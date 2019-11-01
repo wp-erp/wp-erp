@@ -30,192 +30,260 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
      */
     public function register_routes() {
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/type/(?P<voucher_no>[\d]+)', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/type/(?P<voucher_no>[\d]+)',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_transaction_type' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_sales_summary' );
-                },
-            ]
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_transaction_type' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_sales_summary' );
+					},
+				],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/statuses', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/statuses',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_trn_statuses' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_sales_summary' );
-                },
-            ]
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_trn_statuses' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_sales_summary' );
+					},
+				],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/sales', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/sales',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_sales' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_sales_summary' );
-                },
-            ]
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_sales' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_sales_summary' );
+					},
+				],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/expenses', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/expenses',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_expenses' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_sales_summary' );
-                },
-            ]
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_expenses' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_sales_summary' );
+					},
+				],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/purchases', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/purchases',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_purchases' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_expense' );
-                },
-            ]
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_purchases' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_expense' );
+					},
+				],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/sales/chart-status', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/sales/chart-status',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_sales_chart_status' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_sales_summary' );
-                },
-            ]
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_sales_chart_status' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_sales_summary' );
+					},
+				],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/sales/chart-payment', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/sales/chart-payment',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_sales_chart_payment' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_sales_summary' );
-                },
-            ]
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_sales_chart_payment' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_sales_summary' );
+					},
+				],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/income-expense-overview', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/income-expense-overview',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_income_expense_overview' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_expense' );
-                },
-            ]
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_income_expense_overview' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_expense' );
+					},
+				],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/expense/chart-expense', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/expense/chart-expense',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_expense_chart_data' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_sales_summary' );
-                },
-            ]
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_expense_chart_data' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_sales_summary' );
+					},
+				],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/expense/chart-status', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/expense/chart-status',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_expense_chart_status' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_sales_summary' );
-                },
-            ]
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_expense_chart_status' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_sales_summary' );
+					},
+				],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/purchase/chart-purchase', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/purchase/chart-purchase',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_purchase_chart_data' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_sales_summary' );
-                },
-            ]
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_purchase_chart_data' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_sales_summary' );
+					},
+				],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/purchase/chart-status', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/purchase/chart-status',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_purchase_chart_status' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_sales_summary' );
-                },
-            ]
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_purchase_chart_status' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_sales_summary' );
+					},
+				],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/payment-methods', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/payment-methods',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_payment_methods' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_expense' );
-                },
-            ]
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_payment_methods' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_expense' );
+					},
+				],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/send-pdf' . '/(?P<id>[\d]+)', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/send-pdf' . '/(?P<id>[\d]+)',
             [
-                'methods'             => WP_REST_Server::CREATABLE,
-                'callback'            => [ $this, 'send_as_pdf' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_expense' );
-                },
-            ]
-        ] );
+				[
+					'methods'             => WP_REST_Server::CREATABLE,
+					'callback'            => [ $this, 'send_as_pdf' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_expense' );
+					},
+				],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/people-chart' . '/trn-amount' . '/(?P<id>[\d]+)', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/people-chart' . '/trn-amount' . '/(?P<id>[\d]+)',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_people_trn_amount_data' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_expense' );
-                },
-            ]
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_people_trn_amount_data' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_expense' );
+					},
+				],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/people-chart' . '/trn-status' . '/(?P<id>[\d]+)', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/people-chart' . '/trn-status' . '/(?P<id>[\d]+)',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_people_trn_status_data' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_expense' );
-                },
-            ]
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_people_trn_status_data' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_expense' );
+					},
+				],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/voucher-type' . '/(?P<id>[\d]+)', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/voucher-type' . '/(?P<id>[\d]+)',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_voucher_type' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_sales_summary' );
-                },
-            ]
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_voucher_type' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_sales_summary' );
+					},
+				],
+			]
+        );
 
     }
 
@@ -249,7 +317,15 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
         global $wpdb;
 
         $statuses = $wpdb->get_results( "SELECT id, type_name as name, slug FROM {$wpdb->prefix}erp_acct_trn_status_types", ARRAY_A );
-        array_unshift( $statuses, [ 'id' => '0', 'type_name' => 'all', 'name' => 'All', 'slug' => 'all' ] );
+        array_unshift(
+            $statuses,
+            [
+				'id'        => '0',
+				'type_name' => 'all',
+				'name'      => 'All',
+				'slug'      => 'all',
+			]
+        );
 
         $response = rest_ensure_response( $statuses );
 
@@ -267,11 +343,11 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
      */
     public function get_sales( $request ) {
         $args = [
-            'number'     => empty( $request['per_page'] ) ? 20 : $request['per_page'],
+            'number'     => empty( $request['per_page'] ) ? 20 : (int) $request['per_page'],
             'offset'     => ( $request['per_page'] * ( $request['page'] - 1 ) ),
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
             'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date'],
-            'status'     => empty( $request['status'] ) ? '' : $request['status']
+            'status'     => empty( $request['status'] ) ? '' : $request['status'],
         ];
 
         $formatted_items   = [];
@@ -281,7 +357,12 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields['rest_base'] = $this->rest_base;
 
         $transactions = erp_acct_get_sales_transactions( $args );
-        $total_items  = erp_acct_get_sales_transactions( [ 'count' => true, 'number' => -1 ] );
+        $total_items  = erp_acct_get_sales_transactions(
+            [
+				'count'  => true,
+				'number' => -1,
+			]
+        );
 
         foreach ( $transactions as $transaction ) {
             $data              = $this->prepare_item_for_response( $transaction, $request, $additional_fields );
@@ -302,7 +383,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function get_sales_chart_status( $request ) {
         $args = [
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
-            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date']
+            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date'],
         ];
 
         $chart_status = erp_acct_get_sales_chart_status( $args );
@@ -320,7 +401,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function get_sales_chart_payment( $request ) {
         $args = [
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
-            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date']
+            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date'],
         ];
 
         $chart_payment = erp_acct_get_sales_chart_payment( $args );
@@ -360,14 +441,15 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function get_expense_chart_data( $request ) {
         $args = [
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
-            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date']
+            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date'],
         ];
 
         $bill_payment    = erp_acct_get_bill_chart_data( $args );
         $expense_payment = erp_acct_get_expense_chart_data( $args );
 
-        $chart_payment['paid'] = $bill_payment['paid'] + $expense_payment['paid'];;
-        $chart_payment['payable'] = $bill_payment['payable'] + $expense_payment['payable'];;
+        $chart_payment['paid'] = $bill_payment['paid'] + $expense_payment['paid'];
+
+        $chart_payment['payable'] = $bill_payment['payable'] + $expense_payment['payable'];
 
         $response = rest_ensure_response( $chart_payment );
 
@@ -386,14 +468,14 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function get_expense_chart_status( $request ) {
         $args = [
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
-            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date']
+            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date'],
         ];
 
         $chart_statuses = erp_acct_get_bill_chart_status( $args );
         $expense_status = erp_acct_get_expense_chart_status( $args );
 
         foreach ( $chart_statuses as $bill_status ) {
-            if ( $bill_status['type_name'] == $expense_status['type_name'] ) {
+            if ( $bill_status['type_name'] === $expense_status['type_name'] ) {
                 $bill_status['sub_total'] += $expense_status['sub_total'];
             } else {
                 array_push( $chart_statuses, $expense_status );
@@ -417,11 +499,11 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
      */
     public function get_expenses( $request ) {
         $args = [
-            'number'     => empty( $request['per_page'] ) ? 20 : $request['per_page'],
+            'number'     => empty( $request['per_page'] ) ? 20 : (int) $request['per_page'],
             'offset'     => ( $request['per_page'] * ( $request['page'] - 1 ) ),
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
             'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date'],
-            'status'     => empty( $request['status'] ) ? '' : $request['status']
+            'status'     => empty( $request['status'] ) ? '' : $request['status'],
         ];
 
         $formatted_items   = [];
@@ -431,7 +513,12 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields['rest_base'] = $this->rest_base;
 
         $transactions = erp_acct_get_expense_transactions( $args );
-        $total_items  = erp_acct_get_expense_transactions( [ 'count' => true, 'number' => -1 ] );
+        $total_items  = erp_acct_get_expense_transactions(
+            [
+				'count'  => true,
+				'number' => -1,
+			]
+        );
 
         foreach ( $transactions as $transaction ) {
             $data              = $this->prepare_item_for_response( $transaction, $request, $additional_fields );
@@ -456,7 +543,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function get_purchase_chart_data( $request ) {
         $args = [
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
-            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date']
+            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date'],
         ];
 
         $chart_payment = erp_acct_get_purchase_chart_data( $args );
@@ -478,7 +565,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function get_purchase_chart_status( $request ) {
         $args = [
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
-            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date']
+            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date'],
         ];
 
         $chart_status = erp_acct_get_purchase_chart_status( $args );
@@ -499,11 +586,11 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
      */
     public function get_purchases( $request ) {
         $args = [
-            'number'     => empty( $request['per_page'] ) ? 20 : $request['per_page'],
+            'number'     => (int) empty( $request['per_page'] ) ? 20 : (int) $request['per_page'],
             'offset'     => ( $request['per_page'] * ( $request['page'] - 1 ) ),
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
             'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date'],
-            'status'     => empty( $request['status'] ) ? '' : $request['status']
+            'status'     => empty( $request['status'] ) ? '' : $request['status'],
         ];
 
         $formatted_items   = [];
@@ -513,7 +600,12 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields['rest_base'] = $this->rest_base;
 
         $transactions = erp_acct_get_purchase_transactions( $args );
-        $total_items  = erp_acct_get_purchase_transactions( [ 'count' => true, 'number' => -1 ] );
+        $total_items  = erp_acct_get_purchase_transactions(
+            [
+				'count'  => true,
+				'number' => -1,
+			]
+        );
 
         foreach ( $transactions as $transaction ) {
             $data              = $this->prepare_item_for_response( $transaction, $request, $additional_fields );
@@ -537,12 +629,9 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function get_payment_methods() {
         global $wpdb;
 
-        $sql = "SELECT id, name
-            FROM {$wpdb->prefix}erp_acct_payment_methods";
+        $rows = $wpdb->get_results( "SELECT id, name FROM {$wpdb->prefix}erp_acct_payment_methods", ARRAY_A );
 
-        $row = $wpdb->get_results( $sql, ARRAY_A );
-
-        return apply_filters( 'erp_acct_pay_methods', $row );
+        return apply_filters( 'erp_acct_pay_methods', $rows );
     }
 
     public function get_voucher_type( $request ) {
@@ -629,13 +718,13 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $response = array(
             'status'  => 304,
-            'message' => 'There was an error sending mail!'
+            'message' => 'There was an error sending mail!',
         );
 
-        $file_name = erp_acct_get_pdf_filename( $request['trn_data']['voucher_no'] );
+        $file_name   = erp_acct_get_pdf_filename( $request['trn_data']['voucher_no'] );
         $transaction = (object) $request['trn_data'];
 
-        if ( erp_acct_send_email_with_pdf_attached( $request, $transaction, $file_name,'F' ) ) {
+        if ( erp_acct_send_email_with_pdf_attached( $request, $transaction, $file_name, 'F' ) ) {
             $response['status']  = 200;
             $response['message'] = 'mail sent successfully.';
         }
@@ -649,7 +738,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function get_people_trn_amount_data( $request ) {
         $args = [
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
-            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date']
+            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date'],
         ];
 
         $args['people_id'] = $request['id'];
@@ -675,7 +764,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function get_people_trn_status_data( $request ) {
         $args = [
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
-            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date']
+            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date'],
         ];
 
         $args['people_id'] = $request['id'];
@@ -686,15 +775,15 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
         $purchase_statuses = erp_acct_get_purchase_chart_status( $args );
 
         for ( $i = 0; $i < count( $chart_statuses ); $i++ ) {
-            $chart_statuses[$i]['sub_total'] = (int) $chart_statuses[$i]['sub_total'];
+            $chart_statuses[ $i ]['sub_total'] = (int) $chart_statuses[ $i ]['sub_total'];
         }
 
         for ( $i = 0; $i < count( $sales_statuses ); $i++ ) {
-            $sales_statuses[$i]['sub_total'] = (int) $sales_statuses[$i]['sub_total'];
+            $sales_statuses[ $i ]['sub_total'] = (int) $sales_statuses[ $i ]['sub_total'];
         }
 
         for ( $i = 0; $i < count( $purchase_statuses ); $i++ ) {
-            $purchase_statuses[$i]['sub_total'] = (int) $purchase_statuses[$i]['sub_total'];
+            $purchase_statuses[ $i ]['sub_total'] = (int) $purchase_statuses[ $i ]['sub_total'];
         }
 
         if ( ! empty( $expense_status ) ) {
@@ -708,23 +797,23 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
         $len = count( $chart_statuses );
         for ( $i = 0; $i < $len; $i++ ) {
             $k = 0;
-            if ( is_null( $chart_statuses[$i] ) ) {
+            if ( is_null( $chart_statuses[ $i ] ) ) {
                 continue;
             }
             for ( $j = $i + 1; $j < $len; $j++ ) {
-                if ( is_null( $chart_statuses[$j] ) ) {
+                if ( is_null( $chart_statuses[ $j ] ) ) {
                     continue;
                 }
-                if ( $chart_statuses[$i]['type_name'] == $chart_statuses[$j]['type_name'] ) {
-                    $chart_statuses[$i]['sub_total'] += $chart_statuses[$j]['sub_total'];
-                    $statuses[$k]['type_name']       = $chart_statuses[$i]['type_name'];
-                    $statuses[$k]['sub_total']       = $chart_statuses[$i]['sub_total'];
+                if ( $chart_statuses[ $i ]['type_name'] === $chart_statuses[ $j ]['type_name'] ) {
+                    $chart_statuses[ $i ]['sub_total'] += $chart_statuses[ $j ]['sub_total'];
+                    $statuses[ $k ]['type_name']        = $chart_statuses[ $i ]['type_name'];
+                    $statuses[ $k ]['sub_total']        = $chart_statuses[ $i ]['sub_total'];
                     $k++;
-                    $chart_statuses[$j] = null;
+                    $chart_statuses[ $j ] = null;
                 }
             }
-            $statuses[$k]['type_name'] = $chart_statuses[$i]['type_name'];
-            $statuses[$k]['sub_total'] = $chart_statuses[$i]['sub_total'];
+            $statuses[ $k ]['type_name'] = $chart_statuses[ $i ]['type_name'];
+            $statuses[ $k ]['sub_total'] = $chart_statuses[ $i ]['sub_total'];
             $k++;
         }
 

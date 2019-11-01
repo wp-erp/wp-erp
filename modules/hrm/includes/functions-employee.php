@@ -435,6 +435,7 @@ function erp_hr_get_employees_dropdown( $selected = '' ) {
 function erp_hr_get_employee_statuses() {
     $statuses = array(
         'active'     => __( 'Active', 'erp' ),
+        'inactive'   => __( 'Inactive', 'erp' ),
         'terminated' => __( 'Terminated', 'erp' ),
         'deceased'   => __( 'Deceased', 'erp' ),
         'resigned'   => __( 'Resigned', 'erp' )
@@ -1036,4 +1037,39 @@ function erp_revoke_terminated_employee_access( $capabilities, $caps, $args, $us
     }
 
     return $capabilities;
+}
+
+
+/**
+ * Get Contractual Employees
+ *
+ * @since 0.1
+ * @since 1.1.14 Add where condition to remove terminated employees
+ *
+ * @return object collection of user_id
+ */
+function erp_hr_get_contractual_employee() {
+
+    $db = new \WeDevs\ORM\Eloquent\Database();
+
+    return erp_array_to_object( \WeDevs\ERP\HRM\Models\Employee::select( 'user_id', 'hiring_date' )
+        ->where( 'status', 'active' )
+        ->where( 'type', 'contract' )
+        ->orWhere( 'type', 'trainee' )
+        ->get()
+        ->toArray() );
+}
+
+/**
+ * Get Contractual Employees
+ *
+ * @since 1.5.6 Add Closing date for employee
+ *
+ * @return object collection of fields;
+ */
+
+function get_employee_additional_fields( $fields, $id, $user ) {
+    $user_id = $fields['user_id'];
+    $fields['work']['end_date'] = get_user_meta( $user_id, 'end_date' );
+    return $fields;
 }

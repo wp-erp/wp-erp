@@ -1,5 +1,5 @@
 <template>
-    <div class="particulars">
+    <div class="particulars" v-if="particulars">
         <h4>Particulars</h4>
         <p :key="par"
             v-for="(particular, par) in particulars.split(/\r?\n/)"

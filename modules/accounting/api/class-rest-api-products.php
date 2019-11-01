@@ -25,81 +25,97 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
      * Register the routes for the objects of the controller.
      */
     public function register_routes() {
-        register_rest_route( $this->namespace, '/' . $this->rest_base, [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base,
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_inventory_products' ],
-                'args'                => $this->get_collection_params(),
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_manager' );
-                },
-            ],
-            [
-                'methods'             => WP_REST_Server::CREATABLE,
-                'callback'            => [ $this, 'create_inventory_product' ],
-                'args'                => $this->get_collection_params(),
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_manager' );
-                },
-            ],
-            'schema' => [ $this, 'get_public_item_schema' ],
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_inventory_products' ],
+					'args'                => $this->get_collection_params(),
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_manager' );
+					},
+				],
+				[
+					'methods'             => WP_REST_Server::CREATABLE,
+					'callback'            => [ $this, 'create_inventory_product' ],
+					'args'                => $this->get_collection_params(),
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_manager' );
+					},
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/(?P<id>[\d]+)',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_inventory_product' ],
-                'args'                => [
-                    'context' => $this->get_context_param( [ 'default' => 'view' ] ),
-                ],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_manager' );
-                },
-            ],
-            [
-                'methods'             => WP_REST_Server::EDITABLE,
-                'callback'            => [ $this, 'update_inventory_product' ],
-                'args'                => $this->get_collection_params(),
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_manager' );
-                },
-            ],
-            [
-                'methods'             => WP_REST_Server::DELETABLE,
-                'callback'            => [ $this, 'delete_inventory_product' ],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_manager' );
-                },
-            ],
-            'schema' => [ $this, 'get_public_item_schema' ],
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_inventory_product' ],
+					'args'                => [
+						'context' => $this->get_context_param( [ 'default' => 'view' ] ),
+					],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_manager' );
+					},
+				],
+				[
+					'methods'             => WP_REST_Server::EDITABLE,
+					'callback'            => [ $this, 'update_inventory_product' ],
+					'args'                => $this->get_collection_params(),
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_manager' );
+					},
+				],
+				[
+					'methods'             => WP_REST_Server::DELETABLE,
+					'callback'            => [ $this, 'delete_inventory_product' ],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_manager' );
+					},
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/delete/(?P<ids>[\d,?]+)', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/delete/(?P<ids>[\d,?]+)',
             [
-                'methods'             => WP_REST_Server::DELETABLE,
-                'callback'            => [ $this, 'bulk_delete' ],
-                'args'                => [
-                    'ids' => [ 'required' => true ]
-                ],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_manager' );
-                },
-            ],
-            'schema' => [ $this, 'get_public_item_schema' ],
-        ] );
+				[
+					'methods'             => WP_REST_Server::DELETABLE,
+					'callback'            => [ $this, 'bulk_delete' ],
+					'args'                => [
+						'ids' => [ 'required' => true ],
+					],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_manager' );
+					},
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/types', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/types',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_product_types' ],
-                'args'                => [
-                    'context' => $this->get_context_param( [ 'default' => 'view' ] ),
-                ],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_manager' );
-                },
-            ],
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_product_types' ],
+					'args'                => [
+						'context' => $this->get_context_param( [ 'default' => 'view' ] ),
+					],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_manager' );
+					},
+				],
+			]
+        );
     }
 
     /**
@@ -111,7 +127,7 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
      */
     public function get_inventory_products( $request ) {
         $args = [
-            'number' => ! empty( $request['number'] ) ? $request['number'] : 20,
+            'number' => ! empty( $request['number'] ) ? (int) $request['number'] : 20,
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) )
         ];
 
@@ -122,7 +138,12 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields['rest_base'] = $this->rest_base;
 
         $product_data = erp_acct_get_all_products( $args );
-        $total_items  = erp_acct_get_all_products( [ 'count' => true, 'number' => -1 ] );
+        $total_items  = erp_acct_get_all_products(
+            [
+				'count'  => true,
+				'number' => -1,
+			]
+        );
 
         foreach ( $product_data as $item ) {
             $data              = $this->prepare_item_for_response( $item, $request, $additional_fields );
@@ -325,7 +346,7 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'readonly'    => true,
                 ],
                 'name'            => [
-                    'description' => __( 'Title for the resource.' ),
+                    'description' => __( 'Name for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -333,51 +354,104 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
                     ],
                     'required'    => true,
                 ],
-                'vendor'          => [
-                    'description' => __( 'Vendor for the resource.' ),
-                    'type'        => 'string',
-                    'context'     => [ 'edit' ],
-                    'arg_options' => [
-                        'sanitize_callback' => 'sanitize_text_field',
-                    ],
-                    'required'    => true,
-                ],
-                'product_type_id' => [
-                    'description' => __( 'product type id for the resource.' ),
-                    'type'        => 'integer',
-                    'context'     => [ 'edit' ],
-                    'arg_options' => [
-                        'sanitize_callback' => 'sanitize_text_field',
-                    ],
-                ],
-                'category_id'     => [
-                    'description' => __( 'Category id for the resource.' ),
-                    'type'        => 'integer',
-                    'context'     => [ 'edit' ],
-                    'arg_options' => [
-                        'sanitize_callback' => 'sanitize_text_field',
+                'product_type_id'    => [
+                    'description' => __( 'State for the resource.', 'erp' ),
+                    'type'        => 'object',
+                    'context'     => [ 'view', 'edit' ],
+                    'properties'  => [
+                        'id'   => [
+                            'description' => __( 'Unique identifier for the resource.', 'erp' ),
+                            'type'        => 'integer',
+                            'context'     => [ 'view', 'edit' ],
+                            'required'    => true,
+                        ],
+                        'name' => [
+                            'description' => __( 'Type name for the resource.', 'erp' ),
+                            'type'        => 'string',
+                            'context'     => [ 'view', 'edit' ],
+                            'arg_options' => [
+                                'sanitize_callback' => 'sanitize_text_field',
+                            ],
+                        ]
                     ],
                 ],
-                'tax_cat_id'      => [
-                    'description' => __( 'Tax Category id for the resource.' ),
-                    'type'        => 'integer',
-                    'context'     => [ 'edit' ],
-                    'arg_options' => [
-                        'sanitize_callback' => 'sanitize_text_field',
+                'category_id'    => [
+                    'description' => __( 'Category id for the resource.', 'erp' ),
+                    'type'        => 'object',
+                    'context'     => [ 'view', 'edit' ],
+                    'properties'  => [
+                        'id'   => [
+                            'description' => __( 'Unique identifier for the resource.', 'erp' ),
+                            'type'        => 'integer',
+                            'context'     => [ 'view', 'edit' ],
+                        ],
+                        'name' => [
+                            'description' => __( 'Type name for the resource.', 'erp' ),
+                            'type'        => 'string',
+                            'context'     => [ 'view', 'edit' ],
+                        ],
+                        'parent' => [
+                            'description' => __( 'Parent category for the resource.', 'erp' ),
+                            'type'        => 'integer',
+                            'context'     => [ 'view', 'edit' ],
+                        ]
+                    ],
+                ],
+                'tax_cat_id'    => [
+                    'description' => __( 'Tax category id for the resource.', 'erp' ),
+                    'type'        => 'object',
+                    'context'     => [ 'view', 'edit' ],
+                    'properties'  => [
+                        'id'   => [
+                            'description' => __( 'Unique identifier for the resource.', 'erp' ),
+                            'type'        => 'integer',
+                            'context'     => [ 'view', 'edit' ],
+                        ],
+                        'name' => [
+                            'description' => __( 'Tax category name for the resource.', 'erp' ),
+                            'type'        => 'string',
+                            'context'     => [ 'view', 'edit' ],
+                        ],
+                        'description' => [
+                            'description' => __( 'Description for the resource.', 'erp' ),
+                            'type'        => 'integer',
+                            'context'     => [ 'view', 'edit' ],
+                        ]
+                    ],
+                ],
+                'vendor'    => [
+                    'description' => __( 'Vendor for the resource.', 'erp' ),
+                    'type'        => 'object',
+                    'context'     => [ 'view', 'edit' ],
+                    'properties'  => [
+                        'id'   => [
+                            'description' => __( 'Unique identifier for the resource.', 'erp' ),
+                            'type'        => 'integer',
+                            'context'     => [ 'view', 'edit' ],
+                            'required'    => true
+                        ],
+                        'name' => [
+                            'description' => __( 'Name for the resource.', 'erp' ),
+                            'type'        => 'string',
+                            'context'     => [ 'view', 'edit' ],
+                            'arg_options' => [
+                                'sanitize_callback' => 'sanitize_text_field',
+                            ]
+                        ]
                     ],
                 ],
                 'cost_price'      => [
                     'description' => __( 'Cost price for the resource.' ),
-                    'type'        => 'integer',
+                    'type'        => 'number',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
                 'sale_price'      => [
                     'description' => __( 'Sale price for the resource.' ),
-                    'type'        => 'integer',
+                    'type'        => 'number',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
-                ],
+                ]
             ],
         ];
 

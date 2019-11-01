@@ -163,9 +163,9 @@ function erp_acct_get_owners_equity( $args, $type ) {
     global $wpdb;
 
     if ( 'capital' === $type ) {
-        $having = "HAVING balance < 0";
+        $having = 'HAVING balance < 0';
     } elseif ( 'drawings' === $type ) {
-        $having = "HAVING balance > 0";
+        $having = 'HAVING balance > 0';
     }
 
     $sql = "SELECT SUM( debit - credit ) AS balance
@@ -238,13 +238,13 @@ function erp_acct_get_balance_with_opening_balance( $ledgers, $data, $opening_ba
         $balance = 0;
 
         foreach ( $data as $row ) {
-            if ( $row['id'] == $ledger['id'] ) {
+            if ( $row['id'] === $ledger['id'] ) {
                 $balance += (float) $row['balance'];
             }
         }
 
         foreach ( $opening_balance as $op_balance ) {
-            if ( $op_balance['id'] == $ledger['id'] ) {
+            if ( $op_balance['id'] === $ledger['id'] ) {
                 $balance += (float) $op_balance['balance'];
             }
         }
@@ -254,7 +254,7 @@ function erp_acct_get_balance_with_opening_balance( $ledgers, $data, $opening_ba
                 'id'       => $ledger['id'],
                 'chart_id' => $ledger['chart_id'],
                 'name'     => $ledger['name'],
-                'balance'  => $balance
+                'balance'  => $balance,
             ];
         }
     }
@@ -282,7 +282,7 @@ function erp_acct_get_balance_within_ledger_details_and_trial_balance( $sql, $te
             $balance = $temp['balance'];
 
             foreach ( $ledger_details as $detail ) {
-                if ( $temp['id'] == $detail['id'] ) {
+                if ( $temp['id'] === $detail['id'] ) {
                     $balance += (float) $detail['balance'];
                 }
             }
@@ -291,7 +291,7 @@ function erp_acct_get_balance_within_ledger_details_and_trial_balance( $sql, $te
                 'id'       => $temp['id'],
                 'chart_id' => $temp['chart_id'],
                 'name'     => $temp['name'],
-                'balance'  => $balance
+                'balance'  => $balance,
             ];
         }
     } else {
@@ -321,8 +321,11 @@ function erp_acct_calc_with_opening_balance( $tb_start_date, $data, $sql ) {
     // get opening balance data within that(^) financial year
     $opening_balance = erp_acct_opening_balance_by_fn_year_id( $closest_fy_date['id'] );
 
-    $ledgers = $wpdb->get_results( "SELECT ledger.id, ledger.chart_id, ledger.name FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
-                WHERE ledger.chart_id <> 7 AND ledger.slug <> 'owner_s_equity'", ARRAY_A );
+    $ledgers = $wpdb->get_results(
+        "SELECT ledger.id, ledger.chart_id, ledger.name FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
+                WHERE ledger.chart_id <> 7 AND ledger.slug <> 'owner_s_equity'",
+        ARRAY_A
+    );
 
     $temp_data = erp_acct_get_balance_with_opening_balance( $ledgers, $data, $opening_balance );
 
@@ -333,11 +336,15 @@ function erp_acct_calc_with_opening_balance( $tb_start_date, $data, $sql ) {
         $prev_date_of_tb_start = date( 'Y-m-d', strtotime( '-1 day', strtotime( $tb_start_date ) ) );
     }
 
-    $sql = $wpdb->prepare( "SELECT
+    $sql = $wpdb->prepare(
+        "SELECT
         ledger.id, ledger.name, SUM(ledger_detail.debit - ledger_detail.credit) AS balance
         FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
         LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id
-        WHERE ledger.chart_id NOT IN ( 4, 5, 7 ) AND ledger.slug <> 'owner_s_equity' AND ledger_detail.trn_date BETWEEN '%s' AND '%s' GROUP BY ledger_detail.ledger_id", $closest_fy_date['start_date'], $prev_date_of_tb_start );
+        WHERE ledger.chart_id NOT IN ( 4, 5, 7 ) AND ledger.slug <> 'owner_s_equity' AND ledger_detail.trn_date BETWEEN '%s' AND '%s' GROUP BY ledger_detail.ledger_id",
+        $closest_fy_date['start_date'],
+        $prev_date_of_tb_start
+    );
 
     $result = erp_acct_get_balance_within_ledger_details_and_trial_balance( $sql, $temp_data );
 
@@ -764,35 +771,35 @@ function erp_acct_get_trial_balance( $args ) {
         'chart_id'   => '1',
         'name'       => 'Cash at Bank',
         'balance'    => erp_acct_cash_at_bank( $args, 'balance' ),
-        'additional' => erp_acct_bank_balance( $args, 'balance' )
+        'additional' => erp_acct_bank_balance( $args, 'balance' ),
     ];
     $results['rows'][] = [
         'chart_id'   => '2',
         'name'       => 'Bank Loan',
         'balance'    => erp_acct_cash_at_bank( $args, 'loan' ),
-        'additional' => erp_acct_bank_balance( $args, 'loan' )
+        'additional' => erp_acct_bank_balance( $args, 'loan' ),
     ];
 
     $results['rows'][] = [
         'chart_id' => '2',
         'name'     => 'Sales Tax Payable',
-        'balance'  => erp_acct_sales_tax_query( $args, 'payable' )
+        'balance'  => erp_acct_sales_tax_query( $args, 'payable' ),
     ];
     $results['rows'][] = [
         'chart_id' => '1',
         'name'     => 'Sales Tax Receivable',
-        'balance'  => erp_acct_sales_tax_query( $args, 'receivable' )
+        'balance'  => erp_acct_sales_tax_query( $args, 'receivable' ),
     ];
 
     $results['rows'][] = [
         'chart_id' => '2',
         'name'     => 'Accounts Payable',
-        'balance'  => erp_acct_get_account_payable( $args )
+        'balance'  => erp_acct_get_account_payable( $args ),
     ];
     $results['rows'][] = [
         'chart_id' => '1',
         'name'     => 'Accounts Receivable',
-        'balance'  => erp_acct_get_account_receivable( $args )
+        'balance'  => erp_acct_get_account_receivable( $args ),
     ];
 
     /**
@@ -808,7 +815,7 @@ function erp_acct_get_trial_balance( $args ) {
     // Owner's Equity calculation with income statement profit/loss
     $inc_statmnt_range = [
         'start_date' => $closest_fy_date['start_date'],
-        'end_date'   => $prev_date_of_tb_start
+        'end_date'   => $prev_date_of_tb_start,
     ];
 
     $income_statement_balance = erp_acct_get_income_statement( $inc_statmnt_range );
@@ -819,13 +826,13 @@ function erp_acct_get_trial_balance( $args ) {
         $results['rows'][] = [
             'chart_id' => '3',
             'name'     => 'Owner\'s Drawings',
-            'balance'  => $new_capital
+            'balance'  => $new_capital,
         ];
     } else {
         $results['rows'][] = [
             'chart_id' => '3',
             'name'     => 'Owner\'s Capital',
-            'balance'  => $new_capital
+            'balance'  => $new_capital,
         ];
     }
 
@@ -844,7 +851,7 @@ function erp_acct_get_trial_balance( $args ) {
                 $results['total_credit'] += $result['balance'];
             }
 
-            $grouped[$result['chart_id']][$key] = $result;
+            $grouped[ $result['chart_id'] ][ $key ] = $result;
         }
     }
 

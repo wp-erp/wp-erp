@@ -29,91 +29,113 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
      * Register the routes for the objects of the controller.
      */
     public function register_routes() {
-        register_rest_route( $this->namespace, '/' . $this->rest_base, [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base,
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_invoices' ],
-                'args'                => $this->get_collection_params(),
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_sale' );
-                },
-            ],
-            [
-                'methods'             => WP_REST_Server::CREATABLE,
-                'callback'            => [ $this, 'create_invoice' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_create_sales_invoice' );
-                },
-            ],
-            //'schema' => [ $this, 'get_item_schema' ],
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_invoices' ],
+					'args'                => $this->get_collection_params(),
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_sale' );
+					},
+				],
+				[
+					'methods'             => WP_REST_Server::CREATABLE,
+					'callback'            => [ $this, 'create_invoice' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_create_sales_invoice' );
+					},
+				],
+				'schema' => [ $this, 'get_item_schema' ],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/(?P<id>[\d]+)',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_invoice' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_sales_summary' );
-                },
-            ],
-            [
-                'methods'             => WP_REST_Server::EDITABLE,
-                'callback'            => [ $this, 'update_invoice' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_create_sales_invoice' );
-                },
-            ],
-            'schema' => [ $this, 'get_item_schema' ],
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_invoice' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_sales_summary' );
+					},
+				],
+				[
+					'methods'             => WP_REST_Server::EDITABLE,
+					'callback'            => [ $this, 'update_invoice' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_create_sales_invoice' );
+					},
+				],
+				'schema' => [ $this, 'get_item_schema' ],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/void', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/void',
             [
-                'methods'             => WP_REST_Server::CREATABLE,
-                'callback'            => [ $this, 'void_invoice' ],
-                'args'                => $this->get_collection_params(),
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_create_sales_invoice' );
-                },
-            ],
-        ] );
+				[
+					'methods'             => WP_REST_Server::CREATABLE,
+					'callback'            => [ $this, 'void_invoice' ],
+					'args'                => $this->get_collection_params(),
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_create_sales_invoice' );
+					},
+				],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/due' . '/(?P<id>[\d]+)', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/due' . '/(?P<id>[\d]+)',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'due_invoices' ],
-                'args'                => $this->get_collection_params(),
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_create_sales_invoice' );
-                },
-            ],
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'due_invoices' ],
+					'args'                => $this->get_collection_params(),
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_create_sales_invoice' );
+					},
+				],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/attachments', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/attachments',
             [
-                'methods'             => WP_REST_Server::CREATABLE,
-                'callback'            => [ $this, 'upload_attachments' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_create_sales_invoice' );
-                },
-            ],
-            //'schema' => [ $this, 'get_item_schema' ],
-        ] );
+				[
+					'methods'             => WP_REST_Server::CREATABLE,
+					'callback'            => [ $this, 'upload_attachments' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_create_sales_invoice' );
+					},
+				]
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/overview-receivable', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/overview-receivable',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_overview_receivables' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_create_sales_invoice' );
-                },
-            ],
-            //'schema' => [ $this, 'get_item_schema' ],
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_overview_receivables' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_create_sales_invoice' );
+					},
+				]
+			]
+        );
 
     }
 
@@ -129,7 +151,7 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
             'number'     => $request['per_page'],
             'offset'     => ( $request['per_page'] * ( $request['page'] - 1 ) ),
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
-            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date']
+            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date'],
         ];
 
         $formatted_items   = [];
@@ -139,13 +161,18 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields['rest_base'] = $this->rest_base;
 
         $invoice_data = erp_acct_get_all_invoices( $args );
-        $total_items  = erp_acct_get_all_invoices( [ 'count' => true, 'number' => -1 ] );
+        $total_items  = erp_acct_get_all_invoices(
+            [
+				'count'  => true,
+				'number' => -1,
+			]
+        );
 
         foreach ( $invoice_data as $item ) {
             if ( isset( $request['include'] ) ) {
                 $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
 
-                if ( in_array( 'created_by', $include_params ) ) {
+                if ( in_array( 'created_by', $include_params, true ) ) {
                     $item['created_by'] = $this->get_user( $item['created_by'] );
                 }
             }
@@ -180,7 +207,14 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
         $item = erp_acct_get_invoice( $id );
 
         $link_hash    = erp_acct_get_invoice_link_hash( $id, 'invoice' );
-        $readonly_url = add_query_arg( [ 'query' => 'readonly_invoice', 'trans_id' => $id, 'auth' => $link_hash ], site_url() );
+        $readonly_url = add_query_arg(
+            [
+				'query'    => 'readonly_invoice',
+				'trans_id' => $id,
+				'auth'     => $link_hash,
+			],
+            site_url()
+        );
 
         $item['readonly_url'] = $readonly_url;
 
@@ -339,7 +373,7 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $args = [
             'number' => isset( $request['per_page'] ) ? $request['per_page'] : 20,
-            'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) )
+            'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
         ];
 
         $formatted_items   = [];
@@ -355,7 +389,7 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
             if ( isset( $request['include'] ) ) {
                 $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
 
-                if ( in_array( 'created_by', $include_params ) ) {
+                if ( in_array( 'created_by', $include_params, true ) ) {
                     $item['created_by'] = $this->get_user( $item['created_by'] );
                 }
             }
@@ -411,16 +445,19 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @param $action
      */
     public function add_log( $data, $action ) {
-        erp_log()->add( [
-            'component'     => 'Accounting',
-            'sub_component' => __( 'Invoice', 'erp' ),
-            'old_value'     => '',
-            'new_value'     => '',
-            'message'       => sprintf( __( 'An invoice of %s has been created for %s', 'erp' ), $data['amount'], erp_acct_get_people_name_by_people_id( $data['customer_id'] ) ),
-            'changetype'    => $action,
-            'created_by'    => get_current_user_id()
+        erp_log()->add(
+            [
+				'component'     => 'Accounting',
+				'sub_component' => __( 'Invoice', 'erp' ),
+				'old_value'     => '',
+                'new_value'     => '',
+                // translators: %1$s: amount, %2$s: id
+				'message'       => sprintf( __( 'An invoice of %1$s has been created for %2$s', 'erp' ), $data['amount'], erp_acct_get_people_name_by_people_id( $data['customer_id'] ) ),
+				'changetype'    => $action,
+				'created_by'    => get_current_user_id(),
 
-        ] );
+			]
+        );
     }
 
     /**
@@ -515,9 +552,6 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'description' => __( 'Customer id for the resource.' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],
-                    'arg_options' => [
-                        'sanitize_callback' => 'sanitize_text_field',
-                    ],
                     'required'    => true,
                 ],
                 'date'            => [
@@ -540,35 +574,24 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
                 ],
                 'billing_address' => [
                     'description' => __( 'List of billing address data.', 'erp' ),
-                    'type'        => 'object',
+                    'type'        => 'string',
                     'context'     => [ 'view', 'edit' ],
-                    'properties'  => [
-                        'city'        => [
-                            'description' => __( 'City name.', 'erp' ),
-                            'type'        => 'string',
-                            'context'     => [ 'view', 'edit' ],
-                        ],
-                        'state'       => [
-                            'description' => __( 'ISO code or name of the state, province or district.', 'erp' ),
-                            'type'        => 'string',
-                            'context'     => [ 'view', 'edit' ],
-                        ],
-                        'postal_code' => [
-                            'description' => __( 'Postal code.', 'erp' ),
-                            'type'        => 'string',
-                            'context'     => [ 'view', 'edit' ],
-                        ],
-                        'country'     => [
-                            'description' => __( 'ISO code of the country.', 'erp' ),
-                            'type'        => 'string',
-                            'context'     => [ 'view', 'edit' ],
-                        ],
-                        'phone'       => [
-                            'description' => __( 'Phone for the resource.' ),
-                            'type'        => 'string',
-                            'context'     => [ 'edit' ],
-                        ],
-                    ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ]
+                ],
+                'discount_type' => [
+                    'description' => __( 'Discount type data.', 'erp' ),
+                    'type'        => 'string',
+                    'context'     => [ 'view', 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ]
+                ],
+                'tax_rate_id' => [
+                    'description' => __( 'Tax rate id.', 'erp' ),
+                    'type'        => 'integer',
+                    'context'     => [ 'view', 'edit' ]
                 ],
                 'line_items'      => [
                     'description' => __( 'List of line items data.', 'erp' ),
@@ -577,12 +600,20 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'properties'  => [
                         'product_id'   => [
                             'description' => __( 'Product id.', 'erp' ),
-                            'type'        => 'string',
+                            'type'        => 'integer',
                             'context'     => [ 'view', 'edit' ],
                         ],
-                        'product_type' => [
+                        'product_type_name' => [
                             'description' => __( 'Product type.', 'erp' ),
                             'type'        => 'string',
+                            'context'     => [ 'view', 'edit' ],
+                            'arg_options' => [
+                                'sanitize_callback' => 'sanitize_text_field',
+                            ]
+                        ],
+                        'tax_cat_id' => [
+                            'description' => __( 'Product type.', 'erp' ),
+                            'type'        => 'integer',
                             'context'     => [ 'view', 'edit' ],
                         ],
                         'qty'          => [
@@ -592,27 +623,27 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
                         ],
                         'unit_price'   => [
                             'description' => __( 'Unit price.', 'erp' ),
-                            'type'        => 'integer',
+                            'type'        => 'number',
                             'context'     => [ 'view', 'edit' ],
                         ],
                         'discount'     => [
                             'description' => __( 'Discount.', 'erp' ),
-                            'type'        => 'integer',
+                            'type'        => 'number',
                             'context'     => [ 'view', 'edit' ],
                         ],
                         'tax'          => [
                             'description' => __( 'Tax.' ),
-                            'type'        => 'integer',
+                            'type'        => 'number',
                             'context'     => [ 'edit' ],
                         ],
-                        'tax_percent'  => [
+                        'tax_rate'  => [
                             'description' => __( 'Tax percent.', 'erp' ),
-                            'type'        => 'integer',
+                            'type'        => 'number',
                             'context'     => [ 'view', 'edit' ],
                         ],
                         'item_total'   => [
                             'description' => __( 'Item total.' ),
-                            'type'        => 'integer',
+                            'type'        => 'number',
                             'context'     => [ 'edit' ],
                         ],
                     ],
@@ -627,15 +658,25 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
                 ],
                 'status'          => [
                     'description' => __( 'Status for the resource.' ),
+                    'type'        => 'integer',
+                    'context'     => [ 'edit' ]
+                ],
+                'particulars'          => [
+                    'description' => __( 'Status for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
+                'estimate'        => [
+                    'description' => __( 'Status for the resource.' ),
+                    'type'        => 'integer',
+                    'context'     => [ 'edit' ],
+                    'required'    => true
+                ],
             ],
         ];
-
 
         return $schema;
     }

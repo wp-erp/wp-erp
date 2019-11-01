@@ -367,15 +367,17 @@ export default {
                     });
                 });
                 /* global erp_reimbursement_var */
-            } else if (erp_reimbursement_var.erp_reimbursement_module !== 'undefined' &&  erp_reimbursement_var.erp_reimbursement_module === '1') {
-                HTTP.get('/people-transactions/balances').then((response) => {
-                    this.accts_by_chart = response.data;
-                    this.accts_by_chart.forEach(element => {
-                        if (!Object.prototype.hasOwnProperty.call(element, 'balance')) {
-                            element.balance = 0;
-                        }
+            } else if (this.basic_fields.trn_by.id === '4') {
+                if (erp_reimbursement_var.erp_reimbursement_module !== 'undefined' &&  erp_reimbursement_var.erp_reimbursement_module === '1') {
+                    HTTP.get('/people-transactions/balances').then((response) => {
+                        this.accts_by_chart = response.data;
+                        this.accts_by_chart.forEach(element => {
+                            if (!Object.prototype.hasOwnProperty.call(element, 'balance')) {
+                                element.balance = 0;
+                            }
+                        });
                     });
-                });
+                }
             }
             this.$root.$emit('account-changed');
         },

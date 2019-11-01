@@ -79,7 +79,7 @@
                         <td class="col--total" data-colname="Total">{{moneyFormat(invoice.amount)}}</td>
                         <td class="col--due" data-colname="Due">{{moneyFormat(invoice.due)}}</td>
                         <td class="col--amount" data-colname="Amount">
-                            <input type="text" v-model="totalAmounts[key]" @keyup="updateFinalAmount" class="text-right"/>
+                            <input type="number" min="0" step="0.01" v-model="totalAmounts[key]" @keyup="updateFinalAmount" class="wperp-form-field text-right"/>
                         </td>
                         <td class="delete-row" data-colname="Remove Above Selection">
                             <a @click.prevent="removeRow(key)" href="#"><i class="flaticon-trash"></i></a>
@@ -89,7 +89,7 @@
                     <tr class="total-amount-row">
                         <td class="text-right pr-0 hide-sm" colspan="4">{{ __('Total Amount', 'erp') }}</td>
                         <td class="text-right" data-colname="Total Amount">
-                            <input type="text" class="text-right" name="finalamount"
+                            <input type="text" class="wperp-form-field text-right" name="finalamount"
                             :value="moneyFormat(finalTotalAmount)" readonly disabled/></td>
                         <td class="text-right"></td>
                     </tr>
@@ -433,15 +433,17 @@ export default {
                     });
                 });
                 /* global erp_reimbursement_var */
-            } else if (erp_reimbursement_var.erp_reimbursement_module !== 'undefined' &&  erp_reimbursement_var.erp_reimbursement_module === '1') {
-                HTTP.get('/people-transactions/balances').then((response) => {
-                    this.accts_by_chart = response.data;
-                    this.accts_by_chart.forEach(element => {
-                        if (!Object.prototype.hasOwnProperty.call(element, 'balance')) {
-                            element.balance = 0;
-                        }
+            } else if (this.basic_fields.trn_by.id === '4') {
+                if (erp_reimbursement_var.erp_reimbursement_module !== 'undefined' &&  erp_reimbursement_var.erp_reimbursement_module === '1') {
+                    HTTP.get('/people-transactions/balances').then((response) => {
+                        this.accts_by_chart = response.data;
+                        this.accts_by_chart.forEach(element => {
+                            if (!Object.prototype.hasOwnProperty.call(element, 'balance')) {
+                                element.balance = 0;
+                            }
+                        });
                     });
-                });
+                }
             }
             this.$root.$emit('account-changed');
         },

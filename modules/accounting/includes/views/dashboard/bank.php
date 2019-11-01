@@ -13,27 +13,27 @@
                         if ( ! empty( $item['additional'] ) ) {
                             $open = 'open';
                             ?>
-                            <details <?php echo $open ?>>
-                                <summary><?php echo $item['name'] ?></summary>
+                            <details <?php echo $open; ?>>
+                                <summary><?php echo $item['name']; ?></summary>
                                 <?php foreach ( $item['additional'] as $additional ) { ?>
                                     <p>
-                                        <?php echo $additional['name'] ?>
-                                        <?php echo $additional['balance'] ?>
+                                        <?php echo $additional['name']; ?>
+                                        <?php echo $additional['balance']; ?>
                                     </p>
                                 <?php } ?>
                             </details>
                         <?php } else { ?>
-                            <span> <?php echo $item['name'] ?> </span>
+                            <span> <?php echo $item['name']; ?> </span>
                         <?php } ?>
                     </div>
                     <div class="right">
-                        <span class="price"><?php echo $item['balance'] ?></span>
+                        <span class="price"><?php echo $item['balance']; ?></span>
                     </div>
                 </li>
             <?php } ?>
             <li class="total">
-                <span class="account-title"><?php _e( 'Total Balance ', 'erp' ) ?></span> <span class="price"><a
-                        href="#"><?php echo $balance ?></a></span>
+                <span class="account-title"><?php _e( 'Total Balance ', 'erp' ); ?></span> <span class="price"><a
+                        href="#"><?php echo $balance; ?></a></span>
             </li>
         </ul>
     </div>

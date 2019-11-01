@@ -70,6 +70,24 @@
                                 </table>
                             </div>
                         </div>
+                        <div class="wperp-row" v-if="null != expense_data.check_data">
+                            <div class="wperp-col-sm-12">
+                                <table>
+                                    <tr>
+                                        <th>{{ __('Check No', 'erp') }}:</th>
+                                        <td>#{{ expense_data.check_data.check_no }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>{{ __('Bank Name', 'erp') }}:</th>
+                                        <td>{{ expense_data.check_data.bank }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>{{ __('Pay To', 'erp') }}:</th>
+                                        <td>{{ expense_data.check_data.pay_to }}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="wperp-invoice-table" v-if="null != expense_data">

@@ -5,7 +5,7 @@
  * Plugin URI: https://wperp.com
  * Author: weDevs
  * Author URI: https://wedevs.com
- * Version: 1.5.5
+ * Version: 1.5.6
  * License: GPL2
  * Text Domain: erp
  * Domain Path: /i18n/languages/
@@ -53,7 +53,7 @@ final class WeDevs_ERP {
      * @var string
      */
 
-    public $version = '1.5.5';
+    public $version = '1.5.6';
 
     /**
      * Minimum PHP version required
@@ -184,12 +184,19 @@ final class WeDevs_ERP {
 
         deactivate_plugins( basename( __FILE__ ) );
 
-        $error = __( '<h1>An Error Occured</h1>', 'erp' );
+        $error  = __( '<h1>An Error Occured</h1>', 'erp' );
         $error .= __( '<h2>Your installed PHP Version is: ', 'erp' ) . PHP_VERSION . '</h2>';
         $error .= __( '<p>The <strong>WP ERP</strong> plugin requires PHP version <strong>', 'erp' ) . $this->min_php . __( '</strong> or greater', 'erp' );
         $error .= __( '<p>The version of your PHP is ', 'erp' ) . '<a href="http://php.net/supported-versions.php" target="_blank"><strong>' . __( 'unsupported and old', 'erp' ) . '</strong></a>.';
         $error .= __( 'You should update your PHP software or contact your host regarding this matter.</p>', 'erp' );
-        wp_die( $error, __( 'Plugin Activation Error', 'erp' ), array( 'response' => 200, 'back_link' => true ) );
+        wp_die(
+            $error,
+            __( 'Plugin Activation Error', 'erp' ),
+            array(
+				'response'  => 200,
+				'back_link' => true,
+            )
+        );
     }
 
     /**
@@ -290,7 +297,7 @@ final class WeDevs_ERP {
         add_action( 'erp_loaded', array( $this->container['integration'], 'init_integrations' ) );
 
         // Add plugin action links
-        add_filter( 'plugin_action_links_' . plugin_basename(__FILE__), [ $this, 'plugin_action_links' ] );
+        add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), [ $this, 'plugin_action_links' ] );
 
         // Admin footer text
         add_filter( 'admin_footer_text', array( $this, 'admin_footer_text' ), 10, 1 );
@@ -344,7 +351,7 @@ final class WeDevs_ERP {
             return;
         }
 
-        foreach ($modules as $key => $module) {
+        foreach ( $modules as $key => $module ) {
 
             if ( ! $this->modules->is_module_active( $key ) ) {
                 continue;
@@ -364,12 +371,15 @@ final class WeDevs_ERP {
      * @return string
      */
     public function admin_footer_text( $text ) {
-        $page = isset( $_GET['page'] ) ? wp_unslash( $_GET['page'] ) : '';
+        $page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
         $page = substr( $page, 0, 3 );
 
-        if ( $page === 'erp' ) {
-            $text = sprintf( __( 'If you like WPERP please leave us a <a href="%s" target="_blank" style="text-decoration:none">★★★★★</a> rating. Thanking you from the team of WPERP in advance!' ),
-                __( 'https://wordpress.org/support/plugin/erp/reviews/?filter=5' ) );
+        if ( 'erp' === $page ) {
+            $text = sprintf(
+                /* translators: %s: review url */
+                __( 'If you like WPERP please leave us a <a href="%s" target="_blank" style="text-decoration:none">★★★★★</a> rating. Thanking you from the team of WPERP in advance!' ),
+                __( 'https://wordpress.org/support/plugin/erp/reviews/?filter=5' )
+            );
         }
 
         return $text;

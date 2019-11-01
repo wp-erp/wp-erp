@@ -30,135 +30,167 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      */
     public function register_routes() {
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base, [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base,
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_all_ledger_accounts' ],
-                'args'                => $this->get_collection_params(),
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_account_lists' );
-                },
-            ],
-            [
-                'methods'             => WP_REST_Server::CREATABLE,
-                'callback'            => [ $this, 'create_ledger_account' ],
-                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_create_account' );
-                },
-            ],
-            'schema' => [ $this, 'get_item_schema' ],
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_all_ledger_accounts' ],
+					'args'                => $this->get_collection_params(),
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_account_lists' );
+					},
+				],
+				[
+					'methods'             => WP_REST_Server::CREATABLE,
+					'callback'            => [ $this, 'create_ledger_account' ],
+					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_create_account' );
+					},
+				],
+				'schema' => [ $this, 'get_item_schema' ],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/(?P<id>[\d]+)',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_ledger_account' ],
-                'args'                => [
-                    'context' => $this->get_context_param( [ 'default' => 'view' ] ),
-                ],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_single_account' );
-                },
-            ],
-            [
-                'methods'             => WP_REST_Server::EDITABLE,
-                'callback'            => [ $this, 'update_ledger_account' ],
-                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_edit_account' );
-                },
-            ],
-            [
-                'methods'             => WP_REST_Server::DELETABLE,
-                'callback'            => [ $this, 'delete_ledger_account' ],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_delete_account' );
-                },
-            ],
-            'schema' => [ $this, 'get_item_schema' ],
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_ledger_account' ],
+					'args'                => [
+						'context' => $this->get_context_param( [ 'default' => 'view' ] ),
+					],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_single_account' );
+					},
+				],
+				[
+					'methods'             => WP_REST_Server::EDITABLE,
+					'callback'            => [ $this, 'update_ledger_account' ],
+					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_edit_account' );
+					},
+				],
+				[
+					'methods'             => WP_REST_Server::DELETABLE,
+					'callback'            => [ $this, 'delete_ledger_account' ],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_delete_account' );
+					},
+				],
+				'schema' => [ $this, 'get_item_schema' ],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<chart_id>[\d]+)' . '/accounts', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/(?P<chart_id>[\d]+)' . '/accounts',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_ledger_accounts_by_chart' ],
-                'args'                => $this->get_collection_params(),
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_account_lists' );
-                },
-            ],
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_ledger_accounts_by_chart' ],
+					'args'                => $this->get_collection_params(),
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_account_lists' );
+					},
+				],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/accounts', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/accounts',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_chart_accounts' ],
-                'args'                => $this->get_collection_params(),
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_account_lists' );
-                },
-            ],
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_chart_accounts' ],
+					'args'                => $this->get_collection_params(),
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_account_lists' );
+					},
+				],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/bank-accounts', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/bank-accounts',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_bank_accounts' ],
-                'args'                => $this->get_collection_params(),
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_account_lists' );
-                },
-            ],
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_bank_accounts' ],
+					'args'                => $this->get_collection_params(),
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_account_lists' );
+					},
+				],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/cash-accounts', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/cash-accounts',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_cash_accounts' ],
-                'args'                => $this->get_collection_params(),
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_account_lists' );
-                },
-            ],
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_cash_accounts' ],
+					'args'                => $this->get_collection_params(),
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_account_lists' );
+					},
+				],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/categories/(?P<chart_id>[\d]+)', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/categories/(?P<chart_id>[\d]+)',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_ledger_categories' ],
-                'args'                => $this->get_collection_params(),
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_account_lists' );
-                },
-            ],
-            [
-                'methods'             => WP_REST_Server::CREATABLE,
-                'callback'            => [ $this, 'create_ledger_category' ],
-                // 'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_create_account' );
-                },
-            ]
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_ledger_categories' ],
+					'args'                => $this->get_collection_params(),
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_account_lists' );
+					},
+				],
+				[
+					'methods'             => WP_REST_Server::CREATABLE,
+					'callback'            => [ $this, 'create_ledger_category' ],
+					// 'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_create_account' );
+					},
+				],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/categories/(?P<id>[\d]+)', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/categories/(?P<id>[\d]+)',
             [
-                'methods'             => WP_REST_Server::EDITABLE,
-                'callback'            => [ $this, 'update_ledger_category' ],
-                // 'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_edit_account' );
-                },
-            ],
-            [
-                'methods'             => WP_REST_Server::DELETABLE,
-                'callback'            => [ $this, 'delete_ledger_category' ],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_delete_account' );
-                },
-            ],
-        ] );
+				[
+					'methods'             => WP_REST_Server::EDITABLE,
+					'callback'            => [ $this, 'update_ledger_category' ],
+					// 'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_edit_account' );
+					},
+				],
+				[
+					'methods'             => WP_REST_Server::DELETABLE,
+					'callback'            => [ $this, 'delete_ledger_category' ],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_delete_account' );
+					},
+				],
+			]
+        );
     }
 
     /**
@@ -199,7 +231,6 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      */
     public function get_ledger_accounts_by_chart( $request ) {
         $id = $request['chart_id'];
-
 
         if ( empty( $id ) ) {
             return new WP_Error( 'rest_empty_chart_id', __( 'Chart ID is Empty.' ), [ 'status' => 400 ] );
@@ -248,7 +279,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function create_ledger_account( $request ) {
         global $wpdb;
 
-        $exist = $wpdb->get_var( "SELECT name FROM {$wpdb->prefix}erp_acct_ledgers WHERE name = '{$request['name']}'" );
+        $exist = $wpdb->get_var( $wpdb->prepare( "SELECT name FROM {$wpdb->prefix}erp_acct_ledgers WHERE name = %s", $request['name'] ) );
 
         if ( $exist ) {
             return new WP_Error( 'rest_ledger_name_already_exist', __( 'Name already exist.' ), [ 'status' => 404 ] );
@@ -373,13 +404,13 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      */
     public function get_cash_accounts( $request ) {
         $args               = [];
-        $args['start_date'] = date( "Y-m-d" );
+        $args['start_date'] = date( 'Y-m-d' );
 
         $closest_fy_date    = erp_acct_get_closest_fn_year_date( $args['start_date'] );
         $args['start_date'] = $closest_fy_date['start_date'];
         $args['end_date']   = $closest_fy_date['end_date'];
 
-        $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::getInstance();
+        $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::get_instance();
         $ledger_id  = $ledger_map->get_ledger_id_by_slug( 'cash' );
 
         $c_balance = get_ledger_balance_with_opening_balance( $ledger_id, $args['start_date'], $args['end_date'] );
@@ -390,7 +421,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
             'obalance'     => $c_balance['obalance'],
             'balance'      => $c_balance['balance'],
             'total_debit'  => $c_balance['total_debit'],
-            'total_credit' => $c_balance['total_credit']
+            'total_credit' => $c_balance['total_credit'],
         ];
         $additional_fields = [];
         $data              = $this->prepare_bank_item_for_response( $item, $request, $additional_fields );
@@ -491,16 +522,19 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      */
     public function add_log( $data, $action ) {
         $data = (array) $data;
-        erp_log()->add( [
-            'component'     => 'Accounting',
-            'sub_component' => __( 'Ledger Account', 'erp' ),
-            'old_value'     => '',
-            'new_value'     => '',
-            'message'       => sprintf( __( 'A ledger account named %s has been created for %s', 'erp' ), $data['name'], erp_acct_get_people_name_by_people_id( $data['people_id'] ) ),
-            'changetype'    => $action,
-            'created_by'    => get_current_user_id()
+        erp_log()->add(
+            [
+				'component'     => 'Accounting',
+				'sub_component' => __( 'Ledger Account', 'erp' ),
+				'old_value'     => '',
+                'new_value'     => '',
+                // translators: %1$s: name, %2$s: id
+				'message'       => sprintf( __( 'A ledger account named %1$s has been created for %2$s', 'erp' ), $data['name'], erp_acct_get_people_name_by_people_id( $data['people_id'] ) ),
+				'changetype'    => $action,
+				'created_by'    => get_current_user_id(),
 
-        ] );
+			]
+        );
     }
 
     /**
@@ -542,7 +576,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
             'code'        => $item->code,
             'trn_count'   => erp_acct_get_ledger_trn_count( $item->id ),
             'system'      => $item->system,
-            'balance'     => erp_acct_get_ledger_balance( $item->id )
+            'balance'     => erp_acct_get_ledger_balance( $item->id ),
         ];
 
         $data = array_merge( $data, $additional_fields );
@@ -616,8 +650,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'category_id' => [
                     'description' => __( 'Code for the resource.' ),
                     'type'        => 'integer',
-                    'context'     => [ 'edit' ],
-                    'required'    => false,
+                    'context'     => [ 'edit' ]
                 ],
                 'name'        => [
                     'description' => __( 'Name for the resource.' ),
@@ -635,7 +668,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
-                ]
+                ],
             ],
         ];
 

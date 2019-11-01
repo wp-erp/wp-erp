@@ -29,38 +29,50 @@ class Closing_Balance_Controller extends \WeDevs\ERP\API\REST_Controller {
      * Register the routes for the objects of the controller.
      */
     public function register_routes() {
-        register_rest_route( $this->namespace, '/' . $this->rest_base, [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base,
             [
-                'methods'             => WP_REST_Server::CREATABLE,
-                'callback'            => [ $this, 'close_balancesheet' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_create_expenses_voucher' );
-                },
-            ]
-        ] );
+				[
+					'methods'             => WP_REST_Server::CREATABLE,
+					'callback'            => [ $this, 'close_balancesheet' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_create_expenses_voucher' );
+					},
+				],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/closest-fn-year', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/closest-fn-year',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_closest_fn_year' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_expense' );
-                },
-            ],
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_closest_fn_year' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_expense' );
+					},
+				],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/next-fn-year', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/next-fn-year',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_next_fn_year' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_expense' );
-                },
-            ],
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_next_fn_year' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_expense' );
+					},
+				],
+			]
+        );
     }
 
     /**
@@ -82,7 +94,7 @@ class Closing_Balance_Controller extends \WeDevs\ERP\API\REST_Controller {
         $args = [
             'f_year_id'  => (int) $request['f_year_id'],
             'start_date' => $request['start_date'],
-            'end_date'   => $request['end_date']
+            'end_date'   => $request['end_date'],
         ];
 
         $data     = erp_acct_clsbl_close_balance_sheet_now( $args );

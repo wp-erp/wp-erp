@@ -72,7 +72,7 @@ final class Accounting {
     public function admin_pdf_notice() {
         if ( current_user_can( 'install_plugins' ) ) {
 
-            $action      = empty( $_GET['erp-pdf'] ) ? '' : \sanitize_text_field( $_GET['erp-pdf'] );
+            $action      = empty( $_GET['erp-pdf'] ) ? '' : \sanitize_text_field( wp_unslash( $_GET['erp-pdf'] ) );
             $plugin      = 'erp-pdf-invoice/wp-erp-pdf.php';
             $pdf_install = new \WeDevs\ERP\Accounting\Includes\Classes\PDF_Install();
 
@@ -89,8 +89,7 @@ final class Accounting {
             } else {
                 $this->pdf_notice_message( 'install' );
             }
-
-        }
+		}
     }
 
     /**
@@ -101,11 +100,16 @@ final class Accounting {
      * @return void
      */
     public function pdf_notice_message( $type ) {
-        $actual_link = esc_url( ( isset( $_SERVER['HTTPS'] ) ? "https" : "http" ) . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]" );
-        $sign        = empty( $_GET ) ? '?' : '&';
+        $protocol = empty( $_SERVER['HTTPS'] ) ? 'http' : 'https';
+        $host     = empty( $_SERVER['HTTP_HOST'] ) ? '' : sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) );
+        $uri      = empty( $_SERVER['REQUEST_URI'] ) ? '' : sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) );
+        $sign     = empty( $_GET ) ? '?' : '&';
+
+        $actual_link = esc_url( $protocol . '://' . $host . $uri );
 
         echo '<div class="updated notice is-dismissible notice-pdf"><p>';
-        echo __( 'Please ' . $type . ' <a href="' . $actual_link . $sign . 'erp-pdf=' . $type . '">WP ERP PDF</a> extension to get PDF export feature.', 'erp' );
+        // translators: %1$s: type, %2$s: link, %3$s: type
+        echo sprintf( __( 'Please %1$s <a href="%2$serp-pdf=%3$s">WP ERP PDF</a> extension to get PDF export feature.', 'erp' ), $type, $actual_link . $sign, $type );
         echo '</p></div>';
     }
 
@@ -143,7 +147,7 @@ final class Accounting {
      */
     public function __get( $prop ) {
         if ( array_key_exists( $prop, $this->container ) ) {
-            return $this->container[$prop];
+            return $this->container[ $prop ];
         }
 
         return $this->{$prop};
@@ -157,7 +161,7 @@ final class Accounting {
      * @return mixed
      */
     public function __isset( $prop ) {
-        return isset( $this->{$prop} ) || isset( $this->container[$prop] );
+        return isset( $this->{$prop} ) || isset( $this->container[ $prop ] );
     }
 
     /**
@@ -281,16 +285,16 @@ final class Accounting {
      */
     private function is_request( $type ) {
         switch ( $type ) {
-            case 'admin' :
+            case 'admin':
                 return is_admin();
 
-            case 'ajax' :
+            case 'ajax':
                 return defined( 'DOING_AJAX' );
 
-            case 'cron' :
+            case 'cron':
                 return defined( 'DOING_CRON' );
 
-            case 'frontend' :
+            case 'frontend':
                 return ( ! is_admin() || defined( 'DOING_AJAX' ) ) && ! defined( 'DOING_CRON' );
         }
     }
@@ -310,7 +314,7 @@ final class Accounting {
         }
 
         $rest_prefix         = trailingslashit( rest_get_url_prefix() );
-        $is_rest_api_request = ( false !== strpos( $_SERVER['REQUEST_URI'], $rest_prefix ) );
+        $is_rest_api_request = ( false !== strpos( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ), $rest_prefix ) );
 
         return apply_filters( 'wperp_acct_is_rest_api_request', $is_rest_api_request );
     }
@@ -343,9 +347,9 @@ final class Accounting {
      */
     function readonly_invoice_template() {
 
-        $query          = isset( $_REQUEST['query'] ) ? esc_attr( $_REQUEST['query'] ) : '';
+        $query          = isset( $_REQUEST['query'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['query'] ) ) : '';
         $transaction_id = isset( $_REQUEST['trans_id'] ) ? intval( $_REQUEST['trans_id'] ) : '';
-        $auth_id        = isset( $_REQUEST['auth'] ) ? esc_attr( $_REQUEST['auth'] ) : '';
+        $auth_id        = isset( $_REQUEST['auth'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['auth'] ) ) : '';
         $verified       = false;
 
         if ( ! $query || ! $transaction_id || ! $auth_id ) {
