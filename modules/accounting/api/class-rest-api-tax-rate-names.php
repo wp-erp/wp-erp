@@ -374,7 +374,7 @@ class Tax_Rate_Names_Controller extends \WeDevs\ERP\API\REST_Controller {
                 ],
                 'default' => [
                     'description' => __( 'Tax default value for the resource.' ),
-                    'type'        => 'integer',
+                    'type'        => [ 'integer', 'string' ],
                     'context'     => [ 'view', 'edit' ]
                 ]
             ],

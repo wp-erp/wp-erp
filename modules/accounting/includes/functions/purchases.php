@@ -170,21 +170,22 @@ function erp_acct_insert_purchase( $data ) {
         $wpdb->insert(
             $wpdb->prefix . 'erp_acct_purchase',
             array(
-				'voucher_no'     => $voucher_no,
-				'vendor_id'      => $purchase_data['vendor_id'],
-				'vendor_name'    => $purchase_data['vendor_name'],
-				'trn_date'       => $purchase_data['trn_date'],
-				'due_date'       => $purchase_data['due_date'],
-				'amount'         => $purchase_data['amount'],
-				'ref'            => $purchase_data['ref'],
-				'status'         => $purchase_data['status'],
-				'purchase_order' => $purchase_data['purchase_order'],
-				'attachments'    => $purchase_data['attachments'],
-				'particulars'    => $purchase_data['particulars'],
-				'created_at'     => $purchase_data['created_at'],
-				'created_by'     => $created_by,
-				'updated_at'     => $purchase_data['updated_at'],
-				'updated_by'     => $purchase_data['updated_by'],
+				'voucher_no'      => $voucher_no,
+				'vendor_id'       => $purchase_data['vendor_id'],
+				'vendor_name'     => $purchase_data['vendor_name'],
+				'billing_address' => $purchase_data['billing_address'],
+				'trn_date'        => $purchase_data['trn_date'],
+				'due_date'        => $purchase_data['due_date'],
+				'amount'          => $purchase_data['amount'],
+				'ref'             => $purchase_data['ref'],
+				'status'          => $purchase_data['status'],
+				'purchase_order'  => $purchase_data['purchase_order'],
+				'attachments'     => $purchase_data['attachments'],
+				'particulars'     => $purchase_data['particulars'],
+				'created_at'      => $purchase_data['created_at'],
+				'created_by'      => $created_by,
+				'updated_at'      => $purchase_data['updated_at'],
+				'updated_by'      => $purchase_data['updated_by'],
             )
         );
 
@@ -275,9 +276,9 @@ function erp_acct_update_purchase( $purchase_data, $purchase_id ) {
     $draft               = 1;
     $voucher_no          = null;
 
-    $data['created_at'] = date( 'Y-m-d H:i:s' );
+    $data['created_at'] = date( 'Y-m-d' );
     $data['created_by'] = $user_id;
-    $data['updated_at'] = date( 'Y-m-d H:i:s' );
+    $data['updated_at'] = date( 'Y-m-d' );
     $data['updated_by'] = $user_id;
     $currency           = erp_get_currency();
 
@@ -419,7 +420,7 @@ function erp_acct_update_purchase( $purchase_data, $purchase_id ) {
 					'trn_no'      => $voucher_no,
 					'trn_date'    => $purchase_data['trn_date'],
 					'particulars' => $purchase_data['particulars'],
-					'debit'       => $purchase_data['amount'],
+					'debit'       => $old_purchase['amount'],
 					'updated_at'  => date( 'Y-m-d H:i:s' ),
 					'updated_by'  => $user_id,
                 )
@@ -569,17 +570,18 @@ function erp_acct_void_purchase( $id ) {
 function erp_acct_get_formatted_purchase_data( $data, $voucher_no ) {
     $user_info = erp_get_people( $data['vendor_id'] );
 
-    $purchase_data['voucher_no']     = isset( $data['voucher_no'] ) ? $data['voucher_no'] : $voucher_no;
-    $purchase_data['vendor_id']      = isset( $data['vendor_id'] ) ? $data['vendor_id'] : 0;
-    $purchase_data['vendor_name']    = $user_info->first_name . ' ' . $user_info->last_name;
-    $purchase_data['trn_date']       = isset( $data['trn_date'] ) ? $data['trn_date'] : date( 'Y-m-d' );
-    $purchase_data['due_date']       = isset( $data['due_date'] ) ? $data['due_date'] : date( 'Y-m-d' );
-    $purchase_data['amount']         = isset( $data['amount'] ) ? floatval( $data['amount'] ) : 0;
-    $purchase_data['attachments']    = isset( $data['attachments'] ) ? $data['attachments'] : '';
-    $purchase_data['status']         = isset( $data['status'] ) ? intval( $data['status'] ) : '';
-    $purchase_data['line_items']     = isset( $data['line_items'] ) ? $data['line_items'] : [];
-    $purchase_data['purchase_order'] = isset( $data['purchase_order'] ) ? intval( $data['purchase_order'] ) : '';
-    $purchase_data['ref']            = isset( $data['ref'] ) ? $data['ref'] : '';
+    $purchase_data['voucher_no']      = isset( $data['voucher_no'] ) ? $data['voucher_no'] : $voucher_no;
+    $purchase_data['vendor_id']       = isset( $data['vendor_id'] ) ? $data['vendor_id'] : 0;
+    $purchase_data['vendor_name']     = $user_info->first_name . ' ' . $user_info->last_name;
+    $purchase_data['billing_address'] = isset( $data['billing_address'] ) ? $data['billing_address'] : '';
+    $purchase_data['trn_date']        = isset( $data['trn_date'] ) ? $data['trn_date'] : date( 'Y-m-d' );
+    $purchase_data['due_date']        = isset( $data['due_date'] ) ? $data['due_date'] : date( 'Y-m-d' );
+    $purchase_data['amount']          = isset( $data['amount'] ) ? floatval( $data['amount'] ) : 0;
+    $purchase_data['attachments']     = isset( $data['attachments'] ) ? $data['attachments'] : '';
+    $purchase_data['status']          = isset( $data['status'] ) ? intval( $data['status'] ) : '';
+    $purchase_data['line_items']      = isset( $data['line_items'] ) ? $data['line_items'] : [];
+    $purchase_data['purchase_order']  = isset( $data['purchase_order'] ) ? intval( $data['purchase_order'] ) : '';
+    $purchase_data['ref']             = isset( $data['ref'] ) ? $data['ref'] : '';
     // translators: %s: voucher_no
     $purchase_data['particulars'] = ! empty( $data['particulars'] ) ? $data['particulars'] : sprintf( __( 'Purchase created with voucher no %s', 'erp' ), $voucher_no );
     $purchase_data['created_at']  = date( 'Y-m-d' );

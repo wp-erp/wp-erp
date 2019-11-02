@@ -274,9 +274,9 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no, $c
 
     $user_id = get_current_user_id();
 
-    $invoice_data['created_at'] = date( 'Y-m-d H:i:s' );
+    $invoice_data['created_at'] = date( 'Y-m-d' );
     $invoice_data['created_by'] = $user_id;
-    $invoice_data['updated_at'] = date( 'Y-m-d H:i:s' );
+    $invoice_data['updated_at'] = date( 'Y-m-d' );
     $invoice_data['updated_by'] = $user_id;
 
     $estimate_type      = 1;
@@ -350,7 +350,7 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no, $c
         foreach ( $tax_agency_details as $agency_id => $tax_agency_detail ) {
 
             if ( $contra ) {
-                $debit  = $tax_agency_detail;
+                $debit  = $invoice_data['tax'];
                 $credit = 0;
             } else {
                 $debit  = 0;
@@ -692,8 +692,11 @@ function erp_acct_get_formatted_invoice_data( $data, $voucher_no ) {
     $invoice_data['updated_at']  = isset( $data['updated_at'] ) ? $data['updated_at'] : null;
     $invoice_data['updated_by']  = isset( $data['updated_by'] ) ? $data['updated_by'] : null;
 
-    if ( ! empty( $data['estimate'] ) ) {
-        $invoice_data['status'] = 3;
+    $draft   = 1;
+    $pending = 3;
+
+    if ( ! empty( $data['estimate'] ) && $data['status'] !== $draft ) {
+        $invoice_data['status'] = $pending;
     }
 
     return $invoice_data;

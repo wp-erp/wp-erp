@@ -130,7 +130,7 @@ function erp_acct_insert_payment( $data ) {
 				'voucher_no'       => $voucher_no,
 				'customer_id'      => $payment_data['customer_id'],
 				'customer_name'    => $payment_data['customer_name'],
-				'trn_date'         => date( 'Y-m-d' ),
+				'trn_date'         => $payment_data['trn_date'],
 				'particulars'      => $payment_data['particulars'],
 				'amount'           => $payment_data['amount'],
 				'ref'              => $payment_data['ref'],
@@ -266,7 +266,7 @@ function erp_acct_update_payment( $data, $voucher_no ) {
         $wpdb->update(
             $wpdb->prefix . 'erp_acct_invoice_receipts',
             array(
-				'trn_date'         => date( 'Y-m-d' ),
+				'trn_date'         => $payment_data['trn_date'],
 				'particulars'      => $payment_data['particulars'],
 				'amount'           => $payment_data['amount'],
 				'trn_by'           => $payment_data['trn_by'],
@@ -465,10 +465,9 @@ function erp_acct_void_payment( $id ) {
 function erp_acct_change_invoice_status( $invoice_no ) {
     global $wpdb;
 
-    $due = erp_acct_get_invoice_due( $invoice_no );
+    $due = (float) erp_acct_get_invoice_due( $invoice_no );
 
-    if ( 0 === $due ) {
-
+    if ( 0.00 === $due ) {
         $wpdb->update(
             $wpdb->prefix . 'erp_acct_invoices',
             array(

@@ -12572,6 +12572,49 @@ var render = function() {
                               }
                             })
                           ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          {
+                            staticClass:
+                              "wperp-col-sm-6 wperp-col-xs-12 wperp-form-group"
+                          },
+                          [
+                            _c("label", { attrs: { for: "company" } }, [
+                              _vm._v(_vm._s(_vm.__("Company", "erp")))
+                            ]),
+                            _vm._v(" "),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.peopleFields.company,
+                                  expression: "peopleFields.company"
+                                }
+                              ],
+                              staticClass: "wperp-form-field",
+                              attrs: {
+                                type: "text",
+                                id: "company",
+                                placeholder: _vm.__("ABC Corporation", "erp")
+                              },
+                              domProps: { value: _vm.peopleFields.company },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.peopleFields,
+                                    "company",
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            })
+                          ]
                         )
                       ]),
                       _vm._v(" "),
@@ -12591,54 +12634,6 @@ var render = function() {
                               "div",
                               { staticClass: "wperp-row wperp-gutter-20" },
                               [
-                                _c(
-                                  "div",
-                                  {
-                                    staticClass:
-                                      "wperp-col-sm-6 wperp-col-xs-12 wperp-form-group"
-                                  },
-                                  [
-                                    _c("label", { attrs: { for: "company" } }, [
-                                      _vm._v(_vm._s(_vm.__("Company", "erp")))
-                                    ]),
-                                    _vm._v(" "),
-                                    _c("input", {
-                                      directives: [
-                                        {
-                                          name: "model",
-                                          rawName: "v-model",
-                                          value: _vm.peopleFields.company,
-                                          expression: "peopleFields.company"
-                                        }
-                                      ],
-                                      staticClass: "wperp-form-field",
-                                      attrs: {
-                                        type: "text",
-                                        id: "company",
-                                        placeholder: _vm.__(
-                                          "ABC Corporation",
-                                          "erp"
-                                        )
-                                      },
-                                      domProps: {
-                                        value: _vm.peopleFields.company
-                                      },
-                                      on: {
-                                        input: function($event) {
-                                          if ($event.target.composing) {
-                                            return
-                                          }
-                                          _vm.$set(
-                                            _vm.peopleFields,
-                                            "company",
-                                            $event.target.value
-                                          )
-                                        }
-                                      }
-                                    })
-                                  ]
-                                ),
-                                _vm._v(" "),
                                 _c(
                                   "div",
                                   {
@@ -13797,14 +13792,18 @@ var render = function() {
           "div",
           { staticClass: "wperp-form-group wperp-row" },
           [
-            _c("div", { staticClass: "wperp-col-sm-3 wperp-col-xs-12" }, [
-              _c("label", [
-                _vm._v(_vm._s(_vm.__("To", "erp")) + " "),
-                _c("span", { staticClass: "wperp-required-sign" }, [
-                  _vm._v("*")
+            _c(
+              "div",
+              { staticClass: "wperp-col-sm-3 wperp-col-xs-12 send-mail-to" },
+              [
+                _c("label", [
+                  _vm._v(_vm._s(_vm.__("To", "erp")) + " "),
+                  _c("span", { staticClass: "wperp-required-sign" }, [
+                    _vm._v("*")
+                  ])
                 ])
-              ])
-            ]),
+              ]
+            ),
             _vm._v(" "),
             _c("input-tag", {
               attrs: {
@@ -17717,7 +17716,12 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       var taxRate = this.taxRates.find(function (rate) {
         return rate.id === parseInt(id);
       });
-      return taxRate.name;
+
+      if (taxRate) {
+        return taxRate.name;
+      }
+
+      return null;
     },
     getUniqueTaxRates: function getUniqueTaxRates(taxes) {
       var _this5 = this;
@@ -19674,16 +19678,18 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
           });
         });
         /* global erp_reimbursement_var */
-      } else if (erp_reimbursement_var.erp_reimbursement_module !== 'undefined' && erp_reimbursement_var.erp_reimbursement_module === '1') {
-        __WEBPACK_IMPORTED_MODULE_3_admin_http__["a" /* default */].get('/people-transactions/balances').then(function (response) {
-          _this5.accts_by_chart = response.data;
+      } else if (this.basic_fields.trn_by.id === '4') {
+        if (erp_reimbursement_var.erp_reimbursement_module !== 'undefined' && erp_reimbursement_var.erp_reimbursement_module === '1') {
+          __WEBPACK_IMPORTED_MODULE_3_admin_http__["a" /* default */].get('/people-transactions/balances').then(function (response) {
+            _this5.accts_by_chart = response.data;
 
-          _this5.accts_by_chart.forEach(function (element) {
-            if (!Object.prototype.hasOwnProperty.call(element, 'balance')) {
-              element.balance = 0;
-            }
+            _this5.accts_by_chart.forEach(function (element) {
+              if (!Object.prototype.hasOwnProperty.call(element, 'balance')) {
+                element.balance = 0;
+              }
+            });
           });
-        });
+        }
       }
 
       this.$root.$emit('account-changed');
@@ -20983,16 +20989,18 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
           });
         });
         /* global erp_reimbursement_var */
-      } else if (erp_reimbursement_var.erp_reimbursement_module !== 'undefined' && erp_reimbursement_var.erp_reimbursement_module === '1') {
-        __WEBPACK_IMPORTED_MODULE_2_admin_http__["a" /* default */].get('/people-transactions/balances').then(function (response) {
-          _this6.accts_by_chart = response.data;
+      } else if (this.basic_fields.trn_by.id === '4') {
+        if (erp_reimbursement_var.erp_reimbursement_module !== 'undefined' && erp_reimbursement_var.erp_reimbursement_module === '1') {
+          __WEBPACK_IMPORTED_MODULE_2_admin_http__["a" /* default */].get('/people-transactions/balances').then(function (response) {
+            _this6.accts_by_chart = response.data;
 
-          _this6.accts_by_chart.forEach(function (element) {
-            if (!Object.prototype.hasOwnProperty.call(element, 'balance')) {
-              element.balance = 0;
-            }
+            _this6.accts_by_chart.forEach(function (element) {
+              if (!Object.prototype.hasOwnProperty.call(element, 'balance')) {
+                element.balance = 0;
+              }
+            });
           });
-        });
+        }
       }
 
       this.$root.$emit('account-changed');
@@ -21630,7 +21638,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         name: purchase.vendor_name
       };
       this.basic_fields.billing_address = purchase.billing_address;
-      this.basic_fields.trn_date = purchase.trn_date;
+      this.basic_fields.trn_date = purchase.date;
       this.basic_fields.ref = purchase.ref;
       this.basic_fields.due_date = purchase.due_date;
       this.status = purchase.status;
@@ -22723,16 +22731,18 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
           });
         });
         /* global erp_reimbursement_var */
-      } else if (erp_reimbursement_var.erp_reimbursement_module !== 'undefined' && erp_reimbursement_var.erp_reimbursement_module === '1') {
-        __WEBPACK_IMPORTED_MODULE_2_admin_http__["a" /* default */].get('/people-transactions/balances').then(function (response) {
-          _this5.accts_by_chart = response.data;
+      } else if (this.basic_fields.trn_by.id === '4') {
+        if (erp_reimbursement_var.erp_reimbursement_module !== 'undefined' && erp_reimbursement_var.erp_reimbursement_module === '1') {
+          __WEBPACK_IMPORTED_MODULE_2_admin_http__["a" /* default */].get('/people-transactions/balances').then(function (response) {
+            _this5.accts_by_chart = response.data;
 
-          _this5.accts_by_chart.forEach(function (element) {
-            if (!Object.prototype.hasOwnProperty.call(element, 'balance')) {
-              element.balance = 0;
-            }
+            _this5.accts_by_chart.forEach(function (element) {
+              if (!Object.prototype.hasOwnProperty.call(element, 'balance')) {
+                element.balance = 0;
+              }
+            });
           });
-        });
+        }
       }
 
       this.$root.$emit('account-changed');
@@ -24667,16 +24677,18 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
           });
         });
         /* global erp_reimbursement_var */
-      } else if (erp_reimbursement_var.erp_reimbursement_module !== 'undefined' && erp_reimbursement_var.erp_reimbursement_module === '1') {
-        __WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].get('/people-transactions/balances').then(function (response) {
-          _this8.accts_by_chart = response.data;
+      } else if (this.basic_fields.trn_by.id === '4') {
+        if (erp_reimbursement_var.erp_reimbursement_module !== 'undefined' && erp_reimbursement_var.erp_reimbursement_module === '1') {
+          __WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].get('/people-transactions/balances').then(function (response) {
+            _this8.accts_by_chart = response.data;
 
-          _this8.accts_by_chart.forEach(function (element) {
-            if (!Object.prototype.hasOwnProperty.call(element, 'balance')) {
-              element.balance = 0;
-            }
+            _this8.accts_by_chart.forEach(function (element) {
+              if (!Object.prototype.hasOwnProperty.call(element, 'balance')) {
+                element.balance = 0;
+              }
+            });
           });
-        });
+        }
       }
 
       this.$root.$emit('account-changed');
@@ -24763,6 +24775,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_transactions_sales_PaymentSingleContent_vue__ = __webpack_require__(403);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_email_SendMail_vue__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_components_base_Dropdown_vue__ = __webpack_require__(6);
+//
+//
 //
 //
 //
@@ -25630,9 +25644,9 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       this.fetchItems(filters);
     }
   },
-  watch: {
-    $route: 'fetchItems'
-  },
+  // watch: {
+  //     $route: 'fetchItems'
+  // },
   methods: {
     fetchItems: function fetchItems() {
       var _this2 = this;
@@ -26319,7 +26333,7 @@ setTimeout(function () {
           label: 'Ref'
         },
         vendor_name: {
-          label: 'Vendor'
+          label: 'People'
         },
         trn_date: {
           label: 'Trn Date'
@@ -26384,9 +26398,9 @@ setTimeout(function () {
       this.fetchItems(filters);
     }
   },
-  watch: {
-    $route: 'fetchItems'
-  },
+  // watch: {
+  //     $route: 'fetchItems'
+  // },
   methods: {
     fetchItems: function fetchItems() {
       var _this2 = this;
@@ -26593,7 +26607,7 @@ setTimeout(function () {
               trn_no: item.id,
               type: 'Expense',
               trn_type: 'expense',
-              ref: item.ref ? item.ref : '-',
+              ref: item.exp_ref ? item.exp_ref : '-',
               vendor_name: item.expense_people_name,
               trn_date: item.expense_trn_date,
               due_date: '-',
@@ -26621,7 +26635,7 @@ setTimeout(function () {
               trn_type: 'check',
               ref: item.ref ? item.ref : '-',
               vendor_name: item.expense_people_name,
-              trn_date: item.expense_people_name,
+              trn_date: item.expense_trn_date,
               due_date: '-',
               due: '-',
               amount: _this4.formatAmount(item.expense_amount),
@@ -27240,9 +27254,9 @@ setTimeout(function () {
       this.fetchItems(filters);
     }
   },
-  watch: {
-    $route: 'fetchItems'
-  },
+  // watch: {
+  //     $route: 'fetchItems'
+  // },
   methods: {
     fetchItems: function fetchItems() {
       var _this2 = this;
@@ -32837,17 +32851,20 @@ Vue.directive('click-outside', {
     el.__vueClickOutside__ = null;
   }
 });
+var accountingContainer = document.getElementById('erp-accounting');
 
-(function () {
-  return new Vue({
-    el: '#erp-accounting',
-    router: __WEBPACK_IMPORTED_MODULE_1__router__["a" /* default */],
-    store: __WEBPACK_IMPORTED_MODULE_2__store_store__["a" /* default */],
-    render: function render(h) {
-      return h(__WEBPACK_IMPORTED_MODULE_0__App_vue__["a" /* default */]);
-    }
-  });
-})();
+if (accountingContainer !== null) {
+  (function () {
+    return new Vue({
+      el: '#erp-accounting',
+      router: __WEBPACK_IMPORTED_MODULE_1__router__["a" /* default */],
+      store: __WEBPACK_IMPORTED_MODULE_2__store_store__["a" /* default */],
+      render: function render(h) {
+        return h(__WEBPACK_IMPORTED_MODULE_0__App_vue__["a" /* default */]);
+      }
+    });
+  })();
+}
 
 /***/ }),
 /* 214 */
@@ -55579,55 +55596,59 @@ var render = function() {
                 ]
               ),
               _vm._v(" "),
-              _c(
-                "dropdown",
-                [
-                  _c("template", { slot: "button" }, [
-                    _c(
-                      "a",
-                      {
-                        staticClass: "wperp-btn btn--default",
-                        attrs: { href: "#" }
-                      },
-                      [
-                        _c("i", { staticClass: "flaticon-settings-work-tool" }),
-                        _vm._v(
-                          "\n                              " +
-                            _vm._s(_vm.__("More Action", "erp")) +
-                            "\n                        "
-                        )
-                      ]
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("template", { slot: "dropdown" }, [
-                    _c("ul", { attrs: { role: "menu" } }, [
-                      _c("li", [
-                        _c("a", { attrs: { href: _vm.pdf_link } }, [
-                          _vm._v(_vm._s(_vm.__("Export as PDF", "erp")))
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c("li", [
+              _vm.acct_var.pdf_plugin_active
+                ? _c(
+                    "dropdown",
+                    [
+                      _c("template", { slot: "button" }, [
                         _c(
                           "a",
                           {
-                            attrs: { href: "#" },
-                            on: {
-                              click: function($event) {
-                                $event.preventDefault()
-                                _vm.showModal = true
-                              }
-                            }
+                            staticClass: "wperp-btn btn--default",
+                            attrs: { href: "#" }
                           },
-                          [_vm._v(_vm._s(_vm.__("Send Mail", "erp")))]
+                          [
+                            _c("i", {
+                              staticClass: "flaticon-settings-work-tool"
+                            }),
+                            _vm._v(
+                              "\n                              " +
+                                _vm._s(_vm.__("More Action", "erp")) +
+                                "\n                        "
+                            )
+                          ]
                         )
+                      ]),
+                      _vm._v(" "),
+                      _c("template", { slot: "dropdown" }, [
+                        _c("ul", { attrs: { role: "menu" } }, [
+                          _c("li", [
+                            _c("a", { attrs: { href: _vm.pdf_link } }, [
+                              _vm._v(_vm._s(_vm.__("Export as PDF", "erp")))
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c("li", [
+                            _c(
+                              "a",
+                              {
+                                attrs: { href: "#" },
+                                on: {
+                                  click: function($event) {
+                                    $event.preventDefault()
+                                    _vm.showModal = true
+                                  }
+                                }
+                              },
+                              [_vm._v(_vm._s(_vm.__("Send Mail", "erp")))]
+                            )
+                          ])
+                        ])
                       ])
-                    ])
-                  ])
-                ],
-                2
-              ),
+                    ],
+                    2
+                  )
+                : _vm._e(),
               _vm._v(" "),
               _c(
                 "a",

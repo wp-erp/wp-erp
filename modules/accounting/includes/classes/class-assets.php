@@ -22,6 +22,8 @@ class Assets {
      * @return void
      */
     public function register() {
+        $section = ! empty( $_GET['section'] ) ? wp_unslash( $_GET['section'] ) : '';
+
         if ( is_admin() ) {
             $screen = get_current_screen();
             if ( 'wp-erp_page_erp-settings' === $screen->base ) {
@@ -36,7 +38,7 @@ class Assets {
                     )
                 );
                 return;
-            } elseif ( 'wp-erp_page_erp-accounting' !== $screen->base ) {
+            } elseif ( 'wp-erp_page_erp-accounting' !== $screen->base && $section !== 'reimbursement' ) {
                 return;
             }
         }
@@ -121,6 +123,7 @@ class Assets {
             'fy_upper_range'     => $fy_ranges['upper'],
             'ledgers'            => $ledgers,
             'trn_statuses'       => $trn_statuses,
+            'pdf_plugin_active'  => is_plugin_active( 'erp-pdf-invoice/wp-erp-pdf.php' ),
             'link_copy_success'  => __( 'Link has been successfully copied.', 'erp' ),
             'link_copy_error'    => __( 'Failed to copy the link.', 'erp' ),
             'banner_dimension'   => [

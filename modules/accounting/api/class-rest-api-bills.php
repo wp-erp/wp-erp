@@ -504,7 +504,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $data = [
             'id'              => (int) $item->id,
-            'editable'        => (int) $item->editable,
+            'editable'        => ! empty( $item->editable ) ? (int) $item->editable : 1,
             'voucher_no'      => (int) $item->voucher_no,
             'vendor_id'       => (int) $item->vendor_id,
             'vendor_name'     => $item->vendor_name,

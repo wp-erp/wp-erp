@@ -41,8 +41,6 @@ function erp_acct_get_sales_transactions( $args = [] ) {
     } else {
         if ( ! empty( $args['status'] ) ) {
             $where .= " AND invoice.status={$args['status']} OR invoice_receipt.status={$args['status']} ";
-        } else {
-            $where .= ' AND invoice.status=2 ';
         }
     }
     if ( -1 !== $args['number'] ) {
@@ -579,8 +577,6 @@ function erp_acct_get_expense_transactions( $args = [] ) {
     } else {
         if ( ! empty( $args['status'] ) ) {
             $where .= " AND bill.status={$args['status']} OR pay_bill.status={$args['status']} OR expense.status={$args['status']} ";
-        } else {
-            $where .= ' AND bill.status=2 OR expense.status=4';
         }
     }
     if ( -1 !== $args['number'] ) {
@@ -604,6 +600,7 @@ function erp_acct_get_expense_transactions( $args = [] ) {
             bill.due_date,
             bill.amount,
             bill.ref,
+            expense.ref AS exp_ref,
             pay_bill.amount as pay_bill_amount,
             expense.amount as expense_amount,
             SUM(bill_acct_details.debit - bill_acct_details.credit) AS due,
@@ -668,8 +665,6 @@ function erp_acct_get_purchase_transactions( $args = [] ) {
     } else {
         if ( ! empty( $args['status'] ) ) {
             $where .= " AND purchase.status={$args['status']} OR pay_purchase.status={$args['status']} ";
-        } else {
-            $where .= ' AND purchase.status=2 ';
         }
     }
     if ( -1 !== $args['number'] ) {
@@ -854,7 +849,7 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
     /* Customize columns based on transaction type */
     if ( 'invoice' == $type ) {
         // Set Date Due
-        $trn_pdf->set_reference( erp_format_date( $datedue ), __( 'Due Date', 'erp' ) );
+        $trn_pdf->set_reference( erp_format_date( $transaction->due_date ), __( 'Due Date', 'erp' ) );
 
         // Set Column Headers
         $trn_pdf->set_table_headers( [ __( 'PRODUCT', 'erp' ), __( 'QUANTITY', 'erp' ), __( 'UNIT PRICE', 'erp' ), __( 'AMOUNT', 'erp' ) ] );
@@ -924,7 +919,7 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
 
         // Add Table Items
         foreach ( $transaction->bill_details as $line ) {
-            $trn_pdf->add_item( [ $line['bill_no'], $transaction->due_date, $line['amount'] ] );
+            $trn_pdf->add_item( [ $line['bill_no'], $transaction->trn_date, $line['amount'] ] );
         }
 
         // Add particulars

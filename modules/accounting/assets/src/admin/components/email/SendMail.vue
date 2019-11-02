@@ -8,10 +8,10 @@
     >
         <template slot="body">
             <div class="wperp-form-group wperp-row">
-                <div class="wperp-col-sm-3 wperp-col-xs-12">
+                <div class="wperp-col-sm-3 wperp-col-xs-12 send-mail-to">
                     <label>{{ __('To', 'erp') }} <span class="wperp-required-sign">*</span></label>
                 </div>
-                <input-tag :placeholder="__('Add Emails', 'erp')" v-model="emails" validate="email"></input-tag>
+                <input-tag :placeholder="__('Add Emails', 'erp')" v-model="emails" validate="email" />
             </div>
             <div class="wperp-form-group wperp-row">
                 <div class="wperp-col-sm-3 wperp-col-xs-12">
@@ -120,14 +120,38 @@ export default {
 };
 </script>
 
-<style>
-    .vue-input-tag-wrapper .input-tag {
-        border-radius: 2px;
-        display: inline-block;
-        font-size: 13px;
-        font-weight: 400;
-        margin-bottom: 4px;
-        margin-right: 4px;
-        text-align: left;
+<style lang="less">
+    .wperp-row .vue-input-tag-wrapper {
+        .input-tag {
+            background-color: rgba(67, 160, 71, .8);
+            border: 1px solid #689f38;
+            color: #fff;
+            display: inline-block;
+            font-size: 13px;
+            font-weight: 400;
+            margin-bottom: 4px;
+            margin-right: 4px;
+            padding: 3px;
+            height: 28px;
+            border-radius: 3px;
+
+            span {
+                padding: 0 6px;
+            }
+
+            .remove {
+                color: rgba(105,240,174,1);
+            }
+        }
+
+        .new-tag {
+            height: 34px;
+            padding-top: 0 !important;
+            box-shadow: none;
+        }
+    }
+
+    .send-mail-to {
+        margin-right: 8px;
     }
 </style>

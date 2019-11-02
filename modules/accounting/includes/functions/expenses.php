@@ -110,27 +110,21 @@ function erp_acct_get_check( $expense_no ) {
     expense.status,
     expense.trn_by_ledger_id,
     expense.trn_by,
-    cheque.check_no,
+    expense.check_no,
     expense.attachments,
     expense.created_at,
     expense.created_by,
     expense.updated_at,
     expense.updated_by,
 
-    cheque.bank,
-    cheque.name,
-    cheque.pay_to,
-    cheque.amount,
-
     ledg_detail.debit,
     ledg_detail.credit
 
     FROM {$wpdb->prefix}erp_acct_expenses AS expense
 
-    LEFT JOIN {$wpdb->prefix}erp_acct_expense_checks AS cheque ON expense.voucher_no = cheque.trn_no
     LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledg_detail ON expense.voucher_no = ledg_detail.trn_no
 
-    WHERE expense.voucher_no = {$expense_no} AND cheque.voucher_type = 'check'";
+    WHERE expense.voucher_no = {$expense_no} AND expense.trn_by = 3";
 
     $row = $wpdb->get_row( $sql, ARRAY_A );
 
@@ -155,21 +149,15 @@ function erp_acct_format_check_line_items( $voucher_no ) {
 
         expense_detail.ledger_id,
         expense_detail.particulars,
+        expense_detail.amount,
 
-        ledger.name AS ledger_name,
-
-        cheque.bank,
-        cheque.name,
-        cheque.check_no,
-        cheque.pay_to,
-        cheque.amount
+        ledger.name AS ledger_name
 
         FROM {$wpdb->prefix}erp_acct_expenses AS expense
-        LEFT JOIN {$wpdb->prefix}erp_acct_expense_checks AS cheque ON expense.voucher_no = cheque.trn_no
-        LEFT JOIN {$wpdb->prefix}erp_acct_expense_details AS expense_detail ON expense_detail.trn_no = cheque.trn_no
+        LEFT JOIN {$wpdb->prefix}erp_acct_expense_details AS expense_detail ON expense_detail.trn_no = expense.voucher_no
         LEFT JOIN {$wpdb->prefix}erp_acct_ledgers AS ledger ON expense_detail.ledger_id = ledger.id
 
-        WHERE expense.voucher_no = %d AND cheque.voucher_type = 'check'",
+        WHERE expense.voucher_no = 3",
         $voucher_no
     );
 
@@ -292,12 +280,15 @@ function erp_acct_insert_expense( $data ) {
             return erp_acct_get_expense( $voucher_no );
         }
 
-        if ( 3 == $expense_data['trn_by'] ) {
+        $check = 3;
+
+        if ( $check == $expense_data['trn_by'] ) {
+            erp_acct_insert_check_data( $expense_data );
+        } elseif ( 'check' === $type ) {
             erp_acct_insert_check_data( $expense_data );
         }
 
         if ( 'check' === $type ) {
-            erp_acct_insert_check_data( $expense_data );
             erp_acct_insert_source_expense_data_into_ledger( $expense_data );
         } elseif ( isset( $expense_data['trn_by'] ) && 4 === $expense_data['trn_by'] ) {
             do_action( 'erp_acct_expense_people_transaction', $expense_data, $voucher_no );
@@ -498,7 +489,10 @@ function erp_acct_get_formatted_expense_data( $data, $voucher_no ) {
 function erp_acct_insert_expense_data_into_ledger( $expense_data, $item_data = [] ) {
     global $wpdb;
 
-    if ( 1 === $expense_data['status'] && ( isset( $expense_data['trn_by'] ) && 4 === $expense_data['trn_by'] ) ) {
+    $draft  = 1;
+    $people = '4'; // from reimbursement
+
+    if ( $draft === $expense_data['status'] || $people === $expense_data['trn_by'] ) {
         return;
     }
 
