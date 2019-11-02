@@ -21,7 +21,12 @@ class ExpensesCest
             $I->wait(5);
             $I->click('//form/div/div/div/div/div/div[2]');
             $I->click('//div[3]/ul/li/span');
-            
+
+//            $I->selectOption('.multiselect', 'Cash');
+//            $I->click('//div[4]/div/div[2]/input');
+//            $I->click('//div[4]/div/div[3]/ul/li/span');
+//            $I->click('//tfoot/tr/td/div/div/div');
+
 
     }
 }
