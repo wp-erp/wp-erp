@@ -3209,9 +3209,27 @@ function add_enable_disable_section_to_email_column( $email ) {
     } else {
         $is_enable = '';
     }
-    echo '<td class="erp-settings-table-is_enable">
+    $can_not_be_disabled = apply_filters( 'email_settings_enable_filter', [
+        'erp_email_settings_new-leave-request',
+        'erp_email_settings_approved-leave-request',
+        'erp_email_settings_rejected-leave-request',
+        'erp_email_settings_employee-asset-request',
+        'erp_email_settings_employee-asset-approve',
+        'erp_email_settings_employee-asset-reject',
+        'erp_email_settings_employee-asset-overdue'
+    ] );
+    if ( in_array( $get_option_id, $can_not_be_disabled ) ) {
+        echo '<td class="erp-settings-table-is_enable">
+            <label class="cus_switch"><input type="checkbox" checked disabled="disabled"><span class="cus_slider cus_round"></span></label>
+        </td>';
+    } else {
+        echo '<td class="erp-settings-table-is_enable">
             <label class="cus_switch"><input type="checkbox" name="isEnableEmail['. $get_option_id .']"  ' . $is_enable . '><span class="cus_slider cus_round"></span></label>
         </td>';
+    }
+    /*echo '<td class="erp-settings-table-is_enable">
+            <label class="cus_switch"><input type="checkbox" name="isEnableEmail['. $get_option_id .']"  ' . $is_enable . '><span class="cus_slider cus_round"></span></label>
+        </td>';*/
 }
 
 /**

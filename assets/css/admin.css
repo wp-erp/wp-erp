@@ -4179,7 +4179,7 @@ div.erp-nav-container.--show-secondary .-secondary {
 }
 
 .cus_switch input {
-    opacity: 0;
+    opacity: 0 !important;
     width: 0;
     height: 0;
 }
