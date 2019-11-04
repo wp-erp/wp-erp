@@ -22,6 +22,7 @@ import PieChart from 'admin/components/chart/PieChart.vue';
 import DynamicTrnLoader from 'admin/components/transactions/DynamicTrnLoader.vue';
 import VueClipboards from 'vue-clipboards';
 import { createHooks } from '@wordpress/hooks';
+import { clickOutside } from './directive/directives';
 
 // global acct var
 window.acct = {
@@ -51,6 +52,7 @@ window.acct.libs['DynamicTrnLoader'] = DynamicTrnLoader;
 window.acct.libs['Vuelidate']        = Vuelidate;
 window.acct.libs['PieChart']         = PieChart;
 window.acct.libs['VueClipboards']    = VueClipboards;
+window.acct.libs['clickOutside']     = clickOutside;
 
 // get lib reference from window
 window.acct_get_lib = function(lib) {
