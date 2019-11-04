@@ -10698,6 +10698,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_21_admin_components_transactions_DynamicTrnLoader_vue__ = __webpack_require__(89);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_22_vue_clipboards__ = __webpack_require__(537);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_23__wordpress_hooks__ = __webpack_require__(90);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_24__directive_directives__ = __webpack_require__(550);
+
 
 
 
@@ -10748,7 +10750,8 @@ window.acct.libs['SelectPeople'] = __WEBPACK_IMPORTED_MODULE_18_admin_components
 window.acct.libs['DynamicTrnLoader'] = __WEBPACK_IMPORTED_MODULE_21_admin_components_transactions_DynamicTrnLoader_vue__["a" /* default */];
 window.acct.libs['Vuelidate'] = __WEBPACK_IMPORTED_MODULE_19_vuelidate___default.a;
 window.acct.libs['PieChart'] = __WEBPACK_IMPORTED_MODULE_20_admin_components_chart_PieChart_vue__["a" /* default */];
-window.acct.libs['VueClipboards'] = __WEBPACK_IMPORTED_MODULE_22_vue_clipboards__["a" /* default */]; // get lib reference from window
+window.acct.libs['VueClipboards'] = __WEBPACK_IMPORTED_MODULE_22_vue_clipboards__["a" /* default */];
+window.acct.libs['clickOutside'] = __WEBPACK_IMPORTED_MODULE_24__directive_directives__["a" /* clickOutside */]; // get lib reference from window
 
 window.acct_get_lib = function (lib) {
   return window.acct.libs[lib];
@@ -12140,6 +12143,32 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+
+/***/ 550:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return clickOutside; });
+var clickOutside = {
+  bind: function bind(el, binding, vnode) {
+    var bubble = binding.modifiers.bubble;
+
+    var handler = function handler(e) {
+      if (bubble || !el.contains(e.target) && el !== e.target) {
+        binding.value(e);
+      }
+    };
+
+    el.__vueClickOutside__ = handler;
+    document.addEventListener('click', handler);
+  },
+  unbind: function unbind(el, binding) {
+    document.removeEventListener('click', el.__vueClickOutside__);
+    el.__vueClickOutside__ = null;
+  }
+};
 
 /***/ }),
 
