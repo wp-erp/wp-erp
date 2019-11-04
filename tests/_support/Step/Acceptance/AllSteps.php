@@ -21,4 +21,9 @@ class AllSteps extends \AcceptanceTester
         $I->wait(5);
         $I->moveMouseOver('//div[2]/div/div[2]/div/div/ul/li[3]/a');
     }
+
+}
+
+function randomGenerate() {
+  return \Faker\Factory::create();
 }

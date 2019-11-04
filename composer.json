@@ -24,7 +24,8 @@
         "squizlabs/php_codesniffer": "3.3.2",
         "wp-coding-standards/wpcs": "dev-master",
         "dealerdirect/phpcodesniffer-composer-installer": "^0.4.3",
-        "lucatume/wp-browser": "^2.2"
+        "lucatume/wp-browser": "^2.2",
+        "fzaninotto/faker": "^1.9@dev"
     },
     "scripts": {
         "phpcs": [
