@@ -1,0 +1,31 @@
+version: '3.7'
+
+services:
+
+  wp-erp:
+    restart: always
+    build: .
+    ports:
+      - 80:80
+    environment:
+      WORDPRESS_DB_USER: wp-erp-user
+      WORDPRESS_DB_PASSWORD: wp-erp-pass
+      WORDPRESS_DB_NAME: wp-erp
+      WORDPRESS_DB_HOST: database.wp-erp
+      WORDPRESS_ADMIN_USER: squash
+      WORDPRESS_ADMIN_PASSWORD: squashpwd
+      SQUASH_DOMAIN: ${SQUASH_DOMAIN}
+    container_name: web.wp-erp
+    depends_on:
+      - database
+
+  database:
+    image: mysql
+    command: '--default-authentication-plugin=mysql_native_password'
+    restart: always
+    environment:
+      MYSQL_DATABASE: wp-erp
+      MYSQL_USER: wp-erp-user
+      MYSQL_PASSWORD: wp-erp-pass
+      MYSQL_RANDOM_ROOT_PASSWORD: '1'
+    container_name: database.wp-erp

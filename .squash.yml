@@ -1,0 +1,9 @@
+deployments:
+  WP-ERP:
+    filename:
+      ./docker-compose-wizard.yml
+    vm_size: 2GB
+  WP-ERP Pre-configured (squash/squashpwd):
+    filename:
+      ./docker-compose.yml
+    vm_size: 2GB
