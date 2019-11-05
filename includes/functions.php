@@ -3299,4 +3299,36 @@ function add_checkbox_hidden_field( $fields, $section ) {
     return $fields;
 }
 
+/**
+ * Filtering emails if those are enabled OR disabled by settings.
+ *
+ * @since  1.5.6
+ *
+ * @return string
+ */
+function filter_enabled_email( $email ) {
+
+    $get_option_id          = $email->get_option_id();
+    $can_not_be_disabled    = apply_filters( 'email_settings_enable_filter', [
+        'erp_email_settings_new-leave-request',
+        'erp_email_settings_approved-leave-request',
+        'erp_email_settings_rejected-leave-request',
+        'erp_email_settings_employee-asset-request',
+        'erp_email_settings_employee-asset-approve',
+        'erp_email_settings_employee-asset-reject',
+        'erp_email_settings_employee-asset-overdue'
+    ] );
+    if ( in_array( $get_option_id, $can_not_be_disabled ) ) {
+        return $email;
+    }
+    $get_email_settings = get_option( $get_option_id );
+    if ( isset( $get_email_settings['is_enable'] ) && $get_email_settings['is_enable'] == 'yes' ) {
+        return $email;
+    }
+    add_filter( 'erp_email_recipient_'.$email->id, function( $recipient, $object){
+        console_log($recipient);
+        return '';
+    }, 10, 2 );
+    return $email;
+}
 /**** Add Enable Disable section for All Pre-generated email End ****/
