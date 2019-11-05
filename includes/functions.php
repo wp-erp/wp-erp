@@ -3326,7 +3326,6 @@ function filter_enabled_email( $email ) {
         return $email;
     }
     add_filter( 'erp_email_recipient_'.$email->id, function( $recipient, $object){
-        console_log($recipient);
         return '';
     }, 10, 2 );
     return $email;
