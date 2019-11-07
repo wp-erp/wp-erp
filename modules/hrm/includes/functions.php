@@ -434,7 +434,8 @@ function get_upcomming_hiring_date_anniversary( $current_date, $after_7_days_dat
 function generate_mail_section_body( $data, $start_tag, $heading,  $end_tag = null ) {
     $loop_text = "";
     if ( count( ( array ) $data ) == 0 ) {
-        return "";
+        //return "";
+        $loop_text .= "<li> Currently there is no upcoming information for this week </li>";
     }
     foreach( $data as $dt ) {
 
@@ -447,7 +448,7 @@ function generate_mail_section_body( $data, $start_tag, $heading,  $end_tag = nu
         $loop_text .=
             "<li>" . get_user_meta( $dt->user_id, 'first_name', true ) . ' ' . get_user_meta( $dt->user_id, 'last_name', true ) . ' &mdash; ' . date( 'M j', strtotime( $dt->$start_tag ) ) . $end_tag_date . "</li>";
     }
-    return "<div><h3> {$heading} </h3><ul>{$loop_text}</ul></div>";
+    return "<div style='padding: 20px;background-color: #f0f8ff;width: 90%; margin: 20px auto;border-radius: 15px;'><h3> {$heading} </h3><ul>{$loop_text}</ul></div>";
 }
 
 
