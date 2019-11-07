@@ -51729,6 +51729,7 @@ var render = function() {
                             attrs: {
                               type: "number",
                               min: "0",
+                              step: "0.01",
                               max: item.due,
                               name: "amount"
                             },
