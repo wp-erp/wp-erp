@@ -117,14 +117,7 @@ class CRM_Settings extends ERP_Settings_Page {
             'desc'    => __( 'Default life stage for contact.', 'erp' ),
             'options' => $life_stages,
         ];
-
-        $fields['contacts'][] = [
-            'title'   => __( 'Enable Birthday Greetings To Contacts', 'erp' ),
-            'id'      => 'send_bg_to_contact',
-            'type'    => 'checkbox',
-            'desc'    => __( '', 'erp' )
-        ];
-
+        
         $fields['contacts'][] = [
             'type' => 'sectionend',
             'id'   => 'script_styling_options'
