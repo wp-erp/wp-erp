@@ -60,14 +60,14 @@
                 <div class="table-container">
                     <table class="wperp-table wperp-form-table">
                         <thead>
-                        <tr>
-                            <th scope="col" class="col--id column-primary">{{ __('Voucher No', 'erp') }}</th>
-                            <th scope="col">{{ __('Due Date', 'erp') }}</th>
-                            <th scope="col">{{ __('Total', 'erp') }}</th>
-                            <th scope="col">{{ __('Due', 'erp') }}</th>
-                            <th scope="col">{{ __('Amount', 'erp') }}</th>
-                            <th scope="col" class="col--actions"></th>
-                        </tr>
+                            <tr>
+                                <th scope="col" class="col--id column-primary">{{ __('Voucher No', 'erp') }}</th>
+                                <th scope="col">{{ __('Due Date', 'erp') }}</th>
+                                <th scope="col">{{ __('Total', 'erp') }}</th>
+                                <th scope="col">{{ __('Due', 'erp') }}</th>
+                                <th scope="col">{{ __('Amount', 'erp') }}</th>
+                                <th scope="col" class="col--actions"></th>
+                            </tr>
                         </thead>
                         <tbody>
                         <tr :key="key" v-for="(item,key) in pay_purchases">
