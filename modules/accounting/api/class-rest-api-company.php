@@ -39,7 +39,7 @@ class Company_Controller extends \WeDevs\ERP\API\REST_Controller {
 					'callback'            => [ $this, 'get_company' ],
 					'args'                => [],
 					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_view_dashboard' );
+						return current_user_can( 'erp_view_list' );
 					},
                 ],
                 'schema' => [ $this, 'get_item_schema' ],
