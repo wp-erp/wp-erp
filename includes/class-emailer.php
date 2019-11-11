@@ -56,7 +56,7 @@ class Emailer {
      */
     public function get_email( $class_name ) {
         if ( $this->emails && array_key_exists( $class_name, $this->emails ) ) {
-            return $this->emails[ $class_name ];
+            return apply_filters( 'creating_email_instance', $this->emails[ $class_name ] );
         }
 
         return false;

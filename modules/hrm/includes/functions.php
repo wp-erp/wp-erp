@@ -346,17 +346,17 @@ function get_employees_by_hiring_date( $from_date, $to_date ) {
  */
 function get_employees_by_birth_month( $current_date, $after_7_days_date ) {
     global $wpdb;
-    $current_month_date      = date('m d', strtotime( $current_date ) );
-    $after_7_days_month_date = date('m d', strtotime( $after_7_days_date ) );
-    $results = $wpdb->get_results( "SELECT * FROM `{$wpdb->prefix}erp_hr_employees` WHERE DATE_FORMAT(`date_of_birth`, \"%m %d\") BETWEEN '{$current_month_date}' AND '{$after_7_days_month_date}' AND status='active' ORDER BY date_of_birth" );
+    $current_month_date         = date('m d', strtotime( $current_date ) );
+    $after_7_days_month_date    = date('m d', strtotime( $after_7_days_date ) );
+    $results                    = $wpdb->get_results( "SELECT * FROM `{$wpdb->prefix}erp_hr_employees` WHERE DATE_FORMAT(`date_of_birth`, \"%m %d\") BETWEEN '{$current_month_date}' AND '{$after_7_days_month_date}' AND status='active' ORDER BY date_of_birth" );
 
     $results_arr = [];
 
     foreach( $results as $result) {
         $results_arr[] = ( object ) [
-            'user_id'       => $result->user_id,
-            'date_of_birth' => $result->date_of_birth,
-            'date_of_birth_only' => date( 'd', strtotime( $result->date_of_birth ) ),
+            'user_id'               => $result->user_id,
+            'date_of_birth'         => $result->date_of_birth,
+            'date_of_birth_only'    => date( 'd', strtotime( $result->date_of_birth ) ),
         ];
     }
     usort($results_arr, function($a, $b) {
@@ -395,6 +395,35 @@ function get_about_to_end_employees( $current_date ) {
 }
 
 /**
+ * Get Hiring anniversary of the employees
+ *
+ * @since 1.5.6
+ *
+ * @return mixed
+ *
+ */
+function get_upcomming_hiring_date_anniversary( $current_date, $after_7_days_date ) {
+    global $wpdb;
+    $current_month_date         = date('m d', strtotime( $current_date ) );
+    $after_7_days_month_date    = date('m d', strtotime( $after_7_days_date ) );
+    $results                    = $wpdb->get_results( "SELECT * FROM `{$wpdb->prefix}erp_hr_employees` WHERE DATE_FORMAT(`hiring_date`, \"%m %d\") BETWEEN '{$current_month_date}' AND '{$after_7_days_month_date}' AND status='active' ORDER BY hiring_date" );
+
+    $results_arr = [];
+
+    foreach( $results as $result) {
+        $results_arr[] = ( object ) [
+            'user_id'           => $result->user_id,
+            'hiring_date'       => $result->hiring_date,
+            'hiring_date_only'  => date( 'd', strtotime( $result->hiring_date ) ),
+        ];
+    }
+    usort($results_arr, function($a, $b) {
+        return $a->hiring_date_only > $b->hiring_date_only;
+    });
+    return ( object ) $results_arr;
+}
+
+/**
  * Generate email section body for weekly digest email
  *
  * @since 1.5.6
@@ -405,11 +434,12 @@ function get_about_to_end_employees( $current_date ) {
 function generate_mail_section_body( $data, $start_tag, $heading,  $end_tag = null ) {
     $loop_text = "";
     if ( count( ( array ) $data ) == 0 ) {
-        return "";
+        //return "";
+        $loop_text .= "<li> Currently there is no upcoming information for this week </li>";
     }
     foreach( $data as $dt ) {
 
-        if( $end_tag != null ) {
+        if ( $end_tag != null ) {
             $end_tag_date = " &mdash; " . date( ' M j', strtotime( $dt->$end_tag ) );
         } else {
             $end_tag_date = '';
@@ -418,7 +448,7 @@ function generate_mail_section_body( $data, $start_tag, $heading,  $end_tag = nu
         $loop_text .=
             "<li>" . get_user_meta( $dt->user_id, 'first_name', true ) . ' ' . get_user_meta( $dt->user_id, 'last_name', true ) . ' &mdash; ' . date( 'M j', strtotime( $dt->$start_tag ) ) . $end_tag_date . "</li>";
     }
-    return "<div><h3> {$heading} </h3><ul>{$loop_text}</ul></div>";
+    return "<div style='padding: 20px;background-color: #f0f8ff;width: 90%; margin: 20px auto;border-radius: 15px;'><h3> {$heading} </h3><ul>{$loop_text}</ul></div>";
 }
 
 
@@ -455,20 +485,23 @@ function get_approved_leave_by_week( $current_date, $after_7_days_date ) {
  */
 function get_digest_email_body( $current_date, $after_7_days_date ) {
 
-    $get_employees_by_hiring_date   = get_employees_by_hiring_date( $current_date, $after_7_days_date );
-    $html_for_new_member_joining    = generate_mail_section_body( $get_employees_by_hiring_date, 'hiring_date', 'New Team Member Joining' );
+    $get_employees_by_hiring_date               = get_employees_by_hiring_date( $current_date, $after_7_days_date );
+    $html_for_new_member_joining                = generate_mail_section_body( $get_employees_by_hiring_date, 'hiring_date', 'New Team Member Joining' );
 
-    $get_employees_by_birth_month   = get_employees_by_birth_month( $current_date, $after_7_days_date );
-    $html_for_birth_month           = generate_mail_section_body( $get_employees_by_birth_month, 'date_of_birth', 'Birthday This Week' );
+    $get_employees_by_birth_month               = get_employees_by_birth_month( $current_date, $after_7_days_date );
+    $html_for_birth_month                       = generate_mail_section_body( $get_employees_by_birth_month, 'date_of_birth', 'Birthday This Week' );
 
-    $leave_request                  = get_approved_leave_by_week( $current_date, $after_7_days_date );
-    $html_for_leave_request         = generate_mail_section_body( $leave_request, 'start_date', 'Who is Out This Week', 'end_date' );
+    $leave_request                              = get_approved_leave_by_week( $current_date, $after_7_days_date );
+    $html_for_leave_request                     = generate_mail_section_body( $leave_request, 'start_date', 'Who is Out This Week', 'end_date' );
 
-    $c_t_employees                  = get_about_to_end_employees( $current_date );
-    $html_for_c_t_employees         = generate_mail_section_body( $c_t_employees, 'end_date', 'Contract About to End' );
+    $c_t_employees                              = get_about_to_end_employees( $current_date );
+    $html_for_c_t_employees                     = generate_mail_section_body( $c_t_employees, 'end_date', 'Contract About to End' );
+
+    $get_upcomming_hiring_date_anniversary      = get_upcomming_hiring_date_anniversary( $current_date, $after_7_days_date );
+    $html_for_hiring_date_anniversary           = generate_mail_section_body( $get_upcomming_hiring_date_anniversary, 'hiring_date', 'Work Anniversary This Week' );
 
 
-    $html_wrapper                   = "<div>{$html_for_new_member_joining} {$html_for_birth_month} {$html_for_leave_request} {$html_for_c_t_employees}</div>";
+    $html_wrapper                               = "<div>{$html_for_new_member_joining} {$html_for_birth_month} {$html_for_leave_request} {$html_for_c_t_employees} {$html_for_hiring_date_anniversary}</div>";
     return $html_wrapper;
 }
 
