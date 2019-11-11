@@ -146,7 +146,7 @@ function erp_hr_dashboard_widget_about_to_end() {
             endforeach;
             if ( empty( $contract ) ) {
                 ?>
-                <li>No employee found to be ended nearby</li>
+                <li><?php _e( 'No employee found to be ended nearby', 'erp' ); ?></li>
                 <?php
             }
         ?>
@@ -167,7 +167,7 @@ function erp_hr_dashboard_widget_about_to_end() {
             endforeach;
             if ( empty( $trainee ) ) {
                 ?>
-                <li>No trainee found to be ended nearby</li>
+                <li><?php _e( 'No trainee found to be ended nearby', 'erp' ); ?></li>
                 <?php
             }
         ?>

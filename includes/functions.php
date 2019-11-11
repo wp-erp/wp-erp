@@ -3240,7 +3240,7 @@ function add_enable_disable_section_to_email_column( $email ) {
  * @return null
  */
 function add_enable_disable_option_save() {
-    if( isset( $_POST['save_email_enable_or_disable'] ) && $_POST['save_email_enable_or_disable'] = 'save_email_enable_or_disable' ) {
+    if ( isset( $_POST['save_email_enable_or_disable'] ) && $_POST['save_email_enable_or_disable'] == 'save_email_enable_or_disable' ) {
         $registered_email = array_keys( wperp()->emailer->get_emails() );
         foreach( $registered_email as $remail ) {
             $cur_email_init     = wperp()->emailer->get_email( $remail );
@@ -3291,9 +3291,9 @@ function erp_email_setting_columns_add_enable_disable( $array ){
  */
 function add_checkbox_hidden_field( $fields, $section ) {
     $fields['general'][] = [
-        'default' => 'save_email_enable_or_disable',
-        'type'  => 'hidden',
-        'id'    => 'save_email_enable_or_disable',
+        'default'   => 'save_email_enable_or_disable',
+        'type'      => 'hidden',
+        'id'        => 'save_email_enable_or_disable',
 
     ];
     return $fields;
