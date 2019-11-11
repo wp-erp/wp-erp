@@ -105,42 +105,73 @@ function erp_hr_dashboard_widget_birthday() {
  * @return void
  */
 function erp_hr_dashboard_widget_about_to_end() {
-    $c_t_employees = erp_hr_get_contractual_employee();
-    $current_date =  current_time('Y-m-d' );
-    $emp_counter    = 0;
+    $c_t_employees  = erp_hr_get_contractual_employee();
+    $current_date   =  current_time('Y-m-d' );
+    $trainee        = [];
+    $contract       = [];
+    foreach( $c_t_employees as $key => $user ) {
+        $date1          = date_create($current_date);
+        $end_date       = get_user_meta( $user->user_id, 'end_date', true );
+        $date2          = date_create( $end_date );
+        $diff           = date_diff($date1,$date2);
+        if ( $diff->days > 0 && $diff->days < 21 ) {
+            $user->end_date = $end_date;
+            if ($user->type == 'contract') {
+                $contract[] = $user;
+            }
+            if ($user->type == 'trainee') {
+                $trainee[] = $user;
+            }
+        }
+    }
+    usort($contract, function( $a, $b ) {
+        return $a->end_date > $b->end_date;
+    });
+    usort($trainee, function( $a, $b ) {
+        return $a->end_date > $b->end_date;
+    });
     ?>
-    <h4><?php _e( 'Contracts about to end ', 'erp' ); ?></h4>
+    <h4><?php _e( 'Contractual Employees about to End', 'erp' ); ?></h4>
     <span class="wait"><?php _e( 'please wait ...', 'erp' ); ?></span>
 
     <ul class="erp-list list-two-side list-sep">
 
-        <?php foreach ( $c_t_employees as $key => $user ): ?>
-
-            <?php
-                $date1          = date_create($current_date);
-                $end_date       = get_user_meta( $user->user_id, 'end_date', true );
-                $date2          = date_create( $end_date );
-                $diff           = date_diff($date1,$date2);
-                if ( $diff->days > 0 && $diff->days < 21) :
-            ?>
-                <?php $employee = new \WeDevs\ERP\HRM\Employee( intval( $user->user_id ) ); ?>
-
+        <?php foreach ( $contract as $key => $user ):
+             $employee = new \WeDevs\ERP\HRM\Employee( intval( $user->user_id ) ); ?>
                 <li>
                     <a href="<?php echo $employee->get_details_url(); ?>"><?php echo $employee->get_full_name(); ?></a>
-                    <span><?php echo erp_format_date( $end_date, 'M, d' ); ?></span>
+                    <span><?php echo erp_format_date( $user->end_date, 'M, d' ); ?></span>
                 </li>
-            <?php
-                    $emp_counter++;
-                endif;
-                endforeach;
-            ?>
+        <?php
+            endforeach;
+            if ( empty( $contract ) ) {
+                ?>
+                <li><?php _e( 'No employee found to be ended nearby', 'erp' ); ?></li>
+                <?php
+            }
+        ?>
     </ul>
 
-    <?php
-    if ( $emp_counter == 0 ) {
-        echo "<span> Sorry ! No data found </span>";
-    }
-    ?>
+    <h4><?php _e( 'Trainee Employees about to End', 'erp' ); ?></h4>
+    <span class="wait"><?php _e( 'please wait ...', 'erp' ); ?></span>
+
+    <ul class="erp-list list-two-side list-sep">
+
+        <?php foreach ( $trainee as $key => $user ):
+            $employee = new \WeDevs\ERP\HRM\Employee( intval( $user->user_id ) ); ?>
+            <li>
+                <a href="<?php echo $employee->get_details_url(); ?>"><?php echo $employee->get_full_name(); ?></a>
+                <span><?php echo erp_format_date( $user->end_date, 'M, d' ); ?></span>
+            </li>
+        <?php
+            endforeach;
+            if ( empty( $trainee ) ) {
+                ?>
+                <li><?php _e( 'No trainee found to be ended nearby', 'erp' ); ?></li>
+                <?php
+            }
+        ?>
+    </ul>
 
     <style>
         span.wait {

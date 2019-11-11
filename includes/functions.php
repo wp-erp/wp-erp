@@ -3186,3 +3186,148 @@ function erp_ac_get_price_thousand_separator() {
 
     return $separator;
 }
+
+
+/**** Add Enable Disable section for All Pre-generated email End ****/
+
+/**
+ * Return the enable/disable column checkbox of email.
+ *
+ * @since  1.5.6
+ *
+ * @return string
+ */
+function add_enable_disable_section_to_email_column( $email ) {
+
+    $get_option_id    = $email->get_option_id();
+    $get_option_value = get_option( $get_option_id );
+
+    if ( isset( $get_option_value['is_enable'] ) ) {
+        if ( $get_option_value['is_enable'] == 'yes' ) {
+            $is_enable = ' checked';
+        }
+    } else {
+        $is_enable = '';
+    }
+    $can_not_be_disabled = apply_filters( 'email_settings_enable_filter', [
+        'erp_email_settings_new-leave-request',
+        'erp_email_settings_approved-leave-request',
+        'erp_email_settings_rejected-leave-request',
+        'erp_email_settings_employee-asset-request',
+        'erp_email_settings_employee-asset-approve',
+        'erp_email_settings_employee-asset-reject',
+        'erp_email_settings_employee-asset-overdue'
+    ] );
+    if ( in_array( $get_option_id, $can_not_be_disabled ) ) {
+        echo '<td class="erp-settings-table-is_enable">
+            <label class=""> &nbsp; </label>
+        </td>';
+    } else {
+        echo '<td class="erp-settings-table-is_enable">
+            <label class="cus_switch"><input type="checkbox" name="isEnableEmail['. $get_option_id .']"  ' . $is_enable . '><span class="cus_slider cus_round"></span></label>
+        </td>';
+    }
+    /*echo '<td class="erp-settings-table-is_enable">
+            <label class="cus_switch"><input type="checkbox" name="isEnableEmail['. $get_option_id .']"  ' . $is_enable . '><span class="cus_slider cus_round"></span></label>
+        </td>';*/
+}
+
+/**
+ * update enable/disable column checkbox of email.
+ *
+ * @since  1.5.6
+ *
+ * @return null
+ */
+function add_enable_disable_option_save() {
+    if ( isset( $_POST['save_email_enable_or_disable'] ) && $_POST['save_email_enable_or_disable'] == 'save_email_enable_or_disable' ) {
+        $registered_email = array_keys( wperp()->emailer->get_emails() );
+        foreach( $registered_email as $remail ) {
+            $cur_email_init     = wperp()->emailer->get_email( $remail );
+            $cur_email_id       = 'erp_email_settings_'.$cur_email_init->id;
+            $cur_email_option   = get_option( $cur_email_id );
+            if ( isset( $cur_email_option['is_enable'] ) ) {
+                unset( $cur_email_option['is_enable'] );
+                update_option( $cur_email_id, $cur_email_option );
+            }
+        }
+        if ( isset( $_POST['isEnableEmail'] ) ) {
+            $is_enable_email = $_POST['isEnableEmail'];
+            foreach ($is_enable_email as $key => $value) {
+                $email_arr = get_option($key);
+                $email_arr['is_enable'] = 'yes';
+                update_option( $key, $email_arr );
+            }
+        }
+    }
+}
+
+/**
+ * Add enable/disable column checkbox of email.
+ *
+ * @since  1.5.6
+ *
+ * @return array
+ */
+function erp_email_setting_columns_add_enable_disable( $array ){
+    $arr = [];
+    $counter = 1;
+    foreach( $array as $key => $value ) {
+        $arr[$key] = $value;
+        if ( count( $array ) - 1 == $counter ) {
+            $arr['is_enable'] = __( 'Enable/Disable', 'erp' );
+        }
+        $counter++;
+    }
+    return $arr;
+}
+
+/**
+ * Add hidden field at email settings page.
+ *
+ * @since  1.5.6
+ *
+ * @return array
+ */
+function add_checkbox_hidden_field( $fields, $section ) {
+    $fields['general'][] = [
+        'default'   => 'save_email_enable_or_disable',
+        'type'      => 'hidden',
+        'id'        => 'save_email_enable_or_disable',
+
+    ];
+    return $fields;
+}
+
+/**
+ * Filtering emails if those are enabled OR disabled by settings.
+ *
+ * @since  1.5.6
+ *
+ * @return string
+ */
+function filter_enabled_email( $email ) {
+
+    $get_option_id          = $email->get_option_id();
+    $can_not_be_disabled    = apply_filters( 'email_settings_enable_filter', [
+        'erp_email_settings_new-leave-request',
+        'erp_email_settings_approved-leave-request',
+        'erp_email_settings_rejected-leave-request',
+        'erp_email_settings_employee-asset-request',
+        'erp_email_settings_employee-asset-approve',
+        'erp_email_settings_employee-asset-reject',
+        'erp_email_settings_employee-asset-overdue'
+    ] );
+    if ( in_array( $get_option_id, $can_not_be_disabled ) ) {
+        return $email;
+    }
+    $get_email_settings = get_option( $get_option_id );
+    if ( isset( $get_email_settings['is_enable'] ) && $get_email_settings['is_enable'] == 'yes' ) {
+        return $email;
+    }
+    add_filter( 'erp_email_recipient_'.$email->id, function( $recipient, $object){
+        return '';
+    }, 10, 2 );
+    return $email;
+}
+/**** Add Enable Disable section for All Pre-generated email End ****/

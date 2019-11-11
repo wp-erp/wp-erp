@@ -140,7 +140,7 @@ $schedules_data = erp_crm_get_schedule_data( $tab );
                         $( 'select.erp-crm-contact-list-dropdown' ).select2({
                             allowClear: true,
                             placeholder: $(this).attr( 'data-placeholder' ),
-                            minimumInputLength: 3,
+                            minimumInputLength: 1,
                             ajax: {
                                 url: wpErpCrm.ajaxurl,
                                 dataType: 'json',
