@@ -3220,7 +3220,7 @@ function add_enable_disable_section_to_email_column( $email ) {
     ] );
     if ( in_array( $get_option_id, $can_not_be_disabled ) ) {
         echo '<td class="erp-settings-table-is_enable">
-            <label class="cus_switch"><input type="checkbox" checked disabled="disabled"><span class="cus_slider cus_round"></span></label>
+            <label class=""> &nbsp; </label>
         </td>';
     } else {
         echo '<td class="erp-settings-table-is_enable">

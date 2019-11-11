@@ -4209,7 +4209,7 @@ div.erp-nav-container.--show-secondary .-secondary {
 }
 
 input:checked + .cus_slider {
-    background-color: #2196F3;
+    background-color: #5dee24;
 }
 
 input:focus + .cus_slider {
