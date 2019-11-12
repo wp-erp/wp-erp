@@ -68,6 +68,9 @@ class Scripts {
         // sweet alert
         wp_register_script( 'erp-sweetalert', $vendor . '/sweetalert/sweetalert.min.js', array( 'jquery' ), $this->version, true );
 
+        // Are you sure? JS
+        wp_register_script( 'erp-are-you-sure', $vendor . '/are-you-sure/jquery.are-you-sure.js', array( 'jquery' ), $this->version, true );
+
         // flot chart
         wp_register_script( 'erp-flotchart', $vendor . '/flot/jquery.flot.min.js', array( 'jquery' ), $this->version, true );
         wp_register_script( 'erp-flotchart-time', $vendor . '/flot/jquery.flot.time.min.js', array( 'jquery' ), $this->version, true );
@@ -149,6 +152,7 @@ class Scripts {
         wp_enqueue_script( 'erp-select2' );
         wp_enqueue_script( 'erp-popup' );
         wp_enqueue_script( 'erp-script' );
+        wp_enqueue_script( 'erp-are-you-sure' );
         wp_enqueue_media();
 
         wp_localize_script( 'erp-script', 'wpErp', array(
@@ -159,7 +163,8 @@ class Scripts {
             'update_location' => __( 'Update Location', 'erp' ),
             'create'          => __( 'Create', 'erp' ),
             'update'          => __( 'Update', 'erp' ),
-            'confirmMsg'      => __( 'Are you sure?', 'wpuf' ),
+            'formUnsavedMsg'  => __( 'You didn\'t save your changes!', 'erp' ),
+            'confirmMsg'      => __( 'Are you sure?', 'erp' ),
             'ajaxurl'         => admin_url( 'admin-ajax.php' ),
             'plupload'        => array(
                 'url'              => admin_url( 'admin-ajax.php' ) . '?nonce=' . wp_create_nonce( 'erp_featured_img' ),
