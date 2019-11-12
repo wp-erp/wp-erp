@@ -20,7 +20,7 @@ class Admin_Page {
         $this->action( 'init', 'includes' );
         $this->action( 'admin_init', 'admin_redirects' );
         add_action( 'admin_footer', 'erp_include_popup_markup' );
-        //$this->action( 'admin_notices', 'promotional_offer' );
+        $this->action( 'admin_notices', 'promotional_offer' );
         // $this->action( 'admin_notices', 'accounting_survey_notice' );
     }
 
@@ -85,136 +85,146 @@ class Admin_Page {
      * @return void
      */
     public function promotional_offer() {
-        // Show only to Admins
         if ( ! current_user_can( 'manage_options' ) ) {
             return;
         }
 
+        if ( ! isset( $_GET['page'] ) ) {
+            return;
+        }
+
+        if ( $_GET['page'] !== 'erp' ) {
+            return;
+        }
+
         // check if it has already been dismissed
-        $hide_notice = get_option( 'erp_promotional_offer_notice_quiz-aug17', 'no' );
+        $offer_key        = 'erp_wedevs_19_blackfriday';
+        $offer_start_date = strtotime( '2019-11-26 00:00:01' );
+        $offer_end_date   = strtotime( '2019-12-04 23:59:00' );
+        $hide_notice      = get_option( $offer_key, 'show' );
+        $offer_link       = 'https://wedevs.com/dokan/?add-to-cart=15310&variation_id=15314&attribute_pa_license=professional&coupon_code=BFCM2019';
 
         if ( 'hide' == $hide_notice ) {
             return;
         }
-        ?>
-            <div class="notice is-dismissible" id="erp-promotional-offer-notice">
-                <table>
-                    <tbody>
-                        <tr>
-                            <td class="image-container">
-                                <img src="https://ps.w.org/erp/assets/icon-256x256.png" alt="">
-                            </td>
-                            <td class="message-container">
-                                <h2><span class="dashicons dashicons-awards"></span> Big Discount!</h2>
-                                <p>
-                                    <a href="https://wperp.com/in/WPERP-Quiz" class="highlight-text" target="_blank">Play This Quiz</a> on WP ERP and Win Massive 50% Discount. Hurry Up! Limited Time Offer!
-                                </p>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
 
-                <span class="dashicons dashicons-megaphone"></span>
-            </div><!-- #erp-promotional-offer-notice -->
+        if ( $offer_start_date < current_time( 'timestamp' ) && current_time( 'timestamp' ) < $offer_end_date ) {
+            ?>
+                <div class="notice notice-success is-dismissible" id="erp-christmas-notice">
+                    <div class="logo">
+                        <img src="<?php echo WPERP_ASSETS . '/images/promo-logo.png' ?>" alt="ERP">
+                    </div>
+                    <div class="content">
+                        <h3><span class="highlight-red">Black Friday</span> &amp; <span class="highlight-blue">Cyber Monday</span></h3>
+                        <p>Don't miss out on the biggest sale of the year on <span class="highlight-red">WP ERP</span></p>
+                        <div class="coupon-box">
+                            <div class="highlight-red">Use this coupon</div>
+                            <div class="highlight-code">BFCM2019</div>
+                        </div>
+                    </div>
+                    <div class="call-to-action">
+                        <a href="https://wedevs.com/dokan/pricing?utm_campaign=black_friday_&_cyber_monday&utm_medium=banner&utm_source=plugin_dashboard">Save 33%</a>
+                        <p>Valid till 4th December.</p>
+                    </div>
+                </div>
 
-            <style>
-                #erp-promotional-offer-notice {
-                    background-color: #089dd7;
-                    border: 0px;
-                    padding: 0;
-                    opacity: 0;
-                }
+                <style>
+                    #erp-christmas-notice {
+                        font-size: 14px;
+                        border-left: none;
+                        background: #000;
+                        color: #fff;
+                        display: flex
+                    }
 
-                .wrap > #erp-promotional-offer-notice {
-                    opacity: 1;
-                }
+                    #erp-christmas-notice .logo {
+                        text-align: center;
+                        text-align: center;
+                        margin: 13px 30px 5px 15px;
+                    }
 
-                #erp-promotional-offer-notice table {
-                    border-collapse: collapse;
-                    width: 100%;
-                }
+                    #erp-christmas-notice .logo img {
+                        width: 80%;
+                    }
 
-                #erp-promotional-offer-notice table td {
-                    padding: 0;
-                }
+                    #erp-christmas-notice .highlight-red {
+                        color: #FF0000;
+                    }
+                    #erp-christmas-notice .highlight-blue {
+                        color: #48ABFF;
+                    }
 
-                #erp-promotional-offer-notice table td.image-container {
-                    background-color: #fff;
-                    vertical-align: middle;
-                    width: 95px;
-                }
+                    #erp-christmas-notice .content {
+                        margin-top: 5px;
+                    }
 
+                    #erp-christmas-notice .content h3 {
+                        color: #FFF;
+                        margin: 12px 0px 5px;
+                        font-weight: normal;
+                        font-size: 20px;
+                    }
 
-                #erp-promotional-offer-notice img {
-                    max-width: 100%;
-                    max-height: 100px;
-                    vertical-align: middle;
-                }
+                    #erp-christmas-notice .content p {
+                        margin: 0px 0px;
+                        padding: 0px;
+                        letter-spacing: 0.4px;
+                    }
 
-                #erp-promotional-offer-notice table td.message-container {
-                    padding: 0 10px;
-                }
+                    #erp-christmas-notice .coupon-box {
+                        margin-top: 10px;
+                        display: flex;
+                        align-items: center;
+                        font-size: 17px;
+                    }
 
-                #erp-promotional-offer-notice h2 {
-                    color: rgba(250, 250, 250, 0.77);
-                    margin-bottom: 10px;
-                    font-weight: normal;
-                    margin: 16px 0 14px;
-                    -webkit-text-shadow: 0.1px 0.1px 0px rgba(250, 250, 250, 0.24);
-                    -moz-text-shadow: 0.1px 0.1px 0px rgba(250, 250, 250, 0.24);
-                    -o-text-shadow: 0.1px 0.1px 0px rgba(250, 250, 250, 0.24);
-                    text-shadow: 0.1px 0.1px 0px rgba(250, 250, 250, 0.24);
-                }
+                    #erp-christmas-notice .coupon-box .highlight-code {
+                        margin-left: 15px;
+                        border: 1px dashed;
+                        padding: 4px 10px;
+                        border-radius: 15px;
+                        letter-spacing: 1px;
+                        background: #1E1B1B;
 
+                        -webkit-user-select: all;
+                        -moz-user-select: all;
+                        -ms-user-select: all;
+                        user-select: all;
+                    }
 
-                #erp-promotional-offer-notice h2 span {
-                    position: relative;
-                    top: 0;
-                }
+                    #erp-christmas-notice .call-to-action {
+                        margin-left: 8%;
+                        margin-top: 25px;
+                    }
+                    #erp-christmas-notice .call-to-action a {
+                        border: none;
+                        background: #FF0000;
+                        padding: 8px 15px;
+                        font-size: 15px;
+                        color: #fff;
+                        border-radius: 20px;
+                        text-decoration: none;
+                        display: block;
+                        text-align: center;
+                    }
+                    #erp-christmas-notice .call-to-action p {
+                        font-size: 12px;
+                        margin-top: 1px;
+                    }
+                </style>
 
-                #erp-promotional-offer-notice p {
-                    color: rgba(250, 250, 250, 0.77);
-                    font-size: 14px;
-                    margin-bottom: 10px;
-                    -webkit-text-shadow: 0.1px 0.1px 0px rgba(250, 250, 250, 0.24);
-                    -moz-text-shadow: 0.1px 0.1px 0px rgba(250, 250, 250, 0.24);
-                    -o-text-shadow: 0.1px 0.1px 0px rgba(250, 250, 250, 0.24);
-                    text-shadow: 0.1px 0.1px 0px rgba(250, 250, 250, 0.24);
-                }
+                <script type='text/javascript'>
+                    jQuery('body').on('click', '#erp-christmas-notice .notice-dismiss', function(e) {
+                        e.preventDefault();
 
-                #erp-promotional-offer-notice p strong.highlight-text{
-                    color: #fff;
-                }
-
-                #erp-promotional-offer-notice p a {
-                    color: #fafafa;
-                }
-
-                #erp-promotional-offer-notice .notice-dismiss:before {
-                    color: #fff;
-                }
-
-                #erp-promotional-offer-notice span.dashicons-megaphone {
-                    position: absolute;
-                    bottom: 46px;
-                    right: 119px;
-                    color: rgba(253, 253, 253, 0.29);
-                    font-size: 96px;
-                    transform: rotate(-21deg);
-                }
-
-            </style>
-
-            <script type='text/javascript'>
-                jQuery('body').on('click', '#erp-promotional-offer-notice .notice-dismiss', function(e) {
-                    e.preventDefault();
-
-                    wp.ajax.post('erp-dismiss-promotional-offer-notice', {
-                        dismissed: true
+                        wp.ajax.post( 'erp-dismiss-promotional-offer-notice', {
+                            erp_christmas_dismissed: true,
+                            nonce: '<?php echo esc_attr( wp_create_nonce( 'erp_admin' ) ); ?>'
+                        });
                     });
-                });
-            </script>
-        <?php
+                </script>
+            <?php
+        }
     }
 
     /**
