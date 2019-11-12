@@ -122,7 +122,7 @@ class Admin_Page {
                         </div>
                     </div>
                     <div class="call-to-action">
-                        <a href="#">Save 33%</a>
+                        <a href="https://wperp.com/pricing?utm_campaign=black_friday_&_cyber_monday&utm_medium=banner&utm_source=plugin_dashboard">Save 33%</a>
                         <p>Valid till 4th December.</p>
                     </div>
                 </div>
