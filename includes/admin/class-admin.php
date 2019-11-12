@@ -102,7 +102,6 @@ class Admin_Page {
         $offer_start_date = strtotime( '2019-11-26 00:00:01' );
         $offer_end_date   = strtotime( '2019-12-04 23:59:00' );
         $hide_notice      = get_option( $offer_key, 'show' );
-        $offer_link       = 'https://wedevs.com/dokan/?add-to-cart=15310&variation_id=15314&attribute_pa_license=professional&coupon_code=BFCM2019';
 
         if ( 'hide' == $hide_notice ) {
             return;
@@ -123,7 +122,7 @@ class Admin_Page {
                         </div>
                     </div>
                     <div class="call-to-action">
-                        <a href="https://wedevs.com/dokan/pricing?utm_campaign=black_friday_&_cyber_monday&utm_medium=banner&utm_source=plugin_dashboard">Save 33%</a>
+                        <a href="#">Save 33%</a>
                         <p>Valid till 4th December.</p>
                     </div>
                 </div>
