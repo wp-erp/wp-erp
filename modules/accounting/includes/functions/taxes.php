@@ -398,7 +398,7 @@ function erp_acct_pay_tax( $data ) {
     $created_by         = get_current_user_id();
     $data['created_at'] = date( 'Y-m-d H:i:s' );
     $data['created_by'] = $created_by;
-    $currency           = erp_get_currency();
+    $currency           = erp_get_currency(true);
 
     $wpdb->insert(
         $wpdb->prefix . 'erp_acct_voucher_no',

@@ -144,7 +144,7 @@ function erp_acct_insert_purchase( $data ) {
 
     $purchase_type_order = 1;
     $draft               = 1;
-    $currency            = erp_get_currency();
+    $currency            = erp_get_currency(true);
 
     try {
         $wpdb->query( 'START TRANSACTION' );
@@ -280,7 +280,7 @@ function erp_acct_update_purchase( $purchase_data, $purchase_id ) {
     $data['created_by'] = $user_id;
     $data['updated_at'] = date( 'Y-m-d' );
     $data['updated_by'] = $user_id;
-    $currency           = erp_get_currency();
+    $currency           = erp_get_currency(true);
 
     try {
         $wpdb->query( 'START TRANSACTION' );
