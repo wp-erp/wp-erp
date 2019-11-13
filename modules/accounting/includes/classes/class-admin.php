@@ -388,15 +388,18 @@ class Admin {
         global $wpdb;
         $fin_years = [];
 
-        if ( empty( $_POST['ob_names'] ) || empty( $_POST['ob_starts'] ) || empty( $_POST['ob_ends'] ) ) {
+        if (
+            empty( $_POST['ob_names'] )
+            || empty( $_POST['ob_starts'] )
+            || empty( $_POST['ob_ends'] )
+        ) {
             return;
         }
 
-        $ob_names                           = sanitize_text_field( wp_unslash( $_POST['ob_names'] ) );
-        $ob_starts                          = sanitize_text_field( wp_unslash( $_POST['ob_starts'] ) );
-        $ob_ends                            = sanitize_text_field( wp_unslash( $_POST['ob_ends'] ) );
-        $opening_balance_data['created_at'] = date( 'Y-m-d H:i:s' );
-        $opening_balance_data['created_by'] = get_current_user_id();
+        $ob_names   = $_POST['ob_names'];
+        $ob_starts  = $_POST['ob_starts'];
+        $ob_ends    = $_POST['ob_ends'];
+        $created_by = get_current_user_id();
 
         if ( ! empty( $ob_names ) ) {
             for ( $i = 0; $i < count( $ob_names ); $i++ ) {
@@ -421,13 +424,14 @@ class Admin {
         for ( $i = 0; $i < count( $ob_names ); $i++ ) {
             $wpdb->insert(
                 $wpdb->prefix . 'erp_acct_financial_years',
-                array(
+                [
 					'name'       => $fin_years['ob_names'][ $i ],
 					'start_date' => $fin_years['ob_starts'][ $i ],
 					'end_date'   => $fin_years['ob_ends'][ $i ],
-					'created_at' => $opening_balance_data['created_at'],
-					'created_by' => $opening_balance_data['created_by'],
-                )
+					'created_at' => date( 'Y-m-d' ),
+					'created_by' => $created_by
+                ],
+                ['%s', '%s', '%s', '%s', '%d']
             );
         }
     }
