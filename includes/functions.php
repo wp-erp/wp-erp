@@ -280,16 +280,24 @@ function erp_get_currencies_dropdown( $selected = '' ) {
  *
  * @return string
  */
-function erp_get_currency() {
+function erp_get_currency( $get_only_id = false ) {
     global $wpdb;
 
-    $erp_currency = erp_get_option( 'erp_currency', 'erp_settings_general', 'USD' );
+    $usd = 148;
 
-    $sql = $wpdb->prepare( "SELECT name FROM {$wpdb->prefix}erp_acct_currency_info WHERE id = %d", $erp_currency );
+    $currency_id = erp_get_option('erp_currency', 'erp_settings_general', $usd);
 
-    return $wpdb->get_var( $sql );
+    if ( $get_only_id ) {
+        return $currency_id;
+    }
+
+    $currency_name = $wpdb->get_var( $wpdb->prepare(
+        "SELECT name FROM {$wpdb->prefix}erp_acct_currency_info WHERE id = %d",
+        $currency_id
+    ) );
+
+    return $currency_name;
 }
-
 
 /**
  * Get Currency symbol.
