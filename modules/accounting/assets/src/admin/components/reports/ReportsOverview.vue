@@ -9,7 +9,7 @@
 
         <li>
             <h3>{{ __('Ledger Report', 'erp') }}</h3>
-            <p>{{ __('Detailed transactions list of ledger accounts.', 'erp') }}</p>
+            <p>{{ __('The ledger report contains the classified and detailed information of all the individual accounts including the debit and credit aspects.', 'erp') }}</p>
 
             <router-link class="wperp-btn btn--primary" :to="{ name: 'LedgerSingle', params: { id: 7 } }">{{ __('View Report', 'erp') }}</router-link>
         </li>
