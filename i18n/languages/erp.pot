@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP ERP 1.5.6\n"
+"Project-Id-Version: WP ERP 1.5.7\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-erp\n"
-"POT-Creation-Date: 2019-11-01 08:58:20+00:00\n"
+"POT-Creation-Date: 2019-11-15 09:04:12+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -5205,6 +5205,14 @@ msgstr ""
 msgid "Your IMAP connection is established."
 msgstr ""
 
+#: includes/admin/class-ajax.php:534
+msgid "You have no permission to do that"
+msgstr ""
+
+#: includes/admin/class-ajax.php:540
+msgid "Invalid nonce"
+msgstr ""
+
 #: includes/admin/class-audit-list-table.php:63
 msgid "Filter by Module"
 msgstr ""
@@ -5260,7 +5268,7 @@ msgstr ""
 
 #: includes/admin/class-audit-list-table.php:107
 #: modules/accounting/assets/src/admin/components/dashboard/Chart.vue:8
-#: modules/hrm/includes/functions-dashboard-widgets.php:227
+#: modules/hrm/includes/functions-dashboard-widgets.php:258
 msgid "This Month"
 msgstr ""
 
@@ -5345,7 +5353,7 @@ msgid "Created At"
 msgstr ""
 
 #: includes/admin/class-form-handler.php:25
-#: includes/framework/views/status-report.php:118 includes/functions.php:1302
+#: includes/framework/views/status-report.php:118 includes/functions.php:1310
 msgid "ERP Settings"
 msgstr ""
 
@@ -5415,7 +5423,7 @@ msgstr ""
 
 #: includes/admin/class-menu.php:136 includes/admin/class-menu.php:138
 #: includes/admin/views/tools/general.php:23
-#: modules/crm/includes/admin/class-settings.php:666 wp-erp.php:314
+#: modules/crm/includes/admin/class-settings.php:659 wp-erp.php:314
 msgid "Settings"
 msgstr ""
 
@@ -5802,6 +5810,7 @@ msgstr ""
 #: modules/hrm/views/js-templates/performance-reviews.php:70
 #: modules/hrm/views/js-templates/performance-reviews.php:82
 #: modules/hrm/views/leave/leave-entitlements.php:65
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:322
 msgid "- Select -"
 msgstr ""
 
@@ -5888,11 +5897,11 @@ msgstr ""
 msgid "Company Logo"
 msgstr ""
 
-#: includes/admin/views/company-editor.php:196 includes/class-scripts.php:158
+#: includes/admin/views/company-editor.php:196 includes/class-scripts.php:162
 msgid "Remove company logo"
 msgstr ""
 
-#: includes/admin/views/company-editor.php:202 includes/class-scripts.php:157
+#: includes/admin/views/company-editor.php:202 includes/class-scripts.php:161
 msgid "Upload company logo"
 msgstr ""
 
@@ -5914,7 +5923,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:321
 #: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:177
 #: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:173
-#: modules/crm/includes/admin/class-settings.php:770
+#: modules/crm/includes/admin/class-settings.php:763
 #: modules/crm/includes/class-campaigns-list-table.php:89
 #: modules/crm/includes/class-contact-group-list-table.php:118
 #: modules/crm/includes/class-contact-subscriber-list-table.php:199
@@ -6023,9 +6032,9 @@ msgid "Inactive (%s)"
 msgstr ""
 
 #: includes/admin/views/module.php:30 includes/admin/views/module.php:38
-#: modules/crm/includes/admin/class-settings.php:203
-#: modules/crm/includes/admin/class-settings.php:222
-#: modules/crm/includes/admin/class-settings.php:241
+#: modules/crm/includes/admin/class-settings.php:196
+#: modules/crm/includes/admin/class-settings.php:215
+#: modules/crm/includes/admin/class-settings.php:234
 #: modules/crm/includes/class-campaigns-list-table.php:69
 #: modules/crm/includes/class-subscription-widget.php:64
 #: modules/hrm/includes/class-announcement-list-table.php:34
@@ -6043,7 +6052,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:68
 #: modules/accounting/assets/src/admin/components/opening-balance/OpeningBalance.vue:269
 #: modules/accounting/assets/src/admin/components/tax/NewTaxCategory.vue:23
-#: modules/crm/includes/admin/class-settings.php:622
+#: modules/crm/includes/admin/class-settings.php:615
 #: modules/crm/includes/class-subscription-widget.php:71
 #: modules/crm/views/js-templates/new-contact-group.php:16
 #: modules/hrm/views/employee/tab-leave.php:91
@@ -6298,8 +6307,8 @@ msgstr ""
 
 #: includes/admin/views/tools.php:36
 #: modules/accounting/assets/src/admin/components/transactions/TransactionsFilter.vue:31
-#: modules/crm/includes/admin/class-settings.php:534
-#: modules/crm/includes/admin/class-settings.php:623
+#: modules/crm/includes/admin/class-settings.php:527
+#: modules/crm/includes/admin/class-settings.php:616
 #: modules/crm/includes/class-contact-subscriber-list-table.php:176
 #: modules/hrm/includes/class-employee-list-table.php:152
 #: modules/hrm/includes/class-leave-request-list-table.php:168
@@ -6693,9 +6702,13 @@ msgstr ""
 msgid "Any State"
 msgstr ""
 
-#: includes/class-email.php:454
+#: includes/class-email.php:461
+msgid "Is Enabled"
+msgstr ""
+
+#: includes/class-email.php:467
 #: modules/accounting/assets/src/admin/components/email/SendMail.vue:18
-#: modules/crm/includes/admin/class-settings.php:736
+#: modules/crm/includes/admin/class-settings.php:729
 #: modules/crm/includes/functions-localize.php:20
 #: modules/crm/views/js-templates/customer-add-schedules.php:127
 #: modules/crm/views/js-templates/customer-email-note.php:39
@@ -6706,19 +6719,19 @@ msgstr ""
 msgid "Subject"
 msgstr ""
 
-#: includes/class-email.php:457
+#: includes/class-email.php:470
 #: modules/hrm/includes/emails/class-email-new-leave-request.php:131
 msgid ""
 "This controls the email subject line. Leave blank to use the default "
 "subject: <code>%s</code>."
 msgstr ""
 
-#: includes/class-email.php:463
+#: includes/class-email.php:476
 #: modules/hrm/includes/emails/class-email-new-leave-request.php:137
 msgid "Email Heading"
 msgstr ""
 
-#: includes/class-email.php:466 includes/class-email.php:475
+#: includes/class-email.php:479 includes/class-email.php:488
 #: modules/hrm/includes/emails/class-email-new-leave-request.php:140
 #: modules/hrm/includes/emails/class-email-new-leave-request.php:149
 msgid ""
@@ -6726,17 +6739,17 @@ msgid ""
 "Leave blank to use the default heading: <code>%s</code>."
 msgstr ""
 
-#: includes/class-email.php:472
+#: includes/class-email.php:485
 #: modules/hrm/includes/emails/class-email-new-leave-request.php:146
 msgid "Email Body"
 msgstr ""
 
-#: includes/class-email.php:498
+#: includes/class-email.php:511
 #: modules/hrm/includes/emails/class-email-new-leave-request.php:172
 msgid "Template Tags"
 msgstr ""
 
-#: includes/class-email.php:500
+#: includes/class-email.php:513
 #: modules/hrm/includes/emails/class-email-new-leave-request.php:174
 msgid ""
 "You may use these template tags inside subject, heading, body and those "
@@ -6748,13 +6761,13 @@ msgid "ERP Subscription"
 msgstr ""
 
 #: includes/class-install.php:1461 includes/updates/update-1.1.17.php:33
-#: modules/crm/includes/admin/class-settings.php:173
+#: modules/crm/includes/admin/class-settings.php:166
 #: modules/crm/includes/class-subscription.php:455
 msgid "Confirm your subscription to %s"
 msgstr ""
 
 #: includes/class-install.php:1463 includes/updates/update-1.1.17.php:35
-#: modules/crm/includes/admin/class-settings.php:181
+#: modules/crm/includes/admin/class-settings.php:174
 #: modules/crm/includes/class-subscription.php:457
 msgid ""
 "Hello!\n"
@@ -6771,30 +6784,30 @@ msgid ""
 msgstr ""
 
 #: includes/class-install.php:1467 includes/updates/update-1.1.17.php:39
-#: modules/crm/includes/admin/class-settings.php:206
+#: modules/crm/includes/admin/class-settings.php:199
 #: modules/crm/includes/class-subscription.php:684
 msgid "You are now subscribed!"
 msgstr ""
 
 #: includes/class-install.php:1468 includes/updates/update-1.1.17.php:40
-#: modules/crm/includes/admin/class-settings.php:213
+#: modules/crm/includes/admin/class-settings.php:206
 #: modules/crm/includes/class-subscription.php:719
 msgid "We've added you to our email list. You'll hear from us shortly."
 msgstr ""
 
 #: includes/class-install.php:1469 includes/updates/update-1.1.17.php:41
-#: modules/crm/includes/admin/class-settings.php:225
+#: modules/crm/includes/admin/class-settings.php:218
 #: modules/crm/includes/class-subscription.php:693
 msgid "You are now unsubscribed"
 msgstr ""
 
 #: includes/class-install.php:1470 includes/updates/update-1.1.17.php:42
-#: modules/crm/includes/admin/class-settings.php:232
+#: modules/crm/includes/admin/class-settings.php:225
 #: modules/crm/includes/class-subscription.php:736
 msgid "You are successfully unsubscribed from list(s):"
 msgstr ""
 
-#: includes/class-install.php:1828 includes/class-scripts.php:147
+#: includes/class-install.php:1828 includes/class-scripts.php:150
 #: includes/framework/modules.php:38
 #: includes/framework/views/status-report.php:49 modules/hrm/hrm.php:273
 #: modules/hrm/views/dashboard.php:2
@@ -6859,19 +6872,19 @@ msgstr ""
 msgid "Get the Offer"
 msgstr ""
 
-#: includes/class-scripts.php:156
+#: includes/class-scripts.php:160
 msgid "Set company logo"
 msgstr ""
 
-#: includes/class-scripts.php:159
+#: includes/class-scripts.php:163
 msgid "Update Location"
 msgstr ""
 
-#: includes/class-scripts.php:160
+#: includes/class-scripts.php:164
 msgid "Create"
 msgstr ""
 
-#: includes/class-scripts.php:161
+#: includes/class-scripts.php:165
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:10
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:138
 #: modules/accounting/assets/src/admin/components/product-category/ProductCategory.vue:46
@@ -6886,12 +6899,16 @@ msgstr ""
 msgid "Update"
 msgstr ""
 
-#: includes/class-scripts.php:162 modules/crm/crm.php:192
+#: includes/class-scripts.php:166
+msgid "You didn't save your changes!"
+msgstr ""
+
+#: includes/class-scripts.php:167 modules/crm/crm.php:192
 #: modules/crm/crm.php:211 modules/hrm/hrm.php:196
 msgid "Are you sure?"
 msgstr ""
 
-#: includes/class-scripts.php:167
+#: includes/class-scripts.php:172
 msgid "Allowed Files"
 msgstr ""
 
@@ -7041,7 +7058,7 @@ msgstr ""
 
 #: includes/framework/settings/email.php:122
 #: includes/framework/settings/email.php:346
-#: modules/crm/includes/admin/class-settings.php:433
+#: modules/crm/includes/admin/class-settings.php:426
 msgid "Mail Server"
 msgstr ""
 
@@ -7051,7 +7068,7 @@ msgstr ""
 
 #: includes/framework/settings/email.php:132
 #: includes/framework/settings/email.php:382
-#: modules/crm/includes/admin/class-settings.php:469
+#: modules/crm/includes/admin/class-settings.php:462
 msgid "Port"
 msgstr ""
 
@@ -7061,55 +7078,55 @@ msgstr ""
 
 #: includes/framework/settings/email.php:139
 #: includes/framework/settings/email.php:389
-#: modules/crm/includes/admin/class-settings.php:476
+#: modules/crm/includes/admin/class-settings.php:469
 msgid "Authentication"
 msgstr ""
 
 #: includes/framework/settings/email.php:142
 #: includes/framework/settings/email.php:394
-#: modules/crm/includes/admin/class-settings.php:481
+#: modules/crm/includes/admin/class-settings.php:474
 msgid "Authentication type."
 msgstr ""
 
 #: includes/framework/settings/email.php:143
 #: includes/framework/settings/email.php:392
-#: modules/crm/includes/admin/class-settings.php:479
+#: modules/crm/includes/admin/class-settings.php:472
 msgid "None"
 msgstr ""
 
 #: includes/framework/settings/email.php:143
 #: includes/framework/settings/email.php:392
-#: modules/crm/includes/admin/class-settings.php:479
+#: modules/crm/includes/admin/class-settings.php:472
 msgid "SSL"
 msgstr ""
 
 #: includes/framework/settings/email.php:143
 #: includes/framework/settings/email.php:392
-#: modules/crm/includes/admin/class-settings.php:479
+#: modules/crm/includes/admin/class-settings.php:472
 msgid "TLS"
 msgstr ""
 
 #: includes/framework/settings/email.php:147
 #: includes/framework/settings/email.php:356
-#: modules/crm/includes/admin/class-settings.php:443
+#: modules/crm/includes/admin/class-settings.php:436
 msgid "Username"
 msgstr ""
 
 #: includes/framework/settings/email.php:153
 #: includes/framework/settings/email.php:359
-#: modules/crm/includes/admin/class-settings.php:446
+#: modules/crm/includes/admin/class-settings.php:439
 msgid "Your email id."
 msgstr ""
 
 #: includes/framework/settings/email.php:157
 #: includes/framework/settings/email.php:366
-#: modules/crm/includes/admin/class-settings.php:453
+#: modules/crm/includes/admin/class-settings.php:446
 msgid "Password"
 msgstr ""
 
 #: includes/framework/settings/email.php:160
 #: includes/framework/settings/email.php:369
-#: modules/crm/includes/admin/class-settings.php:456
+#: modules/crm/includes/admin/class-settings.php:449
 msgid "Your email password."
 msgstr ""
 
@@ -7142,19 +7159,19 @@ msgid "An email address to test the connection."
 msgstr ""
 
 #: includes/framework/settings/email.php:283
-#: modules/crm/includes/admin/class-settings.php:517
+#: modules/crm/includes/admin/class-settings.php:510
 msgid "Click on the above button before saving the settings."
 msgstr ""
 
 #: includes/framework/settings/email.php:299
 #: includes/framework/settings/email.php:312
-#: modules/crm/includes/admin/class-settings.php:402
-#: modules/crm/includes/admin/class-settings.php:415
+#: modules/crm/includes/admin/class-settings.php:395
+#: modules/crm/includes/admin/class-settings.php:408
 msgid "IMAP/POP3 Options"
 msgstr ""
 
 #: includes/framework/settings/email.php:302
-#: modules/crm/includes/admin/class-settings.php:405
+#: modules/crm/includes/admin/class-settings.php:398
 msgid ""
 "Your server does not have PHP IMAP extension loaded. To enable this "
 "feature, please contact your hosting provider and ask to enable PHP IMAP "
@@ -7162,13 +7179,13 @@ msgid ""
 msgstr ""
 
 #: includes/framework/settings/email.php:314
-#: modules/crm/includes/admin/class-settings.php:417
+#: modules/crm/includes/admin/class-settings.php:410
 msgid "Email incoming settings for ERP."
 msgstr ""
 
 #: includes/framework/settings/email.php:322
 #: includes/framework/views/status-report.php:159
-#: modules/crm/includes/admin/class-settings.php:425
+#: modules/crm/includes/admin/class-settings.php:418
 msgid "Enable IMAP"
 msgstr ""
 
@@ -7181,32 +7198,32 @@ msgid "Interval time to run cron."
 msgstr ""
 
 #: includes/framework/settings/email.php:352
-#: modules/crm/includes/admin/class-settings.php:439
+#: modules/crm/includes/admin/class-settings.php:432
 msgid "IMAP/POP3 host address."
 msgstr ""
 
 #: includes/framework/settings/email.php:373
-#: modules/crm/includes/admin/class-settings.php:460
+#: modules/crm/includes/admin/class-settings.php:453
 msgid "Protocol"
 msgstr ""
 
 #: includes/framework/settings/email.php:376
-#: modules/crm/includes/admin/class-settings.php:463
+#: modules/crm/includes/admin/class-settings.php:456
 msgid "Protocol type."
 msgstr ""
 
 #: includes/framework/settings/email.php:377
-#: modules/crm/includes/admin/class-settings.php:464
+#: modules/crm/includes/admin/class-settings.php:457
 msgid "IMAP"
 msgstr ""
 
 #: includes/framework/settings/email.php:377
-#: modules/crm/includes/admin/class-settings.php:464
+#: modules/crm/includes/admin/class-settings.php:457
 msgid "POP3"
 msgstr ""
 
 #: includes/framework/settings/email.php:385
-#: modules/crm/includes/admin/class-settings.php:472
+#: modules/crm/includes/admin/class-settings.php:465
 msgid "IMAP: 993<br> POP3: 995"
 msgstr ""
 
@@ -8759,107 +8776,111 @@ msgstr ""
 msgid "Zimbabwean Dollar"
 msgstr ""
 
-#: includes/functions.php:670
+#: includes/functions.php:678
 msgid "Invalid date provided"
 msgstr ""
 
-#: includes/functions.php:777
+#: includes/functions.php:785
 msgid "Very Bad"
 msgstr ""
 
-#: includes/functions.php:778
+#: includes/functions.php:786
 msgid "Poor"
 msgstr ""
 
-#: includes/functions.php:779
+#: includes/functions.php:787
 msgid "Average"
 msgstr ""
 
-#: includes/functions.php:780
+#: includes/functions.php:788
 msgid "Good"
 msgstr ""
 
-#: includes/functions.php:781
+#: includes/functions.php:789
 msgid "Excellent"
 msgstr ""
 
-#: includes/functions.php:1000
+#: includes/functions.php:1008
 msgid "Every Minute"
 msgstr ""
 
-#: includes/functions.php:1005
+#: includes/functions.php:1013
 msgid "Every 2 Minutes"
 msgstr ""
 
-#: includes/functions.php:1010
+#: includes/functions.php:1018
 msgid "Every 5 Minutes"
 msgstr ""
 
-#: includes/functions.php:1015
+#: includes/functions.php:1023
 msgid "Every 10 Minutes"
 msgstr ""
 
-#: includes/functions.php:1020
+#: includes/functions.php:1028
 msgid "Every 15 Minutes"
 msgstr ""
 
-#: includes/functions.php:1025
+#: includes/functions.php:1033
 msgid "Every 30 Minutes"
 msgstr ""
 
-#: includes/functions.php:1030 includes/lib/class-wedevs-insights.php:471
+#: includes/functions.php:1038 includes/lib/class-wedevs-insights.php:471
 msgid "Once Weekly"
 msgstr ""
 
-#: includes/functions.php:1104 includes/functions.php:1144
+#: includes/functions.php:1112 includes/functions.php:1152
 msgid ""
 "Your license key expired on %s. Please <a href=\"%s\" target=\"_blank\" "
 "title=\"Renew your license key\">renew your license key</a>."
 msgstr ""
 
-#: includes/functions.php:1113
+#: includes/functions.php:1121
 msgid ""
 "Invalid license. Please <a href=\"%s\" target=\"_blank\" title=\"Visit "
 "account page\">visit your account page</a> and verify it."
 msgstr ""
 
-#: includes/functions.php:1122
+#: includes/functions.php:1130
 msgid ""
 "Your %s is not active for this URL. Please <a href=\"%s\" target=\"_blank\" "
 "title=\"Visit account page\">visit your account page</a> to manage your "
 "license key URLs."
 msgstr ""
 
-#: includes/functions.php:1130
+#: includes/functions.php:1138
 msgid "This is not a %s."
 msgstr ""
 
-#: includes/functions.php:1134
+#: includes/functions.php:1142
 msgid ""
 "Your license key has reached its activation limit. <a href=\"%s\">View "
 "possible upgrades</a> now."
 msgstr ""
 
-#: includes/functions.php:1157
+#: includes/functions.php:1165
 msgid "License key never expires."
 msgstr ""
 
-#: includes/functions.php:1162
+#: includes/functions.php:1170
 msgid ""
 "Your license key expires soon! It expires on %s. <a href=\"%s\" "
 "target=\"_blank\" title=\"Renew license\">Renew your license key</a>."
 msgstr ""
 
-#: includes/functions.php:1170
+#: includes/functions.php:1178
 msgid "Your license key expires on %s."
 msgstr ""
 
-#: includes/functions.php:1888
+#: includes/functions.php:1896
 msgid "Nothing to import or items are already exists."
 msgstr ""
 
-#: includes/functions.php:1891
+#: includes/functions.php:1899
 msgid "%s items successfully imported."
+msgstr ""
+
+#: includes/functions.php:3286
+msgid "Enable/Disable"
 msgstr ""
 
 #: includes/lib/EDD_SL_Plugin_Updater.php:186
@@ -8938,7 +8959,7 @@ msgstr ""
 msgid "Accountig Management"
 msgstr ""
 
-#: modules/accounting/accounting.php:112
+#: modules/accounting/accounting.php:114
 #. translators: %1$s: type, %2$s: link, %3$s: type
 msgid ""
 "Please %1$s <a href=\"%2$serp-pdf=%3$s\">WP ERP PDF</a> extension to get "
@@ -9660,47 +9681,47 @@ msgstr ""
 msgid "Select Image"
 msgstr ""
 
-#: modules/accounting/assets/js/bootstrap.js:11977
-#: modules/accounting/assets/js/bootstrap.js:12154
-#: modules/accounting/assets/js/bootstrap.js:12229
-#: modules/accounting/assets/js/bootstrap.js:13180
-#: modules/accounting/assets/js/bootstrap.js:13298
-#: modules/accounting/assets/js/bootstrap.js:14191
-#: modules/accounting/assets/js/bootstrap.js:14392
-#: modules/accounting/assets/js/bootstrap.js:14500
-#: modules/accounting/assets/js/bootstrap.js:14545
-#: modules/accounting/assets/js/bootstrap.js:14598
-#: modules/accounting/assets/js/bootstrap.js:14719
+#: modules/accounting/assets/js/bootstrap.js:11980
+#: modules/accounting/assets/js/bootstrap.js:12183
+#: modules/accounting/assets/js/bootstrap.js:12258
+#: modules/accounting/assets/js/bootstrap.js:13209
+#: modules/accounting/assets/js/bootstrap.js:13327
+#: modules/accounting/assets/js/bootstrap.js:14220
+#: modules/accounting/assets/js/bootstrap.js:14421
+#: modules/accounting/assets/js/bootstrap.js:14529
+#: modules/accounting/assets/js/bootstrap.js:14574
+#: modules/accounting/assets/js/bootstrap.js:14627
+#: modules/accounting/assets/js/bootstrap.js:14748
 #: modules/accounting/assets/js/frontend.js:99
 msgid "div"
 msgstr ""
 
-#: modules/accounting/assets/js/bootstrap.js:12013
+#: modules/accounting/assets/js/bootstrap.js:12016
 msgid "tr"
 msgstr ""
 
-#: modules/accounting/assets/js/bootstrap.js:12122
-#: modules/accounting/assets/js/bootstrap.js:13027
+#: modules/accounting/assets/js/bootstrap.js:12125
+#: modules/accounting/assets/js/bootstrap.js:13056
 msgid "span"
 msgstr ""
 
-#: modules/accounting/assets/js/bootstrap.js:13250
+#: modules/accounting/assets/js/bootstrap.js:13279
 msgid "multiselect"
 msgstr ""
 
-#: modules/accounting/assets/js/bootstrap.js:14234
+#: modules/accounting/assets/js/bootstrap.js:14263
 msgid "dropdown"
 msgstr ""
 
-#: modules/accounting/assets/js/bootstrap.js:14304
+#: modules/accounting/assets/js/bootstrap.js:14333
 msgid "form"
 msgstr ""
 
-#: modules/accounting/assets/js/bootstrap.js:14791
+#: modules/accounting/assets/js/bootstrap.js:14820
 msgid "modal"
 msgstr ""
 
-#: modules/accounting/assets/js/bootstrap.js:15019
+#: modules/accounting/assets/js/bootstrap.js:15048
 msgid "button"
 msgstr ""
 
@@ -10853,13 +10874,15 @@ msgid "View Report"
 msgstr ""
 
 #: modules/accounting/assets/src/admin/components/reports/ReportsOverview.vue:12
-msgid "Ledger report"
+msgid ""
+"The ledger report contains the classified and detailed information of all "
+"the individual accounts including the debit and credit aspects."
 msgstr ""
 
 #: modules/accounting/assets/src/admin/components/reports/ReportsOverview.vue:19
 msgid ""
-"A summary of a management's performance as reflecte the profitability of an "
-"organization during the time interval"
+"A summary of a management's performance reflected as the profitability of "
+"an organization during the time interval"
 msgstr ""
 
 #: modules/accounting/assets/src/admin/components/reports/ReportsOverview.vue:25
@@ -11779,110 +11802,106 @@ msgstr ""
 msgid "Default life stage for contact."
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:122
-msgid "Enable Birthday Greetings To Contacts"
-msgstr ""
-
-#: modules/crm/includes/admin/class-settings.php:134
+#: modules/crm/includes/admin/class-settings.php:127
 msgid "Saved Replies"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:152
+#: modules/crm/includes/admin/class-settings.php:145
 msgid "Contact Group subscription settings"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:158
+#: modules/crm/includes/admin/class-settings.php:151
 msgid "Enable signup confirmation"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:161
-#: modules/crm/includes/admin/class-settings.php:163
+#: modules/crm/includes/admin/class-settings.php:154
+#: modules/crm/includes/admin/class-settings.php:156
 #: modules/crm/views/js-templates/new-contact-group.php:33
 #: modules/hrm/includes/functions-employee.php:582
 msgid "Yes"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:166
+#: modules/crm/includes/admin/class-settings.php:159
 msgid ""
 "If you enable this option, your subscribers will first receive a "
 "confirmation email after they subscribe. Once they confirm their "
 "subscription (via this email), they will be marked as 'subscribed'."
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:170
+#: modules/crm/includes/admin/class-settings.php:163
 msgid "Email subject"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:177
+#: modules/crm/includes/admin/class-settings.php:170
 msgid "Email content"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:188
+#: modules/crm/includes/admin/class-settings.php:181
 msgid ""
 "Don't forget to include: <code>[activation_link]Confirm your "
 "subscription.[/activation_link]</code>. <br><br>Optional: "
 "<code>[contact_groups_to_confirm]</code>."
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:194
+#: modules/crm/includes/admin/class-settings.php:187
 msgid "Subscription Page"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:198
+#: modules/crm/includes/admin/class-settings.php:191
 msgid ""
 "When subscribers click on the activation link, they will be redirected to "
 "this page."
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:202
+#: modules/crm/includes/admin/class-settings.php:195
 msgid "Confirmation Page"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:210
-#: modules/crm/includes/admin/class-settings.php:229
-#: modules/crm/includes/admin/class-settings.php:248
+#: modules/crm/includes/admin/class-settings.php:203
+#: modules/crm/includes/admin/class-settings.php:222
+#: modules/crm/includes/admin/class-settings.php:241
 msgid "Content"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:221
+#: modules/crm/includes/admin/class-settings.php:214
 msgid "Unsubscribe Page"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:240
+#: modules/crm/includes/admin/class-settings.php:233
 msgid "Edit Subscription Page"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:244
+#: modules/crm/includes/admin/class-settings.php:237
 #: modules/crm/includes/class-subscription.php:688
 msgid "Edit Your Subscription"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:251
+#: modules/crm/includes/admin/class-settings.php:244
 #: modules/crm/includes/class-subscription.php:723
 msgid "Update your preferences"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:282
+#: modules/crm/includes/admin/class-settings.php:275
 msgid "Email Connection Settings"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:284
+#: modules/crm/includes/admin/class-settings.php:277
 msgid "Settings for CRM Contact Emails Connectivity."
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:289
+#: modules/crm/includes/admin/class-settings.php:282
 msgid "Check Emails "
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:292
+#: modules/crm/includes/admin/class-settings.php:285
 msgid "Interval time to run cron for checking inbound emails."
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:336
+#: modules/crm/includes/admin/class-settings.php:329
 msgid "Gmail / G suite Authentication"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:338
+#: modules/crm/includes/admin/class-settings.php:331
 msgid ""
 "<a target=\"_blank\" "
 "href=\"https://console.developers.google.com/flows/enableapi?apiid=gmail&"
@@ -11894,88 +11913,88 @@ msgid ""
 "content=Backend&utm_campaign=Docs\">Documentation</a> to get started"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:356
+#: modules/crm/includes/admin/class-settings.php:349
 msgid "Client ID"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:359
+#: modules/crm/includes/admin/class-settings.php:352
 msgid "Your APP Client ID"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:363
+#: modules/crm/includes/admin/class-settings.php:356
 msgid "Client Secret"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:366
+#: modules/crm/includes/admin/class-settings.php:359
 msgid "Your APP Client Secret"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:515
+#: modules/crm/includes/admin/class-settings.php:508
 msgid "Test Connection"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:538
-#: modules/crm/includes/admin/class-settings.php:578
+#: modules/crm/includes/admin/class-settings.php:531
+#: modules/crm/includes/admin/class-settings.php:571
 msgid "Connected"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:538
+#: modules/crm/includes/admin/class-settings.php:531
 msgid "Not Connected"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:560
+#: modules/crm/includes/admin/class-settings.php:553
 msgid "Redirect URL to use"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:565
+#: modules/crm/includes/admin/class-settings.php:558
 msgid "Copy and Use this url when oAuth consent asks for Authorized Redirect URL"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:588
+#: modules/crm/includes/admin/class-settings.php:581
 msgid "Disconnect"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:598
+#: modules/crm/includes/admin/class-settings.php:591
 msgid "Gmail Connect"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:599
+#: modules/crm/includes/admin/class-settings.php:592
 msgid "Connect your Gmail or Gsuite account"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:605
+#: modules/crm/includes/admin/class-settings.php:598
 msgid "IMAP Connection"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:606
+#: modules/crm/includes/admin/class-settings.php:599
 msgid "Connect to Custom IMAP server"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:621
+#: modules/crm/includes/admin/class-settings.php:614
 msgid "Provider"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:653
+#: modules/crm/includes/admin/class-settings.php:646
 msgid "Disabled"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:656
+#: modules/crm/includes/admin/class-settings.php:649
 msgid "Enabled"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:727
+#: modules/crm/includes/admin/class-settings.php:720
 msgid "Add new Template"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:727
+#: modules/crm/includes/admin/class-settings.php:720
 msgid "Add Templates"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:735
+#: modules/crm/includes/admin/class-settings.php:728
 msgid "Template Name"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:771
+#: modules/crm/includes/admin/class-settings.php:764
 #: modules/crm/includes/class-campaigns-list-table.php:90
 #: modules/crm/includes/class-campaigns-list-table.php:116
 #: modules/crm/includes/class-contact-group-list-table.php:124
@@ -12003,7 +12022,7 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:783
+#: modules/crm/includes/admin/class-settings.php:776
 msgid "No templates found"
 msgstr ""
 
@@ -14924,7 +14943,7 @@ msgid "This note does not exist or does not belongs to the supplied user"
 msgstr ""
 
 #: modules/hrm/includes/class-employee.php:1989
-#: modules/hrm/includes/functions-dashboard-widgets.php:286
+#: modules/hrm/includes/functions-dashboard-widgets.php:317
 #: modules/hrm/includes/functions-leave.php:1189
 msgid "Pending"
 msgstr ""
@@ -15396,7 +15415,8 @@ msgid "Today's Birthday"
 msgstr ""
 
 #: modules/hrm/includes/functions-dashboard-widgets.php:36
-#: modules/hrm/includes/functions-dashboard-widgets.php:113
+#: modules/hrm/includes/functions-dashboard-widgets.php:135
+#: modules/hrm/includes/functions-dashboard-widgets.php:156
 msgid "please wait ..."
 msgstr ""
 
@@ -15408,31 +15428,43 @@ msgstr ""
 msgid "No one has birthdays this week!"
 msgstr ""
 
-#: modules/hrm/includes/functions-dashboard-widgets.php:112
-msgid "Contracts about to end "
+#: modules/hrm/includes/functions-dashboard-widgets.php:134
+msgid "Contractual Employees about to End"
 msgstr ""
 
-#: modules/hrm/includes/functions-dashboard-widgets.php:200
+#: modules/hrm/includes/functions-dashboard-widgets.php:149
+msgid "No employee found to be ended nearby"
+msgstr ""
+
+#: modules/hrm/includes/functions-dashboard-widgets.php:155
+msgid "Trainee Employees about to End"
+msgstr ""
+
+#: modules/hrm/includes/functions-dashboard-widgets.php:170
+msgid "No trainee found to be ended nearby"
+msgstr ""
+
+#: modules/hrm/includes/functions-dashboard-widgets.php:231
 msgid "Mark as Read"
 msgstr ""
 
-#: modules/hrm/includes/functions-dashboard-widgets.php:202
+#: modules/hrm/includes/functions-dashboard-widgets.php:233
 msgid "View full announcement"
 msgstr ""
 
-#: modules/hrm/includes/functions-dashboard-widgets.php:210
+#: modules/hrm/includes/functions-dashboard-widgets.php:241
 msgid "No announcement found"
 msgstr ""
 
-#: modules/hrm/includes/functions-dashboard-widgets.php:241
+#: modules/hrm/includes/functions-dashboard-widgets.php:272
 msgid "Next Month"
 msgstr ""
 
-#: modules/hrm/includes/functions-dashboard-widgets.php:257
+#: modules/hrm/includes/functions-dashboard-widgets.php:288
 msgid "No one is on vacation on this or next month"
 msgstr ""
 
-#: modules/hrm/includes/functions-dashboard-widgets.php:332
+#: modules/hrm/includes/functions-dashboard-widgets.php:363
 msgid "Take a Leave"
 msgstr ""
 
@@ -15748,14 +15780,6 @@ msgstr ""
 
 #: modules/hrm/includes/functions-reporting.php:32
 msgid "Shows leaves report."
-msgstr ""
-
-#: modules/hrm/includes/functions.php:511
-msgid "Weekly digest email to HR Manager"
-msgstr ""
-
-#: modules/hrm/includes/functions.php:512
-msgid "Send weekly digest email to HR Manager with general information"
 msgstr ""
 
 #: modules/hrm/views/dashboard-badge.php:16
@@ -16833,6 +16857,260 @@ msgid_plural "Years"
 msgstr[0] ""
 msgstr[1] ""
 
+#: vendor/lucatume/wp-browser/src/data/plugins/internationalized-plugin.php:11
+msgid "This is a dummy plugin"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:42
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:72
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:80
+msgid "There was an error when reading this WXR file"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:43
+msgid ""
+"Details are shown above. The importer will now try again with a different "
+"parser..."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:84
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:89
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:306
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:495
+msgid "This does not appear to be a WXR file, missing/invalid WXR version number"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:132
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:141
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:192
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:196
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:205
+msgid "Sorry, there has been an error."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:133
+msgid "The file does not exist, please try again."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:176
+msgid "All done."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:176
+msgid "Have fun!"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:177
+msgid "Remember to update the passwords and roles of imported users."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:197
+msgid ""
+"The export file could not be found at <code>%s</code>. It is likely that "
+"this was caused by a permissions problem."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:213
+msgid ""
+"This WXR file (version %s) may not be supported by this version of the "
+"importer. Please consider updating."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:238
+msgid ""
+"Failed to import author %s. Their posts will be attributed to the current "
+"user."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:264
+msgid "Assign Authors"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:265
+msgid ""
+"To make it easier for you to edit and save the imported content, you may "
+"want to reassign the author of the imported item to an existing user of "
+"this site. For example, you may want to import all the entries as "
+"<code>admin</code>s entries."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:267
+msgid ""
+"If a new user is created by WordPress, a new password will be randomly "
+"generated and the new user&#8217;s role will be set as %s. Manually "
+"changing the new user&#8217;s details will be necessary."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:277
+msgid "Import Attachments"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:280
+msgid "Download and import file attachments"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:284
+msgid "Submit"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:297
+msgid "Import author:"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:308
+msgid "or create new user with login name:"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:311
+msgid "as a new user:"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:319
+msgid "assign posts to an existing user:"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:321
+msgid "or assign posts to an existing user:"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:372
+msgid ""
+"Failed to create new user for %s. Their posts will be attributed to the "
+"current user."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:424
+msgid "Failed to import category %s"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:467
+msgid "Failed to import post tag %s"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:516
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:738
+msgid "Failed to import %s %s"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:605
+msgid "Failed to import &#8220;%s&#8221;: Invalid post type %s"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:642
+msgid "%s &#8220;%s&#8221; already exists."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:704
+msgid "Failed to import %s &#8220;%s&#8221;"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:869
+msgid "Menu item skipped due to missing menu slug"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:876
+msgid "Menu item skipped due to invalid menu slug: %s"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:939
+msgid "Fetching attachments is not enabled"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:952
+msgid "Invalid file type"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:996
+msgid "Remote server did not respond"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1002
+msgid "Remote server returned error response %1$d %2$s"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1009
+msgid "Remote file is incorrect size"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1014
+msgid "Zero size file downloaded"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1020
+msgid "Remote file is too large, limit is %s"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1119
+msgid "Import WordPress"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1126
+msgid ""
+"A new version of this importer is available. Please update to version %s to "
+"ensure compatibility with newer export files."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1141
+msgid ""
+"Howdy! Upload your WordPress eXtended RSS (WXR) file and we&#8217;ll import "
+"the posts, pages, comments, custom fields, categories, and tags into this "
+"site."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1142
+msgid "Choose a WXR (.xml) file to upload, then click Upload file and import."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1216
+msgid ""
+"Import <strong>posts, pages, comments, custom fields, categories, and "
+"tags</strong> from a WordPress export file."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/themedir1/internationalized-theme/functions.php:7
+msgid "This is a dummy theme"
+msgstr ""
+
+#: vendor/wp-cli/core-command/src/Core_Command.php:700
+msgid "Wildcard DNS may not be configured correctly."
+msgstr ""
+
+#: vendor/wp-cli/entity-command/src/Site_Command.php:125
+msgid "Uncategorized"
+msgstr ""
+
+#: vendor/wp-cli/export-command/src/WP_Export_File_Writer.php:32
+#: vendor/wp-cli/export-command/src/WP_Export_Split_Files_Writer.php:51
+msgid "WP Export: error writing to export file."
+msgstr ""
+
+#: vendor/wp-cli/export-command/src/WP_Export_XML_Over_HTTP.php:20
+#: vendor/wp-cli/export-command/src/WP_Export_XML_Over_HTTP.php:25
+msgid "Export Error"
+msgstr ""
+
+#: vendor/wp-cli/extension-command/src/WP_CLI/CommandWithUpgrade.php:651
+msgid " Try again"
+msgstr ""
+
+#: vendor/wp-cli/extension-command/src/WP_CLI/CommandWithUpgrade.php:657
+msgid "API error. Try Again."
+msgstr ""
+
+#: vendor/wp-cli/media-command/src/Media_Command.php:145
+msgid "image"
+msgid_plural "images"
+msgstr[0] ""
+msgstr[1] ""
+
+#: vendor/wp-cli/wp-cli/php/utils-wp.php:196
+msgid "Inactive Widgets"
+msgstr ""
+
+#: vendor/wp-cli/wp-cli/php/utils-wp.php:199
+msgid "Drag widgets here to remove them from the sidebar but keep their settings."
+msgstr ""
+
 #: wp-erp.php:187
 msgid "<h1>An Error Occured</h1>"
 msgstr ""
@@ -16904,4 +17182,18 @@ msgstr ""
 #: i18n/states/US.php:21
 msgctxt "US state of Georgia"
 msgid "Georgia"
+msgstr ""
+
+#: vendor/wp-cli/core-command/src/Core_Command.php:465
+#: vendor/wp-cli/core-command/src/Core_Command.php:539
+#. translators: placeholder is blog name
+#. translators: placeholder is user supplied title
+msgctxt "Default network name"
+msgid "%s Sites"
+msgstr ""
+
+#: vendor/wp-cli/entity-command/src/Site_Command.php:128
+#. translators: Default category slug
+msgctxt "Default category slug"
+msgid "Uncategorized"
 msgstr ""
