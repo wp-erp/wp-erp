@@ -1052,7 +1052,7 @@ function erp_hr_get_contractual_employee() {
 
     $db = new \WeDevs\ORM\Eloquent\Database();
 
-    return erp_array_to_object( \WeDevs\ERP\HRM\Models\Employee::select( 'user_id', 'hiring_date' )
+    return erp_array_to_object( \WeDevs\ERP\HRM\Models\Employee::select( 'user_id', 'hiring_date', 'type' )
         ->where( 'status', 'active' )
         ->where( 'type', 'contract' )
         ->orWhere( 'type', 'trainee' )

@@ -323,6 +323,19 @@ window.wperp = window.wperp || {};
             $( '.erp-select2' ).select2({
                 placeholder: $(this).attr('data-placeholder')
             });
+
+            // Notify user to save the form
+            var settingsForm  = $('.erp-settings').find('#mainform');
+            var toolsForm     = $('.erp-tools-form');
+
+            /* global wpErp */
+            if (settingsForm.length) {
+                settingsForm.areYouSure({ message: wpErp.formUnsavedMsg });
+            }
+
+            if (toolsForm.length) {
+                toolsForm.areYouSure({ message: wpErp.formUnsavedMsg });
+            }
         },
 
         viewLogChanges: function(e) {

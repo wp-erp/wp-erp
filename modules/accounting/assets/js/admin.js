@@ -32821,7 +32821,8 @@ var Loading = acct_get_lib('Loading');
 var Vuelidate = acct_get_lib('Vuelidate');
 var VueClipboards = acct_get_lib('VueClipboards');
 var commonMixins = acct_get_lib('commonMixins');
-var i18nMixin = acct_get_lib('i18nMixin'); // config
+var i18nMixin = acct_get_lib('i18nMixin');
+var clickOutside = acct_get_lib('clickOutside'); // config
 
 Vue.config.productionTip = false; // vue uses
 
@@ -32833,24 +32834,7 @@ Vue.use(VueClipboards); // mixin
 Vue.mixin(commonMixins);
 Vue.mixin(i18nMixin); // vue click outside directive
 
-Vue.directive('click-outside', {
-  bind: function bind(el, binding, vnode) {
-    var bubble = binding.modifiers.bubble;
-
-    var handler = function handler(e) {
-      if (bubble || !el.contains(e.target) && el !== e.target) {
-        binding.value(e);
-      }
-    };
-
-    el.__vueClickOutside__ = handler;
-    document.addEventListener('click', handler);
-  },
-  unbind: function unbind(el, binding) {
-    document.removeEventListener('click', el.__vueClickOutside__);
-    el.__vueClickOutside__ = null;
-  }
-});
+Vue.directive('click-outside', clickOutside);
 var accountingContainer = document.getElementById('erp-accounting');
 
 if (accountingContainer !== null) {
@@ -46859,7 +46843,13 @@ var render = function() {
         [
           _c("h3", [_vm._v(_vm._s(_vm.__("Ledger Report", "erp")))]),
           _vm._v(" "),
-          _c("p", [_vm._v(_vm._s(_vm.__("Ledger report", "erp")))]),
+          _c("p", [
+            _vm._v(
+              _vm._s(
+                _vm.__("Detailed transactions list of ledger accounts.", "erp")
+              )
+            )
+          ]),
           _vm._v(" "),
           _c(
             "router-link",
@@ -46882,7 +46872,7 @@ var render = function() {
             _vm._v(
               _vm._s(
                 _vm.__(
-                  "A summary of a management's performance as reflecte the profitability of an organization during the time interval",
+                  "A summary of a management's performance reflected as the profitability of an organization during the time interval",
                   "erp"
                 )
               ) + "."
@@ -51745,6 +51735,7 @@ var render = function() {
                             attrs: {
                               type: "number",
                               min: "0",
+                              step: "0.01",
                               max: item.due,
                               name: "amount"
                             },

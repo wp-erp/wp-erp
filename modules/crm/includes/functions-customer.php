@@ -3895,11 +3895,8 @@ function erp_crm_sync_is_active() {
  * @return void
  */
 function erp_crm_send_birthday_greetings() {
-    $is_enabled = get_option( 'erp_settings_erp-crm_contacts' );
-    if ( isset( $is_enabled['send_bg_to_contact'] ) && $is_enabled['send_bg_to_contact'] == 'yes' ) {
         $email =  new WeDevs\ERP\CRM\Emails\Birthday_Greetings();
         $email->trigger();
-    }
 }
 
 /**

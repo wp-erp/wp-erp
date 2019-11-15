@@ -44,9 +44,14 @@ function erp_acct_get_currencies_for_dropdown() {
 function erp_acct_get_currency_symbol() {
     global $wpdb;
 
-    $active_currency_id = erp_get_currency();
+    $active_currency_id = erp_get_currency(true);
 
-    return $wpdb->get_var( $wpdb->prepare( "SELECT sign FROM {$wpdb->prefix}erp_acct_currency_info WHERE id = %d", absint( $active_currency_id ) ) );
+    return $wpdb->get_var(
+        $wpdb->prepare(
+            "SELECT sign FROM {$wpdb->prefix}erp_acct_currency_info WHERE id = %d",
+            absint( $active_currency_id )
+        )
+    );
 }
 
 /**
@@ -56,20 +61,20 @@ function erp_acct_get_currency_symbol() {
  */
 function erp_acct_get_price_format() {
     $currency_pos = erp_get_option( 'erp_ac_currency_position', false, 'left' );
-    $format       = '%1$s%2$s';
+    $format       = '%s%v';
 
     switch ( $currency_pos ) {
         case 'left':
-            $format = '%1$s%2$s';
+            $format = '%s%v';
             break;
         case 'right':
-            $format = '%2$s%1$s';
+            $format = '%v%s';
             break;
         case 'left_space':
-            $format = '%1$s&nbsp;%2$s';
+            $format = '%s&nbsp;%v';
             break;
         case 'right_space':
-            $format = '%2$s&nbsp;%1$s';
+            $format = '%v&nbsp;%s';
             break;
     }
 

@@ -280,7 +280,7 @@ if ( ! class_exists( 'WP_Background_Process' ) ) {
 			LIMIT 1
 		", $key ) );
 
-			$batch       = new stdClass();
+			$batch       = new \stdClass();
 			$batch->key  = $query->$column;
 			$batch->data = maybe_unserialize( $query->$value_column );
 

@@ -256,9 +256,23 @@ abstract class REST_Controller {
      * @return array Links for the given user.
      */
     protected function prepare_links( $item, $additional_fields = array() ) {
+        if ( empty( $additional_fields ) ) {
+            $links = [
+                'self' => [
+                    'href' => rest_url( sprintf( '%s/%s/%d', $this->namespace, $this->rest_base, $item->id ) ),
+                ],
+                'collection' => [
+                    'href' => rest_url( sprintf( '%s/%s', $this->namespace, $this->rest_base ) ),
+                ]
+            ];
+
+            return $links;
+        }
+
         $item = (array) $item;
 
-        $namespace = $additional_fields['namespace'];  $rest_base = $additional_fields['rest_base'];
+        $namespace = $additional_fields['namespace'];
+        $rest_base = $additional_fields['rest_base'];
 
         if ( empty( $item['id'] ) && isset( $additional_fields['id'] ) ) {
             $item['id'] = $additional_fields['id'];
@@ -267,7 +281,7 @@ abstract class REST_Controller {
         if ( empty( $item['id'] ) && empty( $additional_fields['id'] ) ) {
             $item['id'] = '';
         }
-        
+
         $links = [
             'self' => [
                 'href' => rest_url( sprintf( '%s/%s/%d', $namespace, $rest_base, $item['id'] ) ),

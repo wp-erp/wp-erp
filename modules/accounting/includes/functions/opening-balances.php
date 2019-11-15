@@ -381,6 +381,8 @@ function get_ledger_balance_with_opening_balance( $ledger_id, $start_date, $end_
 
     $l_data = erp_acct_get_ledger_by_id( $ledger_id );
 
+    if ( empty( $l_data ) ) return [];
+
     return [
         'id'           => $ledger_id,
         'name'         => $l_data->name,

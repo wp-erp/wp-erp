@@ -57,8 +57,10 @@ final class Accounting {
         do_action( 'erp_accounting_loaded' );
 
         // pdf plugin is not installed notice
-        if ( ! is_plugin_active( 'erp-pdf-invoice/wp-erp-pdf.php' ) || empty( get_option( 'pdf-notice-dismissed' ) ) ) {
-            add_action( 'admin_notices', array( $this, 'admin_pdf_notice' ) );
+        if ( ! is_plugin_active( 'erp-pdf-invoice/wp-erp-pdf.php' ) ) {
+            if ( 'hide' !== get_option( 'pdf-notice-dismissed' ) ) {
+                add_action( 'admin_notices', array( $this, 'admin_pdf_notice' ) );
+            }
         }
 
         add_action( 'wp_ajax_dismiss_pdf_notice', array( $this, 'dismiss_pdf_notice' ) );
@@ -119,7 +121,7 @@ final class Accounting {
      * @return void
      */
     public function dismiss_pdf_notice() {
-        update_option( 'pdf-notice-dismissed', 1 );
+        update_option( 'pdf-notice-dismissed', 'hide' );
     }
 
     /**

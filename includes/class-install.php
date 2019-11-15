@@ -300,8 +300,8 @@ May you enjoy the fruits of your labors for years to come'
         $collate = 'COLLATE=utf8mb4_unicode_ci';
 
         if ( defined('DB_COLLATE') && DB_COLLATE )  {
-            $charset = DB_CHARSET;
-            $collate = DB_COLLATE;
+            $charset = 'CHARSET=' . DB_CHARSET;
+            $collate = 'COLLATE=' . DB_COLLATE;
         }
 
         $charset_collate = $charset . ' ' . $collate;

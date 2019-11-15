@@ -9,14 +9,14 @@
 
         <li>
             <h3>{{ __('Ledger Report', 'erp') }}</h3>
-            <p>{{ __('Ledger report', 'erp') }}</p>
+            <p>{{ __('The ledger report contains the classified and detailed information of all the individual accounts including the debit and credit aspects.', 'erp') }}</p>
 
             <router-link class="wperp-btn btn--primary" :to="{ name: 'LedgerSingle', params: { id: 7 } }">{{ __('View Report', 'erp') }}</router-link>
         </li>
 
         <li>
             <h3>{{ __('Income Statement', 'erp') }}</h3>
-            <p>{{ __('A summary of a management\'s performance as reflecte the profitability of an organization during the time interval', 'erp') }}.</p>
+            <p>{{ __('A summary of a management\'s performance reflected as the profitability of an organization during the time interval', 'erp') }}.</p>
 
             <router-link class="wperp-btn btn--primary" :to="{ name: 'IncomeStatement' }">View Report</router-link>
         </li>
