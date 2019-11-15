@@ -37,7 +37,7 @@
                 $( 'select#erp-select-user-for-assign-contact' ).select2({
                     allowClear: true,
                     placeholder: 'Filter by Owner',
-                    minimumInputLength: 3,
+                    minimumInputLength: 1,
                     ajax: {
                         url: wpErpCrm.ajaxurl,
                         dataType: 'json',
@@ -79,7 +79,7 @@
                 $( 'select#erp-select-contact-company' ).select2({
                     allowClear: true,
                     placeholder: 'Filter by Company',
-                    minimumInputLength: 3,
+                    minimumInputLength: 1,
                     ajax: {
                         url: wpErpCrm.ajaxurl,
                         dataType: 'json',
@@ -121,7 +121,7 @@
                 $( 'select.erp-crm-contact-list-dropdown' ).select2({
                     allowClear: true,
                     placeholder: $(this).attr( 'data-placeholder' ),
-                    minimumInputLength: 3,
+                    minimumInputLength: 1,
                     ajax: {
                         url: wpErpCrm.ajaxurl,
                         dataType: 'json',
@@ -398,7 +398,7 @@
                         width: 'resolve',
                         allowClear: true,
                         placeholder: 'Search..',
-                        minimumInputLength: 3,
+                        minimumInputLength: 1,
                         ajax: {
                             url: wpErpCrm.ajaxurl,
                             dataType: 'json',

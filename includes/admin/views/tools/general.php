@@ -5,7 +5,7 @@
     <div class="inside">
         <p><?php _e( 'Remove default admin sidebar menus', 'erp' ); ?></p>
 
-        <form method="post" action="<?php echo admin_url( 'admin.php?page=erp-tools' ); ?>">
+        <form method="post" class="erp-tools-form" action="<?php echo admin_url( 'admin.php?page=erp-tools' ); ?>">
             <?php
             $menus          = get_option( '_erp_admin_menu', array() );
             $adminbar_menus = get_option( '_erp_adminbar_menu', array() );

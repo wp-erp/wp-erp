@@ -3,9 +3,9 @@ Contributors: tareq1988, nizamuddinbabu, wedevs, ediamin, sabbir1991, asaquzzama
 Donate Link: https://tareq.co/donate
 Tags: business manager, erp, accounting, crm, hr, project manager, small business, SME, contact, contacts, Customer Relationship Management, employee, leave management, hr, human resource management, job, jobs, job listing, lead management, opportunity, schedule, task, lead, holiday, company
 Requires at least: 4.4
-Tested up to: 5.2.4
+Tested up to: 5.3
 Requires PHP: 5.6
-Stable tag: 1.5.6
+Stable tag: 1.5.7
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -259,6 +259,15 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+
+= v1.5.7 -> November 15, 2019 =
+[fix] Fixed the SQL syntax error for DB collate which was causing installation error in some cases.
+[fix] AC: Fixed financial year creating an issue.
+[fix] AC: Changing currency position was not reflecting Accounting, this has been fixed now.
+[fix] AC: Changing currency was not working and it was always fixed for USD, this has been fixed now.
+[fix] AC: Added decimal amount support to pay the purchases.
+[fix] AC: After the Purchase edit, the trial balance mismatch issue has been fixed.
+[tweak] Added form changes saving alert in Settings.
 
 = v1.5.6 -> November 01, 2019 =
 [new] HR: Hiring date anniversary reminder and wishing email to employees.

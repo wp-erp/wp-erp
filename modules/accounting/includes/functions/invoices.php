@@ -183,7 +183,7 @@ function erp_acct_insert_invoice( $data ) {
     $voucher_no    = null;
     $estimate_type = 1;
     $draft         = 1;
-    $currency      = erp_get_currency();
+    $currency      = erp_get_currency(true);
     $email         = erp_get_people_email( $data['customer_id'] );
 
     try {
@@ -446,7 +446,7 @@ function erp_acct_update_invoice( $data, $invoice_no ) {
 
     $estimate_type = 1;
     $draft         = 1;
-    $currency      = erp_get_currency();
+    $currency      = erp_get_currency(true);
 
     try {
         $wpdb->query( 'START TRANSACTION' );

@@ -144,7 +144,7 @@ function erp_acct_insert_purchase( $data ) {
 
     $purchase_type_order = 1;
     $draft               = 1;
-    $currency            = erp_get_currency();
+    $currency            = erp_get_currency(true);
 
     try {
         $wpdb->query( 'START TRANSACTION' );
@@ -276,11 +276,11 @@ function erp_acct_update_purchase( $purchase_data, $purchase_id ) {
     $draft               = 1;
     $voucher_no          = null;
 
-    $data['created_at'] = date( 'Y-m-d H:i:s' );
+    $data['created_at'] = date( 'Y-m-d' );
     $data['created_by'] = $user_id;
-    $data['updated_at'] = date( 'Y-m-d H:i:s' );
+    $data['updated_at'] = date( 'Y-m-d' );
     $data['updated_by'] = $user_id;
-    $currency           = erp_get_currency();
+    $currency           = erp_get_currency(true);
 
     try {
         $wpdb->query( 'START TRANSACTION' );
@@ -420,7 +420,7 @@ function erp_acct_update_purchase( $purchase_data, $purchase_id ) {
 					'trn_no'      => $voucher_no,
 					'trn_date'    => $purchase_data['trn_date'],
 					'particulars' => $purchase_data['particulars'],
-					'debit'       => $purchase_data['amount'],
+					'debit'       => $old_purchase['amount'],
 					'updated_at'  => date( 'Y-m-d H:i:s' ),
 					'updated_by'  => $user_id,
                 )

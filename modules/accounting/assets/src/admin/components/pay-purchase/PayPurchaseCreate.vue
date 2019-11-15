@@ -60,14 +60,14 @@
                 <div class="table-container">
                     <table class="wperp-table wperp-form-table">
                         <thead>
-                        <tr>
-                            <th scope="col" class="col--id column-primary">{{ __('Voucher No', 'erp') }}</th>
-                            <th scope="col">{{ __('Due Date', 'erp') }}</th>
-                            <th scope="col">{{ __('Total', 'erp') }}</th>
-                            <th scope="col">{{ __('Due', 'erp') }}</th>
-                            <th scope="col">{{ __('Amount', 'erp') }}</th>
-                            <th scope="col" class="col--actions"></th>
-                        </tr>
+                            <tr>
+                                <th scope="col" class="col--id column-primary">{{ __('Voucher No', 'erp') }}</th>
+                                <th scope="col">{{ __('Due Date', 'erp') }}</th>
+                                <th scope="col">{{ __('Total', 'erp') }}</th>
+                                <th scope="col">{{ __('Due', 'erp') }}</th>
+                                <th scope="col">{{ __('Amount', 'erp') }}</th>
+                                <th scope="col" class="col--actions"></th>
+                            </tr>
                         </thead>
                         <tbody>
                         <tr :key="key" v-for="(item,key) in pay_purchases">
@@ -76,7 +76,7 @@
                             <td class="col--total" data-colname="Total">{{moneyFormat(item.total)}}</td>
                             <td class="col--due" data-colname="Due">{{moneyFormat(item.due)}}</td>
                             <td class="col--amount" data-colname="Amount">
-                                <input type="number" min="0" :max="item.due" name="amount" v-model="totalAmounts[key]" @keyup="updateFinalAmount" class="text-right wperp-form-field">
+                                <input type="number" min="0" step="0.01" :max="item.due" name="amount" v-model="totalAmounts[key]" @keyup="updateFinalAmount" class="text-right wperp-form-field">
                             </td>
                             <td class="delete-row" data-colname="Remove Above Selection">
                                 <a href="#" @click.prevent="remove_item(key)"><i class="flaticon-trash"></i></a>

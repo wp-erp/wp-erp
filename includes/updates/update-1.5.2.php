@@ -8,11 +8,15 @@
 function erp_acct_updater_create_people_trn_details_table() {
     global $wpdb;
 
-    $collate = '';
+    $charset = 'CHARSET=utf8mb4';
+    $collate = 'COLLATE=utf8mb4_unicode_ci';
 
-    if ( defined( 'DB_COLLATE' ) ) {
-        $collate = DB_COLLATE;
+    if ( defined('DB_COLLATE') && DB_COLLATE )  {
+        $charset = 'CHARSET=' . DB_CHARSET;
+        $collate = 'COLLATE=' . DB_COLLATE;
     }
+
+    $charset_collate = $charset . ' ' . $collate;
 
     $table = [
         "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_people_trn_details` (
@@ -28,7 +32,7 @@ function erp_acct_updater_create_people_trn_details_table() {
             `updated_at` date DEFAULT NULL,
             `updated_by` varchar(50) DEFAULT NULL,
             PRIMARY KEY (`id`)
-        ) $collate;"
+        ) $charset_collate;"
     ];
 
     require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
