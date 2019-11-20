@@ -57,6 +57,8 @@ function erp_acct_get_currency_symbol() {
 /**
  * Get the price format depending on the currency position.
  *
+ * Use it for JavaScript
+ *
  * @return string
  */
 function erp_acct_get_price_format() {
@@ -82,6 +84,35 @@ function erp_acct_get_price_format() {
 }
 
 /**
+ * Get the price format depending on the currency position.
+ *
+ * Use it for PHP
+ *
+ * @return string
+ */
+function erp_acct_get_price_format_php() {
+    $currency_pos = erp_get_option( 'erp_ac_currency_position', false, 'left' );
+    $format       = '%1$s%2$s';
+
+    switch ($currency_pos) {
+        case 'left':
+            $format = '%1$s%2$s';
+            break;
+        case 'right':
+            $format = '%2$s%1$s';
+            break;
+        case 'left_space':
+            $format = '%1$s&nbsp;%2$s';
+            break;
+        case 'right_space':
+            $format = '%2$s&nbsp;%1$s';
+            break;
+    }
+
+    return apply_filters( 'erp_acct_price_format_php', $format, $currency_pos );
+}
+
+/**
  * Format the price with a currency symbol.
  *
  * @param float $price
@@ -101,7 +132,7 @@ function erp_acct_get_price( $main_price, $args = array() ) {
 					'decimal_separator'  => erp_get_option( 'erp_ac_de_separator', false, '.' ),
 					'thousand_separator' => erp_get_option( 'erp_ac_th_separator', false, ',' ),
 					'decimals'           => absint( erp_get_option( 'erp_ac_nm_decimal', false, 2 ) ),
-					'price_format'       => erp_acct_get_price_format(),
+					'price_format'       => erp_acct_get_price_format_php(),
 					'symbol'             => true,
 					'currency_symbol'    => erp_acct_get_currency_symbol(),
                 )
