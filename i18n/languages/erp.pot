@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WP ERP 1.5.7\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-erp\n"
-"POT-Creation-Date: 2019-11-15 09:04:12+00:00\n"
+"POT-Creation-Date: 2019-11-27 07:00:59+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -98,583 +98,583 @@ msgid "Belgium"
 msgstr ""
 
 #: i18n/countries.php:37
-msgid "Belau"
-msgstr ""
-
-#: i18n/countries.php:38
 msgid "Belize"
 msgstr ""
 
-#: i18n/countries.php:39
+#: i18n/countries.php:38
 msgid "Benin"
 msgstr ""
 
-#: i18n/countries.php:40
+#: i18n/countries.php:39
 msgid "Bermuda"
 msgstr ""
 
-#: i18n/countries.php:41
+#: i18n/countries.php:40
 msgid "Bhutan"
 msgstr ""
 
-#: i18n/countries.php:42
+#: i18n/countries.php:41
 msgid "Bolivia"
 msgstr ""
 
-#: i18n/countries.php:43
+#: i18n/countries.php:42
 msgid "Bonaire, Saint Eustatius and Saba"
 msgstr ""
 
-#: i18n/countries.php:44
+#: i18n/countries.php:43
 msgid "Bosnia and Herzegovina"
 msgstr ""
 
-#: i18n/countries.php:45
+#: i18n/countries.php:44
 msgid "Botswana"
 msgstr ""
 
-#: i18n/countries.php:46
+#: i18n/countries.php:45
 msgid "Bouvet Island"
 msgstr ""
 
-#: i18n/countries.php:47
+#: i18n/countries.php:46
 msgid "Brazil"
 msgstr ""
 
-#: i18n/countries.php:48
+#: i18n/countries.php:47
 msgid "British Indian Ocean Territory"
 msgstr ""
 
-#: i18n/countries.php:49
+#: i18n/countries.php:48
 msgid "British Virgin Islands"
 msgstr ""
 
-#: i18n/countries.php:50
+#: i18n/countries.php:49
 msgid "Brunei"
 msgstr ""
 
-#: i18n/countries.php:51
+#: i18n/countries.php:50
 msgid "Bulgaria"
 msgstr ""
 
-#: i18n/countries.php:52
+#: i18n/countries.php:51
 msgid "Burkina Faso"
 msgstr ""
 
-#: i18n/countries.php:53
+#: i18n/countries.php:52
 msgid "Burundi"
 msgstr ""
 
-#: i18n/countries.php:54
+#: i18n/countries.php:53
 msgid "Cambodia"
 msgstr ""
 
-#: i18n/countries.php:55
+#: i18n/countries.php:54
 msgid "Cameroon"
 msgstr ""
 
-#: i18n/countries.php:56
+#: i18n/countries.php:55
 msgid "Canada"
 msgstr ""
 
-#: i18n/countries.php:57
+#: i18n/countries.php:56
 msgid "Cape Verde"
 msgstr ""
 
-#: i18n/countries.php:58
+#: i18n/countries.php:57
 msgid "Cayman Islands"
 msgstr ""
 
-#: i18n/countries.php:59
+#: i18n/countries.php:58
 msgid "Central African Republic"
 msgstr ""
 
-#: i18n/countries.php:60
+#: i18n/countries.php:59
 msgid "Chad"
 msgstr ""
 
-#: i18n/countries.php:61
+#: i18n/countries.php:60
 msgid "Chile"
 msgstr ""
 
-#: i18n/countries.php:62
+#: i18n/countries.php:61
 msgid "China"
 msgstr ""
 
-#: i18n/countries.php:63
+#: i18n/countries.php:62
 msgid "Christmas Island"
 msgstr ""
 
-#: i18n/countries.php:64
+#: i18n/countries.php:63
 msgid "Cocos (Keeling) Islands"
 msgstr ""
 
-#: i18n/countries.php:65
+#: i18n/countries.php:64
 msgid "Colombia"
 msgstr ""
 
-#: i18n/countries.php:66
+#: i18n/countries.php:65
 msgid "Comoros"
 msgstr ""
 
-#: i18n/countries.php:67
+#: i18n/countries.php:66
 msgid "Congo (Brazzaville)"
 msgstr ""
 
-#: i18n/countries.php:68
+#: i18n/countries.php:67
 msgid "Congo (Kinshasa)"
 msgstr ""
 
-#: i18n/countries.php:69
+#: i18n/countries.php:68
 msgid "Cook Islands"
 msgstr ""
 
-#: i18n/countries.php:70
+#: i18n/countries.php:69
 msgid "Costa Rica"
 msgstr ""
 
-#: i18n/countries.php:71
+#: i18n/countries.php:70
 msgid "Croatia"
 msgstr ""
 
-#: i18n/countries.php:72
+#: i18n/countries.php:71
 msgid "Cuba"
 msgstr ""
 
-#: i18n/countries.php:73
+#: i18n/countries.php:72
 msgid "Cura&Ccedil;ao"
 msgstr ""
 
-#: i18n/countries.php:74
+#: i18n/countries.php:73
 msgid "Cyprus"
 msgstr ""
 
-#: i18n/countries.php:75
+#: i18n/countries.php:74
 msgid "Czech Republic"
 msgstr ""
 
-#: i18n/countries.php:76
+#: i18n/countries.php:75
 msgid "Denmark"
 msgstr ""
 
-#: i18n/countries.php:77
+#: i18n/countries.php:76
 msgid "Djibouti"
 msgstr ""
 
-#: i18n/countries.php:78
+#: i18n/countries.php:77
 msgid "Dominica"
 msgstr ""
 
-#: i18n/countries.php:79
+#: i18n/countries.php:78
 msgid "Dominican Republic"
 msgstr ""
 
-#: i18n/countries.php:80
+#: i18n/countries.php:79
 msgid "Ecuador"
 msgstr ""
 
-#: i18n/countries.php:81
+#: i18n/countries.php:80
 msgid "Egypt"
 msgstr ""
 
-#: i18n/countries.php:82
+#: i18n/countries.php:81
 msgid "El Salvador"
 msgstr ""
 
-#: i18n/countries.php:83
+#: i18n/countries.php:82
 msgid "Equatorial Guinea"
 msgstr ""
 
-#: i18n/countries.php:84
+#: i18n/countries.php:83
 msgid "Eritrea"
 msgstr ""
 
-#: i18n/countries.php:85
+#: i18n/countries.php:84
 msgid "Estonia"
 msgstr ""
 
-#: i18n/countries.php:86
+#: i18n/countries.php:85
 msgid "Ethiopia"
 msgstr ""
 
-#: i18n/countries.php:87
+#: i18n/countries.php:86
 msgid "Falkland Islands"
 msgstr ""
 
-#: i18n/countries.php:88
+#: i18n/countries.php:87
 msgid "Faroe Islands"
 msgstr ""
 
-#: i18n/countries.php:89
+#: i18n/countries.php:88
 msgid "Fiji"
 msgstr ""
 
-#: i18n/countries.php:90
+#: i18n/countries.php:89
 msgid "Finland"
 msgstr ""
 
-#: i18n/countries.php:91
+#: i18n/countries.php:90
 msgid "France"
 msgstr ""
 
-#: i18n/countries.php:92
+#: i18n/countries.php:91
 msgid "French Guiana"
 msgstr ""
 
-#: i18n/countries.php:93
+#: i18n/countries.php:92
 msgid "French Polynesia"
 msgstr ""
 
-#: i18n/countries.php:94
+#: i18n/countries.php:93
 msgid "French Southern Territories"
 msgstr ""
 
-#: i18n/countries.php:95
+#: i18n/countries.php:94
 msgid "Gabon"
 msgstr ""
 
-#: i18n/countries.php:96
+#: i18n/countries.php:95
 msgid "Gambia"
 msgstr ""
 
-#: i18n/countries.php:97
+#: i18n/countries.php:96
 msgid "Georgia"
 msgstr ""
 
-#: i18n/countries.php:98
+#: i18n/countries.php:97
 msgid "Germany"
 msgstr ""
 
-#: i18n/countries.php:99
+#: i18n/countries.php:98
 msgid "Ghana"
 msgstr ""
 
-#: i18n/countries.php:100
+#: i18n/countries.php:99
 msgid "Gibraltar"
 msgstr ""
 
-#: i18n/countries.php:101
+#: i18n/countries.php:100
 msgid "Greece"
 msgstr ""
 
-#: i18n/countries.php:102
+#: i18n/countries.php:101
 msgid "Greenland"
 msgstr ""
 
-#: i18n/countries.php:103
+#: i18n/countries.php:102
 msgid "Grenada"
 msgstr ""
 
-#: i18n/countries.php:104
+#: i18n/countries.php:103
 msgid "Guadeloupe"
 msgstr ""
 
-#: i18n/countries.php:105
+#: i18n/countries.php:104
 msgid "Guatemala"
 msgstr ""
 
-#: i18n/countries.php:106
+#: i18n/countries.php:105
 msgid "Guernsey"
 msgstr ""
 
-#: i18n/countries.php:107
+#: i18n/countries.php:106
 msgid "Guinea"
 msgstr ""
 
-#: i18n/countries.php:108
+#: i18n/countries.php:107
 msgid "Guinea-Bissau"
 msgstr ""
 
-#: i18n/countries.php:109
+#: i18n/countries.php:108
 msgid "Guyana"
 msgstr ""
 
-#: i18n/countries.php:110
+#: i18n/countries.php:109
 msgid "Haiti"
 msgstr ""
 
-#: i18n/countries.php:111
+#: i18n/countries.php:110
 msgid "Heard Island and McDonald Islands"
 msgstr ""
 
-#: i18n/countries.php:112
+#: i18n/countries.php:111
 msgid "Honduras"
 msgstr ""
 
-#: i18n/countries.php:113
+#: i18n/countries.php:112
 msgid "Hong Kong"
 msgstr ""
 
-#: i18n/countries.php:114
+#: i18n/countries.php:113
 msgid "Hungary"
 msgstr ""
 
-#: i18n/countries.php:115
+#: i18n/countries.php:114
 msgid "Iceland"
 msgstr ""
 
-#: i18n/countries.php:116
+#: i18n/countries.php:115
 msgid "India"
 msgstr ""
 
-#: i18n/countries.php:117
+#: i18n/countries.php:116
 msgid "Indonesia"
 msgstr ""
 
-#: i18n/countries.php:118
+#: i18n/countries.php:117
 msgid "Iran"
 msgstr ""
 
-#: i18n/countries.php:119
+#: i18n/countries.php:118
 msgid "Iraq"
 msgstr ""
 
-#: i18n/countries.php:120
+#: i18n/countries.php:119
 msgid "Ireland"
 msgstr ""
 
-#: i18n/countries.php:121
+#: i18n/countries.php:120
 msgid "Isle of Man"
 msgstr ""
 
-#: i18n/countries.php:122
+#: i18n/countries.php:121
 msgid "Israel"
 msgstr ""
 
-#: i18n/countries.php:123
+#: i18n/countries.php:122
 msgid "Italy"
 msgstr ""
 
-#: i18n/countries.php:124
+#: i18n/countries.php:123
 msgid "Ivory Coast"
 msgstr ""
 
-#: i18n/countries.php:125
+#: i18n/countries.php:124
 msgid "Jamaica"
 msgstr ""
 
-#: i18n/countries.php:126
+#: i18n/countries.php:125
 msgid "Japan"
 msgstr ""
 
-#: i18n/countries.php:127
+#: i18n/countries.php:126
 msgid "Jersey"
 msgstr ""
 
-#: i18n/countries.php:128
+#: i18n/countries.php:127
 msgid "Jordan"
 msgstr ""
 
-#: i18n/countries.php:129
+#: i18n/countries.php:128
 msgid "Kazakhstan"
 msgstr ""
 
-#: i18n/countries.php:130
+#: i18n/countries.php:129
 msgid "Kenya"
 msgstr ""
 
-#: i18n/countries.php:131
+#: i18n/countries.php:130
 msgid "Kiribati"
 msgstr ""
 
-#: i18n/countries.php:132
+#: i18n/countries.php:131
 msgid "Kuwait"
 msgstr ""
 
-#: i18n/countries.php:133
+#: i18n/countries.php:132
 msgid "Kyrgyzstan"
 msgstr ""
 
-#: i18n/countries.php:134
+#: i18n/countries.php:133
 msgid "Laos"
 msgstr ""
 
-#: i18n/countries.php:135
+#: i18n/countries.php:134
 msgid "Latvia"
 msgstr ""
 
-#: i18n/countries.php:136
+#: i18n/countries.php:135
 msgid "Lebanon"
 msgstr ""
 
-#: i18n/countries.php:137
+#: i18n/countries.php:136
 msgid "Lesotho"
 msgstr ""
 
-#: i18n/countries.php:138
+#: i18n/countries.php:137
 msgid "Liberia"
 msgstr ""
 
-#: i18n/countries.php:139
+#: i18n/countries.php:138
 msgid "Libya"
 msgstr ""
 
-#: i18n/countries.php:140
+#: i18n/countries.php:139
 msgid "Liechtenstein"
 msgstr ""
 
-#: i18n/countries.php:141
+#: i18n/countries.php:140
 msgid "Lithuania"
 msgstr ""
 
-#: i18n/countries.php:142
+#: i18n/countries.php:141
 msgid "Luxembourg"
 msgstr ""
 
-#: i18n/countries.php:143
+#: i18n/countries.php:142
 msgid "Macao S.A.R., China"
 msgstr ""
 
-#: i18n/countries.php:144
+#: i18n/countries.php:143
 msgid "Macedonia"
 msgstr ""
 
-#: i18n/countries.php:145
+#: i18n/countries.php:144
 msgid "Madagascar"
 msgstr ""
 
-#: i18n/countries.php:146
+#: i18n/countries.php:145
 msgid "Malawi"
 msgstr ""
 
-#: i18n/countries.php:147
+#: i18n/countries.php:146
 msgid "Malaysia"
 msgstr ""
 
-#: i18n/countries.php:148
+#: i18n/countries.php:147
 msgid "Maldives"
 msgstr ""
 
-#: i18n/countries.php:149
+#: i18n/countries.php:148
 msgid "Mali"
 msgstr ""
 
-#: i18n/countries.php:150
+#: i18n/countries.php:149
 msgid "Malta"
 msgstr ""
 
-#: i18n/countries.php:151
+#: i18n/countries.php:150
 msgid "Marshall Islands"
 msgstr ""
 
-#: i18n/countries.php:152
+#: i18n/countries.php:151
 msgid "Martinique"
 msgstr ""
 
-#: i18n/countries.php:153
+#: i18n/countries.php:152
 msgid "Mauritania"
 msgstr ""
 
-#: i18n/countries.php:154
+#: i18n/countries.php:153
 msgid "Mauritius"
 msgstr ""
 
-#: i18n/countries.php:155
+#: i18n/countries.php:154
 msgid "Mayotte"
 msgstr ""
 
-#: i18n/countries.php:156
+#: i18n/countries.php:155
 msgid "Mexico"
 msgstr ""
 
-#: i18n/countries.php:157
+#: i18n/countries.php:156
 msgid "Micronesia"
 msgstr ""
 
-#: i18n/countries.php:158
+#: i18n/countries.php:157
 msgid "Moldova"
 msgstr ""
 
-#: i18n/countries.php:159
+#: i18n/countries.php:158
 msgid "Monaco"
 msgstr ""
 
-#: i18n/countries.php:160
+#: i18n/countries.php:159
 msgid "Mongolia"
 msgstr ""
 
-#: i18n/countries.php:161
+#: i18n/countries.php:160
 msgid "Montenegro"
 msgstr ""
 
-#: i18n/countries.php:162
+#: i18n/countries.php:161
 msgid "Montserrat"
 msgstr ""
 
-#: i18n/countries.php:163
+#: i18n/countries.php:162
 msgid "Morocco"
 msgstr ""
 
-#: i18n/countries.php:164
+#: i18n/countries.php:163
 msgid "Mozambique"
 msgstr ""
 
-#: i18n/countries.php:165
+#: i18n/countries.php:164
 msgid "Myanmar"
 msgstr ""
 
-#: i18n/countries.php:166
+#: i18n/countries.php:165
 msgid "Namibia"
 msgstr ""
 
-#: i18n/countries.php:167
+#: i18n/countries.php:166
 msgid "Nauru"
 msgstr ""
 
-#: i18n/countries.php:168
+#: i18n/countries.php:167
 msgid "Nepal"
 msgstr ""
 
-#: i18n/countries.php:169
+#: i18n/countries.php:168
 msgid "Netherlands"
 msgstr ""
 
-#: i18n/countries.php:170
+#: i18n/countries.php:169
 msgid "Netherlands Antilles"
 msgstr ""
 
-#: i18n/countries.php:171
+#: i18n/countries.php:170
 msgid "New Caledonia"
 msgstr ""
 
-#: i18n/countries.php:172
+#: i18n/countries.php:171
 msgid "New Zealand"
 msgstr ""
 
-#: i18n/countries.php:173
+#: i18n/countries.php:172
 msgid "Nicaragua"
 msgstr ""
 
-#: i18n/countries.php:174
+#: i18n/countries.php:173
 msgid "Niger"
 msgstr ""
 
-#: i18n/countries.php:175
+#: i18n/countries.php:174
 msgid "Nigeria"
 msgstr ""
 
-#: i18n/countries.php:176
+#: i18n/countries.php:175
 msgid "Niue"
 msgstr ""
 
-#: i18n/countries.php:177
+#: i18n/countries.php:176
 msgid "Norfolk Island"
 msgstr ""
 
-#: i18n/countries.php:178
+#: i18n/countries.php:177
 msgid "North Korea"
 msgstr ""
 
-#: i18n/countries.php:179
+#: i18n/countries.php:178
 msgid "Norway"
 msgstr ""
 
-#: i18n/countries.php:180
+#: i18n/countries.php:179
 msgid "Oman"
 msgstr ""
 
-#: i18n/countries.php:181
+#: i18n/countries.php:180
 msgid "Pakistan"
+msgstr ""
+
+#: i18n/countries.php:181
+msgid "Palau"
 msgstr ""
 
 #: i18n/countries.php:182
@@ -5368,7 +5368,7 @@ msgstr ""
 #: includes/admin/class-form-handler.php:99 includes/admin/views/address.php:37
 #: includes/admin/views/company-editor.php:75
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:93
-#: modules/crm/includes/functions-customer.php:2944
+#: modules/crm/includes/functions-customer.php:2953
 #: modules/crm/views/company/single.php:82
 #: modules/crm/views/contact/single.php:83
 #: modules/crm/views/js-templates/new-customer.php:219
@@ -5403,9 +5403,9 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:50
 #: modules/accounting/includes/classes/class-settings.php:70
 #: modules/crm/includes/class-contact-subscriber-list-table.php:99
-#: modules/crm/includes/functions-customer.php:221
+#: modules/crm/includes/functions-customer.php:228
 #: modules/crm/views/company.php:20 modules/crm/views/dashboard-badge.php:55
-#: modules/crm/views/dashboard.php:61
+#: modules/crm/views/dashboard.php:54
 msgid "Company"
 msgstr ""
 
@@ -5509,8 +5509,8 @@ msgid "Basic Settings"
 msgstr ""
 
 #: includes/admin/class-setup-wizard.php:226
-#: modules/crm/includes/functions-customer.php:1840
-#: modules/crm/includes/functions-customer.php:2904
+#: modules/crm/includes/functions-customer.php:1849
+#: modules/crm/includes/functions-customer.php:2913
 #: modules/crm/views/js-templates/new-assign-company.php:6
 #: modules/crm/views/js-templates/new-customer.php:73
 msgid "Company Name"
@@ -5768,7 +5768,7 @@ msgstr ""
 #: includes/admin/views/address.php:30
 #: includes/admin/views/company-editor.php:64 includes/class-company.php:41
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:89
-#: modules/crm/includes/functions-customer.php:1629
+#: modules/crm/includes/functions-customer.php:1638
 #: modules/crm/views/company/single.php:80
 #: modules/crm/views/contact/single.php:81
 #: modules/crm/views/js-templates/new-customer.php:212
@@ -5852,8 +5852,8 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/people/EmployeeDetails.vue:25
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:46
 #: modules/accounting/assets/src/admin/components/userinfo/UserBasic.vue:22
-#: modules/crm/includes/functions-customer.php:1587
-#: modules/crm/includes/functions-customer.php:2914
+#: modules/crm/includes/functions-customer.php:1596
+#: modules/crm/includes/functions-customer.php:2923
 #: modules/crm/views/company/single.php:75
 #: modules/crm/views/contact/single.php:76
 #: modules/hrm/views/js-templates/new-employee.php:319
@@ -5863,7 +5863,7 @@ msgstr ""
 #: includes/admin/views/company-editor.php:123
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:77
 #: modules/accounting/assets/src/admin/components/userinfo/UserBasic.vue:34
-#: modules/crm/includes/functions-customer.php:2929
+#: modules/crm/includes/functions-customer.php:2938
 #: modules/crm/views/company/single.php:76
 #: modules/crm/views/contact/single.php:77
 msgid "Fax"
@@ -5873,8 +5873,8 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/people/EmployeeDetails.vue:29
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:65
 #: modules/accounting/assets/src/admin/components/userinfo/UserBasic.vue:26
-#: modules/crm/includes/functions-customer.php:1601
-#: modules/crm/includes/functions-customer.php:2919
+#: modules/crm/includes/functions-customer.php:1610
+#: modules/crm/includes/functions-customer.php:2928
 #: modules/crm/views/js-templates/new-customer.php:172
 #: modules/hrm/views/employee/tab-general.php:62
 #: modules/hrm/views/js-templates/new-employee.php:311
@@ -5884,8 +5884,8 @@ msgstr ""
 #: includes/admin/views/company-editor.php:145
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:69
 #: modules/accounting/assets/src/admin/components/userinfo/UserBasic.vue:30
-#: modules/crm/includes/functions-customer.php:1615
-#: modules/crm/includes/functions-customer.php:2924
+#: modules/crm/includes/functions-customer.php:1624
+#: modules/crm/includes/functions-customer.php:2933
 #: modules/crm/views/company/single.php:77
 #: modules/crm/views/contact/single.php:78
 #: modules/crm/views/js-templates/new-customer.php:180
@@ -6202,7 +6202,7 @@ msgstr ""
 #: includes/admin/views/tools/import.php:83
 #: includes/admin/views/tools/import.php:160
 #: modules/crm/includes/class-subscription-widget.php:105
-#: modules/crm/includes/functions-customer.php:1746
+#: modules/crm/includes/functions-customer.php:1755
 #: modules/crm/views/import-user-to-crm.php:30
 #: modules/crm/views/js-templates/new-customer.php:105
 msgid "Life Stage"
@@ -6216,7 +6216,7 @@ msgstr ""
 #: includes/admin/views/tools/import.php:94
 #: includes/admin/views/tools/import.php:171
 #: modules/crm/includes/contact-forms/class-erp-settings-contact-forms.php:77
-#: modules/crm/includes/functions-customer.php:1720
+#: modules/crm/includes/functions-customer.php:1729
 #: modules/crm/views/company/single.php:187
 #: modules/crm/views/contact/single.php:191
 #: modules/crm/views/js-templates/new-customer.php:256
@@ -6679,7 +6679,7 @@ msgid "Street Address 1"
 msgstr ""
 
 #: includes/class-company.php:42
-#: modules/crm/includes/functions-customer.php:2949
+#: modules/crm/includes/functions-customer.php:2958
 #: modules/crm/views/company/single.php:81
 #: modules/crm/views/contact/single.php:82
 #: modules/hrm/views/employee/tab-general.php:59
@@ -7138,10 +7138,10 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:42
 #: modules/crm/includes/class-contact-subscriber-list-table.php:173
 #: modules/crm/includes/class-subscription.php:164
-#: modules/crm/includes/functions-customer.php:529
-#: modules/crm/includes/functions-customer.php:1575
-#: modules/crm/includes/functions-customer.php:2816
-#: modules/crm/includes/functions-customer.php:2909
+#: modules/crm/includes/functions-customer.php:538
+#: modules/crm/includes/functions-customer.php:1584
+#: modules/crm/includes/functions-customer.php:2825
+#: modules/crm/includes/functions-customer.php:2918
 #: modules/crm/views/js-templates/customer-add-schedules.php:81
 #: modules/crm/views/js-templates/new-customer.php:87
 #: modules/hrm/views/employee/tab-general.php:11
@@ -8015,12 +8015,12 @@ msgid "Something went wrong, please try again"
 msgstr ""
 
 #: includes/functions-people.php:830
-#: modules/crm/includes/functions-customer.php:3701
-#: modules/crm/includes/functions-customer.php:3722
-#: modules/crm/includes/functions-customer.php:3741
-#: modules/crm/includes/functions-customer.php:3761
-#: modules/crm/includes/functions-customer.php:3801
-#: modules/crm/includes/functions-customer.php:3821
+#: modules/crm/includes/functions-customer.php:3710
+#: modules/crm/includes/functions-customer.php:3731
+#: modules/crm/includes/functions-customer.php:3750
+#: modules/crm/includes/functions-customer.php:3770
+#: modules/crm/includes/functions-customer.php:3810
+#: modules/crm/includes/functions-customer.php:3830
 msgid "People not exists"
 msgstr ""
 
@@ -9147,8 +9147,8 @@ msgid "Email already exists!"
 msgstr ""
 
 #: modules/accounting/api/class-rest-api-customers.php:423
-#: modules/crm/includes/functions-customer.php:193
-#: modules/crm/includes/functions-customer.php:220
+#: modules/crm/includes/functions-customer.php:200
+#: modules/crm/includes/functions-customer.php:227
 #: modules/crm/views/reports/customer-report.php:23
 #: modules/crm/views/reports/growth-report.php:28
 msgid "Customer"
@@ -10599,8 +10599,8 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:35
 #: modules/crm/includes/class-subscription-widget.php:176
 #: modules/crm/includes/class-subscription.php:177
-#: modules/crm/includes/functions-customer.php:1801
-#: modules/crm/includes/functions-customer.php:2894
+#: modules/crm/includes/functions-customer.php:1810
+#: modules/crm/includes/functions-customer.php:2903
 #: modules/crm/views/contact/single.php:72
 #: modules/crm/views/js-templates/new-customer.php:54
 #: modules/hrm/views/employee/tab-general.php:8
@@ -10612,8 +10612,8 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:39
 #: modules/crm/includes/class-subscription-widget.php:177
 #: modules/crm/includes/class-subscription.php:184
-#: modules/crm/includes/functions-customer.php:1815
-#: modules/crm/includes/functions-customer.php:2899
+#: modules/crm/includes/functions-customer.php:1824
+#: modules/crm/includes/functions-customer.php:2908
 #: modules/crm/views/contact/single.php:73
 #: modules/crm/views/js-templates/new-customer.php:63
 #: modules/hrm/views/employee/tab-general.php:9
@@ -10632,8 +10632,8 @@ msgstr ""
 
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:81
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:82
-#: modules/crm/includes/functions-customer.php:1641
-#: modules/crm/includes/functions-customer.php:2934
+#: modules/crm/includes/functions-customer.php:1650
+#: modules/crm/includes/functions-customer.php:2943
 #: modules/crm/views/company/single.php:78
 #: modules/crm/views/contact/single.php:79
 msgid "Street 1"
@@ -10641,8 +10641,8 @@ msgstr ""
 
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:85
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:86
-#: modules/crm/includes/functions-customer.php:1655
-#: modules/crm/includes/functions-customer.php:2939
+#: modules/crm/includes/functions-customer.php:1664
+#: modules/crm/includes/functions-customer.php:2948
 #: modules/crm/views/company/single.php:79
 #: modules/crm/views/contact/single.php:80
 msgid "Street 2"
@@ -11115,7 +11115,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:8
 #: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:8
 #: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:8
-#: modules/crm/includes/functions-customer.php:334
+#: modules/crm/includes/functions-customer.php:343
 #: modules/hrm/includes/class-employee-list-table.php:279
 msgid "Trash"
 msgstr ""
@@ -11452,7 +11452,7 @@ msgstr ""
 #: modules/accounting/includes/functions/transactions.php:988
 #: modules/accounting/includes/functions/transactions.php:1008
 #: modules/accounting/includes/functions/transactions.php:1026
-#: modules/crm/includes/functions-customer.php:1696
+#: modules/crm/includes/functions-customer.php:1705
 #: modules/crm/views/js-templates/new-customer.php:308
 #: modules/hrm/views/employee/empty-employee.php:126
 #: modules/hrm/views/employee/single.php:116
@@ -11611,11 +11611,11 @@ msgid "Add More"
 msgstr ""
 
 #: modules/accounting/includes/views/transactions/invoice-readonly.php:10
-#: modules/crm/includes/functions-customer.php:1633
-#: modules/crm/includes/functions-customer.php:1647
-#: modules/crm/includes/functions-customer.php:1661
-#: modules/crm/includes/functions-customer.php:1673
-#: modules/crm/includes/functions-customer.php:1686
+#: modules/crm/includes/functions-customer.php:1642
+#: modules/crm/includes/functions-customer.php:1656
+#: modules/crm/includes/functions-customer.php:1670
+#: modules/crm/includes/functions-customer.php:1682
+#: modules/crm/includes/functions-customer.php:1695
 msgid "from"
 msgstr ""
 
@@ -11645,6 +11645,11 @@ msgstr ""
 
 #: modules/accounting/includes/views/transactions/invoice-readonly.php:131
 msgid "Powered By "
+msgstr ""
+
+#: modules/crm/assets/js/crm-contacts.js:1175
+#: modules/crm/views/campaigns.php:15
+msgid "Search Contact"
 msgstr ""
 
 #: modules/crm/crm.php:181
@@ -12115,10 +12120,10 @@ msgstr ""
 
 #: modules/crm/includes/class-ajax.php:552
 #: modules/crm/includes/class-ajax.php:708
-#: modules/crm/includes/functions-customer.php:382
-#: modules/crm/includes/functions-customer.php:1358
-#: modules/crm/includes/functions-customer.php:3066
-#: modules/crm/includes/functions-customer.php:3521
+#: modules/crm/includes/functions-customer.php:391
+#: modules/crm/includes/functions-customer.php:1367
+#: modules/crm/includes/functions-customer.php:3075
+#: modules/crm/includes/functions-customer.php:3530
 msgid "No contact found"
 msgstr ""
 
@@ -12413,12 +12418,12 @@ msgid "No contact group found."
 msgstr ""
 
 #: modules/crm/includes/class-contact-group-list-table.php:87
-#: modules/crm/includes/functions-customer.php:1495
+#: modules/crm/includes/functions-customer.php:1504
 msgid "Subscribed"
 msgstr ""
 
 #: modules/crm/includes/class-contact-group-list-table.php:88
-#: modules/crm/includes/functions-customer.php:1497
+#: modules/crm/includes/functions-customer.php:1506
 msgid "Unconfirmed"
 msgstr ""
 
@@ -12773,25 +12778,31 @@ msgstr ""
 msgid "Me"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:194
+#: modules/crm/includes/functions-customer.php:201
 #: modules/crm/views/reports/customer-report.php:22
 #: modules/crm/views/reports/growth-report.php:27
 msgid "Lead"
-msgstr ""
+msgid_plural "Leads"
+msgstr[0] ""
+msgstr[1] ""
 
-#: modules/crm/includes/functions-customer.php:195
+#: modules/crm/includes/functions-customer.php:202
 #: modules/crm/views/reports/customer-report.php:21
 #: modules/crm/views/reports/growth-report.php:26
 msgid "Opportunity"
-msgstr ""
+msgid_plural "Opportunities"
+msgstr[0] ""
+msgstr[1] ""
 
-#: modules/crm/includes/functions-customer.php:196
+#: modules/crm/includes/functions-customer.php:203
 #: modules/crm/views/reports/customer-report.php:20
 #: modules/crm/views/reports/growth-report.php:25
 msgid "Subscriber"
-msgstr ""
+msgid_plural "Subscribers"
+msgstr[0] ""
+msgstr[1] ""
 
-#: modules/crm/includes/functions-customer.php:290
+#: modules/crm/includes/functions-customer.php:323
 #: modules/crm/views/activities.php:26
 #: modules/hrm/includes/class-hr-log.php:792
 #: modules/hrm/includes/class-hr-log.php:797
@@ -12802,373 +12813,373 @@ msgstr ""
 msgid "All"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:419
+#: modules/crm/includes/functions-customer.php:428
 msgid "No comapany found"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:490
+#: modules/crm/includes/functions-customer.php:499
 #: modules/crm/views/js-templates/new-customer.php:331
 msgid "Facebook"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:495
+#: modules/crm/includes/functions-customer.php:504
 #: modules/crm/views/js-templates/new-customer.php:339
 msgid "Twitter"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:500
+#: modules/crm/includes/functions-customer.php:509
 #: modules/crm/views/js-templates/new-customer.php:347
 msgid "Google Plus"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:505
+#: modules/crm/includes/functions-customer.php:514
 #: modules/crm/views/js-templates/new-customer.php:355
 msgid "Linkedin"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:524
+#: modules/crm/includes/functions-customer.php:533
 msgid "New Note"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:534
+#: modules/crm/includes/functions-customer.php:543
 msgid "Log Activity"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:539
+#: modules/crm/includes/functions-customer.php:548
 msgid "Schedule"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:544
+#: modules/crm/includes/functions-customer.php:553
 msgid "Tasks"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:967
+#: modules/crm/includes/functions-customer.php:976
 msgid "You have a schedule after %s %s at %s"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:968
+#: modules/crm/includes/functions-customer.php:977
 msgid "ERP Schedule"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1311
+#: modules/crm/includes/functions-customer.php:1320
 msgid "No group selected"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1315
+#: modules/crm/includes/functions-customer.php:1324
 msgid "No contact founds"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1496
+#: modules/crm/includes/functions-customer.php:1505
 msgid "Unsubscribe"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1579
-#: modules/crm/includes/functions-customer.php:1593
-#: modules/crm/includes/functions-customer.php:1607
-#: modules/crm/includes/functions-customer.php:1621
-#: modules/crm/includes/functions-customer.php:1635
-#: modules/crm/includes/functions-customer.php:1649
-#: modules/crm/includes/functions-customer.php:1663
-#: modules/crm/includes/functions-customer.php:1688
-#: modules/crm/includes/functions-customer.php:1702
-#: modules/crm/includes/functions-customer.php:1714
-#: modules/crm/includes/functions-customer.php:1738
-#: modules/crm/includes/functions-customer.php:1807
-#: modules/crm/includes/functions-customer.php:1821
-#: modules/crm/includes/functions-customer.php:1846
+#: modules/crm/includes/functions-customer.php:1588
+#: modules/crm/includes/functions-customer.php:1602
+#: modules/crm/includes/functions-customer.php:1616
+#: modules/crm/includes/functions-customer.php:1630
+#: modules/crm/includes/functions-customer.php:1644
+#: modules/crm/includes/functions-customer.php:1658
+#: modules/crm/includes/functions-customer.php:1672
+#: modules/crm/includes/functions-customer.php:1697
+#: modules/crm/includes/functions-customer.php:1711
+#: modules/crm/includes/functions-customer.php:1723
+#: modules/crm/includes/functions-customer.php:1747
+#: modules/crm/includes/functions-customer.php:1816
+#: modules/crm/includes/functions-customer.php:1830
+#: modules/crm/includes/functions-customer.php:1855
 msgid "contains"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1580
-#: modules/crm/includes/functions-customer.php:1594
-#: modules/crm/includes/functions-customer.php:1608
-#: modules/crm/includes/functions-customer.php:1622
-#: modules/crm/includes/functions-customer.php:1636
-#: modules/crm/includes/functions-customer.php:1650
-#: modules/crm/includes/functions-customer.php:1664
-#: modules/crm/includes/functions-customer.php:1689
-#: modules/crm/includes/functions-customer.php:1703
-#: modules/crm/includes/functions-customer.php:1739
-#: modules/crm/includes/functions-customer.php:1808
-#: modules/crm/includes/functions-customer.php:1822
-#: modules/crm/includes/functions-customer.php:1847
+#: modules/crm/includes/functions-customer.php:1589
+#: modules/crm/includes/functions-customer.php:1603
+#: modules/crm/includes/functions-customer.php:1617
+#: modules/crm/includes/functions-customer.php:1631
+#: modules/crm/includes/functions-customer.php:1645
+#: modules/crm/includes/functions-customer.php:1659
+#: modules/crm/includes/functions-customer.php:1673
+#: modules/crm/includes/functions-customer.php:1698
+#: modules/crm/includes/functions-customer.php:1712
+#: modules/crm/includes/functions-customer.php:1748
+#: modules/crm/includes/functions-customer.php:1817
+#: modules/crm/includes/functions-customer.php:1831
+#: modules/crm/includes/functions-customer.php:1856
 msgid "not contains"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1581
-#: modules/crm/includes/functions-customer.php:1595
-#: modules/crm/includes/functions-customer.php:1609
-#: modules/crm/includes/functions-customer.php:1623
-#: modules/crm/includes/functions-customer.php:1690
-#: modules/crm/includes/functions-customer.php:1704
-#: modules/crm/includes/functions-customer.php:1740
-#: modules/crm/includes/functions-customer.php:1809
-#: modules/crm/includes/functions-customer.php:1823
-#: modules/crm/includes/functions-customer.php:1848
+#: modules/crm/includes/functions-customer.php:1590
+#: modules/crm/includes/functions-customer.php:1604
+#: modules/crm/includes/functions-customer.php:1618
+#: modules/crm/includes/functions-customer.php:1632
+#: modules/crm/includes/functions-customer.php:1699
+#: modules/crm/includes/functions-customer.php:1713
+#: modules/crm/includes/functions-customer.php:1749
+#: modules/crm/includes/functions-customer.php:1818
+#: modules/crm/includes/functions-customer.php:1832
+#: modules/crm/includes/functions-customer.php:1857
 msgid "begins with"
-msgstr ""
-
-#: modules/crm/includes/functions-customer.php:1582
-#: modules/crm/includes/functions-customer.php:1596
-#: modules/crm/includes/functions-customer.php:1610
-#: modules/crm/includes/functions-customer.php:1624
-#: modules/crm/includes/functions-customer.php:1691
-#: modules/crm/includes/functions-customer.php:1705
-#: modules/crm/includes/functions-customer.php:1741
-#: modules/crm/includes/functions-customer.php:1810
-#: modules/crm/includes/functions-customer.php:1824
-#: modules/crm/includes/functions-customer.php:1849
-msgid "ends with"
 msgstr ""
 
 #: modules/crm/includes/functions-customer.php:1591
 #: modules/crm/includes/functions-customer.php:1605
 #: modules/crm/includes/functions-customer.php:1619
-#: modules/crm/includes/functions-customer.php:1645
-#: modules/crm/includes/functions-customer.php:1659
-#: modules/crm/includes/functions-customer.php:1684
+#: modules/crm/includes/functions-customer.php:1633
 #: modules/crm/includes/functions-customer.php:1700
-#: modules/crm/includes/functions-customer.php:1736
+#: modules/crm/includes/functions-customer.php:1714
+#: modules/crm/includes/functions-customer.php:1750
+#: modules/crm/includes/functions-customer.php:1819
+#: modules/crm/includes/functions-customer.php:1833
+#: modules/crm/includes/functions-customer.php:1858
+msgid "ends with"
+msgstr ""
+
+#: modules/crm/includes/functions-customer.php:1600
+#: modules/crm/includes/functions-customer.php:1614
+#: modules/crm/includes/functions-customer.php:1628
+#: modules/crm/includes/functions-customer.php:1654
+#: modules/crm/includes/functions-customer.php:1668
+#: modules/crm/includes/functions-customer.php:1693
+#: modules/crm/includes/functions-customer.php:1709
+#: modules/crm/includes/functions-customer.php:1745
 msgid "has"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1592
-#: modules/crm/includes/functions-customer.php:1606
-#: modules/crm/includes/functions-customer.php:1620
-#: modules/crm/includes/functions-customer.php:1646
-#: modules/crm/includes/functions-customer.php:1660
-#: modules/crm/includes/functions-customer.php:1685
-#: modules/crm/includes/functions-customer.php:1701
-#: modules/crm/includes/functions-customer.php:1737
+#: modules/crm/includes/functions-customer.php:1601
+#: modules/crm/includes/functions-customer.php:1615
+#: modules/crm/includes/functions-customer.php:1629
+#: modules/crm/includes/functions-customer.php:1655
+#: modules/crm/includes/functions-customer.php:1669
+#: modules/crm/includes/functions-customer.php:1694
+#: modules/crm/includes/functions-customer.php:1710
+#: modules/crm/includes/functions-customer.php:1746
 msgid "has not"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1634
-#: modules/crm/includes/functions-customer.php:1648
-#: modules/crm/includes/functions-customer.php:1662
-#: modules/crm/includes/functions-customer.php:1674
-#: modules/crm/includes/functions-customer.php:1687
+#: modules/crm/includes/functions-customer.php:1643
+#: modules/crm/includes/functions-customer.php:1657
+#: modules/crm/includes/functions-customer.php:1671
+#: modules/crm/includes/functions-customer.php:1683
+#: modules/crm/includes/functions-customer.php:1696
 msgid "not from"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1669
+#: modules/crm/includes/functions-customer.php:1678
 msgid "Country/State"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1680
-#: modules/crm/includes/functions-customer.php:2954
+#: modules/crm/includes/functions-customer.php:1689
+#: modules/crm/includes/functions-customer.php:2963
 #: modules/crm/views/company/single.php:83
 #: modules/crm/views/contact/single.php:84
 #: modules/hrm/views/employee/tab-general.php:60
 msgid "Postal Code"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1710
-#: modules/crm/includes/functions-customer.php:3868
+#: modules/crm/includes/functions-customer.php:1719
+#: modules/crm/includes/functions-customer.php:3877
 msgid "Tags"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1724
+#: modules/crm/includes/functions-customer.php:1733
 msgid "in group"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1725
+#: modules/crm/includes/functions-customer.php:1734
 msgid "not in group"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1726
+#: modules/crm/includes/functions-customer.php:1735
 msgid "unsubscribed from"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1732
+#: modules/crm/includes/functions-customer.php:1741
 msgid "Others Fields"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1750
-#: modules/crm/includes/functions-customer.php:1761
-#: modules/crm/includes/functions-customer.php:1805
-#: modules/crm/includes/functions-customer.php:1819
-#: modules/crm/includes/functions-customer.php:1844
+#: modules/crm/includes/functions-customer.php:1759
+#: modules/crm/includes/functions-customer.php:1770
+#: modules/crm/includes/functions-customer.php:1814
+#: modules/crm/includes/functions-customer.php:1828
+#: modules/crm/includes/functions-customer.php:1853
 msgid "is"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1751
-#: modules/crm/includes/functions-customer.php:1762
-#: modules/crm/includes/functions-customer.php:1806
-#: modules/crm/includes/functions-customer.php:1820
-#: modules/crm/includes/functions-customer.php:1845
+#: modules/crm/includes/functions-customer.php:1760
+#: modules/crm/includes/functions-customer.php:1771
+#: modules/crm/includes/functions-customer.php:1815
+#: modules/crm/includes/functions-customer.php:1829
+#: modules/crm/includes/functions-customer.php:1854
 msgid "is not"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1757
+#: modules/crm/includes/functions-customer.php:1766
 #: modules/crm/views/js-templates/new-customer.php:289
 msgid "Contact Source"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1768
+#: modules/crm/includes/functions-customer.php:1777
 msgid "Contact age"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1772
+#: modules/crm/includes/functions-customer.php:1781
 msgid "exactly"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1773
+#: modules/crm/includes/functions-customer.php:1782
 msgid "grater"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1774
+#: modules/crm/includes/functions-customer.php:1783
 msgid "less"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1775
+#: modules/crm/includes/functions-customer.php:1784
 msgid "Between"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1992
+#: modules/crm/includes/functions-customer.php:2001
 msgid "own_search"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1993
+#: modules/crm/includes/functions-customer.php:2002
 msgid "Own Search"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1999
+#: modules/crm/includes/functions-customer.php:2008
 msgid "global_search"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:2000
+#: modules/crm/includes/functions-customer.php:2009
 msgid "Global Search"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:2831
+#: modules/crm/includes/functions-customer.php:2840
 msgid "Template name and body content are required"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:2850
+#: modules/crm/includes/functions-customer.php:2859
 msgid "Template name is required"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:2854
+#: modules/crm/includes/functions-customer.php:2863
 msgid "Template body is required"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:2863
+#: modules/crm/includes/functions-customer.php:2872
 msgid "<strong>%s</strong> has been updated"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:2872
+#: modules/crm/includes/functions-customer.php:2881
 msgid "<strong>%s</strong> has been created"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3021
-#: modules/crm/includes/functions-customer.php:3040
+#: modules/crm/includes/functions-customer.php:3030
+#: modules/crm/includes/functions-customer.php:3049
 msgid "No record found"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3062
+#: modules/crm/includes/functions-customer.php:3071
 msgid "No template found"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3112
-#: modules/crm/includes/functions-customer.php:3113
+#: modules/crm/includes/functions-customer.php:3121
+#: modules/crm/includes/functions-customer.php:3122
 msgid "Import into CRM"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3235
+#: modules/crm/includes/functions-customer.php:3244
 msgid "%s contacts created."
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3388
+#: modules/crm/includes/functions-customer.php:3397
 #: modules/hrm/includes/functions-employee.php:496
 msgid "Advertisement"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3389
+#: modules/crm/includes/functions-customer.php:3398
 msgid "Chat"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3390
+#: modules/crm/includes/functions-customer.php:3399
 msgid "Contact Form"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3391
+#: modules/crm/includes/functions-customer.php:3400
 msgid "Employee Referral"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3392
+#: modules/crm/includes/functions-customer.php:3401
 msgid "External Referral"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3393
+#: modules/crm/includes/functions-customer.php:3402
 msgid "Marketing campaign"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3394
+#: modules/crm/includes/functions-customer.php:3403
 msgid "Newsletter"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3395
+#: modules/crm/includes/functions-customer.php:3404
 msgid "OnlineStore"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3396
+#: modules/crm/includes/functions-customer.php:3405
 msgid "Optin Forms"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3397
+#: modules/crm/includes/functions-customer.php:3406
 msgid "Partner"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3398
+#: modules/crm/includes/functions-customer.php:3407
 msgid "Phone Call"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3399
+#: modules/crm/includes/functions-customer.php:3408
 msgid "Public Relations"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3400
+#: modules/crm/includes/functions-customer.php:3409
 msgid "Sales Mail Alias"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3401
+#: modules/crm/includes/functions-customer.php:3410
 msgid "Search Engine"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3402
+#: modules/crm/includes/functions-customer.php:3411
 msgid "Seminar-Internal"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3403
+#: modules/crm/includes/functions-customer.php:3412
 msgid "Seminar Partner"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3404
+#: modules/crm/includes/functions-customer.php:3413
 msgid "Social Media"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3405
+#: modules/crm/includes/functions-customer.php:3414
 msgid "Trade Show"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3406
+#: modules/crm/includes/functions-customer.php:3415
 msgid "Web Download"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3407
+#: modules/crm/includes/functions-customer.php:3416
 msgid "Web Research"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3517
+#: modules/crm/includes/functions-customer.php:3526
 msgid "You do not have permission to make WP User"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3531
+#: modules/crm/includes/functions-customer.php:3540
 msgid "No email found for creating wp user"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3867
+#: modules/crm/includes/functions-customer.php:3876
 #: modules/crm/views/company/single.php:150
 #: modules/crm/views/contact/single.php:154
 msgid "Tag"
@@ -13443,10 +13454,6 @@ msgstr ""
 msgid "Add New Contact"
 msgstr ""
 
-#: modules/crm/views/campaigns.php:15
-msgid "Search Contact"
-msgstr ""
-
 #: modules/crm/views/company/feeds.php:64
 msgid "No Activity found for this Company"
 msgstr ""
@@ -13619,11 +13626,11 @@ msgstr ""
 msgid "Search Contact Group"
 msgstr ""
 
-#: modules/crm/views/dashboard-badge.php:46 modules/crm/views/dashboard.php:50
+#: modules/crm/views/dashboard-badge.php:46 modules/crm/views/dashboard.php:43
 msgid "View all Contacts"
 msgstr ""
 
-#: modules/crm/views/dashboard-badge.php:84 modules/crm/views/dashboard.php:93
+#: modules/crm/views/dashboard-badge.php:84 modules/crm/views/dashboard.php:79
 msgid "View all Companies"
 msgstr ""
 
