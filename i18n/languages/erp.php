@@ -305,4 +305,5 @@ return [
 	__( 'Created By', 'erp' ),
 	__( 'Account From', 'erp' ),
 	__( 'Account To', 'erp' ),
+	__( 'Search Contact', 'erp' ),
 ];
