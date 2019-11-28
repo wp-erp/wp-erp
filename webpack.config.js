@@ -97,7 +97,7 @@ plugins.push(new webpack.ProvidePlugin({
     $: 'jquery'
 }));
 
-module.exports = {
+var mainConfig = {
     entry: entryPoints,
     output: {
         path: exportPath,
@@ -167,3 +167,13 @@ module.exports = {
         ]
     }
 };
+
+var i18nJSConfig = {
+    entry: './assets/vendor/i18n/i18n.js',
+    output: {
+        path: path.resolve(__dirname, './assets/js'),
+        filename: 'i18n.js'
+    }
+};
+
+module.exports = [mainConfig, i18nJSConfig];

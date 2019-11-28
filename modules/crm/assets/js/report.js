@@ -42,25 +42,25 @@ var chart = new Chart(ctx, {
         labels: labels,
         datasets: [
             {
-                label: 'Subscriber',
+                label: __('Subscriber', 'erp'),
                 backgroundColor: 'rgba(244,67,54, .5)',
                 borderColor: 'rgba(244,67,54, .5)',
                 data: data[0].subscriber
             },
             {
-                label: 'Opportunity',
+                label: __('Opportunity', 'erp'),
                 backgroundColor: 'rgba(103,58, 183, .5)',
                 borderColor: 'rgba(103,58, 183, .5)',
                 data: data[1].opportunity
             },
             {
-                label: 'Lead',
+                label: __('Lead', 'erp'),
                 backgroundColor: 'rgba(3,169,244, .5)',
                 borderColor: 'rgba(3,169,244, .5)',
                 data: data[2].lead
             },
             {
-                label: 'Customer',
+                label: __('Customer', 'erp'),
                 backgroundColor: 'rgba(255,193,7, .5)',
                 borderColor: 'rgba(255,193,7, .5)',
                 data: data[3].customer
@@ -71,7 +71,7 @@ var chart = new Chart(ctx, {
     options: {
         maintainAspectRatio: false,
         scales: {
-            xAxes: [{ 
+            xAxes: [{
                 stacked: true,
                 gridLines: {
                     display: false

@@ -54,7 +54,7 @@ foreach ( $reports as $report ) {
 
         <tfoot>
             <tr>
-                <td>Total</td>
+                <td><?php _e('Total', 'erp') ?></td>
                 <td><?php echo $total; ?></td>
             </tr>
         </tfoot>
