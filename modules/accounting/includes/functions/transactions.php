@@ -291,8 +291,7 @@ function erp_acct_get_expense_chart_data( $args = [] ) {
     $sql = "SELECT SUM(balance) as paid, 0 AS payable
         FROM ( SELECT bill.voucher_no, bill_acc_detail.amount AS balance
         FROM {$wpdb->prefix}erp_acct_expenses AS bill
-        LEFT JOIN {$wpdb->prefix}erp_acct_expense_details AS bill_acc_detail ON bill.voucher_no = bill_acc_detail.trn_no {$where}
-        GROUP BY bill.voucher_no HAVING balance > 0 ) AS get_amount";
+        LEFT JOIN {$wpdb->prefix}erp_acct_expense_details AS bill_acc_detail ON bill.voucher_no = bill_acc_detail.trn_no {$where} HAVING balance > 0 ) AS get_amount";
 
     return $wpdb->get_row( $sql, ARRAY_A );
 }
