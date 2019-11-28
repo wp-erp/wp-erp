@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WP ERP 1.5.7\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-erp\n"
-"POT-Creation-Date: 2019-11-27 07:00:59+00:00\n"
+"POT-Creation-Date: 2019-11-28 09:22:09+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -5347,6 +5347,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseSingle.vue:71
 #: modules/accounting/assets/src/admin/components/transactions/sales/InvoiceSingleContent.vue:44
 #: modules/accounting/assets/src/admin/components/transactions/sales/PaymentSingleContent.vue:40
+#: modules/crm/assets/js/crm-contacts.js:291
 #: modules/crm/includes/class-campaigns-list-table.php:71
 #: modules/crm/includes/class-contact-group-list-table.php:90
 msgid "Created At"
@@ -5362,6 +5363,7 @@ msgid "Cheating?"
 msgstr ""
 
 #: includes/admin/class-form-handler.php:97
+#: modules/crm/assets/js/crm-contacts.js:264
 msgid "Company name"
 msgstr ""
 
@@ -5852,6 +5854,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/people/EmployeeDetails.vue:25
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:46
 #: modules/accounting/assets/src/admin/components/userinfo/UserBasic.vue:22
+#: modules/crm/assets/js/crm-contacts.js:275
 #: modules/crm/includes/functions-customer.php:1596
 #: modules/crm/includes/functions-customer.php:2923
 #: modules/crm/views/company/single.php:75
@@ -5923,6 +5926,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:321
 #: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:177
 #: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:173
+#: modules/crm/assets/js/crm-contacts.js:1125
 #: modules/crm/includes/admin/class-settings.php:763
 #: modules/crm/includes/class-campaigns-list-table.php:89
 #: modules/crm/includes/class-contact-group-list-table.php:118
@@ -7375,8 +7379,8 @@ msgstr ""
 msgid "Total leave policies count."
 msgstr ""
 
-#: includes/framework/views/status-report.php:79 modules/crm/crm.php:324
-#: modules/crm/crm.php:428 modules/crm/crm.php:442
+#: includes/framework/views/status-report.php:79 modules/crm/crm.php:333
+#: modules/crm/crm.php:437 modules/crm/crm.php:451
 #: modules/crm/includes/admin/class-menu.php:31
 #: modules/crm/includes/admin/class-settings.php:16
 #: modules/crm/includes/class-form-handler.php:24
@@ -9147,6 +9151,7 @@ msgid "Email already exists!"
 msgstr ""
 
 #: modules/accounting/api/class-rest-api-customers.php:423
+#: modules/crm/assets/js/report.js:63
 #: modules/crm/includes/functions-customer.php:200
 #: modules/crm/includes/functions-customer.php:227
 #: modules/crm/views/reports/customer-report.php:23
@@ -9878,6 +9883,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/transactions/sales/PaymentSingleContent.vue:73
 #: modules/accounting/includes/views/transactions/invoice-readonly.php:55
 #: modules/accounting/includes/views/transactions/invoice-readonly.php:117
+#: modules/crm/views/reports/activity-report.php:57
 msgid "Total"
 msgstr ""
 
@@ -10908,6 +10914,8 @@ msgstr ""
 
 #: modules/accounting/assets/src/admin/components/reports/SalesTax.vue:15
 #: modules/accounting/assets/src/admin/components/reports/TrialBalance.vue:15
+#: modules/crm/assets/js/crm-contacts.js:1132
+#: modules/crm/assets/js/crm-contacts.js:1229
 msgid "View"
 msgstr ""
 
@@ -11647,9 +11655,183 @@ msgstr ""
 msgid "Powered By "
 msgstr ""
 
-#: modules/crm/assets/js/crm-contacts.js:1175
+#: modules/crm/assets/js/crm-contacts.js:40
+#: modules/crm/assets/js/crm-contacts.js:328
+msgid "Filter by Owner"
+msgstr ""
+
+#: modules/crm/assets/js/crm-contacts.js:82
+#: modules/crm/assets/js/crm-contacts.js:355
+msgid "Filter by Company"
+msgstr ""
+
+#: modules/crm/assets/js/crm-contacts.js:264
+msgid "Contact name"
+msgstr ""
+
+#: modules/crm/assets/js/crm-contacts.js:270
+msgid "Email Address"
+msgstr ""
+
+#: modules/crm/assets/js/crm-contacts.js:279
+#: modules/crm/views/contact/single.php:86
+msgid "Life stage"
+msgstr ""
+
+#: modules/crm/assets/js/crm-contacts.js:285
+msgid "Owner"
+msgstr ""
+
+#: modules/crm/assets/js/crm-contacts.js:299
+#: modules/crm/assets/js/crm-contacts.js:1139
+#: modules/crm/includes/admin/class-settings.php:764
+#: modules/crm/includes/class-campaigns-list-table.php:90
+#: modules/crm/includes/class-campaigns-list-table.php:116
+#: modules/crm/includes/class-contact-group-list-table.php:124
+#: modules/crm/includes/class-contact-group-list-table.php:160
+#: modules/crm/includes/class-contact-subscriber-list-table.php:200
+#: modules/crm/includes/class-contact-subscriber-list-table.php:217
+#: modules/crm/includes/functions-localize.php:14
+#: modules/hrm/includes/class-department-list-table.php:212
+#: modules/hrm/includes/class-designation-list-table.php:84
+#: modules/hrm/includes/class-designation-list-table.php:109
+#: modules/hrm/includes/class-employee-list-table.php:169
+#: modules/hrm/includes/class-entitlements-list-table.php:171
+#: modules/hrm/includes/class-entitlements-list-table.php:210
+#: modules/hrm/includes/class-leave-request-list-table.php:196
+#: modules/hrm/includes/class-leave-request-list-table.php:223
+#: modules/hrm/includes/class-walker-department.php:45
+#: modules/hrm/views/employee/tab-notes-row.php:19
+#: modules/hrm/views/employee/tab-notes.php:48
+#: modules/hrm/views/js-templates/row-dept.php:11
+#: modules/hrm/views/js-templates/row-desig.php:11
+#: modules/hrm/views/js-templates/row-employee.php:12
+#: modules/hrm/views/leave/holiday.php:113
+#: modules/hrm/views/leave/holiday.php:154
+#: modules/hrm/views/leave/leave-policies.php:103
+msgid "Delete"
+msgstr ""
+
+#: modules/crm/assets/js/crm-contacts.js:305
+#: modules/crm/assets/js/crm-contacts.js:1146
+#: modules/hrm/includes/class-employee-list-table.php:169
+#: modules/hrm/includes/class-employee-list-table.php:212
+msgid "Permanent Delete"
+msgstr ""
+
+#: modules/crm/assets/js/crm-contacts.js:311
+#: modules/crm/assets/js/crm-contacts.js:1153
+#: modules/hrm/includes/class-employee-list-table.php:187
+#: modules/hrm/includes/class-employee-list-table.php:213
+msgid "Restore"
+msgstr ""
+
+#: modules/crm/assets/js/crm-contacts.js:317
+#: modules/crm/views/js-templates/new-bulk-contact-group.php:5
+#: modules/crm/views/js-templates/new-customer.php:261
+#: modules/crm/views/js-templates/new-subscriber-contact.php:17
+msgid "Assign Group"
+msgstr ""
+
+#: modules/crm/assets/js/crm-contacts.js:342
+msgid "Filter by Segment"
+msgstr ""
+
+#: modules/crm/assets/js/crm-contacts.js:401
+msgid "Search.."
+msgstr ""
+
+#: modules/crm/assets/js/crm-contacts.js:866
+msgid "You have not any filter for saving"
+msgstr ""
+
+#: modules/crm/assets/js/crm-contacts.js:878
+#: modules/crm/assets/js/crm-contacts.js:900
+#: modules/crm/includes/functions-customer.php:2002
+msgid "Own Search"
+msgstr ""
+
+#: modules/crm/assets/js/crm-contacts.js:886
+#: modules/crm/assets/js/crm-contacts.js:892
+#: modules/crm/includes/functions-customer.php:2009
+msgid "Global Search"
+msgstr ""
+
+#: modules/crm/assets/js/crm-contacts.js:1126
+#: modules/crm/views/contact/single.php:11
+msgid "Edit this contact"
+msgstr ""
+
+#: modules/crm/assets/js/crm-contacts.js:1133
+msgid "View this contact"
+msgstr ""
+
+#: modules/crm/assets/js/crm-contacts.js:1140
+msgid "Delete this contact"
+msgstr ""
+
+#: modules/crm/assets/js/crm-contacts.js:1147
+msgid "Permanent Delete this contact"
+msgstr ""
+
+#: modules/crm/assets/js/crm-contacts.js:1154
+msgid "Restore this contact"
+msgstr ""
+
+#: modules/crm/assets/js/crm-contacts.js:1173
+#: modules/crm/assets/js/crm-contacts.js:1176
+msgid "Search Compnay"
+msgstr ""
+
+#: modules/crm/assets/js/crm-contacts.js:1173
+#: modules/crm/assets/js/crm-contacts.js:1176
 #: modules/crm/views/campaigns.php:15
 msgid "Search Contact"
+msgstr ""
+
+#: modules/crm/assets/js/crm-contacts.js:1186 modules/crm/views/company.php:25
+msgid "Hide Search Segment"
+msgstr ""
+
+#: modules/crm/assets/js/crm-contacts.js:1187
+msgid "Search Segment"
+msgstr ""
+
+#: modules/crm/assets/js/crm-contacts.js:1344
+msgid "Edit this "
+msgstr ""
+
+#: modules/crm/assets/js/crm-contacts.js:2059
+msgid "Subscribed at"
+msgstr ""
+
+#: modules/crm/assets/js/crm-contacts.js:2061
+msgid "Unsubscribed at"
+msgstr ""
+
+#: modules/crm/assets/js/crm.js:210
+msgid "Select"
+msgstr ""
+
+#: modules/crm/assets/js/report.js:45
+#: modules/crm/includes/functions-customer.php:203
+#: modules/crm/views/reports/customer-report.php:20
+#: modules/crm/views/reports/growth-report.php:25
+msgid "Subscriber"
+msgstr ""
+
+#: modules/crm/assets/js/report.js:51
+#: modules/crm/includes/functions-customer.php:202
+#: modules/crm/views/reports/customer-report.php:21
+#: modules/crm/views/reports/growth-report.php:26
+msgid "Opportunity"
+msgstr ""
+
+#: modules/crm/assets/js/report.js:57
+#: modules/crm/includes/functions-customer.php:201
+#: modules/crm/views/reports/customer-report.php:22
+#: modules/crm/views/reports/growth-report.php:27
+msgid "Lead"
 msgstr ""
 
 #: modules/crm/crm.php:181
@@ -11997,34 +12179,6 @@ msgstr ""
 
 #: modules/crm/includes/admin/class-settings.php:728
 msgid "Template Name"
-msgstr ""
-
-#: modules/crm/includes/admin/class-settings.php:764
-#: modules/crm/includes/class-campaigns-list-table.php:90
-#: modules/crm/includes/class-campaigns-list-table.php:116
-#: modules/crm/includes/class-contact-group-list-table.php:124
-#: modules/crm/includes/class-contact-group-list-table.php:160
-#: modules/crm/includes/class-contact-subscriber-list-table.php:200
-#: modules/crm/includes/class-contact-subscriber-list-table.php:217
-#: modules/crm/includes/functions-localize.php:14
-#: modules/hrm/includes/class-department-list-table.php:212
-#: modules/hrm/includes/class-designation-list-table.php:84
-#: modules/hrm/includes/class-designation-list-table.php:109
-#: modules/hrm/includes/class-employee-list-table.php:169
-#: modules/hrm/includes/class-entitlements-list-table.php:171
-#: modules/hrm/includes/class-entitlements-list-table.php:210
-#: modules/hrm/includes/class-leave-request-list-table.php:196
-#: modules/hrm/includes/class-leave-request-list-table.php:223
-#: modules/hrm/includes/class-walker-department.php:45
-#: modules/hrm/views/employee/tab-notes-row.php:19
-#: modules/hrm/views/employee/tab-notes.php:48
-#: modules/hrm/views/js-templates/row-dept.php:11
-#: modules/hrm/views/js-templates/row-desig.php:11
-#: modules/hrm/views/js-templates/row-employee.php:12
-#: modules/hrm/views/leave/holiday.php:113
-#: modules/hrm/views/leave/holiday.php:154
-#: modules/hrm/views/leave/leave-policies.php:103
-msgid "Delete"
 msgstr ""
 
 #: modules/crm/includes/admin/class-settings.php:776
@@ -12778,30 +12932,6 @@ msgstr ""
 msgid "Me"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:201
-#: modules/crm/views/reports/customer-report.php:22
-#: modules/crm/views/reports/growth-report.php:27
-msgid "Lead"
-msgid_plural "Leads"
-msgstr[0] ""
-msgstr[1] ""
-
-#: modules/crm/includes/functions-customer.php:202
-#: modules/crm/views/reports/customer-report.php:21
-#: modules/crm/views/reports/growth-report.php:26
-msgid "Opportunity"
-msgid_plural "Opportunities"
-msgstr[0] ""
-msgstr[1] ""
-
-#: modules/crm/includes/functions-customer.php:203
-#: modules/crm/views/reports/customer-report.php:20
-#: modules/crm/views/reports/growth-report.php:25
-msgid "Subscriber"
-msgid_plural "Subscribers"
-msgstr[0] ""
-msgstr[1] ""
-
 #: modules/crm/includes/functions-customer.php:323
 #: modules/crm/views/activities.php:26
 #: modules/hrm/includes/class-hr-log.php:792
@@ -13040,16 +13170,8 @@ msgstr ""
 msgid "own_search"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:2002
-msgid "Own Search"
-msgstr ""
-
 #: modules/crm/includes/functions-customer.php:2008
 msgid "global_search"
-msgstr ""
-
-#: modules/crm/includes/functions-customer.php:2009
-msgid "Global Search"
 msgstr ""
 
 #: modules/crm/includes/functions-customer.php:2840
@@ -13548,10 +13670,6 @@ msgid "Add New Company"
 msgstr ""
 
 #: modules/crm/views/company.php:25
-msgid "Hide Search Segment"
-msgstr ""
-
-#: modules/crm/views/company.php:25
 msgid "Add Search Segment"
 msgstr ""
 
@@ -13561,10 +13679,6 @@ msgstr ""
 
 #: modules/crm/views/contact/single.php:7
 msgid "Back to Contact list"
-msgstr ""
-
-#: modules/crm/views/contact/single.php:11
-msgid "Edit this contact"
 msgstr ""
 
 #: modules/crm/views/contact/single.php:11
@@ -13582,10 +13696,6 @@ msgstr ""
 
 #: modules/crm/views/contact/single.php:75
 msgid "Age"
-msgstr ""
-
-#: modules/crm/views/contact/single.php:86
-msgid "Life stage"
 msgstr ""
 
 #: modules/crm/views/contact/single.php:184
@@ -13956,12 +14066,6 @@ msgstr ""
 #: modules/crm/views/js-templates/new-assign-company.php:15
 #: modules/crm/views/js-templates/new-assign-company.php:16
 msgid "Select a Contact"
-msgstr ""
-
-#: modules/crm/views/js-templates/new-bulk-contact-group.php:5
-#: modules/crm/views/js-templates/new-customer.php:261
-#: modules/crm/views/js-templates/new-subscriber-contact.php:17
-msgid "Assign Group"
 msgstr ""
 
 #: modules/crm/views/js-templates/new-contact-group.php:21
@@ -14810,22 +14914,12 @@ msgstr ""
 msgid "Joined"
 msgstr ""
 
-#: modules/hrm/includes/class-employee-list-table.php:169
-#: modules/hrm/includes/class-employee-list-table.php:212
-msgid "Permanent Delete"
-msgstr ""
-
 #: modules/hrm/includes/class-employee-list-table.php:182
 msgid "Switch to"
 msgstr ""
 
 #: modules/hrm/includes/class-employee-list-table.php:187
 msgid "Restore this item"
-msgstr ""
-
-#: modules/hrm/includes/class-employee-list-table.php:187
-#: modules/hrm/includes/class-employee-list-table.php:213
-msgid "Restore"
 msgstr ""
 
 #: modules/hrm/includes/class-employee.php:251

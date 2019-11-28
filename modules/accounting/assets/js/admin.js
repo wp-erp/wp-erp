@@ -46846,7 +46846,10 @@ var render = function() {
           _c("p", [
             _vm._v(
               _vm._s(
-                _vm.__("Detailed transactions list of ledger accounts.", "erp")
+                _vm.__(
+                  "The ledger report contains the classified and detailed information of all the individual accounts including the debit and credit aspects.",
+                  "erp"
+                )
               )
             )
           ]),
