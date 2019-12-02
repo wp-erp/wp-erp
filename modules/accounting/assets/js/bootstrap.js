@@ -2021,6 +2021,7 @@ if (false) {(function () {
 //
 //
 //
+//
 
 /* eslint func-names: ["error", "never"] */
 
@@ -2043,6 +2044,10 @@ if (false) {(function () {
       }
     },
     multiple: {
+      type: Boolean,
+      default: false
+    },
+    disabled: {
       type: Boolean,
       default: false
     },
@@ -13286,6 +13291,7 @@ var render = function() {
         "close-on-select": !_vm.multiple,
         loading: _vm.isLoading,
         placeholder: _vm.placeholder,
+        disabled: _vm.disabled,
         label: "name",
         "track-by": "id"
       },
