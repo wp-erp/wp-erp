@@ -29,14 +29,7 @@
                                             <li>
                                                 <a href="<?php echo add_query_arg( [ 'page' => 'erp-crm','section' => 'contacts', 'status' => $contact_key ], admin_url( 'admin.php' ) ); ?>">
                                                     <i class="fa fa-square" aria-hidden="true"></i>&nbsp;
-                                                    <?php
-                                                        $singular = $contact_value['label'];
-                                                        $plural = erp_pluralize( $singular );
-
-                                                        $plural = apply_filters( "erp_crm_life_stage_plural_of_{$contact_key}", $plural, $singular );
-
-                                                        echo sprintf( _n( "%s {$singular}", "%s {$plural}", $contact_value['count'], 'erp' ), number_format_i18n( $contact_value['count'] ), 0 );
-                                                    ?>
+                                                    <?php echo $contact_value['count'] . ' ' . $contact_value['label']; ?>
                                                 </a>
                                             </li>
                                             <?php
@@ -72,14 +65,7 @@
                                             <li>
                                                 <a href="<?php echo add_query_arg( [ 'page' => 'erp-crm', 'section' => 'companies', 'status' => $company_key ], admin_url( 'admin.php' ) ); ?>">
                                                     <i class="fa fa-square" aria-hidden="true"></i>&nbsp;
-                                                    <?php
-                                                        $singular = $company_value['label'];
-                                                        $plural = erp_pluralize( $singular );
-
-                                                        $plural = apply_filters( "erp_crm_life_stage_plural_of_{$company_key}", $plural, $singular );
-
-                                                        echo sprintf( _n( "%s {$singular}", "%s {$plural}", $company_value['count'], 'erp' ), number_format_i18n( $company_value['count'] ), 0 );
-                                                    ?>
+                                                    <?php echo $company_value['count'] . ' ' . $company_value['label']; ?>
                                                 </a>
                                             </li>
                                             <?php

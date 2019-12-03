@@ -46843,7 +46843,16 @@ var render = function() {
         [
           _c("h3", [_vm._v(_vm._s(_vm.__("Ledger Report", "erp")))]),
           _vm._v(" "),
-          _c("p", [_vm._v(_vm._s(_vm.__("Ledger report", "erp")))]),
+          _c("p", [
+            _vm._v(
+              _vm._s(
+                _vm.__(
+                  "The ledger report contains the classified and detailed information of all the individual accounts including the debit and credit aspects.",
+                  "erp"
+                )
+              )
+            )
+          ]),
           _vm._v(" "),
           _c(
             "router-link",
@@ -46866,7 +46875,7 @@ var render = function() {
             _vm._v(
               _vm._s(
                 _vm.__(
-                  "A summary of a management's performance as reflecte the profitability of an organization during the time interval",
+                  "A summary of a management's performance reflected as the profitability of an organization during the time interval",
                   "erp"
                 )
               ) + "."
