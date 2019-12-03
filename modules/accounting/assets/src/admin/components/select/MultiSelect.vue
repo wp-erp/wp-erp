@@ -6,6 +6,7 @@
     :close-on-select="!multiple"
     :loading="isLoading"
     :placeholder="placeholder"
+    :disabled="disabled"
     label="name"
     track-by="id"
     @open="onDropdownOpen"
@@ -45,6 +46,12 @@ export default {
             type: Boolean,
             default: false
         },
+
+        disabled: {
+            type: Boolean,
+            default: false
+        },
+
         placeholder: {
             type: String,
             default: 'Please search'

@@ -2162,6 +2162,7 @@ if (false) {(function () {
 //
 //
 //
+//
 
 /* eslint func-names: ["error", "never"] */
 
@@ -2184,6 +2185,10 @@ if (false) {(function () {
       }
     },
     multiple: {
+      type: Boolean,
+      default: false
+    },
+    disabled: {
       type: Boolean,
       default: false
     },
@@ -12266,6 +12271,7 @@ var render = function() {
         "close-on-select": !_vm.multiple,
         loading: _vm.isLoading,
         placeholder: _vm.placeholder,
+        disabled: _vm.disabled,
         label: "name",
         "track-by": "id"
       },
@@ -14973,6 +14979,7 @@ module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFs
 //
 //
 //
+//
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
@@ -15005,7 +15012,8 @@ module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFs
       categories: [],
       tax_cats: [],
       productType: [],
-      title: 'Product'
+      title: __('Product', 'erp'),
+      isDisabled: false
     };
   },
   created: function created() {
@@ -15031,6 +15039,7 @@ module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFs
       };
       this.ProductFields.salePrice = product.sale_price;
       this.ProductFields.costPrice = product.cost_price;
+      this.isDisabled = true;
     }
 
     this.loaded();
@@ -34640,6 +34649,7 @@ var render = function() {
                                     _c("multi-select", {
                                       attrs: {
                                         options: _vm.productType,
+                                        disabled: _vm.isDisabled,
                                         multiple: false
                                       },
                                       model: {
