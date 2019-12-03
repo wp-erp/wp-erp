@@ -53006,9 +53006,9 @@ var render = function() {
                           staticClass: "wperp-form-field text-right",
                           attrs: { type: "text", readonly: "" },
                           domProps: {
-                            value: isNaN(_vm.totalDebit)
+                            value: isNaN(_vm.totalDebit())
                               ? _vm.debit_total
-                              : _vm.moneyFormat(_vm.totalDebit)
+                              : _vm.moneyFormat(_vm.totalDebit())
                           }
                         })
                       ]),
@@ -53018,9 +53018,9 @@ var render = function() {
                           staticClass: "wperp-form-field text-right",
                           attrs: { type: "text", readonly: "" },
                           domProps: {
-                            value: isNaN(_vm.totalCredit)
+                            value: isNaN(_vm.totalCredit())
                               ? _vm.credit_total
-                              : _vm.moneyFormat(_vm.totalCredit)
+                              : _vm.moneyFormat(_vm.totalCredit())
                           }
                         })
                       ]),
