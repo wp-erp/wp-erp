@@ -346,7 +346,7 @@ function erp_acct_void_pay_bill( $id ) {
     );
 
     $wpdb->delete( $wpdb->prefix . 'erp_acct_ledger_details', array( 'trn_no' => $id ) );
-    $wpdb->delete( $wpdb->prefix . 'erp_acct_bill_account_details', array( 'bill_no' => $id ) );
+    $wpdb->delete( $wpdb->prefix . 'erp_acct_bill_account_details', array( 'trn_no' => $id ) );
 }
 
 /**
@@ -478,7 +478,7 @@ function erp_acct_get_pay_bill_count() {
  * Update bill status after a payment
  *
  * @param $bill_no
- * @param $due
+ *
  * @return void
  */
 function erp_acct_change_bill_status( $bill_no ) {
@@ -504,7 +504,7 @@ function erp_acct_change_bill_status( $bill_no ) {
             array( 'voucher_no' => $bill_no )
         );
     }
-
 }
+
 
 

@@ -347,7 +347,7 @@ function erp_acct_void_pay_purchase( $id ) {
     );
 
     $wpdb->delete( $wpdb->prefix . 'erp_acct_ledger_details', array( 'trn_no' => $id ) );
-    $wpdb->delete( $wpdb->prefix . 'erp_acct_purchase_account_details', array( 'purchase_no' => $id ) );
+    $wpdb->delete( $wpdb->prefix . 'erp_acct_purchase_account_details', array( 'trn_no' => $id ) );
 }
 
 /**
@@ -479,7 +479,7 @@ function erp_acct_get_pay_purchase_count() {
  * Update purchase status after a payment
  *
  * @param $purchase_no
- * @param $due
+ *
  * @return void
  */
 function erp_acct_change_purchase_status( $purchase_no ) {
