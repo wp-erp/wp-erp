@@ -263,6 +263,64 @@ function erp_acct_get_product_type_id_by_product_id( $product_id ) {
     return $type_id;
 }
 
+/**
+ * Get all products of a vendor
+ *
+ * @return mixed
+ */
+function erp_acct_get_vendor_products( $args = [] ) {
+    global $wpdb;
+
+    $defaults = [
+        'number'  => 20,
+        'offset'  => 0,
+        'orderby' => 'id',
+        'order'   => 'DESC',
+        'count'   => false,
+        's'       => '',
+        'vendor'  => 0
+    ];
+
+    $args = wp_parse_args( $args, $defaults );
+
+    $where = '';
+    $limit = '';
+
+    if ( -1 !== $args['number'] ) {
+        $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+    }
+
+    $sql = 'SELECT';
+
+    if ( $args['count'] ) {
+        $sql .= ' COUNT( product.id ) as total_number';
+    } else {
+        $sql .= " product.id,
+            product.name,
+            product.product_type_id,
+            product.cost_price,
+            product.sale_price,
+            product.tax_cat_id,
+            product.vendor,
+            CONCAT(people.first_name, ' ',  people.last_name) AS vendor_name,
+            cat.id AS category_id,
+            cat.name AS cat_name,
+            product_type.name AS product_type_name";
+    }
+
+    $sql .= " FROM {$wpdb->prefix}erp_acct_products AS product
+        LEFT JOIN {$wpdb->prefix}erp_peoples AS people ON product.vendor = people.id
+        LEFT JOIN {$wpdb->prefix}erp_acct_product_categories AS cat ON product.category_id = cat.id
+        LEFT JOIN {$wpdb->prefix}erp_acct_product_types AS product_type ON product.product_type_id = product_type.id
+        WHERE people.id={$args['vendor']} AND product.product_type_id<>3 ORDER BY product.{$args['orderby']} {$args['order']} {$limit}";
+
+    if ( $args['count'] ) {
+        return $wpdb->get_var( $sql );
+    }
+
+    return $wpdb->get_results( $sql, ARRAY_A );
+}
+
 
 
 
