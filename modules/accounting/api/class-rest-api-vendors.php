@@ -133,6 +133,21 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
 				],
 			]
         );
+
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/products',
+            [
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_vendor_products' ],
+                    'args'                => $this->get_collection_params(),
+                    'permission_callback' => function( $request ) {
+                        return current_user_can( 'erp_ac_view_customer' );
+                    },
+                ],
+            ]
+        );
     }
 
     /**
@@ -379,6 +394,46 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
     }
 
     /**
+     * Get products of a vendor
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Response
+     */
+    public function get_vendor_products( $request ) {
+        $args = [
+            'number' => ! empty( $request['number'] ) ? (int) $request['number'] : 20,
+            'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
+            'vendor' => ! empty( $request['id'] ) ? $request['id'] : 0
+        ];
+
+        $formatted_items   = [];
+        $additional_fields = [];
+
+        $additional_fields['namespace'] = $this->namespace;
+        $additional_fields['rest_base'] = $this->rest_base;
+
+        $product_data = erp_acct_get_vendor_products( $args );
+        $total_items  = erp_acct_get_vendor_products(
+            [
+                'count'  => true,
+                'number' => -1,
+            ]
+        );
+
+        foreach ( $product_data as $item ) {
+            $data              = $this->prepare_product_item_for_response( $item, $request, $additional_fields );
+            $formatted_items[] = $this->prepare_response_for_collection( $data );
+        }
+
+        $response = rest_ensure_response( $formatted_items );
+        $response = $this->format_collection_response( $response, $request, $total_items );
+        $response->set_status( 200 );
+
+        return $response;
+    }
+
+    /**
      * Log when vendor insert or update
      *
      * @param $data
@@ -510,6 +565,43 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'email'       => $item->email,
                 'phone'       => $item->phone,
             ],
+        ];
+
+        $data = array_merge( $data, $additional_fields );
+
+        // Wrap the data in a response object
+        $response = rest_ensure_response( $data );
+
+        $response = $this->add_links( $response, $item, $additional_fields );
+
+        return $response;
+    }
+
+    /**
+     * Prepare a single user output for response
+     *
+     * @param array|object $item
+     * @param WP_REST_Request $request Request object.
+     * @param array $additional_fields (optional)
+     *
+     * @return WP_REST_Response $response Response data.
+     */
+    public function prepare_product_item_for_response( $item, $request, $additional_fields = [] ) {
+        $item = (object) $item;
+
+        $data = [
+            'id'                => $item->id,
+            'name'              => $item->name,
+            'product_type_id'   => $item->product_type_id,
+            'product_type_name' => $item->product_type_name,
+            'category_id'       => $item->category_id,
+            'tax_cat_id'        => $item->tax_cat_id,
+            'vendor'            => $item->vendor,
+            'cost_price'        => $item->cost_price,
+            'sale_price'        => $item->sale_price,
+            'vendor_name'       => $item->vendor_name,
+            'cat_name'          => $item->cat_name,
+            'tax_cat_name'      => erp_acct_get_tax_category_by_id( $item->tax_cat_id ),
         ];
 
         $data = array_merge( $data, $additional_fields );

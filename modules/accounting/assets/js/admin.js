@@ -21525,7 +21525,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
   watch: {
     'basic_fields.vendor': function basic_fieldsVendor() {
       if (!this.editMode) {
-        this.getvendorAddress();
+        this.getvendorData();
       }
     }
   },
@@ -21611,7 +21611,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
                 this.setDataForEdit(request2.data); // initialize combo button id with `update`
 
                 this.$store.dispatch('combo/setBtnID', 'update');
-                _context.next = 23;
+                _context.next = 22;
                 break;
 
               case 18:
@@ -21620,14 +21620,13 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
                      * create a new purchase
                      * -----------------------------------------------
                      */
-                this.getProducts();
                 this.basic_fields.trn_date = erp_acct_var.current_date;
                 this.basic_fields.due_date = erp_acct_var.current_date;
                 this.transactionLines.push({}, {}, {}); // initialize combo button id with `save`
 
                 this.$store.dispatch('combo/setBtnID', 'save');
 
-              case 23:
+              case 22:
               case "end":
                 return _context.stop();
             }
@@ -21679,7 +21678,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
       this.products = [];
       this.$store.dispatch('spinner/setSpinner', true);
-      __WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].get('/products', {
+      __WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].get("vendors/".concat(this.basic_fields.vendor.id, "/products"), {
         params: {
           number: -1
         }
@@ -21699,7 +21698,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         throw error;
       });
     },
-    getvendorAddress: function getvendorAddress() {
+    getvendorData: function getvendorData() {
       var _this3 = this;
 
       var vendor_id = this.basic_fields.vendor.id;
@@ -21714,6 +21713,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         var address = "Street: ".concat(billing.street_1, " ").concat(billing.street_2, " \nCity: ").concat(billing.city, " \nState: ").concat(billing.state, " \nCountry: ").concat(billing.country);
         _this3.basic_fields.billing_address = address;
       });
+      this.getProducts();
     },
     orderToPurchase: function orderToPurchase() {
       var purchase_order = 1;
