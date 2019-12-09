@@ -51243,7 +51243,7 @@ var render = function() {
                               _c("td", [_vm._v(_vm._s(line.qty))]),
                               _vm._v(" "),
                               _c("td", [
-                                _vm._v(_vm._s(_vm.moneyFormat(line.cost_price)))
+                                _vm._v(_vm._s(_vm.moneyFormat(line.price)))
                               ]),
                               _vm._v(" "),
                               _c("td", [
