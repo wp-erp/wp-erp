@@ -170,11 +170,8 @@ function erp_acct_get_people_transactions( $args = [] ) {
     }
     if ( ! empty( $args['start_date'] ) ) {
         $where .= " AND people.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
-    } else {
-        $args['start_date'] = date( 'Y-m-d', strtotime( 'first day of this month' ) );
-        $args['end_date']   = date( 'Y-m-d', strtotime( 'last day of this month' ) );
-        $where             .= " AND people.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
     }
+
     if ( empty( $args['end_date'] ) ) {
         $args['end_date'] = date( 'Y-m-d', strtotime( 'last day of this month' ) );
     }
@@ -238,21 +235,25 @@ function erp_acct_get_people_transactions( $args = [] ) {
     );
 
     for ( $idx = 0; $idx < count( $results ); $idx++ ) {
-        if ( 0 === $idx ) {
+        if ( 0 == $idx ) {
+            $results[ $idx ]['balance_val'] = 0;
             continue;
         }
         $dr_total += (float) $results[ $idx ]['debit'];
         $cr_total += (float) $results[ $idx ]['credit'];
-        $balance   = (float) $results[ $idx - 1 ]['balance'] + (float) $results[ $idx ]['debit'] - (float) $results[ $idx ]['credit'];
+        $balance   = (float) $results[ $idx - 1 ]['balance_val'] + (float) $results[ $idx ]['debit'] - (float) $results[ $idx ]['credit'];
+
         if ( $balance >= 0 ) {
-            $results[ $idx ]['balance'] = erp_get_currency_symbol( erp_get_currency(true) ) . abs( (float) $balance ) . ' Dr';
+            $results[ $idx ]['balance_val'] = $balance;
+            $results[ $idx ]['balance'] = erp_get_currency_symbol( erp_get_currency() ) . abs( (float) $results[ $idx ]['balance_val'] ) . ' Dr';
         } else {
-            $results[ $idx ]['balance'] = erp_get_currency_symbol( erp_get_currency(true) ) . abs( (float) $balance ) . ' Cr';
+            $results[ $idx ]['balance_val'] = $balance;
+            $results[ $idx ]['balance'] = erp_get_currency_symbol( erp_get_currency() ) . abs( (float) $results[ $idx ]['balance_val'] ) . ' Cr';
         }
         $total = $balance;
     }
 
-    $results[0]['balance'] = $temp;
+    $results[0]['balance'] = $total;
 
     array_push(
         $results,

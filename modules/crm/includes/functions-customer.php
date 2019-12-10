@@ -187,13 +187,20 @@ function erp_crm_get_details_url( $id, $type ) {
  *
  * @return array
  */
-function erp_crm_get_life_stages_dropdown_raw( $label = [] ) {
+function erp_crm_get_life_stages_dropdown_raw( $label = [], $counts = [] ) {
+
+    $counts = wp_parse_args( $counts, [
+        'customer'    => 0,
+        'lead'        => 0,
+        'opportunity' => 0,
+        'subscriber'  => 0
+    ] );
 
     $life_stages = [
-        'customer'    => __( 'Customer', 'wp-erp' ),
-        'lead'        => __( 'Lead', 'wp-erp' ),
-        'opportunity' => __( 'Opportunity', 'wp-erp' ),
-        'subscriber'  => __( 'Subscriber', 'wp-erp' )
+        'customer'    => _n( 'Customer', 'Customers', $counts['customer'], 'erp' ),
+        'lead'        => _n( 'Lead', 'Leads', $counts['lead'], 'erp' ),
+        'opportunity' => _n( 'Opportunity', 'Opportunities',  $counts['opportunity'], 'erp' ),
+        'subscriber'  => _n( 'Subscriber', 'Subscribers', $counts['subscriber'], 'erp' )
     ];
 
     $life_stages = apply_filters( 'erp_crm_life_stages', $life_stages );
@@ -287,13 +294,6 @@ function erp_crm_get_contact_dropdown( $label = [] ) {
 function erp_crm_customer_get_status_count( $type = null ) {
     global $wpdb;
 
-    $statuses = erp_crm_get_life_stages_dropdown_raw( [ 'all' => __( 'All', 'erp' ) ] );
-    $counts   = array();
-
-    foreach ( $statuses as $status => $label ) {
-        $counts[ $status ] = array( 'count' => 0, 'label' => $label );
-    }
-
     $cache_key = 'erp-crm-customer-status-counts-' . $type;
     $results   = wp_cache_get( $cache_key, 'erp' );
 
@@ -316,7 +316,16 @@ function erp_crm_customer_get_status_count( $type = null ) {
         $results = $wpdb->get_results( $wpdb->prepare( $sql, $type ) );
 
         wp_cache_set( $cache_key, $results, 'erp' );
+    }
 
+    $status_counts = wp_list_pluck( $results, 'count', 'status' );
+
+    $statuses = erp_crm_get_life_stages_dropdown_raw( [ 'all' => __( 'All', 'erp' ) ], $status_counts );
+
+    $counts = array();
+
+    foreach ( $statuses as $status => $label ) {
+        $counts[ $status ] = array( 'count' => 0, 'label' => $label );
     }
 
     foreach ( $results as $result ) {

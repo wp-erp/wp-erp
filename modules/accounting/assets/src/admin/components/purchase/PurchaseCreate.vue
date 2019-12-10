@@ -197,7 +197,7 @@ export default {
     watch: {
         'basic_fields.vendor'() {
             if (!this.editMode) {
-                this.getvendorAddress();
+                this.getvendorData();
             }
         }
     },
@@ -278,8 +278,6 @@ export default {
                      * create a new purchase
                      * -----------------------------------------------
                      */
-                this.getProducts();
-
                 this.basic_fields.trn_date = erp_acct_var.current_date;
                 this.basic_fields.due_date = erp_acct_var.current_date;
                 this.transactionLines.push({}, {}, {});
@@ -325,7 +323,7 @@ export default {
 
             this.$store.dispatch('spinner/setSpinner', true);
 
-            HTTP.get('/products', {
+            HTTP.get(`vendors/${this.basic_fields.vendor.id}/products`, {
                 params: {
                     number: -1
                 }
@@ -345,7 +343,7 @@ export default {
             });
         },
 
-        getvendorAddress() {
+        getvendorData() {
             const vendor_id = this.basic_fields.vendor.id;
 
             if (!vendor_id) {
@@ -360,6 +358,8 @@ export default {
 
                 this.basic_fields.billing_address = address;
             });
+
+            this.getProducts();
         },
 
         orderToPurchase() {

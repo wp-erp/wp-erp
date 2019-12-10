@@ -689,7 +689,7 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
                 ],
                 'country'    => [
                     'description' => __( 'List of countries data.', 'erp' ),
-                    'type'        => 'array',
+                    'type'        => [ 'array', 'object' ],
                     'context'     => [ 'view', 'edit' ],
                     'properties'  => [
                         'id'   => [
@@ -706,7 +706,7 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
                 ],
                 'state'    => [
                     'description' => __( 'State for the resource.', 'erp' ),
-                    'type'        => 'array',
+                    'type'        => [ 'array', 'object' ],
                     'context'     => [ 'view', 'edit' ],
                     'properties'  => [
                         'id'   => [

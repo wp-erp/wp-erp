@@ -452,7 +452,8 @@ function erp_acct_void_payment( $id ) {
     );
 
     $wpdb->delete( $wpdb->prefix . 'erp_acct_ledger_details', array( 'trn_no' => $id ) );
-    $wpdb->delete( $wpdb->prefix . 'erp_acct_invoice_account_details', array( 'invoice_no' => $id ) );
+    $wpdb->delete( $wpdb->prefix . 'erp_acct_invoice_account_details', array( 'trn_no' => $id ) );
+
 }
 
 /**
@@ -587,3 +588,4 @@ function erp_acct_format_payment_line_items( $invoice = 'all' ) {
 
     return $wpdb->get_results( $sql, ARRAY_A );
 }
+
