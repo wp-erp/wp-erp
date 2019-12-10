@@ -207,7 +207,7 @@
             var self = $(this),
                 country = self.val(),
                 parent = self.closest(self.data('parent')),
-                empty = '<option value="">- Select -</option>';
+                empty = '<option value="">- '+ __('Select', 'erp') +' -</option>';
 
             if (wpErpCrm.wpErpCountries[country]) {
                 var options = '',

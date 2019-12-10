@@ -447,6 +447,12 @@ export default {
             }
         }
 
+        .modal-close {
+            .flaticon-close {
+                font-size: inherit;
+            }
+        }
+
         .errors {
             margin: 0 20px;
             color: #f44336;

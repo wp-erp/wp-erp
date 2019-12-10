@@ -5,7 +5,7 @@ Tags: business manager, erp, accounting, crm, hr, project manager, small busines
 Requires at least: 4.4
 Tested up to: 5.3
 Requires PHP: 5.6
-Stable tag: 1.5.7
+Stable tag: 1.5.8
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -259,6 +259,21 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+
+= v1.5.8 -> December 10, 2019 =
+[fix]   HR: Fixed country, state schema type for customer & vendor.
+[fix]   CRM: Made the strings translatable that are not translatable.
+[tweak] CRM: Moved customer statistics from admin dashboard to crm dashboard.
+[fix]   AC: Fixed the Customer transactions wrong balance issue.
+[fix]   AC: Amount was not showing on PDF invoice, which has been fixed.
+[fix]   AC: Decimals valus were not appearing in the Pay Purchase. It has fixed now.
+[fix]   AC: Particulars were not showing in journal entries. Fixed now.
+[fix]   AC: Unit price was showing Zero in purchase single view. It has been fixed.
+[fix]   AC: Fixed the Void transaction related issues.
+[fix]   AC: Fixed the wrong balance issue in the People details.
+[fix]   AC: Show only the products of selected vendor in purchase.
+[tweak] AC: Disabled Product type while editing product to preserve reports.
+[tweak] AC: Updated modal style.
 
 = v1.5.7 -> November 15, 2019 =
 [fix] Fixed the SQL syntax error for DB collate which was causing installation error in some cases.

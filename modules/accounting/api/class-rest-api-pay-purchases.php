@@ -361,7 +361,7 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
             'vendor_id'        => (int) $item->vendor_id,
             'trn_date'         => $item->trn_date,
             'purchase_details' => $item->purchase_details,
-            'amount'           => (int) $item->amount,
+            'amount'           => (float) $item->amount,
             'particulars'      => $item->particulars,
             'attachments'      => maybe_unserialize( $item->attachments ),
             'status'           => $item->status,

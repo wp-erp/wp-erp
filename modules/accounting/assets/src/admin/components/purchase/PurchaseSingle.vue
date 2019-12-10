@@ -92,7 +92,7 @@
                                     <td>{{ index+1 }}</td>
                                     <td>{{ line.name }}</td>
                                     <td>{{ line.qty }}</td>
-                                    <td>{{ moneyFormat(line.cost_price) }}</td>
+                                    <td>{{ moneyFormat(line.price) }}</td>
                                     <td>{{ moneyFormat(line.amount) }}</td>
                                 </tr>
                             </tbody>

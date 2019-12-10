@@ -48,6 +48,7 @@
                                                     <multi-select
                                                         v-model="ProductFields.type"
                                                         :options="productType"
+                                                        :disabled="isDisabled"
                                                         :multiple="false"/>
                                                     <!-- <i class="flaticon-arrow-down-sign-to-navigate"></i> -->
                                                 </div>
@@ -185,7 +186,8 @@ export default {
             categories   : [],
             tax_cats     : [],
             productType  : [],
-            title        : 'Product'
+            title        : __( 'Product', 'erp' ),
+            isDisabled   : false
         };
     },
 
@@ -200,6 +202,7 @@ export default {
             this.ProductFields.vendor     = { id: product.vendor, name: product.vendor_name };
             this.ProductFields.salePrice  = product.sale_price;
             this.ProductFields.costPrice  = product.cost_price;
+            this.isDisabled               = true;
         }
 
         this.loaded();
@@ -336,6 +339,9 @@ export default {
 
         .modal-close {
             top: 20px !important;
+            .flaticon-close {
+                font-size: inherit;
+            }
         }
 
         .errors {

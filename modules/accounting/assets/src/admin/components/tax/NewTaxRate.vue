@@ -309,5 +309,11 @@ export default {
                 margin-top: 10px;
             }
         }
+
+        .modal-close {
+            .flaticon-close {
+                font-size: inherit;
+            }
+        }
     }
 </style>

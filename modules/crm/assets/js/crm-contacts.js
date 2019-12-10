@@ -1,4 +1,5 @@
 ;( function($, wperp) {
+    /* global __,wpErpCrm */
     Vue.config.debug = 1;
 
     var mixin = {
@@ -36,7 +37,7 @@
             initSearchCrmAgent: function() {
                 $( 'select#erp-select-user-for-assign-contact' ).select2({
                     allowClear: true,
-                    placeholder: 'Filter by Owner',
+                    placeholder: __('Filter by Owner', 'erp'),
                     minimumInputLength: 1,
                     ajax: {
                         url: wpErpCrm.ajaxurl,
@@ -78,7 +79,7 @@
             initSearchCrmCompany: function() {
                 $( 'select#erp-select-contact-company' ).select2({
                     allowClear: true,
-                    placeholder: 'Filter by Company',
+                    placeholder: __('Filter by Company', 'erp'),
                     minimumInputLength: 1,
                     ajax: {
                         url: wpErpCrm.ajaxurl,
@@ -260,34 +261,34 @@
         var tableColumns = [
             {
                 name: 'name',
-                title: ( wpErpCrm.contact_type == 'contact') ? 'Contact name' : 'Company name',
+                title: ( wpErpCrm.contact_type == 'contact') ? __('Contact name', 'erp') : __('Company name', 'erp'),
                 callback: 'fullName',
-                sortField: 'first_name',
+                sortField: 'first_name'
             },
             {
                 name: 'email',
-                title: 'Email Address'
+                title: __('Email Address', 'erp')
 
             },
             {
                 name: 'phone',
-                title: 'Phone'
+                title: __('Phone', 'erp')
             },
             {
                 name: 'life_stage',
-                title: 'Life stage',
-                callback: 'lifeStage',
+                title: __('Life stage', 'erp'),
+                callback: 'lifeStage'
             },
 
             {
                 name: 'contact_owner',
-                title: 'Owner',
-                callback: 'contactOwner',
+                title: __('Owner', 'erp'),
+                callback: 'contactOwner'
             },
 
             {
                 name: 'created',
-                title: 'Created At',
+                title: __('Created At', 'erp'),
                 sortField: 'created'
             }
         ];
@@ -295,25 +296,25 @@
         var bulkactions = [
             {
                 id : 'delete',
-                text : 'Delete',
+                text : __('Delete', 'erp'),
                 showIf : 'whenNotTrased'
             },
 
             {
                 id : 'permanent_delete',
-                text : 'Permanent Delete',
+                text : __('Permanent Delete', 'erp'),
                 showIf : 'showPermanentDelete'
             },
 
             {
                 id : 'restore',
-                text : 'Restore',
+                text : __('Restore', 'erp'),
                 showIf : 'onlyTrased'
             },
 
             {
                 id : 'assign_group',
-                text : 'Assign Group',
+                text : __('Assign Group', 'erp'),
                 showIf : 'whenNotTrased'
             }
         ];
@@ -324,7 +325,7 @@
                 type: 'select', // or text|email|number|url|datefield
                 id: 'erp-select-user-for-assign-contact',
                 class: 'erp-filter-contact-owner',
-                placeholder: 'Filter by Owner',
+                placeholder: __('Filter by Owner', 'erp'),
                 options: [
                     {
                         id : '',
@@ -338,7 +339,7 @@
                 type: 'select_optgroup', // or text|email|number|url|datefield
                 id: 'erp-select-save-advance-filter',
                 class: 'erp-save-advance-filter',
-                placeholder: 'Filter by Segment',
+                placeholder: __('Filter by Segment', 'erp'),
                 default: {
                     id: '',
                     text: '--Select save filter --'
@@ -351,7 +352,7 @@
                 type: 'select',
                 id: 'erp-select-contact-company',
                 class: 'erp-filter-contact-company',
-                placeholder: 'Filter by Company',
+                placeholder: __('Filter by Company', 'erp'),
                 options: [
                     {
                         id : '',
@@ -397,7 +398,7 @@
                         },
                         width: 'resolve',
                         allowClear: true,
-                        placeholder: 'Search..',
+                        placeholder: __('Search..', 'erp'),
                         minimumInputLength: 1,
                         ajax: {
                             url: wpErpCrm.ajaxurl,
@@ -862,7 +863,7 @@
                     };
 
                     if ( ! queryUrl ) {
-                        alert( 'You have not any filter for saving' );
+                        alert( __('You have not any filter for saving', 'erp') );
                     }
 
                     self.isLoading = true;
@@ -874,7 +875,7 @@
                                     if ( resp.data.global == '0' ) {
                                         contact.extraBulkAction.filterSaveAdvanceFiter.options.push( {
                                             id: 'own_search',
-                                            name: 'Own Search',
+                                            name: __('Own Search', 'erp'),
                                             options: [ {
                                                 id: resp.data.id,
                                                 text: resp.data.search_name,
@@ -882,13 +883,13 @@
                                             } ]
                                         }, {
                                             id: 'global_search',
-                                            name: 'Global Search',
+                                            name: __('Global Search', 'erp'),
                                             options: []
                                         } );
                                     } else {
                                         contact.extraBulkAction.filterSaveAdvanceFiter.options.push({
                                             id: 'global_search',
-                                            name: 'Global Search',
+                                            name: __('Global Search', 'erp'),
                                             options: [ {
                                                 id: resp.data.id,
                                                 text: resp.data.search_name,
@@ -896,7 +897,7 @@
                                             } ]
                                         }, {
                                             id: 'own_search',
-                                            name: 'Own Search',
+                                            name: __('Own Search', 'erp'),
                                             options: []
                                         });
                                     }
@@ -1121,36 +1122,36 @@
                 fields: tableColumns,
                 itemRowActions: [
                     {
-                        title: 'Edit',
-                        attrTitle: 'Edit this contact',
+                        title: __('Edit', 'erp'),
+                        attrTitle: __('Edit this contact', 'erp'),
                         class: 'edit',
                         action: 'edit',
                         showIf: 'checkPermission'
                     },
                     {
-                        title: 'View',
-                        attrTitle: 'View this contact',
+                        title: __('View', 'erp'),
+                        attrTitle: __('View this contact', 'erp'),
                         class: 'view',
                         action: 'view',
                         callback: 'contact_view_link'
                     },
                     {
-                        title: 'Delete',
-                        attrTitle: 'Delete this contact',
+                        title: __('Delete', 'erp'),
+                        attrTitle: __('Delete this contact', 'erp'),
                         class: 'delete',
                         action: 'delete',
                         showIf: 'whenNotTrased'
                     },
                     {
-                        title: 'Permanent Delete',
-                        attrTitle: 'Permanent Delete this contact',
+                        title: __('Permanent Delete', 'erp'),
+                        attrTitle: __('Permanent Delete this contact', 'erp'),
                         class: 'delete',
                         action: 'permanent_delete',
                         showIf: 'showPermanentDelete'
                     },
                     {
-                        title: 'Restore',
-                        attrTitle: 'Restore this contact',
+                        title: __('Restore', 'erp'),
+                        attrTitle: __('Restore this contact', 'erp'),
                         class: 'restore',
                         action: 'restore',
                         showIf: 'onlyTrased'
@@ -1169,10 +1170,10 @@
                 search: {
                     params: 's',
                     wrapperClass: '',
-                    screenReaderText: ( wpErpCrm.contact_type == 'company' ) ? 'Search Compnay' : 'Search Contact',
+                    screenReaderText: ( wpErpCrm.contact_type == 'company' ) ? __('Search Compnay', 'erp') : __('Search Contact', 'erp'),
                     inputId: 'search-input',
                     btnId: 'search-submit',
-                    placeholder: ( wpErpCrm.contact_type == 'company' ) ? 'Search Compnay' : 'Search Contact',
+                    placeholder: ( wpErpCrm.contact_type == 'company' ) ? __('Search Compnay', 'erp') : __( 'Search Contact', 'erp' ),
                 },
                 isRequestDone: false,
                 showHideSegment: false,
@@ -1181,7 +1182,9 @@
 
             computed: {
                 segmentBtnText: function() {
-                    return ( this.showHideSegment ) ? '<i class="fa fa-search" aria-hidden="true"></i> Hide Search Segment' : '<i class="fa fa-search" aria-hidden="true"></i> Search Segment';
+                    return ( this.showHideSegment ) ? '<i class="fa fa-search" aria-hidden="true"></i>'+
+                    __('Hide Search Segment', 'erp') : '<i class="fa fa-search" aria-hidden="true"></i>'+
+                    __('Search Segment', 'erp');
                 }
             },
 
@@ -1199,7 +1202,7 @@
                         } else if ( item.first_name && item.last_name ) {
                             var name = item.first_name + ' ' + item.last_name;
                         } else {
-                            var name = '(No name)';
+                            var name = '(' + __('No name', 'erp') +')';
                         }
 
                         var link = '<a href="' + item.details_url + '"><strong>' + name + '</strong></a>';
@@ -1208,7 +1211,7 @@
                         if ( item.company ) {
                             var name = item.company;
                         } else {
-                            var name = '(No name)';
+                            var name = '(' + __('No name', 'erp') +')';
                         }
 
                         var link = '<a href="' + item.details_url + '"><strong>' + name + '</strong></a>';
@@ -1222,7 +1225,8 @@
                 },
 
                 contact_view_link: function( action, item ) {
-                    return '<span class="view"><a href="' + item.details_url + '" title="View this contact">View</a><span> | </span></span>';
+                    return '<span class="view"><a href="' + item.details_url + '" title="View this contact">'+
+                    __('View', 'erp') +'</a><span> | </span></span>';
                 },
 
                 contactOwner: function( value, item ) {
@@ -1337,7 +1341,7 @@
                     var self = this;
 
                     $.erpPopup({
-                        title: 'Edit this ' + wpErpCrm.contact_type,
+                        title: __('Edit this ', 'erp') + wpErpCrm.contact_type,
                         button: wpErpCrm.update_submit,
                         id: 'erp-customer-edit',
                         onReady: function() {
@@ -1384,21 +1388,6 @@
 
 
                                     });
-                                    //$( 'li[data-selected]', modal ).each(function() {
-                                    //    var self = $(this),
-                                    //        selected = self.data('selected');
-                                    //
-                                    //    if ( selected !== '' ) {
-                                    //        self.find( 'select' ).val( selected );
-                                    //    }
-                                    //});
-                                    //
-                                    //_.each( $( 'input[type=checkbox].erp-crm-contact-group-class' ), function( el, i) {
-                                    //    var optionsVal = $(el).val();
-                                    //    if( _.contains( response.group_id, optionsVal ) ) {
-                                    //        $(el).prop('checked', true );
-                                    //    }
-                                    //});
 
                                     $( 'div[data-selected]', modal ).each(function() {
                                         var self = $(this),
@@ -2040,7 +2029,7 @@
                             + '<p v-if="isItems" v-for="item in items">{{ item.groups.name }}'
                                 + '<tooltip :content="subscriberInfo( item )" :title="subscribeInfoToolTip(item)"></tooltip>'
                             + '</p>'
-                            + '<div v-if="!isItems && !isPermitted">No group found</div>'
+                            + '<div v-if="!isItems && !isPermitted">'+__('No group found', 'erp')+'</div>'
                             + '<a href="#" v-if="isPermitted" @click.prevent="assigContactGroup()" id="erp-contact-update-assign-group" data-id="" title="{{ addButtonTxt }}"><i class="fa fa-plus"></i> {{ addButtonTxt }}</a>'
                         + '</div>'
                     + '</div>'
@@ -2067,9 +2056,9 @@
 
                 subscribeInfoToolTip: function ( item ) {
                     if ( 'subscribe' == item.status ) {
-                        return 'Subscribed at ' + wperp.dateFormat( item.subscribe_at, 'Y-m-d' );
+                        return __('Subscribed at', 'erp') + ' ' + wperp.dateFormat( item.subscribe_at, 'Y-m-d' );
                     } else {
-                        return 'Unsubscribed at ' + wperp.dateFormat( item.unsubscribe_at, 'Y-m-d' );
+                        return __('Unsubscribed at', 'erp') + ' ' + wperp.dateFormat( item.unsubscribe_at, 'Y-m-d' );
                     }
 
                     return '';
