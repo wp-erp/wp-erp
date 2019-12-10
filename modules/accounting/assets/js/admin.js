@@ -10805,11 +10805,11 @@ if (false) {(function () {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_NewTaxAgency_vue__ = __webpack_require__(180);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_872040ec_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_NewTaxAgency_vue__ = __webpack_require__(649);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_872040ec_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_NewTaxAgency_vue__ = __webpack_require__(440);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(648)
+  __webpack_require__(439)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -10861,11 +10861,11 @@ if (false) {(function () {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_NewTaxCategory_vue__ = __webpack_require__(181);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_0e7d34c3_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_NewTaxCategory_vue__ = __webpack_require__(656);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_0e7d34c3_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_NewTaxCategory_vue__ = __webpack_require__(442);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(655)
+  __webpack_require__(441)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -10917,11 +10917,11 @@ if (false) {(function () {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_NewTaxZone_vue__ = __webpack_require__(183);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_1937b2f1_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_NewTaxZone_vue__ = __webpack_require__(659);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_1937b2f1_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_NewTaxZone_vue__ = __webpack_require__(446);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(658)
+  __webpack_require__(445)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -10973,11 +10973,11 @@ if (false) {(function () {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_TaxShortcuts_vue__ = __webpack_require__(186);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_d74e6388_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_TaxShortcuts_vue__ = __webpack_require__(452);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_d74e6388_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_TaxShortcuts_vue__ = __webpack_require__(454);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(451)
+  __webpack_require__(453)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -30899,8 +30899,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_list_table_ListTable_vue__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_tax_TaxRateLineAdd_vue__ = __webpack_require__(480);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_tax_TaxRateLineEdit_vue__ = __webpack_require__(483);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_tax_TaxRateLineAdd_vue__ = __webpack_require__(482);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_tax_TaxRateLineEdit_vue__ = __webpack_require__(485);
 //
 //
 //
@@ -31213,7 +31213,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_tax_TaxRateRow_vue__ = __webpack_require__(485);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_tax_TaxRateRow_vue__ = __webpack_require__(487);
 //
 //
 //
@@ -32825,7 +32825,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__App_vue__ = __webpack_require__(214);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__router__ = __webpack_require__(230);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__store_store__ = __webpack_require__(503);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__store_store__ = __webpack_require__(505);
 
 
  // get lib reference
@@ -33333,24 +33333,24 @@ if (false) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_36_admin_components_transactions_purchases_Purchases_vue__ = __webpack_require__(431);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_37_admin_components_tax_NewTaxAgency_vue__ = __webpack_require__(47);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_38_admin_components_tax_NewTaxCategory_vue__ = __webpack_require__(48);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_39_admin_components_tax_NewTaxRate_vue__ = __webpack_require__(442);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_39_admin_components_tax_NewTaxRate_vue__ = __webpack_require__(443);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_40_admin_components_tax_NewTaxZone_vue__ = __webpack_require__(49);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_41_admin_components_tax_RecordPayTax_vue__ = __webpack_require__(446);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_42_admin_components_tax_TaxAgencies_vue__ = __webpack_require__(449);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_43_admin_components_tax_TaxCategories_vue__ = __webpack_require__(454);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_44_admin_components_tax_TaxZones_vue__ = __webpack_require__(457);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_45_admin_components_tax_TaxRates_vue__ = __webpack_require__(460);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_46_admin_components_tax_TaxRecords_vue__ = __webpack_require__(463);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_47_admin_components_tax_PayTaxSingle_vue__ = __webpack_require__(466);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_48_admin_components_bank_accounts_BankAccounts_vue__ = __webpack_require__(469);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_49_admin_components_check_CheckCreate_vue__ = __webpack_require__(472);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_50_admin_components_check_CheckSingle_vue__ = __webpack_require__(475);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_51_admin_components_tax_SingleTaxRate_vue__ = __webpack_require__(478);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_52_admin_components_reports_IncomeStatement_vue__ = __webpack_require__(490);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_53_admin_components_reports_BalanceSheet_vue__ = __webpack_require__(493);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_41_admin_components_tax_RecordPayTax_vue__ = __webpack_require__(448);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_42_admin_components_tax_TaxAgencies_vue__ = __webpack_require__(451);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_43_admin_components_tax_TaxCategories_vue__ = __webpack_require__(456);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_44_admin_components_tax_TaxZones_vue__ = __webpack_require__(459);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_45_admin_components_tax_TaxRates_vue__ = __webpack_require__(462);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_46_admin_components_tax_TaxRecords_vue__ = __webpack_require__(465);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_47_admin_components_tax_PayTaxSingle_vue__ = __webpack_require__(468);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_48_admin_components_bank_accounts_BankAccounts_vue__ = __webpack_require__(471);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_49_admin_components_check_CheckCreate_vue__ = __webpack_require__(474);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_50_admin_components_check_CheckSingle_vue__ = __webpack_require__(477);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_51_admin_components_tax_SingleTaxRate_vue__ = __webpack_require__(480);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_52_admin_components_reports_IncomeStatement_vue__ = __webpack_require__(492);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_53_admin_components_reports_BalanceSheet_vue__ = __webpack_require__(495);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_54_admin_components_transactions_DynamicTrnLoader_vue__ = __webpack_require__(89);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_55_admin_components_opening_balance_OpeningBalance_vue__ = __webpack_require__(496);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_56_admin_components_help_HelpContent_vue__ = __webpack_require__(500);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_55_admin_components_opening_balance_OpeningBalance_vue__ = __webpack_require__(498);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_56_admin_components_help_HelpContent_vue__ = __webpack_require__(502);
 
 
 
@@ -58251,20 +58251,325 @@ if (false) {
 }
 
 /***/ }),
-/* 439 */,
-/* 440 */,
-/* 441 */,
+/* 439 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 440 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "wperp-modal has-form wperp-modal-open",
+      attrs: { id: "wperp-tax-agency-modal", role: "dialog" }
+    },
+    [
+      _c("div", { staticClass: "wperp-modal-dialog" }, [
+        _c(
+          "div",
+          { staticClass: "wperp-modal-content" },
+          [
+            _c("div", { staticClass: "wperp-modal-header" }, [
+              _c("h3", [
+                _vm._v(
+                  _vm._s(_vm.is_update ? "Edit" : "Add") +
+                    " " +
+                    _vm._s(_vm.__("Tax Agency", "erp"))
+                )
+              ]),
+              _vm._v(" "),
+              _c(
+                "span",
+                {
+                  staticClass: "modal-close",
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.closeModal($event)
+                    }
+                  }
+                },
+                [_c("i", { staticClass: "flaticon-close" })]
+              )
+            ]),
+            _vm._v(" "),
+            _c("show-errors", { attrs: { error_msgs: _vm.form_errors } }),
+            _vm._v(" "),
+            _c(
+              "form",
+              {
+                staticClass: "modal-form edit-customer-modal",
+                attrs: { action: "", method: "post" },
+                on: {
+                  submit: function($event) {
+                    $event.preventDefault()
+                    return _vm.taxAgencyFormSubmit($event)
+                  }
+                }
+              },
+              [
+                _c("div", { staticClass: "wperp-modal-body" }, [
+                  _c("div", { staticClass: "wperp-form-group" }, [
+                    _c("label", [
+                      _vm._v(_vm._s(_vm.__("Tax Agency Name", "erp"))),
+                      _c("span", { staticClass: "wperp-required-sign" }, [
+                        _vm._v("*")
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.agency,
+                          expression: "agency"
+                        }
+                      ],
+                      staticClass: "wperp-form-field",
+                      attrs: { type: "text" },
+                      domProps: { value: _vm.agency },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.agency = $event.target.value
+                        }
+                      }
+                    })
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "wperp-modal-footer pt-0" }, [
+                  _c(
+                    "div",
+                    { staticClass: "buttons-wrapper text-right" },
+                    [
+                      _vm.is_update
+                        ? _c("submit-button", {
+                            attrs: {
+                              text: _vm.__("Update", "erp"),
+                              working: _vm.isWorking
+                            }
+                          })
+                        : _c("submit-button", {
+                            attrs: {
+                              text: _vm.__("Save", "erp"),
+                              working: _vm.isWorking
+                            }
+                          })
+                    ],
+                    1
+                  )
+                ])
+              ]
+            )
+          ],
+          1
+        )
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-872040ec", esExports)
+  }
+}
+
+/***/ }),
+/* 441 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
 /* 442 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "wperp-modal has-form wperp-modal-open",
+      attrs: { id: "wperp-tax-category-modal", role: "dialog" }
+    },
+    [
+      _c("div", { staticClass: "wperp-modal-dialog" }, [
+        _c(
+          "div",
+          { staticClass: "wperp-modal-content" },
+          [
+            _c("div", { staticClass: "wperp-modal-header" }, [
+              _c("h3", [
+                _vm._v(
+                  _vm._s(_vm.is_update ? "Edit" : "Add") +
+                    " " +
+                    _vm._s(_vm.__("Tax Category", "erp"))
+                )
+              ]),
+              _vm._v(" "),
+              _c(
+                "span",
+                {
+                  staticClass: "modal-close",
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.closeModal($event)
+                    }
+                  }
+                },
+                [_c("i", { staticClass: "flaticon-close" })]
+              )
+            ]),
+            _vm._v(" "),
+            _c("show-errors", { attrs: { error_msgs: _vm.form_errors } }),
+            _vm._v(" "),
+            _c(
+              "form",
+              {
+                staticClass: "modal-form edit-customer-modal",
+                attrs: { action: "", method: "post" },
+                on: {
+                  submit: function($event) {
+                    $event.preventDefault()
+                    return _vm.taxCatFormSubmit($event)
+                  }
+                }
+              },
+              [
+                _c("div", { staticClass: "wperp-modal-body" }, [
+                  _c("div", { staticClass: "wperp-form-group" }, [
+                    _c("label", [
+                      _vm._v(_vm._s(_vm.__("Tax Category Name", "erp")) + " "),
+                      _c("span", { staticClass: "wperp-required-sign" }, [
+                        _vm._v("*")
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.category,
+                          expression: "category"
+                        }
+                      ],
+                      staticClass: "wperp-form-field wperp-required-sign",
+                      attrs: { type: "text", required: "" },
+                      domProps: { value: _vm.category },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.category = $event.target.value
+                        }
+                      }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "wperp-form-group mb-0" }, [
+                    _c("label", [_vm._v(_vm._s(_vm.__("Description", "erp")))]),
+                    _vm._v(" "),
+                    _c("textarea", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.desc,
+                          expression: "desc"
+                        }
+                      ],
+                      staticClass: "wperp-form-field",
+                      attrs: { rows: "4" },
+                      domProps: { value: _vm.desc },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.desc = $event.target.value
+                        }
+                      }
+                    })
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "wperp-modal-footer pt-0" }, [
+                  _c(
+                    "div",
+                    { staticClass: "buttons-wrapper text-right" },
+                    [
+                      _vm.is_update
+                        ? _c("submit-button", {
+                            attrs: {
+                              text: _vm.__("Update", "erp"),
+                              working: _vm.isWorking
+                            }
+                          })
+                        : _c("submit-button", {
+                            attrs: {
+                              text: _vm.__("Save", "erp"),
+                              working: _vm.isWorking
+                            }
+                          })
+                    ],
+                    1
+                  )
+                ])
+              ]
+            )
+          ],
+          1
+        )
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-0e7d34c3", esExports)
+  }
+}
+
+/***/ }),
+/* 443 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_NewTaxRate_vue__ = __webpack_require__(182);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_0057bbb6_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_NewTaxRate_vue__ = __webpack_require__(445);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_0057bbb6_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_NewTaxRate_vue__ = __webpack_require__(447);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(443)
+  __webpack_require__(444)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -58310,14 +58615,234 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 443 */
+/* 444 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 444 */,
 /* 445 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 446 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "wperp-modal has-form wperp-modal-open",
+      attrs: { id: "wperp-tax-agency-modal", role: "dialog" }
+    },
+    [
+      _c("div", { staticClass: "wperp-modal-dialog" }, [
+        _c(
+          "div",
+          { staticClass: "wperp-modal-content" },
+          [
+            _c("div", { staticClass: "wperp-modal-header" }, [
+              _c("h3", [
+                _vm._v(
+                  _vm._s(_vm.is_update ? "Edit" : "Add") +
+                    " " +
+                    _vm._s(_vm.__("Tax Zone", "erp"))
+                )
+              ]),
+              _vm._v(" "),
+              _c(
+                "span",
+                {
+                  staticClass: "modal-close",
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.closeModal($event)
+                    }
+                  }
+                },
+                [_c("i", { staticClass: "flaticon-close" })]
+              )
+            ]),
+            _vm._v(" "),
+            _c("show-errors", { attrs: { error_msgs: _vm.form_errors } }),
+            _vm._v(" "),
+            _c(
+              "form",
+              {
+                staticClass: "modal-form edit-customer-modal",
+                attrs: { method: "post" },
+                on: {
+                  submit: function($event) {
+                    $event.preventDefault()
+                    return _vm.taxZoneFormSubmit($event)
+                  }
+                }
+              },
+              [
+                _c("div", { staticClass: "wperp-modal-body" }, [
+                  _c("div", { staticClass: "wperp-form-group" }, [
+                    _c("label", [
+                      _vm._v(_vm._s(_vm.__("Tax Zone Name", "erp")) + " "),
+                      _c("span", { staticClass: "wperp-required-sign" }, [
+                        _vm._v("*")
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.rate_name,
+                          expression: "rate_name"
+                        }
+                      ],
+                      staticClass: "wperp-form-field",
+                      attrs: { type: "text", required: "" },
+                      domProps: { value: _vm.rate_name },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.rate_name = $event.target.value
+                        }
+                      }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "wperp-form-group" }, [
+                    _c("label", [_vm._v(_vm._s(_vm.__("Tax Number", "erp")))]),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.tax_number,
+                          expression: "tax_number"
+                        }
+                      ],
+                      staticClass: "wperp-form-field",
+                      attrs: {
+                        type: "text",
+                        placeholder: _vm.__("Enter Tax Number", "erp")
+                      },
+                      domProps: { value: _vm.tax_number },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.tax_number = $event.target.value
+                        }
+                      }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-check" }, [
+                    _c("label", { staticClass: "form-check-label" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.is_default,
+                            expression: "is_default"
+                          }
+                        ],
+                        staticClass: "form-check-input",
+                        attrs: { type: "checkbox" },
+                        domProps: {
+                          checked: Array.isArray(_vm.is_default)
+                            ? _vm._i(_vm.is_default, null) > -1
+                            : _vm.is_default
+                        },
+                        on: {
+                          change: function($event) {
+                            var $$a = _vm.is_default,
+                              $$el = $event.target,
+                              $$c = $$el.checked ? true : false
+                            if (Array.isArray($$a)) {
+                              var $$v = null,
+                                $$i = _vm._i($$a, $$v)
+                              if ($$el.checked) {
+                                $$i < 0 && (_vm.is_default = $$a.concat([$$v]))
+                              } else {
+                                $$i > -1 &&
+                                  (_vm.is_default = $$a
+                                    .slice(0, $$i)
+                                    .concat($$a.slice($$i + 1)))
+                              }
+                            } else {
+                              _vm.is_default = $$c
+                            }
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("span", { staticClass: "form-check-sign" }),
+                      _vm._v(" "),
+                      _c("span", { staticClass: "field-label" }, [
+                        _vm._v(
+                          _vm._s(_vm.__("Is this tax default", "erp")) + "?"
+                        )
+                      ])
+                    ])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "wperp-modal-footer pt-0" }, [
+                  _c(
+                    "div",
+                    { staticClass: "buttons-wrapper text-right" },
+                    [
+                      _vm.is_update
+                        ? _c("submit-button", {
+                            attrs: {
+                              text: _vm.__("Update", "erp"),
+                              working: _vm.isWorking
+                            }
+                          })
+                        : _c("submit-button", {
+                            attrs: {
+                              text: _vm.__("Save", "erp"),
+                              working: _vm.isWorking
+                            }
+                          })
+                    ],
+                    1
+                  )
+                ])
+              ]
+            )
+          ],
+          1
+        )
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-1937b2f1", esExports)
+  }
+}
+
+/***/ }),
+/* 447 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -58858,17 +59383,17 @@ if (false) {
 }
 
 /***/ }),
-/* 446 */
+/* 448 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_RecordPayTax_vue__ = __webpack_require__(184);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_3794054e_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_RecordPayTax_vue__ = __webpack_require__(448);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_3794054e_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_RecordPayTax_vue__ = __webpack_require__(450);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(447)
+  __webpack_require__(449)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -58914,13 +59439,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 447 */
+/* 449 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 448 */
+/* 450 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -59188,17 +59713,17 @@ if (false) {
 }
 
 /***/ }),
-/* 449 */
+/* 451 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_TaxAgencies_vue__ = __webpack_require__(185);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_0b9f9864_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_TaxAgencies_vue__ = __webpack_require__(453);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_0b9f9864_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_TaxAgencies_vue__ = __webpack_require__(455);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(450)
+  __webpack_require__(452)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -59244,19 +59769,19 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 450 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 451 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
 /* 452 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 453 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 454 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -59327,7 +59852,7 @@ if (false) {
 }
 
 /***/ }),
-/* 453 */
+/* 455 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -59421,17 +59946,17 @@ if (false) {
 }
 
 /***/ }),
-/* 454 */
+/* 456 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_TaxCategories_vue__ = __webpack_require__(187);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_3836f746_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_TaxCategories_vue__ = __webpack_require__(456);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_3836f746_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_TaxCategories_vue__ = __webpack_require__(458);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(455)
+  __webpack_require__(457)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -59477,13 +60002,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 455 */
+/* 457 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 456 */
+/* 458 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -59577,17 +60102,17 @@ if (false) {
 }
 
 /***/ }),
-/* 457 */
+/* 459 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_TaxZones_vue__ = __webpack_require__(188);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_22d52bd4_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_TaxZones_vue__ = __webpack_require__(459);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_22d52bd4_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_TaxZones_vue__ = __webpack_require__(461);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(458)
+  __webpack_require__(460)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -59633,13 +60158,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 458 */
+/* 460 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 459 */
+/* 461 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -59747,17 +60272,17 @@ if (false) {
 }
 
 /***/ }),
-/* 460 */
+/* 462 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_TaxRates_vue__ = __webpack_require__(189);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_48f23d3c_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_TaxRates_vue__ = __webpack_require__(462);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_48f23d3c_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_TaxRates_vue__ = __webpack_require__(464);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(461)
+  __webpack_require__(463)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -59803,13 +60328,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 461 */
+/* 463 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 462 */
+/* 464 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -59949,17 +60474,17 @@ if (false) {
 }
 
 /***/ }),
-/* 463 */
+/* 465 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_TaxRecords_vue__ = __webpack_require__(190);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_43af6ed1_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_TaxRecords_vue__ = __webpack_require__(465);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_43af6ed1_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_TaxRecords_vue__ = __webpack_require__(467);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(464)
+  __webpack_require__(466)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -60005,13 +60530,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 464 */
+/* 466 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 465 */
+/* 467 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -60119,17 +60644,17 @@ if (false) {
 }
 
 /***/ }),
-/* 466 */
+/* 468 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_PayTaxSingle_vue__ = __webpack_require__(191);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_74751445_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_PayTaxSingle_vue__ = __webpack_require__(468);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_74751445_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_PayTaxSingle_vue__ = __webpack_require__(470);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(467)
+  __webpack_require__(469)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -60175,13 +60700,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 467 */
+/* 469 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 468 */
+/* 470 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -60469,17 +60994,17 @@ if (false) {
 }
 
 /***/ }),
-/* 469 */
+/* 471 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_BankAccounts_vue__ = __webpack_require__(192);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_14087e50_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_BankAccounts_vue__ = __webpack_require__(471);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_14087e50_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_BankAccounts_vue__ = __webpack_require__(473);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(470)
+  __webpack_require__(472)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -60525,13 +61050,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 470 */
+/* 472 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 471 */
+/* 473 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -60734,17 +61259,17 @@ if (false) {
 }
 
 /***/ }),
-/* 472 */
+/* 474 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_CheckCreate_vue__ = __webpack_require__(193);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_ea570792_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_CheckCreate_vue__ = __webpack_require__(474);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_ea570792_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_CheckCreate_vue__ = __webpack_require__(476);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(473)
+  __webpack_require__(475)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -60790,13 +61315,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 473 */
+/* 475 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 474 */
+/* 476 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -61387,17 +61912,17 @@ if (false) {
 }
 
 /***/ }),
-/* 475 */
+/* 477 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_CheckSingle_vue__ = __webpack_require__(194);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_6facd983_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_CheckSingle_vue__ = __webpack_require__(477);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_6facd983_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_CheckSingle_vue__ = __webpack_require__(479);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(476)
+  __webpack_require__(478)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -61443,13 +61968,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 476 */
+/* 478 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 477 */
+/* 479 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -61780,17 +62305,17 @@ if (false) {
 }
 
 /***/ }),
-/* 478 */
+/* 480 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_SingleTaxRate_vue__ = __webpack_require__(195);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_88c8980e_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_SingleTaxRate_vue__ = __webpack_require__(489);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_88c8980e_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_SingleTaxRate_vue__ = __webpack_require__(491);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(479)
+  __webpack_require__(481)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -61836,23 +62361,23 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 479 */
+/* 481 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 480 */
+/* 482 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_TaxRateLineAdd_vue__ = __webpack_require__(196);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_120eeac8_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_TaxRateLineAdd_vue__ = __webpack_require__(482);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_120eeac8_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_TaxRateLineAdd_vue__ = __webpack_require__(484);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(481)
+  __webpack_require__(483)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -61898,13 +62423,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 481 */
+/* 483 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 482 */
+/* 484 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -62078,17 +62603,17 @@ if (false) {
 }
 
 /***/ }),
-/* 483 */
+/* 485 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_TaxRateLineEdit_vue__ = __webpack_require__(197);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_d8411fc2_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_TaxRateLineEdit_vue__ = __webpack_require__(488);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_d8411fc2_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_TaxRateLineEdit_vue__ = __webpack_require__(490);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(484)
+  __webpack_require__(486)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -62134,23 +62659,23 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 484 */
+/* 486 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 485 */
+/* 487 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_TaxRateRow_vue__ = __webpack_require__(198);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_9b00e52e_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_TaxRateRow_vue__ = __webpack_require__(487);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_9b00e52e_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_TaxRateRow_vue__ = __webpack_require__(489);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(486)
+  __webpack_require__(488)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -62196,13 +62721,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 486 */
+/* 488 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 487 */
+/* 489 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -62369,7 +62894,7 @@ if (false) {
 }
 
 /***/ }),
-/* 488 */
+/* 490 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -62438,7 +62963,7 @@ if (false) {
 }
 
 /***/ }),
-/* 489 */
+/* 491 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -62534,17 +63059,17 @@ if (false) {
 }
 
 /***/ }),
-/* 490 */
+/* 492 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_IncomeStatement_vue__ = __webpack_require__(199);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_6f719a10_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_IncomeStatement_vue__ = __webpack_require__(492);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_6f719a10_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_IncomeStatement_vue__ = __webpack_require__(494);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(491)
+  __webpack_require__(493)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -62590,13 +63115,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 491 */
+/* 493 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 492 */
+/* 494 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -62836,17 +63361,17 @@ if (false) {
 }
 
 /***/ }),
-/* 493 */
+/* 495 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_BalanceSheet_vue__ = __webpack_require__(200);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_2c908cee_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_BalanceSheet_vue__ = __webpack_require__(495);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_2c908cee_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_BalanceSheet_vue__ = __webpack_require__(497);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(494)
+  __webpack_require__(496)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -62892,13 +63417,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 494 */
+/* 496 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 495 */
+/* 497 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -63351,18 +63876,18 @@ if (false) {
 }
 
 /***/ }),
-/* 496 */
+/* 498 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_OpeningBalance_vue__ = __webpack_require__(201);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_ca7c613c_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_OpeningBalance_vue__ = __webpack_require__(499);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_ca7c613c_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_OpeningBalance_vue__ = __webpack_require__(501);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(497)
-  __webpack_require__(498)
+  __webpack_require__(499)
+  __webpack_require__(500)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -63408,19 +63933,19 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 497 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 498 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
 /* 499 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 500 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 501 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -64767,17 +65292,17 @@ if (false) {
 }
 
 /***/ }),
-/* 500 */
+/* 502 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_HelpContent_vue__ = __webpack_require__(202);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_37b316c0_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_HelpContent_vue__ = __webpack_require__(502);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_37b316c0_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_HelpContent_vue__ = __webpack_require__(504);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(501)
+  __webpack_require__(503)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -64823,13 +65348,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 501 */
+/* 503 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 502 */
+/* 504 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -64906,17 +65431,17 @@ if (false) {
 }
 
 /***/ }),
-/* 503 */
+/* 505 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(24);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuex__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__modules_sales__ = __webpack_require__(504);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__modules_expense__ = __webpack_require__(505);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__modules_purchase__ = __webpack_require__(506);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__modules_spinner__ = __webpack_require__(507);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__modules_combo_btn__ = __webpack_require__(508);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__modules_sales__ = __webpack_require__(506);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__modules_expense__ = __webpack_require__(507);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__modules_purchase__ = __webpack_require__(508);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__modules_spinner__ = __webpack_require__(509);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__modules_combo_btn__ = __webpack_require__(510);
 
 
 
@@ -64940,7 +65465,7 @@ var debug = process.env.NODE_ENV !== 'production';
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(17)))
 
 /***/ }),
-/* 504 */
+/* 506 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -65070,7 +65595,7 @@ var mutations = {
 });
 
 /***/ }),
-/* 505 */
+/* 507 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -65167,7 +65692,7 @@ var mutations = {
 });
 
 /***/ }),
-/* 506 */
+/* 508 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -65264,7 +65789,7 @@ var mutations = {
 });
 
 /***/ }),
-/* 507 */
+/* 509 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -65300,7 +65825,7 @@ var mutations = {
 });
 
 /***/ }),
-/* 508 */
+/* 510 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -65334,680 +65859,6 @@ var mutations = {
   actions: actions,
   mutations: mutations
 });
-
-/***/ }),
-/* 509 */,
-/* 510 */,
-/* 511 */,
-/* 512 */,
-/* 513 */,
-/* 514 */,
-/* 515 */,
-/* 516 */,
-/* 517 */,
-/* 518 */,
-/* 519 */,
-/* 520 */,
-/* 521 */,
-/* 522 */,
-/* 523 */,
-/* 524 */,
-/* 525 */,
-/* 526 */,
-/* 527 */,
-/* 528 */,
-/* 529 */,
-/* 530 */,
-/* 531 */,
-/* 532 */,
-/* 533 */,
-/* 534 */,
-/* 535 */,
-/* 536 */,
-/* 537 */,
-/* 538 */,
-/* 539 */,
-/* 540 */,
-/* 541 */,
-/* 542 */,
-/* 543 */,
-/* 544 */,
-/* 545 */,
-/* 546 */,
-/* 547 */,
-/* 548 */,
-/* 549 */,
-/* 550 */,
-/* 551 */,
-/* 552 */,
-/* 553 */,
-/* 554 */,
-/* 555 */,
-/* 556 */,
-/* 557 */,
-/* 558 */,
-/* 559 */,
-/* 560 */,
-/* 561 */,
-/* 562 */,
-/* 563 */,
-/* 564 */,
-/* 565 */,
-/* 566 */,
-/* 567 */,
-/* 568 */,
-/* 569 */,
-/* 570 */,
-/* 571 */,
-/* 572 */,
-/* 573 */,
-/* 574 */,
-/* 575 */,
-/* 576 */,
-/* 577 */,
-/* 578 */,
-/* 579 */,
-/* 580 */,
-/* 581 */,
-/* 582 */,
-/* 583 */,
-/* 584 */,
-/* 585 */,
-/* 586 */,
-/* 587 */,
-/* 588 */,
-/* 589 */,
-/* 590 */,
-/* 591 */,
-/* 592 */,
-/* 593 */,
-/* 594 */,
-/* 595 */,
-/* 596 */,
-/* 597 */,
-/* 598 */,
-/* 599 */,
-/* 600 */,
-/* 601 */,
-/* 602 */,
-/* 603 */,
-/* 604 */,
-/* 605 */,
-/* 606 */,
-/* 607 */,
-/* 608 */,
-/* 609 */,
-/* 610 */,
-/* 611 */,
-/* 612 */,
-/* 613 */,
-/* 614 */,
-/* 615 */,
-/* 616 */,
-/* 617 */,
-/* 618 */,
-/* 619 */,
-/* 620 */,
-/* 621 */,
-/* 622 */,
-/* 623 */,
-/* 624 */,
-/* 625 */,
-/* 626 */,
-/* 627 */,
-/* 628 */,
-/* 629 */,
-/* 630 */,
-/* 631 */,
-/* 632 */,
-/* 633 */,
-/* 634 */,
-/* 635 */,
-/* 636 */,
-/* 637 */,
-/* 638 */,
-/* 639 */,
-/* 640 */,
-/* 641 */,
-/* 642 */,
-/* 643 */,
-/* 644 */,
-/* 645 */,
-/* 646 */,
-/* 647 */,
-/* 648 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 649 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      staticClass: "wperp-modal has-form wperp-modal-open",
-      attrs: { id: "wperp-tax-agency-modal", role: "dialog" }
-    },
-    [
-      _c("div", { staticClass: "wperp-modal-dialog" }, [
-        _c(
-          "div",
-          { staticClass: "wperp-modal-content" },
-          [
-            _c("div", { staticClass: "wperp-modal-header" }, [
-              _c("h3", [
-                _vm._v(
-                  _vm._s(_vm.is_update ? "Edit" : "Add") +
-                    " " +
-                    _vm._s(_vm.__("Tax Agency", "erp"))
-                )
-              ]),
-              _vm._v(" "),
-              _c(
-                "span",
-                {
-                  staticClass: "modal-close",
-                  on: {
-                    click: function($event) {
-                      $event.preventDefault()
-                      return _vm.closeModal($event)
-                    }
-                  }
-                },
-                [_c("i", { staticClass: "flaticon-close" })]
-              )
-            ]),
-            _vm._v(" "),
-            _c("show-errors", { attrs: { error_msgs: _vm.form_errors } }),
-            _vm._v(" "),
-            _c(
-              "form",
-              {
-                staticClass: "modal-form edit-customer-modal",
-                attrs: { action: "", method: "post" },
-                on: {
-                  submit: function($event) {
-                    $event.preventDefault()
-                    return _vm.taxAgencyFormSubmit($event)
-                  }
-                }
-              },
-              [
-                _c("div", { staticClass: "wperp-modal-body" }, [
-                  _c("div", { staticClass: "wperp-form-group" }, [
-                    _c("label", [
-                      _vm._v(_vm._s(_vm.__("Tax Agency Name", "erp"))),
-                      _c("span", { staticClass: "wperp-required-sign" }, [
-                        _vm._v("*")
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.agency,
-                          expression: "agency"
-                        }
-                      ],
-                      staticClass: "wperp-form-field",
-                      attrs: { type: "text" },
-                      domProps: { value: _vm.agency },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.agency = $event.target.value
-                        }
-                      }
-                    })
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "wperp-modal-footer pt-0" }, [
-                  _c(
-                    "div",
-                    { staticClass: "buttons-wrapper text-right" },
-                    [
-                      _vm.is_update
-                        ? _c("submit-button", {
-                            attrs: {
-                              text: _vm.__("Update", "erp"),
-                              working: _vm.isWorking
-                            }
-                          })
-                        : _c("submit-button", {
-                            attrs: {
-                              text: _vm.__("Save", "erp"),
-                              working: _vm.isWorking
-                            }
-                          })
-                    ],
-                    1
-                  )
-                ])
-              ]
-            )
-          ],
-          1
-        )
-      ])
-    ]
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-var esExports = { render: render, staticRenderFns: staticRenderFns }
-/* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-872040ec", esExports)
-  }
-}
-
-/***/ }),
-/* 650 */,
-/* 651 */,
-/* 652 */,
-/* 653 */,
-/* 654 */,
-/* 655 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 656 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      staticClass: "wperp-modal has-form wperp-modal-open",
-      attrs: { id: "wperp-tax-category-modal", role: "dialog" }
-    },
-    [
-      _c("div", { staticClass: "wperp-modal-dialog" }, [
-        _c(
-          "div",
-          { staticClass: "wperp-modal-content" },
-          [
-            _c("div", { staticClass: "wperp-modal-header" }, [
-              _c("h3", [
-                _vm._v(
-                  _vm._s(_vm.is_update ? "Edit" : "Add") +
-                    " " +
-                    _vm._s(_vm.__("Tax Category", "erp"))
-                )
-              ]),
-              _vm._v(" "),
-              _c(
-                "span",
-                {
-                  staticClass: "modal-close",
-                  on: {
-                    click: function($event) {
-                      $event.preventDefault()
-                      return _vm.closeModal($event)
-                    }
-                  }
-                },
-                [_c("i", { staticClass: "flaticon-close" })]
-              )
-            ]),
-            _vm._v(" "),
-            _c("show-errors", { attrs: { error_msgs: _vm.form_errors } }),
-            _vm._v(" "),
-            _c(
-              "form",
-              {
-                staticClass: "modal-form edit-customer-modal",
-                attrs: { action: "", method: "post" },
-                on: {
-                  submit: function($event) {
-                    $event.preventDefault()
-                    return _vm.taxCatFormSubmit($event)
-                  }
-                }
-              },
-              [
-                _c("div", { staticClass: "wperp-modal-body" }, [
-                  _c("div", { staticClass: "wperp-form-group" }, [
-                    _c("label", [
-                      _vm._v(_vm._s(_vm.__("Tax Category Name", "erp")) + " "),
-                      _c("span", { staticClass: "wperp-required-sign" }, [
-                        _vm._v("*")
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.category,
-                          expression: "category"
-                        }
-                      ],
-                      staticClass: "wperp-form-field wperp-required-sign",
-                      attrs: { type: "text", required: "" },
-                      domProps: { value: _vm.category },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.category = $event.target.value
-                        }
-                      }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "wperp-form-group mb-0" }, [
-                    _c("label", [_vm._v(_vm._s(_vm.__("Description", "erp")))]),
-                    _vm._v(" "),
-                    _c("textarea", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.desc,
-                          expression: "desc"
-                        }
-                      ],
-                      staticClass: "wperp-form-field",
-                      attrs: { rows: "4" },
-                      domProps: { value: _vm.desc },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.desc = $event.target.value
-                        }
-                      }
-                    })
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "wperp-modal-footer pt-0" }, [
-                  _c(
-                    "div",
-                    { staticClass: "buttons-wrapper text-right" },
-                    [
-                      _vm.is_update
-                        ? _c("submit-button", {
-                            attrs: {
-                              text: _vm.__("Update", "erp"),
-                              working: _vm.isWorking
-                            }
-                          })
-                        : _c("submit-button", {
-                            attrs: {
-                              text: _vm.__("Save", "erp"),
-                              working: _vm.isWorking
-                            }
-                          })
-                    ],
-                    1
-                  )
-                ])
-              ]
-            )
-          ],
-          1
-        )
-      ])
-    ]
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-var esExports = { render: render, staticRenderFns: staticRenderFns }
-/* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-0e7d34c3", esExports)
-  }
-}
-
-/***/ }),
-/* 657 */,
-/* 658 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 659 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      staticClass: "wperp-modal has-form wperp-modal-open",
-      attrs: { id: "wperp-tax-agency-modal", role: "dialog" }
-    },
-    [
-      _c("div", { staticClass: "wperp-modal-dialog" }, [
-        _c(
-          "div",
-          { staticClass: "wperp-modal-content" },
-          [
-            _c("div", { staticClass: "wperp-modal-header" }, [
-              _c("h3", [
-                _vm._v(
-                  _vm._s(_vm.is_update ? "Edit" : "Add") +
-                    " " +
-                    _vm._s(_vm.__("Tax Zone", "erp"))
-                )
-              ]),
-              _vm._v(" "),
-              _c(
-                "span",
-                {
-                  staticClass: "modal-close",
-                  on: {
-                    click: function($event) {
-                      $event.preventDefault()
-                      return _vm.closeModal($event)
-                    }
-                  }
-                },
-                [_c("i", { staticClass: "flaticon-close" })]
-              )
-            ]),
-            _vm._v(" "),
-            _c("show-errors", { attrs: { error_msgs: _vm.form_errors } }),
-            _vm._v(" "),
-            _c(
-              "form",
-              {
-                staticClass: "modal-form edit-customer-modal",
-                attrs: { method: "post" },
-                on: {
-                  submit: function($event) {
-                    $event.preventDefault()
-                    return _vm.taxZoneFormSubmit($event)
-                  }
-                }
-              },
-              [
-                _c("div", { staticClass: "wperp-modal-body" }, [
-                  _c("div", { staticClass: "wperp-form-group" }, [
-                    _c("label", [
-                      _vm._v(_vm._s(_vm.__("Tax Zone Name", "erp")) + " "),
-                      _c("span", { staticClass: "wperp-required-sign" }, [
-                        _vm._v("*")
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.rate_name,
-                          expression: "rate_name"
-                        }
-                      ],
-                      staticClass: "wperp-form-field",
-                      attrs: { type: "text", required: "" },
-                      domProps: { value: _vm.rate_name },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.rate_name = $event.target.value
-                        }
-                      }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "wperp-form-group" }, [
-                    _c("label", [_vm._v(_vm._s(_vm.__("Tax Number", "erp")))]),
-                    _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.tax_number,
-                          expression: "tax_number"
-                        }
-                      ],
-                      staticClass: "wperp-form-field",
-                      attrs: {
-                        type: "text",
-                        placeholder: _vm.__("Enter Tax Number", "erp")
-                      },
-                      domProps: { value: _vm.tax_number },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.tax_number = $event.target.value
-                        }
-                      }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "form-check" }, [
-                    _c("label", { staticClass: "form-check-label" }, [
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.is_default,
-                            expression: "is_default"
-                          }
-                        ],
-                        staticClass: "form-check-input",
-                        attrs: { type: "checkbox" },
-                        domProps: {
-                          checked: Array.isArray(_vm.is_default)
-                            ? _vm._i(_vm.is_default, null) > -1
-                            : _vm.is_default
-                        },
-                        on: {
-                          change: function($event) {
-                            var $$a = _vm.is_default,
-                              $$el = $event.target,
-                              $$c = $$el.checked ? true : false
-                            if (Array.isArray($$a)) {
-                              var $$v = null,
-                                $$i = _vm._i($$a, $$v)
-                              if ($$el.checked) {
-                                $$i < 0 && (_vm.is_default = $$a.concat([$$v]))
-                              } else {
-                                $$i > -1 &&
-                                  (_vm.is_default = $$a
-                                    .slice(0, $$i)
-                                    .concat($$a.slice($$i + 1)))
-                              }
-                            } else {
-                              _vm.is_default = $$c
-                            }
-                          }
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c("span", { staticClass: "form-check-sign" }),
-                      _vm._v(" "),
-                      _c("span", { staticClass: "field-label" }, [
-                        _vm._v(
-                          _vm._s(_vm.__("Is this tax default", "erp")) + "?"
-                        )
-                      ])
-                    ])
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "wperp-modal-footer pt-0" }, [
-                  _c(
-                    "div",
-                    { staticClass: "buttons-wrapper text-right" },
-                    [
-                      _vm.is_update
-                        ? _c("submit-button", {
-                            attrs: {
-                              text: _vm.__("Update", "erp"),
-                              working: _vm.isWorking
-                            }
-                          })
-                        : _c("submit-button", {
-                            attrs: {
-                              text: _vm.__("Save", "erp"),
-                              working: _vm.isWorking
-                            }
-                          })
-                    ],
-                    1
-                  )
-                ])
-              ]
-            )
-          ],
-          1
-        )
-      ])
-    ]
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-var esExports = { render: render, staticRenderFns: staticRenderFns }
-/* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-1937b2f1", esExports)
-  }
-}
 
 /***/ })
 ],[213]);
