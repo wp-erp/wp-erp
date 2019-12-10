@@ -208,6 +208,10 @@ class Admin_Menu {
         $section = ( isset( $_GET['section'] ) && isset( $menu[$_GET['section']] ) ) ? $_GET['section'] : 'dashboard';
         $sub = ( isset( $_GET['sub-section'] ) && !empty( $menu[$section]['submenu'][$_GET['sub-section']] ) ) ? $_GET['sub-section'] : false;
 
+        // check permission/capability
+        $permission = $menu[$section]['capability'];
+        if ( ! current_user_can( $permission ) ) return;
+
         $callback = $menu[$section]['callback'];
         if ( $sub ) {
             $callback = $menu[$section]['submenu'][$sub]['callback'];
