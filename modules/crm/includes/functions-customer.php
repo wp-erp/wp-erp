@@ -3688,7 +3688,7 @@ function erp_crm_login_redirect( $redirect_to, $roles ) {
     $crm_agent   = erp_crm_get_agent_role();
 
     if ( in_array( $crm_manager, $roles ) || in_array( $crm_agent, $roles ) ) {
-        $redirect_to = get_admin_url( null, 'admin.php?page=erp-sales' );
+        $redirect_to = get_admin_url( null, 'admin.php?page=erp-crm' );
     }
 
     return $redirect_to;

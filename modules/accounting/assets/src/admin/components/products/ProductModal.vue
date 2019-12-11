@@ -339,6 +339,9 @@ export default {
 
         .modal-close {
             top: 20px !important;
+            .flaticon-close {
+                font-size: inherit;
+            }
         }
 
         .errors {

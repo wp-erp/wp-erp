@@ -164,7 +164,7 @@ export default {
                         item['actions'] = [
                             { key: '#', label: __('No actions found', 'erp') }
                         ];
-                    } else if (item.type === 'invoice') {
+                    } else if (item.type === 'invoice' && item.status_code !== '4') {
                         if (item.status_code === '7') {
                             delete item['actions'];
                         } else if (item.status_code === '2' || item.status_code === '3' || item.status_code === '5') {

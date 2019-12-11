@@ -208,6 +208,16 @@ class Admin_Menu {
         $section = ( isset( $_GET['section'] ) && isset( $menu[$_GET['section']] ) ) ? $_GET['section'] : 'dashboard';
         $sub = ( isset( $_GET['sub-section'] ) && !empty( $menu[$section]['submenu'][$_GET['sub-section']] ) ) ? $_GET['sub-section'] : false;
 
+        // check permission/capability
+        $permission = $menu[$section]['capability'];
+        if ( ! current_user_can( $permission ) ) {
+            $error_message  = '<h2 style="text-align: center; margin-top:40px">';
+            $error_message .= __('Sorry! You are not allowed to access this page.', 'erp');
+            $error_message .= '</h2>';
+
+            wp_die( $error_message );
+        }
+
         $callback = $menu[$section]['callback'];
         if ( $sub ) {
             $callback = $menu[$section]['submenu'][$sub]['callback'];

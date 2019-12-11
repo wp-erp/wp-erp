@@ -88,11 +88,11 @@
                         </td>
                         <td data-colname="Debit">
                             <input type="text" class="wperp-form-field text-right"
-                            :value="isNaN(totalDebit) ? debit_total : moneyFormat(totalDebit)" readonly>
+                            :value="isNaN(totalDebit()) ? debit_total : moneyFormat(totalDebit())" readonly>
                         </td>
                         <td data-colname="Credit">
                             <input type="text" class="wperp-form-field text-right"
-                            :value="isNaN(totalCredit) ? credit_total: moneyFormat(totalCredit)" readonly>
+                            :value="isNaN(totalCredit()) ? credit_total: moneyFormat(totalCredit())" readonly>
                         </td>
                         <td></td>
                     </tr>
