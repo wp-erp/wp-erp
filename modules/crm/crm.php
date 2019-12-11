@@ -171,11 +171,6 @@ class Customer_Relationship {
         wp_enqueue_script( 'erp-tiptip' );
         wp_enqueue_script( 'erp-vuejs', false, [ 'jquery', 'erp-script' ], false, true );
         wp_enqueue_script( 'erp-vue-table', WPERP_CRM_ASSETS . "/js/vue-table$suffix.js", array( 'erp-vuejs', 'jquery' ), date( 'Ymd' ), true );
-        wp_enqueue_script( 'erp-crm-i18n', WPERP_ASSETS . "/js/i18n.js", array(), date( 'Ymd' ), true );
-        wp_enqueue_script( 'erp-crm', WPERP_CRM_ASSETS . "/js/crm$suffix.js", array( 'erp-script', 'erp-timepicker' ), date( 'Ymd' ), true );
-        wp_enqueue_script( 'erp-crm-contact', WPERP_CRM_ASSETS . "/js/crm-contacts$suffix.js", array( 'erp-vue-table', 'erp-script', 'erp-vuejs', 'underscore', 'erp-tiptip', 'jquery', 'erp-select2', 'erp-crm-i18n' ), date( 'Ymd' ), true );
-
-        erp_remove_other_select2_sources();
 
         wp_enqueue_style( 'email-attachment', WPERP_CRM_ASSETS . "/css/email-attachment.css", array(), false );
 
@@ -218,6 +213,23 @@ class Customer_Relationship {
             'timeline_feed_header' => apply_filters( 'erp_crm_contact_timeline_feeds_header', '' ),
             'timeline_feed_body'   => apply_filters( 'erp_crm_contact_timeline_feeds_body', '' ),
         ] );
+
+        /**
+         * This below block is only needed for translations
+         * Pleeease find some proper place for me
+         */
+        ?>
+        <script>
+            window.erpLocale = JSON.parse('<?php echo addslashes(
+                json_encode( apply_filters( 'erp_localized_data', [] ) )
+            ); ?>');
+        </script>
+
+        <?php
+        wp_enqueue_script( 'erp-crm-i18n', WPERP_ASSETS . "/js/i18n.js", array(), date( 'Ymd' ), true );
+        /**
+         * This above block is only needed for translations
+         */
 
         $section = !empty( $_GET['section'] ) ? $_GET['section'] : 'dashboard' ;
 
@@ -301,7 +313,6 @@ class Customer_Relationship {
                 break;
 
             default :
-                break;
 
         }
 
@@ -309,17 +320,13 @@ class Customer_Relationship {
             'ajaxurl' => admin_url( 'admin-ajax.php' ),
             'nonce'   => wp_create_nonce( 'wp-erp-vue-table' )
         ] );
-        ?>
 
-        <script>
-            window.erpLocale = JSON.parse('<?php echo addslashes(
-                json_encode( apply_filters( 'erp_localized_data', [] ) )
-            ); ?>');
-        </script>
-
-        <?php
+        wp_enqueue_script( 'erp-crm', WPERP_CRM_ASSETS . "/js/crm$suffix.js", array( 'erp-script', 'erp-timepicker' ), date( 'Ymd' ), true );
+        wp_enqueue_script( 'erp-crm-contact', WPERP_CRM_ASSETS . "/js/crm-contacts$suffix.js", array( 'erp-vue-table', 'erp-script', 'erp-vuejs', 'underscore', 'erp-tiptip', 'jquery', 'erp-select2', 'erp-crm-i18n' ), date( 'Ymd' ), true );
         wp_localize_script( 'erp-crm', 'wpErpCrm', $localize_script );
         wp_localize_script( 'erp-crm-contact', 'wpErpCrm', $localize_script );
+
+        erp_remove_other_select2_sources();
     }
 
     /**
