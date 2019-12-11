@@ -5,7 +5,7 @@ Tags: business manager, erp, accounting, crm, hr, project manager, small busines
 Requires at least: 4.4
 Tested up to: 5.3
 Requires PHP: 5.6
-Stable tag: 1.5.8
+Stable tag: 1.5.9
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -259,6 +259,10 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+
+= v1.5.9 -> December 11, 2019 =
+[fix] Updated: CRM js loading sequence. Which was causing CRM single page view not working properly.
+[fix] Fixed: Redirect to CRM overview page after login as CRM Agent
 
 = v1.5.8 -> December 10, 2019 =
 [fix]   HR: Fixed country, state schema type for customer & vendor.
