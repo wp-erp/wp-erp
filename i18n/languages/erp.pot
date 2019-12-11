@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP ERP 1.5.8\n"
+"Project-Id-Version: WP ERP 1.5.9\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-erp\n"
-"POT-Creation-Date: 2019-12-10 07:26:31+00:00\n"
+"POT-Creation-Date: 2019-12-11 11:09:19+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -5609,7 +5609,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/people/People.vue:6
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:137
 #: modules/accounting/assets/src/admin/components/tax/TaxRateLineAdd.vue:7
-#: modules/crm/crm.php:192 modules/hrm/views/departments.php:3
+#: modules/crm/crm.php:187 modules/hrm/views/departments.php:3
 #: modules/hrm/views/designation.php:3 modules/hrm/views/employee/single.php:10
 #: modules/hrm/views/employee.php:9 modules/hrm/views/leave/holiday.php:250
 #: modules/hrm/views/leave/leave-entitlements.php:12
@@ -6898,7 +6898,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/tax/NewTaxCategory.vue:32
 #: modules/accounting/assets/src/admin/components/tax/NewTaxZone.vue:37
 #: modules/accounting/assets/src/admin/components/tax/TaxRateRow.vue:34
-#: modules/crm/crm.php:193 modules/crm/views/edit-subscription-form.php:28
+#: modules/crm/crm.php:188 modules/crm/views/edit-subscription-form.php:28
 #: modules/hrm/hrm.php:180 modules/hrm/views/employee/tab-job.php:25
 msgid "Update"
 msgstr ""
@@ -6907,8 +6907,8 @@ msgstr ""
 msgid "You didn't save your changes!"
 msgstr ""
 
-#: includes/class-scripts.php:167 modules/crm/crm.php:197
-#: modules/crm/crm.php:216 modules/hrm/hrm.php:196
+#: includes/class-scripts.php:167 modules/crm/crm.php:192
+#: modules/crm/crm.php:211 modules/hrm/hrm.php:196
 msgid "Are you sure?"
 msgstr ""
 
@@ -7379,8 +7379,8 @@ msgstr ""
 msgid "Total leave policies count."
 msgstr ""
 
-#: includes/framework/views/status-report.php:79 modules/crm/crm.php:334
-#: modules/crm/crm.php:438 modules/crm/crm.php:452
+#: includes/framework/views/status-report.php:79 modules/crm/crm.php:341
+#: modules/crm/crm.php:445 modules/crm/crm.php:459
 #: modules/crm/includes/admin/class-menu.php:31
 #: modules/crm/includes/admin/class-settings.php:16
 #: modules/crm/includes/class-form-handler.php:24
@@ -10460,7 +10460,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/tax/NewTaxZone.vue:38
 #: modules/accounting/assets/src/admin/components/tax/RecordPayTax.vue:68
 #: modules/accounting/assets/src/admin/components/tax/TaxRateLineAdd.vue:37
-#: modules/crm/crm.php:194
+#: modules/crm/crm.php:189
 msgid "Save"
 msgstr ""
 
@@ -11835,60 +11835,60 @@ msgstr ""
 msgid "Lead"
 msgstr ""
 
-#: modules/crm/crm.php:186
+#: modules/crm/crm.php:181
 msgid "Add New Customer"
 msgstr ""
 
-#: modules/crm/crm.php:187
+#: modules/crm/crm.php:182
 msgid "Edit Customer"
 msgstr ""
 
-#: modules/crm/crm.php:188
+#: modules/crm/crm.php:183
 msgid "Customer Social Profile"
 msgstr ""
 
-#: modules/crm/crm.php:189
+#: modules/crm/crm.php:184
 msgid "Add to Contact groups"
 msgstr ""
 
-#: modules/crm/crm.php:195 modules/crm/views/js-templates/new-customer.php:25
+#: modules/crm/crm.php:190 modules/crm/views/js-templates/new-customer.php:25
 #: modules/hrm/hrm.php:194 modules/hrm/views/js-templates/new-employee.php:17
 msgid "Upload Photo"
 msgstr ""
 
-#: modules/crm/crm.php:196 modules/hrm/hrm.php:195
+#: modules/crm/crm.php:191 modules/hrm/hrm.php:195
 msgid "Set Photo"
 msgstr ""
 
-#: modules/crm/crm.php:198
+#: modules/crm/crm.php:193
 msgid "Are you sure to delete?"
 msgstr ""
 
-#: modules/crm/crm.php:199
+#: modules/crm/crm.php:194
 msgid "Are you sure to delete this?"
 msgstr ""
 
-#: modules/crm/crm.php:200
+#: modules/crm/crm.php:195
 msgid "Select atleast one group"
 msgstr ""
 
-#: modules/crm/crm.php:201
+#: modules/crm/crm.php:196
 msgid "Already exists as a contact or company"
 msgstr ""
 
-#: modules/crm/crm.php:202
+#: modules/crm/crm.php:197
 msgid "This user already exists! Do you want to make this user as a"
 msgstr ""
 
-#: modules/crm/crm.php:203
+#: modules/crm/crm.php:198
 msgid "This is wp user! Do you want to create this user as a"
 msgstr ""
 
-#: modules/crm/crm.php:204
+#: modules/crm/crm.php:199
 msgid "Create new"
 msgstr ""
 
-#: modules/crm/crm.php:206
+#: modules/crm/crm.php:201
 msgid "WP User created successfully"
 msgstr ""
 
