@@ -48605,7 +48605,7 @@ var render = function() {
                             ]),
                             _vm._v(" "),
                             _c("file-upload", {
-                              attrs: { url: "/bills/attachments" },
+                              attrs: { url: "/invoices/attachments" },
                               model: {
                                 value: _vm.attachments,
                                 callback: function($$v) {
