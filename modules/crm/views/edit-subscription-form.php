@@ -3,8 +3,8 @@
 <?php do_action( 'erp_edit_subscription_page_before_form' ); ?>
 
 <?php if ( ! empty( $contact_lists ) ): ?>
-    <form class="<?php echo implode( ' ', $class_names ); ?>">
-        <p><?php echo $page_content; ?></p>
+    <form class="<?php echo esc_html( implode( ' ', $class_names ) ); ?>">
+        <p><?php echo esc_html( $page_content ); ?></p>
 
         <ul>
             <?php foreach ( $contact_lists as $list_type => $lists ): ?>
@@ -13,16 +13,16 @@
                         <label>
                             <input
                                 type="checkbox"
-                                name="<?php echo $list_type ?>[<?php echo $list->id ?>]"
+                                name="<?php echo esc_attr( $list_type ) ?>[<?php echo esc_attr( $list->id ) ?>]"
                                 <?php echo empty( $list->unsubscribe_at ) ? 'checked' : '' ?>
-                            > <?php echo $list->name; ?>
+                            > <?php echo esc_attr( $list->name ); ?>
                         </label>
                     </li>
                 <?php } ); ?>
             <?php endforeach; ?>
         </ul>
 
-        <input type="hidden" name="id" value="<?php echo $hash; ?>">
+        <input type="hidden" name="id" value="<?php echo esc_attr( $hash ); ?>">
 
         <button type="submit">
             <span class="submit-btn-label"><?php echo __( 'Update', 'erp' ); ?></span>

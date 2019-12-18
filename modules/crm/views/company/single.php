@@ -55,7 +55,7 @@ $contact_tags = wp_list_pluck($contact_tags, 'name');
                                         <?php $social_field_data = $customer->get_meta( $social_key, true ); ?>
 
                                         <?php if ( ! empty( $social_field_data ) ): ?>
-                                            <li><a href="<?php echo esc_url( $social_field_data ); ?>"><?php echo $social_value['icon']; ?></a></li>
+                                            <li><a href="<?php echo esc_url_raw( $social_field_data ); ?>"><?php echo $social_value['icon']; ?></a></li>
                                         <?php endif ?>
                                     <?php endforeach ?>
 
