@@ -5,18 +5,18 @@ $active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : '';
 <div class="wrap" id="wp-erp">
 
     <h2>
-        <?php _e( 'Leave Entitlements', 'erp' ); ?>
+        <?php esc_html_e( 'Leave Entitlements', 'erp' ); ?>
         <?php if ( 'assignment' == $active_tab ): ?>
-            <a href="<?php echo admin_url( 'admin.php?page=erp-hr&section=leave&sub-section=leave-entitlements' ); ?>" id="erp-new-leave-request" class="add-new-h2"><?php _e( 'Back to Entitlement list', 'erp' ); ?></a>
+            <a href="<?php echo admin_url( 'admin.php?page=erp-hr&section=leave&sub-section=leave-entitlements' ); ?>" id="erp-new-leave-request" class="add-new-h2"><?php esc_html_e( 'Back to Entitlement list', 'erp' ); ?></a>
         <?php else: ?>
-            <a href="<?php echo add_query_arg( array( 'sub-section' => 'leave-entitlements', 'tab' => 'assignment' ), admin_url( 'admin.php?page=erp-hr&section=leave' ) ); ?>" id="erp-new-leave-request" class="add-new-h2"><?php _e( 'Add New', 'erp' ); ?></a>
+            <a href="<?php echo add_query_arg( array( 'sub-section' => 'leave-entitlements', 'tab' => 'assignment' ), admin_url( 'admin.php?page=erp-hr&section=leave' ) ); ?>" id="erp-new-leave-request" class="add-new-h2"><?php esc_html_e( 'Add New', 'erp' ); ?></a>
         <?php endif ?>
     </h2>
 
     <?php if ( 'assignment' == $active_tab ) { ?>
 
         <p class="description">
-            <?php _e( 'Assign a leave policy to employees.', 'erp' ); ?>
+            <?php esc_html_e( 'Assign a leave policy to employees.', 'erp' ); ?>
         </p>
 
         <?php

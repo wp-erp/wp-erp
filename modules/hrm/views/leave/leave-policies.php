@@ -44,7 +44,7 @@ class Leave_Policies_List_Table extends WP_List_Table {
      * @return void
      */
     function no_items() {
-        _e( 'No policies found.', 'erp' );
+        esc_html_e( 'No policies found.', 'erp' );
     }
 
     /**
@@ -220,7 +220,7 @@ class Leave_Policies_List_Table extends WP_List_Table {
 ?>
 
 <div class="wrap erp-hr-leave-policy">
-    <h2><?php _e( 'Leave Policies', 'erp' ); ?> <a href="#" id="erp-leave-policy-new" class="add-new-h2"><?php _e( 'Add New', 'erp' ); ?></a></h2>
+    <h2><?php esc_html_e( 'Leave Policies', 'erp' ); ?> <a href="#" id="erp-leave-policy-new" class="add-new-h2"><?php esc_html_e( 'Add New', 'erp' ); ?></a></h2>
 
     <div class="list-table-wrap">
         <div class="list-wrap-inner">

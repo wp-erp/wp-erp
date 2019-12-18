@@ -1,5 +1,5 @@
 <div class="wrap">
-    <h2><?php _e( 'Gender Profile', 'erp' ); ?></h2>
+    <h2><?php esc_html_e( 'Gender Profile', 'erp' ); ?></h2>
 
     <?php
         $gender_all   = erp_hr_get_gender_count();
@@ -49,9 +49,9 @@
         <table class="widefat striped">
             <thead>
                 <tr>
-                    <th><?php _e( 'Gender', 'erp' ); ?></th>
-                    <th><?php _e( 'Count', 'erp' ); ?></th>
-                    <th><?php _e( 'Percentage', 'erp' ); ?></th>
+                    <th><?php esc_html_e( 'Gender', 'erp' ); ?></th>
+                    <th><?php esc_html_e( 'Count', 'erp' ); ?></th>
+                    <th><?php esc_html_e( 'Percentage', 'erp' ); ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -84,10 +84,10 @@
         <table class="widefat striped">
             <thead>
                 <tr>
-                    <th><?php _e( 'Department', 'erp' ); ?></th>
-                    <th><?php _e( 'Male', 'erp' ); ?></th>
-                    <th><?php _e( 'Female', 'erp' ); ?></th>
-                    <th><?php _e( 'Unspecified', 'erp' ); ?></th>
+                    <th><?php esc_html_e( 'Department', 'erp' ); ?></th>
+                    <th><?php esc_html_e( 'Male', 'erp' ); ?></th>
+                    <th><?php esc_html_e( 'Female', 'erp' ); ?></th>
+                    <th><?php esc_html_e( 'Unspecified', 'erp' ); ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -213,7 +213,7 @@
                             showTooltip(item.pageX,
                             item.pageY,
                             color,
-                            "<strong>" + item.series.yaxis.ticks[item.dataIndex].label + "</strong><br><?php _e( 'Category :', 'erp' ); ?><strong>" + item.series.label + "</strong><br><?php _e( 'Employee :', 'erp' ); ?><strong>" + y + "</strong>");
+                            "<strong>" + item.series.yaxis.ticks[item.dataIndex].label + "</strong><br><?php esc_html_e( 'Category :', 'erp' ); ?><strong>" + item.series.label + "</strong><br><?php esc_html_e( 'Employee :', 'erp' ); ?><strong>" + y + "</strong>");
                         }
                     } else {
                         $("#tooltip").remove();

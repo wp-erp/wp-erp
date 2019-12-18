@@ -1,5 +1,5 @@
 <div class="wrap">
-    <h3><?php _e( 'Headcount', 'erp' ); ?></h3>
+    <h3><?php esc_html_e( 'Headcount', 'erp' ); ?></h3>
     <?php
         global $wpdb;
 
@@ -72,7 +72,7 @@
             ?>
             </select>
             <?php wp_nonce_field( 'epr-rep-headcount' ); ?>
-            <button type="submit" class="button-secondary" name="filter_headcount"><?php _e( 'Filter', 'erp' ); ?></button>
+            <button type="submit" class="button-secondary" name="filter_headcount"><?php esc_html_e( 'Filter', 'erp' ); ?></button>
         </form>
     </div>
 
@@ -90,7 +90,7 @@
                         <div class="handlediv" title="Click to toggle"><br></div>
                         <!-- Toggle -->
 
-                        <h2 class="hndle"><span><?php _e( 'Headcount by Month', 'erp' ); ?></span>
+                        <h2 class="hndle"><span><?php esc_html_e( 'Headcount by Month', 'erp' ); ?></span>
                         </h2>
 
                         <div class="inside">
@@ -124,7 +124,7 @@
                         <div class="inside">
                             <span class="dashicons dashicons-groups"></span>
                             <span></span><br>
-                            <h4><?php _e( 'Total Employees', 'erp' ); ?> : <?php echo esc_attr( $total_emp_count ); ?></h4>
+                            <h4><?php esc_html_e( 'Total Employees', 'erp' ); ?> : <?php echo esc_attr( $total_emp_count ); ?></h4>
                         </div>
                         <!-- .inside -->
 
@@ -150,12 +150,12 @@
     <table class="widefat striped">
         <thead>
             <tr>
-                <th><?php _e( 'Name', 'erp'); ?></th>
-                <th><?php _e( 'Hire Date', 'erp'); ?></th>
-                <th><?php _e( 'Job Title', 'erp'); ?></th>
-                <th><?php _e( 'Department', 'erp'); ?></th>
-                <th><?php _e( 'Location', 'erp'); ?></th>
-                <th><?php _e( 'Status', 'erp'); ?></th>
+                <th><?php esc_html_e( 'Name', 'erp'); ?></th>
+                <th><?php esc_html_e( 'Hire Date', 'erp'); ?></th>
+                <th><?php esc_html_e( 'Job Title', 'erp'); ?></th>
+                <th><?php esc_html_e( 'Department', 'erp'); ?></th>
+                <th><?php esc_html_e( 'Location', 'erp'); ?></th>
+                <th><?php esc_html_e( 'Status', 'erp'); ?></th>
             </tr>
         </thead>
         <tbody>

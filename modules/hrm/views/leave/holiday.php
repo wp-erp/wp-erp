@@ -31,11 +31,11 @@ class Leave_Holiday_List_Table extends WP_List_Table {
         $to           = isset( $_GET['to'] ) ? $_GET['to'] : date( 'Y-12-31' );
         ?>
 
-        <label class="screen-reader-text" for="new_role"><?php _e( 'From', 'erp' ) ?></label>
-        <input type="text" placeholder="<?php _e( 'From date', 'erp' ); ?>" name="from" value="<?php echo $from; ?>" class="erp-leave-date-picker-from">
+        <label class="screen-reader-text" for="new_role"><?php esc_html_e( 'From', 'erp' ) ?></label>
+        <input type="text" placeholder="<?php esc_html_e( 'From date', 'erp' ); ?>" name="from" value="<?php echo $from; ?>" class="erp-leave-date-picker-from">
 
-        <label class="screen-reader-text" for="new_role"><?php _e( 'To', 'erp' ) ?></label>
-        <input type="text" placeholder="<?php _e( 'To date', 'erp' ); ?>" name="to" value="<?php echo $to; ?>" class="erp-leave-date-picker-to">
+        <label class="screen-reader-text" for="new_role"><?php esc_html_e( 'To', 'erp' ) ?></label>
+        <input type="text" placeholder="<?php esc_html_e( 'To date', 'erp' ); ?>" name="to" value="<?php echo $to; ?>" class="erp-leave-date-picker-to">
         <?php
         submit_button( __( 'Filter' ), 'button', 'filter', false );
     }
@@ -46,7 +46,7 @@ class Leave_Holiday_List_Table extends WP_List_Table {
      * @return void
      */
     function no_items() {
-        _e( 'No holiday record found!', 'erp' );
+        esc_html_e( 'No holiday record found!', 'erp' );
     }
 
     /**
@@ -246,9 +246,9 @@ class Leave_Holiday_List_Table extends WP_List_Table {
 
 <div class="wrap erp-hr-holiday-wrap">
     <h2>
-        <?php _e( 'Holiday', 'erp' ); ?>
-        <a href="#" id="erp-hr-new-holiday" class="add-new-h2"><?php _e( 'Add New', 'erp' ); ?></a>
-        <a href="#import-ical" id="erp-hr-import-ical" class="add-new-h2"><?php _e( 'Import iCal', 'erp' ); ?></a>
+        <?php esc_html_e( 'Holiday', 'erp' ); ?>
+        <a href="#" id="erp-hr-new-holiday" class="add-new-h2"><?php esc_html_e( 'Add New', 'erp' ); ?></a>
+        <a href="#import-ical" id="erp-hr-import-ical" class="add-new-h2"><?php esc_html_e( 'Import iCal', 'erp' ); ?></a>
     </h2>
 
     <div class="list-table-wrap">

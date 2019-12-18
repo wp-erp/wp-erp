@@ -5,16 +5,16 @@ $all_user_id = $wpdb->get_col( "SELECT user_id FROM {$wpdb->prefix}erp_hr_employ
 $date_format = get_option( 'date_format' );
 ?>
 <div class="wrap">
-    <h1><?php _e( 'Salary History', 'erp' ); ?></h1>
+    <h1><?php esc_html_e( 'Salary History', 'erp' ); ?></h1>
 
     <table class="widefat striped" style="margin-top: 20px;">
         <thead>
             <tr>
-                <th><?php _e( 'Employee', 'erp' ); ?></th>
-                <th><?php _e( 'Date', 'erp' ); ?></th>
-                <th><?php _e( 'Pay Rate', 'erp' ); ?></th>
-                <th><?php _e( 'Pay type', 'erp' ); ?></th>
-                <th><?php _e( 'Employee ID', 'erp' ); ?></th>
+                <th><?php esc_html_e( 'Employee', 'erp' ); ?></th>
+                <th><?php esc_html_e( 'Date', 'erp' ); ?></th>
+                <th><?php esc_html_e( 'Pay Rate', 'erp' ); ?></th>
+                <th><?php esc_html_e( 'Pay type', 'erp' ); ?></th>
+                <th><?php esc_html_e( 'Employee ID', 'erp' ); ?></th>
             </tr>
         </thead>
         <tbody>

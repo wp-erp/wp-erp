@@ -1,5 +1,5 @@
 <div class="wrap wperp-hrm-report">
-    <h1><?php _e( 'Years of Service', 'erp' ); ?></h1>
+    <h1><?php esc_html_e( 'Years of Service', 'erp' ); ?></h1>
 
     <?php
         global $wpdb;
