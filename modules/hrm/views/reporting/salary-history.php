@@ -32,9 +32,10 @@ $date_format = get_option( 'date_format' );
                         foreach ( $compensations['compensation'] as $compensation ) {
 
                             $employee_url = '<a href="'. admin_url( 'admin.php?page=erp-hr&section=employee&action=view&id=' . $employee->get_user_id() ) . '">' . $employee->display_name . '</a>';
+                            $emp_url      = ( 0 == $line ? wp_kses_post( $employee_url ) : '' );
                             echo '<tr>';
-                            echo '<td>' . ( 0 == $line ? wp_kses_post( $employee_url ) : '' ) . '</td>';
-                            echo '<td>' . date( $date_format, strtotime( esc_attr( $compensation['date'] ) ) ) . '</td>';
+                            echo '<td>' . wp_kses_post( $emp_url ) . '</td>';
+                            echo '<td>' . esc_html( date( $date_format, strtotime( esc_attr( $compensation['date'] ) ) ) ) . '</td>';
                             echo '<td>' . esc_attr( $compensation['pay_rate'] ) . '</td>';
                             echo '<td>' . esc_attr( $compensation['pay_type'] ) . '</td>';
                             echo '<td>' . esc_attr( $employee->get_user_id() ) . '</td>';
@@ -45,7 +46,7 @@ $date_format = get_option( 'date_format' );
                     }
                 }
             } else {
-                echo '<tr><td colspan="5">' . __( 'No employee found!', 'erp' ) . '</td></tr>';
+                echo '<tr><td colspan="5">' . esc_html__( 'No employee found!', 'erp' ) . '</td></tr>';
             }
             ?>
         </tbody>

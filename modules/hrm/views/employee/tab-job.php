@@ -160,7 +160,10 @@
                 <tr class="<?php echo $num % 2 == 0 ? 'alternate' : 'odd'; ?>">
                     <td><?php echo esc_html( erp_format_date( $row['date'] ) ); ?></td>
                     <td>
-                        <?php echo ( ! empty( $row['location'] ) ) ? esc_html( $row['location'] ) : erp_get_company_default_location_name(); ?>
+                        <?php
+                            $location = ( ! empty( $row['location'] ) ) ? esc_html( $row['location'] ) : erp_get_company_default_location_name();
+                            echo esc_html( $location );
+                        ?>
                     </td>
                     <td>
                         <?php echo ( ! empty( $row['department'] ) ) ? esc_html( $row['department'] ) : '--'; ?>

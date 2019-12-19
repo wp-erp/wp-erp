@@ -194,7 +194,7 @@ class Leave_Policies_List_Table extends WP_List_Table {
         $per_page              = 20;
         $current_page          = $this->get_pagenum();
         $offset                = ( $current_page -1 ) * $per_page;
-        $this->page_status     = isset( $_GET['status'] ) ? sanitize_text_field( $_GET['status'] ) : '2';
+        $this->page_status     = isset( $_GET['status'] ) ? sanitize_text_field( wp_unslash( $_GET['status'] ) ) : '2';
 
         // only ncessary because we have sample data
         $args = array(
@@ -203,8 +203,8 @@ class Leave_Policies_List_Table extends WP_List_Table {
         );
 
         if ( isset( $_REQUEST['orderby'] ) && isset( $_REQUEST['order'] ) ) {
-            $args['orderby'] = $_REQUEST['orderby'];
-            $args['order'] = $_REQUEST['order'] ;
+            $args['orderby'] = sanitize_text_field( wp_unslash( $_REQUEST['orderby'] ) );
+            $args['order'] = sanitize_text_field( wp_unslash( $_REQUEST['order'] ) ) ;
         }
 
         $this->items  = erp_hr_leave_get_policies( $args );

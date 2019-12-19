@@ -39,11 +39,11 @@
 
     <div class="erp-area-left" id="poststuff">
 
-        <?php echo erp_admin_dash_metabox( __( '<i class="fa fa-bar-chart"></i> Employee Gender Count', 'erp' ), function() {
+        <?php echo wp_kses_post( erp_admin_dash_metabox( __( '<i class="fa fa-bar-chart"></i> Employee Gender Count', 'erp' ), function() {
             ?>
             <div id="emp-gender-ratio" style="width:50%;height:400px;"></div>
             <?php
-            } );
+            } ) );
         ?>
 
         <table class="widefat striped">
@@ -74,11 +74,11 @@
         <br>
 
         <?php
-        echo erp_admin_dash_metabox( __( '<i class="fa fa-bar-chart"></i> Employee Gender Ratio By Department', 'erp' ), function() {
+        echo wp_kses_post( erp_admin_dash_metabox( __( '<i class="fa fa-bar-chart"></i> Employee Gender Ratio By Department', 'erp' ), function() {
            ?>
             <div id="emp-gender-ratio-by-department" class="erp-report-chart"></div>
            <?php
-          } );
+          } ) );
         ?>
 
         <table class="widefat striped">

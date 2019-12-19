@@ -190,8 +190,8 @@ final class WeDevs_ERP {
         $error .= __( '<p>The version of your PHP is ', 'erp' ) . '<a href="http://php.net/supported-versions.php" target="_blank"><strong>' . __( 'unsupported and old', 'erp' ) . '</strong></a>.';
         $error .= __( 'You should update your PHP software or contact your host regarding this matter.</p>', 'erp' );
         wp_die(
-            $error,
-            __( 'Plugin Activation Error', 'erp' ),
+            esc_html( $error ),
+            esc_html__( 'Plugin Activation Error', 'erp' ),
             array(
 				'response'  => 200,
 				'back_link' => true,

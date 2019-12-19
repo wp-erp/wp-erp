@@ -53,7 +53,7 @@
                             $age = date( 'Y', time() ) - date( 'Y', strtotime( $single_data['hiring_date'] ) );
 
                             if ( $age > 0 ) {
-                                echo "<span class='emp_person'>".esc_attr( $single_data['emp_name'] ) . ' ('. $age .' '. esc_attr( _n('Year', 'Years', $age ) ) .' ) </span>' ;
+                                echo "<span class='emp_person'>".esc_attr( $single_data['emp_name'] ) . ' ('. esc_html( $age ) .' '. esc_attr( _n('Year', 'Years', $age ) ) .' ) </span>' ;
                             }
 
                             if ( ++$i != $count ) {
