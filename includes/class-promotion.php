@@ -8,7 +8,7 @@ class Promotion {
 
     public function __construct() {
         add_action( 'admin_notices', array( $this, 'promotional_offer' ) );
-        add_action( 'wp_ajax_erp-dismiss-promotional-offer-notice', array( $this, 'dismiss_promotional_offer' ) );
+        // add_action( 'wp_ajax_erp-dismiss-promotional-offer-notice', array( $this, 'dismiss_promotional_offer' ) );
     }
 
     /**
@@ -53,14 +53,14 @@ class Promotion {
                                 <img src="https://ps.w.org/erp/assets/icon-256x256.png" alt="">
                             </td>
                             <td class="message-container">
-                                <?php echo $offer_msg; ?>
+                                <?php echo wp_kses_post( $offer_msg ); ?>
                             </td>
                         </tr>
                     </tbody>
                 </table>
 
                 <span class="dashicons dashicons-megaphone"></span>
-                <a href="https://wperp.com/in/wordpress-erp-3rd-birthday" class="button button-primary promo-btn" target="_blank"><?php _e( 'Get the Offer', 'erp' ); ?></a>
+                <a href="https://wperp.com/in/wordpress-erp-3rd-birthday" class="button button-primary promo-btn" target="_blank"><?php esc_html_e( 'Get the Offer', 'erp' ); ?></a>
             </div><!-- #erp-promotional-offer-notice -->
 
             <style>
@@ -188,10 +188,10 @@ class Promotion {
     *
     * @return void
     */
-   public function dismiss_promotional_offer() {
-        if ( ! empty( $_POST['dismissed'] ) ) {
-            $offer_key = 'erp_birthday2018_promotional_offer_notice';
-            update_option( $offer_key, 'hide' );
-        }
-    }
+//    public function dismiss_promotional_offer() {
+//         if ( ! empty( $_POST['dismissed'] ) ) {
+//             $offer_key = 'erp_birthday2018_promotional_offer_notice';
+//             update_option( $offer_key, 'hide' );
+//         }
+//     }
 }

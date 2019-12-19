@@ -102,7 +102,7 @@ class Admin_Page {
             ?>
                 <div class="notice notice-success is-dismissible" id="erp-christmas-notice">
                     <div class="logo">
-                        <img src="<?php echo WPERP_ASSETS . '/images/promo-logo.png' ?>" alt="ERP">
+                        <img src="<?php echo esc_url( WPERP_ASSETS . '/images/promo-logo.png' ) ?>" alt="ERP">
                     </div>
                     <div class="content">
                         <p>Biggest Sale of the year on this</p>
@@ -112,7 +112,7 @@ class Admin_Page {
                     </div>
                     <div class="call-to-action">
                         <a target="_blank" href="https://wperp.com/pricing?utm_campaign=black_friday_&_cyber_monday&utm_medium=banner&utm_source=plugin_dashboard">
-                            <img src="<?php echo WPERP_ASSETS . '/images/promo-btn.png' ?>" alt="Btn">
+                            <img src="<?php echo esc_url( WPERP_ASSETS . '/images/promo-btn.png' ) ?>" alt="Btn">
                         </a>
                         <p>
                             <span class="highlight-green">COUPON: </span>

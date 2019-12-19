@@ -52,37 +52,37 @@ class Auditlog_List_Table extends \WP_List_Table {
 
         $modules          = erp_get_audit_log_modules();
         $sections         = erp_get_audit_log_sub_component();
-        $selected_module  = ( isset( $_GET['filter_module'] ) ) ? $_GET['filter_module'] : '';
-        $selected_section = ( isset( $_GET['filter_section'] ) ) ? $_GET['filter_section'] : '';
+        $selected_module  = ( isset( $_GET['filter_module'] ) ) ? sanitize_text_field( wp_unslash( $_GET['filter_module'] ) ) : '';
+        $selected_section = ( isset( $_GET['filter_section'] ) ) ? sanitize_text_field( wp_unslash( $_GET['filter_section'] ) ) : '';
 
-        $selected_duration = ( isset( $_GET['filter_duration'] ) ) ? $_GET['filter_duration'] : '';
+        $selected_duration = ( isset( $_GET['filter_duration'] ) ) ? sanitize_text_field( wp_unslash( $_GET['filter_duration'] ) ) : '';
 
         ?>
         <div class="alignleft actions">
 
-            <label class="screen-reader-text" for="filter_module"><?php _e( 'Filter by Module', 'erp' ) ?></label>
+            <label class="screen-reader-text" for="filter_module"><?php esc_html_e( 'Filter by Module', 'erp' ) ?></label>
             <select name="filter_module" id="filter_module">
-                <option value=""><?php _e( '&mdash; All Modules &mdash;', 'erp' ); ?></option>
+                <option value=""><?php esc_html_e( '&mdash; All Modules &mdash;', 'erp' ); ?></option>
                 <?php foreach ( $modules as $key => $module ): ?>
-                    <option value="<?php echo $module['component'] ?>" <?php selected( $selected_module, $module['component'] ); ?>><?php echo $module['component']; ?></option>
+                    <option value="<?php echo esc_html( $module['component'] ) ?>" <?php selected( $selected_module, $module['component'] ); ?>><?php echo esc_html( $module['component'] ); ?></option>
                 <?php endforeach ?>
             </select>
 
-            <label class="screen-reader-text" for="filter_section"><?php _e( 'Filter by Section', 'erp' ) ?></label>
+            <label class="screen-reader-text" for="filter_section"><?php esc_html_e( 'Filter by Section', 'erp' ) ?></label>
             <select name="filter_section" id="filter_section">
-                <option value=""><?php _e( '&mdash; All Sections &mdash;', 'erp' ); ?></option>
+                <option value=""><?php esc_html_e( '&mdash; All Sections &mdash;', 'erp' ); ?></option>
                 <?php foreach ( $sections as $key => $section ): ?>
-                    <option value="<?php echo $section['sub_component'] ?>" <?php selected( $section['sub_component'], $selected_section ); ?>><?php echo ucfirst( $section['sub_component'] ); ?></option>
+                    <option value="<?php echo esc_attr( $section['sub_component'] ) ?>" <?php selected( $section['sub_component'], $selected_section ); ?>><?php echo esc_html( ucfirst( $section['sub_component'] ) ); ?></option>
                 <?php endforeach ?>
             </select>
-            <label class="screen-reader-text" for="new_role"><?php _e( 'Filter by Duration', 'erp' ) ?></label>
+            <label class="screen-reader-text" for="new_role"><?php esc_html_e( 'Filter by Duration', 'erp' ) ?></label>
             <select name="filter_duration" id="filter_duration">
-                <option value="-1"><?php _e( '&mdash; All Times &mdash;', 'erp' ) ?></option>
+                <option value="-1"><?php esc_html_e( '&mdash; All Times &mdash;', 'erp' ) ?></option>
                 <?php
                 $types = $this->erp_log_get_filters();
 
                 foreach ( $types as $key => $title ) {
-                    echo sprintf( "<option value='%s'%s>%s</option>\n", $key, selected( $selected_duration, $key, false ), $title );
+                    echo wp_kses_post( sprintf( "<option value='%s'%s>%s</option>\n", $key, selected( $selected_duration, $key, false ), $title ) );
                 }
                 ?>
             </select>
@@ -136,7 +136,7 @@ class Auditlog_List_Table extends \WP_List_Table {
      * @return void
      */
     function no_items() {
-        _e( 'No logs found.', 'erp' );
+        esc_html_e( 'No logs found.', 'erp' );
     }
 
     /**
@@ -223,7 +223,7 @@ class Auditlog_List_Table extends \WP_List_Table {
         $per_page              = 30;
         $current_page          = $this->get_pagenum();
         $offset                = ( $current_page -1 ) * $per_page;
-        $this->page_status     = isset( $_GET['status'] ) ? sanitize_text_field( $_GET['status'] ) : '2';
+        $this->page_status     = isset( $_GET['status'] ) ? sanitize_text_field( wp_unslash( $_GET['status'] ) ) : '2';
         $args                  = [];
 
 
@@ -234,22 +234,22 @@ class Auditlog_List_Table extends \WP_List_Table {
         );
 
         if ( isset( $_REQUEST['filter_module'] ) && !empty( $_REQUEST['filter_module'] ) ) {
-            $args['component'] = $_REQUEST['filter_module'];
+            $args['component'] = sanitize_text_field( wp_unslash( $_REQUEST['filter_module'] ) );
         }
 
         if ( isset( $_REQUEST['filter_section'] ) && !empty( $_REQUEST['filter_section'] ) ) {
-            $args['sub_component'] = $_REQUEST['filter_section'];
+            $args['sub_component'] = sanitize_text_field( wp_unslash( $_REQUEST['filter_section'] ) );
         }
 
         if ( isset( $_REQUEST['filter_duration'] ) && !empty( $_REQUEST['filter_duration'] ) ) {
-            $args['filter_duration'] = $_REQUEST['filter_duration'];
+            $args['filter_duration'] = sanitize_text_field( wp_unslash( $_REQUEST['filter_duration'] ) );
 
 
             if ( '-1' != $args['filter_duration'] ) {
 
                 if ( $args['filter_duration'] == 'custom' ) {
-                    $args['start'] = isset( $_REQUEST['start'] ) ? $_REQUEST['start'] : '';
-                    $args['end']   = isset( $_REQUEST['end'] ) ? $_REQUEST['end'] : '';
+                    $args['start'] = isset( $_REQUEST['start'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['start'] ) ) : '';
+                    $args['end']   = isset( $_REQUEST['end'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['end'] ) ) : '';
                 } else {
                     $duration      = $this->erp_log_get_start_end_date( $args['filter_duration'] );
                     $args['start'] = $duration['start'];

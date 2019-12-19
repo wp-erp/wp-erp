@@ -1,6 +1,6 @@
 <?php
 wp_enqueue_script( 'erp-tiptip' );
-$current_tab = ! empty( $_REQUEST['tab'] ) ? sanitize_title( $_REQUEST['tab'] ) : 'status';
+$current_tab = ! empty( $_REQUEST['tab'] ) ? sanitize_title( wp_unslash( $_REQUEST['tab'] ) ) : 'status';
 $tabs        = array(
 	'status' => __( 'System status', 'erp' )
 );
@@ -10,11 +10,11 @@ $tabs        = apply_filters( 'erp_admin_status_tabs', $tabs );
 	<nav class="nav-tab-wrapper">
 		<?php
 			foreach ( $tabs as $name => $label ) {
-				echo '<a href="' . admin_url( 'admin.php?page=erp-tools&tab=' . $name ) . '" class="nav-tab ';
+				echo '<a href="' . esc_url( admin_url( 'admin.php?page=erp-tools&tab=' . $name ) ) . '" class="nav-tab ';
 				if ( $current_tab == $name ) {
 					echo 'nav-tab-active';
 				}
-				echo '">' . $label . '</a>';
+				echo '">' . esc_html( $label ) . '</a>';
 			}
 		?>
 	</nav>
