@@ -284,7 +284,7 @@ function sprintf(format) {
 function _objectSpread(target) {
   for (var i = 1; i < arguments.length; i++) {
     var source = arguments[i] != null ? arguments[i] : {};
-    var ownKeys = Object.keys(source);
+    var ownKeys = Object.keys(Object(source));
 
     if (typeof Object.getOwnPropertySymbols === 'function') {
       ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {
@@ -333,12 +333,50 @@ function _defineProperty(obj, key, value) {
 /**
  * Tannin constructor options.
  *
- * @property {?string}   contextDelimiter Joiner in string lookup with context.
- * @property {?Function} onMissingKey     Callback to invoke when key missing.
+ * @typedef {Object} TanninOptions
  *
- * @type {Object}
+ * @property {string}   [contextDelimiter] Joiner in string lookup with context.
+ * @property {Function} [onMissingKey]     Callback to invoke when key missing.
+ */
+
+/**
+ * Domain metadata.
  *
- * @typedef {TanninOptions}
+ * @typedef {Object} TanninDomainMetadata
+ *
+ * @property {string}            [domain]       Domain name.
+ * @property {string}            [lang]         Language code.
+ * @property {(string|Function)} [plural_forms] Plural forms expression or
+ *                                              function evaluator.
+ */
+
+/**
+ * Domain translation pair respectively representing the singular and plural
+ * translation.
+ *
+ * @typedef {Array<string,string>} TanninTranslation
+ */
+
+/**
+ * Locale domain entry.
+ *
+ * @typedef {(TanninDomainMetadata|TanninTranslation)} LocaleDomainEntry
+ */
+
+/**
+ * Locale data domain. The key is used as reference for lookup, the value an
+ * array of two string entries respectively representing the singular and plural
+ * translation.
+ *
+ * @typedef {Object<string,LocaleDomainEntry>} TanninLocaleDomain
+ */
+
+/**
+ * Jed-formatted locale data.
+ *
+ * @see http://messageformat.github.io/Jed/
+ *
+ * @typedef {Object<string,TanninLocaleDomain>} TanninLocaleData
  */
 
 /**
@@ -381,19 +419,42 @@ function getPluralExpression( pf ) {
 /**
  * Tannin constructor.
  *
- * @param {Object}        data    Jed-formatted locale data.
- * @param {TanninOptions} options Tannin options.
+ * @class
+ *
+ * @param {TanninLocaleData} data      Jed-formatted locale data.
+ * @param {TanninOptions}    [options] Tannin options.
  */
 function Tannin( data, options ) {
 	var key;
 
+	/**
+	 * Jed-formatted locale data.
+	 *
+	 * @name Tannin#data
+	 * @type {TanninLocaleData}
+	 */
 	this.data = data;
+
+	/**
+	 * Plural forms function cache, keyed by plural forms string.
+	 *
+	 * @name Tannin#pluralForms
+	 * @type {Object<string,Function>}
+	 */
 	this.pluralForms = {};
 
-	options = options || {};
+	/**
+	 * Effective options for instance, including defaults.
+	 *
+	 * @name Tannin#options
+	 * @type {TanninOptions}
+	 */
 	this.options = {};
+
 	for ( key in DEFAULT_OPTIONS ) {
-		this.options[ key ] = options[ key ] || DEFAULT_OPTIONS[ key ];
+		this.options[ key ] = options !== undefined && key in options ?
+			options[ key ] :
+			DEFAULT_OPTIONS[ key ];
 	}
 }
 
@@ -415,6 +476,9 @@ Tannin.prototype.getPluralForm = function( domain, n ) {
 		pf = (
 			config[ 'Plural-Forms' ] ||
 			config[ 'plural-forms' ] ||
+			// Ignore reason: As known, there's no way to document the empty
+			// string property on a key to guarantee this as metadata.
+			// @ts-ignore
 			config.plural_forms
 		);
 
@@ -422,6 +486,9 @@ Tannin.prototype.getPluralForm = function( domain, n ) {
 			plural = getPluralExpression(
 				config[ 'Plural-Forms' ] ||
 				config[ 'plural-forms' ] ||
+				// Ignore reason: As known, there's no way to document the empty
+				// string property on a key to guarantee this as metadata.
+				// @ts-ignore
 				config.plural_forms
 			);
 
