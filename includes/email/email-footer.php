@@ -35,7 +35,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                                                 }
 
                                                 $footer_text = empty( $footer_text ) ? sprintf( '&copy; %s', get_bloginfo( 'name', 'display' ) ) : $footer_text;
-                                                echo wpautop( wp_kses_post( wptexturize( apply_filters( 'erp_email_footer_text', $footer_text ) ) ) );
+                                                echo wp_kses_post( wpautop( wptexturize( apply_filters( 'erp_email_footer_text', $footer_text ) ) ) );
 
                                                 do_action( 'erp_email_after_footer' );
                                                 ?>

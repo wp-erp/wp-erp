@@ -74,11 +74,11 @@ class WeForms_Upsell {
                 <p>weForms is the next generation contact form plugin for WordPress.</p>
             </div>
             <div class="weforms-upsell-cta">
-                <button id="weforms-upsell-prompt-btn" class="button"><?php _e( 'Install Now', 'weforms' ); ?></button>
+                <button id="weforms-upsell-prompt-btn" class="button"><?php esc_html_e( 'Install Now', 'weforms' ); ?></button>
                 &nbsp;<a href="#" class="learn-more" data-tube="NJvjy9WFyAM">Learn More</a>
             </div>
-            <button type="button" class="notice-dismiss" style="padding: 3px;" title="<?php _e( 'Dismiss this notice.' ); ?>">
-                <span class="screen-reader-text"><?php _e( 'Dismiss this notice.' ); ?></span>
+            <button type="button" class="notice-dismiss" style="padding: 3px;" title="<?php esc_html_e( 'Dismiss this notice.' ); ?>">
+                <span class="screen-reader-text"><?php esc_html_e( 'Dismiss this notice.' ); ?></span>
             </button>
         </div>
 
@@ -92,7 +92,7 @@ class WeForms_Upsell {
             </div>
 
             <div class="learn-more">
-                <a href="<?php echo $this->learn_more_link(); ?>" target="_blank" class="button button-primary">Learn more about weForms</a>
+                <a href="<?php echo esc_url( $this->learn_more_link() ); ?>" target="_blank" class="button button-primary">Learn more about weForms</a>
             </div>
         </div>
         <div class="weforms-upsell-modal-backdrop" id="weforms-upsell-modal-backdrop"></div>
@@ -239,12 +239,12 @@ class WeForms_Upsell {
 
                     wp.ajax.send( 'weforms_upsell_installer', {
                         data: {
-                            _wpnonce: '<?php echo wp_create_nonce('weforms_upsell_installer'); ?>'
+                            _wpnonce: '<?php echo esc_html( wp_create_nonce('weforms_upsell_installer') ); ?>'
                         },
 
                         success: function(response) {
                             self.text('<?php echo esc_js( 'Installed' ); ?>');
-                            window.location.href = '<?php echo admin_url( 'admin.php?page=weforms' ); ?>';
+                            window.location.href = '<?php echo esc_url( admin_url( 'admin.php?page=weforms' ) ); ?>';
                         },
 
                         error: function(error) {
