@@ -9,7 +9,7 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
             <?php foreach ( $feeds_tab as $name => $value ) : ?>
                 <li :class="'<?php echo esc_attr( $name ); ?>' == tabShow ? 'active': ''">
                     <a href="#<?php echo esc_attr( $name ); ?>" @click.prevent="showTab('<?php echo esc_attr( $name ); ?>')">
-                        <?php echo sprintf('%s %s', $value['icon'], esc_attr( $value['title'] ) ); ?>
+                        <?php echo wp_kses_post( sprintf('%s %s', $value['icon'], esc_attr( $value['title'] ) ) ); ?>
                     </a>
                 </li>
             <?php endforeach ?>

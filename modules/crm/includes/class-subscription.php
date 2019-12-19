@@ -251,15 +251,18 @@ class Subscription {
      * @return void
      */
     public function save_form_data() {
-        $this->verify_nonce( 'erp-subscription-form' );
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'erp-subscription-form' ) ) {
+            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
 
         // validations
         if ( empty( $_POST['form_data'] ) ) {
             $this->send_error( [ 'msg' => __( 'Invalid operation', 'erp' ) ] );
 
         } else {
-            parse_str( $_POST['form_data'], $form_data );
+            parse_str( sanitize_text_field( wp_unslash( $_POST['form_data'] ) ), $form_data );
         }
+
 
         if ( empty( $form_data['contact']['email'] ) || ! is_email( $form_data['contact']['email'] ) ) {
             $this->send_error( [ 'msg' => __( 'Please provide a valid email address', 'erp' ) ] );
@@ -548,7 +551,7 @@ class Subscription {
             if ( ! empty( $this->sub_page_id ) && absint( $page->ID ) === $this->sub_page_id ) {
 
                 if ( ! empty( $_GET['subscription-id'] ) ) {
-                    $subscription_ids = explode( ':', $_GET['subscription-id'] );
+                    $subscription_ids = explode( ':', sanitize_text_field( wp_unslash( $_GET['subscription-id'] ) ) );
 
                     $this->subscribed_groups = Models\ContactSubscriber::whereIn( 'hash', $subscription_ids )->get();
 
@@ -560,7 +563,7 @@ class Subscription {
                     $this->confirm_subscription();
 
                 } else if ( ! empty( $_GET['id'] ) ) {
-                    $meta = \WeDevs\ERP\Framework\Models\Peoplemeta::where( 'meta_value', $_GET['id'] )
+                    $meta = \WeDevs\ERP\Framework\Models\Peoplemeta::where( 'meta_value', sanitize_text_field( wp_unslash( $_GET['id'] ) ) )
                                 ->where( 'meta_key', 'hash' )
                                 ->first();
 
@@ -638,7 +641,7 @@ class Subscription {
      */
     private function unsubscribe_contact() {
         if ( ! empty( $_GET['g'] ) ) {
-            $group_ids = explode( ':', $_GET['g'] );
+            $group_ids = explode( ':', sanitize_text_field( wp_unslash( $_GET['g'] ) ) );
 
             $groups = Models\ContactGroup::whereIn( 'id', $group_ids )->get();
 
@@ -778,14 +781,16 @@ class Subscription {
      * @return void
      */
     public function save_edit_form_data() {
-        $this->verify_nonce( 'erp-subscription-edit' );
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'erp-subscription-edit' ) ) {
+            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
 
         // validations
         if ( empty( $_POST['form_data'] ) ) {
             $this->send_error( [ 'msg' => __( 'Invalid operation', 'erp' ) ] );
 
         } else {
-            parse_str( $_POST['form_data'], $form_data );
+            parse_str( sanitize_text_field( wp_unslash( $_POST['form_data'] ) ), $form_data );
         }
 
         if ( empty( $form_data['id'] ) ) {

@@ -286,12 +286,12 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
                                     type="button"
                                     class="button"
                                     v-on:click="reset_mapping"
-                                ><?php echo __( 'Reset', 'erp' ); ?></button>
+                                ><?php esc_attr_e( 'Reset', 'erp' ); ?></button>
                                 <button
                                     type="button"
                                     class="button button-primary"
                                     v-on:click="save_mapping"
-                                ><?php echo __( 'Save Changes', 'erp' ); ?></button>
+                                ><?php esc_attr_e( 'Save Changes', 'erp' ); ?></button>
                             </td>
                         </tr>
                     </tfoot>
@@ -313,7 +313,9 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
             'msg' => null
         ];
 
-        $this->verify_nonce( 'erp_settings_contact_forms' );
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'erp_settings_contact_forms' ) ) {
+            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
 
         if ( !erp_crm_is_current_user_manager() ) {
             $response['msg'] = __( 'Unauthorized operation', 'erp' );
@@ -384,7 +386,9 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
             'msg' => null
         ];
 
-        $this->verify_nonce( 'erp_settings_contact_forms' );
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'erp_settings_contact_forms' ) ) {
+            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
 
         if ( !erp_crm_is_current_user_manager() ) {
             $response['msg'] = __( 'Unauthorized operation', 'erp' );

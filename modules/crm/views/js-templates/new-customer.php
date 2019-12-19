@@ -19,10 +19,10 @@
                             <img src="{{ data.avatar.url }}" alt="Image">
                             <a href="#" class="erp-remove-photo">&times;</a>
                         <# } else { #>
-                            <img src="<?php echo WPERP_ASSETS . '/images/mystery-person.png'; ?>" alt="">
+                            <img src="<?php echo esc_url_raw( WPERP_ASSETS . '/images/mystery-person.png' ); ?>" alt="">
                             <a href="#" id="erp-set-customer-photo" class="button button-primary">
                                 <i class="fa fa-cloud-upload"></i>
-                                <?php _e( 'Upload Photo', 'erp' ); ?>
+                                <?php esc_attr_e( 'Upload Photo', 'erp' ); ?>
                             </a>
                         <# } #>
                     </div>
@@ -33,11 +33,11 @@
             <div class="col-4 right-column">
                 <div class="erp-crm-modal-right">
                 <# if ( _.contains( data.types, 'company' ) ) { #>
-                    <span class="required">* <?php _e( 'Company name or email or phone is required', 'erp' ) ?></span>
+                    <span class="required">* <?php esc_attr_e( 'Company name or email or phone is required', 'erp' ) ?></span>
 
                     <?php do_action( 'erp_crm_company_form_top' ); ?>
                 <# } else { #>
-                    <span class="required">* <?php _e( 'First name or email or phone is required', 'erp' ); ?></span>
+                    <span class="required">* <?php esc_attr_e( 'First name or email or phone is required', 'erp' ); ?></span>
 
                     <?php $custom_attr_length = apply_filters( 'erp_crm_custom_attr_length', 30 ); ?>
 
@@ -124,7 +124,7 @@
                                     ) ); ?>
                                 </div>
                             <?php elseif ( current_user_can( 'erp_crm_agent' ) ): ?>
-                                <input type="hidden" name="contact[meta][contact_owner]" value="<?php echo get_current_user_id(); ?>">
+                                <input type="hidden" name="contact[meta][contact_owner]" value="<?php echo esc_attr( get_current_user_id() ); ?>">
                             <?php endif ?>
 
                             <# if ( _.contains( data.types, 'company' ) ) { #>
@@ -142,7 +142,7 @@
                         </p>
 
                         <fieldset class="others-info">
-                        <legend><?php _e( 'Others Info', 'erp' ) ?></legend>
+                        <legend><?php esc_attr_e( 'Others Info', 'erp' ) ?></legend>
 
                         <div class="row">
 
@@ -216,10 +216,10 @@
                             </div>
 
                             <div class="col-3" data-selected="{{ data.country }}">
-                                <label for="erp-popup-country"><?php _e( 'Country', 'erp' ); ?></label>
+                                <label for="erp-popup-country"><?php esc_attr_e( 'Country', 'erp' ); ?></label>
                                 <select name="contact[main][country]" id="erp-popup-country" class="erp-country-select erp-select2" data-parent="ol">
                                     <?php $country = \WeDevs\ERP\Countries::instance(); ?>
-                                    <?php echo $country->country_dropdown( erp_get_country() ); ?>
+                                    <?php echo wp_kses_post( $country->country_dropdown( erp_get_country() ) ); ?>
                                 </select>
                             </div>
 
@@ -253,7 +253,7 @@
 
                     <?php if ( erp_crm_get_contact_group_dropdown() ) : ?>
                         <fieldset class="contact-group">
-                            <legend><?php _e( 'Contact Group', 'erp' ) ?></legend>
+                            <legend><?php esc_attr_e( 'Contact Group', 'erp' ) ?></legend>
 
                             <div class="row">
                                 <div class="col-6" id="erp-crm-contact-subscriber-group-checkbox" data-selected = "{{ data.group_id }}">
@@ -280,7 +280,7 @@
                         <?php endif; ?>
 
                         <fieldset class="additional-info">
-                        <legend><?php _e( 'Additional Info', 'erp' ) ?></legend>
+                        <legend><?php esc_attr_e( 'Additional Info', 'erp' ) ?></legend>
 
                         <div class="row">
 
@@ -322,7 +322,7 @@
                         </fieldset>
 
                         <fieldset class="social-info">
-                        <legend><?php _e( 'Social Info', 'erp' ) ?></legend>
+                        <legend><?php esc_attr_e( 'Social Info', 'erp' ) ?></legend>
 
                         <div class="row">
 

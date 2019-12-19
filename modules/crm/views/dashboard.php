@@ -15,7 +15,7 @@
                                 <div class="erp-info-box-content-left">
                                     <h3><?php echo esc_attr( number_format_i18n( $contacts_count['all']['count'], 0 ) ); ?></h3>
                                     <p>
-                                        <?php echo sprintf( _n( 'Contact', 'Contacts', $contacts_count['all']['count'], 'erp' ), number_format_i18n( $companies_count['all']['count'] ), 0 ); ?>
+                                        <?php echo wp_kses_post( sprintf( _n( 'Contact', 'Contacts', $contacts_count['all']['count'], 'erp' ), number_format_i18n( $companies_count['all']['count'] ), 0 ) ); ?>
                                     </p>
                                 </div>
                                 <div class="erp-info-box-content-right">
@@ -50,9 +50,9 @@
                         <div class="erp-info-box-content">
                             <div class="erp-info-box-content-row">
                                 <div class="erp-info-box-content-left">
-                                    <h3><?php echo number_format_i18n( $companies_count['all']['count'], 0 ); ?></h3>
+                                    <h3><?php echo wp_kses_post( number_format_i18n( $companies_count['all']['count'], 0 ) ); ?></h3>
                                     <p>
-                                        <?php echo sprintf( _n( 'Company', 'Companies', $companies_count['all']['count'], 'erp' ), number_format_i18n( $companies_count['all']['count'] ), 0 ); ?>
+                                        <?php echo wp_kses_post( sprintf( _n( 'Company', 'Companies', $companies_count['all']['count'], 'erp' ), number_format_i18n( $companies_count['all']['count'] ), 0 ) ); ?>
                                     </p>
                                 </div>
                                 <div class="erp-info-box-content-right">

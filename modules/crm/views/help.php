@@ -1,8 +1,8 @@
 <div class="wrap">
     <h1>
-        <?php _e( 'CRM Help', 'erp' ); ?>
+        <?php esc_attr_e( 'CRM Help', 'erp' ); ?>
         <a href="https://wperp.com/docs/crm/" target="_blank" class="page-title-action">
-            <?php _e( 'View all Documentations', 'erp' ); ?>
+            <?php esc_attr_e( 'View all Documentations', 'erp' ); ?>
         </a>
     </h1>
     <?php

@@ -38,23 +38,23 @@ function erp_crm_activity_report_filter_form($start = true, $end = true) {
     echo '<form class="erp-crm-report-filter-form" action="" method="post">';
 
     if ( $start ) {
-        erp_html_form_input( array(
+        wp_kses_post( erp_html_form_input( array(
             'name'        => 'start',
             'type'        => 'text',
             'class'       => 'erp-date-picker-from',
             'placeholder' => __( 'Form', 'erp' ),
             'value'       => isset( $_POST['start'] ) ? $_POST['start'] : ''
-        ) );
+        ) ) );
     }
 
     if ( $end ) {
-        erp_html_form_input( array(
+        wp_kses_post( erp_html_form_input( array(
             'name'        => 'end',
             'type'        => 'text',
             'class'       => 'erp-date-picker-to',
             'placeholder' => __( 'To', 'erp' ),
             'value'       => isset( $_POST['end'] ) ? $_POST['end'] : ''
-        ) );
+        ) ) );
     }
 
     wp_nonce_field('erp_crm_nonce_report');
@@ -78,26 +78,26 @@ function erp_crm_customer_report_filter_form($start = true, $end = true, $type =
     echo '<form class="erp-crm-report-filter-form" action="" method="post">';
 
     if ( $start ) {
-        erp_html_form_input( array(
+        wp_kses_post( erp_html_form_input( array(
             'name'        => 'start',
             'type'        => 'text',
             'class'       => 'erp-date-picker-from',
             'placeholder' => __( 'Form', 'erp' ),
             'value'       => isset( $_POST['start'] ) ? $_POST['start'] : ''
-        ) );
+        ) ) );
     }
 
     if ( $end ) {
-        erp_html_form_input( array(
+        wp_kses_post( erp_html_form_input( array(
             'name'        => 'end',
             'type'        => 'text',
             'class'       => 'erp-date-picker-to',
             'placeholder' => __( 'To', 'erp' ),
             'value'       => isset( $_POST['end'] ) ? $_POST['end'] : ''
-        ) );
+        ) ) );
     }
 
-    erp_html_form_input( array(
+    wp_kses_post( erp_html_form_input( array(
             'name'        => 'filter_type',
             'placeholder' => __( 'Select a type', 'erp' ),
             'type'        => 'select',
@@ -112,7 +112,7 @@ function erp_crm_customer_report_filter_form($start = true, $end = true, $type =
             ],
             'value'       => isset($_POST['filter_type']) ? $_POST['filter_type'] : 'life_stage'
         )
-    );
+    ) );
 
     wp_nonce_field('erp_crm_nonce_report');
 
@@ -135,7 +135,7 @@ function erp_crm_growth_report_filter_form($start = true, $end = true, $type = f
 
     echo '<form class="erp-crm-report-filter-form" action="" method="post">';
 
-    erp_html_form_input( array(
+    wp_kses_post( erp_html_form_input( array(
             'name'        => 'filter_type',
             'placeholder' => __( 'Select a type', 'erp' ),
             'type'        => 'select',
@@ -147,26 +147,26 @@ function erp_crm_growth_report_filter_form($start = true, $end = true, $type = f
             ],
             'value'       => isset($_POST['filter_type']) ? $_POST['filter_type'] : 'this_year'
         )
-    );
+    ) );
 
     if ( $start ) {
-        erp_html_form_input( array(
+        wp_kses_post( erp_html_form_input( array(
             'name'        => 'start',
             'type'        => 'text',
             'class'       => 'erp-date-picker-from custom-filter',
             'placeholder' => __( 'From', 'erp' ),
             'value'       => isset( $_POST['start'] ) ? $_POST['start'] : ''
-        ) );
+        ) ) );
     }
 
     if ( $end ) {
-        erp_html_form_input( array(
+        wp_kses_post( erp_html_form_input( array(
             'name'        => 'end',
             'type'        => 'text',
             'class'       => 'erp-date-picker-to custom-filter',
             'placeholder' => __( 'To', 'erp' ),
             'value'       => isset( $_POST['end'] ) ? $_POST['end'] : ''
-        ) );
+        ) ) );
     }
 
     wp_nonce_field('erp_crm_nonce_report');

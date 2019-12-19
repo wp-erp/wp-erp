@@ -3,13 +3,13 @@ global $current_user;
 $feeds_tab = erp_crm_get_customer_feeds_nav();
 ?>
 <div class="erp-customer-feeds" id="erp-customer-feeds" v-cloak>
-    <input type="hidden" v-model="customer_id" value="<?php echo $customer->id; ?>" name="customer_id">
+    <input type="hidden" v-model="customer_id" value="<?php echo esc_attr( $customer->id ); ?>" name="customer_id">
     <div class="activity-form">
         <ul class="erp-list list-inline nav-item">
             <?php foreach ( $feeds_tab as $name => $value ) : ?>
-                <li :class="'<?php echo $name; ?>' == tabShow ? 'active': ''">
-                    <a href="#<?php echo $name; ?>" @click.prevent="showTab('<?php echo $name; ?>')">
-                        <?php echo sprintf('%s %s', $value['icon'], $value['title'] ); ?>
+                <li :class="'<?php echo sanitize_html_class( $name ); ?>' == tabShow ? 'active': ''">
+                    <a href="#<?php echo esc_url( $name ); ?>" @click.prevent="showTab('<?php echo esc_attr( $name ); ?>')">
+                        <?php echo wp_kses_post( sprintf('%s %s', $value['icon'], $value['title'] ) ); ?>
                     </a>
                 </li>
             <?php endforeach ?>
@@ -55,13 +55,13 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
         <div class="feed-load-more" v-show="( feeds.length >= limit ) && !loadingFinish">
             <button @click="loadMoreContent( feeds )" class="button">
                 <i class="fa fa-cog fa-spin" v-if="loading"></i>
-                &nbsp;<span v-if="!loading"><?php _e( 'Load More', 'erp' ); ?></span>
-                &nbsp;<span v-else><?php _e( 'Loading..', 'erp' ); ?></span>
+                &nbsp;<span v-if="!loading"><?php esc_attr_e( 'Load More', 'erp' ); ?></span>
+                &nbsp;<span v-else><?php esc_attr_e( 'Loading..', 'erp' ); ?></span>
             </button>
         </div>
 
         <div class="no-activity-found" v-if="!feeds.length">
-            <?php _e( 'No Activity found for this Company', 'erp' ); ?>
+            <?php esc_attr_e( 'No Activity found for this Company', 'erp' ); ?>
         </div>
     </div>
 </div>

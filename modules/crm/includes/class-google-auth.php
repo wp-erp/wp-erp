@@ -126,7 +126,7 @@ class Google_Auth {
         if ( !isset( $_GET['erp-auth'] ) || !isset( $_GET['code'] ) ) {
             return;
         }
-        $this->set_access_token( $_GET['code'] );
+        $this->set_access_token( sanitize_text_field( wp_unslash( $_GET['code'] ) ) );
 
         wperp()->google_sync->update_profile();
 

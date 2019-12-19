@@ -30,7 +30,7 @@ class Campaign_List_Table extends \WP_List_Table {
      * @return void
      */
     function no_items() {
-        _e( 'No campaign found.', 'erp' );
+        esc_attr_e( 'No campaign found.', 'erp' );
     }
 
     /**
@@ -145,7 +145,7 @@ class Campaign_List_Table extends \WP_List_Table {
         $per_page              = 20;
         $current_page          = $this->get_pagenum();
         $offset                = ( $current_page -1 ) * $per_page;
-        $this->page_status     = isset( $_GET['status'] ) ? sanitize_text_field( $_GET['status'] ) : 'all';
+        $this->page_status     = isset( $_GET['status'] ) ? sanitize_text_field( wp_unslash( $_GET['status'] ) ) : 'all';
 
         // only ncessary because we have sample data
         $args = [
@@ -155,12 +155,12 @@ class Campaign_List_Table extends \WP_List_Table {
 
         // Filter for order by
         if ( isset( $_REQUEST['orderby'] ) && ! empty( $_REQUEST['orderby'] ) ) {
-            $args['orderby'] = $_REQUEST['orderby'];
+            $args['orderby'] = sanitize_text_field( wp_unslash( $_REQUEST['orderby'] ) );
         }
 
         // Filter for order
         if ( isset( $_REQUEST['order'] ) && !empty( $_REQUEST['order'] ) ) {
-            $args['order'] = $_REQUEST['order'];
+            $args['order'] = sanitize_text_field( wp_unslash( $_REQUEST['order'] ) );
         }
 
         // Prepare all item after all filtering
