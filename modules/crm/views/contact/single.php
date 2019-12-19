@@ -14,7 +14,7 @@ $contact_list_url = add_query_arg( ['page' => 'erp-crm', 'section' => 'contacts'
 
             <?php if ( ! $customer->user_id && erp_crm_current_user_can_make_wp_user() ): ?>
                 <span class="make-wp-user">
-                    <a href="#" @click.prevent="makeWPUser( 'contact', '<?php echo esc_attr( $customer->id ); ?>', '<?php _e( 'Make WP User', 'erp' ); ?>', '<?php echo esc_attr( $customer->email ) ?>' )" data-single_view="1" title="<?php esc_attr_e( 'Make this contact as a WP User', 'erp' ); ?>" class="add-new-h2"><?php esc_attr_e( 'Make WP User', 'erp' ); ?></a>
+                    <a href="#" @click.prevent="makeWPUser( 'contact', '<?php echo esc_attr( $customer->id ); ?>', '<?php esc_attr_e( 'Make WP User', 'erp' ); ?>', '<?php echo esc_attr( $customer->email ) ?>' )" data-single_view="1" title="<?php esc_attr_e( 'Make this contact as a WP User', 'erp' ); ?>" class="add-new-h2"><?php esc_attr_e( 'Make WP User', 'erp' ); ?></a>
                 </span>
             <?php endif ?>
         <?php endif ?>
@@ -28,7 +28,7 @@ $contact_list_url = add_query_arg( ['page' => 'erp-crm', 'section' => 'contacts'
                     <div class="customer-image-wraper">
                         <div class="row">
                             <div class="col-2 avatar">
-                                <?php echo $customer->get_avatar(100) ?>
+                                <?php echo wp_kses_post( $customer->get_avatar(100) ); ?>
                             </div>
                             <div class="col-4 details">
                                 <h3><?php echo esc_attr( $customer->get_full_name() ); ?></h3>
@@ -36,7 +36,7 @@ $contact_list_url = add_query_arg( ['page' => 'erp-crm', 'section' => 'contacts'
                                 <?php if ( $customer->get_email() ): ?>
                                     <p>
                                         <i class="fa fa-envelope"></i>&nbsp;
-                                        <?php echo erp_get_clickable( 'email', $customer->get_email() ); ?>
+                                        <?php echo wp_kses_post( erp_get_clickable( 'email', $customer->get_email() ) ); ?>
                                     </p>
                                 <?php endif ?>
 
@@ -54,7 +54,7 @@ $contact_list_url = add_query_arg( ['page' => 'erp-crm', 'section' => 'contacts'
                                         <?php $social_field_data = $customer->get_meta( $social_key, true ); ?>
 
                                         <?php if ( ! empty( $social_field_data ) ): ?>
-                                            <li><a href="<?php echo esc_url_raw( $social_field_data ); ?>"><?php echo $social_value['icon']; ?></a></li>
+                                            <li><a href="<?php echo esc_url_raw( $social_field_data ); ?>"><?php echo wp_kses_post( $social_value['icon'] ); ?></a></li>
                                         <?php endif ?>
                                     <?php endforeach ?>
 
@@ -105,7 +105,7 @@ $contact_list_url = add_query_arg( ['page' => 'erp-crm', 'section' => 'contacts'
                                                 }
                                             ?>
                                             <?php if ( $crm_user_id && ! empty( $user ) ): ?>
-                                                <?php echo erp_crm_get_avatar( $crm_user_id, $user_email, $crm_user_id, 32 ); ?>
+                                                <?php echo wp_kses_post( erp_crm_get_avatar( $crm_user_id, $user_email, $crm_user_id, 32 ) ); ?>
                                                 <div class="user-details">
                                                     <a href="#"><?php echo esc_attr( get_the_author_meta( 'display_name', $crm_user_id ) ); ?></a>
                                                     <span><?php echo esc_attr(  get_the_author_meta( 'user_email', $crm_user_id ) ); ?></span>

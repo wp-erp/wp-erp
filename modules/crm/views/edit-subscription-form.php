@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="<?php echo WPERP_CRM_ASSETS . '/css/erp-subscription-edit.css?ver=' . WPERP_VERSION; ?>">
+<link rel="stylesheet" href="<?php echo esc_url_raw(WPERP_CRM_ASSETS . '/css/erp-subscription-edit.css?ver=' . WPERP_VERSION ); ?>">
 
 <?php do_action( 'erp_edit_subscription_page_before_form' ); ?>
 
@@ -12,9 +12,10 @@
                     <li>
                         <label>
                             <input
+                                <?php $checked = empty( $list->unsubscribe_at ) ? 'checked' : '' ?>
                                 type="checkbox"
                                 name="<?php echo esc_attr( $list_type ) ?>[<?php echo esc_attr( $list->id ) ?>]"
-                                <?php echo empty( $list->unsubscribe_at ) ? 'checked' : '' ?>
+                                <?php echo esc_attr( $checked ) ?>
                             > <?php echo esc_attr( $list->name ); ?>
                         </label>
                     </li>
@@ -25,7 +26,7 @@
         <input type="hidden" name="id" value="<?php echo esc_attr( $hash ); ?>">
 
         <button type="submit">
-            <span class="submit-btn-label"><?php echo __( 'Update', 'erp' ); ?></span>
+            <span class="submit-btn-label"><?php echo esc_html( __( 'Update', 'erp' ) ); ?></span>
             <span class="erp-spinner"></span>
         </button>
 

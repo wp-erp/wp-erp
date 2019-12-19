@@ -12,9 +12,9 @@
 
         <li class="erp-count-box">
             <div class="count-inner">
-                <h3><?php echo number_format_i18n( $contacts_count['all']['count'], 0 ); ?></h3>
+                <h3><?php echo wp_kses_post( number_format_i18n( $contacts_count['all']['count'], 0 ) ); ?></h3>
                 <p>
-                    <?php echo sprintf( _n( 'Contact', 'Contacts', $contacts_count['all']['count'], 'erp' ), number_format_i18n( $companies_count['all']['count'] ), 0 ); ?>
+                    <?php echo wp_kses_post( sprintf( _n( 'Contact', 'Contacts', $contacts_count['all']['count'], 'erp' ), number_format_i18n( $companies_count['all']['count'] ), 0 ) ); ?>
                 </p>
 
                 <ul class="erp-info-box-list">
@@ -32,7 +32,7 @@
 
                                     $plural = apply_filters( "erp_crm_life_stage_plural_of_{$contact_key}", $plural, $singular );
 
-                                    echo sprintf( _n( "<span>{$singular}</span> <span>%s</span>", "<span>{$plural}</span> <span>%s</span>", $contact_value['count'], 'erp' ), number_format_i18n( $contact_value['count'] ), 0 );
+                                    echo wp_kses_post( sprintf( _n( "<span>{$singular}</span> <span>%s</span>", "<span>{$plural}</span> <span>%s</span>", $contact_value['count'], 'erp' ), number_format_i18n( $contact_value['count'] ), 0 ) );
                                 ?>
                             </a>
                         </li>
@@ -50,9 +50,9 @@
 
         <li class="erp-count-box">
             <div class="count-inner">
-                <h3><?php echo number_format_i18n( $companies_count['all']['count'], 0 ); ?></h3>
+                <h3><?php echo wp_kses_post( number_format_i18n( $companies_count['all']['count'], 0 ) ); ?></h3>
                 <p>
-                    <?php echo sprintf( _n( 'Company', 'Companies', $companies_count['all']['count'], 'erp' ), number_format_i18n( $companies_count['all']['count'] ), 0 ); ?>
+                    <?php echo wp_kses_post( sprintf( _n( 'Company', 'Companies', $companies_count['all']['count'], 'erp' ), number_format_i18n( $companies_count['all']['count'] ), 0 ) ); ?>
                 </p>
 
                 <ul class="erp-info-box-list">
@@ -70,7 +70,7 @@
 
                                     $plural = apply_filters( "erp_crm_life_stage_plural_of_{$company_key}", $plural, $singular );
 
-                                    echo sprintf( _n( "<span>{$singular}</span> <span>%s</span>", "<span>{$plural}</span> <span>%s</span>", $company_value['count'], 'erp' ), number_format_i18n( $company_value['count'] ), 0 );
+                                    echo wp_kses_post( sprintf( _n( "<span>{$singular}</span> <span>%s</span>", "<span>{$plural}</span> <span>%s</span>", $company_value['count'], 'erp' ), number_format_i18n( $company_value['count'] ), 0 ) );
                                 ?>
                             </a>
                         </li>
