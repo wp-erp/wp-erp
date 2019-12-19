@@ -228,7 +228,6 @@ final class WeDevs_ERP {
         require_once WPERP_INCLUDES . '/functions-html.php';
         require_once WPERP_INCLUDES . '/functions-company.php';
         require_once WPERP_INCLUDES . '/functions-people.php';
-        require_once WPERP_INCLUDES . '/lib/class-wedevs-insights.php';
         require_once WPERP_INCLUDES . '/api/class-api-registrar.php';
         require_once WPERP_INCLUDES . '/class-i18n.php';
 
@@ -265,11 +264,13 @@ final class WeDevs_ERP {
         new \WeDevs\ERP\Admin\User_Profile();
         new \WeDevs\ERP\Scripts();
         new \WeDevs\ERP\Updates();
-        new \WeDevs\ERP\Tracker();
         new \WeDevs\ERP\API\API_Registrar();
         new \WeDevs\ERP\Promotion();
         new \WeDevs\ERP\AddonTask();
         new \WeDevs\ERP\ERP_i18n();
+
+        // Appsero Tracker
+        \WeDevs\ERP\Tracker::get_instance()->init();
 
         $this->container['modules']     = new \WeDevs\ERP\Framework\Modules();
         $this->container['emailer']     = \WeDevs\ERP\Emailer::init();
