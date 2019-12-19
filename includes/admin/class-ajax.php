@@ -36,11 +36,15 @@ class Ajax {
     }
 
     function file_delete() {
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'erp-nonce' ) ) {
+
+        }
+
         $this->verify_nonce( 'erp-nonce' );
 
-        $attach_id = isset( $_POST['attach_id'] ) ? $_POST['attach_id'] : 0;
-        $custom_attr = isset( $_POST['custom_attr'] ) ? $_POST['custom_attr'] : [];
-        $upload    = new \WeDevs\ERP\Uploader();
+        $attach_id   = isset( $_POST['attach_id'] ) ? sanitize_text_field( wp_unslash( $_POST['attach_id'] ) ) : 0;
+        $custom_attr = isset( $_POST['custom_attr'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['custom_attr'] ) ) : [];
+        $upload      = new \WeDevs\ERP\Uploader();
 
         if ( is_array( $attach_id) ) {
             foreach ( $attach_id as $id ) {
@@ -79,14 +83,14 @@ class Ajax {
     public function location_create() {
         $this->verify_nonce( 'erp-company-location' );
 
-        $location_name = isset( $_POST['location_name'] ) ? sanitize_text_field( $_POST['location_name'] ) : '';
-        $address_1     = isset( $_POST['address_1'] ) ? sanitize_text_field( $_POST['address_1'] ) : '';
-        $address_2     = isset( $_POST['address_2'] ) ? sanitize_text_field( $_POST['address_2'] ) : '';
-        $city          = isset( $_POST['city'] ) ? sanitize_text_field( $_POST['city'] ) : '';
-        $state         = isset( $_POST['state'] ) ? sanitize_text_field( $_POST['state'] ) : '';
-        $zip           = isset( $_POST['zip'] ) ? sanitize_text_field( $_POST['zip'] )  : '';
-        $country       = isset( $_POST['country'] ) ? sanitize_text_field( $_POST['country'] ) : '';
-        $location_id   = isset( $_POST['location_id'] ) ? intval( $_POST['location_id'] ) : 0;
+        $location_name = isset( $_POST['location_name'] ) ? sanitize_text_field( wp_unslash( $_POST['location_name'] ) ) : '';
+        $address_1     = isset( $_POST['address_1'] ) ? sanitize_text_field( wp_unslash( $_POST['address_1'] ) ) : '';
+        $address_2     = isset( $_POST['address_2'] ) ? sanitize_text_field( wp_unslash( $_POST['address_2'] ) ) : '';
+        $city          = isset( $_POST['city'] ) ? sanitize_text_field( wp_unslash( $_POST['city'] ) ) : '';
+        $state         = isset( $_POST['state'] ) ? sanitize_text_field( wp_unslash( $_POST['state'] ) ) : '';
+        $zip           = isset( $_POST['zip'] ) ? sanitize_text_field( wp_unslash( $_POST['zip'] ) )  : '';
+        $country       = isset( $_POST['country'] ) ? sanitize_text_field( wp_unslash( $_POST['country'] ) ) : '';
+        $location_id   = isset( $_POST['location_id'] ) ? intval( wp_unslash( $_POST['location_id'] ) ) : 0;
 
         $args = [
             'id'         => $location_id,
@@ -130,7 +134,7 @@ class Ajax {
 
         $this->verify_nonce( 'wp-erp-hr-nonce' );
 
-        $log_id = intval( $_POST['id'] );
+        $log_id = isset( $_POST['id'] ) ? intval( wp_unslash( $_POST['id'] ) ) : 0;
 
         if ( ! $log_id ) {
             $this->send_error();
@@ -145,17 +149,17 @@ class Ajax {
             <table class="wp-list-table widefat fixed audit-log-change-table">
                 <thead>
                     <tr>
-                        <th class="col-date"><?php _e( 'Field/Items', 'erp' ); ?></th>
-                        <th class="col"><?php _e( 'Old Value', 'erp' ); ?></th>
-                        <th class="col"><?php _e( 'New Value', 'erp' ); ?></th>
+                        <th class="col-date"><?php esc_html_e( 'Field/Items', 'erp' ); ?></th>
+                        <th class="col"><?php esc_html_e( 'Old Value', 'erp' ); ?></th>
+                        <th class="col"><?php esc_html_e( 'New Value', 'erp' ); ?></th>
                     </tr>
                 </thead>
 
                 <tfoot>
                     <tr>
-                        <th class="col-items"><?php _e( 'Field/Items', 'erp' ); ?></th>
-                        <th class="col"><?php _e( 'Old Value', 'erp' ); ?></th>
-                        <th class="col"><?php _e( 'New Value', 'erp' ); ?></th>
+                        <th class="col-items"><?php esc_html_e( 'Field/Items', 'erp' ); ?></th>
+                        <th class="col"><?php esc_html_e( 'Old Value', 'erp' ); ?></th>
+                        <th class="col"><?php esc_html_e( 'New Value', 'erp' ); ?></th>
                     </tr>
                 </tfoot>
 
@@ -163,9 +167,9 @@ class Ajax {
                     <?php $i=1; ?>
                     <?php foreach( $old_value as $key => $value ) { ?>
                         <tr class="<?php echo $i % 2 == 0 ? 'alternate' : 'odd'; ?>">
-                            <td class="col-date"><?php echo ucfirst( str_replace('_', ' ', $key ) ); ?></td>
-                            <td><?php echo ( $value ) ? stripslashes( $value ) : '--'; ?></td>
-                            <td><?php echo ( $new_value[$key] ) ? stripslashes( $new_value[$key] ) : '--'; ?></td>
+                            <td class="col-date"><?php echo esc_html( ucfirst( str_replace('_', ' ', $key ) ) ); ?></td>
+                            <td><?php echo ( $value ) ? esc_html( wp_unslash( $value ) ) : '--'; ?></td>
+                            <td><?php echo ( $new_value[$key] ) ? esc_html( wp_unslash( $new_value[$key] ) ) : '--'; ?></td>
                         </tr>
                     <?php $i++; } ?>
                 </tbody>
@@ -175,7 +179,7 @@ class Ajax {
         $content = ob_get_clean();
 
         $data = [
-            'title' => __( 'Log changes', 'erp' ),
+            'title' => esc_html__( 'Log changes', 'erp' ),
             'content' => $content
         ];
 
@@ -188,10 +192,10 @@ class Ajax {
      * @return void
      */
     public function check_people() {
-        $email = isset( $_REQUEST['email'] ) ? sanitize_text_field( $_REQUEST['email'] ) : false;
+        $email = isset( $_REQUEST['email'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['email'] ) ) : false;
 
         if ( ! $email ) {
-            $this->send_error( __( 'No email address provided', 'erp' ) );
+            $this->send_error( esc_html__( 'No email address provided', 'erp' ) );
         }
 
         $user = \get_user_by( 'email', $email );
@@ -228,25 +232,25 @@ class Ajax {
         $this->verify_nonce( 'erp-smtp-test-connection-nonce' );
 
         if ( empty( $_REQUEST['mail_server'] ) ) {
-            $this->send_error( __( 'No host address provided', 'erp' ) );
+            $this->send_error( esc_html__( 'No host address provided', 'erp' ) );
         }
 
         if ( empty( $_REQUEST['port'] ) ) {
-            $this->send_error( __( 'No port address provided', 'erp' ) );
+            $this->send_error( esc_html__( 'No port address provided', 'erp' ) );
         }
 
         if ( $_REQUEST['authentication'] !== '' ) {
             if ( empty( $_REQUEST['username'] ) ) {
-                $this->send_error( __( 'No email address provided', 'erp' ) );
+                $this->send_error( esc_html__( 'No email address provided', 'erp' ) );
             }
 
             if ( empty( $_REQUEST['password'] ) ) {
-                $this->send_error( __( 'No email password provided', 'erp' ) );
+                $this->send_error( esc_html__( 'No email password provided', 'erp' ) );
             }
         }
 
         if ( empty( $_REQUEST['to'] ) ) {
-            $this->send_error( __( 'No testing email address provided', 'erp' ) );
+            $this->send_error( esc_html__( 'No testing email address provided', 'erp' ) );
         }
 
         $mail_server    = $_REQUEST['mail_server'];
@@ -307,7 +311,7 @@ class Ajax {
         try {
             $result = $phpmailer->Send();
 
-            $this->send_success( __( 'Test email has been sent.', 'erp' ) );
+            $this->send_success( esc_html__( 'Test email has been sent.', 'erp' ) );
         } catch( \Exception $e ) {
             $this->send_error( $e->getMessage() );
         }
@@ -322,19 +326,19 @@ class Ajax {
         $this->verify_nonce( 'erp-imap-test-connection-nonce' );
 
         if ( empty( $_REQUEST['mail_server'] ) ) {
-            $this->send_error( __( 'No host address provided', 'erp' ) );
+            $this->send_error( esc_html__( 'No host address provided', 'erp' ) );
         }
 
         if ( empty( $_REQUEST['username'] ) ) {
-            $this->send_error( __( 'No email address provided', 'erp' ) );
+            $this->send_error( esc_html__( 'No email address provided', 'erp' ) );
         }
 
         if ( empty( $_REQUEST['password'] ) ) {
-            $this->send_error( __( 'No email password provided', 'erp' ) );
+            $this->send_error( esc_html__( 'No email password provided', 'erp' ) );
         }
 
         if ( empty( $_REQUEST['port'] ) ) {
-            $this->send_error( __( 'No port address provided', 'erp' ) );
+            $this->send_error( esc_html__( 'No port address provided', 'erp' ) );
         }
 
         $mail_server = $_REQUEST['mail_server'];
@@ -348,7 +352,7 @@ class Ajax {
             $imap = new \WeDevs\ERP\Imap( $mail_server, $port, $protocol, $username, $password, $authentication );
             $imap->is_connected();
 
-            $this->send_success( __( 'Your IMAP connection is established.', 'erp' ) );
+            $this->send_success( esc_html__( 'Your IMAP connection is established.', 'erp' ) );
         } catch( \Exception $e ) {
             $this->send_error( $e->getMessage() );
         }
@@ -428,15 +432,15 @@ class Ajax {
 
                 if ( ! $people->exists) {
                     $contact->update_life_stage($life_stage);
-                    $contact->update_contact_owner(  $contact_owner );
+                    $contact->update_contact_owner( $contact_owner );
 
                 } else {
                     if ( ! $contact->get_life_stage() ) {
-                        $contact->update_life_stage($life_stage);
+                        $contact->update_life_stage( $life_stage );
                     }
 
                     if ( ! $contact->get_contact_owner() ) {
-                        $contact->update_contact_owner(  $contact_owner );
+                        $contact->update_contact_owner( $contact_owner );
                     }
                 }
 
@@ -531,13 +535,13 @@ class Ajax {
      */
     public function dismiss_promotional_offer() {
         if ( ! current_user_can( 'manage_options' ) ) {
-            wp_send_json_error( __( 'You have no permission to do that', 'erp' ) );
+            wp_send_json_error( esc_html__( 'You have no permission to do that', 'erp' ) );
         }
 
         $nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
 
         if ( ! wp_verify_nonce( $nonce, 'erp_admin' ) ) {
-            wp_send_json_error( __( 'Invalid nonce', 'erp' ) );
+            wp_send_json_error( esc_html__( 'Invalid nonce', 'erp' ) );
         }
 
         if ( ! empty( $_POST['erp_christmas_dismissed'] ) ) {

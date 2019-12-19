@@ -103,7 +103,7 @@ class Setup_Wizard {
         wp_register_script( 'erp-setup', WPERP_ASSETS . "/js/erp$suffix.js", array( 'jquery', 'jquery-ui-datepicker', 'erp-select2' ), date( 'Ymd' ), true );
 
         if ( ! empty( $_POST['save_step'] ) && isset( $this->steps[ $this->step ]['handler'] ) ) {
-            call_user_func( $this->steps[ $this->step ]['handler'] );
+            call_user_func( esc_html( $this->steps[ $this->step ]['handler'] ) );
         }
 
         ob_start();
@@ -129,7 +129,7 @@ class Setup_Wizard {
         <head>
             <meta name="viewport" content="width=device-width" />
             <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-            <title><?php _e( 'WP ERP &rsaquo; Setup Wizard', 'erp' ); ?></title>
+            <title><?php esc_html_e( 'WP ERP &rsaquo; Setup Wizard', 'erp' ); ?></title>
             <?php wp_print_scripts( 'erp-setup' ); ?>
             <?php do_action( 'admin_print_styles' ); ?>
             <?php do_action( 'admin_head' ); ?>
@@ -145,7 +145,7 @@ class Setup_Wizard {
     public function setup_wizard_footer() {
         ?>
             <?php if ( 'next_steps' === $this->step ) : ?>
-                <a class="erp-return-to-dashboard" href="<?php echo esc_url( admin_url() ); ?>"><?php _e( 'Return to the WordPress Dashboard', 'erp' ); ?></a>
+                <a class="erp-return-to-dashboard" href="<?php echo esc_url( admin_url() ); ?>"><?php esc_html_e( 'Return to the WordPress Dashboard', 'erp' ); ?></a>
             <?php endif; ?>
             </body>
         </html>
@@ -167,7 +167,7 @@ class Setup_Wizard {
                     } elseif ( array_search( $this->step, array_keys( $this->steps ) ) > array_search( $step_key, array_keys( $this->steps ) ) ) {
                         echo 'done';
                     }
-                    ?>"><a href="<?php echo admin_url( 'index.php?page=erp-setup&step=' . $step_key ); ?>"><?php echo esc_html( $step['name'] ); ?></a>
+                    ?>"><a href="<?php echo esc_url( admin_url( 'index.php?page=erp-setup&step=' . $step_key ) ); ?>"><?php echo esc_html( $step['name'] ); ?></a>
                 </li>
             <?php endforeach; ?>
         </ol>
@@ -187,7 +187,7 @@ class Setup_Wizard {
         ?>
         <p class="erp-setup-actions step">
             <input type="submit" class="button-primary button button-large button-next" value="<?php esc_attr_e( 'Continue', 'erp' ); ?>" name="save_step" />
-            <a href="<?php echo esc_url( $this->get_next_step_link() ); ?>" class="button button-large button-next"><?php _e( 'Skip this step', 'erp' ); ?></a>
+            <a href="<?php echo esc_url( $this->get_next_step_link() ); ?>" class="button button-large button-next"><?php esc_html_e( 'Skip this step', 'erp' ); ?></a>
             <?php wp_nonce_field( 'erp-setup' ); ?>
         </p>
         <?php
@@ -198,12 +198,12 @@ class Setup_Wizard {
      */
     public function setup_step_introduction() {
         ?>
-        <h1><?php _e( 'Welcome to WP ERP!', 'erp' ); ?></h1>
-        <p><?php _e( 'Thank you for choosing WP-ERP. An easier way to manage your company! This quick setup wizard will help you configure the basic settings. <strong>It’s completely optional and shouldn’t take longer than three minutes.</strong>', 'erp' ); ?></p>
-        <p><?php _e( 'No time right now? If you don’t want to go through the wizard, you can skip and return to the WordPress dashboard. Come back anytime if you change your mind!', 'erp' ); ?></p>
+        <h1><?php esc_html_e( 'Welcome to WP ERP!', 'erp' ); ?></h1>
+        <p><?php esc_html_e( 'Thank you for choosing WP-ERP. An easier way to manage your company! This quick setup wizard will help you configure the basic settings. <strong>It’s completely optional and shouldn’t take longer than three minutes.</strong>', 'erp' ); ?></p>
+        <p><?php esc_html_e( 'No time right now? If you don’t want to go through the wizard, you can skip and return to the WordPress dashboard. Come back anytime if you change your mind!', 'erp' ); ?></p>
         <p class="erp-setup-actions step">
-            <a href="<?php echo esc_url( $this->get_next_step_link() ); ?>" class="button-primary button button-large button-next"><?php _e( 'Let\'s Go!', 'erp' ); ?></a>
-            <a href="<?php echo esc_url( wp_get_referer() ? wp_get_referer() : admin_url( 'plugins.php' ) ); ?>" class="button button-large"><?php _e( 'Not right now', 'erp' ); ?></a>
+            <a href="<?php echo esc_url( $this->get_next_step_link() ); ?>" class="button-primary button button-large button-next"><?php esc_html_e( 'Let\'s Go!', 'erp' ); ?></a>
+            <a href="<?php echo esc_url( wp_get_referer() ? wp_get_referer() : admin_url( 'plugins.php' ) ); ?>" class="button button-large"><?php esc_html_e( 'Not right now', 'erp' ); ?></a>
         </p>
         <?php
     }
@@ -214,16 +214,16 @@ class Setup_Wizard {
         $company         = new \WeDevs\ERP\Company();
         $business_type   = $company->business_type;
 
-        $financial_month = isset( $general['gen_financial_month'] ) ? $general['gen_financial_month'] : '1';
-        $company_started = isset( $general['gen_com_start'] ) ? $general['gen_com_start'] : '';
+        $financial_month = isset( $general['gen_financial_month'] ) ? sanitize_text_field( wp_unslash( $general['gen_financial_month'] ) ) : '1';
+        $company_started = isset( $general['gen_com_start'] ) ? sanitize_text_field( wp_unslash( $general['gen_com_start'] ) ) : '';
         ?>
-        <h1><?php _e( 'Basic Settings', 'erp' ); ?></h1>
+        <h1><?php esc_html_e( 'Basic Settings', 'erp' ); ?></h1>
 
         <form method="post">
 
             <table class="form-table">
                 <tr>
-                    <th scope="row"><label for="company_name"><?php _e( 'Company Name', 'erp' ); ?></label></th>
+                    <th scope="row"><label for="company_name"><?php esc_html_e( 'Company Name', 'erp' ); ?></label></th>
                     <td>
                         <?php erp_html_form_input([
                             'name'    => 'company_name',
@@ -235,7 +235,7 @@ class Setup_Wizard {
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row"><label for="gen_financial_month"><?php _e( 'Financial Year Starts', 'erp' ); ?></label></th>
+                    <th scope="row"><label for="gen_financial_month"><?php esc_html_e( 'Financial Year Starts', 'erp' ); ?></label></th>
                     <td>
                         <?php erp_html_form_input([
                             'name'    => 'gen_financial_month',
@@ -243,37 +243,37 @@ class Setup_Wizard {
                             'type'    => 'select',
                             'value'   => $financial_month,
                             'options' => erp_months_dropdown(),
-                            'help'    => __( 'Financial and tax calculation starts from this month of every year.', 'erp' ),
+                            'help'    => esc_html__( 'Financial and tax calculation starts from this month of every year.', 'erp' ),
                         ]); ?>
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row"><label for="gen_com_start"><?php _e( 'Company Start Date', 'erp' ); ?></label></th>
+                    <th scope="row"><label for="gen_com_start"><?php esc_html_e( 'Company Start Date', 'erp' ); ?></label></th>
                     <td>
                         <?php erp_html_form_input([
                             'name'        => 'gen_com_start',
                             'type'        => 'text',
                             'value'       => $company_started,
-                            'help'        => __( 'The date the company officially started.', 'erp' ),
+                            'help'        => esc_html__( 'The date the company officially started.', 'erp' ),
                             'class'       => 'erp-date-field',
                             'placeholder' => 'YYYY-MM-DD'
                         ]); ?>
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row"><label for="base_currency"><?php _e( 'Currency', 'erp' ); ?></label></th>
+                    <th scope="row"><label for="base_currency"><?php esc_html_e( 'Currency', 'erp' ); ?></label></th>
                     <td>
                         <?php erp_html_form_input([
                             'name'    => 'base_currency',
                             'type'    => 'select',
                             'value'   => 'USD',
                             'options' => erp_get_currencies(),
-                            'desc'    => __( 'Format of date to show accross the system.', 'erp' ),
+                            'desc'    => esc_html__( 'Format of date to show accross the system.', 'erp' ),
                         ]); ?>
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row"><label for="date_format"><?php _e( 'Date Format', 'erp' ); ?></label></th>
+                    <th scope="row"><label for="date_format"><?php esc_html_e( 'Date Format', 'erp' ); ?></label></th>
                     <td>
                         <?php erp_html_form_input([
                             'name'    => 'date_format',
@@ -286,12 +286,12 @@ class Setup_Wizard {
                                 'd/m/Y' => 'dd/mm/yyyy',
                                 'Y-m-d' => 'yyyy-mm-dd',
                             ],
-                            'help' => __( 'Format of date to show accross the system.', 'erp' ),
+                            'help' => esc_html__( 'Format of date to show accross the system.', 'erp' ),
                         ]); ?>
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row"><label for="business_type"><?php _e( 'What sort of business do you do?', 'erp' ); ?></label></th>
+                    <th scope="row"><label for="business_type"><?php esc_html_e( 'What sort of business do you do?', 'erp' ); ?></label></th>
                     <td>
                         <?php erp_html_form_input([
                             'name'    => 'business_type',
@@ -317,7 +317,7 @@ class Setup_Wizard {
                 <?php if ( null !== get_option( 'erp_allow_tracking') ) : ?>
 
                 <tr>
-                    <th scope="row"><label for="share_essentials"><?php _e( 'Share Essentials', 'erp' ); ?></label></th>
+                    <th scope="row"><label for="share_essentials"><?php esc_html_e( 'Share Essentials', 'erp' ); ?></label></th>
 
                     <td class="updated">
                         <input type="checkbox" name="share_essentials" id="share_essentials" class="switch-input" checked>
@@ -349,13 +349,13 @@ class Setup_Wizard {
     public function setup_step_basic_save() {
         check_admin_referer( 'erp-setup' );
 
-        $company_name     = sanitize_text_field( $_POST['company_name'] );
-        $business_type    = sanitize_text_field( $_POST['business_type'] );
-        $financial_month  = sanitize_text_field( $_POST['gen_financial_month'] );
-        $company_started  = sanitize_text_field( $_POST['gen_com_start'] );
-        $base_currency    = sanitize_text_field( $_POST['base_currency'] );
-        $date_format      = sanitize_text_field( $_POST['date_format'] );
-        $share_essentials = sanitize_text_field( isset( $_POST['share_essentials'] ) );
+        $company_name     = isset( $_POST['company_name'] ) ? sanitize_text_field( wp_unslash( $_POST['company_name'] ) ) : '';
+        $business_type    = isset( $_POST['business_type'] ) ? sanitize_text_field( wp_unslash( $_POST['business_type'] ) ) : '';
+        $financial_month  = isset( $_POST['gen_financial_month'] ) ? sanitize_text_field( wp_unslash( $_POST['gen_financial_month'] ) ) : '';
+        $company_started  = isset( $_POST['gen_com_start'] ) ? sanitize_text_field( wp_unslash( $_POST['gen_com_start'] ) ) : '';
+        $base_currency    = isset( $_POST['base_currency'] ) ? sanitize_text_field( wp_unslash( $_POST['base_currency'] ) ) : '';
+        $date_format      = isset( $_POST['date_format'] ) ? sanitize_text_field( wp_unslash( $_POST['date_format'] ) ) : '';
+        $share_essentials = isset( $_POST['share_essentials'] ) ? sanitize_text_field( wp_unslash( $_POST['share_essentials'] ) ) : '';
         $company          = new \WeDevs\ERP\Company();
         $allowed          = '1';
 
@@ -416,7 +416,7 @@ class Setup_Wizard {
         }
         ?>
 
-        <h1><?php _e( 'Active Modules', 'erp' ); ?></h1>
+        <h1><?php esc_html_e( 'Active Modules', 'erp' ); ?></h1>
 
         <form method="post">
             <table class="form-table">
@@ -426,15 +426,15 @@ class Setup_Wizard {
                 ?>
                 <tr>
                     <th scope="row">
-                        <label for="erp_module_<?php echo $slug; ?>"><?php echo isset( $module['title'] ) ? $module['title'] : ''; ?></label>
+                        <label for="erp_module_<?php echo esc_attr( $slug ); ?>"><?php echo isset( $module['title'] ) ? esc_html( $module['title'] ) : ''; ?></label>
                     </th>
                     <td>
-                        <input type="checkbox" name="modules[]" id="erp_module_<?php echo $slug; ?>" class="switch-input" value="<?php echo $slug; ?>" <?php checked( $slug, $checked ); ?>>
-                        <label for="erp_module_<?php echo $slug; ?>" class="switch-label">
+                        <input type="checkbox" name="modules[]" id="erp_module_<?php echo esc_attr( $slug ); ?>" class="switch-input" value="<?php echo esc_attr( $slug ); ?>" <?php checked( $slug, $checked ); ?>>
+                        <label for="erp_module_<?php echo esc_attr( $slug ); ?>" class="switch-label">
                             <span class="toggle--on">On</span>
                             <span class="toggle--off">Off</span>
                         </label>
-                        <span class="description"><?php echo isset( $module['description'] ) ? $module['description'] : ''; ?></span>
+                        <span class="description"><?php echo isset( $module['description'] ) ? esc_html( $module['description'] ) : ''; ?></span>
                     </td>
                 </tr>
                 <?php } ?>
@@ -476,7 +476,7 @@ class Setup_Wizard {
     /**
      * Module setup step save
      * @since 1.3.4
-     * 
+     *
      * Add project manager plugin
      * @since 1.4.2
      */
@@ -486,7 +486,7 @@ class Setup_Wizard {
         $all_modules   = wperp()->modules->get_modules();
         $modules       = array_map( 'sanitize_text_field', wp_unslash( $_POST['modules'] ) );
         $pm_module_add = 'no';
-        
+
         // if `WP Project Manager` plugin needs to be installed
         if ( in_array( 'pm', $modules ) ) {
             $pm_plugin_id = 'wedevs-project-manager';
@@ -528,8 +528,8 @@ class Setup_Wizard {
 
             <div class="two-col">
                 <div class="col-first">
-                    <p><?php _e( 'Create some departments for your company. e.g. HR, Engineering, Marketing, Support, etc. ', 'erp' ); ?></p>
-                    <p><?php _e( 'Leave empty for not to create any departments.', 'erp' ); ?></p>
+                    <p><?php esc_html_e( 'Create some departments for your company. e.g. HR, Engineering, Marketing, Support, etc. ', 'erp' ); ?></p>
+                    <p><?php esc_html_e( 'Leave empty for not to create any departments.', 'erp' ); ?></p>
                 </div>
 
                 <div class="col-last">
@@ -917,7 +917,7 @@ class Setup_Wizard {
 			}
 		}
     }
-    
+
     private function associate_plugin_file( $plugins, $key ) {
 		$path                 = explode( '/', $key );
 		$filename             = end( $path );
