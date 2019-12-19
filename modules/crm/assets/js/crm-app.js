@@ -6,6 +6,9 @@
  *
  * @return {void}
  */
+
+var $ = jQuery; // To resolve undefined jQuery
+
 Vue.component( 'new-note', {
     props: ['feed'],
 
