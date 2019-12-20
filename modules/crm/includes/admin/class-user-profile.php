@@ -96,7 +96,7 @@ class User_Profile {
         $is_agent   = in_array( erp_crm_get_agent_role(), $profileuser->roles ) ? 'checked' : '';
         ?>
         <label for="erp-crm-manager">
-            <input type="checkbox" id="erp-crm-manager" <?php echo $is_manager; ?> name="crm_manager" value="<?php echo esc_attr( erp_crm_get_manager_role() ); ?>">
+            <input type="checkbox" id="erp-crm-manager" <?php echo esc_attr( $is_manager ); ?> name="crm_manager" value="<?php echo esc_attr( erp_crm_get_manager_role() ); ?>">
             <span class="description"><?php esc_attr_e( 'CRM Manager', 'erp' ); ?></span>
         </label>
 
