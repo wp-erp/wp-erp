@@ -686,7 +686,7 @@ function erp_extract_dates( $start_date, $end_date ) {
     }
 
     $interval = DateInterval::createFromDateString( '1 day' );
-    $period   = new DatePeriod( $start_date, $interval, $end_date );
+    $period   = new DatePeriod( $start_date, $interval, $end_date, null, null );
 
     // prepare the periods
     $dates = array();
@@ -1428,7 +1428,7 @@ function erp_import_export_javascript() {
             var fields = [];
             var required_fields = [];
 
-            var erp_fields = <?php echo json_encode( $erp_fields ); ?>;
+            var erp_fields = '<?php echo json_encode( $erp_fields ); ?>';
 
             var type = $('form#export_form #type').val();
 
@@ -1624,7 +1624,9 @@ function erp_process_import_export() {
             return;
         }
 
-        $data = [ 'type' => $type, 'fields' => $fields, 'file' => $_FILES['csv_file'] ];
+        $csv_file = isset( $_FILES['csv_file'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_FILES['csv_file'] ) ) : [];
+
+        $data = [ 'type' => $type, 'fields' => $fields, 'file' => $csv_file ];
 
         do_action( 'erp_tool_import_csv_action', $data );
 
@@ -1675,7 +1677,9 @@ function erp_process_import_export() {
 
         require_once WPERP_INCLUDES . '/lib/parsecsv.lib.php';
 
-        $csv = new parseCSV( $_FILES['csv_file']['tmp_name'] );
+        $tmp_name = isset( $_FILES['csv_file']['tmp_name'] ) ? sanitize_text_field( wp_unslash( $_FILES['csv_file']['tmp_name'] ) ) : '';
+
+        $csv = new parseCSV( $tmp_name );
 
         if ( empty( $csv->data ) ) {
             wp_redirect( admin_url( "admin.php?page=erp-tools&tab=import" ) );

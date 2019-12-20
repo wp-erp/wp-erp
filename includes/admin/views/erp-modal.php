@@ -1,8 +1,8 @@
 <div id="erp-modal">
     <div class="erp-modal">
 
-        <span id="modal-label" class="screen-reader-text"><?php _e( 'Modal window. Press escape to close.', 'erp' ); ?></span>
-        <a href="#" class="close">× <span class="screen-reader-text"><?php _e( 'Close modal window', 'erp' ); ?></span></a>
+        <span id="modal-label" class="screen-reader-text"><?php esc_html_e( 'Modal window. Press escape to close.', 'erp' ); ?></span>
+        <a href="#" class="close">× <span class="screen-reader-text"><?php esc_html_e( 'Close modal window', 'erp' ); ?></span></a>
 
         <form action="" class="erp-modal-form" method="post">
             <header class="modal-header">
@@ -10,7 +10,7 @@
             </header>
 
             <div class="content-container modal-footer">
-                <div class="content"><?php _e( 'Loading', 'erp' ); ?></div>
+                <div class="content"><?php esc_html_e( 'Loading', 'erp' ); ?></div>
             </div>
 
             <footer>

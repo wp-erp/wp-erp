@@ -21,6 +21,6 @@
     <arg name="extensions" value="php" />
     <arg name="extensions" value="html" />
     <arg name="report" value="full" />
-    <arg name="report-file" value="../wp-erp-phpcs-report.txt" />
+    <arg name="report-file" value="../wp-erp-phpcs-report.log" />
     <file>.</file>
 </ruleset>
