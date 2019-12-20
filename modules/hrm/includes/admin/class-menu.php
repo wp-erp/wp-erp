@@ -212,7 +212,7 @@ class Admin_Menu {
         $permission = $menu[$section]['capability'];
         if ( ! current_user_can( $permission ) ) {
             $error_message  = '<h2 style="text-align: center; margin-top:40px">';
-            $error_message .= __('Sorry! You are not allowed to access this page.', 'erp');
+            $error_message .= esc_html__('Sorry! You are not allowed to access this page.', 'erp');
             $error_message .= '</h2>';
 
             wp_die( wp_kses_post( $error_message ) );
