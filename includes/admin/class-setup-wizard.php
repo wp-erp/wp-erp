@@ -47,7 +47,7 @@ class Setup_Wizard {
      */
     public function setup_wizard() {
         if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'erp-setup' ) ) {
-            return;
+            //return;
         }
 
         if ( empty( $_GET['page'] ) || 'erp-setup' !== $_GET['page'] ) {
