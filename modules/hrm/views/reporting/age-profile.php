@@ -1,5 +1,5 @@
 <div class="wrap">
-    <h2><?php _e( 'Age Profile', 'erp' ); ?></h2>
+    <h2><?php esc_html_e( 'Age Profile', 'erp' ); ?></h2>
 
     <?php
         $employees    = new \WeDevs\ERP\HRM\Models\Employee();
@@ -32,17 +32,17 @@
     <div class="erp-single-container">
         <div class="erp-area-left" id="poststuff">
         <?php
-            echo erp_admin_dash_metabox( __( '<i class="fa fa-bar-chart"></i> Employee Age Breakdown Chart', 'erp' ), function() {
+            echo wp_kses_post( erp_admin_dash_metabox( __( '<i class="fa fa-bar-chart"></i> Employee Age Breakdown Chart', 'erp' ), function() {
         ?>
             <div id="emp-age-breakdown-chart" class="erp-report-chart"></div>
         <?php
-            } );
+            } ) );
 
-            echo erp_admin_dash_metabox( __( '<i class="fa fa-bar-chart-o"></i> Employee Age Breakdown by Department', 'erp' ), function() {
+            echo wp_kses_post( erp_admin_dash_metabox( __( '<i class="fa fa-bar-chart-o"></i> Employee Age Breakdown by Department', 'erp' ), function() {
         ?>
             <div id="emp-age-breakdown-by-department" class="erp-report-chart"></div>
         <?php
-            } );
+            } ) );
         ?>
         </div>
     </div>
@@ -50,14 +50,14 @@
         <table class="widefat striped erp-report-chart">
             <thead>
                 <tr>
-                    <th><?php _e( 'Department', 'erp' ); ?></th>
-                    <th><?php _e( 'Under 18 year', 'erp' ); ?></th>
-                    <th><?php _e( '18 to 25 year', 'erp' ); ?></th>
-                    <th><?php _e( '26 to 35 year', 'erp' ); ?></th>
-                    <th><?php _e( '36 to 45 year', 'erp' ); ?></th>
-                    <th><?php _e( '46 to 55 year', 'erp' ); ?></th>
-                    <th><?php _e( '56 to 65 year', 'erp' ); ?></th>
-                    <th><?php _e( '65+ year', 'erp' ); ?></th>
+                    <th><?php esc_html_e( 'Department', 'erp' ); ?></th>
+                    <th><?php esc_html_e( 'Under 18 year', 'erp' ); ?></th>
+                    <th><?php esc_html_e( '18 to 25 year', 'erp' ); ?></th>
+                    <th><?php esc_html_e( '26 to 35 year', 'erp' ); ?></th>
+                    <th><?php esc_html_e( '36 to 45 year', 'erp' ); ?></th>
+                    <th><?php esc_html_e( '46 to 55 year', 'erp' ); ?></th>
+                    <th><?php esc_html_e( '56 to 65 year', 'erp' ); ?></th>
+                    <th><?php esc_html_e( '65+ year', 'erp' ); ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -92,7 +92,7 @@
                 [6, <?php echo esc_attr( $emp_all_data['_65_plus'] ); ?>]
             ] ;
 
-            var dataset = [{ label: "<?php _e( 'Employee by age', 'erp' ); ?>", data: ageBreakdown }];
+            var dataset = [{ label: "<?php esc_html_e( 'Employee by age', 'erp' ); ?>", data: ageBreakdown }];
 
             $(document).ready(function () {
                 $.plot($("#emp-age-breakdown-chart"), dataset, {
@@ -173,7 +173,7 @@
                             showTooltip(item.pageX,
                             item.pageY,
                             color,
-                            "<?php _e(' Age :', 'erp' ); ?><strong>" + item.series.xaxis.ticks[x].label + "  yr</strong><br><?php _e( 'Employee :', 'erp' ); ?> <strong>" + y + "</strong>");
+                            "<?php esc_html_e(' Age :', 'erp' ); ?><strong>" + item.series.xaxis.ticks[x].label + "  yr</strong><br><?php esc_html_e( 'Employee :', 'erp' ); ?> <strong>" + y + "</strong>");
                         }
                     } else {
                         $("#tooltip").remove();
@@ -283,7 +283,7 @@
                             showTooltip(item.pageX,
                             item.pageY,
                             color,
-                            "<strong>" + item.series.yaxis.ticks[item.dataIndex].label + "</strong><br><?php _e( 'Age : ', 'erp' ); ?><strong>" + item.series.label + " yr </strong><br><?php _e( 'Employee :', 'erp' ); ?> <strong>" + y + "</strong>");
+                            "<strong>" + item.series.yaxis.ticks[item.dataIndex].label + "</strong><br><?php esc_html_e( 'Age : ', 'erp' ); ?><strong>" + item.series.label + " yr </strong><br><?php esc_html_e( 'Employee :', 'erp' ); ?> <strong>" + y + "</strong>");
                         }
                     } else {
                         $("#tooltip").remove();

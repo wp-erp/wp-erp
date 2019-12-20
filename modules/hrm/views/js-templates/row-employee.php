@@ -8,8 +8,8 @@
         <strong><a href="{{ data.url }}">{{ data.name.full_name }}</a></strong>
 
         <div class="row-actions">
-            <span class="edit"><a href="#" data-id="{{ data.id }}" title="<?php echo esc_attr( 'Edit this item', 'erp' ); ?>"><?php _e( 'Edit', 'erp' ); ?></a> | </span>
-            <span class="delete"><a class="submitdelete" data-id="{{ data.id }}" title="<?php echo esc_attr( 'Delete this item', 'erp' ); ?>" href="#"><?php _e( 'Delete', 'erp' ); ?></a></span>
+            <span class="edit"><a href="#" data-id="{{ data.id }}" title="<?php echo esc_attr( 'Edit this item', 'erp' ); ?>"><?php esc_html_e( 'Edit', 'erp' ); ?></a> | </span>
+            <span class="delete"><a class="submitdelete" data-id="{{ data.id }}" title="<?php echo esc_attr( 'Delete this item', 'erp' ); ?>" href="#"><?php esc_html_e( 'Delete', 'erp' ); ?></a></span>
         </div>
     </td>
     <td class="col-">{{ data.work.designation_title }}</td>

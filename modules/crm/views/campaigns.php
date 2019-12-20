@@ -1,7 +1,7 @@
 <div class="wrap erp-crm-campaign" id="wp-erp">
 
-    <h2><?php _e( 'Campaigns', 'erp' ); ?>
-        <a href="#" id="erp-customer-new" class="erp-contact-new add-new-h2" data-type="contact" title="<?php _e( 'Add New Contact', 'erp' ); ?>"><?php _e( 'Add New Contact', 'erp' ); ?></a>
+    <h2><?php esc_attr_e( 'Campaigns', 'erp' ); ?>
+        <a href="#" id="erp-customer-new" class="erp-contact-new add-new-h2" data-type="contact" title="<?php esc_attr_e( 'Add New Contact', 'erp' ); ?>"><?php esc_attr_e( 'Add New Contact', 'erp' ); ?></a>
     </h2>
 
     <div class="list-table-wrap">

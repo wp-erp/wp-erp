@@ -23,16 +23,16 @@
     </div>
 
     <div class="row">
-        <label for="template-body"><?php _e( 'Body', 'erp' ); ?> <span class="required">*</span></label>
+        <label for="template-body"><?php esc_attr_e( 'Body', 'erp' ); ?> <span class="required">*</span></label>
         <div class="template-body-wrapper">
             <select name="erp-crm-template-shortcodes" id="erp-crm-template-shortcodes">
                 <option value="">--Select--</option>
                 <?php $shortcodes = erp_crm_get_save_replies_shortcodes(); ?>
                 <?php foreach ( $shortcodes as $key => $value ) : ?>
-                    <option value="<?php echo $key ?>"><?php echo $value['title']; ?></option>
+                    <option value="<?php echo esc_attr( $key ) ?>"><?php echo esc_attr( $value['title'] ); ?></option>
                 <?php endforeach; ?>
             </select>
-            <trix-editor id="template-body" input="template-content" required placeholder="<?php _e( 'Type your content .....', 'erp' ); ?>"></trix-editor>
+            <trix-editor id="template-body" input="template-content" required placeholder="<?php esc_attr_e( 'Type your content .....', 'erp' ); ?>"></trix-editor>
             <input id="template-content" type="hidden" name="template" required value="{{ data.template }}">
         </div>
     </div>

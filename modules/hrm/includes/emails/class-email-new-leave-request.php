@@ -169,10 +169,10 @@ class New_Leave_Request extends Email {
     function replace_keys() {
         ?>
         <tr valign="top" class="single_select_page">
-            <th scope="row" class="titledesc"><?php _e( 'Template Tags', 'erp' ); ?></th>
+            <th scope="row" class="titledesc"><?php esc_html_e( 'Template Tags', 'erp' ); ?></th>
             <td class="forminp">
-                <em><?php _e( 'You may use these template tags inside subject, heading, body and those will be replaced by original values', 'erp' ); ?></em>:
-                <?php echo '<code>' . implode( '</code>, <code>', $this->find ) . '</code>'; ?>
+                <em><?php esc_html_e( 'You may use these template tags inside subject, heading, body and those will be replaced by original values', 'erp' ); ?></em>:
+                <?php echo '<code>' . wp_kses_post( implode( '</code>, <code>', $this->find ) ) . '</code>'; ?>
             </td>
         </tr>
         <?php
