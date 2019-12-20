@@ -314,13 +314,13 @@ class Setup_Wizard {
                     </td>
                 </tr>
 
-                <?php if ( null !== get_option( 'erp_allow_tracking') ) : ?>
+                <?php if ( \WeDevs\ERP\Tracker::get_instance()->not_allowed() ) : ?>
 
                 <tr>
                     <th scope="row"><label for="share_essentials"><?php esc_html_e( 'Share Essentials', 'erp' ); ?></label></th>
 
                     <td class="updated">
-                        <input type="checkbox" name="share_essentials" id="share_essentials" class="switch-input" checked>
+                        <input type="checkbox" name="share_essentials" id="share_essentials" class="switch-input">
                         <label for="share_essentials" class="switch-label">
                             <span class="toggle--on">On</span>
                             <span class="toggle--off">Off</span>
@@ -328,7 +328,7 @@ class Setup_Wizard {
                         <span class="description">
                             Want to help make WP ERP even more awesome? Allow weDevs to collect non-sensitive diagnostic data and usage information. <a class="insights-data-we-collect" href="#">what we collect</a>
                         </span>
-                        <p class="description" style="display:none;">Server environment details (php, mysql, server, WordPress versions), Number of users in your site, Site language, Number of active and inactive plugins, Site name and url, Your name and email address. No sensitive data is tracked.</p>
+                        <p class="description" style="display:none;">Server environment details (php, mysql, server, WordPress versions), Number of users in your site, Site language, Number of active and inactive plugins, Site name and url, Your name and email address. No sensitive data is tracked. We are using Appsero to collect your data. <a href="https://appsero.com/privacy-policy/">Learn more</a> about how Appsero collects and handle your data.</p>
                     </td>
 
                     <script type="text/javascript">
@@ -360,14 +360,11 @@ class Setup_Wizard {
         $allowed          = '1';
 
         if ( $share_essentials === $allowed ) {
-            update_option( 'erp_allow_tracking', 'yes' );
-            update_option( 'erp_tracking_notice', 'hide' );
-
-            wp_clear_scheduled_hook( 'erp_tracker_send_event' );
-            wp_schedule_event( time(), 'weekly', 'erp_tracker_send_event' );
-
-            $tracker = new \WeDevs\ERP\Tracker();
-            $tracker->send_tracking_data();
+            // Appsero Tracker allow
+            \WeDevs\ERP\Tracker::get_instance()->optin();
+        } else {
+            // Appsero Tracker disallow
+            \WeDevs\ERP\Tracker::get_instance()->optout();
         }
 
         $company->update( array(
