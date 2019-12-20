@@ -409,7 +409,7 @@ class Employees_Controller extends REST_Controller {
      * @return array
      */
     public function upload_photo( \WP_REST_Request $request ) {
-        $file = isset( $_FILES['image'] ) ? $_FILES['image'] : array();
+        $file = isset( $_FILES['image'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_FILES['image'] ) ) : array();
 
         if ( ! $file ) {
             return;

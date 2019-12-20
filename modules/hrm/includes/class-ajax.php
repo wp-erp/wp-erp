@@ -213,8 +213,9 @@ class Ajax_Handler {
         $holiday_model = new \WeDevs\ERP\HRM\Models\Leave_Holiday();
 
         // create the ical parser object
-        $ical   = new \ICal( $_FILES['ics']['tmp_name'] );
-        $events = $ical->events();
+        $temp_name = isset( $_FILES['ics']['tmp_name'] ) ? sanitize_text_field( wp_unslash( $_FILES['ics']['tmp_name'] ) ) : '';
+        $ical      = new \ICal( $temp_name );
+        $events    = $ical->events();
 
         foreach ( $events as $event ) {
             $start = strtotime( $event['DTSTART'] );
