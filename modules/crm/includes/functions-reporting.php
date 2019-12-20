@@ -8,16 +8,16 @@ function erp_crm_get_reports() {
 
     $reports = [
         'activity-report' => [
-            'title'       => __( 'Activity Report', 'erp' ),
-            'description' => __( 'Activity report for crm', 'erp' )
+            'title'       => esc_html__( 'Activity Report', 'erp' ),
+            'description' => esc_html__( 'Activity report for crm', 'erp' )
         ],
         'customer-report' => [
-            'title'       => __( 'Customer Report', 'erp' ),
-            'description' => __( 'Customer report for crm', 'erp' )
+            'title'       => esc_html__( 'Customer Report', 'erp' ),
+            'description' => esc_html__( 'Customer report for crm', 'erp' )
         ],
         'growth-report'   => [
-            'title'       => __( 'Growth Report', 'erp' ),
-            'description' => __( 'Growth report for crm', 'erp' )
+            'title'       => esc_html__( 'Growth Report', 'erp' ),
+            'description' => esc_html__( 'Growth report for crm', 'erp' )
         ],
     ];
 
@@ -32,6 +32,10 @@ function erp_crm_get_reports() {
  *
  */
 function erp_crm_activity_report_filter_form( $start = true, $end = true ) {
+    if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'erp_crm_nonce_report' ) ) {
+        return;
+    }
+
     $start = $start ? $start : false;
     $end   = $end ? $end : false;
 
@@ -42,7 +46,7 @@ function erp_crm_activity_report_filter_form( $start = true, $end = true ) {
             'name'        => 'start',
             'type'        => 'text',
             'class'       => 'erp-date-picker-from',
-            'placeholder' => __( 'Form', 'erp' ),
+            'placeholder' => esc_html__( 'Form', 'erp' ),
             'value'       => isset( $_POST['start'] ) ? sanitize_text_field( wp_unslash( $_POST['start'] ) ) : ''
         ) );
     }
@@ -52,14 +56,14 @@ function erp_crm_activity_report_filter_form( $start = true, $end = true ) {
             'name'        => 'end',
             'type'        => 'text',
             'class'       => 'erp-date-picker-to',
-            'placeholder' => __( 'To', 'erp' ),
+            'placeholder' => esc_html__( 'To', 'erp' ),
             'value'       => isset( $_POST['end'] ) ? sanitize_text_field( wp_unslash( $_POST['end'] ) ) : ''
         ) );
     }
 
     wp_nonce_field( 'erp_crm_nonce_report' );
 
-    submit_button( __( 'Filter', 'erp' ), 'secondary', 'erp_crm_report_filter', false );
+    submit_button( esc_html__( 'Filter', 'erp' ), 'secondary', 'erp_crm_report_filter', false );
 
     echo '</form>';
 }
@@ -72,6 +76,10 @@ function erp_crm_activity_report_filter_form( $start = true, $end = true ) {
  *
  */
 function erp_crm_customer_report_filter_form( $start = true, $end = true, $type = false ) {
+    if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'erp_crm_nonce_report' ) ) {
+        return;
+    }
+
     $start = $start ? $start : false;
     $end   = $end ? $end : false;
     $type  = $type ? $type : 'all';
@@ -82,7 +90,7 @@ function erp_crm_customer_report_filter_form( $start = true, $end = true, $type 
             'name'        => 'start',
             'type'        => 'text',
             'class'       => 'erp-date-picker-from',
-            'placeholder' => __( 'Form', 'erp' ),
+            'placeholder' => esc_html__( 'Form', 'erp' ),
             'value'       => isset( $_POST['start'] ) ? sanitize_text_field( wp_unslash( $_POST['start'] ) ): ''
         ) );
     }
@@ -92,23 +100,23 @@ function erp_crm_customer_report_filter_form( $start = true, $end = true, $type 
             'name'        => 'end',
             'type'        => 'text',
             'class'       => 'erp-date-picker-to',
-            'placeholder' => __( 'To', 'erp' ),
+            'placeholder' => esc_html__( 'To', 'erp' ),
             'value'       => isset( $_POST['end'] ) ? sanitize_text_field( wp_unslash( $_POST['end'] ) ): ''
         ) );
     }
 
     erp_html_form_input( array(
             'name'        => 'filter_type',
-            'placeholder' => __( 'Select a type', 'erp' ),
+            'placeholder' => esc_html__( 'Select a type', 'erp' ),
             'type'        => 'select',
             'class'       => 'filter-types',
             'id'          => 'erp-crm-select-types',
             'options'     => [
-                'life_stage'    => __( 'All Types', 'erp' ),
-                'contact_owner' => __( 'Owner Wise', 'erp' ),
-                'country'       => __( 'Country Wise', 'erp' ),
-                'source'        => __( 'Source Wise', 'erp' ),
-                'group'         => __( 'Group Wise', 'erp' ),
+                'life_stage'    => esc_html__( 'All Types', 'erp' ),
+                'contact_owner' => esc_html__( 'Owner Wise', 'erp' ),
+                'country'       => esc_html__( 'Country Wise', 'erp' ),
+                'source'        => esc_html__( 'Source Wise', 'erp' ),
+                'group'         => esc_html__( 'Group Wise', 'erp' ),
             ],
             'value'       => isset( $_POST['filter_type'] ) ? sanitize_text_field( wp_unslash( $_POST['filter_type'] ) ): 'life_stage'
         )
@@ -116,7 +124,7 @@ function erp_crm_customer_report_filter_form( $start = true, $end = true, $type 
 
     wp_nonce_field( 'erp_crm_nonce_report' );
 
-    submit_button( __( 'Filter', 'erp' ), 'secondary', 'erp_crm_report_filter', false );
+    submit_button( esc_html__( 'Filter', 'erp' ), 'secondary', 'erp_crm_report_filter', false );
 
     echo '</form>';
 }
@@ -129,6 +137,10 @@ function erp_crm_customer_report_filter_form( $start = true, $end = true, $type 
  *
  */
 function erp_crm_growth_report_filter_form( $start = true, $end = true, $type = false ) {
+    if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'erp_crm_nonce_report' ) ) {
+        return;
+    }
+
     $start = $start ? $start : false;
     $end   = $end ? $end : false;
     $type  = $type ? $type : 'all';
@@ -137,13 +149,13 @@ function erp_crm_growth_report_filter_form( $start = true, $end = true, $type = 
 
     erp_html_form_input( array(
             'name'        => 'filter_type',
-            'placeholder' => __( 'Select a type', 'erp' ),
+            'placeholder' => esc_html__( 'Select a type', 'erp' ),
             'type'        => 'select',
             'class'       => 'filter-types',
             'id'          => 'crm-filter-duration',
             'options'     => [
-                'this_year' => __( 'This Year', 'erp' ),
-                'custom'    => __( 'Custom', 'erp' )
+                'this_year' => esc_html__( 'This Year', 'erp' ),
+                'custom'    => esc_html__( 'Custom', 'erp' )
             ],
             'value'       => isset( $_POST['filter_type'] ) ? sanitize_text_field( wp_unslash( $_POST['filter_type'] ) ) : 'this_year'
         )
@@ -154,7 +166,7 @@ function erp_crm_growth_report_filter_form( $start = true, $end = true, $type = 
             'name'        => 'start',
             'type'        => 'text',
             'class'       => 'erp-date-picker-from custom-filter',
-            'placeholder' => __( 'From', 'erp' ),
+            'placeholder' => esc_html__( 'From', 'erp' ),
             'value'       => isset( $_POST['start'] ) ? sanitize_text_field( wp_unslash( $_POST['start'] ) ) : ''
         ) );
     }
@@ -164,14 +176,14 @@ function erp_crm_growth_report_filter_form( $start = true, $end = true, $type = 
             'name'        => 'end',
             'type'        => 'text',
             'class'       => 'erp-date-picker-to custom-filter',
-            'placeholder' => __( 'To', 'erp' ),
+            'placeholder' => esc_html__( 'To', 'erp' ),
             'value'       => isset( $_POST['end'] ) ? sanitize_text_field( wp_unslash( $_POST['end'] ) ): ''
         ) );
     }
 
     wp_nonce_field( 'erp_crm_nonce_report' );
 
-    submit_button( __( 'Filter', 'erp' ), 'secondary', 'erp_crm_report_filter', false );
+    submit_button( esc_html__( 'Filter', 'erp' ), 'secondary', 'erp_crm_report_filter', false );
 
     echo '</form>';
 }
