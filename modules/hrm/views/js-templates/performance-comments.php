@@ -47,7 +47,7 @@ $department_lead_id = erp_hr_get_department_lead_by_user( $employee_id );
 if ( get_current_user_id() === $department_lead_id ) { ?>
     <script>
         $( '#performance_reviewer' )
-            .val( <?php echo get_current_user_id() ?> )
+            .val( <?php echo esc_html( get_current_user_id() ) ?> )
             .trigger('change');
     </script>
 <?php } ?>

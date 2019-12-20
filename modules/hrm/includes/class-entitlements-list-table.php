@@ -49,7 +49,7 @@ class Entitlement_List_Table extends \WP_List_Table {
         }
 
         if ( ! empty( $_GET['financial_year'] ) ) {
-            $selected = $_GET['financial_year'];
+            $selected = sanitize_text_field( wp_unslash( $_GET['financial_year'] ) );
         } else {
             $financial_year = erp_get_financial_year_dates();
 
@@ -65,7 +65,7 @@ class Entitlement_List_Table extends \WP_List_Table {
 
         ?>
             <div class="alignleft actions">
-                <select name="financial_year"><?php echo erp_html_generate_dropdown( $years, $selected ); ?></select>
+                <select name="financial_year"><?php echo wp_kses_post( erp_html_generate_dropdown( $years, $selected ) ); ?></select>
                 <?php submit_button( __( 'Filter' ), 'button', 'filter_entitlement', false ); ?>
             </div>
         <?php
@@ -79,7 +79,7 @@ class Entitlement_List_Table extends \WP_List_Table {
      * @return void
      */
     function no_items() {
-        _e( 'No entitlement found.', 'erp' );
+        esc_html_e( 'No entitlement found.', 'erp' );
     }
 
     /**
@@ -242,8 +242,8 @@ class Entitlement_List_Table extends \WP_List_Table {
         $per_page              = 20;
         $current_page          = $this->get_pagenum();
         $offset                = ( $current_page -1 ) * $per_page;
-        $this->page_status     = isset( $_GET['status'] ) ? sanitize_text_field( $_GET['status'] ) : '2';
-        $search                = ( isset( $_REQUEST['s'] ) ) ? $_REQUEST['s'] : false;
+        $this->page_status     = isset( $_GET['status'] ) ? sanitize_text_field( wp_unslash(  $_GET['status'] ) ) : '2';
+        $search                = ( isset( $_REQUEST['s'] ) ) ? sanitize_text_field( wp_unslash( $_REQUEST['s'] ) ) : false;
 
         $args = [
             'offset'      => $offset,
@@ -254,7 +254,7 @@ class Entitlement_List_Table extends \WP_List_Table {
 
         if ( isset( $_REQUEST['orderby'] ) && isset( $_REQUEST['order'] ) ) {
             $args['orderby'] = 'u.display_name';
-            $args['order']   = $_REQUEST['order'] ;
+            $args['order']   = sanitize_text_field( wp_unslash( $_REQUEST['order'] ) ) ;
         }
 
         // calculate start and end dates
@@ -264,7 +264,7 @@ class Entitlement_List_Table extends \WP_List_Table {
         $to_date    = $financial_year_dates['end'];
 
         if ( ! empty( $_GET['financial_year'] ) ) {
-            preg_match_all( '/^(\d{4})-(\d{4})|(\d{4})$/', $_GET['financial_year'], $matches );
+            preg_match_all( '/^(\d{4})-(\d{4})|(\d{4})$/', sanitize_text_field( wp_unslash( $_GET['financial_year'] ) ), $matches );
 
             if ( ! empty( $matches[3][0] ) ) {
                 $from_date  = $matches[3][0] . '-01-01 00:00:00';

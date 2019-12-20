@@ -1,10 +1,10 @@
 <div class="wrap erp erp-hr-designation">
 
-    <h2><?php _e( 'Designation', 'erp' ); ?> <a href="#" id="erp-new-designation" data-single="1" class="add-new-h2"><?php _e( 'Add New', 'erp' ); ?></a></h2>
+    <h2><?php esc_html_e( 'Designation', 'erp' ); ?> <a href="#" id="erp-new-designation" data-single="1" class="add-new-h2"><?php esc_html_e( 'Add New', 'erp' ); ?></a></h2>
 
     <?php if ( isset( $_GET['desig_delete'] ) ): ?>
         <div id="message" class="error notice is-dismissible below-h2">
-            <p><?php _e( 'Some designation doesn\'t delete because those designation assign some employees.', 'erp' ) ?></p>
+            <p><?php esc_html_e( 'Some designation doesn\'t delete because those designation assign some employees.', 'erp' ) ?></p>
             <button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span></button>
         </div>
     <?php endif ?>

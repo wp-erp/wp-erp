@@ -1,5 +1,5 @@
 <div class="wrap erp hrm-dashboard">
-    <h2><?php _e( 'HR Management', 'erp' ); ?></h2>
+    <h2><?php esc_html_e( 'HR Management', 'erp' ); ?></h2>
 
     <div class="erp-single-container">
 
@@ -16,25 +16,25 @@
                 <div class="badge-container">
                     <div class="badge-wrap badge-green">
                         <div class="badge-inner">
-                            <h3><?php echo number_format_i18n( $employees, 0 ); ?></h3>
-                            <p><?php _e( 'Employees', 'erp' ); ?></p>
+                            <h3><?php echo esc_html( number_format_i18n( $employees, 0 ) ); ?></h3>
+                            <p><?php esc_html_e( 'Employees', 'erp' ); ?></p>
                         </div>
 
                         <div class="badge-footer wp-ui-highlight">
-                            <a href="<?php echo erp_hr_employee_list_url(); ?>"><?php _e( 'View Employees', 'erp' ); ?></a>
+                            <a href="<?php echo esc_url( erp_hr_employee_list_url() ); ?>"><?php esc_html_e( 'View Employees', 'erp' ); ?></a>
                         </div>
                     </div><!-- .badge-wrap -->
 
                     <div class="badge-wrap badge-red">
                         <div class="badge-inner">
-                            <h3><?php echo number_format_i18n( $departments, 0 ); ?></h3>
-                            <p><?php _e( 'Departments', 'erp' ); ?></p>
+                            <h3><?php echo esc_html( number_format_i18n( $departments, 0 ) ); ?></h3>
+                            <p><?php esc_html_e( 'Departments', 'erp' ); ?></p>
                         </div>
                         <?php
                         if ( is_admin() ) {
                             ?>
                             <div class="badge-footer wp-ui-highlight">
-                                <a href="<?php echo admin_url( 'admin.php?page=erp-hr&section=department' ); ?>"><?php _e( 'View Departments', 'erp' ); ?></a>
+                                <a href="<?php echo esc_url( admin_url( 'admin.php?page=erp-hr&section=department' ) ); ?>"><?php esc_html_e( 'View Departments', 'erp' ); ?></a>
                             </div>
                             <?php
                         }
@@ -44,14 +44,14 @@
 
                     <div class="badge-wrap badge-aqua">
                         <div class="badge-inner">
-                            <h3><?php echo number_format_i18n( $designations, 0 ); ?></h3>
-                            <p><?php _e( 'Designation', 'erp' ); ?></p>
+                            <h3><?php echo esc_html( number_format_i18n( $designations, 0 ) ); ?></h3>
+                            <p><?php esc_html_e( 'Designation', 'erp' ); ?></p>
                         </div>
                         <?php
                         if ( is_admin() ) {
                             ?>
                             <div class="badge-footer wp-ui-highlight">
-                                <a href="<?php echo admin_url( 'admin.php?page=erp-hr&section=designation' ); ?>"><?php _e( 'View Designation', 'erp' ); ?></a>
+                                <a href="<?php echo esc_url( admin_url( 'admin.php?page=erp-hr&section=designation' ) ); ?>"><?php esc_html_e( 'View Designation', 'erp' ); ?></a>
                             </div>
                             <?php
                         }

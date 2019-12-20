@@ -27,7 +27,7 @@ class Designation_List_Table extends \WP_List_Table {
      * @return void
      */
     function no_items() {
-        _e( 'No designation found.', 'erp' );
+        esc_html_e( 'No designation found.', 'erp' );
     }
 
     /**
@@ -156,7 +156,7 @@ class Designation_List_Table extends \WP_List_Table {
         $per_page              = 20;
         $current_page          = $this->get_pagenum();
         $offset                = ( $current_page -1 ) * $per_page;
-        $this->page_status     = isset( $_GET['status'] ) ? sanitize_text_field( $_GET['status'] ) : '2';
+        $this->page_status     = isset( $_GET['status'] ) ? sanitize_text_field( wp_unslash( $_GET['status'] ) ) : '2';
 
         // only ncessary because we have sample data
         $args = array(
@@ -166,7 +166,7 @@ class Designation_List_Table extends \WP_List_Table {
 
         if ( isset( $_REQUEST['orderby'] ) && isset( $_REQUEST['order'] ) ) {
             $args['orderby'] = 'title';
-            $args['order'] = $_REQUEST['order'] ;
+            $args['order'] = sanitize_text_field( wp_unslash( $_REQUEST['order'] ) ) ;
         }
 
         $this->items  = erp_hr_get_designations( $args );
