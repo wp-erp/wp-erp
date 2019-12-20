@@ -44,7 +44,7 @@
         include WPERP_HRM_VIEWS . '/employee/empty-employee.php';
         $output = ob_get_contents();
         ob_get_clean();
-        echo wp_kses_post( $output );
+        echo $output;
 
         return;
     }

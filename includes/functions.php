@@ -2816,7 +2816,7 @@ function erp_help_tip( $tip, $allow_html = false ) {
     if ( $allow_html ) {
         $tip = erp_sanitize_tooltip( $tip );
     } else {
-        $tip = esc_attr( $tip );
+        $tip = wp_kses_post( $tip );
     }
 
     return '<span class="erp-help-tip" data-tip="' . $tip . '"></span>';
