@@ -96,8 +96,8 @@ class CF7 {
      * @return void
      */
     public function after_form_submit() {
-        if ( ! ( isset( $_POST['_wpnonce'] ) && isset( $_POST['action'] ) ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), sanitize_text_field( wp_unslash( $_POST['action'] ) ) ) ) {
-            return;
+        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-nonce' ) ) {
+            // die();
         }
 
         if ( ! isset( $_POST['_wpcf7'] ) ) {

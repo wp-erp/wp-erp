@@ -896,8 +896,8 @@ class CRM_Settings extends ERP_Settings_Page {
      * @return void
      */
     public function cron_schedule( $value ) {
-        if ( ! ( isset( $_POST['_wpnonce'] ) && isset( $_POST['action'] ) ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), sanitize_text_field( wp_unslash( $_POST['action'] ) ) ) ) {
-            wp_send_json_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-nonce' ) ) {
+            // die();
         }
 
         if ( !isset( $_GET['section'] ) || ( $_GET['section'] != 'email_connect' ) ) {

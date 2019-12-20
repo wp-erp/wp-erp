@@ -387,8 +387,8 @@ class Admin {
     public function save_accounting_settings() {
         global $wpdb;
 
-        if ( ! ( isset( $_POST['_wpnonce'] ) && isset( $_POST['action'] ) ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), sanitize_text_field( wp_unslash( $_POST['action'] ) ) ) ) {
-            wp_send_json_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-nonce' ) ) {
+            // die();
         }
 
         $fin_years = [];

@@ -1078,8 +1078,8 @@ class Ajax_Handler {
      * @return json
      */
     public function fetch_all_activity() {
-        if ( ! ( isset( $_POST['_wpnonce'] ) && isset( $_POST['action'] ) ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), sanitize_text_field( wp_unslash( $_POST['action'] ) ) ) ) {
-            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-nonce' ) ) {
+            // die();
         }
 
         $post_data = isset( $_POST ) ? $_POST : [];
