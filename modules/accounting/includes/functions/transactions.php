@@ -787,7 +787,7 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
     $user = new \WeDevs\ERP\People( intval( $user_id ) );
 
     if ( ! defined( 'WPERP_PDF_VERSION' ) ) {
-        wp_die( __( 'ERP PDF extension is not installed. Please install the extension for PDF support', 'erp' ) );
+        wp_die( esc_html__( 'ERP PDF extension is not installed. Please install the extension for PDF support', 'erp' ) );
     }
 
     //Create a new instance
@@ -1079,7 +1079,7 @@ function erp_acct_send_email_with_pdf_attached( $request, $transaction, $file_na
     if ( $pdf_file ) {
         $result = $trn_email->trigger( $receiver, $subject, $body, $pdf_file );
     } else {
-        wp_die( __( 'PDF not generated!', 'erp' ) );
+        wp_die( esc_html__( 'PDF not generated!', 'erp' ) );
     }
 
     return $result;
@@ -1131,7 +1131,7 @@ function erp_acct_send_email_on_transaction( $voucher_no, $transaction ) {
     if ( $pdf_file ) {
         $result = $trn_email->trigger( $request['receiver'], $request['subject'], $request['body'], $request['attachment'] );
     } else {
-        wp_die( __( 'PDF not generated!', 'erp' ) );
+        wp_die( esc_html__( 'PDF not generated!', 'erp' ) );
     }
 
     return $result;

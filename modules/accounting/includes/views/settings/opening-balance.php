@@ -80,7 +80,5 @@
         </div>
     </div>
     <br>
-    <a href="#" class="button-secondary erp-ac-ob-add-more"><?php _e( 'Add More', 'erp' ); ?></a>
+    <a href="#" class="button-secondary erp-ac-ob-add-more"><?php esc_attr_e( 'Add More', 'erp' ); ?></a>
 </div>
-
-
