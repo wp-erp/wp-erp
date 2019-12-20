@@ -1,8 +1,9 @@
 <div class="wrap erp-crm-subscriber-contact" id="wp-erp">
 
-    <h2><?php _e( 'Contacts', 'erp' ); ?>
-        <a href="#" id="erp-new-subscriber-contact" class="erp-new-subscriber-contact add-new-h2" title="<?php _e( 'Assign a Contact', 'erp' ); ?>"><?php _e( 'Assign a Contact', 'erp' ); ?></a>
-        <a href="<?php echo add_query_arg( [ 'page' => 'erp-crm', 'section' => 'contact-groups' ], admin_url( 'admin.php' ) ) ?>" class="add-new-h2" title="<?php _e( 'Back to Contact Group', 'erp' ); ?>"><?php _e( 'Back to Contact Group', 'erp' ); ?></a>
+    <h2><?php esc_attr_e( 'Contacts', 'erp' ); ?>
+        <a href="#" id="erp-new-subscriber-contact" class="erp-new-subscriber-contact add-new-h2" title="<?php esc_attr_e( 'Assign a Contact', 'erp' ); ?>"><?php esc_attr_e( 'Assign a Contact', 'erp' ); ?></a>
+        <?php $contact_group_url = add_query_arg( [ 'page' => 'erp-crm', 'section' => 'contact-groups' ], admin_url( 'admin.php' ) ); ?>
+        <a href="<?php echo  esc_url_raw( $contact_group_url ); ?>" class="add-new-h2" title="<?php esc_attr_e( 'Back to Contact Group', 'erp' ); ?>"><?php esc_attr_e( 'Back to Contact Group', 'erp' ); ?></a>
     </h2>
 
     <div class="list-table-wrap erp-crm-subscriber-contact-list-table-wrap">

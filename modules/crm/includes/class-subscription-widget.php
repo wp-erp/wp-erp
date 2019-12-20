@@ -61,58 +61,58 @@ class Subscription_Widget extends \WP_Widget {
         ?>
         <p>
             <label>
-                <?php _e( 'Title', 'erp' ); ?>:
-                <input class="widefat" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>">
+                <?php esc_attr_e( 'Title', 'erp' ); ?>:
+                <input class="widefat" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>">
             </label>
         </p>
 
         <p>
             <label>
-                <?php _e( 'Description', 'erp' ); ?>:
-                <textarea class="widefat" name="<?php echo $this->get_field_name( 'description' ); ?>" rows="3"><?php echo esc_attr( $description ); ?></textarea>
+                <?php esc_attr_e( 'Description', 'erp' ); ?>:
+                <textarea class="widefat" name="<?php echo esc_attr( $this->get_field_name( 'description' ) ); ?>" rows="3"><?php echo esc_attr( $description ); ?></textarea>
             </label>
         </p>
 
-        <label><?php _e( 'Contact Groups' ); ?>:</label>
+        <label><?php esc_attr_e( 'Contact Groups' ); ?>:</label>
         <ul style="margin-top: 5px;">
             <?php foreach ( $erp_contact_groups as $group ): ?>
                 <li>
                     <label>
-                        <input type="checkbox" class="checkbox" name="<?php echo $this->get_field_name( 'contact_groups[]' ); ?>" value="<?php echo $group->id; ?>" <?php echo in_array( $group->id, $selected_groups ) ? 'checked' : ''; ?> >
-                        <?php echo $group->name; ?>
+                        <input type="checkbox" class="checkbox" name="<?php echo esc_attr( $this->get_field_name( 'contact_groups[]' ) ); ?>" value="<?php echo esc_attr( $group->id ); ?>" <?php echo in_array( $group->id, $selected_groups ) ? 'checked' : ''; ?> >
+                        <?php echo esc_attr( $group->name ); ?>
                     </label>
                 </li>
             <?php endforeach; ?>
         </ul>
 
         <p>
-            <?php _e( 'Show name fields', 'erp' ); ?>:<br>
-            <label> <input type="radio" class="radio" name="<?php echo $this->get_field_name( 'show_name_fields' ); ?>" value="no" <?php echo ( 'no' === $show_name_fields ) ? 'checked' : ''; ?>>
-                <?php _e( 'No', 'erp' ); ?>
+            <?php esc_attr_e( 'Show name fields', 'erp' ); ?>:<br>
+            <label> <input type="radio" class="radio" name="<?php echo esc_attr( $this->get_field_name( 'show_name_fields' ) ); ?>" value="no" <?php echo ( 'no' === $show_name_fields ) ? 'checked' : ''; ?>>
+                <?php esc_attr_e( 'No', 'erp' ); ?>
             </label><br>
 
-            <label> <input type="radio" class="radio" name="<?php echo $this->get_field_name( 'show_name_fields' ); ?>" value="first_last_names" <?php echo ( 'first_last_names' === $show_name_fields ) ? 'checked' : ''; ?>>
-                <?php _e( 'First and Last names', 'erp' ); ?>
+            <label> <input type="radio" class="radio" name="<?php echo esc_attr( $this->get_field_name( 'show_name_fields' ) ); ?>" value="first_last_names" <?php echo ( 'first_last_names' === $show_name_fields ) ? 'checked' : ''; ?>>
+                <?php esc_attr_e( 'First and Last names', 'erp' ); ?>
             </label><br>
 
-            <label> <input type="radio" class="radio" name="<?php echo $this->get_field_name( 'show_name_fields' ); ?>" value="full_name" <?php echo ( 'full_name' === $show_name_fields ) ? 'checked' : ''; ?>>
-                <?php _e( 'Full Name', 'erp' ); ?>
+            <label> <input type="radio" class="radio" name="<?php echo esc_attr( $this->get_field_name( 'show_name_fields' ) ); ?>" value="full_name" <?php echo ( 'full_name' === $show_name_fields ) ? 'checked' : ''; ?>>
+                <?php esc_attr_e( 'Full Name', 'erp' ); ?>
             </label>
         </p>
 
         <p>
             <label>
-                <?php _e( 'Life Stage', 'erp' ); ?>:<br>
-                <select name="<?php echo $this->get_field_name( 'life_stage' ); ?>" class="widefat">
-                    <?php echo erp_crm_get_life_stages_dropdown( [], $life_stage ); ?>
+                <?php esc_attr_e( 'Life Stage', 'erp' ); ?>:<br>
+                <select name="<?php echo esc_attr( $this->get_field_name( 'life_stage' ) ); ?>" class="widefat">
+                    <?php echo wp_kses_post( erp_crm_get_life_stages_dropdown( [], $life_stage ) ); ?>
                 </select>
             </label>
         </p>
 
         <p>
             <label>
-                <?php _e( 'Button Label', 'erp' ); ?>:
-                <input class="widefat" name="<?php echo $this->get_field_name( 'button_label' ); ?>" type="text" value="<?php echo esc_attr( $button_label ); ?>">
+                <?php esc_attr_e( 'Button Label', 'erp' ); ?>:
+                <input class="widefat" name="<?php echo esc_attr( $this->get_field_name( 'button_label' ) ); ?>" type="text" value="<?php echo esc_attr( $button_label ); ?>">
             </label>
         </p>
         <?php
@@ -154,14 +154,14 @@ class Subscription_Widget extends \WP_Widget {
     public function widget( $args, $instance ) {
         $title = ! empty( $instance['title'] ) ? $instance['title'] : '';
 
-        echo $args['before_widget'];
+        echo wp_kses_post( $args['before_widget'] );
 
         if ( $title ) {
-            echo $args['before_title'] . $title . $args['after_title'];
+            echo wp_kses_post( $args['before_title'] . $title . $args['after_title'] );
         }
 
         if ( ! empty( $instance['description'] ) ) {
-            echo wpautop( $instance['description'], true );
+            echo wp_kses_post( wpautop( $instance['description'], true ) );
         }
 
         $default_life_stage = erp_get_option( 'life_stage', 'erp_settings_erp-crm_contacts', 'subscriber' );
@@ -180,9 +180,9 @@ class Subscription_Widget extends \WP_Widget {
             $attrs['full_name'] = __( 'Full Name', 'erp' );
         }
 
-        echo Subscription::instance()->shortcode( $attrs );
+        echo wp_kses_post( Subscription::instance()->shortcode( $attrs ) );
 
-        echo $args['after_widget'];
+        echo wp_kses_post( $args['after_widget'] );
     }
 
 }

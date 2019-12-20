@@ -20,9 +20,9 @@ function erp_acct_upload_attachments( $files ) {
     // Formatting request for upload
     for ( $i = 0; $i < count( $files['name'] ); $i++ ) {
         $attachments[] = [
-            'name'     => $files['name'][ $i ],
+            'name'     => wp_unslash( $files['name'][ $i ] ),
             'type'     => $files['type'][ $i ],
-            'tmp_name' => $files['tmp_name'][ $i ],
+            'tmp_name' => wp_unslash( $files['tmp_name'][ $i ] ),
             'error'    => $files['error'][ $i ],
             'size'     => $files['size'][ $i ],
         ];

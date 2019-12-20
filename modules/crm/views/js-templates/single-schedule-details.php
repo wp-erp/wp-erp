@@ -1,17 +1,17 @@
 <div id="erp-crm-single-schedule-details-wrap">
     <p class="title">
         <# if( data.schedule.created_by.ID == wpErpCrm.current_user_id ) { #>
-            <?php _e( 'You', 'erp' ); ?>
+            <?php esc_attr_e( 'You', 'erp' ); ?>
         <# } else { #>
             <strong>{{ data.schedule.created_by.display_name }}</strong>
         <# } #>
 
         <# if ( data.schedule.type == 'tasks' ) { #>
-            <?php _e( 'assigned a task', 'erp' ); ?>
+            <?php esc_attr_e( 'assigned a task', 'erp' ); ?>
         <# } else if( ( data.schedule.type == 'log_activity' ) && ( new Date() < new Date( data.schedule.start_date ) ) ) { #>
-            <?php _e( 'have scheduled', 'erp' ) ?>
+            <?php esc_attr_e( 'have scheduled', 'erp' ) ?>
         <# } else { #>
-            <?php _e( 'logged', 'erp' ) ?>
+            <?php esc_attr_e( 'logged', 'erp' ) ?>
         <# } #>
 
         <# if( data.schedule.log_type == 'sms' || data.schedule.log_type == 'email' ) {  #>
@@ -70,7 +70,7 @@
     <hr>
     <# if( data.schedule.log_type == 'email' ) { #>
         <span class='email_subject'>
-                <?php _e('Subject', 'erp' ) ?> : {{ data.schedule.email_subject }}
+                <?php esc_attr_e('Subject', 'erp' ) ?> : {{ data.schedule.email_subject }}
         </span> |
     <# } #>
 

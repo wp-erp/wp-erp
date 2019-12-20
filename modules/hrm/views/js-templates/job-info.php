@@ -1,4 +1,4 @@
-<?php $profile_user_id = isset($_GET['id']) ? $_GET['id'] : null; ?>
+<?php $profile_user_id = isset($_GET['id']) ? sanitize_text_field( wp_unslash( $_GET['id'] ) ) : null; ?>
 <div class="info-form-wrap">
     <div class="row">
         <?php erp_html_form_input( array(
