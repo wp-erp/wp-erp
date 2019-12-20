@@ -113,7 +113,7 @@
                             <td colspan="9" style="text-align: left;">
                                 <div class="attachment-container">
                                     <label class="col--attachement">{{ __('Attachment', 'erp') }}</label>
-                                    <file-upload v-model="attachments" url="/bills/attachments"/>
+                                    <file-upload v-model="attachments" url="/invoices/attachments"/>
                                 </div>
                             </td>
                         </tr>

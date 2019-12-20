@@ -1,4 +1,4 @@
-<form class="<?php echo implode( ' ', $class_names ); ?>">
+<form class="<?php echo wp_kses_post( implode( ' ', $class_names ) ); ?>">
     <?php do_action( 'erp_subscription_form_start', $args ); ?>
 
     <?php if ( ! empty( $args['full_name_lbl'] ) ): ?>
@@ -33,15 +33,15 @@
     <?php do_action( 'erp_subscription_form_after_email', $args ); ?>
 
     <?php foreach ( $contact_groups as $group_id ): ?>
-        <input type="hidden" name="groups[]" value="<?php echo $group_id; ?>">
+        <input type="hidden" name="groups[]" value="<?php echo esc_attr( $group_id ); ?>">
     <?php endforeach; ?>
 
     <?php if ( $args['life_stage'] ): ?>
-        <input type="hidden" name="life_stage" value="<?php echo $args['life_stage']; ?>">
+        <input type="hidden" name="life_stage" value="<?php echo esc_attr( $args['life_stage'] ); ?>">
     <?php endif; ?>
 
     <button type="submit">
-        <span class="submit-btn-label"><?php echo $args['button_lbl']; ?></span>
+        <span class="submit-btn-label"><?php echo esc_attr( $args['button_lbl'] ); ?></span>
         <span class="erp-spinner"></span>
     </button>
 

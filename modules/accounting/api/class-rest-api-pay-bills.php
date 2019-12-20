@@ -91,21 +91,6 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
 				],
 			]
         );
-
-        register_rest_route(
-            $this->namespace,
-            '/' . $this->rest_base . '/attachments',
-            [
-				[
-					'methods'             => WP_REST_Server::CREATABLE,
-					'callback'            => [ $this, 'upload_attachments' ],
-					'args'                => [],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_create_expenses_voucher' );
-					},
-				],
-			]
-        );
     }
 
     /**
@@ -276,24 +261,6 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         erp_acct_void_pay_bill( $id );
 
         return new WP_REST_Response( true, 204 );
-    }
-
-    /**
-     * Upload attachment for pay-bills
-     *
-     * @param WP_REST_Request $request
-     *
-     * @return WP_Error|WP_REST_Request
-     */
-    public function upload_attachments( $request ) {
-        $file = empty( $_FILES['attachments'] ) ? null : $_FILES['attachments'];
-
-        $movefiles = erp_acct_upload_attachments( $file );
-
-        $response = rest_ensure_response( $movefiles );
-        $response->set_status( 200 );
-
-        return $response;
     }
 
     /**

@@ -18,7 +18,7 @@
         <div class="timeline-email-subject">{{i18n.emailSubject}} : {{feed.email_subject}}</div>
         <div class="timeline-email-body">{{{feed.message}}}</div>
         <div class="timeline-email-attachments" v-if="( feed.extra.attachments.length > 0)">
-            <?php _e( 'Attachments : ', 'erp' ) ?>
+            <?php esc_attr_e( 'Attachments : ', 'erp' ) ?>
             <ul>
                 <li v-for="file in feed.extra.attachments"><a target="_blank" href="{{{file.url}}}">{{{file.name}}}</a></li>
             </ul>
