@@ -27,15 +27,15 @@ class Leave_Holiday_List_Table extends WP_List_Table {
     function extra_tablenav( $which ) {
         if ( $which != 'top' ) return;
 
-        $from         = isset( $_GET['from'] ) ? $_GET['from'] : date( 'Y-01-01' );
-        $to           = isset( $_GET['to'] ) ? $_GET['to'] : date( 'Y-12-31' );
+        $from         = isset( $_GET['from'] ) ? sanitize_text_field( wp_unslash( $_GET['from'] ) ) : date( 'Y-01-01' );
+        $to           = isset( $_GET['to'] ) ? sanitize_text_field( wp_unslash( $_GET['to'] ) ) : date( 'Y-12-31' );
         ?>
 
-        <label class="screen-reader-text" for="new_role"><?php _e( 'From', 'erp' ) ?></label>
-        <input type="text" placeholder="<?php _e( 'From date', 'erp' ); ?>" name="from" value="<?php echo $from; ?>" class="erp-leave-date-picker-from">
+        <label class="screen-reader-text" for="new_role"><?php esc_html_e( 'From', 'erp' ) ?></label>
+        <input type="text" placeholder="<?php esc_html_e( 'From date', 'erp' ); ?>" name="from" value="<?php echo esc_attr( $from ); ?>" class="erp-leave-date-picker-from">
 
-        <label class="screen-reader-text" for="new_role"><?php _e( 'To', 'erp' ) ?></label>
-        <input type="text" placeholder="<?php _e( 'To date', 'erp' ); ?>" name="to" value="<?php echo $to; ?>" class="erp-leave-date-picker-to">
+        <label class="screen-reader-text" for="new_role"><?php esc_html_e( 'To', 'erp' ) ?></label>
+        <input type="text" placeholder="<?php esc_html_e( 'To date', 'erp' ); ?>" name="to" value="<?php echo esc_attr( $to ); ?>" class="erp-leave-date-picker-to">
         <?php
         submit_button( __( 'Filter' ), 'button', 'filter', false );
     }
@@ -46,7 +46,7 @@ class Leave_Holiday_List_Table extends WP_List_Table {
      * @return void
      */
     function no_items() {
-        _e( 'No holiday record found!', 'erp' );
+        esc_html_e( 'No holiday record found!', 'erp' );
     }
 
     /**
@@ -201,7 +201,7 @@ class Leave_Holiday_List_Table extends WP_List_Table {
         $per_page              = 20;
         $current_page          = $this->get_pagenum();
         $offset                = ( $current_page -1 ) * $per_page;
-        $this->page_status     = isset( $_GET['status'] ) ? sanitize_text_field( $_GET['status'] ) : '2';
+        $this->page_status     = isset( $_GET['status'] ) ? sanitize_text_field( wp_unslash( $_GET['status'] ) ) : '2';
 
         // only ncessary because we have sample data
         $args = array(
@@ -212,24 +212,24 @@ class Leave_Holiday_List_Table extends WP_List_Table {
         );
 
         if ( ! empty( $_GET['s'] ) ) {
-            $args['s'] = $_GET['s'];
+            $args['s'] = sanitize_text_field( wp_unslash( $_GET['s'] ) );
         }
 
         if ( isset( $_GET['from'] ) && $_GET['from'] != '' ) {
-            $args['from'] = date( 'Y-m-d', strtotime( $_GET['from'] ) );
+            $args['from'] = date( 'Y-m-d', strtotime( sanitize_text_field( wp_unslash( $_GET['from'] ) ) ) );
         } else {
             $args['from'] = date( 'Y-01-01' );
         }
 
         if ( isset( $_GET['to'] ) && $_GET['to'] != '' ) {
-            $args['to'] = date( 'Y-m-d', strtotime( $_GET['to'] . '+1day' ) );
+            $args['to'] = date( 'Y-m-d', strtotime( sanitize_text_field( wp_unslash( $_GET['to'] ) ) . '+1day' ) );
         } else {
             $args['to'] = date( 'Y-12-31' );
         }
 
         if ( isset( $_REQUEST['orderby'] ) && isset( $_REQUEST['order'] ) ) {
-            $args['orderby'] = $_REQUEST['orderby'];
-            $args['order'] = $_REQUEST['order'] ;
+            $args['orderby'] = sanitize_text_field( wp_unslash( $_REQUEST['orderby'] ) );
+            $args['order'] = sanitize_text_field( wp_unslash( $_REQUEST['order'] ) ) ;
         }
 
         $this->items  = erp_hr_get_holidays( $args );
@@ -246,9 +246,9 @@ class Leave_Holiday_List_Table extends WP_List_Table {
 
 <div class="wrap erp-hr-holiday-wrap">
     <h2>
-        <?php _e( 'Holiday', 'erp' ); ?>
-        <a href="#" id="erp-hr-new-holiday" class="add-new-h2"><?php _e( 'Add New', 'erp' ); ?></a>
-        <a href="#import-ical" id="erp-hr-import-ical" class="add-new-h2"><?php _e( 'Import iCal', 'erp' ); ?></a>
+        <?php esc_html_e( 'Holiday', 'erp' ); ?>
+        <a href="#" id="erp-hr-new-holiday" class="add-new-h2"><?php esc_html_e( 'Add New', 'erp' ); ?></a>
+        <a href="#import-ical" id="erp-hr-import-ical" class="add-new-h2"><?php esc_html_e( 'Import iCal', 'erp' ); ?></a>
     </h2>
 
     <div class="list-table-wrap">

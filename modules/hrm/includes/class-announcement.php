@@ -206,20 +206,20 @@ class Announcement {
         ?>
             <table class="form-table erp-hr-announcement-meta-wrap-table">
                 <tr>
-                    <th><?php _e( 'Send Announcement To', 'erp' ); ?></th>
+                    <th><?php esc_html_e( 'Send Announcement To', 'erp' ); ?></th>
                     <td>
                         <select name="hr_announcement_assign_type" id="hr_announcement_assign_type" style="width:60%">
                             <?php foreach ( $this->assign_type as $key => $type ): ?>
-                                <option value="<?php echo $key; ?>" <?php selected( $announcement_type, $key ); ?>><?php echo $type; ?></option>
+                                <option value="<?php echo esc_attr( $key ); ?>" <?php selected( $announcement_type, $key ); ?>><?php echo esc_attr( $type ); ?></option>
                             <?php endforeach ?>
                         </select>
                     </td>
                 </tr>
 
                 <tr class="selected_employee_field">
-                    <th><?php _e( 'Select Employees', 'erp' ); ?></th>
+                    <th><?php esc_html_e( 'Select Employees', 'erp' ); ?></th>
                     <td>
-                        <select name="hr_announcement_assign_employee[]" data-placeholder= '<?php echo __( 'Select Employees...', 'erp' ); ?>' id="hr_announcement_assign_employee" class="erp-select2" multiple="multiple">
+                        <select name="hr_announcement_assign_employee[]" data-placeholder= '<?php echo esc_html__( 'Select Employees...', 'erp' ); ?>' id="hr_announcement_assign_employee" class="erp-select2" multiple="multiple">
                             <?php
                             foreach ( $employees as $user ) {
                                 if ( $user->user_id == get_current_user_id() ) {
@@ -227,7 +227,7 @@ class Announcement {
                                 }
 
                                 ?>
-                                    <option <?php echo in_array( $user->user_id, $announcement_employee ) ? 'selected="selected"' : ''; ?> value='<?php echo $user->user_id  ?>'><?php echo $user->display_name; ?></option>
+                                    <option <?php echo in_array( $user->user_id, $announcement_employee ) ? 'selected="selected"' : ''; ?> value='<?php echo esc_attr( $user->user_id );  ?>'><?php echo esc_html( $user->display_name ); ?></option>
                                 <?php
                             }
                             ?>
@@ -236,13 +236,13 @@ class Announcement {
                 </tr>
 
                 <tr class="by_department_field">
-                    <th><?php _e( 'Select Departments', 'erp' ); ?></th>
+                    <th><?php esc_html_e( 'Select Departments', 'erp' ); ?></th>
                     <td>
-                        <select name="hr_announcement_assign_department[]" data-placeholder= '<?php echo __( 'Select Departments...', 'erp' ); ?>' id="hr_announcement_assign_department" class="erp-select2" multiple="multiple">
+                        <select name="hr_announcement_assign_department[]" data-placeholder= '<?php echo esc_html__( 'Select Departments...', 'erp' ); ?>' id="hr_announcement_assign_department" class="erp-select2" multiple="multiple">
                             <?php
                             foreach ( $departments as $department ) {
                                 ?>
-                                <option <?php echo in_array( $department->id, $announcement_department ) ? 'selected="selected"' : ''; ?> value='<?php echo $department->id; ?>'><?php echo $department->title; ?></option>
+                                <option <?php echo in_array( $department->id, $announcement_department ) ? 'selected="selected"' : ''; ?> value='<?php echo esc_attr( $department->id ); ?>'><?php echo esc_html( $department->title ); ?></option>
                                 <?php
                             }
                             ?>
@@ -251,13 +251,13 @@ class Announcement {
                 </tr>
 
                 <tr class="by_designation_field">
-                    <th><?php _e( 'Select Designations', 'erp' ); ?></th>
+                    <th><?php esc_html_e( 'Select Designations', 'erp' ); ?></th>
                     <td>
-                        <select name="hr_announcement_assign_designation[]" data-placeholder= '<?php echo __( 'Select Designations...', 'erp' ); ?>' id="hr_announcement_assign_designation" class="erp-select2" multiple="multiple">
+                        <select name="hr_announcement_assign_designation[]" data-placeholder= '<?php echo esc_html__( 'Select Designations...', 'erp' ); ?>' id="hr_announcement_assign_designation" class="erp-select2" multiple="multiple">
                             <?php
                             foreach ( $designations as $designation ) {
                                 ?>
-                                <option <?php echo in_array( $designation->id, $announcement_designation ) ? 'selected="selected"' : ''; ?> value='<?php echo $designation->id; ?>'><?php echo $designation->title; ?></option>
+                                <option <?php echo in_array( $designation->id, $announcement_designation ) ? 'selected="selected"' : ''; ?> value='<?php echo esc_attr( $designation->id ); ?>'><?php echo esc_html( $designation->title ); ?></option>
                                 <?php
                             }
                             ?>
@@ -378,9 +378,9 @@ class Announcement {
             $assign_type = get_post_meta( $post_id, '_announcement_type', true );
 
             if ( $assign_type ) {
-                echo $this->assign_type[$assign_type];
+                echo wp_kses_post( $this->assign_type[$assign_type] );
             } else {
-                _e( 'No employee assigned!', 'erp' );
+                esc_html_e( 'No employee assigned!', 'erp' );
             }
         }
 
@@ -407,7 +407,7 @@ class Announcement {
             return $post_id;
         }
 
-        if ( ! wp_verify_nonce( $_POST['hr_announcement_meta_action_nonce'], 'hr_announcement_meta_action' ) ) {
+        if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['hr_announcement_meta_action_nonce'] ) ), 'hr_announcement_meta_action' ) ) {
             return $post_id;
         }
 
@@ -425,10 +425,10 @@ class Announcement {
             return $post_id;
         }
 
-        $type         = ( isset( $_POST['hr_announcement_assign_type'] ) ) ? $_POST['hr_announcement_assign_type']: '';
-        $employees    = ( isset( $_POST['hr_announcement_assign_employee'] ) ) ? $_POST['hr_announcement_assign_employee']: array();
-        $departments  = ( isset( $_POST['hr_announcement_assign_department'] ) ) ? $_POST['hr_announcement_assign_department']: array();
-        $designations = ( isset( $_POST['hr_announcement_assign_designation'] ) ) ? $_POST['hr_announcement_assign_designation']: array();
+        $type         = ( isset( $_POST['hr_announcement_assign_type'] ) ) ? sanitize_text_field( wp_unslash( $_POST['hr_announcement_assign_type'] ) ): '';
+        $employees    = ( isset( $_POST['hr_announcement_assign_employee'] ) ) ? sanitize_text_field( wp_unslash( $_POST['hr_announcement_assign_employee'] ) ): array();
+        $departments  = ( isset( $_POST['hr_announcement_assign_department'] ) ) ? sanitize_text_field( wp_unslash( $_POST['hr_announcement_assign_department'] ) ): array();
+        $designations = ( isset( $_POST['hr_announcement_assign_designation'] ) ) ? sanitize_text_field( wp_unslash( $_POST['hr_announcement_assign_designation'] ) ): array();
 
         if ( $type == 'by_department' ) {
             $selected = $departments;
