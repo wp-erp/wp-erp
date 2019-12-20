@@ -10,9 +10,6 @@
     <exclude-pattern>*/bin/*</exclude-pattern>
     <exclude-pattern>*/i18n/*</exclude-pattern>
 
-    <exclude-pattern>*/modules/crm/*</exclude-pattern>
-    <exclude-pattern>*/modules/accounting/*</exclude-pattern>
-
     <!--<rule ref="WordPress.DB" />-->
     <rule ref="WordPress.Security" />
     <rule ref="WordPress.CodeAnalysis" />

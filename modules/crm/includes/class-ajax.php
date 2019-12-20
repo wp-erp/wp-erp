@@ -1078,7 +1078,12 @@ class Ajax_Handler {
      * @return json
      */
     public function fetch_all_activity() {
-        $data = array_map( 'sanitize_text_field', wp_unslash( $_POST ) );
+        if ( ! ( isset( $_POST['_wpnonce'] ) && isset( $_POST['action'] ) ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), sanitize_text_field( wp_unslash( $_POST['action'] ) ) ) ) {
+            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
+
+        $post_data = isset( $_POST ) ? $_POST : [];
+        $data = array_map( 'sanitize_text_field', wp_unslash( $post_data ) );
         $feeds = erp_crm_get_feed_activity( $data );
         $this->send_success( $feeds );
     }
@@ -1173,7 +1178,9 @@ class Ajax_Handler {
 
                 $contact_owner_id = $contact->get_contact_owner();
 
-                $message_id = md5( uniqid( time() ) ) . '.' . $contact_id . '.' . $contact_owner_id . '.r2@' . esc_url_raw( $_SERVER['HTTP_HOST'] );
+                $server_host = isset( $_SERVER['HTTP_HOST'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : '';
+
+                $message_id = md5( uniqid( time() ) ) . '.' . $contact_id . '.' . $contact_owner_id . '.r2@' . $server_host;
 
                 $custom_headers = [
                     "In-Reply-To" => "<{$message_id}>",
@@ -1343,8 +1350,7 @@ class Ajax_Handler {
             $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
-        $form_data = isset( $_POST['form_data'] ) ? $_POST['form_data'] : array();
-        $postdata = array_map( 'sanitize_text_field', wp_unslash( $form_data ) );
+        $postdata = isset( $_POST['form_data'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['form_data'] ) )  : array();
 
         if ( ! $postdata ) {
             $this->send_error( __( 'No data not found', 'erp' ) );
@@ -1405,8 +1411,7 @@ class Ajax_Handler {
             $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
-        $form_data = isset( $_POST['form_data'] ) ? $_POST['form_data'] : array();
-        $postdata = array_map( 'sanitize_text_field', wp_unslash( $form_data ) );
+        $postdata = isset( $_POST['form_data'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['form_data'] ) )  : array();
 
         if ( ! $postdata ) {
             $this->send_error( __( 'No data not found', 'erp' ) );
@@ -1675,7 +1680,7 @@ class Ajax_Handler {
      */
     public function email_attachment() {
 
-        $files          =   ( ! empty( $_FILES['files'] ) ) ? $_FILES['files'] : array();
+        $files          =   ( ! empty( $_FILES['files'] ) ) ? array_map( 'sanitize_text_field', wp_unslash( $_FILES['files'] ) ) : array();
         $wp_upload_dir  =   wp_upload_dir();
         $subdir         =   apply_filters( 'crm_attachmet_directory', 'crm-attachments' );
         $path           =   $wp_upload_dir['basedir'] . '/' . $subdir . '/';

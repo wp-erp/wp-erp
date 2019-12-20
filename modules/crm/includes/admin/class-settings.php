@@ -582,7 +582,7 @@ class CRM_Settings extends ERP_Settings_Page {
             <th scope="row" class="titledesc">
             </th>
             <td class="forminp forminp-text">
-                <a style="background: #dc3232; color:#fff" class="button-secondary" href="<?php echo $url ?>"> <?php esc_attr_e( 'Disconnect','erp') ?> </a>
+                <a style="background: #dc3232; color:#fff" class="button-secondary" href="<?php echo esc_url_raw( $url ) ?>"> <?php esc_attr_e( 'Disconnect','erp') ?> </a>
             </td>
         </tr>
         <?php
@@ -636,7 +636,7 @@ class CRM_Settings extends ERP_Settings_Page {
                             switch ( $key ) {
                                 case 'name' :
                                     echo '<td class="erp-settings-table-' . esc_attr( $key ) . '">
-                                        <a href="' . esc_url_raw( $settings_url ) . strtolower( wp_unslash( $slug ) ) . '">' . $item . '</a>
+                                        <a href="' . esc_url_raw( $settings_url ) . esc_attr( strtolower( $slug ) ) . '">' . esc_attr( $item ) . '</a>
                                     </td>';
                                     break;
 
@@ -660,7 +660,7 @@ class CRM_Settings extends ERP_Settings_Page {
 
                                 case 'actions' :
                                     echo '<td class="erp-settings-table-' . esc_attr( $key ) . '">
-                                        <a class="button alignright" href="' . esc_url_raw( $settings_url ) . strtolower( esc_attr( $slug ) ) . '">' . __( 'Settings', 'erp' ) . '</a>
+                                        <a class="button alignright" href="' . esc_url_raw( $settings_url ) . esc_attr( strtolower( $slug ) ) . '">' . esc_html__( 'Settings', 'erp' ) . '</a>
                                     </td>';
                                     break;
 
@@ -856,7 +856,7 @@ class CRM_Settings extends ERP_Settings_Page {
      * @param bool $section
      */
     function save( $section = false ) {
-        if ( isset( $_POST['_wpnonce'] ) && wp_verify_nonce( $_POST['_wpnonce'], 'erp-settings-nonce' ) ) {
+        if ( isset( $_POST['_wpnonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_POST['_wpnonce'] ) ), 'erp-settings-nonce' ) ) {
 
             if ( !isset( $_GET['sub_section'] ) ) {
                 parent::save( $section );
@@ -896,6 +896,10 @@ class CRM_Settings extends ERP_Settings_Page {
      * @return void
      */
     public function cron_schedule( $value ) {
+        if ( ! ( isset( $_POST['_wpnonce'] ) && isset( $_POST['action'] ) ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), sanitize_text_field( wp_unslash( $_POST['action'] ) ) ) ) {
+            wp_send_json_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
+
         if ( !isset( $_GET['section'] ) || ( $_GET['section'] != 'email_connect' ) ) {
             return;
         }

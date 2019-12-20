@@ -1,4 +1,7 @@
 <?php
+if ( ! ( isset( $_POST['_wpnonce'] ) && isset( $_POST['action'] ) ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), sanitize_text_field( wp_unslash( $_POST['action'] ) ) ) ) {
+    $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+}
 
 $data    = [];
 $total   = 0;
@@ -44,8 +47,8 @@ foreach ( $reports as $report ) {
         <tbody>
             <?php
             foreach ( $data as $key => $value ) {
-                echo "<tr><td>" . __( $key, 'erp' ) . "</td>";
-                echo "<td>" . $value . "</td></tr>";
+                echo "<tr><td>" . esc_attr__( $key, 'erp' ) . "</td>";
+                echo "<td>" . esc_attr( $value ) . "</td></tr>";
 
                 $total += $value;
             }
@@ -55,7 +58,7 @@ foreach ( $reports as $report ) {
         <tfoot>
             <tr>
                 <td><?php esc_attr_e('Total', 'erp') ?></td>
-                <td><?php echo $total; ?></td>
+                <td><?php echo esc_attr( $total ); ?></td>
             </tr>
         </tfoot>
     </table>
