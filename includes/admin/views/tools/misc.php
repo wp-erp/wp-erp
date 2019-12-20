@@ -1,22 +1,22 @@
 <div class="postbox">
     <div class="inside">
-        <h3><?php _e( 'Send Test Email', 'erp' ); ?></h3>
+        <h3><?php esc_html_e( 'Send Test Email', 'erp' ); ?></h3>
 
         <?php
         $email_settings = get_option( 'erp_settings_erp-email_general', [] );
 
         if ( isset( $_GET['sent'] ) ) {
-            erp_html_show_notice(  __( 'The test email has been sent by WordPress. Please note this does NOT mean it has been delivered.', 'erp' ) );
+            erp_html_show_notice(  esc_html__( 'The test email has been sent by WordPress. Please note this does NOT mean it has been delivered.', 'erp' ) );
         }
         ?>
 
-        <form method="post" action="<?php echo admin_url( 'admin.php?page=erp-tools&tab=misc' ); ?>" id="erp-test-email-form">
+        <form method="post" action="<?php echo esc_url( admin_url( 'admin.php?page=erp-tools&tab=misc' ) ); ?>" id="erp-test-email-form">
 
             <table class="form-table">
                 <tbody>
                     <tr>
                         <th>
-                            <label for="to"><?php _e( 'To', 'erp' ); ?> <span class="required">*</span></label>
+                            <label for="to"><?php esc_html_e( 'To', 'erp' ); ?> <span class="required">*</span></label>
                         </th>
                         <td>
                             <?php erp_html_form_input([
@@ -32,7 +32,7 @@
                     </tr>
                     <tr>
                         <th>
-                            <label for="from"><?php _e( 'From', 'erp' ); ?></label>
+                            <label for="from"><?php esc_html_e( 'From', 'erp' ); ?></label>
                         </th>
                         <td>
                             <?php
@@ -44,7 +44,7 @@
                                 erp_html_form_input([
                                     'type'        => 'text',
                                     'name'        => 'from',
-                                    'value'       => sprintf( '%s <%s>', $from_name, $from_email ),
+                                    'value'       => sprintf( '%s <%s>', esc_html( $from_name ), esc_html( $from_email ) ),
                                     'custom_attr' => [
                                         'readonly' => 'readonly',
                                         'size'     => 40
@@ -55,13 +55,13 @@
                     </tr>
                     <tr>
                         <th>
-                            <label for="body"><?php _e( 'Message', 'erp' ); ?></label>
+                            <label for="body"><?php esc_html_e( 'Message', 'erp' ); ?></label>
                         </th>
                         <td>
                             <?php erp_html_form_input([
                                 'type'        => 'textarea',
                                 'name'        => 'body',
-                                'placeholder' => __( 'Leave blank to send default texts', 'erp' ),
+                                'placeholder' => esc_html__( 'Leave blank to send default texts', 'erp' ),
                                 'custom_attr' => [
                                     'cols' => 45,
                                     'rows' => 6

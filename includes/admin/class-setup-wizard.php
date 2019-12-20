@@ -46,6 +46,10 @@ class Setup_Wizard {
      * Show the setup wizard
      */
     public function setup_wizard() {
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'erp-setup' ) ) {
+            return;
+        }
+
         if ( empty( $_GET['page'] ) || 'erp-setup' !== $_GET['page'] ) {
             return;
         }
@@ -481,7 +485,7 @@ class Setup_Wizard {
         check_admin_referer( 'erp-setup' );
 
         $all_modules   = wperp()->modules->get_modules();
-        $modules       = array_map( 'sanitize_text_field', wp_unslash( $_POST['modules'] ) );
+        $modules       = isset( $_POST['modules'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['modules'] ) ) : [];
         $pm_module_add = 'no';
 
         // if `WP Project Manager` plugin needs to be installed
@@ -520,7 +524,7 @@ class Setup_Wizard {
 
     public function setup_step_departments() {
         ?>
-        <h1><?php _e( 'Departments Setup', 'erp' ); ?></h1>
+        <h1><?php esc_html_e( 'Departments Setup', 'erp' ); ?></h1>
         <form method="post" class="form-table">
 
             <div class="two-col">
@@ -537,7 +541,7 @@ class Setup_Wizard {
                         <li>
                             <input type="text" name="departments[]" class="regular-text" placeholder="<?php esc_attr_e( 'Department name', 'erp' ); ?>">
                         </li>
-                        <li class="add-new"><a href="#" class="button"><?php _e( 'Add New', 'erp' ); ?></a></li>
+                        <li class="add-new"><a href="#" class="button"><?php esc_html_e( 'Add New', 'erp' ); ?></a></li>
                     </ul>
                 </div>
             </div>
@@ -569,7 +573,7 @@ class Setup_Wizard {
     public function setup_step_departments_save() {
         check_admin_referer( 'erp-setup' );
 
-        $departments = array_map( 'sanitize_text_field', $_POST['departments'] );
+        $departments = isset( $_POST['departments'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['departments'] ) ) : [];
 
         if ( $departments ) {
             foreach ($departments as $department) {
@@ -587,13 +591,13 @@ class Setup_Wizard {
 
     public function setup_step_designation() {
         ?>
-        <h1><?php _e( 'Designation Setup', 'erp' ); ?></h1>
+        <h1><?php esc_html_e( 'Designation Setup', 'erp' ); ?></h1>
         <form method="post" class="form-table">
 
             <div class="two-col">
                 <div class="col-first">
-                    <p><?php _e( 'Create some designations for your company. e.g. Manager, Senior Developer, Marketing Manager, Support Executive, etc. ', 'erp' ); ?></p>
-                    <p><?php _e( 'Leave empty for not to create any designations.', 'erp' ); ?></p>
+                    <p><?php esc_html_e( 'Create some designations for your company. e.g. Manager, Senior Developer, Marketing Manager, Support Executive, etc. ', 'erp' ); ?></p>
+                    <p><?php esc_html_e( 'Leave empty for not to create any designations.', 'erp' ); ?></p>
                 </div>
 
                 <div class="col-last">
@@ -604,7 +608,7 @@ class Setup_Wizard {
                         <li>
                             <input type="text" name="designations[]" class="regular-text" placeholder="<?php esc_attr_e( 'Designation name', 'erp' ); ?>">
                         </li>
-                        <li class="add-new"><a href="#" class="button"><?php _e( 'Add New', 'erp' ); ?></a></li>
+                        <li class="add-new"><a href="#" class="button"><?php esc_html_e( 'Add New', 'erp' ); ?></a></li>
                     </ul>
                 </div>
             </div>
@@ -619,7 +623,7 @@ class Setup_Wizard {
     public function setup_step_designation_save() {
         check_admin_referer( 'erp-setup' );
 
-        $designations = array_map( 'sanitize_text_field', $_POST['designations'] );
+        $designations = isset( $_POST['designations'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['designations'] ) ) : [];
 
         if ( $designations ) {
             foreach ($designations as $designation) {
@@ -652,7 +656,7 @@ class Setup_Wizard {
             'sun' => __( 'Sunday', 'erp' )
         );
         ?>
-        <h1><?php _e( 'Workdays Setup', 'erp' ); ?></h1>
+        <h1><?php esc_html_e( 'Workdays Setup', 'erp' ); ?></h1>
 
         <form method="post">
             <table class="form-table">
@@ -661,14 +665,14 @@ class Setup_Wizard {
                 foreach( $days as $key => $day ) {
                     ?>
                     <tr>
-                        <th scope="row"><label for="gen_financial_month"><?php echo $day; ?></label></th>
+                        <th scope="row"><label for="gen_financial_month"><?php echo esc_html( $day ); ?></label></th>
                         <td>
-                            <?php erp_html_form_input( array(
+                            <?php wp_kses_post( erp_html_form_input( array(
                                 'name'     => 'day[' . $key . ']',
                                 'value'    => $working_days[ $key ],
                                 'type'     => 'select',
                                 'options'  => $options
-                            ) ); ?>
+                            ) ) ); ?>
                         </td>
                     </tr>
                 <?php } ?>
@@ -692,8 +696,10 @@ class Setup_Wizard {
     public function setup_step_workdays_save() {
         check_admin_referer( 'erp-setup' );
 
-        if ( 7 === count( $_POST['day'] ) ) {
-            foreach ( $_POST['day'] as $day => $hour_limit ) {
+        if ( isset( $_POST['day'] ) && 7 === count( $_POST['day'] ) ) {
+            $days = array_map( 'sanitize_text_field', wp_unslash( $_POST['day'] ) );
+
+            foreach ( $days as $day => $hour_limit ) {
                 update_option( $day, $hour_limit );
             }
         }
@@ -708,7 +714,7 @@ class Setup_Wizard {
      */
     public function setup_step_newsletter() {
         ?>
-        <h1><?php _e( 'Newsletter Setup', 'erp' ); ?></h1>
+        <h1><?php esc_html_e( 'Newsletter Setup', 'erp' ); ?></h1>
 
         <?php
         $subscription = new \WeDevs\ERP\CRM\Subscription();
@@ -719,7 +725,7 @@ class Setup_Wizard {
             <table class="form-table">
                 <tr>
                     <th scope="row">
-                        <label for="full_name"><?php _e( 'Your Name', 'erp' ); ?></label>
+                        <label for="full_name"><?php esc_html_e( 'Your Name', 'erp' ); ?></label>
                     </th>
                     <td>
                         <?php erp_html_form_input( array(
@@ -733,7 +739,7 @@ class Setup_Wizard {
 
                 <tr>
                     <th scope="row">
-                        <label for="subs_email"><?php _e( 'Your Email', 'erp' ); ?></label>
+                        <label for="subs_email"><?php esc_html_e( 'Your Email', 'erp' ); ?></label>
                     </th>
                     <td>
                         <?php erp_html_form_input( array(
@@ -768,24 +774,24 @@ class Setup_Wizard {
         ?>
 
         <div class="final-step">
-            <h1><?php _e( 'Your Site is Ready!', 'erp' ); ?></h1>
+            <h1><?php esc_html_e( 'Your Site is Ready!', 'erp' ); ?></h1>
 
             <div class="erp-setup-next-steps">
                 <div class="erp-setup-next-steps-first">
-                    <h2><?php _e( 'Next Steps &rarr;', 'erp' ); ?></h2>
+                    <h2><?php esc_html_e( 'Next Steps &rarr;', 'erp' ); ?></h2>
                     <?php
                         $is_hrm_activated = erp_is_module_active( 'hrm' );
 
                         if ( $is_hrm_activated ) : ?>
                             <a class="button button-primary button-large btn-add-employees"
                                 href="<?php echo esc_url( admin_url( 'admin.php?page=erp-hr&section=employee' ) ); ?>">
-                                <?php _e( 'Add your employees!', 'erp' ); ?>
+                                <?php esc_html_e( 'Add your employees!', 'erp' ); ?>
                             </a>
                         <?php endif; ?>
 
                         <a class="button button-primary button-large"
                             href="<?php echo esc_url( admin_url( 'admin.php?page=erp' ) ); ?>">
-                            <?php _e( 'Go to ERP Dashboard!', 'erp' ); ?>
+                            <?php esc_html_e( 'Go to ERP Dashboard!', 'erp' ); ?>
                         </a>
                 </div>
             </div>
