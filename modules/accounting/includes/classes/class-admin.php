@@ -386,19 +386,25 @@ class Admin {
      */
     public function save_accounting_settings() {
         global $wpdb;
+
+        if ( ! ( isset( $_POST['_wpnonce'] ) && isset( $_POST['action'] ) ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), sanitize_text_field( wp_unslash( $_POST['action'] ) ) ) ) {
+            wp_send_json_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
+
         $fin_years = [];
+        $post_data = array_map( 'sanitize_text_field', wp_unslash( $_POST ) );
 
         if (
-            empty( $_POST['ob_names'] )
-            || empty( $_POST['ob_starts'] )
-            || empty( $_POST['ob_ends'] )
+            empty( $post_data['ob_names'] )
+            || empty( $post_data['ob_starts'] )
+            || empty( $post_data['ob_ends'] )
         ) {
             return;
         }
 
-        $ob_names   = $_POST['ob_names'];
-        $ob_starts  = $_POST['ob_starts'];
-        $ob_ends    = $_POST['ob_ends'];
+        $ob_names   = $post_data['ob_names'];
+        $ob_starts  = $post_data['ob_starts'];
+        $ob_ends    = $post_data['ob_ends'];
         $created_by = get_current_user_id();
 
         if ( ! empty( $ob_names ) ) {

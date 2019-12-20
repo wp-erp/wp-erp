@@ -22,7 +22,7 @@ class Assets {
      * @return void
      */
     public function register() {
-        $section = ! empty( $_GET['section'] ) ? wp_unslash( $_GET['section'] ) : '';
+        $section = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : '';
 
         if ( is_admin() ) {
             $screen = get_current_screen();
