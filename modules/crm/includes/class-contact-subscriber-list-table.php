@@ -54,7 +54,7 @@ class Contact_Subscriber_List_Table extends \WP_List_Table {
                 <label class="screen-reader-text" for="new_role"><?php esc_html_e( 'Filter by Group', 'erp' ) ?></label>
                 <select name="filter_contact_group" id="filter_contact_group">
                     <?php foreach ( $groups as $key => $group ) : ?>
-                        <option value="<?php echo esc_attr( $key ); ?>" <?php selected( $selected_group, $key ); ?>><?php echo esc_attr( $group ); ?></option>
+                        <option value="<?php echo esc_attr( $key ); ?>" <?php selected( $selected_group, $key ); ?>><?php echo wp_kses_post( $group ); ?></option>
                     <?php endforeach ?>
                 </select>
                 <?php submit_button( esc_html__( 'Filter', 'erp' ), 'button', 'filter_group', false ); ?>

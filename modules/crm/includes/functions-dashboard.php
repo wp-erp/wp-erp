@@ -369,7 +369,7 @@ function erp_crm_dashboard_widget_latest_contact() {
  */
 function erp_crm_dashboard_widget_inbound_emails() {
     $total_emails_count = get_option( 'wp_erp_inbound_email_count', 0 );
-    echo esc_html( '<h1 style="text-align: center;">' . $total_emails_count . '</h1>' );
+    echo wp_kses_post( '<h1 style="text-align: center;">' . $total_emails_count . '</h1>' );
 }
 
 /**
@@ -431,6 +431,6 @@ function customer_statics() {
     <?php
     $output = ob_get_contents();
     ob_get_clean();
-    echo wp_kses_post( $output );
+    echo $output;
 
 }
