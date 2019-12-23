@@ -38,12 +38,12 @@ class Form_Handler {
             return;
         }
 
-        if ( ! isset( $_POST['erp_settings'] ) || ! wp_verify_nonce( sanitize_key( $_POST['erp_settings'] ), 'erp_nonce' ) ) {
+        if ( ! isset( $_POST['erp_settings'] ) || ! wp_verify_nonce( sanitize_key( $_POST['erp_settings'] ), 'erp-nonce' ) ) {
             return;
         }
 
-        $inactive    =  ( isset( $_GET['tab'] ) && $_GET['tab'] == 'inactive' ) ? true : false;
-        $modules     = isset( $_POST['modules'] ) ? sanitize_text_field( wp_unslash( $_POST['modules'] ) ) : array();
+        $inactive    = ( isset( $_GET['tab'] ) && $_GET['tab'] == 'inactive' ) ? true : false;
+        $modules     = isset( $_POST['modules'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['modules'] ) ) : array();
         $all_modules = wperp()->modules->get_modules();
 
         foreach ( $all_modules as $key => $module ) {
