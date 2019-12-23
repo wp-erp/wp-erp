@@ -542,7 +542,7 @@ class Ajax_Handler {
     }
 
     /**
-     * Adds compnay to custmer individual profile
+     * Adds company to customer individual profile
      *
      * @since 1.0
      *
@@ -686,7 +686,7 @@ class Ajax_Handler {
         }
 
         $term = isset( $_REQUEST['s'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['s'] ) ) : '';
-        $types = isset( $_REQUEST['types'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['types'] ) ) : '';
+        $types = isset( $_REQUEST['types'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_REQUEST['types'] ) ) : [];
 
         if ( empty( $term ) ) {
             die();
@@ -880,7 +880,7 @@ class Ajax_Handler {
     }
 
     /**
-     * Get alreay assigned contact into subscriber
+     * Get already assigned contact into subscriber
      *
      * @since 1.0
      *
