@@ -4,13 +4,33 @@ namespace WeDevs\ERP;
 /**
  * Tracker class
  */
-class Tracker extends \WeDevs_Insights {
+class Tracker {
 
-    public function __construct() {
+    private static $instance = null;
 
-        $notice = __( 'Want to help make <strong>WP ERP</strong> even more awesome? Allow weDevs to collect non-sensitive diagnostic data and usage information.', 'erp' );
+    private $insights;
 
-        parent::__construct( 'erp', 'WP ERP', WPERP_FILE, $notice );
+    private $client;
+
+    /**
+     * Singleton instance
+     */
+    public static function get_instance() {
+        if ( self::$instance === null ) {
+            self::$instance = new self();
+        }
+
+        return self::$instance;
+    }
+
+    /**
+     * Constructor
+     */
+    private function __construct() {
+        $this->client = new \Appsero\Client( 'd8539710-7e93-422a-a293-11739b118d6a', 'WP ERP', WPERP_FILE );
+
+        $this->insights = $this->client->insights()
+                                 ->add_extra( array( $this, 'get_extra_data' ) );
     }
 
     /**
@@ -18,7 +38,7 @@ class Tracker extends \WeDevs_Insights {
      *
      * @return array
      */
-    protected function get_extra_data() {
+    public function get_extra_data() {
         $data = array(
             'active_modules' => get_option( 'erp_modules', [] ),
             'contacts'       => $this->get_people_count( 'contact' ),
@@ -42,11 +62,32 @@ class Tracker extends \WeDevs_Insights {
         return \WeDevs\ERP\Framework\Models\People::type( $type )->count();
     }
 
-    private function transaction_type_count( $type ) {
-        if ( ! class_exists( '\WeDevs\ERP\Accounting\Model\Transaction' ) ) {
-            require_once WPERP_MODULES . '/accounting/includes/models/transaction.php';
-        }
-
-        return \WeDevs\ERP\Accounting\Model\Transaction::type( $type )->count();
+    /**
+     * Initialize appsero insights
+     */
+    public function init() {
+        $this->insights->init();
     }
+
+    /**
+     * Forcefully optin
+     */
+    public function optin() {
+        $this->insights->optin();
+    }
+
+    /**
+     * Forcefully optout
+     */
+    public function optout() {
+        $this->insights->optout();
+    }
+
+    /**
+     * Tracking not allowed
+     */
+    public function not_allowed() {
+        return ! $this->insights->tracking_allowed();
+    }
+
 }

@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP ERP 1.5.9\n"
+"Project-Id-Version: WP ERP 1.5.10\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-erp\n"
-"POT-Creation-Date: 2019-12-11 11:09:19+00:00\n"
+"POT-Creation-Date: 2019-12-19 10:41:26+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -5575,36 +5575,36 @@ msgstr ""
 msgid "Share Essentials"
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:419
+#: includes/admin/class-setup-wizard.php:416
 #: includes/framework/views/status-report.php:123
 msgid "Active Modules"
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:494
+#: includes/admin/class-setup-wizard.php:491
 msgid "WP Project Manager"
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:526
+#: includes/admin/class-setup-wizard.php:523
 msgid "Departments Setup"
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:531
+#: includes/admin/class-setup-wizard.php:528
 msgid ""
 "Create some departments for your company. e.g. HR, Engineering, Marketing, "
 "Support, etc. "
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:532
+#: includes/admin/class-setup-wizard.php:529
 msgid "Leave empty for not to create any departments."
 msgstr ""
 
+#: includes/admin/class-setup-wizard.php:535
 #: includes/admin/class-setup-wizard.php:538
-#: includes/admin/class-setup-wizard.php:541
 msgid "Department name"
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:543
-#: includes/admin/class-setup-wizard.php:610
+#: includes/admin/class-setup-wizard.php:540
+#: includes/admin/class-setup-wizard.php:607
 #: modules/accounting/assets/src/admin/components/chart-accounts/ChartOfAccounts.vue:9
 #: modules/accounting/assets/src/admin/components/people/People.vue:6
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:137
@@ -5617,112 +5617,112 @@ msgstr ""
 msgid "Add New"
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:593
+#: includes/admin/class-setup-wizard.php:590
 msgid "Designation Setup"
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:598
+#: includes/admin/class-setup-wizard.php:595
 msgid ""
 "Create some designations for your company. e.g. Manager, Senior Developer, "
 "Marketing Manager, Support Executive, etc. "
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:599
+#: includes/admin/class-setup-wizard.php:596
 msgid "Leave empty for not to create any designations."
 msgstr ""
 
+#: includes/admin/class-setup-wizard.php:602
 #: includes/admin/class-setup-wizard.php:605
-#: includes/admin/class-setup-wizard.php:608
 msgid "Designation name"
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:644
+#: includes/admin/class-setup-wizard.php:641
 #: modules/hrm/includes/class-settings.php:43
 msgid "Full Day"
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:645
+#: includes/admin/class-setup-wizard.php:642
 #: modules/hrm/includes/class-settings.php:44
 msgid "Half Day"
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:646
+#: includes/admin/class-setup-wizard.php:643
 #: modules/hrm/includes/class-settings.php:45
 msgid "Non-working Day"
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:649
+#: includes/admin/class-setup-wizard.php:646
 #: modules/hrm/includes/class-settings.php:49
 msgid "Monday"
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:650
+#: includes/admin/class-setup-wizard.php:647
 #: modules/hrm/includes/class-settings.php:50
 msgid "Tuesday"
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:651
+#: includes/admin/class-setup-wizard.php:648
 #: modules/hrm/includes/class-settings.php:51
 msgid "Wednesday"
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:652
+#: includes/admin/class-setup-wizard.php:649
 #: modules/hrm/includes/class-settings.php:52
 msgid "Thursday"
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:653
+#: includes/admin/class-setup-wizard.php:650
 #: modules/hrm/includes/class-settings.php:53
 msgid "Friday"
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:654
+#: includes/admin/class-setup-wizard.php:651
 #: modules/hrm/includes/class-settings.php:54
 msgid "Saturday"
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:655
+#: includes/admin/class-setup-wizard.php:652
 #: modules/hrm/includes/class-settings.php:55
 msgid "Sunday"
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:658
+#: includes/admin/class-setup-wizard.php:655
 msgid "Workdays Setup"
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:714
+#: includes/admin/class-setup-wizard.php:711
 msgid "Newsletter Setup"
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:725
+#: includes/admin/class-setup-wizard.php:722
 msgid "Your Name"
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:732
+#: includes/admin/class-setup-wizard.php:729
 msgid "This name will be used for newsletter name."
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:739
+#: includes/admin/class-setup-wizard.php:736
 msgid "Your Email"
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:746
+#: includes/admin/class-setup-wizard.php:743
 msgid "Email to get update critical updates."
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:774
+#: includes/admin/class-setup-wizard.php:771
 msgid "Your Site is Ready!"
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:778
+#: includes/admin/class-setup-wizard.php:775
 msgid "Next Steps &rarr;"
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:785
+#: includes/admin/class-setup-wizard.php:782
 msgid "Add your employees!"
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:791
+#: includes/admin/class-setup-wizard.php:788
 msgid "Go to ERP Dashboard!"
 msgstr ""
 
@@ -6914,12 +6914,6 @@ msgstr ""
 
 #: includes/class-scripts.php:172
 msgid "Allowed Files"
-msgstr ""
-
-#: includes/class-tracker.php:11
-msgid ""
-"Want to help make <strong>WP ERP</strong> even more awesome? Allow weDevs "
-"to collect non-sensitive diagnostic data and usage information."
 msgstr ""
 
 #: includes/class-updates.php:116
@@ -8828,7 +8822,7 @@ msgstr ""
 msgid "Every 30 Minutes"
 msgstr ""
 
-#: includes/functions.php:1038 includes/lib/class-wedevs-insights.php:471
+#: includes/functions.php:1038
 msgid "Once Weekly"
 msgstr ""
 
@@ -8910,40 +8904,6 @@ msgstr ""
 
 #: includes/lib/bgprocess/wp-background-process.php:425
 msgid "Every %d Minutes"
-msgstr ""
-
-#: includes/lib/class-wedevs-insights.php:282
-msgid ""
-"Want to help make <strong>%s</strong> even more awesome? Allow weDevs to "
-"collect non-sensitive diagnostic data and usage information."
-msgstr ""
-
-#: includes/lib/class-wedevs-insights.php:287
-msgid "what we collect"
-msgstr ""
-
-#: includes/lib/class-wedevs-insights.php:293
-msgid "Allow"
-msgstr ""
-
-#: includes/lib/class-wedevs-insights.php:294
-msgid "No thanks"
-msgstr ""
-
-#: includes/lib/class-wedevs-insights.php:607
-msgid "If you have a moment, please let us know why you are deactivating:"
-msgstr ""
-
-#: includes/lib/class-wedevs-insights.php:621
-msgid "I rather wouldn't say"
-msgstr ""
-
-#: includes/lib/class-wedevs-insights.php:622
-msgid "Submit & Deactivate"
-msgstr ""
-
-#: includes/lib/class-wedevs-insights.php:623
-msgid "Canel"
 msgstr ""
 
 #: includes/lib/class-weforms-upsell.php:77
@@ -10201,6 +10161,7 @@ msgstr ""
 #: modules/crm/views/js-templates/customer-newnote.php:19
 #: modules/crm/views/js-templates/customer-schedule-note.php:111
 #: modules/crm/views/js-templates/customer-tasks-note.php:40
+#: vendor/appsero/client/src/Insights.php:764
 msgid "Cancel"
 msgstr ""
 
@@ -16963,6 +16924,36 @@ msgid_plural "Years"
 msgstr[0] ""
 msgstr[1] ""
 
+#: vendor/appsero/client/src/Insights.php:369
+msgid ""
+"Want to help make <strong>%1$s</strong> even more awesome? Allow %1$s to "
+"collect non-sensitive diagnostic data and usage information."
+msgstr ""
+
+#: vendor/appsero/client/src/Insights.php:374
+msgid "what we collect"
+msgstr ""
+
+#: vendor/appsero/client/src/Insights.php:381
+msgid "Allow"
+msgstr ""
+
+#: vendor/appsero/client/src/Insights.php:382
+msgid "No thanks"
+msgstr ""
+
+#: vendor/appsero/client/src/Insights.php:747
+msgid "If you have a moment, please let us know why you are deactivating:"
+msgstr ""
+
+#: vendor/appsero/client/src/Insights.php:762
+msgid "I rather wouldn't say"
+msgstr ""
+
+#: vendor/appsero/client/src/Insights.php:763
+msgid "Submit & Deactivate"
+msgstr ""
+
 #: vendor/lucatume/wp-browser/src/data/plugins/internationalized-plugin.php:11
 msgid "This is a dummy plugin"
 msgstr ""
@@ -17217,37 +17208,37 @@ msgstr ""
 msgid "Drag widgets here to remove them from the sidebar but keep their settings."
 msgstr ""
 
-#: wp-erp.php:187
+#: wp-erp.php:186
 msgid "<h1>An Error Occured</h1>"
 msgstr ""
 
-#: wp-erp.php:188
+#: wp-erp.php:187
 msgid "<h2>Your installed PHP Version is: "
 msgstr ""
 
-#: wp-erp.php:189
+#: wp-erp.php:188
 msgid "<p>The <strong>WP ERP</strong> plugin requires PHP version <strong>"
 msgstr ""
 
-#: wp-erp.php:189
+#: wp-erp.php:188
 msgid "</strong> or greater"
 msgstr ""
 
-#: wp-erp.php:190
+#: wp-erp.php:189
 msgid "<p>The version of your PHP is "
 msgstr ""
 
-#: wp-erp.php:190
+#: wp-erp.php:189
 msgid "unsupported and old"
 msgstr ""
 
-#: wp-erp.php:191
+#: wp-erp.php:190
 msgid ""
 "You should update your PHP software or contact your host regarding this "
 "matter.</p>"
 msgstr ""
 
-#: wp-erp.php:194
+#: wp-erp.php:193
 msgid "Plugin Activation Error"
 msgstr ""
 
