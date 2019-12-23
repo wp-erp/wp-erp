@@ -506,7 +506,7 @@ class CRM_Settings extends ERP_Settings_Page {
             </th>
             <td class="forminp forminp-text">
                 <a id="imap-test-connection"
-                   class="button-secondary"><?php esc_attresc_attr_e( 'Test Connection', 'erp' ); ?></a>
+                   class="button-secondary"><?php esc_attr_e( 'Test Connection', 'erp' ); ?></a>
                 <span class="erp-loader" style="display: none;"></span>
                 <p class="description"><?php esc_attr_e( 'Click on the above button before saving the settings.', 'erp' ); ?></p>
             </td>

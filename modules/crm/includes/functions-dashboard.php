@@ -122,7 +122,7 @@ function erp_crm_dashboard_widget_todays_schedules() {
                     data-schedule_id="<?php echo esc_attr( $schedule['id'] ); ?>"
                     data-title="<?php echo esc_attr( $data_title ) ?>"
                     class="erp-crm-dashbaord-show-details-schedule"
-                ><?php esc_attresc_attr_e('Details', 'erp' ); ?></a>
+                ><?php esc_attr_e('Details', 'erp' ); ?></a>
 
             </li>
         <?php endforeach ?>

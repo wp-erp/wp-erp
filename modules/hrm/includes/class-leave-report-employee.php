@@ -65,12 +65,12 @@ class Leave_Report_Employee_Based extends \WP_List_Table {
                 </span>
             <?php endif ?>
             <select name="filter_designation" id="filter_designation">
-                <?php echo wp_kses_post( erp_hr_get_designation_dropdown( $selected_desingnation ) ); ?>
+                <?php echo erp_hr_get_designation_dropdown( $selected_desingnation ); ?>
             </select>
 
             <label class="screen-reader-text" for="new_role"><?php esc_html_e( 'Filter by Designation', 'erp' ) ?></label>
             <select name="filter_department" id="filter_department">
-                <?php echo wp_kses_post( erp_hr_get_departments_dropdown( $selected_department ) ); ?>
+                <?php echo erp_hr_get_departments_dropdown( $selected_department ); ?>
             </select>
 
             <label class="screen-reader-text" for="new_role"><?php esc_html_e( 'Filter by Employment Type', 'erp' ) ?></label>
