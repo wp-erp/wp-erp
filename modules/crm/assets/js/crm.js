@@ -641,6 +641,27 @@
             },
             remove: function (e) {
                 e.preventDefault();
+
+                var self = $(this);
+
+                if (confirm(wpErpCrm.delConfirm)) {
+                    wp.ajax.send('erp-crm-contact-subscriber-delete', {
+                        data: {
+                            '_wpnonce': wpErpCrm.nonce,
+                            group_id: self.data('group_id'),
+                            id: self.data('id')
+                        },
+                        success: function () {
+                            self.closest('tr').fadeOut('fast', function () {
+                                $(this).remove();
+                                WeDevs_ERP_CRM.contactGroup.pageReload();
+                            });
+                        },
+                        error: function (response) {
+                            alert(response);
+                        }
+                    });
+                }
             }
         },
 
