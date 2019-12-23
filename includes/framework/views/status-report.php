@@ -219,9 +219,9 @@ $security         = $system_status->get_security_info();
 			<td class="help"><?php echo wp_kses_post( erp_help_tip( esc_html__( 'Several erp extensions can write logs which makes debugging problems easier. The directory must be writable for this to happen.', 'erp' ) ) ); ?></td>
 			<td><?php
 				if ( $environment['log_directory_writable'] ) {
-					echo '<mark class="yes"><span class="dashicons dashicons-yes"></span> <code class="private">' . esc_html( $environment['log_directory'] ) . '</code></mark> ';
+					echo '<mark class="yes"><span class="dashicons dashicons-yes"></span> <code class="private">' . esc_url( $environment['log_directory'] ) . '</code></mark> ';
 				} else {
-					echo '<mark class="error"><span class="dashicons dashicons-warning"></span> ' . esc_html( sprintf( esc_html__( 'To allow logging, make %1$s writable or define a custom %2$s.', 'erp' ), '<code>' . $environment['log_directory'] . '</code>', '<code>ERP_LOG_DIR</code>' ) ) . '</mark>';
+					echo '<mark class="error"><span class="dashicons dashicons-warning"></span> ' . wp_kses_post( sprintf( esc_html__( 'To allow logging, make %1$s writable or define a custom %2$s.', 'erp' ), '<code>' . $environment['log_directory'] . '</code>', '<code>ERP_LOG_DIR</code>' ) ) . '</mark>';
 				}
 			?></td>
 		</tr>
@@ -544,7 +544,7 @@ $security         = $system_status->get_security_info();
 				<?php if ( $security['secure_connection'] ) : ?>
 					<mark class="yes"><span class="dashicons dashicons-yes"></span></mark>
 				<?php else : ?>
-					<mark class="error"><span class="dashicons dashicons-warning"></span><?php printf( esc_html__( 'Your website is not using HTTPS. <a href="%s" target="_blank">Learn more about HTTPS and SSL Certificates</a>.', 'erp' ), 'https://docs.erp.com/document/ssl-and-https/' ); ?></mark>
+					<mark class="error"><span class="dashicons dashicons-warning"></span><?php wp_kses_post( printf( __( 'Your website is not using HTTPS. <a href="%s" target="_blank">Learn more about HTTPS and SSL Certificates</a>.', 'erp' ), 'https://docs.erp.com/document/ssl-and-https/' ) ); ?></mark>
 				<?php endif; ?>
 			</td>
 		</tr>
@@ -581,7 +581,7 @@ $security         = $system_status->get_security_info();
 				}
 				?>
 				<tr>
-					<td><?php echo esc_html( $plugin_name ); ?></td>
+					<td><?php echo wp_kses_post( $plugin_name ); ?></td>
 					<td class="help">&nbsp;</td>
 					<td><?php
 						/* translators: %s: plugin author */
@@ -628,7 +628,7 @@ $security         = $system_status->get_security_info();
 			<td data-export-label="Child Theme"><?php esc_html_e( 'Child theme', 'erp' ); ?>:</td>
 			<td class="help"><?php echo wp_kses_post( erp_help_tip( __( 'Displays whether or not the current theme is a child theme.', 'erp' ) ) ); ?></td>
 			<td><?php
-				echo $theme['is_child_theme'] ? '<mark class="yes"><span class="dashicons dashicons-yes"></span></mark>' : '<span class="dashicons dashicons-no-alt"></span> &ndash; ' . esc_html( sprintf( __( 'If you are modifying erp on a parent theme that you did not build personally we recommend using a child theme. See: <a href="%s" target="_blank">How to create a child theme</a>', 'erp' ), 'https://codex.wordpress.org/Child_Themes' ) );
+				echo $theme['is_child_theme'] ? '<mark class="yes"><span class="dashicons dashicons-yes"></span></mark>' : '<span class="dashicons dashicons-no-alt"></span> &ndash; ' . wp_kses_post( sprintf( __( 'If you are modifying erp on a parent theme that you did not build personally we recommend using a child theme. See: <a href="%s" target="_blank">How to create a child theme</a>', 'erp' ), 'https://codex.wordpress.org/Child_Themes' ) );
 			?></td>
 		</tr>
 		<?php

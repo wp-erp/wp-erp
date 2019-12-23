@@ -211,7 +211,7 @@ class Department_List_Table extends \WP_List_Table {
                         $actions['edit']   = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $delete_url, $department->id, __( 'Edit this item', 'erp' ), __( 'Edit', 'erp' ) );
                         $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" title="%s">%s</a>', $delete_url, $department->id, __( 'Delete this item', 'erp' ), __( 'Delete', 'erp' ) );
 
-                        printf( '<a href="%4$s"><strong>%1$s %2$s</strong></a> %3$s', esc_html( $pad ), esc_html( $department->title ), esc_html( $this->row_actions( $actions ) ), esc_html( $link_to_employee ) );
+                        printf( '<a href="%4$s"><strong>%1$s %2$s</strong></a> %3$s', esc_html( $pad ), esc_html( $department->title ), wp_kses_post( $this->row_actions( $actions ) ), esc_url( $link_to_employee ) );
                     echo '</td>';
                     break;
 
