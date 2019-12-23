@@ -37,6 +37,13 @@ class AllSteps extends \AcceptanceTester
         $I->wait(5);
         $I->moveMouseOver('//div[2]/div/div[2]/div/div/ul/li[6]/a');
     }
+    public function checkError()
+    {
+        $I = $this;
+        $I->dontSee('Warning');
+        $I->dontSee('Fatal error');
+        $I->dontSee('Notice');
+    }
 
 }
 
