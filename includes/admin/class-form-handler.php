@@ -38,7 +38,7 @@ class Form_Handler {
             return;
         }
 
-        if ( ! isset( $_POST['erp_settings'] ) || ! wp_verify_nonce( sanitize_key( $_POST['erp_settings'] ), 'erp-nonce' ) ) {
+        if ( ! isset( $_POST['erp_settings'] ) || ! wp_verify_nonce( sanitize_key( $_POST['erp_settings'] ), 'erp_nonce' ) ) {
             return;
         }
 

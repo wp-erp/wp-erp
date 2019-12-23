@@ -7,9 +7,9 @@ $count_all          = count( wperp()->modules->get_modules() );
 $count_active       = count( $all_active_modules );
 $count_inactive     = count( wperp()->modules->get_inactive_modules() );
 
-$all_url            = admin_url( 'admin.php/?page=erp-modules' );
-$active_url         = admin_url( 'admin.php/?page=erp-modules&tab=active' );
-$inactive_url       = admin_url( 'admin.php/?page=erp-modules&tab=inactive' );
+$all_url            = admin_url( 'admin.php?page=erp-modules' );
+$active_url         = admin_url( 'admin.php?page=erp-modules&tab=active' );
+$inactive_url       = admin_url( 'admin.php?page=erp-modules&tab=inactive' );
 
 $current_tab        = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : ''
 ?>

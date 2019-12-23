@@ -107,7 +107,7 @@ class Setup_Wizard {
         wp_register_script( 'erp-setup', WPERP_ASSETS . "/js/erp$suffix.js", array( 'jquery', 'jquery-ui-datepicker', 'erp-select2' ), date( 'Ymd' ), true );
 
         if ( ! empty( $_POST['save_step'] ) && isset( $this->steps[ $this->step ]['handler'] ) ) {
-            call_user_func( esc_html( $this->steps[ $this->step ]['handler'] ) );
+            call_user_func( $this->steps[ $this->step ]['handler'] );
         }
 
         ob_start();

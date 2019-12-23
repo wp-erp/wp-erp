@@ -41,7 +41,7 @@
                     </div>
 
                     <div class="note-body">
-                        <?php echo esc_html( wpautop( $note->comment ) ); ?>
+                        <?php echo wp_kses_post( wpautop( $note->comment ) ); ?>
                     </div>
                     <?php if ( current_user_can( 'manage_options' ) OR (wp_get_current_user()->ID == $note->comment_by ) ) { ?>
                         <div class="row-action">
