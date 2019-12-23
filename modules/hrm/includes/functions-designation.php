@@ -174,7 +174,7 @@ function erp_hr_get_designation_dropdown( $selected = '' ) {
 
     if ( $designations ) {
         foreach ($designations as $key => $title) {
-            $dropdown .= sprintf( "<option value='%s'%s>%s</option>\n", $key, selected( $selected, $key, false ), $title );
+            $dropdown .= wp_kses_post( sprintf( "<option value='%s'%s>%s</option>\n", $key, selected( $selected, $key, false ), $title ) );
         }
     }
 

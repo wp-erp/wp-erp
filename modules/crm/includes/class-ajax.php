@@ -462,7 +462,7 @@ class Ajax_Handler {
         $ids                = [];
         $contact_subscriber = [];
         $user_ids           = ( isset( $_POST['user_id'] ) && ! empty( $_POST['user_id'] ) ) ? explode(',', sanitize_text_field( wp_unslash( $_POST['user_id'] ) ) ) : [];
-        $group_ids          = ( isset( $_POST['group_id'] ) && ! empty( $_POST['group_id'] ) ) ? sanitize_text_field( wp_unslash( $_POST['group_id'] ) ) : [];
+        $group_ids          = ( isset( $_POST['group_id'] ) && ! empty( $_POST['group_id'] ) ) ? wp_unslash( $_POST['group_id'] ) : [];
 
         if ( empty( $user_ids ) ) {
             $this->send_error( __( 'Contact must be required', 'erp' ) );
@@ -1012,7 +1012,7 @@ class Ajax_Handler {
         }
 
         $user_id = isset( $_REQUEST['user_id'] ) ? intval( $_REQUEST['user_id'] ) : 0;
-        $group_id = isset( $_POST['group_id'] ) ? sanitize_text_field( wp_unslash( $_POST['group_id'] ) ): [];
+        $group_id = isset( $_POST['group_id'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['group_id'] ) ): [];
 
         if ( ! current_user_can( 'erp_crm_edit_contact', $user_id ) ) {
             $this->send_error( __( 'You don\'t have any permission to assign this contact', 'erp' ) );

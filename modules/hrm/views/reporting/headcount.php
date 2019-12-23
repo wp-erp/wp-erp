@@ -8,8 +8,8 @@
         $current_year    = current_time( 'Y' );
         $dept_raw        = erp_hr_get_departments_dropdown_raw();
         $query_dept      = isset( $_REQUEST['department'] ) && '-1' != $_REQUEST['department'] ? intval( $_REQUEST['department'] ) : '';
-        $query_year      = isset( $_REQUEST['year'] ) && '-1' != $_REQUEST['year'] ? intval( $_REQUEST['year'] ) : date('Y');
-        $user_all        = $wpdb->get_results( $wpdb->prepare( "SELECT user_id, department, hiring_date, termination_date FROM {$wpdb->prefix}erp_hr_employees WHERE status = 'active'" ) );
+        $query_year      = isset( $_REQUEST['year'] ) && '-1' != $_REQUEST['year'] ? $_REQUEST['year'] : date('Y');
+        $user_all        = $wpdb->get_results( "SELECT user_id, department, hiring_date, termination_date FROM {$wpdb->prefix}erp_hr_employees WHERE status = 'active'" );
         $user_filtered   = [];
         $this_month      = $query_year ? date( $query_year . '-12-01') : current_time( 'Y-m-01' );
         $js_this_month   = strtotime( $this_month ) * 1000 + ( 15*24*60*60*1000 );

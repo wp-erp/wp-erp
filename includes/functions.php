@@ -616,9 +616,9 @@ function erp_print_key_value( $label, $value, $sep = ' : ', $type = 'text' ) {
 
     printf(
         '<label>%s</label> <span class="sep">%s</span> <span class="value">%s</span>',
-        esc_html( $label ),
-        esc_html( $sep ),
-        esc_html( $value )
+        wp_kses_post( $label ),
+        wp_kses_post( $sep ),
+        wp_kses_post( $value )
     );
 }
 

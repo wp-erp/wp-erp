@@ -392,19 +392,18 @@ class Admin {
         }
 
         $fin_years = [];
-        $post_data = array_map( 'sanitize_text_field', wp_unslash( $_POST ) );
 
         if (
-            empty( $post_data['ob_names'] )
-            || empty( $post_data['ob_starts'] )
-            || empty( $post_data['ob_ends'] )
+            empty( $_POST['ob_names'] )
+            || empty( $_POST['ob_starts'] )
+            || empty( $_POST['ob_ends'] )
         ) {
             return;
         }
 
-        $ob_names   = $post_data['ob_names'];
-        $ob_starts  = $post_data['ob_starts'];
-        $ob_ends    = $post_data['ob_ends'];
+        $ob_names   = array_map( 'sanitize_text_field', wp_unslash( $_POST['ob_names'] ) );
+        $ob_starts  = array_map( 'sanitize_text_field', wp_unslash( $_POST['ob_starts'] ) );
+        $ob_ends    = array_map( 'sanitize_text_field', wp_unslash( $_POST['ob_ends'] ) );
         $created_by = get_current_user_id();
 
         if ( ! empty( $ob_names ) ) {

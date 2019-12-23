@@ -375,7 +375,7 @@ function erp_crm_customer_add_company( $customer_id, $company_id ) {
 }
 
 /**
- * Get all the companies for a single costomer
+ * Get all the companies for a single customer
  *
  * @since 1.1.0
  *
@@ -412,7 +412,7 @@ function erp_crm_customer_get_company( $postdata ) {
 }
 
 /**
- * Get all the companies for a single costomer
+ * Get all the companies for a single customer
  *
  * @since 1.0
  *
@@ -3673,7 +3673,12 @@ function erp_dropdown_roles( $selected = '' ) {
         }
     }
 
-    echo esc_html( $r );
+    echo wp_kses( $r, array(
+        'option' => array(
+            'value'    => array(),
+            'selected' => array()
+        ),
+    ) );
 }
 
 /**
