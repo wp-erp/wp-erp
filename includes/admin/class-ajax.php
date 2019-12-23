@@ -135,7 +135,7 @@ class Ajax {
     }
 
     public function view_edit_log_changes() {
-        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'wp-erp-hr-nonce' ) ) {
+        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-nonce' ) ) {
             return;
         }
 
@@ -549,14 +549,12 @@ class Ajax {
      * @return void
      */
     public function dismiss_promotional_offer() {
-        if ( ! current_user_can( 'manage_options' ) ) {
-            wp_send_json_error( esc_html__( 'You have no permission to do that', 'erp' ) );
+        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp_admin' ) ) {
+            wp_send_json_error( esc_html__( 'Invalid nonce', 'erp' ) );
         }
 
-        $nonce = isset( $_POST['nonce'] ) ? sanitize_key( wp_unslash( $_POST['nonce'] ) ) : '';
-
-        if ( ! wp_verify_nonce( $nonce, 'erp_admin' ) ) {
-            wp_send_json_error( esc_html__( 'Invalid nonce', 'erp' ) );
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( esc_html__( 'You have no permission to do that', 'erp' ) );
         }
 
         if ( ! empty( $_POST['erp_christmas_dismissed'] ) ) {
