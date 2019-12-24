@@ -384,7 +384,7 @@ class Form_Handler {
                 case 'delete' :
 
                     if ( isset( $_GET['employee_id'] ) && ! empty( $_GET['employee_id'] ) ) {
-                        erp_employee_delete( sanitize_text_field( wp_unslash( $_GET['employee_id'] ) ), false );
+                        erp_employee_delete( array_map( 'sanitize_text_field', wp_unslash( $_GET['employee_id'] ) ), false );
                     }
 
                     wp_redirect( $redirect );
@@ -392,7 +392,7 @@ class Form_Handler {
 
                 case 'permanent_delete' :
                     if ( isset( $_GET['employee_id'] ) && ! empty( $_GET['employee_id'] ) ) {
-                        erp_employee_delete(sanitize_text_field( wp_unslash(  $_GET['employee_id'] ) ), true );
+                        erp_employee_delete( array_map( 'sanitize_text_field', wp_unslash( $_GET['employee_id'] ) ), true );
                     }
 
                     wp_redirect( $redirect );
@@ -400,7 +400,7 @@ class Form_Handler {
 
                 case 'restore' :
                     if ( isset( $_GET['employee_id'] ) && ! empty( $_GET['employee_id'] ) ) {
-                        erp_employee_restore( sanitize_text_field( wp_unslash( $_GET['employee_id'] ) ) );
+                        erp_employee_restore( array_map( 'sanitize_text_field', wp_unslash( $_GET['employee_id'] ) ) );
                     }
 
                     wp_redirect( $redirect );
