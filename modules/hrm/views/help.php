@@ -31,7 +31,7 @@
             __( 'How to create announcement?', 'erp' )                  => 'https://wperp.com/docs/hr/announcement/',
             __( 'How to setup working days for the employees?', 'erp' ) => 'https://wperp.com/docs/hr/settings/work-days/',
             __( 'How to generate reports?', 'erp' )                     => 'https://wperp.com/docs/hr/reporting/',
-            __( 'Do you have any video tutorial on HRM?', 'erp' )       => 'https://wperp.com/docs/hr/videos/'
+            __( 'Do you have any video tutorial on HRM?', 'erp' )       => 'https://wperp.com/tv/category/hr/'
         )
     );
 

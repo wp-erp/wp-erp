@@ -87,16 +87,18 @@ class ERP_Email_Settings extends ERP_Settings_Page {
             'type' => 'sectionend', 'id' => 'script_styling_options'
         ];
 
-        $fields['general'][] = [
-            'title' => __( 'Notification Emails', 'erp' ),
-            'desc'  => __( 'Email notifications sent from WP ERP are listed below. Click on an email to configure it.', 'erp' ),
-            'type'  => 'title',
-            'id'    => 'email_notification_settings'
-        ];
+        if ( ! empty( wperp()->emailer->get_emails() ) ) {
+            $fields['general'][] = [
+                'title' => __( 'Notification Emails', 'erp' ),
+                'desc'  => __( 'Email notifications sent from WP ERP are listed below. Click on an email to configure it.', 'erp' ),
+                'type'  => 'title',
+                'id'    => 'email_notification_settings'
+            ];
 
-        $fields['general'][] = [
-            'type' => 'notification_emails'
-        ];
+            $fields['general'][] = [
+                'type' => 'notification_emails'
+            ];
+        }
 
         $fields['general'][] = [
             'type' => 'sectionend',
