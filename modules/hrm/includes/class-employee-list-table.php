@@ -55,11 +55,11 @@ class Employee_List_Table extends \WP_List_Table {
             <label class="screen-reader-text" for="new_role"><?php esc_html_e( 'Filter by Designation', 'erp' ) ?></label>
             <select name="filter_department" id="filter_department">
                 <?php echo wp_kses( erp_hr_get_departments_dropdown( $selected_department ), array(
-                                        'option' => array(
-                                            'value' => array(),
-                                            'selected' => array()
-                                        ),
-                                    ) ); ?>
+                    'option' => array(
+                        'value' => array(),
+                        'selected' => array()
+                    ),
+                ) ); ?>
             </select>
 
             <label class="screen-reader-text" for="new_role"><?php esc_html_e( 'Filter by Employment Type', 'erp' ) ?></label>
