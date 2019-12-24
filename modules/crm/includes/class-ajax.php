@@ -405,8 +405,6 @@ class Ajax_Handler {
             'type' => $type
         ];
 
-        error_log( print_r( $data, true ) );
-
         $deleted = erp_delete_people( $data );
 
         if ( is_wp_error( $deleted ) ) {
