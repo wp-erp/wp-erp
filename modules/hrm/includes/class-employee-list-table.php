@@ -44,7 +44,12 @@ class Employee_List_Table extends \WP_List_Table {
 
             <label class="screen-reader-text" for="new_role"><?php esc_html_e( 'Filter by Designation', 'erp' ) ?></label>
             <select name="filter_designation" id="filter_designation">
-                <?php echo erp_hr_get_designation_dropdown( $selected_desingnation ); ?>
+                <?php echo wp_kses( erp_hr_get_designation_dropdown( $selected_desingnation ), array(
+                    'option' => array(
+                        'value' => array(),
+                        'selected' => array()
+                    )
+                ) ); ?>
             </select>
 
             <label class="screen-reader-text" for="new_role"><?php esc_html_e( 'Filter by Designation', 'erp' ) ?></label>
