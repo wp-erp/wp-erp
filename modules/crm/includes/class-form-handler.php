@@ -125,7 +125,8 @@ class Form_Handler {
 
                 case 'contact_group_delete':
                     if ( isset( $_GET['contact_group'] ) && !empty( $_GET['contact_group'] ) ) {
-                        erp_crm_contact_group_delete( sanitize_text_field( wp_unslash( $_GET['contact_group'] ) ) );
+                        $groups = array_map( 'sanitize_text_field', wp_unslash( $_GET['contact_group'] ) );
+                        erp_crm_contact_group_delete( $groups );
                     }
                     wp_redirect( $redirect );
                     exit();
