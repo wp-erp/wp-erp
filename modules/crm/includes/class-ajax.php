@@ -944,8 +944,8 @@ class Ajax_Handler {
 
         $data = [];
 
-        $user_id = ( isset( $_POST['user_id'] ) && !empty( $_POST['user_id'] ) ) ? (int) $_POST['user_id'] : 0;
-        $group_ids = ( isset( $_POST['group_id'] ) && !empty( $_POST['group_id'] ) ) ? (array) sanitize_text_field( wp_unslash( $_POST['group_id'] ) ): [];
+        $user_id   = ! empty( $_POST['user_id'] )  ? absint( $_POST['user_id'] ) : 0;
+        $group_ids = ! empty( $_POST['group_id'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['group_id'] ) ): [];
 
         if ( ! $user_id ) {
             $this->send_error( __( 'No user data found', 'erp' ) );
