@@ -364,7 +364,7 @@ class Ajax_Handler {
         }
 
         $ids         = [];
-        $customer_id = ( isset( $_REQUEST['id'] ) && is_array( $_REQUEST['id'] ) ) ? (array)sanitize_text_field( wp_unslash( $_REQUEST['id'] ) ): intval( $_REQUEST['id'] );
+        $customer_id = ( isset( $_REQUEST['id'] ) && is_array( $_REQUEST['id'] ) ) ? array_map( 'sanitize_text_field', wp_unslash( $_REQUEST['id'] ) ): intval( $_REQUEST['id'] );
         $hard        = isset( $_REQUEST['hard'] ) ? intval( $_REQUEST['hard'] ) : 0;
         $type        = isset( $_REQUEST['type'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['type'] ) ) : '';
 
@@ -404,6 +404,8 @@ class Ajax_Handler {
             'hard' => $hard,
             'type' => $type
         ];
+
+        error_log( print_r( $data, true ) );
 
         $deleted = erp_delete_people( $data );
 

@@ -431,7 +431,7 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
      */
     public function upload_attachments( $request ) {
 
-        $file = isset( $_FILES['attachments'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_FILES['attachments'] ) ) : [];
+        $file = $_FILES['attachments'];
 
         $movefiles = erp_acct_upload_attachments( $file );
 

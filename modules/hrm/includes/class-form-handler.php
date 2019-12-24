@@ -453,7 +453,7 @@ class Form_Handler {
                 case 'designation_delete' :
 
                     if ( isset( $_GET['desig'] ) && ! empty( $_GET['desig'] ) ) {
-                        $not_deleted_item = erp_hr_delete_designation( sanitize_text_field( wp_unslash( $_GET['desig'] ) ) );
+                        $not_deleted_item = erp_hr_delete_designation( array_map( 'sanitize_text_field', wp_unslash( $_GET['desig'] ) ) );
                     }
 
                     if ( ! empty ( $not_deleted_item ) ) {
