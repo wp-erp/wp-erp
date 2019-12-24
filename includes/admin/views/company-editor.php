@@ -75,7 +75,12 @@
                                 <td><label for="erp-country"><?php esc_html_e( 'Country', 'erp' ); ?></label> <span class="required">*</span></td>
                                 <td>
                                     <select name="address[country]" id="erp-country" data-parent="table" class="erp-country-select select2" required="required">
-                                        <?php echo wp_kses_post( $country->country_dropdown( $company->address['country'] ) ); ?>
+                                        <?php echo wp_kses( $country->country_dropdown( $company->address['country'] ), array(
+                                            'option' => array(
+                                                'value' => array(),
+                                                'selected' => array()
+                                            ),
+                                        ) ); ?>
                                     </select>
                                 </td>
                             </tr>
@@ -87,7 +92,12 @@
                                         <?php
                                         if ( $company->address['country'] ) {
                                             $states = $country->get_states( $company->address['country'] );
-                                            echo wp_kses_post( erp_html_generate_dropdown( $states, $company->address['state'] ) );
+                                            echo wp_kses( erp_html_generate_dropdown( $states, $company->address['state'] ), array(
+                                                'option' => array(
+                                                    'value' => array(),
+                                                    'selected' => array()
+                                                ),
+                                            ) );
                                         } else {
                                             ?>
                                             <option value="-1"><?php esc_html_e( '- Select -', 'erp' ); ?></option>

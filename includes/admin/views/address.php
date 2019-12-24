@@ -37,7 +37,12 @@
         <label for="erp-popup-country"><?php esc_html_e( 'Country', 'erp' ); ?> <span class="required">*</span></label>
         <select name="country" id="erp-popup-country" class="erp-country-select select2" data-parent="ul">
             <?php $country = \WeDevs\ERP\Countries::instance(); ?>
-            <?php echo wp_kses_post( $country->country_dropdown( erp_get_country() ) ); ?>
+            <?php echo wp_kses( $country->country_dropdown( erp_get_country() ), array(
+                'option' => array(
+                    'value' => array(),
+                    'selected' => array()
+                ),
+            ) ); ?>
         </select>
     </li>
 
