@@ -34278,7 +34278,7 @@ var render = function() {
       _vm._v(" "),
       _c("list-table", {
         attrs: {
-          tableClass: "wperp-table people-table table-striped table-dark",
+          tableClass: "wperp-table people-table table-striped table-dark ",
           "action-column": "actions",
           columns: _vm.columns,
           rows: _vm.row_data,
@@ -35452,7 +35452,8 @@ var render = function() {
         [
           _c("list-table", {
             attrs: {
-              tableClass: "wperp-table table-striped table-dark widefat",
+              tableClass:
+                "wperp-table people-trns-table table-striped table-dark widefat",
               "action-column": "actions",
               columns: _vm.columns,
               rows: _vm.rows,
