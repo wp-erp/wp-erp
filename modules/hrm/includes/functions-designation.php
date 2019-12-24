@@ -136,7 +136,7 @@ function erp_hr_delete_designation( $designation_id ) {
 
         return \WeDevs\ERP\HRM\Models\Designation::find( $designation_id )->delete();
     }
-    
+
 }
 
 /**
@@ -174,7 +174,7 @@ function erp_hr_get_designation_dropdown( $selected = '' ) {
 
     if ( $designations ) {
         foreach ($designations as $key => $title) {
-            $dropdown .= wp_kses_post( sprintf( "<option value='%s'%s>%s</option>\n", $key, selected( $selected, $key, false ), $title ) );
+            $dropdown .= sprintf( "<option value='%s'%s>%s</option>\n", $key, selected( $selected, $key, false ), $title );
         }
     }
 
