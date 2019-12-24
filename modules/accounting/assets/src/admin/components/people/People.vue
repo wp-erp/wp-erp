@@ -13,7 +13,7 @@
         <people-modal v-if="showModal" :people.sync="people" :title="buttonTitle" @close="showModal = false" />
 
         <list-table
-            tableClass="wperp-table people-table table-striped table-dark"
+            tableClass="wperp-table people-table table-striped table-dark "
             action-column="actions"
             :columns="columns"
             :rows="row_data"
@@ -226,7 +226,6 @@ export default {
             align-items: center;
 
             .add-new-people {
-                padding-bottom: 10px 10px 20px 0;
                 align-items: center;
                 display: flex;
                 width: 50%;
@@ -246,8 +245,16 @@ export default {
                 }
             }
         }
-
-        .customer-list {
+        .widefat {
+            tfoot td,
+            tbody th {
+                line-height: 2.5em;
+            }
+            tbody td {
+                line-height: 3em;
+            }
+        }
+        .people-table {
             border-radius: 3px;
             tbody {
                 background: #FAFAFA;
@@ -277,17 +284,6 @@ export default {
                     }
                 }
             }
-        }
-        .widefat {
-            tfoot td,
-            tbody th {
-                line-height: 2.5em;
-            }
-            tbody td {
-                line-height: 3em;
-            }
-        }
-        .people-table {
             .col--actions {
                 float: left !important;
             }

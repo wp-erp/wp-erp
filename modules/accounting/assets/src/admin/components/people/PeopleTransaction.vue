@@ -47,7 +47,7 @@
         <div class="wperp-transactions-section wperp-section">
             <div class="table-container">
                 <list-table
-                    tableClass="wperp-table table-striped table-dark widefat"
+                    tableClass="wperp-table people-trns-table table-striped table-dark widefat"
                     action-column="actions"
                     :columns="columns"
                     :rows="rows"
@@ -146,6 +146,9 @@ export default {
 </script>
 
 <style lang="less">
+    .people-trns-table tbody tr td:last-child {
+        text-align: left !important;
+    }
     .open-dropdown-menu {
         visibility: visible !important;
         opacity: 1 !important;
