@@ -44,7 +44,7 @@ $contact_tags = wp_list_pluck( $contact_tags, 'name' );
                                 <?php if ( $customer->get_mobile() != '—' ): ?>
                                     <p>
                                         <i class="fa fa-phone"></i>&nbsp;
-                                        <?php echo esc_html( $customer->get_mobile() ); ?>
+                                        <?php echo wp_kses_post( $customer->get_mobile() ); ?>
                                     </p>
                                 <?php endif ?>
 

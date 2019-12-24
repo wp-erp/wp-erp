@@ -21,7 +21,7 @@
 
                         <div class="wperp-form-group mb-0">
                             <label>{{ __('Description', 'erp') }}</label>
-                            <textarea v-model="desc" rows="4" class="wperp-form-field"></textarea>
+                            <textarea v-model="desc" rows="4" class="wperp-form-field" maxlength="250"></textarea>
                         </div>
 
                     </div>

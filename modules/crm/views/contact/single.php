@@ -43,7 +43,7 @@ $contact_list_url = add_query_arg( ['page' => 'erp-crm', 'section' => 'contacts'
                                 <?php if ( $customer->get_mobile() != '—' ): ?>
                                     <p>
                                         <i class="fa fa-phone"></i>&nbsp;
-                                        <?php echo esc_attr( $customer->get_mobile() ); ?>
+                                        <?php echo wp_kses_post( $customer->get_mobile() ); ?>
                                     </p>
                                 <?php endif ?>
 

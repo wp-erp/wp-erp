@@ -32740,7 +32740,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
           url: 'https://wperp.com/docs/accounting/sales-transactions/creating-your-first-invoice/'
         }, {
           label: window.__('How to receive payment from invoices?', 'erp'),
-          url: 'https://wperp.com/docs/accounting/sales-transactions/receive-payment-new/'
+          url: 'https://wperp.com/docs/accounting/sales-transactions/adding-invoice-payments/'
         }, {
           label: window.__('How can I delete an invoice?', 'erp'),
           url: 'https://wperp.com/docs/accounting/sales-transactions/creating-your-first-invoice/'
@@ -58502,7 +58502,7 @@ var render = function() {
                         }
                       ],
                       staticClass: "wperp-form-field",
-                      attrs: { rows: "4" },
+                      attrs: { rows: "4", maxlength: "250" },
                       domProps: { value: _vm.desc },
                       on: {
                         input: function($event) {
