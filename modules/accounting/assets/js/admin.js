@@ -1690,18 +1690,20 @@ if (false) {(function () {
     };
   },
   created: function created() {
+    var _this = this;
+
     this.url = this.generateUrl();
-    this.selectedCountry();
-    this.setInputField();
     this.getCustomers();
-    this.getCountries();
+    this.getCountries(function () {
+      return _this.setInputField();
+    });
   },
   mounted: function mounted() {
     window.acct.hooks.doAction('acctPeopleID', this.peopleFields.id);
   },
   methods: {
     saveCustomer: function saveCustomer() {
-      var _this = this;
+      var _this2 = this;
 
       var peopleFields = window.acct.hooks.applyFilters('acctPeopleFieldsData', this.peopleFields);
 
@@ -1723,13 +1725,13 @@ if (false) {(function () {
 
       var message = type === 'post' ? 'Created' : 'Updated';
       __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */][type](url, peopleFields).then(function (response) {
-        _this.$root.$emit('peopleUpdate');
+        _this2.$root.$emit('peopleUpdate');
 
-        _this.resetForm();
+        _this2.resetForm();
 
-        _this.$store.dispatch('spinner/setSpinner', false);
+        _this2.$store.dispatch('spinner/setSpinner', false);
 
-        _this.showAlert('success', message);
+        _this2.showAlert('success', message);
       });
     },
     checkForm: function checkForm() {
@@ -1766,8 +1768,8 @@ if (false) {(function () {
     showDetails: function showDetails() {
       this.showMore = !this.showMore;
     },
-    getCountries: function getCountries() {
-      var _this2 = this;
+    getCountries: function getCountries(callBack) {
+      var _this3 = this;
 
       __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('customers/country').then(function (response) {
         var country = response.data.country;
@@ -1778,20 +1780,24 @@ if (false) {(function () {
             states[x] = [];
           }
 
-          _this2.countries.push({
+          _this3.countries.push({
             id: x,
-            name: _this2.decodeHtml(country[x]),
+            name: _this3.decodeHtml(country[x]),
             state: states[x]
           });
         }
 
         for (var state in states) {
           for (var _x in states[state]) {
-            _this2.get_states.push({
+            _this3.get_states.push({
               id: _x,
               name: states[state][_x]
             });
           }
+        }
+
+        if (typeof callBack !== 'undefined') {
+          callBack();
         }
       });
     },
@@ -1810,7 +1816,7 @@ if (false) {(function () {
       }
     },
     checkEmailExistence: function checkEmailExistence() {
-      var _this3 = this;
+      var _this4 = this;
 
       if (this.peopleFields.email) {
         if (!this.people) {
@@ -1819,16 +1825,16 @@ if (false) {(function () {
               email: this.peopleFields.email
             }
           }).then(function (res) {
-            _this3.emailExists = res.data;
+            _this4.emailExists = res.data;
           });
         }
       }
     },
     getCustomers: function getCustomers() {
-      var _this4 = this;
+      var _this5 = this;
 
       __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('/customers').then(function (response) {
-        _this4.customers = response.data;
+        _this5.customers = response.data;
       });
     },
     setInputField: function setInputField() {
@@ -1858,7 +1864,7 @@ if (false) {(function () {
     },
     selectedCountry: function selectedCountry(id) {
       return this.countries.find(function (country) {
-        return id === country.id;
+        return country.id === id;
       });
     },
     selectedState: function selectedState(id) {
