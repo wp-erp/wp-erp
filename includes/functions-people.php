@@ -472,6 +472,8 @@ function erp_insert_people( $args = array(), $return_object = false ) {
     );
 
     $args           = wp_parse_args( $args, $defaults );
+
+
     $errors         = [];
     $unchanged_data = [];
 
@@ -593,7 +595,7 @@ function erp_insert_people( $args = array(), $return_object = false ) {
         if ( is_wp_error( $user_id ) ) {
             return new WP_Error( 'update-user', $user_id->get_error_message() );
         } else {
-            $people->update( [ 'user_id' => $user_id, 'email' => $args['email'], 'website' => $args['website'] ] );
+            $people->update( [ 'user_id' => $user_id, 'email' => $args['email'], 'website' => $args['website'], 'contact_owner' => $args['contact_owner'] ] );
 
             unset( $args['id'], $args['user_id'], $args['email'], $args['website'], $args['contact_owner'], $args['created_by'], $args['hash'] );
 
