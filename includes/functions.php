@@ -686,7 +686,7 @@ function erp_extract_dates( $start_date, $end_date ) {
     }
 
     $interval = DateInterval::createFromDateString( '1 day' );
-    $period   = new DatePeriod( $start_date, $interval, $end_date, null, null );
+    $period   = new DatePeriod( $start_date, $interval, $end_date );
 
     // prepare the periods
     $dates = array();
