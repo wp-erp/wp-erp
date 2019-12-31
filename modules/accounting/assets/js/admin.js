@@ -23108,6 +23108,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 //
 //
 //
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
@@ -52483,11 +52485,17 @@ var render = function() {
             on: {
               click: function($event) {
                 $event.preventDefault()
-                return _vm.$router.push("journals/new")
+                return _vm.$router.push({ name: "JournalCreate" })
               }
             }
           },
-          [_vm._v(_vm._s(_vm.__("New Journal Entry", "erp")))]
+          [
+            _vm._v(
+              "\n            " +
+                _vm._s(_vm.__("New Journal Entry", "erp")) +
+                "\n        "
+            )
+          ]
         )
       ]),
       _vm._v(" "),
