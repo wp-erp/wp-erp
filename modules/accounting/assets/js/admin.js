@@ -46022,6 +46022,7 @@ var render = function() {
                               staticClass: "wperp-form-field display-flex",
                               attrs: {
                                 rows: "4",
+                                maxlength: "250",
                                 placeholder: _vm.__("Particulars", "erp")
                               },
                               domProps: { value: _vm.particulars },
@@ -47895,6 +47896,7 @@ var render = function() {
                       staticClass: "wperp-form-field display-flex",
                       attrs: {
                         rows: "4",
+                        maxlength: "250",
                         placeholder: _vm.__("Internal Information", "erp")
                       },
                       domProps: { value: _vm.particulars },
@@ -48367,6 +48369,7 @@ var render = function() {
                           staticClass: "wperp-form-field display-flex",
                           attrs: {
                             rows: "1",
+                            maxlength: "250",
                             placeholder: _vm.__("Particulars", "erp")
                           },
                           domProps: { value: line.description },
@@ -48548,6 +48551,7 @@ var render = function() {
                           staticClass: "wperp-form-field display-flex",
                           attrs: {
                             rows: "4",
+                            maxlength: "250",
                             placeholder: _vm.__("Internal Information", "erp")
                           },
                           domProps: { value: _vm.particulars },
@@ -49631,6 +49635,7 @@ var render = function() {
                       staticClass: "wperp-form-field display-flex",
                       attrs: {
                         rows: "4",
+                        maxlength: "250",
                         placeholder: _vm.__("Internal Information", "erp")
                       },
                       domProps: { value: _vm.particulars },
@@ -50805,6 +50810,7 @@ var render = function() {
                           staticClass: "wperp-form-field display-flex",
                           attrs: {
                             rows: "4",
+                            maxlength: "250",
                             placeholder: _vm.__("Particulars", "erp")
                           },
                           domProps: { value: _vm.particulars },
@@ -51877,6 +51883,7 @@ var render = function() {
                       staticClass: "wperp-form-field display-flex",
                       attrs: {
                         rows: "4",
+                        maxlength: "250",
                         placeholder: _vm.__("Internal Information", "erp")
                       },
                       domProps: { value: _vm.particulars },
@@ -52721,6 +52728,7 @@ var render = function() {
                     staticClass: "wperp-form-field display-flex",
                     attrs: {
                       rows: "1",
+                      maxlength: "250",
                       placeholder: _vm.__("Internal Information", "erp")
                     },
                     domProps: { value: _vm.journal_parti },
@@ -52847,7 +52855,7 @@ var render = function() {
                                 }
                               ],
                               staticClass: "wperp-form-field",
-                              attrs: { type: "text" },
+                              attrs: { type: "text", maxlength: "250" },
                               domProps: { value: _vm.particulars[key] },
                               on: {
                                 input: function($event) {
@@ -53873,6 +53881,7 @@ var render = function() {
                       name: "particulars",
                       id: "particulars",
                       rows: "3",
+                      maxlength: "250",
                       placeholder: _vm.__("Type Here", "erp")
                     },
                     domProps: { value: _vm.particulars },
@@ -54623,6 +54632,7 @@ var render = function() {
                           staticClass: "wperp-form-field display-flex",
                           attrs: {
                             rows: "1",
+                            maxlength: "250",
                             placeholder: _vm.__("Particulars", "erp")
                           },
                           domProps: { value: line.particulars },
@@ -54803,6 +54813,7 @@ var render = function() {
                           staticClass: "wperp-form-field display-flex",
                           attrs: {
                             rows: "4",
+                            maxlength: "250",
                             placeholder: _vm.__("Internal Information", "erp")
                           },
                           domProps: { value: _vm.particulars },
@@ -59678,6 +59689,7 @@ var render = function() {
                   staticClass: "wperp-form-field",
                   attrs: {
                     rows: "3",
+                    maxlength: "250",
                     placeholder: _vm.__("Enter Particulars", "erp")
                   },
                   domProps: { value: _vm.particulars },
@@ -61614,6 +61626,7 @@ var render = function() {
                           staticClass: "wperp-form-field display-flex",
                           attrs: {
                             rows: "1",
+                            maxlength: "250",
                             placeholder: _vm.__("Particulars", "erp")
                           },
                           domProps: { value: line.particulars },
@@ -61796,6 +61809,7 @@ var render = function() {
                           staticClass: "wperp-form-field display-flex",
                           attrs: {
                             rows: "4",
+                            maxlength: "250",
                             placeholder: _vm.__("Internal Information", "erp")
                           },
                           domProps: { value: _vm.particulars },

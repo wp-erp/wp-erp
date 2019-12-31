@@ -78,7 +78,7 @@
                                 <multi-select v-model="line.ledger_id" :options="ledgers" />
                             </td>
                             <td class="col--particulars">
-                                <textarea v-model="line.particulars" rows="1" class="wperp-form-field display-flex" :placeholder="__('Particulars', 'erp')"></textarea>
+                                <textarea v-model="line.particulars" rows="1" maxlength="250" class="wperp-form-field display-flex" :placeholder="__('Particulars', 'erp')"></textarea>
                             </td>
                             <td class="col--amount" data-colname="Amount">
                                 <input type="text" name="amount" v-model="line.amount" @keyup="updateFinalAmount" class="text-right wperp-form-field" :required="line.ledger_id ? true : false">
@@ -106,7 +106,7 @@
                         <tr class="wperp-form-group">
                             <td colspan="9" style="text-align: left;">
                                 <label>{{ __('Particulars', 'erp') }}</label>
-                                <textarea v-model="particulars" rows="4" class="wperp-form-field display-flex" :placeholder="__('Internal Information', 'erp')"></textarea>
+                                <textarea v-model="particulars" rows="4" maxlength="250" class="wperp-form-field display-flex" :placeholder="__('Internal Information', 'erp')"></textarea>
                             </td>
                         </tr>
                         <tr>
