@@ -61,7 +61,7 @@
 
                         <div class="wperp-col-xs-12">
                             <label>{{ __('Particulars', 'erp') }}</label>
-                            <textarea rows="3" v-model="particulars" class="wperp-form-field" :placeholder="__('Enter Particulars', 'erp')"></textarea>
+                            <textarea rows="3" v-model="particulars" maxlength="250" class="wperp-form-field" :placeholder="__('Enter Particulars', 'erp')"></textarea>
                         </div>
                         <div class="wperp-col-xs-12">
                             <div class="wperp-form-group text-right mt-10 mb-0">
