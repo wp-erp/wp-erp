@@ -283,8 +283,9 @@ class Ajax_Handler {
     public function create_customer() {
         $this->verify_nonce( 'wp-erp-crm-customer-nonce' );
 
-        $current_user_id = get_current_user_id();
-        $posted = array_map( 'strip_tags_deep', $_POST );
+        $current_user_id                      = get_current_user_id();
+        $posted                               = array_map( 'strip_tags_deep', $_POST );
+        $posted['contact']['main']['company'] = stripslashes( $posted['contact']['main']['company'] ); // To remove Apostrophe slash
 
         $data   = array_merge( $posted['contact']['main'], $posted['contact']['meta'], $posted['contact']['social'] );
 
