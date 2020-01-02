@@ -241,7 +241,7 @@ export default {
                 this.form_errors.push('Total amount can\'t be zero.');
             }
 
-            if (this.isWorking) {
+            if (Math.abs(this.debit_total - this.credit_total)) {
                 this.form_errors.push('Debit and Credit must be Equal.');
             }
         },
@@ -257,7 +257,8 @@ export default {
 
             const diff = Math.abs(this.debit_total - this.credit_total);
             this.isWorking = true;
-            if (diff === 0) {
+
+            if (!diff) {
                 this.isWorking = false;
             }
         },
@@ -301,12 +302,12 @@ export default {
         },
 
         totalDebit() {
-            this.debit_total = this.debitLine.reduce((a, b) => parseFloat(a) + parseFloat(b), 0);
+            this.debit_total = this.debitLine.reduce((a, b) => parseFloat(a) + parseFloat(b), 0).toFixed(2);
             return this.debit_total;
         },
 
         totalCredit() {
-            this.creditLine.reduce((a, b) => parseFloat(a) + parseFloat(b), 0);
+            this.credit_total = this.creditLine.reduce((a, b) => parseFloat(a) + parseFloat(b), 0).toFixed(2);
             return this.credit_total;
         }
     },

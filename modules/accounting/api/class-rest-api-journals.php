@@ -182,16 +182,12 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
         $vocher_amount_cr = [];
 
         foreach ( $items as $key => $item ) {
-            $vocher_amount_dr[ $key ] = $item['debit'];
-            $vocher_amount_cr[ $key ] = $item['credit'];
+            $vocher_amount_dr[ $key ] = (float) $item['debit'];
+            $vocher_amount_cr[ $key ] = (float) $item['credit'];
         }
 
         $total_dr = array_sum( $vocher_amount_dr );
         $total_cr = array_sum( $vocher_amount_cr );
-
-        if ( $total_dr !== $total_cr ) {
-            return new WP_Error( 'rest_journal_invalid_amount', __( 'Summation of debit and credit must be equal.' ), [ 'status' => 400 ] );
-        }
 
         $trans_data['voucher_amount'] = $total_dr;
 
