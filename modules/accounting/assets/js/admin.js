@@ -57471,7 +57471,7 @@ var render = function() {
                     ])
                   : _vm._e(),
                 _vm._v(" "),
-                null != _vm.expense_data.check_data
+                _vm.expense_data.check_data.length
                   ? _c("div", { staticClass: "wperp-row" }, [
                       _c("div", { staticClass: "wperp-col-sm-12" }, [
                         _c("table", [
