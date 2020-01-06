@@ -24844,6 +24844,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 //
 //
 //
+//
+//
 
 
 
@@ -55662,25 +55664,32 @@ var render = function() {
                   )
                 : _vm._e(),
               _vm._v(" "),
-              _c(
-                "a",
-                {
-                  directives: [
-                    {
-                      name: "clipboard",
-                      rawName: "v-clipboard",
-                      value: _vm.copyLink,
-                      expression: "copyLink"
-                    }
-                  ],
-                  staticClass: "wperp-btn btn--default print-btn",
-                  attrs: { href: "#" },
-                  on: { success: _vm.handleSuccess, error: _vm.handleError }
-                },
-                [_vm._v(_vm._s(_vm.__("Copy Link", "erp")))]
-              )
+              _vm.invoice
+                ? [
+                    _c(
+                      "a",
+                      {
+                        directives: [
+                          {
+                            name: "clipboard",
+                            rawName: "v-clipboard",
+                            value: _vm.copyLink,
+                            expression: "copyLink"
+                          }
+                        ],
+                        staticClass: "wperp-btn btn--default print-btn",
+                        attrs: { href: "#" },
+                        on: {
+                          success: _vm.handleSuccess,
+                          error: _vm.handleError
+                        }
+                      },
+                      [_vm._v(_vm._s(_vm.__("Copy Link", "erp")))]
+                    )
+                  ]
+                : _vm._e()
             ],
-            1
+            2
           )
         ]),
         _vm._v(" "),

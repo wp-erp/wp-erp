@@ -27,10 +27,12 @@
                         </template>
                     </dropdown>
 
-                    <a href="#" class="wperp-btn btn--default print-btn"
-                       v-clipboard="copyLink"
-                       @success="handleSuccess"
-                       @error="handleError">{{ __('Copy Link', 'erp') }}</a>
+                    <template v-if="invoice">
+                        <a href="#" class="wperp-btn btn--default print-btn"
+                           v-clipboard="copyLink"
+                           @success="handleSuccess"
+                           @error="handleError">{{ __('Copy Link', 'erp') }}</a>
+                    </template>
                 </div>
             </div>
 
