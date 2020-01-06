@@ -21579,7 +21579,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       var _prepareDataLoad = __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_asyncToGenerator___default()(
       /*#__PURE__*/
       regeneratorRuntime.mark(function _callee() {
-        var _ref, _ref2, request1, request2, canEdit;
+        var _ref, _ref2, request, canEdit, purchase_data;
 
         return regeneratorRuntime.wrap(function _callee$(_context) {
           while (1) {
@@ -21593,30 +21593,30 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
                 this.editMode = true;
                 this.voucherNo = this.$route.params.id;
                 _context.next = 5;
-                return Promise.all([__WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].get('/products', {
-                  params: {
-                    number: -1
-                  }
-                }), __WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].get("/purchases/".concat(this.$route.params.id))]);
+                return Promise.all([__WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].get("/purchases/".concat(this.$route.params.id))]);
 
               case 5:
                 _ref = _context.sent;
-                _ref2 = __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_slicedToArray___default()(_ref, 2);
-                request1 = _ref2[0];
-                request2 = _ref2[1];
-                canEdit = Boolean(Number(request2.data.editable));
+                _ref2 = __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_slicedToArray___default()(_ref, 1);
+                request = _ref2[0];
+                canEdit = Boolean(Number(request.data.editable));
 
                 if (canEdit) {
-                  _context.next = 13;
+                  _context.next = 12;
                   break;
                 }
 
                 this.showAlert('error', 'Can\'t edit');
                 return _context.abrupt("return");
 
-              case 13:
-                this.products = request1.data;
-                this.setDataForEdit(request2.data); // initialize combo button id with `update`
+              case 12:
+                purchase_data = request.data;
+
+                if (purchase_data) {
+                  this.getProducts(purchase_data.vendor_id);
+                }
+
+                this.setDataForEdit(request.data); // initialize combo button id with `update`
 
                 this.$store.dispatch('combo/setBtnID', 'update');
                 _context.next = 22;
@@ -21624,10 +21624,10 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
               case 18:
                 /**
-                     * ----------------------------------------------
-                     * create a new purchase
-                     * -----------------------------------------------
-                     */
+                 * ----------------------------------------------
+                 * create a new purchase
+                 * -----------------------------------------------
+                 */
                 this.basic_fields.trn_date = erp_acct_var.current_date;
                 this.basic_fields.due_date = erp_acct_var.current_date;
                 this.transactionLines.push({}, {}, {}); // initialize combo button id with `save`
@@ -21681,12 +21681,17 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       this.isWorking = false;
       this.$store.dispatch('combo/setBtnID', 'save');
     },
-    getProducts: function getProducts() {
+    getProducts: function getProducts(vendor_id) {
       var _this2 = this;
 
       this.products = [];
+
+      if (!vendor_id) {
+        vendor_id = this.basic_fields.vendor.id;
+      }
+
       this.$store.dispatch('spinner/setSpinner', true);
-      __WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].get("vendors/".concat(this.basic_fields.vendor.id, "/products"), {
+      __WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].get("vendors/".concat(vendor_id, "/products"), {
         params: {
           number: -1
         }
