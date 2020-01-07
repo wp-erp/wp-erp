@@ -1668,7 +1668,9 @@ function erp_process_import_export() {
 
         require_once WPERP_INCLUDES . '/lib/parsecsv.lib.php';
 
-        $csv = new parseCSV( $_FILES['csv_file']['tmp_name'] );
+        $csv = new ParseCsv();
+        $csv->encoding( null, 'UTF-8' );
+        $csv->parse( $_FILES['csv_file']['tmp_name'] );
 
         if ( empty( $csv->data ) ) {
             wp_redirect( admin_url( "admin.php?page=erp-tools&tab=import" ) );
