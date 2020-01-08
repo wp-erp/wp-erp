@@ -472,6 +472,8 @@ function erp_insert_people( $args = array(), $return_object = false ) {
     );
 
     $args           = wp_parse_args( $args, $defaults );
+
+
     $errors         = [];
     $unchanged_data = [];
 
@@ -505,16 +507,16 @@ function erp_insert_people( $args = array(), $return_object = false ) {
     if ( 'contact' == $people_type ) {
         if ( empty( $args['user_id'] ) ) {
             // Check if contact first name or email or phone provided or not
-            if ( empty( $args['first_name'] ) && empty( $args['phone'] ) && empty( $args['email'] ) ) {
-                return new WP_Error( 'no-basic-data', __( 'You must need to fillup either first name or phone or email', 'erp' ) );
+            if ( empty( $args['first_name'] ) || empty( $args['email'] ) ) {
+                return new WP_Error( 'no-basic-data', __( 'You must need to fill up either first name or phone or email', 'erp' ) );
             }
         }
     }
 
     // Check if company name provide or not
     if ( 'company' == $people_type ) {
-        if ( empty( $args['company'] ) && empty( $args['phone'] ) && empty( $args['email'] ) ) {
-            return new WP_Error( 'no-company', __( 'You must need to fillup either Company name or email or phone', 'erp' ) );
+        if ( empty( $args['company'] ) || empty( $args['email'] ) ) {
+            return new WP_Error( 'no-company', __( 'You must need to fill up either Company name or email or phone', 'erp' ) );
         }
     }
 
@@ -593,7 +595,7 @@ function erp_insert_people( $args = array(), $return_object = false ) {
         if ( is_wp_error( $user_id ) ) {
             return new WP_Error( 'update-user', $user_id->get_error_message() );
         } else {
-            $people->update( [ 'user_id' => $user_id, 'email' => $args['email'], 'website' => $args['website'] ] );
+            $people->update( [ 'user_id' => $user_id, 'email' => $args['email'], 'website' => $args['website'], 'contact_owner' => $args['contact_owner'] ] );
 
             unset( $args['id'], $args['user_id'], $args['email'], $args['website'], $args['contact_owner'], $args['created_by'], $args['hash'] );
 

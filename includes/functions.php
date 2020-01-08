@@ -1215,6 +1215,7 @@ function erp_get_import_export_fields() {
         'contact'  => [
             'required_fields' => [
                 'first_name',
+                'email'
             ],
             'fields'          => [
                 'first_name',
@@ -1677,9 +1678,9 @@ function erp_process_import_export() {
 
         require_once WPERP_INCLUDES . '/lib/parsecsv.lib.php';
 
-        $tmp_name = isset( $_FILES['csv_file']['tmp_name'] ) ? sanitize_text_field( wp_unslash( $_FILES['csv_file']['tmp_name'] ) ) : '';
-
-        $csv = new parseCSV( $tmp_name );
+        $csv = new ParseCsv();
+        $csv->encoding( null, 'UTF-8' );
+        $csv->parse( $_FILES['csv_file']['tmp_name'] );
 
         if ( empty( $csv->data ) ) {
             wp_redirect( admin_url( "admin.php?page=erp-tools&tab=import" ) );
