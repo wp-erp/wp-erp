@@ -897,7 +897,7 @@ class Setup_Wizard {
 
 					$activate = true;
 
-				} catch ( Exception $e ) {}
+				} catch ( \Exception $e ) {}
 
 				// Discard feedback.
 				ob_end_clean();
@@ -916,7 +916,7 @@ class Setup_Wizard {
 					if ( is_wp_error( $result ) ) {
 						throw new \Exception( $result->get_error_message() );
 					}
-				} catch ( Exception $e ) {}
+				} catch ( \Exception $e ) {}
 			}
 		}
     }

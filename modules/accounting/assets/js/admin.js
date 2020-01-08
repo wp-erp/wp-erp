@@ -17024,15 +17024,16 @@ if (false) {(function () {
     fetchItem: function fetchItem(id) {
       var _this2 = this;
 
-      if ('VendorDetails' === this.$route.name) {
+      if (this.$route.name === 'VendorDetails') {
         this.req_url = 'vendors';
-      } else if ('CustomerDetails' === this.$route.name) {
+      } else if (this.$route.name === 'CustomerDetails') {
         this.req_url = 'customers';
       }
 
       __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get(this.req_url + '/' + id, {
         params: {}
       }).then(function (response) {
+        console.log(response.data);
         _this2.resData = response.data;
       });
     },
