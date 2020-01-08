@@ -65,13 +65,13 @@ $transaction = erp_acct_get_transaction( $transaction_id );
                     <h3 class="invoice-address-direction"><?php esc_html_e( 'From', 'erp' ); ?></h3>
                     <b><?php echo esc_html( $company->name ); ?></b>
                     <div class="formatted-address">
-                        <?php echo esc_html( $company->get_formatted_address() ); ?>
+                        <?php echo wp_kses_post( $company->get_formatted_address() ); ?>
                     </div>
                 </div>
                 <div class="bill-to">
                     <h3 class="invoice-address-direction"><?php esc_html_e( 'To', 'erp' ); ?></h3>
                     <strong><?php echo esc_html( $user->get_full_name() ); ?></strong>
-                    <div class="billing-address"><?php echo esc_html( nl2br( $transaction['billing_address'] ) ); ?></div>
+                    <div class="billing-address"><?php echo wp_kses_post( nl2br( $transaction['billing_address'] ) ); ?></div>
                 </div>
             </div>
 
