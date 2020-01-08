@@ -113,15 +113,17 @@ export default {
 
     methods: {
         fetchItem(id) {
-            if ( 'VendorDetails' === this.$route.name ) {
+            if (this.$route.name === 'VendorDetails') {
                 this.req_url = 'vendors';
-            } else if ( 'CustomerDetails' === this.$route.name ) {
+            } else if (this.$route.name === 'CustomerDetails') {
                 this.req_url = 'customers';
             }
 
             HTTP.get(this.req_url + '/' + id, {
                 params: {}
             }).then((response) => {
+                console.log(response.data);
+
                 this.resData = response.data;
             });
         },
