@@ -360,7 +360,8 @@ export default {
                 this.peopleFields.postal_code = people.billing.postal_code;
 
                 if (people.photo) {
-                    this.peopleFields.photo = people.photo;
+                    this.peopleFields.photo_id = people.photo_id;
+                    this.peopleFields.photo    = people.photo;
                 }
             }
         },
