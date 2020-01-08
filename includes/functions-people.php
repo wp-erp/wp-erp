@@ -507,16 +507,16 @@ function erp_insert_people( $args = array(), $return_object = false ) {
     if ( 'contact' == $people_type ) {
         if ( empty( $args['user_id'] ) ) {
             // Check if contact first name or email or phone provided or not
-            if ( empty( $args['first_name'] ) && empty( $args['phone'] ) && empty( $args['email'] ) ) {
-                return new WP_Error( 'no-basic-data', __( 'You must need to fillup either first name or phone or email', 'erp' ) );
+            if ( empty( $args['first_name'] ) || empty( $args['email'] ) ) {
+                return new WP_Error( 'no-basic-data', __( 'You must need to fill up either first name or phone or email', 'erp' ) );
             }
         }
     }
 
     // Check if company name provide or not
     if ( 'company' == $people_type ) {
-        if ( empty( $args['company'] ) && empty( $args['phone'] ) && empty( $args['email'] ) ) {
-            return new WP_Error( 'no-company', __( 'You must need to fillup either Company name or email or phone', 'erp' ) );
+        if ( empty( $args['company'] ) || empty( $args['email'] ) ) {
+            return new WP_Error( 'no-company', __( 'You must need to fill up either Company name or email or phone', 'erp' ) );
         }
     }
 

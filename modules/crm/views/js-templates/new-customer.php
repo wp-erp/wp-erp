@@ -33,11 +33,11 @@
             <div class="col-4 right-column">
                 <div class="erp-crm-modal-right">
                 <# if ( _.contains( data.types, 'company' ) ) { #>
-                    <span class="required">* <?php _e( 'Company name or email or phone is required', 'erp' ) ?></span>
+                    <span class="required space-top">* <?php _e( 'Company name and email are required', 'erp' ) ?></span>
 
                     <?php do_action( 'erp_crm_company_form_top' ); ?>
                 <# } else { #>
-                    <span class="required">* <?php _e( 'First name or email or phone is required', 'erp' ); ?></span>
+                    <span class="required space-top">* <?php _e( 'First name and email are required', 'erp' ); ?></span>
 
                     <?php $custom_attr_length = apply_filters( 'erp_crm_custom_attr_length', 30 ); ?>
 
@@ -55,7 +55,8 @@
                                         'name'        => 'contact[main][first_name]',
                                         'id'          => 'first_name',
                                         'value'       => '{{ data.first_name }}',
-                                        'custom_attr' => array( 'maxlength' => $custom_attr_length )
+                                        'custom_attr' => array( 'maxlength' => $custom_attr_length ),
+                                        'required'    => true
                                     ) ); ?>
                                 </div>
                                 <div class="col-3">
@@ -74,7 +75,8 @@
                                         'name'        => 'contact[main][company]',
                                         'id'          => 'company',
                                         'value'       => '{{ data.company }}',
-                                        'custom_attr' => array( 'maxlength' => $custom_attr_length )
+                                        'custom_attr' => array( 'maxlength' => $custom_attr_length ),
+                                        'required'    => true
                                     ) ); ?>
                                 </div>
                             <# } #>
@@ -88,7 +90,8 @@
                                     'name'     => 'contact[main][email]',
                                     'value'    => '{{ data.email }}',
                                     'id'       => 'erp-crm-new-contact-email',
-                                    'type'     => 'email'
+                                    'type'     => 'email',
+                                    'required'    => true
                                 ) ); ?>
                             </div>
 
@@ -302,7 +305,7 @@
                                     'value'   => '{{ data.other }}'
                                 ) ); ?>
                             </div>
-                            
+
                             <div class="col-3">
                                 <?php erp_html_form_input( array(
                                     'label'   => __( 'Notes', 'erp' ),

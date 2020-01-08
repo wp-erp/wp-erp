@@ -1208,6 +1208,7 @@ function erp_get_import_export_fields() {
         'contact'  => [
             'required_fields' => [
                 'first_name',
+                'email'
             ],
             'fields'          => [
                 'first_name',
