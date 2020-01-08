@@ -203,7 +203,7 @@ class Setup_Wizard {
     public function setup_step_introduction() {
         ?>
         <h1><?php esc_html_e( 'Welcome to WP ERP!', 'erp' ); ?></h1>
-        <p><?php esc_html_e( 'Thank you for choosing WP-ERP. An easier way to manage your company! This quick setup wizard will help you configure the basic settings. <strong>It’s completely optional and shouldn’t take longer than three minutes.</strong>', 'erp' ); ?></p>
+        <p><?php echo wp_kses_post( __('Thank you for choosing WP-ERP. An easier way to manage your company! This quick setup wizard will help you configure the basic settings. <strong>It’s completely optional and shouldn’t take longer than three minutes.</strong>', 'erp' ) ); ?></p>
         <p><?php esc_html_e( 'No time right now? If you don’t want to go through the wizard, you can skip and return to the WordPress dashboard. Come back anytime if you change your mind!', 'erp' ); ?></p>
         <p class="erp-setup-actions step">
             <a href="<?php echo esc_url( $this->get_next_step_link() ); ?>" class="button-primary button button-large button-next"><?php esc_html_e( 'Let\'s Go!', 'erp' ); ?></a>
