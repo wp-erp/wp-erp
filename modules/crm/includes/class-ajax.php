@@ -291,8 +291,9 @@ class Ajax_Handler {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
-        $current_user_id = get_current_user_id();
-        $posted = array_map( 'strip_tags_deep', $_POST );
+        $current_user_id                      = get_current_user_id();
+        $posted                               = array_map( 'strip_tags_deep', $_POST );
+        $posted['contact']['main']['company'] = stripslashes( $posted['contact']['main']['company'] ); // To remove Apostrophe slash
 
         $data   = array_merge( $posted['contact']['main'], $posted['contact']['meta'], $posted['contact']['social'] );
 

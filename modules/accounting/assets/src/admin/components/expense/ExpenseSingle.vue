@@ -70,7 +70,7 @@
                                 </table>
                             </div>
                         </div>
-                        <div class="wperp-row" v-if="null != expense_data.check_data">
+                        <div class="wperp-row" v-if="expense_data.check_data.length">
                             <div class="wperp-col-sm-12">
                                 <table>
                                     <tr>
