@@ -5,7 +5,7 @@ Tags: business manager, erp, accounting, crm, hr, project manager, small busines
 Requires at least: 4.4
 Tested up to: 5.3.2
 Requires PHP: 5.6
-Stable tag: 1.5.10
+Stable tag: 1.5.11
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -266,6 +266,16 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+
+= v1.5.11 -> January 09, 2020 =
+[fix]   - Unicode characters saving issue during CSV import
+[fix]   - CR: Removed extra slash when saving company name
+[fix]   - CR: Contact owner field value is not saving where contact or company is a wp user
+[fix]   - AC: Save journal entries "Error: Debit and Credit must be Equal"
+[fix]   - AC: When viewing an expense transaction the bank and check fields appear although paying with Cash
+[tweak] - Optimize code for better security
+[tweak] - CR: Make first_name and email as required fields to avoid duplicate entry during CSV import
+[tweak] - AC: Display only products of selected vendor in purchase transaction
 
 = v1.5.10 -> December 19, 2019 =
 [fix] CR: Fixed file attachment issue.
