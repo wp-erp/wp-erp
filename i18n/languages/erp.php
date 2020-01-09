@@ -1,7 +1,5 @@
 <?php
 return [
-	__( 'Select & Crop Image', 'erp' ),
-	__( 'Select Image', 'erp' ),
 	__( 'Accounts', 'erp' ),
 	__( 'New Transaction', 'erp' ),
 	__( 'Account Number', 'erp' ),
@@ -11,6 +9,8 @@ return [
 	__( 'Select files', 'erp' ),
 	__( 'from your computer', 'erp' ),
 	__( 'uploaded', 'erp' ),
+	__( 'Select & Crop Image', 'erp' ),
+	__( 'Select Image', 'erp' ),
 	__( 'Please complete these fields', 'erp' ),
 	__( 'Bill', 'erp' ),
 	__( 'Bill Date', 'erp' ),
@@ -132,6 +132,7 @@ return [
 	__( 'Credit', 'erp' ),
 	__( 'Save', 'erp' ),
 	__( 'Journals', 'erp' ),
+	__( 'New Journal Entry', 'erp' ),
 	__( 'Journal', 'erp' ),
 	__( 'Journal No', 'erp' ),
 	__( 'Journal Ref', 'erp' ),

@@ -16,11 +16,15 @@
     </div>
 
     <div class="row">
-        <?php erp_html_form_label( __( 'Department Lead', 'erp' ), 'dept-lead' ); ?>
+        <?php erp_html_form_label( __( 'Department Lead ...', 'erp' ), 'dept-lead' ); ?>
 
         <span class="field">
             <select name="lead" id="dept-lead">
-                <?php echo wp_kses_post( erp_hr_get_employees_dropdown() ); ?>
+                <?php echo wp_kses( erp_hr_get_employees_dropdown(), array(
+                    'option' => array(
+                        'selected'  => array()
+                    )
+                ) ); ?>
             </select>
         </span>
     </div>
@@ -30,7 +34,11 @@
 
         <span class="field">
             <select name="parent" id="dept-parent">
-                <?php echo wp_kses_post( erp_hr_get_departments_dropdown() ); ?>
+                <?php echo wp_kses( erp_hr_get_departments_dropdown(), array(
+                        'option' => array(
+                            'selected'  => array()
+                        )
+                ) ); ?>
             </select>
         </span>
     </div>
