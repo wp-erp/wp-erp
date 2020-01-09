@@ -59,7 +59,7 @@ class PDF_Install {
      */
     public function show_activation_notice() {
         echo '<div class="updated notice is-dismissible"><p>';
-        echo __( 'Plugin <strong>activated.</strong>', 'erp' );
+        echo esc_html__( 'Plugin <strong>activated.</strong>', 'erp' );
         echo '</p></div>';
     }
 

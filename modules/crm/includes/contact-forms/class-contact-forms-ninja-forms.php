@@ -136,6 +136,10 @@ class Ninja_Forms {
         $form_id = 0;
         $data = [];
 
+        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-nonce' ) ) {
+            // die();
+        }
+
         if ( version_compare( get_option( 'ninja_forms_version', '0.0.0' ), '3', '<' ) ) {
             /* Support for version < 3.0 */
             $sub = $nf->sub( $sub_id );
@@ -146,7 +150,7 @@ class Ninja_Forms {
             /* Support for version >= 3.0 */
             $sub = $nf->form()->get_sub( $sub_id );
 
-            $formData = stripslashes( $_POST['formData'] );
+            $formData = isset( $_POST['formData'] ) ? sanitize_text_field( wp_unslash( $_POST['formData'] ) ) : '';
             $formData = json_decode( $formData, true );
 
             $form_id = $formData['id'];

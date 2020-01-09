@@ -77,8 +77,15 @@ function erp_hr_get_departments( $args = [] ) {
     $department = new \WeDevs\ERP\HRM\Models\Department();
 
     if ( !empty( $args['s'] ) ) {
+
+        if ( isset( $_GET['s'] ) ) {
+            $s = sanitize_text_field( wp_unslash( $_GET['s'] ) ) ;
+        } else {
+            $s = sanitize_text_field( wp_unslash( $args['s'] ) ) ;
+        }
+
         $results = $department
-                ->where( 'title', 'LIKE', '%'.$_GET['s'].'%' )
+                ->where( 'title', 'LIKE', '%'. $s .'%' )
                 ->get()
                 ->toArray();
         $results = erp_array_to_object( $results );

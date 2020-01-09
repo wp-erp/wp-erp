@@ -550,6 +550,8 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
             'phone'      => $item->phone,
             'website'    => $item->website,
             'notes'      => $item->notes,
+            'mobile'     => $item->mobile,
+            'fax'        => $item->fax,
             'other'      => $item->other,
             'photo_id'   => !empty($item->photo_id) ? $item->photo_id : null,
             'photo'      => !empty($item->photo) ? $item->photo : null,

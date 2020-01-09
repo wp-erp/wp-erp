@@ -430,7 +430,10 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Request
      */
     public function upload_attachments( $request ) {
-        $movefiles = erp_acct_upload_attachments( $_FILES['attachments'] );
+
+        $file = $_FILES['attachments'];
+
+        $movefiles = erp_acct_upload_attachments( $file );
 
         $response = rest_ensure_response( $movefiles );
         $response->set_status( 200 );

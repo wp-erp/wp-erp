@@ -31,8 +31,8 @@ class ERP_Settings_Page {
 
         if ( $sections = $this->get_sections() ) {
 
-            if ( isset( $_REQUEST['section'] ) && array_key_exists( $_REQUEST['section'], $sections ) ) {
-                $current_section = $_REQUEST['section'];
+            if ( isset( $_REQUEST['section'] ) && array_key_exists( sanitize_key( $_REQUEST['section'] ), $sections ) ) {
+                $current_section = sanitize_text_field( wp_unslash( $_REQUEST['section'] ) );
                 $option_id = 'erp_settings_' . $this->id . '_' . $current_section;
             } else {
                 $option_id = 'erp_settings_' . $this->id . '_' . strtolower( reset( $sections ) ); // section's first element
@@ -64,7 +64,7 @@ class ERP_Settings_Page {
     public function save( $section = false ) {
         global $current_class;
 
-        if ( isset( $_POST['_wpnonce']) && wp_verify_nonce( $_POST['_wpnonce'], 'erp-settings-nonce' ) ) {
+        if ( isset( $_POST['_wpnonce']) && wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-settings-nonce' ) ) {
 
             $from_sections = false;
 
@@ -130,7 +130,7 @@ class ERP_Settings_Page {
                     update_option( $this->get_option_id(), $update_options );
                 }
                 ?>
-                	<div id="message" class="updated notice is-dismissible"><p><strong><?php _e( 'Settings saved.' ); ?></strong></p></div>
+                	<div id="message" class="updated notice is-dismissible"><p><strong><?php esc_html_e( 'Settings saved.' ); ?></strong></p></div>
                 <?php
             }
 
@@ -139,6 +139,10 @@ class ERP_Settings_Page {
     }
 
     function parse_option_value( $value ) {
+        if ( isset( $_POST['_wpnonce']) && wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-settings-nonce' ) ) {
+            //
+        }
+
         $type         = isset( $value['type'] ) ? sanitize_title( $value['type'] ) : '';
         $option_value = null;
 
@@ -159,7 +163,7 @@ class ERP_Settings_Page {
             case "wysiwyg" :
 
                 if ( isset( $_POST[$value['id']] ) ) {
-                    $option_value = wp_kses_post( trim( stripslashes( $_POST[ $value['id'] ] ) ) );
+                    $option_value = wp_kses_post( trim( sanitize_text_field( wp_unslash( $_POST[ $value['id'] ] ) ) ) );
                 } else {
                     $option_value = '';
                 }
@@ -169,7 +173,7 @@ class ERP_Settings_Page {
             case 'multicheck':
 
                 if ( isset( $_POST[$value['id']] ) ) {
-                    $option_value = array_map( 'sanitize_text_field', array_map( 'stripslashes', (array) $_POST[ $value['id'] ] ) );
+                    $option_value = array_map( 'sanitize_text_field', wp_unslash( $_POST[ $value['id'] ] ) );
                 } else {
                     $option_value = array();
                 }
@@ -188,7 +192,7 @@ class ERP_Settings_Page {
             case 'hidden' :
 
                if ( isset( $_POST[$value['id']] ) ) {
-                    $option_value = sanitize_text_field( stripslashes( $_POST[ $value['id'] ] ) );
+                    $option_value = sanitize_text_field( wp_unslash( $_POST[ $value['id'] ] ) );
                 } else {
                     $option_value = '';
                 }
@@ -200,7 +204,7 @@ class ERP_Settings_Page {
 
                 // Get countries array
                 if ( isset( $_POST[ $value['id'] ] ) )
-                    $selected_countries = array_map( 'sanitize_text_field', array_map( 'stripslashes', (array) $_POST[ $value['id'] ] ) );
+                    $selected_countries = array_map( 'sanitize_text_field', wp_unslash( (array) $_POST[ $value['id'] ] ) );
                 else
                     $selected_countries = array();
 
@@ -319,7 +323,7 @@ class ERP_Settings_Page {
 
             } elseif ( $tip ) {
 
-                $tip = '<img class="help_tip" data-tip="' . esc_attr( $tip ) . '" src="' . WPERP_ASSETS . '/images/help.png" height="16" width="16" />';
+                $tip = '<img class="help_tip" data-tip="' . wp_kses_post( $tip ) . '" src="' . WPERP_ASSETS . '/images/help.png" height="16" width="16" />';
 
             }
 
@@ -376,11 +380,11 @@ class ERP_Settings_Page {
                     ?><tr valign="top">
                         <th scope="row" class="titledesc">
                             <label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
-                            <?php echo $tip; ?>
+                            <?php echo wp_kses_post( $tip ); ?>
                         </th>
-                        <td class="forminp forminp-<?php echo sanitize_title( $value['type'] ) ?>">
+                        <td class="forminp forminp-<?php echo esc_attr( $value['type'] ) ?>">
                             <?php if ( ! empty( $value['title_before_field'] ) ): ?>
-                                <h4 class="erp-settings-title-before-field"><?php echo $value['title_before_field']; ?></h4>
+                                <h4 class="erp-settings-title-before-field"><?php echo esc_html( $value['title_before_field'] ); ?></h4>
                             <?php endif; ?>
                             <input
                                 name="<?php echo esc_attr( $value['id'] ); ?>"
@@ -389,8 +393,8 @@ class ERP_Settings_Page {
                                 style="<?php echo esc_attr( $value['css'] ); ?>"
                                 value="<?php echo esc_attr( $option_value ); ?>"
                                 class="<?php echo esc_attr( $value['class'] ); ?>"
-                                <?php echo implode( ' ', $custom_attributes ); ?>
-                                /> <?php echo $description; ?>
+                                <?php echo esc_html( implode( ' ', $custom_attributes ) ); ?>
+                                /> <?php echo wp_kses_post( $description ); ?>
                         </td>
                     </tr><?php
                 break;
@@ -403,7 +407,7 @@ class ERP_Settings_Page {
                     ?><tr valign="top">
                         <th scope="row" class="titledesc">
                             <label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
-                            <?php echo $tip; ?>
+                            <?php echo wp_kses_post( $tip ); ?>
                         </th>
 
                         <td>
@@ -411,12 +415,12 @@ class ERP_Settings_Page {
                                 <input type="hidden" class="erp-file-field" name="<?php echo esc_attr( $value['id'] ); ?>" value="<?php echo esc_attr( $option_value ); ?>">
                                 <img class="erp-option-image" src="<?php echo esc_url( $image_url ); ?>">
 
-                                <a class="erp-remove-image" title="<?php _e( 'Delete this image?', 'erp' ); ?>">&times;</a>
+                                <a class="erp-remove-image" title="<?php esc_attr_e( 'Delete this image?', 'erp' ); ?>">&times;</a>
                             </div>
 
-                            <div class="button-area<?php echo $option_value ? ' erp-hide' : ''; ?>">
-                                <a href="#" class="erp-image-upload button"><?php _e( 'Upload Image', 'erp' ); ?></a>
-                                <?php echo $description; ?>
+                            <div class="button-area<?php echo esc_attr( $option_value ) ? ' erp-hide' : ''; ?>">
+                                <a href="#" class="erp-image-upload button"><?php esc_html_e( 'Upload Image', 'erp' ); ?></a>
+                                <?php echo wp_kses_post( $description ); ?>
                             </div>
 
                         </td>
@@ -433,11 +437,11 @@ class ERP_Settings_Page {
                     ?><tr valign="top">
                         <th scope="row" class="titledesc">
                             <label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
-                            <?php echo $tip; ?>
+                            <?php echo wp_kses_post( $tip ); ?>
                         </th>
-                        <td class="forminp forminp-<?php echo sanitize_title( $value['type'] ) ?>">
+                        <td class="forminp forminp-<?php echo esc_attr( $value['type'] ) ?>">
                             <?php if ( ! empty( $value['title_before_field'] ) ): ?>
-                                <h4 class="erp-settings-title-before-field"><?php echo $value['title_before_field']; ?></h4>
+                                <h4 class="erp-settings-title-before-field"><?php echo esc_html( $value['title_before_field'] ); ?></h4>
                             <?php endif; ?>
 
                             <textarea
@@ -445,10 +449,10 @@ class ERP_Settings_Page {
                                 id="<?php echo esc_attr( $value['id'] ); ?>"
                                 style="<?php echo esc_attr( $value['css'] ); ?>"
                                 class="<?php echo esc_attr( $value['class'] ); ?>"
-                                <?php echo implode( ' ', $custom_attributes ); ?>
+                                <?php echo esc_html( implode( ' ', $custom_attributes ) ); ?>
                                 ><?php echo esc_textarea( $option_value );  ?></textarea>
 
-                                <?php echo $description; ?>
+                                <?php echo wp_kses_post( $description ); ?>
                         </td>
                     </tr><?php
                 break;
@@ -465,13 +469,13 @@ class ERP_Settings_Page {
                     ?><tr valign="top">
                         <th scope="row" class="titledesc">
                             <label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
-                            <?php echo $tip; ?>
+                            <?php echo wp_kses_post( $tip ); ?>
                         </th>
-                        <td class="forminp forminp-<?php echo sanitize_title( $value['type'] ) ?>">
+                        <td class="forminp forminp-<?php echo esc_attr( $value['type'] ) ?>">
 
                             <?php wp_editor( $option_value, $value['id'], $editor_args ); ?>
 
-                            <?php echo $description; ?>
+                            <?php echo wp_kses_post( $description ); ?>
                         </td>
                     </tr><?php
                 break;
@@ -485,15 +489,15 @@ class ERP_Settings_Page {
                     ?><tr valign="top">
                         <th scope="row" class="titledesc">
                             <label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
-                            <?php echo $tip; ?>
+                            <?php echo wp_kses_post( $tip ); ?>
                         </th>
-                        <td class="forminp forminp-<?php echo sanitize_title( $value['type'] ) ?>">
+                        <td class="forminp forminp-<?php echo esc_attr( $value['type'] ) ?>">
                             <select
                                 name="<?php echo esc_attr( $value['id'] ); ?><?php if ( $value['type'] == 'multiselect' ) echo '[]'; ?>"
                                 id="<?php echo esc_attr( $value['id'] ); ?>"
                                 style="<?php echo esc_attr( $value['css'] ); ?>"
                                 class="<?php echo esc_attr( $value['class'] ); ?>"
-                                <?php echo implode( ' ', $custom_attributes ); ?>
+                                <?php echo esc_html( implode( ' ', $custom_attributes ) ); ?>
                                 <?php if ( $value['type'] == 'multiselect' ) echo 'multiple="multiple"'; ?>
                                 >
                                 <?php
@@ -506,11 +510,11 @@ class ERP_Settings_Page {
                                             else
                                                 selected( $option_value, $key );
 
-                                        ?>><?php echo $val ?></option>
+                                        ?>><?php echo esc_html( $val ) ?></option>
                                         <?php
                                     }
                                 ?>
-                           </select> <?php echo $description; ?>
+                           </select> <?php echo wp_kses_post( $description ); ?>
                         </td>
                     </tr><?php
                 break;
@@ -523,9 +527,9 @@ class ERP_Settings_Page {
                     ?><tr valign="top">
                         <th scope="row" class="titledesc">
                             <label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
-                            <?php echo $tip; ?>
+                            <?php echo wp_kses_post( $tip ); ?>
                         </th>
-                        <td class="forminp forminp-<?php echo sanitize_title( $value['type'] ) ?>">
+                        <td class="forminp forminp-<?php echo esc_attr( $value['type'] ) ?>">
                             <fieldset>
                                 <ul class="erp-settings-radio">
                                 <?php
@@ -534,19 +538,19 @@ class ERP_Settings_Page {
                                         <li>
                                             <label><input
                                                 name="<?php echo esc_attr( $value['id'] ); ?>"
-                                                value="<?php echo $key; ?>"
+                                                value="<?php echo esc_attr( $key ); ?>"
                                                 type="radio"
                                                 style="<?php echo esc_attr( $value['css'] ); ?>"
                                                 class="<?php echo esc_attr( $value['class'] ); ?>"
-                                                <?php echo implode( ' ', $custom_attributes ); ?>
+                                                <?php echo esc_html( implode( ' ', $custom_attributes ) ); ?>
                                                 <?php checked( $key, $option_value ); ?>
-                                                /> <?php echo $val ?></label>
+                                                /> <?php echo esc_html( $val ) ?></label>
                                         </li>
                                         <?php
                                     }
                                 ?>
                                 </ul>
-                                <?php echo $description; ?>
+                                <?php echo wp_kses_post( $description ); ?>
                             </fieldset>
                         </td>
                     </tr><?php
@@ -562,9 +566,9 @@ class ERP_Settings_Page {
                     ?><tr valign="top">
                         <th scope="row" class="titledesc">
                             <label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
-                            <?php echo $tip; ?>
+                            <?php echo wp_kses_post( $tip ); ?>
                         </th>
-                        <td class="forminp forminp-<?php echo sanitize_title( $value['type'] ) ?>">
+                        <td class="forminp forminp-<?php echo esc_attr( $value['type'] ) ?>">
                             <fieldset>
                                 <ul>
                                 <?php
@@ -573,20 +577,20 @@ class ERP_Settings_Page {
                                         <li>
                                             <label><input
                                                 name="<?php echo esc_attr( $value['id'] ); ?>[<?php echo esc_attr( $key ); ?>]"
-                                                value="<?php echo $key; ?>"
+                                                value="<?php echo esc_html( $key ); ?>"
                                                 type="checkbox"
                                                 style="<?php echo esc_attr( $value['css'] ); ?>"
                                                 class="<?php echo esc_attr( $value['class'] ); ?>"
-                                                <?php echo implode( ' ', $custom_attributes ); ?>
+                                                <?php echo esc_html( implode( ' ', $custom_attributes ) ); ?>
                                                 <?php checked( in_array( $key, $option_value ) ); ?>
-                                                /> <?php echo $val ?></label>
+                                                /> <?php echo esc_html( $val ) ?></label>
                                         </li>
                                         <?php
                                     }
                                 ?>
                                 </ul>
                             </fieldset>
-                            <?php echo $description; ?>
+                            <?php echo wp_kses_post( $description ); ?>
                         </td>
                     </tr><?php
                 break;
@@ -633,16 +637,16 @@ class ERP_Settings_Page {
                     }
 
                     ?>
-                        <label for="<?php echo $value['id'] ?>">
+                        <label for="<?php echo esc_attr( $value['id'] ) ?>">
                             <input
                                 name="<?php echo esc_attr( $value['id'] ); ?>"
                                 id="<?php echo esc_attr( $value['id'] ); ?>"
                                 type="checkbox"
                                 value="1"
                                 <?php checked( $option_value, 'yes'); ?>
-                                <?php echo implode( ' ', $custom_attributes ); ?>
-                            /> <?php echo $description ?>
-                        </label> <?php echo $tip; ?>
+                                <?php echo esc_html( implode( ' ', $custom_attributes ) ); ?>
+                            /> <?php echo wp_kses_post( $description ) ?>
+                        </label> <?php echo wp_kses_post( $tip ); ?>
                     <?php
 
                     if ( ! isset( $value['checkboxgroup'] ) || 'end' == $value['checkboxgroup'] ) {
@@ -666,12 +670,12 @@ class ERP_Settings_Page {
                     $crop   = checked( 1, $this->get_option( $value['id'] . '[crop]', $value['default']['crop'] ), false );
 
                     ?><tr valign="top">
-                        <th scope="row" class="titledesc"><?php echo esc_html( $value['title'] ) ?> <?php echo $tip; ?></th>
+                        <th scope="row" class="titledesc"><?php echo esc_html( $value['title'] ) ?> <?php echo wp_kses_post( $tip ); ?></th>
                         <td class="forminp image_width_settings">
 
-                            <input name="<?php echo esc_attr( $value['id'] ); ?>[width]" id="<?php echo esc_attr( $value['id'] ); ?>-width" type="text" size="3" value="<?php echo $width; ?>" /> &times; <input name="<?php echo esc_attr( $value['id'] ); ?>[height]" id="<?php echo esc_attr( $value['id'] ); ?>-height" type="text" size="3" value="<?php echo $height; ?>" />px
+                            <input name="<?php echo esc_attr( $value['id'] ); ?>[width]" id="<?php echo esc_attr( $value['id'] ); ?>-width" type="text" size="3" value="<?php echo esc_attr( $width ); ?>" /> &times; <input name="<?php echo esc_attr( $value['id'] ); ?>[height]" id="<?php echo esc_attr( $value['id'] ); ?>-height" type="text" size="3" value="<?php echo esc_attr( $height ); ?>" />px
 
-                            <label><input name="<?php echo esc_attr( $value['id'] ); ?>[crop]" id="<?php echo esc_attr( $value['id'] ); ?>-crop" type="checkbox" <?php echo $crop; ?> /> <?php _e( 'Hard Crop?', 'erp' ); ?></label>
+                            <label><input name="<?php echo esc_attr( $value['id'] ); ?>[crop]" id="<?php echo esc_attr( $value['id'] ); ?>-crop" type="checkbox" <?php echo esc_html( $crop ); ?> /> <?php esc_html_e( 'Hard Crop?', 'erp' ); ?></label>
 
                             </td>
                     </tr><?php
@@ -696,9 +700,9 @@ class ERP_Settings_Page {
                     }
 
                     ?><tr valign="top" class="single_select_page">
-                        <th scope="row" class="titledesc"><?php echo esc_html( $value['title'] ) ?> <?php echo $tip; ?></th>
+                        <th scope="row" class="titledesc"><?php echo esc_html( $value['title'] ) ?> <?php echo wp_kses_post( $tip ); ?></th>
                         <td class="forminp">
-                            <?php echo str_replace(' id=', " data-placeholder='" . __( 'Select a page&hellip;', 'erp' ) .  "' style='" . $value['css'] . "' class='" . $value['class'] . "' id=", wp_dropdown_pages( $args ) ); ?> <?php echo $description; ?>
+                            <?php echo wp_kses_post( str_replace(' id=', " data-placeholder='" . __( 'Select a page&hellip;', 'erp' ) .  "' style='" . esc_attr( $value['css'] ) . "' class='" . esc_attr( $value['class'] ) . "' id=",  esc_attr( wp_dropdown_pages( $args ) ) ) ); ?> <?php echo wp_kses_post( $description ); ?>
                         </td>
                     </tr><?php
                 break;
@@ -728,7 +732,7 @@ class ERP_Settings_Page {
         $array_keys = array_keys( $sections );
 
         foreach ( $sections as $id => $label ) {
-            echo '<li><a href="' . admin_url( 'admin.php?page=erp-settings&tab=' . $this->id . '&section=' . sanitize_title( $id ) ) . '" class="' . ( $current_section == $id ? 'current' : '' ) . '">' . $label . '</a> ' . ( end( $array_keys ) == $id ? '' : '|' ) . ' </li>';
+            echo '<li><a href="' . esc_url( admin_url( 'admin.php?page=erp-settings&tab=' . $this->id . '&section=' . sanitize_title( $id ) ) ) . '" class="' . ( $current_section == $id ? 'current' : '' ) . '">' . esc_html( $label ) . '</a> ' . ( end( $array_keys ) == $id ? '' : '|' ) . ' </li>';
         }
 
         echo '</ul><br class="clear" />';

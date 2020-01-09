@@ -37,18 +37,18 @@ class Leave_Requests_List_Table extends \WP_List_Table {
         }
 
         $current_year  = date( 'Y' );
-        $selected_year = ( isset( $_GET['filter_year'] ) ) ? $_GET['filter_year'] : $current_year;
+        $selected_year = ( isset( $_GET['filter_year'] ) ) ? sanitize_text_field( wp_unslash( $_GET['filter_year'] ) ) : $current_year;
         ?>
         <div class="alignleft actions">
 
-            <label class="screen-reader-text" for="filter_year"><?php _e( 'Filter by year', 'erp' ) ?></label>
-            <input type="hidden" name="status" value="<?php echo $this->page_status; ?>">
+            <label class="screen-reader-text" for="filter_year"><?php esc_html_e( 'Filter by year', 'erp' ) ?></label>
+            <input type="hidden" name="status" value="<?php echo esc_html( $this->page_status ); ?>">
             <select name="filter_year" id="filter_year">
                 <option value="">select year</option>
                 <?php
                 for ( $i = 0; $i <= 5; $i ++ ) {
                     $year = $current_year - $i;
-                    echo sprintf( "<option value='%s'%s>%s</option>\n", $year, selected( $selected_year, $year, false ), $year );
+                    echo sprintf( "<option value='%s'%s>%s</option>\n", esc_html( $year ), selected( $selected_year, $year, false ), esc_html( $year ) );
                 }
                 ?>
             </select>
@@ -64,7 +64,7 @@ class Leave_Requests_List_Table extends \WP_List_Table {
      * @return void
      */
     function no_items() {
-        _e( 'No requests found.', 'erp' );
+        esc_html_e( 'No requests found.', 'erp' );
     }
 
     /**
@@ -285,17 +285,17 @@ class Leave_Requests_List_Table extends \WP_List_Table {
         $per_page              = 20;
         $current_page          = $this->get_pagenum();
         $offset                = ( $current_page -1 ) * $per_page;
-        $this->page_status     = isset( $_GET['status'] ) ? sanitize_text_field( $_GET['status'] ) : '2';
+        $this->page_status     = isset( $_GET['status'] ) ?sanitize_text_field( wp_unslash(  $_GET['status'] ) ) : '2';
 
         // only necessary because we have sample data
         $args = array(
             'offset'  => $offset,
             'number'  => $per_page,
             'status'  => $this->page_status,
-            'year'    => isset( $_GET['filter_year'] ) ? $_GET['filter_year'] : '',
-            'orderby' => isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'created_on',
-            'order'   => isset( $_GET['order'] ) ? $_GET['order'] : 'DESC',
-            's'       => isset( $_GET['s'] ) ? $_GET['s'] : ''
+            'year'    => isset( $_GET['filter_year'] ) ? sanitize_text_field( wp_unslash( $_GET['filter_year'] ) ) : '',
+            'orderby' => isset( $_GET['orderby'] ) ? sanitize_text_field( wp_unslash( $_GET['orderby'] ) ) : 'created_on',
+            'order'   => isset( $_GET['order'] ) ? sanitize_text_field( wp_unslash( $_GET['order'] ) ) : 'DESC',
+            's'       => isset( $_GET['s'] ) ? sanitize_text_field( wp_unslash( $_GET['s'] ) ) : ''
         );
 
         $this->counts = erp_hr_leave_get_requests_count();

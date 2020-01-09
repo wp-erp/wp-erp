@@ -2,11 +2,11 @@
 
     <h2>
         <?php
-        _e( 'Employee', 'erp' );
+        esc_html_e( 'Employee', 'erp' );
 
         if ( current_user_can( 'erp_create_employee' ) ) {
             ?>
-                <a href="#" id="erp-employee-new" class="add-new-h2"><?php _e( 'Add New', 'erp' ); ?></a>
+                <a href="#" id="erp-employee-new" class="add-new-h2"><?php esc_html_e( 'Add New', 'erp' ); ?></a>
             <?php
         }
         ?>

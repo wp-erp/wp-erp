@@ -73,7 +73,7 @@ class ERP_Integration_Settings extends ERP_Settings_Page {
                                 switch ( $key ) {
                                     case 'name' :
                                         echo '<td class="erp-settings-table-' . esc_attr( $key ) . '">
-                                            <a href="' . admin_url( 'admin.php?page=erp-settings&tab=erp-integration&section=' . strtolower( $integration_key ) ) . '">' . $integration->get_title() . '</a>
+                                            <a href="' . esc_url( admin_url( 'admin.php?page=erp-settings&tab=erp-integration&section=' . esc_attr( strtolower( $integration_key ) ) ) ) . '">' .  esc_html( $integration->get_title() ) . '</a>
                                         </td>';
                                         break;
 
@@ -87,13 +87,13 @@ class ERP_Integration_Settings extends ERP_Settings_Page {
 
                                     case 'description':
                                         echo '<td class="erp-settings-table-' . esc_attr( $key ) . '">
-                                            <span class="help">' . $integration->get_description() . '</span>
+                                            <span class="help">' . esc_html( $integration->get_description() ) . '</span>
                                         </td>';
                                         break;
 
                                     case 'actions' :
                                         echo '<td class="erp-settings-table-' . esc_attr( $key ) . '">
-                                            <a class="button alignright" href="' . admin_url( 'admin.php?page=erp-settings&tab=erp-integration&section=' . strtolower( $integration_key ) ) . '">' . __( 'Configure', 'erp' ) . '</a>
+                                            <a class="button alignright" href="' . esc_url( admin_url( 'admin.php?page=erp-settings&tab=erp-integration&section=' . strtolower( $integration_key ) ) ) . '">' . esc_html__( 'Configure', 'erp' ) . '</a>
                                         </td>';
                                         break;
 
@@ -146,8 +146,8 @@ class ERP_Integration_Settings extends ERP_Settings_Page {
      * @return void
      */
     function save( $section = false ) {
-        if ( isset( $_POST['_wpnonce']) && wp_verify_nonce( $_POST['_wpnonce'], 'erp-settings-nonce' ) ) {
-            $current_section = isset( $_GET['section'] ) ? sanitize_key( $_GET['section'] ) : false;
+        if ( isset( $_POST['_wpnonce']) && wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-settings-nonce' ) ) {
+            $current_section = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : false;
 
             // saving individual integration settings
             if ( $current_section ) {

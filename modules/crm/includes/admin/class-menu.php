@@ -161,8 +161,8 @@ class Admin_Menu {
         $menu = erp_menu();
         $menu = $menu[$component];
 
-        $section = ( isset( $_GET['section'] ) && isset( $menu[$_GET['section']] ) ) ? $_GET['section'] : 'dashboard';
-        $sub = ( isset( $_GET['sub-section'] ) && !empty( $menu[$section]['submenu'][$_GET['sub-section']] ) ) ? $_GET['sub-section'] : false;
+        $section = ( isset( $_GET['section'] ) && isset( $menu[$_GET['section']] ) ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ): 'dashboard';
+        $sub = ( isset( $_GET['sub-section'] ) && !empty( $menu[$section]['submenu'][$_GET['sub-section']] ) ) ? sanitize_text_field( wp_unslash( $_GET['sub-section'] ) ) : false;
 
         $callback = $menu[$section]['callback'];
         if ( $sub ) {
@@ -197,7 +197,7 @@ class Admin_Menu {
      * @return void
      */
     public function contact_page() {
-        $action = isset( $_GET['action'] ) ? $_GET['action'] : 'list';
+        $action = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ): 'list';
         $id     = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
         switch ( $action ) {
 
@@ -205,7 +205,7 @@ class Admin_Menu {
                 $customer = new Contact( $id );
 
                 if ( ! $customer->id ) {
-                    wp_die( __( 'Contact not found!', 'erp' ) );
+                    wp_die( esc_html__( 'Contact not found!', 'erp' ) );
                 }
 
                 $template = WPERP_CRM_VIEWS . '/contact/single.php';
@@ -231,7 +231,7 @@ class Admin_Menu {
      * @return void
      */
     public function company_page() {
-        $action = isset( $_GET['action'] ) ? $_GET['action'] : 'list';
+        $action = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ): 'list';
         $id     = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
 
         switch ( $action ) {
@@ -240,7 +240,7 @@ class Admin_Menu {
                 $customer = new Contact( $id );
 
                 if ( ! $customer->id ) {
-                    wp_die( __( 'Company not found!', 'erp' ) );
+                    wp_die( esc_html__( 'Company not found!', 'erp' ) );
                 }
 
                 $template = WPERP_CRM_VIEWS . '/company/single.php';
@@ -267,7 +267,7 @@ class Admin_Menu {
      */
     public function leads_page() {
 
-        $action = isset( $_GET['action'] ) ? $_GET['action'] : 'list';
+        $action = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : 'list';
         $id     = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
 
         switch ($action) {
@@ -331,7 +331,7 @@ class Admin_Menu {
      */
     public function contact_group_page() {
 
-        $action = isset( $_GET['groupaction'] ) ? $_GET['groupaction'] : 'list';
+        $action = isset( $_GET['groupaction'] ) ? sanitize_text_field( wp_unslash( $_GET['groupaction'] ) ) : 'list';
         $id     = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
 
         switch ($action) {
@@ -365,7 +365,7 @@ class Admin_Menu {
      * @return void
      */
     public function campaigns_page() {
-        $action = isset( $_GET['action'] ) ? $_GET['action'] : 'list';
+        $action = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ): 'list';
         $id     = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
 
         switch ($action) {
@@ -394,7 +394,7 @@ class Admin_Menu {
      * @return void
      */
     public function page_reports() {
-        $type    = isset( $_GET['type'] ) ? $_GET['type'] : '';
+        $type    = isset( $_GET['type'] ) ? sanitize_text_field( wp_unslash( $_GET['type'] ) ): '';
         $pagenum = isset( $_GET['pagenum'] ) ? absint( $_GET['pagenum'] ) : 1;
         $limit   = 20;
         $offset  = ( $pagenum - 1 ) * $limit;

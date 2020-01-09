@@ -3,17 +3,17 @@
     <# if ( data.type == 'assign_company' ) { #>
 
         <div class="row">
-            <label for="erp-select-customer-company"><?php _e( 'Company Name', 'erp' ); ?> <span class="required">*</span></label>
-            <select style="width:240px;" name="erp_assign_company_id" id="erp-select-customer-company" required="required" data-types="company" class="erp-crm-contact-list-dropdown" data-placeholder="<?php _e( 'Select a company', 'erp' )?>">
-                <option value=""><?php _e( 'Select a Company', 'erp' ); ?></option>
+            <label for="erp-select-customer-company"><?php esc_attr_e( 'Company Name', 'erp' ); ?> <span class="required">*</span></label>
+            <select style="width:240px;" name="erp_assign_company_id" id="erp-select-customer-company" required="required" data-types="company" class="erp-crm-contact-list-dropdown" data-placeholder="<?php esc_attr_e( 'Select a company', 'erp' )?>">
+                <option value=""><?php esc_attr_e( 'Select a Company', 'erp' ); ?></option>
             </select>
         </div>
 
     <# } else if ( data.type == 'assign_customer' ) { #>
         <div class="row">
-            <label for="erp-select-customer-company"><?php _e( 'Contact Name', 'erp' ); ?> <span class="required">*</span></label>
-            <select style="width:240px;" name="erp_assign_customer_id" id="erp-select-customer-company" required="required" data-types="contact" class="erp-crm-contact-list-dropdown" data-placeholder="<?php _e( 'Select a Contact', 'erp' )?>">
-                <option value=""><?php _e( 'Select a Contact', 'erp' ); ?></option>
+            <label for="erp-select-customer-company"><?php esc_attr_e( 'Contact Name', 'erp' ); ?> <span class="required">*</span></label>
+            <select style="width:240px;" name="erp_assign_customer_id" id="erp-select-customer-company" required="required" data-types="contact" class="erp-crm-contact-list-dropdown" data-placeholder="<?php esc_attr_e( 'Select a Contact', 'erp' )?>">
+                <option value=""><?php esc_attr_e( 'Select a Contact', 'erp' ); ?></option>
             </select>
         </div>
     <# } #>

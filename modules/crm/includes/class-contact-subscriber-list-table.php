@@ -47,17 +47,17 @@ class Contact_Subscriber_List_Table extends \WP_List_Table {
         }
 
         $groups          = erp_crm_get_contact_group_dropdown();
-        $selected_group  = ( isset( $_GET['filter_contact_group'] ) ) ? $_GET['filter_contact_group'] : 0;
+        $selected_group  = ( isset( $_GET['filter_contact_group'] ) ) ? sanitize_text_field( wp_unslash( $_GET['filter_contact_group'] ) ) : 0;
         ?>
             <div class="alignleft actions">
 
-                <label class="screen-reader-text" for="new_role"><?php _e( 'Filter by Group', 'erp' ) ?></label>
+                <label class="screen-reader-text" for="new_role"><?php esc_html_e( 'Filter by Group', 'erp' ) ?></label>
                 <select name="filter_contact_group" id="filter_contact_group">
                     <?php foreach ( $groups as $key => $group ) : ?>
-                        <option value="<?php echo $key; ?>" <?php selected( $selected_group, $key ); ?>><?php echo $group; ?></option>
+                        <option value="<?php echo esc_attr( $key ); ?>" <?php selected( $selected_group, $key ); ?>><?php echo wp_kses_post( $group ); ?></option>
                     <?php endforeach ?>
                 </select>
-                <?php submit_button( __( 'Filter', 'erp' ), 'button', 'filter_group', false ); ?>
+                <?php submit_button( esc_html__( 'Filter', 'erp' ), 'button', 'filter_group', false ); ?>
             </div>
         <?php
     }
@@ -70,7 +70,7 @@ class Contact_Subscriber_List_Table extends \WP_List_Table {
      * @return void
      */
     function no_items() {
-        _e( 'No Subscriber contact found', 'erp' );
+        esc_html_e( 'No Subscriber contact found', 'erp' );
     }
 
     /**
@@ -96,11 +96,11 @@ class Contact_Subscriber_List_Table extends \WP_List_Table {
             case 'type':
 
                 if ( in_array( 'company', $contact->types ) ) {
-                    $type = __( 'Company', 'erp' );
+                    $type = esc_html__( 'Company', 'erp' );
                 }
 
                 if(  in_array( 'contact', $contact->types ) ) {
-                    $type = __( 'Contact', 'erp' );
+                    $type = esc_html__( 'Contact', 'erp' );
                 }
 
                 return $type;
@@ -131,8 +131,8 @@ class Contact_Subscriber_List_Table extends \WP_List_Table {
         foreach( $res as $key=>$data ) {
             $subscribe_date = sprintf( '%s %s',
                                 ( $status[$key] == 'subscribe' )
-                                    ? __( 'Subscribed on ', 'erp' )
-                                    : __( 'Unsubscribed on ', 'erp' ),
+                                    ? esc_html__( 'Subscribed on ', 'erp' )
+                                    : esc_html__( 'Unsubscribed on ', 'erp' ),
                                 ( $status[$key] == 'subscribe' )
                                     ? erp_format_date( $item[$key]['subscribe_at'] )
                                     : erp_format_date( $item[$key]['unsubscribe_at'] )
@@ -169,11 +169,11 @@ class Contact_Subscriber_List_Table extends \WP_List_Table {
     function get_columns() {
         $columns = array(
             'cb'                     => '<input type="checkbox" />',
-            'name'                   => __( 'Name', 'erp' ),
-            'email'                  => __( 'Email', 'erp' ),
-            'type'                   => __( 'Contact Type', 'erp' ),
-            'group'                  => __( 'Group', 'erp' ),
-            'subscription_status'    => __( 'Status', 'erp' )
+            'name'                   => esc_html__( 'Name', 'erp' ),
+            'email'                  => esc_html__( 'Email', 'erp' ),
+            'type'                   => esc_html__( 'Contact Type', 'erp' ),
+            'group'                  => esc_html__( 'Group', 'erp' ),
+            'subscription_status'    => esc_html__( 'Status', 'erp' )
         );
 
         return apply_filters( 'erp_crm_contact_subscribe_table_cols', $columns );
@@ -191,17 +191,17 @@ class Contact_Subscriber_List_Table extends \WP_List_Table {
     function column_name( $subscriber_contact ) {
         $contact    = new \WeDevs\ERP\CRM\Contact( $subscriber_contact->user_id );
         $actions    = array();
-        $delete_url = '';
         $edit_url   = '';
-        $group_id   = isset( $_GET['filter_contact_group'] ) ? $_GET['filter_contact_group'] : 0;
+        $group_id   = isset( $_GET['filter_contact_group'] ) ? sanitize_text_field( wp_unslash( $_GET['filter_contact_group'] ) ) : 0;
+        $delete_url = add_query_arg( [ 'page'=>'erp-crm', 'section'=> 'contact-groups', 'action' => 'delete', 'group_id' => $group_id, 'id' => $subscriber_contact->user_id ], admin_url( 'admin.php' ) );;
 
         if ( current_user_can( 'erp_crm_delete_contact', $contact->id ) ) {
-            $actions['edit']   = sprintf( '<a href="%s" data-id="%d" data-name="%s" title="%s">%s</a>', $edit_url, $subscriber_contact->user_id, $contact->get_full_name(), __( 'Edit this item', 'erp' ), __( 'Edit', 'erp' ) );
-            $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" data-group_id="%d" title="%s">%s</a>', $delete_url, $subscriber_contact->user_id, $group_id, __( 'Delete this item', 'erp' ), __( 'Delete', 'erp' ) );
+            $actions['edit']   = sprintf( '<a href="%s" data-id="%d" data-name="%s" title="%s">%s</a>', $edit_url, $subscriber_contact->user_id, $contact->get_full_name(), esc_html__( 'Edit this item', 'erp' ), esc_html__( 'Edit', 'erp' ) );
+            $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" data-group_id="%d" title="%s">%s</a>', $delete_url, $subscriber_contact->user_id, $group_id, esc_html__( 'Delete this item', 'erp' ), esc_html__( 'Delete', 'erp' ) );
         }
 
         $full_name = $contact->get_full_name();
-        $full_name = ! empty( $full_name ) ? $full_name : '(' . __( 'No name', 'erp' ) . ')';
+        $full_name = ! empty( $full_name ) ? $full_name : '(' . esc_html__( 'No name', 'erp' ) . ')';
         return sprintf( '%4$s <a href="%3$s"><strong>%1$s</strong></a> %2$s', $full_name, $this->row_actions( $actions ), erp_crm_get_details_url( $contact->id, $contact->types ) , $contact->get_avatar() );
     }
 
@@ -214,7 +214,7 @@ class Contact_Subscriber_List_Table extends \WP_List_Table {
      */
     function get_bulk_actions() {
         $actions = array(
-            'delete'  => __( 'Delete', 'erp' )
+            'delete'  => esc_html__( 'Delete', 'erp' )
         );
 
         return $actions;
@@ -270,7 +270,7 @@ class Contact_Subscriber_List_Table extends \WP_List_Table {
         $per_page              = 20;
         $current_page          = $this->get_pagenum();
         $offset                = ( $current_page -1 ) * $per_page;
-        $this->page_status     = isset( $_GET['status'] ) ? sanitize_text_field( $_GET['status'] ) : 'all';
+        $this->page_status     = isset( $_GET['status'] ) ? sanitize_text_field( wp_unslash( $_GET['status'] ) ) : 'all';
 
         // only ncessary because we have sample data
         $args = [
@@ -280,22 +280,22 @@ class Contact_Subscriber_List_Table extends \WP_List_Table {
 
         // Filter for serach
         if ( isset( $_REQUEST['s'] ) && ! empty( $_REQUEST['s'] ) ) {
-            $args['s'] = $_REQUEST['s'];
+            $args['s'] = sanitize_text_field( wp_unslash( $_REQUEST['s'] ) );
         }
 
         // Filter for order by
         if ( isset( $_REQUEST['orderby'] ) && ! empty( $_REQUEST['orderby'] ) ) {
-            $args['orderby'] = $_REQUEST['orderby'];
+            $args['orderby'] = sanitize_text_field( wp_unslash( $_REQUEST['orderby'] ) );
         }
 
         // Filter for order
         if ( isset( $_REQUEST['order'] ) && !empty( $_REQUEST['order'] ) ) {
-            $args['order'] = $_REQUEST['order'];
+            $args['order'] = sanitize_text_field( wp_unslash( $_REQUEST['order'] ) );
         }
 
         // Filter for groups
         if ( isset( $_REQUEST['filter_contact_group'] ) && !empty( $_REQUEST['filter_contact_group'] ) ) {
-            $args['group_id'] = $_REQUEST['filter_contact_group'];
+            $args['group_id'] = sanitize_text_field( wp_unslash( $_REQUEST['filter_contact_group'] ) );
         }
 
         // Prepare all item after all filtering

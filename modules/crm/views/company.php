@@ -17,12 +17,12 @@ if ( isset( $_GET['filter_assign_contact' ] ) && !empty( $_GET['filter_assign_co
 ?>
 <div class="wrap erp-crm-customer erp-crm-customer-listing" id="wp-erp">
 
-    <h2><?php _e( 'Company', 'erp' ); ?>
+    <h2><?php esc_attr_e( 'Company', 'erp' ); ?>
         <?php if ( current_user_can( 'erp_crm_add_contact' ) ): ?>
-            <a href="#" @click.prevent="addContact( 'company', '<?php _e( 'Add New Company', 'erp' ); ?>' )" id="erp-company-new" class="erp-contact-new add-new-h2" data-type="company" title="<?php _e( 'Add New Company', 'erp' ); ?>"><?php _e( 'Add New Company', 'erp' ); ?></a>
+            <a href="#" @click.prevent="addContact( 'company', '<?php esc_attr_e( 'Add New Company', 'erp' ); ?>' )" id="erp-company-new" class="erp-contact-new add-new-h2" data-type="company" title="<?php esc_attr_e( 'Add New Company', 'erp' ); ?>"><?php esc_attr_e( 'Add New Company', 'erp' ); ?></a>
         <?php endif; ?>
 
-        <a href="#" @click.prevent="addSearchSegment()" id="erp-contact-search-segmen" class="erp-search-segment add-new-h2" v-text="( showHideSegment ) ? '<?php _e( 'Hide Search Segment', 'erp' ); ?>' : '<?php _e( 'Add Search Segment', 'erp' ); ?>'"></a>
+        <a href="#" @click.prevent="addSearchSegment()" id="erp-contact-search-segmen" class="erp-search-segment add-new-h2" v-text="( showHideSegment ) ? '<?php esc_attr_e( 'Hide Search Segment', 'erp' ); ?>' : '<?php esc_attr_e( 'Add Search Segment', 'erp' ); ?>'"></a>
     </h2>
 
     <!-- Advance search filter vue component -->
@@ -36,7 +36,7 @@ if ( isset( $_GET['filter_assign_contact' ] ) && !empty( $_GET['filter_assign_co
         row-checkbox-name="company_id"
         action="erp-crm-get-contacts"
         :wpnonce="wpnonce"
-        page = "<?php echo add_query_arg( [ 'page' => 'erp-crm', 'section' => 'companies' ], admin_url( 'admin.php' ) ); ?>"
+        page = "<?php echo esc_url_raw( add_query_arg( [ 'page' => 'erp-crm', 'section' => 'companies' ], admin_url( 'admin.php' ) ) ); ?>"
         per-page="20"
         :fields=fields
         :item-row-actions=itemRowActions

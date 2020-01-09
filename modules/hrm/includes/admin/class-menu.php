@@ -205,17 +205,17 @@ class Admin_Menu {
         $menu = erp_menu();
         $menu = $menu[$component];
 
-        $section = ( isset( $_GET['section'] ) && isset( $menu[$_GET['section']] ) ) ? $_GET['section'] : 'dashboard';
-        $sub = ( isset( $_GET['sub-section'] ) && !empty( $menu[$section]['submenu'][$_GET['sub-section']] ) ) ? $_GET['sub-section'] : false;
+        $section = ( isset( $_GET['section'] ) && isset( $menu[$_GET['section']] ) ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : 'dashboard';
+        $sub = ( isset( $_GET['sub-section'] ) && !empty( $menu[$section]['submenu'][$_GET['sub-section']] ) ) ? sanitize_text_field( wp_unslash( $_GET['sub-section'] ) ) : false;
 
         // check permission/capability
         $permission = $menu[$section]['capability'];
         if ( ! current_user_can( $permission ) ) {
             $error_message  = '<h2 style="text-align: center; margin-top:40px">';
-            $error_message .= __('Sorry! You are not allowed to access this page.', 'erp');
+            $error_message .= esc_html__('Sorry! You are not allowed to access this page.', 'erp');
             $error_message .= '</h2>';
 
-            wp_die( $error_message );
+            wp_die( wp_kses_post( $error_message ) );
         }
 
         $callback = $menu[$section]['callback'];
@@ -255,14 +255,14 @@ class Admin_Menu {
      * @return void
      */
     public function employee_page() {
-        $action = isset( $_GET['action'] ) ? $_GET['action'] : 'list';
+        $action = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : 'list';
         $id     = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
 
         switch ($action) {
             case 'view':
                 $employee = new Employee( $id );
                 if ( ! $employee->get_user_id() ) {
-                    wp_die( __( 'Employee not found!', 'erp' ) );
+                    wp_die( esc_html__( 'Employee not found!', 'erp' ) );
                 }
 
                 $template = WPERP_HRM_VIEWS . '/employee/single.php';
@@ -288,14 +288,14 @@ class Admin_Menu {
      * @return void
      */
     public function employee_my_profile_page() {
-        $action = isset( $_GET['action'] ) ? $_GET['action'] : 'view';
+        $action = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : 'view';
         $id     = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : intval( get_current_user_id() );
 
         switch ($action) {
             case 'view':
                 $employee = new Employee( $id );
                 if ( ! $employee->ID ) {
-                    wp_die( __( 'Employee not found!', 'erp' ) );
+                    wp_die( esc_html__( 'Employee not found!', 'erp' ) );
                 }
 
                 $template = WPERP_HRM_VIEWS . '/employee/single.php';
@@ -324,7 +324,7 @@ class Admin_Menu {
      * @return void
      */
     public function department_page() {
-        $action = isset( $_GET['action'] ) ? $_GET['action'] : 'list';
+        $action = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : 'list';
         $id     = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
 
         switch ($action) {
@@ -360,7 +360,7 @@ class Admin_Menu {
      */
     public function reporting_page() {
 
-        $action = isset( $_GET['type'] ) ? $_GET['type'] : 'main';
+        $action = isset( $_GET['type'] ) ? sanitize_text_field( wp_unslash( $_GET['type'] ) ) : 'main';
 
         switch ( $action ) {
             case 'age-profile':
@@ -442,7 +442,7 @@ class Admin_Menu {
      * @return void
      */
     public function leave_requests() {
-        $view = isset( $_GET['view'] ) ? $_GET['view'] : 'list';
+        $view = isset( $_GET['view'] ) ? sanitize_text_field( wp_unslash( $_GET['view'] ) ) : 'list';
 
         switch ($view) {
             case 'new':

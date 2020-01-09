@@ -136,7 +136,7 @@ function erp_hr_delete_designation( $designation_id ) {
 
         return \WeDevs\ERP\HRM\Models\Designation::find( $designation_id )->delete();
     }
-    
+
 }
 
 /**

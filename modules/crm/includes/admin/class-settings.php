@@ -307,8 +307,9 @@ class CRM_Settings extends ERP_Settings_Page {
      * @return array fields
      */
     public function get_sub_section_fields() {
+        $sub_section = isset( $_GET['sub_section'] ) ? sanitize_text_field( wp_unslash( $_GET['sub_section'] ) ) : '';
 
-        switch ( $_GET['sub_section'] ) {
+        switch ( $sub_section ) {
             case 'gmail' :
                 return $this->get_gmail_api_settings_fields();
             case 'imap' :
@@ -507,7 +508,7 @@ class CRM_Settings extends ERP_Settings_Page {
                 <a id="imap-test-connection"
                    class="button-secondary"><?php esc_attr_e( 'Test Connection', 'erp' ); ?></a>
                 <span class="erp-loader" style="display: none;"></span>
-                <p class="description"><?php _e( 'Click on the above button before saving the settings.', 'erp' ); ?></p>
+                <p class="description"><?php esc_attr_e( 'Click on the above button before saving the settings.', 'erp' ); ?></p>
             </td>
         </tr>
         <?php
@@ -524,11 +525,14 @@ class CRM_Settings extends ERP_Settings_Page {
         ?>
         <tr valign="top">
             <th scope="row" class="titledesc">
-                <?php _e( 'Status', 'erp' ); ?>
+                <?php esc_attr_e( 'Status', 'erp' ); ?>
             </th>
             <td class="forminp forminp-text">
-                <span
-                    class="dashicons dashicons-<?php echo ( $imap_status ) ? 'yes green' : 'no red' ?>"></span><?php echo ( $imap_status ) ? __( 'Connected', 'erp' ) : __( 'Not Connected', 'erp' ); ?>
+                <?php
+                $status    = ( $imap_status ) ? 'yes green' : 'no red';
+                $connected = ( $imap_status ) ? __( 'Connected', 'erp' ) : __( 'Not Connected', 'erp' );
+                ?>
+                <span class="dashicons dashicons-<?php echo esc_attr( $status ) ?>"></span><?php echo esc_attr( $connected ) ?>
             </td>
         </tr>
         <?php
@@ -539,7 +543,7 @@ class CRM_Settings extends ERP_Settings_Page {
         ?>
         <tr valign="top">
             <td class="forminp forminp-text">
-                <a target="_blank" class="button-primary" href="<?php echo $url ?>">Click to Authorize your gmail account </a>
+                <a target="_blank" class="button-primary" href="<?php echo esc_url_raw( $url ) ?>"><?php esc_attr_e( 'Click to Authorize your gmail account', 'erp' ) ?> </a>
             </td>
         </tr>
         <?php
@@ -550,12 +554,12 @@ class CRM_Settings extends ERP_Settings_Page {
         ?>
         <tr valign="top">
             <th scope="row" class="titledesc">
-                <label for="redirect_url"><?php _e( 'Redirect URL to use', 'erp' ); ?></label>
+                <label for="redirect_url"><?php esc_attr_e( 'Redirect URL to use', 'erp' ); ?></label>
             </th>
             <td class="forminp forminp-text">
-                <input name="redirect_url" id="redirect_url" type="text" disabled value="<?php echo $url ?>"
+                <input name="redirect_url" id="redirect_url" type="text" disabled value="<?php echo esc_url_raw( $url ) ?>"
                        class="regular-text">
-                <p class="description"><?php _e( 'Copy and Use this url when oAuth consent asks for Authorized Redirect URL', 'erp' ) ?></p>
+                <p class="description"><?php esc_attr_e( 'Copy and Use this url when oAuth consent asks for Authorized Redirect URL', 'erp' ) ?></p>
             </td>
         </tr>
 
@@ -568,17 +572,17 @@ class CRM_Settings extends ERP_Settings_Page {
         ?>
         <tr valign="top">
             <th scope="row" class="titledesc">
-                <?php _e( 'Connected', 'erp' ); ?>
+                <?php esc_attr_e( 'Connected', 'erp' ); ?>
             </th>
             <td class="forminp forminp-text">
-                <p><b><?php echo $connected_email ?></b></p>
+                <p><b><?php echo wp_kses_post( $connected_email ) ?></b></p>
             </td>
         </tr>
         <tr valign="top">
             <th scope="row" class="titledesc">
             </th>
             <td class="forminp forminp-text">
-                <a style="background: #dc3232; color:#fff" class="button-secondary" href="<?php echo $url ?>"> <?php _e( 'Disconnect','erp') ?> </a>
+                <a style="background: #dc3232; color:#fff" class="button-secondary" href="<?php echo esc_url_raw( $url ) ?>"> <?php esc_attr_e( 'Disconnect','erp') ?> </a>
             </td>
         </tr>
         <?php
@@ -632,13 +636,13 @@ class CRM_Settings extends ERP_Settings_Page {
                             switch ( $key ) {
                                 case 'name' :
                                     echo '<td class="erp-settings-table-' . esc_attr( $key ) . '">
-                                        <a href="' . $settings_url . strtolower( $slug ) . '">' . $item . '</a>
+                                        <a href="' . esc_url_raw( $settings_url ) . esc_attr( strtolower( $slug ) ) . '">' . esc_attr( $item ) . '</a>
                                     </td>';
                                     break;
 
                                 case 'description':
                                     echo '<td class="erp-settings-table-' . esc_attr( $key ) . '">
-                                        <span class="help">' . $item . '</span>
+                                        <span class="help">' . esc_attr( $item ) . '</span>
                                     </td>';
                                     break;
 
@@ -650,13 +654,13 @@ class CRM_Settings extends ERP_Settings_Page {
                                         $btn_class .= ' enabled';
                                     }
                                     echo '<td class="erp-settings-table-' . esc_attr( $key ) . '">
-                                        <span class="help">' . $status . '</span>
+                                        <span class="help">' . esc_attr( $status ) . '</span>
                                     </td>';
                                     break;
 
                                 case 'actions' :
                                     echo '<td class="erp-settings-table-' . esc_attr( $key ) . '">
-                                        <a class="button alignright" href="' . $settings_url . strtolower( $slug ) . '">' . __( 'Settings', 'erp' ) . '</a>
+                                        <a class="button alignright" href="' . esc_url_raw( $settings_url ) . esc_attr( strtolower( $slug ) ) . '">' . esc_html__( 'Settings', 'erp' ) . '</a>
                                     </td>';
                                     break;
 
@@ -717,7 +721,7 @@ class CRM_Settings extends ERP_Settings_Page {
             margin-bottom: 10px;
         }
     </style>
-    <a href="#" class="erp-crm-add-save-replies button alignright" id="erp-crm-add-save-replies" title="<?php _e( 'Add new Template', 'erp' ); ?>"><?php _e( 'Add Templates', 'erp' ); ?></a>
+    <a href="#" class="erp-crm-add-save-replies button alignright" id="erp-crm-add-save-replies" title="<?php esc_attr_e( 'Add new Template', 'erp' ); ?>"><?php esc_attr_e( 'Add Templates', 'erp' ); ?></a>
     <tr valign="top">
         <td class="erp-crm-templates-wrapper" colspan="2">
             <table class="erp-crm-templates-table widefat" cellspacing="0">
@@ -747,21 +751,21 @@ class CRM_Settings extends ERP_Settings_Page {
                                 switch ( $key ) {
                                     case 'name' :
                                         echo '<td class="erp-templates-settings-table-' . esc_attr( $key ) . '">
-                                            <a href="#">' . $save_reply->name . '</a>
+                                            <a href="#">' . esc_attr( $save_reply->name ) . '</a>
                                         </td>';
                                         break;
 
                                     case 'subject':
-                                        $subject = ( isset( $save_reply->subject ) && ! empty( $save_reply->subject ) ) ? $save_reply->subject : '----';
+                                        $subject = ( isset( $save_reply->subject ) && ! empty( $save_reply->subject ) ) ? esc_attr( $save_reply->subject ) : '----';
                                         echo '<td class="erp-templates-settings-table-' . esc_attr( $key ) . '">
-                                            <span class="help">' . $subject . '</span>
+                                            <span class="help">' . esc_attr( $subject ) . '</span>
                                         </td>';
                                         break;
 
                                     case 'actions' :
                                         echo '<td class="erp-templates-settings-table-' . esc_attr( $key ) . '">
-                                            <a class="erp-crm-save-replies-edit erp-tips" title="'. __( 'Edit', 'erp' ) .'" href="#" data-id="' . $save_reply->id . '"><i class="fa fa-pencil-square-o"></i></a>
-                                            <a class="erp-crm-delete-save-replies erp-tips" title="'. __( 'Delete', 'erp' ) .'" href="#" data-id="' . $save_reply->id . '"><i class="fa fa-trash-o"></i></a>
+                                            <a class="erp-crm-save-replies-edit erp-tips" title="'. esc_html__( 'Edit', 'erp' ) .'" href="#" data-id="' . esc_attr( $save_reply->id ) . '"><i class="fa fa-pencil-square-o"></i></a>
+                                            <a class="erp-crm-delete-save-replies erp-tips" title="'. esc_html__( 'Delete', 'erp' ) .'" href="#" data-id="' . esc_attr( $save_reply->id ) . '"><i class="fa fa-trash-o"></i></a>
                                         </td>';
                                         break;
 
@@ -773,7 +777,7 @@ class CRM_Settings extends ERP_Settings_Page {
                             echo '</tr>';
                         }
                     } else {
-                        echo '<tr><td colspan="3">' . __( 'No templates found', 'erp' ) . '</td></tr>';
+                        echo '<tr><td colspan="3">' . esc_html__( 'No templates found', 'erp' ) . '</td></tr>';
                     }
                     ?>
                 </tbody>
@@ -852,14 +856,14 @@ class CRM_Settings extends ERP_Settings_Page {
      * @param bool $section
      */
     function save( $section = false ) {
-        if ( isset( $_POST['_wpnonce'] ) && wp_verify_nonce( $_POST['_wpnonce'], 'erp-settings-nonce' ) ) {
+        if ( isset( $_POST['_wpnonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_POST['_wpnonce'] ) ), 'erp-settings-nonce' ) ) {
 
             if ( !isset( $_GET['sub_section'] ) ) {
                 parent::save( $section );
                 return;
             }
 
-            $current_section = isset( $_GET['sub_section'] ) ? sanitize_key( $_GET['sub_section'] ) : false;
+            $current_section = isset( $_GET['sub_section'] ) ? sanitize_key( wp_unslash( $_GET['sub_section'] ) ) : false;
             // saving individual email settings
             if ( $current_section ) {
 
@@ -892,6 +896,10 @@ class CRM_Settings extends ERP_Settings_Page {
      * @return void
      */
     public function cron_schedule( $value ) {
+        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-nonce' ) ) {
+            // die();
+        }
+
         if ( !isset( $_GET['section'] ) || ( $_GET['section'] != 'email_connect' ) ) {
             return;
         }
@@ -900,7 +908,7 @@ class CRM_Settings extends ERP_Settings_Page {
             return;
         }
 
-        $recurrence = isset( $_POST['schedule'] ) ? $_POST['schedule'] : 'hourly';
+        $recurrence = isset( $_POST['schedule'] ) ? sanitize_text_field( wp_unslash( $_POST['schedule'] ) ): 'hourly';
         wp_clear_scheduled_hook( 'erp_crm_inbound_email_scheduled_events' );
         wp_schedule_event( time(), $recurrence, 'erp_crm_inbound_email_scheduled_events' );
     }

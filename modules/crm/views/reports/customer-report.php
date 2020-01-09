@@ -1,14 +1,17 @@
 <?php
+if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-nonce' ) ) {
+    // die();
+}
 
 $data         = [];
-$start        = !empty( $_POST['start'] ) ? $_POST['start'] : false;
-$end          = !empty( $_POST['end'] ) ? $_POST['end'] : date('Y-m-d');
-$filter_type  = !empty( $_POST['filter_type'] ) ? $_POST['filter_type'] : 'life_stage';
+$start        = !empty( $_POST['start'] ) ? sanitize_text_field( wp_unslash( $_POST['start'] ) ) : false;
+$end          = !empty( $_POST['end'] ) ? sanitize_text_field( wp_unslash( $_POST['end'] ) ): date('Y-m-d');
+$filter_type  = !empty( $_POST['filter_type'] ) ? sanitize_text_field( wp_unslash( $_POST['filter_type'] ) ) : 'life_stage';
 
 $reports      = erp_crm_customer_reporting_query( $start, $end, $filter_type );
 
 ?><div class="wrap">
-    <h2 class="report-title"><?php _e( 'Customer Report', 'erp' ); ?></h2>
+    <h2 class="report-title"><?php esc_attr_e( 'Customer Report', 'erp' ); ?></h2>
     <div class="erp-crm-report-header-wrap">
         <?php erp_crm_customer_report_filter_form(); ?>
         <button class="print" onclick="window.print()">Print</button>
@@ -16,11 +19,11 @@ $reports      = erp_crm_customer_reporting_query( $start, $end, $filter_type );
     <table class="table widefat striped">
         <thead>
             <tr>
-                <th><?php _e( 'Label', 'erp' ); ?></th>
-                <th><?php _e( 'Subscriber', 'erp' ); ?></th>
-                <th><?php _e( 'Opportunity', 'erp' ); ?></th>
-                <th><?php _e( 'Lead', 'erp' ); ?></th>
-                <th><?php _e( 'Customer', 'erp' ); ?></th>
+                <th><?php esc_attr_e( 'Label', 'erp' ); ?></th>
+                <th><?php esc_attr_e( 'Subscriber', 'erp' ); ?></th>
+                <th><?php esc_attr_e( 'Opportunity', 'erp' ); ?></th>
+                <th><?php esc_attr_e( 'Lead', 'erp' ); ?></th>
+                <th><?php esc_attr_e( 'Customer', 'erp' ); ?></th>
             </tr>
         </thead>
 
@@ -32,10 +35,10 @@ $reports      = erp_crm_customer_reporting_query( $start, $end, $filter_type );
             ?>
             <tr>
                 <td>All</td>
-                <td><?php echo !empty( $data['subscriber'] )  ? $data['subscriber']  : 0; ?></td>
-                <td><?php echo !empty( $data['opportunity'] ) ? $data['opportunity'] : 0; ?></td>
-                <td><?php echo !empty( $data['lead'] )        ? $data['lead']        : 0; ?></td>
-                <td><?php echo !empty( $data['customer'] )    ? $data['customer']    : 0; ?></td>
+                <td><?php echo !empty( $data['subscriber'] )  ? esc_attr( $data['subscriber'] ) : 0; ?></td>
+                <td><?php echo !empty( $data['opportunity'] ) ? esc_attr( $data['opportunity'] ) : 0; ?></td>
+                <td><?php echo !empty( $data['lead'] )        ? esc_attr( $data['lead'] ) : 0; ?></td>
+                <td><?php echo !empty( $data['customer'] )    ? esc_attr( $data['customer'] ) : 0; ?></td>
             </tr>
 
             <?php elseif ( $filter_type === 'contact_owner' ) :
@@ -45,7 +48,7 @@ $reports      = erp_crm_customer_reporting_query( $start, $end, $filter_type );
 
                 foreach ( $data as $key => $value ) : ?>
                     <tr>
-                        <td><?php echo $key; ?></td>
+                        <td><?php echo esc_attr( $key ); ?></td>
 
                         <td>
                         <?php $num = 0;
@@ -55,7 +58,7 @@ $reports      = erp_crm_customer_reporting_query( $start, $end, $filter_type );
                                 }
                             }
 
-                            echo $num;
+                            echo esc_attr( $num );
                         ?>
                         </td>
 
@@ -67,7 +70,7 @@ $reports      = erp_crm_customer_reporting_query( $start, $end, $filter_type );
                                 }
                             }
 
-                            echo $num;
+                            echo esc_attr( $num );
                         ?>
                         </td>
 
@@ -79,7 +82,7 @@ $reports      = erp_crm_customer_reporting_query( $start, $end, $filter_type );
                                 }
                             }
 
-                            echo $num;
+                            echo esc_attr( $num );
                         ?>
                         </td>
 
@@ -91,7 +94,7 @@ $reports      = erp_crm_customer_reporting_query( $start, $end, $filter_type );
                                 }
                             }
 
-                            echo $num;
+                            echo esc_attr( $num );
                         ?>
                         </td>
                     </tr>
@@ -104,7 +107,7 @@ $reports      = erp_crm_customer_reporting_query( $start, $end, $filter_type );
 
                 foreach ( $data as $key => $value ) : ?>
                     <tr>
-                        <td><?php echo $key !== -1 ? erp_get_country_name( $key ) : 'Other'; ?></td>
+                        <td><?php echo esc_attr( $key ) !== -1 ? esc_html( erp_get_country_name( $key ) ) : 'Other'; ?></td>
 
                         <td>
                         <?php $num = 0;
@@ -114,7 +117,7 @@ $reports      = erp_crm_customer_reporting_query( $start, $end, $filter_type );
                                 }
                             }
 
-                            echo $num;
+                            echo esc_attr( $num );
                         ?>
                         </td>
 
@@ -126,7 +129,7 @@ $reports      = erp_crm_customer_reporting_query( $start, $end, $filter_type );
                                 }
                             }
 
-                            echo $num;
+                            echo esc_attr( $num );
                         ?>
                         </td>
 
@@ -138,7 +141,7 @@ $reports      = erp_crm_customer_reporting_query( $start, $end, $filter_type );
                                 }
                             }
 
-                            echo $num;
+                            echo esc_attr( $num );
                         ?>
                         </td>
 
@@ -150,7 +153,7 @@ $reports      = erp_crm_customer_reporting_query( $start, $end, $filter_type );
                                 }
                             }
 
-                            echo $num;
+                            echo esc_attr( $num );
                         ?>
                         </td>
                     </tr>
@@ -160,7 +163,7 @@ $reports      = erp_crm_customer_reporting_query( $start, $end, $filter_type );
 
                 foreach ( $reports as $key => $value ) : ?>
                     <tr>
-                        <td><?php echo $key; ?></td>
+                        <td><?php echo esc_attr( $key ); ?></td>
 
                         <td>
                         <?php $num = 0;
@@ -170,7 +173,7 @@ $reports      = erp_crm_customer_reporting_query( $start, $end, $filter_type );
                                 }
                             }
 
-                            echo $num;
+                            echo esc_attr( $num );
                         ?>
                         </td>
 
@@ -182,7 +185,7 @@ $reports      = erp_crm_customer_reporting_query( $start, $end, $filter_type );
                                 }
                             }
 
-                            echo $num;
+                            echo esc_attr( $num );
                         ?>
                         </td>
 
@@ -194,7 +197,7 @@ $reports      = erp_crm_customer_reporting_query( $start, $end, $filter_type );
                                 }
                             }
 
-                            echo $num;
+                            echo esc_attr( $num );
                         ?>
                         </td>
 
@@ -206,7 +209,7 @@ $reports      = erp_crm_customer_reporting_query( $start, $end, $filter_type );
                                 }
                             }
 
-                            echo $num;
+                            echo esc_attr( $num );
                         ?>
                         </td>
                     </tr>
@@ -216,7 +219,7 @@ $reports      = erp_crm_customer_reporting_query( $start, $end, $filter_type );
 
                 foreach ( $reports as $key => $value ) : ?>
                     <tr>
-                        <td><?php echo $key; ?></td>
+                        <td><?php echo esc_attr( $key ); ?></td>
 
                         <td>
                         <?php $num = 0;
@@ -226,7 +229,7 @@ $reports      = erp_crm_customer_reporting_query( $start, $end, $filter_type );
                                 }
                             }
 
-                            echo $num;
+                            echo esc_attr( $num );
                         ?>
                         </td>
 
@@ -238,7 +241,7 @@ $reports      = erp_crm_customer_reporting_query( $start, $end, $filter_type );
                                 }
                             }
 
-                            echo $num;
+                            echo esc_attr( $num );
                         ?>
                         </td>
 
@@ -250,7 +253,7 @@ $reports      = erp_crm_customer_reporting_query( $start, $end, $filter_type );
                                 }
                             }
 
-                            echo $num;
+                            echo esc_attr( $num );
                         ?>
                         </td>
 
@@ -262,7 +265,7 @@ $reports      = erp_crm_customer_reporting_query( $start, $end, $filter_type );
                                 }
                             }
 
-                            echo $num;
+                            echo esc_attr( $num );
                         ?>
                         </td>
                     </tr>

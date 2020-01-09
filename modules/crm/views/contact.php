@@ -27,9 +27,9 @@ if ( isset( $_GET['filter_assign_contact' ] ) && !empty( $_GET['filter_assign_co
 <div class="wrap erp-crm-customer erp-crm-customer-listing" id="wp-erp" v-cloak>
 
     <h2>
-        <?php _e( 'Contact', 'erp' ); ?>
+        <?php esc_attr_e( 'Contact', 'erp' ); ?>
         <?php if ( current_user_can( 'erp_crm_add_contact' ) ): ?>
-            <a href="#" @click.prevent="addContact( 'contact', '<?php _e( 'Add New Contact', 'erp' ); ?>' )" id="erp-customer-new" class="erp-contact-new add-new-h2"><?php _e( 'Add New Contact', 'erp' ); ?></a>
+            <a href="#" @click.prevent="addContact( 'contact', '<?php esc_attr_e( 'Add New Contact', 'erp' ); ?>' )" id="erp-customer-new" class="erp-contact-new add-new-h2"><?php esc_attr_e( 'Add New Contact', 'erp' ); ?></a>
         <?php endif ?>
 
         <a href="#" @click.prevent="addSearchSegment()" id="erp-contact-search-segmen" class="erp-search-segment add-new-h2">{{{ segmentBtnText }}}</a>
@@ -46,7 +46,7 @@ if ( isset( $_GET['filter_assign_contact' ] ) && !empty( $_GET['filter_assign_co
         row-checkbox-name="customer_id"
         action="erp-crm-get-contacts"
         :wpnonce="wpnonce"
-        page = "<?php echo add_query_arg( [ 'page' => 'erp-crm' ], admin_url( 'admin.php' ) ); ?>"
+        page = "<?php echo esc_url_raw( add_query_arg( [ 'page' => 'erp-crm' ], admin_url( 'admin.php' ) ) ); ?>"
         per-page="20"
         :fields=fields
         :item-row-actions=itemRowActions

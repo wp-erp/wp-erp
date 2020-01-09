@@ -22,7 +22,7 @@ class Form_Handler {
         $this->action( 'admin_init', 'tools_general' );
         $this->action( 'admin_init', 'tools_test_mail' );
 
-        $erp_settings = sanitize_title( __( 'ERP Settings', 'erp' ) );
+        $erp_settings = sanitize_title( esc_html__( 'ERP Settings', 'erp' ) );
         add_action( "load-{$erp_settings}_page_erp-audit-log", array( $this, 'audit_log_bulk_action' ) );
     }
 
@@ -38,12 +38,12 @@ class Form_Handler {
             return;
         }
 
-        if ( ! wp_verify_nonce( $_POST['erp_settings'], 'erp_nonce' ) ) {
+        if ( ! isset( $_POST['erp_settings'] ) || ! wp_verify_nonce( sanitize_key( $_POST['erp_settings'] ), 'erp_nonce' ) ) {
             return;
         }
 
-        $inactive    =  ( isset( $_GET['tab'] ) && $_GET['tab'] == 'inactive' ) ? true : false;
-        $modules     = isset( $_POST['modules'] ) ? $_POST['modules'] : array();
+        $inactive    = ( isset( $_GET['tab'] ) && $_GET['tab'] == 'inactive' ) ? true : false;
+        $modules     = isset( $_POST['modules'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['modules'] ) ) : array();
         $all_modules = wperp()->modules->get_modules();
 
         foreach ( $all_modules as $key => $module ) {
@@ -57,7 +57,7 @@ class Form_Handler {
             $all_modules    = array_merge( $all_modules, $active_modules );
         }
         update_option( 'erp_modules', $all_modules );
-        wp_redirect( $_POST['_wp_http_referer'] );
+        wp_redirect( isset( $_POST['_wp_http_referer'] ) ? sanitize_text_field( wp_unslash( $_POST['_wp_http_referer'] ) ) : '' );
         exit();
     }
 
@@ -85,8 +85,8 @@ class Form_Handler {
      * @return void
      */
     public function create_new_company() {
-        if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'erp-new-company' ) ) {
-            wp_die( __( 'Cheating?', 'erp' ) );
+        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-new-company' ) ) {
+            wp_die( esc_html__( 'Cheating?', 'erp' ) );
         }
 
         $posted   = array_map( 'strip_tags_deep', $_POST );
@@ -94,9 +94,9 @@ class Form_Handler {
 
         $errors   = [];
         $required = [
-            'name'    => __( 'Company name', 'erp' ),
+            'name'    => esc_html__( 'Company name', 'erp' ),
             'address' => [
-                'country' => __( 'Country', 'erp' )
+                'country' => esc_html__( 'Country', 'erp' )
             ]
         ];
 
@@ -136,7 +136,7 @@ class Form_Handler {
         $company = new Company();
         $company->update( $args );
 
-        $redirect_to = admin_url( 'admin.php?page=erp-company&action=edit&msg=updated' );
+        $redirect_to = esc_url( admin_url( 'admin.php?page=erp-company&action=edit&msg=updated' ) );
         wp_redirect( $redirect_to );
         exit;
     }
@@ -158,11 +158,13 @@ class Form_Handler {
             return;
         }
 
-        if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-audit_logs' ) ) {
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'bulk-audit_logs' ) ) {
             return;
         }
 
-        $redirect = remove_query_arg( array( '_wp_http_referer', '_wpnonce', 'filter_audit_log' ), wp_unslash( $_SERVER['REQUEST_URI'] ) );
+        $request_uri = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+
+        $redirect = remove_query_arg( array( '_wp_http_referer', '_wpnonce', 'filter_audit_log' ), $request_uri );
         wp_redirect( $redirect );
         exit();
     }
@@ -175,10 +177,10 @@ class Form_Handler {
     public function tools_general() {
 
         // admin menu form
-        if ( isset( $_POST['erp_admin_menu'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'erp-remove-menu-nonce' ) ) {
+        if ( isset( $_POST['erp_admin_menu'], $_REQUEST['_wpnonce'] ) && wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'erp-remove-menu-nonce' ) ) {
 
-            $menu     = isset( $_POST['menu'] ) ? array_map( 'strip_tags', $_POST['menu'] ) : [];
-            $bar_menu = isset( $_POST['admin_menu'] ) ? array_map( 'strip_tags', $_POST['admin_menu'] ) : [];
+            $menu     = isset( $_POST['menu'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['menu'] ) ) : [];
+            $bar_menu = isset( $_POST['admin_menu'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['admin_menu'] ) ) : [];
 
             update_option( '_erp_admin_menu', $menu );
             update_option( '_erp_adminbar_menu', $bar_menu );
@@ -193,11 +195,11 @@ class Form_Handler {
      * @return void
      */
     public function tools_test_mail() {
-        if ( isset( $_POST['erp_send_test_email'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'erp-test-email-nonce' ) ) {
+        if ( isset( $_POST['erp_send_test_email'], $_REQUEST['_wpnonce'] ) && wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'erp-test-email-nonce' ) ) {
 
-            $to      = isset( $_POST['to'] ) ? sanitize_text_field( $_POST['to'] ) : '';
+            $to      = isset( $_POST['to'] ) ? sanitize_text_field( wp_unslash( $_POST['to'] ) ) : '';
             $subject = sprintf( __( 'Test email from %s', 'erp' ), get_bloginfo( 'name' ) );
-            $body    = isset( $_POST['body'] ) ? $_POST['body'] : '';
+            $body    = isset( $_POST['body'] ) ? sanitize_text_field( wp_unslash( $_POST['body'] ) ) : '';
 
             if ( empty( $body ) ) {
                 $body = sprintf( __( 'This test email proves that your WordPress installation at %1$s can send emails.\n\nSent: %2$s', 'erp' ), get_bloginfo( 'url' ), date( 'r' ) );
@@ -205,7 +207,7 @@ class Form_Handler {
 
             erp_mail( $to, $subject, $body );
 
-            $redirect_to = admin_url( 'admin.php?page=erp-tools&tab=misc&sent=true' );
+            $redirect_to = esc_url( admin_url( 'admin.php?page=erp-tools&tab=misc&sent=true' ) );
             wp_redirect( $redirect_to );
             exit;
         }

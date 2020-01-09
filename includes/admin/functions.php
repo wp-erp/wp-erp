@@ -21,8 +21,8 @@ function erp_admin_dash_metabox( $title = '', $callback = null, $class = '' ) {
 
     $class_name = ! empty( $class ) ? ' ' . $class : '';
     ?>
-    <div class="postbox<?php echo $class_name; ?>">
-        <h3 class="hndle"><span><?php echo $title; ?></span></h3>
+    <div class="postbox<?php echo esc_attr( $class_name ); ?>">
+        <h3 class="hndle"><span><?php echo wp_kses_post( $title ); ?></span></h3>
         <div class="inside">
             <div class="main">
                 <?php if ( is_callable( $callback ) ) {

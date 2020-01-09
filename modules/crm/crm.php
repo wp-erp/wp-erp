@@ -220,9 +220,9 @@ class Customer_Relationship {
          */
         ?>
         <script>
-            window.erpLocale = JSON.parse('<?php echo addslashes(
+            window.erpLocale = JSON.parse('<?php echo wp_kses_post( wp_slash(
                 json_encode( apply_filters( 'erp_localized_data', [] ) )
-            ); ?>');
+            ) ); ?>');
         </script>
 
         <?php
@@ -231,7 +231,7 @@ class Customer_Relationship {
          * This above block is only needed for translations
          */
 
-        $section = !empty( $_GET['section'] ) ? $_GET['section'] : 'dashboard' ;
+        $section = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : 'dashboard' ;
 
         switch ( $section ) {
 
@@ -339,7 +339,8 @@ class Customer_Relationship {
     public function load_js_template() {
         global $current_screen;
         $hook = str_replace( sanitize_title( __( 'CRM', 'erp' ) ) , 'crm', $current_screen->base );
-        $section = !empty( $_GET['section'] ) ? $_GET['section'] : 'dashboard' ;
+        $section = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : 'dashboard' ;
+
         switch ( $section ) {
 
             case 'contacts':

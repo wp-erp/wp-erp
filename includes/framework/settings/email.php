@@ -87,16 +87,18 @@ class ERP_Email_Settings extends ERP_Settings_Page {
             'type' => 'sectionend', 'id' => 'script_styling_options'
         ];
 
-        $fields['general'][] = [
-            'title' => __( 'Notification Emails', 'erp' ),
-            'desc'  => __( 'Email notifications sent from WP ERP are listed below. Click on an email to configure it.', 'erp' ),
-            'type'  => 'title',
-            'id'    => 'email_notification_settings'
-        ];
+        if ( ! empty( wperp()->emailer->get_emails() ) ) {
+            $fields['general'][] = [
+                'title' => __( 'Notification Emails', 'erp' ),
+                'desc'  => __( 'Email notifications sent from WP ERP are listed below. Click on an email to configure it.', 'erp' ),
+                'type'  => 'title',
+                'id'    => 'email_notification_settings'
+            ];
 
-        $fields['general'][] = [
-            'type' => 'notification_emails'
-        ];
+            $fields['general'][] = [
+                'type' => 'notification_emails'
+            ];
+        }
 
         $fields['general'][] = [
             'type' => 'sectionend',
@@ -224,7 +226,7 @@ class ERP_Email_Settings extends ERP_Settings_Page {
                             switch ( $key ) {
                                 case 'name' :
                                     echo '<td class="erp-settings-table-' . esc_attr( $key ) . '">
-                                            <a href="' . admin_url( 'admin.php?page=erp-settings&tab=erp-email&section=general&sub_section=' . strtolower( $email_key ) ) . '">' . $email->get_title() . '</a>
+                                            <a href="' . esc_url( admin_url( 'admin.php?page=erp-settings&tab=erp-email&section=general&sub_section=' . esc_attr( strtolower( $email_key ) ) ) ) . '">' . esc_html( $email->get_title() ) . '</a>
                                         </td>';
                                     break;
 
@@ -238,13 +240,13 @@ class ERP_Email_Settings extends ERP_Settings_Page {
 
                                 case 'description':
                                     echo '<td class="erp-settings-table-' . esc_attr( $key ) . '">
-                                            <span class="help">' . $email->get_description() . '</span>
+                                            <span class="help">' . esc_html( $email->get_description() ) . '</span>
                                         </td>';
                                     break;
 
                                 case 'actions' :
                                     echo '<td class="erp-settings-table-' . esc_attr( $key ) . '">
-                                            <a class="button alignright" href="' . admin_url( 'admin.php?page=erp-settings&tab=erp-email&section=general&sub_section=' . strtolower( $email_key ) ) . '">' . __( 'Configure', 'erp' ) . '</a>
+                                            <a class="button alignright" href="' . esc_url( admin_url( 'admin.php?page=erp-settings&tab=erp-email&section=general&sub_section=' . strtolower( $email_key ) ) ) . '">' . esc_html__( 'Configure', 'erp' ) . '</a>
                                         </td>';
                                     break;
 
@@ -275,12 +277,12 @@ class ERP_Email_Settings extends ERP_Settings_Page {
             </th>
             <td class="forminp forminp-text">
                 <input type="email" id="smtp_test_email_address" class="regular-text"
-                       value="<?php echo get_option( 'admin_email' ); ?>"/><br>
-                <p class="description"><?php _e( 'An email address to test the connection.', 'erp' ); ?></p>
+                       value="<?php echo esc_attr( get_option( 'admin_email' ) ); ?>"/><br>
+                <p class="description"><?php esc_html_e( 'An email address to test the connection.', 'erp' ); ?></p>
                 <a id="smtp-test-connection"
                    class="button-secondary"><?php esc_attr_e( 'Send Test Email', 'erp' ); ?></a>
                 <span class="erp-loader" style="display: none;"></span>
-                <p class="description"><?php _e( 'Click on the above button before saving the settings.', 'erp' ); ?></p>
+                <p class="description"><?php esc_html_e( 'Click on the above button before saving the settings.', 'erp' ); ?></p>
             </td>
         </tr>
         <?php
@@ -440,7 +442,7 @@ class ERP_Email_Settings extends ERP_Settings_Page {
     }
 
     function save( $section = false ) {
-        if ( isset( $_POST['_wpnonce'] ) && wp_verify_nonce( $_POST['_wpnonce'], 'erp-settings-nonce' ) ) {
+        if ( isset( $_POST['_wpnonce'] ) && wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-settings-nonce' ) ) {
 
             if ( !isset( $_GET['sub_section'] ) ) {
                 parent::save( $section );

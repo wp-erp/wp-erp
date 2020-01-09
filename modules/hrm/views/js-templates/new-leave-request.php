@@ -50,7 +50,7 @@ $types = $employee_types ? $employee_types : [];
         ) ); ?>
     </div>
 
-    <input type="hidden" name="employee_id" id="erp-hr-leave-req-employee-id" value="<?php echo get_current_user_id(); ?>">
+    <input type="hidden" name="employee_id" id="erp-hr-leave-req-employee-id" value="<?php echo esc_html( get_current_user_id() ); ?>">
     <input type="hidden" name="action" value="erp-hr-leave-req-new">
     <?php wp_nonce_field( 'erp-leave-req-new' ); ?>
 </div>

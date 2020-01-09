@@ -34,21 +34,26 @@
     </li>
 
     <li class="row" data-selected="{{ data.country }}">
-        <label for="erp-popup-country"><?php _e( 'Country', 'erp' ); ?> <span class="required">*</span></label>
+        <label for="erp-popup-country"><?php esc_html_e( 'Country', 'erp' ); ?> <span class="required">*</span></label>
         <select name="country" id="erp-popup-country" class="erp-country-select select2" data-parent="ul">
             <?php $country = \WeDevs\ERP\Countries::instance(); ?>
-            <?php echo $country->country_dropdown( erp_get_country() ); ?>
+            <?php echo wp_kses( $country->country_dropdown( erp_get_country() ), array(
+                'option' => array(
+                    'value' => array(),
+                    'selected' => array()
+                ),
+            ) ); ?>
         </select>
     </li>
 
     <li class="row state-field" data-selected="{{ data.state }}">
         <?php erp_html_form_input( array(
-            'label'   => __( 'Province / State', 'erp' ),
+            'label'   => esc_html__( 'Province / State', 'erp' ),
             'name'    => 'state',
             'id'      => 'erp-state',
             'type'    => 'select',
             'class'   => 'erp-state-select',
-            'options' => array( 0 => __( '- Select -', 'erp' ) )
+            'options' => array( 0 => esc_html__( '- Select -', 'erp' ) )
         ) ); ?>
     </li>
 

@@ -24,7 +24,7 @@ class Department_List_Table extends \WP_List_Table {
      * @return void
      */
     function no_items() {
-        _e( 'No department found.', 'erp' );
+        esc_html_e( 'No department found.', 'erp' );
     }
 
     /**
@@ -193,8 +193,8 @@ class Department_List_Table extends \WP_List_Table {
                     ?>
                     <th scope="row" class="check-column">
 
-                        <label class="screen-reader-text" for="cb-select-<?php the_ID(); ?>"><?php printf( __( 'Select %s' ), $department->title ); ?></label>
-                        <input id="cb-select-<?php the_ID(); ?>" type="checkbox" name="department_id[]" value="<?php echo $department->id; ?>" />
+                        <label class="screen-reader-text" for="cb-select-<?php the_ID(); ?>"><?php printf( esc_html__( 'Select %s' ), esc_html( $department->title ) ); ?></label>
+                        <input id="cb-select-<?php the_ID(); ?>" type="checkbox" name="department_id[]" value="<?php echo esc_html( $department->id ); ?>" />
                         <div class="locked-indicator"></div>
 
                     </th>
@@ -211,14 +211,14 @@ class Department_List_Table extends \WP_List_Table {
                         $actions['edit']   = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $delete_url, $department->id, __( 'Edit this item', 'erp' ), __( 'Edit', 'erp' ) );
                         $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" title="%s">%s</a>', $delete_url, $department->id, __( 'Delete this item', 'erp' ), __( 'Delete', 'erp' ) );
 
-                        printf( '<a href="%4$s"><strong>%1$s %2$s</strong></a> %3$s', $pad, $department->title, $this->row_actions( $actions ), $link_to_employee );
+                        printf( '<a href="%4$s"><strong>%1$s %2$s</strong></a> %3$s', esc_html( $pad ), esc_html( $department->title ), wp_kses_post( $this->row_actions( $actions ) ), esc_url( $link_to_employee ) );
                     echo '</td>';
                     break;
 
                 case 'lead':
                     echo '<td>';
                         if ( $new_lead = $department->get_lead() ) {
-                             echo $new_lead->get_link();
+                             echo wp_kses_post( $new_lead->get_link() );
                         } else {
                            echo '-';
                         }
@@ -227,7 +227,7 @@ class Department_List_Table extends \WP_List_Table {
 
                 case 'number_employee':
                     echo '<td>';
-                        echo $department->num_of_employees();
+                        echo wp_kses_post( $department->num_of_employees() );
                     echo '</td>';
                     break;
 
@@ -300,7 +300,7 @@ class Department_List_Table extends \WP_List_Table {
         $this->per_page        = 20;
         $current_page          = $this->get_pagenum();
         $offset                = ( $current_page -1 ) * $this->per_page;
-        $this->page_status     = isset( $_GET['status'] ) ? sanitize_text_field( $_GET['status'] ) : '2';
+        $this->page_status     = isset( $_GET['status'] ) ? sanitize_text_field( wp_unslash( $_GET['status'] ) ) : '2';
 
         // only ncessary because we have sample data
         $args = array(

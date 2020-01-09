@@ -13,8 +13,8 @@ $announcements = get_posts( [
 ?>
 
 <div class="erp-badge-box box-announce">
-    <h2><?php _e( 'Latest Announcement', 'erp' ); ?>
-        <a href="<?php echo admin_url( 'edit.php?post_type=erp_hr_announcement' ); ?>" class="btn"><?php _e( 'View All', 'erp' ); ?></a>
+    <h2><?php esc_html_e( 'Latest Announcement', 'erp' ); ?>
+        <a href="<?php echo esc_url( admin_url( 'edit.php?post_type=erp_hr_announcement' ) ); ?>" class="btn"><?php esc_html_e( 'View All', 'erp' ); ?></a>
     </h2>
 
     <?php if ( ! $announcements ) : ?>
@@ -23,7 +23,7 @@ $announcements = get_posts( [
     <ul class="erp-badge-announce">
         <?php
         foreach( $announcements as $announcement ) {
-            echo '<li>' . $announcement->post_title . '</li>';
+            echo '<li>' . esc_html( $announcement->post_title ) . '</li>';
         }
         ?>
     </ul>
@@ -31,45 +31,45 @@ $announcements = get_posts( [
 </div>
 
 <div class="erp-badge-box box-hr">
-    <h2><?php _e( 'HR', 'erp' ); ?>
-        <a href="<?php echo admin_url( 'admin.php?page=erp-hr' ); ?>" class="btn"><?php _e( 'Visit Dashboard', 'erp' ); ?></a>
+    <h2><?php esc_html_e( 'HR', 'erp' ); ?>
+        <a href="<?php echo esc_url( admin_url( 'admin.php?page=erp-hr' ) ); ?>" class="btn"><?php esc_html_e( 'Visit Dashboard', 'erp' ); ?></a>
     </h2>
 
     <ul class="erp-badge-hr-count">
 
         <li class="erp-count-box">
             <div class="count-inner">
-                <h3><?php echo number_format_i18n( $employees, 0 ); ?></h3>
-                <p><?php _e( 'Employees', 'erp' ); ?></p>
+                <h3><?php echo esc_html( number_format_i18n( $employees, 0 ) ); ?></h3>
+                <p><?php esc_html_e( 'Employees', 'erp' ); ?></p>
             </div>
 
             <div class="count-footer">
-                <a href="<?php echo erp_hr_employee_list_url(); ?>"><?php _e( 'View Employees', 'erp' ); ?></a>
+                <a href="<?php echo esc_url( erp_hr_employee_list_url() ); ?>"><?php esc_html_e( 'View Employees', 'erp' ); ?></a>
             </div>
         </li><!-- .count-box -->
 
         <li class="erp-count-box">
             <div class="count-inner">
-                <h3><?php echo number_format_i18n( $departments, 0 ); ?></h3>
-                <p><?php _e( 'Departments', 'erp' ); ?></p>
+                <h3><?php echo esc_html( number_format_i18n( $departments, 0 ) ); ?></h3>
+                <p><?php esc_html_e( 'Departments', 'erp' ); ?></p>
             </div>
 
             <?php if ( is_admin() ) : ?>
             <div class="count-footer">
-                <a href="<?php echo admin_url( 'admin.php?page=erp-hr&section=department' ); ?>"><?php _e( 'View Departments', 'erp' ); ?></a>
+                <a href="<?php echo esc_url( admin_url( 'admin.php?page=erp-hr&section=department' ) ); ?>"><?php esc_html_e( 'View Departments', 'erp' ); ?></a>
             </div>
             <?php endif; ?>
         </li><!-- .count-box -->
 
         <li class="erp-count-box">
             <div class="count-inner">
-                <h3><?php echo number_format_i18n( $designations, 0 ); ?></h3>
-                <p><?php _e( 'Designations', 'erp' ); ?></p>
+                <h3><?php echo esc_html( number_format_i18n( $designations, 0 ) ); ?></h3>
+                <p><?php esc_html_e( 'Designations', 'erp' ); ?></p>
             </div>
 
             <?php if ( is_admin() ) : ?>
             <div class="count-footer">
-                <a href="<?php echo admin_url( 'admin.php?page=erp-hr&section=designation' ); ?>"><?php _e( 'View Designations', 'erp' ); ?></a>
+                <a href="<?php echo esc_url( admin_url( 'admin.php?page=erp-hr&section=designation' ) ); ?>"><?php esc_html_e( 'View Designations', 'erp' ); ?></a>
             </div>
             <?php endif; ?>
         </li><!-- .count-box -->

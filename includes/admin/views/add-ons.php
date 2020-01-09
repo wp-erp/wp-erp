@@ -1,5 +1,5 @@
 <div class="wrap">
-    <h1><?php _e( 'Add-ons', 'erp' ); ?> <a href="http://wperp.com/downloads/" target="_blank" class="page-title-action"><?php _e( 'View all Add-ons', 'erp' ); ?></a></h1>
+    <h1><?php esc_html_e( 'Add-ons', 'erp' ); ?> <a href="http://wperp.com/downloads/" target="_blank" class="page-title-action"><?php esc_html_e( 'View all Add-ons', 'erp' ); ?></a></h1>
 
     <?php
     $add_ons = get_transient( 'wperp_addons' );
@@ -25,14 +25,14 @@
 
             <div class="erp-addon">
                 <div class="erp-addon-thumb">
-                    <a href="<?php echo $addon_url; ?>" target="_blank">
-                        <img src="<?php echo $addon->thumb; ?>" alt="<?php echo esc_attr( $addon->title ); ?>" />
+                    <a href="<?php echo esc_url( $addon_url ); ?>" target="_blank">
+                        <img src="<?php echo esc_url( $addon->thumb ); ?>" alt="<?php echo esc_attr( $addon->title ); ?>" />
                     </a>
                 </div>
 
                 <div class="erp-detail">
                     <h3 class="title">
-                        <a href="<?php echo $addon->url; ?>" target="_blank"><?php echo esc_html( $addon->title ); ?></a>
+                        <a href="<?php echo esc_url( $addon->url ); ?>" target="_blank"><?php echo esc_html( $addon->title ); ?></a>
                     </h3>
 
                     <div class="text"><?php echo wp_kses_post( $addon->desc ); ?></div>
@@ -40,9 +40,9 @@
 
                 <div class="erp-links">
                     <?php if ( class_exists( $addon->class ) ) { ?>
-                        <a class="button button-disabled" href="<?php echo $addon_url; ?>" target="_blank"><?php _e( 'Installed', 'erp' ); ?></a>
+                        <a class="button button-disabled" href="<?php echo esc_url( $addon_url ); ?>" target="_blank"><?php esc_html_e( 'Installed', 'erp' ); ?></a>
                     <?php } else { ?>
-                        <a class="button-primary" href="<?php echo $addon_url; ?>" target="_blank"><?php _e( 'View Details', 'erp' ); ?></a>
+                        <a class="button-primary" href="<?php echo esc_url( $addon_url ); ?>" target="_blank"><?php esc_html_e( 'View Details', 'erp' ); ?></a>
                     <?php } ?>
                 </div>
             </div>
@@ -50,7 +50,7 @@
             <?php
         }
     } else {
-        _e( '<div class="error"><p>Error fetching add-ons</p></div>', 'erp' );
+        esc_html_e( '<div class="error"><p>Error fetching add-ons</p></div>', 'erp' );
     }
     ?>
 </div>

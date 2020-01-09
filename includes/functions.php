@@ -8,7 +8,9 @@
  */
 function erp_process_actions() {
     if ( isset( $_REQUEST['erp-action'] ) ) {
-        do_action( 'erp_action_' . $_REQUEST['erp-action'], $_REQUEST );
+        $action = sanitize_text_field( wp_unslash( $_REQUEST['erp-action'] ) );
+
+        do_action( 'erp_action_' .$action, $_REQUEST );
     }
 }
 
@@ -517,8 +519,8 @@ function erp_get_country() {
  */
 function erp_get_js_template( $file_path, $id ) {
     if ( file_exists( $file_path ) ) {
-        echo '<script type="text/html" id="tmpl-' . $id . '">' . "\n";
-        include_once apply_filters( 'erp_crm_js_template_file_path', $file_path, $id );
+        echo '<script type="text/html" id="tmpl-' . esc_html( $id ) . '">' . "\n";
+        include_once apply_filters( 'erp_crm_js_template_file_path', $file_path, esc_html( $id ) );
         echo "\n" . '</script>' . "\n";
     }
 }
@@ -533,7 +535,7 @@ function erp_get_js_template( $file_path, $id ) {
  */
 function erp_get_vue_component_template( $file_path, $id ) {
     if ( file_exists( $file_path ) ) {
-        echo '<script type="text/x-template" id="' . $id . '">' . "\n";
+        echo '<script type="text/x-template" id="' . esc_html( $id ) . '">' . "\n";
         include_once $file_path;
         echo "\n" . '</script>' . "\n";
     }
@@ -612,7 +614,12 @@ function erp_print_key_value( $label, $value, $sep = ' : ', $type = 'text' ) {
         }
     }
 
-    printf( '<label>%s</label> <span class="sep">%s</span> <span class="value">%s</span>', $label, $sep, $value );
+    printf(
+        '<label>%s</label> <span class="sep">%s</span> <span class="value">%s</span>',
+        wp_kses_post( $label ),
+        esc_html( $sep ),
+        wp_kses_post( $value )
+    );
 }
 
 /**
@@ -1208,6 +1215,7 @@ function erp_get_import_export_fields() {
         'contact'  => [
             'required_fields' => [
                 'first_name',
+                'email'
             ],
             'fields'          => [
                 'first_name',
@@ -1421,7 +1429,7 @@ function erp_import_export_javascript() {
             var fields = [];
             var required_fields = [];
 
-            var erp_fields = <?php echo json_encode( $erp_fields ); ?>;
+            var erp_fields = '<?php echo json_encode( $erp_fields ); ?>';
 
             var type = $('form#export_form #type').val();
 
@@ -1579,7 +1587,7 @@ function erp_import_export_javascript() {
  * @return void
  */
 function erp_process_import_export() {
-    if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'erp-import-export-nonce' ) ) {
+    if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'erp-import-export-nonce' ) ) {
         return;
     }
 
@@ -1610,14 +1618,16 @@ function erp_process_import_export() {
     if ( isset( $_POST['erp_import_csv'] ) ) {
         define( 'ERP_IS_IMPORTING', true );
 
-        $fields = ! empty( $_POST['fields'] ) ? $_POST['fields'] : [];
-        $type   = isset( $_POST['type'] ) ? $_POST['type'] : '';
+        $fields = ! empty( $_POST['fields'] ) ? sanitize_text_field( wp_unslash( $_POST['fields'] ) ) : [];
+        $type   = isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
 
         if ( empty( $type ) ) {
             return;
         }
 
-        $data = [ 'type' => $type, 'fields' => $fields, 'file' => $_FILES['csv_file'] ];
+        $csv_file = isset( $_FILES['csv_file'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_FILES['csv_file'] ) ) : [];
+
+        $data = [ 'type' => $type, 'fields' => $fields, 'file' => $csv_file ];
 
         do_action( 'erp_tool_import_csv_action', $data );
 
@@ -1668,7 +1678,9 @@ function erp_process_import_export() {
 
         require_once WPERP_INCLUDES . '/lib/parsecsv.lib.php';
 
-        $csv = new parseCSV( $_FILES['csv_file']['tmp_name'] );
+        $csv = new ParseCsv();
+        $csv->encoding( null, 'UTF-8' );
+        $csv->parse( $_FILES['csv_file']['tmp_name'] );
 
         if ( empty( $csv->data ) ) {
             wp_redirect( admin_url( "admin.php?page=erp-tools&tab=import" ) );
@@ -1796,8 +1808,8 @@ function erp_process_import_export() {
 
     if ( isset( $_POST['erp_export_csv'] ) ) {
         if ( ! empty( $_POST['type'] ) && ! empty( $_POST['fields'] ) ) {
-            $type   = $_POST['type'];
-            $fields = $_POST['fields'];
+            $type   = isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
+            $fields = array_map( 'sanitize_text_field', wp_unslash( $_POST['fields'] ) );
 
             if ( $type == 'employee' && $is_hrm_activated ) {
                 $args = [
@@ -1894,10 +1906,12 @@ function erp_importer_notices() {
     if ( isset( $_REQUEST['imported'] ) ) {
         if ( intval( $_REQUEST['imported'] ) == 0 ) {
             $message = __( 'Nothing to import or items are already exists.', 'erp' );
-            echo "<div class='notice error'><p>{$message}</p></div>";
+            echo "<div class='notice error'><p>" . esc_html( $message ) . "</p></div>";
         } else {
-            $message = sprintf( __( '%s items successfully imported.', 'erp' ), number_format_i18n( $_REQUEST['imported'] ) );
-            echo "<div class='notice updated'><p>{$message}</p></div>";
+            $message = sprintf( __( '%s items successfully imported.', 'erp' ),
+                number_format_i18n( sanitize_text_field( wp_unslash( $_REQUEST['imported'] ) ) )
+            );
+            echo "<div class='notice updated'><p>" . esc_html( $message ) . "</p></div>";
         }
     }
 }
@@ -2252,7 +2266,7 @@ function erp_email_settings_javascript() {
                     'username': $('input[name=username]').val(),
                     'password': $('input[name=password]').val(),
                     'to': $('#smtp_test_email_address').val(),
-                    '_wpnonce': '<?php echo wp_create_nonce( "erp-smtp-test-connection-nonce" ); ?>'
+                    '_wpnonce': '<?php echo esc_html( wp_create_nonce( "erp-smtp-test-connection-nonce" ) ); ?>'
                 };
 
                 $.post(ajaxurl, data, function (response) {
@@ -2288,7 +2302,7 @@ function erp_email_settings_javascript() {
                     'protocol': $('select[name=protocol]').val(),
                     'port': $('input[name=port]').val(),
                     'authentication': $('select[name=authentication]').val(),
-                    '_wpnonce': '<?php echo wp_create_nonce( "erp-imap-test-connection-nonce" ); ?>'
+                    '_wpnonce': '<?php echo esc_html( wp_create_nonce( "erp-imap-test-connection-nonce" ) ); ?>'
                 };
 
                 $.post(ajaxurl, data, function (response) {
@@ -2418,13 +2432,13 @@ function erp_make_csv_file( $items, $file_name, $field_data = true ) {
  */
 function erp_import_export_download_sample_action() {
 
-    $type = isset( $_POST['type'] ) ? $_POST['type'] : '';
+    $type = isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
 
     if ( ! isset( $_GET['action'] ) || $_GET['action'] != 'download_sample' ) {
         return;
     }
 
-    if ( ! wp_verify_nonce( $_GET['_wpnonce'], 'erp-emport-export-sample-nonce' ) ) {
+    if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_GET['_wpnonce'] ), 'erp-emport-export-sample-nonce' ) ) {
         return;
     }
 
@@ -2564,17 +2578,17 @@ function erp_get_client_ip() {
     $ipaddress = '';
 
     if ( isset( $_SERVER['HTTP_CLIENT_IP'] ) ) {
-        $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
+        $ipaddress = sanitize_text_field( wp_unslash( $_SERVER['HTTP_CLIENT_IP'] ) );
     } else if ( isset( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
-        $ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        $ipaddress = sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_FORWARDED_FOR'] ) );
     } else if ( isset( $_SERVER['HTTP_X_FORWARDED'] ) ) {
-        $ipaddress = $_SERVER['HTTP_X_FORWARDED'];
+        $ipaddress = sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_FORWARDED'] ) );
     } else if ( isset( $_SERVER['HTTP_FORWARDED_FOR'] ) ) {
-        $ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
+        $ipaddress = sanitize_text_field( wp_unslash( $_SERVER['HTTP_FORWARDED_FOR'] ) );
     } else if ( isset( $_SERVER['HTTP_FORWARDED'] ) ) {
-        $ipaddress = $_SERVER['HTTP_FORWARDED'];
+        $ipaddress = sanitize_text_field( wp_unslash( $_SERVER['HTTP_FORWARDED'] ) );
     } else if ( isset( $_SERVER['REMOTE_ADDR'] ) ) {
-        $ipaddress = $_SERVER['REMOTE_ADDR'];
+        $ipaddress = sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) );
     } else {
         $ipaddress = 'UNKNOWN';
     }
@@ -2803,7 +2817,7 @@ function erp_help_tip( $tip, $allow_html = false ) {
     if ( $allow_html ) {
         $tip = erp_sanitize_tooltip( $tip );
     } else {
-        $tip = esc_attr( $tip );
+        $tip = wp_kses_post( $tip );
     }
 
     return '<span class="erp-help-tip" data-tip="' . $tip . '"></span>';
@@ -2906,11 +2920,11 @@ function erp_render_menu( $component ) {
         return false;
     }
     //check current tab
-    $tab = isset( $_GET['section'] ) ? $_GET['section'] : 'dashboard';
+    $tab = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : 'dashboard';
 
     echo "<div class='erp-nav-container'>";
     echo erp_render_menu_header( $component );
-    echo erp_build_menu( $menu[$component], $tab, $component );
+    echo wp_kses_post( erp_build_menu( $menu[$component], $tab, $component ) );
     echo "</div>";
 }
 
@@ -3232,7 +3246,7 @@ function add_enable_disable_section_to_email_column( $email ) {
         </td>';
     } else {
         echo '<td class="erp-settings-table-is_enable">
-            <label class="cus_switch"><input type="checkbox" name="isEnableEmail['. $get_option_id .']"  ' . $is_enable . '><span class="cus_slider cus_round"></span></label>
+            <label class="cus_switch"><input type="checkbox" name="isEnableEmail['. esc_attr( $get_option_id ) .']"  ' . esc_attr( $is_enable ) . '><span class="cus_slider cus_round"></span></label>
         </td>';
     }
     /*echo '<td class="erp-settings-table-is_enable">
@@ -3248,6 +3262,10 @@ function add_enable_disable_section_to_email_column( $email ) {
  * @return null
  */
 function add_enable_disable_option_save() {
+    if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'erp-nonce' ) ) {
+        // die();
+    }
+
     if ( isset( $_POST['save_email_enable_or_disable'] ) && $_POST['save_email_enable_or_disable'] == 'save_email_enable_or_disable' ) {
         $registered_email = array_keys( wperp()->emailer->get_emails() );
         foreach( $registered_email as $remail ) {
@@ -3260,7 +3278,7 @@ function add_enable_disable_option_save() {
             }
         }
         if ( isset( $_POST['isEnableEmail'] ) ) {
-            $is_enable_email = $_POST['isEnableEmail'];
+            $is_enable_email = sanitize_text_field( wp_unslash( $_POST['isEnableEmail'] ) );
             foreach ($is_enable_email as $key => $value) {
                 $email_arr = get_option($key);
                 $email_arr['is_enable'] = 'yes';

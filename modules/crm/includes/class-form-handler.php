@@ -21,7 +21,7 @@ class Form_Handler {
         add_action( 'admin_head', [ $this, 'handle_canonical_url' ], 10 );
         add_action( 'erp_hr_after_employee_permission_set', [ $this, 'crm_permission_set' ], 10, 2 );
 
-        $crm = sanitize_title( __( 'CRM', 'erp' ) );
+        $crm = sanitize_title( esc_html__( 'CRM', 'erp' ) );
         add_action( "admin_init", [ $this, 'contact_groups_bulk_action' ] );
     }
 
@@ -99,11 +99,11 @@ class Form_Handler {
         }
 
         if ( isset( $_GET['groupaction'] ) && $_GET['groupaction'] == 'view-subscriber' ) {
-            if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-contactsubscribers' ) ) {
+            if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'bulk-contactsubscribers' ) ) {
                 return;
             }
         } else {
-            if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-contactgroups' ) ) {
+            if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'bulk-contactgroups' ) ) {
                 return;
             }
         }
@@ -114,7 +114,8 @@ class Form_Handler {
 
         if ( $action ) {
 
-            $redirect = remove_query_arg( array( '_wp_http_referer', '_wpnonce', 'filter_group' ), wp_unslash( $_SERVER['REQUEST_URI'] ) );
+            $redirect_uri = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+            $redirect = remove_query_arg( array( '_wp_http_referer', '_wpnonce', 'filter_group' ),  $redirect_uri );
 
             switch ( $action ) {
 
@@ -124,15 +125,16 @@ class Form_Handler {
 
                 case 'contact_group_delete':
                     if ( isset( $_GET['contact_group'] ) && !empty( $_GET['contact_group'] ) ) {
-                        erp_crm_contact_group_delete( $_GET['contact_group'] );
+                        $groups = array_map( 'sanitize_text_field', wp_unslash( $_GET['contact_group'] ) );
+                        erp_crm_contact_group_delete( $groups );
                     }
                     wp_redirect( $redirect );
                     exit();
 
                 case 'delete':
 
-                    if ( isset( $_GET['suscriber_contact_id'] ) && !empty( $_GET['suscriber_contact_id'] ) ) {
-                        erp_crm_contact_subscriber_delete( $_GET['suscriber_contact_id'], $_GET['filter_contact_group'] );
+                    if ( isset( $_GET['suscriber_contact_id'] ) && !empty( $_GET['filter_contact_group'] ) ) {
+                        erp_crm_contact_subscriber_delete( sanitize_text_field( wp_unslash( $_GET['suscriber_contact_id'] ) ), sanitize_text_field( wp_unslash( $_GET['filter_contact_group'] ) ) );
                     }
 
                     wp_redirect( $redirect );

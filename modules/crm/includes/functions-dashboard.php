@@ -99,15 +99,17 @@ function erp_crm_dashboard_widget_todays_schedules() {
                     }
 
 
-                    printf(
-                        '<i class="fa fa-%s"></i> %s <a href="%s">%s</a> %s %s %s',
-                        $icon,
-                        $text,
-                        erp_crm_get_details_url( $schedule['contact']['id'], $schedule['contact']['types'] ),
-                        $contact_user,
-                        $users_text,
-                        __( 'at', 'erp' ),
-                        date( 'g:ia', strtotime( $schedule['start_date'] ) )
+                    echo wp_kses_post(
+                        sprintf(
+                            '<i class="fa fa-%s"></i> %s <a href="%s">%s</a> %s %s %s',
+                            $icon,
+                            $text,
+                            erp_crm_get_details_url( $schedule['contact']['id'], $schedule['contact']['types'] ),
+                            $contact_user,
+                            $users_text,
+                            __( 'at', 'erp' ),
+                            date( 'g:ia', strtotime( $schedule['start_date'] ) )
+                        )
                     );
 
                     do_action( 'erp_crm_dashboard_widget_todays_schedules', $schedule );
@@ -117,16 +119,16 @@ function erp_crm_dashboard_widget_todays_schedules() {
                 ?>
                 | <a
                     href="#"
-                    data-schedule_id="<?php echo $schedule['id']; ?>"
-                    data-title="<?php echo $data_title ?>"
+                    data-schedule_id="<?php echo esc_attr( $schedule['id'] ); ?>"
+                    data-title="<?php echo esc_attr( $data_title ) ?>"
                     class="erp-crm-dashbaord-show-details-schedule"
-                ><?php echo __( 'Details', 'erp' ); ?></a>
+                ><?php esc_attr_e('Details', 'erp' ); ?></a>
 
             </li>
         <?php endforeach ?>
     </ul>
      <?php else : ?>
-        <?php _e( 'No schedules found', 'erp' ); ?>
+        <?php esc_attr_e( 'No schedules found', 'erp' ); ?>
     <?php endif;
 }
 
@@ -161,18 +163,18 @@ function erp_crm_dashboard_widget_upcoming_schedules() {
                         }
 
                         if ( $schedule['log_type'] == 'meeting' ) {
-                            echo sprintf( '%s <a href="%s">%s</a> %s %s %s %s %s', __( '<i class="fa fa-calendar"></i> Meeting with', 'erp' ), erp_crm_get_details_url( $schedule['contact']['id'], $schedule['contact']['types'] ), $contact_user, $users_text, __( 'on', 'erp' ), erp_format_date( $schedule['start_date'] ), __( 'at', 'erp' ), date( 'g:ia', strtotime( $schedule['start_date'] ) ) ) . " <a href='#' data-schedule_id=' " . $schedule['id'] . " ' data-title='" . $schedule['extra']['schedule_title'] . "' class='erp-crm-dashbaord-show-details-schedule'>" . __( 'Details &rarr;', 'erp' ) . "</a>";
+                            echo wp_kses_post( sprintf( '%s <a href="%s">%s</a> %s %s %s %s %s', __( '<i class="fa fa-calendar"></i> Meeting with', 'erp' ), erp_crm_get_details_url( $schedule['contact']['id'], $schedule['contact']['types'] ), $contact_user, $users_text, __( 'on', 'erp' ), erp_format_date( $schedule['start_date'] ), __( 'at', 'erp' ), date( 'g:ia', strtotime( $schedule['start_date'] ) ) ) . " <a href='#' data-schedule_id=' " . $schedule['id'] . " ' data-title='" . $schedule['extra']['schedule_title'] . "' class='erp-crm-dashbaord-show-details-schedule'>" . __( 'Details &rarr;', 'erp' ) . "</a>" );
                         }
 
                         if ( $schedule['log_type'] == 'call' ) {
-                            echo sprintf( '%s <a href="%s">%s</a> %s %s %s %s %s', __( '<i class="fa fa-phone"></i> Call to', 'erp' ), erp_crm_get_details_url( $schedule['contact']['id'], $schedule['contact']['types'] ), $contact_user, $users_text, __( 'on', 'erp' ), erp_format_date( $schedule['start_date'] ), __( 'at', 'erp' ), date( 'g:ia', strtotime( $schedule['start_date'] ) ) ) . " <a href='#' data-schedule_id=' " . $schedule['id'] . " ' data-title='" . $schedule['extra']['schedule_title'] . "' class='erp-crm-dashbaord-show-details-schedule'>" . __( 'Details &rarr;', 'erp' ) . "</a>";
+                            echo wp_kses_post( sprintf( '%s <a href="%s">%s</a> %s %s %s %s %s', __( '<i class="fa fa-phone"></i> Call to', 'erp' ), erp_crm_get_details_url( $schedule['contact']['id'], $schedule['contact']['types'] ), $contact_user, $users_text, __( 'on', 'erp' ), erp_format_date( $schedule['start_date'] ), __( 'at', 'erp' ), date( 'g:ia', strtotime( $schedule['start_date'] ) ) ) . " <a href='#' data-schedule_id=' " . $schedule['id'] . " ' data-title='" . $schedule['extra']['schedule_title'] . "' class='erp-crm-dashbaord-show-details-schedule'>" . __( 'Details &rarr;', 'erp' ) . "</a>" );
                         }
                     ?>
                 </li>
             <?php endforeach ?>
         </ul>
     <?php else : ?>
-        <?php _e( 'No schedules found', 'erp' ); ?>
+        <?php esc_attr_e( 'No schedules found', 'erp' ); ?>
     <?php endif;
 }
 
@@ -222,7 +224,7 @@ function erp_crm_dashboard_widget_my_schedules() {
                 eventClick: function(calEvent, jsEvent, view) {
                     var scheduleId = calEvent.schedule.id;
                     $.erpPopup({
-                        title: ( calEvent.schedule.extra.schedule_title ) ? calEvent.schedule.extra.schedule_title : '<?php _e( 'Log Details', 'erp' ) ?>',
+                        title: ( calEvent.schedule.extra.schedule_title ) ? calEvent.schedule.extra.schedule_title : '<?php esc_attr_e( 'Log Details', 'erp' ) ?>',
                         button: '',
                         id: 'erp-customer-edit',
                         onReady: function() {
@@ -233,7 +235,7 @@ function erp_crm_dashboard_widget_my_schedules() {
                             wp.ajax.send( 'erp-crm-get-single-schedule-details', {
                                 data: {
                                     id: scheduleId,
-                                    _wpnonce: '<?php echo wp_create_nonce( 'wp-erp-crm-nonce' ); ?>'
+                                    _wpnonce: '<?php echo esc_attr( wp_create_nonce( 'wp-erp-crm-nonce' ) ); ?>'
                                 },
 
                                 success: function( response ) {
@@ -301,7 +303,7 @@ function erp_crm_dashboard_widget_latest_contact() {
     $crm_life_stages = erp_crm_get_life_stages_dropdown_raw();
     ?>
 
-    <h4><?php _e( 'Contacts', 'erp' ); ?></h4>
+    <h4><?php esc_attr_e( 'Contacts', 'erp' ); ?></h4>
 
     <?php if ( $contacts ) { ?>
 
@@ -313,24 +315,24 @@ function erp_crm_dashboard_widget_latest_contact() {
                 ?>
                 <li>
                     <div class="avatar">
-                        <?php echo $contact_obj->get_avatar(28); ?>
+                        <?php echo wp_kses_post( $contact_obj->get_avatar(28) ); ?>
                     </div>
                     <div class="details">
-                        <p class="contact-name"><a href="<?php echo $contact_obj->get_details_url(); ?>"><?php echo $contact_obj->get_full_name(); ?></a></p>
-                        <p class="contact-stage"><?php echo isset( $crm_life_stages[ $life_stage ] ) ? $crm_life_stages[ $life_stage ] : ''; ?></p>
+                        <p class="contact-name"><a href="<?php echo esc_attr( $contact_obj->get_details_url() ); ?>"><?php echo esc_attr( $contact_obj->get_full_name() ); ?></a></p>
+                        <p class="contact-stage"><?php echo isset( $crm_life_stages[ $life_stage ] ) ? esc_attr( $crm_life_stages[ $life_stage ] ) : ''; ?></p>
                     </div>
-                    <span class="contact-created-time erp-tips" title="<?php echo sprintf( '%s %s', __( 'Created on', 'erp' ), erp_format_date( $contact->created ) )  ?>"><i class="fa fa-clock-o"></i></span>
+                    <span class="contact-created-time erp-tips" title="<?php echo wp_kses_post( sprintf( '%s %s', __( 'Created on', 'erp' ), erp_format_date( $contact->created ) ) ) ?>"><i class="fa fa-clock-o"></i></span>
                 </li>
             <?php endforeach ?>
         </ul>
 
     <?php } else { ?>
-        <?php _e( 'No contacts found', 'erp' ); ?>
+        <?php esc_attr_e( 'No contacts found', 'erp' ); ?>
     <?php } ?>
 
     <hr>
 
-    <h4><?php _e( 'Companies', 'erp' ); ?></h4>
+    <h4><?php esc_attr_e( 'Companies', 'erp' ); ?></h4>
 
     <?php if ( $companies ) { ?>
         <ul class="erp-list erp-latest-contact-list">
@@ -341,20 +343,20 @@ function erp_crm_dashboard_widget_latest_contact() {
                 ?>
                 <li>
                     <div class="avatar">
-                        <?php echo $company_obj->get_avatar(28); ?>
+                        <?php echo wp_kses_post( $company_obj->get_avatar(28) ); ?>
                     </div>
 
                     <div class="details">
-                        <p class="contact-name"><a href="<?php echo $company_obj->get_details_url(); ?>"><?php echo $company_obj->get_full_name(); ?></a></p>
-                        <p class="contact-stage"><?php echo isset( $crm_life_stages[ $life_stage ] ) ? $crm_life_stages[ $life_stage ] : ''; ?></p>
+                        <p class="contact-name"><a href="<?php echo esc_url_raw( $company_obj->get_details_url() ); ?>"><?php echo esc_attr( $company_obj->get_full_name() ); ?></a></p>
+                        <p class="contact-stage"><?php echo isset( $crm_life_stages[ $life_stage ] ) ? esc_attr( $crm_life_stages[ $life_stage ] ) : ''; ?></p>
                     </div>
-                    <span class="contact-created-time erp-tips" title="<?php echo sprintf( '%s %s', __( 'Created on', 'erp' ), erp_format_date( $company->created ) )  ?>"><i class="fa fa-clock-o"></i></span>
+                    <span class="contact-created-time erp-tips" title="<?php echo wp_kses_post( sprintf( '%s %s', __( 'Created on', 'erp' ), erp_format_date( $company->created ) ) ) ?>"><i class="fa fa-clock-o"></i></span>
                 </li>
             <?php endforeach ?>
         </ul>
     <?php
     } else {
-        _e( 'No companies found', 'erp' );
+        esc_attr_e( 'No companies found', 'erp' );
     }
 }
 
@@ -367,7 +369,7 @@ function erp_crm_dashboard_widget_latest_contact() {
  */
 function erp_crm_dashboard_widget_inbound_emails() {
     $total_emails_count = get_option( 'wp_erp_inbound_email_count', 0 );
-    echo '<h1 style="text-align: center;">' . $total_emails_count . '</h1>';
+    echo wp_kses_post( '<h1 style="text-align: center;">' . $total_emails_count . '</h1>' );
 }
 
 /**

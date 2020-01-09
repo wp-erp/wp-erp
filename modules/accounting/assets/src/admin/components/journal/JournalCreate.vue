@@ -33,7 +33,7 @@
                     </div>
                     <div class="wperp-col-sm-4">
                         <label>{{ __('Particulars', 'erp') }}</label>
-                        <textarea v-model="journal_parti" rows="1" class="wperp-form-field display-flex" :placeholder="__('Internal Information', 'erp')"></textarea>
+                        <textarea v-model="journal_parti" rows="1" maxlength="250" class="wperp-form-field display-flex" :placeholder="__('Internal Information', 'erp')"></textarea>
                     </div>
                 </div>
 
@@ -65,7 +65,7 @@
                             </div>
                         </td>
                         <td class="col--particulars" data-colname="Particulars">
-                            <input type="text" v-model="particulars[key]" class="wperp-form-field">
+                            <input type="text" v-model="particulars[key]" maxlength="250" class="wperp-form-field">
                         </td>
                         <td class="col--debit" data-colname="Debit">
                             <input type="text" @keyup="calculateAmount(key)" v-model="debitLine[key]" class="wperp-form-field text-right" :required="(Number(creditLine[key]) || 0) === 0 ? true : false">
@@ -241,7 +241,7 @@ export default {
                 this.form_errors.push('Total amount can\'t be zero.');
             }
 
-            if (this.isWorking) {
+            if (Math.abs(this.debit_total - this.credit_total)) {
                 this.form_errors.push('Debit and Credit must be Equal.');
             }
         },
@@ -257,7 +257,8 @@ export default {
 
             const diff = Math.abs(this.debit_total - this.credit_total);
             this.isWorking = true;
-            if (diff === 0) {
+
+            if (!diff) {
                 this.isWorking = false;
             }
         },
@@ -301,12 +302,12 @@ export default {
         },
 
         totalDebit() {
-            this.debit_total = this.debitLine.reduce((a, b) => parseFloat(a) + parseFloat(b), 0);
+            this.debit_total = this.debitLine.reduce((a, b) => parseFloat(a) + parseFloat(b), 0).toFixed(2);
             return this.debit_total;
         },
 
         totalCredit() {
-            this.creditLine.reduce((a, b) => parseFloat(a) + parseFloat(b), 0);
+            this.credit_total = this.creditLine.reduce((a, b) => parseFloat(a) + parseFloat(b), 0).toFixed(2);
             return this.credit_total;
         }
     },

@@ -1,19 +1,20 @@
 <?php
 $contact_tags = wp_get_object_terms( $customer->id, 'erp_crm_tag', array('orderby' => 'name', 'order' => 'ASC'));
 $contact_tags = wp_list_pluck($contact_tags, 'name');
+$contact_list_url = add_query_arg( ['page' => 'erp-crm', 'section' => 'contacts'], admin_url('admin.php') );
 ?>
 <div class="wrap erp erp-crm-customer erp-single-customer" id="wp-erp" v-cloak>
-    <h2><?php _e( 'Contact #', 'erp' ); echo $customer->id; ?>
-        <a href="<?php echo add_query_arg( ['page' => 'erp-crm', 'section' => 'contacts'], admin_url('admin.php') ); ?>" id="erp-contact-list" class="add-new-h2"><?php _e( 'Back to Contact list', 'erp' ); ?></a>
+    <h2><?php esc_attr_e( 'Contact #', 'erp' ); echo esc_attr( $customer->id ); ?>
+        <a href="<?php echo esc_url_raw( $contact_list_url ); ?>" id="erp-contact-list" class="add-new-h2"><?php esc_attr_e( 'Back to Contact list', 'erp' ); ?></a>
 
         <?php if ( current_user_can( 'erp_crm_edit_contact', $customer->id ) || current_user_can( erp_crm_get_manager_role() ) ): ?>
             <span class="edit">
-                <a href="#" @click.prevent="editContact( 'contact', '<?php echo $customer->id; ?>', '<?php _e( 'Edit this contact', 'erp' ); ?>' )" data-id="<?php echo $customer->id; ?>" data-single_view="1" title="<?php _e( 'Edit this Contact', 'erp' ); ?>" class="add-new-h2"><?php _e( 'Edit this Contact', 'erp' ); ?></a>
+                <a href="#" @click.prevent="editContact( 'contact', '<?php echo esc_attr( $customer->id ); ?>', '<?php esc_attr_e( 'Edit this contact', 'erp' ); ?>' )" data-id="<?php echo esc_attr( $customer->id ); ?>" data-single_view="1" title="<?php esc_attr_e( 'Edit this Contact', 'erp' ); ?>" class="add-new-h2"><?php esc_attr_e( 'Edit this Contact', 'erp' ); ?></a>
             </span>
 
             <?php if ( ! $customer->user_id && erp_crm_current_user_can_make_wp_user() ): ?>
                 <span class="make-wp-user">
-                    <a href="#" @click.prevent="makeWPUser( 'contact', '<?php echo $customer->id; ?>', '<?php _e( 'Make WP User', 'erp' ); ?>', '<?php echo $customer->email ?>' )" data-single_view="1" title="<?php _e( 'Make this contact as a WP User', 'erp' ); ?>" class="add-new-h2"><?php _e( 'Make WP User', 'erp' ); ?></a>
+                    <a href="#" @click.prevent="makeWPUser( 'contact', '<?php echo esc_attr( $customer->id ); ?>', '<?php esc_attr_e( 'Make WP User', 'erp' ); ?>', '<?php echo esc_attr( $customer->email ) ?>' )" data-single_view="1" title="<?php esc_attr_e( 'Make this contact as a WP User', 'erp' ); ?>" class="add-new-h2"><?php esc_attr_e( 'Make WP User', 'erp' ); ?></a>
                 </span>
             <?php endif ?>
         <?php endif ?>
@@ -27,22 +28,22 @@ $contact_tags = wp_list_pluck($contact_tags, 'name');
                     <div class="customer-image-wraper">
                         <div class="row">
                             <div class="col-2 avatar">
-                                <?php echo $customer->get_avatar(100) ?>
+                                <?php echo wp_kses_post( $customer->get_avatar(100) ); ?>
                             </div>
                             <div class="col-4 details">
-                                <h3><?php echo $customer->get_full_name(); ?></h3>
+                                <h3><?php echo esc_attr( $customer->get_full_name() ); ?></h3>
 
                                 <?php if ( $customer->get_email() ): ?>
                                     <p>
                                         <i class="fa fa-envelope"></i>&nbsp;
-                                        <?php echo erp_get_clickable( 'email', $customer->get_email() ); ?>
+                                        <?php echo wp_kses_post( erp_get_clickable( 'email', $customer->get_email() ) ); ?>
                                     </p>
                                 <?php endif ?>
 
                                 <?php if ( $customer->get_mobile() != '—' ): ?>
                                     <p>
                                         <i class="fa fa-phone"></i>&nbsp;
-                                        <?php echo $customer->get_mobile(); ?>
+                                        <?php echo wp_kses_post( $customer->get_mobile() ); ?>
                                     </p>
                                 <?php endif ?>
 
@@ -53,7 +54,7 @@ $contact_tags = wp_list_pluck($contact_tags, 'name');
                                         <?php $social_field_data = $customer->get_meta( $social_key, true ); ?>
 
                                         <?php if ( ! empty( $social_field_data ) ): ?>
-                                            <li><a href="<?php echo esc_url( $social_field_data ); ?>"><?php echo $social_value['icon']; ?></a></li>
+                                            <li><a href="<?php echo esc_url_raw( $social_field_data ); ?>"><?php echo wp_kses_post( $social_value['icon'] ); ?></a></li>
                                         <?php endif ?>
                                     <?php endforeach ?>
 
@@ -65,8 +66,8 @@ $contact_tags = wp_list_pluck($contact_tags, 'name');
                     </div>
 
                     <div class="postbox customer-basic-info">
-                        <div class="erp-handlediv" title="<?php _e( 'Click to toggle', 'erp' ); ?>"><br></div>
-                        <h3 class="erp-hndle"><span><?php _e( 'Basic Info', 'erp' ); ?></span></h3>
+                        <div class="erp-handlediv" title="<?php esc_attr_e( 'Click to toggle', 'erp' ); ?>"><br></div>
+                        <h3 class="erp-hndle"><span><?php esc_attr_e( 'Basic Info', 'erp' ); ?></span></h3>
                         <div class="inside">
                             <ul class="erp-list separated">
                                 <li><?php erp_print_key_value( __( 'First Name', 'erp' ), $customer->get_first_name() ); ?></li>
@@ -90,7 +91,7 @@ $contact_tags = wp_list_pluck($contact_tags, 'name');
 
                             <div class="erp-crm-assign-contact">
                                 <div class="inner-wrap">
-                                    <h4><?php _e( 'Contact Owner', 'erp' ); ?></h4>
+                                    <h4><?php esc_attr_e( 'Contact Owner', 'erp' ); ?></h4>
                                     <div class="user-wrap">
                                         <div class="user-wrap-content">
                                             <?php
@@ -104,14 +105,14 @@ $contact_tags = wp_list_pluck($contact_tags, 'name');
                                                 }
                                             ?>
                                             <?php if ( $crm_user_id && ! empty( $user ) ): ?>
-                                                <?php echo erp_crm_get_avatar( $crm_user_id, $user_email, $crm_user_id, 32 ); ?>
+                                                <?php echo wp_kses_post( erp_crm_get_avatar( $crm_user_id, $user_email, $crm_user_id, 32 ) ); ?>
                                                 <div class="user-details">
-                                                    <a href="#"><?php echo get_the_author_meta( 'display_name', $crm_user_id ); ?></a>
-                                                    <span><?php echo  get_the_author_meta( 'user_email', $crm_user_id ); ?></span>
+                                                    <a href="#"><?php echo esc_attr( get_the_author_meta( 'display_name', $crm_user_id ) ); ?></a>
+                                                    <span><?php echo esc_attr(  get_the_author_meta( 'user_email', $crm_user_id ) ); ?></span>
                                                 </div>
                                             <?php else: ?>
                                                 <div class="user-details">
-                                                    <p><?php _e( 'Nobody', 'erp' ) ?></p>
+                                                    <p><?php esc_attr_e( 'Nobody', 'erp' ) ?></p>
                                                 </div>
                                             <?php endif ?>
 
@@ -128,19 +129,19 @@ $contact_tags = wp_list_pluck($contact_tags, 'name');
                                         <form action="" method="post">
 
                                             <div class="crm-aget-search-select-wrap">
-                                                <select name="erp_select_assign_contact" id="erp-select-user-for-assign-contact" style="width: 300px; margin-bottom: 20px;" data-placeholder="<?php _e( 'Search a crm agent', 'erp' ) ?>" data-val="<?php echo $crm_user_id; ?>" data-selected="<?php echo $user_string; ?>">
-                                                    <option value=""><?php _e( 'Select a agent', 'erp' ); ?></option>
+                                                <select name="erp_select_assign_contact" id="erp-select-user-for-assign-contact" style="width: 300px; margin-bottom: 20px;" data-placeholder="<?php esc_attr_e( 'Search a crm agent', 'erp' ) ?>" data-val="<?php echo esc_attr( $crm_user_id ); ?>" data-selected="<?php echo esc_attr( $user_string ); ?>">
+                                                    <option value=""><?php esc_attr_e( 'Select a agent', 'erp' ); ?></option>
                                                     <?php if ( $crm_user_id ): ?>
-                                                        <option value="<?php echo $crm_user_id ?>" selected><?php echo $user_string; ?></option>
+                                                        <option value="<?php echo esc_attr( $crm_user_id ) ?>" selected><?php echo esc_attr( $user_string ); ?></option>
                                                     <?php endif ?>
                                                 </select>
                                             </div>
 
-                                            <input type="hidden" name="assign_contact_id" value="<?php echo $customer->id; ?>">
-                                            <input type="hidden" id="contact_id" name="contact_id" value="<?php echo $customer->id; ?>">
-                                            <input type="hidden" name="assign_contact_user_id" value="<?php echo $customer->user_id; ?>">
-                                            <input type="submit" @click.prevent="saveAssignContact()" class="button button-primary save-edit-assign-contact" name="erp_assign_contacts" value="<?php _e( 'Assign', 'erp' ); ?>">
-                                            <input type="submit" @click.prevent="cancelAssignContact()" class="button cancel-edit-assign-contact" value="<?php _e( 'Cancel', 'erp' ); ?>">
+                                            <input type="hidden" name="assign_contact_id" value="<?php echo esc_attr( $customer->id ); ?>">
+                                            <input type="hidden" id="contact_id" name="contact_id" value="<?php echo esc_attr( $customer->id ); ?>">
+                                            <input type="hidden" name="assign_contact_user_id" value="<?php echo esc_attr( $customer->user_id ); ?>">
+                                            <input type="submit" @click.prevent="saveAssignContact()" class="button button-primary save-edit-assign-contact" name="erp_assign_contacts" value="<?php esc_attr_e( 'Assign', 'erp' ); ?>">
+                                            <input type="submit" @click.prevent="cancelAssignContact()" class="button cancel-edit-assign-contact" value="<?php esc_attr_e( 'Cancel', 'erp' ); ?>">
                                             <span class="erp-loader erp-hide assign-form-loader"></span>
                                         </form>
                                     </div>
@@ -150,14 +151,14 @@ $contact_tags = wp_list_pluck($contact_tags, 'name');
                     </div><!-- .postbox -->
 
                     <div class="postbox erp-customer-tag-div" id="tagsdiv-post_tag">
-                        <div class="erp-handlediv" title="<?php _e( 'Click to toggle', 'erp' ); ?>"><br></div>
-                        <h3 class="erp-hndle"><span><?php _e( 'Tag', 'erp' ); ?></span></h3>
+                        <div class="erp-handlediv" title="<?php esc_attr_e( 'Click to toggle', 'erp' ); ?>"><br></div>
+                        <h3 class="erp-hndle"><span><?php esc_attr_e( 'Tag', 'erp' ); ?></span></h3>
                         <div class="inside">
                             <div class="tagsdiv" id="tagsdiv-erp-crm-tag">
                                 <div class="nojs-tags hide-if-js">
                                     <label for="tax-input-post_tag">Add or remove tags</label>
                                     <p><textarea name="tax_input[erp_crm_tag]" rows="3" cols="20" class="the-tags" id="tax-input-erp_crm_tag" aria-describedby="new-tag-post_tag-desc">
-                                            <?php echo implode(',', $contact_tags);?>
+                                            <?php echo esc_attr( implode(',', $contact_tags) );?>
                                         </textarea></p>
                                 </div>
 
@@ -166,9 +167,9 @@ $contact_tags = wp_list_pluck($contact_tags, 'name');
                                         <label class="screen-reader-text" for="new-tag-erp-crm-tag"></label>
                                         <p>
                                             <input style="width: 82%;" data-wp-taxonomy="erp_crm_tag" type="text" id="new-tag-erp-crm-tag" name="newtag[erp_crm_tag]" class="newtag form-input-tip" size="16" autocomplete="on" aria-describedby="new-tag-erp-crm-tag-desc" value="" />
-                                            <input type="button" id="add-crm-tag" class="button tagadd" value="<?php esc_attr_e('Add'); ?>" /></p>
+                                            <input type="button" id="add-crm-tag" class="button tagadd" value="<?php esc_attr_e('Add', 'erp'); ?>" /></p>
                                     </div>
-                                    <p class="howto" id="new-tag-erp-crm-tag-desc"><?php _e('Separate tags with commas', 'erp') ?></p>
+                                    <p class="howto" id="new-tag-erp-crm-tag-desc"><?php esc_attr_e('Separate tags with commas', 'erp') ?></p>
 
                                     <p><?php ?></p>
                                 </div>
@@ -179,17 +180,17 @@ $contact_tags = wp_list_pluck($contact_tags, 'name');
 
 
                     <contact-company-relation
-                        :id="<?php echo $customer->id; ?>"
+                        :id="<?php echo esc_attr( $customer->id ); ?>"
                         type="contact_companies"
-                        add-button-txt="<?php _e( 'Assign a company', 'erp' ) ?>"
-                        title="<?php _e( 'Companies', 'erp' ); ?>"
+                        add-button-txt="<?php esc_attr_e( 'Assign a company', 'erp' ) ?>"
+                        title="<?php esc_attr_e( 'Companies', 'erp' ); ?>"
                     ></contact-company-relation>
 
                     <contact-assign-group
-                        :id="<?php echo $customer->id; ?>"
-                        add-button-txt="<?php _e( 'Assign Contact Groups', 'erp' ) ?>"
-                        title="<?php _e( 'Contact Group', 'erp' ); ?>"
-                        is-permitted="<?php echo current_user_can( 'erp_crm_edit_contact', $customer->id ); ?>"
+                        :id="<?php echo esc_attr( $customer->id ); ?>"
+                        add-button-txt="<?php esc_attr_e( 'Assign Contact Groups', 'erp' ) ?>"
+                        title="<?php esc_attr_e( 'Contact Group', 'erp' ); ?>"
+                        is-permitted="<?php echo esc_attr( current_user_can( 'erp_crm_edit_contact', $customer->id ) ); ?>"
                     ></contact-assign-group>
 
                     <?php do_action( 'erp_crm_contact_left_widgets', $customer ); ?>
