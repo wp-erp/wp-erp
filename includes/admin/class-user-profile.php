@@ -71,6 +71,10 @@ class User_Profile {
     }
 
     public static function profile_update_role( $user_id = 0 ) {
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'erp-nonce' ) ) {
+            //
+        }
+
         // Bail if no user ID was passed
         if ( empty( $user_id ) ) {
             return;

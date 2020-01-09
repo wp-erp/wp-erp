@@ -5,7 +5,7 @@
  * Plugin URI: https://wperp.com
  * Author: weDevs
  * Author URI: https://wedevs.com
- * Version: 1.5.10
+ * Version: 1.5.11
  * License: GPL2
  * Text Domain: erp
  * Domain Path: /i18n/languages/
@@ -52,7 +52,7 @@ final class WeDevs_ERP {
      *
      * @var string
      */
-    public $version = '1.5.10';
+    public $version = '1.5.11';
 
     /**
      * Minimum PHP version required
@@ -189,8 +189,8 @@ final class WeDevs_ERP {
         $error .= __( '<p>The version of your PHP is ', 'erp' ) . '<a href="http://php.net/supported-versions.php" target="_blank"><strong>' . __( 'unsupported and old', 'erp' ) . '</strong></a>.';
         $error .= __( 'You should update your PHP software or contact your host regarding this matter.</p>', 'erp' );
         wp_die(
-            $error,
-            __( 'Plugin Activation Error', 'erp' ),
+            wp_kses_post( $error ),
+            esc_html__( 'Plugin Activation Error', 'erp' ),
             array(
 				'response'  => 200,
 				'back_link' => true,

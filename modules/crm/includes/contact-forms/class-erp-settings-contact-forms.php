@@ -204,15 +204,15 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
             <td style="padding-left: 0; padding-top: 0;">
                 <table
                     class="wp-list-table widefat fixed striped cfi-table"
-                    id="<?php echo $value['plugin'] . '_' . $value['form_id']; ?>"
-                    data-plugin="<?php echo $value['plugin']; ?>"
-                    data-form-id="<?php echo $value['form_id']; ?>"
+                    id="<?php echo esc_attr( $value['plugin'] ) . '_' . esc_attr( $value['form_id'] ); ?>"
+                    data-plugin="<?php echo esc_attr( $value['plugin'] ); ?>"
+                    data-form-id="<?php echo esc_attr( $value['form_id'] ); ?>"
                     v-cloak
                 >
                     <tbody>
                         <tr>
-                            <th class="cfi-table-wide-column"><?php _e( 'Form Field', 'erp' ); ?></th>
-                            <th class="cfi-table-wide-column"><?php _e( 'CRM Contact Option' ); ?></th>
+                            <th class="cfi-table-wide-column"><?php esc_html_e( 'Form Field', 'erp' ); ?></th>
+                            <th class="cfi-table-wide-column"><?php esc_html_e( 'CRM Contact Option' ); ?></th>
                             <th class="cfi-table-narrow-column">&nbsp;</th>
                         </tr>
                     </tbody>
@@ -286,12 +286,12 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
                                     type="button"
                                     class="button"
                                     v-on:click="reset_mapping"
-                                ><?php echo __( 'Reset', 'erp' ); ?></button>
+                                ><?php esc_html_e( 'Reset', 'erp' ); ?></button>
                                 <button
                                     type="button"
                                     class="button button-primary"
                                     v-on:click="save_mapping"
-                                ><?php echo __( 'Save Changes', 'erp' ); ?></button>
+                                ><?php esc_html_e( 'Save Changes', 'erp' ); ?></button>
                             </td>
                         </tr>
                     </tfoot>
@@ -313,7 +313,9 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
             'msg' => null
         ];
 
-        $this->verify_nonce( 'erp_settings_contact_forms' );
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'erp_settings_contact_forms' ) ) {
+            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
 
         if ( !erp_crm_is_current_user_manager() ) {
             $response['msg'] = __( 'Unauthorized operation', 'erp' );
@@ -333,7 +335,7 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
                 array_unshift( $required_options, 'full_name' );
             }
 
-            $diff = array_diff( $required_options, $_POST['map'] );
+            $diff = array_diff( $required_options, array_map( 'sanitize_text_field', wp_unslash( $_POST['map'] ) ) );
 
             if ( !empty( $diff ) ) {
                 $required_options = array_map( function ( $option ) {
@@ -351,10 +353,10 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
             } else {
                 $settings = get_option( 'wperp_crm_contact_forms' );
 
-                $settings[ $_POST['plugin'] ][ $_POST['formId'] ] = [
-                    'map' => $_POST['map'],
-                    'contact_group' => $_POST['contactGroup'],
-                    'contact_owner' => $_POST['contactOwner']
+                $settings[ sanitize_text_field( wp_unslash( $_POST['plugin'] ) ) ][ sanitize_text_field( wp_unslash( $_POST['formId'] ) ) ] = [
+                    'map' => sanitize_text_field( wp_unslash( $_POST['map'] ) ),
+                    'contact_group' => isset( $_POST['contactGroup'] ) ? sanitize_text_field( wp_unslash( $_POST['contactGroup'] ) ) : '',
+                    'contact_owner' => isset( $_POST['contactOwner'] ) ? sanitize_text_field( wp_unslash( $_POST['contactOwner'] ) ) : ''
                 ];
 
                 update_option( 'wperp_crm_contact_forms', $settings );
@@ -384,7 +386,9 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
             'msg' => null
         ];
 
-        $this->verify_nonce( 'erp_settings_contact_forms' );
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'erp_settings_contact_forms' ) ) {
+            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
 
         if ( !erp_crm_is_current_user_manager() ) {
             $response['msg'] = __( 'Unauthorized operation', 'erp' );
@@ -393,7 +397,7 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
             $settings = get_option( 'wperp_crm_contact_forms' );
 
             if ( !empty( $settings[ $_POST['plugin'] ][ $_POST['formId'] ] ) ) {
-                $map = $settings[ $_POST['plugin'] ][ $_POST['formId'] ]['map'];
+                $map = $settings[ sanitize_text_field( wp_unslash( $_POST['plugin'] ) ) ][ sanitize_text_field( wp_unslash( $_POST['formId'] ) ) ]['map'];
 
                 unset( $settings[ $_POST['plugin'] ][ $_POST['formId'] ] );
 

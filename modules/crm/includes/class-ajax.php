@@ -115,7 +115,9 @@ class Ajax_Handler {
      * @return json
      */
     public function get_all_contact() {
-        $this->verify_nonce( 'wp-erp-vue-table' );
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'wp-erp-vue-table' ) ) {
+            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
 
         $contacts = [];
 
@@ -129,28 +131,28 @@ class Ajax_Handler {
 
         // Set type. By defaul it sets to contact :p
         if ( isset( $_REQUEST['type'] ) && ! empty( $_REQUEST['type'] ) ) {
-            $args['type'] = $_REQUEST['type'];
+            $args['type'] = sanitize_text_field( wp_unslash( $_REQUEST['type'] ) );
         }
 
         // Filter Limit value
         if ( isset( $_REQUEST['number'] ) && ! empty( $_REQUEST['number'] ) ) {
-            $args['number'] = $_REQUEST['number'];
+            $args['number'] = sanitize_text_field( wp_unslash( $_REQUEST['number'] ) );
         }
 
         // Filter offset value
         if ( isset( $_REQUEST['offset'] ) && ! empty( $_REQUEST['offset'] ) ) {
-            $args['offset'] = $_REQUEST['offset'];
+            $args['offset'] = sanitize_text_field( wp_unslash( $_REQUEST['offset'] ) );
         }
 
         // Filter for serach
         if ( isset( $_REQUEST['s'] ) && ! empty( $_REQUEST['s'] ) ) {
-            $args['s'] = trim( $_REQUEST['s'] );
+            $args['s'] = sanitize_text_field( wp_unslash( $_REQUEST['s'] ) );
         }
 
         // Filter for order & order by
         if ( isset( $_REQUEST['orderby'] ) && isset( $_REQUEST['order'] ) ) {
-            $args['orderby']  = $_REQUEST['orderby'];
-            $args['order']    = $_REQUEST['order'] ;
+            $args['orderby']  = sanitize_text_field( wp_unslash( $_REQUEST['orderby'] ) );
+            $args['order']    = sanitize_text_field( wp_unslash( $_REQUEST['order'] ) ) ;
         } else {
             $args['orderby']  = 'created';
             $args['order']    = 'DESC';
@@ -162,21 +164,21 @@ class Ajax_Handler {
                 if ( $_REQUEST['status'] == 'trash' ) {
                     $args['trashed'] = true;
                 } else {
-                    $args['life_stage'] = $_REQUEST['status'];
+                    $args['life_stage'] = sanitize_text_field( wp_unslash( $_REQUEST['status'] ) );
                 }
             }
         }
 
         if ( isset( $_REQUEST['filter_assign_contact']) && !empty( $_REQUEST['filter_assign_contact']) ){
-            $args['contact_owner'] = $_REQUEST['filter_assign_contact'];
+            $args['contact_owner'] = sanitize_text_field( wp_unslash( $_REQUEST['filter_assign_contact'] ) );
         }
 
         if ( isset( $_REQUEST['erpadvancefilter'] ) && ! empty( $_REQUEST['erpadvancefilter'] ) ) {
-            $args['erpadvancefilter'] = $_REQUEST['erpadvancefilter'];
+            $args['erpadvancefilter'] = sanitize_text_field( wp_unslash( $_REQUEST['erpadvancefilter'] ) );
         }
 
         if ( isset( $_REQUEST['filter_contact_company'] ) && ! empty( $_REQUEST['filter_contact_company'] ) ) {
-            $companies = erp_crm_company_get_customers( array( 'id' => $_REQUEST['filter_contact_company'] ) );
+            $companies = erp_crm_company_get_customers( array( 'id' => sanitize_text_field( wp_unslash( $_REQUEST['filter_contact_company'] ) ) ) );
 
             foreach ( $companies as $company ) {
                 $contacts['data'][] = $company['contact_details'];
@@ -225,7 +227,9 @@ class Ajax_Handler {
      * @return josn
      */
     public function get_contact_companies() {
-        $this->verify_nonce( 'wp-erp-crm-nonce' );
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'wp-erp-crm-nonce' ) ) {
+            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
 
         unset( $_POST['_wpnonce'], $_POST['_wp_http_referer'], $_POST['action'] );
 
@@ -256,7 +260,9 @@ class Ajax_Handler {
      * @return json
      */
     public function get_assignable_contact() {
-        $this->verify_nonce( 'wp-erp-crm-nonce' );
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'wp-erp-crm-nonce' ) ) {
+            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
 
         unset( $_POST['_wpnonce'], $_POST['_wp_http_referer'], $_POST['action'] );
 
@@ -264,7 +270,7 @@ class Ajax_Handler {
             $this->send_error( __( 'No company or contact found', 'erp' ) );
         }
 
-        $data = erp_crm_get_user_assignable_groups( $_POST['id'] );
+        $data = erp_crm_get_user_assignable_groups( sanitize_text_field( wp_unslash( $_POST['id'] ) ) );
 
         if ( is_wp_error( $data ) ) {
             $this->send_error( $data->get_error_message() );
@@ -281,10 +287,13 @@ class Ajax_Handler {
      * @return json
      */
     public function create_customer() {
-        $this->verify_nonce( 'wp-erp-crm-customer-nonce' );
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'wp-erp-crm-customer-nonce' ) ) {
+            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
 
-        $current_user_id = get_current_user_id();
-        $posted = array_map( 'strip_tags_deep', $_POST );
+        $current_user_id                      = get_current_user_id();
+        $posted                               = array_map( 'strip_tags_deep', $_POST );
+        $posted['contact']['main']['company'] = stripslashes( $posted['contact']['main']['company'] ); // To remove Apostrophe slash
 
         $data   = array_merge( $posted['contact']['main'], $posted['contact']['meta'], $posted['contact']['social'] );
 
@@ -329,8 +338,9 @@ class Ajax_Handler {
      * @return array
      */
     public function customer_get() {
-
-        $this->verify_nonce( 'wp-erp-crm-nonce' );
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'wp-erp-crm-nonce' ) ) {
+            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
 
         $customer_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
         $customer    = new Contact( $customer_id );
@@ -350,12 +360,14 @@ class Ajax_Handler {
      * @return json
      */
     public function customer_remove() {
-        $this->verify_nonce( 'wp-erp-crm-nonce' );
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'wp-erp-crm-nonce' ) ) {
+            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
 
         $ids         = [];
-        $customer_id = ( isset( $_REQUEST['id'] ) && is_array( $_REQUEST['id'] ) ) ? (array)$_REQUEST['id'] : intval( $_REQUEST['id'] );
+        $customer_id = ( isset( $_REQUEST['id'] ) && is_array( $_REQUEST['id'] ) ) ? array_map( 'sanitize_text_field', wp_unslash( $_REQUEST['id'] ) ): intval( $_REQUEST['id'] );
         $hard        = isset( $_REQUEST['hard'] ) ? intval( $_REQUEST['hard'] ) : 0;
-        $type        = isset( $_REQUEST['type'] ) ? $_REQUEST['type'] : '';
+        $type        = isset( $_REQUEST['type'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['type'] ) ) : '';
 
         // Check if this contact OR company has relationship with any company OR contact
         $if_customer_has_relations = ( !is_array( $customer_id ) ) ? erp_crm_check_company_contact_relations( $customer_id, $type ) : 0;
@@ -413,10 +425,12 @@ class Ajax_Handler {
      * @return json
      */
     public function customer_restore() {
-        $this->verify_nonce( 'wp-erp-crm-nonce' );
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'wp-erp-crm-nonce' ) ) {
+            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
 
-        $customer_id = ( isset( $_REQUEST['id'] ) && is_array( $_REQUEST['id'] ) ) ? (array)$_REQUEST['id'] : intval( $_REQUEST['id'] );
-        $type        = isset( $_REQUEST['type'] ) ? $_REQUEST['type'] : '';
+        $customer_id = ( isset( $_REQUEST['id'] ) && is_array( $_REQUEST['id'] ) ) ? (array)sanitize_text_field( wp_unslash( $_REQUEST['id'] ) ) : intval( $_REQUEST['id'] );
+        $type        = isset( $_REQUEST['type'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['type'] ) ) : '';
 
         $data = [
             'id'   => $customer_id,
@@ -442,12 +456,14 @@ class Ajax_Handler {
      * @return json
      */
     public function bulk_assign_group() {
-        $this->verify_nonce( 'wp-erp-crm-bulk-contact-subscriber' );
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'wp-erp-crm-bulk-contact-subscriber' ) ) {
+            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
 
         $ids                = [];
         $contact_subscriber = [];
-        $user_ids           = ( isset( $_POST['user_id'] ) && ! empty( $_POST['user_id'] ) ) ? explode(',', $_POST['user_id'] ) : [];
-        $group_ids          = ( isset( $_POST['group_id'] ) && ! empty( $_POST['group_id'] ) ) ? $_POST['group_id'] : [];
+        $user_ids           = ( isset( $_POST['user_id'] ) && ! empty( $_POST['user_id'] ) ) ? explode(',', sanitize_text_field( wp_unslash( $_POST['user_id'] ) ) ) : [];
+        $group_ids          = ( isset( $_POST['group_id'] ) && ! empty( $_POST['group_id'] ) ) ? wp_unslash( $_POST['group_id'] ) : [];
 
         if ( empty( $user_ids ) ) {
             $this->send_error( __( 'Contact must be required', 'erp' ) );
@@ -492,10 +508,12 @@ class Ajax_Handler {
      * @return json
      */
     public function convert_user_to_customer() {
-        $this->verify_nonce( 'wp-erp-crm-nonce' );
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'wp-erp-crm-nonce' ) ) {
+            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
 
-        $id   = isset( $_POST['user_id'] ) ? $_POST['user_id'] : 0;
-        $type = isset( $_POST['type'] ) ? $_POST['type'] : '';
+        $id   = isset( $_POST['user_id'] ) ? sanitize_text_field( wp_unslash( $_POST['user_id'] ) ): 0;
+        $type = isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ): '';
         $is_wp = isset( $_POST['is_wp'] ) ? true : false;
 
         if ( ! $id ) {
@@ -525,17 +543,19 @@ class Ajax_Handler {
     }
 
     /**
-     * Adds compnay to custmer individual profile
+     * Adds company to customer individual profile
      *
      * @since 1.0
      *
      * @return
      */
     public function customer_add_company() {
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'wp-erp-crm-assign-customer-company-nonce' ) ) {
+            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
 
-        $this->verify_nonce( 'wp-erp-crm-assign-customer-company-nonce' );
 
-        $type        = isset( $_REQUEST['assign_type'] ) ? $_REQUEST['assign_type'] : '';
+        $type        = isset( $_REQUEST['assign_type'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['assign_type'] ) ) : '';
         $id          = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
         $company_id  = isset( $_REQUEST['erp_assign_company_id'] ) ? intval( $_REQUEST['erp_assign_company_id'] ) : 0;
         $customer_id = isset( $_REQUEST['erp_assign_customer_id'] ) ? intval( $_REQUEST['erp_assign_customer_id'] ) : 0;
@@ -568,7 +588,9 @@ class Ajax_Handler {
      * Save Company edit field for customer
      */
     public function customer_update_company() {
-        $this->verify_nonce( 'wp-erp-crm-customer-update-company-nonce' );
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'wp-erp-crm-customer-update-company-nonce' ) ) {
+            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
 
         $row_id     = isset( $_REQUEST['row_id'] ) ? intval( $_REQUEST['row_id'] ) : 0;
         $company_id = isset( $_REQUEST['company_id'] ) ? intval( $_REQUEST['company_id'] ) : 0;
@@ -582,8 +604,9 @@ class Ajax_Handler {
      * Remove Company from Customer Single Profile
      */
     public function customer_remove_company() {
-
-        $this->verify_nonce( 'wp-erp-crm-nonce' );
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'wp-erp-crm-nonce' ) ) {
+            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
 
         $id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
 
@@ -603,9 +626,11 @@ class Ajax_Handler {
      * @return void
      */
     public function search_crm_user() {
-        $this->verify_nonce( 'wp-erp-crm-nonce' );
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'wp-erp-crm-nonce' ) ) {
+            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
 
-        $term = isset( $_REQUEST['q'] ) ? stripslashes( $_REQUEST['q'] ) : '';
+        $term = isset( $_REQUEST['q'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['q'] ) ) : '';
 
         if ( empty( $term ) ) {
             die();
@@ -631,7 +656,7 @@ class Ajax_Handler {
      * @return void
      */
     public function search_company_contact() {
-        $term = isset( $_REQUEST['q'] ) ? stripslashes( $_REQUEST['q'] ) : '';
+        $term = isset( $_REQUEST['q'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['q'] ) ) : '';
 
         if ( empty( $term ) ) {
             die();
@@ -657,9 +682,12 @@ class Ajax_Handler {
      * @return json
      */
     public function search_crm_contacts() {
-        $this->verify_nonce( 'wp-erp-crm-nonce' );
-        $term = isset( $_REQUEST['s'] ) ? stripslashes( $_REQUEST['s'] ) : '';
-        $types = isset( $_REQUEST['types'] ) ? $_REQUEST['types'] : '';
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'wp-erp-crm-nonce' ) ) {
+            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
+
+        $term = isset( $_REQUEST['s'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['s'] ) ) : '';
+        $types = isset( $_REQUEST['types'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_REQUEST['types'] ) ) : [];
 
         if ( empty( $term ) ) {
             die();
@@ -694,9 +722,12 @@ class Ajax_Handler {
      * @return json [object]
      */
     public function save_assign_contact() {
-        $this->verify_nonce( 'wp-erp-crm-nonce' );
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'wp-erp-crm-nonce' ) ) {
+            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
 
-        parse_str( $_POST['formData'], $output );
+        $form_data = isset( $_POST['formData'] ) ? sanitize_text_field( wp_unslash( $_POST['formData'] ) ) : '';
+        parse_str( $form_data, $output );
 
         //contact Owner
         if ( isset( $output['erp_select_assign_contact'] ) && empty( $output['erp_select_assign_contact'] ) ) {
@@ -726,12 +757,14 @@ class Ajax_Handler {
     * @return void
     **/
     public function make_wp_user() {
-        $this->verify_nonce( 'erp-crm-make-wp-user' );
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'erp-crm-make-wp-user' ) ) {
+            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
 
-        $customer_id  = isset( $_POST['id'] ) ? $_POST['id'] : 0;
-        $type         = isset( $_POST['type'] ) ? $_POST['type'] : '';
-        $email        = isset( $_POST['customer_email'] ) ? $_POST['customer_email'] : '';
-        $role         = isset( $_POST['customer_role'] ) ? $_POST['customer_role'] : '';
+        $customer_id  = isset( $_POST['id'] ) ? sanitize_text_field( wp_unslash( $_POST['id'] ) ): 0;
+        $type         = isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ): '';
+        $email        = isset( $_POST['customer_email'] ) ? sanitize_email( wp_unslash( $_POST['customer_email'] ) ) : '';
+        $role         = isset( $_POST['customer_role'] ) ? sanitize_text_field( wp_unslash( $_POST['customer_role'] ) ) : '';
         $notify_email = isset( $_POST['send_password_notification'] ) ? true : false;
 
         if ( ! $customer_id ) {
@@ -773,7 +806,9 @@ class Ajax_Handler {
      * @return json
      */
     public function contact_group_create() {
-        $this->verify_nonce( 'wp-erp-crm-contact-group' );
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'wp-erp-crm-contact-group' ) ) {
+            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
 
         // Check permission
         if ( ! current_user_can( 'erp_crm_create_groups' ) ) {
@@ -784,11 +819,13 @@ class Ajax_Handler {
             $this->send_error( __('Contact Group Name must be required', 'erp' ) );
         }
 
+        $form_data = array_map( 'sanitize_text_field', wp_unslash( $_POST ) );
+
         $data = [
-            'id'          => ( isset( $_POST['id'] ) && !empty( $_POST['id'] ) ) ? $_POST['id'] : '',
-            'name'        => $_POST['group_name'],
-            'description' => $_POST['group_description'],
-            'private'     => erp_validate_boolean( $_POST['group_private'] ) ? 1 : null,
+            'id'          => ( isset( $_POST['id'] ) && !empty( $form_data['id'] ) ) ? sanitize_text_field( wp_unslash( $form_data['id'] ) ) : '',
+            'name'        => sanitize_text_field( wp_unslash( $form_data['group_name'] ) ),
+            'description' => sanitize_text_field( wp_unslash( $form_data['group_description'] ) ),
+            'private'     => erp_validate_boolean( $form_data['group_private'] ) ? 1 : null,
         ];
 
         erp_crm_save_contact_group( $data );
@@ -804,7 +841,9 @@ class Ajax_Handler {
      * @return json
      */
     public function contact_group_edit() {
-        $this->verify_nonce( 'wp-erp-crm-nonce' );
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'wp-erp-crm-nonce' ) ) {
+            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
 
         $query_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
 
@@ -821,7 +860,9 @@ class Ajax_Handler {
      * @return json
      */
     public function contact_group_delete() {
-        $this->verify_nonce( 'wp-erp-crm-nonce' );
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'wp-erp-crm-nonce' ) ) {
+            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
 
         $query_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
 
@@ -840,14 +881,16 @@ class Ajax_Handler {
     }
 
     /**
-     * Get alreay assigned contact into subscriber
+     * Get already assigned contact into subscriber
      *
      * @since 1.0
      *
      * @return json
      */
     public function check_assign_contact() {
-        $this->verify_nonce( 'wp-erp-crm-nonce' );
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'wp-erp-crm-nonce' ) ) {
+            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
 
         $result = erp_crm_get_assign_subscriber_contact();
 
@@ -862,7 +905,9 @@ class Ajax_Handler {
      * @return json
      */
     public function edit_assign_contact() {
-        $this->verify_nonce( 'wp-erp-crm-nonce' );
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'wp-erp-crm-nonce' ) ) {
+            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
 
         $data    = [];
         $user_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
@@ -894,12 +939,14 @@ class Ajax_Handler {
      * @return json
      */
     public function assign_contact_as_subscriber() {
-        $this->verify_nonce( 'wp-erp-crm-contact-subscriber' );
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'wp-erp-crm-contact-subscriber' ) ) {
+            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
 
         $data = [];
 
-        $user_id = ( isset( $_POST['user_id'] ) && !empty( $_POST['user_id'] ) ) ? (int) $_POST['user_id'] : 0;
-        $group_ids = ( isset( $_POST['group_id'] ) && !empty( $_POST['group_id'] ) ) ? (array) $_POST['group_id'] : [];
+        $user_id   = ! empty( $_POST['user_id'] )  ? absint( $_POST['user_id'] ) : 0;
+        $group_ids = ! empty( $_POST['group_id'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['group_id'] ) ): [];
 
         if ( ! $user_id ) {
             $this->send_error( __( 'No user data found', 'erp' ) );
@@ -929,7 +976,9 @@ class Ajax_Handler {
      * @return json
      */
     public function assign_contact_delete() {
-        $this->verify_nonce( 'wp-erp-crm-nonce' );
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'wp-erp-crm-nonce' ) ) {
+            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
 
         $user_id  = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
         $group_id = isset( $_REQUEST['group_id'] ) ? intval( $_REQUEST['group_id'] ) : 0;
@@ -959,10 +1008,12 @@ class Ajax_Handler {
      * @return json
      */
     public function edit_assign_contact_submission() {
-        $this->verify_nonce( 'wp-erp-crm-contact-subscriber' );
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'wp-erp-crm-contact-subscriber' ) ) {
+            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
 
         $user_id = isset( $_REQUEST['user_id'] ) ? intval( $_REQUEST['user_id'] ) : 0;
-        $group_id = isset( $_POST['group_id'] ) ? $_POST['group_id'] : [];
+        $group_id = isset( $_POST['group_id'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['group_id'] ) ): [];
 
         if ( ! current_user_can( 'erp_crm_edit_contact', $user_id ) ) {
             $this->send_error( __( 'You don\'t have any permission to assign this contact', 'erp' ) );
@@ -998,18 +1049,20 @@ class Ajax_Handler {
      * @return void
      */
     public function customer_social_profile() {
-        $this->verify_nonce( 'wp-erp-crm-customer-social-nonce' );
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'wp-erp-crm-customer-social-nonce' ) ) {
+            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
 
         // @TODO: check permission
         unset( $_POST['_wp_http_referer'] );
         unset( $_POST['_wpnonce'] );
         unset( $_POST['action'] );
 
-        if ( ! $_POST['customer_id'] ) {
+        if ( empty( $_POST['customer_id'] ) ) {
             $this->send_error( __( 'No customer found', 'erp' ) );
         }
 
-        $customer_id = (int) $_POST['customer_id'];
+        $customer_id = absint( $_POST['customer_id'] ) ;
         unset( $_POST['customer_id'] );
 
         $customer = new \WeDevs\ERP\CRM\Contact( $customer_id );
@@ -1026,7 +1079,13 @@ class Ajax_Handler {
      * @return json
      */
     public function fetch_all_activity() {
-        $feeds = erp_crm_get_feed_activity( $_POST );
+        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-nonce' ) ) {
+            // die();
+        }
+
+        $post_data = isset( $_POST ) ? $_POST : [];
+        $data = array_map( 'sanitize_text_field', wp_unslash( $post_data ) );
+        $feeds = erp_crm_get_feed_activity( $data );
         $this->send_success( $feeds );
     }
 
@@ -1039,7 +1098,9 @@ class Ajax_Handler {
      * @return json success|error
      */
     public function save_activity_feeds() {
-        $this->verify_nonce( 'wp-erp-crm-customer-feed' );
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'wp-erp-crm-customer-feed' ) ) {
+            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
 
         $save_data      = [];
         $postdata       = $_POST;
@@ -1118,7 +1179,9 @@ class Ajax_Handler {
 
                 $contact_owner_id = $contact->get_contact_owner();
 
-                $message_id = md5( uniqid( time() ) ) . '.' . $contact_id . '.' . $contact_owner_id . '.r2@' . $_SERVER['HTTP_HOST'];
+                $server_host = isset( $_SERVER['HTTP_HOST'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : '';
+
+                $message_id = md5( uniqid( time() ) ) . '.' . $contact_id . '.' . $contact_owner_id . '.r2@' . $server_host;
 
                 $custom_headers = [
                     "In-Reply-To" => "<{$message_id}>",
@@ -1253,17 +1316,21 @@ class Ajax_Handler {
      * @return json
      */
     public function delete_customer_activity_feeds() {
-        $this->verify_nonce( 'wp-erp-crm-customer-feed' );
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'wp-erp-crm-customer-feed' ) ) {
+            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
 
         if ( ! ( current_user_can( erp_crm_get_manager_role() ) || current_user_can( erp_crm_get_agent_role() ) ) ) {
             $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
-        if ( ! $_POST['feed_id'] ) {
+        if ( empty( $_POST['feed_id'] ) ) {
             $this->send_error( __( 'Feeds Not found', 'erp' ) );
         }
 
-        erp_crm_customer_delete_activity_feed( $_POST['feed_id'] );
+        $feed_id = isset( $_POST['feed_id'] ) ? sanitize_text_field( wp_unslash( $_POST['feed_id'] ) ) : '';
+
+        erp_crm_customer_delete_activity_feed( $feed_id );
 
         $this->send_success( __( 'Feed Deleted successfully', 'erp' ) );
     }
@@ -1276,13 +1343,15 @@ class Ajax_Handler {
      * @return json
      */
     public function create_save_search() {
-        $this->verify_nonce( 'wp-erp-crm-nonce' );
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'wp-erp-crm-nonce' ) ) {
+            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
 
         if ( ! ( current_user_can( erp_crm_get_manager_role() ) || current_user_can( erp_crm_get_agent_role() ) ) ) {
             $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
-        $postdata = $_POST['form_data'];
+        $postdata = isset( $_POST['form_data'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['form_data'] ) )  : array();
 
         if ( ! $postdata ) {
             $this->send_error( __( 'No data not found', 'erp' ) );
@@ -1335,14 +1404,15 @@ class Ajax_Handler {
      * @since 1.2.5
      */
     public function create_save_group(){
-        global $wpdb;
-        $this->verify_nonce( 'wp-erp-crm-nonce' );
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'wp-erp-crm-nonce' ) ) {
+            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
 
         if ( ! ( current_user_can( erp_crm_get_manager_role() ) || current_user_can( erp_crm_get_agent_role() ) ) ) {
             $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
-        $postdata = $_POST['form_data'];
+        $postdata = isset( $_POST['form_data'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['form_data'] ) )  : array();
 
         if ( ! $postdata ) {
             $this->send_error( __( 'No data not found', 'erp' ) );
@@ -1402,9 +1472,11 @@ class Ajax_Handler {
      * @return json object
      */
     public function get_save_search() {
-        $this->verify_nonce( 'wp-erp-crm-nonce' );
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'wp-erp-crm-nonce' ) ) {
+            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
 
-        $id = ( isset( $_POST['search_id'] ) && ! empty( $_POST['search_id'] ) ) ? $_POST['search_id'] : 0;
+        $id = ( isset( $_POST['search_id'] ) && ! empty( $_POST['search_id'] ) ) ? sanitize_text_field( wp_unslash( $_POST['search_id'] ) ) : 0;
 
         if ( ! $id ) {
             $this->send_error( __( 'Search name not found', 'erp' ) );
@@ -1423,13 +1495,15 @@ class Ajax_Handler {
      * @return json boolean
      */
     public function delete_save_search() {
-        $this->verify_nonce( 'wp-erp-crm-nonce' );
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'wp-erp-crm-nonce' ) ) {
+            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
 
         if ( ! ( current_user_can( erp_crm_get_manager_role() ) || current_user_can( erp_crm_get_agent_role() ) ) ) {
             $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
-        $id = ( isset( $_POST['filterId'] ) && ! empty( $_POST['filterId'] ) ) ? $_POST['filterId'] : 0;
+        $id = ( isset( $_POST['filterId'] ) && ! empty( $_POST['filterId'] ) ) ? sanitize_text_field( wp_unslash( $_POST['filterId'] ) ) : 0;
 
         if ( ! $id ) {
             $this->send_error( __( 'Search segment not found', 'erp' ) );
@@ -1448,7 +1522,9 @@ class Ajax_Handler {
      * @return json [array]
      */
     public function get_single_schedule_details() {
-        $this->verify_nonce( 'wp-erp-crm-nonce' );
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'wp-erp-crm-nonce' ) ) {
+            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
 
         $query_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
 
@@ -1469,14 +1545,16 @@ class Ajax_Handler {
      * @return json
      */
     public function save_template_save_replies() {
-        $this->verify_nonce( 'wp-erp-crm-save-replies' );
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'wp-erp-crm-save-replies' ) ) {
+            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
 
         $data = [
-            'id'       => isset( $_POST['id'] ) ? $_POST['id'] : 0,
-            'name'     => isset( $_POST['name'] ) ? $_POST['name'] : '',
-            'subject'  => isset( $_POST['subject'] ) ? $_POST['subject'] : '',
+            'id'       => isset( $_POST['id'] ) ? sanitize_text_field( wp_unslash( $_POST['id'] ) ) : 0,
+            'name'     => isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ): '',
+            'subject'  => isset( $_POST['subject'] ) ? sanitize_text_field( wp_unslash( $_POST['subject'] ) ): '',
             /*'template' => isset( $_POST['template'] ) ? $_POST['template'] : ''*/
-            'template' => isset( $_POST['template'] ) ? stripslashes( $_POST['template'] ) : ''
+            'template' => isset( $_POST['template'] ) ? sanitize_text_field( wp_unslash( $_POST['template'] ) ) : ''
         ];
 
         $results = erp_crm_insert_save_replies( $data );
@@ -1497,7 +1575,9 @@ class Ajax_Handler {
      * @return json
      */
     public function edit_save_replies() {
-        $this->verify_nonce( 'wp-erp-crm-nonce' );
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'wp-erp-crm-nonce' ) ) {
+            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
 
         $query_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
 
@@ -1522,8 +1602,9 @@ class Ajax_Handler {
      * @return json
      */
     public function delete_save_replies() {
-
-        $this->verify_nonce( 'wp-erp-crm-nonce' );
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'wp-erp-crm-nonce' ) ) {
+            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
 
         $query_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
 
@@ -1548,7 +1629,9 @@ class Ajax_Handler {
      * @return json|object
      */
     public function load_save_replies() {
-        $this->verify_nonce( 'wp-erp-crm-customer-feed' );
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'wp-erp-crm-customer-feed' ) ) {
+            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
 
         $template_id = isset( $_REQUEST['template_id'] ) ? intval( $_REQUEST['template_id'] ) : 0;
         $contact_id = isset( $_REQUEST['contact_id'] ) ? intval( $_REQUEST['contact_id'] ) : 0;
@@ -1568,13 +1651,15 @@ class Ajax_Handler {
      *
      */
     public function update_contact_tags(){
-        $this->verify_nonce( 'wp-erp-crm-nonce' );
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'wp-erp-crm-nonce' ) ) {
+            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
 
         if( empty(intval($_POST['contact_id']))){
             wp_send_json_error(['message' => __('could not find contact id', 'erp')]);
         }
 
-        $tags = !empty( $_POST['tags'] )? explode(',', $_POST['tags']) : [];
+        $tags = !empty( $_POST['tags'] )? explode(',', sanitize_text_field( wp_unslash( $_POST['tags'] ) ) ) : [];
 
 
         $tags = array_map('trim', $tags);
@@ -1596,7 +1681,7 @@ class Ajax_Handler {
      */
     public function email_attachment() {
 
-        $files          =   ( ! empty( $_FILES['files'] ) ) ? $_FILES['files'] : array();
+        $files          =   ( ! empty( $_FILES['files'] ) ) ? array_map( 'sanitize_text_field', wp_unslash( $_FILES['files'] ) ) : array();
         $wp_upload_dir  =   wp_upload_dir();
         $subdir         =   apply_filters( 'crm_attachmet_directory', 'crm-attachments' );
         $path           =   $wp_upload_dir['basedir'] . '/' . $subdir . '/';

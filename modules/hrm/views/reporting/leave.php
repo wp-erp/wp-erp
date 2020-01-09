@@ -1,6 +1,6 @@
 <div class="wrap">
     <div class="erp-hr-report-area" style="width:95%">
-        <h2><?php _e( 'Leave Report', 'erp' ); ?></h2>
+        <h2><?php esc_html_e( 'Leave Report', 'erp' ); ?></h2>
         <form method="get">
             <input type="hidden" name="page" value="erp-hr">
             <input type="hidden" name="section" value="report">

@@ -474,7 +474,7 @@ class parseCSV {
             header('Expires: 0');
             header('Content-Disposition: attachment; filename="' . $filename . '"; modification-date="' . date('r') . '";');
 
-            echo $data;
+            echo wp_kses_post( $data );
         }
 
         return $data;

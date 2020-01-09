@@ -1475,10 +1475,8 @@ May you enjoy the fruits of your labors for years to come'
 
         // check if people_types exists
         if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_people_types` LIMIT 0, 1" ) ) {
-            $sql = "INSERT INTO `{$wpdb->prefix}erp_people_types` (`id`, `name`)
-                    VALUES (1, 'contact'), (2, 'company'), (3, 'customer'), (4, 'vendor'), (5, 'employee')";
-
-            $wpdb->query( $sql );
+            $wpdb->query( "INSERT INTO `{$wpdb->prefix}erp_people_types` (`id`, `name`)
+            VALUES (1, 'contact'), (2, 'company'), (3, 'customer'), (4, 'vendor'), (5, 'employee')" );
         }
 
         /** ===========
@@ -1603,10 +1601,8 @@ May you enjoy the fruits of your labors for years to come'
 
         // insert product types
         if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_acct_product_types` LIMIT 0, 1" ) ) {
-            $sql = "INSERT INTO `{$wpdb->prefix}erp_acct_product_types` (`id`, `name`, `slug`)
-                    VALUES (1, 'Inventory', 'inventory'), (2, 'Service', 'service')";
-
-            $wpdb->query( $sql );
+            $wpdb->query( "INSERT INTO `{$wpdb->prefix}erp_acct_product_types` (`id`, `name`, `slug`)
+            VALUES (1, 'Inventory', 'inventory'), (2, 'Service', 'service')" );
         }
 
         // insert currency info
@@ -1777,10 +1773,8 @@ May you enjoy the fruits of your labors for years to come'
             ];
 
             foreach ( $currency_symbols as $key => $val ) {
-                $sql = "INSERT INTO `{$wpdb->prefix}erp_acct_currency_info` (`name`, `sign`)
-                    VALUES ( '{$key}', '{$val}' )";
-
-                $wpdb->query( $sql );
+                $wpdb->query( $wpdb->prepare( "INSERT INTO `{$wpdb->prefix}erp_acct_currency_info` (`name`, `sign`)
+                VALUES ( %s, %s )", $key, $val ) );
             }
         }
 

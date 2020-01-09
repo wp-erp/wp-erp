@@ -96,7 +96,11 @@ class CF7 {
      * @return void
      */
     public function after_form_submit() {
-        if ( empty( $_POST['_wpcf7'] ) ) {
+        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-nonce' ) ) {
+            // die();
+        }
+
+        if ( ! isset( $_POST['_wpcf7'] ) ) {
             return;
         }
 
@@ -110,8 +114,8 @@ class CF7 {
 
         $cf7_settings = $cfi_settings['contact_form_7'];
 
-        if ( in_array( $_POST['_wpcf7'] , array_keys( $cf7_settings ) ) ) {
-            do_action( "wperp_integration_contact_form_7_form_submit", $_POST, 'contact_form_7', $_POST['_wpcf7'] );
+        if ( in_array( sanitize_text_field( wp_unslash( $_POST['_wpcf7'] ) ) , array_keys( $cf7_settings ) ) ) {
+            do_action( "wperp_integration_contact_form_7_form_submit", array_map( 'sanitize_text_field', wp_unslash( $_POST ) ), 'contact_form_7', sanitize_text_field( wp_unslash( $_POST['_wpcf7'] ) ) );
         }
     }
 

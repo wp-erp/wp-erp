@@ -20,7 +20,7 @@ class Announcement_List_Table extends \WP_List_Table {
      * @return void
      */
     public function no_items() {
-        _e( 'No announcement  found.' );
+        esc_html_e( 'No announcement  found.' );
     }
 
     /**

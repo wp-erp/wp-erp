@@ -213,7 +213,7 @@ class Human_Resource {
         ) );
 
 
-        $section    =   isset( $_GET['section'] ) ? $_GET['section'] :'dashboard';
+        $section    =   isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) :'dashboard';
 
         switch ( $section ) {
             case 'employee':
@@ -276,7 +276,7 @@ class Human_Resource {
             erp_get_js_template( WPERP_HRM_JS_TMPL . '/leave-days.php', 'erp-leave-days' );
         }
 
-        $section    =   isset( $_GET['section'] ) ? $_GET['section'] : 'dashboard';
+        $section    =   isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : 'dashboard';
         switch ( $section ) {
             case 'department':
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/new-dept.php', 'erp-new-dept' );
@@ -312,7 +312,7 @@ class Human_Resource {
 
         // leave menu
         // $hook = str_replace( sanitize_title( __( 'Leave', 'erp' ) ), 'leave', $current_screen->base );
-        $sub_section    =   isset( $_GET['sub-section'] ) ? $_GET['sub-section'] : '';
+        $sub_section    =   isset( $_GET['sub-section'] ) ? sanitize_text_field( wp_unslash( $_GET['sub-section'] ) ) : '';
         switch ( $sub_section ) {
             case 'policies':
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/leave-policy.php', 'erp-leave-policy' );

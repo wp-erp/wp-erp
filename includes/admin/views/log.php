@@ -1,6 +1,6 @@
 <div class="wrap erp erp-hr-audit-log">
 
-    <h2><?php _e( 'Audit Log', 'erp' ); ?></h2>
+    <h2><?php esc_html_e( 'Audit Log', 'erp' ); ?></h2>
 
     <div id="erp-audit-log-table-wrap">
 

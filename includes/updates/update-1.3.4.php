@@ -116,8 +116,8 @@ function erp_att_get_start_end_date( $time = '' ) {
 
             case 'custom':
 
-                $start_date = $_REQUEST['start'];
-                $end_date   = $_REQUEST['end'];
+                $start_date = isset( $_REQUEST['start'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['start'] ) ) : date('Y-m-d');
+                $end_date   = isset( $_REQUEST['end'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['end'] ) ) : date('Y-m-d');
                 break;
 
             default:

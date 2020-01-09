@@ -3918,8 +3918,11 @@ kbd {
   height: 33px;
 }
 .erp-customer-form span.required {
-  margin: 10px 10px 0;
+  margin: 0 10px 0;
   display: inline-block;
+}
+.erp-customer-form span.space-top {
+    margin-top: 10px;
 }
 .erp-customer-form input[type='number'] {
   height: 33px;

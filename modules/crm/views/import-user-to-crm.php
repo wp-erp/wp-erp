@@ -5,20 +5,20 @@ $users       = erp_crm_get_crm_user();
 <form method="post" name="contact_from_user" id="contact_from_user">
     <div class="wrap">
 
-        <h2><?php _e( 'Import as Contact', 'erp' ); ?></h2>
+        <h2><?php esc_attr_e( 'Import as Contact', 'erp' ); ?></h2>
 
         <table class="form-table">
             <tbody>
                 <tr>
                     <th>
-                        <label for="contact_owner"><?php _e( 'Assign Contact Owner', 'erp' ); ?></label>
+                        <label for="contact_owner"><?php esc_attr_e( 'Assign Contact Owner', 'erp' ); ?></label>
                     </th>
                     <td>
                         <select name="contact_owner" id="contact_owner" class="">
-                            <option value=""><?php _e( '&mdash; Select Owner &mdash;', 'erp' ); ?></option>
+                            <option value=""><?php esc_attr_e( '&mdash; Select Owner &mdash;', 'erp' ); ?></option>
                             <?php
                             foreach ( $users as $user ) {
-                                echo '<option value="' . $user->ID . '">' . $user->display_name . ' &lt;' . $user->user_email . '&gt;' . '</option>';
+                                echo esc_html( '<option value="' . $user->ID . '">' . $user->display_name . ' &lt;' . $user->user_email . '&gt;' . '</option>' );
                             }
                             ?>
                         </select>
@@ -27,13 +27,13 @@ $users       = erp_crm_get_crm_user();
 
                 <tr>
                     <th>
-                        <label for="life_stage"><?php _e( 'Life Stage', 'erp' ); ?></label>
+                        <label for="life_stage"><?php esc_attr_e( 'Life Stage', 'erp' ); ?></label>
                     </th>
                     <td>
                         <select name="life_stage" id="life_stage">
                         <?php
                         foreach ( $life_stages as $key => $value ) {
-                            echo '<option value="' . $key . '">' . $value . '</option>';
+                            echo esc_html( '<option value="' . $key . '">' . $value . '</option>' );
                         }
                         ?>
                     </select>

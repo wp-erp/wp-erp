@@ -113,13 +113,13 @@ class Updates {
         if ( ! is_null( $installed_version ) && version_compare( $installed_version, end( $updatable_versions ), '<' ) ) {
             ?>
                 <div id="message" class="updated">
-                    <p><?php _e( '<strong>WP ERP Data Update Required</strong> &#8211; We need to update your install to the latest version', 'erp' ); ?></p>
-                    <p class="submit"><a href="<?php echo add_query_arg( [ 'wperp_do_update' => true ], $_SERVER['REQUEST_URI'] ); ?>" class="wperp-update-btn button-primary"><?php _e( 'Run the updater', 'erp' ); ?></a></p>
+                    <p><?php esc_html_e( '<strong>WP ERP Data Update Required</strong> &#8211; We need to update your install to the latest version', 'erp' ); ?></p>
+                    <p class="submit"><a href="<?php echo esc_attr( add_query_arg( [ 'wperp_do_update' => true ], isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '' ) ); ?>" class="wperp-update-btn button-primary"><?php esc_html_e( 'Run the updater', 'erp' ); ?></a></p>
                 </div>
 
                 <script type="text/javascript">
                     jQuery('.wperp-update-btn').click('click', function(){
-                        return confirm( '<?php _e( 'It is strongly recommended that you backup your database before proceeding. Are you sure you wish to run the updater now?', 'erp' ); ?>' );
+                        return confirm( '<?php esc_html_e( 'It is strongly recommended that you backup your database before proceeding. Are you sure you wish to run the updater now?', 'erp' ); ?>' );
                     });
                 </script>
             <?php
@@ -143,7 +143,7 @@ class Updates {
         $bg_process            = new \WeDevs\ERP\Updates\BP\ERP_ACCT_BG_Process;
         $bg_process_people_trn = new \WeDevs\ERP\Updates\BP\ERP_ACCT_BG_Process_People_Trn;
 
-        if ( isset( $_GET['wperp_do_update'] ) && $_GET['wperp_do_update'] ) {
+        if ( isset( $_GET['wperp_do_update'] ) && sanitize_text_field( wp_unslash( $_GET['wperp_do_update'] ) ) ) {
             $this->perform_updates();
         }
     }
@@ -180,7 +180,7 @@ class Updates {
 
         $this->enable_active_erp_modules();
 
-        $location = remove_query_arg( ['wperp_do_update'], $_SERVER['REQUEST_URI'] );
+        $location = remove_query_arg( ['wperp_do_update'], isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '' );
         wp_redirect( $location );
         exit();
     }

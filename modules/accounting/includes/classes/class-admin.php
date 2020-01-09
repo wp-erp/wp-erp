@@ -326,9 +326,9 @@ class Admin {
     public function erp_accounting_page() {
         ?>
         <script>
-            window.erpAcct = JSON.parse('<?php echo addslashes(
+            window.erpAcct = JSON.parse('<?php echo wp_kses_post( wp_slash(
                 json_encode( apply_filters( 'erp_localized_data', [] ) )
-            ); ?>');
+            ) ); ?>');
         </script>
         <?php
         echo '<div class="wrap"><div id="erp-accounting"></div></div>';
@@ -386,6 +386,11 @@ class Admin {
      */
     public function save_accounting_settings() {
         global $wpdb;
+
+        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-nonce' ) ) {
+            // die();
+        }
+
         $fin_years = [];
 
         if (
@@ -396,9 +401,9 @@ class Admin {
             return;
         }
 
-        $ob_names   = $_POST['ob_names'];
-        $ob_starts  = $_POST['ob_starts'];
-        $ob_ends    = $_POST['ob_ends'];
+        $ob_names   = array_map( 'sanitize_text_field', wp_unslash( $_POST['ob_names'] ) );
+        $ob_starts  = array_map( 'sanitize_text_field', wp_unslash( $_POST['ob_starts'] ) );
+        $ob_ends    = array_map( 'sanitize_text_field', wp_unslash( $_POST['ob_ends'] ) );
         $created_by = get_current_user_id();
 
         if ( ! empty( $ob_names ) ) {

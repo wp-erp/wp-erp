@@ -1,5 +1,5 @@
 <div class="wrap">
-    <h3><?php _e( 'Headcount', 'erp' ); ?></h3>
+    <h3><?php esc_html_e( 'Headcount', 'erp' ); ?></h3>
     <?php
         global $wpdb;
 
@@ -8,9 +8,8 @@
         $current_year    = current_time( 'Y' );
         $dept_raw        = erp_hr_get_departments_dropdown_raw();
         $query_dept      = isset( $_REQUEST['department'] ) && '-1' != $_REQUEST['department'] ? intval( $_REQUEST['department'] ) : '';
-        $query_year      = isset( $_REQUEST['year'] ) && '-1' != $_REQUEST['year'] ? intval( $_REQUEST['year'] ) : date('Y');
-        $query           = "SELECT user_id, department, hiring_date, termination_date FROM {$wpdb->prefix}erp_hr_employees WHERE status = 'active'";
-        $user_all        = $wpdb->get_results( $query );
+        $query_year      = isset( $_REQUEST['year'] ) && '-1' != $_REQUEST['year'] ? $_REQUEST['year'] : date('Y');
+        $user_all        = $wpdb->get_results( "SELECT user_id, department, hiring_date, termination_date FROM {$wpdb->prefix}erp_hr_employees WHERE status = 'active'" );
         $user_filtered   = [];
         $this_month      = $query_year ? date( $query_year . '-12-01') : current_time( 'Y-m-01' );
         $js_this_month   = strtotime( $this_month ) * 1000 + ( 15*24*60*60*1000 );
@@ -59,7 +58,7 @@
             <?php
                 echo '<option value="-1">-Select Year-</option>';
                 for ( $i = $current_year; $i >= $start_year; $i-- ) {
-                    echo '<option value"' . $i . '"' . selected( $query_year, $i ) . '>' . $i . '</option>';
+                    echo '<option value"' . esc_attr( $i ) . '"' . selected( $query_year, $i ) . '>' . esc_html( $i ) . '</option>';
                 }
             ?>
             </select>
@@ -67,12 +66,12 @@
             <select name="department">
             <?php
                 foreach ( $dept_raw as $key => $dept ) {
-                    echo '<option value="' . $key . '"' . selected( $query_dept, $key ) . '>' . $dept . '</option>';
+                    echo '<option value="' . esc_attr( $key ) . '"' . selected( $query_dept, $key ) . '>' . esc_html( $dept ) . '</option>';
                 }
             ?>
             </select>
             <?php wp_nonce_field( 'epr-rep-headcount' ); ?>
-            <button type="submit" class="button-secondary" name="filter_headcount"><?php _e( 'Filter', 'erp' ); ?></button>
+            <button type="submit" class="button-secondary" name="filter_headcount"><?php esc_html_e( 'Filter', 'erp' ); ?></button>
         </form>
     </div>
 
@@ -90,7 +89,7 @@
                         <div class="handlediv" title="Click to toggle"><br></div>
                         <!-- Toggle -->
 
-                        <h2 class="hndle"><span><?php _e( 'Headcount by Month', 'erp' ); ?></span>
+                        <h2 class="hndle"><span><?php esc_html_e( 'Headcount by Month', 'erp' ); ?></span>
                         </h2>
 
                         <div class="inside">
@@ -119,12 +118,12 @@
                         <div class="handlediv" title="Click to toggle"><br></div>
                         <!-- Toggle -->
 
-                        <h2 class="hndle"><span><?php echo current_time( 'M j, Y' ); ?></span></h2>
+                        <h2 class="hndle"><span><?php echo esc_html( current_time( 'M j, Y' ) ); ?></span></h2>
 
                         <div class="inside">
                             <span class="dashicons dashicons-groups"></span>
                             <span></span><br>
-                            <h4><?php _e( 'Total Employees', 'erp' ); ?> : <?php echo esc_attr( $total_emp_count ); ?></h4>
+                            <h4><?php esc_html_e( 'Total Employees', 'erp' ); ?> : <?php echo esc_attr( $total_emp_count ); ?></h4>
                         </div>
                         <!-- .inside -->
 
@@ -150,12 +149,12 @@
     <table class="widefat striped">
         <thead>
             <tr>
-                <th><?php _e( 'Name', 'erp'); ?></th>
-                <th><?php _e( 'Hire Date', 'erp'); ?></th>
-                <th><?php _e( 'Job Title', 'erp'); ?></th>
-                <th><?php _e( 'Department', 'erp'); ?></th>
-                <th><?php _e( 'Location', 'erp'); ?></th>
-                <th><?php _e( 'Status', 'erp'); ?></th>
+                <th><?php esc_html_e( 'Name', 'erp'); ?></th>
+                <th><?php esc_html_e( 'Hire Date', 'erp'); ?></th>
+                <th><?php esc_html_e( 'Job Title', 'erp'); ?></th>
+                <th><?php esc_html_e( 'Department', 'erp'); ?></th>
+                <th><?php esc_html_e( 'Location', 'erp'); ?></th>
+                <th><?php esc_html_e( 'Status', 'erp'); ?></th>
             </tr>
         </thead>
         <tbody>
@@ -168,7 +167,7 @@
             ?>
                     <tr>
                         <td><?php echo wp_kses_post( $employee_url ); ?></td>
-                        <td><?php echo date( $date_format, strtotime( esc_attr( $employee->hiring_date ) ) ); ?></td>
+                        <td><?php echo esc_html( date( $date_format, strtotime( esc_attr( $employee->hiring_date ) ) ) ); ?></td>
                         <td><?php echo esc_attr( $employee->designation_title ); ?></td>
                         <td><?php echo esc_attr( $employee->department_title ); ?></td>
                         <td><?php echo esc_attr( $employee->location_name ); ?></td>
@@ -191,8 +190,8 @@
               mode: 'time',
               tickLength: 0,
               tickSize: [1, 'month'],
-              min: <?php echo $js_year_before; ?>,
-              max: <?php echo $js_this_month; ?>,
+              min: <?php echo esc_html( $js_year_before ); ?>,
+              max: <?php echo esc_html( $js_this_month ); ?>,
               axisLabel: "Headcount by Month",
             axisLabelUseCanvas: true,
             axisLabelFontSizePixels: 14,

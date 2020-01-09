@@ -1,5 +1,5 @@
 <div class="wrap erp erp-company-single">
-    <h2><?php _e( 'Company Details', 'erp' ); ?></h2>
+    <h2><?php esc_html_e( 'Company Details', 'erp' ); ?></h2>
 
     <div class="metabox-holder company-accounts">
         <?php
@@ -10,14 +10,14 @@
         <div class="postbox account">
             <div class="inside clearfix">
                 <div class="logo-area">
-                    <?php echo $company->get_logo(); ?>
+                    <?php echo wp_kses_post( $company->get_logo() ); ?>
                 </div><!-- .logo-area -->
 
                 <div class="content-area">
-                    <h2><?php echo $company->name; ?> <a href="<?php echo $company->get_edit_url(); ?>"><?php _e( 'Edit', 'erp' ); ?></a></h2>
+                    <h2><?php echo esc_html( $company->name ); ?> <a href="<?php echo esc_url( $company->get_edit_url() ); ?>"><?php esc_html_e( 'Edit', 'erp' ); ?></a></h2>
 
                     <address class="address">
-                        <?php echo $company->get_formatted_address(); ?>
+                        <?php echo wp_kses_post( $company->get_formatted_address() ); ?>
                     </address>
                 </div><!-- .content-area -->
             </div><!-- .inside -->
@@ -25,9 +25,9 @@
 
         <div class="company-location-wrap">
             <h2>
-                <?php _e( 'Locations', 'erp' ); ?>
+                <?php esc_html_e( 'Locations', 'erp' ); ?>
 
-                <a href="#" id="erp-company-new-location" class="add-new-h2 erp-add-new-location" data-title="<?php _e( 'New Location', 'erp' ); ?>" data-id="<?php echo $company->id; ?>"><?php _e( 'Create New Location', 'erp' ); ?></a>
+                <a href="#" id="erp-company-new-location" class="add-new-h2 erp-add-new-location" data-title="<?php esc_attr_e( 'New Location', 'erp' ); ?>" data-id="<?php echo esc_attr( $company->id ); ?>"><?php esc_attr_e( 'Create New Location', 'erp' ); ?></a>
             </h2>
 
             <div id="company-locations">
@@ -45,28 +45,28 @@
                             <div class="inside">
                                 <address class="address">
                                     <?php
-                                    echo $country->get_formatted_address( array(
+                                    echo wp_kses_post( $country->get_formatted_address( array(
                                         'address_1' => $location['address_1'],
                                         'address_2' => $location['address_2'],
                                         'city'      => $location['city'],
                                         'state'     => $location['state'],
                                         'postcode'  => $location['zip'],
                                         'country'   => $location['country']
-                                    ) );
+                                    ) ) );
                                     ?>
                                 </address>
                             </div><!-- .inside -->
 
                             <div class="actions">
-                                <a href="#" class="edit-location" data-data='<?php echo json_encode( $location ); ?>'><span class="dashicons dashicons-edit"></span></a>
-                                <a href="#" class="remove-location" data-id="<?php echo $location['id']; ?>"><span class="dashicons dashicons-trash"></span></a>
+                                <a href="#" class="edit-location" data-data='<?php echo esc_attr( json_encode( $location ) ); ?>'><span class="dashicons dashicons-edit"></span></a>
+                                <a href="#" class="remove-location" data-id="<?php echo esc_attr( $location['id'] ); ?>"><span class="dashicons dashicons-trash"></span></a>
                             </div>
                         </div>
 
                         <?php
                     }
                 } else {
-                    _e( 'No extra locations found!', 'erp' );
+                    esc_html_e( 'No extra locations found!', 'erp' );
                 }
                 ?>
                 </div><!-- #company-locations-inside -->

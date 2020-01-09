@@ -73,20 +73,20 @@ class ERP_License_Settings extends ERP_Settings_Page {
                                 switch ( $key ) {
                                     case 'name' :
                                         echo '<td class="erp-settings-table-' . esc_attr( $key ) . '">
-                                            <strong>' . $addon['name'] . '</strong>
+                                            <strong>' . esc_html( $addon['name'] ) . '</strong>
                                         </td>';
                                         break;
 
                                     case 'version':
                                         echo '<td class="erp-settings-table-' . esc_attr( $key ) . '">
-                                            ' . $addon['version'] . '
+                                            ' . esc_html( $addon['version'] ) . '
                                         </td>';
                                         break;
 
                                     case 'license':
                                         echo '<td class="erp-settings-table-' . esc_attr( $key ) . '">
                                             <input type="text" name="' . esc_attr( $addon['id'] ) .'" value="' . esc_attr( $addon['license'] ) .'" class="regular-text" />';
-                                        echo erp_get_license_status( $addon );
+                                        echo esc_html( erp_get_license_status( $addon ) );
                                         echo '</td>';
                                         break;
                                 }

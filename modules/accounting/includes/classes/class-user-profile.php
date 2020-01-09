@@ -63,8 +63,8 @@ class User_Profile {
         $checked = in_array( erp_ac_get_manager_role(), $profileuser->roles, true ) ? 'checked' : '';
         ?>
         <label for="erp-ac-manager">
-            <input type="checkbox" id="erp-ac-manager" <?php echo $checked; ?> name="ac_manager" value="<?php echo erp_ac_get_manager_role(); ?>">
-            <span class="description"><?php _e( 'Accounting Manager', 'erp' ); ?></span>
+            <input type="checkbox" id="erp-ac-manager" <?php echo esc_attr( $checked ); ?> name="ac_manager" value="<?php echo esc_attr( erp_ac_get_manager_role() ); ?>">
+            <span class="description"><?php esc_html_e( 'Accounting Manager', 'erp' ); ?></span>
         </label>
 
         <?php

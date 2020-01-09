@@ -1,6 +1,6 @@
 <div class="wrap erp erp-hr-leave-request-new erp-hr-leave-reqs-wrap">
     <div class="postbox">
-        <h3 class="hndle"><?php _e( 'New Leave Request', 'erp' ); ?></h3>
+        <h3 class="hndle"><?php esc_html_e( 'New Leave Request', 'erp' ); ?></h3>
         <div class="inside">
             <?php if ( isset( $_GET['msg'] ) ) {
 

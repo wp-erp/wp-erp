@@ -1,8 +1,8 @@
 <div class="wrap">
     <h1>
-        <?php _e( 'HRM Help', 'erp' ); ?>
+        <?php esc_html_e( 'HRM Help', 'erp' ); ?>
         <a href="https://wperp.com/docs/hr/" target="_blank" class="page-title-action">
-            <?php _e( 'View all Documentations', 'erp' ); ?>
+            <?php esc_html_e( 'View all Documentations', 'erp' ); ?>
         </a>
     </h1>
     <?php
@@ -31,7 +31,7 @@
             __( 'How to create announcement?', 'erp' )                  => 'https://wperp.com/docs/hr/announcement/',
             __( 'How to setup working days for the employees?', 'erp' ) => 'https://wperp.com/docs/hr/settings/work-days/',
             __( 'How to generate reports?', 'erp' )                     => 'https://wperp.com/docs/hr/reporting/',
-            __( 'Do you have any video tutorial on HRM?', 'erp' )       => 'https://wperp.com/docs/hr/videos/'
+            __( 'Do you have any video tutorial on HRM?', 'erp' )       => 'https://wperp.com/tv/category/hr/'
         )
     );
 

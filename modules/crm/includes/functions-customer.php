@@ -375,7 +375,7 @@ function erp_crm_customer_add_company( $customer_id, $company_id ) {
 }
 
 /**
- * Get all the companies for a single costomer
+ * Get all the companies for a single customer
  *
  * @since 1.1.0
  *
@@ -412,7 +412,7 @@ function erp_crm_customer_get_company( $postdata ) {
 }
 
 /**
- * Get all the companies for a single costomer
+ * Get all the companies for a single customer
  *
  * @since 1.0
  *
@@ -2417,7 +2417,8 @@ function erp_crm_save_email_activity( $email, $inbound_email_address ) {
         $headers = "";
         $headers .= "Content-Type: text/html; charset=UTF-8" . "\r\n";
 
-        $message_id = md5( uniqid( time() ) ) . '.' . $contact_id . '.' . $contact_owner_id . '.r2@' . $_SERVER['HTTP_HOST'];
+        $server_host = isset( $_SERVER['HTTP_HOST'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : '';
+        $message_id = md5( uniqid( time() ) ) . '.' . $contact_id . '.' . $contact_owner_id . '.r2@' . $server_host;
 
         $custom_headers = [
             "Message-ID"  => "<{$message_id}>",
@@ -2484,7 +2485,8 @@ function erp_crm_save_contact_owner_email_activity( $email, $inbound_email_addre
     $headers = "";
     $headers .= "Content-Type: text/html; charset=UTF-8" . "\r\n";
 
-    $message_id = md5( uniqid( time() ) ) . '.' . $save_data['user_id'] . '.' . $save_data['created_by'] . '.r1@' . $_SERVER['HTTP_HOST'];
+    $server_host = isset( $_SERVER['HTTP_HOST'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : '';
+    $message_id = md5( uniqid( time() ) ) . '.' . $save_data['user_id'] . '.' . $save_data['created_by'] . '.r1@' . $server_host;
 
     $custom_headers = [
         "Message-ID"  => "<{$message_id}>",
@@ -2635,7 +2637,7 @@ function erp_crm_get_email_from_name() {
  */
 function erp_crm_track_email_opened() {
     if ( isset( $_GET['aid'] ) ) {
-        $activity = \WeDevs\ERP\CRM\Models\Activity::find( $_GET['aid'] );
+        $activity = \WeDevs\ERP\CRM\Models\Activity::find( sanitize_text_field( wp_unslash( $_GET['aid'] ) ) );
         $extra    = json_decode( base64_decode( $activity->extra ), true );
 
         if ( isset( $extra['email_opened_at'] ) && ! is_array( $extra['email_opened_at'] ) ) {
@@ -2668,7 +2670,7 @@ function erp_crm_track_email_opened() {
 
     $contents = fread( $handle, filesize( $image ) );
     fclose( $handle );
-    echo $contents;
+    echo wp_kses_post( $contents );
 
     exit;
 }
@@ -3118,8 +3120,8 @@ function erp_user_bulk_actions() {
     ?>
     <script type="text/javascript">
         jQuery(document).ready(function ($) {
-            $('<option>').val('crm_contact').text('<?php _e( 'Import into CRM', 'erp' )?>').appendTo("select[name='action']");
-            $('<option>').val('crm_contact').text('<?php _e( 'Import into CRM', 'erp' )?>').appendTo("select[name='action2']");
+            $('<option>').val('crm_contact').text('<?php esc_html_e( 'Import into CRM', 'erp' )?>').appendTo("select[name='action']");
+            $('<option>').val('crm_contact').text('<?php esc_html_e( 'Import into CRM', 'erp' )?>').appendTo("select[name='action2']");
         });
     </script>
     <?php
@@ -3158,7 +3160,7 @@ function erp_handle_user_bulk_actions() {
             break;
 
         case 'process_crm_contact':
-            if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'erp_create_contact_from_user' ) ) {
+            if ( isset( $_REQUEST['_wpnonce'] ) && ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'erp_create_contact_from_user' ) ) {
                 exit;
             }
 
@@ -3168,9 +3170,9 @@ function erp_handle_user_bulk_actions() {
 
             $created       = 0;
             $users         = [];
-            $user_ids      = $_REQUEST['users'];
-            $life_stage    = $_POST['life_stage'];
-            $contact_owner = $_POST['contact_owner'];
+            $user_ids      = isset( $_REQUEST['users'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['users'] ) ) : [];
+            $life_stage    = isset( $_POST['life_stage'] ) ? sanitize_text_field( wp_unslash( $_POST['life_stage'] ) ) : [];
+            $contact_owner = isset( $_POST['contact_owner'] ) ? sanitize_text_field( wp_unslash( $_POST['contact_owner'] ) ) : [];
 
             $contacts = erp_get_people_by( 'user_id', $user_ids );
 
@@ -3241,8 +3243,8 @@ function erp_user_bulk_actions_notices() {
     global $pagenow;
 
     if ( $pagenow == 'users.php' && isset( $_REQUEST['created'] ) && (int) $_REQUEST['created'] ) {
-        $message = sprintf( __( '%s contacts created.', 'erp' ), number_format_i18n( $_REQUEST['created'] ) );
-        echo "<div class='updated'><p>{$message}</p></div>";
+        $message = wp_kses_post( sprintf( __( '%s contacts created.', 'erp' ), number_format_i18n( sanitize_text_field( wp_unslash( $_REQUEST['created'] ) ) ) ) );
+        echo wp_kses_post( "<div class='updated'><p>{$message}</p></div>" );
     }
 }
 
@@ -3337,7 +3339,8 @@ function erp_crm_check_new_inbound_emails() {
 
         do_action( 'erp_crm_new_inbound_emails', $emails );
 
-        $email_regexp = '([a-z0-9]+[.][0-9]+[.][0-9]+[.][r][1|2])@' . $_SERVER['HTTP_HOST'];
+        $server_host  = isset( $_SERVER['HTTP_HOST'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : '';
+        $email_regexp = '([a-z0-9]+[.][0-9]+[.][0-9]+[.][r][1|2])@' . $server_host;
 
         $filtered_emails = [];
         foreach ( $emails as $email ) {
@@ -3670,7 +3673,12 @@ function erp_dropdown_roles( $selected = '' ) {
         }
     }
 
-    echo $r;
+    echo wp_kses( $r, array(
+        'option' => array(
+            'value'    => array(),
+            'selected' => array()
+        ),
+    ) );
 }
 
 /**

@@ -1,5 +1,5 @@
 <div class="wrap">
-    <h2><?php _e( 'Reports', 'erp' ); ?></h2>
+    <h2><?php esc_attr_e( 'Reports', 'erp' ); ?></h2>
 
     <div id="dashboard-widgets-wrap">
 
@@ -25,7 +25,7 @@
                     <h2 class="hndle"><span><?php echo esc_html( $report['title'] ); ?></span></h2>
                     <div class="inside">
                         <p><?php echo esc_html( $report['description'] ); ?></p>
-                        <p><a class="button button-primary" href="admin.php?page=erp-crm&section=reports&type=<?php echo esc_attr( $key ); ?>"><?php _e( 'View Report', 'erp' ); ?></a></p>
+                        <p><a class="button button-primary" href="admin.php?page=erp-crm&section=reports&type=<?php echo esc_attr( $key ); ?>"><?php esc_attr_e( 'View Report', 'erp' ); ?></a></p>
                     </div>
                 </div><!-- .postbox -->
             <?php
@@ -48,7 +48,7 @@
                     <h2 class="hndle"><span><?php echo esc_html( $report['title'] ); ?></span></h2>
                     <div class="inside">
                         <p><?php echo esc_html( $report['description'] ); ?></p>
-                        <p><a class="button button-primary" href="admin.php?page=erp-crm&section=reports&type=<?php echo $key; ?>"><?php _e( 'View Report', 'erp' ); ?></a></p>
+                        <p><a class="button button-primary" href="admin.php?page=erp-crm&section=reports&type=<?php echo esc_attr( $key ); ?>"><?php esc_attr_e( 'View Report', 'erp' ); ?></a></p>
                     </div>
                 </div><!-- .postbox -->
             <?php

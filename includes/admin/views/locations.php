@@ -1,11 +1,11 @@
 <div class="wrap">
 
-    <h2><?php _e( 'Company Locations', 'erp' ); ?></h2>
+    <h2><?php esc_html_e( 'Company Locations', 'erp' ); ?></h2>
 
     <table class="table table-details">
   <tbody>
     <tr>
-      <td class="name"><?php _e( 'Filing Address', 'erp' ); ?></td>
+      <td class="name"><?php esc_html_e( 'Filing Address', 'erp' ); ?></td>
       <td class="value">
 
           <address>
@@ -21,7 +21,7 @@ Miami, FL 33142
       </td>
     </tr>
     <tr>
-      <td class="name"><?php _e( 'Mailing Address', 'erp' ); ?></td>
+      <td class="name"><?php esc_html_e( 'Mailing Address', 'erp' ); ?></td>
       <td class="value">
 
           <address>
@@ -39,7 +39,7 @@ Miami, FL 33142
   </tbody>
 </table>
 
-<h2><?php _e( 'All Company Locations', 'erp' ); ?></h2>
+<h2><?php esc_html_e( 'All Company Locations', 'erp' ); ?></h2>
 
 <table class="table table-details">
       <tbody>

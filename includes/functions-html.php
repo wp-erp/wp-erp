@@ -27,7 +27,7 @@ function erp_html_form_help( $value = '' ) {
  */
 function erp_html_form_label( $label, $field_id = '', $required = false ) {
     $req = $required ? ' <span class="required">*</span>' : '';
-    echo '<label for="' . esc_attr( $field_id ) . '">' . wp_kses_post( $label ) . $req . '</label>';
+    echo '<label for="' . esc_attr( $field_id ) . '">' . wp_kses_post( $label ) . wp_kses_post( $req ) . '</label>';
 }
 
 /**
@@ -101,7 +101,7 @@ function erp_html_form_input( $args = array() ) {
 
     // open tag
     if ( ! empty( $field['tag'] ) ) {
-        echo '<' . $field['tag'] . ' class="erp-form-field ' . esc_attr( $field['name'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '">';
+        echo '<' . esc_attr( $field['tag'] ) . ' class="erp-form-field ' . esc_attr( $field['name'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '">';
     }
 
     if ( ! empty( $field['label'] ) ) {
@@ -112,7 +112,7 @@ function erp_html_form_input( $args = array() ) {
         echo '<div class="input-group">';
 
         if ( $field['addon_pos'] == 'before' ) {
-            echo '<span class="input-group-addon">' . $field['addon'] . '</span>';
+            echo '<span class="input-group-addon">' . esc_html( $field['addon'] ) . '</span>';
         }
     }
 
@@ -123,21 +123,21 @@ function erp_html_form_input( $args = array() ) {
         case 'hidden':
         case 'date':
         case 'url':
-            echo '<input type="' . $field['type'] . '" value="' . esc_attr( $field['value'] ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
+            echo '<input type="' . esc_attr( $field['type'] ) . '" value="' . esc_attr( $field['value'] ) . '" ' . wp_kses_post( implode( ' ', $custom_attributes ) ) . ' />';
             break;
 
         case 'select':
             if ( $field['options'] ) {
-                echo '<select ' . implode( ' ', $custom_attributes ) . '>';
+                echo '<select ' . wp_kses_post( implode( ' ', $custom_attributes ) ) . '>';
                 foreach ($field['options'] as $key => $value) {
-                    printf( "<option value='%s'%s>%s</option>\n", $key, selected( $field['value'], $key, false ), $value );
+                    printf( "<option value='%s'%s>%s</option>\n", esc_attr( $key ), selected( $field['value'], esc_attr( $key ), false ), esc_html( $value ) );
                 }
                 echo '</select>';
             }
             break;
 
         case 'textarea':
-            echo '<textarea ' . implode( ' ', $custom_attributes ) . '>' . esc_textarea( $field['value'] ) . '</textarea>';
+            echo '<textarea ' . wp_kses_post( implode( ' ', $custom_attributes ) ) . '>' . esc_textarea( $field['value'] ) . '</textarea>';
             break;
 
         case 'wysiwyg':
@@ -156,7 +156,7 @@ function erp_html_form_input( $args = array() ) {
             //echo '<input type="hidden" value="off" name="' . $field['name'] . '" />';
             echo '<span class="checkbox">';
             echo '<label for="' . esc_attr( $field_attributes['id'] ) . '">';
-            echo '<input type="checkbox" '.checked( $field['value'], 'on', false ).' value="on" ' . implode( ' ', $custom_attributes ) . ' />';
+            echo '<input type="checkbox" '.checked( $field['value'], 'on', false ).' value="on" ' . wp_kses_post( implode( ' ', $custom_attributes ) ) . ' />';
             echo wp_kses_post( $field['help'] );
             echo '</label>';
             echo '</span>';
@@ -168,7 +168,7 @@ function erp_html_form_input( $args = array() ) {
             unset( $custom_attributes['id'] );
 
             foreach ( $field['options'] as $key => $value ) {
-                echo '<label for="' . esc_attr( $field_attributes['id'] ) . '-' . $key .'">';
+                echo '<label for="' . esc_attr( $field_attributes['id'] ) . '-' . esc_attr( $key ) .'">';
                 if ( ! empty( $field['value'] ) ) {
                     if ( is_array( $field['value'] ) ) {
                         $checked = in_array( $key, $field['value'] ) ? 'checked' : '';
@@ -181,7 +181,7 @@ function erp_html_form_input( $args = array() ) {
                     $checked = '';
                 }
 
-                echo '<input type="checkbox" '. $checked .' id="' . esc_attr( $field_attributes['id'] ) . '-' . $key . '" value="'.$key.'" ' . implode( ' ', $custom_attributes ) . ' />';
+                echo '<input type="checkbox" '. esc_attr( $checked ) .' id="' . esc_attr( $field_attributes['id'] ) . '-' . esc_attr( $key ) . '" value="'. esc_attr( $key ) .'" ' . wp_kses_post( implode( ' ', $custom_attributes ) ) . ' />';
                 echo '<span class="checkbox-value">' . wp_kses_post( $value ) . '</span>';
                 echo '</label>';
             }
@@ -191,8 +191,8 @@ function erp_html_form_input( $args = array() ) {
         case 'radio':
             echo '<span class="checkbox">';
             if ( $field['options'] ) {
-                foreach ( $field['options'] as $key => $value) { 
-                    echo '<input type="radio" '.checked( $field['value'], $key, false ).' value="'.$key.'" ' . implode( ' ', $custom_attributes ) . ' id="'. esc_attr( $field_attributes['id'] ) . '-' . $key . '"/>'. $value . '&nbsp; <br><br>';
+                foreach ( $field['options'] as $key => $value) {
+                    echo '<input type="radio" '.checked( $field['value'], $key, false ).' value="'.esc_attr( $key ).'" ' . wp_kses_post( implode( ' ', $custom_attributes ) ) . ' id="'. esc_attr( $field_attributes['id'] ) . '-' . esc_attr( $key ) . '"/>'. esc_html( $value ) . '&nbsp; <br><br>';
                 }
             }
              echo '</span>';
@@ -208,22 +208,22 @@ function erp_html_form_input( $args = array() ) {
             $values     = is_array( $field['value'] ) ? $field['value'] : [];
             ?>
 
-            <div id="<?php echo $id; ?>" class="erp-attachment-area">
+            <div id="<?php echo esc_attr( $id ); ?>" class="erp-attachment-area">
 
-                <div id="<?php echo $drop; ?>" class="erp-drop-jon">
+                <div id="<?php echo esc_attr( $drop ); ?>" class="erp-drop-jon">
                     <div class="erp-attachment-upload-filelist" data-type="file">
                         <ul class="erp-attachment-list">
                             <?php
                                 $uploader = new \WeDevs\ERP\Uploader();
                                 foreach ( $values as $key => $attach_id ) {
-                                    echo $uploader->attach_html( $attach_id, $custom_attributes );
+                                    echo wp_kses_post( $uploader->attach_html( $attach_id, $custom_attributes ) );
                                 }
                             ?>
 
                         </ul>
                         <div class="erp-clear"></div>
 
-                        <div class="erp-attc-link-text"><?php _e( 'To attach, ', 'erp' ); ?> <a id="<?php echo $pick_files; ?>" href="#"><?php _e( 'select files', 'erp' ); ?></a><?php _e( ' from your computer.', 'erp' ); ?></div>
+                        <div class="erp-attc-link-text"><?php esc_html_e( 'To attach, ', 'erp' ); ?> <a id="<?php echo esc_attr( $pick_files ); ?>" href="#"><?php esc_html_e( 'select files', 'erp' ); ?></a><?php esc_html_e( ' from your computer.', 'erp' ); ?></div>
                     </div>
                 </div>
             </div>
@@ -231,11 +231,11 @@ function erp_html_form_input( $args = array() ) {
 
             <script type="text/javascript">
                 jQuery(function($) {
-                    var pick_files = '<?php echo $pick_files; ?>',
-                        id         = '<?php echo $id; ?>',
-                        drop_jone  = '<?php echo $drop; ?>',
-                        action     = '<?php echo $action; ?>',
-                        callback   = <?php echo $call_back; ?>;
+                    var pick_files = '<?php echo array_map( 'esc_html', wp_unslash( $pick_files ) ); ?>',
+                        id         = '<?php echo esc_html( $id ); ?>',
+                        drop_jone  = '<?php echo esc_html( $drop ); ?>',
+                        action     = '<?php echo esc_html( $action ); ?>',
+                        callback   = '<?php echo esc_html( $call_back ); ?>';
 
                     new ERP_Uploader( action, pick_files, id, drop_jone, 'file_upload', 'doc,docx,xls,xlsx,jpg,jpeg,gif,png,pdf,bmp,zip,rar', 1024, callback );
                 });
@@ -251,7 +251,7 @@ function erp_html_form_input( $args = array() ) {
     if ( ! empty( $field['addon'] ) ) {
 
         if ( $field['addon_pos'] == 'after' ) {
-            echo '<span class="input-group-addon">' . $field['addon'] . '</span>';
+            echo '<span class="input-group-addon">' . esc_html( $field['addon'] ) . '</span>';
         }
 
         echo '</div>';
@@ -263,7 +263,7 @@ function erp_html_form_input( $args = array() ) {
 
     // closing tag
     if ( ! empty( $field['tag'] ) ) {
-        echo '</' . $field['tag'] . '>';
+        echo '</' . esc_html( $field['tag'] ) . '>';
     }
 }
 
@@ -298,7 +298,7 @@ function erp_html_generate_dropdown( $values = array(), $selected = null ) {
 function erp_html_show_notice( $text, $type = 'updated' ) {
     ?>
     <div class="<?php echo esc_attr( $type ); ?>">
-        <p><strong><?php echo $text; ?></strong></p>
+        <p><strong><?php echo esc_html( $text ); ?></strong></p>
     </div>
     <?php
 }
