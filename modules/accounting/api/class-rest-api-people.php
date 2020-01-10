@@ -171,7 +171,12 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
             return new WP_Error( 'rest_people_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
 
-        return erp_get_people( $id );
+        $people = erp_get_people( $id );
+
+        $people->{'state'}   = erp_get_state_name( $people->country, $people->state );
+        $people->{'country'} = erp_get_country_name( $people->country );
+
+        return $people;
     }
 
     /**
