@@ -337,7 +337,7 @@ export default {
             HTTP.get(`/people/${people_id}`).then(response => {
                 const billing = response.data;
 
-                const address = `Street: ${billing.street_1} ${billing.street_2} \nCity: ${billing.city} \nState: ${billing.state} \nCountry: ${billing.country}`;
+                const address = `${billing.street_1}, ${billing.street_2} \n${billing.city} \n${billing.state}, ${billing.postal_code} \n${billing.country}`;
 
                 this.basic_fields.billing_address = address;
             });
