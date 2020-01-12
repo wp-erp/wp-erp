@@ -65,7 +65,14 @@ class Entitlement_List_Table extends \WP_List_Table {
 
         ?>
             <div class="alignleft actions">
-                <select name="financial_year"><?php echo wp_kses_post( erp_html_generate_dropdown( $years, $selected ) ); ?></select>
+                <select name="financial_year">
+                    <?php echo wp_kses( erp_html_generate_dropdown( $years, $selected ), array(
+                        'option' => array(
+                            'value' => array(),
+                            'selected' => array()
+                        ),
+                    ) ); ?>
+                </select>
                 <?php submit_button( __( 'Filter' ), 'button', 'filter_entitlement', false ); ?>
             </div>
         <?php
