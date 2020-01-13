@@ -109,7 +109,7 @@
                                         </div>
                                         <div class="wperp-col-sm-6 wperp-col-xs-12 wperp-form-group">
                                             <label for="post_code">{{ __('Post Code', 'erp') }}</label>
-                                            <input type="number" v-model="peopleFields.postal_code" id="post_code" class="wperp-form-field" :placeholder="__('Post Code', 'erp')">
+                                            <input type="text" v-model="peopleFields.postal_code" id="post_code" class="wperp-form-field" :placeholder="__('Post Code', 'erp')">
                                         </div>
                                     </div>
                                 </div>
