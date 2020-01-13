@@ -44,7 +44,7 @@
                 and
                 <# var users = data.schedule.extra.invited_user.map( function( elm ) {
                     if ( elm.id == wpErpCrm.current_user_id ) {
-                        if ( self.feed.type == 'tasks' ) {
+                        if (self.feed && self.feed.type == 'tasks' ) {
                             return 'Yourself';
                         }
                         return 'You';

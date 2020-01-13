@@ -48,7 +48,12 @@
 
             <p>
                 <select name="invite_contact[]" id="erp-crm-activity-invite-contact" class="select2" multiple="multiple" style="width: 100%" data-placeholder="<?php esc_attr_e( 'Agents or managers..', 'erp' ) ?>">
-                    <?php echo wp_kses_post( erp_crm_get_crm_user_html_dropdown() ); ?>
+                    <?php echo wp_kses( erp_crm_get_crm_user_html_dropdown(), array(
+                        'option' => array(
+                            'value' => array(),
+                            'selected' => array()
+                        ),
+                    ) ); ?>
                 </select>
             </p>
 
@@ -133,7 +138,12 @@
 
             <p class="log-selected-contact erp-hide">
                 <select name="invite_contact[]" id="erp-crm-activity-invite-contact" class="select2" multiple="multiple" style="width: 100%" data-placeholder="<?php esc_attr_e( 'Agents or managers..', 'erp' ) ?>">
-                    <?php echo wp_kses_post( erp_crm_get_crm_user_html_dropdown() ); ?>
+                    <?php echo wp_kses( erp_crm_get_crm_user_html_dropdown(), array(
+                        'option' => array(
+                            'value' => array(),
+                            'selected' => array()
+                        ),
+                    ) ); ?>
                 </select>
             </p>
 

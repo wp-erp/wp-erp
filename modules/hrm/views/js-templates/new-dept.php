@@ -22,8 +22,9 @@
             <select name="lead" id="dept-lead">
                 <?php echo wp_kses( erp_hr_get_employees_dropdown(), array(
                     'option' => array(
-                        'selected'  => array()
-                    )
+                        'value' => array(),
+                        'selected' => array()
+                    ),
                 ) ); ?>
             </select>
         </span>
@@ -35,9 +36,10 @@
         <span class="field">
             <select name="parent" id="dept-parent">
                 <?php echo wp_kses( erp_hr_get_departments_dropdown(), array(
-                        'option' => array(
-                            'selected'  => array()
-                        )
+                    'option' => array(
+                        'value' => array(),
+                        'selected' => array()
+                    ),
                 ) ); ?>
             </select>
         </span>
