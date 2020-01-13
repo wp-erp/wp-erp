@@ -1854,12 +1854,16 @@ if (false) {(function () {
         this.peopleFields.street_2 = people.billing.street_2;
         this.peopleFields.city = people.billing.city;
         this.peopleFields.country = this.selectedCountry(people.billing.country);
-        this.peopleFields.state = this.selectedState(people.billing.state);
         this.peopleFields.postal_code = people.billing.postal_code;
 
         if (people.photo) {
           this.peopleFields.photo_id = people.photo_id;
           this.peopleFields.photo = people.photo;
+        }
+
+        if (Object.prototype.hasOwnProperty.call(this.peopleFields.country, 'id')) {
+          this.getState(this.peopleFields.country);
+          this.peopleFields.state = this.selectedState(people.billing.state);
         }
       }
     },
