@@ -1429,7 +1429,7 @@ function erp_import_export_javascript() {
             var fields = [];
             var required_fields = [];
 
-            var erp_fields = '<?php echo json_encode( $erp_fields ); ?>';
+            var erp_fields = <?php echo json_encode( $erp_fields ); ?>;
 
             var type = $('form#export_form #type').val();
 
