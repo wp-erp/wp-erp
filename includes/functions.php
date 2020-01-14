@@ -3278,7 +3278,9 @@ function add_enable_disable_option_save() {
             }
         }
         if ( isset( $_POST['isEnableEmail'] ) ) {
-            $is_enable_email = sanitize_text_field( wp_unslash( $_POST['isEnableEmail'] ) );
+
+            $is_enable_email = array_map( 'sanitize_text_field', $_POST['isEnableEmail'] );
+            $is_enable_email = array_map( 'wp_unslash', $is_enable_email );
             foreach ($is_enable_email as $key => $value) {
                 $email_arr = get_option($key);
                 $email_arr['is_enable'] = 'yes';
