@@ -508,7 +508,7 @@ function erp_insert_people( $args = array(), $return_object = false ) {
         if ( empty( $args['user_id'] ) ) {
             // Check if contact first name or email or phone provided or not
             if ( empty( $args['first_name'] ) || empty( $args['email'] ) ) {
-                return new WP_Error( 'no-basic-data', __( 'You must need to fill up either first name or phone or email', 'erp' ) );
+                return new WP_Error( 'no-basic-data', esc_attr__( 'You must need to fill up both first name and email fields', 'erp' ) );
             }
         }
     }
@@ -516,7 +516,7 @@ function erp_insert_people( $args = array(), $return_object = false ) {
     // Check if company name provide or not
     if ( 'company' == $people_type ) {
         if ( empty( $args['company'] ) || empty( $args['email'] ) ) {
-            return new WP_Error( 'no-company', __( 'You must need to fill up either Company name or email or phone', 'erp' ) );
+            return new WP_Error( 'no-company', esc_attr__( 'You must need to fill up both Company name and email fields', 'erp' ) );
         }
     }
 
