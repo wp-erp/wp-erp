@@ -62,7 +62,7 @@ function erp_crm_dashboard_widget_todays_schedules() {
                     if ( count( $invite_users) == 1 ) {
                         $users_text = sprintf( '%s <span>%s</span>', __( 'and', 'erp' ), reset( $invite_users ) );
                     } else if ( count( $invite_users) > 1 ) {
-                        $users_text = sprintf( '%s <span class="erp-tips" title="%s">%d %s</span>', __( 'and', 'erp' ), implode( '<br>', $invite_users ), count( $invite_users ), __( 'Others') );
+                        $users_text = sprintf( '%s <span class="erp-tips" title="%s">%d %s</span>', __( 'and', 'erp' ), implode( ',', $invite_users ), count( $invite_users ), __( 'Others') );
                     }
 
 
