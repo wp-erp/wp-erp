@@ -576,7 +576,7 @@ export default {
         getPeople() {
             HTTP.get('/people', {
                 params: {
-                    type: 'all'
+                    type: []
                 }
             }).then(response => {
                 this.options = response.data;
