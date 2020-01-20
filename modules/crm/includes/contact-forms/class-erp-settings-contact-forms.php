@@ -354,7 +354,7 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
                 $settings = get_option( 'wperp_crm_contact_forms' );
 
                 $settings[ sanitize_text_field( wp_unslash( $_POST['plugin'] ) ) ][ sanitize_text_field( wp_unslash( $_POST['formId'] ) ) ] = [
-                    'map' => sanitize_text_field( wp_unslash( $_POST['map'] ) ),
+                    'map' => array_map( 'sanitize_text_field', wp_unslash( $_POST['map'] ) ),
                     'contact_group' => isset( $_POST['contactGroup'] ) ? sanitize_text_field( wp_unslash( $_POST['contactGroup'] ) ) : '',
                     'contact_owner' => isset( $_POST['contactOwner'] ) ? sanitize_text_field( wp_unslash( $_POST['contactOwner'] ) ) : ''
                 ];

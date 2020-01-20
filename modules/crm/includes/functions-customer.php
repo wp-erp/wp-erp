@@ -2780,6 +2780,11 @@ function erp_crm_get_crm_user( $args = [] ) {
                 'key'     => 'last_name',
                 'value'   => $args['s'],
                 'compare' => 'LIKE'
+            ],
+            [
+                'key'     => 'nickname',
+                'value'   => $args['s'],
+                'compare' => 'LIKE'
             ]
         ];
     }
