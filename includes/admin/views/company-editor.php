@@ -202,7 +202,7 @@
                         <?php if ( $company->has_logo() ) { ?>
 
                             <p class="hide-if-no-js">
-                                <input type="hidden" name="company_logo_id" value="<?php echo esc_url( $company->logo ); ?>">
+                                <input type="hidden" name="company_logo_id" value="<?php echo esc_attr( $company->logo ); ?>">
                                 <a href="#" class="remove-logo"><?php esc_html_e( 'Remove company logo', 'erp' ); ?></a>
                             </p>
 
