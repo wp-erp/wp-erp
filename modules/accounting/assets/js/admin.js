@@ -10360,7 +10360,7 @@ var STATUS_FAILED = 3;
 
       __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get('/people', {
         params: {
-          type: 'all',
+          type: [],
           search: query
         }
       }).then(function (response) {
@@ -32605,7 +32605,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
       __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get('/people', {
         params: {
-          type: 'all'
+          type: []
         }
       }).then(function (response) {
         _this9.options = response.data;

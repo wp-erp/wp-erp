@@ -10283,7 +10283,7 @@ if (false) {(function () {
 
       __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get('/people', {
         params: {
-          type: 'all',
+          type: [],
           search: query
         }
       }).then(function (response) {
