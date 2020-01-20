@@ -770,6 +770,11 @@ class CRM_Settings extends ERP_Settings_Page {
                                         break;
 
                                     default :
+                                        if ( empty( $email ) ) {
+                                            // why?
+                                            $email = '';
+                                        }
+
                                         do_action( 'erp_templates_setting_column_' . $key, $email );
                                     break;
                                 }
