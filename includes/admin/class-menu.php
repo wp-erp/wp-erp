@@ -25,7 +25,7 @@ class Admin_Menu {
     /**
      * Render Admin bar menu
      */
-    function add_admin_bar_menu(){
+    function add_admin_bar_menu() {
         global $wp_admin_bar, $wpdb;
 
         /* Check that the admin bar is showing and user has permission... */
