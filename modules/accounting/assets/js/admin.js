@@ -32302,6 +32302,15 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -64272,34 +64281,42 @@ var render = function() {
                     }),
                     _vm._v(" "),
                     _c("tr", { staticClass: "add-new-line" }, [
-                      _c(
-                        "td",
-                        {
-                          staticStyle: { "text-align": "left" },
-                          attrs: { colspan: "9" }
-                        },
-                        [
-                          _c(
-                            "button",
+                      undefined === _vm.acct_rec
+                        ? _c("td", { staticStyle: { float: "left" } }, [
+                            _vm._v(
+                              "\n                        " +
+                                _vm._s(_vm.__("No People Found!", "erp")) +
+                                "\n                    "
+                            )
+                          ])
+                        : _c(
+                            "td",
                             {
-                              staticClass:
-                                "wperp-btn btn--primary add-line-trigger",
-                              on: {
-                                click: function($event) {
-                                  $event.preventDefault()
-                                  return _vm.acct_rec.push({})
-                                }
-                              }
+                              staticStyle: { "text-align": "left" },
+                              attrs: { colspan: "9" }
                             },
                             [
-                              _c("i", {
-                                staticClass: "flaticon-add-plus-button"
-                              }),
-                              _vm._v(_vm._s(_vm.__("Add People", "erp")))
+                              _c(
+                                "button",
+                                {
+                                  staticClass:
+                                    "wperp-btn btn--primary add-line-trigger",
+                                  on: {
+                                    click: function($event) {
+                                      $event.preventDefault()
+                                      return _vm.acct_rec.push({})
+                                    }
+                                  }
+                                },
+                                [
+                                  _c("i", {
+                                    staticClass: "flaticon-add-plus-button"
+                                  }),
+                                  _vm._v(_vm._s(_vm.__("Add People", "erp")))
+                                ]
+                              )
                             ]
                           )
-                        ]
-                      )
                     ])
                   ],
                   2
@@ -64478,34 +64495,44 @@ var render = function() {
                         }),
                         _vm._v(" "),
                         _c("tr", { staticClass: "add-new-line" }, [
-                          _c(
-                            "td",
-                            {
-                              staticStyle: { "text-align": "left" },
-                              attrs: { colspan: "9" }
-                            },
-                            [
-                              _c(
-                                "button",
+                          undefined === _vm.acct_pay
+                            ? _c("td", { staticStyle: { float: "left" } }, [
+                                _vm._v(
+                                  "\n                        " +
+                                    _vm._s(_vm.__("No People Found!", "erp")) +
+                                    "\n                    "
+                                )
+                              ])
+                            : _c(
+                                "td",
                                 {
-                                  staticClass:
-                                    "wperp-btn btn--primary add-line-trigger",
-                                  on: {
-                                    click: function($event) {
-                                      $event.preventDefault()
-                                      return _vm.acct_pay.push({})
-                                    }
-                                  }
+                                  staticStyle: { "text-align": "left" },
+                                  attrs: { colspan: "9" }
                                 },
                                 [
-                                  _c("i", {
-                                    staticClass: "flaticon-add-plus-button"
-                                  }),
-                                  _vm._v(_vm._s(_vm.__("Add People", "erp")))
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass:
+                                        "wperp-btn btn--primary add-line-trigger",
+                                      on: {
+                                        click: function($event) {
+                                          $event.preventDefault()
+                                          return _vm.acct_pay.push({})
+                                        }
+                                      }
+                                    },
+                                    [
+                                      _c("i", {
+                                        staticClass: "flaticon-add-plus-button"
+                                      }),
+                                      _vm._v(
+                                        _vm._s(_vm.__("Add People", "erp"))
+                                      )
+                                    ]
+                                  )
                                 ]
                               )
-                            ]
-                          )
                         ])
                       ],
                       2
@@ -65222,34 +65249,44 @@ var render = function() {
                         }),
                         _vm._v(" "),
                         _c("tr", { staticClass: "add-new-line" }, [
-                          _c(
-                            "td",
-                            {
-                              staticStyle: { "text-align": "left" },
-                              attrs: { colspan: "9" }
-                            },
-                            [
-                              _c(
-                                "button",
+                          undefined === _vm.ledgers[7]
+                            ? _c("td", { staticStyle: { float: "left" } }, [
+                                _vm._v(
+                                  "\n                       " +
+                                    _vm._s(
+                                      _vm.__("No Bank Account Found!", "erp")
+                                    ) +
+                                    "\n                    "
+                                )
+                              ])
+                            : _c(
+                                "td",
                                 {
-                                  staticClass:
-                                    "wperp-btn btn--primary add-line-trigger",
-                                  on: {
-                                    click: function($event) {
-                                      $event.preventDefault()
-                                      return _vm.ledgers[7].push({})
-                                    }
-                                  }
+                                  staticStyle: { "text-align": "left" },
+                                  attrs: { colspan: "9" }
                                 },
                                 [
-                                  _c("i", {
-                                    staticClass: "flaticon-add-plus-button"
-                                  }),
-                                  _vm._v(_vm._s(_vm.__("Add Bank", "erp")))
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass:
+                                        "wperp-btn btn--primary add-line-trigger",
+                                      on: {
+                                        click: function($event) {
+                                          $event.preventDefault()
+                                          return _vm.ledgers[7].push({})
+                                        }
+                                      }
+                                    },
+                                    [
+                                      _c("i", {
+                                        staticClass: "flaticon-add-plus-button"
+                                      }),
+                                      _vm._v(_vm._s(_vm.__("Add Bank", "erp")))
+                                    ]
+                                  )
                                 ]
                               )
-                            ]
-                          )
                         ])
                       ],
                       2
