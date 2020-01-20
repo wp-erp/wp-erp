@@ -13,6 +13,7 @@ class Admin {
         add_action( 'admin_init', [ $this, 'init_hooks' ], 5 );
         add_action( 'erp_hr_employee_new', [ $this, 'make_people_from_employee' ], 10, 2 );
         add_action( 'admin_init', [ $this, 'save_accounting_settings' ] );
+        add_action( 'erp_hr_permission_management', [ $this, 'erp_acct_permission_management_field' ] );
     }
 
     /**
@@ -439,5 +440,31 @@ class Admin {
                 ['%s', '%s', '%s', '%s', '%d']
             );
         }
+    }
+
+    /**
+     * Check accounting permission for users
+     *
+     * @since 1.5.12
+     *
+     * @param object $employee
+     *
+     * @return void
+     */
+    public function erp_acct_permission_management_field( $employee ) {
+        if ( ! erp_acct_is_hr_current_user_manager() ) {
+            return;
+        }
+    
+        $is_manager = user_can( $employee->id, erp_ac_get_manager_role() ) ? 'on' : 'off';
+    
+        erp_html_form_input( array(
+            'label' => esc_html__( 'Accounting Manager', 'erp' ),
+            'name'  => 'erp_ac_manager',
+            'type'  => 'checkbox',
+            'tag'   => 'div',
+            'value' => $is_manager,
+            'help'  => esc_html__( 'This Employee is Accounting Manager', 'erp'  )
+        ) );
     }
 }
