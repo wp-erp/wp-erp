@@ -32696,7 +32696,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       this.calculateAmount();
     },
     removeBankRow: function removeBankRow(index) {
-      this.$delete(this.banks, index);
+      this.$delete(this.ledgers[7], index);
       this.calculateAmount();
     }
   }
