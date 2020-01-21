@@ -48,7 +48,7 @@
         <h3 class="hndle"><span><?php esc_html_e( 'Personal Details', 'erp' ); ?></span></h3>
         <div class="inside">
             <ul class="erp-list two-col separated">
-                <li><?php erp_print_key_value( __( 'Blood Group', 'erp' ), strtoupper( $employee->blood_group ) ); ?></li>
+                <li><?php erp_print_key_value( __( 'Blood Group', 'erp' ), $employee->get_bloog_group() ); ?></li>
                 <li><?php erp_print_key_value( __( 'Spouse\'s Name', 'erp' ), $employee->spouse_name ); ?></li>
                 <li><?php erp_print_key_value( __( 'Father\'s Name', 'erp' ), $employee->father_name ); ?></li>
                 <li><?php erp_print_key_value( __( 'Mother\'s Name', 'erp' ), $employee->mother_name ); ?></li>

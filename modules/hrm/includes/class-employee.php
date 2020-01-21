@@ -1066,6 +1066,21 @@ class Employee {
         }
     }
 
+    /**
+     * Get blood group
+     * 
+     * @since 1.5.12
+     * @return string
+     */
+    public function get_bloog_group() {
+        if ( $this->is_employee() && isset( $this->wp_user->blood_group ) ) {
+            if ( $this->wp_user->blood_group === '-1' ) {
+                return '';
+            }
+
+            return strtoupper( $this->wp_user->blood_group );
+        }
+    }
 
     /**
      * Get birth date
