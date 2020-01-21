@@ -666,7 +666,7 @@ export default {
         },
 
         removeBankRow(index) {
-            this.$delete(this.banks, index);
+            this.$delete(this.ledgers[7], index);
             this.calculateAmount();
         }
     }
