@@ -434,3 +434,10 @@ function customer_statics() {
     echo $output;
 
 }
+
+function crm_vue_customer_script_dep( $dep ) {
+    if ( defined( 'WPERP_DOC' ) ) {
+        array_unshift($dep,'erp-document-upload','erp-document', 'erp-document-entry' );
+    }
+    return $dep;
+}
