@@ -236,6 +236,10 @@ export default {
         validateForm() {
             this.form_errors = [];
 
+            if (!Object.prototype.hasOwnProperty.call(this.componentLines[0], 'component_name')) {
+                this.form_errors.push('At least One Component is required.');
+            }
+
             if (!Object.prototype.hasOwnProperty.call(this.tax_name, 'id')) {
                 this.form_errors.push('Tax Zone Name is required.');
             }
