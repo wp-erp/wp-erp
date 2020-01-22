@@ -86,7 +86,7 @@ class ERP_License_Settings extends ERP_Settings_Page {
                                     case 'license':
                                         echo '<td class="erp-settings-table-' . esc_attr( $key ) . '">
                                             <input type="text" name="' . esc_attr( $addon['id'] ) .'" value="' . esc_attr( $addon['license'] ) .'" class="regular-text" />';
-                                        echo esc_html( erp_get_license_status( $addon ) );
+                                        echo wp_kses_post( erp_get_license_status( $addon ) );
                                         echo '</td>';
                                         break;
                                 }
