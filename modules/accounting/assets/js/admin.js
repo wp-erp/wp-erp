@@ -27980,6 +27980,7 @@ setTimeout(function () {
       var _this3 = this;
 
       this.validateForm();
+      return;
 
       if (this.form_errors.length) {
         window.scrollTo({
@@ -28035,6 +28036,24 @@ setTimeout(function () {
 
       if (!Object.prototype.hasOwnProperty.call(this.tax_name, 'id')) {
         this.form_errors.push('Tax Zone Name is required.');
+      }
+
+      for (var i = 0; i < this.componentLines.length; i++) {
+        var name = this.componentLines[i].component_name;
+
+        if (name) {
+          if (!Object.prototype.hasOwnProperty.call('agency_id', this.componentLines[i])) {
+            this.form_errors.push("Component '".concat(name, "' agency id is required."));
+          }
+
+          if (!Object.prototype.hasOwnProperty.call('tax_category', this.componentLines[i])) {
+            this.form_errors.push("Component '".concat(name, "' tax category id is required."));
+          }
+
+          if (!Object.prototype.hasOwnProperty.call('tax_rate', this.componentLines[i])) {
+            this.form_errors.push("Component '".concat(name, "' tax rate is required."));
+          }
+        }
       }
     },
     updateFinalAmount: function updateFinalAmount() {
