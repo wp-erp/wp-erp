@@ -2923,7 +2923,7 @@ function erp_render_menu( $component ) {
     //check current tab
     $tab = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : 'dashboard';
 
-    echo "<div class='erp-nav-container'>";
+    echo "<div class='erp-nav-container erp-hide-print'>";
     echo erp_render_menu_header( $component );
     echo wp_kses_post( erp_build_menu( $menu[$component], $tab, $component ) );
     echo "</div>";
