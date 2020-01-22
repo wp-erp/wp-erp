@@ -102,7 +102,16 @@
                     foreach ($histories['compensation'] as $num => $compensation) {
                         ?>
                         <tr class="<?php echo $num % 2 == 0 ? 'alternate' : 'odd'; ?>">
-                            <td><?php echo esc_html( erp_format_date( $compensation['date'] ) ); ?></td>
+                            <td>
+                                <?php echo esc_html( erp_format_date( $compensation['date'] ) ); ?>
+                                <?php
+                                 if ( ( count( $histories['compensation'] ) - 1 ) == $num ) {
+                                     ?>
+                                    <span class="active_dot"></span>
+                                    <?php
+                                 }
+                                ?>
+                            </td>
                             <td>
                                 <?php echo ( ! empty( $compensation['pay_rate'] ) ) ? wp_kses_post( $compensation['pay_rate'] ) : '--'; ?>
                             </td>

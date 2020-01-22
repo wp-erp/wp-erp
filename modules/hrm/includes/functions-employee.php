@@ -67,7 +67,13 @@ function erp_hr_get_employees( $args = array() ) {
 
     $employee_tbl = $wpdb->prefix . 'erp_hr_employees';
     $employees    = \WeDevs\ERP\HRM\Models\Employee::select( array( $employee_tbl . '.user_id', 'display_name' ) )
-                                                   ->leftJoin( $wpdb->users, $employee_tbl . '.user_id', '=', $wpdb->users . '.ID' );
+                                                   ->leftJoin( $wpdb->users, $employee_tbl . '.user_id', '=', $wpdb->users . '.ID' )
+                                                    ->leftJoin( "{$wpdb->prefix}usermeta as gender", function ( $join ) use ( $employee_tbl ) {
+                                                        $join->on( $employee_tbl . '.user_id', '=', 'gender.user_id' )->where( 'gender.meta_key', '=', 'gender' );
+                                                    } )
+                                                    ->leftJoin( "{$wpdb->prefix}usermeta as marital_status", function ( $join ) use ( $employee_tbl ) {
+                                                        $join->on( $employee_tbl . '.user_id', '=', 'marital_status.user_id' )->where( 'marital_status.meta_key', '=', 'marital_status' );
+                                                    } );
 
     if ( isset( $args['designation'] ) && $args['designation'] != '-1' ) {
         $employees = $employees->where( 'designation', $args['designation'] );
@@ -84,6 +90,17 @@ function erp_hr_get_employees( $args = array() ) {
     if ( isset( $args['type'] ) && $args['type'] != '-1' ) {
         $employees = $employees->where( 'type', $args['type'] );
     }
+
+    /******** Check gender & marital status start ***********/
+    if ( isset( $args['gender'] ) && $args['gender'] != '-1' ) {
+        $employees = $employees->where( 'gender.meta_value', $args['gender'] );
+    }
+
+    if ( isset( $args['marital_status'] ) && $args['marital_status'] != '-1' ) {
+        $employees = $employees->where( 'marital_status.meta_value', $args['marital_status'] );
+    }
+    /******** Check gender & marital status end ***********/
+
 
     if ( isset( $args['status'] ) && ! empty( $args['status'] ) ) {
         if ( $args['status'] == 'trash' ) {
