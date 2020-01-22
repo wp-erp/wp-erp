@@ -619,6 +619,8 @@ class Form_Handler {
 
         if ( ! $leave_policy ) {
             $errors[] = 'invalid-policy';
+        } else {
+            $policy = \WeDevs\ERP\HRM\Models\Leave_Policies::find( $leave_policy );
         }
 
         if ( ! in_array( $leave_period, array( $cur_year - 1, $cur_year, $cur_year + 1 ) ) ) {
@@ -641,9 +643,11 @@ class Form_Handler {
         if ( ! $is_single ) {
 
             $employees = erp_hr_get_employees( array(
-                'location'   => $location,
-                'department' => $department,
-                'number'     => '-1',
+                'location'          => $location,
+                'department'        => $department,
+                'number'            => '-1',
+                'gender'            => $policy->gender,
+                'marital_status'    => $policy->marital,
             ) );
         } else {
 

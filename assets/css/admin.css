@@ -1836,6 +1836,14 @@ span.green {
 .erp-hr-employees table.wp-list-table .column-comments {
   width: 25%;
 }
+.erp-hr-employees span.active_dot {
+  height: 8px;
+  width: 8px;
+  background-color: #17C739;
+  display: inline-block;
+  border-radius: 35px;
+  margin-left: 5px;
+}
 .hrm-dashboard .badge-container {
   margin-bottom: 40px;
 }
@@ -3922,7 +3930,7 @@ kbd {
   display: inline-block;
 }
 .erp-customer-form span.space-top {
-    margin-top: 10px;
+  margin-top: 10px;
 }
 .erp-customer-form input[type='number'] {
   height: 33px;

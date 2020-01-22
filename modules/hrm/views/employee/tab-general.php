@@ -32,7 +32,15 @@
                 ?>
 
                 <li><?php erp_print_key_value( __( 'Reporting To', 'erp' ), isset( $reporting_to_link ) ? $reporting_to_link : '-' ); ?></li>
-                <li><?php erp_print_key_value( __( 'Date of Hire', 'erp' ), $employee->get_hiring_date() ); ?></li>
+                <li>
+                    <?php erp_print_key_value( __( 'Date of Hire', 'erp' ), '<span style="font-weight: bold">' . $employee->get_hiring_date() . '</span>' ); ?>
+                    <?php
+                        $emp_hdate = new DateTime( $employee->get_hiring_date() );
+                        $cur_date  = new DateTime( date( 'd-m-Y' ) );
+                        $interval = $cur_date->diff( $emp_hdate );
+                        echo '( '. $interval->y.' years, '.$interval->m.' months, '.$interval->d.' days )';
+                    ?>
+                </li>
                 <li><?php erp_print_key_value( __( 'Source of Hire', 'erp' ), $employee->get_hiring_source( 'view' ) ); ?></li>
                 <li><?php erp_print_key_value( __( 'Employee Status', 'erp' ), $employee->get_status( 'view' ) ); ?></li>
                 <li><?php erp_print_key_value( __( 'Work Phone', 'erp' ), erp_get_clickable( 'phone', $employee->get_work_phone()) ); ?></li>
