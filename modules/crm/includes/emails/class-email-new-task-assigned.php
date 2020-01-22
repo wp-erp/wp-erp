@@ -59,6 +59,7 @@ class New_Task_Assigned extends Email {
         foreach ($data['user_ids'] as $id) {
             $employee = new \WeDevs\ERP\HRM\Employee( intval( $id ) );
 
+            $this->recipient    = $employee->user_email;
             $this->replace = [
                 'employee_name' => $employee->get_full_name(),
                 'task_title'    => $extra->task_title,
@@ -67,7 +68,7 @@ class New_Task_Assigned extends Email {
             ];
 
             if ( $employee ) {
-                $this->send( $employee->user_email, $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
+                $this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
             }
         }
     }

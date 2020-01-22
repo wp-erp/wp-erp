@@ -52,14 +52,15 @@ class New_Contact_Assigned extends Email {
 
         $employee = new \WeDevs\ERP\HRM\Employee( intval( $contact->contact_owner ) );
 
+        $this->recipient    = $employee->user_email;
         $this->replace = [
             'employee_name' => $employee->get_full_name(),
-            'contact_name'    => $contact_full_name,
+            'contact_name'  => $contact_full_name,
             'created_by'    => $current_user->display_name,
         ];
 
         if ( $employee ) {
-            $this->send( $employee->user_email, $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
+            $this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
         }
     }
 
