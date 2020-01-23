@@ -104,7 +104,12 @@ class Subscription_Widget extends \WP_Widget {
             <label>
                 <?php esc_attr_e( 'Life Stage', 'erp' ); ?>:<br>
                 <select name="<?php echo esc_attr( $this->get_field_name( 'life_stage' ) ); ?>" class="widefat">
-                    <?php echo wp_kses_post( erp_crm_get_life_stages_dropdown( [], $life_stage ) ); ?>
+                    <?php echo wp_kses( erp_crm_get_life_stages_dropdown( [], $life_stage ), array(
+                        'option' => array(
+                            'value' => array(),
+                            'selected' => array()
+                        ),
+                    ) ); ?>
                 </select>
             </label>
         </p>

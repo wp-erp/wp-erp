@@ -141,7 +141,7 @@ if ( ! function_exists( 'erp_ac_get_manager_role' ) ) {
         return apply_filters( 'erp_ac_get_caps_for_role', $caps, $role );
     }
 
-    function erp_ac_is_hr_current_user_manager() {
+    function erp_acct_is_hr_current_user_manager() {
         $current_user_hr_role = erp_hr_get_user_role( get_current_user_id() );
 
         if ( erp_hr_get_manager_role() !== $current_user_hr_role ) {
@@ -150,7 +150,6 @@ if ( ! function_exists( 'erp_ac_get_manager_role' ) ) {
 
         return true;
     }
-
 
     //Customer
     function erp_ac_create_customer() {

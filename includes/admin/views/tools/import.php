@@ -72,7 +72,12 @@
                             <select name="contact_owner" id="contact_owner">
                                 <?php
                                     $current_user = get_current_user_id();
-                                    echo wp_kses_post( erp_html_generate_dropdown( $users, $current_user ) );
+                                    echo wp_kses( erp_html_generate_dropdown( $users, $current_user ), array(
+                                        'option' => array(
+                                            'value' => array(),
+                                            'selected' => array()
+                                        ),
+                                    ) );
                                 ?>
                             </select>
                             <p class="description"><?php esc_html_e( 'Contact owner for contact.', 'erp' ); ?></p>
@@ -84,7 +89,12 @@
                         </th>
                         <td>
                             <select name="life_stage" id="life_stage">
-                                <?php echo wp_kses_post( erp_html_generate_dropdown( $life_stages ) ); ?>
+                                <?php echo wp_kses( erp_html_generate_dropdown( $life_stages ), array(
+                                    'option' => array(
+                                        'value' => array(),
+                                        'selected' => array()
+                                    ),
+                                ) ); ?>
                             </select>
                             <p class="description"><?php esc_html_e( 'Life stage for contact.', 'erp' ); ?></p>
                         </td>
@@ -95,7 +105,12 @@
                         </th>
                         <td>
                             <select name="contact_group">
-                                <?php echo wp_kses_post( erp_html_generate_dropdown( $groups ) ); ?>
+                                <?php echo wp_kses( erp_html_generate_dropdown( $groups ), array(
+                                    'option' => array(
+                                        'value' => array(),
+                                        'selected' => array()
+                                    ),
+                                ) ); ?>
                             </select>
                             <p class="description"><?php esc_html_e( 'Imported contacts will be subscribed in selected group.', 'erp' ); ?></p>
                         </td>
@@ -136,7 +151,12 @@
                             </th>
                             <td>
                                 <select name="user_role" class="erp-select2" id="user_role" multiple="true">
-                                    <?php echo wp_kses_post( erp_html_generate_dropdown( $roles, $default_role ) ); ?>
+                                    <?php echo wp_kses( erp_html_generate_dropdown( $roles, $default_role ), array(
+                                        'option' => array(
+                                            'value' => array(),
+                                            'selected' => array()
+                                        ),
+                                    ) ); ?>
                                 </select>
                                 <p class="description"><?php esc_html_e( 'Selected user role are considered to import.', 'erp' ); ?></p>
                             </td>
@@ -149,7 +169,12 @@
                                 <select name="contact_owner" id="contact_owner">
                                     <?php
                                         $current_user = get_current_user_id();
-                                        echo wp_kses_post( erp_html_generate_dropdown( $users, $current_user ) );
+                                        echo wp_kses( erp_html_generate_dropdown( $users, $current_user ), array(
+                                            'option' => array(
+                                                'value' => array(),
+                                                'selected' => array()
+                                            ),
+                                        ) );
                                     ?>
                                 </select>
                                 <p class="description"><?php esc_html_e( 'Contact owner for contact.', 'erp' ); ?></p>
@@ -161,7 +186,12 @@
                             </th>
                             <td>
                                 <select name="life_stage" id="life_stage">
-                                    <?php echo wp_kses_post( erp_html_generate_dropdown( $life_stages ) ); ?>
+                                    <?php echo wp_kses( erp_html_generate_dropdown( $life_stages ), array(
+                                        'option' => array(
+                                            'value' => array(),
+                                            'selected' => array()
+                                        ),
+                                    ) ); ?>
                                 </select>
                                 <p class="description"><?php esc_html_e( 'Life stage for contact.', 'erp' ); ?></p>
                             </td>
@@ -172,7 +202,12 @@
                             </th>
                             <td>
                                 <select name="contact_group">
-                                    <?php echo wp_kses_post( erp_html_generate_dropdown( $groups ) ); ?>
+                                    <?php echo wp_kses( erp_html_generate_dropdown( $groups ), array(
+                                        'option' => array(
+                                            'value' => array(),
+                                            'selected' => array()
+                                        ),
+                                    ) ); ?>
                                 </select>
                                 <p class="description"><?php esc_html_e( 'Imported contacts will be subscribed in selected group.', 'erp' ); ?></p>
                             </td>

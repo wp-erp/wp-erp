@@ -2780,6 +2780,11 @@ function erp_crm_get_crm_user( $args = [] ) {
                 'key'     => 'last_name',
                 'value'   => $args['s'],
                 'compare' => 'LIKE'
+            ],
+            [
+                'key'     => 'nickname',
+                'value'   => $args['s'],
+                'compare' => 'LIKE'
             ]
         ];
     }
@@ -3339,7 +3344,7 @@ function erp_crm_check_new_inbound_emails() {
 
         do_action( 'erp_crm_new_inbound_emails', $emails );
 
-        $server_host  = isset( $_SERVER['HTTP_HOST'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : '';
+        $server_host  = isset( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : '';
         $email_regexp = '([a-z0-9]+[.][0-9]+[.][0-9]+[.][r][1|2])@' . $server_host;
 
         $filtered_emails = [];

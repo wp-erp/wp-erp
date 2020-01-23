@@ -214,7 +214,6 @@ class Setup_Wizard {
 
     public function setup_step_basic() {
         $general         = get_option( 'erp_settings_general', array() );
-        $accounting      = get_option( 'erp_settings_accounting', array() );
         $company         = new \WeDevs\ERP\Company();
         $business_type   = $company->business_type;
 
@@ -270,8 +269,8 @@ class Setup_Wizard {
                         <?php erp_html_form_input([
                             'name'    => 'base_currency',
                             'type'    => 'select',
-                            'value'   => 'USD',
-                            'options' => erp_get_currencies(),
+                            'value'   => '1',
+                            'options' => erp_get_currencies_for_dropdown(),
                             'desc'    => esc_html__( 'Format of date to show accross the system.', 'erp' ),
                         ]); ?>
                     </td>
@@ -382,10 +381,6 @@ class Setup_Wizard {
             'date_format'         => $date_format,
             'erp_currency'        => $base_currency,
             'erp_debug_mode'      => 0
-        ] );
-
-        update_option( 'erp_settings_accounting', [
-            'base_currency' => $base_currency,
         ] );
 
         wp_redirect( esc_url_raw( $this->get_next_step_link() ) );

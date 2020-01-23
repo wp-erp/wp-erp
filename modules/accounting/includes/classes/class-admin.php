@@ -13,6 +13,8 @@ class Admin {
         add_action( 'admin_init', [ $this, 'init_hooks' ], 5 );
         add_action( 'erp_hr_employee_new', [ $this, 'make_people_from_employee' ], 10, 2 );
         add_action( 'admin_init', [ $this, 'save_accounting_settings' ] );
+        add_action( 'erp_hr_permission_management', [ $this, 'permission_management_field' ] );
+        add_action( 'erp_hr_after_employee_permission_set', [ $this, 'permission_set' ], 10, 2 );
     }
 
     /**
@@ -440,4 +442,55 @@ class Admin {
             );
         }
     }
+
+    /**
+     * Check accounting permission for users
+     *
+     * @since 1.5.12
+     *
+     * @param object $employee
+     *
+     * @return void
+     */
+    public function permission_management_field( $employee ) {
+        if ( ! erp_acct_is_hr_current_user_manager() ) {
+            return;
+        }
+    
+        $is_manager = user_can( $employee->id, erp_ac_get_manager_role() ) ? 'on' : 'off';
+    
+        erp_html_form_input( array(
+            'label' => esc_html__( 'Accounting Manager', 'erp' ),
+            'name'  => 'acct_manager',
+            'type'  => 'checkbox',
+            'tag'   => 'div',
+            'value' => $is_manager,
+            'help'  => esc_html__( 'This Employee is Accounting Manager', 'erp'  )
+        ) );
+    }
+
+    /**
+     * Set employee permission as account manager
+     *
+     * @since 1.5.12
+     *
+     * @param  array $post
+     * @param  object $user
+     *
+     * @return void
+     */
+    public function permission_set( $post, $user ) {
+        $enable_acct_manager = isset( $post['acct_manager'] ) ? filter_var( $post['acct_manager'], FILTER_VALIDATE_BOOLEAN ) : false;
+
+        $acct_manager_role = erp_ac_get_manager_role();
+
+        if ( current_user_can( $acct_manager_role ) ) {
+            if ( $enable_acct_manager ) {
+                $user->add_role( $acct_manager_role );
+            } else {
+                $user->remove_role( $acct_manager_role );
+            }
+        }
+    }
+
 }

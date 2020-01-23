@@ -32,7 +32,15 @@
                 ?>
 
                 <li><?php erp_print_key_value( __( 'Reporting To', 'erp' ), isset( $reporting_to_link ) ? $reporting_to_link : '-' ); ?></li>
-                <li><?php erp_print_key_value( __( 'Date of Hire', 'erp' ), $employee->get_hiring_date() ); ?></li>
+                <li>
+                    <?php erp_print_key_value( __( 'Date of Hire', 'erp' ), '<span style="font-weight: bold">' . $employee->get_hiring_date() . '</span>' ); ?>
+                    <?php
+                        $emp_hdate = new DateTime( $employee->get_hiring_date() );
+                        $cur_date  = new DateTime( date( 'd-m-Y' ) );
+                        $interval = $cur_date->diff( $emp_hdate );
+                        echo '( '. $interval->y.' years, '.$interval->m.' months, '.$interval->d.' days )';
+                    ?>
+                </li>
                 <li><?php erp_print_key_value( __( 'Source of Hire', 'erp' ), $employee->get_hiring_source( 'view' ) ); ?></li>
                 <li><?php erp_print_key_value( __( 'Employee Status', 'erp' ), $employee->get_status( 'view' ) ); ?></li>
                 <li><?php erp_print_key_value( __( 'Work Phone', 'erp' ), erp_get_clickable( 'phone', $employee->get_work_phone()) ); ?></li>
@@ -48,7 +56,7 @@
         <h3 class="hndle"><span><?php esc_html_e( 'Personal Details', 'erp' ); ?></span></h3>
         <div class="inside">
             <ul class="erp-list two-col separated">
-                <li><?php erp_print_key_value( __( 'Blood Group', 'erp' ), strtoupper( $employee->blood_group ) ); ?></li>
+                <li><?php erp_print_key_value( __( 'Blood Group', 'erp' ), $employee->get_bloog_group() ); ?></li>
                 <li><?php erp_print_key_value( __( 'Spouse\'s Name', 'erp' ), $employee->spouse_name ); ?></li>
                 <li><?php erp_print_key_value( __( 'Father\'s Name', 'erp' ), $employee->father_name ); ?></li>
                 <li><?php erp_print_key_value( __( 'Mother\'s Name', 'erp' ), $employee->mother_name ); ?></li>

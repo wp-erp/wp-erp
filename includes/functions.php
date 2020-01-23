@@ -1429,7 +1429,7 @@ function erp_import_export_javascript() {
             var fields = [];
             var required_fields = [];
 
-            var erp_fields = '<?php echo json_encode( $erp_fields ); ?>';
+            var erp_fields = <?php echo json_encode( $erp_fields ); ?>;
 
             var type = $('form#export_form #type').val();
 
@@ -1618,7 +1618,7 @@ function erp_process_import_export() {
     if ( isset( $_POST['erp_import_csv'] ) ) {
         define( 'ERP_IS_IMPORTING', true );
 
-        $fields = ! empty( $_POST['fields'] ) ? sanitize_text_field( wp_unslash( $_POST['fields'] ) ) : [];
+        $fields = ! empty( $_POST['fields'] ) ?  array_map( 'sanitize_text_field', wp_unslash( $_POST['fields'] ) ) : [];
         $type   = isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
 
         if ( empty( $type ) ) {
@@ -1680,7 +1680,7 @@ function erp_process_import_export() {
 
         $csv = new ParseCsv();
         $csv->encoding( null, 'UTF-8' );
-        $csv->parse( $_FILES['csv_file']['tmp_name'] );
+        $csv->parse( $csv_file['tmp_name'] );
 
         if ( empty( $csv->data ) ) {
             wp_redirect( admin_url( "admin.php?page=erp-tools&tab=import" ) );
@@ -1705,30 +1705,31 @@ function erp_process_import_export() {
 
                 $line_data = [];
 
-                foreach ( $fields as $key => $value ) {
+                if ( is_array( $fields ) && ! empty( $fields ) ) {
+                    foreach ($fields as $key => $value) {
 
-                    if ( ! empty( $line[ $value ] ) && is_numeric( $value ) ) {
-                        if ( $type == 'employee' ) {
-                            if ( in_array( $key, $employee_fields['work'] ) ) {
-                                if ( $key == 'designation' ) {
-                                    $line_data['work'][ $key ] = array_search( $line[ $value ], $designations );
-                                } else if ( $key == 'department' ) {
-                                    $line_data['work'][ $key ] = array_search( $line[ $value ], $departments );
+                        if (!empty($line[$value]) && is_numeric($value)) {
+                            if ($type == 'employee') {
+                                if (in_array($key, $employee_fields['work'])) {
+                                    if ($key == 'designation') {
+                                        $line_data['work'][$key] = array_search($line[$value], $designations);
+                                    } else if ($key == 'department') {
+                                        $line_data['work'][$key] = array_search($line[$value], $departments);
+                                    } else {
+                                        $line_data['work'][$key] = $line[$value];
+                                    }
+
+                                } else if (in_array($key, $employee_fields['personal'])) {
+                                    $line_data['personal'][$key] = $line[$value];
                                 } else {
-                                    $line_data['work'][ $key ] = $line[ $value ];
+                                    $line_data[$key] = $line[$value];
                                 }
-
-                            } else if ( in_array( $key, $employee_fields['personal'] ) ) {
-                                $line_data['personal'][ $key ] = $line[ $value ];
                             } else {
-                                $line_data[ $key ] = $line[ $value ];
+                                $line_data[$key] = isset($line[$value]) ? $line[$value] : '';
+                                $line_data['type'] = $type;
                             }
-                        } else {
-                            $line_data[ $key ] = isset( $line[ $value ] ) ? $line[ $value ] : '';
-                            $line_data['type'] = $type;
                         }
                     }
-
                 }
 
                 if ( $type == 'employee' && $is_hrm_activated ) {
@@ -2922,7 +2923,7 @@ function erp_render_menu( $component ) {
     //check current tab
     $tab = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : 'dashboard';
 
-    echo "<div class='erp-nav-container'>";
+    echo "<div class='erp-nav-container erp-hide-print'>";
     echo erp_render_menu_header( $component );
     echo wp_kses_post( erp_build_menu( $menu[$component], $tab, $component ) );
     echo "</div>";
@@ -3278,7 +3279,9 @@ function add_enable_disable_option_save() {
             }
         }
         if ( isset( $_POST['isEnableEmail'] ) ) {
-            $is_enable_email = sanitize_text_field( wp_unslash( $_POST['isEnableEmail'] ) );
+
+            $is_enable_email = array_map( 'sanitize_text_field', $_POST['isEnableEmail'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+            $is_enable_email = array_map( 'wp_unslash', $is_enable_email );
             foreach ($is_enable_email as $key => $value) {
                 $email_arr = get_option($key);
                 $email_arr['is_enable'] = 'yes';
