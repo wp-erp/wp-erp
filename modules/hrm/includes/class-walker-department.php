@@ -32,29 +32,29 @@ class Department_Walker extends \Walker {
         $padding    = str_repeat( '&#8212; ', $depth );
 
         ?>
-        <tr class="<?php echo $alternate; ?>" id="erp-dept-<?php echo $department->id; ?>">
+        <tr class="<?php echo esc_attr( $alternate ); ?>" id="erp-dept-<?php echo esc_attr( $department->id ); ?>">
             <th scope="row" class="check-column">
                 <input id="cb-select-1" type="checkbox" name="dept[]" value="1">
             </th>
             <td class="col-">
 
-                <strong><a href="#"><?php echo $padding . $department->name; ?></a></strong>
+                <strong><a href="#"><?php echo wp_kses_post( $padding . $department->name ); ?></a></strong>
 
                 <div class="row-actions">
-                    <span class="edit"><a href="#" data-id="<?php echo $department->id; ?>" title="<?php _e( 'Edit this item', 'erp' ); ?>"><?php _e( 'Edit', 'erp' ); ?></a> | </span>
-                    <span class="trash"><a class="submitdelete" data-id="<?php echo $department->id; ?>" title="Delete this item" href="#"><?php _e( 'Delete', 'erp' ); ?></a></span>
+                    <span class="edit"><a href="#" data-id="<?php echo esc_attr( $department->id ); ?>" title="<?php esc_html_e( 'Edit this item', 'erp' ); ?>"><?php esc_html_e( 'Edit', 'erp' ); ?></a> | </span>
+                    <span class="trash"><a class="submitdelete" data-id="<?php echo esc_attr( $department->id ); ?>" title="Delete this item" href="#"><?php esc_html_e( 'Delete', 'erp' ); ?></a></span>
                 </div>
             </td>
             <td class="col-">
                 <?php
                 if ( $lead = $department->get_lead() ) {
-                    echo $lead->get_link();
+                    echo wp_kses_post( $lead->get_link() );
                 } else {
                     echo '-';
                 }
                 ?>
             </td>
-            <td class="col-"><?php echo $department->num_of_employees(); ?></td>
+            <td class="col-"><?php echo esc_html( $department->num_of_employees() ); ?></td>
         </tr>
         <?php
     }

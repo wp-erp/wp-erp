@@ -13,11 +13,11 @@ class Uploader {
         }
 
         $upload = array(
-            'name'     => $_FILES['file']['name'],
-            'type'     => $_FILES['file']['type'],
-            'tmp_name' => $_FILES['file']['tmp_name'],
-            'error'    => $_FILES['file']['error'],
-            'size'     => $_FILES['file']['size']
+            'name'     => isset( $_FILES['file'], $_FILES['file']['name'] ) ? sanitize_text_field( wp_unslash( $_FILES['file']['name'] ) ) : '',
+            'type'     => isset( $_FILES['file'], $_FILES['file']['type'] ) ? sanitize_text_field( wp_unslash( $_FILES['file']['type'] ) ) : '',
+            'tmp_name' => isset( $_FILES['file'], $_FILES['file']['tmp_name'] ) ? sanitize_text_field( wp_unslash( $_FILES['file']['tmp_name'] ) ) : '',
+            'error'    => isset( $_FILES['file'], $_FILES['file']['error'] ) ? sanitize_text_field( wp_unslash( $_FILES['file']['error'] ) ) : '',
+            'size'     => isset( $_FILES['file'], $_FILES['file']['size'] ) ? sanitize_text_field( wp_unslash( $_FILES['file']['size'] ) ) : ''
         );
 
         header('Content-Type: text/html; charset=' . get_option('blog_charset'));
@@ -25,7 +25,6 @@ class Uploader {
         $attach = $this->handle_upload( $upload );
 
         if ( $attach['success'] ) {
-
             $response = array( 'success' => true );
             return $this->attach_html( $attach['attach_id'] );
         } else {
@@ -47,7 +46,7 @@ class Uploader {
 
         // If the wp_handle_upload call returned a local path for the image
         if ( isset( $uploaded_file['file'] ) ) {
-			
+
 			$file_loc  = $uploaded_file['file'];
 			$file_name = basename( $upload_data['name'] );
 			$file_type = wp_check_filetype( $file_name );
@@ -94,13 +93,13 @@ class Uploader {
     }
 
     function delete_file( $attach_id ) {
-        
+
         $attachment = get_post( $attach_id );
 
         //post author or editor role
         if ( get_current_user_id() == $attachment->post_author || current_user_can( 'delete_private_pages' ) ) {
             wp_delete_attachment( $attach_id, true );
-            return true;        
+            return true;
         }
 
         exit;

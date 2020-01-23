@@ -3,11 +3,11 @@
     <?php
     if ( is_admin() ) {
         ?>
-        <h2 class="erp-hide-print"><?php empty( $is_my_profile_page ) ? _e( 'Employee', 'erp' ) : _e( 'My Profile', 'erp' );
+        <h2 class="erp-hide-print"><?php empty( $is_my_profile_page ) ? esc_html_e( 'Employee', 'erp' ) : esc_html_e( 'My Profile', 'erp' );
 
         if ( empty( $is_my_profile_page ) && current_user_can( 'erp_create_employee' ) ) {
             ?>
-            <a href="#" id="erp-employee-new" class="add-new-h2 erp-hide-print"><?php _e( 'Add New', 'erp' ); ?></a>
+            <a href="#" id="erp-employee-new" class="add-new-h2 erp-hide-print"><?php esc_html_e( 'Add New', 'erp' ); ?></a>
             <?php
         }
     }
@@ -16,7 +16,7 @@
 
     <?php if( isset( $_GET['msg'] ) && $_GET['msg'] == 'success'):  ?>
     <div class="notice notice-success is-dismissible">
-        <p> <?php _e('Data Successfully saved.','erp'); ?> </p>
+        <p> <?php esc_html_e('Data Successfully saved.','erp'); ?> </p>
     </div>
     <?php endif;  ?>
     <div class="erp-single-container erp-hr-employees-wrap" id="erp-single-container-wrap">
@@ -29,24 +29,24 @@
 
                 <div class="erp-profile-top">
                     <div class="erp-avatar">
-                        <?php echo $employee->get_avatar( 150 ); ?>
+                        <?php echo wp_kses_post( $employee->get_avatar( 150 ) ); ?>
                         <?php if ( $employee->get_status('view') !== 'Active' ): ?>
                             <span class="inactive">
-                                <?php echo $employee->get_status('view'); ?>
+                                <?php echo esc_html( $employee->get_status('view') ); ?>
                             </span>
                         <?php endif ?>
                     </div>
 
                     <div class="erp-user-info">
-                        <h3><span class="title"><?php echo $employee->get_full_name(); ?></span></h3>
+                        <h3><span class="title"><?php echo esc_html( $employee->get_full_name() ); ?></span></h3>
 
                         <ul class="lead-info">
                             <li>
-                                <?php echo $employee->get_job_title(); ?> - <?php echo $employee->get_department_title(); ?>
+                                <?php echo esc_html( $employee->get_job_title() ); ?> - <?php echo esc_html( $employee->get_department_title() ); ?>
                             </li>
 
                             <li>
-                                <a href="mailto:<?php echo $employee->user_email; ?>"><?php echo $employee->user_email; ?></a>
+                                <a href="mailto:<?php echo esc_html( $employee->user_email ); ?>"><?php echo esc_html( $employee->user_email ); ?></a>
                             </li>
 
                             <?php
@@ -62,7 +62,7 @@
                                 <li>
                                     <ul class="erp-list list-inline">
                                         <?php foreach( $phones as $phone ) { ?>
-                                            <li><a href="tel:<?php echo $phone; ?>"><span class="dashicons dashicons-smartphone"></span></a><?php echo $phone; ?></li>
+                                            <li><a href="tel:<?php echo esc_html( $phone ); ?>"><span class="dashicons dashicons-smartphone"></span></a><?php echo esc_html( $phone ); ?></li>
                                         <?php } ?>
                                     </ul>
                                 </li>
@@ -72,22 +72,22 @@
 
                     <div class="erp-area-right erp-hide-print">
                         <div class="postbox leads-actions">
-                            <h3 class="hndle"><span><?php _e( 'Actions', 'erp' ); ?></span></h3>
+                            <h3 class="hndle"><span><?php esc_html_e( 'Actions', 'erp' ); ?></span></h3>
                             <div class="inside">
                                 <?php
                                 if ( current_user_can( 'erp_edit_employee', $employee->get_user_id() ) ) {
                                     ?>
-                                    <span class="edit"><a class="button button-primary" data-id="<?php echo $employee->get_user_id(); ?>" data-single="true" href="#"><?php _e( 'Edit', 'erp' ); ?></a></span>
+                                    <span class="edit"><a class="button button-primary" data-id="<?php echo esc_html( $employee->get_user_id() ); ?>" data-single="true" href="#"><?php esc_html_e( 'Edit', 'erp' ); ?></a></span>
                                     <?php
                                 }
                                 ?>
 
                                 <?php if ( $employee->get_status() != 'Terminated' && current_user_can( 'erp_create_employee' ) ): ?>
-                                    <a class="button" href="#" id="erp-employee-terminate" data-id="<?php echo $employee->get_user_id(); ?>" data-template="erp-employment-terminate" data-title="<?php _e( 'Terminate Employee', 'erp' ); ?>"><?php _e( 'Terminate', 'erp' ); ?></a>
+                                    <a class="button" href="#" id="erp-employee-terminate" data-id="<?php echo esc_html( $employee->get_user_id() ); ?>" data-template="erp-employment-terminate" data-title="<?php esc_html_e( 'Terminate Employee', 'erp' ); ?>"><?php esc_html_e( 'Terminate', 'erp' ); ?></a>
                                 <?php endif; ?>
 
                                 <?php if ( ( isset( $_GET['tab'] ) && $_GET['tab'] == 'general' ) || !isset( $_GET['tab'] )  ): ?>
-                                    <a class="button" id="erp-employee-print" href="#"><?php _e( 'Print', 'erp' ); ?></a>
+                                    <a class="button" id="erp-employee-print" href="#"><?php esc_html_e( 'Print', 'erp' ); ?></a>
                                 <?php endif ?>
                             </div>
                         </div><!-- .postbox -->
@@ -98,7 +98,7 @@
                 </div><!-- .erp-profile-top -->
 
                 <?php
-                $active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'general';
+                $active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : 'general';
                 $tabs       = apply_filters( 'erp_hr_employee_single_tabs', array(
                     'general' => array(
                         'title'    => __( 'General Info', 'erp' ),
@@ -151,7 +151,7 @@
                     <?php foreach ($tabs as $key => $tab) {
                         $active_class = ( $key == $active_tab ) ? ' nav-tab-active' : '';
                         ?>
-                        <a href="<?php echo erp_hr_employee_tab_url( $key, $employee->get_user_id() ); ?>" class="nav-tab<?php echo $active_class; ?>"><?php echo $tab['title'] ?></a>
+                        <a href="<?php echo esc_url( erp_hr_employee_tab_url( $key, $employee->get_user_id() ) ); ?>" class="nav-tab<?php echo esc_html( $active_class ); ?>"><?php echo esc_html( $tab['title'] ) ; ?></a>
                     <?php } ?>
                 </h2>
 

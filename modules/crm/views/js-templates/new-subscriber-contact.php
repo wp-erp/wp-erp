@@ -2,9 +2,9 @@
 
     <# if ( ! data.group_id ) { #>
         <div class="row" data-selected = "'{{ data.user_id }}'">
-            <label for="erp-select-customer-company"><?php _e( 'Contact/Company', 'erp' ); ?> <span class="required">*</span></label>
-            <select style="width:240px;" name="user_id" id="erp-crm-contact-subscriber-user" required="required" data-types="contact,company" class="erp-crm-contact-list-dropdown" data-placeholder="<?php _e( 'Select a Contact or company', 'erp' )?>">
-                <option value=""><?php _e( 'Select a contact or company', 'erp' ); ?></option>
+            <label for="erp-select-customer-company"><?php esc_attr_e( 'Contact/Company', 'erp' ); ?> <span class="required">*</span></label>
+            <select style="width:240px;" name="user_id" id="erp-crm-contact-subscriber-user" required="required" data-types="contact,company" class="erp-crm-contact-list-dropdown" data-placeholder="<?php esc_attr_e( 'Select a Contact or company', 'erp' )?>">
+                <option value=""><?php esc_attr_e( 'Select a contact or company', 'erp' ); ?></option>
             </select>
         </div>
     <# } #>
@@ -23,7 +23,7 @@
             ) ); ?>
         </div>
     <?php else : ?>
-        <p><?php echo sprintf( '%s <a href="%s">%s</a>', __( 'No group founds. Please add group first', 'erp' ), add_query_arg( [ 'page' => 'erp-sales-contact-groups' ], admin_url( 'admin.php' ) ), __( 'Add New Group', 'erp' ) ); ?></p>
+        <p><?php echo wp_kses_post( sprintf( '%s <a href="%s">%s</a>', __( 'No group founds. Please add group first', 'erp' ), add_query_arg( [ 'page' => 'erp-crm', 'section' => 'contact-groups' ], admin_url( 'admin.php' ) ), __( 'Add New Group', 'erp' ) ) ); ?></p>
     <?php endif; ?>
 
     <?php wp_nonce_field( 'wp-erp-crm-contact-subscriber' ); ?>

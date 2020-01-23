@@ -66,7 +66,7 @@ class ERP_Admin_Settings {
             return $query_arg;
         }
 
-        $current_tab = $query_arg['tab'] = isset( $_GET['tab'] ) ? sanitize_title( $_GET['tab'] ) : $settings[0]->get_id();
+        $current_tab = $query_arg['tab'] = isset( $_GET['tab'] ) ? sanitize_title( wp_unslash( $_GET['tab'] ) ) : $settings[0]->get_id();
 
         foreach ( $settings as $obj ) {
             $sections[$obj->get_id()] = isset( $obj->sections ) ? $obj->sections : array();
@@ -84,7 +84,7 @@ class ERP_Admin_Settings {
             return $query_arg;
         }
 
-        $query_arg['subtab'] = isset( $_GET['section'] ) ? sanitize_title( $_GET['section'] ) : key( $sections[$current_tab] );
+        $query_arg['subtab'] = isset( $_GET['section'] ) ? sanitize_title( wp_unslash( $_GET['section'] ) ) : key( $sections[$current_tab] );
 
         return $query_arg;
     }
@@ -119,7 +119,7 @@ class ERP_Admin_Settings {
                 $current_class = $obj;
             }
 
-            printf('<a class="nav-tab%s" href="%s">%s</a>', $class, $url, $obj->get_label() );
+            printf('<a class="nav-tab%s" href="%s">%s</a>', esc_attr( $class ), esc_url( $url ), esc_html( $obj->get_label() ) );
         }
 
         echo '</h2>';
@@ -173,7 +173,7 @@ class ERP_Admin_Settings {
                 $link[] = '<a class="erp-nav-tab'.$class.'" href="'.$url.'">' . $label . '</a>';
             }
 
-            echo implode( ' | </li><li>', $link );
+            echo wp_kses_post( implode( ' | </li><li>', $link ) );
             echo '</li>';
 
         echo '</ul>';

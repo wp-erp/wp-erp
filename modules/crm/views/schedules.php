@@ -1,15 +1,15 @@
 <?php
-$tab            = ( isset( $_GET['tab'] ) && !empty( $_GET['tab'] ) ) ? $_GET['tab']: 'own';
+$tab            = ( isset( $_GET['tab'] ) && !empty( $_GET['tab'] ) ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ): 'own';
 $schedules_data = erp_crm_get_schedule_data( $tab );
 ?>
 <div class="wrap erp erp-crm-schedules" id="wp-erp">
 
-    <h1><?php _e( 'Schedules', 'erp' ); ?></h1>
+    <h1><?php esc_attr_e( 'Schedules', 'erp' ); ?></h1>
 
     <?php if ( current_user_can( erp_crm_get_manager_role() ) ): ?>
         <h2 class="nav-tab-wrapper erp-nav-tab-wrapper">
-            <a class="nav-tab <?php echo $tab == 'own' ? 'nav-tab-active': ''; ?>" href="<?php echo add_query_arg( [ 'page'=>'erp-crm', 'section' => 'schedules', 'tab' => 'own' ], admin_url( 'admin.php' ) ); ?>"><?php _e( 'My Schedules', 'erp' ); ?></a>
-            <a class="nav-tab <?php echo $tab == 'all' ? 'nav-tab-active': ''; ?>" href="<?php echo add_query_arg( [ 'page'=>'erp-crm', 'section' => 'schedules', 'tab' => 'all' ], admin_url( 'admin.php' ) ); ?>"><?php _e( 'All Schedules', 'erp' ); ?></a>
+            <a class="nav-tab <?php echo $tab == 'own' ? 'nav-tab-active': ''; ?>" href="<?php echo esc_url_raw( add_query_arg( [ 'page'=>'erp-crm', 'section' => 'schedules', 'tab' => 'own' ], admin_url( 'admin.php' ) ) ); ?>"><?php esc_attr_e( 'My Schedules', 'erp' ); ?></a>
+            <a class="nav-tab <?php echo $tab == 'all' ? 'nav-tab-active': ''; ?>" href="<?php echo esc_url_raw( add_query_arg( [ 'page'=>'erp-crm', 'section' => 'schedules', 'tab' => 'all' ], admin_url( 'admin.php' ) ) ); ?>"><?php esc_attr_e( 'All Schedules', 'erp' ); ?></a>
         </h2>
     <?php endif; ?>
 
@@ -44,7 +44,7 @@ $schedules_data = erp_crm_get_schedule_data( $tab );
             events: <?php echo json_encode( $schedules_data ); ?>,
             eventClick: function(calEvent, jsEvent, view) {
                 var scheduleId = calEvent.schedule.id;
-                var title      = ( calEvent.schedule.extra.schedule_title ) ? calEvent.schedule.extra.schedule_title : '<?php _e( 'Log Details', 'erp' ) ?>';
+                var title      = ( calEvent.schedule.extra.schedule_title ) ? calEvent.schedule.extra.schedule_title : '<?php esc_attr_e( 'Log Details', 'erp' ) ?>';
 
                 if ( 'tasks' === calEvent.schedule.type ) {
                     title = calEvent.schedule.extra.task_title
@@ -62,7 +62,7 @@ $schedules_data = erp_crm_get_schedule_data( $tab );
                         wp.ajax.send( 'erp-crm-get-single-schedule-details', {
                             data: {
                                 id: scheduleId,
-                                _wpnonce: '<?php echo wp_create_nonce( 'wp-erp-crm-nonce' ); ?>'
+                                _wpnonce: '<?php echo esc_html( wp_create_nonce( 'wp-erp-crm-nonce' ) ); ?>'
                             },
 
                             success: function( response ) {
@@ -113,8 +113,8 @@ $schedules_data = erp_crm_get_schedule_data( $tab );
             dayClick: function(date, jsEvent, view) {
 
                 $.erpPopup({
-                    title: ( new Date( date) < new Date() ) ? '<?php _e( 'Add new Log', 'erp' ) ?>' : '<?php _e( 'Add new Schedule', 'erp' ); ?>',
-                    button: ( new Date( date) < new Date() ) ? '<?php _e( 'Create Log', 'erp' ) ?>' : '<?php _e( 'Create Schedule', 'erp' ); ?>',
+                    title: ( new Date( date) < new Date() ) ? '<?php esc_attr_e( 'Add new Log', 'erp' ) ?>' : '<?php esc_attr_e( 'Add new Schedule', 'erp' ); ?>',
+                    button: ( new Date( date) < new Date() ) ? '<?php esc_attr_e( 'Create Log', 'erp' ) ?>' : '<?php esc_attr_e( 'Create Schedule', 'erp' ); ?>',
                     id: 'erp-crm-customer-schedules',
                     content: wperp.template('erp-crm-customer-schedules')( { current_date: date.format() } ).trim(),
                     extraClass: 'larger',

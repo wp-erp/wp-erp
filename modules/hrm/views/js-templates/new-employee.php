@@ -10,11 +10,11 @@
                             <img src="{{ data.avatar.url }}" alt="Image">
                             <a href="#" class="erp-remove-photo">&times;</a>
                         <# } else { #>
-                            <img src="<?php echo WPERP_ASSETS . '/images/mystery-person.png'; ?>" alt="">
+                            <img src="<?php echo esc_html( WPERP_ASSETS . '/images/mystery-person.png' ); ?>" alt="">
 
                             <a href="#" id="erp-set-emp-photo" class="button-primary">
                                 <i class="fa fa-cloud-upload"></i>
-                                <?php _e( 'Upload Photo', 'erp' ); ?>
+                                <?php esc_html_e( 'Upload Photo', 'erp' ); ?>
                             </a>
                         <# } #>
                     </div>
@@ -157,7 +157,7 @@
                             <div class="erp-grid-container">
                                 <# if ( ! data.id ) { #>
                                 <div class="col-6">
-                                    <h3 class="modal-section-title"><?php _e( 'Work', 'erp' ); ?></h3>
+                                    <h3 class="modal-section-title"><?php esc_html_e( 'Work', 'erp' ); ?></h3>
                                 </div>
 
                                 <div class="col-3 erp-hr-js-department" data-selected="{{ data.work.department }}">
@@ -263,7 +263,7 @@
 
                         <div class="erp-grid-container">
                             <div class="col-6">
-                                <h3 class="modal-section-title"><?php _e( 'Personal Details', 'erp' ); ?></h3>
+                                <h3 class="modal-section-title"><?php esc_html_e( 'Personal Details', 'erp' ); ?></h3>
                             </div>
                             <div class="col-3" data-selected="{{ data.personal.blood_group }}">
                                 <?php erp_html_form_input( array(
@@ -423,11 +423,16 @@
                             </div>
 
                             <div class="col-3" data-selected="{{ data.personal.country }}">
-                                <label for="erp-popup-country"><?php _e( 'Country', 'erp' ); ?></label>
+                                <label for="erp-popup-country"><?php esc_html_e( 'Country', 'erp' ); ?></label>
                                 <select name="personal[country]" id="erp-popup-country"
                                         class="erp-country-select select2" data-parent="ol">
                                     <?php $country = \WeDevs\ERP\Countries::instance(); ?>
-                                    <?php echo $country->country_dropdown( erp_get_country() ); ?>
+                                    <?php echo wp_kses( $country->country_dropdown( erp_get_country() ), array(
+                                        'option' => array(
+                                            'value' => array(),
+                                            'selected' => array()
+                                        ),
+                                    ) ); ?>
                                 </select>
                             </div>
 

@@ -329,9 +329,9 @@ class Email extends ERP_Settings_Page {
                 $emogrifier = new \WeDevs\ERP\Lib\Emogrifier( $content, $css );
                 $content = $emogrifier->emogrify();
 
-            } catch ( Exception $e ) {
+            } catch ( \Exception $e ) {
 
-                echo $e->getMessage();
+                echo esc_html( $e->getMessage() );
             }
         }
 
@@ -402,7 +402,7 @@ class Email extends ERP_Settings_Page {
     public function admin_options() {
         ?>
         <h3><?php echo esc_html( $this->get_title() ); ?></h3>
-        <?php echo wpautop( wp_kses_post( $this->get_description() ) ); ?>
+        <?php echo wp_kses_post( wpautop( $this->get_description() ) ); ?>
 
         <?php
             /**
@@ -508,10 +508,10 @@ class Email extends ERP_Settings_Page {
     function replace_keys() {
         ?>
         <tr valign="top" class="single_select_page">
-            <th scope="row" class="titledesc"><?php _e( 'Template Tags', 'erp' ); ?></th>
+            <th scope="row" class="titledesc"><?php esc_html_e( 'Template Tags', 'erp' ); ?></th>
             <td class="forminp">
-                <em><?php _e( 'You may use these template tags inside subject, heading, body and those will be replaced by original values', 'erp' ); ?></em>:
-                <?php echo '<code>' . implode( '</code>, <code>', $this->find ) . '</code>'; ?>
+                <em><?php esc_html_e( 'You may use these template tags inside subject, heading, body and those will be replaced by original values', 'erp' ); ?></em>:
+                <?php echo '<code>' . wp_kses_post( implode( '</code>, <code>', $this->find ) ) . '</code>'; ?>
             </td>
         </tr>
         <?php

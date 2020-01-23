@@ -109,7 +109,7 @@
                             <tr class="wperp-form-group">
                                 <td colspan="9" style="text-align: left;">
                                     <label>{{ __('Particulars', 'erp') }}</label>
-                                    <textarea v-model="particulars" rows="4" class="wperp-form-field display-flex" :placeholder="__('Particulars', 'erp')"></textarea>
+                                    <textarea v-model="particulars" rows="4" maxlength="250" class="wperp-form-field display-flex" :placeholder="__('Particulars', 'erp')"></textarea>
                                 </td>
                             </tr>
                             <tr>
@@ -406,7 +406,7 @@ export default {
             HTTP.get(`/people/${customer_id}`).then(response => {
                 const billing = response.data;
 
-                const address = `Street: ${billing.street_1} ${billing.street_2} \nCity: ${billing.city} \nState: ${billing.state} \nCountry: ${billing.country}`;
+                const address = `${billing.street_1}, ${billing.street_2} \n${billing.city} \n${billing.state}, ${billing.postal_code} \n${billing.country}`;
 
                 this.basic_fields.billing_address = address;
             });

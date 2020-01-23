@@ -109,7 +109,7 @@
                                         </div>
                                         <div class="wperp-col-sm-6 wperp-col-xs-12 wperp-form-group">
                                             <label for="post_code">{{ __('Post Code', 'erp') }}</label>
-                                            <input type="number" v-model="peopleFields.postal_code" id="post_code" class="wperp-form-field" :placeholder="__('Post Code', 'erp')">
+                                            <input type="text" v-model="peopleFields.postal_code" id="post_code" class="wperp-form-field" :placeholder="__('Post Code', 'erp')">
                                         </div>
                                     </div>
                                 </div>
@@ -208,10 +208,8 @@ export default {
 
     created() {
         this.url = this.generateUrl();
-        this.selectedCountry();
-        this.setInputField();
         this.getCustomers();
-        this.getCountries();
+        this.getCountries(() => this.setInputField());
     },
 
     mounted() {
@@ -286,7 +284,7 @@ export default {
             this.showMore = !this.showMore;
         },
 
-        getCountries() {
+        getCountries(callBack) {
             HTTP.get('customers/country').then(response => {
                 const country = response.data.country;
                 const states   = response.data.state;
@@ -297,10 +295,14 @@ export default {
 
                     this.countries.push({ id: x, name: this.decodeHtml(country[x]), state: states[x] });
                 }
+
                 for (const state in states) {
                     for (const x in states[state]) {
                         this.get_states.push({ id: x, name: states[state][x] });
                     }
+                }
+                if (typeof callBack !== 'undefined') {
+                    callBack();
                 }
             });
         },
@@ -354,17 +356,23 @@ export default {
                 this.peopleFields.street_2    = people.billing.street_2;
                 this.peopleFields.city        = people.billing.city;
                 this.peopleFields.country     = this.selectedCountry(people.billing.country);
-                this.peopleFields.state       = this.selectedState(people.billing.state);
                 this.peopleFields.postal_code = people.billing.postal_code;
 
                 if (people.photo) {
-                    this.peopleFields.photo = people.photo;
+                    this.peopleFields.photo_id = people.photo_id;
+                    this.peopleFields.photo    = people.photo;
+                }
+
+                if (Object.prototype.hasOwnProperty.call(this.peopleFields.country, 'id')) {
+                    this.getState(this.peopleFields.country);
+
+                    this.peopleFields.state = this.selectedState(people.billing.state);
                 }
             }
         },
 
         selectedCountry(id) {
-            return this.countries.find(country => id === country.id);
+            return this.countries.find(country => country.id === id);
         },
 
         selectedState(id) {

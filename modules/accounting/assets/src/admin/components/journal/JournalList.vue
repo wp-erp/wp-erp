@@ -4,7 +4,9 @@
 
         <h2 class="add-new-journal">
             <span>{{ __('Journals', 'erp') }}</span>
-            <a href="#" class="erp-journal-new" @click.prevent="$router.push('journals/new')">{{ __('New Journal Entry', 'erp') }}</a>
+            <a href="#" class="erp-journal-new" @click.prevent="$router.push({ name: 'JournalCreate' })">
+                {{ __('New Journal Entry', 'erp') }}
+            </a>
         </h2>
 
         <list-table

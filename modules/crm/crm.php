@@ -220,9 +220,9 @@ class Customer_Relationship {
          */
         ?>
         <script>
-            window.erpLocale = JSON.parse('<?php echo addslashes(
+            window.erpLocale = JSON.parse('<?php echo wp_kses_post( wp_slash(
                 json_encode( apply_filters( 'erp_localized_data', [] ) )
-            ); ?>');
+            ) ); ?>');
         </script>
 
         <?php
@@ -231,7 +231,7 @@ class Customer_Relationship {
          * This above block is only needed for translations
          */
 
-        $section = !empty( $_GET['section'] ) ? $_GET['section'] : 'dashboard' ;
+        $section = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : 'dashboard' ;
 
         switch ( $section ) {
 
@@ -293,7 +293,7 @@ class Customer_Relationship {
                 wp_enqueue_script( 'erp-vuejs' );
                 wp_enqueue_style( 'erp-nprogress' );
                 wp_enqueue_script( 'erp-nprogress' );
-                wp_enqueue_script( 'wp-erp-crm-vue-component', WPERP_CRM_ASSETS . "/js/crm-components.js", array( 'erp-nprogress', 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ), date( 'Ymd' ), true );
+                wp_enqueue_script( 'wp-erp-crm-vue-component', WPERP_CRM_ASSETS . "/js/crm-components.js", apply_filters( 'crm_vue_customer_script', array( 'erp-nprogress', 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ) ), date( 'Ymd' ), true );
 
                 do_action( 'erp_crm_load_contact_vue_scripts' );
 
@@ -339,7 +339,8 @@ class Customer_Relationship {
     public function load_js_template() {
         global $current_screen;
         $hook = str_replace( sanitize_title( __( 'CRM', 'erp' ) ) , 'crm', $current_screen->base );
-        $section = !empty( $_GET['section'] ) ? $_GET['section'] : 'dashboard' ;
+        $section = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : 'dashboard' ;
+
         switch ( $section ) {
 
             case 'contacts':
@@ -429,7 +430,7 @@ class Customer_Relationship {
         do_action( 'erp_crm_load_contact_vue_scripts' );
 
         if ( isset( $_GET['action'] ) && $_GET['action'] == 'view' ) {
-            wp_enqueue_script( 'wp-erp-crm-vue-customer', WPERP_CRM_ASSETS . "/js/crm-app$suffix.js", array( 'erp-nprogress', 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ), date( 'Ymd' ), true );
+            wp_enqueue_script( 'wp-erp-crm-vue-customer', WPERP_CRM_ASSETS . "/js/crm-app$suffix.js", apply_filters( 'crm_vue_customer_script', array( 'erp-nprogress', 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ) ), date( 'Ymd' ), true );
         }
 
         wp_localize_script( 'wp-erp-crm-vue-component', 'wpCRMvue', $contact_actvity_localize );

@@ -19,31 +19,31 @@
 
                     <show-errors :error_msgs="form_errors"></show-errors>
 
-                        <div class="wperp-row">
-                            <div class="wperp-col-sm-4">
-                                <select-vendors v-model="basic_fields.vendor"></select-vendors>
-                            </div>
-                            <div class="wperp-col-sm-4">
-                                <div class="wperp-form-group">
-                                    <label>{{ __('Transaction Date', 'erp') }}<span class="wperp-required-sign">*</span></label>
-                                    <datepicker v-model="basic_fields.trn_date"></datepicker>
-                                </div>
-                            </div>
-                            <div class="wperp-col-sm-4">
-                                <div class="wperp-form-group">
-                                    <label>{{ __('Due Date', 'erp') }}<span class="wperp-required-sign">*</span></label>
-                                    <datepicker v-model="basic_fields.due_date"></datepicker>
-                                </div>
-                            </div>
-                            <div class="wperp-col-sm-6">
-                                <label>{{ __('Reference No', 'erp') }}</label>
-                                <input type="text" v-model="basic_fields.ref" rows="4" class="wperp-form-field">
-                            </div>
-                            <div class="wperp-col-sm-6">
-                                <label>{{ __('Billing Address', 'erp') }}</label>
-                                <textarea v-model="basic_fields.billing_address" rows="4" class="wperp-form-field" :placeholder="__('Type here', 'erp')"></textarea>
+                    <div class="wperp-row">
+                        <div class="wperp-col-sm-4">
+                            <select-vendors v-model="basic_fields.vendor"></select-vendors>
+                        </div>
+                        <div class="wperp-col-sm-4">
+                            <div class="wperp-form-group">
+                                <label>{{ __('Transaction Date', 'erp') }}<span class="wperp-required-sign">*</span></label>
+                                <datepicker v-model="basic_fields.trn_date"></datepicker>
                             </div>
                         </div>
+                        <div class="wperp-col-sm-4">
+                            <div class="wperp-form-group">
+                                <label>{{ __('Due Date', 'erp') }}<span class="wperp-required-sign">*</span></label>
+                                <datepicker v-model="basic_fields.due_date"></datepicker>
+                            </div>
+                        </div>
+                        <div class="wperp-col-sm-6">
+                            <label>{{ __('Reference No', 'erp') }}</label>
+                            <input type="text" v-model="basic_fields.ref" rows="4" class="wperp-form-field">
+                        </div>
+                        <div class="wperp-col-sm-6">
+                            <label>{{ __('Billing Address', 'erp') }}</label>
+                            <textarea v-model="basic_fields.billing_address" rows="4" class="wperp-form-field" :placeholder="__('Type here', 'erp')"></textarea>
+                        </div>
+                    </div>
 
                 </div>
             </div>
@@ -87,7 +87,7 @@
                         <tr class="wperp-form-group">
                             <td colspan="9" style="text-align: left;">
                                 <label>{{ __('Particulars', 'erp') }}</label>
-                                <textarea v-model="particulars" rows="4" class="wperp-form-field display-flex" :placeholder="__('Particulars', 'erp')"></textarea>
+                                <textarea v-model="particulars" rows="4" maxlength="250" class="wperp-form-field display-flex" :placeholder="__('Particulars', 'erp')"></textarea>
                             </td>
                         </tr>
                         <tr>
@@ -250,25 +250,24 @@ export default {
                 this.editMode = true;
                 this.voucherNo = this.$route.params.id;
 
-                const [request1, request2] = await Promise.all([
-                    HTTP.get('/products', {
-                        params: {
-                            number: -1
-                        }
-                    }),
+                const [request] = await Promise.all([
                     HTTP.get(`/purchases/${this.$route.params.id}`)
                 ]);
 
-                const canEdit = Boolean(Number(request2.data.editable));
+                const canEdit = Boolean(Number(request.data.editable));
 
                 if (!canEdit) {
                     this.showAlert('error', 'Can\'t edit');
                     return;
                 }
 
-                this.products = request1.data;
+                const purchase_data = request.data;
 
-                this.setDataForEdit(request2.data);
+                if (purchase_data) {
+                    this.getProducts(purchase_data.vendor_id);
+                }
+
+                this.setDataForEdit(request.data);
 
                 // initialize combo button id with `update`
                 this.$store.dispatch('combo/setBtnID', 'update');
@@ -318,12 +317,15 @@ export default {
             this.$store.dispatch('combo/setBtnID', 'save');
         },
 
-        getProducts() {
+        getProducts(vendor_id) {
             this.products = [];
+            if (!vendor_id) {
+                vendor_id = this.basic_fields.vendor.id;
+            }
 
             this.$store.dispatch('spinner/setSpinner', true);
 
-            HTTP.get(`vendors/${this.basic_fields.vendor.id}/products`, {
+            HTTP.get(`vendors/${vendor_id}/products`, {
                 params: {
                     number: -1
                 }
@@ -354,7 +356,7 @@ export default {
             HTTP.get(`/people/${vendor_id}`).then(response => {
                 const billing = response.data;
 
-                const address = `Street: ${billing.street_1} ${billing.street_2} \nCity: ${billing.city} \nState: ${billing.state} \nCountry: ${billing.country}`;
+                const address = `${billing.street_1} ${billing.street_2} \n${billing.city} \n${billing.state} ${billing.postal_code} \n${billing.country}`;
 
                 this.basic_fields.billing_address = address;
             });
@@ -514,26 +516,26 @@ export default {
 </script>
 
 <style lang="less">
-.purchase-create {
-    .dropdown {
-        width: 100%;
-    }
+    .purchase-create {
+        .dropdown {
+            width: 100%;
+        }
 
-    .col--product {
-        min-width: 500px;
-    }
+        .col--product {
+            min-width: 500px;
+        }
 
-    .col--qty {
-        width: 120px;
-    }
+        .col--qty {
+            width: 120px;
+        }
 
-    .col--qty input {
-        width: 100% !important;
-    }
+        .col--qty input {
+            width: 100% !important;
+        }
 
-    .col--uni_price,
-    .col--amount {
-        width: 200px;
+        .col--uni_price,
+        .col--amount {
+            width: 200px;
+        }
     }
-}
 </style>

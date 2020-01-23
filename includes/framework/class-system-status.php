@@ -49,7 +49,9 @@ class System_Status {
 		}
 
 		$upload_dir =  wp_upload_dir();
-		$log_directory = $upload_dir['basedir'] . '/erp-logs/';
+        $log_directory = $upload_dir['basedir'] . '/erp-logs/';
+
+        $server_software = isset( $_SERVER['SERVER_SOFTWARE'] ) ? sanitize_text_field( wp_unslash( $_SERVER['SERVER_SOFTWARE'] ) ) : '';
 
 		// Return all environment info. Described by JSON Schema.
 		return array(
@@ -64,7 +66,7 @@ class System_Status {
 			'wp_debug_mode'             => ( defined( 'WP_DEBUG' ) && WP_DEBUG ),
 			'wp_cron'                   => ! ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ),
 			'language'                  => get_locale(),
-			'server_info'               => $_SERVER['SERVER_SOFTWARE'],
+            'server_info'               => $server_software,
 			'php_version'               => phpversion(),
 			'php_post_max_size'         => erp_let_to_num( ini_get( 'post_max_size' ) ),
 			'php_max_execution_time'    => ini_get( 'max_execution_time' ),

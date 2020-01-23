@@ -1690,18 +1690,20 @@ if (false) {(function () {
     };
   },
   created: function created() {
+    var _this = this;
+
     this.url = this.generateUrl();
-    this.selectedCountry();
-    this.setInputField();
     this.getCustomers();
-    this.getCountries();
+    this.getCountries(function () {
+      return _this.setInputField();
+    });
   },
   mounted: function mounted() {
     window.acct.hooks.doAction('acctPeopleID', this.peopleFields.id);
   },
   methods: {
     saveCustomer: function saveCustomer() {
-      var _this = this;
+      var _this2 = this;
 
       var peopleFields = window.acct.hooks.applyFilters('acctPeopleFieldsData', this.peopleFields);
 
@@ -1723,13 +1725,13 @@ if (false) {(function () {
 
       var message = type === 'post' ? 'Created' : 'Updated';
       __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */][type](url, peopleFields).then(function (response) {
-        _this.$root.$emit('peopleUpdate');
+        _this2.$root.$emit('peopleUpdate');
 
-        _this.resetForm();
+        _this2.resetForm();
 
-        _this.$store.dispatch('spinner/setSpinner', false);
+        _this2.$store.dispatch('spinner/setSpinner', false);
 
-        _this.showAlert('success', message);
+        _this2.showAlert('success', message);
       });
     },
     checkForm: function checkForm() {
@@ -1766,8 +1768,8 @@ if (false) {(function () {
     showDetails: function showDetails() {
       this.showMore = !this.showMore;
     },
-    getCountries: function getCountries() {
-      var _this2 = this;
+    getCountries: function getCountries(callBack) {
+      var _this3 = this;
 
       __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('customers/country').then(function (response) {
         var country = response.data.country;
@@ -1778,20 +1780,24 @@ if (false) {(function () {
             states[x] = [];
           }
 
-          _this2.countries.push({
+          _this3.countries.push({
             id: x,
-            name: _this2.decodeHtml(country[x]),
+            name: _this3.decodeHtml(country[x]),
             state: states[x]
           });
         }
 
         for (var state in states) {
           for (var _x in states[state]) {
-            _this2.get_states.push({
+            _this3.get_states.push({
               id: _x,
               name: states[state][_x]
             });
           }
+        }
+
+        if (typeof callBack !== 'undefined') {
+          callBack();
         }
       });
     },
@@ -1810,7 +1816,7 @@ if (false) {(function () {
       }
     },
     checkEmailExistence: function checkEmailExistence() {
-      var _this3 = this;
+      var _this4 = this;
 
       if (this.peopleFields.email) {
         if (!this.people) {
@@ -1819,16 +1825,16 @@ if (false) {(function () {
               email: this.peopleFields.email
             }
           }).then(function (res) {
-            _this3.emailExists = res.data;
+            _this4.emailExists = res.data;
           });
         }
       }
     },
     getCustomers: function getCustomers() {
-      var _this4 = this;
+      var _this5 = this;
 
       __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('/customers').then(function (response) {
-        _this4.customers = response.data;
+        _this5.customers = response.data;
       });
     },
     setInputField: function setInputField() {
@@ -1848,17 +1854,22 @@ if (false) {(function () {
         this.peopleFields.street_2 = people.billing.street_2;
         this.peopleFields.city = people.billing.city;
         this.peopleFields.country = this.selectedCountry(people.billing.country);
-        this.peopleFields.state = this.selectedState(people.billing.state);
         this.peopleFields.postal_code = people.billing.postal_code;
 
         if (people.photo) {
+          this.peopleFields.photo_id = people.photo_id;
           this.peopleFields.photo = people.photo;
+        }
+
+        if (Object.prototype.hasOwnProperty.call(this.peopleFields.country, 'id')) {
+          this.getState(this.peopleFields.country);
+          this.peopleFields.state = this.selectedState(people.billing.state);
         }
       }
     },
     selectedCountry: function selectedCountry(id) {
       return this.countries.find(function (country) {
-        return id === country.id;
+        return country.id === id;
       });
     },
     selectedState: function selectedState(id) {
@@ -10349,7 +10360,7 @@ var STATUS_FAILED = 3;
 
       __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get('/people', {
         params: {
-          type: 'all',
+          type: [],
           search: query
         }
       }).then(function (response) {
@@ -13071,7 +13082,7 @@ var render = function() {
                                       ],
                                       staticClass: "wperp-form-field",
                                       attrs: {
-                                        type: "number",
+                                        type: "text",
                                         id: "post_code",
                                         placeholder: _vm.__("Post Code", "erp")
                                       },
@@ -16987,7 +16998,8 @@ if (false) {(function () {
       opening_balance: 0,
       people_balance: 0,
       outstanding: 0,
-      temp: null
+      temp: null,
+      req_url: ''
     };
   },
   created: function created() {
@@ -17016,9 +17028,16 @@ if (false) {(function () {
     fetchItem: function fetchItem(id) {
       var _this2 = this;
 
-      __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get(this.url + '/' + id, {
+      if (this.$route.name === 'VendorDetails') {
+        this.req_url = 'vendors';
+      } else if (this.$route.name === 'CustomerDetails') {
+        this.req_url = 'customers';
+      }
+
+      __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get(this.req_url + '/' + id, {
         params: {}
       }).then(function (response) {
+        console.log(response.data);
         _this2.resData = response.data;
       });
     },
@@ -17026,7 +17045,7 @@ if (false) {(function () {
       var _this3 = this;
 
       this.$store.dispatch('spinner/setSpinner', true);
-      __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get(this.url + '/' + this.userId + '/transactions').then(function (res) {
+      __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get(this.req_url + '/' + this.userId + '/transactions').then(function (res) {
         _this3.transactions = res.data;
 
         _this3.$store.dispatch('spinner/setSpinner', false);
@@ -17707,7 +17726,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
       __WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].get("/people/".concat(customer_id)).then(function (response) {
         var billing = response.data;
-        var address = "Street: ".concat(billing.street_1, " ").concat(billing.street_2, " \nCity: ").concat(billing.city, " \nState: ").concat(billing.state, " \nCountry: ").concat(billing.country);
+        var address = "".concat(billing.street_1, ", ").concat(billing.street_2, " \n").concat(billing.city, " \n").concat(billing.state, ", ").concat(billing.postal_code, " \n").concat(billing.country);
         _this3.basic_fields.billing_address = address;
       });
     },
@@ -19593,7 +19612,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
       __WEBPACK_IMPORTED_MODULE_3_admin_http__["a" /* default */].get("/people/".concat(customer_id)).then(function (response) {
         var billing = response.data;
-        var address = "Street: ".concat(billing.street_1, " ").concat(billing.street_2, " \nCity: ").concat(billing.city, " \nState: ").concat(billing.state, " \nCountry: ").concat(billing.country);
+        var address = "".concat(billing.street_1, ", ").concat(billing.street_2, " \n").concat(billing.city, " \n").concat(billing.state, ", ").concat(billing.postal_code, " \n").concat(billing.country);
         _this3.basic_fields.billing_address = address;
       });
     },
@@ -20200,7 +20219,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
       __WEBPACK_IMPORTED_MODULE_3_admin_http__["a" /* default */].get("/people/".concat(peopleId)).then(function (response) {
         var billing = response.data;
-        var address = "Street: ".concat(billing.street_1, " ").concat(billing.street_2, " \nCity: ").concat(billing.city, " \nState: ").concat(billing.state, " \nCountry: ").concat(billing.country);
+        var address = "".concat(billing.street_1, ", ").concat(billing.street_2, " \n").concat(billing.city, " \n").concat(billing.state, ", ").concat(billing.postal_code, " \n").concat(billing.country);
         _this4.basic_fields.billing_address = address;
       });
     },
@@ -20897,7 +20916,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
       __WEBPACK_IMPORTED_MODULE_2_admin_http__["a" /* default */].get("/people/".concat(people_id)).then(function (response) {
         var billing = response.data;
-        var address = "Street: ".concat(billing.street_1, " ").concat(billing.street_2, " \nCity: ").concat(billing.city, " \nState: ").concat(billing.state, " \nCountry: ").concat(billing.country);
+        var address = "".concat(billing.street_1, " ").concat(billing.street_2, " \n").concat(billing.city, " \n").concat(billing.state, " ").concat(billing.postal_code, " \n").concat(billing.country);
         _this4.basic_fields.billing_address = address;
       });
     },
@@ -21579,7 +21598,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       var _prepareDataLoad = __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_asyncToGenerator___default()(
       /*#__PURE__*/
       regeneratorRuntime.mark(function _callee() {
-        var _ref, _ref2, request1, request2, canEdit;
+        var _ref, _ref2, request, canEdit, purchase_data;
 
         return regeneratorRuntime.wrap(function _callee$(_context) {
           while (1) {
@@ -21593,30 +21612,30 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
                 this.editMode = true;
                 this.voucherNo = this.$route.params.id;
                 _context.next = 5;
-                return Promise.all([__WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].get('/products', {
-                  params: {
-                    number: -1
-                  }
-                }), __WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].get("/purchases/".concat(this.$route.params.id))]);
+                return Promise.all([__WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].get("/purchases/".concat(this.$route.params.id))]);
 
               case 5:
                 _ref = _context.sent;
-                _ref2 = __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_slicedToArray___default()(_ref, 2);
-                request1 = _ref2[0];
-                request2 = _ref2[1];
-                canEdit = Boolean(Number(request2.data.editable));
+                _ref2 = __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_slicedToArray___default()(_ref, 1);
+                request = _ref2[0];
+                canEdit = Boolean(Number(request.data.editable));
 
                 if (canEdit) {
-                  _context.next = 13;
+                  _context.next = 12;
                   break;
                 }
 
                 this.showAlert('error', 'Can\'t edit');
                 return _context.abrupt("return");
 
-              case 13:
-                this.products = request1.data;
-                this.setDataForEdit(request2.data); // initialize combo button id with `update`
+              case 12:
+                purchase_data = request.data;
+
+                if (purchase_data) {
+                  this.getProducts(purchase_data.vendor_id);
+                }
+
+                this.setDataForEdit(request.data); // initialize combo button id with `update`
 
                 this.$store.dispatch('combo/setBtnID', 'update');
                 _context.next = 22;
@@ -21681,12 +21700,17 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       this.isWorking = false;
       this.$store.dispatch('combo/setBtnID', 'save');
     },
-    getProducts: function getProducts() {
+    getProducts: function getProducts(vendor_id) {
       var _this2 = this;
 
       this.products = [];
+
+      if (!vendor_id) {
+        vendor_id = this.basic_fields.vendor.id;
+      }
+
       this.$store.dispatch('spinner/setSpinner', true);
-      __WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].get("vendors/".concat(this.basic_fields.vendor.id, "/products"), {
+      __WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].get("vendors/".concat(vendor_id, "/products"), {
         params: {
           number: -1
         }
@@ -21718,7 +21742,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
       __WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].get("/people/".concat(vendor_id)).then(function (response) {
         var billing = response.data;
-        var address = "Street: ".concat(billing.street_1, " ").concat(billing.street_2, " \nCity: ").concat(billing.city, " \nState: ").concat(billing.state, " \nCountry: ").concat(billing.country);
+        var address = "".concat(billing.street_1, " ").concat(billing.street_2, " \n").concat(billing.city, " \n").concat(billing.state, " ").concat(billing.postal_code, " \n").concat(billing.country);
         _this3.basic_fields.billing_address = address;
       });
       this.getProducts();
@@ -22647,7 +22671,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
       __WEBPACK_IMPORTED_MODULE_2_admin_http__["a" /* default */].get("/people/".concat(vendor_id)).then(function (response) {
         var billing = response.data;
-        var address = "Street: ".concat(billing.street_1, " ").concat(billing.street_2, " \nCity: ").concat(billing.city, " \nState: ").concat(billing.state, " \nCountry: ").concat(billing.country);
+        var address = "".concat(billing.street_1, " ").concat(billing.street_2, " \n").concat(billing.city, " \n").concat(billing.state, " ").concat(billing.postal_code, " \n").concat(billing.country);
         _this3.basic_fields.billing_address = address;
       });
     },
@@ -23095,6 +23119,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 //
 //
 //
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
@@ -23432,7 +23458,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         this.form_errors.push('Total amount can\'t be zero.');
       }
 
-      if (this.isWorking) {
+      if (Math.abs(this.debit_total - this.credit_total)) {
         this.form_errors.push('Debit and Credit must be Equal.');
       }
     },
@@ -23452,7 +23478,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       var diff = Math.abs(this.debit_total - this.credit_total);
       this.isWorking = true;
 
-      if (diff === 0) {
+      if (!diff) {
         this.isWorking = false;
       }
     },
@@ -23500,13 +23526,13 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
     totalDebit: function totalDebit() {
       this.debit_total = this.debitLine.reduce(function (a, b) {
         return parseFloat(a) + parseFloat(b);
-      }, 0);
+      }, 0).toFixed(2);
       return this.debit_total;
     },
     totalCredit: function totalCredit() {
-      this.creditLine.reduce(function (a, b) {
+      this.credit_total = this.creditLine.reduce(function (a, b) {
         return parseFloat(a) + parseFloat(b);
-      }, 0);
+      }, 0).toFixed(2);
       return this.credit_total;
     }
   },
@@ -24553,7 +24579,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
           return;
         }
 
-        var address = "Street: ".concat(billing.street_1, " ").concat(billing.street_2, " \nCity: ").concat(billing.city, " \nState: ").concat(billing.state, " \nCountry: ").concat(billing.country);
+        var address = "".concat(billing.street_1, ", ").concat(billing.street_2, " \n").concat(billing.city, " \n").concat(billing.state, ", ").concat(billing.postal_code, " \n").concat(billing.country);
         _this5.basic_fields.billing_address = address;
       });
     },
@@ -24792,6 +24818,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_transactions_sales_PaymentSingleContent_vue__ = __webpack_require__(403);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_email_SendMail_vue__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_components_base_Dropdown_vue__ = __webpack_require__(6);
+//
+//
 //
 //
 //
@@ -27952,6 +27980,7 @@ setTimeout(function () {
       var _this3 = this;
 
       this.validateForm();
+      return;
 
       if (this.form_errors.length) {
         window.scrollTo({
@@ -28001,8 +28030,30 @@ setTimeout(function () {
     validateForm: function validateForm() {
       this.form_errors = [];
 
+      if (!Object.prototype.hasOwnProperty.call(this.componentLines[0], 'component_name')) {
+        this.form_errors.push('At least One Component is required.');
+      }
+
       if (!Object.prototype.hasOwnProperty.call(this.tax_name, 'id')) {
         this.form_errors.push('Tax Zone Name is required.');
+      }
+
+      for (var i = 0; i < this.componentLines.length; i++) {
+        var name = this.componentLines[i].component_name;
+
+        if (name) {
+          if (!Object.prototype.hasOwnProperty.call('agency_id', this.componentLines[i])) {
+            this.form_errors.push("Component '".concat(name, "' agency id is required."));
+          }
+
+          if (!Object.prototype.hasOwnProperty.call('tax_category', this.componentLines[i])) {
+            this.form_errors.push("Component '".concat(name, "' tax category id is required."));
+          }
+
+          if (!Object.prototype.hasOwnProperty.call('tax_rate', this.componentLines[i])) {
+            this.form_errors.push("Component '".concat(name, "' tax rate is required."));
+          }
+        }
       }
     },
     updateFinalAmount: function updateFinalAmount() {
@@ -30499,7 +30550,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
       __WEBPACK_IMPORTED_MODULE_3_admin_http__["a" /* default */].get("/people/".concat(people_id)).then(function (response) {
         var billing = response.data;
-        var address = "Street: ".concat(billing.street_1, " ").concat(billing.street_2, " \nCity: ").concat(billing.city, " \nState: ").concat(billing.state, " \nCountry: ").concat(billing.country);
+        var address = "".concat(billing.street_1, ", ").concat(billing.street_2, " \n").concat(billing.city, " \n").concat(billing.state, ", ").concat(billing.postal_code, " \n").concat(billing.country);
         _this5.basic_fields.billing_address = address;
       });
     },
@@ -32274,6 +32325,15 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -32577,7 +32637,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
       __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get('/people', {
         params: {
-          type: 'all'
+          type: []
         }
       }).then(function (response) {
         _this9.options = response.data;
@@ -32659,7 +32719,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       this.calculateAmount();
     },
     removeBankRow: function removeBankRow(index) {
-      this.$delete(this.banks, index);
+      this.$delete(this.ledgers[7], index);
       this.calculateAmount();
     }
   }
@@ -32740,7 +32800,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
           url: 'https://wperp.com/docs/accounting/sales-transactions/creating-your-first-invoice/'
         }, {
           label: window.__('How to receive payment from invoices?', 'erp'),
-          url: 'https://wperp.com/docs/accounting/sales-transactions/receive-payment-new/'
+          url: 'https://wperp.com/docs/accounting/sales-transactions/adding-invoice-payments/'
         }, {
           label: window.__('How can I delete an invoice?', 'erp'),
           url: 'https://wperp.com/docs/accounting/sales-transactions/creating-your-first-invoice/'
@@ -34278,7 +34338,7 @@ var render = function() {
       _vm._v(" "),
       _c("list-table", {
         attrs: {
-          tableClass: "wperp-table people-table table-striped table-dark",
+          tableClass: "wperp-table people-table table-striped table-dark ",
           "action-column": "actions",
           columns: _vm.columns,
           rows: _vm.row_data,
@@ -35452,7 +35512,8 @@ var render = function() {
         [
           _c("list-table", {
             attrs: {
-              tableClass: "wperp-table table-striped table-dark widefat",
+              tableClass:
+                "wperp-table people-trns-table table-striped table-dark widefat",
               "action-column": "actions",
               columns: _vm.columns,
               rows: _vm.rows,
@@ -46008,6 +46069,7 @@ var render = function() {
                               staticClass: "wperp-form-field display-flex",
                               attrs: {
                                 rows: "4",
+                                maxlength: "250",
                                 placeholder: _vm.__("Particulars", "erp")
                               },
                               domProps: { value: _vm.particulars },
@@ -47881,6 +47943,7 @@ var render = function() {
                       staticClass: "wperp-form-field display-flex",
                       attrs: {
                         rows: "4",
+                        maxlength: "250",
                         placeholder: _vm.__("Internal Information", "erp")
                       },
                       domProps: { value: _vm.particulars },
@@ -48353,6 +48416,7 @@ var render = function() {
                           staticClass: "wperp-form-field display-flex",
                           attrs: {
                             rows: "1",
+                            maxlength: "250",
                             placeholder: _vm.__("Particulars", "erp")
                           },
                           domProps: { value: line.description },
@@ -48534,6 +48598,7 @@ var render = function() {
                           staticClass: "wperp-form-field display-flex",
                           attrs: {
                             rows: "4",
+                            maxlength: "250",
                             placeholder: _vm.__("Internal Information", "erp")
                           },
                           domProps: { value: _vm.particulars },
@@ -48605,7 +48670,7 @@ var render = function() {
                             ]),
                             _vm._v(" "),
                             _c("file-upload", {
-                              attrs: { url: "/bills/attachments" },
+                              attrs: { url: "/invoices/attachments" },
                               model: {
                                 value: _vm.attachments,
                                 callback: function($$v) {
@@ -49617,6 +49682,7 @@ var render = function() {
                       staticClass: "wperp-form-field display-flex",
                       attrs: {
                         rows: "4",
+                        maxlength: "250",
                         placeholder: _vm.__("Internal Information", "erp")
                       },
                       domProps: { value: _vm.particulars },
@@ -50791,6 +50857,7 @@ var render = function() {
                           staticClass: "wperp-form-field display-flex",
                           attrs: {
                             rows: "4",
+                            maxlength: "250",
                             placeholder: _vm.__("Particulars", "erp")
                           },
                           domProps: { value: _vm.particulars },
@@ -51863,6 +51930,7 @@ var render = function() {
                       staticClass: "wperp-form-field display-flex",
                       attrs: {
                         rows: "4",
+                        maxlength: "250",
                         placeholder: _vm.__("Internal Information", "erp")
                       },
                       domProps: { value: _vm.particulars },
@@ -52462,11 +52530,17 @@ var render = function() {
             on: {
               click: function($event) {
                 $event.preventDefault()
-                return _vm.$router.push("journals/new")
+                return _vm.$router.push({ name: "JournalCreate" })
               }
             }
           },
-          [_vm._v(_vm._s(_vm.__("New Journal Entry", "erp")))]
+          [
+            _vm._v(
+              "\n            " +
+                _vm._s(_vm.__("New Journal Entry", "erp")) +
+                "\n        "
+            )
+          ]
         )
       ]),
       _vm._v(" "),
@@ -52707,6 +52781,7 @@ var render = function() {
                     staticClass: "wperp-form-field display-flex",
                     attrs: {
                       rows: "1",
+                      maxlength: "250",
                       placeholder: _vm.__("Internal Information", "erp")
                     },
                     domProps: { value: _vm.journal_parti },
@@ -52833,7 +52908,7 @@ var render = function() {
                                 }
                               ],
                               staticClass: "wperp-form-field",
-                              attrs: { type: "text" },
+                              attrs: { type: "text", maxlength: "250" },
                               domProps: { value: _vm.particulars[key] },
                               on: {
                                 input: function($event) {
@@ -53859,6 +53934,7 @@ var render = function() {
                       name: "particulars",
                       id: "particulars",
                       rows: "3",
+                      maxlength: "250",
                       placeholder: _vm.__("Type Here", "erp")
                     },
                     domProps: { value: _vm.particulars },
@@ -54609,6 +54685,7 @@ var render = function() {
                           staticClass: "wperp-form-field display-flex",
                           attrs: {
                             rows: "1",
+                            maxlength: "250",
                             placeholder: _vm.__("Particulars", "erp")
                           },
                           domProps: { value: line.particulars },
@@ -54789,6 +54866,7 @@ var render = function() {
                           staticClass: "wperp-form-field display-flex",
                           attrs: {
                             rows: "4",
+                            maxlength: "250",
                             placeholder: _vm.__("Internal Information", "erp")
                           },
                           domProps: { value: _vm.particulars },
@@ -55662,25 +55740,32 @@ var render = function() {
                   )
                 : _vm._e(),
               _vm._v(" "),
-              _c(
-                "a",
-                {
-                  directives: [
-                    {
-                      name: "clipboard",
-                      rawName: "v-clipboard",
-                      value: _vm.copyLink,
-                      expression: "copyLink"
-                    }
-                  ],
-                  staticClass: "wperp-btn btn--default print-btn",
-                  attrs: { href: "#" },
-                  on: { success: _vm.handleSuccess, error: _vm.handleError }
-                },
-                [_vm._v(_vm._s(_vm.__("Copy Link", "erp")))]
-              )
+              _vm.invoice
+                ? [
+                    _c(
+                      "a",
+                      {
+                        directives: [
+                          {
+                            name: "clipboard",
+                            rawName: "v-clipboard",
+                            value: _vm.copyLink,
+                            expression: "copyLink"
+                          }
+                        ],
+                        staticClass: "wperp-btn btn--default print-btn",
+                        attrs: { href: "#" },
+                        on: {
+                          success: _vm.handleSuccess,
+                          error: _vm.handleError
+                        }
+                      },
+                      [_vm._v(_vm._s(_vm.__("Copy Link", "erp")))]
+                    )
+                  ]
+                : _vm._e()
             ],
-            1
+            2
           )
         ]),
         _vm._v(" "),
@@ -57471,7 +57556,7 @@ var render = function() {
                     ])
                   : _vm._e(),
                 _vm._v(" "),
-                null != _vm.expense_data.check_data
+                _vm.expense_data.check_data.length
                   ? _c("div", { staticClass: "wperp-row" }, [
                       _c("div", { staticClass: "wperp-col-sm-12" }, [
                         _c("table", [
@@ -58502,7 +58587,7 @@ var render = function() {
                         }
                       ],
                       staticClass: "wperp-form-field",
-                      attrs: { rows: "4" },
+                      attrs: { rows: "4", maxlength: "250" },
                       domProps: { value: _vm.desc },
                       on: {
                         input: function($event) {
@@ -59664,6 +59749,7 @@ var render = function() {
                   staticClass: "wperp-form-field",
                   attrs: {
                     rows: "3",
+                    maxlength: "250",
                     placeholder: _vm.__("Enter Particulars", "erp")
                   },
                   domProps: { value: _vm.particulars },
@@ -61600,6 +61686,7 @@ var render = function() {
                           staticClass: "wperp-form-field display-flex",
                           attrs: {
                             rows: "1",
+                            maxlength: "250",
                             placeholder: _vm.__("Particulars", "erp")
                           },
                           domProps: { value: line.particulars },
@@ -61782,6 +61869,7 @@ var render = function() {
                           staticClass: "wperp-form-field display-flex",
                           attrs: {
                             rows: "4",
+                            maxlength: "250",
                             placeholder: _vm.__("Internal Information", "erp")
                           },
                           domProps: { value: _vm.particulars },
@@ -64216,34 +64304,42 @@ var render = function() {
                     }),
                     _vm._v(" "),
                     _c("tr", { staticClass: "add-new-line" }, [
-                      _c(
-                        "td",
-                        {
-                          staticStyle: { "text-align": "left" },
-                          attrs: { colspan: "9" }
-                        },
-                        [
-                          _c(
-                            "button",
+                      undefined === _vm.acct_rec
+                        ? _c("td", { staticStyle: { float: "left" } }, [
+                            _vm._v(
+                              "\n                        " +
+                                _vm._s(_vm.__("No People Found!", "erp")) +
+                                "\n                    "
+                            )
+                          ])
+                        : _c(
+                            "td",
                             {
-                              staticClass:
-                                "wperp-btn btn--primary add-line-trigger",
-                              on: {
-                                click: function($event) {
-                                  $event.preventDefault()
-                                  return _vm.acct_rec.push({})
-                                }
-                              }
+                              staticStyle: { "text-align": "left" },
+                              attrs: { colspan: "9" }
                             },
                             [
-                              _c("i", {
-                                staticClass: "flaticon-add-plus-button"
-                              }),
-                              _vm._v(_vm._s(_vm.__("Add People", "erp")))
+                              _c(
+                                "button",
+                                {
+                                  staticClass:
+                                    "wperp-btn btn--primary add-line-trigger",
+                                  on: {
+                                    click: function($event) {
+                                      $event.preventDefault()
+                                      return _vm.acct_rec.push({})
+                                    }
+                                  }
+                                },
+                                [
+                                  _c("i", {
+                                    staticClass: "flaticon-add-plus-button"
+                                  }),
+                                  _vm._v(_vm._s(_vm.__("Add People", "erp")))
+                                ]
+                              )
                             ]
                           )
-                        ]
-                      )
                     ])
                   ],
                   2
@@ -64422,34 +64518,44 @@ var render = function() {
                         }),
                         _vm._v(" "),
                         _c("tr", { staticClass: "add-new-line" }, [
-                          _c(
-                            "td",
-                            {
-                              staticStyle: { "text-align": "left" },
-                              attrs: { colspan: "9" }
-                            },
-                            [
-                              _c(
-                                "button",
+                          undefined === _vm.acct_pay
+                            ? _c("td", { staticStyle: { float: "left" } }, [
+                                _vm._v(
+                                  "\n                        " +
+                                    _vm._s(_vm.__("No People Found!", "erp")) +
+                                    "\n                    "
+                                )
+                              ])
+                            : _c(
+                                "td",
                                 {
-                                  staticClass:
-                                    "wperp-btn btn--primary add-line-trigger",
-                                  on: {
-                                    click: function($event) {
-                                      $event.preventDefault()
-                                      return _vm.acct_pay.push({})
-                                    }
-                                  }
+                                  staticStyle: { "text-align": "left" },
+                                  attrs: { colspan: "9" }
                                 },
                                 [
-                                  _c("i", {
-                                    staticClass: "flaticon-add-plus-button"
-                                  }),
-                                  _vm._v(_vm._s(_vm.__("Add People", "erp")))
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass:
+                                        "wperp-btn btn--primary add-line-trigger",
+                                      on: {
+                                        click: function($event) {
+                                          $event.preventDefault()
+                                          return _vm.acct_pay.push({})
+                                        }
+                                      }
+                                    },
+                                    [
+                                      _c("i", {
+                                        staticClass: "flaticon-add-plus-button"
+                                      }),
+                                      _vm._v(
+                                        _vm._s(_vm.__("Add People", "erp"))
+                                      )
+                                    ]
+                                  )
                                 ]
                               )
-                            ]
-                          )
                         ])
                       ],
                       2
@@ -65166,34 +65272,44 @@ var render = function() {
                         }),
                         _vm._v(" "),
                         _c("tr", { staticClass: "add-new-line" }, [
-                          _c(
-                            "td",
-                            {
-                              staticStyle: { "text-align": "left" },
-                              attrs: { colspan: "9" }
-                            },
-                            [
-                              _c(
-                                "button",
+                          undefined === _vm.ledgers[7]
+                            ? _c("td", { staticStyle: { float: "left" } }, [
+                                _vm._v(
+                                  "\n                       " +
+                                    _vm._s(
+                                      _vm.__("No Bank Account Found!", "erp")
+                                    ) +
+                                    "\n                    "
+                                )
+                              ])
+                            : _c(
+                                "td",
                                 {
-                                  staticClass:
-                                    "wperp-btn btn--primary add-line-trigger",
-                                  on: {
-                                    click: function($event) {
-                                      $event.preventDefault()
-                                      return _vm.ledgers[7].push({})
-                                    }
-                                  }
+                                  staticStyle: { "text-align": "left" },
+                                  attrs: { colspan: "9" }
                                 },
                                 [
-                                  _c("i", {
-                                    staticClass: "flaticon-add-plus-button"
-                                  }),
-                                  _vm._v(_vm._s(_vm.__("Add Bank", "erp")))
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass:
+                                        "wperp-btn btn--primary add-line-trigger",
+                                      on: {
+                                        click: function($event) {
+                                          $event.preventDefault()
+                                          return _vm.ledgers[7].push({})
+                                        }
+                                      }
+                                    },
+                                    [
+                                      _c("i", {
+                                        staticClass: "flaticon-add-plus-button"
+                                      }),
+                                      _vm._v(_vm._s(_vm.__("Add Bank", "erp")))
+                                    ]
+                                  )
                                 ]
                               )
-                            ]
-                          )
                         ])
                       ],
                       2

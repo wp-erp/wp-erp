@@ -86,7 +86,8 @@ export default {
             opening_balance: 0,
             people_balance: 0,
             outstanding: 0,
-            temp: null
+            temp: null,
+            req_url: ''
         };
     },
 
@@ -112,9 +113,17 @@ export default {
 
     methods: {
         fetchItem(id) {
-            HTTP.get(this.url + '/' + id, {
+            if (this.$route.name === 'VendorDetails') {
+                this.req_url = 'vendors';
+            } else if (this.$route.name === 'CustomerDetails') {
+                this.req_url = 'customers';
+            }
+
+            HTTP.get(this.req_url + '/' + id, {
                 params: {}
             }).then((response) => {
+                console.log(response.data);
+
                 this.resData = response.data;
             });
         },
@@ -122,7 +131,7 @@ export default {
         getTransactions() {
             this.$store.dispatch('spinner/setSpinner', true);
 
-            HTTP.get(this.url + '/' + this.userId + '/transactions').then(res => {
+            HTTP.get(this.req_url + '/' + this.userId + '/transactions').then(res => {
                 this.transactions = res.data;
 
                 this.$store.dispatch('spinner/setSpinner', false);

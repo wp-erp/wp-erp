@@ -409,7 +409,7 @@ class Employees_Controller extends REST_Controller {
      * @return array
      */
     public function upload_photo( \WP_REST_Request $request ) {
-        $file = isset( $_FILES['image'] ) ? $_FILES['image'] : array();
+        $file = isset( $_FILES['image'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_FILES['image'] ) ) : array();
 
         if ( ! $file ) {
             return;
@@ -1479,6 +1479,7 @@ class Employees_Controller extends REST_Controller {
             'phone'           => '',
             'work_phone'      => '',
             'mobile'          => '',
+            'blood_group'     => '',
             'address'         => '',
             'gender'          => '',
             'marital_status'  => '',
@@ -1628,6 +1629,10 @@ class Employees_Controller extends REST_Controller {
 
         if ( isset( $request['mobile'] ) ) {
             $prepared_item['personal']['mobile'] = $request['mobile'];
+        }
+
+        if ( isset( $request['blood_group'] ) ) {
+            $prepared_item['personal']['blood_group'] = $request['blood_group'];
         }
 
         if ( isset( $request['address'] ) ) {

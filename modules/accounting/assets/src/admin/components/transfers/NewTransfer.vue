@@ -40,7 +40,7 @@
                             </div>
                             <div class="wperp-col-xs-12 wperp-form-group">
                                 <label for="particulars">{{ __('Particulars', 'erp') }}</label>
-                                <textarea name="particulars" id="particulars" rows="3" class="wperp-form-field" :placeholder="__('Type Here', 'erp')" v-model="particulars"></textarea>
+                                <textarea name="particulars" id="particulars" rows="3" maxlength="250" class="wperp-form-field" :placeholder="__('Type Here', 'erp')" v-model="particulars"></textarea>
                             </div>
                         </div>
                     </div>

@@ -50,7 +50,10 @@ class License {
      * @return boolean
      */
     private function is_local_server() {
-        $is_local = ( in_array( $_SERVER['REMOTE_ADDR'], array( '127.0.0.1', '::1' ) ) || substr( $_SERVER['HTTP_HOST'], -4 ) == '.dev' );
+        $addr = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
+        $host = isset( $_SERVER['HTTP_HOST'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : '';
+
+        $is_local = ( in_array( $addr, array( '127.0.0.1', '::1' ) ) || substr( $host, -4 ) == '.dev' );
 
         return apply_filters( 'erp_lc_is_local_server', $is_local );
     }
@@ -203,9 +206,13 @@ class License {
      * @return void
      */
     public function save_and_activate_license() {
+        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-nonce' ) ) {
+            // die();
+        }
+
         if ( isset( $_POST[ $this->get_license_option_key() ] ) ) {
             $old_key = $this->get_license_key();
-            $new_key = sanitize_text_field( $_POST[ $this->get_license_option_key() ] );
+            $new_key = sanitize_text_field( wp_unslash( $_POST[ $this->get_license_option_key() ] ) );
 
             // delete license status if differs
             if ( $old_key != $new_key ) {
@@ -270,7 +277,7 @@ class License {
      */
     public function show_error( $message ) {
         echo '<div class="error">';
-            echo '<p>' . $message . '</p>';
+            echo '<p>' . wp_kses_post( $message ) . '</p>';
         echo '</div>';
     }
 
@@ -286,7 +293,7 @@ class License {
 
         if ( ( ! is_object( $license ) || 'valid' !== $license->license ) && empty( $showed_imissing_key_message[ $this->get_license_option_key() ] ) ) {
 
-            echo '&nbsp;<strong><a href="' . esc_url( admin_url( 'admin.php?page=erp-settings&tab=erp-license' ) ) . '">' . __( 'Enter valid license key for automatic updates.', 'erp' ) . '</a></strong>';
+            echo '&nbsp;<strong><a href="' . esc_url( admin_url( 'admin.php?page=erp-settings&tab=erp-license' ) ) . '">' . esc_html__( 'Enter valid license key for automatic updates.', 'erp' ) . '</a></strong>';
             $showed_imissing_key_message[ $this->get_license_option_key() ] = true;
         }
 

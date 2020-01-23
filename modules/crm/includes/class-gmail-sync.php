@@ -257,7 +257,9 @@ class Gmail_Sync {
 
         do_action( 'erp_crm_new_inbound_emails', $emails );
 
-        $email_regexp = '([a-z0-9]+[.][0-9]+[.][0-9]+[.][r][1|2])@' . $_SERVER['HTTP_HOST'];
+        $http_host = isset( $_SERVER['HTTP_HOST'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : '';
+
+        $email_regexp = '([a-z0-9]+[.][0-9]+[.][0-9]+[.][r][1|2])@' . $http_host;
         foreach ( $emails as $email ) {
 
             if ( !isset( $email['headers']['References'] ) ) {

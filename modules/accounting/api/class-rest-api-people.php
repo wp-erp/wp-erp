@@ -115,7 +115,7 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
         $args = [
             'number' => ! empty( $request['per_page'] ) ? $request['per_page'] : 20,
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
-            'type'   => ! empty( $request['type'] ) ? $request['type'] : 'all',
+            'type'   => ! empty( $request['type'] ) ? $request['type'] : [ 'customer', 'employee', 'vendor' ],
             's'      => ! empty( $request['search'] ) ? $request['search'] : '',
         ];
 
@@ -171,7 +171,12 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
             return new WP_Error( 'rest_people_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
 
-        return erp_get_people( $id );
+        $people = erp_get_people( $id );
+
+        $people->{'state'}   = erp_get_state_name( $people->country, $people->state );
+        $people->{'country'} = erp_get_country_name( $people->country );
+
+        return $people;
     }
 
     /**

@@ -74,9 +74,9 @@ class User_Profile {
         $checked = in_array( erp_hr_get_manager_role(), $profileuser->roles ) ? 'checked' : '';
         ?>
         <label for="erp-hr-manager">
-            <input type="checkbox" id="erp-hr-manager" <?php echo $checked; ?> name="hr_manager"
-                   value="<?php echo erp_hr_get_manager_role(); ?>">
-            <span class="description"><?php _e( 'HR Manager', 'erp' ); ?></span>
+            <input type="checkbox" id="erp-hr-manager" <?php echo esc_attr( $checked ); ?> name="hr_manager"
+                   value="<?php echo esc_attr( erp_hr_get_manager_role() ); ?>">
+            <span class="description"><?php esc_html_e( 'HR Manager', 'erp' ); ?></span>
         </label>
         <?php
     }
@@ -85,15 +85,15 @@ class User_Profile {
         $notification = get_user_meta( $profileuser->ID, 'erp_hr_disable_notification', true );
         $checked      = ! empty( $notification ) ? 'checked' : '';
         ?>
-        <h3><?php _e( 'ERP Profile Settings', 'erp' ); ?></h3>
+        <h3><?php esc_html_e( 'ERP Profile Settings', 'erp' ); ?></h3>
         <table class="form-table">
             <tbody>
             <tr>
                 <th><label for="erp-hr-disable-notification"><?php esc_html_e( 'Notification', 'erp' ); ?></label></th>
                 <td>
-                    <input type="checkbox" id="erp-hr-disable-notification" <?php echo $checked; ?>
+                    <input type="checkbox" id="erp-hr-disable-notification" <?php echo esc_attr( $checked ); ?>
                            name="erp_hr_disable_notification">
-                    <span class="description"><?php _e( 'Disable WP ERP email notifications', 'erp' ); ?></span>
+                    <span class="description"><?php esc_html_e( 'Disable WP ERP email notifications', 'erp' ); ?></span>
                 </td>
             </tr>
             </tbody>

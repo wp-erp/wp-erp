@@ -36,14 +36,14 @@ foreach ( $leave_requests as $key => $leave_request ) {
 </style>
 <div class="wrap erp-hr-calendar-wrap">
 
-    <h1><?php _e( 'Calendar', 'erp' ); ?></h1>
+    <h1><?php esc_html_e( 'Calendar', 'erp' ); ?></h1>
 
     <div class="tablenav top erp-calendar-filter">
         <form method="post" action="">
              <?php
                 erp_html_form_input( array(
                     'name'        => 'department',
-                    'value'       =>  isset( $_GET['department'] ) ? $_GET['department'] : '',
+                    'value'       =>  isset( $_GET['department'] ) ? sanitize_text_field( wp_unslash( $_GET['department'] ) ) : '',
                     'class'       => 'erp-hrm-select2-add-more erp-hr-dept-drop-down',
                     'custom_attr' => array( 'data-id' => 'erp-new-dept' ),
                     'type'        => 'select',
@@ -52,14 +52,14 @@ foreach ( $leave_requests as $key => $leave_request ) {
 
                 erp_html_form_input( array(
                     'name'        => 'designation',
-                    'value'       => isset( $_GET['designation'] ) ? $_GET['designation'] : '',
+                    'value'       => isset( $_GET['designation'] ) ? sanitize_text_field( wp_unslash( $_GET['designation'] ) ) : '',
                     'class'       => 'erp-hrm-select2-add-more erp-hr-desi-drop-down',
                     'custom_attr' => array( 'data-id' => 'erp-new-designation' ),
                     'type'        => 'select',
                     'options'     => erp_hr_get_designation_dropdown_raw()
                 ) );
             ?>
-            <input type="submit" class="button" name="erp_leave_calendar_filter" value="<?php _e( 'Filter', 'erp' ); ?>">
+            <input type="submit" class="button" name="erp_leave_calendar_filter" value="<?php esc_html_e( 'Filter', 'erp' ); ?>">
         </form>
     </div>
 

@@ -38,49 +38,54 @@ class Leave_Report_Employee_Based extends \WP_List_Table {
         if ( $which != 'top' ) {
             return;
         }
-        $selected_desingnation = ( isset( $_GET['filter_designation'] ) ) ? $_GET['filter_designation'] : 0;
-        $selected_department   = ( isset( $_GET['filter_department'] ) ) ? $_GET['filter_department'] : 0;
-        $selected_type         = ( isset( $_GET['filter_employment_type'] ) ) ? $_GET['filter_employment_type'] : '';
-        $selected_time         = ( isset( $_GET['filter_year'] ) ) ? $_GET['filter_year'] : date( 'Y' );
+        $selected_desingnation = ( isset( $_GET['filter_designation'] ) ) ? sanitize_text_field( wp_unslash( $_GET['filter_designation'] ) ) : 0;
+        $selected_department   = ( isset( $_GET['filter_department'] ) ) ? sanitize_text_field( wp_unslash( $_GET['filter_department'] ) ) : 0;
+        $selected_type         = ( isset( $_GET['filter_employment_type'] ) ) ? sanitize_text_field( wp_unslash( $_GET['filter_employment_type'] ) ) : '';
+        $selected_time         = ( isset( $_GET['filter_year'] ) ) ? sanitize_text_field( wp_unslash( $_GET['filter_year'] ) ) : date( 'Y' );
         $current_year          = date( 'Y' );
-        $date_range_start      = isset( $_REQUEST['start'] ) ? $_REQUEST['start'] : '';
-        $date_range_end        = isset( $_REQUEST['end'] ) ? $_REQUEST['end'] : '';
+        $date_range_start      = isset( $_REQUEST['start'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['start'] ) ) : '';
+        $date_range_end        = isset( $_REQUEST['end'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['end'] ) ) : '';
         ?>
         <div class="actions alignleft">
-            <label class="screen-reader-text" for="new_role"><?php _e( 'Filter by Designation', 'erp' ) ?></label>
+            <label class="screen-reader-text" for="new_role"><?php esc_html_e( 'Filter by Designation', 'erp' ) ?></label>
             <select name="filter_year" id="filter_year">
                 <?php
                 for ( $i = 0; $i <= 5; $i ++ ) {
                     $year = $current_year - $i;
-                    echo sprintf( "<option value='%s'%s>%s</option>\n", $year, selected( $selected_time, $year, false ), $year );
+                    echo sprintf( "<option value='%s'%s>%s</option>\n", esc_html( $year ), selected( $selected_time, $year, false ), esc_html( $year ) );
                 }
                 $selected = ( $selected_time == 'custom' ) ? 'selected' : '';
                 ?>
-                <option value="custom" <?php echo $selected; ?>><?php _e( 'Custom', 'erp' ); ?></option>
+                <option value="custom" <?php echo esc_html( $selected ); ?>><?php esc_html_e( 'Custom', 'erp' ); ?></option>
             </select>
             <span id="custom-date-range"></span>
             <?php if( $selected ) :?>
                 <span id="custom-input" style="float:left">
-                    <span>From </span><input name="start" class="erp-leave-date-field" type="text" value="<?php echo $date_range_start; ?>">&nbsp;<span>To </span><input name="end" class="erp-leave-date-field" type="text" value="<?php echo $date_range_end; ?>">
+                    <span>From </span><input name="start" class="erp-leave-date-field" type="text" value="<?php echo esc_html( $date_range_start ); ?>">&nbsp;<span>To </span><input name="end" class="erp-leave-date-field" type="text" value="<?php echo esc_html( $date_range_end ); ?>">
                 </span>
             <?php endif ?>
             <select name="filter_designation" id="filter_designation">
-                <?php echo erp_hr_get_designation_dropdown( $selected_desingnation ); ?>
+                <?php echo wp_kses( erp_hr_get_designation_dropdown( $selected_desingnation ), array(
+                    'option' => array(
+                        'value' => array(),
+                        'selected' => array()
+                    )
+                )  ); ?>
             </select>
 
-            <label class="screen-reader-text" for="new_role"><?php _e( 'Filter by Designation', 'erp' ) ?></label>
+            <label class="screen-reader-text" for="new_role"><?php esc_html_e( 'Filter by Designation', 'erp' ) ?></label>
             <select name="filter_department" id="filter_department">
                 <?php echo erp_hr_get_departments_dropdown( $selected_department ); ?>
             </select>
 
-            <label class="screen-reader-text" for="new_role"><?php _e( 'Filter by Employment Type', 'erp' ) ?></label>
+            <label class="screen-reader-text" for="new_role"><?php esc_html_e( 'Filter by Employment Type', 'erp' ) ?></label>
             <select name="filter_employment_type" id="filter_employment_type">
-                <option value="-1"><?php _e( '- Select Employment Type -', 'erp' ) ?></option>
+                <option value="-1"><?php esc_html_e( '- Select Employment Type -', 'erp' ) ?></option>
                 <?php
                 $types = erp_hr_get_employee_types();
 
                 foreach ( $types as $key => $title ) {
-                    echo sprintf( "<option value='%s'%s>%s</option>\n", $key, selected( $selected_type, $key, false ), $title );
+                    echo sprintf( "<option value='%s'%s>%s</option>\n", esc_html( $key ), selected( $selected_type, $key, false ), esc_html( $title ) );
                 }
                 ?>
             </select>
@@ -103,7 +108,7 @@ class Leave_Report_Employee_Based extends \WP_List_Table {
      */
     function no_items() {
 
-        _e( 'No Record Found', 'erp-attendance' );
+        esc_html_e( 'No Record Found', 'erp-attendance' );
     }
 
     /**
@@ -181,19 +186,19 @@ class Leave_Report_Employee_Based extends \WP_List_Table {
         $current_page = $this->get_pagenum();
         $offset       = ( $current_page - 1 ) * $per_page;
 
-        $selected_desingnation = ( isset( $_GET['filter_designation'] ) ) ? $_GET['filter_designation'] : 0;
-        $selected_department   = ( isset( $_GET['filter_department'] ) ) ? $_GET['filter_department'] : 0;
-        $selected_type         = ( isset( $_GET['filter_employment_type'] ) ) ? $_GET['filter_employment_type'] : '';
-        $selected_time         = ( isset( $_GET['filter_year'] ) ) ? $_GET['filter_year'] : date( 'Y' );
+        $selected_desingnation = ( isset( $_GET['filter_designation'] ) ) ? sanitize_text_field( wp_unslash( $_GET['filter_designation'] ) ) : 0;
+        $selected_department   = ( isset( $_GET['filter_department'] ) ) ? sanitize_text_field( wp_unslash( $_GET['filter_department'] ) ) : 0;
+        $selected_type         = ( isset( $_GET['filter_employment_type'] ) ) ? sanitize_text_field( wp_unslash( $_GET['filter_employment_type'] ) ) : '';
+        $selected_time         = ( isset( $_GET['filter_year'] ) ) ? sanitize_text_field( wp_unslash( $_GET['filter_year'] ) ) : date( 'Y' );
         $start_date            = $selected_time . '-01-01';
         $end_date              = $selected_time . '-12-31';
 
         if ( isset( $_REQUEST['start'] ) ) {
-            $start_date = $_REQUEST['start'];
+            $start_date = sanitize_text_field( wp_unslash( $_REQUEST['start'] ) );
         }
 
         if ( isset( $_REQUEST['end'] ) ) {
-            $end_date = $_REQUEST['end'];
+            $end_date = sanitize_text_field( wp_unslash( $_REQUEST['end'] ) );
         }
 
         $query = \WeDevs\ERP\HRM\Models\Employee::where( 'status', 'active' )->select( 'user_id' )->orderBy( 'hiring_date', 'desc' );

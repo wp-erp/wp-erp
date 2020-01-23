@@ -20,9 +20,9 @@ function erp_acct_upload_attachments( $files ) {
     // Formatting request for upload
     for ( $i = 0; $i < count( $files['name'] ); $i++ ) {
         $attachments[] = [
-            'name'     => $files['name'][ $i ],
+            'name'     => wp_unslash( $files['name'][ $i ] ),
             'type'     => $files['type'][ $i ],
-            'tmp_name' => $files['tmp_name'][ $i ],
+            'tmp_name' => wp_unslash( $files['tmp_name'][ $i ] ),
             'error'    => $files['error'][ $i ],
             'size'     => $files['size'][ $i ],
         ];
@@ -55,7 +55,7 @@ function erp_acct_get_payables( $from, $to ) {
     $purchase_query = $wpdb->prepare(
         "Select voucher_no, SUM(ad.debit - ad.credit) as due, due_date
         FROM $purchases LEFT JOIN $purchase_acct_details as ad
-        ON ad.purchase_no = voucher_no  where due_date 
+        ON ad.purchase_no = voucher_no  where due_date
         BETWEEN %s and %s Group BY voucher_no Having due < 0 ",
         $from_date,
         $to_date
@@ -426,7 +426,7 @@ function erp_acct_quick_access_menu() {
         'journal'         => [
             'title' => 'Journal',
             'slug'  => 'journal',
-            'url'   => 'journals/new',
+            'url'   => 'transactions/journals/new',
         ],
         'tax_rate'        => [
             'title' => 'Tax Payment',

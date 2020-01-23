@@ -36,30 +36,40 @@ class Employee_List_Table extends \WP_List_Table {
             return;
         }
 
-        $selected_desingnation = ( isset( $_GET['filter_designation'] ) ) ? $_GET['filter_designation'] : 0;
-        $selected_department   = ( isset( $_GET['filter_department'] ) ) ? $_GET['filter_department'] : 0;
-        $selected_type   = ( isset( $_GET['filter_employment_type'] ) ) ? $_GET['filter_employment_type'] : '';
+        $selected_desingnation = ( isset( $_GET['filter_designation'] ) ) ? sanitize_text_field( wp_unslash( $_GET['filter_designation'] ) ) : 0;
+        $selected_department   = ( isset( $_GET['filter_department'] ) ) ? sanitize_text_field( wp_unslash( $_GET['filter_department'] ) ) : 0;
+        $selected_type   = ( isset( $_GET['filter_employment_type'] ) ) ? sanitize_text_field( wp_unslash( $_GET['filter_employment_type'] ) ) : '';
         ?>
         <div class="alignleft actions">
 
-            <label class="screen-reader-text" for="new_role"><?php _e( 'Filter by Designation', 'erp' ) ?></label>
+            <label class="screen-reader-text" for="new_role"><?php esc_html_e( 'Filter by Designation', 'erp' ) ?></label>
             <select name="filter_designation" id="filter_designation">
-                <?php echo erp_hr_get_designation_dropdown( $selected_desingnation ); ?>
+                <?php echo wp_kses( erp_hr_get_designation_dropdown( $selected_desingnation ), array(
+                    'option' => array(
+                        'value' => array(),
+                        'selected' => array()
+                    )
+                ) ); ?>
             </select>
 
-            <label class="screen-reader-text" for="new_role"><?php _e( 'Filter by Designation', 'erp' ) ?></label>
+            <label class="screen-reader-text" for="new_role"><?php esc_html_e( 'Filter by Designation', 'erp' ) ?></label>
             <select name="filter_department" id="filter_department">
-                <?php echo erp_hr_get_departments_dropdown( $selected_department ); ?>
+                <?php echo wp_kses( erp_hr_get_departments_dropdown( $selected_department ), array(
+                    'option' => array(
+                        'value' => array(),
+                        'selected' => array()
+                    ),
+                ) ); ?>
             </select>
 
-            <label class="screen-reader-text" for="new_role"><?php _e( 'Filter by Employment Type', 'erp' ) ?></label>
+            <label class="screen-reader-text" for="new_role"><?php esc_html_e( 'Filter by Employment Type', 'erp' ) ?></label>
             <select name="filter_employment_type" id="filter_employment_type">
-                <option value="-1"><?php _e( '- Select Employment Type -', 'erp' ) ?></option>
+                <option value="-1"><?php esc_html_e( '- Select Employment Type -', 'erp' ) ?></option>
                 <?php
                     $types = erp_hr_get_employee_types();
 
                     foreach ( $types as $key => $title ) {
-                        echo sprintf( "<option value='%s'%s>%s</option>\n", $key, selected( $selected_type, $key, false ), $title );
+                        echo sprintf( "<option value='%s'%s>%s</option>\n", esc_html( $key ), selected( $selected_type, esc_html( $key ), false ), esc_html( $title ) );
                     }
                 ?>
             </select>
@@ -75,7 +85,7 @@ class Employee_List_Table extends \WP_List_Table {
      * @return void
      */
     function no_items() {
-        _e( 'No employee found.', 'erp' );
+        esc_html_e( 'No employee found.', 'erp' );
     }
 
     /**
@@ -298,28 +308,28 @@ class Employee_List_Table extends \WP_List_Table {
         $input_id = $input_id . '-search-input';
 
         if ( ! empty( $_REQUEST['orderby'] ) ) {
-            echo '<input type="hidden" name="orderby" value="' . esc_attr( $_REQUEST['orderby'] ) . '" />';
+            echo '<input type="hidden" name="orderby" value="' . esc_attr( sanitize_text_field( wp_unslash( $_REQUEST['orderby'] ) ) ) . '" />';
         }
 
         if ( ! empty( $_REQUEST['order'] ) ) {
-            echo '<input type="hidden" name="order" value="' . esc_attr( $_REQUEST['order'] ) . '" />';
+            echo '<input type="hidden" name="order" value="' . esc_attr( sanitize_text_field( wp_unslash( $_REQUEST['order'] ) ) ) . '" />';
         }
 
         if ( ! empty( $_REQUEST['status'] ) ) {
-            echo '<input type="hidden" name="status" value="' . esc_attr( $_REQUEST['status'] ) . '" />';
+            echo '<input type="hidden" name="status" value="' . esc_attr( sanitize_text_field( wp_unslash( $_REQUEST['status'] ) ) ) . '" />';
         }
 
         if ( ! empty( $_REQUEST['post_mime_type'] ) ) {
-            echo '<input type="hidden" name="post_mime_type" value="' . esc_attr( $_REQUEST['post_mime_type'] ) . '" />';
+            echo '<input type="hidden" name="post_mime_type" value="' . esc_attr( sanitize_text_field( wp_unslash( $_REQUEST['post_mime_type'] ) ) ) . '" />';
         }
 
         if ( ! empty( $_REQUEST['detached'] ) ) {
-            echo '<input type="hidden" name="detached" value="' . esc_attr( $_REQUEST['detached'] ) . '" />';
+            echo '<input type="hidden" name="detached" value="' . esc_attr( sanitize_text_field( wp_unslash( $_REQUEST['detached'] ) ) ) . '" />';
         }
         ?>
         <p class="search-box">
-            <label class="screen-reader-text" for="<?php echo $input_id ?>"><?php echo $text; ?>:</label>
-            <input type="search" id="<?php echo $input_id ?>" name="s" value="<?php _admin_search_query(); ?>" />
+            <label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>"><?php echo esc_html( $text ); ?>:</label>
+            <input type="search" id="<?php echo esc_attr( $input_id ) ?>" name="s" value="<?php _admin_search_query(); ?>" />
             <?php submit_button( $text, 'button', 'employee_search', false, array( 'id' => 'search-submit' ) ); ?>
         </p>
         <?php
@@ -339,7 +349,7 @@ class Employee_List_Table extends \WP_List_Table {
         $per_page              = 20;
         $current_page          = $this->get_pagenum();
         $offset                = ( $current_page -1 ) * $per_page;
-        $this->page_status     = isset( $_GET['status'] ) ? sanitize_text_field( $_GET['status'] ) : 'active';
+        $this->page_status     = isset( $_GET['status'] ) ? sanitize_text_field( wp_unslash( $_GET['status'] ) ) : 'active';
 
         // only ncessary because we have sample data
         $args = array(
@@ -348,31 +358,31 @@ class Employee_List_Table extends \WP_List_Table {
         );
 
         if ( isset( $_REQUEST['s'] ) && !empty( $_REQUEST['s'] ) ) {
-            $args['s'] = $_REQUEST['s'];
+            $args['s'] = sanitize_text_field( wp_unslash( $_REQUEST['s'] ) );
         }
 
         if ( isset( $_REQUEST['orderby'] ) && !empty( $_REQUEST['orderby'] ) ) {
-            $args['orderby'] = $_REQUEST['orderby'];
+            $args['orderby'] = sanitize_text_field( wp_unslash( $_REQUEST['orderby'] ) );
         }
 
         if ( isset( $_REQUEST['status'] ) && !empty( $_REQUEST['status'] ) && current_user_can( erp_hr_get_manager_role() ) ) {
-            $args['status'] = $_REQUEST['status'];
+            $args['status'] = sanitize_text_field( wp_unslash( $_REQUEST['status'] ) );
         }
 
         if ( isset( $_REQUEST['order'] ) && !empty( $_REQUEST['order'] ) ) {
-            $args['order'] = $_REQUEST['order'];
+            $args['order'] = sanitize_text_field( wp_unslash( $_REQUEST['order'] ) );
         }
 
-        if ( isset( $_REQUEST['filter_designation'] ) && $_REQUEST['filter_designation'] ) {
-            $args['designation'] = $_REQUEST['filter_designation'];
+        if ( isset( $_REQUEST['filter_designation'] ) && !empty( $_REQUEST['filter_designation'] ) ) {
+            $args['designation'] = sanitize_text_field( wp_unslash( $_REQUEST['filter_designation'] ) );
         }
 
-        if ( isset( $_REQUEST['filter_department'] ) && $_REQUEST['filter_department'] ) {
-            $args['department'] = $_REQUEST['filter_department'];
+        if ( isset( $_REQUEST['filter_department'] ) && !empty( $_REQUEST['filter_department'] ) ) {
+            $args['department'] = sanitize_text_field( wp_unslash( $_REQUEST['filter_department'] ) );
         }
 
-        if ( isset( $_REQUEST['filter_employment_type'] ) && $_REQUEST['filter_employment_type'] ) {
-            $args['type'] = $_REQUEST['filter_employment_type'];
+        if ( isset( $_REQUEST['filter_employment_type'] ) && !empty( $_REQUEST['filter_employment_type'] ) ) {
+            $args['type'] = sanitize_text_field( wp_unslash( $_REQUEST['filter_employment_type'] ) );
         }
 
         $this->counts = erp_hr_employee_get_status_count();

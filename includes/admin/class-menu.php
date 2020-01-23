@@ -25,7 +25,7 @@ class Admin_Menu {
     /**
      * Render Admin bar menu
      */
-    function add_admin_bar_menu(){
+    function add_admin_bar_menu() {
         global $wp_admin_bar, $wpdb;
 
         /* Check that the admin bar is showing and user has permission... */
@@ -155,8 +155,8 @@ class Admin_Menu {
         $menu = erp_menu();
         $menu = $menu[$component];
 
-        $section = ( isset( $_GET['section'] ) && isset( $menu[$_GET['section']] ) ) ? $_GET['section'] : 'settings';
-        $sub = ( isset( $_GET['sub-section'] ) && !empty( $menu[$section]['submenu'][$_GET['sub-section']] ) ) ? $_GET['sub-section'] : false;
+        $section = ( isset( $_GET['section'] ) && isset( $menu[$_GET['section']] ) ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : 'settings';
+        $sub = ( isset( $_GET['sub-section'] ) && !empty( $menu[$section]['submenu'][$_GET['sub-section']] ) ) ? sanitize_text_field( wp_unslash( $_GET['sub-section']  ) ) : false;
 
         $callback = $menu[$section]['callback'];
         if ( $sub ) {
@@ -258,7 +258,7 @@ class Admin_Menu {
      * @return void
      */
     public function company_page() {
-        $action = isset( $_GET['action'] ) ? $_GET['action'] : 'list';
+        $action = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : 'list';
 
         switch ($action) {
             case 'edit':
