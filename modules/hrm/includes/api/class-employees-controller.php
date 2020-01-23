@@ -1479,6 +1479,7 @@ class Employees_Controller extends REST_Controller {
             'phone'           => '',
             'work_phone'      => '',
             'mobile'          => '',
+            'blood_group'     => '',
             'address'         => '',
             'gender'          => '',
             'marital_status'  => '',
@@ -1628,6 +1629,10 @@ class Employees_Controller extends REST_Controller {
 
         if ( isset( $request['mobile'] ) ) {
             $prepared_item['personal']['mobile'] = $request['mobile'];
+        }
+
+        if ( isset( $request['blood_group'] ) ) {
+            $prepared_item['personal']['blood_group'] = $request['blood_group'];
         }
 
         if ( isset( $request['address'] ) ) {

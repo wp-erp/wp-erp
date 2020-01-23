@@ -113,7 +113,7 @@ class Updates {
         if ( ! is_null( $installed_version ) && version_compare( $installed_version, end( $updatable_versions ), '<' ) ) {
             ?>
                 <div id="message" class="updated">
-                    <p><?php esc_html_e( '<strong>WP ERP Data Update Required</strong> &#8211; We need to update your install to the latest version', 'erp' ); ?></p>
+                    <p><?php wp_kses_post( _e( '<strong>WP ERP Data Update Required</strong> &#8211; We need to update your install to the latest version', 'erp' ) ); ?></p>
                     <p class="submit"><a href="<?php echo esc_attr( add_query_arg( [ 'wperp_do_update' => true ], isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '' ) ); ?>" class="wperp-update-btn button-primary"><?php esc_html_e( 'Run the updater', 'erp' ); ?></a></p>
                 </div>
 

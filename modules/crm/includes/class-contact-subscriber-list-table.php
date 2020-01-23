@@ -298,6 +298,8 @@ class Contact_Subscriber_List_Table extends \WP_List_Table {
             $args['group_id'] = sanitize_text_field( wp_unslash( $_REQUEST['filter_contact_group'] ) );
         }
 
+        $this->process_bulk_action();
+
         // Prepare all item after all filtering
         $this->items  = erp_crm_get_subscriber_contact( $args );
 
@@ -310,6 +312,39 @@ class Contact_Subscriber_List_Table extends \WP_List_Table {
             'total_items' => $total_items,
             'per_page'    => $per_page
         ] );
+    }
+
+    /**
+     * Process bulk action
+     */
+    public function process_bulk_action() {
+        // security check!
+        if ( isset( $_REQUEST['_wpnonce'] ) && ! empty( $_REQUEST['_wpnonce'] ) ) {
+
+            $nonce  = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
+            $action = 'bulk-' . $this->_args['plural'];
+
+            if ( ! wp_verify_nonce( $nonce, $action ) ) {
+                wp_die( 'Nope! Security check failed!' );
+            }
+        }
+
+        $action = $this->current_action();
+
+        switch ( $action ) {
+            case 'delete':
+                erp_crm_contact_subscriber_delete(
+                    $_REQUEST['suscriber_contact_id'],
+                    $_REQUEST['filter_contact_group']
+                );
+
+                break;
+
+            default:
+                return;
+        }
+
+        return;
     }
 
 }

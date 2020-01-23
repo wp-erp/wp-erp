@@ -406,7 +406,14 @@ export default {
             HTTP.get(`/people/${customer_id}`).then(response => {
                 const billing = response.data;
 
-                const address = `Street: ${billing.street_1} ${billing.street_2} \nCity: ${billing.city} \nState: ${billing.state} \nCountry: ${billing.country}`;
+                let street_1    = billing.street_1 ? billing.street_1 + ',' : '';
+                let street_2    = billing.street_2 ? billing.street_2 : '';
+                let city        = billing.city ? billing.city : '';
+                let state       = billing.state ? billing.state + ',' : '';
+                let postal_code = billing.postal_code ? billing.postal_code : '';
+                let country     = billing.country ? billing.country : '';
+
+                const address = `${street_1} ${street_2} \n${city} \n${state} ${postal_code} \n${country}`;
 
                 this.basic_fields.billing_address = address;
             });

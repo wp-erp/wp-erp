@@ -186,7 +186,7 @@ export default {
         },
 
         addNewTaxRate(event) {
-            this.validateForm();
+            this.validateForm(); return;
 
             if (this.form_errors.length) {
                 window.scrollTo({
@@ -222,10 +222,10 @@ export default {
 
             for (let idx = 0; idx < this.componentLines.length; idx++) {
                 const item                 = {};
-                item.component_name = this.componentLines[idx].component_name;
-                item.agency_id = this.componentLines[idx].agency_id.id;
+                item.component_name  = this.componentLines[idx].component_name;
+                item.agency_id       = this.componentLines[idx].agency_id.id;
                 item.tax_category_id = this.componentLines[idx].tax_category.id;
-                item.tax_rate = this.componentLines[idx].tax_rate;
+                item.tax_rate        = this.componentLines[idx].tax_rate;
 
                 lineItems.push(item);
             }
@@ -236,8 +236,31 @@ export default {
         validateForm() {
             this.form_errors = [];
 
+            if (!Object.prototype.hasOwnProperty.call(this.componentLines[0], 'component_name')) {
+                this.form_errors.push('At least One Component is required.');
+            }
+
             if (!Object.prototype.hasOwnProperty.call(this.tax_name, 'id')) {
                 this.form_errors.push('Tax Zone Name is required.');
+            }
+
+            for ( let i = 0; i < this.componentLines.length; i++ ) {
+                var component = this.componentLines[i];
+                var name      = component.component_name;
+
+                if ( name ) {
+                    if (!Object.prototype.hasOwnProperty.call( 'agency_id', component ) ) {
+                        this.form_errors.push(`Component '${name}' agency id is required.`);
+                    }
+
+                    if (!Object.prototype.hasOwnProperty.call( 'tax_category', component ) ) {
+                        this.form_errors.push(`Component '${name}' tax category id is required.`);
+                    }
+
+                    if (!Object.prototype.hasOwnProperty.call( 'tax_rate', component ) ) {
+                        this.form_errors.push(`Component '${name}' tax rate is required.`);
+                    }
+                }
             }
         },
 

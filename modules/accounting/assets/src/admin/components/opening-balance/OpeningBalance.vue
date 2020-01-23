@@ -62,7 +62,10 @@
                         </td>
                     </tr>
                     <tr class="add-new-line">
-                        <td colspan="9" style="text-align: left;">
+                        <td v-if="undefined === acct_rec" style="float: left;">
+                            {{ __( 'No People Found!', 'erp' ) }}
+                        </td>
+                        <td v-else colspan="9" style="text-align: left;">
                             <button @click.prevent="acct_rec.push({})" class="wperp-btn btn--primary add-line-trigger"><i class="flaticon-add-plus-button"></i>{{ __('Add People', 'erp') }}</button>
                         </td>
                     </tr>
@@ -99,7 +102,10 @@
                         </td>
                     </tr>
                     <tr class="add-new-line">
-                        <td colspan="9" style="text-align: left;">
+                        <td v-if="undefined === acct_pay" style="float: left;">
+                            {{ __( 'No People Found!', 'erp' ) }}
+                        </td>
+                        <td v-else colspan="9" style="text-align: left;">
                             <button @click.prevent="acct_pay.push({})" class="wperp-btn btn--primary add-line-trigger"><i class="flaticon-add-plus-button"></i>{{ __('Add People', 'erp') }}</button>
                         </td>
                     </tr>
@@ -243,7 +249,10 @@
                         </td>
                     </tr>
                     <tr class="add-new-line">
-                        <td colspan="9" style="text-align: left;">
+                        <td v-if="undefined === ledgers[7]" style="float: left;">
+                           {{ __( 'No Bank Account Found!', 'erp' ) }}
+                        </td>
+                        <td v-else colspan="9" style="text-align: left;">
                             <button @click.prevent="ledgers[7].push({})" class="wperp-btn btn--primary add-line-trigger"><i class="flaticon-add-plus-button"></i>{{ __('Add Bank', 'erp') }}</button>
                         </td>
                     </tr>
@@ -576,7 +585,7 @@ export default {
         getPeople() {
             HTTP.get('/people', {
                 params: {
-                    type: 'all'
+                    type: []
                 }
             }).then(response => {
                 this.options = response.data;
@@ -657,7 +666,7 @@ export default {
         },
 
         removeBankRow(index) {
-            this.$delete(this.banks, index);
+            this.$delete(this.ledgers[7], index);
             this.calculateAmount();
         }
     }

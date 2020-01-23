@@ -88,7 +88,7 @@ export default {
         getPeople(query) {
             HTTP.get('/people', {
                 params: {
-                    type: 'all',
+                    type: [],
                     search: query
                 }
             }).then(response => {
