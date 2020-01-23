@@ -5,7 +5,7 @@ Tags: business manager, erp, accounting, crm, hr, project manager, small busines
 Requires at least: 4.4
 Tested up to: 5.3.2
 Requires PHP: 5.6
-Stable tag: 1.5.11
+Stable tag: 1.5.12
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -266,6 +266,18 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+
+= v1.5.12 -> January 23, 2020 =
+[fix]   - Some import related issues for wrong sanitize functions
+[fix]   - HR: Cannot set AC Manager permission for an employee
+[fix]   - CR: Email templates could not be enabled
+[fix]   - CR: View meeting details from widget
+[fix]   - CR: New contact & assigned task email configuration issue
+[fix]   - AC: Broken journal link from admin bar menu
+[fix]   - AC: Prevent creating a tax rate without component values
+[fix]   - AC: Banks cannot be deleted from opening balance
+[tweak] - AC: Update address field formation in transactions
+[tweak] - AC: Support for alphanumeric post code in people creation
 
 = v1.5.11 -> January 09, 2020 =
 [fix]   - Unicode characters saving issue during CSV import
