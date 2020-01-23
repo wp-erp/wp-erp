@@ -364,8 +364,15 @@ export default {
                     this.basic_fields.billing_address = billing;
                     return;
                 }
+                
+                let street_1    = billing.street_1 ? billing.street_1 + ',' : '';
+                let street_2    = billing.street_2 ? billing.street_2 : '';
+                let city        = billing.city ? billing.city : '';
+                let state       = billing.state ? billing.state + ',' : '';
+                let postal_code = billing.postal_code ? billing.postal_code : '';
+                let country     = billing.country ? billing.country : '';
 
-                const address = `${billing.street_1}, ${billing.street_2} \n${billing.city} \n${billing.state}, ${billing.postal_code} \n${billing.country}`;
+                const address = `${street_1} ${street_2} \n${city} \n${state} ${postal_code} \n${country}`;
 
                 this.basic_fields.billing_address = address;
             });
