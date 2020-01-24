@@ -260,7 +260,7 @@ class Subscription {
             $this->send_error( [ 'msg' => __( 'Invalid operation', 'erp' ) ] );
 
         } else {
-            parse_str( sanitize_text_field( wp_unslash( $_POST['form_data'] ) ), $form_data );
+            parse_str( $_POST['form_data'], $form_data ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         }
 
 
