@@ -1606,7 +1606,7 @@ function erp_process_import_export() {
         }
     }
 
-    $field_builder_company_options = get_option( 'erp-company-fields' );
+    $field_builder_company_options  = get_option( 'erp-company-fields' );
     $field_builder_companies_fields = [];
 
     if ( ! empty( $field_builder_company_options ) ) {
