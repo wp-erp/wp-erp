@@ -141,7 +141,7 @@
 
                         <p class="advanced-fields">
                             <input type="checkbox" id="advanced_fields">
-                            <label for="advanced_fields">Show Advanced Fields</label>
+                            <label for="advanced_fields">{{ __('Show Advanced Fields', 'erp') }}</label>
                         </p>
 
                         <fieldset class="others-info">

@@ -678,56 +678,68 @@
                         + '<div class="erp-advance-search-or-wrapper" v-for="(index,fieldItem) in fields">'
                             + '<div class="or-divider" v-show="( this.fields.length > 1 ) && ( index != 0)">'
                                 + '<hr>'
-                                + '<span>Or</span>'
+                                + '<span>{{ orText }}</span>'
                             + '</div>'
-                            + '<button :disabled="editableMode" class="add-filter button" @click.prevent="addNewFilter( index )"><i class="fa fa-filter" aria-hidden="true"></i> Add Filter</button>'
+                            + '<button :disabled="editableMode" class="add-filter button" @click.prevent="addNewFilter( index )"><i class="fa fa-filter" aria-hidden="true"></i> {{ addFilterText }}</button>'
                             + '<filter-item :editable-mode=editableMode :field=field :field-index=fieldIndex :index=index v-for="( fieldIndex, field ) in fieldItem"></filter-item>'
-                            + '<button :disabled="editableMode" class="add-filter button" v-show="( this.fields[index].length > 0 && index == this.fields.length-1 )" @click.prevent="addNewOrFilter( index )"><i class="fa fa-filter" aria-hidden="true"></i> Or Filter</button>'
+                            + '<button :disabled="editableMode" class="add-filter button" v-show="( this.fields[index].length > 0 && index == this.fields.length-1 )" @click.prevent="addNewOrFilter( index )"><i class="fa fa-filter" aria-hidden="true"></i> {{ orFilterText }}</button>'
                             + '<div class="clearfix"></div>'
                         + '</div>'
                     + '</div>'
                     + '<div class="erp-advance-search-action-wrapper" v-if="ifHasAnyFilter()">'
                         + '<div class="saveasnew-wrapper" v-show="isNewSave">'
-                            + '<input type="text" class="save-search-name" v-model="saveSearchObj.searchName" placeholder="Name this Segment..">'
-                            + '<label for="save-search-global"><input type="checkbox" id="save-search-global" class="save-search-global" v-model="saveSearchObj.searchItGlobal"> Make segment available for all users</label>'
-                            + '<input type="submit" class="button button-primary" v-if="isUpdate" @click.prevent="searchSave(\'update\')" value="Update">'
-                            + '<input type="submit" class="button button-primary" v-if="!isUpdate" @click.prevent="searchSave(\'save\')" value="Save">'
-                            + '<input type="submit" class="button" v-if="isUpdate" @click.prevent="cancelSave(\'update\')" value="Cancel">'
-                            + '<input type="submit" class="button" v-if="!isUpdate" @click.prevent="cancelSave(\'save\')" value="Cancel">'
+                            + '<input type="text" class="save-search-name" v-model="saveSearchObj.searchName" :placeholder="segmentNamePlaceholder">'
+                            + '<label for="save-search-global"><input type="checkbox" id="save-search-global" class="save-search-global" v-model="saveSearchObj.searchItGlobal"> {{ makeSegmentAvailableText }}</label>'
+                            + '<input type="submit" class="button button-primary" v-if="isUpdate" @click.prevent="searchSave(\'update\')" :value="updateText">'
+                            + '<input type="submit" class="button button-primary" v-if="!isUpdate" @click.prevent="searchSave(\'save\')" :value="saveText">'
+                            + '<input type="submit" class="button" v-if="isUpdate" @click.prevent="cancelSave(\'update\')" :value="cancelText">'
+                            + '<input type="submit" class="button" v-if="!isUpdate" @click.prevent="cancelSave(\'save\')" :value="cancelText">'
                             + '<span class="erp-loader" v-show="isLoading" style="margin-top: 4px;"></span>'
                         + '</div>'
                         + '<div class="saveasnew-wrapper" v-show="isNewGroup">'
-                            + '<input type="text" class="save-group-name" v-model="groupName" placeholder="Name this Group..">'
-                            + '<input type="submit" class="button button-primary" @click.prevent="saveGroup(\'save\')" value="Save">'
-                            + '<input type="submit" class="button" @click.prevent="cancelGroupSave(\'save\')" value="Cancel">'
+                            + '<input type="text" class="save-group-name" v-model="groupName" :placeholder="groupNamePlaceholder">'
+                            + '<input type="submit" class="button button-primary" @click.prevent="saveGroup(\'save\')" :value="saveText">'
+                            + '<input type="submit" class="button" @click.prevent="cancelGroupSave(\'save\')" :value="cancelText">'
                             + '<span class="erp-loader" v-show="isLoading" style="margin-top: 4px;"></span>'
                         + '</div>'
-                        + '<button :disabled="editableMode" class="button button-primary" v-show="!isNewSave && !isNewGroup" @click.prevent="saveAsNew()">Save new Segment</button>'
-                        + '<button :disabled="editableMode" class="button button-secondary" v-show="!isNewSave && !isNewGroup" @click.prevent="saveAsGroup()">Save Contact Group</button>'
-                        + '<button :disabled="editableMode" class="button" v-show="isUpdateSaveSearch && !isNewSave" @click.prevent="updateSave()">Update this Segment</button>'
-                        + '<button :disabled="editableMode" class="erp-button-danger button" style="float:right;" v-show="isUpdateSaveSearch && !isNewSave" @click.prevent="removeSegment()">Delete this Segment</button>'
-                        + '<button :disabled="editableMode" class="button" style="float:right;" v-show="!isNewSave && !isNewGroup" @click.prevent="resetFilter()">Reset all filter</button>'
+                        + '<button :disabled="editableMode" class="button button-primary" v-show="!isNewSave && !isNewGroup" @click.prevent="saveAsNew()">{{ saveSegmentText }}</button>'
+                        + '<button :disabled="editableMode" class="button button-secondary" v-show="!isNewSave && !isNewGroup" @click.prevent="saveAsGroup()">{{ saveContactGroupText }}</button>'
+                        + '<button :disabled="editableMode" class="button" v-show="isUpdateSaveSearch && !isNewSave" @click.prevent="updateSave()">{{ updateSegmentText }}</button>'
+                        + '<button :disabled="editableMode" class="erp-button-danger button" style="float:right;" v-show="isUpdateSaveSearch && !isNewSave" @click.prevent="removeSegment()">{{ deleteSegmentText }}</button>'
+                        + '<button :disabled="editableMode" class="button" style="float:right;" v-show="!isNewSave && !isNewGroup" @click.prevent="resetFilter()">{{ resetFilterText }}</button>'
                         + '<span class="erp-loader" v-show="isLoading && !isNewSave && !isNewGroup" style="margin-top: 4px;"></span>'
                     + '</div>'
                 + '</div>',
 
             data: function() {
                 return {
-                    editableMode: false,
-                    fields: [
-                        [
-                        ]
-                    ],
-                    isNewSave: false,
-                    isUpdate: false,
-                    isNewGroup:false,
-                    groupName:'',
+                    editableMode      : false,
+                    fields            : [[]],
+                    isNewSave         : false,
+                    isUpdate          : false,
+                    isNewGroup        : false,
+                    groupName         : '',
                     isUpdateSaveSearch: false,
-                    saveSearchObj: {
+                    saveSearchObj     : {
                         searchName: '',
                         searchItGlobal: false,
                     },
-                    isLoading: false
+                    isLoading               : false,
+                    addFilterText           : __( 'Add Filter', 'erp' ),
+                    orText                  : __( 'Or', 'erp' ),
+                    orFilterText            : __( 'Or Filter', 'erp' ),
+                    segmentNamePlaceholder  : __( 'Name this Segment..', 'erp' ),
+                    makeSegmentAvailableText: __( 'Make segment available for all users', 'erp' ),
+                    updateText              : __( 'Update', 'erp' ),
+                    saveText                : __( 'Save', 'erp' ),
+                    cancelText              : __( 'Cancel', 'erp' ),
+                    groupNamePlaceholder    : __( 'Name this Group..', 'erp' ),
+                    saveSegmentText         : __( 'Save new Segment', 'erp' ),
+                    saveContactGroupText    : __( 'Save Contact Group', 'erp' ),
+                    updateSegmentText       : __( 'Update this Segment', 'erp' ),
+                    deleteSegmentText       : __( 'Delete this Segment', 'erp' ),
+                    resetFilterText         : __( 'Reset all filter', 'erp' )
+                    
                 }
             },
 
