@@ -1606,6 +1606,15 @@ function erp_process_import_export() {
         }
     }
 
+    $field_builder_company_options = get_option( 'erp-company-fields' );
+    $field_builder_companies_fields = [];
+
+    if ( ! empty( $field_builder_company_options ) ) {
+        foreach ( $field_builder_company_options as $field ) {
+            $field_builder_companies_fields[] = $field['name'];
+        }
+    }
+
     $field_builder_employee_options = get_option( 'erp-employee-fields' );
     $field_builder_employees_fields = array();
 
@@ -1837,7 +1846,6 @@ function erp_process_import_export() {
             }
 
             //@todo do_action()
-
             $csv_items = [];
 
             $x = 0;
@@ -1869,10 +1877,17 @@ function erp_process_import_export() {
                         }
 
                     } else {
-                        if ( in_array( $field, $field_builder_contacts_fields ) ) {
-                            $csv_items[ $x ][ $field ] = erp_people_get_meta( $item->id, $field, true );
-                        } else {
-                            if ( isset( $item->{$field} ) ) {
+                        if ( $type == 'contact' ) {
+                            if ( in_array( $field, $field_builder_contacts_fields ) ) {
+                                $csv_items[ $x ][ $field ] = erp_people_get_meta( $item->id, $field, true );
+                            } else {
+                                $csv_items[ $x ][ $field ] = $item->{$field};
+                            }
+                        }
+                        if ( $type == 'company' ) {
+                            if ( in_array( $field, $field_builder_companies_fields ) ) {
+                                $csv_items[ $x ][ $field ] = erp_people_get_meta( $item->id, $field, true );
+                            } else {
                                 $csv_items[ $x ][ $field ] = $item->{$field};
                             }
                         }
