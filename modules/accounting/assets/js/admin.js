@@ -28026,7 +28026,6 @@ setTimeout(function () {
       var _this3 = this;
 
       this.validateForm();
-      return;
 
       if (this.form_errors.length) {
         window.scrollTo({
@@ -28089,15 +28088,15 @@ setTimeout(function () {
         var name = component.component_name;
 
         if (name) {
-          if (!Object.prototype.hasOwnProperty.call('agency_id', component)) {
+          if (!Object.prototype.hasOwnProperty.call(component, 'agency_id')) {
             this.form_errors.push("Component '".concat(name, "' agency id is required."));
           }
 
-          if (!Object.prototype.hasOwnProperty.call('tax_category', component)) {
+          if (!Object.prototype.hasOwnProperty.call(component, 'tax_category')) {
             this.form_errors.push("Component '".concat(name, "' tax category id is required."));
           }
 
-          if (!Object.prototype.hasOwnProperty.call('tax_rate', component)) {
+          if (!Object.prototype.hasOwnProperty.call(component, 'tax_rate')) {
             this.form_errors.push("Component '".concat(name, "' tax rate is required."));
           }
         }
