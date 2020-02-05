@@ -48,18 +48,19 @@ class ERP_1_5_15 {
         $charset_collate = $charset . ' ' . $collate;
 
         $table_schema = [
-            "CREATE TABLE  {$wpdb->prefix}erp_hr_leaves_new (
+            "CREATE TABLE {$wpdb->prefix}erp_hr_leaves_new (
                   id smallint(6) NOT NULL AUTO_INCREMENT,
                   name varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
                   description text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
                   created_at int(11) DEFAULT NULL,
                   update_at int(11) DEFAULT NULL,
-                  PRIMARY KEY (id)
+                  PRIMARY KEY  (id)
               ) $charset_collate;",
 
-            "CREATE TABLE  {$wpdb->prefix}erp_hr_leave_policies_new (
+            "CREATE TABLE {$wpdb->prefix}erp_hr_leave_policies_new (
                   id int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
                   leave_id smallint(5) UNSIGNED NOT NULL,
+                  old_policy_id int(11) UNSIGNED NOT NULL,
                   description text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
                   days tinyint(3) UNSIGNED NOT NULL,
                   color varchar(10) DEFAULT NULL,
@@ -76,7 +77,7 @@ class ERP_1_5_15 {
                   accrued_days tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
                   created_at int(11) NOT NULL,
                   updated_at int(11) NOT NULL,
-                  PRIMARY KEY (id)
+                  PRIMARY KEY  (id)
             ) $charset_collate;",
 
             "CREATE TABLE {$wpdb->prefix}erp_hr_leave_policies_segregation_new (
@@ -96,7 +97,7 @@ class ERP_1_5_15 {
                   decem tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
                   added int(11) NOT NULL,
                   updated int(11) NOT NULL,
-                  PRIMARY KEY (id)
+                  PRIMARY KEY  (id)
             ) $charset_collate;",
 
             "CREATE TABLE {$wpdb->prefix}erp_hr_leave_entitlements_new (
@@ -106,13 +107,13 @@ class ERP_1_5_15 {
                   created_by bigint(20) UNSIGNED NOT NULL,
                   trn_id bigint(20) UNSIGNED NOT NULL,
                   trn_type enum('leave_policies','leave_approval_status','leave_encashment_requests','leave_entitlements','unpaid_leave','leave_encashment', 'manual_leave_policies', 'others') NOT NULL DEFAULT 'leave_policies',
-                  day_in tinyint(3) UNSIGNED NOT NULL,
-                  day_out tinyint(3) UNSIGNED NOT NULL,
-                  description varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+                  day_in tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                  day_out tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                  description text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
                   f_year smallint(6) NOT NULL,
                   created_at int(11) NOT NULL,
                   updated_at int(11) NOT NULL,
-                  PRIMARY KEY (id)
+                  PRIMARY KEY  (id)
             ) $charset_collate;",
 
             "CREATE TABLE {$wpdb->prefix}erp_hr_leave_requests_new (
@@ -123,10 +124,10 @@ class ERP_1_5_15 {
                   days tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
                   start_date int(11) NOT NULL,
                   end_date int(11) NOT NULL,
-                  reason text NOT NULL,
+                  reason text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
                   created_at int(11) NOT NULL,
                   updated_at int(11) NOT NULL,
-                  PRIMARY KEY (id),
+                  PRIMARY KEY  (id),
                   KEY user_id (user_id,leave_policy_id)
             ) $charset_collate;",
 
@@ -140,7 +141,7 @@ class ERP_1_5_15 {
                   status tinyint(3) UNSIGNED NOT NULL,
                   created_at int(11) NOT NULL,
                   updated_at int(11) NOT NULL,
-                  PRIMARY KEY (id)
+                  PRIMARY KEY  (id)
             ) $charset_collate;",
 
             "CREATE TABLE {$wpdb->prefix}erp_hr_leave_approval_status_new (
@@ -150,10 +151,10 @@ class ERP_1_5_15 {
                   approved_by bigint(20) UNSIGNED NOT NULL,
                   approved_date int(11) NOT NULL,
                   forward_to bigint(20) UNSIGNED NOT NULL,
-                  message text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+                  message text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
                   created_at int(11) NOT NULL,
                   updated_at int(11) NOT NULL,
-                  PRIMARY KEY (id)
+                  PRIMARY KEY  (id)
             ) $charset_collate;",
 
             "CREATE TABLE {$wpdb->prefix}erp_hr_leave_encashment_requests_new (
@@ -164,12 +165,12 @@ class ERP_1_5_15 {
                   approval_status_id tinyint(3) UNSIGNED NOT NULL,
                   encash_days tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
                   forward_days tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
-                  amount decimal(20,2) NOT NULL,
-                  total decimal(20,2) NOT NULL,
+                  amount decimal(20,2) NOT NULL DEFAULT '0.00',
+                  total decimal(20,2) NOT NULL DEFAULT '0.00',
                   f_year smallint(5) UNSIGNED NOT NULL,
                   created_at int(11) NOT NULL,
                   updated_at int(11) NOT NULL,
-                  PRIMARY KEY (id)
+                  PRIMARY KEY  (id)
             ) $charset_collate;",
 
             "CREATE TABLE {$wpdb->prefix}erp_hr_leaves_unpaid_new (
@@ -178,13 +179,13 @@ class ERP_1_5_15 {
                   leave_request_id bigint(20) UNSIGNED NOT NULL,
                   leave_approval_status_id bigint(20) UNSIGNED NOT NULL,
                   user_id bigint(20) UNSIGNED NOT NULL,
-                  days tinyint(3) UNSIGNED NOT NULL,
-                  amount decimal(20,2) NOT NULL,
-                  total decimal(20,2) NOT NULL,
+                  days tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                  amount decimal(20,2) NOT NULL DEFAULT '0.00',
+                  total decimal(20,2) NOT NULL DEFAULT '0.00',
                   status tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
                   created_at int(11) NOT NULL,
                   updated_at int(11) NOT NULL,
-                  PRIMARY KEY (id)
+                  PRIMARY KEY  (id)
             ) $charset_collate;",
 
         ];
@@ -197,9 +198,26 @@ class ERP_1_5_15 {
 
     protected function migrate_data() {
         global $wpdb;
-        global $bg_progess_hr_leaves;
 
+        if ( ! class_exists( '\WeDevs\ERP\Updates\BP\Leave\ERP_HR_Leave_Policies' ) ) {
+            require_once WPERP_INCLUDES . '/updates/bp/leave_1_5_15/class-erp-hr-leave-policies.php';
+        }
 
+        $bg_progess_hr_leaves_1_5_15 = new \WeDevs\ERP\Updates\BP\Leave\ERP_HR_Leave_Policies();
+
+        //get all leave policies from old db
+        $policies = $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$wpdb->prefix}erp_hr_leave_policies" ) );
+
+        if ( is_array( $policies ) && ! empty( $policies ) ) {
+            foreach ( $policies as $policy ) {
+                $bg_progess_hr_leaves_1_5_15->push_to_queue( $policy );
+            }
+        }
+        else {
+            //todo: add some functionality if no policies is found.
+        }
+
+        $bg_progess_hr_leaves_1_5_15->save()->dispatch();
     }
 
 
