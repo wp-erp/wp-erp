@@ -3360,3 +3360,134 @@ function filter_enabled_email( $email ) {
     return $email;
 }
 /**** Add Enable Disable section for All Pre-generated email End ****/
+
+/**
+ *  A method for inserting multiple rows into the specified table
+ *  Updated to include the ability to Update existing rows by primary key
+ *
+ *  Usage Example for insert:
+ *
+ *  $insert_arrays = array();
+ *  foreach($assets as $asset) {
+ *  $time = current_time( 'mysql' );
+ *  $insert_arrays[] = array(
+ *  'type' => "multiple_row_insert",
+ *  'status' => 1,
+ *  'name'=>$asset,
+ *  'added_date' => $time,
+ *  'last_update' => $time);
+ *
+ *  }
+ *
+ *
+ *  wp_insert_rows($insert_arrays, $wpdb->tablename);
+ *
+ *  Usage Example for update:
+ *
+ *  wp_insert_rows($insert_arrays, $wpdb->tablename, true, "primary_column");
+ *
+ * @since 1.5.15
+ *
+ * @param array   $row_arrays key value pairs of row data.
+ * @param string  $wp_table_name table name with prefix added.
+ * @param boolean $update set true for data updates, you need to specify primary_key parameter.
+ * @param string  $primary_key primary key field name, provide this field if you want to update the given data.
+ *
+ * @return false|int return false on query error, otherwise return number of row effected, output can be 0 if no row is updated, consider this while checking for errors.
+ *
+ * @author  Ugur Mirza ZEYREK
+ * @contributor Travis Grenell
+ */
+function erp_wp_insert_rows( $row_arrays = array(), $wp_table_name, $update = false, $primary_key = null ) {
+    global $wpdb;
+    $wp_table_name = esc_sql( $wp_table_name );
+    // Setup arrays for Actual Values, and Placeholders.
+    $values        = array();
+    $place_holders = array();
+    $query         = '';
+    $query_columns = '';
+
+    $query .= "INSERT INTO `{$wp_table_name}` (";
+    foreach ( $row_arrays as $count => $row_array ) {
+        foreach ( $row_array as $key => $value ) {
+            if ( $count == 0 ) {
+                if ( $query_columns ) {
+                    $query_columns .= ', ' . $key . '';
+                } else {
+                    $query_columns .= '' . $key . '';
+                }
+            }
+
+            $values[] = $value;
+
+            $symbol = '%s';
+            if ( is_numeric( $value ) ) {
+                if ( is_float( $value ) ) {
+                    $symbol = '%f';
+                } else {
+                    $symbol = '%d';
+                }
+            }
+            if ( isset( $place_holders[ $count ] ) ) {
+                $place_holders[ $count ] .= ", '$symbol'";
+            } else {
+                $place_holders[ $count ] = "( '$symbol'";
+            }
+        }
+        // mind closing the GAP.
+        $place_holders[ $count ] .= ')';
+    }
+
+    $query .= " $query_columns ) VALUES ";
+
+    $query .= implode( ', ', $place_holders );
+
+    if ( $update ) {
+        $update = " ON DUPLICATE KEY UPDATE $primary_key=VALUES( $primary_key ),";
+        $cnt    = 0;
+        foreach ( $row_arrays[0] as $key => $value ) {
+            if ( $cnt == 0 ) {
+                $update .= "$key=VALUES($key)";
+                $cnt     = 1;
+            } else {
+                $update .= ", $key=VALUES($key)";
+            }
+        }
+        $query .= $update;
+    }
+
+    return $wpdb->query( $wpdb->prepare( $query, $values ) ) === false ? false : true;
+}
+
+
+/**
+ * This function will get mysql date string as input and will return php timestamp with default WordPress timzone
+ *
+ * @since 1.5.15
+ *
+ * @param string $time mysql date format: Y-m-d H:i:s or Y-m-d. In case of Y-m-d only string H:i:s will be set to 00:00:00.
+ * @param bool   $timestamp return false to get DateTimeImmutable object.
+ *
+ * @return bool|int|DateTimeImmutable false on return php timestamp on success
+ */
+function erp_mysqldate_to_phptimestamp( $time, $timestamp = true ) {
+
+    if ( ! preg_match( '/\d{2}:\d{2}:\d{2}$/', $time ) ) {
+        $time = $time . ' 00:00:00';
+    }
+
+    $timezone = wp_timezone();
+    $datetime = date_create_immutable_from_format( 'Y-m-d H:i:s', $time, $timezone );
+
+    if ( false === $datetime ) {
+        return false;
+    }
+
+    $datetime = $datetime->setTimezone( $timezone );
+
+    if ( $timestamp ) {
+        return $datetime->getTimestamp();
+    }
+
+    return $datetime;
+}

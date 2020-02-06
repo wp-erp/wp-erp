@@ -9,34 +9,45 @@ namespace WeDevs\ERP\HRM\Update;
  * 4. rename new db tables removing new suffix
  *
  */
-
+// this task not yet complete.
 
 
 class ERP_1_5_15 {
-    protected $db_tables = [];
-    protected $db_tables_old = [];
+    /**
+     * Database tables to create.
+     *
+     * @var array
+     */
+    protected $db_tables     = array();
+
+    /**
+     * Old database tables to delete.
+     *
+     * @var array
+     */
+    protected $db_tables_old = array();
 
     public function __construct() {
         global $wpdb;
 
-        $this->db_tables = [
-            "{$wpdb->prefix}erp_hr_leaves"                      => "{$wpdb->prefix}erp_hr_leaves_new",
-            "{$wpdb->prefix}erp_hr_leave_policies"              => "{$wpdb->prefix}erp_hr_leave_policies_new",
-            "{$wpdb->prefix}erp_hr_leave_policies_segregation"  => "{$wpdb->prefix}erp_hr_leave_policies_segregation_new",
-            "{$wpdb->prefix}erp_hr_leave_entitlements"          => "{$wpdb->prefix}erp_hr_leave_entitlements_new",
-            "{$wpdb->prefix}erp_hr_leave_requests"              => "{$wpdb->prefix}erp_hr_leave_requests_new",
-            "{$wpdb->prefix}erp_hr_leave_request_details"       => "{$wpdb->prefix}erp_hr_leave_request_details_new",
-            "{$wpdb->prefix}erp_hr_leave_approval_status"       => "{$wpdb->prefix}erp_hr_leave_approval_status_new",
-            "{$wpdb->prefix}erp_hr_leave_encashment_requests"   => "{$wpdb->prefix}erp_hr_leave_encashment_requests_new",
-            "{$wpdb->prefix}erp_hr_leaves_unpaid"               => "{$wpdb->prefix}erp_hr_leaves_unpaid_new",
-        ];
+        $this->db_tables = array(
+            "{$wpdb->prefix}erp_hr_leaves"                => "{$wpdb->prefix}erp_hr_leaves_new",
+            "{$wpdb->prefix}erp_hr_leave_policies"        => "{$wpdb->prefix}erp_hr_leave_policies_new",
+            "{$wpdb->prefix}erp_hr_leave_policies_segregation" => "{$wpdb->prefix}erp_hr_leave_policies_segregation_new",
+            "{$wpdb->prefix}erp_hr_leave_entitlements"    => "{$wpdb->prefix}erp_hr_leave_entitlements_new",
+            "{$wpdb->prefix}erp_hr_leave_requests"        => "{$wpdb->prefix}erp_hr_leave_requests_new",
+            "{$wpdb->prefix}erp_hr_leave_request_details" => "{$wpdb->prefix}erp_hr_leave_request_details_new",
+            "{$wpdb->prefix}erp_hr_leave_approval_status" => "{$wpdb->prefix}erp_hr_leave_approval_status_new",
+            "{$wpdb->prefix}erp_hr_leave_encashment_requests" => "{$wpdb->prefix}erp_hr_leave_encashment_requests_new",
+            "{$wpdb->prefix}erp_hr_leaves_unpaid"         => "{$wpdb->prefix}erp_hr_leaves_unpaid_new",
+        );
 
-        $this->db_tables_old = [
+        $this->db_tables_old = array(
             "{$wpdb->prefix}erp_hr_leave_entitlements",
             "{$wpdb->prefix}erp_hr_leave_policies",
             "{$wpdb->prefix}erp_hr_leave_requests",
-            "{$wpdb->prefix}erp_hr_leaves"
-        ];
+            "{$wpdb->prefix}erp_hr_leaves",
+        );
     }
 
     public function create_db_tables() {
@@ -47,7 +58,7 @@ class ERP_1_5_15 {
 
         $charset_collate = $charset . ' ' . $collate;
 
-        $table_schema = [
+        $table_schema = array(
             "CREATE TABLE {$wpdb->prefix}erp_hr_leaves_new (
                   id smallint(6) NOT NULL AUTO_INCREMENT,
                   name varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -95,8 +106,8 @@ class ERP_1_5_15 {
                   oct tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
                   nov tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
                   decem tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
-                  added int(11) NOT NULL,
-                  updated int(11) NOT NULL,
+                  created_at int(11) NOT NULL,
+                  updated_at int(11) NOT NULL,
                   PRIMARY KEY  (id)
             ) $charset_collate;",
 
@@ -120,7 +131,7 @@ class ERP_1_5_15 {
                   id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
                   user_id bigint(20) UNSIGNED NOT NULL,
                   leave_id smallint(6) UNSIGNED NOT NULL,
-                  day_status_id smallint(5) UNSIGNED NOT NULL,
+                  day_status_id smallint(5) UNSIGNED NOT NULL DEFAULT '1',
                   days tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
                   start_date int(11) NOT NULL,
                   end_date int(11) NOT NULL,
@@ -134,11 +145,10 @@ class ERP_1_5_15 {
             "CREATE TABLE {$wpdb->prefix}erp_hr_leave_request_details_new (
                   id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
                   leave_request_id bigint(20) UNSIGNED NOT NULL,
-                  leave_id smallint(6) UNSIGNED NOT NULL,
-                  day_status_id smallint(5) UNSIGNED NOT NULL,
+                  leave_approval_status_id bigint(20) UNSIGNED NOT NULL,
+                  workingday_status tinyint(3) UNSIGNED NOT NULL DEFAULT '1',
                   user_id bigint(20) UNSIGNED NOT NULL,
                   leave_date int(11) NOT NULL,
-                  status tinyint(3) UNSIGNED NOT NULL,
                   created_at int(11) NOT NULL,
                   updated_at int(11) NOT NULL,
                   PRIMARY KEY  (id)
@@ -150,7 +160,7 @@ class ERP_1_5_15 {
                   approval_status_id tinyint(3) UNSIGNED NOT NULL,
                   approved_by bigint(20) UNSIGNED NOT NULL,
                   approved_date int(11) NOT NULL,
-                  forward_to bigint(20) UNSIGNED NOT NULL,
+                  forward_to bigint(20) UNSIGNED DEFAULT NULL,
                   message text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
                   created_at int(11) NOT NULL,
                   updated_at int(11) NOT NULL,
@@ -188,9 +198,9 @@ class ERP_1_5_15 {
                   PRIMARY KEY  (id)
             ) $charset_collate;",
 
-        ];
+        );
 
-        require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+        require_once ABSPATH . 'wp-admin/includes/upgrade.php';
         foreach ( $table_schema as $table ) {
             dbDelta( $table );
         }
@@ -205,16 +215,15 @@ class ERP_1_5_15 {
 
         $bg_progess_hr_leaves_1_5_15 = new \WeDevs\ERP\Updates\BP\Leave\ERP_HR_Leave_Policies();
 
-        //get all leave policies from old db
+        // get all leave policies from old db
         $policies = $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$wpdb->prefix}erp_hr_leave_policies" ) );
 
         if ( is_array( $policies ) && ! empty( $policies ) ) {
             foreach ( $policies as $policy ) {
                 $bg_progess_hr_leaves_1_5_15->push_to_queue( $policy );
             }
-        }
-        else {
-            //todo: add some functionality if no policies is found.
+        } else {
+            // todo: add some functionality if no policies is found.
         }
 
         $bg_progess_hr_leaves_1_5_15->save()->dispatch();
@@ -226,8 +235,8 @@ class ERP_1_5_15 {
      */
     protected function delete_old_db_tables() {
         global $wpdb;
-        if ( $wpdb->query( "DROP TABLE " . implode( ', ', $this->db_tables_old ) . ";" ) === false ) {
-            //todo: mysql query error, store this error to log
+        if ( $wpdb->query( 'DROP TABLE ' . implode( ', ', $this->db_tables_old ) . ';' ) === false ) {
+            // todo: mysql query error, store this error to log
 
         }
     }
@@ -235,23 +244,21 @@ class ERP_1_5_15 {
     /**
      *
      * Call this method after migrating all datas
-     *
      */
     protected function alter_new_db_tables() {
         global $wpdb;
-        $queries = "RENAME TABLE ";
+        $queries = 'RENAME TABLE ';
         foreach ( $this->db_tables as $new_name => $old_name ) {
             $queries .= "$old_name TO $new_name";
             if ( next( $this->db_tables ) !== false ) {
                 $queries .= ', ';
-            }
-            else {
+            } else {
                 $queries .= ';';
             }
         }
 
         if ( $wpdb->query( $queries ) === false ) {
-            //query error, log this to db
+            // query error, log this to db
 
         }
     }
