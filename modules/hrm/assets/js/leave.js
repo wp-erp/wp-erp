@@ -617,9 +617,10 @@
                 cache: false,
                 processData: false,
                 contentType: false,
-                success: function() {
+                success: function( res ) {
                     $( '.list-table-wrap' ).load( window.location.href + ' .list-wrap-inner', function() {
                         Leave.initDateField();
+                        $('#holiday_msg').html( res );
                     } );
 
                     form[0].reset();

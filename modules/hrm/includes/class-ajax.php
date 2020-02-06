@@ -214,6 +214,16 @@ class Ajax_Handler {
 
         // create the ical parser object
         $temp_name = isset( $_FILES['ics']['tmp_name'] ) ? sanitize_text_field( wp_unslash( $_FILES['ics']['tmp_name'] ) ) : '';
+
+        /***** check if file is csv start ******/
+        $mimes = array( 'application/vnd.ms-excel', 'text/csv' );
+        if( in_array( sanitize_text_field( wp_unslash( $_FILES['ics']['type'] ) ), $mimes ) ) {
+            $import_csv_data = import_holidays_csv( $_FILES['ics']['tmp_name'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+            $this->send_success( $import_csv_data );
+        }
+        /***** check if file is csv end ******/
+
+
         $ical      = new \ICal( $temp_name );
         $events    = $ical->events();
 
