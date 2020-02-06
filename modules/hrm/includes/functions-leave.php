@@ -1881,12 +1881,11 @@ function erp_bulk_policy_assign( $policy, $employee_ids = [] ) {
 }
 
 /**
- * Assign policy bulk
+ * Import holidays from csv
  *
- * @since 1.3.2
+ * @since 1.5.10
  *
- * @param $policy
- * @param array $employee_ids
+ * @param $file
  *
  */
 function import_holidays_csv( $file ) {
