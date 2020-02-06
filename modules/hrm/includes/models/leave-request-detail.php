@@ -26,4 +26,15 @@ class Leave_Request_Detail extends Model {
     public function leave_request() {
         return $this->belongsTo( 'WeDevs\ERP\HRM\Models\Leave_Request' );
     }
+
+    /**
+     * Relation to Leave_Approval_Status model
+     *
+     * @since 1.6.0
+     *
+     * @return object
+     */
+    public function leave_approval_status() {
+        return $this->hasMany( 'WeDevs\ERP\HRM\Models\Leave_Approval_Status', 'leave_request_id', 'leave_request_id' );
+    }
 }
