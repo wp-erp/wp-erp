@@ -28,36 +28,35 @@ class Leave_Request extends Model {
     }
 
     /**
-     * Relation to Leave_Policies model
+     * Relation to Leave_Request_Detail model
      *
-     * @since 1.2.0
+     * @since 1.6.0
      *
      * @return object
      */
-    // public function policy() {
-    //     return $this->belongsTo( 'WeDevs\ERP\HRM\Models\Leave_Policies', 'policy_id' );
-    // }
+    public function details() {
+        return $this->hasMany( 'WeDevs\ERP\HRM\Models\Leave_Request_Detail' );
+    }
 
     /**
-     * Relation to Leave model
+     * Relation to Leave_Approval_Status model
      *
-     * @since 1.2.0
+     * @since 1.6.0
      *
      * @return object
      */
-    // public function employee() {
-    //     return $this->belongsTo( 'WeDevs\ERP\HRM\Models\Employee', 'user_id', 'user_id' );
-    // }
+    public function leave_approval_status() {
+        return $this->hasMany( 'WeDevs\ERP\HRM\Models\Leave_Approval_Status' );
+    }
 
-    // public function scopeJoinWithPolicy( $query ) {
-    //     global $wpdb;
-    //     return $query->leftJoin( "{$wpdb->prefix}erp_hr_leave_policies", "{$wpdb->prefix}erp_hr_leave_policies.id", "=", "{$wpdb->prefix}erp_hr_leave_requests.policy_id" );
-    // }
-
-    // public function scopeJoinWithEn( $query ) {
-    //     global $wpdb;
-    //     return $query->leftJoin( "{$wpdb->prefix}erp_hr_leave_entitlements", "{$wpdb->prefix}erp_hr_leave_entitlements.policy_id", "=", "{$wpdb->prefix}erp_hr_leave_requests.policy_id" );
-    // }
-
-
+    /**
+     * Relation to Leaves_Unpaid model
+     *
+     * @since 1.6.0
+     *
+     * @return object
+     */
+    public function unpaid() {
+        return $this->hasOne( 'WeDevs\ERP\HRM\Models\Leaves_Unpaid' );
+    }
 }

@@ -47,6 +47,17 @@ class Leave extends Model {
     }
 
     /**
+     * Relation to Leave_Encashment_Request model
+     *
+     * @since 1.6.0
+     *
+     * @return object
+     */
+    public function encashments() {
+        return $this->hasMany( 'WeDevs\ERP\HRM\Models\Leave_Encashment_Request' );
+    }
+
+    /**
      * Relation to Leaves_Unpaid model
      *
      * @since 1.6.0
