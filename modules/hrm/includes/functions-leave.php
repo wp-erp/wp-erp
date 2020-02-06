@@ -1176,6 +1176,8 @@ function erp_hr_leave_request_update_status( $request_id, $status ) {
 /**
  * Get leave requests status
  *
+ * added filter `erp_hr_leave_approval_statuses` on version 1.5.15
+ *
  * @since 0.1
  *
  * @param  int|boolean $status
@@ -1183,12 +1185,12 @@ function erp_hr_leave_request_update_status( $request_id, $status ) {
  * @return array|string
  */
 function erp_hr_leave_request_get_statuses( $status = false ) {
-    $statuses = array(
-        'all' => __( 'All', 'erp' ),
-        '1'   => __( 'Approved', 'erp' ),
-        '2'   => __( 'Pending', 'erp' ),
-        '3'   => __( 'Rejected', 'erp' )
-    );
+    $statuses = apply_filters( 'erp_hr_leave_approval_statuses', array(
+        'all' => esc_attr__( 'All', 'erp' ),
+        '1'   => esc_attr__( 'Approved', 'erp' ),
+        '2'   => esc_attr__( 'Pending', 'erp' ),
+        '3'   => esc_attr__( 'Rejected', 'erp' )
+    ) );
 
     if ( false !== $status && array_key_exists( $status, $statuses ) ) {
         return $statuses[ $status ];
@@ -1878,4 +1880,28 @@ function erp_bulk_policy_assign( $policy, $employee_ids = [] ) {
 
     }
 
+}
+
+/**
+ * Get leave requests day status
+ *
+ * @since 1.5.15
+ *
+ * @param  int|boolean $status
+ *
+ * @return array|string
+ */
+function erp_hr_leave_days_get_statuses( $status = false ) {
+    $statuses = apply_filters( 'erp_hr_leave_day_statuses', array(
+        'all' => esc_attr__( 'All', 'erp' ),
+        '1'   => esc_attr__( 'Full Day', 'erp' ),
+        '2'   => esc_attr__( 'Monring', 'erp' ),
+        '3'   => esc_attr__( 'Afternoon', 'erp' )
+    ) );
+
+    if ( false !== $status && array_key_exists( $status, $statuses ) ) {
+        return $statuses[ $status ];
+    }
+
+    return $statuses;
 }
