@@ -241,7 +241,8 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
     }
 
     protected function insert_leave_entitlement() {
-        if ( isset( $this->data['leave_approval_status_id'] ) && $this->data['leave_approval_status_id'] > 0 && isset( $this->data['status'] ) && in_array( $this->data['status'], array( 1 ) )) {
+        if ( isset( $this->data['leave_approval_status_id'] ) && $this->data['leave_approval_status_id'] > 0 && isset( $this->data['status'] ) && $this->data['status'] === 1 ) {
+
             global $wpdb;
 
             $table_data = array(
@@ -280,6 +281,7 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
 
 
                 //todo: for nadim, add extra leave data here. data will go erp_hr_leave_entitlements_new and erp_hr_leaves_unpaid_new table
+
 
 
 

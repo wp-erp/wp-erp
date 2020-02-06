@@ -1,22 +1,19 @@
 <?php
-
 namespace WeDevs\ERP\HRM\Models;
 
 use WeDevs\ERP\Framework\Model;
 
 /**
- * Class Leave_Policies
+ * Class Leaves_Unpaid
  *
  * @package WeDevs\ERP\HRM\Models
  */
-class Leave_Policy extends Model {
-    protected $table = 'erp_hr_leave_policies_new';
+class Leaves_Unpaid extends Model {
+    protected $table = 'erp_hr_leaves_new';
 
     protected $fillable = [
-        'leave_id', 'old_policy_id', 'description', 'days', 'color',
-        'department_id', 'location_id', 'designation_id', 'f_year',
-        'forward_status', 'encashment_status', 'gender', 'marital',
-        'applicable_from_days', 'accrued_amount', 'accrued_days'
+        'leave_id', 'leave_request_id', 'leave_approval_status_id',
+        'user_id', 'days', 'amount', 'total', 'status'
     ];
 
     /**
@@ -42,13 +39,24 @@ class Leave_Policy extends Model {
     }
 
     /**
-     * Relation to Leave_Policies_Segregation
-     * 
+     * Relation to Leave_Request model
+     *
      * @since 1.6.0
-     * 
+     *
      * @return object
      */
-    public function segregation() {
-        return $this->hasOne( 'WeDevs\ERP\HRM\Models\Leave_Policies_Segregation' );
+    public function leave_request() {
+        return $this->belongsTo( 'WeDevs\ERP\HRM\Models\Leave_Request' );
+    }
+
+    /**
+     * Relation to Leave_Request_Detail model
+     *
+     * @since 1.6.0
+     *
+     * @return object
+     */
+    public function details() {
+        return $this->hasMany( 'WeDevs\ERP\HRM\Models\Leave_Request_Detail', 'leave_request_id', 'leave_request_id' );
     }
 }
