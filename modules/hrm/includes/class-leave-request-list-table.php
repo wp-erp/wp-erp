@@ -116,6 +116,10 @@ class Leave_Requests_List_Table extends \WP_List_Table {
 
             case 'comment' :
                 return stripslashes( $item->comments );
+
+            case 'attachment' :
+                return stripslashes( $item->user_id );
+
             default:
                 return isset( $item->$column_name ) ? $item->$column_name : '';
         }
@@ -158,15 +162,16 @@ class Leave_Requests_List_Table extends \WP_List_Table {
      */
     function get_columns() {
         $columns = array(
-            'cb'        => '<input type="checkbox" />',
-            'name'      => __( 'Employee Name', 'erp' ),
-            'policy'    => __( 'Leave Policy', 'erp' ),
-            'from_date' => __( 'From Date', 'erp' ),
-            'to_date'   => __( 'To Date', 'erp' ),
-            'days'      => __( 'Days', 'erp' ),
-            'available' => __( 'Available', 'erp' ),
-            'status'    => __( 'Status', 'erp' ),
-            'reason'    => __( 'Leave Reason', 'erp' ),
+            'cb'          => '<input type="checkbox" />',
+            'name'        => __( 'Employee Name', 'erp' ),
+            'policy'      => __( 'Leave Policy', 'erp' ),
+            'from_date'   => __( 'From Date', 'erp' ),
+            'to_date'     => __( 'To Date', 'erp' ),
+            'days'        => __( 'Days', 'erp' ),
+            'available'   => __( 'Available', 'erp' ),
+            'status'      => __( 'Status', 'erp' ),
+            'reason'      => __( 'Leave Reason', 'erp' ),
+            'attachment'  => __( 'Attachment', 'erp' ),
 
         );
         if ( isset( $_GET['status'] ) && $_GET['status'] == 3 ) {
