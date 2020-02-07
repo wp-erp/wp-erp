@@ -70,4 +70,15 @@ class Leave_Entitlement extends Model {
     public function unpaids() {
         return $this->belongsTo( 'WeDevs\ERP\HRM\Models\Leaves_Unpaid', 'trn_id' );
     }
+
+    /**
+     * Relation to Employee model
+     *
+     * @since 1.6.0
+     *
+     * @return object
+     */
+    public function employee() {
+        return $this->belongsTo( 'WeDevs\ERP\HRM\Models\Employee', 'user_id', 'user_id' );
+    }
 }

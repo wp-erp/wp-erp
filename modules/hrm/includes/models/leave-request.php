@@ -59,4 +59,15 @@ class Leave_Request extends Model {
     public function unpaid() {
         return $this->hasOne( 'WeDevs\ERP\HRM\Models\Leaves_Unpaid' );
     }
+
+    /**
+     * Relation to Employee model
+     *
+     * @since 1.6.0
+     *
+     * @return object
+     */
+    public function employee() {
+        return $this->belongsTo( 'WeDevs\ERP\HRM\Models\Employee', 'user_id', 'user_id' );
+    }
 }
