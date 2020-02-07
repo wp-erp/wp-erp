@@ -279,11 +279,97 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
                 $this->data['task']                 = 'leave_request_details';
                 $this->data['leave_entitlement_id'] = $wpdb->insert_id;
 
+                // now get days data from new leave policy table.
+                $policy_days = $wpdb->get_var(
+                    $wpdb->prepare(
+                        "SELECT days FROM {$wpdb->prefix}erp_hr_leave_policies_new WHERE old_policy_id = %d",
+                        array( $this->data['policy_id'] )
+                    )
+                );
+
+                $days_count = $wpdb->get_var(
+                    $wpdb->prepare(
+                        "SELECT SUM(days) FROM {$wpdb->prefix}erp_hr_leave_requests WHERE policy_id = %d and user_id = %d and id <= %d",
+                        array( $this->data['policy_id'], $this->data['user_id'], $this->data['id'] )
+                    )
+                );
+
+                if ( $days_count > $policy_days ) {
+                    // calculate extra leaves
+                    $option_key = "extra_days_count_{$this->data['user_id']}_{$this->data['policy_id']}";
+                    $extra_days_count = absint( get_option( $option_key , 0 ) );
+
+                    $current_count = absint( $days_count ) - absint( $policy_days ) - absint( $extra_days_count );
+                    update_option( $option_key, $extra_days_count + $current_count );
+
+                    // insert into new unpaid leave table.
+                    $table_data = array(
+                        'leave_id'                 => $this->data['leave_id'],
+                        'leave_request_id'         => $this->data['leave_request_id'],
+                        'leave_approval_status_id' => $this->data['leave_approval_status_id'],
+                        'user_id'                  => $this->data['user_id'],
+                        'days'                     => $current_count,
+                        'amount'                   => 0,
+                        'total'                    => 0,
+                        'status'                   => 1,
+                        'created_at'               => $this->data['created_on'],
+                        'updated_at'               => $this->data['updated_on'],
+                    );
+
+                    $table_format = array(
+                        '%d',
+                        '%d',
+                        '%d',
+                        '%d',
+                        '%d',
+                        '%d',
+                        '%d',
+                        '%d',
+                        '%d',
+                        '%d'
+                    );
+
+                    if ( $wpdb->insert( "{$wpdb->prefix}erp_hr_leaves_unpaid_new", $table_data, $table_format ) === false ) {
+                        // todo: query error, do loging or something here.
+                    } else {
+                        $table_data = array(
+                            'user_id'     => $this->data['user_id'],
+                            'leave_id'    => $this->data['leave_id'],
+                            'created_by'  => $this->data['updated_by'],
+                            'trn_id'      => $wpdb->insert_id,
+                            'trn_type'    => 'unpaid_leave',
+                            'day_in'      => $current_count,
+                            'day_out'     => 0,
+                            'description' => 'Accounts',
+                            'f_year'      => $this->data['f_year'],
+                            'created_at'  => $this->data['created_on'],
+                            'updated_at'  => $this->data['created_on'],
+                        );
+
+                        $table_format = array(
+                            '%d',
+                            '%d',
+                            '%d',
+                            '%d',
+                            '%s',
+                            '%d',
+                            '%d',
+                            '%s',
+                            '%d',
+                            '%d',
+                            '%d',
+                        );
+
+                        if ( $wpdb->insert( "{$wpdb->prefix}erp_hr_leave_entitlements_new", $table_data, $table_format ) === false ) {
+                            // todo: query error, do loging or something here.
+                        } else {
+                            // All done, have fun
+                        }
+
+                    }
+                }
 
                 //todo: for nadim, add extra leave data here. data will go erp_hr_leave_entitlements_new and erp_hr_leaves_unpaid_new table
-
-
-
 
                 return $this->data;
             }
