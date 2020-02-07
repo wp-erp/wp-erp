@@ -437,16 +437,27 @@
                     onSubmit: function(modal) {
                         $( 'button[type=submit]', '.erp-modal' ).attr( 'disabled', 'disabled' );
 
-                        wp.ajax.send( {
-                            data: this.serialize(),
-                            success: function(res) {
+                       // console.log(this.serialize());
+                        var form = $('#erp-hr-new-leave-req-popup .erp-modal-form')[0];
+                        var data = new FormData( form );
+
+                        $.ajax({
+                            type: "POST",
+                            enctype: 'multipart/form-data',
+                            url: ajaxurl,
+                            data: data,
+                            processData: false,
+                            contentType: false,
+                            cache: false,
+                            timeout: 600000,
+                            success: function ( res ) {
                                 modal.enableButton();
-                                alert( res );
+                                alert( res.data );
                                 modal.closeModal();
                             },
-                            error: function(error) {
+                            error: function (e) {
                                 modal.enableButton();
-                                modal.showError( error );
+                                modal.showError( e );
                             }
                         });
                     }
