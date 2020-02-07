@@ -85,6 +85,7 @@ class Employee extends Model {
     public function entitlements() {
         return $this->hasMany( '\WeDevs\ERP\HRM\Models\Leave_Entitlement', 'user_id', 'user_id' );
     }
+
     public function notes() {
         return $this->hasMany( 'WeDevs\ERP\HRM\Models\Employee_Note', 'user_id', 'user_id' );
     }
