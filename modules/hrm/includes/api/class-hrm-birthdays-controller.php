@@ -66,6 +66,7 @@ class Birthdays_Controller extends REST_Controller {
             ->orderByRaw('MONTH(date_of_birth)')
             ->orderByRaw('DAYOFMONTH(date_of_birth)')
             ->where( 'termination_date', '0000-00-00' )
+            ->where( 'status', 'active' )
             ->where( $db->raw( "DATE_FORMAT( `date_of_birth`, '%m %d' )" ), '<=', \Carbon\Carbon::now()->addWeek()->format( 'm d' ) )
             ->limit( $args['number'] )
             ->offset( $args['offset'] )
