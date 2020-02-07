@@ -117,8 +117,16 @@ class Leave_Requests_List_Table extends \WP_List_Table {
             case 'comment' :
                 return stripslashes( $item->comments );
 
-            case 'attachment' :
-                return stripslashes( $item->user_id );
+            case 'leave_attachment' :
+
+                $attachment       = "";
+                $leave_attachment = get_user_meta( $item->user_id, 'leave_document_' . $item->id ) ;
+                foreach ( $leave_attachment as $la ) {
+                    $file_link = wp_get_attachment_url( $la );
+                    $file_name = basename( $file_link );
+                    $attachment .= "<a target='_blank' href='{$file_link}'>{$file_name}</a><br>";
+                }
+                return $attachment;
 
             default:
                 return isset( $item->$column_name ) ? $item->$column_name : '';
@@ -171,7 +179,7 @@ class Leave_Requests_List_Table extends \WP_List_Table {
             'available'   => __( 'Available', 'erp' ),
             'status'      => __( 'Status', 'erp' ),
             'reason'      => __( 'Leave Reason', 'erp' ),
-            'attachment'  => __( 'Attachment', 'erp' ),
+            'leave_attachment'  => __( 'Attachment', 'erp' ),
 
         );
         if ( isset( $_GET['status'] ) && $_GET['status'] == 3 ) {
