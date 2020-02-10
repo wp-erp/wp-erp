@@ -9,7 +9,7 @@ use WeDevs\ERP\Framework\Model;
  * @package WeDevs\ERP\HRM\Models
  */
 class Leave_Policies_Segregation extends Model {
-    protected $table = 'erp_hr_leave_policies_segregation_new';
+    protected $table = 'erp_hr_leave_policies_segregation';
 
     protected $fillable = [
         'leave_policy_id', 'jan', 'feb', 'mar', 'apr', 'may',
