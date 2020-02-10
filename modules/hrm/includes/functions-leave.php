@@ -134,7 +134,7 @@ function erp_hrm_is_valid_leave_duration( $start_date, $end_date, $policy_id, $u
     $financial_end_date   = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
 
     $user_request = new \WeDevs\ERP\HRM\Models\Leave_request();
-    $policy       = new \WeDevs\ERP\HRM\Models\Leave_Policies();
+    $policy       = new \WeDevs\ERP\HRM\Models\Leave_Policy();
 
     $user_request = $user_request->where( function ( $condition ) use ( $financial_start_date, $financial_end_date, $user_id, $policy_id ) {
         //$start_date = date( 'Y-m-d', strtotime( $start_date ) );
@@ -226,7 +226,7 @@ function erp_hr_leave_insert_policy( $args = array() ) {
     $policy_id = (int) $args['id'];
     unset( $args['id'] );
 
-    $leave_policies = new \WeDevs\ERP\HRM\Models\Leave_Policies();
+    $leave_policies = new \WeDevs\ERP\HRM\Models\Leave_Policy();
 
     if ( ! $policy_id ) {
         // insert a new
@@ -280,7 +280,7 @@ function erp_hr_apply_policy_existing_employee( $policy, $args ) {
  */
 function erp_hr_apply_policy_to_employee( $policy, $employee_ids = [] ) {
     if ( is_int( $policy ) ) {
-        $policy = $policy = \WeDevs\ERP\HRM\Models\Leave_Policies::find( $policy );
+        $policy = $policy = \WeDevs\ERP\HRM\Models\Leave_Policy::find( $policy );
     }
 
     $db     = \WeDevs\ORM\Eloquent\Facades\DB::instance();
@@ -460,7 +460,7 @@ function erp_hr_leave_insert_entitlement( $args = [] ) {
  * @return void
  */
 function erp_hr_apply_policy_on_new_employee( $user_id ) {
-    $policies = \WeDevs\ERP\HRM\Models\Leave_Policies::where( 'activate', 1 )->get();
+    $policies = \WeDevs\ERP\HRM\Models\Leave_Policy::where( 'activate', 1 )->get();
 
     $policies->each( function ( $policy ) use ( $user_id ) {
         erp_hr_apply_policy_to_employee( $policy, [ $user_id ] );
@@ -475,7 +475,7 @@ function erp_hr_apply_policy_on_new_employee( $user_id ) {
  * @return void
  */
 function erp_hr_apply_scheduled_policies() {
-    $policies = \WeDevs\ERP\HRM\Models\Leave_Policies::where( 'activate', 2 )->get();
+    $policies = \WeDevs\ERP\HRM\Models\Leave_Policy::where( 'activate', 2 )->get();
 
     $policies->each( function ( $policy ) {
         erp_hr_apply_policy_to_employee( $policy );
@@ -571,7 +571,7 @@ function erp_hr_leave_get_policies( $args = array() ) {
     if ( false === $policies ) {
 
         $policies = erp_array_to_object(
-            \WeDevs\ERP\HRM\Models\Leave_Policies::select( array(
+            \WeDevs\ERP\HRM\Models\Leave_Policy::select( array(
                 'id',
                 'name',
                 'value',
@@ -609,7 +609,7 @@ function erp_hr_leave_get_policies( $args = array() ) {
  * @return \stdClass
  */
 function erp_hr_leave_get_policy_by_name( $name ) {
-    return \WeDevs\ERP\HRM\Models\Leave_Policies::where( 'name', $name )->first();
+    return \WeDevs\ERP\HRM\Models\Leave_Policy::where( 'name', $name )->first();
 }
 
 /**
@@ -623,7 +623,7 @@ function erp_hr_leave_get_policy_by_name( $name ) {
  * @return \stdClass
  */
 function erp_hr_leave_get_policy( $policy_id ) {
-    return \WeDevs\ERP\HRM\Models\Leave_Policies::find( $policy_id );
+    return \WeDevs\ERP\HRM\Models\Leave_Policy::find( $policy_id );
 }
 
 /**
@@ -634,7 +634,7 @@ function erp_hr_leave_get_policy( $policy_id ) {
  * @return integer
  */
 function erp_hr_count_leave_policies() {
-    return \WeDevs\ERP\HRM\Models\Leave_Policies::count();
+    return \WeDevs\ERP\HRM\Models\Leave_Policy::count();
 }
 
 /**
@@ -796,7 +796,7 @@ function erp_hr_leave_policy_delete( $policy_ids ) {
         $policy_ids = [ $policy_ids ];
     }
 
-    $policies = \WeDevs\ERP\HRM\Models\Leave_Policies::find( $policy_ids );
+    $policies = \WeDevs\ERP\HRM\Models\Leave_Policy::find( $policy_ids );
 
     $policies->each( function ( $policy ) {
         $has_request = $policy->leave_requests()->count();
@@ -826,7 +826,7 @@ function erp_hr_get_assign_policy_from_entitlement( $employee_id ) {
 
     $data      = [];
     $dropdown  = [];
-    $policy    = new \WeDevs\ERP\HRM\Models\Leave_Policies();
+    $policy    = new \WeDevs\ERP\HRM\Models\Leave_Policy();
     $en        = new \WeDevs\ERP\HRM\Models\Leave_Entitlement();
     $policy_tb = $wpdb->prefix . 'erp_hr_leave_policies';
     $en_tb     = $wpdb->prefix . 'erp_hr_leave_entitlements';
@@ -834,7 +834,7 @@ function erp_hr_get_assign_policy_from_entitlement( $employee_id ) {
     $financial_start_date = erp_financial_start_date();
     $financial_end_date   = erp_financial_end_date();
 
-    $policies = \WeDevs\ERP\HRM\Models\Leave_Policies::select( $policy_tb . '.name', $policy_tb . '.id' )
+    $policies = \WeDevs\ERP\HRM\Models\Leave_Policy::select( $policy_tb . '.name', $policy_tb . '.id' )
                                                      ->leftjoin( $en_tb, $en_tb . '.policy_id', '=', $policy_tb . '.id' )
                                                      ->where( $en_tb . '.user_id', $employee_id )
                                                      ->where( 'from_date', '>=', $financial_start_date )
@@ -1766,7 +1766,7 @@ function erp_get_leave_report( array $employees, $start_date = null, $end_date =
  */
 function erp_bulk_policy_assign( $policy, $employee_ids = [] ) {
     if ( is_int( $policy ) ) {
-        $policy = \WeDevs\ERP\HRM\Models\Leave_Policies::find( $policy );
+        $policy = \WeDevs\ERP\HRM\Models\Leave_Policy::find( $policy );
     }
 
     $db     = \WeDevs\ORM\Eloquent\Facades\DB::instance();
