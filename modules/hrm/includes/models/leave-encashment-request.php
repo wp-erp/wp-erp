@@ -19,7 +19,7 @@ class Leave_Encashment_Request extends Model {
     /**
      * Relation to Leave model
      *
-     * @since 1.6.0
+     * @since 1.5.15
      *
      * @return object
      */
@@ -30,7 +30,7 @@ class Leave_Encashment_Request extends Model {
     /**
      * Relation to Leave_Entitlement model
      *
-     * @since 1.6.0
+     * @since 1.5.15
      *
      * @return object
      */

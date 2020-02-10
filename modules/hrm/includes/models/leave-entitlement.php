@@ -19,7 +19,7 @@ class Leave_Entitlement extends Model {
     /**
      * Relation to Leave model
      *
-     * @since 1.6.0
+     * @since 1.5.15
      *
      * @return object
      */
@@ -30,7 +30,7 @@ class Leave_Entitlement extends Model {
     /**
      * Relation to Leave_Policy model
      *
-     * @since 1.6.0
+     * @since 1.5.15
      *
      * @return object
      */
@@ -41,7 +41,7 @@ class Leave_Entitlement extends Model {
     /**
      * Relation to Leave_Approval_Status model
      *
-     * @since 1.6.0
+     * @since 1.5.15
      *
      * @return object
      */
@@ -52,7 +52,7 @@ class Leave_Entitlement extends Model {
     /**
      * Relation to Leave_Encashment_Request model
      *
-     * @since 1.6.0
+     * @since 1.5.15
      *
      * @return object
      */
@@ -63,7 +63,7 @@ class Leave_Entitlement extends Model {
     /**
      * Relation to Leaves_Unpaid model
      *
-     * @since 1.6.0
+     * @since 1.5.15
      *
      * @return object
      */
@@ -74,7 +74,7 @@ class Leave_Entitlement extends Model {
     /**
      * Relation to Employee model
      *
-     * @since 1.6.0
+     * @since 1.5.15
      *
      * @return object
      */

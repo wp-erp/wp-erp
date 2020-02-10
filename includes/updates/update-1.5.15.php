@@ -64,7 +64,7 @@ class ERP_1_5_15 {
                   name varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
                   description text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
                   created_at int(11) DEFAULT NULL,
-                  update_at int(11) DEFAULT NULL,
+                  updated_at int(11) DEFAULT NULL,
                   PRIMARY KEY  (id)
               ) $charset_collate;",
 
@@ -136,10 +136,10 @@ class ERP_1_5_15 {
                   start_date int(11) NOT NULL,
                   end_date int(11) NOT NULL,
                   reason text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-                  created_at int(11) NOT NULL,
-                  updated_at int(11) NOT NULL,
+                  created_at int(11) DEFAULT NULL,
+                  updated_at int(11) DEFAULT NULL,
                   PRIMARY KEY  (id),
-                  KEY user_id (user_id,leave_policy_id)
+                  KEY user_id (user_id)
             ) $charset_collate;",
 
             "CREATE TABLE {$wpdb->prefix}erp_hr_leave_request_details_new (
@@ -210,15 +210,16 @@ class ERP_1_5_15 {
 
     public function migrate_data() {
         global $wpdb;
+        global $bg_progess_hr_leaves_1_5_15;
 
-        if ( ! class_exists( '\WeDevs\ERP\Updates\BP\Leave\ERP_HR_Leave_Policies' ) ) {
-            require_once WPERP_INCLUDES . '/updates/bp/leave_1_5_15/class-erp-hr-leave-policies.php';
-        }
+        // if ( ! class_exists( '\WeDevs\ERP\Updates\BP\Leave\ERP_HR_Leave_Policies' ) ) {
+        //     require_once WPERP_INCLUDES . '/updates/bp/leave_1_5_15/class-erp-hr-leave-policies.php';
+        // }
 
-        $bg_progess_hr_leaves_1_5_15 = new \WeDevs\ERP\Updates\BP\Leave\ERP_HR_Leave_Policies();
+        // $bg_progess_hr_leaves_1_5_15 = new \WeDevs\ERP\Updates\BP\Leave\ERP_HR_Leave_Policies();
 
         // get all leave policies from old db
-        $policies = $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$wpdb->prefix}erp_hr_leave_policies" ) );
+        $policies = $wpdb->get_col( "SELECT id FROM {$wpdb->prefix}erp_hr_leave_policies ORDER BY id ASC" );
 
         if ( is_array( $policies ) && ! empty( $policies ) ) {
             foreach ( $policies as $policy ) {
@@ -234,9 +235,48 @@ class ERP_1_5_15 {
             // todo: add some functionality if no policies is found.
         }
 
-        $bg_progess_hr_leaves_1_5_15->save()->dispatch();
-    }
+        $bg_progess_hr_leaves_1_5_15->save();
 
+        // get all leave entitlement data from old db
+        global $bg_progess_hr_leaves_entitlements;
+
+        $entitlement_ids = $wpdb->get_col( "SELECT id FROM {$wpdb->prefix}erp_hr_leave_entitlements ORDER BY id ASC" );
+
+        if (
+            is_array( $entitlement_ids )
+            && ! empty( $entitlement_ids )
+            
+        ) {
+            foreach ( $entitlement_ids as $entitlement_id ) {
+                $bg_progess_hr_leaves_entitlements->push_to_queue( $entitlement_id );
+            }
+        } else {
+            // todo: add some functionality if no policies is found.
+        }
+
+        $bg_progess_hr_leaves_entitlements->save();
+
+        //
+        global $bg_progess_hr_leave_requests;
+
+        $request_ids = $wpdb->get_col( "SELECT id FROM {$wpdb->prefix}erp_hr_leave_requests ORDER BY id ASC" );
+
+        if ( is_array( $request_ids ) && ! empty( $request_ids ) ) {
+            foreach ( $request_ids as $request_id ) {
+                $bg_progess_hr_leave_requests->push_to_queue( array(
+                    'task'  => 'leave_request',
+                    'id'    => $request_id
+                ) );
+            }
+        } else {
+            // todo: add some functionality if no leave request is found.
+        }
+
+        $bg_progess_hr_leave_requests->save();
+
+        $bg_progess_hr_leaves_1_5_15->dispatch();
+
+    }
 
     /**
      * Call this methode after migrating old data
@@ -286,9 +326,9 @@ class ERP_1_5_15 {
             return true;
         }
     }
+
 }
 
-global $erp_update_1_5_15;
 $erp_update_1_5_15 = new ERP_1_5_15();
 if ( $erp_update_1_5_15->create_db_tables() ) {
     $erp_update_1_5_15->migrate_data();
