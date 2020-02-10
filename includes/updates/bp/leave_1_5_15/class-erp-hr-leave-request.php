@@ -69,23 +69,29 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
     protected function task( $leave_request ) {
         $this->request_data = wp_parse_args( $leave_request, $this->request_data );
 
+        error_log( print_r(
+            array(
+                'file' => __FILE__, 'line' => __LINE__,
+                'message' => 'Leave request data: ' . print_r( $this->request_data, true )
+            ), true )
+        );
+
         switch ( $this->request_data['task'] ) {
 
             case 'leave_request':
-                $this->insert_leave_request();
+                return $this->insert_leave_request();
                 break;
 
             case 'leave_approval_status':
-                $this->insert_leave_approval_status();
+                return $this->insert_leave_approval_status();
                 break;
 
             case 'leave_entitlements':
-                $this->insert_leave_entitlement();
+                return $this->insert_leave_entitlement();
                 break;
 
             case 'leave_request_details':
-                $this->insert_leave_request_details();
-                return false;
+                return $this->insert_leave_request_details();
                 break;
 
             default:
@@ -204,6 +210,15 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
                 } else {
                     $this->request_data['task']             = 'leave_approval_status';
                     $this->request_data['leave_request_id'] = $wpdb->insert_id;
+
+
+                    error_log( print_r(
+                        array(
+                            'file' => __FILE__, 'line' => __LINE__,
+                            'message' => 'New Leave request data: ' . print_r( $this->request_data, true )
+                        ), true )
+                    );
+
                     return $this->request_data;
                 }
             }
@@ -219,6 +234,13 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
      * @return array will return updated data to further run current background process.
      */
     protected function insert_leave_approval_status() {
+        error_log( print_r(
+            array(
+                'file' => __FILE__, 'line' => __LINE__,
+                'message' => 'Insert leave approval status: ' . print_r( $this->request_data, true )
+            ), true )
+        );
+
         // insert only if leave is approved or rejected and request is already made.
         if ( isset( $this->request_data['status'] ) && in_array( $this->request_data['status'], array( 1, 3 ) ) && isset( $this->request_data['leave_request_id'] ) && $this->request_data['leave_request_id'] > 0 ) {
             // leave approved or rejected.

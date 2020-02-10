@@ -211,14 +211,22 @@ class ERP_1_5_15 {
     public function migrate_data() {
         global $wpdb;
         global $bg_progess_hr_leaves_1_5_15;
+        global $bg_progess_hr_leaves_entitlements;
+        global $bg_progess_hr_leave_requests;
 
-        // if ( ! class_exists( '\WeDevs\ERP\Updates\BP\Leave\ERP_HR_Leave_Policies' ) ) {
-        //     require_once WPERP_INCLUDES . '/updates/bp/leave_1_5_15/class-erp-hr-leave-policies.php';
-        // }
+        $already_done = get_option('policy_migrate_data', 0);
 
-        // $bg_progess_hr_leaves_1_5_15 = new \WeDevs\ERP\Updates\BP\Leave\ERP_HR_Leave_Policies();
+        if ( $already_done ) {
+            return;
+        }
 
-        // get all leave policies from old db
+        update_option( 'policy_migrate_data', 1 );
+
+        /**
+         * Leave policies BG process save
+         * 
+         * get all leave policies from old db
+         */
         $policies = $wpdb->get_col( "SELECT id FROM {$wpdb->prefix}erp_hr_leave_policies ORDER BY id ASC" );
 
         if ( is_array( $policies ) && ! empty( $policies ) ) {
@@ -237,16 +245,16 @@ class ERP_1_5_15 {
 
         $bg_progess_hr_leaves_1_5_15->save();
 
-        // get all leave entitlement data from old db
-        global $bg_progess_hr_leaves_entitlements;
 
+
+        /**
+         * Leave entitlements BG process save
+         * 
+         * get all leave entitlements from old db
+         */
         $entitlement_ids = $wpdb->get_col( "SELECT id FROM {$wpdb->prefix}erp_hr_leave_entitlements ORDER BY id ASC" );
 
-        if (
-            is_array( $entitlement_ids )
-            && ! empty( $entitlement_ids )
-            
-        ) {
+        if ( is_array( $entitlement_ids ) && ! empty( $entitlement_ids ) ) {
             foreach ( $entitlement_ids as $entitlement_id ) {
                 $bg_progess_hr_leaves_entitlements->push_to_queue( $entitlement_id );
             }
@@ -256,9 +264,13 @@ class ERP_1_5_15 {
 
         $bg_progess_hr_leaves_entitlements->save();
 
-        //
-        global $bg_progess_hr_leave_requests;
 
+
+        /**
+         * Leave requests BG process save
+         *
+         * get all leave requests from old db
+         */
         $request_ids = $wpdb->get_col( "SELECT id FROM {$wpdb->prefix}erp_hr_leave_requests ORDER BY id ASC" );
 
         if ( is_array( $request_ids ) && ! empty( $request_ids ) ) {
@@ -274,8 +286,12 @@ class ERP_1_5_15 {
 
         $bg_progess_hr_leave_requests->save();
 
-        $bg_progess_hr_leaves_1_5_15->dispatch();
 
+
+        /**
+         * Boot leaves data migration
+         */
+        $bg_progess_hr_leaves_1_5_15->dispatch();
     }
 
     /**
