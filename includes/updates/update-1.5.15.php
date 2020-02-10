@@ -117,7 +117,7 @@ class ERP_1_5_15 {
                   leave_id smallint(6) UNSIGNED NOT NULL,
                   created_by bigint(20) UNSIGNED NOT NULL,
                   trn_id bigint(20) UNSIGNED NOT NULL,
-                  trn_type enum('leave_policies','leave_approval_status','leave_encashment_requests','leave_entitlements','unpaid_leave','leave_encashment', 'manual_leave_policies', 'others') NOT NULL DEFAULT 'leave_policies',
+                  trn_type enum('leave_policies','leave_approval_status','leave_encashment_requests','leave_entitlements','unpaid_leave','leave_encashment', 'manual_leave_policies', 'Accounts', 'others') NOT NULL DEFAULT 'leave_policies',
                   day_in tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
                   day_out tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
                   description text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -204,9 +204,11 @@ class ERP_1_5_15 {
         foreach ( $table_schema as $table ) {
             dbDelta( $table );
         }
+
+        return true;
     }
 
-    protected function migrate_data() {
+    public function migrate_data() {
         global $wpdb;
 
         if ( ! class_exists( '\WeDevs\ERP\Updates\BP\Leave\ERP_HR_Leave_Policies' ) ) {
@@ -233,11 +235,14 @@ class ERP_1_5_15 {
     /**
      * Call this methode after migrating old data
      */
-    protected function delete_old_db_tables() {
+    public function delete_old_db_tables() {
         global $wpdb;
         if ( $wpdb->query( 'DROP TABLE ' . implode( ', ', $this->db_tables_old ) . ';' ) === false ) {
             // todo: mysql query error, store this error to log
 
+        }
+        else {
+            return true;
         }
     }
 
@@ -245,7 +250,7 @@ class ERP_1_5_15 {
      *
      * Call this method after migrating all datas
      */
-    protected function alter_new_db_tables() {
+    public function alter_new_db_tables() {
         global $wpdb;
         $queries = 'RENAME TABLE ';
         foreach ( $this->db_tables as $new_name => $old_name ) {
@@ -258,10 +263,19 @@ class ERP_1_5_15 {
         }
 
         if ( $wpdb->query( $queries ) === false ) {
-            // query error, log this to db
+            // todo: query error, log this to db
 
         }
+        else {
+            return true;
+        }
     }
+}
+
+global $erp_update_1_5_15;
+$erp_update_1_5_15 = new ERP_1_5_15();
+if ( $erp_update_1_5_15->create_db_tables() ) {
+    $erp_update_1_5_15->migrate_data();
 }
 
 

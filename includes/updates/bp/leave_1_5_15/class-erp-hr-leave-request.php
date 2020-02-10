@@ -426,5 +426,11 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
      */
     protected function complete() {
         parent::complete();
+
+        //now delete all old db tables and data
+        global $erp_update_1_5_15;
+        if ( $erp_update_1_5_15->delete_old_db_tables() ) {
+            $erp_update_1_5_15->alter_new_db_tables();
+        }
     }
 }
