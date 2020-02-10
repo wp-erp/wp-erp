@@ -212,13 +212,13 @@ class ERP_1_5_15 {
         global $wpdb;
         global $bg_progess_hr_leaves_1_5_15;
 
-        // if ( ! class_exists( '\WeDevs\ERP\Updates\BP\Leave\ERP_HR_Leave_Policies' ) ) {
-        //     require_once WPERP_INCLUDES . '/updates/bp/leave_1_5_15/class-erp-hr-leave-policies.php';
-        // }
+        $already_done = get_option('policy_migrate_data_1_5_15', 0);
+        if ( $already_done ) {
+            return;
+        }
 
-        // $bg_progess_hr_leaves_1_5_15 = new \WeDevs\ERP\Updates\BP\Leave\ERP_HR_Leave_Policies();
+        update_option( 'policy_migrate_data_1_5_15', 1 );
 
-        // get all leave policies from old db
         $policies = $wpdb->get_col( "SELECT id FROM {$wpdb->prefix}erp_hr_leave_policies ORDER BY id ASC" );
 
         if ( is_array( $policies ) && ! empty( $policies ) ) {
@@ -245,7 +245,7 @@ class ERP_1_5_15 {
         if (
             is_array( $entitlement_ids )
             && ! empty( $entitlement_ids )
-            
+
         ) {
             foreach ( $entitlement_ids as $entitlement_id ) {
                 $bg_progess_hr_leaves_entitlements->push_to_queue( $entitlement_id );
@@ -256,7 +256,7 @@ class ERP_1_5_15 {
 
         $bg_progess_hr_leaves_entitlements->save();
 
-        //
+        //get all leave request data
         global $bg_progess_hr_leave_requests;
 
         $request_ids = $wpdb->get_col( "SELECT id FROM {$wpdb->prefix}erp_hr_leave_requests ORDER BY id ASC" );
@@ -274,8 +274,8 @@ class ERP_1_5_15 {
 
         $bg_progess_hr_leave_requests->save();
 
+        //run the queue, starting with leave policies data
         $bg_progess_hr_leaves_1_5_15->dispatch();
-
     }
 
     /**
@@ -288,7 +288,7 @@ class ERP_1_5_15 {
             error_log( print_r(
                 array(
                     'file' => __FILE__, 'line' => __LINE__,
-                    'message' => '(Query error) Table drop failed.'
+                    'message' => '(Query error) Table drop failed: ' . $wpdb->last_error
                 ), true )
             );
         }
@@ -318,7 +318,7 @@ class ERP_1_5_15 {
             error_log( print_r(
                 array(
                     'file' => __FILE__, 'line' => __LINE__,
-                    'message' => '(Query error) Table renaming failed.'
+                    'message' => '(Query error) Table renaming failed: ' . $wpdb->last_error
                 ), true )
             );
         }
