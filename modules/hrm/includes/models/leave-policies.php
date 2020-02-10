@@ -22,7 +22,7 @@ class Leave_Policy extends Model {
     /**
      * Relation to Leave model
      *
-     * @since 1.6.0
+     * @since 1.5.15
      *
      * @return object
      */
@@ -33,7 +33,7 @@ class Leave_Policy extends Model {
     /**
      * Relation to Leave_Entitlement model
      *
-     * @since 1.6.0
+     * @since 1.5.15
      *
      * @return object
      */
@@ -44,7 +44,7 @@ class Leave_Policy extends Model {
     /**
      * Relation to Leave_Policies_Segregation
      * 
-     * @since 1.6.0
+     * @since 1.5.15
      * 
      * @return object
      */

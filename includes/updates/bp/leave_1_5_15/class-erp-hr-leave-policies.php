@@ -43,7 +43,7 @@ class ERP_HR_Leave_Policies extends \WP_Background_Process {
 
         $policy_data = $wpdb->get_row(
             $wpdb->prepare(
-                "SELECT * FROM {$wpdb}erp_hr_leave_policies WHERE id = %d",
+                "SELECT * FROM {$wpdb->prefix}erp_hr_leave_policies WHERE id = %d",
                 array( $policy )
             ),
             ARRAY_A
@@ -211,27 +211,8 @@ class ERP_HR_Leave_Policies extends \WP_Background_Process {
     protected function complete() {
         parent::complete();
 
-        global $wpdb;
+        global $bg_progess_hr_leaves_entitlements;
 
-        // todo: verify data migrated successfully on new tables.
-
-        if ( ! class_exists('\WeDevs\ERP\Updates\BP\Leave\ERP_HR_Leave_Entitlements') ) {
-            require_once WPERP_INCLUDES . '/updates/bp/leave_1_5_15/class-erp-hr-leave-entitlements.php';
-        }
-
-        $bg_progess_hr_leaves_entitlements = new \WeDevs\ERP\Updates\BP\Leave\ERP_HR_Leave_Entitlements();
-
-        // get all leave entitlement data from old db
-        $entitlement_ids = $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$wpdb->prefix}erp_hr_leave_entitlements" ) );
-
-        if ( is_array( $entitlement_ids ) && ! empty( $entitlement_ids ) ) {
-            foreach ( $entitlement_ids as $entitlement_id ) {
-                $bg_progess_hr_leaves_entitlements->push_to_queue( $entitlement_id );
-            }
-        } else {
-            // todo: add some functionality if no policies is found.
-        }
-
-        $bg_progess_hr_leaves_entitlements->save()->dispatch();
+        $bg_progess_hr_leaves_entitlements->dispatch();
     }
 }

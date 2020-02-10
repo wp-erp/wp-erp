@@ -46,7 +46,8 @@ class Updates {
         '1.5.2'  => 'updates/update-1.5.2.php',
         '1.5.4'  => 'updates/update-1.5.4.php',
         '1.5.5'  => 'updates/update-1.5.5.php',
-        '1.5.6'  => 'updates/update-1.5.6.php'
+        '1.5.6'  => 'updates/update-1.5.6.php',
+        '1.5.15' => 'updates/update-1.5.15.php'
     ];
 
     /**
@@ -139,9 +140,16 @@ class Updates {
     public function do_updates() {
         global $bg_process;
         global $bg_process_people_trn;
+        global $bg_progess_hr_leaves_1_5_15;
+        global $bg_progess_hr_leaves_entitlements;
+        global $bg_progess_hr_leave_requests;
 
-        $bg_process            = new \WeDevs\ERP\Updates\BP\ERP_ACCT_BG_Process;
-        $bg_process_people_trn = new \WeDevs\ERP\Updates\BP\ERP_ACCT_BG_Process_People_Trn;
+
+        $bg_process                        = new \WeDevs\ERP\Updates\BP\ERP_ACCT_BG_Process;
+        $bg_process_people_trn             = new \WeDevs\ERP\Updates\BP\ERP_ACCT_BG_Process_People_Trn;
+        $bg_progess_hr_leaves_1_5_15       = new \WeDevs\ERP\Updates\BP\Leave\ERP_HR_Leave_Policies();
+        $bg_progess_hr_leaves_entitlements = new \WeDevs\ERP\Updates\BP\Leave\ERP_HR_Leave_Entitlements();
+        $bg_progess_hr_leave_requests      = new \WeDevs\ERP\Updates\BP\Leave\ERP_HR_Leave_Request();
 
         if ( isset( $_GET['wperp_do_update'] ) && sanitize_text_field( wp_unslash( $_GET['wperp_do_update'] ) ) ) {
             $this->perform_updates();
@@ -224,6 +232,7 @@ class Updates {
      * @return bool
      */
     private function memory_exceeded() {
+        // can be resolve by `extends WP_Background_Process class`
         $memory_limit   = $this->get_memory_limit() * 0.5; // 90% of max memory
         $current_memory = memory_get_usage( true );
         $return         = false;

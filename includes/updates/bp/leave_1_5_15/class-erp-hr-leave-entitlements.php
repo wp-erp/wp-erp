@@ -42,7 +42,7 @@ class ERP_HR_Leave_Entitlements extends \WP_Background_Process {
 
         $entitlement_data = $wpdb->get_row(
             $wpdb->prepare(
-                "SELECT * FROM {$wpdb}erp_hr_leave_entitlements WHERE id = %d",
+                "SELECT * FROM {$wpdb->prefix}erp_hr_leave_entitlements WHERE id = %d",
                 array( $entitlement_id )
             ),
             ARRAY_A
@@ -51,6 +51,12 @@ class ERP_HR_Leave_Entitlements extends \WP_Background_Process {
         if ( null === $entitlement_data ) {
             // no result found: can be because of query error, handle this problem here probably log this error.
             // todo: keep log here.
+            error_log( print_r(
+                array(
+                    'file' => __FILE__, 'line' => __LINE__,
+                    'message' => '(Query error) No data found from leave entitlements table.'
+                ), true )
+            );
 
         } elseif ( is_array( $entitlement_data ) && ! empty( $entitlement_data ) ) {
 
@@ -137,29 +143,9 @@ class ERP_HR_Leave_Entitlements extends \WP_Background_Process {
     protected function complete() {
         parent::complete();
 
-        global $wpdb;
+        global $bg_progess_hr_leave_requests;
 
-        if ( ! class_exists('\WeDevs\ERP\Updates\BP\Leave\ERP_HR_Leave_Request') ) {
-            require_once WPERP_INCLUDES . '/updates/bp/leave_1_5_15/class-erp-hr-leave-request.php';
-        }
-
-        $bg_progess_hr_leave_requests = new \WeDevs\ERP\Updates\BP\Leave\ERP_HR_Leave_Request();
-
-        // get all leave entitlement data from old db
-        $request_ids = $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$wpdb->prefix}erp_hr_leave_requests" ) );
-
-        if ( is_array( $request_ids ) && ! empty( $request_ids ) ) {
-            foreach ( $request_ids as $request_id ) {
-                $bg_progess_hr_leave_requests->push_to_queue( array(
-                    'task'  => 'leave_request',
-                    'id'    => $request_id
-                ) );
-            }
-        } else {
-            // todo: add some functionality if no leave request is found.
-        }
-
-        $bg_progess_hr_leave_requests->save()->dispatch();
+        $bg_progess_hr_leave_requests->dispatch();
 
     }
 }
