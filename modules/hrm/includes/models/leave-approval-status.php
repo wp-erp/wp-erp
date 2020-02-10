@@ -9,7 +9,7 @@ use WeDevs\ERP\Framework\Model;
  * @package WeDevs\ERP\HRM\Models
  */
 class Leave_Approval_Status extends Model {
-    protected $table = 'erp_hr_leave_approval_status_new';
+    protected $table = 'erp_hr_leave_approval_status';
 
     protected $fillable = [
         'leave_request_id', 'approval_status_id', 'approved_by',

@@ -9,7 +9,7 @@ use WeDevs\ERP\Framework\Model;
  * @package WeDevs\ERP\HRM\Models
  */
 class Leave_Request extends Model {
-    protected $table = 'erp_hr_leave_requests_new';
+    protected $table = 'erp_hr_leave_requests';
 
     protected $fillable = [
         'user_id', 'leave_id', 'day_status_id', 'days',
