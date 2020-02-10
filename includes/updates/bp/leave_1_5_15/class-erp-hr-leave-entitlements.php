@@ -136,5 +136,30 @@ class ERP_HR_Leave_Entitlements extends \WP_Background_Process {
      */
     protected function complete() {
         parent::complete();
+
+        global $wpdb;
+
+        if ( ! class_exists('\WeDevs\ERP\Updates\BP\Leave\ERP_HR_Leave_Request') ) {
+            require_once WPERP_INCLUDES . '/updates/bp/leave_1_5_15/class-erp-hr-leave-request.php';
+        }
+
+        $bg_progess_hr_leave_requests = new \WeDevs\ERP\Updates\BP\Leave\ERP_HR_Leave_Request();
+
+        // get all leave entitlement data from old db
+        $request_ids = $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$wpdb->prefix}erp_hr_leave_requests" ) );
+
+        if ( is_array( $request_ids ) && ! empty( $request_ids ) ) {
+            foreach ( $request_ids as $request_id ) {
+                $bg_progess_hr_leave_requests->push_to_queue( array(
+                    'task'  => 'leave_request',
+                    'id'    => $request_id
+                ) );
+            }
+        } else {
+            // todo: add some functionality if no leave request is found.
+        }
+
+        $bg_progess_hr_leave_requests->save()->dispatch();
+
     }
 }
