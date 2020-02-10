@@ -52,6 +52,12 @@ class ERP_HR_Leave_Policies extends \WP_Background_Process {
         if ( null === $policy_data ) {
             // no result found: can be because of query error, handle this problem here probably log this error
             // todo: keep log here
+            error_log( print_r(
+                array(
+                    'file' => __FILE__, 'line' => __LINE__,
+                    'message' => '(Query error) Policy not found.'
+                ), true )
+            );
 
         } elseif ( is_array( $policy_data ) && ! empty( $policy_data ) ) {
 
@@ -87,6 +93,12 @@ class ERP_HR_Leave_Policies extends \WP_Background_Process {
 
             $leave_id = 0;
             if ( false === $wpdb->insert( "{$wpdb->prefix}erp_hr_leaves_new", $table_data, $table_format ) ) {
+                error_log( print_r(
+                    array(
+                        'file' => __FILE__, 'line' => __LINE__,
+                        'message' => '(Query error) Insertion failed new leaves table.'
+                    ), true )
+                );
                 // todo: query error, do loging or something here.
             } else {
                 $leave_id = $wpdb->insert_id;
@@ -156,6 +168,12 @@ class ERP_HR_Leave_Policies extends \WP_Background_Process {
                 }
 
                 if ( false === $wpdb->insert( "{$wpdb->prefix}erp_hr_leave_policies_new", $table_data, $table_format ) ) {
+                    error_log( print_r(
+                        array(
+                            'file' => __FILE__, 'line' => __LINE__,
+                            'message' => '(Query error) Insertion failed new leave policies table.'
+                        ), true )
+                    );
                     // todo: query error, log this error for debugging.
 
                 } else {
@@ -174,7 +192,12 @@ class ERP_HR_Leave_Policies extends \WP_Background_Process {
 
                 if ( false === $wpdb->insert( "{$wpdb->prefix}erp_hr_leave_policies_segregation_new", $table_data, $table_format ) ) {
                     // todo: query error, log this error for debugging.
-
+                    error_log( print_r(
+                        array(
+                            'file' => __FILE__, 'line' => __LINE__,
+                            'message' => '(Query error) Insertion failed new leave policies segregation table.'
+                        ), true )
+                    );
                 }
             }
         }

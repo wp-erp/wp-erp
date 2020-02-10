@@ -223,6 +223,12 @@ class ERP_1_5_15 {
                 $bg_progess_hr_leaves_1_5_15->push_to_queue( $policy );
             }
         } else {
+            error_log( print_r(
+                array(
+                    'file' => __FILE__, 'line' => __LINE__,
+                    'message' => 'No policies found.'
+                ), true )
+            );
             // todo: add some functionality if no policies is found.
         }
 
@@ -237,7 +243,12 @@ class ERP_1_5_15 {
         global $wpdb;
         if ( $wpdb->query( 'DROP TABLE ' . implode( ', ', $this->db_tables_old ) . ';' ) === false ) {
             // todo: mysql query error, store this error to log
-
+            error_log( print_r(
+                array(
+                    'file' => __FILE__, 'line' => __LINE__,
+                    'message' => '(Query error) Table drop failed.'
+                ), true )
+            );
         }
     }
 
@@ -259,7 +270,12 @@ class ERP_1_5_15 {
 
         if ( $wpdb->query( $queries ) === false ) {
             // query error, log this to db
-
+            error_log( print_r(
+                array(
+                    'file' => __FILE__, 'line' => __LINE__,
+                    'message' => '(Query error) Table renaming failed.'
+                ), true )
+            );
         }
     }
 }
