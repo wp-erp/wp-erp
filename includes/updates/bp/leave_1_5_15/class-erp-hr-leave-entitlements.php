@@ -97,6 +97,12 @@ class ERP_HR_Leave_Entitlements extends \WP_Background_Process {
             if ( null === $policy_data ) {
                 // no result found: can be because of query error, handle this problem here probably log this error.
                 // todo: keep log here.
+                error_log( print_r(
+                    array(
+                        'file' => __FILE__, 'line' => __LINE__,
+                        'message' => '(Query error) Insertion failed new leave policies table.'
+                    ), true )
+                );
 
             } elseif ( is_array( $policy_data ) && ! empty( $policy_data ) ) {
                 $table_data['trn_id'] = $policy_data['id'];
@@ -110,6 +116,12 @@ class ERP_HR_Leave_Entitlements extends \WP_Background_Process {
 
                 if ( false === $wpdb->insert( "{$wpdb->prefix}erp_hr_leave_entitlements_new", $table_data, $table_format ) ) {
                     // todo: query error, do loging or something here
+                    error_log( print_r(
+                        array(
+                            'file' => __FILE__, 'line' => __LINE__,
+                            'message' => '(Query error) Insertion failed new leave entitlements table.'
+                        ), true )
+                    );
                 } else {
                     return false;
                 }
