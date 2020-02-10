@@ -214,13 +214,13 @@ class ERP_1_5_15 {
         global $bg_progess_hr_leaves_entitlements;
         global $bg_progess_hr_leave_requests;
 
-        $already_done = get_option('policy_migrate_data', 0);
+        $already_done = get_option('policy_migrate_data_1_5_15', 0);
 
         if ( $already_done ) {
             return;
         }
-
-        update_option( 'policy_migrate_data', 1 );
+      
+        update_option( 'policy_migrate_data_1_5_15', 1 );
 
         /**
          * Leave policies BG process save
@@ -264,8 +264,7 @@ class ERP_1_5_15 {
 
         $bg_progess_hr_leaves_entitlements->save();
 
-
-
+        global $bg_progess_hr_leave_requests;
         /**
          * Leave requests BG process save
          *
@@ -286,10 +285,8 @@ class ERP_1_5_15 {
 
         $bg_progess_hr_leave_requests->save();
 
-
-
         /**
-         * Boot leaves data migration
+         * run the queue, starting with leave policies data
          */
         $bg_progess_hr_leaves_1_5_15->dispatch();
     }
@@ -304,7 +301,7 @@ class ERP_1_5_15 {
             error_log( print_r(
                 array(
                     'file' => __FILE__, 'line' => __LINE__,
-                    'message' => '(Query error) Table drop failed.'
+                    'message' => '(Query error) Table drop failed: ' . $wpdb->last_error
                 ), true )
             );
         }
@@ -334,7 +331,7 @@ class ERP_1_5_15 {
             error_log( print_r(
                 array(
                     'file' => __FILE__, 'line' => __LINE__,
-                    'message' => '(Query error) Table renaming failed.'
+                    'message' => '(Query error) Table renaming failed: ' . $wpdb->last_error
                 ), true )
             );
         }

@@ -96,7 +96,7 @@ class ERP_HR_Leave_Policies extends \WP_Background_Process {
                 error_log( print_r(
                     array(
                         'file' => __FILE__, 'line' => __LINE__,
-                        'message' => '(Query error) Insertion failed new leaves table.'
+                        'message' => '(Query error) Insertion failed new leaves table. ' . $wpdb->last_error
                     ), true )
                 );
                 // todo: query error, do loging or something here.
@@ -171,7 +171,7 @@ class ERP_HR_Leave_Policies extends \WP_Background_Process {
                     error_log( print_r(
                         array(
                             'file' => __FILE__, 'line' => __LINE__,
-                            'message' => '(Query error) Insertion failed new leave policies table.'
+                            'message' => '(Query error) Insertion failed new leave policies table: ' . $wpdb->last_error
                         ), true )
                     );
                     // todo: query error, log this error for debugging.
@@ -195,7 +195,7 @@ class ERP_HR_Leave_Policies extends \WP_Background_Process {
                     error_log( print_r(
                         array(
                             'file' => __FILE__, 'line' => __LINE__,
-                            'message' => '(Query error) Insertion failed new leave policies segregation table.'
+                            'message' => '(Query error) Insertion failed new leave policies segregation table: ' . $wpdb->last_error
                         ), true )
                     );
                 }

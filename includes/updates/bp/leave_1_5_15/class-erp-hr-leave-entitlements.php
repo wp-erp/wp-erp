@@ -125,7 +125,7 @@ class ERP_HR_Leave_Entitlements extends \WP_Background_Process {
                     error_log( print_r(
                         array(
                             'file' => __FILE__, 'line' => __LINE__,
-                            'message' => '(Query error) Insertion failed new leave entitlements table.'
+                            'message' => '(Query error) Insertion failed new leave entitlements table: ' . $wpdb->last_error
                         ), true )
                     );
                 } else {
@@ -146,6 +146,5 @@ class ERP_HR_Leave_Entitlements extends \WP_Background_Process {
         global $bg_progess_hr_leave_requests;
 
         $bg_progess_hr_leave_requests->dispatch();
-
     }
 }
