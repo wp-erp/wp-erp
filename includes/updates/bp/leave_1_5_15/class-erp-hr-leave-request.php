@@ -68,7 +68,7 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
      */
     protected function task( $leave_request ) {
         $this->request_data = wp_parse_args( $leave_request, $this->request_data );
-
+      
         $ret = '';
 
         switch ( $this->request_data['task'] ) {
@@ -219,6 +219,13 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
      * @return array will return updated data to further run current background process.
      */
     protected function insert_leave_approval_status() {
+        error_log( print_r(
+            array(
+                'file' => __FILE__, 'line' => __LINE__,
+                'message' => 'Insert leave approval status: ' . print_r( $this->request_data, true )
+            ), true )
+        );
+
         // insert only if leave is approved or rejected and request is already made.
         if ( isset( $this->request_data['status'] ) && in_array( $this->request_data['status'], array( 1, 3 ) ) && isset( $this->request_data['leave_request_id'] ) && $this->request_data['leave_request_id'] > 0 ) {
             // leave approved or rejected.
