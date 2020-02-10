@@ -426,9 +426,9 @@ class Announcement {
         }
 
         $type         = ( isset( $_POST['hr_announcement_assign_type'] ) ) ? sanitize_text_field( wp_unslash( $_POST['hr_announcement_assign_type'] ) ): '';
-        $employees    = ( isset( $_POST['hr_announcement_assign_employee'] ) ) ? sanitize_text_field( wp_unslash( $_POST['hr_announcement_assign_employee'] ) ): array();
-        $departments  = ( isset( $_POST['hr_announcement_assign_department'] ) ) ? sanitize_text_field( wp_unslash( $_POST['hr_announcement_assign_department'] ) ): array();
-        $designations = ( isset( $_POST['hr_announcement_assign_designation'] ) ) ? sanitize_text_field( wp_unslash( $_POST['hr_announcement_assign_designation'] ) ): array();
+        $employees    = ( isset( $_POST['hr_announcement_assign_employee'] ) ) ? array_map( 'sanitize_text_field', $_POST['hr_announcement_assign_employee'] ) : array();
+        $departments  = ( isset( $_POST['hr_announcement_assign_department'] ) ) ? array_map( 'sanitize_text_field', $_POST['hr_announcement_assign_department'] ) : array();
+        $designations = ( isset( $_POST['hr_announcement_assign_designation'] ) ) ? array_map( 'sanitize_text_field', $_POST['hr_announcement_assign_designation'] ) : array();
 
         if ( $type == 'by_department' ) {
             $selected = $departments;
