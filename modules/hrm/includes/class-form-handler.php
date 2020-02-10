@@ -620,7 +620,7 @@ class Form_Handler {
         if ( ! $leave_policy ) {
             $errors[] = 'invalid-policy';
         } else {
-            $policy = \WeDevs\ERP\HRM\Models\Leave_Policies::find( $leave_policy );
+            $policy = \WeDevs\ERP\HRM\Models\Leave_Policy::find( $leave_policy );
         }
 
         if ( ! in_array( $leave_period, array( $cur_year - 1, $cur_year, $cur_year + 1 ) ) ) {

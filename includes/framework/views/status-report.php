@@ -72,7 +72,7 @@ $security         = $system_status->get_security_info();
 		<tr>
 			<td data-export-label="Leave policies"><?php esc_html_e( 'Leave policies', 'erp' ); ?>:</td>
 			<td class="help"><?php echo wp_kses_post( erp_help_tip( esc_html__( 'Total leave policies count.', 'erp' ) ) ); ?></td>
-			<td><?php echo esc_html( \WeDevs\ERP\HRM\Models\Leave_Policies::count() ); ?></td>
+			<td><?php echo esc_html( \WeDevs\ERP\HRM\Models\Leave_Policy::count() ); ?></td>
 		</tr>
 		<tr>
 			<td data-export-label="CRM">

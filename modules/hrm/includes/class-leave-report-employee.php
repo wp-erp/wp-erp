@@ -21,7 +21,7 @@ class Leave_Report_Employee_Based extends \WP_List_Table {
             'ajax'     => false
         ) );
         $this->table_css();
-        $this->policies = \WeDevs\ERP\HRM\Models\Leave_Policies::select( 'name', 'id' )->get();
+        $this->policies = \WeDevs\ERP\HRM\Models\Leave_Policy::select( 'name', 'id' )->get();
     }
 
     /**

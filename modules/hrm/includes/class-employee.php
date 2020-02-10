@@ -9,7 +9,7 @@ use WeDevs\ERP\HRM\Models\Employee_History;
 use WeDevs\ERP\HRM\Models\Hr_User;
 use WeDevs\ERP\HRM\Models\Leave_Entitlement;
 use WeDevs\ERP\HRM\Models\Leave_Holiday;
-use WeDevs\ERP\HRM\Models\Leave_Policies;
+use WeDevs\ERP\HRM\Models\Leave_Policy;
 use WeDevs\ERP\HRM\Models\Work_Experience;
 
 class Employee {
