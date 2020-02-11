@@ -71,7 +71,7 @@ class ERP_1_5_15 {
             "CREATE TABLE {$wpdb->prefix}erp_hr_leave_policies_new (
                   id int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
                   leave_id smallint(5) UNSIGNED NOT NULL,
-                  old_policy_id int(11) UNSIGNED NOT NULL,
+                  old_policy_id int(11) UNSIGNED DEFAULT NULL,
                   description text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
                   days tinyint(3) UNSIGNED NOT NULL,
                   color varchar(10) DEFAULT NULL,

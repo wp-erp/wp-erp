@@ -10,7 +10,7 @@
         initialize: function() {
             var self = this;
 
-            $( '.erp-hr-leave-policy' ).on( 'click', 'a#erp-leave-policy-new', self, this.policy.create );
+            // $( '.erp-hr-leave-policy' ).on( 'click', 'a#erp-leave-policy-new', self, this.policy.create );
             $( '.erp-hr-leave-policy' ).on( 'click', 'a.link, span.edit a', self, this.policy.edit );
             $( '.erp-hr-leave-policy' ).on( 'click', 'a.submitdelete', self, this.policy.remove );
             $( 'body' ).on( 'change', '#erp-hr-leave-req-from-date, #erp-hr-leave-req-to-date', self, this.leave.requestDates );
@@ -138,6 +138,12 @@
                     $( ".erp-leave-date-picker-from" ).datepicker( "option", "maxDate", selectedDate );
                 }
             });
+
+            $('.leave-policy-form').find('#leave_id').select2({
+                tags: true
+            });
+
+            $('.erp-color-picker').wpColorPicker();
         },
 
         holiday: {

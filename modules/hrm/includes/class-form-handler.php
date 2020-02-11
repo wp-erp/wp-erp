@@ -43,6 +43,8 @@ class Form_Handler {
 //        add_action( "load-{$leave}_page_erp-leave-policies", array( $this, 'leave_policies' ) );
 //        add_action( "load-leaves_page_erp-hr-reporting", array( $this, 'reporting_leaves_bulk_action' ) );
 
+        // Leave policies
+        add_action( 'erp_action_hr-leave-policy-create', array( $this, 'leave_policy_create' ) );
     }
 
     /**
@@ -937,6 +939,85 @@ class Form_Handler {
             wp_redirect( $redirect );
         }
 
+    }
+
+    /**
+     * Create leave policy
+     * 
+     * @since 1.5.13
+     * 
+     * @return mixed
+     */
+    public function leave_policy_create() {
+        // Nonce validaion
+        if ( ! isset( $_POST['_wpnonce'] ) ||
+            ! wp_verify_nonce(
+                sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'erp-leave-policy'
+            )
+        ) {
+            return;
+        }
+
+        // Check permission
+        if ( ! current_user_can( erp_hr_get_manager_role() ) ) {
+            wp_die( esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
+        global $policy_create_error;
+        $policy_create_error = new \WP_Error();
+
+        $leave_id = sanitize_text_field( wp_unslash( $_POST['leave_id'] ) );
+        $days     = absint( wp_unslash( $_POST['days'] ) );
+        $f_year   = absint( wp_unslash( $_POST['f_year'] ) );
+
+        $desc        = ! empty( $_POST['description'] ) ? sanitize_text_field( wp_unslash( $_POST['description'] ) ) : '';
+        $dept_id     = ! empty( $_POST['department'] ) ? sanitize_text_field( wp_unslash( $_POST['department'] ) ) : '-1';
+        $desg_id     = ! empty( $_POST['designation'] ) ? sanitize_text_field( wp_unslash( $_POST['designation'] ) ) : '-1';
+        $location_id = ! empty( $_POST['location'] ) ? sanitize_text_field( wp_unslash( $_POST['location'] ) ) : '-1';
+        $color       = ! empty( $_POST['color'] ) ? sanitize_text_field( wp_unslash( $_POST['color'] ) ) : '';
+        $gender      = ! empty( $_POST['gender'] ) ? sanitize_text_field( wp_unslash( $_POST['gender'] ) ) : '-1';
+        $maritial    = ! empty( $_POST['maritial'] ) ? sanitize_text_field( wp_unslash( $_POST['maritial'] ) ) : '-1';
+
+        if ( empty( $_POST['leave_id'] )  ) {
+            $policy_create_error->add( 'empty', 'Name field should not be left empty' );
+        }
+
+        if ( empty( $_POST['days'] )  ) {
+            $policy_create_error->add( 'empty', 'Days field should not be left empty' );
+        }
+
+        if ( empty( $_POST['color'] )  ) {
+            $policy_create_error->add( 'empty', 'Color field should not be left empty' );
+        }
+
+        if ( empty( $_POST['f_year'] )  ) {
+            $policy_create_error->add( 'empty', 'Financial year field should not be left empty' );
+        }
+
+        if ( ! (int) $leave_id ) {
+            // here `leave id` is a policy name
+            $leave_id = erp_hr_create_leave($leave_id, $desc);
+        }
+
+        if ( ! is_wp_error( $policy_create_error ) ) {
+            $data = array(
+                'leave_id'       => $leave_id,
+                'days'           => $days,
+                'color'          => $color,
+                'department_id'  => $dept_id,
+                'designation_id' => $desg_id,
+                'location_id'    => $location_id,
+                'gender'         => $gender,
+                'marital'        => $maritial,
+                'f_year'         => $f_year,
+                'created_at'     => current_datetime()->getTimestamp()
+            );
+
+            erp_hr_leave_insert_policy( $data );
+
+            wp_redirect( erp_hr_new_policy_url() );
+            exit;
+        }
     }
 
 }

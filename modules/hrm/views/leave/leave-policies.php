@@ -220,7 +220,11 @@ class Leave_Policies_List_Table extends WP_List_Table {
 ?>
 
 <div class="wrap erp-hr-leave-policy">
-    <h2><?php esc_html_e( 'Leave Policies', 'erp' ); ?> <a href="#" id="erp-leave-policy-new" class="add-new-h2"><?php esc_html_e( 'Add New', 'erp' ); ?></a></h2>
+    <h2><?php esc_html_e( 'Leave Policies', 'erp' ); ?>
+        <a href="<?php echo esc_url( erp_hr_new_policy_url() ); ?>" id="erp-leave-policy-new" class="add-new-h2">
+            <?php esc_html_e( 'Add New', 'erp' ); ?>
+        </a>
+    </h2>
 
     <div class="list-table-wrap">
         <div class="list-wrap-inner">

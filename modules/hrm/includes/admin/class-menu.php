@@ -406,7 +406,17 @@ class Admin_Menu {
      * @return void
      */
     public function leave_policy_page() {
-        include WPERP_HRM_VIEWS . '/leave/leave-policies.php';
+        $action = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : 'list';
+
+        switch( $action ) {
+            case 'list':
+                include WPERP_HRM_VIEWS . '/leave/leave-policies.php';
+                break;
+
+            case 'new':
+                include WPERP_HRM_VIEWS . '/leave/new-policy.php';
+                break;
+        }
     }
 
     /**
