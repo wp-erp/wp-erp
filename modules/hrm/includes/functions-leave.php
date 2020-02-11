@@ -199,18 +199,17 @@ function erp_hrm_is_valid_leave_date_range_within_financial_date_range( $start_d
 function erp_hr_leave_insert_policy( $args = array() ) {
     $defaults = array(
         'id'          => null,
-        'name'        => '',
-        'value'       => 0,
-        'color'       => '',
-        'description' => '',
+        'leave_id'    => 0
     );
 
     $args = wp_parse_args( $args, $defaults );
 
+    error_log(print_r( $args, true));
+
     // some validation
-    if ( empty( $args['name'] ) ) {
-        return new WP_Error( 'no-name', __( 'No name provided.', 'erp' ) );
-    }
+    // if ( empty( $args['name'] ) ) {
+    //     return new WP_Error( 'no-name', __( 'No name provided.', 'erp' ) );
+    // }
 
     $exist = erp_hr_leave_get_policy_by_name( $args['name'] );
     if ( $exist && $args['id'] !== $exist->id ) {
@@ -1572,7 +1571,7 @@ function erp_hr_get_calendar_leave_events( $get = false, $user_id = false, $appr
     $policy_tb   = $wpdb->prefix . 'erp_hr_leave_policies';
 
     $employee      = new \WeDevs\ERP\HRM\Models\Employee();
-    $leave_request = new \WeDevs\ERP\HRM\Models\Leave_request();
+    $leave_request = new \WeDevs\ERP\HRM\Models\Leave_Request();
 
     $department  = isset( $get['department'] ) && ! empty( $get['department'] ) && $get['department'] != '-1' ? intval( $get['department'] ) : false;
     $designation = isset( $get['designation'] ) && ! empty( $get['designation'] ) && $get['designation'] != '-1' ? intval( $get['designation'] ) : false;
@@ -1904,4 +1903,53 @@ function erp_hr_leave_days_get_statuses( $status = false ) {
     }
 
     return $statuses;
+}
+
+/**
+ * Create new leave policy name
+ * 
+ * @since 1.5.13
+ * 
+ * @return int
+ */
+function erp_hr_create_leave( $name, $desc ) {
+    global $wpdb;
+
+    $name = strtoupper( $name );
+
+    $id = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$wpdb->prefix}erp_hr_leaves WHERE name = %s", array( $name ) ) );
+
+    if ( $id ) {
+        return $id;
+    }
+
+    $wpdb->insert(
+        $wpdb->prefix . 'erp_hr_leaves',
+        array(
+            'name'        => $name,
+            'description' => $desc
+        ),
+        array('%s', '%s')
+    );
+
+    return $wpdb->insert_id;
+}
+
+/**
+ * Build and return new policy create URL
+ * 
+ * @since 1.5.15
+ * 
+ * @return string
+ */
+function erp_hr_new_policy_url() {
+    return add_query_arg(
+        array(
+            'page'        => 'erp-hr',
+            'section'     => 'leave',
+            'sub-section' => 'policies',
+            'action'      => 'new'
+        ),
+        admin_url( 'admin.php' )
+    );
 }

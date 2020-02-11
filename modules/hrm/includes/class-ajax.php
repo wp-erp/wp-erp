@@ -83,7 +83,7 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-hr-emp-delete-dependent', 'employee_dependent_delete' );
 
         // leave policy
-        $this->action( 'wp_ajax_erp-hr-leave-policy-create', 'leave_policy_create' );
+        // $this->action( 'wp_ajax_erp-hr-leave-policy-create', 'leave_policy_create' );
         $this->action( 'wp_ajax_erp-hr-leave-policy-delete', 'leave_policy_delete' );
         $this->action( 'wp_ajax_erp-hr-leave-request-req-date', 'leave_request_dates' );
         $this->action( 'wp_ajax_erp-hr-leave-employee-assign-policies', 'leave_assign_employee_policy' );

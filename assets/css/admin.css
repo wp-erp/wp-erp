@@ -4231,3 +4231,37 @@ div.erp-nav-container.--show-secondary .-secondary {
     text-align: center;
   }
 }
+.leave-policy-form {
+  background: #fff;
+  padding: 20px;
+  width: 700px;
+  margin: 0 auto;
+}
+.leave-policy-form .form-group {
+  background: #f1f1f1;
+  border: 2px solid #eee;
+  padding-left: 10px;
+  margin-bottom: 10px;
+  border-radius: 3px;
+}
+.leave-policy-form .form-group .row {
+  margin: 15px 0;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  max-width: 500px;
+}
+.leave-policy-form .form-group .row .description {
+  margin-left: 120px;
+  font-size: 12px;
+  color: #757575;
+}
+.leave-policy-form .form-group label {
+  width: 125px;
+  display: inline-block;
+}
+.leave-policy-form .form-group input,
+.leave-policy-form .form-group select,
+.leave-policy-form .form-group textarea {
+  min-width: 300px;
+}
