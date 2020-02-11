@@ -103,15 +103,15 @@ export default {
 
 <style lang="less">
 
-    .multiselect {
-        input.multiselect__input {
-            display: none;
-        }
-        &.multiselect--active input.multiselect__input {
-            display: block;
-            width: 97% !important;
-        }
+.multiselect {
+    input.multiselect__input {
+        display: none;
     }
+    &.multiselect--active input.multiselect__input {
+        display: block;
+        width: 97% !important;
+    }
+}
 
 .with-multiselect {
     .multiselect__input {
@@ -235,6 +235,11 @@ export default {
             color: rgba(45,140,240,.9) !important;
             font-family: dashicons !important;
         }
+    }
+
+    .multiselect--disabled .multiselect__current,
+    .multiselect--disabled .multiselect__select {
+        background: none;
     }
 
 }

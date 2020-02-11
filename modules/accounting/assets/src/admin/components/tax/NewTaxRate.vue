@@ -186,7 +186,7 @@ export default {
         },
 
         addNewTaxRate(event) {
-            this.validateForm(); return;
+            this.validateForm();
 
             if (this.form_errors.length) {
                 window.scrollTo({
@@ -249,15 +249,15 @@ export default {
                 var name      = component.component_name;
 
                 if ( name ) {
-                    if (!Object.prototype.hasOwnProperty.call( 'agency_id', component ) ) {
+                    if (!Object.prototype.hasOwnProperty.call( component, 'agency_id' ) ) {
                         this.form_errors.push(`Component '${name}' agency id is required.`);
                     }
 
-                    if (!Object.prototype.hasOwnProperty.call( 'tax_category', component ) ) {
+                    if (!Object.prototype.hasOwnProperty.call( component, 'tax_category' ) ) {
                         this.form_errors.push(`Component '${name}' tax category id is required.`);
                     }
 
-                    if (!Object.prototype.hasOwnProperty.call( 'tax_rate', component ) ) {
+                    if (!Object.prototype.hasOwnProperty.call( component, 'tax_rate' ) ) {
                         this.form_errors.push(`Component '${name}' tax rate is required.`);
                     }
                 }

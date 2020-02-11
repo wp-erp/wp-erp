@@ -42,6 +42,10 @@ class Uploader {
      */
     function handle_upload( $upload_data ) {
 
+        /*** Necessary if called from API ***/
+        if ( ! function_exists( 'wp_handle_upload' ) ) require_once( ABSPATH . 'wp-admin/includes/file.php' );
+        if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) require_once( ABSPATH . 'wp-admin/includes/image.php' );
+
         $uploaded_file = wp_handle_upload( $upload_data, array('test_form' => false) );
 
         // If the wp_handle_upload call returned a local path for the image

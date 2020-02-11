@@ -249,7 +249,6 @@
             } else {
                 self.closest('.erp-crm-new-schedule-wrapper').find('#schedule-notification-wrap').hide();
             }
-            ;
         },
 
         triggerLogType: function () {
