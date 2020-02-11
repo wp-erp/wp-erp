@@ -1681,7 +1681,7 @@ class Ajax_Handler {
      */
     public function email_attachment() {
 
-        $files          =   ( ! empty( $_FILES['files'] ) ) ? array_map( 'sanitize_text_field', wp_unslash( $_FILES['files'] ) ) : array();
+        $files          =   ( ! empty( $_FILES['files'] ) ) ? $_FILES['files'] : array(); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         $wp_upload_dir  =   wp_upload_dir();
         $subdir         =   apply_filters( 'crm_attachmet_directory', 'crm-attachments' );
         $path           =   $wp_upload_dir['basedir'] . '/' . $subdir . '/';
