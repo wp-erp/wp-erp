@@ -5,7 +5,7 @@ Tags: business manager, erp, accounting, crm, hr, project manager, small busines
 Requires at least: 4.4
 Tested up to: 5.3.2
 Requires PHP: 5.6
-Stable tag: 1.5.12
+Stable tag: 1.5.13
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -266,6 +266,17 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+
+= v1.5.13 -> February 11, 2020 =
+- [new] Add document attachment field at leave application form
+- [new] Add csv import feature for uploading bulk holidays
+- [fix] Problem with announcement publication for selected employees & department
+- [fix] Default email format or HTML tags are not working with ERP Email notifications 
+- [fix] Add disabled props in multi-select for people selection
+- [fix] Fix tax component validation
+- [fix] Fix missing company custom field csv export issue
+- [fix] Fix most of the CRM list table translation related issues
+- [fix] Fix CRM subscription issue
 
 = v1.5.12 -> January 23, 2020 =
 [fix]   - Some import related issues for wrong sanitize functions
