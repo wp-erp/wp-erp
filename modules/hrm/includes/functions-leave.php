@@ -1879,3 +1879,100 @@ function erp_bulk_policy_assign( $policy, $employee_ids = [] ) {
     }
 
 }
+
+/**
+ * Import holidays from csv
+ *
+ * @since 1.5.10
+ *
+ * @param $file
+ *
+ */
+function import_holidays_csv( $file ) {
+
+    require_once WPERP_INCLUDES . '/lib/parsecsv.lib.php';
+
+    $csv = new ParseCsv();
+    $csv->encoding( null, 'UTF-8' );
+    $csv->parse( $file );
+
+    $error_list   = array();
+    $valid_import = array();
+    $line         = 1;
+    $msg          = "";
+
+    foreach ( $csv->data as $data ) {
+        $title       = ( isset( $data['title'] ) ) ? $data['title'] : '';
+        $start       = ( isset( $data['start'] ) ) ? $data['start'] : '';
+        $end         = ( isset( $data['end'] ) ) ? $data['end'] : '';
+        $description = ( isset( $data['description'] ) ) ? $data['description'] : '';
+
+        if( ! empty( $title ) && ! empty( $start ) && ! empty( $end ) ) {
+            if ( is_string( $title ) && is_string( $start ) && is_string( $end ) ) {
+                if ( strlen( $title ) < 200 ) {
+                    if ( DateTime::createFromFormat( 'Y-m-d H:i:s', $start ) !== FALSE &&
+                            DateTime::createFromFormat( 'Y-m-d H:i:s', $end ) !== FALSE ) {
+                        $holiday_id = erp_hr_leave_insert_holiday( array(
+                            "title" => $title,
+                            "start" => $start,
+                            "end" => $end,
+                            "description" => $description,
+                        ) );
+
+                        if ( is_wp_error( $holiday_id ) ) {
+                            $error_list[]   = $line;
+                        } else {
+                            $valid_import[] = $line;
+                        }
+                    }
+                }
+            }
+        } else {
+            $error_list[] = $line;
+        }
+        $line++;
+    }
+
+    if( count( $valid_import ) > 0 ) {
+        $html_class  = "updated notice";
+        $msg        .= sprintf( __( "Successfully imported %u data<br>", 'wp-erp' ), count( $valid_import ) );
+    }
+
+    if ( count( $error_list ) > 0 ) {
+        $html_class  = "error  notice";
+        $err_string  = implode( ',' , $error_list );
+        $msg        .= sprintf( __( "Failed to import line no  %s. Please check if title, start & end fields are following proper formation", 'wp-erp' ), $err_string );
+    }
+
+    return "<div class='{$html_class}'><p>{$msg}</p></div>";
+}
+
+/**
+ * Save employee leave request attachment
+ *
+ * @since 1.5.10
+ *
+ * @param $file
+ *
+ */
+function save_leave_attachment( $request_id, $request, $leaves ) {
+    if ( isset( $_FILES['leave_document'] ) && isset( $_FILES['leave_document']['name'] ) && ! empty( $_FILES['leave_document']['name'][0] ) ) {
+        $uploader = new \WeDevs\ERP\Uploader();
+
+        foreach ( $_FILES['leave_document']['name'] as $key => $value ) {
+            $upload = array(
+                'name'     => isset( $_FILES['leave_document'], $_FILES['leave_document']['name'][$key] ) ? sanitize_text_field( wp_unslash( $_FILES['leave_document']['name'][$key] ) ) : '',
+                'type'     => isset( $_FILES['leave_document'], $_FILES['leave_document']['type'][$key] ) ? sanitize_text_field( wp_unslash( $_FILES['leave_document']['type'][$key] ) ) : '',
+                'tmp_name' => isset( $_FILES['leave_document'], $_FILES['leave_document']['tmp_name'][$key] ) ? $_FILES['leave_document']['tmp_name'][$key] : '',
+                'error'    => isset( $_FILES['leave_document'], $_FILES['leave_document']['error'][$key] ) ? sanitize_text_field( wp_unslash( $_FILES['leave_document']['error'][$key] ) ) : '',
+                'size'     => isset( $_FILES['leave_document'], $_FILES['leave_document']['size'][$key] ) ? sanitize_text_field( wp_unslash( $_FILES['leave_document']['size'][$key] ) ) : ''
+            );
+
+            $file   = $uploader->handle_upload( $upload );
+
+            if( isset( $file['success'] ) && $file['success'] ) {
+                add_user_meta( $request['user_id'], 'leave_document_' . $request_id , $file['attach_id'] );
+            }
+        }
+    }
+}
