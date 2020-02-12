@@ -27,7 +27,7 @@ class Form_Handler {
         add_action( 'admin_init', array( $this, 'leave_request_status_change' ) );
         add_action( 'admin_init', array( $this, 'handle_employee_status_update' ) );
         add_action( 'admin_init', array( $this, 'handle_leave_calendar_filter' ) );
-        add_action( "load-wp-erp_page_erp-hr", array( $this, 'handle_actions' ) );
+        add_action( 'load-wp-erp_page_erp-hr', array( $this, 'handle_actions' ) );
 
 //        $hr_management = sanitize_title( esc_html__( 'HR Management', 'erp' ) );
 
@@ -45,6 +45,7 @@ class Form_Handler {
 
         // Leave policies
         add_action( 'erp_action_hr-leave-policy-create', array( $this, 'leave_policy_create' ) );
+        add_action( 'erp_action_hr-leave-policy-name-create', array( $this, 'leave_policy_name_create' ) );
     }
 
     /**
@@ -92,6 +93,8 @@ class Form_Handler {
             return;
         }
 
+        $type = isset( $_GET['type'] ) ? sanitize_text_field( wp_unslash( $_GET['type'] ) ) : '';
+
         switch ( $_GET['sub-section'] ) {
             case 'leave-requests' :
                 $this->leave_request_bulk_action();
@@ -103,7 +106,11 @@ class Form_Handler {
                 $this->holiday_action();
                 break;
             case 'policies' :
-                $this->leave_policies();
+                if ( $type === 'policy-name' ) {
+                    $this->leave_policies_name_bulk_action();
+                } else {
+                    $this->leave_policies();
+                }
                 break;
             default :
 
@@ -190,6 +197,33 @@ class Form_Handler {
         }
 
         return true;
+    }
+
+    /**
+     * Handle leave policies name bulk action and single action
+     *
+     * @since 0.1
+     *
+     * @return void [redirection]
+     */
+    public function leave_policies_name_bulk_action() {
+        $id = ! empty( $_REQUEST['id'] ) ? absint( wp_unslash( $_REQUEST['id'] ) ) : 0;
+
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'delete_policy_name' ) ) {
+            return;
+        }
+
+        // Check permission
+        if ( ! current_user_can( 'erp_leave_manage' ) ) {
+            wp_die( esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
+        if ( ! empty($id ) ) {
+            erp_hr_remove_leave_policy_name( $id );
+        }
+
+        wp_redirect( erp_hr_new_policy_name_url() );
+        exit;
     }
 
     /**
@@ -944,7 +978,7 @@ class Form_Handler {
     /**
      * Create leave policy
      * 
-     * @since 1.5.13
+     * @since 1.5.15
      * 
      * @return mixed
      */
@@ -1016,6 +1050,52 @@ class Form_Handler {
             erp_hr_leave_insert_policy( $data );
 
             wp_redirect( erp_hr_new_policy_url() );
+            exit;
+        }
+    }
+
+    /**
+     * Create leave policy name
+     * 
+     * @since 1.5.15
+     * 
+     * @return mixed
+     */
+    public function leave_policy_name_create() {
+        // Nonce validaion
+        if ( ! isset( $_POST['_wpnonce'] ) ||
+            ! wp_verify_nonce(
+                sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'erp-leave-policy'
+            )
+        ) {
+            return;
+        }
+
+        // Check permission
+        if ( ! current_user_can( erp_hr_get_manager_role() ) ) {
+            wp_die( esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
+        $id   = ! empty( $_POST['policy-name-id'] ) ? absint( wp_unslash( $_POST['policy-name-id'] ) ) : 0;
+        $name = ! empty( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
+        $desc = ! empty( $_POST['description'] ) ? sanitize_text_field( wp_unslash( $_POST['description'] ) ) : '';
+
+        global $policy_name_create_error;
+        $policy_name_create_error = new \WP_Error();
+
+        if ( empty( $name ) ) {
+            $policy_name_create_error->add( 'empty', 'Name field should not be left empty' );
+        }
+
+        if ( ! count( $policy_name_create_error->errors ) ) {
+            if ( $id ) {
+                // wants to update
+                erp_hr_update_leave_policy_name($id, $name, $desc);
+            } else {
+                erp_hr_create_leave_policy_name($name, $desc);
+            }
+
+            wp_redirect( erp_hr_new_policy_name_url() );
             exit;
         }
     }

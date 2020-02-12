@@ -38,15 +38,6 @@
                     'placeholder' => 20
                 ) ); ?>
             </div>
-            <div class="row">
-                <?php erp_html_form_input( array(
-                    'label'       => esc_html__( 'Description', 'erp' ),
-                    'type'        => 'textarea',
-                    'name'        => 'description',
-                    'value'       => '',
-                    'placeholder' => esc_html__( '(optional)', 'erp' ),
-                ) ); ?>
-            </div>
         </div> <!-- .form-group -->
 
         <div class="form-group">

@@ -407,15 +407,25 @@ class Admin_Menu {
      */
     public function leave_policy_page() {
         $action = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : 'list';
+        $type   = isset( $_GET['type'] ) ? sanitize_text_field( wp_unslash( $_GET['type'] ) ) : '';
 
         switch( $action ) {
             case 'list':
-                include WPERP_HRM_VIEWS . '/leave/leave-policies.php';
+            case 'edit':
+                if ( $type === 'policy-name' ) {
+                    include WPERP_HRM_VIEWS . '/leave/policy-name.php';
+                } else {
+                    include WPERP_HRM_VIEWS . '/leave/leave-policies.php';
+                }
                 break;
 
             case 'new':
                 include WPERP_HRM_VIEWS . '/leave/new-policy.php';
                 break;
+
+            // case 'delete':
+            //     include WPERP_HRM_VIEWS . '/leave/new-policy.php';
+            //     break;
         }
     }
 

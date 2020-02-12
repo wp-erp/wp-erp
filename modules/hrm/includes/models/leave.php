@@ -14,6 +14,20 @@ class Leave extends Model {
     protected $fillable = [ 'name', 'description' ];
 
     /**
+     * Created at date format
+     */
+    public function setCreatedAtAttribute() {
+        $this->attributes['created_at'] = current_datetime()->getTimestamp();
+    }
+
+    /**
+     * Updated at date format
+     */
+    public function setUpdatedAtAttribute() {
+        $this->attributes['updated_at'] = current_datetime()->getTimestamp();
+    }
+
+    /**
      * Relation to Leave_Policies model
      *
      * @since 1.5.15

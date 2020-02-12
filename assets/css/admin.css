@@ -4252,7 +4252,7 @@ div.erp-nav-container.--show-secondary .-secondary {
   max-width: 500px;
 }
 .leave-policy-form .form-group .row .description {
-  margin-left: 120px;
+  margin-left: 125px;
   font-size: 12px;
   color: #757575;
 }
@@ -4260,8 +4260,17 @@ div.erp-nav-container.--show-secondary .-secondary {
   width: 125px;
   display: inline-block;
 }
-.leave-policy-form .form-group input,
+.leave-policy-form .form-group input[type=text],
+.leave-policy-form .form-group input[type=number],
 .leave-policy-form .form-group select,
 .leave-policy-form .form-group textarea {
   min-width: 300px;
+}
+.create-policy-name .form-field {
+  width: 90%;
+  margin: 1em 0;
+}
+.create-policy-name .form-field .description {
+  font-style: italic;
+  color: #666;
 }
