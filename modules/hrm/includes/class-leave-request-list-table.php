@@ -285,7 +285,7 @@ class Leave_Requests_List_Table extends \WP_List_Table {
         $per_page              = 20;
         $current_page          = $this->get_pagenum();
         $offset                = ( $current_page -1 ) * $per_page;
-        $this->page_status     = isset( $_GET['status'] ) ?sanitize_text_field( wp_unslash(  $_GET['status'] ) ) : '2';
+        $this->page_status     = isset( $_GET['status'] ) ? sanitize_text_field( wp_unslash( $_GET['status'] ) ) : '2';
 
         // only necessary because we have sample data
         $args = array(

@@ -204,7 +204,7 @@ function erp_hr_leave_insert_policy( $args = array() ) {
 
     $args = wp_parse_args( $args, $defaults );
 
-    error_log(print_r( $args, true));
+    // error_log(print_r( $args, true));
 
     // some validation
     // if ( empty( $args['name'] ) ) {
@@ -823,32 +823,32 @@ function erp_hr_get_assign_policy_from_entitlement( $employee_id ) {
 
     global $wpdb;
 
-    $data      = [];
-    $dropdown  = [];
-    $policy    = new \WeDevs\ERP\HRM\Models\Leave_Policy();
-    $en        = new \WeDevs\ERP\HRM\Models\Leave_Entitlement();
-    $policy_tb = $wpdb->prefix . 'erp_hr_leave_policies';
-    $en_tb     = $wpdb->prefix . 'erp_hr_leave_entitlements';
+    // $data      = [];
+    // $dropdown  = [];
+    // $policy    = new \WeDevs\ERP\HRM\Models\Leave_Policy();
+    // $en        = new \WeDevs\ERP\HRM\Models\Leave_Entitlement();
+    // $policy_tb = $wpdb->prefix . 'erp_hr_leave_policies';
+    // $en_tb     = $wpdb->prefix . 'erp_hr_leave_entitlements';
 
-    $financial_start_date = erp_financial_start_date();
-    $financial_end_date   = erp_financial_end_date();
+    // $financial_start_date = erp_financial_start_date();
+    // $financial_end_date   = erp_financial_end_date();
 
-    $policies = \WeDevs\ERP\HRM\Models\Leave_Policy::select( $policy_tb . '.name', $policy_tb . '.id' )
-                                                     ->leftjoin( $en_tb, $en_tb . '.policy_id', '=', $policy_tb . '.id' )
-                                                     ->where( $en_tb . '.user_id', $employee_id )
-                                                     ->where( 'from_date', '>=', $financial_start_date )
-                                                     ->where( 'to_date', '<=', $financial_end_date )
-                                                     ->distinct()
-                                                     ->get()
-                                                     ->toArray();
+    // $policies = \WeDevs\ERP\HRM\Models\Leave_Policy::select( $policy_tb . '.name', $policy_tb . '.id' )
+    //                                                  ->leftjoin( $en_tb, $en_tb . '.policy_id', '=', $policy_tb . '.id' )
+    //                                                  ->where( $en_tb . '.user_id', $employee_id )
+    //                                                  ->where( 'from_date', '>=', $financial_start_date )
+    //                                                  ->where( 'to_date', '<=', $financial_end_date )
+    //                                                  ->distinct()
+    //                                                  ->get()
+    //                                                  ->toArray();
 
-    if ( ! empty( $policies ) ) {
-        foreach ( $policies as $policy ) {
-            $dropdown[ $policy['id'] ] = stripslashes( $policy['name'] );
-        }
+    // if ( ! empty( $policies ) ) {
+    //     foreach ( $policies as $policy ) {
+    //         $dropdown[ $policy['id'] ] = stripslashes( $policy['name'] );
+    //     }
 
-        return $dropdown;
-    }
+    //     return $dropdown;
+    // }
 
     return false;
 }
@@ -1908,31 +1908,60 @@ function erp_hr_leave_days_get_statuses( $status = false ) {
 /**
  * Create new leave policy name
  * 
- * @since 1.5.13
+ * @since 1.5.15
  * 
  * @return int
  */
-function erp_hr_create_leave( $name, $desc ) {
-    global $wpdb;
+function erp_hr_create_leave_policy_name( $name, $desc ) {
+    $exists = \WeDevs\ERP\HRM\Models\Leave::where('name', $name)->first();
 
-    $name = strtoupper( $name );
-
-    $id = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$wpdb->prefix}erp_hr_leaves WHERE name = %s", array( $name ) ) );
-
-    if ( $id ) {
-        return $id;
+    if ( $exists ) {
+        return $exists->id;
     }
 
-    $wpdb->insert(
-        $wpdb->prefix . 'erp_hr_leaves',
-        array(
-            'name'        => $name,
-            'description' => $desc
-        ),
-        array('%s', '%s')
-    );
+    $leave = \WeDevs\ERP\HRM\Models\Leave::create( array(
+        'name'        => $name,
+        'description' => $desc
+    ) );
 
-    return $wpdb->insert_id;
+    return $leave->id;
+}
+
+/**
+ * Update leave policy name
+ * 
+ * @since 1.5.15
+ * 
+ * @return int
+ */
+function erp_hr_update_leave_policy_name( $id,  $name, $desc ) {
+    $leave = \WeDevs\ERP\HRM\Models\Leave::find( $id );
+
+    $leave->update( array(
+        'name'        => $name,
+        'description' => $desc
+    ) );
+
+    return $leave->id;
+}
+
+/**
+ * Remove leave policy name
+ * 
+ * @since 1.5.15
+ * 
+ * @return void
+ */
+function erp_hr_remove_leave_policy_name( $id ) {
+    $has_policy = \WeDevs\ERP\HRM\Models\Leave_Policy::where('leave_id', $id )->first();
+
+    if ( $has_policy ) {
+        return new WP_Error( 'has_policy', __( 'Can not remove, connected with policy', 'erp' ) );
+    }
+
+    $leave = \WeDevs\ERP\HRM\Models\Leave::find( $id );
+    
+    $leave->delete();
 }
 
 /**
@@ -1953,3 +1982,22 @@ function erp_hr_new_policy_url() {
         admin_url( 'admin.php' )
     );
 }
+
+/**
+ * Build and return new policy create URL
+ * 
+ * @since 1.5.15
+ * 
+ * @return string
+ */
+function erp_hr_new_policy_name_url() {
+    $params = array(
+        'page'        => 'erp-hr',
+        'section'     => 'leave',
+        'sub-section' => 'policies',
+        'type'        => 'policy-name'
+    );
+
+    return add_query_arg( $params, admin_url( 'admin.php' ) );
+}
+

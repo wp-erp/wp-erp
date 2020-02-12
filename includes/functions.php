@@ -652,9 +652,15 @@ function erp_format_date( $date, $format = false ) {
         $format = erp_get_option( 'date_format', 'erp_settings_general', 'd-m-Y' );
     }
 
-    $time = strtotime( $date );
+    if ( ! is_numeric( $date ) ) {
+        $date = strtotime( $date );
+    }
 
-    return date_i18n( $format, $time );
+    if ( function_exists('wp_date') ) {
+        return wp_date( $format, $date );
+    }
+
+    return date_i18n( $format, $date );
 }
 
 /**
