@@ -12,7 +12,7 @@ class CreatePurchasesCest
     public function createPurchases(\Step\Acceptance\AllSteps $I)
     {
     	$I->loginAsAdmin();
-    	// $I->previewTransactions();
+    //         $I->previewTransactions();
      //        $I->click('Purchase');
      //        $I->wait(5);
      //        $I->moveMouseOver('#erp-accounting');
@@ -20,6 +20,9 @@ class CreatePurchasesCest
      //        $I->click('Create Purchase');
      //        $I->wait(5);
         $I->amOnPage('/wp-admin/admin.php?page=erp-accounting#/purchases/new');
-        
+        $I->click('div.multiselect');
+        $I->click('//th/div/div[2]');
+        $I->click('//th/div/div[3]/ul/li[2]/span');
+        $I->click('Save');
     }
 }

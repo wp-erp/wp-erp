@@ -25,6 +25,12 @@ class CreateBillCest
     	$I->click('//td[2]/div/div[3]/ul/li/span/span');
     	$I->fillField('//td[4]/input', '100');
     	$I->click('//div/button');
-        $I->click('Save');
+        // $I->acceptPopup();
+        $I->waitForElement('.table-container', 30); // secs
+
+        // $I->wait(5);
+        // $I->seeInPopup('Bill Created!');
+        // $I->wait(5);
+        // $I->acceptPopup();
     }
 }
