@@ -411,7 +411,6 @@ class Admin_Menu {
 
         switch( $action ) {
             case 'list':
-            case 'edit':
                 if ( $type === 'policy-name' ) {
                     include WPERP_HRM_VIEWS . '/leave/policy-name.php';
                 } else {
@@ -419,13 +418,17 @@ class Admin_Menu {
                 }
                 break;
 
+            case 'edit':
+                if ( $type === 'policy-name' ) {
+                    include WPERP_HRM_VIEWS . '/leave/policy-name.php';
+                } else {
+                    include WPERP_HRM_VIEWS . '/leave/new-policy.php';
+                }
+                break;
+
             case 'new':
                 include WPERP_HRM_VIEWS . '/leave/new-policy.php';
                 break;
-
-            // case 'delete':
-            //     include WPERP_HRM_VIEWS . '/leave/new-policy.php';
-            //     break;
         }
     }
 

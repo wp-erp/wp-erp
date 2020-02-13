@@ -107,7 +107,7 @@ class Form_Handler {
                 break;
             case 'policies' :
                 if ( $type === 'policy-name' ) {
-                    $this->leave_policies_name_bulk_action();
+                    $this->leave_policies_name_action();
                 } else {
                     $this->leave_policies();
                 }
@@ -200,13 +200,13 @@ class Form_Handler {
     }
 
     /**
-     * Handle leave policies name bulk action and single action
+     * Handle leave policies name action
      *
      * @since 0.1
      *
      * @return void [redirection]
      */
-    public function leave_policies_name_bulk_action() {
+    public function leave_policies_name_action() {
         $id = ! empty( $_REQUEST['id'] ) ? absint( wp_unslash( $_REQUEST['id'] ) ) : 0;
 
         if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'delete_policy_name' ) ) {
@@ -1000,17 +1000,17 @@ class Form_Handler {
         global $policy_create_error;
         $policy_create_error = new \WP_Error();
 
-        $leave_id = sanitize_text_field( wp_unslash( $_POST['leave_id'] ) );
-        $days     = absint( wp_unslash( $_POST['days'] ) );
-        $f_year   = absint( wp_unslash( $_POST['f_year'] ) );
-
+        $id          = ! empty( $_POST['policy-id'] ) ? absint( wp_unslash( $_POST['policy-id'] ) ) : 0;
+        $leave_id    = ! empty( $_POST['leave_id'] ) ? absint( wp_unslash( $_POST['leave_id'] ) ) : 0;
+        $days        = ! empty( $_POST['days'] ) ? absint( wp_unslash( $_POST['days'] ) ) : 0;
+        $f_year      = ! empty( $_POST['f_year'] ) ? absint( wp_unslash( $_POST['f_year'] ) ) : date('Y');
         $desc        = ! empty( $_POST['description'] ) ? sanitize_text_field( wp_unslash( $_POST['description'] ) ) : '';
         $dept_id     = ! empty( $_POST['department'] ) ? sanitize_text_field( wp_unslash( $_POST['department'] ) ) : '-1';
         $desg_id     = ! empty( $_POST['designation'] ) ? sanitize_text_field( wp_unslash( $_POST['designation'] ) ) : '-1';
         $location_id = ! empty( $_POST['location'] ) ? sanitize_text_field( wp_unslash( $_POST['location'] ) ) : '-1';
         $color       = ! empty( $_POST['color'] ) ? sanitize_text_field( wp_unslash( $_POST['color'] ) ) : '';
         $gender      = ! empty( $_POST['gender'] ) ? sanitize_text_field( wp_unslash( $_POST['gender'] ) ) : '-1';
-        $maritial    = ! empty( $_POST['maritial'] ) ? sanitize_text_field( wp_unslash( $_POST['maritial'] ) ) : '-1';
+        $marital     = ! empty( $_POST['marital'] ) ? sanitize_text_field( wp_unslash( $_POST['marital'] ) ) : '-1';
 
         if ( empty( $_POST['leave_id'] )  ) {
             $policy_create_error->add( 'empty', 'Name field should not be left empty' );
@@ -1028,30 +1028,35 @@ class Form_Handler {
             $policy_create_error->add( 'empty', 'Financial year field should not be left empty' );
         }
 
-        if ( ! (int) $leave_id ) {
-            // here `leave id` is a policy name
-            $leave_id = erp_hr_create_leave($leave_id, $desc);
+        if ( count( $policy_create_error->errors ) ) {
+            return;
         }
 
-        if ( ! is_wp_error( $policy_create_error ) ) {
-            $data = array(
-                'leave_id'       => $leave_id,
-                'days'           => $days,
-                'color'          => $color,
-                'department_id'  => $dept_id,
-                'designation_id' => $desg_id,
-                'location_id'    => $location_id,
-                'gender'         => $gender,
-                'marital'        => $maritial,
-                'f_year'         => $f_year,
-                'created_at'     => current_datetime()->getTimestamp()
-            );
+        $data = array(
+            'leave_id'       => $leave_id,
+            'description'    => $desc,
+            'days'           => $days,
+            'color'          => $color,
+            'department_id'  => $dept_id,
+            'designation_id' => $desg_id,
+            'location_id'    => $location_id,
+            'gender'         => $gender,
+            'marital'        => $marital,
+            'f_year'         => $f_year
+        );
 
-            erp_hr_leave_insert_policy( $data );
-
-            wp_redirect( erp_hr_new_policy_url() );
-            exit;
+        if ( $id ) {
+            $data['id'] = $id;
         }
+
+        $res = erp_hr_leave_insert_policy( $data );
+
+        if ( is_wp_error( $res ) ) {
+            return $policy_create_error->errors = $res->errors;
+        }
+
+        wp_redirect( erp_hr_new_policy_url() );
+        exit;
     }
 
     /**
@@ -1087,17 +1092,27 @@ class Form_Handler {
             $policy_name_create_error->add( 'empty', 'Name field should not be left empty' );
         }
 
-        if ( ! count( $policy_name_create_error->errors ) ) {
-            if ( $id ) {
-                // wants to update
-                erp_hr_update_leave_policy_name($id, $name, $desc);
-            } else {
-                erp_hr_create_leave_policy_name($name, $desc);
-            }
-
-            wp_redirect( erp_hr_new_policy_name_url() );
-            exit;
+        if ( count( $policy_name_create_error->errors ) ) {
+            return;
         }
+
+        $data = array(
+            'name'        => $name,
+            'description' => $desc
+        );
+
+        if ( $id ) {
+            $data['id'] = $id;
+        }
+
+        $res = erp_hr_insert_leave_policy_name( $data );
+
+        if ( is_wp_error( $res ) ) {
+            return $policy_name_create_error->errors = $res->errors;
+        }
+
+        wp_redirect( erp_hr_new_policy_name_url() );
+        exit;
     }
 
 }
