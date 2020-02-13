@@ -13,7 +13,7 @@ if ( $id ) {
 <div class="wrap">
     <div id="col-container" class="wp-clearfix create-policy-name">
         <div id="col-left" class="form-wrap">
-            <form action="<?php echo esc_url( erp_hr_new_policy_name_url() ); ?>" method="POST">
+            <form action="<?php echo esc_url( erp_hr_new_policy_name_url( $id ) ); ?>" method="POST">
 
                 <!-- show error message -->
                 <?php global $policy_name_create_error;

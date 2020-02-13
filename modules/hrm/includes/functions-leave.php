@@ -1986,16 +1986,20 @@ function erp_hr_remove_leave_policy_name( $id ) {
  * 
  * @return string
  */
-function erp_hr_new_policy_url() {
-    return add_query_arg(
-        array(
-            'page'        => 'erp-hr',
-            'section'     => 'leave',
-            'sub-section' => 'policies',
-            'action'      => 'new'
-        ),
-        admin_url( 'admin.php' )
+function erp_hr_new_policy_url( $id = null ) {
+    $params = array(
+        'page'        => 'erp-hr',
+        'section'     => 'leave',
+        'sub-section' => 'policies',
+        'action'      => 'new'
     );
+
+    if ( $id ) {
+        $params['id'] = absint( $id );
+        $params['action'] = 'edit';
+    }
+
+    return add_query_arg( $params, admin_url( 'admin.php' ) );
 }
 
 /**
@@ -2005,13 +2009,18 @@ function erp_hr_new_policy_url() {
  * 
  * @return string
  */
-function erp_hr_new_policy_name_url() {
+function erp_hr_new_policy_name_url( $id = null ) {
     $params = array(
         'page'        => 'erp-hr',
         'section'     => 'leave',
         'sub-section' => 'policies',
         'type'        => 'policy-name'
     );
+
+    if ( $id ) {
+        $params['id'] = absint( $id );
+        $params['action'] = 'edit';
+    }
 
     return add_query_arg( $params, admin_url( 'admin.php' ) );
 }
