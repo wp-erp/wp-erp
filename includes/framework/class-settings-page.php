@@ -163,7 +163,7 @@ class ERP_Settings_Page {
             case "wysiwyg" :
 
                 if ( isset( $_POST[$value['id']] ) ) {
-                    $option_value = wp_kses_post( trim( sanitize_text_field( wp_unslash( $_POST[ $value['id'] ] ) ) ) );
+                    $option_value = wp_kses_post( trim( $_POST[ $value['id'] ] ) );
                 } else {
                     $option_value = '';
                 }

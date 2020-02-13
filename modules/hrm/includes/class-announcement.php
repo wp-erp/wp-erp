@@ -426,9 +426,9 @@ class Announcement {
         }
 
         $type         = ( isset( $_POST['hr_announcement_assign_type'] ) ) ? sanitize_text_field( wp_unslash( $_POST['hr_announcement_assign_type'] ) ): '';
-        $employees    = ( isset( $_POST['hr_announcement_assign_employee'] ) ) ? sanitize_text_field( wp_unslash( $_POST['hr_announcement_assign_employee'] ) ): array();
-        $departments  = ( isset( $_POST['hr_announcement_assign_department'] ) ) ? sanitize_text_field( wp_unslash( $_POST['hr_announcement_assign_department'] ) ): array();
-        $designations = ( isset( $_POST['hr_announcement_assign_designation'] ) ) ? sanitize_text_field( wp_unslash( $_POST['hr_announcement_assign_designation'] ) ): array();
+        $employees    = ( isset( $_POST['hr_announcement_assign_employee'] ) ) ? array_map( 'sanitize_text_field', $_POST['hr_announcement_assign_employee'] ) : array();
+        $departments  = ( isset( $_POST['hr_announcement_assign_department'] ) ) ? array_map( 'sanitize_text_field', $_POST['hr_announcement_assign_department'] ) : array();
+        $designations = ( isset( $_POST['hr_announcement_assign_designation'] ) ) ? array_map( 'sanitize_text_field', $_POST['hr_announcement_assign_designation'] ) : array();
 
         if ( $type == 'by_department' ) {
             $selected = $departments;
@@ -440,6 +440,10 @@ class Announcement {
 
 		// Assign / Send announcements to the selected group
         erp_hr_assign_announcements_to_employees( $post_id, $type, $selected );
+
+        //Redirect to announment list page
+        wp_redirect( admin_url( 'edit.php?post_type=erp_hr_announcement' ) );
+        exit;
 
         //do_action( 'hr_annoucement_save', $post_id, $selected );
     }
