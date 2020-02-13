@@ -3368,7 +3368,7 @@ function erp_crm_check_new_inbound_emails() {
 
                 }, $email['attachments'] );
                 /*** Save uploaded files start *****/
-                $g_uploader = new \WeDevs\ERP\CRM\Gmail_Sync();
+                $g_uploader           = new \WeDevs\ERP\CRM\Gmail_Sync();
                 $email['attachments'] = $g_uploader->save_attachments( $email['attachments'] );
                 /*** Save uploaded files end *****/
                 // Save & sent the email
