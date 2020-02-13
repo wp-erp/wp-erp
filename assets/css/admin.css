@@ -4260,10 +4260,7 @@ div.erp-nav-container.--show-secondary .-secondary {
   width: 125px;
   display: inline-block;
 }
-.leave-policy-form .form-group input[type=text],
-.leave-policy-form .form-group input[type=number],
-.leave-policy-form .form-group select,
-.leave-policy-form .form-group textarea {
+.leave-policy-form .form-group .leave-policy-input {
   min-width: 300px;
 }
 .create-policy-name .form-field {

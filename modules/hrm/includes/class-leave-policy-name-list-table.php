@@ -125,6 +125,12 @@ class Leave_Policy_Name_List_Table extends \WP_List_Table {
     }
 
     public function process_bulk_action() {
+        $action = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : '';
+
+        if ( $action !== 'delete' ) {
+            return;
+        }
+
         // security check!
         if ( isset( $_POST['_wpnonce'] ) && ! empty( $_POST['_wpnonce'] ) ) {
             $nonce  = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
@@ -135,20 +141,10 @@ class Leave_Policy_Name_List_Table extends \WP_List_Table {
             }
         }
 
-        $action = $this->current_action();
+        $ids = array_map( 'sanitize_text_field', wp_unslash( $_REQUEST['ids'] ) );
 
-        switch ( $action ) {
-
-            case 'delete':
-                $ids = array_map( 'sanitize_text_field', wp_unslash( $_REQUEST['ids'] ) );
-
-                foreach ( $ids as $id ) {
-                    erp_hr_remove_leave_policy_name( $id );
-                }
-                break;
-
-            default:
-                break;
+        foreach ( $ids as $id ) {
+            erp_hr_remove_leave_policy_name( $id );
         }
 
         return;

@@ -1,5 +1,8 @@
 <?php
-//test - nurul
+
+use \WeDevs\ERP\HRM\Models\Leave_Policy;
+use \WeDevs\ERP\HRM\Models\Leave;
+
 /**
  * Get holiday between two date
  *
@@ -198,52 +201,59 @@ function erp_hrm_is_valid_leave_date_range_within_financial_date_range( $start_d
  */
 function erp_hr_leave_insert_policy( $args = array() ) {
     $defaults = array(
-        'id'          => null,
-        'leave_id'    => 0
+        'id' => null
     );
 
     $args = wp_parse_args( $args, $defaults );
 
-    // error_log(print_r( $args, true));
+    $common = array(
+        'leave_id'       => $args['leave_id'],
+        'department_id'  => $args['department_id'],
+        'designation_id' => $args['designation_id'],
+        'location_id'    => $args['location_id'],
+        'f_year'         => $args['f_year']
+    );
 
-    // some validation
-    // if ( empty( $args['name'] ) ) {
-    //     return new WP_Error( 'no-name', __( 'No name provided.', 'erp' ) );
-    // }
+    $extra = array(
+        'description'    => $args['description'],
+        'days'           => $args['days'],
+        'color'          => $args['color'],
+        'gender'         => $args['gender'],
+        'marital'        => $args['marital']
+    );
 
-    $exist = erp_hr_leave_get_policy_by_name( $args['name'] );
-    if ( $exist && $args['id'] !== $exist->id ) {
-        return new WP_Error( 'policy_name_exists', __( 'Policy name already exists, please use a different one.', 'erp' ) );
-    }
+    /**
+     * Update
+     */
+    if ( $args['id'] ) {
+        $where = array();
 
-    if ( ! intval( $args['value'] ) ) {
-        return new WP_Error( 'no-value', __( 'No duration provided.', 'erp' ) );
-    }
-
-    $args['name'] = sanitize_text_field( $args['name'] );
-
-    $policy_id = (int) $args['id'];
-    unset( $args['id'] );
-
-    $leave_policies = new \WeDevs\ERP\HRM\Models\Leave_Policy();
-
-    if ( ! $policy_id ) {
-        // insert a new
-        $leave_policy = $leave_policies->create( $args );
-
-        if ( ! empty( $leave_policy ) ) {
-            do_action( 'erp_hr_leave_policy_new', $leave_policy, $args );
+        foreach ( $common as $key => $value ) {
+            $where[] = array( $key, $value );
         }
 
-    } else {
-        do_action( 'erp_hr_leave_before_policy_updated', $policy_id, $args );
+        $exists = Leave_Policy::where( $where )->first();
 
-        if ( $leave_policies->find( $policy_id )->update( $args ) ) {
-            do_action( 'erp_hr_leave_after_policy_updated', $policy_id, $args );
-
-            return $policy_id;
+        if ( $exists ) {
+            return new WP_Error( 'exists', esc_html__( 'Policy already exists.', 'erp' ) );
         }
+
+        $leave_policy = Leave_Policy::find( $args['id'] )
+                            ->update( array_merge( $common, $extra ) );
+
+        return $leave_policy->id;
     }
+
+    /**
+     * Create
+     */
+    $leave_policy = Leave_Policy::firstOrCreate( $common, $extra );
+
+    if ( ! $leave_policy->wasRecentlyCreated ) {
+        return new WP_Error( 'exists', esc_html__( 'Policy already exists.', 'erp' ) );
+    }
+
+    return $leave_policy->id;
 }
 
 /**
@@ -1906,41 +1916,46 @@ function erp_hr_leave_days_get_statuses( $status = false ) {
 }
 
 /**
- * Create new leave policy name
+ * Insert / Update new leave policy name
  * 
  * @since 1.5.15
  * 
  * @return int
  */
-function erp_hr_create_leave_policy_name( $name, $desc ) {
-    $exists = \WeDevs\ERP\HRM\Models\Leave::where('name', $name)->first();
+function erp_hr_insert_leave_policy_name( $args = array() ) {
+    $defaults = array(
+        'id' => null
+    );
 
-    if ( $exists ) {
-        return $exists->id;
+    $args = wp_parse_args( $args, $defaults );
+
+    /**
+     * Update
+     */
+    if ( $args['id'] ) {
+        $exists = Leave::where( 'name', $args['name'] )
+                        ->where('id', '<>', $args['id'])
+                        ->first();
+
+        if ( $exists ) {
+            return new WP_Error( 'exists', esc_html__('Name already exists', 'erp') );
+        }
+
+        $leave = Leave::find( $args['id'] )->update( $args );
+
+        return $leave->id;
     }
 
-    $leave = \WeDevs\ERP\HRM\Models\Leave::create( array(
-        'name'        => $name,
-        'description' => $desc
-    ) );
+    /**
+     * Create
+     */
+    $exists = Leave::where('name', $args['name'])->first();
 
-    return $leave->id;
-}
+    if ( $exists ) {
+        return new WP_Error( 'exists', esc_html__('Name already exists', 'erp') );
+    }
 
-/**
- * Update leave policy name
- * 
- * @since 1.5.15
- * 
- * @return int
- */
-function erp_hr_update_leave_policy_name( $id,  $name, $desc ) {
-    $leave = \WeDevs\ERP\HRM\Models\Leave::find( $id );
-
-    $leave->update( array(
-        'name'        => $name,
-        'description' => $desc
-    ) );
+    $leave = Leave::create( $args );
 
     return $leave->id;
 }
@@ -1953,13 +1968,13 @@ function erp_hr_update_leave_policy_name( $id,  $name, $desc ) {
  * @return void
  */
 function erp_hr_remove_leave_policy_name( $id ) {
-    $has_policy = \WeDevs\ERP\HRM\Models\Leave_Policy::where('leave_id', $id )->first();
+    $has_policy = Leave_Policy::where('leave_id', $id )->first();
 
     if ( $has_policy ) {
         return new WP_Error( 'has_policy', __( 'Can not remove, connected with policy', 'erp' ) );
     }
 
-    $leave = \WeDevs\ERP\HRM\Models\Leave::find( $id );
+    $leave = Leave::find( $id );
     
     $leave->delete();
 }

@@ -139,10 +139,6 @@
                 }
             });
 
-            $('.leave-policy-form').find('#leave_id').select2({
-                tags: true
-            });
-
             $('.erp-color-picker').wpColorPicker();
         },
 

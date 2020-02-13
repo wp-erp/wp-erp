@@ -14,6 +14,18 @@ if ( $id ) {
     <div id="col-container" class="wp-clearfix create-policy-name">
         <div id="col-left" class="form-wrap">
             <form action="<?php echo esc_url( erp_hr_new_policy_name_url() ); ?>" method="POST">
+
+                <!-- show error message -->
+                <?php global $policy_name_create_error;
+                    if ( isset( $policy_name_create_error ) && count( $policy_name_create_error->errors ) ) {
+                        echo '<ul>';
+                        foreach ( $policy_name_create_error->get_error_messages() as $error ) {
+                            echo '<li style="color: #ef5350">* ' . $error . '</li>';
+                        }
+                        echo '</ul>';
+                    }
+                ?>
+
                 <div class="form-field">
                     <?php erp_html_form_input( array(
                         'label'       => esc_html__( 'Policy Name', 'erp' ),
