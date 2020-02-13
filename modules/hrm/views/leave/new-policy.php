@@ -19,7 +19,7 @@ if ( $id ) {
 
 ?>
 <div class="wrap">
-    <form class="leave-policy-form" action="<?php echo esc_url( erp_hr_new_policy_url() ); ?>" method="POST">
+    <form class="leave-policy-form" action="<?php echo esc_url( erp_hr_new_policy_url( $id ) ); ?>" method="POST">
 
         <!-- show error message -->
         <?php global $policy_create_error;

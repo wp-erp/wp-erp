@@ -219,7 +219,11 @@ class Form_Handler {
         }
 
         if ( ! empty($id ) ) {
-            erp_hr_remove_leave_policy_name( $id );
+            $res = erp_hr_remove_leave_policy_name( $id );
+
+            if ( is_wp_error( $res ) ) {
+                // return $res;
+            }
         }
 
         wp_redirect( erp_hr_new_policy_name_url() );
