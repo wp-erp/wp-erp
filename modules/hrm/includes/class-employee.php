@@ -1152,6 +1152,8 @@ class Employee {
 
         if ( ! $education ) {
             return $this->send_error( 'error-creating-education', __( 'Could not create education.', 'erp' ) );
+        } else {
+            update_user_meta( $education['employee_id'], 'education_' . $education['employee_id'] . '_' . $education['id'], $data['expiration_date'] );
         }
 
         return $education;

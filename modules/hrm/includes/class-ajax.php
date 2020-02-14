@@ -1300,15 +1300,17 @@ class Ajax_Handler {
         $finished = isset( $_POST['finished'] ) ? intval( $_POST['finished'] ) : '';
         $notes    = isset( $_POST['notes'] ) ? strip_tags( sanitize_text_field( wp_unslash( $_POST['notes'] ) ) ) : '';
         $interest = isset( $_POST['interest'] ) ? strip_tags( sanitize_text_field( wp_unslash( $_POST['interest'] ) ) ) : '';
+        $exp_date = isset( $_POST['expiration_date'] ) ? strip_tags( sanitize_text_field( wp_unslash( $_POST['expiration_date'] ) ) ) : '';
 
         $fields = [
-            'id'       => $edu_id,
-            'school'   => $school,
-            'degree'   => $degree,
-            'field'    => $field,
-            'finished' => $finished,
-            'notes'    => $notes,
-            'interest' => $interest
+            'id'              => $edu_id,
+            'school'          => $school,
+            'degree'          => $degree,
+            'field'           => $field,
+            'finished'        => $finished,
+            'notes'           => $notes,
+            'interest'        => $interest,
+            'expiration_date' => $exp_date
         ];
 
         $employee = new Employee( $employee_id );
