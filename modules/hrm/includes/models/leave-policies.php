@@ -51,4 +51,27 @@ class Leave_Policy extends Model {
     public function segregation() {
         return $this->hasOne( 'WeDevs\ERP\HRM\Models\Leave_Policies_Segregation' );
     }
+
+    /**
+     * Relation to Department
+     * 
+     * @since 1.5.15
+     * 
+     * @return object
+     */
+    public function department() {
+        return $this->belongsTo( 'WeDevs\ERP\HRM\Models\Department' );
+    }
+
+    /**
+     * Relation to Designation
+     * 
+     * @since 1.5.15
+     * 
+     * @return object
+     */
+    public function designation() {
+        return $this->belongsTo( 'WeDevs\ERP\HRM\Models\Designation' );
+    }
+
 }

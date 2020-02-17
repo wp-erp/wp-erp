@@ -58,10 +58,8 @@ class Leave_Policies_List_Table extends WP_List_Table {
     function column_default( $leave_policy, $column_name ) {
 
         switch ( $column_name ) {
-            case 'name':
-
             case 'leave_day':
-                return number_format_i18n( $leave_policy->value, 0 );
+                return number_format_i18n( $leave_policy->days, 0 );
 
             case 'calendar_color':
                 return '<span class="leave-color" style="background-color: ' . $leave_policy->color . ' "></span>';
@@ -80,9 +78,13 @@ class Leave_Policies_List_Table extends WP_List_Table {
         $columns = array(
             'cb'             => '<input type="checkbox" />',
             'name'           => __( 'Policy Name', 'erp' ),
-            'leave_day'      => __( 'Leave Days', 'erp' ),
-            'leave_day'      => __( 'Leave Days', 'erp' ),
-            'calendar_color' => __( 'Calendar Color', 'erp' )
+            'description'    => __( 'Description', 'erp' ),
+            'leave_day'      => __( 'Days', 'erp' ),
+            'calendar_color' => __( 'Calendar Color', 'erp' ),
+            'department'     => __( 'Department', 'erp' ),
+            'designation'    => __( 'Designation', 'erp' ),
+            // 'location'       => __( 'Location', 'erp' ),
+            'f_year'         => __( 'Financial year', 'erp' ),
         );
 
         return apply_filters( 'erp_hr_leave_policy_table_cols', $columns );
@@ -96,10 +98,20 @@ class Leave_Policies_List_Table extends WP_List_Table {
      * @return string
      */
     function column_name( $leave_policy ) {
+        $actions = array();
 
-        $actions           = array();
+        $params = array(
+            'page'        => 'erp-hr',
+            'section'     => 'leave',
+            'sub-section' => 'policies',
+            'id'          => $leave_policy->id
+        );
+
+        $params['action'] = 'edit';
+        $edit_url = add_query_arg( $params, admin_url( 'admin.php' ) );
+
         $delete_url        = '';
-        $actions['edit']   = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $delete_url, $leave_policy->id, __( 'Edit this item', 'erp' ), __( 'Edit', 'erp' ) );
+        $actions['edit']   = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $edit_url, $leave_policy->id, __( 'Edit this item', 'erp' ), __( 'Edit', 'erp' ) );
         $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" title="%s">%s</a>', $delete_url, $leave_policy->id, __( 'Delete this item', 'erp' ), __( 'Delete', 'erp' ) );
 
         return sprintf( '<a href="#" class="link" data-id="%3$s"><strong>%1$s</strong></a> %2$s', esc_html( $leave_policy->name ), $this->row_actions( $actions ), $leave_policy->id );
@@ -116,7 +128,7 @@ class Leave_Policies_List_Table extends WP_List_Table {
      * @return void
      */
     function single_row( $item ) {
-        $item->effective_date = preg_replace( '/\s.+$/', '', $item->effective_date );
+        // $item->effective_date = preg_replace( '/\s.+$/', '', $item->effective_date );
         ?>
             <tr data-json='<?php echo json_encode( $item ); ?>'>
                 <?php $this->single_row_columns( $item ); ?>
