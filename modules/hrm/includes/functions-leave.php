@@ -567,40 +567,45 @@ function erp_hr_leave_get_policies( $args = array() ) {
     $defaults = array(
         'number'  => 99,
         'offset'  => 0,
-        'orderby' => 'name',
+        'orderby' => 'id',
         'order'   => 'ASC',
     );
 
     $args = wp_parse_args( $args, $defaults );
-
 
     $cache_key = 'erp-leave-pol';
     $policies  = wp_cache_get( $cache_key, 'erp' );
 
     if ( false === $policies ) {
 
-        $policies = erp_array_to_object(
-            \WeDevs\ERP\HRM\Models\Leave_Policy::select( array(
-                'id',
-                'name',
-                'value',
-                'color',
-                'department',
-                'designation',
-                'gender',
-                'marital',
-                'activate',
-                'execute_day',
-                'effective_date',
-                'location',
-                'description'
-            ) )
-                ->skip( $args['offset'] )
-                ->take( $args['number'] )
-                ->orderBy( $args['orderby'], $args['order'] )
-                ->get()
-                ->toArray()
-        );
+        $policies = \WeDevs\ERP\HRM\Models\Leave_Policy::skip( $args['offset'] )
+            ->take( $args['number'] )
+            ->orderBy( $args['orderby'], $args['order'] )
+            ->get();
+
+        $formatted_data = array();
+
+        foreach( $policies as $key => $policy ) {
+            $department  = empty( $policy->department ) ? 'All Departments' : $policy->department->title;
+            $designation = empty( $policy->designation ) ? 'All Designations' : $policy->designation->title;
+
+            $formatted_data[$key]['id']             = $policy->id;
+            $formatted_data[$key]['leave_id']       = $policy->leave_id;
+            $formatted_data[$key]['name']           = $policy->leave->name;
+            $formatted_data[$key]['description']    = $policy->description;
+            $formatted_data[$key]['days']           = $policy->days;
+            $formatted_data[$key]['color']          = $policy->color;
+            $formatted_data[$key]['department_id']  = $policy->department_id;
+            $formatted_data[$key]['department']     = $department;
+            $formatted_data[$key]['designation_id'] = $policy->designation_id;
+            $formatted_data[$key]['designation']    = $designation;
+            $formatted_data[$key]['location_id']    = $policy->location_id;
+            $formatted_data[$key]['f_year']         = $policy->f_year;
+            $formatted_data[$key]['gender']         = $policy->gender;
+            $formatted_data[$key]['marital']        = $policy->marital;
+        }
+
+        $policies = erp_array_to_object( $formatted_data );
 
         wp_cache_set( $cache_key, $policies, 'erp' );
     }
@@ -808,10 +813,9 @@ function erp_hr_leave_policy_delete( $policy_ids ) {
     $policies = \WeDevs\ERP\HRM\Models\Leave_Policy::find( $policy_ids );
 
     $policies->each( function ( $policy ) {
-        $has_request = $policy->leave_requests()->count();
+        $has_entitlements = $policy->entitlements()->count();
 
-        if ( ! $has_request ) {
-            $policy->entitlements()->delete();
+        if ( ! $has_entitlements ) {
             $policy->delete();
 
             do_action( 'erp_hr_leave_policy_delete', $policy );

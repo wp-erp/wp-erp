@@ -1532,7 +1532,6 @@ class Ajax_Handler {
      * @return void
      */
     public function leave_policy_delete() {
-        //$this->verify_nonce( 'wp-erp-hr-nonce' );
         if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'wp-erp-hr-nonce' ) ) {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
