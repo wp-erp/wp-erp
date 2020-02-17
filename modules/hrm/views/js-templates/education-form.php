@@ -65,6 +65,16 @@
         ) ); ?>
     </div>
 
+    <div class="row">
+        <?php erp_html_form_input( array(
+            'label'       => __('Expiration date', 'erp'),
+            'name'        => 'expiration_date',
+            'type'        => 'text',
+            'value'       => '{{ data.expiration_date }}',
+            'class'       => 'erp-date-field'
+        ) ); ?>
+    </div>
+
     <?php wp_nonce_field( 'erp-hr-education-form' ); ?>
 
     <input type="hidden" name="action" value="erp-hr-create-education">
