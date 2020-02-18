@@ -1005,9 +1005,9 @@ class Form_Handler {
         $policy_create_error = new \WP_Error();
 
         $id          = ! empty( $_POST['policy-id'] ) ? absint( wp_unslash( $_POST['policy-id'] ) ) : 0;
-        $leave_id    = ! empty( $_POST['leave_id'] ) ? absint( wp_unslash( $_POST['leave_id'] ) ) : 0;
+        $leave_id    = ! empty( $_POST['leave-id'] ) ? absint( wp_unslash( $_POST['leave-id'] ) ) : 0;
         $days        = ! empty( $_POST['days'] ) ? absint( wp_unslash( $_POST['days'] ) ) : 0;
-        $f_year      = ! empty( $_POST['f_year'] ) ? absint( wp_unslash( $_POST['f_year'] ) ) : date('Y');
+        $f_year      = ! empty( $_POST['f-year'] ) ? absint( wp_unslash( $_POST['f-year'] ) ) : date('Y');
         $desc        = ! empty( $_POST['description'] ) ? sanitize_text_field( wp_unslash( $_POST['description'] ) ) : '';
         $dept_id     = ! empty( $_POST['department'] ) ? sanitize_text_field( wp_unslash( $_POST['department'] ) ) : '-1';
         $desg_id     = ! empty( $_POST['designation'] ) ? sanitize_text_field( wp_unslash( $_POST['designation'] ) ) : '-1';
@@ -1015,38 +1015,44 @@ class Form_Handler {
         $color       = ! empty( $_POST['color'] ) ? sanitize_text_field( wp_unslash( $_POST['color'] ) ) : '';
         $gender      = ! empty( $_POST['gender'] ) ? sanitize_text_field( wp_unslash( $_POST['gender'] ) ) : '-1';
         $marital     = ! empty( $_POST['marital'] ) ? sanitize_text_field( wp_unslash( $_POST['marital'] ) ) : '-1';
+        $applicable  = ! empty( $_POST['applicable-from'] ) ? absint( wp_unslash( $_POST['applicable-from'] ) ) : 0;
 
-        if ( empty( $_POST['leave_id'] )  ) {
+        if ( empty( $leave_id )  ) {
             $policy_create_error->add( 'empty', 'Name field should not be left empty' );
         }
 
-        if ( empty( $_POST['days'] )  ) {
+        if ( empty( $days )  ) {
             $policy_create_error->add( 'empty', 'Days field should not be left empty' );
         }
 
-        if ( empty( $_POST['color'] )  ) {
+        if ( empty( $color )  ) {
             $policy_create_error->add( 'empty', 'Color field should not be left empty' );
         }
 
-        if ( empty( $_POST['f_year'] )  ) {
+        if ( empty( $f_year )  ) {
             $policy_create_error->add( 'empty', 'Financial year field should not be left empty' );
         }
+
+        $policy_create_error = apply_filters( 'erp_pro_hr_leave_policy_form_errors', $policy_create_error );
 
         if ( count( $policy_create_error->errors ) ) {
             return;
         }
 
+
+
         $data = array(
-            'leave_id'       => $leave_id,
-            'description'    => $desc,
-            'days'           => $days,
-            'color'          => $color,
-            'department_id'  => $dept_id,
-            'designation_id' => $desg_id,
-            'location_id'    => $location_id,
-            'gender'         => $gender,
-            'marital'        => $marital,
-            'f_year'         => $f_year
+            'leave_id'        => $leave_id,
+            'description'     => $desc,
+            'days'            => $days,
+            'color'           => $color,
+            'department_id'   => $dept_id,
+            'designation_id'  => $desg_id,
+            'location_id'     => $location_id,
+            'gender'          => $gender,
+            'marital'         => $marital,
+            'f_year'          => $f_year,
+            'applicable_from' => $applicable
         );
 
         if ( $id ) {

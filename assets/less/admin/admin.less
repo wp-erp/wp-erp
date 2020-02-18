@@ -2408,11 +2408,10 @@ div.erp-nav-container {
     }
 }
 
-
 .leave-policy-form {
     background: #fff;
     padding: 20px;
-    width: 700px;
+    width: 800px;
     margin: 0 auto;
 
     .form-group {
@@ -2427,17 +2426,27 @@ div.erp-nav-container {
             display: flex;
             align-items: center;
             flex-wrap: wrap;
-            max-width: 500px;
+            max-width: 700px;
 
             .description {
-                margin-left: 125px;
+                margin-left: 190px;
                 font-size: 12px;
                 color: #757575;
+            }
+
+            &.applicable-form-row {
+                input[type=number] {
+                    width: 100px;
+                }
+
+                span {
+                    margin-left: 20px;
+                }
             }
         }
 
         label {
-            width: 125px;
+            width: 190px;
             display: inline-block;
         }
 

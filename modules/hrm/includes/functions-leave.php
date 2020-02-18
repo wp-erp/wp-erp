@@ -214,13 +214,14 @@ function erp_hr_leave_insert_policy( $args = array() ) {
         'f_year'         => $args['f_year']
     );
 
-    $extra = array(
-        'description'    => $args['description'],
-        'days'           => $args['days'],
-        'color'          => $args['color'],
-        'gender'         => $args['gender'],
-        'marital'        => $args['marital']
-    );
+    $extra = apply_filters( 'erp_hr_leave_insert_policy_extra', array(
+        'description'          => $args['description'],
+        'days'                 => $args['days'],
+        'color'                => $args['color'],
+        'gender'               => $args['gender'],
+        'marital'              => $args['marital'],
+        'applicable_from_days' => $args['applicable_from'],
+    ) );
 
     /**
      * Update

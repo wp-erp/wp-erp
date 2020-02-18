@@ -15,8 +15,9 @@ class Leave_Policy extends Model {
     protected $fillable = [
         'leave_id', 'old_policy_id', 'description', 'days', 'color',
         'department_id', 'location_id', 'designation_id', 'f_year',
-        'forward_status', 'encashment_status', 'gender', 'marital',
-        'applicable_from_days', 'accrued_amount', 'accrued_days'
+        'carryover_days', 'carryover_uses_limit', 'encashment_days',
+        'encashment_based_on', 'gender', 'marital', 'applicable_from_days',
+        'accrued_max_days', 'accrued_amount', 'accrued_based_on'
     ];
 
     /**
