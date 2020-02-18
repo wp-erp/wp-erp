@@ -185,7 +185,30 @@ class Subscription_Widget extends \WP_Widget {
             $attrs['full_name'] = __( 'Full Name', 'erp' );
         }
 
-        echo wp_kses_post( Subscription::instance()->shortcode( $attrs ) );
+        echo wp_kses(Subscription::instance()->shortcode( $attrs ), array(
+            'form'   => array(
+                'class' => array()
+            ),
+            'label'  => array(
+                'class' => array()
+            ),
+            'input'  => array(
+                'type'        => array(),
+                'class'       => array(),
+                'name'        => array(),
+                'placeholder' => array(),
+                'value'       => array()
+            ),
+            'button' => array(
+                'type' => array()
+            ),
+            'span'   => array(
+                'class' => array()
+            ),
+            'div'    => array(
+                'class' => array()
+            )
+        ) );
 
         echo wp_kses_post( $args['after_widget'] );
     }
