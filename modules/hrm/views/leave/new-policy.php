@@ -36,7 +36,7 @@ if ( $id ) {
             <div class="row">
                 <?php erp_html_form_input( array(
                     'label'    => esc_html__( 'Policy Name', 'erp' ),
-                    'name'     => 'leave_id',
+                    'name'     => 'leave-id',
                     'value'    => ! empty( $leave_policy ) ? $leave_policy->leave_id : '',
                     'type'     => 'select',
                     'class'    => 'leave-policy-input',
@@ -147,10 +147,10 @@ if ( $id ) {
             <div class="row">
                 <?php
                 $range = range( date('Y'), date('Y', strtotime('+5 years')) );
-                
+
                 erp_html_form_input( array(
                     'label'    => esc_html__( 'Financial Year', 'erp' ),
-                    'name'     => 'f_year',
+                    'name'     => 'f-year',
                     'value'    => ! empty( $leave_policy ) ? $leave_policy->f_year : date('Y'),
                     'required' => true,
                     'class'    => 'leave-policy-input erp-hrm-select2-add-more erp-hr-desi-drop-down',
@@ -158,7 +158,19 @@ if ( $id ) {
                     'options'  => array_combine( $range, $range )
                 ) ); ?>
             </div>
+
+            <div class="row applicable-form-row">
+                <?php erp_html_form_input(array(
+                    'label'    => __('Applicable from', 'erp-pro'),
+                    'name'     => 'applicable-from',
+                    'value'    => '0',
+                    'type'     => 'number'
+                )); ?>
+                <span>Days</span>
+            </div>
         </div> <!-- .form-group -->
+
+        <?php do_action('erp-hr-leave-policy-form-bottom'); ?>
 
         <?php wp_nonce_field( 'erp-leave-policy' ); ?>
         <input type="hidden" name="erp-action" value="hr-leave-policy-create">
