@@ -185,7 +185,7 @@ class Subscription_Widget extends \WP_Widget {
             $attrs['full_name'] = __( 'Full Name', 'erp' );
         }
 
-        echo wp_kses(Subscription::instance()->shortcode( $attrs ), array(
+        echo wp_kses( Subscription::instance()->shortcode( $attrs ), array(
             'form'   => array(
                 'class' => array()
             ),
