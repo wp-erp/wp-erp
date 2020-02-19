@@ -1,6 +1,8 @@
 <?php
 namespace WeDevs\ERP\Updates\BP\Leave;
 
+use function Patchwork\Config\getTimestamp;
+
 if ( ! class_exists( 'WP_Async_Request', false ) ) {
     require_once WPERP_INCLUDES . '/lib/bgprocess/wp-async-request.php';
 }
@@ -25,6 +27,40 @@ class ERP_HR_Leave_Entitlements extends \WP_Background_Process {
      */
     protected $action = 'erp_hr_leaves_entitlements_1_5_15';
 
+    protected $request_data = array(
+        'task'          => 'task_required_data',
+        'id'            => 0,
+        'user_id'       => 0,
+        'policy_id'     => 0,
+        'days'          => 0,
+        'from_date'     => '',
+        'to_date'       => '',
+        'comments'      => '',
+        'status'        => 0,
+        'created_by'    => 0,
+        'created_on'    => '',
+        'policy_data'   => array(
+            'id'             => 0,
+            'name'           => '',
+            'value'          => 0,
+            'color'          => '',
+            'department'     => 0,
+            'designation'    => 0,
+            'gender'         => '',
+            'marital'        => '',
+            'description'    => '',
+            'location'       => 0,
+            'effective_date' => '',
+            'activate'       => 0,
+            'execute_day'    => 0,
+            'created_at'     => '',
+            'updated_at'     => '',
+        ),
+        'f_year'        => 0,
+        'new_policy_id' => 0,
+        'leave_id'      => 0,
+    );
+
     /**
      * Task
      *
@@ -33,108 +69,443 @@ class ERP_HR_Leave_Entitlements extends \WP_Background_Process {
      * in the next pass through. Or, return false to remove the
      * item from the queue.
      *
-     * @param int $entitlement_id Queue item to iterate over
+     * @param array $leave_entitlement Queue item to iterate over
      *
      * @return mixed
      */
-    protected function task( $entitlement_id ) {
+    protected function task( $leave_entitlement ) {
+        $this->request_data = wp_parse_args( $leave_entitlement, $this->request_data );
+
+        $ret = '';
+
+        switch ( $this->request_data['task'] ) {
+
+            case 'task_required_data':
+                $ret = $this->task_required_data();
+                break;
+
+            case 'task_leave_policy':
+                $ret = $this->task_leave_policy();
+                break;
+
+            case 'task_leave_entitlements':
+                $ret = $this->task_create_entitlement();
+                break;
+
+            default:
+                $ret = false;
+                break;
+
+        }
+        return $ret;
+    }
+
+    /**
+     * This method will get entitlement data and policy table data from old db tables
+     *
+     * @return array|bool
+     */
+    protected function task_required_data() {
+        // get leave_entitlement_data.
         global $wpdb;
 
         $entitlement_data = $wpdb->get_row(
             $wpdb->prepare(
                 "SELECT * FROM {$wpdb->prefix}erp_hr_leave_entitlements WHERE id = %d",
-                array( $entitlement_id )
+                array( $this->request_data['id'] )
             ),
             ARRAY_A
         );
 
         if ( null === $entitlement_data ) {
             // no result found: can be because of query error, handle this problem here probably log this error.
-            // todo: keep log here.
-            error_log( print_r(
-                array(
-                    'file' => __FILE__, 'line' => __LINE__,
-                    'message' => '(Query error) No data found from leave entitlements table.'
-                ), true )
+            error_log(
+                print_r(
+                    array(
+                        'file'    => __FILE__,
+                        'line'    => __LINE__,
+                        'message' => '(Query error) No data found from leave entitlements table. ' . $wpdb->last_error,
+                    ),
+                    true
+                )
             );
+            return false; // exit from current queue.
 
         } elseif ( is_array( $entitlement_data ) && ! empty( $entitlement_data ) ) {
+            // store datas for further use.
+            $this->request_data = wp_parse_args( $entitlement_data, $this->request_data );
+        }
 
-            if ( '' !== $entitlement_data['created_on'] ) {
-                $created_at = erp_mysqldate_to_phptimestamp( $entitlement_data['created_on'] );
-            } else {
-                $created_at = time();
+        // get policy data
+        $policy_data = $wpdb->get_row(
+            $wpdb->prepare(
+                "SELECT * FROM {$wpdb->prefix}erp_hr_leave_policies WHERE id = %d",
+                array( $this->request_data['policy_id'] )
+            ),
+            ARRAY_A
+        );
+
+        if ( null === $policy_data ) {
+            // no result found: can be because of query error, handle this problem here probably log this error.
+            error_log(
+                print_r(
+                    array(
+                        'file'    => __FILE__,
+                        'line'    => __LINE__,
+                        'message' => '(Query error) No data found from policy table. ' . $wpdb->last_error,
+                    ),
+                    true
+                )
+            );
+            return false; // exit from current queue.
+
+        } elseif ( is_array( $policy_data ) && ! empty( $policy_data ) ) {
+            // store datas for further use.
+            $this->request_data['policy_data'] = wp_parse_args( $policy_data, $this->request_data['policy_data'] );
+        }
+
+        $this->request_data['task'] = 'task_leave_policy';
+
+        return $this->request_data;
+    }
+
+    /**
+     * This method will create financial table data, leave names table data and finally leave policy table data based on entitlement data.
+     *
+     * @return array|bool
+     */
+    protected function task_leave_policy() {
+        global $wpdb;
+        /*
+         * check if policy exist based on financial year,
+         * if no policies exist for that f_year, insert that policy
+         * data will go both leave_name and policy table
+         */
+
+        if ( $this->request_data['policy_data']['created_at'] != '' ) {
+            $created_at = erp_mysqldate_to_phptimestamp( $this->request_data['policy_data']['created_at'] );
+        } else {
+            $created_at = ( new \DateTimeImmutable( 'now', wp_timezone() ) )->getTimestamp();
+        }
+
+        if ( $this->request_data['policy_data']['updated_at'] != '' ) {
+            $updated_at = erp_mysqldate_to_phptimestamp( $this->request_data['policy_data']['updated_at'] );
+        } else {
+            $updated_at = ( new \DateTimeImmutable( 'now', wp_timezone() ) )->getTimestamp();
+        }
+
+        // get financial year
+        $financial_year = erp_get_financial_year_dates( $this->request_data['from_date'] );
+        $start_date     = erp_mysqldate_to_phptimestamp( $financial_year['start'], false );
+        $end_date       = erp_mysqldate_to_phptimestamp( $financial_year['end'], false );
+
+        // check f_year already exist for given date range
+        $f_year_id = $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT id FROM {$wpdb->prefix}erp_hr_financial_years_new WHERE start_date >= %d AND end_date <= %d LIMIT 1",
+                array( $start_date->getTimestamp(), $end_date->getTimestamp() )
+            )
+        );
+
+        if ( null === $f_year_id ) {
+            // we've to create this financial year first.
+            $f_year_name = $start_date->format( 'Y' ) === $end_date->format( 'Y' ) ? $start_date->format( 'Y' ) : $start_date->format( 'Y' ) . ' - ' . $end_date->format( 'Y' );
+            $insert_data = array(
+                'fy_name'    => $f_year_name,
+                'start_date' => $start_date->getTimestamp(),
+                'end_date'   => $end_date->getTimestamp(),
+                'created_by' => $this->request_data['created_by'],
+                'updated_by' => $this->request_data['created_by'],
+                'created_at' => erp_mysqldate_to_phptimestamp( $this->request_data['created_on'] ),
+                'updated_at' => erp_mysqldate_to_phptimestamp( $this->request_data['created_on'] ),
+            );
+
+            $insert_format = array(
+                '%s',
+                '%d',
+                '%d',
+                '%d',
+                '%d',
+                '%d',
+                '%d',
+            );
+
+            if ( false === $wpdb->insert( "{$wpdb->prefix}erp_hr_financial_years_new", $insert_data, $insert_format ) ) {
+                error_log(
+                    print_r(
+                        array(
+                            'file'    => __FILE__,
+                            'line'    => __LINE__,
+                            'message' => '(Query error) Insertion failed new financial_years table. ' . $wpdb->last_error,
+                        ),
+                        true
+                    )
+                );
+                return false; // exit the queue.
             }
+            $f_year_id = $wpdb->insert_id;
+        }
 
+        $this->request_data['f_year'] = $f_year_id;
+
+        // get leave name or create one.
+
+        // check if leave name already exist on database.
+        $leave_id = $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT id FROM {$wpdb->prefix}erp_hr_leaves_new WHERE name = %s",
+                array( $this->request_data['policy_data']['name'] )
+            )
+        );
+
+        if ( null === $leave_id ) {
             // insert into erp_hr_leaves_new table.
-
             $table_data = array(
-                'user_id'    => $entitlement_data['user_id'],
-                'created_by' => $entitlement_data['created_by'],
-                'day_in'     => $entitlement_data['days'],
-                'trn_type'   => 'leave_policies',
+                'name'       => $this->request_data['policy_data']['name'],
                 'created_at' => $created_at,
-                'updated_at' => $created_at,
+                'updated_at' => $updated_at,
             );
 
             $table_format = array(
-                '%d',
-                '%d',
-                '%d',
                 '%s',
                 '%d',
                 '%d',
             );
 
-            if ( isset( $entitlement_data['comments'] ) && '' !== $entitlement_data['comments'] ) {
-                $table_data['description'] = wp_kses_post( $entitlement_data['comments'] );
+            if ( '' !== $this->request_data['policy_data']['description'] ) {
+                $table_data['description'] = wp_kses_post( $this->request_data['policy_data']['description'] );
                 $table_format[]            = '%s';
             }
 
-            // get policy table data
-            $policy_data = $wpdb->get_row(
-                $wpdb->prepare(
-                    "SELECT id, leave_id, f_year FROM {$wpdb->prefix}erp_hr_leave_policies_new WHERE old_policy_id = %d",
-                    array( $entitlement_data['policy_id'] )
-                ),
-                ARRAY_A
-            );
-
-            if ( null === $policy_data ) {
-                // no result found: can be because of query error, handle this problem here probably log this error.
-                // todo: keep log here.
-                error_log( print_r(
-                    array(
-                        'file' => __FILE__, 'line' => __LINE__,
-                        'message' => '(Query error) Insertion failed new leave policies table.'
-                    ), true )
-                );
-
-            } elseif ( is_array( $policy_data ) && ! empty( $policy_data ) ) {
-                $table_data['trn_id'] = $policy_data['id'];
-                $table_format[]       = '%d';
-
-                $table_data['leave_id'] = $policy_data['leave_id'];
-                $table_format[]         = '%d';
-
-                $table_data['f_year'] = $policy_data['f_year'];
-                $table_format[]       = '%d';
-
-                if ( false === $wpdb->insert( "{$wpdb->prefix}erp_hr_leave_entitlements_new", $table_data, $table_format ) ) {
-                    // todo: query error, do loging or something here
-                    error_log( print_r(
+            if ( false === $wpdb->insert( "{$wpdb->prefix}erp_hr_leaves_new", $table_data, $table_format ) ) {
+                error_log(
+                    print_r(
                         array(
-                            'file' => __FILE__, 'line' => __LINE__,
-                            'message' => '(Query error) Insertion failed new leave entitlements table: ' . $wpdb->last_error
-                        ), true )
-                    );
-                } else {
-                    return false;
-                }
+                            'file'    => __FILE__,
+                            'line'    => __LINE__,
+                            'message' => '(Query error) Insertion failed new leaves table. ' . $wpdb->last_error,
+                        ),
+                        true
+                    )
+                );
+                return false;
+            } else {
+                $leave_id = $wpdb->insert_id;
             }
         }
 
+        // save this leave id for further processing.
+        $this->request_data['leave_id'] = $leave_id;
+
+        // check if policy already exists
+        $new_policy_id = $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT id FROM {$wpdb->prefix}erp_hr_leave_policies_new WHERE department_id = %d AND location_id = %d AND designation_id = %d AND gender = %s AND marital = %s AND f_year = %d AND leave_id = %d",
+                array(
+                    $this->request_data['policy_data']['department'],
+                    $this->request_data['policy_data']['location'],
+                    $this->request_data['policy_data']['designation'],
+                    $this->request_data['policy_data']['gender'],
+                    $this->request_data['policy_data']['marital'],
+                    $this->request_data['f_year'],
+                    $this->request_data['leave_id'],
+                )
+            )
+        );
+
+        if ( null === $new_policy_id ) {
+            // insert this policy into new table.
+            $new_policy_id = $this->create_leave_policy();
+        }
+
+        if ( false === $new_policy_id ) {
+            // exit the current queue, we couldn't create leave policy data for this entitlement.
+            return false;
+        }
+
+        $this->request_data['task'] = 'task_leave_entitlements';
+
+        return $this->request_data;
+
+    }
+
+    /**
+     * This method will migrate old entitlements data to new table
+     *
+     * @return bool
+     */
+    protected function task_create_entitlement() {
+        global $wpdb;
+
+        if ( '' !== $this->request_data['created_on'] ) {
+            $created_at = erp_mysqldate_to_phptimestamp( $this->request_data['created_on'] );
+        } else {
+            $created_at = ( new \DateTimeImmutable( 'now', wp_timezone() ) )->getTimestamp();
+        }
+
+        // insert into erp_hr_leaves_new table.
+
+        $table_data = array(
+            'user_id'    => $this->request_data['user_id'],
+            'created_by' => $this->request_data['created_by'],
+            'day_in'     => $this->request_data['days'],
+            'trn_id'     => $this->request_data['new_policy_id'],
+            'trn_type'   => 'leave_policies',
+            'leave_id'   => $this->request_data['leave_id'],
+            'f_year'     => $this->request_data['f_year'],
+            'created_at' => $created_at,
+            'updated_at' => $created_at,
+        );
+
+        $table_format = array(
+            '%d',
+            '%d',
+            '%d',
+            '%d',
+            '%s',
+            '%d',
+            '%d',
+            '%d',
+            '%d',
+        );
+
+        if ( isset( $this->request_data['comments'] ) && '' !== $this->request_data['comments'] ) {
+            $table_data['description'] = wp_kses_post( $this->request_data['comments'] );
+            $table_format[]            = '%s';
+        }
+
+        if ( false === $wpdb->insert( "{$wpdb->prefix}erp_hr_leave_entitlements_new", $table_data, $table_format ) ) {
+            error_log(
+                print_r(
+                    array(
+                        'file'    => __FILE__,
+                        'line'    => __LINE__,
+                        'message' => '(Query error) Insertion failed new leave entitlements table: ' . $wpdb->last_error,
+                    ),
+                    true
+                )
+            );
+        }
+
         return false;
+    }
+
+    /**
+     * This method will create leave_name, leave_policy data.
+     *
+     * @return bool|int
+     */
+    private function create_leave_policy() {
+        global $wpdb;
+
+        if ( $this->request_data['policy_data']['created_at'] != '' ) {
+            $created_at = erp_mysqldate_to_phptimestamp( $this->request_data['policy_data']['created_at'] );
+        } else {
+            $created_at = ( new \DateTimeImmutable( 'now', wp_timezone() ) )->getTimestamp();
+        }
+
+        if ( $this->request_data['policy_data']['updated_at'] != '' ) {
+            $updated_at = erp_mysqldate_to_phptimestamp( $this->request_data['policy_data']['updated_at'] );
+        } else {
+            $updated_at = ( new \DateTimeImmutable( 'now', wp_timezone() ) )->getTimestamp();
+        }
+
+        // insert into erp_hr_leave_policies_new table.
+        $table_data = array(
+            'old_policy_id' => $this->request_data['policy_data']['id'],
+            'leave_id'      => $this->request_data['leave_id'],
+            'days'          => $this->request_data['policy_data']['value'],
+            'color'         => $this->request_data['policy_data']['color'],
+            'f_year'        => $this->request_data['f_year'],
+            'created_at'    => $created_at,
+            'updated_at'    => $updated_at,
+        );
+
+        $table_format = array(
+            '%d',
+            '%d',
+            '%d',
+            '%s',
+            '%d',
+            '%d',
+            '%d',
+        );
+
+        if ( isset( $this->request_data['policy_data']['department'] ) && '' !== $this->request_data['policy_data']['department'] ) {
+            $table_data['department_id'] = $this->request_data['policy_data']['department'];
+            $table_format[]              = '%d';
+        }
+
+        if ( isset( $this->request_data['policy_data']['designation'] ) && '' !== $this->request_data['policy_data']['designation'] ) {
+            $table_data['designation_id'] = $this->request_data['policy_data']['designation'];
+            $table_format[]               = '%d';
+        }
+
+        if ( isset( $this->request_data['policy_data']['gender'] ) && '' !== $this->request_data['policy_data']['gender'] ) {
+            $table_data['gender'] = $this->request_data['policy_data']['gender'];
+            $table_format[]       = '%s';
+        }
+
+        if ( isset( $this->request_data['policy_data']['marital'] ) && '' !== $this->request_data['policy_data']['marital'] ) {
+            $table_data['marital'] = $this->request_data['policy_data']['marital'];
+            $table_format[]        = '%s';
+        }
+
+        if ( isset( $this->request_data['policy_data']['location'] ) && '' !== $this->request_data['policy_data']['location'] ) {
+            $table_data['location_id'] = $this->request_data['policy_data']['location'];
+            $table_format[]            = '%d';
+        }
+
+        if ( isset( $this->request_data['policy_data']['execute_day'] ) && '' !== $this->request_data['policy_data']['execute_day'] ) {
+            $table_data['applicable_from_days'] = $this->request_data['policy_data']['execute_day'];
+            $table_format[]                     = '%d';
+        }
+
+        if ( false === $wpdb->insert( "{$wpdb->prefix}erp_hr_leave_policies_new", $table_data, $table_format ) ) {
+            error_log(
+                print_r(
+                    array(
+                        'file'    => __FILE__,
+                        'line'    => __LINE__,
+                        'message' => '(Query error) Insertion failed new leave policies table: ' . $wpdb->last_error,
+                    ),
+                    true
+                )
+            );
+
+            return false;
+
+        } else {
+            $policy_id = $wpdb->insert_id;
+        }
+
+        // save policy id for further use.
+        $this->request_data['new_policy_id'] = $policy_id;
+
+        // insert into erp_hr_leave_policies_segregation_new table.
+        $table_data   = array(
+            'leave_policy_id' => $policy_id,
+            'created_at'      => $created_at,
+            'updated_at'      => $updated_at,
+        );
+        $table_format = array( '%d', '%d', '%d' );
+
+        if ( false === $wpdb->insert( "{$wpdb->prefix}erp_hr_leave_policies_segregation_new", $table_data, $table_format ) ) {
+            error_log(
+                print_r(
+                    array(
+                        'file'    => __FILE__,
+                        'line'    => __LINE__,
+                        'message' => '(Query error) Insertion failed new leave policies segregation table: ' . $wpdb->last_error,
+                    ),
+                    true
+                )
+            );
+
+            // i'm not sending return false here, because segregation is optional.
+        }
+
+        return $policy_id;
     }
 
     /**
