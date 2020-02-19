@@ -18,7 +18,7 @@ class ERP_1_5_15 {
      *
      * @var array
      */
-    protected $db_tables     = array();
+    protected $db_tables = array();
 
     /**
      * Old database tables to delete.
@@ -40,6 +40,7 @@ class ERP_1_5_15 {
             "{$wpdb->prefix}erp_hr_leave_approval_status" => "{$wpdb->prefix}erp_hr_leave_approval_status_new",
             "{$wpdb->prefix}erp_hr_leave_encashment_requests" => "{$wpdb->prefix}erp_hr_leave_encashment_requests_new",
             "{$wpdb->prefix}erp_hr_leaves_unpaid"         => "{$wpdb->prefix}erp_hr_leaves_unpaid_new",
+            "{$wpdb->prefix}erp_hr_financial_years"       => "{$wpdb->prefix}erp_hr_financial_years_new",
         );
 
         $this->db_tables_old = array(
@@ -50,6 +51,11 @@ class ERP_1_5_15 {
         );
     }
 
+    /**
+     * This method will create all required db tables.
+     * @since 1.5.15
+     * @return bool
+     */
     public function create_db_tables() {
         global $wpdb;
 
@@ -78,14 +84,17 @@ class ERP_1_5_15 {
                   department_id int(11) NOT NULL DEFAULT '-1',
                   location_id int(11) NOT NULL DEFAULT '-1',
                   designation_id int(11) NOT NULL DEFAULT '-1',
-                  f_year smallint(5) UNSIGNED NOT NULL,
-                  forward_status tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
-                  encashment_status tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
                   gender enum('-1','male','female','other') NOT NULL DEFAULT '-1',
                   marital enum('-1','single','married','widowed') NOT NULL DEFAULT '-1',
+                  f_year smallint(5) UNSIGNED DEFAULT NULL,
+                  carryover_days tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                  carryover_uses_limit tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                  encashment_days tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                  encashment_based_on enum('basic','gross') DEFAULT NULL,
                   applicable_from_days smallint(5) UNSIGNED NOT NULL DEFAULT '0',
                   accrued_amount decimal(5,2) NOT NULL DEFAULT '0.00',
-                  accrued_days tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                  accrued_based_on enum('day','week','month','year') DEFAULT NULL,
+                  accrued_max_days tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
                   created_at int(11) NOT NULL,
                   updated_at int(11) NOT NULL,
                   PRIMARY KEY  (id)
@@ -198,6 +207,20 @@ class ERP_1_5_15 {
                   PRIMARY KEY  (id)
             ) $charset_collate;",
 
+            "CREATE TABLE {$wpdb->prefix}erp_hr_financial_years_new (
+                  id int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+                  fy_name varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                  start_date int(11) DEFAULT NULL,
+                  end_date int(11) DEFAULT NULL,
+                  description varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                  created_by bigint(20) UNSIGNED DEFAULT NULL,
+                  updated_by bigint(20) UNSIGNED DEFAULT NULL,
+                  created_at int(11) DEFAULT NULL,
+                  updated_at int(11) DEFAULT NULL,
+                  PRIMARY KEY (id),
+                  KEY year_search (start_date,end_date)
+            ) $charset_collate;",
+
         );
 
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
@@ -208,104 +231,82 @@ class ERP_1_5_15 {
         return true;
     }
 
+    /**
+     * This method will start data migration process.
+     * @since 1.5.15
+     */
     public function migrate_data() {
         global $wpdb;
-        global $bg_progess_hr_leaves_1_5_15;
         global $bg_progess_hr_leaves_entitlements;
         global $bg_progess_hr_leave_requests;
 
-        $already_done = get_option('policy_migrate_data_1_5_15', 0);
+        $already_done = get_option( 'policy_migrate_data_1_5_15', 0 );
 
         if ( $already_done ) {
             return;
         }
-      
+
         update_option( 'policy_migrate_data_1_5_15', 1 );
 
         /**
-         * Leave policies BG process save
-         * 
-         * get all leave policies from old db
-         */
-        $policies = $wpdb->get_col( "SELECT id FROM {$wpdb->prefix}erp_hr_leave_policies ORDER BY id ASC" );
-
-        if ( is_array( $policies ) && ! empty( $policies ) ) {
-            foreach ( $policies as $policy ) {
-                $bg_progess_hr_leaves_1_5_15->push_to_queue( $policy );
-            }
-        } else {
-            error_log( print_r(
-                array(
-                    'file' => __FILE__, 'line' => __LINE__,
-                    'message' => 'No policies found.'
-                ), true )
-            );
-            // todo: add some functionality if no policies is found.
-        }
-
-        $bg_progess_hr_leaves_1_5_15->save();
-
-
-
-        /**
-         * Leave entitlements BG process save
-         * 
-         * get all leave entitlements from old db
+         * Get all leave entitlements from old db and add them to process queue.
          */
         $entitlement_ids = $wpdb->get_col( "SELECT id FROM {$wpdb->prefix}erp_hr_leave_entitlements ORDER BY id ASC" );
 
         if ( is_array( $entitlement_ids ) && ! empty( $entitlement_ids ) ) {
             foreach ( $entitlement_ids as $entitlement_id ) {
-                $bg_progess_hr_leaves_entitlements->push_to_queue( $entitlement_id );
+                $bg_progess_hr_leaves_entitlements->push_to_queue(
+                    array(
+                        'task' => 'task_required_data',
+                        'id'   => $entitlement_id,
+                    )
+                );
             }
-        } else {
-            // todo: add some functionality if no policies is found.
         }
 
         $bg_progess_hr_leaves_entitlements->save();
 
-        global $bg_progess_hr_leave_requests;
         /**
-         * Leave requests BG process save
-         *
-         * get all leave requests from old db
+         * Get all leave requests from old db and add them to process queue
          */
         $request_ids = $wpdb->get_col( "SELECT id FROM {$wpdb->prefix}erp_hr_leave_requests ORDER BY id ASC" );
 
         if ( is_array( $request_ids ) && ! empty( $request_ids ) ) {
             foreach ( $request_ids as $request_id ) {
-                $bg_progess_hr_leave_requests->push_to_queue( array(
-                    'task'  => 'leave_request',
-                    'id'    => $request_id
-                ) );
+                $bg_progess_hr_leave_requests->push_to_queue(
+                    array(
+                        'task' => 'leave_request',
+                        'id'   => $request_id,
+                    )
+                );
             }
-        } else {
-            // todo: add some functionality if no leave request is found.
         }
 
         $bg_progess_hr_leave_requests->save();
 
         /**
-         * run the queue, starting with leave policies data
+         * Run the queue, starting with leave entitlements data
          */
-        $bg_progess_hr_leaves_1_5_15->dispatch();
+        $bg_progess_hr_leaves_entitlements->dispatch();
     }
 
     /**
-     * Call this methode after migrating old data
+     * Call this method after migrating old data
      */
     public function delete_old_db_tables() {
         global $wpdb;
         if ( $wpdb->query( 'DROP TABLE ' . implode( ', ', $this->db_tables_old ) . ';' ) === false ) {
-            // todo: mysql query error, store this error to log
-            error_log( print_r(
-                array(
-                    'file' => __FILE__, 'line' => __LINE__,
-                    'message' => '(Query error) Table drop failed: ' . $wpdb->last_error
-                ), true )
+            error_log(
+                print_r(
+                    array(
+                        'file'    => __FILE__,
+                        'line'    => __LINE__,
+                        'message' => '(Query error) Table drop failed: ' . $wpdb->last_error,
+                    ),
+                    true
+                )
             );
-        }
-        else {
+        } else {
             return true;
         }
     }
@@ -328,14 +329,17 @@ class ERP_1_5_15 {
 
         if ( $wpdb->query( $queries ) === false ) {
             // query error, log this to db
-            error_log( print_r(
-                array(
-                    'file' => __FILE__, 'line' => __LINE__,
-                    'message' => '(Query error) Table renaming failed: ' . $wpdb->last_error
-                ), true )
+            error_log(
+                print_r(
+                    array(
+                        'file'    => __FILE__,
+                        'line'    => __LINE__,
+                        'message' => '(Query error) Table renaming failed: ' . $wpdb->last_error,
+                    ),
+                    true
+                )
             );
-        }
-        else {
+        } else {
             return true;
         }
     }

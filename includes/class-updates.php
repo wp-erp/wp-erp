@@ -140,14 +140,11 @@ class Updates {
     public function do_updates() {
         global $bg_process;
         global $bg_process_people_trn;
-        global $bg_progess_hr_leaves_1_5_15;
         global $bg_progess_hr_leaves_entitlements;
         global $bg_progess_hr_leave_requests;
 
-
         $bg_process                        = new \WeDevs\ERP\Updates\BP\ERP_ACCT_BG_Process;
         $bg_process_people_trn             = new \WeDevs\ERP\Updates\BP\ERP_ACCT_BG_Process_People_Trn;
-        $bg_progess_hr_leaves_1_5_15       = new \WeDevs\ERP\Updates\BP\Leave\ERP_HR_Leave_Policies();
         $bg_progess_hr_leaves_entitlements = new \WeDevs\ERP\Updates\BP\Leave\ERP_HR_Leave_Entitlements();
         $bg_progess_hr_leave_requests      = new \WeDevs\ERP\Updates\BP\Leave\ERP_HR_Leave_Request();
 

@@ -243,7 +243,6 @@ final class WeDevs_ERP {
             require_once WPERP_INCLUDES . '/updates/bp/class-erp-acct-bg-process-1.5.2.php';
 
             // `Leave` related background process files
-            require_once WPERP_INCLUDES . '/updates/bp/leave_1_5_15/class-erp-hr-leave-policies.php';
             require_once WPERP_INCLUDES . '/updates/bp/leave_1_5_15/class-erp-hr-leave-entitlements.php';
             require_once WPERP_INCLUDES . '/updates/bp/leave_1_5_15/class-erp-hr-leave-request.php';
         }

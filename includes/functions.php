@@ -2629,8 +2629,14 @@ function erp_get_financial_year_dates( $date = null ) {
         $year  = date( 'Y' );
         $month = date( 'n' );
     } else {
-        $year  = date( 'Y', strtotime( $date ) );
-        $month = date( 'n', strtotime( $date ) );
+        if ( ! is_numeric( $date ) ) {
+            $timestamp = strtotime( $date );
+        }
+        else {
+            $timestamp = $date;
+        }
+        $year  = date( 'Y', $timestamp );
+        $month = date( 'n', $timestamp );
     }
 
     /**
@@ -2667,7 +2673,10 @@ function get_financial_year_from_date( $date ) {
     $fy_start_month = erp_get_option( 'gen_financial_month', 'erp_settings_general', 1 );
     $fy_start_month = absint( $fy_start_month );
 
-    $date_timestamp = strtotime( $date );
+    if ( ! is_numeric( $date ) ) {
+        $date_timestamp = strtotime( $date );
+    }
+
     $date_year      = absint( date( 'Y', $date_timestamp ) );
     $date_month     = absint( date( 'n', $date_timestamp ) );
 
@@ -3483,13 +3492,11 @@ function erp_mysqldate_to_phptimestamp( $time, $timestamp = true ) {
     }
 
     $timezone = wp_timezone();
-    $datetime = date_create_immutable_from_format( 'Y-m-d H:i:s', $time, $timezone );
+    $datetime = DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $time, $timezone );
 
     if ( false === $datetime ) {
         return false;
     }
-
-    $datetime = $datetime->setTimezone( $timezone );
 
     if ( $timestamp ) {
         return $datetime->getTimestamp();
