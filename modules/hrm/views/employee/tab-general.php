@@ -155,12 +155,12 @@
                             <th><?php esc_html_e( 'Year of Completion', 'erp' ); ?></th>
                             <th><?php esc_html_e( 'Additional Notes', 'erp' ); ?></th>
                             <th><?php esc_html_e( 'Interests', 'erp' ); ?></th>
+                            <th><?php esc_html_e( 'Expiration date', 'erp' ); ?></th>
                             <th>&nbsp;</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach ($educations as $key => $education) { ?>
-
                             <tr class="<?php echo $key % 2 == 0 ? 'alternate' : 'odd'; ?>">
                                 <td><?php echo esc_html( $education->school ); ?></td>
                                 <td><?php echo esc_html( $education->degree ); ?></td>
@@ -168,6 +168,12 @@
                                 <td><?php echo esc_html( $education->finished ); ?></td>
                                 <td><?php echo $education->notes ? esc_html( $education->notes ) : '-'; ?></td>
                                 <td><?php echo $education->interest ? esc_html( $education->interest ) : '-'; ?></td>
+                                <td>
+                                    <?php
+                                    $education->expiration_date = get_user_meta($education->employee_id, 'education_' . $education->employee_id . '_' . $education->id, true );
+                                    echo $education->expiration_date ? esc_html($education->expiration_date) : '-';
+                                    ?>
+                                </td>
                                 <td width="10%">
                                     <?php if ( current_user_can( 'erp_edit_employee', $employee->get_user_id() ) ) : ?>
                                         <div class="row-actions erp-hide-print">
