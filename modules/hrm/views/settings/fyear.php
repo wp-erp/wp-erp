@@ -22,8 +22,10 @@ foreach ( $fnames as $key => $fname ) {
     );
 }
 
-Financial_Year::query()->truncate();
-Financial_Year::insert( $fin_years );
+if ( isset( $_POST['erp-hr-fyears-setting'] ) ) {
+    Financial_Year::query()->truncate();
+    Financial_Year::insert( $fin_years );
+}
 
 ?>
 
@@ -39,15 +41,22 @@ Financial_Year::insert( $fin_years );
         </thead>
 
         <tbody>
+            <?php foreach( $f_years as $year ) : ?>
             <tr class="fyear-clone">
                 <td>
-                    <input name="fyear-name[]" class="fyear-name" type="text" autocomplete="off">
+                    <input
+                        name="fyear-name[]"
+                        class="fyear-name"
+                        type="text"
+                        value="<?php echo $year['fy_name'] ?>"
+                        autocomplete="off">
                 </td>
                 <td>
                     <input
                         name="fyear-start[]"
                         id="fyear-start1"
                         class="fyear-start-date erp-date-field"
+                        value="<?php echo $year['start_date'] ?>"
                         type="text">
                 </td>
                 <td>
@@ -55,14 +64,18 @@ Financial_Year::insert( $fin_years );
                         name="fyear-end[]"
                         id="fyear-end1"
                         class="fyear-end-date erp-date-field"
+                        value="<?php echo $year['end_date'] ?>"
                         type="text">
                 </td>
                 <td>
                     <i class="fa fa-times-circle erp-settings-fyear-remove"></i>
                 </td>
             </tr>
+            <?php endforeach; ?>
         </tbody>
     </table>
+
+    <input type="hidden" name="erp-hr-fyears-setting">
 
     <button type="button" class="button-secondary erp-fyear-add-more-btn">
         <?php esc_attr_e( 'Add More', 'erp' ); ?>
