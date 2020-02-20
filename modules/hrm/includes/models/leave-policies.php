@@ -13,7 +13,7 @@ class Leave_Policy extends Model {
     protected $table = 'erp_hr_leave_policies';
 
     protected $fillable = [
-        'leave_id', 'old_policy_id', 'description', 'days', 'color',
+        'leave_id', 'description', 'days', 'color',
         'department_id', 'location_id', 'designation_id', 'f_year',
         'carryover_days', 'carryover_uses_limit', 'encashment_days',
         'encashment_based_on', 'gender', 'marital', 'applicable_from_days',
@@ -44,9 +44,9 @@ class Leave_Policy extends Model {
 
     /**
      * Relation to Leave_Policies_Segregation
-     * 
+     *
      * @since 1.5.15
-     * 
+     *
      * @return object
      */
     public function segregation() {
@@ -55,9 +55,9 @@ class Leave_Policy extends Model {
 
     /**
      * Relation to Department
-     * 
+     *
      * @since 1.5.15
-     * 
+     *
      * @return object
      */
     public function department() {
@@ -66,13 +66,24 @@ class Leave_Policy extends Model {
 
     /**
      * Relation to Designation
-     * 
+     *
      * @since 1.5.15
-     * 
+     *
      * @return object
      */
     public function designation() {
         return $this->belongsTo( 'WeDevs\ERP\HRM\Models\Designation' );
+    }
+
+    /**
+     * Relation to Financial Year
+     *
+     * @since 1.5.15
+     *
+     * @return object
+     */
+    public function financial_year() {
+        return $this->belongsTo( 'WeDevs\ERP\HRM\Models\Financial_Year', 'f_year', 'id' );
     }
 
 }

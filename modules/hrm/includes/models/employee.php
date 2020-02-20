@@ -89,5 +89,9 @@ class Employee extends Model {
     public function notes() {
         return $this->hasMany( 'WeDevs\ERP\HRM\Models\Employee_Note', 'user_id', 'user_id' );
     }
+
+    public function user() {
+        return $this->belongsTo( 'WeDevs\ERP\HRM\Models\Hr_User', 'user_id', 'ID' );
+    }
 }
 
