@@ -185,13 +185,13 @@ class ERP_HR_Leave_Entitlements extends \WP_Background_Process {
         if ( $this->request_data['policy_data']['created_at'] != '' ) {
             $created_at = erp_mysqldate_to_phptimestamp( $this->request_data['policy_data']['created_at'] );
         } else {
-            $created_at = ( new \DateTimeImmutable( 'now', wp_timezone() ) )->getTimestamp();
+            $created_at = current_datetime()->getTimestamp();
         }
 
         if ( $this->request_data['policy_data']['updated_at'] != '' ) {
             $updated_at = erp_mysqldate_to_phptimestamp( $this->request_data['policy_data']['updated_at'] );
         } else {
-            $updated_at = ( new \DateTimeImmutable( 'now', wp_timezone() ) )->getTimestamp();
+            $updated_at = current_datetime()->getTimestamp();
         }
 
         // get financial year
@@ -340,7 +340,7 @@ class ERP_HR_Leave_Entitlements extends \WP_Background_Process {
         if ( '' !== $this->request_data['created_on'] ) {
             $created_at = erp_mysqldate_to_phptimestamp( $this->request_data['created_on'] );
         } else {
-            $created_at = ( new \DateTimeImmutable( 'now', wp_timezone() ) )->getTimestamp();
+            $created_at = current_datetime()->getTimestamp();
         }
 
         // insert into erp_hr_leaves_new table.
@@ -401,13 +401,13 @@ class ERP_HR_Leave_Entitlements extends \WP_Background_Process {
         if ( $this->request_data['policy_data']['created_at'] != '' ) {
             $created_at = erp_mysqldate_to_phptimestamp( $this->request_data['policy_data']['created_at'] );
         } else {
-            $created_at = ( new \DateTimeImmutable( 'now', wp_timezone() ) )->getTimestamp();
+            $created_at = current_datetime()->getTimestamp();
         }
 
         if ( $this->request_data['policy_data']['updated_at'] != '' ) {
             $updated_at = erp_mysqldate_to_phptimestamp( $this->request_data['policy_data']['updated_at'] );
         } else {
-            $updated_at = ( new \DateTimeImmutable( 'now', wp_timezone() ) )->getTimestamp();
+            $updated_at = current_datetime()->getTimestamp();
         }
 
         // insert into erp_hr_leave_policies_new table.
