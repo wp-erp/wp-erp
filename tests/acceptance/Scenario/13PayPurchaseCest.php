@@ -2,25 +2,26 @@
 // namespace Scenario;
 
 
-class PayBillCest
+class PayPurchaseCest
 {
     public function _before(AcceptanceTester $I)
     {
     }
 
     // tests
-    public function payBill(\Step\Acceptance\AllSteps $I)
+    public function payPurchase(\Step\Acceptance\AllSteps $I)
     {
     	$I->loginAsAdmin();
-     //        $I->previewTransactions();
-     //        $I->click('Expenses');
+    //         $I->previewTransactions();
+     //        $I->click('Purchase');
      //        $I->wait(5);
      //        $I->moveMouseOver('#erp-accounting');
      //        $I->click(['css' => '.wperp-selected-option']);
-     //        $I->click('//td/div/div/div');
+     //        $I->click('Pay Purchase');
      //        $I->wait(5);
-    	$I->amOnPage('/wp-admin/admin.php?page=erp-accounting#/pay-bills/new');
+        $I->amOnPage('/wp-admin/admin.php?page=erp-accounting#/pay-purchases/new');	
         $I->wait(5);
+        // $I->click('//input');
         $I->click('div.multiselect');
         $I->click('//div[3]/ul/li/span/span');
         $I->wait(5);
