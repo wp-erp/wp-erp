@@ -1,5 +1,6 @@
-<?php 
+<?php
 
+use WeDevs\ERP\HRM\Models\Financial_Year;
 use \WeDevs\ERP\HRM\Models\Leave;
 use \WeDevs\ERP\HRM\Models\Leave_Policy;
 
@@ -16,6 +17,8 @@ if ( $id ) {
     $leave_policy = Leave_Policy::find( $id );
     $submit_button = esc_attr('Update', 'erp');
 }
+
+$financial_years = wp_list_pluck( Financial_Year::all(), 'fy_name', 'id' );
 
 ?>
 <div class="wrap">
@@ -146,16 +149,14 @@ if ( $id ) {
 
             <div class="row">
                 <?php
-                $range = range( date('Y'), date('Y', strtotime('+5 years')) );
-
                 erp_html_form_input( array(
                     'label'    => esc_html__( 'Financial Year', 'erp' ),
                     'name'     => 'f-year',
-                    'value'    => ! empty( $leave_policy ) ? $leave_policy->f_year : date('Y'),
+                    'value'    =>  ! empty( $leave_policy ) ? $leave_policy->f_year : '',
                     'required' => true,
                     'class'    => 'leave-policy-input erp-hrm-select2-add-more erp-hr-desi-drop-down',
                     'type'     => 'select',
-                    'options'  => array_combine( $range, $range )
+                    'options'  => $financial_years
                 ) ); ?>
             </div>
 
