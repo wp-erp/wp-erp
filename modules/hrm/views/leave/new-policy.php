@@ -7,6 +7,7 @@ use \WeDevs\ERP\HRM\Models\Leave_Policy;
 $id            = isset( $_GET['id'] ) ? absint( wp_unslash( $_GET['id'] ) ) : 0;
 $leaves        = Leave::all();
 $leave_names   = [];
+$leave_policy  = [];
 $submit_button = esc_attr('Save', 'erp');
 
 foreach ( $leaves as $leave ) {
@@ -171,7 +172,7 @@ $financial_years = wp_list_pluck( Financial_Year::all(), 'fy_name', 'id' );
             </div>
         </div> <!-- .form-group -->
 
-        <?php do_action('erp-hr-leave-policy-form-bottom'); ?>
+        <?php do_action('erp-hr-leave-policy-form-bottom', $leave_policy); ?>
 
         <?php wp_nonce_field( 'erp-leave-policy' ); ?>
         <input type="hidden" name="erp-action" value="hr-leave-policy-create">

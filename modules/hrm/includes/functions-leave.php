@@ -242,6 +242,8 @@ function erp_hr_leave_insert_policy( $args = array() ) {
         $leave_policy = Leave_Policy::find( $args['id'] )
                             ->update( array_merge( $common, $extra ) );
 
+        do_action( 'erp_hr_leave_update_policy', $args['id'] );
+
         return $leave_policy->id;
     }
 
@@ -253,6 +255,8 @@ function erp_hr_leave_insert_policy( $args = array() ) {
     if ( ! $leave_policy->wasRecentlyCreated ) {
         return new WP_Error( 'exists', esc_html__( 'Policy already exists.', 'erp' ) );
     }
+
+    do_action( 'erp_hr_leave_insert_policy', $args['id'] );
 
     return $leave_policy->id;
 }
