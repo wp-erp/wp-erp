@@ -61,6 +61,24 @@ function erp_acct_get_banks( $show_balance = false, $with_cash = false, $no_bank
               Group BY ld.ledger_id";
 
     $temp_accts = $wpdb->get_results( $query, ARRAY_A );
+
+    if ( $with_cash ) {
+        // little hack to solve -> opening_balance cash entry with no ledger_details cash entry
+        $cash_ledger = '7';
+        $no_cash = true;
+
+        foreach ( $temp_accts as $temp_acct ) {
+            if ( $temp_acct['ledger_id'] === $cash_ledger ) {
+                $no_cash = false;
+                break;
+            }
+        }
+
+        if ( $no_cash ) {
+            $temp_accts[] = array( 'id' => 7 );
+        }
+    }
+
     $accts      = [];
     $bank_accts = [];
     $uniq_accts = [];
