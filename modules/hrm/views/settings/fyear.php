@@ -41,37 +41,70 @@ if ( isset( $_POST['erp-hr-fyears-setting'] ) ) {
         </thead>
 
         <tbody>
-            <?php foreach( $f_years as $year ) : ?>
-            <tr class="fyear-clone">
-                <td>
-                    <input
-                        name="fyear-name[]"
-                        class="fyear-name"
-                        type="text"
-                        value="<?php echo $year['fy_name'] ?>"
-                        autocomplete="off">
-                </td>
-                <td>
-                    <input
-                        name="fyear-start[]"
-                        id="fyear-start1"
-                        class="fyear-start-date erp-date-field"
-                        value="<?php echo $year['start_date'] ?>"
-                        type="text">
-                </td>
-                <td>
-                    <input
-                        name="fyear-end[]"
-                        id="fyear-end1"
-                        class="fyear-end-date erp-date-field"
-                        value="<?php echo $year['end_date'] ?>"
-                        type="text">
-                </td>
-                <td>
-                    <i class="fa fa-times-circle erp-settings-fyear-remove"></i>
-                </td>
-            </tr>
-            <?php endforeach; ?>
+            <?php if ( empty( $f_years ) ) : ?>
+                <tr class="fyear-clone">
+                    <td>
+                        <input
+                            name="fyear-name[]"
+                            class="fyear-name"
+                            type="text"
+                            value=""
+                            autocomplete="off">
+                    </td>
+                    <td>
+                        <input
+                            name="fyear-start[]"
+                            id="fyear-start1"
+                            class="fyear-start-date erp-date-field"
+                            value=""
+                            type="text">
+                    </td>
+                    <td>
+                        <input
+                            name="fyear-end[]"
+                            id="fyear-end1"
+                            class="fyear-end-date erp-date-field"
+                            value=""
+                            type="text">
+                    </td>
+                    <td>
+                        <i class="fa fa-times-circle erp-settings-fyear-remove"></i>
+                    </td>
+                </tr>
+            <?php else: ?>
+                <?php foreach( $f_years as $year ) : ?>
+                <tr class="fyear-clone">
+                    <td>
+                        <input
+                            name="fyear-name[]"
+                            class="fyear-name"
+                            type="text"
+                            value="<?php echo $year['fy_name'] ?>"
+                            autocomplete="off">
+                    </td>
+                    <td>
+                        <input
+                            name="fyear-start[]"
+                            id="fyear-start1"
+                            class="fyear-start-date erp-date-field"
+                            value="<?php echo erp_format_date( $year['start_date'] ) ?>"
+                            type="text">
+                    </td>
+                    <td>
+                        <input
+                            name="fyear-end[]"
+                            id="fyear-end1"
+                            class="fyear-end-date erp-date-field"
+                            value="<?php echo erp_format_date( $year['end_date'] ) ?>"
+                            type="text">
+                    </td>
+                    <td>
+                        <i class="fa fa-times-circle erp-settings-fyear-remove"></i>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+
+            <?php endif; ?>
         </tbody>
     </table>
 
@@ -104,7 +137,7 @@ if ( isset( $_POST['erp-hr-fyears-setting'] ) ) {
 
     jQuery(document).on('focus', ".erp-date-field", function() {
         jQuery(this).removeClass('hasDatepicker')
-        jQuery(this).datepicker();
+        jQuery(this).datepicker({ dateFormat: 'yy-mm-dd' });
     });
 
     // Remove row
