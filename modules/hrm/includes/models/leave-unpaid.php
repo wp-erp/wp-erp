@@ -13,7 +13,7 @@ class Leaves_Unpaid extends Model {
 
     protected $fillable = [
         'leave_id', 'leave_request_id', 'leave_approval_status_id',
-        'user_id', 'days', 'amount', 'total', 'status'
+        'user_id', 'f_year', 'days', 'amount', 'total'
     ];
 
     /**
@@ -69,5 +69,16 @@ class Leaves_Unpaid extends Model {
      */
     public function employee() {
         return $this->belongsTo( 'WeDevs\ERP\HRM\Models\Employee', 'user_id', 'user_id' );
+    }
+
+    /**
+     * Relation to Financial Year
+     *
+     * @since 1.5.15
+     *
+     * @return object
+     */
+    public function financial_year() {
+        return $this->belongsTo( 'WeDevs\ERP\HRM\Models\Financial_Year', 'f_year', 'id' );
     }
 }
