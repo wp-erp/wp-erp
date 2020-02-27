@@ -220,7 +220,7 @@ function erp_hr_leave_insert_policy( $args = array() ) {
         'color'                => $args['color'],
         'gender'               => $args['gender'],
         'marital'              => $args['marital'],
-        'applicable_from_days' => $args['applicable_from'],
+        'applicable_from_days' => $args['applicable_from']
     ) );
 
     /**
