@@ -59,17 +59,6 @@ class Leave_Request extends Model {
      *
      * @return object
      */
-    public function leave_approval_status() {
-        return $this->hasMany( 'WeDevs\ERP\HRM\Models\Leave_Approval_Status', 'leave_request_id', 'id' );
-    }
-
-    /**
-     * Relation to Leave_Approval_Status model
-     *
-     * @since 1.5.15
-     *
-     * @return object
-     */
     public function latest_approval_status() {
         return $this->hasOne( 'WeDevs\ERP\HRM\Models\Leave_Approval_Status', 'leave_request_id', 'id' )->orderBy('id', 'desc');
     }

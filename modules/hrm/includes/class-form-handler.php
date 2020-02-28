@@ -1051,19 +1051,19 @@ class Form_Handler {
         $marital     = ! empty( $_POST['marital'] ) ? sanitize_text_field( wp_unslash( $_POST['marital'] ) ) : '-1';
         $applicable  = ! empty( $_POST['applicable-from'] ) ? absint( wp_unslash( $_POST['applicable-from'] ) ) : 0;
 
-        if ( empty( $leave_id )  ) {
+        if ( empty( $leave_id ) ) {
             $policy_create_error->add( 'empty', 'Name field should not be left empty' );
         }
 
-        if ( empty( $days )  ) {
+        if ( empty( $days ) ) {
             $policy_create_error->add( 'empty', 'Days field should not be left empty' );
         }
 
-        if ( empty( $color )  ) {
+        if ( empty( $color ) ) {
             $policy_create_error->add( 'empty', 'Color field should not be left empty' );
         }
 
-        if ( empty( $f_year )  ) {
+        if ( empty( $f_year ) ) {
             $policy_create_error->add( 'empty', 'Financial year field should not be left empty' );
         }
 
@@ -1072,8 +1072,6 @@ class Form_Handler {
         if ( count( $policy_create_error->errors ) ) {
             return;
         }
-
-
 
         $data = array(
             'leave_id'        => $leave_id,
@@ -1099,7 +1097,11 @@ class Form_Handler {
             return $policy_create_error->errors = $res->errors;
         }
 
-        wp_redirect( erp_hr_new_policy_url() );
+        wp_redirect( add_query_arg( array(
+            'page'        => 'erp-hr',
+            'section'     => 'leave',
+            'sub-section' => 'policies'
+        ), admin_url( 'admin.php' ) ) );
         exit;
     }
 

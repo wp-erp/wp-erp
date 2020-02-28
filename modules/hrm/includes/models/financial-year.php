@@ -4,7 +4,7 @@ namespace WeDevs\ERP\HRM\Models;
 use WeDevs\ERP\Framework\Model;
 
 /**
- * Class Leave_Policies_Segregation
+ * Class Financial_Year
  *
  * @package WeDevs\ERP\HRM\Models
  */
