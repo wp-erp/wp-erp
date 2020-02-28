@@ -1,6 +1,6 @@
 <?php
 
-if ( ! $requests->isEmpty() ) {
+if ( ! empty( $requests ) ) {
 
     foreach ($requests as $num => $request) {
         ?>
@@ -10,7 +10,7 @@ if ( ! $requests->isEmpty() ) {
                 printf( '%s - %s', esc_html( erp_format_date( $request->start_date, 'd M' ) ), esc_html( erp_format_date( $request->end_date, 'd M' ) ) );
                 ?>
             </td>
-            <td><?php echo esc_html( $request->name ); ?></td>
+            <td><?php echo esc_html( $request->policy_name ); ?></td>
             <td><?php echo !empty( $request->reason ) ? esc_html( stripslashes( $request->reason ) ) : '-'; ?></td>
             <td><?php echo esc_html( number_format_i18n( $request->days ) ); ?></td>
         </tr>

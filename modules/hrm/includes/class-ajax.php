@@ -97,6 +97,10 @@ class Ajax_Handler {
 
         //leave entitlement
         $this->action( 'wp_ajax_erp-hr-leave-entitlement-delete', 'remove_entitlement' );
+        $this->action( 'wp_ajax_erp-hr-leave-get-policies', 'get_policies_for_entitlement' );
+
+        //leave get filtered employees
+        $this->action( 'wp_ajax_erp-hr-leave-get-employees', 'get_employees' );
 
         //leave rejected
         $this->action( 'wp_ajax_erp_hr_leave_reject', 'leave_reject' );
@@ -121,16 +125,9 @@ class Ajax_Handler {
         $request_id = isset( $_POST['leave_request_id'] ) ? intval( $_POST['leave_request_id'] ) : 0;
         $comments   = isset( $_POST['reason'] ) ? sanitize_text_field( wp_unslash( $_POST['reason'] ) ) : '';
 
-        global $wpdb;
-        $update = $wpdb->update( $wpdb->prefix . 'erp_hr_leave_requests',
-            array( 'comments' => $comments ),
-            array( 'id' => $request_id )
-        );
-        erp_hr_leave_request_update_status( $request_id, 3 );
+        $update = erp_hr_leave_request_update_status( $request_id, 3, $comments );
 
-        if ( $update ) {
-            $this->send_success();
-        }
+        $this->send_success();
     }
 
     /**
@@ -276,6 +273,63 @@ class Ajax_Handler {
         } else {
             $this->send_error( __( 'Somthing wrong !', 'erp' ) );
         }
+    }
+
+    /**
+     * Get filtered policies for entitlements
+     *
+     * @since 1.5.15
+     *
+     * @return json
+     */
+    public function get_policies_for_entitlement() {
+
+        $this->verify_nonce( 'wp-erp-hr-nonce' );
+
+        if ( ! current_user_can( 'erp_leave_manage' ) ) {
+            wp_die( esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
+        $data = array(
+            'department_id' => isset( $_POST['department_id'] ) ? sanitize_text_field( wp_unslash( $_POST['department_id'] ) ) :  '-1',
+            'location_id'   => isset( $_POST['location_id'] ) ? sanitize_text_field( wp_unslash( $_POST['location_id'] ) ) :  '-1',
+            'designation_id' => isset( $_POST['designation_id'] ) ? sanitize_text_field( wp_unslash( $_POST['designation_id'] ) ) :  '-1',
+            'gender'        => isset( $_POST['gender'] ) ? sanitize_text_field( wp_unslash( $_POST['gender'] ) ) :  '-1',
+            'marital'       => isset( $_POST['marital'] ) ? sanitize_text_field( wp_unslash( $_POST['marital'] ) ) :  '-1',
+            'f_year'        => isset( $_POST['f_year'] ) ? sanitize_text_field( wp_unslash( $_POST['f_year'] ) ) :  '',
+        );
+
+        $this->send_success(  array( 0 => __( '- Select -', 'erp' ) ) + erp_hr_leave_get_policies_dropdown_raw( $data ) );
+    }
+
+    /**
+     * Get filtered policies for entitlements
+     *
+     * @since 1.5.15
+     *
+     * @return json
+     */
+    public function get_employees() {
+
+        $this->verify_nonce( 'wp-erp-hr-nonce' );
+
+        if ( ! current_user_can( 'erp_leave_manage' ) ) {
+            wp_die( esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
+        $args = array(
+            'number'        => '-1',
+            'no_object'     => true,
+            'department'    => isset( $_POST['department_id'] ) ? sanitize_text_field( wp_unslash( $_POST['department_id'] ) ) :  '-1',
+            'location'      => isset( $_POST['location_id'] ) ? sanitize_text_field( wp_unslash( $_POST['location_id'] ) ) :  '-1',
+            'designation'   => isset( $_POST['designation_id'] ) ? sanitize_text_field( wp_unslash( $_POST['designation_id'] ) ) :  '-1',
+            'gender'        => isset( $_POST['gender'] ) ? sanitize_text_field( wp_unslash( $_POST['gender'] ) ) :  '-1',
+            'marital_status'    => isset( $_POST['marital'] ) ? sanitize_text_field( wp_unslash( $_POST['marital'] ) ) :  '-1',
+        );
+
+        $employees = erp_hr_get_employees( $args );
+
+        $this->send_success(  array( 0 => __( '- Select -', 'erp' ) ) + wp_list_pluck( $employees, 'display_name', 'user_id' ) );
     }
 
     /**
@@ -1696,7 +1750,7 @@ class Ajax_Handler {
         $balance = erp_hr_leave_get_balance( $employee_id );
 
         if ( array_key_exists( $policy_id, $balance ) ) {
-            $available = $balance[ $policy_id ]['entitlement'] - $balance[ $policy_id ]['total'];
+            $available = $balance[ $policy_id ]['available'];
         }
 
         if ( $available <= 0 ) {
@@ -1786,8 +1840,6 @@ class Ajax_Handler {
         $args = array(
             'year'    => $year,
             'user_id' => $user_id,
-            'status'  => 1,
-            'orderby' => 'req.start_date'
         );
 
         if ( $policy != 'all' ) {

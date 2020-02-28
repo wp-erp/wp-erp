@@ -12,7 +12,7 @@ function erp_hr_dashboard_widget_birthday_callback() {
 
 function erp_hr_dashboard_widget_announcement_callback() {
     erp_admin_dash_metabox( __( '<i class="fa fa-microphone"></i> Latest Announcement', 'erp' ), 'erp_hr_dashboard_widget_latest_announcement' );
-    erp_admin_dash_metabox( __( '<i class="fa fa-calendar-o"></i> My Leave Calendar', 'erp' ), 'erp_hr_dashboard_widget_leave_calendar' );
+    //erp_admin_dash_metabox( __( '<i class="fa fa-calendar-o"></i> My Leave Calendar', 'erp' ), 'erp_hr_dashboard_widget_leave_calendar' );
 }
 
 
@@ -264,7 +264,10 @@ function erp_hr_dashboard_widget_whoisout() {
             <?php foreach ( $leave_requests as $key => $leave ): ?>
                 <?php $employee = new \WeDevs\ERP\HRM\Employee( intval( $leave->user_id ) ); ?>
                 <li>
-                    <a href="<?php echo esc_url( $employee->get_details_url() ); ?>"><?php echo esc_html( $employee->get_full_name() ); ?></a>
+                    <a href="<?php echo esc_url( $employee->get_details_url() ); ?>">
+                        <?php echo esc_html( $employee->get_full_name() ); ?>
+                    </a>
+                    <?php echo $leave->days < 1 ? ' (' . esc_attr__( 'Half Day') . ')' : ''; ?>
                     <span><i class="fa fa-calendar"></i> <?php echo esc_html( erp_format_date( $leave->start_date, 'M d' ) ) . ' - '. esc_html( erp_format_date( $leave->end_date, 'M d' ) ); ?></span>
                 </li>
             <?php endforeach ?>
@@ -278,7 +281,10 @@ function erp_hr_dashboard_widget_whoisout() {
             <?php foreach ( $leave_requests_nextmonth as $key => $leave ): ?>
                 <?php $employee = new \WeDevs\ERP\HRM\Employee( intval( $leave->user_id ) ); ?>
                 <li>
-                    <a href="<?php echo esc_url( $employee->get_details_url() ); ?>"><?php echo esc_html( $employee->get_full_name() ); ?></a>
+                    <a href="<?php echo esc_url( $employee->get_details_url() ); ?>">
+                        <?php echo esc_html( $employee->get_full_name() ); ?>
+                    </a>
+                    <?php echo $leave->days < 1 ? ' (' . esc_attr__( 'Half Day') . ')' : ''; ?>
                     <span><i class="fa fa-calendar"></i> <?php echo esc_html( erp_format_date( $leave->start_date, 'M d' ) ) . ' - '. esc_html( erp_format_date( $leave->end_date, 'M d' ) ); ?></span>
                 </li>
             <?php endforeach ?>

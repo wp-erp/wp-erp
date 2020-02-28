@@ -1,6 +1,8 @@
 <?php
 namespace WeDevs\ERP\HRM;
 
+use WeDevs\ERP\HRM\Models\Financial_Year;
+
 /**
  * List table class
  */
@@ -44,7 +46,7 @@ class Leave_Requests_List_Table extends \WP_List_Table {
             <label class="screen-reader-text" for="filter_year"><?php esc_html_e( 'Filter by year', 'erp' ) ?></label>
             <input type="hidden" name="status" value="<?php echo esc_html( $this->page_status ); ?>">
             <select name="filter_year" id="filter_year">
-                <option value="">select year</option>
+                <option value="" selected="selected">select year</option>
                 <?php
                 for ( $i = 0; $i <= 5; $i ++ ) {
                     $year = $current_year - $i;
@@ -68,6 +70,32 @@ class Leave_Requests_List_Table extends \WP_List_Table {
     }
 
     /**
+     * Get the column names
+     *
+     * @return array
+     */
+    function get_columns() {
+        $columns = array(
+            'cb'        => '<input type="checkbox" />',
+            'name'      => __( 'Employee Name', 'erp' ),
+            'policy'    => __( 'Leave Policy', 'erp' ),
+            'from_date' => __( 'From Date', 'erp' ),
+            'to_date'   => __( 'To Date', 'erp' ),
+            //'entitlement'    => __( 'Entitled Days', 'erp' ),
+            'days'      => __( 'Request Days', 'erp' ),
+            'available' => __( 'Available', 'erp' ),
+            'extra'         => __( 'Extra Leaves', 'erp' ),
+            'status'    => __( 'Status', 'erp' ),
+            'reason'    => __( 'Leave Reason', 'erp' ),
+
+        );
+        if ( isset( $_GET['status'] ) && $_GET['status'] == 3 ) {
+            $columns['comment'] =  __( 'Reject Reason', 'erp' );
+        }
+        return $columns;
+    }
+
+    /**
      * Default column values if no callback found
      *
      * @param  object  $item
@@ -78,44 +106,41 @@ class Leave_Requests_List_Table extends \WP_List_Table {
     function column_default( $item, $column_name ) {
         switch ( $column_name ) {
 
+            case 'name':
+                return esc_attr( $item->name );
+
             case 'policy':
-                return stripslashes( $item->policy_name );
+                return esc_attr( $item->policy_name );
 
             case 'from_date':
                 return erp_format_date( $item->start_date );
+
             case 'to_date':
                 return erp_format_date( $item->end_date );
 
             case 'status':
                 return '<span class="status-' . $item->status . '">' . erp_hr_leave_request_get_statuses( $item->status ) . '</span>';
 
-            case 'available':
-                $balance = erp_hr_leave_get_balance( $item->user_id );
-                $policy  = erp_hr_leave_get_policy( $item->policy_id );
-
-                if ( isset( $balance[ $item->policy_id ] ) ) {
-                    $scheduled = $balance[ $item->policy_id ]['scheduled'];
-                    $available = $balance[ $item->policy_id ]['entitlement'] - $balance[ $item->policy_id ]['total'];
-                } else {
-                    $scheduled = 0;
-                    $available = 0;
-                }
-
-                if ( $available < 0 ) {
-                    return sprintf( '<span class="red">%d %s</span>', number_format_i18n( $available ), __( 'days', 'erp' ) );
-                } elseif ( $available > 0 ) {
-                    return sprintf( '<span class="green">%d %s</span>', number_format_i18n( $available ), __( 'days', 'erp' ) );
-                } else if(  $available === 0 ){
-                    return sprintf( '<span class="gray">%d %s</span>', 0, __( 'days', 'erp' ) );
-                } else {
-                    return sprintf( '<span class="green">%d %s</span>', number_format_i18n( $policy->value ), __( 'days', 'erp' ) );
-                }
+            case 'days':
+                return $item->days == 0.5 ? $item->days : intval( $item->days );
 
             case 'reason':
                 return stripslashes( $item->reason );
 
-            case 'comment' :
-                return stripslashes( $item->comments );
+            case 'entitlement':
+                return sprintf( '<span class="green">%d %s</span>', number_format_i18n( $item->entitlement ), __( 'days', 'erp' ) );
+
+            case 'available':
+                return sprintf( '<span class="green">%d %s</span>', number_format_i18n( $item->available ), __( 'days', 'erp' ) );
+
+            case 'extra':
+                $class = 'green';
+                if ( intval( $item->extra_leaves ) > 0 ) {
+                    $class = 'red';
+                }
+
+                return sprintf( '<span class="%s">%d %s</span>', $class, number_format_i18n( $item->extra_leaves ), __( 'days', 'erp' ) );
+
             default:
                 return isset( $item->$column_name ) ? $item->$column_name : '';
         }
@@ -152,30 +177,6 @@ class Leave_Requests_List_Table extends \WP_List_Table {
     }
 
     /**
-     * Get the column names
-     *
-     * @return array
-     */
-    function get_columns() {
-        $columns = array(
-            'cb'        => '<input type="checkbox" />',
-            'name'      => __( 'Employee Name', 'erp' ),
-            'policy'    => __( 'Leave Policy', 'erp' ),
-            'from_date' => __( 'From Date', 'erp' ),
-            'to_date'   => __( 'To Date', 'erp' ),
-            'days'      => __( 'Days', 'erp' ),
-            'available' => __( 'Available', 'erp' ),
-            'status'    => __( 'Status', 'erp' ),
-            'reason'    => __( 'Leave Reason', 'erp' ),
-
-        );
-        if ( isset( $_GET['status'] ) && $_GET['status'] == 3 ) {
-            $columns['comment'] =  __( 'Reject Reason', 'erp' );
-        }
-        return $columns;
-    }
-
-    /**
      * Render the employee name column
      *
      * @param  object  $item
@@ -197,20 +198,17 @@ class Leave_Requests_List_Table extends \WP_List_Table {
         }
 
         if ( $item->status == '2' ) {
-
-            $actions['reject']   = sprintf( '<a class="erp-hr-leave-reject-btn" data-id="%s" href="%s">%s</a>', $item->id, $reject_url, __( 'Reject', 'erp' ) );
             $actions['approved'] = sprintf( '<a href="%s">%s</a>', $approve_url, __( 'Approve', 'erp' ) );
+            $actions['reject']   = sprintf( '<a class="erp-hr-leave-reject-btn" data-id="%s" href="%s">%s</a>', $item->id, $reject_url, __( 'Reject', 'erp' ) );
 
         } elseif ( $item->status == '1' ) {
-
-            $actions['pending'] = sprintf( '<a href="%s">%s</a>', $pending_url, __( 'Mark Pending', 'erp' ) );
+            $actions['reject']   = sprintf( '<a class="erp-hr-leave-reject-btn" data-id="%s" href="%s">%s</a>', $item->id, $reject_url, __( 'Reject', 'erp' ) );
 
         } elseif ( $item->status == '3') {
             $actions['approved'] = sprintf( '<a href="%s">%s</a>', $approve_url, __( 'Approve', 'erp' ) );
-            $actions['pending'] = sprintf( '<a href="%s">%s</a>', $pending_url, __( 'Mark Pending', 'erp' ) );
         }
 
-        return sprintf( '<a href="%3$s"><strong>%1$s</strong></a> %2$s', $item->display_name, $this->row_actions( $actions ), erp_hr_url_single_employee( $item->user_id ) );
+        return sprintf( '<a href="%3$s"><strong>%1$s</strong></a> %2$s', $item->name, $this->row_actions( $actions ), erp_hr_url_single_employee( $item->user_id ) );
     }
 
     /**
@@ -224,14 +222,12 @@ class Leave_Requests_List_Table extends \WP_List_Table {
         }
 
         if ( $this->page_status == '2' ) {
-            $actions['reject']   = __( 'Reject', 'erp' );
             $actions['approved'] = __( 'Approve', 'erp' );
+            $actions['reject']   = __( 'Reject', 'erp' );
         } elseif ( $this->page_status == '1' ) {
-            $actions['pending'] = __( 'Mark Pending', 'erp' );
             $actions['reject']   = __( 'Reject', 'erp' );
         } elseif ( $this->page_status == '3') {
             $actions['approved'] = __( 'Approve', 'erp' );
-            $actions['pending'] = __( 'Mark Pending', 'erp' );
         } else {
             $actions['reject']   = __( 'Reject', 'erp' );
             $actions['approved'] = __( 'Approve', 'erp' );
@@ -284,7 +280,7 @@ class Leave_Requests_List_Table extends \WP_List_Table {
 
         $per_page              = 20;
         $current_page          = $this->get_pagenum();
-        $offset                = ( $current_page -1 ) * $per_page;
+        $offset                = ( $current_page - 1 ) * $per_page;
         $this->page_status     = isset( $_GET['status'] ) ? sanitize_text_field( wp_unslash( $_GET['status'] ) ) : '2';
 
         // only necessary because we have sample data
@@ -293,18 +289,20 @@ class Leave_Requests_List_Table extends \WP_List_Table {
             'number'  => $per_page,
             'status'  => $this->page_status,
             'year'    => isset( $_GET['filter_year'] ) ? sanitize_text_field( wp_unslash( $_GET['filter_year'] ) ) : '',
-            'orderby' => isset( $_GET['orderby'] ) ? sanitize_text_field( wp_unslash( $_GET['orderby'] ) ) : 'created_on',
+            'orderby' => isset( $_GET['orderby'] ) ? sanitize_text_field( wp_unslash( $_GET['orderby'] ) ) : 'created_at',
             'order'   => isset( $_GET['order'] ) ? sanitize_text_field( wp_unslash( $_GET['order'] ) ) : 'DESC',
             's'       => isset( $_GET['s'] ) ? sanitize_text_field( wp_unslash( $_GET['s'] ) ) : ''
         );
 
         $this->counts = erp_hr_leave_get_requests_count();
-        $this->items  = erp_hr_get_leave_requests( $args );
+
+        $query_results  = erp_hr_get_leave_requests( $args );
+        $this->items    = $query_results['data'];
+        $total          = $query_results['total'];
 
         $this->set_pagination_args( array(
-            'total_items' => $this->counts[ $this->page_status ]['count'],
+            'total_items' => $total,
             'per_page'    => $per_page
         ) );
     }
-
 }

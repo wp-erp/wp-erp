@@ -1068,7 +1068,7 @@ class Employee {
 
     /**
      * Get blood group
-     * 
+     *
      * @since 1.5.12
      * @return string
      */
@@ -1844,6 +1844,7 @@ class Employee {
      * Get leave balances of the current year
      *
      * @since 1.3.0
+     * @since 1.5.15
      *
      * @param null $date
      * @param null $policy_id
@@ -1851,59 +1852,18 @@ class Employee {
      * @return array
      */
     public function get_leave_summary( $date = null, $policy_id = null ) {
-        $date       = $date == null ? current_time( 'mysql' ) : $date;
-        $year_dates = erp_get_financial_year_dates( $date );
+        $financial_year_dates = erp_get_financial_year_dates( $date );
+        $f_year_ids = get_financial_year_from_date_range( $financial_year_dates['start'], $financial_year_dates['end'] );
 
-        $balances = [];
-        $start    = isset( $year_dates['start'] ) ? $year_dates['start'] : null;
-        $end      = isset( $year_dates['end'] ) ? $year_dates['end'] : null;
-        $user_id  = $this->user_id;
+        $result = array();
 
-        $results = $this->erp_user
-            ->entitlements()
-            ->whereDate( 'from_date', '>=', $start )
-            ->whereDate( 'to_date', '<=', $end )
-            ->with( [
-                'leaves' => function ( $q ) use ( $user_id, $start, $end ) {
-                    $q->where( 'status', '=', '1' )
-                      ->where( 'user_id', $user_id )
-                      ->whereDate( 'start_date', '>=', $start )
-                      ->whereDate( 'end_date', '<=', $end );
-                }
-            ] )
-            ->with( 'policy' )
-//            ->where('policy_id', '1')
-            ->get();
-
-        foreach ( $results as $result ) {
-            $balance      = array(
-                'entitlement_id' => $result->id,
-                'days'           => intval( $result->days ),
-                'from_date'      => $result->from_date,
-                'to_date'        => $result->to_date,
-                'policy'         => isset( $result->policy ) ? $result->policy->name : '',
-                'policy_id'      => isset( $result->policy ) ? $result->policy->id : '',
-            );
-            $spent        = 0;
-            $scheduled    = 0;
-            $available    = $result->days;
-            $current_time = current_time( 'timestamp' );
-            foreach ( $result->leaves as $leave ) {
-                $spent     += $leave->days;
-                $available = $available - $leave->days;
-                if ( $current_time < strtotime( $leave->start_date ) ) {
-                    $scheduled += $leave->days;
-                }
-            }
-            $balance['spent']     = $spent;
-            $balance['scheduled'] = $scheduled;
-            $balance['available'] = $available;
-
-            $balances[] = $balance;
-
+        if ( empty( $f_year_ids ) ) {
+            return $result;
         }
 
-        return erp_array_to_object( $balances );
+        $result =  erp_hr_leave_get_balance( $this->user_id, $f_year_ids[0] );
+
+        return erp_array_to_object( $result );
     }
 
     /**
@@ -1917,40 +1877,19 @@ class Employee {
      */
     public function get_leave_requests( $args = array() ) {
         $default = array(
+            'user_id'   => $this->user_id,
             'year'      => date( 'Y' ),
             'status'    => 1,
-            'orderby'   => 'start_date',
-            'policy_id' => null,
-            'number'    => 0,
+            'orderby'   => 'created_at',
+            'policy_id' => 0,
+            'number'    => -1,
             'offset'    => 0,
         );
         $args    = wp_parse_args( $args, $default );
 
-        $requests = $this->get_erp_user()
-                         ->leave_requests();
-        if ( ! empty( $args['year'] ) ) {
-            $requests = $requests->whereYear( 'start_date', '=', intval( $args['year'] ) );
-        }
-        if ( ! empty( $args['policy_id'] ) ) {
-            $requests = $requests->where( 'policy_id', intval( $args['policy_id'] ) );
-        }
-        if ( ! empty( $args['status'] ) ) {
-            $requests = $requests->where( 'status', intval( $args['status'] ) );
-        }
-        if ( ! empty( $args['offset'] ) ) {
-            $requests = $requests->skip( intval( $args['offset'] ) );
-        }
-        if ( ! empty( $args['number'] ) ) {
-            $requests = $requests->skip( intval( $args['number'] ) );
-        }
+        $result = erp_hr_get_leave_requests( $args );
 
-        return $requests->JoinWithPolicy()->orderBy( 'start_date' )->select( [
-            'start_date',
-            'end_date',
-            'reason',
-            'days',
-            'name'
-        ] )->get();
+        return $result['data'];
     }
 
     /**

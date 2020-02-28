@@ -29,5 +29,4 @@ class Financial_Year extends Model {
     public function setUpdatedAtAttribute() {
         $this->attributes['updated_at'] = current_datetime()->getTimestamp();
     }
-
 }

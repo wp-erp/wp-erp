@@ -2408,7 +2408,7 @@ div.erp-nav-container {
     }
 }
 
-.leave-policy-form {
+.leave-policy-form, .leave-entitlement-form {
     background: #fff;
     padding: 20px;
     width: 800px;
@@ -2428,10 +2428,20 @@ div.erp-nav-container {
             flex-wrap: wrap;
             max-width: 700px;
 
-            .description {
+            .description, .error-text {
                 margin-left: 190px;
+                margin-top: 5px;
                 font-size: 12px;
                 color: #757575;
+                width: 100%;
+                width: -moz-available;          /* WebKit-based browsers will ignore this. */
+                width: -webkit-fill-available;  /* Mozilla-based browsers will ignore this. */
+                width: fill-available;
+            }
+
+            .error-text {
+                color: #ff3860;
+                font-weight: bold;
             }
 
             &.applicable-form-row {
@@ -2448,6 +2458,10 @@ div.erp-nav-container {
         label {
             width: 190px;
             display: inline-block;
+        }
+
+        span.checkbox label {
+            width: auto;
         }
 
         .leave-policy-input {

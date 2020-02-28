@@ -11,8 +11,8 @@ if ( $balance ) {
                 <th><?php esc_html_e( 'Leave', 'erp' ) ?></th>
                 <th><?php esc_html_e( 'Days', 'erp' ) ?></th>
                 <th><?php esc_html_e( 'Spent', 'erp' ) ?></th>
-                <th><?php esc_html_e( 'Scheduled', 'erp' ) ?></th>
                 <th><?php esc_html_e( 'Available', 'erp' ) ?></th>
+                <th><?php esc_html_e( 'Extra', 'erp' ) ?></th>
                 <th><?php esc_html_e( 'Period', 'erp' ) ?></th>
             </tr>
         </thead>
@@ -25,14 +25,20 @@ if ( $balance ) {
             <tr class="<?php echo $num % 2 == 0 ? 'alternate' : 'odd'; ?>">
                 <td><?php echo esc_html( $entitlement->policy ); ?></td>
                 <td><?php echo $entitlement->days ? sprintf( esc_html__( '%d days', 'erp' ), esc_html( number_format_i18n( $entitlement->days ) ) ) : '-'; ?></td>
-                <td><?php echo ($entitlement->spent - $entitlement->scheduled) ? sprintf( esc_html__( '%d days', 'erp' ), esc_html( number_format_i18n( ($entitlement->spent - $entitlement->scheduled) ) ) ) : '-'; ?></td>
-                <td><?php echo $entitlement->scheduled ? sprintf( esc_html__( '%d days', 'erp' ), esc_html( number_format_i18n( $entitlement->scheduled ) ) ) : '-'; ?></td>
+                <td><?php echo ($entitlement->day_out != 0) ? sprintf( esc_html__( '%d days', 'erp' ), esc_html( number_format_i18n( ($entitlement->day_out) ) ) ) : '-'; ?></td>
                 <td>
                     <?php
-                    if ( $entitlement->available < 0 ) {
-                        printf( '<span class="red">%d %s</span>', esc_html( number_format_i18n( $entitlement->available ) ), esc_html__( 'days', 'erp' ) );
-                    } elseif ( $entitlement->available > 0 ) {
+                    if ( $entitlement->available > 0 ) {
                         printf( '<span class="green">%d %s</span>', esc_html( number_format_i18n( $entitlement->available ) ), esc_html__( 'days', 'erp' ) );
+                    } else {
+                        echo '-';
+                    }
+                    ?>
+                </td>
+                <td>
+                    <?php
+                    if ( $entitlement->extra_leave > 0 ) {
+                        printf( '<span class="green">%d %s</span>', esc_html( number_format_i18n( $entitlement->extra_leave ) ), esc_html__( 'days', 'erp' ) );
                     } else {
                         echo '-';
                     }

@@ -17,6 +17,20 @@ class Leave_Request extends Model {
     ];
 
     /**
+     * Created at date format
+     */
+    public function setCreatedAtAttribute() {
+        $this->attributes['created_at'] = current_datetime()->getTimestamp();
+    }
+
+    /**
+     * Updated at date format
+     */
+    public function setUpdatedAtAttribute() {
+        $this->attributes['updated_at'] = current_datetime()->getTimestamp();
+    }
+
+    /**
      * Relation to Leave model
      *
      * @since 1.5.15
@@ -45,8 +59,8 @@ class Leave_Request extends Model {
      *
      * @return object
      */
-    public function leave_approval_status() {
-        return $this->hasMany( 'WeDevs\ERP\HRM\Models\Leave_Approval_Status', 'leave_request_id' );
+    public function latest_approval_status() {
+        return $this->hasOne( 'WeDevs\ERP\HRM\Models\Leave_Approval_Status', 'leave_request_id', 'id' )->orderBy('id', 'desc');
     }
 
     /**
