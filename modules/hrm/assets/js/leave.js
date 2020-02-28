@@ -36,6 +36,21 @@
             $( '#filter_year' ).on( 'change', self, this.customFilterLeaveReport );
             $( 'input[name="end"], input[name="start"]' ).on( 'change', self, this.checkDateRange );
 
+            // leave entitlement initialize
+            $( '.leave-entitlement-form' ).on( 'change', '#assignment_to', self, this.entitlement.hideEmployee );
+
+            // trigger entitlement hide employee checkbox
+            $( '.leave-entitlement-form#assignment_to' ).change();
+
+            // trigger get policy names
+            this.entitlement.getLeavePolicies();
+            // trigger on change
+            $( '.leave-entitlement-form' ).on( 'change', '.change_policy', self, this.entitlement.getLeavePolicies );
+
+            // trigger get employees
+            this.entitlement.getFilteredEmployee();
+            $( '.leave-entitlement-form' ).on( 'change', '.change_policy', self, this.entitlement.getFilteredEmployee );
+
             this.initDateField();
         },
 
@@ -420,6 +435,99 @@
                         }
                     });
                 }
+            },
+
+            hideEmployee: function (e) {
+                e.preventDefault();
+
+                if ( $(this).is(':checked') ) {
+                    $( '.single_employee_field' ).hide();
+                } else {
+                    $( '.single_employee_field' ).show();
+                }
+            },
+
+            getLeavePolicies: function () {
+
+                $( ".leave-entitlement-form .leave_policy" ).prop("disabled", true);
+
+                var department  = $('.leave-entitlement-form .department_id').select2('data'),
+                    designation = $('.leave-entitlement-form .designation_id').select2('data'),
+                    location    = $('.leave-entitlement-form .location_id').select2('data'),
+                    gender      = $('.leave-entitlement-form .gender').select2('data'),
+                    marital     = $('.leave-entitlement-form .marital').select2('data'),
+                    f_year      = $('.leave-entitlement-form .f_year').select2('data');
+
+                wp.ajax.send( 'erp-hr-leave-get-policies', {
+                    data: {
+                        '_wpnonce': wpErpHr.nonce,
+                        department_id:      department[0].id,
+                        designation_id:     designation[0].id,
+                        location_id:        location[0].id,
+                        gender:             gender[0].id,
+                        marital:            marital[0].id,
+                        f_year:             f_year[0].id,
+                    },
+                    success: function( resp ) {
+                        var policy_select = $( '.leave-entitlement-form .leave_policy');
+                        //remove old items
+                        policy_select.find('option').remove();
+
+                        $.each( resp, function ( policy_id, policy_name ) {
+                            var option = new Option(policy_name, policy_id);
+                            policy_select.append(option);
+                        } );
+
+                        // trigger value change
+                        policy_select.trigger('change');
+
+                        policy_select.prop("disabled", false);
+                    },
+                    error: function( response ) {
+                        console.log( response )
+                    }
+                });
+
+            },
+
+            getFilteredEmployee: function () {
+
+                $( ".leave-entitlement-form .single_employee" ).prop("disabled", true);
+
+                var department  = $('.leave-entitlement-form .department_id').select2('data'),
+                    designation = $('.leave-entitlement-form .designation_id').select2('data'),
+                    location    = $('.leave-entitlement-form .location_id').select2('data'),
+                    gender      = $('.leave-entitlement-form .gender').select2('data'),
+                    marital     = $('.leave-entitlement-form .marital').select2('data');
+
+                wp.ajax.send( 'erp-hr-leave-get-employees', {
+                    data: {
+                        '_wpnonce': wpErpHr.nonce,
+                        department_id:      department[0].id,
+                        designation_id:     designation[0].id,
+                        location_id:        location[0].id,
+                        gender:             gender[0].id,
+                        marital:            marital[0].id,
+                    },
+                    success: function( resp ) {
+                        var employee_select = $( '.leave-entitlement-form .single_employee');
+                        //remove old items
+                        employee_select.find('option').remove();
+
+                        $.each( resp, function ( employee_id, employee_name ) {
+                            var option = new Option(employee_name, employee_id);
+                            employee_select.append(option);
+                        } );
+
+                        // trigger value change
+                        employee_select.trigger('change');
+
+                        employee_select.prop("disabled", false);
+                    },
+                    error: function( response ) {
+                        console.log( response )
+                    }
+                });
             }
         },
 

@@ -2621,6 +2621,7 @@ function erp_validate_boolean( $value ) {
  * @param $date
  * @since 1.2.0
  * since 1.3.0 $date added
+ * @since 1.5.15 added timestamp support
  * @return array
  */
 function erp_get_financial_year_dates( $date = null ) {
@@ -2698,6 +2699,39 @@ function get_financial_year_from_date( $date ) {
             'end'   => ( $date_year + 1 )
         ];
     }
+}
+
+/**
+ * Get financial year id(s) that belongs to a date range
+ *
+ * @since 1.5.15
+ *
+ * @param int|string $start_date
+ * @param int|string $end_date
+ *
+ * @return int
+ */
+function get_financial_year_from_date_range( $start_date, $end_date ) {
+    global $wpdb;
+
+    if ( ! is_numeric( $start_date ) ) {
+        $start_date_obj = current_datetime();
+        $start_date_obj = $start_date_obj->modify( $start_date );
+        $start_date = $start_date_obj->getTimestamp();
+    }
+
+    if ( ! is_numeric( $end_date ) ) {
+        $end_date_obj = current_datetime();
+        $end_date_obj = $end_date_obj->modify( $end_date );
+        $end_date = $end_date_obj->getTimestamp();
+    }
+
+    return $wpdb->get_col(
+        $wpdb->prepare(
+            "SELECT id FROM {$wpdb->prefix}erp_hr_financial_years WHERE start_date >= %d AND end_date <= %d",
+            array( $start_date, $end_date )
+        )
+    );
 }
 
 /**

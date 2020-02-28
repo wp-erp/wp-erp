@@ -2,6 +2,10 @@
 
 namespace WeDevs\ERP\HRM;
 
+use tad\WPBrowser\Adapters\WP;
+use WeDevs\ERP\HRM\Models\Leave_Policy;
+use WP_Error;
+
 /**
  * Handle the form submissions
  *
@@ -644,92 +648,122 @@ class Form_Handler {
         }
 
         $affected  = 0;
-        $errors    = array();
+        $errors    = new \WeDevs\ERP\ERP_Errors( 'create_entitlements' );
         $employees = array();
-        $cur_year  = (int) date( 'Y' );
-        $page_url  = admin_url( 'admin.php?page=erp-hr&section=leave&sub-section=leave-entitlements' );
+        $page_url  = admin_url( 'admin.php?page=erp-hr&section=leave&sub-section=leave-entitlements&tab=assignment' );
 
-        $is_single       = ! isset( $_POST['assignment_to'] );
-        $leave_policy    = isset( $_POST['leave_policy'] ) ? intval( $_POST['leave_policy'] ) : '-1';
-        $leave_period    = isset( $_POST['leave_period'] ) ? sanitize_text_field( wp_unslash( $_POST['leave_period'] ) ) : '-1';
-        $single_employee = isset( $_POST['single_employee'] ) ? intval( $_POST['single_employee'] ) : '-1';
-        $location        = isset( $_POST['location'] ) ? intval( $_POST['location'] ) : '-1';
-        $department      = isset( $_POST['department'] ) ? intval( $_POST['department'] ) : '-1';
-        $comment         = isset( $_POST['comment'] ) ? sanitize_text_field( wp_unslash(  $_POST['comment'] ) ) : '-1';
+        $department_id      = isset( $_POST['department_id'] ) ? intval( $_POST['department_id'] ) : '-1';
+        $designation_id     = isset( $_POST['designation_id'] ) ? intval( $_POST['designation_id'] ) : '-1';
+        $location_id        = isset( $_POST['location_id'] ) ? intval( $_POST['location_id'] ) : '-1';
+        $gender             = isset( $_POST['gender'] ) ? intval( $_POST['gender'] ) : '-1';
+        $marital            = isset( $_POST['marital'] ) ? intval( $_POST['marital'] ) : '-1';
+        $f_year             = isset( $_POST['f_year'] ) ? intval( $_POST['f_year'] ) : '';
+        $leave_policy       = isset( $_POST['leave_policy'] ) ? intval( $_POST['leave_policy'] ) : '';
+        $is_single          = ! isset( $_POST['assignment_to'] );
+        $single_employee    = isset( $_POST['single_employee'] ) ? intval( $_POST['single_employee'] ) : '-1';
+        $comment            = isset( $_POST['comment'] ) ? sanitize_text_field( wp_unslash(  $_POST['comment'] ) ) : '-1';
 
-        if ( ! $leave_policy ) {
-            $errors[] = 'invalid-policy';
+        if ( $leave_policy == '' ) {
+            $errors->add( new WP_Error( 'leave_policy', esc_attr__( 'Error: Please select a leave policy.', 'erp' ) ) );
         } else {
-            $policy = \WeDevs\ERP\HRM\Models\Leave_Policy::find( $leave_policy );
-        }
-
-        if ( ! in_array( $leave_period, array( $cur_year - 1, $cur_year, $cur_year + 1 ) ) ) {
-            $errors[] = 'invalid-period';
+            $policy = Leave_Policy::find( $leave_policy );
+            if ( ! $policy ) {
+                $errors->add( new WP_Error( 'leave_policy', esc_attr__( 'Error: Invalid policy selected. Please check your input.', 'erp' ) ) );
+            }
         }
 
         if ( $is_single && ! $single_employee ) {
-            $errors[] = 'invalid-employee';
-        }
-
-        // bail out if error found
-        if ( $errors ) {
-            $first_error = reset( $errors );
-            $redirect_to = add_query_arg( array( 'error' => $first_error ), $page_url );
-            wp_safe_redirect( $redirect_to );
-            exit;
+            $errors->add( new WP_Error( 'single_employee', esc_attr__( 'Error: Please select an employee.', 'erp' ) ) );
         }
 
         // fetch employees if not single
-        if ( ! $is_single ) {
+        $employees = array();
 
+        if ( ! $is_single ) {
             $employees = erp_hr_get_employees( array(
-                'location'          => $location,
-                'department'        => $department,
+                'department'        => $department_id,
+                'designation'       => $designation_id,
+                'location'          => $location_id,
+                'gender'            => $gender,
+                'marital_status'    => $marital,
                 'number'            => '-1',
-                'gender'            => $policy->gender,
-                'marital_status'    => $policy->marital,
+                'no_object'         => true,
             ) );
         } else {
-
             $user              = get_user_by( 'id', $single_employee );
             $emp               = new \stdClass();
-            $emp->id           = $user->ID;
+            $emp->user_id      = $user->ID;
             $emp->display_name = $user->display_name;
 
             $employees[] = $emp;
         }
 
-        if ( $employees ) {
-            $from_date = $leave_period;
-            $to_date   = date( 'Y-m-t H:i:s', strtotime( '+11 month', strtotime( $leave_period ) ) );
-            $policy    = erp_hr_leave_get_policy( $leave_policy );
+        if ( count( $employees ) === 0 ) {
+            $errors->add( esc_attr__( 'Error: No Employees Found. Please check your input.', 'erp' ) );
+        }
 
-            if ( ! $policy ) {
-                return;
-            }
-
-            foreach ( $employees as $employee ) {
-                $data = array(
-                    'user_id'   => $employee->id,
-                    'policy_id' => $leave_policy,
-                    'days'      => $policy->value,
-                    'from_date' => $from_date,
-                    'to_date'   => $to_date,
-                    'comments'  => $comment,
-                    'status'    => 1
-                );
-
-                $inserted = erp_hr_leave_insert_entitlement( $data );
-
-                if ( ! is_wp_error( $inserted ) ) {
-                    $affected += 1;
-                }
-            }
-
-            $redirect_to = add_query_arg( array( 'affected' => $affected ), $page_url );
+        // bail out if error found
+        if ( $errors->has_error() ) {
+            $errors->add_form_data(
+                array(
+                    'department_id' => $designation_id,
+                    'designation_id' => $designation_id,
+                    'location_id' => $location_id,
+                    'gender' => $gender,
+                    'marital' => $marital,
+                    'f_year' => $f_year,
+                    'leave_policy' => $leave_policy,
+                    'assignment_to' => sanitize_text_field( wp_unslash( $_POST['assignment_to'] ) ),
+                    'single_employee' => $single_employee,
+                    'comment' => $comment
+                )
+            );
+            $errors->save();
+            $redirect_to = add_query_arg( array( 'error' => $errors->get_key() ), $page_url );
             wp_safe_redirect( $redirect_to );
             exit;
         }
+
+        //echo "<pre>"; print_r( $employees ); die();
+
+        $affected = 0;
+        foreach ( $employees as $employee ) {
+            // get required data and send it to insert_entitlement function
+            $data = array(
+                'user_id'       => $employee->user_id,
+                'leave_id'      => $policy->leave_id,
+                'created_by'    => get_current_user_id(),
+                'trn_id'        => $policy->id,
+                'trn_type'      => 'leave_policies',
+                'day_in'        => $policy->days,
+                'day_out'       => 0,
+                'description'   => $comment,
+                'f_year'        => $policy->f_year,
+            );
+
+            $inserted = erp_hr_leave_insert_entitlement( $data );
+
+            if ( ! is_wp_error( $inserted ) ) {
+                $affected += 1;
+            }
+            else {
+                $errors->add( $inserted );
+            }
+        }
+
+        if ( $errors->has_error() ) {
+            if ( $affected ) {
+                $errors->add_form_data( array( 'affected' => $affected ) );
+            }
+            $errors->save();
+            $redirect_to = add_query_arg( array( 'error' => $errors->get_key() ), $page_url );
+        }
+        else {
+            $redirect_to = add_query_arg( array( 'affected' => $affected ), $page_url );
+        }
+
+        wp_safe_redirect( $redirect_to );
+        exit;
     }
 
     /**
@@ -828,7 +862,7 @@ class Form_Handler {
 
         switch ( $action ) {
             case 'delete':
-                \WeDevs\ERP\HRM\Models\Leave_request::find( sanitize_text_field( wp_unslash( $_GET['id'] ) ) )->delete();
+                \WeDevs\ERP\HRM\Models\Leave_request::find( $request_id )->delete();
                 break;
 
             case 'reject':
@@ -981,9 +1015,9 @@ class Form_Handler {
 
     /**
      * Create leave policy
-     * 
+     *
      * @since 1.5.15
-     * 
+     *
      * @return mixed
      */
     public function leave_policy_create() {
@@ -1002,7 +1036,7 @@ class Form_Handler {
         }
 
         global $policy_create_error;
-        $policy_create_error = new \WP_Error();
+        $policy_create_error = new WP_Error();
 
         $id          = ! empty( $_POST['policy-id'] ) ? absint( wp_unslash( $_POST['policy-id'] ) ) : 0;
         $leave_id    = ! empty( $_POST['leave-id'] ) ? absint( wp_unslash( $_POST['leave-id'] ) ) : 0;
@@ -1071,9 +1105,9 @@ class Form_Handler {
 
     /**
      * Create leave policy name
-     * 
+     *
      * @since 1.5.15
-     * 
+     *
      * @return mixed
      */
     public function leave_policy_name_create() {
@@ -1096,7 +1130,7 @@ class Form_Handler {
         $desc = ! empty( $_POST['description'] ) ? sanitize_text_field( wp_unslash( $_POST['description'] ) ) : '';
 
         global $policy_name_create_error;
-        $policy_name_create_error = new \WP_Error();
+        $policy_name_create_error = new WP_Error();
 
         if ( empty( $name ) ) {
             $policy_name_create_error->add( 'empty', 'Name field should not be left empty' );
