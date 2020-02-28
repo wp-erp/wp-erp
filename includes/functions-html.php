@@ -18,6 +18,19 @@ function erp_html_form_help( $value = '' ) {
 }
 
 /**
+ * Prints error text
+ *
+ * @param  string  individual field error
+ *
+ * @return void
+ */
+function erp_html_form_error( $value = '' ) {
+    if ( ! empty( $value ) ) {
+        echo '<span class="error-text">' . wp_kses_post( $value ) . '</span>';
+    }
+}
+
+/**
  * Prints a label attribute
  *
  * @param  string  label vlaue
@@ -261,6 +274,10 @@ function erp_html_form_input( $args = array() ) {
         erp_html_form_help( $field['help'] );
     }
 
+    if ( ! empty( $field['error'] ) ) {
+        erp_html_form_error( $field['error'] );
+    }
+
     // closing tag
     if ( ! empty( $field['tag'] ) ) {
         echo '</' . esc_html( $field['tag'] ) . '>';
@@ -295,9 +312,9 @@ function erp_html_generate_dropdown( $values = array(), $selected = null ) {
  *
  * @return void
  */
-function erp_html_show_notice( $text, $type = 'updated' ) {
+function erp_html_show_notice( $text, $type = 'updated', $dismissible = false ) {
     ?>
-    <div class="<?php echo esc_attr( $type ); ?>">
+    <div class="notice <?php echo esc_attr( $type ); ?> <?php echo ($dismissible == true) ? 'is-dismissible' : ''; ?>">
         <p><strong><?php echo esc_html( $text ); ?></strong></p>
     </div>
     <?php
