@@ -528,7 +528,7 @@ function erp_hr_leave_insert_holiday( $args = array() ) {
         $leave_policy = $holiday->create( $args );
 
         if ( $leave_policy ) {
-            do_action( 'erp_hr_new_holiday', $leave_policy->insert_id, $args );
+            do_action( 'erp_hr_new_holiday', $leave_policy->id, $args );
 
             return $leave_policy->id;
         }
