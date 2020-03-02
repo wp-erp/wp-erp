@@ -17557,8 +17557,10 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
     });
   },
   methods: {
-    prepareDataLoad: function () {
-      var _prepareDataLoad = __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_asyncToGenerator___default()(
+    prepareDataLoad: function prepareDataLoad() {
+      var _this2 = this;
+
+      return __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_asyncToGenerator___default()(
       /*#__PURE__*/
       regeneratorRuntime.mark(function _callee() {
         var _ref, _ref2, request1, request2, request3, canEdit;
@@ -17567,13 +17569,13 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                if (!this.$route.params.id) {
+                if (!_this2.$route.params.id) {
                   _context.next = 26;
                   break;
                 }
 
-                this.editMode = true;
-                this.voucherNo = this.$route.params.id;
+                _this2.editMode = true;
+                _this2.voucherNo = _this2.$route.params.id;
                 /**
                  * Duplicates of
                  *? this.getProducts()
@@ -17594,7 +17596,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
                 request1 = _ref2[0];
                 request2 = _ref2[1];
                 _context.next = 11;
-                return __WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].get("/invoices/".concat(this.$route.params.id));
+                return __WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].get("/invoices/".concat(_this2.$route.params.id));
 
               case 11:
                 request3 = _context.sent;
@@ -17604,7 +17606,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
                   break;
                 }
 
-                this.showAlert('error', 'Invoice does not exists!');
+                _this2.showAlert('error', 'Invoice does not exists!');
+
                 return _context.abrupt("return");
 
               case 15:
@@ -17615,16 +17618,20 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
                   break;
                 }
 
-                this.showAlert('error', 'Can\'t edit');
+                _this2.showAlert('error', 'Can\'t edit');
+
                 return _context.abrupt("return");
 
               case 19:
-                this.products = request1.data;
-                this.taxSummary = request2.data;
-                this.taxRates = this.getUniqueTaxRates(request2.data);
-                this.setDataForEdit(request3.data); // initialize combo button id with `update`
+                _this2.products = request1.data;
+                _this2.taxSummary = request2.data;
+                _this2.taxRates = _this2.getUniqueTaxRates(request2.data);
 
-                this.$store.dispatch('combo/setBtnID', 'update');
+                _this2.setDataForEdit(request3.data); // initialize combo button id with `update`
+
+
+                _this2.$store.dispatch('combo/setBtnID', 'update');
+
                 _context.next = 32;
                 break;
 
@@ -17634,28 +17641,26 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
                  * create a new invoice
                  * -----------------------------------------------
                  */
-                this.getProducts();
-                this.getTaxRates();
-                this.basic_fields.trn_date = erp_acct_var.current_date;
-                this.basic_fields.due_date = erp_acct_var.current_date;
-                this.transactionLines.push({}, {}, {}); // initialize combo button id with `save`
+                _this2.getProducts();
 
-                this.$store.dispatch('combo/setBtnID', 'save');
+                _this2.getTaxRates();
+
+                _this2.basic_fields.trn_date = erp_acct_var.current_date;
+                _this2.basic_fields.due_date = erp_acct_var.current_date;
+
+                _this2.transactionLines.push({}, {}, {}); // initialize combo button id with `save`
+
+
+                _this2.$store.dispatch('combo/setBtnID', 'save');
 
               case 32:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this);
-      }));
-
-      function prepareDataLoad() {
-        return _prepareDataLoad.apply(this, arguments);
-      }
-
-      return prepareDataLoad;
-    }(),
+        }, _callee);
+      }))();
+    },
     setDataForEdit: function setDataForEdit(invoice) {
       this.basic_fields.customer = {
         id: parseInt(invoice.customer_id),
@@ -17697,7 +17702,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       return estimate === this.inv_type.id && this.$route.query.convert;
     },
     getProducts: function getProducts() {
-      var _this2 = this;
+      var _this3 = this;
 
       this.$store.dispatch('spinner/setSpinner', true);
       __WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].get('/products', {
@@ -17705,17 +17710,17 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
           number: -1
         }
       }).then(function (response) {
-        _this2.products = response.data;
+        _this3.products = response.data;
 
-        _this2.$store.dispatch('spinner/setSpinner', false);
+        _this3.$store.dispatch('spinner/setSpinner', false);
       }).catch(function (error) {
-        _this2.$store.dispatch('spinner/setSpinner', false);
+        _this3.$store.dispatch('spinner/setSpinner', false);
 
         throw error;
       });
     },
     getCustomerAddress: function getCustomerAddress() {
-      var _this3 = this;
+      var _this4 = this;
 
       var customer_id = this.basic_fields.customer.id;
 
@@ -17733,7 +17738,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         var postal_code = billing.postal_code ? billing.postal_code : '';
         var country = billing.country ? billing.country : '';
         var address = "".concat(street_1, " ").concat(street_2, " \n").concat(city, " \n").concat(state, " ").concat(postal_code, " \n").concat(country);
-        _this3.basic_fields.billing_address = address;
+        _this4.basic_fields.billing_address = address;
       });
     },
     discountChanged: function discountChanged() {
@@ -17746,11 +17751,11 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       this.$store.dispatch('sales/setDiscount', discount);
     },
     getTaxRates: function getTaxRates() {
-      var _this4 = this;
+      var _this5 = this;
 
       __WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].get('/taxes/summary').then(function (response) {
-        _this4.taxSummary = response.data;
-        _this4.taxRates = _this4.getUniqueTaxRates(_this4.taxSummary);
+        _this5.taxSummary = response.data;
+        _this5.taxRates = _this5.getUniqueTaxRates(_this5.taxSummary);
       });
     },
     getTaxRateNameByID: function getTaxRateNameByID(id) {
@@ -17766,7 +17771,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       return null;
     },
     getUniqueTaxRates: function getUniqueTaxRates(taxes) {
-      var _this5 = this;
+      var _this6 = this;
 
       return Array.from(new Set(taxes.map(function (tax) {
         return tax.tax_rate_id;
@@ -17777,12 +17782,12 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
         if (tax.default) {
           // set default tax rate name for invoice
-          _this5.taxRate = {
+          _this6.taxRate = {
             id: tax_rate_id,
             name: tax.tax_rate_name
           };
 
-          _this5.$store.dispatch('sales/setTaxRateID', tax_rate_id);
+          _this6.$store.dispatch('sales/setTaxRateID', tax_rate_id);
         }
 
         return {
@@ -17830,52 +17835,52 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       return lineItems;
     },
     updateInvoice: function updateInvoice(requestData) {
-      var _this6 = this;
+      var _this7 = this;
 
       this.$store.dispatch('spinner/setSpinner', true);
       __WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].put("/invoices/".concat(this.voucherNo), requestData).then(function (res) {
-        _this6.$store.dispatch('spinner/setSpinner', false);
+        _this7.$store.dispatch('spinner/setSpinner', false);
 
         var message = 'Invoice Updated!';
 
-        if (_this6.estimateToInvoice()) {
+        if (_this7.estimateToInvoice()) {
           message = 'Conversion Successful!';
         }
 
-        _this6.showAlert('success', message);
+        _this7.showAlert('success', message);
       }).catch(function (error) {
-        _this6.$store.dispatch('spinner/setSpinner', false);
+        _this7.$store.dispatch('spinner/setSpinner', false);
 
         throw error;
       }).then(function () {
-        if (_this6.actionType === 'update' || _this6.actionType === 'draft') {
-          _this6.$router.push({
+        if (_this7.actionType === 'update' || _this7.actionType === 'draft') {
+          _this7.$router.push({
             name: 'Sales'
           });
-        } else if (_this6.actionType === 'new_update') {
-          _this6.resetFields();
+        } else if (_this7.actionType === 'new_update') {
+          _this7.resetFields();
         }
       });
     },
     createInvoice: function createInvoice(requestData) {
-      var _this7 = this;
+      var _this8 = this;
 
       this.$store.dispatch('spinner/setSpinner', true);
       __WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].post('/invoices', requestData).then(function (res) {
-        _this7.$store.dispatch('spinner/setSpinner', false);
+        _this8.$store.dispatch('spinner/setSpinner', false);
 
-        _this7.showAlert('success', _this7.inv_title + ' Created!');
+        _this8.showAlert('success', _this8.inv_title + ' Created!');
       }).catch(function (error) {
-        _this7.$store.dispatch('spinner/setSpinner', false);
+        _this8.$store.dispatch('spinner/setSpinner', false);
 
         throw error;
       }).then(function () {
-        if (_this7.actionType === 'save' || _this7.actionType === 'draft') {
-          _this7.$router.push({
+        if (_this8.actionType === 'save' || _this8.actionType === 'draft') {
+          _this8.$router.push({
             name: 'Sales'
           });
-        } else if (_this7.actionType === 'new_create') {
-          _this7.resetFields();
+        } else if (_this8.actionType === 'new_create') {
+          _this8.resetFields();
         }
       });
     },
@@ -18712,8 +18717,10 @@ if (false) {(function () {
     // });
   },
   methods: {
-    prepareDataLoad: function () {
-      var _prepareDataLoad = __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_asyncToGenerator___default()(
+    prepareDataLoad: function prepareDataLoad() {
+      var _this = this;
+
+      return __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_asyncToGenerator___default()(
       /*#__PURE__*/
       regeneratorRuntime.mark(function _callee() {
         var _ref, _ref2, request1, request2, request3;
@@ -18722,13 +18729,13 @@ if (false) {(function () {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                if (!this.$route.params.id) {
+                if (!_this.$route.params.id) {
                   _context.next = 17;
                   break;
                 }
 
-                this.editMode = true;
-                this.ledgerID = this.$route.params.id;
+                _this.editMode = true;
+                _this.ledgerID = _this.$route.params.id;
                 /**
                      * Duplicates of
                      *? this.fetchChartAccounts()
@@ -18737,7 +18744,7 @@ if (false) {(function () {
                      */
 
                 _context.next = 5;
-                return Promise.all([__WEBPACK_IMPORTED_MODULE_2_admin_http__["a" /* default */].get('/ledgers/accounts'), __WEBPACK_IMPORTED_MODULE_2_admin_http__["a" /* default */].get("/ledgers/".concat(this.$route.params.id))]);
+                return Promise.all([__WEBPACK_IMPORTED_MODULE_2_admin_http__["a" /* default */].get('/ledgers/accounts'), __WEBPACK_IMPORTED_MODULE_2_admin_http__["a" /* default */].get("/ledgers/".concat(_this.$route.params.id))]);
 
               case 5:
                 _ref = _context.sent;
@@ -18749,9 +18756,11 @@ if (false) {(function () {
 
               case 11:
                 request3 = _context.sent;
-                this.chartAccounts = request1.data;
-                this.setDataForEdit(request2.data);
-                this.categories = this.buildTree(request3.data);
+                _this.chartAccounts = request1.data;
+
+                _this.setDataForEdit(request2.data);
+
+                _this.categories = _this.buildTree(request3.data);
                 _context.next = 19;
                 break;
 
@@ -18761,23 +18770,18 @@ if (false) {(function () {
                      * create a new ledger
                      * -----------------------------------------------
                      */
-                this.fetchChartAccounts();
-                this.fetchLedgerCategories();
+                _this.fetchChartAccounts();
+
+                _this.fetchLedgerCategories();
 
               case 19:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this);
-      }));
-
-      function prepareDataLoad() {
-        return _prepareDataLoad.apply(this, arguments);
-      }
-
-      return prepareDataLoad;
-    }(),
+        }, _callee);
+      }))();
+    },
     setDataForEdit: function setDataForEdit(ledger) {
       this.ledgFields.chart_id = ledger.chart_id;
       this.ledgFields.name = ledger.name;
@@ -18788,13 +18792,13 @@ if (false) {(function () {
       this.catAddModal = true;
     },
     buildTree: function buildTree(elements) {
-      var _this = this;
+      var _this2 = this;
 
       var parentId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
       var branch = [];
       elements.forEach(function (element) {
         if (element['parent_id'] === parentId) {
-          var children = _this.buildTree(elements, element.id);
+          var children = _this2.buildTree(elements, element.id);
 
           if (children.length) {
             element['children'] = children;
@@ -18806,20 +18810,20 @@ if (false) {(function () {
       return branch;
     },
     fetchChartAccounts: function fetchChartAccounts() {
-      var _this2 = this;
+      var _this3 = this;
 
       this.chartAccounts = [];
       __WEBPACK_IMPORTED_MODULE_2_admin_http__["a" /* default */].get('/ledgers/accounts').then(function (response) {
-        _this2.chartAccounts = response.data;
+        _this3.chartAccounts = response.data;
       });
     },
     fetchLedgerCategories: function fetchLedgerCategories() {
-      var _this3 = this;
+      var _this4 = this;
 
       if (!this.ledgFields.chart_id) return;
       __WEBPACK_IMPORTED_MODULE_2_admin_http__["a" /* default */].get("/ledgers/categories/".concat(this.ledgFields.chart_id)).then(function (response) {
         if (!response.data) return;
-        _this3.categories = _this3.buildTree(response.data);
+        _this4.categories = _this4.buildTree(response.data);
       });
     },
     editCategory: function editCategory(node) {
@@ -18828,58 +18832,58 @@ if (false) {(function () {
       this.catAddModal = true;
     },
     removeCategory: function removeCategory(node) {
-      var _this4 = this;
+      var _this5 = this;
 
       if (confirm('Are you sure to remove this category?')) {
         __WEBPACK_IMPORTED_MODULE_2_admin_http__["a" /* default */].delete("/ledgers/categories/".concat(node.id)).then(function (response) {
-          _this4.showAlert('error', 'Category Removed!');
+          _this5.showAlert('error', 'Category Removed!');
 
-          _this4.fetchLedgerCategories();
+          _this5.fetchLedgerCategories();
         });
       }
     },
     createLedger: function createLedger(requestData) {
-      var _this5 = this;
-
-      this.$store.dispatch('spinner/setSpinner', true);
-      __WEBPACK_IMPORTED_MODULE_2_admin_http__["a" /* default */].post('/ledgers', requestData).then(function (res) {
-        _this5.$store.dispatch('spinner/setSpinner', false);
-
-        _this5.showAlert('success', 'Created !');
-      }).catch(function (error) {
-        _this5.$store.dispatch('spinner/setSpinner', false);
-
-        throw error;
-      }).then(function () {
-        _this5.resetFields();
-      });
-    },
-    updateteLedger: function updateteLedger(requestData) {
       var _this6 = this;
 
       this.$store.dispatch('spinner/setSpinner', true);
-      __WEBPACK_IMPORTED_MODULE_2_admin_http__["a" /* default */].put("/ledgers/".concat(this.ledgerID), requestData).then(function (res) {
+      __WEBPACK_IMPORTED_MODULE_2_admin_http__["a" /* default */].post('/ledgers', requestData).then(function (res) {
         _this6.$store.dispatch('spinner/setSpinner', false);
 
-        _this6.showAlert('success', 'Updated !');
+        _this6.showAlert('success', 'Created !');
       }).catch(function (error) {
         _this6.$store.dispatch('spinner/setSpinner', false);
 
         throw error;
       }).then(function () {
         _this6.resetFields();
+      });
+    },
+    updateteLedger: function updateteLedger(requestData) {
+      var _this7 = this;
 
-        _this6.$router.push({
+      this.$store.dispatch('spinner/setSpinner', true);
+      __WEBPACK_IMPORTED_MODULE_2_admin_http__["a" /* default */].put("/ledgers/".concat(this.ledgerID), requestData).then(function (res) {
+        _this7.$store.dispatch('spinner/setSpinner', false);
+
+        _this7.showAlert('success', 'Updated !');
+      }).catch(function (error) {
+        _this7.$store.dispatch('spinner/setSpinner', false);
+
+        throw error;
+      }).then(function () {
+        _this7.resetFields();
+
+        _this7.$router.push({
           name: 'ChartOfAccounts'
         });
       });
     },
     isDuplicateLedger: function isDuplicateLedger(requestData) {
-      var _this7 = this;
+      var _this8 = this;
 
       /* global erp_acct_var */
       var current_ledgers = erp_acct_var.ledgers.filter(function (led) {
-        return led.id !== _this7.$route.params.id;
+        return led.id !== _this8.$route.params.id;
       });
       var duplicate = false;
 
@@ -19489,8 +19493,10 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
     }
   },
   methods: {
-    prepareDataLoad: function () {
-      var _prepareDataLoad = __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator___default()(
+    prepareDataLoad: function prepareDataLoad() {
+      var _this = this;
+
+      return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator___default()(
       /*#__PURE__*/
       regeneratorRuntime.mark(function _callee() {
         var request1, request2;
@@ -19498,13 +19504,13 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                if (!this.$route.params.id) {
+                if (!_this.$route.params.id) {
                   _context.next = 16;
                   break;
                 }
 
-                this.editMode = true;
-                this.voucherNo = this.$route.params.id;
+                _this.editMode = true;
+                _this.voucherNo = _this.$route.params.id;
                 /**
                      * Duplicates of
                      *? this.getPayMethods()
@@ -19516,7 +19522,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
               case 5:
                 request1 = _context.sent;
                 _context.next = 8;
-                return __WEBPACK_IMPORTED_MODULE_3_admin_http__["a" /* default */].get("/invoices/".concat(this.$route.params.id));
+                return __WEBPACK_IMPORTED_MODULE_3_admin_http__["a" /* default */].get("/invoices/".concat(_this.$route.params.id));
 
               case 8:
                 request2 = _context.sent;
@@ -19526,12 +19532,15 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
                   break;
                 }
 
-                this.showAlert('error', 'Invoice does not exists!');
+                _this.showAlert('error', 'Invoice does not exists!');
+
                 return _context.abrupt("return");
 
               case 12:
-                this.pay_methods = request1.data;
-                this.setDataForEdit(request2.data);
+                _this.pay_methods = request1.data;
+
+                _this.setDataForEdit(request2.data);
+
                 _context.next = 18;
                 break;
 
@@ -19541,33 +19550,28 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
                      * create a new Receive Payment
                      * -----------------------------------------------
                      */
-                this.basic_fields.payment_date = erp_acct_var.current_date;
-                this.getPayMethods();
+                _this.basic_fields.payment_date = erp_acct_var.current_date;
+
+                _this.getPayMethods();
 
               case 18:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this);
-      }));
-
-      function prepareDataLoad() {
-        return _prepareDataLoad.apply(this, arguments);
-      }
-
-      return prepareDataLoad;
-    }(),
+        }, _callee);
+      }))();
+    },
     getPayMethods: function getPayMethods() {
-      var _this = this;
+      var _this2 = this;
 
       this.$store.dispatch('spinner/setSpinner', true);
       __WEBPACK_IMPORTED_MODULE_3_admin_http__["a" /* default */].get('/transactions/payment-methods').then(function (response) {
-        _this.pay_methods = response.data;
+        _this2.pay_methods = response.data;
 
-        _this.$store.dispatch('spinner/setSpinner', false);
+        _this2.$store.dispatch('spinner/setSpinner', false);
       }).catch(function (error) {
-        _this.$store.dispatch('spinner/setSpinner', false);
+        _this2.$store.dispatch('spinner/setSpinner', false);
 
         throw error;
       });
@@ -19576,7 +19580,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       this.check_data = check_data;
     },
     getDueInvoices: function getDueInvoices() {
-      var _this2 = this;
+      var _this3 = this;
 
       this.invoices = [];
       var customerId = this.basic_fields.customer.id;
@@ -19589,7 +19593,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
       __WEBPACK_IMPORTED_MODULE_3_admin_http__["a" /* default */].get("/invoices/due/".concat(customerId)).then(function (response) {
         response.data.forEach(function (element) {
-          _this2.invoices.push({
+          _this3.invoices.push({
             id: element.id,
             invoice_no: element.voucher_no,
             due_date: element.due_date,
@@ -19598,16 +19602,16 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
           });
         });
       }).then(function () {
-        _this2.invoices.forEach(function (element) {
-          _this2.totalAmounts[idx++] = parseFloat(element.due);
+        _this3.invoices.forEach(function (element) {
+          _this3.totalAmounts[idx++] = parseFloat(element.due);
           finalAmount += parseFloat(element.due);
         });
 
-        _this2.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
+        _this3.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
       });
     },
     getCustomerAddress: function getCustomerAddress() {
-      var _this3 = this;
+      var _this4 = this;
 
       var customer_id = this.basic_fields.customer.id;
 
@@ -19625,7 +19629,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         var postal_code = billing.postal_code ? billing.postal_code : '';
         var country = billing.country ? billing.country : '';
         var address = "".concat(street_1, " ").concat(street_2, " \n").concat(city, " \n").concat(state, " ").concat(postal_code, " \n").concat(country);
-        _this3.basic_fields.billing_address = address;
+        _this4.basic_fields.billing_address = address;
       });
     },
     updateFinalAmount: function updateFinalAmount() {
@@ -19636,7 +19640,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       this.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
     },
     SubmitForPayment: function SubmitForPayment(event) {
-      var _this4 = this;
+      var _this5 = this;
 
       this.validateForm();
 
@@ -19649,7 +19653,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       }
 
       this.invoices.forEach(function (element, index) {
-        element['line_total'] = parseFloat(_this4.totalAmounts[index]);
+        element['line_total'] = parseFloat(_this5.totalAmounts[index]);
       });
       this.$store.dispatch('spinner/setSpinner', true);
       var trn_status = null;
@@ -19681,35 +19685,35 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         name: this.check_data.payer_name,
         bank: this.check_data.bank_name
       }).then(function (res) {
-        _this4.$store.dispatch('spinner/setSpinner', false);
+        _this5.$store.dispatch('spinner/setSpinner', false);
 
-        _this4.showAlert('success', 'Payment Created!');
+        _this5.showAlert('success', 'Payment Created!');
 
-        _this4.reset = true;
+        _this5.reset = true;
 
-        if (_this4.actionType === 'save' || _this4.actionType === 'draft') {
-          _this4.$router.push({
+        if (_this5.actionType === 'save' || _this5.actionType === 'draft') {
+          _this5.$router.push({
             name: 'Sales'
           });
-        } else if (_this4.actionType === 'new_create') {
-          _this4.resetFields();
+        } else if (_this5.actionType === 'new_create') {
+          _this5.resetFields();
         }
       }).catch(function (error) {
-        _this4.$store.dispatch('spinner/setSpinner', false);
+        _this5.$store.dispatch('spinner/setSpinner', false);
 
         throw error;
       });
     },
     changeAccounts: function changeAccounts() {
-      var _this5 = this;
+      var _this6 = this;
 
       this.accts_by_chart = [];
 
       if (this.basic_fields.trn_by.id === '2' || this.basic_fields.trn_by.id === '3') {
         __WEBPACK_IMPORTED_MODULE_3_admin_http__["a" /* default */].get('/ledgers/bank-accounts').then(function (response) {
-          _this5.accts_by_chart = response.data;
+          _this6.accts_by_chart = response.data;
 
-          _this5.accts_by_chart.forEach(function (element) {
+          _this6.accts_by_chart.forEach(function (element) {
             if (!Object.prototype.hasOwnProperty.call(element, 'balance')) {
               element.balance = 0;
             }
@@ -19717,9 +19721,9 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         });
       } else if (this.basic_fields.trn_by.id === '1') {
         __WEBPACK_IMPORTED_MODULE_3_admin_http__["a" /* default */].get('/ledgers/cash-accounts').then(function (response) {
-          _this5.accts_by_chart = response.data;
+          _this6.accts_by_chart = response.data;
 
-          _this5.accts_by_chart.forEach(function (element) {
+          _this6.accts_by_chart.forEach(function (element) {
             if (!Object.prototype.hasOwnProperty.call(element, 'balance')) {
               element.balance = 0;
             }
@@ -19729,9 +19733,9 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       } else if (this.basic_fields.trn_by.id === '4') {
         if (erp_reimbursement_var.erp_reimbursement_module !== 'undefined' && erp_reimbursement_var.erp_reimbursement_module === '1') {
           __WEBPACK_IMPORTED_MODULE_3_admin_http__["a" /* default */].get('/people-transactions/balances').then(function (response) {
-            _this5.accts_by_chart = response.data;
+            _this6.accts_by_chart = response.data;
 
-            _this5.accts_by_chart.forEach(function (element) {
+            _this6.accts_by_chart.forEach(function (element) {
               if (!Object.prototype.hasOwnProperty.call(element, 'balance')) {
                 element.balance = 0;
               }
@@ -20086,8 +20090,10 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
     });
   },
   methods: {
-    prepareDataLoad: function () {
-      var _prepareDataLoad = __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator___default()(
+    prepareDataLoad: function prepareDataLoad() {
+      var _this2 = this;
+
+      return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator___default()(
       /*#__PURE__*/
       regeneratorRuntime.mark(function _callee() {
         var expenseChartId, request1, request2, canEdit;
@@ -20095,13 +20101,13 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                if (!this.$route.params.id) {
+                if (!_this2.$route.params.id) {
                   _context.next = 22;
                   break;
                 }
 
-                this.editMode = true;
-                this.voucherNo = this.$route.params.id;
+                _this2.editMode = true;
+                _this2.voucherNo = _this2.$route.params.id;
                 /**
                  * Duplicates of
                  *? this.getLedgers()
@@ -20114,7 +20120,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
               case 6:
                 request1 = _context.sent;
                 _context.next = 9;
-                return __WEBPACK_IMPORTED_MODULE_3_admin_http__["a" /* default */].get("/bills/".concat(this.$route.params.id));
+                return __WEBPACK_IMPORTED_MODULE_3_admin_http__["a" /* default */].get("/bills/".concat(_this2.$route.params.id));
 
               case 9:
                 request2 = _context.sent;
@@ -20124,7 +20130,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
                   break;
                 }
 
-                this.showAlert('error', 'Bill does not exists!');
+                _this2.showAlert('error', 'Bill does not exists!');
+
                 return _context.abrupt("return");
 
               case 13:
@@ -20135,14 +20142,18 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
                   break;
                 }
 
-                this.showAlert('error', 'Can\'t edit');
+                _this2.showAlert('error', 'Can\'t edit');
+
                 return _context.abrupt("return");
 
               case 17:
-                this.ledgers = request1.data;
-                this.setDataForEdit(request2.data); // initialize combo button id with `update`
+                _this2.ledgers = request1.data;
 
-                this.$store.dispatch('combo/setBtnID', 'update');
+                _this2.setDataForEdit(request2.data); // initialize combo button id with `update`
+
+
+                _this2.$store.dispatch('combo/setBtnID', 'update');
+
                 _context.next = 27;
                 break;
 
@@ -20152,31 +20163,28 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
                      * create a new bill
                      * -----------------------------------------------
                      */
-                this.getLedgers();
+                _this2.getLedgers();
                 /* global erp_acct_var */
 
-                this.basic_fields.trn_date = erp_acct_var.current_date;
-                this.basic_fields.due_date = erp_acct_var.current_date;
-                this.transactionLines.push({}, {}, {}); // initialize combo button id with `save`
 
-                this.$store.dispatch('combo/setBtnID', 'save');
+                _this2.basic_fields.trn_date = erp_acct_var.current_date;
+                _this2.basic_fields.due_date = erp_acct_var.current_date;
+
+                _this2.transactionLines.push({}, {}, {}); // initialize combo button id with `save`
+
+
+                _this2.$store.dispatch('combo/setBtnID', 'save');
 
               case 27:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this);
-      }));
-
-      function prepareDataLoad() {
-        return _prepareDataLoad.apply(this, arguments);
-      }
-
-      return prepareDataLoad;
-    }(),
+        }, _callee);
+      }))();
+    },
     setDataForEdit: function setDataForEdit(bill) {
-      var _this2 = this;
+      var _this3 = this;
 
       this.basic_fields.user = {
         id: parseInt(bill.vendor_id),
@@ -20192,7 +20200,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       this.attachments = bill.attachments; // format transaction lines
 
       bill.bill_details.forEach(function (detail) {
-        _this2.transactionLines.push({
+        _this3.transactionLines.push({
           id: detail.id,
           ledger_id: {
             id: detail.ledger_id,
@@ -20205,22 +20213,22 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       this.updateFinalAmount();
     },
     getLedgers: function getLedgers() {
-      var _this3 = this;
+      var _this4 = this;
 
       var expenseChartId = 5;
       this.$store.dispatch('spinner/setSpinner', true);
       __WEBPACK_IMPORTED_MODULE_3_admin_http__["a" /* default */].get("/ledgers/".concat(expenseChartId, "/accounts")).then(function (response) {
-        _this3.ledgers = response.data;
+        _this4.ledgers = response.data;
 
-        _this3.$store.dispatch('spinner/setSpinner', false);
+        _this4.$store.dispatch('spinner/setSpinner', false);
       }).catch(function (error) {
-        _this3.$store.dispatch('spinner/setSpinner', false);
+        _this4.$store.dispatch('spinner/setSpinner', false);
 
         throw error;
       });
     },
     getPeopleAddress: function getPeopleAddress() {
-      var _this4 = this;
+      var _this5 = this;
 
       var peopleId = this.basic_fields.user.id;
 
@@ -20238,7 +20246,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         var postal_code = billing.postal_code ? billing.postal_code : '';
         var country = billing.country ? billing.country : '';
         var address = "".concat(street_1, " ").concat(street_2, " \n").concat(city, " \n").concat(state, " ").concat(postal_code, " \n").concat(country);
-        _this4.basic_fields.billing_address = address;
+        _this5.basic_fields.billing_address = address;
       });
     },
     updateFinalAmount: function updateFinalAmount() {
@@ -20254,37 +20262,13 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       this.transactionLines.push({});
     },
     updateBill: function updateBill(requestData) {
-      var _this5 = this;
-
-      this.$store.dispatch('spinner/setSpinner', true);
-      __WEBPACK_IMPORTED_MODULE_3_admin_http__["a" /* default */].put("/bills/".concat(this.voucherNo), requestData).then(function (res) {
-        _this5.$store.dispatch('spinner/setSpinner', false);
-
-        _this5.showAlert('success', 'Bill Updated!');
-      }).catch(function (error) {
-        _this5.$store.dispatch('spinner/setSpinner', false);
-
-        throw error;
-      }).then(function () {
-        _this5.reset = true;
-
-        if (_this5.actionType === 'update' || _this5.actionType === 'draft') {
-          _this5.$router.push({
-            name: 'Expenses'
-          });
-        } else if (_this5.actionType === 'new_update') {
-          _this5.resetFields();
-        }
-      });
-    },
-    createBill: function createBill(requestData) {
       var _this6 = this;
 
       this.$store.dispatch('spinner/setSpinner', true);
-      __WEBPACK_IMPORTED_MODULE_3_admin_http__["a" /* default */].post('/bills', requestData).then(function (res) {
+      __WEBPACK_IMPORTED_MODULE_3_admin_http__["a" /* default */].put("/bills/".concat(this.voucherNo), requestData).then(function (res) {
         _this6.$store.dispatch('spinner/setSpinner', false);
 
-        _this6.showAlert('success', 'Bill Created!');
+        _this6.showAlert('success', 'Bill Updated!');
       }).catch(function (error) {
         _this6.$store.dispatch('spinner/setSpinner', false);
 
@@ -20292,12 +20276,36 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       }).then(function () {
         _this6.reset = true;
 
-        if (_this6.actionType === 'save' || _this6.actionType === 'draft') {
+        if (_this6.actionType === 'update' || _this6.actionType === 'draft') {
           _this6.$router.push({
             name: 'Expenses'
           });
-        } else if (_this6.actionType === 'new_create') {
+        } else if (_this6.actionType === 'new_update') {
           _this6.resetFields();
+        }
+      });
+    },
+    createBill: function createBill(requestData) {
+      var _this7 = this;
+
+      this.$store.dispatch('spinner/setSpinner', true);
+      __WEBPACK_IMPORTED_MODULE_3_admin_http__["a" /* default */].post('/bills', requestData).then(function (res) {
+        _this7.$store.dispatch('spinner/setSpinner', false);
+
+        _this7.showAlert('success', 'Bill Created!');
+      }).catch(function (error) {
+        _this7.$store.dispatch('spinner/setSpinner', false);
+
+        throw error;
+      }).then(function () {
+        _this7.reset = true;
+
+        if (_this7.actionType === 'save' || _this7.actionType === 'draft') {
+          _this7.$router.push({
+            name: 'Expenses'
+          });
+        } else if (_this7.actionType === 'new_create') {
+          _this7.resetFields();
         }
       });
     },
@@ -21618,8 +21626,10 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
     this.$store.dispatch('combo/setBtnID', 'update');
   },
   methods: {
-    prepareDataLoad: function () {
-      var _prepareDataLoad = __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_asyncToGenerator___default()(
+    prepareDataLoad: function prepareDataLoad() {
+      var _this2 = this;
+
+      return __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_asyncToGenerator___default()(
       /*#__PURE__*/
       regeneratorRuntime.mark(function _callee() {
         var _ref, _ref2, request, canEdit, purchase_data;
@@ -21628,15 +21638,15 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                if (!this.$route.params.id) {
+                if (!_this2.$route.params.id) {
                   _context.next = 18;
                   break;
                 }
 
-                this.editMode = true;
-                this.voucherNo = this.$route.params.id;
+                _this2.editMode = true;
+                _this2.voucherNo = _this2.$route.params.id;
                 _context.next = 5;
-                return Promise.all([__WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].get("/purchases/".concat(this.$route.params.id))]);
+                return Promise.all([__WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].get("/purchases/".concat(_this2.$route.params.id))]);
 
               case 5:
                 _ref = _context.sent;
@@ -21649,19 +21659,22 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
                   break;
                 }
 
-                this.showAlert('error', 'Can\'t edit');
+                _this2.showAlert('error', 'Can\'t edit');
+
                 return _context.abrupt("return");
 
               case 12:
                 purchase_data = request.data;
 
                 if (purchase_data) {
-                  this.getProducts(purchase_data.vendor_id);
+                  _this2.getProducts(purchase_data.vendor_id);
                 }
 
-                this.setDataForEdit(request.data); // initialize combo button id with `update`
+                _this2.setDataForEdit(request.data); // initialize combo button id with `update`
 
-                this.$store.dispatch('combo/setBtnID', 'update');
+
+                _this2.$store.dispatch('combo/setBtnID', 'update');
+
                 _context.next = 22;
                 break;
 
@@ -21671,26 +21684,22 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
                      * create a new purchase
                      * -----------------------------------------------
                      */
-                this.basic_fields.trn_date = erp_acct_var.current_date;
-                this.basic_fields.due_date = erp_acct_var.current_date;
-                this.transactionLines.push({}, {}, {}); // initialize combo button id with `save`
+                _this2.basic_fields.trn_date = erp_acct_var.current_date;
+                _this2.basic_fields.due_date = erp_acct_var.current_date;
 
-                this.$store.dispatch('combo/setBtnID', 'save');
+                _this2.transactionLines.push({}, {}, {}); // initialize combo button id with `save`
+
+
+                _this2.$store.dispatch('combo/setBtnID', 'save');
 
               case 22:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this);
-      }));
-
-      function prepareDataLoad() {
-        return _prepareDataLoad.apply(this, arguments);
-      }
-
-      return prepareDataLoad;
-    }(),
+        }, _callee);
+      }))();
+    },
     setDataForEdit: function setDataForEdit(purchase) {
       this.basic_fields.vendor = {
         id: parseInt(purchase.vendor_id),
@@ -21725,7 +21734,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       this.$store.dispatch('combo/setBtnID', 'save');
     },
     getProducts: function getProducts(vendor_id) {
-      var _this2 = this;
+      var _this3 = this;
 
       this.products = [];
 
@@ -21740,22 +21749,22 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         }
       }).then(function (response) {
         response.data.forEach(function (element) {
-          _this2.products.push({
+          _this3.products.push({
             id: element.id,
             name: element.name,
             unitPrice: element.cost_price
           });
         });
 
-        _this2.$store.dispatch('spinner/setSpinner', false);
+        _this3.$store.dispatch('spinner/setSpinner', false);
       }).catch(function (error) {
-        _this2.$store.dispatch('spinner/setSpinner', false);
+        _this3.$store.dispatch('spinner/setSpinner', false);
 
         throw error;
       });
     },
     getvendorData: function getvendorData() {
-      var _this3 = this;
+      var _this4 = this;
 
       var vendor_id = this.basic_fields.vendor.id;
 
@@ -21773,7 +21782,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         var postal_code = billing.postal_code ? billing.postal_code : '';
         var country = billing.country ? billing.country : '';
         var address = "".concat(street_1, " ").concat(street_2, " \n").concat(city, " \n").concat(state, " ").concat(postal_code, " \n").concat(country);
-        _this3.basic_fields.billing_address = address;
+        _this4.basic_fields.billing_address = address;
       });
       this.getProducts();
     },
@@ -21808,51 +21817,51 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       return lineItems;
     },
     updatePurchase: function updatePurchase(requestData) {
-      var _this4 = this;
+      var _this5 = this;
 
       __WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].put("/purchases/".concat(this.voucherNo), requestData).then(function (res) {
-        _this4.$store.dispatch('spinner/setSpinner', false);
+        _this5.$store.dispatch('spinner/setSpinner', false);
 
         var message = 'Purchase Updated!';
 
-        if (_this4.orderToPurchase()) {
+        if (_this5.orderToPurchase()) {
           message = 'Conversion Successful!';
         }
 
-        _this4.showAlert('success', message);
+        _this5.showAlert('success', message);
       }).then(function () {
-        _this4.$store.dispatch('spinner/setSpinner', false);
+        _this5.$store.dispatch('spinner/setSpinner', false);
 
-        _this4.isWorking = false;
-        _this4.reset = true;
+        _this5.isWorking = false;
+        _this5.reset = true;
 
-        if (_this4.actionType === 'update' || _this4.actionType === 'draft') {
-          _this4.$router.push({
+        if (_this5.actionType === 'update' || _this5.actionType === 'draft') {
+          _this5.$router.push({
             name: 'Purchases'
           });
-        } else if (_this4.actionType === 'new_update') {
-          _this4.resetFields();
+        } else if (_this5.actionType === 'new_update') {
+          _this5.resetFields();
         }
       });
     },
     createPurchase: function createPurchase(requestData) {
-      var _this5 = this;
+      var _this6 = this;
 
       __WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].post('/purchases', requestData).then(function (res) {
-        _this5.$store.dispatch('spinner/setSpinner', false);
+        _this6.$store.dispatch('spinner/setSpinner', false);
 
-        _this5.showAlert('success', _this5.page_title + ' Created!');
+        _this6.showAlert('success', _this6.page_title + ' Created!');
       }).catch(function (error) {
-        _this5.$store.dispatch('spinner/setSpinner', false);
+        _this6.$store.dispatch('spinner/setSpinner', false);
 
         throw error;
       }).then(function () {
-        if (_this5.actionType === 'save' || _this5.actionType === 'draft') {
-          _this5.$router.push({
+        if (_this6.actionType === 'save' || _this6.actionType === 'draft') {
+          _this6.$router.push({
             name: 'Purchases'
           });
-        } else if (_this5.actionType === 'new_create') {
-          _this5.resetFields();
+        } else if (_this6.actionType === 'new_create') {
+          _this6.resetFields();
         }
       });
     },
@@ -24466,8 +24475,10 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
     });
   },
   methods: {
-    prepareDataLoad: function () {
-      var _prepareDataLoad = __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_asyncToGenerator___default()(
+    prepareDataLoad: function prepareDataLoad() {
+      var _this2 = this;
+
+      return __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_asyncToGenerator___default()(
       /*#__PURE__*/
       regeneratorRuntime.mark(function _callee() {
         var expense_chart_id, _ref, _ref2, request1, request2, request3;
@@ -24476,13 +24487,13 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                if (!this.$route.params.id) {
+                if (!_this2.$route.params.id) {
                   _context.next = 19;
                   break;
                 }
 
-                this.editMode = true;
-                this.voucherNo = this.$route.params.id;
+                _this2.editMode = true;
+                _this2.voucherNo = _this2.$route.params.id;
                 /**
                      * Duplicates of
                      *? this.getLedgers()
@@ -24499,15 +24510,18 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
                 request1 = _ref2[0];
                 request2 = _ref2[1];
                 _context.next = 12;
-                return __WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].get("/expenses/".concat(this.$route.params.id));
+                return __WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].get("/expenses/".concat(_this2.$route.params.id));
 
               case 12:
                 request3 = _context.sent;
-                this.ledgers = request1.data;
-                this.pay_methods = request2.data;
-                this.setDataForEdit(request3.data); // initialize combo button id with `update`
+                _this2.ledgers = request1.data;
+                _this2.pay_methods = request2.data;
 
-                this.$store.dispatch('combo/setBtnID', 'update');
+                _this2.setDataForEdit(request3.data); // initialize combo button id with `update`
+
+
+                _this2.$store.dispatch('combo/setBtnID', 'update');
+
                 _context.next = 25;
                 break;
 
@@ -24517,30 +24531,28 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
                      * create a new expense
                      * -----------------------------------------------
                      */
-                this.getLedgers();
-                this.getPayMethods();
-                this.basic_fields.trn_date = erp_acct_var.current_date;
-                this.basic_fields.due_date = erp_acct_var.current_date;
-                this.transactionLines.push({}, {}, {}); // initialize combo button id with `save`
+                _this2.getLedgers();
 
-                this.$store.dispatch('combo/setBtnID', 'save');
+                _this2.getPayMethods();
+
+                _this2.basic_fields.trn_date = erp_acct_var.current_date;
+                _this2.basic_fields.due_date = erp_acct_var.current_date;
+
+                _this2.transactionLines.push({}, {}, {}); // initialize combo button id with `save`
+
+
+                _this2.$store.dispatch('combo/setBtnID', 'save');
 
               case 25:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this);
-      }));
-
-      function prepareDataLoad() {
-        return _prepareDataLoad.apply(this, arguments);
-      }
-
-      return prepareDataLoad;
-    }(),
+        }, _callee);
+      }))();
+    },
     setDataForEdit: function setDataForEdit(expense) {
-      var _this2 = this;
+      var _this3 = this;
 
       this.basic_fields.people = {
         id: parseInt(expense.people_id),
@@ -24560,7 +24572,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       this.attachments = expense.attachments; // format transaction lines
 
       expense.bill_details.forEach(function (detail) {
-        _this2.transactionLines.push({
+        _this3.transactionLines.push({
           id: detail.id,
           ledger_id: {
             id: detail.ledger_id,
@@ -24573,23 +24585,23 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       this.updateFinalAmount();
     },
     getLedgers: function getLedgers() {
-      var _this3 = this;
+      var _this4 = this;
 
       var expense_chart_id = 5;
       __WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].get("/ledgers/".concat(expense_chart_id, "/accounts")).then(function (response) {
-        _this3.ledgers = response.data;
+        _this4.ledgers = response.data;
       });
     },
     getPayMethods: function getPayMethods() {
-      var _this4 = this;
+      var _this5 = this;
 
       this.$store.dispatch('spinner/setSpinner', true);
       __WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].get('/transactions/payment-methods').then(function (response) {
-        _this4.pay_methods = response.data;
+        _this5.pay_methods = response.data;
 
-        _this4.$store.dispatch('spinner/setSpinner', false);
+        _this5.$store.dispatch('spinner/setSpinner', false);
       }).catch(function (error) {
-        _this4.$store.dispatch('spinner/setSpinner', false);
+        _this5.$store.dispatch('spinner/setSpinner', false);
 
         throw error;
       });
@@ -24598,7 +24610,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       this.check_data = check_data;
     },
     getPeopleAddress: function getPeopleAddress() {
-      var _this5 = this;
+      var _this6 = this;
 
       var user_id = this.basic_fields.people.id;
 
@@ -24611,7 +24623,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         var billing = response.data;
 
         if (typeof billing === 'string') {
-          _this5.basic_fields.billing_address = billing;
+          _this6.basic_fields.billing_address = billing;
           return;
         }
 
@@ -24622,7 +24634,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         var postal_code = billing.postal_code ? billing.postal_code : '';
         var country = billing.country ? billing.country : '';
         var address = "".concat(street_1, " ").concat(street_2, " \n").concat(city, " \n").concat(state, " ").concat(postal_code, " \n").concat(country);
-        _this5.basic_fields.billing_address = address;
+        _this6.basic_fields.billing_address = address;
       });
     },
     updateFinalAmount: function updateFinalAmount() {
@@ -24638,38 +24650,13 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       this.transactionLines.push({});
     },
     updateExpense: function updateExpense(requestData) {
-      var _this6 = this;
-
-      this.$store.dispatch('spinner/setSpinner', true);
-      __WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].put("/expenses/".concat(this.voucherNo), requestData).then(function (res) {
-        _this6.$store.dispatch('spinner/setSpinner', false);
-
-        _this6.showAlert('success', 'Expense Updated!');
-      }).catch(function (error) {
-        _this6.$store.dispatch('spinner/setSpinner', false);
-
-        throw error;
-      }).then(function () {
-        _this6.isWorking = false;
-        _this6.reset = true;
-
-        if (_this6.actionType === 'update' || _this6.actionType === 'draft') {
-          _this6.$router.push({
-            name: 'Expenses'
-          });
-        } else if (_this6.actionType === 'new_update') {
-          _this6.resetFields();
-        }
-      });
-    },
-    createExpense: function createExpense(requestData) {
       var _this7 = this;
 
       this.$store.dispatch('spinner/setSpinner', true);
-      __WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].post('/expenses', requestData).then(function (res) {
+      __WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].put("/expenses/".concat(this.voucherNo), requestData).then(function (res) {
         _this7.$store.dispatch('spinner/setSpinner', false);
 
-        _this7.showAlert('success', 'Expense Created!');
+        _this7.showAlert('success', 'Expense Updated!');
       }).catch(function (error) {
         _this7.$store.dispatch('spinner/setSpinner', false);
 
@@ -24678,12 +24665,37 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         _this7.isWorking = false;
         _this7.reset = true;
 
-        if (_this7.actionType === 'save' || _this7.actionType === 'draft') {
+        if (_this7.actionType === 'update' || _this7.actionType === 'draft') {
           _this7.$router.push({
             name: 'Expenses'
           });
-        } else if (_this7.actionType === 'new_create') {
+        } else if (_this7.actionType === 'new_update') {
           _this7.resetFields();
+        }
+      });
+    },
+    createExpense: function createExpense(requestData) {
+      var _this8 = this;
+
+      this.$store.dispatch('spinner/setSpinner', true);
+      __WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].post('/expenses', requestData).then(function (res) {
+        _this8.$store.dispatch('spinner/setSpinner', false);
+
+        _this8.showAlert('success', 'Expense Created!');
+      }).catch(function (error) {
+        _this8.$store.dispatch('spinner/setSpinner', false);
+
+        throw error;
+      }).then(function () {
+        _this8.isWorking = false;
+        _this8.reset = true;
+
+        if (_this8.actionType === 'save' || _this8.actionType === 'draft') {
+          _this8.$router.push({
+            name: 'Expenses'
+          });
+        } else if (_this8.actionType === 'new_create') {
+          _this8.resetFields();
         }
       });
     },
@@ -24737,15 +24749,15 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       }
     },
     changeAccounts: function changeAccounts() {
-      var _this8 = this;
+      var _this9 = this;
 
       this.accts_by_chart = [];
 
       if (this.basic_fields.trn_by.id === '2' || this.basic_fields.trn_by.id === '3') {
         __WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].get('/ledgers/bank-accounts').then(function (response) {
-          _this8.accts_by_chart = response.data;
+          _this9.accts_by_chart = response.data;
 
-          _this8.accts_by_chart.forEach(function (element) {
+          _this9.accts_by_chart.forEach(function (element) {
             if (!Object.prototype.hasOwnProperty.call(element, 'balance')) {
               element.balance = 0;
             }
@@ -24753,9 +24765,9 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         });
       } else if (this.basic_fields.trn_by.id === '1') {
         __WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].get('/ledgers/cash-accounts').then(function (response) {
-          _this8.accts_by_chart = response.data;
+          _this9.accts_by_chart = response.data;
 
-          _this8.accts_by_chart.forEach(function (element) {
+          _this9.accts_by_chart.forEach(function (element) {
             if (!Object.prototype.hasOwnProperty.call(element, 'balance')) {
               element.balance = 0;
             }
@@ -24765,9 +24777,9 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       } else if (this.basic_fields.trn_by.id === '4') {
         if (erp_reimbursement_var.erp_reimbursement_module !== 'undefined' && erp_reimbursement_var.erp_reimbursement_module === '1') {
           __WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].get('/people-transactions/balances').then(function (response) {
-            _this8.accts_by_chart = response.data;
+            _this9.accts_by_chart = response.data;
 
-            _this8.accts_by_chart.forEach(function (element) {
+            _this9.accts_by_chart.forEach(function (element) {
               if (!Object.prototype.hasOwnProperty.call(element, 'balance')) {
                 element.balance = 0;
               }
@@ -30440,8 +30452,10 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
     });
   },
   methods: {
-    prepareDataLoad: function () {
-      var _prepareDataLoad = __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator___default()(
+    prepareDataLoad: function prepareDataLoad() {
+      var _this2 = this;
+
+      return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator___default()(
       /*#__PURE__*/
       regeneratorRuntime.mark(function _callee() {
         var request1, request2;
@@ -30449,13 +30463,13 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                if (!this.$route.params.id) {
+                if (!_this2.$route.params.id) {
                   _context.next = 17;
                   break;
                 }
 
-                this.editMode = true;
-                this.voucherNo = this.$route.params.id;
+                _this2.editMode = true;
+                _this2.voucherNo = _this2.$route.params.id;
                 /**
                  * Duplicates of
                  *? this.getLedgers()
@@ -30467,7 +30481,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
               case 5:
                 request1 = _context.sent;
                 _context.next = 8;
-                return __WEBPACK_IMPORTED_MODULE_3_admin_http__["a" /* default */].get("/expenses/checks/".concat(this.$route.params.id));
+                return __WEBPACK_IMPORTED_MODULE_3_admin_http__["a" /* default */].get("/expenses/checks/".concat(_this2.$route.params.id));
 
               case 8:
                 request2 = _context.sent;
@@ -30477,14 +30491,18 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
                   break;
                 }
 
-                this.showAlert('error', 'Check does not exists!');
+                _this2.showAlert('error', 'Check does not exists!');
+
                 return _context.abrupt("return");
 
               case 12:
-                this.ledgers = request1.data;
-                this.setDataForEdit(request2.data); // initialize combo button id with `update`
+                _this2.ledgers = request1.data;
 
-                this.$store.dispatch('combo/setBtnID', 'update');
+                _this2.setDataForEdit(request2.data); // initialize combo button id with `update`
+
+
+                _this2.$store.dispatch('combo/setBtnID', 'update');
+
                 _context.next = 22;
                 break;
 
@@ -30494,29 +30512,26 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
                  * create a new check
                  * -----------------------------------------------
                  */
-                this.getLedgers();
-                this.basic_fields.trn_date = erp_acct_var.current_date;
-                this.basic_fields.due_date = erp_acct_var.current_date;
-                this.transactionLines.push({}, {}, {}); // initialize combo button id with `save`
+                _this2.getLedgers();
 
-                this.$store.dispatch('combo/setBtnID', 'save');
+                _this2.basic_fields.trn_date = erp_acct_var.current_date;
+                _this2.basic_fields.due_date = erp_acct_var.current_date;
+
+                _this2.transactionLines.push({}, {}, {}); // initialize combo button id with `save`
+
+
+                _this2.$store.dispatch('combo/setBtnID', 'save');
 
               case 22:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this);
-      }));
-
-      function prepareDataLoad() {
-        return _prepareDataLoad.apply(this, arguments);
-      }
-
-      return prepareDataLoad;
-    }(),
+        }, _callee);
+      }))();
+    },
     setDataForEdit: function setDataForEdit(check) {
-      var _this2 = this;
+      var _this3 = this;
 
       this.basic_fields.people = {
         id: parseInt(check.people_id),
@@ -30536,7 +30551,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       this.attachments = check.attachments; // format transaction lines
 
       check.bill_details.forEach(function (detail) {
-        _this2.transactionLines.push({
+        _this3.transactionLines.push({
           id: detail.id,
           ledger_id: {
             id: detail.ledger_id,
@@ -30549,31 +30564,31 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       this.updateFinalAmount();
     },
     getLedgers: function getLedgers() {
-      var _this3 = this;
+      var _this4 = this;
 
       var expense_chart_id = 5;
       this.$store.dispatch('spinner/setSpinner', true);
       __WEBPACK_IMPORTED_MODULE_3_admin_http__["a" /* default */].get("/ledgers/".concat(expense_chart_id, "/accounts")).then(function (response) {
-        _this3.ledgers = response.data;
+        _this4.ledgers = response.data;
 
-        _this3.$store.dispatch('spinner/setSpinner', false);
+        _this4.$store.dispatch('spinner/setSpinner', false);
       }).catch(function (error) {
-        _this3.$store.dispatch('spinner/setSpinner', false);
+        _this4.$store.dispatch('spinner/setSpinner', false);
 
         throw error;
       });
     },
     getBanks: function getBanks() {
-      var _this4 = this;
+      var _this5 = this;
 
       var bank_chart_id = 7;
       this.$store.dispatch('spinner/setSpinner', true);
       __WEBPACK_IMPORTED_MODULE_3_admin_http__["a" /* default */].get("/ledgers/".concat(bank_chart_id, "/accounts")).then(function (response) {
-        _this4.bank_accts = response.data;
+        _this5.bank_accts = response.data;
 
-        _this4.$store.dispatch('spinner/setSpinner', false);
+        _this5.$store.dispatch('spinner/setSpinner', false);
       }).catch(function (error) {
-        _this4.$store.dispatch('spinner/setSpinner', false);
+        _this5.$store.dispatch('spinner/setSpinner', false);
 
         throw error;
       });
@@ -30582,7 +30597,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       this.check_data = check_data;
     },
     getPeopleAddress: function getPeopleAddress() {
-      var _this5 = this;
+      var _this6 = this;
 
       var people_id = this.basic_fields.people.id;
 
@@ -30600,7 +30615,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         var postal_code = billing.postal_code ? billing.postal_code : '';
         var country = billing.country ? billing.country : '';
         var address = "".concat(street_1, " ").concat(street_2, " \n").concat(city, " \n").concat(state, " ").concat(postal_code, " \n").concat(country);
-        _this5.basic_fields.billing_address = address;
+        _this6.basic_fields.billing_address = address;
       });
     },
     updateFinalAmount: function updateFinalAmount() {
@@ -30616,38 +30631,13 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       this.transactionLines.push({});
     },
     updateCheck: function updateCheck(requestData) {
-      var _this6 = this;
-
-      this.$store.dispatch('spinner/setSpinner', true);
-      __WEBPACK_IMPORTED_MODULE_3_admin_http__["a" /* default */].put("/expenses/".concat(this.voucherNo), requestData).then(function (res) {
-        _this6.$store.dispatch('spinner/setSpinner', false);
-
-        _this6.showAlert('success', 'Check Updated!');
-      }).catch(function (error) {
-        _this6.$store.dispatch('spinner/setSpinner', false);
-
-        throw error;
-      }).then(function () {
-        _this6.isWorking = false;
-        _this6.reset = true;
-
-        if (_this6.actionType === 'update' || _this6.actionType === 'draft') {
-          _this6.$router.push({
-            name: 'Expenses'
-          });
-        } else if (_this6.actionType === 'new_update') {
-          _this6.resetFields();
-        }
-      });
-    },
-    createCheck: function createCheck(requestData) {
       var _this7 = this;
 
       this.$store.dispatch('spinner/setSpinner', true);
-      __WEBPACK_IMPORTED_MODULE_3_admin_http__["a" /* default */].post('/expenses', requestData).then(function (res) {
+      __WEBPACK_IMPORTED_MODULE_3_admin_http__["a" /* default */].put("/expenses/".concat(this.voucherNo), requestData).then(function (res) {
         _this7.$store.dispatch('spinner/setSpinner', false);
 
-        _this7.showAlert('success', 'Check Created!');
+        _this7.showAlert('success', 'Check Updated!');
       }).catch(function (error) {
         _this7.$store.dispatch('spinner/setSpinner', false);
 
@@ -30656,12 +30646,37 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         _this7.isWorking = false;
         _this7.reset = true;
 
-        if (_this7.actionType === 'save' || _this7.actionType === 'draft') {
+        if (_this7.actionType === 'update' || _this7.actionType === 'draft') {
           _this7.$router.push({
             name: 'Expenses'
           });
-        } else if (_this7.actionType === 'new_create') {
+        } else if (_this7.actionType === 'new_update') {
           _this7.resetFields();
+        }
+      });
+    },
+    createCheck: function createCheck(requestData) {
+      var _this8 = this;
+
+      this.$store.dispatch('spinner/setSpinner', true);
+      __WEBPACK_IMPORTED_MODULE_3_admin_http__["a" /* default */].post('/expenses', requestData).then(function (res) {
+        _this8.$store.dispatch('spinner/setSpinner', false);
+
+        _this8.showAlert('success', 'Check Created!');
+      }).catch(function (error) {
+        _this8.$store.dispatch('spinner/setSpinner', false);
+
+        throw error;
+      }).then(function () {
+        _this8.isWorking = false;
+        _this8.reset = true;
+
+        if (_this8.actionType === 'save' || _this8.actionType === 'draft') {
+          _this8.$router.push({
+            name: 'Expenses'
+          });
+        } else if (_this8.actionType === 'new_create') {
+          _this8.resetFields();
         }
       });
     },
