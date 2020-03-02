@@ -14543,11 +14543,18 @@ module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFs
           if (confirm('Are you sure to delete?')) {
             this.$store.dispatch('spinner/setSpinner', true);
             __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].delete(this.url + '/' + row.id).then(function (response) {
-              _this3.$delete(_this3.rows, index);
+              if (response.data.success) {
+                _this3.$delete(_this3.rows, index);
+
+                _this3.$store.dispatch('spinner/setSpinner', false);
+
+                _this3.showAlert('success', 'Deleted !');
+              }
 
               _this3.$store.dispatch('spinner/setSpinner', false);
 
-              _this3.showAlert('success', 'Deleted !');
+              _this3.showAlert('error', response.data.data[0].message); // or loop through the erros and show a list
+
             }).catch(function (error) {
               _this3.$store.dispatch('spinner/setSpinner', false);
 
@@ -14573,6 +14580,14 @@ module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFs
         if (confirm('Are you sure to delete?')) {
           this.$store.dispatch('spinner/setSpinner', true);
           __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].delete(this.url + '/delete/' + items.join(',')).then(function (response) {
+            if (!response.data.success) {
+              _this4.$store.dispatch('spinner/setSpinner', false);
+
+              _this4.showAlert('error', response.data.data[0].message);
+
+              return;
+            }
+
             var toggleCheckbox = document.getElementsByClassName('column-cb')[0].childNodes[0];
 
             if (toggleCheckbox.checked) {

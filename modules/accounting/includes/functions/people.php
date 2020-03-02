@@ -559,3 +559,19 @@ function erp_acct_get_accounting_people( $args = [] ) {
 
     return $items;
 }
+
+/**
+ * Check if transaction associated with this people
+ * 
+ * @param int $id
+ */
+function erp_acct_check_associated_tranasaction( $people_id ) {
+    global $wpdb;
+
+    return $wpdb->get_var(
+        $wpdb->prepare(
+            "SELECT id FROM {$wpdb->prefix}erp_acct_people_trn_details WHERE people_id = %d",
+            $people_id
+        )
+    );
+}
