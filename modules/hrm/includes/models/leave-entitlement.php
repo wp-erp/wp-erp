@@ -95,4 +95,16 @@ class Leave_Entitlement extends Model {
     public function employee() {
         return $this->belongsTo( 'WeDevs\ERP\HRM\Models\Employee', 'user_id', 'user_id' );
     }
+
+    /**
+     * Relation to Financial Year
+     *
+     * @since 1.5.15
+     *
+     * @return object
+     */
+    public function financial_year() {
+        return $this->belongsTo( 'WeDevs\ERP\HRM\Models\Financial_Year', 'f_year', 'id' );
+    }
+
 }

@@ -322,6 +322,7 @@ class ERP_HR_Leave_Entitlements extends \WP_Background_Process {
             // exit the current queue, we couldn't create leave policy data for this entitlement.
             return false;
         }
+
         $this->request_data['new_policy_id'] = $new_policy_id;
         $this->request_data['task'] = 'task_leave_entitlements';
 
