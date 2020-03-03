@@ -68,28 +68,7 @@ class Countries {
 
         // States set to array() are blank i.e. the country has no use for the state field.
         $states = array(
-            'AF' => array(),
-            'AT' => array(),
-            'BE' => array(),
-            'BI' => array(),
-            'CZ' => array(),
-            'DE' => array(),
-            'DK' => array(),
-            'EE' => array(),
-            'FI' => array(),
-            'FR' => array(),
-            'IS' => array(),
-            'IL' => array(),
-            'KR' => array(),
-            'NL' => array(),
-            'NO' => array(),
-            'PL' => array(),
             'SG' => array(),
-            'SK' => array(),
-            'SI' => array(),
-            'LK' => array(),
-            'SE' => array(),
-            'VN' => array(),
         );
 
         // Load only the state files the shop owner wants/needs

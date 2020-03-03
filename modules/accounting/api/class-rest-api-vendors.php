@@ -324,9 +324,17 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function delete_vendor( $request ) {
         $id = (int) $request['id'];
 
+        $exist = erp_acct_check_associated_tranasaction( $id );
+
+        if ( $exist ) {
+            $error = new WP_Error( 'rest_customer_has_trans', __( 'Can not remove! Customer has transactions.' ) );
+            
+            wp_send_json_error($error);
+        }
+
         $data = [
             'id'   => $id,
-            'hard' => false,
+            'hard' => true,
             'type' => 'vendor',
         ];
 
@@ -347,9 +355,19 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $data = [
             'id'   => explode( ',', $ids ),
-            'hard' => false,
+            'hard' => true,
             'type' => 'vendor',
         ];
+
+        foreach ( $data['id'] as $id ) {
+            $exist = erp_acct_check_associated_tranasaction( $id );
+
+            if ( $exist ) {
+                $error = new WP_Error( 'rest_customer_has_trans', __( 'Can not remove! Customer has transactions.' ) );
+                
+                wp_send_json_error($error);
+            }
+        }
 
         erp_delete_people( $data );
 

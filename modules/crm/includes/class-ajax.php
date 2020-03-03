@@ -1554,7 +1554,7 @@ class Ajax_Handler {
             'name'     => isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ): '',
             'subject'  => isset( $_POST['subject'] ) ? sanitize_text_field( wp_unslash( $_POST['subject'] ) ): '',
             /*'template' => isset( $_POST['template'] ) ? $_POST['template'] : ''*/
-            'template' => isset( $_POST['template'] ) ? sanitize_text_field( wp_unslash( $_POST['template'] ) ) : ''
+            'template' => isset( $_POST['template'] ) ?  wp_kses_post( $_POST['template'] ) : ''
         ];
 
         $results = erp_crm_insert_save_replies( $data );
@@ -1681,7 +1681,7 @@ class Ajax_Handler {
      */
     public function email_attachment() {
 
-        $files          =   ( ! empty( $_FILES['files'] ) ) ? array_map( 'sanitize_text_field', wp_unslash( $_FILES['files'] ) ) : array();
+        $files          =   ( ! empty( $_FILES['files'] ) ) ? $_FILES['files'] : array(); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         $wp_upload_dir  =   wp_upload_dir();
         $subdir         =   apply_filters( 'crm_attachmet_directory', 'crm-attachments' );
         $path           =   $wp_upload_dir['basedir'] . '/' . $subdir . '/';

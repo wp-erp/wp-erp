@@ -3360,6 +3360,17 @@ function erp_crm_check_new_inbound_emails() {
                 $email['cid']  = $message_id_parts[1];
                 $email['sid']  = $message_id_parts[2];
 
+                $email['attachments'] = array_map( function( $items ) {
+                    $current_item           = [];
+                    $current_item['name']   = $items['filename'];
+                    $current_item['data']   = $items['attachment'];
+                    return $current_item;
+
+                }, $email['attachments'] );
+                /*** Save uploaded files start *****/
+                $g_uploader           = new \WeDevs\ERP\CRM\Gmail_Sync();
+                $email['attachments'] = $g_uploader->save_attachments( $email['attachments'] );
+                /*** Save uploaded files end *****/
                 // Save & sent the email
                 switch ( $message_id_parts[3] ) {
                     case 'r1':
