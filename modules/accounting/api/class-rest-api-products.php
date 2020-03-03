@@ -428,7 +428,7 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
                             'description' => __( 'Unique identifier for the resource.', 'erp' ),
                             'type'        => 'integer',
                             'context'     => [ 'view', 'edit' ],
-                            'required'    => true
+                            'required'    => false
                         ],
                         'name' => [
                             'description' => __( 'Name for the resource.', 'erp' ),

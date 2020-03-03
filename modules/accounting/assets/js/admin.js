@@ -15018,6 +15018,19 @@ module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFs
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
@@ -15051,7 +15064,8 @@ module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFs
       tax_cats: [],
       productType: [],
       title: __('Product', 'erp'),
-      isDisabled: false
+      isDisabled: false,
+      selfOwner: false
     };
   },
   created: function created() {
@@ -15071,13 +15085,19 @@ module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFs
         id: product.tax_cat_id,
         name: product.tax_cat_name
       };
-      this.ProductFields.vendor = {
-        id: product.vendor,
-        name: product.vendor_name
-      };
       this.ProductFields.salePrice = product.sale_price;
       this.ProductFields.costPrice = product.cost_price;
       this.isDisabled = true;
+
+      if (product.vendor) {
+        this.ProductFields.vendor = {
+          id: product.vendor,
+          name: product.vendor_name
+        };
+      } else {
+        this.selfOwner = true;
+        this.ProductFields.vendor = null;
+      }
     }
 
     this.loaded();
@@ -15106,10 +15126,15 @@ module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFs
         product_type_id: this.ProductFields.type,
         category_id: this.ProductFields.categories,
         tax_cat_id: this.ProductFields.tax_cat_id,
-        vendor: this.ProductFields.vendor,
+        vendor: null,
         cost_price: this.ProductFields.costPrice,
         sale_price: this.ProductFields.salePrice
       };
+
+      if (!this.selfOwner) {
+        data.vendor = this.ProductFields.vendor;
+      }
+
       __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */][type](url, data).then(function (response) {
         _this.$parent.$emit('close');
 
@@ -15183,10 +15208,21 @@ module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFs
       this.ProductFields.costPrice = '';
       this.ProductFields.salePrice = '';
     },
+    checkOwner: function checkOwner() {
+      if (this.selfOwner) {
+        return true;
+      }
+
+      if (!this.ProductFields.vendor) {
+        return false;
+      }
+
+      return true;
+    },
     checkForm: function checkForm() {
       this.error_msg = [];
 
-      if (this.ProductFields.name && this.ProductFields.type && this.ProductFields.vendor && this.ProductFields.salePrice) {
+      if (this.ProductFields.name && this.ProductFields.type && this.checkOwner() && this.ProductFields.salePrice) {
         return true;
       }
 
@@ -15202,7 +15238,7 @@ module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFs
         this.error_msg.push('Product sale price should be greater than 0');
       }
 
-      if (!this.ProductFields.vendor) {
+      if (!this.selfOwner && !this.ProductFields.vendor) {
         this.error_msg.push('Vendor is required');
       }
 
@@ -35019,10 +35055,108 @@ var render = function() {
                           _c("div", { staticClass: "wperp-row" }, [
                             _c(
                               "div",
-                              { staticClass: "wperp-col-sm-3 wperp-col-xs-12" },
+                              {
+                                staticClass:
+                                  "wperp-col-sm-3 wperp-col-xs-12 product-owner"
+                              },
                               [
                                 _c("label", [
-                                  _vm._v(_vm._s(_vm.__("Vendor", "erp")) + " "),
+                                  _vm._v(
+                                    "\n                                                " +
+                                      _vm._s(_vm.__("Owner", "erp")) +
+                                      "\n                                                "
+                                  ),
+                                  _c(
+                                    "span",
+                                    {
+                                      directives: [
+                                        {
+                                          name: "show",
+                                          rawName: "v-show",
+                                          value: _vm.selfOwner,
+                                          expression: "selfOwner"
+                                        }
+                                      ],
+                                      staticClass: "wperp-required-sign"
+                                    },
+                                    [_vm._v("*")]
+                                  )
+                                ])
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              { staticClass: "wperp-col-sm-9 wperp-col-xs-12" },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.selfOwner,
+                                      expression: "selfOwner"
+                                    }
+                                  ],
+                                  attrs: {
+                                    type: "checkbox",
+                                    value: "self",
+                                    required: _vm.selfOwner
+                                  },
+                                  domProps: {
+                                    checked: Array.isArray(_vm.selfOwner)
+                                      ? _vm._i(_vm.selfOwner, "self") > -1
+                                      : _vm.selfOwner
+                                  },
+                                  on: {
+                                    change: function($event) {
+                                      var $$a = _vm.selfOwner,
+                                        $$el = $event.target,
+                                        $$c = $$el.checked ? true : false
+                                      if (Array.isArray($$a)) {
+                                        var $$v = "self",
+                                          $$i = _vm._i($$a, $$v)
+                                        if ($$el.checked) {
+                                          $$i < 0 &&
+                                            (_vm.selfOwner = $$a.concat([$$v]))
+                                        } else {
+                                          $$i > -1 &&
+                                            (_vm.selfOwner = $$a
+                                              .slice(0, $$i)
+                                              .concat($$a.slice($$i + 1)))
+                                        }
+                                      } else {
+                                        _vm.selfOwner = $$c
+                                      }
+                                    }
+                                  }
+                                }),
+                                _vm._v(
+                                  " Self\n                                        "
+                                )
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              {
+                                directives: [
+                                  {
+                                    name: "show",
+                                    rawName: "v-show",
+                                    value: !_vm.selfOwner,
+                                    expression: "!selfOwner"
+                                  }
+                                ],
+                                staticClass: "wperp-col-sm-3 wperp-col-xs-12"
+                              },
+                              [
+                                _c("label", [
+                                  _vm._v(
+                                    "\n                                                " +
+                                      _vm._s(_vm.__("Vendor", "erp")) +
+                                      "\n                                                "
+                                  ),
                                   _c(
                                     "span",
                                     { staticClass: "wperp-required-sign" },
@@ -35034,7 +35168,17 @@ var render = function() {
                             _vm._v(" "),
                             _c(
                               "div",
-                              { staticClass: "wperp-col-sm-9 wperp-col-xs-12" },
+                              {
+                                directives: [
+                                  {
+                                    name: "show",
+                                    rawName: "v-show",
+                                    value: !_vm.selfOwner,
+                                    expression: "!selfOwner"
+                                  }
+                                ],
+                                staticClass: "wperp-col-sm-9 wperp-col-xs-12"
+                              },
                               [
                                 _c(
                                   "div",
