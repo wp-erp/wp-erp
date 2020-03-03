@@ -107,10 +107,23 @@
                                     </div>
                                     <div class="wperp-panel-body">
                                         <div class="wperp-row">
-                                            <div class="wperp-col-sm-3 wperp-col-xs-12">
-                                                <label>{{ __('Vendor', 'erp') }} <span class="wperp-required-sign">*</span></label>
+                                            <div class="wperp-col-sm-3 wperp-col-xs-12 product-owner">
+                                                <label>
+                                                    {{ __('Owner', 'erp') }}
+                                                    <span v-show="selfOwner" class="wperp-required-sign">*</span>
+                                                </label>
                                             </div>
                                             <div class="wperp-col-sm-9 wperp-col-xs-12">
+                                                <input type="checkbox" v-model="selfOwner" value="self" :required="selfOwner"> Self
+                                            </div>
+
+                                            <div class="wperp-col-sm-3 wperp-col-xs-12" v-show="!selfOwner">
+                                                <label>
+                                                    {{ __('Vendor', 'erp') }}
+                                                    <span class="wperp-required-sign">*</span>
+                                                </label>
+                                            </div>
+                                            <div class="wperp-col-sm-9 wperp-col-xs-12" v-show="!selfOwner">
                                                 <div class="with-multiselect">
                                                     <multi-select
                                                         v-model="ProductFields.vendor"
@@ -182,27 +195,34 @@ export default {
                 vendor    : 0,
                 tax_cat_id: 0
             },
-            vendors      : [],
-            categories   : [],
-            tax_cats     : [],
-            productType  : [],
-            title        : __( 'Product', 'erp' ),
-            isDisabled   : false
+            vendors    : [],
+            categories : [],
+            tax_cats   : [],
+            productType: [],
+            title      : __( 'Product', 'erp' ),
+            isDisabled : false,
+            selfOwner  : false
         };
     },
 
     created() {
         if (this.product) {
-            const product                   = this.product;
+            const product                 = this.product;
             this.ProductFields.name       = product.name;
             this.ProductFields.id         = product.id;
             this.ProductFields.type       = { id: product.product_type_id, name: product.type_name };
             this.ProductFields.categories = { id: product.category_id, name: product.cat_name };
             this.ProductFields.tax_cat_id = { id: product.tax_cat_id, name: product.tax_cat_name };
-            this.ProductFields.vendor     = { id: product.vendor, name: product.vendor_name };
             this.ProductFields.salePrice  = product.sale_price;
             this.ProductFields.costPrice  = product.cost_price;
             this.isDisabled               = true;
+
+            if ( product.vendor ) {
+                this.ProductFields.vendor = { id: product.vendor, name: product.vendor_name };
+            } else {
+                this.selfOwner = true;
+                this.ProductFields.vendor = null;
+            }
         }
 
         this.loaded();
@@ -231,10 +251,14 @@ export default {
                 product_type_id: this.ProductFields.type,
                 category_id    : this.ProductFields.categories,
                 tax_cat_id     : this.ProductFields.tax_cat_id,
-                vendor         : this.ProductFields.vendor,
+                vendor         : null,
                 cost_price     : this.ProductFields.costPrice,
                 sale_price     : this.ProductFields.salePrice
             };
+
+            if (! this.selfOwner) {
+                data.vendor = this.ProductFields.vendor;
+            }
 
             HTTP[type](url, data).then(response => {
                 this.$parent.$emit('close');
@@ -297,14 +321,26 @@ export default {
             this.ProductFields.salePrice  = '';
         },
 
+        checkOwner() {
+            if (this.selfOwner) {
+                return true;
+            }
+
+            if ( ! this.ProductFields.vendor ) {
+                return false;
+            }
+            
+            return true;
+        },
+
         checkForm() {
             this.error_msg = [];
 
             if (
-                this.ProductFields.name &&
-                    this.ProductFields.type &&
-                    this.ProductFields.vendor &&
-                    this.ProductFields.salePrice
+                this.ProductFields.name
+                && this.ProductFields.type
+                && this.checkOwner()
+                && this.ProductFields.salePrice
             ) {
                 return true;
             }
@@ -321,7 +357,7 @@ export default {
                 this.error_msg.push('Product sale price should be greater than 0');
             }
 
-            if (!this.ProductFields.vendor) {
+            if (!this.selfOwner && !this.ProductFields.vendor) {
                 this.error_msg.push('Vendor is required');
             }
 
@@ -335,6 +371,13 @@ export default {
     #wperp-product-modal {
         .wperp-modal-header {
             padding: 30px 20px 20px !important;
+        }
+
+        .product-owner {
+            margin-bottom: 10px;
+            label {
+                margin-top: 0;
+            }
         }
 
         .modal-close {
