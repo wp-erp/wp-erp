@@ -55,8 +55,8 @@
                     <tr :key="idx" v-for="(acct,idx) in acct_rec">
                         <td><div class="wperp-form-group ob-people with-multiselect">
                             <multi-select v-model="acct.people" :options="options" /></div></td>
-                        <td><input type="number" class="wperp-form-field" @keyup="calculateAmount" v-model="acct.debit"></td>
-                        <td><input type="number" class="wperp-form-field" @keyup="calculateAmount" disabled v-model="acct.credit"></td>
+                        <td><input type="number" step="0.01"  class="wperp-form-field" @keyup="calculateAmount" v-model="acct.debit"></td>
+                        <td><input type="number" step="0.01"  class="wperp-form-field" @keyup="calculateAmount" disabled v-model="acct.credit"></td>
                         <td class="delete-row" data-colname="Remove">
                             <a @click.prevent="removeAcctRecRow(idx)" href="#"><i class="flaticon-trash"></i></a>
                         </td>
@@ -95,8 +95,8 @@
                     <tr :key="idx" v-for="(acct,idx) in acct_pay">
                         <td><div class="wperp-form-group ob-people with-multiselect">
                             <multi-select v-model="acct.people" :options="options" /></div></td>
-                        <td><input type="number" class="wperp-form-field" @keyup="calculateAmount" disabled v-model="acct.debit"></td>
-                        <td><input type="number" class="wperp-form-field" @keyup="calculateAmount" v-model="acct.credit"></td>
+                        <td><input type="number" step="0.01"  class="wperp-form-field" @keyup="calculateAmount" disabled v-model="acct.debit"></td>
+                        <td><input type="number" step="0.01"  class="wperp-form-field" @keyup="calculateAmount" v-model="acct.credit"></td>
                         <td class="delete-row" data-colname="Remove">
                             <a @click.prevent="removeAcctPayRow(idx)" href="#"><i class="flaticon-trash"></i></a>
                         </td>
@@ -132,8 +132,8 @@
                     <tbody>
                     <tr :key="idx" v-for="(acct,idx) in tax_pay">
                         <td><div class="with-multiselect"><multi-select v-model="acct.agency" :options="agencies"/></div></td>
-                        <td><input type="number" class="wperp-form-field" @keyup="calculateAmount" disabled v-model="acct.debit"></td>
-                        <td><input type="number" class="wperp-form-field" @keyup="calculateAmount" v-model="acct.credit"></td>
+                        <td><input type="number" step="0.01"  class="wperp-form-field" @keyup="calculateAmount" disabled v-model="acct.debit"></td>
+                        <td><input type="number" step="0.01"  class="wperp-form-field" @keyup="calculateAmount" v-model="acct.credit"></td>
                         <td class="delete-row" data-colname="Remove">
                             <a @click.prevent="removeTaxPayRow(idx)" href="#"><i class="flaticon-trash"></i></a>
                         </td>
@@ -165,8 +165,8 @@
                     <tbody>
                     <tr :key="idx" v-for="(ledger,idx) in ledgers[1]">
                         <td>{{ledger.name}}</td>
-                        <td><input type="number" class="wperp-form-field" @keyup="calculateAmount" v-model="ledger.debit"></td>
-                        <td><input type="number" class="wperp-form-field" @keyup="calculateAmount" v-model="ledger.credit"></td>
+                        <td><input type="number" step="0.01"  class="wperp-form-field" @keyup="calculateAmount" v-model="ledger.debit"></td>
+                        <td><input type="number" step="0.01"  class="wperp-form-field" @keyup="calculateAmount" v-model="ledger.credit"></td>
                     </tr>
                     </tbody>
                 </table>
@@ -190,8 +190,8 @@
                     <tbody>
                     <tr :key="idx" v-for="(ledger,idx) in ledgers[2]">
                         <td>{{ledger.name}}</td>
-                        <td><input type="number" class="wperp-form-field" @keyup="calculateAmount" v-model="ledger.debit"></td>
-                        <td><input type="number" class="wperp-form-field" @keyup="calculateAmount" v-model="ledger.credit"></td>
+                        <td><input type="number" step="0.01"  class="wperp-form-field" @keyup="calculateAmount" v-model="ledger.debit"></td>
+                        <td><input type="number" step="0.01"  class="wperp-form-field" @keyup="calculateAmount" v-model="ledger.credit"></td>
                     </tr>
                     </tbody>
                 </table>
@@ -215,8 +215,8 @@
                     <tbody>
                     <tr :key="idx" v-for="(ledger,idx) in ledgers[3]">
                         <td>{{ledger.name}}</td>
-                        <td><input type="number" class="wperp-form-field" @keyup="calculateAmount" v-model="ledger.debit"></td>
-                        <td><input type="number" class="wperp-form-field" @keyup="calculateAmount" v-model="ledger.credit"></td>
+                        <td><input type="number" step="0.01"  class="wperp-form-field" @keyup="calculateAmount" v-model="ledger.debit"></td>
+                        <td><input type="number" step="0.01"  class="wperp-form-field" @keyup="calculateAmount" v-model="ledger.credit"></td>
                     </tr>
                     </tbody>
                 </table>
@@ -242,8 +242,8 @@
                     <tr :key="idx" v-for="(acct,idx) in ledgers[7]">
                         <td><div class="wperp-form-group ob-people with-multiselect">
                             <multi-select v-model="acct.bank" :options="banks" /></div></td>
-                        <td><input type="number" class="wperp-form-field" @keyup="calculateAmount" v-model="acct.debit"></td>
-                        <td><input type="number" class="wperp-form-field" @keyup="calculateAmount" v-model="acct.credit"></td>
+                        <td><input type="number" step="0.01"  class="wperp-form-field" @keyup="calculateAmount" v-model="acct.debit"></td>
+                        <td><input type="number" step="0.01"  class="wperp-form-field" @keyup="calculateAmount" v-model="acct.credit"></td>
                         <td class="delete-row" data-colname="Remove">
                             <a @click.prevent="removeBankRow(idx)" href="#"><i class="flaticon-trash"></i></a>
                         </td>

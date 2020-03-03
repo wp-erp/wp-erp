@@ -159,10 +159,16 @@ export default {
                 if (confirm('Are you sure to delete?')) {
                     this.$store.dispatch('spinner/setSpinner', true);
                     HTTP.delete(this.url + '/' + row.id).then(response => {
-                        this.$delete(this.rows, index);
+                        if ( response.data.success ) {
+                            this.$delete(this.rows, index);
 
+                            this.$store.dispatch('spinner/setSpinner', false);
+                            this.showAlert('success', 'Deleted !');
+                        }
+                                                
                         this.$store.dispatch('spinner/setSpinner', false);
-                        this.showAlert('success', 'Deleted !');
+                        this.showAlert('error', response.data.data[0].message);
+                        // or loop through the erros and show a list
                     }).catch(error => {
                         this.$store.dispatch('spinner/setSpinner', false);
                         throw error;
@@ -185,6 +191,13 @@ export default {
                 if (confirm('Are you sure to delete?')) {
                     this.$store.dispatch('spinner/setSpinner', true);
                     HTTP.delete(this.url + '/delete/' + items.join(',')).then(response => {
+                        if ( ! response.data.success ) {
+                            this.$store.dispatch('spinner/setSpinner', false);
+                            this.showAlert('error', response.data.data[0].message);
+
+                            return;
+                        }
+
                         const toggleCheckbox = document.getElementsByClassName('column-cb')[0].childNodes[0];
 
                         if (toggleCheckbox.checked) {

@@ -1,0 +1,40 @@
+<?php 
+global $states; 
+
+$states['CO'] = array(
+
+    "AMAZONAS"              => __("Amazonas", 'erp'),
+    "ANTIOQUIA"             => __("Antioquia", 'erp'),
+    "ARAUCA"                => __("Arauca", 'erp'),
+    "ATLANTICO"             => __("Atlantico", 'erp'),
+    "BOGOTADISTRICTCAPITAL" => __("Bogota District Capital", 'erp'),
+    "BOLIVAR"               => __("Bolivar", 'erp'),
+    "BOYACA"                => __("Boyaca", 'erp'),
+    "CALDAS"                => __("Caldas", 'erp'),
+    "CAQUETA"               => __("Caqueta", 'erp'),
+    "CASANARE"              => __("Casanare", 'erp'),
+    "CAUCA"                 => __("Cauca", 'erp'),
+    "CESAR"                 => __("Cesar", 'erp'),
+    "CHOCO"                 => __("Choco", 'erp'),
+    "CORDOBA"               => __("Cordoba", 'erp'),
+    "CUNDINAMARCA"          => __("Cundinamarca", 'erp'),
+    "GUAINIA"               => __("Guainia", 'erp'),
+    "GUAVIARE"              => __("Guaviare", 'erp'),
+    "HUILA"                 => __("Huila", 'erp'),
+    "LAGUAJIRA"             => __("La Guajira", 'erp'),
+    "MAGDALENA"             => __("Magdalena", 'erp'),
+    "META"                  => __("Meta", 'erp'),
+    "NARINO"                => __("Narino", 'erp'),
+    "NORTEDESANTANDER"      => __("Norte de Santander", 'erp'),
+    "PUTUMAYO"              => __("Putumayo", 'erp'),
+    "QUINDIO"               => __("Quindio", 'erp'),
+    "RISARALDA"             => __("Risaralda", 'erp'),
+    "SANANDRES&PROVIDENCIA" => __("San Andres & Providencia", 'erp'),
+    "SANTANDER"             => __("Santander", 'erp'),
+    "SUCRE"                 => __("Sucre", 'erp'),
+    "TOLIMA"                => __("Tolima", 'erp'),
+    "VALLEDELCAUCA"         => __("Valle del Cauca", 'erp'),
+    "VAUPES"                => __("Vaupes", 'erp'),
+    "VICHADA"               => __("Vichada", 'erp'),
+
+);
