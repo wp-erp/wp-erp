@@ -1554,7 +1554,7 @@ class Ajax_Handler {
             'name'     => isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ): '',
             'subject'  => isset( $_POST['subject'] ) ? sanitize_text_field( wp_unslash( $_POST['subject'] ) ): '',
             /*'template' => isset( $_POST['template'] ) ? $_POST['template'] : ''*/
-            'template' => isset( $_POST['template'] ) ? sanitize_text_field( wp_unslash( $_POST['template'] ) ) : ''
+            'template' => isset( $_POST['template'] ) ?  wp_kses_post( $_POST['template'] ) : ''
         ];
 
         $results = erp_crm_insert_save_replies( $data );
