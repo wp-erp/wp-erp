@@ -267,6 +267,16 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 == Changelog ==
 
+= v1.5.14 -> March 03, 2020 =
+- [fix] Show owners equity ledger account balance in chart of accounts
+- [fix] Bank balance transfer issue with opening balance cash
+- [fix] Subscription widget is not working issue
+- [fix] Email attachment is not working 
+- [fix] Opening balance doesn't support fraction amounts
+- [fix] States/provinces are missing for most of the country
+- [tweak] Conditionally required vendor field on product creation
+- [tweak] Add expiration field at employee education section
+
 = v1.5.13 -> February 11, 2020 =
 - [new] Add document attachment field at leave application form
 - [new] Add csv import feature for uploading bulk holidays
