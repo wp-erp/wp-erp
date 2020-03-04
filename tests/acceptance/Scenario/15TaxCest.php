@@ -17,15 +17,15 @@ class TaxCest
         $I->amOnPage('/wp-admin/admin.php?page=erp-accounting#/taxes/rate-names');
         $I->wait(5);
         $I->click('Add Tax Zone');
-    	$I->fillField('//input[@type="text"]', 'Jessore');
-    	$I->fillField('//div[2]/input', '345435');
+    	$I->fillField('//input[@type="text"]', 'Dhaka');
+    	$I->fillField('//div[2]/input', '34543534');
     	$I->click('Save');
 
         // Add new tax category
         $I->amOnPage('/wp-admin/admin.php?page=erp-accounting#/taxes/categories');
         $I->wait(5);
         $I->click('Add Tax Category');
-        $I->fillField('//input[@type="text"]', 'Basic');
+        $I->fillField('//input[@type="text"]', 'Standard');
         $I->fillField('//textarea', 'Listing basic tax category');
         $I->click('Save');
 
@@ -54,7 +54,7 @@ class TaxCest
 
         //Tax Payments
         $I->amOnPage('/wp-admin/admin.php?page=erp-accounting#/taxes/tax-records');
-        $I->wait(5);
+        $I->wait(10);
         $I->click('New Tax Payment');
         $I->click('//div[@class="wperp-col-sm-4 with-multiselect"]//span[@class="multiselect__single"]');
         $I->wait(5);
