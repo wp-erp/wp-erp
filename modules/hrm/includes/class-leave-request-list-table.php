@@ -38,8 +38,11 @@ class Leave_Requests_List_Table extends \WP_List_Table {
             return;
         }
 
-        $current_year  = date( 'Y' );
-        $selected_year = ( isset( $_GET['filter_year'] ) ) ? sanitize_text_field( wp_unslash( $_GET['filter_year'] ) ) : $current_year;
+        $financial_year = erp_get_financial_year_dates();
+        $f_ids = get_financial_year_from_date_range( $financial_year['start'], $financial_year['end'] );
+        $financial_years = wp_list_pluck( Financial_Year::all(), 'fy_name', 'id' );
+
+        $selected_year = ( isset( $_GET['filter_year'] ) ) ? absint( wp_unslash( $_GET['filter_year'] ) ) : $f_ids[0];
         ?>
         <div class="alignleft actions">
 
@@ -48,9 +51,8 @@ class Leave_Requests_List_Table extends \WP_List_Table {
             <select name="filter_year" id="filter_year">
                 <option value="" selected="selected">select year</option>
                 <?php
-                for ( $i = 0; $i <= 5; $i ++ ) {
-                    $year = $current_year - $i;
-                    echo sprintf( "<option value='%s'%s>%s</option>\n", esc_html( $year ), selected( $selected_year, $year, false ), esc_html( $year ) );
+                foreach ( $financial_years as $f_id => $f_name ) {
+                    echo sprintf( "<option value='%s'%s>%s</option>\n", esc_html( $f_id ), selected( $selected_year, $f_id, false ), esc_html( $f_name ) );
                 }
                 ?>
             </select>
@@ -76,7 +78,7 @@ class Leave_Requests_List_Table extends \WP_List_Table {
      */
     function get_columns() {
         $columns = array(
-            'cb'        => '<input type="checkbox" />',
+            //'cb'        => '<input type="checkbox" />',
             'name'      => __( 'Employee Name', 'erp' ),
             'policy'    => __( 'Leave Policy', 'erp' ),
             'from_date' => __( 'From Date', 'erp' ),
@@ -237,7 +239,7 @@ class Leave_Requests_List_Table extends \WP_List_Table {
             $actions['pending'] = __( 'Mark Pending', 'erp' );
         }
 
-        return $actions;
+        //return $actions;
     }
 
     /**
@@ -291,7 +293,7 @@ class Leave_Requests_List_Table extends \WP_List_Table {
             'offset'  => $offset,
             'number'  => $per_page,
             'status'  => $this->page_status,
-            'year'    => isset( $_GET['filter_year'] ) ? sanitize_text_field( wp_unslash( $_GET['filter_year'] ) ) : '',
+            'f_year'  => isset( $_GET['filter_year'] ) ? sanitize_text_field( wp_unslash( $_GET['filter_year'] ) ) : '',
             'orderby' => isset( $_GET['orderby'] ) ? sanitize_text_field( wp_unslash( $_GET['orderby'] ) ) : 'created_at',
             'order'   => isset( $_GET['order'] ) ? sanitize_text_field( wp_unslash( $_GET['order'] ) ) : 'DESC',
             's'       => isset( $_GET['s'] ) ? sanitize_text_field( wp_unslash( $_GET['s'] ) ) : ''

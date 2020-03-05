@@ -1112,7 +1112,7 @@ function erp_hr_leave_insert_request( $args = array() ) {
 function erp_hr_get_leave_request( $request_id ) {
     $request_data = erp_hr_get_leave_requests( array( 'request_id' => $request_id ) );
 
-    if ( isset( $request_data['data'] ) ) {
+    if ( isset( $request_data['data'] )  && is_array( $request_data['data'] ) && ! empty( $request_data['data'] ) ) {
         return $request_data['data'][0];
     }
 
@@ -1137,6 +1137,7 @@ function erp_hr_get_leave_requests( $args = array() ) {
         'policy_id'     => 0,
         'status'        => 1,
         'year'          => '',
+        'f_year'        => '',
         'number'        => 20,
         'offset'        => 0,
         'orderby'       => 'created_at',
@@ -1187,7 +1188,7 @@ function erp_hr_get_leave_requests( $args = array() ) {
 
     // filter by name
     if ( isset( $args['s'] ) && $args['s'] !== '' ) {
-        $where .= " AND u.display_name like '%" . esc_sql( $args['s'] ) . "%'";
+        $where .= " AND u.display_name like '%" . esc_sql( trim( $args['s'] ) ) . "%'";
     }
 
     if ( 'all' != $args['status'] && $args['status'] != '' ) {
@@ -1239,6 +1240,11 @@ function erp_hr_get_leave_requests( $args = array() ) {
         $to_date = $to_date->modify( $to_date_string );
 
         $where .= " AND request.start_date >= {$from_date->getTimestamp()} AND request.end_date <= {$to_date->getTimestamp()}";
+    }
+
+    if ( ! empty( $args['f_year'] ) ) {
+        $join .= " left join {$wpdb->prefix}erp_hr_leave_entitlements as entl on request.leave_entitlement_id = entl.id";
+        $where .= ' and entl.f_year = ' . absint( wp_unslash( $args['f_year'] ) );
     }
 
     if ( $args['start_date']  && $args['end_date'] ) {
