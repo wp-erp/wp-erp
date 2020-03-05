@@ -87,7 +87,6 @@ class ERP_1_5_15 {
                   gender enum('-1','male','female','other') NOT NULL DEFAULT '-1',
                   marital enum('-1','single','married','widowed') NOT NULL DEFAULT '-1',
                   f_year smallint(5) UNSIGNED DEFAULT NULL,
-                  forward_default enum('carryover','encashment') NOT NULL DEFAULT 'encashment',
                   carryover_days tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
                   carryover_uses_limit tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
                   encashment_days tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
@@ -129,8 +128,8 @@ class ERP_1_5_15 {
                   created_by bigint(20) UNSIGNED NOT NULL,
                   trn_id bigint(20) UNSIGNED NOT NULL,
                   trn_type enum('leave_policies','leave_approval_status','leave_encashment_requests','leave_entitlements','unpaid_leave','leave_encashment', 'leave_carryforward', 'manual_leave_policies', 'Accounts', 'others') NOT NULL DEFAULT 'leave_policies',
-                  day_in tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
-                  day_out tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                  day_in decimal(4,1) UNSIGNED NOT NULL DEFAULT '0.0',
+                  day_out decimal(4,1) UNSIGNED NOT NULL DEFAULT '0.0',
                   description text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
                   f_year smallint(6) NOT NULL,
                   created_at int(11) NOT NULL,
@@ -142,27 +141,17 @@ class ERP_1_5_15 {
                   id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
                   user_id bigint(20) UNSIGNED NOT NULL,
                   leave_id smallint(6) UNSIGNED NOT NULL,
+                  leave_entitlement_id bigint(20) UNSIGNED NOT NULL default 0,
                   day_status_id smallint(5) UNSIGNED NOT NULL DEFAULT '1',
                   days decimal(4,1) UNSIGNED NOT NULL DEFAULT '0.0',
                   start_date int(11) NOT NULL,
                   end_date int(11) NOT NULL,
                   reason text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                  created_by bigint(20) UNSIGNED NOT NULL,
                   created_at int(11) DEFAULT NULL,
                   updated_at int(11) DEFAULT NULL,
                   PRIMARY KEY  (id),
                   KEY user_id (user_id)
-            ) $charset_collate;",
-
-            "CREATE TABLE {$wpdb->prefix}erp_hr_leave_request_details_new (
-                  id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-                  leave_request_id bigint(20) UNSIGNED NOT NULL,
-                  leave_approval_status_id bigint(20) UNSIGNED NOT NULL,
-                  workingday_status tinyint(3) UNSIGNED NOT NULL DEFAULT '1',
-                  user_id bigint(20) UNSIGNED NOT NULL,
-                  leave_date int(11) NOT NULL,
-                  created_at int(11) NOT NULL,
-                  updated_at int(11) NOT NULL,
-                  PRIMARY KEY  (id)
             ) $charset_collate;",
 
             "CREATE TABLE {$wpdb->prefix}erp_hr_leave_approval_status_new (
@@ -178,12 +167,25 @@ class ERP_1_5_15 {
                   PRIMARY KEY  (id)
             ) $charset_collate;",
 
+            "CREATE TABLE {$wpdb->prefix}erp_hr_leave_request_details_new (
+                  id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+                  leave_request_id bigint(20) UNSIGNED NOT NULL,
+                  leave_approval_status_id bigint(20) UNSIGNED NOT NULL,
+                  workingday_status tinyint(3) UNSIGNED NOT NULL DEFAULT '1',
+                  user_id bigint(20) UNSIGNED NOT NULL,
+                  f_year smallint(6) NOT NULL,
+                  leave_date int(11) NOT NULL,
+                  created_at int(11) NOT NULL,
+                  updated_at int(11) NOT NULL,
+                  PRIMARY KEY  (id)
+            ) $charset_collate;",
+
             "CREATE TABLE {$wpdb->prefix}erp_hr_leave_encashment_requests_new (
                   id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
                   user_id bigint(20) UNSIGNED NOT NULL,
                   leave_id smallint(6) UNSIGNED NOT NULL,
                   approved_by bigint(20) UNSIGNED NOT NULL,
-                  approval_status_id tinyint(3) UNSIGNED NOT NULL,
+                  approval_status_id tinyint(3) UNSIGNED NOT NULL DEFAULT '1',
                   encash_days tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
                   forward_days tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
                   amount decimal(20,2) NOT NULL DEFAULT '0.00',
@@ -200,7 +202,7 @@ class ERP_1_5_15 {
                   leave_request_id bigint(20) UNSIGNED NOT NULL,
                   leave_approval_status_id bigint(20) UNSIGNED NOT NULL,
                   user_id bigint(20) UNSIGNED NOT NULL,
-                  days tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                  days decimal(4,1) UNSIGNED NOT NULL DEFAULT '0.0',
                   amount decimal(20,2) NOT NULL DEFAULT '0.00',
                   total decimal(20,2) NOT NULL DEFAULT '0.00',
                   status tinyint(3) UNSIGNED NOT NULL DEFAULT '0',

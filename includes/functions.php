@@ -2665,6 +2665,7 @@ function erp_get_financial_year_dates( $date = null ) {
  * Get finanicial start and end years that a date belongs to
  *
  * @since 1.2.0
+ * @since 1.5.15 added timestamp support
  *
  * @param string $date
  *
@@ -2676,6 +2677,9 @@ function get_financial_year_from_date( $date ) {
 
     if ( ! is_numeric( $date ) ) {
         $date_timestamp = strtotime( $date );
+    }
+    else {
+        $date_timestamp = $date;
     }
 
     $date_year      = absint( date( 'Y', $date_timestamp ) );
@@ -2726,10 +2730,29 @@ function get_financial_year_from_date_range( $start_date, $end_date ) {
         $end_date = $end_date_obj->getTimestamp();
     }
 
+    /**
+     * select wp_erp_hr_leave_requests.id, st.approval_status_id from wp_erp_hr_leave_requests
+     * left join wp_erp_hr_leave_approval_status as st on st.leave_request_id = wp_erp_hr_leave_requests.id
+     * where (start_date <= 1578441600 and end_date >= 1578441600 and user_id = 23)
+     * or (start_date <= 1579046399 and end_date >= 1579046399 and user_id = 23)
+     * or (start_date >= 1578441600 and start_date <= 1579046399 and user_id = 23)
+     * or (end_date >= 1578441600 and end_date <= 1579046399 and user_id = 23)
+     */
+
     return $wpdb->get_col(
         $wpdb->prepare(
-            "SELECT id FROM {$wpdb->prefix}erp_hr_financial_years WHERE start_date >= %d AND end_date <= %d",
-            array( $start_date, $end_date )
+            "SELECT id FROM {$wpdb->prefix}erp_hr_financial_years
+                    WHERE (start_date <= %d AND end_date >= %d)
+                    OR (start_date <= %d AND end_date >= %d)
+                    OR (start_date >= %d and start_date <= %d)
+                    OR (end_date >= %d and end_date <= %d)
+                    ",
+            array(
+                $start_date, $start_date,
+                $end_date, $end_date,
+                $start_date, $end_date,
+                $start_date, $end_date
+            )
         )
     );
 }
@@ -3492,7 +3515,8 @@ function erp_wp_insert_rows( $row_arrays = array(), $wp_table_name, $update = fa
     $query .= implode( ', ', $place_holders );
 
     if ( $update ) {
-        $update = " ON DUPLICATE KEY UPDATE $primary_key=VALUES( $primary_key ),";
+        //$update = " ON DUPLICATE KEY UPDATE $primary_key=VALUES( $primary_key ),";
+        $update = ' ON DUPLICATE KEY UPDATE ';
         $cnt    = 0;
         foreach ( $row_arrays[0] as $key => $value ) {
             if ( $cnt == 0 ) {
