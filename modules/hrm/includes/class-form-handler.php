@@ -3,8 +3,10 @@
 namespace WeDevs\ERP\HRM;
 
 use tad\WPBrowser\Adapters\WP;
+use WeDevs\ERP\ERP_Errors;
 use WeDevs\ERP\HRM\Models\Leave_Policy;
 use WP_Error;
+use function Sodium\add;
 
 /**
  * Handle the form submissions
@@ -319,6 +321,8 @@ class Form_Handler {
                 'filter_by_year'
             ), $req_uri_bulk );
 
+            $errors = new ERP_Errors( 'leave_request_status_change' );
+
             switch ( $action ) {
 
                 case 'delete' :
@@ -337,57 +341,59 @@ class Form_Handler {
                     if ( isset( $_GET['request_id'] ) && ! empty( $_GET['request_id'] ) ) {
                         $array = array_map( 'sanitize_text_field', wp_unslash( $_GET['request_id'] ) );
                         foreach ( $array as $key => $request_id ) {
-                            erp_hr_leave_request_update_status( $request_id, 1 );
-
-                            $approved_email = wperp()->emailer->get_email( 'Approved_Leave_Request' );
-
-                            if ( is_a( $approved_email, '\WeDevs\ERP\Email' ) ) {
-                                $approved_email->trigger( $request_id );
+                            $return = erp_hr_leave_request_update_status( $request_id, 1 );
+                            if ( is_wp_error( $return ) ) {
+                                $errors->add( $return );
                             }
-
                         }
                     }
 
-                    wp_redirect( $redirect );
-                    exit();
+                    break;
 
                 case 'reject' :
                     if ( isset( $_GET['request_id'] ) && ! empty( $_GET['request_id'] ) ) {
                         $array = array_map( 'sanitize_text_field', wp_unslash( $_GET['request_id'] ) );
                         foreach ( $array as $key => $request_id ) {
-                            erp_hr_leave_request_update_status( $request_id, 3 );
-
-                            $rejected_email = wperp()->emailer->get_email( 'Rejected_Leave_Request' );
-
-                            if ( is_a( $rejected_email, '\WeDevs\ERP\Email' ) ) {
-                                $rejected_email->trigger( $request_id );
+                            $return = erp_hr_leave_request_update_status( $request_id, 3 );
+                            if ( is_wp_error( $return ) ) {
+                                $errors->add( $return );
                             }
                         }
                     }
 
-                    wp_redirect( $redirect );
-                    exit();
+                    break;
 
                 case 'pending':
                     if ( isset( $_GET['request_id'] ) && ! empty( $_GET['request_id'] ) ) {
                         $array = array_map( 'sanitize_text_field', wp_unslash( $_GET['request_id'] ) );
                         foreach ( $array as $key => $request_id ) {
-                            erp_hr_leave_request_update_status( $request_id, 2 );
+                            $return = erp_hr_leave_request_update_status( $request_id, 2 );
+                            if ( is_wp_error( $return ) ) {
+                                $errors->add( $return );
+                            }
                         }
                     }
 
-                    wp_redirect( $redirect );
-                    exit();
+                    break;
 
                 case 'filter_by_year':
-                    wp_redirect( $redirect );
-                    exit();
+                    break;
 
                 case 'search_request':
-                    wp_redirect( $redirect );
-                    exit();
+                    break;
+
+                default:
+                    break;
 
             }
+
+            if ( $errors->has_error() ) {
+                $errors->save();
+                $redirect = add_query_arg( array( 'error' => 'leave_request_status_change' ), $redirect );
+            }
+
+            wp_redirect( $redirect );
+            exit();
         }
 
     }
@@ -783,8 +789,14 @@ class Form_Handler {
             wp_die( esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
-        if( empty( trim( sanitize_text_field( wp_unslash( $_POST['leave_reason'] ) ) ) ) ){
-            $redirect_to = admin_url( 'admin.php?page=erp-hr&section=leave&view=new&msg=no_reason' );
+        $errors = new ERP_Errors( 'new_leave_request' );
+
+        if( empty( trim( sanitize_text_field( wp_unslash( $_POST['leave_reason'] ) ) ) ) ) {
+
+            $errors->add( esc_attr__( 'Leave reason field can not be blank.', 'erp' ) );
+            $errors->save();
+
+            $redirect_to = admin_url( 'admin.php?page=erp-hr&section=leave&view=new&error=new_leave_request' );
             wp_redirect( $redirect_to );
             exit;
         }
@@ -807,10 +819,13 @@ class Form_Handler {
             'reason'       => $leave_reason
         ) );
 
-        if ( ! is_wp_error( $insert ) ) {
-            $redirect_to = admin_url( 'admin.php?page=erp-hr&section=leave&view=new&msg=submitted' );
+        if ( is_wp_error( $insert ) ) {
+            $errors->add( $insert );
+            $errors->save();
+            $redirect_to = admin_url( 'admin.php?page=erp-hr&section=leave&view=new&error=new_leave_request' );
+
         } else {
-            $redirect_to = admin_url( 'admin.php?page=erp-hr&section=leave&view=new&msg=error' );
+            $redirect_to = admin_url( 'admin.php?page=erp-hr&section=leave&view=new&msg=submitted' );
         }
 
         wp_redirect( $redirect_to );
@@ -862,7 +877,7 @@ class Form_Handler {
 
         switch ( $action ) {
             case 'delete':
-                \WeDevs\ERP\HRM\Models\Leave_request::find( $request_id )->delete();
+                // \WeDevs\ERP\HRM\Models\Leave_request::find( $request_id )->delete();
                 break;
 
             case 'reject':
@@ -879,13 +894,22 @@ class Form_Handler {
         }
 
         if ( null !== $status ) {
-            erp_hr_leave_request_update_status( $request_id, $status );
+            $return = erp_hr_leave_request_update_status( $request_id, $status );
+        }
+
+        $redirect_to = remove_query_arg( array( 'status' ), admin_url( 'admin.php?page=erp-hr&section=leave' ) );
+
+        if ( is_wp_error( $return ) ) {
+            $errors = new ERP_Errors( 'leave_request_status_change' );
+            $errors->add( $return );
+            $errors->save();
+            $redirect_to = add_query_arg( array( 'error' => 'leave_request_status_change' ), $redirect_to );
+        }
+        else {
+            $redirect_to = add_query_arg( array( 'status' => $status ), $redirect_to );
         }
 
         // redirect the user back
-        $redirect_to = remove_query_arg( array( 'status' ), admin_url( 'admin.php?page=erp-hr&section=leave' ) );
-        $redirect_to = add_query_arg( array( 'status' => $status ), $redirect_to );
-
         wp_redirect( $redirect_to );
         exit;
     }

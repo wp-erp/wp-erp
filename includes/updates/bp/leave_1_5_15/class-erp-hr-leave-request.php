@@ -189,15 +189,30 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
             } elseif ( is_array( $policy_data ) && ! empty( $policy_data ) ) {
                 $this->request_data['leave_id'] = $policy_data['leave_id'];
 
+                // get entitlement id for current request
+                $entitlement_id = $wpdb->get_var(
+                    $wpdb->prepare(
+                        "SELECT id FROM {$wpdb->prefix}erp_hr_leave_entitlements_new WHERE trn_type = %s AND user_id = %d AND leave_id = %d AND f_year = %d",
+                        array(
+                            'leave_policies',
+                            $this->request_data['user_id'],
+                            $this->request_data['leave_id'],
+                            $f_year_id,
+                        )
+                    )
+                );
+
                 // insert into new leave request table.
                 $table_data = array(
                     'user_id'       => $this->request_data['user_id'],
                     'leave_id'      => $this->request_data['leave_id'],
+                    'leave_entitlement_id' => $entitlement_id,
                     'day_status_id' => 1,
                     'days'          => $this->request_data['days'],
                     'start_date'    => $this->request_data['start_date'],
                     'end_date'      => $this->request_data['end_date'],
                     'reason'        => wp_kses_post( $this->request_data['reason'] ),
+                    'created_by'    => $this->request_data['created_by'],
                     'created_at'    => $this->request_data['created_on'],
                     'updated_at'    => $this->request_data['updated_on'],
                 );
@@ -209,7 +224,9 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
                     '%d',
                     '%d',
                     '%d',
+                    '%d',
                     '%s',
+                    '%d',
                     '%d',
                     '%d',
                 );
@@ -225,7 +242,6 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
                             true
                         )
                     );
-                    // todo: query error, do loging or something here.
                 } else {
                     $this->request_data['leave_request_id'] = $wpdb->insert_id;
                 }
@@ -403,7 +419,8 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
                             'user_id'     => $this->request_data['user_id'],
                             'leave_id'    => $this->request_data['leave_id'],
                             'created_by'  => $this->request_data['updated_by'],
-                            'trn_id'      => $wpdb->insert_id,
+                            //'trn_id'      => $wpdb->insert_id,
+                            'trn_id'      => $this->request_data['leave_approval_status_id'],
                             'trn_type'    => 'unpaid_leave',
                             'day_in'      => $current_count,
                             'day_out'     => 0,
@@ -473,6 +490,7 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
                         'leave_approval_status_id' => $this->request_data['leave_approval_status_id'],
                         'workingday_status'        => 1,
                         'user_id'                  => $this->request_data['user_id'],
+                        'f_year'                   => $this->request_data['f_year'],
                         'leave_date'               => erp_mysqldate_to_phptimestamp( $leave_date ),
                         'created_at'               => $this->request_data['created_on'],
                         'updated_at'               => $this->request_data['created_on'],

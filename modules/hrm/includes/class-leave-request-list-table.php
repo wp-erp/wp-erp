@@ -90,7 +90,7 @@ class Leave_Requests_List_Table extends \WP_List_Table {
 
         );
         if ( isset( $_GET['status'] ) && $_GET['status'] == 3 ) {
-            $columns['comment'] =  __( 'Reject Reason', 'erp' );
+            $columns['message'] =  __( 'Reject Reason', 'erp' );
         }
         return $columns;
     }
@@ -140,6 +140,9 @@ class Leave_Requests_List_Table extends \WP_List_Table {
                 }
 
                 return sprintf( '<span class="%s">%d %s</span>', $class, number_format_i18n( $item->extra_leaves ), __( 'days', 'erp' ) );
+
+            case 'message':
+                return stripslashes( $item->message );
 
             default:
                 return isset( $item->$column_name ) ? $item->$column_name : '';
