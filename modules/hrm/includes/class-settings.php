@@ -89,11 +89,14 @@ class Settings extends ERP_Settings_Page {
             'id'    => 'general_options'
         ];
         $fields['leave'][] = [
-            'title' => __( 'Extra Leave', 'erp' ),
+            'title' => __( 'Extra Unpaid Leave', 'erp' ),
             'type'  => 'checkbox',
             'id'    => 'enable_extra_leave',
             'desc'  => __( 'Employees can apply for leave, even when there is no entitlement left.', 'erp' )
         ];
+
+        $fields = apply_filters( 'erp_settings_hr_leave_section_fields', $fields );
+
         $fields['leave'][] = [
             'type'  => 'sectionend',
             'id'    => 'script_styling_options'
