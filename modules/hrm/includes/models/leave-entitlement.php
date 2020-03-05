@@ -106,5 +106,4 @@ class Leave_Entitlement extends Model {
     public function financial_year() {
         return $this->belongsTo( 'WeDevs\ERP\HRM\Models\Financial_Year', 'f_year', 'id' );
     }
-
 }

@@ -15,6 +15,7 @@
             $( '.erp-hr-leave-policy' ).on( 'click', 'a.submitdelete', self, this.policy.remove );
             $( 'body' ).on( 'change', '#erp-hr-leave-req-from-date, #erp-hr-leave-req-to-date', self, this.leave.requestDates );
             $( 'body' ).on( 'change', '#erp-hr-leave-req-employee-id', self, this.leave.setPolicy );
+            $( 'body' ).on( 'change', '.new-leave-request-form .f_year', self, this.leave.setPolicy );
             $( 'body' ).on( 'change', '#erp-hr-leave-req-leave-policy', self, this.leave.setAvailableDays );
             $( '.hrm-dashboard' ).on( 'click', '.erp-hr-new-leave-request-wrap a#erp-hr-new-leave-req', this.leave.takeLeave );
             $( '.erp-employee-single' ).on('submit', 'form#erp-hr-empl-leave-history', this.leave.showHistory );
@@ -458,6 +459,10 @@
                     marital     = $('.leave-entitlement-form .marital').select2('data'),
                     f_year      = $('.leave-entitlement-form .f_year').select2('data');
 
+                if ( typeof department === 'undefined' ) {
+                    return;
+                }
+
                 wp.ajax.send( 'erp-hr-leave-get-policies', {
                     data: {
                         '_wpnonce': wpErpHr.nonce,
@@ -499,6 +504,10 @@
                     location    = $('.leave-entitlement-form .location_id').select2('data'),
                     gender      = $('.leave-entitlement-form .gender').select2('data'),
                     marital     = $('.leave-entitlement-form .marital').select2('data');
+
+                if ( typeof department === 'undefined' ) {
+                    return;
+                }
 
                 wp.ajax.send( 'erp-hr-leave-get-employees', {
                     data: {
@@ -611,14 +620,15 @@
 
                 leavetypewrap.html('');
 
-                if ( self.val() == 0 ) {
+                if ( $('#erp-hr-leave-req-employee-id').val() == 0 ) {
                     return;
                 };
 
                 wp.ajax.send( 'erp-hr-leave-employee-assign-policies', {
                     data: {
                         '_wpnonce'  : wpErpHr.nonce,
-                        employee_id : self.val()
+                        employee_id : $('#erp-hr-leave-req-employee-id').val(),
+                        f_year: $('.new-leave-request-form .f_year').val(),
                     },
                     success: function(resp) {
                         leavetypewrap.html( resp ).hide().fadeIn();
@@ -693,9 +703,20 @@
                         wp.ajax.send( {
                             data: this.serialize()+'&_wpnonce='+wpErpHr.nonce,
                             success: function(res) {
-                                Leave.leave.pageReload();
-                                modal.closeModal();
-                                //location.reload();
+                                var error_string = '';
+                                if ( res.errors ) {
+                                    $.each( res.errors, function( key, val ) {
+                                        error_string += '<div class="notice notice-error is-dismissible"><p>' + val[0] + '</p></div>';
+                                    });
+                                    if ( error_string != '' ) {
+                                        $('#leave-reject-form-error').html( error_string );
+                                    }
+                                }
+                                else {
+                                    Leave.leave.pageReload();
+                                    modal.closeModal();
+                                    //location.reload();
+                                }
                             },
                             error: function(error) {
                                 modal.showError( error );

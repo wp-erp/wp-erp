@@ -140,7 +140,7 @@ class Entitlement_List_Table extends \WP_List_Table {
         $str = '';
 
         if ( ! array_key_exists( $entitlement->id, $this->entitlement_data ) ) {
-            $this->entitlement_data[ $entitlement->id ] = erp_hr_leave_get_balance_for_single_policy( $entitlement );
+            $this->entitlement_data[ $entitlement->id ] = erp_hr_leave_get_balance_for_single_entitlement( $entitlement->id );
         }
 
         if ( array_key_exists( $entitlement->id, $this->entitlement_data ) && ! is_wp_error( $this->entitlement_data[ $entitlement->id ] ) ) {
@@ -154,7 +154,7 @@ class Entitlement_List_Table extends \WP_List_Table {
         $extra_leave = 0;
 
         if ( ! array_key_exists( $entitlement->id, $this->entitlement_data ) ) {
-            $this->entitlement_data[ $entitlement->id ] = erp_hr_leave_get_balance_for_single_policy( $entitlement );
+            $this->entitlement_data[ $entitlement->id ] = erp_hr_leave_get_balance_for_single_entitlement( $entitlement->id );
         }
 
         if ( array_key_exists( $entitlement->id, $this->entitlement_data ) && ! is_wp_error( $this->entitlement_data[ $entitlement->id ] ) ) {

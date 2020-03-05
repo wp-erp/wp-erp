@@ -1,6 +1,11 @@
 <div class="wrap erp-hr-leave-requests">
     <h2><?php esc_html_e( 'Leave Requests', 'erp' ); ?> <a href="<?php echo esc_url( add_query_arg( array( 'view' => 'new' ) ) ); ?>" class="add-new-h2"><?php esc_html_e( 'New Request', 'erp' ); ?></a></h2>
-
+    <?php
+    if ( isset( $_GET['error'] ) && $_GET['error'] != '' ) {
+        $errors = new \WeDevs\ERP\ERP_Errors( sanitize_text_field( wp_unslash( $_GET['error'] ) ) );
+        echo $errors->display();
+    }
+    ?>
     <div class="erp-hr-leave-requests-inner">
         <div class="list-table-wrap">
             <div class="list-table-inner">

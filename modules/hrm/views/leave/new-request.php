@@ -1,20 +1,30 @@
 <div class="wrap erp erp-hr-leave-request-new erp-hr-leave-reqs-wrap">
     <div class="postbox">
-        <h3 class="hndle"><?php esc_html_e( 'New Leave Request', 'erp' ); ?></h3>
+        <h3 class="hndle">
+            <?php esc_html_e( 'New Leave Request', 'erp' ); ?>
+            <a href="<?php echo esc_url( admin_url( 'admin.php?page=erp-hr&section=leave&sub-section=leave-requests' ) ); ?>" id="erp-new-leave-request" class="add-new-h2" style="top: 0px;"><?php esc_html_e( 'Back to Leave Requests', 'erp' ); ?></a>
+        </h3>
         <div class="inside">
-            <?php if ( isset( $_GET['msg'] ) ) {
+            <?php
+            use WeDevs\ERP\HRM\Models\Financial_Year;
 
-                if ( $_GET['msg'] == 'submitted' ) {
-                    erp_html_show_notice( __( 'Leave request has been submitted successfully.', 'erp' ) );
-                } elseif ( $_GET['msg'] == 'error' ) {
-                    erp_html_show_notice( __( 'Something went wrong.', 'erp' ), 'error' );
-                } elseif ( $_GET['msg'] == 'no_reason' ) {
-                    erp_html_show_notice( __( 'Leave reason field can not be blank.', 'erp' ), 'error' );
+            if ( isset( $_GET['error'] ) && $_GET['error'] !== '' ) {
+                $errors = new \WeDevs\ERP\ERP_Errors( sanitize_text_field( wp_unslash( $_GET['error'] ) ) );
+                $errors->display();
+            } elseif ( isset( $_GET['msg'] ) && $_GET['msg'] == 'submitted' ) {
+                erp_html_show_notice( __( 'Leave request has been submitted successfully.', 'erp' ), 'updated', true );
+            }
+            $financial_years = array();
+            $current_start_date = current_datetime()->modify( erp_financial_start_date() )->getTimestamp();
+            foreach ( Financial_Year::all() as $f_year ) {
+                if ( $f_year['start_date'] < $current_start_date ) {
+                    continue;
                 }
+                $financial_years[ $f_year['id'] ] = $f_year['fy_name'];
+            }
+            ?>
 
-            } ?>
-
-            <form action="" method="post">
+            <form action="" method="post" class="new-leave-request-form">
 
                 <?php if ( current_user_can( 'erp_leave_create_request' ) ) { ?>
                     <div class="row">
@@ -29,6 +39,18 @@
                         ) ); ?>
                     </div>
                 <?php } ?>
+
+                <div class="row">
+                    <?php erp_html_form_input( array(
+                        'label'    => esc_html__( 'Financial Year', 'erp' ),
+                        'name'     => 'f_year',
+                        'value'    =>  '',
+                        'required' => true,
+                        'class'    => 'f_year',
+                        'type'     => 'select',
+                        'options'  => $financial_years
+                    ) ); ?>
+                </div>
 
                 <div class="row erp-hide erp-hr-leave-type-wrapper"></div>
 

@@ -84,4 +84,15 @@ class Leave_Request extends Model {
     public function employee() {
         return $this->belongsTo( 'WeDevs\ERP\HRM\Models\Employee', 'user_id', 'user_id' );
     }
+
+    /**
+     * Relation to Leave Entitlement model
+     *
+     * @since 1.5.15
+     *
+     * @return object
+     */
+    public function entitlement() {
+        return $this->hasOne( 'WeDevs\ERP\HRM\Models\Leave_Entitlement', 'id', 'leave_entitlement_id' );
+    }
 }

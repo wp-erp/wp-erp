@@ -6,6 +6,8 @@ use WeDevs\ERP\Framework\Traits\Ajax;
 use WeDevs\ERP\Framework\Traits\Hooker;
 use WeDevs\ERP\HRM\Models\Dependents;
 use WeDevs\ERP\HRM\Models\Education;
+use WeDevs\ERP\HRM\Models\Financial_Year;
+use WeDevs\ERP\HRM\Models\Leave_Entitlement;
 use WeDevs\ERP\HRM\Models\Work_Experience;
 
 /**
@@ -127,7 +129,7 @@ class Ajax_Handler {
 
         $update = erp_hr_leave_request_update_status( $request_id, 3, $comments );
 
-        $this->send_success();
+        $this->send_success( $update );
     }
 
     /**
@@ -1618,39 +1620,58 @@ class Ajax_Handler {
 
         //$this->verify_nonce( 'wp-erp-hr-nonce' );
         if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'wp-erp-hr-nonce' ) ) {
-            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+            $this->send_error( esc_attr__( 'Error: Nonce verification failed', 'erp' ) );
         }
 
         $id = isset( $_POST['employee_id'] ) && !empty( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : false;
 
         if ( ! $id ) {
-            $this->send_error( __( 'Please select an employee', 'erp' ) );
+            $this->send_error( esc_attr__( 'Please select an employee', 'erp' ) );
         }
 
         $policy_id = isset( $_POST['type'] ) && !empty( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : false;
 
         if ( ! $policy_id ) {
-            $this->send_error( __( 'Please select a policy', 'erp' ) );
+            $this->send_error( esc_attr__( 'Please select a policy', 'erp' ) );
         }
 
         $start_date           = isset( $_POST['from'] ) ? sanitize_text_field( wp_unslash( $_POST['from'] ) ) : date_i18n( 'Y-m-d' );
         $end_date             = isset( $_POST['to'] ) ? sanitize_text_field( wp_unslash( $_POST['to'] ) ) : date_i18n( 'Y-m-d' );
+
+        if ( $start_date > $end_date ) {
+            $this->send_error( esc_attr__( 'Invalid date range', 'erp' ) );
+        }
+
+        // check if start_date or end_date are of past
+        $current_date = current_datetime()->format('Y-m-d');
+        if ( $start_date < $current_date || $end_date < $current_date ) {
+            $this->send_error( esc_attr__( 'Invalid date range. You can not apply for past dates.', 'erp' ) );
+        }
+
+        // check if start_date and end_dates are in same f_year
+        $entitlement = Leave_Entitlement::find( $policy_id );
+
+        if ( ! $entitlement ) {
+            $this->send_error( esc_attr__( 'Invalid leave policy.', 'erp' ) );
+        }
+
+        $f_year_start = current_datetime()->setTimestamp( $entitlement->financial_year->start_date)->format( 'Y-m-d' );
+        $f_year_end = current_datetime()->setTimestamp( $entitlement->financial_year->end_date)->format( 'Y-m-d' );
+
+        if ( ( $start_date < $f_year_start || $start_date > $f_year_end ) || ( $end_date < $f_year_start || $end_date > $f_year_end )  ) {
+            $this->send_error( sprintf( esc_attr__( 'Invalid leave duration. Please apply between %s and %s.', 'erp' ), erp_format_date( $f_year_start ), erp_format_date( $f_year_end ) ) );
+        }
+
+        /*
         $valid_date_range     = erp_hrm_is_valid_leave_date_range_within_financial_date_range( $start_date, $end_date );
         $financial_start_date = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
         $financial_end_date   = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
+        */
 
-        if ( $start_date > $end_date ) {
-            $this->send_error( __( 'Invalid date range', 'erp' ) );
-        }
-
-        if ( ! $valid_date_range ) {
-            $this->send_error( sprintf( __( 'Date range must be within %s to %s', 'erp' ), erp_format_date( $financial_start_date ), erp_format_date( $financial_end_date ) ) );
-        }
-
+        // handle overlapped leaves
         $leave_record_exist = erp_hrm_is_leave_recored_exist_between_date( $start_date, $end_date, $id );
-
         if ( $leave_record_exist ) {
-            $this->send_error( __( 'Existing Leave Record found within selected range!', 'erp' ) );
+            $this->send_error( esc_attr__( 'Existing Leave Record found within selected range!', 'erp' ) );
         }
 
         $is_extra_leave_enabled = get_option( 'enable_extra_leave', 'no' );
@@ -1659,7 +1680,7 @@ class Ajax_Handler {
             $is_policy_valid = erp_hrm_is_valid_leave_duration( $start_date, $end_date, $policy_id, $id );
 
             if ( ! $is_policy_valid ) {
-                $this->send_error( __( 'Sorry! You do not have any leave left under this leave policy', 'erp' ) );
+                $this->send_error( esc_attr__( 'Sorry! You do not have any leave left under this leave policy', 'erp' ) );
             }
         }
 
@@ -1671,7 +1692,6 @@ class Ajax_Handler {
 
         // just a bit more readable date format
         foreach ( $days['days'] as &$date ) {
-
             $date['date'] = erp_format_date( $date['date'], 'D, M d' );
         }
 
@@ -1696,12 +1716,23 @@ class Ajax_Handler {
         }
 
         $employee_id = isset( $_POST['employee_id'] ) && !empty( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : false;
+        $f_year = isset( $_POST['f_year'] ) && !empty( $_POST['f_year'] ) ? intval( $_POST['f_year'] ) : false;
 
         if ( ! $employee_id ) {
-            $this->send_error( __( 'Please select an employee', 'erp' ) );
+            $this->send_error( esc_attr__( 'Please select an employee.', 'erp' ) );
         }
 
-        $policies = erp_hr_get_assign_policy_from_entitlement( $employee_id );
+        if ( ! $f_year ) {
+            $this->send_error( esc_attr__( 'Please select a financial year.', 'erp' ) );
+        }
+
+        $financial_year = Financial_Year::find( $f_year );
+
+        if ( ! $financial_year ) {
+            $this->send_error( esc_attr__( 'Invalid financial year.', 'erp' ) );
+        }
+
+        $policies = erp_hr_get_assign_policy_from_entitlement( $employee_id, $financial_year->start_date );
         if ( $policies ) {
             ob_start();
             erp_html_form_input( array(
@@ -1736,7 +1767,7 @@ class Ajax_Handler {
         }
 
         $employee_id = isset( $_POST['employee_id'] ) && !empty( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : false;
-        $policy_id   = isset( $_POST['policy_id'] ) && !empty( $_POST['policy_id'] ) ? intval( $_POST['policy_id'] ) : false;
+        $policy_id   = isset( $_POST['policy_id'] ) && !empty( $_POST['policy_id'] ) ? intval( $_POST['policy_id'] ) : false; // @since 1.5.15 this is now entitlement id
         $available   = 0;
 
         if ( ! $employee_id ) {
@@ -1747,10 +1778,15 @@ class Ajax_Handler {
             $this->send_error( __( 'Please select a policy', 'erp' ) );
         }
 
-        $balance = erp_hr_leave_get_balance( $employee_id );
+        $balance = erp_hr_leave_get_balance_for_single_entitlement( $policy_id );
 
-        if ( array_key_exists( $policy_id, $balance ) ) {
-            $available = $balance[ $policy_id ]['available'];
+
+        if ( array_key_exists( 'available', $balance ) ) {
+            $available = $balance['available'];
+        }
+
+        if ( array_key_exists( 'extra_leave', $balance ) ) {
+            $extra_leaves = $balance['extra_leave'];
         }
 
         if ( $available <= 0 ) {
@@ -1758,8 +1794,12 @@ class Ajax_Handler {
         } elseif ( $available > 0 ) {
             $content = sprintf( '<span class="description green">%d %s</span>', number_format_i18n( $available ), __( 'days are available', 'erp' ) );
         } else {
-            $leave_policy_day = \WeDevs\ERP\HRM\Models\Leave_Policy::select( 'value' )->where( 'id', $policy_id )->pluck( 'value' );
-            $content          = sprintf( '<span class="description">%d %s</span>', number_format_i18n( $leave_policy_day ), __( 'days are available', 'erp' ) );
+            //$leave_policy_day = \WeDevs\ERP\HRM\Models\Leave_Policy::select( 'value' )->where( 'id', $policy_id )->pluck( 'value' );
+            //$content          = sprintf( '<span class="description">%d %s</span>', number_format_i18n( $leave_policy_day ), __( 'days are available', 'erp' ) );
+        }
+
+        if ( intval( $extra_leaves ) > 0 ) {
+            $content .= sprintf( ' <span class="description red">(%d %s)</span>', number_format_i18n( $extra_leaves ), __( 'days extra', 'erp' ) );
         }
 
         $this->send_success( $content );

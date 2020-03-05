@@ -17,6 +17,20 @@ class Leaves_Unpaid extends Model {
     ];
 
     /**
+     * Created at date format
+     */
+    public function setCreatedAtAttribute() {
+        $this->attributes['created_at'] = current_datetime()->getTimestamp();
+    }
+
+    /**
+     * Updated at date format
+     */
+    public function setUpdatedAtAttribute() {
+        $this->attributes['updated_at'] = current_datetime()->getTimestamp();
+    }
+
+    /**
      * Relation to Leave model
      *
      * @since 1.5.15
