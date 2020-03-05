@@ -344,6 +344,23 @@ class ERP_HR_Leave_Entitlements extends \WP_Background_Process {
             $created_at = current_datetime()->getTimestamp();
         }
 
+        // check if already entitled
+        $already_entitled = $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT count(id) FROM {$wpdb->prefix}erp_hr_leave_entitlements_new WHERE user_id = %d AND leave_id = %d AND f_year = %d AND trn_type = %s",
+                array(
+                    $this->request_data['user_id'],
+                    $this->request_data['leave_id'],
+                    $this->request_data['f_year'],
+                    'leave_policies'
+                )
+            )
+        );
+
+        if ( $already_entitled ) {
+            return false;
+        }
+
         // insert into erp_hr_leaves_new table.
 
         $table_data = array(
