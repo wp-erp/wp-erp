@@ -90,7 +90,6 @@ class ERP_1_5_15 {
                   carryover_days tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
                   carryover_uses_limit tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
                   encashment_days tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
-                  forward_default enum('carryover','encashment') NOT NULL DEFAULT 'encashment',
                   encashment_based_on enum('pay_rate','basic','gross') DEFAULT NULL,
                   applicable_from_days smallint(5) UNSIGNED NOT NULL DEFAULT '0',
                   accrued_amount decimal(5,2) NOT NULL DEFAULT '0.00',
