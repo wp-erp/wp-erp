@@ -22,6 +22,10 @@
                 }
                 $financial_years[ $f_year['id'] ] = $f_year['fy_name'];
             }
+            $f_year_help_text = '';
+            if ( current_user_can( 'erp_leave_create_request' ) ) {
+                $f_year_help_text .=  ' ' . sprintf( '<a href="?page=erp-settings&tab=erp-hr&section=financial">%s</a>', __( 'Add New', 'erp' ) );
+            }
             ?>
 
             <form action="" method="post" class="new-leave-request-form">
@@ -48,7 +52,8 @@
                         'required' => true,
                         'class'    => 'f_year',
                         'type'     => 'select',
-                        'options'  => $financial_years
+                        'options'  => $financial_years,
+                        'help'     => $f_year_help_text,
                     ) ); ?>
                 </div>
 

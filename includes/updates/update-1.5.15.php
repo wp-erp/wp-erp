@@ -117,7 +117,8 @@ class ERP_1_5_15 {
                   decem tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
                   created_at int(11) NOT NULL,
                   updated_at int(11) NOT NULL,
-                  PRIMARY KEY  (id)
+                  PRIMARY KEY  (id),
+                  KEY leave_policy_id (leave_policy_id)
             ) $charset_collate;",
 
             "CREATE TABLE {$wpdb->prefix}erp_hr_leave_entitlements_new (
@@ -133,7 +134,8 @@ class ERP_1_5_15 {
                   f_year smallint(6) NOT NULL,
                   created_at int(11) NOT NULL,
                   updated_at int(11) NOT NULL,
-                  PRIMARY KEY  (id)
+                  PRIMARY KEY  (id),
+                  KEY comp_key_1 (user_id,leave_id,f_year,trn_type)
             ) $charset_collate;",
 
             "CREATE TABLE {$wpdb->prefix}erp_hr_leave_requests_new (
@@ -150,7 +152,9 @@ class ERP_1_5_15 {
                   created_at int(11) DEFAULT NULL,
                   updated_at int(11) DEFAULT NULL,
                   PRIMARY KEY  (id),
-                  KEY user_id (user_id)
+                  KEY user_id (user_id),
+                  KEY user_leave (user_id,leave_id),
+                  KEY user_entitlement (user_id,leave_entitlement_id)
             ) $charset_collate;",
 
             "CREATE TABLE {$wpdb->prefix}erp_hr_leave_approval_status_new (
@@ -163,7 +167,9 @@ class ERP_1_5_15 {
                   message text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
                   created_at int(11) NOT NULL,
                   updated_at int(11) NOT NULL,
-                  PRIMARY KEY  (id)
+                  PRIMARY KEY  (id),
+                  KEY leave_request_id (leave_request_id),
+                  KEY approval_status_id (approval_status_id)
             ) $charset_collate;",
 
             "CREATE TABLE {$wpdb->prefix}erp_hr_leave_request_details_new (
@@ -176,7 +182,10 @@ class ERP_1_5_15 {
                   leave_date int(11) NOT NULL,
                   created_at int(11) NOT NULL,
                   updated_at int(11) NOT NULL,
-                  PRIMARY KEY  (id)
+                  PRIMARY KEY  (id),
+                  KEY leave_request_id (leave_request_id),
+                  KEY user_id (user_id),
+                  KEY user_fyear_leave (user_id,f_year,leave_date)
             ) $charset_collate;",
 
             "CREATE TABLE {$wpdb->prefix}erp_hr_leave_encashment_requests_new (

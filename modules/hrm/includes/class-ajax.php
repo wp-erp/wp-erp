@@ -1669,7 +1669,7 @@ class Ajax_Handler {
         */
 
         // handle overlapped leaves
-        $leave_record_exist = erp_hrm_is_leave_recored_exist_between_date( $start_date, $end_date, $id );
+        $leave_record_exist = erp_hrm_is_leave_recored_exist_between_date( $start_date, $end_date, $id, $entitlement->f_year );
         if ( $leave_record_exist ) {
             $this->send_error( esc_attr__( 'Existing Leave Record found within selected range!', 'erp' ) );
         }
