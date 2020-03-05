@@ -1645,19 +1645,7 @@ class Ajax_Handler {
         // check if start_date or end_date are of past
         $current_date = current_datetime()->format('Y-m-d');
         if ( $start_date < $current_date || $end_date < $current_date ) {
-            $this->send_error( esc_attr__( 'Invalid date range. You can\'t apply for past dates.', 'erp' ) );
-        }
-
-        /*
-        $valid_date_range     = erp_hrm_is_valid_leave_date_range_within_financial_date_range( $start_date, $end_date );
-        $financial_start_date = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
-        $financial_end_date   = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
-        */
-
-        // handle overlapped leaves
-        $leave_record_exist = erp_hrm_is_leave_recored_exist_between_date( $start_date, $end_date, $id );
-        if ( $leave_record_exist ) {
-            $this->send_error( esc_attr__( 'Existing Leave Record found within selected range!', 'erp' ) );
+            $this->send_error( esc_attr__( 'Invalid date range. You can not apply for past dates.', 'erp' ) );
         }
 
         // check if start_date and end_dates are in same f_year
@@ -1672,6 +1660,18 @@ class Ajax_Handler {
 
         if ( ( $start_date < $f_year_start || $start_date > $f_year_end ) || ( $end_date < $f_year_start || $end_date > $f_year_end )  ) {
             $this->send_error( sprintf( esc_attr__( 'Invalid leave duration. Please apply between %s and %s.', 'erp' ), erp_format_date( $f_year_start ), erp_format_date( $f_year_end ) ) );
+        }
+
+        /*
+        $valid_date_range     = erp_hrm_is_valid_leave_date_range_within_financial_date_range( $start_date, $end_date );
+        $financial_start_date = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
+        $financial_end_date   = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
+        */
+
+        // handle overlapped leaves
+        $leave_record_exist = erp_hrm_is_leave_recored_exist_between_date( $start_date, $end_date, $id );
+        if ( $leave_record_exist ) {
+            $this->send_error( esc_attr__( 'Existing Leave Record found within selected range!', 'erp' ) );
         }
 
         $is_extra_leave_enabled = get_option( 'enable_extra_leave', 'no' );
