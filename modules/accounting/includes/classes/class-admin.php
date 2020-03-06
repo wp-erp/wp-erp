@@ -387,7 +387,7 @@ class Admin {
      * @return bool
      */
     public function save_accounting_settings() {
-        if ( $_SERVER['REQUEST_METHOD'] !== 'POST' && ! isset( $_POST['erp-ac-ob-fyears-add'] ) ) {
+        if ( $_SERVER['REQUEST_METHOD'] !== 'POST' || ! isset( $_POST['erp-ac-ob-fyears-add'] ) ) {
             return;
         }
 
