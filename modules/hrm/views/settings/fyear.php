@@ -1,32 +1,78 @@
 <?php
+
+use WeDevs\ERP\ERP_Errors;
+use \WeDevs\ERP\HRM\Models\Leave_Policy;
 use \WeDevs\ERP\HRM\Models\Financial_Year;
 
-if ( isset( $_POST['_wpnonce'] ) && ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] )) ) {
-    // die('with pain');
+if ( isset( $_POST['_wpnonce'] ) && ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-settings-nonce' ) ) {
+    die('Nonce failed.');
 }
 
 $fnames = isset( $_POST['fyear-name'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['fyear-name'] ) ) : [];
 $starts = isset( $_POST['fyear-start'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['fyear-start'] ) ) : [];
 $ends   = isset( $_POST['fyear-end'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['fyear-end'] ) ) : [];
 
-$created_by = get_current_user_id();
+$current_user_id = get_current_user_id();
+$url = admin_url('?page=erp-settings&tab=erp-hr&section=financial');
 
 $fin_years = array();
 
-foreach ( $fnames as $key => $fname ) {
-    $fin_years[] = array(
-        'fy_name'    => $fname,
-        'start_date' => erp_mysqldate_to_phptimestamp( $starts[$key] ),
-        'end_date'   => erp_mysqldate_to_phptimestamp( $ends[$key] ),
-        'created_by' => $created_by
-    );
-}
-
 if ( isset( $_POST['erp-hr-fyears-setting'] ) ) {
-    Financial_Year::query()->truncate();
-    Financial_Year::insert( $fin_years );
+
+    $errors = new ERP_Errors( 'leave_financial_years_create' );
+
+    foreach ( $fnames as $key => $fname ) {
+        if ( strpos($key, 'id-') !== false ) {
+            // we have existing record
+
+            $f_id = explode( 'id-', $key )[1]; // id-3 => 3
+
+            $policy_exist = Leave_Policy::where('f_year', $f_id)->first();
+
+            if ( $policy_exist ) {
+                $errors->add( esc_html__(
+                    sprintf('Existing financial year associated with policy won\'t be updated. e.g. %s', $fname)
+                , 'erp') );
+
+                continue;
+            }
+
+            // update an existing one
+            Financial_Year::find($f_id)->update([
+                'fy_name'    => $fname,
+                'start_date' => erp_mysqldate_to_phptimestamp( $starts[$key] ),
+                'end_date'   => erp_mysqldate_to_phptimestamp( $ends[$key] ),
+                'description'=> 'Financial year for leave',
+                'updated_by' => $current_user_id
+            ]);
+
+            continue;
+        }
+
+        // or create a new one
+        Financial_Year::create([
+            'fy_name'    => $fname,
+            'start_date' => erp_mysqldate_to_phptimestamp( $starts[$key] ),
+            'end_date'   => erp_mysqldate_to_phptimestamp( $ends[$key] ),
+            'description'=> 'Financial year for leave',
+            'created_by' => $current_user_id
+        ]);
+    }
+
+    if ( $errors->has_error() ) {
+        $errors->save();
+        $url = add_query_arg( array( 'error' => 'leave_financial_years_create' ), $url );
+    }
+
+    wp_safe_redirect( $url );
+    exit();
 }
 
+// show the erros
+if ( isset( $_GET['error'] ) && $_GET['error'] != '' ) {
+    $errors = new ERP_Errors( sanitize_text_field( wp_unslash( $_GET['error'] ) ) );
+    echo $errors->display();
+}
 ?>
 
 <div class="erp-hr-financial-years">
@@ -49,58 +95,54 @@ if ( isset( $_POST['erp-hr-fyears-setting'] ) ) {
                             class="fyear-name"
                             type="text"
                             value=""
-                            autocomplete="off">
+                            autocomplete="off" required>
                     </td>
                     <td>
                         <input
                             name="fyear-start[]"
-                            id="fyear-start1"
-                            class="fyear-start-date erp-date-field"
+                            class="fyear-start-date hr-fyear-date-field"
                             value=""
-                            type="text">
+                            type="text"
+                            autocomplete="off" required>
                     </td>
                     <td>
                         <input
                             name="fyear-end[]"
-                            id="fyear-end1"
-                            class="fyear-end-date erp-date-field"
+                            class="fyear-end-date hr-fyear-date-field"
                             value=""
-                            type="text">
+                            type="text"
+                            autocomplete="off" required>
                     </td>
-                    <td>
-                        <i class="fa fa-times-circle erp-settings-fyear-remove"></i>
-                    </td>
+                    <td></td>
                 </tr>
             <?php else: ?>
                 <?php foreach( $f_years as $year ) : ?>
                 <tr class="fyear-clone">
                     <td>
                         <input
-                            name="fyear-name[]"
+                            name="fyear-name[<?php echo 'id-' . $year['id']; ?>]"
                             class="fyear-name"
                             type="text"
                             value="<?php echo $year['fy_name'] ?>"
-                            autocomplete="off">
+                            autocomplete="off" required>
                     </td>
                     <td>
                         <input
-                            name="fyear-start[]"
-                            id="fyear-start1"
-                            class="fyear-start-date erp-date-field"
+                            name="fyear-start[<?php echo 'id-' . $year['id']; ?>]"
+                            class="fyear-start-date hr-fyear-date-field"
                             value="<?php echo erp_format_date( $year['start_date'] ) ?>"
-                            type="text">
+                            type="text"
+                            autocomplete="off" required>
                     </td>
                     <td>
                         <input
-                            name="fyear-end[]"
-                            id="fyear-end1"
-                            class="fyear-end-date erp-date-field"
+                            name="fyear-end[<?php echo 'id-' . $year['id']; ?>]"
+                            class="fyear-end-date hr-fyear-date-field"
                             value="<?php echo erp_format_date( $year['end_date'] ) ?>"
-                            type="text">
+                            type="text"
+                            autocomplete="off" required>
                     </td>
-                    <td>
-                        <i class="fa fa-times-circle erp-settings-fyear-remove"></i>
-                    </td>
+                    <td></td>
                 </tr>
                 <?php endforeach; ?>
 
@@ -116,28 +158,57 @@ if ( isset( $_POST['erp-hr-fyears-setting'] ) ) {
 </div>
 
 <script>
-    function getDateFieldId( period ) {
-        var $div = jQuery('.fyear-clone:last input[id^="fyear-'+period+'"]');
-        var num = parseInt( $div.prop('id').match(/\d+/g), 10 ) + 1;
-
-        return 'fyear-' + period + num;
-    }
-
-    // Duplicate
+    // Clone
     jQuery('.erp-fyear-add-more-btn').on('click', function(e) {
-        var clonedRow = jQuery('.fyear-clone:first').clone();
+        var fyear_first = jQuery('.fyear-clone:first');
 
-        clonedRow.find('.fyear-name').val('');
-        clonedRow.find('.fyear-start-date').attr('id', getDateFieldId('start'));
-        clonedRow.find('.fyear-end-date').attr('id', getDateFieldId('end'));
+        fyear_first.find('.fyear-start-date').datepicker('destroy').removeAttr('id');
+        fyear_first.find('.fyear-end-date').datepicker('destroy').removeAttr('id');
+
+        var clonedRow = fyear_first.clone();
+
+        clonedRow.find('.fyear-name').attr('name', 'fyear-name[]').val('');
+        clonedRow.find('.fyear-start-date').attr('name', 'fyear-start[]').val('');
+        clonedRow.find('.fyear-end-date').attr('name', 'fyear-end[]').val('');
+        clonedRow.find('td').eq(3).append('<i class="fa fa-times-circle erp-settings-fyear-remove"></i>');
+
         jQuery('tbody').append(clonedRow);
 
         e.preventDefault();
     });
 
-    jQuery(document).on('focus', ".erp-date-field", function() {
-        jQuery(this).removeClass('hasDatepicker')
-        jQuery(this).datepicker({ dateFormat: 'yy-mm-dd' });
+    // Re-initiate datepicker every time
+    jQuery(document).on('focus', '.hr-fyear-date-field', function() {
+        jQuery(this)
+            .datepicker({
+                dateFormat : 'yy-mm-dd',
+                changeMonth: true,
+                changeYear : true,
+                yearRange  : '-10:+5'
+            });
+    });
+
+    // Copied from accounting financial years
+    jQuery(document).on('change', '.hr-fyear-date-field', function(e) {
+        e.preventDefault();
+
+        var vals = [];
+
+        jQuery(this).each(function() {
+            vals.push(jQuery(this).val());
+        });
+
+        for ( let i = 2; i < vals.length; i += 2 ) {
+            if ( ( Date.parse( vals[i]) >= Date.parse( vals[i-2] ) ) && ( Date.parse( vals[i] ) <= Date.parse( vals[i-1] ) ) ) {
+                alert( wpErpHr.fin_overlap_msg );
+                $(this).val('');
+            }
+
+            if ( Date.parse( vals[i+1] ) < Date.parse( vals[i]) ) {
+                alert( wpErpHr.fin_val_compare_msg );
+                $(this).val('');
+            }
+        }
     });
 
     // Remove row
