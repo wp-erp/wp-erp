@@ -1136,26 +1136,58 @@ function erp_hr_get_leave_requests( $args = array() ) {
         'user_id'       => 0,
         'policy_id'     => 0,
         'status'        => 1,
-        'year'          => '',
-        'f_year'        => '',
+        'year'          => 0,
+        'f_year'        => 0,
         'number'        => 20,
         'offset'        => 0,
         'orderby'       => 'created_at',
         'order'         => 'DESC',
         'start_date'    => '',
-        'end_date'      => ''
+        'end_date'      => '',
+        'department_id' => 0,
+        'designation_id' => 0,
     );
 
     $args  = wp_parse_args( $args, $defaults );
 
     array_walk_recursive( $args, function( &$key, &$value ) {
         $key = sanitize_key( wp_unslash( $key ) );
-        $value = sanitize_text_field( $value );
+        $value = wp_unslash( $value );
+
+        switch ( $key ) {
+            case 'request_id':
+            case 'user_id':
+            case 'policy_id':
+            case 'f_year':
+            case 'offset':
+            case 'department_id':
+            case 'designation_id':
+            case 'year':
+            case 'calendar':
+                $value = absint( $value );
+                break;
+
+            case 'number':
+                $value = intval( $value );
+                break;
+
+            default:
+                $value = sanitize_text_field( trim( $value ) );
+                break;
+        }
     });
+
+    $entitlement_table_joined = false;
 
     // fix orderby parameter
     if ( $args['orderby'] == 'created_on' ) {
-        $args['orderby'] = 'created_at';
+        $args['orderby'] = 'request.created_at';
+    }
+    elseif ( in_array( $args['orderby'], array( 'from_date', 'to_date', 'name', 'created_at' ) ) ) {
+        $args['orderby'] = 'request.' . $args['orderby'];
+    }
+    elseif ( $args['orderby'] == 'name' ) {
+        $args['orderby'] = 'u.' . $args['orderby'];
     }
 
     $cache_key = 'erp_hr_leave_requests_' . md5( serialize( $args ) );
@@ -1169,12 +1201,19 @@ function erp_hr_get_leave_requests( $args = array() ) {
 
     $leave_requests_table = $wpdb->prefix . 'erp_hr_leave_requests';
     $tables = " FROM $leave_requests_table as request";
+
     $fields = 'SELECT SQL_CALC_FOUND_ROWS request.id, u.display_name';
-    $join = " LEFT JOIN {$wpdb->users} as u ON u.ID = request.user_id";
+    $fields .= ', policy.color';
+
+    $join = " LEFT JOIN {$wpdb->users} AS u ON u.ID = request.user_id";
+    $join .= " LEFT JOIN {$wpdb->prefix}erp_hr_leave_entitlements AS entl ON request.leave_entitlement_id = entl.id";
+    $join .= " LEFT JOIN {$wpdb->prefix}erp_hr_leave_policies AS policy ON policy.id = entl.trn_id";
+
     $where = ' WHERE 1=1';
+    $where .= " AND entl.trn_type = 'leave_policies'" ;
 
     $groupby = '';
-    $orderby = " ORDER BY request.{$args['orderby']} {$args['order']}";
+    $orderby = " ORDER BY {$args['orderby']} {$args['order']}";
 
     $offset = absint( $args['offset'] );
     $number = absint( $args['number'] );
@@ -1183,12 +1222,12 @@ function erp_hr_get_leave_requests( $args = array() ) {
     // filter by request_id
 
     if ( is_numeric( $args['request_id'] ) && $args['request_id'] > 0 ) {
-        $where .= " AND request.id = " . intval( $args['request_id'] );
+        $where .= " AND request.id = " .  $args['request_id'];
     }
 
     // filter by name
     if ( isset( $args['s'] ) && $args['s'] !== '' ) {
-        $where .= " AND u.display_name like '%" . esc_sql( trim( $args['s'] ) ) . "%'";
+        $where .= " AND u.display_name like '%" . esc_sql( $args['s'] ) . "%'";
     }
 
     if ( 'all' != $args['status'] && $args['status'] != '' ) {
@@ -1199,11 +1238,11 @@ function erp_hr_get_leave_requests( $args = array() ) {
              */
             $fields .= ', status1.approval_status_id AS status, status1.message as message';
             $join .= " INNER JOIN {$wpdb->prefix}erp_hr_leave_approval_status AS status1 ON status1.leave_request_id = request.id";
-            $where .= " and status1.id = ( SELECT MAX(id) FROM {$wpdb->prefix}erp_hr_leave_approval_status WHERE leave_request_id = request.id and approval_status_id=" . intval( $args['status'] ) . ')';
+            $where .= " AND status1.id = ( SELECT MAX(id) FROM {$wpdb->prefix}erp_hr_leave_approval_status WHERE leave_request_id = request.id AND approval_status_id=" . intval( $args['status'] ) . ')';
         }
         else {
             // get pending requests
-            $where .= " and NOT EXISTS ( SELECT  null FROM {$wpdb->prefix}erp_hr_leave_approval_status as status WHERE request.id = status.leave_request_id)";
+            $where .= " AND NOT EXISTS ( SELECT  null FROM {$wpdb->prefix}erp_hr_leave_approval_status AS status WHERE request.id = status.leave_request_id)";
         }
     }
     else {
@@ -1212,25 +1251,21 @@ function erp_hr_get_leave_requests( $args = array() ) {
          * select t.id, l1.leave_request_id, t.user_id, l1.approval_status_id, u.display_name from wp_erp_hr_leave_requests t left join wp_users as u on u.ID = t.user_id left join wp_erp_hr_leave_approval_status l1 on t.id = l1.leave_request_id left join wp_erp_hr_leave_approval_status l2 on l1.leave_request_id = l2.leave_request_id and l1.id < l2.id where l2.id is null
          */
 
-        $fields .= ', status1.approval_status_id as status';
-        $join .= " left join {$wpdb->prefix}erp_hr_leave_approval_status status1 on request.id = status1.leave_request_id";
-        $join .= " left join {$wpdb->prefix}erp_hr_leave_approval_status status2 on status1.leave_request_id = status2.leave_request_id and status1.id < status2.id";
-        $where .= ' and status2.id is null';
+        $fields .= ', status1.approval_status_id AS status';
+        $join .= " LEFT JOIN {$wpdb->prefix}erp_hr_leave_approval_status status1 ON request.id = status1.leave_request_id";
+        $join .= " LEFT JOIN {$wpdb->prefix}erp_hr_leave_approval_status status2 ON status1.leave_request_id = status2.leave_request_id AND status1.id < status2.id";
+        $where .= ' AND status2.id IS null';
     }
 
-    if ( $args['user_id'] != '0' ) {
-        if ( empty( $where ) ) {
-            $where .= " WHERE request.user_id = " . intval( $args['user_id'] );
-        } else {
-            $where .= " AND request.user_id = " . intval( $args['user_id'] );
-        }
+    if ( $args['user_id'] ) {
+        $where .= " AND request.user_id = " . $args['user_id'];
     }
 
-    if ( $args['policy_id'] ) {
-        $where .= " AND request.leave_id = " . intval( $args['policy_id'] );
+    if ( $args['policy_id'] ) { // @since 1.5.15 policy_id is equal to leave_id
+        $where .= " AND request.leave_id = " . $args['policy_id'];
     }
 
-    if ( ! empty( $args['year'] ) ) {
+    if ( $args['year'] ) {
         $from_date_string = $args['year'] . '-01-01 00:00:00';
         $from_date = current_datetime();
         $from_date = $from_date->modify( $from_date_string );
@@ -1242,9 +1277,18 @@ function erp_hr_get_leave_requests( $args = array() ) {
         $where .= " AND request.start_date >= {$from_date->getTimestamp()} AND request.end_date <= {$to_date->getTimestamp()}";
     }
 
-    if ( ! empty( $args['f_year'] ) ) {
-        $join .= " left join {$wpdb->prefix}erp_hr_leave_entitlements as entl on request.leave_entitlement_id = entl.id";
-        $where .= ' and entl.f_year = ' . absint( wp_unslash( $args['f_year'] ) );
+    if ( $args['f_year'] ) {
+        $where .= ' AND entl.f_year = ' .  $args['f_year'];
+    }
+
+    if ( $args['department_id'] && $args['designation_id'] ) {
+        $where .= " AND policy.designation_id = {$args['designation_id']} and policy.department_id = {$args['department_id']}" ;
+    }
+    elseif ( $args['department_id'] ) {
+        $where .= " AND policy.department_id = {$args['department_id']}" ;
+    }
+    elseif ( $args['designation_id'] ) {
+        $where .= " AND policy.designation_id = {$args['designation_id']}" ;
     }
 
     if ( $args['start_date']  && $args['end_date'] ) {
@@ -1272,6 +1316,7 @@ function erp_hr_get_leave_requests( $args = array() ) {
     }
 
     $query = $fields . $tables . $join . $where . $orderby . $limit;
+    //echo $query; die();
     $requests = $wpdb->get_results( $query, ARRAY_A );
 
     $total_row_found = absint( $wpdb->get_var( "SELECT FOUND_ROWS()" ) );
@@ -1326,17 +1371,19 @@ function erp_hr_get_leave_requests( $args = array() ) {
             $temp_data['days']           = $request->days;
             $temp_data['entitlement']    = $entitlement;
             $temp_data['available']      = $available;
-            $temp_data['extra_leaves']    = $extra;
+            $temp_data['extra_leaves']   = $extra;
             $temp_data['spent']          = $spent;
             $temp_data['status']         = isset( $single_request['status'] ) ? $single_request['status'] : 2;
             $temp_data['reason']         = $request->reason;
-            $temp_data['message']         = isset( $single_request['message'] ) ? $single_request['message'] : '';
+            $temp_data['message']        = isset( $single_request['message'] ) ? $single_request['message'] : '';
+            $temp_data['color']          = isset( $single_request['color'] ) ? $single_request['color'] : '';
+            $temp_data['day_status_id']  = $request->day_status_id;
 
             $formatted_data[] =  $temp_data;
         }
     }
 
-    $requests_data = array( 'data' => erp_array_to_object( $formatted_data ), 'total' => $total_row_found );
+    $requests_data = array( 'data' => erp_array_to_object( $formatted_data ), 'total' => $total_row_found, 'sql' => $query );
     wp_cache_set( $cache_key, $requests_data, 'erp', HOUR_IN_SECONDS );
 
     return $requests_data;
@@ -1544,7 +1591,7 @@ function erp_hr_leave_request_update_status( $request_id, $status, $comments = '
                     return new WP_Error( 'invalid-entitlement-id', esc_attr__( 'No entitlement found for given request. Please check your input.', 'erp' ) );
                 }
 
-                $work_days = erp_hr_get_work_days_between_dates( erp_format_date( $request->start_date ), erp_format_date( $request->end_date ) );
+                $work_days = erp_hr_get_work_days_between_dates( $request->start_date, $request->end_date );
 
                 if ( is_wp_error( $work_days ) ) {
                     return $work_days;
@@ -1669,6 +1716,30 @@ function erp_hr_leave_request_get_statuses( $status = false ) {
 
     if ( false !== $status && array_key_exists( $status, $statuses ) ) {
         return $statuses[ $status ];
+    }
+
+    return $statuses;
+}
+
+/**
+ * Get leave requests day status
+ *
+ * @since 1.5.15
+ *
+ * @param  int|boolean $status
+ *
+ * @return array|string
+ */
+function erp_hr_leave_request_get_day_statuses( $status = false ) {
+    $statuses = apply_filters( 'erp_hr_leave_day_statuses', array(
+        'all' => esc_attr__( 'All', 'erp' ),
+        '1'   => esc_attr__( 'Full Day', 'erp' ),
+        '2'   => esc_attr__( 'Monring', 'erp' ),
+        '3'   => esc_attr__( 'Afternoon', 'erp' )
+    ) );
+
+    if ( false !== $status ) {
+        return array_key_exists( $status, $statuses ) ? $statuses[ $status ] : '';
     }
 
     return $statuses;

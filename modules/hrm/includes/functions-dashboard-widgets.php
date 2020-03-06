@@ -12,7 +12,7 @@ function erp_hr_dashboard_widget_birthday_callback() {
 
 function erp_hr_dashboard_widget_announcement_callback() {
     erp_admin_dash_metabox( __( '<i class="fa fa-microphone"></i> Latest Announcement', 'erp' ), 'erp_hr_dashboard_widget_latest_announcement' );
-    //erp_admin_dash_metabox( __( '<i class="fa fa-calendar-o"></i> My Leave Calendar', 'erp' ), 'erp_hr_dashboard_widget_leave_calendar' );
+    erp_admin_dash_metabox( __( '<i class="fa fa-calendar-o"></i> My Leave Calendar', 'erp' ), 'erp_hr_dashboard_widget_leave_calendar' );
 }
 
 
@@ -311,7 +311,14 @@ function erp_hr_dashboard_widget_whoisout() {
 function erp_hr_dashboard_widget_leave_calendar() {
 
     $user_id        = get_current_user_id();
-    $leave_requests = erp_hr_get_calendar_leave_events( false, $user_id, false );
+    $args = array(
+        'user_id'           => $user_id,
+        'status'            => 'all',
+        'number'            => '-1',
+    );
+
+    $leave_requests = erp_hr_get_leave_requests( $args );
+    $leave_requests = $leave_requests['data'];
     $holidays       = erp_array_to_object( \WeDevs\ERP\HRM\Models\Leave_Holiday::all()->toArray() );
     $events         = [];
     $holiday_events = [];
@@ -319,17 +326,21 @@ function erp_hr_dashboard_widget_leave_calendar() {
 
     foreach ( $leave_requests as $key => $leave_request ) {
         //if status pending
-        $policy = erp_hr_leave_get_policy( $leave_request->policy_id );
-        $event_label = $policy->name;
+        $event_label = $leave_request->policy_name;
         if ( 2 == $leave_request->status ) {
-            $policy = erp_hr_leave_get_policy( $leave_request->policy_id );
             $event_label .= sprintf( ' ( %s ) ', __( 'Pending', 'erp' ) );
         }
+
+        // Half day leave
+        if ( $leave_request->day_status_id != 1 ) {
+            $event_label .= '(' . erp_hr_leave_request_get_day_statuses( $leave_request->day_status_id ) . ')';
+        }
+
         $events[] = array(
             'id'        => $leave_request->id,
             'title'     => $event_label,
-            'start'     => $leave_request->start_date,
-            'end'       => $leave_request->end_date,
+            'start'     => current_datetime()->setTimestamp( $leave_request->start_date )->format(  'Y-m-d' ),
+            'end'       => current_datetime()->setTimestamp( $leave_request->end_date )->format( 'Y-m-d' ),
             'url'       => erp_hr_url_single_employee( $leave_request->user_id, 'leave' ),
             'color'     => $leave_request->color,
         );
