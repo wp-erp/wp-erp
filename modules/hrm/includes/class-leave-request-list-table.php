@@ -40,16 +40,15 @@ class Leave_Requests_List_Table extends \WP_List_Table {
 
         $financial_year = erp_get_financial_year_dates();
         $f_ids = get_financial_year_from_date_range( $financial_year['start'], $financial_year['end'] );
-        $financial_years = wp_list_pluck( Financial_Year::all(), 'fy_name', 'id' );
+        $financial_years =  array( '' => esc_attr__( 'Select year', 'erp') ) +  wp_list_pluck( Financial_Year::all(), 'fy_name', 'id' );
 
-        $selected_year = ( isset( $_GET['filter_year'] ) ) ? absint( wp_unslash( $_GET['filter_year'] ) ) : $f_ids[0];
+        $selected_year = ( isset( $_GET['filter_year'] ) ) ? absint( wp_unslash( $_GET['filter_year'] ) ) : '';
         ?>
         <div class="alignleft actions">
 
             <label class="screen-reader-text" for="filter_year"><?php esc_html_e( 'Filter by year', 'erp' ) ?></label>
             <input type="hidden" name="status" value="<?php echo esc_html( $this->page_status ); ?>">
             <select name="filter_year" id="filter_year">
-                <option value="" selected="selected">select year</option>
                 <?php
                 foreach ( $financial_years as $f_id => $f_name ) {
                     echo sprintf( "<option value='%s'%s>%s</option>\n", esc_html( $f_id ), selected( $selected_year, $f_id, false ), esc_html( $f_name ) );
@@ -84,7 +83,7 @@ class Leave_Requests_List_Table extends \WP_List_Table {
             'from_date' => __( 'From Date', 'erp' ),
             'to_date'   => __( 'To Date', 'erp' ),
             //'entitlement'    => __( 'Entitled Days', 'erp' ),
-            'days'      => __( 'Request Days', 'erp' ),
+            'days'      => __( 'Request', 'erp' ),
             'available' => __( 'Available', 'erp' ),
             'extra'         => __( 'Extra Leaves', 'erp' ),
             'status'    => __( 'Status', 'erp' ),
@@ -124,7 +123,8 @@ class Leave_Requests_List_Table extends \WP_List_Table {
                 return '<span class="status-' . $item->status . '">' . erp_hr_leave_request_get_statuses( $item->status ) . '</span>';
 
             case 'days':
-                return $item->days == 0.5 ? $item->days : intval( $item->days );
+                $days = $item->days == 0.5 ? $item->days : intval( $item->days );
+                return sprintf( '<span>%d %s</span>', number_format_i18n( $days ), __( 'days', 'erp' ) );
 
             case 'reason':
                 return stripslashes( $item->reason );
@@ -175,7 +175,9 @@ class Leave_Requests_List_Table extends \WP_List_Table {
      */
     function get_sortable_columns() {
         $sortable_columns = array(
-            'days' => array( 'days', false ),
+            'from_date' => array( 'start_date', false ),
+            'to_date' => array( 'end_date', false ),
+            'name'      => array( 'display_name', false ),
         );
 
         return $sortable_columns;
