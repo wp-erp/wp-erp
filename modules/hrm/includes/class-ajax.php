@@ -1643,9 +1643,12 @@ class Ajax_Handler {
         }
 
         // check if start_date or end_date are of past
-        $current_date = current_datetime()->format('Y-m-d');
-        if ( $start_date < $current_date || $end_date < $current_date ) {
-            $this->send_error( esc_attr__( 'Invalid date range. You can not apply for past dates.', 'erp' ) );
+        // user can't apply for past leave, only hr can
+        if ( ! current_user_can( 'erp_leave_create_request' ) ) {
+            $current_date = current_datetime()->format('Y-m-d');
+            if ( $start_date < $current_date || $end_date < $current_date ) {
+                $this->send_error( esc_attr__( 'Invalid date range. You can not apply for past dates.', 'erp' ) );
+            }
         }
 
         // check if start_date and end_dates are in same f_year
@@ -1684,7 +1687,7 @@ class Ajax_Handler {
             }
         }
 
-        $days = erp_hr_get_work_days_between_dates( $start_date, $end_date );
+        $days = erp_hr_get_work_days_between_dates( $start_date, $end_date, $id );
 
         if ( is_wp_error( $days ) ) {
             $this->send_error( $days->get_error_message() );
@@ -1697,6 +1700,10 @@ class Ajax_Handler {
 
         $leave_count   = $days['total'];
         $days['total'] = sprintf( '%d %s', $days['total'], _n( 'day', 'days', $days['total'], 'erp' ) );
+
+        if ( $days['sandwich'] == 1 ) {
+            $days['total'] .=  ' ' . esc_attr__( '(Sandwich rule applied)', 'erp');
+        }
 
         $this->send_success( array( 'print' => $days, 'leave_count' => $leave_count ) );
     }
