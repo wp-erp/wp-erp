@@ -114,7 +114,7 @@ function erp_hrm_is_valid_leave_duration( $start_date, $end_date, $policy_id, $u
 
     $user_enti_count    = $balance['day_out'];
     $policy_days        = $balance['total'];
-    $working_day        = erp_hr_get_work_days_without_off_day( $start_date, $end_date );//erp_hr_get_work_days_between_dates( $start_date, $end_date );erp_hr_get_work_days_without_holiday
+    $working_day        = erp_hr_get_work_days_without_off_day( $start_date, $end_date, $user_id );//erp_hr_get_work_days_between_dates( $start_date, $end_date );erp_hr_get_work_days_without_holiday
     $apply_days         = $working_day['total'] + $user_enti_count;
 
     if ( $apply_days > $policy_days ) {
@@ -1017,7 +1017,7 @@ function erp_hr_leave_insert_request( $args = array() ) {
         return new WP_Error( 'no-policy', esc_attr__( 'No leave policy provided.', 'erp' ) );
     }
 
-    $period = erp_hr_get_work_days_between_dates( $args['start_date'], $args['end_date'] );
+    $period = erp_hr_get_work_days_between_dates( $args['start_date'], $args['end_date'], $args['user_id'] );
 
     if ( is_wp_error( $period ) ) {
         return $period;
@@ -1035,9 +1035,12 @@ function erp_hr_leave_insert_request( $args = array() ) {
         return new WP_Error( 'invalid-dates', esc_attr__( 'Invalid date range.', 'erp' ) );
     }
 
-    $current_date = current_datetime()->format('Y-m-d');
-    if ( $args['start_date'] < $current_date || $args['end_date'] < $current_date ) {
-        return new WP_Error( 'invalid-dates', esc_attr__( 'Invalid date range. You can not apply for past dates.', 'erp' ) );
+    // user can't apply for past leave, only hr can
+    if ( ! current_user_can( 'erp_leave_create_request' ) ) {
+        $current_date = current_datetime()->format('Y-m-d');
+        if ( $args['start_date'] < $current_date || $args['end_date'] < $current_date ) {
+            return new WP_Error( 'invalid-dates', esc_attr__( 'Invalid date range. You can not apply for past dates.', 'erp' ) );
+        }
     }
 
     // check start_date and end_date are in the same f_year
@@ -1059,7 +1062,7 @@ function erp_hr_leave_insert_request( $args = array() ) {
     $leaves = array();
     if ( $period['days'] ) {
         foreach ( $period['days'] as $date ) {
-            if ( ! $date['count'] ) { // skip if holiday or not working day
+            if ( get_option( 'erp_pro_sandwich_leave', '') !== 'yes' && ! $date['count'] ) { // skip if holiday or not working day
                 continue;
             }
 
@@ -1081,7 +1084,8 @@ function erp_hr_leave_insert_request( $args = array() ) {
             'leave_id'   => $entitlement->leave_id,
             'leave_entitlement_id' => $entitlement->id,
             'day_status_id' => '1',
-            'days'       => count( $leaves ),
+            //'days'       => count( $leaves ),
+            'days'       => absint( $period['total'] ),
             'start_date' => current_datetime()->modify( $args['start_date'] )->setTime( 0, 0, 0 )->getTimestamp(),
             'end_date'   => current_datetime()->modify( $args['end_date'] )->setTime( 0, 0, 0 )->getTimestamp(),
             'reason'     => wp_kses_post( $args['reason'] ),
@@ -1591,7 +1595,7 @@ function erp_hr_leave_request_update_status( $request_id, $status, $comments = '
                     return new WP_Error( 'invalid-entitlement-id', esc_attr__( 'No entitlement found for given request. Please check your input.', 'erp' ) );
                 }
 
-                $work_days = erp_hr_get_work_days_between_dates( $request->start_date, $request->end_date );
+                $work_days = erp_hr_get_work_days_between_dates( $request->start_date, $request->end_date, $request->user_id );
 
                 if ( is_wp_error( $work_days ) ) {
                     return $work_days;
