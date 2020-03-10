@@ -212,6 +212,8 @@ class Leave_Requests_List_Table extends \WP_List_Table {
             $actions['approved']   = sprintf( '<a class="erp-hr-leave-approve-btn" data-id="%s" href="%s">%s</a>', $item->id, $approve_url, __( 'Approve', 'erp' ) );
             $actions['reject']   = sprintf( '<a class="erp-hr-leave-reject-btn" data-id="%s" href="%s">%s</a>', $item->id, $reject_url, __( 'Reject', 'erp' ) );
 
+            $actions = \apply_filters( 'erp_leave_request_row_actions', $actions, $item->id );
+
         } elseif ( $item->status == '1' ) {
             $actions['reject']   = sprintf( '<a class="erp-hr-leave-reject-btn" data-id="%s" href="%s">%s</a>', $item->id, $reject_url, __( 'Reject', 'erp' ) );
 
@@ -247,7 +249,7 @@ class Leave_Requests_List_Table extends \WP_List_Table {
         } else {
             $actions['reject']   = __( 'Reject', 'erp' );
             $actions['approved'] = __( 'Approve', 'erp' );
-            $actions['pending'] = __( 'Mark Pending', 'erp' );
+            $actions['pending']  = __( 'Mark Pending', 'erp' );
         }
 
         //return $actions;
