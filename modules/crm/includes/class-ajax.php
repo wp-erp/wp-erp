@@ -740,9 +740,9 @@ class Ajax_Handler {
         }
 
         if ( $output['assign_contact_user_id'] ) {
-            erp_crm_update_contact_owner( $output['assign_contact_user_id'], $output['erp_select_assign_contact'] );
+            erp_crm_update_contact_owner( $output['assign_contact_user_id'], $output['erp_select_assign_contact'], 'user_id' );
         } else {
-            erp_crm_update_contact_owner($output['assign_contact_id'], $output['erp_select_assign_contact'] );
+            erp_crm_update_contact_owner($output['assign_contact_id'], $output['erp_select_assign_contact'], 'id' );
         }
 
         $this->send_success( __( 'Assign to agent successfully', 'erp' ) );
