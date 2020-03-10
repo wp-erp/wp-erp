@@ -1422,7 +1422,7 @@ function erp_hr_leave_get_requests_count() {
         $accepted_rejected_status = $wpdb->get_results(
             "SELECT count(m1.leave_request_id) AS count, m1.approval_status_id AS id FROM {$wpdb->prefix}erp_hr_leave_approval_status m1
                     LEFT JOIN {$wpdb->prefix}erp_hr_leave_approval_status m2 ON (m1.leave_request_id = m2.leave_request_id AND m1.id < m2.id)
-                    WHERE m2.id IS NULL GROUP BY m1.approval_status_id", ARRAY_A );
+                    WHERE m2.id IS NULL AND m2.approval_status_id <> NULL GROUP BY m1.approval_status_id", ARRAY_A );
 
         if ( is_array( $accepted_rejected_status ) && ! empty( $accepted_rejected_status ) ) {
             foreach ( $accepted_rejected_status as $item ) {
