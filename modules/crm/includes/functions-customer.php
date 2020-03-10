@@ -1115,11 +1115,11 @@ function erp_crm_get_contact_groups( $args = [] ) {
 
         foreach ( $results as $key => $group ) {
 
-            if( ! current_user_can( 'erp_crm_create_groups' ) ) {
+            if ( ! current_user_can( 'erp_crm_create_groups' ) ) {
                 $contact_subscriber = $group['contact_subscriber'];
-                $agent_subscriber = [];
+                $agent_subscriber   = [];
                 foreach ( $contact_subscriber as $cs ) {
-                    $obj = erp_get_people($cs['user_id']);
+                    $obj = erp_get_people( $cs['user_id'] );
                     if ( $obj->contact_owner == get_current_user_id() ) {
                         $agent_subscriber[] = $cs;
                     }
