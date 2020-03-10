@@ -386,6 +386,7 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
                         'amount'                   => 0,
                         'total'                    => 0,
                         'status'                   => 1,
+                        'f_year'                   => $this->request_data['f_year'],
                         'created_at'               => $this->request_data['created_on'],
                         'updated_at'               => $this->request_data['updated_on'],
                     );

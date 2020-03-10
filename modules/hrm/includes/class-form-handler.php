@@ -2,11 +2,9 @@
 
 namespace WeDevs\ERP\HRM;
 
-use tad\WPBrowser\Adapters\WP;
 use WeDevs\ERP\ERP_Errors;
 use WeDevs\ERP\HRM\Models\Leave_Policy;
 use WP_Error;
-use function Sodium\add;
 
 /**
  * Handle the form submissions
