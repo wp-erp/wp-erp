@@ -15,8 +15,8 @@ class Leave_Requests_List_Table extends \WP_List_Table {
         global $status, $page;
 
         parent::__construct( array(
-            'singular' => 'leave',
-            'plural'   => 'leaves',
+            'singular' => 'leave-request',
+            'plural'   => 'leave-requests',
             'ajax'     => false
         ) );
 
@@ -107,8 +107,8 @@ class Leave_Requests_List_Table extends \WP_List_Table {
     function column_default( $item, $column_name ) {
         switch ( $column_name ) {
 
-            case 'name':
-                return esc_attr( $item->name );
+            // case 'name':
+            //     return esc_attr( $item->name );
 
             case 'policy':
                 return esc_attr( $item->policy_name );
@@ -212,10 +212,15 @@ class Leave_Requests_List_Table extends \WP_List_Table {
             $actions['reject']   = sprintf( '<a class="erp-hr-leave-reject-btn" data-id="%s" href="%s">%s</a>', $item->id, $reject_url, __( 'Reject', 'erp' ) );
 
         } elseif ( $item->status == '3') {
-            $actions['approved'] = sprintf( '<a href="%s">%s</a>', $approve_url, __( 'Approve', 'erp' ) );
+            $actions['approved']   = sprintf( '<a class="erp-hr-leave-approve-btn" data-id="%s" href="%s">%s</a>', $item->id, $approve_url, __( 'Approve', 'erp' ) );
         }
 
-        return sprintf( '<a href="%3$s"><strong>%1$s</strong></a> %2$s', $item->name, $this->row_actions( $actions ), erp_hr_url_single_employee( $item->user_id ) );
+        return sprintf(
+            '<a href="%3$s"><strong>%1$s</strong></a>' . apply_filters( 'erp_leave_request_employee_name_column', '', $item->id ) . '%2$s',
+            $item->name,
+            $this->row_actions( $actions ),
+            erp_hr_url_single_employee( $item->user_id )
+        );
     }
 
     /**

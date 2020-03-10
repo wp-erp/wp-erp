@@ -73,4 +73,27 @@ class Leave_Approval_Status extends Model {
     public function unpaids() {
         return $this->hasMany( 'WeDevs\ERP\HRM\Models\Leaves_Unpaid', 'leave_request_id', 'leave_request_id' );
     }
+
+    /**
+     * Relation to Hr_User model
+     *
+     * @since 1.5.15
+     *
+     * @return object
+     */
+    public function leave_approved_by() {
+        return $this->belongsTo( 'WeDevs\ERP\HRM\Models\Hr_User', 'approved_by', 'id' );
+    }
+
+    /**
+     * Relation to Hr_User model
+     *
+     * @since 1.5.15
+     *
+     * @return object
+     */
+    public function leave_forward_to() {
+        return $this->belongsTo( 'WeDevs\ERP\HRM\Models\Hr_User', 'forward_to', 'id' );
+    }
+
 }
