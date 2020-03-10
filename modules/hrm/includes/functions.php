@@ -184,6 +184,7 @@ function erp_hr_can_apply_sandwich_rules_between_dates( $start_date, $end_date, 
 
     $can_apply_sandwich_rule_on_previous_leave = false;
     $previous_dates = array();
+    $next_dates = array();
 
     if ( get_option( 'erp_pro_sandwich_leave', '') === 'yes' && absint( $user_id ) ) {
         // get previous leave request for this user either approved or pending, skip rejected
@@ -231,7 +232,6 @@ function erp_hr_can_apply_sandwich_rules_between_dates( $start_date, $end_date, 
         }
 
         //get next leave request
-        $next_dates = array();
         $next_leave_request = $wpdb->get_row(
             $wpdb->prepare(
                 "SELECT rq.start_date, rq.end_date, st.approval_status_id

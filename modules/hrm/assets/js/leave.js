@@ -34,7 +34,7 @@
             $( '.erp-hr-holiday-wrap' ).on( 'click', '#erp-hr-import-ical', self, this.importICalInit );
             $( '.erp-hr-holiday-wrap' ).on( 'change', '#erp-ical-input', self, this.uploadICal );
 
-            $( '.erp-hr-leave-requests' ).on( 'click', '.erp-hr-leave-approve-btn', self, this.leave.reject );
+            $( '.erp-hr-leave-requests' ).on( 'click', '.erp-hr-leave-approve-btn', self, this.leave.approve );
             $( '.erp-hr-leave-requests' ).on( 'click', '.erp-hr-leave-reject-btn', self, this.leave.reject );
 
             // Leaave report custom filter
@@ -688,6 +688,46 @@
                 $( '.erp-hr-leave-requests' ).load( window.location.href + ' .erp-hr-leave-requests-inner' );
             },
 
+            approve: function(e) {
+                e.preventDefault();
+
+                var self = $(this),
+                data = {
+                    id : self.data('id')
+                }
+
+                $.erpPopup({
+                    title: wpErpHr.popup.leave_approve,
+                    button: wpErpHr.popup.update_status,
+                    id: 'erp-hr-leave-approve-popup',
+                    content: wperp.template('erp-hr-leave-approve-js-tmp')(data).trim(),
+                    extraClass: 'smaller',
+                    onSubmit: function(modal) {
+                        wp.ajax.send( {
+                            data: this.serialize()+'&_wpnonce='+wpErpHr.nonce,
+                            success: function(res) {
+                                var error_string = '';
+                                if ( res.errors ) {
+                                    $.each( res.errors, function( key, val ) {
+                                        error_string += '<div class="notice notice-error is-dismissible"><p>' + val[0] + '</p></div>';
+                                    });
+                                    if ( error_string != '' ) {
+                                        $('#leave-approve-form-error').html( error_string );
+                                    }
+                                }
+                                else {
+                                    Leave.leave.pageReload();
+                                    modal.closeModal();
+                                    //location.reload();
+                                }
+                            },
+                            error: function(error) {
+                                modal.showError( error );
+                            }
+                        });
+                    }
+                }); //popup
+            },
 
             reject: function(e) {
                 e.preventDefault();

@@ -104,6 +104,9 @@ class Ajax_Handler {
         //leave get filtered employees
         $this->action( 'wp_ajax_erp-hr-leave-get-employees', 'get_employees' );
 
+        //leave approved
+        $this->action( 'wp_ajax_erp_hr_leave_approve', 'leave_approve' );
+
         //leave rejected
         $this->action( 'wp_ajax_erp_hr_leave_reject', 'leave_reject' );
 
@@ -113,6 +116,31 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-hr-holiday-delete', 'holiday_remove' );
     }
 
+    /**
+     * Leave approve
+     */
+    function leave_approve() {
+
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'wp-erp-hr-nonce' ) ) {
+            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
+
+        // Check permission
+        if ( ! current_user_can( 'erp_leave_manage' ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
+        $request_id = isset( $_POST['leave_request_id'] ) ? intval( $_POST['leave_request_id'] ) : 0;
+        $comments   = isset( $_POST['reason'] ) ? sanitize_text_field( wp_unslash( $_POST['reason'] ) ) : '';
+
+        $update = erp_hr_leave_request_update_status( $request_id, 1, $comments );
+
+        $this->send_success( $update );
+    }
+
+    /**
+     * Leave reject
+     */
     function leave_reject() {
 
         if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'wp-erp-hr-nonce' ) ) {
