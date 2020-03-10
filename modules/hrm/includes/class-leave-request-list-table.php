@@ -24,7 +24,7 @@ class Leave_Requests_List_Table extends \WP_List_Table {
     }
 
     function get_table_classes() {
-        return array( 'widefat', 'fixed', 'striped', 'request-list-table', $this->_args['plural'] );
+        return array( 'widefat', 'fixed', 'striped', 'request-list-table', 'leaves', $this->_args['plural'] );
     }
 
     /**
