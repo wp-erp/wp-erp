@@ -36,6 +36,7 @@
 
             $( '.erp-hr-leave-requests' ).on( 'click', '.erp-hr-leave-approve-btn', self, this.leave.approve );
             $( '.erp-hr-leave-requests' ).on( 'click', '.erp-hr-leave-reject-btn', self, this.leave.reject );
+            $( '.request-list-table' ).on( 'click', 'a.submitdelete', self, this.leave.remove );
 
             // Leaave report custom filter
             $( '#filter_year' ).on( 'change', self, this.customFilterLeaveReport );
@@ -768,7 +769,30 @@
                         });
                     }
                 }); //popup
-            }
+            },
+
+            remove: function(e) {
+                e.preventDefault();
+
+                var self = $(this);
+
+                if ( confirm( wpErpHr.delConfirmRequest ) ) {
+                    wp.ajax.send( 'erp-hr-leave-request-delete', {
+                        data: {
+                            '_wpnonce': wpErpHr.nonce,
+                            id: self.data( 'id' ),
+                        },
+                        success: function() {
+                            self.closest('tr').fadeOut( 'fast', function() {
+                                $(this).remove();
+                            });
+                        },
+                        error: function(response) {
+                            alert( response );
+                        }
+                    });
+                }
+            },
         },
 
         importICalInit: function ( e ) {

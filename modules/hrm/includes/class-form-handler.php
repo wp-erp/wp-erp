@@ -875,7 +875,7 @@ class Form_Handler {
 
         switch ( $action ) {
             case 'delete':
-                // \WeDevs\ERP\HRM\Models\Leave_request::find( $request_id )->delete();
+                //@since 1.5.15, do nothing, we are handling this from ajax request
                 break;
 
             case 'reject':

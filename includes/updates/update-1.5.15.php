@@ -161,9 +161,8 @@ class ERP_1_5_15 {
             "CREATE TABLE {$wpdb->prefix}erp_hr_leave_approval_status_new (
                   id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
                   leave_request_id bigint(20) UNSIGNED NOT NULL,
-                  approval_status_id tinyint(3) UNSIGNED NOT NULL,
+                  approval_status_id tinyint(3) UNSIGNED DEFAULT NULL,
                   approved_by bigint(20) UNSIGNED NOT NULL,
-                  approved_date int(11) NOT NULL,
                   forward_to bigint(20) UNSIGNED DEFAULT NULL,
                   message text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
                   created_at int(11) NOT NULL,
