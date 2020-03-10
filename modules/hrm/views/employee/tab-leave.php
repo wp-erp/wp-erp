@@ -67,7 +67,7 @@ if ( $balance ) {
 
 <?php
 $cur_year   = date( 'Y' );
-$requests   = $employee->get_leave_requests();
+$requests   = $employee->get_leave_requests( array( 'status' => 'all' ) );
 ?>
 
 <form action="#" id="erp-hr-empl-leave-history">
@@ -96,6 +96,7 @@ $requests   = $employee->get_leave_requests();
             <th><?php esc_html_e( 'Policy', 'erp' ) ?></th>
             <th><?php esc_html_e( 'Description', 'erp' ) ?></th>
             <th><?php esc_html_e( 'Days', 'erp' ) ?></th>
+            <th><?php esc_html_e( 'Status', 'erp' ) ?></th>
         </tr>
     </thead>
 

@@ -1,20 +1,35 @@
 <?php
-$employee_types = erp_hr_get_assign_policy_from_entitlement( get_current_user_id() );
-$types = $employee_types ? $employee_types : [];
+
+use WeDevs\ERP\HRM\Models\Financial_Year;
+
+$employee_types     = erp_hr_get_assign_policy_from_entitlement( get_current_user_id() );
+$types              = $employee_types ? $employee_types : [];
+$financial_years    = array(
+    '' => esc_attr__( 'select year', 'erp')
+);
+$current_start_date = current_datetime()->modify( erp_financial_start_date() )->getTimestamp();
+foreach ( Financial_Year::all() as $f_year ) {
+    if ( $f_year['start_date'] < $current_start_date ) {
+        continue;
+    }
+    $financial_years[ $f_year['id'] ] = $f_year['fy_name'];
+}
 ?>
-<div class="erp-hr-leave-request-new">
+<div class="erp-hr-leave-request-new erp-hr-leave-reqs-wrap">
 
     <div class="row">
         <?php erp_html_form_input( array(
-            'label'    => __( 'Leave Type', 'erp' ),
-            'name'     => 'leave_policy',
-            'id'       => 'erp-hr-leave-req-leave-policy',
-            'value'    => '',
+            'label'    => esc_html__( 'Financial Year', 'erp' ),
+            'name'     => 'f_year',
+            'value'    =>  '',
             'required' => true,
+            'class'    => 'f_year',
             'type'     => 'select',
-            'options'  => array( '' => __( '- Select -', 'erp' ) ) + $types
+            'options'  => $financial_years,
         ) ); ?>
     </div>
+
+    <div class="row erp-hide erp-hr-leave-type-wrapper"></div>
 
     <div class="row">
         <?php erp_html_form_input( array(

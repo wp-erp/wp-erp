@@ -1274,7 +1274,7 @@ function erp_hr_get_leave_requests( $args = array() ) {
         $from_date = current_datetime();
         $from_date = $from_date->modify( $from_date_string );
 
-        $to_date_string = $args['year'] . '-12-31 00:00:00';
+        $to_date_string = $args['year'] . '-12-31 23:59:59';
         $to_date = current_datetime();
         $to_date = $to_date->modify( $to_date_string );
 
