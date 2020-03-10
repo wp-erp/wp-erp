@@ -13,6 +13,7 @@ if ( ! empty( $requests ) ) {
             <td><?php echo esc_html( $request->policy_name ); ?></td>
             <td><?php echo !empty( $request->reason ) ? esc_html( stripslashes( $request->reason ) ) : '-'; ?></td>
             <td><?php echo esc_html( number_format_i18n( $request->days ) ); ?></td>
+            <td><?php echo '<span class="status-' . $request->status . '">' . erp_hr_leave_request_get_statuses( $request->status ) . '</span>' ?></td>
         </tr>
 
     <?php } ?>
