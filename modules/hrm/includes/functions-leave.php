@@ -1617,6 +1617,7 @@ function erp_hr_leave_request_update_status( $request_id, $status, $comments = '
                 }
 
                 // 3. send data to leave approval status table
+                $approval_status_data['message'] = $comments;
                 $approval_status = Leave_Approval_Status::create( $approval_status_data );
 
                 // 4. send data to leave entitlement table - day out

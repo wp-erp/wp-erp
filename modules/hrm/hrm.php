@@ -186,6 +186,7 @@ class Human_Resource {
                 'new_leave_req'     => __( 'Leave Request', 'erp' ),
                 'take_leave'        => __( 'Send Leave Request', 'erp' ),
                 'terminate'         => __( 'Terminate', 'erp' ),
+                'leave_approve'     => __( 'Approve Reason', 'erp' ),
                 'leave_reject'      => __( 'Reject Reason', 'erp' ),
                 'already_terminate' => __( 'Sorry, this employee is already terminated', 'erp' ),
                 'already_active'    => __( 'Sorry, this employee is already active', 'erp' )
@@ -309,6 +310,7 @@ class Human_Resource {
                 break;
 
             case 'leave':
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/leave-approve.php', 'erp-hr-leave-approve-js-tmp' );
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/leave-reject.php', 'erp-hr-leave-reject-js-tmp' );
         }
 
