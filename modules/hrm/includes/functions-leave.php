@@ -155,7 +155,7 @@ function erp_hrm_is_valid_leave_date_range_within_financial_date_range( $start_d
 /**
  * Insert a new leave policy
  *
- * @since 0.1
+ * @since 1.0.0
  *
  * @param array $args
  *
@@ -173,6 +173,8 @@ function erp_hr_leave_insert_policy( $args = array() ) {
         'department_id'  => $args['department_id'],
         'designation_id' => $args['designation_id'],
         'location_id'    => $args['location_id'],
+        'gender'         => $args['gender'],
+        'marital'        => $args['marital'],
         'f_year'         => $args['f_year']
     );
 
@@ -180,8 +182,6 @@ function erp_hr_leave_insert_policy( $args = array() ) {
         'description'          => $args['description'],
         'days'                 => $args['days'],
         'color'                => $args['color'],
-        'gender'               => $args['gender'],
-        'marital'              => $args['marital'],
         'applicable_from_days' => $args['applicable_from']
     ) );
 
@@ -195,7 +195,7 @@ function erp_hr_leave_insert_policy( $args = array() ) {
             $where[] = array( $key, $value );
         }
 
-        $exists = Leave_Policy::where( $where )->first();
+        $exists = Leave_Policy::where( $where )->where('id', '<>', $args['id'])->first();
 
         if ( $exists ) {
             return new WP_Error( 'exists', esc_html__( 'Policy already exists.', 'erp' ) );
@@ -218,7 +218,7 @@ function erp_hr_leave_insert_policy( $args = array() ) {
         return new WP_Error( 'exists', esc_html__( 'Policy already exists.', 'erp' ) );
     }
 
-    do_action( 'erp_hr_leave_insert_policy', $args['id'] );
+    do_action( 'erp_hr_leave_insert_policy', $leave_policy->id );
 
     return $leave_policy->id;
 }
