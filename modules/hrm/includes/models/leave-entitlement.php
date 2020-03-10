@@ -42,6 +42,17 @@ class Leave_Entitlement extends Model {
     }
 
     /**
+     * Relation to Leave_Approval_Status model
+     *
+     * @since 1.5.15
+     *
+     * @return object
+     */
+    public function leave_requests() {
+        return $this->hasMany( 'WeDevs\ERP\HRM\Models\Leave_Request', 'leave_entitlement_id', 'id' )->orderBy('id', 'desc');
+    }
+
+    /**
      * Relation to Leave_Policy model
      *
      * @since 1.5.15

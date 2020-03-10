@@ -33,7 +33,7 @@
 
                 <li><?php erp_print_key_value( __( 'Reporting To', 'erp' ), isset( $reporting_to_link ) ? $reporting_to_link : '-' ); ?></li>
                 <li>
-                    <?php erp_print_key_value( __( 'Date of Hire', 'erp' ), '<span style="font-weight: bold">' . $employee->get_hiring_date() . '</span>' ); ?>
+                    <?php erp_print_key_value( __( 'Date of Hire', 'erp' ), '<span style="font-weight: bold">' . erp_format_date( $employee->get_hiring_date() ) . '</span>' ); ?>
                     <?php
                         $emp_hdate = new DateTime( $employee->get_hiring_date() );
                         $cur_date  = new DateTime( date( 'd-m-Y' ) );

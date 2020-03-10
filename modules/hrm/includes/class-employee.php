@@ -875,13 +875,14 @@ class Employee {
      * get hiring date
      *
      * @since 1.3.0
+     * @since 1.5.15 removed erp_format_date() from return value due to date string parse error
      * @return string
      */
     public function get_hiring_date() {
         if ( isset( $this->erp_user->hiring_date )
              && is_valid_date( $this->erp_user->hiring_date )
              && $this->erp_user->hiring_date != '0000-00-00' ) {
-            return erp_format_date( $this->erp_user->hiring_date );
+            return $this->erp_user->hiring_date;
         }
     }
 
