@@ -3787,8 +3787,8 @@ function erp_crm_get_contact_owner( $contact_id ) {
  *
  * @return WP_Error|void
  */
-function erp_crm_update_contact_owner( $contact_id, $owner_id ) {
-    $people = erp_get_people_by('user_id', $contact_id);
+function erp_crm_update_contact_owner( $contact_id, $owner_id, $field_type = 'user_id' ) {
+    $people = erp_get_people_by( $field_type, $contact_id );
 
     if ( empty( $people ) ) {
         return new \WP_Error( 'no-erp-people', __( 'People not exists', 'erp' ) );
