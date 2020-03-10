@@ -1916,22 +1916,41 @@ function erp_hr_leave_count_entitlements( $args = array() ) {
  *
  * @return void
  */
-function erp_hr_delete_entitlement( $id, $user_id, $policy_id ) {
-//    $leave_recored = \WeDevs\ERP\HRM\Models\Leave_request::where( 'user_id', '=', $user_id )
-//                                                         ->where( 'policy_id', '=', $policy_id )->get()->toArray();
-//    $leave_recored = wp_list_pluck( $leave_recored, 'status' );
-//
-//    if ( in_array( '1', $leave_recored ) ) {
-//        return;
-//    }
-//
-//    if ( \WeDevs\ERP\HRM\Models\Leave_Entitlement::find( $id )->delete() ) {
-//        return \WeDevs\ERP\HRM\Models\Leave_request::where( 'user_id', '=', $user_id )
-//                                                   ->where( 'policy_id', '=', $policy_id )
-//                                                   ->delete();
-//    }
+function erp_hr_delete_entitlement( $id, $user_id, $entitlement_id ) {
+    // 1. Get all leave request id associated with this entitlement id
 
-    return Leave_Entitlement::find( $id )->delete();
+    // 2. Get all approval status id associated with step 1 request ids
+
+    // 3. delete all entitlement ids based on step 2 approval status id
+
+    // 4. delete all unpaid leaves data based on step 1 request_id
+
+    // 5. delete all approval status data based on step 2 data
+
+    // 6. delete all leave request data based on step 1
+
+    $entitlement = Leave_Entitlement::find( $entitlement_id );
+
+    if ( $entitlement->leave_requests ) {
+        foreach( $entitlement->leave_requests as $request ) {
+            if ( $request->approval_status ) {
+                foreach ( $request->approval_status as $status ) {
+                    if ( $status->entitlements ) {
+                        foreach ( $status->entitlements as $entl ) {
+                            $entl->delete();
+                        }
+                    }
+                    $status->delete();
+                }
+            }
+            if ( $request->unpaid ) {
+                $request->unpaid->delete();
+            }
+            $request->delete();
+        }
+    }
+
+    return $entitlement->delete();
 }
 
 /**

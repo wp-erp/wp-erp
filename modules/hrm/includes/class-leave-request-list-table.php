@@ -23,6 +23,10 @@ class Leave_Requests_List_Table extends \WP_List_Table {
         $this->table_css();
     }
 
+    function get_table_classes() {
+        return array( 'widefat', 'fixed', 'striped', 'request-list-table', $this->_args['plural'] );
+    }
+
     /**
      * Render extra filtering option in
      * top of the table
@@ -201,7 +205,7 @@ class Leave_Requests_List_Table extends \WP_List_Table {
         $pending_url = wp_nonce_url( sprintf( $tpl, 'pending', $item->id ), $nonce );
 
         if ( erp_get_option( 'erp_debug_mode', 'erp_settings_general', 0 ) ) {
-            $actions['delete'] = sprintf( '<a href="%s">%s</a>', $delete_url, __( 'Delete', 'erp' ) );
+            $actions['delete'] = sprintf( '<a href="%s" data-id="%d" class="submitdelete">%s</a>', $delete_url, $item->id, __( 'Delete', 'erp' ) );
         }
 
         if ( $item->status == '2' ) {

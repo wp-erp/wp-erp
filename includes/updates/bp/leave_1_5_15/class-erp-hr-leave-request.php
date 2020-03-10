@@ -267,13 +267,11 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
                 'leave_request_id'   => $this->request_data['leave_request_id'],
                 'approval_status_id' => $this->request_data['status'],
                 'approved_by'        => $this->request_data['updated_by'],
-                'approved_date'      => $this->request_data['updated_on'],
                 'created_at'         => $this->request_data['updated_on'],
                 'updated_at'         => $this->request_data['updated_on'],
             );
 
             $table_format = array(
-                '%d',
                 '%d',
                 '%d',
                 '%d',

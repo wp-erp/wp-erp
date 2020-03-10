@@ -12,8 +12,8 @@ class Leave_Request extends Model {
     protected $table = 'erp_hr_leave_requests';
 
     protected $fillable = [
-        'user_id', 'leave_id', 'day_status_id', 'days',
-        'start_date', 'end_date', 'reason'
+        'user_id', 'leave_id', 'leave_entitlement_id', 'day_status_id', 'days',
+        'start_date', 'end_date', 'reason', 'created_by'
     ];
 
     /**
@@ -59,6 +59,17 @@ class Leave_Request extends Model {
      *
      * @return object
      */
+    public function approval_status() {
+        return $this->hasMany( 'WeDevs\ERP\HRM\Models\Leave_Approval_Status', 'leave_request_id', 'id' )->orderBy('id', 'desc');
+    }
+
+    /**
+     * Relation to Leave_Approval_Status model
+     *
+     * @since 1.5.15
+     *
+     * @return object
+     */
     public function latest_approval_status() {
         return $this->hasOne( 'WeDevs\ERP\HRM\Models\Leave_Approval_Status', 'leave_request_id', 'id' )->orderBy('id', 'desc');
     }
@@ -71,7 +82,7 @@ class Leave_Request extends Model {
      * @return object
      */
     public function unpaid() {
-        return $this->hasOne( 'WeDevs\ERP\HRM\Models\Leaves_Unpaid' );
+        return $this->hasOne( 'WeDevs\ERP\HRM\Models\Leaves_Unpaid', 'leave_request_id', 'id' );
     }
 
     /**

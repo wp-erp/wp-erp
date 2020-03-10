@@ -8,6 +8,7 @@ use WeDevs\ERP\HRM\Models\Dependents;
 use WeDevs\ERP\HRM\Models\Education;
 use WeDevs\ERP\HRM\Models\Financial_Year;
 use WeDevs\ERP\HRM\Models\Leave_Entitlement;
+use WeDevs\ERP\HRM\Models\Leave_Request;
 use WeDevs\ERP\HRM\Models\Work_Experience;
 
 /**
@@ -106,6 +107,7 @@ class Ajax_Handler {
 
         //leave rejected
         $this->action( 'wp_ajax_erp_hr_leave_reject', 'leave_reject' );
+        $this->action( 'wp_ajax_erp-hr-leave-request-delete', 'remove_leave_request' );
 
         // script reload
         $this->action( 'wp_ajax_erp_hr_script_reload', 'employee_template_refresh' );
@@ -130,6 +132,46 @@ class Ajax_Handler {
         $update = erp_hr_leave_request_update_status( $request_id, 3, $comments );
 
         $this->send_success( $update );
+    }
+
+    /**
+     * @since 1.5.15
+     */
+    function remove_leave_request() {
+
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'wp-erp-hr-nonce' ) ) {
+            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
+
+        // Check permission
+        if ( ! current_user_can( 'erp_leave_manage' ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
+        $request_id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
+
+        $request = Leave_Request::find( $request_id );
+
+        if ( ! $request ) {
+            return esc_attr__( 'No leave request found with give request id.', 'erp' );
+        }
+
+        if ( $request->approval_status ) {
+            foreach ( $request->approval_status as $status ) {
+                if ( $status->entitlements ) {
+                    foreach ( $status->entitlements as $entl ) {
+                        $entl->delete();
+                    }
+                }
+                $status->delete();
+            }
+        }
+        if ( $request->unpaid ) {
+            $request->unpaid->delete();
+        }
+        $request->delete();
+
+        $this->send_success( $request_id );
     }
 
     /**
@@ -267,7 +309,7 @@ class Ajax_Handler {
 
         $id        = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
         $user_id   = isset( $_POST['user_id'] ) ? intval( $_POST['user_id'] ) : 0;
-        $policy_id = isset( $_POST['policy_id'] ) ? intval( $_POST['policy_id'] ) : 0;
+        $policy_id = isset( $_POST['policy_id'] ) ? intval( $_POST['policy_id'] ) : 0; // @since 1.5.15 this is entitlement id
 
         if ( $id && $user_id && $policy_id ) {
             erp_hr_delete_entitlement( $id, $user_id, $policy_id );
