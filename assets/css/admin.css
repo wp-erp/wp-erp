@@ -1953,6 +1953,9 @@ table.leaves td.column-status .status-2 {
 table.leaves td.column-status .status-3 {
   background: #dd3d36;
 }
+table.leaves td.column-status .status-4 {
+  background: #3E87D0;
+}
 .erp-hr-leave-request-new .show-days {
   width: 97%;
 }

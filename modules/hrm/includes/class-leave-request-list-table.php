@@ -208,7 +208,7 @@ class Leave_Requests_List_Table extends \WP_List_Table {
             $actions['delete'] = sprintf( '<a href="%s" data-id="%d" class="submitdelete">%s</a>', $delete_url, $item->id, __( 'Delete', 'erp' ) );
         }
 
-        if ( $item->status == '2' ) {
+        if ( $item->status == '2' || $item->status == '4' ) {
             $actions['approved']   = sprintf( '<a class="erp-hr-leave-approve-btn" data-id="%s" href="%s">%s</a>', $item->id, $approve_url, __( 'Approve', 'erp' ) );
             $actions['reject']   = sprintf( '<a class="erp-hr-leave-reject-btn" data-id="%s" href="%s">%s</a>', $item->id, $reject_url, __( 'Reject', 'erp' ) );
 
@@ -239,7 +239,7 @@ class Leave_Requests_List_Table extends \WP_List_Table {
             $actions['delete'] = __( 'Delete', 'erp' );
         }
 
-        if ( $this->page_status == '2' ) {
+        if ( $this->page_status == '2' || $this->page_status == '4' ) {
             $actions['approved'] = __( 'Approve', 'erp' );
             $actions['reject']   = __( 'Reject', 'erp' );
         } elseif ( $this->page_status == '1' ) {
