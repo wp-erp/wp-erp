@@ -31,6 +31,8 @@ foreach ( Financial_Year::all() as $f_year ) {
 
     <div class="row erp-hide erp-hr-leave-type-wrapper"></div>
 
+    <?php do_action( 'erp_hr_leave_request_form_middle' ); ?>
+
     <div class="row">
         <?php erp_html_form_input( array(
             'label'    => __( 'From', 'erp' ),
@@ -42,7 +44,7 @@ foreach ( Financial_Year::all() as $f_year ) {
         ) ); ?>
     </div>
 
-    <div class="row">
+    <div class="row erp-leave-to-date">
         <?php erp_html_form_input( array(
             'label'    => __( 'To', 'erp' ),
             'name'     => 'leave_to',

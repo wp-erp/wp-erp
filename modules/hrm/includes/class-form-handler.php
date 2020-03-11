@@ -2,9 +2,10 @@
 
 namespace WeDevs\ERP\HRM;
 
+use WP_Error;
 use WeDevs\ERP\ERP_Errors;
 use WeDevs\ERP\HRM\Models\Leave_Policy;
-use WP_Error;
+use \WeDevs\ERP\HRM\Models\Financial_Year;
 
 /**
  * Handle the form submissions
@@ -31,6 +32,7 @@ class Form_Handler {
         add_action( 'admin_init', array( $this, 'leave_request_status_change' ) );
         add_action( 'admin_init', array( $this, 'handle_employee_status_update' ) );
         add_action( 'admin_init', array( $this, 'handle_leave_calendar_filter' ) );
+        add_action( 'admin_init', array( $this, 'insert_financial_years') );
         add_action( 'load-wp-erp_page_erp-hr', array( $this, 'handle_actions' ) );
 
 //        $hr_management = sanitize_title( esc_html__( 'HR Management', 'erp' ) );
@@ -1181,6 +1183,81 @@ class Form_Handler {
 
         wp_redirect( erp_hr_new_policy_name_url() );
         exit;
+    }
+
+    /**
+     * Insert financial years
+     *
+     * @since 1.5.15
+     *
+     * @return void
+     */
+    public function insert_financial_years() {
+        if ( $_SERVER['REQUEST_METHOD'] !== 'POST' ) {
+            return;
+        }
+
+        if ( isset( $_POST['action'] ) && $_POST['action'] !=='erp-hr-fyears-setting' ) {
+            return;
+        }
+
+        if ( isset( $_POST['_wpnonce'] ) && ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-settings-nonce' ) ) {
+            die('Nonce failed.');
+        }
+    
+        $fnames = isset( $_POST['fyear-name'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['fyear-name'] ) ) : [];
+        $starts = isset( $_POST['fyear-start'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['fyear-start'] ) ) : [];
+        $ends   = isset( $_POST['fyear-end'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['fyear-end'] ) ) : [];
+
+        $current_user_id = get_current_user_id();
+        $url = admin_url('admin.php?page=erp-settings&tab=erp-hr&section=financial');
+
+        $errors = new ERP_Errors( 'leave_financial_years_create' );
+
+        foreach ( $fnames as $key => $fname ) {
+            if ( strpos($key, 'id-') !== false ) {
+                // we have existing record
+                $f_id = explode( 'id-', $key )[1]; // id-3 => 3
+
+                $policy_exist = Leave_Policy::where('f_year', $f_id)->first();
+
+                if ( $policy_exist ) {
+                    $errors->add( esc_html__(
+                        sprintf('Existing financial year associated with policy won\'t be updated. e.g. %s', $fname)
+                    , 'erp') );
+
+                    continue;
+                }
+
+                // update an existing one
+                Financial_Year::find($f_id)->update([
+                    'fy_name'    => $fname,
+                    'start_date' => erp_mysqldate_to_phptimestamp( $starts[$key] ),
+                    'end_date'   => erp_mysqldate_to_phptimestamp( $ends[$key] ),
+                    'description'=> 'Financial year for leave',
+                    'updated_by' => $current_user_id
+                ]);
+
+                continue;
+            }
+
+            // or create a new one
+            Financial_Year::create([
+                'fy_name'    => $fname,
+                'start_date' => erp_mysqldate_to_phptimestamp( $starts[$key] ),
+                'end_date'   => erp_mysqldate_to_phptimestamp( $ends[$key] ),
+                'description'=> 'Financial year for leave',
+                'created_by' => $current_user_id
+            ]);
+        }
+
+        if ( $errors->has_error() ) {
+            $errors->save();
+            $url = add_query_arg( array( 'error' => 'leave_financial_years_create' ), $url );
+        }
+
+        wp_safe_redirect( $url );
+        exit();
     }
 
 }

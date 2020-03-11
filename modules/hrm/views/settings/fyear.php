@@ -1,76 +1,8 @@
 <?php
 
-use WeDevs\ERP\ERP_Errors;
-use \WeDevs\ERP\HRM\Models\Leave_Policy;
-use \WeDevs\ERP\HRM\Models\Financial_Year;
-
-if ( isset( $_POST['_wpnonce'] ) && ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-settings-nonce' ) ) {
-    die('Nonce failed.');
-}
-
-$fnames = isset( $_POST['fyear-name'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['fyear-name'] ) ) : [];
-$starts = isset( $_POST['fyear-start'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['fyear-start'] ) ) : [];
-$ends   = isset( $_POST['fyear-end'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['fyear-end'] ) ) : [];
-
-$current_user_id = get_current_user_id();
-$url = admin_url('?page=erp-settings&tab=erp-hr&section=financial');
-
-$fin_years = array();
-
-if ( isset( $_POST['erp-hr-fyears-setting'] ) ) {
-
-    $errors = new ERP_Errors( 'leave_financial_years_create' );
-
-    foreach ( $fnames as $key => $fname ) {
-        if ( strpos($key, 'id-') !== false ) {
-            // we have existing record
-
-            $f_id = explode( 'id-', $key )[1]; // id-3 => 3
-
-            $policy_exist = Leave_Policy::where('f_year', $f_id)->first();
-
-            if ( $policy_exist ) {
-                $errors->add( esc_html__(
-                    sprintf('Existing financial year associated with policy won\'t be updated. e.g. %s', $fname)
-                , 'erp') );
-
-                continue;
-            }
-
-            // update an existing one
-            Financial_Year::find($f_id)->update([
-                'fy_name'    => $fname,
-                'start_date' => erp_mysqldate_to_phptimestamp( $starts[$key] ),
-                'end_date'   => erp_mysqldate_to_phptimestamp( $ends[$key] ),
-                'description'=> 'Financial year for leave',
-                'updated_by' => $current_user_id
-            ]);
-
-            continue;
-        }
-
-        // or create a new one
-        Financial_Year::create([
-            'fy_name'    => $fname,
-            'start_date' => erp_mysqldate_to_phptimestamp( $starts[$key] ),
-            'end_date'   => erp_mysqldate_to_phptimestamp( $ends[$key] ),
-            'description'=> 'Financial year for leave',
-            'created_by' => $current_user_id
-        ]);
-    }
-
-    if ( $errors->has_error() ) {
-        $errors->save();
-        $url = add_query_arg( array( 'error' => 'leave_financial_years_create' ), $url );
-    }
-
-    wp_safe_redirect( $url );
-    exit();
-}
-
 // show the erros
 if ( isset( $_GET['error'] ) && $_GET['error'] != '' ) {
-    $errors = new ERP_Errors( sanitize_text_field( wp_unslash( $_GET['error'] ) ) );
+    $errors = new \WeDevs\ERP\ERP_Errors( sanitize_text_field( wp_unslash( $_GET['error'] ) ) );
     echo $errors->display();
 }
 ?>
@@ -130,7 +62,7 @@ if ( isset( $_GET['error'] ) && $_GET['error'] != '' ) {
                         <input
                             name="fyear-start[<?php echo 'id-' . $year['id']; ?>]"
                             class="fyear-start-date hr-fyear-date-field"
-                            value="<?php echo erp_format_date( $year['start_date'] ) ?>"
+                            value="<?php echo current_datetime()->setTimestamp( $year['start_date'] )->format('Y-m-d'); ?>"
                             type="text"
                             autocomplete="off" required>
                     </td>
@@ -138,7 +70,7 @@ if ( isset( $_GET['error'] ) && $_GET['error'] != '' ) {
                         <input
                             name="fyear-end[<?php echo 'id-' . $year['id']; ?>]"
                             class="fyear-end-date hr-fyear-date-field"
-                            value="<?php echo erp_format_date( $year['end_date'] ) ?>"
+                            value="<?php echo current_datetime()->setTimestamp( $year['end_date'] )->format('Y-m-d'); ?>"
                             type="text"
                             autocomplete="off" required>
                     </td>
@@ -150,7 +82,7 @@ if ( isset( $_GET['error'] ) && $_GET['error'] != '' ) {
         </tbody>
     </table>
 
-    <input type="hidden" name="erp-hr-fyears-setting">
+    <input type="hidden" name="action" value="erp-hr-fyears-setting">
 
     <button type="button" class="button-secondary erp-fyear-add-more-btn">
         <?php esc_attr_e( 'Add More', 'erp' ); ?>

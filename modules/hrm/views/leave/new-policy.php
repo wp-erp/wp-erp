@@ -163,7 +163,7 @@ $financial_years = wp_list_pluck( Financial_Year::all(), 'fy_name', 'id' );
 
             <div class="row applicable-form-row">
                 <?php erp_html_form_input(array(
-                    'label'    => __('Applicable from', 'erp-pro'),
+                    'label'    => __('Applicable From', 'erp-pro'),
                     'name'     => 'applicable-from',
                     'value'    => '0',
                     'type'     => 'number'
