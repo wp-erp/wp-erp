@@ -493,14 +493,21 @@ function erp_hr_leave_insert_entitlement( $args = [] ) {
         }
 
         // get employee joining date and compare it with policy's applicable form date
-        $compare_with = current_datetime();
-        $compare_with = $compare_with->modify( $employee->get_hiring_date() );
-        $compare_with = $compare_with->modify( '+' . $policy->applicable_from_days . ' days' );
+        if ( $employee->get_hiring_date() ) {
+            $hiring_date = current_datetime()->modify( $employee->get_hiring_date() );
+            $compare_with = $hiring_date->modify( '+' . $policy->applicable_from_days . ' days' );
 
-        $today = current_datetime();
+            $today = current_datetime();
 
-        if ( $compare_with > $today ) {
-            return new WP_Error( 'invalid-entitlement-days', esc_attr__( 'Error: Employee is not eligible for this leave policy yet.', 'erp' ) );
+            if ( $compare_with > $today ) {
+                return new WP_Error( 'invalid-entitlement-days', esc_attr__( 'Error: Employee is not eligible for this leave policy yet.', 'erp' ) );
+            }
+
+            // check if this a new employee and then apply segregation rule
+            $interval = date_diff( $compare_with, $today );
+            if ( get_option( '' ) === 'yes' ) {
+
+            }
         }
     }
 
@@ -1089,6 +1096,7 @@ function erp_hr_leave_insert_request( $args = array() ) {
             'start_date' => current_datetime()->modify( $args['start_date'] )->setTime( 0, 0, 0 )->getTimestamp(),
             'end_date'   => current_datetime()->modify( $args['end_date'] )->setTime( 0, 0, 0 )->getTimestamp(),
             'reason'     => wp_kses_post( $args['reason'] ),
+            'last_status' => '2',
             'created_by' => get_current_user_id(),
             'created_at' => current_datetime()->getTimestamp(),
             'updated_at' => current_datetime()->getTimestamp(),
@@ -1206,7 +1214,7 @@ function erp_hr_get_leave_requests( $args = array() ) {
     $leave_requests_table = $wpdb->prefix . 'erp_hr_leave_requests';
     $tables = " FROM $leave_requests_table as request";
 
-    $fields = 'SELECT SQL_CALC_FOUND_ROWS request.id, u.display_name';
+    $fields = 'SELECT SQL_CALC_FOUND_ROWS request.id, request.last_status AS status, u.display_name';
     $fields .= ', policy.color';
 
     $join = " LEFT JOIN {$wpdb->users} AS u ON u.ID = request.user_id";
@@ -1235,30 +1243,7 @@ function erp_hr_get_leave_requests( $args = array() ) {
     }
 
     if ( 'all' != $args['status'] && $args['status'] != '' ) {
-        if ( in_array( $args['status'], array( 1, 3 )  ) ) {
-            // get accepted and rejected requests
-            /*
-             * SELECT c.id, cch.leave_request_id, c.user_id, c.leave_id, cch.approval_status_id FROM wp_erp_hr_leave_requests AS c INNER JOIN wp_erp_hr_leave_approval_status AS cch ON cch.leave_request_id = c.id WHERE cch.id = ( SELECT MAX(id) FROM wp_erp_hr_leave_approval_status WHERE leave_request_id = c.id and approval_status_id=1)
-             */
-            $fields .= ', status1.approval_status_id AS status, status1.message as message';
-            $join .= " INNER JOIN {$wpdb->prefix}erp_hr_leave_approval_status AS status1 ON status1.leave_request_id = request.id";
-            $where .= " AND status1.id = ( SELECT MAX(id) FROM {$wpdb->prefix}erp_hr_leave_approval_status WHERE leave_request_id = request.id AND approval_status_id=" . intval( $args['status'] ) . ')';
-        }
-        else {
-            // get pending requests
-            $where .= " AND NOT EXISTS ( SELECT  null FROM {$wpdb->prefix}erp_hr_leave_approval_status AS status WHERE request.id = status.leave_request_id)";
-        }
-    }
-    else {
-        // query for all status
-        /*
-         * select t.id, l1.leave_request_id, t.user_id, l1.approval_status_id, u.display_name from wp_erp_hr_leave_requests t left join wp_users as u on u.ID = t.user_id left join wp_erp_hr_leave_approval_status l1 on t.id = l1.leave_request_id left join wp_erp_hr_leave_approval_status l2 on l1.leave_request_id = l2.leave_request_id and l1.id < l2.id where l2.id is null
-         */
-
-        $fields .= ', status1.approval_status_id AS status';
-        $join .= " LEFT JOIN {$wpdb->prefix}erp_hr_leave_approval_status status1 ON request.id = status1.leave_request_id";
-        $join .= " LEFT JOIN {$wpdb->prefix}erp_hr_leave_approval_status status2 ON status1.leave_request_id = status2.leave_request_id AND status1.id < status2.id";
-        $where .= ' AND status2.id IS null';
+        $where .= ' AND request.last_status = ' . absint( $args['status'] );
     }
 
     if ( $args['user_id'] ) {
@@ -1379,7 +1364,7 @@ function erp_hr_get_leave_requests( $args = array() ) {
             $temp_data['spent']          = $spent;
             $temp_data['status']         = isset( $single_request['status'] ) ? $single_request['status'] : 2;
             $temp_data['reason']         = $request->reason;
-            $temp_data['message']        = isset( $single_request['message'] ) ? $single_request['message'] : '';
+            $temp_data['message']        = $request->latest_approval_status ? $request->latest_approval_status->message : '';
             $temp_data['color']          = isset( $single_request['color'] ) ? $single_request['color'] : '';
             $temp_data['day_status_id']  = $request->day_status_id;
 
@@ -1418,29 +1403,29 @@ function erp_hr_leave_get_requests_count() {
             $counts[ $status ] = array( 'count' => 0, 'label' => $label );
         }
 
-        //get accepted and rejected leave count
-        $accepted_rejected_status = $wpdb->get_results(
-            "SELECT count(m1.leave_request_id) AS count, m1.approval_status_id AS id FROM {$wpdb->prefix}erp_hr_leave_approval_status m1
-                    LEFT JOIN {$wpdb->prefix}erp_hr_leave_approval_status m2 ON (m1.leave_request_id = m2.leave_request_id AND m1.id < m2.id)
-                    WHERE m2.id IS NULL AND m2.approval_status_id <> NULL GROUP BY m1.approval_status_id", ARRAY_A );
+        $total_leave_count = $wpdb->get_results(
+            "SELECT last_status as id, COUNT( last_status ) as count from {$wpdb->prefix}erp_hr_leave_requests GROUP BY last_status", ARRAY_A
+        );
 
-        if ( is_array( $accepted_rejected_status ) && ! empty( $accepted_rejected_status ) ) {
-            foreach ( $accepted_rejected_status as $item ) {
+        if ( is_array( $total_leave_count ) && ! empty( $total_leave_count ) ) {
+            foreach ( $total_leave_count as $item ) {
                 $counts[ $item['id'] ]['count'] = $item['count'];
                 $total += $item['count'];
             }
         }
 
-        //get pending leave count
-        $pending_count = $wpdb->get_var(
-            "SELECT COUNT( DISTINCT(id) ) FROM {$wpdb->prefix}erp_hr_leave_requests as request WHERE NOT EXISTS
-            ( SELECT  null FROM {$wpdb->prefix}erp_hr_leave_approval_status as status WHERE request.id = status.leave_request_id)"
-        );
-
-        $counts[2]['count'] = $pending_count;
-        $total += $pending_count;
         $counts['all']['count'] = $total;
 
+        if ( ! class_exists( '\weDevs\ERP_PRO\HR\Leave\Multilevel' ) ) {
+            if ( isset( $counts['4'] ) ) {
+                unset( $counts['4'] );
+            }
+        }
+        elseif( class_exists( '\weDevs\ERP_PRO\HR\Leave\Multilevel' ) && get_option('erp_pro_multilevel_approval') !== 'yes' ) {
+            if ( isset( $counts['4'] ) ) {
+                unset( $counts['4'] );
+            }
+        }
 
         wp_cache_set( $cache_key, $counts, 'erp' );
     }
@@ -1514,7 +1499,6 @@ function erp_hr_leave_request_update_status( $request_id, $status, $comments = '
         'leave_request_id'      => $request_id,
         'approval_status_id'    => $status,
         'approved_by'           => get_current_user_id(),
-        'approved_date'         => current_datetime()->getTimestamp(),
     );
 
     // leave entitlement table data
@@ -1574,6 +1558,7 @@ function erp_hr_leave_request_update_status( $request_id, $status, $comments = '
 
         case 2: // pending
         case 3: // rejected
+        case 4: // forwarded
             if ( $status === 1 ) { // approve this request
                 // 0. check if we are in the same financial year
                 $f_year_start = $request->entitlement->financial_year->start_date;
@@ -1674,6 +1659,10 @@ function erp_hr_leave_request_update_status( $request_id, $status, $comments = '
             return new WP_Error( 'invalid-status', esc_attr__( 'Invalid leave request status.', 'erp' ) );
             break;
     }
+
+    // update last_status of current request
+    $request->last_status = $status;
+    $request->save();
 
     // notification email
     if ( 1 === $status ) {
