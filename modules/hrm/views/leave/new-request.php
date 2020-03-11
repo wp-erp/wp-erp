@@ -59,6 +59,8 @@
 
                 <div class="row erp-hide erp-hr-leave-type-wrapper"></div>
 
+                <?php do_action( 'erp_hr_leave_request_form_middle' ); ?>
+
                 <div class="row two-col">
                     <div class="cols">
                         <?php erp_html_form_input( array(
@@ -72,7 +74,7 @@
                         ) ); ?>
                     </div>
 
-                    <div class="cols last">
+                    <div class="cols last erp-leave-to-date">
                         <?php erp_html_form_input( array(
                             'label'    => __( 'To', 'erp' ),
                             'name'     => 'leave_to',

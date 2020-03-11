@@ -96,6 +96,7 @@ class ERP_1_5_15 {
                   accrued_amount decimal(5,2) NOT NULL DEFAULT '0.00',
                   accrued_based_on enum('day','week','month','year') DEFAULT NULL,
                   accrued_max_days tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                  halfday_enable tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
                   created_at int(11) NOT NULL,
                   updated_at int(11) NOT NULL,
                   PRIMARY KEY  (id)
