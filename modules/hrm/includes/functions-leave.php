@@ -504,9 +504,18 @@ function erp_hr_leave_insert_entitlement( $args = [] ) {
             }
 
             // check if this a new employee and then apply segregation rule
-            $interval = date_diff( $compare_with, $today );
-            if ( get_option( '' ) === 'yes' ) {
-
+            if ( get_option( 'erp_pro_seg_leave' ) === 'yes'  && $compare_with < $today ) {
+                $interval = date_diff( $compare_with, $today );
+                // segregation  will apply max 30 days after applicable_form days.
+                if ( $interval->days <= 30 ) {
+                    // check if segregation assigned for this policy.
+                    $current_month = strtolower( $today->format('M') );
+                    $current_month = $current_month === 'dec' ? 'decem' : $current_month;
+                    $segregation = $policy->segregation;
+                    if ( array_key_exists( $current_month, $segregation ) && $segregation[ $current_month ] != 0 ) {
+                        $fields['day_in'] = $segregation[ $current_month ];
+                    }
+                }
             }
         }
     }
@@ -954,6 +963,7 @@ function erp_hr_leave_policy_delete( $policy_ids ) {
  * Get assign policies according to employee entitlement
  *
  * @since 0.1
+ * @since 1.5.15 changed according to new db structure.
  *
  * @param  integer $employee_id
  *

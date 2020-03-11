@@ -64,7 +64,7 @@ class Leave_Policy extends Model {
      * @return object
      */
     public function segregation() {
-        return $this->hasOne( 'WeDevs\ERP\HRM\Models\Leave_Policies_Segregation' );
+        return $this->hasOne( 'WeDevs\ERP\HRM\Models\Leave_Policies_Segregation', 'leave_policy_id' );
     }
 
     /**
