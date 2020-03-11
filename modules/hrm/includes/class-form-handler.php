@@ -1159,7 +1159,7 @@ class Form_Handler {
         $policy_name_create_error = new WP_Error();
 
         if ( empty( $name ) ) {
-            $policy_name_create_error->add( 'empty', 'Name field should not be left empty' );
+            $policy_name_create_error->add( 'empty', esc_html__('Name field should not be left empty', 'erp') );
         }
 
         if ( count( $policy_name_create_error->errors ) ) {
@@ -1226,15 +1226,17 @@ class Form_Handler {
                         sprintf('Existing financial year associated with policy won\'t be updated. e.g. %s', $fname)
                     , 'erp') );
 
+                    // we shouldn't update if there's an associated policy
+                    // so, let's move on to next loop
                     continue;
                 }
 
-                // update an existing one
+                // otherwise, update an existing one
                 Financial_Year::find($f_id)->update([
                     'fy_name'    => $fname,
                     'start_date' => erp_mysqldate_to_phptimestamp( $starts[$key] ),
                     'end_date'   => erp_mysqldate_to_phptimestamp( $ends[$key] ),
-                    'description'=> 'Financial year for leave',
+                    'description'=> esc_html__('Financial year for leave', 'erp'),
                     'updated_by' => $current_user_id
                 ]);
 
@@ -1246,7 +1248,7 @@ class Form_Handler {
                 'fy_name'    => $fname,
                 'start_date' => erp_mysqldate_to_phptimestamp( $starts[$key] ),
                 'end_date'   => erp_mysqldate_to_phptimestamp( $ends[$key] ),
-                'description'=> 'Financial year for leave',
+                'description'=> esc_html__('Financial year for leave', 'erp'),
                 'created_by' => $current_user_id
             ]);
         }
