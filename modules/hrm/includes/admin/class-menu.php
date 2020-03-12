@@ -143,7 +143,7 @@ class Admin_Menu {
 
         erp_add_menu( 'hr', array(
             'title'         =>  __( 'Leave Management', 'erp' ),
-            'capability'    =>  'erp_leave_manage',
+            'capability'    =>  erp_hr_is_current_user_dept_lead() ? 'erp_list_employee' : 'erp_leave_manage',
             'slug'          =>  'leave',
             'callback'      =>  [ $this, 'leave_requests' ],
             'position'      =>  30,
@@ -151,7 +151,7 @@ class Admin_Menu {
 
         erp_add_submenu( 'hr', 'leave', array(
             'title'         =>  __( 'Requests', 'erp' ),
-            'capability'    =>  'erp_leave_manage',
+            'capability'    =>  erp_hr_is_current_user_dept_lead() ? 'erp_list_employee' : 'erp_leave_manage',
             'slug'          =>  'leave-requests',
             'callback'      =>  [ $this, 'leave_requests' ],
             'position'      =>  5,

@@ -109,7 +109,7 @@ class Entitlement_List_Table extends \WP_List_Table {
      */
     function column_default( $entitlement, $column_name ) {
         $f_year = Financial_Year::find( $entitlement->f_year );
-        $balance   = erp_hr_leave_get_balance( $entitlement->user_id );
+        $balance = erp_hr_leave_get_balance( $entitlement->user_id );
 
         if ( isset( $balance[ $entitlement->trn_id ] ) ) {
             $scheduled = $balance[ $entitlement->trn_id ]['scheduled'];
