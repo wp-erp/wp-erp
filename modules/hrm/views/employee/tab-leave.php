@@ -1,4 +1,6 @@
-<h3><?php esc_html_e( 'Balances', 'erp' ) ?></h3>
+<h3><?php use WeDevs\ERP\HRM\Models\Financial_Year;
+
+    esc_html_e( 'Balances', 'erp' ) ?></h3>
 
 <?php
 $balance = $employee->get_leave_summary();
@@ -71,17 +73,20 @@ $requests   = $employee->get_leave_requests( array( 'status' => 'all' ) );
 ?>
 
 <form action="#" id="erp-hr-empl-leave-history">
+    <select name="f_year" id="f_year">
+        <?php echo wp_kses( erp_html_generate_dropdown( array( '' => esc_attr__( 'select year', 'erp' ) ) + wp_list_pluck( Financial_Year::all(), 'fy_name', 'id' ), '' ), array(
+            'option' => array(
+                'value' => array(),
+                'selected' => array()
+            ),
+        ) ); ?>
+    </select>
+
     <?php erp_html_form_input( array(
         'name'     => 'leave_policy',
         'type'     => 'select',
-        'options'  => array( 'all' => esc_html__( 'All Policy', 'erp' ) ) + erp_hr_leave_get_policies_dropdown_raw()
+        'options'  => array( 'all' => esc_attr__( 'All Policy', 'erp' ) ) + erp_hr_leave_get_policies_dropdown_raw()
     ) ); ?>
-
-    <select name="year" id="year">
-        <?php for ( $i = $cur_year; $i > $cur_year - 5; $i-- ) { ?>
-            <option value="<?php echo esc_html( $i ); ?>"><?php echo esc_html( $i ); ?></option>
-        <?php } ?>
-    </select>
 
     <input type="hidden" name="employee_id" value="<?php echo esc_attr( $employee->get_user_id() ); ?>">
 
@@ -104,3 +109,33 @@ $requests   = $employee->get_leave_requests( array( 'status' => 'all' ) );
         <?php include dirname( __FILE__ ) . '/tab-leave-history.php'; ?>
     </tbody>
 </table>
+<script type="text/javascript">
+    ;jQuery(function( $ ) {
+        var select_string = '<?php echo esc_attr__( 'All Policy', 'erp') ?>';
+        var policies = <?php
+            $policies = $employee->get_leave_policies();
+            $result = array();
+            foreach ( $policies as $policy ) {
+                $result[ $policy['f_year'] ][] = $policy;
+            }
+            echo json_encode( $result );
+            ?>;
+
+        $('#erp-hr-empl-leave-history').on( 'change', '#f_year', function ( e) {
+
+            var f_year = $(this).val();
+
+            $('#leave_policy option').remove();
+            var option = new Option( select_string, '' );
+            $('#leave_policy').append(option);
+
+            if ( policies[ f_year ] ) {
+                $.each( policies[ f_year ], function ( id, policy ) {
+                    var option = new Option(policy.name, policy.leave_id);
+                    $('#leave_policy').append(option);
+                } );
+            }
+        });
+
+    })
+</script>

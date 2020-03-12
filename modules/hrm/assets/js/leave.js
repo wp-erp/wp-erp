@@ -15,10 +15,8 @@
             $( '.erp-hr-leave-policy' ).on( 'click', 'a.submitdelete', self, this.policy.remove );
             $( 'body' ).on( 'change', '#erp-hr-leave-req-from-date, #erp-hr-leave-req-to-date', self, this.leave.requestDates );
             $( 'body' ).on( 'change', '#erp-hr-leave-req-employee-id', self, this.leave.setPolicy );
-            $( 'body' ).on( 'change', '.new-leave-request-form .f_year', self, this.leave.setPolicy );
+            $( 'body' ).on( 'change', '.new-leave-request-form .f_year, .erp-hr-leave-request-new .f_year', self, this.leave.setPolicy );
             $( 'body' ).on( 'change', '#erp-hr-leave-req-leave-policy', self, this.leave.setAvailableDays );
-
-            $( 'body' ).on( 'change', '.erp-hr-leave-request-new .f_year', self, this.leave.setPolicy );
 
             $( '.hrm-dashboard' ).on( 'click', '.erp-hr-new-leave-request-wrap a#erp-hr-new-leave-req', this.leave.takeLeave );
             $( '.erp-employee-single' ).on('submit', 'form#erp-hr-empl-leave-history', this.leave.showHistory );

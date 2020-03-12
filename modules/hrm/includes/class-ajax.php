@@ -1878,12 +1878,12 @@ class Ajax_Handler {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
-        $year    = isset( $_POST['year'] ) ? intval( $_POST['year'] ) : date( 'Y' );
+        $year    = isset( $_POST['f_year'] ) ? intval( $_POST['f_year'] ) : date( 'Y' );
         $user_id = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
         $policy  = isset( $_POST['leave_policy'] ) ? intval( $_POST['leave_policy'] ) : 'all';
 
         $args = array(
-            'year'    => $year,
+            'f_year'    => $year,
             'user_id' => $user_id,
         );
 

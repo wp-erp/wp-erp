@@ -42,6 +42,11 @@ class Entitlement_List_Table extends \WP_List_Table {
             'extra'         => __( 'Extra Leaves', 'erp' ),
         );
 
+        // hide cb if debug mode is off
+        if ( ! erp_get_option( 'erp_debug_mode', 'erp_settings_general', 0 ) ) {
+            unset( $columns['cb'] );
+        }
+
         return apply_filters( 'erp_hr_entitlement_table_cols', $columns );
     }
 
@@ -65,18 +70,14 @@ class Entitlement_List_Table extends \WP_List_Table {
             return;
         }
 
+        $selected = '';
         if ( ! empty( $_GET['financial_year'] ) ) {
             $selected = absint( wp_unslash( $_GET['financial_year'] ) );
-        }
-        else {
-            $financial_year_dates = erp_get_financial_year_dates();
-            $f_year_ids = get_financial_year_from_date_range( $financial_year_dates['start'], $financial_year_dates['end'] );
-            $selected = is_array( $f_year_ids ) && ! empty( $f_year_ids ) ? $f_year_ids[0] : '';
         }
         ?>
             <div class="alignleft actions">
                 <select name="financial_year">
-                    <?php echo wp_kses( erp_html_generate_dropdown( $entitlement_years, $selected ), array(
+                    <?php echo wp_kses( erp_html_generate_dropdown( array( '' => esc_attr__( 'select year', 'erp' ) ) + $entitlement_years, $selected ), array(
                         'option' => array(
                             'value' => array(),
                             'selected' => array()
@@ -282,12 +283,6 @@ class Entitlement_List_Table extends \WP_List_Table {
 
         if ( ! empty( $_GET['financial_year'] ) ) {
             $args['year'] = absint( wp_unslash( $_GET['financial_year'] ) );
-        }
-        else {
-            // todo: get financial year id from date range
-            $financial_year_dates = erp_get_financial_year_dates();
-            $f_year_ids = get_financial_year_from_date_range( $financial_year_dates['start'], $financial_year_dates['end'] );
-            $args['year'] = is_array( $f_year_ids ) && ! empty( $f_year_ids ) ? $f_year_ids[0] : '';
         }
 
         // get the items

@@ -499,13 +499,23 @@ function erp_hr_leave_insert_entitlement( $args = [] ) {
 
         // get employee joining date and compare it with policy's applicable form date
         if ( $employee->get_hiring_date() ) {
+            // get hiring date
             $hiring_date = erp_current_datetime()->modify( $employee->get_hiring_date() );
-            $compare_with = $hiring_date->modify( '+' . $policy->applicable_from_days . ' days' );
 
+            // get current date
             $today = erp_current_datetime();
 
+            // check if hiring date in the future
+            $interval = date_diff( $hiring_date, $today );
+
+            if ( $interval->invert == 1 ) {
+                return new WP_Error( 'invalid-joining-date', esc_attr__( 'Error: Employee joining date is in the future.', 'erp' ) );
+            }
+
+            $compare_with = $hiring_date->modify( '+' . $policy->applicable_from_days . ' days' );
+
             if ( $compare_with > $today ) {
-                return new WP_Error( 'invalid-entitlement-days', esc_attr__( 'Error: Employee is not eligible for this leave policy yet.', 'erp' ) );
+                return new WP_Error( 'invalid-joining-date', esc_attr__( 'Error: Employee is not eligible for this leave policy yet.', 'erp' ) );
             }
 
             // check if this a new employee and then apply segregation rule
@@ -992,13 +1002,13 @@ function erp_hr_get_assign_policy_from_entitlement( $employee_id, $date = null )
 
      $policies = Leave_Entitlement::select( $entitlement_table . '.id', $leave_table . '.name' )
          ->leftjoin( $leave_table, $entitlement_table . '.leave_id', '=', $leave_table . '.id' )
-         ->where( 'trn_type', '=', 'leave_policies' )
-         ->where( 'user_id', '=', $employee_id )
-         ->where( 'f_year', '=', $f_year_ids[0] )
+         ->where( $entitlement_table . '.trn_type', '=', 'leave_policies' )
+         ->where( $entitlement_table . '.user_id', '=', $employee_id )
+         ->where( $entitlement_table . '.f_year', '=', $f_year_ids[0] )
          ->get()
          ->toArray();
 
-     if ( ! empty( $policies ) ) {
+     if ( is_array( $policies ) && ! empty( $policies ) ) {
          foreach ( $policies as $policy ) {
              $dropdown[ $policy['id'] ] = stripslashes( $policy['name'] );
          }
@@ -1152,6 +1162,7 @@ function erp_hr_get_leave_request( $request_id ) {
  * Fetch the leave requests
  *
  * @since 0.1
+ * @since 1.5.15
  *
  * @param  array $args
  *
@@ -1858,17 +1869,19 @@ function erp_hr_leave_get_entitlements( $args = array() ) {
     global $wpdb;
 
     // get default financial year
+    /*
     $f_year = 0;
     $financial_year_dates = erp_get_financial_year_dates();
     $f_year_ids = get_financial_year_from_date_range( $financial_year_dates['start'], $financial_year_dates['end'] );
     if ( ! empty( $f_year_ids ) ) {
         $f_year = $f_year_ids[0];
     }
+    */
 
     $defaults = array(
         'user_id'       => 0,
         'leave_id'      => 0,
-        'year'          => $f_year,
+        'year'          => 0,
         'number'        => 20,
         'offset'        => 0,
         'orderby'       => 'en.user_id, en.created_at',
@@ -1883,11 +1896,11 @@ function erp_hr_leave_get_entitlements( $args = array() ) {
     /**
      * @deprecated 1.2.0 Use $args['from_date'] and $args['to_date'] instead
      */
-    if ( ! empty( $args['year'] ) ) {
+    if ( absint( $args['year'] ) ) {
         $where     .= " AND en.f_year = " . absint( $args['year'] );
     }
 
-    if ( $args['user_id'] ) {
+    if ( absint( $args['user_id'] ) ) {
         $where .= " AND en.user_id = " . absint( $args['user_id'] );
     }
 
@@ -1903,6 +1916,10 @@ function erp_hr_leave_get_entitlements( $args = array() ) {
         $where .= " AND emp.status = 'active'";
     }
 
+    $offset = absint( $args['offset'] );
+    $number = absint( $args['number'] );
+    $limit = $args['number'] == '-1' ? '' : " LIMIT {$offset}, {$number}";
+
     $query = "SELECT SQL_CALC_FOUND_ROWS en.*, u.display_name as employee_name, l.name as policy_name, emp.status as emp_status
         FROM `{$wpdb->prefix}erp_hr_leave_entitlements` AS en
         LEFT JOIN {$wpdb->prefix}erp_hr_leaves AS l ON l.id = en.leave_id
@@ -1910,10 +1927,9 @@ function erp_hr_leave_get_entitlements( $args = array() ) {
         LEFT JOIN {$wpdb->prefix}erp_hr_employees AS emp ON en.user_id = emp.user_id
         $where
         ORDER BY {$args['orderby']} {$args['order']}
-        LIMIT %d,%d;";
+        {$limit};";
 
-    $sql     = $wpdb->prepare( $query, absint( $args['offset'] ), absint( $args['number'] ) );
-    $results = $wpdb->get_results( $sql );
+    $results = $wpdb->get_results( $query );
 
     $total_row_found = absint( $wpdb->get_var( "SELECT FOUND_ROWS()" ) );
 

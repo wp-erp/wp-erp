@@ -2719,15 +2719,11 @@ function get_financial_year_from_date_range( $start_date, $end_date ) {
     global $wpdb;
 
     if ( ! is_numeric( $start_date ) ) {
-        $start_date_obj = erp_current_datetime();
-        $start_date_obj = $start_date_obj->modify( $start_date );
-        $start_date = $start_date_obj->getTimestamp();
+        $start_date = erp_current_datetime()->modify( $start_date )->getTimestamp();
     }
 
     if ( ! is_numeric( $end_date ) ) {
-        $end_date_obj = erp_current_datetime();
-        $end_date_obj = $end_date_obj->modify( $end_date );
-        $end_date = $end_date_obj->getTimestamp();
+        $end_date = erp_current_datetime()->modify( $end_date )->getTimestamp();
     }
 
     /**
