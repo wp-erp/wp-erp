@@ -1,5 +1,8 @@
 <?php
 
+use WeDevs\ERP\HRM\Models\Department;
+use WeDevs\ERP\HRM\Models\Employee;
+
 /**
  * Create a new department
  *
@@ -127,7 +130,7 @@ function erp_hr_get_departments( $args = [] ) {
  * @return array  the department
  */
 function erp_hr_count_departments() {
-    return \WeDevs\ERP\HRM\Models\Department::count();
+    return Department::count();
 }
 
 /**
@@ -144,7 +147,7 @@ function erp_hr_delete_department( $department_id ) {
         $not_exist_employee = [];
 
         foreach ( $department_id as $key => $department ) {
-            $dept = new \WeDevs\ERP\HRM\Department( intval( $department ) );
+            $dept = new Department( intval( $department ) );
 
             if ( $dept->num_of_employees() ) {
                 $exist_employee[] = $department;
@@ -155,14 +158,14 @@ function erp_hr_delete_department( $department_id ) {
         }
 
         if ( $not_exist_employee ) {
-            \WeDevs\ERP\HRM\Models\Department::destroy( $not_exist_employee );
+            Department::destroy( $not_exist_employee );
         }
 
         return $exist_employee;
 
     }
 
-    $department = new \WeDevs\ERP\HRM\Department( intval( $department_id ) );
+    $department = new Department( intval( $department_id ) );
 
     if ( $department->num_of_employees() ) {
         return new WP_Error( 'not-empty', __( 'You can not delete this department because it contains employees.', 'erp' ) );
@@ -170,15 +173,15 @@ function erp_hr_delete_department( $department_id ) {
 
     do_action( 'erp_hr_dept_delete', $department_id );
 
-    $parent_id = \WeDevs\ERP\HRM\Models\Department::where( 'id', '=', $department_id )->pluck('parent')[0];
+    $parent_id = Department::where( 'id', '=', $department_id )->pluck('parent')[0];
 
     if ( $parent_id ) {
-        \WeDevs\ERP\HRM\Models\Department::where( 'parent', '=', $department_id )->update( ['parent' => $parent_id ] );
+        Department::where( 'parent', '=', $department_id )->update( ['parent' => $parent_id ] );
     } else {
-        \WeDevs\ERP\HRM\Models\Department::where( 'parent', '=', $department_id )->update( ['parent' => 0 ] );
+        Department::where( 'parent', '=', $department_id )->update( ['parent' => 0 ] );
     }
 
-    $resp = \WeDevs\ERP\HRM\Models\Department::find( $department_id )->delete();
+    $resp = Department::find( $department_id )->delete();
 
     return $resp;
 }
@@ -238,9 +241,53 @@ function erp_hr_get_department_lead_by_user( $user_id ) {
     $employee = new \WeDevs\ERP\HRM\Employee( $user_id );
 
     if ( $employee->get_department() ) {
-        $department = new \WeDevs\ERP\HRM\Department( intval( $employee->get_department() ) );
+        $department = new Department( intval( $employee->get_department() ) );
         $department_lead = $department->get_lead();
     }
 
     return empty( $department_lead ) ? 0 : $department_lead->id;
+}
+
+/**
+ * Get department employees
+ * 
+ * @since 1.5.15
+ *
+ * @param $lead_id
+ *
+ * @return array
+ */
+function erp_hr_get_dept_lead_subordinate_employees( $lead_id ) {
+
+    $depts_id = Department::select('id')
+            ->where('lead', absint( $lead_id ))->pluck('id')
+            ->toArray();
+
+    $users_id = Employee::select('user_id')
+            ->whereIn('department', $depts_id )
+            ->get()->toArray();
+
+    return $users_id;
+}
+
+/**
+ * Check if this user_id's department lead is the current logged_in user
+ * 
+ * @since 1.5.15
+ * 
+ * @return bool
+ */
+function erp_hr_match_user_dept_lead_with_current_user( $user_id ) {
+    $employee = Employee::select('department')->where('user_id', $user_id )->first();
+    $emp_department = absint( $employee->department );
+
+    if ( $emp_department ) {
+        $department = Department::find( $emp_department );
+
+        if ( get_current_user_id() === absint( $department->lead ) ) {
+            return true;
+        }
+    }
+
+    return false;
 }
