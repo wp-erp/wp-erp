@@ -10,6 +10,7 @@ use \WeDevs\ERP\HRM\Models\Leave;
 use WeDevs\ERP\HRM\Models\Leave_Request;
 use WeDevs\ERP\HRM\Models\Leave_Request_Detail;
 use WeDevs\ERP\HRM\Models\Leaves_Unpaid;
+use WeDevs\ERP\HRM\Models\Department;
 
 /**
  * Get holiday between two date
@@ -167,6 +168,10 @@ function erp_hrm_is_valid_leave_date_range_within_financial_date_range( $start_d
  * @return int $policy_id
  */
 function erp_hr_leave_insert_policy( $args = array() ) {
+    if ( ! current_user_can( 'erp_leave_manage' ) ) {
+        wp_die( esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
+    }
+
     $defaults = array(
         'id' => null
     );
@@ -375,6 +380,10 @@ function erp_hr_apply_leave_policy( $user_id, $policy ) {
  * @return int|object New entitlement id or WP_Error object
  */
 function erp_hr_leave_insert_entitlement( $args = [] ) {
+    if ( ! current_user_can( 'erp_leave_manage' ) ) {
+        wp_die( esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
+    }
+
     /*
      * Workflow:
      * 1. Check if required fields exists
@@ -597,6 +606,9 @@ function erp_hr_apply_scheduled_policies() {
  * @return integer [$holiday_id]
  */
 function erp_hr_leave_insert_holiday( $args = array() ) {
+    if ( ! current_user_can( 'erp_leave_manage' ) ) {
+        wp_die( esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
+    }
 
     $defaults = array(
         'id'          => null,
@@ -958,6 +970,10 @@ function erp_hr_leave_get_policies_dropdown_raw( $args = array() ) {
  * @return void
  */
 function erp_hr_leave_policy_delete( $policy_ids ) {
+    if ( ! current_user_can( 'erp_leave_manage' ) ) {
+        wp_die( esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
+    }
+
     if ( ! is_array( $policy_ids ) ) {
         $policy_ids = [ $policy_ids ];
     }
@@ -1030,6 +1046,10 @@ function erp_hr_get_assign_policy_from_entitlement( $employee_id, $date = null )
  * @return integet request_id
  */
 function erp_hr_leave_insert_request( $args = array() ) {
+    if ( ! current_user_can( 'erp_leave_manage' ) ) {
+        wp_die( esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
+    }
+
     global $wpdb;
 
     $defaults = array(
@@ -1149,6 +1169,10 @@ function erp_hr_leave_insert_request( $args = array() ) {
  * @return object
  */
 function erp_hr_get_leave_request( $request_id ) {
+    if ( ! current_user_can( 'erp_leave_manage' ) || ! erp_hr_is_current_user_dept_lead() ) {
+        wp_die( esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
+    }
+
     $request_data = erp_hr_get_leave_requests( array( 'request_id' => $request_id ) );
 
     if ( isset( $request_data['data'] )  && is_array( $request_data['data'] ) && ! empty( $request_data['data'] ) ) {
@@ -1169,6 +1193,10 @@ function erp_hr_get_leave_request( $request_id ) {
  * @return array
  */
 function erp_hr_get_leave_requests( $args = array() ) {
+    if ( ! current_user_can( 'erp_leave_manage' ) || ! erp_hr_is_current_user_dept_lead() ) {
+        wp_die( esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
+    }
+
     global $wpdb;
 
     $defaults = array(
@@ -1414,6 +1442,10 @@ function erp_hr_get_leave_requests( $args = array() ) {
  * @return array
  */
 function erp_hr_leave_get_requests_count() {
+    if ( ! current_user_can( 'erp_leave_manage' ) || ! erp_hr_is_current_user_dept_lead() ) {
+        wp_die( esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
+    }
+
     global $wpdb;
 
     $statuses = erp_hr_leave_request_get_statuses();
@@ -1866,6 +1898,10 @@ function erp_hr_leave_get_entitlement( $user_id, $leave_id, $start_date ) {
  * @return array
  */
 function erp_hr_leave_get_entitlements( $args = array() ) {
+    if ( ! current_user_can( 'erp_leave_manage' ) ) {
+        wp_die( esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
+    }
+
     global $wpdb;
 
     // get default financial year
@@ -1973,6 +2009,10 @@ function erp_hr_leave_count_entitlements( $args = array() ) {
  * @return void
  */
 function erp_hr_delete_entitlement( $id, $user_id, $entitlement_id ) {
+    if ( ! current_user_can( 'erp_leave_manage' ) ) {
+        wp_die( esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
+    }
+
     // 1. Get all leave request id associated with this entitlement id
 
     // 2. Get all approval status id associated with step 1 request ids
@@ -2463,6 +2503,10 @@ function get_entitlement_financial_years() {
  *
  */
 function erp_get_leave_report( array $employees, $start_date = null, $end_date = null ) {
+    if ( ! current_user_can( 'erp_leave_manage' ) ) {
+        wp_die( esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
+    }
+
     $year_dates = erp_get_financial_year_dates( date( 'Y-m-d' ) );
     if ( ! $start_date ) {
         $start_date = $year_dates['start'];
@@ -2530,6 +2574,10 @@ function erp_get_leave_report( array $employees, $start_date = null, $end_date =
  *
  */
 function erp_bulk_policy_assign( $policy, $employee_ids = [] ) {
+    if ( ! current_user_can( 'erp_leave_manage' ) ) {
+        wp_die( esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
+    }
+
     if ( is_int( $policy ) ) {
         $policy = Leave_Policy::find( $policy );
     }
@@ -2679,6 +2727,10 @@ function erp_hr_leave_days_get_statuses( $status = false ) {
  * @return int
  */
 function erp_hr_insert_leave_policy_name( $args = array() ) {
+    if ( ! current_user_can( 'erp_leave_manage' ) || ! erp_hr_is_current_user_dept_lead() ) {
+        wp_die( esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
+    }
+
     $defaults = array(
         'id' => null
     );
@@ -2724,6 +2776,10 @@ function erp_hr_insert_leave_policy_name( $args = array() ) {
  * @return void
  */
 function erp_hr_remove_leave_policy_name( $id ) {
+    if ( ! current_user_can( 'erp_leave_manage' ) ) {
+        wp_die( esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
+    }
+
     $has_policy = Leave_Policy::where('leave_id', $id )->first();
 
     if ( $has_policy ) {
@@ -2781,3 +2837,27 @@ function erp_hr_new_policy_name_url( $id = null ) {
     return add_query_arg( $params, admin_url( 'admin.php' ) );
 }
 
+/**
+ * Get all departments leads id
+ * 
+ * @since 1.5.15
+ * 
+ * @return array
+ */
+function erp_hr_get_department_leads_id() {
+    return Department::select('lead')->pluck('lead')->toArray();
+}
+
+/**
+ * Check if current user is lead
+ * 
+ * @since 1.5.15
+ * 
+ * @return bool
+ */
+function erp_hr_is_current_user_dept_lead() {
+    $leads = erp_hr_get_department_leads_id();
+    $logged_in_us = get_current_user_id();
+
+    return (bool) in_array( $logged_in_us, $leads );
+}
