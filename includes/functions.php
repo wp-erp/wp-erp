@@ -2719,13 +2719,13 @@ function get_financial_year_from_date_range( $start_date, $end_date ) {
     global $wpdb;
 
     if ( ! is_numeric( $start_date ) ) {
-        $start_date_obj = current_datetime();
+        $start_date_obj = erp_current_datetime();
         $start_date_obj = $start_date_obj->modify( $start_date );
         $start_date = $start_date_obj->getTimestamp();
     }
 
     if ( ! is_numeric( $end_date ) ) {
-        $end_date_obj = current_datetime();
+        $end_date_obj = erp_current_datetime();
         $end_date_obj = $end_date_obj->modify( $end_date );
         $end_date = $end_date_obj->getTimestamp();
     }
@@ -3561,4 +3561,34 @@ function erp_mysqldate_to_phptimestamp( $time, $timestamp = true ) {
     }
 
     return $datetime;
+}
+
+function erp_current_datetime() {
+    if ( function_exists( 'current_datetime' ) ) {
+        return erp_current_datetime();
+    }
+    return new DateTimeImmutable( 'now', erp_wp_timezone() );
+}
+
+function erp_wp_timezone() {
+    if ( function_exists( 'wp_timezone' ) ) {
+        return wp_timezone();
+    }
+
+    $timezone_string = get_option( 'timezone_string' );
+
+    if ( $timezone_string ) {
+        return $timezone_string;
+    }
+
+    $offset  = (float) get_option( 'gmt_offset' );
+    $hours   = (int) $offset;
+    $minutes = ( $offset - $hours );
+
+    $sign      = ( $offset < 0 ) ? '-' : '+';
+    $abs_hour  = abs( $hours );
+    $abs_mins  = abs( $minutes * 60 );
+    $tz_offset = sprintf( '%s%02d:%02d', $sign, $abs_hour, $abs_mins );
+
+    return new DateTimeZone( $tz_offset );
 }

@@ -75,11 +75,11 @@ function erp_hrm_is_leave_recored_exist_between_date( $start_date, $end_date, $u
     global $wpdb;
 
     if ( ! is_numeric( $start_date ) ) {
-        $start_date = current_datetime()->modify( $start_date )->setTime( 0, 0, 0 )->getTimestamp();
+        $start_date = erp_current_datetime()->modify( $start_date )->setTime( 0, 0, 0 )->getTimestamp();
     }
 
     if ( ! is_numeric( $end_date ) ) {
-        $end_date = current_datetime()->modify( $end_date )->setTime( 0, 0, 0 )->getTimestamp();
+        $end_date = erp_current_datetime()->modify( $end_date )->setTime( 0, 0, 0 )->getTimestamp();
     }
 
     $request_details_tbl  = "{$wpdb->prefix}erp_hr_leave_request_details";
@@ -494,10 +494,10 @@ function erp_hr_leave_insert_entitlement( $args = [] ) {
 
         // get employee joining date and compare it with policy's applicable form date
         if ( $employee->get_hiring_date() ) {
-            $hiring_date = current_datetime()->modify( $employee->get_hiring_date() );
+            $hiring_date = erp_current_datetime()->modify( $employee->get_hiring_date() );
             $compare_with = $hiring_date->modify( '+' . $policy->applicable_from_days . ' days' );
 
-            $today = current_datetime();
+            $today = erp_current_datetime();
 
             if ( $compare_with > $today ) {
                 return new WP_Error( 'invalid-entitlement-days', esc_attr__( 'Error: Employee is not eligible for this leave policy yet.', 'erp' ) );
@@ -1018,8 +1018,8 @@ function erp_hr_leave_insert_request( $args = array() ) {
     $defaults = array(
         'user_id'      => 0,
         'leave_policy' => 0,
-        'start_date'   => current_datetime()->getTimestamp(),
-        'end_date'     => current_datetime()->getTimestamp(),
+        'start_date'   => erp_current_datetime()->getTimestamp(),
+        'end_date'     => erp_current_datetime()->getTimestamp(),
         'reason'       => '',
         'status'       => 0
     );
@@ -1054,15 +1054,15 @@ function erp_hr_leave_insert_request( $args = array() ) {
 
     // user can't apply for past leave, only hr can
     if ( ! current_user_can( 'erp_leave_create_request' ) ) {
-        $current_date = current_datetime()->format('Y-m-d');
+        $current_date = erp_current_datetime()->format('Y-m-d');
         if ( $args['start_date'] < $current_date || $args['end_date'] < $current_date ) {
             return new WP_Error( 'invalid-dates', esc_attr__( 'Invalid date range. You can not apply for past dates.', 'erp' ) );
         }
     }
 
     // check start_date and end_date are in the same f_year
-    $f_year_start = current_datetime()->setTimestamp( $entitlement->financial_year->start_date)->format( 'Y-m-d' );
-    $f_year_end = current_datetime()->setTimestamp( $entitlement->financial_year->end_date)->format( 'Y-m-d' );
+    $f_year_start = erp_current_datetime()->setTimestamp( $entitlement->financial_year->start_date)->format( 'Y-m-d' );
+    $f_year_end = erp_current_datetime()->setTimestamp( $entitlement->financial_year->end_date)->format( 'Y-m-d' );
 
     if ( ( $args['start_date'] < $f_year_start || $args['start_date'] > $f_year_end ) || ( $args['end_date'] < $f_year_start || $args['end_date'] > $f_year_end )  ) {
         return new WP_Error( 'invalid-dates', sprintf( esc_attr__( 'Invalid leave duration. Please apply between %s and %s.', 'erp' ), erp_format_date( $f_year_start ), erp_format_date( $f_year_end ) ) );
@@ -1103,13 +1103,13 @@ function erp_hr_leave_insert_request( $args = array() ) {
             'day_status_id' => '1',
             //'days'       => count( $leaves ),
             'days'       => absint( $period['total'] ),
-            'start_date' => current_datetime()->modify( $args['start_date'] )->setTime( 0, 0, 0 )->getTimestamp(),
-            'end_date'   => current_datetime()->modify( $args['end_date'] )->setTime( 0, 0, 0 )->getTimestamp(),
+            'start_date' => erp_current_datetime()->modify( $args['start_date'] )->setTime( 0, 0, 0 )->getTimestamp(),
+            'end_date'   => erp_current_datetime()->modify( $args['end_date'] )->setTime( 0, 0, 0 )->getTimestamp(),
             'reason'     => wp_kses_post( $args['reason'] ),
             'last_status' => '2',
             'created_by' => get_current_user_id(),
-            'created_at' => current_datetime()->getTimestamp(),
-            'updated_at' => current_datetime()->getTimestamp(),
+            'created_at' => erp_current_datetime()->getTimestamp(),
+            'updated_at' => erp_current_datetime()->getTimestamp(),
         ] );
 
         if ( $wpdb->insert( $wpdb->prefix . 'erp_hr_leave_requests', $request ) ) {
@@ -1266,11 +1266,11 @@ function erp_hr_get_leave_requests( $args = array() ) {
 
     if ( $args['year'] ) {
         $from_date_string = $args['year'] . '-01-01 00:00:00';
-        $from_date = current_datetime();
+        $from_date = erp_current_datetime();
         $from_date = $from_date->modify( $from_date_string );
 
         $to_date_string = $args['year'] . '-12-31 23:59:59';
-        $to_date = current_datetime();
+        $to_date = erp_current_datetime();
         $to_date = $to_date->modify( $to_date_string );
 
         $where .= " AND request.start_date >= {$from_date->getTimestamp()} AND request.end_date <= {$to_date->getTimestamp()}";
@@ -1293,21 +1293,21 @@ function erp_hr_get_leave_requests( $args = array() ) {
     if ( $args['start_date']  && $args['end_date'] ) {
         //dates can be timestamps
         if ( is_numeric( $args['start_date'] ) ) {
-            $from_date = current_datetime();
+            $from_date = erp_current_datetime();
             $from_date = $from_date->setTimestamp( $args['start_date'] );
         }
         else {
-            $from_date = current_datetime();
+            $from_date = erp_current_datetime();
             $from_date = $from_date->modify( $args['start_date'] )->setTime( 0, 0, 0 );
         }
 
         // dates can be timstamps
         if ( is_numeric( $args['end_date'] ) ) {
-            $to_date = current_datetime();
+            $to_date = erp_current_datetime();
             $to_date = $to_date->setTimestamp( $args['end_date'] );
         }
         else {
-            $to_date = current_datetime();
+            $to_date = erp_current_datetime();
             $to_date = $to_date->modify( $args['end_date'] )->setTime( 23, 59, 59 );
         }
 
@@ -1492,7 +1492,7 @@ function erp_hr_leave_request_update_status( $request_id, $status, $comments = '
 
     // past records can't be edited
     $financial_years = array();
-    $current_start_date = current_datetime()->modify( erp_financial_start_date() )->getTimestamp();
+    $current_start_date = erp_current_datetime()->modify( erp_financial_start_date() )->getTimestamp();
     foreach ( Financial_Year::all() as $f_year ) {
         if ( $f_year['start_date'] < $current_start_date ) {
             continue;
@@ -1632,9 +1632,9 @@ function erp_hr_leave_request_update_status( $request_id, $status, $comments = '
                         'workingday_status'         => $work_day['count'],
                         'user_id'                   => $request->user_id,
                         'f_year'                    => $request->entitlement->f_year,
-                        'leave_date'                => current_datetime()->modify( $work_day['date'] )->setTime( 0, 0, 0 )->getTimestamp(),
-                        'created_at'                => current_datetime()->getTimestamp(),
-                        'updated_at'                => current_datetime()->getTimestamp(),
+                        'leave_date'                => erp_current_datetime()->modify( $work_day['date'] )->setTime( 0, 0, 0 )->getTimestamp(),
+                        'created_at'                => erp_current_datetime()->getTimestamp(),
+                        'updated_at'                => erp_current_datetime()->getTimestamp(),
                     );
                 }
 
@@ -2169,10 +2169,10 @@ function erp_hr_leave_get_balance_for_single_policy( $entitlement ) {
  * @return array
  */
 function erp_hr_get_current_month_leave_list() {
-    $end_of_current_month = current_datetime()->modify('last day of this month')->setTime( 23, 59, 59 );
+    $end_of_current_month = erp_current_datetime()->modify('last day of this month')->setTime( 23, 59, 59 );
     $args = array(
         'status'        => 1, // get only approved
-        'start_date'    => current_datetime()->setTime(0, 0)->getTimestamp(),
+        'start_date'    => erp_current_datetime()->setTime(0, 0)->getTimestamp(),
         'end_date'      => $end_of_current_month->getTimestamp()
     );
     $leave_requests = erp_hr_get_leave_requests( $args );
@@ -2191,8 +2191,8 @@ function erp_hr_get_current_month_leave_list() {
 function erp_hr_get_next_month_leave_list() {
     $args = array(
         'status'        => 1, // get only approved
-        'start_date'    => current_datetime()->modify( 'first day of next month' )->setTime( 0, 0 )->getTimestamp(),
-        'end_date'      => current_datetime()->modify( 'last day of next month' )->setTime( 23, 59, 59 )->getTimestamp()
+        'start_date'    => erp_current_datetime()->modify( 'first day of next month' )->setTime( 0, 0 )->getTimestamp(),
+        'end_date'      => erp_current_datetime()->modify( 'last day of next month' )->setTime( 23, 59, 59 )->getTimestamp()
     );
     $leave_requests = erp_hr_get_leave_requests( $args );
     return $leave_requests['data'];

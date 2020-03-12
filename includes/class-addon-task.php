@@ -42,9 +42,9 @@ class AddonTask {
     public function erp_hr_leave_request_approved_hook_callback( $id, $request ) {
         if ( ! empty( $id ) && ! empty( $request ) ) {
             $period = new DatePeriod(
-                new DateTime( current_datetime()->setTimestamp( $request->start_date )->format( 'Y-m-d H:i:s') ),
+                new DateTime( erp_current_datetime()->setTimestamp( $request->start_date )->format( 'Y-m-d H:i:s') ),
                 new DateInterval( 'P1D' ),
-                new DateTime( current_datetime()->setTimestamp( $request->end_date )->format( 'Y-m-d H:i:s') )
+                new DateTime( erp_current_datetime()->setTimestamp( $request->end_date )->format( 'Y-m-d H:i:s') )
             );
             foreach ( $period as $key => $value ) {
                 $leaveday_value = $value->format( 'Y-m-d' );
