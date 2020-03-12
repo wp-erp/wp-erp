@@ -3565,8 +3565,9 @@ function erp_mysqldate_to_phptimestamp( $time, $timestamp = true ) {
 
 function erp_current_datetime() {
     if ( function_exists( 'current_datetime' ) ) {
-        return erp_current_datetime();
+        return current_datetime();
     }
+
     return new DateTimeImmutable( 'now', erp_wp_timezone() );
 }
 

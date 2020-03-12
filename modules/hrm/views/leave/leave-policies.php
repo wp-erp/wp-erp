@@ -1,4 +1,7 @@
 <?php
+
+use WeDevs\ERP\HRM\Models\Financial_Year;
+
 /**
  * List table class
  */
@@ -45,6 +48,59 @@ class Leave_Policies_List_Table extends WP_List_Table {
      */
     function no_items() {
         esc_html_e( 'No policies found.', 'erp' );
+    }
+
+    /**
+     * Render extra filtering option in
+     * top of the table
+     *
+     * @since 1.3.2
+     *
+     * @param string $which
+     *
+     * @return void
+     */
+    function extra_tablenav( $which ) {
+        if ( $which != 'top' ) {
+            return;
+        }
+
+        $financial_years =  array( '' => esc_attr__( 'Select year', 'erp') ) +  wp_list_pluck( Financial_Year::all(), 'fy_name', 'id' );
+
+        $selected_year = ( isset( $_GET['filter_year'] ) ) ? absint( wp_unslash( $_GET['filter_year'] ) ) : '';
+        ?>
+        <div class="alignleft actions">
+
+            <label class="screen-reader-text" for="filter_year"><?php esc_html_e( 'Filter by year', 'erp' ) ?></label>
+            <input type="hidden" name="status" value="<?php echo esc_html( $this->page_status ); ?>">
+            <select name="filter_year" id="filter_year">
+                <?php
+                foreach ( $financial_years as $f_id => $f_name ) {
+                    echo sprintf( "<option value='%s'%s>%s</option>\n", esc_html( $f_id ), selected( $selected_year, $f_id, false ), esc_html( $f_name ) );
+                }
+                ?>
+            </select>
+
+            <?php
+            submit_button( __( 'Filter' ), 'button', 'filter_by_year', false );
+        echo '</div>';
+    }
+
+    /**
+     * Filter action
+     * @return string
+     */
+    public function current_action() {
+
+        if ( isset( $_REQUEST['filter_by_year'] ) ) {
+            return 'filter_by_year';
+        }
+
+        if ( ! empty( $_REQUEST['s'] ) ) {
+            return 'search_request';
+        }
+
+        return parent::current_action();
     }
 
     /**
@@ -212,6 +268,7 @@ class Leave_Policies_List_Table extends WP_List_Table {
         $args = array(
             'offset' => $offset,
             'number' => $per_page,
+            'f_year'  => isset( $_GET['filter_year'] ) ? sanitize_text_field( wp_unslash( $_GET['filter_year'] ) ) : ''
         );
 
         if ( isset( $_REQUEST['orderby'] ) && isset( $_REQUEST['order'] ) ) {
@@ -245,8 +302,11 @@ class Leave_Policies_List_Table extends WP_List_Table {
     <div class="list-table-wrap">
         <div class="list-wrap-inner">
 
-            <form method="post">
-                <input type="hidden" name="page" value="erp-hr-policies">
+            <form method="get" action="">
+                <input type="hidden" name="page" value="erp-hr">
+                <input type="hidden" name="section" value="leave">
+                <input type="hidden" name="sub-section" value="policies">
+
                 <?php
                 $leave_policy = new Leave_Policies_List_Table();
                 $leave_policy->prepare_items();
