@@ -15,7 +15,7 @@
                 erp_html_show_notice( __( 'Leave request has been submitted successfully.', 'erp' ), 'updated', true );
             }
             $financial_years = array();
-            $current_start_date = current_datetime()->modify( erp_financial_start_date() )->getTimestamp();
+            $current_start_date = erp_current_datetime()->modify( erp_financial_start_date() )->getTimestamp();
             foreach ( Financial_Year::all() as $f_year ) {
                 if ( $f_year['start_date'] < $current_start_date ) {
                     continue;

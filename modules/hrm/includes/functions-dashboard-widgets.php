@@ -339,8 +339,8 @@ function erp_hr_dashboard_widget_leave_calendar() {
         $events[] = array(
             'id'        => $leave_request->id,
             'title'     => $event_label,
-            'start'     => current_datetime()->setTimestamp( $leave_request->start_date )->format(  'Y-m-d' ),
-            'end'       => current_datetime()->setTimestamp( $leave_request->end_date )->format( 'Y-m-d' ),
+            'start'     => erp_current_datetime()->setTimestamp( $leave_request->start_date )->format(  'Y-m-d' ),
+            'end'       => erp_current_datetime()->setTimestamp( $leave_request->end_date )->format( 'Y-m-d' ),
             'url'       => erp_hr_url_single_employee( $leave_request->user_id, 'leave' ),
             'color'     => $leave_request->color,
         );

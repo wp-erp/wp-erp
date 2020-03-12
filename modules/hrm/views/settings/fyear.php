@@ -62,7 +62,7 @@ if ( isset( $_GET['error'] ) && $_GET['error'] != '' ) {
                         <input
                             name="fyear-start[<?php echo 'id-' . $year['id']; ?>]"
                             class="fyear-start-date hr-fyear-date-field"
-                            value="<?php echo current_datetime()->setTimestamp( $year['start_date'] )->format('Y-m-d'); ?>"
+                            value="<?php echo erp_current_datetime()->setTimestamp( $year['start_date'] )->format('Y-m-d'); ?>"
                             type="text"
                             autocomplete="off" required>
                     </td>
@@ -70,7 +70,7 @@ if ( isset( $_GET['error'] ) && $_GET['error'] != '' ) {
                         <input
                             name="fyear-end[<?php echo 'id-' . $year['id']; ?>]"
                             class="fyear-end-date hr-fyear-date-field"
-                            value="<?php echo current_datetime()->setTimestamp( $year['end_date'] )->format('Y-m-d'); ?>"
+                            value="<?php echo erp_current_datetime()->setTimestamp( $year['end_date'] )->format('Y-m-d'); ?>"
                             type="text"
                             autocomplete="off" required>
                     </td>

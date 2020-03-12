@@ -107,19 +107,19 @@ function erp_hr_get_work_days_between_dates( $start_date, $end_date, $user_id = 
     global $wpdb;
 
     if ( is_numeric( $start_date ) ) {
-        $start_date = current_datetime()->setTimestamp( $start_date )->format( 'Y-m-d' );
+        $start_date = erp_current_datetime()->setTimestamp( $start_date )->format( 'Y-m-d' );
     }
 
     if ( is_numeric( $end_date ) ) {
-        $end_date = current_datetime()->setTimestamp( $end_date )->format( 'Y-m-d' );
+        $end_date = erp_current_datetime()->setTimestamp( $end_date )->format( 'Y-m-d' );
     }
 
     if ( is_numeric( $start_date ) ) {
-        $start_date = current_datetime()->setTimestamp( $start_date )->format( 'Y-m-d' );
+        $start_date = erp_current_datetime()->setTimestamp( $start_date )->format( 'Y-m-d' );
     }
 
     if ( is_numeric( $end_date ) ) {
-        $end_date = current_datetime()->setTimestamp( $end_date )->format( 'Y-m-d' );
+        $end_date = erp_current_datetime()->setTimestamp( $end_date )->format( 'Y-m-d' );
     }
 
     $between_dates = erp_extract_dates( $start_date, $end_date );
@@ -202,8 +202,8 @@ function erp_hr_can_apply_sandwich_rules_between_dates( $start_date, $end_date, 
         if ( is_array( $last_leave_request ) && ! empty( $last_leave_request ) ) {
             // proceed further for pending or accepted request
             if ( $last_leave_request['approval_status_id'] != 3  ) {
-                $last_req_end_date = current_datetime()->setTimestamp( $last_leave_request['end_date'] )->modify( '+1 days' )->format( 'Y-m-d' );
-                $start_day_previous = current_datetime()->modify( $start_date )->modify( '-1 days' )->format( 'Y-m-d' );
+                $last_req_end_date = erp_current_datetime()->setTimestamp( $last_leave_request['end_date'] )->modify( '+1 days' )->format( 'Y-m-d' );
+                $start_day_previous = erp_current_datetime()->modify( $start_date )->modify( '-1 days' )->format( 'Y-m-d' );
                 //date extract between last leave date and current leave start dates
                 $previous_between_dates = erp_extract_dates( $last_req_end_date, $start_day_previous );
 
@@ -246,8 +246,8 @@ function erp_hr_can_apply_sandwich_rules_between_dates( $start_date, $end_date, 
         if ( is_array( $next_leave_request ) && ! empty( $next_leave_request ) ) {
             // proceed further for pending or accepted request
             if ( $next_leave_request['approval_status_id'] != 3  ) {
-                $last_req_start_date = current_datetime()->setTimestamp( $next_leave_request['start_date'] )->modify( '-1 days' )->format( 'Y-m-d' );
-                $end_date_next_day = current_datetime()->modify( $end_date )->modify( '+1 days' )->format( 'Y-m-d' );
+                $last_req_start_date = erp_current_datetime()->setTimestamp( $next_leave_request['start_date'] )->modify( '-1 days' )->format( 'Y-m-d' );
+                $end_date_next_day = erp_current_datetime()->modify( $end_date )->modify( '+1 days' )->format( 'Y-m-d' );
                 //date extract between last leave date and current leave start dates
                 $previous_between_dates = erp_extract_dates( $end_date_next_day, $last_req_start_date );
 
