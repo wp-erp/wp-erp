@@ -690,11 +690,11 @@ class Form_Handler {
 
         if ( ! $is_single ) {
             $employees = erp_hr_get_employees( array(
-                'department'        => $department_id,
-                'designation'       => $designation_id,
-                'location'          => $location_id,
-                'gender'            => $gender,
-                'marital_status'    => $marital,
+                'department'    => $policy->department_id,
+                'location'      => $policy->location_id,
+                'designation'   => $policy->designation_id,
+                'gender'        => $policy->gender,
+                'marital_status'    => $policy->marital,
                 'number'            => '-1',
                 'no_object'         => true,
             ) );

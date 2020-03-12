@@ -8,6 +8,7 @@ use WeDevs\ERP\HRM\Models\Dependents;
 use WeDevs\ERP\HRM\Models\Education;
 use WeDevs\ERP\HRM\Models\Financial_Year;
 use WeDevs\ERP\HRM\Models\Leave_Entitlement;
+use WeDevs\ERP\HRM\Models\Leave_Policy;
 use WeDevs\ERP\HRM\Models\Leave_Request;
 use WeDevs\ERP\HRM\Models\Work_Experience;
 
@@ -373,14 +374,26 @@ class Ajax_Handler {
             wp_die( esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
+        $policy_id = isset( $_POST['policy_id'] ) ? absint( wp_unslash( $_POST['policy_id'] ) ) :  '0';
+
+        if ( empty( $policy_id ) ) {
+            $this->send_error( esc_attr__( 'Invalid Policy id.', 'erp' ) );
+        }
+
+        $policy = Leave_Policy::find( $policy_id );
+
+        if ( ! $policy ) {
+            $this->send_error( esc_attr__( 'No policy found with given policy id.', 'erp' ) );
+        }
+
         $args = array(
             'number'        => '-1',
             'no_object'     => true,
-            'department'    => isset( $_POST['department_id'] ) ? sanitize_text_field( wp_unslash( $_POST['department_id'] ) ) :  '-1',
-            'location'      => isset( $_POST['location_id'] ) ? sanitize_text_field( wp_unslash( $_POST['location_id'] ) ) :  '-1',
-            'designation'   => isset( $_POST['designation_id'] ) ? sanitize_text_field( wp_unslash( $_POST['designation_id'] ) ) :  '-1',
-            'gender'        => isset( $_POST['gender'] ) ? sanitize_text_field( wp_unslash( $_POST['gender'] ) ) :  '-1',
-            'marital_status'    => isset( $_POST['marital'] ) ? sanitize_text_field( wp_unslash( $_POST['marital'] ) ) :  '-1',
+            'department'    => $policy->department_id,
+            'location'      => $policy->location_id,
+            'designation'   => $policy->designation_id,
+            'gender'        => $policy->gender,
+            'marital_status'    => $policy->marital,
         );
 
         $employees = erp_hr_get_employees( $args );

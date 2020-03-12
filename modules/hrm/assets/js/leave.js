@@ -52,8 +52,7 @@
             $( '.leave-entitlement-form' ).on( 'change', '.change_policy', self, this.entitlement.getLeavePolicies );
 
             // trigger get employees
-            this.entitlement.getFilteredEmployee();
-            $( '.leave-entitlement-form' ).on( 'change', '.change_policy', self, this.entitlement.getFilteredEmployee );
+            $( '.leave-entitlement-form' ).on( 'change', '#leave_policy', self, this.entitlement.getFilteredEmployee );
 
             this.initDateField();
         },
@@ -453,8 +452,6 @@
 
             getLeavePolicies: function () {
 
-                $( ".leave-entitlement-form .leave_policy" ).prop("disabled", true);
-
                 var department  = $('.leave-entitlement-form .department_id').select2('data'),
                     designation = $('.leave-entitlement-form .designation_id').select2('data'),
                     location    = $('.leave-entitlement-form .location_id').select2('data'),
@@ -465,6 +462,8 @@
                 if ( typeof department === 'undefined' ) {
                     return;
                 }
+
+                $( ".leave-entitlement-form .leave_policy" ).prop("disabled", true);
 
                 wp.ajax.send( 'erp-hr-leave-get-policies', {
                     data: {
@@ -500,26 +499,18 @@
 
             getFilteredEmployee: function () {
 
-                $( ".leave-entitlement-form .single_employee" ).prop("disabled", true);
+                var leave_policy  = $('.leave-entitlement-form #leave_policy').val();
 
-                var department  = $('.leave-entitlement-form .department_id').select2('data'),
-                    designation = $('.leave-entitlement-form .designation_id').select2('data'),
-                    location    = $('.leave-entitlement-form .location_id').select2('data'),
-                    gender      = $('.leave-entitlement-form .gender').select2('data'),
-                    marital     = $('.leave-entitlement-form .marital').select2('data');
-
-                if ( typeof department === 'undefined' ) {
+                if ( typeof leave_policy === 'undefined' ) {
                     return;
                 }
+
+                $( ".leave-entitlement-form .single_employee" ).prop("disabled", true);
 
                 wp.ajax.send( 'erp-hr-leave-get-employees', {
                     data: {
                         '_wpnonce': wpErpHr.nonce,
-                        department_id:      department[0].id,
-                        designation_id:     designation[0].id,
-                        location_id:        location[0].id,
-                        gender:             gender[0].id,
-                        marital:            marital[0].id,
+                        policy_id:      leave_policy,
                     },
                     success: function( resp ) {
                         var employee_select = $( '.leave-entitlement-form .single_employee');
