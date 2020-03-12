@@ -128,7 +128,14 @@ class Leave_Requests_List_Table extends \WP_List_Table {
 
             case 'days':
                 $days = $item->days == 0.5 ? $item->days : intval( $item->days );
-                return sprintf( '<span>%d %s</span>', number_format_i18n( $days ), __( 'days', 'erp' ) );
+
+                if ( $item->day_status_id != '1' ) {
+                    $days = erp_hr_leave_request_get_day_statuses( $item->day_status_id );
+                } else {
+                    $days = number_format_i18n( $days ) . esc_attr__( 'days', 'erp' );
+                }
+
+                return sprintf( '<span>%s</span>', $days );
 
             case 'reason':
                 return stripslashes( $item->reason );

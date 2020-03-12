@@ -23,7 +23,7 @@ class Leave_Report_Employee_Based extends \WP_List_Table {
         $this->table_css();
         $this->policies = \WeDevs\ERP\HRM\Models\Leave_Policy::select( 'name', 'id' )->get();
     }
-
+                                                                                                                            
     /**
      * Render extra filtering option in
      * top of the table
