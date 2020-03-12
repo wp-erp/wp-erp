@@ -7,7 +7,7 @@ $args = array(
     'number'            => '-1',
     'department_id'     => $department_id,
     'designation_id'    => $designation_id,
-    'year'              => current_datetime()->format( 'Y' ),
+    'year'              => erp_current_datetime()->format( 'Y' ),
 );
 
 $leave_requests = erp_hr_get_leave_requests( $args );
@@ -25,8 +25,8 @@ foreach ( $leave_requests as $key => $leave_request ) {
     $events[] = array(
         'id'        => $leave_request->id,
         'title'     => $event_label,
-        'start'     => current_datetime()->setTimestamp( $leave_request->start_date )->format(  'Y-m-d' ),
-        'end'       => current_datetime()->setTimestamp( $leave_request->end_date )->format( 'Y-m-d' ),
+        'start'     => erp_current_datetime()->setTimestamp( $leave_request->start_date )->format(  'Y-m-d' ),
+        'end'       => erp_current_datetime()->setTimestamp( $leave_request->end_date )->format( 'Y-m-d' ),
         'url'       => erp_hr_url_single_employee( $leave_request->user_id ),
         'color'     => $leave_request->color,
         'img'       => get_avatar( $leave_request->user_id, 16 )

@@ -24,14 +24,14 @@ class Leave_Policy extends Model {
      * Created at date format
      */
     public function setCreatedAtAttribute() {
-        $this->attributes['created_at'] = current_datetime()->getTimestamp();
+        $this->attributes['created_at'] = erp_current_datetime()->getTimestamp();
     }
 
     /**
      * Updated at date format
      */
     public function setUpdatedAtAttribute() {
-        $this->attributes['updated_at'] = current_datetime()->getTimestamp();
+        $this->attributes['updated_at'] = erp_current_datetime()->getTimestamp();
     }
 
     /**
@@ -64,7 +64,7 @@ class Leave_Policy extends Model {
      * @return object
      */
     public function segregation() {
-        return $this->hasOne( 'WeDevs\ERP\HRM\Models\Leave_Policies_Segregation' );
+        return $this->hasOne( 'WeDevs\ERP\HRM\Models\Leave_Policies_Segregation', 'leave_policy_id' );
     }
 
     /**

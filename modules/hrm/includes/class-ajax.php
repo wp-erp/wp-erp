@@ -1715,7 +1715,7 @@ class Ajax_Handler {
         // check if start_date or end_date are of past
         // user can't apply for past leave, only hr can
         if ( ! current_user_can( 'erp_leave_create_request' ) ) {
-            $current_date = current_datetime()->format('Y-m-d');
+            $current_date = erp_current_datetime()->format('Y-m-d');
             if ( $start_date < $current_date || $end_date < $current_date ) {
                 $this->send_error( esc_attr__( 'Invalid date range. You can not apply for past dates.', 'erp' ) );
             }
@@ -1728,8 +1728,8 @@ class Ajax_Handler {
             $this->send_error( esc_attr__( 'Invalid leave policy.', 'erp' ) );
         }
 
-        $f_year_start = current_datetime()->setTimestamp( $entitlement->financial_year->start_date)->format( 'Y-m-d' );
-        $f_year_end = current_datetime()->setTimestamp( $entitlement->financial_year->end_date)->format( 'Y-m-d' );
+        $f_year_start = erp_current_datetime()->setTimestamp( $entitlement->financial_year->start_date)->format( 'Y-m-d' );
+        $f_year_end = erp_current_datetime()->setTimestamp( $entitlement->financial_year->end_date)->format( 'Y-m-d' );
 
         if ( ( $start_date < $f_year_start || $start_date > $f_year_end ) || ( $end_date < $f_year_start || $end_date > $f_year_end )  ) {
             $this->send_error( sprintf( esc_attr__( 'Invalid leave duration. Please apply between %s and %s.', 'erp' ), erp_format_date( $f_year_start ), erp_format_date( $f_year_end ) ) );
