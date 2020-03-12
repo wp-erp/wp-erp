@@ -319,6 +319,10 @@ class Leave_Requests_List_Table extends \WP_List_Table {
             's'       => isset( $_GET['s'] ) ? sanitize_text_field( wp_unslash( $_GET['s'] ) ) : ''
         );
 
+        if ( erp_hr_is_current_user_dept_lead() ) {
+            $args['lead'] = get_current_user_id();
+        }
+
         $this->counts = erp_hr_leave_get_requests_count();
 
         $query_results  = erp_hr_get_leave_requests( $args );

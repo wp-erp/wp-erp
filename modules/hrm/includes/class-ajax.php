@@ -149,8 +149,10 @@ class Ajax_Handler {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
+        $access = false;
+
         // Check permission
-        if ( ! current_user_can( 'erp_leave_manage' ) ) {
+        if ( current_user_can( 'erp_leave_manage' ) === false && erp_hr_is_current_user_dept_lead() === false ) {
             $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
