@@ -1738,7 +1738,7 @@ function erp_hr_leave_request_get_day_statuses( $status = false ) {
     $statuses = apply_filters( 'erp_hr_leave_day_statuses', array(
         'all' => esc_attr__( 'All', 'erp' ),
         '1'   => esc_attr__( 'Full Day', 'erp' ),
-        '2'   => esc_attr__( 'Monring', 'erp' ),
+        '2'   => esc_attr__( 'Morning', 'erp' ),
         '3'   => esc_attr__( 'Afternoon', 'erp' )
     ) );
 
