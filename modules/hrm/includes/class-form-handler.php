@@ -195,6 +195,22 @@ class Form_Handler {
             wp_die( esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
+        if ( isset( $_REQUEST['filter_by_year'] ) ) {
+            
+            $req_uri_bulk = ( isset( $_SERVER['REQUEST_URI'] ) ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+
+            $redirect = remove_query_arg( array(
+                '_wp_http_referer',
+                '_wpnonce',
+                'action',
+                'action2',
+                'filter_by_year'
+            ), $req_uri_bulk );
+
+            wp_redirect( $redirect );
+            exit();
+        }
+
         if ( isset( $_POST['action'] ) && sanitize_text_field( wp_unslash( $_POST['action'] ) ) == 'trash' ) {
 
             if ( isset( $_POST['policy_id'] ) ) {
