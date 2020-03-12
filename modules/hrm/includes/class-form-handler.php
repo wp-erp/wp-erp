@@ -95,7 +95,7 @@ class Form_Handler {
      */
     public function handle_leave_bulk_actions(){
         if ( empty( $_GET['sub-section'] ) ) {
-            $this->leave_request_bulk_action();
+            //$this->leave_request_bulk_action();
             return;
         }
 
@@ -103,7 +103,7 @@ class Form_Handler {
 
         switch ( $_GET['sub-section'] ) {
             case 'leave-requests' :
-                $this->leave_request_bulk_action();
+                //$this->leave_request_bulk_action();
                 break;
             case 'leave-entitlements' :
                 $this->entitlement_bulk_action();
@@ -240,6 +240,7 @@ class Form_Handler {
      * Handle entitlement bulk actions
      *
      * @since 0.1
+     * @since 1.5.15
      *
      * @return void
      */
@@ -275,8 +276,7 @@ class Form_Handler {
                 if ( isset( $_GET['entitlement_id'] ) && ! empty( $_GET['entitlement_id'] ) ) {
                     $array = array_map( 'sanitize_text_field', wp_unslash( $_GET['entitlement_id'] ) );
                     foreach ( $array as $key => $ent_id ) {
-                        $entitlement_data = \WeDevs\ERP\HRM\Models\Leave_Entitlement::select( 'user_id', 'policy_id' )->find( $ent_id )->toArray();
-                        erp_hr_delete_entitlement( $ent_id, $entitlement_data['user_id'], $entitlement_data['policy_id'] );
+                        erp_hr_delete_entitlement( $ent_id, 0, $ent_id );
                     }
                 }
 
@@ -291,6 +291,7 @@ class Form_Handler {
      * Leave request bulk actions
      *
      * @since 1.0
+     * @since 1.5.15
      *
      * @return void redirect
      */
@@ -330,7 +331,10 @@ class Form_Handler {
                     if ( isset( $_GET['request_id'] ) && ! empty( $_GET['request_id'] ) ) {
                         $array = array_map( 'sanitize_text_field', wp_unslash( $_GET['request_id'] ) );
                         foreach ( $array as $key => $request_id ) {
-                            \WeDevs\ERP\HRM\Models\Leave_request::find( $request_id )->delete();
+                            $response = erp_hr_delete_leave_request( $request_id );
+                            if ( is_wp_error( $response ) ) {
+                                $errors->add( $response );
+                            }
                         }
                     }
 
@@ -395,7 +399,6 @@ class Form_Handler {
             wp_redirect( $redirect );
             exit();
         }
-
     }
 
     /**
@@ -1197,69 +1200,68 @@ class Form_Handler {
             return;
         }
 
-        if ( isset( $_POST['action'] ) && $_POST['action'] !=='erp-hr-fyears-setting' ) {
-            return;
-        }
+        if ( isset( $_POST['action'] ) && $_POST['action'] === 'erp-hr-fyears-setting' ) {
 
-        if ( isset( $_POST['_wpnonce'] ) && ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-settings-nonce' ) ) {
-            die('Nonce failed.');
-        }
-    
-        $fnames = isset( $_POST['fyear-name'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['fyear-name'] ) ) : [];
-        $starts = isset( $_POST['fyear-start'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['fyear-start'] ) ) : [];
-        $ends   = isset( $_POST['fyear-end'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['fyear-end'] ) ) : [];
+            if ( isset( $_POST['_wpnonce'] ) && ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-settings-nonce' ) ) {
+                die( 'Nonce failed.' );
+            }
 
-        $current_user_id = get_current_user_id();
-        $url = admin_url('admin.php?page=erp-settings&tab=erp-hr&section=financial');
+            $fnames = isset( $_POST['fyear-name'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['fyear-name'] ) ) : [];
+            $starts = isset( $_POST['fyear-start'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['fyear-start'] ) ) : [];
+            $ends   = isset( $_POST['fyear-end'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['fyear-end'] ) ) : [];
 
-        $errors = new ERP_Errors( 'leave_financial_years_create' );
+            $current_user_id = get_current_user_id();
+            $url             = admin_url( 'admin.php?page=erp-settings&tab=erp-hr&section=financial' );
 
-        foreach ( $fnames as $key => $fname ) {
-            if ( strpos($key, 'id-') !== false ) {
-                // we have existing record
-                $f_id = explode( 'id-', $key )[1]; // id-3 => 3
+            $errors = new ERP_Errors( 'leave_financial_years_create' );
 
-                $policy_exist = Leave_Policy::where('f_year', $f_id)->first();
+            foreach ( $fnames as $key => $fname ) {
+                if ( strpos( $key, 'id-' ) !== false ) {
+                    // we have existing record
+                    $f_id = explode( 'id-', $key )[1]; // id-3 => 3
 
-                if ( $policy_exist ) {
-                    $errors->add( esc_html__(
-                        sprintf('Existing financial year associated with policy won\'t be updated. e.g. %s', $fname)
-                    , 'erp') );
+                    $policy_exist = Leave_Policy::where( 'f_year', $f_id )->first();
 
-                    // we shouldn't update if there's an associated policy
-                    // so, let's move on to next loop
+                    if ( $policy_exist ) {
+                        $errors->add( esc_html__(
+                            sprintf( 'Existing financial year associated with policy won\'t be updated. e.g. %s', $fname )
+                            , 'erp' ) );
+
+                        // we shouldn't update if there's an associated policy
+                        // so, let's move on to next loop
+                        continue;
+                    }
+
+                    // otherwise, update an existing one
+                    Financial_Year::find( $f_id )->update( [
+                        'fy_name'     => $fname,
+                        'start_date'  => erp_mysqldate_to_phptimestamp( $starts[ $key ] ),
+                        'end_date'    => erp_mysqldate_to_phptimestamp( $ends[ $key ] ),
+                        'description' => esc_html__( 'Financial year for leave', 'erp' ),
+                        'updated_by'  => $current_user_id
+                    ] );
+
                     continue;
                 }
 
-                // otherwise, update an existing one
-                Financial_Year::find($f_id)->update([
-                    'fy_name'    => $fname,
-                    'start_date' => erp_mysqldate_to_phptimestamp( $starts[$key] ),
-                    'end_date'   => erp_mysqldate_to_phptimestamp( $ends[$key] ),
-                    'description'=> esc_html__('Financial year for leave', 'erp'),
-                    'updated_by' => $current_user_id
-                ]);
-
-                continue;
+                // or create a new one
+                Financial_Year::create( [
+                    'fy_name'     => $fname,
+                    'start_date'  => erp_mysqldate_to_phptimestamp( $starts[ $key ] ),
+                    'end_date'    => erp_mysqldate_to_phptimestamp( $ends[ $key ] ),
+                    'description' => esc_html__( 'Financial year for leave', 'erp' ),
+                    'created_by'  => $current_user_id
+                ] );
             }
 
-            // or create a new one
-            Financial_Year::create([
-                'fy_name'    => $fname,
-                'start_date' => erp_mysqldate_to_phptimestamp( $starts[$key] ),
-                'end_date'   => erp_mysqldate_to_phptimestamp( $ends[$key] ),
-                'description'=> esc_html__('Financial year for leave', 'erp'),
-                'created_by' => $current_user_id
-            ]);
-        }
+            if ( $errors->has_error() ) {
+                $errors->save();
+                $url = add_query_arg( array( 'error' => 'leave_financial_years_create' ), $url );
+            }
 
-        if ( $errors->has_error() ) {
-            $errors->save();
-            $url = add_query_arg( array( 'error' => 'leave_financial_years_create' ), $url );
+            wp_safe_redirect( $url );
+            exit();
         }
-
-        wp_safe_redirect( $url );
-        exit();
     }
 
 }

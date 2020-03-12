@@ -187,7 +187,6 @@ class Entitlement_List_Table extends \WP_List_Table {
             $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" data-user_id="%d" data-policy_id="%d" title="%s">%s</a>', $delete_url, $entitlement->id, $entitlement->user_id, $entitlement->id, __( 'Delete this item', 'erp' ), __( 'Delete', 'erp' ) );
         }
 
-
         return sprintf( '<a href="%3$s"><strong>%1$s</strong></a> %2$s', esc_html( $entitlement->employee_name ), $this->row_actions( $actions ), erp_hr_url_single_employee( $entitlement->user_id ) );
     }
 
@@ -224,9 +223,15 @@ class Entitlement_List_Table extends \WP_List_Table {
      * @return array
      */
     function get_bulk_actions() {
-        $actions = array(
-            'entitlement_delete'  => __( 'Delete', 'erp' ),
-        );
+        if ( erp_get_option( 'erp_debug_mode', 'erp_settings_general', 0 ) ) {
+            $actions = array(
+                'entitlement_delete'  => __( 'Delete', 'erp' ),
+            );
+        }
+        else {
+            $actions = array();
+        }
+
         return $actions;
     }
 

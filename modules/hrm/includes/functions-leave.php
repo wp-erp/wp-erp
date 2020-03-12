@@ -65,6 +65,8 @@ function erp_hr_leave_get_holiday_between_date_range( $start_date, $end_date ) {
  *
  * @since  0.1
  *
+ * @since 1.5.15
+ *
  * @param  string $start_date
  * @param  string $end_date
  * @param  int $user_id
@@ -96,6 +98,7 @@ function erp_hrm_is_leave_recored_exist_between_date( $start_date, $end_date, $u
  * Check leave duration exist or not the plicy days
  *
  * @since  0.1
+ * @since 1.5.15
  *
  * @param  string $start_date
  * @param  string $end_date
@@ -156,6 +159,8 @@ function erp_hrm_is_valid_leave_date_range_within_financial_date_range( $start_d
  * Insert a new leave policy
  *
  * @since 1.0.0
+ *
+ * @since 1.5.15
  *
  * @param array $args
  *
@@ -936,6 +941,8 @@ function erp_hr_leave_get_policies_dropdown_raw( $args = array() ) {
  *
  * @since 0.1
  *
+ * @since 1.5.15
+ *
  * @param  int|array $policy_ids
  *
  * @return void
@@ -1700,6 +1707,38 @@ function erp_hr_leave_request_update_status( $request_id, $status, $comments = '
 }
 
 /**
+ * Delete a single leave request
+ *
+ * @since 1.5.15
+ * @param int $request_id
+ * @return WP_Error|int
+ */
+function erp_hr_delete_leave_request( $request_id ) {
+    $request = Leave_Request::find( $request_id );
+
+    if ( ! $request ) {
+        return new WP_Error( 'invalid_leave_id', esc_attr__( 'No leave request found with give request id.', 'erp' ) );
+    }
+
+    if ( $request->approval_status ) {
+        foreach ( $request->approval_status as $status ) {
+            if ( $status->entitlements ) {
+                foreach ( $status->entitlements as $entl ) {
+                    $entl->delete();
+                }
+            }
+            $status->delete();
+        }
+    }
+    if ( $request->unpaid ) {
+        $request->unpaid->delete();
+    }
+    $request->delete();
+
+    return $request_id;
+}
+
+/**
  * Get leave requests status
  *
  * added filter `erp_hr_leave_approval_statuses` on version 1.5.15
@@ -1909,10 +1948,11 @@ function erp_hr_leave_count_entitlements( $args = array() ) {
  * Delete entitlement with leave request
  *
  * @since 0.1
+ * @since 1.5.15 both $id and $entitlement_id are same ie: entitlement table id
  *
  * @param  integer $id
  * @param  integer $user_id
- * @param  integer $policy_id
+ * @param  integer $entitlement_id
  *
  * @return void
  */
@@ -2165,6 +2205,7 @@ function erp_hr_leave_get_balance_for_single_policy( $entitlement ) {
  * @since 1.2.0 Ignore terminated employees
  * @since 1.2.2 Exclude past requests
  *              Sort results by start_date
+ * @since 1.5.15
  *
  * @return array
  */
@@ -2185,7 +2226,7 @@ function erp_hr_get_current_month_leave_list() {
  * @since 0.1
  * @since 1.2.0 Ignore terminated employees
  * @since 1.2.2 Sort results by start_date
- *
+ * @since 1.5.15
  * @return array
  */
 function erp_hr_get_next_month_leave_list() {
@@ -2266,6 +2307,7 @@ function erp_hr_apply_entitlement_yearly() {
  * @param   boolean $approved_only Get leaves which are approved
  *
  * @since 0.1
+ * @since 1.5.15
  *
  * @return array
  */
@@ -2602,7 +2644,7 @@ function erp_hr_leave_days_get_statuses( $status = false ) {
     $statuses = apply_filters( 'erp_hr_leave_day_statuses', array(
         'all' => esc_attr__( 'All', 'erp' ),
         '1'   => esc_attr__( 'Full Day', 'erp' ),
-        '2'   => esc_attr__( 'Monring', 'erp' ),
+        '2'   => esc_attr__( 'Morning', 'erp' ),
         '3'   => esc_attr__( 'Afternoon', 'erp' )
     ) );
 
