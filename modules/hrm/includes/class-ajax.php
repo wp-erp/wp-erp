@@ -8,6 +8,7 @@ use WeDevs\ERP\HRM\Models\Dependents;
 use WeDevs\ERP\HRM\Models\Education;
 use WeDevs\ERP\HRM\Models\Financial_Year;
 use WeDevs\ERP\HRM\Models\Leave_Entitlement;
+use WeDevs\ERP\HRM\Models\Leave_Policy;
 use WeDevs\ERP\HRM\Models\Leave_Request;
 use WeDevs\ERP\HRM\Models\Work_Experience;
 
@@ -86,7 +87,6 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-hr-emp-delete-dependent', 'employee_dependent_delete' );
 
         // leave policy
-        // $this->action( 'wp_ajax_erp-hr-leave-policy-create', 'leave_policy_create' );
         $this->action( 'wp_ajax_erp-hr-leave-policy-delete', 'leave_policy_delete' );
         $this->action( 'wp_ajax_erp-hr-leave-request-req-date', 'leave_request_dates' );
         $this->action( 'wp_ajax_erp-hr-leave-employee-assign-policies', 'leave_assign_employee_policy' );
@@ -173,31 +173,16 @@ class Ajax_Handler {
 
         // Check permission
         if ( ! current_user_can( 'erp_leave_manage' ) ) {
-            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+            $this->send_error( esc_attr__( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
         $request_id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
 
-        $request = Leave_Request::find( $request_id );
+        $request_id = erp_hr_delete_leave_request( $request_id );
 
-        if ( ! $request ) {
-            return esc_attr__( 'No leave request found with give request id.', 'erp' );
+        if ( is_wp_error( $request_id ) ) {
+            $this->send_error( $request_id->get_error_message() );
         }
-
-        if ( $request->approval_status ) {
-            foreach ( $request->approval_status as $status ) {
-                if ( $status->entitlements ) {
-                    foreach ( $status->entitlements as $entl ) {
-                        $entl->delete();
-                    }
-                }
-                $status->delete();
-            }
-        }
-        if ( $request->unpaid ) {
-            $request->unpaid->delete();
-        }
-        $request->delete();
 
         $this->send_success( $request_id );
     }
@@ -389,14 +374,26 @@ class Ajax_Handler {
             wp_die( esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
+        $policy_id = isset( $_POST['policy_id'] ) ? absint( wp_unslash( $_POST['policy_id'] ) ) :  '0';
+
+        if ( empty( $policy_id ) ) {
+            $this->send_error( esc_attr__( 'Invalid Policy id.', 'erp' ) );
+        }
+
+        $policy = Leave_Policy::find( $policy_id );
+
+        if ( ! $policy ) {
+            $this->send_error( esc_attr__( 'No policy found with given policy id.', 'erp' ) );
+        }
+
         $args = array(
             'number'        => '-1',
             'no_object'     => true,
-            'department'    => isset( $_POST['department_id'] ) ? sanitize_text_field( wp_unslash( $_POST['department_id'] ) ) :  '-1',
-            'location'      => isset( $_POST['location_id'] ) ? sanitize_text_field( wp_unslash( $_POST['location_id'] ) ) :  '-1',
-            'designation'   => isset( $_POST['designation_id'] ) ? sanitize_text_field( wp_unslash( $_POST['designation_id'] ) ) :  '-1',
-            'gender'        => isset( $_POST['gender'] ) ? sanitize_text_field( wp_unslash( $_POST['gender'] ) ) :  '-1',
-            'marital_status'    => isset( $_POST['marital'] ) ? sanitize_text_field( wp_unslash( $_POST['marital'] ) ) :  '-1',
+            'department'    => $policy->department_id,
+            'location'      => $policy->location_id,
+            'designation'   => $policy->designation_id,
+            'gender'        => $policy->gender,
+            'marital_status'    => $policy->marital,
         );
 
         $employees = erp_hr_get_employees( $args );
@@ -1546,62 +1543,6 @@ class Ajax_Handler {
     }
 
     /**
-     * Create or update a leave policy
-     *
-     * @since 0.1
-     *
-     * @return void
-     */
-    public function leave_policy_create() {
-        //$this->verify_nonce( 'erp-leave-policy' );
-        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'erp-leave-policy' ) ) {
-            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
-        }
-
-        if ( ! current_user_can( 'erp_leave_create_request' ) ) {
-            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
-        }
-
-        $policy_id      = isset( $_POST['policy-id'] ) ? intval( $_POST['policy-id'] ) : 0;
-        $name           = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) )  : '';
-        $days           = isset( $_POST['days'] ) ? intval( $_POST['days'] ) : '';
-        $color          = isset( $_POST['color'] ) ? sanitize_text_field( wp_unslash( $_POST['color'] ) ) : '';
-        $department     = isset( $_POST['department'] ) ? intval( $_POST['department'] ) : 0;
-        $designation    = isset( $_POST['designation'] ) ? intval( $_POST['designation'] ) : 0;
-        $gender         = isset( $_POST['gender'] ) ? sanitize_text_field( wp_unslash( $_POST['gender'] ) ) : 0;
-        $marital_status = isset( $_POST['maritial'] ) ? sanitize_text_field( wp_unslash( $_POST['maritial'] ) ) : 0;
-        $activate       = isset( $_POST['rateTransitions'] ) ? intval( $_POST['rateTransitions'] ) : 1;
-        $description    = isset( $_POST['description'] ) ? sanitize_text_field( wp_unslash( $_POST['description'] ) ) : '';
-        $after_x_day    = isset( $_POST['no_of_days'] ) ? intval( $_POST['no_of_days'] ) : '';
-        $effective_date = isset( $_POST['effective_date'] ) ? sanitize_text_field( wp_unslash( $_POST['effective_date'] ) ) : '';
-        $location       = isset( $_POST['location'] ) ? sanitize_text_field( wp_unslash( $_POST['location'] ) ) : '';
-        $instant_apply  = isset( $_POST['apply'] ) ? sanitize_text_field( wp_unslash( $_POST['apply'] ) ) : '';
-
-        $policy_id = erp_hr_leave_insert_policy( array(
-            'id'             => $policy_id,
-            'name'           => $name,
-            'description'    => $description,
-            'value'          => $days,
-            'color'          => $color,
-            'department'     => $department,
-            'designation'    => $designation,
-            'gender'         => $gender,
-            'marital'        => $marital_status,
-            'activate'       => $activate,
-            'execute_day'    => $after_x_day,
-            'effective_date' => $effective_date,
-            'location'       => $location,
-            'instant_apply'  => $instant_apply
-        ) );
-
-        if ( is_wp_error( $policy_id ) ) {
-            $this->send_error( $policy_id->get_error_message() );
-        }
-
-        $this->send_success();
-    }
-
-    /**
      * Create or update a holiday
      *
      * @since 0.1
@@ -1950,12 +1891,12 @@ class Ajax_Handler {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
-        $year    = isset( $_POST['year'] ) ? intval( $_POST['year'] ) : date( 'Y' );
+        $year    = isset( $_POST['f_year'] ) ? intval( $_POST['f_year'] ) : date( 'Y' );
         $user_id = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
         $policy  = isset( $_POST['leave_policy'] ) ? intval( $_POST['leave_policy'] ) : 'all';
 
         $args = array(
-            'year'    => $year,
+            'f_year'    => $year,
             'user_id' => $user_id,
         );
 

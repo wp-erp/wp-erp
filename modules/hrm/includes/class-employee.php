@@ -1787,57 +1787,74 @@ class Employee {
      * Get leave policies
      *
      * @since 1.3.0
+     * @since 1.5.15
      * @return mixed
      */
     public function get_leave_policies() {
-        $financial_year_dates = erp_get_financial_year_dates();
-        $entitlements         = $this->erp_user
-            ->entitlements()
-            ->whereDate( 'from_date', '>=', $financial_year_dates['start'] )
-            ->whereDate( 'to_date', '<=', $financial_year_dates['end'] )
-            ->JoinWithPolicy()
-            ->orderBy( 'created_on', 'DESC' )
-            ->select( array( 'days', 'policy_id', 'from_date', 'to_date', 'color', 'name' ) )
-            ->get();
-
-        return $entitlements;
+        $args['f_year'] = 0;
+        return $this->get_entitlements( $args );
     }
 
     /**
      * Get assigned entitlements
      *
      * @since 1.3.0
+     * @since 1.5.15
      *
      * @return array
      */
     public function get_entitlements( $args = array() ) {
+        global $wpdb;
+        $ent_tbl    = $wpdb->prefix . 'erp_hr_leave_entitlements';
+        $policy_tbl = $wpdb->prefix . 'erp_hr_leave_policies';
+        $f_year_tbl = $wpdb->prefix . 'erp_hr_financial_years';
+        $leave_tbl  = $wpdb->prefix . 'erp_hr_leaves';
+
         $financial_year_dates = erp_get_financial_year_dates();
+        $f_year_ids = get_financial_year_from_date_range( $financial_year_dates['start'], $financial_year_dates['end'] );
+
+        $result = array();
+
+        if ( empty( $f_year_ids ) ) {
+            return $result;
+        }
+
         $defaults             = array(
-            'policy_id' => 0,
-            'from_date' => $financial_year_dates['start'],
-            'to_date'   => $financial_year_dates['end'],
+            'policy_id' => 0,       // @since 1.5.1 will be use as leave_id
+            'f_year'    => $f_year_ids[0],
             'number'    => 20,
             'offset'    => 0,
-            'orderby'   => 'created_on',
+            'orderby'   => "$ent_tbl.created_at",
             'order'     => 'DESC',
         );
 
         $args = wp_parse_args( $args, $defaults );
 
         $entitlements = $this->erp_user->entitlements();
+
         if ( ! empty( $args['policy_id'] ) ) {
-            $entitlements = $entitlements->where( 'policy_id', intval( $args['policy_id'] ) );
+            $entitlements = $entitlements->where( "$ent_tbl.leave_id", intval( $args['policy_id'] ) );
         }
-        $entitlements = $entitlements->whereDate( 'from_date', '>=', $args['from_date'] )
-                                     ->whereDate( 'to_date', '<=', $args['to_date'] )
-                                     ->JoinWithPolicy()
+
+        if ( ! empty( $args['f_year'] ) ) {
+            $entitlements->where( "$ent_tbl.f_year", '=', $args['f_year'] );
+        }
+
+
+        $entitlements = $entitlements->leftJoin( $policy_tbl, "$ent_tbl.trn_id", '=', "$policy_tbl.id" )
+                                     ->leftJoin( $f_year_tbl, "$ent_tbl.f_year", '=', "$f_year_tbl.id" )
+                                     ->leftJoin( $leave_tbl, "$ent_tbl.leave_id", '=', "$leave_tbl.id" )
                                      ->skip( $args['offset'] )
                                      ->take( $args['number'] )
                                      ->orderBy( $args['orderby'], $args['order'] )
-                                     ->select( array( 'days', 'policy_id', 'from_date', 'to_date', 'color', 'name' ) )
-                                     ->get();
+                                     ->select( array( "$ent_tbl.day_in as days", "$ent_tbl.f_year", "$ent_tbl.leave_id", "$f_year_tbl.start_date", "$f_year_tbl.end_date", "$policy_tbl.color", "$leave_tbl.name" ) );
 
-        return $entitlements;
+
+        if ( $entitlements->count() ) {
+            $result = $entitlements->get()->toArray();
+        }
+
+        return $result;
     }
 
 
@@ -1879,7 +1896,7 @@ class Employee {
     public function get_leave_requests( $args = array() ) {
         $default = array(
             'user_id'   => $this->user_id,
-            'year'      => date( 'Y' ),
+            'year'      => '',
             'status'    => 1,
             'orderby'   => 'created_at',
             'policy_id' => 0,
