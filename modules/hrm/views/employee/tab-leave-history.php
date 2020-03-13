@@ -12,7 +12,16 @@ if ( ! empty( $requests ) ) {
             </td>
             <td><?php echo esc_html( $request->policy_name ); ?></td>
             <td><?php echo !empty( $request->reason ) ? esc_html( stripslashes( $request->reason ) ) : '-'; ?></td>
-            <td><?php echo esc_html( number_format_i18n( $request->days ) ); ?></td>
+            <td><?php
+                if ( $request->day_status_id != '1' ) {
+                    $days = erp_hr_leave_request_get_day_statuses( $request->day_status_id );
+                } else {
+                    $days = erp_number_format_i18n( $request->days ) . ' ' . esc_attr__( 'days', 'erp' );
+                }
+
+                echo sprintf( '<span>%s</span>', $days );
+
+                ?></td>
             <td><?php echo '<span class="status-' . $request->status . '">' . erp_hr_leave_request_get_statuses( $request->status ) . '</span>' ?></td>
         </tr>
 

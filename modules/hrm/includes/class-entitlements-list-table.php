@@ -109,15 +109,6 @@ class Entitlement_List_Table extends \WP_List_Table {
      */
     function column_default( $entitlement, $column_name ) {
         $f_year = Financial_Year::find( $entitlement->f_year );
-        $balance = erp_hr_leave_get_balance( $entitlement->user_id );
-
-        if ( isset( $balance[ $entitlement->trn_id ] ) ) {
-            $scheduled = $balance[ $entitlement->trn_id ]['scheduled'];
-            $available = $balance[ $entitlement->trn_id ]['available'];
-        } else {
-            $scheduled = '';
-            $available = '';
-        }
 
         switch ( $column_name ) {
             case 'leave_policy':
@@ -145,7 +136,7 @@ class Entitlement_List_Table extends \WP_List_Table {
         }
 
         if ( array_key_exists( $entitlement->id, $this->entitlement_data ) && ! is_wp_error( $this->entitlement_data[ $entitlement->id ] ) ) {
-            $str = sprintf( '<span class="green">%d %s</span>', number_format_i18n( $this->entitlement_data[ $entitlement->id ]['available'] ), __( 'days', 'erp' ) );
+            $str = sprintf( '<span class="green">%s %s</span>', erp_number_format_i18n( $this->entitlement_data[ $entitlement->id ]['available'] ), __( 'days', 'erp' ) );
         }
 
         return $str;
@@ -167,7 +158,7 @@ class Entitlement_List_Table extends \WP_List_Table {
             $class = 'red';
         }
 
-        $str = sprintf( '<span class="%s">%d %s</span>', $class, number_format_i18n( $extra_leave ), __( 'days', 'erp' ) );
+        $str = sprintf( '<span class="%s">%s %s</span>', $class, erp_number_format_i18n( $extra_leave ), __( 'days', 'erp' ) );
 
         return $str;
     }

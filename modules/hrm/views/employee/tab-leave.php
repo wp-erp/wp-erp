@@ -31,7 +31,7 @@ if ( $balance ) {
                 <td>
                     <?php
                     if ( $entitlement->available > 0 ) {
-                        printf( '<span class="green">%d %s</span>', esc_html( number_format_i18n( $entitlement->available ) ), esc_html__( 'days', 'erp' ) );
+                        printf( '<span class="green">%s %s</span>', erp_number_format_i18n( $entitlement->available ), esc_html__( 'days', 'erp' ) );
                     } else {
                         echo '-';
                     }
@@ -40,7 +40,7 @@ if ( $balance ) {
                 <td>
                     <?php
                     if ( $entitlement->extra_leave > 0 ) {
-                        printf( '<span class="green">%d %s</span>', esc_html( number_format_i18n( $entitlement->extra_leave ) ), esc_html__( 'days', 'erp' ) );
+                        printf( '<span class="green">%s %s</span>', erp_number_format_i18n( $entitlement->extra_leave ), esc_html__( 'days', 'erp' ) );
                     } else {
                         echo '-';
                     }
@@ -100,7 +100,7 @@ $requests   = $employee->get_leave_requests( array( 'status' => 'all' ) );
             <th><?php esc_html_e( 'Date', 'erp' ) ?></th>
             <th><?php esc_html_e( 'Policy', 'erp' ) ?></th>
             <th><?php esc_html_e( 'Description', 'erp' ) ?></th>
-            <th><?php esc_html_e( 'Days', 'erp' ) ?></th>
+            <th><?php esc_html_e( 'Request', 'erp' ) ?></th>
             <th><?php esc_html_e( 'Status', 'erp' ) ?></th>
         </tr>
     </thead>
