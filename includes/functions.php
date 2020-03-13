@@ -3545,7 +3545,7 @@ function erp_mysqldate_to_phptimestamp( $time, $timestamp = true ) {
         $time = $time . ' 00:00:00';
     }
 
-    $timezone = wp_timezone();
+    $timezone = erp_wp_timezone();
     $datetime = DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $time, $timezone );
 
     if ( false === $datetime ) {
