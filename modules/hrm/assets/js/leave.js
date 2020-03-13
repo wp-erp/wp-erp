@@ -694,10 +694,6 @@
                 } );
             },
 
-            pageReload: function() {
-                $( '.erp-hr-leave-requests' ).load( window.location.href + ' .erp-hr-leave-requests-inner' );
-            },
-
             approve: function(e) {
                 e.preventDefault();
 
@@ -726,9 +722,8 @@
                                     }
                                 }
                                 else {
-                                    Leave.leave.pageReload();
-                                    modal.closeModal();
-                                    //location.reload();
+                                    var approve_url = window.location.origin + window.location.pathname + '?page=erp-hr&section=leave&status=1';
+                                    window.location.replace( approve_url );
                                 }
                             },
                             error: function(error) {
@@ -767,9 +762,8 @@
                                     }
                                 }
                                 else {
-                                    Leave.leave.pageReload();
-                                    modal.closeModal();
-                                    //location.reload();
+                                    var approve_url = window.location.origin + window.location.pathname + '?page=erp-hr&section=leave&status=3';
+                                    window.location.replace( approve_url );
                                 }
                             },
                             error: function(error) {

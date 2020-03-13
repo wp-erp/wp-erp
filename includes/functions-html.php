@@ -81,6 +81,8 @@ function erp_html_form_input( $args = array() ) {
     $defaults = array(
         'placeholder'   => '',
         'required'      => false,
+        'disabled'      => false,
+        'readonly'      => false,
         'type'          => 'text',
         'class'         => '',
         'tag'           => '',
@@ -108,6 +110,14 @@ function erp_html_form_input( $args = array() ) {
 
     if ( $field['required'] ) {
         $field_attributes['required'] = 'required';
+    }
+
+    if ( $field['disabled'] ) {
+        $field_attributes['disabled'] = 'disabled';
+    }
+
+    if ( $field['readonly'] ) {
+        $field_attributes['readonly'] = 'readonly';
     }
 
     $custom_attributes = erp_html_form_custom_attr( $field_attributes );
