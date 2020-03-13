@@ -1810,16 +1810,16 @@ class Ajax_Handler {
         }
 
         if ( $available <= 0 ) {
-            $content = sprintf( '<span class="description red">%d %s</span>', number_format_i18n( $available ), __( 'days are available', 'erp' ) );
+            $content = sprintf( '<span class="description red">%d %s</span>', erp_number_format_i18n( $available ), __( 'days are available', 'erp' ) );
         } elseif ( $available > 0 ) {
-            $content = sprintf( '<span class="description green">%d %s</span>', number_format_i18n( $available ), __( 'days are available', 'erp' ) );
+            $content = sprintf( '<span class="description green">%s %s</span>', erp_number_format_i18n( $available ), __( 'days are available', 'erp' ) );
         } else {
             //$leave_policy_day = \WeDevs\ERP\HRM\Models\Leave_Policy::select( 'value' )->where( 'id', $policy_id )->pluck( 'value' );
             //$content          = sprintf( '<span class="description">%d %s</span>', number_format_i18n( $leave_policy_day ), __( 'days are available', 'erp' ) );
         }
 
-        if ( intval( $extra_leaves ) > 0 ) {
-            $content .= sprintf( ' <span class="description red">(%d %s)</span>', number_format_i18n( $extra_leaves ), __( 'days extra', 'erp' ) );
+        if (  $extra_leaves > 0 ) {
+            $content .= sprintf( ' <span class="description red">(%s %s)</span>', erp_number_format_i18n( $extra_leaves ), __( 'days extra', 'erp' ) );
         }
 
         $this->send_success( $content );
