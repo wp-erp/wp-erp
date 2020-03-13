@@ -66,7 +66,7 @@ function erp_hr_leave_get_holiday_between_date_range( $start_date, $end_date ) {
  *
  * @since  0.1
  *
- * @since 1.5.15
+ * @since 1.6.0
  *
  * @param  string $start_date
  * @param  string $end_date
@@ -99,7 +99,7 @@ function erp_hrm_is_leave_recored_exist_between_date( $start_date, $end_date, $u
  * Check leave duration exist or not the plicy days
  *
  * @since  0.1
- * @since 1.5.15
+ * @since 1.6.0
  *
  * @param  string $start_date
  * @param  string $end_date
@@ -161,7 +161,7 @@ function erp_hrm_is_valid_leave_date_range_within_financial_date_range( $start_d
  *
  * @since 1.0.0
  *
- * @since 1.5.15
+ * @since 1.6.0
  *
  * @param array $args
  *
@@ -369,7 +369,7 @@ function erp_hr_apply_leave_policy( $user_id, $policy ) {
  *
  * @since 0.1
  * @since 1.2.0 Use `erp_get_financial_year_dates` for financial start and end dates
- * @since 1.5.15 updated due to database structure change
+ * @since 1.6.0 updated due to database structure change
  *
  * @param  array $args
  *
@@ -656,7 +656,7 @@ function erp_hr_leave_insert_holiday( $args = array() ) {
  *
  * @since 0.1
  *
- * @since 1.5.15 updated code to reflect new leave data structure
+ * @since 1.6.0 updated code to reflect new leave data structure
  *
  * @param array $args
  *
@@ -940,7 +940,7 @@ function erp_hr_delete_holidays( $holidays_id ) {
  *
  * @return array
  * @since 0.1
- * @since 1.5.15 added $args argument
+ * @since 1.6.0 added $args argument
  *
  *
  */
@@ -953,7 +953,7 @@ function erp_hr_leave_get_policies_dropdown_raw( $args = array() ) {
  *
  * @since 0.1
  *
- * @since 1.5.15
+ * @since 1.6.0
  *
  * @param  int|array $policy_ids
  *
@@ -983,7 +983,7 @@ function erp_hr_leave_policy_delete( $policy_ids ) {
  * Get assign policies according to employee entitlement
  *
  * @since 0.1
- * @since 1.5.15 changed according to new db structure.
+ * @since 1.6.0 changed according to new db structure.
  *
  * @param  integer $employee_id
  *
@@ -1026,7 +1026,7 @@ function erp_hr_get_assign_policy_from_entitlement( $employee_id, $date = null )
  * Add a new leave request
  *
  * @since 0.1
- * @since 1.5.15
+ * @since 1.6.0
  *
  * @param  array $args
  *
@@ -1166,7 +1166,7 @@ function erp_hr_get_leave_request( $request_id ) {
  * Fetch the leave requests
  *
  * @since 0.1
- * @since 1.5.15
+ * @since 1.6.0
  *
  * @param  array $args
  *
@@ -1294,7 +1294,7 @@ function erp_hr_get_leave_requests( $args = array() ) {
         $where .= " AND request.user_id = " . $args['user_id'];
     }
 
-    if ( $args['policy_id'] ) { // @since 1.5.15 policy_id is equal to leave_id
+    if ( $args['policy_id'] ) { // @since 1.6.0 policy_id is equal to leave_id
         $where .= " AND request.leave_id = " . $args['policy_id'];
     }
 
@@ -1743,7 +1743,7 @@ function erp_hr_leave_request_update_status( $request_id, $status, $comments = '
 /**
  * Delete a single leave request
  *
- * @since 1.5.15
+ * @since 1.6.0
  * @param int $request_id
  * @return WP_Error|int
  */
@@ -1801,7 +1801,7 @@ function erp_hr_leave_request_get_statuses( $status = false ) {
 /**
  * Get leave requests day status
  *
- * @since 1.5.15
+ * @since 1.6.0
  *
  * @param  int|boolean $status
  *
@@ -1883,6 +1883,7 @@ function erp_hr_leave_get_entitlement( $user_id, $leave_id, $start_date ) {
  *
  * @since 0.1
  * @since 1.2.0 Depricate `year` arg and using `from_date` and `to_date` instead
+ * @since 1.6.0
  *
  * @param  integer $year
  *
@@ -1987,7 +1988,7 @@ function erp_hr_leave_count_entitlements( $args = array() ) {
  * Delete entitlement with leave request
  *
  * @since 0.1
- * @since 1.5.15 both $id and $entitlement_id are same ie: entitlement table id
+ * @since 1.6.0 both $id and $entitlement_id are same ie: entitlement table id
  *
  * @param  integer $id
  * @param  integer $user_id
@@ -2039,7 +2040,7 @@ function erp_hr_delete_entitlement( $id, $user_id, $entitlement_id ) {
  * @since 0.1
  * @since 1.1.18 Add start_date in where clause
  * @since 1.2.1  Fix main query statement
- * @since 1.5.15 changed according to new db structure
+ * @since 1.6.0 changed according to new db structure
  *
  * @param  integer $user_id
  *
@@ -2114,7 +2115,7 @@ function erp_hr_leave_get_balance( $user_id, $date = null ) {
 /**
  * Erp get leave balance for a single entitlement
  *
- * @since 1.5.15
+ * @since 1.6.0
  *
  * @param  integer $user_id
  *
@@ -2184,7 +2185,7 @@ function erp_hr_leave_get_balance_for_single_entitlement( $entitlement_id ) {
 /**
  * Erp get leave balance for a single policy for a user
  *
- * @since 1.5.15
+ * @since 1.6.0
  *
  * @param  integer|object $leave_entitlement_id
  *
@@ -2245,7 +2246,7 @@ function erp_hr_leave_get_balance_for_single_policy( $entitlement ) {
  * @since 1.2.0 Ignore terminated employees
  * @since 1.2.2 Exclude past requests
  *              Sort results by start_date
- * @since 1.5.15
+ * @since 1.6.0
  *
  * @return array
  */
@@ -2266,7 +2267,7 @@ function erp_hr_get_current_month_leave_list() {
  * @since 0.1
  * @since 1.2.0 Ignore terminated employees
  * @since 1.2.2 Sort results by start_date
- * @since 1.5.15
+ * @since 1.6.0
  * @return array
  */
 function erp_hr_get_next_month_leave_list() {
@@ -2347,7 +2348,7 @@ function erp_hr_apply_entitlement_yearly() {
  * @param   boolean $approved_only Get leaves which are approved
  *
  * @since 0.1
- * @since 1.5.15
+ * @since 1.6.0
  *
  * @return array
  */
@@ -2676,7 +2677,7 @@ function erp_bulk_policy_assign( $policy, $employee_ids = [] ) {
 /**
  * Get leave requests day status
  *
- * @since 1.5.15
+ * @since 1.6.0
  *
  * @param  int|boolean $status
  *
@@ -2700,7 +2701,7 @@ function erp_hr_leave_days_get_statuses( $status = false ) {
 /**
  * Insert / Update new leave policy name
  *
- * @since 1.5.15
+ * @since 1.6.0
  *
  * @return int
  */
@@ -2745,7 +2746,7 @@ function erp_hr_insert_leave_policy_name( $args = array() ) {
 /**
  * Remove leave policy name
  *
- * @since 1.5.15
+ * @since 1.6.0
  *
  * @return void
  */
@@ -2764,7 +2765,7 @@ function erp_hr_remove_leave_policy_name( $id ) {
 /**
  * Build and return new policy create URL
  *
- * @since 1.5.15
+ * @since 1.6.0
  *
  * @return string
  */
@@ -2787,7 +2788,7 @@ function erp_hr_new_policy_url( $id = null ) {
 /**
  * Build and return new policy create URL
  *
- * @since 1.5.15
+ * @since 1.6.0
  *
  * @return string
  */
@@ -2809,9 +2810,9 @@ function erp_hr_new_policy_name_url( $id = null ) {
 
 /**
  * Get all departments leads id
- * 
- * @since 1.5.15
- * 
+ *
+ * @since 1.6.0
+ *
  * @return array
  */
 function erp_hr_get_department_leads_id() {
@@ -2820,9 +2821,9 @@ function erp_hr_get_department_leads_id() {
 
 /**
  * Check if current user is lead
- * 
- * @since 1.5.15
- * 
+ *
+ * @since 1.6.0
+ *
  * @return bool
  */
 function erp_hr_is_current_user_dept_lead() {

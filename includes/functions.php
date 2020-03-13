@@ -2621,7 +2621,7 @@ function erp_validate_boolean( $value ) {
  * @param $date
  * @since 1.2.0
  * since 1.3.0 $date added
- * @since 1.5.15 added timestamp support
+ * @since 1.6.0 added timestamp support
  * @return array
  */
 function erp_get_financial_year_dates( $date = null ) {
@@ -2665,7 +2665,7 @@ function erp_get_financial_year_dates( $date = null ) {
  * Get finanicial start and end years that a date belongs to
  *
  * @since 1.2.0
- * @since 1.5.15 added timestamp support
+ * @since 1.6.0 added timestamp support
  *
  * @param string $date
  *
@@ -2708,7 +2708,7 @@ function get_financial_year_from_date( $date ) {
 /**
  * Get financial year id(s) that belongs to a date range
  *
- * @since 1.5.15
+ * @since 1.6.0
  *
  * @param int|string $start_date
  * @param int|string $end_date
@@ -3454,7 +3454,7 @@ function filter_enabled_email( $email ) {
  *
  *  wp_insert_rows($insert_arrays, $wpdb->tablename, true, "primary_column");
  *
- * @since 1.5.15
+ * @since 1.6.0
  *
  * @param array   $row_arrays key value pairs of row data.
  * @param string  $wp_table_name table name with prefix added.
@@ -3532,7 +3532,7 @@ function erp_wp_insert_rows( $row_arrays = array(), $wp_table_name, $update = fa
 /**
  * This function will get mysql date string as input and will return php timestamp with default WordPress timzone
  *
- * @since 1.5.15
+ * @since 1.6.0
  *
  * @param string $time mysql date format: Y-m-d H:i:s or Y-m-d. In case of Y-m-d only string H:i:s will be set to 00:00:00.
  * @param bool   $timestamp return false to get DateTimeImmutable object.
@@ -3559,6 +3559,13 @@ function erp_mysqldate_to_phptimestamp( $time, $timestamp = true ) {
     return $datetime;
 }
 
+/**
+ * current_datetime() function compability for wp version < 5.3
+ *
+ * @since 1.6.0
+ *
+ * @return DateTimeImmutable
+ */
 function erp_current_datetime() {
     if ( function_exists( 'current_datetime' ) ) {
         return current_datetime();
@@ -3567,11 +3574,29 @@ function erp_current_datetime() {
     return new DateTimeImmutable( 'now', erp_wp_timezone() );
 }
 
+/**
+ * erp_wp_timezone() function compability for wp version < 5.3
+ *
+ * @since 1.6.0
+ *
+ * @return DateTimeZone
+ */
 function erp_wp_timezone() {
     if ( function_exists( 'wp_timezone' ) ) {
         return wp_timezone();
     }
 
+    return new DateTimeZone( erp_wp_timezone_string() );
+}
+
+/**
+ * erp_wp_timezone_string() function compability for wp version < 5.3
+ *
+ * @since 1.6.0
+ *
+ * @return string
+ */
+function erp_wp_timezone_string() {
     $timezone_string = get_option( 'timezone_string' );
 
     if ( $timezone_string ) {
@@ -3587,5 +3612,25 @@ function erp_wp_timezone() {
     $abs_mins  = abs( $minutes * 60 );
     $tz_offset = sprintf( '%s%02d:%02d', $sign, $abs_hour, $abs_mins );
 
-    return new DateTimeZone( $tz_offset );
+    return $tz_offset;
+}
+
+/**
+ * This method will return input value as integer if there is no . value, otherwise will return a float value
+ * @param $number
+ *
+ * @return int|float
+ */
+function erp_number_format_i18n( $number ) {
+    // cast as string
+    $number = (string) $number;
+
+    // check if . exist
+    if ( strpos( $number, '.' ) !== false ) {
+        $extract = explode( '.', $number );
+        if ( isset( $extract[1] ) && absint( $extract[1] > 0 ) ) {
+            return number_format_i18n( $number, 1 );
+        }
+    }
+    return number_format_i18n( $number );
 }

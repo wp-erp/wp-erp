@@ -196,7 +196,7 @@ class Form_Handler {
         }
 
         if ( isset( $_REQUEST['filter_by_year'] ) ) {
-            
+
             $req_uri_bulk = ( isset( $_SERVER['REQUEST_URI'] ) ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
 
             $redirect = remove_query_arg( array(
@@ -256,7 +256,7 @@ class Form_Handler {
      * Handle entitlement bulk actions
      *
      * @since 0.1
-     * @since 1.5.15
+     * @since 1.6.0
      *
      * @return void
      */
@@ -307,7 +307,7 @@ class Form_Handler {
      * Leave request bulk actions
      *
      * @since 1.0
-     * @since 1.5.15
+     * @since 1.6.0
      *
      * @return void redirect
      */
@@ -896,7 +896,7 @@ class Form_Handler {
 
         switch ( $action ) {
             case 'delete':
-                //@since 1.5.15, do nothing, we are handling this from ajax request
+                //@since 1.6.0, do nothing, we are handling this from ajax request
                 break;
 
             case 'reject':
@@ -1059,7 +1059,7 @@ class Form_Handler {
     /**
      * Create leave policy
      *
-     * @since 1.5.15
+     * @since 1.6.0
      *
      * @return mixed
      */
@@ -1151,7 +1151,7 @@ class Form_Handler {
     /**
      * Create leave policy name
      *
-     * @since 1.5.15
+     * @since 1.6.0
      *
      * @return mixed
      */
@@ -1207,7 +1207,7 @@ class Form_Handler {
     /**
      * Insert financial years
      *
-     * @since 1.5.15
+     * @since 1.6.0
      *
      * @return void
      */
