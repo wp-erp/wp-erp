@@ -566,12 +566,27 @@
                 });
             },
 
-            requestDates: function() {
+            requestDates: function(e) {
                 var from = $('#erp-hr-leave-req-from-date').val(),
                     to = $('#erp-hr-leave-req-to-date').val(),
                     submit = $(this).closest('form').find('*[type="submit"]'),
                     user_id = parseInt( $( '#erp-hr-leave-req-employee-id').val() ),
                     type = $('#erp-hr-leave-req-leave-policy').val();
+
+                    // From WPERP pro
+                    // we are sending request only for `from date``
+                    var halfDay = $('#halfday');
+                    var isHalfDay = false;
+
+                    if ( halfDay.val() !== 'undefined' ) { 
+                        if ( halfDay.is(':checked') ) {
+                            isHalfDay = true;
+                            
+                            if (e.target.name === 'leave_to') {
+                                return;
+                            }
+                        }
+                    }
 
                 if ( from !== '' && to !== '' ) {
 
@@ -585,6 +600,11 @@
                         },
                         success: function(resp) {
                             var html = wp.template('erp-leave-days')(resp.print);
+
+                            // Show day counts if half day is holiday or not working day
+                            if ( isHalfDay === true && resp.leave_count != '0' ) {                                
+                                html = '';
+                            }
 
                             $('div.erp-hr-leave-req-show-days').html( html );
 
