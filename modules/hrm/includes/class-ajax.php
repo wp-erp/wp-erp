@@ -1899,7 +1899,8 @@ class Ajax_Handler {
 
         $args = array(
             'f_year'    => $year,
-            'user_id' => $user_id,
+            'user_id'   => $user_id,
+            'status'    => 'all',
         );
 
         if ( $policy != 'all' ) {
