@@ -42,6 +42,11 @@ class Entitlement_List_Table extends \WP_List_Table {
             'extra'         => __( 'Extra Leaves', 'erp' ),
         );
 
+        // hide cb if debug mode is off
+        if ( ! erp_get_option( 'erp_debug_mode', 'erp_settings_general', 0 ) ) {
+            unset( $columns['cb'] );
+        }
+
         return apply_filters( 'erp_hr_entitlement_table_cols', $columns );
     }
 
@@ -65,18 +70,14 @@ class Entitlement_List_Table extends \WP_List_Table {
             return;
         }
 
+        $selected = '';
         if ( ! empty( $_GET['financial_year'] ) ) {
             $selected = absint( wp_unslash( $_GET['financial_year'] ) );
-        }
-        else {
-            $financial_year_dates = erp_get_financial_year_dates();
-            $f_year_ids = get_financial_year_from_date_range( $financial_year_dates['start'], $financial_year_dates['end'] );
-            $selected = is_array( $f_year_ids ) && ! empty( $f_year_ids ) ? $f_year_ids[0] : '';
         }
         ?>
             <div class="alignleft actions">
                 <select name="financial_year">
-                    <?php echo wp_kses( erp_html_generate_dropdown( $entitlement_years, $selected ), array(
+                    <?php echo wp_kses( erp_html_generate_dropdown( array( '' => esc_attr__( 'select year', 'erp' ) ) + $entitlement_years, $selected ), array(
                         'option' => array(
                             'value' => array(),
                             'selected' => array()
@@ -187,7 +188,6 @@ class Entitlement_List_Table extends \WP_List_Table {
             $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" data-user_id="%d" data-policy_id="%d" title="%s">%s</a>', $delete_url, $entitlement->id, $entitlement->user_id, $entitlement->id, __( 'Delete this item', 'erp' ), __( 'Delete', 'erp' ) );
         }
 
-
         return sprintf( '<a href="%3$s"><strong>%1$s</strong></a> %2$s', esc_html( $entitlement->employee_name ), $this->row_actions( $actions ), erp_hr_url_single_employee( $entitlement->user_id ) );
     }
 
@@ -224,9 +224,15 @@ class Entitlement_List_Table extends \WP_List_Table {
      * @return array
      */
     function get_bulk_actions() {
-        $actions = array(
-            'entitlement_delete'  => __( 'Delete', 'erp' ),
-        );
+        if ( erp_get_option( 'erp_debug_mode', 'erp_settings_general', 0 ) ) {
+            $actions = array(
+                'entitlement_delete'  => __( 'Delete', 'erp' ),
+            );
+        }
+        else {
+            $actions = array();
+        }
+
         return $actions;
     }
 
@@ -277,12 +283,6 @@ class Entitlement_List_Table extends \WP_List_Table {
 
         if ( ! empty( $_GET['financial_year'] ) ) {
             $args['year'] = absint( wp_unslash( $_GET['financial_year'] ) );
-        }
-        else {
-            // todo: get financial year id from date range
-            $financial_year_dates = erp_get_financial_year_dates();
-            $f_year_ids = get_financial_year_from_date_range( $financial_year_dates['start'], $financial_year_dates['end'] );
-            $args['year'] = is_array( $f_year_ids ) && ! empty( $f_year_ids ) ? $f_year_ids[0] : '';
         }
 
         // get the items
