@@ -53,7 +53,7 @@ class ERP_1_5_15 {
 
     /**
      * This method will create all required db tables.
-     * @since 1.5.15
+     * @since 1.6.0
      * @return bool
      */
     public function create_db_tables() {
@@ -248,7 +248,7 @@ class ERP_1_5_15 {
 
     /**
      * This method will start data migration process.
-     * @since 1.5.15
+     * @since 1.6.0
      */
     public function migrate_data() {
         global $wpdb;

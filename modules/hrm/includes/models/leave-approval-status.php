@@ -33,7 +33,7 @@ class Leave_Approval_Status extends Model {
     /**
      * Relation to Leave_Entitlement model
      *
-     * @since 1.5.15
+     * @since 1.6.0
      *
      * @return object
      */
@@ -44,7 +44,7 @@ class Leave_Approval_Status extends Model {
     /**
      * Relation to Leave_Request_Detail model
      *
-     * @since 1.5.15
+     * @since 1.6.0
      *
      * @return object
      */
@@ -55,7 +55,7 @@ class Leave_Approval_Status extends Model {
     /**
      * Relation to Leave_Request model
      *
-     * @since 1.5.15
+     * @since 1.6.0
      *
      * @return object
      */
@@ -66,7 +66,7 @@ class Leave_Approval_Status extends Model {
     /**
      * Relation to Leaves_Unpaid model
      *
-     * @since 1.5.15
+     * @since 1.6.0
      *
      * @return object
      */
@@ -77,7 +77,7 @@ class Leave_Approval_Status extends Model {
     /**
      * Relation to Hr_User model
      *
-     * @since 1.5.15
+     * @since 1.6.0
      *
      * @return object
      */
@@ -88,7 +88,7 @@ class Leave_Approval_Status extends Model {
     /**
      * Relation to Hr_User model
      *
-     * @since 1.5.15
+     * @since 1.6.0
      *
      * @return object
      */

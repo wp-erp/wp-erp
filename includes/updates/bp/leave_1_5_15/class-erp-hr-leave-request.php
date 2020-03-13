@@ -15,7 +15,7 @@ if ( ! class_exists( 'WP_Background_Process', false ) ) {
  * For each leave request table entry, there will be an entry in new leave request table, leave approval status table,
  * leave entitlements table and leave request details table.
  *
- * @since 1.5.15
+ * @since 1.6.0
  * @package WeDevs\ERP\Updates\BP\Leave
  */
 class ERP_HR_Leave_Request extends \WP_Background_Process {
@@ -100,7 +100,7 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
     /**
      * This method will insert old leave request single row data to new leave request table.
      *
-     * @since 1.5.15
+     * @since 1.6.0
      *
      * @return array will return updated data to further run current background process.
      */
@@ -256,7 +256,7 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
     /**
      * This method will insert old leave request single row data to new leave approval status table.
      *
-     * @since 1.5.15
+     * @since 1.6.0
      *
      * @return array will return updated data to further run current background process.
      */
@@ -468,7 +468,7 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
     /**
      * This method will insert old hr_leaves table data to new leave request details table. Can be multiple rows.
      *
-     * @since 1.5.15
+     * @since 1.6.0
      *
      * @return array will return false on success that will prevent for this task to run further and remove this task from current queue.
      */

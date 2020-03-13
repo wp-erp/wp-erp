@@ -2621,7 +2621,7 @@ function erp_validate_boolean( $value ) {
  * @param $date
  * @since 1.2.0
  * since 1.3.0 $date added
- * @since 1.5.15 added timestamp support
+ * @since 1.6.0 added timestamp support
  * @return array
  */
 function erp_get_financial_year_dates( $date = null ) {
@@ -2665,7 +2665,7 @@ function erp_get_financial_year_dates( $date = null ) {
  * Get finanicial start and end years that a date belongs to
  *
  * @since 1.2.0
- * @since 1.5.15 added timestamp support
+ * @since 1.6.0 added timestamp support
  *
  * @param string $date
  *
@@ -2708,7 +2708,7 @@ function get_financial_year_from_date( $date ) {
 /**
  * Get financial year id(s) that belongs to a date range
  *
- * @since 1.5.15
+ * @since 1.6.0
  *
  * @param int|string $start_date
  * @param int|string $end_date
@@ -3454,7 +3454,7 @@ function filter_enabled_email( $email ) {
  *
  *  wp_insert_rows($insert_arrays, $wpdb->tablename, true, "primary_column");
  *
- * @since 1.5.15
+ * @since 1.6.0
  *
  * @param array   $row_arrays key value pairs of row data.
  * @param string  $wp_table_name table name with prefix added.
@@ -3532,7 +3532,7 @@ function erp_wp_insert_rows( $row_arrays = array(), $wp_table_name, $update = fa
 /**
  * This function will get mysql date string as input and will return php timestamp with default WordPress timzone
  *
- * @since 1.5.15
+ * @since 1.6.0
  *
  * @param string $time mysql date format: Y-m-d H:i:s or Y-m-d. In case of Y-m-d only string H:i:s will be set to 00:00:00.
  * @param bool   $timestamp return false to get DateTimeImmutable object.
