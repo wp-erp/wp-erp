@@ -264,13 +264,16 @@ function erp_hr_dashboard_widget_whoisout() {
             <?php foreach ( $leave_requests as $key => $leave ): ?>
                 <?php $employee = new \WeDevs\ERP\HRM\Employee( intval( $leave->user_id ) ); ?>
                 <li>
-                    <a href="<?php echo esc_url( $employee->get_details_url() ); ?>">
-                        <?php echo esc_html( $employee->get_full_name() ); ?>
-                    </a>
+                    <a href="<?php echo esc_url( $employee->get_details_url() ); ?>"><?php echo esc_html( $employee->get_full_name() ); ?></a>
                     <?php
                     if ( $leave->day_status_id != '1' ) {
                         $days = erp_hr_leave_request_get_day_statuses( $leave->day_status_id );
-                        echo  ' (' . $days . ')';
+
+                        if ( $leave->day_status_id == '2' ) {
+                            echo '&nbsp; <i title="' . $days . '" class="dashicons dashicons-cloud" style="color:#f57f17"></i>';
+                        } elseif( $leave->day_status_id == '3' ) {
+                            echo '&nbsp; <i title="' . $days . '" class="dashicons dashicons-cloud" style="color:#ffff00"></i>';
+                        }
                     }
                     ?>
                     <span><i class="fa fa-calendar"></i> <?php echo esc_html( erp_format_date( $leave->start_date, 'M d' ) ) . ' - '. esc_html( erp_format_date( $leave->end_date, 'M d' ) ); ?></span>
