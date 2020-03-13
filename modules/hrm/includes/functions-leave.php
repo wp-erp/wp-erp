@@ -168,6 +168,10 @@ function erp_hrm_is_valid_leave_date_range_within_financial_date_range( $start_d
  * @return int $policy_id
  */
 function erp_hr_leave_insert_policy( $args = array() ) {
+    if ( ! current_user_can( 'erp_leave_manage' ) ) {
+        return new WP_Error( 'no-permission', esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
+    }
+
     $defaults = array(
         'id' => null
     );
@@ -207,8 +211,10 @@ function erp_hr_leave_insert_policy( $args = array() ) {
             return new WP_Error( 'exists', esc_html__( 'Policy already exists.', 'erp' ) );
         }
 
-        $leave_policy = Leave_Policy::find( $args['id'] )
-                            ->update( array_merge( $common, $extra ) );
+        // won't update days
+        unset( $extra['days'] );
+
+        $leave_policy = Leave_Policy::find( $args['id'] )->update( $extra );
 
         do_action( 'erp_hr_leave_update_policy', $args['id'] );
 
@@ -2769,17 +2775,18 @@ function erp_hr_remove_leave_policy_name( $id ) {
  *
  * @return string
  */
-function erp_hr_new_policy_url( $id = null ) {
+function erp_hr_new_policy_url( $id = null, $action = '', $paged = 1 ) {
     $params = array(
         'page'        => 'erp-hr',
         'section'     => 'leave',
         'sub-section' => 'policies',
-        'action'      => 'new'
+        'action'      => 'new',
+        'paged'       => $paged
     );
 
     if ( $id ) {
         $params['id'] = absint( $id );
-        $params['action'] = 'edit';
+        $params['action'] = $action;
     }
 
     return add_query_arg( $params, admin_url( 'admin.php' ) );

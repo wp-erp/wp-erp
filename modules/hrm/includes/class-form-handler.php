@@ -844,7 +844,7 @@ class Form_Handler {
             $redirect_to = admin_url( 'admin.php?page=erp-hr&section=leave&view=new&error=new_leave_request' );
 
         } else {
-            $redirect_to = admin_url( 'admin.php?page=erp-hr&section=leave&view=new&msg=submitted' );
+            $redirect_to = admin_url( 'admin.php?page=erp-hr&section=leave&sub-section=leave-requests&status=2' );
         }
 
         wp_redirect( $redirect_to );
@@ -1094,11 +1094,13 @@ class Form_Handler {
         $marital     = ! empty( $_POST['marital'] ) ? sanitize_text_field( wp_unslash( $_POST['marital'] ) ) : '-1';
         $applicable  = ! empty( $_POST['applicable-from'] ) ? absint( wp_unslash( $_POST['applicable-from'] ) ) : 0;
 
-        if ( empty( $leave_id ) ) {
+        // no need to throw this error if editing
+        if ( ! $id && empty( $leave_id ) ) {
             $policy_create_error->add( 'empty', 'Name field should not be left empty' );
         }
 
-        if ( empty( $days ) ) {
+        // no need to throw this error if editing
+        if ( ! $id && empty( $days ) ) {
             $policy_create_error->add( 'empty', 'Days field should not be left empty' );
         }
 

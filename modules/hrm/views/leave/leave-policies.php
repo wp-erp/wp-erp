@@ -166,9 +166,15 @@ class Leave_Policies_List_Table extends WP_List_Table {
         $params['action'] = 'edit';
         $edit_url = add_query_arg( $params, admin_url( 'admin.php' ) );
 
+        $params['action'] = 'copy';
+        $copy_url = add_query_arg( $params, admin_url( 'admin.php' ) );
+
         $delete_url        = '';
-        $actions['edit']   = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $edit_url, $leave_policy->id, __( 'Edit this item', 'erp' ), __( 'Edit', 'erp' ) );
-        $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" title="%s">%s</a>', $delete_url, $leave_policy->id, __( 'Delete this item', 'erp' ), __( 'Delete', 'erp' ) );
+        $actions['edit']   = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $edit_url, $leave_policy->id, esc_html__( 'Edit this item', 'erp' ), esc_html__( 'Edit', 'erp' ) );
+
+        $actions['copy'] = sprintf( '<a href="%s" class="submitcopy" data-id="%d" title="%s">%s</a>', $copy_url, $leave_policy->id, esc_html__( 'Copy this item', 'erp' ), esc_html__( 'Copy', 'erp' ) );
+
+        $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" title="%s">%s</a>', $delete_url, $leave_policy->id, esc_html__( 'Delete this item', 'erp' ), esc_html__( 'Delete', 'erp' ) );
 
         return sprintf( '<a href="#" class="link" data-id="%3$s"><strong>%1$s</strong></a> %2$s', esc_html( $leave_policy->name ), $this->row_actions( $actions ), $leave_policy->id );
     }

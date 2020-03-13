@@ -427,6 +427,7 @@ class Admin_Menu {
                 break;
 
             case 'new':
+            case 'copy':
                 include WPERP_HRM_VIEWS . '/leave/new-policy.php';
                 break;
         }
