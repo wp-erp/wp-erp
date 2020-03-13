@@ -182,116 +182,18 @@ class ERP_HR_Leave_Entitlements extends \WP_Background_Process {
          * data will go both leave_name and policy table
          */
 
-        if ( $this->request_data['policy_data']['created_at'] != '' ) {
-            $created_at = erp_mysqldate_to_phptimestamp( $this->request_data['policy_data']['created_at'] );
-        } else {
-            $created_at = erp_current_datetime()->getTimestamp();
-        }
-
-        if ( $this->request_data['policy_data']['updated_at'] != '' ) {
-            $updated_at = erp_mysqldate_to_phptimestamp( $this->request_data['policy_data']['updated_at'] );
-        } else {
-            $updated_at = erp_current_datetime()->getTimestamp();
-        }
-
-        // get financial year
-        $financial_year = erp_get_financial_year_dates( $this->request_data['from_date'] );
-        $start_date     = erp_mysqldate_to_phptimestamp( $financial_year['start'], false );
-        $end_date       = erp_mysqldate_to_phptimestamp( $financial_year['end'], false );
-
-        // check f_year already exist for given date range
-        $f_year_id = $wpdb->get_var(
-            $wpdb->prepare(
-                "SELECT id FROM {$wpdb->prefix}erp_hr_financial_years_new WHERE start_date >= %d AND end_date <= %d LIMIT 1",
-                array( $start_date->getTimestamp(), $end_date->getTimestamp() )
-            )
-        );
-
-        if ( null === $f_year_id ) {
-            // we've to create this financial year first.
-            $f_year_name = $start_date->format( 'Y' ) === $end_date->format( 'Y' ) ? $start_date->format( 'Y' ) : $start_date->format( 'Y' ) . ' - ' . $end_date->format( 'Y' );
-            $insert_data = array(
-                'fy_name'    => $f_year_name,
-                'start_date' => $start_date->getTimestamp(),
-                'end_date'   => $end_date->getTimestamp(),
-                'created_by' => $this->request_data['created_by'],
-                'updated_by' => $this->request_data['created_by'],
-                'created_at' => erp_mysqldate_to_phptimestamp( $this->request_data['created_on'] ),
-                'updated_at' => erp_mysqldate_to_phptimestamp( $this->request_data['created_on'] ),
-            );
-
-            $insert_format = array(
-                '%s',
-                '%d',
-                '%d',
-                '%d',
-                '%d',
-                '%d',
-                '%d',
-            );
-
-            if ( false === $wpdb->insert( "{$wpdb->prefix}erp_hr_financial_years_new", $insert_data, $insert_format ) ) {
-                error_log(
-                    print_r(
-                        array(
-                            'file'    => __FILE__,
-                            'line'    => __LINE__,
-                            'message' => '(Query error) Insertion failed new financial_years table. ' . $wpdb->last_error,
-                        ),
-                        true
-                    )
-                );
-                return false; // exit the queue.
-            }
-            $f_year_id = $wpdb->insert_id;
+        $f_year_id = $this->create_financial_year( $this->request_data['from_date'], $this->request_data['created_by'], $this->request_data['created_on'] );
+        if ( false === $f_year_id ) {
+            return false; // exit the queue.
         }
 
         $this->request_data['f_year'] = $f_year_id;
 
         // get leave name or create one.
 
-        // check if leave name already exist on database.
-        $leave_id = $wpdb->get_var(
-            $wpdb->prepare(
-                "SELECT id FROM {$wpdb->prefix}erp_hr_leaves_new WHERE name = %s",
-                array( $this->request_data['policy_data']['name'] )
-            )
-        );
-
-        if ( null === $leave_id ) {
-            // insert into erp_hr_leaves_new table.
-            $table_data = array(
-                'name'       => $this->request_data['policy_data']['name'],
-                'created_at' => $created_at,
-                'updated_at' => $updated_at,
-            );
-
-            $table_format = array(
-                '%s',
-                '%d',
-                '%d',
-            );
-
-            if ( '' !== $this->request_data['policy_data']['description'] ) {
-                $table_data['description'] = wp_kses_post( $this->request_data['policy_data']['description'] );
-                $table_format[]            = '%s';
-            }
-
-            if ( false === $wpdb->insert( "{$wpdb->prefix}erp_hr_leaves_new", $table_data, $table_format ) ) {
-                error_log(
-                    print_r(
-                        array(
-                            'file'    => __FILE__,
-                            'line'    => __LINE__,
-                            'message' => '(Query error) Insertion failed new leaves table. ' . $wpdb->last_error,
-                        ),
-                        true
-                    )
-                );
-                return false;
-            } else {
-                $leave_id = $wpdb->insert_id;
-            }
+        $leave_id = $this->create_leave_name( $this->request_data['policy_data']['name'], $this->request_data['policy_data']['description'], $this->request_data['policy_data']['created_at'], $this->request_data['policy_data']['updated_at'] );
+        if ( false === $leave_id ) {
+            return false; // exit the queue.
         }
 
         // save this leave id for further processing.
@@ -328,6 +230,130 @@ class ERP_HR_Leave_Entitlements extends \WP_Background_Process {
 
         return $this->request_data;
 
+    }
+
+    /**
+     * This method will get financial year id from db or will create one if doesn't exist
+     *
+     * @param string $date
+     *
+     * @return bool|int
+     */
+    protected function create_financial_year( $date, $created_by, $created_on ) {
+        global $wpdb;
+        // get financial year
+        $financial_year = erp_get_financial_year_dates( $date );
+        $start_date     = erp_mysqldate_to_phptimestamp( $financial_year['start'], false );
+        $end_date       = erp_mysqldate_to_phptimestamp( $financial_year['end'], false );
+
+        // check f_year already exist for given date range
+        $f_year_id = $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT id FROM {$wpdb->prefix}erp_hr_financial_years_new WHERE start_date >= %d AND end_date <= %d LIMIT 1",
+                array( $start_date->getTimestamp(), $end_date->getTimestamp() )
+            )
+        );
+
+        if ( null === $f_year_id ) {
+            // we've to create this financial year first.
+            $f_year_name = $start_date->format( 'Y' ) === $end_date->format( 'Y' ) ? $start_date->format( 'Y' ) : $start_date->format( 'Y' ) . ' - ' . $end_date->format( 'Y' );
+            $insert_data = array(
+                'fy_name'    => $f_year_name,
+                'start_date' => $start_date->getTimestamp(),
+                'end_date'   => $end_date->getTimestamp(),
+                'created_by' => $created_by,
+                'updated_by' => $created_by,
+                'created_at' => erp_mysqldate_to_phptimestamp( $created_on ),
+                'updated_at' => erp_mysqldate_to_phptimestamp( $created_on ),
+            );
+
+            $insert_format = array(
+                '%s',
+                '%d',
+                '%d',
+                '%d',
+                '%d',
+                '%d',
+                '%d',
+            );
+
+            if ( false === $wpdb->insert( "{$wpdb->prefix}erp_hr_financial_years_new", $insert_data, $insert_format ) ) {
+                error_log(
+                    print_r(
+                        array(
+                            'file'    => __FILE__,
+                            'line'    => __LINE__,
+                            'message' => '(Query error) Insertion failed new financial_years table. ' . $wpdb->last_error,
+                        ),
+                        true
+                    )
+                );
+                return false;
+            }
+            $f_year_id = $wpdb->insert_id;
+        }
+        return $f_year_id;
+    }
+
+    protected function create_leave_name( $name, $description, $created_at, $updated_at ) {
+        global $wpdb;
+
+        if ( $created_at != '' ) {
+            $created_at = erp_mysqldate_to_phptimestamp( $created_at );
+        } else {
+            $created_at = erp_current_datetime()->getTimestamp();
+        }
+
+        if ( $updated_at != '' ) {
+            $updated_at = erp_mysqldate_to_phptimestamp( $updated_at );
+        } else {
+            $updated_at = erp_current_datetime()->getTimestamp();
+        }
+
+        // check if leave name already exist on database.
+        $leave_id = $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT id FROM {$wpdb->prefix}erp_hr_leaves_new WHERE name = %s",
+                array( $name )
+            )
+        );
+
+        if ( null === $leave_id ) {
+            // insert into erp_hr_leaves_new table.
+            $table_data = array(
+                'name'       => $name,
+                'created_at' => $created_at,
+                'updated_at' => $updated_at,
+            );
+
+            $table_format = array(
+                '%s',
+                '%d',
+                '%d',
+            );
+
+            if ( '' !== $description ) {
+                $table_data['description'] = wp_kses_post( $description );
+                $table_format[]            = '%s';
+            }
+
+            if ( false === $wpdb->insert( "{$wpdb->prefix}erp_hr_leaves_new", $table_data, $table_format ) ) {
+                error_log(
+                    print_r(
+                        array(
+                            'file'    => __FILE__,
+                            'line'    => __LINE__,
+                            'message' => '(Query error) Insertion failed new leaves table. ' . $wpdb->last_error,
+                        ),
+                        true
+                    )
+                );
+                return false;
+            } else {
+                $leave_id = $wpdb->insert_id;
+            }
+        }
+        return $leave_id;
     }
 
     /**
@@ -525,11 +551,51 @@ class ERP_HR_Leave_Entitlements extends \WP_Background_Process {
         return $policy_id;
     }
 
+    protected function create_orphaned_policies() {
+        // check old policy table data to find out any orphaned policy exists or not, if found migrate them to new db
+        global $wpdb;
+
+        $orphaned_policies = $wpdb->get_results(
+            "SELECT policy.* FROM {$wpdb->prefix}erp_hr_leave_policies as policy WHERE NOT EXISTS ( SELECT  null FROM {$wpdb->prefix}erp_hr_leave_entitlements as en WHERE policy.id = en.policy_id)",
+            ARRAY_A
+        );
+
+        if ( is_array( $orphaned_policies ) && ! empty( $orphaned_policies ) ) {
+            foreach ( $orphaned_policies as $policy_data ) {
+                // store datas for further use.
+                $this->request_data['policy_data'] = wp_parse_args( $policy_data, $this->request_data['policy_data'] );
+
+                // get financial year for this policy
+                $f_year_id = $this->create_financial_year( $policy_data['created_at'], get_current_user_id(), $policy_data['created_at'] );
+                if ( false === $f_year_id ) {
+                    continue;
+                }
+
+                $this->request_data['f_year'] = $f_year_id;
+
+                // get leave name or create one.
+
+                $leave_id = $this->create_leave_name( $this->request_data['policy_data']['name'], $this->request_data['policy_data']['description'], $this->request_data['policy_data']['created_at'], $this->request_data['policy_data']['updated_at'] );
+                if ( false === $leave_id ) {
+                    continue;
+                }
+
+                // save this leave id for further processing.
+                $this->request_data['leave_id'] = $leave_id;
+
+                $this->create_leave_policy();
+            }
+        }
+    }
+
     /**
      * Complete
      */
     protected function complete() {
         parent::complete();
+
+        // create orphaned policies
+        $this->create_orphaned_policies();
 
         global $bg_progess_hr_leave_requests;
 

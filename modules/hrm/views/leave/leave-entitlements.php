@@ -185,5 +185,38 @@ $active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['ta
 
             </div><!-- .list-table-inner -->
         </div><!-- .list-table-wrap -->
+        <script type="text/javascript">
+            ;jQuery(function( $ ) {
+                var select_string = '<?php echo esc_attr__( 'All Policy', 'erp') ?>';
+                var policies = <?php
+                    $policies = \WeDevs\ERP\HRM\Models\Leave_Policy::all();
+                    $result = array();
+                    foreach ( $policies as $policy ) {
+                        $result[ $policy['f_year'] ][] = array(
+                            'name'      => $policy->leave->name,
+                            'leave_id'  => $policy->leave_id
+                        );
+                    }
+                    echo json_encode( $result );
+                    ?>;
+
+                $('#erp-entitlement-table-wrap').on( 'change', '#financial_year', function (e) {
+
+                    var f_year = $(this).val();
+
+                    $('#leave_policy option').remove();
+                    var option = new Option( select_string, '' );
+                    $('#leave_policy').append(option);
+
+                    if ( policies[ f_year ] ) {
+                        $.each( policies[ f_year ], function ( id, policy ) {
+                            var option = new Option(policy.name, policy.leave_id);
+                            $('#leave_policy').append(option);
+                        } );
+                    }
+                });
+
+            })
+        </script>
     <?php } ?>
 </div>

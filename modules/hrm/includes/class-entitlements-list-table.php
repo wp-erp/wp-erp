@@ -70,20 +70,45 @@ class Entitlement_List_Table extends \WP_List_Table {
             return;
         }
 
-        $selected = '';
+        $selected_f_year = '';
         if ( ! empty( $_GET['financial_year'] ) ) {
-            $selected = absint( wp_unslash( $_GET['financial_year'] ) );
+            $selected_f_year = absint( wp_unslash( $_GET['financial_year'] ) );
+        }
+
+        $policies = \WeDevs\ERP\HRM\Models\Leave_Policy::all();
+        $policy_data = array();
+        foreach ( $policies as $policy ) {
+            $policy_data[ $policy['f_year'] ][] = array(
+                'name'      => $policy->leave->name,
+                'leave_id'  => $policy->leave_id
+            );
+        }
+
+        $selected_leave_id = '';
+        if ( ! empty( $_GET['leave_policy'] ) ) {
+            $selected_leave_id = absint( wp_unslash( $_GET['leave_policy'] ) );
         }
         ?>
             <div class="alignleft actions">
-                <select name="financial_year">
-                    <?php echo wp_kses( erp_html_generate_dropdown( array( '' => esc_attr__( 'select year', 'erp' ) ) + $entitlement_years, $selected ), array(
+                <select name="financial_year" id="financial_year">
+                    <?php echo wp_kses( erp_html_generate_dropdown( array( '' => esc_attr__( 'select year', 'erp' ) ) + $entitlement_years, $selected_f_year ), array(
                         'option' => array(
                             'value' => array(),
                             'selected' => array()
                         ),
                     ) ); ?>
                 </select>
+
+                <select name="leave_policy" id="leave_policy">
+                    <option value=""><?php echo esc_attr__( 'All Policy', 'erp'); ?></option>
+                    <?php if ( array_key_exists( $selected_f_year, $policy_data ) ) {
+                        foreach ( $policy_data[ $selected_f_year ] as $policy ) {
+                            $selected = $policy['leave_id'] == $selected_leave_id ? 'selected="selected"' : '';
+                            echo "<option value='{$policy['leave_id']}' $selected>{$policy['name']}</option>";
+                        }
+                    } ?>
+                </select>
+
                 <?php submit_button( __( 'Filter' ), 'button', 'filter_entitlement', false ); ?>
             </div>
         <?php
@@ -274,6 +299,10 @@ class Entitlement_List_Table extends \WP_List_Table {
 
         if ( ! empty( $_GET['financial_year'] ) ) {
             $args['year'] = absint( wp_unslash( $_GET['financial_year'] ) );
+        }
+
+        if ( ! empty( $_GET['leave_policy'] ) ) {
+            $args['leave_id'] = absint( wp_unslash( $_GET['leave_policy'] ) );
         }
 
         // get the items

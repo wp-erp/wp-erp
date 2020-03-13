@@ -94,7 +94,6 @@ class ERP_1_5_15 {
                   forward_default enum('encashment','carryover') NOT NULL DEFAULT 'encashment',
                   applicable_from_days smallint(5) UNSIGNED NOT NULL DEFAULT '0',
                   accrued_amount decimal(5,2) NOT NULL DEFAULT '0.00',
-                  accrued_based_on enum('day','week','month','year') DEFAULT NULL,
                   accrued_max_days tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
                   halfday_enable tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
                   created_at int(11) NOT NULL,
