@@ -127,12 +127,10 @@ class Leave_Requests_List_Table extends \WP_List_Table {
                 return '<span class="status-' . $item->status . '">' . erp_hr_leave_request_get_statuses( $item->status ) . '</span>';
 
             case 'days':
-                $days = $item->days == 0.5 ? $item->days : intval( $item->days );
-
                 if ( $item->day_status_id != '1' ) {
                     $days = erp_hr_leave_request_get_day_statuses( $item->day_status_id );
                 } else {
-                    $days = number_format_i18n( $days ) . ' ' . esc_attr__( 'days', 'erp' );
+                    $days = number_format_i18n( $item->days ) . ' ' . esc_attr__( 'days', 'erp' );
                 }
 
                 return sprintf( '<span>%s</span>', $days );

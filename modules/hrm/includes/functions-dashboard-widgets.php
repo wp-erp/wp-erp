@@ -267,7 +267,12 @@ function erp_hr_dashboard_widget_whoisout() {
                     <a href="<?php echo esc_url( $employee->get_details_url() ); ?>">
                         <?php echo esc_html( $employee->get_full_name() ); ?>
                     </a>
-                    <?php echo $leave->days < 1 ? ' (' . esc_attr__( 'Half Day') . ')' : ''; ?>
+                    <?php
+                    if ( $leave->day_status_id != '1' ) {
+                        $days = erp_hr_leave_request_get_day_statuses( $leave->day_status_id );
+                        echo  ' (' . $days . ')';
+                    }
+                    ?>
                     <span><i class="fa fa-calendar"></i> <?php echo esc_html( erp_format_date( $leave->start_date, 'M d' ) ) . ' - '. esc_html( erp_format_date( $leave->end_date, 'M d' ) ); ?></span>
                 </li>
             <?php endforeach ?>
