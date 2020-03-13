@@ -165,7 +165,7 @@ class Ajax_Handler {
     }
 
     /**
-     * @since 1.5.15
+     * @since 1.6.0
      */
     function remove_leave_request() {
 
@@ -324,7 +324,7 @@ class Ajax_Handler {
 
         $id        = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
         $user_id   = isset( $_POST['user_id'] ) ? intval( $_POST['user_id'] ) : 0;
-        $policy_id = isset( $_POST['policy_id'] ) ? intval( $_POST['policy_id'] ) : 0; // @since 1.5.15 this is entitlement id
+        $policy_id = isset( $_POST['policy_id'] ) ? intval( $_POST['policy_id'] ) : 0; // @since 1.6.0 this is entitlement id
 
         if ( $id && $user_id && $policy_id ) {
             erp_hr_delete_entitlement( $id, $user_id, $policy_id );
@@ -337,7 +337,7 @@ class Ajax_Handler {
     /**
      * Get filtered policies for entitlements
      *
-     * @since 1.5.15
+     * @since 1.6.0
      *
      * @return json
      */
@@ -364,7 +364,7 @@ class Ajax_Handler {
     /**
      * Get filtered policies for entitlements
      *
-     * @since 1.5.15
+     * @since 1.6.0
      *
      * @return json
      */
@@ -1787,7 +1787,7 @@ class Ajax_Handler {
         }
 
         $employee_id = isset( $_POST['employee_id'] ) && !empty( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : false;
-        $policy_id   = isset( $_POST['policy_id'] ) && !empty( $_POST['policy_id'] ) ? intval( $_POST['policy_id'] ) : false; // @since 1.5.15 this is now entitlement id
+        $policy_id   = isset( $_POST['policy_id'] ) && !empty( $_POST['policy_id'] ) ? intval( $_POST['policy_id'] ) : false; // @since 1.6.0 this is now entitlement id
         $available   = 0;
 
         if ( ! $employee_id ) {
@@ -1810,16 +1810,16 @@ class Ajax_Handler {
         }
 
         if ( $available <= 0 ) {
-            $content = sprintf( '<span class="description red">%d %s</span>', number_format_i18n( $available ), __( 'days are available', 'erp' ) );
+            $content = sprintf( '<span class="description red">%d %s</span>', erp_number_format_i18n( $available ), __( 'days are available', 'erp' ) );
         } elseif ( $available > 0 ) {
-            $content = sprintf( '<span class="description green">%d %s</span>', number_format_i18n( $available ), __( 'days are available', 'erp' ) );
+            $content = sprintf( '<span class="description green">%s %s</span>', erp_number_format_i18n( $available ), __( 'days are available', 'erp' ) );
         } else {
             //$leave_policy_day = \WeDevs\ERP\HRM\Models\Leave_Policy::select( 'value' )->where( 'id', $policy_id )->pluck( 'value' );
             //$content          = sprintf( '<span class="description">%d %s</span>', number_format_i18n( $leave_policy_day ), __( 'days are available', 'erp' ) );
         }
 
-        if ( intval( $extra_leaves ) > 0 ) {
-            $content .= sprintf( ' <span class="description red">(%d %s)</span>', number_format_i18n( $extra_leaves ), __( 'days extra', 'erp' ) );
+        if (  $extra_leaves > 0 ) {
+            $content .= sprintf( ' <span class="description red">(%s %s)</span>', erp_number_format_i18n( $extra_leaves ), __( 'days extra', 'erp' ) );
         }
 
         $this->send_success( $content );

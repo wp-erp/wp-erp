@@ -132,7 +132,7 @@ class Leave_Requests_List_Table extends \WP_List_Table {
                 if ( $item->day_status_id != '1' ) {
                     $days = erp_hr_leave_request_get_day_statuses( $item->day_status_id );
                 } else {
-                    $days = number_format_i18n( $days ) . esc_attr__( 'days', 'erp' );
+                    $days = number_format_i18n( $days ) . ' ' . esc_attr__( 'days', 'erp' );
                 }
 
                 return sprintf( '<span>%s</span>', $days );
@@ -144,7 +144,7 @@ class Leave_Requests_List_Table extends \WP_List_Table {
                 return sprintf( '<span class="green">%d %s</span>', number_format_i18n( $item->entitlement ), __( 'days', 'erp' ) );
 
             case 'available':
-                return sprintf( '<span class="green">%d %s</span>', number_format_i18n( $item->available ), __( 'days', 'erp' ) );
+                return sprintf( '<span class="green">%s %s</span>', erp_number_format_i18n( $item->available ), __( 'days', 'erp' ) );
 
             case 'extra':
                 $class = 'green';
@@ -152,7 +152,7 @@ class Leave_Requests_List_Table extends \WP_List_Table {
                     $class = 'red';
                 }
 
-                return sprintf( '<span class="%s">%d %s</span>', $class, number_format_i18n( $item->extra_leaves ), __( 'days', 'erp' ) );
+                return sprintf( '<span class="%s">%s %s</span>', $class, erp_number_format_i18n( $item->extra_leaves ), __( 'days', 'erp' ) );
 
             case 'message':
                 return stripslashes( $item->message );

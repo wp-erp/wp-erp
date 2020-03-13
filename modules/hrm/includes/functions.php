@@ -96,7 +96,7 @@ function erp_hr_get_work_days_without_off_day( $start_date, $end_date, $user_id 
  * Get working day with off day
  *
  * @since  0.1
- * @since 1.5.15 added sandwich rules
+ * @since 1.6.0 added sandwich rules
  *
  * @param  string $start_date
  * @param  string $end_date

@@ -14,7 +14,7 @@ if ( ! class_exists( 'WP_Background_Process', false ) ) {
 /**
  * Migrate Leave Entitlement Data to new leave entitlement table
  *
- * @since 1.5.15
+ * @since 1.6.0
  * @package WeDevs\ERP\Updates\BP\Leave
  */
 

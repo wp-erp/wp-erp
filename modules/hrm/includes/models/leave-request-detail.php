@@ -33,7 +33,7 @@ class Leave_Request_Detail extends Model {
     /**
      * Relation to Leave_Request model
      *
-     * @since 1.5.15
+     * @since 1.6.0
      *
      * @return object
      */
@@ -44,7 +44,7 @@ class Leave_Request_Detail extends Model {
     /**
      * Relation to Leave_Approval_Status model
      *
-     * @since 1.5.15
+     * @since 1.6.0
      *
      * @return object
      */

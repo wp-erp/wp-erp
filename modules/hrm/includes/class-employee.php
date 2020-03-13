@@ -875,7 +875,7 @@ class Employee {
      * get hiring date
      *
      * @since 1.3.0
-     * @since 1.5.15 removed erp_format_date() from return value due to date string parse error
+     * @since 1.6.0 removed erp_format_date() from return value due to date string parse error
      * @return string
      */
     public function get_hiring_date() {
@@ -1787,7 +1787,7 @@ class Employee {
      * Get leave policies
      *
      * @since 1.3.0
-     * @since 1.5.15
+     * @since 1.6.0
      * @return mixed
      */
     public function get_leave_policies() {
@@ -1799,7 +1799,7 @@ class Employee {
      * Get assigned entitlements
      *
      * @since 1.3.0
-     * @since 1.5.15
+     * @since 1.6.0
      *
      * @return array
      */
@@ -1862,7 +1862,7 @@ class Employee {
      * Get leave balances of the current year
      *
      * @since 1.3.0
-     * @since 1.5.15
+     * @since 1.6.0
      *
      * @param null $date
      * @param null $policy_id
