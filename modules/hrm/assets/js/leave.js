@@ -531,7 +531,7 @@
                         console.log( response )
                     }
                 });
-            }
+            },
         },
 
         leave: {
@@ -578,10 +578,10 @@
                     var halfDay = $('#halfday');
                     var isHalfDay = false;
 
-                    if ( halfDay.val() !== 'undefined' ) { 
+                    if ( halfDay.val() !== 'undefined' ) {
                         if ( halfDay.is(':checked') ) {
                             isHalfDay = true;
-                            
+
                             if (e.target.name === 'leave_to') {
                                 return;
                             }
@@ -602,7 +602,7 @@
                             var html = wp.template('erp-leave-days')(resp.print);
 
                             // Show day counts if half day is holiday or not working day
-                            if ( isHalfDay === true && resp.leave_count != '0' ) {                                
+                            if ( isHalfDay === true && resp.leave_count != '0' ) {
                                 html = '';
                             }
 
