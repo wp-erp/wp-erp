@@ -211,9 +211,7 @@ class Human_Resource {
                 'page'          => 'erp-hr',
                 'section'       => 'leave',
                 'sub-section'   => 'leave-entitlements&tab=assignment'
-            ], admin_url( 'admin.php' ) ), __( 'Create Entitlement', 'erp' ), __( 'Create Entitlement', 'erp' ) ),
-            'fin_overlap_msg'     => __( 'Year values must not be overlapped!', 'erp' ),
-            'fin_val_compare_msg' => __( 'Second value must be greater than the first value!', 'erp' )
+            ], admin_url( 'admin.php' ) ), __( 'Create Entitlement', 'erp' ), __( 'Create Entitlement', 'erp' ) )
         ) );
 
 

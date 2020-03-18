@@ -5,6 +5,10 @@ if ( isset( $_GET['error'] ) && $_GET['error'] != '' ) {
     $errors = new \WeDevs\ERP\ERP_Errors( sanitize_text_field( wp_unslash( $_GET['error'] ) ) );
     echo $errors->display();
 }
+
+$fin_overlap_msg     = __( 'Year values must not be overlapped!', 'erp' );
+$fin_val_compare_msg = __( 'Second value must be greater than the first value!', 'erp' );
+
 ?>
 
 <div class="erp-hr-financial-years">
@@ -90,9 +94,11 @@ if ( isset( $_GET['error'] ) && $_GET['error'] != '' ) {
 </div>
 
 <script>
+(function($) {
+
     // Clone
-    jQuery('.erp-fyear-add-more-btn').on('click', function(e) {
-        var fyear_first = jQuery('.fyear-clone:first');
+    $('.erp-fyear-add-more-btn').on('click', function(e) {
+        var fyear_first = $('.fyear-clone:first');
 
         fyear_first.find('.fyear-start-date').datepicker('destroy').removeAttr('id');
         fyear_first.find('.fyear-end-date').datepicker('destroy').removeAttr('id');
@@ -104,14 +110,14 @@ if ( isset( $_GET['error'] ) && $_GET['error'] != '' ) {
         clonedRow.find('.fyear-end-date').attr('name', 'fyear-end[]').val('');
         clonedRow.find('td').eq(3).append('<i class="fa fa-times-circle erp-settings-fyear-remove"></i>');
 
-        jQuery('tbody').append(clonedRow);
+        $('tbody').append(clonedRow);
 
         e.preventDefault();
     });
 
     // Re-initiate datepicker every time
-    jQuery(document).on('focus', '.hr-fyear-date-field', function() {
-        jQuery(this)
+    $(document).on('focus', '.hr-fyear-date-field', function() {
+        $(this)
             .datepicker({
                 dateFormat : 'yy-mm-dd',
                 changeMonth: true,
@@ -121,32 +127,38 @@ if ( isset( $_GET['error'] ) && $_GET['error'] != '' ) {
     });
 
     // Copied from accounting financial years
-    jQuery(document).on('change', '.hr-fyear-date-field', function(e) {
+    $(document).on('change', '.hr-fyear-date-field', function(e) {
         e.preventDefault();
 
         var vals = [];
 
-        jQuery(this).each(function() {
-            vals.push(jQuery(this).val());
+        $('.hr-fyear-date-field').each(function() {
+            vals.push($(this).val());
         });
 
         for ( let i = 2; i < vals.length; i += 2 ) {
-            if ( ( Date.parse( vals[i]) >= Date.parse( vals[i-2] ) ) && ( Date.parse( vals[i] ) <= Date.parse( vals[i-1] ) ) ) {
-                alert( wpErpHr.fin_overlap_msg );
+            if (
+                ( Date.parse( vals[i]) >= Date.parse( vals[i-2] ) )
+                &&
+                ( Date.parse( vals[i] ) <= Date.parse( vals[i-1] ) )
+            ) {
+                alert('<?php echo esc_attr( $fin_overlap_msg ); ?>');
                 $(this).val('');
             }
 
             if ( Date.parse( vals[i+1] ) < Date.parse( vals[i]) ) {
-                alert( wpErpHr.fin_val_compare_msg );
+                alert('<?php echo esc_attr( $fin_val_compare_msg ); ?>');
                 $(this).val('');
             }
         }
     });
 
     // Remove row
-    jQuery(document).on('click', '.erp-settings-fyear-remove', function(e) {
-        jQuery(this).parent().parent().remove();
+    $(document).on('click', '.erp-settings-fyear-remove', function(e) {
+        $(this).parent().parent().remove();
     });
+    
+})( jQuery );
 </script>
 
 <style>
