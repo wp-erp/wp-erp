@@ -979,13 +979,32 @@ function erp_hr_leave_policy_delete( $policy_ids ) {
     $policies = Leave_Policy::find( $policy_ids );
 
     $policies->each( function ( $policy ) {
-        $has_entitlements = $policy->entitlements()->count();
-
-        if ( ! $has_entitlements ) {
-            $policy->delete();
-
-            do_action( 'erp_hr_leave_policy_delete', $policy );
+        if ( $policy->entitlements ) {
+            foreach ( $policy->entitlements as $entitlement ) {
+                if ( $entitlement->leave_requests ) {
+                    foreach( $entitlement->leave_requests as $request ) {
+                        if ( $request->approval_status ) {
+                            foreach ( $request->approval_status as $status ) {
+                                if ( $status->entitlements ) {
+                                    foreach ( $status->entitlements as $entl ) {
+                                        $entl->delete();
+                                    }
+                                }
+                                $status->delete();
+                            }
+                        }
+                        if ( $request->unpaid ) {
+                            $request->unpaid->delete();
+                        }
+                        $request->delete();
+                    }
+                }
+                $entitlement->delete();
+            }
         }
+        $policy->delete();
+
+        do_action( 'erp_hr_leave_policy_delete', $policy );
     } );
 }
 
