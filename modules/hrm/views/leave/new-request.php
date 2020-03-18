@@ -37,6 +37,7 @@
                             'name'     => 'employee_id',
                             'id'       => 'erp-hr-leave-req-employee-id',
                             'value'    => '',
+                            'class'    => 'erp-select2',
                             'required' => true,
                             'type'     => 'select',
                             'options'  => erp_hr_get_employees_dropdown_raw()
