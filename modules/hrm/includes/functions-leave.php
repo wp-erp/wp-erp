@@ -1363,7 +1363,7 @@ function erp_hr_get_leave_requests( $args = array() ) {
     //echo "<pre>"; print_r( $requests ); die;
 
     $formatted_data = array();
-    $users = array();
+
     if ( is_array( $requests ) && ! empty( $requests ) ) {
 
         $available_leaves = array();
@@ -1374,15 +1374,9 @@ function erp_hr_get_leave_requests( $args = array() ) {
             // get available days
             if ( ! isset( $available_leaves[ $request->user_id ] ) || ! array_key_exists( $request->leave->id, $available_leaves[ $request->user_id ] ) ) {
 
-                $entitlement = erp_hr_leave_get_entitlement( $request->user_id, $request->leave->id, $request->start_date );
+                $policy_data = erp_hr_leave_get_balance_for_single_entitlement( $request->leave_entitlement_id );
 
-                if ( is_wp_error( $entitlement ) ) {
-                    continue;
-                }
-
-                $policy_data = erp_hr_leave_get_balance_for_single_policy( $entitlement );
-
-                if ( is_wp_error( $policy_data ) ) {
+                if ( ! is_array( $policy_data ) || empty( $policy_data ) ) {
                     continue;
                 }
 
