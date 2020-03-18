@@ -602,3 +602,7 @@ class ERP_HR_Leave_Entitlements extends \WP_Background_Process {
         $bg_progess_hr_leave_requests->dispatch();
     }
 }
+
+global $bg_progess_hr_leaves_entitlements;
+$bg_progess_hr_leaves_entitlements = new \WeDevs\ERP\Updates\BP\Leave\ERP_HR_Leave_Entitlements();
+

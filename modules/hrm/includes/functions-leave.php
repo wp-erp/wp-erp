@@ -675,12 +675,12 @@ function erp_hr_leave_get_policies( $args = array() ) {
         'offset'        => 0,
         'orderby'       => 'id',
         'order'         => 'ASC',
-        'department_id' => '-1',
-        'location_id'   => '-1',
-        'designation_id' => '-1',
-        'gender'        => '-1',
-        'marital'       => '-1',
-        'f_year'        => '',
+        'department_id' => '',
+        'location_id'   => '',
+        'designation_id' => '',
+        'gender'        => '',
+        'marital'       => '',
+        'f_year'        => '0',
     );
 
     $args = wp_parse_args( $args, $defaults );
@@ -695,7 +695,7 @@ function erp_hr_leave_get_policies( $args = array() ) {
             case 'location_id':
             case 'designation_id':
             case 'f_year':
-                $value = absint( $value );
+                $value = intval( $value );
                 break;
 
             case 'orderby':
@@ -719,27 +719,27 @@ function erp_hr_leave_get_policies( $args = array() ) {
                                 ->take( $args['number'] )
                                 ->orderBy( $args['orderby'], $args['order'] );
 
-        if ( $args['department_id'] != '-1' ) {
+        if ( $args['department_id'] ) {
             $policies->where( 'department_id', '=', $args['department_id'] );
         }
 
-        if ( $args['location_id'] != '-1' ) {
+        if ( $args['location_id'] ) {
             $policies->where( 'location_id', '=', $args['location_id'] );
         }
 
-        if ( $args['designation_id'] != '-1' ) {
+        if ( $args['designation_id'] ) {
             $policies->where( 'designation_id', '=', $args['designation_id'] );
         }
 
-        if ( $args['gender'] != '-1' ) {
+        if ( $args['gender'] ) {
             $policies->where( 'gender', '=', $args['gender'] );
         }
 
-        if ( $args['marital'] != '-1' ) {
+        if ( $args['marital'] ) {
             $policies->where( 'marital', '=', $args['marital'] );
         }
 
-        if ( $args['f_year'] != '' ) {
+        if ( $args['f_year'] ) {
             $policies->where( 'f_year', '=', $args['f_year'] );
         }
 
