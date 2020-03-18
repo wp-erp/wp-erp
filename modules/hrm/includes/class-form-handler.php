@@ -688,6 +688,22 @@ class Form_Handler {
         $single_employee    = isset( $_POST['single_employee'] ) ? intval( $_POST['single_employee'] ) : '-1';
         $comment            = isset( $_POST['comment'] ) ? sanitize_text_field( wp_unslash(  $_POST['comment'] ) ) : '-1';
 
+        // save form data for future use
+        $errors->add_form_data(
+            array(
+                'department_id' => $designation_id,
+                'designation_id' => $designation_id,
+                'location_id' => $location_id,
+                'gender' => $gender,
+                'marital' => $marital,
+                'f_year' => $f_year,
+                'leave_policy' => $leave_policy,
+                'assignment_to' => sanitize_text_field( wp_unslash( $_POST['assignment_to'] ) ),
+                'single_employee' => $single_employee,
+                'comment' => $comment
+            )
+        );
+
         if ( $leave_policy == '' ) {
             $errors->add( new WP_Error( 'leave_policy', esc_attr__( 'Error: Please select a leave policy.', 'erp' ) ) );
         } else {
@@ -699,6 +715,14 @@ class Form_Handler {
 
         if ( $is_single && ! $single_employee ) {
             $errors->add( new WP_Error( 'single_employee', esc_attr__( 'Error: Please select an employee.', 'erp' ) ) );
+        }
+
+        // bail out if error found
+        if ( $errors->has_error() ) {
+            $errors->save();
+            $redirect_to = add_query_arg( array( 'error' => $errors->get_key() ), $page_url );
+            wp_safe_redirect( $redirect_to );
+            exit;
         }
 
         // fetch employees if not single
@@ -729,20 +753,6 @@ class Form_Handler {
 
         // bail out if error found
         if ( $errors->has_error() ) {
-            $errors->add_form_data(
-                array(
-                    'department_id' => $designation_id,
-                    'designation_id' => $designation_id,
-                    'location_id' => $location_id,
-                    'gender' => $gender,
-                    'marital' => $marital,
-                    'f_year' => $f_year,
-                    'leave_policy' => $leave_policy,
-                    'assignment_to' => sanitize_text_field( wp_unslash( $_POST['assignment_to'] ) ),
-                    'single_employee' => $single_employee,
-                    'comment' => $comment
-                )
-            );
             $errors->save();
             $redirect_to = add_query_arg( array( 'error' => $errors->get_key() ), $page_url );
             wp_safe_redirect( $redirect_to );

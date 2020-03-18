@@ -1,5 +1,6 @@
 <?php
 
+use phpDocumentor\Reflection\Location;
 use WeDevs\ERP\HRM\Employee;
 use WeDevs\ERP\HRM\Models\Financial_Year;
 use WeDevs\ERP\HRM\Models\Leave_Approval_Status;
@@ -214,7 +215,8 @@ function erp_hr_leave_insert_policy( $args = array() ) {
         // won't update days
         unset( $extra['days'] );
 
-        $leave_policy = Leave_Policy::find( $args['id'] )->update( $extra );
+        $leave_policy = Leave_Policy::find( $args['id'] );
+        $leave_policy->update( $extra );
 
         do_action( 'erp_hr_leave_update_policy', $args['id'] );
 
@@ -748,8 +750,11 @@ function erp_hr_leave_get_policies( $args = array() ) {
         $formatted_data = array();
 
         foreach( $policies as $key => $policy ) {
-            $department  = empty( $policy->department ) ? 'All Departments' : $policy->department->title;
-            $designation = empty( $policy->designation ) ? 'All Designations' : $policy->designation->title;
+            $department  = empty( $policy->department )  ? esc_attr__('All', 'erp') : $policy->department->title;
+            $designation = empty( $policy->designation ) ? esc_attr__('All', 'erp') : $policy->designation->title;
+            $gender      = $policy->gender == '-1'       ? esc_attr__('All', 'erp') : ucwords( $policy->gender );
+            $marital     = $policy->marital == '-1'      ? esc_attr__('All', 'erp') : ucwords( $policy->marital );
+            $location    = $policy->location_id == '-1'  ? esc_attr__('All', 'erp') : $policy->location->name;
 
             $formatted_data[$key]['id']             = $policy->id;
             $formatted_data[$key]['leave_id']       = $policy->leave_id;
@@ -761,10 +766,10 @@ function erp_hr_leave_get_policies( $args = array() ) {
             $formatted_data[$key]['department']     = $department;
             $formatted_data[$key]['designation_id'] = $policy->designation_id;
             $formatted_data[$key]['designation']    = $designation;
-            $formatted_data[$key]['location_id']    = $policy->location_id;
+            $formatted_data[$key]['location']       = $location;
             $formatted_data[$key]['f_year']         = $policy->financial_year->fy_name;
-            $formatted_data[$key]['gender']         = $policy->gender;
-            $formatted_data[$key]['marital']        = $policy->marital;
+            $formatted_data[$key]['gender']         = $gender;
+            $formatted_data[$key]['marital']        = $marital;
         }
 
         $policies = erp_array_to_object( $formatted_data );
