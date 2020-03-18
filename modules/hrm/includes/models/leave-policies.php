@@ -53,7 +53,7 @@ class Leave_Policy extends Model {
      * @return object
      */
     public function entitlements() {
-        return $this->hasMany( 'WeDevs\ERP\HRM\Models\Leave_Entitlement', 'trn_id' );
+        return $this->hasMany( 'WeDevs\ERP\HRM\Models\Leave_Entitlement', 'trn_id', 'id' )->where( 'trn_type', '=', 'leave_policies' );
     }
 
     /**
