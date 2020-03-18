@@ -141,7 +141,7 @@ class Leave_Policies_List_Table extends \WP_List_Table {
             'department'     => __( 'Department', 'erp' ),
             'designation'    => __( 'Designation', 'erp' ),
             'location'       => __( 'Location', 'erp' ),
-            'f_year'         => __( 'Financial year', 'erp' ),
+            'f_year'         => __( 'Year', 'erp' ),
             'gender'         => __( 'Gender', 'erp' ),
             'marital'        => __( 'Marital', 'erp' ),
         );

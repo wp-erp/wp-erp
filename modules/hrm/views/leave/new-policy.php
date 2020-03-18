@@ -187,7 +187,7 @@ $f_year_help_text = __( 'Select Financial Year', 'erp' ) . ' ' . esc_attr__( 'Or
             <div class="row">
                 <?php
                 erp_html_form_input( array(
-                    'label'    => esc_html__( 'Financial Year', 'erp' ),
+                    'label'    => esc_html__( 'Year', 'erp' ),
                     'name'     => 'f-year',
                     'value'    => ! empty( $leave_policy ) ? $leave_policy->f_year : '',
                     'required' => true,
@@ -195,7 +195,7 @@ $f_year_help_text = __( 'Select Financial Year', 'erp' ) . ' ' . esc_attr__( 'Or
                     'type'     => 'select',
                     'help'     => $f_year_help_text,
                     'options'  => array(
-                        '' => esc_html__( '-- select financial year --', 'erp' )
+                        '' => esc_html__( '-- select year --', 'erp' )
                     ) + $financial_years,
                     'disabled' => $disabled,
                 ) ); ?>

@@ -460,7 +460,7 @@ function erp_hr_leave_insert_entitlement( $args = [] ) {
     }
 
     if ( ! $fields['f_year']) {
-        return new WP_Error( 'no-financial-year', esc_attr__( 'No financial year is provided.', 'erp' ) );
+        return new WP_Error( 'no-financial-year', esc_attr__( 'No year is provided.', 'erp' ) );
     }
 
     if ( $fields['day_in'] == 0 && $fields['day_out'] == 0 ) {

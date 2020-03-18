@@ -1119,7 +1119,7 @@ class Form_Handler {
         }
 
         if ( empty( $f_year ) ) {
-            $policy_create_error->add( 'empty', 'Financial year field should not be left empty' );
+            $policy_create_error->add( 'empty', 'Year field should not be left empty' );
         }
 
         $policy_create_error = apply_filters( 'erp_pro_hr_leave_policy_form_errors', $policy_create_error );
@@ -1265,7 +1265,7 @@ class Form_Handler {
                         'fy_name'     => $fname,
                         'start_date'  => erp_mysqldate_to_phptimestamp( $starts[ $key ] ),
                         'end_date'    => erp_mysqldate_to_phptimestamp( $ends[ $key ] ),
-                        'description' => esc_html__( 'Financial year for leave', 'erp' ),
+                        'description' => esc_html__( 'Year for leave', 'erp' ),
                         'updated_by'  => $current_user_id
                     ] );
 
@@ -1277,7 +1277,7 @@ class Form_Handler {
                     'fy_name'     => $fname,
                     'start_date'  => erp_mysqldate_to_phptimestamp( $starts[ $key ] ),
                     'end_date'    => erp_mysqldate_to_phptimestamp( $ends[ $key ] ),
-                    'description' => esc_html__( 'Financial year for leave', 'erp' ),
+                    'description' => esc_html__( 'Year for leave', 'erp' ),
                     'created_by'  => $current_user_id
                 ] );
             }
