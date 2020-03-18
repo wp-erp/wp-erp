@@ -8,7 +8,9 @@ $id            = isset( $_GET['id'] ) ? absint( wp_unslash( $_GET['id'] ) ) : 0;
 $action        = isset( $_GET['action'] ) ? sanitize_key( wp_unslash( $_GET['action'] ) ) : '';
 $leaves        = Leave::all();
 $disabled      = false;
-$leave_names   = [];
+$leave_names   = array(
+    '' => esc_attr__('-- select name --', 'erp')
+);
 $leave_policy  = [];
 $submit_button = esc_attr('Save', 'erp');
 
@@ -32,6 +34,8 @@ if ( $id ) {
 $financial_years = wp_list_pluck( Financial_Year::all(), 'fy_name', 'id' );
 
 $leave_help_text = esc_html__( 'Select A Policy Name', 'erp' ) . ' ' . esc_attr__( 'Or', 'erp' ) . ' ' . sprintf( '<a href="?page=erp-hr&section=leave&sub-section=policies&type=policy-name">%s</a>', __( 'Add New', 'erp' ) );
+
+$f_year_help_text = __( 'Select Financial Year', 'erp' ) . ' ' . esc_attr__( 'Or', 'erp' ) . ' ' . sprintf( '<a href="?page=erp-settings&tab=erp-hr&section=financial">%s</a>', __( 'Add New', 'erp' ) );
 
 ?>
 <div class="wrap">
@@ -189,7 +193,10 @@ $leave_help_text = esc_html__( 'Select A Policy Name', 'erp' ) . ' ' . esc_attr_
                     'required' => true,
                     'class'    => 'leave-policy-input erp-hrm-select2-add-more erp-hr-desi-drop-down',
                     'type'     => 'select',
-                    'options'  => $financial_years,
+                    'help'     => $f_year_help_text,
+                    'options'  => array(
+                        '' => esc_html__( '-- select financial year --', 'erp' )
+                    ) + $financial_years,
                     'disabled' => $disabled,
                 ) ); ?>
             </div>

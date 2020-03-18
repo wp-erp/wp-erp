@@ -109,7 +109,9 @@ $active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['ta
                         'class'    => 'leave-policy-input erp-select2 f_year change_policy',
                         'type'     => 'select',
                         'help'     => $f_year_help_text,
-                        'options'  => $financial_years
+                        'options'  =>  array(
+                            '' => esc_html__( '-- select year --', 'erp' )
+                        ) + $financial_years
                     ) ); ?>
                 </div>
 

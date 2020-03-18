@@ -131,7 +131,12 @@ class Assets {
                 'height'      => 600,
                 'flex-width'  => true,
                 'flex-height' => true
-            ]
+            ],
+            'rest' => array(
+                'root'    => esc_url_raw( get_rest_url() ),
+                'nonce'   => $rest_nonce,
+                'version' => 'erp/v1',
+            ),
         ) );
     }
 

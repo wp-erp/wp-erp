@@ -1743,13 +1743,13 @@ class Ajax_Handler {
         }
 
         if ( ! $f_year ) {
-            $this->send_error( esc_attr__( 'Please select a financial year.', 'erp' ) );
+            $this->send_error( esc_attr__( 'Please select a year.', 'erp' ) );
         }
 
         $financial_year = Financial_Year::find( $f_year );
 
         if ( ! $financial_year ) {
-            $this->send_error( esc_attr__( 'Invalid financial year.', 'erp' ) );
+            $this->send_error( esc_attr__( 'Invalid year.', 'erp' ) );
         }
 
         $policies = erp_hr_get_assign_policy_from_entitlement( $employee_id, $financial_year->start_date );

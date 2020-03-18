@@ -100,4 +100,15 @@ class Leave_Policy extends Model {
         return $this->belongsTo( 'WeDevs\ERP\HRM\Models\Financial_Year', 'f_year', 'id' );
     }
 
+    /**
+     * Relation to Company Locations
+     *
+     * @since 1.6.0
+     *
+     * @return object
+     */
+    public function location() {
+        return $this->belongsTo( 'WeDevs\ERP\Admin\Models\Company_Locations', 'location_id', 'id' );
+    }
+
 }

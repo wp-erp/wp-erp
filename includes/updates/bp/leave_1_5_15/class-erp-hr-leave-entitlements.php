@@ -1,8 +1,6 @@
 <?php
 namespace WeDevs\ERP\Updates\BP\Leave;
 
-use function Patchwork\Config\getTimestamp;
-
 if ( ! class_exists( 'WP_Async_Request', false ) ) {
     require_once WPERP_INCLUDES . '/lib/bgprocess/wp-async-request.php';
 }
