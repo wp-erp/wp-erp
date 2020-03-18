@@ -38,7 +38,7 @@ $active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['ta
         }
 
         $policy_help_text = __( 'Select A Policy', 'erp' ) . ' ' . esc_attr__( 'Or', 'erp' ) . ' ' . sprintf( '<a href="?page=erp-hr&section=leave&sub-section=policies">%s</a>', __( 'Add New', 'erp' ) );
-        $f_year_help_text = __( 'Select Financial Year', 'erp' ) . ' ' . esc_attr__( 'Or', 'erp' ) . ' ' . sprintf( '<a href="?page=erp-settings&tab=erp-hr&section=financial">%s</a>', __( 'Add New', 'erp' ) );
+        $f_year_help_text = __( 'Select Year', 'erp' ) . ' ' . esc_attr__( 'Or', 'erp' ) . ' ' . sprintf( '<a href="?page=erp-settings&tab=erp-hr&section=financial">%s</a>', __( 'Add New', 'erp' ) );
         ?>
 
         <form class="leave-entitlement-form" action="" method="post">
@@ -102,7 +102,7 @@ $active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['ta
 
                 <div class="row">
                     <?php erp_html_form_input( array(
-                        'label'    => esc_html__( 'Financial Year', 'erp' ),
+                        'label'    => esc_html__( 'Year', 'erp' ),
                         'name'     => 'f_year',
                         'value'    =>  '',
                         'required' => true,

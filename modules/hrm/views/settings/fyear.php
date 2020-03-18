@@ -15,9 +15,9 @@ $fin_val_compare_msg = __( 'Second value must be greater than the first value!',
     <table>
         <thead>
             <tr>
-                <td>Name</td>
-                <td>Start Date</td>
-                <td>End Date</td>
+                <td><?php esc_html_e('Name', 'erp'); ?></td>
+                <td><?php esc_html_e('Start Date', 'erp'); ?></td>
+                <td><?php esc_html_e('End Date', 'erp'); ?></td>
                 <td></td>
             </tr>
         </thead>

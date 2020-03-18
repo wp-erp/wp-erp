@@ -19,7 +19,7 @@ foreach ( Financial_Year::all() as $f_year ) {
 
     <div class="row">
         <?php erp_html_form_input( array(
-            'label'    => esc_html__( 'Financial Year', 'erp' ),
+            'label'    => esc_html__( 'Year', 'erp' ),
             'name'     => 'f_year',
             'value'    =>  '',
             'required' => true,
