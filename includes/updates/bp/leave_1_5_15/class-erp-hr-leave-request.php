@@ -538,3 +538,6 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
         }
     }
 }
+
+global $bg_progess_hr_leave_requests;
+$bg_progess_hr_leave_requests      = new \WeDevs\ERP\Updates\BP\Leave\ERP_HR_Leave_Request();
