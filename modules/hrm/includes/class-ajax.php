@@ -1762,7 +1762,7 @@ class Ajax_Handler {
                 'value'    => '',
                 'required' => true,
                 'type'     => 'select',
-                'options'  => array( '' => __( '- Select -', 'erp' ) ) + $policies
+                'options'  => array( '' => __( '- Select -', 'erp' ) ) + array_unique( $policies )
             ) );
             $content = ob_get_clean();
 

@@ -196,7 +196,7 @@ $active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['ta
                     foreach ( $policies as $policy ) {
                         $result[ $policy['f_year'] ][] = array(
                             'name'      => $policy->leave->name,
-                            'leave_id'  => $policy->leave_id
+                            'policy_id'  => $policy['id']
                         );
                     }
                     echo json_encode( $result );
@@ -212,7 +212,7 @@ $active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['ta
 
                     if ( policies[ f_year ] ) {
                         $.each( policies[ f_year ], function ( id, policy ) {
-                            var option = new Option(policy.name, policy.leave_id);
+                            var option = new Option(policy.name, policy.policy_id);
                             $('#leave_policy').append(option);
                         } );
                     }
