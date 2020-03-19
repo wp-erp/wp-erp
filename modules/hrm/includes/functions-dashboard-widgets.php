@@ -333,6 +333,9 @@ function erp_hr_dashboard_widget_leave_calendar() {
     $event_data     = [];
 
     foreach ( $leave_requests as $key => $leave_request ) {
+        if ( 3 == $leave_request->status ) {
+            continue;
+        }
         //if status pending
         $event_label = $leave_request->policy_name;
         if ( 2 == $leave_request->status ) {
