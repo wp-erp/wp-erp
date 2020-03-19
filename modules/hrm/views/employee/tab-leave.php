@@ -68,13 +68,26 @@ if ( $balance ) {
 <h3><?php esc_html_e( 'History', 'erp' ) ?></h3>
 
 <?php
-$cur_year   = date( 'Y' );
+// get leave requests
 $requests   = $employee->get_leave_requests( array( 'status' => 'all' ) );
+
+// get current financial year
+$financial_year = erp_get_financial_year_dates();
+$fids = get_financial_year_from_date_range( $financial_year['start'], $financial_year['end'] );
+$f_year = is_array( $fids ) && ! empty( $fids ) ? $fids[0] : 0;
+
+// get leave policies
+$policies = $employee->get_leave_policies();
+$policy_result = array();
+foreach ( $policies as $policy ) {
+    $policy_result[ $policy['f_year'] ][ $policy['leave_id'] ] = $policy['name'];
+}
+$current_assigned_policies = $f_year && array_key_exists( $f_year, $policy_result ) ? $policy_result[ $f_year ] : array();
 ?>
 
 <form action="#" id="erp-hr-empl-leave-history">
     <select name="f_year" id="f_year">
-        <?php echo wp_kses( erp_html_generate_dropdown( array( '' => esc_attr__( 'select year', 'erp' ) ) + wp_list_pluck( Financial_Year::all(), 'fy_name', 'id' ), '' ), array(
+        <?php echo wp_kses( erp_html_generate_dropdown( array( '' => esc_attr__( 'select year', 'erp' ) ) + wp_list_pluck( Financial_Year::all(), 'fy_name', 'id' ), $f_year ), array(
             'option' => array(
                 'value' => array(),
                 'selected' => array()
@@ -82,10 +95,11 @@ $requests   = $employee->get_leave_requests( array( 'status' => 'all' ) );
         ) ); ?>
     </select>
 
-    <?php erp_html_form_input( array(
+    <?php
+    erp_html_form_input( array(
         'name'     => 'leave_policy',
         'type'     => 'select',
-        'options'  => array( 'all' => esc_attr__( 'All Policy', 'erp' ) ) + erp_hr_leave_get_policies_dropdown_raw()
+        'options'  => array( 'all' => esc_attr__( 'All Policy', 'erp' ) ) +  $current_assigned_policies
     ) ); ?>
 
     <input type="hidden" name="employee_id" value="<?php echo esc_attr( $employee->get_user_id() ); ?>">
@@ -113,12 +127,7 @@ $requests   = $employee->get_leave_requests( array( 'status' => 'all' ) );
     ;jQuery(function( $ ) {
         var select_string = '<?php echo esc_attr__( 'All Policy', 'erp') ?>';
         var policies = <?php
-            $policies = $employee->get_leave_policies();
-            $result = array();
-            foreach ( $policies as $policy ) {
-                $result[ $policy['f_year'] ][] = $policy;
-            }
-            echo json_encode( $result );
+            echo json_encode( $policy_result );
             ?>;
 
         $('#erp-hr-empl-leave-history').on( 'change', '#f_year', function ( e) {
@@ -130,9 +139,10 @@ $requests   = $employee->get_leave_requests( array( 'status' => 'all' ) );
             $('#leave_policy').append(option);
 
             if ( policies[ f_year ] ) {
-                $.each( policies[ f_year ], function ( id, policy ) {
-                    var option = new Option(policy.name, policy.leave_id);
-                    $('#leave_policy').append(option);
+                $.each( policies[ f_year ], function ( id, name ) {
+                    console.log(id,name);
+                    var option = new Option( name, id );
+                    $('#leave_policy').append( option );
                 } );
             }
         });

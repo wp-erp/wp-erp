@@ -638,11 +638,17 @@
                     return;
                 };
 
+                var f_year = $('.f_year').val();
+
+                if ( f_year == 0 || f_year === undefined ) {
+                    return;
+                }
+
                 wp.ajax.send( 'erp-hr-leave-employee-assign-policies', {
                     data: {
                         '_wpnonce'  : wpErpHr.nonce,
                         employee_id : $('#erp-hr-leave-req-employee-id').val(),
-                        f_year: $('.f_year').val(),
+                        f_year: f_year,
                     },
                     success: function(resp) {
                         leavetypewrap.html( resp ).hide().fadeIn();
