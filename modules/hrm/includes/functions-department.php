@@ -265,7 +265,8 @@ function erp_hr_get_dept_lead_subordinate_employees( $lead_id ) {
 
     $users_id = Employee::select('user_id')
             ->whereIn('department', $depts_id )
-            ->get()->toArray();
+            ->pluck('user_id')
+            ->toArray();
 
     return $users_id;
 }

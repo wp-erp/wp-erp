@@ -1301,7 +1301,6 @@ function erp_hr_get_leave_requests( $args = array() ) {
         $args['user'] = 0;
 
         // get all user ids for this lead
-
         $args['users'] = erp_hr_get_dept_lead_subordinate_employees( $args['lead'] );
 
         $where .= " AND request.user_id in (" . implode( ', ', $args['users'] ) . ')' ;
