@@ -3,7 +3,7 @@
 use WeDevs\ERP\HRM\Models\Financial_Year;
 
 $employee_types     = erp_hr_get_assign_policy_from_entitlement( get_current_user_id() );
-$types              = $employee_types ? $employee_types : [];
+$types              = $employee_types ? array_unique( $employee_types ) : [];
 $financial_years    = array(
     '' => esc_attr__( 'select year', 'erp')
 );

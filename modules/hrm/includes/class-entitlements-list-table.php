@@ -80,7 +80,7 @@ class Entitlement_List_Table extends \WP_List_Table {
         foreach ( $policies as $policy ) {
             $policy_data[ $policy['f_year'] ][] = array(
                 'name'      => $policy->leave->name,
-                'leave_id'  => $policy->leave_id
+                'policy_id'  => $policy['id']
             );
         }
 
@@ -103,8 +103,8 @@ class Entitlement_List_Table extends \WP_List_Table {
                     <option value=""><?php echo esc_attr__( 'All Policy', 'erp'); ?></option>
                     <?php if ( array_key_exists( $selected_f_year, $policy_data ) ) {
                         foreach ( $policy_data[ $selected_f_year ] as $policy ) {
-                            $selected = $policy['leave_id'] == $selected_leave_id ? 'selected="selected"' : '';
-                            echo "<option value='{$policy['leave_id']}' $selected>{$policy['name']}</option>";
+                            $selected = $policy['policy_id'] == $selected_leave_id ? 'selected="selected"' : '';
+                            echo "<option value='{$policy['policy_id']}' $selected>{$policy['name']}</option>";
                         }
                     } ?>
                 </select>
@@ -302,7 +302,7 @@ class Entitlement_List_Table extends \WP_List_Table {
         }
 
         if ( ! empty( $_GET['leave_policy'] ) ) {
-            $args['leave_id'] = absint( wp_unslash( $_GET['leave_policy'] ) );
+            $args['policy_id'] = absint( wp_unslash( $_GET['leave_policy'] ) );
         }
 
         // get the items

@@ -471,6 +471,7 @@ function erp_hr_leave_insert_entitlement( $args = [] ) {
     if ( $fields['trn_type'] === 'leave_policies' ) {
         $entitlement = Leave_Entitlement::where( 'user_id', '=', $fields['user_id'] );
         $entitlement->where( 'leave_id', '=', $fields['leave_id'] );
+        $entitlement->where( 'trn_id', '=', $fields['trn_id'] );
         $entitlement->where( 'trn_type', '=', 'leave_policies' );
         $entitlement->where( 'f_year', '=', $fields['f_year'] );
 
@@ -1929,6 +1930,7 @@ function erp_hr_leave_get_entitlements( $args = array() ) {
     $defaults = array(
         'user_id'       => 0,
         'leave_id'      => 0,
+        'policy_id'     => 0,
         'year'          => 0,
         'number'        => 20,
         'offset'        => 0,
@@ -1958,6 +1960,10 @@ function erp_hr_leave_get_entitlements( $args = array() ) {
 
     if ( $args['leave_id'] ) {
         $where .= " AND en.leave_id = " . absint( $args['leave_id'] );
+    }
+
+    if ( $args['policy_id'] ) {
+        $where .= " AND en.trn_id = " . absint( $args['policy_id'] );
     }
 
     if ( $args['emp_status'] == 'active') {
