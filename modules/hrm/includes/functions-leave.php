@@ -2085,6 +2085,12 @@ function erp_hr_leave_get_balance( $user_id, $date = null ) {
     $query .= " LEFT JOIN {$wpdb->prefix}erp_hr_leaves as l on l.id = en.leave_id";
     $query .= " where user_id = %d and trn_type='leave_policies'";
 
+    if ( $date === null ) {
+        $financial_year = erp_get_financial_year_dates();
+        $fids = get_financial_year_from_date_range( $financial_year['start'], $financial_year['end'] );
+        $date = is_array( $fids ) && ! empty( $fids ) ? $fids[0] : null;
+    }
+
     if ( $date !== null ) {
         $query .= " and fy.id = " . absint( $date );
     }
@@ -2117,7 +2123,25 @@ function erp_hr_leave_get_balance( $user_id, $date = null ) {
                             array( $user_id, $result->leave_id, $result->f_year, 'unpaid_leave' )
                         )
                     );
+                    $extra_leave = null === $extra_leave ? 0 : $extra_leave;
                 }
+
+                // total spent
+                $leave_spent = 0;
+                if ( $date !== null ) {
+                    $financial_year = Financial_Year::find( $date );
+                    $leave_spent = $wpdb->get_var(
+                        $wpdb->prepare(
+                            "SELECT sum(rq.days) FROM {$wpdb->prefix}erp_hr_leave_requests as rq
+                                WHERE rq.user_id = %d AND rq.leave_id = %d AND rq.last_status = %d AND rq.start_date BETWEEN %d AND %d",
+                            array( $user_id, $result->leave_id, 1, $financial_year->start_date, $financial_year->end_date )
+                        )
+                    );
+
+
+                    $leave_spent = null === $leave_spent ? 0 : $leave_spent;
+                }
+
 
                 $balance[ $result->leave_id ] = array(
                     'entitlement_id' => $result->id,
@@ -2133,7 +2157,7 @@ function erp_hr_leave_get_balance( $user_id, $date = null ) {
                     'extra_leave'   => $extra_leave,
                     'day_in'        => $day_in,
                     'day_out'       => $day_out,
-                    'spent'         => $day_out,
+                    'spent'         => $leave_spent,
                 );
             }
         }
@@ -2187,7 +2211,19 @@ function erp_hr_leave_get_balance_for_single_entitlement( $entitlement_id ) {
                         array( $result->user_id, $result->leave_id, $result->f_year, 'unpaid_leave' )
                     )
                 );
+                $extra_leave = null === $extra_leave ? 0 : $extra_leave;
             }
+
+            $financial_year = Financial_Year::find( $result->f_year );
+            $leave_spent = $wpdb->get_var(
+                $wpdb->prepare(
+                    "SELECT sum(rq.days) FROM {$wpdb->prefix}erp_hr_leave_requests as rq
+                                WHERE rq.user_id = %d AND rq.leave_id = %d AND rq.last_status = %d AND rq.start_date BETWEEN %d AND %d",
+                    array( $result->user_id, $result->leave_id, 1, $financial_year->start_date, $financial_year->end_date )
+                )
+            );
+
+            $leave_spent = null === $leave_spent ? 0 : $leave_spent;
 
             $balance = array(
                 'entitlement_id' => $result->id,
@@ -2204,7 +2240,7 @@ function erp_hr_leave_get_balance_for_single_entitlement( $entitlement_id ) {
                 'extra_leave'   => $extra_leave,
                 'day_in'        => $day_in,
                 'day_out'       => $day_out,
-                'spent'         => $day_out,
+                'spent'         => $leave_spent,
             );
         }
     }
@@ -2216,6 +2252,8 @@ function erp_hr_leave_get_balance_for_single_entitlement( $entitlement_id ) {
  * Erp get leave balance for a single policy for a user
  *
  * @since 1.6.0
+ *
+ * @deprecated since 1.6.0 use erp_hr_leave_get_balance_for_single_entitlement() instead.
  *
  * @param  integer|object $leave_entitlement_id
  *
@@ -2256,6 +2294,7 @@ function erp_hr_leave_get_balance_for_single_policy( $entitlement ) {
                 array( $entitlement->user_id, $entitlement->leave_id, $entitlement->f_year, 'unpaid_leave' )
             )
         );
+        $extra_leave = null === $extra_leave ? 0 : $extra_leave;
     }
 
     return array(

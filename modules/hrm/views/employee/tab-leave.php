@@ -27,7 +27,7 @@ if ( $balance ) {
             <tr class="<?php echo $num % 2 == 0 ? 'alternate' : 'odd'; ?>">
                 <td><?php echo esc_html( $entitlement->policy ); ?></td>
                 <td><?php echo $entitlement->days ? sprintf( esc_html__( '%d days', 'erp' ), esc_html( number_format_i18n( $entitlement->days ) ) ) : '-'; ?></td>
-                <td><?php echo ($entitlement->day_out != 0) ? sprintf( esc_html__( '%d days', 'erp' ), esc_html( number_format_i18n( ($entitlement->day_out) ) ) ) : '-'; ?></td>
+                <td><?php echo ($entitlement->spent != 0) ? sprintf( esc_html__( '%d days', 'erp' ), esc_html( number_format_i18n( ($entitlement->spent) ) ) ) : '-'; ?></td>
                 <td>
                     <?php
                     if ( $entitlement->available > 0 ) {
