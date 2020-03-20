@@ -2173,7 +2173,6 @@ function erp_hr_leave_get_balance( $user_id, $date = null ) {
                     $leave_spent = null === $leave_spent ? 0 : $leave_spent;
                 }
 
-
                 $balance[ $result->leave_id ] = array(
                     'entitlement_id' => $result->id,
                     'days'          => $result->day_in,
