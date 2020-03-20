@@ -2569,6 +2569,7 @@ function get_entitlement_financial_years() {
  * Generate leave reports
  *
  * @since 1.3.2
+ * @since 1.6.0 updated according to new database change
  *
  * @param array $employees
  * @param int $f_year
@@ -2585,63 +2586,6 @@ function erp_get_leave_report( array $employees, $f_year ) {
     }
 
     return $return;
-
-
-    $year_dates = erp_get_financial_year_dates( date( 'Y-m-d' ) );
-    if ( ! $start_date ) {
-        $start_date = $year_dates['start'];
-    }
-    if ( ! $end_date ) {
-        $end_date = $year_dates['end'];
-    }
-    $employees_report = \WeDevs\ERP\HRM\Models\Employee::whereIn( 'user_id', $employees );
-    $employees_report = $employees_report->select( 'user_id' )
-                                         ->with( [
-                                             'leave_requests' => function ( $q ) use ( $start_date, $end_date ) {
-                                                 $q->where( 'status', '=', '1' )
-                                                   ->whereDate( 'start_date', '>=', $start_date )
-                                                   ->whereDate( 'end_date', '<=', $end_date );
-                                             },
-                                             'entitlements'   => function ( $q ) use ( $start_date, $end_date ) {
-                                                $entitlement_start_date = date('Y', strtotime( $start_date ) ) . '-01-01';
-                                                $entitlement_end_date   = date('Y', strtotime( $end_date ) ) . '-12-31';
-
-                                                $q->whereDate( 'from_date', '>=', $entitlement_start_date )
-                                                   ->whereDate( 'to_date', '<=', $entitlement_end_date )
-                                                   ->JoinWithPolicy();
-                                             }
-                                         ] )
-                                         ->get();
-
-    $reports = [];
-    foreach ( $employees_report as $employee_report ) {
-        $entitlements = [];
-        foreach ( $employee_report->entitlements as $entitlement ) {
-            $report = [
-                'entitlement_id' => $entitlement->id,
-                'days'           => $entitlement->days,
-                'from_date'      => $entitlement->from_date,
-                'to_date'        => $entitlement->to_date,
-                'policy'         => $entitlement->name,
-                'policy_id'      => $entitlement->policy_id,
-                'color'          => $entitlement->color,
-                'spent'          => 0,
-            ];
-
-            $entitlements[ $entitlement->policy_id ] = $report;
-        }
-
-        foreach ( $employee_report->leave_requests as $leave_report ) {
-            if ( isset( $entitlements[ $leave_report->policy_id ] ) ) {
-                $entitlements[ $leave_report->policy_id ]['spent'] += $leave_report->days;
-            }
-
-            $reports[ $employee_report->user_id ] = $entitlements;
-        }
-
-    }
-
-    return $reports;
 }
 
 /**
