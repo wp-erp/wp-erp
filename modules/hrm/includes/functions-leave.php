@@ -2571,13 +2571,21 @@ function get_entitlement_financial_years() {
  * @since 1.3.2
  *
  * @param array $employees
- * @param null $start_date
- * @param null $end_date
+ * @param int $f_year
  *
  * @return array
  *
  */
-function erp_get_leave_report( array $employees, $start_date = null, $end_date = null ) {
+function erp_get_leave_report( array $employees, $f_year ) {
+
+    $return = [];
+
+    foreach ( $employees as $employee_id ) {
+        $return[ $employee_id ] = erp_hr_leave_get_balance( $employee_id, $f_year );;
+    }
+
+    return $return;
+
 
     $year_dates = erp_get_financial_year_dates( date( 'Y-m-d' ) );
     if ( ! $start_date ) {
