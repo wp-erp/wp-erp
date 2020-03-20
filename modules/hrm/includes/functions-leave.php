@@ -1237,8 +1237,6 @@ function erp_hr_get_leave_requests( $args = array() ) {
             case 'policy_id':
             case 'f_year':
             case 'offset':
-            case 'department_id':
-            case 'designation_id':
             case 'year':
             case 'lead':
             case 'calendar':
@@ -1246,6 +1244,8 @@ function erp_hr_get_leave_requests( $args = array() ) {
                 break;
 
             case 'number':
+            case 'department_id':
+            case 'designation_id':
                 $value = intval( $value );
                 break;
 
@@ -1302,10 +1302,41 @@ function erp_hr_get_leave_requests( $args = array() ) {
         $args['user'] = 0;
 
         // get all user ids for this lead
-
         $args['users'] = erp_hr_get_dept_lead_subordinate_employees( $args['lead'] );
 
         $where .= " AND request.user_id in (" . implode( ', ', $args['users'] ) . ')' ;
+    }
+
+    if ( $args['department_id'] && $args['designation_id'] ) {
+        $args['user'] = 0;
+        $users = \WeDevs\ERP\HRM\Models\Employee::select('user_id')
+                            ->where( 'department', $args['department_id'] )
+                            ->where( 'designation', $args['designation_id'] );
+
+        if ( $users->count() ) {
+            $user_ids = $users->pluck('user_id')->toArray();
+            $where .= " AND request.user_id in (" . implode( ', ', $user_ids ) . ')' ;
+        }
+    }
+    elseif ( $args['department_id'] ) {
+        $args['user'] = 0;
+        $users = \WeDevs\ERP\HRM\Models\Employee::select('user_id')
+                                                ->where( 'department', $args['department_id'] );
+
+        if ( $users->count() ) {
+            $user_ids = $users->pluck('user_id')->toArray();
+            $where .= " AND request.user_id in (" . implode( ', ', $user_ids ) . ')' ;
+        }
+    }
+    elseif ( $args['designation_id'] ) {
+        $args['user'] = 0;
+        $users = \WeDevs\ERP\HRM\Models\Employee::select('user_id')
+                                                ->where( 'designation', $args['designation_id'] );
+
+        if ( $users->count() ) {
+            $user_ids = $users->pluck('user_id')->toArray();
+            $where .= " AND request.user_id in (" . implode( ', ', $user_ids ) . ')' ;
+        }
     }
 
     if ( is_numeric( $args['request_id'] ) && $args['request_id'] > 0 ) {
@@ -1343,16 +1374,6 @@ function erp_hr_get_leave_requests( $args = array() ) {
 
     if ( $args['f_year'] ) {
         $where .= ' AND entl.f_year = ' .  $args['f_year'];
-    }
-
-    if ( $args['department_id'] && $args['designation_id'] ) {
-        $where .= " AND policy.designation_id = {$args['designation_id']} and policy.department_id = {$args['department_id']}" ;
-    }
-    elseif ( $args['department_id'] ) {
-        $where .= " AND policy.department_id = {$args['department_id']}" ;
-    }
-    elseif ( $args['designation_id'] ) {
-        $where .= " AND policy.designation_id = {$args['designation_id']}" ;
     }
 
     if ( $args['start_date']  && $args['end_date'] ) {
