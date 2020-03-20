@@ -146,6 +146,10 @@ class Leave_Policies_List_Table extends \WP_List_Table {
             'marital'        => __( 'Marital', 'erp' ),
         );
 
+        if ( ! erp_get_option( 'erp_debug_mode', 'erp_settings_general', 0 ) ) {
+            unset( $columns['cb'] );
+        }
+
         return apply_filters( 'erp_hr_leave_policy_table_cols', $columns );
     }
 
@@ -177,7 +181,9 @@ class Leave_Policies_List_Table extends \WP_List_Table {
 
         $actions['copy'] = sprintf( '<a href="%s" class="submitcopy" data-id="%d" title="%s">%s</a>', $copy_url, $leave_policy->id, esc_html__( 'Copy this item', 'erp' ), esc_html__( 'Copy', 'erp' ) );
 
-        $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" title="%s">%s</a>', $delete_url, $leave_policy->id, esc_html__( 'Delete this item', 'erp' ), esc_html__( 'Delete', 'erp' ) );
+        if ( erp_get_option( 'erp_debug_mode', 'erp_settings_general', 0 ) ) {
+            $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" title="%s">%s</a>', $delete_url, $leave_policy->id, esc_html__( 'Delete this item', 'erp' ), esc_html__( 'Delete', 'erp' ) );
+        }
 
         return sprintf( '<a href="#" class="link" data-id="%3$s"><strong>%1$s</strong></a> %2$s', esc_html( $leave_policy->name ), $this->row_actions( $actions ), $leave_policy->id );
     }
@@ -220,9 +226,13 @@ class Leave_Policies_List_Table extends \WP_List_Table {
      * @return array
      */
     function get_bulk_actions() {
-        $actions = array(
-            'trash'  => __( 'Delete', 'erp' ),
-        );
+        $actions = array();
+        if ( erp_get_option( 'erp_debug_mode', 'erp_settings_general', 0 ) ) {
+            $actions = array(
+                'trash'  => __( 'Delete', 'erp' ),
+            );
+        }
+
         return $actions;
     }
 
@@ -235,7 +245,7 @@ class Leave_Policies_List_Table extends \WP_List_Table {
      */
     function column_cb( $item ) {
         return sprintf(
-            '<input type="checkbox" name="policy_id[]" value="%s" />', $item->id
+            '<input type="checkbox" name="policy_id[]" value="%d" />', $item->id
         );
     }
 

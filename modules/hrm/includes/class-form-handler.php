@@ -195,30 +195,42 @@ class Form_Handler {
             wp_die( esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
+        $req_uri_bulk = ( isset( $_SERVER['REQUEST_URI'] ) ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+        $redirect = remove_query_arg( array(
+            '_wp_http_referer',
+            '_wpnonce',
+            'action',
+            'action2',
+        ), $req_uri_bulk );
+
         if ( isset( $_REQUEST['filter_by_year'] ) ) {
 
-            $req_uri_bulk = ( isset( $_SERVER['REQUEST_URI'] ) ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
-
             $redirect = remove_query_arg( array(
-                '_wp_http_referer',
-                '_wpnonce',
-                'action',
-                'action2',
                 'filter_by_year'
-            ), $req_uri_bulk );
+            ), $redirect );
 
             wp_redirect( $redirect );
             exit();
         }
 
-        if ( isset( $_POST['action'] ) && sanitize_text_field( wp_unslash( $_POST['action'] ) ) == 'trash' ) {
+        if ( isset( $_REQUEST['action'] ) && sanitize_text_field( wp_unslash( $_REQUEST['action'] ) ) == 'trash' ) {
 
-            if ( isset( $_POST['policy_id'] ) ) {
-                erp_hr_leave_policy_delete( sanitize_text_field( wp_unslash( $_POST['policy_id'] ) ) );
+            if ( isset( $_REQUEST['policy_id'] ) ) {
+                $policy_ids = $_REQUEST['policy_id'];
+                array_walk( $policy_ids, function( $key, $value ) {
+                    $key = sanitize_key( $key );
+                    $value = absint( $value );
+                });
+                erp_hr_leave_policy_delete( $policy_ids );
+
+                $redirect = remove_query_arg( array(
+                    'policy_id'
+                ), $redirect );
+
+                wp_redirect( $redirect );
+                exit();
             }
         }
-
-        return true;
     }
 
     /**

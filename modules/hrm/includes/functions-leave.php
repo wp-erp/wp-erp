@@ -973,6 +973,11 @@ function erp_hr_leave_get_policies_dropdown_raw( $args = array() ) {
  */
 function erp_hr_leave_policy_delete( $policy_ids ) {
 
+    // Check permission
+    if ( ! current_user_can( 'erp_leave_manage' ) ) {
+        wp_die( esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
+    }
+
     if ( ! is_array( $policy_ids ) ) {
         $policy_ids = [ $policy_ids ];
     }
@@ -1794,6 +1799,11 @@ function erp_hr_leave_request_update_status( $request_id, $status, $comments = '
  * @return WP_Error|int
  */
 function erp_hr_delete_leave_request( $request_id ) {
+    // Check permission
+    if ( ! current_user_can( 'erp_leave_manage' ) ) {
+        wp_die( esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
+    }
+
     $request = Leave_Request::find( $request_id );
 
     if ( ! $request ) {
@@ -2162,7 +2172,6 @@ function erp_hr_leave_get_balance( $user_id, $date = null ) {
 
                     $leave_spent = null === $leave_spent ? 0 : $leave_spent;
                 }
-
 
                 $balance[ $result->leave_id ] = array(
                     'entitlement_id' => $result->id,
