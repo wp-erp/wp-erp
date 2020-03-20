@@ -1237,8 +1237,6 @@ function erp_hr_get_leave_requests( $args = array() ) {
             case 'policy_id':
             case 'f_year':
             case 'offset':
-            case 'department_id':
-            case 'designation_id':
             case 'year':
             case 'lead':
             case 'calendar':
@@ -1246,6 +1244,8 @@ function erp_hr_get_leave_requests( $args = array() ) {
                 break;
 
             case 'number':
+            case 'department_id':
+            case 'designation_id':
                 $value = intval( $value );
                 break;
 
@@ -1307,6 +1307,38 @@ function erp_hr_get_leave_requests( $args = array() ) {
         $where .= " AND request.user_id in (" . implode( ', ', $args['users'] ) . ')' ;
     }
 
+    if ( $args['department_id'] && $args['designation_id'] ) {
+        $args['user'] = 0;
+        $users = \WeDevs\ERP\HRM\Models\Employee::select('user_id')
+                            ->where( 'department', $args['department_id'] )
+                            ->where( 'designation', $args['designation_id'] );
+
+        if ( $users->count() ) {
+            $user_ids = $users->pluck('user_id')->toArray();
+            $where .= " AND request.user_id in (" . implode( ', ', $user_ids ) . ')' ;
+        }
+    }
+    elseif ( $args['department_id'] ) {
+        $args['user'] = 0;
+        $users = \WeDevs\ERP\HRM\Models\Employee::select('user_id')
+                                                ->where( 'department', $args['department_id'] );
+
+        if ( $users->count() ) {
+            $user_ids = $users->pluck('user_id')->toArray();
+            $where .= " AND request.user_id in (" . implode( ', ', $user_ids ) . ')' ;
+        }
+    }
+    elseif ( $args['designation_id'] ) {
+        $args['user'] = 0;
+        $users = \WeDevs\ERP\HRM\Models\Employee::select('user_id')
+                                                ->where( 'designation', $args['designation_id'] );
+
+        if ( $users->count() ) {
+            $user_ids = $users->pluck('user_id')->toArray();
+            $where .= " AND request.user_id in (" . implode( ', ', $user_ids ) . ')' ;
+        }
+    }
+
     if ( is_numeric( $args['request_id'] ) && $args['request_id'] > 0 ) {
         $where .= " AND request.id = " .  $args['request_id'];
     }
@@ -1342,16 +1374,6 @@ function erp_hr_get_leave_requests( $args = array() ) {
 
     if ( $args['f_year'] ) {
         $where .= ' AND entl.f_year = ' .  $args['f_year'];
-    }
-
-    if ( $args['department_id'] && $args['designation_id'] ) {
-        $where .= " AND policy.designation_id = {$args['designation_id']} and policy.department_id = {$args['department_id']}" ;
-    }
-    elseif ( $args['department_id'] ) {
-        $where .= " AND policy.department_id = {$args['department_id']}" ;
-    }
-    elseif ( $args['designation_id'] ) {
-        $where .= " AND policy.designation_id = {$args['designation_id']}" ;
     }
 
     if ( $args['start_date']  && $args['end_date'] ) {
@@ -2084,6 +2106,12 @@ function erp_hr_leave_get_balance( $user_id, $date = null ) {
     $query .= " LEFT JOIN {$wpdb->prefix}erp_hr_leaves as l on l.id = en.leave_id";
     $query .= " where user_id = %d and trn_type='leave_policies'";
 
+    if ( $date === null ) {
+        $financial_year = erp_get_financial_year_dates();
+        $fids = get_financial_year_from_date_range( $financial_year['start'], $financial_year['end'] );
+        $date = is_array( $fids ) && ! empty( $fids ) ? $fids[0] : null;
+    }
+
     if ( $date !== null ) {
         $query .= " and fy.id = " . absint( $date );
     }
@@ -2116,7 +2144,25 @@ function erp_hr_leave_get_balance( $user_id, $date = null ) {
                             array( $user_id, $result->leave_id, $result->f_year, 'unpaid_leave' )
                         )
                     );
+                    $extra_leave = null === $extra_leave ? 0 : $extra_leave;
                 }
+
+                // total spent
+                $leave_spent = 0;
+                if ( $date !== null ) {
+                    $financial_year = Financial_Year::find( $date );
+                    $leave_spent = $wpdb->get_var(
+                        $wpdb->prepare(
+                            "SELECT sum(rq.days) FROM {$wpdb->prefix}erp_hr_leave_requests as rq
+                                WHERE rq.user_id = %d AND rq.leave_id = %d AND rq.last_status = %d AND rq.start_date BETWEEN %d AND %d",
+                            array( $user_id, $result->leave_id, 1, $financial_year->start_date, $financial_year->end_date )
+                        )
+                    );
+
+
+                    $leave_spent = null === $leave_spent ? 0 : $leave_spent;
+                }
+
 
                 $balance[ $result->leave_id ] = array(
                     'entitlement_id' => $result->id,
@@ -2132,7 +2178,7 @@ function erp_hr_leave_get_balance( $user_id, $date = null ) {
                     'extra_leave'   => $extra_leave,
                     'day_in'        => $day_in,
                     'day_out'       => $day_out,
-                    'spent'         => $day_out,
+                    'spent'         => $leave_spent,
                 );
             }
         }
@@ -2186,7 +2232,19 @@ function erp_hr_leave_get_balance_for_single_entitlement( $entitlement_id ) {
                         array( $result->user_id, $result->leave_id, $result->f_year, 'unpaid_leave' )
                     )
                 );
+                $extra_leave = null === $extra_leave ? 0 : $extra_leave;
             }
+
+            $financial_year = Financial_Year::find( $result->f_year );
+            $leave_spent = $wpdb->get_var(
+                $wpdb->prepare(
+                    "SELECT sum(rq.days) FROM {$wpdb->prefix}erp_hr_leave_requests as rq
+                                WHERE rq.user_id = %d AND rq.leave_id = %d AND rq.last_status = %d AND rq.start_date BETWEEN %d AND %d",
+                    array( $result->user_id, $result->leave_id, 1, $financial_year->start_date, $financial_year->end_date )
+                )
+            );
+
+            $leave_spent = null === $leave_spent ? 0 : $leave_spent;
 
             $balance = array(
                 'entitlement_id' => $result->id,
@@ -2203,7 +2261,7 @@ function erp_hr_leave_get_balance_for_single_entitlement( $entitlement_id ) {
                 'extra_leave'   => $extra_leave,
                 'day_in'        => $day_in,
                 'day_out'       => $day_out,
-                'spent'         => $day_out,
+                'spent'         => $leave_spent,
             );
         }
     }
@@ -2215,6 +2273,8 @@ function erp_hr_leave_get_balance_for_single_entitlement( $entitlement_id ) {
  * Erp get leave balance for a single policy for a user
  *
  * @since 1.6.0
+ *
+ * @deprecated since 1.6.0 use erp_hr_leave_get_balance_for_single_entitlement() instead.
  *
  * @param  integer|object $leave_entitlement_id
  *
@@ -2255,6 +2315,7 @@ function erp_hr_leave_get_balance_for_single_policy( $entitlement ) {
                 array( $entitlement->user_id, $entitlement->leave_id, $entitlement->f_year, 'unpaid_leave' )
             )
         );
+        $extra_leave = null === $extra_leave ? 0 : $extra_leave;
     }
 
     return array(
@@ -2508,71 +2569,23 @@ function get_entitlement_financial_years() {
  * Generate leave reports
  *
  * @since 1.3.2
+ * @since 1.6.0 updated according to new database change
  *
  * @param array $employees
- * @param null $start_date
- * @param null $end_date
+ * @param int $f_year
  *
  * @return array
  *
  */
-function erp_get_leave_report( array $employees, $start_date = null, $end_date = null ) {
+function erp_get_leave_report( array $employees, $f_year ) {
 
-    $year_dates = erp_get_financial_year_dates( date( 'Y-m-d' ) );
-    if ( ! $start_date ) {
-        $start_date = $year_dates['start'];
-    }
-    if ( ! $end_date ) {
-        $end_date = $year_dates['end'];
-    }
-    $employees_report = \WeDevs\ERP\HRM\Models\Employee::whereIn( 'user_id', $employees );
-    $employees_report = $employees_report->select( 'user_id' )
-                                         ->with( [
-                                             'leave_requests' => function ( $q ) use ( $start_date, $end_date ) {
-                                                 $q->where( 'status', '=', '1' )
-                                                   ->whereDate( 'start_date', '>=', $start_date )
-                                                   ->whereDate( 'end_date', '<=', $end_date );
-                                             },
-                                             'entitlements'   => function ( $q ) use ( $start_date, $end_date ) {
-                                                $entitlement_start_date = date('Y', strtotime( $start_date ) ) . '-01-01';
-                                                $entitlement_end_date   = date('Y', strtotime( $end_date ) ) . '-12-31';
+    $return = [];
 
-                                                $q->whereDate( 'from_date', '>=', $entitlement_start_date )
-                                                   ->whereDate( 'to_date', '<=', $entitlement_end_date )
-                                                   ->JoinWithPolicy();
-                                             }
-                                         ] )
-                                         ->get();
-
-    $reports = [];
-    foreach ( $employees_report as $employee_report ) {
-        $entitlements = [];
-        foreach ( $employee_report->entitlements as $entitlement ) {
-            $report = [
-                'entitlement_id' => $entitlement->id,
-                'days'           => $entitlement->days,
-                'from_date'      => $entitlement->from_date,
-                'to_date'        => $entitlement->to_date,
-                'policy'         => $entitlement->name,
-                'policy_id'      => $entitlement->policy_id,
-                'color'          => $entitlement->color,
-                'spent'          => 0,
-            ];
-
-            $entitlements[ $entitlement->policy_id ] = $report;
-        }
-
-        foreach ( $employee_report->leave_requests as $leave_report ) {
-            if ( isset( $entitlements[ $leave_report->policy_id ] ) ) {
-                $entitlements[ $leave_report->policy_id ]['spent'] += $leave_report->days;
-            }
-
-            $reports[ $employee_report->user_id ] = $entitlements;
-        }
-
+    foreach ( $employees as $employee_id ) {
+        $return[ $employee_id ] = erp_hr_leave_get_balance( $employee_id, $f_year );;
     }
 
-    return $reports;
+    return $return;
 }
 
 /**

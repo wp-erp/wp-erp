@@ -250,8 +250,8 @@ function erp_hr_get_department_lead_by_user( $user_id ) {
 
 /**
  * Get department employees
- * 
- * @since 1.5.15
+ *
+ * @since 1.6.0
  *
  * @param $lead_id
  *
@@ -259,23 +259,28 @@ function erp_hr_get_department_lead_by_user( $user_id ) {
  */
 function erp_hr_get_dept_lead_subordinate_employees( $lead_id ) {
 
-    $depts_id = Department::select('id')
-            ->where('lead', absint( $lead_id ))->pluck('id')
-            ->toArray();
+    $ret = array();
 
-    $users_id = Employee::select('user_id')
-            ->whereIn('department', $depts_id )
-            ->pluck('user_id')
-            ->toArray();
+    $depts_id = Department::select('id')->where( 'lead', absint( $lead_id ) );
 
-    return $users_id;
+    if ( $depts_id->count() ) {
+        $depts_id = $depts_id->pluck('id')->toArray();
+
+        $users_id = Employee::select( 'user_id' )->whereIn( 'department', $depts_id );
+
+        if ( $users_id->count() ) {
+            $ret = $users_id->pluck( 'user_id' )->toArray();
+        }
+    }
+
+    return $ret;
 }
 
 /**
  * Check if this user_id's department lead is the current logged_in user
- * 
- * @since 1.5.15
- * 
+ *
+ * @since 1.6.0
+ *
  * @return bool
  */
 function erp_hr_match_user_dept_lead_with_current_user( $user_id ) {
