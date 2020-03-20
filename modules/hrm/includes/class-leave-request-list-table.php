@@ -44,7 +44,7 @@ class Leave_Requests_List_Table extends \WP_List_Table {
 
         $financial_year = erp_get_financial_year_dates();
         $f_ids = get_financial_year_from_date_range( $financial_year['start'], $financial_year['end'] );
-        $financial_years =  array( '' => esc_attr__( 'Select year', 'erp') ) +  wp_list_pluck( Financial_Year::all(), 'fy_name', 'id' );
+        $financial_years =  array( '' => esc_attr__( 'select year', 'erp') ) +  wp_list_pluck( Financial_Year::all(), 'fy_name', 'id' );
 
         $selected_year = ( isset( $_GET['filter_year'] ) ) ? absint( wp_unslash( $_GET['filter_year'] ) ) : '';
         ?>
