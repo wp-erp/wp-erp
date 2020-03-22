@@ -12,6 +12,11 @@ if ( $id ) {
 
 <div class="wrap">
     <div id="col-container" class="wp-clearfix create-policy-name">
+        <h2><?php esc_html_e( 'Leave Names', 'erp' ); ?>
+            <a href="<?php echo esc_url( admin_url( 'admin.php?page=erp-hr&section=leave&sub-section=policies' ) ); ?>" id="erp-leave-policy-new" class="add-new-h2">
+                <?php esc_html_e( 'Back To Leave Policies', 'erp' ); ?>
+            </a>
+        </h2>
         <div id="col-left" class="form-wrap">
             <form action="<?php echo esc_url( erp_hr_new_policy_name_url( $id ) ); ?>" method="POST">
 

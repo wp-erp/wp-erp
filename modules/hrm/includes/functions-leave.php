@@ -193,7 +193,8 @@ function erp_hr_leave_insert_policy( $args = array() ) {
         'description'          => $args['description'],
         'days'                 => $args['days'],
         'color'                => $args['color'],
-        'applicable_from_days' => $args['applicable_from']
+        'applicable_from_days' => $args['applicable_from'],
+        'apply_for_new_users'  => $args['apply_for_new_users']
     ) );
 
     /**
@@ -243,19 +244,66 @@ function erp_hr_leave_insert_policy( $args = array() ) {
  * @since 0.1
  * @since 1.2.0 Using `erp_hr_apply_policy_to_employee` for both Immediate and
  *              Scheduled policy when `instant_apply` is true
+ * @since 1.6.0 changed according to new db structure
  *
- * @param  object $policy Leave_Policies model
- * @param  array $args
+ * @param  int $policy_id newly created policy id
  *
  * @return void
  */
-function erp_hr_apply_policy_existing_employee( $policy, $args ) {
-    if ( ! erp_validate_boolean( $args['instant_apply'] ) ) {
+function erp_hr_apply_policy_existing_employee( $policy_id ) {
+
+    $apply_for_existing_users = ! empty( $_POST['apply-for-existing-users'] ) ? 1 : 0;
+
+    if ( ! $apply_for_existing_users ) {
         return;
     }
 
-    erp_bulk_policy_assign($policy);
-//    erp_hr_apply_policy_to_employee( $policy );
+    $policy = Leave_Policy::find( $policy_id );
+    if ( ! $policy ) {
+        return;
+    }
+
+    $employees = erp_hr_get_employees( array(
+        'department'    => $policy->department_id,
+        'location'      => $policy->location_id,
+        'designation'   => $policy->designation_id,
+        'gender'        => $policy->gender,
+        'marital_status'    => $policy->marital,
+        'number'            => '-1',
+        'no_object'         => true,
+    ) );
+
+    if ( count( $employees ) === 0 ) {
+        return;
+    }
+
+    $entitlement_bg = new \WeDevs\ERP\HRM\Leave_Entitlement_BG_Process();
+
+    foreach ( $employees as $employee ) {
+        $entitlement_bg->push_to_queue(
+            array(
+                'user_id'       => $employee->user_id,
+                'leave_id'      => $policy->leave_id,
+                'created_by'    => get_current_user_id(),
+                'trn_id'        => $policy->id,
+                'trn_type'      => 'leave_policies',
+                'day_in'        => $policy->days,
+                'day_out'       => 0,
+                'description'   => 'Generated',
+                'f_year'        => $policy->f_year,
+            )
+        );
+    }
+
+    $entitlement_bg->save();
+
+    /**
+     * Run the queue, starting with leave entitlements data
+     */
+    $entitlement_bg->dispatch();
+
+    // erp_bulk_policy_assign( $policy_id );
+    // erp_hr_apply_policy_to_employee( $policy );
 }
 
 /**
@@ -571,15 +619,38 @@ function erp_hr_leave_insert_entitlement( $args = [] ) {
  *
  * @since 1.2.0
  *
+ * @since 1.6.0 updated according to new leave database
+ *
  * @param int $user_id Employee user_id provided by `erp_hr_employee_new` hook
  *
  * @return void
  */
 function erp_hr_apply_policy_on_new_employee( $user_id ) {
-    $policies = Leave_Policy::where( 'activate', 1 )->get();
+    // 1. get current financial year
+    $financial_year = erp_get_financial_year_dates();
+    $fids = get_financial_year_from_date_range( $financial_year['start'], $financial_year['end'] );
+
+    if ( ! is_array( $fids ) || empty( $fids ) ) {
+        return;
+    }
+
+    // 2. get policies where automatic policy assign is enabled.
+    $policies = Leave_Policy::where( 'apply_for_new_users', 1 )->where( 'f_year', $fids[0] )->get();
 
     $policies->each( function ( $policy ) use ( $user_id ) {
-        erp_hr_apply_policy_to_employee( $policy, [ $user_id ] );
+        $data = array(
+            'user_id'       => $user_id,
+            'leave_id'      => $policy->leave_id,
+            'created_by'    => get_current_user_id(),
+            'trn_id'        => $policy->id,
+            'trn_type'      => 'leave_policies',
+            'day_in'        => $policy->days,
+            'day_out'       => 0,
+            'description'   => 'Generated',
+            'f_year'        => $policy->f_year,
+        );
+
+        $inserted = erp_hr_leave_insert_entitlement( $data );
     } );
 }
 

@@ -418,6 +418,7 @@ May you enjoy the fruits of your labors for years to come'
                   gender enum('-1','male','female','other') NOT NULL DEFAULT '-1',
                   marital enum('-1','single','married','widowed') NOT NULL DEFAULT '-1',
                   f_year smallint(5) UNSIGNED DEFAULT NULL,
+                  apply_for_new_users tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
                   carryover_days tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
                   carryover_uses_limit tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
                   encashment_days tinyint(3) UNSIGNED NOT NULL DEFAULT '0',

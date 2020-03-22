@@ -6,17 +6,13 @@ use \WeDevs\ERP\HRM\Models\Leave_Policy;
 
 $id            = isset( $_GET['id'] ) ? absint( wp_unslash( $_GET['id'] ) ) : 0;
 $action        = isset( $_GET['action'] ) ? sanitize_key( wp_unslash( $_GET['action'] ) ) : '';
-$leaves        = Leave::all();
 $disabled      = false;
-$leave_names   = array(
-    '' => esc_attr__('-- select name --', 'erp')
-);
 $leave_policy  = [];
 $submit_button = esc_attr('Save', 'erp');
 
-foreach ( $leaves as $leave ) {
-    $leave_names[$leave->id] = $leave->name;
-}
+$leave_names   = array(
+                     '' => esc_attr__('-- select name --', 'erp')
+                 ) + wp_list_pluck( Leave::all(), 'name', 'id' );
 
 // edit / copy
 if ( $id ) {
@@ -39,6 +35,11 @@ $f_year_help_text = __( 'Select Financial Year', 'erp' ) . ' ' . esc_attr__( 'Or
 
 ?>
 <div class="wrap">
+    <h2><?php esc_html_e( 'Leave Policies', 'erp' ); ?>
+        <a href="<?php echo esc_url( admin_url( 'admin.php?page=erp-hr&section=leave&sub-section=policies' ) ); ?>" id="erp-leave-policy-new" class="add-new-h2">
+            <?php esc_html_e( 'Back To Leave Policies', 'erp' ); ?>
+        </a>
+    </h2>
     <form class="leave-policy-form" action="<?php echo esc_url( erp_hr_new_policy_url( $id, $action ) ); ?>" method="POST">
 
         <!-- show error message -->
@@ -64,7 +65,7 @@ $f_year_help_text = __( 'Select Financial Year', 'erp' ) . ' ' . esc_attr__( 'Or
                     'options'  => $leave_names,
                     'help'     => $leave_help_text,
                     'disabled' => $disabled,
-                ) ); ?>                
+                ) ); ?>
             </div>
 
             <div class="row">
@@ -114,6 +115,32 @@ $f_year_help_text = __( 'Select Financial Year', 'erp' ) . ' ' . esc_attr__( 'Or
                     'class'    => 'erp-color-picker'
                 ) ); ?>
             </div>
+
+            <div class="row">
+                <?php
+                erp_html_form_input(array(
+                    'label'       => esc_html__('Entitle New Users?', 'erp'),
+                    'name'        => 'apply-for-new-users',
+                    'type'        => 'checkbox',
+                    'value'    => ! empty( $leave_policy ) && $leave_policy->apply_for_new_users == '1' ? 'on'  : '0',
+                    'help'        => esc_attr__( 'Check this button if you want to entitle new users to this policy after hiring.' )
+                ));
+                ?>
+            </div>
+
+            <?php
+            if ( ! $disabled ) {
+                echo '<div class="row">';
+                erp_html_form_input(array(
+                    'label'       => esc_html__('Apply for existing users?', 'erp'),
+                    'name'        => 'apply-for-existing-users',
+                    'type'        => 'checkbox',
+                    'help'        => esc_attr__( 'Check this button if you want to entitle existing users to this policy.' )
+                ));
+                echo '</div>';
+            }
+            ?>
+
         </div> <!-- .form-group -->
 
         <div class="form-group">
