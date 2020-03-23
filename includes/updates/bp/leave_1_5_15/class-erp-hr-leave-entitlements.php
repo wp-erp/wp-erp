@@ -505,6 +505,11 @@ class ERP_HR_Leave_Entitlements extends \WP_Background_Process {
             $table_format[]                     = '%d';
         }
 
+        if ( isset( $this->request_data['policy_data']['activate'] ) && '1' == $this->request_data['policy_data']['activate'] ) {
+            $table_data['apply_for_new_users'] = $this->request_data['policy_data']['activate'];
+            $table_format[]                     = '%d';
+        }
+
         if ( false === $wpdb->insert( "{$wpdb->prefix}erp_hr_leave_policies_new", $table_data, $table_format ) ) {
             error_log(
                 print_r(
