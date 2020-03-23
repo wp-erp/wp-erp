@@ -289,7 +289,7 @@ function erp_hr_apply_policy_existing_employee( $policy_id ) {
                 'trn_type'      => 'leave_policies',
                 'day_in'        => $policy->days,
                 'day_out'       => 0,
-                'description'   => 'Generated',
+                'description'   => $policy->description != '' ? $policy->description : 'Generated',
                 'f_year'        => $policy->f_year,
             )
         );
@@ -646,7 +646,7 @@ function erp_hr_apply_policy_on_new_employee( $user_id ) {
             'trn_type'      => 'leave_policies',
             'day_in'        => $policy->days,
             'day_out'       => 0,
-            'description'   => 'Generated',
+            'description'   => $policy->description != '' ? $policy->description : 'Generated',
             'f_year'        => $policy->f_year,
         );
 
@@ -659,13 +659,69 @@ function erp_hr_apply_policy_on_new_employee( $user_id ) {
  *
  * @since 1.2.0
  *
+ * @since 1.6.0
+ *
  * @return void
  */
 function erp_hr_apply_scheduled_policies() {
-    $policies = Leave_Policy::where( 'activate', 2 )->get();
+    $policies = Leave_Policy::where( 'apply_for_new_users', 1 )->get();
 
     $policies->each( function ( $policy ) {
-        erp_hr_apply_policy_to_employee( $policy );
+
+        // 1. get all employee
+        $employees = erp_hr_get_employees( array(
+            'department'    => $policy->department_id,
+            'location'      => $policy->location_id,
+            'designation'   => $policy->designation_id,
+            'gender'        => $policy->gender,
+            'marital_status'    => $policy->marital,
+            'number'            => '-1',
+            'no_object'         => true,
+        ) );
+
+        if ( ! count( $employees ) ) {
+            return;
+        }
+
+        $employees = wp_list_pluck( $employees, 'display_name', 'user_id' );
+
+        // 2. get already entitled users and remove them from queue
+        if ( $policy->entitlements ) {
+            foreach ( $policy->entitlements as $entitlement ) {
+                if ( array_key_exists( $entitlement['user_id'], $employees ) ) {
+                    unset( $employees[ $entitlement['user_id'] ] );
+                }
+            }
+        }
+
+        if ( count( $employees ) ) {
+            $entitlement_bg = new \WeDevs\ERP\HRM\Leave_Entitlement_BG_Process();
+
+            foreach ( $employees as $employee_id => $employee_name ) {
+                $entitlement_bg->push_to_queue(
+                    array(
+                        'user_id'       => $employee_id,
+                        'leave_id'      => $policy->leave_id,
+                        'created_by'    => get_current_user_id(),
+                        'trn_id'        => $policy->id,
+                        'trn_type'      => 'leave_policies',
+                        'day_in'        => $policy->days,
+                        'day_out'       => 0,
+                        'description'   => $policy->description != '' ? $policy->description : 'Generated',
+                        'f_year'        => $policy->f_year,
+                    )
+                );
+            }
+
+            $entitlement_bg->save();
+
+            /**
+             * Run the queue, starting with leave entitlements data
+             */
+            $entitlement_bg->dispatch();
+        }
+
+        //erp_hr_apply_policy_to_employee( $policy );
     } );
 }
 
