@@ -241,11 +241,11 @@ final class WeDevs_ERP {
 
             require_once WPERP_INCLUDES . '/updates/bp/class-erp-acct-bg-process-1.5.0.php';
             require_once WPERP_INCLUDES . '/updates/bp/class-erp-acct-bg-process-1.5.2.php';
-
-            // `Leave` related background process files
-            require_once WPERP_INCLUDES . '/updates/bp/leave_1_6_0/class-erp-hr-leave-entitlements.php';
-            require_once WPERP_INCLUDES . '/updates/bp/leave_1_6_0/class-erp-hr-leave-request.php';
         }
+
+        // `Leave` related background process files
+        require_once WPERP_INCLUDES . '/updates/bp/leave_1_6_0/class-erp-hr-leave-entitlements.php';
+        require_once WPERP_INCLUDES . '/updates/bp/leave_1_6_0/class-erp-hr-leave-request.php';
 
         // cli command
         if ( defined( 'WP_CLI' ) && WP_CLI ) {
