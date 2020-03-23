@@ -1266,7 +1266,7 @@ class Form_Handler {
 
                     if ( $policy_exist ) {
                         $errors->add( esc_html__(
-                            sprintf( 'Existing financial year associated with policy won\'t be updated. e.g. %s', $fname )
+                            sprintf( 'Existing leave year associated with policy won\'t be updated. e.g. %s', $fname )
                             , 'erp' ) );
 
                         // we shouldn't update if there's an associated policy

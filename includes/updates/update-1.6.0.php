@@ -12,7 +12,7 @@ namespace WeDevs\ERP\HRM\Update;
 // this task not yet complete.
 
 
-class ERP_1_5_15 {
+class ERP_1_6_0 {
     /**
      * Database tables to create.
      *
@@ -361,9 +361,9 @@ class ERP_1_5_15 {
 
 }
 
-$erp_update_1_5_15 = new ERP_1_5_15();
-if ( $erp_update_1_5_15->create_db_tables() ) {
-    $erp_update_1_5_15->migrate_data();
+$erp_update_1_6_0 = new ERP_1_6_0();
+if ( $erp_update_1_6_0->create_db_tables() ) {
+    $erp_update_1_6_0->migrate_data();
 }
 
 
