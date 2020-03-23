@@ -633,9 +633,9 @@ function erp_hr_employee_terminate( $data ) {
 }
 
 /**
- * Get marital statuses
+ * Get employee genders
  *
- * @return array all the statuses
+ * @return array all genders
  */
 function erp_hr_get_genders( $select_text = null ) {
 
@@ -658,9 +658,9 @@ function erp_hr_get_genders( $select_text = null ) {
 }
 
 /**
- * Get marital statuses
+ * Get pay type
  *
- * @return array all the statuses
+ * @return array all pay types
  */
 function erp_hr_get_pay_type() {
     $types = array(
@@ -676,9 +676,9 @@ function erp_hr_get_pay_type() {
 }
 
 /**
- * Get marital statuses
+ * Get pay change reasons
  *
- * @return array all the statuses
+ * @return array all the pay change reasons
  */
 function erp_hr_get_pay_change_reasons() {
     $reasons = array(
