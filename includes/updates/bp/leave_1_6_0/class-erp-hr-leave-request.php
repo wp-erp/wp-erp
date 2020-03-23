@@ -363,7 +363,7 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
 
                 $days_count = $wpdb->get_var(
                     $wpdb->prepare(
-                        "SELECT SUM(days) FROM {$wpdb->prefix}erp_hr_leave_requests WHERE policy_id = %d and user_id = %d and id <= %d",
+                        "SELECT SUM(days) FROM {$wpdb->prefix}erp_hr_leave_requests WHERE policy_id = %d and user_id = %d and id <= %d and status = 1",
                         array( $this->request_data['policy_id'], $this->request_data['user_id'], $this->request_data['id'] )
                     )
                 );
@@ -534,7 +534,7 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
 
         if ( $erp_update_1_6_0->delete_old_db_tables() ) {
             $erp_update_1_6_0->alter_new_db_tables();
-            delete_option( 'policy_migrate_data_1_5_15' );
+            delete_option( 'policy_migrate_data_1_6_0' );
         }
     }
 }
