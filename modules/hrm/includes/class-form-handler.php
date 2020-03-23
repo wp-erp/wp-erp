@@ -1115,6 +1115,7 @@ class Form_Handler {
         $gender      = ! empty( $_POST['gender'] ) ? sanitize_text_field( wp_unslash( $_POST['gender'] ) ) : '-1';
         $marital     = ! empty( $_POST['marital'] ) ? sanitize_text_field( wp_unslash( $_POST['marital'] ) ) : '-1';
         $applicable  = ! empty( $_POST['applicable-from'] ) ? absint( wp_unslash( $_POST['applicable-from'] ) ) : 0;
+        $apply_for_new_users = ! empty( $_POST['apply-for-new-users'] ) ? 1 : 0;
 
         // no need to throw this error if editing
         if ( ! $id && empty( $leave_id ) ) {
@@ -1151,7 +1152,8 @@ class Form_Handler {
             'gender'          => $gender,
             'marital'         => $marital,
             'f_year'          => $f_year,
-            'applicable_from' => $applicable
+            'applicable_from' => $applicable,
+            'apply_for_new_users' => $apply_for_new_users
         );
 
         if ( $id ) {

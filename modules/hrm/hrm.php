@@ -80,6 +80,7 @@ class Human_Resource {
         require_once WPERP_HRM_PATH . '/includes/functions-reporting.php';
         require_once WPERP_HRM_PATH . '/includes/functions-announcement.php';
         require_once WPERP_HRM_PATH . '/includes/actions-filters.php';
+        require_once WPERP_HRM_PATH . '/includes/class-leave-entitlement-bg-process.php';
 
         // cli command
         if ( defined( 'WP_CLI' ) && WP_CLI ) {

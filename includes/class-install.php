@@ -409,7 +409,6 @@ May you enjoy the fruits of your labors for years to come'
             "CREATE TABLE {$wpdb->prefix}erp_hr_leave_policies (
                   id int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
                   leave_id smallint(5) UNSIGNED NOT NULL,
-                  old_policy_id int(11) UNSIGNED DEFAULT NULL,
                   description text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
                   days tinyint(3) UNSIGNED NOT NULL,
                   color varchar(10) DEFAULT NULL,
@@ -419,6 +418,7 @@ May you enjoy the fruits of your labors for years to come'
                   gender enum('-1','male','female','other') NOT NULL DEFAULT '-1',
                   marital enum('-1','single','married','widowed') NOT NULL DEFAULT '-1',
                   f_year smallint(5) UNSIGNED DEFAULT NULL,
+                  apply_for_new_users tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
                   carryover_days tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
                   carryover_uses_limit tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
                   encashment_days tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
