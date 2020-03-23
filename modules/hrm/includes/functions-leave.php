@@ -1712,7 +1712,7 @@ function erp_hr_leave_request_update_status( $request_id, $status, $comments = '
     }
 
     if ( ! array_key_exists( $request->entitlement->f_year, $financial_years ) ) {
-        return new WP_Error( 'invalid-entitlement', __( 'Error: You can not modify past financial year requests.', 'erp' ) );
+        return new WP_Error( 'invalid-entitlement', __( 'Error: You can not modify past leave year requests.', 'erp' ) );
     }
 
     if ( erp_hr_is_current_user_dept_lead() ) {
@@ -1958,7 +1958,7 @@ function erp_hr_delete_leave_request( $request_id ) {
 /**
  * Get leave requests status
  *
- * added filter `erp_hr_leave_approval_statuses` on version 1.5.15
+ * added filter `erp_hr_leave_approval_statuses` on version 1.6.0
  *
  * @since 0.1
  *
@@ -2034,6 +2034,7 @@ function erp_hr_leave_has_employee_entitlement( $employee_id, $policy_id, $year 
 
 /**
  * Get Leave Entitlement For A User
+ * @since 1.6.0
  * @param array $args
  */
 function erp_hr_leave_get_entitlement( $user_id, $leave_id, $start_date ) {
@@ -2042,7 +2043,7 @@ function erp_hr_leave_get_entitlement( $user_id, $leave_id, $start_date ) {
     $financial_year_dates = erp_get_financial_year_dates( $start_date );
     $f_year_ids = get_financial_year_from_date_range( $financial_year_dates['start'], $financial_year_dates['end'] );
     if ( empty( $f_year_ids ) ) {
-        return new WP_Error( 'invalid-financial-year', esc_attr__( 'No financial year found with given date.', 'erp' ) );
+        return new WP_Error( 'invalid-financial-year', esc_attr__( 'No leave year found with given date.', 'erp' ) );
     }
     $f_year = $f_year_ids[0];
 
@@ -2074,16 +2075,6 @@ function erp_hr_leave_get_entitlement( $user_id, $leave_id, $start_date ) {
  */
 function erp_hr_leave_get_entitlements( $args = array() ) {
     global $wpdb;
-
-    // get default financial year
-    /*
-    $f_year = 0;
-    $financial_year_dates = erp_get_financial_year_dates();
-    $f_year_ids = get_financial_year_from_date_range( $financial_year_dates['start'], $financial_year_dates['end'] );
-    if ( ! empty( $f_year_ids ) ) {
-        $f_year = $f_year_ids[0];
-    }
-    */
 
     $defaults = array(
         'user_id'       => 0,
