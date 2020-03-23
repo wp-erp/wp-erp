@@ -4310,3 +4310,6 @@ div.erp-nav-container.--show-secondary .-secondary {
 .new-leave-request-form #f_year {
   width: 162px;
 }
+.leave-requests th#reason {
+  width: 250px;
+}
