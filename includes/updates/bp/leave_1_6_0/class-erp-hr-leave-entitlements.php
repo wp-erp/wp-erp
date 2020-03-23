@@ -23,7 +23,7 @@ class ERP_HR_Leave_Entitlements extends \WP_Background_Process {
      *
      * @var string
      */
-    protected $action = 'erp_hr_leaves_entitlements_1_5_15';
+    protected $action = 'erp_hr_leaves_entitlements_1_6_0';
 
     protected $request_data = array(
         'task'          => 'task_required_data',

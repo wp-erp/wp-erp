@@ -255,13 +255,13 @@ class ERP_1_6_0 {
         global $bg_progess_hr_leaves_entitlements;
         global $bg_progess_hr_leave_requests;
 
-        $already_done = get_option( 'policy_migrate_data_1_5_15', 0 );
+        $already_done = get_option( 'policy_migrate_data_1_6_0', 0 );
 
         if ( $already_done ) {
             return;
         }
 
-        update_option( 'policy_migrate_data_1_5_15', 1 );
+        update_option( 'policy_migrate_data_1_6_0', 1 );
 
         /**
          * Get all leave entitlements from old db and add them to process queue.
