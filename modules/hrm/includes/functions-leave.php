@@ -1958,7 +1958,7 @@ function erp_hr_delete_leave_request( $request_id ) {
 /**
  * Get leave requests status
  *
- * added filter `erp_hr_leave_approval_statuses` on version 1.5.15
+ * added filter `erp_hr_leave_approval_statuses` on version 1.6.0
  *
  * @since 0.1
  *

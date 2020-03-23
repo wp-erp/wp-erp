@@ -171,7 +171,7 @@ function erp_hr_get_work_days_between_dates( $start_date, $end_date, $user_id = 
 /**
  * Check if we can apply sandwich rule between two dates
  *
- * @since  1.5.15
+ * @since  1.6.0
  *
  * @param  string $start_date
  * @param  string $end_date

@@ -525,15 +525,15 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
     protected function complete() {
         parent::complete();
 
-        if ( ! class_exists( '\WeDevs\ERP\HRM\Update\ERP_1_5_15' ) ) {
-            require_once WPERP_INCLUDES . '/updates/update-1.5.15.php';
+        if ( ! class_exists( '\WeDevs\ERP\HRM\Update\ERP_1_6_0' ) ) {
+            require_once WPERP_INCLUDES . '/updates/update-1.6.0.php';
         }
 
         // now delete all old db tables and data.
-        $erp_update_1_5_15 = new \WeDevs\ERP\HRM\Update\ERP_1_5_15();
+        $erp_update_1_6_0 = new \WeDevs\ERP\HRM\Update\ERP_1_6_0();
 
-        if ( $erp_update_1_5_15->delete_old_db_tables() ) {
-            $erp_update_1_5_15->alter_new_db_tables();
+        if ( $erp_update_1_6_0->delete_old_db_tables() ) {
+            $erp_update_1_6_0->alter_new_db_tables();
             delete_option( 'policy_migrate_data_1_5_15' );
         }
     }
