@@ -55,12 +55,12 @@ class Leave_Report_Employee_Based extends \WP_List_Table {
         if ( $which != 'top' ) {
             return;
         }
-        $selected_desingnation = ( isset( $_GET['filter_designation'] ) ) ? sanitize_text_field( wp_unslash( $_GET['filter_designation'] ) ) : 0;
-        $selected_department   = ( isset( $_GET['filter_department'] ) ) ? sanitize_text_field( wp_unslash( $_GET['filter_department'] ) ) : 0;
-        $selected_type         = ( isset( $_GET['filter_employment_type'] ) ) ? sanitize_text_field( wp_unslash( $_GET['filter_employment_type'] ) ) : '';
+        $selected_desingnation = ( isset( $_POST['filter_designation'] ) ) ? sanitize_text_field( wp_unslash( $_POST['filter_designation'] ) ) : 0;
+        $selected_department   = ( isset( $_POST['filter_department'] ) ) ? sanitize_text_field( wp_unslash( $_POST['filter_department'] ) ) : 0;
+        $selected_type         = ( isset( $_POST['filter_employment_type'] ) ) ? sanitize_text_field( wp_unslash( $_POST['filter_employment_type'] ) ) : '';
 
         $financial_years =  array( '' => esc_attr__( 'select year', 'erp') ) +  wp_list_pluck( Financial_Year::all(), 'fy_name', 'id' );
-        $selected_year         = ( isset( $_GET['filter_year'] ) ) ? sanitize_text_field( wp_unslash( $_GET['filter_year'] ) ) : $this->current_f_year;
+        $selected_year         = ( isset( $_POST['filter_year'] ) ) ? sanitize_text_field( wp_unslash( $_POST['filter_year'] ) ) : $this->current_f_year;
         ?>
         <div class="actions alignleft">
             <label class="screen-reader-text" for="new_role"><?php esc_html_e( 'Filter by Designation', 'erp' ) ?></label>
@@ -96,8 +96,6 @@ class Leave_Report_Employee_Based extends \WP_List_Table {
                 }
                 ?>
             </select>
-
-            <?php wp_nonce_field( 'epr-rep-leaves' ); ?>
             <?php submit_button( __( 'Filter' ), 'apply', 'filter_leave_report', false ); ?>
         </div>
         <?php
@@ -160,7 +158,10 @@ class Leave_Report_Employee_Based extends \WP_List_Table {
 
     }
 
-    protected function get_user_full_name( \WP_User $user ) {
+    protected function get_user_full_name( $user ) {
+        if ( ! $user instanceof \WP_User) {
+            return '';
+        }
         $name = array();
         if ( $user->first_name ) {
             $name[] = $user->first_name;
@@ -193,10 +194,10 @@ class Leave_Report_Employee_Based extends \WP_List_Table {
         $current_page = $this->get_pagenum();
         $offset       = ( $current_page - 1 ) * $per_page;
 
-        $selected_desingnation = ( isset( $_GET['filter_designation'] ) ) ? sanitize_text_field( wp_unslash( $_GET['filter_designation'] ) ) : 0;
-        $selected_department   = ( isset( $_GET['filter_department'] ) ) ? sanitize_text_field( wp_unslash( $_GET['filter_department'] ) ) : 0;
-        $selected_type         = ( isset( $_GET['filter_employment_type'] ) ) ? sanitize_text_field( wp_unslash( $_GET['filter_employment_type'] ) ) : '';
-        $selected_f_year         = ( isset( $_GET['filter_year'] ) ) ? sanitize_text_field( wp_unslash( $_GET['filter_year'] ) ) : $this->current_f_year;
+        $selected_desingnation = ( isset( $_POST['filter_designation'] ) ) ? sanitize_text_field( wp_unslash( $_POST['filter_designation'] ) ) : 0;
+        $selected_department   = ( isset( $_POST['filter_department'] ) ) ? sanitize_text_field( wp_unslash( $_POST['filter_department'] ) ) : 0;
+        $selected_type         = ( isset( $_POST['filter_employment_type'] ) ) ? sanitize_text_field( wp_unslash( $_POST['filter_employment_type'] ) ) : '';
+        $selected_f_year         = ( isset( $_POST['filter_year'] ) ) ? sanitize_text_field( wp_unslash( $_POST['filter_year'] ) ) : $this->current_f_year;
 
         $query = \WeDevs\ERP\HRM\Models\Employee::where( 'status', 'active' )->select( 'user_id' )->orderBy( 'hiring_date', 'desc' );
 

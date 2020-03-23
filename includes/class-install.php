@@ -546,7 +546,6 @@ May you enjoy the fruits of your labors for years to come'
                   days decimal(4,1) UNSIGNED NOT NULL DEFAULT '0.0',
                   amount decimal(20,2) NOT NULL DEFAULT '0.00',
                   total decimal(20,2) NOT NULL DEFAULT '0.00',
-                  status tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
                   f_year smallint(5) UNSIGNED NOT NULL,
                   created_at int(11) NOT NULL,
                   updated_at int(11) NOT NULL,

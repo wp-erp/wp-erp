@@ -1750,6 +1750,7 @@ function erp_hr_leave_request_update_status( $request_id, $status, $comments = '
         'leave_approval_status_id'  => 0,
         'user_id'                   => $request->user_id,
         'days'                      => 0,
+        'f_year'                    => $request->entitlement->f_year
     );
 
     //
