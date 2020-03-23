@@ -660,7 +660,7 @@ function erp_hr_get_genders( $select_text = null ) {
 /**
  * Get pay type
  *
- * @return array all the types
+ * @return array all pay types
  */
 function erp_hr_get_pay_type() {
     $types = array(
