@@ -6,6 +6,7 @@ use WeDevs\ERP\HRM\Models\Financial_Year;
 use WeDevs\ERP\HRM\Models\Leave_Approval_Status;
 use WeDevs\ERP\HRM\Models\Leave_Entitlement;
 use WeDevs\ERP\HRM\Models\Leave_Holiday;
+use WeDevs\ERP\HRM\Models\Leave_Policies_Segregation;
 use \WeDevs\ERP\HRM\Models\Leave_Policy;
 use \WeDevs\ERP\HRM\Models\Leave;
 use WeDevs\ERP\HRM\Models\Leave_Request;
@@ -232,6 +233,13 @@ function erp_hr_leave_insert_policy( $args = array() ) {
     if ( ! $leave_policy->wasRecentlyCreated ) {
         return new WP_Error( 'exists', esc_html__( 'Policy already exists.', 'erp' ) );
     }
+
+    // create policy segregation
+    $segre = isset( $_POST['segre'] ) ? array_map( 'absint', wp_unslash( $_POST['segre'] ) ) : [];
+
+    $segre['leave_policy_id'] = $leave_policy->id;
+
+    Leave_Policies_Segregation::create($segre);
 
     do_action( 'erp_hr_leave_insert_policy', $leave_policy->id );
 
@@ -538,6 +546,11 @@ function erp_hr_leave_insert_entitlement( $args = [] ) {
         // check if this user is a valid employee
         if ( ! $employee->is_employee() ) {
             return new WP_Error( 'invalid-employee-' . $fields['user_id'], esc_attr__( 'Error: Invalid Employee. No employee found with given ID: ', 'erp' ) . $fields['user_id'] );
+        }
+
+        // check employee status
+        if ( $employee->get_status() !== 'active' ) {
+            return new WP_Error( 'invalid-employee-' . $fields['user_id'], esc_attr__( 'Error: Invalid Employee. Employee job status is not active: ', 'erp' ) . $fields['user_id'] );
         }
 
         // get policy data
