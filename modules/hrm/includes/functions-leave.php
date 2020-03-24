@@ -537,13 +537,13 @@ function erp_hr_leave_insert_entitlement( $args = [] ) {
 
         // check if this user is a valid employee
         if ( ! $employee->is_employee() ) {
-            return new WP_Error( 'invalid-employee-' . $fields['user_id'], esc_attr__( 'Error: Invalid Employee. No employee found with given ID.', 'erp' ) );
+            return new WP_Error( 'invalid-employee-' . $fields['user_id'], esc_attr__( 'Error: Invalid Employee. No employee found with given ID: ', 'erp' ) ) . $fields['user_id'];
         }
 
         // get policy data
         $policy = Leave_Policy::find( $fields['trn_id'] );
         if ( ! $policy ) {
-            return new WP_Error( 'invalid-policy-' . $fields['trn_id'], esc_attr__( 'Error: Invalid Policy. No leave policy found with given ID.', 'erp' ) );
+            return new WP_Error( 'invalid-policy-' . $fields['trn_id'], esc_attr__( 'Error: Invalid Policy. No leave policy found with given ID: ', 'erp' ) ) . $fields['trn_id'] ;
         }
 
         // check policy filter is same as employee filters
@@ -556,42 +556,39 @@ function erp_hr_leave_insert_entitlement( $args = [] ) {
             return new WP_Error( 'invalid-employee-' . $fields['user_id'], esc_attr__( 'Error: Invalid Employee. Policy does not match with employee profile.', 'erp' ) );
         }
 
-        // get employee joining date and compare it with policy's applicable form date
-        if ( $employee->get_hiring_date() ) {
-            // get hiring date
-            $hiring_date = erp_current_datetime()->modify( $employee->get_hiring_date() );
+        if ( $policy->applicable_from_days && $policy->applicable_from_days > 0 ) {
+            // get employee joining date and compare it with policy's applicable form date
+            if ( $employee->get_hiring_date() ) {
+                // get hiring date
+                $hiring_date = erp_current_datetime()->modify( $employee->get_hiring_date() )->setTime( 0, 0, 0 );
 
-            // get current date
-            $today = erp_current_datetime();
+                // get current date
+                $today = erp_current_datetime()->setTime( 0, 0, 0 );
 
-            // check if hiring date in the future
-            $interval = date_diff( $hiring_date, $today );
+                // check if hiring date in the future
+                $interval = date_diff( $hiring_date, $today );
 
-            if ( $interval->invert == 1 ) {
-                return new WP_Error( 'invalid-joining-date', esc_attr__( 'Error: Employee joining date is in the future.', 'erp' ) );
-            }
+                if ( $interval->invert == 1 ) {
+                    return new WP_Error( 'invalid-joining-date', esc_attr__( 'Error: Employee joining date is in the future: ', 'erp' ) ) . $fields['user_id'];
+                }
 
-            $compare_with = $hiring_date->modify( '+' . $policy->applicable_from_days . ' days' );
+                $compare_with = $hiring_date->modify( '+ ' . $policy->applicable_from_days . ' days' );
 
-            if ( $compare_with > $today ) {
-                return new WP_Error( 'invalid-joining-date', esc_attr__( 'Error: Employee is not eligible for this leave policy yet.', 'erp' ) );
-            }
-
-            // check if this a new employee and then apply segregation rule
-            if ( get_option( 'erp_pro_seg_leave' ) === 'yes'  && $compare_with < $today ) {
-                $interval = date_diff( $compare_with, $today );
-                // segregation  will apply max 30 days after applicable_form days.
-                if ( $interval->days <= 30 ) {
-                    // check if segregation assigned for this policy.
-                    $current_month = strtolower( $today->format('M') );
-                    $current_month = $current_month === 'dec' ? 'decem' : $current_month;
-                    $segregation = $policy->segregation;
-                    if ( array_key_exists( $current_month, $segregation ) && $segregation[ $current_month ] != 0 ) {
-                        $fields['day_in'] = $segregation[ $current_month ];
-                    }
+                if ( $compare_with > $today ) {
+                    return new WP_Error( 'invalid-joining-date', esc_attr__( 'Error: Employee is not eligible for this leave policy yet: ', 'erp' ) ) . $fields['user_id'];
                 }
             }
+            else {
+                return new WP_Error( 'invalid-joining-date', esc_attr__( 'Error: Employee joining date is invalid: ', 'erp' ) ) . $fields['user_id'] ;
+            }
         }
+    }
+
+    $fields = apply_filters( 'erp_hr_leave_before_insert_new_entitlement', $fields );
+
+    // bailout in case of errors
+    if ( is_wp_error( $fields ) ) {
+        return $fields;
     }
 
     // add this policy to database.
