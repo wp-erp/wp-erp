@@ -537,13 +537,13 @@ function erp_hr_leave_insert_entitlement( $args = [] ) {
 
         // check if this user is a valid employee
         if ( ! $employee->is_employee() ) {
-            return new WP_Error( 'invalid-employee-' . $fields['user_id'], esc_attr__( 'Error: Invalid Employee. No employee found with given ID: ', 'erp' ) ) . $fields['user_id'];
+            return new WP_Error( 'invalid-employee-' . $fields['user_id'], esc_attr__( 'Error: Invalid Employee. No employee found with given ID: ', 'erp' ) . $fields['user_id'] );
         }
 
         // get policy data
         $policy = Leave_Policy::find( $fields['trn_id'] );
         if ( ! $policy ) {
-            return new WP_Error( 'invalid-policy-' . $fields['trn_id'], esc_attr__( 'Error: Invalid Policy. No leave policy found with given ID: ', 'erp' ) ) . $fields['trn_id'] ;
+            return new WP_Error( 'invalid-policy-' . $fields['trn_id'], esc_attr__( 'Error: Invalid Policy. No leave policy found with given ID: ', 'erp' )  . $fields['trn_id'] ) ;
         }
 
         // check policy filter is same as employee filters
@@ -569,17 +569,17 @@ function erp_hr_leave_insert_entitlement( $args = [] ) {
                 $interval = date_diff( $hiring_date, $today );
 
                 if ( $interval->invert == 1 ) {
-                    return new WP_Error( 'invalid-joining-date', esc_attr__( 'Error: Employee joining date is in the future: ', 'erp' ) ) . $fields['user_id'];
+                    return new WP_Error( 'invalid-joining-date', esc_attr__( 'Error: Employee joining date is in the future: ' , 'erp' )  . $fields['user_id'] );
                 }
 
                 $compare_with = $hiring_date->modify( '+ ' . $policy->applicable_from_days . ' days' );
 
                 if ( $compare_with > $today ) {
-                    return new WP_Error( 'invalid-joining-date', esc_attr__( 'Error: Employee is not eligible for this leave policy yet: ', 'erp' ) ) . $fields['user_id'];
+                    return new WP_Error( 'invalid-joining-date', esc_attr__( 'Error: Employee is not eligible for this leave policy yet: ', 'erp' ) . $fields['user_id'] );
                 }
             }
             else {
-                return new WP_Error( 'invalid-joining-date', esc_attr__( 'Error: Employee joining date is invalid: ', 'erp' ) ) . $fields['user_id'] ;
+                return new WP_Error( 'invalid-joining-date', esc_attr__( 'Error: Employee joining date is invalid: ', 'erp' ). $fields['user_id'] ) ;
             }
         }
     }
