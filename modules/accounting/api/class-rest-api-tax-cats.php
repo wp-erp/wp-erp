@@ -102,22 +102,6 @@ class Tax_Cats_Controller extends \WeDevs\ERP\API\REST_Controller {
 			]
         );
 
-        register_rest_route(
-            $this->namespace,
-            '/' . $this->rest_base . '/pay',
-            [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'pay_tax' ],
-					'args'                => [],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_create_sales_payment' );
-					},
-				],
-				'schema' => [ $this, 'get_item_schema' ],
-			]
-        );
-
     }
 
     /**
