@@ -2665,44 +2665,56 @@ function erp_get_financial_year_dates( $date = null ) {
  * Get finanicial start and end years that a date belongs to
  *
  * @since 1.2.0
- * @since 1.6.0 added timestamp support
+ * @since 1.6.0 rewritten whole function
  *
- * @param string $date
+ * @param null|string|int $date
  *
- * @return array
+ * @return null|\WeDevs\ERP\HRM\Models\Financial_Year
  */
-function get_financial_year_from_date( $date ) {
-    $fy_start_month = erp_get_option( 'gen_financial_month', 'erp_settings_general', 1 );
-    $fy_start_month = absint( $fy_start_month );
+function get_financial_year_from_date( $date = null ) {
+    global $wpdb;
+
+    if ( empty( $date ) ) {
+        $date = erp_current_datetime()->setTime( 0, 0, 0 )->getTimestamp();
+    }
 
     if ( ! is_numeric( $date ) ) {
-        $date_timestamp = strtotime( $date );
+        if ( is_valid_date( $date ) ) {
+            $date = erp_current_datetime()->modify( $date )->setTime( 0, 0, 0 )->getTimestamp();
+        }
+        else {
+            return null;
+        }
     }
-    else {
-        $date_timestamp = $date;
+
+    $query = $wpdb->prepare(
+        "SELECT id FROM {$wpdb->prefix}erp_hr_financial_years
+                    WHERE (start_date <= %d AND end_date >= %d)
+                    OR (start_date >= %d and start_date <= %d)
+                    OR (end_date >= %d and end_date <= %d)
+                    ",
+        array(
+            $date, $date,
+            $date, $date,
+            $date, $date
+        )
+    );
+
+    $fid = $wpdb->get_var(
+        $query
+    );
+
+    if ( null === $fid ) {  // no financial year found with given range
+        return $fid;
     }
 
-    $date_year      = absint( date( 'Y', $date_timestamp ) );
-    $date_month     = absint( date( 'n', $date_timestamp ) );
+    $financial_year = \WeDevs\ERP\HRM\Models\Financial_Year::find( $fid );
 
-    if ( 1 === $fy_start_month ) {
-        return [
-            'start' => $date_year,
-            'end'   => $date_year
-        ];
-
-    } else if ( $date_month <= ( $fy_start_month - 1 ) ) {
-        return [
-            'start' => ( $date_year - 1 ),
-            'end'   => $date_year
-        ];
-
-    } else {
-        return [
-            'start' => $date_year,
-            'end'   => ( $date_year + 1 )
-        ];
+    if ( ! $financial_year ) {
+        return null;
     }
+
+    return $financial_year;
 }
 
 /**
