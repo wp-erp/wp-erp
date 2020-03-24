@@ -1725,14 +1725,6 @@ function erp_hr_leave_request_update_status( $request_id, $status, $comments = '
         return new WP_Error( 'invalid-entitlement', __( 'Error: You can not modify past leave year requests.', 'erp' ) );
     }
 
-    if ( erp_hr_is_current_user_dept_lead() ) {
-        $is_valid = erp_hr_match_user_dept_lead_with_current_user( $request->user_id );
-
-        if ( ! $is_valid ) {
-            return new WP_Error( 'no-permission', esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
-        }
-    }
-
     // approval status table data
     $approval_status_data = array(
         'leave_request_id'      => $request_id,
@@ -3008,14 +3000,6 @@ function erp_hr_get_department_leads_id() {
  * @return bool
  */
 function erp_hr_is_current_user_dept_lead() {
-    if ( ! class_exists( '\weDevs\ERP_PRO\HR\Leave\Multilevel' ) ) {
-        return false;
-    }
-
-    if ( get_option('erp_pro_multilevel_approval') !== 'yes' ) {
-        return false;
-    }
-
     $leads = erp_hr_get_department_leads_id();
     $logged_in_us = get_current_user_id();
 
