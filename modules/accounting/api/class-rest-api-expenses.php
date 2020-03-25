@@ -65,7 +65,6 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
 						return current_user_can( 'erp_ac_view_expense' );
 					},
 				],
-                /*
 				[
 					'methods'             => WP_REST_Server::EDITABLE,
 					'callback'            => [ $this, 'update_expense' ],
@@ -74,7 +73,6 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
 						return current_user_can( 'erp_ac_create_expenses_voucher' );
 					},
 				],
-                */
 				'schema' => [ $this, 'get_public_item_schema' ],
 			]
         );
