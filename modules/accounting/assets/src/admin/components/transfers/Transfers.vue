@@ -66,7 +66,7 @@ export default {
 
     methods: {
         get_transfer_list() {
-            HTTP.get('/accounts/list').then(res => {
+            HTTP.get('/accounts/transfers/list').then(res => {
                 this.transfer_list = res.data;
                 this.$store.dispatch('spinner/setSpinner', false);
             }).catch(error => {
