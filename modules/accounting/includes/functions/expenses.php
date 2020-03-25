@@ -157,7 +157,7 @@ function erp_acct_format_check_line_items( $voucher_no ) {
         LEFT JOIN {$wpdb->prefix}erp_acct_expense_details AS expense_detail ON expense_detail.trn_no = expense.voucher_no
         LEFT JOIN {$wpdb->prefix}erp_acct_ledgers AS ledger ON expense_detail.ledger_id = ledger.id
 
-        WHERE expense.voucher_no = 3",
+        WHERE expense.voucher_no={$voucher_no} AND expense.trn_by = 3",
         $voucher_no
     );
 
