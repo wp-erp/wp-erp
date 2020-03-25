@@ -317,7 +317,7 @@ class Leave_Requests_List_Table extends \WP_List_Table {
             's'       => isset( $_GET['s'] ) ? sanitize_text_field( wp_unslash( $_GET['s'] ) ) : ''
         );
 
-        if ( erp_hr_is_current_user_dept_lead() ) {
+        if ( erp_hr_is_current_user_dept_lead() && ! current_user_can( 'erp_leave_manage' ) ) {
             $args['lead'] = get_current_user_id();
         }
 
