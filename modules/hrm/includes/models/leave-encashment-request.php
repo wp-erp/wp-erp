@@ -64,6 +64,17 @@ class Leave_Encashment_Request extends Model {
     }
 
     /**
+     * Relation to User model
+     *
+     * @since 1.6.0
+     *
+     * @return object
+     */
+    public function approver() {
+        return $this->belongsTo( 'WeDevs\ORM\WP\User', 'approved_by', 'ID' );
+    }
+
+    /**
      * Relation to Financial Year
      *
      * @since 1.6.0
