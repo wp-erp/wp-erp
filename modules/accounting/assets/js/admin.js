@@ -23867,7 +23867,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
     get_transfer_list: function get_transfer_list() {
       var _this = this;
 
-      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('/accounts/list').then(function (res) {
+      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('/accounts/transfers/list').then(function (res) {
         _this.transfer_list = res.data;
 
         _this.$store.dispatch('spinner/setSpinner', false);
@@ -24204,7 +24204,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
     getVoucher: function getVoucher() {
       var _this2 = this;
 
-      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get("/accounts/transfer/".concat(this.$route.params.id)).then(function (response) {
+      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get("/accounts/transfers/".concat(this.$route.params.id)).then(function (response) {
         _this2.voucher = response.data;
         _this2.print_data = _this2.voucher;
 

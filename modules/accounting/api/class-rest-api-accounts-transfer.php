@@ -82,7 +82,7 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         register_rest_route(
             $this->namespace,
-            '/' . $this->rest_base . '/transfer/(?P<id>[\d]+)',
+            '/' . $this->rest_base . '/transfers/(?P<id>[\d]+)',
             [
 				[
 					'methods'             => WP_REST_Server::READABLE,
@@ -97,7 +97,7 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         register_rest_route(
             $this->namespace,
-            '/' . $this->rest_base . '/list',
+            '/' . $this->rest_base . '/transfers/list',
             [
 				[
 					'methods'             => WP_REST_Server::READABLE,
