@@ -460,7 +460,7 @@ May you enjoy the fruits of your labors for years to come'
                   leave_id smallint(6) UNSIGNED NOT NULL,
                   created_by bigint(20) UNSIGNED NOT NULL,
                   trn_id bigint(20) UNSIGNED NOT NULL,
-                  trn_type enum('leave_policies','leave_approval_status','leave_encashment_requests','leave_entitlements','unpaid_leave','leave_encashment', 'leave_carryforward', 'manual_leave_policies', 'Accounts', 'others', 'leave_accrual') NOT NULL DEFAULT 'leave_policies',
+                  trn_type enum('leave_policies','leave_approval_status','leave_encashment_requests','leave_entitlements','unpaid_leave','leave_encashment', 'leave_carryforward', 'manual_leave_policies', 'Accounts', 'others', 'leave_accrual', 'carry_forward_leave_expired') NOT NULL DEFAULT 'leave_policies',
                   day_in decimal(4,1) UNSIGNED NOT NULL DEFAULT '0.0',
                   day_out decimal(4,1) UNSIGNED NOT NULL DEFAULT '0.0',
                   description text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,

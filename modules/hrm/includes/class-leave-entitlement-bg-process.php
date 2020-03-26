@@ -10,8 +10,8 @@ if ( ! class_exists( 'WP_Background_Process', false ) ) {
 }
 
 /**
- * Class Accrual_BG_Process
- * @package weDevs\ERP_PRO\HR\Leave
+ * Class Leave_Entitlement_BG_Process
+ * @package WeDevs\ERP\HRM
  */
 class Leave_Entitlement_BG_Process extends \WP_Background_Process {
 
