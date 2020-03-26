@@ -144,15 +144,10 @@ class Leave_Requests_List_Table extends \WP_List_Table {
                 return sprintf( '<span class="green">%d %s</span>', number_format_i18n( $item->entitlement ), __( 'days', 'erp' ) );
 
             case 'available':
-                return sprintf( '<span class="green">%s %s</span>', erp_number_format_i18n( $item->available ), __( 'days', 'erp' ) );
+                return floatval( $item->available ) > 0 ? sprintf( '<span class="green">%s %s</span>', erp_number_format_i18n( $item->available ), __( 'days', 'erp' ) ) : '-';
 
             case 'extra':
-                $class = 'green';
-                if ( intval( $item->extra_leaves ) > 0 ) {
-                    $class = 'red';
-                }
-
-                return sprintf( '<span class="%s">%s %s</span>', $class, erp_number_format_i18n( $item->extra_leaves ), __( 'days', 'erp' ) );
+                return floatval( $item->extra_leaves ) > 0 ? sprintf( '<span class="red">%s %s</span>', erp_number_format_i18n( $item->extra_leaves ), __( 'days', 'erp' ) ) : '-';
 
             case 'message':
                 return stripslashes( $item->message );
