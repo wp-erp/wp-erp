@@ -37,8 +37,8 @@ class Entitlement_List_Table extends \WP_List_Table {
             'valid_from'    => __( 'Valid From', 'erp' ),
             'valid_to'      => __( 'Valid To', 'erp' ),
             'days'          => __( 'Days', 'erp' ),
-            //'scheduled'    => __( 'Scheduled', 'erp' ),
             'available'     => __( 'Available', 'erp' ),
+            'spent'         => __( 'Spent', 'erp' ),
             'extra'         => __( 'Extra Leaves', 'erp' ),
         );
 
@@ -161,29 +161,39 @@ class Entitlement_List_Table extends \WP_List_Table {
         }
 
         if ( array_key_exists( $entitlement->id, $this->entitlement_data ) && ! is_wp_error( $this->entitlement_data[ $entitlement->id ] ) ) {
-            $str = sprintf( '<span class="green">%s %s</span>', erp_number_format_i18n( $this->entitlement_data[ $entitlement->id ]['available'] ), __( 'days', 'erp' ) );
+            $available = floatval( $this->entitlement_data[ $entitlement->id ]['available'] );
+            $str =  $available > 0 ? sprintf( '<span class="green">%s %s</span>', erp_number_format_i18n( $available ), __( 'days', 'erp' ) ) : '-';
         }
 
         return $str;
     }
 
-    function column_extra( $entitlement ) {
-        $extra_leave = 0;
+    function column_spent( $entitlement ) {
+        $str = '';
 
         if ( ! array_key_exists( $entitlement->id, $this->entitlement_data ) ) {
             $this->entitlement_data[ $entitlement->id ] = erp_hr_leave_get_balance_for_single_entitlement( $entitlement->id );
         }
 
         if ( array_key_exists( $entitlement->id, $this->entitlement_data ) && ! is_wp_error( $this->entitlement_data[ $entitlement->id ] ) ) {
-            $extra_leave = $this->entitlement_data[ $entitlement->id ]['extra_leave'];
+            $spent = floatval( $this->entitlement_data[ $entitlement->id ]['spent'] );
+            $str = $spent > 0 ? sprintf( '<span class="green">%s %s</span>', erp_number_format_i18n( $spent ), __( 'days', 'erp' ) ) : '-';
         }
 
-        $class = 'green';
-        if ( intval( $extra_leave ) > 0 ) {
-            $class = 'red';
+        return $str;
+    }
+
+    function column_extra( $entitlement ) {
+        $str = '';
+
+        if ( ! array_key_exists( $entitlement->id, $this->entitlement_data ) ) {
+            $this->entitlement_data[ $entitlement->id ] = erp_hr_leave_get_balance_for_single_entitlement( $entitlement->id );
         }
 
-        $str = sprintf( '<span class="%s">%s %s</span>', $class, erp_number_format_i18n( $extra_leave ), __( 'days', 'erp' ) );
+        if ( array_key_exists( $entitlement->id, $this->entitlement_data ) && ! is_wp_error( $this->entitlement_data[ $entitlement->id ] ) ) {
+            $extra_leave = floatval( $this->entitlement_data[ $entitlement->id ]['extra_leave'] );
+            $str = $extra_leave > 0 ? sprintf( '<span class="red">%s %s</span>', erp_number_format_i18n( $extra_leave ), __( 'days', 'erp' ) ) : '-';
+        }
 
         return $str;
     }

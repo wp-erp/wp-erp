@@ -1810,18 +1810,17 @@ class Employee {
         $f_year_tbl = $wpdb->prefix . 'erp_hr_financial_years';
         $leave_tbl  = $wpdb->prefix . 'erp_hr_leaves';
 
-        $financial_year_dates = erp_get_financial_year_dates();
-        $f_year_ids = get_financial_year_from_date_range( $financial_year_dates['start'], $financial_year_dates['end'] );
+        $f_year = get_financial_year_from_date();
 
         $result = array();
 
-        if ( empty( $f_year_ids ) ) {
+        if ( empty( $f_year ) ) {
             return $result;
         }
 
         $defaults             = array(
             'policy_id' => 0,       // @since 1.5.1 will be use as leave_id
-            'f_year'    => $f_year_ids[0],
+            'f_year'    => $f_year->id,
             'number'    => 20,
             'offset'    => 0,
             'orderby'   => "$ent_tbl.created_at",
@@ -1870,16 +1869,15 @@ class Employee {
      * @return array
      */
     public function get_leave_summary( $date = null, $policy_id = null ) {
-        $financial_year_dates = erp_get_financial_year_dates( $date );
-        $f_year_ids = get_financial_year_from_date_range( $financial_year_dates['start'], $financial_year_dates['end'] );
+        $f_year = get_financial_year_from_date( $date );
 
         $result = array();
 
-        if ( empty( $f_year_ids ) ) {
+        if ( empty( $f_year ) ) {
             return $result;
         }
 
-        $result =  erp_hr_leave_get_balance( $this->user_id, $f_year_ids[0] );
+        $result =  erp_hr_leave_get_balance( $this->user_id, $f_year->id );
 
         return erp_array_to_object( $result );
     }

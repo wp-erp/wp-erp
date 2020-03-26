@@ -114,14 +114,6 @@ function erp_hr_get_work_days_between_dates( $start_date, $end_date, $user_id = 
         $end_date = erp_current_datetime()->setTimestamp( $end_date )->format( 'Y-m-d' );
     }
 
-    if ( is_numeric( $start_date ) ) {
-        $start_date = erp_current_datetime()->setTimestamp( $start_date )->format( 'Y-m-d' );
-    }
-
-    if ( is_numeric( $end_date ) ) {
-        $end_date = erp_current_datetime()->setTimestamp( $end_date )->format( 'Y-m-d' );
-    }
-
     $between_dates = erp_extract_dates( $start_date, $end_date );
 
     if ( is_wp_error( $between_dates ) ) {

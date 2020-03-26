@@ -72,9 +72,8 @@ if ( $balance ) {
 $requests   = $employee->get_leave_requests( array( 'status' => 'all' ) );
 
 // get current financial year
-$financial_year = erp_get_financial_year_dates();
-$fids = get_financial_year_from_date_range( $financial_year['start'], $financial_year['end'] );
-$f_year = is_array( $fids ) && ! empty( $fids ) ? $fids[0] : 0;
+$financial_year = get_financial_year_from_date();
+$f_year = ! empty( $financial_year ) ? $financial_year->id : 0;
 
 // get leave policies
 $policies = $employee->get_leave_policies();

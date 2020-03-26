@@ -67,6 +67,11 @@ foreach ( Financial_Year::all() as $f_year ) {
         ) ); ?>
     </div>
 
+    <div class="row">
+        <label for="leave_document"><?php echo esc_html__( 'Document', 'wp-erp' );?></label>
+        <input type="file" name="leave_document[]" id="leave_document" multiple>
+    </div>
+
     <input type="hidden" name="employee_id" id="erp-hr-leave-req-employee-id" value="<?php echo esc_html( get_current_user_id() ); ?>">
     <input type="hidden" name="action" value="erp-hr-leave-req-new">
     <?php wp_nonce_field( 'erp-leave-req-new' ); ?>

@@ -28,7 +28,7 @@
             }
             ?>
 
-            <form action="" method="post" class="new-leave-request-form">
+            <form action="" method="post" class="new-leave-request-form" enctype="multipart/form-data">
 
                 <?php if ( current_user_can( 'erp_leave_create_request' ) ) { ?>
                     <div class="row">
@@ -99,6 +99,12 @@
                         'custom_attr' => array( 'cols' => 30, 'rows' => 3, 'disabled' => 'disabled' )
                     ) ); ?>
                 </div>
+
+                <div class="row">
+                    <label for="leave_document"><?php echo esc_html__( 'Document', 'wp-erp' );?></label>
+                    <input type="file" name="leave_document[]" id="leave_document" multiple>
+                </div>
+
                 <input type="hidden" name="erp-action" value="hr-leave-req-new">
                 <?php wp_nonce_field( 'erp-leave-req-new' ); ?>
                 <?php submit_button( __( 'Submit Request', 'erp' ), 'primary', 'submit', true, array( 'disabled' => 'disabled' )  ); ?>
