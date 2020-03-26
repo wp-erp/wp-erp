@@ -808,6 +808,7 @@ function erp_hr_leave_insert_holiday( $args = array() ) {
  * @return array
  */
 function erp_hr_leave_get_policies( $args = array() ) {
+    global $wpdb;
 
     $defaults = array(
         'number'        => 99,
@@ -854,7 +855,8 @@ function erp_hr_leave_get_policies( $args = array() ) {
     $policies  = wp_cache_get( $cache_key, 'erp' );
 
     if ( false === $policies ) {
-        $policies = Leave_Policy::skip( $args['offset'] )
+        $policies = Leave_Policy::select( \WeDevs\ORM\Eloquent\Facades\DB::raw( 'SQL_CALC_FOUND_ROWS *' ))
+                                ->skip( $args['offset'] )
                                 ->take( $args['number'] )
                                 ->orderBy( $args['orderby'], $args['order'] );
 
@@ -883,6 +885,8 @@ function erp_hr_leave_get_policies( $args = array() ) {
         }
 
         $policies = $policies->get();
+
+        $total_row_found = absint( $wpdb->get_var( "SELECT FOUND_ROWS()" ) );
 
         $formatted_data = array();
 
@@ -913,7 +917,7 @@ function erp_hr_leave_get_policies( $args = array() ) {
         wp_cache_set( $cache_key, $policies, 'erp' );
     }
 
-    return $policies;
+    return array( 'data' => $policies, 'total' => $total_row_found );
 }
 
 /**
@@ -1093,7 +1097,8 @@ function erp_hr_delete_holidays( $holidays_id ) {
  *
  */
 function erp_hr_leave_get_policies_dropdown_raw( $args = array() ) {
-    return wp_list_pluck( erp_hr_leave_get_policies( $args ), 'name', 'id' );
+    $data = erp_hr_leave_get_policies( $args );
+    return wp_list_pluck( $data['data'], 'name', 'id' );
 }
 
 /**

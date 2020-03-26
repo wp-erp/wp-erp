@@ -295,10 +295,12 @@ class Leave_Policies_List_Table extends \WP_List_Table {
             $args['order'] = sanitize_text_field( wp_unslash( $_REQUEST['order'] ) ) ;
         }
 
-        $this->items  = erp_hr_leave_get_policies( $args );
+        $data = erp_hr_leave_get_policies( $args );
+
+        $this->items  = $data['data'];
 
         $this->set_pagination_args( array(
-            'total_items' => erp_hr_count_leave_policies(),
+            'total_items' => $data['total'],
             'per_page'    => $per_page
         ) );
     }
