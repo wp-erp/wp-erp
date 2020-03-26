@@ -254,7 +254,7 @@ function erp_html_form_input( $args = array() ) {
 
             <script type="text/javascript">
                 jQuery(function($) {
-                    var pick_files = '<?php echo array_map( 'esc_html', wp_unslash( $pick_files ) ); ?>',
+                    var pick_files = '<?php echo esc_html( $pick_files ); ?>',
                         id         = '<?php echo esc_html( $id ); ?>',
                         drop_jone  = '<?php echo esc_html( $drop ); ?>',
                         action     = '<?php echo esc_html( $action ); ?>',

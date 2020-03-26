@@ -42,11 +42,12 @@ class Leave_Requests_List_Table extends \WP_List_Table {
             return;
         }
 
-        $financial_year = erp_get_financial_year_dates();
-        $f_ids = get_financial_year_from_date_range( $financial_year['start'], $financial_year['end'] );
+        $f_year = get_financial_year_from_date();
+        $f_year = ! empty( $f_year ) ? $f_year->id : '';
+
         $financial_years =  array( '' => esc_attr__( 'select year', 'erp') ) +  wp_list_pluck( Financial_Year::all(), 'fy_name', 'id' );
 
-        $selected_year = ( isset( $_GET['filter_year'] ) ) ? absint( wp_unslash( $_GET['filter_year'] ) ) : '';
+        $selected_year = ( isset( $_GET['filter_year'] ) ) ? absint( wp_unslash( $_GET['filter_year'] ) ) : $f_year;
         ?>
         <div class="alignleft actions">
 
@@ -91,12 +92,14 @@ class Leave_Requests_List_Table extends \WP_List_Table {
             'available' => __( 'Available', 'erp' ),
             'extra'         => __( 'Extra Leaves', 'erp' ),
             'status'    => __( 'Status', 'erp' ),
+            'leave_attachment'  => __( 'Attachment', 'erp' ),
             'reason'    => __( 'Leave Reason', 'erp' ),
-
         );
+
         if ( isset( $_GET['status'] ) && $_GET['status'] == 3 ) {
             $columns['message'] =  __( 'Reject Reason', 'erp' );
         }
+
         return $columns;
     }
 
@@ -142,18 +145,23 @@ class Leave_Requests_List_Table extends \WP_List_Table {
                 return sprintf( '<span class="green">%d %s</span>', number_format_i18n( $item->entitlement ), __( 'days', 'erp' ) );
 
             case 'available':
-                return sprintf( '<span class="green">%s %s</span>', erp_number_format_i18n( $item->available ), __( 'days', 'erp' ) );
+                return floatval( $item->available ) > 0 ? sprintf( '<span class="green">%s %s</span>', erp_number_format_i18n( $item->available ), __( 'days', 'erp' ) ) : '-';
 
             case 'extra':
-                $class = 'green';
-                if ( intval( $item->extra_leaves ) > 0 ) {
-                    $class = 'red';
-                }
-
-                return sprintf( '<span class="%s">%s %s</span>', $class, erp_number_format_i18n( $item->extra_leaves ), __( 'days', 'erp' ) );
+                return floatval( $item->extra_leaves ) > 0 ? sprintf( '<span class="red">%s %s</span>', erp_number_format_i18n( $item->extra_leaves ), __( 'days', 'erp' ) ) : '-';
 
             case 'message':
                 return stripslashes( $item->message );
+
+            case 'leave_attachment' :
+                $attachment       = "";
+                $leave_attachment = get_user_meta( $item->user_id, 'leave_document_' . $item->id ) ;
+                foreach ( $leave_attachment as $la ) {
+                    $file_link = wp_get_attachment_url( $la );
+                    $file_name = basename( $file_link );
+                    $attachment .= "<a target='_blank' href='{$file_link}'>{$file_name}</a><br>";
+                }
+                return $attachment;
 
             default:
                 return isset( $item->$column_name ) ? $item->$column_name : '';
@@ -306,12 +314,16 @@ class Leave_Requests_List_Table extends \WP_List_Table {
         $offset                = ( $current_page - 1 ) * $per_page;
         $this->page_status     = isset( $_GET['status'] ) ? sanitize_text_field( wp_unslash( $_GET['status'] ) ) : '2';
 
+        // get current year as default f_year
+        $f_year = get_financial_year_from_date();
+        $f_year = ! empty( $f_year ) ? $f_year->id : '';
+
         // only necessary because we have sample data
         $args = array(
             'offset'  => $offset,
             'number'  => $per_page,
             'status'  => $this->page_status,
-            'f_year'  => isset( $_GET['filter_year'] ) ? sanitize_text_field( wp_unslash( $_GET['filter_year'] ) ) : '',
+            'f_year'  => isset( $_GET['filter_year'] ) ? sanitize_text_field( wp_unslash( $_GET['filter_year'] ) ) : $f_year,
             'orderby' => isset( $_GET['orderby'] ) ? sanitize_text_field( wp_unslash( $_GET['orderby'] ) ) : 'created_at',
             'order'   => isset( $_GET['order'] ) ? sanitize_text_field( wp_unslash( $_GET['order'] ) ) : 'DESC',
             's'       => isset( $_GET['s'] ) ? sanitize_text_field( wp_unslash( $_GET['s'] ) ) : ''
