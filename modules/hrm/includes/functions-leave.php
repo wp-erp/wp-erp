@@ -3012,3 +3012,34 @@ function erp_hr_is_current_user_dept_lead() {
 
     return (bool) in_array( $logged_in_us, $leads );
 }
+
+/**
+ * Save employee leave request attachment
+ *
+ * @since 1.5.10
+ *
+ * @param $request_id
+ * @param $request
+ * @param $leaves
+ */
+function save_leave_attachment( $request_id, $request, $leaves ) {
+    if ( isset( $_FILES['leave_document'] ) && isset( $_FILES['leave_document']['name'] ) && ! empty( $_FILES['leave_document']['name'][0] ) ) {
+        $uploader = new \WeDevs\ERP\Uploader();
+
+        foreach ( $_FILES['leave_document']['name'] as $key => $value ) {
+            $upload = array(
+                'name'     => isset( $_FILES['leave_document'], $_FILES['leave_document']['name'][$key] ) ? sanitize_text_field( wp_unslash( $_FILES['leave_document']['name'][$key] ) ) : '',
+                'type'     => isset( $_FILES['leave_document'], $_FILES['leave_document']['type'][$key] ) ? sanitize_text_field( wp_unslash( $_FILES['leave_document']['type'][$key] ) ) : '',
+                'tmp_name' => isset( $_FILES['leave_document'], $_FILES['leave_document']['tmp_name'][$key] ) ? $_FILES['leave_document']['tmp_name'][$key] : '',
+                'error'    => isset( $_FILES['leave_document'], $_FILES['leave_document']['error'][$key] ) ? sanitize_text_field( wp_unslash( $_FILES['leave_document']['error'][$key] ) ) : '',
+                'size'     => isset( $_FILES['leave_document'], $_FILES['leave_document']['size'][$key] ) ? sanitize_text_field( wp_unslash( $_FILES['leave_document']['size'][$key] ) ) : ''
+            );
+
+            $file   = $uploader->handle_upload( $upload );
+
+            if( isset( $file['success'] ) && $file['success'] ) {
+                add_user_meta( $request['user_id'], 'leave_document_' . $request_id , $file['attach_id'] );
+            }
+        }
+    }
+}
