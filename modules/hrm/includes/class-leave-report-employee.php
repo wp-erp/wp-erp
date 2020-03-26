@@ -36,9 +36,8 @@ class Leave_Report_Employee_Based extends \WP_List_Table {
             ->leftJoin( $leave_name_tbl, "$policy_tbl.leave_id", '=', "$leave_name_tbl.id" )
             ->get();
 
-        $financial_year = erp_get_financial_year_dates();
-        $fids = get_financial_year_from_date_range( $financial_year['start'], $financial_year['end'] );
-        $this->current_f_year = is_array( $fids ) && ! empty( $fids ) ? $fids[0] : 0;
+        $f_year = get_financial_year_from_date();
+        $this->current_f_year = ! empty( $f_year ) ? $f_year->id : 0;
     }
 
     /**

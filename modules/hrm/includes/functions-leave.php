@@ -637,15 +637,14 @@ function erp_hr_leave_insert_entitlement( $args = [] ) {
  */
 function erp_hr_apply_policy_on_new_employee( $user_id ) {
     // 1. get current financial year
-    $financial_year = erp_get_financial_year_dates();
-    $fids = get_financial_year_from_date_range( $financial_year['start'], $financial_year['end'] );
+    $f_year = get_financial_year_from_date();
 
-    if ( ! is_array( $fids ) || empty( $fids ) ) {
+    if ( empty( $f_year ) ) {
         return;
     }
 
     // 2. get policies where automatic policy assign is enabled.
-    $policies = Leave_Policy::where( 'apply_for_new_users', 1 )->where( 'f_year', $fids[0] )->get();
+    $policies = Leave_Policy::where( 'apply_for_new_users', 1 )->where( 'f_year', $f_year->id )->get();
 
     $policies->each( function ( $policy ) use ( $user_id ) {
         $data = array(
@@ -1164,11 +1163,10 @@ function erp_hr_leave_policy_delete( $policy_ids ) {
  */
 function erp_hr_get_assign_policy_from_entitlement( $employee_id, $date = null ) {
 
-    $financial_year_dates = erp_get_financial_year_dates( $date );
-    $f_year_ids = get_financial_year_from_date_range( $financial_year_dates['start'], $financial_year_dates['end'] );
+    $f_year = get_financial_year_from_date( $date );
 
-    if ( ! is_array( $f_year_ids ) || empty( $f_year_ids ) ) {
-        return  false;
+    if ( empty( $f_year ) ) {
+        return false;
     }
 
     global $wpdb;
@@ -1180,7 +1178,7 @@ function erp_hr_get_assign_policy_from_entitlement( $employee_id, $date = null )
          ->leftjoin( $leave_table, $entitlement_table . '.leave_id', '=', $leave_table . '.id' )
          ->where( $entitlement_table . '.trn_type', '=', 'leave_policies' )
          ->where( $entitlement_table . '.user_id', '=', $employee_id )
-         ->where( $entitlement_table . '.f_year', '=', $f_year_ids[0] )
+         ->where( $entitlement_table . '.f_year', '=', $f_year->id )
          ->get()
          ->toArray();
 
@@ -2050,18 +2048,17 @@ function erp_hr_leave_has_employee_entitlement( $employee_id, $policy_id, $year 
 function erp_hr_leave_get_entitlement( $user_id, $leave_id, $start_date ) {
     global $wpdb;
     // get financial year from date
-    $financial_year_dates = erp_get_financial_year_dates( $start_date );
-    $f_year_ids = get_financial_year_from_date_range( $financial_year_dates['start'], $financial_year_dates['end'] );
-    if ( empty( $f_year_ids ) ) {
+    $f_year = get_financial_year_from_date( $start_date );
+
+    if ( empty( $f_year ) ) {
         return new WP_Error( 'invalid-financial-year', esc_attr__( 'No leave year found with given date.', 'erp' ) );
     }
-    $f_year = $f_year_ids[0];
 
     // get entitlement
     $entitlement = $wpdb->get_row(
         $wpdb->prepare(
             "SELECT * FROM {$wpdb->prefix}erp_hr_leave_entitlements WHERE user_id = %d and leave_id = %d and f_year = %d and trn_type = %s",
-            array( $user_id, $leave_id, $f_year, 'leave_policies' )
+            array( $user_id, $leave_id, $f_year->id, 'leave_policies' )
         )
     );
 
@@ -2245,9 +2242,8 @@ function erp_hr_leave_get_balance( $user_id, $date = null ) {
     $query .= " where user_id = %d and trn_type='leave_policies'";
 
     if ( $date === null ) {
-        $financial_year = erp_get_financial_year_dates();
-        $fids = get_financial_year_from_date_range( $financial_year['start'], $financial_year['end'] );
-        $date = is_array( $fids ) && ! empty( $fids ) ? $fids[0] : null;
+        $financial_year = get_financial_year_from_date();
+        $date = ! empty( $financial_year ) ? $financial_year->id : null;
     }
 
     if ( $date !== null ) {
