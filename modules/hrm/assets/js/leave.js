@@ -452,6 +452,9 @@
 
             getLeavePolicies: function () {
 
+                $( '.leave-entitlement-form .leave_policy').find('option').remove();
+                $( ".leave-entitlement-form .leave_policy" ).prop("disabled", true);
+
                 var department  = $('.leave-entitlement-form .department_id').select2('data'),
                     designation = $('.leave-entitlement-form .designation_id').select2('data'),
                     location    = $('.leave-entitlement-form .location_id').select2('data'),
@@ -459,11 +462,9 @@
                     marital     = $('.leave-entitlement-form .marital').select2('data'),
                     f_year      = $('.leave-entitlement-form .f_year').select2('data');
 
-                if ( typeof department === 'undefined' ) {
+                if ( f_year[0].id == '' ) {
                     return;
                 }
-
-                $( ".leave-entitlement-form .leave_policy" ).prop("disabled", true);
 
                 wp.ajax.send( 'erp-hr-leave-get-policies', {
                     data: {
@@ -501,11 +502,11 @@
 
                 var leave_policy  = $('.leave-entitlement-form #leave_policy').val();
 
-                if ( typeof leave_policy === 'undefined' ) {
+                $( ".leave-entitlement-form .single_employee" ).prop("disabled", true);
+
+                if ( typeof leave_policy === 'undefined' || leave_policy == 0 || leave_policy == '' ) {
                     return;
                 }
-
-                $( ".leave-entitlement-form .single_employee" ).prop("disabled", true);
 
                 wp.ajax.send( 'erp-hr-leave-get-employees', {
                     data: {
