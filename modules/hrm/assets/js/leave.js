@@ -10,8 +10,6 @@
         initialize: function() {
             var self = this;
 
-            // $( '.erp-hr-leave-policy' ).on( 'click', 'a#erp-leave-policy-new', self, this.policy.create );
-            // $( '.erp-hr-leave-policy' ).on( 'click', 'a.link, span.edit a', self, this.policy.edit );
             $( '.erp-hr-leave-policy' ).on( 'click', 'a.submitdelete', self, this.policy.remove );
             $( 'body' ).on( 'change', '#erp-hr-leave-req-from-date, #erp-hr-leave-req-to-date', self, this.leave.requestDates );
             $( 'body' ).on( 'change', '#erp-hr-leave-req-employee-id', self, this.leave.setPolicy );
@@ -288,108 +286,6 @@
         },
 
         policy: {
-            // periodField: function() {
-            //     if (3 == $('.erp-hr-leave-period').val()) {
-            //         $('.hide-if-manual').hide();
-            //     }
-
-            //     $('.erp-hr-leave-period').on( 'change', function() {
-            //         var type = $(this).val();
-
-            //         if ( type == 2 ) {
-            //             $('.showifschedule').slideDown();
-            //         } else {
-            //             $('.showifschedule').slideUp();
-            //         };
-
-            //         if (3 != type) {
-            //             $('.hide-if-manual').slideDown();
-            //         } else {
-            //             $('.hide-if-manual').slideUp();
-            //         }
-            //     });
-            // },
-
-            // submit: function(modal) {
-            //     wp.ajax.send( {
-            //         data: this.serializeObject(),
-            //         success: function() {
-            //             modal.closeModal();
-            //             $( '.list-table-wrap' ).load( window.location.href + ' .list-wrap-inner', function() {
-            //                 Leave.initToggleCheckbox();
-            //             } );
-            //         },
-            //         error: function(error) {
-            //             modal.enableButton();
-            //             alert( error );
-            //         }
-            //     });
-            // },
-
-            // create: function(e) {
-            //     e.preventDefault();
-
-            //     $.erpPopup({
-            //         title: wpErpHr.popup.policy,
-            //         button: wpErpHr.popup.policy_create,
-            //         id: 'erp-hr-leave-policy-create-popup',
-            //         content: wp.template('erp-leave-policy')({ data: null }).trim(),
-            //         extraClass: 'smaller',
-            //         onReady: function() {
-            //             Leave.initDateField();
-            //             $('.erp-color-picker').wpColorPicker().wpColorPicker( 'color', '#fafafa' );
-            //             Leave.policy.periodField();
-            //         },
-            //         onSubmit: function(modal) {
-            //             e.data.policy.submit.call(this, modal);
-            //         }
-            //     }); //popup
-            // },
-
-            // edit: function(e) {
-            //     e.preventDefault();
-
-            //     var self = $(this),
-            //         data = self.closest('tr').data('json');
-
-            //     $.erpPopup({
-            //         title: wpErpHr.popup.policy,
-            //         button: wpErpHr.popup.update_status,
-            //         id: 'erp-hr-leave-policy-edit-popup',
-            //         content: wperp.template('erp-leave-policy')(data).trim(),
-            //         extraClass: 'smaller',
-            //         onReady: function() {
-            //             var modal = this;
-            //             Leave.initDateField();
-            //             $('.erp-color-picker').wpColorPicker();
-
-            //             $( 'div.row[data-selected]', modal ).each(function() {
-            //                 var self = $(this),
-            //                     selected = self.data('selected');
-
-            //                 if ( selected !== '' ) {
-            //                     self.find( 'select' ).val( selected );
-            //                 }
-            //             });
-
-            //             $( 'div.row[data-checked]', modal ).each(function( key, val ) {
-            //                 var self = $(this),
-            //                     checked = self.data('checked');
-
-            //                 if ( checked !== '' ) {
-            //                     self.find( 'input[value="'+checked+'"]' ).attr( 'checked', 'checked' );
-            //                 }
-            //             });
-
-            //             Leave.policy.periodField();
-            //             $('.erp-hr-leave-period').trigger('change');
-            //         },
-            //         onSubmit: function(modal) {
-            //             e.data.policy.submit.call(this, modal);
-            //         }
-            //     }); //popup
-            // },
-
             remove: function(e) {
                 e.preventDefault();
 
