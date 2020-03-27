@@ -1123,7 +1123,7 @@ class Form_Handler {
         }
 
         // no need to throw this error if editing
-        if ( ! $id && empty( $days ) ) {
+        if ( ! $id && $days < 0 ) {
             $policy_create_error->add( 'empty', 'Days field should not be left empty' );
         }
 
