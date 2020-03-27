@@ -195,9 +195,9 @@ function erp_acct_insert_pay_bill( $data ) {
 					'updated_by'  => $pay_bill_data['updated_by'],
                 )
             );
-
-            erp_acct_insert_pay_bill_data_into_ledger( $pay_bill_data, $item );
         }
+
+        erp_acct_insert_pay_bill_data_into_ledger( $pay_bill_data );
 
         if ( isset( $pay_bill_data['trn_by'] ) && 3 === $pay_bill_data['trn_by'] ) {
             erp_acct_insert_check_data( $pay_bill_data );
@@ -306,8 +306,9 @@ function erp_acct_update_pay_bill( $data, $pay_bill_id ) {
                 )
             );
 
-            erp_acct_update_pay_bill_data_into_ledger( $pay_bill_data, $pay_bill_id, $item );
         }
+
+        erp_acct_update_pay_bill_data_into_ledger( $pay_bill_data, $pay_bill_id );
 
         $wpdb->query( 'COMMIT' );
 
@@ -398,7 +399,7 @@ function erp_acct_get_formatted_pay_bill_data( $data, $voucher_no ) {
  *
  * @return mixed
  */
-function erp_acct_insert_pay_bill_data_into_ledger( $pay_bill_data, $item_data ) {
+function erp_acct_insert_pay_bill_data_into_ledger( $pay_bill_data ) {
     global $wpdb;
 
     if ( 1 === $pay_bill_data['status'] || ( isset( $pay_bill_data['trn_by'] ) && 4 === $pay_bill_data['trn_by'] ) ) {
@@ -433,7 +434,7 @@ function erp_acct_insert_pay_bill_data_into_ledger( $pay_bill_data, $item_data )
  *
  * @return mixed
  */
-function erp_acct_update_pay_bill_data_into_ledger( $pay_bill_data, $pay_bill_no, $item_data ) {
+function erp_acct_update_pay_bill_data_into_ledger( $pay_bill_data, $pay_bill_no ) {
     global $wpdb;
 
     if ( 1 === $pay_bill_data['status'] || ( isset( $pay_bill_data['trn_by'] ) && 4 === $pay_bill_data['trn_by'] ) ) {
