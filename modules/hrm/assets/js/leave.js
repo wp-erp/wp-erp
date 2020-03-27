@@ -462,6 +462,10 @@
                     marital     = $('.leave-entitlement-form .marital').select2('data'),
                     f_year      = $('.leave-entitlement-form .f_year').select2('data');
 
+                if ( typeof f_year === "undefined" ) {
+                    return;
+                }
+
                 if ( f_year[0].id == '' ) {
                     return;
                 }
