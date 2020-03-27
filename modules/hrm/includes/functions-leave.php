@@ -519,10 +519,6 @@ function erp_hr_leave_insert_entitlement( $args = [] ) {
         return new WP_Error( 'no-financial-year', esc_attr__( 'No year is provided.', 'erp' ) );
     }
 
-    if ( $fields['day_in'] == 0 && $fields['day_out'] == 0 ) {
-        return new WP_Error( 'no-date', esc_attr__( 'No date provided.', 'erp' ) );
-    }
-
     // Check if policy already assigned for current user - only if transaction type is: leave_policies
     if ( $fields['trn_type'] === 'leave_policies' ) {
         $entitlement = Leave_Entitlement::where( 'user_id', '=', $fields['user_id'] );
