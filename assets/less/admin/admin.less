@@ -2411,3 +2411,86 @@ div.erp-nav-container {
 .wpdt-c #adminmenuback {
     z-index: 1 !important;
 }
+
+.leave-policy-form, .leave-entitlement-form {
+    background: #fff;
+    padding: 20px;
+    width: 800px;
+    margin: 0 auto;
+
+    .form-group {
+        background: #f1f1f1;
+        border: 2px solid #eee;
+        padding-left: 10px;
+        margin-bottom: 10px;
+        border-radius: 3px;
+
+        .row {
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            max-width: 700px;
+
+            .description, .error-text {
+                margin-left: 190px;
+                margin-top: 5px;
+                font-size: 12px;
+                color: #757575;
+                width: 100%;
+                width: -moz-available;          /* WebKit-based browsers will ignore this. */
+                width: -webkit-fill-available;  /* Mozilla-based browsers will ignore this. */
+                width: fill-available;
+            }
+
+            .error-text {
+                color: #ff3860;
+                font-weight: bold;
+            }
+
+            &.applicable-form-row {
+                input[type=number] {
+                    width: 100px;
+                }
+
+                span {
+                    margin-left: 20px;
+                }
+            }
+        }
+
+        label {
+            width: 190px;
+            display: inline-block;
+        }
+
+        span.checkbox label {
+            width: auto;
+        }
+
+        .leave-policy-input {
+            min-width: 300px;
+        }
+    }
+}
+
+.create-policy-name {
+    .form-field {
+        width: 90%;
+        margin: 1em 0;
+
+        .description {
+            font-style: italic;
+            color: #666;
+        }
+    }
+}
+
+#erp-hr-leave-req-leave-policy,
+.new-leave-request-form #f_year {
+    width: 162px;
+}
+
+.leave-requests th#reason {
+    width: 250px;
+}

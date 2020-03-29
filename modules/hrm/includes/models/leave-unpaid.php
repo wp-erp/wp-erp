@@ -4,16 +4,16 @@ namespace WeDevs\ERP\HRM\Models;
 use WeDevs\ERP\Framework\Model;
 
 /**
- * Class Leave_Entitlement
+ * Class Leaves_Unpaid
  *
  * @package WeDevs\ERP\HRM\Models
  */
-class Leave_Entitlement extends Model {
-    protected $table = 'erp_hr_leave_entitlements';
+class Leaves_Unpaid extends Model {
+    protected $table = 'erp_hr_leaves_unpaid';
 
     protected $fillable = [
-        'user_id', 'leave_id', 'created_by', 'trn_id', 'trn_type',
-        'day_in', 'day_out', 'description', 'f_year'
+        'leave_id', 'leave_request_id', 'leave_approval_status_id',
+        'user_id', 'f_year', 'days', 'amount', 'total'
     ];
 
     /**
@@ -42,58 +42,36 @@ class Leave_Entitlement extends Model {
     }
 
     /**
-     * Relation to Leave_Approval_Status model
+     * Relation to Leave_Entitlement model
      *
      * @since 1.6.0
      *
      * @return object
      */
-    public function leave_requests() {
-        return $this->hasMany( 'WeDevs\ERP\HRM\Models\Leave_Request', 'leave_entitlement_id', 'id' )->orderBy('id', 'desc');
+    public function entitlement() {
+        return $this->hasOne( 'WeDevs\ERP\HRM\Models\Leave_Entitlement', 'trn_id' );
     }
 
     /**
-     * Relation to Leave_Policy model
+     * Relation to Leave_Request model
      *
      * @since 1.6.0
      *
      * @return object
      */
-    public function policy() {
-        return $this->belongsTo( 'WeDevs\ERP\HRM\Models\Leave_Policy', 'trn_id' );
+    public function leave_request() {
+        return $this->belongsTo( 'WeDevs\ERP\HRM\Models\Leave_Request' );
     }
 
     /**
-     * Relation to Leave_Approval_Status model
+     * Relation to Leave_Request_Detail model
      *
      * @since 1.6.0
      *
      * @return object
      */
-    public function leave_approval_status() {
-        return $this->belongsTo( 'WeDevs\ERP\HRM\Models\Leave_Approval_Status', 'trn_id' );
-    }
-
-    /**
-     * Relation to Leave_Encashment_Request model
-     *
-     * @since 1.6.0
-     *
-     * @return object
-     */
-    public function encashment_request() {
-        return $this->belongsTo( 'WeDevs\ERP\HRM\Models\Leave_Encashment_Request', 'trn_id' );
-    }
-
-    /**
-     * Relation to Leaves_Unpaid model
-     *
-     * @since 1.6.0
-     *
-     * @return object
-     */
-    public function unpaids() {
-        return $this->belongsTo( 'WeDevs\ERP\HRM\Models\Leaves_Unpaid', 'trn_id' );
+    public function details() {
+        return $this->hasMany( 'WeDevs\ERP\HRM\Models\Leave_Request_Detail', 'leave_request_id', 'leave_request_id' );
     }
 
     /**

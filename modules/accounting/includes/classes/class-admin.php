@@ -373,7 +373,7 @@ class Admin {
         $people_id = erp_insert_people( $args );
 
         if ( is_wp_error( $people_id ) ) {
-            return new WP_Error( 'crate_people', __( 'Could not create people', 'erp' ) );
+            return new \WP_Error( 'crate_people', __( 'Could not create people', 'erp' ) );
         }
 
         return $people_id;
@@ -387,10 +387,14 @@ class Admin {
      * @return bool
      */
     public function save_accounting_settings() {
+        if ( $_SERVER['REQUEST_METHOD'] !== 'POST' || ! isset( $_POST['erp-ac-ob-fyears-add'] ) ) {
+            return;
+        }
+
         global $wpdb;
 
-        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-nonce' ) ) {
-            // die();
+        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-settings-nonce' ) ) {
+            die('Nonce failed.');
         }
 
         $fin_years = [];

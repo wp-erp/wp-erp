@@ -44,12 +44,18 @@ function erp_hr_get_work_days() {
  *
  * @return array
  */
-function erp_hr_get_work_days_without_off_day( $start_date, $end_date ) {
+function erp_hr_get_work_days_without_off_day( $start_date, $end_date, $user_id = null ) {
 
     $between_dates = erp_extract_dates( $start_date, $end_date );
 
     if ( is_wp_error( $between_dates ) ) {
         return $between_dates;
+    }
+
+    $sandwich_rules_applied = erp_hr_can_apply_sandwich_rules_between_dates( $start_date, $end_date, $user_id );
+
+    if ( ! empty( $sandwich_rules_applied ) ) {
+        $between_dates = array_merge( $sandwich_rules_applied, $between_dates );
     }
 
     $dates         = array( 'days' => array(), 'total' => 0 );
@@ -65,7 +71,14 @@ function erp_hr_get_work_days_without_off_day( $start_date, $end_date ) {
             $is_holidy = in_array( $date, $holiday_exist ) ? true : false;
         }
 
-        if ( ! $is_holidy ) {
+        if ( get_option( 'erp_pro_sandwich_leave', '') === 'yes'  ) {
+            $dates['days'][] = array(
+                'date'  => $date,
+                'count' => (int) ! $is_holidy
+            );
+
+            $dates['total'] += 1;
+        } elseif ( ! $is_holidy ) {
 
             $dates['days'][] = array(
                 'date'  => $date,
@@ -83,13 +96,23 @@ function erp_hr_get_work_days_without_off_day( $start_date, $end_date ) {
  * Get working day with off day
  *
  * @since  0.1
+ * @since 1.6.0 added sandwich rules
  *
  * @param  string $start_date
  * @param  string $end_date
  *
  * @return array
  */
-function erp_hr_get_work_days_between_dates( $start_date, $end_date ) {
+function erp_hr_get_work_days_between_dates( $start_date, $end_date, $user_id = null ) {
+    global $wpdb;
+
+    if ( is_numeric( $start_date ) ) {
+        $start_date = erp_current_datetime()->setTimestamp( $start_date )->format( 'Y-m-d' );
+    }
+
+    if ( is_numeric( $end_date ) ) {
+        $end_date = erp_current_datetime()->setTimestamp( $end_date )->format( 'Y-m-d' );
+    }
 
     $between_dates = erp_extract_dates( $start_date, $end_date );
 
@@ -97,9 +120,15 @@ function erp_hr_get_work_days_between_dates( $start_date, $end_date ) {
         return $between_dates;
     }
 
-    $dates         = array( 'days' => array(), 'total' => 0 );
+    $dates         = array( 'days' => array(), 'total' => 0, 'sandwich' => 0 );
     $work_days     = erp_hr_get_work_days();
     $holiday_exist = erp_hr_leave_get_holiday_between_date_range( $start_date, $end_date );
+
+    $sandwich_rules_applied = erp_hr_can_apply_sandwich_rules_between_dates( $start_date, $end_date, $user_id );
+
+    if ( ! empty( $sandwich_rules_applied ) ) {
+        $between_dates = array_merge( $sandwich_rules_applied, $between_dates );
+    }
 
     foreach ( $between_dates as $date ) {
 
@@ -115,12 +144,132 @@ function erp_hr_get_work_days_between_dates( $start_date, $end_date ) {
             'count' => (int) ! $is_holidy
         );
 
-        if ( ! $is_holidy ) {
+        if ( get_option( 'erp_pro_sandwich_leave', '') === 'yes'  ) {
+            $dates['total'] += 1;
+
+            // mark sandwich rule to true
+            if ( $is_holidy ) {
+                $dates['sandwich'] = 1;
+            }
+        }
+        elseif ( ! $is_holidy ) {
             $dates['total'] += 1;
         }
     }
 
     return $dates;
+}
+
+/**
+ * Check if we can apply sandwich rule between two dates
+ *
+ * @since  1.6.0
+ *
+ * @param  string $start_date
+ * @param  string $end_date
+ *
+ * @return array
+ */
+function erp_hr_can_apply_sandwich_rules_between_dates( $start_date, $end_date, $user_id = null ) {
+    global $wpdb;
+    $work_days     = erp_hr_get_work_days();
+
+    $can_apply_sandwich_rule_on_previous_leave = false;
+    $previous_dates = array();
+    $next_dates = array();
+
+    if ( get_option( 'erp_pro_sandwich_leave', '') === 'yes' && absint( $user_id ) ) {
+        // get previous leave request for this user either approved or pending, skip rejected
+        $last_leave_request = $wpdb->get_row(
+            $wpdb->prepare(
+                "SELECT rq.start_date, rq.end_date, st.approval_status_id
+                        FROM {$wpdb->prefix}erp_hr_leave_requests as rq
+                        left join {$wpdb->prefix}erp_hr_leave_approval_status as st on st.leave_request_id = rq.id
+                        where rq.user_id = %d and rq.end_date < %d order by rq.id DESC limit 1",
+                array( $user_id, strtotime( $start_date ) )
+            ),
+            ARRAY_A
+        );
+
+        if ( is_array( $last_leave_request ) && ! empty( $last_leave_request ) ) {
+            // proceed further for pending or accepted request
+            if ( $last_leave_request['approval_status_id'] != 3  ) {
+                $last_req_end_date = erp_current_datetime()->setTimestamp( $last_leave_request['end_date'] )->modify( '+1 days' )->format( 'Y-m-d' );
+                $start_day_previous = erp_current_datetime()->modify( $start_date )->modify( '-1 days' )->format( 'Y-m-d' );
+                //date extract between last leave date and current leave start dates
+                $previous_between_dates = erp_extract_dates( $last_req_end_date, $start_day_previous );
+
+                //check holiday or non-working day exist between last_req and current start_date
+                $previous_holiday_exist = erp_hr_leave_get_holiday_between_date_range( $last_req_end_date, $start_day_previous );
+
+                foreach ( $previous_between_dates as $date ) {
+                    $key       = strtolower( date( 'D', strtotime( $date ) ) );
+                    $is_holidy = ( $work_days[ $key ] == '0' ) ? true : false;
+
+                    if ( ! $is_holidy ) {
+                        $is_holidy = in_array( $date, $previous_holiday_exist ) ? true : false;
+                    }
+
+                    if ( $is_holidy ) {
+                        $previous_dates[] = $date;
+                        $can_apply_sandwich_rule_on_previous_leave = true;
+                    }
+                    else {
+                        $can_apply_sandwich_rule_on_previous_leave = false;
+                        $previous_dates = array();
+                        break;
+                    }
+                }
+            }
+        }
+
+        //get next leave request
+        $next_leave_request = $wpdb->get_row(
+            $wpdb->prepare(
+                "SELECT rq.start_date, rq.end_date, st.approval_status_id
+                        FROM {$wpdb->prefix}erp_hr_leave_requests as rq
+                        left join {$wpdb->prefix}erp_hr_leave_approval_status as st on st.leave_request_id = rq.id
+                        where rq.user_id = %d and rq.start_date > %d order by rq.id DESC limit 1",
+                array( $user_id, strtotime( $end_date ) )
+            ),
+            ARRAY_A
+        );
+
+        if ( is_array( $next_leave_request ) && ! empty( $next_leave_request ) ) {
+            // proceed further for pending or accepted request
+            if ( $next_leave_request['approval_status_id'] != 3  ) {
+                $last_req_start_date = erp_current_datetime()->setTimestamp( $next_leave_request['start_date'] )->modify( '-1 days' )->format( 'Y-m-d' );
+                $end_date_next_day = erp_current_datetime()->modify( $end_date )->modify( '+1 days' )->format( 'Y-m-d' );
+                //date extract between last leave date and current leave start dates
+                $previous_between_dates = erp_extract_dates( $end_date_next_day, $last_req_start_date );
+
+                //check holiday or non-working day exist between last_req and current start_date
+                $previous_holiday_exist = erp_hr_leave_get_holiday_between_date_range( $end_date_next_day, $last_req_start_date );
+
+                foreach ( $previous_between_dates as $date ) {
+                    $key       = strtolower( date( 'D', strtotime( $date ) ) );
+                    $is_holidy = ( $work_days[ $key ] == '0' ) ? true : false;
+
+                    if ( ! $is_holidy ) {
+                        $is_holidy = in_array( $date, $previous_holiday_exist ) ? true : false;
+                    }
+
+                    if ( $is_holidy ) {
+                        $next_dates[] = $date;
+                        $can_apply_sandwich_rule_on_previous_leave = true;
+                    }
+                    else {
+                        $can_apply_sandwich_rule_on_previous_leave = false;
+                        $next_dates = array();
+                        break;
+                    }
+                }
+            }
+        }
+
+    }
+
+    return array_merge( $previous_dates, $next_dates );
 }
 
 
