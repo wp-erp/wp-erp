@@ -1,5 +1,8 @@
 <?php
 
+use WeDevs\ERP\HRM\Models\Department;
+use WeDevs\ERP\HRM\Models\Employee;
+
 /**
  * Create a new department
  *
@@ -243,4 +246,54 @@ function erp_hr_get_department_lead_by_user( $user_id ) {
     }
 
     return empty( $department_lead ) ? 0 : $department_lead->id;
+}
+
+/**
+ * Get department employees
+ *
+ * @since 1.6.0
+ *
+ * @param $lead_id
+ *
+ * @return array
+ */
+function erp_hr_get_dept_lead_subordinate_employees( $lead_id ) {
+
+    $ret = array();
+
+    $depts_id = Department::select('id')->where( 'lead', absint( $lead_id ) );
+
+    if ( $depts_id->count() ) {
+        $depts_id = $depts_id->pluck('id')->toArray();
+
+        $users_id = Employee::select( 'user_id' )->whereIn( 'department', $depts_id );
+
+        if ( $users_id->count() ) {
+            $ret = $users_id->pluck( 'user_id' )->toArray();
+        }
+    }
+
+    return $ret;
+}
+
+/**
+ * Check if this user_id's department lead is the current logged_in user
+ *
+ * @since 1.6.0
+ *
+ * @return bool
+ */
+function erp_hr_match_user_dept_lead_with_current_user( $user_id ) {
+    $employee = Employee::select('department')->where('user_id', $user_id )->first();
+    $emp_department = absint( $employee->department );
+
+    if ( $emp_department ) {
+        $department = Department::find( $emp_department );
+
+        if ( get_current_user_id() === absint( $department->lead ) ) {
+            return true;
+        }
+    }
+
+    return false;
 }

@@ -739,7 +739,7 @@ class Hr_Log {
             return;
         }
 
-        $old_policy = \WeDevs\ERP\HRM\Models\Leave_Policies::find( $policy_id )->toArray();
+        $old_policy = \WeDevs\ERP\HRM\Models\Leave_Policy::find( $policy_id )->toArray();
         unset( $old_policy['created_at'], $old_policy['updated_at'], $fields['instant_apply'] ) ;
 
         $old_policy['effective_date'] = erp_format_date( $old_policy['effective_date'], 'Y-m-d' );

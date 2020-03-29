@@ -397,22 +397,193 @@ May you enjoy the fruits of your labors for years to come'
                 PRIMARY KEY (`id`)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_hr_leave_policies` (
-                `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-                `name` varchar(20) DEFAULT NULL,
-                `value` mediumint(5) DEFAULT NULL,
-                `color` varchar(7) DEFAULT NULL,
-                `department` int(11) NOT NULL,
-                `designation` int(11) NOT NULL,
-                `gender` varchar(50) NOT NULL,
-                `marital` varchar(50) NOT NULL,
-                `description` LONGTEXT NOT NULL,
-                `location` INT(3) NOT NULL,
-                `effective_date` TIMESTAMP NOT NULL,
-                `activate` INT(2) NOT NULL,
-                `execute_day` INT(11) NOT NULL,
-                `created_at` datetime NOT NULL,
-                `updated_at` datetime NOT NULL,
+            "CREATE TABLE {$wpdb->prefix}erp_hr_leaves (
+                  id smallint(6) NOT NULL AUTO_INCREMENT,
+                  name varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+                  description text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                  created_at int(11) DEFAULT NULL,
+                  updated_at int(11) DEFAULT NULL,
+                  PRIMARY KEY  (id)
+              ) $charset_collate;",
+
+            "CREATE TABLE {$wpdb->prefix}erp_hr_leave_policies (
+                  id int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+                  leave_id smallint(5) UNSIGNED NOT NULL,
+                  description text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                  days tinyint(3) UNSIGNED NOT NULL,
+                  color varchar(10) DEFAULT NULL,
+                  department_id int(11) NOT NULL DEFAULT '-1',
+                  location_id int(11) NOT NULL DEFAULT '-1',
+                  designation_id int(11) NOT NULL DEFAULT '-1',
+                  gender enum('-1','male','female','other') NOT NULL DEFAULT '-1',
+                  marital enum('-1','single','married','widowed') NOT NULL DEFAULT '-1',
+                  f_year smallint(5) UNSIGNED DEFAULT NULL,
+                  apply_for_new_users tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                  carryover_days tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                  carryover_uses_limit tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                  encashment_days tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                  encashment_based_on enum('pay_rate','basic','gross') DEFAULT NULL,
+                  forward_default enum('encashment','carryover') NOT NULL DEFAULT 'encashment',
+                  applicable_from_days smallint(5) UNSIGNED NOT NULL DEFAULT '0',
+                  accrued_amount decimal(5,2) NOT NULL DEFAULT '0.00',
+                  accrued_max_days tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                  halfday_enable tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                  created_at int(11) NOT NULL,
+                  updated_at int(11) NOT NULL,
+                  PRIMARY KEY  (id)
+            ) $charset_collate;",
+
+            "CREATE TABLE {$wpdb->prefix}erp_hr_leave_policies_segregation (
+                  id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+                  leave_policy_id bigint(20) UNSIGNED NOT NULL,
+                  jan tinyint(3) UNSIGNED DEFAULT '0',
+                  feb tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                  mar tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                  apr tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                  may tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                  jun tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                  jul tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                  aug tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                  sep tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                  oct tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                  nov tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                  decem tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                  created_at int(11) NOT NULL,
+                  updated_at int(11) NOT NULL,
+                  PRIMARY KEY  (id),
+                  KEY leave_policy_id (leave_policy_id)
+            ) $charset_collate;",
+
+            "CREATE TABLE {$wpdb->prefix}erp_hr_leave_entitlements (
+                  id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+                  user_id bigint(20) UNSIGNED NOT NULL,
+                  leave_id smallint(6) UNSIGNED NOT NULL,
+                  created_by bigint(20) UNSIGNED NOT NULL,
+                  trn_id bigint(20) UNSIGNED NOT NULL,
+                  trn_type enum('leave_policies','leave_approval_status','leave_encashment_requests','leave_entitlements','unpaid_leave','leave_encashment', 'leave_carryforward', 'manual_leave_policies', 'Accounts', 'others', 'leave_accrual', 'carry_forward_leave_expired') NOT NULL DEFAULT 'leave_policies',
+                  day_in decimal(4,1) UNSIGNED NOT NULL DEFAULT '0.0',
+                  day_out decimal(4,1) UNSIGNED NOT NULL DEFAULT '0.0',
+                  description text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                  f_year smallint(6) NOT NULL,
+                  created_at int(11) NOT NULL,
+                  updated_at int(11) NOT NULL,
+                  PRIMARY KEY  (id),
+                  KEY comp_key_1 (user_id,leave_id,f_year,trn_type)
+            ) $charset_collate;",
+
+            "CREATE TABLE {$wpdb->prefix}erp_hr_leave_requests (
+                  id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+                  user_id bigint(20) UNSIGNED NOT NULL,
+                  leave_id smallint(6) UNSIGNED NOT NULL,
+                  leave_entitlement_id bigint(20) UNSIGNED NOT NULL default '0',
+                  day_status_id smallint(5) UNSIGNED NOT NULL DEFAULT '1',
+                  days decimal(4,1) UNSIGNED NOT NULL DEFAULT '0.0',
+                  start_date int(11) NOT NULL,
+                  end_date int(11) NOT NULL,
+                  reason text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                  last_status smallint(6) UNSIGNED NOT NULL DEFAULT '2',
+                  created_by bigint(20) UNSIGNED NOT NULL,
+                  created_at int(11) DEFAULT NULL,
+                  updated_at int(11) DEFAULT NULL,
+                  PRIMARY KEY  (id),
+                  KEY user_id (user_id),
+                  KEY user_leave (user_id,leave_id),
+                  KEY user_entitlement (user_id,leave_entitlement_id)
+            ) $charset_collate;",
+
+            "CREATE TABLE {$wpdb->prefix}erp_hr_leave_approval_status (
+                  id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+                  leave_request_id bigint(20) UNSIGNED NOT NULL,
+                  approval_status_id tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                  approved_by bigint(20) UNSIGNED NOT NULL,
+                  forward_to bigint(20) UNSIGNED DEFAULT NULL,
+                  message text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                  created_at int(11) NOT NULL,
+                  updated_at int(11) NOT NULL,
+                  PRIMARY KEY  (id),
+                  KEY leave_request_id (leave_request_id),
+                  KEY approval_status_id (approval_status_id)
+            ) $charset_collate;",
+
+            "CREATE TABLE {$wpdb->prefix}erp_hr_leave_request_details (
+                  id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+                  leave_request_id bigint(20) UNSIGNED NOT NULL,
+                  leave_approval_status_id bigint(20) UNSIGNED NOT NULL,
+                  workingday_status tinyint(3) UNSIGNED NOT NULL DEFAULT '1',
+                  user_id bigint(20) UNSIGNED NOT NULL,
+                  f_year smallint(6) NOT NULL,
+                  leave_date int(11) NOT NULL,
+                  created_at int(11) NOT NULL,
+                  updated_at int(11) NOT NULL,
+                  PRIMARY KEY  (id),
+                  KEY leave_request_id (leave_request_id),
+                  KEY user_id (user_id),
+                  KEY user_fyear_leave (user_id,f_year,leave_date)
+            ) $charset_collate;",
+
+            "CREATE TABLE {$wpdb->prefix}erp_hr_leave_encashment_requests (
+                  id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+                  user_id bigint(20) UNSIGNED NOT NULL,
+                  leave_id smallint(6) UNSIGNED NOT NULL,
+                  approved_by bigint(20) UNSIGNED NOT NULL,
+                  approval_status_id tinyint(3) UNSIGNED NOT NULL DEFAULT '1',
+                  encash_days tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                  forward_days tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                  amount decimal(20,2) NOT NULL DEFAULT '0.00',
+                  total decimal(20,2) NOT NULL DEFAULT '0.00',
+                  f_year smallint(5) UNSIGNED NOT NULL,
+                  created_at int(11) NOT NULL,
+                  updated_at int(11) NOT NULL,
+                  PRIMARY KEY  (id)
+            ) $charset_collate;",
+
+            "CREATE TABLE {$wpdb->prefix}erp_hr_leaves_unpaid (
+                  id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+                  leave_id smallint(6) UNSIGNED NOT NULL,
+                  leave_request_id bigint(20) UNSIGNED NOT NULL,
+                  leave_approval_status_id bigint(20) UNSIGNED NOT NULL,
+                  user_id bigint(20) UNSIGNED NOT NULL,
+                  days decimal(4,1) UNSIGNED NOT NULL DEFAULT '0.0',
+                  amount decimal(20,2) NOT NULL DEFAULT '0.00',
+                  total decimal(20,2) NOT NULL DEFAULT '0.00',
+                  f_year smallint(5) UNSIGNED NOT NULL,
+                  created_at int(11) NOT NULL,
+                  updated_at int(11) NOT NULL,
+                  PRIMARY KEY  (id)
+            ) $charset_collate;",
+
+            "CREATE TABLE {$wpdb->prefix}erp_hr_financial_years (
+                  id int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+                  fy_name varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                  start_date int(11) DEFAULT NULL,
+                  end_date int(11) DEFAULT NULL,
+                  description varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                  created_by bigint(20) UNSIGNED DEFAULT NULL,
+                  updated_by bigint(20) UNSIGNED DEFAULT NULL,
+                  created_at int(11) DEFAULT NULL,
+                  updated_at int(11) DEFAULT NULL,
+                  PRIMARY KEY (id),
+                  KEY year_search (start_date,end_date)
+            ) $charset_collate;",
+
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_user_leaves` (
+                `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+                `user_id` int(11) DEFAULT NULL,
+                `request_id` int(11) DEFAULT NULL,
+                `title` varchar(255) DEFAULT NULL,
+                `date` date DEFAULT NULL,
+                `created_at` datetime DEFAULT NULL,
+                `updated_at` datetime DEFAULT NULL,
+                PRIMARY KEY (`id`)
+            ) $charset_collate;",
+
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_holidays_indv` (
+                `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+                `holiday_id` int(11) DEFAULT NULL,
+                `title` varchar(255) DEFAULT NULL,
+                `date` date DEFAULT NULL,
+                `created_at` datetime DEFAULT NULL,
+                `updated_at` datetime DEFAULT NULL,
                 PRIMARY KEY (`id`)
             ) $charset_collate;",
 
@@ -426,59 +597,6 @@ May you enjoy the fruits of your labors for years to come'
                 `created_at` datetime NOT NULL,
                 `updated_at` datetime NOT NULL,
                 PRIMARY KEY (`id`)
-            ) $charset_collate;",
-
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_hr_leave_entitlements` (
-                `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-                `user_id` bigint(20) unsigned NOT NULL,
-                `policy_id` int(11) unsigned DEFAULT NULL,
-                `days` mediumint(4) DEFAULT NULL,
-                `from_date` datetime NOT NULL,
-                `to_date` datetime NOT NULL,
-                `comments` text,
-                `status` tinyint(2) unsigned NOT NULL,
-                `created_by` bigint(20) unsigned DEFAULT NULL,
-                `created_on` datetime NOT NULL,
-                PRIMARY KEY (`id`),
-                KEY `user_id` (`user_id`),
-                KEY `policy_id` (`policy_id`)
-            ) $charset_collate;",
-
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_hr_leaves` (
-                `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-                `request_id` bigint(20) unsigned NOT NULL,
-                `date` date NOT NULL,
-                `length_hours` decimal(6,2) unsigned NOT NULL,
-                `length_days` decimal(6,2) NOT NULL,
-                `start_time` time NOT NULL,
-                `end_time` time NOT NULL,
-                `duration_type` tinyint(4) unsigned NOT NULL,
-                PRIMARY KEY (`id`),
-                KEY `request_id` (`request_id`),
-                KEY `date` (`date`)
-            ) $charset_collate;",
-
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_hr_leave_requests` (
-                `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-                `user_id` bigint(20) unsigned NOT NULL,
-                `policy_id` int(11) unsigned NOT NULL,
-                `days` tinyint(3) unsigned DEFAULT NULL,
-                `start_date` datetime NOT NULL,
-                `end_date` datetime NOT NULL,
-                `comments` text,
-                `reason` text NOT NULL,
-                `status` tinyint(2) unsigned DEFAULT NULL,
-                `created_by` bigint(20) unsigned DEFAULT NULL,
-                `updated_by` bigint(20) unsigned DEFAULT NULL,
-                `created_on` datetime NOT NULL,
-                `updated_on` datetime DEFAULT NULL,
-                `last_date` datetime DEFAULT NULL,
-                PRIMARY KEY (`id`),
-                KEY `user_id` (`user_id`),
-                KEY `policy_id` (`policy_id`),
-                KEY `status` (`status`),
-                KEY `created_by` (`created_by`),
-                KEY `updated_by` (`updated_by`)
             ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_hr_work_exp` (
@@ -1402,26 +1520,6 @@ May you enjoy the fruits of your labors for years to come'
                 PRIMARY KEY (`id`)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_holidays_indv` (
-                `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-                `holiday_id` int(11) DEFAULT NULL,
-                `title` varchar(255) DEFAULT NULL,
-                `date` date DEFAULT NULL,
-                `created_at` datetime DEFAULT NULL,
-                `updated_at` datetime DEFAULT NULL,
-                PRIMARY KEY (`id`)
-            ) $charset_collate;",
-
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_user_leaves` (
-                `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-                `user_id` int(11) DEFAULT NULL,
-                `request_id` int(11) DEFAULT NULL,
-                `title` varchar(255) DEFAULT NULL,
-                `date` date DEFAULT NULL,
-                `created_at` datetime DEFAULT NULL,
-                `updated_at` datetime DEFAULT NULL,
-                PRIMARY KEY (`id`)
-            ) $charset_collate;",
 
         ];
 

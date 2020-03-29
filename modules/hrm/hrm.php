@@ -80,6 +80,7 @@ class Human_Resource {
         require_once WPERP_HRM_PATH . '/includes/functions-reporting.php';
         require_once WPERP_HRM_PATH . '/includes/functions-announcement.php';
         require_once WPERP_HRM_PATH . '/includes/actions-filters.php';
+        require_once WPERP_HRM_PATH . '/includes/class-leave-entitlement-bg-process.php';
 
         // cli command
         if ( defined( 'WP_CLI' ) && WP_CLI ) {
@@ -186,6 +187,7 @@ class Human_Resource {
                 'new_leave_req'     => __( 'Leave Request', 'erp' ),
                 'take_leave'        => __( 'Send Leave Request', 'erp' ),
                 'terminate'         => __( 'Terminate', 'erp' ),
+                'leave_approve'     => __( 'Approve Reason', 'erp' ),
                 'leave_reject'      => __( 'Reject Reason', 'erp' ),
                 'already_terminate' => __( 'Sorry, this employee is already terminated', 'erp' ),
                 'already_active'    => __( 'Sorry, this employee is already active', 'erp' )
@@ -201,6 +203,7 @@ class Human_Resource {
             'restoreConfirmEmployee' => __( 'Are you sure to restore this employee?', 'erp' ),
             'delConfirmEmployeeNote' => __( 'Are you sure to delete this employee note?', 'erp' ),
             'delConfirmEntitlement'  => __( 'Are you sure to delete this Entitlement? If yes, then all leave request under this entitlement also permanently deleted', 'erp' ),
+            'delConfirmRequest'      => __( 'Are you sure to permanently delete this Request?', 'erp' ),
             'make_employee_text'     => __( 'This user already exists, Do you want to make this user as a employee?', 'erp' ),
             'employee_exit'          => __( 'This employee already exists', 'erp' ),
             'employee_created'       => __( 'Employee successfully created', 'erp' ),
@@ -209,7 +212,7 @@ class Human_Resource {
                 'page'          => 'erp-hr',
                 'section'       => 'leave',
                 'sub-section'   => 'leave-entitlements&tab=assignment'
-            ], admin_url( 'admin.php' ) ), __( 'Create Entitlement', 'erp' ), __( 'Create Entitlement', 'erp' ) ),
+            ], admin_url( 'admin.php' ) ), __( 'Create Entitlement', 'erp' ), __( 'Create Entitlement', 'erp' ) )
         ) );
 
 
@@ -307,6 +310,7 @@ class Human_Resource {
                 break;
 
             case 'leave':
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/leave-approve.php', 'erp-hr-leave-approve-js-tmp' );
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/leave-reject.php', 'erp-hr-leave-reject-js-tmp' );
         }
 
