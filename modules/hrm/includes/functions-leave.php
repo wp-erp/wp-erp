@@ -549,6 +549,11 @@ function erp_hr_leave_insert_entitlement( $args = [] ) {
             return new WP_Error( 'invalid-employee-' . $fields['user_id'], esc_attr__( 'Error: Invalid Employee. Employee job status is not active: ', 'erp' ) . $fields['user_id'] );
         }
 
+        // check employee type, only full time employees will get entitled
+        if ( $employee->get_type() !== 'permanent' ) {
+            return new WP_Error( 'invalid-employee-' . $fields['user_id'], esc_attr__( 'Error: Invalid Employee. Employee type is not Full Time: ', 'erp' ) . $fields['user_id'] );
+        }
+
         // get policy data
         $policy = Leave_Policy::find( $fields['trn_id'] );
         if ( ! $policy ) {
