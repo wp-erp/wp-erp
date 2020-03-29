@@ -4234,10 +4234,9 @@ div.erp-nav-container.--show-secondary .-secondary {
     text-align: center;
   }
 }
-
 /* WP data table conflict resolve ----------- */
 .wpdt-c #adminmenuback {
-    z-index: 1 !important;
+  z-index: 1 !important;
 }
 .leave-policy-form,
 .leave-entitlement-form {
