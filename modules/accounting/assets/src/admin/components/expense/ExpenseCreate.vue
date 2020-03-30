@@ -5,7 +5,8 @@
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
-                    <h2 class="content-header__title">{{ __('New Expense', 'erp') }}</h2>
+                    <h2 v-if="draftToExpense()">{{ __('Convert into Expense', 'erp') }}</h2>
+                    <h2 v-else class="content-header__title">{{ __('New Expense', 'erp') }}</h2>
                 </div>
             </div>
         </div>
@@ -133,7 +134,8 @@
                         <tfoot>
                         <tr>
                             <td colspan="9" style="text-align: right;">
-                                <combo-button v-if="editMode" :options="updateButtons" />
+                                <combo-button v-if="draftToExpense()" :options="[{ id: 'update', text: 'Save Conversion' }]" />
+                                <combo-button v-else-if="editMode" :options="updateButtons" />
                                 <combo-button v-else :options="createButtons" />
                             </td>
                         </tr>
@@ -256,10 +258,10 @@ export default {
     methods: {
         async prepareDataLoad() {
             /**
-                 * ----------------------------------------------
-                 * check if editing
-                 * -----------------------------------------------
-                 */
+             * ----------------------------------------------
+             * check if editing
+             * -----------------------------------------------
+             */
             if (this.$route.params.id) {
                 this.editMode  = true;
                 this.voucherNo = this.$route.params.id;
@@ -286,10 +288,10 @@ export default {
                 this.$store.dispatch('combo/setBtnID', 'update');
             } else {
                 /**
-                     * ----------------------------------------------
-                     * create a new expense
-                     * -----------------------------------------------
-                     */
+                 * ----------------------------------------------
+                 * create a new expense
+                 * -----------------------------------------------
+                 */
                 this.getLedgers();
                 this.getPayMethods();
 
@@ -324,6 +326,10 @@ export default {
             });
 
             this.updateFinalAmount();
+        },
+
+        draftToExpense() {
+            return this.$route.query.convert;
         },
 
         getLedgers() {
@@ -398,7 +404,14 @@ export default {
             this.$store.dispatch('spinner/setSpinner', true);
             HTTP.put(`/expenses/${this.voucherNo}`, requestData).then(res => {
                 this.$store.dispatch('spinner/setSpinner', false);
-                this.showAlert('success', 'Expense Updated!');
+
+                var message = __('Expense Updated!', 'erp');
+
+                if (this.draftToExpense()) {
+                    message = __('Conversion Successful!', 'erp');
+                }
+
+                this.showAlert('success', message);
             }).catch(error => {
                 this.$store.dispatch('spinner/setSpinner', false);
                 throw error;
@@ -474,7 +487,8 @@ export default {
                 particulars    : this.particulars,
                 check_no       : parseInt(this.check_data.check_no),
                 name           : this.check_data.payer_name,
-                bank           : this.check_data.bank_name
+                bank           : this.check_data.bank_name,
+                convert        : this.$route.query.convert
             };
 
             if (this.editMode) {

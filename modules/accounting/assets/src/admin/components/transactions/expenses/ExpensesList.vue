@@ -202,6 +202,10 @@ export default {
                 }
                 break;
 
+            case 'to_expense':
+                this.$router.push({ name: 'ExpenseEdit', params: { id: row.id }, query: { convert: true } });
+                break;
+
             default :
                 break;
             }
@@ -320,6 +324,10 @@ export default {
                         { key: 'payment', label: __('Make Payment', 'erp') },
                         { key: 'edit', label: __('Edit', 'erp') },
                         { key: 'void', label: 'Void' }
+                    ];
+                } else if (item.status_code === '1') {
+                    temp['actions'] = [
+                        { key: 'to_expense', label: 'Make Expense' }
                     ];
                 } else {
                     temp['actions'] = [
