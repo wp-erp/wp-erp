@@ -5,7 +5,7 @@ Tags: business manager, erp, accounting, crm, hr, project manager, small busines
 Requires at least: 4.4
 Tested up to: 5.3.2
 Requires PHP: 5.6
-Stable tag: 1.5.13
+Stable tag: 1.5.15
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -267,11 +267,20 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 == Changelog ==
 
+= v1.5.15 -> March 31, 2020 =
+- [fix] Plugin update capability of the user
+- [fix] Fixed pay bill duplicate entry issue on the ledger_details
+- [fix] Fixed the Check single view- which was not showing properly
+- [fix] Fixed dashboard CSS conflict with wpdatatable
+- [fix] Fixed accounting load issue with different permalink structure
+- [fix] Fixed Contact Group-based permission issue for the CRM agent
+- [fix] Contact Owner was not being updated from the CRM contact profile, Which has been fixed
+
 = v1.5.14 -> March 03, 2020 =
 - [fix] Show owners equity ledger account balance in chart of accounts
 - [fix] Bank balance transfer issue with opening balance cash
 - [fix] Subscription widget is not working issue
-- [fix] Email attachment is not working 
+- [fix] Email attachment is not working
 - [fix] Opening balance doesn't support fraction amounts
 - [fix] States/provinces are missing for most of the country
 - [tweak] Conditionally required vendor field on product creation
@@ -281,7 +290,7 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 - [new] Add document attachment field at leave application form
 - [new] Add csv import feature for uploading bulk holidays
 - [fix] Problem with announcement publication for selected employees & department
-- [fix] Default email format or HTML tags are not working with ERP Email notifications 
+- [fix] Default email format or HTML tags are not working with ERP Email notifications
 - [fix] Add disabled props in multi-select for people selection
 - [fix] Fix tax component validation
 - [fix] Fix missing company custom field csv export issue
