@@ -1277,7 +1277,7 @@ function erp_hr_leave_insert_request( $args = array() ) {
     $leaves = array();
     if ( $period['days'] ) {
         foreach ( $period['days'] as $date ) {
-            if ( get_option( 'erp_pro_sandwich_leave', '') !== 'yes' && ! $date['count'] ) { // skip if holiday or not working day
+            if ( class_exists( '\weDevs\ERP_PRO\HR\Leave' ) && get_option( 'erp_pro_sandwich_leave', '') !== 'yes' && ! $date['count'] ) { // skip if holiday or not working day
                 continue;
             }
 
