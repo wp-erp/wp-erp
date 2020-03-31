@@ -157,7 +157,7 @@ function erp_acct_format_check_line_items( $voucher_no ) {
         LEFT JOIN {$wpdb->prefix}erp_acct_expense_details AS expense_detail ON expense_detail.trn_no = expense.voucher_no
         LEFT JOIN {$wpdb->prefix}erp_acct_ledgers AS ledger ON expense_detail.ledger_id = ledger.id
 
-        WHERE expense.voucher_no = 3",
+        WHERE expense.voucher_no={$voucher_no} AND expense.trn_by = 3",
         $voucher_no
     );
 
@@ -340,6 +340,12 @@ function erp_acct_insert_expense( $data ) {
 function erp_acct_update_expense( $data, $expense_id ) {
     global $wpdb;
 
+    if ( $data['convert'] ) {
+        erp_acct_convert_draft_to_expense( $data, $expense_id );
+
+        return;
+    }
+
     $updated_by         = get_current_user_id();
     $data['updated_at'] = date( 'Y-m-d H:i:s' );
     $data['updated_by'] = $updated_by;
@@ -409,6 +415,135 @@ function erp_acct_update_expense( $data, $expense_id ) {
 
     return $expense_id;
 
+}
+
+/**
+ * Convert draft to expense
+ *
+ * @param array $data
+ * @param int $expense_id
+ *
+ * @return array
+ */
+function erp_acct_convert_draft_to_expense( $data, $expense_id ) {
+    global $wpdb;
+
+    $updated_by         = get_current_user_id();
+    $data['updated_at'] = date( 'Y-m-d H:i:s' );
+    $data['updated_by'] = $updated_by;
+
+    try {
+        $wpdb->query( 'START TRANSACTION' );
+
+        $type = 'expense';
+        if ( isset( $data['voucher_type'] ) && 'check' === $data['voucher_type'] ) {
+            $type = 'check';
+        }
+
+        $expense_data = erp_acct_get_formatted_expense_data( $data, $expense_id );
+
+        $wpdb->update(
+            $wpdb->prefix . 'erp_acct_expenses',
+            array(
+				'people_id'        => $expense_data['people_id'],
+				'people_name'      => $expense_data['people_name'],
+				'address'          => $expense_data['billing_address'],
+				'trn_date'         => $expense_data['trn_date'],
+				'amount'           => $expense_data['amount'],
+				'ref'              => $expense_data['ref'],
+				'check_no'         => $expense_data['check_no'],
+				'status'           => $expense_data['status'],
+				'particulars'      => $expense_data['particulars'],
+				'trn_by'           => $expense_data['trn_by'],
+				'trn_by_ledger_id' => $expense_data['trn_by_ledger_id'],
+				'attachments'      => $expense_data['attachments'],
+				'updated_at'       => $expense_data['updated_at'],
+				'updated_by'       => $expense_data['updated_by'],
+            ),
+            array(
+				'voucher_no' => $expense_id,
+            )
+        );
+
+        /**
+         *? We can't update `expense_details` directly
+         *? suppose there were 5 detail rows previously
+         *? but on update there may be 2 detail rows
+         *? that's why we can't update because the foreach will iterate only 2 times, not 5 times
+         *? so, remove previous rows and insert new rows
+         */
+        $prev_detail_ids = $wpdb->get_results( $wpdb->prepare( "SELECT id FROM {$wpdb->prefix}erp_acct_expense_details WHERE trn_no = %d", $expense_id ), ARRAY_A );
+        $prev_detail_ids = implode( ',', array_map( 'absint', $prev_detail_ids ) );
+
+        $wpdb->delete( $wpdb->prefix . 'erp_acct_expense_details', [ 'trn_no' => $expense_id ] );
+
+        $items = $expense_data['bill_details'];
+
+        foreach ( $items as $item ) {
+            $wpdb->insert(
+                $wpdb->prefix . 'erp_acct_expense_details',
+                array(
+					'ledger_id'   => $item['ledger_id'],
+					'particulars' => $item['particulars'],
+					'trn_no'      => $expense_id,
+					'amount'      => $item['amount'],
+					'created_at'  => $expense_data['created_at'],
+					'created_by'  => $expense_data['created_by'],
+					'updated_at'  => $expense_data['updated_at'],
+					'updated_by'  => $expense_data['updated_by'],
+                )
+            );
+
+            erp_acct_insert_expense_data_into_ledger( $expense_data, $item );
+        }
+
+        $check = 3;
+
+        if ( $check == $expense_data['trn_by'] ) {
+            erp_acct_insert_check_data( $expense_data );
+        } elseif ( 'check' === $type ) {
+            erp_acct_insert_check_data( $expense_data );
+        }
+
+        if ( 'check' === $type ) {
+            erp_acct_insert_source_expense_data_into_ledger( $expense_data );
+        } elseif ( isset( $expense_data['trn_by'] ) && 4 === $expense_data['trn_by'] ) {
+            do_action( 'erp_acct_expense_people_transaction', $expense_data, $expense_id );
+        } else {
+            //Insert into Ledger for source account
+            erp_acct_insert_source_expense_data_into_ledger( $expense_data );
+        }
+
+        $data['dr'] = 0;
+        $data['cr'] = $expense_data['amount'];
+        erp_acct_insert_data_into_people_trn_details( $data, $expense_id );
+
+        do_action( 'erp_acct_after_expense_create', $expense_data, $expense_id );
+
+        $wpdb->query( 'COMMIT' );
+
+    } catch ( Exception $e ) {
+        $wpdb->query( 'ROLLBACK' );
+        return new WP_error( 'expense-exception', $e->getMessage() );
+    }
+
+    $email = erp_get_people_email( $expense_data['people_id'] );
+
+    if ( 'check' === $type ) {
+        $check          = erp_acct_get_check( $expense_id );
+        $check['email'] = $email;
+
+        do_action( 'erp_acct_new_transaction_check', $expense_id, $check );
+
+        return $check;
+    }
+
+    $expense          = erp_acct_get_expense( $expense_id );
+    $expense['email'] = $email;
+
+    do_action( 'erp_acct_new_transaction_expense', $expense_id, $expense );
+
+    return $expense;
 }
 
 /**

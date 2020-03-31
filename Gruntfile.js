@@ -14,8 +14,7 @@ module.exports = function(grunt) {
         },
 
         // Compile all .less files.
-        less: {
-            admin: {
+        less: {admin: {
                 files: {
                     '<%= dirs.css %>/admin.css': '<%= dirs.less %>/admin/admin.less',
                     '<%= dirs.css %>/setup.css': '<%= dirs.less %>/admin/setup.less'

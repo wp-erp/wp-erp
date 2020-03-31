@@ -137,7 +137,7 @@ export default {
         },
 
         getVoucher() {
-            HTTP.get(`/accounts/transfer/${this.$route.params.id}`).then(response => {
+            HTTP.get(`/accounts/transfers/${this.$route.params.id}`).then(response => {
                 this.voucher = response.data;
                 this.print_data = this.voucher;
                 this.$store.dispatch('spinner/setSpinner', false);

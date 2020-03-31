@@ -82,7 +82,7 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         register_rest_route(
             $this->namespace,
-            '/' . $this->rest_base . '/transfer/(?P<id>[\d]+)',
+            '/' . $this->rest_base . '/transfers/(?P<id>[\d]+)',
             [
 				[
 					'methods'             => WP_REST_Server::READABLE,
@@ -97,7 +97,7 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         register_rest_route(
             $this->namespace,
-            '/' . $this->rest_base . '/list',
+            '/' . $this->rest_base . '/transfers/list',
             [
 				[
 					'methods'             => WP_REST_Server::READABLE,
@@ -135,14 +135,6 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
 					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::READABLE ),
 					'permission_callback' => function( $request ) {
 						return current_user_can( 'erp_ac_view_bank_accounts' );
-					},
-				],
-				[
-					'methods'             => WP_REST_Server::CREATABLE,
-					'callback'            => [ $this, 'update_dashboard_accounts' ],
-					'args'                => [],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_create_bank_transfer' );
 					},
 				],
 			]
@@ -360,50 +352,6 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $response = rest_ensure_response( $formatted_items );
         $response = $this->format_collection_response( $response, $request, 0 );
-
-        return $response;
-    }
-
-    /**
-     * Update dashboard bank accounts
-     *
-     * @param WP_REST_Request $request
-     *
-     * @return WP_Error|WP_REST_Response
-     */
-    public function update_dashboard_accounts( $request ) {
-        global $wpdb;
-
-        $wpdb->query( 'TRUNCATE TABLE ' . $wpdb->prefix . 'erp_acct_cash_at_banks' );
-
-        $items           = $request['accounts'];
-        $formatted_items = [];
-
-        if ( empty( $items ) ) {
-            return new WP_Error( 'rest_empty_accounts', __( 'Bank accounts are empty.' ), [ 'status' => 204 ] );
-        }
-
-        foreach ( $items as $item ) {
-            $additional_fields = [];
-
-            $wpdb->insert(
-                $wpdb->prefix . 'erp_acct_cash_at_banks',
-                array(
-					'ledger_id' => $item['ledger_id'],
-					'name'      => $item['name'],
-					'balance'   => $item['balance'],
-                )
-            );
-
-            $data              = $this->prepare_dashboard_item_for_response( $item, $request, $additional_fields );
-            $formatted_items[] = $this->prepare_response_for_collection( $data );
-        }
-
-        $additional_fields['namespace'] = $this->namespace;
-        $additional_fields['rest_base'] = $this->rest_base;
-
-        $response = rest_ensure_response( $formatted_items );
-        $response->set_status( 201 );
 
         return $response;
     }

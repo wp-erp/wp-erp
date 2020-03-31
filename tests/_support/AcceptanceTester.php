@@ -23,4 +23,7 @@ class AcceptanceTester extends \Codeception\Actor
    /**
     * Define custom actions here
     */
+   function randomGenerate() {
+  return \Faker\Factory::create();
+}
 }

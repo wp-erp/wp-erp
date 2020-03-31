@@ -58,7 +58,6 @@ class Assets {
         global $current_user;
         $u_id       = $current_user->ID;
         $site_url   = site_url();
-        $rest_nonce = wp_create_nonce( 'wp_rest' );
         $logout_url = esc_url( wp_logout_url() );
         $acct_url   = admin_url( 'admin.php' ) . '?page=erp-accounting#/';
 
@@ -107,7 +106,6 @@ class Assets {
         wp_localize_script( 'accounting-bootstrap', 'erp_acct_var', array(
             'user_id'            => $u_id,
             'site_url'           => $site_url,
-            'rest_nonce'         => $rest_nonce,
             'logout_url'         => $logout_url,
             'acct_assets'        => ERP_ACCOUNTING_ASSETS,
             'erp_assets'         => WPERP_ASSETS,
@@ -131,7 +129,12 @@ class Assets {
                 'height'      => 600,
                 'flex-width'  => true,
                 'flex-height' => true
-            ]
+            ],
+            'rest' => array(
+                'root'    => esc_url_raw( get_rest_url() ),
+                'nonce'   => wp_create_nonce( 'wp_rest' ),
+                'version' => 'erp/v1',
+            ),
         ) );
     }
 

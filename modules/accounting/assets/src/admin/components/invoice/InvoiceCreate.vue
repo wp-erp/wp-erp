@@ -5,7 +5,7 @@
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
-                    <h2 v-if="estimateToInvoice()">Convert into Invoice</h2>
+                    <h2 v-if="estimateToInvoice()">{{ __('Convert into Invoice', 'erp') }}</h2>
                     <h2 v-else class="content-header__title">{{ editMode ? __('Edit', 'erp') : __('New', 'erp') }} {{inv_title}}</h2>
                 </div>
             </div>

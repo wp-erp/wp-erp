@@ -1114,6 +1114,19 @@ function erp_crm_get_contact_groups( $args = [] ) {
                                  ->toArray();
 
         foreach ( $results as $key => $group ) {
+
+            if ( ! current_user_can( 'erp_crm_create_groups' ) ) {
+                $contact_subscriber = $group['contact_subscriber'];
+                $agent_subscriber   = [];
+                foreach ( $contact_subscriber as $cs ) {
+                    $obj = erp_get_people( $cs['user_id'] );
+                    if ( $obj->contact_owner == get_current_user_id() ) {
+                        $agent_subscriber[] = $cs;
+                    }
+                }
+                $group['contact_subscriber'] = $agent_subscriber;
+            }
+
             $subscribers = array_filter( $group['contact_subscriber'], function ( $subscriber ) {
                 return 'subscribe' === $subscriber['status'];
             } );
@@ -1208,6 +1221,10 @@ function erp_crm_get_subscriber_contact( $args = [] ) {
         $contact_subscribers = WeDevs\ERP\CRM\Models\ContactSubscriber::leftjoin( $contact_group_tb, $contact_group_tb . '.id', '=', $contact_subscribe_tb . '.group_id' );
 
 //        $contact_subscribers = $contact_subscribers::leftjoin('')
+        if( ! current_user_can( 'erp_crm_create_groups' ) ) {
+            $erp_peoples         = $wpdb->prefix . 'erp_peoples';
+            $contact_subscribers = $contact_subscribers->leftJoin( $erp_peoples, $erp_peoples . '.id', '=', $contact_subscribe_tb . '.user_id' )->addSelect( $contact_subscribe_tb . '.*', $contact_group_tb . '.*', $erp_peoples . '.contact_owner' )->where( $erp_peoples . '.contact_owner', '=', get_current_user_id() );
+        }
 
         // Check if want all data without any pagination
         if ( $args['number'] != '-1' && ! $args['count'] ) {
@@ -1242,12 +1259,15 @@ function erp_crm_get_subscriber_contact( $args = [] ) {
 
         // Check if args count true, then return total count customer according to above filter
         if ( $args['count'] ) {
+            $items = count( $items );
+        }
+        /*if ( $args['count'] ) {
             if ( ! empty( $args['group_id'] ) ) {
                 $items = WeDevs\ERP\CRM\Models\ContactSubscriber::leftjoin( $contact_group_tb, $contact_group_tb . '.id', '=', $contact_subscribe_tb . '.group_id' )->where( $contact_subscribe_tb . '.group_id', $args['group_id'] )->count();
             } else {
                 $items = WeDevs\ERP\CRM\Models\ContactSubscriber::leftjoin( $contact_group_tb, $contact_group_tb . '.id', '=', $contact_subscribe_tb . '.group_id' )->count();
             }
-        }
+        }*/
 
         wp_cache_set( $cache_key, $items, 'erp' );
     }
@@ -3787,8 +3807,8 @@ function erp_crm_get_contact_owner( $contact_id ) {
  *
  * @return WP_Error|void
  */
-function erp_crm_update_contact_owner( $contact_id, $owner_id ) {
-    $people = erp_get_people_by('user_id', $contact_id);
+function erp_crm_update_contact_owner( $contact_id, $owner_id, $field_type = 'user_id' ) {
+    $people = erp_get_people_by( $field_type, $contact_id );
 
     if ( empty( $people ) ) {
         return new \WP_Error( 'no-erp-people', __( 'People not exists', 'erp' ) );
