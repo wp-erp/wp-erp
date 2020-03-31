@@ -56,6 +56,7 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
 
                 <li v-for="feed in feed_obj">
                     <timeline-feed :i18n="i18n" :is="loadTimelineComponent( feed.type )" :feed="feed"></timeline-feed>
+                    <?php do_action('erp_add_custom_content_after_feed', $_GET['id'] );?>
                 </li>
 
             </template>

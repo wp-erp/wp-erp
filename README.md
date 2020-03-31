@@ -41,8 +41,9 @@ An open-source ERP (Enterprise Resource Planning) solution for WordPress. View [
 ## Installation
 
 * Clone the repository inside `/wp-content/plugins/`
-* CD into folder `cd wp-erp` and run `composer install`
-* Lastly run `composer dump-autoload -o`
+* CD into folder `cd wp-erp` and run `composer install` and then `composer dump-autoload -o`
+* Lastly run `npm install` and then `npm run build`
+* Activate the plugin
 
 
 ## Who's behind?

@@ -160,6 +160,10 @@ class Updates {
             return;
         }
 
+        if ( ! current_user_can( 'update_plugins' ) ) {
+            return;
+        }
+
         $installed_version = get_option( 'wp_erp_version' );
 
         $this->enable_all_erp_modules();

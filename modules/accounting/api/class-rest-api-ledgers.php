@@ -147,6 +147,8 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
 			]
         );
 
+
+        /*
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base . '/categories/(?P<chart_id>[\d]+)',
@@ -191,6 +193,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
 				],
 			]
         );
+        */
     }
 
     /**
