@@ -1,5 +1,6 @@
 <?php
 wp_enqueue_script( 'erp-tiptip' );
+wp_enqueue_style( 'erp-tiptip' );
 $current_tab = ! empty( $_REQUEST['tab'] ) ? sanitize_title( wp_unslash( $_REQUEST['tab'] ) ) : 'status';
 $tabs        = array(
 	'status' => __( 'System status', 'erp' )
