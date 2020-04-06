@@ -11,7 +11,7 @@ $leave_policy  = [];
 $submit_button = esc_attr('Save', 'erp');
 
 $leave_names   = array(
-                     '' => esc_attr__('-- select name --', 'erp')
+                     '' => '&mdash; ' . esc_attr__('select leave type', 'erp') . ' &mdash;'
                  ) + wp_list_pluck( Leave::all(), 'name', 'id' );
 
 // edit / copy
@@ -27,11 +27,18 @@ if ( $id ) {
     }
 }
 
-$financial_years = wp_list_pluck( Financial_Year::all(), 'fy_name', 'id' );
+$financial_years = array();
+$current_f_year = erp_hr_get_financial_year_from_date();
+foreach ( Financial_Year::all() as $f_year ) {
+    if ( $f_year['start_date'] < $current_f_year->start_date ) {
+        continue;
+    }
+    $financial_years[ $f_year['id'] ] = $f_year['fy_name'];
+}
 
-$leave_help_text = esc_html__( 'Select A Policy Name', 'erp' ) . ' ' . esc_attr__( 'Or', 'erp' ) . ' ' . sprintf( '<a href="?page=erp-hr&section=leave&sub-section=policies&type=policy-name">%s</a>', __( 'Add New', 'erp' ) );
+$leave_help_text = esc_html__( 'Select A Leave Type', 'erp' ) . ' ' . esc_attr__( 'Or', 'erp' ) . ' ' . sprintf( '<a href="?page=erp-hr&section=leave&sub-section=policies&type=policy-name">%s</a>', __( 'Add New', 'erp' ) );
 
-$f_year_help_text = __( 'Select Financial Year', 'erp' ) . ' ' . esc_attr__( 'Or', 'erp' ) . ' ' . sprintf( '<a href="?page=erp-settings&tab=erp-hr&section=financial">%s</a>', __( 'Add New', 'erp' ) );
+$f_year_help_text = __( 'Select Year', 'erp' ) . ' ' . esc_attr__( 'Or', 'erp' ) . ' ' . sprintf( '<a href="?page=erp-settings&tab=erp-hr&section=financial">%s</a>', __( 'Add New', 'erp' ) );
 
 ?>
 <div class="wrap">
@@ -55,8 +62,26 @@ $f_year_help_text = __( 'Select Financial Year', 'erp' ) . ' ' . esc_attr__( 'Or
 
         <div class="form-group">
             <div class="row">
+                <?php
+                erp_html_form_input( array(
+                    'label'    => esc_html__( 'Year', 'erp' ),
+                    'name'     => 'f-year',
+                    'value'    => ! empty( $leave_policy ) ? $leave_policy->f_year : '',
+                    'required' => true,
+                    'class'    => 'leave-policy-input erp-hrm-select2-add-more erp-hr-desi-drop-down',
+                    'type'     => 'select',
+                    'help'     => $f_year_help_text,
+                    'value'    => $current_f_year ? $current_f_year->id : '',
+                    'options'  => array(
+                                      '' => '&mdash; ' . esc_attr__('select year', 'erp') . ' &mdash;'
+                                  ) + $financial_years,
+                    'disabled' => $disabled,
+                ) ); ?>
+            </div>
+
+            <div class="row">
                 <?php erp_html_form_input( array(
-                    'label'    => esc_html__( 'Policy Name', 'erp' ),
+                    'label'    => esc_html__( 'Leave Type', 'erp' ),
                     'name'     => 'leave-id',
                     'value'    => ! empty( $leave_policy ) ? $leave_policy->leave_id : '',
                     'type'     => 'select',
@@ -97,13 +122,14 @@ $f_year_help_text = __( 'Select Financial Year', 'erp' ) . ' ' . esc_attr__( 'Or
 
             <div class="row applicable-form-row">
                 <?php erp_html_form_input(array(
-                    'label' => __('Applicable From', 'erp-pro'),
+                    'label' => __('Applicable After', 'erp-pro'),
                     'name'  => 'applicable-from',
                     'class' => 'leave-policy-input',
                     'value' => ! empty( $leave_policy ) ? $leave_policy->applicable_from_days : '0',
-                    'type'  => 'number'
+                    'type'  => 'number',
                 )); ?>
                 <span>Days</span>
+                <p class="description"><?php echo esc_html__( 'Based on employee joining date.', 'erp' ); ?></p>
             </div>
 
             <div class="row">
@@ -119,28 +145,27 @@ $f_year_help_text = __( 'Select Financial Year', 'erp' ) . ' ' . esc_attr__( 'Or
             <div class="row">
                 <?php
                 erp_html_form_input(array(
-                    'label'       => esc_html__('Entitle New Users?', 'erp'),
-                    'name'        => 'apply-for-new-users',
-                    'type'        => 'checkbox',
-                    'value'    => ! empty( $leave_policy ) && $leave_policy->apply_for_new_users == '1' ? 'on'  : '0',
-                    'help'        => esc_attr__( 'Check this button if you want to entitle new users to this policy after hiring.' )
+                    'label' => esc_html__('Entitle New Employees?', 'erp'),
+                    'name'  => 'apply-for-new-users',
+                    'type'  => 'checkbox',
+                    'value' => ! empty( $leave_policy ) && $leave_policy->apply_for_new_users == '1' ? 'on'  : '0',
                 ));
                 ?>
+                <p class="description"><?php echo esc_attr__( 'Check this checkbox if you want to entitle new employees to this policy after hiring.' ); ?></p>
             </div>
 
             <?php
             if ( ! $disabled ) {
                 echo '<div class="row">';
                 erp_html_form_input(array(
-                    'label'       => esc_html__('Apply for existing users?', 'erp'),
-                    'name'        => 'apply-for-existing-users',
-                    'type'        => 'checkbox',
-                    'help'        => esc_attr__( 'Check this button if you want to entitle existing users to this policy.' )
+                    'label' => esc_html__('Apply for existing employees?', 'erp'),
+                    'name'  => 'apply-for-existing-users',
+                    'type'  => 'checkbox',
                 ));
+                echo '<p class="description">' . esc_attr__( 'Check this checkbox if you want to entitle existing employees to this policy.' ) . '</p>';
                 echo '</div>';
             }
             ?>
-
         </div> <!-- .form-group -->
 
         <div class="form-group">
@@ -207,23 +232,6 @@ $f_year_help_text = __( 'Select Financial Year', 'erp' ) . ' ' . esc_attr__( 'Or
                     'class'    => 'leave-policy-input erp-hrm-select2-add-more erp-hr-desi-drop-down',
                     'type'     => 'select',
                     'options'  => erp_hr_get_marital_statuses( esc_html__( 'All', 'erp' ) ),
-                    'disabled' => $disabled,
-                ) ); ?>
-            </div>
-
-            <div class="row">
-                <?php
-                erp_html_form_input( array(
-                    'label'    => esc_html__( 'Year', 'erp' ),
-                    'name'     => 'f-year',
-                    'value'    => ! empty( $leave_policy ) ? $leave_policy->f_year : '',
-                    'required' => true,
-                    'class'    => 'leave-policy-input erp-hrm-select2-add-more erp-hr-desi-drop-down',
-                    'type'     => 'select',
-                    'help'     => $f_year_help_text,
-                    'options'  => array(
-                        '' => esc_html__( '-- select year --', 'erp' )
-                    ) + $financial_years,
                     'disabled' => $disabled,
                 ) ); ?>
             </div>

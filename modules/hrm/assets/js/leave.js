@@ -12,6 +12,8 @@
 
             $( '.erp-hr-leave-policy' ).on( 'click', 'a.submitdelete', self, this.policy.remove );
             $( 'body' ).on( 'change', '#erp-hr-leave-req-from-date, #erp-hr-leave-req-to-date', self, this.leave.requestDates );
+            // trigger policy
+            this.leave.setPolicy();
             $( 'body' ).on( 'change', '#erp-hr-leave-req-employee-id', self, this.leave.setPolicy );
             $( 'body' ).on( 'change', '.new-leave-request-form .f_year, .erp-hr-leave-request-new .f_year', self, this.leave.setPolicy );
             $( 'body' ).on( 'change', '#erp-hr-leave-req-leave-policy', self, this.leave.setAvailableDays );
@@ -476,6 +478,7 @@
                         });
                     }
                 });
+                Leave.leave.setPolicy();
             },
 
             requestDates: function(e) {
@@ -567,8 +570,7 @@
                         leaveWrap.find( 'input[type="text"], textarea').removeAttr('disabled');
                     },
                     error: function(resp) {
-                        leavetypewrap.html( wpErpHr.empty_entitlement_text ).hide().fadeIn();
-                        // alert( resp );
+                        leavetypewrap.html( '<div class="notice error"><p>' + resp + '</p></div>' ).hide().fadeIn();
                     }
                 } );
             },

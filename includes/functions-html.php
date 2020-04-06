@@ -38,9 +38,10 @@ function erp_html_form_error( $value = '' ) {
  *
  * @return void
  */
-function erp_html_form_label( $label, $field_id = '', $required = false ) {
+function erp_html_form_label( $label, $field_id = '', $required = false, $tooltip = '' ) {
     $req = $required ? ' <span class="required">*</span>' : '';
-    echo '<label for="' . esc_attr( $field_id ) . '">' . wp_kses_post( $label ) . wp_kses_post( $req ) . '</label>';
+    $tip = ! empty( $tooltip ) ? ' ' . erp_help_tip( $tooltip, true, 'title' ) : '';
+    echo '<label for="' . esc_attr( $field_id ) . '">' . wp_kses_post( $label ) . wp_kses_post( $req ) . $tip . '</label>';
 }
 
 /**
@@ -94,6 +95,7 @@ function erp_html_form_input( $args = array() ) {
         'help'          => '',
         'addon'         => '',
         'addon_pos'     => 'before',
+        'tooltip'       => '',
         'custom_attr'   => array(),
         'options'       => array(),
     );
@@ -128,7 +130,7 @@ function erp_html_form_input( $args = array() ) {
     }
 
     if ( ! empty( $field['label'] ) ) {
-        erp_html_form_label( $field['label'], $field_id, $field['required'] );
+        erp_html_form_label( $field['label'], $field_id, $field['required'], $field['tooltip'] );
     }
 
     if ( ! empty( $field['addon'] ) ) {

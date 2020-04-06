@@ -12,7 +12,7 @@ if ( $id ) {
 
 <div class="wrap">
     <div id="col-container" class="wp-clearfix create-policy-name">
-        <h2><?php esc_html_e( 'Leave Names', 'erp' ); ?>
+        <h2><?php esc_html_e( 'Leave Types', 'erp' ); ?>
             <a href="<?php echo esc_url( admin_url( 'admin.php?page=erp-hr&section=leave&sub-section=policies' ) ); ?>" id="erp-leave-policy-new" class="add-new-h2">
                 <?php esc_html_e( 'Back To Leave Policies', 'erp' ); ?>
             </a>
@@ -33,11 +33,11 @@ if ( $id ) {
 
                 <div class="form-field">
                     <?php erp_html_form_input( array(
-                        'label'       => esc_html__( 'Policy Name', 'erp' ),
+                        'label'       => esc_html__( 'Leave Type', 'erp' ),
                         'name'        => 'name',
                         'value'       => empty( $leave ) ? '' : $leave->name,
                         'required'    => true,
-                        'help'        => esc_html__( 'Unique policy name.', 'erp' ),
+                        'help'        => esc_html__( 'Unique leave type eg: Annual Leave, Casual Leave etc.', 'erp' ),
                         'placeholder' => 'Annual leave'
                     ) ); ?>
                 </div>

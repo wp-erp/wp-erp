@@ -217,8 +217,7 @@ class Form_Handler {
 
             if ( isset( $_REQUEST['policy_id'] ) ) {
                 $policy_ids = $_REQUEST['policy_id'];
-                array_walk( $policy_ids, function( $key, $value ) {
-                    $key = sanitize_key( $key );
+                array_walk( $policy_ids, function( &$value ) {
                     $value = absint( $value );
                 });
                 erp_hr_leave_policy_delete( $policy_ids );

@@ -5,7 +5,7 @@
         </a>
 
         <a href="<?php echo esc_url( erp_hr_new_policy_name_url() ); ?>" id="erp-leave-name-new" class="add-new-h2">
-            <?php esc_html_e( 'View Names', 'erp' ); ?>
+            <?php esc_html_e( 'View Leave Types', 'erp' ); ?>
         </a>
     </h2>
 

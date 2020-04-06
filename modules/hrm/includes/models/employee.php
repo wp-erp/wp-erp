@@ -51,11 +51,11 @@ class Employee extends Model {
      * @return object
      */
     public function leave_requests() {
-        return $this->hasMany( 'WeDevs\ERP\HRM\Models\Leave_request', 'user_id', 'user_id' );
+        return $this->hasMany( 'WeDevs\ERP\HRM\Models\Leave_Request', 'user_id', 'user_id' );
     }
 
     public function scopeleave_requests() {
-        return $this->hasMany( 'WeDevs\ERP\HRM\Models\Leave_request', 'user_id', 'user_id' );
+        return $this->hasMany( 'WeDevs\ERP\HRM\Models\Leave_Request', 'user_id', 'user_id' );
     }
 
     public function educations() {

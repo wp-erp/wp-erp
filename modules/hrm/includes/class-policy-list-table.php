@@ -66,9 +66,17 @@ class Leave_Policies_List_Table extends \WP_List_Table {
             return;
         }
 
-        $financial_years =  array( '' => esc_attr__( 'Select year', 'erp') ) +  wp_list_pluck( Financial_Year::all(), 'fy_name', 'id' );
+        $financial_years = wp_list_pluck( Financial_Year::orderBy( 'start_date', 'desc')->get(), 'fy_name', 'id' );
 
-        $selected_year = ( isset( $_GET['filter_year'] ) ) ? absint( wp_unslash( $_GET['filter_year'] ) ) : '';
+        if ( empty( $financial_years ) ) {
+            return;
+        }
+
+        if ( ! empty( $_GET['filter_year'] ) ) {
+            $selected_year = absint( wp_unslash( $_GET['filter_year'] ) );
+        } else {
+            $selected_year = erp_hr_get_financial_year_from_date()->id;
+        }
         ?>
         <div class="alignleft actions">
 
@@ -135,13 +143,13 @@ class Leave_Policies_List_Table extends \WP_List_Table {
         $columns = array(
             'cb'             => '<input type="checkbox" />',
             'name'           => __( 'Policy Name', 'erp' ),
+            'f_year'         => __( 'Year', 'erp' ),
             'description'    => __( 'Description', 'erp' ),
             'leave_day'      => __( 'Days', 'erp' ),
             'calendar_color' => __( 'Calendar Color', 'erp' ),
             'department'     => __( 'Department', 'erp' ),
             'designation'    => __( 'Designation', 'erp' ),
             'location'       => __( 'Location', 'erp' ),
-            'f_year'         => __( 'Year', 'erp' ),
             'gender'         => __( 'Gender', 'erp' ),
             'marital'        => __( 'Marital', 'erp' ),
         );
@@ -284,10 +292,12 @@ class Leave_Policies_List_Table extends \WP_List_Table {
         $this->page_status     = isset( $_GET['status'] ) ? sanitize_text_field( wp_unslash( $_GET['status'] ) ) : '2';
 
         // only ncessary because we have sample data
+        $current_f_year = erp_hr_get_financial_year_from_date();
+        $f_year = null !== $current_f_year ? $current_f_year->id : '';
         $args = array(
             'offset' => $offset,
             'number' => $per_page,
-            'f_year'  => isset( $_GET['filter_year'] ) ? sanitize_text_field( wp_unslash( $_GET['filter_year'] ) ) : ''
+            'f_year'  => isset( $_GET['filter_year'] ) ? sanitize_text_field( wp_unslash( $_GET['filter_year'] ) ) : $f_year
         );
 
         if ( isset( $_REQUEST['orderby'] ) && isset( $_REQUEST['order'] ) ) {

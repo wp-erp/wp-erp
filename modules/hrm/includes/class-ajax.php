@@ -1690,12 +1690,6 @@ class Ajax_Handler {
             $this->send_error( sprintf( esc_attr__( 'Invalid leave duration. Please apply between %s and %s.', 'erp' ), erp_format_date( $f_year_start ), erp_format_date( $f_year_end ) ) );
         }
 
-        /*
-        $valid_date_range     = erp_hrm_is_valid_leave_date_range_within_financial_date_range( $start_date, $end_date );
-        $financial_start_date = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
-        $financial_end_date   = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
-        */
-
         // handle overlapped leaves
         $leave_record_exist = erp_hrm_is_leave_recored_exist_between_date( $start_date, $end_date, $id, $entitlement->f_year );
         if ( $leave_record_exist ) {
@@ -1781,7 +1775,12 @@ class Ajax_Handler {
             return $this->send_success( $content );
         }
 
-        return $this->send_error( __( 'Selected user is not entitled to any leave policy. Set leave entitlement to apply for leave', 'erp' ) );
+        $error_string = esc_html__( 'Employee is not entitled to any leave policy. Set leave entitlement to apply for leave.', 'erp' );
+        if ( ! current_user_can( 'erp_leave_manage' ) ) {
+            $error_string = esc_html__( 'No entitlement found for selected year. Please contact with HR.', 'erp' );
+        }
+
+        return $this->send_error( $error_string );
     }
 
     /**
@@ -1822,16 +1821,16 @@ class Ajax_Handler {
         }
 
         if ( $available <= 0 ) {
-            $content = sprintf( '<span class="description red">%d %s</span>', erp_number_format_i18n( $available ), __( 'days are available', 'erp' ) );
+            $content = sprintf( '<span class="description red"> %d %s</span>', erp_number_format_i18n( $available ), _n( 'day available', 'days are available', $available+1, 'erp' ) );
         } elseif ( $available > 0 ) {
-            $content = sprintf( '<span class="description green">%s %s</span>', erp_number_format_i18n( $available ), __( 'days are available', 'erp' ) );
+            $content = sprintf( '<span class="description green"> %s %s</span>', erp_number_format_i18n( $available ), __( 'days are available', 'erp' ) );
         } else {
             //$leave_policy_day = \WeDevs\ERP\HRM\Models\Leave_Policy::select( 'value' )->where( 'id', $policy_id )->pluck( 'value' );
             //$content          = sprintf( '<span class="description">%d %s</span>', number_format_i18n( $leave_policy_day ), __( 'days are available', 'erp' ) );
         }
 
         if (  $extra_leaves > 0 ) {
-            $content .= sprintf( ' <span class="description red">(%s %s)</span>', erp_number_format_i18n( $extra_leaves ), __( 'days extra', 'erp' ) );
+            $content .= sprintf( '<span class="description red"> (%s %s)</span>', erp_number_format_i18n( $extra_leaves ), _n( 'day extra', 'days extra', $extra_leaves, 'erp' ) );
         }
 
         $this->send_success( $content );

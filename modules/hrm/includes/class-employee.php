@@ -1812,7 +1812,7 @@ class Employee {
         $f_year_tbl = $wpdb->prefix . 'erp_hr_financial_years';
         $leave_tbl  = $wpdb->prefix . 'erp_hr_leaves';
 
-        $f_year = get_financial_year_from_date();
+        $f_year = erp_hr_get_financial_year_from_date();
 
         $result = array();
 
@@ -1871,7 +1871,7 @@ class Employee {
      * @return array
      */
     public function get_leave_summary( $date = null, $policy_id = null ) {
-        $f_year = get_financial_year_from_date( $date );
+        $f_year = erp_hr_get_financial_year_from_date( $date );
 
         $result = array();
 
