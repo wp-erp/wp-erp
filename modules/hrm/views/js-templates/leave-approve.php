@@ -7,7 +7,7 @@
             'id'       => 'erp-hr-leave-approve-reason',
             'value'    => '',
             'type'     => 'textarea',
-            'required' => true,
+            'required' => false,
             'custom_attr'   => array(
                 'rows' => 5,
                 'cols' => 50,

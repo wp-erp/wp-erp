@@ -36,7 +36,7 @@ class Leave_Report_Employee_Based extends \WP_List_Table {
             ->leftJoin( $leave_name_tbl, "$policy_tbl.leave_id", '=', "$leave_name_tbl.id" )
             ->get();
 
-        $f_year = get_financial_year_from_date();
+        $f_year = erp_hr_get_financial_year_from_date();
         $this->current_f_year = ! empty( $f_year ) ? $f_year->id : 0;
     }
 

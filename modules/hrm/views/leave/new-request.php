@@ -15,9 +15,9 @@
                 erp_html_show_notice( __( 'Leave request has been submitted successfully.', 'erp' ), 'updated', true );
             }
             $financial_years = array();
-            $current_start_date = erp_current_datetime()->modify( erp_financial_start_date() )->getTimestamp();
+            $current_f_year = erp_hr_get_financial_year_from_date();
             foreach ( Financial_Year::all() as $f_year ) {
-                if ( $f_year['start_date'] < $current_start_date ) {
+                if ( $f_year['start_date'] < $current_f_year->start_date ) {
                     continue;
                 }
                 $financial_years[ $f_year['id'] ] = $f_year['fy_name'];
@@ -29,6 +29,24 @@
             ?>
 
             <form action="" method="post" class="new-leave-request-form" enctype="multipart/form-data">
+                <?php
+                if ( count( $financial_years ) === 1 ) { ?>
+                    <input type="hidden" name="f_year" id="f_year" class="f_year" value="<?php echo key( $financial_years );?>" />
+                    <?php
+                }
+                else {
+                    echo '<div class="row">';
+                    erp_html_form_input( array(
+                        'label'    => esc_html__( 'Year', 'erp' ),
+                        'name'     => 'f_year',
+                        'value'    =>  '',
+                        'required' => true,
+                        'class'    => 'f_year',
+                        'type'     => 'select',
+                        'options'  => $financial_years,
+                    ) );
+                    echo '</div>';
+                }?>
 
                 <?php if ( current_user_can( 'erp_leave_create_request' ) ) { ?>
                     <div class="row">
@@ -45,19 +63,6 @@
                     </div>
                 <?php } ?>
 
-                <div class="row">
-                    <?php erp_html_form_input( array(
-                        'label'    => esc_html__( 'Year', 'erp' ),
-                        'name'     => 'f_year',
-                        'value'    =>  '',
-                        'required' => true,
-                        'class'    => 'f_year',
-                        'type'     => 'select',
-                        'options'  => $financial_years,
-                        'help'     => $f_year_help_text,
-                    ) ); ?>
-                </div>
-
                 <div class="row erp-hide erp-hr-leave-type-wrapper"></div>
 
                 <?php do_action( 'erp_hr_leave_request_form_middle' ); ?>
@@ -71,7 +76,10 @@
                             'value'    => '',
                             'required' => true,
                             'class'    => 'erp-leave-date-field',
-                            'custom_attr' => [ 'disabled' => 'disabled' ]
+                            'custom_attr' => array(
+                                'disabled' => 'disabled',
+                                'autocomplete' => 'off',
+                            ),
                         ) ); ?>
                     </div>
 
@@ -83,7 +91,10 @@
                             'value'    => '',
                             'required' => true,
                             'class'    => 'erp-leave-date-field',
-                            'custom_attr' => [ 'disabled' => 'disabled' ]
+                            'custom_attr' => array(
+                                'disabled' => 'disabled',
+                                'autocomplete' => 'off',
+                            ),
                         ) ); ?>
                     </div>
                 </div>

@@ -34,12 +34,9 @@ class Entitlement_List_Table extends \WP_List_Table {
             'cb'            => '<input type="checkbox" />',
             'name'          => __( 'Employee Name', 'erp' ),
             'leave_policy'  => __( 'Leave Policy', 'erp' ),
-            'valid_from'    => __( 'Valid From', 'erp' ),
-            'valid_to'      => __( 'Valid To', 'erp' ),
-            'days'          => __( 'Days', 'erp' ),
+            'validity'      => __( 'Validity', 'erp' ),
             'available'     => __( 'Available', 'erp' ),
             'spent'         => __( 'Spent', 'erp' ),
-            'extra'         => __( 'Extra Leaves', 'erp' ),
         );
 
         // hide cb if debug mode is off
@@ -64,15 +61,16 @@ class Entitlement_List_Table extends \WP_List_Table {
         if ( $which != 'top' ) {
             return;
         }
-        $entitlement_years = wp_list_pluck( Financial_Year::all(), 'fy_name', 'id' );
+        $entitlement_years = wp_list_pluck( Financial_Year::orderBy( 'start_date', 'desc')->get(), 'fy_name', 'id' );
 
         if ( empty( $entitlement_years ) ) {
             return;
         }
 
-        $selected_f_year = '';
         if ( ! empty( $_GET['financial_year'] ) ) {
             $selected_f_year = absint( wp_unslash( $_GET['financial_year'] ) );
+        } else {
+            $selected_f_year = erp_hr_get_financial_year_from_date()->id;
         }
 
         $policies = \WeDevs\ERP\HRM\Models\Leave_Policy::all();
@@ -91,7 +89,7 @@ class Entitlement_List_Table extends \WP_List_Table {
         ?>
             <div class="alignleft actions">
                 <select name="financial_year" id="financial_year">
-                    <?php echo wp_kses( erp_html_generate_dropdown( array( '' => esc_attr__( 'select year', 'erp' ) ) + $entitlement_years, $selected_f_year ), array(
+                    <?php echo wp_kses( erp_html_generate_dropdown( $entitlement_years, $selected_f_year ), array(
                         'option' => array(
                             'value' => array(),
                             'selected' => array()
@@ -133,24 +131,26 @@ class Entitlement_List_Table extends \WP_List_Table {
      * @return string
      */
     function column_default( $entitlement, $column_name ) {
-        $f_year = Financial_Year::find( $entitlement->f_year );
-
         switch ( $column_name ) {
             case 'leave_policy':
                 return esc_html( $entitlement->policy_name );
 
-            case 'valid_from':
-                return erp_format_date( $f_year->start_date );
-
-            case 'valid_to':
-                return erp_format_date( $f_year->end_date );
-
-            case 'days':
-                return number_format_i18n( $entitlement->day_in );
-
             default:
                 return isset( $entitlement->$column_name ) ? $entitlement->$column_name : '';
         }
+    }
+
+    function column_validity( $item ) {
+        $f_year = Financial_Year::find( $item->f_year );
+
+        $str = '<p><strong>' . erp_format_date( $f_year->start_date ) .  ' &mdash; ' . erp_format_date( $f_year->end_date ) . '</strong></p>';
+
+        $days = number_format_i18n( $item->day_in ) . ' ' . _n( 'day', 'days', $item->day_in, 'erp' );
+        $days = sprintf( '<span class="tooltip" title="%s">%s</span>', __( 'Entitled Days', 'erp' ), $days );
+
+        $str .= "<p><em>$days</em></p>";
+
+        return $str;
     }
 
     function column_available( $entitlement ) {
@@ -162,7 +162,14 @@ class Entitlement_List_Table extends \WP_List_Table {
 
         if ( array_key_exists( $entitlement->id, $this->entitlement_data ) && ! is_wp_error( $this->entitlement_data[ $entitlement->id ] ) ) {
             $available = floatval( $this->entitlement_data[ $entitlement->id ]['available'] );
-            $str =  $available > 0 ? sprintf( '<span class="green">%s %s</span>', erp_number_format_i18n( $available ), __( 'days', 'erp' ) ) : '-';
+            $extra_leave = floatval( $this->entitlement_data[ $entitlement->id ]['extra_leave'] );
+
+            if ( $available > 0 ) {
+                $str = sprintf( '<span class="green tooltip" title="%s"> %s %s</span>', __( 'Available Leave', 'erp' ), erp_number_format_i18n( $available ), _n( 'day', 'days', $available+1, 'erp' ) );
+            }
+            elseif ( $extra_leave > 0 ) {
+                $str = sprintf( '<span class="red tooltip" title="%s"> -%s %s</span>', __( 'Extra Leave', 'erp' ), erp_number_format_i18n( $extra_leave ), _n( 'day', 'days', $extra_leave, 'erp' ) );
+            }
         }
 
         return $str;
@@ -178,21 +185,6 @@ class Entitlement_List_Table extends \WP_List_Table {
         if ( array_key_exists( $entitlement->id, $this->entitlement_data ) && ! is_wp_error( $this->entitlement_data[ $entitlement->id ] ) ) {
             $spent = floatval( $this->entitlement_data[ $entitlement->id ]['spent'] );
             $str = $spent > 0 ? sprintf( '<span class="green">%s %s</span>', erp_number_format_i18n( $spent ), __( 'days', 'erp' ) ) : '-';
-        }
-
-        return $str;
-    }
-
-    function column_extra( $entitlement ) {
-        $str = '';
-
-        if ( ! array_key_exists( $entitlement->id, $this->entitlement_data ) ) {
-            $this->entitlement_data[ $entitlement->id ] = erp_hr_leave_get_balance_for_single_entitlement( $entitlement->id );
-        }
-
-        if ( array_key_exists( $entitlement->id, $this->entitlement_data ) && ! is_wp_error( $this->entitlement_data[ $entitlement->id ] ) ) {
-            $extra_leave = floatval( $this->entitlement_data[ $entitlement->id ]['extra_leave'] );
-            $str = $extra_leave > 0 ? sprintf( '<span class="red">%s %s</span>', erp_number_format_i18n( $extra_leave ), __( 'days', 'erp' ) ) : '-';
         }
 
         return $str;
@@ -309,6 +301,10 @@ class Entitlement_List_Table extends \WP_List_Table {
 
         if ( ! empty( $_GET['financial_year'] ) ) {
             $args['year'] = absint( wp_unslash( $_GET['financial_year'] ) );
+        }
+        else {
+            $current_f_year = erp_hr_get_financial_year_from_date();
+            $args['year'] = null !== $current_f_year ? $current_f_year->id : '';
         }
 
         if ( ! empty( $_GET['leave_policy'] ) ) {

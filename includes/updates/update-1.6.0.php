@@ -81,6 +81,8 @@ class ERP_1_6_0 {
                   description text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
                   days tinyint(3) UNSIGNED NOT NULL,
                   color varchar(10) DEFAULT NULL,
+                  apply_limit tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                  employee_type enum('-1','permanent','parttime','contract','temporary','trainee') NOT NULL DEFAULT 'permanent',
                   department_id int(11) NOT NULL DEFAULT '-1',
                   location_id int(11) NOT NULL DEFAULT '-1',
                   designation_id int(11) NOT NULL DEFAULT '-1',
@@ -99,7 +101,9 @@ class ERP_1_6_0 {
                   halfday_enable tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
                   created_at int(11) NOT NULL,
                   updated_at int(11) NOT NULL,
-                  PRIMARY KEY  (id)
+                  PRIMARY KEY  (id),
+                  KEY leave_id (leave_id),
+                  KEY f_year (f_year)
             ) $charset_collate;",
 
             "CREATE TABLE {$wpdb->prefix}erp_hr_leave_policies_segregation_new (
@@ -137,7 +141,9 @@ class ERP_1_6_0 {
                   created_at int(11) NOT NULL,
                   updated_at int(11) NOT NULL,
                   PRIMARY KEY  (id),
-                  KEY comp_key_1 (user_id,leave_id,f_year,trn_type)
+                  KEY comp_key_1 (user_id,leave_id,f_year,trn_type),
+                  KEY trn_id (trn_id),
+                  KEY leave_id (leave_id)
             ) $charset_collate;",
 
             "CREATE TABLE {$wpdb->prefix}erp_hr_leave_requests_new (
@@ -157,7 +163,9 @@ class ERP_1_6_0 {
                   PRIMARY KEY  (id),
                   KEY user_id (user_id),
                   KEY user_leave (user_id,leave_id),
-                  KEY user_entitlement (user_id,leave_entitlement_id)
+                  KEY user_entitlement (user_id,leave_entitlement_id),
+                  KEY last_status (last_status),
+                  KEY leave_entitlement_id (leave_entitlement_id)
             ) $charset_collate;",
 
             "CREATE TABLE {$wpdb->prefix}erp_hr_leave_approval_status_new (
@@ -203,7 +211,10 @@ class ERP_1_6_0 {
                   f_year smallint(5) UNSIGNED NOT NULL,
                   created_at int(11) NOT NULL,
                   updated_at int(11) NOT NULL,
-                  PRIMARY KEY  (id)
+                  PRIMARY KEY  (id),
+                  KEY user_id (user_id),
+                  KEY leave_id (leave_id),
+                  KEY f_year (f_year)
             ) $charset_collate;",
 
             "CREATE TABLE {$wpdb->prefix}erp_hr_leaves_unpaid_new (
@@ -218,7 +229,12 @@ class ERP_1_6_0 {
                   f_year smallint(5) UNSIGNED NOT NULL,
                   created_at int(11) NOT NULL,
                   updated_at int(11) NOT NULL,
-                  PRIMARY KEY  (id)
+                  PRIMARY KEY  (id),
+                  KEY user_id (user_id),
+                  KEY leave_id (leave_id),
+                  KEY f_year (f_year),
+                  KEY leave_request_id (leave_request_id),
+                  KEY leave_approval_status_id (leave_approval_status_id)
             ) $charset_collate;",
 
             "CREATE TABLE {$wpdb->prefix}erp_hr_financial_years_new (
@@ -232,7 +248,9 @@ class ERP_1_6_0 {
                   created_at int(11) DEFAULT NULL,
                   updated_at int(11) DEFAULT NULL,
                   PRIMARY KEY (id),
-                  KEY year_search (start_date,end_date)
+                  KEY year_search (start_date,end_date),
+                  KEY start_date (start_date),
+                  KEY end_date (end_date)
             ) $charset_collate;",
 
         );

@@ -80,7 +80,7 @@ class Leave_Requests_Controller extends REST_Controller {
         $total = 0;
 
         if ( $args['type'] == 'upcoming' ) {
-            $items = \WeDevs\ERP\HRM\Models\Leave_request::where( 'start_date', '>=', date( 'Y-m-d' ) . ' 00:00:00' )
+            $items = \WeDevs\ERP\HRM\Models\Leave_Request::where( 'start_date', '>=', date( 'Y-m-d' ) . ' 00:00:00' )
                                                          ->where( 'status', '1' )
                                                          ->offset( $args['offset'] )
                                                          ->take( $args['number'] )

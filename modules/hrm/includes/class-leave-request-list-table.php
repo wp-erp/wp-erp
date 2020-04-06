@@ -10,6 +10,7 @@ class Leave_Requests_List_Table extends \WP_List_Table {
 
     private $counts = array();
     private $page_status;
+    private $users = array();
 
     function __construct() {
         global $status, $page;
@@ -42,10 +43,13 @@ class Leave_Requests_List_Table extends \WP_List_Table {
             return;
         }
 
-        $f_year = get_financial_year_from_date();
-        $f_year = ! empty( $f_year ) ? $f_year->id : '';
+        $financial_years = wp_list_pluck( Financial_Year::orderBy( 'start_date', 'desc')->get(), 'fy_name', 'id' );
+        if ( empty( $financial_years ) ) {
+            return;
+        }
 
-        $financial_years =  array( '' => esc_attr__( 'select year', 'erp') ) +  wp_list_pluck( Financial_Year::all(), 'fy_name', 'id' );
+        $f_year = erp_hr_get_financial_year_from_date();
+        $f_year = ! empty( $f_year ) ? $f_year->id : '';
 
         $selected_year = ( isset( $_GET['filter_year'] ) ) ? absint( wp_unslash( $_GET['filter_year'] ) ) : $f_year;
         ?>
@@ -84,16 +88,11 @@ class Leave_Requests_List_Table extends \WP_List_Table {
         $columns = array(
             //'cb'        => '<input type="checkbox" />',
             'name'      => __( 'Employee Name', 'erp' ),
-            'policy'    => __( 'Leave Policy', 'erp' ),
-            'from_date' => __( 'From Date', 'erp' ),
-            'to_date'   => __( 'To Date', 'erp' ),
-            //'entitlement'    => __( 'Entitled Days', 'erp' ),
-            'days'      => __( 'Request', 'erp' ),
-            'available' => __( 'Available', 'erp' ),
-            'extra'         => __( 'Extra Leaves', 'erp' ),
+            'policy'    => __( 'Policy', 'erp' ),
+            'request'   => __( 'Request', 'erp' ),
+            'reason'    => __( 'Reason', 'erp' ),
             'status'    => __( 'Status', 'erp' ),
-            'leave_attachment'  => __( 'Attachment', 'erp' ),
-            'reason'    => __( 'Leave Reason', 'erp' ),
+            'approved_by' => __( 'Approved By', 'erp' ),
         );
 
         if ( isset( $_GET['status'] ) && $_GET['status'] == 3 ) {
@@ -112,49 +111,62 @@ class Leave_Requests_List_Table extends \WP_List_Table {
      * @return string
      */
     function column_default( $item, $column_name ) {
-        switch ( $column_name ) {
 
-            // case 'name':
-            //     return esc_attr( $item->name );
+        global $wpdb;
+
+        switch ( $column_name ) {
 
             case 'policy':
                 return esc_attr( $item->policy_name );
 
-            case 'from_date':
-                return erp_format_date( $item->start_date );
-
-            case 'to_date':
-                return erp_format_date( $item->end_date );
-
             case 'status':
-                return '<span class="status-' . $item->status . '">' . erp_hr_leave_request_get_statuses( $item->status ) . '</span>';
+                return sprintf( '<span class="status-%s">%s</span>', $item->status, erp_hr_leave_request_get_statuses( $item->status ) );
 
-            case 'days':
+            case 'approved_by':
+                if ( $item->status == 1 || $item->status == 3) {
+                    $status = $wpdb->get_row(
+                        $wpdb->prepare(
+                            "SELECT approved_by, created_at FROM {$wpdb->prefix}erp_hr_leave_approval_status WHERE leave_request_id = %d AND approval_status_id = %d ORDER BY id DESC",
+                            array( $item->id, $item->status )
+                        )
+                    );
+
+                    $approved_by = "";
+                    $approved_on = "";
+                    if ( null !== $status->approved_by ) {
+                        $user = get_user_by( 'id', $status->approved_by );
+                        $approved_by = $user instanceof \WP_User ? $user->display_name : '';
+                        $approved_on = erp_format_date( $status->created_at );
+                    }
+                    if ( $approved_by && $approved_on ) {
+                        return sprintf( '<p><strong>%s</strong></p><p><em>%s</em></p>', $approved_by, $approved_on );
+                    }
+                }
+                break;
+
+            case 'request':
+                $str = '<p><strong>' . erp_format_date( $item->start_date ) .  ' &mdash; ' . erp_format_date( $item->end_date ) . '</strong></p>';
+
                 if ( $item->day_status_id != '1' ) {
                     $days = erp_hr_leave_request_get_day_statuses( $item->day_status_id );
                 } else {
-                    $days = number_format_i18n( $item->days ) . ' ' . esc_attr__( 'days', 'erp' );
+                    $days = number_format_i18n( $item->days ) . ' ' . _n( 'day', 'days', $item->days, 'erp' );
+                }
+                $days = sprintf( '<span class="tooltip" title="%s">%s</span>', __( 'Request Days', 'erp' ), $days );
+
+                $available = __( ' of', 'erp' );
+                if ( floatval( $item->available ) >= 0 && floatval( $item->extra_leaves ) == 0  ) {
+                    $available .= sprintf( '<span class="green tooltip" title="%s"> %s %s</span>', __( 'Available Leave', 'erp' ), erp_number_format_i18n( $item->available ), _n( 'day', 'days', $item->available+1, 'erp' ) );
+                }
+                elseif( floatval( $item->extra_leaves ) > 0 ) {
+                    $available .= sprintf( '<span class="red tooltip" title="%s"> -%s %s</span>', __( 'Extra Leave', 'erp' ), erp_number_format_i18n( $item->extra_leaves ), _n( 'day', 'days', $item->extra_leaves, 'erp' ) );
                 }
 
-                return sprintf( '<span>%s</span>', $days );
+                $str .= "<p><em>$days $available</em></p>";
+
+                return $str;
 
             case 'reason':
-                return stripslashes( $item->reason );
-
-            case 'entitlement':
-                return sprintf( '<span class="green">%d %s</span>', number_format_i18n( $item->entitlement ), __( 'days', 'erp' ) );
-
-            case 'available':
-                return floatval( $item->available ) > 0 ? sprintf( '<span class="green">%s %s</span>', erp_number_format_i18n( $item->available ), __( 'days', 'erp' ) ) : '-';
-
-            case 'extra':
-                return floatval( $item->extra_leaves ) > 0 ? sprintf( '<span class="red">%s %s</span>', erp_number_format_i18n( $item->extra_leaves ), __( 'days', 'erp' ) ) : '-';
-
-            case 'message':
-                return stripslashes( $item->message );
-
-            case 'leave_attachment' :
-
                 $attachment       = "";
                 $leave_attachment = get_user_meta( $item->user_id, 'leave_document_' . $item->id ) ;
                 foreach ( $leave_attachment as $la ) {
@@ -162,7 +174,18 @@ class Leave_Requests_List_Table extends \WP_List_Table {
                     $file_name = basename( $file_link );
                     $attachment .= "<a target='_blank' href='{$file_link}'>{$file_name}</a><br>";
                 }
-                return $attachment;
+                $str = '';
+
+                if ( trim( $item->reason ) != '' ) {
+                    $str .= '<p>' . $item->reason . '</p>';
+                }
+                if ( $attachment != '' ) {
+                    $str .= '<p>' . $attachment . '</p>';
+                }
+                return stripslashes( $str );
+
+            case 'message':
+                return stripslashes( $item->message );
 
             default:
                 return isset( $item->$column_name ) ? $item->$column_name : '';
@@ -316,7 +339,7 @@ class Leave_Requests_List_Table extends \WP_List_Table {
         $this->page_status     = isset( $_GET['status'] ) ? sanitize_text_field( wp_unslash( $_GET['status'] ) ) : '2';
 
         // get current year as default f_year
-        $f_year = get_financial_year_from_date();
+        $f_year = erp_hr_get_financial_year_from_date();
         $f_year = ! empty( $f_year ) ? $f_year->id : '';
 
         // only necessary because we have sample data

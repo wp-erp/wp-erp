@@ -10,8 +10,8 @@ class Leave_Policy_Name_List_Table extends \WP_List_Table {
 
     function __construct() {
         parent::__construct( array(
-            'singular' => 'name',
-            'plural'   => 'names',
+            'singular' => 'type',
+            'plural'   => 'types',
             'ajax'     => false
         ) );
 
@@ -24,7 +24,7 @@ class Leave_Policy_Name_List_Table extends \WP_List_Table {
      * @return void
      */
     function no_items() {
-        esc_html_e( 'No requests found.', 'erp' );
+        esc_html_e( 'No leave types found.', 'erp' );
     }
 
     /**
@@ -72,7 +72,7 @@ class Leave_Policy_Name_List_Table extends \WP_List_Table {
     function get_columns() {
         $columns = array(
             'cb'          => '<input type="checkbox" />',
-            'name'        => esc_html__( 'Policy Name', 'erp' ),
+            'name'        => esc_html__( 'Leave Type', 'erp' ),
             'description' => esc_html__( 'Description', 'erp' ),
             'created_at'  => esc_html__( 'Created At', 'erp' ),
         );

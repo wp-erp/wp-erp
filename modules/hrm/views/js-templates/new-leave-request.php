@@ -4,21 +4,30 @@ use WeDevs\ERP\HRM\Models\Financial_Year;
 
 $employee_types     = erp_hr_get_assign_policy_from_entitlement( get_current_user_id() );
 $types              = $employee_types ? array_unique( $employee_types ) : [];
-$financial_years    = array(
-    '' => esc_attr__( 'select year', 'erp')
-);
-$current_start_date = erp_current_datetime()->modify( erp_financial_start_date() )->getTimestamp();
+$financial_years    = array();
+
+$current_f_year = erp_hr_get_financial_year_from_date();
+
+if ( null === $current_f_year ) {
+    erp_html_show_notice( __( 'No leave assigned for current year. Please contact HR.', 'erp' ), 'error', true );
+    return;
+}
 foreach ( Financial_Year::all() as $f_year ) {
-    if ( $f_year['start_date'] < $current_start_date ) {
+    if ( $f_year['start_date'] < $current_f_year->start_date ) {
         continue;
     }
     $financial_years[ $f_year['id'] ] = $f_year['fy_name'];
 }
 ?>
 <div class="erp-hr-leave-request-new erp-hr-leave-reqs-wrap">
-
-    <div class="row">
-        <?php erp_html_form_input( array(
+    <?php
+    if ( count( $financial_years ) === 1 ) { ?>
+        <input type="hidden" name="f_year" id="f_year" class="f_year" value="<?php echo key( $financial_years );?>" />
+        <?php
+    }
+    else {
+        echo '<div class="row">';
+        erp_html_form_input( array(
             'label'    => esc_html__( 'Year', 'erp' ),
             'name'     => 'f_year',
             'value'    =>  '',
@@ -26,8 +35,9 @@ foreach ( Financial_Year::all() as $f_year ) {
             'class'    => 'f_year',
             'type'     => 'select',
             'options'  => $financial_years,
-        ) ); ?>
-    </div>
+        ) );
+        echo '</div>';
+    }?>
 
     <div class="row erp-hide erp-hr-leave-type-wrapper"></div>
 
@@ -41,6 +51,9 @@ foreach ( Financial_Year::all() as $f_year ) {
             'value'    => '',
             'required' => true,
             'class'    => 'erp-leave-date-field',
+            'custom_attr' => array(
+                'autocomplete' => 'off'
+            ),
         ) ); ?>
     </div>
 
@@ -52,6 +65,9 @@ foreach ( Financial_Year::all() as $f_year ) {
             'value'    => '',
             'required' => true,
             'class'    => 'erp-leave-date-field',
+            'custom_attr' => array(
+                'autocomplete' => 'off'
+            ),
         ) ); ?>
     </div>
 

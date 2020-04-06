@@ -2677,107 +2677,42 @@ function erp_get_financial_year_dates( $date = null ) {
 }
 
 /**
- * Get finanicial start and end years that a date belongs to
+ * Get financial start and end years that a date belongs to
  *
  * @since 1.2.0
- * @since 1.6.0 rewritten whole function
  *
- * @param null|string|int $date
+ * @since 1.6.0 added timestamp support
  *
- * @return null|\WeDevs\ERP\HRM\Models\Financial_Year
+ * @param string $date
+ *
+ * @return array
  */
-function get_financial_year_from_date( $date = null ) {
-    global $wpdb;
+function get_financial_year_from_date( $date ) {
+    $fy_start_month = erp_get_option( 'gen_financial_month', 'erp_settings_general', 1 );
+    $fy_start_month = absint( $fy_start_month );
 
-    if ( empty( $date ) ) {
-        $date = erp_current_datetime()->setTime( 0, 0, 0 )->getTimestamp();
+    $date_timestamp = !is_numeric( $date ) ? strtotime( $date ) : $date;
+    $date_year      = absint( date( 'Y', $date_timestamp ) );
+    $date_month     = absint( date( 'n', $date_timestamp ) );
+
+    if ( 1 === $fy_start_month ) {
+        return [
+            'start' => $date_year,
+            'end'   => $date_year
+        ];
+
+    } else if ( $date_month <= ( $fy_start_month - 1 ) ) {
+        return [
+            'start' => ( $date_year - 1 ),
+            'end'   => $date_year
+        ];
+
+    } else {
+        return [
+            'start' => $date_year,
+            'end'   => ( $date_year + 1 )
+        ];
     }
-
-    if ( ! is_numeric( $date ) ) {
-        if ( is_valid_date( $date ) ) {
-            $date = erp_current_datetime()->modify( $date )->setTime( 0, 0, 0 )->getTimestamp();
-        }
-        else {
-            return null;
-        }
-    }
-
-    $query = $wpdb->prepare(
-        "SELECT id FROM {$wpdb->prefix}erp_hr_financial_years
-                    WHERE (start_date <= %d AND end_date >= %d)
-                    OR (start_date >= %d and start_date <= %d)
-                    OR (end_date >= %d and end_date <= %d)
-                    ",
-        array(
-            $date, $date,
-            $date, $date,
-            $date, $date
-        )
-    );
-
-    $fid = $wpdb->get_var(
-        $query
-    );
-
-    if ( null === $fid ) {  // no financial year found with given range
-        return $fid;
-    }
-
-    $financial_year = \WeDevs\ERP\HRM\Models\Financial_Year::find( $fid );
-
-    if ( ! $financial_year ) {
-        return null;
-    }
-
-    return $financial_year;
-}
-
-/**
- * Get financial year id(s) that belongs to a date range
- *
- * @since 1.6.0
- *
- * @param int|string $start_date
- * @param int|string $end_date
- *
- * @return int
- */
-function get_financial_year_from_date_range( $start_date, $end_date ) {
-    global $wpdb;
-
-    if ( ! is_numeric( $start_date ) ) {
-        $start_date = erp_current_datetime()->modify( $start_date )->getTimestamp();
-    }
-
-    if ( ! is_numeric( $end_date ) ) {
-        $end_date = erp_current_datetime()->modify( $end_date )->getTimestamp();
-    }
-
-    /**
-     * select wp_erp_hr_leave_requests.id, st.approval_status_id from wp_erp_hr_leave_requests
-     * left join wp_erp_hr_leave_approval_status as st on st.leave_request_id = wp_erp_hr_leave_requests.id
-     * where (start_date <= 1578441600 and end_date >= 1578441600 and user_id = 23)
-     * or (start_date <= 1579046399 and end_date >= 1579046399 and user_id = 23)
-     * or (start_date >= 1578441600 and start_date <= 1579046399 and user_id = 23)
-     * or (end_date >= 1578441600 and end_date <= 1579046399 and user_id = 23)
-     */
-
-    return $wpdb->get_col(
-        $wpdb->prepare(
-            "SELECT id FROM {$wpdb->prefix}erp_hr_financial_years
-                    WHERE (start_date <= %d AND end_date >= %d)
-                    OR (start_date <= %d AND end_date >= %d)
-                    OR (start_date >= %d and start_date <= %d)
-                    OR (end_date >= %d and end_date <= %d)
-                    ",
-            array(
-                $start_date, $start_date,
-                $end_date, $end_date,
-                $start_date, $end_date,
-                $start_date, $end_date
-            )
-        )
-    );
 }
 
 /**
@@ -2909,14 +2844,18 @@ function erp_sanitize_tooltip( $var ) {
  * @return string
  * @since 1.3.4
  */
-function erp_help_tip( $tip, $allow_html = false ) {
+function erp_help_tip( $tip, $allow_html = false, $tag = 'tips' ) {
     if ( $allow_html ) {
         $tip = erp_sanitize_tooltip( $tip );
     } else {
         $tip = wp_kses_post( $tip );
     }
 
-    return '<span class="erp-help-tip" data-tip="' . $tip . '"></span>';
+    if ( 'tips' === $tag ) {
+        return sprintf( '<span class="erp-help-tip erp-tips" data-tip="%s"></span>', $tip );
+    }
+
+    return sprintf( '<span class="erp-help-tip erp-tips" title="%s"></span>', $tip );
 }
 
 /**
