@@ -270,9 +270,12 @@ function erp_hr_dashboard_widget_whoisout() {
                         $days = erp_hr_leave_request_get_day_statuses( $leave->day_status_id );
 
                         if ( $leave->day_status_id == '2' ) {
-                            echo '&nbsp; <i title="' . $days . '" class="dashicons dashicons-cloud" style="color:#f57f17"></i>';
+                            $img = WPERP_URL . '/assets/images/Morning.svg';
+                            echo "&nbsp; <img src='$img' height='20' title='$days' />";
+
                         } elseif( $leave->day_status_id == '3' ) {
-                            echo '&nbsp; <i title="' . $days . '" class="dashicons dashicons-cloud" style="color:#ffff00"></i>';
+                            $img = WPERP_URL . '/assets/images/Afternoon.svg';
+                            echo "&nbsp; <img src='$img' height='18' title='$days' />";
                         }
                     }
                     ?>
@@ -297,9 +300,11 @@ function erp_hr_dashboard_widget_whoisout() {
                         $days = erp_hr_leave_request_get_day_statuses( $leave->day_status_id );
 
                         if ( $leave->day_status_id == '2' ) {
-                            echo '&nbsp; <i title="' . $days . '" class="dashicons dashicons-cloud" style="color:#f57f17"></i>';
+                            $img = WPERP_URL . '/assets/images/Morning.svg';
+                            echo "&nbsp; <img src='$img' height='20' title='$days' />";
                         } elseif( $leave->day_status_id == '3' ) {
-                            echo '&nbsp; <i title="' . $days . '" class="dashicons dashicons-cloud" style="color:#ffff00"></i>';
+                            $img = WPERP_URL . '/assets/images/Afternoon.svg';
+                            echo "&nbsp; <img src='$img' height='18' title='$days' />";
                         }
                     }
                     ?>
