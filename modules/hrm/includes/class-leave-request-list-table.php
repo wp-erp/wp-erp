@@ -120,7 +120,13 @@ class Leave_Requests_List_Table extends \WP_List_Table {
                 return esc_attr( $item->policy_name );
 
             case 'status':
-                return sprintf( '<span class="status-%s">%s</span>', $item->status, erp_hr_leave_request_get_statuses( $item->status ) );
+                $message = $wpdb->get_var(
+                    $wpdb->prepare(
+                        "SELECT message FROM {$wpdb->prefix}erp_hr_leave_approval_status WHERE leave_request_id = %d AND approval_status_id = %d ORDER BY id DESC",
+                        array( $item->id, $item->status )
+                    )
+                );
+                return sprintf( '<span class="status-%s" title="%s">%s</span>', $item->status, $message, erp_hr_leave_request_get_statuses( $item->status ) );
 
             case 'approved_by':
                 if ( $item->status == 1 || $item->status == 3) {
@@ -259,7 +265,7 @@ class Leave_Requests_List_Table extends \WP_List_Table {
         }
 
         return sprintf(
-            '<a href="%3$s"><strong>%1$s</strong></a>' . apply_filters( 'erp_leave_request_employee_name_column', '', $item->id ) . '%2$s',
+            apply_filters( 'erp_leave_request_employee_name_column', '', $item->id ) . '<a href="%3$s"><strong>%1$s</strong></a>' .  '%2$s',
             $item->name,
             $this->row_actions( $actions ),
             erp_hr_url_single_employee( $item->user_id )
