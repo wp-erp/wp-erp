@@ -186,7 +186,7 @@ class Leave_Requests_List_Table extends \WP_List_Table {
                     $str .= '<p>' . $item->reason . '</p>';
                 }
                 if ( $attachment != '' ) {
-                    $str .= '<p>' . $attachment . '</p>';
+                    $str .= "<p  title='$file_name' style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>$attachment</p>";
                 }
                 return stripslashes( $str );
 
