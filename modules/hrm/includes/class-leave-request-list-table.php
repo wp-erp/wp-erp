@@ -120,19 +120,13 @@ class Leave_Requests_List_Table extends \WP_List_Table {
                 return esc_attr( $item->policy_name );
 
             case 'status':
-                $message = $wpdb->get_var(
-                    $wpdb->prepare(
-                        "SELECT message FROM {$wpdb->prefix}erp_hr_leave_approval_status WHERE leave_request_id = %d AND approval_status_id = %d ORDER BY id DESC",
-                        array( $item->id, $item->status )
-                    )
-                );
-                return sprintf( '<span class="status-%s" title="%s">%s</span>', $item->status, $message, erp_hr_leave_request_get_statuses( $item->status ) );
+                return sprintf( '<span class="status-%s">%s</span>', $item->status, erp_hr_leave_request_get_statuses( $item->status ) );
 
             case 'approved_by':
                 if ( $item->status == 1 || $item->status == 3) {
                     $status = $wpdb->get_row(
                         $wpdb->prepare(
-                            "SELECT approved_by, created_at FROM {$wpdb->prefix}erp_hr_leave_approval_status WHERE leave_request_id = %d AND approval_status_id = %d ORDER BY id DESC",
+                            "SELECT message, approved_by, created_at FROM {$wpdb->prefix}erp_hr_leave_approval_status WHERE leave_request_id = %d AND approval_status_id = %d ORDER BY id DESC",
                             array( $item->id, $item->status )
                         )
                     );
@@ -145,7 +139,8 @@ class Leave_Requests_List_Table extends \WP_List_Table {
                         $approved_on = erp_format_date( $status->created_at );
                     }
                     if ( $approved_by && $approved_on ) {
-                        return sprintf( '<p><strong>%s</strong></p><p><em>%s</em></p>', $approved_by, $approved_on );
+                        $reason = $status->message ? "<p style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;' title='{$status->message}'>{$status->message}</p>" : '';
+                        return sprintf( '<p><strong>%s</strong></p><p><em>%s</em></p>%s', $approved_by, $approved_on, $reason );
                     }
                 }
                 break;
