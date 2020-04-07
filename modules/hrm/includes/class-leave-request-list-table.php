@@ -96,7 +96,7 @@ class Leave_Requests_List_Table extends \WP_List_Table {
         );
 
         if ( isset( $_GET['status'] ) && $_GET['status'] == 3 ) {
-            $columns['message'] =  __( 'Reject Reason', 'erp' );
+            //$columns['message'] =  __( 'Reject Reason', 'erp' );
         }
 
         return $columns;
