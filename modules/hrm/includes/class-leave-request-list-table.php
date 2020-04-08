@@ -123,25 +123,23 @@ class Leave_Requests_List_Table extends \WP_List_Table {
                 return sprintf( '<span class="status-%s">%s</span>', $item->status, erp_hr_leave_request_get_statuses( $item->status ) );
 
             case 'approved_by':
-                if ( $item->status == 1 || $item->status == 3) {
-                    $status = $wpdb->get_row(
-                        $wpdb->prepare(
-                            "SELECT message, approved_by, created_at FROM {$wpdb->prefix}erp_hr_leave_approval_status WHERE leave_request_id = %d AND approval_status_id = %d ORDER BY id DESC",
-                            array( $item->id, $item->status )
-                        )
-                    );
+                $status = $wpdb->get_row(
+                    $wpdb->prepare(
+                        "SELECT message, approved_by, created_at FROM {$wpdb->prefix}erp_hr_leave_approval_status WHERE leave_request_id = %d ORDER BY id DESC LIMIT 1",
+                        array( $item->id )
+                    )
+                );
 
-                    $approved_by = "";
-                    $approved_on = "";
-                    if ( null !== $status->approved_by ) {
-                        $user = get_user_by( 'id', $status->approved_by );
-                        $approved_by = $user instanceof \WP_User ? $user->display_name : '';
-                        $approved_on = erp_format_date( $status->created_at );
-                    }
-                    if ( $approved_by && $approved_on ) {
-                        $reason = $status->message ? "<p style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;' title='{$status->message}'>{$status->message}</p>" : '';
-                        return sprintf( '<p><strong>%s</strong></p><p><em>%s</em></p>%s', $approved_by, $approved_on, $reason );
-                    }
+                $approved_by = "";
+                $approved_on = "";
+                if ( ! empty( $status ) && null !== $status->approved_by ) {
+                    $user = get_user_by( 'id', $status->approved_by );
+                    $approved_by = $user instanceof \WP_User ? $user->display_name : '';
+                    $approved_on = erp_format_date( $status->created_at );
+                }
+                if ( $approved_by && $approved_on ) {
+                    $reason = $status->message ? "<p style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;' title='{$status->message}'>{$status->message}</p>" : '';
+                    return sprintf( '<p><strong>%s</strong></p><p><em>%s</em></p>%s', $approved_by, $approved_on, $reason );
                 }
                 break;
 
@@ -250,8 +248,6 @@ class Leave_Requests_List_Table extends \WP_List_Table {
             $actions['approved']   = sprintf( '<a class="erp-hr-leave-approve-btn" data-id="%s" href="%s">%s</a>', $item->id, $approve_url, __( 'Approve', 'erp' ) );
             $actions['reject']   = sprintf( '<a class="erp-hr-leave-reject-btn" data-id="%s" href="%s">%s</a>', $item->id, $reject_url, __( 'Reject', 'erp' ) );
 
-            $actions = \apply_filters( 'erp_leave_request_row_actions', $actions, $item->id );
-
         } elseif ( $item->status == '1' ) {
             $actions['reject']   = sprintf( '<a class="erp-hr-leave-reject-btn" data-id="%s" href="%s">%s</a>', $item->id, $reject_url, __( 'Reject', 'erp' ) );
 
@@ -262,7 +258,7 @@ class Leave_Requests_List_Table extends \WP_List_Table {
         return sprintf(
             apply_filters( 'erp_leave_request_employee_name_column', '', $item->id ) . '<a href="%3$s"><strong>%1$s</strong></a>' .  '%2$s',
             $item->name,
-            $this->row_actions( $actions ),
+            $this->row_actions( apply_filters( 'erp_leave_request_row_actions', $actions, $item ) ),
             erp_hr_url_single_employee( $item->user_id )
         );
     }
