@@ -179,7 +179,6 @@ function erp_hr_can_apply_sandwich_rules_between_dates( $start_date, $end_date, 
     global $wpdb;
     $work_days     = erp_hr_get_work_days();
 
-    $can_apply_sandwich_rule_on_previous_leave = false;
     $previous_dates = array();
     $next_dates = array();
 
@@ -187,9 +186,8 @@ function erp_hr_can_apply_sandwich_rules_between_dates( $start_date, $end_date, 
         // get previous leave request for this user either approved or pending, skip rejected
         $last_leave_request = $wpdb->get_row(
             $wpdb->prepare(
-                "SELECT rq.start_date, rq.end_date, st.approval_status_id
+                "SELECT rq.start_date, rq.end_date, rq.last_status
                         FROM {$wpdb->prefix}erp_hr_leave_requests as rq
-                        left join {$wpdb->prefix}erp_hr_leave_approval_status as st on st.leave_request_id = rq.id
                         where rq.user_id = %d and rq.end_date < %d order by rq.id DESC limit 1",
                 array( $user_id, strtotime( $start_date ) )
             ),
@@ -198,7 +196,7 @@ function erp_hr_can_apply_sandwich_rules_between_dates( $start_date, $end_date, 
 
         if ( is_array( $last_leave_request ) && ! empty( $last_leave_request ) ) {
             // proceed further for pending or accepted request
-            if ( $last_leave_request['approval_status_id'] != 3  ) {
+            if ( $last_leave_request['last_status'] != 3  ) {
                 $last_req_end_date = erp_current_datetime()->setTimestamp( $last_leave_request['end_date'] )->modify( '+1 days' )->format( 'Y-m-d' );
                 $start_day_previous = erp_current_datetime()->modify( $start_date )->modify( '-1 days' )->format( 'Y-m-d' );
                 //date extract between last leave date and current leave start dates
@@ -217,10 +215,8 @@ function erp_hr_can_apply_sandwich_rules_between_dates( $start_date, $end_date, 
 
                     if ( $is_holidy ) {
                         $previous_dates[] = $date;
-                        $can_apply_sandwich_rule_on_previous_leave = true;
                     }
                     else {
-                        $can_apply_sandwich_rule_on_previous_leave = false;
                         $previous_dates = array();
                         break;
                     }
@@ -231,9 +227,8 @@ function erp_hr_can_apply_sandwich_rules_between_dates( $start_date, $end_date, 
         //get next leave request
         $next_leave_request = $wpdb->get_row(
             $wpdb->prepare(
-                "SELECT rq.start_date, rq.end_date, st.approval_status_id
+                "SELECT rq.start_date, rq.end_date, rq.last_status
                         FROM {$wpdb->prefix}erp_hr_leave_requests as rq
-                        left join {$wpdb->prefix}erp_hr_leave_approval_status as st on st.leave_request_id = rq.id
                         where rq.user_id = %d and rq.start_date > %d order by rq.id DESC limit 1",
                 array( $user_id, strtotime( $end_date ) )
             ),
@@ -242,7 +237,7 @@ function erp_hr_can_apply_sandwich_rules_between_dates( $start_date, $end_date, 
 
         if ( is_array( $next_leave_request ) && ! empty( $next_leave_request ) ) {
             // proceed further for pending or accepted request
-            if ( $next_leave_request['approval_status_id'] != 3  ) {
+            if ( $next_leave_request['last_status'] != 3  ) {
                 $last_req_start_date = erp_current_datetime()->setTimestamp( $next_leave_request['start_date'] )->modify( '-1 days' )->format( 'Y-m-d' );
                 $end_date_next_day = erp_current_datetime()->modify( $end_date )->modify( '+1 days' )->format( 'Y-m-d' );
                 //date extract between last leave date and current leave start dates
@@ -261,10 +256,8 @@ function erp_hr_can_apply_sandwich_rules_between_dates( $start_date, $end_date, 
 
                     if ( $is_holidy ) {
                         $next_dates[] = $date;
-                        $can_apply_sandwich_rule_on_previous_leave = true;
                     }
                     else {
-                        $can_apply_sandwich_rule_on_previous_leave = false;
                         $next_dates = array();
                         break;
                     }

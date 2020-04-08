@@ -641,6 +641,10 @@
                                         $('#leave-approve-form-error').html( error_string );
                                     }
                                 }
+                                else if( res.redirect ) {
+                                    var approve_url = window.location.origin + window.location.pathname + '?page=erp-hr&section=leave&status=' + res.redirect;
+                                    window.location.replace( approve_url );
+                                }
                                 else {
                                     var approve_url = window.location.origin + window.location.pathname + '?page=erp-hr&section=leave&status=1';
                                     window.location.replace( approve_url );
@@ -680,6 +684,10 @@
                                     if ( error_string != '' ) {
                                         $('#leave-reject-form-error').html( error_string );
                                     }
+                                }
+                                else if( res.redirect ) {
+                                    var approve_url = window.location.origin + window.location.pathname + '?page=erp-hr&section=leave&status=' + res.redirect;
+                                    window.location.replace( approve_url );
                                 }
                                 else {
                                     var approve_url = window.location.origin + window.location.pathname + '?page=erp-hr&section=leave&status=3';

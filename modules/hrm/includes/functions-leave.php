@@ -1514,6 +1514,7 @@ function erp_hr_get_leave_requests( $args = array() ) {
  * Get leave requests count
  *
  * @since 0.1
+ * @since 1.6.0 updated according to new db strucutre
  *
  * @return array
  */
@@ -1604,7 +1605,7 @@ function erp_hr_leave_request_update_status( $request_id, $status, $comments = '
     $old_leave_status = isset( $request->latest_approval_status->approval_status_id ) ? absint( $request->latest_approval_status->approval_status_id ) : 2; // by default status is pending
 
     // return if old and new status are same.
-    if ( $old_leave_status == $status ) {
+    if ( $request->last_status == $status ) {
         return new WP_Error( 'no-leave-status', __( 'Invalid leave status. Please check your input.', 'erp' ) );
     }
 
@@ -1638,6 +1639,8 @@ function erp_hr_leave_request_update_status( $request_id, $status, $comments = '
         return new WP_Error( 'invalid-entitlement', __( 'Error: You can not modify past leave year requests.', 'erp' ) );
     }
 
+    do_action( "erp_hr_leave_request_before_process", $request_id, $status, $comments );
+
     // approval status table data
     $approval_status_data = array(
         'leave_request_id'      => $request_id,
@@ -1669,7 +1672,7 @@ function erp_hr_leave_request_update_status( $request_id, $status, $comments = '
     );
 
     //
-    switch ( $old_leave_status ) {
+    switch ( $request->last_status ) {
         case 1: // approved
             if ( $status === 3 ) { // reject this request
                 // 1. Get latest approval_status_id for current request
@@ -1827,7 +1830,7 @@ function erp_hr_leave_request_update_status( $request_id, $status, $comments = '
         }
     }
 
-    $status = ( $status == 1 ) ? 'approved' : 'pending';
+    $status = ( $status == 1 ) ? 'approved' :  ( $status == 2  ? 'pending' : 'reject' );
 
     do_action( "erp_hr_leave_request_{$status}", $request_id, $request );
 
