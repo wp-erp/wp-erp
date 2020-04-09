@@ -90,8 +90,9 @@ class Leave_Requests_List_Table extends \WP_List_Table {
             'name'      => __( 'Employee Name', 'erp' ),
             'policy'    => __( 'Policy', 'erp' ),
             'request'   => __( 'Request', 'erp' ),
-            'reason'    => __( 'Reason', 'erp' ),
+            'available' => __( 'Available', 'erp' ),
             'status'    => __( 'Status', 'erp' ),
+            'reason'    => __( 'Reason', 'erp' ),
             'approved_by' => __( 'Approved By', 'erp' ),
         );
 
@@ -138,7 +139,8 @@ class Leave_Requests_List_Table extends \WP_List_Table {
                     $approved_on = erp_format_date( $status->created_at );
                 }
                 if ( $approved_by && $approved_on ) {
-                    $reason = $status->message ? "<p style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;' title='{$status->message}'>{$status->message}</p>" : '';
+                    $message = $status->message ? esc_html( $status->message ) : '';
+                    $reason = $message ? "<p style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;' title='{$message}'>{$message}</p>" : '';
                     return sprintf( '<p><strong>%s</strong></p><p><em>%s</em></p>%s', $approved_by, $approved_on, $reason );
                 }
                 break;
@@ -153,24 +155,28 @@ class Leave_Requests_List_Table extends \WP_List_Table {
                 }
                 $days = sprintf( '<span class="tooltip" title="%s">%s</span>', __( 'Request Days', 'erp' ), $days );
 
-                $available = __( ' of', 'erp' );
-                if ( floatval( $item->available ) >= 0 && floatval( $item->extra_leaves ) == 0  ) {
-                    $available .= sprintf( '<span class="green tooltip" title="%s"> %s %s</span>', __( 'Available Leave', 'erp' ), erp_number_format_i18n( $item->available ), _n( 'day', 'days', $item->available+1, 'erp' ) );
-                }
-                elseif( floatval( $item->extra_leaves ) > 0 ) {
-                    $available .= sprintf( '<span class="red tooltip" title="%s"> -%s %s</span>', __( 'Extra Leave', 'erp' ), erp_number_format_i18n( $item->extra_leaves ), _n( 'day', 'days', $item->extra_leaves, 'erp' ) );
-                }
-
-                $str .= "<p><em>$days $available</em></p>";
+                $str .= "<p><em>$days</em></p>";
 
                 return $str;
+
+            case 'available':
+                $available = '';
+
+                if ( floatval( $item->available ) >= 0 && floatval( $item->extra_leaves ) == 0  ) {
+                    $available = sprintf( '<span class="green tooltip" title="%s"> %s %s</span>', __( 'Available Leave', 'erp' ), erp_number_format_i18n( $item->available ), _n( 'day', 'days', $item->available+1, 'erp' ) );
+                }
+                elseif( floatval( $item->extra_leaves ) > 0 ) {
+                    $available = sprintf( '<span class="red tooltip" title="%s"> -%s %s</span>', __( 'Extra Leave', 'erp' ), erp_number_format_i18n( $item->extra_leaves ), _n( 'day', 'days', $item->extra_leaves, 'erp' ) );
+                }
+
+                return $available;
 
             case 'reason':
                 $attachment       = "";
                 $leave_attachment = get_user_meta( $item->user_id, 'leave_document_' . $item->id ) ;
                 foreach ( $leave_attachment as $la ) {
                     $file_link = wp_get_attachment_url( $la );
-                    $file_name = basename( $file_link );
+                    $file_name = esc_attr( basename( $file_link ) );
                     $attachment .= "<a target='_blank' href='{$file_link}'>{$file_name}</a><br>";
                 }
                 $str = '';
