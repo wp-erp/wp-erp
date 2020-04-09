@@ -1942,6 +1942,12 @@ table.leaves td p {
 table.leaves th#name {
   width: 200px;
 }
+table.leaves th#policy {
+  width: 75px;
+}
+table.leaves th#available {
+  width: 75px;
+}
 table.leaves th#request {
   width: 200px;
 }
