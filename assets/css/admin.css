@@ -1933,13 +1933,27 @@ span.green {
   margin-top: 12px;
   background-color: #ddd;
 }
+table.entitlements td p {
+  margin: 2px 0 0;
+}
+table.leaves td p {
+  margin: 2px 0 0;
+}
+table.leaves th#name {
+  width: 200px;
+}
+table.leaves th#request {
+  width: 200px;
+}
 table.leaves th#status,
 table.leaves td#status {
   width: 100px;
 }
-table.leaves th#reason,
-table.leaves td#reason {
+table.leaves th#reason {
   width: 250px;
+}
+table.leaves th#approved_by {
+  width: 150px;
 }
 table.leaves td.column-status {
   font-size: 11px;

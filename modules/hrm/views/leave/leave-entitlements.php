@@ -19,7 +19,14 @@ $active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['ta
 
     <?php if ( 'assignment' == $active_tab ) { ?>
         <?php
-        $financial_years = wp_list_pluck( Financial_Year::all(), 'fy_name', 'id' );
+        $financial_years = array();
+        $current_f_year = erp_hr_get_financial_year_from_date();
+        foreach ( Financial_Year::all() as $f_year ) {
+            if ( $f_year['start_date'] < $current_f_year->start_date ) {
+                continue;
+            }
+            $financial_years[ $f_year['id'] ] = $f_year['fy_name'];
+        }
 
         if ( isset( $_GET['affected' ] ) ) {
             erp_html_show_notice( sprintf( __( '%d Employee(s) has been entitled to this leave policy.', 'erp' ), sanitize_text_field( wp_unslash( $_GET['affected'] ) ) ), 'updated', true );
@@ -46,6 +53,19 @@ $active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['ta
                 <?php esc_html_e( 'Assign a leave policy to employees.', 'erp' ); ?>
             </h3>
             <div class="form-group">
+                <div class="row">
+                    <?php erp_html_form_input( array(
+                        'label'    => esc_html__( 'Year', 'erp' ),
+                        'name'     => 'f_year',
+                        'value'    =>  '',
+                        'required' => true,
+                        'class'    => 'leave-policy-input erp-select2 f_year change_policy',
+                        'type'     => 'select',
+                        'help'     => $f_year_help_text,
+                        'options'  =>  $financial_years
+                    ) ); ?>
+                </div>
+
                 <div class="row">
                     <?php erp_html_form_input( array(
                         'label'    => __( 'Department', 'erp' ),
@@ -97,21 +117,6 @@ $active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['ta
                         'class'   => 'leave-policy-input erp-select2 marital change_policy',
                         'type'    => 'select',
                         'options' => erp_hr_get_marital_statuses( esc_html__( 'All', 'erp' ) )
-                    ) ); ?>
-                </div>
-
-                <div class="row">
-                    <?php erp_html_form_input( array(
-                        'label'    => esc_html__( 'Year', 'erp' ),
-                        'name'     => 'f_year',
-                        'value'    =>  '',
-                        'required' => true,
-                        'class'    => 'leave-policy-input erp-select2 f_year change_policy',
-                        'type'     => 'select',
-                        'help'     => $f_year_help_text,
-                        'options'  =>  array(
-                            '' => esc_html__( '-- select year --', 'erp' )
-                        ) + $financial_years
                     ) ); ?>
                 </div>
 
