@@ -1263,7 +1263,7 @@ function erp_hr_get_leave_requests( $args = array() ) {
         'request_id'     => 0,
         'user_id'        => 0,
         'policy_id'      => 0,
-        'status'         => 1,
+        'status'         => '',
         'year'           => 0,
         'f_year'         => 0,
         'number'         => 20,
@@ -1305,8 +1305,6 @@ function erp_hr_get_leave_requests( $args = array() ) {
                 break;
         }
     });
-
-    $entitlement_table_joined = false;
 
     // fix orderby parameter
     if ( $args['orderby'] == 'created_on' ) {

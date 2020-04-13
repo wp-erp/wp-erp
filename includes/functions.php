@@ -682,6 +682,12 @@ function erp_extract_dates( $start_date, $end_date ) {
         $end_date = $end_date . ' 23:59:59';
     }
 
+    if ( $start_date > $end_date ) {
+        $temp = $start_date;
+        $start_date = $end_date;
+        $end_date = $temp;
+    }
+
     $start_date = new DateTime( $start_date );
     $end_date   = new DateTime( $end_date );
     $diff       = $start_date->diff( $end_date );
