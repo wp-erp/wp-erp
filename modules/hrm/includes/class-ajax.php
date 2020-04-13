@@ -1886,9 +1886,13 @@ class Ajax_Handler {
             }
 
             $this->send_success( __( 'Leave request has been submitted successfully!', 'erp' ) );
+        } elseif ( is_wp_error( $request_id ) ) {
+            $this->send_error( $request_id->get_error_message() );
         } else {
             $this->send_error( __( 'Something went wrong, please try again.', 'erp' ) );
         }
+
+        exit();
     }
 
     /**
