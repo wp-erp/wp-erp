@@ -862,7 +862,7 @@ class Form_Handler {
         if ( is_wp_error( $insert ) ) {
             $errors->add( $insert );
             $errors->save();
-            $redirect_to = admin_url( 'admin.php?page=erp-hr&section=leave&view=new&error=new_leave_request' );
+            $redirect_to = admin_url( 'admin.php?page=erp-hr&section=leave&view=new&insert_error=new_leave_request' );
 
         } else {
             $redirect_to = admin_url( 'admin.php?page=erp-hr&section=leave&sub-section=leave-requests&status=2' );

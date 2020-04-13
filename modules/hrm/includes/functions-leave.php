@@ -1155,6 +1155,15 @@ function erp_hr_leave_insert_request( $args = array() ) {
         }
     }
 
+    // check for unpaid leave
+    if ( get_option( 'enable_extra_leave', 'no' ) !== 'yes' ) {
+        $is_policy_valid = erp_hrm_is_valid_leave_duration( $args['start_date'], $args['end_date'], $args['leave_policy'], $args['user_id'] );
+
+        if ( ! $is_policy_valid ) {
+            return new WP_Error( 'invalid-dates', esc_attr__( 'Sorry! You do not have any leave left under this leave policy.', 'erp' ) );
+        }
+    }
+
     // check start_date and end_date are in the same f_year
     $f_year_start = erp_current_datetime()->setTimestamp( $entitlement->financial_year->start_date)->format( 'Y-m-d' );
     $f_year_end = erp_current_datetime()->setTimestamp( $entitlement->financial_year->end_date)->format( 'Y-m-d' );
