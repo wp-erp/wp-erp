@@ -24398,6 +24398,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 //
 //
 //
+//
+//
 
 
 
@@ -24557,10 +24559,10 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
               case 19:
                 /**
-                     * ----------------------------------------------
-                     * create a new expense
-                     * -----------------------------------------------
-                     */
+                 * ----------------------------------------------
+                 * create a new expense
+                 * -----------------------------------------------
+                 */
                 _this2.getLedgers();
 
                 _this2.getPayMethods();
@@ -24613,6 +24615,9 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         });
       });
       this.updateFinalAmount();
+    },
+    draftToExpense: function draftToExpense() {
+      return this.$route.query.convert;
     },
     getLedgers: function getLedgers() {
       var _this4 = this;
@@ -24686,7 +24691,13 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       __WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].put("/expenses/".concat(this.voucherNo), requestData).then(function (res) {
         _this7.$store.dispatch('spinner/setSpinner', false);
 
-        _this7.showAlert('success', 'Expense Updated!');
+        var message = __('Expense Updated!', 'erp');
+
+        if (_this7.draftToExpense()) {
+          message = __('Conversion Successful!', 'erp');
+        }
+
+        _this7.showAlert('success', message);
       }).catch(function (error) {
         _this7.$store.dispatch('spinner/setSpinner', false);
 
@@ -24769,7 +24780,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         particulars: this.particulars,
         check_no: parseInt(this.check_data.check_no),
         name: this.check_data.payer_name,
-        bank: this.check_data.bank_name
+        bank: this.check_data.bank_name,
+        convert: this.$route.query.convert
       };
 
       if (this.editMode) {
@@ -26643,6 +26655,18 @@ setTimeout(function () {
 
           break;
 
+        case 'to_expense':
+          this.$router.push({
+            name: 'ExpenseEdit',
+            params: {
+              id: row.id
+            },
+            query: {
+              convert: true
+            }
+          });
+          break;
+
         default:
           break;
       }
@@ -26796,6 +26820,11 @@ setTimeout(function () {
           }, {
             key: 'void',
             label: 'Void'
+          }];
+        } else if (item.status_code === '1') {
+          temp['actions'] = [{
+            key: 'to_expense',
+            label: 'Make Expense'
           }];
         } else {
           temp['actions'] = [{
@@ -45836,7 +45865,7 @@ var render = function() {
       _c("div", { staticClass: "wperp-row wperp-between-xs" }, [
         _c("div", { staticClass: "wperp-col" }, [
           _vm.estimateToInvoice()
-            ? _c("h2", [_vm._v("Convert into Invoice")])
+            ? _c("h2", [_vm._v(_vm._s(_vm.__("Convert into Invoice", "erp")))])
             : _c("h2", { staticClass: "content-header__title" }, [
                 _vm._v(
                   _vm._s(
@@ -54569,9 +54598,11 @@ var render = function() {
     _c("div", { staticClass: "content-header-section separator" }, [
       _c("div", { staticClass: "wperp-row wperp-between-xs" }, [
         _c("div", { staticClass: "wperp-col" }, [
-          _c("h2", { staticClass: "content-header__title" }, [
-            _vm._v(_vm._s(_vm.__("New Expense", "erp")))
-          ])
+          _vm.draftToExpense()
+            ? _c("h2", [_vm._v(_vm._s(_vm.__("Convert into Expense", "erp")))])
+            : _c("h2", { staticClass: "content-header__title" }, [
+                _vm._v(_vm._s(_vm.__("New Expense", "erp")))
+              ])
         ])
       ])
     ]),
@@ -55167,7 +55198,15 @@ var render = function() {
                       attrs: { colspan: "9" }
                     },
                     [
-                      _vm.editMode
+                      _vm.draftToExpense()
+                        ? _c("combo-button", {
+                            attrs: {
+                              options: [
+                                { id: "update", text: "Save Conversion" }
+                              ]
+                            }
+                          })
+                        : _vm.editMode
                         ? _c("combo-button", {
                             attrs: { options: _vm.updateButtons }
                           })
