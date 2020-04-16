@@ -3,9 +3,9 @@ Contributors: tareq1988, nizamuddinbabu, wedevs, ediamin, sabbir1991, asaquzzama
 Donate Link: https://tareq.co/donate
 Tags: business manager, erp, accounting, crm, hr, project manager, small business, SME, contact, contacts, Customer Relationship Management, employee, leave management, hr, human resource management, job, jobs, job listing, lead management, opportunity, schedule, task, lead, holiday, company
 Requires at least: 4.4
-Tested up to: 5.3.2
+Tested up to: 5.4
 Requires PHP: 5.6
-Stable tag: 1.5.15
+Stable tag: 1.5.16
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -266,6 +266,14 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+
+= v1.5.16 -> April 17, 2020 =
+--------------------------
+- [fix] [Accounting] Fixed Trial Balance bank balance-loan calculation
+- [fix] [Accounting] Fixed balance of ledger report debit-credit label: Wrong Dr/Cr label is showing at the rightmost balance column in the list row of accounting ledger details report page.
+- [fix] [Accounting] moved Chart of Accounts "Sales Returns and Allowance:1403" from Income to Expense section
+- [fix] fixed tooltip display issue on WP ERP -> Tools -> Status page
+- [fix] fixed a notice on “Latest ERP Blogs” section under WP ERP -> Dashboard page
 
 = v1.5.15 -> March 31, 2020 =
 - [fix] Plugin update capability of the user
