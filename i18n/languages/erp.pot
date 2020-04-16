@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP ERP 1.5.14\n"
+"Project-Id-Version: WP ERP 1.5.15\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-erp\n"
-"POT-Creation-Date: 2020-03-03 04:53:58+00:00\n"
+"POT-Creation-Date: 2020-03-31 11:52:50+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -16094,7 +16094,7 @@ msgstr ""
 #: includes/admin/class-form-handler.php:99 includes/admin/views/address.php:37
 #: includes/admin/views/company-editor.php:75
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:93
-#: modules/crm/includes/functions-customer.php:2960
+#: modules/crm/includes/functions-customer.php:2980
 #: modules/crm/views/company/single.php:82
 #: modules/crm/views/contact/single.php:84
 #: modules/crm/views/js-templates/new-customer.php:222
@@ -16235,8 +16235,8 @@ msgid "Basic Settings"
 msgstr ""
 
 #: includes/admin/class-setup-wizard.php:229
-#: modules/crm/includes/functions-customer.php:1849
-#: modules/crm/includes/functions-customer.php:2920
+#: modules/crm/includes/functions-customer.php:1869
+#: modules/crm/includes/functions-customer.php:2940
 #: modules/crm/views/js-templates/new-assign-company.php:6
 #: modules/crm/views/js-templates/new-customer.php:74
 msgid "Company Name"
@@ -16494,7 +16494,7 @@ msgstr ""
 #: includes/admin/views/address.php:30
 #: includes/admin/views/company-editor.php:64 includes/class-company.php:41
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:89
-#: modules/crm/includes/functions-customer.php:1638
+#: modules/crm/includes/functions-customer.php:1658
 #: modules/crm/views/company/single.php:80
 #: modules/crm/views/contact/single.php:82
 #: modules/crm/views/js-templates/new-customer.php:215
@@ -16536,7 +16536,6 @@ msgstr ""
 #: modules/hrm/views/js-templates/performance-reviews.php:70
 #: modules/hrm/views/js-templates/performance-reviews.php:82
 #: modules/hrm/views/leave/leave-entitlements.php:65
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:322
 msgid "- Select -"
 msgstr ""
 
@@ -16579,8 +16578,8 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:46
 #: modules/accounting/assets/src/admin/components/userinfo/UserBasic.vue:22
 #: modules/crm/assets/js/crm-contacts.js:275
-#: modules/crm/includes/functions-customer.php:1596
-#: modules/crm/includes/functions-customer.php:2930
+#: modules/crm/includes/functions-customer.php:1616
+#: modules/crm/includes/functions-customer.php:2950
 #: modules/crm/views/company/single.php:75
 #: modules/crm/views/contact/single.php:77
 #: modules/hrm/views/js-templates/new-employee.php:319
@@ -16590,7 +16589,7 @@ msgstr ""
 #: includes/admin/views/company-editor.php:133
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:77
 #: modules/accounting/assets/src/admin/components/userinfo/UserBasic.vue:34
-#: modules/crm/includes/functions-customer.php:2945
+#: modules/crm/includes/functions-customer.php:2965
 #: modules/crm/views/company/single.php:76
 #: modules/crm/views/contact/single.php:78
 msgid "Fax"
@@ -16600,8 +16599,8 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/people/EmployeeDetails.vue:29
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:65
 #: modules/accounting/assets/src/admin/components/userinfo/UserBasic.vue:26
-#: modules/crm/includes/functions-customer.php:1610
-#: modules/crm/includes/functions-customer.php:2935
+#: modules/crm/includes/functions-customer.php:1630
+#: modules/crm/includes/functions-customer.php:2955
 #: modules/crm/views/js-templates/new-customer.php:175
 #: modules/hrm/views/employee/tab-general.php:70
 #: modules/hrm/views/js-templates/new-employee.php:311
@@ -16611,8 +16610,8 @@ msgstr ""
 #: includes/admin/views/company-editor.php:155
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:69
 #: modules/accounting/assets/src/admin/components/userinfo/UserBasic.vue:30
-#: modules/crm/includes/functions-customer.php:1624
-#: modules/crm/includes/functions-customer.php:2940
+#: modules/crm/includes/functions-customer.php:1644
+#: modules/crm/includes/functions-customer.php:2960
 #: modules/crm/views/company/single.php:77
 #: modules/crm/views/contact/single.php:79
 #: modules/crm/views/js-templates/new-customer.php:183
@@ -16647,7 +16646,7 @@ msgstr ""
 
 #: includes/admin/views/company.php:17
 #: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:9
-#: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:321
+#: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:325
 #: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:177
 #: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:173
 #: modules/crm/assets/js/crm-contacts.js:1137
@@ -16777,7 +16776,7 @@ msgstr ""
 #: includes/framework/settings/integration.php:57
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:61
 #: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:61
-#: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:68
+#: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:69
 #: modules/accounting/assets/src/admin/components/opening-balance/OpeningBalance.vue:278
 #: modules/accounting/assets/src/admin/components/tax/NewTaxCategory.vue:23
 #: modules/crm/includes/admin/class-settings.php:619
@@ -16931,7 +16930,7 @@ msgstr ""
 #: includes/admin/views/tools/import.php:88
 #: includes/admin/views/tools/import.php:185
 #: modules/crm/includes/class-subscription-widget.php:105
-#: modules/crm/includes/functions-customer.php:1755
+#: modules/crm/includes/functions-customer.php:1775
 #: modules/crm/views/import-user-to-crm.php:30
 #: modules/crm/views/js-templates/new-customer.php:108
 msgid "Life Stage"
@@ -16945,7 +16944,7 @@ msgstr ""
 #: includes/admin/views/tools/import.php:104
 #: includes/admin/views/tools/import.php:201
 #: modules/crm/includes/contact-forms/class-erp-settings-contact-forms.php:77
-#: modules/crm/includes/functions-customer.php:1729
+#: modules/crm/includes/functions-customer.php:1749
 #: modules/crm/views/company/single.php:187
 #: modules/crm/views/contact/single.php:192
 #: modules/crm/views/js-templates/new-customer.php:265
@@ -17103,8 +17102,8 @@ msgstr ""
 #: includes/api/class-contacts-controller.php:141
 #: includes/api/class-contacts-controller.php:218
 #: includes/api/class-contacts-groups-controller.php:140
-#: modules/accounting/api/class-rest-api-accounts-transfer.php:190
-#: modules/accounting/api/class-rest-api-accounts-transfer.php:211
+#: modules/accounting/api/class-rest-api-accounts-transfer.php:182
+#: modules/accounting/api/class-rest-api-accounts-transfer.php:203
 #: modules/accounting/api/class-rest-api-bills.php:185
 #: modules/accounting/api/class-rest-api-bills.php:255
 #: modules/accounting/api/class-rest-api-bills.php:306
@@ -17121,11 +17120,11 @@ msgstr ""
 #: modules/accounting/api/class-rest-api-invoices.php:352
 #: modules/accounting/api/class-rest-api-invoices.php:371
 #: modules/accounting/api/class-rest-api-journals.php:137
-#: modules/accounting/api/class-rest-api-ledgers.php:261
-#: modules/accounting/api/class-rest-api-ledgers.php:316
-#: modules/accounting/api/class-rest-api-ledgers.php:345
-#: modules/accounting/api/class-rest-api-ledgers.php:486
-#: modules/accounting/api/class-rest-api-ledgers.php:509
+#: modules/accounting/api/class-rest-api-ledgers.php:264
+#: modules/accounting/api/class-rest-api-ledgers.php:319
+#: modules/accounting/api/class-rest-api-ledgers.php:348
+#: modules/accounting/api/class-rest-api-ledgers.php:489
+#: modules/accounting/api/class-rest-api-ledgers.php:512
 #: modules/accounting/api/class-rest-api-opening-balances.php:195
 #: modules/accounting/api/class-rest-api-opening-balances.php:237
 #: modules/accounting/api/class-rest-api-opening-balances.php:261
@@ -17148,16 +17147,16 @@ msgstr ""
 #: modules/accounting/api/class-rest-api-rec-payments.php:155
 #: modules/accounting/api/class-rest-api-rec-payments.php:217
 #: modules/accounting/api/class-rest-api-rec-payments.php:258
-#: modules/accounting/api/class-rest-api-tax-agencies.php:199
-#: modules/accounting/api/class-rest-api-tax-agencies.php:251
-#: modules/accounting/api/class-rest-api-tax-agencies.php:280
-#: modules/accounting/api/class-rest-api-tax-agencies.php:306
-#: modules/accounting/api/class-rest-api-tax-cats.php:185
-#: modules/accounting/api/class-rest-api-tax-cats.php:237
-#: modules/accounting/api/class-rest-api-tax-cats.php:276
-#: modules/accounting/api/class-rest-api-tax-rate-names.php:185
-#: modules/accounting/api/class-rest-api-tax-rate-names.php:237
-#: modules/accounting/api/class-rest-api-tax-rate-names.php:268
+#: modules/accounting/api/class-rest-api-tax-agencies.php:183
+#: modules/accounting/api/class-rest-api-tax-agencies.php:235
+#: modules/accounting/api/class-rest-api-tax-agencies.php:264
+#: modules/accounting/api/class-rest-api-tax-agencies.php:290
+#: modules/accounting/api/class-rest-api-tax-cats.php:169
+#: modules/accounting/api/class-rest-api-tax-cats.php:221
+#: modules/accounting/api/class-rest-api-tax-cats.php:260
+#: modules/accounting/api/class-rest-api-tax-rate-names.php:169
+#: modules/accounting/api/class-rest-api-tax-rate-names.php:221
+#: modules/accounting/api/class-rest-api-tax-rate-names.php:252
 #: modules/accounting/api/class-rest-api-taxes.php:299
 #: modules/accounting/api/class-rest-api-taxes.php:362
 #: modules/accounting/api/class-rest-api-taxes.php:402
@@ -17198,15 +17197,15 @@ msgstr ""
 #: includes/api/class-announcements-controller.php:306
 #: includes/api/class-contacts-controller.php:401
 #: includes/api/class-contacts-groups-controller.php:346
-#: modules/accounting/api/class-rest-api-accounts-transfer.php:578
+#: modules/accounting/api/class-rest-api-accounts-transfer.php:526
 #: modules/accounting/api/class-rest-api-bills.php:516
 #: modules/accounting/api/class-rest-api-currencies.php:116
 #: modules/accounting/api/class-rest-api-customers.php:587
 #: modules/accounting/api/class-rest-api-customers.php:714
 #: modules/accounting/api/class-rest-api-customers.php:731
-#: modules/accounting/api/class-rest-api-expenses.php:467
+#: modules/accounting/api/class-rest-api-expenses.php:470
 #: modules/accounting/api/class-rest-api-journals.php:318
-#: modules/accounting/api/class-rest-api-ledgers.php:639
+#: modules/accounting/api/class-rest-api-ledgers.php:642
 #: modules/accounting/api/class-rest-api-opening-balances.php:451
 #: modules/accounting/api/class-rest-api-opening-balances.php:457
 #: modules/accounting/api/class-rest-api-opening-balances.php:483
@@ -17224,9 +17223,9 @@ msgstr ""
 #: modules/accounting/api/class-rest-api-products.php:428
 #: modules/accounting/api/class-rest-api-purchases.php:471
 #: modules/accounting/api/class-rest-api-rec-payments.php:412
-#: modules/accounting/api/class-rest-api-tax-agencies.php:391
-#: modules/accounting/api/class-rest-api-tax-cats.php:365
-#: modules/accounting/api/class-rest-api-tax-rate-names.php:354
+#: modules/accounting/api/class-rest-api-tax-agencies.php:375
+#: modules/accounting/api/class-rest-api-tax-cats.php:349
+#: modules/accounting/api/class-rest-api-tax-rate-names.php:338
 #: modules/accounting/api/class-rest-api-taxes.php:905
 #: modules/accounting/api/class-rest-api-vendors.php:649
 #: modules/accounting/api/class-rest-api-vendors.php:776
@@ -17255,7 +17254,7 @@ msgstr ""
 
 #: includes/api/class-announcements-controller.php:330
 #: modules/accounting/api/class-rest-api-bills.php:596
-#: modules/accounting/api/class-rest-api-expenses.php:549
+#: modules/accounting/api/class-rest-api-expenses.php:552
 #: modules/accounting/api/class-rest-api-invoices.php:663
 #: modules/accounting/api/class-rest-api-invoices.php:668
 #: modules/accounting/api/class-rest-api-invoices.php:676
@@ -17377,7 +17376,7 @@ msgstr ""
 
 #: includes/api/class-contacts-groups-controller.php:352
 #: modules/accounting/api/class-rest-api-currencies.php:122
-#: modules/accounting/api/class-rest-api-ledgers.php:656
+#: modules/accounting/api/class-rest-api-ledgers.php:659
 #: modules/accounting/api/class-rest-api-product-cats.php:312
 #: modules/accounting/api/class-rest-api-product-cats.php:331
 #: modules/accounting/api/class-rest-api-products.php:349
@@ -17408,7 +17407,7 @@ msgid "Street Address 1"
 msgstr ""
 
 #: includes/class-company.php:42
-#: modules/crm/includes/functions-customer.php:2965
+#: modules/crm/includes/functions-customer.php:2985
 #: modules/crm/views/company/single.php:81
 #: modules/crm/views/contact/single.php:83
 #: modules/hrm/views/employee/tab-general.php:67
@@ -17863,9 +17862,9 @@ msgstr ""
 #: modules/crm/includes/class-contact-subscriber-list-table.php:173
 #: modules/crm/includes/class-subscription.php:164
 #: modules/crm/includes/functions-customer.php:538
-#: modules/crm/includes/functions-customer.php:1584
-#: modules/crm/includes/functions-customer.php:2832
-#: modules/crm/includes/functions-customer.php:2925
+#: modules/crm/includes/functions-customer.php:1604
+#: modules/crm/includes/functions-customer.php:2852
+#: modules/crm/includes/functions-customer.php:2945
 #: modules/crm/views/js-templates/customer-add-schedules.php:86
 #: modules/crm/views/js-templates/new-customer.php:89
 #: modules/hrm/views/employee/tab-general.php:11
@@ -18817,12 +18816,12 @@ msgid "Something went wrong, please try again"
 msgstr ""
 
 #: includes/functions-people.php:832
-#: modules/crm/includes/functions-customer.php:3734
-#: modules/crm/includes/functions-customer.php:3755
-#: modules/crm/includes/functions-customer.php:3774
+#: modules/crm/includes/functions-customer.php:3754
+#: modules/crm/includes/functions-customer.php:3775
 #: modules/crm/includes/functions-customer.php:3794
-#: modules/crm/includes/functions-customer.php:3834
+#: modules/crm/includes/functions-customer.php:3814
 #: modules/crm/includes/functions-customer.php:3854
+#: modules/crm/includes/functions-customer.php:3874
 msgid "People not exists"
 msgstr ""
 
@@ -19734,34 +19733,33 @@ msgid ""
 "PDF export feature."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-accounts-transfer.php:231
+#: modules/accounting/api/class-rest-api-accounts-transfer.php:223
 msgid "Both accounts should be present."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-accounts-transfer.php:244
+#: modules/accounting/api/class-rest-api-accounts-transfer.php:236
 msgid "Something Went Wrong! Account not found."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-accounts-transfer.php:322
-#: modules/accounting/api/class-rest-api-accounts-transfer.php:351
-#: modules/accounting/api/class-rest-api-accounts-transfer.php:383
-#: modules/accounting/api/class-rest-api-ledgers.php:381
+#: modules/accounting/api/class-rest-api-accounts-transfer.php:314
+#: modules/accounting/api/class-rest-api-accounts-transfer.php:343
+#: modules/accounting/api/class-rest-api-ledgers.php:384
 #: modules/accounting/includes/functions/bank.php:103
 msgid "Bank accounts are empty."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-accounts-transfer.php:421
+#: modules/accounting/api/class-rest-api-accounts-transfer.php:369
 msgid "Transfer"
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-accounts-transfer.php:425
+#: modules/accounting/api/class-rest-api-accounts-transfer.php:373
 #. translators: %1$s: amount, %2$s: id
 msgid "%1$s has been transferred from %2$s to %3$s"
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-accounts-transfer.php:584
+#: modules/accounting/api/class-rest-api-accounts-transfer.php:532
 #: modules/accounting/api/class-rest-api-bills.php:536
-#: modules/accounting/api/class-rest-api-expenses.php:492
+#: modules/accounting/api/class-rest-api-expenses.php:495
 #: modules/accounting/api/class-rest-api-invoices.php:561
 #: modules/accounting/api/class-rest-api-pay-purchases.php:422
 #: modules/accounting/api/class-rest-api-purchases.php:502
@@ -19769,21 +19767,21 @@ msgstr ""
 msgid "Date for the resource."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-accounts-transfer.php:593
+#: modules/accounting/api/class-rest-api-accounts-transfer.php:541
 msgid "From account id for the resource."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-accounts-transfer.php:599
+#: modules/accounting/api/class-rest-api-accounts-transfer.php:547
 msgid "To account id for the resource."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-accounts-transfer.php:605
+#: modules/accounting/api/class-rest-api-accounts-transfer.php:553
 #: modules/accounting/api/class-rest-api-pay-bills.php:458
 msgid "Amount for the resource."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-accounts-transfer.php:611
-#: modules/accounting/api/class-rest-api-expenses.php:541
+#: modules/accounting/api/class-rest-api-accounts-transfer.php:559
+#: modules/accounting/api/class-rest-api-expenses.php:544
 #: modules/accounting/api/class-rest-api-journals.php:378
 #: modules/accounting/api/class-rest-api-pay-bills.php:499
 #: modules/accounting/api/class-rest-api-pay-purchases.php:497
@@ -19807,7 +19805,7 @@ msgid "A bill of %1$s has been created for %2$s"
 msgstr ""
 
 #: modules/accounting/api/class-rest-api-bills.php:522
-#: modules/accounting/api/class-rest-api-expenses.php:473
+#: modules/accounting/api/class-rest-api-expenses.php:476
 #: modules/accounting/api/class-rest-api-pay-bills.php:430
 #: modules/accounting/api/class-rest-api-pay-purchases.php:400
 #: modules/accounting/api/class-rest-api-purchases.php:477
@@ -19816,7 +19814,7 @@ msgid "Voucher no. for the resource."
 msgstr ""
 
 #: modules/accounting/api/class-rest-api-bills.php:527
-#: modules/accounting/api/class-rest-api-expenses.php:478
+#: modules/accounting/api/class-rest-api-expenses.php:481
 msgid "People id for the resource."
 msgstr ""
 
@@ -19832,12 +19830,12 @@ msgid "Reference number for the resource."
 msgstr ""
 
 #: modules/accounting/api/class-rest-api-bills.php:562
-#: modules/accounting/api/class-rest-api-expenses.php:506
+#: modules/accounting/api/class-rest-api-expenses.php:509
 msgid "Billing address for the resource."
 msgstr ""
 
 #: modules/accounting/api/class-rest-api-bills.php:571
-#: modules/accounting/api/class-rest-api-expenses.php:514
+#: modules/accounting/api/class-rest-api-expenses.php:517
 #: modules/accounting/api/class-rest-api-invoices.php:600
 #: modules/accounting/api/class-rest-api-journals.php:348
 #: modules/accounting/api/class-rest-api-pay-bills.php:435
@@ -19848,7 +19846,7 @@ msgid "List of line items data."
 msgstr ""
 
 #: modules/accounting/api/class-rest-api-bills.php:576
-#: modules/accounting/api/class-rest-api-expenses.php:519
+#: modules/accounting/api/class-rest-api-expenses.php:522
 #: modules/accounting/api/class-rest-api-journals.php:353
 msgid "Ledger id."
 msgstr ""
@@ -19858,12 +19856,12 @@ msgid "Item Particular."
 msgstr ""
 
 #: modules/accounting/api/class-rest-api-bills.php:589
-#: modules/accounting/api/class-rest-api-expenses.php:533
+#: modules/accounting/api/class-rest-api-expenses.php:536
 msgid "Bill Amount"
 msgstr ""
 
 #: modules/accounting/api/class-rest-api-bills.php:602
-#: modules/accounting/api/class-rest-api-expenses.php:554
+#: modules/accounting/api/class-rest-api-expenses.php:557
 msgid "Item Type."
 msgstr ""
 
@@ -20011,25 +20009,25 @@ msgstr ""
 msgid "An expense of %1$s has been created for %2$s"
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-expenses.php:484
+#: modules/accounting/api/class-rest-api-expenses.php:487
 #: modules/accounting/api/class-rest-api-journals.php:332
 #: modules/accounting/api/class-rest-api-pay-bills.php:413
 msgid "Reference for the resource."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-expenses.php:501
+#: modules/accounting/api/class-rest-api-expenses.php:504
 msgid "Trans by for the resource."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-expenses.php:525
+#: modules/accounting/api/class-rest-api-expenses.php:528
 msgid "Bill Particulars."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-expenses.php:562
+#: modules/accounting/api/class-rest-api-expenses.php:565
 msgid "Payment method for the resource."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-expenses.php:570
+#: modules/accounting/api/class-rest-api-expenses.php:573
 msgid "Account for the resource."
 msgstr ""
 
@@ -20111,7 +20109,7 @@ msgstr ""
 
 #: modules/accounting/api/class-rest-api-invoices.php:655
 #: modules/accounting/api/class-rest-api-journals.php:340
-#: modules/accounting/api/class-rest-api-ledgers.php:645
+#: modules/accounting/api/class-rest-api-ledgers.php:648
 #: modules/accounting/api/class-rest-api-pay-bills.php:486
 #: modules/accounting/api/class-rest-api-pay-purchases.php:405
 #: modules/accounting/api/class-rest-api-pay-purchases.php:484
@@ -20151,33 +20149,33 @@ msgstr ""
 msgid "Attachments for the resource."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-ledgers.php:236
+#: modules/accounting/api/class-rest-api-ledgers.php:239
 msgid "Chart ID is Empty."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-ledgers.php:285
+#: modules/accounting/api/class-rest-api-ledgers.php:288
 msgid "Name already exist."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-ledgers.php:465
-#: modules/accounting/api/class-rest-api-ledgers.php:492
+#: modules/accounting/api/class-rest-api-ledgers.php:468
+#: modules/accounting/api/class-rest-api-ledgers.php:495
 msgid "Category already exist."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-ledgers.php:528
+#: modules/accounting/api/class-rest-api-ledgers.php:531
 msgid "Ledger Account"
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-ledgers.php:532
+#: modules/accounting/api/class-rest-api-ledgers.php:535
 #. translators: %1$s: name, %2$s: id
 msgid "A ledger account named %1$s has been created for %2$s"
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-ledgers.php:651
+#: modules/accounting/api/class-rest-api-ledgers.php:654
 msgid "Code for the resource."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-ledgers.php:665
+#: modules/accounting/api/class-rest-api-ledgers.php:668
 #: modules/accounting/api/class-rest-api-products.php:416
 #: modules/hrm/includes/api/class-departments-controller.php:323
 #: modules/hrm/includes/api/class-designations-controller.php:274
@@ -20379,28 +20377,28 @@ msgstr ""
 msgid "Total."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-tax-agencies.php:397
+#: modules/accounting/api/class-rest-api-tax-agencies.php:381
 msgid "Tax agency name for the resource."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-tax-cats.php:371
+#: modules/accounting/api/class-rest-api-tax-cats.php:355
 msgid "Tax Category name for the resource."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-tax-cats.php:379
+#: modules/accounting/api/class-rest-api-tax-cats.php:363
 msgid "Tax Category Description for the resource."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-tax-rate-names.php:360
+#: modules/accounting/api/class-rest-api-tax-rate-names.php:344
 #: modules/accounting/api/class-rest-api-taxes.php:911
 msgid "Tax rate name for the resource."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-tax-rate-names.php:368
+#: modules/accounting/api/class-rest-api-tax-rate-names.php:352
 msgid "Tax number for the resource."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-tax-rate-names.php:376
+#: modules/accounting/api/class-rest-api-tax-rate-names.php:360
 msgid "Tax default value for the resource."
 msgstr ""
 
@@ -20522,7 +20520,7 @@ msgstr ""
 
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:44
 #: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:45
-#: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:49
+#: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:50
 #: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:39
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillCreate.vue:48
 #: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:48
@@ -20533,7 +20531,7 @@ msgstr ""
 
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:45
 #: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:46
-#: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:50
+#: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:51
 #: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:40
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillCreate.vue:49
 #: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:49
@@ -20553,7 +20551,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/chart-accounts/AddChartAccounts.vue:7
 #: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:60
 #: modules/accounting/assets/src/admin/components/check/CheckSingle.vue:80
-#: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:67
+#: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:68
 #: modules/accounting/assets/src/admin/components/expense/ExpenseSingle.vue:98
 #: modules/accounting/assets/src/admin/components/journal/JournalCreate.vue:50
 #: modules/accounting/assets/src/admin/components/journal/JournalSingle.vue:56
@@ -20569,7 +20567,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/bill/BillSingle.vue:90
 #: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:62
 #: modules/accounting/assets/src/admin/components/check/CheckSingle.vue:82
-#: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:69
+#: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:70
 #: modules/accounting/assets/src/admin/components/expense/ExpenseSingle.vue:100
 #: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:57
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillCreate.vue:68
@@ -20590,7 +20588,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:63
 #: modules/accounting/assets/src/admin/components/bill/BillSingle.vue:106
 #: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:63
-#: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:70
+#: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:71
 #: modules/accounting/assets/src/admin/components/expense/ExpenseSingle.vue:116
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillCreate.vue:66
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillSingle.vue:99
@@ -20616,8 +20614,8 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:72
 #: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:101
 #: modules/accounting/assets/src/admin/components/check/CheckSingle.vue:81
-#: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:81
-#: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:108
+#: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:82
+#: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:109
 #: modules/accounting/assets/src/admin/components/expense/ExpenseSingle.vue:99
 #: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:111
 #: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:112
@@ -20637,7 +20635,7 @@ msgid "Particulars"
 msgstr ""
 
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:84
-#: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:95
+#: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:96
 #: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:73
 #: modules/accounting/assets/src/admin/components/journal/JournalCreate.vue:82
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:74
@@ -20646,7 +20644,7 @@ msgstr ""
 
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:89
 #: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:92
-#: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:100
+#: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:101
 #: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:104
 #: modules/accounting/assets/src/admin/components/journal/JournalCreate.vue:87
 #: modules/accounting/assets/src/admin/components/opening-balance/OpeningBalance.vue:267
@@ -20659,7 +20657,7 @@ msgstr ""
 
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:97
 #: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:102
-#: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:109
+#: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:110
 #: modules/accounting/assets/src/admin/components/journal/JournalCreate.vue:36
 #: modules/accounting/assets/src/admin/components/opening-balance/OpeningBalance.vue:280
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillCreate.vue:96
@@ -20671,7 +20669,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:115
 #: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:120
 #: modules/accounting/assets/src/admin/components/email/SendMail.vue:34
-#: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:127
+#: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:128
 #: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:130
 #: modules/accounting/assets/src/admin/components/journal/JournalCreate.vue:103
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillCreate.vue:102
@@ -20836,7 +20834,7 @@ msgid "From Account"
 msgstr ""
 
 #: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:59
-#: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:66
+#: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:67
 #: modules/accounting/assets/src/admin/components/journal/JournalCreate.vue:49
 msgid "SL No."
 msgstr ""
@@ -20865,7 +20863,7 @@ msgstr ""
 msgid "Check"
 msgstr ""
 
-#: modules/accounting/assets/src/admin/components/dashboard/Accounts.vue:33
+#: modules/accounting/assets/src/admin/components/dashboard/Accounts.vue:29
 #: modules/accounting/assets/src/admin/components/dashboard/DashBoard.vue:50
 #: modules/accounting/assets/src/admin/components/dashboard/DashBoard.vue:79
 msgid "Total Balance"
@@ -20926,7 +20924,6 @@ msgstr ""
 #: modules/crm/views/js-templates/customer-newnote.php:19
 #: modules/crm/views/js-templates/customer-schedule-note.php:116
 #: modules/crm/views/js-templates/customer-tasks-note.php:45
-#: vendor/appsero/client/src/Insights.php:764
 msgid "Cancel"
 msgstr ""
 
@@ -20935,21 +20932,25 @@ msgid "Send"
 msgstr ""
 
 #: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:8
+msgid "Convert into Expense"
+msgstr ""
+
+#: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:9
 msgid "New Expense"
 msgstr ""
 
-#: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:30
+#: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:31
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillCreate.vue:29
 #: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:29
 #: modules/accounting/assets/src/admin/components/rec-payment/RecPaymentCreate.vue:31
 msgid "Reference"
 msgstr ""
 
-#: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:36
+#: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:37
 msgid "Expense Date"
 msgstr ""
 
-#: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:41
+#: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:42
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillCreate.vue:40
 #: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:40
 #: modules/accounting/assets/src/admin/components/rec-payment/RecPaymentCreate.vue:42
@@ -20957,12 +20958,20 @@ msgstr ""
 msgid "Payment Method"
 msgstr ""
 
-#: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:45
+#: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:46
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillCreate.vue:44
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillSingle.vue:70
 #: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:44
 #: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseSingle.vue:71
 msgid "Transaction From"
+msgstr ""
+
+#: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:408
+msgid "Expense Updated!"
+msgstr ""
+
+#: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:411
+msgid "Conversion Successful!"
 msgstr ""
 
 #: modules/accounting/assets/src/admin/components/expense/ExpenseSingle.vue:85
@@ -21107,6 +21116,10 @@ msgstr ""
 
 #: modules/accounting/assets/src/admin/components/help/HelpContent.vue:182
 msgid "How to produce different types of reports in Accounting?"
+msgstr ""
+
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:8
+msgid "Convert into Invoice"
 msgstr ""
 
 #: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:9
@@ -21344,8 +21357,8 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:35
 #: modules/crm/includes/class-subscription-widget.php:181
 #: modules/crm/includes/class-subscription.php:177
-#: modules/crm/includes/functions-customer.php:1810
-#: modules/crm/includes/functions-customer.php:2910
+#: modules/crm/includes/functions-customer.php:1830
+#: modules/crm/includes/functions-customer.php:2930
 #: modules/crm/views/contact/single.php:73
 #: modules/crm/views/js-templates/new-customer.php:54
 #: modules/hrm/views/employee/tab-general.php:8
@@ -21357,8 +21370,8 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:39
 #: modules/crm/includes/class-subscription-widget.php:182
 #: modules/crm/includes/class-subscription.php:184
-#: modules/crm/includes/functions-customer.php:1824
-#: modules/crm/includes/functions-customer.php:2915
+#: modules/crm/includes/functions-customer.php:1844
+#: modules/crm/includes/functions-customer.php:2935
 #: modules/crm/views/contact/single.php:74
 #: modules/crm/views/js-templates/new-customer.php:64
 #: modules/hrm/views/employee/tab-general.php:9
@@ -21377,8 +21390,8 @@ msgstr ""
 
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:81
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:82
-#: modules/crm/includes/functions-customer.php:1650
-#: modules/crm/includes/functions-customer.php:2950
+#: modules/crm/includes/functions-customer.php:1670
+#: modules/crm/includes/functions-customer.php:2970
 #: modules/crm/views/company/single.php:78
 #: modules/crm/views/contact/single.php:80
 msgid "Street 1"
@@ -21386,8 +21399,8 @@ msgstr ""
 
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:85
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:86
-#: modules/crm/includes/functions-customer.php:1664
-#: modules/crm/includes/functions-customer.php:2955
+#: modules/crm/includes/functions-customer.php:1684
+#: modules/crm/includes/functions-customer.php:2975
 #: modules/crm/views/company/single.php:79
 #: modules/crm/views/contact/single.php:81
 msgid "Street 2"
@@ -21878,12 +21891,12 @@ msgstr ""
 msgid "Trash"
 msgstr ""
 
-#: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:320
+#: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:324
 #: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:176
 msgid "Make Payment"
 msgstr ""
 
-#: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:326
+#: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:334
 #: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:169
 #: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:187
 #: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:165
@@ -22002,11 +22015,11 @@ msgstr ""
 msgid "Second value must be greater than the first value!"
 msgstr ""
 
-#: modules/accounting/includes/classes/class-assets.php:127
+#: modules/accounting/includes/classes/class-assets.php:125
 msgid "Link has been successfully copied."
 msgstr ""
 
-#: modules/accounting/includes/classes/class-assets.php:128
+#: modules/accounting/includes/classes/class-assets.php:126
 msgid "Failed to copy the link."
 msgstr ""
 
@@ -22088,7 +22101,7 @@ msgstr ""
 msgid "Bill created with voucher no %s"
 msgstr ""
 
-#: modules/accounting/includes/functions/expenses.php:463
+#: modules/accounting/includes/functions/expenses.php:598
 #. translators: %s: voucher_no
 msgid "Expense created with voucher no %s"
 msgstr ""
@@ -22105,7 +22118,7 @@ msgstr ""
 msgid "Journal created with voucher no %s"
 msgstr ""
 
-#: modules/accounting/includes/functions/pay-bills.php:375
+#: modules/accounting/includes/functions/pay-bills.php:376
 #. translators: %s: voucher_no
 msgid "Bill payment created with voucher no %s"
 msgstr ""
@@ -22210,7 +22223,7 @@ msgstr ""
 #: modules/accounting/includes/functions/transactions.php:987
 #: modules/accounting/includes/functions/transactions.php:1007
 #: modules/accounting/includes/functions/transactions.php:1025
-#: modules/crm/includes/functions-customer.php:1705
+#: modules/crm/includes/functions-customer.php:1725
 #: modules/crm/views/js-templates/new-customer.php:317
 #: modules/hrm/views/employee/empty-employee.php:126
 #: modules/hrm/views/employee/single.php:116
@@ -22369,11 +22382,11 @@ msgid "Add More"
 msgstr ""
 
 #: modules/accounting/includes/views/transactions/invoice-readonly.php:10
-#: modules/crm/includes/functions-customer.php:1642
-#: modules/crm/includes/functions-customer.php:1656
-#: modules/crm/includes/functions-customer.php:1670
-#: modules/crm/includes/functions-customer.php:1682
-#: modules/crm/includes/functions-customer.php:1695
+#: modules/crm/includes/functions-customer.php:1662
+#: modules/crm/includes/functions-customer.php:1676
+#: modules/crm/includes/functions-customer.php:1690
+#: modules/crm/includes/functions-customer.php:1702
+#: modules/crm/includes/functions-customer.php:1715
 msgid "from"
 msgstr ""
 
@@ -22539,13 +22552,13 @@ msgstr ""
 
 #: modules/crm/assets/js/crm-contacts.js:890
 #: modules/crm/assets/js/crm-contacts.js:912
-#: modules/crm/includes/functions-customer.php:2002
+#: modules/crm/includes/functions-customer.php:2022
 msgid "Own Search"
 msgstr ""
 
 #: modules/crm/assets/js/crm-contacts.js:898
 #: modules/crm/assets/js/crm-contacts.js:904
-#: modules/crm/includes/functions-customer.php:2009
+#: modules/crm/includes/functions-customer.php:2029
 msgid "Global Search"
 msgstr ""
 
@@ -22572,7 +22585,7 @@ msgstr ""
 
 #: modules/crm/assets/js/crm-contacts.js:1185
 #: modules/crm/assets/js/crm-contacts.js:1188
-msgid "Search Compnay"
+msgid "Search Company"
 msgstr ""
 
 #: modules/crm/assets/js/crm-contacts.js:1185
@@ -23083,9 +23096,9 @@ msgstr ""
 #: modules/crm/includes/class-ajax.php:572
 #: modules/crm/includes/class-ajax.php:739
 #: modules/crm/includes/functions-customer.php:391
-#: modules/crm/includes/functions-customer.php:1367
-#: modules/crm/includes/functions-customer.php:3082
-#: modules/crm/includes/functions-customer.php:3549
+#: modules/crm/includes/functions-customer.php:1387
+#: modules/crm/includes/functions-customer.php:3102
+#: modules/crm/includes/functions-customer.php:3569
 msgid "No contact found"
 msgstr ""
 
@@ -23380,12 +23393,12 @@ msgid "No contact group found."
 msgstr ""
 
 #: modules/crm/includes/class-contact-group-list-table.php:87
-#: modules/crm/includes/functions-customer.php:1504
+#: modules/crm/includes/functions-customer.php:1524
 msgid "Subscribed"
 msgstr ""
 
 #: modules/crm/includes/class-contact-group-list-table.php:88
-#: modules/crm/includes/functions-customer.php:1506
+#: modules/crm/includes/functions-customer.php:1526
 msgid "Unconfirmed"
 msgstr ""
 
@@ -23799,317 +23812,317 @@ msgstr ""
 msgid "ERP Schedule"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1320
+#: modules/crm/includes/functions-customer.php:1340
 msgid "No group selected"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1324
+#: modules/crm/includes/functions-customer.php:1344
 msgid "No contact founds"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1505
+#: modules/crm/includes/functions-customer.php:1525
 msgid "Unsubscribe"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1588
-#: modules/crm/includes/functions-customer.php:1602
-#: modules/crm/includes/functions-customer.php:1616
-#: modules/crm/includes/functions-customer.php:1630
-#: modules/crm/includes/functions-customer.php:1644
-#: modules/crm/includes/functions-customer.php:1658
-#: modules/crm/includes/functions-customer.php:1672
-#: modules/crm/includes/functions-customer.php:1697
-#: modules/crm/includes/functions-customer.php:1711
-#: modules/crm/includes/functions-customer.php:1723
-#: modules/crm/includes/functions-customer.php:1747
-#: modules/crm/includes/functions-customer.php:1816
-#: modules/crm/includes/functions-customer.php:1830
-#: modules/crm/includes/functions-customer.php:1855
+#: modules/crm/includes/functions-customer.php:1608
+#: modules/crm/includes/functions-customer.php:1622
+#: modules/crm/includes/functions-customer.php:1636
+#: modules/crm/includes/functions-customer.php:1650
+#: modules/crm/includes/functions-customer.php:1664
+#: modules/crm/includes/functions-customer.php:1678
+#: modules/crm/includes/functions-customer.php:1692
+#: modules/crm/includes/functions-customer.php:1717
+#: modules/crm/includes/functions-customer.php:1731
+#: modules/crm/includes/functions-customer.php:1743
+#: modules/crm/includes/functions-customer.php:1767
+#: modules/crm/includes/functions-customer.php:1836
+#: modules/crm/includes/functions-customer.php:1850
+#: modules/crm/includes/functions-customer.php:1875
 msgid "contains"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1589
-#: modules/crm/includes/functions-customer.php:1603
-#: modules/crm/includes/functions-customer.php:1617
-#: modules/crm/includes/functions-customer.php:1631
-#: modules/crm/includes/functions-customer.php:1645
-#: modules/crm/includes/functions-customer.php:1659
-#: modules/crm/includes/functions-customer.php:1673
-#: modules/crm/includes/functions-customer.php:1698
-#: modules/crm/includes/functions-customer.php:1712
-#: modules/crm/includes/functions-customer.php:1748
-#: modules/crm/includes/functions-customer.php:1817
-#: modules/crm/includes/functions-customer.php:1831
-#: modules/crm/includes/functions-customer.php:1856
+#: modules/crm/includes/functions-customer.php:1609
+#: modules/crm/includes/functions-customer.php:1623
+#: modules/crm/includes/functions-customer.php:1637
+#: modules/crm/includes/functions-customer.php:1651
+#: modules/crm/includes/functions-customer.php:1665
+#: modules/crm/includes/functions-customer.php:1679
+#: modules/crm/includes/functions-customer.php:1693
+#: modules/crm/includes/functions-customer.php:1718
+#: modules/crm/includes/functions-customer.php:1732
+#: modules/crm/includes/functions-customer.php:1768
+#: modules/crm/includes/functions-customer.php:1837
+#: modules/crm/includes/functions-customer.php:1851
+#: modules/crm/includes/functions-customer.php:1876
 msgid "not contains"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1590
-#: modules/crm/includes/functions-customer.php:1604
-#: modules/crm/includes/functions-customer.php:1618
-#: modules/crm/includes/functions-customer.php:1632
-#: modules/crm/includes/functions-customer.php:1699
-#: modules/crm/includes/functions-customer.php:1713
-#: modules/crm/includes/functions-customer.php:1749
-#: modules/crm/includes/functions-customer.php:1818
-#: modules/crm/includes/functions-customer.php:1832
-#: modules/crm/includes/functions-customer.php:1857
+#: modules/crm/includes/functions-customer.php:1610
+#: modules/crm/includes/functions-customer.php:1624
+#: modules/crm/includes/functions-customer.php:1638
+#: modules/crm/includes/functions-customer.php:1652
+#: modules/crm/includes/functions-customer.php:1719
+#: modules/crm/includes/functions-customer.php:1733
+#: modules/crm/includes/functions-customer.php:1769
+#: modules/crm/includes/functions-customer.php:1838
+#: modules/crm/includes/functions-customer.php:1852
+#: modules/crm/includes/functions-customer.php:1877
 msgid "begins with"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1591
-#: modules/crm/includes/functions-customer.php:1605
-#: modules/crm/includes/functions-customer.php:1619
-#: modules/crm/includes/functions-customer.php:1633
-#: modules/crm/includes/functions-customer.php:1700
-#: modules/crm/includes/functions-customer.php:1714
-#: modules/crm/includes/functions-customer.php:1750
-#: modules/crm/includes/functions-customer.php:1819
-#: modules/crm/includes/functions-customer.php:1833
-#: modules/crm/includes/functions-customer.php:1858
+#: modules/crm/includes/functions-customer.php:1611
+#: modules/crm/includes/functions-customer.php:1625
+#: modules/crm/includes/functions-customer.php:1639
+#: modules/crm/includes/functions-customer.php:1653
+#: modules/crm/includes/functions-customer.php:1720
+#: modules/crm/includes/functions-customer.php:1734
+#: modules/crm/includes/functions-customer.php:1770
+#: modules/crm/includes/functions-customer.php:1839
+#: modules/crm/includes/functions-customer.php:1853
+#: modules/crm/includes/functions-customer.php:1878
 msgid "ends with"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1600
-#: modules/crm/includes/functions-customer.php:1614
-#: modules/crm/includes/functions-customer.php:1628
-#: modules/crm/includes/functions-customer.php:1654
-#: modules/crm/includes/functions-customer.php:1668
-#: modules/crm/includes/functions-customer.php:1693
-#: modules/crm/includes/functions-customer.php:1709
-#: modules/crm/includes/functions-customer.php:1745
+#: modules/crm/includes/functions-customer.php:1620
+#: modules/crm/includes/functions-customer.php:1634
+#: modules/crm/includes/functions-customer.php:1648
+#: modules/crm/includes/functions-customer.php:1674
+#: modules/crm/includes/functions-customer.php:1688
+#: modules/crm/includes/functions-customer.php:1713
+#: modules/crm/includes/functions-customer.php:1729
+#: modules/crm/includes/functions-customer.php:1765
 msgid "has"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1601
-#: modules/crm/includes/functions-customer.php:1615
-#: modules/crm/includes/functions-customer.php:1629
-#: modules/crm/includes/functions-customer.php:1655
-#: modules/crm/includes/functions-customer.php:1669
-#: modules/crm/includes/functions-customer.php:1694
-#: modules/crm/includes/functions-customer.php:1710
-#: modules/crm/includes/functions-customer.php:1746
+#: modules/crm/includes/functions-customer.php:1621
+#: modules/crm/includes/functions-customer.php:1635
+#: modules/crm/includes/functions-customer.php:1649
+#: modules/crm/includes/functions-customer.php:1675
+#: modules/crm/includes/functions-customer.php:1689
+#: modules/crm/includes/functions-customer.php:1714
+#: modules/crm/includes/functions-customer.php:1730
+#: modules/crm/includes/functions-customer.php:1766
 msgid "has not"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1643
-#: modules/crm/includes/functions-customer.php:1657
-#: modules/crm/includes/functions-customer.php:1671
-#: modules/crm/includes/functions-customer.php:1683
-#: modules/crm/includes/functions-customer.php:1696
+#: modules/crm/includes/functions-customer.php:1663
+#: modules/crm/includes/functions-customer.php:1677
+#: modules/crm/includes/functions-customer.php:1691
+#: modules/crm/includes/functions-customer.php:1703
+#: modules/crm/includes/functions-customer.php:1716
 msgid "not from"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1678
+#: modules/crm/includes/functions-customer.php:1698
 msgid "Country/State"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1689
-#: modules/crm/includes/functions-customer.php:2970
+#: modules/crm/includes/functions-customer.php:1709
+#: modules/crm/includes/functions-customer.php:2990
 #: modules/crm/views/company/single.php:83
 #: modules/crm/views/contact/single.php:85
 #: modules/hrm/views/employee/tab-general.php:68
 msgid "Postal Code"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1719
-#: modules/crm/includes/functions-customer.php:3901
+#: modules/crm/includes/functions-customer.php:1739
+#: modules/crm/includes/functions-customer.php:3921
 msgid "Tags"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1733
+#: modules/crm/includes/functions-customer.php:1753
 msgid "in group"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1734
+#: modules/crm/includes/functions-customer.php:1754
 msgid "not in group"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1735
+#: modules/crm/includes/functions-customer.php:1755
 msgid "unsubscribed from"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1741
+#: modules/crm/includes/functions-customer.php:1761
 msgid "Others Fields"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1759
-#: modules/crm/includes/functions-customer.php:1770
-#: modules/crm/includes/functions-customer.php:1814
-#: modules/crm/includes/functions-customer.php:1828
-#: modules/crm/includes/functions-customer.php:1853
+#: modules/crm/includes/functions-customer.php:1779
+#: modules/crm/includes/functions-customer.php:1790
+#: modules/crm/includes/functions-customer.php:1834
+#: modules/crm/includes/functions-customer.php:1848
+#: modules/crm/includes/functions-customer.php:1873
 msgid "is"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1760
-#: modules/crm/includes/functions-customer.php:1771
-#: modules/crm/includes/functions-customer.php:1815
-#: modules/crm/includes/functions-customer.php:1829
-#: modules/crm/includes/functions-customer.php:1854
+#: modules/crm/includes/functions-customer.php:1780
+#: modules/crm/includes/functions-customer.php:1791
+#: modules/crm/includes/functions-customer.php:1835
+#: modules/crm/includes/functions-customer.php:1849
+#: modules/crm/includes/functions-customer.php:1874
 msgid "is not"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1766
+#: modules/crm/includes/functions-customer.php:1786
 #: modules/crm/views/js-templates/new-customer.php:298
 msgid "Contact Source"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1777
+#: modules/crm/includes/functions-customer.php:1797
 msgid "Contact age"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1781
+#: modules/crm/includes/functions-customer.php:1801
 msgid "exactly"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1782
+#: modules/crm/includes/functions-customer.php:1802
 msgid "grater"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1783
+#: modules/crm/includes/functions-customer.php:1803
 msgid "less"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1784
+#: modules/crm/includes/functions-customer.php:1804
 msgid "Between"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:2001
+#: modules/crm/includes/functions-customer.php:2021
 msgid "own_search"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:2008
+#: modules/crm/includes/functions-customer.php:2028
 msgid "global_search"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:2847
+#: modules/crm/includes/functions-customer.php:2867
 msgid "Template name and body content are required"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:2866
+#: modules/crm/includes/functions-customer.php:2886
 msgid "Template name is required"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:2870
+#: modules/crm/includes/functions-customer.php:2890
 msgid "Template body is required"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:2879
+#: modules/crm/includes/functions-customer.php:2899
 msgid "<strong>%s</strong> has been updated"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:2888
+#: modules/crm/includes/functions-customer.php:2908
 msgid "<strong>%s</strong> has been created"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3037
-#: modules/crm/includes/functions-customer.php:3056
+#: modules/crm/includes/functions-customer.php:3057
+#: modules/crm/includes/functions-customer.php:3076
 msgid "No record found"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3078
+#: modules/crm/includes/functions-customer.php:3098
 msgid "No template found"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3128
-#: modules/crm/includes/functions-customer.php:3129
+#: modules/crm/includes/functions-customer.php:3148
+#: modules/crm/includes/functions-customer.php:3149
 msgid "Import into CRM"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3251
+#: modules/crm/includes/functions-customer.php:3271
 msgid "%s contacts created."
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3416
+#: modules/crm/includes/functions-customer.php:3436
 #: modules/hrm/includes/functions-employee.php:513
 msgid "Advertisement"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3417
+#: modules/crm/includes/functions-customer.php:3437
 msgid "Chat"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3418
+#: modules/crm/includes/functions-customer.php:3438
 msgid "Contact Form"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3419
+#: modules/crm/includes/functions-customer.php:3439
 msgid "Employee Referral"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3420
+#: modules/crm/includes/functions-customer.php:3440
 msgid "External Referral"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3421
+#: modules/crm/includes/functions-customer.php:3441
 msgid "Marketing campaign"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3422
+#: modules/crm/includes/functions-customer.php:3442
 msgid "Newsletter"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3423
+#: modules/crm/includes/functions-customer.php:3443
 msgid "OnlineStore"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3424
+#: modules/crm/includes/functions-customer.php:3444
 msgid "Optin Forms"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3425
+#: modules/crm/includes/functions-customer.php:3445
 msgid "Partner"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3426
+#: modules/crm/includes/functions-customer.php:3446
 msgid "Phone Call"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3427
+#: modules/crm/includes/functions-customer.php:3447
 msgid "Public Relations"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3428
+#: modules/crm/includes/functions-customer.php:3448
 msgid "Sales Mail Alias"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3429
+#: modules/crm/includes/functions-customer.php:3449
 msgid "Search Engine"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3430
+#: modules/crm/includes/functions-customer.php:3450
 msgid "Seminar-Internal"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3431
+#: modules/crm/includes/functions-customer.php:3451
 msgid "Seminar Partner"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3432
+#: modules/crm/includes/functions-customer.php:3452
 msgid "Social Media"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3433
+#: modules/crm/includes/functions-customer.php:3453
 msgid "Trade Show"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3434
+#: modules/crm/includes/functions-customer.php:3454
 msgid "Web Download"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3435
+#: modules/crm/includes/functions-customer.php:3455
 msgid "Web Research"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3545
+#: modules/crm/includes/functions-customer.php:3565
 msgid "You do not have permission to make WP User"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3559
+#: modules/crm/includes/functions-customer.php:3579
 msgid "No email found for creating wp user"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3900
+#: modules/crm/includes/functions-customer.php:3920
 #: modules/crm/views/company/single.php:150
 #: modules/crm/views/contact/single.php:155
 msgid "Tag"
@@ -24366,17 +24379,17 @@ msgstr ""
 msgid "Created Date.."
 msgstr ""
 
-#: modules/crm/views/activities.php:67 modules/crm/views/company/feeds.php:58
-#: modules/crm/views/contact/feeds.php:66
+#: modules/crm/views/activities.php:68 modules/crm/views/company/feeds.php:58
+#: modules/crm/views/contact/feeds.php:67
 msgid "Load More"
 msgstr ""
 
-#: modules/crm/views/activities.php:68 modules/crm/views/company/feeds.php:59
-#: modules/crm/views/contact/feeds.php:67
+#: modules/crm/views/activities.php:69 modules/crm/views/company/feeds.php:59
+#: modules/crm/views/contact/feeds.php:68
 msgid "Loading.."
 msgstr ""
 
-#: modules/crm/views/activities.php:73 modules/crm/views/contact/feeds.php:72
+#: modules/crm/views/activities.php:74 modules/crm/views/contact/feeds.php:73
 msgid "No Activity found for this Contact"
 msgstr ""
 
@@ -27796,290 +27809,6 @@ msgid_plural "Years"
 msgstr[0] ""
 msgstr[1] ""
 
-#: vendor/appsero/client/src/Insights.php:369
-msgid ""
-"Want to help make <strong>%1$s</strong> even more awesome? Allow %1$s to "
-"collect non-sensitive diagnostic data and usage information."
-msgstr ""
-
-#: vendor/appsero/client/src/Insights.php:374
-msgid "what we collect"
-msgstr ""
-
-#: vendor/appsero/client/src/Insights.php:381
-msgid "Allow"
-msgstr ""
-
-#: vendor/appsero/client/src/Insights.php:382
-msgid "No thanks"
-msgstr ""
-
-#: vendor/appsero/client/src/Insights.php:747
-msgid "If you have a moment, please let us know why you are deactivating:"
-msgstr ""
-
-#: vendor/appsero/client/src/Insights.php:762
-msgid "I rather wouldn't say"
-msgstr ""
-
-#: vendor/appsero/client/src/Insights.php:763
-msgid "Submit & Deactivate"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/internationalized-plugin.php:11
-msgid "This is a dummy plugin"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:42
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:72
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:80
-msgid "There was an error when reading this WXR file"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:43
-msgid ""
-"Details are shown above. The importer will now try again with a different "
-"parser..."
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:84
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:89
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:306
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:495
-msgid "This does not appear to be a WXR file, missing/invalid WXR version number"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:132
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:141
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:192
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:196
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:205
-msgid "Sorry, there has been an error."
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:133
-msgid "The file does not exist, please try again."
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:176
-msgid "All done."
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:176
-msgid "Have fun!"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:177
-msgid "Remember to update the passwords and roles of imported users."
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:197
-msgid ""
-"The export file could not be found at <code>%s</code>. It is likely that "
-"this was caused by a permissions problem."
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:213
-msgid ""
-"This WXR file (version %s) may not be supported by this version of the "
-"importer. Please consider updating."
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:238
-msgid ""
-"Failed to import author %s. Their posts will be attributed to the current "
-"user."
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:264
-msgid "Assign Authors"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:265
-msgid ""
-"To make it easier for you to edit and save the imported content, you may "
-"want to reassign the author of the imported item to an existing user of "
-"this site. For example, you may want to import all the entries as "
-"<code>admin</code>s entries."
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:267
-msgid ""
-"If a new user is created by WordPress, a new password will be randomly "
-"generated and the new user&#8217;s role will be set as %s. Manually "
-"changing the new user&#8217;s details will be necessary."
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:277
-msgid "Import Attachments"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:280
-msgid "Download and import file attachments"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:284
-msgid "Submit"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:297
-msgid "Import author:"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:308
-msgid "or create new user with login name:"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:311
-msgid "as a new user:"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:319
-msgid "assign posts to an existing user:"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:321
-msgid "or assign posts to an existing user:"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:372
-msgid ""
-"Failed to create new user for %s. Their posts will be attributed to the "
-"current user."
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:424
-msgid "Failed to import category %s"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:467
-msgid "Failed to import post tag %s"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:516
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:738
-msgid "Failed to import %s %s"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:605
-msgid "Failed to import &#8220;%s&#8221;: Invalid post type %s"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:642
-msgid "%s &#8220;%s&#8221; already exists."
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:704
-msgid "Failed to import %s &#8220;%s&#8221;"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:869
-msgid "Menu item skipped due to missing menu slug"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:876
-msgid "Menu item skipped due to invalid menu slug: %s"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:939
-msgid "Fetching attachments is not enabled"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:952
-msgid "Invalid file type"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:996
-msgid "Remote server did not respond"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1002
-msgid "Remote server returned error response %1$d %2$s"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1009
-msgid "Remote file is incorrect size"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1014
-msgid "Zero size file downloaded"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1020
-msgid "Remote file is too large, limit is %s"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1119
-msgid "Import WordPress"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1126
-msgid ""
-"A new version of this importer is available. Please update to version %s to "
-"ensure compatibility with newer export files."
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1141
-msgid ""
-"Howdy! Upload your WordPress eXtended RSS (WXR) file and we&#8217;ll import "
-"the posts, pages, comments, custom fields, categories, and tags into this "
-"site."
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1142
-msgid "Choose a WXR (.xml) file to upload, then click Upload file and import."
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1216
-msgid ""
-"Import <strong>posts, pages, comments, custom fields, categories, and "
-"tags</strong> from a WordPress export file."
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/themedir1/internationalized-theme/functions.php:7
-msgid "This is a dummy theme"
-msgstr ""
-
-#: vendor/wp-cli/core-command/src/Core_Command.php:700
-msgid "Wildcard DNS may not be configured correctly."
-msgstr ""
-
-#: vendor/wp-cli/entity-command/src/Site_Command.php:125
-msgid "Uncategorized"
-msgstr ""
-
-#: vendor/wp-cli/export-command/src/WP_Export_File_Writer.php:32
-#: vendor/wp-cli/export-command/src/WP_Export_Split_Files_Writer.php:51
-msgid "WP Export: error writing to export file."
-msgstr ""
-
-#: vendor/wp-cli/export-command/src/WP_Export_XML_Over_HTTP.php:20
-#: vendor/wp-cli/export-command/src/WP_Export_XML_Over_HTTP.php:25
-msgid "Export Error"
-msgstr ""
-
-#: vendor/wp-cli/extension-command/src/WP_CLI/CommandWithUpgrade.php:651
-msgid " Try again"
-msgstr ""
-
-#: vendor/wp-cli/extension-command/src/WP_CLI/CommandWithUpgrade.php:657
-msgid "API error. Try Again."
-msgstr ""
-
-#: vendor/wp-cli/media-command/src/Media_Command.php:145
-msgid "image"
-msgid_plural "images"
-msgstr[0] ""
-msgstr[1] ""
-
-#: vendor/wp-cli/wp-cli/php/utils-wp.php:196
-msgid "Inactive Widgets"
-msgstr ""
-
-#: vendor/wp-cli/wp-cli/php/utils-wp.php:199
-msgid "Drag widgets here to remove them from the sidebar but keep their settings."
-msgstr ""
-
 #: wp-erp.php:186
 msgid "<h1>An Error Occured</h1>"
 msgstr ""
@@ -28151,18 +27880,4 @@ msgstr ""
 #: i18n/states/US.php:21
 msgctxt "US state of Georgia"
 msgid "Georgia"
-msgstr ""
-
-#: vendor/wp-cli/core-command/src/Core_Command.php:465
-#: vendor/wp-cli/core-command/src/Core_Command.php:539
-#. translators: placeholder is blog name
-#. translators: placeholder is user supplied title
-msgctxt "Default network name"
-msgid "%s Sites"
-msgstr ""
-
-#: vendor/wp-cli/entity-command/src/Site_Command.php:128
-#. translators: Default category slug
-msgctxt "Default category slug"
-msgid "Uncategorized"
 msgstr ""
