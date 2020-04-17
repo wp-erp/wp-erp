@@ -145,24 +145,26 @@ $f_year_help_text = __( 'Select Year', 'erp' ) . ' ' . esc_attr__( 'Or', 'erp' )
             <div class="row">
                 <?php
                 erp_html_form_input(array(
-                    'label' => esc_html__('Entitle New Employees?', 'erp'),
+                    'label' => esc_html__('Entitle New Employees', 'erp'),
                     'name'  => 'apply-for-new-users',
                     'type'  => 'checkbox',
                     'value' => ! empty( $leave_policy ) && $leave_policy->apply_for_new_users == '1' ? 'on'  : '0',
+                    'help'  => esc_attr__( 'Entitle new employees to this policy after hiring?' ),
+                    'tooltip' => esc_attr__( 'Check this checkbox if you want to entitle new employees to this policy after hiring.', 'erp' )
                 ));
                 ?>
-                <p class="description"><?php echo esc_attr__( 'Check this checkbox if you want to entitle new employees to this policy after hiring.' ); ?></p>
             </div>
 
             <?php
             if ( ! $disabled ) {
                 echo '<div class="row">';
                 erp_html_form_input(array(
-                    'label' => esc_html__('Apply for existing employees?', 'erp'),
+                    'label' => esc_html__('Apply for existing employees', 'erp'),
                     'name'  => 'apply-for-existing-users',
                     'type'  => 'checkbox',
+                    'help'  => esc_attr__( 'Entitle existing employees to this policy?' ),
+                    //'tooltip' => esc_attr__( 'Check this checkbox if you want to entitle existing employees to this policy.' ),
                 ));
-                echo '<p class="description">' . esc_attr__( 'Check this checkbox if you want to entitle existing employees to this policy.' ) . '</p>';
                 echo '</div>';
             }
             ?>

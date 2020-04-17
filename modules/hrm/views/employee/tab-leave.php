@@ -68,7 +68,7 @@ if ( $balance ) {
 
 <?php
 // get leave requests
-$requests   = $employee->get_leave_requests( array( 'status' => 'all' ) );
+$requests   = $employee->get_leave_requests( array( 'status' => 'all', 'orderby' => 'start_date' ) );
 
 // get current financial year
 $financial_year = erp_hr_get_financial_year_from_date();
