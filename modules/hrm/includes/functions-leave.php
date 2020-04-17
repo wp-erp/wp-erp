@@ -1310,7 +1310,7 @@ function erp_hr_get_leave_requests( $args = array() ) {
     if ( $args['orderby'] == 'created_on' ) {
         $args['orderby'] = 'request.created_at';
     }
-    elseif ( in_array( $args['orderby'], array( 'from_date', 'to_date', 'name', 'created_at' ) ) ) {
+    elseif ( in_array( $args['orderby'], array( 'start_date', 'end_date', 'name', 'created_at' ) ) ) {
         $args['orderby'] = 'request.' . $args['orderby'];
     }
     elseif ( $args['orderby'] == 'name' ) {
