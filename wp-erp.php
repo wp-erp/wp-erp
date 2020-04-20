@@ -5,7 +5,6 @@
  * Plugin URI: https://wperp.com
  * Author: weDevs
  * Author URI: https://wedevs.com
- * Version: 1.5.14
  * Version: 1.6.0
  * License: GPL2
  * Text Domain: erp
