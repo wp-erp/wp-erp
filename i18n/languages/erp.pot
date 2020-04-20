@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WP ERP 1.5.14\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-erp\n"
-"POT-Creation-Date: 2020-04-13 04:54:56+00:00\n"
+"POT-Creation-Date: 2020-04-17 03:50:28+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -16079,7 +16079,7 @@ msgid "Created At"
 msgstr ""
 
 #: includes/admin/class-form-handler.php:25
-#: includes/framework/views/status-report.php:118 includes/functions.php:1324
+#: includes/framework/views/status-report.php:118 includes/functions.php:1330
 msgid "ERP Settings"
 msgstr ""
 
@@ -16368,8 +16368,8 @@ msgstr ""
 
 #: includes/admin/class-setup-wizard.php:640
 #: modules/hrm/includes/class-settings.php:46
-#: modules/hrm/includes/functions-leave.php:1924
-#: modules/hrm/includes/functions-leave.php:2681
+#: modules/hrm/includes/functions-leave.php:1922
+#: modules/hrm/includes/functions-leave.php:2679
 msgid "Full Day"
 msgstr ""
 
@@ -19599,110 +19599,110 @@ msgstr ""
 msgid "Zimbabwean Dollar"
 msgstr ""
 
-#: includes/functions.php:691
+#: includes/functions.php:697
 msgid "Invalid date provided"
 msgstr ""
 
-#: includes/functions.php:798
+#: includes/functions.php:804
 msgid "Very Bad"
 msgstr ""
 
-#: includes/functions.php:799
+#: includes/functions.php:805
 msgid "Poor"
 msgstr ""
 
-#: includes/functions.php:800
+#: includes/functions.php:806
 msgid "Average"
 msgstr ""
 
-#: includes/functions.php:801
+#: includes/functions.php:807
 msgid "Good"
 msgstr ""
 
-#: includes/functions.php:802
+#: includes/functions.php:808
 msgid "Excellent"
 msgstr ""
 
-#: includes/functions.php:1021
+#: includes/functions.php:1027
 msgid "Every Minute"
 msgstr ""
 
-#: includes/functions.php:1026
+#: includes/functions.php:1032
 msgid "Every 2 Minutes"
 msgstr ""
 
-#: includes/functions.php:1031
+#: includes/functions.php:1037
 msgid "Every 5 Minutes"
 msgstr ""
 
-#: includes/functions.php:1036
+#: includes/functions.php:1042
 msgid "Every 10 Minutes"
 msgstr ""
 
-#: includes/functions.php:1041
+#: includes/functions.php:1047
 msgid "Every 15 Minutes"
 msgstr ""
 
-#: includes/functions.php:1046
+#: includes/functions.php:1052
 msgid "Every 30 Minutes"
 msgstr ""
 
-#: includes/functions.php:1051
+#: includes/functions.php:1057
 msgid "Once Weekly"
 msgstr ""
 
-#: includes/functions.php:1125 includes/functions.php:1165
+#: includes/functions.php:1131 includes/functions.php:1171
 msgid ""
 "Your license key expired on %s. Please <a href=\"%s\" target=\"_blank\" "
 "title=\"Renew your license key\">renew your license key</a>."
 msgstr ""
 
-#: includes/functions.php:1134
+#: includes/functions.php:1140
 msgid ""
 "Invalid license. Please <a href=\"%s\" target=\"_blank\" title=\"Visit "
 "account page\">visit your account page</a> and verify it."
 msgstr ""
 
-#: includes/functions.php:1143
+#: includes/functions.php:1149
 msgid ""
 "Your %s is not active for this URL. Please <a href=\"%s\" target=\"_blank\" "
 "title=\"Visit account page\">visit your account page</a> to manage your "
 "license key URLs."
 msgstr ""
 
-#: includes/functions.php:1151
+#: includes/functions.php:1157
 msgid "This is not a %s."
 msgstr ""
 
-#: includes/functions.php:1155
+#: includes/functions.php:1161
 msgid ""
 "Your license key has reached its activation limit. <a href=\"%s\">View "
 "possible upgrades</a> now."
 msgstr ""
 
-#: includes/functions.php:1178
+#: includes/functions.php:1184
 msgid "License key never expires."
 msgstr ""
 
-#: includes/functions.php:1183
+#: includes/functions.php:1189
 msgid ""
 "Your license key expires soon! It expires on %s. <a href=\"%s\" "
 "target=\"_blank\" title=\"Renew license\">Renew your license key</a>."
 msgstr ""
 
-#: includes/functions.php:1191
+#: includes/functions.php:1197
 msgid "Your license key expires on %s."
 msgstr ""
 
-#: includes/functions.php:1930
+#: includes/functions.php:1936
 msgid "Nothing to import or items are already exists."
 msgstr ""
 
-#: includes/functions.php:1933
+#: includes/functions.php:1939
 msgid "%s items successfully imported."
 msgstr ""
 
-#: includes/functions.php:3341
+#: includes/functions.php:3347
 msgid "Enable/Disable"
 msgstr ""
 
@@ -21333,7 +21333,7 @@ msgstr ""
 #: modules/hrm/views/js-templates/job-info.php:25
 #: modules/hrm/views/js-templates/new-employee.php:170
 #: modules/hrm/views/leave/leave-entitlements.php:71
-#: modules/hrm/views/leave/new-policy.php:174
+#: modules/hrm/views/leave/new-policy.php:176
 #: modules/hrm/views/reporting/age-profile.php:53
 #: modules/hrm/views/reporting/gender-profile.php:87
 #: modules/hrm/views/reporting/headcount.php:155
@@ -21345,7 +21345,7 @@ msgstr ""
 #: modules/hrm/includes/class-policy-list-table.php:151
 #: modules/hrm/views/dashboard.php:48 modules/hrm/views/designation.php:3
 #: modules/hrm/views/leave/leave-entitlements.php:81
-#: modules/hrm/views/leave/new-policy.php:187
+#: modules/hrm/views/leave/new-policy.php:189
 msgid "Designation"
 msgstr ""
 
@@ -23213,9 +23213,9 @@ msgstr ""
 #: modules/hrm/includes/class-form-handler.php:1195
 #: modules/hrm/includes/functions-leave.php:190
 #: modules/hrm/includes/functions-leave.php:1017
-#: modules/hrm/includes/functions-leave.php:1596
-#: modules/hrm/includes/functions-leave.php:1608
-#: modules/hrm/includes/functions-leave.php:1859
+#: modules/hrm/includes/functions-leave.php:1594
+#: modules/hrm/includes/functions-leave.php:1606
+#: modules/hrm/includes/functions-leave.php:1857
 msgid "You do not have sufficient permissions to do this action"
 msgstr ""
 
@@ -23796,13 +23796,13 @@ msgstr ""
 #: modules/hrm/includes/functions-leave.php:794
 #: modules/hrm/includes/functions-leave.php:795
 #: modules/hrm/includes/functions-leave.php:796
-#: modules/hrm/includes/functions-leave.php:1899
-#: modules/hrm/includes/functions-leave.php:1923
-#: modules/hrm/includes/functions-leave.php:2680
+#: modules/hrm/includes/functions-leave.php:1897
+#: modules/hrm/includes/functions-leave.php:1921
+#: modules/hrm/includes/functions-leave.php:2678
 #: modules/hrm/views/leave/leave-entitlements.php:108
 #: modules/hrm/views/leave/leave-entitlements.php:119
-#: modules/hrm/views/leave/new-policy.php:222
-#: modules/hrm/views/leave/new-policy.php:234
+#: modules/hrm/views/leave/new-policy.php:224
+#: modules/hrm/views/leave/new-policy.php:236
 msgid "All"
 msgstr ""
 
@@ -25585,7 +25585,7 @@ msgstr ""
 
 #: modules/hrm/includes/class-ajax.php:1690
 #: modules/hrm/includes/functions-leave.php:1172
-#: modules/hrm/includes/functions-leave.php:1725
+#: modules/hrm/includes/functions-leave.php:1723
 msgid "Invalid leave duration. Please apply between %s and %s."
 msgstr ""
 
@@ -25971,7 +25971,7 @@ msgstr ""
 
 #: modules/hrm/includes/class-employee.php:1961
 #: modules/hrm/includes/functions-dashboard-widgets.php:357
-#: modules/hrm/includes/functions-leave.php:1901
+#: modules/hrm/includes/functions-leave.php:1899
 msgid "Pending"
 msgstr ""
 
@@ -26015,7 +26015,7 @@ msgid "All Policy"
 msgstr ""
 
 #: modules/hrm/includes/class-entitlements-list-table.php:122
-#: modules/hrm/includes/functions-leave.php:1986
+#: modules/hrm/includes/functions-leave.php:1984
 msgid "No entitlement found."
 msgstr ""
 
@@ -26174,7 +26174,7 @@ msgid "<strong>%s</strong> policy has been deleted"
 msgstr ""
 
 #: modules/hrm/includes/class-hr-log.php:765
-#: modules/hrm/views/leave/new-policy.php:180
+#: modules/hrm/views/leave/new-policy.php:182
 msgid "All Department"
 msgstr ""
 
@@ -26183,7 +26183,7 @@ msgid "All Designation"
 msgstr ""
 
 #: modules/hrm/includes/class-hr-log.php:783
-#: modules/hrm/views/leave/new-policy.php:206
+#: modules/hrm/views/leave/new-policy.php:208
 msgid "All Location"
 msgstr ""
 
@@ -26339,7 +26339,7 @@ msgstr ""
 #: modules/hrm/views/js-templates/job-info.php:15
 #: modules/hrm/views/js-templates/new-employee.php:194
 #: modules/hrm/views/leave/leave-entitlements.php:93
-#: modules/hrm/views/leave/new-policy.php:200
+#: modules/hrm/views/leave/new-policy.php:202
 #: modules/hrm/views/reporting/headcount.php:156
 msgid "Location"
 msgstr ""
@@ -26348,7 +26348,7 @@ msgstr ""
 #: modules/hrm/views/employee/tab-general.php:73
 #: modules/hrm/views/js-templates/new-employee.php:361
 #: modules/hrm/views/leave/leave-entitlements.php:103
-#: modules/hrm/views/leave/new-policy.php:217
+#: modules/hrm/views/leave/new-policy.php:219
 #: modules/hrm/views/reporting/gender-profile.php:52
 msgid "Gender"
 msgstr ""
@@ -26917,99 +26917,99 @@ msgstr ""
 msgid "Sorry! You do not have any leave left under this leave policy."
 msgstr ""
 
-#: modules/hrm/includes/functions-leave.php:1602
+#: modules/hrm/includes/functions-leave.php:1600
 msgid "Invalid leave request"
 msgstr ""
 
-#: modules/hrm/includes/functions-leave.php:1618
+#: modules/hrm/includes/functions-leave.php:1616
 msgid "Invalid leave status. Please check your input."
 msgstr ""
 
-#: modules/hrm/includes/functions-leave.php:1623
+#: modules/hrm/includes/functions-leave.php:1621
 msgid "Please provide a reject reason for given leave request."
 msgstr ""
 
-#: modules/hrm/includes/functions-leave.php:1628
+#: modules/hrm/includes/functions-leave.php:1626
 msgid "No Entitlement found for given request."
 msgstr ""
 
-#: modules/hrm/includes/functions-leave.php:1637
+#: modules/hrm/includes/functions-leave.php:1635
 msgid "No current leave year found."
 msgstr ""
 
-#: modules/hrm/includes/functions-leave.php:1648
+#: modules/hrm/includes/functions-leave.php:1646
 msgid "Error: You can not modify past leave year requests."
 msgstr ""
 
-#: modules/hrm/includes/functions-leave.php:1689
+#: modules/hrm/includes/functions-leave.php:1687
 msgid "Invalid Request: No previous records found for given request."
 msgstr ""
 
-#: modules/hrm/includes/functions-leave.php:1732
+#: modules/hrm/includes/functions-leave.php:1730
 msgid "Approved leave request found within given range!"
 msgstr ""
 
-#: modules/hrm/includes/functions-leave.php:1737
+#: modules/hrm/includes/functions-leave.php:1735
 msgid "No entitlement found for given request. Please check your input."
 msgstr ""
 
-#: modules/hrm/includes/functions-leave.php:1754
+#: modules/hrm/includes/functions-leave.php:1752
 msgid ""
 "Sorry! given request do not have any leave left under this leave policy. If "
 "you still want to process this request, please enable Extra Leave feature "
 "from settings."
 msgstr ""
 
-#: modules/hrm/includes/functions-leave.php:1816
+#: modules/hrm/includes/functions-leave.php:1814
 msgid "Invalid leave request status."
 msgstr ""
 
-#: modules/hrm/includes/functions-leave.php:1865
+#: modules/hrm/includes/functions-leave.php:1863
 msgid "No leave request found with give request id."
 msgstr ""
 
-#: modules/hrm/includes/functions-leave.php:1900
+#: modules/hrm/includes/functions-leave.php:1898
 msgid "Approved"
 msgstr ""
 
-#: modules/hrm/includes/functions-leave.php:1902
+#: modules/hrm/includes/functions-leave.php:1900
 msgid "Rejected"
 msgstr ""
 
-#: modules/hrm/includes/functions-leave.php:1925
-#: modules/hrm/includes/functions-leave.php:2682
+#: modules/hrm/includes/functions-leave.php:1923
+#: modules/hrm/includes/functions-leave.php:2680
 msgid "Morning"
 msgstr ""
 
-#: modules/hrm/includes/functions-leave.php:1926
-#: modules/hrm/includes/functions-leave.php:2683
+#: modules/hrm/includes/functions-leave.php:1924
+#: modules/hrm/includes/functions-leave.php:2681
 msgid "Afternoon"
 msgstr ""
 
-#: modules/hrm/includes/functions-leave.php:1974
+#: modules/hrm/includes/functions-leave.php:1972
 msgid "No leave year found with given date."
 msgstr ""
 
-#: modules/hrm/includes/functions-leave.php:2346
+#: modules/hrm/includes/functions-leave.php:2344
 msgid "Invalid entitlement data."
 msgstr ""
 
-#: modules/hrm/includes/functions-leave.php:2657
+#: modules/hrm/includes/functions-leave.php:2655
 msgid "Successfully imported %u data<br>"
 msgstr ""
 
-#: modules/hrm/includes/functions-leave.php:2663
+#: modules/hrm/includes/functions-leave.php:2661
 msgid ""
 "Failed to import line no  %s. Please check if title, start & end fields are "
 "following proper formation"
 msgstr ""
 
-#: modules/hrm/includes/functions-leave.php:2716
-#: modules/hrm/includes/functions-leave.php:2730
+#: modules/hrm/includes/functions-leave.php:2714
+#: modules/hrm/includes/functions-leave.php:2728
 msgid "Name already exists"
 msgstr ""
 
-#: modules/hrm/includes/functions-leave.php:2749
+#: modules/hrm/includes/functions-leave.php:2747
 msgid "Can not remove, connected with policy"
 msgstr ""
 
@@ -27229,7 +27229,7 @@ msgstr ""
 #: modules/hrm/views/employee/tab-general.php:75
 #: modules/hrm/views/js-templates/new-employee.php:372
 #: modules/hrm/views/leave/leave-entitlements.php:114
-#: modules/hrm/views/leave/new-policy.php:229
+#: modules/hrm/views/leave/new-policy.php:231
 msgid "Marital Status"
 msgstr ""
 
@@ -27886,7 +27886,7 @@ msgid "All Departments"
 msgstr ""
 
 #: modules/hrm/views/leave/leave-entitlements.php:87
-#: modules/hrm/views/leave/new-policy.php:193
+#: modules/hrm/views/leave/new-policy.php:195
 msgid "All Designations"
 msgstr ""
 
@@ -27950,23 +27950,25 @@ msgid "Based on employee joining date."
 msgstr ""
 
 #: modules/hrm/views/leave/new-policy.php:148
-msgid "Entitle New Employees?"
+msgid "Entitle New Employees"
 msgstr ""
 
-#: modules/hrm/views/leave/new-policy.php:154
+#: modules/hrm/views/leave/new-policy.php:152
+msgid "Entitle new employees to this policy after hiring?"
+msgstr ""
+
+#: modules/hrm/views/leave/new-policy.php:153
 msgid ""
 "Check this checkbox if you want to entitle new employees to this policy "
 "after hiring."
 msgstr ""
 
-#: modules/hrm/views/leave/new-policy.php:161
-msgid "Apply for existing employees?"
+#: modules/hrm/views/leave/new-policy.php:162
+msgid "Apply for existing employees"
 msgstr ""
 
 #: modules/hrm/views/leave/new-policy.php:165
-msgid ""
-"Check this checkbox if you want to entitle existing employees to this "
-"policy."
+msgid "Entitle existing employees to this policy?"
 msgstr ""
 
 #: modules/hrm/views/leave/new-request.php:5
