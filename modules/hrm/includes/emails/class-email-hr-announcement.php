@@ -28,7 +28,7 @@ class HR_Announcement_Email extends Email {
             $employee = new \WeDevs\ERP\HRM\Employee( intval( $employee_id ) );
 
             if ( $employee ) {
-                $this->send( $employee->user_email, $post_data->post_title, wpautop( $post_data->post_content, true ), '', '' );
+                $this->send( $employee->user_email, $post_data->post_title, wpautop( $post_data->post_content, true ), $this->get_headers(), $this->get_attachments() );
             }
         }
     }
