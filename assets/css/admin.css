@@ -1943,13 +1943,13 @@ table.leaves th#name {
   width: 200px;
 }
 table.leaves th#policy {
-  width: 75px;
+  width: 100px;
 }
 table.leaves th#available {
   width: 75px;
 }
 table.leaves th#request {
-  width: 200px;
+  width: 150px;
 }
 table.leaves th#status,
 table.leaves td#status {

@@ -92,6 +92,17 @@ $current_assigned_policies = $f_year && array_key_exists( $f_year, $policy_resul
             ),
         ) ); ?>
     </select>
+    <?php
+    $statuses = erp_hr_leave_request_get_statuses();
+    if ( isset( $statuses['all'] ) ) {
+        $statuses['all'] = esc_attr__( 'All Status', 'erp' );
+    }
+    erp_html_form_input( array(
+        'name'     => 'status',
+        'type'     => 'select',
+        'options'  => $statuses
+    ) );
+    ?>
 
     <?php
     erp_html_form_input( array(

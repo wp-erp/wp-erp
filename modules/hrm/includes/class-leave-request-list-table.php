@@ -146,7 +146,11 @@ class Leave_Requests_List_Table extends \WP_List_Table {
                 break;
 
             case 'request':
-                $str = '<p><strong>' . erp_format_date( $item->start_date ) .  ' &mdash; ' . erp_format_date( $item->end_date ) . '</strong></p>';
+                $request_days = $item->start_date === $item->end_date
+                    ? erp_format_date( $item->start_date, 'M d' )
+                    : erp_format_date( $item->start_date, 'M d' ) .  ' &mdash; ' . erp_format_date( $item->end_date, 'M d' );
+
+                $str = '<p><strong>' . $request_days . '</strong></p>';
 
                 if ( $item->day_status_id != '1' ) {
                     $days = erp_hr_leave_request_get_day_statuses( $item->day_status_id );

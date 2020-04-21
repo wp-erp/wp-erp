@@ -7,7 +7,10 @@ if ( ! empty( $requests ) ) {
         <tr class="<?php echo $num % 2 == 0 ? 'alternate' : 'odd'; ?>">
             <td>
                 <?php
-                printf( '%s - %s', esc_html( erp_format_date( $request->start_date, 'd M' ) ), esc_html( erp_format_date( $request->end_date, 'd M' ) ) );
+                $request_days = $request->start_date === $request->end_date
+                    ? erp_format_date( $request->start_date, 'M d' )
+                    : erp_format_date( $request->start_date, 'M d' ) .  ' &mdash; ' . erp_format_date( $request->end_date, 'M d' );
+                printf( '%s', $request_days );
                 ?>
             </td>
             <td><?php echo esc_html( $request->policy_name ); ?></td>
