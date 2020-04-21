@@ -189,6 +189,8 @@ class Human_Resource {
                 'terminate'         => __( 'Terminate', 'erp' ),
                 'leave_approve'     => __( 'Approve Reason', 'erp' ),
                 'leave_reject'      => __( 'Reject Reason', 'erp' ),
+                'leave_approve_btn'     => __( 'Approve Request', 'erp' ),
+                'leave_reject_btn'      => __( 'Reject Request', 'erp' ),
                 'already_terminate' => __( 'Sorry, this employee is already terminated', 'erp' ),
                 'already_active'    => __( 'Sorry, this employee is already active', 'erp' )
             ),

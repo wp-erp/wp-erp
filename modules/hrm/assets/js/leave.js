@@ -624,7 +624,7 @@
 
                 $.erpPopup({
                     title: wpErpHr.popup.leave_approve,
-                    button: wpErpHr.popup.update_status,
+                    button: wpErpHr.popup.leave_approve_btn,
                     id: 'erp-hr-leave-approve-popup',
                     content: wperp.template('erp-hr-leave-approve-js-tmp')(data).trim(),
                     extraClass: 'smaller',
@@ -668,7 +668,7 @@
 
                 $.erpPopup({
                     title: wpErpHr.popup.leave_reject,
-                    button: wpErpHr.popup.update_status,
+                    button: wpErpHr.popup.leave_reject_btn,
                     id: 'erp-hr-leave-reject-popup',
                     content: wperp.template('erp-hr-leave-reject-js-tmp')(data).trim(),
                     extraClass: 'smaller',
