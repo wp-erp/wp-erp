@@ -20,15 +20,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 function erp_acct_cash_at_bank( $args, $type ) {
     global $wpdb;
 
-    $balance = null;
+    $balance = 0;
+    $result  = 0;
 
     $chart_bank = 7;
-
-    if ( 'loan' === $type ) {
-        $having = 'HAVING balance < 0';
-    } elseif ( 'balance' === $type ) {
-        $having = 'HAVING balance >= 0';
-    }
 
     $sql1       = $wpdb->prepare( "SELECT group_concat(id) FROM {$wpdb->prefix}erp_acct_ledgers where chart_id = %d", $chart_bank );
     $ledger_ids = implode( ',', explode( ',', $wpdb->get_var( $sql1 ) ) ); // e.g. 4, 5
@@ -36,14 +31,20 @@ function erp_acct_cash_at_bank( $args, $type ) {
     if ( $ledger_ids ) {
         $sql2 = "SELECT SUM(ledger_details.balance) as balance from (SELECT SUM( debit - credit ) AS balance
         FROM {$wpdb->prefix}erp_acct_ledger_details WHERE ledger_id IN ({$ledger_ids}) AND trn_date BETWEEN '%s' AND '%s'
-        GROUP BY ledger_id {$having}) AS ledger_details";
+        GROUP BY ledger_id) AS ledger_details";
 
         $data = $wpdb->get_var( $wpdb->prepare( $sql2, $args['start_date'], $args['end_date'] ) );
 
         $balance = erp_acct_bank_cash_calc_with_opening_balance( $args['start_date'], $data, $sql2, $type );
     }
 
-    return $balance;
+    if ( 'loan' === $type && $balance < 0 ) {
+        $result = $balance;
+    } elseif ( 'balance' === $type && $balance >= 0 ) {
+        $result = $balance;
+    }
+
+    return $result;
 }
 
 /**
@@ -60,16 +61,10 @@ function erp_acct_bank_balance( $args, $type ) {
 
     $chart_bank = 7;
 
-    if ( 'loan' === $type ) {
-        $having = 'HAVING balance < 0';
-    } elseif ( 'balance' === $type ) {
-        $having = 'HAVING balance >= 0';
-    }
-
     $sql = "SELECT ledger.id, ledger.name, SUM( debit - credit ) AS balance
         FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
         LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id
-        WHERE ledger.chart_id = %d AND trn_date BETWEEN '%s' AND '%s' GROUP BY ledger.id {$having}";
+        WHERE ledger.chart_id = %d AND trn_date BETWEEN '%s' AND '%s' GROUP BY ledger.id";
 
     $data = $wpdb->get_results( $wpdb->prepare( $sql, $chart_bank, $args['start_date'], $args['end_date'] ), ARRAY_A );
 
@@ -368,7 +363,7 @@ function erp_acct_bank_cash_calc_with_opening_balance( $tb_start_date, $data, $s
     $closest_fy_date = erp_acct_get_closest_fn_year_date( $tb_start_date );
 
     // get opening balance data within that(^) financial year
-    $opening_balance = erp_acct_bank_cash_opening_balance_by_fn_year_id( $closest_fy_date['id'], $type );
+    $opening_balance = erp_acct_bank_cash_opening_balance_by_fn_year_id( $closest_fy_date['id'] );
 
     $balance = (float) $data;
 
@@ -415,7 +410,7 @@ function erp_acct_bank_balance_calc_with_opening_balance( $tb_start_date, $data,
     $closest_fy_date = erp_acct_get_closest_fn_year_date( $tb_start_date );
 
     // get opening balance data within that(^) financial year
-    $opening_balance = erp_acct_bank_balance_opening_balance_by_fn_year_id( $closest_fy_date['id'], $type );
+    $opening_balance = erp_acct_bank_balance_opening_balance_by_fn_year_id( $closest_fy_date['id'] );
 
     $ledgers = $wpdb->get_results( "SELECT ledger.id, ledger.chart_id, ledger.name FROM {$wpdb->prefix}erp_acct_ledgers AS ledger WHERE ledger.chart_id = 7", ARRAY_A );
 
@@ -639,18 +634,12 @@ function erp_acct_opening_balance_by_fn_year_id( $id, $chart_id = null ) {
  *
  * @return array
  */
-function erp_acct_bank_cash_opening_balance_by_fn_year_id( $id, $type ) {
+function erp_acct_bank_cash_opening_balance_by_fn_year_id( $id ) {
     global $wpdb;
-
-    if ( 'loan' === $type ) {
-        $having = 'HAVING balance < 0';
-    } elseif ( 'balance' === $type ) {
-        $having = 'HAVING balance >= 0';
-    }
 
     $sql = "SELECT SUM(opb.balance) AS balance FROM (SELECT SUM( debit - credit ) AS balance
             FROM {$wpdb->prefix}erp_acct_opening_balances WHERE financial_year_id = %d AND chart_id = 7
-            GROUP BY ledger_id {$having}) AS opb";
+            GROUP BY ledger_id) AS opb";
 
     return $wpdb->get_results( $wpdb->prepare( $sql, $id ), ARRAY_A );
 }
@@ -687,19 +676,13 @@ function erp_acct_sales_tax_opening_balance_by_fn_year_id( $id, $type ) {
  *
  * @return array
  */
-function erp_acct_bank_balance_opening_balance_by_fn_year_id( $id, $type ) {
+function erp_acct_bank_balance_opening_balance_by_fn_year_id( $id ) {
     global $wpdb;
-
-    if ( 'loan' === $type ) {
-        $having = 'HAVING balance < 0';
-    } elseif ( 'balance' === $type ) {
-        $having = 'HAVING balance >= 0';
-    }
 
     $sql = "SELECT ledger.id, ledger.name, SUM(opb.debit - opb.credit) AS balance
         FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
         LEFT JOIN {$wpdb->prefix}erp_acct_opening_balances AS opb ON ledger.id = opb.ledger_id
-        WHERE opb.financial_year_id = %d AND ledger.chart_id = 7 GROUP BY opb.ledger_id {$having}";
+        WHERE opb.financial_year_id = %d AND ledger.chart_id = 7 GROUP BY opb.ledger_id";
 
     return $wpdb->get_results( $wpdb->prepare( $sql, $id ), ARRAY_A );
 }

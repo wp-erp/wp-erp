@@ -406,6 +406,9 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['type'] ) ) {
             $prepared_item['voucher_type'] = $request['type'];
         }
+        if ( isset( $request['convert'] ) ) {
+            $prepared_item['convert'] = $request['convert'];
+        }
 
         return $prepared_item;
     }
