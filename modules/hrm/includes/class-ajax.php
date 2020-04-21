@@ -1911,11 +1911,13 @@ class Ajax_Handler {
         $year    = isset( $_POST['f_year'] ) ? intval( $_POST['f_year'] ) : date( 'Y' );
         $user_id = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
         $policy  = isset( $_POST['leave_policy'] ) ? intval( $_POST['leave_policy'] ) : 'all';
+        $status  = isset( $_POST['status'] ) ? sanitize_text_field( $_POST['status'] ) : 'all';
 
         $args = array(
             'f_year'    => $year,
             'user_id'   => $user_id,
-            'status'    => 'all',
+            'status'    => $status,
+            'orderby'   => 'start_date',
         );
 
         if ( $policy != 'all' ) {
