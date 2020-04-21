@@ -267,6 +267,15 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 == Changelog ==
 
+= v1.5.15 -> March 31, 2020 =
+- [fix] Plugin update capability of the user
+- [fix] Fixed pay bill duplicate entry issue on the ledger_details
+- [fix] Fixed the Check single view- which was not showing properly
+- [fix] Fixed dashboard CSS conflict with wpdatatable
+- [fix] Fixed accounting load issue with different permalink structure
+- [fix] Fixed Contact Group-based permission issue for the CRM agent
+- [fix] Contact Owner was not being updated from the CRM contact profile, Which has been fixed
+
 = v1.5.14 -> March 03, 2020 =
 - [fix] Show owners equity ledger account balance in chart of accounts
 - [fix] Bank balance transfer issue with opening balance cash

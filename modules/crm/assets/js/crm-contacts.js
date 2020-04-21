@@ -1182,10 +1182,10 @@
                 search: {
                     params: 's',
                     wrapperClass: '',
-                    screenReaderText: ( wpErpCrm.contact_type == 'company' ) ? __('Search Compnay', 'erp') : __('Search Contact', 'erp'),
+                    screenReaderText: ( wpErpCrm.contact_type == 'company' ) ? __('Search Company', 'erp') : __('Search Contact', 'erp'),
                     inputId: 'search-input',
                     btnId: 'search-submit',
-                    placeholder: ( wpErpCrm.contact_type == 'company' ) ? __('Search Compnay', 'erp') : __( 'Search Contact', 'erp' ),
+                    placeholder: ( wpErpCrm.contact_type == 'company' ) ? __('Search Company', 'erp') : __( 'Search Contact', 'erp' ),
                 },
                 isRequestDone: false,
                 showHideSegment: false,
