@@ -80,20 +80,16 @@ class Leave_Requests_Controller extends REST_Controller {
         $total = 0;
 
         if ( $args['type'] == 'upcoming' ) {
-            $items = \WeDevs\ERP\HRM\Models\Leave_Request::where( 'start_date', '>=', date( 'Y-m-d' ) . ' 00:00:00' )
-                                                         ->where( 'status', '1' )
-                                                         ->offset( $args['offset'] )
-                                                         ->take( $args['number'] )
-                                                         ->get();
-            $total = count($items);
-        } else {
-            $items       = erp_hr_get_leave_requests( $args );
-            $leave_count = erp_hr_leave_get_requests_count();
-            $total = $leave_count['all']['count'];
-
-            $formatted_items = [];
+            $args['status']     = 1; // only approved leave request
+            $args['start_date'] = erp_current_datetime()->setTime(0, 0)->getTimestamp(); //today
+            $args['end_date']   = erp_current_datetime()->modify( 'last day of next month' )->setTime( 23, 59, 59 )->getTimestamp();
         }
 
+        $leave_requests = erp_hr_get_leave_requests( $args );
+        $items = $leave_requests['data'];
+        $total = $leave_requests['total'];
+
+        $formatted_items = [];
         foreach( $items as $item ) {
             $data              = $this->prepare_item_for_response( $item, $request );
             $formatted_items[] = $this->prepare_response_for_collection( $data );
@@ -212,10 +208,10 @@ class Leave_Requests_Controller extends REST_Controller {
             'employee_id'   => (int) $employee->employee_id,
             'employee_name' => $employee->display_name,
             'avatar_url'    => $employee->get_avatar_url(80),
-            'start_date'    => date( 'Y-m-d', strtotime( $item->start_date ) ),
-            'end_date'      => date( 'Y-m-d', strtotime( $item->end_date ) ),
+            'start_date'    => erp_format_date( $item->start_date, 'Y-m-d' ),
+            'end_date'      => erp_format_date( $item->end_date, 'Y-m-d' ),
             'reason'        => $item->reason,
-            'comments'      => $item->comments,
+            'comments'      => isset( $item->comments ) ? $item->comments : '',
         ];
 
         if ( isset( $request['include'] ) ) {
