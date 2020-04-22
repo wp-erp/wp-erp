@@ -141,9 +141,14 @@ class Admin_Menu {
             'position'      =>  100,
         ) );
 
+        $request_capabilities = 'erp_leave_manage';
+        if ( class_exists( '\weDevs\ERP_PRO\HR\Leave\Multilevel' ) && get_option('erp_pro_multilevel_approval') === 'yes' )  {
+            $request_capabilities = erp_hr_is_current_user_dept_lead() ? 'erp_list_employee' : 'erp_leave_manage';
+        }
+
         erp_add_menu( 'hr', array(
             'title'         =>  __( 'Leave Management', 'erp' ),
-            'capability'    =>  erp_hr_is_current_user_dept_lead() ? 'erp_list_employee' : 'erp_leave_manage',
+            'capability'    =>  $request_capabilities,
             'slug'          =>  'leave',
             'callback'      =>  [ $this, 'leave_requests' ],
             'position'      =>  30,
