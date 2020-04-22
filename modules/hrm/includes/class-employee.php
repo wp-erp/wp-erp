@@ -1888,6 +1888,7 @@ class Employee {
      * Get leave requests
      *
      * @since 1.3.0
+     * @since 1.6.0 changed according to new db structure
      *
      * @param array $args
      *
@@ -1896,7 +1897,7 @@ class Employee {
     public function get_leave_requests( $args = array() ) {
         $default = array(
             'user_id'   => $this->user_id,
-            'year'      => '',
+            'f_year'    => '',
             'status'    => 1,
             'orderby'   => 'created_at',
             'policy_id' => 0,
@@ -1904,6 +1905,15 @@ class Employee {
             'offset'    => 0,
         );
         $args    = wp_parse_args( $args, $default );
+
+        if ( empty( $args['f_year'] ) ) {
+            $date = isset( $args['year'] ) ? $args['year'] : null;
+            $f_year = erp_hr_get_financial_year_from_date( $date );
+            if ( empty( $f_year ) ) {
+                return array();
+            }
+            $args['f_year'] = $f_year->id;
+        }
 
         $result = erp_hr_get_leave_requests( $args );
 
@@ -1921,27 +1931,21 @@ class Employee {
      *
      */
     public function get_calender_events( array $date_range = array() ) {
-        global $wpdb;
-        if ( empty( $date_range ) || empty( $date_range['start'] ) || empty( $date_range['end'] ) ) {
-            $date_range = [
-                'start' => date( "Y-01-01" ),
-                'end'   => date( "Y-12-31" ),
-            ];
+        $f_year = erp_hr_get_financial_year_from_date();
+        if ( empty( $f_year ) ) {
+            $leave_requests = array();
         }
-        $leave_requests = $this->get_erp_user()
-                               ->leave_requests()
-                               ->whereDate( 'start_date', '>=', $date_range['start'] )
-                               ->whereDate( 'end_date', '<=', $date_range['end'] )->JoinWithPolicy()->orderBy( 'start_date' )
-                               ->select( [
-                                   "{$wpdb->prefix}erp_hr_leave_requests.id",
-                                   'start_date',
-                                   'end_date',
-                                   'color',
-                                   'status',
-                                   'days',
-                                   'name'
-                               ] )
-                               ->get();
+        else {
+            $args = array(
+                'user_id'   => $this->get_user_id(),
+                'f_year'    => $f_year->id,
+                'status'    => 'all',
+                'number'    => '-1',
+            );
+            $leave_requests = erp_hr_get_leave_requests( $args );
+            $leave_requests = $leave_requests['data'];
+        }
+
         $holidays       = Leave_Holiday::whereDate( 'start', '>=', $date_range['start'] )
                                        ->whereDate( 'end', '<=', $date_range['end'] )
                                        ->get();
@@ -1956,14 +1960,21 @@ class Employee {
                 continue;
             }
 
-            $title = $leave_request->name;
-            if ( $leave_request->status == 2 ) {
+            //if status pending
+            $title = $leave_request->policy_name;
+            if ( 2 == $leave_request->status ) {
                 $title .= sprintf( ' ( %s ) ', __( 'Pending', 'erp' ) );
             }
+
+            // Half day leave
+            if ( $leave_request->day_status_id != 1 ) {
+                $title .= '(' . erp_hr_leave_request_get_day_statuses( $leave_request->day_status_id ) . ')';
+            }
+
             $event = [
                 'id'      => $leave_request->id,
-                'start'   => date( 'Y-m-d', strtotime( $leave_request->start_date ) ),
-                'end'     => date( 'Y-m-d', strtotime( $leave_request->end_date ) ),
+                'start'     => erp_current_datetime()->setTimestamp( $leave_request->start_date )->setTime( 0, 0, 0 )->format(  'Y-m-d h:i:s' ),
+                'end'       => erp_current_datetime()->setTimestamp( $leave_request->end_date )->setTime( 23, 59, 59 )->format( 'Y-m-d h:i:s' ),
                 'color'   => $leave_request->color,
                 'title'   => $title,
                 'img'     => '',

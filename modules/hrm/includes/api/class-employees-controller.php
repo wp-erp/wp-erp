@@ -1145,6 +1145,11 @@ class Employees_Controller extends REST_Controller {
             return new WP_Error( 'rest_invalid_employee_id', __( 'Invalid Employee id.' ), array( 'status' => 404 ) );
         }
         $policies = $employee->get_leave_summary();
+        foreach ( $policies as &$policy ) {
+            if ( $policy->available == 0 && $policy->extra_leave > 0 ) {
+                $policy->available = - $policy->extra_leave;
+            }
+        }
         $response = rest_ensure_response( $policies );
         $response = $this->format_collection_response( $response, $request, count( $policies ) );
 
@@ -1166,9 +1171,25 @@ class Employees_Controller extends REST_Controller {
         if ( ! $employee ) {
             return new WP_Error( 'rest_invalid_employee_id', __( 'Invalid Employee id.' ), array( 'status' => 404 ) );
         }
-        $leaves   = $employee->get_leave_requests();
-        $response = rest_ensure_response( $leaves );
-        $response = $this->format_collection_response( $response, $request, count( $leaves ) );
+
+        $f_year = erp_hr_get_financial_year_from_date();
+        if ( empty( $f_year ) ) {
+            return new WP_Error( 'rest_invalid_financial_year', __( 'No financial year defined for current year.' ), array( 'status' => 404 ) );
+        }
+
+        $args = array(
+            'user_id'   => $user_id,
+            'f_year'    => $f_year->id,
+            'status'    => 1,
+            'orderby'   => 'created_at',
+            'policy_id' => 0,
+            'number'    => -1,
+            'offset'    => 0,
+        );
+        $leaves = erp_hr_get_leave_requests( $args );
+
+        $response = rest_ensure_response( $leaves['data'] );
+        $response = $this->format_collection_response( $response, $request, $leaves['total'] );
 
         return $response;
     }
@@ -1188,28 +1209,6 @@ class Employees_Controller extends REST_Controller {
 
         if ( ! $employee ) {
             return new WP_Error( 'rest_invalid_employee_id', __( 'Invalid Employee id.' ), array( 'status' => 404 ) );
-        }
-
-        if ( empty( $request['policy_id'] ) ) {
-            return new WP_Error( 'rest_invalid_policy_id', __( 'Invalid Policy id.' ), array( 'status' => 404 ) );
-        }
-
-        if ( empty( $request['start_date'] ) ) {
-            return new WP_Error( 'rest_invalid_start_date', __( 'Invalid Leave Start Date.' ), array( 'status' => 404 ) );
-        }
-
-        if ( empty( $request['end_date'] ) ) {
-            return new WP_Error( 'rest_invalid_end_date', __( 'Invalid Leave End Date.' ), array( 'status' => 404 ) );
-        }
-
-        $is_extra_leave_enabled = get_option( 'enable_extra_leave', 'no' );
-
-        if ( $is_extra_leave_enabled !== 'yes' ) {
-            $is_policy_valid = erp_hrm_is_valid_leave_duration( $request['start_date'], $request['end_date'], $request['policy_id'], $id );
-
-            if ( ! $is_policy_valid ) {
-                return new WP_Error( 'rest_invalid_date_range',  __( 'Sorry! You do not have any leave left under this leave policy', 'erp' ), array( 'status' => 404 ) );
-            }
         }
 
         $request_id = erp_hr_leave_insert_request(

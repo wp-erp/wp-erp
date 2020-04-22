@@ -2218,6 +2218,7 @@ function erp_hr_leave_get_balance( $user_id, $date = null ) {
                     'from_date'     => $result->start_date,
                     'to_date'       => $result->end_date,
                     'leave_id'      => $result->leave_id,
+                    'policy_id'     => $result->id,
                     'policy'        => $result->policy_name,
                     'scheduled'     => 0,
                     'entitlement'   => $result->day_in,
