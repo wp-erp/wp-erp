@@ -504,7 +504,6 @@ May you enjoy the fruits of your labors for years to come'
                   leave_request_id bigint(20) UNSIGNED NOT NULL,
                   approval_status_id tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
                   approved_by bigint(20) UNSIGNED NOT NULL,
-                  forward_to bigint(20) UNSIGNED DEFAULT NULL,
                   message text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
                   created_at int(11) NOT NULL,
                   updated_at int(11) NOT NULL,
