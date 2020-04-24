@@ -13,7 +13,7 @@ class Leave_Approval_Status extends Model {
 
     protected $fillable = [
         'leave_request_id', 'approval_status_id', 'approved_by',
-        'approved_date', 'forward_to', 'message'
+        'approved_date', 'message'
     ];
 
     /**
@@ -83,17 +83,6 @@ class Leave_Approval_Status extends Model {
      */
     public function leave_approved_by() {
         return $this->belongsTo( 'WeDevs\ERP\HRM\Models\Hr_User', 'approved_by', 'id' );
-    }
-
-    /**
-     * Relation to Hr_User model
-     *
-     * @since 1.6.0
-     *
-     * @return object
-     */
-    public function leave_forward_to() {
-        return $this->belongsTo( 'WeDevs\ERP\HRM\Models\Hr_User', 'forward_to', 'id' );
     }
 
 }
