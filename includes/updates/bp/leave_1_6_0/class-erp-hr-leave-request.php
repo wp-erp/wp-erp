@@ -50,6 +50,7 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
         'leave_request_id'         => 0,
         'leave_id'                 => '',
         'f_year'                   => '',
+        'leave_policy_id'          => 0,
         'leave_approval_status_id' => 0,
         'leave_entitlement_id'     => 0,
     );
@@ -201,6 +202,8 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
                         )
                     )
                 );
+
+                $this->request_data['leave_policy_id'] = $entitlement_id;
 
                 // insert into new leave request table.
                 $table_data = array(
@@ -363,18 +366,22 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
 
                 $days_count = $wpdb->get_var(
                     $wpdb->prepare(
-                        "SELECT SUM(days) FROM {$wpdb->prefix}erp_hr_leave_requests WHERE policy_id = %d and user_id = %d and id <= %d and status = 1",
-                        array( $this->request_data['policy_id'], $this->request_data['user_id'], $this->request_data['id'] )
+                        "SELECT SUM(days) FROM {$wpdb->prefix}erp_hr_leave_requests_new WHERE leave_entitlement_id = %d and user_id = %d and id <= %d and last_status = 1",
+                        array( $this->request_data['leave_policy_id'], $this->request_data['user_id'], $this->request_data['leave_request_id'] )
                     )
                 );
 
                 if ( $days_count > $policy_days ) {
                     // calculate extra leaves
-                    $option_key       = "extra_days_count_{$this->request_data['user_id']}_{$this->request_data['policy_id']}";
-                    $extra_days_count = absint( get_option( $option_key, 0 ) );
+                    // already got extra leaves ?
+                    $extra_days_count = $wpdb->get_var(
+                        $wpdb->prepare(
+                            "SELECT SUM(days) FROM {$wpdb->prefix}erp_hr_leaves_unpaid_new WHERE leave_id = %d and user_id = %d and f_year = %d and leave_request_id < %d",
+                            array( $this->request_data['leave_id'], $this->request_data['user_id'], $this->request_data['f_year'], $this->request_data['leave_request_id'] )
+                        )
+                    );
 
                     $current_count = absint( $days_count ) - absint( $policy_days ) - absint( $extra_days_count );
-                    update_option( $option_key, $extra_days_count + $current_count );
 
                     // insert into new unpaid leave table.
                     $table_data = array(
@@ -530,7 +537,7 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
         // now delete all old db tables and data.
         $erp_update_1_6_0 = new \WeDevs\ERP\HRM\Update\ERP_1_6_0();
 
-        if ( $erp_update_1_6_0->delete_old_db_tables() ) {
+        if ( $erp_update_1_6_0->alter_old_db_tables() ) {
             $erp_update_1_6_0->alter_new_db_tables();
             delete_option( 'policy_migrate_data_1_6_0' );
         }

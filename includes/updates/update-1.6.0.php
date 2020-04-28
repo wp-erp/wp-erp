@@ -44,10 +44,10 @@ class ERP_1_6_0 {
         );
 
         $this->db_tables_old = array(
-            "{$wpdb->prefix}erp_hr_leave_entitlements",
-            "{$wpdb->prefix}erp_hr_leave_policies",
-            "{$wpdb->prefix}erp_hr_leave_requests",
-            "{$wpdb->prefix}erp_hr_leaves",
+            "{$wpdb->prefix}erp_hr_leave_entitlements"  => "{$wpdb->prefix}erp_hr_leave_entitlements_old",
+            "{$wpdb->prefix}erp_hr_leave_policies"      => "{$wpdb->prefix}erp_hr_leave_policies_old",
+            "{$wpdb->prefix}erp_hr_leave_requests"      => "{$wpdb->prefix}erp_hr_leave_requests_old",
+            "{$wpdb->prefix}erp_hr_leaves"              => "{$wpdb->prefix}erp_hr_leaves_old",
         );
     }
 
@@ -79,7 +79,7 @@ class ERP_1_6_0 {
                   leave_id smallint(5) UNSIGNED NOT NULL,
                   old_policy_id int(11) UNSIGNED DEFAULT NULL,
                   description text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-                  days tinyint(3) UNSIGNED NOT NULL,
+                  days tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
                   color varchar(10) DEFAULT NULL,
                   apply_limit tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
                   employee_type enum('-1','permanent','parttime','contract','temporary','trainee') NOT NULL DEFAULT 'permanent',
@@ -96,11 +96,11 @@ class ERP_1_6_0 {
                   encashment_based_on enum('pay_rate','basic','gross') DEFAULT NULL,
                   forward_default enum('encashment','carryover') NOT NULL DEFAULT 'encashment',
                   applicable_from_days smallint(5) UNSIGNED NOT NULL DEFAULT '0',
-                  accrued_amount decimal(5,2) NOT NULL DEFAULT '0.00',
-                  accrued_max_days tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                  accrued_amount decimal(10,2) NOT NULL DEFAULT '0.00',
+                  accrued_max_days smallint(4) UNSIGNED NOT NULL DEFAULT '0',
                   halfday_enable tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
-                  created_at int(11) NOT NULL,
-                  updated_at int(11) NOT NULL,
+                  created_at int(11) DEFAULT NULL,
+                  updated_at int(11) DEFAULT NULL,
                   PRIMARY KEY  (id),
                   KEY leave_id (leave_id),
                   KEY f_year (f_year)
@@ -109,7 +109,7 @@ class ERP_1_6_0 {
             "CREATE TABLE {$wpdb->prefix}erp_hr_leave_policies_segregation_new (
                   id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
                   leave_policy_id bigint(20) UNSIGNED NOT NULL,
-                  jan tinyint(3) UNSIGNED DEFAULT '0',
+                  jan tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
                   feb tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
                   mar tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
                   apr tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
@@ -121,8 +121,8 @@ class ERP_1_6_0 {
                   oct tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
                   nov tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
                   decem tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
-                  created_at int(11) NOT NULL,
-                  updated_at int(11) NOT NULL,
+                  created_at int(11) DEFAULT NULL,
+                  updated_at int(11) DEFAULT NULL,
                   PRIMARY KEY  (id),
                   KEY leave_policy_id (leave_policy_id)
             ) $charset_collate;",
@@ -131,15 +131,15 @@ class ERP_1_6_0 {
                   id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
                   user_id bigint(20) UNSIGNED NOT NULL,
                   leave_id smallint(6) UNSIGNED NOT NULL,
-                  created_by bigint(20) UNSIGNED NOT NULL,
+                  created_by bigint(20) UNSIGNED DEFAULT NULL,
                   trn_id bigint(20) UNSIGNED NOT NULL,
                   trn_type enum('leave_policies','leave_approval_status','leave_encashment_requests','leave_entitlements','unpaid_leave','leave_encashment', 'leave_carryforward', 'manual_leave_policies', 'Accounts', 'others', 'leave_accrual', 'carry_forward_leave_expired') NOT NULL DEFAULT 'leave_policies',
-                  day_in decimal(4,1) UNSIGNED NOT NULL DEFAULT '0.0',
-                  day_out decimal(4,1) UNSIGNED NOT NULL DEFAULT '0.0',
+                  day_in decimal(5,1) UNSIGNED NOT NULL DEFAULT '0.0',
+                  day_out decimal(5,1) UNSIGNED NOT NULL DEFAULT '0.0',
                   description text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
                   f_year smallint(6) NOT NULL,
-                  created_at int(11) NOT NULL,
-                  updated_at int(11) NOT NULL,
+                  created_at int(11) DEFAULT NULL,
+                  updated_at int(11) DEFAULT NULL,
                   PRIMARY KEY  (id),
                   KEY comp_key_1 (user_id,leave_id,f_year,trn_type),
                   KEY trn_id (trn_id),
@@ -152,12 +152,12 @@ class ERP_1_6_0 {
                   leave_id smallint(6) UNSIGNED NOT NULL,
                   leave_entitlement_id bigint(20) UNSIGNED NOT NULL default '0',
                   day_status_id smallint(5) UNSIGNED NOT NULL DEFAULT '1',
-                  days decimal(4,1) UNSIGNED NOT NULL DEFAULT '0.0',
+                  days decimal(5,1) UNSIGNED NOT NULL DEFAULT '0.0',
                   start_date int(11) NOT NULL,
                   end_date int(11) NOT NULL,
                   reason text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
                   last_status smallint(6) UNSIGNED NOT NULL DEFAULT '2',
-                  created_by bigint(20) UNSIGNED NOT NULL,
+                  created_by bigint(20) UNSIGNED DEFAULT NULL,
                   created_at int(11) DEFAULT NULL,
                   updated_at int(11) DEFAULT NULL,
                   PRIMARY KEY  (id),
@@ -172,10 +172,10 @@ class ERP_1_6_0 {
                   id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
                   leave_request_id bigint(20) UNSIGNED NOT NULL,
                   approval_status_id tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
-                  approved_by bigint(20) UNSIGNED NOT NULL,
+                  approved_by bigint(20) UNSIGNED DEFAULT NULL,
                   message text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-                  created_at int(11) NOT NULL,
-                  updated_at int(11) NOT NULL,
+                  created_at int(11) DEFAULT NULL,
+                  updated_at int(11) DEFAULT NULL,
                   PRIMARY KEY  (id),
                   KEY leave_request_id (leave_request_id),
                   KEY approval_status_id (approval_status_id)
@@ -189,8 +189,8 @@ class ERP_1_6_0 {
                   user_id bigint(20) UNSIGNED NOT NULL,
                   f_year smallint(6) NOT NULL,
                   leave_date int(11) NOT NULL,
-                  created_at int(11) NOT NULL,
-                  updated_at int(11) NOT NULL,
+                  created_at int(11) DEFAULT NULL,
+                  updated_at int(11) DEFAULT NULL,
                   PRIMARY KEY  (id),
                   KEY leave_request_id (leave_request_id),
                   KEY user_id (user_id),
@@ -201,15 +201,15 @@ class ERP_1_6_0 {
                   id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
                   user_id bigint(20) UNSIGNED NOT NULL,
                   leave_id smallint(6) UNSIGNED NOT NULL,
-                  approved_by bigint(20) UNSIGNED NOT NULL,
+                  approved_by bigint(20) UNSIGNED DEFAULT NULL,
                   approval_status_id tinyint(3) UNSIGNED NOT NULL DEFAULT '1',
                   encash_days decimal(4,1) UNSIGNED NOT NULL DEFAULT '0.0',
                   forward_days decimal(4,1) UNSIGNED NOT NULL DEFAULT '0.0',
                   amount decimal(20,2) NOT NULL DEFAULT '0.00',
                   total decimal(20,2) NOT NULL DEFAULT '0.00',
                   f_year smallint(5) UNSIGNED NOT NULL,
-                  created_at int(11) NOT NULL,
-                  updated_at int(11) NOT NULL,
+                  created_at int(11) DEFAULT NULL,
+                  updated_at int(11) DEFAULT NULL,
                   PRIMARY KEY  (id),
                   KEY user_id (user_id),
                   KEY leave_id (leave_id),
@@ -226,8 +226,8 @@ class ERP_1_6_0 {
                   amount decimal(20,2) NOT NULL DEFAULT '0.00',
                   total decimal(20,2) NOT NULL DEFAULT '0.00',
                   f_year smallint(5) UNSIGNED NOT NULL,
-                  created_at int(11) NOT NULL,
-                  updated_at int(11) NOT NULL,
+                  created_at int(11) DEFAULT NULL,
+                  updated_at int(11) DEFAULT NULL,
                   PRIMARY KEY  (id),
                   KEY user_id (user_id),
                   KEY leave_id (leave_id),
@@ -324,15 +324,26 @@ class ERP_1_6_0 {
     /**
      * Call this method after migrating old data
      */
-    public function delete_old_db_tables() {
+    public function alter_old_db_tables() {
         global $wpdb;
-        if ( $wpdb->query( 'DROP TABLE ' . implode( ', ', $this->db_tables_old ) . ';' ) === false ) {
+        $queries = 'RENAME TABLE ';
+        foreach ( $this->db_tables_old as $old_name => $new_name ) {
+            $queries .= "$old_name TO $new_name";
+            if ( next( $this->db_tables ) !== false ) {
+                $queries .= ', ';
+            } else {
+                $queries .= ';';
+            }
+        }
+
+        if ( $wpdb->query( $queries ) === false ) {
+            // query error, log this to db
             error_log(
                 print_r(
                     array(
                         'file'    => __FILE__,
                         'line'    => __LINE__,
-                        'message' => '(Query error) Table drop failed: ' . $wpdb->last_error,
+                        'message' => '(Query error) Old Table renaming failed: ' . $wpdb->last_error,
                     ),
                     true
                 )
