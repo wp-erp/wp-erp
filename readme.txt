@@ -1,5 +1,5 @@
 === WP ERP - Complete WordPress Business Manager with HR, CRM & Accounting Systems for Small Businesses ===
-Contributors: tareq1988, nizamuddinbabu, wedevs, ediamin, sabbir1991, asaquzzaman
+Contributors: tareq1988, nizamuddinbabu, wedevs
 Donate Link: https://tareq.co/donate
 Tags: business manager, erp, accounting, crm, hr, project manager, small business, SME, contact, contacts, Customer Relationship Management, employee, leave management, hr, human resource management, job, jobs, job listing, lead management, opportunity, schedule, task, lead, holiday, company
 Requires at least: 4.4
