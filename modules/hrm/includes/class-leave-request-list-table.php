@@ -118,10 +118,10 @@ class Leave_Requests_List_Table extends \WP_List_Table {
         switch ( $column_name ) {
 
             case 'policy':
-                return esc_attr( $item->policy_name );
+                return esc_html( $item->policy_name );
 
             case 'status':
-                return sprintf( '<span class="status-%s">%s</span>', $item->status, erp_hr_leave_request_get_statuses( $item->status ) );
+                return sprintf( '<span class="status-%s">%s</span>', absint( $item->status ), erp_hr_leave_request_get_statuses( $item->status ) );
 
             case 'approved_by':
                 $status = $wpdb->get_row(
@@ -135,7 +135,7 @@ class Leave_Requests_List_Table extends \WP_List_Table {
                 $approved_on = "";
                 if ( ! empty( $status ) && null !== $status->approved_by ) {
                     $user = get_user_by( 'id', $status->approved_by );
-                    $approved_by = $user instanceof \WP_User ? $user->display_name : '';
+                    $approved_by = $user instanceof \WP_User ? esc_html( $user->display_name ) : '';
                     $approved_on = erp_format_date( $status->created_at );
                 }
                 if ( $approved_by && $approved_on ) {
@@ -179,14 +179,14 @@ class Leave_Requests_List_Table extends \WP_List_Table {
                 $attachment       = "";
                 $leave_attachment = get_user_meta( $item->user_id, 'leave_document_' . $item->id ) ;
                 foreach ( $leave_attachment as $la ) {
-                    $file_link = wp_get_attachment_url( $la );
+                    $file_link = esc_url( wp_get_attachment_url( $la ) );
                     $file_name = esc_attr( basename( $file_link ) );
                     $attachment .= "<a target='_blank' href='{$file_link}'>{$file_name}</a><br>";
                 }
                 $str = '';
 
                 if ( trim( $item->reason ) != '' ) {
-                    $str .= '<p>' . $item->reason . '</p>';
+                    $str .= '<p>' . esc_html( $item->reason ) . '</p>';
                 }
                 if ( $attachment != '' ) {
                     $str .= "<p  title='$file_name' style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>$attachment</p>";
@@ -194,10 +194,10 @@ class Leave_Requests_List_Table extends \WP_List_Table {
                 return stripslashes( $str );
 
             case 'message':
-                return stripslashes( $item->message );
+                return esc_html( $item->message );
 
             default:
-                return isset( $item->$column_name ) ? $item->$column_name : '';
+                return isset( $item->$column_name ) ? esc_html( $item->$column_name ) : '';
         }
     }
 
