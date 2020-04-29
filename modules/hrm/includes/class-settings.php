@@ -29,7 +29,7 @@ class Settings extends ERP_Settings_Page {
         $sections = array(
             'workdays'      => __( 'Workdays', 'erp' ),
             'leave'         => __( 'Leave', 'erp' ),
-            'financial'     => __( 'Financial Years', 'erp' ),
+            'financial'     => __( 'Leave Years', 'erp' ),
             'miscellaneous' => __( 'Miscellaneous', 'erp' ),
         );
 
@@ -104,7 +104,7 @@ class Settings extends ERP_Settings_Page {
 
         $fields['financial'] = [
             [
-                'title' => __( 'Financial Years', 'erp' ),
+                'title' => __( 'Leave Years', 'erp' ),
                 'type'  => 'title',
                 'desc'  => '',
                 'id'    => 'erp_acct_ob_options',
