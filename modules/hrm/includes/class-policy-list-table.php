@@ -129,8 +129,13 @@ class Leave_Policies_List_Table extends \WP_List_Table {
             case 'calendar_color':
                 return '<span class="leave-color" style="background-color: ' . $leave_policy->color . ' "></span>';
 
+            case 'description':
+                $title = esc_attr( $leave_policy->description );
+                $description = esc_html( $leave_policy->description );
+                return "<p  title='{$title}' style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>{$description}</p>";
+
             default:
-                return isset( $leave_policy->$column_name ) ? $leave_policy->$column_name : '';
+                return isset( $leave_policy->$column_name ) ? esc_html( $leave_policy->$column_name ) : '';
         }
     }
 
