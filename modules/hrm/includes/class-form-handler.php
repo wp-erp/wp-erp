@@ -1099,8 +1099,7 @@ class Form_Handler {
             wp_die( esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
-        global $policy_create_error;
-        $policy_create_error = new WP_Error();
+        $errors = new ERP_Errors( 'policy_create_error' );
 
         $id          = ! empty( $_POST['policy-id'] ) ? absint( wp_unslash( $_POST['policy-id'] ) ) : 0;
         $leave_id    = ! empty( $_POST['leave-id'] ) ? absint( wp_unslash( $_POST['leave-id'] ) ) : 0;
@@ -1118,26 +1117,46 @@ class Form_Handler {
 
         // no need to throw this error if editing
         if ( ! $id && empty( $leave_id ) ) {
-            $policy_create_error->add( 'empty', 'Name field should not be left empty' );
+            $errors->add( __( 'Name field should not be left empty', 'erp') );
         }
 
         // no need to throw this error if editing
         if ( ! $id && $days < 0 ) {
-            $policy_create_error->add( 'empty', 'Days field should not be left empty' );
+            $errors->add( __( 'Days field should not be left empty', 'erp' ) );
         }
 
         if ( empty( $color ) ) {
-            $policy_create_error->add( 'empty', 'Color field should not be left empty' );
+            $errors->add( __( 'Color field should not be left empty', 'erp' ) );
         }
 
         if ( empty( $f_year ) ) {
-            $policy_create_error->add( 'empty', 'Year field should not be left empty' );
+            $errors->add( __( 'Year field should not be left empty', 'erp' ) );
         }
 
-        $policy_create_error = apply_filters( 'erp_pro_hr_leave_policy_form_errors', $policy_create_error );
+        $errors = apply_filters( 'erp_pro_hr_leave_policy_form_errors', $errors );
 
-        if ( count( $policy_create_error->errors ) ) {
-            return;
+        $redirect_args = array(
+            'page'        => 'erp-hr',
+            'section'     => 'leave',
+            'sub-section' => 'policies'
+        );
+
+        if ( ! empty( $_GET['action'] ) ) {
+            $redirect_args['id'] = absint( wp_unslash( $_GET['id'] ) );
+        }
+
+        if ( ! empty( $_GET['action'] ) ) {
+            $redirect_args['action'] = sanitize_key( wp_unslash( $_GET['action'] ) );
+        }
+
+        $redirect_url = add_query_arg( $redirect_args, admin_url( 'admin.php' ) );
+
+        if ( $errors->has_error() ) {
+            $errors->add_form_data( $_POST );
+            $errors->save();
+
+            wp_redirect( $redirect_url );
+            exit;
         }
 
         $data = array(
@@ -1162,7 +1181,11 @@ class Form_Handler {
         $res = erp_hr_leave_insert_policy( $data );
 
         if ( is_wp_error( $res ) ) {
-            return $policy_create_error->errors = $res->errors;
+            $errors->add( $res );
+            $errors->add_form_data( $_POST );
+            $errors->save();
+            wp_redirect( $redirect_url );
+            exit;
         }
 
         wp_redirect( add_query_arg( array(

@@ -294,6 +294,13 @@ class ERP_1_6_0 {
                 );
             }
         }
+        else {
+            $bg_progess_hr_leaves_entitlements->push_to_queue(
+                array(
+                    'task' => 'exit_from_here',
+                )
+            );
+        }
 
         $bg_progess_hr_leaves_entitlements->save();
 
@@ -312,6 +319,13 @@ class ERP_1_6_0 {
                 );
             }
         }
+        else {
+            $bg_progess_hr_leave_requests->push_to_queue(
+                array(
+                    'task' => 'exit_from_here',
+                )
+            );
+        }
 
         $bg_progess_hr_leave_requests->save();
 
@@ -329,7 +343,7 @@ class ERP_1_6_0 {
         $queries = 'RENAME TABLE ';
         foreach ( $this->db_tables_old as $old_name => $new_name ) {
             $queries .= "$old_name TO $new_name";
-            if ( next( $this->db_tables ) !== false ) {
+            if ( next( $this->db_tables_old ) !== false ) {
                 $queries .= ', ';
             } else {
                 $queries .= ';';
@@ -392,5 +406,3 @@ $erp_update_1_6_0 = new ERP_1_6_0();
 if ( $erp_update_1_6_0->create_db_tables() ) {
     $erp_update_1_6_0->migrate_data();
 }
-
-
