@@ -8,8 +8,10 @@
 function erp_updater_db_collate() {
     global $wpdb;
 
+    $db_name = DB_NAME;
+
     $tables = $wpdb->get_results(
-        "SELECT table_name FROM information_schema.tables where table_name like '{$wpdb->prefix}erp_%'",
+        "SELECT table_name FROM information_schema.tables where table_schema = '{$db_name}' and table_name like '{$wpdb->prefix}erp_%'",
         ARRAY_A
     );
 
@@ -88,7 +90,7 @@ function erp_acct_populate_charts_ledgers_155() {
     $old_ledgers = [];
     $ledgers     = [];
 
-    require_once WPERP_INCLUDES . '/ledgers.php';
+    require WPERP_INCLUDES . '/ledgers.php';
 
     $o_ledgers = $wpdb->get_results( "SELECT
         ledger.code, ledger.id, ledger.system, chart_cat.id category_id, chart.id as chart_id, ledger.name

@@ -1,5 +1,6 @@
 <?php
 
+use WeDevs\ERP\ERP_Errors;
 use WeDevs\ERP\HRM\Models\Financial_Year;
 use \WeDevs\ERP\HRM\Models\Leave;
 use \WeDevs\ERP\HRM\Models\Leave_Policy;
@@ -40,6 +41,18 @@ $leave_help_text = esc_html__( 'Select A Leave Type', 'erp' ) . ' ' . esc_attr__
 
 $f_year_help_text = __( 'Select Year', 'erp' ) . ' ' . esc_attr__( 'Or', 'erp' ) . ' ' . sprintf( '<a href="?page=erp-settings&tab=erp-hr&section=financial">%s</a>', __( 'Add New', 'erp' ) );
 
+// get error data
+$errors = new ERP_Errors( 'policy_create_error' );
+$error_messages = '';
+$form_data = array();
+if ( $errors->has_error() ) {
+    $error_messages = $errors->display();
+    $form_data = $errors->get_form_data();
+}
+
+// populate form data
+$f_year = ! empty( $form_data ) ?  $form_data['f-year'] : ( ! empty( $leave_policy ) ? $leave_policy->f_year : ( ! empty( $current_f_year ) ? $current_f_year->id : '' ) );
+
 ?>
 <div class="wrap">
     <h2><?php esc_html_e( 'Leave Policies', 'erp' ); ?>
@@ -50,15 +63,7 @@ $f_year_help_text = __( 'Select Year', 'erp' ) . ' ' . esc_attr__( 'Or', 'erp' )
     <form class="leave-policy-form" action="<?php echo esc_url( erp_hr_new_policy_url( $id, $action ) ); ?>" method="POST">
 
         <!-- show error message -->
-        <?php global $policy_create_error;
-            if ( isset( $policy_create_error ) && count( $policy_create_error->errors ) ) {
-                echo '<ul>';
-                foreach ( $policy_create_error->get_error_messages() as $error ) {
-                    echo '<li style="color: #ef5350">* ' . $error . '</li>';
-                }
-                echo '</ul>';
-            }
-        ?>
+        <?php echo $error_messages; ?>
 
         <div class="form-group">
             <div class="row">
@@ -66,12 +71,11 @@ $f_year_help_text = __( 'Select Year', 'erp' ) . ' ' . esc_attr__( 'Or', 'erp' )
                 erp_html_form_input( array(
                     'label'    => esc_html__( 'Year', 'erp' ),
                     'name'     => 'f-year',
-                    'value'    => ! empty( $leave_policy ) ? $leave_policy->f_year : '',
                     'required' => true,
                     'class'    => 'leave-policy-input erp-hrm-select2-add-more erp-hr-desi-drop-down',
                     'type'     => 'select',
                     'help'     => $f_year_help_text,
-                    'value'    => $current_f_year ? $current_f_year->id : '',
+                    'value'    => $f_year,
                     'options'  => array(
                                       '' => '&mdash; ' . esc_attr__('select year', 'erp') . ' &mdash;'
                                   ) + $financial_years,
