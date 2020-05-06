@@ -290,7 +290,7 @@ function erp_acct_create_accounting_tables() {
             `id` int(11) NOT NULL AUTO_INCREMENT,
             `voucher_no` int(11) DEFAULT NULL,
             `trn_date` date DEFAULT NULL,
-            `amount` decimal(20,2) DEFAULT NULL,
+            `amount` decimal(20,2) DEFAULT 0,
             `ac_from` int(11) DEFAULT NULL,
             `ac_to` int(11) DEFAULT NULL,
             `particulars` varchar(255) DEFAULT NULL,
@@ -729,6 +729,28 @@ function erp_acct_populate_data() {
         }
     }
 
+    // insert ledger categories
+    if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_acct_ledger_categories` LIMIT 0, 1" ) ) {
+        $wpdb->query("INSERT INTO `{$wpdb->prefix}erp_acct_ledger_categories`
+                (id,name,chart_id)
+                    VALUES
+                (1,'Current Asset',1),
+                (2,'Fixed Asset',1),
+                (3,'Inventory',1),
+                (4,'Non-current Asset',1),
+                (5,'Prepayment',1),
+                (6,'Bank & Cash',1),
+                (7,'Current Liability',2),
+                (8,'Liability',2),
+                (9,'Non-current Liability',2),
+                (10,'Depreciation',3),
+                (11,'Direct Costs',3),
+                (12,'Expense',3),
+                (13,'Revenue',4),
+                (14,'Sales',4),
+                (15,'Other Income',4),
+                (16,'Equity',5);");
+    }
 
     // insert payment methods
     if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_acct_payment_methods` LIMIT 0, 1" ) ) {
@@ -947,24 +969,25 @@ function erp_acct_populate_data() {
 
     //Insert default financial years
     if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_acct_financial_years` LIMIT 0, 1" ) ) {
-
-        $general         = get_option( 'erp_settings_general', array() );
-        $financial_month = isset( $general['gen_financial_month'] ) ? $general['gen_financial_month'] : '1';
-
-        $start_date = new DateTime( date( 'Y-' . $financial_month . '-1' ) );
-
-        $start_date = $start_date->format( "Y-m-d" );
-
-        $end_date = date( 'Y-m-d', strtotime( '+1 year', strtotime( $start_date ) ) );
-        $end_date = new DateTime( $end_date );
-        $end_date->modify( "-1 day" );
-
-        $end_date = $end_date->format( "Y-m-d" );
+        $start_date = $wpdb->get_var( "SELECT MIN(issue_date) FROM {$wpdb->prefix}erp_ac_transactions LIMIT 1" );
+        $end_date = date( 'Y-m-d' );
 
         $wpdb->insert( $wpdb->prefix . 'erp_acct_financial_years', array(
             'name'       => date( "Y" ),
             'start_date' => $start_date,
             'end_date'   => $end_date,
+            'created_at' => date( "Y-m-d" ),
+            'created_by' => get_current_user_id()
+        ) );
+
+        //Next FY
+        $next_fy_name  = date( "Y" ) . '_1';
+        $next_fy_start = date( 'Y-m-d', strtotime( ' +1 day' ) );
+        $next_fy_end   = date( 'Y-m-d', strtotime( 'Dec 31' ) );
+        $wpdb->insert( $wpdb->prefix . 'erp_acct_financial_years', array(
+            'name'       => $next_fy_name,
+            'start_date' => $next_fy_start,
+            'end_date'   => $next_fy_end,
             'created_at' => date( "Y-m-d" ),
             'created_by' => get_current_user_id()
         ) );
@@ -1199,308 +1222,6 @@ function erp_acct_populate_charts_ledgers() {
 
 }
 
-//=======================================
-// Balance Sheet migration helpers
-//=======================================
-
-/**
- * Get closing debit and credit
- *
- * @return array
- */
-function _erp_ac_get_opening_income_expense( $financial_end = false ) {
-    global $wpdb;
-
-    $tbl_ledger      = $wpdb->prefix . 'erp_ac_ledger';
-    $tbl_type        = $wpdb->prefix . 'erp_ac_chart_types';
-    $tbl_class       = $wpdb->prefix . 'erp_ac_chart_classes';
-    $tbl_journals    = $wpdb->prefix . 'erp_ac_journals';
-    $tbl_transaction = $wpdb->prefix . 'erp_ac_transactions';
-
-    $start_date    = $wpdb->get_var( "SELECT MIN(issue_date) FROM {$wpdb->prefix}erp_ac_transactions LIMIT 1" );
-    $financial_end = $wpdb->get_var( "SELECT MAX(issue_date) FROM {$wpdb->prefix}erp_ac_transactions LIMIT 1" );
-
-    $financial_start = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
-
-    $sql = $wpdb->prepare(
-        "SELECT ledger.id, ledger.code, ledger.name, ledger.type_id, type.name as type_name, type.class_id, class.name as class_name, sum(jour.debit) as debit, sum(jour.credit) as credit
-        FROM $tbl_class as class
-        LEFT JOIN $tbl_type as type ON type.class_id = class.id
-        LEFT JOIN $tbl_ledger as ledger ON ledger.type_id = type.id
-        LEFT JOIN $tbl_journals as jour ON jour.ledger_id = ledger.id
-        LEFT JOIN $tbl_transaction as trans ON trans.id = jour.transaction_id
-        WHERE class.id IN ( 3, 4 )
-        AND ( trans.status IS NULL OR trans.status NOT IN ( 'draft', 'void', 'awaiting_approval' ) )
-        AND ( trans.issue_date <= '%s' ) AND trans.type = 'journal'
-        GROUP BY ledger.id", $financial_end
-    );
-
-    return $wpdb->get_results( $sql );
-}
-
-/**
- * Transaction report query
- *
- * @param string $financial_end
- *
- * @return array
- */
-function _erp_ac_reporting_query( $financial_end = false ) {
-    global $wpdb;
-
-    $start_date    = $wpdb->get_var( "SELECT MIN(issue_date) FROM {$wpdb->prefix}erp_ac_transactions LIMIT 1" );
-    $financial_end = $wpdb->get_var( "SELECT MAX(issue_date) FROM {$wpdb->prefix}erp_ac_transactions LIMIT 1" );
-
-    $unit_balance      = _erp_ac_get_asset_liability_equity_balance( $financial_end );
-    $ope_in_ex_balance = _erp_ac_get_opening_income_expense( $financial_end );
-    $report            = array_merge( $unit_balance, $ope_in_ex_balance );
-    return $report;
-}
-
-/**
- * Get closing Balnace
- *
- * @return array
- */
-function _erp_ac_get_asset_liability_equity_balance( $financial_end = false ) {
-    global $wpdb;
-
-    $tbl_ledger      = $wpdb->prefix . 'erp_ac_ledger';
-    $tbl_type        = $wpdb->prefix . 'erp_ac_chart_types';
-    $tbl_class       = $wpdb->prefix . 'erp_ac_chart_classes';
-    $tbl_journals    = $wpdb->prefix . 'erp_ac_journals';
-    $tbl_transaction = $wpdb->prefix . 'erp_ac_transactions';
-
-    $start_date    = $wpdb->get_var( "SELECT MIN(issue_date) FROM {$wpdb->prefix}erp_ac_transactions LIMIT 1" );
-    $financial_end = $wpdb->get_var( "SELECT MAX(issue_date) FROM {$wpdb->prefix}erp_ac_transactions LIMIT 1" );
-
-    $sql = $wpdb->prepare(
-        "SELECT ledger.id, ledger.code, ledger.name, ledger.type_id, type.name as type_name, type.class_id, class.name as class_name, sum(jour.debit) as debit, sum(jour.credit) as credit
-        FROM $tbl_class as class
-        LEFT JOIN $tbl_type as type ON type.class_id = class.id
-        LEFT JOIN $tbl_ledger as ledger ON ledger.type_id = type.id
-        LEFT JOIN $tbl_journals as jour ON jour.ledger_id = ledger.id
-        LEFT JOIN $tbl_transaction as trans ON trans.id = jour.transaction_id
-        WHERE class.id IN ( 1, 2, 5 )
-        AND ( trans.status IS NULL OR trans.status NOT IN ( 'draft', 'void', 'awaiting_approval' ) )
-        AND ( trans.issue_date <= '%s' ) AND trans.type = 'journal'
-        GROUP BY ledger.id", $financial_end
-    );
-
-    return $wpdb->get_results( $sql );
-}
-
-/**
- * Get closing debit and credit
- *
- * @return array
- */
-function _erp_ac_get_closing_income_expense( $financial_end = false ) {
-    global $wpdb;
-
-    $tbl_ledger      = $wpdb->prefix . 'erp_ac_ledger';
-    $tbl_type        = $wpdb->prefix . 'erp_ac_chart_types';
-    $tbl_class       = $wpdb->prefix . 'erp_ac_chart_classes';
-    $tbl_journals    = $wpdb->prefix . 'erp_ac_journals';
-    $tbl_transaction = $wpdb->prefix . 'erp_ac_transactions';
-
-    $start_date    = $wpdb->get_var( "SELECT MIN(issue_date) FROM {$wpdb->prefix}erp_ac_transactions LIMIT 1" );
-    $financial_end = $wpdb->get_var( "SELECT MAX(issue_date) FROM {$wpdb->prefix}erp_ac_transactions LIMIT 1" );
-
-    $sql = $wpdb->prepare(
-        "SELECT sum(jour.debit) as debit, sum(jour.credit) as credit
-        FROM $tbl_class as class
-        LEFT JOIN $tbl_type as type ON type.class_id = class.id
-        LEFT JOIN $tbl_ledger as ledger ON ledger.type_id = type.id
-        LEFT JOIN $tbl_journals as jour ON jour.ledger_id = ledger.id
-        LEFT JOIN $tbl_transaction as trans ON trans.id = jour.transaction_id
-        WHERE class.id IN ( 3, 4 )
-        AND ( trans.status IS NULL OR trans.status NOT IN ( 'draft', 'void', 'awaiting_approval' ) )
-        AND ( trans.issue_date < '%s' ) AND trans.type = 'journal'", $financial_end
-    );
-
-    $balance = $wpdb->get_results( $sql );
-    $balance = reset( $balance );
-
-    if ( $balance->credit > $balance->debit ) {
-        $balance->credit = abs( $balance->credit - $balance->debit );
-        $balance->debit  = abs( 0 );
-
-    } else {
-        if ( $balance->credit < $balance->debit ) {
-            $balance->debit  = abs( $balance->debit - $balance->credit );
-            $balance->credit = abs( 0 );
-
-        } else {
-            $balance->debit  = abs( 0 );
-            $balance->credit = abs( 0 );
-        }
-    }
-
-    return $balance;
-}
-
-/**
- * Get total sales amount without tax
- *
- * @param array $charts
- *
- * @return int
- */
-function _erp_ac_get_sales_total_without_tax( $charts ) {
-
-    $sales_journals = isset( $charts[4] ) ? $charts[4] : [];
-    $sales_total    = 0;
-
-    foreach ( $sales_journals as $key => $ledger_jours ) {
-        $sales_total = $sales_total + array_sum( wp_list_pluck( $ledger_jours, 'credit' ) ) - array_sum( wp_list_pluck( $ledger_jours, 'debit' ) );
-    }
-
-    return $sales_total;
-}
-
-
-/**
- * Getting all tax query
- *
- * @param array $args
- *
- * @return array
- */
-function _erp_ac_get_all_tax( $args = [] ) {
-    global $wpdb;
-
-    $sql = "SELECT * FROM {$wpdb->prefix}erp_ac_tax";
-
-    $items = $wpdb->get_results( $sql );
-
-    return $items;
-}
-
-/**
- * Create tax dropdown
- *
- * @return array
- */
-function _erp_ac_get_tax_dropdown() {
-    $taxs    = _erp_ac_get_all_tax( [ 'number' => '-1' ] );
-    $drpdown = [];
-
-    foreach ( $taxs as $tax ) {
-        $drpdown[$tax->id] = $tax->name;
-    }
-
-    return $drpdown;
-}
-
-/**
- * Get all payable tax ledger
- *
- * @return array
- */
-function _erp_ac_get_tax_payable_ledger() {
-    global $wpdb;
-    $all_tax_id = array_keys( _erp_ac_get_tax_dropdown() );
-
-    $array = implode( "','", $all_tax_id );
-
-    $payables = $wpdb->query( "CREATE TEMPORARY TABLE IF NOT EXISTS erp_acct_temp_tax_ledger as ( SELECT * FROM {$wpdb->prefix}erp_ac_ledger AS ledger WHERE tax IN ('" . $array . "') )" );
-
-    $payables = $wpdb->get_results( "SELECT * FROM erp_acct_temp_tax_ledger as ledger LEFT JOIN {$wpdb->prefix}erp_ac_chart_types AS type ON ledger.type_id = type.id WHERE type.class_id = 2", ARRAY_A );
-
-    foreach ( $payables as $key => $payable ) {
-        if ( ! empty( $payable['charts'] ) ) {
-            if ( ! count( $payable['charts'] ) ) {
-                unset( $payables[$key] );
-            }
-        }
-    }
-
-    return $payables;
-}
-
-/**
- * Get total sales total amount
- *
- * @param array $charts
- *
- * @return int
- */
-function _erp_ac_get_sales_tax_total( $charts ) {
-    $payable_tax                   = _erp_ac_get_tax_payable_ledger();
-    $payable_tax                   = wp_list_pluck( $payable_tax, 'id' );
-    $payable_tax_journals          = [];
-    $tax_total                     = 0;
-    $libility_payable_tax_journals = isset( $charts[2] ) ? $charts[2] : [];
-
-    foreach ( $libility_payable_tax_journals as $key => $libility_journal ) {
-        if ( in_array( $key, $payable_tax ) ) {
-            $payable_tax_journals[$key] = $libility_journal;
-        }
-    }
-
-    foreach ( $payable_tax_journals as $key => $ledger_jours ) {
-        $tax_total = $tax_total + array_sum( wp_list_pluck( $ledger_jours, 'credit' ) ) - array_sum( wp_list_pluck( $ledger_jours, 'debit' ) );
-    }
-
-    return $tax_total;
-}
-
-
-/**
- * Get cost of good sold amount
- *
- * @param string $charts
- *
- * @return int
- */
-function _erp_ac_get_good_sold_total_amount( $financial_end = false ) {
-    global $wpdb;
-
-    $costs_of_goods_sold = 24;
-
-    $start_date    = $wpdb->get_var( "SELECT MIN(issue_date) FROM {$wpdb->prefix}erp_ac_transactions LIMIT 1" );
-    $financial_end = $wpdb->get_var( "SELECT MAX(issue_date) FROM {$wpdb->prefix}erp_ac_transactions LIMIT 1" );
-
-    $tbl_journals    = $wpdb->prefix . 'erp_ac_journals';
-    $tbl_transaction = $wpdb->prefix . 'erp_ac_transactions';
-
-    $sql = $wpdb->prepare(
-        "SELECT trans.id as transaction_id
-                FROM $tbl_transaction as trans
-                LEFT JOIN $tbl_journals as jour ON jour.transaction_id = trans.id
-                WHERE jour.ledger_id = '%d'
-                AND ( trans.status IS NULL OR trans.status NOT IN ( 'draft', 'void', 'awaiting_approval' ) )
-                AND ( trans.issue_date < '%s' ) AND trans.type = 'journal'", $costs_of_goods_sold, $financial_end
-    );
-
-    $results   = $wpdb->get_results( $sql );
-    $trans_ids = implode( "','", wp_list_pluck( $results, 'transaction_id' ) );
-
-    $sql     = "SELECT sum( jour.debit ) as debit FROM $tbl_journals as jour WHERE jour.transaction_id IN ( '$trans_ids' )";
-    $results = $wpdb->get_var( $sql );
-
-    return $results;
-}
-
-/**
- * Get total expense amount without tax
- *
- * @param array $charts
- *
- * @return int
- */
-function _erp_ac_get_expense_total_with_tax( $charts ) {
-    $expense_journals = isset( $charts[3] ) ? $charts[3] : [];
-    $expense_total    = 0;
-
-    foreach ( $expense_journals as $key => $ledger_jours ) {
-        $expense_total = $expense_total + array_sum( wp_list_pluck( $ledger_jours, 'debit' ) ) - array_sum( wp_list_pluck( $ledger_jours, 'credit' ) );
-    }
-    return $expense_total;
-
-}
-
 /**
  * Migrate balance sheet as opening balance
  *
@@ -1508,194 +1229,21 @@ function _erp_ac_get_expense_total_with_tax( $charts ) {
 function erp_acct_migrate_balance_sheet() {
     global $wpdb;
 
-    $ob_data = [];
-    $data    = [];
-
-    // $acct_rec_sql     = "SELECT `id`,`user_id`,`due` as debit FROM `{$wpdb->prefix}erp_ac_transactions` WHERE `form_type`='invoice' HAVING due>0";
-    // $data['acct_rec'] = $wpdb->get_results( $acct_rec_sql, ARRAY_A );
-
-    // $acct_pay_sql     = "SELECT `id`,`user_id`,`due` as credit FROM `{$wpdb->prefix}erp_ac_transactions` WHERE `form_type`='vendor_credit' HAVING due>0";
-    // $data['acct_pay'] = $wpdb->get_results( $acct_pay_sql, ARRAY_A );
-
-    $general         = get_option( 'erp_settings_general', array() );
-    $financial_month = isset( $general['gen_financial_month'] ) ? $general['gen_financial_month'] : '1';
-
     $start_date = $wpdb->get_var( "SELECT MIN(issue_date) FROM {$wpdb->prefix}erp_ac_transactions LIMIT 1" );
+    $end_date = date( 'Y-m-d' );
 
-    $current_fy = erp_acct_get_current_financial_year();
-    $next_fy_id = '';
-
-    $next_fy_name  = date( "Y" ) . '_1';
     $next_fy_start = date( 'Y-m-d', strtotime( ' +1 day' ) );
-    $next_fy_end   = date( 'Y-m-d', strtotime( 'Dec 31' ) );
+    $next_fy = erp_acct_get_current_financial_year( $next_fy_start );
 
-    $wpdb->query( "TRUNCATE TABLE {$wpdb->prefix}erp_acct_financial_years" );
-
-    if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_acct_financial_years` WHERE name='{$next_fy_name}' LIMIT 0, 1" ) ) {
-        //Insert current FY
-
-        $general         = get_option( 'erp_settings_general', array() );
-        $financial_month = isset( $general['gen_financial_month'] ) ? $general['gen_financial_month'] : '1';
-
-        $start_date = $wpdb->get_var( "SELECT MIN(issue_date) FROM {$wpdb->prefix}erp_ac_transactions LIMIT 1" );
-
-        $end_date = date( 'Y-m-d' );
-
-        $wpdb->insert( $wpdb->prefix . 'erp_acct_financial_years', array(
-            'name'       => date( "Y" ),
+    if ( ! empty ( $next_fy ) ) {
+        $args = [
+            'f_year_id'  => $next_fy->id,
             'start_date' => $start_date,
-            'end_date'   => $end_date,
-            'created_at' => date( "Y-m-d" ),
-            'created_by' => get_current_user_id()
-        ) );
+            'end_date'   => $end_date
+        ];
 
-        //Next FY
-        $wpdb->insert( $wpdb->prefix . 'erp_acct_financial_years', array(
-            'name'       => $next_fy_name,
-            'start_date' => $next_fy_start,
-            'end_date'   => $next_fy_end,
-            'created_at' => date( "Y-m-d" ),
-            'created_by' => get_current_user_id()
-        ) );
-        $next_fy_id = $wpdb->insert_id;
+        erp_acct_clsbl_close_balance_sheet_now( $args );
     }
-
-    // if ( ! empty( $data['acct_rec'] ) ) {
-    //     foreach ( $data['acct_rec'] as $acct_rec ) {
-    //         $wpdb->insert( $wpdb->prefix . 'erp_acct_opening_balances', [
-    //             'financial_year_id' => $current_fy->id,
-    //             'ledger_id'         => $acct_rec['user_id'],
-    //             'type'              => 'people',
-    //             'debit'             => $acct_rec['debit'],
-    //             'credit'            => 0,
-    //             'created_at'        => date( "Y-m-d" ),
-    //             'created_by'        => get_current_user_id()
-    //         ] );
-    //     }
-    // }
-
-    // if ( ! empty( $data['acct_pay'] ) ) {
-    //     foreach ( $data['acct_pay'] as $acct_pay ) {
-    //         $wpdb->insert( $wpdb->prefix . 'erp_acct_opening_balances', [
-    //             'financial_year_id' => $current_fy->id,
-    //             'ledger_id'         => $acct_pay['user_id'],
-    //             'type'              => 'people',
-    //             'debit'             => 0,
-    //             'credit'            => $acct_pay['credit'],
-    //             'created_at'        => date( "Y-m-d" ),
-    //             'created_by'        => get_current_user_id()
-    //         ] );
-    //     }
-    // }
-
-    $ledgers              = _erp_ac_reporting_query( $end_date );
-    $clos_inc_exp_balance = _erp_ac_get_closing_income_expense( $end_date );
-
-    $closing_balance = ( $clos_inc_exp_balance->credit > 0 ) ? $clos_inc_exp_balance->credit : -$clos_inc_exp_balance->debit;
-
-    $charts = [];
-
-    foreach ( $ledgers as $ledger ) {
-        $charts[$ledger->class_id][$ledger->id][] = $ledger;
-    }
-
-    $assets      = isset( $charts[1] ) ? $charts[1] : [];
-    $liabilities = isset( $charts[2] ) ? $charts[2] : [];
-    $equities    = isset( $charts[5] ) ? $charts[5] : [];
-
-    $sales_total   = _erp_ac_get_sales_total_without_tax( $charts ) + _erp_ac_get_sales_tax_total( $charts );
-    $goods_sold    = _erp_ac_get_good_sold_total_amount( $end_date );
-    $expense_total = _erp_ac_get_expense_total_with_tax( $charts );
-    $expense_total = $expense_total - $goods_sold;
-    $tax_total     = _erp_ac_get_sales_tax_total( $charts );
-    $gross         = $sales_total - $goods_sold;
-    $operating     = $gross - $expense_total;
-    $net_income    = $operating - $tax_total;
-
-    foreach ( $assets as $key => $asset ) {
-        if ( $asset[0]->code == '120' ) {
-            continue;
-        }
-
-        $asset = (array) $asset[0];
-
-        $wpdb->insert( $wpdb->prefix . 'erp_acct_opening_balances', [
-            'financial_year_id' => $current_fy->id,
-            'ledger_id'         => $asset['id'],
-            'chart_id'          => $asset['class_id'],
-            'type'              => 'ledger',
-            'debit'             => $asset['debit'],
-            'credit'            => 0,
-            'created_at'        => date( "Y-m-d" ),
-            'created_by'        => get_current_user_id()
-        ] );
-    }
-
-    foreach ( $liabilities as $key => $liability ) {
-        if ( $liability[0]->code == '200' ) {
-            continue;
-        }
-
-        $liability = (array) $liability[0];
-
-        $wpdb->insert( $wpdb->prefix . 'erp_acct_opening_balances', [
-            'financial_year_id' => $current_fy->id,
-            'ledger_id'         => $liability['id'],
-            'chart_id'          => $liability['class_id'],
-            'type'              => 'ledger',
-            'debit'             => 0,
-            'credit'            => $liability['credit'],
-            'created_at'        => date( "Y-m-d" ),
-            'created_by'        => get_current_user_id()
-        ] );
-    }
-
-    foreach ( $equities as $key => $equity ) {
-        $equity = (array) $equity[0];
-
-        $wpdb->insert( $wpdb->prefix . 'erp_acct_opening_balances', [
-            'financial_year_id' => $current_fy->id,
-            'ledger_id'         => $equity['id'],
-            'chart_id'          => $equity['class_id'],
-            'type'              => 'ledger',
-            'debit'             => 0,
-            'credit'            => $equity['credit'],
-            'created_at'        => date( "Y-m-d" ),
-            'created_by'        => get_current_user_id()
-        ] );
-    }
-
-    $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::get_instance();
-    $ledger_id  = $ledger_map->get_ledger_id_by_slug( 'owner_s_equity' );
-
-    $profit = 0;
-    $loss   = 0;
-
-    if ( $net_income < 0 ) {
-        $loss = abs( $net_income );
-    } else {
-        $profit = abs( $net_income );
-    }
-
-    $wpdb->insert( $wpdb->prefix . 'erp_acct_opening_balances', [
-        'financial_year_id' => $current_fy->id,
-        'ledger_id'         => $ledger_id,
-        'chart_id'          => 3,
-        'type'              => 'ledger',
-        'debit'             => $loss,
-        'credit'            => $profit,
-        'created_at'        => date( "Y-m-d" ),
-        'created_by'        => get_current_user_id()
-    ] );
-
-    $args = [
-        'f_year_id'  => (int) $next_fy_id,
-        'start_date' => $next_fy_start,
-        'end_date'   => $next_fy_end
-    ];
-
-    erp_acct_clsbl_close_balance_sheet_now( $args );
-
 }
 
 /**
@@ -1705,8 +1253,8 @@ function erp_acct_migrate_balance_sheet() {
  */
 function wperp_update_accounting_module_1_5_0() {
     erp_acct_create_accounting_tables();
-    erp_acct_populate_charts_ledgers();
     erp_acct_populate_data();
+    erp_acct_populate_charts_ledgers();
 
     erp_acct_populate_tax_agencies();
     erp_acct_populate_tax_data();

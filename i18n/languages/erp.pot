@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WP ERP 1.6.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-erp\n"
-"POT-Creation-Date: 2020-05-02 09:20:57+00:00\n"
+"POT-Creation-Date: 2020-05-06 16:32:52+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -16805,7 +16805,7 @@ msgstr ""
 #: modules/hrm/views/js-templates/new-dept.php:11
 #: modules/hrm/views/js-templates/new-designation.php:9
 #: modules/hrm/views/leave/holiday.php:95
-#: modules/hrm/views/leave/new-policy.php:97
+#: modules/hrm/views/leave/new-policy.php:102
 #: modules/hrm/views/leave/policy-name.php:47
 msgid "Description"
 msgstr ""
@@ -19748,6 +19748,14 @@ msgstr ""
 msgid "You don't have permission to install the plugins"
 msgstr ""
 
+#: includes/updates/bp/class-erp-acct-bg-process-1.5.0.php:249
+#: includes/updates/bp/class-erp-acct-bg-process-1.5.0.php:267
+#: includes/updates/bp/class-erp-acct-bg-process-1.5.0.php:280
+#: modules/accounting/includes/functions/journals.php:290
+#. translators: %s: voucher_no
+msgid "Journal created with voucher no %s"
+msgstr ""
+
 #: includes/updates/update-1.1.0.php:415 includes/updates/update-1.1.0.php:417
 msgid "Accountig Management"
 msgstr ""
@@ -21353,7 +21361,7 @@ msgstr ""
 #: modules/hrm/views/js-templates/job-info.php:25
 #: modules/hrm/views/js-templates/new-employee.php:170
 #: modules/hrm/views/leave/leave-entitlements.php:71
-#: modules/hrm/views/leave/new-policy.php:175
+#: modules/hrm/views/leave/new-policy.php:180
 #: modules/hrm/views/reporting/age-profile.php:53
 #: modules/hrm/views/reporting/gender-profile.php:87
 #: modules/hrm/views/reporting/headcount.php:155
@@ -21365,7 +21373,7 @@ msgstr ""
 #: modules/hrm/includes/class-policy-list-table.php:156
 #: modules/hrm/views/dashboard.php:48 modules/hrm/views/designation.php:3
 #: modules/hrm/views/leave/leave-entitlements.php:81
-#: modules/hrm/views/leave/new-policy.php:188
+#: modules/hrm/views/leave/new-policy.php:193
 msgid "Designation"
 msgstr ""
 
@@ -22141,11 +22149,6 @@ msgstr ""
 #: modules/accounting/includes/functions/taxes.php:454
 #. translators: %s: voucher_no
 msgid "Invoice created with voucher no %s"
-msgstr ""
-
-#: modules/accounting/includes/functions/journals.php:290
-#. translators: %s: voucher_no
-msgid "Journal created with voucher no %s"
 msgstr ""
 
 #: modules/accounting/includes/functions/pay-bills.php:376
@@ -23819,8 +23822,8 @@ msgstr ""
 #: modules/hrm/includes/functions-leave.php:2679
 #: modules/hrm/views/leave/leave-entitlements.php:108
 #: modules/hrm/views/leave/leave-entitlements.php:119
-#: modules/hrm/views/leave/new-policy.php:223
-#: modules/hrm/views/leave/new-policy.php:235
+#: modules/hrm/views/leave/new-policy.php:228
+#: modules/hrm/views/leave/new-policy.php:240
 msgid "All"
 msgstr ""
 
@@ -25632,7 +25635,7 @@ msgstr ""
 
 #: modules/hrm/includes/class-ajax.php:1765
 #: modules/hrm/includes/class-leave-policy-name-list-table.php:75
-#: modules/hrm/views/leave/new-policy.php:83
+#: modules/hrm/views/leave/new-policy.php:88
 #: modules/hrm/views/leave/policy-name.php:36
 msgid "Leave Type"
 msgstr ""
@@ -26207,7 +26210,7 @@ msgid "<strong>%s</strong> policy has been deleted"
 msgstr ""
 
 #: modules/hrm/includes/class-hr-log.php:765
-#: modules/hrm/views/leave/new-policy.php:181
+#: modules/hrm/views/leave/new-policy.php:186
 msgid "All Department"
 msgstr ""
 
@@ -26216,7 +26219,7 @@ msgid "All Designation"
 msgstr ""
 
 #: modules/hrm/includes/class-hr-log.php:783
-#: modules/hrm/views/leave/new-policy.php:207
+#: modules/hrm/views/leave/new-policy.php:212
 msgid "All Location"
 msgstr ""
 
@@ -26272,7 +26275,7 @@ msgstr ""
 
 #: modules/hrm/includes/class-leave-report-employee.php:61
 #: modules/hrm/views/employee/tab-leave.php:88
-#: modules/hrm/views/leave/new-policy.php:75
+#: modules/hrm/views/leave/new-policy.php:80
 msgid "select year"
 msgstr ""
 
@@ -26350,7 +26353,7 @@ msgstr ""
 #: modules/hrm/includes/class-policy-list-table.php:151
 #: modules/hrm/views/js-templates/new-leave-request.php:31
 #: modules/hrm/views/leave/leave-entitlements.php:58
-#: modules/hrm/views/leave/new-policy.php:66
+#: modules/hrm/views/leave/new-policy.php:72
 #: modules/hrm/views/leave/new-request.php:40
 #: modules/hrm/views/reporting/years-of-service.php:56
 msgid "Year"
@@ -26358,12 +26361,12 @@ msgstr ""
 
 #: modules/hrm/includes/class-policy-list-table.php:153
 #: modules/hrm/views/employee/tab-leave.php:14
-#: modules/hrm/views/leave/new-policy.php:111
+#: modules/hrm/views/leave/new-policy.php:116
 msgid "Days"
 msgstr ""
 
 #: modules/hrm/includes/class-policy-list-table.php:154
-#: modules/hrm/views/leave/new-policy.php:136
+#: modules/hrm/views/leave/new-policy.php:141
 msgid "Calendar Color"
 msgstr ""
 
@@ -26372,7 +26375,7 @@ msgstr ""
 #: modules/hrm/views/js-templates/job-info.php:15
 #: modules/hrm/views/js-templates/new-employee.php:194
 #: modules/hrm/views/leave/leave-entitlements.php:93
-#: modules/hrm/views/leave/new-policy.php:201
+#: modules/hrm/views/leave/new-policy.php:206
 #: modules/hrm/views/reporting/headcount.php:156
 msgid "Location"
 msgstr ""
@@ -26381,7 +26384,7 @@ msgstr ""
 #: modules/hrm/views/employee/tab-general.php:73
 #: modules/hrm/views/js-templates/new-employee.php:361
 #: modules/hrm/views/leave/leave-entitlements.php:103
-#: modules/hrm/views/leave/new-policy.php:218
+#: modules/hrm/views/leave/new-policy.php:223
 #: modules/hrm/views/reporting/gender-profile.php:52
 msgid "Gender"
 msgstr ""
@@ -27267,7 +27270,7 @@ msgstr ""
 #: modules/hrm/views/employee/tab-general.php:75
 #: modules/hrm/views/js-templates/new-employee.php:372
 #: modules/hrm/views/leave/leave-entitlements.php:114
-#: modules/hrm/views/leave/new-policy.php:230
+#: modules/hrm/views/leave/new-policy.php:235
 msgid "Marital Status"
 msgstr ""
 
@@ -27928,7 +27931,7 @@ msgid "All Departments"
 msgstr ""
 
 #: modules/hrm/views/leave/leave-entitlements.php:87
-#: modules/hrm/views/leave/new-policy.php:194
+#: modules/hrm/views/leave/new-policy.php:199
 msgid "All Designations"
 msgstr ""
 
@@ -27953,7 +27956,7 @@ msgid "Assign Policies"
 msgstr ""
 
 #: modules/hrm/views/leave/leave-policies.php:2
-#: modules/hrm/views/leave/new-policy.php:46
+#: modules/hrm/views/leave/new-policy.php:58
 msgid "Leave Policies"
 msgstr ""
 
@@ -27969,47 +27972,47 @@ msgstr ""
 msgid "Select A Leave Type"
 msgstr ""
 
-#: modules/hrm/views/leave/new-policy.php:48
+#: modules/hrm/views/leave/new-policy.php:60
 #: modules/hrm/views/leave/policy-name.php:17
 msgid "Back To Leave Policies"
 msgstr ""
 
-#: modules/hrm/views/leave/new-policy.php:102
+#: modules/hrm/views/leave/new-policy.php:107
 #: modules/hrm/views/leave/policy-name.php:51
 msgid "(optional)"
 msgstr ""
 
-#: modules/hrm/views/leave/new-policy.php:116
+#: modules/hrm/views/leave/new-policy.php:121
 msgid "Days in a calendar year."
 msgstr ""
 
-#: modules/hrm/views/leave/new-policy.php:124
+#: modules/hrm/views/leave/new-policy.php:129
 msgid "Applicable After"
 msgstr ""
 
-#: modules/hrm/views/leave/new-policy.php:131
+#: modules/hrm/views/leave/new-policy.php:136
 msgid "Based on employee joining date."
 msgstr ""
 
-#: modules/hrm/views/leave/new-policy.php:147
+#: modules/hrm/views/leave/new-policy.php:152
 msgid "Entitle New Employees"
 msgstr ""
 
-#: modules/hrm/views/leave/new-policy.php:151
+#: modules/hrm/views/leave/new-policy.php:156
 msgid "Entitle new employees to this policy after hiring?"
 msgstr ""
 
-#: modules/hrm/views/leave/new-policy.php:152
+#: modules/hrm/views/leave/new-policy.php:157
 msgid ""
 "Check this checkbox if you want to entitle new employees to this policy "
 "after hiring."
 msgstr ""
 
-#: modules/hrm/views/leave/new-policy.php:161
+#: modules/hrm/views/leave/new-policy.php:166
 msgid "Apply for existing employees"
 msgstr ""
 
-#: modules/hrm/views/leave/new-policy.php:164
+#: modules/hrm/views/leave/new-policy.php:169
 msgid "Entitle existing employees to this policy?"
 msgstr ""
 
