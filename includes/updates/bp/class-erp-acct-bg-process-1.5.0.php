@@ -224,6 +224,70 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
             $this->_helper_bank_transfers_migration($trn, $trn_id);
         } // transfer
 
+        elseif ( 'journal' === $trn['type'] ) {
+            // insert into voucher_no
+            $trn['currency'] = empty( $trn['currency'] ) ? 'USD' : $trn['currency'];
+
+            $wpdb->insert(
+                "{$wpdb->prefix}erp_acct_voucher_no", [
+                    'id'         => $trn_id,
+                    'type'       => $trn['type'],
+                    'currency'   => $this->get_currecny_id( $trn['currency'] ),
+                    'created_at' => $this->get_created_at( $trn['created_at'] ),
+                    'created_by' => $trn['created_by']
+                ]
+            );
+            $voucher_no = $wpdb->insert_id;
+
+            // insert into erp_acct_journals table
+            $wpdb->insert(
+                $wpdb->prefix . 'erp_acct_journals',
+                array(
+                    'voucher_no'     => $voucher_no,
+                    'trn_date'       => $this->get_created_at( $trn['created_at'] ),
+                    'voucher_amount' => $trn['sub_total'],
+                    'particulars'    => sprintf( __( 'Journal created with voucher no %s', 'erp' ), $voucher_no ),
+                    'created_at'     => $this->get_created_at( $trn['created_at'] ),
+                    'created_by'     => $trn['created_by']
+                )
+            );
+
+            // get data from wp_erp_ac_journals
+            $items = $wpdb->get_results(
+                $wpdb->prepare( "SELECT * FROM  {$wpdb->prefix}erp_ac_journals where transaction_id = %d", $trn_id ),
+                ARRAY_A );
+
+            // insert line items
+            foreach ( $items as $key => $item ) {
+                $wpdb->insert(
+                    $wpdb->prefix . 'erp_acct_journal_details',
+                    array(
+                        'trn_no'      => $voucher_no,
+                        'ledger_id'   => $item['ledger_id'],
+                        'particulars' => sprintf( __( 'Journal created with voucher no %s', 'erp' ), $voucher_no ),
+                        'debit'       => empty( $item['debit'] ) ? 0.00 : $item['debit'],
+                        'credit'      => empty( $item['credit'] ) ? 0.00 : $item['credit'],
+                        'created_at'  => $this->get_created_at( $trn['created_at'] ),
+                        'created_by'  => $trn['created_by']
+                    )
+                );
+
+                $wpdb->insert(
+                    $wpdb->prefix . 'erp_acct_ledger_details',
+                    [
+                        'ledger_id'   => $item['ledger_id'],
+                        'trn_no'      => $voucher_no,
+                        'particulars' => sprintf( __( 'Journal created with voucher no %s', 'erp' ), $voucher_no ),
+                        'debit'       => empty( $item['debit'] ) ? 0.00 : $item['debit'],
+                        'credit'      => empty( $item['credit'] ) ? 0.00 : $item['credit'],
+                        'trn_date'    => $this->get_created_at( $trn['created_at'] ),
+                        'created_at'  => $this->get_created_at( $trn['created_at'] ),
+                        'created_by'  => $trn['created_by']
+                    ]
+                );
+            }
+        }
+
 		return false;
 	}
 
