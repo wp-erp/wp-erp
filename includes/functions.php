@@ -3606,3 +3606,19 @@ function erp_number_format_i18n( $number ) {
     }
     return number_format_i18n( $number );
 }
+
+/**
+ * This method will check for a valid timestamp
+ *
+ * @param int|string $string timestamp
+ *
+ * @return bool
+ */
+function erp_is_timestamp( $string ) {
+    try {
+        new DateTime('@' . $string);
+    } catch(Exception $e) {
+        return false;
+    }
+    return true;
+}
