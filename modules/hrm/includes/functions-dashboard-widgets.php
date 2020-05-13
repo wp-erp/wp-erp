@@ -3,10 +3,10 @@
 /** Callbacks *****************************/
 
 function erp_hr_dashboard_widget_birthday_callback() {
-    erp_admin_dash_metabox( __( '<i class="fa fa-birthday-cake"></i> Birthday Buddies', 'erp' ), 'erp_hr_dashboard_widget_birthday' );
+    erp_admin_dash_metabox( __( '<i class="fa fa-birthday-cake"></i> Celebrations', 'erp' ), 'erp_hr_dashboard_widget_birthday' );
     erp_admin_dash_metabox( __( '<i class="fa fa-paper-plane"></i> Who is out', 'erp' ), 'erp_hr_dashboard_widget_whoisout' );
     if ( current_user_can( 'erp_hr_manager' ) ) {
-        erp_admin_dash_metabox(__('<i class="fa fa-paper-plane"></i> About to end', 'erp'), 'erp_hr_dashboard_widget_about_to_end');
+        erp_admin_dash_metabox(__('<i class="fa fa-paper-plane"></i> Employee end date', 'erp'), 'erp_hr_dashboard_widget_about_to_end');
     }
 }
 
@@ -131,7 +131,7 @@ function erp_hr_dashboard_widget_about_to_end() {
         return $a->end_date > $b->end_date;
     });
     ?>
-    <h4><?php esc_html_e( 'Contractual Employees about to End', 'erp' ); ?></h4>
+    <h4><?php esc_html_e( 'Contractual Employees', 'erp' ); ?></h4>
     <span class="wait"><?php esc_html_e( 'please wait ...', 'erp' ); ?></span>
 
     <ul class="erp-list list-two-side list-sep">
@@ -146,13 +146,13 @@ function erp_hr_dashboard_widget_about_to_end() {
             endforeach;
             if ( empty( $contract ) ) {
                 ?>
-                <li><?php esc_html_e( 'No employee found to be ended nearby', 'erp' ); ?></li>
+                <li><?php esc_html_e( 'No employee found', 'erp' ); ?></li>
                 <?php
             }
         ?>
     </ul>
 
-    <h4><?php esc_html_e( 'Trainee Employees about to End', 'erp' ); ?></h4>
+    <h4><?php esc_html_e( 'Trainee Employees', 'erp' ); ?></h4>
     <span class="wait"><?php esc_html_e( 'please wait ...', 'erp' ); ?></span>
 
     <ul class="erp-list list-two-side list-sep">
@@ -167,7 +167,7 @@ function erp_hr_dashboard_widget_about_to_end() {
             endforeach;
             if ( empty( $trainee ) ) {
                 ?>
-                <li><?php esc_html_e( 'No trainee found to be ended nearby', 'erp' ); ?></li>
+                <li><?php esc_html_e( 'No trainee found', 'erp' ); ?></li>
                 <?php
             }
         ?>
