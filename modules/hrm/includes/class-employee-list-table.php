@@ -158,7 +158,7 @@ class Employee_List_Table extends \WP_List_Table {
             'designation'  => __( 'Designation', 'erp' ),
             'department'   => __( 'Department', 'erp' ),
             'type'         => __( 'Employment Type', 'erp' ),
-            'date_of_hire' => __( 'Joined', 'erp' ),
+            'date_of_hire' => __( 'Hire Date', 'erp' ),
             'status'       => __( 'Status', 'erp' ),
         );
 
