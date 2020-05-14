@@ -67,7 +67,7 @@
                 <li><?php erp_print_key_value( __( 'State', 'erp' ), $employee->get_state( 'view' ) ); ?></li>
                 <li><?php erp_print_key_value( __( 'Zip/Postal Code', 'erp' ), $employee->get_postal_code() ); ?></li>
 
-                <li><?php erp_print_key_value( __( 'Mobile No', 'erp' ), erp_get_clickable( 'phone', $employee->get_mobile() ) ); ?></li>
+                <li><?php erp_print_key_value( __( 'Mobile No.', 'erp' ), erp_get_clickable( 'phone', $employee->get_mobile() ) ); ?></li>
                 <li><?php erp_print_key_value( __( 'Personal Email', 'erp' ), erp_get_clickable( 'email', $employee->other_email ) ); ?></li>
                 <li><?php erp_print_key_value( __( 'Date of Birth', 'erp' ), $employee->get_date_of_birth() ); ?></li>
                 <li><?php erp_print_key_value( __( 'Gender', 'erp' ), $employee->get_gender( 'view' ) ); ?></li>
