@@ -126,7 +126,7 @@ class Admin_Menu {
         ) );
 
         erp_add_submenu( 'hr', 'report', array(
-            'title'         =>  __( 'Leave', 'erp' ),
+            'title'         =>  __( 'Leaves', 'erp' ),
             'capability'    =>  'erp_hr_manager',
             'slug'          =>  'report&type=leaves',
             'callback'      =>  [ $this, 'reporting_page' ],
