@@ -102,7 +102,7 @@
                             <div class="col-3" style="clear:left">
                                 <?php
                                 erp_html_form_input( array(
-                                    'label'    => __( 'Employee Closing Date', 'erp' ),
+                                    'label'    => __( 'Employee End Date', 'erp' ),
                                     'name'     => 'work[end_date]',
                                     'value'    => '{{ ( data.work.end_date ) ? data.work.end_date : null }}',
                                     'required' => false,

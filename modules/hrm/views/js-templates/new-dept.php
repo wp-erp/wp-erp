@@ -16,7 +16,7 @@
     </div>
 
     <div class="row">
-        <?php erp_html_form_label( __( 'Department Lead ...', 'erp' ), 'dept-lead' ); ?>
+        <?php erp_html_form_label( __( 'Department Manager ...', 'erp' ), 'dept-lead' ); ?>
 
         <span class="field">
             <select name="lead" id="dept-lead">

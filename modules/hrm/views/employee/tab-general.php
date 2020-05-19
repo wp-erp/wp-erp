@@ -65,15 +65,15 @@
                 <li><?php erp_print_key_value( __( 'City', 'erp' ), $employee->get_city() ); ?></li>
                 <li><?php erp_print_key_value( __( 'Country', 'erp' ), $employee->get_country( 'view' ) ); ?></li>
                 <li><?php erp_print_key_value( __( 'State', 'erp' ), $employee->get_state( 'view' ) ); ?></li>
-                <li><?php erp_print_key_value( __( 'Postal Code', 'erp' ), $employee->get_postal_code() ); ?></li>
+                <li><?php erp_print_key_value( __( 'Zip/Postal Code', 'erp' ), $employee->get_postal_code() ); ?></li>
 
-                <li><?php erp_print_key_value( __( 'Mobile', 'erp' ), erp_get_clickable( 'phone', $employee->get_mobile() ) ); ?></li>
-                <li><?php erp_print_key_value( __( 'Other Email', 'erp' ), erp_get_clickable( 'email', $employee->other_email ) ); ?></li>
+                <li><?php erp_print_key_value( __( 'Mobile No.', 'erp' ), erp_get_clickable( 'phone', $employee->get_mobile() ) ); ?></li>
+                <li><?php erp_print_key_value( __( 'Personal Email', 'erp' ), erp_get_clickable( 'email', $employee->other_email ) ); ?></li>
                 <li><?php erp_print_key_value( __( 'Date of Birth', 'erp' ), $employee->get_date_of_birth() ); ?></li>
                 <li><?php erp_print_key_value( __( 'Gender', 'erp' ), $employee->get_gender( 'view' ) ); ?></li>
                 <li><?php erp_print_key_value( __( 'Nationality', 'erp' ), $employee->get_nationality( 'view' ) ); ?></li>
                 <li><?php erp_print_key_value( __( 'Marital Status', 'erp' ), $employee->get_marital_status( 'view' ) ); ?></li>
-                <li><?php erp_print_key_value( __( 'Driving License', 'erp' ), $employee->get_driving_license() ); ?></li>
+                <li><?php erp_print_key_value( __( 'Driver License', 'erp' ), $employee->get_driving_license() ); ?></li>
                 <li><?php erp_print_key_value( __( 'Hobbies', 'erp' ), $employee->hobbies ); ?></li>
 
                 <?php do_action( 'erp-hr-employee-single-personal', $employee ); ?>

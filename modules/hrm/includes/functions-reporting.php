@@ -13,7 +13,7 @@ function erp_hr_get_reports() {
         ],
         'gender-profile' => [
             'title' => __( 'Gender Profile', 'erp' ),
-            'description' => __( 'Shows differentiation data by age in your company.', 'erp' )
+            'description' => __( 'Shows differentiation data by gender in your company.', 'erp' )
         ],
         'headcount' => [
             'title' => __( 'Head Count', 'erp' ),
@@ -28,7 +28,7 @@ function erp_hr_get_reports() {
             'description' => __( 'Shows longevity and experience report of the employees of your company.', 'erp' )
         ],
         'leaves' => [
-            'title' => __( 'Leaves Reports', 'erp' ),
+            'title' => __( 'Leaves', 'erp' ),
             'description' => __( 'Shows leaves report.', 'erp' )
         ]
     ];
