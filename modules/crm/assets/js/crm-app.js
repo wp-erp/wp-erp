@@ -615,7 +615,7 @@ var vm = new Vue({
         },
         i18n: {},
         findFeeds: {
-            type: 'email',
+            type: 'all',
             created_from: '',
             created_to: ''
         },
@@ -982,9 +982,9 @@ var vm = new Vue({
             vm.feeds = vm.dataFeeds.filter( function( item ) {
                 if ( vm.findFeeds.created_from != '' && vm.findFeeds.created_to != '' ) {
                     var created_date = moment( item.created_at ).format('YYYY-MM-DD');
-                    return ( item.type == vm.findFeeds.type )  && ( created_date >= vm.findFeeds.created_from  &&  created_date <= vm.findFeeds.created_to );
+                    return ( vm.findFeeds.type == "all" || item.type == vm.findFeeds.type )  && ( created_date >= vm.findFeeds.created_from  &&  created_date <= vm.findFeeds.created_to );
                 } else {
-                    return item.type == vm.findFeeds.type;
+                    return vm.findFeeds.type == "all" || item.type == vm.findFeeds.type;
                 }
             } );
         }
