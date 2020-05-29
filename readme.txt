@@ -267,6 +267,35 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 == Changelog ==
 
+= v1.6.0 -> June 01, 2020 =
+--------------------------
+- [enhancement] Rewritten HR leave feature from the ground up for better performance and better management.
+- [new] Introduced new tables related to leaves for better management
+- [new] Added Year support for leaves under Settings —> HR —> Leave Years
+- [new] Moved policy name under Leave Management —> Policies —> View Leave Types for better policy management. Now you can define all leave types eg: Annual Leave, Casual Leave, Sick Leave, etc in one place and reuse them when you create new policies
+- [new] Add new policy page moved to a standalone page
+- [new] Leave Year and Leave Type fields are mandatory to create new policies now
+- [new] Now policies can be customized for each leave year by leaving previous policy settings untouched
+- [new] Now policies can be duplicated depending on department, designation, location, gender, marital status filter
+- [new] Added copy feature for policies where you can copy an existing policy and reuse it for next year
+- [enhancement] Updated Leave Entitlements table for a more compact view.
+- [enhancement] Updated Leave Entitlements: Add New page with related policy filters, now to entitle employees to a policy, you’ve to select related filters to get desired leave policy
+- [enhancement] Now only full-time employees will be considered for leave entitlements
+- [new] Added related filters for leave entitlement list page
+- [enhancement] Moved policy and entitlement delete feature to debug mode. If you want to delete leave policies or leave entitlements, enable debug mode from Settings —> General —> Enable Debug Mode
+- [new] Added new Year field for New Leave Request form on admin and Take a Leave modal on employee end, if there are multiple leave years defined, users can choose which leave year they are going to apply leave for
+- [enhancement] Updated Leave History section under Employee —> Leave tab, so that user can view all request made from their end, view request status, filter through a leave year, approve status and policies, etc
+- [new] User can now apply for leaves for multiple leave year
+- [new] Added Approve message feature while approving a leave request
+- [new] Added new Approved By column on leave request table
+- [enhancement] Updated existing leave request table view for better information display, now you can get an overview of leave request on a more compact way
+- [tweak] Removed leave request bulk action from Leave Requests table
+- [tweak] Updated API related to leave features
+- [tweak] Updated some string on various pages
+- [enhancement] On CRM Contact Activity Feeds Filter added a new filter to display all activities, thanks to Andrija Naglic
+- [fix] updated schedule event hooks to avoid duplicate events
+- [fix] updated validation for extra leave requests
+
 = v1.5.16 -> April 17, 2020 =
 --------------------------
 - [fix] [Accounting] Fixed Trial Balance bank balance-loan calculation
@@ -1158,4 +1187,5 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 == Upgrade Notice ==
 
-Nothing here right now.
+= 1.6.0 =
+This is a major release of ERP. Before update please take a backup of your existing database. Also if you are using WP ERP - HR Frontend, WP ERP - Attendance or WP ERP - Workflow extensions, please update those after you update ERP
