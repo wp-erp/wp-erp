@@ -89,7 +89,6 @@ window.sprintf = __WEBPACK_IMPORTED_MODULE_0__wordpress_i18n__["c" /* sprintf */
 /* unused harmony export _x */
 /* unused harmony export _n */
 /* unused harmony export _nx */
-/* unused harmony export isRTL */
 /* harmony export (immutable) */ __webpack_exports__["c"] = sprintf;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_esm_defineProperty__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_tannin__ = __webpack_require__(3);
@@ -258,20 +257,6 @@ function _nx(single, plural, number, context, domain) {
   return dcnpgettext(domain, context, single, plural, number);
 }
 /**
- * Check if current locale is RTL.
- *
- * **RTL (Right To Left)** is a locale property indicating that text is written from right to left.
- * For example, the `he` locale (for Hebrew) specifies right-to-left. Arabic (ar) is another common
- * language written RTL. The opposite of RTL, LTR (Left To Right) is used in other languages,
- * including English (`en`, `en-US`, `en-GB`, etc.), Spanish (`es`), and French (`fr`).
- *
- * @return {boolean} Whether locale is RTL.
- */
-
-function isRTL() {
-  return 'rtl' === _x('ltr', 'text direction');
-}
-/**
  * Returns a formatted string. If an error occurs in applying the format, the
  * original format string is returned.
  *
@@ -351,7 +336,13 @@ function _defineProperty(obj, key, value) {
  * Domain translation pair respectively representing the singular and plural
  * translation.
  *
- * @typedef {[string,string]} TanninTranslation
+ * @typedef {Array<string,string>} TanninTranslation
+ */
+
+/**
+ * Locale domain entry.
+ *
+ * @typedef {(TanninDomainMetadata|TanninTranslation)} LocaleDomainEntry
  */
 
 /**
@@ -359,7 +350,7 @@ function _defineProperty(obj, key, value) {
  * array of two string entries respectively representing the singular and plural
  * translation.
  *
- * @typedef {{[key:string]:TanninDomainMetadata|TanninTranslation,'':TanninDomainMetadata|TanninTranslation}} TanninLocaleDomain
+ * @typedef {Object<string,LocaleDomainEntry>} TanninLocaleDomain
  */
 
 /**
@@ -367,7 +358,7 @@ function _defineProperty(obj, key, value) {
  *
  * @see http://messageformat.github.io/Jed/
  *
- * @typedef {{[domain:string]:TanninLocaleDomain}} TanninLocaleData
+ * @typedef {Object<string,TanninLocaleDomain>} TanninLocaleData
  */
 
 /**
@@ -443,9 +434,9 @@ function Tannin( data, options ) {
 	this.options = {};
 
 	for ( key in DEFAULT_OPTIONS ) {
-		this.options[ key ] = options !== undefined && key in options
-			? options[ key ]
-			: DEFAULT_OPTIONS[ key ];
+		this.options[ key ] = options !== undefined && key in options ?
+			options[ key ] :
+			DEFAULT_OPTIONS[ key ];
 	}
 }
 
@@ -495,12 +486,11 @@ Tannin.prototype.getPluralForm = function( domain, n ) {
 /**
  * Translate a string.
  *
- * @param {string}      domain   Translation domain.
- * @param {string|void} context  Context distinguishing terms of the same name.
- * @param {string}      singular Primary key for translation lookup.
- * @param {string=}     plural   Fallback value used for non-zero plural
- *                               form index.
- * @param {number=}     n        Value to use in calculating plural form.
+ * @param {string} domain   Translation domain.
+ * @param {string} context  Context distinguishing terms of the same name.
+ * @param {string} singular Primary key for translation lookup.
+ * @param {string} plural   Fallback value used for non-zero plural form index.
+ * @param {number} n        Value to use in calculating plural form.
  *
  * @return {string} Translated string.
  */
@@ -595,7 +585,7 @@ function pluralForms( expression ) {
  *
  * @param {string} expression C expression.
  *
- * @return {(variables?:{[variable:string]:*})=>*} Compiled evaluator.
+ * @return {Function} Compiled evaluator.
  */
 function compile( expression ) {
 	var terms = Object(__WEBPACK_IMPORTED_MODULE_0__tannin_postfix__["a" /* default */])( expression );
@@ -860,55 +850,13 @@ function evaluate( postfix, variables ) {
 /* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(process) {/**
- * Memize options object.
- *
- * @typedef MemizeOptions
- *
- * @property {number} [maxSize] Maximum size of the cache.
- */
+/* WEBPACK VAR INJECTION */(function(process) {module.exports = function memize( fn, options ) {
+	var size = 0,
+		maxSize, head, tail;
 
-/**
- * Internal cache entry.
- *
- * @typedef MemizeCacheNode
- *
- * @property {?MemizeCacheNode|undefined} [prev] Previous node.
- * @property {?MemizeCacheNode|undefined} [next] Next node.
- * @property {Array<*>}                   args   Function arguments for cache
- *                                               entry.
- * @property {*}                          val    Function result.
- */
-
-/**
- * Properties of the enhanced function for controlling cache.
- *
- * @typedef MemizeMemoizedFunction
- *
- * @property {()=>void} clear Clear the cache.
- */
-
-/**
- * Accepts a function to be memoized, and returns a new memoized function, with
- * optional options.
- *
- * @template {Function} F
- *
- * @param {F}             fn        Function to memoize.
- * @param {MemizeOptions} [options] Options object.
- *
- * @return {F & MemizeMemoizedFunction} Memoized function.
- */
-function memize( fn, options ) {
-	var size = 0;
-
-	/** @type {?MemizeCacheNode|undefined} */
-	var head;
-
-	/** @type {?MemizeCacheNode|undefined} */
-	var tail;
-
-	options = options || {};
+	if ( options && options.maxSize ) {
+		maxSize = options.maxSize;
+	}
 
 	function memoized( /* ...args */ ) {
 		var node = head,
@@ -948,14 +896,14 @@ function memize( fn, options ) {
 
 				// Adjust siblings to point to each other. If node was tail,
 				// this also handles new tail's empty `next` assignment.
-				/** @type {MemizeCacheNode} */ ( node.prev ).next = node.next;
+				node.prev.next = node.next;
 				if ( node.next ) {
 					node.next.prev = node.prev;
 				}
 
 				node.next = head;
 				node.prev = null;
-				/** @type {MemizeCacheNode} */ ( head ).prev = node;
+				head.prev = node;
 				head = node;
 			}
 
@@ -975,7 +923,7 @@ function memize( fn, options ) {
 			args: args,
 
 			// Generate the result from original function
-			val: fn.apply( null, args ),
+			val: fn.apply( null, args )
 		};
 
 		// Don't need to check whether node is already head, since it would
@@ -991,9 +939,9 @@ function memize( fn, options ) {
 		}
 
 		// Trim tail if we're reached max size and are pending cache insertion
-		if ( size === /** @type {MemizeOptions} */ ( options ).maxSize ) {
-			tail = /** @type {MemizeCacheNode} */ ( tail ).prev;
-			/** @type {MemizeCacheNode} */ ( tail ).next = null;
+		if ( size === maxSize ) {
+			tail = tail.prev;
+			tail.next = null;
 		} else {
 			size++;
 		}
@@ -1017,16 +965,8 @@ function memize( fn, options ) {
 		};
 	}
 
-	// Ignore reason: There's not a clear solution to create an intersection of
-	// the function with additional properties, where the goal is to retain the
-	// function signature of the incoming argument and add control properties
-	// on the return value.
-
-	// @ts-ignore
 	return memoized;
-}
-
-module.exports = memize;
+};
 
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9)))
 
