@@ -126,7 +126,7 @@ class Admin_Menu {
         ) );
 
         erp_add_submenu( 'hr', 'report', array(
-            'title'         =>  __( 'Leave Reports', 'erp' ),
+            'title'         =>  __( 'Leaves', 'erp' ),
             'capability'    =>  'erp_hr_manager',
             'slug'          =>  'report&type=leaves',
             'callback'      =>  [ $this, 'reporting_page' ],
@@ -141,9 +141,14 @@ class Admin_Menu {
             'position'      =>  100,
         ) );
 
+        $request_capabilities = 'erp_leave_manage';
+        if ( class_exists( '\weDevs\ERP_PRO\HR\Leave\Multilevel' ) && get_option('erp_pro_multilevel_approval') === 'yes' )  {
+            $request_capabilities = erp_hr_is_current_user_dept_lead() ? 'erp_list_employee' : 'erp_leave_manage';
+        }
+
         erp_add_menu( 'hr', array(
             'title'         =>  __( 'Leave Management', 'erp' ),
-            'capability'    =>  'erp_leave_manage',
+            'capability'    =>  $request_capabilities,
             'slug'          =>  'leave',
             'callback'      =>  [ $this, 'leave_requests' ],
             'position'      =>  30,
@@ -151,7 +156,7 @@ class Admin_Menu {
 
         erp_add_submenu( 'hr', 'leave', array(
             'title'         =>  __( 'Requests', 'erp' ),
-            'capability'    =>  'erp_leave_manage',
+            'capability'    =>  erp_hr_is_current_user_dept_lead() ? 'erp_list_employee' : 'erp_leave_manage',
             'slug'          =>  'leave-requests',
             'callback'      =>  [ $this, 'leave_requests' ],
             'position'      =>  5,
@@ -406,7 +411,31 @@ class Admin_Menu {
      * @return void
      */
     public function leave_policy_page() {
-        include WPERP_HRM_VIEWS . '/leave/leave-policies.php';
+        $action = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : 'list';
+        $type   = isset( $_GET['type'] ) ? sanitize_text_field( wp_unslash( $_GET['type'] ) ) : '';
+
+        switch( $action ) {
+            case 'list':
+                if ( $type === 'policy-name' ) {
+                    include WPERP_HRM_VIEWS . '/leave/policy-name.php';
+                } else {
+                    include WPERP_HRM_VIEWS . '/leave/leave-policies.php';
+                }
+                break;
+
+            case 'edit':
+                if ( $type === 'policy-name' ) {
+                    include WPERP_HRM_VIEWS . '/leave/policy-name.php';
+                } else {
+                    include WPERP_HRM_VIEWS . '/leave/new-policy.php';
+                }
+                break;
+
+            case 'new':
+            case 'copy':
+                include WPERP_HRM_VIEWS . '/leave/new-policy.php';
+                break;
+        }
     }
 
     /**

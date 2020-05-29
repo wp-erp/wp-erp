@@ -16,6 +16,8 @@ class Settings extends ERP_Settings_Page {
         $this->label         = __( 'HR', 'erp' );
         $this->single_option = true;
         $this->sections      = $this->get_sections();
+
+        add_action( 'erp_admin_field_hr_financial_years', [ $this, 'get_hr_financial_years' ] );
     }
 
     /**
@@ -27,6 +29,7 @@ class Settings extends ERP_Settings_Page {
         $sections = array(
             'workdays'      => __( 'Workdays', 'erp' ),
             'leave'         => __( 'Leave', 'erp' ),
+            'financial'     => __( 'Leave Years', 'erp' ),
             'miscellaneous' => __( 'Miscellaneous', 'erp' ),
         );
 
@@ -86,14 +89,34 @@ class Settings extends ERP_Settings_Page {
             'id'    => 'general_options'
         ];
         $fields['leave'][] = [
-            'title' => __( 'Extra Leave', 'erp' ),
+            'title' => __( 'Extra Unpaid Leave', 'erp' ),
             'type'  => 'checkbox',
             'id'    => 'enable_extra_leave',
             'desc'  => __( 'Employees can apply for leave, even when there is no entitlement left.', 'erp' )
         ];
+
+        $fields = apply_filters( 'erp_settings_hr_leave_section_fields', $fields );
+
         $fields['leave'][] = [
             'type'  => 'sectionend',
             'id'    => 'script_styling_options'
+        ];
+
+        $fields['financial'] = [
+            [
+                'title' => __( 'Leave Years', 'erp' ),
+                'type'  => 'title',
+                'desc'  => '',
+                'id'    => 'erp_acct_ob_options',
+            ],
+            [
+                'type' => 'hr_financial_years',
+                'id'   => 'erp_hr_financial_years',
+            ],
+            [
+				'type' => 'sectionend',
+				'id'   => 'script_styling_options',
+            ]
         ];
 
         $fields['miscellaneous'][] =[
@@ -117,6 +140,14 @@ class Settings extends ERP_Settings_Page {
         $section = $section === false ? $fields['workdays'] : $fields[$section];
 
         return $section;
+    }
+
+    public function get_hr_financial_years() {
+        global $wpdb;
+
+        $f_years = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}erp_hr_financial_years", ARRAY_A );
+
+        require_once WPERP_HRM_VIEWS . '/settings/fyear.php';
     }
 }
 

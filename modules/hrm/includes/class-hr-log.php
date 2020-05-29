@@ -65,7 +65,7 @@ class Hr_Log {
         $this->action( 'erp_hr_desig_before_updated', 'update_designation', 10, 2 );
 
         //Leave Policy
-        $this->action( 'erp_hr_leave_policy_new', 'create_policy', 10, 2 );
+        $this->action( 'erp_hr_leave_insert_policy', 'create_policy', 10, 1 );
         $this->action( 'erp_hr_leave_policy_delete', 'delete_policy', 10 );
         $this->action( 'erp_hr_leave_before_policy_updated', 'update_policy', 10, 2 );
 
@@ -682,11 +682,10 @@ class Hr_Log {
      * @since 0.1
      *
      * @param  integer $policy_id
-     * @param  array $fields
      *
      * @return void
      */
-    public function create_policy( $policy_id, $fields ) {
+    public function create_policy( $policy_id ) {
 
         if ( ! $policy_id ) {
             return;
@@ -694,7 +693,7 @@ class Hr_Log {
 
         erp_log()->add([
             'sub_component' => 'leave',
-            'message'       => sprintf( __( '<strong>%s</strong> policy has been created', 'erp' ), $fields['name'] ),
+            'message'       => sprintf( __( '<strong>policy %d</strong> has been created', 'erp' ), $policy_id ),
             'created_by'    => get_current_user_id(),
             'changetype'    => 'add',
         ]);
@@ -739,7 +738,7 @@ class Hr_Log {
             return;
         }
 
-        $old_policy = \WeDevs\ERP\HRM\Models\Leave_Policies::find( $policy_id )->toArray();
+        $old_policy = \WeDevs\ERP\HRM\Models\Leave_Policy::find( $policy_id )->toArray();
         unset( $old_policy['created_at'], $old_policy['updated_at'], $fields['instant_apply'] ) ;
 
         $old_policy['effective_date'] = erp_format_date( $old_policy['effective_date'], 'Y-m-d' );

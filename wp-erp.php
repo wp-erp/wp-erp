@@ -5,7 +5,7 @@
  * Plugin URI: https://wperp.com
  * Author: weDevs
  * Author URI: https://wedevs.com
- * Version: 1.5.16
+ * Version: 1.6.0
  * License: GPL2
  * Text Domain: erp
  * Domain Path: /i18n/languages/
@@ -52,7 +52,7 @@ final class WeDevs_ERP {
      *
      * @var string
      */
-    public $version = '1.5.16';
+    public $version = '1.6.0';
 
     /**
      * Minimum PHP version required
@@ -242,6 +242,10 @@ final class WeDevs_ERP {
             require_once WPERP_INCLUDES . '/updates/bp/class-erp-acct-bg-process-1.5.0.php';
             require_once WPERP_INCLUDES . '/updates/bp/class-erp-acct-bg-process-1.5.2.php';
         }
+
+        // `Leave` related background process files
+        require_once WPERP_INCLUDES . '/updates/bp/leave_1_6_0/class-erp-hr-leave-entitlements.php';
+        require_once WPERP_INCLUDES . '/updates/bp/leave_1_6_0/class-erp-hr-leave-request.php';
 
         // cli command
         if ( defined( 'WP_CLI' ) && WP_CLI ) {

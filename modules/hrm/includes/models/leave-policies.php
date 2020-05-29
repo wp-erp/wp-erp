@@ -9,32 +9,106 @@ use WeDevs\ERP\Framework\Model;
  *
  * @package WeDevs\ERP\HRM\Models
  */
-class Leave_Policies extends Model {
+class Leave_Policy extends Model {
     protected $table = 'erp_hr_leave_policies';
+
     protected $fillable = [
-        'name', 'value', 'color', 'department', 'designation', 'gender',
-        'marital', 'description', 'location', 'effective_date', 'activate', 'execute_day'
+        'leave_id', 'description', 'days', 'color', 'forward_default',
+        'department_id', 'location_id', 'designation_id', 'f_year', 'apply_for_new_users',
+        'carryover_days', 'carryover_uses_limit', 'encashment_days',
+        'encashment_based_on', 'gender', 'marital', 'applicable_from_days',
+        'accrued_max_days', 'accrued_amount', 'accrued_based_on', 'halfday_enable'
     ];
+
+    /**
+     * Created at date format
+     */
+    public function setCreatedAtAttribute() {
+        $this->attributes['created_at'] = erp_current_datetime()->getTimestamp();
+    }
+
+    /**
+     * Updated at date format
+     */
+    public function setUpdatedAtAttribute() {
+        $this->attributes['updated_at'] = erp_current_datetime()->getTimestamp();
+    }
+
+    /**
+     * Relation to Leave model
+     *
+     * @since 1.6.0
+     *
+     * @return object
+     */
+    public function leave() {
+        return $this->belongsTo( 'WeDevs\ERP\HRM\Models\Leave' );
+    }
 
     /**
      * Relation to Leave_Entitlement model
      *
-     * @since 1.2.0
+     * @since 1.6.0
      *
      * @return object
      */
     public function entitlements() {
-        return $this->hasMany( 'WeDevs\ERP\HRM\Models\Leave_Entitlement', 'policy_id' );
+        return $this->hasMany( 'WeDevs\ERP\HRM\Models\Leave_Entitlement', 'trn_id', 'id' )->where( 'trn_type', '=', 'leave_policies' );
     }
 
     /**
-     * Relation to Leave_request model
+     * Relation to Leave_Policies_Segregation
      *
-     * @since 1.2.0
+     * @since 1.6.0
      *
      * @return object
      */
-    public function leave_requests() {
-        return $this->hasMany( 'WeDevs\ERP\HRM\Models\Leave_request', 'policy_id' );
+    public function segregation() {
+        return $this->hasOne( 'WeDevs\ERP\HRM\Models\Leave_Policies_Segregation', 'leave_policy_id' );
     }
+
+    /**
+     * Relation to Department
+     *
+     * @since 1.6.0
+     *
+     * @return object
+     */
+    public function department() {
+        return $this->belongsTo( 'WeDevs\ERP\HRM\Models\Department' );
+    }
+
+    /**
+     * Relation to Designation
+     *
+     * @since 1.6.0
+     *
+     * @return object
+     */
+    public function designation() {
+        return $this->belongsTo( 'WeDevs\ERP\HRM\Models\Designation' );
+    }
+
+    /**
+     * Relation to Financial Year
+     *
+     * @since 1.6.0
+     *
+     * @return object
+     */
+    public function financial_year() {
+        return $this->belongsTo( 'WeDevs\ERP\HRM\Models\Financial_Year', 'f_year', 'id' );
+    }
+
+    /**
+     * Relation to Company Locations
+     *
+     * @since 1.6.0
+     *
+     * @return object
+     */
+    public function location() {
+        return $this->belongsTo( 'WeDevs\ERP\Admin\Models\Company_Locations', 'location_id', 'id' );
+    }
+
 }

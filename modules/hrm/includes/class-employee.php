@@ -9,7 +9,7 @@ use WeDevs\ERP\HRM\Models\Employee_History;
 use WeDevs\ERP\HRM\Models\Hr_User;
 use WeDevs\ERP\HRM\Models\Leave_Entitlement;
 use WeDevs\ERP\HRM\Models\Leave_Holiday;
-use WeDevs\ERP\HRM\Models\Leave_Policies;
+use WeDevs\ERP\HRM\Models\Leave_Policy;
 use WeDevs\ERP\HRM\Models\Work_Experience;
 
 class Employee {
@@ -875,13 +875,14 @@ class Employee {
      * get hiring date
      *
      * @since 1.3.0
+     * @since 1.6.0 removed erp_format_date() from return value due to date string parse error
      * @return string
      */
     public function get_hiring_date() {
         if ( isset( $this->erp_user->hiring_date )
              && is_valid_date( $this->erp_user->hiring_date )
              && $this->erp_user->hiring_date != '0000-00-00' ) {
-            return erp_format_date( $this->erp_user->hiring_date );
+            return $this->erp_user->hiring_date;
         }
     }
 
@@ -1068,7 +1069,7 @@ class Employee {
 
     /**
      * Get blood group
-     * 
+     *
      * @since 1.5.12
      * @return string
      */
@@ -1788,57 +1789,73 @@ class Employee {
      * Get leave policies
      *
      * @since 1.3.0
+     * @since 1.6.0
      * @return mixed
      */
     public function get_leave_policies() {
-        $financial_year_dates = erp_get_financial_year_dates();
-        $entitlements         = $this->erp_user
-            ->entitlements()
-            ->whereDate( 'from_date', '>=', $financial_year_dates['start'] )
-            ->whereDate( 'to_date', '<=', $financial_year_dates['end'] )
-            ->JoinWithPolicy()
-            ->orderBy( 'created_on', 'DESC' )
-            ->select( array( 'days', 'policy_id', 'from_date', 'to_date', 'color', 'name' ) )
-            ->get();
-
-        return $entitlements;
+        $args['f_year'] = 0;
+        return $this->get_entitlements( $args );
     }
 
     /**
      * Get assigned entitlements
      *
      * @since 1.3.0
+     * @since 1.6.0
      *
      * @return array
      */
     public function get_entitlements( $args = array() ) {
-        $financial_year_dates = erp_get_financial_year_dates();
+        global $wpdb;
+        $ent_tbl    = $wpdb->prefix . 'erp_hr_leave_entitlements';
+        $policy_tbl = $wpdb->prefix . 'erp_hr_leave_policies';
+        $f_year_tbl = $wpdb->prefix . 'erp_hr_financial_years';
+        $leave_tbl  = $wpdb->prefix . 'erp_hr_leaves';
+
+        $f_year = erp_hr_get_financial_year_from_date();
+
+        $result = array();
+
+        if ( empty( $f_year ) ) {
+            return $result;
+        }
+
         $defaults             = array(
-            'policy_id' => 0,
-            'from_date' => $financial_year_dates['start'],
-            'to_date'   => $financial_year_dates['end'],
+            'policy_id' => 0,       // @since 1.5.1 will be use as leave_id
+            'f_year'    => $f_year->id,
             'number'    => 20,
             'offset'    => 0,
-            'orderby'   => 'created_on',
+            'orderby'   => "$ent_tbl.created_at",
             'order'     => 'DESC',
         );
 
         $args = wp_parse_args( $args, $defaults );
 
         $entitlements = $this->erp_user->entitlements();
+
         if ( ! empty( $args['policy_id'] ) ) {
-            $entitlements = $entitlements->where( 'policy_id', intval( $args['policy_id'] ) );
+            $entitlements = $entitlements->where( "$ent_tbl.leave_id", intval( $args['policy_id'] ) );
         }
-        $entitlements = $entitlements->whereDate( 'from_date', '>=', $args['from_date'] )
-                                     ->whereDate( 'to_date', '<=', $args['to_date'] )
-                                     ->JoinWithPolicy()
+
+        if ( ! empty( $args['f_year'] ) ) {
+            $entitlements->where( "$ent_tbl.f_year", '=', $args['f_year'] );
+        }
+
+
+        $entitlements = $entitlements->leftJoin( $policy_tbl, "$ent_tbl.trn_id", '=', "$policy_tbl.id" )
+                                     ->leftJoin( $f_year_tbl, "$ent_tbl.f_year", '=', "$f_year_tbl.id" )
+                                     ->leftJoin( $leave_tbl, "$ent_tbl.leave_id", '=', "$leave_tbl.id" )
                                      ->skip( $args['offset'] )
                                      ->take( $args['number'] )
                                      ->orderBy( $args['orderby'], $args['order'] )
-                                     ->select( array( 'days', 'policy_id', 'from_date', 'to_date', 'color', 'name' ) )
-                                     ->get();
+                                     ->select( array( "$ent_tbl.day_in as days", "$ent_tbl.f_year", "$ent_tbl.leave_id", "$f_year_tbl.start_date", "$f_year_tbl.end_date", "$policy_tbl.color", "$leave_tbl.name" ) );
 
-        return $entitlements;
+
+        if ( $entitlements->count() ) {
+            $result = $entitlements->get()->toArray();
+        }
+
+        return $result;
     }
 
 
@@ -1846,6 +1863,7 @@ class Employee {
      * Get leave balances of the current year
      *
      * @since 1.3.0
+     * @since 1.6.0
      *
      * @param null $date
      * @param null $policy_id
@@ -1853,65 +1871,24 @@ class Employee {
      * @return array
      */
     public function get_leave_summary( $date = null, $policy_id = null ) {
-        $date       = $date == null ? current_time( 'mysql' ) : $date;
-        $year_dates = erp_get_financial_year_dates( $date );
+        $f_year = erp_hr_get_financial_year_from_date( $date );
 
-        $balances = [];
-        $start    = isset( $year_dates['start'] ) ? $year_dates['start'] : null;
-        $end      = isset( $year_dates['end'] ) ? $year_dates['end'] : null;
-        $user_id  = $this->user_id;
+        $result = array();
 
-        $results = $this->erp_user
-            ->entitlements()
-            ->whereDate( 'from_date', '>=', $start )
-            ->whereDate( 'to_date', '<=', $end )
-            ->with( [
-                'leaves' => function ( $q ) use ( $user_id, $start, $end ) {
-                    $q->where( 'status', '=', '1' )
-                      ->where( 'user_id', $user_id )
-                      ->whereDate( 'start_date', '>=', $start )
-                      ->whereDate( 'end_date', '<=', $end );
-                }
-            ] )
-            ->with( 'policy' )
-//            ->where('policy_id', '1')
-            ->get();
-
-        foreach ( $results as $result ) {
-            $balance      = array(
-                'entitlement_id' => $result->id,
-                'days'           => intval( $result->days ),
-                'from_date'      => $result->from_date,
-                'to_date'        => $result->to_date,
-                'policy'         => isset( $result->policy ) ? $result->policy->name : '',
-                'policy_id'      => isset( $result->policy ) ? $result->policy->id : '',
-            );
-            $spent        = 0;
-            $scheduled    = 0;
-            $available    = $result->days;
-            $current_time = current_time( 'timestamp' );
-            foreach ( $result->leaves as $leave ) {
-                $spent     += $leave->days;
-                $available = $available - $leave->days;
-                if ( $current_time < strtotime( $leave->start_date ) ) {
-                    $scheduled += $leave->days;
-                }
-            }
-            $balance['spent']     = $spent;
-            $balance['scheduled'] = $scheduled;
-            $balance['available'] = $available;
-
-            $balances[] = $balance;
-
+        if ( empty( $f_year ) ) {
+            return $result;
         }
 
-        return erp_array_to_object( $balances );
+        $result =  erp_hr_leave_get_balance( $this->user_id, $f_year->id );
+
+        return erp_array_to_object( $result );
     }
 
     /**
      * Get leave requests
      *
      * @since 1.3.0
+     * @since 1.6.0 changed according to new db structure
      *
      * @param array $args
      *
@@ -1919,40 +1896,28 @@ class Employee {
      */
     public function get_leave_requests( $args = array() ) {
         $default = array(
-            'year'      => date( 'Y' ),
+            'user_id'   => $this->user_id,
+            'f_year'    => '',
             'status'    => 1,
-            'orderby'   => 'start_date',
-            'policy_id' => null,
-            'number'    => 0,
+            'orderby'   => 'created_at',
+            'policy_id' => 0,
+            'number'    => -1,
             'offset'    => 0,
         );
         $args    = wp_parse_args( $args, $default );
 
-        $requests = $this->get_erp_user()
-                         ->leave_requests();
-        if ( ! empty( $args['year'] ) ) {
-            $requests = $requests->whereYear( 'start_date', '=', intval( $args['year'] ) );
-        }
-        if ( ! empty( $args['policy_id'] ) ) {
-            $requests = $requests->where( 'policy_id', intval( $args['policy_id'] ) );
-        }
-        if ( ! empty( $args['status'] ) ) {
-            $requests = $requests->where( 'status', intval( $args['status'] ) );
-        }
-        if ( ! empty( $args['offset'] ) ) {
-            $requests = $requests->skip( intval( $args['offset'] ) );
-        }
-        if ( ! empty( $args['number'] ) ) {
-            $requests = $requests->skip( intval( $args['number'] ) );
+        if ( empty( $args['f_year'] ) ) {
+            $date = isset( $args['year'] ) ? $args['year'] : null;
+            $f_year = erp_hr_get_financial_year_from_date( $date );
+            if ( empty( $f_year ) ) {
+                return array();
+            }
+            $args['f_year'] = $f_year->id;
         }
 
-        return $requests->JoinWithPolicy()->orderBy( 'start_date' )->select( [
-            'start_date',
-            'end_date',
-            'reason',
-            'days',
-            'name'
-        ] )->get();
+        $result = erp_hr_get_leave_requests( $args );
+
+        return $result['data'];
     }
 
     /**
@@ -1966,27 +1931,21 @@ class Employee {
      *
      */
     public function get_calender_events( array $date_range = array() ) {
-        global $wpdb;
-        if ( empty( $date_range ) || empty( $date_range['start'] ) || empty( $date_range['end'] ) ) {
-            $date_range = [
-                'start' => date( "Y-01-01" ),
-                'end'   => date( "Y-12-31" ),
-            ];
+        $f_year = erp_hr_get_financial_year_from_date();
+        if ( empty( $f_year ) ) {
+            $leave_requests = array();
         }
-        $leave_requests = $this->get_erp_user()
-                               ->leave_requests()
-                               ->whereDate( 'start_date', '>=', $date_range['start'] )
-                               ->whereDate( 'end_date', '<=', $date_range['end'] )->JoinWithPolicy()->orderBy( 'start_date' )
-                               ->select( [
-                                   "{$wpdb->prefix}erp_hr_leave_requests.id",
-                                   'start_date',
-                                   'end_date',
-                                   'color',
-                                   'status',
-                                   'days',
-                                   'name'
-                               ] )
-                               ->get();
+        else {
+            $args = array(
+                'user_id'   => $this->get_user_id(),
+                'f_year'    => $f_year->id,
+                'status'    => 'all',
+                'number'    => '-1',
+            );
+            $leave_requests = erp_hr_get_leave_requests( $args );
+            $leave_requests = $leave_requests['data'];
+        }
+
         $holidays       = Leave_Holiday::whereDate( 'start', '>=', $date_range['start'] )
                                        ->whereDate( 'end', '<=', $date_range['end'] )
                                        ->get();
@@ -2001,14 +1960,21 @@ class Employee {
                 continue;
             }
 
-            $title = $leave_request->name;
-            if ( $leave_request->status == 2 ) {
+            //if status pending
+            $title = $leave_request->policy_name;
+            if ( 2 == $leave_request->status ) {
                 $title .= sprintf( ' ( %s ) ', __( 'Pending', 'erp' ) );
             }
+
+            // Half day leave
+            if ( $leave_request->day_status_id != 1 ) {
+                $title .= '(' . erp_hr_leave_request_get_day_statuses( $leave_request->day_status_id ) . ')';
+            }
+
             $event = [
                 'id'      => $leave_request->id,
-                'start'   => date( 'Y-m-d', strtotime( $leave_request->start_date ) ),
-                'end'     => date( 'Y-m-d', strtotime( $leave_request->end_date ) ),
+                'start'     => erp_current_datetime()->setTimestamp( $leave_request->start_date )->setTime( 0, 0, 0 )->format(  'Y-m-d h:i:s' ),
+                'end'       => erp_current_datetime()->setTimestamp( $leave_request->end_date )->setTime( 23, 59, 59 )->format( 'Y-m-d h:i:s' ),
                 'color'   => $leave_request->color,
                 'title'   => $title,
                 'img'     => '',

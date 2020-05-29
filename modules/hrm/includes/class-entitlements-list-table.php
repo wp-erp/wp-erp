@@ -1,10 +1,14 @@
 <?php
 namespace WeDevs\ERP\HRM;
 
+use WeDevs\ERP\HRM\Models\Financial_Year;
+
 /**
  * List table class
  */
 class Entitlement_List_Table extends \WP_List_Table {
+
+    protected $entitlement_data = array();
 
     function __construct() {
         global $status, $page;
@@ -21,6 +25,29 @@ class Entitlement_List_Table extends \WP_List_Table {
     }
 
     /**
+     * Get the column names
+     *
+     * @return array
+     */
+    function get_columns() {
+        $columns = array(
+            'cb'            => '<input type="checkbox" />',
+            'name'          => __( 'Employee Name', 'erp' ),
+            'leave_policy'  => __( 'Leave Policy', 'erp' ),
+            'validity'      => __( 'Validity', 'erp' ),
+            'available'     => __( 'Available', 'erp' ),
+            'spent'         => __( 'Spent', 'erp' ),
+        );
+
+        // hide cb if debug mode is off
+        if ( ! erp_get_option( 'erp_debug_mode', 'erp_settings_general', 0 ) ) {
+            unset( $columns['cb'] );
+        }
+
+        return apply_filters( 'erp_hr_entitlement_table_cols', $columns );
+    }
+
+    /**
      * Extra filters for the list table
      *
      * @since 0.1
@@ -34,49 +61,55 @@ class Entitlement_List_Table extends \WP_List_Table {
         if ( $which != 'top' ) {
             return;
         }
-
-        $entitlement_years = get_entitlement_financial_years();
+        $entitlement_years = wp_list_pluck( Financial_Year::orderBy( 'start_date', 'desc')->get(), 'fy_name', 'id' );
 
         if ( empty( $entitlement_years ) ) {
             return;
         }
 
-        $years = [];
-        $selected = '';
-
-        foreach ( $entitlement_years as $year ) {
-            $years[ $year ] = $year;
-        }
-
         if ( ! empty( $_GET['financial_year'] ) ) {
-            $selected = sanitize_text_field( wp_unslash( $_GET['financial_year'] ) );
+            $selected_f_year = absint( wp_unslash( $_GET['financial_year'] ) );
         } else {
-            $financial_year = erp_get_financial_year_dates();
-
-            $start = date( 'Y', strtotime( $financial_year['start'] ) );
-            $end   = date( 'Y', strtotime( $financial_year['end'] ) );
-
-            if ( $start === $end ) {
-                $selected = $start;
-            } else {
-                $selected = $start . '-' . $end;
-            }
+            $selected_f_year = erp_hr_get_financial_year_from_date()->id;
         }
 
+        $policies = \WeDevs\ERP\HRM\Models\Leave_Policy::all();
+        $policy_data = array();
+        foreach ( $policies as $policy ) {
+            $policy_data[ $policy['f_year'] ][] = array(
+                'name'      => $policy->leave->name,
+                'policy_id'  => $policy['id']
+            );
+        }
+
+        $selected_leave_id = '';
+        if ( ! empty( $_GET['leave_policy'] ) ) {
+            $selected_leave_id = absint( wp_unslash( $_GET['leave_policy'] ) );
+        }
         ?>
             <div class="alignleft actions">
-                <select name="financial_year">
-                    <?php echo wp_kses( erp_html_generate_dropdown( $years, $selected ), array(
+                <select name="financial_year" id="financial_year">
+                    <?php echo wp_kses( erp_html_generate_dropdown( $entitlement_years, $selected_f_year ), array(
                         'option' => array(
                             'value' => array(),
                             'selected' => array()
                         ),
                     ) ); ?>
                 </select>
+
+                <select name="leave_policy" id="leave_policy">
+                    <option value=""><?php echo esc_attr__( 'All Policy', 'erp'); ?></option>
+                    <?php if ( array_key_exists( $selected_f_year, $policy_data ) ) {
+                        foreach ( $policy_data[ $selected_f_year ] as $policy ) {
+                            $selected = $policy['policy_id'] == $selected_leave_id ? 'selected="selected"' : '';
+                            echo "<option value='{$policy['policy_id']}' $selected>{$policy['name']}</option>";
+                        }
+                    } ?>
+                </select>
+
                 <?php submit_button( __( 'Filter' ), 'button', 'filter_entitlement', false ); ?>
             </div>
         <?php
-
     }
 
 
@@ -98,69 +131,63 @@ class Entitlement_List_Table extends \WP_List_Table {
      * @return string
      */
     function column_default( $entitlement, $column_name ) {
-        $balance   = erp_hr_leave_get_balance( $entitlement->user_id );
-
-        if ( isset( $balance[ $entitlement->policy_id ] ) ) {
-            $scheduled = $balance[ $entitlement->policy_id ]['scheduled'];
-            $available = $balance[ $entitlement->policy_id ]['entitlement'] - $balance[ $entitlement->policy_id ]['total'];
-        } else {
-            $scheduled = '';
-            $available = '';
-        }
-
         switch ( $column_name ) {
-            case 'name':
-                return sprintf( '<strong><a href="%s">%s</a></strong>', erp_hr_url_single_employee( $entitlement->user_id ), esc_html( $entitlement->employee_name ) );
-
             case 'leave_policy':
                 return esc_html( $entitlement->policy_name );
-
-            case 'valid_from':
-                return erp_format_date( $entitlement->from_date );
-
-            case 'valid_to':
-                return erp_format_date( $entitlement->to_date );
-
-            case 'days':
-                return number_format_i18n( $entitlement->days );
-
-            case 'scheduled':
-                return $scheduled ? sprintf( __( '%d days', 'erp' ), number_format_i18n( $scheduled ) ) : '-';
-
-            case 'available':
-                if ( $available < 0 ) {
-                    return sprintf( '<span class="red">%d %s</span>', number_format_i18n( $available ), __( 'days', 'erp' ) );
-                } elseif ( $available > 0 ) {
-                    return sprintf( '<span class="green">%d %s</span>', number_format_i18n( $available ), __( 'days', 'erp' ) );
-                } elseif ( $available === 0 ) {
-                    return sprintf( '<span class="gray">%d %s</span>', 0, __( 'days', 'erp' ) );
-                } else {
-                    return sprintf( '<span class="green">%d %s</span>', number_format_i18n( $entitlement->days ), __( 'days', 'erp' ) );
-                }
 
             default:
                 return isset( $entitlement->$column_name ) ? $entitlement->$column_name : '';
         }
     }
 
-    /**
-     * Get the column names
-     *
-     * @return array
-     */
-    function get_columns() {
-        $columns = array(
-            'cb'           => '<input type="checkbox" />',
-            'name'         => __( 'Employee Name', 'erp' ),
-            'leave_policy' => __( 'Leave Policy', 'erp' ),
-            'valid_from'   => __( 'Valid From', 'erp' ),
-            'valid_to'     => __( 'Valid To', 'erp' ),
-            'days'         => __( 'Days', 'erp' ),
-            'scheduled'    => __( 'Scheduled', 'erp' ),
-            'available'    => __( 'available', 'erp' )
-        );
+    function column_validity( $item ) {
+        $f_year = Financial_Year::find( $item->f_year );
 
-        return apply_filters( 'erp_hr_entitlement_table_cols', $columns );
+        $str = '<p><strong>' . erp_format_date( $f_year->start_date ) .  ' &mdash; ' . erp_format_date( $f_year->end_date ) . '</strong></p>';
+
+        $days = number_format_i18n( $item->day_in ) . ' ' . _n( 'day', 'days', $item->day_in, 'erp' );
+        $days = sprintf( '<span class="tooltip" title="%s">%s</span>', __( 'Entitled Days', 'erp' ), $days );
+
+        $str .= "<p><em>$days</em></p>";
+
+        return $str;
+    }
+
+    function column_available( $entitlement ) {
+        $str = '';
+
+        if ( ! array_key_exists( $entitlement->id, $this->entitlement_data ) ) {
+            $this->entitlement_data[ $entitlement->id ] = erp_hr_leave_get_balance_for_single_entitlement( $entitlement->id );
+        }
+
+        if ( array_key_exists( $entitlement->id, $this->entitlement_data ) && ! is_wp_error( $this->entitlement_data[ $entitlement->id ] ) ) {
+            $available = floatval( $this->entitlement_data[ $entitlement->id ]['available'] );
+            $extra_leave = floatval( $this->entitlement_data[ $entitlement->id ]['extra_leave'] );
+
+            if ( $available > 0 ) {
+                $str = sprintf( '<span class="green tooltip" title="%s"> %s %s</span>', __( 'Available Leave', 'erp' ), erp_number_format_i18n( $available ), _n( 'day', 'days', $available+1, 'erp' ) );
+            }
+            elseif ( $extra_leave > 0 ) {
+                $str = sprintf( '<span class="red tooltip" title="%s"> -%s %s</span>', __( 'Extra Leave', 'erp' ), erp_number_format_i18n( $extra_leave ), _n( 'day', 'days', $extra_leave, 'erp' ) );
+            }
+        }
+
+        return $str;
+    }
+
+    function column_spent( $entitlement ) {
+        $str = '';
+
+        if ( ! array_key_exists( $entitlement->id, $this->entitlement_data ) ) {
+            $this->entitlement_data[ $entitlement->id ] = erp_hr_leave_get_balance_for_single_entitlement( $entitlement->id );
+        }
+
+        if ( array_key_exists( $entitlement->id, $this->entitlement_data ) && ! is_wp_error( $this->entitlement_data[ $entitlement->id ] ) ) {
+            $spent = floatval( $this->entitlement_data[ $entitlement->id ]['spent'] );
+            $str = $spent > 0 ? sprintf( '<span class="green">%s %s</span>', erp_number_format_i18n( $spent ), __( 'days', 'erp' ) ) : '-';
+        }
+
+        return $str;
     }
 
     /**
@@ -175,7 +202,9 @@ class Entitlement_List_Table extends \WP_List_Table {
         $actions           = array();
         $delete_url        = '';
 
-        $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" data-user_id="%d" data-policy_id="%d" title="%s">%s</a>', $delete_url, $entitlement->id, $entitlement->user_id, $entitlement->policy_id, __( 'Delete this item', 'erp' ), __( 'Delete', 'erp' ) );
+        if ( erp_get_option( 'erp_debug_mode', 'erp_settings_general', 0 ) ) {
+            $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" data-user_id="%d" data-policy_id="%d" title="%s">%s</a>', $delete_url, $entitlement->id, $entitlement->user_id, $entitlement->id, __( 'Delete this item', 'erp' ), __( 'Delete', 'erp' ) );
+        }
 
         return sprintf( '<a href="%3$s"><strong>%1$s</strong></a> %2$s', esc_html( $entitlement->employee_name ), $this->row_actions( $actions ), erp_hr_url_single_employee( $entitlement->user_id ) );
     }
@@ -213,9 +242,15 @@ class Entitlement_List_Table extends \WP_List_Table {
      * @return array
      */
     function get_bulk_actions() {
-        $actions = array(
-            'entitlement_delete'  => __( 'Delete', 'erp' ),
-        );
+        if ( erp_get_option( 'erp_debug_mode', 'erp_settings_general', 0 ) ) {
+            $actions = array(
+                'entitlement_delete'  => __( 'Delete', 'erp' ),
+            );
+        }
+        else {
+            $actions = array();
+        }
+
         return $actions;
     }
 
@@ -264,33 +299,24 @@ class Entitlement_List_Table extends \WP_List_Table {
             $args['order']   = sanitize_text_field( wp_unslash( $_REQUEST['order'] ) ) ;
         }
 
-        // calculate start and end dates
-        $financial_year_dates = erp_get_financial_year_dates();
-
-        $from_date  = $financial_year_dates['start'];
-        $to_date    = $financial_year_dates['end'];
-
         if ( ! empty( $_GET['financial_year'] ) ) {
-            preg_match_all( '/^(\d{4})-(\d{4})|(\d{4})$/', sanitize_text_field( wp_unslash( $_GET['financial_year'] ) ), $matches );
-
-            if ( ! empty( $matches[3][0] ) ) {
-                $from_date  = $matches[3][0] . '-01-01 00:00:00';
-                $to_date    = $matches[3][0] . '-12-31 23:59:59';
-
-            } else if ( ! empty( $matches[1][0] ) && ! empty( $matches[2][0] ) ) {
-                $from_date  = $matches[1][0] . '-01-01 00:00:00';
-                $to_date    = $matches[2][0] . '-12-31 23:59:59';
-            }
+            $args['year'] = absint( wp_unslash( $_GET['financial_year'] ) );
+        }
+        else {
+            $current_f_year = erp_hr_get_financial_year_from_date();
+            $args['year'] = null !== $current_f_year ? $current_f_year->id : '';
         }
 
-        $args['from_date'] = $from_date;
-        $args['to_date'] = $to_date;
+        if ( ! empty( $_GET['leave_policy'] ) ) {
+            $args['policy_id'] = absint( wp_unslash( $_GET['leave_policy'] ) );
+        }
 
         // get the items
-        $this->items  = erp_hr_leave_get_entitlements( $args );
+        $items = erp_hr_leave_get_entitlements( $args );
+        $this->items  = $items['data'];
 
         $this->set_pagination_args( array(
-            'total_items' => erp_hr_leave_count_entitlements( $args ),
+            'total_items' => $items['total'],
             'per_page'    => $per_page
         ) );
     }

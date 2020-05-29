@@ -37,6 +37,7 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
     <div class="activity-content">
         <div class="activity-feed" style="margin-bottom: 10px">
             <select name="" id="" v-model="findFeeds.type"> 
+                <option value="all">All Activities</option>
                 <option value="email">Email</option>
                 <option value="tasks">Task</option>
                 <option value="log_activity">Schedule</option>

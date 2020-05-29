@@ -1,15 +1,32 @@
 <?php
-$filter_active = ( isset( $_GET['department'] ) && $_GET['department'] != '-1' ) || ( isset( $_GET['designation'] ) && $_GET['designation'] != '-1' ) ? $_GET : false;
+$department_id =    isset( $_GET['department'] ) && $_GET['department'] != '-1' ? absint( wp_unslash( $_GET['department'] ) ) : 0;
+$designation_id =   isset( $_GET['designation'] ) && $_GET['designation'] != '-1' ? absint( wp_unslash( $_GET['designation'] ) ) : 0;
 
-$leave_requests = erp_hr_get_calendar_leave_events( $filter_active, false, true );
+$args = array(
+    'status'            => 1,
+    'number'            => '-1',
+    'department_id'     => $department_id,
+    'designation_id'    => $designation_id,
+    'year'              => erp_current_datetime()->format( 'Y' ),
+);
+
+$leave_requests = erp_hr_get_leave_requests( $args );
+$leave_requests = $leave_requests['data'];
+
 $events = [];
 
 foreach ( $leave_requests as $key => $leave_request ) {
+    $event_label = $leave_request->display_name;
+    // Half day leave
+    if ( $leave_request->day_status_id != 1 ) {
+        $event_label .= '(' . erp_hr_leave_request_get_day_statuses( $leave_request->day_status_id ) . ')';
+    }
+
     $events[] = array(
         'id'        => $leave_request->id,
-        'title'     => $leave_request->display_name,
-        'start'     => $leave_request->start_date,
-        'end'       => $leave_request->end_date,
+        'title'     => $event_label,
+        'start'     => erp_current_datetime()->setTimestamp( $leave_request->start_date )->setTime( 0, 0, 0 )->format(  'Y-m-d h:i:s' ),
+        'end'       => erp_current_datetime()->setTimestamp( $leave_request->end_date )->setTime( 23, 59, 59 )->format( 'Y-m-d h:i:s' ),
         'url'       => erp_hr_url_single_employee( $leave_request->user_id ),
         'color'     => $leave_request->color,
         'img'       => get_avatar( $leave_request->user_id, 16 )
@@ -47,7 +64,8 @@ foreach ( $leave_requests as $key => $leave_request ) {
                     'class'       => 'erp-hrm-select2-add-more erp-hr-dept-drop-down',
                     'custom_attr' => array( 'data-id' => 'erp-new-dept' ),
                     'type'        => 'select',
-                    'options'     => erp_hr_get_departments_dropdown_raw()
+                    'options'     => erp_hr_get_departments_dropdown_raw(),
+                    'value'       => $department_id
                 ) );
 
                 erp_html_form_input( array(
@@ -56,7 +74,8 @@ foreach ( $leave_requests as $key => $leave_request ) {
                     'class'       => 'erp-hrm-select2-add-more erp-hr-desi-drop-down',
                     'custom_attr' => array( 'data-id' => 'erp-new-designation' ),
                     'type'        => 'select',
-                    'options'     => erp_hr_get_designation_dropdown_raw()
+                    'options'     => erp_hr_get_designation_dropdown_raw(),
+                    'value'       => $designation_id,
                 ) );
             ?>
             <input type="submit" class="button" name="erp_leave_calendar_filter" value="<?php esc_html_e( 'Filter', 'erp' ); ?>">

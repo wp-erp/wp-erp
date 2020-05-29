@@ -48,6 +48,7 @@ class Updates {
         '1.5.5'  => 'updates/update-1.5.5.php',
         '1.5.6'  => 'updates/update-1.5.6.php',
         '1.5.16'  => 'updates/update-1.5.16.php',
+        '1.6.0' => 'updates/update-1.6.0.php',
     ];
 
     /**
@@ -141,8 +142,8 @@ class Updates {
         global $bg_process;
         global $bg_process_people_trn;
 
-        $bg_process            = new \WeDevs\ERP\Updates\BP\ERP_ACCT_BG_Process;
-        $bg_process_people_trn = new \WeDevs\ERP\Updates\BP\ERP_ACCT_BG_Process_People_Trn;
+        $bg_process                        = new \WeDevs\ERP\Updates\BP\ERP_ACCT_BG_Process;
+        $bg_process_people_trn             = new \WeDevs\ERP\Updates\BP\ERP_ACCT_BG_Process_People_Trn;
 
         if ( isset( $_GET['wperp_do_update'] ) && sanitize_text_field( wp_unslash( $_GET['wperp_do_update'] ) ) ) {
             $this->perform_updates();
@@ -229,6 +230,7 @@ class Updates {
      * @return bool
      */
     private function memory_exceeded() {
+        // can be resolve by `extends WP_Background_Process class`
         $memory_limit   = $this->get_memory_limit() * 0.5; // 90% of max memory
         $current_memory = memory_get_usage( true );
         $return         = false;

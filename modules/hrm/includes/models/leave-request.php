@@ -8,54 +8,87 @@ use WeDevs\ERP\Framework\Model;
  *
  * @package WeDevs\ERP\HRM\Models
  */
-class Leave_request extends Model {
-    /**
-     * Custom created_at field
-     *
-     * @since 1.2.0
-     */
-    const CREATED_AT = 'created_on';
-
-    /**
-     * Custom updated_at field
-     *
-     * @since 1.2.0
-     */
-    const UPDATED_AT = 'updated_on';
-    protected $primaryKey = 'id';
-
+class Leave_Request extends Model {
     protected $table = 'erp_hr_leave_requests';
+
     protected $fillable = [
-        'user_id', 'policy_id', 'days', 'start_date',
-        'end_date', 'comments', 'reason', 'status'
+        'user_id', 'leave_id', 'leave_entitlement_id', 'day_status_id', 'days',
+        'start_date', 'end_date', 'reason', 'last_status', 'created_by'
     ];
+
+    /**
+     * Created at date format
+     */
+    public function setCreatedAtAttribute() {
+        $this->attributes['created_at'] = erp_current_datetime()->getTimestamp();
+    }
+
+    /**
+     * Updated at date format
+     */
+    public function setUpdatedAtAttribute() {
+        $this->attributes['updated_at'] = erp_current_datetime()->getTimestamp();
+    }
 
     /**
      * Relation to Leave model
      *
-     * @since 1.2.0
+     * @since 1.6.0
      *
      * @return object
      */
     public function leave() {
-        return $this->hasOne( 'WeDevs\ERP\HRM\Models\Leave', 'request_id' );
+        return $this->belongsTo( 'WeDevs\ERP\HRM\Models\Leave' );
     }
 
     /**
-     * Relation to Leave_Policies model
+     * Relation to Leave_Request_Detail model
      *
-     * @since 1.2.0
+     * @since 1.6.0
      *
      * @return object
      */
-    public function policy() {
-        return $this->belongsTo( 'WeDevs\ERP\HRM\Models\Leave_Policies', 'policy_id' );
+    public function details() {
+        return $this->hasMany( 'WeDevs\ERP\HRM\Models\Leave_Request_Detail' );
     }
 
     /**
-     * Relation to Leave model
+     * Relation to Leave_Approval_Status model
      *
-     * @since 1.2.0
+     * @since 1.6.0
+     *
+     * @return object
+     */
+    public function approval_status() {
+        return $this->hasMany( 'WeDevs\ERP\HRM\Models\Leave_Approval_Status', 'leave_request_id', 'id' )->orderBy('id', 'desc');
+    }
+
+    /**
+     * Relation to Leave_Approval_Status model
+     *
+     * @since 1.6.0
+     *
+     * @return object
+     */
+    public function latest_approval_status() {
+        return $this->hasOne( 'WeDevs\ERP\HRM\Models\Leave_Approval_Status', 'leave_request_id', 'id' )->orderBy('id', 'desc');
+    }
+
+    /**
+     * Relation to Leaves_Unpaid model
+     *
+     * @since 1.6.0
+     *
+     * @return object
+     */
+    public function unpaid() {
+        return $this->hasOne( 'WeDevs\ERP\HRM\Models\Leaves_Unpaid', 'leave_request_id', 'id' );
+    }
+
+    /**
+     * Relation to Employee model
+     *
+     * @since 1.6.0
      *
      * @return object
      */
@@ -63,15 +96,14 @@ class Leave_request extends Model {
         return $this->belongsTo( 'WeDevs\ERP\HRM\Models\Employee', 'user_id', 'user_id' );
     }
 
-    public function scopeJoinWithPolicy( $query ) {
-        global $wpdb;
-        return $query->leftJoin( "{$wpdb->prefix}erp_hr_leave_policies", "{$wpdb->prefix}erp_hr_leave_policies.id", "=", "{$wpdb->prefix}erp_hr_leave_requests.policy_id" );
+    /**
+     * Relation to Leave Entitlement model
+     *
+     * @since 1.6.0
+     *
+     * @return object
+     */
+    public function entitlement() {
+        return $this->hasOne( 'WeDevs\ERP\HRM\Models\Leave_Entitlement', 'id', 'leave_entitlement_id' );
     }
-
-    public function scopeJoinWithEn( $query ) {
-        global $wpdb;
-        return $query->leftJoin( "{$wpdb->prefix}erp_hr_leave_entitlements", "{$wpdb->prefix}erp_hr_leave_entitlements.policy_id", "=", "{$wpdb->prefix}erp_hr_leave_requests.policy_id" );
-    }
-
-
 }

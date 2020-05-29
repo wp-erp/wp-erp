@@ -1,5 +1,5 @@
-<div class="holiday-form-wrap">
-
+<div class="leave-reject-form-wrap">
+    <div id="leave-reject-form-error"></div>
     <div class="row">
         <?php erp_html_form_input( array(
             'label'    => __( 'Reason', 'erp' ),
@@ -8,6 +8,10 @@
             'value'    => '',
             'type'     => 'textarea',
             'required' => true,
+            'custom_attr'   => array(
+                'rows' => 5,
+                'cols' => 50,
+            )
         ) ); ?>
         <?php erp_html_form_input( array(
             'type'     => 'hidden',
@@ -22,5 +26,5 @@
     </div>
 
     <?php wp_nonce_field( 'erp-leave-reject' ); ?>
-    <input type="hidden" name="action" id="erp-hr-holiday-action" value="erp_hr_leave_reject">
+    <input type="hidden" name="action" value="erp_hr_leave_reject">
 </div>

@@ -8,8 +8,10 @@
 function erp_updater_db_collate() {
     global $wpdb;
 
+    $db_name = DB_NAME;
+
     $tables = $wpdb->get_results(
-        "SELECT table_name FROM information_schema.tables where table_name like '{$wpdb->prefix}erp_%'",
+        "SELECT table_name FROM information_schema.tables where table_schema = '{$db_name}' and table_name like '{$wpdb->prefix}erp_%'",
         ARRAY_A
     );
 
@@ -88,7 +90,7 @@ function erp_acct_populate_charts_ledgers_155() {
     $old_ledgers = [];
     $ledgers     = [];
 
-    require_once WPERP_INCLUDES . '/ledgers.php';
+    require WPERP_INCLUDES . '/ledgers.php';
 
     $o_ledgers = $wpdb->get_results( "SELECT
         ledger.code, ledger.id, ledger.system, chart_cat.id category_id, chart.id as chart_id, ledger.name
@@ -161,6 +163,34 @@ function erp_acct_populate_charts_ledgers_155() {
 }
 
 /**
+ * This method will rename petty_cash to cash on ledger table
+ *
+ * @since 1.6.0
+ * @return void
+ */
+function erp_acct_rename_petty_cash() {
+    global $wpdb;
+
+    // get chart_id for expenses
+    $petty_cash_chart_id = $wpdb->get_var(
+        $wpdb->prepare(
+            "SELECT id FROM {$wpdb->prefix}erp_acct_ledgers WHERE code = %d",
+            array( 90 )
+        )
+    );
+
+    // update chart_id for 1403
+    if ( null !== $petty_cash_chart_id && $petty_cash_chart_id > 0 ) {
+        $wpdb->query(
+            $wpdb->prepare(
+                "UPDATE {$wpdb->prefix}erp_acct_ledgers SET name = %s, slug = %s WHERE id = %d",
+                array( 'Cash', slugify( 'Cash' ), $petty_cash_chart_id )
+            )
+        );
+    }
+}
+
+/**
  * Call other function related to this update
  *
  * @return void
@@ -170,6 +200,7 @@ function wperp_update_1_5_5() {
     erp_updater_generate_holiday_leave_tables();
     erp_acct_updater_estimate_order_status();
     erp_acct_populate_charts_ledgers_155();
+    erp_acct_rename_petty_cash();
 }
 
 wperp_update_1_5_5();

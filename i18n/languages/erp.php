@@ -1,5 +1,6 @@
 <?php
 return [
+	_x( 'ltr', 'text direction' ),
 	__( 'Accounts', 'erp' ),
 	__( 'New Transaction', 'erp' ),
 	__( 'Account Number', 'erp' ),

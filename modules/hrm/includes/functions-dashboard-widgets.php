@@ -3,7 +3,7 @@
 /** Callbacks *****************************/
 
 function erp_hr_dashboard_widget_birthday_callback() {
-    erp_admin_dash_metabox( __( '<i class="fa fa-birthday-cake"></i> Birthday Buddies', 'erp' ), 'erp_hr_dashboard_widget_birthday' );
+    erp_admin_dash_metabox( __( '<i class="fa fa-birthday-cake"></i> Celebrations', 'erp' ), 'erp_hr_dashboard_widget_birthday' );
     erp_admin_dash_metabox( __( '<i class="fa fa-paper-plane"></i> Who is out', 'erp' ), 'erp_hr_dashboard_widget_whoisout' );
     if ( current_user_can( 'erp_hr_manager' ) ) {
         erp_admin_dash_metabox(__('<i class="fa fa-paper-plane"></i> About to end', 'erp'), 'erp_hr_dashboard_widget_about_to_end');
@@ -131,7 +131,7 @@ function erp_hr_dashboard_widget_about_to_end() {
         return $a->end_date > $b->end_date;
     });
     ?>
-    <h4><?php esc_html_e( 'Contractual Employees about to End', 'erp' ); ?></h4>
+    <h4><?php esc_html_e( 'Contractual Employees', 'erp' ); ?></h4>
     <span class="wait"><?php esc_html_e( 'please wait ...', 'erp' ); ?></span>
 
     <ul class="erp-list list-two-side list-sep">
@@ -146,13 +146,13 @@ function erp_hr_dashboard_widget_about_to_end() {
             endforeach;
             if ( empty( $contract ) ) {
                 ?>
-                <li><?php esc_html_e( 'No employee found to be ended nearby', 'erp' ); ?></li>
+                <li><?php esc_html_e( 'No employee found', 'erp' ); ?></li>
                 <?php
             }
         ?>
     </ul>
 
-    <h4><?php esc_html_e( 'Trainee Employees about to End', 'erp' ); ?></h4>
+    <h4><?php esc_html_e( 'Trainee Employees', 'erp' ); ?></h4>
     <span class="wait"><?php esc_html_e( 'please wait ...', 'erp' ); ?></span>
 
     <ul class="erp-list list-two-side list-sep">
@@ -167,7 +167,7 @@ function erp_hr_dashboard_widget_about_to_end() {
             endforeach;
             if ( empty( $trainee ) ) {
                 ?>
-                <li><?php esc_html_e( 'No trainee found to be ended nearby', 'erp' ); ?></li>
+                <li><?php esc_html_e( 'No trainee found', 'erp' ); ?></li>
                 <?php
             }
         ?>
@@ -265,6 +265,20 @@ function erp_hr_dashboard_widget_whoisout() {
                 <?php $employee = new \WeDevs\ERP\HRM\Employee( intval( $leave->user_id ) ); ?>
                 <li>
                     <a href="<?php echo esc_url( $employee->get_details_url() ); ?>"><?php echo esc_html( $employee->get_full_name() ); ?></a>
+                    <?php
+                    if ( $leave->day_status_id != '1' ) {
+                        $days = erp_hr_leave_request_get_day_statuses( $leave->day_status_id );
+
+                        if ( $leave->day_status_id == '2' ) {
+                            $img = WPERP_URL . '/assets/images/Morning.svg';
+                            echo "&nbsp; <img src='$img' height='20' title='$days' />";
+
+                        } elseif( $leave->day_status_id == '3' ) {
+                            $img = WPERP_URL . '/assets/images/Afternoon.svg';
+                            echo "&nbsp; <img src='$img' height='18' title='$days' />";
+                        }
+                    }
+                    ?>
                     <span><i class="fa fa-calendar"></i> <?php echo esc_html( erp_format_date( $leave->start_date, 'M d' ) ) . ' - '. esc_html( erp_format_date( $leave->end_date, 'M d' ) ); ?></span>
                 </li>
             <?php endforeach ?>
@@ -278,7 +292,22 @@ function erp_hr_dashboard_widget_whoisout() {
             <?php foreach ( $leave_requests_nextmonth as $key => $leave ): ?>
                 <?php $employee = new \WeDevs\ERP\HRM\Employee( intval( $leave->user_id ) ); ?>
                 <li>
-                    <a href="<?php echo esc_url( $employee->get_details_url() ); ?>"><?php echo esc_html( $employee->get_full_name() ); ?></a>
+                    <a href="<?php echo esc_url( $employee->get_details_url() ); ?>">
+                        <?php echo esc_html( $employee->get_full_name() ); ?>
+                    </a>
+                    <?php
+                    if ( $leave->day_status_id != '1' ) {
+                        $days = erp_hr_leave_request_get_day_statuses( $leave->day_status_id );
+
+                        if ( $leave->day_status_id == '2' ) {
+                            $img = WPERP_URL . '/assets/images/Morning.svg';
+                            echo "&nbsp; <img src='$img' height='20' title='$days' />";
+                        } elseif( $leave->day_status_id == '3' ) {
+                            $img = WPERP_URL . '/assets/images/Afternoon.svg';
+                            echo "&nbsp; <img src='$img' height='18' title='$days' />";
+                        }
+                    }
+                    ?>
                     <span><i class="fa fa-calendar"></i> <?php echo esc_html( erp_format_date( $leave->start_date, 'M d' ) ) . ' - '. esc_html( erp_format_date( $leave->end_date, 'M d' ) ); ?></span>
                 </li>
             <?php endforeach ?>
@@ -305,25 +334,39 @@ function erp_hr_dashboard_widget_whoisout() {
 function erp_hr_dashboard_widget_leave_calendar() {
 
     $user_id        = get_current_user_id();
-    $leave_requests = erp_hr_get_calendar_leave_events( false, $user_id, false );
+    $args = array(
+        'user_id'           => $user_id,
+        'status'            => 'all',
+        'number'            => '-1',
+    );
+
+    $leave_requests = erp_hr_get_leave_requests( $args );
+    $leave_requests = $leave_requests['data'];
     $holidays       = erp_array_to_object( \WeDevs\ERP\HRM\Models\Leave_Holiday::all()->toArray() );
     $events         = [];
     $holiday_events = [];
     $event_data     = [];
 
     foreach ( $leave_requests as $key => $leave_request ) {
+        if ( 3 == $leave_request->status ) {
+            continue;
+        }
         //if status pending
-        $policy = erp_hr_leave_get_policy( $leave_request->policy_id );
-        $event_label = $policy->name;
+        $event_label = $leave_request->policy_name;
         if ( 2 == $leave_request->status ) {
-            $policy = erp_hr_leave_get_policy( $leave_request->policy_id );
             $event_label .= sprintf( ' ( %s ) ', __( 'Pending', 'erp' ) );
         }
+
+        // Half day leave
+        if ( $leave_request->day_status_id != 1 ) {
+            $event_label .= '(' . erp_hr_leave_request_get_day_statuses( $leave_request->day_status_id ) . ')';
+        }
+
         $events[] = array(
             'id'        => $leave_request->id,
             'title'     => $event_label,
-            'start'     => $leave_request->start_date,
-            'end'       => $leave_request->end_date,
+            'start'     => erp_current_datetime()->setTimestamp( $leave_request->start_date )->setTime( 0, 0, 0 )->format(  'Y-m-d h:i:s' ),
+            'end'       => erp_current_datetime()->setTimestamp( $leave_request->end_date )->setTime( 23, 59, 59 )->format( 'Y-m-d h:i:s' ),
             'url'       => erp_hr_url_single_employee( $leave_request->user_id, 'leave' ),
             'color'     => $leave_request->color,
         );

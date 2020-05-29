@@ -18,6 +18,19 @@ function erp_html_form_help( $value = '' ) {
 }
 
 /**
+ * Prints error text
+ *
+ * @param  string  individual field error
+ *
+ * @return void
+ */
+function erp_html_form_error( $value = '' ) {
+    if ( ! empty( $value ) ) {
+        echo '<span class="error-text">' . wp_kses_post( $value ) . '</span>';
+    }
+}
+
+/**
  * Prints a label attribute
  *
  * @param  string  label vlaue
@@ -25,9 +38,10 @@ function erp_html_form_help( $value = '' ) {
  *
  * @return void
  */
-function erp_html_form_label( $label, $field_id = '', $required = false ) {
+function erp_html_form_label( $label, $field_id = '', $required = false, $tooltip = '' ) {
     $req = $required ? ' <span class="required">*</span>' : '';
-    echo '<label for="' . esc_attr( $field_id ) . '">' . wp_kses_post( $label ) . wp_kses_post( $req ) . '</label>';
+    $tip = ! empty( $tooltip ) ? ' ' . erp_help_tip( $tooltip, true, 'title' ) : '';
+    echo '<label for="' . esc_attr( $field_id ) . '">' . wp_kses_post( $label ) . wp_kses_post( $req ) . $tip . '</label>';
 }
 
 /**
@@ -68,6 +82,8 @@ function erp_html_form_input( $args = array() ) {
     $defaults = array(
         'placeholder'   => '',
         'required'      => false,
+        'disabled'      => false,
+        'readonly'      => false,
         'type'          => 'text',
         'class'         => '',
         'tag'           => '',
@@ -79,6 +95,7 @@ function erp_html_form_input( $args = array() ) {
         'help'          => '',
         'addon'         => '',
         'addon_pos'     => 'before',
+        'tooltip'       => '',
         'custom_attr'   => array(),
         'options'       => array(),
     );
@@ -97,6 +114,14 @@ function erp_html_form_input( $args = array() ) {
         $field_attributes['required'] = 'required';
     }
 
+    if ( $field['disabled'] ) {
+        $field_attributes['disabled'] = 'disabled';
+    }
+
+    if ( $field['readonly'] ) {
+        $field_attributes['readonly'] = 'readonly';
+    }
+
     $custom_attributes = erp_html_form_custom_attr( $field_attributes );
 
     // open tag
@@ -105,7 +130,7 @@ function erp_html_form_input( $args = array() ) {
     }
 
     if ( ! empty( $field['label'] ) ) {
-        erp_html_form_label( $field['label'], $field_id, $field['required'] );
+        erp_html_form_label( $field['label'], $field_id, $field['required'], $field['tooltip'] );
     }
 
     if ( ! empty( $field['addon'] ) ) {
@@ -192,7 +217,7 @@ function erp_html_form_input( $args = array() ) {
             echo '<span class="checkbox">';
             if ( $field['options'] ) {
                 foreach ( $field['options'] as $key => $value) {
-                    echo '<input type="radio" '.checked( $field['value'], $key, false ).' value="'.esc_attr( $key ).'" ' . wp_kses_post( implode( ' ', $custom_attributes ) ) . ' id="'. esc_attr( $field_attributes['id'] ) . '-' . esc_attr( $key ) . '"/>'. esc_html( $value ) . '&nbsp; <br><br>';
+                    echo '<input type="radio" '.checked( $field['value'], $key, false ).' value="'.esc_attr( $key ).'" ' . wp_kses_post( implode( ' ', $custom_attributes ) ) . ' id="'. esc_attr( $field_attributes['id'] ) . '-' . esc_attr( $key ) . '"/>'. esc_html( $value ) . '&nbsp;';
                 }
             }
              echo '</span>';
@@ -231,7 +256,7 @@ function erp_html_form_input( $args = array() ) {
 
             <script type="text/javascript">
                 jQuery(function($) {
-                    var pick_files = '<?php echo array_map( 'esc_html', wp_unslash( $pick_files ) ); ?>',
+                    var pick_files = '<?php echo esc_html( $pick_files ); ?>',
                         id         = '<?php echo esc_html( $id ); ?>',
                         drop_jone  = '<?php echo esc_html( $drop ); ?>',
                         action     = '<?php echo esc_html( $action ); ?>',
@@ -259,6 +284,10 @@ function erp_html_form_input( $args = array() ) {
 
     if ( $field['type'] != 'checkbox' ) {
         erp_html_form_help( $field['help'] );
+    }
+
+    if ( ! empty( $field['error'] ) ) {
+        erp_html_form_error( $field['error'] );
     }
 
     // closing tag
@@ -295,9 +324,9 @@ function erp_html_generate_dropdown( $values = array(), $selected = null ) {
  *
  * @return void
  */
-function erp_html_show_notice( $text, $type = 'updated' ) {
+function erp_html_show_notice( $text, $type = 'updated', $dismissible = false ) {
     ?>
-    <div class="<?php echo esc_attr( $type ); ?>">
+    <div class="notice <?php echo esc_attr( $type ); ?> <?php echo ($dismissible == true) ? 'is-dismissible' : ''; ?>">
         <p><strong><?php echo esc_html( $text ); ?></strong></p>
     </div>
     <?php
