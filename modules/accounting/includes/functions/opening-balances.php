@@ -439,7 +439,7 @@ function erp_acct_get_opb_bill_purchase_account_details( $fy_start_date ) {
     $bill_amount     = $wpdb->get_var( $wpdb->prepare( $bill_sql, $fy_start_date ) );
     $purchase_amount = $wpdb->get_var( $wpdb->prepare( $purchase_sql, $fy_start_date ) );
 
-    return (float) $bill_amount + (float) $purchase_amount;
+    return abs( (float) $bill_amount + (float) $purchase_amount );
 }
 
 /**

@@ -49,7 +49,7 @@
 
     <div class="row">
         <?php erp_html_form_input( array(
-            'label'   => __( 'Attendence/Punctuality', 'erp' ),
+            'label'   => __( 'Attendance/Punctuality', 'erp' ),
             'name'    => 'attendance',
             'value'   => '',
             'class'   => 'erp-hrm-select2',

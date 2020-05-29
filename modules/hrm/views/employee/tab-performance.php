@@ -14,7 +14,7 @@
         ?>
         <a href="#" id="erp-empl-performance-reviews" class="action button"
            data-id="<?php echo esc_html( $employee->get_user_id() ); ?>" data-template="erp-employment-performance-reviews"
-           data-title="<?php esc_html_e( 'Performance Reviews', 'erp' ); ?>"><span
+           data-title="<?php esc_html_e( 'Performance Review', 'erp' ); ?>"><span
                 class="dashicons dashicons-plus erp-performance-dashicon"></span> <?php esc_html_e( 'Add Performance Reviews', 'erp' ); ?>
         </a>
         <?php

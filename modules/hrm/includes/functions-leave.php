@@ -1,4 +1,16 @@
 <?php
+use WeDevs\ERP\HRM\Employee;
+use WeDevs\ERP\HRM\Models\Financial_Year;
+use WeDevs\ERP\HRM\Models\Leave_Approval_Status;
+use WeDevs\ERP\HRM\Models\Leave_Entitlement;
+use WeDevs\ERP\HRM\Models\Leave_Holiday;
+use WeDevs\ERP\HRM\Models\Leave_Policies_Segregation;
+use \WeDevs\ERP\HRM\Models\Leave_Policy;
+use \WeDevs\ERP\HRM\Models\Leave;
+use WeDevs\ERP\HRM\Models\Leave_Request;
+use WeDevs\ERP\HRM\Models\Leave_Request_Detail;
+use WeDevs\ERP\HRM\Models\Leaves_Unpaid;
+use WeDevs\ERP\HRM\Models\Department;
 
 /**
  * Get holiday between two date
@@ -11,7 +23,7 @@
  * @return array
  */
 function erp_hr_leave_get_holiday_between_date_range( $start_date, $end_date ) {
-    $holiday = new \WeDevs\ERP\HRM\Models\Leave_Holiday();
+    $holiday = new Leave_Holiday();
 
     $holiday = $holiday->where( function ( $condition ) use ( $start_date ) {
         $condition->where( 'start', '<=', $start_date );
@@ -54,68 +66,45 @@ function erp_hr_leave_get_holiday_between_date_range( $start_date, $end_date ) {
  *
  * @since  0.1
  *
+ * @since 1.6.0
+ *
  * @param  string $start_date
  * @param  string $end_date
  * @param  int $user_id
+ * @param int|null $f_year
  *
  * @return boolean
  */
-function erp_hrm_is_leave_recored_exist_between_date( $start_date, $end_date, $user_id ) {
+function erp_hrm_is_leave_recored_exist_between_date( $start_date, $end_date, $user_id, $f_year = null ) {
+    global $wpdb;
 
-    $start_date = date( 'Y-m-d', strtotime( $start_date ) );
-    $end_date   = date( 'Y-m-d', strtotime( $end_date ) );
-
-    $holiday = new \WeDevs\ERP\HRM\Models\Leave_request();
-
-    $holiday->where( 'user_id', '=', $user_id );
-
-    $holiday = $holiday->where( function ( $condition ) use ( $start_date, $user_id ) {
-        $condition->where( 'start_date', '<=', $start_date );
-        $condition->where( 'end_date', '>=', $start_date );
-        $condition->whereIn( 'status', [ 1, 2 ] );
-        $condition->where( 'user_id', '=', $user_id );
-    } );
-
-    $holiday = $holiday->orWhere( function ( $condition ) use ( $end_date, $user_id ) {
-        $condition->where( 'start_date', '<=', $end_date );
-        $condition->where( 'end_date', '>=', $end_date );
-        $condition->whereIn( 'status', [ 1, 2 ] );
-        $condition->where( 'user_id', '=', $user_id );
-    } );
-
-    $holiday = $holiday->orWhere( function ( $condition ) use ( $start_date, $end_date, $user_id ) {
-        $condition->where( 'start_date', '>=', $start_date );
-        $condition->where( 'start_date', '<=', $end_date );
-        $condition->whereIn( 'status', [ 1, 2 ] );
-        $condition->where( 'user_id', '=', $user_id );
-    } );
-
-    $holiday = $holiday->orWhere( function ( $condition ) use ( $start_date, $end_date, $user_id ) {
-        $condition->where( 'end_date', '>=', $start_date );
-        $condition->where( 'end_date', '<=', $end_date );
-        $condition->whereIn( 'status', [ 1, 2 ] );
-        $condition->where( 'user_id', '=', $user_id );
-    } );
-
-    $results = $holiday->get()->toArray();
-
-    $holiday_extrat    = [];
-    $given_date_extrat = erp_extract_dates( $start_date, $end_date );
-
-    foreach ( $results as $result ) {
-        $date_extrat    = erp_extract_dates( $result['start_date'], $result['end_date'] );
-        $holiday_extrat = array_merge( $holiday_extrat, $date_extrat );
+    if ( ! is_numeric( $start_date ) ) {
+        $start_date = erp_current_datetime()->modify( $start_date )->setTime( 0, 0, 0 )->getTimestamp();
     }
 
-    $extract = array_intersect( $given_date_extrat, $holiday_extrat );
+    if ( ! is_numeric( $end_date ) ) {
+        $end_date = erp_current_datetime()->modify( $end_date )->setTime( 0, 0, 0 )->getTimestamp();
+    }
 
-    return $extract;
+    if ( null === $f_year ) {
+        $current_f_year = erp_hr_get_financial_year_from_date( $start_date );
+        $f_year = ! empty( $current_f_year ) ? $current_f_year->id : '';
+    }
+
+    $available = Leave_Request_Detail::where( 'user_id', '=', $user_id )
+                                     ->where( 'f_year', '=', $f_year )
+                                     ->where( 'leave_date', '>=', $start_date )
+                                     ->where( 'leave_date', '<=', $end_date )
+                                     ->count();
+
+    return $available ? true : false;
 }
 
 /**
  * Check leave duration exist or not the plicy days
  *
  * @since  0.1
+ * @since 1.6.0
  *
  * @param  string $start_date
  * @param  string $end_date
@@ -130,29 +119,14 @@ function erp_hrm_is_valid_leave_duration( $start_date, $end_date, $policy_id, $u
         return true;
     }
 
-    $financial_start_date = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
-    $financial_end_date   = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
+    $balance = erp_hr_leave_get_balance_for_single_entitlement( $policy_id );
 
-    $user_request = new \WeDevs\ERP\HRM\Models\Leave_request();
-    $policy       = new \WeDevs\ERP\HRM\Models\Leave_Policies();
+    $user_enti_count    = $balance['day_out'];
+    $policy_days        = $balance['total'];
+    $working_day        = erp_hr_get_work_days_without_off_day( $start_date, $end_date, $user_id );//erp_hr_get_work_days_between_dates( $start_date, $end_date );erp_hr_get_work_days_without_holiday
+    $apply_days         = $working_day['total'] + $user_enti_count;
 
-    $user_request = $user_request->where( function ( $condition ) use ( $financial_start_date, $financial_end_date, $user_id, $policy_id ) {
-        //$start_date = date( 'Y-m-d', strtotime( $start_date ) );
-        // $end_date   = date( 'Y-m-d', strtotime( $end_date ) );
-
-        $condition->where( 'start_date', '>=', $financial_start_date );
-        $condition->where( 'end_date', '<=', $financial_end_date );
-        $condition->where( 'user_id', '=', $user_id );
-        $condition->where( 'policy_id', '=', $policy_id );
-        $condition->where( 'status', '!=', 3 );
-    } );
-
-    $user_enti_count = $user_request->sum( 'days' );
-    $policy_count    = $policy->find( $policy_id )->toArray();
-    $working_day     = erp_hr_get_work_days_without_off_day( $start_date, $end_date );//erp_hr_get_work_days_between_dates( $start_date, $end_date );erp_hr_get_work_days_without_holiday
-    $apply_days      = $working_day['total'] + $user_enti_count;
-
-    if ( $apply_days > $policy_count['value'] ) {
+    if ( $apply_days > $policy_days ) {
         return false;
     }
 
@@ -163,24 +137,37 @@ function erp_hrm_is_valid_leave_duration( $start_date, $end_date, $policy_id, $u
  * Leave request time checking the apply date duration with the financial date duration
  *
  * @since  0.1
+ * @since 1.6.0 updated according to new db structure
  *
- * @param  string $start_date
- * @param  string $end_date
+ * @param  string|int $start_date
+ * @param  string|int $end_date
+ * @param  int|null $f_year
  *
  * @return boolean
  */
-function erp_hrm_is_valid_leave_date_range_within_financial_date_range( $start_date, $end_date ) {
+function erp_hrm_is_valid_leave_date_range_within_financial_date_range( $start_date, $end_date, $f_year = null ) {
 
-    $financial_start_date = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
-    $financial_end_date   = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
-    $apply_start_date     = date( 'Y-m-d', strtotime( $start_date ) );
-    $apply_end_date       = date( 'Y-m-d', strtotime( $end_date ) );
+    if ( ! is_numeric( $start_date ) ) {
+        $start_date = erp_current_datetime()->modify( $start_date )->getTimestamp();
+    }
 
-    if ( $financial_start_date > $apply_start_date || $apply_start_date > $financial_end_date ) {
+    if ( ! is_numeric( $end_date ) ) {
+        $end_date = erp_current_datetime()->modify( $end_date )->getTimestamp();
+    }
+
+    if ( null === $f_year ) {
+        $current_f_year = erp_hr_get_financial_year_from_date();
+    }
+    elseif( is_numeric( $f_year ) ) {
+        $current_f_year = Financial_Year::find( $f_year );
+    }
+
+    if ( null === $current_f_year ) {
         return false;
     }
 
-    if ( $financial_start_date > $apply_end_date || $apply_end_date > $financial_end_date ) {
+    if (    ( $start_date < $current_f_year->start_date || $start_date > $current_f_year->end_date )
+         || ( $end_date < $current_f_year->start_date || $end_date > $current_f_year->end_date )  ) {
         return false;
     }
 
@@ -190,61 +177,89 @@ function erp_hrm_is_valid_leave_date_range_within_financial_date_range( $start_d
 /**
  * Insert a new leave policy
  *
- * @since 0.1
+ * @since 1.0.0
+ *
+ * @since 1.6.0
  *
  * @param array $args
  *
  * @return int $policy_id
  */
 function erp_hr_leave_insert_policy( $args = array() ) {
+    if ( ! current_user_can( 'erp_leave_manage' ) ) {
+        return new WP_Error( 'no-permission', esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
+    }
+
     $defaults = array(
-        'id'          => null,
-        'name'        => '',
-        'value'       => 0,
-        'color'       => '',
-        'description' => '',
+        'id' => null
     );
 
     $args = wp_parse_args( $args, $defaults );
 
-    // some validation
-    if ( empty( $args['name'] ) ) {
-        return new WP_Error( 'no-name', __( 'No name provided.', 'erp' ) );
-    }
+    $common = array(
+        'leave_id'       => $args['leave_id'],
+        'department_id'  => $args['department_id'],
+        'designation_id' => $args['designation_id'],
+        'location_id'    => $args['location_id'],
+        'gender'         => $args['gender'],
+        'marital'        => $args['marital'],
+        'f_year'         => $args['f_year']
+    );
 
-    $exist = erp_hr_leave_get_policy_by_name( $args['name'] );
-    if ( $exist && $args['id'] !== $exist->id ) {
-        return new WP_Error( 'policy_name_exists', __( 'Policy name already exists, please use a different one.', 'erp' ) );
-    }
+    $extra = apply_filters( 'erp_hr_leave_insert_policy_extra', array(
+        'description'          => $args['description'],
+        'days'                 => $args['days'],
+        'color'                => $args['color'],
+        'applicable_from_days' => $args['applicable_from'],
+        'apply_for_new_users'  => $args['apply_for_new_users']
+    ) );
 
-    if ( ! intval( $args['value'] ) ) {
-        return new WP_Error( 'no-value', __( 'No duration provided.', 'erp' ) );
-    }
+    /**
+     * Update
+     */
+    if ( $args['id'] ) {
+        $where = array();
 
-    $args['name'] = sanitize_text_field( $args['name'] );
-
-    $policy_id = (int) $args['id'];
-    unset( $args['id'] );
-
-    $leave_policies = new \WeDevs\ERP\HRM\Models\Leave_Policies();
-
-    if ( ! $policy_id ) {
-        // insert a new
-        $leave_policy = $leave_policies->create( $args );
-
-        if ( ! empty( $leave_policy ) ) {
-            do_action( 'erp_hr_leave_policy_new', $leave_policy, $args );
+        foreach ( $common as $key => $value ) {
+            $where[] = array( $key, $value );
         }
 
-    } else {
-        do_action( 'erp_hr_leave_before_policy_updated', $policy_id, $args );
+        $exists = Leave_Policy::where( $where )->where('id', '<>', $args['id'])->first();
 
-        if ( $leave_policies->find( $policy_id )->update( $args ) ) {
-            do_action( 'erp_hr_leave_after_policy_updated', $policy_id, $args );
-
-            return $policy_id;
+        if ( $exists ) {
+            return new WP_Error( 'exists', esc_html__( 'Policy already exists.', 'erp' ) );
         }
+
+        // won't update days
+        unset( $extra['days'] );
+
+        $leave_policy = Leave_Policy::find( $args['id'] );
+        $leave_policy->update( $extra );
+
+        do_action( 'erp_hr_leave_update_policy', $args['id'] );
+
+        return $leave_policy->id;
     }
+
+    /**
+     * Create
+     */
+    $leave_policy = Leave_Policy::firstOrCreate( $common, $extra );
+
+    if ( ! $leave_policy->wasRecentlyCreated ) {
+        return new WP_Error( 'exists', esc_html__( 'Policy already exists.', 'erp' ) );
+    }
+
+    // create policy segregation
+    $segre = isset( $_POST['segre'] ) ? array_map( 'absint', wp_unslash( $_POST['segre'] ) ) : [];
+
+    $segre['leave_policy_id'] = $leave_policy->id;
+
+    Leave_Policies_Segregation::create($segre);
+
+    do_action( 'erp_hr_leave_insert_policy', $leave_policy->id );
+
+    return $leave_policy->id;
 }
 
 /**
@@ -253,133 +268,66 @@ function erp_hr_leave_insert_policy( $args = array() ) {
  * @since 0.1
  * @since 1.2.0 Using `erp_hr_apply_policy_to_employee` for both Immediate and
  *              Scheduled policy when `instant_apply` is true
+ * @since 1.6.0 changed according to new db structure
  *
- * @param  object $policy Leave_Policies model
- * @param  array $args
+ * @param  int $policy_id newly created policy id
  *
  * @return void
  */
-function erp_hr_apply_policy_existing_employee( $policy, $args ) {
-    if ( ! erp_validate_boolean( $args['instant_apply'] ) ) {
+function erp_hr_apply_policy_existing_employee( $policy_id ) {
+
+    $apply_for_existing_users = ! empty( $_POST['apply-for-existing-users'] ) ? 1 : 0;
+
+    if ( ! $apply_for_existing_users ) {
         return;
     }
 
-    erp_bulk_policy_assign($policy);
-//    erp_hr_apply_policy_to_employee( $policy );
-}
-
-/**
- * Apply a leave policy to all or filtered employees
- *
- * @since 1.2.0
- *
- * @param object $policy Leave_Policies eloquent object
- * @param array $employee_ids Employee ids
- *
- * @return void
- */
-function erp_hr_apply_policy_to_employee( $policy, $employee_ids = [] ) {
-    if ( is_int( $policy ) ) {
-        $policy = $policy = \WeDevs\ERP\HRM\Models\Leave_Policies::find( $policy );
+    $policy = Leave_Policy::find( $policy_id );
+    if ( ! $policy ) {
+        return;
     }
 
-    $db     = \WeDevs\ORM\Eloquent\Facades\DB::instance();
-    $prefix = $db->db->prefix;
+    $employees = erp_hr_get_employees( array(
+        'department'    => $policy->department_id,
+        'location'      => $policy->location_id,
+        'designation'   => $policy->designation_id,
+        'gender'        => $policy->gender,
+        'marital_status'    => $policy->marital,
+        'number'            => '-1',
+        'no_object'         => true,
+    ) );
 
-    $employees = $db->table( 'erp_hr_employees as employee' )
-                    ->select( 'employee.user_id' )
-                    ->leftJoin( "{$prefix}usermeta as gender", function ( $join ) {
-                        $join->on( 'employee.user_id', '=', 'gender.user_id' )->where( 'gender.meta_key', '=', 'gender' );
-                    } )
-                    ->leftJoin( "{$prefix}usermeta as marital_status", function ( $join ) {
-                        $join->on( 'employee.user_id', '=', 'marital_status.user_id' )->where( 'marital_status.meta_key', '=', 'marital_status' );
-                    } )
-                    ->where( 'status', '=', 'active' );
-
-    if ( ! empty( $employee_ids ) && is_array( $employee_ids ) ) {
-        $employees->whereIn( 'employee.user_id', $employee_ids );
+    if ( count( $employees ) === 0 ) {
+        return;
     }
 
-    if ( $policy->department > 0 ) {
-        $employees->where( 'department', $policy->department );
-    }
+    $entitlement_bg = new \WeDevs\ERP\HRM\Leave_Entitlement_BG_Process();
 
-    if ( $policy->designation > 0 ) {
-        $employees->where( 'designation', $policy->designation );
-    }
-
-    if ( $policy->location > 0 ) {
-        $employees->where( 'location', $policy->location );
-    }
-
-    if ( $policy->gender != - 1 ) {
-        $employees->where( 'gender.meta_value', $policy->gender );
-    }
-
-    if ( $policy->marital != - 1 ) {
-        $employees->where( 'marital_status.meta_value', $policy->marital );
-    }
-
-    if ( $policy->activate == 2 && ! empty( $policy->execute_day ) ) {
-        $current_date = date( 'Y-m-d', current_time( 'timestamp' ) );
-
-        $employees->where(
-            $db->raw( "DATEDIFF( '$current_date', `employee`.`hiring_date` )" ), '>=', $policy->execute_day
+    foreach ( $employees as $employee ) {
+        $entitlement_bg->push_to_queue(
+            array(
+                'user_id'       => $employee->user_id,
+                'leave_id'      => $policy->leave_id,
+                'created_by'    => get_current_user_id(),
+                'trn_id'        => $policy->id,
+                'trn_type'      => 'leave_policies',
+                'day_in'        => $policy->days,
+                'day_out'       => 0,
+                'description'   => $policy->description != '' ? $policy->description : 'Generated',
+                'f_year'        => $policy->f_year,
+            )
         );
     }
 
-    $employees = $employees->get();
+    $entitlement_bg->save();
 
-    if ( ! empty( $employees ) ) {
-        foreach ( $employees as $employee ) {
-            erp_hr_apply_leave_policy( $employee->user_id, $policy );
-        }
-    }
-}
+    /**
+     * Run the queue, starting with leave entitlements data
+     */
+    $entitlement_bg->dispatch();
 
-/**
- * Assign entitlement
- *
- * @since 0.1
- * @since 1.2.0 Calculate from_date and to_date based on policy
- *              effective_date and financial start/end dates
- *
- * @param  int $user_id
- * @param  object $leave_policy
- *
- * @return void
- */
-function erp_hr_apply_leave_policy( $user_id, $policy ) {
-    $financial_year = erp_get_financial_year_dates();
-
-    $from_date                      = ! empty( $policy->effective_date ) ? $policy->effective_date : $financial_year['start'];
-    $from_date_timestamp            = strtotime( $from_date );
-    $financial_year_start_timestamp = strtotime( $financial_year['start'] );
-
-    if ( $from_date_timestamp < $financial_year_start_timestamp ) {
-        $from_date = date( 'Y-m-d 00:00:00', $financial_year_start_timestamp );
-    } else {
-        $from_date = date( 'Y-m-d 00:00:00', $from_date_timestamp );
-    }
-
-    $to_date                      = $financial_year['end'];
-    $financial_year_end_timestamp = strtotime( $financial_year['end'] );
-
-    if ( $from_date_timestamp > $financial_year_end_timestamp ) {
-        $financial_year_end_timestamp += YEAR_IN_SECONDS;
-        $to_date                      = date( 'Y-m-d 23:59:59', $financial_year_end_timestamp );
-    }
-
-    $policy = [
-        'user_id'   => $user_id,
-        'policy_id' => $policy->id,
-        'days'      => $policy->value,
-        'from_date' => $from_date,
-        'to_date'   => $to_date,
-        'comments'  => $policy->description
-    ];
-
-    erp_hr_leave_insert_entitlement( $policy );
+    // erp_bulk_policy_assign( $policy_id );
+    // erp_hr_apply_policy_to_employee( $policy );
 }
 
 /**
@@ -387,67 +335,191 @@ function erp_hr_apply_leave_policy( $user_id, $policy ) {
  *
  * @since 0.1
  * @since 1.2.0 Use `erp_get_financial_year_dates` for financial start and end dates
+ * @since 1.6.0 updated due to database structure change
  *
  * @param  array $args
  *
  * @return int|object New entitlement id or WP_Error object
  */
 function erp_hr_leave_insert_entitlement( $args = [] ) {
-    global $wpdb;
 
-    $financial_year = erp_get_financial_year_dates();
+    /*
+     * Workflow:
+     * 1. Check if required fields exists
+     * 2. Check if policy already assigned for current user
+     * 3. Check if we can assign this employee ie: 60 days waiting period based on joining date -- user trn_id
+     * 5. Check if we can assign this policy to this employee based on filters
+     * 4. finally add this policy to database.
+     */
 
     $defaults = array(
-        'id'         => null,
-        'user_id'    => 0,
-        'policy_id'  => 0,
-        'days'       => 0,
-        'from_date'  => $financial_year['start'],
-        'to_date'    => $financial_year['end'],
-        'comments'   => '',
-        'status'     => 1,
-        'created_by' => get_current_user_id(),
-        'created_on' => current_time( 'mysql' )
+        'user_id'       => 0,
+        'leave_id'      => 0,
+        'created_by'    => get_current_user_id(),
+        'trn_id'        => 0,
+        'trn_type'      => 'leave_policies',
+        'day_in'        => 0,
+        'day_out'       => 0,
+        'description'   => '',
+        'f_year'        => '',
     );
 
     $fields = wp_parse_args( $args, $defaults );
 
-    if ( ! intval( $fields['user_id'] ) ) {
-        return new WP_Error( 'no-user', __( 'No employee provided.', 'erp' ) );
-    }
+    // sanitize user inputs
+    array_walk_recursive( $fields, function( &$value, $key ) {
+        $value = wp_unslash( $value );
+        switch ( $key ) {
+            case 'user_id':
+            case 'leave_id':
+            case 'created_by':
+            case 'trn_id':
+            case 'f_year':
+                $value = absint( $value );
+                break;
 
-    if ( ! intval( $fields['policy_id'] ) ) {
-        return new WP_Error( 'no-policy', __( 'No policy provided.', 'erp' ) );
-    }
+            case 'day_in':
+            case 'day_out':
+                // can be float value
+                if ( (float) $value == $value ) {
+                    $value = floatval( $value );
+                }
+                else {
+                    $value = absint( $value );
+                }
+                break;
 
-    if ( empty( $fields['from_date'] ) || empty( $fields['to_date'] ) ) {
-        return new WP_Error( 'no-date', __( 'No date provided.', 'erp' ) );
-    }
-
-    $entitlement = new \WeDevs\ERP\HRM\Models\Leave_Entitlement();
-    $user_id     = intval( $fields['user_id'] );
-    $policy_id   = intval( $fields['policy_id'] );
-
-    $entitlement = $entitlement->where( function ( $condition ) use ( $user_id, $policy_id, $fields, $financial_year ) {
-        $financial_start_date = $fields['from_date'] ? $fields['from_date'] : $financial_year['start'];
-        $financial_end_date   = $fields['to_date'] ? $fields['to_date'] : $financial_year['end'];
-        $condition->where( 'from_date', '>=', $financial_start_date );
-        $condition->where( 'to_date', '<=', $financial_end_date );
-        $condition->where( 'user_id', '=', $user_id );
-        $condition->where( 'policy_id', '=', $policy_id );
+            default:
+                $value = sanitize_text_field( $value );
+                break;
+        }
     } );
 
-    $existing_entitlement = $entitlement->get();
-
-    if ( $existing_entitlement->count() ) {
-        return $existing_entitlement->first()->id;
+    // Check if required fields exists
+    if ( ! $fields['user_id'] ) {
+        return new WP_Error( 'no-user', esc_attr__( 'No employee provided.', 'erp' ) );
     }
 
-    $wpdb->insert( $wpdb->prefix . 'erp_hr_leave_entitlements', $fields );
+    if ( ! $fields['leave_id'] ) {
+        return new WP_Error( 'no-policy', esc_attr__( 'No policy provided.', 'erp' ) );
+    }
 
-    do_action( 'erp_hr_leave_insert_new_entitlement', $wpdb->insert_id, $fields );
+    if ( ! $fields['trn_id'] ) {
+        return new WP_Error( 'no-trn-id', esc_attr__( 'No transaction id is provided.', 'erp' ) );
+    }
 
-    return $wpdb->insert_id;
+    if ( ! $fields['trn_type'] ) {
+        return new WP_Error( 'no-trn-type', esc_attr__( 'No transaction type is provided.', 'erp' ) );
+    }
+
+    if ( ! $fields['f_year'] ) {
+        return new WP_Error( 'no-financial-year', esc_attr__( 'No year is provided.', 'erp' ) );
+    }
+
+    // Check if policy already assigned for current user - only if transaction type is: leave_policies
+    if ( $fields['trn_type'] === 'leave_policies' ) {
+        $entitlement = Leave_Entitlement::where( 'user_id', '=', $fields['user_id'] );
+        $entitlement->where( 'leave_id', '=', $fields['leave_id'] );
+        $entitlement->where( 'trn_id', '=', $fields['trn_id'] );
+        $entitlement->where( 'trn_type', '=', 'leave_policies' );
+        $entitlement->where( 'f_year', '=', $fields['f_year'] );
+
+        $existing_entitlement = $entitlement->get();
+
+        if ( $existing_entitlement->count() ) {
+            return $existing_entitlement->first()->id;
+            //return new WP_Error( 'policy-already-assigned', 'policy already assigned. ID: ' . $existing_entitlement->first()->id);
+        }
+
+        // Check if we can assign this employee
+
+        // get employee from user id
+        $employee = new Employee( $fields['user_id'] );
+
+        // check if this user is a valid employee
+        if ( ! $employee->is_employee() ) {
+            return new WP_Error( 'invalid-employee-' . $fields['user_id'], esc_attr__( 'Error: Invalid Employee. No employee found with given ID: ', 'erp' ) . $fields['user_id'] );
+        }
+
+        // check employee status
+        if ( $employee->get_status() !== 'active' ) {
+            return new WP_Error( 'invalid-employee-' . $fields['user_id'], esc_attr__( 'Error: Invalid Employee. Employee job status is not active: ', 'erp' ) . $fields['user_id'] );
+        }
+
+        // check employee type, only full time employees will get entitled
+        if ( $employee->get_type() !== 'permanent' ) {
+            return new WP_Error( 'invalid-employee-' . $fields['user_id'], esc_attr__( 'Error: Invalid Employee. Employee type is not Full Time: ', 'erp' ) . $fields['user_id'] );
+        }
+
+        // get policy data
+        $policy = Leave_Policy::find( $fields['trn_id'] );
+        if ( ! $policy ) {
+            return new WP_Error( 'invalid-policy-' . $fields['trn_id'], esc_attr__( 'Error: Invalid Policy. No leave policy found with given ID: ', 'erp' )  . $fields['trn_id'] ) ;
+        }
+
+        // check policy filter is same as employee filters
+        if (    ( $policy->department_id    != '-1'   && $employee->get_department()        != $policy->department_id )
+             || ( $policy->designation_id   != '-1'   && $employee->get_designation()       != $policy->designation_id )
+             || ( $policy->location_id      != '-1'   && $employee->get_location()          != $policy->location_id )
+             || ( $policy->gender           != '-1'   && $employee->get_gender()            != $policy->gender )
+             || ( $policy->marital          != '-1'   && $employee->get_marital_status()    != $policy->marital )
+        ) {
+            return new WP_Error( 'invalid-employee-' . $fields['user_id'], esc_attr__( 'Error: Invalid Employee. Policy does not match with employee profile.', 'erp' ) );
+        }
+
+        if ( $policy->applicable_from_days && $policy->applicable_from_days > 0 ) {
+            // get employee joining date and compare it with policy's applicable form date
+            if ( $employee->get_hiring_date() ) {
+                // get hiring date
+                $hiring_date = erp_current_datetime()->modify( $employee->get_hiring_date() )->setTime( 0, 0, 0 );
+
+                // get current date
+                $today = erp_current_datetime()->setTime( 0, 0, 0 );
+
+                // check if hiring date in the future
+                $interval = date_diff( $hiring_date, $today );
+
+                if ( $interval->invert == 1 ) {
+                    return new WP_Error( 'invalid-joining-date', esc_attr__( 'Error: Employee joining date is in the future: ' , 'erp' )  . $fields['user_id'] );
+                }
+
+                $compare_with = $hiring_date->modify( '+ ' . $policy->applicable_from_days . ' days' );
+
+                if ( $compare_with > $today ) {
+                    return new WP_Error( 'invalid-joining-date', esc_attr__( 'Error: Employee is not eligible for this leave policy yet: ', 'erp' ) . $fields['user_id'] );
+                }
+            }
+            else {
+                return new WP_Error( 'invalid-joining-date', esc_attr__( 'Error: Employee joining date is invalid: ', 'erp' ). $fields['user_id'] ) ;
+            }
+        }
+    }
+
+    $fields = apply_filters( 'erp_hr_leave_before_insert_new_entitlement', $fields );
+
+    // bailout in case of errors
+    if ( is_wp_error( $fields ) ) {
+        return $fields;
+    }
+
+    // add this policy to database.
+    $entitlement = new Leave_Entitlement();
+    $entitlement->user_id       = $fields['user_id'];
+    $entitlement->leave_id      = $fields['leave_id'];
+    $entitlement->created_by    = $fields['created_by'];
+    $entitlement->trn_id        = $fields['trn_id'];
+    $entitlement->trn_type      = $fields['trn_type'];
+    $entitlement->day_in        = $fields['day_in'];
+    $entitlement->day_out       = $fields['day_out'];
+    $entitlement->description   = $fields['description'];
+    $entitlement->f_year        = $fields['f_year'];
+    $entitlement->save();
+
+    if ( $fields['trn_type'] === 'leave_policies' ) {
+        do_action( 'erp_hr_leave_insert_new_entitlement', $entitlement->id, $fields );
+    }
+
+    return $entitlement->id;
 }
 
 /**
@@ -455,15 +527,37 @@ function erp_hr_leave_insert_entitlement( $args = [] ) {
  *
  * @since 1.2.0
  *
+ * @since 1.6.0 updated according to new leave database
+ *
  * @param int $user_id Employee user_id provided by `erp_hr_employee_new` hook
  *
  * @return void
  */
 function erp_hr_apply_policy_on_new_employee( $user_id ) {
-    $policies = \WeDevs\ERP\HRM\Models\Leave_Policies::where( 'activate', 1 )->get();
+    // 1. get current financial year
+    $f_year = erp_hr_get_financial_year_from_date();
+
+    if ( empty( $f_year ) ) {
+        return;
+    }
+
+    // 2. get policies where automatic policy assign is enabled.
+    $policies = Leave_Policy::where( 'apply_for_new_users', 1 )->where( 'f_year', $f_year->id )->get();
 
     $policies->each( function ( $policy ) use ( $user_id ) {
-        erp_hr_apply_policy_to_employee( $policy, [ $user_id ] );
+        $data = array(
+            'user_id'       => $user_id,
+            'leave_id'      => $policy->leave_id,
+            'created_by'    => get_current_user_id(),
+            'trn_id'        => $policy->id,
+            'trn_type'      => 'leave_policies',
+            'day_in'        => $policy->days,
+            'day_out'       => 0,
+            'description'   => $policy->description != '' ? $policy->description : 'Generated',
+            'f_year'        => $policy->f_year,
+        );
+
+        $inserted = erp_hr_leave_insert_entitlement( $data );
     } );
 }
 
@@ -472,13 +566,69 @@ function erp_hr_apply_policy_on_new_employee( $user_id ) {
  *
  * @since 1.2.0
  *
+ * @since 1.6.0
+ *
  * @return void
  */
 function erp_hr_apply_scheduled_policies() {
-    $policies = \WeDevs\ERP\HRM\Models\Leave_Policies::where( 'activate', 2 )->get();
+    $policies = Leave_Policy::where( 'apply_for_new_users', 1 )->get();
 
     $policies->each( function ( $policy ) {
-        erp_hr_apply_policy_to_employee( $policy );
+
+        // 1. get all employee
+        $employees = erp_hr_get_employees( array(
+            'department'    => $policy->department_id,
+            'location'      => $policy->location_id,
+            'designation'   => $policy->designation_id,
+            'gender'        => $policy->gender,
+            'marital_status'    => $policy->marital,
+            'number'            => '-1',
+            'no_object'         => true,
+        ) );
+
+        if ( ! count( $employees ) ) {
+            return;
+        }
+
+        $employees = wp_list_pluck( $employees, 'display_name', 'user_id' );
+
+        // 2. get already entitled users and remove them from queue
+        if ( $policy->entitlements ) {
+            foreach ( $policy->entitlements as $entitlement ) {
+                if ( array_key_exists( $entitlement['user_id'], $employees ) ) {
+                    unset( $employees[ $entitlement['user_id'] ] );
+                }
+            }
+        }
+
+        if ( count( $employees ) ) {
+            $entitlement_bg = new \WeDevs\ERP\HRM\Leave_Entitlement_BG_Process();
+
+            foreach ( $employees as $employee_id => $employee_name ) {
+                $entitlement_bg->push_to_queue(
+                    array(
+                        'user_id'       => $employee_id,
+                        'leave_id'      => $policy->leave_id,
+                        'created_by'    => get_current_user_id(),
+                        'trn_id'        => $policy->id,
+                        'trn_type'      => 'leave_policies',
+                        'day_in'        => $policy->days,
+                        'day_out'       => 0,
+                        'description'   => $policy->description != '' ? $policy->description : 'Generated',
+                        'f_year'        => $policy->f_year,
+                    )
+                );
+            }
+
+            $entitlement_bg->save();
+
+            /**
+             * Run the queue, starting with leave entitlements data
+             */
+            $entitlement_bg->dispatch();
+        }
+
+        //erp_hr_apply_policy_to_employee( $policy );
     } );
 }
 
@@ -521,7 +671,7 @@ function erp_hr_leave_insert_holiday( $args = array() ) {
     $holiday_id = (int) $args['id'];
     unset( $args['id'] );
 
-    $holiday = new \WeDevs\ERP\HRM\Models\Leave_Holiday();
+    $holiday = new Leave_Holiday();
 
     if ( ! $holiday_id ) {
         // insert a new
@@ -549,54 +699,123 @@ function erp_hr_leave_insert_holiday( $args = array() ) {
  *
  * @since 0.1
  *
+ * @since 1.6.0 updated code to reflect new leave data structure
+ *
  * @param array $args
  *
  * @return array
  */
 function erp_hr_leave_get_policies( $args = array() ) {
+    global $wpdb;
 
     $defaults = array(
-        'number'  => 99,
-        'offset'  => 0,
-        'orderby' => 'name',
-        'order'   => 'ASC',
+        'number'        => 99,
+        'offset'        => 0,
+        'orderby'       => 'id',
+        'order'         => 'ASC',
+        'department_id' => '',
+        'location_id'   => '',
+        'designation_id' => '',
+        'gender'        => '',
+        'marital'       => '',
+        'f_year'        => '0',
     );
 
     $args = wp_parse_args( $args, $defaults );
 
+    // sanitize inputs
+    array_walk_recursive( $args, function( &$value, $key ) {
+        $value = wp_unslash( $value );
+        switch ( $key ) {
+            case 'number':
+            case 'offset':
+            case 'department_id':
+            case 'location_id':
+            case 'designation_id':
+            case 'f_year':
+                $value = intval( $value );
+                break;
 
-    $cache_key = 'erp-leave-pol';
+            case 'orderby':
+            case 'order':
+            case 'gender':
+            case 'marital':
+                $value = sanitize_text_field( $value );
+                break;
+
+            default:
+                $value = sanitize_text_field( $value );
+                break;
+        }
+    } );
+
+    $cache_key = 'erp-get-policies-' . md5( serialize( $args ) );
     $policies  = wp_cache_get( $cache_key, 'erp' );
 
     if ( false === $policies ) {
+        $policies = Leave_Policy::select( \WeDevs\ORM\Eloquent\Facades\DB::raw( 'SQL_CALC_FOUND_ROWS *' ))
+                                ->skip( $args['offset'] )
+                                ->take( $args['number'] )
+                                ->orderBy( $args['orderby'], $args['order'] );
 
-        $policies = erp_array_to_object(
-            \WeDevs\ERP\HRM\Models\Leave_Policies::select( array(
-                'id',
-                'name',
-                'value',
-                'color',
-                'department',
-                'designation',
-                'gender',
-                'marital',
-                'activate',
-                'execute_day',
-                'effective_date',
-                'location',
-                'description'
-            ) )
-                ->skip( $args['offset'] )
-                ->take( $args['number'] )
-                ->orderBy( $args['orderby'], $args['order'] )
-                ->get()
-                ->toArray()
-        );
+        if ( $args['department_id'] ) {
+            $policies->where( 'department_id', '=', $args['department_id'] );
+        }
 
+        if ( $args['location_id'] ) {
+            $policies->where( 'location_id', '=', $args['location_id'] );
+        }
+
+        if ( $args['designation_id'] ) {
+            $policies->where( 'designation_id', '=', $args['designation_id'] );
+        }
+
+        if ( $args['gender'] ) {
+            $policies->where( 'gender', '=', $args['gender'] );
+        }
+
+        if ( $args['marital'] ) {
+            $policies->where( 'marital', '=', $args['marital'] );
+        }
+
+        if ( $args['f_year'] ) {
+            $policies->where( 'f_year', '=', $args['f_year'] );
+        }
+
+        $policies = $policies->get();
+
+        $total_row_found = absint( $wpdb->get_var( "SELECT FOUND_ROWS()" ) );
+
+        $formatted_data = array();
+
+        foreach( $policies as $key => $policy ) {
+            $department  = empty( $policy->department )  ? esc_attr__('All', 'erp') : $policy->department->title;
+            $designation = empty( $policy->designation ) ? esc_attr__('All', 'erp') : $policy->designation->title;
+            $gender      = $policy->gender == '-1'       ? esc_attr__('All', 'erp') : ucwords( $policy->gender );
+            $marital     = $policy->marital == '-1'      ? esc_attr__('All', 'erp') : ucwords( $policy->marital );
+            $location    = $policy->location_id == '-1'  ? esc_attr__('All', 'erp') : $policy->location->name;
+
+            $formatted_data[$key]['id']             = $policy->id;
+            $formatted_data[$key]['leave_id']       = $policy->leave_id;
+            $formatted_data[$key]['name']           = $policy->leave->name;
+            $formatted_data[$key]['description']    = $policy->description;
+            $formatted_data[$key]['days']           = $policy->days;
+            $formatted_data[$key]['color']          = $policy->color;
+            $formatted_data[$key]['department_id']  = $policy->department_id;
+            $formatted_data[$key]['department']     = $department;
+            $formatted_data[$key]['designation_id'] = $policy->designation_id;
+            $formatted_data[$key]['designation']    = $designation;
+            $formatted_data[$key]['location']       = $location;
+            $formatted_data[$key]['f_year']         = $policy->financial_year->fy_name;
+            $formatted_data[$key]['gender']         = $gender;
+            $formatted_data[$key]['marital']        = $marital;
+        }
+
+        $policies = erp_array_to_object( $formatted_data );
         wp_cache_set( $cache_key, $policies, 'erp' );
     }
 
-    return $policies;
+    return array( 'data' => $policies, 'total' => $total_row_found );
 }
 
 /**
@@ -609,7 +828,7 @@ function erp_hr_leave_get_policies( $args = array() ) {
  * @return \stdClass
  */
 function erp_hr_leave_get_policy_by_name( $name ) {
-    return \WeDevs\ERP\HRM\Models\Leave_Policies::where( 'name', $name )->first();
+    return Leave_Policy::where( 'name', $name )->first();
 }
 
 /**
@@ -623,7 +842,7 @@ function erp_hr_leave_get_policy_by_name( $name ) {
  * @return \stdClass
  */
 function erp_hr_leave_get_policy( $policy_id ) {
-    return \WeDevs\ERP\HRM\Models\Leave_Policies::find( $policy_id );
+    return Leave_Policy::find( $policy_id );
 }
 
 /**
@@ -634,7 +853,7 @@ function erp_hr_leave_get_policy( $policy_id ) {
  * @return integer
  */
 function erp_hr_count_leave_policies() {
-    return \WeDevs\ERP\HRM\Models\Leave_Policies::count();
+    return Leave_Policy::count();
 }
 
 /**
@@ -657,7 +876,7 @@ function erp_hr_get_holidays( $args = [] ) {
 
     $args = wp_parse_args( $args, $defaults );
 
-    $holiday = new \WeDevs\ERP\HRM\Models\Leave_Holiday();
+    $holiday = new Leave_Holiday();
 
     $holiday_results = $holiday->select( array( 'id', 'title', 'start', 'end', 'description' ) );
 
@@ -701,7 +920,7 @@ function erp_hr_get_holidays( $args = [] ) {
  */
 function erp_hr_count_holidays( $args ) {
 
-    $holiday = new \WeDevs\ERP\HRM\Models\Leave_Holiday();
+    $holiday = new Leave_Holiday();
     $holiday = erp_hr_holiday_filter_param( $holiday, $args );
 
     return $holiday->count();
@@ -755,31 +974,29 @@ function erp_hr_delete_holidays( $holidays_id ) {
             do_action( 'erp_hr_leave_holiday_delete', $holiday_id );
         }
 
-        \WeDevs\ERP\HRM\Models\Leave_Holiday::destroy( $holidays_id );
+        Leave_Holiday::destroy( $holidays_id );
 
     } else {
         do_action( 'erp_hr_leave_holiday_delete', $holidays_id );
 
-        return \WeDevs\ERP\HRM\Models\Leave_Holiday::find( $holidays_id )->delete();
+        return Leave_Holiday::find( $holidays_id )->delete();
     }
 }
 
 /**
  * Get policies as formatted for dropdown
  *
- * @since 0.1
+ * @param array $args data to filter leave policies
  *
  * @return array
+ * @since 0.1
+ * @since 1.6.0 added $args argument
+ *
+ *
  */
-function erp_hr_leave_get_policies_dropdown_raw() {
-    $policies = erp_hr_leave_get_policies();
-    $dropdown = array();
-
-    foreach ( $policies as $policy ) {
-        $dropdown[ $policy->id ] = stripslashes( $policy->name );
-    }
-
-    return $dropdown;
+function erp_hr_leave_get_policies_dropdown_raw( $args = array() ) {
+    $data = erp_hr_leave_get_policies( $args );
+    return wp_list_pluck( $data['data'], 'name', 'id' );
 }
 
 /**
@@ -787,26 +1004,52 @@ function erp_hr_leave_get_policies_dropdown_raw() {
  *
  * @since 0.1
  *
+ * @since 1.6.0
+ *
  * @param  int|array $policy_ids
  *
  * @return void
  */
 function erp_hr_leave_policy_delete( $policy_ids ) {
+
+    // Check permission
+    if ( ! current_user_can( 'erp_leave_manage' ) ) {
+        wp_die( esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
+    }
+
     if ( ! is_array( $policy_ids ) ) {
         $policy_ids = [ $policy_ids ];
     }
 
-    $policies = \WeDevs\ERP\HRM\Models\Leave_Policies::find( $policy_ids );
+    $policies = Leave_Policy::find( $policy_ids );
 
     $policies->each( function ( $policy ) {
-        $has_request = $policy->leave_requests()->count();
-
-        if ( ! $has_request ) {
-            $policy->entitlements()->delete();
-            $policy->delete();
-
-            do_action( 'erp_hr_leave_policy_delete', $policy );
+        if ( $policy->entitlements ) {
+            foreach ( $policy->entitlements as $entitlement ) {
+                if ( $entitlement->leave_requests ) {
+                    foreach( $entitlement->leave_requests as $request ) {
+                        if ( $request->approval_status ) {
+                            foreach ( $request->approval_status as $status ) {
+                                if ( $status->entitlements ) {
+                                    foreach ( $status->entitlements as $entl ) {
+                                        $entl->delete();
+                                    }
+                                }
+                                $status->delete();
+                            }
+                        }
+                        if ( $request->unpaid ) {
+                            $request->unpaid->delete();
+                        }
+                        $request->delete();
+                    }
+                }
+                $entitlement->delete();
+            }
         }
+        $policy->delete();
+
+        do_action( 'erp_hr_leave_policy_delete', $policy );
     } );
 }
 
@@ -815,41 +1058,40 @@ function erp_hr_leave_policy_delete( $policy_ids ) {
  * Get assign policies according to employee entitlement
  *
  * @since 0.1
+ * @since 1.6.0 changed according to new db structure.
  *
  * @param  integer $employee_id
  *
  * @return boolean|array
  */
-function erp_hr_get_assign_policy_from_entitlement( $employee_id ) {
+function erp_hr_get_assign_policy_from_entitlement( $employee_id, $date = null ) {
+
+    $f_year = erp_hr_get_financial_year_from_date( $date );
+
+    if ( empty( $f_year ) ) {
+        return false;
+    }
 
     global $wpdb;
 
-    $data      = [];
-    $dropdown  = [];
-    $policy    = new \WeDevs\ERP\HRM\Models\Leave_Policies();
-    $en        = new \WeDevs\ERP\HRM\Models\Leave_Entitlement();
-    $policy_tb = $wpdb->prefix . 'erp_hr_leave_policies';
-    $en_tb     = $wpdb->prefix . 'erp_hr_leave_entitlements';
+    $entitlement_table = "{$wpdb->prefix}erp_hr_leave_entitlements";
+    $leave_table = "{$wpdb->prefix}erp_hr_leaves";
 
-    $financial_start_date = erp_financial_start_date();
-    $financial_end_date   = erp_financial_end_date();
+     $policies = Leave_Entitlement::select( $entitlement_table . '.id', $leave_table . '.name' )
+         ->leftjoin( $leave_table, $entitlement_table . '.leave_id', '=', $leave_table . '.id' )
+         ->where( $entitlement_table . '.trn_type', '=', 'leave_policies' )
+         ->where( $entitlement_table . '.user_id', '=', $employee_id )
+         ->where( $entitlement_table . '.f_year', '=', $f_year->id )
+         ->get()
+         ->toArray();
 
-    $policies = \WeDevs\ERP\HRM\Models\Leave_Policies::select( $policy_tb . '.name', $policy_tb . '.id' )
-                                                     ->leftjoin( $en_tb, $en_tb . '.policy_id', '=', $policy_tb . '.id' )
-                                                     ->where( $en_tb . '.user_id', $employee_id )
-                                                     ->where( 'from_date', '>=', $financial_start_date )
-                                                     ->where( 'to_date', '<=', $financial_end_date )
-                                                     ->distinct()
-                                                     ->get()
-                                                     ->toArray();
+     if ( is_array( $policies ) && ! empty( $policies ) ) {
+         foreach ( $policies as $policy ) {
+             $dropdown[ $policy['id'] ] = stripslashes( $policy['name'] );
+         }
 
-    if ( ! empty( $policies ) ) {
-        foreach ( $policies as $policy ) {
-            $dropdown[ $policy['id'] ] = stripslashes( $policy['name'] );
-        }
-
-        return $dropdown;
-    }
+         return $dropdown;
+     }
 
     return false;
 }
@@ -858,45 +1100,82 @@ function erp_hr_get_assign_policy_from_entitlement( $employee_id ) {
  * Add a new leave request
  *
  * @since 0.1
+ * @since 1.6.0
  *
  * @param  array $args
  *
  * @return integet request_id
  */
 function erp_hr_leave_insert_request( $args = array() ) {
+
     global $wpdb;
 
     $defaults = array(
         'user_id'      => 0,
         'leave_policy' => 0,
-        'start_date'   => current_time( 'mysql' ),
-        'end_date'     => current_time( 'mysql' ),
+        'start_date'   => erp_current_datetime()->getTimestamp(),
+        'end_date'     => erp_current_datetime()->getTimestamp(),
         'reason'       => '',
         'status'       => 0
     );
 
     $args = wp_parse_args( $args, $defaults );
-    extract( $args );
 
-    if ( ! intval( $user_id ) ) {
-        return new WP_Error( 'no-employee', __( 'No employee ID provided.', 'erp' ) );
+    if ( ! intval( $args['user_id'] ) ) {
+        return new WP_Error( 'no-employee', esc_attr__( 'No employee ID provided.', 'erp' ) );
     }
 
-    if ( ! intval( $leave_policy ) ) {
-        return new WP_Error( 'no-policy', __( 'No leave policy provided.', 'erp' ) );
+    if ( ! intval( $args['leave_policy'] ) ) {
+        return new WP_Error( 'no-policy', esc_attr__( 'No leave policy provided.', 'erp' ) );
     }
 
-    $period = erp_hr_get_work_days_between_dates( $start_date, $end_date );
+    $period = erp_hr_get_work_days_between_dates( $args['start_date'], $args['end_date'], $args['user_id'] );
 
     if ( is_wp_error( $period ) ) {
         return $period;
     }
 
+    // get balance
+    $entitlement = Leave_Entitlement::find( $args['leave_policy'] );
+
+    if ( ! $entitlement ) {
+        return new WP_Error( 'no-entitlement', esc_attr__( 'No entitlement found with given id.', 'erp' ) );
+    }
+
+    // validate start and end date
+    if ( $args['start_date'] > $args['end_date'] ) {
+        return new WP_Error( 'invalid-dates', esc_attr__( 'Invalid date range.', 'erp' ) );
+    }
+
+    // check for unpaid leave
+    if ( get_option( 'enable_extra_leave', 'no' ) !== 'yes' ) {
+        $is_policy_valid = erp_hrm_is_valid_leave_duration( $args['start_date'], $args['end_date'], $args['leave_policy'], $args['user_id'] );
+
+        if ( ! $is_policy_valid ) {
+            return new WP_Error( 'invalid-dates', esc_attr__( 'Sorry! You do not have any leave left under this leave policy.', 'erp' ) );
+        }
+    }
+
+    // check start_date and end_date are in the same f_year
+    $f_year_start = erp_current_datetime()->setTimestamp( $entitlement->financial_year->start_date)->format( 'Y-m-d' );
+    $f_year_end = erp_current_datetime()->setTimestamp( $entitlement->financial_year->end_date)->format( 'Y-m-d' );
+
+    if ( ( $args['start_date'] < $f_year_start || $args['start_date'] > $f_year_end ) || ( $args['end_date'] < $f_year_start || $args['end_date'] > $f_year_end )  ) {
+        return new WP_Error( 'invalid-dates', sprintf( esc_attr__( 'Invalid leave duration. Please apply between %s and %s.', 'erp' ), erp_format_date( $f_year_start ), erp_format_date( $f_year_end ) ) );
+    }
+
+    // handle overlapped leaves
+    $leave_record_exist = erp_hrm_is_leave_recored_exist_between_date( $args['start_date'], $args['end_date'], $args['user_id'], $entitlement->f_year );
+    if ( $leave_record_exist ) {
+        return new WP_Error( 'invalid-dates', esc_attr__( 'Existing Leave Record found within selected range!', 'erp' ) );
+    }
+
+
     // prepare the periods
     $leaves = array();
     if ( $period['days'] ) {
         foreach ( $period['days'] as $date ) {
-            if ( ! $date['count'] ) {
+            if ( class_exists( '\weDevs\ERP_PRO\HR\Leave' ) && get_option( 'erp_pro_sandwich_leave', '') !== 'yes' && ! $date['count'] ) { // skip if holiday or not working day
                 continue;
             }
 
@@ -914,25 +1193,23 @@ function erp_hr_leave_insert_request( $args = array() ) {
     if ( $leaves ) {
 
         $request = apply_filters( 'erp_hr_leave_new_args', [
-            'user_id'    => $user_id,
-            'policy_id'  => $leave_policy,
-            'days'       => count( $leaves ),
-            'start_date' => $start_date,
-            'end_date'   => $end_date,
-            'reason'     => wp_kses_post( $reason ),
-            'status'     => 2, // default is pending
+            'user_id'    => $args['user_id'],
+            'leave_id'   => $entitlement->leave_id,
+            'leave_entitlement_id' => $entitlement->id,
+            'day_status_id' => '1',
+            //'days'       => count( $leaves ),
+            'days'       => absint( $period['total'] ),
+            'start_date' => erp_current_datetime()->modify( $args['start_date'] )->setTime( 0, 0, 0 )->getTimestamp(),
+            'end_date'   => erp_current_datetime()->modify( $args['end_date'] )->setTime( 0, 0, 0 )->getTimestamp(),
+            'reason'     => wp_kses_post( $args['reason'] ),
+            'last_status' => '2',
             'created_by' => get_current_user_id(),
-            'created_on' => current_time( 'mysql' ),
+            'created_at' => erp_current_datetime()->getTimestamp(),
+            'updated_at' => erp_current_datetime()->getTimestamp(),
         ] );
 
         if ( $wpdb->insert( $wpdb->prefix . 'erp_hr_leave_requests', $request ) ) {
             $request_id = $wpdb->insert_id;
-
-            foreach ( $leaves as $leave ) {
-                $leave['request_id'] = $request_id;
-
-                $wpdb->insert( $wpdb->prefix . 'erp_hr_leaves', $leave );
-            }
 
             do_action( 'erp_hr_leave_new', $request_id, $request, $leaves );
 
@@ -951,135 +1228,292 @@ function erp_hr_leave_insert_request( $args = array() ) {
  * @return object
  */
 function erp_hr_get_leave_request( $request_id ) {
-    global $wpdb;
+    $request_data = erp_hr_get_leave_requests( array( 'request_id' => $request_id ) );
 
-    $sql = "SELECT req.id, req.user_id, u.display_name, req.policy_id, pol.name as policy_name, req.status, req.reason, req.comments, req.created_on, req.days, req.start_date, req.end_date
-        FROM {$wpdb->prefix}erp_hr_leave_requests AS req
-        LEFT JOIN {$wpdb->prefix}erp_hr_leave_policies AS pol ON pol.id = req.policy_id
-        LEFT JOIN $wpdb->users AS u ON req.user_id = u.ID
-        WHERE req.id = %d";
+    if ( isset( $request_data['data'] )  && is_array( $request_data['data'] ) && ! empty( $request_data['data'] ) ) {
+        return $request_data['data'][0];
+    }
 
-    $row = $wpdb->get_row( $wpdb->prepare( $sql, $request_id ) );
-
-    return $row;
+    return null;
 }
 
 /**
  * Fetch the leave requests
  *
  * @since 0.1
+ * @since 1.6.0
  *
  * @param  array $args
  *
  * @return array
  */
 function erp_hr_get_leave_requests( $args = array() ) {
+
     global $wpdb;
 
     $defaults = array(
-        'user_id'   => 0,
-        'policy_id' => 0,
-        'status'    => 1,
-        'year'      => date( 'Y' ),
-        'number'    => 20,
-        'offset'    => 0,
-        'orderby'   => 'created_on',
-        'order'     => 'DESC',
-        'start_date' => '',
-        'end_date'   => ''
+        'request_id'     => 0,
+        'user_id'        => 0,
+        'policy_id'      => 0,
+        'status'         => '',
+        'year'           => 0,
+        'f_year'         => 0,
+        'number'         => 20,
+        'offset'         => 0,
+        'orderby'        => 'created_at',
+        'order'          => 'DESC',
+        'start_date'     => '',
+        'end_date'       => '',
+        'department_id'  => 0,
+        'designation_id' => 0,
+        'lead'           => 0,
+        's'              => '',
     );
 
     $args  = wp_parse_args( $args, $defaults );
-    $where = '';
 
-    // Check if the row want to search
-    if ( ! empty( $args['s'] ) ) {
-        $where .= " WHERE u.display_name LIKE '%{$args['s']}%'";
+    array_walk_recursive( $args, function( &$value, $key ) {
+        $value = wp_unslash( $value );
+        switch ( $key ) {
+            case 'request_id':
+            case 'user_id':
+            case 'policy_id':
+            case 'f_year':
+            case 'offset':
+            case 'year':
+            case 'lead':
+            case 'calendar':
+                $value = absint( $value );
+                break;
+
+            case 'number':
+            case 'department_id':
+            case 'designation_id':
+                $value = intval( $value );
+                break;
+
+            default:
+                $value = sanitize_text_field( trim( $value ) );
+                break;
+        }
+    });
+
+    // fix orderby parameter
+    if ( $args['orderby'] == 'created_on' ) {
+        $args['orderby'] = 'request.created_at';
     }
-
-    if ( 'all' != $args['status'] && $args['status'] != '' ) {
-
-        if ( empty( $where ) ) {
-            $where .= " WHERE";
-        } else {
-            $where .= " AND";
-        }
-
-        if ( is_array( $args['status'] ) ) {
-            $where .= " `status` IN(" . implode( ",", array_map( 'intval', $args['status'] ) ) . ") ";
-        } else {
-            $where .= " `status` = " . intval( $args['status'] ) . " ";
-        }
+    elseif ( in_array( $args['orderby'], array( 'start_date', 'end_date', 'name', 'created_at' ) ) ) {
+        $args['orderby'] = 'request.' . $args['orderby'];
     }
-
-    if ( $args['user_id'] != '0' ) {
-
-        if ( empty( $where ) ) {
-            $where .= " WHERE req.user_id = " . intval( $args['user_id'] );
-        } else {
-            $where .= " AND req.user_id = " . intval( $args['user_id'] );
-        }
-    }
-
-    if ( $args['policy_id'] ) {
-
-        if ( empty( $where ) ) {
-            $where .= " WHERE req.policy_id = " . intval( $args['policy_id'] );
-        } else {
-            $where .= " AND req.policy_id = " . intval( $args['policy_id'] );
-        }
-    }
-
-    if ( ! empty( $args['year'] ) ) {
-        $from_date = $args['year'] . '-01-01';
-        $to_date   = $args['year'] . '-12-31';
-
-        if ( empty( $where ) ) {
-            $where .= " WHERE req.start_date >= date('$from_date') AND req.start_date <= date('$to_date')";
-        } else {
-            $where .= " AND req.start_date >= date('$from_date') AND req.start_date <= date('$to_date')";
-        }
-    }
-
-    if ( $args['start_date']  && $args['end_date'] ) {
-        $from_date = $args['start_date'];
-        $to_date   = $args['end_date'];
-
-        if ( empty( $where ) ) {
-            $where .= " WHERE req.start_date >= date('$from_date') AND req.start_date <= date('$to_date')";
-        } else {
-            $where .= " AND req.start_date >= date('$from_date') AND req.start_date <= date('$to_date')";
-        }
+    elseif ( $args['orderby'] == 'name' ) {
+        $args['orderby'] = 'u.' . $args['orderby'];
     }
 
     $cache_key = 'erp_hr_leave_requests_' . md5( serialize( $args ) );
     $requests  = wp_cache_get( $cache_key, 'erp' );
-    $limit     = $args['number'] == '-1' ? '' : 'LIMIT %d, %d';
 
-    $sql = "SELECT req.id, req.user_id, u.display_name, req.policy_id, pol.name as policy_name, req.status, req.reason, req.comments, req.created_on, req.days, req.start_date, req.end_date
-        FROM {$wpdb->prefix}erp_hr_leave_requests AS req
-        LEFT JOIN {$wpdb->prefix}erp_hr_leave_policies AS pol ON pol.id = req.policy_id
-        LEFT JOIN $wpdb->users AS u ON req.user_id = u.ID
-        $where
-        ORDER BY {$args['orderby']} {$args['order']}
-        $limit";
-
-    if ( $requests === false ) {
-        if ( $args['number'] == '-1' ) {
-            $requests = $wpdb->get_results( $sql );
-        } else {
-            $requests = $wpdb->get_results( $wpdb->prepare( $sql, absint( $args['offset'] ), absint( $args['number'] ) ) );
-        }
-        wp_cache_set( $cache_key, $requests, 'erp', HOUR_IN_SECONDS );
+    if ( false !== $requests ) {
+        return $requests;
     }
 
-    return $requests;
+    //return erp_array_to_object( $formatted_data );
+
+    $leave_requests_table = $wpdb->prefix . 'erp_hr_leave_requests';
+    $tables = " FROM $leave_requests_table as request";
+
+    $fields = 'SELECT SQL_CALC_FOUND_ROWS request.id, u.display_name';
+    $fields .= ', policy.color';
+
+    $join = " LEFT JOIN {$wpdb->users} AS u ON u.ID = request.user_id";
+    $join .= " LEFT JOIN {$wpdb->prefix}erp_hr_leave_entitlements AS entl ON request.leave_entitlement_id = entl.id";
+    $join .= " LEFT JOIN {$wpdb->prefix}erp_hr_leave_policies AS policy ON policy.id = entl.trn_id";
+
+    $where = ' WHERE 1=1';
+    $where .= " AND entl.trn_type = 'leave_policies'" ;
+
+    $groupby = '';
+    $orderby = " ORDER BY {$args['orderby']} {$args['order']}";
+
+    $offset = absint( $args['offset'] );
+    $number = absint( $args['number'] );
+    $limit = $args['number'] == '-1' ? '' : " LIMIT {$offset}, {$number}";
+
+    // filter by request_id
+    if ( $args['lead'] ) {
+        $args['user'] = 0;
+
+        // get all user ids for this lead
+        $args['users'] = erp_hr_get_dept_lead_subordinate_employees( $args['lead'] );
+
+        $where .= " AND request.user_id in (" . implode( ', ', $args['users'] ) . ')' ;
+    }
+
+    if ( $args['department_id'] && $args['designation_id'] ) {
+        $args['user'] = 0;
+        $users = \WeDevs\ERP\HRM\Models\Employee::select('user_id')
+                            ->where( 'department', $args['department_id'] )
+                            ->where( 'designation', $args['designation_id'] );
+
+        if ( $users->count() ) {
+            $user_ids = $users->pluck('user_id')->toArray();
+            $where .= " AND request.user_id in (" . implode( ', ', $user_ids ) . ')' ;
+        }
+    }
+    elseif ( $args['department_id'] ) {
+        $args['user'] = 0;
+        $users = \WeDevs\ERP\HRM\Models\Employee::select('user_id')
+                                                ->where( 'department', $args['department_id'] );
+
+        if ( $users->count() ) {
+            $user_ids = $users->pluck('user_id')->toArray();
+            $where .= " AND request.user_id in (" . implode( ', ', $user_ids ) . ')' ;
+        }
+    }
+    elseif ( $args['designation_id'] ) {
+        $args['user'] = 0;
+        $users = \WeDevs\ERP\HRM\Models\Employee::select('user_id')
+                                                ->where( 'designation', $args['designation_id'] );
+
+        if ( $users->count() ) {
+            $user_ids = $users->pluck('user_id')->toArray();
+            $where .= " AND request.user_id in (" . implode( ', ', $user_ids ) . ')' ;
+        }
+    }
+
+    if ( is_numeric( $args['request_id'] ) && $args['request_id'] > 0 ) {
+        $where .= " AND request.id = " .  $args['request_id'];
+    }
+
+    // filter by name
+    if ( ! empty( $args['s'] ) ) {
+        $where .= " AND u.display_name like '%" . esc_sql( $args['s'] ) . "%'";
+    }
+
+    if ( 'all' != $args['status'] && $args['status'] != '' ) {
+        $where .= ' AND request.last_status = ' . absint( $args['status'] );
+    }
+
+    if ( $args['user_id'] ) {
+        $where .= " AND request.user_id = " . $args['user_id'];
+    }
+
+    if ( $args['policy_id'] ) { // @since 1.6.0 policy_id is equal to leave_id
+        $where .= " AND request.leave_id = " . $args['policy_id'];
+    }
+
+    if ( $args['year'] ) {
+        $from_date_string = $args['year'] . '-01-01 00:00:00';
+        $from_date = erp_current_datetime();
+        $from_date = $from_date->modify( $from_date_string );
+
+        $to_date_string = $args['year'] . '-12-31 23:59:59';
+        $to_date = erp_current_datetime();
+        $to_date = $to_date->modify( $to_date_string );
+
+        $where .= " AND request.start_date >= {$from_date->getTimestamp()} AND request.end_date <= {$to_date->getTimestamp()}";
+    }
+
+    if ( $args['f_year'] ) {
+        $where .= ' AND entl.f_year = ' .  $args['f_year'];
+    }
+
+    if ( $args['start_date']  && $args['end_date'] ) {
+        //dates can be timestamps
+        if ( is_numeric( $args['start_date'] ) ) {
+            $from_date = erp_current_datetime();
+            $from_date = $from_date->setTimestamp( $args['start_date'] );
+        }
+        else {
+            $from_date = erp_current_datetime();
+            $from_date = $from_date->modify( $args['start_date'] )->setTime( 0, 0, 0 );
+        }
+
+        // dates can be timstamps
+        if ( is_numeric( $args['end_date'] ) ) {
+            $to_date = erp_current_datetime();
+            $to_date = $to_date->setTimestamp( $args['end_date'] );
+        }
+        else {
+            $to_date = erp_current_datetime();
+            $to_date = $to_date->modify( $args['end_date'] )->setTime( 23, 59, 59 );
+        }
+
+        $where .= " AND request.start_date >= {$from_date->getTimestamp()} AND request.start_date <= {$to_date->getTimestamp()}";
+    }
+
+    $query = $fields . $tables . $join . $where . $orderby . $limit;
+    //echo $query; die();
+    $requests = $wpdb->get_results( $query, ARRAY_A );
+
+    $total_row_found = absint( $wpdb->get_var( "SELECT FOUND_ROWS()" ) );
+
+    //echo "<pre>"; print_r( $requests ); die;
+
+    $formatted_data = array();
+
+    if ( is_array( $requests ) && ! empty( $requests ) ) {
+
+        $available_leaves = array();
+
+        foreach ( $requests as $single_request ) {
+            $request = Leave_Request::find( $single_request['id'] );
+
+            // get available days
+            if ( ! isset( $available_leaves[ $request->user_id ] ) || ! array_key_exists( $request->leave->id, $available_leaves[ $request->user_id ] ) ) {
+
+                $policy_data = erp_hr_leave_get_balance_for_single_entitlement( $request->leave_entitlement_id );
+
+                if ( ! is_array( $policy_data ) || empty( $policy_data ) ) {
+                    continue;
+                }
+
+                $available_leaves[ $request->user_id ][ $request->leave->id ] = $policy_data;
+            }
+
+            $available = isset( $available_leaves[ $request->user_id ][ $request->leave->id ] )
+                ? $available_leaves[ $request->user_id ][ $request->leave->id ]['available'] : 0;
+            $extra = isset( $available_leaves[ $request->user_id ][ $request->leave->id ] )
+                ? $available_leaves[ $request->user_id ][ $request->leave->id ]['extra_leave'] : 0;
+            $spent = isset( $available_leaves[ $request->user_id ][ $request->leave->id ] )
+                ? $available_leaves[ $request->user_id ][ $request->leave->id ]['spent'] : 0;
+            $entitlement = isset( $available_leaves[ $request->user_id ][ $request->leave->id ] )
+                ? $available_leaves[ $request->user_id ][ $request->leave->id ]['entitlement'] : 0;
+
+            $temp_data = array();
+            $temp_data['id']             = $request->id;
+            $temp_data['user_id']        = $request->user_id;
+            $temp_data['name']           = $single_request['display_name'];
+            $temp_data['display_name']   = $single_request['display_name'];
+            $temp_data['leave_id']       = $request->leave_id;
+            $temp_data['policy_name']    = $request->leave->name;
+            $temp_data['start_date']     = $request->start_date;
+            $temp_data['end_date']       = $request->end_date;
+            $temp_data['days']           = $request->days;
+            $temp_data['entitlement']    = $entitlement;
+            $temp_data['available']      = $available;
+            $temp_data['extra_leaves']   = $extra;
+            $temp_data['spent']          = $spent;
+            $temp_data['status']         = $request->last_status;
+            $temp_data['reason']         = $request->reason;
+            $temp_data['message']        = $request->latest_approval_status ? $request->latest_approval_status->message : '';
+            $temp_data['color']          = isset( $single_request['color'] ) ? $single_request['color'] : '';
+            $temp_data['day_status_id']  = $request->day_status_id;
+
+            $formatted_data[] =  $temp_data;
+        }
+    }
+
+    $requests_data = array( 'data' => erp_array_to_object( $formatted_data ), 'total' => $total_row_found, 'sql' => $query );
+    wp_cache_set( $cache_key, $requests_data, 'erp', HOUR_IN_SECONDS );
+
+    return $requests_data;
 }
 
 /**
  * Get leave requests count
  *
  * @since 0.1
+ * @since 1.6.0 updated according to new db strucutre
  *
  * @return array
  */
@@ -1087,28 +1521,44 @@ function erp_hr_leave_get_requests_count() {
     global $wpdb;
 
     $statuses = erp_hr_leave_request_get_statuses();
-    $counts   = array();
-
-    foreach ( $statuses as $status => $label ) {
-        $counts[ $status ] = array( 'count' => 0, 'label' => $label );
-    }
 
     $cache_key = 'erp-hr-leave-request-counts';
-    $results   = wp_cache_get( $cache_key, 'erp' );
+    $counts   = wp_cache_get( $cache_key, 'erp' );
 
-    if ( false === $results ) {
-        $sql     = "SELECT status, COUNT(id) as num FROM {$wpdb->prefix}erp_hr_leave_requests WHERE status != 0 GROUP BY status;";
-        $results = $wpdb->get_results( $sql );
 
-        wp_cache_set( $cache_key, $results, 'erp' );
-    }
+    if ( false === $counts ) {
+        $counts   = array();
+        $total = 0;
 
-    foreach ( $results as $row ) {
-        if ( array_key_exists( $row->status, $counts ) ) {
-            $counts[ $row->status ]['count'] = (int) $row->num;
+        foreach ( $statuses as $status => $label ) {
+            $counts[ $status ] = array( 'count' => 0, 'label' => $label );
         }
 
-        $counts['all']['count'] += (int) $row->num;
+        $total_leave_count = $wpdb->get_results(
+            "SELECT last_status as id, COUNT( last_status ) as count from {$wpdb->prefix}erp_hr_leave_requests GROUP BY last_status", ARRAY_A
+        );
+
+        if ( is_array( $total_leave_count ) && ! empty( $total_leave_count ) ) {
+            foreach ( $total_leave_count as $item ) {
+                $counts[ $item['id'] ]['count'] = $item['count'];
+                $total += $item['count'];
+            }
+        }
+
+        $counts['all']['count'] = $total;
+
+        if ( ! class_exists( '\weDevs\ERP_PRO\HR\Leave\Multilevel' ) ) {
+            if ( isset( $counts['4'] ) ) {
+                unset( $counts['4'] );
+            }
+        }
+        elseif( class_exists( '\weDevs\ERP_PRO\HR\Leave\Multilevel' ) && get_option('erp_pro_multilevel_approval') !== 'yes' ) {
+            if ( isset( $counts['4'] ) ) {
+                unset( $counts['4'] );
+            }
+        }
+
+        wp_cache_set( $cache_key, $counts, 'erp' );
     }
 
     return $counts;
@@ -1130,22 +1580,235 @@ function erp_hr_leave_get_requests_count() {
  *
  * @return object Eloquent Leave_request model
  */
-function erp_hr_leave_request_update_status( $request_id, $status ) {
-    $request = \WeDevs\ERP\HRM\Models\Leave_request::find( $request_id );
+function erp_hr_leave_request_update_status( $request_id, $status, $comments = '' ) {
+
+    if ( current_user_can( 'erp_leave_manage' ) === false && erp_hr_is_current_user_dept_lead() === false ) {
+        return new WP_Error( 'no-permission', esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
+    }
+
+    $request = Leave_Request::find( $request_id );
+
     if ( empty( $request ) ) {
         return new WP_Error( 'no-request-found', __( 'Invalid leave request', 'erp' ) );
     }
+
+    if ( erp_hr_is_current_user_dept_lead() && current_user_can( 'erp_leave_manage' ) === false ) {
+        $is_valid = erp_hr_match_user_dept_lead_with_current_user( $request->user_id );
+        if ( ! $is_valid ) {
+            return new WP_Error( 'no-permission', esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+    }
+
     $status = absint( $status );
-    $existing_request = erp_hr_get_leave_requests( array(
-        'user_id'     => $request->user_id,
-        'status'      => 1,
-        'start_date'  => $request->start_date,
-        'end_date'    => $request->end_date,
-    ) );
 
+    $old_leave_status = isset( $request->latest_approval_status->approval_status_id ) ? absint( $request->latest_approval_status->approval_status_id ) : 2; // by default status is pending
 
-    $request->status     = $status;
-    $request->updated_by = get_current_user_id();
+    // return if old and new status are same.
+    if ( $request->last_status == $status ) {
+        return new WP_Error( 'no-leave-status', __( 'Invalid leave status. Please check your input.', 'erp' ) );
+    }
+
+    // check if reject reason exist
+    if ( $status === 3 && $comments === '' ) {
+        return new WP_Error( 'no-leave-reason', __( 'Please provide a reject reason for given leave request.', 'erp' ) );
+    }
+
+    // get entitlements
+    if ( ! $request->entitlement->id ) {
+        return new WP_Error( 'invalid-entitlement', __( 'No Entitlement found for given request.', 'erp' ) );
+    }
+
+    // past records can't be edited
+    $financial_years = array();
+
+    // get current financial year
+    $current_f_year = erp_hr_get_financial_year_from_date();
+    if ( null === $current_f_year ) {
+        return new WP_Error( 'invalid-f_year', __( 'No current leave year found.', 'erp' ) );
+    }
+
+    foreach ( Financial_Year::all() as $f_year ) {
+        if ( $f_year['start_date'] < $current_f_year->start_date ) {
+            continue;
+        }
+        $financial_years[ $f_year['id'] ] = $f_year['fy_name'];
+    }
+
+    if ( ! array_key_exists( $request->entitlement->f_year, $financial_years ) ) {
+        return new WP_Error( 'invalid-entitlement', __( 'Error: You can not modify past leave year requests.', 'erp' ) );
+    }
+
+    do_action( "erp_hr_leave_request_before_process", $request_id, $status, $comments );
+
+    // approval status table data
+    $approval_status_data = array(
+        'leave_request_id'      => $request_id,
+        'approval_status_id'    => $status,
+        'approved_by'           => get_current_user_id(),
+    );
+
+    // leave entitlement table data
+    $entitlement_data = array(
+        'user_id'       => $request->user_id,
+        'leave_id'      => $request->leave_id,
+        'created_by'    => get_current_user_id(),
+        'trn_id'        => 0,
+        'trn_type'      => 'leave_approval_status',
+        'description'   => '',
+        'day_in'        => 0,
+        'day_out'       => 0,
+        'f_year'        => 0,
+    );
+
+    // unpaid leave table data
+    $unpaid_leave_data = array(
+        'leave_id'                  => $request->leave_id,
+        'leave_request_id'          => $request_id,
+        'leave_approval_status_id'  => 0,
+        'user_id'                   => $request->user_id,
+        'days'                      => 0,
+        'f_year'                    => $request->entitlement->f_year
+    );
+
+    //
+    switch ( $request->last_status ) {
+        case 1: // approved
+            if ( $status === 3 ) { // reject this request
+                // 1. Get latest approval_status_id for current request
+                if ( ! $request->latest_approval_status->id ) {
+                    return new WP_Error( 'no-approval-status', esc_attr__( 'Invalid Request: No previous records found for given request.') );
+                }
+                $old_approval_status_id = $request->latest_approval_status->id;
+
+                // 2. Add new approval status record
+                $approval_status_data['message'] = $comments;
+                $approval_status = Leave_Approval_Status::create( $approval_status_data );
+
+                // 3. Add new leave entitlement record
+                $entitlement_data['day_in']     = $request->days;
+                $entitlement_data['f_year']     = $request->entitlement->f_year;
+                $entitlement_data['trn_id']     = $approval_status->id;
+                $entitlement_data['description'] = 'Rejected';
+                $leave_entitlement = Leave_Entitlement::create( $entitlement_data );
+
+                // 4. Delete data from leave request details table
+                $deleted = Leave_Request_Detail::where( 'leave_request_id', '=', $request->id )->delete();
+
+                // 5. Delete data from unpaid leave table
+                $deleted = Leaves_Unpaid::where( 'leave_request_id', '=', $request->id )->delete();
+
+                // 6. Delete data from entitlement table for trn_type = unpaid leave
+                $deleted = Leave_Entitlement::where('trn_id', '=', $old_approval_status_id )
+                                            ->where( 'trn_type', '=', 'unpaid_leave' )->delete();
+            }
+            break;
+
+        case 2: // pending
+        case 3: // rejected
+        case 4: // forwarded
+            if ( $status === 1 ) { // approve this request
+                // 0. check if we are in the same financial year
+                $f_year_start = $request->entitlement->financial_year->start_date;
+                $f_year_end = $request->entitlement->financial_year->end_date;
+
+                if ( ( $request->start_date < $f_year_start || $request->start_date > $f_year_end ) || ( $request->end_date < $f_year_start || $request->end_date > $f_year_end )  ) {
+                    return new WP_Error( 'invalid-date-range', sprintf( esc_attr__( 'Invalid leave duration. Please apply between %s and %s.', 'erp' ), erp_format_date( $f_year_start ), erp_format_date( $f_year_end ) ) );
+                }
+
+                // 1. check if we got same date range already approved
+                $leave_exist = erp_hrm_is_leave_recored_exist_between_date( $request->start_date, $request->end_date, $request->user_id, $request->entitlement->f_year );
+
+                if ( $leave_exist ) {
+                    return new WP_Error( 'leave-exist', esc_attr__( 'Approved leave request found within given range!', 'erp' ) );
+                }
+
+                $balance = erp_hr_leave_get_balance_for_single_entitlement( $request->entitlement->id );
+                if ( empty( $balance ) ) {
+                    return new WP_Error( 'invalid-entitlement-id', esc_attr__( 'No entitlement found for given request. Please check your input.', 'erp' ) );
+                }
+
+                $work_days = erp_hr_get_work_days_between_dates( $request->start_date, $request->end_date, $request->user_id );
+
+                if ( is_wp_error( $work_days ) ) {
+                    return $work_days;
+                }
+
+                $extra_days = 0;
+
+                // 2. check if leave available
+                if ( $request->days > $balance['available'] ) {
+                    // check if extra leaves enabled
+                    $is_extra_leave_enabled = get_option( 'enable_extra_leave', 'no' );
+
+                    if ( $is_extra_leave_enabled !== 'yes' ) {
+                        return new WP_Error( 'extra-leave-disabled', esc_attr__( 'Sorry! given request do not have any leave left under this leave policy. If you still want to process this request, please enable Extra Leave feature from settings.', 'erp' ) );
+                    }
+
+                    // some days are unpaid leaves
+                    $extra_days = $request->days - $balance['available'];
+                }
+
+                // 3. send data to leave approval status table
+                $approval_status_data['message'] = $comments;
+                $approval_status = Leave_Approval_Status::create( $approval_status_data );
+
+                // 4. send data to leave entitlement table - day out
+                $entitlement_data['day_out']    = $request->days;
+                $entitlement_data['f_year']     = $request->entitlement->f_year;
+                $entitlement_data['trn_id']     = $approval_status->id;
+                $entitlement_data['description'] = 'Approved';
+
+                $leave_entitlement = Leave_Entitlement::create( $entitlement_data );
+
+                // 5. send data to request details table
+                $leave_request_details_data = array();
+                foreach ( $work_days['days'] as $work_day ) {
+                    $leave_request_details_data[] = array(
+                        'leave_request_id'          => $request_id,
+                        'leave_approval_status_id'  => $approval_status->id,
+                        'workingday_status'         => $work_day['count'],
+                        'user_id'                   => $request->user_id,
+                        'f_year'                    => $request->entitlement->f_year,
+                        'leave_date'                => erp_current_datetime()->modify( $work_day['date'] )->setTime( 0, 0, 0 )->getTimestamp(),
+                        'created_at'                => erp_current_datetime()->getTimestamp(),
+                        'updated_at'                => erp_current_datetime()->getTimestamp(),
+                    );
+                }
+
+                if ( ! empty( $leave_request_details_data ) )  {
+                    $request_details = Leave_Request_Detail::insert( $leave_request_details_data );
+                }
+
+                // 6. insert extra if exist
+                if ( $extra_days ) {
+                    // 1. insert into leave entitlement table
+                    $entitlement_data['day_in']     = $extra_days;
+                    $entitlement_data['day_out']    = 0;
+                    $entitlement_data['trn_type']   = 'unpaid_leave';
+                    $entitlement_data['description'] = 'Account';
+
+                    $second_leave_entitlement = Leave_Entitlement::create( $entitlement_data );
+
+                    // 2. insert into unpaid leave table
+                    $unpaid_leave_data['days'] = $extra_days;
+                    $unpaid_leave_data['leave_approval_status_id'] = $approval_status->id;
+                    $unpaid_leave = Leaves_Unpaid::create( $unpaid_leave_data );
+                }
+            }
+            elseif ( $status === 3 ) { // reject this request
+                // 1. send data to leave approval status table
+                $approval_status_data['message'] = $comments;
+                $approval_status = Leave_Approval_Status::create( $approval_status_data );
+            }
+            break;
+
+        default:
+            return new WP_Error( 'invalid-status', esc_attr__( 'Invalid leave request status.', 'erp' ) );
+            break;
+    }
+
+    // update last_status of current request
+    $request->last_status = $status;
     $request->save();
 
     // notification email
@@ -1166,7 +1829,7 @@ function erp_hr_leave_request_update_status( $request_id, $status ) {
         }
     }
 
-    $status = ( $status == 1 ) ? 'approved' : 'pending';
+    $status = ( $status == 1 ) ? 'approved' :  ( $status == 2  ? 'pending' : 'reject' );
 
     do_action( "erp_hr_leave_request_{$status}", $request_id, $request );
 
@@ -1174,7 +1837,46 @@ function erp_hr_leave_request_update_status( $request_id, $status ) {
 }
 
 /**
+ * Delete a single leave request
+ *
+ * @since 1.6.0
+ * @param int $request_id
+ * @return WP_Error|int
+ */
+function erp_hr_delete_leave_request( $request_id ) {
+    // Check permission
+    if ( ! current_user_can( 'erp_leave_manage' ) ) {
+        wp_die( esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
+    }
+
+    $request = Leave_Request::find( $request_id );
+
+    if ( ! $request ) {
+        return new WP_Error( 'invalid_leave_id', esc_attr__( 'No leave request found with give request id.', 'erp' ) );
+    }
+
+    if ( $request->approval_status ) {
+        foreach ( $request->approval_status as $status ) {
+            if ( $status->entitlements ) {
+                foreach ( $status->entitlements as $entl ) {
+                    $entl->delete();
+                }
+            }
+            $status->delete();
+        }
+    }
+    if ( $request->unpaid ) {
+        $request->unpaid->delete();
+    }
+    $request->delete();
+
+    return $request_id;
+}
+
+/**
  * Get leave requests status
+ *
+ * added filter `erp_hr_leave_approval_statuses` on version 1.6.0
  *
  * @since 0.1
  *
@@ -1183,15 +1885,39 @@ function erp_hr_leave_request_update_status( $request_id, $status ) {
  * @return array|string
  */
 function erp_hr_leave_request_get_statuses( $status = false ) {
-    $statuses = array(
-        'all' => __( 'All', 'erp' ),
-        '1'   => __( 'Approved', 'erp' ),
-        '2'   => __( 'Pending', 'erp' ),
-        '3'   => __( 'Rejected', 'erp' )
-    );
+    $statuses = apply_filters( 'erp_hr_leave_approval_statuses', array(
+        'all' => esc_attr__( 'All', 'erp' ),
+        '1'   => esc_attr__( 'Approved', 'erp' ),
+        '2'   => esc_attr__( 'Pending', 'erp' ),
+        '3'   => esc_attr__( 'Rejected', 'erp' )
+    ) );
 
     if ( false !== $status && array_key_exists( $status, $statuses ) ) {
         return $statuses[ $status ];
+    }
+
+    return $statuses;
+}
+
+/**
+ * Get leave requests day status
+ *
+ * @since 1.6.0
+ *
+ * @param  int|boolean $status
+ *
+ * @return array|string
+ */
+function erp_hr_leave_request_get_day_statuses( $status = false ) {
+    $statuses = apply_filters( 'erp_hr_leave_day_statuses', array(
+        'all' => esc_attr__( 'All', 'erp' ),
+        '1'   => esc_attr__( 'Full Day', 'erp' ),
+        '2'   => esc_attr__( 'Morning', 'erp' ),
+        '3'   => esc_attr__( 'Afternoon', 'erp' )
+    ) );
+
+    if ( false !== $status ) {
+        return array_key_exists( $status, $statuses ) ? $statuses[ $status ] : '';
     }
 
     return $statuses;
@@ -1225,10 +1951,40 @@ function erp_hr_leave_has_employee_entitlement( $employee_id, $policy_id, $year 
 }
 
 /**
+ * Get Leave Entitlement For A User
+ * @since 1.6.0
+ * @param array $args
+ */
+function erp_hr_leave_get_entitlement( $user_id, $leave_id, $start_date ) {
+    global $wpdb;
+    // get financial year from date
+    $f_year = erp_hr_get_financial_year_from_date( $start_date );
+
+    if ( empty( $f_year ) ) {
+        return new WP_Error( 'invalid-financial-year', esc_attr__( 'No leave year found with given date.', 'erp' ) );
+    }
+
+    // get entitlement
+    $entitlement = $wpdb->get_row(
+        $wpdb->prepare(
+            "SELECT * FROM {$wpdb->prefix}erp_hr_leave_entitlements WHERE user_id = %d and leave_id = %d and f_year = %d and trn_type = %s",
+            array( $user_id, $leave_id, $f_year->id, 'leave_policies' )
+        )
+    );
+
+    if ( null === $entitlement ) {
+        return new WP_Error( 'invalid-leave-entitlement', esc_attr__( 'No entitlement found.', 'erp' ) );
+    }
+
+    return $entitlement;
+}
+
+/**
  * Get all the leave entitlements of a calendar year
  *
  * @since 0.1
  * @since 1.2.0 Depricate `year` arg and using `from_date` and `to_date` instead
+ * @since 1.6.0
  *
  * @param  integer $year
  *
@@ -1237,70 +1993,64 @@ function erp_hr_leave_has_employee_entitlement( $employee_id, $policy_id, $year 
 function erp_hr_leave_get_entitlements( $args = array() ) {
     global $wpdb;
 
-    $financial_year_dates = erp_get_financial_year_dates();
-
     $defaults = array(
-        'employee_id' => 0,
-        'policy_id'   => 0,
-        'from_date'   => $financial_year_dates['start'],
-        'to_date'     => $financial_year_dates['end'],
-        'number'      => 20,
-        'offset'      => 0,
-        'orderby'     => 'en.user_id, en.created_on',
-        'order'       => 'DESC',
-        'debug'       => false,
-        'emp_status'  => ''
+        'user_id'       => 0,
+        'leave_id'      => 0,
+        'policy_id'     => 0,
+        'year'          => 0,
+        'number'        => 20,
+        'offset'        => 0,
+        'orderby'       => 'en.created_at',
+        'order'         => 'DESC',
+        'debug'         => false,
+        'emp_status'    => ''
     );
 
     $args  = wp_parse_args( $args, $defaults );
-    $where = 'WHERE 1 = 1';
+    $where = "WHERE 1 = 1 AND en.trn_type = 'leave_policies'";
 
-    /**
-     * @deprecated 1.2.0 Use $args['from_date'] and $args['to_date'] instead
-     */
-    if ( ! empty( $args['year'] ) ) {
-        $from_date = date( $args['year'] . '-m-d H:i:s', strtotime( $financial_year_dates['start'] ) );
-        $to_date   = date( $args['year'] . '-m-d H:i:s', strtotime( $financial_year_dates['end'] ) );
-        $where     .= " AND en.from_date >= date('$from_date') AND en.to_date <= date('$to_date')";
+    if ( absint( $args['year'] ) ) {
+        $where     .= " AND en.f_year = " . absint( $args['year'] );
     }
 
-    if ( ! empty( $args['from_date'] ) ) {
-        $where .= ' AND en.from_date >= "' . $args['from_date'] . '"';
-    }
-
-    if ( ! empty( $args['to_date'] ) ) {
-        $where .= ' AND en.to_date <= "' . $args['to_date'] . '"';
-    }
-
-    if ( $args['employee_id'] ) {
-        $where .= " AND en.user_id = " . intval( $args['employee_id'] );
+    if ( absint( $args['user_id'] ) ) {
+        $where .= " AND en.user_id = " . absint( $args['user_id'] );
     }
 
     if ( ! empty( $args['search'] ) ) {
         $where .= $wpdb->prepare(" AND u.display_name LIKE '%%%s%%' ", $args['search'] );
     }
 
+    if ( $args['leave_id'] ) {
+        $where .= " AND en.leave_id = " . absint( $args['leave_id'] );
+    }
+
     if ( $args['policy_id'] ) {
-        $where .= " AND en.policy_id = " . intval( $args['policy_id'] );
+        $where .= " AND en.trn_id = " . absint( $args['policy_id'] );
     }
 
     if ( $args['emp_status'] == 'active') {
         $where .= " AND emp.status = 'active'";
     }
 
-    $query = "SELECT en.*, u.display_name as employee_name, pol.name as policy_name, emp.status as emp_status
+    $offset = absint( $args['offset'] );
+    $number = absint( $args['number'] );
+    $limit = $args['number'] == '-1' ? '' : " LIMIT {$offset}, {$number}";
+
+    $query = "SELECT SQL_CALC_FOUND_ROWS en.*, u.display_name as employee_name, l.name as policy_name, emp.status as emp_status
         FROM `{$wpdb->prefix}erp_hr_leave_entitlements` AS en
-        LEFT JOIN {$wpdb->prefix}erp_hr_leave_policies AS pol ON pol.id = en.policy_id
+        LEFT JOIN {$wpdb->prefix}erp_hr_leaves AS l ON l.id = en.leave_id
         LEFT JOIN {$wpdb->users} AS u ON en.user_id = u.ID
         LEFT JOIN {$wpdb->prefix}erp_hr_employees AS emp ON en.user_id = emp.user_id
         $where
         ORDER BY {$args['orderby']} {$args['order']}
-        LIMIT %d,%d;";
+        {$limit};";
 
-    $sql     = $wpdb->prepare( $query, absint( $args['offset'] ), absint( $args['number'] ) );
-    $results = $wpdb->get_results( $sql );
+    $results = $wpdb->get_results( $query );
 
-    return $results;
+    $total_row_found = absint( $wpdb->get_var( "SELECT FOUND_ROWS()" ) );
+
+    return array( 'data' => $results, 'total' => $total_row_found, 'sql' => $query );
 }
 
 /**
@@ -1322,7 +2072,7 @@ function erp_hr_leave_count_entitlements( $args = array() ) {
 
     $args = wp_parse_args( $args, $defaults );
 
-    return \WeDevs\ERP\HRM\Models\Leave_Entitlement::where( 'from_date', '>=', $args['from_date'] )
+    return Leave_Entitlement::where( 'from_date', '>=', $args['from_date'] )
                                                    ->where( 'to_date', '<=', $args['to_date'] )
                                                    ->count();
 }
@@ -1331,29 +2081,50 @@ function erp_hr_leave_count_entitlements( $args = array() ) {
  * Delete entitlement with leave request
  *
  * @since 0.1
+ * @since 1.6.0 both $id and $entitlement_id are same ie: entitlement table id
  *
  * @param  integer $id
  * @param  integer $user_id
- * @param  integer $policy_id
+ * @param  integer $entitlement_id
  *
  * @return void
  */
-function erp_hr_delete_entitlement( $id, $user_id, $policy_id ) {
-//    $leave_recored = \WeDevs\ERP\HRM\Models\Leave_request::where( 'user_id', '=', $user_id )
-//                                                         ->where( 'policy_id', '=', $policy_id )->get()->toArray();
-//    $leave_recored = wp_list_pluck( $leave_recored, 'status' );
-//
-//    if ( in_array( '1', $leave_recored ) ) {
-//        return;
-//    }
-//
-//    if ( \WeDevs\ERP\HRM\Models\Leave_Entitlement::find( $id )->delete() ) {
-//        return \WeDevs\ERP\HRM\Models\Leave_request::where( 'user_id', '=', $user_id )
-//                                                   ->where( 'policy_id', '=', $policy_id )
-//                                                   ->delete();
-//    }
+function erp_hr_delete_entitlement( $id, $user_id, $entitlement_id ) {
 
-    return \WeDevs\ERP\HRM\Models\Leave_Entitlement::find( $id )->delete();
+    // 1. Get all leave request id associated with this entitlement id
+
+    // 2. Get all approval status id associated with step 1 request ids
+
+    // 3. delete all entitlement ids based on step 2 approval status id
+
+    // 4. delete all unpaid leaves data based on step 1 request_id
+
+    // 5. delete all approval status data based on step 2 data
+
+    // 6. delete all leave request data based on step 1
+
+    $entitlement = Leave_Entitlement::find( $entitlement_id );
+
+    if ( $entitlement->leave_requests ) {
+        foreach( $entitlement->leave_requests as $request ) {
+            if ( $request->approval_status ) {
+                foreach ( $request->approval_status as $status ) {
+                    if ( $status->entitlements ) {
+                        foreach ( $status->entitlements as $entl ) {
+                            $entl->delete();
+                        }
+                    }
+                    $status->delete();
+                }
+            }
+            if ( $request->unpaid ) {
+                $request->unpaid->delete();
+            }
+            $request->delete();
+        }
+    }
+
+    return $entitlement->delete();
 }
 
 /**
@@ -1362,17 +2133,29 @@ function erp_hr_delete_entitlement( $id, $user_id, $policy_id ) {
  * @since 0.1
  * @since 1.1.18 Add start_date in where clause
  * @since 1.2.1  Fix main query statement
+ * @since 1.6.0 changed according to new db structure
  *
  * @param  integer $user_id
  *
  * @return float|boolean
  */
-function erp_hr_leave_get_balance( $user_id ) {
+function erp_hr_leave_get_balance( $user_id, $date = null ) {
     global $wpdb;
 
-    $query = "select policy_id, days";
-    $query .= " from {$wpdb->prefix}erp_hr_leave_entitlements";
-    $query .= " where user_id = %d";
+    $query = "select en.id, en.leave_id, en.day_in, en.f_year, fy.start_date, fy.end_date, l.name as policy_name";
+    $query .= " from {$wpdb->prefix}erp_hr_leave_entitlements as en";
+    $query .= " LEFT JOIN {$wpdb->prefix}erp_hr_financial_years as fy on fy.id = en.f_year";
+    $query .= " LEFT JOIN {$wpdb->prefix}erp_hr_leaves as l on l.id = en.leave_id";
+    $query .= " where user_id = %d and trn_type='leave_policies'";
+
+    if ( $date === null ) {
+        $financial_year = erp_hr_get_financial_year_from_date();
+        $date = ! empty( $financial_year ) ? $financial_year->id : null;
+    }
+
+    if ( $date !== null ) {
+        $query .= " and fy.id = " . absint( $date );
+    }
 
     $results = $wpdb->get_results( $wpdb->prepare( $query, $user_id ) );
 
@@ -1380,64 +2163,211 @@ function erp_hr_leave_get_balance( $user_id ) {
 
     if ( ! empty( $results ) ) {
         foreach ( $results as $result ) {
-            $balance[ $result->policy_id ] = array(
-                'policy_id'   => $result->policy_id,
-                'scheduled'   => 0,
-                'entitlement' => $result->days,
-                'total'       => 0,
-                'available'   => $result->days
-            );
-        }
-    }
-
-    $financial_start_date = erp_financial_start_date();
-    $financial_end_date   = erp_financial_end_date();
-
-    $query = "SELECT req.id, req.days, req.policy_id, req.start_date, en.days as entitlement";
-    $query .= " FROM {$wpdb->prefix}erp_hr_leave_requests AS req";
-    $query .= " LEFT JOIN {$wpdb->prefix}erp_hr_leave_entitlements as en on (req.user_id = en.user_id and req.policy_id = en.policy_id and en.from_date >= '$financial_start_date' )";
-    $query .= " WHERE req.status = 1 and req.user_id = %d AND ( req.start_date >= '$financial_start_date' AND req.end_date <= '$financial_end_date' )";
-
-    $sql     = $wpdb->prepare( $query, $user_id );
-    $results = $wpdb->get_results( $sql );
-
-    $temp         = [];
-    $current_time = current_time( 'timestamp' );
-
-    if ( $results ) {
-        // group by policy
-        foreach ( $results as $request ) {
-            $temp[ $request->policy_id ][] = $request;
-        }
-
-        // calculate each policy
-        foreach ( $temp as $policy_id => $requests ) {
-            $balance[ $policy_id ] = array(
-                'policy_id'   => $policy_id,
-                'scheduled'   => 0,
-                'entitlement' => 0,
-                'total'       => 0,
-                'available'   => 0
+            $days_count = $wpdb->get_row(
+                $wpdb->prepare(
+                    "SELECT sum(day_in) as day_in, sum(day_out) as day_out FROM {$wpdb->prefix}erp_hr_leave_entitlements WHERE user_id = %d AND leave_id = %d and f_year = %d ",
+                    array( $user_id, $result->leave_id, $result->f_year )
+                ),
+                ARRAY_A
             );
 
-            foreach ( $requests as $request ) {
-                $balance[ $policy_id ]['entitlement'] = (int) $request->entitlement;
-                $balance[ $policy_id ]['total']       += $request->days;
+            if ( is_array( $days_count ) && ! empty( $days_count ) ) {
+                $day_in = floatval( $days_count['day_in'] );
+                $day_out = floatval( $days_count['day_out'] );
 
-                if ( $current_time < strtotime( $request->start_date ) ) {
-                    $balance[ $policy_id ]['scheduled'] += $request->days;
+                // check for extra leave
+                $extra_leave = 0 ;
+                $available = $day_in - $day_out;
+                if ( $available == 0 ) {
+                    $extra_leave = $wpdb->get_var(
+                        $wpdb->prepare(
+                            "SELECT sum(day_in) as day_in FROM {$wpdb->prefix}erp_hr_leave_entitlements WHERE user_id = %d AND leave_id = %d and f_year = %d AND trn_type = %s",
+                            array( $user_id, $result->leave_id, $result->f_year, 'unpaid_leave' )
+                        )
+                    );
+                    $extra_leave = null === $extra_leave ? 0 : $extra_leave;
                 }
-            }
-        }
 
-        // calculate available
-        foreach ( $balance as &$policy ) {
-            $available           = $policy['entitlement'] - $policy['total'];
-            $policy['available'] = $available < 0 ? 0 : $available;
+                // total spent
+                $leave_spent = 0;
+                if ( $date !== null ) {
+                    $financial_year = Financial_Year::find( $date );
+                    $leave_spent = $wpdb->get_var(
+                        $wpdb->prepare(
+                            "SELECT sum(rq.days) FROM {$wpdb->prefix}erp_hr_leave_requests as rq
+                                WHERE rq.user_id = %d AND rq.leave_id = %d AND rq.last_status = %d AND rq.start_date BETWEEN %d AND %d",
+                            array( $user_id, $result->leave_id, 1, $financial_year->start_date, $financial_year->end_date )
+                        )
+                    );
+
+
+                    $leave_spent = null === $leave_spent ? 0 : $leave_spent;
+                }
+
+                $balance[ $result->leave_id ] = array(
+                    'entitlement_id' => $result->id,
+                    'days'          => $result->day_in,
+                    'from_date'     => $result->start_date,
+                    'to_date'       => $result->end_date,
+                    'leave_id'      => $result->leave_id,
+                    'policy_id'     => $result->id,
+                    'policy'        => $result->policy_name,
+                    'scheduled'     => 0,
+                    'entitlement'   => $result->day_in,
+                    'total'         => $day_in,
+                    'available'     => $available,
+                    'extra_leave'   => $extra_leave,
+                    'day_in'        => $day_in,
+                    'day_out'       => $day_out,
+                    'spent'         => $leave_spent,
+                );
+            }
         }
     }
 
     return $balance;
+}
+
+/**
+ * Erp get leave balance for a single entitlement
+ *
+ * @since 1.6.0
+ *
+ * @param  integer $user_id
+ *
+ * @return float|boolean
+ */
+function erp_hr_leave_get_balance_for_single_entitlement( $entitlement_id ) {
+    global $wpdb;
+
+    $query = "select en.id, en.user_id, en.leave_id, en.day_in, en.f_year, fy.start_date, fy.end_date, l.name as policy_name";
+    $query .= " from {$wpdb->prefix}erp_hr_leave_entitlements as en";
+    $query .= " LEFT JOIN {$wpdb->prefix}erp_hr_financial_years as fy on fy.id = en.f_year";
+    $query .= " LEFT JOIN {$wpdb->prefix}erp_hr_leaves as l on l.id = en.leave_id";
+    $query .= " where en.id = %d";
+
+    $result = $wpdb->get_row( $wpdb->prepare( $query, $entitlement_id ) );
+
+    $balance = [];
+
+    if ( ! empty( $result ) ) {
+        $days_count = $wpdb->get_row(
+            $wpdb->prepare(
+                "SELECT sum(day_in) as day_in, sum(day_out) as day_out FROM {$wpdb->prefix}erp_hr_leave_entitlements WHERE user_id = %d AND leave_id = %d and f_year = %d ",
+                array( $result->user_id, $result->leave_id, $result->f_year )
+            ),
+            ARRAY_A
+        );
+
+        if ( is_array( $days_count ) && ! empty( $days_count ) ) {
+            $day_in = floatval( $days_count['day_in'] );
+            $day_out = floatval( $days_count['day_out'] );
+
+            // check for extra leave
+            $extra_leave = 0 ;
+            $available = $day_in - $day_out;
+            if ( $available == 0 ) {
+                $extra_leave = $wpdb->get_var(
+                    $wpdb->prepare(
+                        "SELECT sum(day_in) as day_in FROM {$wpdb->prefix}erp_hr_leave_entitlements WHERE user_id = %d AND leave_id = %d and f_year = %d AND trn_type = %s",
+                        array( $result->user_id, $result->leave_id, $result->f_year, 'unpaid_leave' )
+                    )
+                );
+                $extra_leave = null === $extra_leave ? 0 : $extra_leave;
+            }
+
+            $financial_year = Financial_Year::find( $result->f_year );
+            $leave_spent = $wpdb->get_var(
+                $wpdb->prepare(
+                    "SELECT sum(rq.days) FROM {$wpdb->prefix}erp_hr_leave_requests as rq
+                                WHERE rq.user_id = %d AND rq.leave_id = %d AND rq.last_status = %d AND rq.start_date BETWEEN %d AND %d",
+                    array( $result->user_id, $result->leave_id, 1, $financial_year->start_date, $financial_year->end_date )
+                )
+            );
+
+            $leave_spent = null === $leave_spent ? 0 : $leave_spent;
+
+            $balance = array(
+                'entitlement_id' => $result->id,
+                'f_year'         => $result->f_year,
+                'days'          => $result->day_in,
+                'from_date'     => $result->start_date,
+                'to_date'       => $result->end_date,
+                'leave_id'      => $result->leave_id,
+                'policy'        => $result->policy_name,
+                'scheduled'     => 0,
+                'entitlement'   => $result->day_in,
+                'total'         => $day_in,
+                'available'     => $available,
+                'extra_leave'   => $extra_leave,
+                'day_in'        => $day_in,
+                'day_out'       => $day_out,
+                'spent'         => $leave_spent,
+            );
+        }
+    }
+
+    return $balance;
+}
+
+/**
+ * Erp get leave balance for a single policy for a user
+ *
+ * @since 1.6.0
+ *
+ * @deprecated since 1.6.0 use erp_hr_leave_get_balance_for_single_entitlement() instead.
+ *
+ * @param  integer|object $leave_entitlement_id
+ *
+ * @return float|boolean
+ */
+function erp_hr_leave_get_balance_for_single_policy( $entitlement ) {
+    global $wpdb;
+
+    if ( is_int( $entitlement ) ) {
+        $entitlement = $wpdb->get_row(
+            $wpdb->prepare(
+                "SELECT * FROM {$wpdb->prefix}erp_hr_leave_entitlements WHERE id = %d AND trn_type = %s",
+                array( $entitlement, 'leave_policies' )
+            )
+        );
+    }
+
+    if ( ! is_object( $entitlement ) ) {
+        return new WP_Error( 'invalid-entitlement-object', esc_attr__( 'Invalid entitlement data.', 'erp' ) );
+    }
+
+    $days_count = $wpdb->get_row(
+        $wpdb->prepare(
+            "SELECT sum(day_in) as day_in, sum(day_out) as day_out FROM {$wpdb->prefix}erp_hr_leave_entitlements WHERE user_id = %d AND leave_id = %d and f_year = %d ",
+            array( $entitlement->user_id, $entitlement->leave_id, $entitlement->f_year )
+        ),
+        ARRAY_A
+    );
+
+    $day_in = floatval( $days_count['day_in'] );
+    $day_out = floatval( $days_count['day_out'] );
+    $extra_leave = 0 ;
+    $available = $day_in - $day_out;
+    if ( $available == 0 ) {
+        $extra_leave = $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT sum(day_in) as day_in FROM {$wpdb->prefix}erp_hr_leave_entitlements WHERE user_id = %d AND leave_id = %d and f_year = %d AND trn_type = %s",
+                array( $entitlement->user_id, $entitlement->leave_id, $entitlement->f_year, 'unpaid_leave' )
+            )
+        );
+        $extra_leave = null === $extra_leave ? 0 : $extra_leave;
+    }
+
+    return array(
+        'leave_id'      => $entitlement->leave_id,
+        'scheduled'     => 0,
+        'entitlement'   => $entitlement->day_in,
+        'total'         => $day_in,
+        'spent'         => $day_out,
+        'available'     => $available,
+        'extra_leave'   => $extra_leave
+    );
 }
 
 /**
@@ -1447,22 +2377,19 @@ function erp_hr_leave_get_balance( $user_id ) {
  * @since 1.2.0 Ignore terminated employees
  * @since 1.2.2 Exclude past requests
  *              Sort results by start_date
+ * @since 1.6.0
  *
  * @return array
  */
 function erp_hr_get_current_month_leave_list() {
-    $db     = new \WeDevs\ORM\Eloquent\Database();
-    $prefix = $db->db->prefix;
-
-    return $db->table( 'erp_hr_leave_requests as req' )
-              ->select( 'req.user_id', 'req.start_date', 'req.end_date', 'req.status', 'req.id' )
-              ->leftJoin( "{$prefix}erp_hr_employees as em", 'req.user_id', '=', 'em.user_id' )
-              ->where( 'em.status', '=', 'active' )
-              ->whereDate( 'req.start_date', '>=', date( 'Y-m-d 00:00:00', current_time( 'timestamp' ) ) )
-              ->whereDate( 'req.start_date', '<=', date( 'Y-m-d 23:59:59', strtotime( 'last day of this month' ) ) )
-              ->where( 'req.status', 1 )
-              ->orderBy( 'req.start_date', 'asc' )
-              ->get();
+    $end_of_current_month = erp_current_datetime()->modify('last day of this month')->setTime( 23, 59, 59 );
+    $args = array(
+        'status'        => 1, // get only approved
+        'start_date'    => erp_current_datetime()->setTime(0, 0)->getTimestamp(),
+        'end_date'      => $end_of_current_month->getTimestamp()
+    );
+    $leave_requests = erp_hr_get_leave_requests( $args );
+    return $leave_requests['data'];
 }
 
 /**
@@ -1471,22 +2398,17 @@ function erp_hr_get_current_month_leave_list() {
  * @since 0.1
  * @since 1.2.0 Ignore terminated employees
  * @since 1.2.2 Sort results by start_date
- *
+ * @since 1.6.0
  * @return array
  */
 function erp_hr_get_next_month_leave_list() {
-    $db     = new \WeDevs\ORM\Eloquent\Database();
-    $prefix = $db->db->prefix;
-
-    return $db->table( 'erp_hr_leave_requests as req' )
-              ->select( 'req.user_id', 'req.start_date', 'req.end_date' )
-              ->leftJoin( "{$prefix}erp_hr_employees as em", 'req.user_id', '=', 'em.user_id' )
-              ->where( 'em.status', '!=', 'terminated' )
-              ->where( 'req.start_date', '>=', date( 'Y-m-d 00:00:00', strtotime( 'first day of next month' ) ) )
-              ->where( 'req.start_date', '<=', date( 'Y-m-d 23:59:59', strtotime( 'last day of next month' ) ) )
-              ->where( 'req.status', 1 )
-              ->orderBy( 'req.start_date', 'asc' )
-              ->get();
+    $args = array(
+        'status'        => 1, // get only approved
+        'start_date'    => erp_current_datetime()->modify( 'first day of next month' )->setTime( 0, 0 )->getTimestamp(),
+        'end_date'      => erp_current_datetime()->modify( 'last day of next month' )->setTime( 23, 59, 59 )->getTimestamp()
+    );
+    $leave_requests = erp_hr_get_leave_requests( $args );
+    return $leave_requests['data'];
 }
 
 
@@ -1511,45 +2433,6 @@ function erp_hr_leave_period() {
 }
 
 /**
- * Apply entitlement yearly
- *
- * @since 0.1
- *
- * @return void
- */
-function erp_hr_apply_entitlement_yearly() {
-
-    $financial_start_date = erp_financial_start_date();
-    $financial_end_date   = erp_financial_end_date();
-
-    $before_financial_start_date = date( 'Y-m-01 H:i:s', strtotime( '-1 year', strtotime( $financial_start_date ) ) );
-    $before_financial_end_date   = date( 'Y-m-t H:i:s', strtotime( '+11 month', strtotime( $before_financial_start_date ) ) );
-
-    $entitlement = new \WeDevs\ERP\HRM\Models\Leave_Entitlement();
-
-    $entitlement = $entitlement->where( function ( $condition ) use ( $before_financial_start_date, $before_financial_end_date ) {
-        $condition->where( 'from_date', '>=', $before_financial_start_date );
-        $condition->where( 'to_date', '<=', $before_financial_end_date );
-    } );
-
-    $entitlements = $entitlement->get()->toArray();
-
-    foreach ( $entitlements as $key => $entitlement ) {
-
-        $policy = array(
-            'user_id'   => $entitlement['user_id'],
-            'policy_id' => $entitlement['policy_id'],
-            'days'      => $entitlement['days'],
-            'from_date' => erp_financial_start_date(),
-            'to_date'   => erp_financial_end_date(),
-            'comments'  => $entitlement['comments']
-        );
-
-        erp_hr_leave_insert_entitlement( $policy );
-    }
-}
-
-/**
  * Get calendar leave events
  *
  * @param   array|boolean $get filter args
@@ -1557,6 +2440,7 @@ function erp_hr_apply_entitlement_yearly() {
  * @param   boolean $approved_only Get leaves which are approved
  *
  * @since 0.1
+ * @since 1.6.0
  *
  * @return array
  */
@@ -1570,7 +2454,7 @@ function erp_hr_get_calendar_leave_events( $get = false, $user_id = false, $appr
     $policy_tb   = $wpdb->prefix . 'erp_hr_leave_policies';
 
     $employee      = new \WeDevs\ERP\HRM\Models\Employee();
-    $leave_request = new \WeDevs\ERP\HRM\Models\Leave_request();
+    $leave_request = new \WeDevs\ERP\HRM\Models\Leave_Request();
 
     $department  = isset( $get['department'] ) && ! empty( $get['department'] ) && $get['department'] != '-1' ? intval( $get['department'] ) : false;
     $designation = isset( $get['designation'] ) && ! empty( $get['designation'] ) && $get['designation'] != '-1' ? intval( $get['designation'] ) : false;
@@ -1687,197 +2571,23 @@ function get_entitlement_financial_years() {
  * Generate leave reports
  *
  * @since 1.3.2
+ * @since 1.6.0 updated according to new database change
  *
  * @param array $employees
- * @param null $start_date
- * @param null $end_date
+ * @param int $f_year
  *
  * @return array
  *
  */
-function erp_get_leave_report( array $employees, $start_date = null, $end_date = null ) {
-    $year_dates = erp_get_financial_year_dates( date( 'Y-m-d' ) );
-    if ( ! $start_date ) {
-        $start_date = $year_dates['start'];
-    }
-    if ( ! $end_date ) {
-        $end_date = $year_dates['end'];
-    }
-    $employees_report = \WeDevs\ERP\HRM\Models\Employee::whereIn( 'user_id', $employees );
-    $employees_report = $employees_report->select( 'user_id' )
-                                         ->with( [
-                                             'leave_requests' => function ( $q ) use ( $start_date, $end_date ) {
-                                                 $q->where( 'status', '=', '1' )
-                                                   ->whereDate( 'start_date', '>=', $start_date )
-                                                   ->whereDate( 'end_date', '<=', $end_date );
-                                             },
-                                             'entitlements'   => function ( $q ) use ( $start_date, $end_date ) {
-                                                $entitlement_start_date = date('Y', strtotime( $start_date ) ) . '-01-01';
-                                                $entitlement_end_date   = date('Y', strtotime( $end_date ) ) . '-12-31';
+function erp_get_leave_report( array $employees, $f_year ) {
 
-                                                $q->whereDate( 'from_date', '>=', $entitlement_start_date )
-                                                   ->whereDate( 'to_date', '<=', $entitlement_end_date )
-                                                   ->JoinWithPolicy();
-                                             }
-                                         ] )
-                                         ->get();
+    $return = [];
 
-    $reports = [];
-    foreach ( $employees_report as $employee_report ) {
-        $entitlements = [];
-        foreach ( $employee_report->entitlements as $entitlement ) {
-            $report = [
-                'entitlement_id' => $entitlement->id,
-                'days'           => $entitlement->days,
-                'from_date'      => $entitlement->from_date,
-                'to_date'        => $entitlement->to_date,
-                'policy'         => $entitlement->name,
-                'policy_id'      => $entitlement->policy_id,
-                'color'          => $entitlement->color,
-                'spent'          => 0,
-            ];
-
-            $entitlements[ $entitlement->policy_id ] = $report;
-        }
-
-        foreach ( $employee_report->leave_requests as $leave_report ) {
-            if ( isset( $entitlements[ $leave_report->policy_id ] ) ) {
-                $entitlements[ $leave_report->policy_id ]['spent'] += $leave_report->days;
-            }
-
-            $reports[ $employee_report->user_id ] = $entitlements;
-        }
-
+    foreach ( $employees as $employee_id ) {
+        $return[ $employee_id ] = erp_hr_leave_get_balance( $employee_id, $f_year );;
     }
 
-    return $reports;
-}
-
-/**
- * Assign policy bulk
- *
- * @since 1.3.2
- *
- * @param $policy
- * @param array $employee_ids
- *
- */
-function erp_bulk_policy_assign( $policy, $employee_ids = [] ) {
-    if ( is_int( $policy ) ) {
-        $policy = \WeDevs\ERP\HRM\Models\Leave_Policies::find( $policy );
-    }
-
-    $db     = \WeDevs\ORM\Eloquent\Facades\DB::instance();
-    $prefix = $db->db->prefix;
-    global $wpdb;
-
-    $employees = $db->table( 'erp_hr_employees as employee' )
-                    ->select( 'employee.user_id' )
-                    ->leftJoin( "{$prefix}usermeta as gender", function ( $join ) {
-                        $join->on( 'employee.user_id', '=', 'gender.user_id' )->where( 'gender.meta_key', '=', 'gender' );
-                    } )
-                    ->leftJoin( "{$prefix}usermeta as marital_status", function ( $join ) {
-                        $join->on( 'employee.user_id', '=', 'marital_status.user_id' )->where( 'marital_status.meta_key', '=', 'marital_status' );
-                    } )
-                    ->where( 'status', '=', 'active' );
-    if ( ! empty( $employee_ids ) && is_array( $employee_ids ) ) {
-        $employees->whereIn( 'employee.user_id', $employee_ids );
-    }
-
-    if ( $policy->department > 0 ) {
-        $employees->where( 'department', $policy->department );
-    }
-
-    if ( $policy->designation > 0 ) {
-        $employees->where( 'designation', $policy->designation );
-    }
-
-    if ( $policy->location > 0 ) {
-        $employees->where( 'location', $policy->location );
-    }
-
-    if ( $policy->gender != - 1 ) {
-        $employees->where( 'gender.meta_value', $policy->gender );
-    }
-
-    if ( $policy->marital != - 1 ) {
-        $employees->where( 'marital_status.meta_value', $policy->marital );
-    }
-
-    if ( $policy->activate == 2 && ! empty( $policy->execute_day ) ) {
-        $current_date = date( 'Y-m-d', current_time( 'timestamp' ) );
-
-        $employees->where(
-            $db->raw( "DATEDIFF( '$current_date', `employee`.`hiring_date` )" ), '>=', $policy->execute_day
-        );
-    }
-
-    $employees = $employees->get();
-
-    if ( empty( $employees ) ) {
-        return;
-    }
-
-    $financial_year = erp_get_financial_year_dates();
-
-    $from_date                      = ! empty( $policy->effective_date ) ? $policy->effective_date : $financial_year['start'];
-    $from_date_timestamp            = strtotime( $from_date );
-    $financial_year_start_timestamp = strtotime( $financial_year['start'] );
-
-    if ( $from_date_timestamp < $financial_year_start_timestamp ) {
-        $from_date = date( 'Y-m-d 00:00:00', $financial_year_start_timestamp );
-    } else {
-        $from_date = date( 'Y-m-d 00:00:00', $from_date_timestamp );
-    }
-
-    $to_date                      = $financial_year['end'];
-    $financial_year_end_timestamp = strtotime( $financial_year['end'] );
-
-    if ( $from_date_timestamp > $financial_year_end_timestamp ) {
-        $financial_year_end_timestamp += YEAR_IN_SECONDS;
-        $to_date                      = date( 'Y-m-d 23:59:59', $financial_year_end_timestamp );
-    }
-
-
-    $fields = [
-        'user_id'    => '',
-        'policy_id'  => $policy->id,
-        'days'       => $policy->value,
-        'from_date'  => $from_date,
-        'to_date'    => $to_date,
-        'comments'   => $policy->description,
-        'id'         => null,
-        'status'     => 1,
-        'created_by' => get_current_user_id(),
-        'created_on' => current_time( 'mysql' )
-    ];
-
-    foreach ( $employees as $employee ) {
-        $user_id           = $employee->user_id;
-        $fields['user_id'] = $user_id;
-        $entitlement       = new \WeDevs\ERP\HRM\Models\Leave_Entitlement();
-        $entitlement       = $entitlement->where( function ( $condition ) use ( $fields, $financial_year ) {
-            $financial_start_date = $fields['from_date'] ? $fields['from_date'] : $financial_year['start'];
-            $financial_end_date   = $fields['to_date'] ? $fields['to_date'] : $financial_year['end'];
-            $condition->whereBetween( 'from_date', [ $financial_year['start'], $financial_end_date ] );
-            $condition->where( 'to_date', '<=', $financial_end_date );
-            $condition->where( 'user_id', '=', $fields['user_id'] );
-            $condition->where( 'policy_id', '=', $fields['policy_id'] );
-        } );
-
-        $existing_entitlement = $entitlement->first();
-
-        if ( $existing_entitlement ) {
-            continue;
-        }
-
-        $result = $wpdb->insert( $wpdb->prefix . 'erp_hr_leave_entitlements', $fields );
-        if ( $result ) {
-            do_action( 'erp_hr_leave_insert_new_entitlement', $wpdb->insert_id, $fields );
-        }
-
-    }
-
+    return $return;
 }
 
 /**
@@ -1893,34 +2603,34 @@ function import_holidays_csv( $file ) {
     require_once WPERP_INCLUDES . '/lib/parsecsv.lib.php';
 
     $csv = new ParseCsv();
-    $csv->encoding( null, 'UTF-8' );
-    $csv->parse( $file );
+    $csv->encoding(null, 'UTF-8');
+    $csv->parse($file);
 
-    $error_list   = array();
+    $error_list = array();
     $valid_import = array();
-    $line         = 1;
-    $msg          = "";
+    $line = 1;
+    $msg = "";
 
-    foreach ( $csv->data as $data ) {
-        $title       = ( isset( $data['title'] ) ) ? $data['title'] : '';
-        $start       = ( isset( $data['start'] ) ) ? $data['start'] : '';
-        $end         = ( isset( $data['end'] ) ) ? $data['end'] : '';
-        $description = ( isset( $data['description'] ) ) ? $data['description'] : '';
+    foreach ($csv->data as $data) {
+        $title = (isset($data['title'])) ? $data['title'] : '';
+        $start = (isset($data['start'])) ? $data['start'] : '';
+        $end = (isset($data['end'])) ? $data['end'] : '';
+        $description = (isset($data['description'])) ? $data['description'] : '';
 
-        if( ! empty( $title ) && ! empty( $start ) && ! empty( $end ) ) {
-            if ( is_string( $title ) && is_string( $start ) && is_string( $end ) ) {
-                if ( strlen( $title ) < 200 ) {
-                    if ( DateTime::createFromFormat( 'Y-m-d H:i:s', $start ) !== FALSE &&
-                            DateTime::createFromFormat( 'Y-m-d H:i:s', $end ) !== FALSE ) {
-                        $holiday_id = erp_hr_leave_insert_holiday( array(
+        if (!empty($title) && !empty($start) && !empty($end)) {
+            if (is_string($title) && is_string($start) && is_string($end)) {
+                if (strlen($title) < 200) {
+                    if (DateTime::createFromFormat('Y-m-d H:i:s', $start) !== FALSE &&
+                        DateTime::createFromFormat('Y-m-d H:i:s', $end) !== FALSE) {
+                        $holiday_id = erp_hr_leave_insert_holiday(array(
                             "title" => $title,
                             "start" => $start,
                             "end" => $end,
                             "description" => $description,
-                        ) );
+                        ));
 
-                        if ( is_wp_error( $holiday_id ) ) {
-                            $error_list[]   = $line;
+                        if (is_wp_error($holiday_id)) {
+                            $error_list[] = $line;
                         } else {
                             $valid_import[] = $line;
                         }
@@ -1933,29 +2643,191 @@ function import_holidays_csv( $file ) {
         $line++;
     }
 
-    if( count( $valid_import ) > 0 ) {
-        $html_class  = "updated notice";
-        $msg        .= sprintf( __( "Successfully imported %u data<br>", 'wp-erp' ), count( $valid_import ) );
+    if (count($valid_import) > 0) {
+        $html_class = "updated notice";
+        $msg .= sprintf(__("Successfully imported %u data<br>", 'wp-erp'), count($valid_import));
     }
 
-    if ( count( $error_list ) > 0 ) {
-        $html_class  = "error  notice";
-        $err_string  = implode( ',' , $error_list );
-        $msg        .= sprintf( __( "Failed to import line no  %s. Please check if title, start & end fields are following proper formation", 'wp-erp' ), $err_string );
+    if (count($error_list) > 0) {
+        $html_class = "error  notice";
+        $err_string = implode(',', $error_list);
+        $msg .= sprintf(__("Failed to import line no  %s. Please check if title, start & end fields are following proper formation", 'wp-erp'), $err_string);
     }
 
     return "<div class='{$html_class}'><p>{$msg}</p></div>";
 }
 
 /**
+ * Get leave requests day status
+ *
+ * @since 1.6.0
+ *
+ * @param  int|boolean $status
+ *
+ * @return array|string
+ */
+function erp_hr_leave_days_get_statuses( $status = false ) {
+    $statuses = apply_filters( 'erp_hr_leave_day_statuses', array(
+        'all' => esc_attr__( 'All', 'erp' ),
+        '1'   => esc_attr__( 'Full Day', 'erp' ),
+        '2'   => esc_attr__( 'Morning', 'erp' ),
+        '3'   => esc_attr__( 'Afternoon', 'erp' )
+    ) );
+
+    if ( false !== $status && array_key_exists( $status, $statuses ) ) {
+        return $statuses[ $status ];
+    }
+
+    return $statuses;
+}
+
+/**
+ * Insert / Update new leave policy name
+ *
+ * @since 1.6.0
+ *
+ * @return int
+ */
+function erp_hr_insert_leave_policy_name( $args = array() ) {
+    $defaults = array(
+        'id' => null
+    );
+
+    $args = wp_parse_args( $args, $defaults );
+
+    /**
+     * Update
+     */
+    if ( $args['id'] ) {
+        $exists = Leave::where( 'name', $args['name'] )
+                        ->where('id', '<>', $args['id'])
+                        ->first();
+
+        if ( $exists ) {
+            return new WP_Error( 'exists', esc_html__('Name already exists', 'erp') );
+        }
+
+        $leave = Leave::find( $args['id'] )->update( $args );
+
+        return $leave->id;
+    }
+
+    /**
+     * Create
+     */
+    $exists = Leave::where('name', $args['name'])->first();
+
+    if ( $exists ) {
+        return new WP_Error( 'exists', esc_html__('Name already exists', 'erp') );
+    }
+
+    $leave = Leave::create( $args );
+
+    return $leave->id;
+}
+
+/**
+ * Remove leave policy name
+ *
+ * @since 1.6.0
+ *
+ * @return void
+ */
+function erp_hr_remove_leave_policy_name( $id ) {
+    $has_policy = Leave_Policy::where('leave_id', $id )->first();
+
+    if ( $has_policy ) {
+        return new WP_Error( 'has_policy', __( 'Can not remove, connected with policy', 'erp' ) );
+    }
+
+    $leave = Leave::find( $id );
+
+    $leave->delete();
+}
+
+/**
+ * Build and return new policy create URL
+ *
+ * @since 1.6.0
+ *
+ * @return string
+ */
+function erp_hr_new_policy_url( $id = null, $action = '', $paged = 1 ) {
+    $params = array(
+        'page'        => 'erp-hr',
+        'section'     => 'leave',
+        'sub-section' => 'policies',
+        'action'      => 'new',
+        'paged'       => $paged
+    );
+
+    if ( $id ) {
+        $params['id'] = absint( $id );
+        $params['action'] = $action;
+    }
+
+    return add_query_arg( $params, admin_url( 'admin.php' ) );
+}
+
+/**
+ * Build and return new policy create URL
+ *
+ * @since 1.6.0
+ *
+ * @return string
+ */
+function erp_hr_new_policy_name_url( $id = null ) {
+    $params = array(
+        'page'        => 'erp-hr',
+        'section'     => 'leave',
+        'sub-section' => 'policies',
+        'type'        => 'policy-name'
+    );
+
+    if ( $id ) {
+        $params['id'] = absint( $id );
+        $params['action'] = 'edit';
+    }
+
+    return add_query_arg( $params, admin_url( 'admin.php' ) );
+}
+
+/**
+ * Get all departments leads id
+ *
+ * @since 1.6.0
+ *
+ * @return array
+ */
+function erp_hr_get_department_leads_id() {
+    return Department::select('lead')->pluck('lead')->toArray();
+}
+
+/**
+ * Check if current user is lead
+ *
+ * @since 1.6.0
+ *
+ * @return bool
+ */
+function erp_hr_is_current_user_dept_lead() {
+    $leads = erp_hr_get_department_leads_id();
+    $logged_in_us = get_current_user_id();
+
+    return (bool) in_array( $logged_in_us, $leads );
+}
+
+/**
  * Save employee leave request attachment
  *
  * @since 1.5.10
+ * @since 1.6.0 added erp_hr_ prefix to function name
  *
- * @param $file
- *
+ * @param $request_id
+ * @param $request
+ * @param $leaves
  */
-function save_leave_attachment( $request_id, $request, $leaves ) {
+function erp_hr_save_leave_attachment( $request_id, $request, $leaves ) {
     if ( isset( $_FILES['leave_document'] ) && isset( $_FILES['leave_document']['name'] ) && ! empty( $_FILES['leave_document']['name'][0] ) ) {
         $uploader = new \WeDevs\ERP\Uploader();
 
@@ -1975,4 +2847,107 @@ function save_leave_attachment( $request_id, $request, $leaves ) {
             }
         }
     }
+}
+
+/**
+ * Get financial year data that a date belongs to
+ *
+ * @since 1.6.0 rewritten whole function
+ *
+ * @param null|string|int $date
+ *
+ * @return null|\WeDevs\ERP\HRM\Models\Financial_Year
+ */
+function erp_hr_get_financial_year_from_date( $date = null ) {
+    global $wpdb;
+
+    if ( empty( $date ) ) {
+        $date = erp_current_datetime()->setTime( 0, 0, 0 )->getTimestamp();
+    }
+
+    if ( ! is_numeric( $date ) ) {
+        if ( is_valid_date( $date ) ) {
+            $date = erp_current_datetime()->modify( $date )->setTime( 0, 0, 0 )->getTimestamp();
+        }
+        else {
+            return null;
+        }
+    }
+
+    $query = $wpdb->prepare(
+        "SELECT id FROM {$wpdb->prefix}erp_hr_financial_years
+                    WHERE (start_date <= %d AND end_date >= %d)
+                    OR (start_date >= %d and start_date <= %d)
+                    OR (end_date >= %d and end_date <= %d)
+                    ",
+        array(
+            $date, $date,
+            $date, $date,
+            $date, $date
+        )
+    );
+
+    $fid = $wpdb->get_var(
+        $query
+    );
+
+    if ( null === $fid ) {  // no financial year found with given range
+        return $fid;
+    }
+
+    $financial_year = \WeDevs\ERP\HRM\Models\Financial_Year::find( $fid );
+
+    if ( ! $financial_year ) {
+        return null;
+    }
+
+    return $financial_year;
+}
+
+/**
+ * Get financial year id(s) that belongs to a date range
+ *
+ * @since 1.6.0
+ *
+ * @param int|string $start_date
+ * @param int|string $end_date
+ *
+ * @return array<int>
+ */
+function erp_hr_get_financial_year_from_date_range( $start_date, $end_date ) {
+    global $wpdb;
+
+    if ( ! is_numeric( $start_date ) ) {
+        $start_date = erp_current_datetime()->modify( $start_date )->getTimestamp();
+    }
+
+    if ( ! is_numeric( $end_date ) ) {
+        $end_date = erp_current_datetime()->modify( $end_date )->getTimestamp();
+    }
+
+    /**
+     * select wp_erp_hr_leave_requests.id, st.approval_status_id from wp_erp_hr_leave_requests
+     * left join wp_erp_hr_leave_approval_status as st on st.leave_request_id = wp_erp_hr_leave_requests.id
+     * where (start_date <= 1578441600 and end_date >= 1578441600 and user_id = 23)
+     * or (start_date <= 1579046399 and end_date >= 1579046399 and user_id = 23)
+     * or (start_date >= 1578441600 and start_date <= 1579046399 and user_id = 23)
+     * or (end_date >= 1578441600 and end_date <= 1579046399 and user_id = 23)
+     */
+
+    return $wpdb->get_col(
+        $wpdb->prepare(
+            "SELECT id FROM {$wpdb->prefix}erp_hr_financial_years
+                    WHERE (start_date <= %d AND end_date >= %d)
+                    OR (start_date <= %d AND end_date >= %d)
+                    OR (start_date >= %d and start_date <= %d)
+                    OR (end_date >= %d and end_date <= %d)
+                    ",
+            array(
+                $start_date, $start_date,
+                $end_date, $end_date,
+                $start_date, $end_date,
+                $start_date, $end_date
+            )
+        )
+    );
 }

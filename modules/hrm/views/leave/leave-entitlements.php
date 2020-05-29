@@ -1,4 +1,8 @@
 <?php
+
+use WeDevs\ERP\ERP_Errors;
+use WeDevs\ERP\HRM\Models\Financial_Year;
+
 $cur_year   = date( 'Y' );
 $active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : '';
 ?>
@@ -14,128 +18,157 @@ $active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['ta
     </h2>
 
     <?php if ( 'assignment' == $active_tab ) { ?>
-
-        <p class="description">
-            <?php esc_html_e( 'Assign a leave policy to employees.', 'erp' ); ?>
-        </p>
-
         <?php
-        $errors = array(
-            'invalid-policy'   => __( 'Error: Please select a leave policy.', 'erp' ),
-            'invalid-period'   => __( 'Error: Please select a valid period.', 'erp' ),
-            'invalid-employee' => __( 'Error: Please select an employee.', 'erp' )
-        );
+        $financial_years = array();
+        $current_f_year = erp_hr_get_financial_year_from_date();
+        foreach ( Financial_Year::all() as $f_year ) {
+            if ( $f_year['start_date'] < $current_f_year->start_date ) {
+                continue;
+            }
+            $financial_years[ $f_year['id'] ] = $f_year['fy_name'];
+        }
 
         if ( isset( $_GET['affected' ] ) ) {
-            erp_html_show_notice( sprintf( __( '%d Employee(s) has been entitled to this leave policy.', 'erp' ), sanitize_text_field( wp_unslash( $_GET['affected'] ) ) ) );
+            erp_html_show_notice( sprintf( __( '%d Employee(s) has been entitled to this leave policy.', 'erp' ), sanitize_text_field( wp_unslash( $_GET['affected'] ) ) ), 'updated', true );
         }
 
-        if ( isset( $_GET['error'] ) && array_key_exists( sanitize_text_field( wp_unslash( $_GET['error'] ) ), $errors ) ) {
-            erp_html_show_notice( $errors[ sanitize_text_field( wp_unslash( $_GET['error'] ) ) ], 'error' );
+        if ( isset( $_GET['error'] ) ) {
+            $error_key = sanitize_text_field( wp_unslash( $_GET['error'] ) );
+            $errors = new ERP_Errors( $error_key );
+            $form_data = $errors->get_form_data();
+
+            echo $errors->display();
+
+            if ( isset( $form_data['affected'] ) ) {
+                erp_html_show_notice( sprintf( __( '%d Employee(s) has been entitled to this leave policy.', 'erp' ), sanitize_text_field( wp_unslash( $form_data['affected'] ) ) ), 'updated', true );
+            }
         }
 
-        $policy_dropdown = erp_hr_leave_get_policies_dropdown_raw();
-
-        if ( empty( $policy_dropdown ) ) {
-            $help_text = sprintf( '<a href="?page=erp-hr&section=leave&sub-section=policies">%s</a>', __( 'Create A new policy first', 'erp' ) );
-        } else {
-            $help_text = __( 'Select A Policy', 'erp' );
-        }
+        $policy_help_text = __( 'Select A Policy', 'erp' ) . ' ' . esc_attr__( 'Or', 'erp' ) . ' ' . sprintf( '<a href="?page=erp-hr&section=leave&sub-section=policies">%s</a>', __( 'Add New', 'erp' ) );
+        $f_year_help_text = __( 'Select Year', 'erp' ) . ' ' . esc_attr__( 'Or', 'erp' ) . ' ' . sprintf( '<a href="?page=erp-settings&tab=erp-hr&section=financial">%s</a>', __( 'Add New', 'erp' ) );
         ?>
 
-        <form action="" method="post">
+        <form class="leave-entitlement-form" action="" method="post">
+            <h3>
+                <?php esc_html_e( 'Assign a leave policy to employees.', 'erp' ); ?>
+            </h3>
+            <div class="form-group">
+                <div class="row">
+                    <?php erp_html_form_input( array(
+                        'label'    => esc_html__( 'Year', 'erp' ),
+                        'name'     => 'f_year',
+                        'value'    =>  '',
+                        'required' => true,
+                        'class'    => 'leave-policy-input erp-select2 f_year change_policy',
+                        'type'     => 'select',
+                        'help'     => $f_year_help_text,
+                        'options'  =>  $financial_years
+                    ) ); ?>
+                </div>
 
-            <ul class="erp-list separated">
-            <?php
-            erp_html_form_input( array(
-                'label'    => __( 'Assignment', 'erp' ),
-                'name'     => 'assignment_to',
-                'type'     => 'checkbox',
-                'help'     => __( 'Assign to multiple employees', 'erp' ),
-                'tag'      => 'li',
-            ) );
+                <div class="row">
+                    <?php erp_html_form_input( array(
+                        'label'    => __( 'Department', 'erp' ),
+                        'name'     => 'department_id',
+                        'type'     => 'select',
+                        'class'    => 'leave-policy-input erp-select2 department_id change_policy',
+                        'options'  => erp_hr_get_departments_dropdown_raw( __( 'All Departments', 'erp' ) )
+                    ) ); ?>
+                </div>
 
-            erp_html_form_input( array(
-                'label'    => __( 'Leave Policy', 'erp' ),
-                'name'     => 'leave_policy',
-                'type'     => 'select',
-                'class'    => 'leave-policy-select',
-                'tag'      => 'li',
-                'required' => true,
-                'options'  => array( 0 => __( '- Select -', 'erp' ) ) + erp_hr_leave_get_policies_dropdown_raw(),
-                'help'     => $help_text
-            ) );
+                <div class="row">
+                    <?php erp_html_form_input( array(
+                        'label'       => esc_html__( 'Designation', 'erp' ),
+                        'name'        => 'designation_id',
+                        'value'       => '-1',
+                        'class'       => 'leave-policy-input erp-select2 designation_id change_policy',
+                        'custom_attr' => array( 'data-id' => 'erp-new-designation' ),
+                        'type'        => 'select',
+                        'options'     => erp_hr_get_designation_dropdown_raw( esc_html__( 'All Designations', 'erp' ) )
+                    ) ); ?>
+                </div>
 
-            erp_html_form_input( array(
-                'label'    => __( 'Leave Period', 'erp' ),
-                'name'     => 'leave_period',
-                'type'     => 'select',
-                'tag'      => 'li',
-                'required' => true,
-                'class'    => 'leave-period-select',
-                'options'  => erp_hr_leave_period(),
-            ) );
+                <div class="row">
+                    <?php erp_html_form_input( array(
+                        'label'    => __( 'Location', 'erp' ),
+                        'name'     => 'location_id',
+                        'type'     => 'select',
+                        'class'    => 'leave-policy-input erp-select2 location_id change_policy',
+                        'options'  => erp_company_get_location_dropdown_raw( esc_html__( 'All Locations', 'erp' ) )
+                    ) ); ?>
+                </div>
 
-            erp_html_form_input( array(
-                'label'    => __( 'Employee', 'erp' ),
-                'name'     => 'single_employee',
-                'type'     => 'select',
-                'class'    => 'erp-select2 show-if-single',
-                'tag'      => 'li',
-                'required' => true,
-                'options'  => erp_hr_get_employees_dropdown_raw()
-            ) );
+                <div class="row">
+                    <?php erp_html_form_input( array(
+                        'label'   => esc_html__( 'Gender', 'erp' ),
+                        'name'    => 'gender',
+                        'value'   => '-1',
+                        'class'   => 'leave-policy-input erp-select2 gender change_policy',
+                        'type'    => 'select',
+                        'options' => erp_hr_get_genders( esc_html__( 'All', 'erp' ) )
+                    ) ); ?>
+                </div>
 
-            erp_html_form_input( array(
-                'label'    => __( 'Location', 'erp' ),
-                'name'     => 'location',
-                'type'     => 'select',
-                'class'    => 'erp-select2 show-if-multiple',
-                'tag'      => 'li',
-                'options'  => erp_company_get_location_dropdown_raw( __( 'All Locations', 'erp' ) )
-            ) );
+                <div class="row">
+                    <?php erp_html_form_input( array(
+                        'label'   => esc_html__( 'Marital Status', 'erp' ),
+                        'name'    => 'marital',
+                        'value'   => '-1',
+                        'class'   => 'leave-policy-input erp-select2 marital change_policy',
+                        'type'    => 'select',
+                        'options' => erp_hr_get_marital_statuses( esc_html__( 'All', 'erp' ) )
+                    ) ); ?>
+                </div>
 
-            erp_html_form_input( array(
-                'label'    => __( 'Department', 'erp' ),
-                'name'     => 'department',
-                'type'     => 'select',
-                'class'    => 'erp-select2 show-if-multiple',
-                'tag'      => 'li',
-                'options'  => erp_hr_get_departments_dropdown_raw( __( 'All Departments', 'erp' ) )
-            ) );
+                <div class="row">
+                    <?php erp_html_form_input( array(
+                        'label'    => __( 'Leave Policy', 'erp' ),
+                        'name'     => 'leave_policy',
+                        'type'     => 'select',
+                        'class'    => 'leave-policy-input leave_policy_dropdown leave_policy',
+                        'required' => true,
+                        'options'  => array( 0 => __( '- Select -', 'erp' ) ),
+                        'help'     => $policy_help_text
+                    ) ); ?>
+                </div>
 
-            erp_html_form_input( array(
-                'label'    => __( 'Comment', 'erp' ),
-                'name'     => 'comment',
-                'type'     => 'textarea',
-                'tag'      => 'li',
-                'placeholder' => __( 'Optional Comment', 'erp' ),
-            ) );
+                <div class="row">
+                    <?php erp_html_form_input( array(
+                        'label'    => __( 'Assignment', 'erp' ),
+                        'name'     => 'assignment_to',
+                        'type'     => 'checkbox',
+                        'class'    => 'checkbox',
+                        'help'     => __( 'Assign to multiple employees', 'erp' ),
+                    ) ); ?>
+                </div>
 
-            ?>
-            </ul>
+                <div class="row single_employee_field">
+                    <?php erp_html_form_input( array(
+                        'label'    => __( 'Employee', 'erp' ),
+                        'name'     => 'single_employee',
+                        'type'     => 'select',
+                        'class'    => 'leave-policy-input erp-select2 single_employee',
+                        'required' => true,
+                        'options'  => array( 0 => __( '- Select -', 'erp' ) ),
+                    ) ); ?>
+                </div>
+
+                <div class="row">
+                    <?php erp_html_form_input( array(
+                        'label'    => __( 'Comment', 'erp' ),
+                        'name'     => 'comment',
+                        'type'     => 'textarea',
+                        'class'    => 'leave-policy-input',
+                        'placeholder' => __( 'Optional Comment', 'erp' ),
+                    ) ); ?>
+                </div>
+            </div>
 
             <input type="hidden" name="erp-action" value="hr-leave-assign-policy">
 
             <?php wp_nonce_field( 'erp-hr-leave-assign' ); ?>
             <?php submit_button( __( 'Assign Policies', 'erp' ), 'primary' ); ?>
         </form>
-
-        <script type="text/javascript">
-            jQuery(function($) {
-                $( '#assignment_to' ).on('change', function() {
-                    if ( $(this).is(':checked') ) {
-                        $( '.department_field, .location_field' ).show();
-                        $( '.single_employee_field' ).hide();
-                    } else {
-                        $( '.department_field, .location_field' ).hide();
-                        $( '.single_employee_field' ).show();
-                    }
-                });
-
-                $( '#assignment_to' ).change();
-            });
-        </script>
 
     <?php } else { ?>
 
@@ -159,5 +192,38 @@ $active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['ta
 
             </div><!-- .list-table-inner -->
         </div><!-- .list-table-wrap -->
+        <script type="text/javascript">
+            ;jQuery(function( $ ) {
+                var select_string = '<?php echo esc_attr__( 'All Policy', 'erp') ?>';
+                var policies = <?php
+                    $policies = \WeDevs\ERP\HRM\Models\Leave_Policy::all();
+                    $result = array();
+                    foreach ( $policies as $policy ) {
+                        $result[ $policy['f_year'] ][] = array(
+                            'name'      => $policy->leave->name,
+                            'policy_id'  => $policy['id']
+                        );
+                    }
+                    echo json_encode( $result );
+                    ?>;
+
+                $('#erp-entitlement-table-wrap').on( 'change', '#financial_year', function (e) {
+
+                    var f_year = $(this).val();
+
+                    $('#leave_policy option').remove();
+                    var option = new Option( select_string, '' );
+                    $('#leave_policy').append(option);
+
+                    if ( policies[ f_year ] ) {
+                        $.each( policies[ f_year ], function ( id, policy ) {
+                            var option = new Option(policy.name, policy.policy_id);
+                            $('#leave_policy').append(option);
+                        } );
+                    }
+                });
+
+            })
+        </script>
     <?php } ?>
 </div>

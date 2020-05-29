@@ -2,7 +2,7 @@
 
     <h2>
         <?php
-        esc_html_e( 'Employee', 'erp' );
+        esc_html_e( 'Employees', 'erp' );
 
         if ( current_user_can( 'erp_create_employee' ) ) {
             ?>

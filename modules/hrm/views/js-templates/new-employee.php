@@ -102,16 +102,18 @@
                             <div class="col-3" style="clear:left">
                                 <?php
                                 erp_html_form_input( array(
-                                    'label'    => __( 'Employee Closing Date', 'erp' ),
+                                    'label'    => __( 'Employee End Date', 'erp' ),
                                     'name'     => 'work[end_date]',
                                     'value'    => '{{ ( data.work.end_date ) ? data.work.end_date : null }}',
                                     'required' => false,
                                     'type'     => 'text',
-                                    'class'    => 'erp-date-field'
+                                    'class'    => 'erp-date-field',
+                                    'custom_attr' => array(
+                                        'autocomplete' => 'off'
+                                    )
                                 ) );
                                 ?>
                             </div>
-
 
 
                             <div class="col-3" data-selected="{{ data.work.status }}">
@@ -136,7 +138,10 @@
                                         'value'    => '{{ data.work.hiring_date }}',
                                         'required' => true,
                                         'type'     => 'text',
-                                        'class'    => 'erp-date-field'
+                                        'class'    => 'erp-date-field',
+                                        'custom_attr' => array(
+                                            'autocomplete' => 'off'
+                                        )
                                     ) );
                                 ?>
                             </div>

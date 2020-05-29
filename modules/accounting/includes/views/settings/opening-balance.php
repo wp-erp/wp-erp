@@ -80,5 +80,6 @@
         </div>
     </div>
     <br>
+    <input type="hidden" name="erp-ac-ob-fyears-add" value="">
     <a href="#" class="button-secondary erp-ac-ob-add-more"><?php esc_attr_e( 'Add More', 'erp' ); ?></a>
 </div>

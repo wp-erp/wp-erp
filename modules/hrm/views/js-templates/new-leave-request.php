@@ -1,20 +1,47 @@
 <?php
-$employee_types = erp_hr_get_assign_policy_from_entitlement( get_current_user_id() );
-$types = $employee_types ? $employee_types : [];
-?>
-<div class="erp-hr-leave-request-new">
 
-    <div class="row">
-        <?php erp_html_form_input( array(
-            'label'    => __( 'Leave Type', 'erp' ),
-            'name'     => 'leave_policy',
-            'id'       => 'erp-hr-leave-req-leave-policy',
-            'value'    => '',
+use WeDevs\ERP\HRM\Models\Financial_Year;
+
+$employee_types     = erp_hr_get_assign_policy_from_entitlement( get_current_user_id() );
+$types              = $employee_types ? array_unique( $employee_types ) : [];
+$financial_years    = array();
+
+$current_f_year = erp_hr_get_financial_year_from_date();
+
+if ( null === $current_f_year ) {
+    erp_html_show_notice( __( 'No leave assigned for current year. Please contact HR.', 'erp' ), 'error', true );
+    return;
+}
+foreach ( Financial_Year::all() as $f_year ) {
+    if ( $f_year['start_date'] < $current_f_year->start_date ) {
+        continue;
+    }
+    $financial_years[ $f_year['id'] ] = $f_year['fy_name'];
+}
+?>
+<div class="erp-hr-leave-request-new erp-hr-leave-reqs-wrap">
+    <?php
+    if ( count( $financial_years ) === 1 ) { ?>
+        <input type="hidden" name="f_year" id="f_year" class="f_year" value="<?php echo key( $financial_years );?>" />
+        <?php
+    }
+    else {
+        echo '<div class="row">';
+        erp_html_form_input( array(
+            'label'    => esc_html__( 'Year', 'erp' ),
+            'name'     => 'f_year',
+            'value'    =>  '',
             'required' => true,
+            'class'    => 'f_year',
             'type'     => 'select',
-            'options'  => array( '' => __( '- Select -', 'erp' ) ) + $types
-        ) ); ?>
-    </div>
+            'options'  => $financial_years,
+        ) );
+        echo '</div>';
+    }?>
+
+    <div class="row erp-hide erp-hr-leave-type-wrapper"></div>
+
+    <?php do_action( 'erp_hr_leave_request_form_middle' ); ?>
 
     <div class="row">
         <?php erp_html_form_input( array(
@@ -24,10 +51,13 @@ $types = $employee_types ? $employee_types : [];
             'value'    => '',
             'required' => true,
             'class'    => 'erp-leave-date-field',
+            'custom_attr' => array(
+                'autocomplete' => 'off'
+            ),
         ) ); ?>
     </div>
 
-    <div class="row">
+    <div class="row erp-leave-to-date">
         <?php erp_html_form_input( array(
             'label'    => __( 'To', 'erp' ),
             'name'     => 'leave_to',
@@ -35,6 +65,9 @@ $types = $employee_types ? $employee_types : [];
             'value'    => '',
             'required' => true,
             'class'    => 'erp-leave-date-field',
+            'custom_attr' => array(
+                'autocomplete' => 'off'
+            ),
         ) ); ?>
     </div>
 

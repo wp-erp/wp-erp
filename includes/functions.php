@@ -652,9 +652,15 @@ function erp_format_date( $date, $format = false ) {
         $format = erp_get_option( 'date_format', 'erp_settings_general', 'd-m-Y' );
     }
 
-    $time = strtotime( $date );
+    if ( ! is_numeric( $date ) ) {
+        $date = strtotime( $date );
+    }
 
-    return date_i18n( $format, $time );
+    if ( function_exists('wp_date') ) {
+        return wp_date( $format, $date );
+    }
+
+    return date_i18n( $format, $date );
 }
 
 /**
@@ -674,6 +680,12 @@ function erp_extract_dates( $start_date, $end_date ) {
     // if end date has no time set, then add 23:59:59 or 11:59 PM
     if ( ! preg_match( '/\d{2}:\d{2}:\d{2}$/', $end_date ) ) {
         $end_date = $end_date . ' 23:59:59';
+    }
+
+    if ( $start_date > $end_date ) {
+        $temp = $start_date;
+        $start_date = $end_date;
+        $end_date = $temp;
     }
 
     $start_date = new DateTime( $start_date );
@@ -2630,6 +2642,7 @@ function erp_validate_boolean( $value ) {
  * @param $date
  * @since 1.2.0
  * since 1.3.0 $date added
+ * @since 1.6.0 added timestamp support
  * @return array
  */
 function erp_get_financial_year_dates( $date = null ) {
@@ -2638,8 +2651,14 @@ function erp_get_financial_year_dates( $date = null ) {
         $year  = date( 'Y' );
         $month = date( 'n' );
     } else {
-        $year  = date( 'Y', strtotime( $date ) );
-        $month = date( 'n', strtotime( $date ) );
+        if ( ! is_numeric( $date ) ) {
+            $timestamp = strtotime( $date );
+        }
+        else {
+            $timestamp = $date;
+        }
+        $year  = date( 'Y', $timestamp );
+        $month = date( 'n', $timestamp );
     }
 
     /**
@@ -2664,9 +2683,11 @@ function erp_get_financial_year_dates( $date = null ) {
 }
 
 /**
- * Get finanicial start and end years that a date belongs to
+ * Get financial start and end years that a date belongs to
  *
  * @since 1.2.0
+ *
+ * @since 1.6.0 added timestamp support
  *
  * @param string $date
  *
@@ -2676,7 +2697,7 @@ function get_financial_year_from_date( $date ) {
     $fy_start_month = erp_get_option( 'gen_financial_month', 'erp_settings_general', 1 );
     $fy_start_month = absint( $fy_start_month );
 
-    $date_timestamp = strtotime( $date );
+    $date_timestamp = !is_numeric( $date ) ? strtotime( $date ) : $date;
     $date_year      = absint( date( 'Y', $date_timestamp ) );
     $date_month     = absint( date( 'n', $date_timestamp ) );
 
@@ -2829,14 +2850,18 @@ function erp_sanitize_tooltip( $var ) {
  * @return string
  * @since 1.3.4
  */
-function erp_help_tip( $tip, $allow_html = false ) {
+function erp_help_tip( $tip, $allow_html = false, $tag = 'tips' ) {
     if ( $allow_html ) {
         $tip = erp_sanitize_tooltip( $tip );
     } else {
         $tip = wp_kses_post( $tip );
     }
 
-    return '<span class="erp-help-tip" data-tip="' . $tip . '"></span>';
+    if ( 'tips' === $tag ) {
+        return sprintf( '<span class="erp-help-tip erp-tips" data-tip="%s"></span>', $tip );
+    }
+
+    return sprintf( '<span class="erp-help-tip erp-tips" title="%s"></span>', $tip );
 }
 
 /**
@@ -3375,3 +3400,225 @@ function filter_enabled_email( $email ) {
     return $email;
 }
 /**** Add Enable Disable section for All Pre-generated email End ****/
+
+/**
+ *  A method for inserting multiple rows into the specified table
+ *  Updated to include the ability to Update existing rows by primary key
+ *
+ *  Usage Example for insert:
+ *
+ *  $insert_arrays = array();
+ *  foreach($assets as $asset) {
+ *  $time = current_time( 'mysql' );
+ *  $insert_arrays[] = array(
+ *  'type' => "multiple_row_insert",
+ *  'status' => 1,
+ *  'name'=>$asset,
+ *  'added_date' => $time,
+ *  'last_update' => $time);
+ *
+ *  }
+ *
+ *
+ *  wp_insert_rows($insert_arrays, $wpdb->tablename);
+ *
+ *  Usage Example for update:
+ *
+ *  wp_insert_rows($insert_arrays, $wpdb->tablename, true, "primary_column");
+ *
+ * @since 1.6.0
+ *
+ * @param array   $row_arrays key value pairs of row data.
+ * @param string  $wp_table_name table name with prefix added.
+ * @param boolean $update set true for data updates, you need to specify primary_key parameter.
+ * @param string  $primary_key primary key field name, provide this field if you want to update the given data.
+ *
+ * @return false|int return false on query error, otherwise return number of row effected, output can be 0 if no row is updated, consider this while checking for errors.
+ *
+ * @author  Ugur Mirza ZEYREK
+ * @contributor Travis Grenell
+ */
+function erp_wp_insert_rows( $row_arrays = array(), $wp_table_name, $update = false, $primary_key = null ) {
+    global $wpdb;
+    $wp_table_name = esc_sql( $wp_table_name );
+    // Setup arrays for Actual Values, and Placeholders.
+    $values        = array();
+    $place_holders = array();
+    $query         = '';
+    $query_columns = '';
+
+    $query .= "INSERT INTO `{$wp_table_name}` (";
+    foreach ( $row_arrays as $count => $row_array ) {
+        foreach ( $row_array as $key => $value ) {
+            if ( $count == 0 ) {
+                if ( $query_columns ) {
+                    $query_columns .= ', ' . $key . '';
+                } else {
+                    $query_columns .= '' . $key . '';
+                }
+            }
+
+            $values[] = $value;
+
+            $symbol = '%s';
+            if ( is_numeric( $value ) ) {
+                if ( is_float( $value ) ) {
+                    $symbol = '%f';
+                } else {
+                    $symbol = '%d';
+                }
+            }
+            if ( isset( $place_holders[ $count ] ) ) {
+                $place_holders[ $count ] .= ", '$symbol'";
+            } else {
+                $place_holders[ $count ] = "( '$symbol'";
+            }
+        }
+        // mind closing the GAP.
+        $place_holders[ $count ] .= ')';
+    }
+
+    $query .= " $query_columns ) VALUES ";
+
+    $query .= implode( ', ', $place_holders );
+
+    if ( $update ) {
+        //$update = " ON DUPLICATE KEY UPDATE $primary_key=VALUES( $primary_key ),";
+        $update = ' ON DUPLICATE KEY UPDATE ';
+        $cnt    = 0;
+        foreach ( $row_arrays[0] as $key => $value ) {
+            if ( $cnt == 0 ) {
+                $update .= "$key=VALUES($key)";
+                $cnt     = 1;
+            } else {
+                $update .= ", $key=VALUES($key)";
+            }
+        }
+        $query .= $update;
+    }
+
+    return $wpdb->query( $wpdb->prepare( $query, $values ) ) === false ? false : true;
+}
+
+
+/**
+ * This function will get mysql date string as input and will return php timestamp with default WordPress timzone
+ *
+ * @since 1.6.0
+ *
+ * @param string $time mysql date format: Y-m-d H:i:s or Y-m-d. In case of Y-m-d only string H:i:s will be set to 00:00:00.
+ * @param bool   $timestamp return false to get DateTimeImmutable object.
+ *
+ * @return bool|int|DateTimeImmutable false on return php timestamp on success
+ */
+function erp_mysqldate_to_phptimestamp( $time, $timestamp = true ) {
+
+    if ( ! preg_match( '/\d{2}:\d{2}:\d{2}$/', $time ) ) {
+        $time = $time . ' 00:00:00';
+    }
+
+    $timezone = erp_wp_timezone();
+    $datetime = DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $time, $timezone );
+
+    if ( false === $datetime ) {
+        return false;
+    }
+
+    if ( $timestamp ) {
+        return $datetime->getTimestamp();
+    }
+
+    return $datetime;
+}
+
+/**
+ * current_datetime() function compability for wp version < 5.3
+ *
+ * @since 1.6.0
+ *
+ * @return DateTimeImmutable
+ */
+function erp_current_datetime() {
+    if ( function_exists( 'current_datetime' ) ) {
+        return current_datetime();
+    }
+
+    return new DateTimeImmutable( 'now', erp_wp_timezone() );
+}
+
+/**
+ * erp_wp_timezone() function compability for wp version < 5.3
+ *
+ * @since 1.6.0
+ *
+ * @return DateTimeZone
+ */
+function erp_wp_timezone() {
+    if ( function_exists( 'wp_timezone' ) ) {
+        return wp_timezone();
+    }
+
+    return new DateTimeZone( erp_wp_timezone_string() );
+}
+
+/**
+ * erp_wp_timezone_string() function compability for wp version < 5.3
+ *
+ * @since 1.6.0
+ *
+ * @return string
+ */
+function erp_wp_timezone_string() {
+    $timezone_string = get_option( 'timezone_string' );
+
+    if ( $timezone_string ) {
+        return $timezone_string;
+    }
+
+    $offset  = (float) get_option( 'gmt_offset' );
+    $hours   = (int) $offset;
+    $minutes = ( $offset - $hours );
+
+    $sign      = ( $offset < 0 ) ? '-' : '+';
+    $abs_hour  = abs( $hours );
+    $abs_mins  = abs( $minutes * 60 );
+    $tz_offset = sprintf( '%s%02d:%02d', $sign, $abs_hour, $abs_mins );
+
+    return $tz_offset;
+}
+
+/**
+ * This method will return input value as integer if there is no . value, otherwise will return a float value
+ * @param $number
+ *
+ * @return int|float
+ */
+function erp_number_format_i18n( $number ) {
+    // cast as string
+    $number = (string) $number;
+
+    // check if . exist
+    if ( strpos( $number, '.' ) !== false ) {
+        $extract = explode( '.', $number );
+        if ( isset( $extract[1] ) && absint( $extract[1] > 0 ) ) {
+            return number_format_i18n( $number, 1 );
+        }
+    }
+    return number_format_i18n( $number );
+}
+
+/**
+ * This method will check for a valid timestamp
+ *
+ * @param int|string $string timestamp
+ *
+ * @return bool
+ */
+function erp_is_timestamp( $string ) {
+    try {
+        new DateTime('@' . $string);
+    } catch(Exception $e) {
+        return false;
+    }
+    return true;
+}

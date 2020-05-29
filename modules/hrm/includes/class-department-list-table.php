@@ -265,7 +265,7 @@ class Department_List_Table extends \WP_List_Table {
         $columns = array(
             'cb'              => '<input type="checkbox" />',
             'name'            => __( 'Department', 'erp' ),
-            'lead'            => __( 'Department Lead', 'erp' ),
+            'lead'            => __( 'Department Manager', 'erp' ),
             'number_employee' => __( 'No. of Employees', 'erp' )
         );
 

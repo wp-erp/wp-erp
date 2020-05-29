@@ -1933,8 +1933,35 @@ span.green {
   margin-top: 12px;
   background-color: #ddd;
 }
+table.entitlements td p {
+  margin: 2px 0 0;
+}
+table.leaves td p {
+  margin: 2px 0 0;
+}
+table.leaves th#name {
+  width: 200px;
+}
+table.leaves th#policy {
+  width: 120px;
+}
+table.leaves th#available {
+  width: 75px;
+}
+table.leaves th#request {
+  width: 150px;
+}
+table.leaves th#status,
+table.leaves td#status {
+  width: 100px;
+}
+table.leaves th#reason {
+  width: 250px;
+}
+table.leaves th#approved_by {
+  width: 150px;
+}
 table.leaves td.column-status {
-  color: #fff;
   font-size: 11px;
   font-weight: bold;
 }
@@ -1946,12 +1973,19 @@ table.leaves td.column-status span {
 }
 table.leaves td.column-status .status-1 {
   background: #7ad03a;
+  color: #fff;
 }
 table.leaves td.column-status .status-2 {
   background: #ffba00;
+  color: #fff;
 }
 table.leaves td.column-status .status-3 {
   background: #dd3d36;
+  color: #fff;
+}
+table.leaves td.column-status .status-4 {
+  background: #3E87D0;
+  color: #fff;
 }
 .erp-hr-leave-request-new .show-days {
   width: 97%;
@@ -2295,6 +2329,82 @@ table.leaves td.column-status .status-3 {
 }
 .erp-employee-form .erp-employee-modal-right {
   border: 1px solid #ddd;
+}
+.leave-policy-form,
+.leave-entitlement-form {
+  background: #fff;
+  padding: 20px;
+  width: 800px;
+  margin: 0 auto;
+}
+.leave-policy-form .form-group,
+.leave-entitlement-form .form-group {
+  background: #f1f1f1;
+  border: 2px solid #eee;
+  padding-left: 10px;
+  margin-bottom: 10px;
+  border-radius: 3px;
+}
+.leave-policy-form .form-group .row,
+.leave-entitlement-form .form-group .row {
+  margin: 15px 0;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  max-width: 700px;
+}
+.leave-policy-form .form-group .row .description,
+.leave-entitlement-form .form-group .row .description,
+.leave-policy-form .form-group .row .error-text,
+.leave-entitlement-form .form-group .row .error-text {
+  margin-left: 190px;
+  margin-top: 5px;
+  font-size: 12px;
+  color: #757575;
+  width: 100%;
+  width: -moz-available;
+  /* WebKit-based browsers will ignore this. */
+  width: -webkit-fill-available;
+  /* Mozilla-based browsers will ignore this. */
+  width: fill-available;
+}
+.leave-policy-form .form-group .row .error-text,
+.leave-entitlement-form .form-group .row .error-text {
+  color: #ff3860;
+  font-weight: bold;
+}
+.leave-policy-form .form-group .row.applicable-form-row input[type=number],
+.leave-entitlement-form .form-group .row.applicable-form-row input[type=number] {
+  width: 100px;
+}
+.leave-policy-form .form-group .row.applicable-form-row span,
+.leave-entitlement-form .form-group .row.applicable-form-row span {
+  margin-left: 20px;
+}
+.leave-policy-form .form-group label,
+.leave-entitlement-form .form-group label {
+  width: 190px;
+  display: inline-block;
+}
+.leave-policy-form .form-group span.checkbox label,
+.leave-entitlement-form .form-group span.checkbox label {
+  width: auto;
+}
+.leave-policy-form .form-group .leave-policy-input,
+.leave-entitlement-form .form-group .leave-policy-input {
+  min-width: 300px;
+}
+.create-policy-name .form-field {
+  width: 90%;
+  margin: 1em 0;
+}
+.create-policy-name .form-field .description {
+  font-style: italic;
+  color: #666;
+}
+#erp-hr-leave-req-leave-policy,
+.new-leave-request-form #f_year {
+  width: 162px;
 }
 .caret {
   display: inline-block;

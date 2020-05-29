@@ -41,11 +41,20 @@ class Rejected_Leave_Request extends Email {
     }
 
     public function trigger( $request_id = null ) {
+        global $wpdb;
+
         $request = erp_hr_get_leave_request( $request_id );
 
         if ( ! $request ) {
             return;
         }
+
+        $reason = $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT message FROM {$wpdb->prefix}erp_hr_leave_approval_status WHERE leave_request_id = %d ORDER BY id DESC LIMIT 1",
+                array( $request->id )
+            )
+        );
 
         $employee          = new \WeDevs\ERP\HRM\Employee( intval( $request->user_id ) );
 
@@ -59,7 +68,7 @@ class Rejected_Leave_Request extends Email {
             'date_from'    => erp_format_date( $request->start_date ),
             'date_to'      => erp_format_date( $request->end_date ),
             'no_days'      => $request->days,
-            'reason'       => $request->comments,
+            'reason'       => $reason,
         ];
 
         if ( ! $this->get_recipient() ) {

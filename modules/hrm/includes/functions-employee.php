@@ -330,7 +330,7 @@ function erp_employee_delete( $employee_ids, $force = false ) {
         if ( $force ) {
 
             // find leave entitlements and leave requests and delete them as well
-            \WeDevs\ERP\HRM\Models\Leave_request::where( 'user_id', '=', $employee_wp_user_id )->delete();
+            \WeDevs\ERP\HRM\Models\Leave_Request::where( 'user_id', '=', $employee_wp_user_id )->delete();
             \WeDevs\ERP\HRM\Models\Leave_Entitlement::where( 'user_id', '=', $employee_wp_user_id )->delete();
             \WeDevs\ERP\HRM\Models\Education::where( 'employee_id', '=', $employee_wp_user_id )->delete();
             \WeDevs\ERP\HRM\Models\Performance::where( 'employee_id', '=', $employee_wp_user_id )->delete();
