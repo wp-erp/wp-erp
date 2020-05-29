@@ -231,9 +231,20 @@ May you enjoy the fruits of your labors for years to come'
      * @return void
      */
     public function create_cron_jobs() {
-        wp_schedule_event( time(), 'per_minute', 'erp_per_minute_scheduled_events' );
-        wp_schedule_event( time(), 'daily', 'erp_daily_scheduled_events' );
-        wp_schedule_event( time(), 'weekly', 'erp_weekly_scheduled_events' );
+        // schedule per minute hook
+        if ( ! wp_next_scheduled ( 'erp_per_minute_scheduled_events' ) ) {
+            wp_schedule_event( time(), 'per_minute', 'erp_per_minute_scheduled_events' );
+        }
+
+        // schedule daily hook
+        if ( ! wp_next_scheduled ( 'erp_daily_scheduled_events' ) ) {
+            wp_schedule_event( time(), 'daily', 'erp_daily_scheduled_events' );
+        }
+
+        // schedule weekly hook
+        if ( ! wp_next_scheduled ( 'erp_weekly_scheduled_events' ) ) {
+            wp_schedule_event( time(), 'weekly', 'erp_weekly_scheduled_events' );
+        }
     }
 
     /**
