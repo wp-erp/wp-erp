@@ -167,7 +167,13 @@ class Leave_Requests_List_Table extends \WP_List_Table {
                 $available = '';
 
                 if ( floatval( $item->available ) >= 0 && floatval( $item->extra_leaves ) == 0  ) {
-                    $available = sprintf( '<span class="green tooltip" title="%s"> %s %s</span>', __( 'Available Leave', 'erp' ), erp_number_format_i18n( $item->available ), _n( 'day', 'days', $item->available+1, 'erp' ) );
+                    if ( floatval( $item->available ) == 0 ) {
+                        $available = '&mdash;';
+                    }
+                    else {
+                        $available = sprintf( '<span class="green tooltip" title="%s"> %s %s</span>', __( 'Available Leave', 'erp' ), erp_number_format_i18n( $item->available ), _n( 'day', 'days', $item->available+1, 'erp' ) );
+                    }
+
                 }
                 elseif( floatval( $item->extra_leaves ) > 0 ) {
                     $available = sprintf( '<span class="red tooltip" title="%s"> -%s %s</span>', __( 'Extra Leave', 'erp' ), erp_number_format_i18n( $item->extra_leaves ), _n( 'day', 'days', $item->extra_leaves, 'erp' ) );

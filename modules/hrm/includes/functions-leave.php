@@ -1147,14 +1147,6 @@ function erp_hr_leave_insert_request( $args = array() ) {
         return new WP_Error( 'invalid-dates', esc_attr__( 'Invalid date range.', 'erp' ) );
     }
 
-    // user can't apply for past leave, only hr can
-    if ( ! current_user_can( 'erp_leave_create_request' ) ) {
-        $current_date = erp_current_datetime()->format('Y-m-d');
-        if ( $args['start_date'] < $current_date || $args['end_date'] < $current_date ) {
-            return new WP_Error( 'invalid-dates', esc_attr__( 'Invalid date range. You can not apply for past dates.', 'erp' ) );
-        }
-    }
-
     // check for unpaid leave
     if ( get_option( 'enable_extra_leave', 'no' ) !== 'yes' ) {
         $is_policy_valid = erp_hrm_is_valid_leave_duration( $args['start_date'], $args['end_date'], $args['leave_policy'], $args['user_id'] );
