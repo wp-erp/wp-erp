@@ -226,6 +226,26 @@ export default {
         }
 
         this.loaded();
+
+        this.$root.$on('options-query', query => {
+            if (query) {
+
+                HTTP.get('vendors', {
+                    params: {
+                        search: query
+                    }
+                } ).then(response => {
+                    if (response.data) {
+                        this.vendors = [];
+                        for (const i in response.data) {
+                            var vendor = response.data[i];
+                            var object = { id: vendor.id, name: vendor.first_name + ' ' + vendor.last_name };
+                            this.vendors.push(object);
+                        }
+                    }
+                });
+            }
+        });
     },
 
     methods: {
