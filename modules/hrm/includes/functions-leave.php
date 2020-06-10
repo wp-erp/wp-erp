@@ -2579,15 +2579,105 @@ function get_entitlement_financial_years() {
  * @return array
  *
  */
-function erp_get_leave_report( array $employees, $f_year ) {
+function erp_get_leave_report( array $employees, $f_year, $start_date = null, $end_date = null ) {
 
     $return = [];
 
     foreach ( $employees as $employee_id ) {
-        $return[ $employee_id ] = erp_hr_leave_get_balance( $employee_id, $f_year );;
+        //$return[ $employee_id ] = erp_hr_leave_get_balance( $employee_id, $f_year );
+        $return[ $employee_id ] = erp_hr_get_custom_leave_report( $employee_id, $f_year, $start_date, $end_date );
     }
 
     return $return;
+}
+
+function erp_hr_get_custom_leave_report( $user_id, $f_year = null, $start_date = null, $end_date = null ) {
+    global $wpdb;
+
+    $query = "select en.id, en.leave_id, en.day_in, en.f_year, fy.start_date, fy.end_date, l.name as policy_name";
+    $query .= " from {$wpdb->prefix}erp_hr_leave_entitlements as en";
+    $query .= " LEFT JOIN {$wpdb->prefix}erp_hr_financial_years as fy on fy.id = en.f_year";
+    $query .= " LEFT JOIN {$wpdb->prefix}erp_hr_leaves as l on l.id = en.leave_id";
+    $query .= " where user_id = %d and trn_type='leave_policies'";
+
+    if ( $f_year === null || 'custom' === $f_year ) {
+        $financial_year = erp_hr_get_financial_year_from_date( $end_date );
+    }
+    else {
+        $financial_year = Financial_Year::find( $f_year );
+    }
+
+    if ( empty( $financial_year ) ) {
+        return [];
+    }
+
+    $query .= " and fy.id = " . absint( $financial_year->id );
+
+    $results = $wpdb->get_results( $wpdb->prepare( $query, $user_id ) );
+
+    $balance = [];
+
+    if ( ! empty( $results ) ) {
+
+        // fix start date
+        if ( null === $start_date ) {
+            $start_date = $financial_year->start_date;
+        }
+        else {
+            $start_date = current_datetime()->modify( $start_date )->setTime( 0, 0, 0)->getTimestamp();
+        }
+
+        // fix end date
+        if ( null === $end_date ) {
+            $end_date = $financial_year->end_date;
+        }
+        else {
+            $end_date = current_datetime()->modify( $end_date )->setTime( 23, 59, 59 )->getTimestamp();
+        }
+
+        foreach ( $results as $result ) {
+            $days_count = $wpdb->get_row(
+                $wpdb->prepare(
+                    "SELECT sum(day_in) as day_in, sum(day_out) as day_out FROM {$wpdb->prefix}erp_hr_leave_entitlements WHERE user_id = %d AND leave_id = %d and f_year = %d ",
+                    array( $user_id, $result->leave_id, $result->f_year )
+                ),
+                ARRAY_A
+            );
+
+            if ( is_array( $days_count ) && ! empty( $days_count ) ) {
+                $day_in = floatval( $days_count['day_in'] );
+                $day_out = floatval( $days_count['day_out'] );
+
+                // total spent
+                $leave_spent = $wpdb->get_var(
+                    $wpdb->prepare(
+                        "SELECT count(rq_details.id) FROM {$wpdb->prefix}erp_hr_leave_request_details as rq_details
+                                LEFT JOIN {$wpdb->prefix}erp_hr_leave_requests as rq on rq.id = rq_details.leave_request_id
+                                WHERE rq.leave_entitlement_id = %d AND rq_details.user_id = %d AND rq_details.workingday_status = %d AND rq_details.leave_date BETWEEN %d AND %d",
+                        array( $result->id, $user_id, 1, $start_date, $end_date )
+                    )
+                );
+
+                $balance[ $result->leave_id ] = array(
+                    'entitlement_id' => $result->id,
+                    'days'          => $result->day_in,
+                    'from_date'     => $result->start_date,
+                    'to_date'       => $result->end_date,
+                    'leave_id'      => $result->leave_id,
+                    'policy_id'     => $result->id,
+                    'policy'        => $result->policy_name,
+                    'scheduled'     => 0,
+                    'entitlement'   => $result->day_in,
+                    'total'         => $day_in,
+                    'day_in'        => $day_in,
+                    'day_out'       => $day_out,
+                    'spent'         => $leave_spent,
+                );
+            }
+        }
+    }
+
+    return $balance;
 }
 
 /**

@@ -60,6 +60,8 @@ class Leave_Report_Employee_Based extends \WP_List_Table {
 
         $financial_years =  array( '' => esc_attr__( 'select year', 'erp') ) +  wp_list_pluck( Financial_Year::all(), 'fy_name', 'id' );
         $selected_year         = ( isset( $_POST['filter_year'] ) ) ? sanitize_text_field( wp_unslash( $_POST['filter_year'] ) ) : $this->current_f_year;
+        $date_range_start      = isset( $_REQUEST['start'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['start'] ) ) : '';
+        $date_range_end        = isset( $_REQUEST['end'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['end'] ) ) : '';
         ?>
         <div class="actions alignleft">
             <label class="screen-reader-text" for="new_role"><?php esc_html_e( 'Filter by Designation', 'erp' ) ?></label>
@@ -68,8 +70,16 @@ class Leave_Report_Employee_Based extends \WP_List_Table {
                 foreach ( $financial_years as $f_id => $f_name ) {
                     echo sprintf( "<option value='%s'%s>%s</option>\n", esc_html( $f_id ), selected( $selected_year, $f_id, false ), esc_html( $f_name ) );
                 }
+                $selected = ( $selected_year == 'custom' ) ? 'selected' : '';
                 ?>
+                <option value="custom" <?php echo esc_html( $selected ); ?>><?php esc_html_e( 'Custom', 'erp' ); ?></option>
             </select>
+            <span id="custom-date-range"></span>
+            <?php if( $selected ) :?>
+                <span id="custom-input" style="float:left">
+                    <span>From </span><input name="start" class="erp-leave-date-field" type="text" value="<?php echo esc_html( $date_range_start ); ?>">&nbsp;<span>To </span><input name="end" class="erp-leave-date-field" type="text" value="<?php echo esc_html( $date_range_end ); ?>">
+                </span>
+            <?php endif ?>
             <select name="filter_designation" id="filter_designation">
                 <?php echo wp_kses( erp_hr_get_designation_dropdown( $selected_desingnation ), array(
                     'option' => array(
@@ -197,6 +207,16 @@ class Leave_Report_Employee_Based extends \WP_List_Table {
         $selected_department   = ( isset( $_POST['filter_department'] ) ) ? sanitize_text_field( wp_unslash( $_POST['filter_department'] ) ) : 0;
         $selected_type         = ( isset( $_POST['filter_employment_type'] ) ) ? sanitize_text_field( wp_unslash( $_POST['filter_employment_type'] ) ) : '';
         $selected_f_year         = ( isset( $_POST['filter_year'] ) ) ? sanitize_text_field( wp_unslash( $_POST['filter_year'] ) ) : $this->current_f_year;
+        $start_date = null;
+        $end_date = null;
+
+        if ( isset( $_REQUEST['start'] ) ) {
+            $start_date = sanitize_text_field( wp_unslash( $_REQUEST['start'] ) );
+        }
+
+        if ( isset( $_REQUEST['end'] ) ) {
+            $end_date = sanitize_text_field( wp_unslash( $_REQUEST['end'] ) );
+        }
 
         $query = \WeDevs\ERP\HRM\Models\Employee::where( 'status', 'active' )->select( 'user_id' )->orderBy( 'hiring_date', 'desc' );
 
@@ -216,7 +236,7 @@ class Leave_Report_Employee_Based extends \WP_List_Table {
 
         $employees_obj = $query->skip( $offset )->take( $per_page )->get()->toArray();
         $employees = wp_list_pluck( $employees_obj, 'user_id' );
-        $reports   = erp_get_leave_report( $employees, $selected_f_year );
+        $reports   = erp_get_leave_report( $employees, $selected_f_year, $start_date, $end_date );
         $this->reports = $reports;
         $this->items   = $employees;
         $this->set_pagination_args( array(
