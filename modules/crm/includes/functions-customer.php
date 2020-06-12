@@ -3130,7 +3130,7 @@ function erp_crm_render_save_replies( $template_id, $contact_id ) {
 
     return [
         'subject'  => $templates->subject,
-        'template' => $body
+        'template' => stripslashes_deep( $body )
     ];
 }
 
