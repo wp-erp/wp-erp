@@ -1111,7 +1111,6 @@ function erp_acct_send_email_on_transaction( $voucher_no, $transaction ) {
         return;
     }
 
-    $trn_email = new \WeDevs\ERP\Accounting\Includes\Classes\Send_Email();
     $user_id   = null;
     $trn_id    = null;
     $request   = [];
@@ -1120,21 +1119,24 @@ function erp_acct_send_email_on_transaction( $voucher_no, $transaction ) {
     $request['type']       = ! empty( $transaction['type'] ) ? $transaction['type'] : erp_acct_get_transaction_type( $voucher_no );
     $request['receiver'][] = ! empty( $transaction['email'] ) ? $transaction['email'] : [];
     // translators: %s: type
-    $request['subject']    = sprintf( __( 'Transaction alert for %s', 'erp' ), $request['type'] );
-    $request['body']       = __( 'Thank you for the transaction', 'erp' );
-    $request['attachment'] = true;
-    $attach_pdf            = true;
 
     $file_name = erp_acct_get_pdf_filename( $voucher_no );
     $pdf_file  = erp_acct_generate_pdf( $request, $transaction, $file_name, 'F' );
 
     if ( $pdf_file ) {
-        $result = $trn_email->trigger( $request['receiver'], $request['subject'], $request['body'], $request['attachment'] );
+        $emailer = wperp()->emailer->get_email( 'Transactional_Email' );
+        if ( is_array( $request['receiver'] ) ) {
+            foreach ( $request['receiver'] as $email ) {
+                $emailer->trigger( $email, $pdf_file, $request['type'] );
+            }
+        } else {
+            $emailer->trigger( $request['receiver'], $pdf_file, $request['type'] );
+        }
+
     } else {
         wp_die( esc_html__( 'PDF not generated!', 'erp' ) );
     }
 
-    return $result;
 }
 
 /**
