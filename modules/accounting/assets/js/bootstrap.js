@@ -878,7 +878,7 @@ if (false) {(function () {
     },
     notFound: {
       type: String,
-      default: 'No items found.'
+      default: __('No items found.', 'erp')
     },
     totalItems: {
       type: Number,
@@ -12926,7 +12926,9 @@ var render = function() {
       _c("div", { staticClass: "tablenav-pages" }, [
         _vm.showItemNumbers
           ? _c("span", { staticClass: "displaying-num" }, [
-              _vm._v(_vm._s(_vm.itemsTotal) + " items")
+              _vm._v(
+                _vm._s(_vm.itemsTotal) + " " + _vm._s(_vm.__("items", "erp"))
+              )
             ])
           : _vm._e(),
         _vm._v(" "),

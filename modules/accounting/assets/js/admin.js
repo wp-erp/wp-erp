@@ -1081,7 +1081,7 @@ if (false) {(function () {
     },
     notFound: {
       type: String,
-      default: 'No items found.'
+      default: __('No items found.', 'erp')
     },
     totalItems: {
       type: Number,
@@ -11981,7 +11981,9 @@ var render = function() {
       _c("div", { staticClass: "tablenav-pages" }, [
         _vm.showItemNumbers
           ? _c("span", { staticClass: "displaying-num" }, [
-              _vm._v(_vm._s(_vm.itemsTotal) + " items")
+              _vm._v(
+                _vm._s(_vm.itemsTotal) + " " + _vm._s(_vm.__("items", "erp"))
+              )
             ])
           : _vm._e(),
         _vm._v(" "),
@@ -14434,20 +14436,20 @@ module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFs
       }],
       columns: {
         customer: {
-          label: 'Name',
+          label: __('Name', 'erp'),
           isColPrimary: true
         },
         company: {
-          label: 'Company'
+          label: __('Company', 'erp')
         },
         email: {
-          label: 'Email'
+          label: __('Email', 'erp')
         },
         phone: {
-          label: 'Phone'
+          label: __('Phone', 'erp')
         },
         actions: {
-          label: 'Actions'
+          label: __('Actions', 'erp')
         }
       },
       rows: [],
@@ -14488,8 +14490,8 @@ module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFs
 
       _this.fetchItems();
     });
-    this.buttonTitle = this.$route.name.toLowerCase() === 'customers' ? 'Customer' : 'Vendor';
-    this.pageTitle = this.$route.name;
+    this.buttonTitle = this.$route.name.toLowerCase() === 'customers' ? __('Customer', 'erp') : __('Vendor', 'erp');
+    this.pageTitle = this.$route.name.toLowerCase() === 'customers' ? __('Customers', 'erp') : __('Vendors', 'erp');
     this.url = this.$route.name.toLowerCase();
     this.singleUrl = this.url === 'customers' ? 'CustomerDetails' : 'VendorDetails';
     this.fetchItems();
@@ -23222,16 +23224,16 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       journalModal: false,
       columns: {
         l_id: {
-          label: 'Voucher No.'
+          label: __('Voucher No.', 'erp')
         },
         l_date: {
-          label: 'Date'
+          label: __('Date', 'erp')
         },
         l_particulars: {
-          label: 'Particulars'
+          label: __('Particulars', 'erp')
         },
         amount: {
-          label: 'Amount'
+          label: __('Amount', 'erp')
         }
       },
       rows: [],
@@ -25433,13 +25435,13 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
     return {
       pages: [{
         namedRoute: 'InvoiceCreate',
-        name: 'Create Invoice'
+        name: __('Create Invoice', 'erp')
       }, {
         namedRoute: 'RecPaymentCreate',
-        name: 'Receive Payment'
+        name: __('Receive Payment', 'erp')
       }, {
         namedRoute: 'EstimateCreate',
-        name: 'Create Estimate'
+        name: __('Create Estimate', 'erp')
       }]
     };
   }
@@ -25575,7 +25577,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       },
       chartPayment: {
         colors: ['#40c4ff', '#e91e63'],
-        labels: ['Received', 'Outstanding'],
+        labels: [__('Received', 'erp'), __('Outstanding', 'erp')],
         values: [],
         outstanding: 0
       }
@@ -25724,31 +25726,31 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
     return {
       columns: {
         trn_no: {
-          label: 'Voucher No.'
+          label: __('Voucher No.', 'erp')
         },
         type: {
-          label: 'Type'
+          label: __('Type', 'erp')
         },
         ref: {
-          label: 'Ref'
+          label: __('Ref', 'erp')
         },
         customer_name: {
-          label: 'Customer'
+          label: __('Customer', 'erp')
         },
         trn_date: {
-          label: 'Trn Date'
+          label: __('Trn Date', 'erp')
         },
         due_date: {
-          label: 'Due Date'
+          label: __('Due Date', 'erp')
         },
         due: {
-          label: 'Due'
+          label: __('Due', 'erp')
         },
         amount: {
-          label: 'Total'
+          label: __('Total', 'erp')
         },
         status: {
-          label: 'Status'
+          label: __('Status', 'erp')
         },
         actions: {
           label: ''
@@ -26217,16 +26219,16 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
     return {
       pages: [{
         namedRoute: 'ExpenseCreate',
-        name: 'Create Expense'
+        name: __('Create Expense', 'erp')
       }, {
         namedRoute: 'CheckCreate',
-        name: 'Create Check'
+        name: __('Create Check', 'erp')
       }, {
         namedRoute: 'BillCreate',
-        name: 'Create Bill'
+        name: __('Create Bill', 'erp')
       }, {
         namedRoute: 'PayBillCreate',
-        name: 'Pay Bill'
+        name: __('Pay Bill', 'erp')
       }]
     };
   }
@@ -26353,7 +26355,7 @@ setTimeout(function () {
       },
       chartExpense: {
         colors: ['#40c4ff', '#e91e63'],
-        labels: ['Paid', 'Payable'],
+        labels: [__('Paid', 'erp'), __('Payable', 'erp')],
         values: [],
         outstanding: 0
       }
@@ -26477,31 +26479,31 @@ setTimeout(function () {
     return {
       columns: {
         trn_no: {
-          label: 'Voucher No.'
+          label: __('Voucher No.', 'erp')
         },
         type: {
-          label: 'Type'
+          label: __('Type', 'erp')
         },
         ref: {
-          label: 'Ref'
+          label: __('Ref', 'erp')
         },
         vendor_name: {
-          label: 'People'
+          label: __('People', 'erp')
         },
         trn_date: {
-          label: 'Trn Date'
+          label: __('Trn Date', 'erp')
         },
         due_date: {
-          label: 'Due Date'
+          label: __('Due Date', 'erp')
         },
         due: {
-          label: 'Due'
+          label: __('Due', 'erp')
         },
         amount: {
-          label: 'Total'
+          label: __('Total', 'erp')
         },
         status: {
-          label: 'Status'
+          label: __('Status', 'erp')
         },
         actions: {
           label: ''
@@ -27129,13 +27131,13 @@ setTimeout(function () {
     return {
       pages: [{
         namedRoute: 'PurchaseCreate',
-        name: 'Create Purchase'
+        name: __('Create Purchase', 'erp')
       }, {
         namedRoute: 'PayPurchaseCreate',
-        name: 'Pay Purchase'
+        name: __('Pay Purchase', 'erp')
       }, {
         namedRoute: 'PurchaseOrderCreate',
-        name: 'Create Purchase Order'
+        name: __('Create Purchase Order', 'erp')
       }]
     };
   }
@@ -27198,7 +27200,7 @@ setTimeout(function () {
       },
       chartPurchase: {
         colors: ['#40c4ff', '#e91e63'],
-        labels: ['Paid', 'Payable'],
+        labels: [__('Paid', 'erp'), __('Payable', 'erp')],
         values: [],
         outstanding: 0
       }
@@ -27349,31 +27351,31 @@ setTimeout(function () {
     return {
       columns: {
         trn_no: {
-          label: 'Voucher No.'
+          label: __('Voucher No.', 'erp')
         },
         type: {
-          label: 'Type'
+          label: __('Type', 'erp')
         },
         ref: {
-          label: 'Ref'
+          label: __('Ref', 'erp')
         },
         customer_name: {
-          label: 'Customer'
+          label: __('Customer', 'erp')
         },
         trn_date: {
-          label: 'Trn Date'
+          label: __('Trn Date', 'erp')
         },
         due_date: {
-          label: 'Due Date'
+          label: __('Due Date', 'erp')
         },
         due: {
-          label: 'Due'
+          label: __('Due', 'erp')
         },
         amount: {
-          label: 'Total'
+          label: __('Total', 'erp')
         },
         status: {
-          label: 'Status'
+          label: __('Status', 'erp')
         },
         actions: {
           label: ''
@@ -28760,10 +28762,10 @@ setTimeout(function () {
       columns: {
         // 'tax_agency_id': {label: 'ID'},
         tax_agency_name: {
-          label: 'Agency Name'
+          label: __('Agency Name', 'erp')
         },
         actions: {
-          label: 'Actions'
+          label: __('Actions', 'erp')
         }
       },
       rows: [],
@@ -29007,13 +29009,13 @@ setTimeout(function () {
       modalParams: null,
       columns: {
         tax_cat_name: {
-          label: 'Category Name'
+          label: __('Category Name', 'erp')
         },
         tax_cat_desc: {
-          label: 'Description'
+          label: __('Description', 'erp')
         },
         actions: {
-          label: 'Actions'
+          label: __('Actions', 'erp')
         }
       },
       rows: [],
@@ -29251,16 +29253,16 @@ setTimeout(function () {
       modalParams: null,
       columns: {
         tax_rate_name: {
-          label: 'Tax Zone Name'
+          label: __('Tax Zone Name', 'erp')
         },
         tax_number: {
-          label: 'Tax Number'
+          label: __('Tax Number', 'erp')
         },
         default: {
-          label: 'Default'
+          label: __('Default', 'erp')
         },
         actions: {
-          label: 'Actions'
+          label: __('Actions', 'erp')
         }
       },
       rows: [],
@@ -29500,10 +29502,10 @@ setTimeout(function () {
       modalParams: null,
       columns: {
         tax_rate_name: {
-          label: 'Tax Zone Name'
+          label: __('Tax Zone Name', 'erp')
         },
         actions: {
-          label: 'Actions'
+          label: __('Actions', 'erp')
         }
       },
       rows: [],
@@ -34340,7 +34342,7 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "people-search" }, [
-    _c("h4", [_vm._v("Search")]),
+    _c("h4", [_vm._v(_vm._s(_vm.__("Search", "erp")))]),
     _vm._v(" "),
     _c(
       "form",
@@ -34384,7 +34386,7 @@ var render = function() {
         _c(
           "button",
           { staticClass: "wperp-btn btn--primary", attrs: { type: "submit" } },
-          [_vm._v("Search")]
+          [_vm._v(_vm._s(_vm.__("Search", "erp")))]
         )
       ]
     )
@@ -35148,7 +35150,9 @@ var render = function() {
                                   }
                                 }),
                                 _vm._v(
-                                  " Self\n                                        "
+                                  " " +
+                                    _vm._s(_vm.__("self", "erp")) +
+                                    "\n                                        "
                                 )
                               ]
                             ),
@@ -47429,7 +47433,8 @@ var render = function() {
               _c("div", { staticClass: "buttons-wrapper" }, [
                 _c("input", {
                   staticClass: "wperp-btn btn--primary text-left",
-                  attrs: { type: "submit", value: "Save" },
+                  attrs: { type: "submit" },
+                  domProps: { value: _vm.__("Save", "erp") },
                   on: {
                     click: function($event) {
                       $event.preventDefault()
@@ -56319,7 +56324,7 @@ var render = function() {
                 ? _c("pie-chart", {
                     attrs: {
                       id: "payment",
-                      title: "Payment",
+                      title: _vm.__("Payment", "erp"),
                       labels: _vm.chartPayment.labels,
                       colors: _vm.chartPayment.colors,
                       data: _vm.chartPayment.values
@@ -56338,7 +56343,7 @@ var render = function() {
                 ? _c("pie-chart", {
                     attrs: {
                       id: "status",
-                      title: "Status",
+                      title: _vm.__("Status", "erp"),
                       labels: _vm.chartStatus.labels,
                       colors: _vm.chartStatus.colors,
                       data: _vm.chartStatus.values
@@ -57229,7 +57234,7 @@ var render = function() {
                 ? _c("pie-chart", {
                     attrs: {
                       id: "payment",
-                      title: "Payment",
+                      title: _vm.__("Payment", "erp"),
                       labels: _vm.chartExpense.labels,
                       colors: _vm.chartExpense.colors,
                       data: _vm.chartExpense.values
@@ -57248,7 +57253,7 @@ var render = function() {
                 ? _c("pie-chart", {
                     attrs: {
                       id: "status",
-                      title: "Status",
+                      title: _vm.__("Status", "erp"),
                       sign: "",
                       labels: _vm.chartStatus.labels,
                       colors: _vm.chartStatus.colors,
@@ -58136,7 +58141,7 @@ var render = function() {
                 ? _c("pie-chart", {
                     attrs: {
                       id: "payment",
-                      title: "Payment",
+                      title: _vm.__("Payment", "erp"),
                       labels: _vm.chartPurchase.labels,
                       colors: _vm.chartPurchase.colors,
                       data: _vm.chartPurchase.values
@@ -58155,7 +58160,7 @@ var render = function() {
                 ? _c("pie-chart", {
                     attrs: {
                       id: "status",
-                      title: "Status",
+                      title: _vm.__("Status", "erp"),
                       sign: "",
                       labels: _vm.chartStatus.labels,
                       colors: _vm.chartStatus.colors,
