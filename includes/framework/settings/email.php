@@ -15,6 +15,7 @@ class ERP_Email_Settings extends ERP_Settings_Page {
         add_action( 'erp_admin_field_notification_emails', [ $this, 'notification_emails' ] );
         add_action( 'erp_admin_field_smtp_test_connection', [ $this, 'smtp_test_connection' ] );
         add_action( 'admin_footer', 'erp_email_settings_javascript' );
+        add_action( 'admin_footer', 'email_setting_css' );
     }
 
     /**
@@ -93,6 +94,12 @@ class ERP_Email_Settings extends ERP_Settings_Page {
                 'desc'  => __( 'Email notifications sent from WP ERP are listed below. Click on an email to configure it.', 'erp' ),
                 'type'  => 'title',
                 'id'    => 'email_notification_settings'
+            ];
+
+            $fields['general'][] = [
+                'desc'  => '<ul class="email_tab_view"><li id="bt_hrm" class="bt_active">'. __( 'HRM', 'erp' ) .'</li><li id="bt_crm">'. __( 'CRM', 'erp' ) .'</li><li id="bt_accounting">'. __( 'Accounting', 'erp' ) .'</li><li id="bt_others">'. __( 'Others', 'erp' ) .'</li></ul>',
+                'type'  => 'title',
+                'id'    => 'email_notification_tab'
             ];
 
             $fields['general'][] = [
@@ -217,10 +224,21 @@ class ERP_Email_Settings extends ERP_Settings_Page {
                         ?>
                     </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="email_list_view">
                     <?php
                     foreach ( $email_templates as $email_key => $email ) {
-                        echo '<tr>';
+
+                        if ( strpos( get_class( $email ), 'HRM' ) !== false ) {
+                            $tr_class = 'hrm';
+                        } elseif ( strpos( get_class( $email ), 'CRM' ) !== false ) {
+                            $tr_class = 'crm';
+                        } elseif ( strpos( get_class( $email ), 'Accounting' ) !== false ) {
+                            $tr_class = 'accounting';
+                        } else {
+                            $tr_class = 'others';
+                        }
+
+                        echo '<tr class="tag_'. $tr_class .'">';
 
                         foreach ( $columns as $key => $column ) {
                             switch ( $key ) {
