@@ -228,7 +228,11 @@ class ERP_Email_Settings extends ERP_Settings_Page {
                     <?php
                     foreach ( $email_templates as $email_key => $email ) {
 
-                        if ( strpos( get_class( $email ), 'HRM' ) !== false ) {
+                        if ( strpos( get_class( $email ), 'HRM' ) !== false ||
+                            strpos( get_class( $email ), 'ERP_Document' ) !== false ||
+                            strpos( get_class( $email ), 'ERP_Recruitment' ) !== false ||
+                            strpos( get_class( $email ), 'Training' ) !== false
+                        ) {
                             $tr_class = 'hrm';
                         } elseif ( strpos( get_class( $email ), 'CRM' ) !== false ) {
                             $tr_class = 'crm';
