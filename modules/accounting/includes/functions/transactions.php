@@ -1124,20 +1124,70 @@ function erp_acct_send_email_on_transaction( $voucher_no, $transaction ) {
     $pdf_file  = erp_acct_generate_pdf( $request, $transaction, $file_name, 'F' );
 
     if ( $pdf_file ) {
-        $emailer = wperp()->emailer->get_email( 'Transactional_Email' );
-        if ( is_array( $request['receiver'] ) ) {
-            foreach ( $request['receiver'] as $email ) {
-                $emailer->trigger( $email, $pdf_file, $request['type'] );
-            }
-        } else {
-            $emailer->trigger( $request['receiver'], $pdf_file, $request['type'] );
+
+        switch ( current_action() ) {
+            case "erp_acct_new_transaction_sales":
+                $email_type = "Transactional_Email";
+                break;
+            case "erp_acct_new_transaction_payment":
+                $email_type = "Transactional_Email";
+                break;
+            case "erp_acct_new_transaction_bill":
+                $email_type = "Transactional_Email";
+                break;
+            case "erp_acct_new_transaction_pay_bill":
+                $email_type = "Transactional_Email";
+                break;
+            case "erp_acct_new_transaction_purchase":
+                $email_type = "Transactional_Email";
+                break;
+            case "erp_acct_new_transaction_pay_purchase":
+                $email_type = "Transactional_Email";
+                break;
+            case "erp_acct_new_transaction_expense":
+                $email_type = "Transactional_Email";
+                break;
+            case "erp_acct_new_transaction_estimate":
+                $email_type = "Transactional_Email";
+                break;
+            case "erp_acct_new_transaction_purchase_order":
+                $email_type = "Transactional_Email";
+                break;
+            default:
+                $email_type = "Transactional_Email";
         }
+
+        acct_send_email( $request['receiver'], $pdf_file, $email_type, $voucher_no );
 
     } else {
         wp_die( esc_html__( 'PDF not generated!', 'erp' ) );
     }
 
 }
+
+/**
+ * Send accounting emails to receivers
+ *
+ * @param $receiver
+ * @param $pdf
+ * @param $type
+ * @return boolean
+ */
+function acct_send_email( $receiver, $pdf_file, $email_type, $voucher_no ) {
+
+    $emailer = wperp()->emailer->get_email( $email_type );
+    $company = new \WeDevs\ERP\Company();
+
+    if ( is_array( $receiver ) ) {
+        foreach ( $receiver as $email ) {
+            $emailer->trigger( $email, $pdf_file, $voucher_no, $company );
+        }
+    } else {
+        $emailer->trigger( $receiver, $pdf_file, $voucher_no, $company );
+    }
+
+}
+
 
 /**
  * Get voucher type by id

@@ -13,14 +13,18 @@ class Transactional_Email extends Email {
 
     function __construct() {
         $this->id             = 'transectional-email';
-        $this->title          = __( 'Accounting transaction', 'erp' );
-        $this->description    = __( 'Accounting transactional notification alert', 'erp' );
+        $this->title          = __( 'New invoice', 'erp' );
+        $this->description    = __( 'New invoice notification alert', 'erp' );
 
-        $this->subject        = __( 'Transaction alert for ', 'erp');
-        $this->heading        = __( 'New transaction', 'erp');
+        $this->subject        = __( 'New invoice has been created', 'erp');
+        $this->heading        = __( 'New invoice', 'erp');
 
         $this->find = [
-            'email'    => '{email}'
+            'customer_name' => '{customer_name}',
+            'invoide_ID'    => '{invoide_ID}',
+            'amount'        => '{amount}',
+            'due_date'      => '{due_date}',
+            'company_name'  => '{company_name}',
         ];
 
 
@@ -36,15 +40,21 @@ class Transactional_Email extends Email {
         ];
     }
 
-    public function trigger( $receiver_email, $attachment = '', $type = "invoice" ) {
+    public function trigger( $receiver_email, $attachment = '', $voucher_no, $company ) {
 
 
         $this->recipient   = $receiver_email;
         $this->heading     = $this->get_option( 'heading', $this->heading );
-        $this->subject     = $this->get_option( 'subject', $this->subject ) . " " . $type;
+        $this->subject     = $this->get_option( 'subject', $this->subject );
+
+        $voucher_details = erp_acct_get_invoice( $voucher_no );
 
         $this->replace = [
-            'email'    => $receiver_email
+            'customer_name' => $voucher_details['customer_name'],
+            'invoide_ID'    => $voucher_no,
+            'amount'        => $voucher_details['amount'],
+            'due_date'      => $voucher_details['due_date'],
+            'company_name'  => $company->name
         ];
 
 
