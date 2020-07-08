@@ -7,23 +7,23 @@ use WeDevs\ERP\Framework\Traits\Hooker;
 /**
  * Approved Leave Request
  */
-class Transactional_Email extends Email {
+class Transactional_Email_Payments extends Email {
 
     use Hooker;
 
     function __construct() {
-        $this->id             = 'transectional-email';
-        $this->title          = __( 'New transaction invoice', 'erp' );
-        $this->description    = __( 'New invoice notification alert', 'erp' );
+        $this->id             = 'transectional-email-payments';
+        $this->title          = __( 'New transaction payment', 'erp' );
+        $this->description    = __( 'New Payment notification alert', 'erp' );
 
-        $this->subject        = __( 'New invoice has been created', 'erp');
-        $this->heading        = __( 'New transaction invoice', 'erp');
+        $this->subject        = __( 'An invoice has been paid', 'erp');
+        $this->heading        = __( 'New transaction payment', 'erp');
 
         $this->find = [
             'customer_name' => '{customer_name}',
             'invoide_ID'    => '{invoide_ID}',
             'amount'        => '{amount}',
-            'due_date'      => '{due_date}',
+            'trn_date'      => '{trn_date}',
             'company_name'  => '{company_name}',
         ];
 
@@ -47,13 +47,13 @@ class Transactional_Email extends Email {
         $this->heading     = $this->get_option( 'heading', $this->heading );
         $this->subject     = $this->get_option( 'subject', $this->subject );
 
-        $voucher_details = erp_acct_get_invoice( $voucher_no );
+        $voucher_details = erp_acct_get_payment( $voucher_no );
 
         $this->replace = [
             'customer_name' => $voucher_details['customer_name'],
             'invoide_ID'    => $voucher_no,
             'amount'        => $voucher_details['amount'],
-            'due_date'      => $voucher_details['due_date'],
+            'trn_date'      => $voucher_details['trn_date'],
             'company_name'  => $company->name
         ];
 

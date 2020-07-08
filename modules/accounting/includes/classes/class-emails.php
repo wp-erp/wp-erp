@@ -16,7 +16,8 @@ class Emailer {
 
     function register_emails( $emails ) {
 
-        $emails['Transactional_Email'] = new Includes\Emails\Transactional_Email();
+        $emails['Transactional_Email']          = new Includes\Emails\Transactional_Email();
+        $emails['Transactional_Email_Payments'] = new Includes\Emails\Transactional_Email_Payments();
 
         return $emails;
     }
