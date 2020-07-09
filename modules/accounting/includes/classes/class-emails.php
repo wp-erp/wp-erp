@@ -19,6 +19,7 @@ class Emailer {
         $emails['Transactional_Email']          = new Includes\Emails\Transactional_Email();
         $emails['Transactional_Email_Payments'] = new Includes\Emails\Transactional_Email_Payments();
         $emails['Transactional_Email_Purchase'] = new Includes\Emails\Transactional_Email_Purchase();
+        $emails['Transactional_Email_Estimate'] = new Includes\Emails\Transactional_Email_Estimate();
 
         return $emails;
     }
