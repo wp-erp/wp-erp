@@ -18754,8 +18754,7 @@ if (false) {(function () {
 
   },
   watch: {
-    'ledgFields.chart_id': function ledgFieldsChart_id() {
-      this.fetchLedgerCategories();
+    'ledgFields.chart_id': function ledgFieldsChart_id() {// this.fetchLedgerCategories();
     }
   },
   created: function created() {
@@ -18775,14 +18774,14 @@ if (false) {(function () {
       var _this = this;
 
       return __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_asyncToGenerator___default()( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-        var _yield$Promise$all, _yield$Promise$all2, request1, request2, request3;
+        var _yield$Promise$all, _yield$Promise$all2, request1, request2;
 
         return regeneratorRuntime.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
                 if (!_this.$route.params.id) {
-                  _context.next = 17;
+                  _context.next = 13;
                   break;
                 }
 
@@ -18803,20 +18802,16 @@ if (false) {(function () {
                 _yield$Promise$all2 = __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_slicedToArray___default()(_yield$Promise$all, 2);
                 request1 = _yield$Promise$all2[0];
                 request2 = _yield$Promise$all2[1];
-                _context.next = 11;
-                return __WEBPACK_IMPORTED_MODULE_2_admin_http__["a" /* default */].get("/ledgers/categories/".concat(request2.data.chart_id));
-
-              case 11:
-                request3 = _context.sent;
+                //const request3 = await HTTP.get(`/ledgers/categories/${request2.data.chart_id}`);
                 _this.chartAccounts = request1.data;
 
-                _this.setDataForEdit(request2.data);
+                _this.setDataForEdit(request2.data); // this.categories = this.buildTree(request3.data);
 
-                _this.categories = _this.buildTree(request3.data);
-                _context.next = 19;
+
+                _context.next = 15;
                 break;
 
-              case 17:
+              case 13:
                 /**
                      * ----------------------------------------------
                      * create a new ledger
@@ -18826,7 +18821,7 @@ if (false) {(function () {
 
                 _this.fetchLedgerCategories();
 
-              case 19:
+              case 15:
               case "end":
                 return _context.stop();
             }
@@ -47038,11 +47033,11 @@ var render = function() {
           { staticClass: "wperp-btn btn--primary", attrs: { type: "submit" } },
           [
             _vm._v(
-              "\r\n                " +
+              "\n                " +
                 _vm._s(
                   _vm.editMode ? _vm.__("Update", "erp") : _vm.__("Save", "erp")
                 ) +
-                "\r\n            "
+                "\n            "
             )
           ]
         )
