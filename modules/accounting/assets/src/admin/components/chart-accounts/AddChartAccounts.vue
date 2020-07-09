@@ -237,6 +237,7 @@ export default {
             HTTP.post('/ledgers', requestData).then(res => {
                 this.$store.dispatch('spinner/setSpinner', false);
                 this.showAlert('success', 'Created !');
+                window.location.reload();
             }).catch(error => {
                 this.$store.dispatch('spinner/setSpinner', false);
                 throw error;
@@ -251,6 +252,7 @@ export default {
             HTTP.put(`/ledgers/${this.ledgerID}`, requestData).then(res => {
                 this.$store.dispatch('spinner/setSpinner', false);
                 this.showAlert('success', 'Updated !');
+                window.location.reload();
             }).catch(error => {
                 this.$store.dispatch('spinner/setSpinner', false);
                 throw error;

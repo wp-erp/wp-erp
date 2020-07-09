@@ -18897,6 +18897,8 @@ if (false) {(function () {
         _this6.$store.dispatch('spinner/setSpinner', false);
 
         _this6.showAlert('success', 'Created !');
+
+        window.location.reload();
       }).catch(function (error) {
         _this6.$store.dispatch('spinner/setSpinner', false);
 
@@ -18913,6 +18915,8 @@ if (false) {(function () {
         _this7.$store.dispatch('spinner/setSpinner', false);
 
         _this7.showAlert('success', 'Updated !');
+
+        window.location.reload();
       }).catch(function (error) {
         _this7.$store.dispatch('spinner/setSpinner', false);
 
