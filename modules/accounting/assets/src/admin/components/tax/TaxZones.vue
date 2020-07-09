@@ -61,10 +61,10 @@ export default {
         return {
             modalParams: null,
             columns: {
-                tax_rate_name: { label: 'Tax Zone Name' },
-                tax_number   : { label: 'Tax Number' },
-                default      : { label: 'Default' },
-                actions      : { label: 'Actions' }
+                tax_rate_name: { label: __('Tax Zone Name', 'erp') },
+                tax_number   : { label: __('Tax Number', 'erp') },
+                default      : { label: __('Default', 'erp') },
+                actions      : { label: __('Actions', 'erp') }
             },
             rows: [],
             paginationData: {

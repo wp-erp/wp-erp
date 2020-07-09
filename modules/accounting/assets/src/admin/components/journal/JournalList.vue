@@ -47,10 +47,10 @@ export default {
         return {
             journalModal: false,
             columns: {
-                l_id         : { label: 'Voucher No.' },
-                l_date       : { label: 'Date' },
-                l_particulars: { label: 'Particulars' },
-                amount       : { label: 'Amount' }
+                l_id         : { label: __('Voucher No.', 'erp') },
+                l_date       : { label: __('Date', 'erp') },
+                l_particulars: { label: __('Particulars', 'erp') },
+                amount       : { label: __('Amount', 'erp') }
             },
             rows: [],
             paginationData: {

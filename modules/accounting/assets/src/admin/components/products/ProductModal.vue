@@ -114,7 +114,7 @@
                                                 </label>
                                             </div>
                                             <div class="wperp-col-sm-9 wperp-col-xs-12">
-                                                <input type="checkbox" v-model="selfOwner" value="self" :required="selfOwner"> Self
+                                                <input type="checkbox" v-model="selfOwner" value="self" :required="selfOwner"> {{ __('self', 'erp') }}
                                             </div>
 
                                             <div class="wperp-col-sm-3 wperp-col-xs-12" v-show="!selfOwner">

@@ -21,7 +21,7 @@
                                 </div>
                             </div>
                             <div class="buttons-wrapper">
-                                <input type="submit" value="Save" class="wperp-btn btn--primary text-left"
+                                <input type="submit" :value="__('Save', 'erp')" class="wperp-btn btn--primary text-left"
                                        @click.prevent="createCategory"/>
                             </div>
                         </form>

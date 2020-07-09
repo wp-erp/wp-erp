@@ -1111,7 +1111,6 @@ function erp_acct_send_email_on_transaction( $voucher_no, $transaction ) {
         return;
     }
 
-    $trn_email = new \WeDevs\ERP\Accounting\Includes\Classes\Send_Email();
     $user_id   = null;
     $trn_id    = null;
     $request   = [];
@@ -1120,22 +1119,75 @@ function erp_acct_send_email_on_transaction( $voucher_no, $transaction ) {
     $request['type']       = ! empty( $transaction['type'] ) ? $transaction['type'] : erp_acct_get_transaction_type( $voucher_no );
     $request['receiver'][] = ! empty( $transaction['email'] ) ? $transaction['email'] : [];
     // translators: %s: type
-    $request['subject']    = sprintf( __( 'Transaction alert for %s', 'erp' ), $request['type'] );
-    $request['body']       = __( 'Thank you for the transaction', 'erp' );
-    $request['attachment'] = true;
-    $attach_pdf            = true;
 
     $file_name = erp_acct_get_pdf_filename( $voucher_no );
     $pdf_file  = erp_acct_generate_pdf( $request, $transaction, $file_name, 'F' );
 
     if ( $pdf_file ) {
-        $result = $trn_email->trigger( $request['receiver'], $request['subject'], $request['body'], $request['attachment'] );
+
+        switch ( current_action() ) {
+            case "erp_acct_new_transaction_sales":
+                $email_type = "Transactional_Email";
+                break;
+            case "erp_acct_new_transaction_payment":
+                $email_type = "Transactional_Email_Payments";
+                break;
+            case "erp_acct_new_transaction_bill":
+                $email_type = "Transactional_Email";
+                break;
+            case "erp_acct_new_transaction_pay_bill":
+                $email_type = "Transactional_Email";
+                break;
+            case "erp_acct_new_transaction_purchase":
+                $email_type = "Transactional_Email_Purchase";
+                break;
+            case "erp_acct_new_transaction_pay_purchase":
+                $email_type = "Transactional_Email";
+                break;
+            case "erp_acct_new_transaction_expense":
+                $email_type = "Transactional_Email";
+                break;
+            case "erp_acct_new_transaction_estimate":
+                $email_type = "Transactional_Email";
+                break;
+            case "erp_acct_new_transaction_purchase_order":
+                $email_type = "Transactional_Email";
+                break;
+            default:
+                $email_type = "Transactional_Email";
+        }
+
+        acct_send_email( $request['receiver'], $pdf_file, $email_type, $voucher_no );
+
     } else {
         wp_die( esc_html__( 'PDF not generated!', 'erp' ) );
     }
 
-    return $result;
 }
+
+/**
+ * Send accounting emails to receivers
+ *
+ * @param $receiver
+ * @param $pdf
+ * @param $type
+ * @return boolean
+ */
+function acct_send_email( $receiver, $pdf_file, $email_type, $voucher_no ) {
+
+    $emailer = wperp()->emailer->get_email( $email_type );
+    $company = new \WeDevs\ERP\Company();
+
+    if ( is_array( $receiver ) ) {
+        foreach ( $receiver as $email ) {
+            $emailer->trigger( $email, $pdf_file, $voucher_no, $company );
+        }
+    } else {
+        $emailer->trigger( $receiver, $pdf_file, $voucher_no, $company );
+    }
+
+}
+
 
 /**
  * Get voucher type by id

@@ -44,10 +44,10 @@ export default {
     data() {
         return {
             pages: [
-                { namedRoute: 'ExpenseCreate', name: 'Create Expense' },
-                { namedRoute: 'CheckCreate', name: 'Create Check' },
-                { namedRoute: 'BillCreate', name: 'Create Bill' },
-                { namedRoute: 'PayBillCreate', name: 'Pay Bill' }
+                { namedRoute: 'ExpenseCreate', name: __('Create Expense', 'erp') },
+                { namedRoute: 'CheckCreate', name: __('Create Check', 'erp') },
+                { namedRoute: 'BillCreate', name: __('Create Bill', 'erp') },
+                { namedRoute: 'PayBillCreate', name: __('Pay Bill', 'erp') }
             ]
         };
     }
