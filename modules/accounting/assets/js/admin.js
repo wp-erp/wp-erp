@@ -47037,11 +47037,11 @@ var render = function() {
           { staticClass: "wperp-btn btn--primary", attrs: { type: "submit" } },
           [
             _vm._v(
-              "\n                " +
+              "\r\n                " +
                 _vm._s(
                   _vm.editMode ? _vm.__("Update", "erp") : _vm.__("Save", "erp")
                 ) +
-                "\n            "
+                "\r\n            "
             )
           ]
         )
