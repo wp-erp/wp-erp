@@ -1151,7 +1151,7 @@ function erp_acct_send_email_on_transaction( $voucher_no, $transaction ) {
                 $email_type = "Transactional_Email_Estimate";
                 break;
             case "erp_acct_new_transaction_purchase_order":
-                $email_type = "Transactional_Email";
+                $email_type = "Transactional_Email_Purchase_Order";
                 break;
             default:
                 $email_type = "Transactional_Email";
