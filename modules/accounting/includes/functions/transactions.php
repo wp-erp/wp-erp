@@ -1133,10 +1133,10 @@ function erp_acct_send_email_on_transaction( $voucher_no, $transaction ) {
                 $email_type = "Transactional_Email_Payments";
                 break;
             case "erp_acct_new_transaction_bill":
-                $email_type = "Transactional_Email";
+                $email_type = "Transactional_Email_Bill";
                 break;
             case "erp_acct_new_transaction_pay_bill":
-                $email_type = "Transactional_Email";
+                $email_type = "Transactional_Email_Pay_Bill";
                 break;
             case "erp_acct_new_transaction_purchase":
                 $email_type = "Transactional_Email_Purchase";
@@ -1145,7 +1145,7 @@ function erp_acct_send_email_on_transaction( $voucher_no, $transaction ) {
                 $email_type = "Transactional_Email_Pay_Purchase";
                 break;
             case "erp_acct_new_transaction_expense":
-                $email_type = "Transactional_Email";
+                $email_type = "Transactional_Email_Expense";
                 break;
             case "erp_acct_new_transaction_estimate":
                 $email_type = "Transactional_Email_Estimate";
@@ -1178,12 +1178,16 @@ function acct_send_email( $receiver, $pdf_file, $email_type, $voucher_no ) {
     $emailer = wperp()->emailer->get_email( $email_type );
     $company = new \WeDevs\ERP\Company();
 
-    if ( is_array( $receiver ) ) {
-        foreach ( $receiver as $email ) {
-            $emailer->trigger( $email, $pdf_file, $voucher_no, $company );
+    if ( is_a( $emailer, '\WeDevs\ERP\Email' ) ) {
+
+        if ( is_array( $receiver ) ) {
+            foreach ( $receiver as $email ) {
+                $emailer->trigger( $email, $pdf_file, $voucher_no, $company );
+            }
+        } else {
+            $emailer->trigger( $receiver, $pdf_file, $voucher_no, $company );
         }
-    } else {
-        $emailer->trigger( $receiver, $pdf_file, $voucher_no, $company );
+
     }
 
 }
