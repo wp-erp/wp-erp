@@ -172,7 +172,7 @@
         <div class="tablenav bottom">
 
             <div class="tablenav-pages">
-                <span v-if="showItemNumbers" class="displaying-num">{{ itemsTotal }} items</span>
+                <span v-if="showItemNumbers" class="displaying-num">{{ itemsTotal }} {{ __('items', 'erp') }}</span>
 
                 <span v-if="hasPagination" class="pagination-links">
             <span v-if="disableFirst" class="tablenav-pages-navspan" aria-hidden="true">&laquo;</span>
@@ -265,7 +265,7 @@ export default {
         },
         notFound: {
             type: String,
-            default: 'No items found.'
+            default: __('No items found.', 'erp')
         },
         totalItems: {
             type: Number,

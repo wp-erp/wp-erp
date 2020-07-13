@@ -59,8 +59,8 @@ export default {
             modalParams: null,
             columns: {
                 // 'tax_agency_id': {label: 'ID'},
-                tax_agency_name: { label: 'Agency Name' },
-                actions: { label: 'Actions' }
+                tax_agency_name: { label: __('Agency Name', 'erp') },
+                actions: { label: __('Actions', 'erp') }
             },
             rows: [],
             paginationData: {

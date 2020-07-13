@@ -6,7 +6,7 @@
                     <div class="wperp-col-sm-4">
                         <pie-chart v-if="chartPayment.values.length"
                             id="payment"
-                            title="Payment"
+                            :title="__('Payment', 'erp')"
                             :labels="chartPayment.labels"
                             :colors="chartPayment.colors"
                             :data="chartPayment.values" />
@@ -14,7 +14,7 @@
                     <div class="wperp-col-sm-4">
                         <pie-chart v-if="chartStatus.values.length"
                             id="status"
-                            title="Status"
+                            :title="__('Status', 'erp')"
                             :labels="chartStatus.labels"
                             :colors="chartStatus.colors"
                             :data="chartStatus.values" />
@@ -51,7 +51,7 @@ export default {
             },
             chartPayment: {
                 colors: ['#40c4ff', '#e91e63'],
-                labels: ['Received', 'Outstanding'],
+                labels: [ __('Received', 'erp'), __('Outstanding', 'erp') ],
                 values: [],
                 outstanding: 0
             }
