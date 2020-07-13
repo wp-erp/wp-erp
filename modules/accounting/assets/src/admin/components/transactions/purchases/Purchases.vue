@@ -44,9 +44,9 @@ export default {
     data() {
         return {
             pages: [
-                { namedRoute: 'PurchaseCreate', name: 'Create Purchase' },
-                { namedRoute: 'PayPurchaseCreate', name: 'Pay Purchase' },
-                { namedRoute: 'PurchaseOrderCreate', name: 'Create Purchase Order' }
+                { namedRoute: 'PurchaseCreate', name: __('Create Purchase', 'erp') },
+                { namedRoute: 'PayPurchaseCreate', name: __('Pay Purchase', 'erp') },
+                { namedRoute: 'PurchaseOrderCreate', name:  __('Create Purchase Order', 'erp') }
             ]
         };
     }

@@ -66,11 +66,11 @@ export default {
                 }
             ],
             columns: {
-                customer: { label: 'Name', isColPrimary: true },
-                company : { label: 'Company' },
-                email   : { label: 'Email' },
-                phone   : { label: 'Phone' },
-                actions : { label: 'Actions' }
+                customer: { label: __('Name', 'erp'), isColPrimary: true },
+                company : { label: __('Company', 'erp') },
+                email   : { label: __('Email', 'erp') },
+                phone   : { label: __('Phone', 'erp') },
+                actions : { label: __('Actions', 'erp') }
             },
             rows: [],
             paginationData: {
@@ -106,8 +106,8 @@ export default {
             this.fetchItems();
         });
 
-        this.buttonTitle = (this.$route.name.toLowerCase() === 'customers') ? 'Customer' : 'Vendor';
-        this.pageTitle   = this.$route.name;
+        this.buttonTitle = (this.$route.name.toLowerCase() === 'customers') ? __('Customer', 'erp') : __('Vendor', 'erp');
+        this.pageTitle   = (this.$route.name.toLowerCase() === 'customers') ? __('Customers', 'erp') : __('Vendors', 'erp');
         this.url         = this.$route.name.toLowerCase();
         this.singleUrl   = (this.url === 'customers') ? 'CustomerDetails' : 'VendorDetails';
 

@@ -88,17 +88,16 @@ export default {
     data() {
         return {
             columns       : {
-                trn_no       : { label: 'Voucher No.' },
-                type         : { label: 'Type' },
-                ref          : { label: 'Ref' },
-                customer_name: { label: 'Customer' },
-                trn_date     : { label: 'Trn Date' },
-                due_date     : { label: 'Due Date' },
-                due          : { label: 'Due' },
-                amount       : { label: 'Total' },
-                status       : { label: 'Status' },
+                trn_no       : { label:  __('Voucher No.', 'erp') },
+                type         : { label: __('Type', 'erp') },
+                ref          : { label: __('Ref', 'erp') },
+                customer_name: { label: __('Customer', 'erp') },
+                trn_date     : { label: __('Trn Date', 'erp') },
+                due_date     : { label: __('Due Date', 'erp') },
+                due          : { label: __('Due', 'erp') },
+                amount       : { label: __('Total', 'erp') },
+                status       : { label: __('Status', 'erp') },
                 actions      : { label: '' }
-
             },
             listLoading   : false,
             rows          : [],
