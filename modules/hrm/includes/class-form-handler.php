@@ -1365,7 +1365,7 @@ class Form_Handler {
         $page_status    = ( isset( $_GET['status'] ) && ! empty( $_GET['status'] ) ) ? sanitize_text_field( wp_unslash( $_GET['status'] ) ) : 'all';
         $paged          = ( isset( $_GET['paged'] ) && ! empty( $_GET['paged'] ) ) ? sanitize_text_field( wp_unslash( $_GET['paged'] ) ) : 1;
         $request_ids    = ( isset( $_GET['request_id'] ) && ! empty( $_GET['request_id'] ) ) ? array_map( 'sanitize_text_field' , wp_unslash( $_GET['request_id'] ) ) : [];
-        $redirect_url = admin_url( sprintf( 'admin.php?page=erp-hr&section=leave&status=%s&paged=%d', $page_status, $paged ) );
+        $redirect_url   = admin_url( sprintf( 'admin.php?page=erp-hr&section=leave&status=%s&paged=%d', $page_status, $paged ) );
 
         if ( ! empty( $request_ids ) ) {
             $error = new ERP_Errors( 'leave_req_error' );
@@ -1397,6 +1397,7 @@ class Form_Handler {
 
         wp_redirect( $redirect_url );
         exit;
+         
     }
 
 
