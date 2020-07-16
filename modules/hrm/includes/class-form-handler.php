@@ -30,6 +30,7 @@ class Form_Handler {
         add_action( 'erp_action_erp-hr-employee-permission', array( $this, 'employee_permission' ) );
 
         //add_action( 'admin_init', array( $this, 'leave_request_status_change' ) );
+        add_action( 'admin_init', array( $this, 'manage_leave_bulk_action' ) );
         add_action( 'admin_init', array( $this, 'handle_employee_status_update' ) );
         add_action( 'admin_init', array( $this, 'handle_leave_calendar_filter' ) );
         add_action( 'admin_init', array( $this, 'insert_financial_years') );
@@ -1327,6 +1328,63 @@ class Form_Handler {
             exit();
         }
     }
+
+    /**
+     * Leave Request Status change for bulk action
+     *
+     * @since 0.1
+     *
+     * @return void
+     */
+    public function manage_leave_bulk_action() {
+        // If not leave bulk action then go out from here
+        if ( ! isset( $_GET['sub-section'] ) && 'leave-requests' == sanitize_text_field( wp_unslash( $_GET['sub-section'] ) ) ) {
+            return;
+        }
+
+        if ( ! isset( $_GET['action'] ) ) {
+
+            $action = sanitize_text_field( wp_unslash( $_GET['action'] ) );
+
+            if ( 'approved' != $action || 'reject' != $action ) {
+                return;
+            }
+        }
+
+        // Verify the nonce validation
+        /*if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'wp-erp-hr-nonce' ) ) {
+            return;
+        }*/
+
+        // Check permission if not have then bell out :)
+        if ( ! current_user_can( 'erp_leave_manage' ) ) {
+            wp_die( esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
+        $action         = ( isset( $_GET['action'] ) && ! empty( $_GET['action'] ) ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : '';
+        $page_status    = ( isset( $_GET['status'] ) && ! empty( $_GET['status'] ) ) ? sanitize_text_field( wp_unslash( $_GET['status'] ) ) : 'all';
+        $paged          = ( isset( $_GET['paged'] ) && ! empty( $_GET['paged'] ) ) ? sanitize_text_field( wp_unslash( $_GET['paged'] ) ) : 1;
+        $request_ids    = ( isset( $_GET['request_id'] ) && ! empty( $_GET['request_id'] ) ) ? array_map( 'sanitize_text_field' , wp_unslash( $_GET['request_id'] ) ) : [];
+
+        if ( ! empty( $request_ids ) ) {
+            foreach ($request_ids as $request_id) {
+                if ( 'approved' == $action  ) {
+                    $status = 1;
+                    $comment = __( 'Approved from bulk action', 'erp' );
+                }
+                if ( 'reject' == $action  ) {
+                    $status = 3;
+                    $comment = __( 'Rejected from bulk action', 'erp' );
+                }
+                erp_hr_leave_request_update_status( $request_id, $status, $comment );
+            }
+        }
+
+        $redirect_url = admin_url( sprintf( 'admin.php?page=erp-hr&section=leave&status=%s&paged=%d', $page_status, $paged ) );
+        wp_redirect( $redirect_url );
+        exit;
+    }
+
 
 }
 
