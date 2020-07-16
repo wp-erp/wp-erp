@@ -1365,8 +1365,11 @@ class Form_Handler {
         $page_status    = ( isset( $_GET['status'] ) && ! empty( $_GET['status'] ) ) ? sanitize_text_field( wp_unslash( $_GET['status'] ) ) : 'all';
         $paged          = ( isset( $_GET['paged'] ) && ! empty( $_GET['paged'] ) ) ? sanitize_text_field( wp_unslash( $_GET['paged'] ) ) : 1;
         $request_ids    = ( isset( $_GET['request_id'] ) && ! empty( $_GET['request_id'] ) ) ? array_map( 'sanitize_text_field' , wp_unslash( $_GET['request_id'] ) ) : [];
+        $redirect_url   = admin_url( sprintf( 'admin.php?page=erp-hr&section=leave&status=%s&paged=%d', $page_status, $paged ) );
 
         if ( ! empty( $request_ids ) ) {
+            $error = new ERP_Errors( 'leave_req_error' );
+
             foreach ($request_ids as $request_id) {
                 if ( 'approved' == $action  ) {
                     $status = 1;
@@ -1376,13 +1379,25 @@ class Form_Handler {
                     $status = 3;
                     $comment = __( 'Rejected from bulk action', 'erp' );
                 }
-                erp_hr_leave_request_update_status( $request_id, $status, $comment );
+                $update_status = erp_hr_leave_request_update_status( $request_id, $status, $comment );
+
+                if ( is_wp_error( $update_status ) ) {
+                    $error->add( $update_status );
+                }
             }
+
+            if ( $error->has_error() ) {
+                $error->save();
+                $redirect_url = add_query_arg( array(
+                    'error' => 'leave_req_error'
+                ), $redirect_url );
+            }
+
         }
 
-        $redirect_url = admin_url( sprintf( 'admin.php?page=erp-hr&section=leave&status=%s&paged=%d', $page_status, $paged ) );
         wp_redirect( $redirect_url );
         exit;
+         
     }
 
 
