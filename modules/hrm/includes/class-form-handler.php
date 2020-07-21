@@ -340,7 +340,7 @@ class Form_Handler {
 
             $page_status    = ( isset( $_GET['status']) && ! empty( $_GET['status'] ) ) ? sanitize_text_field( wp_unslash( $_GET['status'] ) ) : 'all';
             $paged          = ( isset( $_GET['paged'] ) && !empty( $_GET['paged'] ) ) ? sanitize_text_field( wp_unslash( $_GET['paged'] ) ) : 1;
-            $request_ids    = ( isset( $_GET['request_id'] ) && ! empty( $_GET['request_id'] ) ) ? array_map( 'sanitize_text_field', wp_unslash( $_GET['request_id'] ) ) : [];
+            $request_ids    = ( isset( $_GET['request_id'] ) && ! empty( $_GET['request_id'] ) ) ? array_map( 'absint', wp_unslash( $_GET['request_id'] ) ) : [];
             $redirect_url   = admin_url( sprintf( 'admin.php?page=erp-hr&section=leave&status=%s&paged=%d', $page_status, $paged ) );
 
             $error = new ERP_Errors( 'leave_request_status_change' );
@@ -367,18 +367,12 @@ class Form_Handler {
                     $comment    = __( 'Rejected from bulk action', 'erp' );
                     break;
 
-                case 'filter_by_year':
-                    break;
-
-                case 'search_request':
-                    break;
-
                 default:
                     break;
 
             }
 
-            if ( 'delete' != $action ) {
+            if ( 'approved' == $action || 'reject' == $action ) {
 
                 foreach ( $request_ids as $request_id ) {
                     $update_status = erp_hr_leave_request_update_status( $request_id, $status, $comment );
