@@ -30,7 +30,7 @@ class Form_Handler {
         add_action( 'erp_action_erp-hr-employee-permission', array( $this, 'employee_permission' ) );
 
         //add_action( 'admin_init', array( $this, 'leave_request_status_change' ) );
-        add_action( 'admin_init', array( $this, 'manage_leave_bulk_action' ) );
+        //add_action( 'admin_init', array( $this, 'manage_leave_bulk_action' ) );
         add_action( 'admin_init', array( $this, 'handle_employee_status_update' ) );
         add_action( 'admin_init', array( $this, 'handle_leave_calendar_filter' ) );
         add_action( 'admin_init', array( $this, 'insert_financial_years') );
