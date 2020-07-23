@@ -5,7 +5,7 @@ Tags: business manager, erp, accounting, crm, hr, project manager, small busines
 Requires at least: 4.4
 Tested up to: 5.4.2
 Requires PHP: 5.6
-Stable tag: 1.6.1
+Stable tag: 1.6.2
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -266,6 +266,25 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+
+= v1.6.2 -> July 23, 2020 =
+--------------------------
+- [new] added bulk action for leave requests
+- [fix] Fixed pdf attachment issue at transactional emails
+- [enhancement] Added missing string translation for Accounting module
+- [new] Added accounting emailer class
+- [new] Added tab view at email setting page
+- [new] Filter extension email base on criteria
+- [new] Registered switch check for email type & configure email for invoice
+- [new] Added accounting payment email template
+- [new] Added new purchase email template at accounting
+- [new] Fixes Cannot find taxes in Chart of Accounts #1066
+- [new] Fixed Chart of account ledgers update issue
+- [new] Added email template for accounting product estimate
+- [new] Configured accounting new purchase order create email template
+- [new] Configured pay purchase email template for accounting
+- [new] Disallowing expense, bill & pay bill emails
+
 = v1.6.1 -> June 30, 2020 =
 --------------------------
 - [fix] Fixed auto select issue of state while adding new company
