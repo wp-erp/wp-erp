@@ -103,7 +103,7 @@ class Form_Handler {
 
         switch ( $_GET['sub-section'] ) {
             case 'leave-requests' :
-                //$this->leave_request_bulk_action();
+                $this->leave_request_bulk_action();
                 break;
             case 'leave-entitlements' :
                 $this->entitlement_bulk_action();
@@ -324,9 +324,9 @@ class Form_Handler {
      */
     public function leave_request_bulk_action() {
         // Check nonce validaion
-        if ( ! $this->verify_current_page_screen( 'erp-hr', 'bulk-leaves' ) ) {
+       /* if ( ! $this->verify_current_page_screen( 'erp-hr', 'bulk-leaves' ) ) {
             return;
-        }
+        }*/
 
         // Check permission
         if ( ! current_user_can( 'erp_leave_manage' ) ) {
@@ -338,79 +338,33 @@ class Form_Handler {
 
         if ( $action ) {
 
-            $req_uri_bulk = ( isset( $_SERVER['REQUEST_URI'] ) ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+            $page_status    = ( isset( $_GET['status']) && ! empty( $_GET['status'] ) ) ? sanitize_text_field( wp_unslash( $_GET['status'] ) ) : 'all';
+            $paged          = ( isset( $_GET['paged'] ) && !empty( $_GET['paged'] ) ) ? sanitize_text_field( wp_unslash( $_GET['paged'] ) ) : 1;
+            $request_ids    = ( isset( $_GET['request_id'] ) && ! empty( $_GET['request_id'] ) ) ? array_map( 'absint', wp_unslash( $_GET['request_id'] ) ) : [];
+            $redirect_url   = admin_url( sprintf( 'admin.php?page=erp-hr&section=leave&status=%s&paged=%d', $page_status, $paged ) );
 
-            $redirect = remove_query_arg( array(
-                '_wp_http_referer',
-                '_wpnonce',
-                'action',
-                'action2',
-                'paged',
-                'filter_by_year'
-            ), $req_uri_bulk );
-
-            $errors = new ERP_Errors( 'leave_request_status_change' );
+            $error = new ERP_Errors( 'leave_request_status_change' );
 
             switch ( $action ) {
 
                 case 'delete' :
 
-                    if ( isset( $_GET['request_id'] ) && ! empty( $_GET['request_id'] ) ) {
-                        $array = array_map( 'sanitize_text_field', wp_unslash( $_GET['request_id'] ) );
-                        foreach ( $array as $key => $request_id ) {
-                            $response = erp_hr_delete_leave_request( $request_id );
-                            if ( is_wp_error( $response ) ) {
-                                $errors->add( $response );
-                            }
+                    foreach ( $request_ids as $key => $request_id ) {
+                        $response = erp_hr_delete_leave_request( $request_id );
+                        if ( is_wp_error( $response ) ) {
+                            $error->add( $response );
                         }
                     }
-
-                    wp_redirect( $redirect );
-                    exit();
+                    break;
 
                 case 'approved' :
-                    if ( isset( $_GET['request_id'] ) && ! empty( $_GET['request_id'] ) ) {
-                        $array = array_map( 'sanitize_text_field', wp_unslash( $_GET['request_id'] ) );
-                        foreach ( $array as $key => $request_id ) {
-                            $return = erp_hr_leave_request_update_status( $request_id, 1 );
-                            if ( is_wp_error( $return ) ) {
-                                $errors->add( $return );
-                            }
-                        }
-                    }
-
+                    $status     = 1;
+                    $comment    = __( 'Approved from bulk action', 'erp' );
                     break;
 
                 case 'reject' :
-                    if ( isset( $_GET['request_id'] ) && ! empty( $_GET['request_id'] ) ) {
-                        $array = array_map( 'sanitize_text_field', wp_unslash( $_GET['request_id'] ) );
-                        foreach ( $array as $key => $request_id ) {
-                            $return = erp_hr_leave_request_update_status( $request_id, 3 );
-                            if ( is_wp_error( $return ) ) {
-                                $errors->add( $return );
-                            }
-                        }
-                    }
-
-                    break;
-
-                case 'pending':
-                    if ( isset( $_GET['request_id'] ) && ! empty( $_GET['request_id'] ) ) {
-                        $array = array_map( 'sanitize_text_field', wp_unslash( $_GET['request_id'] ) );
-                        foreach ( $array as $key => $request_id ) {
-                            $return = erp_hr_leave_request_update_status( $request_id, 2 );
-                            if ( is_wp_error( $return ) ) {
-                                $errors->add( $return );
-                            }
-                        }
-                    }
-
-                    break;
-
-                case 'filter_by_year':
-                    break;
-
-                case 'search_request':
+                    $status     = 3;
+                    $comment    = __( 'Rejected from bulk action', 'erp' );
                     break;
 
                 default:
@@ -418,13 +372,25 @@ class Form_Handler {
 
             }
 
-            if ( $errors->has_error() ) {
-                $errors->save();
-                $redirect = add_query_arg( array( 'error' => 'leave_request_status_change' ), $redirect );
+            if ( 'approved' == $action || 'reject' == $action ) {
+
+                foreach ( $request_ids as $request_id ) {
+                    $update_status = erp_hr_leave_request_update_status( $request_id, $status, $comment );
+                    if ( is_wp_error( $update_status ) ) {
+                        $error->add( $update_status );
+                    }
+                }
             }
 
-            wp_redirect( $redirect );
-            exit();
+            if ( $error->has_error() ) {
+                $error->save();
+                $redirect_url = add_query_arg( array(
+                    'error' => 'leave_req_error'
+                ), $redirect_url );
+            }
+
+            wp_redirect( $redirect_url );
+            exit;
         }
     }
 
@@ -1327,7 +1293,6 @@ class Form_Handler {
             exit();
         }
     }
-
 }
 
 new Form_Handler();

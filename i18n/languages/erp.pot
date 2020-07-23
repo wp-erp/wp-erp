@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP ERP 1.6.1\n"
+"Project-Id-Version: WP ERP 1.6.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-erp\n"
-"POT-Creation-Date: 2020-06-30 09:48:50+00:00\n"
+"POT-Creation-Date: 2020-07-23 04:42:04+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1048,11 +1048,14 @@ msgid "uploaded"
 msgstr ""
 
 #: build/i18n/languages/erp.php:12
+#: modules/accounting/assets/js/bootstrap.js:1853
 #: modules/accounting/assets/src/admin/components/base/Media.vue:76
 msgid "Select & Crop Image"
 msgstr ""
 
 #: build/i18n/languages/erp.php:13
+#: modules/accounting/assets/js/bootstrap.js:1910
+#: modules/accounting/assets/js/bootstrap.js:1912
 #: modules/accounting/assets/src/admin/components/base/Media.vue:138
 #: modules/accounting/assets/src/admin/components/base/Media.vue:140
 msgid "Select Image"
@@ -1086,7 +1089,10 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:34
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseSingle.vue:67
 #: modules/accounting/assets/src/admin/components/rec-payment/RecPaymentCreate.vue:68
+#: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:67
+#: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:96
 #: modules/accounting/assets/src/admin/components/transactions/sales/InvoiceSingleContent.vue:40
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:94
 #: modules/accounting/includes/functions/transactions.php:851
 #: modules/accounting/includes/views/transactions/invoice-readonly.php:51
 msgid "Due Date"
@@ -1164,13 +1170,14 @@ msgstr ""
 #: build/modules/hrm/views/leave/new-policy.php:102
 #: build/modules/hrm/views/leave/policy-name.php:47
 #: includes/admin/views/module.php:30 includes/admin/views/module.php:38
-#: includes/framework/settings/email.php:210
+#: includes/framework/settings/email.php:217
 #: includes/framework/settings/integration.php:57
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:61
 #: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:61
 #: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:69
 #: modules/accounting/assets/src/admin/components/opening-balance/OpeningBalance.vue:278
 #: modules/accounting/assets/src/admin/components/tax/NewTaxCategory.vue:23
+#: modules/accounting/assets/src/admin/components/tax/TaxCategories.vue:62
 #: modules/crm/includes/admin/class-settings.php:619
 #: modules/crm/includes/class-subscription-widget.php:71
 #: modules/crm/views/js-templates/new-contact-group.php:16
@@ -1195,6 +1202,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:70
 #: modules/accounting/assets/src/admin/components/expense/ExpenseSingle.vue:100
 #: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:57
+#: modules/accounting/assets/src/admin/components/journal/JournalList.vue:53
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillCreate.vue:68
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillSingle.vue:84
 #: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:68
@@ -1229,8 +1237,11 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/reports/SalesTax.vue:53
 #: modules/accounting/assets/src/admin/components/reports/TrialBalance.vue:57
 #: modules/accounting/assets/src/admin/components/tax/PayTaxSingle.vue:92
+#: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:69
+#: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:98
 #: modules/accounting/assets/src/admin/components/transactions/sales/InvoiceSingleContent.vue:83
 #: modules/accounting/assets/src/admin/components/transactions/sales/PaymentSingleContent.vue:73
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:96
 #: modules/accounting/includes/views/transactions/invoice-readonly.php:55
 #: modules/accounting/includes/views/transactions/invoice-readonly.php:117
 #: modules/crm/views/reports/activity-report.php:60
@@ -1251,6 +1262,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:112
 #: modules/accounting/assets/src/admin/components/journal/JournalCreate.vue:35
 #: modules/accounting/assets/src/admin/components/journal/JournalCreate.vue:51
+#: modules/accounting/assets/src/admin/components/journal/JournalList.vue:52
 #: modules/accounting/assets/src/admin/components/journal/JournalSingle.vue:57
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillCreate.vue:95
 #: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:96
@@ -1862,7 +1874,7 @@ msgstr ""
 #: build/includes/framework/settings/email.php:27
 #: build/includes/framework/settings/general.php:12
 #: build/modules/crm/views/help.php:10 build/modules/hrm/views/help.php:10
-#: includes/admin/views/tools.php:27 includes/framework/settings/email.php:27
+#: includes/admin/views/tools.php:27 includes/framework/settings/email.php:28
 #: includes/framework/settings/general.php:12
 #: modules/accounting/assets/src/admin/components/help/HelpContent.vue:43
 #: modules/crm/views/help.php:10 modules/hrm/views/help.php:10
@@ -2078,7 +2090,7 @@ msgstr ""
 #: includes/admin/views/company.php:17
 #: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:9
 #: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:325
-#: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:177
+#: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:176
 #: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:173
 #: modules/crm/assets/js/crm-contacts.js:1137
 #: modules/crm/includes/admin/class-settings.php:767
@@ -2187,6 +2199,7 @@ msgstr ""
 #: build/modules/crm/crm.php:189
 #: modules/accounting/assets/src/admin/components/journal/JournalCreate.vue:111
 #: modules/accounting/assets/src/admin/components/opening-balance/OpeningBalance.vue:285
+#: modules/accounting/assets/src/admin/components/product-category/ProductCategory.vue:24
 #: modules/accounting/assets/src/admin/components/products/ProductModal.vue:155
 #: modules/accounting/assets/src/admin/components/tax/NewTaxAgency.vue:28
 #: modules/accounting/assets/src/admin/components/tax/NewTaxCategory.vue:33
@@ -2248,6 +2261,7 @@ msgstr ""
 
 #: build/i18n/languages/erp.php:146
 #: modules/accounting/assets/src/admin/components/list-table/ListTable.vue:17
+#: modules/accounting/assets/src/admin/components/list-table/ListTable.vue:175
 msgid "items"
 msgstr ""
 
@@ -2256,7 +2270,7 @@ msgstr ""
 #: build/modules/accounting/includes/classes/class-admin.php:38
 #: build/modules/accounting/includes/classes/class-settings.php:15
 #: build/modules/accounting/includes/views/dashboard/dashboard.php:2
-#: includes/framework/modules.php:52
+#: includes/framework/modules.php:52 includes/framework/settings/email.php:100
 #: includes/framework/views/status-report.php:99
 #: modules/accounting/assets/src/admin/components/menu/AccountingMenu.vue:47
 #: modules/accounting/includes/classes/class-admin.php:38
@@ -2283,6 +2297,7 @@ msgstr ""
 #: build/i18n/languages/erp.php:151
 #: modules/accounting/assets/src/admin/components/opening-balance/OpeningBalance.vue:46
 #: modules/accounting/assets/src/admin/components/opening-balance/OpeningBalance.vue:86
+#: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:65
 msgid "People"
 msgstr ""
 
@@ -2346,6 +2361,9 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillCreate.vue:67
 #: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:67
 #: modules/accounting/assets/src/admin/components/rec-payment/RecPaymentCreate.vue:70
+#: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:68
+#: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:97
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:95
 msgid "Due"
 msgstr ""
 
@@ -2354,6 +2372,7 @@ msgstr ""
 #: modules/accounting/api/class-rest-api-pay-bills.php:276
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillSingle.vue:5
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillSingle.vue:48
+#: modules/accounting/assets/src/admin/components/transactions/expenses/Expenses.vue:50
 msgid "Pay Bill"
 msgstr ""
 
@@ -2375,6 +2394,7 @@ msgstr ""
 #: modules/accounting/api/class-rest-api-pay-purchases.php:271
 #: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseSingle.vue:5
 #: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseSingle.vue:48
+#: modules/accounting/assets/src/admin/components/transactions/purchases/Purchases.vue:48
 msgid "Pay Purchase"
 msgstr ""
 
@@ -2387,6 +2407,7 @@ msgstr ""
 #: build/modules/accounting/api/class-rest-api-vendors.php:464
 #: modules/accounting/api/class-rest-api-vendors.php:464
 #: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseSingle.vue:85
+#: modules/accounting/assets/src/admin/components/people/People.vue:109
 #: modules/accounting/assets/src/admin/components/products/ProductModal.vue:122
 msgid "Vendor"
 msgstr ""
@@ -2401,6 +2422,7 @@ msgstr ""
 #: build/modules/hrm/views/js-templates/new-employee.php:324
 #: includes/admin/views/company-editor.php:122
 #: modules/accounting/assets/src/admin/components/people/EmployeeDetails.vue:25
+#: modules/accounting/assets/src/admin/components/people/People.vue:72
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:46
 #: modules/accounting/assets/src/admin/components/userinfo/UserBasic.vue:22
 #: modules/crm/assets/js/crm-contacts.js:275
@@ -2485,6 +2507,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesStats.vue:25
 #: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesStats.vue:25
 #: modules/accounting/assets/src/admin/components/transactions/sales/SalesStats.vue:24
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesStats.vue:54
 msgid "Outstanding"
 msgstr ""
 
@@ -2584,7 +2607,8 @@ msgstr ""
 #: build/modules/crm/views/js-templates/new-customer.php:89
 #: build/modules/hrm/views/employee/tab-general.php:11
 #: build/modules/hrm/views/js-templates/new-employee.php:78
-#: includes/framework/settings/email.php:209
+#: includes/framework/settings/email.php:216
+#: modules/accounting/assets/src/admin/components/people/People.vue:71
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:42
 #: modules/crm/includes/class-contact-subscriber-list-table.php:173
 #: modules/crm/includes/class-subscription.php:164
@@ -2608,6 +2632,7 @@ msgstr ""
 #: build/modules/crm/views/dashboard-badge.php:55
 #: build/modules/crm/views/dashboard.php:55 includes/admin/class-menu.php:132
 #: includes/admin/views/company-editor.php:2
+#: modules/accounting/assets/src/admin/components/people/People.vue:70
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:50
 #: modules/accounting/includes/classes/class-settings.php:70
 #: modules/crm/includes/class-contact-subscriber-list-table.php:99
@@ -2778,7 +2803,7 @@ msgstr ""
 #: build/modules/crm/includes/functions-reporting.php:186
 #: build/modules/hrm/includes/class-employee-list-table.php:78
 #: build/modules/hrm/includes/class-entitlements-list-table.php:110
-#: build/modules/hrm/includes/class-leave-report-employee.php:98
+#: build/modules/hrm/includes/class-leave-report-employee.php:108
 #: build/modules/hrm/includes/class-leave-request-list-table.php:69
 #: build/modules/hrm/includes/class-policy-list-table.php:94
 #: build/modules/hrm/views/employee/tab-leave.php:117
@@ -2822,6 +2847,7 @@ msgstr ""
 #: build/modules/hrm/views/js-templates/employment-status.php:4
 #: build/modules/hrm/views/js-templates/job-info.php:5
 #: build/modules/hrm/views/reporting/salary-history.php:14
+#: modules/accounting/assets/src/admin/components/journal/JournalList.vue:51
 #: modules/accounting/assets/src/admin/components/people/PeopleTransaction.vue:19
 #: modules/accounting/assets/src/admin/components/transactions/TransactionsFilter.vue:18
 #: modules/accounting/includes/views/transactions/invoice-readonly.php:47
@@ -2854,6 +2880,7 @@ msgstr ""
 
 #: build/i18n/languages/erp.php:199
 #: modules/accounting/assets/src/admin/components/product-category/ProductCategory.vue:10
+#: modules/accounting/assets/src/admin/components/tax/TaxCategories.vue:61
 msgid "Category Name"
 msgstr ""
 
@@ -2967,6 +2994,7 @@ msgstr ""
 #: build/modules/accounting/api/class-rest-api-rec-payments.php:276
 #: modules/accounting/api/class-rest-api-rec-payments.php:276
 #: modules/accounting/assets/src/admin/components/rec-payment/RecPaymentCreate.vue:8
+#: modules/accounting/assets/src/admin/components/transactions/sales/Sales.vue:45
 #: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:172
 msgid "Receive Payment"
 msgstr ""
@@ -3198,6 +3226,8 @@ msgstr ""
 #: build/i18n/languages/erp.php:255
 #: modules/accounting/assets/src/admin/components/tax/NewTaxRate.vue:20
 #: modules/accounting/assets/src/admin/components/tax/NewTaxZone.vue:17
+#: modules/accounting/assets/src/admin/components/tax/TaxRates.vue:72
+#: modules/accounting/assets/src/admin/components/tax/TaxZones.vue:64
 msgid "Tax Zone Name"
 msgstr ""
 
@@ -3252,6 +3282,7 @@ msgstr ""
 
 #: build/i18n/languages/erp.php:265
 #: modules/accounting/assets/src/admin/components/tax/NewTaxZone.vue:22
+#: modules/accounting/assets/src/admin/components/tax/TaxZones.vue:65
 msgid "Tax Number"
 msgstr ""
 
@@ -3420,6 +3451,12 @@ msgstr ""
 #: build/modules/hrm/views/reporting/headcount.php:157
 #: includes/admin/views/tools.php:36
 #: modules/accounting/assets/src/admin/components/transactions/TransactionsFilter.vue:31
+#: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:70
+#: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesStats.vue:17
+#: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:99
+#: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesStats.vue:17
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:97
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesStats.vue:17
 #: modules/crm/includes/admin/class-settings.php:528
 #: modules/crm/includes/admin/class-settings.php:620
 #: modules/crm/includes/class-contact-subscriber-list-table.php:176
@@ -3448,14 +3485,14 @@ msgstr ""
 
 #: build/i18n/languages/erp.php:298
 #: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:324
-#: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:176
+#: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:175
 msgid "Make Payment"
 msgstr ""
 
 #: build/i18n/languages/erp.php:299
 #: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:334
-#: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:169
-#: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:187
+#: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:168
+#: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:186
 #: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:165
 #: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:183
 msgid "No actions found"
@@ -3479,7 +3516,10 @@ msgid "Discount"
 msgstr ""
 
 #: build/i18n/languages/erp.php:303
+#: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesStats.vue:9
+#: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesStats.vue:9
 #: modules/accounting/assets/src/admin/components/transactions/sales/PaymentSingleContent.vue:20
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesStats.vue:9
 msgid "Payment"
 msgstr ""
 
@@ -3873,19 +3913,19 @@ msgid "Search Segment"
 msgstr ""
 
 #: build/i18n/languages/erp.php:351
-#: build/modules/crm/assets/js/crm-contacts.js:1356
+#: build/modules/crm/assets/js/crm-contacts.js:1357
 #: modules/crm/assets/js/crm-contacts.js:1357
 msgid "Edit this "
 msgstr ""
 
 #: build/i18n/languages/erp.php:352
-#: build/modules/crm/assets/js/crm-contacts.js:2071
+#: build/modules/crm/assets/js/crm-contacts.js:2072
 #: modules/crm/assets/js/crm-contacts.js:2072
 msgid "Subscribed at"
 msgstr ""
 
 #: build/i18n/languages/erp.php:353
-#: build/modules/crm/assets/js/crm-contacts.js:2073
+#: build/modules/crm/assets/js/crm-contacts.js:2074
 #: modules/crm/assets/js/crm-contacts.js:2074
 msgid "Unsubscribed at"
 msgstr ""
@@ -3936,6 +3976,9 @@ msgstr ""
 #: build/modules/crm/views/reports/customer-report.php:26
 #: build/modules/crm/views/reports/growth-report.php:31
 #: modules/accounting/api/class-rest-api-customers.php:441
+#: modules/accounting/assets/src/admin/components/people/People.vue:109
+#: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:94
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:92
 #: modules/crm/assets/js/report.js:63
 #: modules/crm/includes/functions-customer.php:200
 #: modules/crm/includes/functions-customer.php:227
@@ -19062,6 +19105,7 @@ msgstr ""
 
 #: build/includes/admin/class-audit-list-table.php:113
 #: build/modules/crm/includes/functions-reporting.php:158
+#: build/modules/hrm/includes/class-leave-report-employee.php:75
 #: includes/admin/class-audit-list-table.php:113
 #: modules/crm/includes/functions-reporting.php:158
 #: modules/hrm/includes/class-leave-report-employee.php:75
@@ -19410,7 +19454,7 @@ msgstr ""
 #: build/includes/admin/class-setup-wizard.php:640
 #: build/modules/hrm/includes/class-settings.php:46
 #: build/modules/hrm/includes/functions-leave.php:1914
-#: build/modules/hrm/includes/functions-leave.php:2672
+#: build/modules/hrm/includes/functions-leave.php:2762
 #: includes/admin/class-setup-wizard.php:640
 #: modules/hrm/includes/class-settings.php:46
 #: modules/hrm/includes/functions-leave.php:1914
@@ -19716,6 +19760,11 @@ msgstr ""
 #: build/includes/admin/views/company-editor.php:220
 #: build/modules/hrm/views/employee/single.php:75
 #: includes/admin/views/company-editor.php:220
+#: modules/accounting/assets/src/admin/components/people/People.vue:73
+#: modules/accounting/assets/src/admin/components/tax/TaxAgencies.vue:63
+#: modules/accounting/assets/src/admin/components/tax/TaxCategories.vue:63
+#: modules/accounting/assets/src/admin/components/tax/TaxRates.vue:73
+#: modules/accounting/assets/src/admin/components/tax/TaxZones.vue:67
 #: modules/hrm/views/employee/single.php:75
 msgid "Actions"
 msgstr ""
@@ -19877,6 +19926,9 @@ msgstr ""
 #: build/modules/hrm/includes/class-announcement.php:358
 #: includes/admin/views/tools/export.php:11
 #: includes/admin/views/tools/import.php:41
+#: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:63
+#: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:92
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:90
 #: modules/hrm/includes/class-announcement-list-table.php:36
 #: modules/hrm/includes/class-announcement.php:358
 msgid "Type"
@@ -20100,7 +20152,7 @@ msgstr ""
 #: build/includes/admin/views/tools/misc.php:3
 #: build/includes/framework/settings/email.php:283
 #: includes/admin/views/tools/misc.php:3
-#: includes/framework/settings/email.php:283
+#: includes/framework/settings/email.php:305
 msgid "Send Test Email"
 msgstr ""
 
@@ -21063,87 +21115,87 @@ msgid "Emails"
 msgstr ""
 
 #: build/includes/framework/settings/email.php:28
-#: includes/framework/settings/email.php:28
+#: includes/framework/settings/email.php:29
 msgid "SMTP"
 msgstr ""
 
 #: build/includes/framework/settings/email.php:42
-#: includes/framework/settings/email.php:42
+#: includes/framework/settings/email.php:43
 msgid "Email Sender Options"
 msgstr ""
 
 #: build/includes/framework/settings/email.php:44
-#: includes/framework/settings/email.php:44
+#: includes/framework/settings/email.php:45
 msgid ""
 "Email notification settings for ERP. Customize the look and feel of "
 "outgoing emails."
 msgstr ""
 
 #: build/includes/framework/settings/email.php:48
-#: includes/framework/settings/email.php:48
+#: includes/framework/settings/email.php:49
 msgid "\"From\" Name"
 msgstr ""
 
 #: build/includes/framework/settings/email.php:53
-#: includes/framework/settings/email.php:53
+#: includes/framework/settings/email.php:54
 msgid "The senders name appears on the outgoing emails"
 msgstr ""
 
 #: build/includes/framework/settings/email.php:57
-#: includes/framework/settings/email.php:57
+#: includes/framework/settings/email.php:58
 msgid "\"From\" Address"
 msgstr ""
 
 #: build/includes/framework/settings/email.php:62
-#: includes/framework/settings/email.php:62
+#: includes/framework/settings/email.php:63
 msgid "The senders email appears on the outgoing emails"
 msgstr ""
 
 #: build/includes/framework/settings/email.php:66
-#: includes/framework/settings/email.php:66
+#: includes/framework/settings/email.php:67
 msgid "Header Image"
 msgstr ""
 
 #: build/includes/framework/settings/email.php:69
-#: includes/framework/settings/email.php:69
+#: includes/framework/settings/email.php:70
 msgid "Upload a logo/banner and provide the URL here."
 msgstr ""
 
 #: build/includes/framework/settings/email.php:77
-#: includes/framework/settings/email.php:77
+#: includes/framework/settings/email.php:78
 msgid "Footer Text"
 msgstr ""
 
 #: build/includes/framework/settings/email.php:83
-#: includes/framework/settings/email.php:83
+#: includes/framework/settings/email.php:84
 msgid "The text apears on each emails footer area."
 msgstr ""
 
 #: build/includes/framework/settings/email.php:92
-#: includes/framework/settings/email.php:92
+#: includes/framework/settings/email.php:93
 msgid "Notification Emails"
 msgstr ""
 
 #: build/includes/framework/settings/email.php:93
-#: includes/framework/settings/email.php:93
+#: includes/framework/settings/email.php:94
 msgid ""
 "Email notifications sent from WP ERP are listed below. Click on an email to "
 "configure it."
 msgstr ""
 
 #: build/includes/framework/settings/email.php:110
-#: includes/framework/settings/email.php:110
+#: includes/framework/settings/email.php:117
 msgid "SMTP Options"
 msgstr ""
 
 #: build/includes/framework/settings/email.php:112
-#: includes/framework/settings/email.php:112
+#: includes/framework/settings/email.php:119
 msgid "Email outgoing settings for ERP."
 msgstr ""
 
 #: build/includes/framework/settings/email.php:116
 #: build/includes/framework/views/status-report.php:154
-#: includes/framework/settings/email.php:116
+#: includes/framework/settings/email.php:123
 #: includes/framework/views/status-report.php:154
 msgid "Enable SMTP"
 msgstr ""
@@ -21151,36 +21203,36 @@ msgstr ""
 #: build/includes/framework/settings/email.php:124
 #: build/includes/framework/settings/email.php:348
 #: build/modules/crm/includes/admin/class-settings.php:427
-#: includes/framework/settings/email.php:124
-#: includes/framework/settings/email.php:348
+#: includes/framework/settings/email.php:131
+#: includes/framework/settings/email.php:370
 #: modules/crm/includes/admin/class-settings.php:427
 msgid "Mail Server"
 msgstr ""
 
 #: build/includes/framework/settings/email.php:130
-#: includes/framework/settings/email.php:130
+#: includes/framework/settings/email.php:137
 msgid "SMTP host address."
 msgstr ""
 
 #: build/includes/framework/settings/email.php:134
 #: build/includes/framework/settings/email.php:384
 #: build/modules/crm/includes/admin/class-settings.php:463
-#: includes/framework/settings/email.php:134
-#: includes/framework/settings/email.php:384
+#: includes/framework/settings/email.php:141
+#: includes/framework/settings/email.php:406
 #: modules/crm/includes/admin/class-settings.php:463
 msgid "Port"
 msgstr ""
 
 #: build/includes/framework/settings/email.php:137
-#: includes/framework/settings/email.php:137
+#: includes/framework/settings/email.php:144
 msgid "SSL: 465<br> TLS: 587"
 msgstr ""
 
 #: build/includes/framework/settings/email.php:141
 #: build/includes/framework/settings/email.php:391
 #: build/modules/crm/includes/admin/class-settings.php:470
-#: includes/framework/settings/email.php:141
-#: includes/framework/settings/email.php:391
+#: includes/framework/settings/email.php:148
+#: includes/framework/settings/email.php:413
 #: modules/crm/includes/admin/class-settings.php:470
 msgid "Authentication"
 msgstr ""
@@ -21188,8 +21240,8 @@ msgstr ""
 #: build/includes/framework/settings/email.php:144
 #: build/includes/framework/settings/email.php:396
 #: build/modules/crm/includes/admin/class-settings.php:475
-#: includes/framework/settings/email.php:144
-#: includes/framework/settings/email.php:396
+#: includes/framework/settings/email.php:151
+#: includes/framework/settings/email.php:418
 #: modules/crm/includes/admin/class-settings.php:475
 msgid "Authentication type."
 msgstr ""
@@ -21197,8 +21249,8 @@ msgstr ""
 #: build/includes/framework/settings/email.php:145
 #: build/includes/framework/settings/email.php:394
 #: build/modules/crm/includes/admin/class-settings.php:473
-#: includes/framework/settings/email.php:145
-#: includes/framework/settings/email.php:394
+#: includes/framework/settings/email.php:152
+#: includes/framework/settings/email.php:416
 #: modules/crm/includes/admin/class-settings.php:473
 msgid "None"
 msgstr ""
@@ -21206,8 +21258,8 @@ msgstr ""
 #: build/includes/framework/settings/email.php:145
 #: build/includes/framework/settings/email.php:394
 #: build/modules/crm/includes/admin/class-settings.php:473
-#: includes/framework/settings/email.php:145
-#: includes/framework/settings/email.php:394
+#: includes/framework/settings/email.php:152
+#: includes/framework/settings/email.php:416
 #: modules/crm/includes/admin/class-settings.php:473
 msgid "SSL"
 msgstr ""
@@ -21215,8 +21267,8 @@ msgstr ""
 #: build/includes/framework/settings/email.php:145
 #: build/includes/framework/settings/email.php:394
 #: build/modules/crm/includes/admin/class-settings.php:473
-#: includes/framework/settings/email.php:145
-#: includes/framework/settings/email.php:394
+#: includes/framework/settings/email.php:152
+#: includes/framework/settings/email.php:416
 #: modules/crm/includes/admin/class-settings.php:473
 msgid "TLS"
 msgstr ""
@@ -21224,8 +21276,8 @@ msgstr ""
 #: build/includes/framework/settings/email.php:149
 #: build/includes/framework/settings/email.php:358
 #: build/modules/crm/includes/admin/class-settings.php:437
-#: includes/framework/settings/email.php:149
-#: includes/framework/settings/email.php:358
+#: includes/framework/settings/email.php:156
+#: includes/framework/settings/email.php:380
 #: modules/crm/includes/admin/class-settings.php:437
 msgid "Username"
 msgstr ""
@@ -21233,8 +21285,8 @@ msgstr ""
 #: build/includes/framework/settings/email.php:155
 #: build/includes/framework/settings/email.php:361
 #: build/modules/crm/includes/admin/class-settings.php:440
-#: includes/framework/settings/email.php:155
-#: includes/framework/settings/email.php:361
+#: includes/framework/settings/email.php:162
+#: includes/framework/settings/email.php:383
 #: modules/crm/includes/admin/class-settings.php:440
 msgid "Your email id."
 msgstr ""
@@ -21242,8 +21294,8 @@ msgstr ""
 #: build/includes/framework/settings/email.php:159
 #: build/includes/framework/settings/email.php:368
 #: build/modules/crm/includes/admin/class-settings.php:447
-#: includes/framework/settings/email.php:159
-#: includes/framework/settings/email.php:368
+#: includes/framework/settings/email.php:166
+#: includes/framework/settings/email.php:390
 #: modules/crm/includes/admin/class-settings.php:447
 msgid "Password"
 msgstr ""
@@ -21251,32 +21303,32 @@ msgstr ""
 #: build/includes/framework/settings/email.php:162
 #: build/includes/framework/settings/email.php:371
 #: build/modules/crm/includes/admin/class-settings.php:450
-#: includes/framework/settings/email.php:162
-#: includes/framework/settings/email.php:371
+#: includes/framework/settings/email.php:169
+#: includes/framework/settings/email.php:393
 #: modules/crm/includes/admin/class-settings.php:450
 msgid "Your email password."
 msgstr ""
 
 #: build/includes/framework/settings/email.php:166
-#: includes/framework/settings/email.php:166
+#: includes/framework/settings/email.php:173
 msgid "Debug"
 msgstr ""
 
 #: build/includes/framework/settings/email.php:249
 #: build/includes/framework/settings/integration.php:96
-#: includes/framework/settings/email.php:249
+#: includes/framework/settings/email.php:271
 #: includes/framework/settings/integration.php:96
 msgid "Configure"
 msgstr ""
 
 #: build/includes/framework/settings/email.php:281
-#: includes/framework/settings/email.php:281
+#: includes/framework/settings/email.php:303
 msgid "An email address to test the connection."
 msgstr ""
 
 #: build/includes/framework/settings/email.php:285
 #: build/modules/crm/includes/admin/class-settings.php:511
-#: includes/framework/settings/email.php:285
+#: includes/framework/settings/email.php:307
 #: modules/crm/includes/admin/class-settings.php:511
 msgid "Click on the above button before saving the settings."
 msgstr ""
@@ -21285,8 +21337,8 @@ msgstr ""
 #: build/includes/framework/settings/email.php:314
 #: build/modules/crm/includes/admin/class-settings.php:396
 #: build/modules/crm/includes/admin/class-settings.php:409
-#: includes/framework/settings/email.php:301
-#: includes/framework/settings/email.php:314
+#: includes/framework/settings/email.php:323
+#: includes/framework/settings/email.php:336
 #: modules/crm/includes/admin/class-settings.php:396
 #: modules/crm/includes/admin/class-settings.php:409
 msgid "IMAP/POP3 Options"
@@ -21294,7 +21346,7 @@ msgstr ""
 
 #: build/includes/framework/settings/email.php:304
 #: build/modules/crm/includes/admin/class-settings.php:399
-#: includes/framework/settings/email.php:304
+#: includes/framework/settings/email.php:326
 #: modules/crm/includes/admin/class-settings.php:399
 msgid ""
 "Your server does not have PHP IMAP extension loaded. To enable this "
@@ -21304,7 +21356,7 @@ msgstr ""
 
 #: build/includes/framework/settings/email.php:316
 #: build/modules/crm/includes/admin/class-settings.php:411
-#: includes/framework/settings/email.php:316
+#: includes/framework/settings/email.php:338
 #: modules/crm/includes/admin/class-settings.php:411
 msgid "Email incoming settings for ERP."
 msgstr ""
@@ -21312,60 +21364,60 @@ msgstr ""
 #: build/includes/framework/settings/email.php:324
 #: build/includes/framework/views/status-report.php:159
 #: build/modules/crm/includes/admin/class-settings.php:419
-#: includes/framework/settings/email.php:324
+#: includes/framework/settings/email.php:346
 #: includes/framework/views/status-report.php:159
 #: modules/crm/includes/admin/class-settings.php:419
 msgid "Enable IMAP"
 msgstr ""
 
 #: build/includes/framework/settings/email.php:339
-#: includes/framework/settings/email.php:339
+#: includes/framework/settings/email.php:361
 msgid "Cron Schedule"
 msgstr ""
 
 #: build/includes/framework/settings/email.php:342
-#: includes/framework/settings/email.php:342
+#: includes/framework/settings/email.php:364
 msgid "Interval time to run cron."
 msgstr ""
 
 #: build/includes/framework/settings/email.php:354
 #: build/modules/crm/includes/admin/class-settings.php:433
-#: includes/framework/settings/email.php:354
+#: includes/framework/settings/email.php:376
 #: modules/crm/includes/admin/class-settings.php:433
 msgid "IMAP/POP3 host address."
 msgstr ""
 
 #: build/includes/framework/settings/email.php:375
 #: build/modules/crm/includes/admin/class-settings.php:454
-#: includes/framework/settings/email.php:375
+#: includes/framework/settings/email.php:397
 #: modules/crm/includes/admin/class-settings.php:454
 msgid "Protocol"
 msgstr ""
 
 #: build/includes/framework/settings/email.php:378
 #: build/modules/crm/includes/admin/class-settings.php:457
-#: includes/framework/settings/email.php:378
+#: includes/framework/settings/email.php:400
 #: modules/crm/includes/admin/class-settings.php:457
 msgid "Protocol type."
 msgstr ""
 
 #: build/includes/framework/settings/email.php:379
 #: build/modules/crm/includes/admin/class-settings.php:458
-#: includes/framework/settings/email.php:379
+#: includes/framework/settings/email.php:401
 #: modules/crm/includes/admin/class-settings.php:458
 msgid "IMAP"
 msgstr ""
 
 #: build/includes/framework/settings/email.php:379
 #: build/modules/crm/includes/admin/class-settings.php:458
-#: includes/framework/settings/email.php:379
+#: includes/framework/settings/email.php:401
 #: modules/crm/includes/admin/class-settings.php:458
 msgid "POP3"
 msgstr ""
 
 #: build/includes/framework/settings/email.php:387
 #: build/modules/crm/includes/admin/class-settings.php:466
-#: includes/framework/settings/email.php:387
+#: includes/framework/settings/email.php:409
 #: modules/crm/includes/admin/class-settings.php:466
 msgid "IMAP: 993<br> POP3: 995"
 msgstr ""
@@ -21724,6 +21776,7 @@ msgstr ""
 #: build/modules/crm/includes/admin/class-settings.php:16
 #: build/modules/crm/includes/class-form-handler.php:24
 #: build/modules/crm/views/dashboard-badge.php:7
+#: includes/framework/settings/email.php:100
 #: includes/framework/views/status-report.php:79 modules/crm/crm.php:341
 #: modules/crm/crm.php:446 modules/crm/crm.php:460
 #: modules/crm/includes/admin/class-menu.php:31
@@ -21789,6 +21842,7 @@ msgstr ""
 #: build/modules/accounting/includes/classes/class-admin.php:64
 #: build/modules/accounting/includes/classes/class-settings.php:29
 #: includes/framework/views/status-report.php:103
+#: modules/accounting/assets/src/admin/components/people/People.vue:110
 #: modules/accounting/includes/classes/class-admin.php:64
 #: modules/accounting/includes/classes/class-settings.php:29
 msgid "Customers"
@@ -21802,6 +21856,7 @@ msgstr ""
 #: build/includes/framework/views/status-report.php:108
 #: build/modules/accounting/includes/classes/class-admin.php:74
 #: includes/framework/views/status-report.php:108
+#: modules/accounting/assets/src/admin/components/people/People.vue:110
 #: modules/accounting/includes/classes/class-admin.php:74
 msgid "Vendors"
 msgstr ""
@@ -22370,6 +22425,7 @@ msgstr ""
 #: build/modules/hrm/views/reporting/headcount.php:152
 #: build/modules/hrm/views/settings/fyear.php:18
 #: includes/framework/views/status-report.php:607
+#: modules/accounting/assets/src/admin/components/people/People.vue:69
 #: modules/accounting/includes/views/settings/opening-balance.php:9
 #: modules/accounting/includes/views/settings/opening-balance.php:43
 #: modules/crm/includes/class-contact-group-list-table.php:86
@@ -23398,7 +23454,7 @@ msgstr ""
 msgid "%s items successfully imported."
 msgstr ""
 
-#: build/includes/functions.php:3347 includes/functions.php:3347
+#: build/includes/functions.php:3347 includes/functions.php:3397
 msgid "Enable/Disable"
 msgstr ""
 
@@ -24862,7 +24918,6 @@ msgstr ""
 #: build/modules/accounting/includes/functions/transactions.php:1073
 #: build/modules/accounting/includes/functions/transactions.php:1123
 #: modules/accounting/includes/functions/transactions.php:1073
-#: modules/accounting/includes/functions/transactions.php:1123
 #. translators: %s: type
 msgid "Transaction alert for %s"
 msgstr ""
@@ -24870,14 +24925,14 @@ msgstr ""
 #: build/modules/accounting/includes/functions/transactions.php:1074
 #: build/modules/accounting/includes/functions/transactions.php:1124
 #: modules/accounting/includes/functions/transactions.php:1074
-#: modules/accounting/includes/functions/transactions.php:1124
 msgid "Thank you for the transaction"
 msgstr ""
 
 #: build/modules/accounting/includes/functions/transactions.php:1082
 #: build/modules/accounting/includes/functions/transactions.php:1134
 #: modules/accounting/includes/functions/transactions.php:1082
-#: modules/accounting/includes/functions/transactions.php:1134
+#: modules/accounting/includes/functions/transactions.php:1163
+#. translators: %s: type
 msgid "PDF not generated!"
 msgstr ""
 
@@ -25692,17 +25747,17 @@ msgstr ""
 #: modules/hrm/includes/class-form-handler.php:251
 #: modules/hrm/includes/class-form-handler.php:281
 #: modules/hrm/includes/class-form-handler.php:333
-#: modules/hrm/includes/class-form-handler.php:446
-#: modules/hrm/includes/class-form-handler.php:515
-#: modules/hrm/includes/class-form-handler.php:564
-#: modules/hrm/includes/class-form-handler.php:618
-#: modules/hrm/includes/class-form-handler.php:647
-#: modules/hrm/includes/class-form-handler.php:683
-#: modules/hrm/includes/class-form-handler.php:829
-#: modules/hrm/includes/class-form-handler.php:896
-#: modules/hrm/includes/class-form-handler.php:977
-#: modules/hrm/includes/class-form-handler.php:1099
-#: modules/hrm/includes/class-form-handler.php:1218
+#: modules/hrm/includes/class-form-handler.php:412
+#: modules/hrm/includes/class-form-handler.php:481
+#: modules/hrm/includes/class-form-handler.php:530
+#: modules/hrm/includes/class-form-handler.php:584
+#: modules/hrm/includes/class-form-handler.php:613
+#: modules/hrm/includes/class-form-handler.php:649
+#: modules/hrm/includes/class-form-handler.php:795
+#: modules/hrm/includes/class-form-handler.php:862
+#: modules/hrm/includes/class-form-handler.php:943
+#: modules/hrm/includes/class-form-handler.php:1065
+#: modules/hrm/includes/class-form-handler.php:1184
 #: modules/hrm/includes/functions-leave.php:190
 #: modules/hrm/includes/functions-leave.php:1017
 #: modules/hrm/includes/functions-leave.php:1586
@@ -26459,7 +26514,7 @@ msgstr ""
 #: build/modules/hrm/includes/functions-leave.php:796
 #: build/modules/hrm/includes/functions-leave.php:1889
 #: build/modules/hrm/includes/functions-leave.php:1913
-#: build/modules/hrm/includes/functions-leave.php:2671
+#: build/modules/hrm/includes/functions-leave.php:2761
 #: build/modules/hrm/views/leave/leave-entitlements.php:108
 #: build/modules/hrm/views/leave/leave-entitlements.php:119
 #: build/modules/hrm/views/leave/new-policy.php:228
@@ -27044,6 +27099,7 @@ msgstr ""
 #: build/modules/crm/includes/functions-dashboard.php:65
 #: build/modules/crm/includes/functions-dashboard.php:162
 #: build/modules/crm/views/js-templates/new-customer.php:309
+#: includes/framework/settings/email.php:100
 #: modules/crm/includes/functions-dashboard.php:65
 #: modules/crm/includes/functions-dashboard.php:162
 #: modules/crm/views/js-templates/new-customer.php:309
@@ -28703,8 +28759,8 @@ msgstr ""
 #: modules/hrm/includes/class-ajax.php:615
 #: modules/hrm/includes/class-ajax.php:646
 #: modules/hrm/includes/class-ajax.php:1842
-#: modules/hrm/includes/class-form-handler.php:679
-#: modules/hrm/includes/class-form-handler.php:825
+#: modules/hrm/includes/class-form-handler.php:645
+#: modules/hrm/includes/class-form-handler.php:791
 msgid "Something went wrong!"
 msgstr ""
 
@@ -29138,8 +29194,8 @@ msgstr ""
 
 #: build/modules/hrm/includes/class-employee-list-table.php:45
 #: build/modules/hrm/includes/class-employee-list-table.php:55
-#: build/modules/hrm/includes/class-leave-report-employee.php:65
-#: build/modules/hrm/includes/class-leave-report-employee.php:82
+#: build/modules/hrm/includes/class-leave-report-employee.php:67
+#: build/modules/hrm/includes/class-leave-report-employee.php:92
 #: modules/hrm/includes/class-employee-list-table.php:45
 #: modules/hrm/includes/class-employee-list-table.php:55
 #: modules/hrm/includes/class-leave-report-employee.php:67
@@ -29148,14 +29204,14 @@ msgid "Filter by Designation"
 msgstr ""
 
 #: build/modules/hrm/includes/class-employee-list-table.php:65
-#: build/modules/hrm/includes/class-leave-report-employee.php:87
+#: build/modules/hrm/includes/class-leave-report-employee.php:97
 #: modules/hrm/includes/class-employee-list-table.php:65
 #: modules/hrm/includes/class-leave-report-employee.php:97
 msgid "Filter by Employment Type"
 msgstr ""
 
 #: build/modules/hrm/includes/class-employee-list-table.php:67
-#: build/modules/hrm/includes/class-leave-report-employee.php:89
+#: build/modules/hrm/includes/class-leave-report-employee.php:99
 #: modules/hrm/includes/class-employee-list-table.php:67
 #: modules/hrm/includes/class-leave-report-employee.php:99
 msgid "- Select Employment Type -"
@@ -29459,61 +29515,61 @@ msgid "days"
 msgstr ""
 
 #: build/modules/hrm/includes/class-form-handler.php:719
-#: modules/hrm/includes/class-form-handler.php:719
+#: modules/hrm/includes/class-form-handler.php:685
 msgid "Error: Please select a leave policy."
 msgstr ""
 
 #: build/modules/hrm/includes/class-form-handler.php:723
-#: modules/hrm/includes/class-form-handler.php:723
+#: modules/hrm/includes/class-form-handler.php:689
 msgid "Error: Invalid policy selected. Please check your input."
 msgstr ""
 
 #: build/modules/hrm/includes/class-form-handler.php:728
-#: modules/hrm/includes/class-form-handler.php:728
+#: modules/hrm/includes/class-form-handler.php:694
 msgid "Error: Please select an employee."
 msgstr ""
 
 #: build/modules/hrm/includes/class-form-handler.php:762
-#: modules/hrm/includes/class-form-handler.php:762
+#: modules/hrm/includes/class-form-handler.php:728
 msgid "Error: No Employees Found. Please check your input."
 msgstr ""
 
 #: build/modules/hrm/includes/class-form-handler.php:836
-#: modules/hrm/includes/class-form-handler.php:836
+#: modules/hrm/includes/class-form-handler.php:802
 msgid "Leave reason field can not be blank."
 msgstr ""
 
 #: build/modules/hrm/includes/class-form-handler.php:1017
-#: modules/hrm/includes/class-form-handler.php:1017
+#: modules/hrm/includes/class-form-handler.php:983
 msgid "Permission Denied!"
 msgstr ""
 
 #: build/modules/hrm/includes/class-form-handler.php:1120
 #: build/modules/hrm/includes/class-form-handler.php:1229
-#: modules/hrm/includes/class-form-handler.php:1120
-#: modules/hrm/includes/class-form-handler.php:1229
+#: modules/hrm/includes/class-form-handler.php:1086
+#: modules/hrm/includes/class-form-handler.php:1195
 msgid "Name field should not be left empty"
 msgstr ""
 
 #: build/modules/hrm/includes/class-form-handler.php:1125
-#: modules/hrm/includes/class-form-handler.php:1125
+#: modules/hrm/includes/class-form-handler.php:1091
 msgid "Days field should not be left empty"
 msgstr ""
 
 #: build/modules/hrm/includes/class-form-handler.php:1129
-#: modules/hrm/includes/class-form-handler.php:1129
+#: modules/hrm/includes/class-form-handler.php:1095
 msgid "Color field should not be left empty"
 msgstr ""
 
 #: build/modules/hrm/includes/class-form-handler.php:1133
-#: modules/hrm/includes/class-form-handler.php:1133
+#: modules/hrm/includes/class-form-handler.php:1099
 msgid "Year field should not be left empty"
 msgstr ""
 
 #: build/modules/hrm/includes/class-form-handler.php:1304
 #: build/modules/hrm/includes/class-form-handler.php:1316
-#: modules/hrm/includes/class-form-handler.php:1304
-#: modules/hrm/includes/class-form-handler.php:1316
+#: modules/hrm/includes/class-form-handler.php:1270
+#: modules/hrm/includes/class-form-handler.php:1282
 msgid "Year for leave"
 msgstr ""
 
@@ -29732,7 +29788,7 @@ msgstr ""
 msgid "select year"
 msgstr ""
 
-#: build/modules/hrm/includes/class-leave-report-employee.php:115
+#: build/modules/hrm/includes/class-leave-report-employee.php:125
 #: modules/hrm/includes/class-leave-report-employee.php:125
 msgid "No Record Found"
 msgstr ""
@@ -29818,7 +29874,6 @@ msgid "Reject"
 msgstr ""
 
 #: build/modules/hrm/includes/class-leave-request-list-table.php:302
-#: modules/hrm/includes/class-leave-request-list-table.php:302
 msgid "Mark Pending"
 msgstr ""
 
@@ -30697,14 +30752,14 @@ msgid "Rejected"
 msgstr ""
 
 #: build/modules/hrm/includes/functions-leave.php:1915
-#: build/modules/hrm/includes/functions-leave.php:2673
+#: build/modules/hrm/includes/functions-leave.php:2763
 #: modules/hrm/includes/functions-leave.php:1915
 #: modules/hrm/includes/functions-leave.php:2763
 msgid "Morning"
 msgstr ""
 
 #: build/modules/hrm/includes/functions-leave.php:1916
-#: build/modules/hrm/includes/functions-leave.php:2674
+#: build/modules/hrm/includes/functions-leave.php:2764
 #: modules/hrm/includes/functions-leave.php:1916
 #: modules/hrm/includes/functions-leave.php:2764
 msgid "Afternoon"
@@ -30720,26 +30775,26 @@ msgstr ""
 msgid "Invalid entitlement data."
 msgstr ""
 
-#: build/modules/hrm/includes/functions-leave.php:2648
+#: build/modules/hrm/includes/functions-leave.php:2738
 #: modules/hrm/includes/functions-leave.php:2738
 msgid "Successfully imported %u data<br>"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-leave.php:2654
+#: build/modules/hrm/includes/functions-leave.php:2744
 #: modules/hrm/includes/functions-leave.php:2744
 msgid ""
 "Failed to import line no  %s. Please check if title, start & end fields are "
 "following proper formation"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-leave.php:2707
-#: build/modules/hrm/includes/functions-leave.php:2721
+#: build/modules/hrm/includes/functions-leave.php:2797
+#: build/modules/hrm/includes/functions-leave.php:2811
 #: modules/hrm/includes/functions-leave.php:2797
 #: modules/hrm/includes/functions-leave.php:2811
 msgid "Name already exists"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-leave.php:2740
+#: build/modules/hrm/includes/functions-leave.php:2830
 #: modules/hrm/includes/functions-leave.php:2830
 msgid "Can not remove, connected with policy"
 msgstr ""
@@ -32241,6 +32296,232 @@ msgstr ""
 
 #: build/wp-erp.php:385 wp-erp.php:385
 msgid "https://wordpress.org/support/plugin/erp/reviews/?filter=5"
+msgstr ""
+
+#: includes/framework/settings/email.php:100
+msgid "HRM"
+msgstr ""
+
+#: modules/accounting/assets/js/bootstrap.js:881
+#: modules/accounting/assets/src/admin/components/list-table/ListTable.vue:268
+msgid "No items found."
+msgstr ""
+
+#: modules/accounting/assets/js/bootstrap.js:12000
+#: modules/accounting/assets/js/bootstrap.js:12203
+#: modules/accounting/assets/js/bootstrap.js:12278
+#: modules/accounting/assets/js/bootstrap.js:13231
+#: modules/accounting/assets/js/bootstrap.js:13350
+#: modules/accounting/assets/js/bootstrap.js:14243
+#: modules/accounting/assets/js/bootstrap.js:14444
+#: modules/accounting/assets/js/bootstrap.js:14552
+#: modules/accounting/assets/js/bootstrap.js:14597
+#: modules/accounting/assets/js/bootstrap.js:14650
+#: modules/accounting/assets/js/bootstrap.js:14771
+#: modules/accounting/assets/js/frontend.js:99
+msgid "div"
+msgstr ""
+
+#: modules/accounting/assets/js/bootstrap.js:12036
+msgid "tr"
+msgstr ""
+
+#: modules/accounting/assets/js/bootstrap.js:12145
+#: modules/accounting/assets/js/bootstrap.js:13078
+msgid "span"
+msgstr ""
+
+#: modules/accounting/assets/js/bootstrap.js:13301
+msgid "multiselect"
+msgstr ""
+
+#: modules/accounting/assets/js/bootstrap.js:14286
+msgid "dropdown"
+msgstr ""
+
+#: modules/accounting/assets/js/bootstrap.js:14356
+msgid "form"
+msgstr ""
+
+#: modules/accounting/assets/js/bootstrap.js:14843
+msgid "modal"
+msgstr ""
+
+#: modules/accounting/assets/js/bootstrap.js:15071
+msgid "button"
+msgstr ""
+
+#: modules/accounting/assets/src/admin/components/journal/JournalList.vue:50
+#: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:62
+#: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:91
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:89
+msgid "Voucher No."
+msgstr ""
+
+#: modules/accounting/assets/src/admin/components/people/PeopleSearch.vue:3
+#: modules/accounting/assets/src/admin/components/people/PeopleSearch.vue:11
+msgid "Search"
+msgstr ""
+
+#: modules/accounting/assets/src/admin/components/products/ProductModal.vue:117
+msgid "self"
+msgstr ""
+
+#: modules/accounting/assets/src/admin/components/tax/TaxAgencies.vue:62
+msgid "Agency Name"
+msgstr ""
+
+#: modules/accounting/assets/src/admin/components/tax/TaxZones.vue:66
+msgid "Default"
+msgstr ""
+
+#: modules/accounting/assets/src/admin/components/transactions/expenses/Expenses.vue:47
+msgid "Create Expense"
+msgstr ""
+
+#: modules/accounting/assets/src/admin/components/transactions/expenses/Expenses.vue:48
+msgid "Create Check"
+msgstr ""
+
+#: modules/accounting/assets/src/admin/components/transactions/expenses/Expenses.vue:49
+msgid "Create Bill"
+msgstr ""
+
+#: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:64
+#: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:93
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:91
+msgid "Ref"
+msgstr ""
+
+#: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:66
+#: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:95
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:93
+msgid "Trn Date"
+msgstr ""
+
+#: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesStats.vue:55
+#: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesStats.vue:55
+msgid "Paid"
+msgstr ""
+
+#: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesStats.vue:55
+#: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesStats.vue:55
+msgid "Payable"
+msgstr ""
+
+#: modules/accounting/assets/src/admin/components/transactions/purchases/Purchases.vue:47
+msgid "Create Purchase"
+msgstr ""
+
+#: modules/accounting/assets/src/admin/components/transactions/purchases/Purchases.vue:49
+msgid "Create Purchase Order"
+msgstr ""
+
+#: modules/accounting/assets/src/admin/components/transactions/sales/Sales.vue:44
+msgid "Create Invoice"
+msgstr ""
+
+#: modules/accounting/assets/src/admin/components/transactions/sales/Sales.vue:46
+msgid "Create Estimate"
+msgstr ""
+
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesStats.vue:54
+msgid "Received"
+msgstr ""
+
+#: modules/accounting/includes/emails/class-email-transections-estimate.php:16
+#: modules/accounting/includes/emails/class-email-transections-estimate.php:20
+msgid "New transaction estimate"
+msgstr ""
+
+#: modules/accounting/includes/emails/class-email-transections-estimate.php:17
+msgid "New estimate notification alert"
+msgstr ""
+
+#: modules/accounting/includes/emails/class-email-transections-estimate.php:19
+msgid "An estimate has been created"
+msgstr ""
+
+#: modules/accounting/includes/emails/class-email-transections-pay-purchase.php:16
+#: modules/accounting/includes/emails/class-email-transections-pay-purchase.php:20
+msgid "New transaction pay purchase"
+msgstr ""
+
+#: modules/accounting/includes/emails/class-email-transections-pay-purchase.php:17
+msgid "New pay purchase notification alert"
+msgstr ""
+
+#: modules/accounting/includes/emails/class-email-transections-pay-purchase.php:19
+#: modules/accounting/includes/emails/class-email-transections-payments.php:19
+msgid "An invoice has been paid"
+msgstr ""
+
+#: modules/accounting/includes/emails/class-email-transections-payments.php:16
+#: modules/accounting/includes/emails/class-email-transections-payments.php:20
+msgid "New transaction payment"
+msgstr ""
+
+#: modules/accounting/includes/emails/class-email-transections-payments.php:17
+msgid "New Payment notification alert"
+msgstr ""
+
+#: modules/accounting/includes/emails/class-email-transections-purchase-order.php:16
+#: modules/accounting/includes/emails/class-email-transections-purchase-order.php:20
+msgid "New transaction purchase order"
+msgstr ""
+
+#: modules/accounting/includes/emails/class-email-transections-purchase-order.php:17
+msgid "New purchase order notification alert"
+msgstr ""
+
+#: modules/accounting/includes/emails/class-email-transections-purchase-order.php:19
+msgid "An purchase order has been created"
+msgstr ""
+
+#: modules/accounting/includes/emails/class-email-transections-purchase.php:16
+#: modules/accounting/includes/emails/class-email-transections-purchase.php:20
+msgid "New transaction purchase"
+msgstr ""
+
+#: modules/accounting/includes/emails/class-email-transections-purchase.php:17
+msgid "New purchase notification alert"
+msgstr ""
+
+#: modules/accounting/includes/emails/class-email-transections-purchase.php:19
+msgid "An purchase has been created"
+msgstr ""
+
+#: modules/accounting/includes/emails/class-email-transections.php:16
+#: modules/accounting/includes/emails/class-email-transections.php:20
+msgid "New transaction invoice"
+msgstr ""
+
+#: modules/accounting/includes/emails/class-email-transections.php:17
+msgid "New invoice notification alert"
+msgstr ""
+
+#: modules/accounting/includes/emails/class-email-transections.php:19
+msgid "New invoice has been created"
+msgstr ""
+
+#: modules/accounting/includes/functions/bank.php:145
+msgid "Cash"
+msgstr ""
+
+#: modules/accounting/includes/functions/bank.php:150
+msgid "Cash at Bank"
+msgstr ""
+
+#: modules/accounting/includes/functions/bank.php:156
+msgid "Bank Loan"
+msgstr ""
+
+#: modules/hrm/includes/class-form-handler.php:362
+msgid "Approved from bulk action"
+msgstr ""
+
+#: modules/hrm/includes/class-form-handler.php:367
+msgid "Rejected from bulk action"
 msgstr ""
 
 #: vendor/lucatume/wp-browser/src/data/plugins/internationalized-plugin.php:11
