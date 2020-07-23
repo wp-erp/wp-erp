@@ -142,18 +142,18 @@ function erp_acct_get_dashboard_banks() {
     $c_balance = get_ledger_balance_with_opening_balance( $ledger_id, $args['start_date'], $args['end_date'] );
 
     $results[] = [
-        'name'    => 'Cash',
+        'name'    => __( 'Cash', 'erp' ),
         'balance' => isset( $c_balance['balance'] ) ? $c_balance['balance'] : 0,
     ];
 
     $results[] = [
-        'name'       => 'Cash at Bank',
+        'name'       => __( 'Cash at Bank', 'erp' ),
         'balance'    => erp_acct_cash_at_bank( $args, 'balance' ),
         'additional' => erp_acct_bank_balance( $args, 'balance' ),
     ];
 
     $results[] = [
-        'name'       => 'Bank Loan',
+        'name'       => __( 'Bank Loan', 'erp' ),
         'balance'    => erp_acct_cash_at_bank( $args, 'loan' ),
         'additional' => erp_acct_bank_balance( $args, 'loan' ),
     ];

@@ -2354,7 +2354,57 @@ function erp_email_settings_javascript() {
                 });
             });
         });
+
+        jQuery('.email_tab_view li').click(function(){
+
+            var elm = jQuery( this );
+            var elm_id = elm.attr( 'id' );
+            var target_elm = 'tag_' + elm_id.split("_")[1];
+            jQuery('ul.email_tab_view li').removeClass('bt_active');
+            elm.addClass('bt_active');
+            jQuery('tbody#email_list_view tr').hide(1000);
+            jQuery( '.'+ target_elm ).show(1000);
+
+        });
     </script>
+    <?php
+}
+
+/**
+ * Email Setting CSS.
+ *
+ * @return void
+ */
+function email_setting_css() {
+    ?>
+    <style>
+
+        #bt_others {
+            display: none;
+        }
+
+        tr.tag_crm, tr.tag_accounting, tr.tag_others {
+            display: none;
+        }
+        ul.email_tab_view {
+            display:table;
+            border-spacing:7px;
+            margin-left:-7px;
+            margin-bottom: -7px;
+        }
+
+        ul.email_tab_view li {
+            display: table-cell;
+            border:1px solid #ccd0d4;
+            padding:5px 10px;
+            background-color: #e5e5e5;
+            cursor: pointer;
+        }
+
+        .bt_active, ul.email_tab_view li:hover {
+            background-color : white !important;
+        }
+    </style>
     <?php
 }
 

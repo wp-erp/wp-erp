@@ -107,7 +107,7 @@ export default {
 
     watch: {
         'ledgFields.chart_id'() {
-            this.fetchLedgerCategories();
+            // this.fetchLedgerCategories();
         }
     },
 
@@ -151,11 +151,11 @@ export default {
                     HTTP.get('/ledgers/accounts'),
                     HTTP.get(`/ledgers/${this.$route.params.id}`)
                 ]);
-                const request3 = await HTTP.get(`/ledgers/categories/${request2.data.chart_id}`);
+                //const request3 = await HTTP.get(`/ledgers/categories/${request2.data.chart_id}`);
 
                 this.chartAccounts = request1.data;
                 this.setDataForEdit(request2.data);
-                this.categories = this.buildTree(request3.data);
+                // this.categories = this.buildTree(request3.data);
             } else {
                 /**
                      * ----------------------------------------------
@@ -237,6 +237,7 @@ export default {
             HTTP.post('/ledgers', requestData).then(res => {
                 this.$store.dispatch('spinner/setSpinner', false);
                 this.showAlert('success', 'Created !');
+                window.location.reload();
             }).catch(error => {
                 this.$store.dispatch('spinner/setSpinner', false);
                 throw error;
@@ -251,6 +252,7 @@ export default {
             HTTP.put(`/ledgers/${this.ledgerID}`, requestData).then(res => {
                 this.$store.dispatch('spinner/setSpinner', false);
                 this.showAlert('success', 'Updated !');
+                window.location.reload();
             }).catch(error => {
                 this.$store.dispatch('spinner/setSpinner', false);
                 throw error;

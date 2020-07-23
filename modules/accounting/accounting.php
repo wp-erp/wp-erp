@@ -200,6 +200,9 @@ final class Accounting {
     public function includes() {
         $this->include_functions();
         $this->include_classes();
+
+        /*** Init emailer class **/
+        new Emailer();
     }
 
     /**

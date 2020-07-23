@@ -1,6 +1,6 @@
 <template>
     <div class="people-search">
-        <h4>Search</h4>
+        <h4>{{ __('Search', 'erp') }}</h4>
 
         <form @submit.prevent="searchPeople">
             <div class="input-with-addon">
@@ -8,7 +8,7 @@
                 <span v-if="search" @click="clearSearch">&#x2716;</span>
             </div>
 
-            <button type="submit" class="wperp-btn btn--primary">Search</button>
+            <button type="submit" class="wperp-btn btn--primary">{{ __('Search', 'erp') }}</button>
         </form>
     </div>
 </template>

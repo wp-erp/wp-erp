@@ -86,7 +86,7 @@ class Leave_Requests_List_Table extends \WP_List_Table {
      */
     function get_columns() {
         $columns = array(
-            //'cb'        => '<input type="checkbox" />',
+            'cb'        => '<input type="checkbox" />',
             'name'      => __( 'Employee Name', 'erp' ),
             'policy'    => __( 'Policy', 'erp' ),
             'request'   => __( 'Request', 'erp' ),
@@ -299,10 +299,10 @@ class Leave_Requests_List_Table extends \WP_List_Table {
         } else {
             $actions['reject']   = __( 'Reject', 'erp' );
             $actions['approved'] = __( 'Approve', 'erp' );
-            $actions['pending']  = __( 'Mark Pending', 'erp' );
+            /*$actions['pending']  = __( 'Mark Pending', 'erp' );*/
         }
 
-        //return $actions;
+        return $actions;
     }
 
     /**
