@@ -1612,7 +1612,7 @@ May you enjoy the fruits of your labors for years to come'
 
         // insert chart of accounts
         if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_acct_chart_of_accounts` LIMIT 0, 1" ) ) {
-            $charts = ['Asset', 'Liability', 'Equity', 'Income', 'Expense', 'Asset & Liability', 'Bank'];
+            $charts = ['Asset', 'Liability', 'Equity', 'Income', 'Expense', 'Asset & Liability', 'Bank' ];
 
             for ( $i = 0; $i < count($charts); $i++ ) {
                 $wpdb->insert( "{$wpdb->prefix}erp_acct_chart_of_accounts", [
@@ -1695,7 +1695,7 @@ May you enjoy the fruits of your labors for years to come'
 
         // insert payment methods
         if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_acct_payment_methods` LIMIT 0, 1" ) ) {
-            $methods = ['Cash', 'Bank', 'Check'];
+            $methods = ['Cash', 'Bank', 'Check' ];
 
             for ( $i = 0; $i < count($methods); $i++ ) {
                 $wpdb->insert( "{$wpdb->prefix}erp_acct_payment_methods", [
