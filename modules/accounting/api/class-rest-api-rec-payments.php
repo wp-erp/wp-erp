@@ -6,11 +6,12 @@ use WP_REST_Server;
 use WP_REST_Response;
 use WP_Error;
 
-if ( ! defined( 'ABSPATH' ) ) {
+if ( !defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
 
-class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
+class Payments_Controller extends \WeDevs\ERP\API\REST_Controller
+{
     /**
      * Endpoint namespace.
      *
@@ -33,63 +34,63 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
             $this->namespace,
             '/' . $this->rest_base,
             [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_payments' ],
-					'args'                => [],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_view_sale' );
-					},
-				],
-				[
-					'methods'             => WP_REST_Server::CREATABLE,
-					'callback'            => [ $this, 'create_payment' ],
-					'args'                => [],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_create_sales_payment' );
-					},
-				],
-				'schema' => [ $this, 'get_public_item_schema' ],
-			]
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_payments' ],
+                    'args'                => [],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_view_sale' );
+                    },
+                ],
+                [
+                    'methods'             => WP_REST_Server::CREATABLE,
+                    'callback'            => [ $this, 'create_payment' ],
+                    'args'                => [],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_create_sales_payment' );
+                    },
+                ],
+                'schema' => [ $this, 'get_public_item_schema' ],
+            ]
         );
 
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base . '/(?P<id>[\d]+)',
             [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_payment' ],
-					'args'                => [],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_view_sales_summary' );
-					},
-				],
-				[
-					'methods'             => WP_REST_Server::EDITABLE,
-					'callback'            => [ $this, 'update_payment' ],
-					'args'                => [],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_create_sales_payment' );
-					},
-				],
-				'schema' => [ $this, 'get_public_item_schema' ],
-			]
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_payment' ],
+                    'args'                => [],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_view_sales_summary' );
+                    },
+                ],
+                [
+                    'methods'             => WP_REST_Server::EDITABLE,
+                    'callback'            => [ $this, 'update_payment' ],
+                    'args'                => [],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_create_sales_payment' );
+                    },
+                ],
+                'schema' => [ $this, 'get_public_item_schema' ],
+            ]
         );
 
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/void',
             [
-				[
-					'methods'             => WP_REST_Server::CREATABLE,
-					'callback'            => [ $this, 'void_payment' ],
-					'args'                => [],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_create_sales_payment' );
-					},
-				],
-			]
+                [
+                    'methods'             => WP_REST_Server::CREATABLE,
+                    'callback'            => [ $this, 'void_payment' ],
+                    'args'                => [],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_create_sales_payment' );
+                    },
+                ],
+            ]
         );
     }
 
@@ -103,7 +104,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function get_payments( $request ) {
         $args = [
             'number' => isset( $request['per_page'] ) ? $request['per_page'] : 20,
-            'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
+            'offset' => ($request['per_page'] * ($request['page'] - 1)),
         ];
 
         $formatted_items   = [];
@@ -115,9 +116,9 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
         $payment_data  = erp_acct_get_payments( $args );
         $payment_count = erp_acct_get_payments(
             [
-				'count'  => true,
-				'number' => -1,
-			]
+                'count'  => true,
+                'number' => -1,
+            ]
         );
 
         foreach ( $payment_data as $item ) {
@@ -149,7 +150,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_payment( $request ) {
-        $id = (int) $request['id'];
+        $id = (int)$request['id'];
 
         if ( empty( $id ) ) {
             return new WP_Error( 'rest_payment_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
@@ -178,6 +179,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function create_payment( $request ) {
         $additional_fields = [];
         $payment_data      = $this->prepare_item_for_database( $request );
+
 
         $items      = $request['line_items'];
         $item_total = [];
@@ -211,7 +213,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function update_payment( $request ) {
-        $id = (int) $request['id'];
+        $id = (int)$request['id'];
 
         if ( empty( $id ) ) {
             return new WP_Error( 'rest_payment_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
@@ -252,7 +254,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Request
      */
     public function void_payment( $request ) {
-        $id = (int) $request['id'];
+        $id = (int)$request['id'];
 
         if ( empty( $id ) ) {
             return new WP_Error( 'rest_payment_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
@@ -272,16 +274,16 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function add_log( $data, $action ) {
         erp_log()->add(
             [
-				'component'     => 'Accounting',
-				'sub_component' => __( 'Receive Payment', 'erp' ),
-				'old_value'     => '',
+                'component'     => 'Accounting',
+                'sub_component' => __( 'Receive Payment', 'erp' ),
+                'old_value'     => '',
                 'new_value'     => '',
                 // translators: %1$s: amount, %2$s: id
-				'message'       => sprintf( __( 'An invoice payment of %1$s has been created for %2$s', 'erp' ), $data['amount'], erp_acct_get_people_name_by_people_id( $data['customer_id'] ) ),
-				'changetype'    => $action,
-				'created_by'    => get_current_user_id(),
+                'message'       => sprintf( __( 'An invoice payment of %1$s has been created for %2$s', 'erp' ), $data['amount'], erp_acct_get_people_name_by_people_id( $data['customer_id'] ) ),
+                'changetype'    => $action,
+                'created_by'    => get_current_user_id(),
 
-			]
+            ]
         );
     }
 
@@ -353,6 +355,9 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['check_no'] ) ) {
             $prepared_item['check_no'] = $request['check_no'];
         }
+        if ( isset( $request['bank_trn_charge'] ) ) {
+            $prepared_item['bank_trn_charge'] = $request['bank_trn_charge'];
+        }
 
         return $prepared_item;
     }
@@ -367,12 +372,12 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_REST_Response $response Response data.
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
-        $item = (object) $item;
+        $item = (object)$item;
 
         $data = [
-            'id'            => (int) $item->id,
-            'voucher_no'    => (int) $item->voucher_no,
-            'customer_id'   => (int) $item->customer_id,
+            'id'            => (int)$item->id,
+            'voucher_no'    => (int)$item->voucher_no,
+            'customer_id'   => (int)$item->customer_id,
             'customer_name' => $item->customer_name,
             'trn_date'      => $item->trn_date,
             'amount'        => $item->amount,
@@ -382,7 +387,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
             'attachments'   => maybe_unserialize( $item->attachments ),
             'status'        => erp_acct_get_trn_status_by_id( $item->status ),
             'pdf_link'      => $item->pdf_link,
-            'type'          => ! empty( $item->type ) ? $item->type : 'payment',
+            'type'          => !empty( $item->type ) ? $item->type : 'payment',
             'particulars'   => $item->particulars,
             'created_at'    => $item->created_at,
         ];
