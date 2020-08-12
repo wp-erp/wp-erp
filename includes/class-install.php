@@ -984,6 +984,7 @@ May you enjoy the fruits of your labors for years to come'
                 `customer_name` varchar(255) DEFAULT NULL,
                 `trn_date` date DEFAULT NULL,
                 `amount` decimal(20,2) DEFAULT 0,
+                `transaction_charge` decimal(20,2) DEFAULT 0,
                 `ref` varchar(255) DEFAULT NULL,
                 `particulars` varchar(255) DEFAULT NULL,
                 `attachments` varchar(255) DEFAULT NULL,

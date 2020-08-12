@@ -353,6 +353,9 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['check_no'] ) ) {
             $prepared_item['check_no'] = $request['check_no'];
         }
+        if ( isset( $request['bank_trn_charge'] ) ) {
+            $prepared_item['bank_trn_charge'] = $request['bank_trn_charge'];
+        }
 
         return $prepared_item;
     }
