@@ -46,6 +46,14 @@
                             <label>{{ __('Deposit to', 'erp') }}<span class="wperp-required-sign">*</span></label>
                             <select-accounts v-model="basic_fields.deposit_to" :reset="reset" :override_accts="accts_by_chart"></select-accounts>
                         </div>
+
+                        <div class="wperp-col-sm-4" v-if="basic_fields.trn_by.id === '2'">
+                            <div class="wperp-form-group">
+                                <label>{{ __('Transaction Charge', 'erp') }}</label>
+                                <input type="text" class="wperp-form-field" v-model="bank_data.trn_charge"/>
+                            </div>
+                        </div>
+
                         <div class="wperp-col-sm-4">
                             <label>{{ __('Billing Address', 'erp') }}</label>
                             <textarea v-model.trim="basic_fields.billing_address" rows="4" class="wperp-form-field" :placeholder="__('Type here', 'erp')"></textarea>
@@ -178,6 +186,10 @@ export default {
                 bank_name: '',
                 payer_name: '',
                 check_no  : ''
+            },
+
+            bank_data: {
+                trn_charge: 0,
             },
 
             createButtons: [
@@ -388,6 +400,13 @@ export default {
                 deposit_id = this.basic_fields.deposit_to.people_id;
             }
 
+            let bank_trn_charge = 0;
+
+            if (parseInt(this.basic_fields.trn_by.id) === 2) {
+                bank_trn_charge = this.bank_data.trn_charge;
+            }
+
+
             HTTP.post('/payments', {
                 customer_id: this.basic_fields.customer.id,
                 ref        : this.basic_fields.trn_ref,
@@ -401,7 +420,8 @@ export default {
                 trn_by     : this.basic_fields.trn_by.id,
                 check_no   : parseInt(this.check_data.check_no),
                 name       : this.check_data.payer_name,
-                bank       : this.check_data.bank_name
+                bank       : this.check_data.bank_name,
+                bank_trn_charge: bank_trn_charge
             }).then(res => {
                 this.$store.dispatch('spinner/setSpinner', false);
 
