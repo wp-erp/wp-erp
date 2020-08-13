@@ -3,9 +3,9 @@ Contributors: tareq1988, nizamuddinbabu, wedevs
 Donate Link: https://tareq.co/donate
 Tags: business manager, erp, accounting, crm, hr, project manager, small business, SME, contact, contacts, Customer Relationship Management, employee, leave management, hr, human resource management, job, jobs, job listing, lead management, opportunity, schedule, task, lead, holiday, company
 Requires at least: 4.4
-Tested up to: 5.4.2
+Tested up to: 5.5
 Requires PHP: 5.6
-Stable tag: 1.6.2
+Stable tag: 1.6.3
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -266,6 +266,12 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+
+= v1.6.3 -> August 13, 2020 =
+--------------------------
+- [enhancement] Support both old PHPMailer v5 (WordPress <=5.4) and PHPMailer v6 (WordPress >=5.5)
+- [new] Added Bank Transaction Charge on Accounting Module
+- [fix] Fixed life stage display issue when translating
 
 = v1.6.2 -> July 23, 2020 =
 --------------------------
