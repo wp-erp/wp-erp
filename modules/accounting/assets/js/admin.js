@@ -19453,6 +19453,14 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -19489,6 +19497,9 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         bank_name: '',
         payer_name: '',
         check_no: ''
+      },
+      bank_data: {
+        trn_charge: 0
       },
       createButtons: [{
         id: 'save',
@@ -19726,6 +19737,12 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         deposit_id = this.basic_fields.deposit_to.people_id;
       }
 
+      var bank_trn_charge = 0;
+
+      if (parseInt(this.basic_fields.trn_by.id) === 2) {
+        bank_trn_charge = this.bank_data.trn_charge;
+      }
+
       __WEBPACK_IMPORTED_MODULE_3_admin_http__["a" /* default */].post('/payments', {
         customer_id: this.basic_fields.customer.id,
         ref: this.basic_fields.trn_ref,
@@ -19739,7 +19756,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         trn_by: this.basic_fields.trn_by.id,
         check_no: parseInt(this.check_data.check_no),
         name: this.check_data.payer_name,
-        bank: this.check_data.bank_name
+        bank: this.check_data.bank_name,
+        bank_trn_charge: bank_trn_charge
       }).then(function (res) {
         _this5.$store.dispatch('spinner/setSpinner', false);
 
@@ -47945,6 +47963,44 @@ var render = function() {
                           ],
                           1
                         ),
+                        _vm._v(" "),
+                        _vm.basic_fields.trn_by.id === "2"
+                          ? _c("div", { staticClass: "wperp-col-sm-4" }, [
+                              _c("div", { staticClass: "wperp-form-group" }, [
+                                _c("label", [
+                                  _vm._v(
+                                    _vm._s(_vm.__("Transaction Charge", "erp"))
+                                  )
+                                ]),
+                                _vm._v(" "),
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.bank_data.trn_charge,
+                                      expression: "bank_data.trn_charge"
+                                    }
+                                  ],
+                                  staticClass: "wperp-form-field",
+                                  attrs: { type: "text" },
+                                  domProps: { value: _vm.bank_data.trn_charge },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        _vm.bank_data,
+                                        "trn_charge",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ])
+                            ])
+                          : _vm._e(),
                         _vm._v(" "),
                         _c("div", { staticClass: "wperp-col-sm-4" }, [
                           _c("label", [

@@ -190,10 +190,10 @@ function erp_crm_get_details_url( $id, $type ) {
 function erp_crm_get_life_stages_dropdown_raw( $label = [], $counts = [] ) {
 
     $counts = wp_parse_args( $counts, [
-        'customer'    => 0,
-        'lead'        => 0,
-        'opportunity' => 0,
-        'subscriber'  => 0
+        'customer'    => 1,
+        'lead'        => 1,
+        'opportunity' => 1,
+        'subscriber'  => 1
     ] );
 
     $life_stages = [
