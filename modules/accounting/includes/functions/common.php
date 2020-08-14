@@ -248,7 +248,7 @@ function erp_acct_get_ledger_by_id( $ledger_id ) {
  *
  * @return array
  */
-function erp_acct_get_ledger_by( $field = 'id', $value ) {
+function erp_acct_get_ledger_by( $field = 'id', $value = '' ) {
     global $wpdb;
 
     $field = sanitize_text_field( $field );
