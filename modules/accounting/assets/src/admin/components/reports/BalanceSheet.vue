@@ -290,18 +290,24 @@ export default {
         },
 
         checkClosingPossibility() {
-            this.$store.dispatch('spinner/setSpinner', true);
+            if(!this.end_date){
+                this.showAlert('error', 'Please select financial year');
+                return false;
+            }
 
+            this.$store.dispatch('spinner/setSpinner', true);
             HTTP.get('/closing-balance/next-fn-year', {
                 params: {
                     date : this.end_date
                 }
             }).then(response => {
-                if (response.data === null) {
-                    alert(`Please create a financial year which start after '${this.end_date}'`);
+
+                if (!response.data) {
+                    this.showAlert('error', `Please create a financial year which start after '${this.end_date}'`);
+                }else{
+                    this.closeBalancesheet(response.data.id);
                 }
 
-                this.closeBalancesheet(response.data.id);
             }).catch(error => {
                 this.$store.dispatch('spinner/setSpinner', false);
                 throw error;

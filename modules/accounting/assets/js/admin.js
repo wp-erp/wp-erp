@@ -32142,17 +32142,22 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
     checkClosingPossibility: function checkClosingPossibility() {
       var _this4 = this;
 
+      if (!this.end_date) {
+        this.showAlert('error', 'Please select financial year');
+        return false;
+      }
+
       this.$store.dispatch('spinner/setSpinner', true);
       __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get('/closing-balance/next-fn-year', {
         params: {
           date: this.end_date
         }
       }).then(function (response) {
-        if (response.data === null) {
-          alert("Please create a financial year which start after '".concat(_this4.end_date, "'"));
+        if (!response.data) {
+          _this4.showAlert('error', "Please create a financial year which start after '".concat(_this4.end_date, "'"));
+        } else {
+          _this4.closeBalancesheet(response.data.id);
         }
-
-        _this4.closeBalancesheet(response.data.id);
       }).catch(function (error) {
         _this4.$store.dispatch('spinner/setSpinner', false);
 
