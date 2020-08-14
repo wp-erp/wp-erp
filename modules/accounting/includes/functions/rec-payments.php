@@ -555,7 +555,7 @@ function erp_acct_insert_bank_transaction_charge_into_ledger( $payment_data ) {
 
     // Insert amount in ledger_details
     // get ledger id of "Bank Transaction Charge"
-    $ledger_data = erp_acct_get_ledger_by( 'code', '606' );
+    $ledger_data = erp_acct_get_ledger_by( 'slug', 'bank_transaction_charge' );
     if ( empty( $ledger_data ) ) {
         return;
     }
