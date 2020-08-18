@@ -1175,7 +1175,7 @@ function erp_hr_leave_insert_request( $args = array() ) {
     $leaves = array();
     if ( $period['days'] ) {
         foreach ( $period['days'] as $date ) {
-            if ( class_exists( '\weDevs\ERP_PRO\HR\Leave' ) && get_option( 'erp_pro_sandwich_leave', '') !== 'yes' && ! $date['count'] ) { // skip if holiday or not working day
+            if ( class_exists( '\weDevs\ERP_PRO\PRO\AdvancedLeave\Module' ) && get_option( 'erp_pro_sandwich_leave', '') !== 'yes' && ! $date['count'] ) { // skip if holiday or not working day
                 continue;
             }
 
@@ -1547,12 +1547,12 @@ function erp_hr_leave_get_requests_count() {
 
         $counts['all']['count'] = $total;
 
-        if ( ! class_exists( '\weDevs\ERP_PRO\HR\Leave\Multilevel' ) ) {
+        if ( ! class_exists( '\weDevs\ERP_PRO\PRO\AdvancedLeave\Module' ) ) {
             if ( isset( $counts['4'] ) ) {
                 unset( $counts['4'] );
             }
         }
-        elseif( class_exists( '\weDevs\ERP_PRO\HR\Leave\Multilevel' ) && get_option('erp_pro_multilevel_approval') !== 'yes' ) {
+        elseif( class_exists( '\weDevs\ERP_PRO\PRO\AdvancedLeave\Module' ) && get_option('erp_pro_multilevel_approval') !== 'yes' ) {
             if ( isset( $counts['4'] ) ) {
                 unset( $counts['4'] );
             }
