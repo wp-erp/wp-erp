@@ -4,7 +4,7 @@
 namespace WeDevs\ERP\Accounting\Includes\Classes;
 
 
-class TrialBalance
+class FinalAccountsHelper
 {
     private $db;
     public $totalCashAtBank = 0;
@@ -25,8 +25,6 @@ class TrialBalance
     }
 
     public function getPreviousBalance($chart_id){
-
-    //   $endDate = strtotime('-1 day', strtotime('2015-08-10'));
 
         $sql = "SELECT  SUM( ld.debit - ld.credit ) AS balance,ledger.name,ld.ledger_id,ledger.chart_id  from {$this->db->prefix}erp_acct_ledger_details as ld
                 INNER JOIN {$this->db->prefix}erp_acct_ledgers as ledger ON ledger.id = ld.ledger_id

@@ -34008,7 +34008,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue__["default"].use(__WEBPACK_IMPORTED_MODULE_1_vue
       component: __WEBPACK_IMPORTED_MODULE_14_admin_components_reports_ReportsOverview_vue__["a" /* default */]
     }, {
       path: 'trial-balance',
-      name: 'TrialBalance',
+      name: 'FinalAccountsHelper',
       component: __WEBPACK_IMPORTED_MODULE_7_admin_components_reports_TrialBalance_vue__["a" /* default */]
     }, {
       path: 'ledgers',
@@ -44220,7 +44220,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "modules/accounting/assets/src/admin/components/reports/TrialBalance.vue"
+Component.options.__file = "modules/accounting/assets/src/admin/components/reports/FinalAccountsHelper.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -47191,7 +47191,7 @@ var render = function() {
             "router-link",
             {
               staticClass: "wperp-btn btn--primary",
-              attrs: { to: { name: "TrialBalance" } }
+              attrs: { to: { name: "FinalAccountsHelper" } }
             },
             [_vm._v(_vm._s(_vm.__("View Report", "erp")))]
           )

@@ -5,7 +5,7 @@ import Products from 'admin/components/products/Products.vue';
 import Employees from 'admin/components/people/Employees.vue';
 import EmployeeDetails from 'admin/components/people/EmployeeDetails.vue';
 import DashBoard from 'admin/components/dashboard/DashBoard.vue';
-import TrialBalance from 'admin/components/reports/TrialBalance.vue';
+import TrialBalance from 'admin/components/reports/FinalAccountsHelper.vue';
 import LedgerReport from 'admin/components/reports/LedgerReport.vue';
 import SalesTax from 'admin/components/reports/SalesTax.vue';
 import PeopleDetails from 'admin/components/people/PeopleDetails.vue';

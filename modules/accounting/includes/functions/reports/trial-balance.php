@@ -750,7 +750,7 @@ function erp_acct_get_trial_balance( $args ) {
      * Let's create some virtual ledgers
      */
 
-    $trialBalance = new \WeDevs\ERP\Accounting\Includes\Classes\TrialBalance($args);
+    $trialBalance = new \WeDevs\ERP\Accounting\Includes\Classes\FinalAccountsHelper($args);
 
 
     $results['rows'][] = [
