@@ -11,7 +11,7 @@ class FinalAccountsHelper
     public $totalLoanAtBank = 0;
     public $cashAtBankBreakdowns = [];
     public $loanAtBankBreakdowns = [];
-    public $args;
+    private $args;
     public $financialYear;
 
     public function __construct( $args ) {
@@ -24,7 +24,7 @@ class FinalAccountsHelper
 
     }
 
-    public function getPreviousBalance($chart_id){
+    private function getPreviousBalance($chart_id){
 
         $sql = "SELECT  SUM( ld.debit - ld.credit ) AS balance,ledger.name,ld.ledger_id,ledger.chart_id  from {$this->db->prefix}erp_acct_ledger_details as ld
                 INNER JOIN {$this->db->prefix}erp_acct_ledgers as ledger ON ledger.id = ld.ledger_id
@@ -40,7 +40,7 @@ class FinalAccountsHelper
      * @param $chart_id
      * @return array|object|null
      */
-    public function getOpeningBalances( $chart_id ) {
+    private function getOpeningBalances( $chart_id ) {
 
         $sql = "SELECT ob.ledger_id, SUM(ob.debit - ob.credit) as balance, ledger.name, ob.chart_id  FROM {$this->db->prefix}erp_acct_opening_balances as ob
                 INNER JOIN {$this->db->prefix}erp_acct_ledgers as ledger ON ledger.id = ob.ledger_id
@@ -54,7 +54,7 @@ class FinalAccountsHelper
      * @param $chart_id
      * @return array|object|null
      */
-    protected function getLedgerDetails( $chart_id ) {
+    private function getLedgerDetails( $chart_id ) {
 
         $sql = "SELECT  SUM( ld.debit - ld.credit ) AS balance,ledger.name,ld.ledger_id,ledger.chart_id  from {$this->db->prefix}erp_acct_ledger_details as ld
                 INNER JOIN {$this->db->prefix}erp_acct_ledgers as ledger ON ledger.id = ld.ledger_id
@@ -68,7 +68,7 @@ class FinalAccountsHelper
     /**
      * generate totalCashAtBank, totalLoanAtBank, cashAtBankBreakdowns, loanAtBankBreakdowns
      */
-    public function setBankData() {
+    private function setBankData() {
 
         $openingBalances = $this->getOpeningBalances( 7 );
 
@@ -129,7 +129,7 @@ class FinalAccountsHelper
     /**
      * get closest financial year by start date
      */
-    function getClosestFinYear() {
+   private function getClosestFinYear() {
 
         $sql = "SELECT id, name, start_date, end_date FROM {$this->db->prefix}erp_acct_financial_years WHERE start_date <= '%s' ORDER BY start_date DESC LIMIT 1";
 

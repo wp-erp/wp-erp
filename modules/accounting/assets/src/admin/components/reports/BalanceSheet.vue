@@ -191,7 +191,7 @@ export default {
 
     created() {
         // ? why is nextTick here ...? i don't know.
-        this.$nextTick(function() {
+      /*  this.$nextTick(function() {
             const dateObj = new Date();
 
             // with leading zero, and JS month are zero index based
@@ -201,7 +201,7 @@ export default {
             this.end_date   = erp_acct_var.current_date;
 
             this.fetchItems();
-        });
+        });*/
 
         this.fetchFnYears();
     },
@@ -274,7 +274,6 @@ export default {
             HTTP.get('/opening-balances/names').then(response => {
                 // get only last 5
                 this.fyears = response.data.reverse().slice(0).slice(-5);
-
                 this.getCurrentFnYear();
             });
         },
@@ -282,6 +281,9 @@ export default {
         getCurrentFnYear() {
             HTTP.get('/closing-balance/closest-fn-year').then(response => {
                 this.selectedYear = response.data;
+                this.start_date = response.data.start_date;
+                this.end_date   = response.data.end_date;
+                this.fetchItems();
             });
         },
 
