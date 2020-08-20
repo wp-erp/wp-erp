@@ -2082,6 +2082,8 @@ if (false) {(function () {
   },
   methods: {
     onSelect: function onSelect(selected) {
+      console.log(selected);
+
       if (this.multiple) {
         this.results.push(selected);
         this.$emit('input', this.results);

@@ -2223,6 +2223,8 @@ if (false) {(function () {
   },
   methods: {
     onSelect: function onSelect(selected) {
+      console.log(selected);
+
       if (this.multiple) {
         this.results.push(selected);
         this.$emit('input', this.results);
@@ -16482,7 +16484,8 @@ if (false) {(function () {
     }
   },
   created: function created() {
-    // ? why is nextTick here ...? I don't know.
+    this.fetchFnYears(); // ? why is nextTick here ...? I don't know.
+
     this.$nextTick(function () {
       // with leading zero, and JS month are zero index based
       // const dateObj = new Date();
@@ -16494,7 +16497,6 @@ if (false) {(function () {
         this.closestFnYear();
       }
     });
-    this.fetchFnYears();
     this.getChartOfAccts();
   },
   methods: {
@@ -16506,7 +16508,15 @@ if (false) {(function () {
         _this.end_date = response.data.end_date;
 
         _this.getTrialBalance();
+
+        _this.setFnYear(response.data);
       });
+    },
+    setFnYear: function setFnYear(closestYear) {
+      var year = this.fyears.filter(function (item) {
+        return item.id === closestYear.id;
+      });
+      this.selectedYear = year.length ? year[0] : null;
     },
     onYearSelected: function onYearSelected() {
       this.start_date = this.selectedYear.start_date;
@@ -16518,13 +16528,11 @@ if (false) {(function () {
       this.getTrialBalance();
     },
     updateDate: function updateDate() {
-      this.$router.push({
-        path: this.$route.path,
-        query: {
-          start: this.start_date,
-          end: this.end_date
-        }
-      });
+      /* this.$router.push({ path: this.$route.path,
+           query: {
+               start: this.start_date,
+               end  : this.end_date
+           } });*/
     },
     getChartOfAccts: function getChartOfAccts() {
       var _this2 = this;
@@ -32489,7 +32497,6 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 //
 //
 //
-//
 
 
 
@@ -32809,7 +32816,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get("/opening-balances/".concat(year.id, "/count")).then(function (response) {
         count = parseInt(response.data);
       }).then(function () {
-        if (count === 0) {
+        if (parseInt(count) === 0) {
           _this10.fetchLedgers();
         } else {
           __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get("/opening-balances/".concat(year.id)).then(function (response) {
@@ -32820,8 +32827,14 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
               ledger.balance = _this10.transformBalance(ledger.balance);
               _this10.totalDebit += parseFloat(ledger.debit);
               _this10.totalCredit += parseFloat(ledger.credit);
-            });
-            _this10.ledgers = _this10.groupBy(response.data, 'chart_id');
+
+              _this10.ledgers[ledger.chart_id].map(function (item, i) {
+                if (item.ledger_id == ledger.ledger_id) {
+                  item.credit = ledger.credit;
+                  item.debit = ledger.debit;
+                }
+              });
+            }); // this.ledgers = this.groupBy(response.data, 'chart_id');
 
             _this10.fetchVirtualAccts(year);
           }).then(function () {
@@ -65487,9 +65500,7 @@ var render = function() {
                         _vm._v(" "),
                         _c("th", [_vm._v(_vm._s(_vm.__("Debit", "erp")))]),
                         _vm._v(" "),
-                        _c("th", [_vm._v(_vm._s(_vm.__("Credit", "erp")))]),
-                        _vm._v(" "),
-                        _c("th")
+                        _c("th", [_vm._v(_vm._s(_vm.__("Credit", "erp")))])
                       ])
                     ]),
                     _vm._v(" "),
@@ -65498,28 +65509,7 @@ var render = function() {
                       [
                         _vm._l(_vm.ledgers[7], function(acct, idx) {
                           return _c("tr", { key: idx }, [
-                            _c("td", [
-                              _c(
-                                "div",
-                                {
-                                  staticClass:
-                                    "wperp-form-group ob-people with-multiselect"
-                                },
-                                [
-                                  _c("multi-select", {
-                                    attrs: { options: _vm.banks },
-                                    model: {
-                                      value: acct.bank,
-                                      callback: function($$v) {
-                                        _vm.$set(acct, "bank", $$v)
-                                      },
-                                      expression: "acct.bank"
-                                    }
-                                  })
-                                ],
-                                1
-                              )
-                            ]),
+                            _c("td", [_vm._v(_vm._s(acct.name))]),
                             _vm._v(" "),
                             _c("td", [
                               _c("input", {
@@ -65573,30 +65563,7 @@ var render = function() {
                                   }
                                 }
                               })
-                            ]),
-                            _vm._v(" "),
-                            _c(
-                              "td",
-                              {
-                                staticClass: "delete-row",
-                                attrs: { "data-colname": "Remove" }
-                              },
-                              [
-                                _c(
-                                  "a",
-                                  {
-                                    attrs: { href: "#" },
-                                    on: {
-                                      click: function($event) {
-                                        $event.preventDefault()
-                                        return _vm.removeBankRow(idx)
-                                      }
-                                    }
-                                  },
-                                  [_c("i", { staticClass: "flaticon-trash" })]
-                                )
-                              ]
-                            )
+                            ])
                           ])
                         }),
                         _vm._v(" "),
@@ -65611,34 +65578,7 @@ var render = function() {
                                     "\n                    "
                                 )
                               ])
-                            : _c(
-                                "td",
-                                {
-                                  staticStyle: { "text-align": "left" },
-                                  attrs: { colspan: "9" }
-                                },
-                                [
-                                  _c(
-                                    "button",
-                                    {
-                                      staticClass:
-                                        "wperp-btn btn--primary add-line-trigger",
-                                      on: {
-                                        click: function($event) {
-                                          $event.preventDefault()
-                                          return _vm.ledgers[7].push({})
-                                        }
-                                      }
-                                    },
-                                    [
-                                      _c("i", {
-                                        staticClass: "flaticon-add-plus-button"
-                                      }),
-                                      _vm._v(_vm._s(_vm.__("Add Bank", "erp")))
-                                    ]
-                                  )
-                                ]
-                              )
+                            : _vm._e()
                         ])
                       ],
                       2
