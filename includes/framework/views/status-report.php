@@ -54,6 +54,11 @@ $security         = $system_status->get_security_info();
 			<td class="help"><?php echo wp_kses_post( erp_help_tip( esc_html__( 'Total employees count.', 'erp' ) ) ); ?></td>
 			<td><?php echo esc_html( \WeDevs\ERP\HRM\Models\Employee::count() ); ?></td>
 		</tr>
+        <tr>
+            <td data-export-label="No of HR Manager"><?php esc_html_e( 'No of HR Manager', 'erp' ); ?>:</td>
+            <td class="help"><?php echo wp_kses_post( erp_help_tip( esc_html__( 'Total HR Manager count.', 'erp' ) ) ); ?></td>
+            <td><?php echo absint( $system_status->get_erp_user_count( 'hrm_manager' ) ); ?></td>
+        </tr>
 		<tr>
 			<td data-export-label="Departments"><?php esc_html_e( 'Departments', 'erp' ); ?>:</td>
 			<td class="help"><?php echo wp_kses_post( erp_help_tip( esc_html__( 'Total departments count.', 'erp' ) ) ); ?></td>
@@ -84,6 +89,16 @@ $security         = $system_status->get_security_info();
 			<td class="help"><?php echo wp_kses_post( erp_help_tip( esc_html__( 'Total contacts count.', 'erp' ) ) ); ?></td>
 			<td><?php echo esc_html( \WeDevs\ERP\Framework\Models\People::type( 'contact' )->count() ); ?></td>
 		</tr>
+        <tr>
+            <td data-export-label="No of CRM Manager"><?php esc_html( esc_html_e( 'No of CRM Manager', 'erp' ) ); ?>:</td>
+            <td class="help"><?php echo wp_kses_post( erp_help_tip( esc_html__( 'Total CRM Manager count.', 'erp' ) ) ); ?></td>
+            <td><?php echo absint( $system_status->get_erp_user_count( 'crm_manager' ) ); ?></td>
+        </tr>
+        <tr>
+            <td data-export-label="No of CRM Agent"><?php esc_html( esc_html_e( 'No of CRM Agent', 'erp' ) ); ?>:</td>
+            <td class="help"><?php echo wp_kses_post( erp_help_tip( esc_html__( 'Total CRM Agent count.', 'erp' ) ) ); ?></td>
+            <td><?php echo absint( $system_status->get_erp_user_count( 'crm_agent' ) ); ?></td>
+        </tr>
 		<tr>
 			<td data-export-label="Companies"><?php esc_html_e( 'Companies', 'erp' ); ?>:</td>
 			<td class="help"><?php echo wp_kses_post( erp_help_tip( esc_html__( 'Total companies count.', 'erp' ) ) ); ?></td>
@@ -99,6 +114,11 @@ $security         = $system_status->get_security_info();
 				<strong><em class="erp-mini-title"># <?php esc_html_e( 'Accounting', 'erp' ); ?></em></strong>
 			</td>
 		</tr>
+        <tr>
+            <td data-export-label="No of Accounting Manager"><?php esc_html( esc_html_e( 'No of Accounting Manager', 'erp' ) ); ?>:</td>
+            <td class="help"><?php echo wp_kses_post( erp_help_tip( esc_html__( 'Total Accounting Manager count.', 'erp' ) ) ); ?></td>
+            <td><?php echo esc_html( $system_status->get_erp_user_count( 'accounting_manager' ) ); ?></td>
+        </tr>
 		<tr>
 			<td data-export-label="Customers"><?php esc_html_e( 'Customers', 'erp' ); ?>:</td>
 			<td class="help"><?php echo wp_kses_post( erp_help_tip( esc_html__( 'Total customers count.', 'erp' ) ) ); ?></td>
@@ -109,6 +129,16 @@ $security         = $system_status->get_security_info();
 			<td class="help"><?php echo wp_kses_post( erp_help_tip( esc_html__( 'Total vendors count.', 'erp' ) ) ); ?></td>
 			<td><?php echo esc_html( \WeDevs\ERP\Framework\Models\People::type( 'vendor' )->count() ); ?></td>
 		</tr>
+        <tr>
+            <td data-export-label="Unique Users">
+                <strong><em class="erp-mini-title"># <?php esc_html_e( 'Unique Users', 'erp' ); ?></em></strong>
+            </td>
+        </tr>
+        <tr>
+            <td data-export-label="No of Unique Users"><?php esc_html( esc_html_e( 'No of Unique Users', 'erp' ) ); ?>:</td>
+            <td class="help"><?php echo wp_kses_post( erp_help_tip( esc_html__( 'No of unique users including Employees, HR Manager, CRM Manager, CRM Agent and Accounting Manager.', 'erp' ) ) ); ?></td>
+            <td><?php echo esc_html( $system_status->get_erp_user_count( 'active_users' ) ); ?></td>
+        </tr>
 	</tbody>
 </table>
 
