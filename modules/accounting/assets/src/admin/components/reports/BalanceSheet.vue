@@ -56,11 +56,14 @@
                         :showCb="false">
                         <template slot="name" slot-scope="data">
                             <span v-html="data.row.name"></span>
+                            <p class="additional" v-for="additional in data.row.additional">{{additional.name}}   <em>{{ moneyFormat( Math.abs(additional.balance) ) }}</em> </p>
                         </template>
                         <template slot="balance" slot-scope="data">
                             <span v-if="isNaN(data.row.balance)">{{data.row.balance}}</span>
                             <span v-else>{{ transformBalance(data.row.balance) }} </span>
                         </template>
+
+
                         <template slot="tfoot">
                             <tr class="t-foot">
                                 <td>{{ __('Total Asset', 'erp') }}</td>
@@ -79,6 +82,7 @@
                         :showCb="false">
                         <template slot="name" slot-scope="data">
                             <span v-html="data.row.name"> </span>
+                         <p  class="additional" v-for="additional in data.row.additional">{{additional.name}}   <em>{{ moneyFormat( Math.abs(additional.balance) ) }}</em> </p>
                         </template>
                         <template slot="balance" slot-scope="data">
                             <span v-if="isNaN(data.row.balance)">{{data.row.balance}}</span>
@@ -478,6 +482,15 @@ export default {
             &:last-child td:nth-child(2) {
                 font-size: 16px;
             }
+        }
+    }
+
+    .additional{
+        max-width: 300px;
+        padding-left: 30px;
+        em{
+           float: right;
+            display: inline-block;
         }
     }
 

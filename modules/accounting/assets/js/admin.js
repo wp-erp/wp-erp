@@ -32001,6 +32001,10 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 //
 //
 //
+//
+//
+//
+//
 
 
 
@@ -47529,20 +47533,6 @@ var render = function() {
                                     id: "cat-" + data.row.id
                                   },
                                   domProps: { value: data.row.name }
-                                }),
-                                _vm._v(" "),
-                                _c("multi-select", {
-                                  attrs: {
-                                    options: _vm.categories,
-                                    multiple: false
-                                  },
-                                  model: {
-                                    value: data.row.parent,
-                                    callback: function($$v) {
-                                      _vm.$set(data.row, "parent", $$v)
-                                    },
-                                    expression: "data.row.parent"
-                                  }
                                 }),
                                 _vm._v(" "),
                                 _c(
@@ -64086,6 +64076,19 @@ var render = function() {
                       return [
                         _c("span", {
                           domProps: { innerHTML: _vm._s(data.row.name) }
+                        }),
+                        _vm._v(" "),
+                        _vm._l(data.row.additional, function(additional) {
+                          return _c("p", { staticClass: "additional" }, [
+                            _vm._v(_vm._s(additional.name) + "   "),
+                            _c("em", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm.moneyFormat(Math.abs(additional.balance))
+                                )
+                              )
+                            ])
+                          ])
                         })
                       ]
                     }
@@ -64148,6 +64151,19 @@ var render = function() {
                       return [
                         _c("span", {
                           domProps: { innerHTML: _vm._s(data.row.name) }
+                        }),
+                        _vm._v(" "),
+                        _vm._l(data.row.additional, function(additional) {
+                          return _c("p", { staticClass: "additional" }, [
+                            _vm._v(_vm._s(additional.name) + "   "),
+                            _c("em", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm.moneyFormat(Math.abs(additional.balance))
+                                )
+                              )
+                            ])
+                          ])
                         })
                       ]
                     }
