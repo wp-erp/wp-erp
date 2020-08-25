@@ -131,8 +131,8 @@ class Form_Handler {
      * @return void
      */
     public function handle_leave_calendar_filter() {
-        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'my-nonce' ) ) {
-            // do action
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'erp_calendar_filter' ) ) {
+            return;
         }
 
         if ( ! isset( $_POST['erp_leave_calendar_filter'] ) ) {
@@ -181,8 +181,8 @@ class Form_Handler {
      */
     public function leave_policies() {
 
-        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'my-nonce' ) ) {
-            // do action
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'bulk-leave_policies' ) ) {
+            return;
         }
 
         // Check nonce validaion

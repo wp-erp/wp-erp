@@ -71,7 +71,7 @@ function erp_hr_get_work_days_without_off_day( $start_date, $end_date, $user_id 
             $is_holidy = in_array( $date, $holiday_exist ) ? true : false;
         }
 
-        if ( class_exists( '\weDevs\ERP_PRO\HR\Leave' ) && get_option( 'erp_pro_sandwich_leave', '') === 'yes'  ) {
+        if ( class_exists( '\weDevs\ERP_PRO\PRO\AdvancedLeave\Module' ) && get_option( 'erp_pro_sandwich_leave', '') === 'yes'  ) {
             $dates['days'][] = array(
                 'date'  => $date,
                 'count' => (int) ! $is_holidy
@@ -144,7 +144,7 @@ function erp_hr_get_work_days_between_dates( $start_date, $end_date, $user_id = 
             'count' => (int) ! $is_holidy
         );
 
-        if ( class_exists( '\weDevs\ERP_PRO\HR\Leave' ) && get_option( 'erp_pro_sandwich_leave', '') === 'yes'  ) {
+        if ( class_exists( '\weDevs\ERP_PRO\PRO\AdvancedLeave\Module' ) && get_option( 'erp_pro_sandwich_leave', '') === 'yes'  ) {
             $dates['total'] += 1;
 
             // mark sandwich rule to true
@@ -172,7 +172,7 @@ function erp_hr_get_work_days_between_dates( $start_date, $end_date, $user_id = 
  */
 function erp_hr_can_apply_sandwich_rules_between_dates( $start_date, $end_date, $user_id = null ) {
     // check pro active
-    if ( ! class_exists( '\weDevs\ERP_PRO\HR\Leave' ) ) {
+    if ( ! class_exists( '\weDevs\ERP_PRO\PRO\AdvancedLeave\Module' ) ) {
         return array();
     }
 

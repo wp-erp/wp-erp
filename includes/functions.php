@@ -3363,8 +3363,8 @@ function add_enable_disable_section_to_email_column( $email ) {
  * @return null
  */
 function add_enable_disable_option_save() {
-    if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'erp-nonce' ) ) {
-        // die();
+    if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'erp-settings-nonce' ) ) {
+        return;
     }
 
     if ( isset( $_POST['save_email_enable_or_disable'] ) && $_POST['save_email_enable_or_disable'] == 'save_email_enable_or_disable' ) {
