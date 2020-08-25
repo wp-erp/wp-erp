@@ -10126,10 +10126,10 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     },
     transformBalance: function transformBalance(val) {
       if (val < 0) {
-        return "Cr. ".concat(this.moneyFormat(Math.abs(val)));
+        return "Cr. ".concat(this.moneyFormat(Math.abs(val)), " (Loan)");
       }
 
-      return "Dr. ".concat(this.moneyFormat(val));
+      return "Dr. ".concat(this.moneyFormat(val), " ") + (val > 0 ? ' (Cash)' : '');
     }
   }
 });

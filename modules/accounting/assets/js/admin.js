@@ -10261,10 +10261,10 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     },
     transformBalance: function transformBalance(val) {
       if (val < 0) {
-        return "Cr. ".concat(this.moneyFormat(Math.abs(val)));
+        return "Cr. ".concat(this.moneyFormat(Math.abs(val)), " (Loan)");
       }
 
-      return "Dr. ".concat(this.moneyFormat(val));
+      return "Dr. ".concat(this.moneyFormat(val), " ") + (val > 0 ? ' (Cash)' : '');
     }
   }
 });
@@ -16707,12 +16707,7 @@ if (false) {(function () {
       if (!isNaN(newVal.id)) {
         this.rows = [];
         this.totalDebit = 0;
-        this.totalCredit = 0;
-        this.$router.push({
-          params: {
-            id: parseInt(newVal.id)
-          }
-        });
+        this.totalCredit = 0; //  this.$router.push({ params: { id: parseInt(newVal.id) } });
       }
     }
   },
@@ -25390,6 +25385,10 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'PaymentSingleContent',
@@ -31789,8 +31788,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         this.end_date = erp_acct_var.current_date;
       }
 
-      ;
-      this.updateDate();
+      ; // this.updateDate();
+
       this.fetchItems();
     });
   },
@@ -32067,11 +32066,11 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
     /*  this.$nextTick(function() {
           const dateObj = new Date();
-           // with leading zero, and JS month are zero index based
+            // with leading zero, and JS month are zero index based
           const month = ('0' + (dateObj.getMonth() + 1)).slice(-2);
-           this.start_date = `${dateObj.getFullYear()}-${month}-01`;
+            this.start_date = `${dateObj.getFullYear()}-${month}-01`;
           this.end_date   = erp_acct_var.current_date;
-           this.fetchItems();
+            this.fetchItems();
       });*/
     this.fetchFnYears();
   },
@@ -55053,6 +55052,7 @@ var render = function() {
                             attrs: {
                               type: "text",
                               name: "amount",
+                              autocomplete: "off",
                               required: line.ledger_id ? true : false
                             },
                             domProps: { value: line.amount },
@@ -55853,7 +55853,25 @@ var render = function() {
                   _c("th", [_vm._v(_vm._s(_vm.__("Deposit To", "erp")) + ":")]),
                   _vm._v(" "),
                   _c("td", [_vm._v(_vm._s(_vm.payment.account))])
-                ])
+                ]),
+                _vm._v(" "),
+                _vm.payment.transaction_charge
+                  ? _c("tr", [
+                      _c("th", [
+                        _vm._v(
+                          _vm._s(_vm.__("Transaction Charge", "erp")) + ":"
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("td", [
+                        _vm._v(
+                          _vm._s(
+                            _vm.moneyFormat(_vm.payment.transaction_charge)
+                          )
+                        )
+                      ])
+                    ])
+                  : _vm._e()
               ])
             ])
           ])

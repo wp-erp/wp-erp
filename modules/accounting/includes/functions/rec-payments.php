@@ -66,6 +66,7 @@ function erp_acct_get_payment( $invoice_no ) {
     pay_inv.attachments,
     pay_inv.status,
     pay_inv.created_at,
+    pay_inv.transaction_charge,
 
     pay_inv_detail.invoice_no,
     pay_inv_detail.amount as pay_inv_detail_amount,

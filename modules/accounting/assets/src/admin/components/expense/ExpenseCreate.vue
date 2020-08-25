@@ -82,7 +82,7 @@
                                 <textarea v-model="line.particulars" rows="1" maxlength="250" class="wperp-form-field display-flex" :placeholder="__('Particulars', 'erp')"></textarea>
                             </td>
                             <td class="col--amount" data-colname="Amount">
-                                <input type="text" name="amount" v-model="line.amount" @keyup="updateFinalAmount" class="text-right wperp-form-field" :required="line.ledger_id ? true : false">
+                                <input type="text" name="amount" autocomplete="off" v-model="line.amount" @keyup="updateFinalAmount" class="text-right wperp-form-field" :required="line.ledger_id ? true : false">
                             </td>
                             <td class="col--total" data-colname="Total">
                                 <input type="text" :value="moneyFormat(line.amount)" class="text-right wperp-form-field" readonly disabled>
@@ -370,7 +370,7 @@ export default {
                     this.basic_fields.billing_address = billing;
                     return;
                 }
-                
+
                 let street_1    = billing.street_1 ? billing.street_1 + ',' : '';
                 let street_2    = billing.street_2 ? billing.street_2 : '';
                 let city        = billing.city ? billing.city : '';
