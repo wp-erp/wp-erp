@@ -5,7 +5,7 @@ Tags: business manager, erp, accounting, crm, hr, project manager, small busines
 Requires at least: 4.4
 Tested up to: 5.5
 Requires PHP: 5.6
-Stable tag: 1.6.3
+Stable tag: 1.6.4
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -266,6 +266,13 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+
+= v1.6.4 -> August 25, 2020 =
+--------------------------
+- [tweak] changed ERP PRO class references
+- [new] revoke access of hrm, crm and accounting modules if employee status is not active
+- [new] added various erp user count on Status report page
+- [fix] Optimized code for better security
 
 = v1.6.3 -> August 13, 2020 =
 --------------------------
