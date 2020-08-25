@@ -287,4 +287,88 @@ class System_Status {
 		);
 	}
 
+    /**
+     * This method will return ERP User Role Counts
+     *
+     * @param string $type accepted types are: active_users, hrm_manager, crm_manager, crm_agent, accounting_manager
+     * @since 1.6.4
+     * @return bool|int|void
+     */
+	public function get_erp_user_count( $type = 'active_users' ) {
+
+        $roles = [];
+
+	    switch ( $type ) {
+            case 'hrm_manager':
+                $roles[] = erp_hr_get_manager_role();
+                break;
+
+            case 'crm_manager':
+                $roles[] = erp_crm_get_manager_role();
+                break;
+
+            case 'crm_agent':
+                $roles[] = erp_crm_get_agent_role();
+                break;
+
+            case 'accounting_manager':
+                $roles[] = erp_ac_get_manager_role();
+                break;
+
+            case 'active_users':
+                if ( wperp()->modules->is_module_active('crm') ) {
+                    $roles[] = erp_crm_get_manager_role();
+                    $roles[] = erp_crm_get_agent_role();
+                }
+
+                if ( wperp()->modules->is_module_active('accounting') ) {
+                    $roles[] = erp_ac_get_manager_role();
+                }
+
+                if ( wperp()->modules->is_module_active('hrm') ) {
+                    $roles[] = erp_hr_get_manager_role();
+                    $roles[] = erp_hr_get_employee_role();
+                }
+                break;
+        }
+
+        if ( empty( $roles ) ) {
+            return false;
+        }
+
+        $user_count = get_users( [
+            'role__in' => $roles,
+            'role__not_in' => 'administrator',
+            'fields' => 'ID'
+        ] );
+
+        // count inactive employees
+        if ( $type === 'active_users' && wperp()->modules->is_module_active('hrm') ) {
+            $employees = $this->erp_hr_get_employees();
+            $user_count = array_diff( $user_count, $employees );
+        }
+
+        return count( $user_count );
+    }
+
+    /**
+     * This method will count active users of hrm
+     *
+     * @since 1.6.4
+     * @return int
+     */
+    public function erp_hr_get_employees() {
+        global $wpdb;
+
+        $employee_tbl = $wpdb->prefix . 'erp_hr_employees';
+        $employees    = \WeDevs\ERP\HRM\Models\Employee::select( array( $employee_tbl . '.user_id' ) )
+                        ->leftJoin( $wpdb->users, $employee_tbl . '.user_id', '=', $wpdb->users . '.ID' );
+
+        $employees = $employees->where( 'status', '!=', 'active' );
+
+        $results     = $employees->pluck( 'user_id' )->toArray();
+
+        return $results;
+    }
+
 }

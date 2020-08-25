@@ -79,6 +79,7 @@ foreach ( $leave_requests as $key => $leave_request ) {
                 ) );
             ?>
             <input type="submit" class="button" name="erp_leave_calendar_filter" value="<?php esc_html_e( 'Filter', 'erp' ); ?>">
+            <?php wp_nonce_field( 'erp_calendar_filter' ); ?>
         </form>
     </div>
 

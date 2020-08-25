@@ -1038,19 +1038,25 @@ add_filter( 'user_has_cap', 'erp_revoke_terminated_employee_access', 10, 4 );
  */
 function erp_revoke_terminated_employee_access( $capabilities, $caps, $args, $user ) {
 
-    if ( !in_array( 'erp_list_employee', $caps ) && !in_array( 'upload_files', $caps ) ) {
+    if ( ! in_array( 'erp_list_employee', $caps )   &&
+         ! in_array( 'upload_files', $caps )        &&
+         ! in_array( 'erp_ac_manager', $caps )      &&
+         ! in_array( 'erp_crm_manage_dashboard', $caps )
+    ) {
         return $capabilities;
     }
 
     //check if user is employee
-    if ( !in_array( erp_hr_get_employee_role(), $user->roles ) ) {
+    if ( ! in_array( erp_hr_get_employee_role(), $user->roles ) ) {
         return $capabilities;
     }
 
     $employee = new WeDevs\ERP\HRM\Employee( $user );
-    if ( 'terminated' === $employee->get_status() ) {
-        $capabilities['erp_list_employee'] = false;
+    if ( 'active' !== $employee->get_status() ) {
+        $capabilities['erp_list_employee'] = false; // hr menu capabilities
         $capabilities['upload_files']      = false;
+        $capabilities['erp_ac_manager'] = false; // accounting menu capabilities
+        $capabilities['erp_crm_manage_dashboard'] = false; // crm menu capabilities
     }
 
     return $capabilities;
