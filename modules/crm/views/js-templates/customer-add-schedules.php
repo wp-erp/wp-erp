@@ -42,7 +42,7 @@
             </div>
             <p>
                 <input id="activity_messageesc_attr_edit" type="hidden" name="message" required value="">
-                <trix-editor input="activity_messageesc_attr_edit" placeholder="<?php esc_attr_e( 'Enter your schedule description .....', 'erp' ); ?>"></trix-editor>
+                <trix-editor class="trix-content" input="activity_messageesc_attr_edit" placeholder="<?php esc_attr_e( 'Enter your schedule description .....', 'erp' ); ?>"></trix-editor>
             </p>
             <div class="clearfix"></div>
 
