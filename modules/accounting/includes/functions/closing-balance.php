@@ -125,16 +125,17 @@ function erp_acct_clsbl_close_balance_sheet_now( $args ) {
     } // ledger loop
 
     $chart_id_bank = 7;
+    $final_accounts_helper = new \WeDevs\ERP\Accounting\Includes\Classes\FinalAccountsHelper($args);
 
     // get bank balance
-    $bank_balance = erp_acct_bank_balance( $args, 'balance' );
+    //$bank_balance = erp_acct_bank_balance( $args, 'balance' );
 
-    if ( is_array( $bank_balance ) ) {
-        foreach ( $bank_balance as $b_balance ) {
+    if ( is_array( $final_accounts_helper->cashAtBankBreakdowns ) ) {
+        foreach ( $final_accounts_helper->cashAtBankBreakdowns  as $b_balance ) {
             erp_acct_clsbl_insert_into_opening_balance(
                 $next_f_year_id,
                 $chart_id_bank,
-                $b_balance['id'],
+                $b_balance['ledger_id'],
                 'ledger',
                 $b_balance['balance'],
                 0.00
@@ -143,14 +144,14 @@ function erp_acct_clsbl_close_balance_sheet_now( $args ) {
     }
 
     // get bank loan
-    $bank_loan = erp_acct_bank_balance( $args, 'loan' );
+    //$bank_loan = erp_acct_bank_balance( $args, 'loan' );
 
-    if ( is_array( $bank_loan ) ) {
-        foreach ( $bank_loan as $b_loan ) {
+    if ( is_array( $final_accounts_helper->loanAtBankBreakdowns ) ) {
+        foreach ( $final_accounts_helper->loanAtBankBreakdowns as $b_loan ) {
             erp_acct_clsbl_insert_into_opening_balance(
                 $next_f_year_id,
                 $chart_id_bank,
-                $b_loan['id'],
+                $b_loan['ledger_id'],
                 'ledger',
                 0.00,
                 abs( $b_loan['balance'] )

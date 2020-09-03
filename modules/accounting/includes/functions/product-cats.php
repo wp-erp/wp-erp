@@ -54,7 +54,7 @@ function erp_acct_insert_product_cat( $data ) {
             $wpdb->prefix . 'erp_acct_product_categories',
             array(
 				'name'       => $product_cat_data['name'],
-				'parent'     => $product_cat_data['parent'],
+				'parent'     => $product_cat_data['parent']['id'],
 				'created_at' => $product_cat_data['created_at'],
 				'created_by' => $product_cat_data['created_by'],
 				'updated_at' => $product_cat_data['updated_at'],
