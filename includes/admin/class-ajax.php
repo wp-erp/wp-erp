@@ -266,12 +266,23 @@ class Ajax {
         $username       = isset( $_REQUEST['username'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['username'] ) ) : '';
         $password       = isset( $_REQUEST['password'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['password'] ) ) : '';
 
-        global $phpmailer;
+        global $phpmailer, $wp_version;
 
-        if ( ! is_object( $phpmailer ) || ! is_a( $phpmailer, 'PHPMailer' ) ) {
-            require_once ABSPATH . WPINC . '/class-phpmailer.php';
-            require_once ABSPATH . WPINC . '/class-smtp.php';
-            $phpmailer = new \PHPMailer( true );
+        // (Re)create it, if it's gone missing.
+        if ( version_compare( $wp_version,'5.5' ) >= 0 ) {
+            if ( ! ( $phpmailer instanceof \PHPMailer\PHPMailer\PHPMailer ) ) {
+                require_once ABSPATH . WPINC . '/PHPMailer/PHPMailer.php';
+                require_once ABSPATH . WPINC . '/PHPMailer/SMTP.php';
+                require_once ABSPATH . WPINC . '/PHPMailer/Exception.php';
+                $phpmailer = new \PHPMailer\PHPMailer\PHPMailer( true );
+            }
+        }
+        else {
+            if ( ! ( $phpmailer instanceof PHPMailer ) ) {
+                require_once ABSPATH . WPINC . '/class-phpmailer.php';
+                require_once ABSPATH . WPINC . '/class-smtp.php';
+                $phpmailer = new \PHPMailer( true );
+            }
         }
 
         $to      = isset( $_REQUEST['to'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['to'] ) ) : '';

@@ -319,8 +319,10 @@ class Contact_Subscriber_List_Table extends \WP_List_Table {
      */
     public function process_bulk_action() {
         // security check!
-        if ( isset( $_REQUEST['_wpnonce'] ) && ! empty( $_REQUEST['_wpnonce'] ) ) {
-
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || empty( $_REQUEST['_wpnonce'] ) ) {
+            return;
+        }
+        else {
             $nonce  = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
             $action = 'bulk-' . $this->_args['plural'];
 

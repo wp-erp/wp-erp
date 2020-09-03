@@ -273,6 +273,7 @@ return [
 	__( 'Item name', 'erp' ),
 	__( 'Receive Payment', 'erp' ),
 	__( 'Deposit to', 'erp' ),
+	__( 'Transaction Charge', 'erp' ),
 	__( 'Balance Sheet', 'erp' ),
 	__( 'Balance showing from', 'erp' ),
 	__( 'to', 'erp' ),
