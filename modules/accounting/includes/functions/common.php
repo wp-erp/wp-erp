@@ -240,6 +240,33 @@ function erp_acct_get_ledger_by_id( $ledger_id ) {
 }
 
 /**
+ * Get sing ledger row data by id, slug or code
+ *
+ * @since 1.6.3
+ * @param $field string id, code or slug field name to search by
+ * @param $value string $field value to search
+ *
+ * @return array
+ */
+function erp_acct_get_ledger_by( $field = 'id', $value = '' ) {
+    global $wpdb;
+
+    $field = sanitize_text_field( $field );
+    // validate fields
+    if ( ! in_array( $field, [ 'id', 'code', 'slug' ] ) ) {
+        return null;
+    }
+
+    if ( empty( $value ) ) {
+        return null;
+    }
+    return $wpdb->get_row(
+        $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}erp_acct_ledgers WHERE $field = %s LIMIT 1", $value ),
+        ARRAY_A
+    );
+}
+
+/**
  * Get product type by id
  *
  * @param $product_type_id

@@ -555,11 +555,15 @@ function erp_acct_insert_bank_transaction_charge_into_ledger( $payment_data ) {
     }
 
     // Insert amount in ledger_details
-    // 107 is the ledger id of "Bank Transaction Charge"
+    // get ledger id of "Bank Transaction Charge"
+    $ledger_data = erp_acct_get_ledger_by( 'slug', 'bank_transaction_charge' );
+    if ( empty( $ledger_data ) ) {
+        return;
+    }
     $wpdb->insert(
         $wpdb->prefix . 'erp_acct_ledger_details',
         array(
-            'ledger_id'   => 107,
+            'ledger_id'   => $ledger_data['id'],
             'trn_no'      => $payment_data['voucher_no'],
             'particulars' => $payment_data['particulars'],
             'debit'       => $payment_data['bank_trn_charge'],

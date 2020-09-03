@@ -2059,13 +2059,23 @@ function erp_mail( $to, $subject, $message, $headers = '', $attachments = [], $c
 
 function erp_mail_send_via_gmail( $to, $subject, $message, $headers = '', $attachments = [], $custom_headers = [] ) {
 
-    global $phpmailer;
+    global $phpmailer, $wp_version;
 
-    // (Re)create it, if it's gone missing
-    if ( ! ( $phpmailer instanceof PHPMailer ) ) {
-        require_once ABSPATH . WPINC . '/class-phpmailer.php';
-        require_once ABSPATH . WPINC . '/class-smtp.php';
-        $phpmailer = new PHPMailer( true );
+    // (Re)create it, if it's gone missing.
+    if ( version_compare( $wp_version,'5.5' ) >= 0 ) {
+        if ( ! ( $phpmailer instanceof \PHPMailer\PHPMailer\PHPMailer ) ) {
+            require_once ABSPATH . WPINC . '/PHPMailer/PHPMailer.php';
+            require_once ABSPATH . WPINC . '/PHPMailer/SMTP.php';
+            require_once ABSPATH . WPINC . '/PHPMailer/Exception.php';
+            $phpmailer = new \PHPMailer\PHPMailer\PHPMailer( true );
+        }
+    }
+    else {
+        if ( ! ( $phpmailer instanceof PHPMailer ) ) {
+            require_once ABSPATH . WPINC . '/class-phpmailer.php';
+            require_once ABSPATH . WPINC . '/class-smtp.php';
+            $phpmailer = new \PHPMailer( true );
+        }
     }
 
     // Headers
@@ -3353,8 +3363,8 @@ function add_enable_disable_section_to_email_column( $email ) {
  * @return null
  */
 function add_enable_disable_option_save() {
-    if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'erp-nonce' ) ) {
-        // die();
+    if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'erp-settings-nonce' ) ) {
+        return;
     }
 
     if ( isset( $_POST['save_email_enable_or_disable'] ) && $_POST['save_email_enable_or_disable'] == 'save_email_enable_or_disable' ) {

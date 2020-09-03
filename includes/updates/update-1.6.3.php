@@ -26,11 +26,11 @@ function erp_acct_insert_to_erp_acct_ledgers_1_6_3() {
     $table = $wpdb->prefix . 'erp_acct_ledgers';
     $check_data = $wpdb->get_row(
         $wpdb->prepare(
-            "SELECT * FROM $table WHERE code = %s", array( '606' )
+            "SELECT * FROM $table WHERE slug = %s", array( 'bank_transaction_charge' )
         )
     );
 
-    if ( !$check_data ) {
+    if ( empty( $check_data ) ) {
         $wpdb->query(
             $wpdb->prepare(
                 "INSERT INTO $table ( `chart_id`, `name`, `slug`, `code`, `system`, `created_at` ) VALUES ( %d, %s, %s, %s, %d, %s )",
