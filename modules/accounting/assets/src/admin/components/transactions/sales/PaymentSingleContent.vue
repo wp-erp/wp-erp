@@ -44,6 +44,10 @@
                                 <th>{{ __('Deposit To', 'erp') }}:</th>
                                 <td>{{ payment.account }}</td>
                             </tr>
+                            <tr v-if="payment.transaction_charge">
+                                <th>{{ __('Transaction Charge', 'erp') }}:</th>
+                                <td>{{ moneyFormat( payment.transaction_charge )  }}</td>
+                            </tr>
                         </table>
                     </div>
                 </div>

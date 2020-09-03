@@ -106,7 +106,7 @@ export default {
                 this.rows        = [];
                 this.totalDebit  = 0;
                 this.totalCredit = 0;
-                this.$router.push({ params: { id: parseInt(newVal.id) } });
+              //  this.$router.push({ params: { id: parseInt(newVal.id) } });
             }
         }
     },
