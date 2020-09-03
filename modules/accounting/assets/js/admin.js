@@ -16542,7 +16542,7 @@ if (false) {(function () {
       });
     },
     setDateAndGetTb: function setDateAndGetTb() {
-      this.updateDate();
+      // this.updateDate();
       this.getTrialBalance();
     },
     fetchFnYears: function fetchFnYears() {
@@ -32082,11 +32082,11 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
     /*  this.$nextTick(function() {
           const dateObj = new Date();
-            // with leading zero, and JS month are zero index based
+           // with leading zero, and JS month are zero index based
           const month = ('0' + (dateObj.getMonth() + 1)).slice(-2);
-            this.start_date = `${dateObj.getFullYear()}-${month}-01`;
+           this.start_date = `${dateObj.getFullYear()}-${month}-01`;
           this.end_date   = erp_acct_var.current_date;
-            this.fetchItems();
+           this.fetchItems();
       });*/
     this.fetchFnYears();
   },
@@ -32177,7 +32177,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       var _this4 = this;
 
       if (!this.end_date) {
-        this.showAlert('error', 'Please select financial year');
+        this.showAlert('error', __('Please select financial year', 'erp'));
         return false;
       }
 
@@ -32188,7 +32188,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         }
       }).then(function (response) {
         if (!response.data) {
-          _this4.showAlert('error', "Please create a financial year which start after '".concat(_this4.end_date, "'"));
+          _this4.showAlert('error', __('Please create a financial year which start after ', 'erp') + _this4.end_date);
         } else {
           _this4.closeBalancesheet(response.data.id);
         }
@@ -32208,7 +32208,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         start_date: this.start_date,
         end_date: this.end_date
       }).then(function (response) {
-        _this5.showAlert('success', 'Balance Sheet Closed!');
+        _this5.showAlert('success', __('Balance Sheet Closed!', 'erp'));
 
         _this5.closingBtnVisibility = false;
       }).catch(function (error) {
