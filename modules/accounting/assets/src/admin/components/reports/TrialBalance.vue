@@ -26,38 +26,38 @@
 
         <table class="wperp-table table-striped table-dark widefat">
             <thead>
-            <tr>
-                <th>{{ __('Account Name', 'erp') }}</th>
-                <th>{{ __('Debit Total', 'erp') }}</th>
-                <th>{{ __('Credit Total', 'erp') }}</th>
-            </tr>
+                <tr>
+                    <th>{{ __('Account Name', 'erp') }}</th>
+                    <th>{{ __('Debit Total', 'erp') }}</th>
+                    <th>{{ __('Credit Total', 'erp') }}</th>
+                </tr>
             </thead>
             <tbody :key="key" v-for="(chart, key) in chrtAcct">
-            <tr v-if="rows[chart.id] && debugMode"><h1>{{ chart.label }}</h1></tr>
+                <tr v-if="rows[chart.id] && debugMode"><h1>{{ chart.label }}</h1></tr>
 
-            <tr :key="index" v-for="(row, index) in rows[chart.id]">
-                <td>
-                    <details v-if="row.additional" open>
-                        <summary>{{ row.name }}</summary>
-                        <p :key="additional.id" v-for="additional in row.additional">
-                            <strong>{{ additional.name }}</strong>
-                            <em>{{ moneyFormat( Math.abs(additional.balance) ) }}</em>
-                        </p>
-                    </details>
+                <tr :key="index" v-for="(row, index) in rows[chart.id]">
+                    <td>
+                        <details v-if="row.additional" open>
+                            <summary>{{ row.name }}</summary>
+                            <p :key="additional.id" v-for="additional in row.additional">
+                                <strong>{{ additional.name }}</strong>
+                                <em>{{ moneyFormat( Math.abs(additional.balance) ) }}</em>
+                            </p>
+                        </details>
 
-                    <span v-else>{{ row.name }}</span>
-                </td>
+                        <span v-else>{{ row.name }}</span>
+                    </td>
 
-                <td>{{ Math.sign(row.balance) === 1 ? moneyFormat( row.balance ) : '' }}</td>
-                <td>{{ Math.sign(row.balance) === -1 ? moneyFormat( Math.abs(row.balance) ) : '' }}</td>
-            </tr>
+                    <td>{{ Math.sign(row.balance) === 1 ? moneyFormat( row.balance ) : '' }}</td>
+                    <td>{{ Math.sign(row.balance) === -1 ? moneyFormat( Math.abs(row.balance) ) : '' }}</td>
+                </tr>
             </tbody>
             <tfoot>
-            <tr class="t-foot">
-                <td>{{ __('Total', 'erp') }}</td>
-                <td>{{ moneyFormat( totalDebit ) }}</td>
-                <td>{{ moneyFormat( Math.abs(totalCredit) ) }}</td>
-            </tr>
+                <tr class="t-foot">
+                    <td>{{ __('Total', 'erp') }}</td>
+                    <td>{{ moneyFormat( totalDebit ) }}</td>
+                    <td>{{ moneyFormat( Math.abs(totalCredit) ) }}</td>
+                </tr>
             </tfoot>
         </table>
 
@@ -65,151 +65,152 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http';
-    import MultiSelect from 'admin/components/select/MultiSelect.vue';
-    import Datepicker  from 'admin/components/base/Datepicker.vue';
+import HTTP from 'admin/http';
+import MultiSelect from 'admin/components/select/MultiSelect.vue';
+import Datepicker  from 'admin/components/base/Datepicker.vue';
 
-    export default {
-        name: 'TrialBalance',
+export default {
+    name: 'TrialBalance',
 
-        components: {
-            Datepicker,
-            MultiSelect
-        },
+    components: {
+        Datepicker,
+        MultiSelect
+    },
 
-        data() {
-            return {
-                bulkActions: [
-                    {
-                        key  : 'trash',
-                        label: 'Move to Trash',
-                        img  : erp_acct_var.erp_assets + '/images/trash.png' /* global erp_acct_var */
-                    }
-                ],
-                columns: {
-                    name  : { label: 'Account Name' },
-                    debit : { label: 'Debit Total' },
-                    credit: { label: 'Credit Total' }
-                },
-                rows        : [],
-                fyears      : [],
-                totalDebit  : 0,
-                totalCredit : 0,
-                chrtAcct    : null,
-                start_date  : null,
-                end_date    : null,
-                selectedYear: null
-            };
-        },
-
-        computed: {
-            debugMode() {
-                return erp_acct_var.erp_debug_mode === '1';
-            }
-        },
-        created() {
-            this.fetchFnYears();
-            // ? why is nextTick here ...? I don't know.
-            this.$nextTick(function() {
-                // with leading zero, and JS month are zero index based
-                // const dateObj = new Date();
-
-                // const month = ('0' + (dateObj.getMonth() + 1)).slice(-2);
-
-                if (this.$route.query.start) {
-                    this.start_date = this.$route.query.start;
-                    this.end_date   = this.$route.query.end;
-                } else {
-                    this.closestFnYear();
+    data() {
+        return {
+            bulkActions: [
+                {
+                    key  : 'trash',
+                    label: 'Move to Trash',
+                    img  : erp_acct_var.erp_assets + '/images/trash.png' /* global erp_acct_var */
                 }
-            });
+            ],
+            columns: {
+                name  : { label: 'Account Name' },
+                debit : { label: 'Debit Total' },
+                credit: { label: 'Credit Total' }
+            },
+            rows        : [],
+            fyears      : [],
+            totalDebit  : 0,
+            totalCredit : 0,
+            chrtAcct    : null,
+            start_date  : null,
+            end_date    : null,
+            selectedYear: null
+        };
+    },
 
-            this.getChartOfAccts();
+    computed: {
+        debugMode() {
+            return erp_acct_var.erp_debug_mode === '1';
+        }
+    },
+
+    created() {
+        this.fetchFnYears();
+        // ? why is nextTick here ...? I don't know.
+        this.$nextTick(function() {
+            // with leading zero, and JS month are zero index based
+            // const dateObj = new Date();
+
+            // const month = ('0' + (dateObj.getMonth() + 1)).slice(-2);
+
+            if (this.$route.query.start) {
+                this.start_date = this.$route.query.start;
+                this.end_date   = this.$route.query.end;
+            } else {
+                this.closestFnYear();
+            }
+        });
+
+        this.getChartOfAccts();
+    },
+
+    methods: {
+        closestFnYear() {
+            HTTP.get('/reports/closest-fn-year').then(response => {
+                this.start_date = response.data.start_date;
+                this.end_date   = response.data.end_date;
+
+                this.getTrialBalance();
+                this.setFnYear(response.data);
+            });
         },
 
-        methods: {
-            closestFnYear() {
-                HTTP.get('/reports/closest-fn-year').then(response => {
-                    this.start_date = response.data.start_date;
-                    this.end_date   = response.data.end_date;
+        setFnYear(closestYear){
 
-                    this.getTrialBalance();
-                    this.setFnYear(response.data);
-                });
-            },
-            setFnYear(closestYear){
+            let year =  this.fyears.filter( item=>{
+                return item.id === closestYear.id
+            })
 
-                let year =  this.fyears.filter( item=>{
-                    return item.id === closestYear.id
-                })
+            this.selectedYear = year.length ? year[0] : null ;
+        },
+        onYearSelected() {
+            this.start_date = this.selectedYear.start_date;
+            this.end_date   = this.selectedYear.end_date;
 
-                this.selectedYear = year.length ? year[0] : null ;
-            },
+            this.selectedYear = { id: parseInt(this.selectedYear.id), name: this.selectedYear.name };
 
-            onYearSelected() {
-                this.start_date = this.selectedYear.start_date;
-                this.end_date   = this.selectedYear.end_date;
+            this.getTrialBalance();
+        },
 
-                this.selectedYear = { id: parseInt(this.selectedYear.id), name: this.selectedYear.name };
+        updateDate() {
+           /* this.$router.push({ path: this.$route.path,
+                query: {
+                    start: this.start_date,
+                    end  : this.end_date
+                } });*/
+        },
 
-                this.getTrialBalance();
-            },
+        getChartOfAccts() {
+            HTTP.get('/ledgers/accounts').then(response => {
+                this.chrtAcct = response.data;
 
-            updateDate() {
-                /* this.$router.push({ path: this.$route.path,
-                     query: {
-                         start: this.start_date,
-                         end  : this.end_date
-                     } });*/
-            },
+                this.setDateAndGetTb();
+            });
+        },
 
-            getChartOfAccts() {
-                HTTP.get('/ledgers/accounts').then(response => {
-                    this.chrtAcct = response.data;
+        setDateAndGetTb() {
+           // this.updateDate();
+            this.getTrialBalance();
+        },
 
-                    this.setDateAndGetTb();
-                });
-            },
+        fetchFnYears() {
+            HTTP.get('/opening-balances/names').then(response => {
+                // get only last 5
+                this.fyears = response.data.reverse().slice(0).slice(-5);
+            });
+        },
 
-            setDateAndGetTb() {
-                this.updateDate();
-                this.getTrialBalance();
-            },
+        getTrialBalance() {
+            this.updateDate();
 
-            fetchFnYears() {
-                HTTP.get('/opening-balances/names').then(response => {
-                    // get only last 5
-                    this.fyears = response.data.reverse().slice(0).slice(-5);
-                });
-            },
+            this.rows = [];
+            this.$store.dispatch('spinner/setSpinner', true);
 
-            getTrialBalance() {
-                this.updateDate();
+            HTTP.get('/reports/trial-balance', {
+                params: {
+                    start_date: this.start_date,
+                    end_date  : this.end_date
+                }
+            }).then(response => {
+                this.rows        = response.data.rows;
+                this.totalDebit  = response.data.total_debit;
+                this.totalCredit = response.data.total_credit;
 
-                this.rows = [];
-                this.$store.dispatch('spinner/setSpinner', true);
+                this.$store.dispatch('spinner/setSpinner', false);
+            }).catch(e => {
+                this.$store.dispatch('spinner/setSpinner', false);
+            });
+        },
 
-                HTTP.get('/reports/trial-balance', {
-                    params: {
-                        start_date: this.start_date,
-                        end_date  : this.end_date
-                    }
-                }).then(response => {
-                    this.rows        = response.data.rows;
-                    this.totalDebit  = response.data.total_debit;
-                    this.totalCredit = response.data.total_credit;
-
-                    this.$store.dispatch('spinner/setSpinner', false);
-                }).catch(e => {
-                    this.$store.dispatch('spinner/setSpinner', false);
-                });
-            },
-
-            printPopup() {
-                window.print();
-            }
+        printPopup() {
+            window.print();
         }
-    };
+    }
+};
 </script>
 
 <style lang="less">

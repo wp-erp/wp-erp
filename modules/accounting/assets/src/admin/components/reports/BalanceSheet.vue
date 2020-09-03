@@ -297,7 +297,7 @@ export default {
 
         checkClosingPossibility() {
             if(!this.end_date){
-                this.showAlert('error', 'Please select financial year');
+                this.showAlert('error',  __('Please select financial year', 'erp'));
                 return false;
             }
 
@@ -309,7 +309,7 @@ export default {
             }).then(response => {
 
                 if (!response.data) {
-                    this.showAlert('error', `Please create a financial year which start after '${this.end_date}'`);
+                    this.showAlert('error', __('Please create a financial year which start after ', 'erp') + this.end_date );
                 }else{
                     this.closeBalancesheet(response.data.id);
                 }
@@ -328,7 +328,7 @@ export default {
                 start_date: this.start_date,
                 end_date  : this.end_date
             }).then(response => {
-                this.showAlert('success', 'Balance Sheet Closed!');
+                this.showAlert('success', __('Balance Sheet Closed!', 'erp') ) ;
                 this.closingBtnVisibility = false;
             }).catch(error => {
                 this.$store.dispatch('spinner/setSpinner', false);
