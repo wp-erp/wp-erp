@@ -1646,7 +1646,7 @@ function erp_process_import_export() {
             return;
         }
 
-        $csv_file = isset( $_FILES['csv_file'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_FILES['csv_file'] ) ) : [];
+        $csv_file = isset( $_FILES['csv_file'] ) ? $_FILES['csv_file'] : []; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
         $data = [ 'type' => $type, 'fields' => $fields, 'file' => $csv_file ];
 
@@ -1718,6 +1718,8 @@ function erp_process_import_export() {
 
         if ( ! empty( $csv_data ) ) {
             $count = 0;
+
+            do_action( 'validate_csv_data', $csv_data, $fields, $type );
 
             foreach ( $csv_data as $line ) {
                 if ( empty( $line ) ) {
