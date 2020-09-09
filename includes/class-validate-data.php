@@ -2,22 +2,35 @@
 namespace WeDevs\ERP;
 
 use WeDevs\ERP\Framework\Traits\Hooker;
+use WeDevs\ERP\ERP_Errors;
 
 class Validate_Data {
 
     use Hooker;
 
-    private $errors = [];
-
-    private $has_error = false;
+    /**
+     * Construct required validation
+     *
+     * @since 1.6.5
+     *
+     * @return void
+     */
 
     public function __construct() {
         $this->action( 'validate_csv_data', 'validate_csv_data', 10, 3 );
         $this->action( 'erp_tool_import_csv_action', 'pre_validate_csv_data' );
     }
 
+    /**
+     * Validate csv data
+     *
+     * @since 1.6.5
+     *
+     * @return void
+     */
     public function validate_csv_data( $csv_data, $fields, $type ) {
 
+        $errors = new ERP_Errors( 'import_csv_data' );
         $fields         = array_flip( $fields );
         $processed_data = [];
 
@@ -31,9 +44,19 @@ class Validate_Data {
            }
         }
 
-        $this->process_data( $processed_data, $type );
+        $prodessed_data = $this->process_data( $processed_data, $type );
+        echo '<pre>';
+        print_r($prodessed_data);
+        die();
     }
 
+    /**
+     * Pre validate csv data
+     *
+     * @since 1.6.5
+     *
+     * @return void
+     */
     public function pre_validate_csv_data( $data ) {
 
         // Check if current user has permission
@@ -49,6 +72,13 @@ class Validate_Data {
         }
     }
 
+    /**
+     * Process collected csv data for validatiob
+     *
+     * @since 1.6.5
+     *
+     * @return array
+     */
     public function process_data( $process_data, $type ) {
 
         $error_list = [];
@@ -56,151 +86,167 @@ class Validate_Data {
             if( 0 != $data_key ) {
                 foreach ($data as $dt_key => $dt_value) {
                     $error_list[] = array(
-                        'line_no'    => $data_key,
-                        'field_type' => $dt_key,
-                        'errors'     => $this->validate( $dt_key, $dt_value, $type )
+                        'line_no'     => $data_key,
+                        'field_type'  => $dt_key,
+                        'field_value' => $dt_value,
+                        'errors'      => $this->validate( $dt_key, $dt_value, $type )
                     );
                 }
             }
         }
-        echo '<pre>';
-        print_r($error_list);
-        die();
+        return $error_list;
     }
 
+    /**
+     * Validate csv data by field
+     *
+     * @since 1.6.5
+     *
+     * @return array
+     */
     public function validate( $dt_key, $dt_value, $type ) {
 
         switch ( $dt_key ) {
             case "first_name":
-                return $this->validate_field( "First name", $dt_value, $type, "not_empty:true|max:60|min:2|email:true|unique:first_name" );
+                return $this->validate_field( "First name", $dt_value, $type, "not_empty:true|max:60|min:2" );
                 break;
             case "middle_name":
-                return $this->validate_field( "Middle name", $dt_value, $type, "max:4|min:3" );
+                return $this->validate_field( "Middle name", $dt_value, $type, "max:60|min:2" );
                 break;
             case "last_name":
-                return $this->validate_field( "Last name", $dt_value, $type, "max:4" );
+                return $this->validate_field( "Last name", $dt_value, $type, "not_empty:true|max:60|min:2" );
                 break;
             case "email":
-                return $this->validate_field( "Email", $dt_value, $type, "max:60|unique" );
+                return $this->validate_field( "Email", $dt_value, $type, "not_empty:true|max:90|min:2|email:true|unique:email" );
                 break;
             case "employee_id":
-                return $this->validate_field( "Employee id", $dt_value, $type, "max:20|unique" );
+                return $this->validate_field( "Employee id", $dt_value, $type, "max:20|min:3|unique:employee_id" );
                 break;
             case "phone":
-                return $this->validate_field( "Phone", $dt_value, $type, "max:20|unique" );
+                return $this->validate_field( "Phone", $dt_value, $type, "max:20|min:3" );
                 break;
             case "mobile":
-                return $this->validate_field( "Mobile", $dt_value, $type, "max:20|unique" );
+                return $this->validate_field( "Mobile", $dt_value, $type, "max:20|min:3" );
                 break;
             case "other":
-                return $this->validate_field( "Other", $dt_value, $type, "max:20|unique" );
+                return $this->validate_field( "Other", $dt_value, $type, "max:50|min:3" );
                 break;
             case "website":
-                return $this->validate_field( "Webnsite", $dt_value, $type, "max:20|unique" );
+                return $this->validate_field( "Webnsite", $dt_value, $type, "max:90|min:3" );
                 break;
             case "fax":
-                return $this->validate_field( "Fax", $dt_value, $type, "max:20|unique" );
+                return $this->validate_field( "Fax", $dt_value, $type, "max:20|min:3" );
                 break;
             case "notes":
-                return $this->validate_field( "Notes", $dt_value, $type, "max:20|unique" );
+                return $this->validate_field( "Notes", $dt_value, $type, "max:250|" );
                 break;
             case "street_1":
-                return $this->validate_field( "Street 1", $dt_value, $type, "max:20|unique" );
+                return $this->validate_field( "Street 1", $dt_value, $type, "max:250|" );
                 break;
             case "street_2":
-                return $this->validate_field( "Street 2", $dt_value, $type, "max:20|unique" );
+                return $this->validate_field( "Street 2", $dt_value, $type, "max:250|" );
                 break;
             case "city":
-                return $this->validate_field( "City", $dt_value, $type, "max:20|unique" );
+                return $this->validate_field( "City", $dt_value, $type, "max:80|" );
                 break;
             case "state":
-                return $this->validate_field( "State", $dt_value, $type, "max:20|unique" );
+                return $this->validate_field( "State", $dt_value, $type, "max:50|" );
                 break;
             case "postal_code":
-                return $this->validate_field( "Postal code", $dt_value, $type, "max:20|unique" );
+                return $this->validate_field( "Postal code", $dt_value, $type, "max:10|" );
                 break;
             case "country":
-                $this->validate_field( "Country", $dt_value, $type, "max:20|unique" );
+                $this->validate_field( "Country", $dt_value, $type, "max:20|" );
                 break;
             case "currency":
-                return $this->validate_field( "Currency", $dt_value, $type, "max:20|unique" );
+                return $this->validate_field( "Currency", $dt_value, $type, "max:5|" );
+                break;
+            case "life_stage":
+                return $this->validate_field( "Currency", $dt_value, $type, "max:100|" );
                 break;
             case "user_email":
-                return $this->validate_field( "User email", $dt_value, $type, "max:20|unique:user_email" );
+                return $this->validate_field( "User email", $dt_value, $type, "not_empty:true|max:100|email:true|unique:user_email" );
                 break;
             case "designation":
-                $this->validate_field( "Designation", $dt_value, $type, "max:20|unique" );
+                $this->validate_field( "Designation", $dt_value, $type, "max:30|" );
                 break;
             case "department":
-                return $this->validate_field( "Department", $dt_value, $type, "max:20|unique" );
+                return $this->validate_field( "Department", $dt_value, $type, "max:30|" );
                 break;
             case "location":
-                return $this->validate_field( "Location", $dt_value, $type, "max:20|unique" );
+                return $this->validate_field( "Location", $dt_value, $type, "max:20|" );
                 break;
             case "hiring_source":
-                return $this->validate_field( "hiring source", $dt_value, $type, "max:20|unique" );
+                return $this->validate_field( "hiring source", $dt_value, $type, "max:20|" );
                 break;
             case "hiring_date":
-                return $this->validate_field( "Hiring date", $dt_value, $type, "max:20|unique" );
+                return $this->validate_field( "Hiring date", $dt_value, $type, "max:20|is_date:true" );
                 break;
             case "date_of_birth":
-                return $this->validate_field( "Date of birth", $dt_value, $type, "max:20|unique" );
+                return $this->validate_field( "Date of birth", $dt_value, $type, "max:20|is_date:true" );
                 break;
             case "reporting_to":
-                return $this->validate_field( "Reporting to", $dt_value, $type, "max:20|unique" );
+                return $this->validate_field( "Reporting to", $dt_value, $type, "max:20|" );
                 break;
             case "pay_rate":
-                return $this->validate_field( "Pay rate", $dt_value, $type, "max:20|unique" );
+                return $this->validate_field( "Pay rate", $dt_value, $type, "max:11|" );
                 break;
             case "type":
-                $this->validate_field( "Type", $dt_value, $type, "max:20|unique" );
+                $this->validate_field( "Type", $dt_value, $type, "max:20|" );
+                break;
+            case "pay_type":
+                $this->validate_field( "Type", $dt_value, $type, "max:20|" );
                 break;
             case "status":
-                return $this->validate_field( "Statue", $dt_value, $type, "max:20|unique" );
+                return $this->validate_field( "Statue", $dt_value, $type, "max:10|" );
                 break;
             case "other_email":
-                return $this->validate_field( "Other email", $dt_value, $type, "max:20|unique" );
+                return $this->validate_field( "Other email", $dt_value, $type, "max:60|email:true" );
                 break;
             case "address":
-                return $this->validate_field( "Address", $dt_value, $type, "max:20|unique" );
+                return $this->validate_field( "Address", $dt_value, $type, "max:200|" );
                 break;
             case "work_phone":
-                return $this->validate_field( "Work phone", $dt_value, $type, "max:20|unique" );
+                return $this->validate_field( "Work phone", $dt_value, $type, "max:20|" );
                 break;
             case "gender":
-                return $this->validate_field( "Gender", $dt_value, $type, "max:20|unique" );
+                return $this->validate_field( "Gender", $dt_value, $type, "max:10|" );
                 break;
             case "marital_status":
-                return $this->validate_field( "Marital status", $dt_value, $type, "max:20|unique" );
+                return $this->validate_field( "Marital status", $dt_value, $type, "max:20|" );
                 break;
             case "nationality":
-                return $this->validate_field( "Nationality", $dt_value, $type, "max:20|unique" );
+                return $this->validate_field( "Nationality", $dt_value, $type, "max:30|" );
                 break;
             case "driving_license":
-                return $this->validate_field( "Driving licence", $dt_value, $type, "max:20|unique" );
+                return $this->validate_field( "Driving licence", $dt_value, $type, "max:30|" );
                 break;
             case "hobbies":
-                return $this->validate_field( "Hobbies", $dt_value, $type, "max:20|unique" );
+                return $this->validate_field( "Hobbies", $dt_value, $type, "max:200|" );
                 break;
             case "user_url":
-                return $this->validate_field( "User email", $dt_value, $type, "max:60|unique" );
+                return $this->validate_field( "User email", $dt_value, $type, "max:600|" );
                 break;
             case "description":
-                return $this->validate_field( "Description", $dt_value, $type, "max:20|unique" );
+                return $this->validate_field( "Description", $dt_value, $type, "max:200|" );
                 break;
             default:
                 return apply_filters( 'validate_field', $dt_key, $dt_value, $type );
         }
     }
 
-
+    /**
+     * Validate individual field data
+     *
+     * @since 1.6.5
+     *
+     * @return array
+     */
     public function validate_field( $field_name, $field_value, $type, $rulesets ) {
 
         $errors = [];
 
         $rulesets = explode('|', $rulesets );
-
-        $field_value = "tgutmann@moen.com";
 
         foreach ( $rulesets as $ruleset ) {
             $ruleset = explode(':', $ruleset );
@@ -211,39 +257,63 @@ class Validate_Data {
 
                 case "not_empty":
                     if ( $rule_value == 'true' && empty( $field_value ) ) {
-                        $errors[] = "{$field_name} can not be empty";
+                        $errors[] =  __( "{$field_name} can not be empty", "erp" );
                     }
                     break;
                 case "max":
                     if ( strlen( $field_value ) > $rule_value ) {
-                        $errors[] = "{$field_name} can not be more than {$rule_value} charecters";
+                        $errors[] =  __( "{$field_name} can not be more than {$rule_value} charecters", "erp" );
                     }
                     break;
                 case "min":
                     if ( strlen( $field_value ) < $rule_value ) {
-                        $errors[] = "{$field_name} can not be less than {$rule_value} charecters";
+                        $errors[] = __( "{$field_name} can not be less than {$rule_value} charecters", "erp" );
                     }
                     break;
                 case "email":
                     if ( $rule_value == 'true' && ! is_email( $field_value ) ) {
-                        $errors[] = "{$field_name} should be a valid email";
+                        $errors[] = __( "{$field_name} should be a valid email", "erp" );
+                    }
+                    break;
+                case "is_date":
+                    if ( $rule_value == 'true' ) {
+                        $check_is_date = $this->is_valid_date( $rule_value, $field_value, $field_name );
+                        if ( $check_is_date ) {
+                            $errors[] = $check_is_date;
+                        }
                     }
                     break;
                 case "unique":
                     if ( $type == 'employee' ) {
-                        $errors[] = $this->check_unique_employee( $rule_value, $field_value, $field_name );
+                        $check_is_unique_emp = $this->check_unique_employee( $rule_value, $field_value, $field_name );
+                        if ( $check_is_unique_emp ) {
+                            $errors[] = $check_is_unique_emp;
+                        }
                     }
-                    if ( $type == 'contact' ) {
-                        $errors[] = $this->check_unique_contact( $rule_value, $field_value, $field_name );
+                    if ( $type == 'contact' || $type == 'company' ) {
+                        $check_is_unique_cont = $this->check_unique_contact( $rule_value, $field_value, $field_name );
+                        if ( $check_is_unique_cont ) {
+                            $errors[] = $check_is_unique_cont;
+                        }
                     }
                     break;
                 default:
-                    //
+                    $custom_error_check = apply_filters( 'custom_validation', $rule_value, $field_value, $field_name, $type );
+                    if ( $custom_error_check ) {
+                        $errors[] = $custom_error_check;
+                    }
             }
         }
         return $errors;
     }
 
+    /**
+     * Check contact OR company specific field is unique or not
+     *
+     * @since 1.6.5
+     *
+     * @return string
+     */
     public function check_unique_contact( $column, $value, $field_name) {
         global $wpdb;
 
@@ -253,12 +323,32 @@ class Validate_Data {
         }
     }
 
+    /**
+     * Check employee specific field is unique or not
+     *
+     * @since 1.6.5
+     *
+     * @return string
+     */
     public function check_unique_employee( $column, $value, $field_name) {
         global $wpdb;
 
         $result = $wpdb->get_var( $wpdb->prepare("SELECT COUNT(*) FROM {$wpdb->prefix}erp_hr_employees as emp LEFT JOIN {$wpdb->prefix}users as users ON emp.user_id=users.id WHERE {$column}=%s",  $value ) );
         if ( $result > 0 ) {
-            return "{$field_name} already exists. Try different one";
+            return __( "{$field_name} already exists. Try different one", "erp" );
+        }
+    }
+
+    /**
+     * Check date is valid or not
+     *
+     * @since 1.6.5
+     *
+     * @return string
+     */
+    public function is_valid_date( $column, $value, $field_name ) {
+        if ( ! preg_match( "/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/", $value ) ) {
+            return __( "{$field_name} should be a valid date. Ex: YYYY-MM-DD", "erp" );
         }
     }
 }
