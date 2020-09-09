@@ -2,7 +2,8 @@
 namespace WeDevs\ERP;
 
 use WeDevs\ERP\Framework\Traits\Hooker;
-use WeDevs\ERP\ERP_Errors;
+use WeDevs\ERP\ERP_Errors as ERP_Errors;
+use WP_Error;
 
 class Validate_Data {
 
@@ -17,37 +18,8 @@ class Validate_Data {
      */
 
     public function __construct() {
-        $this->action( 'validate_csv_data', 'validate_csv_data', 10, 3 );
         $this->action( 'erp_tool_import_csv_action', 'pre_validate_csv_data' );
-    }
-
-    /**
-     * Validate csv data
-     *
-     * @since 1.6.5
-     *
-     * @return void
-     */
-    public function validate_csv_data( $csv_data, $fields, $type ) {
-
-        $errors = new ERP_Errors( 'import_csv_data' );
-        $fields         = array_flip( $fields );
-        $processed_data = [];
-
-        foreach ( $csv_data as $csvd ) {
-           if( ! empty( $csvd ) ) {
-               $person_data = [];
-               foreach ($fields as $field_key => $field_value) {
-                   $person_data[$field_value] = $csvd[$field_key];
-               }
-               $processed_data[] = $person_data;
-           }
-        }
-
-        $prodessed_data = $this->process_data( $processed_data, $type );
-        echo '<pre>';
-        print_r($prodessed_data);
-        die();
+        $this->action( 'validate_csv_data', 'validate_csv_data', 10, 3 );
     }
 
     /**
@@ -59,17 +31,96 @@ class Validate_Data {
      */
     public function pre_validate_csv_data( $data ) {
 
+        $errors = new ERP_Errors( 'import_csv_data' );
         // Check if current user has permission
         if ( ! current_user_can( 'erp_hr_manager' ) ) {
-            return new \WP_Error( 'no-permission', __( 'Sorry ! You do not have permission to access this page', 'erp' ) );
+            $errors->add( new \WP_Error( 'no-permission', __( 'Sorry ! You do not have permission to access this page', 'erp' ) ) );
         }
 
         $files = wp_check_filetype_and_ext( $data['file']['tmp_name'], $data['file']['name'] );
 
         // Check if current user has permission
         if ( 'csv' != $files['ext'] && 'text/csv' != $files['type'] ) {
-            return new \WP_Error( 'no-permission', __( 'Sorry ! You have to provide valid csv file', 'erp' ) );
+            $errors->add( new \WP_Error( 'no-permission', __( 'Sorry ! You have to provide valid csv file', 'erp' ) ) );
         }
+        $this->through_error_if_found( $errors );
+    }
+
+    /**
+     * Validate csv data
+     *
+     * @since 1.6.5
+     *
+     * @return void
+     */
+    public function validate_csv_data( $csv_data, $fields, $type ) {
+
+        $prodessed_data = $this->filter_validate_csv_data( $csv_data, $fields, $type );
+
+        $this->process_errors( $prodessed_data );
+    }
+
+    /**
+     * Process errors
+     *
+     * @since 1.6.5
+     *
+     * @return void
+     */
+    public function process_errors( $prodessed_data ) {
+
+        $errors = new ERP_Errors( 'import_csv_data' );
+
+        foreach ( $prodessed_data as $pdata ) {
+            if ( isset( $pdata['errors'] ) && ! empty( $pdata['errors'] ) ) {
+                foreach ( $pdata['errors'] as $err ) {
+                    $errors->add( new WP_Error( 'csv_error_' . $pdata['field_name'], esc_attr__( $err . " at line no " . $pdata['line_no'], 'erp' ) ) );
+                }
+            }
+        }
+        $this->through_error_if_found( $errors );
+    }
+
+    /**
+     * Through errors if found & redirect
+     *
+     * @since 1.6.5
+     *
+     * @return void
+     */
+    public function through_error_if_found( $errors ) {
+        if ( $errors->has_error() ) {
+            $errors->save();
+            $redirect_to = add_query_arg( array( 'error' => $errors->get_key() ), admin_url( "admin.php?page=erp-tools&tab=import" ) );
+            wp_safe_redirect( $redirect_to );
+            exit;
+        }
+    }
+
+    /**
+     * Filter & validate csv data, field & type
+     *
+     * @since 1.6.5
+     *
+     * @return array
+     */
+    public function filter_validate_csv_data( $csv_data, $fields, $type ) {
+        $fields         = array_flip( $fields );
+        $processed_data = [];
+
+        foreach ( $csv_data as $csvd ) {
+            if( ! empty( $csvd ) ) {
+                $person_data = [];
+                foreach ($fields as $field_key => $field_value) {
+                    $person_data[$field_value] = $csvd[$field_key];
+                }
+                $processed_data[] = $person_data;
+            }
+        }
+
+        $prodessed_data = $this->process_data( $processed_data, $type );
+
+        return $prodessed_data;
     }
 
     /**
@@ -87,7 +138,7 @@ class Validate_Data {
                 foreach ($data as $dt_key => $dt_value) {
                     $error_list[] = array(
                         'line_no'     => $data_key,
-                        'field_type'  => $dt_key,
+                        'field_name'  => $dt_key,
                         'field_value' => $dt_value,
                         'errors'      => $this->validate( $dt_key, $dt_value, $type )
                     );
