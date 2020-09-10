@@ -1697,9 +1697,9 @@ function erp_process_import_export() {
             ]
         ];
 
-        require_once WPERP_INCLUDES . '/lib/parsecsv.lib.php';
+        //require_once WPERP_INCLUDES . '/lib/parsecsv.lib.php';
 
-        $csv = new ParseCsv();
+        $csv = new ParseCsv\Csv();
         $csv->encoding( null, 'UTF-8' );
         $csv->parse( $csv_file['tmp_name'] );
 
