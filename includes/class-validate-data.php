@@ -71,14 +71,19 @@ class Validate_Data {
 
         $errors = new ERP_Errors( 'import_csv_data' );
 
-        foreach ( $prodessed_data as $pdata ) {
-            if ( isset( $pdata['errors'] ) && ! empty( $pdata['errors'] ) ) {
-                foreach ( $pdata['errors'] as $err ) {
-                    $errors->add( new WP_Error( 'csv_error_' . $pdata['field_name'], esc_attr__( $err . " at line no " . $pdata['line_no'], 'erp' ) ) );
+        if ( ! empty( $prodessed_data ) ) {
+            foreach ( $prodessed_data as $pdata_key => $pdata_val ) {
+                $pdata_key_arr = explode( "_", $pdata_key );
+                $errors->add( new WP_Error( 'csv_error_' . $pdata_key, esc_attr__( "Error #ROW " . ( $pdata_key_arr[1] + 1 ) , 'erp' ) ) );
+                foreach ( $pdata_val as $pdval ) {
+                    foreach ( $pdval['errors'] as $err ) {
+                        $errors->add( new WP_Error( 'csv_error_' . $pdval['field_name'], esc_attr__( $err , 'erp' ) ) );
+                    }
                 }
+
             }
+            $this->through_error_if_found( $errors );
         }
-        $this->through_error_if_found( $errors );
     }
 
     /**
@@ -136,12 +141,15 @@ class Validate_Data {
         foreach ( $process_data as $data_key => $data ) {
             if( 0 != $data_key ) {
                 foreach ($data as $dt_key => $dt_value) {
-                    $error_list[] = array(
-                        'line_no'     => $data_key,
-                        'field_name'  => $dt_key,
-                        'field_value' => $dt_value,
-                        'errors'      => $this->validate( $dt_key, $dt_value, $type )
-                    );
+                    $cur_errors = $this->validate( $dt_key, $dt_value, $type );
+                    if ( ! empty( $cur_errors ) ) {
+                        $error_list[ "row_". $data_key][] = array(
+                            'line_no'     => $data_key,
+                            'field_name'  => $dt_key,
+                            'field_value' => $dt_value,
+                            'errors'      => $cur_errors
+                        );
+                    }
                 }
             }
         }

@@ -1603,6 +1603,10 @@ function erp_process_import_export() {
         return;
     }
 
+    if ( ! current_user_can( 'erp_hr_manager' ) ) {
+        return new \WP_Error( 'no-permission', __( 'Sorry ! You do not have permission to access this page', 'erp' ) );
+    }
+
     $is_crm_activated = erp_is_module_active( 'crm' );
     $is_hrm_activated = erp_is_module_active( 'hrm' );
 
