@@ -174,10 +174,10 @@ class Validate_Data {
                 return $this->validate_field( "Employee id", $dt_value, $type, "max:20|min:3|unique:employee_id" );
                 break;
             case "phone":
-                return $this->validate_field( "Phone", $dt_value, $type, "max:20|min:3" );
+                return $this->validate_field( "Phone", $dt_value, $type, "max:20|min:3|is_phone:true" );
                 break;
             case "mobile":
-                return $this->validate_field( "Mobile", $dt_value, $type, "max:20|min:3" );
+                return $this->validate_field( "Mobile", $dt_value, $type, "max:20|min:3|is_phone:true" );
                 break;
             case "other":
                 return $this->validate_field( "Other", $dt_value, $type, "max:50|min:3" );
@@ -258,7 +258,7 @@ class Validate_Data {
                 return $this->validate_field( "Address", $dt_value, $type, "max:200|" );
                 break;
             case "work_phone":
-                return $this->validate_field( "Work phone", $dt_value, $type, "max:20|" );
+                return $this->validate_field( "Work phone", $dt_value, $type, "max:20|is_phone:true" );
                 break;
             case "gender":
                 return $this->validate_field( "Gender", $dt_value, $type, "max:10|" );
@@ -334,6 +334,14 @@ class Validate_Data {
                         }
                     }
                     break;
+                case "is_phone":
+                    if ( $rule_value == 'true' ) {
+                        $check_is_phone = $this->is_valid_phone( $rule_value, $field_value, $field_name );
+                        if ( $check_is_phone ) {
+                            $errors[] = $check_is_phone;
+                        }
+                    }
+                    break;
                 case "unique":
                     if ( $type == 'employee' ) {
                         $check_is_unique_emp = $this->check_unique_employee( $rule_value, $field_value, $field_name );
@@ -400,6 +408,19 @@ class Validate_Data {
     public function is_valid_date( $column, $value, $field_name ) {
         if ( ! preg_match( "/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/", $value ) ) {
             return __( "{$field_name} should be a valid date. Ex: YYYY-MM-DD", "erp" );
+        }
+    }
+
+    /**
+     * Check phone is valid or not
+     *
+     * @since 1.6.5
+     *
+     * @return string
+     */
+    public function is_valid_phone( $column, $value, $field_name ) {
+        if ( ! preg_match( "/\+[0-9]{2}+[0-9]{4}/s", $value ) ) {
+            return __( "{$field_name} should be a valid phone/mobile no.", "erp" );
         }
     }
 }
