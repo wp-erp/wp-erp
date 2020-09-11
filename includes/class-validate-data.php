@@ -9,6 +9,8 @@ class Validate_Data {
 
     use Hooker;
 
+    private $csv_data = [];
+
     /**
      * Construct required validation
      *
@@ -123,6 +125,8 @@ class Validate_Data {
             }
         }
 
+        $this->csv_data = $processed_data;
+
         $prodessed_data = $this->process_data( $processed_data, $type );
 
         return $prodessed_data;
@@ -176,7 +180,7 @@ class Validate_Data {
                 return $this->validate_field( "Last name", $dt_value, $type, "not_empty:true|max:60|min:2" );
                 break;
             case "email":
-                return $this->validate_field( "Email", $dt_value, $type, "not_empty:true|max:90|min:2|email:true|unique:email" );
+                return $this->validate_field( "Email", $dt_value, $type, "not_empty:true|max:90|min:2|email:true|unique:email|not_csv_column_duplicate:email" );
                 break;
             case "employee_id":
                 return $this->validate_field( "Employee id", $dt_value, $type, "max:20|min:3|unique:employee_id" );
@@ -224,7 +228,7 @@ class Validate_Data {
                 return $this->validate_field( "Currency", $dt_value, $type, "max:100|" );
                 break;
             case "user_email":
-                return $this->validate_field( "User email", $dt_value, $type, "not_empty:true|max:100|email:true|unique:user_email" );
+                return $this->validate_field( "User email", $dt_value, $type, "not_empty:true|max:100|email:true|unique:user_email|not_csv_column_duplicate:user_email" );
                 break;
             case "designation":
                 $this->validate_field( "Designation", $dt_value, $type, "max:30|" );
@@ -350,6 +354,12 @@ class Validate_Data {
                         }
                     }
                     break;
+                case "not_csv_column_duplicate":
+                    $check_is_duplicate_column = $this->is_duplicate_column( $rule_value, $field_value, $field_name );
+                    if ( $check_is_duplicate_column ) {
+                        $errors[] = $check_is_duplicate_column;
+                    }
+                    break;
                 case "unique":
                     if ( $type == 'employee' ) {
                         $check_is_unique_emp = $this->check_unique_employee( $rule_value, $field_value, $field_name );
@@ -430,6 +440,23 @@ class Validate_Data {
         if ( ! preg_match( "/\+[0-9]{2}+[0-9]{4}/s", $value ) ) {
             return __( "{$field_name} should be a valid phone/mobile no.", "erp" );
         }
+    }
+
+    /**
+     * Check csv column is duplicate or not
+     *
+     * @since 1.6.5
+     *
+     * @return string
+     */
+    public function is_duplicate_column( $column, $value, $field_name ) {
+
+          $csv_data     = $this->csv_data;
+          $column_vals  = wp_list_pluck( $csv_data, $column );
+          $indexes      = array_keys( $column_vals,  $value );
+          if ( count( $indexes ) > 1 ) {
+            return __( "Duplicate {$field_name} found at this file", "erp" );
+          }
     }
 }
 
