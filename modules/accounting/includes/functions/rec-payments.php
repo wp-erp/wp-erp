@@ -541,43 +541,6 @@ function erp_acct_insert_payment_data_into_ledger( $payment_data ) {
 }
 
 /**
- * Insert Payment/s data into "Bank Transaction Charge"
- *
- * @param array $payment_data
- *
- * @return mixed
- */
-function erp_acct_insert_bank_transaction_charge_into_ledger( $payment_data ) {
-    global $wpdb;
-
-    if ( 1 === $payment_data['status'] || (isset( $payment_data['trn_by'] ) && 4 === $payment_data['trn_by']) ) {
-        return;
-    }
-
-    // Insert amount in ledger_details
-    // get ledger id of "Bank Transaction Charge"
-    $ledger_data = erp_acct_get_ledger_by( 'slug', 'bank_transaction_charge' );
-    if ( empty( $ledger_data ) ) {
-        return;
-    }
-    $wpdb->insert(
-        $wpdb->prefix . 'erp_acct_ledger_details',
-        array(
-            'ledger_id'   => $ledger_data['id'],
-            'trn_no'      => $payment_data['voucher_no'],
-            'particulars' => $payment_data['particulars'],
-            'debit'       => $payment_data['bank_trn_charge'],
-            'credit'      => 0,
-            'trn_date'    => $payment_data['trn_date'],
-            'created_at'  => $payment_data['created_at'],
-            'created_by'  => $payment_data['created_by'],
-            'updated_at'  => $payment_data['updated_at'],
-            'updated_by'  => $payment_data['updated_by'],
-        )
-    );
-}
-
-/**
  * Update Payment/s data into ledger
  *
  * @param array $payment_data

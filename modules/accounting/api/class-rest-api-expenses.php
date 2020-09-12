@@ -241,7 +241,6 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
         $expense_data['amount']      = array_sum( $item_total );
 
         $expense = erp_acct_insert_expense( $expense_data );
-
         $this->add_log( $expense, 'add' );
 
         $additional_fields['namespace'] = $this->namespace;
@@ -382,6 +381,9 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['trn_by'] ) ) {
             $prepared_item['trn_by'] = $request['trn_by'];
         }
+        if ( isset( $request['bank_trn_charge'] ) ) {
+            $prepared_item['bank_trn_charge'] = $request['bank_trn_charge'];
+        }
         if ( isset( $request['bill_details'] ) ) {
             $prepared_item['bill_details'] = $request['bill_details'];
         }
@@ -440,6 +442,7 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
             'status'       => $item->status,
             'attachments'  => maybe_unserialize( $item->attachments ),
             'trn_by'       => $item->trn_by,
+            'transaction_charge' => $item->transaction_charge,
             'created_at'   => $item->created_at,
             'deposit_to'   => $item->trn_by_ledger_id,
             'check_data'   => ! empty( $item->check_data ) ? $item->check_data : [],

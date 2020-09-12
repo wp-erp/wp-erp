@@ -67,6 +67,7 @@ function erp_acct_get_expense( $expense_no ) {
     expense.status,
     expense.trn_by_ledger_id,
     expense.trn_by,
+    expense.transaction_charge,
     expense.attachments,
     expense.created_at,
     expense.created_by,
@@ -228,6 +229,13 @@ function erp_acct_insert_expense( $data ) {
 
         $expense_data = erp_acct_get_formatted_expense_data( $data, $voucher_no );
 
+        // check transaction charge
+        $transaction_charge = 0;
+        if ( isset( $expense_data['bank_trn_charge'] ) && 0 < (float)$expense_data['bank_trn_charge'] && 2 === (int)$expense_data['trn_by'] ) {
+            $transaction_charge = (float)$expense_data['bank_trn_charge'];
+        }
+
+
         $wpdb->insert(
             $wpdb->prefix . 'erp_acct_expenses',
             array(
@@ -237,6 +245,7 @@ function erp_acct_insert_expense( $data ) {
 				'address'          => $expense_data['billing_address'],
 				'trn_date'         => $expense_data['trn_date'],
 				'amount'           => $expense_data['amount'],
+                'transaction_charge' => $transaction_charge,
 				'ref'              => $expense_data['ref'],
 				'check_no'         => $expense_data['check_no'],
 				'particulars'      => $expense_data['particulars'],
@@ -253,6 +262,13 @@ function erp_acct_insert_expense( $data ) {
 
         $items = $expense_data['bill_details'];
 
+        // for bank transaction charge
+        $deduct_unit_for_trn_charge = 0;
+        if ( $transaction_charge ) {
+            $deduct_unit_for_trn_charge = $transaction_charge / $expense_data['amount'];
+        }
+
+
         foreach ( $items as $key => $item ) {
             $wpdb->insert(
                 $wpdb->prefix . 'erp_acct_expense_details',
@@ -268,7 +284,16 @@ function erp_acct_insert_expense( $data ) {
                 )
             );
 
+            $bank_transaction_charge = $deduct_unit_for_trn_charge ? $deduct_unit_for_trn_charge * $item['amount'] : 0;
+            $item['amount'] =  (float)$item['amount'] - $bank_transaction_charge;
+
             erp_acct_insert_expense_data_into_ledger( $expense_data, $item );
+        }
+
+
+        // add transaction charge entry to ledger
+        if ( $transaction_charge ) {
+            erp_acct_insert_bank_transaction_charge_into_ledger( $expense_data );
         }
 
         if ( 1 === $expense_data['status'] ) {
@@ -600,6 +625,7 @@ function erp_acct_get_formatted_expense_data( $data, $voucher_no ) {
     $expense_data['status']           = isset( $data['status'] ) ? $data['status'] : 1;
     $expense_data['trn_by_ledger_id'] = isset( $data['trn_by_ledger_id'] ) ? $data['trn_by_ledger_id'] : null;
     $expense_data['trn_by']           = isset( $data['trn_by'] ) ? $data['trn_by'] : null;
+    $expense_data['bank_trn_charge']           = isset( $data['bank_trn_charge'] ) ? $data['bank_trn_charge'] : null;
     $expense_data['created_at']       = date( 'Y-m-d' );
     $expense_data['created_by']       = isset( $data['created_by'] ) ? $data['created_by'] : '';
     $expense_data['updated_at']       = isset( $data['updated_at'] ) ? $data['updated_at'] : '';

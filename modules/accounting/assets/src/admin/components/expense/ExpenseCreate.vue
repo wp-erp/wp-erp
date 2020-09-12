@@ -446,14 +446,14 @@ export default {
                 this.$store.dispatch('spinner/setSpinner', false);
                 throw error;
             }).then(() => {
-                this.isWorking = false;
-                this.reset = true;
+               // this.isWorking = false;
+               // this.reset = true;
 
-                if (this.actionType === 'save' || this.actionType === 'draft') {
+               /* if (this.actionType === 'save' || this.actionType === 'draft') {
                     this.$router.push({ name: 'Expenses' });
                 } else if (this.actionType === 'new_create') {
                     this.resetFields();
-                }
+                }*/
             });
         },
 

@@ -67,10 +67,14 @@
                                         <th>{{ __('Created At', 'erp') }}:</th>
                                         <td>{{ expense_data.created_at }}</td>
                                     </tr>
+                                    <tr v-if="expense_data.transaction_charge">
+                                        <th>{{ __('Transaction Charge', 'erp') }}:</th>
+                                        <td>{{ expense_data.transaction_charge }}</td>
+                                    </tr>
                                 </table>
                             </div>
                         </div>
-                        <div class="wperp-row" v-if="expense_data.check_data.length">
+                        <div class="wperp-row" v-if="expense_data.check_data">
                             <div class="wperp-col-sm-12">
                                 <table>
                                     <tr>
@@ -161,7 +165,7 @@ export default {
     data() {
         return {
             company     : null,
-            expense_data: {},
+            expense_data: {check_data: []},
             isWorking   : false,
             acct_var    : erp_acct_var,   /* global erp_acct_var */
             print_data  : null,

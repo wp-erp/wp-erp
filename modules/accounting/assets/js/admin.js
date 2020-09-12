@@ -24772,17 +24772,14 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         _this8.$store.dispatch('spinner/setSpinner', false);
 
         throw error;
-      }).then(function () {
-        _this8.isWorking = false;
-        _this8.reset = true;
+      }).then(function () {// this.isWorking = false;
+        // this.reset = true;
 
-        if (_this8.actionType === 'save' || _this8.actionType === 'draft') {
-          _this8.$router.push({
-            name: 'Expenses'
-          });
-        } else if (_this8.actionType === 'new_create') {
-          _this8.resetFields();
-        }
+        /* if (this.actionType === 'save' || this.actionType === 'draft') {
+             this.$router.push({ name: 'Expenses' });
+         } else if (this.actionType === 'new_create') {
+             this.resetFields();
+         }*/
       });
     },
     SubmitForExpense: function SubmitForExpense() {
@@ -27050,6 +27047,10 @@ setTimeout(function () {
 //
 //
 //
+//
+//
+//
+//
 
 
 
@@ -27064,7 +27065,9 @@ setTimeout(function () {
   data: function data() {
     return {
       company: null,
-      expense_data: {},
+      expense_data: {
+        check_data: []
+      },
       isWorking: false,
       acct_var: erp_acct_var,
 
@@ -32082,11 +32085,11 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
     /*  this.$nextTick(function() {
           const dateObj = new Date();
-           // with leading zero, and JS month are zero index based
+            // with leading zero, and JS month are zero index based
           const month = ('0' + (dateObj.getMonth() + 1)).slice(-2);
-           this.start_date = `${dateObj.getFullYear()}-${month}-01`;
+            this.start_date = `${dateObj.getFullYear()}-${month}-01`;
           this.end_date   = erp_acct_var.current_date;
-           this.fetchItems();
+            this.fetchItems();
       });*/
     this.fetchFnYears();
   },
@@ -57963,13 +57966,31 @@ var render = function() {
                             _c("td", [
                               _vm._v(_vm._s(_vm.expense_data.created_at))
                             ])
-                          ])
+                          ]),
+                          _vm._v(" "),
+                          _vm.expense_data.transaction_charge
+                            ? _c("tr", [
+                                _c("th", [
+                                  _vm._v(
+                                    _vm._s(
+                                      _vm.__("Transaction Charge", "erp")
+                                    ) + ":"
+                                  )
+                                ]),
+                                _vm._v(" "),
+                                _c("td", [
+                                  _vm._v(
+                                    _vm._s(_vm.expense_data.transaction_charge)
+                                  )
+                                ])
+                              ])
+                            : _vm._e()
                         ])
                       ])
                     ])
                   : _vm._e(),
                 _vm._v(" "),
-                _vm.expense_data.check_data.length
+                _vm.expense_data.check_data
                   ? _c("div", { staticClass: "wperp-row" }, [
                       _c("div", { staticClass: "wperp-col-sm-12" }, [
                         _c("table", [
