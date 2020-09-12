@@ -67,7 +67,7 @@
                                         <th>{{ __('Created At', 'erp') }}:</th>
                                         <td>{{ expense_data.created_at }}</td>
                                     </tr>
-                                    <tr v-if="expense_data.transaction_charge">
+                                    <tr v-if="parseFloat(expense_data.transaction_charge)">
                                         <th>{{ __('Transaction Charge', 'erp') }}:</th>
                                         <td>{{ expense_data.transaction_charge }}</td>
                                     </tr>

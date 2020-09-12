@@ -71,6 +71,10 @@
                                         <th>{{ __('Transaction From', 'erp') }}:</th>
                                         <td>{{ payPurchase.trn_by }}</td>
                                     </tr>
+                                    <tr v-if="parseFloat(payPurchase.transaction_charge)">
+                                        <th>{{ __('Transaction Charge', 'erp') }}:</th>
+                                        <td>{{ payPurchase.transaction_charge }}</td>
+                                    </tr>
                                 </table>
                             </div>
                         </div>

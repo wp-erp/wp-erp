@@ -22613,6 +22613,12 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 
@@ -22654,6 +22660,9 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         cash: '1',
         bank: '2',
         check: '3'
+      },
+      bank_data: {
+        trn_charge: 0
       },
       check_data: {
         bank_name: '',
@@ -22826,6 +22835,12 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         deposit_id = this.basic_fields.deposit_to.people_id;
       }
 
+      var bank_trn_charge = 0;
+
+      if (parseInt(this.basic_fields.trn_by.id) === 2) {
+        bank_trn_charge = this.bank_data.trn_charge || 0;
+      }
+
       __WEBPACK_IMPORTED_MODULE_2_admin_http__["a" /* default */].post('/pay-purchases', {
         vendor_id: this.basic_fields.vendor.id,
         ref: this.basic_fields.trn_ref,
@@ -22837,6 +22852,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         particulars: this.particulars,
         deposit_to: deposit_id,
         trn_by: this.basic_fields.trn_by.id,
+        bank_trn_charge: bank_trn_charge,
         check_no: parseInt(this.check_data.check_no),
         name: this.check_data.payer_name
       }).then(function (res) {
@@ -22993,6 +23009,10 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_email_SendMail_vue__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Dropdown_vue__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_transactions_TransParticulars_vue__ = __webpack_require__(18);
+//
+//
+//
+//
 //
 //
 //
@@ -52021,6 +52041,44 @@ var render = function() {
                       1
                     ),
                     _vm._v(" "),
+                    _vm.basic_fields.trn_by.id === "2"
+                      ? _c("div", { staticClass: "wperp-col-sm-4" }, [
+                          _c("div", { staticClass: "wperp-form-group" }, [
+                            _c("label", [
+                              _vm._v(
+                                _vm._s(_vm.__("Transaction Charge", "erp"))
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.bank_data.trn_charge,
+                                  expression: "bank_data.trn_charge"
+                                }
+                              ],
+                              staticClass: "wperp-form-field",
+                              attrs: { type: "text" },
+                              domProps: { value: _vm.bank_data.trn_charge },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.bank_data,
+                                    "trn_charge",
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            })
+                          ])
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
                     _c("div", { staticClass: "wperp-col-sm-4" }, [
                       _c("label", [
                         _vm._v(_vm._s(_vm.__("Billing Address", "erp")))
@@ -52633,7 +52691,25 @@ var render = function() {
                             ]),
                             _vm._v(" "),
                             _c("td", [_vm._v(_vm._s(_vm.payPurchase.trn_by))])
-                          ])
+                          ]),
+                          _vm._v(" "),
+                          parseFloat(_vm.payPurchase.transaction_charge)
+                            ? _c("tr", [
+                                _c("th", [
+                                  _vm._v(
+                                    _vm._s(
+                                      _vm.__("Transaction Charge", "erp")
+                                    ) + ":"
+                                  )
+                                ]),
+                                _vm._v(" "),
+                                _c("td", [
+                                  _vm._v(
+                                    _vm._s(_vm.payPurchase.transaction_charge)
+                                  )
+                                ])
+                              ])
+                            : _vm._e()
                         ])
                       ])
                     ])
@@ -57968,7 +58044,7 @@ var render = function() {
                             ])
                           ]),
                           _vm._v(" "),
-                          _vm.expense_data.transaction_charge
+                          parseFloat(_vm.expense_data.transaction_charge)
                             ? _c("tr", [
                                 _c("th", [
                                   _vm._v(

@@ -312,6 +312,9 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['trn_by'] ) ) {
             $prepared_item['trn_by'] = $request['trn_by'];
         }
+        if ( isset( $request['bank_trn_charge'] ) ) {
+            $prepared_item['bank_trn_charge'] = $request['bank_trn_charge'];
+        }
         if ( isset( $request['particulars'] ) ) {
             $prepared_item['particulars'] = $request['particulars'];
         }
@@ -366,6 +369,7 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
             'attachments'      => maybe_unserialize( $item->attachments ),
             'status'           => $item->status,
             'created_at'       => $item->created_at,
+            'transaction_charge' => $item->transaction_charge,
             'trn_by'           => erp_acct_get_payment_method_by_id( $item->trn_by )->name,
         ];
 

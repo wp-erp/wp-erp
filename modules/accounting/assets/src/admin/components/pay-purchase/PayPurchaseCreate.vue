@@ -44,6 +44,12 @@
                                 <label>{{ __('Transaction From', 'erp') }}<span class="wperp-required-sign">*</span></label>
                                 <select-accounts v-model="basic_fields.deposit_to" :override_accts="accts_by_chart" />
                             </div>
+                            <div class="wperp-col-sm-4" v-if="basic_fields.trn_by.id === '2'">
+                                <div class="wperp-form-group">
+                                    <label>{{ __('Transaction Charge', 'erp') }}</label>
+                                    <input type="text" class="wperp-form-field" v-model="bank_data.trn_charge"/>
+                                </div>
+                            </div>
                             <div class="wperp-col-sm-4">
                                 <label>{{ __('Billing Address', 'erp') }}</label>
                                 <textarea v-model.trim="basic_fields.billing_address" rows="3" class="wperp-form-field" :placeholder="__('Type here', 'erp')"></textarea>
@@ -161,6 +167,10 @@ export default {
                 cash: '1',
                 bank: '2',
                 check: '3'
+            },
+
+            bank_data: {
+                trn_charge: 0,
             },
 
             check_data: {
@@ -336,6 +346,12 @@ export default {
                 deposit_id = this.basic_fields.deposit_to.people_id;
             }
 
+            let bank_trn_charge = 0;
+
+            if (parseInt(this.basic_fields.trn_by.id) === 2) {
+                bank_trn_charge = this.bank_data.trn_charge || 0;
+            }
+
             HTTP.post('/pay-purchases', {
                 vendor_id       : this.basic_fields.vendor.id,
                 ref             : this.basic_fields.trn_ref,
@@ -347,6 +363,7 @@ export default {
                 particulars     : this.particulars,
                 deposit_to      : deposit_id,
                 trn_by          : this.basic_fields.trn_by.id,
+                bank_trn_charge : bank_trn_charge,
                 check_no        : parseInt(this.check_data.check_no),
                 name            : this.check_data.payer_name
             }).then(res => {
