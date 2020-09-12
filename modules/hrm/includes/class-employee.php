@@ -220,6 +220,7 @@ class Employee {
     /**
      *
      * @param array $args
+     * @since 1.6.5 added hook pre_erp_hr_employee_args
      *
      * @return $this|int|\WP_Error
      */
