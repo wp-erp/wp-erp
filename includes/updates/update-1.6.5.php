@@ -51,4 +51,10 @@ function erp_acct_alter_decimal_1_6_5() {
     }
 }
 
+function erp_alter_acct_product_categories() {
+    global $wpdb;
+    $wpdb->query( "ALTER TABLE {$wpdb->prefix}erp_acct_product_categories CHANGE parent parent INT(11) NOT NULL DEFAULT '0';" );
+}
+
 erp_acct_alter_decimal_1_6_5();
+erp_alter_acct_product_categories();
