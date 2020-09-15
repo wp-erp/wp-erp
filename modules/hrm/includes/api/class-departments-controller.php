@@ -84,9 +84,9 @@ class Departments_Controller extends REST_Controller {
      */
     public function get_departments( $request ) {
         $args = [
-            'number' => $request['per_page'],
-            'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
-            's'      => $request['s'] ? $request['s'] : '',
+            'per_page'  => $request['per_page'],
+            'page'      => $request['page'],
+            's'         => $request['s'] ? $request['s'] : '',
         ];
 
         $items       = erp_hr_get_departments( $args );

@@ -65,8 +65,8 @@ function erp_hr_create_department( $args = array() ) {
 function erp_hr_get_departments( $args = [] ) {
 
     $defaults = array(
-        'number'     => 20,
-        'offset'     => 0,
+        'per_page'   => 100,
+        'page'       => 1,
         'orderby'    => 'id',
         'order'      => 'asc',
         'no_object'  => false
@@ -97,6 +97,7 @@ function erp_hr_get_departments( $args = [] ) {
     if ( false === $results ) {
         $results = $department
                 ->get()
+                ->forPage( $args['page'], $args['per_page'] )
                 ->toArray();
 
         $results = erp_array_to_object( $results );
