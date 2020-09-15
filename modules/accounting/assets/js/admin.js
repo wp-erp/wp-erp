@@ -15076,7 +15076,7 @@ module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFs
       this.ProductFields.id = product.id;
       this.ProductFields.type = {
         id: product.product_type_id,
-        name: product.type_name
+        name: product.product_type_name
       };
       this.ProductFields.categories = {
         id: product.category_id,
@@ -15217,10 +15217,6 @@ module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFs
 
       __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('products/types').then(function (response) {
         _this6.productType = response.data;
-        _this6.ProductFields.type = {
-          id: parseInt(response.data[0].id),
-          name: response.data[0].name
-        };
       });
     },
     resetForm: function resetForm() {
@@ -34937,7 +34933,7 @@ var render = function() {
                                     _c("multi-select", {
                                       attrs: {
                                         options: _vm.productType,
-                                        disabled: _vm.isDisabled,
+                                        disabled: false,
                                         multiple: false
                                       },
                                       model: {
