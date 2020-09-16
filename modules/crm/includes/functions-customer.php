@@ -2674,6 +2674,11 @@ function erp_crm_track_email_opened() {
 
 
         $activity->update( $data );
+
+        /**
+         * @since 1.6.5
+         */
+        do_action( 'erp_crm_email_opened', $activity, $extra );
     }
 
     header( 'Cache-Control: no-store, no-cache, must-revalidate' );
