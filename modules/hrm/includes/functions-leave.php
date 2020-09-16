@@ -2690,9 +2690,9 @@ function erp_hr_get_custom_leave_report( $user_id, $f_year = null, $start_date =
  */
 function import_holidays_csv( $file ) {
 
-    require_once WPERP_INCLUDES . '/lib/parsecsv.lib.php';
+    //require_once WPERP_INCLUDES . '/lib/parsecsv.lib.php';
 
-    $csv = new ParseCsv();
+    $csv = new ParseCsv\Csv();
     $csv->encoding(null, 'UTF-8');
     $csv->parse($file);
 
