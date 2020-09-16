@@ -124,6 +124,11 @@ class Contact_Forms_Integration {
                 $contact['contact_owner'] = $contact_owner;
             }
 
+            /**
+             * @since 1.6.5
+             */
+            $contact = apply_filters( 'erp_pre_contact_form_people_data', $contact, $data, $plugin, $form_id );
+
             $people_id = erp_insert_people( $contact );
 
             if ( ! is_wp_error( $people_id ) ) {
