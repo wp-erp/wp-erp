@@ -76,10 +76,10 @@ class Validate_Data {
         if ( ! empty( $prodessed_data ) ) {
             foreach ( $prodessed_data as $pdata_key => $pdata_val ) {
                 $pdata_key_arr = explode( "_", $pdata_key );
-                $errors->add( new WP_Error( 'csv_error_' . $pdata_key, esc_attr__( "Error #ROW " . ( $pdata_key_arr[1] + 1 ) , 'erp' ) ) );
+                $errors->add( new WP_Error( 'csv_error_' . $pdata_key, __( "<strong>Error #ROW " . ( $pdata_key_arr[1] + 1 ) . '</strong>' , 'erp' ) ) );
                 foreach ( $pdata_val as $pdval ) {
                     foreach ( $pdval['errors'] as $err ) {
-                        $errors->add( new WP_Error( 'csv_error_' . $pdval['field_name'], esc_attr__( $err , 'erp' ) ) );
+                        $errors->add( new WP_Error( 'csv_error_' . $pdval['field_name'], __( $err , 'erp' ) ) );
                     }
                 }
 
@@ -438,7 +438,7 @@ class Validate_Data {
      */
     public function is_valid_phone( $column, $value, $field_name ) {
         if ( ! preg_match( "/\+[0-9]{2}+[0-9]{4}/s", $value ) ) {
-            return __( "{$field_name} should be a valid phone/mobile no.", "erp" );
+            return __( "{$field_name} should be a valid phone/mobile no. Ex. +123456", "erp" );
         }
     }
 
