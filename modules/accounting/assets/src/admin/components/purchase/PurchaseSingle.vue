@@ -60,6 +60,10 @@
                                         <td>#{{ purchase.voucher_no }}</td>
                                     </tr>
                                     <tr>
+                                        <th>{{ __('Reference No', 'erp') }}:</th>
+                                        <td> <span v-if="purchase.ref"> #{{ purchase.ref }} </span></td>
+                                    </tr>
+                                    <tr>
                                         <th>{{ __('Transaction Date', 'erp') }}:</th>
                                         <td>{{ purchase.date }}</td>
                                     </tr>

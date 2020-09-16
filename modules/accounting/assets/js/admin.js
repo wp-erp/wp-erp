@@ -20626,6 +20626,10 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 //
 //
 //
+//
+//
+//
+//
 
 
 
@@ -22396,6 +22400,10 @@ if (false) {(function () {
 //
 //
 //
+//
+//
+//
+//
 
 
 
@@ -23005,6 +23013,10 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_email_SendMail_vue__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Dropdown_vue__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_transactions_TransParticulars_vue__ = __webpack_require__(18);
+//
+//
+//
+//
 //
 //
 //
@@ -26918,6 +26930,10 @@ setTimeout(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_email_SendMail_vue__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Dropdown_vue__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_transactions_TransParticulars_vue__ = __webpack_require__(18);
+//
+//
+//
+//
 //
 //
 //
@@ -49382,6 +49398,22 @@ var render = function() {
                           _c("tr", [
                             _c("th", [
                               _vm._v(
+                                _vm._s(_vm.__("Reference No", "erp")) + ":"
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [
+                              _vm.bill.ref
+                                ? _c("span", [
+                                    _vm._v(" #" + _vm._s(_vm.bill.ref) + " ")
+                                  ])
+                                : _vm._e()
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c("tr", [
+                            _c("th", [
+                              _vm._v(
                                 _vm._s(_vm.__("Transaction Date", "erp")) + ":"
                               )
                             ]),
@@ -51614,6 +51646,24 @@ var render = function() {
                           _c("tr", [
                             _c("th", [
                               _vm._v(
+                                _vm._s(_vm.__("Reference No", "erp")) + ":"
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [
+                              _vm.purchase.ref
+                                ? _c("span", [
+                                    _vm._v(
+                                      " #" + _vm._s(_vm.purchase.ref) + " "
+                                    )
+                                  ])
+                                : _vm._e()
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c("tr", [
+                            _c("th", [
+                              _vm._v(
                                 _vm._s(_vm.__("Transaction Date", "erp")) + ":"
                               )
                             ]),
@@ -51930,7 +51980,7 @@ var render = function() {
                     _c("div", { staticClass: "wperp-col-sm-4" }, [
                       _c("div", { staticClass: "wperp-form-group" }, [
                         _c("label", [
-                          _vm._v(_vm._s(_vm.__("Reference", "erp")))
+                          _vm._v(_vm._s(_vm.__("Reference No", "erp")))
                         ]),
                         _vm._v(" "),
                         _c("input", {
@@ -52656,6 +52706,24 @@ var render = function() {
                             _vm._v(" "),
                             _c("td", [
                               _vm._v("#" + _vm._s(_vm.payPurchase.voucher_no))
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c("tr", [
+                            _c("th", [
+                              _vm._v(
+                                _vm._s(_vm.__("Reference No", "erp")) + ":"
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [
+                              _vm.payPurchase.ref
+                                ? _c("span", [
+                                    _vm._v(
+                                      " #" + _vm._s(_vm.payPurchase.ref) + " "
+                                    )
+                                  ])
+                                : _vm._e()
                             ])
                           ]),
                           _vm._v(" "),
@@ -54856,7 +54924,7 @@ var render = function() {
                         _c("div", { staticClass: "wperp-col-sm-4" }, [
                           _c("div", { staticClass: "wperp-form-group" }, [
                             _c("label", [
-                              _vm._v(_vm._s(_vm.__("Reference", "erp")))
+                              _vm._v(_vm._s(_vm.__("Reference No", "erp")))
                             ]),
                             _vm._v(" "),
                             _c("input", {
@@ -58017,6 +58085,24 @@ var render = function() {
                             _vm._v(" "),
                             _c("td", [
                               _vm._v("#" + _vm._s(_vm.expense_data.voucher_no))
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c("tr", [
+                            _c("th", [
+                              _vm._v(
+                                _vm._s(_vm.__("Reference No", "erp")) + ":"
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [
+                              _vm.expense_data.ref
+                                ? _c("span", [
+                                    _vm._v(
+                                      " #" + _vm._s(_vm.expense_data.ref) + " "
+                                    )
+                                  ])
+                                : _vm._e()
                             ])
                           ]),
                           _vm._v(" "),

@@ -60,6 +60,10 @@
                                         <td>#{{ bill.voucher_no }}</td>
                                     </tr>
                                     <tr>
+                                        <th>{{ __('Reference No', 'erp') }}:</th>
+                                        <td> <span v-if="bill.ref"> #{{ bill.ref }} </span></td>
+                                    </tr>
+                                    <tr>
                                         <th>{{ __('Transaction Date', 'erp') }}:</th>
                                         <td>{{ bill.trn_date }}</td>
                                     </tr>

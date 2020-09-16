@@ -26,7 +26,7 @@
                             </div>
                             <div class="wperp-col-sm-4">
                                 <div class="wperp-form-group">
-                                    <label>{{ __('Reference', 'erp') }}</label>
+                                    <label>{{ __('Reference No', 'erp') }}</label>
                                     <input type="text" class="wperp-form-field" v-model="basic_fields.trn_ref"/>
                                 </div>
                             </div>

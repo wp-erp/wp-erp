@@ -60,6 +60,10 @@
                                         <td>#{{ expense_data.voucher_no }}</td>
                                     </tr>
                                     <tr>
+                                        <th>{{ __('Reference No', 'erp') }}:</th>
+                                        <td> <span v-if="expense_data.ref"> #{{ expense_data.ref }} </span></td>
+                                    </tr>
+                                    <tr>
                                         <th>{{ __('Transaction Date', 'erp') }}:</th>
                                         <td>{{ expense_data.date }}</td>
                                     </tr>
