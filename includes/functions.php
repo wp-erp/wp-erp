@@ -653,7 +653,7 @@ function erp_format_date( $date, $format = false ) {
     }
 
     if ( ! is_numeric( $date ) ) {
-        $date = strtotime( $date );
+        $date = erp_current_datetime()->modify( $date )->getTimestamp();
     }
 
     if ( function_exists('wp_date') ) {
@@ -2712,7 +2712,7 @@ function erp_get_financial_year_dates( $date = null ) {
         $month = date( 'n' );
     } else {
         if ( ! is_numeric( $date ) ) {
-            $timestamp = strtotime( $date );
+            $timestamp = erp_current_datetime()->modify( $date )->getTimestamp();
         }
         else {
             $timestamp = $date;
@@ -2757,7 +2757,7 @@ function get_financial_year_from_date( $date ) {
     $fy_start_month = erp_get_option( 'gen_financial_month', 'erp_settings_general', 1 );
     $fy_start_month = absint( $fy_start_month );
 
-    $date_timestamp = !is_numeric( $date ) ? strtotime( $date ) : $date;
+    $date_timestamp = ! is_numeric( $date ) ? erp_current_datetime()->modify( $date )->getTimestamp() : $date;
     $date_year      = absint( date( 'Y', $date_timestamp ) );
     $date_month     = absint( date( 'n', $date_timestamp ) );
 
