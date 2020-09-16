@@ -208,20 +208,43 @@ class Leave_Requests_List_Table extends \WP_List_Table {
     }
 
     /**
-     * Filter action
-     * @return string
+     * Search employee form for leave request table
+     *
+     * @since 1.6.5
+     *
+     * @param  string $text
+     * @param  string $input_id
+     *
+     * @return void
      */
-    public function current_action() {
+    public function search_box( $text, $input_id ) {
+        if ( empty( $_REQUEST['s'] ) && !$this->has_items() )
+            return;
 
-        if ( isset( $_REQUEST['filter_by_year'] ) ) {
-            return 'filter_by_year';
+        $input_id = $input_id . '-search-input';
+
+        if ( ! empty( $_REQUEST['orderby'] ) ) {
+            echo '<input type="hidden" name="orderby" value="' . esc_attr( sanitize_text_field( wp_unslash( $_REQUEST['orderby'] ) ) ) . '" />';
         }
 
-        if ( ! empty( $_REQUEST['s'] ) ) {
-            return 'search_request';
+        if ( ! empty( $_REQUEST['order'] ) ) {
+            echo '<input type="hidden" name="order" value="' . esc_attr( sanitize_text_field( wp_unslash( $_REQUEST['order'] ) ) ) . '" />';
         }
 
-        return parent::current_action();
+        if ( ! empty( $_REQUEST['post_mime_type'] ) ) {
+            echo '<input type="hidden" name="post_mime_type" value="' . esc_attr( sanitize_text_field( wp_unslash( $_REQUEST['post_mime_type'] ) ) ) . '" />';
+        }
+
+        if ( ! empty( $_REQUEST['detached'] ) ) {
+            echo '<input type="hidden" name="detached" value="' . esc_attr( sanitize_text_field( wp_unslash( $_REQUEST['detached'] ) ) ) . '" />';
+        }
+        ?>
+        <p class="search-box">
+            <label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>"><?php echo esc_html( $text ); ?>:</label>
+            <input type="search" id="<?php echo esc_attr( $input_id ) ?>" name="s" value="<?php _admin_search_query(); ?>" />
+            <?php submit_button( $text, 'button', 'employee_search', false, array( 'id' => 'search-submit' ) ); ?>
+        </p>
+        <?php
     }
 
     /**
