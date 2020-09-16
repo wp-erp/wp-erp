@@ -307,15 +307,7 @@ May you enjoy the fruits of your labors for years to come'
     public function create_tables() {
         global $wpdb;
 
-        $charset = 'CHARSET=utf8mb4';
-        $collate = 'COLLATE=utf8mb4_unicode_ci';
-
-        if ( defined('DB_COLLATE') && DB_COLLATE )  {
-            $charset = 'CHARSET=' . DB_CHARSET;
-            $collate = 'COLLATE=' . DB_COLLATE;
-        }
-
-        $charset_collate = $charset . ' ' . $collate;
+        $charset_collate = $wpdb->get_charset_collate();
 
         $table_schema = [
 
@@ -1286,7 +1278,7 @@ May you enjoy the fruits of your labors for years to come'
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_product_categories` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
                 `name` varchar(255) DEFAULT NULL,
-                `parent` int(11) NOT NULL,
+                `parent` int(11) NOT NULL DEFAULT 0,
                 `created_at` date DEFAULT NULL,
                 `created_by` varchar(50) DEFAULT NULL,
                 `updated_at` date DEFAULT NULL,
