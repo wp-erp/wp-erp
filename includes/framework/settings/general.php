@@ -52,6 +52,7 @@ class ERP_Settings_General extends ERP_Settings_Page {
                 'options' => [
                     'm-d-Y' => 'mm-dd-yyyy',
                     'd-m-Y' => 'dd-mm-yyyy',
+                    'd.m.Y' => 'dd.mm.yyyy',
                     'm/d/Y' => 'mm/dd/yyyy',
                     'd/m/Y' => 'dd/mm/yyyy',
                     'Y-m-d' => 'yyyy-mm-dd',
