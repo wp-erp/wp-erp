@@ -1,13 +1,22 @@
 'use strict';
 
 var labels;
-var months = moment.months();
-var data = [
-    { 'subscriber' : [] },
-    { 'opportunity': [] },
-    { 'lead'       : [] },
-    { 'customer'   : [] }
-];
+var months   = moment.months();
+var datasets = [];
+var colors   = [
+                'rgba(244,67,54, .5)',
+                'rgba(103,58, 183, .5)',
+                'rgba(3,169,244, .5)',
+                'rgba(255,193,7, .5)',
+                'rgb(102, 255, 153, .5)',
+                'rgb(255, 102, 255, .5)',
+                'rgb(255, 153, 51, .5)',
+                'rgb(102, 153, 153, .5)',
+                'rgb(153, 51, 0, .5)',
+                'rgb(153, 153, 102, .5)',
+                'rgb(0, 0, 204, .5)',
+                'rgb(153, 51, 102, .5)'
+            ];
 
 if ( 'this_year' == growthReport.type ) {
     labels = months;
@@ -21,14 +30,22 @@ if ( 'this_year' == growthReport.type ) {
     labels = Object.keys( growthReport.reports );
 }
 
-for ( var i = 0; i < labels.length; i++) {
-    var tempData = growthReport.reports[ labels[i] ];
+for( var i = 0; i < growthReport.stages.length; ++i) {
+    datasets[i] = {
+        label : __( growthReport.stages[i].title, 'erp' ),
+        backgroundColor: colors[i],
+        borderColor: colors[i],
+        data: [],
+    };
 
-    if ( tempData ) {
-        data[0].subscriber.push( tempData.subscriber ),
-        data[1].opportunity.push( tempData.opportunity ),
-        data[2].lead.push( tempData.lead ),
-        data[3].customer.push( tempData.customer )
+    var slug = growthReport.stages[i].slug;
+
+    for ( var j = 0; j < labels.length; ++j) {
+        var tempData = growthReport.reports[ labels[j] ];
+
+        if ( tempData ) {
+            datasets[i].data.push( tempData[slug] );
+        }
     }
 }
 
@@ -40,32 +57,7 @@ var chart = new Chart(ctx, {
 
     data: {
         labels: labels,
-        datasets: [
-            {
-                label: __('Subscriber', 'erp'),
-                backgroundColor: 'rgba(244,67,54, .5)',
-                borderColor: 'rgba(244,67,54, .5)',
-                data: data[0].subscriber
-            },
-            {
-                label: __('Opportunity', 'erp'),
-                backgroundColor: 'rgba(103,58, 183, .5)',
-                borderColor: 'rgba(103,58, 183, .5)',
-                data: data[1].opportunity
-            },
-            {
-                label: __('Lead', 'erp'),
-                backgroundColor: 'rgba(3,169,244, .5)',
-                borderColor: 'rgba(3,169,244, .5)',
-                data: data[2].lead
-            },
-            {
-                label: __('Customer', 'erp'),
-                backgroundColor: 'rgba(255,193,7, .5)',
-                borderColor: 'rgba(255,193,7, .5)',
-                data: data[3].customer
-            }
-        ]
+        datasets: datasets
     },
 
     options: {
