@@ -203,7 +203,8 @@ function erp_crm_get_life_stages_dropdown_raw( $label = [], $counts = [] ) {
         'subscriber'  => _n( 'Subscriber', 'Subscribers', $counts['subscriber'], 'erp' )
     ];
 
-    $life_stages = apply_filters( 'erp_crm_life_stages', $life_stages );
+    $counts = apply_filters( 'erp_crm_life_stage_counts', $counts );
+    $life_stages = apply_filters( 'erp_crm_life_stages', $life_stages, $counts );
 
     if ( $label ) {
         $life_stages = $label + $life_stages;
