@@ -247,6 +247,9 @@ final class WeDevs_ERP {
         require_once WPERP_INCLUDES . '/updates/bp/leave_1_6_0/class-erp-hr-leave-entitlements.php';
         require_once WPERP_INCLUDES . '/updates/bp/leave_1_6_0/class-erp-hr-leave-request.php';
 
+        // Version 1.6.5 background files
+        require_once WPERP_INCLUDES . '/updates/bp/class-erp-bg-process-1.6.5.php';
+
         // Validates data
         require_once WPERP_INCLUDES . '/class-validate-data.php';
 

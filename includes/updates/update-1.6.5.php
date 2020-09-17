@@ -5,56 +5,280 @@ function erp_acct_alter_decimal_1_6_5() {
     global $wpdb;
 
     $tables = array(
-        'erp_acct_bill_details'             => array( 'amount' ),
-        'erp_acct_bills'                    => array( 'amount' ),
-        'erp_acct_invoice_account_details'  => array( 'debit', 'credit' ),
-        'erp_acct_bill_account_details'     => array( 'debit', 'credit' ),
-        'erp_acct_invoice_details'          => array( 'unit_price', 'discount', 'tax', 'item_total' ),
-        'erp_acct_invoice_receipts'         => array( 'amount' ),
-        'erp_acct_invoice_receipts_details' => array( 'amount' ),
-        'erp_acct_invoices'                 => array( 'amount', 'discount', 'tax ' ),
-        'erp_acct_journal_details'          => array( 'debit', 'credit' ),
-        'erp_acct_journals'                 => array( 'voucher_amount' ),
-        'erp_acct_ledger_details'           => array( 'debit', 'credit' ),
-        'erp_acct_cash_at_banks'            => array( 'balance' ),
-        'erp_acct_transfer_voucher'         => array( 'amount' ),
-        'erp_acct_opening_balances'         => array( 'debit', 'credit' ),
-        'erp_acct_pay_bill'                 => array( 'amount' ),
-        'erp_acct_pay_bill_details'         => array( 'amount' ),
-        'erp_acct_pay_purchase'             => array( 'amount' ),
-        'erp_acct_pay_purchase_details'     => array( 'amount' ),
-        'erp_acct_people_account_details'   => array( 'debit', 'credit' ),
-        'erp_acct_people_trn'               => array( 'amount' ),
-        'erp_acct_people_trn_details'       => array( 'debit', 'credit' ),
-        'erp_acct_products'                 => array( 'cost_price', 'sale_price' ),
-        'erp_acct_purchase'                 => array( 'amount' ),
-        'erp_acct_purchase_account_details' => array( 'debit', 'credit' ),
-        'erp_acct_purchase_details'         => array( 'price', 'amount' ),
-        'erp_acct_tax_cat_agency'           => array( 'tax_rate' ),
-        'erp_acct_tax_pay'                  => array( 'amount' ),
-        'erp_acct_tax_agency_details'       => array( 'debit', 'credit' ),
-        'erp_acct_invoice_details_tax'      => array( 'tax_rate', 'tax_amount' ),
-        'erp_acct_expenses'                 => array( 'amount' ),
-        'erp_acct_expense_details'          => array( 'amount' ),
-        'erp_acct_expense_checks'           => array( 'amount' ),
+        array(
+            'table'     => 'erp_acct_bill_account_details',
+            'fields'    => array( 'debit', 'credit' ),
+            'type'      => 'decimal(20,2)',
+            'null'      => 'NULL',
+            'default'   => '0.00'
+        ),
+
+        array(
+            'table'     => 'erp_acct_bill_details',
+            'fields'    => array( 'amount' ),
+            'type'      => 'decimal(20,2)',
+            'null'      => 'NULL',
+            'default'   => '0.00'
+        ),
+
+        array(
+            'table'     => 'erp_acct_bills',
+            'fields'    => array( 'amount' ),
+            'type'      => 'decimal(20,2)',
+            'null'      => 'NULL',
+            'default'   => '0.00'
+        ),
+
+        array(
+            'table'     => 'erp_acct_invoice_account_details',
+            'fields'    => array( 'debit', 'credit' ),
+            'type'      => 'decimal(20,2)',
+            'null'      => 'NULL',
+            'default'   => '0.00'
+        ),
+
+        array(
+            'table'     => 'erp_acct_invoice_details',
+            'fields'    => array( 'unit_price', 'discount', 'tax', 'item_total' ),
+            'type'      => 'decimal(20,2)',
+            'null'      => 'NULL',
+            'default'   => '0.00'
+        ),
+
+        array(
+            'table'     => 'erp_acct_invoice_receipts',
+            'fields'    => array( 'amount', 'transaction_charge' ),
+            'type'      => 'decimal(20,2)',
+            'null'      => 'NULL',
+            'default'   => '0.00'
+        ),
+
+        array(
+            'table'     => 'erp_acct_invoice_receipts_details',
+            'fields'    => array( 'amount' ),
+            'type'      => 'decimal(20,2)',
+            'null'      => 'NULL',
+            'default'   => '0.00'
+        ),
+
+        array(
+            'table'     => 'erp_acct_invoices',
+            'fields'    => array( 'amount', 'discount', 'tax' ),
+            'type'      => 'decimal(20,2)',
+            'null'      => 'NULL',
+            'default'   => '0.00'
+        ),
+
+        array(
+            'table'     => 'erp_acct_journal_details',
+            'fields'    => array( 'debit', 'credit' ),
+            'type'      => 'decimal(20,2)',
+            'null'      => 'NULL',
+            'default'   => '0.00'
+        ),
+
+        array(
+            'table'     => 'erp_acct_journals',
+            'fields'    => array( 'voucher_amount' ),
+            'type'      => 'decimal(20,2)',
+            'null'      => 'NULL',
+            'default'   => '0.00'
+        ),
+
+        array(
+            'table'     => 'erp_acct_ledger_details',
+            'fields'    => array( 'debit', 'credit' ),
+            'type'      => 'decimal(20,2)',
+            'null'      => 'NULL',
+            'default'   => '0.00'
+        ),
+
+        array(
+            'table'     => 'erp_acct_cash_at_banks',
+            'fields'    => array( 'balance' ),
+            'type'      => 'decimal(20,2)',
+            'null'      => 'NULL',
+            'default'   => '0.00'
+        ),
+
+        array(
+            'table'     => 'erp_acct_transfer_voucher',
+            'fields'    => array( 'amount' ),
+            'type'      => 'decimal(20,2)',
+            'null'      => 'NULL',
+            'default'   => '0.00'
+        ),
+
+        array(
+            'table'     => 'erp_acct_opening_balances',
+            'fields'    => array( 'debit', 'credit' ),
+            'type'      => 'decimal(20,2)',
+            'null'      => 'NULL',
+            'default'   => '0.00'
+        ),
+
+        array(
+            'table'     => 'erp_acct_pay_bill',
+            'fields'    => array( 'amount' ),
+            'type'      => 'decimal(20,2)',
+            'null'      => 'NULL',
+            'default'   => '0.00'
+        ),
+
+        array(
+            'table'     => 'erp_acct_pay_bill_details',
+            'fields'    => array( 'amount' ),
+            'type'      => 'decimal(20,2)',
+            'null'      => 'NULL',
+            'default'   => '0.00'
+        ),
+
+        array(
+            'table'     => 'erp_acct_pay_purchase',
+            'fields'    => array( 'amount' ),
+            'type'      => 'decimal(20,2)',
+            'null'      => 'NULL',
+            'default'   => '0.00'
+        ),
+
+        array(
+            'table'     => 'erp_acct_pay_purchase_details',
+            'fields'    => array( 'amount' ),
+            'type'      => 'decimal(20,2)',
+            'null'      => 'NULL',
+            'default'   => '0.00'
+        ),
+
+        array(
+            'table'     => 'erp_acct_people_account_details',
+            'fields'    => array( 'debit', 'credit' ),
+            'type'      => 'decimal(20,2)',
+            'null'      => 'NULL',
+            'default'   => '0.00'
+        ),
+
+        array(
+            'table'     => 'erp_acct_people_trn',
+            'fields'    => array( 'amount' ),
+            'type'      => 'decimal(20,2)',
+            'null'      => 'NULL',
+            'default'   => '0.00'
+        ),
+
+        array(
+            'table'     => 'erp_acct_people_trn_details',
+            'fields'    => array( 'debit', 'credit' ),
+            'type'      => 'decimal(20,2)',
+            'null'      => 'NULL',
+            'default'   => '0.00'
+        ),
+
+        array(
+            'table'     => 'erp_acct_products',
+            'fields'    => array( 'cost_price', 'sale_price' ),
+            'type'      => 'decimal(20,2)',
+            'null'      => 'NULL',
+            'default'   => '0.00'
+        ),
+
+        array(
+            'table'     => 'erp_acct_purchase',
+            'fields'    => array( 'amount' ),
+            'type'      => 'decimal(20,2)',
+            'null'      => 'NULL',
+            'default'   => '0.00'
+        ),
+
+        array(
+            'table'     => 'erp_acct_purchase_account_details',
+            'fields'    => array( 'debit', 'credit' ),
+            'type'      => 'decimal(20,2)',
+            'null'      => 'NULL',
+            'default'   => '0.00'
+        ),
+
+        array(
+            'table'     => 'erp_acct_purchase_details',
+            'fields'    => array( 'price', 'amount' ),
+            'type'      => 'decimal(20,2)',
+            'null'      => 'NULL',
+            'default'   => '0.00'
+        ),
+
+        array(
+            'table'     => 'erp_acct_tax_cat_agency',
+            'fields'    => array( 'tax_rate' ),
+            'type'      => 'decimal(20,2)',
+            'null'      => 'NULL',
+            'default'   => '0.00'
+        ),
+
+        array(
+            'table'     => 'erp_acct_tax_pay',
+            'fields'    => array( 'amount' ),
+            'type'      => 'decimal(20,2)',
+            'null'      => 'NULL',
+            'default'   => '0.00'
+        ),
+
+        array(
+            'table'     => 'erp_acct_tax_agency_details',
+            'fields'    => array( 'debit', 'credit' ),
+            'type'      => 'decimal(20,2)',
+            'null'      => 'NULL',
+            'default'   => '0.00'
+        ),
+
+        array(
+            'table'     => 'erp_acct_invoice_details_tax',
+            'fields'    => array( 'tax_rate', 'tax_amount' ),
+            'type'      => 'decimal(20,2)',
+            'null'      => 'NULL',
+            'default'   => '0.00'
+        ),
+
+        array(
+            'table'     => 'erp_acct_expenses',
+            'fields'    => array( 'amount' ),
+            'type'      => 'decimal(20,2)',
+            'null'      => 'NULL',
+            'default'   => '0.00'
+        ),
+
+        array(
+            'table'     => 'erp_acct_expense_details',
+            'fields'    => array( 'amount' ),
+            'type'      => 'decimal(20,2)',
+            'null'      => 'NULL',
+            'default'   => '0.00'
+        ),
+
+        array(
+            'table'     => 'erp_acct_expense_checks',
+            'fields'    => array( 'amount' ),
+            'type'      => 'decimal(20,2)',
+            'null'      => 'NULL',
+            'default'   => '0.00'
+        ),
+
+        array(
+            'table'     => 'erp_acct_product_categories',
+            'fields'    => array( 'parent' ),
+            'type'      => 'int(11)',
+            'null'      => 'NOT NULL',
+            'default'   => '0'
+        ),
     );
 
-    foreach ( $tables as $table_name => $tale_fields ) {
-        $table_name     = $wpdb->prefix . $table_name;
-        $field_sql_txt  = "";
-        foreach ( $tale_fields as $tale_field ) {
-            $field_sql_txt .= "CHANGE {$tale_field} {$tale_field} DECIMAL(20,2) NULL DEFAULT '0.00',";
-        }
-        $field_sql_txt  = rtrim( $field_sql_txt, "," );
-        $sql            = "ALTER TABLE {$table_name} {$field_sql_txt};";
-        $wpdb->query( $sql );
-    }
-}
+    global $erp_bg_process_1_6_5;
 
-function erp_alter_acct_product_categories() {
-    global $wpdb;
-    $wpdb->query( "ALTER TABLE {$wpdb->prefix}erp_acct_product_categories CHANGE parent parent INT(11) NOT NULL DEFAULT '0';" );
+    foreach ( $tables as $table_data ) {
+        $erp_bg_process_1_6_5->push_to_queue( $table_data );
+    }
+
+    $erp_bg_process_1_6_5->save();
+
+    $erp_bg_process_1_6_5->dispatch();
 }
 
 erp_acct_alter_decimal_1_6_5();
-erp_alter_acct_product_categories();
