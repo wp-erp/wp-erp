@@ -8,11 +8,9 @@ function erp_acct_alter_invoice_receipts_1_6_3() {
     $table = $wpdb->prefix . 'erp_acct_invoice_receipts';
     $cols  = $wpdb->get_col( "DESC $table" );
 
-    if ( !in_array( 'transaction_charge', $cols ) ) {
+    if ( ! in_array( 'transaction_charge', $cols ) ) {
         $wpdb->query(
-            $wpdb->prepare(
-                "ALTER TABLE $table ADD `transaction_charge` decimal(20,2) DEFAULT 0 AFTER `amount`;"
-            )
+            "ALTER TABLE $table ADD `transaction_charge` decimal(20,2) DEFAULT 0 AFTER `amount`;"
         );
     }
 
