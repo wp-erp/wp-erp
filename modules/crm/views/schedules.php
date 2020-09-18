@@ -4,7 +4,10 @@ $schedules_data = erp_crm_get_schedule_data( $tab );
 ?>
 <div class="wrap erp erp-crm-schedules" id="wp-erp">
 
-    <h1><?php esc_attr_e( 'Schedules', 'erp' ); ?></h1>
+    <h1>
+        <?php esc_attr_e( 'Schedules', 'erp' ); ?>
+        <?php echo wp_kses_post( erp_help_tip( esc_html__( 'Click on the date to create a schedule.', 'erp' ) ) ); ?>
+    </h1>
 
     <?php if ( current_user_can( erp_crm_get_manager_role() ) ): ?>
         <h2 class="nav-tab-wrapper erp-nav-tab-wrapper">
