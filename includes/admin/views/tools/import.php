@@ -55,7 +55,7 @@
                         </th>
                         <td>
                             <input type="file" name="csv_file" id="csv_file" />
-                            <p class="description"><?php esc_html_e( 'Upload a csv file.', 'erp' ); ?></p>
+                            <p class="description"><?php esc_html_e( 'Upload a csv file.', 'erp' ); ?><?php echo erp_help_tip( esc_html__( 'Make sure CSV meets the sample CSV format exactly.', 'erp' ) ) ?></p>
                             <p id="download_sample_wrap">
                                 <input type="hidden" value="<?php echo esc_url( $csv_sample_url ); ?>" />
                                 <button class="button button-primary"> Download Sample CSV</button>
