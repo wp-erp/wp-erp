@@ -72,6 +72,7 @@
 
                 <p class="erp-left schedule-notification-allow">
                     <input type="checkbox" name="allow_notification" value="true"> <?php esc_attr_e( 'Allow notification', 'erp' ); ?>
+                    <?php echo erp_help_tip( esc_html__( 'You can send reminder notification through SMS or Email.', 'erp' ) ); ?>
                 </p>
                 <div class="clearfix"></div>
             </div>
