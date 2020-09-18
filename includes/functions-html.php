@@ -40,7 +40,7 @@ function erp_html_form_error( $value = '' ) {
  */
 function erp_html_form_label( $label, $field_id = '', $required = false, $tooltip = '' ) {
     $req = $required ? ' <span class="required">*</span>' : '';
-    $tip = ! empty( $tooltip ) ? ' ' . erp_help_tip( $tooltip, true, 'title' ) : '';
+    $tip = ! empty( $tooltip ) ? ' ' . erp_help_tip( $tooltip, true ) : '';
     echo '<label for="' . esc_attr( $field_id ) . '">' . wp_kses_post( $label ) . wp_kses_post( $req ) . $tip . '</label>';
 }
 
