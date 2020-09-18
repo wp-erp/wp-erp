@@ -1,6 +1,9 @@
 
 <div class="postbox">
-    <h3><?php esc_html_e( 'Admin Menu', 'erp' ); ?></h3>
+    <h3>
+        <?php esc_html_e( 'Admin Menu', 'erp' ); ?>
+        <?php echo erp_help_tip( esc_html__( 'If you select any, the menu will be hidden for all users.', 'erp' ) ); ?>
+    </h3>
 
     <div class="inside">
         <p><?php esc_html_e( 'Remove default admin sidebar menus', 'erp' ); ?></p>

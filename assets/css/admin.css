@@ -3999,6 +3999,9 @@ kbd {
   font-variant: normal normal;
   margin: 0px;
 }
+.erp-tip-container {
+  display: flex;
+}
 .erp-mini-title {
   font-size: 14px;
   color: #03a9f4;
