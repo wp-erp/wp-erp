@@ -30,21 +30,22 @@ if ( 'this_year' == growthReport.type ) {
     labels = Object.keys( growthReport.reports );
 }
 
-for( var i = 0; i < growthReport.stages.length; ++i) {
+var slugs = Object.keys( growthReport.stages );
+
+for( var i = 0; i < slugs.length; ++i) {
+
     datasets[i] = {
-        label : __( growthReport.stages[i].title, 'erp' ),
+        label : __( growthReport.stages[ slugs[i] ], 'erp' ),
         backgroundColor: colors[i],
         borderColor: colors[i],
         data: [],
     };
 
-    var slug = growthReport.stages[i].slug;
-
     for ( var j = 0; j < labels.length; ++j) {
         var tempData = growthReport.reports[ labels[j] ];
 
         if ( tempData ) {
-            datasets[i].data.push( tempData[slug] );
+            datasets[i].data.push( tempData[ slugs[i] ] );
         }
     }
 }
