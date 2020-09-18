@@ -94,10 +94,10 @@ export default {
 
         transformBalance(val) {
             if (val < 0) {
-                return `Cr. ${this.moneyFormat(Math.abs(val))}`;
+                return `Cr. ${this.moneyFormat(Math.abs(val))} (Loan)`;
             }
 
-            return `Dr. ${this.moneyFormat(val)}`;
+            return `Dr. ${this.moneyFormat(val)} `+ (val > 0 ? ' (Cash)' : '') ;
         }
     }
 };

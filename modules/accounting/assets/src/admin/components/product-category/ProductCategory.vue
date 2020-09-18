@@ -42,6 +42,10 @@
                         >
                         <template slot="name" slot-scope="data" v-if="data.row.isEdit">
                             <input type="text" class="wperp-form-field" :value="data.row.name" :id="'cat-'+data.row.id">
+                           <!-- <multi-select
+                                v-model="data.row.parent"
+                                :options="categories"
+                                :multiple="false"/>-->
                             <div class="buttons-wrapper text-right" style="margin-top: 10px">
                                 <button class="wperp-btn btn--primary" @click="updateCategory(data.row)">{{ __('Update', 'erp') }}</button>
                                 <button class="wperp-btn btn--default" @click.prevent="data.row.isEdit = false">{{ __('Cancel', 'erp') }}

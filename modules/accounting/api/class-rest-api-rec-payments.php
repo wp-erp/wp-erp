@@ -373,21 +373,22 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
         $item = (object) $item;
 
         $data = [
-            'id'            => (int) $item->id,
-            'voucher_no'    => (int) $item->voucher_no,
-            'customer_id'   => (int) $item->customer_id,
-            'customer_name' => $item->customer_name,
-            'trn_date'      => $item->trn_date,
-            'amount'        => $item->amount,
-            'ref'           => $item->ref,
-            'account'       => erp_acct_get_ledger_name_by_id( $item->trn_by_ledger_id ),
-            'line_items'    => $item->line_items,
-            'attachments'   => maybe_unserialize( $item->attachments ),
-            'status'        => erp_acct_get_trn_status_by_id( $item->status ),
-            'pdf_link'      => $item->pdf_link,
-            'type'          => ! empty( $item->type ) ? $item->type : 'payment',
-            'particulars'   => $item->particulars,
-            'created_at'    => $item->created_at,
+            'id'                    => (int) $item->id,
+            'voucher_no'            => (int) $item->voucher_no,
+            'customer_id'           => (int) $item->customer_id,
+            'customer_name'         => $item->customer_name,
+            'trn_date'              => $item->trn_date,
+            'amount'                => $item->amount,
+            'transaction_charge'    => $item->transaction_charge,
+            'ref'                   => $item->ref,
+            'account'               => erp_acct_get_ledger_name_by_id( $item->trn_by_ledger_id ),
+            'line_items'            => $item->line_items,
+            'attachments'           => maybe_unserialize( $item->attachments ),
+            'status'                => erp_acct_get_trn_status_by_id( $item->status ),
+            'pdf_link'              => $item->pdf_link,
+            'type'                  => ! empty( $item->type ) ? $item->type : 'payment',
+            'particulars'           => $item->particulars,
+            'created_at'            => $item->created_at,
         ];
 
         $data = array_merge( $data, $additional_fields );

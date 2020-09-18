@@ -1026,6 +1026,17 @@ table.audit-log-table {
     opacity: .7;
 }
 
+
+/*====================================
+=            BREAK POINTS            =
+====================================*/
+@wide-screen-down: ~'(max-width: 1920px)';
+@desktop-down: ~'(max-width: 991px)';
+@tablet-down: ~'(max-width: 767px)';
+@phone-down: ~'(max-width: 480px)';
+@small-phone-down: ~'(max-width: 320px)';
+
+
 .erp-modal {
     background: #fff;
     position: fixed;
@@ -1039,12 +1050,40 @@ table.audit-log-table {
 
     * { box-sizing: border-box; }
 
-    &.smaller {
-        bottom: 30%;
-        top: 15%;
-        left: 30%;
-        right: 30%;
+
+    @media @wide-screen-down {
+        &.smaller {
+            bottom: 30%;
+            top: 15%;
+            left: 30%;
+            right: 30%;
+        }
     }
+    @media @desktop-down{
+        &.smaller {
+            bottom: 15%;
+            top: 15%;
+            left: 15%;
+            right: 15%;
+        }
+    }
+    @media @tablet-down {
+        &.smaller {
+            bottom: 10%;
+            top: 10%;
+            left: 5%;
+            right: 5%;
+        }
+    }
+    @media @phone-down {
+        &.smaller {
+            bottom: 5%;
+            top: 10%;
+            left: 5%;
+            right: 5%;
+        }
+    }
+
 
     &.medium {
         bottom: 20%;
@@ -1104,8 +1143,28 @@ table.audit-log-table {
             text-align: left;
             margin-top: 0;
             color: #5d6d74;
-            font-size: 20px;
             text-shadow: 0 1px 1px #fff;
+        }
+
+        @media @wide-screen-down {
+            h2 {
+                font-size: 20px;
+            }
+        }
+        @media @desktop-down{
+            h2 {
+                font-size: 20px;
+            }
+        }
+        @media @tablet-down {
+            h2 {
+                font-size: 15px;
+            }
+        }
+        @media @phone-down {
+            h2 {
+                font-size: 15px;
+            }
         }
 
         .modal-suggession {

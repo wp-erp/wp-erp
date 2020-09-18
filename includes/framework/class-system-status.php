@@ -358,17 +358,18 @@ class System_Status {
      * @return int
      */
     public function erp_hr_get_employees() {
+
         global $wpdb;
 
         $employee_tbl = $wpdb->prefix . 'erp_hr_employees';
-        $employees    = \WeDevs\ERP\HRM\Models\Employee::select( array( $employee_tbl . '.user_id' ) )
-                        ->leftJoin( $wpdb->users, $employee_tbl . '.user_id', '=', $wpdb->users . '.ID' );
 
-        $employees = $employees->where( 'status', '!=', 'active' );
+        $query = $wpdb->prepare(
+            "select $employee_tbl.user_id from $employee_tbl
+            left join {$wpdb->users} on $employee_tbl.user_id = {$wpdb->users}.ID
+            where $employee_tbl.status != %s or $employee_tbl.deleted_at is not null",
+            array( 'active' ) );
 
-        $results     = $employees->pluck( 'user_id' )->toArray();
-
-        return $results;
+        return $wpdb->get_col( $query );
     }
 
 }

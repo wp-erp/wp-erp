@@ -1987,6 +1987,11 @@ table.leaves td.column-status .status-4 {
   background: #3E87D0;
   color: #fff;
 }
+.erp-hr-leave-request-new {
+  /*====================================
+    =            BREAK POINTS            =
+    ====================================*/
+}
 .erp-hr-leave-request-new .show-days {
   width: 97%;
 }
@@ -2015,6 +2020,16 @@ table.leaves td.column-status .status-4 {
 .erp-hr-leave-request-new.erp-hr-leave-reqs-wrap .row {
   width: 400px;
   margin: 10px 0px;
+}
+@media (max-width: 767px) {
+  .erp-hr-leave-request-new.erp-hr-leave-reqs-wrap .row {
+    width: auto;
+  }
+}
+@media (max-width: 480px) {
+  .erp-hr-leave-request-new.erp-hr-leave-reqs-wrap .row {
+    width: auto;
+  }
 }
 .erp-hr-leave-request-new.erp-hr-leave-reqs-wrap .row:before,
 .erp-hr-leave-request-new.erp-hr-leave-reqs-wrap .row:after {
@@ -3136,6 +3151,9 @@ table.audit-log-table th.col-date {
   background: #000;
   opacity: 0.7;
 }
+/*====================================
+=            BREAK POINTS            =
+====================================*/
 .erp-modal {
   background: #fff;
   position: fixed;
@@ -3149,11 +3167,37 @@ table.audit-log-table th.col-date {
 .erp-modal * {
   box-sizing: border-box;
 }
-.erp-modal.smaller {
-  bottom: 30%;
-  top: 15%;
-  left: 30%;
-  right: 30%;
+@media (max-width: 1920px) {
+  .erp-modal.smaller {
+    bottom: 30%;
+    top: 15%;
+    left: 30%;
+    right: 30%;
+  }
+}
+@media (max-width: 991px) {
+  .erp-modal.smaller {
+    bottom: 15%;
+    top: 15%;
+    left: 15%;
+    right: 15%;
+  }
+}
+@media (max-width: 767px) {
+  .erp-modal.smaller {
+    bottom: 10%;
+    top: 10%;
+    left: 5%;
+    right: 5%;
+  }
+}
+@media (max-width: 480px) {
+  .erp-modal.smaller {
+    bottom: 5%;
+    top: 10%;
+    left: 5%;
+    right: 5%;
+  }
 }
 .erp-modal.medium {
   bottom: 20%;
@@ -3208,8 +3252,27 @@ table.audit-log-table th.col-date {
   text-align: left;
   margin-top: 0;
   color: #5d6d74;
-  font-size: 20px;
   text-shadow: 0 1px 1px #fff;
+}
+@media (max-width: 1920px) {
+  .erp-modal .modal-header h2 {
+    font-size: 20px;
+  }
+}
+@media (max-width: 991px) {
+  .erp-modal .modal-header h2 {
+    font-size: 20px;
+  }
+}
+@media (max-width: 767px) {
+  .erp-modal .modal-header h2 {
+    font-size: 15px;
+  }
+}
+@media (max-width: 480px) {
+  .erp-modal .modal-header h2 {
+    font-size: 15px;
+  }
 }
 .erp-modal .modal-header .modal-suggession {
   position: absolute;

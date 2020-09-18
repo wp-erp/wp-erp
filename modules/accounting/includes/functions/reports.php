@@ -483,24 +483,27 @@ function erp_acct_get_balance_sheet( $args ) {
     $results['rows2'] = erp_acct_balance_sheet_calculate_with_opening_balance( $args['start_date'], $data2, $sql2, 2 );
     $results['rows3'] = erp_acct_balance_sheet_calculate_with_opening_balance( $args['start_date'], $data3, $sql3, 3 );
 
+    $final_accounts_helper = new \WeDevs\ERP\Accounting\Includes\Classes\FinalAccountsHelper($args);
+
     $results['rows1'][] = [
         'name'    => 'Accounts Receivable',
         'balance' => erp_acct_get_account_receivable( $args ),
     ];
     $results['rows1'][] = [
         'name'       => 'Cash at Bank',
-        'balance'    => erp_acct_cash_at_bank( $args, 'balance' ),
-        'additional' => erp_acct_bank_balance( $args, 'balance' ),
+        'balance'    => $final_accounts_helper->totalCashAtBank,  //erp_acct_cash_at_bank( $args, 'balance' ),
+        'additional' => $final_accounts_helper->cashAtBankBreakdowns , //erp_acct_bank_balance( $args, 'balance' ),
     ];
 
     $results['rows2'][] = [
         'name'    => 'Accounts Payable',
         'balance' => erp_acct_get_account_payable( $args ),
     ];
+
     $results['rows2'][] = [
         'name'       => 'Bank Loan',
-        'balance'    => erp_acct_cash_at_bank( $args, 'loan' ),
-        'additional' => erp_acct_bank_balance( $args, 'loan' ),
+        'balance'    => $final_accounts_helper->totalLoanAtBank, //erp_acct_cash_at_bank( $args, 'loan' ),
+        'additional' => $final_accounts_helper->loanAtBankBreakdowns, //erp_acct_bank_balance( $args, 'loan' ),
     ];
 
     $results['rows2'][] = [

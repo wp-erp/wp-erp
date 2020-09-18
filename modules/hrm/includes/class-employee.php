@@ -220,6 +220,7 @@ class Employee {
     /**
      *
      * @param array $args
+     * @since 1.6.5 added hook pre_erp_hr_employee_args
      *
      * @return $this|int|\WP_Error
      */
@@ -250,6 +251,12 @@ class Employee {
             if ( $erp_user ) {
                 return new \WP_Error( 'employee-id-exist', sprintf( __( 'Employee with the employee id %s already exist. Please use different one.', 'erp' ), $employee_id ) );
             }
+        }
+
+        $data = apply_filters( 'pre_erp_hr_employee_args', $data );
+
+        if ( is_wp_error( $data ) ) {
+            return $data;
         }
 
         //if we received user_id
@@ -298,6 +305,10 @@ class Employee {
             if ( is_wp_error( $user_id ) ) {
                 return $user_id;
             }
+        }
+        else if ( ! in_array( erp_hr_get_employee_role(), (array) $wp_user->roles ) ) {
+            // set user role as employee
+            $wp_user->set_role( erp_hr_get_employee_role() );
         }
 
 
