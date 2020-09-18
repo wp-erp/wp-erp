@@ -656,7 +656,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @param WP_REST_Request $request Request object.
      * @param array $additional_fields (optional)
      *
-     * @return WP_REST_Response $response Response data.
+     * @return object $response Response data.
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
         $status = null;
@@ -691,6 +691,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $item['status']      = erp_acct_get_trn_status_by_id( $status );
         $item['status_code'] = $status;
+        $item['ref'] = $item['ref'] ? $item['ref'] : $item['pay_ref'];
 
         $data = array_merge( $item, $additional_fields );
 
