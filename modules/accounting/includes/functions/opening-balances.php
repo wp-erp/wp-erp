@@ -129,21 +129,25 @@ function erp_acct_insert_opening_balance( $data ) {
         $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}erp_acct_opening_balances WHERE financial_year_id = %d", $year_id ) );
 
         foreach ( $ledgers as $ledger ) {
-            $wpdb->insert(
-                $wpdb->prefix . 'erp_acct_opening_balances',
-                [
-					'financial_year_id' => $year_id,
-					'ledger_id'         => $ledger['ledger_id'],
-					'chart_id'          => $ledger['chart_id'],
-					'type'              => 'ledger',
-					'debit'             => isset( $ledger['debit'] ) ? $ledger['debit'] : 0,
-					'credit'            => isset( $ledger['credit'] ) ? $ledger['credit'] : 0,
-					'created_at'        => $opening_balance_data['created_at'],
-					'created_by'        => $opening_balance_data['created_by'],
-					'updated_at'        => $opening_balance_data['updated_at'],
-					'updated_by'        => $opening_balance_data['updated_by'],
-				]
-            );
+
+            if((isset( $ledger['debit'] ) && (float) $ledger['debit'] > 0)  || (isset( $ledger['credit'] ) && (float) $ledger['credit'] > 0)) {
+                $wpdb->insert(
+                    $wpdb->prefix . 'erp_acct_opening_balances',
+                    [
+                        'financial_year_id' => $year_id,
+                        'ledger_id'         => $ledger['ledger_id'],
+                        'chart_id'          => $ledger['chart_id'],
+                        'type'              => 'ledger',
+                        'debit'             => isset( $ledger['debit'] ) ? $ledger['debit'] : 0,
+                        'credit'            => isset( $ledger['credit'] ) ? $ledger['credit'] : 0,
+                        'created_at'        => $opening_balance_data['created_at'],
+                        'created_by'        => $opening_balance_data['created_by'],
+                        'updated_at'        => $opening_balance_data['updated_at'],
+                        'updated_by'        => $opening_balance_data['updated_by'],
+                    ]
+                );
+            }
+
         }
 
         erp_acct_insert_ob_vir_accounts( $opening_balance_data, $year_id );

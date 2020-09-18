@@ -260,10 +260,26 @@ table.leaves {
         }
     }
 
+    /*====================================
+    =            BREAK POINTS            =
+    ====================================*/
+    @wide-screen-down: ~'(max-width: 1920px)';
+    @desktop-down: ~'(max-width: 991px)';
+    @tablet-down: ~'(max-width: 767px)';
+    @phone-down: ~'(max-width: 480px)';
+    @small-phone-down: ~'(max-width: 320px)';
+
     &.erp-hr-leave-reqs-wrap {
 
         .row {
             width: 400px;
+            @media @tablet-down {
+                width: auto;
+            }
+            @media @phone-down {
+                width: auto;
+            }
+
             margin: 10px 0px;
             .clearfix();
 
