@@ -2909,16 +2909,13 @@ function erp_sanitize_tooltip( $var ) {
  * @param  bool   $allow_html Allow sanitized HTML if true or escape
  * @return string
  * @since 1.3.4
+ * @since 1.6.5
  */
 function erp_help_tip( $tip, $allow_html = false, $tag = 'tips' ) {
     if ( $allow_html ) {
         $tip = erp_sanitize_tooltip( $tip );
     } else {
         $tip = wp_kses_post( $tip );
-    }
-
-    if ( 'tips' === $tag ) {
-        return sprintf( '<span class="erp-help-tip erp-tips" data-tip="%s"></span>', $tip );
     }
 
     return sprintf( '<span class="erp-help-tip erp-tips" title="%s"></span>', $tip );
