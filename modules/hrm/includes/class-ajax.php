@@ -360,6 +360,7 @@ class Ajax_Handler {
         }
 
         $data = array(
+            'employee_type' => isset( $_POST['employee_type'] ) ? sanitize_text_field( wp_unslash( $_POST['employee_type'] ) ) :  'permanent',
             'department_id' => isset( $_POST['department_id'] ) ? sanitize_text_field( wp_unslash( $_POST['department_id'] ) ) :  '-1',
             'location_id'   => isset( $_POST['location_id'] ) ? sanitize_text_field( wp_unslash( $_POST['location_id'] ) ) :  '-1',
             'designation_id' => isset( $_POST['designation_id'] ) ? sanitize_text_field( wp_unslash( $_POST['designation_id'] ) ) :  '-1',
@@ -406,6 +407,7 @@ class Ajax_Handler {
             'designation'   => $policy->designation_id,
             'gender'        => $policy->gender,
             'marital_status'    => $policy->marital,
+            'type'          => $policy->employee_type,
         );
 
         $employees = erp_hr_get_employees( $args );

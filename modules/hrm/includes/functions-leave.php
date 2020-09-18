@@ -181,6 +181,8 @@ function erp_hrm_is_valid_leave_date_range_within_financial_date_range( $start_d
  *
  * @since 1.6.0
  *
+ * @since 1.6.5 added employee_type filter
+ *
  * @param array $args
  *
  * @return int $policy_id
@@ -198,6 +200,7 @@ function erp_hr_leave_insert_policy( $args = array() ) {
 
     $common = array(
         'leave_id'       => $args['leave_id'],
+        'employee_type'  => $args['employee_type'],
         'department_id'  => $args['department_id'],
         'designation_id' => $args['designation_id'],
         'location_id'    => $args['location_id'],
@@ -270,6 +273,8 @@ function erp_hr_leave_insert_policy( $args = array() ) {
  *              Scheduled policy when `instant_apply` is true
  * @since 1.6.0 changed according to new db structure
  *
+ * @since 1.6.5 added employee_type filter
+ *
  * @param  int $policy_id newly created policy id
  *
  * @return void
@@ -288,6 +293,7 @@ function erp_hr_apply_policy_existing_employee( $policy_id ) {
     }
 
     $employees = erp_hr_get_employees( array(
+        'type'          => $policy->employee_type,
         'department'    => $policy->department_id,
         'location'      => $policy->location_id,
         'designation'   => $policy->designation_id,
@@ -336,6 +342,7 @@ function erp_hr_apply_policy_existing_employee( $policy_id ) {
  * @since 0.1
  * @since 1.2.0 Use `erp_get_financial_year_dates` for financial start and end dates
  * @since 1.6.0 updated due to database structure change
+ * @since 1.6.5 added employee_type filter
  *
  * @param  array $args
  *
@@ -446,11 +453,6 @@ function erp_hr_leave_insert_entitlement( $args = [] ) {
             return new WP_Error( 'invalid-employee-' . $fields['user_id'], esc_attr__( 'Error: Invalid Employee. Employee job status is not active: ', 'erp' ) . $fields['user_id'] );
         }
 
-        // check employee type, only full time employees will get entitled
-        if ( $employee->get_type() !== 'permanent' ) {
-            return new WP_Error( 'invalid-employee-' . $fields['user_id'], esc_attr__( 'Error: Invalid Employee. Employee type is not Full Time: ', 'erp' ) . $fields['user_id'] );
-        }
-
         // get policy data
         $policy = Leave_Policy::find( $fields['trn_id'] );
         if ( ! $policy ) {
@@ -463,6 +465,7 @@ function erp_hr_leave_insert_entitlement( $args = [] ) {
              || ( $policy->location_id      != '-1'   && $employee->get_location()          != $policy->location_id )
              || ( $policy->gender           != '-1'   && $employee->get_gender()            != $policy->gender )
              || ( $policy->marital          != '-1'   && $employee->get_marital_status()    != $policy->marital )
+             || ( $policy->employee_type    != '-1'   && $employee->get_type()              != $policy->employee_type )
         ) {
             return new WP_Error( 'invalid-employee-' . $fields['user_id'], esc_attr__( 'Error: Invalid Employee. Policy does not match with employee profile.', 'erp' ) );
         }
@@ -529,6 +532,8 @@ function erp_hr_leave_insert_entitlement( $args = [] ) {
  *
  * @since 1.6.0 updated according to new leave database
  *
+ * @since 1.6.5 added employee_type filter
+ *
  * @param int $user_id Employee user_id provided by `erp_hr_employee_new` hook
  *
  * @return void
@@ -541,8 +546,14 @@ function erp_hr_apply_policy_on_new_employee( $user_id ) {
         return;
     }
 
-    // 2. get policies where automatic policy assign is enabled.
-    $policies = Leave_Policy::where( 'apply_for_new_users', 1 )->where( 'f_year', $f_year->id )->get();
+    // 2. get employee information
+    $employee = new Employee( $user_id );
+
+    // 3. get policies where automatic policy assign is enabled.
+    $policies = Leave_Policy::where( 'apply_for_new_users', 1 )
+        ->where( 'f_year', $f_year->id )
+        ->where( 'employee_type', $employee->get_type() )
+        ->get();
 
     $policies->each( function ( $policy ) use ( $user_id ) {
         $data = array(
@@ -568,6 +579,8 @@ function erp_hr_apply_policy_on_new_employee( $user_id ) {
  *
  * @since 1.6.0
  *
+ * @since 1.6.5 added employee type filter
+ *
  * @return void
  */
 function erp_hr_apply_scheduled_policies() {
@@ -577,6 +590,7 @@ function erp_hr_apply_scheduled_policies() {
 
         // 1. get all employee
         $employees = erp_hr_get_employees( array(
+            'type'          => $policy->employee_type,
             'department'    => $policy->department_id,
             'location'      => $policy->location_id,
             'designation'   => $policy->designation_id,
@@ -713,6 +727,7 @@ function erp_hr_leave_get_policies( $args = array() ) {
         'offset'        => 0,
         'orderby'       => 'id',
         'order'         => 'ASC',
+        'employee_type' => '',
         'department_id' => '',
         'location_id'   => '',
         'designation_id' => '',
@@ -782,11 +797,17 @@ function erp_hr_leave_get_policies( $args = array() ) {
             $policies->where( 'f_year', '=', $args['f_year'] );
         }
 
+        if ( $args['employee_type'] ) {
+            $policies->where( 'employee_type', '=', $args['employee_type'] );
+        }
+
         $policies = $policies->get();
 
         $total_row_found = absint( $wpdb->get_var( "SELECT FOUND_ROWS()" ) );
 
         $formatted_data = array();
+
+        $employee_types = erp_hr_get_employee_types();
 
         foreach( $policies as $key => $policy ) {
             $department  = empty( $policy->department )  ? esc_attr__('All', 'erp') : $policy->department->title;
@@ -794,6 +815,7 @@ function erp_hr_leave_get_policies( $args = array() ) {
             $gender      = $policy->gender == '-1'       ? esc_attr__('All', 'erp') : ucwords( $policy->gender );
             $marital     = $policy->marital == '-1'      ? esc_attr__('All', 'erp') : ucwords( $policy->marital );
             $location    = $policy->location_id == '-1'  ? esc_attr__('All', 'erp') : $policy->location->name;
+            $employee_type = array_key_exists( $policy->employee_type, $employee_types ) ? $employee_types[ $policy->employee_type ] : '';
 
             $formatted_data[$key]['id']             = $policy->id;
             $formatted_data[$key]['leave_id']       = $policy->leave_id;
@@ -809,6 +831,7 @@ function erp_hr_leave_get_policies( $args = array() ) {
             $formatted_data[$key]['f_year']         = $policy->financial_year->fy_name;
             $formatted_data[$key]['gender']         = $gender;
             $formatted_data[$key]['marital']        = $marital;
+            $formatted_data[$key]['employee_type']  = $employee_type;
         }
 
         $policies = erp_array_to_object( $formatted_data );
@@ -2371,7 +2394,7 @@ function erp_hr_leave_get_balance_for_single_policy( $entitlement ) {
 }
 
 /**
- * Get cuurent month approve leave request list
+ * Get current month approve leave request list
  *
  * @since 0.1
  * @since 1.2.0 Ignore terminated employees

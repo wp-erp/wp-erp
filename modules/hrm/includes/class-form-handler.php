@@ -1072,6 +1072,7 @@ class Form_Handler {
         $days        = ! empty( $_POST['days'] ) ? absint( wp_unslash( $_POST['days'] ) ) : 0;
         $f_year      = ! empty( $_POST['f-year'] ) ? absint( wp_unslash( $_POST['f-year'] ) ) : date('Y');
         $desc        = ! empty( $_POST['description'] ) ? sanitize_text_field( wp_unslash( $_POST['description'] ) ) : '';
+        $employee_type = ! empty( $_POST['employee_type'] ) ? sanitize_text_field( wp_unslash( $_POST['employee_type'] ) ) : 'permanent';
         $dept_id     = ! empty( $_POST['department'] ) ? sanitize_text_field( wp_unslash( $_POST['department'] ) ) : '-1';
         $desg_id     = ! empty( $_POST['designation'] ) ? sanitize_text_field( wp_unslash( $_POST['designation'] ) ) : '-1';
         $location_id = ! empty( $_POST['location'] ) ? sanitize_text_field( wp_unslash( $_POST['location'] ) ) : '-1';
@@ -1097,6 +1098,12 @@ class Form_Handler {
 
         if ( empty( $f_year ) ) {
             $errors->add( __( 'Year field should not be left empty', 'erp' ) );
+        }
+
+        // validate employee type
+        $employee_types = array_keys( erp_hr_get_employee_types() );
+        if ( ! in_array( $employee_type, $employee_types ) ) {
+            $errors->add( __( 'You need to select employee type.', 'erp' ) );
         }
 
         $errors = apply_filters( 'erp_pro_hr_leave_policy_form_errors', $errors );
@@ -1127,6 +1134,7 @@ class Form_Handler {
 
         $data = array(
             'leave_id'        => $leave_id,
+            'employee_type'   => $employee_type,
             'description'     => $desc,
             'days'            => $days,
             'color'           => $color,

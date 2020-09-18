@@ -67,6 +67,19 @@ $active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['ta
                 </div>
 
                 <div class="row">
+                    <?php
+                    erp_html_form_input( array(
+                        'label'    => __( 'Employee Type', 'erp' ),
+                        'name'     => 'employee_type',
+                        'value'    => 'permanent',
+                        'class'    => 'erp-select2 employee_type change_policy',
+                        'type'     => 'select',
+                        'options'  => erp_hr_get_employee_types()
+                    ) );
+                    ?>
+                </div>
+
+                <div class="row">
                     <?php erp_html_form_input( array(
                         'label'    => __( 'Department', 'erp' ),
                         'name'     => 'department_id',
