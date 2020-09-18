@@ -152,6 +152,7 @@ class Leave_Policies_List_Table extends \WP_List_Table {
             'description'    => __( 'Description', 'erp' ),
             'leave_day'      => __( 'Days', 'erp' ),
             'calendar_color' => __( 'Calendar Color', 'erp' ),
+            'employee_type'  => __( 'Type', 'erp'),
             'department'     => __( 'Department', 'erp' ),
             'designation'    => __( 'Designation', 'erp' ),
             'location'       => __( 'Location', 'erp' ),
