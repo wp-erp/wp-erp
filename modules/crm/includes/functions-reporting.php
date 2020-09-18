@@ -363,6 +363,7 @@ function erp_crm_customer_reporting_query( $start_date, $end_date, $filter_type 
  *
  * @return array
  * @since  1.3.6
+ * @since 1.6.7 Added a filter on reports data and localized life stages for growth report script to remove hardcoded life stages
  *
  */
 function erp_crm_growth_reporting_query( $start_date, $end_date, $type ) {
@@ -398,16 +399,7 @@ function erp_crm_growth_reporting_query( $start_date, $end_date, $type ) {
 
     $reports = apply_filters( 'erp_crm_growth_report', $reports );
 
-    $life_stages  = [
-                        ['title' => 'Subscriber', 'slug' => 'subscriber'],
-                        ['title' => 'Opportunity', 'slug' => 'opportunity'],
-                        ['title' => 'Lead', 'slug' => 'lead'],
-                        ['title' => 'Customer', 'slug' => 'customer'],
-                    ];
-
-    if ( function_exists('erp_crm_get_all_life_stages') ) {
-        $life_stages = erp_crm_get_all_life_stages();
-    }
+    $life_stages = erp_crm_get_life_stages_dropdown_raw();
 
     wp_localize_script( 'erp-crm-report', 'growthReport', [
         'type'    => $type,
