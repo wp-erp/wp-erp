@@ -182,6 +182,7 @@ function erp_crm_get_details_url( $id, $type ) {
  *
  * @since 1.0
  * @since 1.1.16 Append extra `label` after the filter applied
+ * @since 1.6.7 Added two filters on counts and life stages data to ensure dynamic life stages
  *
  * @param array $label
  *
@@ -203,7 +204,7 @@ function erp_crm_get_life_stages_dropdown_raw( $label = [], $counts = [] ) {
         'subscriber'  => _n( 'Subscriber', 'Subscribers', $counts['subscriber'], 'erp' )
     ];
 
-    $counts = apply_filters( 'erp_crm_life_stage_counts', $counts );
+    $counts      = apply_filters( 'erp_crm_life_stage_counts', $counts );
     $life_stages = apply_filters( 'erp_crm_life_stages', $life_stages, $counts );
 
     if ( $label ) {
