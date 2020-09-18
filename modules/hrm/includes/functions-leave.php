@@ -2700,48 +2700,79 @@ function import_holidays_csv( $file ) {
     $valid_import = array();
     $line = 1;
     $msg = "";
+    $error_msg = '';
 
-    foreach ($csv->data as $data) {
-        $title = (isset($data['title'])) ? $data['title'] : '';
-        $start = (isset($data['start'])) ? $data['start'] : '';
-        $end = (isset($data['end'])) ? $data['end'] : '';
-        $description = (isset($data['description'])) ? $data['description'] : '';
+    foreach ( $csv->data as $data_key => $data ) {
 
-        if (!empty($title) && !empty($start) && !empty($end)) {
-            if (is_string($title) && is_string($start) && is_string($end)) {
-                if (strlen($title) < 200) {
-                    if (DateTime::createFromFormat('Y-m-d H:i:s', $start) !== FALSE &&
-                        DateTime::createFromFormat('Y-m-d H:i:s', $end) !== FALSE) {
-                        $holiday_id = erp_hr_leave_insert_holiday(array(
-                            "title" => $title,
-                            "start" => $start,
-                            "end" => $end,
-                            "description" => $description,
-                        ));
+        $line_error  = "";
+        $title       = ( isset( $data['title'] ) ) ? $data['title'] : '';
+        $start       = ( isset( $data['start'] ) ) ? $data['start'] : '';
+        $end         = ( isset( $data['end'] ) ) ? $data['end'] : '';
 
-                        if (is_wp_error($holiday_id)) {
-                            $error_list[] = $line;
-                        } else {
-                            $valid_import[] = $line;
-                        }
-                    }
-                }
-            }
-        } else {
+        if ( empty( $title ) ) {
+            $line_error .= __( "Title can not be empty", 'wp-erp' ) . '<br>';
+        }
+
+        if ( strlen( $title ) > 200 ) {
+            $line_error .= __( "Title can not be more than 200 charecters", 'wp-erp' ) . '<br>';
+        }
+
+        if ( empty( $start ) || empty( $end ) ) {
+            $line_error .= __( "Start OR End date can not be empty", 'wp-erp' ) . '<br>';
+        }
+
+        if ( ! is_string( $title ) && ! is_string( $start ) && ! is_string( $end ) ) {
+            $line_error .= __( "Title, Start & End must be", 'wp-erp' ) . '<br>';
+        }
+
+        if ( DateTime::createFromFormat('Y-m-d H:i:s', $start) === FALSE  ) {
+            $line_error .= __( "Start date should be valid format. Ex YYYY-MM-DD 00:00:00", 'wp-erp' ) . '<br>';
+        }
+
+        if ( DateTime::createFromFormat('Y-m-d H:i:s', $end) === FALSE  ) {
+            $line_error .= __( "End date should be valid format. Ex YYYY-MM-DD 23:59:59", 'wp-erp' ) . '<br>';
+        }
+
+        if ( ! empty( $line_error ) ) {
+            $error_msg .= __( "<strong>Error at #ROW " . ( $data_key + 1 ) . "</strong>", 'wp-erp' ) . '<br>';
+            $error_msg .= $line_error ;
+        }
+    }
+
+    if ( ! empty( $error_msg ) ) {
+        return "<div class='error  notice'><p>{$error_msg}</p></div>";
+    }
+
+    foreach ( $csv->data as $data ) {
+        $title       = ( isset($data['title'] ) ) ? $data['title'] : '';
+        $start       = ( isset($data['start'] ) ) ? $data['start'] : '';
+        $end         = ( isset($data['end'] ) ) ? $data['end'] : '';
+        $description = ( isset($data['description'] ) ) ? $data['description'] : '';
+
+        $holiday_id = erp_hr_leave_insert_holiday(array(
+            "title" => $title,
+            "start" => $start,
+            "end" => $end,
+            "description" => $description,
+        ));
+
+        if ( is_wp_error( $holiday_id ) ) {
             $error_list[] = $line;
+        } else {
+            $valid_import[] = $line;
         }
         $line++;
     }
 
-    if (count($valid_import) > 0) {
+    if ( count( $valid_import ) > 0 ) {
         $html_class = "updated notice";
-        $msg .= sprintf(__("Successfully imported %u data<br>", 'wp-erp'), count($valid_import));
+        $msg .= sprintf( __( "Successfully imported %u data<br>", 'wp-erp' ), count( $valid_import ) );
     }
 
-    if (count($error_list) > 0) {
+    if ( count($error_list ) > 0 ) {
         $html_class = "error  notice";
         $err_string = implode(',', $error_list);
-        $msg .= sprintf(__("Failed to import line no  %s. Please check if title, start & end fields are following proper formation", 'wp-erp'), $err_string);
+        $msg .= sprintf( __( "Something went wrong. Failed to import line no  %s.", 'wp-erp' ), $err_string );
     }
 
     return "<div class='{$html_class}'><p>{$msg}</p></div>";
