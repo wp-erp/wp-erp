@@ -77,8 +77,9 @@ class Entitlement_List_Table extends \WP_List_Table {
         $policy_data = array();
         foreach ( $policies as $policy ) {
             $policy_data[ $policy['f_year'] ][] = array(
-                'name'      => $policy->leave->name,
-                'policy_id'  => $policy['id']
+                'name'          => $policy->leave->name,
+                'policy_id'     => $policy['id'],
+                'employee_type' => $policy['employee_type'],
             );
         }
 
@@ -86,6 +87,10 @@ class Entitlement_List_Table extends \WP_List_Table {
         if ( ! empty( $_GET['leave_policy'] ) ) {
             $selected_leave_id = absint( wp_unslash( $_GET['leave_policy'] ) );
         }
+
+        // get employee type filter
+        $employee_types = erp_hr_get_employee_types();
+        $employee_type = isset( $_GET['filter_employee_type'] ) ? sanitize_text_field( wp_unslash( $_GET['filter_employee_type'] ) ) : 'permanent';
         ?>
             <div class="alignleft actions">
                 <select name="financial_year" id="financial_year">
@@ -97,10 +102,21 @@ class Entitlement_List_Table extends \WP_List_Table {
                     ) ); ?>
                 </select>
 
+                <select name="filter_employee_type" id="filter_employee_type">
+                    <?php
+                    foreach ( $employee_types as $type_id => $type_name ) {
+                        echo sprintf( "<option value='%s'%s>%s</option>\n", esc_html( $type_id ), selected( $employee_type, $type_id , false ), esc_html( $type_name ) );
+                    }
+                    ?>
+                </select>
+
                 <select name="leave_policy" id="leave_policy">
                     <option value=""><?php echo esc_attr__( 'All Policy', 'erp'); ?></option>
                     <?php if ( array_key_exists( $selected_f_year, $policy_data ) ) {
                         foreach ( $policy_data[ $selected_f_year ] as $policy ) {
+                            if ( $employee_type !== '' && $policy['employee_type'] != $employee_type ) {
+                                continue;
+                            }
                             $selected = $policy['policy_id'] == $selected_leave_id ? 'selected="selected"' : '';
                             echo "<option value='{$policy['policy_id']}' $selected>{$policy['name']}</option>";
                         }
@@ -309,6 +325,10 @@ class Entitlement_List_Table extends \WP_List_Table {
 
         if ( ! empty( $_GET['leave_policy'] ) ) {
             $args['policy_id'] = absint( wp_unslash( $_GET['leave_policy'] ) );
+        }
+
+        if ( ! empty( $_GET['filter_employee_type'] ) ) {
+            $args['employee_type'] = sanitize_text_field( wp_unslash( $_GET['filter_employee_type'] ) );
         }
 
         // get the items

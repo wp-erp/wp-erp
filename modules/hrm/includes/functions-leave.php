@@ -2026,7 +2026,8 @@ function erp_hr_leave_get_entitlements( $args = array() ) {
         'orderby'       => 'en.created_at',
         'order'         => 'DESC',
         'debug'         => false,
-        'emp_status'    => ''
+        'emp_status'    => '',
+        'employee_type' => '',
     );
 
     $args  = wp_parse_args( $args, $defaults );
@@ -2054,6 +2055,10 @@ function erp_hr_leave_get_entitlements( $args = array() ) {
 
     if ( $args['emp_status'] == 'active') {
         $where .= " AND emp.status = 'active'";
+    }
+
+    if ( $args['employee_type'] ) {
+        $where .= " AND emp.type = '" . esc_sql( $args['employee_type'] ) . "'";
     }
 
     $offset = absint( $args['offset'] );
