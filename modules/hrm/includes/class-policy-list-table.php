@@ -77,6 +77,12 @@ class Leave_Policies_List_Table extends \WP_List_Table {
         } else {
             $selected_year = erp_hr_get_financial_year_from_date()->id;
         }
+
+        // get employee type filter
+        $employee_types = array(
+                            '' => esc_html__( 'Employee Types', 'erp' )
+                        ) + erp_hr_get_employee_types();
+        $employee_type = isset( $_GET['filter_employee_type'] ) ? sanitize_text_field( wp_unslash( $_GET['filter_employee_type'] ) ) : '';
         ?>
         <div class="alignleft actions">
 
@@ -86,6 +92,13 @@ class Leave_Policies_List_Table extends \WP_List_Table {
                 <?php
                 foreach ( $financial_years as $f_id => $f_name ) {
                     echo sprintf( "<option value='%s'%s>%s</option>\n", esc_html( $f_id ), selected( $selected_year, $f_id, false ), esc_html( $f_name ) );
+                }
+                ?>
+            </select>
+            <select name="filter_employee_type" id="filter_employee_type">
+                <?php
+                foreach ( $employee_types as $type_id => $type_name ) {
+                    echo sprintf( "<option value='%s'%s>%s</option>\n", esc_html( $type_id ), selected( $employee_type, $type_id , false ), esc_html( $type_name ) );
                 }
                 ?>
             </select>
@@ -303,7 +316,8 @@ class Leave_Policies_List_Table extends \WP_List_Table {
         $args = array(
             'offset' => $offset,
             'number' => $per_page,
-            'f_year'  => isset( $_GET['filter_year'] ) ? sanitize_text_field( wp_unslash( $_GET['filter_year'] ) ) : $f_year
+            'f_year'  => isset( $_GET['filter_year'] ) ? sanitize_text_field( wp_unslash( $_GET['filter_year'] ) ) : $f_year,
+            'employee_type' => isset( $_GET['filter_employee_type'] ) ? sanitize_text_field( wp_unslash( $_GET['filter_employee_type'] ) ) : '',
         );
 
         if ( isset( $_REQUEST['orderby'] ) && isset( $_REQUEST['order'] ) ) {
