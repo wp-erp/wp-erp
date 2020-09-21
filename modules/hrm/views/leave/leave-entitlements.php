@@ -72,7 +72,7 @@ $active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['ta
                         'label'    => __( 'Employee Type', 'erp' ),
                         'name'     => 'employee_type',
                         'value'    => 'permanent',
-                        'class'    => 'erp-select2 employee_type change_policy',
+                        'class'    => 'leave-policy-input erp-select2 employee_type change_policy',
                         'type'     => 'select',
                         'options'  => array(
                                 '-1' => esc_html__( 'All Types', 'erp' )
@@ -243,7 +243,7 @@ $active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['ta
                     }
                 });
 
-            })
+            });
         </script>
     <?php } ?>
 </div>

@@ -103,11 +103,11 @@ $f_year = ! empty( $form_data ) ?  $form_data['f-year'] : ( ! empty( $leave_poli
                     'label'    => __( 'Employee Type', 'erp' ),
                     'name'     => 'employee_type',
                     'value'    => ! empty( $leave_policy ) ? $leave_policy->employee_type : 'permanent',
-                    'class'    => 'erp-hrm-select2',
+                    'class'    => 'leave-policy-input erp-hrm-select2',
                     'type'     => 'select',
                     'required' => true,
                     'options'  => array(
-                            '-1' => esc_html__( 'All Types', 'erp' )
+                            '-1' => esc_html__( 'All', 'erp' )
                         ) + erp_hr_get_employee_types(),
                     'disabled' => $disabled,
                 ) );

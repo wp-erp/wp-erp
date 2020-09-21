@@ -622,7 +622,7 @@
                 var self = $(this),
                 data = {
                     id : self.data('id')
-                }
+                };
 
                 $.erpPopup({
                     title: wpErpHr.popup.leave_approve,
@@ -644,7 +644,10 @@
                                     }
                                 }
                                 else if( res.redirect ) {
-                                    var approve_url = window.location.origin + window.location.pathname + '?page=erp-hr&section=leave&status=' + res.redirect;
+                                    var approve_url = window.location.origin + window.location.pathname + '?1=1';
+                                    $.each( res.redirect, function( key, val ) {
+                                        approve_url += '&' + key + '=' + val;
+                                    });
                                     window.location.replace( approve_url );
                                 }
                                 else {
@@ -666,7 +669,7 @@
                 var self = $(this),
                 data = {
                     id : self.data('id')
-                }
+                };
 
                 $.erpPopup({
                     title: wpErpHr.popup.leave_reject,
@@ -688,7 +691,10 @@
                                     }
                                 }
                                 else if( res.redirect ) {
-                                    var approve_url = window.location.origin + window.location.pathname + '?page=erp-hr&section=leave&status=' + res.redirect;
+                                    var approve_url = window.location.origin + window.location.pathname + '?1=1';
+                                    $.each( res.redirect, function( key, val ) {
+                                        approve_url += '&' + key + '=' + val;
+                                    });
                                     window.location.replace( approve_url );
                                 }
                                 else {

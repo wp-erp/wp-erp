@@ -137,7 +137,18 @@ class Ajax_Handler {
 
         $update = erp_hr_leave_request_update_status( $request_id, 1, $comments );
 
-        $this->send_success( $update );
+        if ( is_wp_error( $update ) ) {
+            $this->send_error( $update->get_error_message() );
+        }
+
+        $ret['redirect'] = array(
+            'page'      => 'erp-hr',
+            'section'   => 'leave',
+            'status'    => $update->last_status,
+            'filter_year' => $update->entitlement->f_year,
+        );
+
+        $this->send_success( $ret );
     }
 
     /**
@@ -161,7 +172,18 @@ class Ajax_Handler {
 
         $update = erp_hr_leave_request_update_status( $request_id, 3, $comments );
 
-        $this->send_success( $update );
+        if ( is_wp_error( $update ) ) {
+            $this->send_error( $update->get_error_message() );
+        }
+
+        $ret['redirect'] = array(
+            'page'      => 'erp-hr',
+            'section'   => 'leave',
+            'status'    => $update->last_status,
+            'filter_year' => $update->entitlement->f_year,
+        );
+
+        $this->send_success( $ret );
     }
 
     /**
