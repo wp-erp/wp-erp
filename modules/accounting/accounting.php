@@ -17,7 +17,7 @@ final class Accounting {
     /**
      * The main plugin instance
      *
-     * @var Object
+     * @var object
      */
     private $plugin;
 
@@ -26,7 +26,7 @@ final class Accounting {
      *
      * @var array
      */
-    private $container = array();
+    private $container = [];
 
     /**
      * Constructor for the ERP_Accounting class
@@ -51,7 +51,7 @@ final class Accounting {
         $this->includes();
 
         // load the module
-        add_action( 'erp_loaded', array( $this, 'plugin_init' ) );
+        add_action( 'erp_loaded', [ $this, 'plugin_init' ] );
 
         // trigger after accounting module loaded
         do_action( 'erp_accounting_loaded' );
@@ -59,11 +59,11 @@ final class Accounting {
         // pdf plugin is not installed notice
         if ( ! is_plugin_active( 'erp-pdf-invoice/wp-erp-pdf.php' ) ) {
             if ( 'hide' !== get_option( 'pdf-notice-dismissed' ) ) {
-                add_action( 'admin_notices', array( $this, 'admin_pdf_notice' ) );
+                add_action( 'admin_notices', [ $this, 'admin_pdf_notice' ] );
             }
         }
 
-        add_action( 'wp_ajax_dismiss_pdf_notice', array( $this, 'dismiss_pdf_notice' ) );
+        add_action( 'wp_ajax_dismiss_pdf_notice', [ $this, 'dismiss_pdf_notice' ] );
     }
 
     /**
@@ -73,7 +73,6 @@ final class Accounting {
      */
     public function admin_pdf_notice() {
         if ( current_user_can( 'install_plugins' ) ) {
-
             $action      = empty( $_GET['erp-pdf'] ) ? '' : \sanitize_text_field( wp_unslash( $_GET['erp-pdf'] ) );
             $plugin      = 'erp-pdf-invoice/wp-erp-pdf.php';
             $pdf_install = new \WeDevs\ERP\Accounting\Includes\Classes\PDF_Install();
@@ -91,13 +90,13 @@ final class Accounting {
             } else {
                 $this->pdf_notice_message( 'install' );
             }
-		}
+        }
     }
 
     /**
      * PDF notice message
      *
-     * @param String $type
+     * @param string $type
      *
      * @return void
      */
@@ -206,9 +205,7 @@ final class Accounting {
     }
 
     /**
-     *
      * Includes Rest API helper Functions
-     *
      */
     public function include_functions() {
         foreach ( glob( ERP_ACCOUNTING_INCLUDES . '/functions/*.php' ) as $filename ) {
@@ -217,9 +214,7 @@ final class Accounting {
     }
 
     /**
-     *
      * Includes Classes
-     *
      */
     public function include_classes() {
         require_once ERP_ACCOUNTING_API . '/class-controller-rest-api.php';
@@ -259,8 +254,9 @@ final class Accounting {
      *
      * @return array
      */
-    public function add_settings_page( $settings = array() ) {
+    public function add_settings_page( $settings = [] ) {
         $settings[] = include __DIR__ . '/includes/classes/class-settings.php';
+
         return $settings;
     }
 
@@ -270,7 +266,6 @@ final class Accounting {
      * @return void
      */
     public function init_classes() {
-
         if ( $this->is_request( 'admin' ) ) {
             $this->container['admin'] = new \WeDevs\ERP\Accounting\Includes\Classes\Admin();
         }
@@ -280,11 +275,10 @@ final class Accounting {
         $this->container['profile'] = new \WeDevs\ERP\Accounting\Includes\Classes\User_Profile();
     }
 
-
     /**
      * What type of request is this?
      *
-     * @param string $type admin, ajax, cron or frontend.
+     * @param string $type admin, ajax, cron or frontend
      *
      * @return bool
      */
@@ -332,11 +326,11 @@ final class Accounting {
      *
      * @return void
      */
-    function deactive_addon() {
+    public function deactive_addon() {
         /**
          * Detect plugin. For use on Front End only.
          */
-        include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+        include_once ABSPATH . 'wp-admin/includes/plugin.php';
 
         // check for plugin using plugin name
         if ( is_plugin_active( 'accounting/accounting.php' ) ) {
@@ -350,8 +344,7 @@ final class Accounting {
      *
      * @return mixed
      */
-    function readonly_invoice_template() {
-
+    public function readonly_invoice_template() {
         $query          = isset( $_REQUEST['query'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['query'] ) ) : '';
         $transaction_id = isset( $_REQUEST['trans_id'] ) ? intval( $_REQUEST['trans_id'] ) : '';
         $auth_id        = isset( $_REQUEST['auth'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['auth'] ) ) : '';
@@ -374,6 +367,4 @@ final class Accounting {
 
         return;
     }
-
 } // ERP_Accounting
-

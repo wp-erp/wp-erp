@@ -3,7 +3,6 @@
  * Installation related functions and actions.
  *
  * @author Tareq Hasan
- * @package ERP
  */
 
 // don't call the file directly
@@ -13,11 +12,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Installer Class
- *
- * @package ERP
  */
 class WeDevs_ERP_Installer {
-
     use \WeDevs\ERP\Framework\Traits\Hooker;
 
     /**
@@ -27,11 +23,11 @@ class WeDevs_ERP_Installer {
      *
      * @return void
      */
-    function __construct() {
+    public function __construct() {
         $this->set_default_modules();
 
-        register_activation_hook( WPERP_FILE, array( $this, 'activate' ) );
-        register_deactivation_hook( WPERP_FILE, array( $this, 'deactivate' ) );
+        register_activation_hook( WPERP_FILE, [ $this, 'activate' ] );
+        register_deactivation_hook( WPERP_FILE, [ $this, 'deactivate' ] );
 
         $this->action( 'admin_menu', 'welcome_screen_menu' );
         $this->action( 'admin_head', 'welcome_screen_menu_remove' );
@@ -44,6 +40,7 @@ class WeDevs_ERP_Installer {
      * @since 1.0
      * @since save plugin install date
      * @since save plugin install date
+     *
      * @return void
      */
     public function activate() {
@@ -85,7 +82,7 @@ class WeDevs_ERP_Installer {
      *
      * @return void
      */
-    function includes() {
+    public function includes() {
         include_once WPERP_MODULES . '/hrm/includes/functions-capabilities.php';
         include_once WPERP_MODULES . '/crm/includes/functions-capabilities.php';
         include_once WPERP_MODULES . '/accounting/includes/functions/capabilities.php';
@@ -98,7 +95,7 @@ class WeDevs_ERP_Installer {
      *
      * @return void
      */
-    function setup_default_emails() {
+    public function setup_default_emails() {
 
         //Employee welcome
         $welcome = [
@@ -118,7 +115,7 @@ Sincerely,
 Manager Name
 CEO, Company Name
 
-{login_info}'
+{login_info}',
         ];
 
         update_option( 'erp_email_settings_employee-welcome', $welcome );
@@ -140,7 +137,7 @@ Please approve/reject this leave application by going following:
 
 {requests_url}
 
-Thanks.'
+Thanks.',
         ];
 
         update_option( 'erp_email_settings_new-leave-request', $new_leave_request );
@@ -155,7 +152,7 @@ Your <strong>{leave_type}</strong> type leave request for <strong>{no_days} days
 
 Regards
 Manager Name
-Company'
+Company',
         ];
 
         update_option( 'erp_email_settings_approved-leave-request', $approved_request );
@@ -172,7 +169,7 @@ The reason of rejection is: {reject_reason}
 
 Regards
 Manager Name
-Company'
+Company',
         ];
 
         update_option( 'erp_email_settings_rejected-leave-request', $reject_request );
@@ -188,7 +185,7 @@ Due Date: {due_date}
 
 Regards
 Manager Name
-Company'
+Company',
         ];
 
         update_option( 'erp_email_settings_new-task-assigned', $new_task_assigned );
@@ -203,11 +200,10 @@ A new contact <strong>{contact_name}</strong> has been assigned to you by {creat
 
 Regards
 Manager Name
-Company'
+Company',
         ];
 
         update_option( 'erp_email_settings_new-contact-assigned', $new_contact_assigned );
-
 
         //Employee hiring date anniversary
         $hiring_date_anniversary = [
@@ -217,12 +213,10 @@ Company'
 
 You have been a model employee for {total_year} years now. You are one of my few original employees and have certainly become an asset to this company. I appreciate the selfless service you\'ve given for so many years. Without the loyalty and hard work of experts like you who helped us get things started, we could never have achieved our present stature. I hope the gift I sent will reflect the high esteem I have for you.
 
-May you enjoy the fruits of your labors for years to come'
+May you enjoy the fruits of your labors for years to come',
         ];
 
         update_option( 'erp_email_settings_hiring-anniversary-wish', $hiring_date_anniversary );
-
-
     }
 
     /**
@@ -232,17 +226,17 @@ May you enjoy the fruits of your labors for years to come'
      */
     public function create_cron_jobs() {
         // schedule per minute hook
-        if ( ! wp_next_scheduled ( 'erp_per_minute_scheduled_events' ) ) {
+        if ( ! wp_next_scheduled( 'erp_per_minute_scheduled_events' ) ) {
             wp_schedule_event( time(), 'per_minute', 'erp_per_minute_scheduled_events' );
         }
 
         // schedule daily hook
-        if ( ! wp_next_scheduled ( 'erp_daily_scheduled_events' ) ) {
+        if ( ! wp_next_scheduled( 'erp_daily_scheduled_events' ) ) {
             wp_schedule_event( time(), 'daily', 'erp_daily_scheduled_events' );
         }
 
         // schedule weekly hook
-        if ( ! wp_next_scheduled ( 'erp_weekly_scheduled_events' ) ) {
+        if ( ! wp_next_scheduled( 'erp_weekly_scheduled_events' ) ) {
             wp_schedule_event( time(), 'weekly', 'erp_weekly_scheduled_events' );
         }
     }
@@ -269,10 +263,10 @@ May you enjoy the fruits of your labors for years to come'
      * @return void
      */
     public function welcome_screen_menu() {
-        add_dashboard_page( __( 'Welcome to WP ERP', 'erp' ), 'WP ERP', 'manage_options', 'erp-welcome', array(
+        add_dashboard_page( __( 'Welcome to WP ERP', 'erp' ), 'WP ERP', 'manage_options', 'erp-welcome', [
             $this,
-            'welcome_screen_content'
-        ) );
+            'welcome_screen_content',
+        ] );
     }
 
     /**
@@ -302,7 +296,7 @@ May you enjoy the fruits of your labors for years to come'
      *
      * @since 1.0
      *
-     * @return  void
+     * @return void
      */
     public function create_tables() {
         global $wpdb;
@@ -310,7 +304,7 @@ May you enjoy the fruits of your labors for years to come'
         $charset = 'CHARSET=utf8mb4';
         $collate = 'COLLATE=utf8mb4_unicode_ci';
 
-        if ( defined('DB_COLLATE') && DB_COLLATE )  {
+        if ( defined( 'DB_COLLATE' ) && DB_COLLATE ) {
             $charset = 'CHARSET=' . DB_CHARSET;
             $collate = 'COLLATE=' . DB_COLLATE;
         }
@@ -318,7 +312,6 @@ May you enjoy the fruits of your labors for years to come'
         $charset_collate = $charset . ' ' . $collate;
 
         $table_schema = [
-
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_company_locations` (
                 `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
                 `company_id` int(11) unsigned DEFAULT NULL,
@@ -1548,15 +1541,13 @@ May you enjoy the fruits of your labors for years to come'
                 `updated_by` varchar(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
             ) $charset_collate;",
-
-
         ];
 
-        require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+        require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+
         foreach ( $table_schema as $table ) {
             dbDelta( $table );
         }
-
     }
 
     /**
@@ -1606,7 +1597,7 @@ May you enjoy the fruits of your labors for years to come'
             VALUES (1, 'contact'), (2, 'company'), (3, 'customer'), (4, 'vendor'), (5, 'employee')" );
         }
 
-        /** ===========
+        /* ===========
          * Accounting
          * ============
          */
@@ -1615,17 +1606,17 @@ May you enjoy the fruits of your labors for years to come'
         if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_acct_chart_of_accounts` LIMIT 0, 1" ) ) {
             $charts = ['Asset', 'Liability', 'Equity', 'Income', 'Expense', 'Asset & Liability', 'Bank'];
 
-            for ( $i = 0; $i < count($charts); $i++ ) {
+            for ( $i = 0; $i < count( $charts ); $i++ ) {
                 $wpdb->insert( "{$wpdb->prefix}erp_acct_chart_of_accounts", [
                     'name' => $charts[$i],
-                    'slug' => slugify($charts[$i])
+                    'slug' => slugify( $charts[$i] ),
                 ] );
             }
         }
 
         // insert ledgers
         $old_ledgers = [];
-        $ledgers = [];
+        $ledgers     = [];
 
         require_once WPERP_INCLUDES . '/ledgers.php';
 
@@ -1644,11 +1635,10 @@ May you enjoy the fruits of your labors for years to come'
                         'slug'     => slugify( $value['name'] ),
                         'code'     => $value['code'],
                         'unused'   => isset( $value['unused'] ) ? $value['unused'] : null,
-                        'system'   => $value['system']
+                        'system'   => $value['system'],
                     ]
                 );
             }
-
 
             foreach ( array_keys( $ledgers ) as $array_key ) {
                 foreach ( $ledgers[$array_key] as $value ) {
@@ -1659,11 +1649,11 @@ May you enjoy the fruits of your labors for years to come'
                     $wpdb->insert(
                         "{$wpdb->prefix}erp_acct_ledgers",
                         [
-                            'chart_id' => erp_acct_get_chart_id_by_slug($array_key),
+                            'chart_id' => erp_acct_get_chart_id_by_slug( $array_key ),
                             'name'     => $value['name'],
                             'slug'     => slugify( $value['name'] ),
                             'code'     => $value['code'],
-                            'system'   => $value['system']
+                            'system'   => $value['system'],
                         ]
                     );
                 }
@@ -1673,7 +1663,7 @@ May you enjoy the fruits of your labors for years to come'
 
         // insert ledger categories
         if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_acct_ledger_categories` LIMIT 0, 1" ) ) {
-            $wpdb->query("INSERT INTO `{$wpdb->prefix}erp_acct_ledger_categories`
+            $wpdb->query( "INSERT INTO `{$wpdb->prefix}erp_acct_ledger_categories`
                 (id,name,chart_id)
                     VALUES
                 (1,'Current Asset',1),
@@ -1691,14 +1681,14 @@ May you enjoy the fruits of your labors for years to come'
                 (13,'Revenue',4),
                 (14,'Sales',4),
                 (15,'Other Income',4),
-                (16,'Equity',5);");
+                (16,'Equity',5);" );
         }
 
         // insert payment methods
         if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_acct_payment_methods` LIMIT 0, 1" ) ) {
             $methods = ['Cash', 'Bank', 'Check'];
 
-            for ( $i = 0; $i < count($methods); $i++ ) {
+            for ( $i = 0; $i < count( $methods ); $i++ ) {
                 $wpdb->insert( "{$wpdb->prefix}erp_acct_payment_methods", [
                     'name' => $methods[$i],
                 ] );
@@ -1715,13 +1705,13 @@ May you enjoy the fruits of your labors for years to come'
                 'Partially Paid',
                 'Approved',
                 'Closed',
-                'Void'
+                'Void',
             ];
 
-            for ( $i = 0; $i < count($statuses); $i++ ) {
+            for ( $i = 0; $i < count( $statuses ); $i++ ) {
                 $wpdb->insert( "{$wpdb->prefix}erp_acct_trn_status_types", [
                     'type_name' => $statuses[$i],
-                    'slug'      => slugify( $statuses[$i] )
+                    'slug'      => slugify( $statuses[$i] ),
                 ] );
             }
         }
@@ -1907,27 +1897,26 @@ May you enjoy the fruits of your labors for years to come'
 
         //Insert default financial years
         if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_acct_financial_years` LIMIT 0, 1" ) ) {
-
-            $general         = get_option( 'erp_settings_general', array() );
+            $general         = get_option( 'erp_settings_general', [] );
             $financial_month = isset( $general['gen_financial_month'] ) ? $general['gen_financial_month'] : '1';
 
             $start_date = new DateTime( date( 'Y-' . $financial_month . '-1' ) );
 
-            $start_date = $start_date->format( "Y-m-d" );
+            $start_date = $start_date->format( 'Y-m-d' );
 
             $end_date = date( 'Y-m-d', strtotime( '+1 year', strtotime( $start_date ) ) );
             $end_date = new DateTime( $end_date );
-            $end_date->modify( "-1 day" );
+            $end_date->modify( '-1 day' );
 
-            $end_date = $end_date->format( "Y-m-d" );
+            $end_date = $end_date->format( 'Y-m-d' );
 
-            $wpdb->insert( $wpdb->prefix . 'erp_acct_financial_years', array(
-                'name'       => date( "Y" ),
+            $wpdb->insert( $wpdb->prefix . 'erp_acct_financial_years', [
+                'name'       => date( 'Y' ),
                 'start_date' => $start_date,
                 'end_date'   => $end_date,
-                'created_at' => date( "Y-m-d" ),
-                'created_by' => get_current_user_id()
-            ) );
+                'created_at' => date( 'Y-m-d' ),
+                'created_by' => get_current_user_id(),
+            ] );
         }
     }
 
@@ -1939,7 +1928,6 @@ May you enjoy the fruits of your labors for years to come'
      * @return void
      */
     public function set_default_modules() {
-
         if ( get_option( 'wp_erp_version' ) ) {
             return;
         }
@@ -1950,7 +1938,7 @@ May you enjoy the fruits of your labors for years to come'
                 'slug'        => 'erp-hrm',
                 'description' => __( 'Human Resource Mnanagement', 'erp' ),
                 'callback'    => '\WeDevs\ERP\HRM\Human_Resource',
-                'modules'     => apply_filters( 'erp_hr_modules', [] )
+                'modules'     => apply_filters( 'erp_hr_modules', [] ),
             ],
 
             'crm' => [
@@ -1958,7 +1946,7 @@ May you enjoy the fruits of your labors for years to come'
                 'slug'        => 'erp-crm',
                 'description' => __( 'Customer Relationship Management', 'erp' ),
                 'callback'    => '\WeDevs\ERP\CRM\Customer_Relationship',
-                'modules'     => apply_filters( 'erp_crm_modules', [] )
+                'modules'     => apply_filters( 'erp_crm_modules', [] ),
             ],
 
             'accounting' => [
@@ -1966,8 +1954,8 @@ May you enjoy the fruits of your labors for years to come'
                 'slug'        => 'erp-accounting',
                 'description' => __( 'Accounting Management', 'erp' ),
                 'callback'    => '\WeDevs\ERP\Accounting\Accounting',
-                'modules'     => apply_filters( 'erp_accounting_modules', [] )
-            ]
+                'modules'     => apply_filters( 'erp_accounting_modules', [] ),
+            ],
         ];
 
         update_option( 'erp_modules', $default );
@@ -2018,7 +2006,7 @@ May you enjoy the fruits of your labors for years to come'
     public function set_role() {
         $this->includes();
 
-        $admins = get_users( array( 'role' => 'administrator' ) );
+        $admins = get_users( [ 'role' => 'administrator' ] );
 
         if ( $admins ) {
             foreach ( $admins as $user ) {

@@ -3,6 +3,7 @@
 namespace WeDevs\ERP\HRM;
 
 use WeDevs\ERP\Framework\Traits\Hooker;
+use WeDevs_ERP;
 
 /**
  * The HRM Class
@@ -10,17 +11,14 @@ use WeDevs\ERP\Framework\Traits\Hooker;
  * This is loaded in `init` action hook
  */
 class Human_Resource {
-
     use Hooker;
 
     private $plugin;
 
     /**
      * Kick-in the class
-     *
-     * @param \WeDevs_ERP $plugin
      */
-    public function __construct( \WeDevs_ERP $plugin ) {
+    public function __construct( WeDevs_ERP $plugin ) {
 
         // prevent duplicate loading
         if ( did_action( 'erp_hrm_loaded' ) ) {
@@ -54,8 +52,8 @@ class Human_Resource {
      */
     private function define_constants() {
         define( 'WPERP_HRM_FILE', __FILE__ );
-        define( 'WPERP_HRM_PATH', dirname( __FILE__ ) );
-        define( 'WPERP_HRM_VIEWS', dirname( __FILE__ ) . '/views' );
+        define( 'WPERP_HRM_PATH', __DIR__ );
+        define( 'WPERP_HRM_VIEWS', __DIR__ . '/views' );
         define( 'WPERP_HRM_JS_TMPL', WPERP_HRM_VIEWS . '/js-templates' );
         define( 'WPERP_HRM_ASSETS', plugins_url( '/assets', __FILE__ ) );
     }
@@ -105,7 +103,7 @@ class Human_Resource {
      * @return void
      */
     private function init_filters() {
-        add_filter( 'erp_settings_pages', array( $this, 'add_settings_page' ) );
+        add_filter( 'erp_settings_pages', [ $this, 'add_settings_page' ] );
     }
 
     /**
@@ -129,7 +127,6 @@ class Human_Resource {
      * @param array
      */
     public function add_settings_page( $settings = [] ) {
-
         $settings[] = include __DIR__ . '/includes/class-settings.php';
 
         return $settings;
@@ -157,43 +154,43 @@ class Human_Resource {
             wp_enqueue_script( 'erp-sweetalert' );
         }
 
-        wp_enqueue_script( 'wp-erp-hr', WPERP_HRM_ASSETS . "/js/hrm$suffix.js", array( 'erp-script' ), date( 'Ymd' ), true );
-        wp_enqueue_script( 'wp-erp-hr-leave', WPERP_HRM_ASSETS . "/js/leave$suffix.js", array(
+        wp_enqueue_script( 'wp-erp-hr', WPERP_HRM_ASSETS . "/js/hrm$suffix.js", [ 'erp-script' ], date( 'Ymd' ), true );
+        wp_enqueue_script( 'wp-erp-hr-leave', WPERP_HRM_ASSETS . "/js/leave$suffix.js", [
             'erp-script',
-            'wp-color-picker'
-        ), date( 'Ymd' ), true );
+            'wp-color-picker',
+        ], date( 'Ymd' ), true );
 
-        $localize_script = apply_filters( 'erp_hr_localize_script', array(
+        $localize_script = apply_filters( 'erp_hr_localize_script', [
             'nonce'                  => wp_create_nonce( 'wp-erp-hr-nonce' ),
-            'popup'                  => array(
-                'dept_title'        => __( 'New Department', 'erp' ),
-                'dept_submit'       => __( 'Create Department', 'erp' ),
-                'location_title'    => __( 'New Location', 'erp' ),
-                'location_submit'   => __( 'Create Location', 'erp' ),
-                'dept_update'       => __( 'Update Department', 'erp' ),
-                'desig_title'       => __( 'New Designation', 'erp' ),
-                'desig_submit'      => __( 'Create Designation', 'erp' ),
-                'desig_update'      => __( 'Update Designation', 'erp' ),
-                'employee_title'    => __( 'New Employee', 'erp' ),
-                'employee_create'   => __( 'Create Employee', 'erp' ),
-                'employee_update'   => __( 'Update Employee', 'erp' ),
-                'employment_status' => __( 'Employment Status', 'erp' ),
-                'update_status'     => __( 'Update', 'erp' ),
-                'policy'            => __( 'Leave Policy', 'erp' ),
-                'policy_create'     => __( 'Create Policy', 'erp' ),
-                'holiday'           => __( 'Holiday', 'erp' ),
-                'holiday_create'    => __( 'Create Holiday', 'erp' ),
-                'holiday_update'    => __( 'Update Holiday', 'erp' ),
-                'new_leave_req'     => __( 'Leave Request', 'erp' ),
-                'take_leave'        => __( 'Send Leave Request', 'erp' ),
-                'terminate'         => __( 'Terminate', 'erp' ),
-                'leave_approve'     => __( 'Approve Reason', 'erp' ),
-                'leave_reject'      => __( 'Reject Reason', 'erp' ),
+            'popup'                  => [
+                'dept_title'            => __( 'New Department', 'erp' ),
+                'dept_submit'           => __( 'Create Department', 'erp' ),
+                'location_title'        => __( 'New Location', 'erp' ),
+                'location_submit'       => __( 'Create Location', 'erp' ),
+                'dept_update'           => __( 'Update Department', 'erp' ),
+                'desig_title'           => __( 'New Designation', 'erp' ),
+                'desig_submit'          => __( 'Create Designation', 'erp' ),
+                'desig_update'          => __( 'Update Designation', 'erp' ),
+                'employee_title'        => __( 'New Employee', 'erp' ),
+                'employee_create'       => __( 'Create Employee', 'erp' ),
+                'employee_update'       => __( 'Update Employee', 'erp' ),
+                'employment_status'     => __( 'Employment Status', 'erp' ),
+                'update_status'         => __( 'Update', 'erp' ),
+                'policy'                => __( 'Leave Policy', 'erp' ),
+                'policy_create'         => __( 'Create Policy', 'erp' ),
+                'holiday'               => __( 'Holiday', 'erp' ),
+                'holiday_create'        => __( 'Create Holiday', 'erp' ),
+                'holiday_update'        => __( 'Update Holiday', 'erp' ),
+                'new_leave_req'         => __( 'Leave Request', 'erp' ),
+                'take_leave'            => __( 'Send Leave Request', 'erp' ),
+                'terminate'             => __( 'Terminate', 'erp' ),
+                'leave_approve'         => __( 'Approve Reason', 'erp' ),
+                'leave_reject'          => __( 'Reject Reason', 'erp' ),
                 'leave_approve_btn'     => __( 'Approve Request', 'erp' ),
                 'leave_reject_btn'      => __( 'Reject Request', 'erp' ),
-                'already_terminate' => __( 'Sorry, this employee is already terminated', 'erp' ),
-                'already_active'    => __( 'Sorry, this employee is already active', 'erp' )
-            ),
+                'already_terminate'     => __( 'Sorry, this employee is already terminated', 'erp' ),
+                'already_active'        => __( 'Sorry, this employee is already active', 'erp' ),
+            ],
             'asset_url'              => WPERP_ASSETS,
             'emp_upload_photo'       => __( 'Upload Photo', 'erp' ),
             'emp_set_photo'          => __( 'Set Photo', 'erp' ),
@@ -213,12 +210,11 @@ class Human_Resource {
             'empty_entitlement_text' => sprintf( '<span>%s <a href="%s" title="%s">%s</a></span>', __( 'Please create entitlement first', 'erp' ), add_query_arg( [
                 'page'          => 'erp-hr',
                 'section'       => 'leave',
-                'sub-section'   => 'leave-entitlements&tab=assignment'
-            ], admin_url( 'admin.php' ) ), __( 'Create Entitlement', 'erp' ), __( 'Create Entitlement', 'erp' ) )
-        ) );
+                'sub-section'   => 'leave-entitlements&tab=assignment',
+            ], admin_url( 'admin.php' ) ), __( 'Create Entitlement', 'erp' ), __( 'Create Entitlement', 'erp' ) ),
+        ] );
 
-
-        $section    =   isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) :'dashboard';
+        $section    =   isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : 'dashboard';
 
         switch ( $section ) {
             case 'employee':
@@ -235,6 +231,7 @@ class Human_Resource {
                 wp_enqueue_script( 'erp-flotchart-valuelabel' );
                 wp_enqueue_style( 'erp-flotchart-valuelabel-css' );
             break;
+
             case 'report':
                 wp_enqueue_script( 'erp-flotchart' );
                 wp_enqueue_script( 'erp-flotchart-time' );
@@ -244,6 +241,7 @@ class Human_Resource {
                 wp_enqueue_script( 'erp-flotchart-valuelabel' );
                 wp_enqueue_style( 'erp-flotchart-valuelabel-css' );
             break;
+
             case 'my-profile':
                 wp_enqueue_script( 'erp-flotchart' );
                 wp_enqueue_script( 'erp-flotchart-stack' );
@@ -276,6 +274,7 @@ class Human_Resource {
         global $current_screen;
         // main HR menu
         $hook = str_replace( sanitize_title( __( 'HR Management', 'erp' ) ), 'hr-management', $current_screen->base );
+
         if ( 'wp-erp_page_erp-hr' === $hook ) {
             erp_get_js_template( WPERP_HRM_JS_TMPL . '/new-leave-request.php', 'erp-new-leave-req' );
             erp_get_js_template( WPERP_HRM_JS_TMPL . '/leave-days.php', 'erp-leave-days' );
@@ -333,12 +332,10 @@ class Human_Resource {
                 break;
 
             default:
-                # code...
+                // code...
                 break;
         }
-
     }
-
 
     /**
      * Load HRM rest controllers
@@ -368,4 +365,3 @@ class Human_Resource {
         return array_merge( $controller, $hrm_controller );
     }
 }
-

@@ -1,28 +1,28 @@
 <div class="holiday-form-wrap">
 
     <div class="row">
-        <?php erp_html_form_input( array(
+        <?php erp_html_form_input( [
             'label'    => __( 'Holiday Name', 'erp' ),
             'name'     => 'title',
             'id'       => 'erp-hr-holiday-title',
             'value'    => '{{ data.title }}',
             'required' => true,
-        ) ); ?>
+        ] ); ?>
     </div>
 
     <div class="row">
-        <?php erp_html_form_input( array(
+        <?php erp_html_form_input( [
             'label'    => __( 'Start Date', 'erp' ),
             'name'     => 'start_date',
             'value'    => '{{ data.start_date }}',
             'id'       => 'erp-hr-holiday-start',
             'required' => true,
             'class'    => 'erp-leave-date-picker-from',
-        ) ); ?>
+        ] ); ?>
     </div>
 
     <div class="row">
-        <?php erp_html_form_input( array(
+        <?php erp_html_form_input( [
             'label'    => __( 'Range', 'erp' ),
             'name'     => 'range',
             'value'    => '{{ data.range }}',
@@ -30,28 +30,28 @@
             'help'     => __( 'Enable', 'erp' ),
             'type'     => 'checkbox',
             'class'    => 'erp-hr-holiday-date-range',
-        ) ); ?>
+        ] ); ?>
     </div>
 
     <div class="row">
-        <?php erp_html_form_input( array(
+        <?php erp_html_form_input( [
             'label'    => __( 'End Date', 'erp' ),
             'name'     => 'end_date',
             'id'       => 'erp-hr-holiday-end',
             'value'    => '{{ data.end_date }}',
             'class'    => 'erp-leave-date-picker-to',
-        ) ); ?>
+        ] ); ?>
     </div>
 
     <div class="row">
-        <?php erp_html_form_input( array(
+        <?php erp_html_form_input( [
             'type'     => 'textarea',
             'label'    => __( 'Description', 'erp' ),
             'name'     => 'description',
             'id'       => 'erp-hr-holiday-description',
             'value'    => '{{ data.description }}',
-            'class'    => 'erp-hr-leave-holiday-description'
-        ) ); ?>
+            'class'    => 'erp-hr-leave-holiday-description',
+        ] ); ?>
     </div>
 
     <?php wp_nonce_field( 'erp-leave-holiday' ); ?>

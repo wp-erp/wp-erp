@@ -30,11 +30,11 @@ function wperp_update_1_0_create_table() {
     $collate = '';
 
     if ( $wpdb->has_cap( 'collation' ) ) {
-        if ( ! empty($wpdb->charset ) ) {
+        if ( ! empty( $wpdb->charset ) ) {
             $collate .= "DEFAULT CHARACTER SET $wpdb->charset";
         }
 
-        if ( ! empty($wpdb->collate ) ) {
+        if ( ! empty( $wpdb->collate ) ) {
             $collate .= " COLLATE $wpdb->collate";
         }
     }
@@ -47,7 +47,7 @@ function wperp_update_1_0_create_table() {
               PRIMARY KEY (`id`)
             ) $collate;";
 
-    require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+    require_once ABSPATH . 'wp-admin/includes/upgrade.php';
     dbDelta( $schema );
 }
 
@@ -64,11 +64,11 @@ function wperp_update_1_0_create_people_types_table() {
     $collate = '';
 
     if ( $wpdb->has_cap( 'collation' ) ) {
-        if ( ! empty($wpdb->charset ) ) {
+        if ( ! empty( $wpdb->charset ) ) {
             $collate .= "DEFAULT CHARACTER SET $wpdb->charset";
         }
 
-        if ( ! empty($wpdb->collate ) ) {
+        if ( ! empty( $wpdb->collate ) ) {
             $collate .= " COLLATE $wpdb->collate";
         }
     }
@@ -90,7 +90,7 @@ function wperp_update_1_0_create_people_types_table() {
                 KEY `people_types_id` (`people_types_id`)
             ) $collate;";
 
-    require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+    require_once ABSPATH . 'wp-admin/includes/upgrade.php';
     dbDelta( $types_table );
     dbDelta( $relations_table );
 
@@ -125,7 +125,7 @@ function wperp_update_1_0_schedules() {
 function wperp_update_1_0_populate_types_table() {
     global $wpdb;
 
-    $query = "SELECT * FROM {$wpdb->prefix}erp_peoples";
+    $query   = "SELECT * FROM {$wpdb->prefix}erp_peoples";
     $peoples = $wpdb->get_results( $query );
 
     if ( ! $peoples ) {
@@ -137,13 +137,13 @@ function wperp_update_1_0_populate_types_table() {
         'contact'  => 1,
         'company'  => 2,
         'customer' => 3,
-        'vendor'   => 4
+        'vendor'   => 4,
     ];
 
     $table_name     = 'INSERT INTO ' . $wpdb->prefix . 'erp_people_type_relations (people_id, people_types_id, deleted_at ) VALUES';
     $insert_queries = [];
 
-    foreach ($peoples as $people) {
+    foreach ( $peoples as $people ) {
         $insert_queries[] = sprintf( "(%d, '%s', '%s')", $people->id, $type_id_mapping[ $people->type ], $people->deleted_at );
     }
 

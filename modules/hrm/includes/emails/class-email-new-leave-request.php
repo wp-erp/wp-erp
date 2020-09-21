@@ -1,4 +1,5 @@
 <?php
+
 namespace WeDevs\ERP\HRM\Emails;
 
 use WeDevs\ERP\Email;
@@ -8,16 +9,15 @@ use WeDevs\ERP\Framework\Traits\Hooker;
  * New Leave Request
  */
 class New_Leave_Request extends Email {
-
     use Hooker;
 
-    function __construct() {
+    public function __construct() {
         $this->id             = 'new-leave-request';
         $this->title          = __( 'New Leave Request', 'erp' );
         $this->description    = __( 'New leave request notification to HR Manager.', 'erp' );
 
-        $this->subject        = __( 'New leave request received', 'erp');
-        $this->heading        = __( 'New Leave Request', 'erp');
+        $this->subject        = __( 'New leave request received', 'erp' );
+        $this->heading        = __( 'New Leave Request', 'erp' );
 
         $this->find = [
             'full-name'    => '{employee_name}',
@@ -35,7 +35,7 @@ class New_Leave_Request extends Email {
         parent::__construct();
     }
 
-    function get_args() {
+    public function get_args() {
         return [
             'email_heading' => $this->heading,
             'email_body'    => wpautop( $this->get_option( 'body' ) ),
@@ -51,7 +51,7 @@ class New_Leave_Request extends Email {
      *
      * @param int $request_id
      *
-     * @return boolean
+     * @return bool
      */
     public function trigger( $request_id = null ) {
         $request = erp_hr_get_leave_request( $request_id );
@@ -70,7 +70,7 @@ class New_Leave_Request extends Email {
             'date_from'    => erp_format_date( $request->start_date ),
             'date_to'      => erp_format_date( $request->end_date ),
             'no_days'      => $request->days,
-            'reason'       => stripslashes($request->reason),
+            'reason'       => stripslashes( $request->reason ),
             'requests_url' => sprintf( '<a class="button green" href="%s">%s</a>', admin_url( 'admin.php?page=erp-hr&section=leave' ), __( 'View Request', 'erp' ) ),
         ];
 
@@ -98,10 +98,9 @@ class New_Leave_Request extends Email {
     /**
      * get_content_html function.
      *
-     * @access public
      * @return string
      */
-    function get_content_html() {
+    public function get_content_html() {
         $message = $this->get_template_content( WPERP_INCLUDES . '/email/email-body.php', $this->get_args() );
 
         return $this->format_string( $message );
@@ -110,10 +109,9 @@ class New_Leave_Request extends Email {
     /**
      * get_content_plain function.
      *
-     * @access public
      * @return string
      */
-    function get_content_plain() {
+    public function get_content_plain() {
         $message = $this->get_template_content( WPERP_INCLUDES . '/email/email-body.php', $this->get_args() );
 
         return $message;
@@ -131,7 +129,7 @@ class New_Leave_Request extends Email {
                 'description' => sprintf( __( 'This controls the email subject line. Leave blank to use the default subject: <code>%s</code>.', 'erp' ), $this->subject ),
                 'placeholder' => '',
                 'default'     => $this->subject,
-                'desc_tip'    => true
+                'desc_tip'    => true,
             ],
             [
                 'title'       => __( 'Email Heading', 'erp' ),
@@ -140,7 +138,7 @@ class New_Leave_Request extends Email {
                 'description' => sprintf( __( 'This controls the main heading contained within the email notification. Leave blank to use the default heading: <code>%s</code>.', 'erp' ), $this->heading ),
                 'placeholder' => '',
                 'default'     => $this->heading,
-                'desc_tip'    => true
+                'desc_tip'    => true,
             ],
             [
                 'title'             => __( 'Email Body', 'erp' ),
@@ -152,12 +150,12 @@ class New_Leave_Request extends Email {
                 'desc_tip'          => true,
                 'custom_attributes' => [
                     'rows' => 5,
-                    'cols' => 45
-                ]
+                    'cols' => 45,
+                ],
             ],
             [
-                'type' => $this->id . '_help_texts'
-            ]
+                'type' => $this->id . '_help_texts',
+            ],
         ];
     }
 
@@ -166,7 +164,7 @@ class New_Leave_Request extends Email {
      *
      * @return void
      */
-    function replace_keys() {
+    public function replace_keys() {
         ?>
         <tr valign="top" class="single_select_page">
             <th scope="row" class="titledesc"><?php esc_html_e( 'Template Tags', 'erp' ); ?></th>

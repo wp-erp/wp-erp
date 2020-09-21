@@ -11,13 +11,13 @@ $all_url            = admin_url( 'admin.php?page=erp-modules' );
 $active_url         = admin_url( 'admin.php?page=erp-modules&tab=active' );
 $inactive_url       = admin_url( 'admin.php?page=erp-modules&tab=inactive' );
 
-$current_tab        = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : ''
+$current_tab        = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : '';
 ?>
 <div class="wrap erp-settings">
 	<h2><?php esc_html_e( 'Modules', 'erp' ); ?></h2>
 	<ul class="erp-subsubsub">
 		<li><a class="erp-nav-tab<?php echo esc_attr( $current_tab ) == '' ? ' erp-nav-tab-active' : ''; ?>" href="<?php echo esc_url( $all_url ); ?>"><?php esc_html( printf( esc_html__( 'All (%s) |', 'erp' ), esc_html( $count_all ) ) ); ?></a></li>
-		<li><a class="erp-nav-tab<?php echo esc_attr( $current_tab ) == 'active' ? ' erp-nav-tab-active' : ''; ?>" href="<?php echo esc_url($active_url); ?>"><?php esc_html( printf( esc_html__( 'Active (%s) |', 'erp' ), esc_html( $count_active ) ) ); ?></a></li>
+		<li><a class="erp-nav-tab<?php echo esc_attr( $current_tab ) == 'active' ? ' erp-nav-tab-active' : ''; ?>" href="<?php echo esc_url( $active_url ); ?>"><?php esc_html( printf( esc_html__( 'Active (%s) |', 'erp' ), esc_html( $count_active ) ) ); ?></a></li>
 		<li><a class="erp-nav-tab<?php echo esc_attr( $current_tab ) == 'inactive' ? ' erp-nav-tab-active' : ''; ?>" href="<?php echo  esc_url( $inactive_url ); ?>"><?php esc_html( printf( esc_html__( 'Inactive (%s)', 'erp' ), esc_html( $count_inactive ) ) ); ?></a></li>
 	</ul>
 
@@ -43,9 +43,8 @@ $current_tab        = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $
 
 		<?php
 
-			foreach ( $modules as $slug => $module ) {
-				$checked = array_key_exists( $slug, $all_active_modules ) ? $slug : '';
-				?>
+            foreach ( $modules as $slug => $module ) {
+                $checked = array_key_exists( $slug, $all_active_modules ) ? $slug : ''; ?>
 				<tr class="active">
 					<th scope="row">
 						<input type="checkbox" name="modules[]" id="erp_module_<?php echo esc_attr( $slug ); ?>" value="<?php echo esc_attr( $slug ); ?>" <?php checked( $slug, $checked ); ?>>
@@ -62,18 +61,18 @@ $current_tab        = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $
 					</td>
 				</tr>
 				<?php
-			}
+            }
 
-			if ( ! $modules  ) {
-				?>
+            if ( ! $modules  ) {
+                ?>
 				<tr class="active">
 					<td colspan="3" class="column-description desc">
 						<?php esc_html_e( 'No modules found!', 'erp' ); ?>
 					</td>
 				</tr>
 				<?php
-			}
-		?>
+            }
+        ?>
 
 		</tbody>
 	</table>

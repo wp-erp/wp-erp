@@ -1,12 +1,12 @@
 <?php
 
 /** Callbacks *****************************/
-
 function erp_hr_dashboard_widget_birthday_callback() {
     erp_admin_dash_metabox( __( '<i class="fa fa-birthday-cake"></i> Celebrations', 'erp' ), 'erp_hr_dashboard_widget_birthday' );
     erp_admin_dash_metabox( __( '<i class="fa fa-paper-plane"></i> Who is out', 'erp' ), 'erp_hr_dashboard_widget_whoisout' );
+
     if ( current_user_can( 'erp_hr_manager' ) ) {
-        erp_admin_dash_metabox(__('<i class="fa fa-paper-plane"></i> About to end', 'erp'), 'erp_hr_dashboard_widget_about_to_end');
+        erp_admin_dash_metabox( __( '<i class="fa fa-paper-plane"></i> About to end', 'erp' ), 'erp_hr_dashboard_widget_about_to_end' );
     }
 }
 
@@ -14,7 +14,6 @@ function erp_hr_dashboard_widget_announcement_callback() {
     erp_admin_dash_metabox( __( '<i class="fa fa-microphone"></i> Latest Announcement', 'erp' ), 'erp_hr_dashboard_widget_latest_announcement' );
     erp_admin_dash_metabox( __( '<i class="fa fa-calendar-o"></i> My Leave Calendar', 'erp' ), 'erp_hr_dashboard_widget_leave_calendar' );
 }
-
 
 add_action( 'erp_hr_dashboard_widgets_right', 'erp_hr_dashboard_widget_birthday_callback' );
 add_action( 'erp_hr_dashboard_widgets_left', 'erp_hr_dashboard_widget_announcement_callback' );
@@ -39,24 +38,23 @@ function erp_hr_dashboard_widget_birthday() {
             <?php
 
             foreach ( $todays_birthday as $user ) {
-                $employee = new \WeDevs\ERP\HRM\Employee( intval( $user->user_id ) );
-                ?>
+                $employee = new \WeDevs\ERP\HRM\Employee( intval( $user->user_id ) ); ?>
                 <li>
                     <a href="<?php echo esc_url( $employee->get_details_url() ); ?>" class="erp-tips" title="<?php echo esc_attr( $employee->get_full_name() ); ?>">
                     <?php echo wp_kses_post( $employee->get_avatar( 32 ) ); ?></a> &nbsp;
-                    <?php if ( !isset($_COOKIE[ $employee->get_user_id() ] ) ) : ?>
+                    <?php if ( !isset( $_COOKIE[ $employee->get_user_id() ] ) ) { ?>
                         <!-- <a href="#" title="Send birthday wish email to <?php /*echo $employee->get_full_name();*/ ?>"
                             class="send-wish" data-user_id="<?php /*echo intval( $employee->get_user_id() );*/ ?>">
                             <i class="fa fa-envelope-o" aria-hidden="true"></i>
                         </a> -->
-                    <?php endif; ?>
+                    <?php } ?>
                 </li>
-            <?php } ?>
+            <?php
+            } ?>
         </ul>
 
         <?php
-    }
-    ?>
+    } ?>
 
     <?php if ( $upcoming_birtday ) { ?>
 
@@ -64,7 +62,7 @@ function erp_hr_dashboard_widget_birthday() {
 
         <ul class="erp-list list-two-side list-sep">
 
-            <?php foreach ( $upcoming_birtday as $key => $user ): ?>
+            <?php foreach ( $upcoming_birtday as $key => $user ) { ?>
 
                 <?php $employee = new \WeDevs\ERP\HRM\Employee( intval( $user->user_id ) ); ?>
 
@@ -73,7 +71,7 @@ function erp_hr_dashboard_widget_birthday() {
                     <span><?php echo esc_html( erp_format_date( $user->date_of_birth, 'M, d' ) ); ?></span>
                 </li>
 
-            <?php endforeach; ?>
+            <?php } ?>
 
         </ul>
         <?php
@@ -81,8 +79,7 @@ function erp_hr_dashboard_widget_birthday() {
 
     if ( ! $todays_birthday && ! $upcoming_birtday ) {
         esc_html_e( 'No one has birthdays this week!', 'erp' );
-    }
-    ?>
+    } ?>
     <style>
         span.wait {
             display: none;
@@ -97,7 +94,6 @@ function erp_hr_dashboard_widget_birthday() {
     </style>
     <?php
 }
-
 
 /**
  * About to end widget
@@ -106,50 +102,53 @@ function erp_hr_dashboard_widget_birthday() {
  */
 function erp_hr_dashboard_widget_about_to_end() {
     $c_t_employees  = erp_hr_get_contractual_employee();
-    $current_date   =  current_time('Y-m-d' );
+    $current_date   =  current_time( 'Y-m-d' );
     $trainee        = [];
     $contract       = [];
-    foreach( $c_t_employees as $key => $user ) {
-        $date1          = date_create($current_date);
+
+    foreach ( $c_t_employees as $key => $user ) {
+        $date1          = date_create( $current_date );
         $end_date       = get_user_meta( $user->user_id, 'end_date', true );
         $date2          = date_create( $end_date );
-        $diff           = date_diff($date1,$date2);
+        $diff           = date_diff( $date1, $date2 );
+
         if ( $diff->days > 0 && $diff->days < 21 ) {
             $user->end_date = $end_date;
-            if ($user->type == 'contract') {
+
+            if ( $user->type == 'contract' ) {
                 $contract[] = $user;
             }
-            if ($user->type == 'trainee') {
+
+            if ( $user->type == 'trainee' ) {
                 $trainee[] = $user;
             }
         }
     }
-    usort($contract, function( $a, $b ) {
+    usort( $contract, function ( $a, $b ) {
         return $a->end_date > $b->end_date;
-    });
-    usort($trainee, function( $a, $b ) {
+    } );
+    usort( $trainee, function ( $a, $b ) {
         return $a->end_date > $b->end_date;
-    });
-    ?>
+    } ); ?>
     <h4><?php esc_html_e( 'Contractual Employees', 'erp' ); ?></h4>
     <span class="wait"><?php esc_html_e( 'please wait ...', 'erp' ); ?></span>
 
     <ul class="erp-list list-two-side list-sep">
 
-        <?php foreach ( $contract as $key => $user ):
-             $employee = new \WeDevs\ERP\HRM\Employee( intval( $user->user_id ) ); ?>
+        <?php foreach ( $contract as $key => $user ) {
+        $employee = new \WeDevs\ERP\HRM\Employee( intval( $user->user_id ) ); ?>
                 <li>
                     <a href="<?php echo esc_url( $employee->get_details_url() ); ?>"><?php echo esc_html( $employee->get_full_name() ); ?></a>
                     <span><?php echo esc_html( erp_format_date( $user->end_date, 'M, d' ) ); ?></span>
                 </li>
         <?php
-            endforeach;
-            if ( empty( $contract ) ) {
-                ?>
+    }
+
+    if ( empty( $contract ) ) {
+        ?>
                 <li><?php esc_html_e( 'No employee found', 'erp' ); ?></li>
                 <?php
-            }
-        ?>
+    } ?>
     </ul>
 
     <h4><?php esc_html_e( 'Trainee Employees', 'erp' ); ?></h4>
@@ -157,20 +156,20 @@ function erp_hr_dashboard_widget_about_to_end() {
 
     <ul class="erp-list list-two-side list-sep">
 
-        <?php foreach ( $trainee as $key => $user ):
-            $employee = new \WeDevs\ERP\HRM\Employee( intval( $user->user_id ) ); ?>
+        <?php foreach ( $trainee as $key => $user ) {
+        $employee = new \WeDevs\ERP\HRM\Employee( intval( $user->user_id ) ); ?>
             <li>
                 <a href="<?php echo esc_url( $employee->get_details_url() ); ?>"><?php echo esc_html( $employee->get_full_name() ); ?></a>
                 <span><?php echo esc_html( erp_format_date( $user->end_date, 'M, d' ) ); ?></span>
             </li>
         <?php
-            endforeach;
-            if ( empty( $trainee ) ) {
-                ?>
+    }
+
+    if ( empty( $trainee ) ) {
+        ?>
                 <li><?php esc_html_e( 'No trainee found', 'erp' ); ?></li>
                 <?php
-            }
-        ?>
+    } ?>
     </ul>
 
     <style>
@@ -187,8 +186,6 @@ function erp_hr_dashboard_widget_about_to_end() {
     </style>
     <?php
 }
-
-
 
 /**
  * Latest Announcement Widget
@@ -201,23 +198,24 @@ function erp_hr_dashboard_widget_latest_announcement() {
 
     //if user is admin then show latest 5 announcements
     if ( current_user_can( erp_hr_get_manager_role() ) ) {
-        $query = new WP_Query( array(
+        $query = new WP_Query( [
             'post_type'      => 'erp_hr_announcement',
             'posts_per_page' => '5',
-            'order'          => 'DESC'
-        ) );
+            'order'          => 'DESC',
+        ] );
         $announcements = $query->get_posts();
     } else {
         $announcements = erp_hr_employee_dashboard_announcement( get_current_user_id() );
     }
 
     if ( $announcements ) {
-    ?>
+        ?>
     <ul class="erp-list erp-dashboard-announcement">
         <?php
         $i = 0;
-        foreach ( $announcements as $key => $announcement ): ?>
-            <li class="<?php echo ($announcement->status !== 'read') ? 'unread' : 'read'; ?>">
+
+        foreach ( $announcements as $key => $announcement ) { ?>
+            <li class="<?php echo ( $announcement->status !== 'read' ) ? 'unread' : 'read'; ?>">
                 <div class="announcement-title">
                     <a href="#" <?php echo ( $announcement->status == 'read' ) ? 'class="read"' : ''; ?>>
                         <?php echo esc_html( $announcement->post_title ); ?>
@@ -230,14 +228,14 @@ function erp_hr_dashboard_widget_latest_announcement() {
                  ?>
 
                 <div class="announcement-row-actions">
-                    <?php if ( ! current_user_can( erp_hr_get_manager_role() ) ): ?>
+                    <?php if ( ! current_user_can( erp_hr_get_manager_role() ) ) { ?>
                         <a href="#" class="mark-read erp-tips <?php echo ( $announcement->status == 'read' ) ? 'erp-hide' : ''; ?>" title="<?php esc_html_e( 'Mark as Read', 'erp' ); ?>" data-row_id="<?php echo esc_html( $announcement->id ); ?>"><i class="dashicons dashicons-yes"></i></a>
-                    <?php endif; ?>
+                    <?php } ?>
                     <a href="#" class="view-full erp-tips" title="<?php esc_html_e( 'View full announcement', 'erp' ); ?>" data-row_id="<?php echo esc_html( $announcement->ID ); ?>"><i class="dashicons dashicons-editor-expand"></i></a>
                 </div>
             </li>
         <?php $i++;
-        endforeach ?>
+        } ?>
     </ul>
     <?php
     } else {
@@ -254,14 +252,13 @@ function erp_hr_dashboard_widget_latest_announcement() {
  */
 function erp_hr_dashboard_widget_whoisout() {
     $leave_requests           = erp_hr_get_current_month_leave_list();
-    $leave_requests_nextmonth = erp_hr_get_next_month_leave_list();
-    ?>
+    $leave_requests_nextmonth = erp_hr_get_next_month_leave_list(); ?>
     <?php if ( $leave_requests ) { ?>
 
         <h4><?php esc_html_e( 'This Month', 'erp' ); ?></h4>
 
         <ul class="erp-list list-two-side list-sep">
-            <?php foreach ( $leave_requests as $key => $leave ): ?>
+            <?php foreach ( $leave_requests as $key => $leave ) { ?>
                 <?php $employee = new \WeDevs\ERP\HRM\Employee( intval( $leave->user_id ) ); ?>
                 <li>
                     <a href="<?php echo esc_url( $employee->get_details_url() ); ?>"><?php echo esc_html( $employee->get_full_name() ); ?></a>
@@ -272,16 +269,15 @@ function erp_hr_dashboard_widget_whoisout() {
                         if ( $leave->day_status_id == '2' ) {
                             $img = WPERP_URL . '/assets/images/Morning.svg';
                             echo "&nbsp; <img src='$img' height='20' title='$days' />";
-
-                        } elseif( $leave->day_status_id == '3' ) {
+                        } elseif ( $leave->day_status_id == '3' ) {
                             $img = WPERP_URL . '/assets/images/Afternoon.svg';
                             echo "&nbsp; <img src='$img' height='18' title='$days' />";
                         }
                     }
                     ?>
-                    <span><i class="fa fa-calendar"></i> <?php echo esc_html( erp_format_date( $leave->start_date, 'M d' ) ) . ' - '. esc_html( erp_format_date( $leave->end_date, 'M d' ) ); ?></span>
+                    <span><i class="fa fa-calendar"></i> <?php echo esc_html( erp_format_date( $leave->start_date, 'M d' ) ) . ' - ' . esc_html( erp_format_date( $leave->end_date, 'M d' ) ); ?></span>
                 </li>
-            <?php endforeach ?>
+            <?php } ?>
         </ul>
     <?php } ?>
 
@@ -289,7 +285,7 @@ function erp_hr_dashboard_widget_whoisout() {
         <h4><?php esc_html_e( 'Next Month', 'erp' ); ?></h4>
 
         <ul class="erp-list list-two-side list-sep">
-            <?php foreach ( $leave_requests_nextmonth as $key => $leave ): ?>
+            <?php foreach ( $leave_requests_nextmonth as $key => $leave ) { ?>
                 <?php $employee = new \WeDevs\ERP\HRM\Employee( intval( $leave->user_id ) ); ?>
                 <li>
                     <a href="<?php echo esc_url( $employee->get_details_url() ); ?>">
@@ -302,15 +298,15 @@ function erp_hr_dashboard_widget_whoisout() {
                         if ( $leave->day_status_id == '2' ) {
                             $img = WPERP_URL . '/assets/images/Morning.svg';
                             echo "&nbsp; <img src='$img' height='20' title='$days' />";
-                        } elseif( $leave->day_status_id == '3' ) {
+                        } elseif ( $leave->day_status_id == '3' ) {
                             $img = WPERP_URL . '/assets/images/Afternoon.svg';
                             echo "&nbsp; <img src='$img' height='18' title='$days' />";
                         }
                     }
                     ?>
-                    <span><i class="fa fa-calendar"></i> <?php echo esc_html( erp_format_date( $leave->start_date, 'M d' ) ) . ' - '. esc_html( erp_format_date( $leave->end_date, 'M d' ) ); ?></span>
+                    <span><i class="fa fa-calendar"></i> <?php echo esc_html( erp_format_date( $leave->start_date, 'M d' ) ) . ' - ' . esc_html( erp_format_date( $leave->end_date, 'M d' ) ); ?></span>
                 </li>
-            <?php endforeach ?>
+            <?php } ?>
         </ul>
 
     <?php } ?>
@@ -332,13 +328,12 @@ function erp_hr_dashboard_widget_whoisout() {
  * @return void
  */
 function erp_hr_dashboard_widget_leave_calendar() {
-
     $user_id        = get_current_user_id();
-    $args = array(
+    $args           = [
         'user_id'           => $user_id,
         'status'            => 'all',
         'number'            => '-1',
-    );
+    ];
 
     $leave_requests = erp_hr_get_leave_requests( $args );
     $leave_requests = $leave_requests['data'];
@@ -353,6 +348,7 @@ function erp_hr_dashboard_widget_leave_calendar() {
         }
         //if status pending
         $event_label = $leave_request->policy_name;
+
         if ( 2 == $leave_request->status ) {
             $event_label .= sprintf( ' ( %s ) ', __( 'Pending', 'erp' ) );
         }
@@ -362,14 +358,14 @@ function erp_hr_dashboard_widget_leave_calendar() {
             $event_label .= '(' . erp_hr_leave_request_get_day_statuses( $leave_request->day_status_id ) . ')';
         }
 
-        $events[] = array(
+        $events[] = [
             'id'        => $leave_request->id,
             'title'     => $event_label,
             'start'     => erp_current_datetime()->setTimestamp( $leave_request->start_date )->setTime( 0, 0, 0 )->format(  'Y-m-d h:i:s' ),
             'end'       => erp_current_datetime()->setTimestamp( $leave_request->end_date )->setTime( 23, 59, 59 )->format( 'Y-m-d h:i:s' ),
             'url'       => erp_hr_url_single_employee( $leave_request->user_id, 'leave' ),
             'color'     => $leave_request->color,
-        );
+        ];
     }
 
     foreach ( $holidays as $key => $holiday ) {
@@ -380,13 +376,11 @@ function erp_hr_dashboard_widget_leave_calendar() {
             'end'       => $holiday->end,
             'color'     => '#FF5354',
             'img'       => '',
-            'holiday'   => true
+            'holiday'   => true,
         ];
     }
 
-    $event_data = array_merge( $events, $holiday_events );
-
-    ?>
+    $event_data = array_merge( $events, $holiday_events ); ?>
     <style>
         .fc-time {
             display:none;
@@ -404,11 +398,11 @@ function erp_hr_dashboard_widget_leave_calendar() {
         }
     </style>
 
-    <?php if ( erp_hr_get_assign_policy_from_entitlement( $user_id ) ): ?>
+    <?php if ( erp_hr_get_assign_policy_from_entitlement( $user_id ) ) { ?>
         <div class="erp-hr-new-leave-request-wrap">
             <a href="#" class="button button-primary" id="erp-hr-new-leave-req"><?php esc_html_e( 'Take a Leave', 'erp' ); ?></a>
         </div>
-    <?php endif ?>
+    <?php } ?>
 
     <div id="erp-hr-calendar"></div>
 
@@ -441,12 +435,12 @@ function erp_hr_dashboard_widget_leave_calendar() {
  *
  * @since  1.1.10
  *
- * @return  string
+ * @return string
  */
 function erp_hr_employee_list_url() {
     $args = [
         'page'    => 'erp-hr',
-        'section' => 'employee'
+        'section' => 'employee',
     ];
 
     $url = add_query_arg( $args, admin_url( 'admin.php' ) );

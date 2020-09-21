@@ -2,10 +2,13 @@
 
 namespace WeDevs\ERP\CRM;
 
+use Google_Client;
+use Google_Service_Gmail;
+
 class Google_Auth {
 
     /**
-     * @var \Google_Client
+     * @var Google_Client
      */
     private $client;
 
@@ -34,26 +37,27 @@ class Google_Auth {
 
     private function init_client() {
         $creds = $this->has_credentials();
+
         if ( empty( $creds['client_id'] ) || empty( $creds['client_secret'] ) ) {
             return false;
         }
 
-        $client = new \Google_Client( array(
+        $client = new Google_Client( [
             'client_id'     => $creds['client_id'],
             'client_secret' => $creds['client_secret'],
-            'redirect_uris' => array(
+            'redirect_uris' => [
                 $this->get_redirect_url(),
-            ),
-        ) );
+            ],
+        ] );
 
-        $client->setAccessType( "offline" );        // offline access
+        $client->setAccessType( 'offline' );        // offline access
         $client->setIncludeGrantedScopes( true );   // incremental auth
-        $client->addScope( \Google_Service_Gmail::GMAIL_SEND );
-        $client->addScope( \Google_Service_Gmail::GMAIL_MODIFY );
-        $client->addScope( \Google_Service_Gmail::GMAIL_SETTINGS_BASIC );
-        $client->addScope( \Google_Service_Gmail::GMAIL_READONLY );
+        $client->addScope( Google_Service_Gmail::GMAIL_SEND );
+        $client->addScope( Google_Service_Gmail::GMAIL_MODIFY );
+        $client->addScope( Google_Service_Gmail::GMAIL_SETTINGS_BASIC );
+        $client->addScope( Google_Service_Gmail::GMAIL_READONLY );
         $client->setRedirectUri( $this->get_redirect_url() );
-        $client->setApprovalPrompt('force');
+        $client->setApprovalPrompt( 'force' );
 
         $token = get_option( 'erp_google_access_token' );
 
@@ -62,13 +66,13 @@ class Google_Auth {
         }
 
         $this->client = $client;
-
     }
 
     public function get_client() {
-        if ( !$this->client instanceof \Google_Client ) {
+        if ( !$this->client instanceof Google_Client ) {
             $this->init_client();
         }
+
         return $this->client;
     }
 
@@ -92,6 +96,7 @@ class Google_Auth {
         }
 
         $token = get_option( 'erp_google_access_token', [] );
+
         if ( empty( $token ) ) {
             return false;
         }
@@ -101,6 +106,7 @@ class Google_Auth {
 
     public function has_credentials() {
         $options = get_option( 'erp_settings_erp-crm_email_connect_gmail', [] );
+
         if ( !isset( $options['client_id'] ) || empty( $options['client_id'] ) ) {
             return false;
         }
@@ -153,7 +159,7 @@ class Google_Auth {
 
     public function get_settings_url() {
         $settings_url = add_query_arg( [ 'page' => 'erp-settings', 'tab' => 'erp-crm', 'section' => 'email_connect', 'sub_section' => 'gmail' ], admin_url( 'admin.php' ) );
+
         return $settings_url;
     }
-
 }

@@ -1,19 +1,17 @@
 <?php
+
 namespace WeDevs\ERP\HRM\Models;
 
 use WeDevs\ERP\Framework\Model;
 
 /**
  * Class Financial_Year
- *
- * @package WeDevs\ERP\HRM\Models
  */
 class Financial_Year extends Model {
-
     protected $table = 'erp_hr_financial_years';
 
     protected $fillable = [
-        'fy_name', 'start_date', 'end_date', 'description', 'created_by', 'updated_by'
+        'fy_name', 'start_date', 'end_date', 'description', 'created_by', 'updated_by',
     ];
 
     /**

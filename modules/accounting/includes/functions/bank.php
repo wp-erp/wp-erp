@@ -8,6 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Get all bank accounts
  *
  * @param $data
+ *
  * @return mixed
  */
 function erp_acct_get_banks( $show_balance = false, $with_cash = false, $no_bank = false ) {
@@ -28,6 +29,7 @@ function erp_acct_get_banks( $show_balance = false, $with_cash = false, $no_bank
     $chart_id    = 7;
     $cash_ledger = '';
     $where       = '';
+
     if ( $with_cash && ! $no_bank ) {
         $where       = " WHERE chart_id = {$chart_id}";
         $cash_ledger = " OR slug = 'cash' ";
@@ -49,6 +51,7 @@ function erp_acct_get_banks( $show_balance = false, $with_cash = false, $no_bank
     if ( ! $show_balance ) {
         $query   = "SELECT * FROM $ledgers" . $where . $cash_ledger;
         $results = $wpdb->get_results( $query, ARRAY_A );
+
         return $results;
     }
 
@@ -65,7 +68,7 @@ function erp_acct_get_banks( $show_balance = false, $with_cash = false, $no_bank
     if ( $with_cash ) {
         // little hack to solve -> opening_balance cash entry with no ledger_details cash entry
         $cash_ledger = '7';
-        $no_cash = true;
+        $no_cash     = true;
 
         foreach ( $temp_accts as $temp_acct ) {
             if ( $temp_acct['ledger_id'] === $cash_ledger ) {
@@ -75,7 +78,7 @@ function erp_acct_get_banks( $show_balance = false, $with_cash = false, $no_bank
         }
 
         if ( $no_cash ) {
-            $temp_accts[] = array( 'id' => 7 );
+            $temp_accts[] = [ 'id' => 7 ];
         }
     }
 
@@ -124,6 +127,7 @@ function erp_acct_get_banks( $show_balance = false, $with_cash = false, $no_bank
  * Get all accounts to show in dashboard
  *
  * @param $data
+ *
  * @return mixed
  */
 function erp_acct_get_dashboard_banks() {
@@ -165,6 +169,7 @@ function erp_acct_get_dashboard_banks() {
  * Get a single bank account
  *
  * @param $bank_no
+ *
  * @return mixed
  */
 function erp_acct_get_bank( $bank_no ) {
@@ -180,6 +185,7 @@ function erp_acct_get_bank( $bank_no ) {
  *
  * @param $data
  * @param $bank_id
+ *
  * @return int
  */
 function erp_acct_insert_bank( $data ) {
@@ -192,26 +198,26 @@ function erp_acct_insert_bank( $data ) {
 
         $wpdb->insert(
             $wpdb->prefix . 'erp_acct_cash_at_banks',
-            array(
-				'ledger_id' => $bank_data['ledger_id'],
-            )
+            [
+                'ledger_id' => $bank_data['ledger_id'],
+            ]
         );
 
         $wpdb->query( 'COMMIT' );
-
     } catch ( Exception $e ) {
         $wpdb->query( 'ROLLBACK' );
+
         return new WP_error( 'bank-account-exception', $e->getMessage() );
     }
+
     return $bank_data['ledger_id'];
-
 }
-
 
 /**
  * Delete a bank account
  *
  * @param $id
+ *
  * @return int
  */
 function erp_acct_delete_bank( $id ) {
@@ -219,17 +225,16 @@ function erp_acct_delete_bank( $id ) {
 
     try {
         $wpdb->query( 'START TRANSACTION' );
-        $wpdb->delete( $wpdb->prefix . 'erp_acct_cash_at_banks', array( 'ledger_id' => $id ) );
+        $wpdb->delete( $wpdb->prefix . 'erp_acct_cash_at_banks', [ 'ledger_id' => $id ] );
         $wpdb->query( 'COMMIT' );
-
     } catch ( Exception $e ) {
         $wpdb->query( 'ROLLBACK' );
+
         return new WP_error( 'bank-account-exception', $e->getMessage() );
     }
 
     return $id;
 }
-
 
 /**
  * Get formatted bank data
@@ -249,9 +254,7 @@ function erp_acct_get_formatted_bank_data( $bank_data ) {
  * Get balance of a single account
  *
  * @param $ledger_id
- *
  */
-
 function erp_acct_get_single_account_balance( $ledger_id ) {
     global $wpdb;
 
@@ -286,21 +289,21 @@ function erp_acct_perform_transfer( $item ) {
     $created_at = date( 'Y-m-d' );
     $updated_at = date( 'Y-m-d' );
     $updated_by = $created_by;
-    $currency   = erp_get_currency(true);
+    $currency   = erp_get_currency( true );
 
     try {
         $wpdb->query( 'START TRANSACTION' );
 
         $wpdb->insert(
             $wpdb->prefix . 'erp_acct_voucher_no',
-            array(
-				'type'       => 'transfer_voucher',
-				'currency'   => $currency,
-				'created_at' => $created_at,
-				'created_by' => $created_by,
-				'updated_at' => $updated_at,
-				'updated_by' => $updated_by,
-            )
+            [
+                'type'       => 'transfer_voucher',
+                'currency'   => $currency,
+                'created_at' => $created_at,
+                'created_by' => $created_by,
+                'updated_at' => $updated_at,
+                'updated_by' => $updated_by,
+            ]
         );
 
         $voucher_no = $wpdb->insert_id;
@@ -308,59 +311,58 @@ function erp_acct_perform_transfer( $item ) {
         // Inset transfer amount in ledger_details
         $wpdb->insert(
             $wpdb->prefix . 'erp_acct_ledger_details',
-            array(
-				'ledger_id'   => $item['from_account_id'],
-				'trn_no'      => $voucher_no,
-				'particulars' => $item['particulars'],
-				'debit'       => 0,
-				'credit'      => $item['amount'],
-				'trn_date'    => $item['date'],
-				'created_at'  => $created_at,
-				'created_by'  => $created_by,
-				'updated_at'  => $updated_at,
-				'updated_by'  => $updated_by,
-            )
+            [
+                'ledger_id'   => $item['from_account_id'],
+                'trn_no'      => $voucher_no,
+                'particulars' => $item['particulars'],
+                'debit'       => 0,
+                'credit'      => $item['amount'],
+                'trn_date'    => $item['date'],
+                'created_at'  => $created_at,
+                'created_by'  => $created_by,
+                'updated_at'  => $updated_at,
+                'updated_by'  => $updated_by,
+            ]
         );
 
         $wpdb->insert(
             $wpdb->prefix . 'erp_acct_ledger_details',
-            array(
-				'ledger_id'   => $item['to_account_id'],
-				'trn_no'      => $voucher_no,
-				'particulars' => $item['particulars'],
-				'debit'       => $item['amount'],
-				'credit'      => 0,
-				'trn_date'    => $item['date'],
-				'created_at'  => $created_at,
-				'created_by'  => $created_by,
-				'updated_at'  => $updated_at,
-				'updated_by'  => $updated_by,
-            )
+            [
+                'ledger_id'   => $item['to_account_id'],
+                'trn_no'      => $voucher_no,
+                'particulars' => $item['particulars'],
+                'debit'       => $item['amount'],
+                'credit'      => 0,
+                'trn_date'    => $item['date'],
+                'created_at'  => $created_at,
+                'created_by'  => $created_by,
+                'updated_at'  => $updated_at,
+                'updated_by'  => $updated_by,
+            ]
         );
 
         $wpdb->insert(
             $wpdb->prefix . 'erp_acct_transfer_voucher',
-            array(
-				'voucher_no'  => $voucher_no,
-				'amount'      => $item['amount'],
-				'ac_from'     => $item['from_account_id'],
-				'ac_to'       => $item['to_account_id'],
-				'particulars' => $item['particulars'],
-				'trn_date'    => $item['date'],
-				'created_at'  => $created_at,
-				'created_by'  => $created_by,
-				'updated_at'  => $updated_at,
-				'updated_by'  => $updated_by,
-            )
+            [
+                'voucher_no'  => $voucher_no,
+                'amount'      => $item['amount'],
+                'ac_from'     => $item['from_account_id'],
+                'ac_to'       => $item['to_account_id'],
+                'particulars' => $item['particulars'],
+                'trn_date'    => $item['date'],
+                'created_at'  => $created_at,
+                'created_by'  => $created_by,
+                'updated_at'  => $updated_at,
+                'updated_by'  => $updated_by,
+            ]
         );
 
         $wpdb->query( 'COMMIT' );
-
     } catch ( Exception $e ) {
         $wpdb->query( 'ROLLBACK' );
+
         return new WP_error( 'transfer-exception', $e->getMessage() );
     }
-
 }
 
 /**
@@ -374,22 +376,20 @@ function erp_acct_sync_dashboard_accounts() {
     foreach ( $accounts as $account ) {
         $wpdb->update(
             $wpdb->prefix . 'erp_acct_cash_at_banks',
-            array(
-				'balance' => $account['balance'],
-            ),
-            array(
-				'ledger_id' => $account['ledger_id'],
-            )
+            [
+                'balance' => $account['balance'],
+            ],
+            [
+                'ledger_id' => $account['ledger_id'],
+            ]
         );
     }
-
 }
 
 /**
  * Get transferrable accounts
  */
 function erp_acct_get_transfer_accounts( $show_balance = false ) {
-
     $results = erp_acct_get_banks( true, true, false );
 
     return $results;
@@ -430,8 +430,9 @@ function erp_acct_get_transfer_vouchers( $args = [] ) {
 /**
  * Get single voucher
  *
- * @param integer $id Voucher id
- * @return object     Single voucher
+ * @param int $id Voucher id
+ *
+ * @return object Single voucher
  */
 function erp_acct_get_single_voucher( $id ) {
     global $wpdb;

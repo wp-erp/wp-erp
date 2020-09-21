@@ -6,8 +6,8 @@
 
     if ( false === $add_ons ) {
         $help_url  = 'https://api.bitbucket.org/2.0/snippets/wedevs/nrq8z/files/addons.json';
-        $response  = wp_remote_get( $help_url, array('timeout' => 15) );
-        $add_ons = wp_remote_retrieve_body( $response );
+        $response  = wp_remote_get( $help_url, ['timeout' => 15] );
+        $add_ons   = wp_remote_retrieve_body( $response );
 
         if ( is_wp_error( $response ) || $response['response']['code'] != 200 ) {
             $add_ons = '[]';
@@ -19,9 +19,8 @@
     $add_ons = json_decode( $add_ons );
 
     if ( count( $add_ons ) ) {
-        foreach ($add_ons as $addon) {
-            $addon_url = $addon->url . '?utm_source=wp-admin&utm_medium=link&utm_campaign=addons-page';
-            ?>
+        foreach ( $add_ons as $addon ) {
+            $addon_url = $addon->url . '?utm_source=wp-admin&utm_medium=link&utm_campaign=addons-page'; ?>
 
             <div class="erp-addon">
                 <div class="erp-addon-thumb">

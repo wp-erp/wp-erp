@@ -1,11 +1,13 @@
 <?php
+
 namespace WeDevs\ERP\API;
 
-use WP_REST_Server;
-use WP_REST_Response;
 use WP_Error;
+use WP_REST_Response;
+use WP_REST_Server;
 
 class Contacts_Groups_Controller extends REST_Controller {
+
     /**
      * Endpoint namespace.
      *
@@ -114,8 +116,9 @@ class Contacts_Groups_Controller extends REST_Controller {
         $total_items = erp_crm_get_contact_groups( [ 'count' => true ] );
 
         $formated_items = [];
+
         foreach ( $items as $item ) {
-            $data = $this->prepare_item_for_response( $item, $request );
+            $data             = $this->prepare_item_for_response( $item, $request );
             $formated_items[] = $this->prepare_response_for_collection( $data );
         }
 
@@ -134,13 +137,13 @@ class Contacts_Groups_Controller extends REST_Controller {
      */
     public function get_group( $request ) {
         $id    = (int) $request['id'];
-        $item = (object) erp_crm_get_contact_group_by_id( $id );
+        $item  = (object) erp_crm_get_contact_group_by_id( $id );
 
         if ( empty( $id ) || empty( $item->id ) ) {
             return new WP_Error( 'rest_group_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
 
-        $item  = $this->prepare_item_for_response( $item, $request );
+        $item     = $this->prepare_item_for_response( $item, $request );
         $response = rest_ensure_response( $item );
 
         return $response;
@@ -217,11 +220,13 @@ class Contacts_Groups_Controller extends REST_Controller {
         $total_items   = erp_crm_get_subscriber_contact( $args );
 
         $item_ids = [];
+
         foreach ( $subscribers as $subscriber ) {
             $item_ids[] = $subscriber->user_id;
         }
 
         $items = [];
+
         if ( ! empty( $item_ids ) ) {
             $items = erp_get_people_by( 'id', $item_ids );
         }
@@ -229,8 +234,9 @@ class Contacts_Groups_Controller extends REST_Controller {
         $contacts_controller = new Contacts_Controller();
 
         $formated_items = [];
+
         foreach ( $items as $item ) {
-            $data = $contacts_controller->prepare_item_for_response( $item, $request );
+            $data             = $contacts_controller->prepare_item_for_response( $item, $request );
             $formated_items[] = $this->prepare_response_for_collection( $data );
         }
 
@@ -285,7 +291,7 @@ class Contacts_Groups_Controller extends REST_Controller {
     /**
      * Prepare a single item for create or update
      *
-     * @param WP_REST_Request $request Request object.
+     * @param WP_REST_Request $request request object
      *
      * @return array $prepared_item
      */
@@ -296,6 +302,7 @@ class Contacts_Groups_Controller extends REST_Controller {
         if ( isset( $request['name'] ) ) {
             $prepared_item['name'] = $request['name'];
         }
+
         if ( isset( $request['description'] ) ) {
             $prepared_item['description'] = $request['description'];
         }
@@ -311,10 +318,10 @@ class Contacts_Groups_Controller extends REST_Controller {
     /**
      * Prepare a single user output for response
      *
-     * @param object $item
-     * @param WP_REST_Request $request Request object.
+     * @param object          $item
+     * @param WP_REST_Request $request request object
      *
-     * @return WP_REST_Response $response Response data.
+     * @return WP_REST_Response $response response data
      */
     public function prepare_item_for_response( $item, $request ) {
         $data = [

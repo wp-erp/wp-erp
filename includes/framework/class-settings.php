@@ -7,8 +7,19 @@ namespace WeDevs\ERP\Framework;
  */
 class ERP_Admin_Settings {
 
-    private static $settings = array();
-    private static $section = array();
+    /**
+     * Settings array
+     *
+     * @var array
+     */
+    private static $settings = [];
+
+    /**
+     * Sections
+     *
+     * @var array
+     */
+    private static $section = [];
 
     /**
      * Include all settings file
@@ -18,9 +29,8 @@ class ERP_Admin_Settings {
      * @return array
      */
     public static function get_settings() {
-
         if ( !self::$settings ) {
-            $settings = array();
+            $settings = [];
 
             $settings[] = include __DIR__ . '/settings/general.php';
             $settings[] = include __DIR__ . '/settings/email.php';
@@ -29,11 +39,13 @@ class ERP_Admin_Settings {
 
             // Display integrations tab only if any integration exist.
             $integrations = wperp()->integration->get_integrations();
+
             if ( ! empty( $integrations ) ) {
                 $settings[] = include __DIR__ . '/settings/integration.php';
             }
 
             $licenses = erp_addon_licenses();
+
             if ( $licenses ) {
                 $settings[] = include __DIR__ . '/settings/license.php';
             }
@@ -52,9 +64,8 @@ class ERP_Admin_Settings {
      * @return array()
      */
     public static function get_current_tab_and_section() {
-
         $settings  = self::get_settings();
-        $query_arg = array( 'tab' => false, 'subtab' => false );
+        $query_arg = [ 'tab' => false, 'subtab' => false ];
 
         if ( ! isset( $settings[0] ) ) {
             return $query_arg;
@@ -69,7 +80,7 @@ class ERP_Admin_Settings {
         $current_tab = $query_arg['tab'] = isset( $_GET['tab'] ) ? sanitize_title( wp_unslash( $_GET['tab'] ) ) : $settings[0]->get_id();
 
         foreach ( $settings as $obj ) {
-            $sections[$obj->get_id()] = isset( $obj->sections ) ? $obj->sections : array();
+            $sections[$obj->get_id()] = isset( $obj->sections ) ? $obj->sections : [];
         }
 
         if ( ! isset( $sections[$current_tab] ) ) {
@@ -112,14 +123,14 @@ class ERP_Admin_Settings {
         echo '<h2 class="nav-tab-wrapper erp-nav-tab-wrapper">';
 
         foreach ( $settings as $obj ) {
-
-            $url   = sprintf('admin.php?page=erp-settings&tab=%s', $obj->get_id() );
+            $url   = sprintf( 'admin.php?page=erp-settings&tab=%s', $obj->get_id() );
             $class = ( $current_tab == $obj->get_id() ) ? ' nav-tab-active' : '';
+
             if ( $current_tab == $obj->get_id() && $current_class === null ) {
                 $current_class = $obj;
             }
 
-            printf('<a class="nav-tab%s" href="%s">%s</a>', esc_attr( $class ), esc_url( $url ), esc_html( $obj->get_label() ) );
+            printf( '<a class="nav-tab%s" href="%s">%s</a>', esc_attr( $class ), esc_url( $url ), esc_html( $obj->get_label() ) );
         }
 
         echo '</h2>';
@@ -128,7 +139,6 @@ class ERP_Admin_Settings {
 
         $current_class->save( $current_section );
         $current_class->output( $current_section );
-
     }
 
     /**
@@ -150,7 +160,7 @@ class ERP_Admin_Settings {
         }
 
         foreach ( $settings as $obj ) {
-            $sections[$obj->get_id()] = isset( $obj->sections ) ? $obj->sections : array();
+            $sections[$obj->get_id()] = isset( $obj->sections ) ? $obj->sections : [];
         }
 
         $tab_sections = $sections[$current_tab];
@@ -166,17 +176,17 @@ class ERP_Admin_Settings {
 
         echo '<ul class="erp-subsubsub">';
 
-            echo '<li>';
-            foreach ( $tab_sections as $slug => $label ) {
-                $url    = 'admin.php?page=erp-settings&tab='.$current_tab.'&section='.$slug;
-                $class  = ( $current_section == $slug ) ? ' erp-nav-tab-active' : '';
-                $link[] = '<a class="erp-nav-tab'.$class.'" href="'.$url.'">' . $label . '</a>';
-            }
+        echo '<li>';
 
-            echo wp_kses_post( implode( ' | </li><li>', $link ) );
-            echo '</li>';
+        foreach ( $tab_sections as $slug => $label ) {
+            $url    = 'admin.php?page=erp-settings&tab=' . $current_tab . '&section=' . $slug;
+            $class  = ( $current_section == $slug ) ? ' erp-nav-tab-active' : '';
+            $link[] = '<a class="erp-nav-tab' . $class . '" href="' . $url . '">' . $label . '</a>';
+        }
+
+        echo wp_kses_post( implode( ' | </li><li>', $link ) );
+        echo '</li>';
 
         echo '</ul>';
-
     }
 }

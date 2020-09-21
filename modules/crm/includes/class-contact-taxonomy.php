@@ -1,8 +1,9 @@
 <?php
+
 namespace WeDevs\ERP\CRM;
 
-
 class Contact_Taxonomy {
+
     /**
      * The unique ID to use for the taxonomy type
      *
@@ -33,7 +34,7 @@ class Contact_Taxonomy {
      *
      * @var array
      */
-    public $args = array();
+    public $args = [];
 
     /**
      * Array of taxonomy labels, if you'd like to customize them completely
@@ -42,26 +43,26 @@ class Contact_Taxonomy {
      *
      * @var array
      */
-    public $labels = array();
+    public $labels = [];
 
     /**
      * Main constructor
      *
      * @since 1.3.6
      *
-     * @param  string  $taxonomy
-     * @param  string  $slug
-     * @param  array   $args
-     * @param  array   $labels
+     * @param string $taxonomy
+     * @param string $slug
+     * @param array  $args
+     * @param array  $labels
      */
-    public function __construct( $taxonomy = '', $slug = '', $args = array(), $labels = array() ) {
+    public function __construct( $taxonomy = '', $slug = '', $args = [], $labels = [] ) {
 
         // Bail if no taxonomy is passed
         if ( empty( $taxonomy ) ) {
             return;
         }
 
-        /** Class Variables ***************************************************/
+        /* Class Variables ***************************************************/
 
         // Set the taxonomy
         $this->taxonomy = sanitize_key( $taxonomy );
@@ -85,7 +86,6 @@ class Contact_Taxonomy {
         do_action( 'erp_crm_taxonomy', $this );
     }
 
-
     /**
      * Hook in to actions & filters
      *
@@ -93,8 +93,8 @@ class Contact_Taxonomy {
      */
     protected function hooks() {
         // Column styling
-        add_action( 'admin_head', array( $this, 'admin_head'     ) );
-        add_action( 'admin_menu', array( $this, 'add_admin_page' ) );
+        add_action( 'admin_head', [ $this, 'admin_head'     ] );
+        add_action( 'admin_menu', [ $this, 'add_admin_page' ] );
     }
 
     /**
@@ -113,18 +113,18 @@ class Contact_Taxonomy {
         }
 
         // URL for the taxonomy
-        $url = add_query_arg( array( 'taxonomy' => $tax->name ), 'edit-tags.php' );
+        $url = add_query_arg( [ 'taxonomy' => $tax->name ], 'edit-tags.php' );
 
         // Add sub menu page
         add_submenu_page( 'erp-sales', esc_attr( $tax->labels->menu_name ),
             esc_attr( $tax->labels->menu_name ),
             $tax->cap->manage_terms,
-            $url);
+            $url );
         // Hook into early actions to load custom CSS and our init handler.
-        add_action( 'erp-sales',     array( $this, 'admin_load' ) );
-        add_action( 'load-edit-tags.php', array( $this, 'admin_load' ) );
-        add_action( 'load-term.php',      array( $this, 'admin_menu_highlight' ) );
-        add_action( 'load-edit-tags.php', array( $this, 'admin_menu_highlight' ) );
+        add_action( 'erp-sales', [ $this, 'admin_load' ] );
+        add_action( 'load-edit-tags.php', [ $this, 'admin_load' ] );
+        add_action( 'load-term.php', [ $this, 'admin_menu_highlight' ] );
+        add_action( 'load-edit-tags.php', [ $this, 'admin_menu_highlight' ] );
     }
 
     /**
@@ -137,6 +137,7 @@ class Contact_Taxonomy {
      */
     public function admin_menu_highlight() {
         global $plugin_page;
+
         if ( isset( $_GET['taxonomy'] ) && ( $_GET['taxonomy'] === $this->taxonomy ) ) {
             $plugin_page = 'erp-sales';
         }
@@ -148,7 +149,7 @@ class Contact_Taxonomy {
      * @since 1.3.6
      */
     public function admin_load() {
-        add_filter( 'admin_body_class', array( $this, 'admin_body_class' ) );
+        add_filter( 'admin_body_class', [ $this, 'admin_body_class' ] );
     }
 
     /**
@@ -156,8 +157,9 @@ class Contact_Taxonomy {
      *
      * @since 1.3.6
      *
-     * @param   string $classes
-     * @return  string
+     * @param string $classes
+     *
+     * @return string
      */
     public function admin_body_class( $classes = '' ) {
 
@@ -210,27 +212,27 @@ class Contact_Taxonomy {
      * @return array
      */
     protected function parse_labels() {
-        return wp_parse_args( $this->labels, array(
+        return wp_parse_args( $this->labels, [
             'menu_name'                  => $this->tax_plural,
             'name'                       => $this->tax_plural,
             'singular_name'              => $this->tax_singular,
-            'search_items'               => sprintf( __( 'Search %s', 'erp' ),                $this->tax_plural ),
-            'popular_items'              => sprintf( __( 'Popular %s', 'erp' ),               $this->tax_plural ),
-            'all_items'                  => sprintf( __( 'All %s', 'erp' ),                   $this->tax_plural ),
-            'parent_item'                => sprintf( __( 'Parent %s', 'erp' ),                $this->tax_singular ),
-            'parent_item_colon'          => sprintf( __( 'Parent %s:', 'erp' ),               $this->tax_singular ),
-            'edit_item'                  => sprintf( __( 'Edit %s', 'erp' ),                  $this->tax_singular ),
-            'view_item'                  => sprintf( __( 'View %s', 'erp' ),                  $this->tax_singular ),
-            'update_item'                => sprintf( __( 'Update %s', 'erp' ),                $this->tax_singular ),
-            'add_new_item'               => sprintf( __( 'Add New %s', 'erp' ),               $this->tax_singular ),
-            'new_item_name'              => sprintf( __( 'New %s Name', 'erp' ),              $this->tax_singular ),
-            'separate_items_with_commas' => sprintf( __( 'Separate %s with commas', 'erp' ),  $this->tax_plural_low ),
-            'add_or_remove_items'        => sprintf( __( 'Add or remove %s', 'erp' ),         $this->tax_plural_low ),
+            'search_items'               => sprintf( __( 'Search %s', 'erp' ), $this->tax_plural ),
+            'popular_items'              => sprintf( __( 'Popular %s', 'erp' ), $this->tax_plural ),
+            'all_items'                  => sprintf( __( 'All %s', 'erp' ), $this->tax_plural ),
+            'parent_item'                => sprintf( __( 'Parent %s', 'erp' ), $this->tax_singular ),
+            'parent_item_colon'          => sprintf( __( 'Parent %s:', 'erp' ), $this->tax_singular ),
+            'edit_item'                  => sprintf( __( 'Edit %s', 'erp' ), $this->tax_singular ),
+            'view_item'                  => sprintf( __( 'View %s', 'erp' ), $this->tax_singular ),
+            'update_item'                => sprintf( __( 'Update %s', 'erp' ), $this->tax_singular ),
+            'add_new_item'               => sprintf( __( 'Add New %s', 'erp' ), $this->tax_singular ),
+            'new_item_name'              => sprintf( __( 'New %s Name', 'erp' ), $this->tax_singular ),
+            'separate_items_with_commas' => sprintf( __( 'Separate %s with commas', 'erp' ), $this->tax_plural_low ),
+            'add_or_remove_items'        => sprintf( __( 'Add or remove %s', 'erp' ), $this->tax_plural_low ),
             'choose_from_most_used'      => sprintf( __( 'Choose from most used %s', 'erp' ), $this->tax_plural_low ),
-            'not_found'                  => sprintf( __( 'No %s found', 'erp' ),              $this->tax_plural_low ),
-            'no_item'                    => sprintf( __( 'No %s', 'erp' ),                    $this->tax_singular ),
-            'no_items'                   => sprintf( __( 'No %s', 'erp' ),                    $this->tax_plural_low )
-        ) );
+            'not_found'                  => sprintf( __( 'No %s found', 'erp' ), $this->tax_plural_low ),
+            'no_item'                    => sprintf( __( 'No %s', 'erp' ), $this->tax_singular ),
+            'no_items'                   => sprintf( __( 'No %s', 'erp' ), $this->tax_plural_low ),
+        ] );
     }
 
     /**
@@ -241,28 +243,28 @@ class Contact_Taxonomy {
      * @return array
      */
     protected function parse_options() {
-        return wp_parse_args( $this->args, array(
+        return wp_parse_args( $this->args, [
             // Core
             'hierarchical' => true,
             'public'       => false,
             'show_ui'      => true,
             'meta_box_cb'  => '',
             'labels'       => $this->parse_labels(),
-            'rewrite'      => array(
+            'rewrite'      => [
                 'with_front'   => false,
                 'slug'         => $this->slug,
-                'hierarchical' => true
-            ),
-            'capabilities' => array(
+                'hierarchical' => true,
+            ],
+            'capabilities' => [
                 'manage_terms' => 'erp_crm_edit_contact',
                 'edit_terms'   => 'erp_crm_edit_contact',
                 'delete_terms' => 'erp_crm_edit_contact',
                 'assign_terms' => 'erp_crm_edit_contact',
-            ),
+            ],
 
             // @see _update_post_term_count()
-            'update_count_callback' => array( $this, 'update_term_count' )
-        ) );
+            'update_count_callback' => [ $this, 'update_term_count' ],
+        ] );
     }
 
     /**
@@ -273,7 +275,7 @@ class Contact_Taxonomy {
      * @param $terms
      * @param $taxonomy
      */
-    public function update_term_count( $terms = array(), $taxonomy = '' ) {
+    public function update_term_count( $terms = [], $taxonomy = '' ) {
         // Fallback to this taxonomy
         if ( empty( $taxonomy ) ) {
             $taxonomy = $this->taxonomy;
@@ -293,18 +295,18 @@ class Contact_Taxonomy {
      *
      * @return array
      */
-    public function bulk_actions( $actions = array() ) {
+    public function bulk_actions( $actions = [] ) {
 
         // Get taxonomy & terms
         $tax   = get_taxonomy( $this->taxonomy );
-        $terms = get_terms( $this->taxonomy, array(
-            'hide_empty' => false
-        ) );
+        $terms = get_terms( $this->taxonomy, [
+            'hide_empty' => false,
+        ] );
 
         // Add to bulk actions array
         if ( ! empty( $terms ) ) {
             foreach ( $terms as $term ) {
-                $actions[ "add-{$term->slug}-{$this->taxonomy}"    ] = sprintf( esc_html__( 'Add to %s %s',      'erp' ), $term->name, $tax->labels->singular_name );
+                $actions[ "add-{$term->slug}-{$this->taxonomy}"    ] = sprintf( esc_html__( 'Add to %s %s', 'erp' ), $term->name, $tax->labels->singular_name );
                 $actions[ "remove-{$term->slug}-{$this->taxonomy}" ] = sprintf( esc_html__( 'Remove from %s %s', 'erp' ), $term->name, $tax->labels->singular_name );
             }
         }
@@ -322,10 +324,10 @@ class Contact_Taxonomy {
      *
      * @return array
      */
-    public function bulk_actions_sort( $actions = array() ) {
+    public function bulk_actions_sort( $actions = [] ) {
 
         // Actions array
-        $old_actions = $add_actions = $rem_actions = array();
+        $old_actions = $add_actions = $rem_actions = [];
 
         // Loop through and separate out actions
         foreach ( $actions as $key => $name ) {
@@ -334,11 +336,11 @@ class Contact_Taxonomy {
             if ( 0 === strpos( $key, 'add-' ) ) {
                 $add_actions[ $key ] = $name;
 
-                // Remove
+            // Remove
             } elseif ( 0 === strpos( $key, 'remove-' ) ) {
                 $rem_actions[ $key ] = $name;
 
-                // Old
+            // Old
             } else {
                 $old_actions[ $key ] = $name;
             }
@@ -358,7 +360,6 @@ class Contact_Taxonomy {
      * @return bool
      */
     public function is_exclusive() {
-        return ( true === $this->args['exclusive'] );
+        return  true === $this->args['exclusive'];
     }
-
 }

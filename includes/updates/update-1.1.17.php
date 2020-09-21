@@ -11,19 +11,19 @@ function erp_crm_update_table_1_1_17() {
 
     // Add hash column in `erp_crm_contact_subscriber` table
     $table = $wpdb->prefix . 'erp_crm_contact_subscriber';
-    $cols  = $wpdb->get_col( "DESC $table");
+    $cols  = $wpdb->get_col( "DESC $table" );
 
     if ( ! in_array( 'hash', $cols ) ) {
         $wpdb->query( "ALTER TABLE $table ADD `hash` VARCHAR(40) NULL DEFAULT NULL AFTER `unsubscribe_at`;" );
 
         // insert default erp subscription form settings
         $args = [
-            'post_title' => __( 'ERP Subscription', 'erp' ),
-            'post_content' => '',
-            'post_status' => 'publish',
-            'post_type' => 'page',
+            'post_title'     => __( 'ERP Subscription', 'erp' ),
+            'post_content'   => '',
+            'post_status'    => 'publish',
+            'post_type'      => 'page',
             'comment_status' => 'closed',
-            'ping_status' => 'closed',
+            'ping_status'    => 'closed',
         ];
 
         $page_id = wp_insert_post( $args );
@@ -43,12 +43,11 @@ function erp_crm_update_table_1_1_17() {
         ];
 
         update_option( 'erp_settings_erp-crm_subscription', $settings );
-
     }
 
     // Change `pay_rate` column's data type in `erp_hr_employees` table
     $table = $wpdb->prefix . 'erp_hr_employees';
-    $cols  = $wpdb->get_col( "DESC $table");
+    $cols  = $wpdb->get_col( "DESC $table" );
 
     if ( in_array( 'pay_rate', $cols ) ) {
         $wpdb->query( "ALTER TABLE $table CHANGE `pay_rate` `pay_rate` DECIMAL(11,2) UNSIGNED NOT NULL DEFAULT '0.00';" );

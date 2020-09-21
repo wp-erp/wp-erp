@@ -5,10 +5,10 @@
 
         <div class="erp-area-left">
 
-            <?php if ( current_user_can('erp_create_employee') ): ?>
+            <?php if ( current_user_can( 'erp_create_employee' ) ) { ?>
 
                 <?php
-                $employees    = \WeDevs\ERP\HRM\Models\Employee::where('status', 'active')->count();
+                $employees    = \WeDevs\ERP\HRM\Models\Employee::where( 'status', 'active' )->count();
                 $departments  = \WeDevs\ERP\HRM\Models\Department::count();
                 $designations = \WeDevs\ERP\HRM\Models\Designation::count();
                 ?>
@@ -59,7 +59,7 @@
                     </div><!-- .badge-wrap -->
                 </div><!-- .badge-container -->
 
-            <?php endif ?>
+            <?php } ?>
 
             <?php do_action( 'erp_hr_dashboard_widgets_left' ); ?>
 
