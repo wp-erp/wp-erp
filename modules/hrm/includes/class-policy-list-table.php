@@ -80,7 +80,8 @@ class Leave_Policies_List_Table extends \WP_List_Table {
 
         // get employee type filter
         $employee_types = array(
-                            '' => esc_html__( 'Employee Types', 'erp' )
+                            ''      => esc_html__( 'Employee Types', 'erp' ),
+                            '-1'    => esc_html__( 'All', 'erp' ),
                         ) + erp_hr_get_employee_types();
         $employee_type = isset( $_GET['filter_employee_type'] ) ? sanitize_text_field( wp_unslash( $_GET['filter_employee_type'] ) ) : '';
         ?>

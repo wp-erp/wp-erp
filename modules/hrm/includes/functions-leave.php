@@ -552,7 +552,6 @@ function erp_hr_apply_policy_on_new_employee( $user_id ) {
     // 3. get policies where automatic policy assign is enabled.
     $policies = Leave_Policy::where( 'apply_for_new_users', 1 )
         ->where( 'f_year', $f_year->id )
-        ->where( 'employee_type', $employee->get_type() )
         ->get();
 
     $policies->each( function ( $policy ) use ( $user_id ) {
@@ -815,7 +814,7 @@ function erp_hr_leave_get_policies( $args = array() ) {
             $gender      = $policy->gender == '-1'       ? esc_attr__('All', 'erp') : ucwords( $policy->gender );
             $marital     = $policy->marital == '-1'      ? esc_attr__('All', 'erp') : ucwords( $policy->marital );
             $location    = $policy->location_id == '-1'  ? esc_attr__('All', 'erp') : $policy->location->name;
-            $employee_type = array_key_exists( $policy->employee_type, $employee_types ) ? $employee_types[ $policy->employee_type ] : '';
+            $employee_type = array_key_exists( $policy->employee_type, $employee_types ) ? $employee_types[ $policy->employee_type ] : __( 'All', 'erp' );
 
             $formatted_data[$key]['id']             = $policy->id;
             $formatted_data[$key]['leave_id']       = $policy->leave_id;
@@ -1049,6 +1048,13 @@ function erp_hr_leave_policy_delete( $policy_ids ) {
     $policies->each( function ( $policy ) {
         if ( $policy->entitlements ) {
             foreach ( $policy->entitlements as $entitlement ) {
+                // check entitlement employee status
+                $employee = new Employee( $entitlement->user_id );
+
+                if ( $policy->employee_type !== '-1' && $policy->employee_type != $employee->get_type() ) {
+                    continue;
+                }
+
                 if ( $entitlement->leave_requests ) {
                     foreach( $entitlement->leave_requests as $request ) {
                         if ( $request->approval_status ) {
@@ -2058,7 +2064,7 @@ function erp_hr_leave_get_entitlements( $args = array() ) {
     }
 
     if ( $args['employee_type'] ) {
-        $where .= " AND emp.type = '" . esc_sql( $args['employee_type'] ) . "'";
+        $where .= " AND policy.employee_type = '" . esc_sql( $args['employee_type'] ) . "'";
     }
 
     $offset = absint( $args['offset'] );
@@ -2070,6 +2076,7 @@ function erp_hr_leave_get_entitlements( $args = array() ) {
         LEFT JOIN {$wpdb->prefix}erp_hr_leaves AS l ON l.id = en.leave_id
         LEFT JOIN {$wpdb->users} AS u ON en.user_id = u.ID
         LEFT JOIN {$wpdb->prefix}erp_hr_employees AS emp ON en.user_id = emp.user_id
+        LEFT JOIN {$wpdb->prefix}erp_hr_leave_policies AS policy ON en.trn_id = policy.id
         $where
         ORDER BY {$args['orderby']} {$args['order']}
         {$limit};";
