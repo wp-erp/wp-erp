@@ -1,4 +1,5 @@
 <?php
+
 namespace WeDevs\ERP\Updates;
 
 // don't call the file directly
@@ -13,7 +14,7 @@ function move_ledger_1403_to_expense() {
     $expense_chart_id = $wpdb->get_var(
         $wpdb->prepare(
             "SELECT id FROM {$wpdb->prefix}erp_acct_chart_of_accounts WHERE slug = %s",
-            array( 'expense' )
+            [ 'expense' ]
         )
     );
 
@@ -22,7 +23,7 @@ function move_ledger_1403_to_expense() {
         $wpdb->query(
             $wpdb->prepare(
                 "UPDATE {$wpdb->prefix}erp_acct_ledgers SET chart_id = %d WHERE code = %d",
-                array( $expense_chart_id, 1403 )
+                [ $expense_chart_id, 1403 ]
             )
         );
     }

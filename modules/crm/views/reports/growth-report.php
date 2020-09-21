@@ -5,7 +5,7 @@ if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_
 
 $data         = [];
 $start        = !empty( $_POST['start'] ) ? sanitize_text_field( wp_unslash( $_POST['start'] ) ) : false;
-$end          = !empty( $_POST['end'] ) ? sanitize_text_field( wp_unslash( $_POST['end'] ) ): date('Y-m-d');
+$end          = !empty( $_POST['end'] ) ? sanitize_text_field( wp_unslash( $_POST['end'] ) ) : date( 'Y-m-d' );
 $filter_type  = !empty( $_POST['filter_type'] ) ? sanitize_text_field( wp_unslash( $_POST['filter_type'] ) ) : 'this_year';
 
 $reports      = erp_crm_growth_reporting_query( $start, $end, $filter_type );
@@ -33,17 +33,17 @@ $reports      = erp_crm_growth_reporting_query( $start, $end, $filter_type );
         </thead>
 
         <tbody>
-            <?php foreach( $reports as $key => $report ) : ?>
+            <?php foreach ( $reports as $key => $report ) { ?>
 
                 <tr>
-                    <td><?php echo esc_html( $key ) ?></td>
-                    <td><?php echo !empty( $report['subscriber'] )  ? esc_attr( $report['subscriber'] ) : 0; ?></td>
+                    <td><?php echo esc_html( $key ); ?></td>
+                    <td><?php echo !empty( $report['subscriber'] ) ? esc_attr( $report['subscriber'] ) : 0; ?></td>
                     <td><?php echo !empty( $report['opportunity'] ) ? esc_attr( $report['opportunity'] ) : 0; ?></td>
-                    <td><?php echo !empty( $report['lead'] )        ? esc_attr( $report['lead'] )      : 0; ?></td>
-                    <td><?php echo !empty( $report['customer'] )    ? esc_attr( $report['customer'] )   : 0; ?></td>
+                    <td><?php echo !empty( $report['lead'] ) ? esc_attr( $report['lead'] ) : 0; ?></td>
+                    <td><?php echo !empty( $report['customer'] ) ? esc_attr( $report['customer'] ) : 0; ?></td>
                 </tr>
 
-            <?php endforeach; ?>
+            <?php } ?>
         </tbody>
     </table>
 

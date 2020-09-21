@@ -1,4 +1,5 @@
 <?php
+
 namespace WeDevs\ERP\CRM;
 
 use WeDevs\ERP\Framework\Traits\Ajax;
@@ -6,11 +7,8 @@ use WeDevs\ERP\Framework\Traits\Hooker;
 
 /**
  * Ajax handler
- *
- * @package WP-ERP
  */
 class Ajax_Handler {
-
     use Ajax;
     use Hooker;
 
@@ -60,13 +58,13 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-crm-contact-subscriber-edit', 'edit_assign_contact_submission' );
 
         // Customer Feeds
-        add_action( 'wp_ajax_erp_crm_get_customer_activity', array( $this, 'fetch_all_activity' ) );
-        add_action( 'wp_ajax_erp_customer_feeds_save_notes', array( $this, 'save_activity_feeds' ) );
-        add_action( 'wp_ajax_erp_crm_delete_customer_activity', array( $this, 'delete_customer_activity_feeds' ) );
-        add_action( 'wp_ajax_email_attachment', array( $this, 'email_attachment' ) );
+        add_action( 'wp_ajax_erp_crm_get_customer_activity', [ $this, 'fetch_all_activity' ] );
+        add_action( 'wp_ajax_erp_customer_feeds_save_notes', [ $this, 'save_activity_feeds' ] );
+        add_action( 'wp_ajax_erp_crm_delete_customer_activity', [ $this, 'delete_customer_activity_feeds' ] );
+        add_action( 'wp_ajax_email_attachment', [ $this, 'email_attachment' ] );
 
         // Schedule page
-        add_action( 'wp_ajax_erp_crm_add_schedules_action', array( $this, 'save_activity_feeds' ) );
+        add_action( 'wp_ajax_erp_crm_add_schedules_action', [ $this, 'save_activity_feeds' ] );
 
         // script reload
         $this->action( 'wp_ajax_erp-crm-customer-company-reload', 'customer_company_template_refresh' );
@@ -152,7 +150,7 @@ class Ajax_Handler {
         // Filter for order & order by
         if ( isset( $_REQUEST['orderby'] ) && isset( $_REQUEST['order'] ) ) {
             $args['orderby']  = sanitize_text_field( wp_unslash( $_REQUEST['orderby'] ) );
-            $args['order']    = sanitize_text_field( wp_unslash( $_REQUEST['order'] ) ) ;
+            $args['order']    = sanitize_text_field( wp_unslash( $_REQUEST['order'] ) );
         } else {
             $args['orderby']  = 'created';
             $args['order']    = 'DESC';
@@ -169,7 +167,7 @@ class Ajax_Handler {
             }
         }
 
-        if ( isset( $_REQUEST['filter_assign_contact']) && !empty( $_REQUEST['filter_assign_contact']) ){
+        if ( isset( $_REQUEST['filter_assign_contact'] ) && !empty( $_REQUEST['filter_assign_contact'] ) ) {
             $args['contact_owner'] = sanitize_text_field( wp_unslash( $_REQUEST['filter_assign_contact'] ) );
         }
 
@@ -178,7 +176,7 @@ class Ajax_Handler {
         }
 
         if ( isset( $_REQUEST['filter_contact_company'] ) && ! empty( $_REQUEST['filter_contact_company'] ) ) {
-            $companies = erp_crm_company_get_customers( array( 'id' => sanitize_text_field( wp_unslash( $_REQUEST['filter_contact_company'] ) ) ) );
+            $companies = erp_crm_company_get_customers( [ 'id' => sanitize_text_field( wp_unslash( $_REQUEST['filter_contact_company'] ) ) ] );
 
             foreach ( $companies as $company ) {
                 $contacts['data'][] = $company['contact_details'];
@@ -187,8 +185,8 @@ class Ajax_Handler {
             $total_items = count( $contacts['data'] );
         } else {
             $contacts['data']  = erp_get_peoples( $args );
-            $args['count'] = true;
-            $total_items = erp_get_peoples( $args );
+            $args['count']     = true;
+            $total_items       = erp_get_peoples( $args );
         }
 
         foreach ( $contacts['data'] as $key => $contact ) {
@@ -204,7 +202,7 @@ class Ajax_Handler {
                     'first_name'   => $user->first_name,
                     'last_name'    => $user->last_name,
                     'display_name' => $user->display_name,
-                    'email'        => $user->user_email
+                    'email'        => $user->user_email,
                 ];
             }
             $contacts['data'][$key]['details_url']   = erp_crm_get_details_url( $contact['id'], $contact['types'] );
@@ -239,7 +237,7 @@ class Ajax_Handler {
 
         if ( 'contact_companies' == $_POST['type'] ) {
             $data = erp_crm_customer_get_company( $_POST );
-        } else if ( 'company_contacts' == $_POST['type'] ) {
+        } elseif ( 'company_contacts' == $_POST['type'] ) {
             $data = erp_crm_company_get_customers( $_POST );
         } else {
             $data = [];
@@ -325,7 +323,7 @@ class Ajax_Handler {
         do_action( 'erp_crm_save_contact_data', $customer, $customer_id, $data );
 
         $customer_data = $customer->to_array();
-        $statuses = erp_crm_customer_get_status_count( $data['type'] );
+        $statuses      = erp_crm_customer_get_status_count( $data['type'] );
 
         $this->send_success( [ 'data' => $customer_data, 'statuses' => $statuses ] );
     }
@@ -365,7 +363,7 @@ class Ajax_Handler {
         }
 
         $ids         = [];
-        $customer_id = ( isset( $_REQUEST['id'] ) && is_array( $_REQUEST['id'] ) ) ? array_map( 'sanitize_text_field', wp_unslash( $_REQUEST['id'] ) ): intval( $_REQUEST['id'] );
+        $customer_id = ( isset( $_REQUEST['id'] ) && is_array( $_REQUEST['id'] ) ) ? array_map( 'sanitize_text_field', wp_unslash( $_REQUEST['id'] ) ) : intval( $_REQUEST['id'] );
         $hard        = isset( $_REQUEST['hard'] ) ? intval( $_REQUEST['hard'] ) : 0;
         $type        = isset( $_REQUEST['type'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['type'] ) ) : '';
 
@@ -373,10 +371,11 @@ class Ajax_Handler {
         $if_customer_has_relations = ( !is_array( $customer_id ) ) ? erp_crm_check_company_contact_relations( $customer_id, $type ) : 0;
 
         if ( $if_customer_has_relations != 0 ) {
-            if ( $type == 'contact') {
+            if ( $type == 'contact' ) {
                 $this->send_error( __( "You can't delete this contact as this contact has a relation with a company. Please make sure this contract is not assigned to any company before deleting.", 'erp' ) );
             }
-            if ( $type == 'company') {
+
+            if ( $type == 'company' ) {
                 $this->send_error( __( "You can't delete this company as this company has a relation with a contact. Please make sure this company is not assigned to any contact before deleting.", 'erp' ) );
             }
         }
@@ -403,7 +402,7 @@ class Ajax_Handler {
         $data = [
             'id'   => $ids,
             'hard' => $hard,
-            'type' => $type
+            'type' => $type,
         ];
 
         $deleted = erp_delete_people( $data );
@@ -429,12 +428,12 @@ class Ajax_Handler {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
-        $customer_id = ( isset( $_REQUEST['id'] ) && is_array( $_REQUEST['id'] ) ) ? (array)sanitize_text_field( wp_unslash( $_REQUEST['id'] ) ) : intval( $_REQUEST['id'] );
+        $customer_id = ( isset( $_REQUEST['id'] ) && is_array( $_REQUEST['id'] ) ) ? (array) sanitize_text_field( wp_unslash( $_REQUEST['id'] ) ) : intval( $_REQUEST['id'] );
         $type        = isset( $_REQUEST['type'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['type'] ) ) : '';
 
         $data = [
             'id'   => $customer_id,
-            'type' => $type
+            'type' => $type,
         ];
 
         $restored = erp_restore_people( $data );
@@ -462,7 +461,7 @@ class Ajax_Handler {
 
         $ids                = [];
         $contact_subscriber = [];
-        $user_ids           = ( isset( $_POST['user_id'] ) && ! empty( $_POST['user_id'] ) ) ? explode(',', sanitize_text_field( wp_unslash( $_POST['user_id'] ) ) ) : [];
+        $user_ids           = ( isset( $_POST['user_id'] ) && ! empty( $_POST['user_id'] ) ) ? explode( ',', sanitize_text_field( wp_unslash( $_POST['user_id'] ) ) ) : [];
         $group_ids          = ( isset( $_POST['group_id'] ) && ! empty( $_POST['group_id'] ) ) ? wp_unslash( $_POST['group_id'] ) : [];
 
         if ( empty( $user_ids ) ) {
@@ -489,7 +488,7 @@ class Ajax_Handler {
             foreach ( $group_ids as $group_key => $group_id ) {
                 $contact_subscriber = [
                     'user_id'  => $user_id,
-                    'group_id' => $group_id
+                    'group_id' => $group_id,
                 ];
 
                 erp_crm_create_new_contact_subscriber( $contact_subscriber );
@@ -497,7 +496,6 @@ class Ajax_Handler {
         }
 
         $this->send_success( __( 'Selected contact are successfully subscribed', 'erp' ) );
-
     }
 
     /**
@@ -512,8 +510,8 @@ class Ajax_Handler {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
-        $id   = isset( $_POST['user_id'] ) ? sanitize_text_field( wp_unslash( $_POST['user_id'] ) ): 0;
-        $type = isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ): '';
+        $id    = isset( $_POST['user_id'] ) ? sanitize_text_field( wp_unslash( $_POST['user_id'] ) ) : 0;
+        $type  = isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
         $is_wp = isset( $_POST['is_wp'] ) ? true : false;
 
         if ( ! $id ) {
@@ -554,7 +552,6 @@ class Ajax_Handler {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
-
         $type        = isset( $_REQUEST['assign_type'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['assign_type'] ) ) : '';
         $id          = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
         $company_id  = isset( $_REQUEST['erp_assign_company_id'] ) ? intval( $_REQUEST['erp_assign_company_id'] ) : 0;
@@ -581,7 +578,6 @@ class Ajax_Handler {
         }
 
         $this->send_success( __( 'Company has been added successfully', 'erp' ) );
-
     }
 
     /**
@@ -610,12 +606,11 @@ class Ajax_Handler {
 
         $id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
 
-        if( $id ) {
+        if ( $id ) {
             erp_crm_customer_remove_company( $id );
         }
 
-        $this->send_success( __('hello', 'erp' ) );
-
+        $this->send_success( __( 'hello', 'erp' ) );
     }
 
     /**
@@ -637,7 +632,7 @@ class Ajax_Handler {
         }
 
         $found_crm_user = [];
-        $crm_users = erp_crm_get_crm_user( [ 's' => $term ] );
+        $crm_users      = erp_crm_get_crm_user( [ 's' => $term ] );
 
         if ( ! empty( $crm_users ) ) {
             foreach ( $crm_users as $user ) {
@@ -648,7 +643,7 @@ class Ajax_Handler {
         $this->send_success( $found_crm_user );
     }
 
-     /**
+    /**
      * Search crm contact company
      *
      * @since 1.3.7
@@ -663,7 +658,7 @@ class Ajax_Handler {
         }
 
         $found_contact_company = [];
-        $crm_companies = erp_get_peoples( [ 's' => $term, 'type' => 'company' ] );
+        $crm_companies         = erp_get_peoples( [ 's' => $term, 'type' => 'company' ] );
 
         if ( ! empty( $crm_companies ) ) {
             foreach ( $crm_companies as $company ) {
@@ -686,7 +681,7 @@ class Ajax_Handler {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
-        $term = isset( $_REQUEST['s'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['s'] ) ) : '';
+        $term  = isset( $_REQUEST['s'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['s'] ) ) : '';
         $types = isset( $_REQUEST['types'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_REQUEST['types'] ) ) : [];
 
         if ( empty( $term ) ) {
@@ -742,27 +737,27 @@ class Ajax_Handler {
         if ( $output['assign_contact_user_id'] ) {
             erp_crm_update_contact_owner( $output['assign_contact_user_id'], $output['erp_select_assign_contact'], 'user_id' );
         } else {
-            erp_crm_update_contact_owner($output['assign_contact_id'], $output['erp_select_assign_contact'], 'id' );
+            erp_crm_update_contact_owner( $output['assign_contact_id'], $output['erp_select_assign_contact'], 'id' );
         }
 
         $this->send_success( __( 'Assign to agent successfully', 'erp' ) );
     }
 
     /**
-    * Make crm contact to wp user
-    *
-    * @since 1.1.7
-    * @since 1.2.4 Check if current user has permission to higher level wp user
+     * Make crm contact to wp user
      *
-    * @return void
-    **/
+     * @since 1.1.7
+     * @since 1.2.4 Check if current user has permission to higher level wp user
+     *
+     * @return void
+     **/
     public function make_wp_user() {
         if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'erp-crm-make-wp-user' ) ) {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
-        $customer_id  = isset( $_POST['id'] ) ? sanitize_text_field( wp_unslash( $_POST['id'] ) ): 0;
-        $type         = isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ): '';
+        $customer_id  = isset( $_POST['id'] ) ? sanitize_text_field( wp_unslash( $_POST['id'] ) ) : 0;
+        $type         = isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
         $email        = isset( $_POST['customer_email'] ) ? sanitize_email( wp_unslash( $_POST['customer_email'] ) ) : '';
         $role         = isset( $_POST['customer_role'] ) ? sanitize_text_field( wp_unslash( $_POST['customer_role'] ) ) : '';
         $notify_email = isset( $_POST['send_password_notification'] ) ? true : false;
@@ -776,6 +771,7 @@ class Ajax_Handler {
         }
 
         $allowed_roles_to_create = array_keys( erp_get_editable_roles() );
+
         if ( ! in_array( $role, $allowed_roles_to_create ) ) {
             $this->send_error( __( 'Not allowed to crated user with the selected role', 'erp' ) );
         }
@@ -784,7 +780,7 @@ class Ajax_Handler {
             'email'        => $email,
             'type'         => $type,
             'role'         => $role,
-            'notify_email' => $notify_email
+            'notify_email' => $notify_email,
         ];
 
         $data = erp_crm_make_wp_user( $customer_id, $data );
@@ -795,7 +791,6 @@ class Ajax_Handler {
 
         $this->send_success();
     }
-
 
     /**
      * Create Contact Group
@@ -816,7 +811,7 @@ class Ajax_Handler {
         }
 
         if ( empty( $_POST['group_name'] ) ) {
-            $this->send_error( __('Contact Group Name must be required', 'erp' ) );
+            $this->send_error( __( 'Contact Group Name must be required', 'erp' ) );
         }
 
         $form_data = array_map( 'sanitize_text_field', wp_unslash( $_POST ) );
@@ -920,11 +915,11 @@ class Ajax_Handler {
 
         foreach ( $result as $key => $value ) {
             $data[ $value['group_id'] ] = [
-                'status'         => $value['status'],
-                'subscribe_at'   => erp_format_date( $value['subscribe_at'] ),
-                'unsubscribe_at' => erp_format_date( $value['unsubscribe_at'] ),
-                'subscribe_message' => sprintf( ' ( %s %s )', __( 'Subscribed on', 'erp' ), erp_format_date( $value['subscribe_at'] ) ),
-                'unsubscribe_message' => sprintf( ' ( %s %s )', __( 'Unsubscribed on', 'erp' ), erp_format_date( $value['unsubscribe_at'] ) )
+                'status'              => $value['status'],
+                'subscribe_at'        => erp_format_date( $value['subscribe_at'] ),
+                'unsubscribe_at'      => erp_format_date( $value['unsubscribe_at'] ),
+                'subscribe_message'   => sprintf( ' ( %s %s )', __( 'Subscribed on', 'erp' ), erp_format_date( $value['subscribe_at'] ) ),
+                'unsubscribe_message' => sprintf( ' ( %s %s )', __( 'Unsubscribed on', 'erp' ), erp_format_date( $value['unsubscribe_at'] ) ),
             ];
         }
 
@@ -945,8 +940,8 @@ class Ajax_Handler {
 
         $data = [];
 
-        $user_id   = ! empty( $_POST['user_id'] )  ? absint( $_POST['user_id'] ) : 0;
-        $group_ids = ! empty( $_POST['group_id'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['group_id'] ) ): [];
+        $user_id   = ! empty( $_POST['user_id'] ) ? absint( $_POST['user_id'] ) : 0;
+        $group_ids = ! empty( $_POST['group_id'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['group_id'] ) ) : [];
 
         if ( ! $user_id ) {
             $this->send_error( __( 'No user data found', 'erp' ) );
@@ -1012,8 +1007,8 @@ class Ajax_Handler {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
-        $user_id = isset( $_REQUEST['user_id'] ) ? intval( $_REQUEST['user_id'] ) : 0;
-        $group_id = isset( $_POST['group_id'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['group_id'] ) ): [];
+        $user_id  = isset( $_REQUEST['user_id'] ) ? intval( $_REQUEST['user_id'] ) : 0;
+        $group_id = isset( $_POST['group_id'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['group_id'] ) ) : [];
 
         if ( ! current_user_can( 'erp_crm_edit_contact', $user_id ) ) {
             $this->send_error( __( 'You don\'t have any permission to assign this contact', 'erp' ) );
@@ -1038,7 +1033,7 @@ class Ajax_Handler {
     public function customer_company_template_refresh() {
         ob_start();
         include WPERP_CRM_JS_TMPL . '/new-assign-company.php';
-        $this->send_success( array( 'cont' => ob_get_clean() ) );
+        $this->send_success( [ 'cont' => ob_get_clean() ] );
     }
 
     /**
@@ -1062,7 +1057,7 @@ class Ajax_Handler {
             $this->send_error( __( 'No customer found', 'erp' ) );
         }
 
-        $customer_id = absint( $_POST['customer_id'] ) ;
+        $customer_id = absint( $_POST['customer_id'] );
         unset( $_POST['customer_id'] );
 
         $customer = new \WeDevs\ERP\CRM\Contact( $customer_id );
@@ -1084,8 +1079,8 @@ class Ajax_Handler {
         }
 
         $post_data = isset( $_POST ) ? $_POST : [];
-        $data = array_map( 'sanitize_text_field', wp_unslash( $post_data ) );
-        $feeds = erp_crm_get_feed_activity( $data );
+        $data      = array_map( 'sanitize_text_field', wp_unslash( $post_data ) );
+        $feeds     = erp_crm_get_feed_activity( $data );
         $this->send_success( $feeds );
     }
 
@@ -1104,7 +1099,8 @@ class Ajax_Handler {
 
         $save_data      = [];
         $postdata       = $_POST;
-        $attachments   = ( isset( $postdata['attachments'] ) ) ? $postdata['attachments'] : array();
+        $attachments    = ( isset( $postdata['attachments'] ) ) ? $postdata['attachments'] : [];
+
         if ( ! isset( $postdata['user_id'] ) && empty( $postdata['user_id'] ) ) {
             $this->send_error( __( 'Customer not found', 'erp' ) );
         }
@@ -1126,7 +1122,7 @@ class Ajax_Handler {
                     'user_id'    => $postdata['user_id'],
                     'created_by' => $postdata['created_by'],
                     'message'    => $postdata['message'],
-                    'type'       => $postdata['type']
+                    'type'       => $postdata['type'],
                 ];
 
                 $data = erp_crm_save_customer_feed_data( $save_data );
@@ -1145,7 +1141,7 @@ class Ajax_Handler {
                 $message = wp_unslash( $postdata['message'] );
 
                 $extra_data = [
-                    'attachments' => $attachments
+                    'attachments' => $attachments,
                 ];
                 $save_data = [
                     'user_id'       => $postdata['user_id'],
@@ -1153,7 +1149,7 @@ class Ajax_Handler {
                     'message'       => $message,
                     'type'          => $postdata['type'],
                     'email_subject' => $postdata['email_subject'],
-                    'extra'         => base64_encode( json_encode( $extra_data ) )
+                    'extra'         => base64_encode( json_encode( $extra_data ) ),
                 ];
 
                 $data = erp_crm_save_customer_feed_data( $save_data );
@@ -1162,8 +1158,8 @@ class Ajax_Handler {
 
                 $contact = new \WeDevs\ERP\CRM\Contact( $contact_id );
 
-                $headers = "";
-                $headers .= "Content-Type: text/html; charset=UTF-8" . "\r\n";
+                $headers = '';
+                $headers .= 'Content-Type: text/html; charset=UTF-8' . "\r\n";
 
                 $erp_is_imap_active = erp_is_imap_active();
                 $reply_to_name      = erp_crm_get_email_from_name();
@@ -1184,8 +1180,8 @@ class Ajax_Handler {
                 $message_id = md5( uniqid( time() ) ) . '.' . $contact_id . '.' . $contact_owner_id . '.r2@' . $server_host;
 
                 $custom_headers = [
-                    "In-Reply-To" => "<{$message_id}>",
-                    "References" => "<{$message_id}>",
+                    'In-Reply-To' => "<{$message_id}>",
+                    'References'  => "<{$message_id}>",
                 ];
 
                 $query = [
@@ -1193,7 +1189,7 @@ class Ajax_Handler {
                     'aid'    => $data['id'],
                 ];
 
-                $email_url  = add_query_arg( $query, admin_url('admin-ajax.php') );
+                $email_url  = add_query_arg( $query, admin_url( 'admin-ajax.php' ) );
                 $img_url    = '<img src="' . $email_url . '" width="1" height="1" style="display:none;" />';
 
                 $email_body = $message . $img_url;
@@ -1202,7 +1198,7 @@ class Ajax_Handler {
 
                 $mail_attachments = wp_list_pluck( $attachments, 'path' );
 
-                if ( wperp()->google_auth->is_active() ){
+                if ( wperp()->google_auth->is_active() ) {
                     //send using gmail api
                     $sent = erp_mail_send_via_gmail( $contact->email, $postdata['email_subject'], $email_body, $headers, $mail_attachments, $custom_headers  );
                 } else {
@@ -1227,7 +1223,7 @@ class Ajax_Handler {
             case 'log_activity':
 
                 $extra_data = [
-                    'invite_contact' => ( isset( $postdata['invite_contact'] ) && ! empty( $postdata['invite_contact'] ) ) ? $postdata['invite_contact'] : []
+                    'invite_contact' => ( isset( $postdata['invite_contact'] ) && ! empty( $postdata['invite_contact'] ) ) ? $postdata['invite_contact'] : [],
                 ];
 
                 $save_data = [
@@ -1238,8 +1234,8 @@ class Ajax_Handler {
                     'type'          => $postdata['type'],
                     'log_type'      => $postdata['log_type'],
                     'email_subject' => ( isset( $postdata['email_subject'] ) && ! empty( $postdata['email_subject'] ) ) ? $postdata['email_subject'] : '',
-                    'start_date'    => date( 'Y-m-d H:i:s', strtotime( $postdata['log_date'].$postdata['log_time'] ) ),
-                    'extra'         => base64_encode( json_encode( $extra_data ) )
+                    'start_date'    => date( 'Y-m-d H:i:s', strtotime( $postdata['log_date'] . $postdata['log_time'] ) ),
+                    'extra'         => base64_encode( json_encode( $extra_data ) ),
                 ];
 
                 $data = erp_crm_save_customer_feed_data( $save_data );
@@ -1274,7 +1270,7 @@ class Ajax_Handler {
 
                 $extra_data = [
                     'task_title'     => ( isset( $postdata['task_title'] ) && ! empty( $postdata['task_title'] ) ) ? $postdata['task_title'] : '',
-                    'invite_contact' => ( isset( $postdata['invite_contact'] ) && ! empty( $postdata['invite_contact'] ) ) ? $postdata['invite_contact'] : []
+                    'invite_contact' => ( isset( $postdata['invite_contact'] ) && ! empty( $postdata['invite_contact'] ) ) ? $postdata['invite_contact'] : [],
                 ];
 
                 $save_data = [
@@ -1284,8 +1280,8 @@ class Ajax_Handler {
                     'message'       => $postdata['message'],
                     'type'          => $postdata['type'],
                     'email_subject' => ( isset( $postdata['email_subject'] ) && ! empty( $postdata['email_subject'] ) ) ? $postdata['email_subject'] : '',
-                    'start_date'    => date( 'Y-m-d H:i:s', strtotime( $postdata['task_date'].$postdata['task_time'] ) ),
-                    'extra'         => base64_encode( json_encode( $extra_data ) )
+                    'start_date'    => date( 'Y-m-d H:i:s', strtotime( $postdata['task_date'] . $postdata['task_time'] ) ),
+                    'extra'         => base64_encode( json_encode( $extra_data ) ),
                 ];
 
                 $data = erp_crm_save_customer_feed_data( $save_data );
@@ -1351,7 +1347,7 @@ class Ajax_Handler {
             $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
-        $postdata = isset( $_POST['form_data'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['form_data'] ) )  : array();
+        $postdata = isset( $_POST['form_data'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['form_data'] ) ) : [];
 
         if ( ! $postdata ) {
             $this->send_error( __( 'No data not found', 'erp' ) );
@@ -1384,13 +1380,14 @@ class Ajax_Handler {
             'search_val'  => $search_fields,
         ];
 
-
         $exists = erp_crm_check_segment_exists( $data['search_name'] );
+
         if ( $exists ) {
             $this->send_error( __( 'Segment name alreday exists.', 'erp' ) );
         }
 
         $result = erp_crm_insert_save_search( $data );
+
         if ( ! $result ) {
             $this->send_error( __( 'Search does not save', 'erp' ) );
         }
@@ -1403,7 +1400,7 @@ class Ajax_Handler {
      *
      * @since 1.2.5
      */
-    public function create_save_group(){
+    public function create_save_group() {
         if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'wp-erp-crm-nonce' ) ) {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
@@ -1412,7 +1409,7 @@ class Ajax_Handler {
             $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
-        $postdata = isset( $_POST['form_data'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['form_data'] ) )  : array();
+        $postdata = isset( $_POST['form_data'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['form_data'] ) ) : [];
 
         if ( ! $postdata ) {
             $this->send_error( __( 'No data not found', 'erp' ) );
@@ -1426,28 +1423,29 @@ class Ajax_Handler {
             $this->send_error( __( 'No search fields found', 'erp' ) );
         }
 
-        $type = isset($postdata['type'])?$postdata['type']:'contact';
+        $type = isset( $postdata['type'] ) ? $postdata['type'] : 'contact';
 
         $contacts = [];
 
         $args = [
-            'type'      => $type,
-            'offset'    => 0,
-            'number'    => '-1',
-            'no_object' => false,
+            'type'             => $type,
+            'offset'           => 0,
+            'number'           => '-1',
+            'no_object'        => false,
             'erpadvancefilter' => $postdata['search_fields'],
         ];
 
-        $group = erp_crm_save_contact_group( array('name' => $postdata['group_name'] ) );
+        $group = erp_crm_save_contact_group( ['name' => $postdata['group_name'] ] );
 
-        if( ! $group ){
+        if ( ! $group ) {
             $this->send_error( __( 'Could not create group.', 'erp' ) );
         }
 
         $contacts = erp_get_peoples( $args );
 
         $imported = 0;
-        foreach ( $contacts as $contact){
+
+        foreach ( $contacts as $contact ) {
             $data = [
                 'user_id'  => $contact->id,
                 'group_id' => $group->id,
@@ -1457,7 +1455,7 @@ class Ajax_Handler {
             $imported++;
         }
 
-        if( $imported > 0){
+        if ( $imported > 0 ) {
             $this->send_success( __( 'Successfully created group and assigned selected contacts to the group.', 'erp' ) );
         }
 
@@ -1551,10 +1549,10 @@ class Ajax_Handler {
 
         $data = [
             'id'       => isset( $_POST['id'] ) ? sanitize_text_field( wp_unslash( $_POST['id'] ) ) : 0,
-            'name'     => isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ): '',
-            'subject'  => isset( $_POST['subject'] ) ? sanitize_text_field( wp_unslash( $_POST['subject'] ) ): '',
+            'name'     => isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '',
+            'subject'  => isset( $_POST['subject'] ) ? sanitize_text_field( wp_unslash( $_POST['subject'] ) ) : '',
             /*'template' => isset( $_POST['template'] ) ? $_POST['template'] : ''*/
-            'template' => isset( $_POST['template'] ) ?  wp_kses_post( $_POST['template'] ) : ''
+            'template' => isset( $_POST['template'] ) ? wp_kses_post( $_POST['template'] ) : '',
         ];
 
         $results = erp_crm_insert_save_replies( $data );
@@ -1563,8 +1561,7 @@ class Ajax_Handler {
             $this->send_error( $results->get_error_message() );
         }
 
-
-        $this->send_success( stripslashes_deep($results) );
+        $this->send_success( stripslashes_deep( $results ) );
     }
 
     /**
@@ -1588,7 +1585,7 @@ class Ajax_Handler {
         $result = erp_crm_get_save_replies_by_id( $query_id );
 
         if ( $result ) {
-            $this->send_success( stripslashes_deep($result) );
+            $this->send_success( stripslashes_deep( $result ) );
         }
 
         $this->send_error( __( 'No results found', 'erp' ) );
@@ -1634,7 +1631,7 @@ class Ajax_Handler {
         }
 
         $template_id = isset( $_REQUEST['template_id'] ) ? intval( $_REQUEST['template_id'] ) : 0;
-        $contact_id = isset( $_REQUEST['contact_id'] ) ? intval( $_REQUEST['contact_id'] ) : 0;
+        $contact_id  = isset( $_REQUEST['contact_id'] ) ? intval( $_REQUEST['contact_id'] ) : 0;
 
         $result = erp_crm_render_save_replies( $template_id, $contact_id );
 
@@ -1647,30 +1644,29 @@ class Ajax_Handler {
 
     /**
      * Update contact tags
-     * @since 1.3.6
      *
+     * @since 1.3.6
      */
-    public function update_contact_tags(){
+    public function update_contact_tags() {
         if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'wp-erp-crm-nonce' ) ) {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
-        if( empty(intval($_POST['contact_id']))){
-            wp_send_json_error(['message' => __('could not find contact id', 'erp')]);
+        if ( empty( intval( $_POST['contact_id'] ) ) ) {
+            wp_send_json_error( ['message' => __( 'could not find contact id', 'erp' )] );
         }
 
-        $tags = !empty( $_POST['tags'] )? explode(',', sanitize_text_field( wp_unslash( $_POST['tags'] ) ) ) : [];
+        $tags = !empty( $_POST['tags'] ) ? explode( ',', sanitize_text_field( wp_unslash( $_POST['tags'] ) ) ) : [];
 
+        $tags = array_map( 'trim', $tags );
+        $tags = array_map( 'sanitize_text_field', $tags );
 
-        $tags = array_map('trim', $tags);
-        $tags = array_map('sanitize_text_field', $tags);
+        $inserted =  wp_set_object_terms( intval( $_POST['contact_id'] ), $tags, 'erp_crm_tag' );
 
-        $inserted =  wp_set_object_terms(intval($_POST['contact_id']), $tags, 'erp_crm_tag');
-
-        if( !is_wp_error($inserted) ){
-            wp_send_json(['message' => __('tags updated successfully', 'erp')]);
-        }else{
-            wp_send_json(['message' => __('tags update failed please try again', 'erp')]);
+        if ( !is_wp_error( $inserted ) ) {
+            wp_send_json( ['message' => __( 'tags updated successfully', 'erp' )] );
+        } else {
+            wp_send_json( ['message' => __( 'tags update failed please try again', 'erp' )] );
         }
     }
 
@@ -1680,30 +1676,29 @@ class Ajax_Handler {
      * @return void
      */
     public function email_attachment() {
-
-        $files          =   ( ! empty( $_FILES['files'] ) ) ? $_FILES['files'] : array(); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+        $files          =   ( ! empty( $_FILES['files'] ) ) ? $_FILES['files'] : []; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         $wp_upload_dir  =   wp_upload_dir();
         $subdir         =   apply_filters( 'crm_attachmet_directory', 'crm-attachments' );
         $path           =   $wp_upload_dir['basedir'] . '/' . $subdir . '/';
-        $attatchments   =   array();
-        $file_names     =   array();
+        $attatchments   =   [];
+        $file_names     =   [];
 
         //Create CRM attachments directory
         if ( !file_exists( $path ) ) {
-            wp_mkdir_p($path);
+            wp_mkdir_p( $path );
         }
 
         foreach ( $files['name'] as $key => $file ) {
             $extension    = pathinfo( $file, PATHINFO_EXTENSION );
             $new_filename = $file;
 
-            if ( file_exists( $path.$new_filename ) ) {
-                $new_filename = uniqid()  . '.' . $extension;
+            if ( file_exists( $path . $new_filename ) ) {
+                $new_filename = uniqid() . '.' . $extension;
             }
 
             if ( $files['error'][ $key ] == 0 ) {
-                if ( move_uploaded_file( $files['tmp_name'][ $key ], $path.$new_filename ) ) {
-                    $file_name      = $path.$new_filename;
+                if ( move_uploaded_file( $files['tmp_name'][ $key ], $path . $new_filename ) ) {
+                    $file_name      = $path . $new_filename;
                     $attatchments[] = [
                         'name' => $file,
                         'path' => $path . basename( $file_name ),
@@ -1714,10 +1709,9 @@ class Ajax_Handler {
             }
         }
 
-        wp_send_json_success( array(
+        wp_send_json_success( [
             'url'   => $attatchments,
-            'files' => $file_names
-        ) );
+            'files' => $file_names,
+        ] );
     }
-
 }

@@ -1,23 +1,23 @@
 <?php
-$contact_tags = wp_get_object_terms( $customer->id, 'erp_crm_tag', array('orderby' => 'name', 'order' => 'ASC'));
-$contact_tags = wp_list_pluck($contact_tags, 'name');
-$contact_list_url = add_query_arg( ['page' => 'erp-crm', 'section' => 'contacts'], admin_url('admin.php') );
+$contact_tags     = wp_get_object_terms( $customer->id, 'erp_crm_tag', ['orderby' => 'name', 'order' => 'ASC'] );
+$contact_tags     = wp_list_pluck( $contact_tags, 'name' );
+$contact_list_url = add_query_arg( ['page' => 'erp-crm', 'section' => 'contacts'], admin_url( 'admin.php' ) );
 ?>
 <div class="wrap erp erp-crm-customer erp-single-customer" id="wp-erp" v-cloak>
     <h2><?php esc_attr_e( 'Contact #', 'erp' ); echo esc_attr( $customer->id ); ?>
         <a href="<?php echo esc_url_raw( $contact_list_url ); ?>" id="erp-contact-list" class="add-new-h2"><?php esc_attr_e( 'Back to Contact list', 'erp' ); ?></a>
 
-        <?php if ( current_user_can( 'erp_crm_edit_contact', $customer->id ) || current_user_can( erp_crm_get_manager_role() ) ): ?>
+        <?php if ( current_user_can( 'erp_crm_edit_contact', $customer->id ) || current_user_can( erp_crm_get_manager_role() ) ) { ?>
             <span class="edit">
                 <a href="#" @click.prevent="editContact( 'contact', '<?php echo esc_attr( $customer->id ); ?>', '<?php esc_attr_e( 'Edit this contact', 'erp' ); ?>' )" data-id="<?php echo esc_attr( $customer->id ); ?>" data-single_view="1" title="<?php esc_attr_e( 'Edit this Contact', 'erp' ); ?>" class="add-new-h2"><?php esc_attr_e( 'Edit this Contact', 'erp' ); ?></a>
             </span>
 
-            <?php if ( ! $customer->user_id && erp_crm_current_user_can_make_wp_user() ): ?>
+            <?php if ( ! $customer->user_id && erp_crm_current_user_can_make_wp_user() ) { ?>
                 <span class="make-wp-user">
-                    <a href="#" @click.prevent="makeWPUser( 'contact', '<?php echo esc_attr( $customer->id ); ?>', '<?php esc_attr_e( 'Make WP User', 'erp' ); ?>', '<?php echo esc_attr( $customer->email ) ?>' )" data-single_view="1" title="<?php esc_attr_e( 'Make this contact as a WP User', 'erp' ); ?>" class="add-new-h2"><?php esc_attr_e( 'Make WP User', 'erp' ); ?></a>
+                    <a href="#" @click.prevent="makeWPUser( 'contact', '<?php echo esc_attr( $customer->id ); ?>', '<?php esc_attr_e( 'Make WP User', 'erp' ); ?>', '<?php echo esc_attr( $customer->email ); ?>' )" data-single_view="1" title="<?php esc_attr_e( 'Make this contact as a WP User', 'erp' ); ?>" class="add-new-h2"><?php esc_attr_e( 'Make WP User', 'erp' ); ?></a>
                 </span>
-            <?php endif ?>
-        <?php endif ?>
+            <?php } ?>
+        <?php } ?>
     </h2>
 
     <div class="erp-grid-container erp-single-customer-content">
@@ -28,35 +28,35 @@ $contact_list_url = add_query_arg( ['page' => 'erp-crm', 'section' => 'contacts'
                     <div class="customer-image-wraper">
                         <div class="row">
                             <div class="col-2 avatar">
-                                <?php echo wp_kses_post( $customer->get_avatar(100) ); ?>
+                                <?php echo wp_kses_post( $customer->get_avatar( 100 ) ); ?>
                             </div>
                             <div class="col-4 details">
                                 <h3><?php echo esc_attr( $customer->get_full_name() ); ?></h3>
 
-                                <?php if ( $customer->get_email() ): ?>
+                                <?php if ( $customer->get_email() ) { ?>
                                     <p>
                                         <i class="fa fa-envelope"></i>&nbsp;
                                         <?php echo wp_kses_post( erp_get_clickable( 'email', $customer->get_email() ) ); ?>
                                     </p>
-                                <?php endif ?>
+                                <?php } ?>
 
-                                <?php if ( $customer->get_mobile() != '—' ): ?>
+                                <?php if ( $customer->get_mobile() != '—' ) { ?>
                                     <p>
                                         <i class="fa fa-phone"></i>&nbsp;
                                         <?php echo wp_kses_post( $customer->get_mobile() ); ?>
                                     </p>
-                                <?php endif ?>
+                                <?php } ?>
 
                                 <ul class="erp-list list-inline social-profile">
                                     <?php $social_field = erp_crm_get_social_field(); ?>
 
-                                    <?php foreach ( $social_field as $social_key => $social_value ) : ?>
+                                    <?php foreach ( $social_field as $social_key => $social_value ) { ?>
                                         <?php $social_field_data = $customer->get_meta( $social_key, true ); ?>
 
-                                        <?php if ( ! empty( $social_field_data ) ): ?>
+                                        <?php if ( ! empty( $social_field_data ) ) { ?>
                                             <li><a href="<?php echo esc_url_raw( $social_field_data ); ?>"><?php echo wp_kses_post( $social_value['icon'] ); ?></a></li>
-                                        <?php endif ?>
-                                    <?php endforeach ?>
+                                        <?php } ?>
+                                    <?php } ?>
 
                                     <?php do_action( 'erp_crm_contact_social_fields', $customer ); ?>
                                 </ul>
@@ -96,44 +96,45 @@ $contact_list_url = add_query_arg( ['page' => 'erp-crm', 'section' => 'contacts'
                                         <div class="user-wrap-content">
                                             <?php
                                                 $crm_user_id = $customer->get_contact_owner();
+
                                                 if ( !empty( $crm_user_id ) ) {
                                                     $user        = get_user_by( 'id', $crm_user_id );
                                                     $user_string = esc_html( $user->display_name );
-                                                    $user_email  = $user->get('user_email');
+                                                    $user_email  = $user->get( 'user_email' );
                                                 } else {
                                                     $user_string = '';
                                                 }
                                             ?>
-                                            <?php if ( $crm_user_id && ! empty( $user ) ): ?>
+                                            <?php if ( $crm_user_id && ! empty( $user ) ) { ?>
                                                 <?php echo wp_kses_post( erp_crm_get_avatar( $crm_user_id, $user_email, $crm_user_id, 32 ) ); ?>
                                                 <div class="user-details">
                                                     <a href="#"><?php echo esc_attr( get_the_author_meta( 'display_name', $crm_user_id ) ); ?></a>
                                                     <span><?php echo esc_attr(  get_the_author_meta( 'user_email', $crm_user_id ) ); ?></span>
                                                 </div>
-                                            <?php else: ?>
+                                            <?php } else { ?>
                                                 <div class="user-details">
-                                                    <p><?php esc_attr_e( 'Nobody', 'erp' ) ?></p>
+                                                    <p><?php esc_attr_e( 'Nobody', 'erp' ); ?></p>
                                                 </div>
-                                            <?php endif ?>
+                                            <?php } ?>
 
                                             <div class="clearfix"></div>
 
                                         </div>
                                     </div>
 
-                                    <?php if ( current_user_can( 'erp_crm_edit_contact' ) ): ?>
+                                    <?php if ( current_user_can( 'erp_crm_edit_contact' ) ) { ?>
                                         <span @click.prevent="assignContact()" id="erp-crm-edit-assign-contact-to-agent"><i class="fa fa-pencil-square-o"></i></span>
-                                    <?php endif ?>
+                                    <?php } ?>
 
                                     <div class="assign-form erp-hide">
                                         <form action="" method="post">
 
                                             <div class="crm-aget-search-select-wrap">
-                                                <select name="erp_select_assign_contact" id="erp-select-user-for-assign-contact" style="width: 300px; margin-bottom: 20px;" data-placeholder="<?php esc_attr_e( 'Search a crm agent', 'erp' ) ?>" data-val="<?php echo esc_attr( $crm_user_id ); ?>" data-selected="<?php echo esc_attr( $user_string ); ?>">
+                                                <select name="erp_select_assign_contact" id="erp-select-user-for-assign-contact" style="width: 300px; margin-bottom: 20px;" data-placeholder="<?php esc_attr_e( 'Search a crm agent', 'erp' ); ?>" data-val="<?php echo esc_attr( $crm_user_id ); ?>" data-selected="<?php echo esc_attr( $user_string ); ?>">
                                                     <option value=""><?php esc_attr_e( 'Select a agent', 'erp' ); ?></option>
-                                                    <?php if ( $crm_user_id ): ?>
-                                                        <option value="<?php echo esc_attr( $crm_user_id ) ?>" selected><?php echo esc_attr( $user_string ); ?></option>
-                                                    <?php endif ?>
+                                                    <?php if ( $crm_user_id ) { ?>
+                                                        <option value="<?php echo esc_attr( $crm_user_id ); ?>" selected><?php echo esc_attr( $user_string ); ?></option>
+                                                    <?php } ?>
                                                 </select>
                                             </div>
 
@@ -158,7 +159,7 @@ $contact_list_url = add_query_arg( ['page' => 'erp-crm', 'section' => 'contacts'
                                 <div class="nojs-tags hide-if-js">
                                     <label for="tax-input-post_tag">Add or remove tags</label>
                                     <p><textarea name="tax_input[erp_crm_tag]" rows="3" cols="20" class="the-tags" id="tax-input-erp_crm_tag" aria-describedby="new-tag-post_tag-desc">
-                                            <?php echo esc_attr( implode(',', $contact_tags) );?>
+                                            <?php echo esc_attr( implode( ',', $contact_tags ) ); ?>
                                         </textarea></p>
                                 </div>
 
@@ -167,9 +168,9 @@ $contact_list_url = add_query_arg( ['page' => 'erp-crm', 'section' => 'contacts'
                                         <label class="screen-reader-text" for="new-tag-erp-crm-tag"></label>
                                         <p>
                                             <input style="width: 82%;" data-wp-taxonomy="erp_crm_tag" type="text" id="new-tag-erp-crm-tag" name="newtag[erp_crm_tag]" class="newtag form-input-tip" size="16" autocomplete="on" aria-describedby="new-tag-erp-crm-tag-desc" value="" />
-                                            <input type="button" id="add-crm-tag" class="button tagadd" value="<?php esc_attr_e('Add', 'erp'); ?>" /></p>
+                                            <input type="button" id="add-crm-tag" class="button tagadd" value="<?php esc_attr_e( 'Add', 'erp' ); ?>" /></p>
                                     </div>
-                                    <p class="howto" id="new-tag-erp-crm-tag-desc"><?php esc_attr_e('Separate tags with commas', 'erp') ?></p>
+                                    <p class="howto" id="new-tag-erp-crm-tag-desc"><?php esc_attr_e( 'Separate tags with commas', 'erp' ); ?></p>
 
                                     <p><?php ?></p>
                                 </div>
@@ -182,13 +183,13 @@ $contact_list_url = add_query_arg( ['page' => 'erp-crm', 'section' => 'contacts'
                     <contact-company-relation
                         :id="<?php echo esc_attr( $customer->id ); ?>"
                         type="contact_companies"
-                        add-button-txt="<?php esc_attr_e( 'Assign a company', 'erp' ) ?>"
+                        add-button-txt="<?php esc_attr_e( 'Assign a company', 'erp' ); ?>"
                         title="<?php esc_attr_e( 'Companies', 'erp' ); ?>"
                     ></contact-company-relation>
 
                     <contact-assign-group
                         :id="<?php echo esc_attr( $customer->id ); ?>"
-                        add-button-txt="<?php esc_attr_e( 'Assign Contact Groups', 'erp' ) ?>"
+                        add-button-txt="<?php esc_attr_e( 'Assign Contact Groups', 'erp' ); ?>"
                         title="<?php esc_attr_e( 'Contact Group', 'erp' ); ?>"
                         is-permitted="<?php echo esc_attr( current_user_can( 'erp_crm_edit_contact', $customer->id ) ); ?>"
                     ></contact-assign-group>

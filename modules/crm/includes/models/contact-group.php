@@ -1,12 +1,11 @@
 <?php
+
 namespace WeDevs\ERP\CRM\Models;
 
 use WeDevs\ERP\Framework\Model;
 
 /**
  * Class Dependents
- *
- * @package WeDevs\ERP\HRM\Models
  */
 class ContactGroup extends Model {
     protected $table = 'erp_crm_contact_group';
@@ -24,9 +23,9 @@ class ContactGroup extends Model {
      *
      * @since 1.2.2
      *
-     * @param object  $query
-     * @param integer $people_id
-     * @param boolean $withPrivate
+     * @param object $query
+     * @param int    $people_id
+     * @param bool   $withPrivate
      *
      * @return object
      */
@@ -36,8 +35,8 @@ class ContactGroup extends Model {
         $subs_tbl   = $prefix . 'erp_crm_contact_subscriber';
 
         $query->select( $group_tbl . '.id', $group_tbl . '.name', $group_tbl . '.private', $subs_tbl . '.user_id', $subs_tbl . '.status', $subs_tbl . '.subscribe_at', $subs_tbl . '.unsubscribe_at', $subs_tbl . '.hash' )
-              ->leftJoin( $subs_tbl, $group_tbl . '.id', '=', $subs_tbl . '.group_id' )
-              ->where( $subs_tbl . '.user_id', $people_id );
+            ->leftJoin( $subs_tbl, $group_tbl . '.id', '=', $subs_tbl . '.group_id' )
+            ->where( $subs_tbl . '.user_id', $people_id );
 
         if ( ! $withPrivate ) {
             $query->whereNull( $group_tbl . '.private' );
@@ -45,5 +44,4 @@ class ContactGroup extends Model {
 
         return $query;
     }
-
 }

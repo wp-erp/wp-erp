@@ -4,8 +4,6 @@ namespace WeDevs\ERP\Framework;
 
 /**
  * Class Model
- *
- * @package WeDevs\ERP\Framework
  */
 class Model extends \WeDevs\ORM\Eloquent\Model {
     protected $prefixed_table = null;
@@ -27,6 +25,7 @@ class Model extends \WeDevs\ORM\Eloquent\Model {
      * Set the value of the "created at" attribute.
      *
      * @param mixed $value
+     *
      * @return void
      */
     public function setCreatedAt( $value ) {
@@ -37,6 +36,7 @@ class Model extends \WeDevs\ORM\Eloquent\Model {
      * Set the value of the "updated at" attribute.
      *
      * @param mixed $value
+     *
      * @return void
      */
     public function setUpdatedAt( $value ) {
@@ -47,6 +47,7 @@ class Model extends \WeDevs\ORM\Eloquent\Model {
      * Set the table associated with the model.
      *
      * @param string $table
+     *
      * @return $this
      */
     public function setTable( $table ) {

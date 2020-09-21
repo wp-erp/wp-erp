@@ -1,4 +1,5 @@
 <?php
+
 namespace WeDevs\ERP\HRM\Emails;
 
 use WeDevs\ERP\Email;
@@ -8,21 +9,20 @@ use WeDevs\ERP\Framework\Traits\Hooker;
  * Birthday wish
  */
 class Birthday_Wish extends Email {
-
     use Hooker;
 
-    function __construct() {
+    public function __construct() {
         $this->id             = 'birthday-wish';
         $this->title          = __( 'Birthday Wish', 'erp' );
         $this->description    = __( 'Birthday wish email to employees.', 'erp' );
 
-        $this->subject        = __( 'Birthday Wish to {full_name}', 'erp');
-        $this->heading        = __( 'Happy Birthday :)', 'erp');
+        $this->subject        = __( 'Birthday Wish to {full_name}', 'erp' );
+        $this->heading        = __( 'Happy Birthday :)', 'erp' );
 
         $this->find = [
             'full-name'       => '{full_name}',
             'first-name'      => '{first_name}',
-            'last-name'       => '{last_name}'
+            'last-name'       => '{last_name}',
         ];
 
         $this->action( 'erp_admin_field_' . $this->id . '_help_texts', 'replace_keys' );
@@ -44,7 +44,7 @@ class Birthday_Wish extends Email {
         $this->replace = [
             'full-name'       => $employee->get_full_name(),
             'first-name'      => $employee->first_name,
-            'last-name'       => $employee->last_name
+            'last-name'       => $employee->last_name,
         ];
 
         $this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
@@ -55,11 +55,10 @@ class Birthday_Wish extends Email {
      *
      * @return array
      */
-    function get_args() {
+    public function get_args() {
         return [
             'email_heading' => $this->get_heading(),
-            'email_body'    => wpautop( $this->get_option( 'body' ) )
+            'email_body'    => wpautop( $this->get_option( 'body' ) ),
         ];
     }
-
 }

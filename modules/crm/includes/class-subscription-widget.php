@@ -1,4 +1,5 @@
 <?php
+
 namespace WeDevs\ERP\CRM;
 
 /**
@@ -14,10 +15,10 @@ class Subscription_Widget extends \WP_Widget {
      * @return void
      */
     public function __construct() {
-        $widget_ops = array(
+        $widget_ops = [
             'classname'   => 'erp-subscription-from-widget',
             'description' => __( 'Add a newsletter subscription form', 'erp' ),
-        );
+        ];
 
         parent::__construct( 'erp-subscription-from-widget', __( 'ERP Subscription Form', 'erp' ), $widget_ops );
     }
@@ -47,7 +48,7 @@ class Subscription_Widget extends \WP_Widget {
             'contact_groups'        => [],
             'life_stage'            => erp_get_option( 'life_stage', 'erp_settings_erp-crm_contacts', 'subscriber' ),
             'show_name_fields'      => 'no',
-            'button_label'          => __( 'Subscribe', 'erp' )
+            'button_label'          => __( 'Subscribe', 'erp' ),
         ];
 
         $instance           = wp_parse_args( (array) $instance, $defaults );
@@ -57,8 +58,7 @@ class Subscription_Widget extends \WP_Widget {
         $selected_groups    = $instance['contact_groups'];
         $life_stage         = $instance['life_stage'];
         $show_name_fields   = $instance['show_name_fields'];
-        $button_label       = $instance['button_label'];
-        ?>
+        $button_label       = $instance['button_label']; ?>
         <p>
             <label>
                 <?php esc_attr_e( 'Title', 'erp' ); ?>:
@@ -75,14 +75,14 @@ class Subscription_Widget extends \WP_Widget {
 
         <label><?php esc_attr_e( 'Contact Groups' ); ?>:</label>
         <ul style="margin-top: 5px;">
-            <?php foreach ( $erp_contact_groups as $group ): ?>
+            <?php foreach ( $erp_contact_groups as $group ) { ?>
                 <li>
                     <label>
                         <input type="checkbox" class="checkbox" name="<?php echo esc_attr( $this->get_field_name( 'contact_groups[]' ) ); ?>" value="<?php echo esc_attr( $group->id ); ?>" <?php echo in_array( $group->id, $selected_groups ) ? 'checked' : ''; ?> >
                         <?php echo esc_attr( $group->name ); ?>
                     </label>
                 </li>
-            <?php endforeach; ?>
+            <?php } ?>
         </ul>
 
         <p>
@@ -104,12 +104,12 @@ class Subscription_Widget extends \WP_Widget {
             <label>
                 <?php esc_attr_e( 'Life Stage', 'erp' ); ?>:<br>
                 <select name="<?php echo esc_attr( $this->get_field_name( 'life_stage' ) ); ?>" class="widefat">
-                    <?php echo wp_kses( erp_crm_get_life_stages_dropdown( [], $life_stage ), array(
-                        'option' => array(
-                            'value' => array(),
-                            'selected' => array()
-                        ),
-                    ) ); ?>
+                    <?php echo wp_kses( erp_crm_get_life_stages_dropdown( [], $life_stage ), [
+                        'option' => [
+                            'value'    => [],
+                            'selected' => [],
+                        ],
+                    ] ); ?>
                 </select>
             </label>
         </p>
@@ -172,45 +172,43 @@ class Subscription_Widget extends \WP_Widget {
         $default_life_stage = erp_get_option( 'life_stage', 'erp_settings_erp-crm_contacts', 'subscriber' );
 
         $attrs = [
-            'group'  => ! empty( $instance['contact_groups'] ) ? $instance['contact_groups'] : [],
+            'group'       => ! empty( $instance['contact_groups'] ) ? $instance['contact_groups'] : [],
             'life_stage'  => ! empty( $instance['life_stage'] ) ? $instance['life_stage'] : $default_life_stage,
-            'button' => ! empty( $instance['button_label'] ) ? $instance['button_label'] : __( 'Subscribe', 'erp' ),
+            'button'      => ! empty( $instance['button_label'] ) ? $instance['button_label'] : __( 'Subscribe', 'erp' ),
         ];
 
         if ( 'first_last_names' === $instance['show_name_fields'] ) {
             $attrs['first_name'] = __( 'First Name', 'erp' );
-            $attrs['last_name'] = __( 'Last Name', 'erp' );
-
-        } else if ( 'full_name' === $instance['show_name_fields'] ) {
+            $attrs['last_name']  = __( 'Last Name', 'erp' );
+        } elseif ( 'full_name' === $instance['show_name_fields'] ) {
             $attrs['full_name'] = __( 'Full Name', 'erp' );
         }
 
-        echo wp_kses( Subscription::instance()->shortcode( $attrs ), array(
-            'form'   => array(
-                'class' => array()
-            ),
-            'label'  => array(
-                'class' => array()
-            ),
-            'input'  => array(
-                'type'        => array(),
-                'class'       => array(),
-                'name'        => array(),
-                'placeholder' => array(),
-                'value'       => array()
-            ),
-            'button' => array(
-                'type' => array()
-            ),
-            'span'   => array(
-                'class' => array()
-            ),
-            'div'    => array(
-                'class' => array()
-            )
-        ) );
+        echo wp_kses( Subscription::instance()->shortcode( $attrs ), [
+            'form'   => [
+                'class' => [],
+            ],
+            'label'  => [
+                'class' => [],
+            ],
+            'input'  => [
+                'type'        => [],
+                'class'       => [],
+                'name'        => [],
+                'placeholder' => [],
+                'value'       => [],
+            ],
+            'button' => [
+                'type' => [],
+            ],
+            'span'   => [
+                'class' => [],
+            ],
+            'div'    => [
+                'class' => [],
+            ],
+        ] );
 
         echo wp_kses_post( $args['after_widget'] );
     }
-
 }

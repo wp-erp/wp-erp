@@ -1,69 +1,66 @@
 <?php
 
-if ( ! class_exists( 'WeForms_Upsell' ) ) :
+if ( ! class_exists( 'WeForms_Upsell' ) ) {
 
 /**
  * weForms Upsell Class
  */
-class WeForms_Upsell {
+    class WeForms_Upsell {
 
     /**
      * Affiliate code for referal tracking
      *
      * @var string
      */
-    private $affiliate;
+        private $affiliate;
 
-    /**
-     * Learn more link
-     *
-     * @var string
-     */
-    private $learn_more = 'https://wedevs.com/weforms-details/';
+        /**
+         * Learn more link
+         *
+         * @var string
+         */
+        private $learn_more = 'https://wedevs.com/weforms-details/';
 
-    /**
-     * Instantiate the class
-     *
-     * @param string $affiliate
-     */
-    function __construct( $affiliate = '' ) {
-        $this->affiliate = $affiliate;
+        /**
+         * Instantiate the class
+         *
+         * @param string $affiliate
+         */
+        public function __construct( $affiliate = '' ) {
+            $this->affiliate = $affiliate;
 
-        add_action( 'init', array( $this, 'init_hooks' ) );
-    }
-
-    /**
-     * Initialize the hooks
-     *
-     * @return void
-     */
-    public function init_hooks() {
-
-        if ( class_exists( 'weForms' ) ) {
-            return;
+            add_action( 'init', [ $this, 'init_hooks' ] );
         }
 
-        if ( ! current_user_can( 'manage_options' ) ) {
-            return;
+        /**
+         * Initialize the hooks
+         *
+         * @return void
+         */
+        public function init_hooks() {
+            if ( class_exists( 'weForms' ) ) {
+                return;
+            }
+
+            if ( ! current_user_can( 'manage_options' ) ) {
+                return;
+            }
+
+            add_action( 'admin_notices', [ $this, 'activation_notice' ] );
+
+            add_action( 'wp_ajax_weforms_upsell_installer', [ $this, 'install_weforms' ] );
+            add_action( 'wp_ajax_weforms_upsell_dismiss', [ $this, 'dismiss_weforms_notice' ] );
         }
 
-        add_action( 'admin_notices', array( $this, 'activation_notice' ) );
-
-        add_action( 'wp_ajax_weforms_upsell_installer', array( $this, 'install_weforms' ) );
-        add_action( 'wp_ajax_weforms_upsell_dismiss', array( $this, 'dismiss_weforms_notice' ) );
-    }
-
-    /**
-     * Show the plugin installation notice
-     *
-     * @return void
-     */
-    public function activation_notice() {
-
-        if ( $this->is_dismissed() ) {
-            return;
-        }
-        ?>
+        /**
+         * Show the plugin installation notice
+         *
+         * @return void
+         */
+        public function activation_notice() {
+            if ( $this->is_dismissed() ) {
+                return;
+            } ?>
         <div class="updated" id="weforms-upsell-prompt">
             <div class="weforms-upsell-logo">
                 <img src="https://wedevs-com-wedevs.netdna-ssl.com/wp-content/uploads/2017/08/weforms-upsell.png" width="272" height="71" alt="weForms Logo">
@@ -239,7 +236,7 @@ class WeForms_Upsell {
 
                     wp.ajax.send( 'weforms_upsell_installer', {
                         data: {
-                            _wpnonce: '<?php echo esc_html( wp_create_nonce('weforms_upsell_installer') ); ?>'
+                            _wpnonce: '<?php echo esc_html( wp_create_nonce( 'weforms_upsell_installer' ) ); ?>'
                         },
 
                         success: function(response) {
@@ -293,126 +290,125 @@ class WeForms_Upsell {
             })(jQuery);
         </script>
         <?php
-    }
-
-    /**
-     * Check if the notice is dimissed
-     *
-     * @return boolean
-     */
-    public function is_dismissed() {
-        return 'yes' == get_option( 'weforms_upsell_dismiss', 'no' );
-    }
-
-    /**
-     * Dismiss the weForms notice
-     *
-     * @return void
-     */
-    public function dismiss_notice() {
-        update_option( 'weforms_upsell_dismiss', 'yes' );
-    }
-
-    /**
-     * Learn more link, append affiliate link if present
-     *
-     * @return string
-     */
-    public function learn_more_link() {
-        $link = $this->learn_more;
-
-        if ( ! empty( $this->affiliate ) ) {
-            $link = add_query_arg( array( 'ref' => $this->affiliate ), $link );
         }
 
-        return $link;
-    }
-
-    /**
-     * Fail if plugin installtion/activation fails
-     *
-     * @param  Object $thing
-     *
-     * @return void
-     */
-    public function fail_on_error( $thing ) {
-        if ( is_wp_error( $thing ) ) {
-            wp_send_json_error( $thing->get_error_message() );
-        }
-    }
-
-    /**
-     * Install weForms
-     *
-     * @return void
-     */
-    public function install_weforms() {
-        check_ajax_referer( 'weforms_upsell_installer' );
-
-        if ( ! current_user_can( 'manage_options' ) ) {
-            wp_send_json_error( __( 'You don\'t have permission to install the plugins' ) );
+        /**
+         * Check if the notice is dimissed
+         *
+         * @return bool
+         */
+        public function is_dismissed() {
+            return 'yes' == get_option( 'weforms_upsell_dismiss', 'no' );
         }
 
-        if ( ! class_exists( 'WP_User_Frontend' ) ) {
-            $wpuf_status = $this->install_plugin( 'wp-user-frontend', 'wpuf.php' );
-
-            $this->fail_on_error( $wpuf_status );
+        /**
+         * Dismiss the weForms notice
+         *
+         * @return void
+         */
+        public function dismiss_notice() {
+            update_option( 'weforms_upsell_dismiss', 'yes' );
         }
 
-        $weforms_status = $this->install_plugin( 'weforms', 'weforms.php' );
-        $this->fail_on_error( $weforms_status );
+        /**
+         * Learn more link, append affiliate link if present
+         *
+         * @return string
+         */
+        public function learn_more_link() {
+            $link = $this->learn_more;
 
-        $this->dismiss_notice();
+            if ( ! empty( $this->affiliate ) ) {
+                $link = add_query_arg( [ 'ref' => $this->affiliate ], $link );
+            }
 
-        if ( ! empty( $this->affiliate ) ) {
-            update_option( '_weforms_aff_ref', $this->affiliate );
+            return $link;
         }
 
-        wp_send_json_success();
-    }
+        /**
+         * Fail if plugin installtion/activation fails
+         *
+         * @param object $thing
+         *
+         * @return void
+         */
+        public function fail_on_error( $thing ) {
+            if ( is_wp_error( $thing ) ) {
+                wp_send_json_error( $thing->get_error_message() );
+            }
+        }
 
-    /**
-     * Install and activate a plugin
-     *
-     * @param  string $slug
-     * @param  string $file
-     *
-     * @return WP_Error|null
-     */
-    public function install_plugin( $slug, $file ) {
-        include_once ABSPATH . 'wp-admin/includes/plugin-install.php';
-        include_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+        /**
+         * Install weForms
+         *
+         * @return void
+         */
+        public function install_weforms() {
+            check_ajax_referer( 'weforms_upsell_installer' );
 
-        $plugin_basename = $slug . '/' . $file;
+            if ( ! current_user_can( 'manage_options' ) ) {
+                wp_send_json_error( __( 'You don\'t have permission to install the plugins' ) );
+            }
 
-        // if exists and not activated
-        if ( file_exists( WP_PLUGIN_DIR . '/' . $plugin_basename ) ) {
+            if ( ! class_exists( 'WP_User_Frontend' ) ) {
+                $wpuf_status = $this->install_plugin( 'wp-user-frontend', 'wpuf.php' );
+
+                $this->fail_on_error( $wpuf_status );
+            }
+
+            $weforms_status = $this->install_plugin( 'weforms', 'weforms.php' );
+            $this->fail_on_error( $weforms_status );
+
+            $this->dismiss_notice();
+
+            if ( ! empty( $this->affiliate ) ) {
+                update_option( '_weforms_aff_ref', $this->affiliate );
+            }
+
+            wp_send_json_success();
+        }
+
+        /**
+         * Install and activate a plugin
+         *
+         * @param string $slug
+         * @param string $file
+         *
+         * @return WP_Error|null
+         */
+        public function install_plugin( $slug, $file ) {
+            include_once ABSPATH . 'wp-admin/includes/plugin-install.php';
+            include_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+
+            $plugin_basename = $slug . '/' . $file;
+
+            // if exists and not activated
+            if ( file_exists( WP_PLUGIN_DIR . '/' . $plugin_basename ) ) {
+                return activate_plugin( $plugin_basename );
+            }
+
+            // seems like the plugin doesn't exists. Download and activate it
+            $upgrader = new Plugin_Upgrader( new WP_Ajax_Upgrader_Skin() );
+
+            $api      = plugins_api( 'plugin_information', [ 'slug' => $slug, 'fields' => [ 'sections' => false ] ] );
+            $result   = $upgrader->install( $api->download_link );
+
+            if ( is_wp_error( $result ) ) {
+                return $result;
+            }
+
             return activate_plugin( $plugin_basename );
         }
 
-        // seems like the plugin doesn't exists. Download and activate it
-        $upgrader = new Plugin_Upgrader( new WP_Ajax_Upgrader_Skin() );
+        /**
+         * Dismiss the notice via Ajax
+         *
+         * @return void
+         */
+        public function dismiss_weforms_notice() {
+            $this->dismiss_notice();
 
-        $api      = plugins_api( 'plugin_information', array( 'slug' => $slug, 'fields' => array( 'sections' => false ) ) );
-        $result   = $upgrader->install( $api->download_link );
-
-        if ( is_wp_error( $result ) ) {
-            return $result;
+            wp_send_json_success();
         }
-
-        return activate_plugin( $plugin_basename );
-    }
-
-    /**
-     * Dismiss the notice via Ajax
-     *
-     * @return void
-     */
-    public function dismiss_weforms_notice() {
-        $this->dismiss_notice();
-
-        wp_send_json_success();
     }
 }
-
-endif;

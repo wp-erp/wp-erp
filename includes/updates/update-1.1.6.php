@@ -15,15 +15,17 @@ function erp_update_table_1_1_6() {
 
     // Add email_status column in erp_hr_announcement table
     $table_name   = $wpdb->prefix . 'erp_hr_announcement';
-    $columns = $wpdb->get_col( "DESC $table_name" );
+    $columns      = $wpdb->get_col( "DESC $table_name" );
+
     if ( ! in_array( 'email_status', $columns ) ) {
         $wpdb->query( "ALTER TABLE $table_name ADD `email_status` VARCHAR(30) NOT NULL AFTER `status`;" );
     }
 
     // Add data_id column in erp_audit_log table
     $table_name = $wpdb->prefix . 'erp_audit_log';
-    $columns  = $wpdb->get_col( "DESC $table_name" );
-    if( ! in_array( 'data_id', $columns ) ) {
+    $columns    = $wpdb->get_col( "DESC $table_name" );
+
+    if ( ! in_array( 'data_id', $columns ) ) {
         $wpdb->query( "ALTER TABLE $table_name ADD `data_id` BIGINT( 20 ) NULL DEFAULT NULL AFTER `sub_component`;" );
     }
 }

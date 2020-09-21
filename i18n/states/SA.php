@@ -3,11 +3,10 @@
  * Saudi Arabia
  *
  * @category    i18n
- * @package     WPERP/i18n
  */
 global $states;
 
-$states['SA'] = array(
+$states['SA'] = [
     'Riyadh'  => __( 'Riyadh', 'erp' ),
     'Makkah'  => __( 'Makkah', 'erp' ),
     'Madinah' => __( 'Madinah', 'erp' ),
@@ -21,4 +20,4 @@ $states['SA'] = array(
     'Najran'  => __( 'Najran', 'erp' ),
     'Bahah'   => __( 'Bahah', 'erp' ),
     'Jawf'    => __( 'Jawf', 'erp' ),
-);
+];

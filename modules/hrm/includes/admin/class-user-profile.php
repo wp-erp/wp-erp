@@ -4,17 +4,11 @@ namespace WeDevs\ERP\HRM\Admin;
 
 /**
  * Loads HR users admin area
- *
- * @package WP-ERP\HR
- * @subpackage Administration
  */
 class User_Profile {
 
     /**
      * The HR users admin loader
-     *
-     * @package WP-ERP\HR
-     * @subpackage Administration
      */
     public function __construct() {
         $this->setup_actions();
@@ -25,15 +19,15 @@ class User_Profile {
      *
      * @return void
      */
-    function setup_actions() {
+    public function setup_actions() {
         // Bail if in network admin
         if ( is_network_admin() ) {
             return;
         }
 
         // User profile edit/display actions
-        add_action( 'erp_user_profile_role', array( $this, 'role' ) );
-        add_action( 'erp_update_user', array( $this, 'update_user' ), 10, 2 );
+        add_action( 'erp_user_profile_role', [ $this, 'role' ] );
+        add_action( 'erp_update_user', [ $this, 'update_user' ], 10, 2 );
 
         //notification disable checkbox
         add_action( 'edit_user_profile', [ $this, 'profile_settings' ] );
@@ -42,7 +36,7 @@ class User_Profile {
         add_action( 'erp_update_user', [ $this, 'update_profile_settings' ], 10, 2 );
     }
 
-    function update_user( $user_id, $post ) {
+    public function update_user( $user_id, $post ) {
 
         // HR role we want the user to have
         $new_hr_manager_role = isset( $post['hr_manager'] ) ? sanitize_text_field( $post['hr_manager'] ) : false;
@@ -66,13 +60,12 @@ class User_Profile {
         }
     }
 
-    function role( $profileuser ) {
+    public function role( $profileuser ) {
         if ( ! current_user_can( 'manage_options' ) ) {
             return;
         }
 
-        $checked = in_array( erp_hr_get_manager_role(), $profileuser->roles ) ? 'checked' : '';
-        ?>
+        $checked = in_array( erp_hr_get_manager_role(), $profileuser->roles ) ? 'checked' : ''; ?>
         <label for="erp-hr-manager">
             <input type="checkbox" id="erp-hr-manager" <?php echo esc_attr( $checked ); ?> name="hr_manager"
                    value="<?php echo esc_attr( erp_hr_get_manager_role() ); ?>">
@@ -81,10 +74,9 @@ class User_Profile {
         <?php
     }
 
-    function profile_settings( $profileuser ) {
+    public function profile_settings( $profileuser ) {
         $notification = get_user_meta( $profileuser->ID, 'erp_hr_disable_notification', true );
-        $checked      = ! empty( $notification ) ? 'checked' : '';
-        ?>
+        $checked      = ! empty( $notification ) ? 'checked' : ''; ?>
         <h3><?php esc_html_e( 'ERP Profile Settings', 'erp' ); ?></h3>
         <table class="form-table">
             <tbody>
@@ -101,12 +93,10 @@ class User_Profile {
         <?php
     }
 
-    function update_profile_settings( $user_id, $posted ) {
-
+    public function update_profile_settings( $user_id, $posted ) {
         if ( current_user_can( 'edit_user', $user_id ) ) {
-            $erp_hr_disable_notification = isset($posted['erp_hr_disable_notification'])? $posted['erp_hr_disable_notification'] : '';
+            $erp_hr_disable_notification = isset( $posted['erp_hr_disable_notification'] ) ? $posted['erp_hr_disable_notification'] : '';
             update_user_meta( $user_id, 'erp_hr_disable_notification', $erp_hr_disable_notification );
         }
     }
-
 }

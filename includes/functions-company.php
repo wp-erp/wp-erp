@@ -3,7 +3,7 @@
 /**
  * Remove a company locaiton
  *
- * @param  int  $location_id
+ * @param int $location_id
  *
  * @return bool
  */
@@ -12,7 +12,7 @@ function erp_company_location_delete( $location_id ) {
 
     do_action( 'erp_company_location_delete', $location_id );
 
-    return $wpdb->delete( $wpdb->prefix . 'erp_company_locations', array( 'id' => $location_id ) );
+    return $wpdb->delete( $wpdb->prefix . 'erp_company_locations', [ 'id' => $location_id ] );
 }
 
 /**
@@ -34,22 +34,22 @@ function erp_company_get_locations() {
         $company = new \WeDevs\ERP\Company();
 
         $main_location = (object) [
-            'id' => -1,
+            'id'         => -1,
             'company_id' => null,
-            'name' => erp_get_company_default_location_name(),
-            'address_1' => $company->address['address_1'],
-            'address_2' => $company->address['address_2'],
-            'city' => $company->address['city'],
-            'state' => $company->address['state'],
-            'zip' => isset( $company->address['zip'] ) ? $company->address['zip'] : $company->address['postcode'],
-            'country' => $company->address['country'],
-            'fax' => $company->fax,
-            'phone' => $company->phone,
+            'name'       => erp_get_company_default_location_name(),
+            'address_1'  => $company->address['address_1'],
+            'address_2'  => $company->address['address_2'],
+            'city'       => $company->address['city'],
+            'state'      => $company->address['state'],
+            'zip'        => isset( $company->address['zip'] ) ? $company->address['zip'] : $company->address['postcode'],
+            'country'    => $company->address['country'],
+            'fax'        => $company->fax,
+            'phone'      => $company->phone,
             'created_at' => null,
             'updated_at' => null,
         ];
 
-        array_unshift( $locations , $main_location );
+        array_unshift( $locations, $main_location );
 
         wp_cache_set( $cache_key, $locations, 'erp' );
     }
@@ -60,8 +60,8 @@ function erp_company_get_locations() {
 /**
  * Get a company location prepared for dropdown
  *
- * @param int     $company_id
- * @param string  $select_label pass any string to be as the first element
+ * @param int    $company_id
+ * @param string $select_label pass any string to be as the first element
  *
  * @return array
  */
@@ -70,7 +70,7 @@ function erp_company_get_location_dropdown_raw( $select_label = null ) {
     $dropdown  = [];
 
     if ( $select_label ) {
-        $dropdown    = array( '-1' => $select_label );
+        $dropdown    = [ '-1' => $select_label ];
     }
 
     foreach ( $locations as $location ) {
@@ -86,15 +86,15 @@ function erp_company_get_location_dropdown_raw( $select_label = null ) {
  * @return array
  */
 function erp_company_get_working_days() {
-    $default = array(
+    $default = [
         'mon' => 8,
         'tue' => 8,
         'wed' => 8,
         'thu' => 8,
         'fri' => 8,
         'sat' => 0,
-        'sun' => 0
-    );
+        'sun' => 0,
+    ];
 
     $option_key = 'erp_hr_work_days';
     $saved      = get_option( $option_key, $default );

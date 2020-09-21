@@ -2,11 +2,12 @@
 
 namespace WeDevs\ERP\Accounting\API;
 
-use WP_REST_Server;
-use WP_REST_Response;
 use WP_Error;
+use WP_REST_Response;
+use WP_REST_Server;
 
 class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
+
     /**
      * Endpoint namespace.
      *
@@ -29,117 +30,116 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
             $this->namespace,
             '/' . $this->rest_base,
             [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_accounts' ],
-					'args'                => $this->get_collection_params(),
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_view_bank_accounts' );
-					},
-				],
-				'schema' => [ $this, 'get_public_item_schema' ],
-			]
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_accounts' ],
+                    'args'                => $this->get_collection_params(),
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_view_bank_accounts' );
+                    },
+                ],
+                'schema' => [ $this, 'get_public_item_schema' ],
+            ]
         );
 
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base . '/(?P<id>[\d]+)',
             [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_account' ],
-					'args'                => [
-						'context' => $this->get_context_param( [ 'default' => 'view' ] ),
-					],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_view_bank_accounts' );
-					},
-				],
-				[
-					'methods'             => WP_REST_Server::DELETABLE,
-					'callback'            => [ $this, 'delete_account' ],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_create_bank_transfer' );
-					},
-				],
-			]
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_account' ],
+                    'args'                => [
+                        'context' => $this->get_context_param( [ 'default' => 'view' ] ),
+                    ],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_view_bank_accounts' );
+                    },
+                ],
+                [
+                    'methods'             => WP_REST_Server::DELETABLE,
+                    'callback'            => [ $this, 'delete_account' ],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_create_bank_transfer' );
+                    },
+                ],
+            ]
         );
 
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base . '/transfer',
             [
-				[
-					'methods'             => WP_REST_Server::CREATABLE,
-					'callback'            => [ $this, 'transfer_money' ],
-					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_create_bank_transfer' );
-					},
-				],
-			]
+                [
+                    'methods'             => WP_REST_Server::CREATABLE,
+                    'callback'            => [ $this, 'transfer_money' ],
+                    'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_create_bank_transfer' );
+                    },
+                ],
+            ]
         );
 
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base . '/transfers/(?P<id>[\d]+)',
             [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_single_transfer' ],
-					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::READABLE ),
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_create_bank_transfer' );
-					},
-				],
-			]
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_single_transfer' ],
+                    'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::READABLE ),
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_create_bank_transfer' );
+                    },
+                ],
+            ]
         );
 
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base . '/transfers/list',
             [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_transfer_list' ],
-					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::READABLE ),
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_create_bank_transfer' );
-					},
-				],
-			]
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_transfer_list' ],
+                    'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::READABLE ),
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_create_bank_transfer' );
+                    },
+                ],
+            ]
         );
 
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base . '/bank-accounts',
             [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_bank_accounts' ],
-					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::READABLE ),
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_view_bank_accounts' );
-					},
-				],
-			]
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_bank_accounts' ],
+                    'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::READABLE ),
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_view_bank_accounts' );
+                    },
+                ],
+            ]
         );
 
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base . '/cash-at-bank',
             [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_cash_at_bank' ],
-					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::READABLE ),
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_view_bank_accounts' );
-					},
-				],
-			]
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_cash_at_bank' ],
+                    'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::READABLE ),
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_view_bank_accounts' );
+                    },
+                ],
+            ]
         );
-
     }
 
     /**
@@ -150,10 +150,10 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_accounts( $request ) {
-
         $items = erp_acct_get_transfer_accounts( true );
 
         $formatted_items = [];
+
         foreach ( $items as $item ) {
             $additional_fields = [];
 
@@ -229,7 +229,6 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
         $args['start_date'] = $closest_fy_date['start_date'];
         $args['end_date']   = $closest_fy_date['end_date'];
 
-
         $ledger_details = get_ledger_balance_with_opening_balance( $item['from_account_id'], $args['start_date'], $args['end_date'] );
 
         if ( empty( $ledger_details ) ) {
@@ -273,6 +272,7 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
         $accounts = wp_list_pluck( $accounts, 'name', 'id' );
 
         $formatted_items = [];
+
         foreach ( $items as $item ) {
             $additional_fields = [];
 
@@ -315,6 +315,7 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
         }
 
         $formatted_items = [];
+
         foreach ( $items as $item ) {
             $additional_fields = [];
 
@@ -365,23 +366,22 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function add_log( $data, $action ) {
         erp_log()->add(
             [
-				'component'     => 'Accounting',
-				'sub_component' => __( 'Transfer', 'erp' ),
-				'old_value'     => '',
+                'component'     => 'Accounting',
+                'sub_component' => __( 'Transfer', 'erp' ),
+                'old_value'     => '',
                 'new_value'     => '',
                 // translators: %1$s: amount, %2$s: id
-				'message'       => sprintf( __( '%1$s has been transferred from %2$s to %3$s', 'erp' ), $data['amount'], erp_acct_get_ledger_name_by_id( $data['from_account_id'] ), erp_acct_get_ledger_name_by_id( $data['to_account_id'] ) ),
-				'changetype'    => $action,
-				'created_by'    => get_current_user_id(),
-
-			]
+                'message'       => sprintf( __( '%1$s has been transferred from %2$s to %3$s', 'erp' ), $data['amount'], erp_acct_get_ledger_name_by_id( $data['from_account_id'] ), erp_acct_get_ledger_name_by_id( $data['to_account_id'] ) ),
+                'changetype'    => $action,
+                'created_by'    => get_current_user_id(),
+            ]
         );
     }
 
     /**
      * Prepare a single item for create or update
      *
-     * @param WP_REST_Request $request Request object.
+     * @param WP_REST_Request $request request object
      *
      * @return array $prepared_item
      */
@@ -400,11 +400,11 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Prepare a single account output for response
      *
-     * @param object $item
-     * @param WP_REST_Request $request Request object.
-     * @param array $additional_fields (optional)
+     * @param object          $item
+     * @param WP_REST_Request $request           request object
+     * @param array           $additional_fields (optional)
      *
-     * @return WP_REST_Response $response Response data.
+     * @return WP_REST_Response $response response data
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
         $item = (object) $item;
@@ -434,14 +434,13 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Prepare a single dashboard output for response
      *
-     * @param object $item
-     * @param WP_REST_Request $request Request object.
-     * @param array $additional_fields (optional)
+     * @param object          $item
+     * @param WP_REST_Request $request           request object
+     * @param array           $additional_fields (optional)
      *
-     * @return WP_REST_Response $response Response data.
+     * @return WP_REST_Response $response response data
      */
     public function prepare_dashboard_item_for_response( $item, $request, $additional_fields = [] ) {
-
         if ( isset( $request['include'] ) ) {
             $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
 
@@ -463,6 +462,7 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @param $request
      * @param $additional_fields
      * @param $accounts
+     *
      * @return mixed|WP_REST_Response
      */
     public function prepare_list_item_for_response( $item, $request, $additional_fields, $accounts ) {
@@ -500,6 +500,7 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @param $item
      * @param $request
      * @param $additional_fields
+     *
      * @return mixed|WP_REST_Response
      */
     public function prepare_bank_item_for_response( $item, $request, $additional_fields ) {

@@ -2,22 +2,21 @@
 
 namespace WeDevs\ERP\HRM\Models;
 
-use WeDevs\ERP\Framework\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use WeDevs\ERP\Framework\Model;
 
 /**
  * Class Employee
- *
- * @package WeDevs\ERP\HRM\Models
  */
 class Employee extends Model {
-
     use SoftDeletes;
 
     protected $table = 'erp_hr_employees';
+
     protected $primaryKey = 'id';
 
     public $timestamps = false;
+
     protected $fillable = [
         'user_id',
         'employee_id',
@@ -33,7 +32,7 @@ class Employee extends Model {
         'pay_type',
         'type',
         'status',
-        'delete_at'
+        'delete_at',
     ];
 
     /**
@@ -94,4 +93,3 @@ class Employee extends Model {
         return $this->belongsTo( 'WeDevs\ERP\HRM\Models\Hr_User', 'user_id', 'ID' );
     }
 }
-

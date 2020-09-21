@@ -2,12 +2,12 @@
 
 namespace WeDevs\ERP\HRM\API;
 
-use WP_REST_Server;
-use WP_REST_Response;
-use WP_Error;
 use WeDevs\ERP\API\REST_Controller;
+use WP_REST_Response;
+use WP_REST_Server;
 
 class Company_Controller extends REST_Controller {
+
     /**
      * Endpoint namespace.
      *
@@ -93,7 +93,7 @@ class Company_Controller extends REST_Controller {
      *
      * @param $request
      *
-     * @return mixed|object|\WP_REST_Response
+     * @return mixed|object|WP_REST_Response
      */
     public function get_company_locations( $request ) {
         $locations = erp_company_get_locations();
@@ -110,7 +110,7 @@ class Company_Controller extends REST_Controller {
      *
      * @param $request
      *
-     * @return mixed|object|\WP_REST_Response
+     * @return mixed|object|WP_REST_Response
      */
     public function get_employee_statuses( $request ) {
         $statuses = erp_hr_get_employee_statuses();
@@ -127,7 +127,7 @@ class Company_Controller extends REST_Controller {
      *
      * @param $request
      *
-     * @return mixed|object|\WP_REST_Response
+     * @return mixed|object|WP_REST_Response
      */
     public function get_employee_pay_types( $request ) {
         $pay_types = erp_hr_get_pay_type();
@@ -144,7 +144,7 @@ class Company_Controller extends REST_Controller {
      *
      * @param $request
      *
-     * @return mixed|object|\WP_REST_Response
+     * @return mixed|object|WP_REST_Response
      */
     public function get_employee_types( $request ) {
         $employee_types = erp_hr_get_employee_types();
@@ -161,7 +161,7 @@ class Company_Controller extends REST_Controller {
      *
      * @param $request
      *
-     * @return mixed|object|\WP_REST_Response
+     * @return mixed|object|WP_REST_Response
      */
     public function get_source_of_hire( $request ) {
         $sources  = erp_hr_get_employee_sources();
@@ -170,5 +170,4 @@ class Company_Controller extends REST_Controller {
 
         return $response;
     }
-
 }

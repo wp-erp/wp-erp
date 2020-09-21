@@ -1,5 +1,7 @@
 <?php
+
 namespace WeDevs\ERP\Admin;
+
 use WeDevs\ERP\Company;
 use WeDevs\ERP\Framework\Traits\Hooker;
 
@@ -9,7 +11,6 @@ use WeDevs\ERP\Framework\Traits\Hooker;
  * Handles all the form submission
  */
 class Form_Handler {
-
     use Hooker;
 
     /**
@@ -23,7 +24,7 @@ class Form_Handler {
         $this->action( 'admin_init', 'tools_test_mail' );
 
         $erp_settings = sanitize_title( esc_html__( 'ERP Settings', 'erp' ) );
-        add_action( "load-{$erp_settings}_page_erp-audit-log", array( $this, 'audit_log_bulk_action' ) );
+        add_action( "load-{$erp_settings}_page_erp-audit-log", [ $this, 'audit_log_bulk_action' ] );
     }
 
     /**
@@ -43,7 +44,7 @@ class Form_Handler {
         }
 
         $inactive    = ( isset( $_GET['tab'] ) && $_GET['tab'] == 'inactive' ) ? true : false;
-        $modules     = isset( $_POST['modules'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['modules'] ) ) : array();
+        $modules     = isset( $_POST['modules'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['modules'] ) ) : [];
         $all_modules = wperp()->modules->get_modules();
 
         foreach ( $all_modules as $key => $module ) {
@@ -66,13 +67,13 @@ class Form_Handler {
      *
      * @since 0.1
      *
-     * @param  array  $array
-     * @param  string  $key
+     * @param array  $array
+     * @param string $key
      *
-     * @return boolean
+     * @return bool
      */
     public function is_valid_input( $array, $key ) {
-        if ( ! isset( $array[$key]) || empty( $array[$key] ) || $array[$key] == '-1' ) {
+        if ( ! isset( $array[$key] ) || empty( $array[$key] ) || $array[$key] == '-1' ) {
             return false;
         }
 
@@ -96,8 +97,8 @@ class Form_Handler {
         $required = [
             'name'    => esc_html__( 'Company name', 'erp' ),
             'address' => [
-                'country' => esc_html__( 'Country', 'erp' )
-            ]
+                'country' => esc_html__( 'Country', 'erp' ),
+            ],
         ];
 
         if ( ! $this->is_valid_input( $posted, 'name' ) ) {
@@ -109,7 +110,7 @@ class Form_Handler {
         }
 
         if ( $errors ) {
-            $args = implode( '&' , $errors );
+            $args        = implode( '&', $errors );
             $redirect_to = admin_url( 'admin.php?page=erp-company&action=edit&msg=error&' . $args );
             wp_redirect( $redirect_to );
             exit;
@@ -126,11 +127,11 @@ class Form_Handler {
                 'zip'       => $posted['address']['zip'],
                 'country'   => $posted['address']['country'],
             ],
-            'phone'   => $posted['phone'],
-            'fax'     => $posted['fax'],
-            'mobile'  => $posted['mobile'],
-            'website' => $posted['website'],
-            'business_type' => $posted['business_type']
+            'phone'         => $posted['phone'],
+            'fax'           => $posted['fax'],
+            'mobile'        => $posted['mobile'],
+            'website'       => $posted['website'],
+            'business_type' => $posted['business_type'],
         ];
 
         $company = new Company();
@@ -149,7 +150,6 @@ class Form_Handler {
      * @return void
      */
     public function audit_log_bulk_action() {
-
         if ( ! isset( $_REQUEST['_wpnonce'] ) || ! isset( $_GET['page'] ) ) {
             return;
         }
@@ -164,7 +164,7 @@ class Form_Handler {
 
         $request_uri = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
 
-        $redirect = remove_query_arg( array( '_wp_http_referer', '_wpnonce', 'filter_audit_log' ), $request_uri );
+        $redirect = remove_query_arg( [ '_wp_http_referer', '_wpnonce', 'filter_audit_log' ], $request_uri );
         wp_redirect( $redirect );
         exit();
     }
@@ -178,7 +178,6 @@ class Form_Handler {
 
         // admin menu form
         if ( isset( $_POST['erp_admin_menu'], $_REQUEST['_wpnonce'] ) && wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'erp-remove-menu-nonce' ) ) {
-
             $menu     = isset( $_POST['menu'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['menu'] ) ) : [];
             $bar_menu = isset( $_POST['admin_menu'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['admin_menu'] ) ) : [];
 
@@ -196,7 +195,6 @@ class Form_Handler {
      */
     public function tools_test_mail() {
         if ( isset( $_POST['erp_send_test_email'], $_REQUEST['_wpnonce'] ) && wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'erp-test-email-nonce' ) ) {
-
             $to      = isset( $_POST['to'] ) ? sanitize_text_field( wp_unslash( $_POST['to'] ) ) : '';
             $subject = sprintf( __( 'Test email from %s', 'erp' ), get_bloginfo( 'name' ) );
             $body    = isset( $_POST['body'] ) ? sanitize_text_field( wp_unslash( $_POST['body'] ) ) : '';
@@ -212,7 +210,6 @@ class Form_Handler {
             exit;
         }
     }
-
 }
 
 new Form_Handler();

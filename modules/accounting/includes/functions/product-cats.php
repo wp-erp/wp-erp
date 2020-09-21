@@ -24,7 +24,6 @@ function erp_acct_get_all_product_cats() {
  *
  * @return mixed
  */
-
 function erp_acct_get_product_cat( $product_cat_id ) {
     global $wpdb;
 
@@ -37,6 +36,7 @@ function erp_acct_get_product_cat( $product_cat_id ) {
  * Insert product data
  *
  * @param $data
+ *
  * @return int
  */
 function erp_acct_insert_product_cat( $data ) {
@@ -52,33 +52,33 @@ function erp_acct_insert_product_cat( $data ) {
 
         $wpdb->insert(
             $wpdb->prefix . 'erp_acct_product_categories',
-            array(
-				'name'       => $product_cat_data['name'],
-				'parent'     => $product_cat_data['parent'],
-				'created_at' => $product_cat_data['created_at'],
-				'created_by' => $product_cat_data['created_by'],
-				'updated_at' => $product_cat_data['updated_at'],
-				'updated_by' => $product_cat_data['updated_by'],
-            )
+            [
+                'name'       => $product_cat_data['name'],
+                'parent'     => $product_cat_data['parent'],
+                'created_at' => $product_cat_data['created_at'],
+                'created_by' => $product_cat_data['created_by'],
+                'updated_at' => $product_cat_data['updated_at'],
+                'updated_by' => $product_cat_data['updated_by'],
+            ]
         );
 
         $product_cat_id = $wpdb->insert_id;
 
         $wpdb->query( 'COMMIT' );
-
     } catch ( Exception $e ) {
         $wpdb->query( 'ROLLBACK' );
+
         return new WP_error( 'product-exception', $e->getMessage() );
     }
 
     return $product_cat_id;
-
 }
 
 /**
  * Update product data
  *
  * @param $data
+ *
  * @return int
  */
 function erp_acct_update_product_cat( $data, $id ) {
@@ -94,28 +94,27 @@ function erp_acct_update_product_cat( $data, $id ) {
 
         $wpdb->update(
             $wpdb->prefix . 'erp_acct_product_categories',
-            array(
-				'name'       => $product_cat_data['name'],
-				'parent'     => $product_cat_data['parent'],
-				'created_at' => $product_cat_data['created_at'],
-				'created_by' => $product_cat_data['created_by'],
-				'updated_at' => $product_cat_data['updated_at'],
-				'updated_by' => $product_cat_data['updated_by'],
-            ),
-            array(
-				'id' => $id,
-            )
+            [
+                'name'       => $product_cat_data['name'],
+                'parent'     => $product_cat_data['parent'],
+                'created_at' => $product_cat_data['created_at'],
+                'created_by' => $product_cat_data['created_by'],
+                'updated_at' => $product_cat_data['updated_at'],
+                'updated_by' => $product_cat_data['updated_by'],
+            ],
+            [
+                'id' => $id,
+            ]
         );
 
         $wpdb->query( 'COMMIT' );
-
     } catch ( Exception $e ) {
         $wpdb->query( 'ROLLBACK' );
+
         return new WP_error( 'product-exception', $e->getMessage() );
     }
 
     return $id;
-
 }
 
 /**
@@ -123,10 +122,10 @@ function erp_acct_update_product_cat( $data, $id ) {
  *
  * @param $data
  * @param $voucher_no
+ *
  * @return mixed
  */
 function erp_acct_get_formatted_product_cat_data( $data ) {
-
     $product_cat_data['name']       = isset( $data['name'] ) ? $data['name'] : '';
     $product_cat_data['parent']     = isset( $data['parent'] ) ? $data['parent'] : 0;
     $product_cat_data['created_at'] = isset( $data['created_at'] ) ? $data['created_at'] : '';
@@ -147,6 +146,5 @@ function erp_acct_get_formatted_product_cat_data( $data ) {
 function erp_acct_delete_product_cat( $product_cat_id ) {
     global $wpdb;
 
-    $wpdb->delete( $wpdb->prefix . 'erp_acct_product_categories', array( 'id' => $product_cat_id ) );
+    $wpdb->delete( $wpdb->prefix . 'erp_acct_product_categories', [ 'id' => $product_cat_id ] );
 }
-

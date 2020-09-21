@@ -28,9 +28,9 @@ function erp_hr_employee_on_delete( $user_id, $hard = 0 ) {
  *
  * @param  array  arguments
  *
- * @return int  employee id
+ * @return int employee id
  */
-function erp_hr_employee_create( $args = array() ) {
+function erp_hr_employee_create( $args = [] ) {
     $employee = new \WeDevs\ERP\HRM\Employee( null );
     $result   = $employee->create_employee( $args );
 
@@ -44,34 +44,34 @@ function erp_hr_employee_create( $args = array() ) {
 /**
  * Get all employees from a company
  *
- * @param  int $company_id company id
- * @param bool $no_object if set true, Employee object will be
- *                            returned as array. $wpdb rows otherwise
+ * @param int  $company_id company id
+ * @param bool $no_object  if set true, Employee object will be
+ *                         returned as array. $wpdb rows otherwise
  *
- * @return array  the employees
+ * @return array the employees
  */
-function erp_hr_get_employees( $args = array() ) {
+function erp_hr_get_employees( $args = [] ) {
     global $wpdb;
 
-    $defaults = array(
+    $defaults = [
         'number'    => 20,
         'offset'    => 0,
         'orderby'   => 'hiring_date',
         'order'     => 'DESC',
         'no_object' => false,
-        'count'     => false
-    );
+        'count'     => false,
+    ];
 
     $args  = wp_parse_args( $args, $defaults );
-    $where = array();
+    $where = [];
 
     $employee_tbl = $wpdb->prefix . 'erp_hr_employees';
-    $employees    = \WeDevs\ERP\HRM\Models\Employee::select( array( $employee_tbl . '.user_id', 'display_name' ) )
-                                                   ->leftJoin( $wpdb->users, $employee_tbl . '.user_id', '=', $wpdb->users . '.ID' )
-                                                    ->leftJoin( "{$wpdb->prefix}usermeta as gender", function ( $join ) use ( $employee_tbl ) {
+    $employees    = \WeDevs\ERP\HRM\Models\Employee::select( [ $employee_tbl . '.user_id', 'display_name' ] )
+        ->leftJoin( $wpdb->users, $employee_tbl . '.user_id', '=', $wpdb->users . '.ID' )
+        ->leftJoin( "{$wpdb->prefix}usermeta as gender", function ( $join ) use ( $employee_tbl ) {
                                                         $join->on( $employee_tbl . '.user_id', '=', 'gender.user_id' )->where( 'gender.meta_key', '=', 'gender' );
                                                     } )
-                                                    ->leftJoin( "{$wpdb->prefix}usermeta as marital_status", function ( $join ) use ( $employee_tbl ) {
+        ->leftJoin( "{$wpdb->prefix}usermeta as marital_status", function ( $join ) use ( $employee_tbl ) {
                                                         $join->on( $employee_tbl . '.user_id', '=', 'marital_status.user_id' )->where( 'marital_status.meta_key', '=', 'marital_status' );
                                                     } );
 
@@ -101,7 +101,6 @@ function erp_hr_get_employees( $args = array() ) {
     }
     /******** Check gender & marital status end ***********/
 
-
     if ( isset( $args['status'] ) && ! empty( $args['status'] ) ) {
         if ( $args['status'] == 'trash' ) {
             $employees = $employees->onlyTrashed();
@@ -122,7 +121,7 @@ function erp_hr_get_employees( $args = array() ) {
     if ( 'employee_name' === $args['orderby'] ) {
         $employees = $employees->leftJoin( $wpdb->usermeta . ' as umeta', function ( $join ) use ( $wpdb, $employee_tbl ) {
             $join->on( $employee_tbl . '.user_id', '=', 'umeta.user_id' )
-                 ->where( 'umeta.meta_key', '=', 'first_name' );
+                ->where( 'umeta.meta_key', '=', 'first_name' );
         } );
 
         $args['orderby'] = 'umeta.meta_value';
@@ -130,7 +129,7 @@ function erp_hr_get_employees( $args = array() ) {
 
     $cache_key = 'erp-get-employees-' . md5( serialize( $args ) );
     $results   = wp_cache_get( $cache_key, 'erp' );
-    $users     = array();
+    $users     = [];
 
     // Check if want all data without any pagination
     if ( $args['number'] != '-1' && ! $args['count'] ) {
@@ -143,7 +142,6 @@ function erp_hr_get_employees( $args = array() ) {
     }
 
     if ( false === $results ) {
-
         $results = $employees
             ->orderBy( $args['orderby'], $args['order'] )
             ->get()
@@ -155,7 +153,6 @@ function erp_hr_get_employees( $args = array() ) {
 
     if ( $results ) {
         foreach ( $results as $key => $row ) {
-
             if ( true === $args['no_object'] ) {
                 $users[] = $row;
             } else {
@@ -167,39 +164,37 @@ function erp_hr_get_employees( $args = array() ) {
     return $users;
 }
 
-
 /**
  * Get all employees from a company
  *
- * @param  int $company_id company id
- * @param bool $no_object if set true, Employee object will be
- *                            returned as array. $wpdb rows otherwise
+ * @param int  $company_id company id
+ * @param bool $no_object  if set true, Employee object will be
+ *                         returned as array. $wpdb rows otherwise
  *
- * @return array  the employees
+ * @return array the employees
  */
 function erp_hr_count_employees() {
-
-    $where = array();
+    $where = [];
 
     $employee = new \WeDevs\ERP\HRM\Models\Employee();
 
     if ( isset( $args['designation'] ) && ! empty( $args['designation'] ) ) {
-        $designation = array( 'designation' => $args['designation'] );
+        $designation = [ 'designation' => $args['designation'] ];
         $where       = array_merge( $designation, $where );
     }
 
     if ( isset( $args['department'] ) && ! empty( $args['department'] ) ) {
-        $department = array( 'department' => $args['department'] );
+        $department = [ 'department' => $args['department'] ];
         $where      = array_merge( $where, $department );
     }
 
     if ( isset( $args['location'] ) && ! empty( $args['location'] ) ) {
-        $location = array( 'location' => $args['location'] );
+        $location = [ 'location' => $args['location'] ];
         $where    = array_merge( $where, $location );
     }
 
     if ( isset( $args['status'] ) && ! empty( $args['status'] ) ) {
-        $status = array( 'status' => $args['status'] );
+        $status = [ 'status' => $args['status'] ];
         $where  = array_merge( $where, $status );
     }
 
@@ -207,7 +202,6 @@ function erp_hr_count_employees() {
 
     return $counts;
 }
-
 
 /**
  * Get Employee status count
@@ -219,25 +213,24 @@ function erp_hr_count_employees() {
 function erp_hr_employee_get_status_count() {
     global $wpdb;
 
-    $statuses = array( 'all' => __( 'All', 'erp' ) ) + erp_hr_get_employee_statuses();
-    $counts   = array();
+    $statuses = [ 'all' => __( 'All', 'erp' ) ] + erp_hr_get_employee_statuses();
+    $counts   = [];
 
     foreach ( $statuses as $status => $label ) {
-        $counts[ $status ] = array( 'count' => 0, 'label' => $label );
+        $counts[ $status ] = [ 'count' => 0, 'label' => $label ];
     }
 
     $cache_key = 'erp-hr-employee-status-counts';
     $results   = wp_cache_get( $cache_key, 'erp' );
 
     if ( false === $results ) {
-
         $employee = new \WeDevs\ERP\HRM\Models\Employee();
         $db       = new \WeDevs\ORM\Eloquent\Database();
 
-        $results = $employee->select( array( 'status', $db->raw( 'COUNT(id) as num' ) ) )
-                            ->where( 'status', '!=', '0' )
-                            ->groupBy( 'status' )
-                            ->get()->toArray();
+        $results = $employee->select( [ 'status', $db->raw( 'COUNT(id) as num' ) ] )
+            ->where( 'status', '!=', '0' )
+            ->groupBy( 'status' )
+            ->get()->toArray();
 
         wp_cache_set( $cache_key, $results, 'erp' );
     }
@@ -271,7 +264,7 @@ function erp_hr_count_trashed_employees() {
  *
  * @since 0.1
  *
- * @param  array|int $employee_ids
+ * @param array|int $employee_ids
  *
  * @return void
  */
@@ -298,8 +291,9 @@ function erp_employee_restore( $employee_ids ) {
  * @since 1.2.0 After delete an employee, remove HR roles instead of
  *              remove the related wp user
  *
- * @param  array|int $employee_ids
+ * @param array|int $employee_ids
  * @param $force boolean
+ *
  * @return void
  */
 function erp_employee_delete( $employee_ids, $force = false ) {
@@ -313,7 +307,7 @@ function erp_employee_delete( $employee_ids, $force = false ) {
         foreach ( $employee_ids as $key => $user_id ) {
             $employees[] = $user_id;
         }
-    } else if ( is_int( $employee_ids ) ) {
+    } elseif ( is_int( $employee_ids ) ) {
         $employees[] = $employee_ids;
     }
 
@@ -324,7 +318,6 @@ function erp_employee_delete( $employee_ids, $force = false ) {
 
     // seems like we got some
     foreach ( $employees as $employee_wp_user_id ) {
-
         do_action( 'erp_hr_delete_employee', $employee_wp_user_id, $force );
 
         if ( $force ) {
@@ -345,19 +338,18 @@ function erp_employee_delete( $employee_ids, $force = false ) {
             $wp_user->remove_role( erp_hr_get_employee_role() );
 
             //finally remove from wordpress user
-            $remove_wp_user = get_option('erp_hrm_remove_wp_user', 'no');
-            if('yes' == $remove_wp_user ){
-                $current_user = get_current_user_id();
-                wp_delete_user($employee_wp_user_id, $current_user);
-            }
+            $remove_wp_user = get_option( 'erp_hrm_remove_wp_user', 'no' );
 
+            if ( 'yes' == $remove_wp_user ) {
+                $current_user = get_current_user_id();
+                wp_delete_user( $employee_wp_user_id, $current_user );
+            }
         } else {
             \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $employee_wp_user_id )->delete();
         }
 
         do_action( 'erp_hr_after_delete_employee', $employee_wp_user_id, $force );
     }
-
 }
 
 /**
@@ -369,14 +361,13 @@ function erp_employee_delete( $employee_ids, $force = false ) {
  * @return object collection of user_id
  */
 function erp_hr_get_todays_birthday() {
-
     $db = new \WeDevs\ORM\Eloquent\Database();
 
     return erp_array_to_object( \WeDevs\ERP\HRM\Models\Employee::select( 'user_id' )
-                                                               ->where( $db->raw( "DATE_FORMAT( `date_of_birth`, '%m %d' )" ), \Carbon\Carbon::today()->format( 'm d' ) )
-                                                               ->where( 'status', 'active' )
-                                                               ->get()
-                                                               ->toArray() );
+        ->where( $db->raw( "DATE_FORMAT( `date_of_birth`, '%m %d' )" ), \Carbon\Carbon::today()->format( 'm d' ) )
+        ->where( 'status', 'active' )
+        ->get()
+        ->toArray() );
 }
 
 /**
@@ -388,15 +379,14 @@ function erp_hr_get_todays_birthday() {
  * @return object user_id, date_of_birth
  */
 function erp_hr_get_next_seven_days_birthday() {
-
     $db = new \WeDevs\ORM\Eloquent\Database();
 
-    return erp_array_to_object( \WeDevs\ERP\HRM\Models\Employee::select( array( 'user_id', 'date_of_birth' ) )
-                                                               ->where( $db->raw( "DATE_FORMAT( `date_of_birth`, '%m %d' )" ), '>', \Carbon\Carbon::today()->format( 'm d' ) )
-                                                               ->where( $db->raw( "DATE_FORMAT( `date_of_birth`, '%m %d' )" ), '<=', \Carbon\Carbon::tomorrow()->addWeek()->format( 'm d' ) )
-                                                               ->where( 'status', 'active' )
-                                                               ->get()
-                                                               ->toArray() );
+    return erp_array_to_object( \WeDevs\ERP\HRM\Models\Employee::select( [ 'user_id', 'date_of_birth' ] )
+        ->where( $db->raw( "DATE_FORMAT( `date_of_birth`, '%m %d' )" ), '>', \Carbon\Carbon::today()->format( 'm d' ) )
+        ->where( $db->raw( "DATE_FORMAT( `date_of_birth`, '%m %d' )" ), '<=', \Carbon\Carbon::tomorrow()->addWeek()->format( 'm d' ) )
+        ->where( 'status', 'active' )
+        ->get()
+        ->toArray() );
 }
 
 /**
@@ -404,11 +394,11 @@ function erp_hr_get_next_seven_days_birthday() {
  *
  * @param  int  company id
  *
- * @return array  the key-value paired employees
+ * @return array the key-value paired employees
  */
 function erp_hr_get_employees_dropdown_raw( $exclude = null ) {
     $employees = erp_hr_get_employees( [ 'number' => - 1, 'no_object' => true ] );
-    $dropdown  = array( 0 => __( '- Select Employee -', 'erp' ) );
+    $dropdown  = [ 0 => __( '- Select Employee -', 'erp' ) ];
 
     if ( $employees ) {
         foreach ( $employees as $key => $employee ) {
@@ -429,7 +419,7 @@ function erp_hr_get_employees_dropdown_raw( $exclude = null ) {
  * @param  int  company id
  * @param  string  selected department
  *
- * @return string  the dropdown
+ * @return string the dropdown
  */
 function erp_hr_get_employees_dropdown( $selected = '' ) {
     $employees = erp_hr_get_employees_dropdown_raw();
@@ -450,13 +440,13 @@ function erp_hr_get_employees_dropdown( $selected = '' ) {
  * @return array the employee statuses
  */
 function erp_hr_get_employee_statuses() {
-    $statuses = array(
+    $statuses = [
         'active'     => __( 'Active', 'erp' ),
         'inactive'   => __( 'Inactive', 'erp' ),
         'terminated' => __( 'Terminated', 'erp' ),
         'deceased'   => __( 'Deceased', 'erp' ),
-        'resigned'   => __( 'Resigned', 'erp' )
-    );
+        'resigned'   => __( 'Resigned', 'erp' ),
+    ];
 
     return apply_filters( 'erp_hr_employee_statuses', $statuses );
 }
@@ -467,12 +457,12 @@ function erp_hr_get_employee_statuses() {
  * @return array the employee statuses
  */
 function erp_hr_get_employee_statuses_icons( $selected = null ) {
-    $statuses = apply_filters( 'erp_hr_employee_statuses_icons', array(
+    $statuses = apply_filters( 'erp_hr_employee_statuses_icons', [
         'active'     => sprintf( '<span class="erp-tips dashicons dashicons-yes" title="%s"></span>', __( 'Active', 'erp' ) ),
         'terminated' => sprintf( '<span class="erp-tips dashicons dashicons-dismiss" title="%s"></span>', __( 'Terminated', 'erp' ) ),
         'deceased'   => sprintf( '<span class="erp-tips dashicons dashicons-marker" title="%s"></span>', __( 'Deceased', 'erp' ) ),
-        'resigned'   => sprintf( '<span class="erp-tips dashicons dashicons-warning" title="%s"></span>', __( 'Resigned', 'erp' ) )
-    ) );
+        'resigned'   => sprintf( '<span class="erp-tips dashicons dashicons-warning" title="%s"></span>', __( 'Resigned', 'erp' ) ),
+    ] );
 
     if ( $selected && array_key_exists( $selected, $statuses ) ) {
         return $statuses[ $selected ];
@@ -481,20 +471,19 @@ function erp_hr_get_employee_statuses_icons( $selected = null ) {
     return false;
 }
 
-
 /**
  * Get the registered employee statuses
  *
  * @return array the employee statuses
  */
 function erp_hr_get_employee_types() {
-    $types = array(
+    $types = [
         'permanent' => __( 'Full Time', 'erp' ),
         'parttime'  => __( 'Part Time', 'erp' ),
         'contract'  => __( 'On Contract', 'erp' ),
         'temporary' => __( 'Temporary', 'erp' ),
-        'trainee'   => __( 'Trainee', 'erp' )
-    );
+        'trainee'   => __( 'Trainee', 'erp' ),
+    ];
 
     return apply_filters( 'erp_hr_employee_types', $types );
 }
@@ -505,7 +494,7 @@ function erp_hr_get_employee_types() {
  * @return array the employee hire sources
  */
 function erp_hr_get_employee_sources() {
-    $sources = array(
+    $sources = [
         'direct'        => __( 'Direct', 'erp' ),
         'referral'      => __( 'Referral', 'erp' ),
         'web'           => __( 'Web', 'erp' ),
@@ -513,7 +502,7 @@ function erp_hr_get_employee_sources() {
         'advertisement' => __( 'Advertisement', 'erp' ),
         'social'        => __( 'Social Network', 'erp' ),
         'other'         => __( 'Other', 'erp' ),
-    );
+    ];
 
     return apply_filters( 'erp_hr_employee_sources', $sources );
 }
@@ -524,20 +513,19 @@ function erp_hr_get_employee_sources() {
  * @return array all the statuses
  */
 function erp_hr_get_marital_statuses( $select_text = null ) {
-
     if ( $select_text ) {
-        $statuses = array(
+        $statuses = [
             '-1'      => $select_text,
             'single'  => __( 'Single', 'erp' ),
             'married' => __( 'Married', 'erp' ),
-            'widowed' => __( 'Widowed', 'erp' )
-        );
+            'widowed' => __( 'Widowed', 'erp' ),
+        ];
     } else {
-        $statuses = array(
+        $statuses = [
             'single'  => __( 'Single', 'erp' ),
             'married' => __( 'Married', 'erp' ),
-            'widowed' => __( 'Widowed', 'erp' )
-        );
+            'widowed' => __( 'Widowed', 'erp' ),
+        ];
     }
 
     return apply_filters( 'erp_hr_marital_statuses', $statuses );
@@ -551,7 +539,7 @@ function erp_hr_get_marital_statuses( $select_text = null ) {
 function erp_hr_get_terminate_type( $selected = null ) {
     $type = apply_filters( 'erp_hr_terminate_type', [
         'voluntary'   => __( 'Voluntary', 'erp' ),
-        'involuntary' => __( 'Involuntary', 'erp' )
+        'involuntary' => __( 'Involuntary', 'erp' ),
     ] );
 
     if ( $selected ) {
@@ -595,11 +583,11 @@ function erp_hr_get_terminate_reason( $selected = null ) {
  * @return array all the reason
  */
 function erp_hr_get_terminate_rehire_options( $selected = null ) {
-    $reason = apply_filters( 'erp_hr_terminate_rehire_option', array(
+    $reason = apply_filters( 'erp_hr_terminate_rehire_option', [
         'yes'         => __( 'Yes', 'erp' ),
         'no'          => __( 'No', 'erp' ),
-        'upon_review' => __( 'Upon Review', 'erp' )
-    ) );
+        'upon_review' => __( 'Upon Review', 'erp' ),
+    ] );
 
     if ( $selected ) {
         return ( isset( $reason[ $selected ] ) ) ? $reason[ $selected ] : '';
@@ -638,20 +626,19 @@ function erp_hr_employee_terminate( $data ) {
  * @return array all genders
  */
 function erp_hr_get_genders( $select_text = null ) {
-
     if ( $select_text ) {
-        $genders = array(
+        $genders = [
             '-1'     => $select_text,
             'male'   => __( 'Male', 'erp' ),
             'female' => __( 'Female', 'erp' ),
-            'other'  => __( 'Other', 'erp' )
-        );
+            'other'  => __( 'Other', 'erp' ),
+        ];
     } else {
-        $genders = array(
+        $genders = [
             'male'   => __( 'Male', 'erp' ),
             'female' => __( 'Female', 'erp' ),
-            'other'  => __( 'Other', 'erp' )
-        );
+            'other'  => __( 'Other', 'erp' ),
+        ];
     }
 
     return apply_filters( 'erp_hr_genders', $genders );
@@ -663,14 +650,14 @@ function erp_hr_get_genders( $select_text = null ) {
  * @return array all pay types
  */
 function erp_hr_get_pay_type() {
-    $types = array(
+    $types = [
         'hourly'   => __( 'Hourly', 'erp' ),
         'daily'    => __( 'Daily', 'erp' ),
         'weekly'   => __( 'Weekly', 'erp' ),
         'biweekly' => __( 'Biweekly', 'erp' ),
         'monthly'  => __( 'Monthly', 'erp' ),
         'contract' => __( 'Contract', 'erp' ),
-    );
+    ];
 
     return apply_filters( 'erp_hr_pay_type', $types );
 }
@@ -681,11 +668,11 @@ function erp_hr_get_pay_type() {
  * @return array all the pay change reasons
  */
 function erp_hr_get_pay_change_reasons() {
-    $reasons = array(
+    $reasons = [
         'promotion'   => __( 'Promotion', 'erp' ),
         'performance' => __( 'Performance', 'erp' ),
-        'increment'   => __( 'Increment', 'erp' )
-    );
+        'increment'   => __( 'Increment', 'erp' ),
+    ];
 
     return apply_filters( 'erp_hr_pay_change_reasons', $reasons );
 }
@@ -697,8 +684,7 @@ function erp_hr_get_pay_change_reasons() {
  *
  * @return array|bool|string|\WP_Error
  */
-function erp_hr_employee_add_history( $args = array() ) {
-
+function erp_hr_employee_add_history( $args = [] ) {
     if ( ! $args['user_id'] ) {
         return new WP_Error( 'no-user-id', 'No User id found' );
     }
@@ -715,14 +701,14 @@ function erp_hr_employee_add_history( $args = array() ) {
 /**
  * Remove an item from the history
  *
- * @param  int $history_id
+ * @param int $history_id
  *
  * @return bool
  */
 function erp_hr_employee_remove_history( $history_id ) {
     global $wpdb;
 
-    return $wpdb->delete( $wpdb->prefix . 'erp_hr_employee_history', array( 'id' => $history_id ) );
+    return $wpdb->delete( $wpdb->prefix . 'erp_hr_employee_history', [ 'id' => $history_id ] );
 }
 
 /**
@@ -730,18 +716,18 @@ function erp_hr_employee_remove_history( $history_id ) {
  *
  * @param  int  employee id
  *
- * @return string  url of the employee details page
+ * @return string url of the employee details page
  */
 function erp_hr_url_single_employee( $employee_id, $tab = null ) {
     if ( $tab ) {
         $tab = '&tab=' . $tab;
     }
 
-    $user = wp_get_current_user();
+    $user    = wp_get_current_user();
     $section = ( $user->ID === $employee_id ) ? 'my-profile' : 'employee';
 
     if ( in_array( 'employee', (array) $user->roles ) ) {
-        add_query_arg( [ 'page' => 'erp-hrm', 'section' => $section, 'id' => $employee_id.$tab ], admin_url( 'admin.php' ) );
+        add_query_arg( [ 'page' => 'erp-hrm', 'section' => $section, 'id' => $employee_id . $tab ], admin_url( 'admin.php' ) );
         $url = admin_url( 'admin.php?page=erp-hr&section=' . $section . '&action=view&id=' . $employee_id . $tab );
     } else {
         $url = admin_url( 'admin.php?page=erp-hr&section=' . $section . '&action=view&id=' . $employee_id . $tab );
@@ -762,7 +748,7 @@ function erp_hr_url_single_employee( $employee_id, $tab = null ) {
  */
 function erp_hr_employee_tab_url( $tab, $employee_id ) {
     $emp_url = erp_hr_url_single_employee( intval( $employee_id ) );
-    $tab_url = add_query_arg( array( 'tab' => $tab ), $emp_url );
+    $tab_url = add_query_arg( [ 'tab' => $tab ], $emp_url );
 
     return apply_filters( 'erp_hr_employee_tab_url', $tab_url, $tab, $employee_id );
 }
@@ -772,7 +758,7 @@ function erp_hr_employee_tab_url( $tab, $employee_id ) {
  *
  * @since 0.1
  *
- * @param  integer $user_id
+ * @param int $user_id
  *
  * @return array
  */
@@ -780,11 +766,11 @@ function erp_hr_employee_dashboard_announcement( $user_id ) {
     global $wpdb;
 
     return erp_array_to_object( \WeDevs\ERP\HRM\Models\Announcement::join( $wpdb->posts, 'post_id', '=', $wpdb->posts . '.ID' )
-                                                                   ->where( 'user_id', '=', $user_id )
-                                                                   ->orderby( $wpdb->posts . '.post_date', 'desc' )
-                                                                   ->take( 8 )
-                                                                   ->get()
-                                                                   ->toArray() );
+        ->where( 'user_id', '=', $user_id )
+        ->orderby( $wpdb->posts . '.post_date', 'desc' )
+        ->take( 8 )
+        ->get()
+        ->toArray() );
 }
 
 /**
@@ -849,11 +835,11 @@ function erp_hr_employee_single_tab_permission( $employee ) {
  * @return array
  */
 function erp_hr_employee_history_modules() {
-    $modules = array(
+    $modules = [
         'employment',
         'compensation',
         'job',
-    );
+    ];
 
     return apply_filters( 'erp_hr_employee_history_modules', $modules );
 }
@@ -861,39 +847,38 @@ function erp_hr_employee_history_modules() {
 /**
  * Translate generic module data to readable format
  *
- * @param array $history
  * @param bool $inserting if inserting data then true
  *
  * @return array|WP_Error
  */
-function erp_hr_translate_employee_history( array $history = array(), $inserting = false ) {
+function erp_hr_translate_employee_history( array $history = [], $inserting = false ) {
     $available_modules = erp_hr_employee_history_modules();
 
     if ( empty( $history['module'] ) || ! in_array( $history['module'], $available_modules ) ) {
         return new \WP_Error( 'invalid-module-type', __( 'Unsupported module type', 'erp' ) );
     }
 
-    $translators = array(
-        'employment'   => array(
+    $translators = [
+        'employment'   => [
             'date'    => 'date',
             'type'    => 'type',
             'comment' => 'comment',
-        ),
-        'compensation' => array(
+        ],
+        'compensation' => [
             'date'     => 'date',
             'comment'  => 'comment',
             'category' => 'pay_type',
             'type'     => 'pay_rate',
             'data'     => 'reason',
-        ),
-        'job'          => array(
+        ],
+        'job'          => [
             'date'     => 'date',
             'comment'  => 'designation',
             'category' => 'department',
             'data'     => 'reporting_to',
             'type'     => 'location',
-        )
-    );
+        ],
+    ];
 
     $translators = apply_filters( 'erp_hr_translatable_employee_history_module_params', $translators );
 
@@ -903,7 +888,8 @@ function erp_hr_translate_employee_history( array $history = array(), $inserting
         $translator = array_flip( $translator );
     }
 
-    $formatted_history = array();
+    $formatted_history = [];
+
     foreach ( $translator as $key => $val ) {
         $formatted_history[ $val ] = '';
 
@@ -931,6 +917,7 @@ function erp_hr_translate_employee_history( array $history = array(), $inserting
  */
 function erp_hr_control_restricted_data( $data, $user_id ) {
     global $current_user;
+
     if ( ( ! current_user_can( erp_hr_get_manager_role() ) && ( $current_user->ID !== $user_id ) ) ) {
         $restricted = [
             'pay_rate',
@@ -942,7 +929,7 @@ function erp_hr_control_restricted_data( $data, $user_id ) {
         return array_merge( $data, $restricted );
     }
 
-    return array();
+    return [];
 }
 
 /**
@@ -953,14 +940,14 @@ function erp_hr_control_restricted_data( $data, $user_id ) {
  * @param $user_id
  *
  * @return string
- *
  */
 function erp_hr_get_employee_name( $user_id ) {
     if ( ! $user_id instanceof WP_User ) {
         $user = new WP_User( $user_id );
     }
 
-    $name = array();
+    $name = [];
+
     if ( $user->first_name ) {
         $name[] = $user->first_name;
     }
@@ -974,7 +961,6 @@ function erp_hr_get_employee_name( $user_id ) {
     }
 
     return implode( ' ', $name );
-
 }
 
 /**
@@ -985,7 +971,6 @@ function erp_hr_get_employee_name( $user_id ) {
  * @param $user_id
  *
  * @return string
- *
  */
 function erp_hr_get_details_url( $user_id ) {
     return admin_url( 'admin.php?page=erp-hr&section=employee&action=view&id=' . $user_id );
@@ -999,10 +984,9 @@ function erp_hr_get_details_url( $user_id ) {
  * @param $user_id
  *
  * @return string
- *
  */
 function erp_hr_get_single_link( $user_id ) {
-    return sprintf( '<a href="%s">%s</a>', erp_hr_get_details_url( $user_id ), erp_hr_get_employee_name($user_id) );
+    return sprintf( '<a href="%s">%s</a>', erp_hr_get_details_url( $user_id ), erp_hr_get_employee_name( $user_id ) );
 }
 
 /**
@@ -1013,12 +997,12 @@ function erp_hr_get_single_link( $user_id ) {
  * @param $email
  *
  * @return array
- *
  */
 function erp_is_employee_exist( $email, $user_id ) {
     global $wpdb;
-    $user_email = sanitize_email($email);
-    $sql    = "select user.ID from {$wpdb->prefix}erp_hr_employees as employee inner join {$wpdb->prefix}users as user on user.ID=employee.user_id where user.user_email='{$user_email}' AND user.ID !='{$user_id}'";
+    $user_email = sanitize_email( $email );
+    $sql        = "select user.ID from {$wpdb->prefix}erp_hr_employees as employee inner join {$wpdb->prefix}users as user on user.ID=employee.user_id where user.user_email='{$user_email}' AND user.ID !='{$user_id}'";
+
     return $wpdb->get_col( $sql );
 }
 
@@ -1029,18 +1013,17 @@ add_filter( 'user_has_cap', 'erp_revoke_terminated_employee_access', 10, 4 );
  *
  * @since 1.4.1
  *
- * @param array $capabilities
- * @param array $caps
- * @param array $args
+ * @param array   $capabilities
+ * @param array   $caps
+ * @param array   $args
  * @param WP_User $user
  *
  * @return array $capabilities
  */
 function erp_revoke_terminated_employee_access( $capabilities, $caps, $args, $user ) {
-
-    if ( ! in_array( 'erp_list_employee', $caps )   &&
-         ! in_array( 'upload_files', $caps )        &&
-         ! in_array( 'erp_ac_manager', $caps )      &&
+    if ( ! in_array( 'erp_list_employee', $caps ) &&
+         ! in_array( 'upload_files', $caps ) &&
+         ! in_array( 'erp_ac_manager', $caps ) &&
          ! in_array( 'erp_crm_manage_dashboard', $caps )
     ) {
         return $capabilities;
@@ -1052,16 +1035,16 @@ function erp_revoke_terminated_employee_access( $capabilities, $caps, $args, $us
     }
 
     $employee = new WeDevs\ERP\HRM\Employee( $user );
+
     if ( 'active' !== $employee->get_status() ) {
-        $capabilities['erp_list_employee'] = false; // hr menu capabilities
-        $capabilities['upload_files']      = false;
-        $capabilities['erp_ac_manager'] = false; // accounting menu capabilities
+        $capabilities['erp_list_employee']        = false; // hr menu capabilities
+        $capabilities['upload_files']             = false;
+        $capabilities['erp_ac_manager']           = false; // accounting menu capabilities
         $capabilities['erp_crm_manage_dashboard'] = false; // crm menu capabilities
     }
 
     return $capabilities;
 }
-
 
 /**
  * Get Contractual Employees
@@ -1072,7 +1055,6 @@ function erp_revoke_terminated_employee_access( $capabilities, $caps, $args, $us
  * @return object collection of user_id
  */
 function erp_hr_get_contractual_employee() {
-
     $db = new \WeDevs\ORM\Eloquent\Database();
 
     return erp_array_to_object( \WeDevs\ERP\HRM\Models\Employee::select( 'user_id', 'hiring_date', 'type' )
@@ -1090,9 +1072,9 @@ function erp_hr_get_contractual_employee() {
  *
  * @return object collection of fields;
  */
-
 function get_employee_additional_fields( $fields, $id, $user ) {
-    $user_id = $fields['user_id'];
+    $user_id                    = $fields['user_id'];
     $fields['work']['end_date'] = get_user_meta( $user_id, 'end_date' );
+
     return $fields;
 }

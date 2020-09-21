@@ -3,9 +3,9 @@
 /**
  * Assign / Send announcements to the employee(s)
  *
- * @param  int     $post_id
- * @param  string  $type
- * @param  array   $employees
+ * @param int    $post_id
+ * @param string $type
+ * @param array  $employees
  *
  * @return void
  */
@@ -19,11 +19,11 @@ function erp_hr_assign_announcements_to_employees( $post_id, $type, $selected = 
         update_post_meta( $post_id, '_announcement_department', $selected );
 
         foreach ( $selected as $department ) {
-            $data[] = erp_hr_get_employees( array(
+            $data[] = erp_hr_get_employees( [
                  'no_object'  => true,
                  'department' => $department,
-                 'number' => '-1'
-            ) );
+                 'number'     => '-1',
+            ] );
         }
 
         $selected = format_data_as_employee( $data );
@@ -33,11 +33,11 @@ function erp_hr_assign_announcements_to_employees( $post_id, $type, $selected = 
         update_post_meta( $post_id, '_announcement_designation', $selected );
 
         foreach ( $selected as $designation ) {
-            $data[] = erp_hr_get_employees( array(
-                 'no_object'  => true,
+            $data[] = erp_hr_get_employees( [
+                 'no_object'   => true,
                  'designation' => $designation,
-                 'number' => '-1'
-            ) );
+                 'number'      => '-1',
+            ] );
         }
 
         $selected = format_data_as_employee( $data );
@@ -47,7 +47,7 @@ function erp_hr_assign_announcements_to_employees( $post_id, $type, $selected = 
     update_post_meta( $post_id, '_announcement_selected_user', $selected );
 
     if ( $type == 'all_employee' ) {
-        $empls = erp_hr_get_employees( array( 'no_object' => true, 'number' => '-1' ) );
+        $empls = erp_hr_get_employees( [ 'no_object' => true, 'number' => '-1' ] );
 
         if ( $empls ) {
             foreach ( $empls as $user ) {
@@ -63,16 +63,16 @@ function erp_hr_assign_announcements_to_employees( $post_id, $type, $selected = 
     $announcements      = $announces_object->get();
     $existing_employees = array_pluck( $announcements->toArray(), 'user_id' );
 
-
     $new_employees = array_diff( $selected, $existing_employees );
 
     $data = [];
+
     foreach ( $new_employees as $item ) {
         $data[] = [
             'user_id'      => $item,
             'post_id'      => $post_id,
             'status'       => 'unread',
-            'email_status' => ( $post_type == 'publish' ) ? 'sent' : 'not_sent'
+            'email_status' => ( $post_type == 'publish' ) ? 'sent' : 'not_sent',
         ];
     }
 
@@ -87,6 +87,7 @@ function erp_hr_assign_announcements_to_employees( $post_id, $type, $selected = 
         $announces_object->update( ['email_status' => 'sent'] );
 
         $count = 0;
+
         foreach ( $employee_chunks as $employee_chunk ) {
             wp_schedule_single_event( time() + ( 300 * $count ), 'erp_hr_schedule_announcement_email', [ $employee_chunk, $post_id ] );
 
@@ -113,14 +114,14 @@ function format_data_as_employee( $data ) {
         }
     }
 
-    return array_unique($temp_users);
+    return array_unique( $temp_users );
 }
 
 /**
  * Send Announcement Email
  *
- * @param  array $employee_ids
- * @param  int   $post_id
+ * @param array $employee_ids
+ * @param int   $post_id
  *
  * @return void
  */

@@ -11,16 +11,14 @@ function erp_acct_create_accounting_tables() {
     $charset = 'CHARSET=utf8mb4';
     $collate = 'COLLATE=utf8mb4_unicode_ci';
 
-    if ( defined('DB_COLLATE') && DB_COLLATE )  {
+    if ( defined( 'DB_COLLATE' ) && DB_COLLATE ) {
         $charset = 'CHARSET=' . DB_CHARSET;
         $collate = 'COLLATE=' . DB_COLLATE;
     }
 
     $charset_collate = $charset . ' ' . $collate;
 
-
     $table_schema = [
-
         "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_voucher_no` (
             `id` int(11) NOT NULL AUTO_INCREMENT,
             `type` varchar(255) DEFAULT NULL,
@@ -688,10 +686,10 @@ function erp_acct_create_accounting_tables() {
             `updated_by` varchar(50) DEFAULT NULL,
             PRIMARY KEY (`id`)
         ) $charset_collate;",
-
     ];
 
-    require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+    require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+
     foreach ( $table_schema as $table ) {
         dbDelta( $table );
     }
@@ -712,7 +710,7 @@ function erp_acct_populate_data() {
 
     $wpdb->query( $sql );
 
-    /** ===========
+    /* ===========
      * Accounitng
      * ============
      */
@@ -724,14 +722,14 @@ function erp_acct_populate_data() {
         for ( $i = 0; $i < count( $charts ); $i++ ) {
             $wpdb->insert( "{$wpdb->prefix}erp_acct_chart_of_accounts", [
                 'name' => $charts[$i],
-                'slug' => slugify( $charts[$i] )
+                'slug' => slugify( $charts[$i] ),
             ] );
         }
     }
 
     // insert ledger categories
     if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_acct_ledger_categories` LIMIT 0, 1" ) ) {
-        $wpdb->query("INSERT INTO `{$wpdb->prefix}erp_acct_ledger_categories`
+        $wpdb->query( "INSERT INTO `{$wpdb->prefix}erp_acct_ledger_categories`
                 (id,name,chart_id)
                     VALUES
                 (1,'Current Asset',1),
@@ -749,7 +747,7 @@ function erp_acct_populate_data() {
                 (13,'Revenue',4),
                 (14,'Sales',4),
                 (15,'Other Income',4),
-                (16,'Equity',5);");
+                (16,'Equity',5);" );
     }
 
     // insert payment methods
@@ -773,13 +771,13 @@ function erp_acct_populate_data() {
             'Partially Paid',
             'Approved',
             'Closed',
-            'Void'
+            'Void',
         ];
 
         for ( $i = 0; $i < count( $statuses ); $i++ ) {
             $wpdb->insert( "{$wpdb->prefix}erp_acct_trn_status_types", [
                 'type_name' => $statuses[$i],
-                'slug'      => slugify( $statuses[$i] )
+                'slug'      => slugify( $statuses[$i] ),
             ] );
         }
     }
@@ -970,33 +968,33 @@ function erp_acct_populate_data() {
     //Insert default financial years
     if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_acct_financial_years` LIMIT 0, 1" ) ) {
         $start_date = $wpdb->get_var( "SELECT MIN(issue_date) FROM {$wpdb->prefix}erp_ac_transactions LIMIT 1" );
-        $end_date = date( 'Y-m-d' );
+        $end_date   = date( 'Y-m-d' );
 
-        $wpdb->insert( $wpdb->prefix . 'erp_acct_financial_years', array(
-            'name'       => date( "Y" ),
+        $wpdb->insert( $wpdb->prefix . 'erp_acct_financial_years', [
+            'name'       => date( 'Y' ),
             'start_date' => $start_date,
             'end_date'   => $end_date,
-            'created_at' => date( "Y-m-d" ),
-            'created_by' => get_current_user_id()
-        ) );
+            'created_at' => date( 'Y-m-d' ),
+            'created_by' => get_current_user_id(),
+        ] );
 
         //Next FY
-        $next_fy_name  = date( "Y" ) . '_1';
+        $next_fy_name  = date( 'Y' ) . '_1';
         $next_fy_start = date( 'Y-m-d', strtotime( ' +1 day' ) );
         $next_fy_end   = date( 'Y-m-d', strtotime( 'Dec 31' ) );
-        $wpdb->insert( $wpdb->prefix . 'erp_acct_financial_years', array(
+        $wpdb->insert( $wpdb->prefix . 'erp_acct_financial_years', [
             'name'       => $next_fy_name,
             'start_date' => $next_fy_start,
             'end_date'   => $next_fy_end,
-            'created_at' => date( "Y-m-d" ),
-            'created_by' => get_current_user_id()
-        ) );
+            'created_at' => date( 'Y-m-d' ),
+            'created_by' => get_current_user_id(),
+        ] );
     }
 
     do_action( 'erp_acct_after_new_acct_populate_data' );
 }
 
-/**
+/*
  * ===========================================================================
  * Begin the hard work ...
  * ====================================================================
@@ -1030,7 +1028,7 @@ function erp_acct_populate_tax_agencies() {
     //=============================
     $db_tax_items = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}erp_ac_tax_items", ARRAY_A );
 
-    $tax_agencies = array_map( function( $tax ) {
+    $tax_agencies = array_map( function ( $tax ) {
         return $tax['agency_name'];
     }, $db_tax_items );
 
@@ -1042,7 +1040,7 @@ function erp_acct_populate_tax_agencies() {
             "{$wpdb->prefix}erp_acct_tax_agencies", [
                 'name'       => $unique_agency,
                 'created_at' => date( 'Y-m-d' ),
-                'created_by' => 1
+                'created_by' => 1,
             ]
         );
     }
@@ -1074,7 +1072,7 @@ function erp_acct_populate_tax_data() {
                 'tax_number'    => $taxes[$i]['tax_number'],
                 'default'       => 0 === $i ? 1 : 0,           // if first record
                 'created_at'    => date( 'Y-m-d' ),
-                'created_by'    => $taxes[$i]['created_by']
+                'created_by'    => $taxes[$i]['created_by'],
             ]
         );
 
@@ -1089,7 +1087,7 @@ function erp_acct_populate_tax_data() {
                         'agency_id'      => $db_tax_agencies[$db_tax_item['agency_name']]->id,
                         'tax_rate'       => $db_tax_item['tax_rate'],
                         'created_at'     => date( 'Y-m-d' ),
-                        'created_by'     => $taxes[$i]['created_by']
+                        'created_by'     => $taxes[$i]['created_by'],
                     ]
                 );
             } // if
@@ -1117,7 +1115,7 @@ function erp_acct_populate_transactions() {
     $transactions = $wpdb->get_results( "SELECT id FROM {$wpdb->prefix}erp_ac_transactions", ARRAY_A );
 
     if ( !class_exists( '\WeDevs\ERP\Updates\BP\ERP_ACCT_BG_Process' ) || empty( $bg_process ) ) {
-        $bg_process = new \WeDevs\ERP\Updates\BP\ERP_ACCT_BG_Process;
+        $bg_process = new \WeDevs\ERP\Updates\BP\ERP_ACCT_BG_Process();
     }
 
     // loop through transactions
@@ -1132,9 +1130,9 @@ function erp_acct_populate_transactions() {
  * Migrate Existing Employees to people
  */
 function erp_employees_to_people_migration() {
-    $employees = erp_hr_get_employees( array(
+    $employees = erp_hr_get_employees( [
         'number' => '-1',
-    ) );
+    ] );
 
     foreach ( $employees as $employee ) {
         erp_acct_add_employee_as_people( $employee->data );
@@ -1159,10 +1157,10 @@ function erp_acct_populate_charts_ledgers() {
         LEFT JOIN {$wpdb->prefix}erp_ac_chart_classes AS chart ON chart_cat.class_id = chart.id ORDER BY chart_id", ARRAY_A );
 
     if ( ! empty( $o_ledgers ) ) {
-        for( $i = 0; $i < count( $o_ledgers ); $i++ ) {
+        for ( $i = 0; $i < count( $o_ledgers ); $i++ ) {
             if ( $o_ledgers[$i]['chart_id'] == 3 ) {
                 $o_ledgers[$i]['chart_id'] = 5;
-            } else if ( $o_ledgers[$i]['chart_id'] == 5 ) {
+            } elseif ( $o_ledgers[$i]['chart_id'] == 5 ) {
                 $o_ledgers[$i]['chart_id'] = 3;
             }
         }
@@ -1188,7 +1186,7 @@ function erp_acct_populate_charts_ledgers() {
                 'slug'     => slugify( $old_ledger['name'] ),
                 'code'     => $old_ledger['code'],
                 'unused'   => isset( $old_ledger['unused'] ) ? $old_ledger['unused'] : null,
-                'system'   => $old_ledger['system']
+                'system'   => $old_ledger['system'],
             ]
         );
     }
@@ -1202,7 +1200,7 @@ function erp_acct_populate_charts_ledgers() {
                     'name'     => $value['name'],
                     'slug'     => slugify( $value['name'] ),
                     'code'     => $value['code'],
-                    'system'   => $value['system']
+                    'system'   => $value['system'],
                 ]
             );
         }
@@ -1215,31 +1213,29 @@ function erp_acct_populate_charts_ledgers() {
                 'chart_id' => 7,
                 'name'     => $old_bank['name'],
                 'slug'     => slugify( $old_bank['name'] ),
-                'code'     => $old_bank['code']
+                'code'     => $old_bank['code'],
             ]
         );
     }
-
 }
 
 /**
  * Migrate balance sheet as opening balance
- *
  */
 function erp_acct_migrate_balance_sheet() {
     global $wpdb;
 
     $start_date = $wpdb->get_var( "SELECT MIN(issue_date) FROM {$wpdb->prefix}erp_ac_transactions LIMIT 1" );
-    $end_date = date( 'Y-m-d' );
+    $end_date   = date( 'Y-m-d' );
 
     $next_fy_start = date( 'Y-m-d', strtotime( ' +1 day' ) );
-    $next_fy = erp_acct_get_current_financial_year( $next_fy_start );
+    $next_fy       = erp_acct_get_current_financial_year( $next_fy_start );
 
-    if ( ! empty ( $next_fy ) ) {
+    if ( ! empty( $next_fy ) ) {
         $args = [
             'f_year_id'  => $next_fy->id,
             'start_date' => $start_date,
-            'end_date'   => $end_date
+            'end_date'   => $end_date,
         ];
 
         erp_acct_clsbl_close_balance_sheet_now( $args );

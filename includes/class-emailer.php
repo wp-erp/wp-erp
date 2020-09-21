@@ -1,11 +1,19 @@
 <?php
+
 namespace WeDevs\ERP;
+
+use Email;
 
 /**
  * Emailer Class
  */
 class Emailer {
 
+    /**
+     * All email classes
+     *
+     * @var array
+     */
     public $emails;
 
     /**
@@ -27,14 +35,14 @@ class Emailer {
     public function __construct() {
 
         // Email Header, Footer and content hooks
-        add_action( 'erp_email_header', array( $this, 'email_header' ) );
-        add_action( 'erp_email_footer', array( $this, 'email_footer' ) );
+        add_action( 'erp_email_header', [ $this, 'email_header' ] );
+        add_action( 'erp_email_footer', [ $this, 'email_footer' ] );
 
         // Let 3rd parties unhook the above via this hook
         do_action( 'erp_email', $this );
     }
 
-    function init_emails() {
+    public function init_emails() {
         $this->emails = apply_filters( 'erp_email_classes', $this->emails );
     }
 
@@ -50,9 +58,9 @@ class Emailer {
     /**
      * Get an registered email instance
      *
-     * @param  string  $class_name
+     * @param string $class_name
      *
-     * @return \Email|false
+     * @return Email|false
      */
     public function get_email( $class_name ) {
         if ( $this->emails && array_key_exists( $class_name, $this->emails ) ) {

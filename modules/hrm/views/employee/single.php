@@ -14,11 +14,11 @@
     ?>
     </h2>
 
-    <?php if( isset( $_GET['msg'] ) && $_GET['msg'] == 'success'):  ?>
+    <?php if ( isset( $_GET['msg'] ) && $_GET['msg'] == 'success' ) {  ?>
     <div class="notice notice-success is-dismissible">
-        <p> <?php esc_html_e('Data Successfully saved.','erp'); ?> </p>
+        <p> <?php esc_html_e( 'Data Successfully saved.', 'erp' ); ?> </p>
     </div>
-    <?php endif;  ?>
+    <?php }  ?>
     <div class="erp-single-container erp-hr-employees-wrap" id="erp-single-container-wrap">
         <div class="erp-area-left full-width erp-hr-employees-wrap-inner">
             <div id="erp-area-left-inner">
@@ -30,11 +30,11 @@
                 <div class="erp-profile-top">
                     <div class="erp-avatar">
                         <?php echo wp_kses_post( $employee->get_avatar( 150 ) ); ?>
-                        <?php if ( $employee->get_status('view') !== 'Active' ): ?>
+                        <?php if ( $employee->get_status( 'view' ) !== 'Active' ) { ?>
                             <span class="inactive">
-                                <?php echo esc_html( $employee->get_status('view') ); ?>
+                                <?php echo esc_html( $employee->get_status( 'view' ) ); ?>
                             </span>
-                        <?php endif ?>
+                        <?php } ?>
                     </div>
 
                     <div class="erp-user-info">
@@ -50,10 +50,12 @@
                             </li>
 
                             <?php
-                            $phones = array();
+                            $phones = [];
+
                             if ( $work_phone = $employee->get_work_phone() ) {
                                 $phones[] = $work_phone;
                             }
+
                             if ( $mobile_phone = $employee->get_mobile() ) {
                                 $phones[] = $mobile_phone;
                             }
@@ -61,7 +63,7 @@
                             if ( $phones ) { ?>
                                 <li>
                                     <ul class="erp-list list-inline">
-                                        <?php foreach( $phones as $phone ) { ?>
+                                        <?php foreach ( $phones as $phone ) { ?>
                                             <li><a href="tel:<?php echo esc_html( $phone ); ?>"><span class="dashicons dashicons-smartphone"></span></a><?php echo esc_html( $phone ); ?></li>
                                         <?php } ?>
                                     </ul>
@@ -82,13 +84,13 @@
                                 }
                                 ?>
 
-                                <?php if ( $employee->get_status() != 'Terminated' && current_user_can( 'erp_create_employee' ) ): ?>
+                                <?php if ( $employee->get_status() != 'Terminated' && current_user_can( 'erp_create_employee' ) ) { ?>
                                     <a class="button" href="#" id="erp-employee-terminate" data-id="<?php echo esc_html( $employee->get_user_id() ); ?>" data-template="erp-employment-terminate" data-title="<?php esc_html_e( 'Terminate Employee', 'erp' ); ?>"><?php esc_html_e( 'Terminate', 'erp' ); ?></a>
-                                <?php endif; ?>
+                                <?php } ?>
 
-                                <?php if ( ( isset( $_GET['tab'] ) && $_GET['tab'] == 'general' ) || !isset( $_GET['tab'] )  ): ?>
+                                <?php if ( ( isset( $_GET['tab'] ) && $_GET['tab'] == 'general' ) || !isset( $_GET['tab'] )  ) { ?>
                                     <a class="button" id="erp-employee-print" href="#"><?php esc_html_e( 'Print', 'erp' ); ?></a>
-                                <?php endif ?>
+                                <?php } ?>
                             </div>
                         </div><!-- .postbox -->
                     </div><!-- .leads-right -->
@@ -99,32 +101,32 @@
 
                 <?php
                 $active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : 'general';
-                $tabs       = apply_filters( 'erp_hr_employee_single_tabs', array(
-                    'general' => array(
+                $tabs       = apply_filters( 'erp_hr_employee_single_tabs', [
+                    'general' => [
                         'title'    => __( 'General Info', 'erp' ),
-                        'callback' => 'erp_hr_employee_single_tab_general'
-                    ),
-                    'job' => array(
+                        'callback' => 'erp_hr_employee_single_tab_general',
+                    ],
+                    'job' => [
                         'title'    => __( 'Job', 'erp' ),
-                        'callback' => 'erp_hr_employee_single_tab_job'
-                    ),
-                    'leave' => array(
+                        'callback' => 'erp_hr_employee_single_tab_job',
+                    ],
+                    'leave' => [
                         'title'    => __( 'Leave', 'erp' ),
-                        'callback' => 'erp_hr_employee_single_tab_leave'
-                    ),
-                    'notes' => array(
+                        'callback' => 'erp_hr_employee_single_tab_leave',
+                    ],
+                    'notes' => [
                         'title'    => __( 'Notes', 'erp' ),
-                        'callback' => 'erp_hr_employee_single_tab_notes'
-                    ),
-                    'performance' => array(
+                        'callback' => 'erp_hr_employee_single_tab_notes',
+                    ],
+                    'performance' => [
                         'title'    => __( 'Performance', 'erp' ),
-                        'callback' => 'erp_hr_employee_single_tab_performance'
-                    ),
-                    'permission' => array(
+                        'callback' => 'erp_hr_employee_single_tab_performance',
+                    ],
+                    'permission' => [
                         'title'    => __( 'Permission', 'erp' ),
-                        'callback' => 'erp_hr_employee_single_tab_permission'
-                    ),
-                ), $employee );
+                        'callback' => 'erp_hr_employee_single_tab_permission',
+                    ],
+                ], $employee );
 
                 $department_lead_id = erp_hr_get_department_lead_by_user( $employee->get_user_id() );
 
@@ -148,17 +150,17 @@
                 ?>
 
                 <h2 class="nav-tab-wrapper erp-hide-print" style="margin-bottom: 15px;">
-                    <?php foreach ($tabs as $key => $tab) {
-                        $active_class = ( $key == $active_tab ) ? ' nav-tab-active' : '';
-                        ?>
-                        <a href="<?php echo esc_url( erp_hr_employee_tab_url( $key, $employee->get_user_id() ) ); ?>" class="nav-tab<?php echo esc_html( $active_class ); ?>"><?php echo esc_html( $tab['title'] ) ; ?></a>
-                    <?php } ?>
+                    <?php foreach ( $tabs as $key => $tab ) {
+                    $active_class = ( $key == $active_tab ) ? ' nav-tab-active' : ''; ?>
+                        <a href="<?php echo esc_url( erp_hr_employee_tab_url( $key, $employee->get_user_id() ) ); ?>" class="nav-tab<?php echo esc_html( $active_class ); ?>"><?php echo esc_html( $tab['title'] ); ?></a>
+                    <?php
+                } ?>
                 </h2>
 
                 <?php
                 // call the tab callback function
                 if ( array_key_exists( $active_tab, $tabs ) && is_callable( $tabs[$active_tab]['callback'] ) ) {
-                    call_user_func_array( $tabs[$active_tab]['callback'], array( $employee ) );
+                    call_user_func_array( $tabs[$active_tab]['callback'], [ $employee ] );
                 }
                 ?>
 

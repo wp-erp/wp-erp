@@ -1,21 +1,16 @@
 <?php
+
 namespace WeDevs\ERP\CRM;
 
 /**
  * Loads CRM users admin area
  *
  * @since 1.0
- *
- * @package WP-ERP\CRM
- * @subpackage Administration
  */
 class User_Profile {
 
     /**
      * The CRM users admin loader
-     *
-     * @package WP-ERP\CRM
-     * @subpackage Administration
      */
     public function __construct() {
         $this->setup_actions();
@@ -28,15 +23,15 @@ class User_Profile {
      *
      * @return void
      */
-    function setup_actions() {
+    public function setup_actions() {
 
         // Bail if in network admin
         if ( is_network_admin() ) {
             return;
         }
 
-        add_action( 'erp_user_profile_role', array( $this, 'role' ) );
-        add_action( 'erp_update_user', array( $this, 'update_user' ), 10, 2 );
+        add_action( 'erp_user_profile_role', [ $this, 'role' ] );
+        add_action( 'erp_update_user', [ $this, 'update_user' ], 10, 2 );
     }
 
     /**
@@ -44,13 +39,12 @@ class User_Profile {
      *
      * @since 1.0
      *
-     * @param  integer $user_id
-     * @param  object $post
+     * @param int    $user_id
+     * @param object $post
      *
      * @return void
      */
-    function update_user( $user_id, $post ) {
-
+    public function update_user( $user_id, $post ) {
         $new_crm_manager_role = isset( $post['crm_manager'] ) ? sanitize_text_field( $post['crm_manager'] ) : false;
         $new_crm_agent_role   = isset( $post['crm_agent'] ) ? sanitize_text_field( $post['crm_agent'] ) : false;
 
@@ -83,18 +77,17 @@ class User_Profile {
      *
      * @since 1.0
      *
-     * @param  object $profileuser
+     * @param object $profileuser
      *
      * @return html|void
      */
-    function role( $profileuser ) {
+    public function role( $profileuser ) {
         if ( ! current_user_can( 'manage_options' ) ) {
             return;
         }
 
         $is_manager = in_array( erp_crm_get_manager_role(), $profileuser->roles ) ? 'checked' : '';
-        $is_agent   = in_array( erp_crm_get_agent_role(), $profileuser->roles ) ? 'checked' : '';
-        ?>
+        $is_agent   = in_array( erp_crm_get_agent_role(), $profileuser->roles ) ? 'checked' : ''; ?>
         <label for="erp-crm-manager">
             <input type="checkbox" id="erp-crm-manager" <?php echo esc_attr( $is_manager ); ?> name="crm_manager" value="<?php echo esc_attr( erp_crm_get_manager_role() ); ?>">
             <span class="description"><?php esc_attr_e( 'CRM Manager', 'erp' ); ?></span>

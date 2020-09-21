@@ -6,7 +6,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! function_exists( 'erp_ac_get_manager_role' ) ) {
 
-
     /**
      * The manager role for HR employees
      *
@@ -132,7 +131,6 @@ if ( ! function_exists( 'erp_ac_get_manager_role' ) ) {
                     'erp_ac_view_other_journals'      => true,
                     'erp_ac_create_journal'           => true,
                     'erp_ac_view_reports'             => true,
-
                 ];
 
                 break;
@@ -159,7 +157,7 @@ if ( ! function_exists( 'erp_ac_get_manager_role' ) ) {
     function erp_ac_current_user_can_edit_customer( $created_by = false ) {
         if ( ! current_user_can( 'erp_ac_edit_customer' ) ) {
             return false;
-        };
+        }
 
         if ( ! $created_by ) {
             return false;
@@ -173,7 +171,7 @@ if ( ! function_exists( 'erp_ac_get_manager_role' ) ) {
 
         if ( current_user_can( 'erp_ac_edit_other_customers' ) ) {
             return true;
-        };
+        }
 
         return false;
     }
@@ -189,7 +187,7 @@ if ( ! function_exists( 'erp_ac_get_manager_role' ) ) {
     function erp_ac_current_user_can_delete_customer( $created_by = false ) {
         if ( ! current_user_can( 'erp_ac_delete_customer' ) ) {
             return false;
-        };
+        }
 
         if ( ! $created_by ) {
             return false;
@@ -203,7 +201,7 @@ if ( ! function_exists( 'erp_ac_get_manager_role' ) ) {
 
         if ( current_user_can( 'erp_ac_delete_other_customers' ) ) {
             return true;
-        };
+        }
 
         return false;
     }
@@ -216,7 +214,7 @@ if ( ! function_exists( 'erp_ac_get_manager_role' ) ) {
     function erp_ac_current_user_can_edit_vendor( $created_by = false ) {
         if ( ! current_user_can( 'erp_ac_edit_vendor' ) ) {
             return false;
-        };
+        }
 
         if ( ! $created_by ) {
             return false;
@@ -230,7 +228,7 @@ if ( ! function_exists( 'erp_ac_get_manager_role' ) ) {
 
         if ( current_user_can( 'erp_ac_edit_other_vendors' ) ) {
             return true;
-        };
+        }
 
         return false;
     }
@@ -246,7 +244,7 @@ if ( ! function_exists( 'erp_ac_get_manager_role' ) ) {
     function erp_ac_current_user_can_delete_vendor( $created_by = false ) {
         if ( ! current_user_can( 'erp_ac_delete_vendor' ) ) {
             return false;
-        };
+        }
 
         if ( ! $created_by ) {
             return false;
@@ -260,7 +258,7 @@ if ( ! function_exists( 'erp_ac_get_manager_role' ) ) {
 
         if ( current_user_can( 'erp_ac_delete_other_vendors' ) ) {
             return true;
-        };
+        }
 
         return false;
     }
@@ -290,13 +288,12 @@ if ( ! function_exists( 'erp_ac_get_manager_role' ) ) {
         return current_user_can( 'erp_ac_publish_sales_invoice' );
     }
 
-
     /**
      * Check capability to view expenses created by other managers
      *
-     * @return boolean
-     * @since 1.2.0 Fix capability spelling
+     * @return bool
      *
+     * @since 1.2.0 Fix capability spelling
      * @since 1.0.0
      */
     function erp_ac_view_other_expenses() {
@@ -355,7 +352,6 @@ if ( ! function_exists( 'erp_ac_get_manager_role' ) ) {
     }
 }
 
-
 /**
  * Removes the non-public AC roles from the editable roles array
  *
@@ -367,7 +363,6 @@ function erp_ac_filter_editable_roles( $all_roles = [] ) {
     $roles = erp_ac_get_roles();
 
     foreach ( $roles as $ac_role_key => $ac_role ) {
-
         if ( isset( $ac_role['public'] ) && false === $ac_role['public'] ) {
 
             // Loop through WordPress roles
@@ -379,7 +374,7 @@ function erp_ac_filter_editable_roles( $all_roles = [] ) {
                 }
             }
         }
-	}
+    }
 
     return $all_roles;
 }

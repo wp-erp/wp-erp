@@ -1,13 +1,13 @@
-<?php if ( current_user_can('erp_create_employee') ): ?>
+<?php if ( current_user_can( 'erp_create_employee' ) ) { ?>
 
 <?php
-$employees    = \WeDevs\ERP\HRM\Models\Employee::where('status', 'active')->count();
+$employees    = \WeDevs\ERP\HRM\Models\Employee::where( 'status', 'active' )->count();
 $departments  = \WeDevs\ERP\HRM\Models\Department::count();
 $designations = \WeDevs\ERP\HRM\Models\Designation::count();
 
 $announcements = get_posts( [
-    'post_type' => 'erp_hr_announcement',
-    'posts_per_page' => 4
+    'post_type'      => 'erp_hr_announcement',
+    'posts_per_page' => 4,
 ] );
 
 ?>
@@ -17,17 +17,17 @@ $announcements = get_posts( [
         <a href="<?php echo esc_url( admin_url( 'edit.php?post_type=erp_hr_announcement' ) ); ?>" class="btn"><?php esc_html_e( 'View All', 'erp' ); ?></a>
     </h2>
 
-    <?php if ( ! $announcements ) : ?>
+    <?php if ( ! $announcements ) { ?>
         <p class="erp-no-announce">No announcement found.</p>
-    <?php else: ?>
+    <?php } else { ?>
     <ul class="erp-badge-announce">
         <?php
-        foreach( $announcements as $announcement ) {
+        foreach ( $announcements as $announcement ) {
             echo '<li>' . esc_html( $announcement->post_title ) . '</li>';
         }
         ?>
     </ul>
-    <?php endif; ?>
+    <?php } ?>
 </div>
 
 <div class="erp-badge-box box-hr">
@@ -54,11 +54,11 @@ $announcements = get_posts( [
                 <p><?php esc_html_e( 'Departments', 'erp' ); ?></p>
             </div>
 
-            <?php if ( is_admin() ) : ?>
+            <?php if ( is_admin() ) { ?>
             <div class="count-footer">
                 <a href="<?php echo esc_url( admin_url( 'admin.php?page=erp-hr&section=department' ) ); ?>"><?php esc_html_e( 'View Departments', 'erp' ); ?></a>
             </div>
-            <?php endif; ?>
+            <?php } ?>
         </li><!-- .count-box -->
 
         <li class="erp-count-box">
@@ -67,14 +67,14 @@ $announcements = get_posts( [
                 <p><?php esc_html_e( 'Designations', 'erp' ); ?></p>
             </div>
 
-            <?php if ( is_admin() ) : ?>
+            <?php if ( is_admin() ) { ?>
             <div class="count-footer">
                 <a href="<?php echo esc_url( admin_url( 'admin.php?page=erp-hr&section=designation' ) ); ?>"><?php esc_html_e( 'View Designations', 'erp' ); ?></a>
             </div>
-            <?php endif; ?>
+            <?php } ?>
         </li><!-- .count-box -->
 
     </ul>
 </div>
 
-<?php endif ?>
+<?php } ?>

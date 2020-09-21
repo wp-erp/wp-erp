@@ -245,12 +245,12 @@ function erp_acct_clsbl_close_balance_sheet_now( $args ) {
 /**
  * Insert closing balance data into opening balance
  *
- * @param int $f_year_id
- * @param int $chart_id
- * @param int $ledger_id
+ * @param int    $f_year_id
+ * @param int    $chart_id
+ * @param int    $ledger_id
  * @param string $type
- * @param int $debit
- * @param int $credit
+ * @param int    $debit
+ * @param int    $credit
  *
  * @return void
  */
@@ -270,7 +270,6 @@ function erp_acct_clsbl_insert_into_opening_balance( $f_year_id, $chart_id, $led
             'created_by'        => get_current_user_id(),
         ]
     );
-
 }
 
 /**
@@ -330,7 +329,7 @@ function erp_acct_clsbl_get_accounts_payable_balance_with_people( $args ) {
  * Get people account receivable calculate with opening balance within financial year date range
  *
  * @param string $bs_start_date
- * @param float $data => account details data on balance sheet date range
+ * @param float  $data          => account details data on balance sheet date range
  * @param string $sql
  * @param string $type
  *
@@ -365,13 +364,12 @@ function erp_acct_clsbl_people_ar_calc_with_opening_balance( $bs_start_date ) {
  * Get people account payable calculate with opening balance within financial year date range
  *
  * @param string $bs_start_date
- * @param float $data => account details data on balance sheet date range
+ * @param float  $data          => account details data on balance sheet date range
  * @param string $sql
  * @param string $type
  *
  * @return array
  */
-
 function erp_acct_clsbl_vendor_ap_calc_with_opening_balance( $bs_start_date ) {
     global $wpdb;
 
@@ -477,7 +475,7 @@ function erp_acct_clsbl_sales_tax_agency( $args, $type ) {
  * Get sales tax payable calculate with opening balance within financial year date range
  *
  * @param string $bs_start_date
- * @param float $data => agency details data on trial balance date range
+ * @param float  $data          => agency details data on trial balance date range
  * @param string $sql
  * @param string $type
  *
@@ -509,12 +507,12 @@ function erp_acct_clsbl_sales_tax_agency_with_opening_balance( $bs_start_date, $
     $agency_details_balance = $wpdb->get_results( $wpdb->prepare( $sql, $closest_fy_date['start_date'], $prev_date_of_tb_start ), ARRAY_A );
 
     $merged = array_merge( $result, $agency_details_balance );
+
     return erp_acct_clsbl_get_formatted_people_balance( $merged );
 }
 
 /**
- *
- * @param int $id
+ * @param int    $id
  * @param string $type
  *
  * @return void

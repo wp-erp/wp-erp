@@ -1,4 +1,5 @@
 <?php
+
 namespace WeDevs\ERP\HRM;
 
 /**
@@ -10,28 +11,25 @@ namespace WeDevs\ERP\HRM;
  * @author Tareq Hasan
  */
 class Department_Walker extends \Walker {
-
-    public $db_fields = array ('parent' => 'parent', 'id' => 'id');
+    public $db_fields = ['parent' => 'parent', 'id' => 'id'];
 
     /**
      * [start_el description]
      *
-     * @param string $output Passed by reference. Used to append additional content.
-     * @param object $elem Department data object.
-     * @param int $depth Depth of Department. Used for padding.
-     * @param int $current_page Department ID.
-     * @param array $args
+     * @param string $output       Passed by reference. Used to append additional content.
+     * @param object $elem         department data object
+     * @param int    $depth        Depth of Department. Used for padding.
+     * @param int    $current_page department ID
+     * @param array  $args
      *
      * @return void
      */
-    public function start_el( &$output, $elem, $depth = 0, $args = array(), $id = 0 ) {
+    public function start_el( &$output, $elem, $depth = 0, $args = [], $id = 0 ) {
         static $alternate;
 
         $department = new Department( $elem );
         $alternate  = ( 'alternate' == $alternate ) ? 'even' : 'alternate';
-        $padding    = str_repeat( '&#8212; ', $depth );
-
-        ?>
+        $padding    = str_repeat( '&#8212; ', $depth ); ?>
         <tr class="<?php echo esc_attr( $alternate ); ?>" id="erp-dept-<?php echo esc_attr( $department->id ); ?>">
             <th scope="row" class="check-column">
                 <input id="cb-select-1" type="checkbox" name="dept[]" value="1">
@@ -51,8 +49,7 @@ class Department_Walker extends \Walker {
                     echo wp_kses_post( $lead->get_link() );
                 } else {
                     echo '-';
-                }
-                ?>
+                } ?>
             </td>
             <td class="col-"><?php echo esc_html( $department->num_of_employees() ); ?></td>
         </tr>

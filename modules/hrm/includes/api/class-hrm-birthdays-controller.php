@@ -2,13 +2,14 @@
 
 namespace WeDevs\ERP\HRM\API;
 
-use Carbon\Carbon;
-use WP_REST_Server;
-use WP_REST_Response;
-use WP_Error;
-use WeDevs\ERP\HRM\Employee;
 use WeDevs\ERP\API\REST_Controller;
+use WeDevs\ERP\HRM\Employee;
+use WP_Error;
+use WP_REST_Response;
+use WP_REST_Server;
+
 class Birthdays_Controller extends REST_Controller {
+
     /**
      * Endpoint namespace.
      *
@@ -49,22 +50,23 @@ class Birthdays_Controller extends REST_Controller {
      */
     public function get_birthdays( $request ) {
         $args = [
-            'upcoming' => empty($request['upcoming']) ? false : true,
-            'number' => $request['per_page'] ? $request['per_page'] : 20,
-            'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
+            'upcoming' => empty( $request['upcoming'] ) ? false : true,
+            'number'   => $request['per_page'] ? $request['per_page'] : 20,
+            'offset'   => ( $request['per_page'] * ( $request['page'] - 1 ) ),
         ];
 
-        $from_date = \Carbon\Carbon::today()->format('m d');
+        $from_date = \Carbon\Carbon::today()->format( 'm d' );
+
         if ( empty( $args['upcoming'] ) ) {
             $from_date = '01 01';
         }
 
-        $db = new \WeDevs\ORM\Eloquent\Database();
-        $employees =  erp_array_to_object ( \WeDevs\ERP\HRM\Models\Employee::select('*')
-            ->where( $db->raw("DATE_FORMAT( `date_of_birth`, '%m %d' )" ), '>=', $from_date )
-            ->orderByRaw('MONTH(date_of_birth)')
-            ->orderByRaw('MONTH(date_of_birth)')
-            ->orderByRaw('DAYOFMONTH(date_of_birth)')
+        $db        = new \WeDevs\ORM\Eloquent\Database();
+        $employees =  erp_array_to_object( \WeDevs\ERP\HRM\Models\Employee::select( '*' )
+            ->where( $db->raw( "DATE_FORMAT( `date_of_birth`, '%m %d' )" ), '>=', $from_date )
+            ->orderByRaw( 'MONTH(date_of_birth)' )
+            ->orderByRaw( 'MONTH(date_of_birth)' )
+            ->orderByRaw( 'DAYOFMONTH(date_of_birth)' )
             ->where( 'termination_date', '0000-00-00' )
             ->where( 'status', 'active' )
             ->where( $db->raw( "DATE_FORMAT( `date_of_birth`, '%m %d' )" ), '<=', \Carbon\Carbon::now()->addWeek()->format( 'm d' ) )
@@ -73,24 +75,25 @@ class Birthdays_Controller extends REST_Controller {
             ->get()
             ->toArray() );
 
-        $total_items = count( $employees );
+        $total_items    = count( $employees );
         $formated_items = [];
+
         foreach ( $employees as $employee ) {
             $item                  = [];
             $item['id']            = $employee->id;
             $item['user_id']       = $employee->user_id;
             $item['employee_id']   = $employee->employee_id;
             $item['date_of_birth'] = $employee->date_of_birth;
-            $item['birthday']      = date('dS, M', strtotime($employee->date_of_birth));
+            $item['birthday']      = date( 'dS, M', strtotime( $employee->date_of_birth ) );
             $item['designation']   = $employee->designation;
             $item['department']    = $employee->department;
 
-            $employee_user         = new \WeDevs\ERP\HRM\Employee( intval( $employee->user_id ) );
-            $item['name']   = $employee_user->get_full_name();
-            $item['avatar'] = $employee_user->get_avatar( 80 );
-            $item['job_title'] = $employee_user->get_job_title();
+            $employee_user            = new \WeDevs\ERP\HRM\Employee( intval( $employee->user_id ) );
+            $item['name']             = $employee_user->get_full_name();
+            $item['avatar']           = $employee_user->get_avatar( 80 );
+            $item['job_title']        = $employee_user->get_job_title();
             $item['department_title'] = $employee_user->get_department_title();
-            $item['url']    = $employee_user->get_details_url();
+            $item['url']              = $employee_user->get_details_url();
 
             $formated_items[] = $item;
         }

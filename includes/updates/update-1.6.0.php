@@ -1,4 +1,5 @@
 <?php
+
 namespace WeDevs\ERP\HRM\Update;
 
 /*
@@ -11,49 +12,51 @@ namespace WeDevs\ERP\HRM\Update;
  */
 // this task not yet complete.
 
-
 class ERP_1_6_0 {
+
     /**
      * Database tables to create.
      *
      * @var array
      */
-    protected $db_tables = array();
+    protected $db_tables = [];
 
     /**
      * Old database tables to delete.
      *
      * @var array
      */
-    protected $db_tables_old = array();
+    protected $db_tables_old = [];
 
     public function __construct() {
         global $wpdb;
 
-        $this->db_tables = array(
-            "{$wpdb->prefix}erp_hr_leaves"                => "{$wpdb->prefix}erp_hr_leaves_new",
-            "{$wpdb->prefix}erp_hr_leave_policies"        => "{$wpdb->prefix}erp_hr_leave_policies_new",
+        $this->db_tables = [
+            "{$wpdb->prefix}erp_hr_leaves"                     => "{$wpdb->prefix}erp_hr_leaves_new",
+            "{$wpdb->prefix}erp_hr_leave_policies"             => "{$wpdb->prefix}erp_hr_leave_policies_new",
             "{$wpdb->prefix}erp_hr_leave_policies_segregation" => "{$wpdb->prefix}erp_hr_leave_policies_segregation_new",
-            "{$wpdb->prefix}erp_hr_leave_entitlements"    => "{$wpdb->prefix}erp_hr_leave_entitlements_new",
-            "{$wpdb->prefix}erp_hr_leave_requests"        => "{$wpdb->prefix}erp_hr_leave_requests_new",
-            "{$wpdb->prefix}erp_hr_leave_request_details" => "{$wpdb->prefix}erp_hr_leave_request_details_new",
-            "{$wpdb->prefix}erp_hr_leave_approval_status" => "{$wpdb->prefix}erp_hr_leave_approval_status_new",
-            "{$wpdb->prefix}erp_hr_leave_encashment_requests" => "{$wpdb->prefix}erp_hr_leave_encashment_requests_new",
-            "{$wpdb->prefix}erp_hr_leaves_unpaid"         => "{$wpdb->prefix}erp_hr_leaves_unpaid_new",
-            "{$wpdb->prefix}erp_hr_financial_years"       => "{$wpdb->prefix}erp_hr_financial_years_new",
-        );
+            "{$wpdb->prefix}erp_hr_leave_entitlements"         => "{$wpdb->prefix}erp_hr_leave_entitlements_new",
+            "{$wpdb->prefix}erp_hr_leave_requests"             => "{$wpdb->prefix}erp_hr_leave_requests_new",
+            "{$wpdb->prefix}erp_hr_leave_request_details"      => "{$wpdb->prefix}erp_hr_leave_request_details_new",
+            "{$wpdb->prefix}erp_hr_leave_approval_status"      => "{$wpdb->prefix}erp_hr_leave_approval_status_new",
+            "{$wpdb->prefix}erp_hr_leave_encashment_requests"  => "{$wpdb->prefix}erp_hr_leave_encashment_requests_new",
+            "{$wpdb->prefix}erp_hr_leaves_unpaid"              => "{$wpdb->prefix}erp_hr_leaves_unpaid_new",
+            "{$wpdb->prefix}erp_hr_financial_years"            => "{$wpdb->prefix}erp_hr_financial_years_new",
+        ];
 
-        $this->db_tables_old = array(
+        $this->db_tables_old = [
             "{$wpdb->prefix}erp_hr_leave_entitlements"  => "{$wpdb->prefix}erp_hr_leave_entitlements_old",
             "{$wpdb->prefix}erp_hr_leave_policies"      => "{$wpdb->prefix}erp_hr_leave_policies_old",
             "{$wpdb->prefix}erp_hr_leave_requests"      => "{$wpdb->prefix}erp_hr_leave_requests_old",
             "{$wpdb->prefix}erp_hr_leaves"              => "{$wpdb->prefix}erp_hr_leaves_old",
-        );
+        ];
     }
 
     /**
      * This method will create all required db tables.
+     *
      * @since 1.6.0
+     *
      * @return bool
      */
     public function create_db_tables() {
@@ -64,7 +67,7 @@ class ERP_1_6_0 {
 
         $charset_collate = $charset . ' ' . $collate;
 
-        $table_schema = array(
+        $table_schema = [
             "CREATE TABLE {$wpdb->prefix}erp_hr_leaves_new (
                   id smallint(6) NOT NULL AUTO_INCREMENT,
                   name varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -251,10 +254,10 @@ class ERP_1_6_0 {
                   KEY start_date (start_date),
                   KEY end_date (end_date)
             ) $charset_collate;",
-
-        );
+        ];
 
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+
         foreach ( $table_schema as $table ) {
             dbDelta( $table );
         }
@@ -264,6 +267,7 @@ class ERP_1_6_0 {
 
     /**
      * This method will start data migration process.
+     *
      * @since 1.6.0
      */
     public function migrate_data() {
@@ -287,18 +291,17 @@ class ERP_1_6_0 {
         if ( is_array( $entitlement_ids ) && ! empty( $entitlement_ids ) ) {
             foreach ( $entitlement_ids as $entitlement_id ) {
                 $bg_progess_hr_leaves_entitlements->push_to_queue(
-                    array(
+                    [
                         'task' => 'task_required_data',
                         'id'   => $entitlement_id,
-                    )
+                    ]
                 );
             }
-        }
-        else {
+        } else {
             $bg_progess_hr_leaves_entitlements->push_to_queue(
-                array(
+                [
                     'task' => 'exit_from_here',
-                )
+                ]
             );
         }
 
@@ -312,24 +315,23 @@ class ERP_1_6_0 {
         if ( is_array( $request_ids ) && ! empty( $request_ids ) ) {
             foreach ( $request_ids as $request_id ) {
                 $bg_progess_hr_leave_requests->push_to_queue(
-                    array(
+                    [
                         'task' => 'leave_request',
                         'id'   => $request_id,
-                    )
+                    ]
                 );
             }
-        }
-        else {
+        } else {
             $bg_progess_hr_leave_requests->push_to_queue(
-                array(
+                [
                     'task' => 'exit_from_here',
-                )
+                ]
             );
         }
 
         $bg_progess_hr_leave_requests->save();
 
-        /**
+        /*
          * Run the queue, starting with leave entitlements data
          */
         $bg_progess_hr_leaves_entitlements->dispatch();
@@ -341,8 +343,10 @@ class ERP_1_6_0 {
     public function alter_old_db_tables() {
         global $wpdb;
         $queries = 'RENAME TABLE ';
+
         foreach ( $this->db_tables_old as $old_name => $new_name ) {
             $queries .= "$old_name TO $new_name";
+
             if ( next( $this->db_tables_old ) !== false ) {
                 $queries .= ', ';
             } else {
@@ -354,11 +358,11 @@ class ERP_1_6_0 {
             // query error, log this to db
             error_log(
                 print_r(
-                    array(
+                    [
                         'file'    => __FILE__,
                         'line'    => __LINE__,
                         'message' => '(Query error) Old Table renaming failed: ' . $wpdb->last_error,
-                    ),
+                    ],
                     true
                 )
             );
@@ -368,14 +372,15 @@ class ERP_1_6_0 {
     }
 
     /**
-     *
      * Call this method after migrating all datas
      */
     public function alter_new_db_tables() {
         global $wpdb;
         $queries = 'RENAME TABLE ';
+
         foreach ( $this->db_tables as $new_name => $old_name ) {
             $queries .= "$old_name TO $new_name";
+
             if ( next( $this->db_tables ) !== false ) {
                 $queries .= ', ';
             } else {
@@ -387,11 +392,11 @@ class ERP_1_6_0 {
             // query error, log this to db
             error_log(
                 print_r(
-                    array(
+                    [
                         'file'    => __FILE__,
                         'line'    => __LINE__,
                         'message' => '(Query error) Table renaming failed: ' . $wpdb->last_error,
-                    ),
+                    ],
                     true
                 )
             );
@@ -399,10 +404,10 @@ class ERP_1_6_0 {
             return true;
         }
     }
-
 }
 
 $erp_update_1_6_0 = new ERP_1_6_0();
+
 if ( $erp_update_1_6_0->create_db_tables() ) {
     $erp_update_1_6_0->migrate_data();
 }

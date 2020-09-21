@@ -1,25 +1,25 @@
 <?php
 if ( isset( $_GET['filter_assign_contact' ] ) && !empty( $_GET['filter_assign_contact' ] ) ) {
-    $id = intval( $_GET['filter_assign_contact'] );
+    $id          = intval( $_GET['filter_assign_contact'] );
     $custom_data = [
         'filter_assign_contact' => [
             'id'           => $id,
-            'display_name' => get_the_author_meta( 'display_name', $id )
+            'display_name' => get_the_author_meta( 'display_name', $id ),
         ],
-        'searchFields' => array_keys( erp_crm_get_serach_key( 'contact' ) )
+        'searchFields' => array_keys( erp_crm_get_serach_key( 'contact' ) ),
     ];
 } elseif ( isset( $_GET['filter_contact_company' ] ) && !empty( $_GET['filter_contact_company' ] ) ) {
-    $id = intval( $_GET['filter_contact_company'] );
+    $id          = intval( $_GET['filter_contact_company'] );
     $custom_data = [
         'filter_contact_company' => [
             'id'           => $id,
-            'display_name' => erp_get_people( $id )->company
+            'display_name' => erp_get_people( $id )->company,
         ],
-        'searchFields' => array_keys( erp_crm_get_serach_key( 'contact' ) )
+        'searchFields' => array_keys( erp_crm_get_serach_key( 'contact' ) ),
     ];
 } else {
     $custom_data = [
-        'searchFields' => array_keys( erp_crm_get_serach_key( 'contact' ) )
+        'searchFields' => array_keys( erp_crm_get_serach_key( 'contact' ) ),
     ];
 }
 ?>
@@ -28,9 +28,9 @@ if ( isset( $_GET['filter_assign_contact' ] ) && !empty( $_GET['filter_assign_co
 
     <h2>
         <?php esc_attr_e( 'Contact', 'erp' ); ?>
-        <?php if ( current_user_can( 'erp_crm_add_contact' ) ): ?>
+        <?php if ( current_user_can( 'erp_crm_add_contact' ) ) { ?>
             <a href="#" @click.prevent="addContact( 'contact', '<?php esc_attr_e( 'Add New Contact', 'erp' ); ?>' )" id="erp-customer-new" class="erp-contact-new add-new-h2"><?php esc_attr_e( 'Add New Contact', 'erp' ); ?></a>
-        <?php endif ?>
+        <?php } ?>
 
         <a href="#" @click.prevent="addSearchSegment()" id="erp-contact-search-segmen" class="erp-search-segment add-new-h2">{{{ segmentBtnText }}}</a>
     </h2>

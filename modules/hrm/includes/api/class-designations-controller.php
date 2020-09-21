@@ -1,11 +1,14 @@
 <?php
+
 namespace WeDevs\ERP\HRM\API;
+
 use WeDevs\ERP\API\REST_Controller;
-use WP_REST_Server;
-use WP_REST_Response;
 use WP_Error;
+use WP_REST_Response;
+use WP_REST_Server;
 
 class Designations_Controller extends REST_Controller {
+
     /**
      * Endpoint namespace.
      *
@@ -92,8 +95,9 @@ class Designations_Controller extends REST_Controller {
         $total_items = erp_hr_count_designation();
 
         $formated_items = [];
+
         foreach ( $items as $item ) {
-            $data = $this->prepare_item_for_response( $item, $request );
+            $data             = $this->prepare_item_for_response( $item, $request );
             $formated_items[] = $this->prepare_response_for_collection( $data );
         }
 
@@ -157,6 +161,7 @@ class Designations_Controller extends REST_Controller {
         $id = (int) $request['id'];
 
         $designation = new \WeDevs\ERP\HRM\Designation( $id );
+
         if ( ! $designation ) {
             return new WP_Error( 'rest_designation_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 400 ] );
         }
@@ -191,7 +196,7 @@ class Designations_Controller extends REST_Controller {
     /**
      * Prepare a single item for create or update
      *
-     * @param WP_REST_Request $request Request object.
+     * @param WP_REST_Request $request request object
      *
      * @return array $prepared_item
      */
@@ -218,14 +223,14 @@ class Designations_Controller extends REST_Controller {
     /**
      * Prepare a single user output for response
      *
-     * @param object $item
-     * @param WP_REST_Request $request Request object.
-     * @param array $additional_fields (optional)
+     * @param object          $item
+     * @param WP_REST_Request $request           request object
+     * @param array           $additional_fields (optional)
      *
-     * @return WP_REST_Response $response Response data.
+     * @return WP_REST_Response $response response data
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
-        $total_employees = \WeDevs\ERP\HRM\Models\Employee::where( array( 'status' => 'active', 'designation' => $item->id ) )->count();
+        $total_employees = \WeDevs\ERP\HRM\Models\Employee::where( [ 'status' => 'active', 'designation' => $item->id ] )->count();
 
         $data = [
             'id'              => (int) $item->id,
