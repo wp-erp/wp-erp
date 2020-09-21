@@ -15,7 +15,7 @@ $current_tab        = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $
 ?>
 
 <div class="wrap erp-settings">
-    <div class="erp-tip-container">
+    <div style="display: flex;">
         <h2><?php esc_html_e( 'Modules', 'erp' ); ?> </h2>
         <?php echo erp_help_tip( esc_html__( "If you do not require any of the modules, you may deactivate it from here.", 'erp' ) ); ?>
     </div>
