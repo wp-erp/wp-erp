@@ -1,19 +1,18 @@
 <?php
+
 namespace WeDevs\ERP\HRM\Models;
 
 use WeDevs\ERP\Framework\Model;
 
 /**
  * Class Leave_request
- *
- * @package WeDevs\ERP\HRM\Models
  */
 class Leave_Request extends Model {
     protected $table = 'erp_hr_leave_requests';
 
     protected $fillable = [
         'user_id', 'leave_id', 'leave_entitlement_id', 'day_status_id', 'days',
-        'start_date', 'end_date', 'reason', 'last_status', 'created_by'
+        'start_date', 'end_date', 'reason', 'last_status', 'created_by',
     ];
 
     /**
@@ -60,7 +59,7 @@ class Leave_Request extends Model {
      * @return object
      */
     public function approval_status() {
-        return $this->hasMany( 'WeDevs\ERP\HRM\Models\Leave_Approval_Status', 'leave_request_id', 'id' )->orderBy('id', 'desc');
+        return $this->hasMany( 'WeDevs\ERP\HRM\Models\Leave_Approval_Status', 'leave_request_id', 'id' )->orderBy( 'id', 'desc' );
     }
 
     /**
@@ -71,7 +70,7 @@ class Leave_Request extends Model {
      * @return object
      */
     public function latest_approval_status() {
-        return $this->hasOne( 'WeDevs\ERP\HRM\Models\Leave_Approval_Status', 'leave_request_id', 'id' )->orderBy('id', 'desc');
+        return $this->hasOne( 'WeDevs\ERP\HRM\Models\Leave_Approval_Status', 'leave_request_id', 'id' )->orderBy( 'id', 'desc' );
     }
 
     /**

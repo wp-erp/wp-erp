@@ -1,19 +1,18 @@
 <?php
+
 namespace WeDevs\ERP\HRM\Models;
 
 use WeDevs\ERP\Framework\Model;
 
 /**
  * Class Leaves_Unpaid
- *
- * @package WeDevs\ERP\HRM\Models
  */
 class Leaves_Unpaid extends Model {
     protected $table = 'erp_hr_leaves_unpaid';
 
     protected $fillable = [
         'leave_id', 'leave_request_id', 'leave_approval_status_id',
-        'user_id', 'f_year', 'days', 'amount', 'total'
+        'user_id', 'f_year', 'days', 'amount', 'total',
     ];
 
     /**

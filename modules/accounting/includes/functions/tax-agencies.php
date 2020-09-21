@@ -59,6 +59,7 @@ function erp_acct_get_tax_agency( $tax_no ) {
  * Insert tax agency
  *
  * @param $data
+ *
  * @return int
  */
 function erp_acct_insert_tax_agency( $data ) {
@@ -72,25 +73,25 @@ function erp_acct_insert_tax_agency( $data ) {
 
     $wpdb->insert(
         $wpdb->prefix . 'erp_acct_tax_agencies',
-        array(
-			'name'       => $tax_data['agency_name'],
-			'created_at' => $tax_data['created_at'],
-			'created_by' => $tax_data['created_by'],
-			'updated_at' => $tax_data['updated_at'],
-			'updated_by' => $tax_data['updated_by'],
-        )
+        [
+            'name'       => $tax_data['agency_name'],
+            'created_at' => $tax_data['created_at'],
+            'created_by' => $tax_data['created_by'],
+            'updated_at' => $tax_data['updated_at'],
+            'updated_by' => $tax_data['updated_by'],
+        ]
     );
 
     $tax_id = $wpdb->insert_id;
 
     return $tax_id;
-
 }
 
 /**
  * Update tax agency
  *
  * @param $data
+ *
  * @return int
  */
 function erp_acct_update_tax_agency( $data, $id ) {
@@ -104,20 +105,19 @@ function erp_acct_update_tax_agency( $data, $id ) {
 
     $wpdb->update(
         $wpdb->prefix . 'erp_acct_tax_agencies',
-        array(
-			'name'       => $tax_data['agency_name'],
-			'created_at' => $tax_data['created_at'],
-			'created_by' => $tax_data['created_by'],
-			'updated_at' => $tax_data['updated_at'],
-			'updated_by' => $tax_data['updated_by'],
-        ),
-        array(
-			'id' => $id,
-        )
+        [
+            'name'       => $tax_data['agency_name'],
+            'created_at' => $tax_data['created_at'],
+            'created_by' => $tax_data['created_by'],
+            'updated_at' => $tax_data['updated_at'],
+            'updated_by' => $tax_data['updated_by'],
+        ],
+        [
+            'id' => $id,
+        ]
     );
 
     return $id;
-
 }
 
 /**
@@ -130,7 +130,7 @@ function erp_acct_update_tax_agency( $data, $id ) {
 function erp_acct_delete_tax_agency( $id ) {
     global $wpdb;
 
-    $wpdb->delete( $wpdb->prefix . 'erp_acct_tax_agencies', array( 'id' => $id ) );
+    $wpdb->delete( $wpdb->prefix . 'erp_acct_tax_agencies', [ 'id' => $id ] );
 
     return $id;
 }
@@ -160,6 +160,7 @@ function erp_acct_get_tax_agency_name_by_id( $agency_id ) {
  * Get agency due amount
  *
  * @param int $agency_id
+ *
  * @return mixed
  */
 function erp_acct_get_agency_due( $agency_id ) {

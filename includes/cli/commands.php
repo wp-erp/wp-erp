@@ -1,12 +1,16 @@
 <?php
+
 namespace WeDevs\ERP\CLI;
+
+use WP_CLI;
+use WP_CLI_Command;
 
 /**
  * ERP core CLI commands
  *
  * @since 1.2.2
  */
-class Commands extends \WP_CLI_Command {
+class Commands extends WP_CLI_Command {
 
     /**
      * Activate single or multiple ERP modules
@@ -37,13 +41,13 @@ class Commands extends \WP_CLI_Command {
         $activated = wperp()->modules->activate_modules( $modules );
 
         if ( is_wp_error( $activated ) ) {
-            \WP_CLI::error( $activated->get_error_message() );
+            WP_CLI::error( $activated->get_error_message() );
         }
 
         $count   = count( $modules );
         $message = sprintf( _n( 'Activated module %s', 'Activated modules %s', $count, 'erp' ), implode( ', ', $modules ) );
 
-        \WP_CLI::success( $message );
+        WP_CLI::success( $message );
     }
 
     /**
@@ -75,16 +79,15 @@ class Commands extends \WP_CLI_Command {
         $deactivated = wperp()->modules->deactivate_modules( $modules );
 
         if ( is_wp_error( $deactivated ) ) {
-            \WP_CLI::error( $deactivated->get_error_message() );
+            WP_CLI::error( $deactivated->get_error_message() );
         }
 
         $count   = count( $modules );
         $message = sprintf( _n( 'Deactivated module %s', 'Deactivated modules %s', $count, 'erp' ), implode( ', ', $modules ) );
 
-        \WP_CLI::success( $message );
+        WP_CLI::success( $message );
     }
-
 }
 
-\WP_CLI::add_command( 'erp module activate', [ '\WeDevs\ERP\CLI\Commands', 'module_activate' ] );
-\WP_CLI::add_command( 'erp module deactivate', [ '\WeDevs\ERP\CLI\Commands', 'module_deactivate' ] );
+WP_CLI::add_command( 'erp module activate', [ '\WeDevs\ERP\CLI\Commands', 'module_activate' ] );
+WP_CLI::add_command( 'erp module deactivate', [ '\WeDevs\ERP\CLI\Commands', 'module_deactivate' ] );

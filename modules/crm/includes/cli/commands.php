@@ -1,11 +1,14 @@
 <?php
+
 namespace WeDevs\ERP\CRM\CLI;
+
+use WP_CLI;
+use WP_CLI_Command;
 
 /**
  * CRM CLI class
  */
-class Commands extends \WP_CLI_Command {
-
+class Commands extends WP_CLI_Command {
     public function delete( $args, $assoc_args ) {
         global $wpdb;
 
@@ -20,9 +23,8 @@ class Commands extends \WP_CLI_Command {
             $wpdb->query( 'TRUNCATE TABLE ' . $wpdb->prefix . $table );
         }
 
-        \WP_CLI::success( "Tables deleted successfully!" );
+        WP_CLI::success( 'Tables deleted successfully!' );
     }
-
 }
 
-\WP_CLI::add_command( 'crm', 'WeDevs\ERP\CRM\CLI\Commands' );
+WP_CLI::add_command( 'crm', 'WeDevs\ERP\CRM\CLI\Commands' );

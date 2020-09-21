@@ -1,4 +1,5 @@
 <?php
+
 namespace WeDevs\ERP;
 
 use WeDevs\ERP\Framework\Traits\Hooker;
@@ -8,6 +9,9 @@ use WeDevs\ERP\Framework\Traits\Hooker;
  */
 class Scripts {
 
+    /*
+     * Hooks
+     */
     use Hooker;
 
     /**
@@ -20,7 +24,7 @@ class Scripts {
     /**
      * Script version number
      *
-     * @var integer
+     * @var int
      */
     protected $version;
 
@@ -54,53 +58,53 @@ class Scripts {
         $js     = WPERP_ASSETS . '/js';
 
         // register vendors first
-        wp_register_script( 'erp-select2', $vendor . '/select2/select2.full.min.js', array( 'jquery' ), $this->version, true );
-        wp_register_script( 'erp-tiptip', $vendor . '/tiptip/jquery.tipTip.min.js', array( 'jquery' ), $this->version, true );
+        wp_register_script( 'erp-select2', $vendor . '/select2/select2.full.min.js', [ 'jquery' ], $this->version, true );
+        wp_register_script( 'erp-tiptip', $vendor . '/tiptip/jquery.tipTip.min.js', [ 'jquery' ], $this->version, true );
         wp_register_script( 'erp-momentjs', $vendor . '/moment/moment.min.js', false, $this->version, true );
-        wp_register_script( 'erp-fullcalendar', $vendor . '/fullcalendar/fullcalendar' . $this->suffix . '.js', array( 'jquery', 'erp-momentjs' ), $this->version, true );
-        wp_register_script( 'erp-timepicker', $vendor . '/timepicker/jquery.timepicker.min.js', array( 'jquery', 'erp-momentjs' ), $this->version, true );
-        wp_register_script( 'erp-vuejs', $vendor . '/vue/vue' . $this->suffix . '.js', array( 'jquery' ), $this->version, true );
-        wp_register_script( 'erp-trix-editor', $vendor . '/trix/trix.js', array( 'jquery' ), $this->version, true );
-        wp_register_script( 'erp-nprogress', $vendor . '/nprogress/nprogress.js', array( 'jquery' ), $this->version, true );
-        wp_register_script( 'erp-jvectormap', $vendor . '/jvectormap/jvectormap.min.js', array( 'jquery' ), $this->version, true );
-        wp_register_script( 'erp-jvectormap-world-mill', $vendor . '/jvectormap/jvectormap-world-mill.js', array( 'jquery' ), $this->version, true );
+        wp_register_script( 'erp-fullcalendar', $vendor . '/fullcalendar/fullcalendar' . $this->suffix . '.js', [ 'jquery', 'erp-momentjs' ], $this->version, true );
+        wp_register_script( 'erp-timepicker', $vendor . '/timepicker/jquery.timepicker.min.js', [ 'jquery', 'erp-momentjs' ], $this->version, true );
+        wp_register_script( 'erp-vuejs', $vendor . '/vue/vue' . $this->suffix . '.js', [ 'jquery' ], $this->version, true );
+        wp_register_script( 'erp-trix-editor', $vendor . '/trix/trix.js', [ 'jquery' ], $this->version, true );
+        wp_register_script( 'erp-nprogress', $vendor . '/nprogress/nprogress.js', [ 'jquery' ], $this->version, true );
+        wp_register_script( 'erp-jvectormap', $vendor . '/jvectormap/jvectormap.min.js', [ 'jquery' ], $this->version, true );
+        wp_register_script( 'erp-jvectormap-world-mill', $vendor . '/jvectormap/jvectormap-world-mill.js', [ 'jquery' ], $this->version, true );
 
         // sweet alert
-        wp_register_script( 'erp-sweetalert', $vendor . '/sweetalert/sweetalert.min.js', array( 'jquery' ), $this->version, true );
+        wp_register_script( 'erp-sweetalert', $vendor . '/sweetalert/sweetalert.min.js', [ 'jquery' ], $this->version, true );
 
         // Are you sure? JS
-        wp_register_script( 'erp-are-you-sure', $vendor . '/are-you-sure/jquery.are-you-sure.js', array( 'jquery' ), $this->version, true );
+        wp_register_script( 'erp-are-you-sure', $vendor . '/are-you-sure/jquery.are-you-sure.js', [ 'jquery' ], $this->version, true );
 
         // flot chart
-        wp_register_script( 'erp-flotchart', $vendor . '/flot/jquery.flot.min.js', array( 'jquery' ), $this->version, true );
-        wp_register_script( 'erp-flotchart-time', $vendor . '/flot/jquery.flot.time.min.js', array( 'jquery' ), $this->version, true );
-        wp_register_script( 'erp-flotchart-orerbars', $vendor . '/flot/jquery.flot.orderBars.js', array( 'jquery' ), $this->version, true );
-        wp_register_script( 'erp-flotchart-pie', $vendor . '/flot/jquery.flot.pie.min.js', array( 'jquery' ), $this->version, true );
-        wp_register_script( 'erp-flotchart-axislables', $vendor . '/flot/jquery.flot.axislabels.js', array( 'jquery' ), $this->version, true );
-        wp_register_script( 'erp-flotchart-categories', $vendor . '/flot/jquery.flot.categories.js', array( 'jquery' ), $this->version, true );
-        wp_register_script( 'erp-flotchart-tooltip', $vendor . '/flot/jquery.flot.tooltip.min.js', array( 'jquery' ), $this->version, true );
-        wp_register_script( 'erp-flotchart-resize', $vendor . '/flot/jquery.flot.resize.min.js', array( 'jquery' ), $this->version, true );
-        wp_register_script( 'erp-flotchart-valuelabel', $vendor . '/flot/jquery.flot.valuelabels.js', array( 'jquery' ), $this->version, true );
-        wp_register_script( 'erp-flotchart-navigate', $vendor . '/flot/jquery.flot.navigate.js', array( 'jquery' ), $this->version, true );
-        wp_register_script( 'erp-flotchart-selection', $vendor . '/flot/jquery.flot.selection.js', array( 'jquery' ), $this->version, true );
-        wp_register_script( 'erp-flotchart-stack', $vendor . '/flot/jquery.flot.stack.js', array( 'jquery' ), $this->version, true );
+        wp_register_script( 'erp-flotchart', $vendor . '/flot/jquery.flot.min.js', [ 'jquery' ], $this->version, true );
+        wp_register_script( 'erp-flotchart-time', $vendor . '/flot/jquery.flot.time.min.js', [ 'jquery' ], $this->version, true );
+        wp_register_script( 'erp-flotchart-orerbars', $vendor . '/flot/jquery.flot.orderBars.js', [ 'jquery' ], $this->version, true );
+        wp_register_script( 'erp-flotchart-pie', $vendor . '/flot/jquery.flot.pie.min.js', [ 'jquery' ], $this->version, true );
+        wp_register_script( 'erp-flotchart-axislables', $vendor . '/flot/jquery.flot.axislabels.js', [ 'jquery' ], $this->version, true );
+        wp_register_script( 'erp-flotchart-categories', $vendor . '/flot/jquery.flot.categories.js', [ 'jquery' ], $this->version, true );
+        wp_register_script( 'erp-flotchart-tooltip', $vendor . '/flot/jquery.flot.tooltip.min.js', [ 'jquery' ], $this->version, true );
+        wp_register_script( 'erp-flotchart-resize', $vendor . '/flot/jquery.flot.resize.min.js', [ 'jquery' ], $this->version, true );
+        wp_register_script( 'erp-flotchart-valuelabel', $vendor . '/flot/jquery.flot.valuelabels.js', [ 'jquery' ], $this->version, true );
+        wp_register_script( 'erp-flotchart-navigate', $vendor . '/flot/jquery.flot.navigate.js', [ 'jquery' ], $this->version, true );
+        wp_register_script( 'erp-flotchart-selection', $vendor . '/flot/jquery.flot.selection.js', [ 'jquery' ], $this->version, true );
+        wp_register_script( 'erp-flotchart-stack', $vendor . '/flot/jquery.flot.stack.js', [ 'jquery' ], $this->version, true );
 
         // core js files
-        wp_register_script( 'erp-popup', $js . '/jquery-popup' . $this->suffix . '.js', array( 'jquery' ), $this->version, true );
-        wp_register_script( 'erp-script', $js . '/erp' . $this->suffix . '.js', array( 'jquery', 'backbone', 'underscore', 'wp-util', 'jquery-ui-datepicker' ), $this->version, true );
-        wp_register_script( 'erp-file-upload', $js . '/upload' . $this->suffix . '.js', array( 'jquery', 'plupload-handlers' ), $this->version, true );
-        wp_register_script( 'erp-admin-settings', $js . '/settings' . $this->suffix . '.js', array( 'jquery' ), $this->version, true );
-        wp_register_script( 'erp-system-status', $js . '/system-status' . $this->suffix . '.js', array( 'jquery' ), $this->version, true );
+        wp_register_script( 'erp-popup', $js . '/jquery-popup' . $this->suffix . '.js', [ 'jquery' ], $this->version, true );
+        wp_register_script( 'erp-script', $js . '/erp' . $this->suffix . '.js', [ 'jquery', 'backbone', 'underscore', 'wp-util', 'jquery-ui-datepicker' ], $this->version, true );
+        wp_register_script( 'erp-file-upload', $js . '/upload' . $this->suffix . '.js', [ 'jquery', 'plupload-handlers' ], $this->version, true );
+        wp_register_script( 'erp-admin-settings', $js . '/settings' . $this->suffix . '.js', [ 'jquery' ], $this->version, true );
+        wp_register_script( 'erp-system-status', $js . '/system-status' . $this->suffix . '.js', [ 'jquery' ], $this->version, true );
 
         // tether.js
-        wp_register_script( 'erp-tether-main', $vendor . '/tether/tether.min.js', array( 'jquery' ), $this->version, true );
-        wp_register_script( 'erp-tether-drop', $vendor . '/tether/drop.min.js', array( 'jquery' ), $this->version, true );
+        wp_register_script( 'erp-tether-main', $vendor . '/tether/tether.min.js', [ 'jquery' ], $this->version, true );
+        wp_register_script( 'erp-tether-drop', $vendor . '/tether/drop.min.js', [ 'jquery' ], $this->version, true );
 
         // clipboard.js
-        wp_register_script( 'erp-clipboard', $vendor . '/clipboard/clipboard.min.js', array( 'jquery' ), $this->version, true );
+        wp_register_script( 'erp-clipboard', $vendor . '/clipboard/clipboard.min.js', [ 'jquery' ], $this->version, true );
 
         // toastr.js
-        wp_register_script( 'erp-toastr', $vendor . '/toastr/toastr.min.js', array(), $this->version, true );
+        wp_register_script( 'erp-toastr', $vendor . '/toastr/toastr.min.js', [], $this->version, true );
     }
 
     /**
@@ -136,7 +140,6 @@ class Scripts {
 
         // core css files
         wp_register_style( 'erp-styles', $css . '/admin.css', false, $this->version );
-
     }
 
     /**
@@ -145,9 +148,9 @@ class Scripts {
      * @return void
      */
     public function enqueue_scripts() {
-        $screen = get_current_screen();
+        $screen      = get_current_screen();
         $screen_base = isset( $screen->base ) ? $screen->base : false;
-        $hook = str_replace( sanitize_title( __( 'HR Management', 'erp' ) ) , 'hr-management', $screen_base );
+        $hook        = str_replace( sanitize_title( __( 'HR Management', 'erp' ) ), 'hr-management', $screen_base );
 
         wp_enqueue_script( 'erp-select2' );
         wp_enqueue_script( 'erp-popup' );
@@ -155,7 +158,7 @@ class Scripts {
         wp_enqueue_script( 'erp-are-you-sure' );
         wp_enqueue_media();
 
-        wp_localize_script( 'erp-script', 'wpErp', array(
+        wp_localize_script( 'erp-script', 'wpErp', [
             'nonce'           => wp_create_nonce( 'erp-nonce' ),
             'set_logo'        => __( 'Set company logo', 'erp' ),
             'upload_logo'     => __( 'Upload company logo', 'erp' ),
@@ -166,16 +169,16 @@ class Scripts {
             'formUnsavedMsg'  => __( 'You didn\'t save your changes!', 'erp' ),
             'confirmMsg'      => __( 'Are you sure?', 'erp' ),
             'ajaxurl'         => admin_url( 'admin-ajax.php' ),
-            'plupload'        => array(
+            'plupload'        => [
                 'url'              => admin_url( 'admin-ajax.php' ) . '?nonce=' . wp_create_nonce( 'erp_featured_img' ),
                 'flash_swf_url'    => includes_url( 'js/plupload/plupload.flash.swf' ),
-                'filters'          => array(array('title' => __( 'Allowed Files' ), 'extensions' => '*')),
+                'filters'          => [['title' => __( 'Allowed Files' ), 'extensions' => '*']],
                 'multipart'        => true,
                 'urlstream_upload' => true,
-            )
-        ) );
+            ],
+        ] );
 
-        wp_enqueue_script( 'erp-menu', WPERP_ASSETS . "/js/erp-menu.js", array(), date( 'Ymd' ), true );
+        wp_enqueue_script( 'erp-menu', WPERP_ASSETS . '/js/erp-menu.js', [], date( 'Ymd' ), true );
 
         // load country/state JSON on new company page
         if ( erp_is_contacts_page() ) {
@@ -189,8 +192,6 @@ class Scripts {
             $country = \WeDevs\ERP\Countries::instance();
             wp_localize_script( 'erp-script', 'wpErpCountries', $country->load_country_states() );
         }
-
-
     }
 
     /**

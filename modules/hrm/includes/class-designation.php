@@ -1,4 +1,5 @@
 <?php
+
 namespace WeDevs\ERP\HRM;
 
 /**
@@ -11,7 +12,7 @@ class Designation extends \WeDevs\ERP\Item {
      *
      * @param  int  company id
      *
-     * @return object  wpdb object
+     * @return object wpdb object
      */
     protected function get_by_id( $designation_id ) {
         global $wpdb;
@@ -25,6 +26,6 @@ class Designation extends \WeDevs\ERP\Item {
      * @return int
      */
     public function num_of_employees() {
-        return \WeDevs\ERP\HRM\Models\Employee::where( array( 'status' => 'active', 'designation' => $this->id ) )->count();
+        return \WeDevs\ERP\HRM\Models\Employee::where( [ 'status' => 'active', 'designation' => $this->id ] )->count();
     }
 }

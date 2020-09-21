@@ -23,6 +23,7 @@
         $contact_groups = erp_crm_get_contact_groups( [ 'number' => '-1' ] );
 
         $groups = ['' => __( '&mdash; Select Group &mdash;', 'erp' )];
+
         foreach ( $contact_groups as $group ) {
             $groups[ $group->id ] = $group->name;
         }
@@ -72,12 +73,12 @@
                             <select name="contact_owner" id="contact_owner">
                                 <?php
                                     $current_user = get_current_user_id();
-                                    echo wp_kses( erp_html_generate_dropdown( $users, $current_user ), array(
-                                        'option' => array(
-                                            'value' => array(),
-                                            'selected' => array()
-                                        ),
-                                    ) );
+                                    echo wp_kses( erp_html_generate_dropdown( $users, $current_user ), [
+                                        'option' => [
+                                            'value'    => [],
+                                            'selected' => [],
+                                        ],
+                                    ] );
                                 ?>
                             </select>
                             <p class="description"><?php esc_html_e( 'Contact owner for contact.', 'erp' ); ?></p>
@@ -89,12 +90,12 @@
                         </th>
                         <td>
                             <select name="life_stage" id="life_stage">
-                                <?php echo wp_kses( erp_html_generate_dropdown( $life_stages ), array(
-                                    'option' => array(
-                                        'value' => array(),
-                                        'selected' => array()
-                                    ),
-                                ) ); ?>
+                                <?php echo wp_kses( erp_html_generate_dropdown( $life_stages ), [
+                                    'option' => [
+                                        'value'    => [],
+                                        'selected' => [],
+                                    ],
+                                ] ); ?>
                             </select>
                             <p class="description"><?php esc_html_e( 'Life stage for contact.', 'erp' ); ?></p>
                         </td>
@@ -105,12 +106,12 @@
                         </th>
                         <td>
                             <select name="contact_group">
-                                <?php echo wp_kses( erp_html_generate_dropdown( $groups ), array(
-                                    'option' => array(
-                                        'value' => array(),
-                                        'selected' => array()
-                                    ),
-                                ) ); ?>
+                                <?php echo wp_kses( erp_html_generate_dropdown( $groups ), [
+                                    'option' => [
+                                        'value'    => [],
+                                        'selected' => [],
+                                    ],
+                                ] ); ?>
                             </select>
                             <p class="description"><?php esc_html_e( 'Imported contacts will be subscribed in selected group.', 'erp' ); ?></p>
                         </td>
@@ -151,12 +152,12 @@
                             </th>
                             <td>
                                 <select name="user_role" class="erp-select2" id="user_role" multiple="true">
-                                    <?php echo wp_kses( erp_html_generate_dropdown( $roles, $default_role ), array(
-                                        'option' => array(
-                                            'value' => array(),
-                                            'selected' => array()
-                                        ),
-                                    ) ); ?>
+                                    <?php echo wp_kses( erp_html_generate_dropdown( $roles, $default_role ), [
+                                        'option' => [
+                                            'value'    => [],
+                                            'selected' => [],
+                                        ],
+                                    ] ); ?>
                                 </select>
                                 <p class="description"><?php esc_html_e( 'Selected user role are considered to import.', 'erp' ); ?></p>
                             </td>
@@ -169,12 +170,12 @@
                                 <select name="contact_owner" id="contact_owner">
                                     <?php
                                         $current_user = get_current_user_id();
-                                        echo wp_kses( erp_html_generate_dropdown( $users, $current_user ), array(
-                                            'option' => array(
-                                                'value' => array(),
-                                                'selected' => array()
-                                            ),
-                                        ) );
+                                        echo wp_kses( erp_html_generate_dropdown( $users, $current_user ), [
+                                            'option' => [
+                                                'value'    => [],
+                                                'selected' => [],
+                                            ],
+                                        ] );
                                     ?>
                                 </select>
                                 <p class="description"><?php esc_html_e( 'Contact owner for contact.', 'erp' ); ?></p>
@@ -186,12 +187,12 @@
                             </th>
                             <td>
                                 <select name="life_stage" id="life_stage">
-                                    <?php echo wp_kses( erp_html_generate_dropdown( $life_stages ), array(
-                                        'option' => array(
-                                            'value' => array(),
-                                            'selected' => array()
-                                        ),
-                                    ) ); ?>
+                                    <?php echo wp_kses( erp_html_generate_dropdown( $life_stages ), [
+                                        'option' => [
+                                            'value'    => [],
+                                            'selected' => [],
+                                        ],
+                                    ] ); ?>
                                 </select>
                                 <p class="description"><?php esc_html_e( 'Life stage for contact.', 'erp' ); ?></p>
                             </td>
@@ -202,12 +203,12 @@
                             </th>
                             <td>
                                 <select name="contact_group">
-                                    <?php echo wp_kses( erp_html_generate_dropdown( $groups ), array(
-                                        'option' => array(
-                                            'value' => array(),
-                                            'selected' => array()
-                                        ),
-                                    ) ); ?>
+                                    <?php echo wp_kses( erp_html_generate_dropdown( $groups ), [
+                                        'option' => [
+                                            'value'    => [],
+                                            'selected' => [],
+                                        ],
+                                    ] ); ?>
                                 </select>
                                 <p class="description"><?php esc_html_e( 'Imported contacts will be subscribed in selected group.', 'erp' ); ?></p>
                             </td>

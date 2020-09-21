@@ -1,4 +1,5 @@
 <?php
+
 namespace WeDevs\ERP\HRM\Emails;
 
 use WeDevs\ERP\Email;
@@ -8,16 +9,15 @@ use WeDevs\ERP\Framework\Traits\Hooker;
  * Rejected Leave Request
  */
 class Rejected_Leave_Request extends Email {
-
     use Hooker;
 
-    function __construct() {
+    public function __construct() {
         $this->id             = 'rejected-leave-request';
         $this->title          = __( 'Rejected Leave Request', 'erp' );
         $this->description    = __( 'Rejected leave request notification to employee.', 'erp' );
 
-        $this->subject        = __( 'Your leave request has been rejected', 'erp');
-        $this->heading        = __( 'Leave Request Rejected', 'erp');
+        $this->subject        = __( 'Your leave request has been rejected', 'erp' );
+        $this->heading        = __( 'Leave Request Rejected', 'erp' );
 
         $this->find = [
             'full-name'    => '{employee_name}',
@@ -33,7 +33,7 @@ class Rejected_Leave_Request extends Email {
         parent::__construct();
     }
 
-    function get_args() {
+    public function get_args() {
         return [
             'email_heading' => $this->heading,
             'email_body'    => wpautop( $this->get_option( 'body' ) ),
@@ -52,7 +52,7 @@ class Rejected_Leave_Request extends Email {
         $reason = $wpdb->get_var(
             $wpdb->prepare(
                 "SELECT message FROM {$wpdb->prefix}erp_hr_leave_approval_status WHERE leave_request_id = %d ORDER BY id DESC LIMIT 1",
-                array( $request->id )
+                [ $request->id ]
             )
         );
 

@@ -22,10 +22,8 @@ add_filter( 'editable_roles', 'erp_hr_filter_editable_roles' );
 add_filter( 'woocommerce_prevent_admin_access', 'erp_hr_wc_prevent_admin_access' );
 add_filter( 'erp_login_redirect', 'erp_hr_login_redirect', 10, 2 );
 add_filter( 'erp_hr_employee_restricted_data', 'erp_hr_control_restricted_data', 10, 2 );
-add_filter( 'erp_mail_recipients', 'erp_hr_exclude_recipients');
+add_filter( 'erp_mail_recipients', 'erp_hr_exclude_recipients' );
 add_filter( 'erp_hr_get_employee_fields', 'get_employee_additional_fields', 10, 3 );
-
-
 
 // Send Birthday email wish to employee
 add_action( 'erp_hr_happened_birthday_today', 'erp_hr_send_birthday_wish_email', 10, 1 );

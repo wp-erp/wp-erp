@@ -8,18 +8,17 @@
         $current_year    = current_time( 'Y' );
         $dept_raw        = erp_hr_get_departments_dropdown_raw();
         $query_dept      = isset( $_REQUEST['department'] ) && '-1' != $_REQUEST['department'] ? intval( $_REQUEST['department'] ) : '';
-        $query_year      = isset( $_REQUEST['year'] ) && '-1' != $_REQUEST['year'] ? $_REQUEST['year'] : date('Y');
+        $query_year      = isset( $_REQUEST['year'] ) && '-1' != $_REQUEST['year'] ? $_REQUEST['year'] : date( 'Y' );
         $user_all        = $wpdb->get_results( "SELECT user_id, department, hiring_date, termination_date FROM {$wpdb->prefix}erp_hr_employees WHERE status = 'active'" );
         $user_filtered   = [];
-        $this_month      = $query_year ? date( $query_year . '-12-01') : current_time( 'Y-m-01' );
-        $js_this_month   = strtotime( $this_month ) * 1000 + ( 15*24*60*60*1000 );
-        $js_year_before  = strtotime( '-12 month', strtotime( $this_month ) ) * 1000 + ( 15*24*60*60*1000 );
+        $this_month      = $query_year ? date( $query_year . '-12-01' ) : current_time( 'Y-m-01' );
+        $js_this_month   = strtotime( $this_month ) * 1000 + ( 15 * 24 * 60 * 60 * 1000 );
+        $js_year_before  = strtotime( '-12 month', strtotime( $this_month ) ) * 1000 + ( 15 * 24 * 60 * 60 * 1000 );
         $total_emp_count = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}erp_hr_employees WHERE status = 'active'" );
 
         for ( $i = 0; $i <= 11; $i++ ) {
-
-            $month        = date( "Y-m", strtotime( $this_month ." -$i months" ) );
-            $js_month     = strtotime( $month. '-01' ) * 1000;
+            $month        = date( 'Y-m', strtotime( $this_month . " -$i months" ) );
+            $js_month     = strtotime( $month . '-01' ) * 1000;
             $count        = erp_hr_get_headcount( $month, $query_dept, 'month' );
             $chart_data[] = [$js_month, $count];
         }
@@ -27,12 +26,11 @@
         $chart_data = [$chart_data];
 
         foreach ( $user_all as $user ) {
-
             if ( $query_dept && $user->department != $query_dept ) {
                 continue;
             }
 
-            if ( '0000-00-00' == $user->hiring_date ){
+            if ( '0000-00-00' == $user->hiring_date ) {
                 continue;
             }
             $hiring_year      = intval( substr( $user->hiring_date, 0, 4 ) );
@@ -57,6 +55,7 @@
             <select name="year">
             <?php
                 echo '<option value="-1">-Select Year-</option>';
+
                 for ( $i = $current_year; $i >= $start_year; $i-- ) {
                     echo '<option value"' . esc_attr( $i ) . '"' . selected( $query_year, $i ) . '>' . esc_html( $i ) . '</option>';
                 }
@@ -149,22 +148,20 @@
     <table class="widefat striped">
         <thead>
             <tr>
-                <th><?php esc_html_e( 'Name', 'erp'); ?></th>
-                <th><?php esc_html_e( 'Hire Date', 'erp'); ?></th>
-                <th><?php esc_html_e( 'Job Title', 'erp'); ?></th>
-                <th><?php esc_html_e( 'Department', 'erp'); ?></th>
-                <th><?php esc_html_e( 'Location', 'erp'); ?></th>
-                <th><?php esc_html_e( 'Status', 'erp'); ?></th>
+                <th><?php esc_html_e( 'Name', 'erp' ); ?></th>
+                <th><?php esc_html_e( 'Hire Date', 'erp' ); ?></th>
+                <th><?php esc_html_e( 'Job Title', 'erp' ); ?></th>
+                <th><?php esc_html_e( 'Department', 'erp' ); ?></th>
+                <th><?php esc_html_e( 'Location', 'erp' ); ?></th>
+                <th><?php esc_html_e( 'Status', 'erp' ); ?></th>
             </tr>
         </thead>
         <tbody>
             <?php
                 foreach ( $user_filtered as $user_id ) {
-
                     $employee     = new \WeDevs\ERP\HRM\Employee( intval( $user_id ) );
                     $employee_url = '<a href="' . admin_url( 'admin.php?page=erp-hr&section=employee&action=view&id=' . $employee->get_user_id() ) . '">' . $employee->display_name . '</a>';
-                    $date_format  = get_option( 'date_format' );
-            ?>
+                    $date_format  = get_option( 'date_format' ); ?>
                     <tr>
                         <td><?php echo wp_kses_post( $employee_url ); ?></td>
                         <td><?php echo esc_html( date( $date_format, strtotime( esc_attr( $employee->hiring_date ) ) ) ); ?></td>

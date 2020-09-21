@@ -5,38 +5,39 @@ namespace WeDevs\ERP\HRM;
 use WeDevs\ERP\HRM\Models\Financial_Year;
 use WeDevs\ERP\HRM\Models\Leave_Policy;
 
-/**
+/*
  * List table class
  */
 if ( ! class_exists( 'WP_List_Table' ) ) {
-
     require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 }
 
 class Leave_Report_Employee_Based extends \WP_List_Table {
     protected $reports;
+
     protected $policies;
+
     protected $current_f_year;
 
-    function __construct() {
+    public function __construct() {
         global $wpdb;
 
-        parent::__construct( array(
+        parent::__construct( [
             'singular' => 'leave',
             'plural'   => 'leaves',
-            'ajax'     => false
-        ) );
+            'ajax'     => false,
+        ] );
 
         $this->table_css();
 
-        $policy_tbl = "{$wpdb->prefix}erp_hr_leave_policies";
+        $policy_tbl     = "{$wpdb->prefix}erp_hr_leave_policies";
         $leave_name_tbl = "{$wpdb->prefix}erp_hr_leaves";
 
         $this->policies = Leave_Policy::select( "$leave_name_tbl.name", "$policy_tbl.id", "$policy_tbl.leave_id" )
             ->leftJoin( $leave_name_tbl, "$policy_tbl.leave_id", '=', "$leave_name_tbl.id" )
             ->get();
 
-        $f_year = erp_hr_get_financial_year_from_date();
+        $f_year               = erp_hr_get_financial_year_from_date();
         $this->current_f_year = ! empty( $f_year ) ? $f_year->id : 0;
     }
 
@@ -46,11 +47,11 @@ class Leave_Report_Employee_Based extends \WP_List_Table {
      *
      * @since 0.1
      *
-     * @param  string $which
+     * @param string $which
      *
      * @return void
      */
-    function extra_tablenav( $which ) {
+    public function extra_tablenav( $which ) {
         if ( $which != 'top' ) {
             return;
         }
@@ -58,61 +59,57 @@ class Leave_Report_Employee_Based extends \WP_List_Table {
         $selected_department   = ( isset( $_POST['filter_department'] ) ) ? sanitize_text_field( wp_unslash( $_POST['filter_department'] ) ) : 0;
         $selected_type         = ( isset( $_POST['filter_employment_type'] ) ) ? sanitize_text_field( wp_unslash( $_POST['filter_employment_type'] ) ) : '';
 
-        $financial_years =  array( '' => esc_attr__( 'select year', 'erp') ) +  wp_list_pluck( Financial_Year::all(), 'fy_name', 'id' );
+        $financial_years       =  [ '' => esc_attr__( 'select year', 'erp' ) ] + wp_list_pluck( Financial_Year::all(), 'fy_name', 'id' );
         $selected_year         = ( isset( $_POST['filter_year'] ) ) ? sanitize_text_field( wp_unslash( $_POST['filter_year'] ) ) : $this->current_f_year;
         $date_range_start      = isset( $_REQUEST['start'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['start'] ) ) : '';
-        $date_range_end        = isset( $_REQUEST['end'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['end'] ) ) : '';
-        ?>
+        $date_range_end        = isset( $_REQUEST['end'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['end'] ) ) : ''; ?>
         <div class="actions alignleft">
-            <label class="screen-reader-text" for="new_role"><?php esc_html_e( 'Filter by Designation', 'erp' ) ?></label>
+            <label class="screen-reader-text" for="new_role"><?php esc_html_e( 'Filter by Designation', 'erp' ); ?></label>
             <select name="filter_year" id="filter_year">
                 <?php
                 foreach ( $financial_years as $f_id => $f_name ) {
                     echo sprintf( "<option value='%s'%s>%s</option>\n", esc_html( $f_id ), selected( $selected_year, $f_id, false ), esc_html( $f_name ) );
                 }
-                $selected = ( $selected_year == 'custom' ) ? 'selected' : '';
-                ?>
+        $selected = ( $selected_year == 'custom' ) ? 'selected' : ''; ?>
                 <option value="custom" <?php echo esc_html( $selected ); ?>><?php esc_html_e( 'Custom', 'erp' ); ?></option>
             </select>
             <span id="custom-date-range"></span>
-            <?php if( $selected ) :?>
+            <?php if ( $selected ) { ?>
                 <span id="custom-input" style="float:left">
                     <span>From </span><input name="start" class="erp-leave-date-field" type="text" value="<?php echo esc_html( $date_range_start ); ?>">&nbsp;<span>To </span><input name="end" class="erp-leave-date-field" type="text" value="<?php echo esc_html( $date_range_end ); ?>">
                 </span>
-            <?php endif ?>
+            <?php } ?>
             <select name="filter_designation" id="filter_designation">
-                <?php echo wp_kses( erp_hr_get_designation_dropdown( $selected_desingnation ), array(
-                    'option' => array(
-                        'value' => array(),
-                        'selected' => array()
-                    )
-                )  ); ?>
+                <?php echo wp_kses( erp_hr_get_designation_dropdown( $selected_desingnation ), [
+                    'option' => [
+                        'value'    => [],
+                        'selected' => [],
+                    ],
+                ]  ); ?>
             </select>
 
-            <label class="screen-reader-text" for="new_role"><?php esc_html_e( 'Filter by Designation', 'erp' ) ?></label>
+            <label class="screen-reader-text" for="new_role"><?php esc_html_e( 'Filter by Designation', 'erp' ); ?></label>
             <select name="filter_department" id="filter_department">
                 <?php echo erp_hr_get_departments_dropdown( $selected_department ); ?>
             </select>
 
-            <label class="screen-reader-text" for="new_role"><?php esc_html_e( 'Filter by Employment Type', 'erp' ) ?></label>
+            <label class="screen-reader-text" for="new_role"><?php esc_html_e( 'Filter by Employment Type', 'erp' ); ?></label>
             <select name="filter_employment_type" id="filter_employment_type">
-                <option value="-1"><?php esc_html_e( '- Select Employment Type -', 'erp' ) ?></option>
+                <option value="-1"><?php esc_html_e( '- Select Employment Type -', 'erp' ); ?></option>
                 <?php
                 $types = erp_hr_get_employee_types();
 
-                foreach ( $types as $key => $title ) {
-                    echo sprintf( "<option value='%s'%s>%s</option>\n", esc_html( $key ), selected( $selected_type, $key, false ), esc_html( $title ) );
-                }
-                ?>
+        foreach ( $types as $key => $title ) {
+            echo sprintf( "<option value='%s'%s>%s</option>\n", esc_html( $key ), selected( $selected_type, $key, false ), esc_html( $title ) );
+        } ?>
             </select>
             <?php submit_button( __( 'Filter' ), 'apply', 'filter_leave_report', false ); ?>
         </div>
         <?php
     }
 
-
-    function get_table_classes() {
-        return array( 'widefat', 'fixed', 'striped', $this->_args['plural'] );
+    public function get_table_classes() {
+        return [ 'widefat', 'fixed', 'striped', $this->_args['plural'] ];
     }
 
     /**
@@ -120,8 +117,7 @@ class Leave_Report_Employee_Based extends \WP_List_Table {
      *
      * @return void
      */
-    function no_items() {
-
+    public function no_items() {
         esc_html_e( 'No Record Found', 'erp-attendance' );
     }
 
@@ -130,9 +126,8 @@ class Leave_Report_Employee_Based extends \WP_List_Table {
      *
      * @return array
      */
-    function get_columns() {
-
-        $columns = array( 'name' => 'Name' );
+    public function get_columns() {
+        $columns = [ 'name' => 'Name' ];
 
         foreach ( $this->policies as $policy ) {
             $columns[ $policy->leave_id ] = __( $policy->name, 'erp' );
@@ -144,13 +139,14 @@ class Leave_Report_Employee_Based extends \WP_List_Table {
     /**
      * Default column values if no callback found
      *
-     * @param  object $item
-     * @param  string $column_name
+     * @param object $item
+     * @param string $column_name
      *
      * @return string
      */
-    function column_default( $item, $column_name ) {
+    public function column_default( $item, $column_name ) {
         $report = isset( $this->reports[ $item ] ) ? $this->reports[ $item ] : [];
+
         if ( isset( $report[ $column_name ] ) ) {
             $summary = $report[ $column_name ];
 
@@ -164,14 +160,14 @@ class Leave_Report_Employee_Based extends \WP_List_Table {
         } else {
             return ' - ';
         }
-
     }
 
     protected function get_user_full_name( $user ) {
-        if ( ! $user instanceof \WP_User) {
+        if ( ! $user instanceof \WP_User ) {
             return '';
         }
-        $name = array();
+        $name = [];
+
         if ( $user->first_name ) {
             $name[] = $user->first_name;
         }
@@ -187,28 +183,27 @@ class Leave_Report_Employee_Based extends \WP_List_Table {
         return implode( ' ', $name );
     }
 
-
     /**
      * Prepare the class items
      *
      * @return void
      */
-    function prepare_items() {
+    public function prepare_items() {
         $columns               = $this->get_columns();
-        $hidden                = array();
+        $hidden                = [];
         $sortable              = $this->get_sortable_columns();
-        $this->_column_headers = array( $columns, $hidden, $sortable );
+        $this->_column_headers = [ $columns, $hidden, $sortable ];
 
         $per_page     = 20;
         $current_page = $this->get_pagenum();
         $offset       = ( $current_page - 1 ) * $per_page;
 
-        $selected_desingnation = ( isset( $_POST['filter_designation'] ) ) ? sanitize_text_field( wp_unslash( $_POST['filter_designation'] ) ) : 0;
-        $selected_department   = ( isset( $_POST['filter_department'] ) ) ? sanitize_text_field( wp_unslash( $_POST['filter_department'] ) ) : 0;
-        $selected_type         = ( isset( $_POST['filter_employment_type'] ) ) ? sanitize_text_field( wp_unslash( $_POST['filter_employment_type'] ) ) : '';
+        $selected_desingnation   = ( isset( $_POST['filter_designation'] ) ) ? sanitize_text_field( wp_unslash( $_POST['filter_designation'] ) ) : 0;
+        $selected_department     = ( isset( $_POST['filter_department'] ) ) ? sanitize_text_field( wp_unslash( $_POST['filter_department'] ) ) : 0;
+        $selected_type           = ( isset( $_POST['filter_employment_type'] ) ) ? sanitize_text_field( wp_unslash( $_POST['filter_employment_type'] ) ) : '';
         $selected_f_year         = ( isset( $_POST['filter_year'] ) ) ? sanitize_text_field( wp_unslash( $_POST['filter_year'] ) ) : $this->current_f_year;
-        $start_date = null;
-        $end_date = null;
+        $start_date              = null;
+        $end_date                = null;
 
         if ( isset( $_REQUEST['start'] ) ) {
             $start_date = sanitize_text_field( wp_unslash( $_REQUEST['start'] ) );
@@ -235,16 +230,13 @@ class Leave_Report_Employee_Based extends \WP_List_Table {
         $total_count = $query->count();
 
         $employees_obj = $query->skip( $offset )->take( $per_page )->get()->toArray();
-        $employees = wp_list_pluck( $employees_obj, 'user_id' );
-        $reports   = erp_get_leave_report( $employees, $selected_f_year, $start_date, $end_date );
+        $employees     = wp_list_pluck( $employees_obj, 'user_id' );
+        $reports       = erp_get_leave_report( $employees, $selected_f_year, $start_date, $end_date );
         $this->reports = $reports;
         $this->items   = $employees;
-        $this->set_pagination_args( array(
+        $this->set_pagination_args( [
             'total_items' => $total_count,
-            'per_page'    => $per_page
-        ) );
-
+            'per_page'    => $per_page,
+        ] );
     }
-
 }
-

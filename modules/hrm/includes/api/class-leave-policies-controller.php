@@ -1,12 +1,14 @@
 <?php
+
 namespace WeDevs\ERP\HRM\API;
 
-use WP_REST_Server;
-use WP_REST_Response;
-use WP_Error;
 use WeDevs\ERP\API\REST_Controller;
+use WP_Error;
+use WP_REST_Response;
+use WP_REST_Server;
 
 class Leave_Policies_Controller extends REST_Controller {
+
     /**
      * Endpoint namespace.
      *
@@ -110,6 +112,7 @@ class Leave_Policies_Controller extends REST_Controller {
         $total_items = erp_hr_count_leave_policies();
 
         $formated_items = [];
+
         foreach ( $items as $item ) {
             $data             = $this->prepare_item_for_response( $item, $request );
             $formated_items[] = $this->prepare_response_for_collection( $data );
@@ -176,6 +179,7 @@ class Leave_Policies_Controller extends REST_Controller {
         $id = (int) $request['id'];
 
         $policy = erp_hr_leave_get_policy( $id );
+
         if ( empty( $id ) || empty( $policy->id ) ) {
             return new WP_Error( 'rest_policy_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 400 ] );
         }
@@ -212,7 +216,7 @@ class Leave_Policies_Controller extends REST_Controller {
     /**
      * Prepare a single item for create or update
      *
-     * @param WP_REST_Request $request Request object.
+     * @param WP_REST_Request $request request object
      *
      * @return array $prepared_item
      */
@@ -278,11 +282,11 @@ class Leave_Policies_Controller extends REST_Controller {
     /**
      * Prepare a single user output for response
      *
-     * @param object $item
-     * @param WP_REST_Request $request Request object.
-     * @param array $additional_fields (optional)
+     * @param object          $item
+     * @param WP_REST_Request $request           request object
+     * @param array           $additional_fields (optional)
      *
-     * @return WP_REST_Response $response Response data.
+     * @return WP_REST_Response $response response data
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
         $data = [
@@ -309,7 +313,7 @@ class Leave_Policies_Controller extends REST_Controller {
                 $data['department'] = null;
 
                 if ( $department_id ) {
-                    $department = $departments_controller->get_department( ['id' => $department_id ] );
+                    $department         = $departments_controller->get_department( ['id' => $department_id ] );
                     $data['department'] = ! is_wp_error( $department ) ? $department->get_data() : null;
                 }
             }
@@ -321,7 +325,7 @@ class Leave_Policies_Controller extends REST_Controller {
                 $data['designation'] = null;
 
                 if ( $designation_id ) {
-                    $designation = $designations_controller->get_designation( ['id' => $designation_id ] );
+                    $designation         = $designations_controller->get_designation( ['id' => $designation_id ] );
                     $data['designation'] = ! is_wp_error( $designation ) ? $designation->get_data() : null;
                 }
             }

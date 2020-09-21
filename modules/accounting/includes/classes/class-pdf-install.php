@@ -2,14 +2,18 @@
 
 namespace WeDevs\ERP\Accounting\Includes\Classes;
 
-require_once( ABSPATH . 'wp-admin/includes/class-wp-upgrader.php' );
-require_once( ABSPATH . 'wp-admin/includes/plugin-install.php' );
+use Plugin_Upgrader;
+
+require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
 
 class PDF_Install {
+
     /**
      * Install Plugin
      *
      * @param $url
+     *
      * @return int
      */
     public function install_plugin( $url ) {
@@ -20,15 +24,15 @@ class PDF_Install {
             $slug          = $slug[ count( $slug ) - 2 ];
             $api           = plugins_api(
                 'plugin_information',
-                array(
-					'slug'   => $slug,
-					'fields' => array( 'sections' => 'false' ),
-                )
+                [
+                    'slug'   => $slug,
+                    'fields' => [ 'sections' => 'false' ],
+                ]
             );
             $download_link = $api->download_link;
         }
 
-        $upgrader = new \Plugin_Upgrader();
+        $upgrader = new Plugin_Upgrader();
 
         if ( ! $upgrader->install( $download_link ) ) {
             return 0;
@@ -62,5 +66,4 @@ class PDF_Install {
         echo esc_html__( 'Plugin <strong>activated.</strong>', 'erp' );
         echo '</p></div>';
     }
-
 }
