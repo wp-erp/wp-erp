@@ -1,12 +1,13 @@
 <?php
+
 namespace WeDevs\ERP\Admin;
+
 use WeDevs\ERP\Framework\Traits\Hooker;
 
 class Admin_Page {
-
     use Hooker;
 
-    function __construct() {
+    public function __construct() {
         $this->init_actions();
         $this->init_classes();
     }
@@ -31,9 +32,8 @@ class Admin_Page {
     public function includes() {
         // Setup/welcome
         if ( ! empty( $_GET['page'] ) ) {
-
             if ( 'erp-setup' == $_GET['page'] ) {
-                include_once dirname( __FILE__ ) . '/class-setup-wizard.php';
+                include_once __DIR__ . '/class-setup-wizard.php';
             }
         }
     }
@@ -60,7 +60,7 @@ class Admin_Page {
 
         delete_transient( '_erp_activation_redirect' );
 
-        if ( ( ! empty( $_GET['page'] ) && in_array( $_GET['page'], array( 'erp-setup', 'erp-welcome' ) ) ) || is_network_admin() || isset( $_GET['activate-multi'] ) || ! current_user_can( 'manage_options' ) ) {
+        if ( ( ! empty( $_GET['page'] ) && in_array( $_GET['page'], [ 'erp-setup', 'erp-welcome' ] ) ) || is_network_admin() || isset( $_GET['activate-multi'] ) || ! current_user_can( 'manage_options' ) ) {
             return;
         }
 
@@ -69,7 +69,7 @@ class Admin_Page {
             wp_safe_redirect( admin_url( 'index.php?page=erp-setup' ) );
             exit;
 
-            // Otherwise, the welcome page
+        // Otherwise, the welcome page
         } else {
             wp_safe_redirect( admin_url( 'index.php?page=erp-welcome' ) );
             exit;
@@ -102,7 +102,7 @@ class Admin_Page {
             ?>
                 <div class="notice notice-success is-dismissible" id="erp-christmas-notice">
                     <div class="logo">
-                        <img src="<?php echo esc_url( WPERP_ASSETS . '/images/promo-logo.png' ) ?>" alt="ERP">
+                        <img src="<?php echo esc_url( WPERP_ASSETS . '/images/promo-logo.png' ); ?>" alt="ERP">
                     </div>
                     <div class="content">
                         <p>Biggest Sale of the year on this</p>
@@ -112,7 +112,7 @@ class Admin_Page {
                     </div>
                     <div class="call-to-action">
                         <a target="_blank" href="https://wperp.com/pricing?utm_campaign=black_friday_&_cyber_monday&utm_medium=banner&utm_source=plugin_dashboard">
-                            <img src="<?php echo esc_url( WPERP_ASSETS . '/images/promo-btn.png' ) ?>" alt="Btn">
+                            <img src="<?php echo esc_url( WPERP_ASSETS . '/images/promo-btn.png' ); ?>" alt="Btn">
                         </a>
                         <p>
                             <span class="highlight-green">COUPON: </span>
@@ -211,7 +211,6 @@ class Admin_Page {
             <?php
         }
     }
-
 }
 
 new Admin_Page();

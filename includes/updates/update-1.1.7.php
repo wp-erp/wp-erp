@@ -20,7 +20,6 @@ function erp_update_poeple_meta_1_1_7() {
  * @return void
  **/
 function erp_update_poeples_1_1_7() {
-
     $people = \WeDevs\ERP\Framework\Models\People::whereNotNull( 'user_id' )->where( 'user_id', '!=', 0 )->get();
 
     $people->each( function ( $contact ) {

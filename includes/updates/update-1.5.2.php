@@ -11,7 +11,7 @@ function erp_acct_updater_create_people_trn_details_table() {
     $charset = 'CHARSET=utf8mb4';
     $collate = 'COLLATE=utf8mb4_unicode_ci';
 
-    if ( defined('DB_COLLATE') && DB_COLLATE )  {
+    if ( defined( 'DB_COLLATE' ) && DB_COLLATE ) {
         $charset = 'CHARSET=' . DB_CHARSET;
         $collate = 'COLLATE=' . DB_COLLATE;
     }
@@ -32,10 +32,10 @@ function erp_acct_updater_create_people_trn_details_table() {
             `updated_at` date DEFAULT NULL,
             `updated_by` varchar(50) DEFAULT NULL,
             PRIMARY KEY (`id`)
-        ) $charset_collate;"
+        ) $charset_collate;",
     ];
 
-    require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+    require_once ABSPATH . 'wp-admin/includes/upgrade.php';
     dbDelta( $table );
 }
 
@@ -59,7 +59,7 @@ function erp_acct_updater_populate_people_transactions() {
         voucher.type = 'people_trn'", ARRAY_A );
 
     if ( !class_exists( '\WeDevs\ERP\Updates\BP\ERP_ACCT_BG_Process_People_Trn' ) || empty( $bg_process_people_trn ) ) {
-        $bg_process_people_trn = new \WeDevs\ERP\Updates\BP\ERP_ACCT_BG_Process_People_Trn;
+        $bg_process_people_trn = new \WeDevs\ERP\Updates\BP\ERP_ACCT_BG_Process_People_Trn();
     }
 
     // loop through vouchers
@@ -82,10 +82,10 @@ function erp_acct_updater_missing_pay_purchase_trn_by_ledger_id() {
         $ledger_id = $wpdb->get_row( "SELECT ledger_id FROM {$wpdb->prefix}erp_acct_ledger_details WHERE trn_no={$pay_purchase_ids[$idx]['voucher_no']}" );
 
         $wpdb->update( $wpdb->prefix . 'erp_acct_pay_purchase',
-            array(
+            [
                 'trn_by_ledger_id' => $ledger_id->ledger_id,
-            ),
-            array( 'voucher_no' => $pay_purchase_ids[$idx]['voucher_no'] )
+            ],
+            [ 'voucher_no' => $pay_purchase_ids[$idx]['voucher_no'] ]
         );
     }
 }

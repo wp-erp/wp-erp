@@ -1,5 +1,8 @@
 <?php
+
 namespace WeDevs\ERP;
+
+use WP_Error;
 
 /**
  * People Class
@@ -17,7 +20,6 @@ class People extends Item {
         if ( $item && ! is_wp_error( $item ) ) {
             $this->id   = (int) $item->id;
             $this->data = $item;
-
         } else {
             $this->id   = 0;
         }
@@ -25,7 +27,7 @@ class People extends Item {
 
     /**
      * Fetch a single people
-    *
+     *
      * @param int $people_id
      *
      * @return object
@@ -37,9 +39,9 @@ class People extends Item {
     /**
      * Check if this people is a WP_User type
      *
-     * @return boolean
+     * @return bool
      */
-    function is_wp_user() {
+    public function is_wp_user() {
         return intval( $this->user_id ) !== 0;
     }
 
@@ -51,12 +53,11 @@ class People extends Item {
      *
      * @return string
      */
-    function get_full_name() {
+    public function get_full_name() {
         $full_name = '';
 
         if ( ! empty( $this->types ) && in_array( 'company', $this->types ) ) {
             $full_name = $this->company;
-
         } elseif ( $this->is_wp_user() ) {
             $user = \get_user_by( 'id', $this->user_id );
 
@@ -77,7 +78,7 @@ class People extends Item {
      *
      * @return string
      */
-    function get_email() {
+    public function get_email() {
         if ( $this->is_wp_user() ) {
             return \get_user_by( 'id', $this->user_id )->user_email;
         } else {
@@ -92,9 +93,10 @@ class People extends Item {
      *
      * @return string
      */
-    function get_website() {
+    public function get_website() {
         if ( $this->is_wp_user() ) {
             $user = \get_user_by( 'id', $this->user_id );
+
             return ( $user->user_url ) ? erp_get_clickable( 'url', $user->user_url ) : '—';
         } else {
             return ( $this->website ) ? erp_get_clickable( 'url', $this->website ) : '—';
@@ -107,7 +109,7 @@ class People extends Item {
      * @param string $meta_key
      * @param string $meta_value
      */
-    function get_meta( $meta_key, $single = true ) {
+    public function get_meta( $meta_key, $single = true ) {
         if ( $this->is_wp_user() ) {
             return \get_user_meta( $this->user_id, $meta_key, $single );
         } else {
@@ -121,7 +123,7 @@ class People extends Item {
      * @param string $meta_key
      * @param string $meta_value
      */
-    function add_meta( $meta_key, $meta_value ) {
+    public function add_meta( $meta_key, $meta_value ) {
         if ( $this->is_wp_user() ) {
             \add_user_meta( $this->user_id, $meta_key, $meta_value );
         } else {
@@ -135,7 +137,7 @@ class People extends Item {
      * @param string $meta_key
      * @param string $meta_value
      */
-    function update_meta( $meta_key, $meta_value ) {
+    public function update_meta( $meta_key, $meta_value ) {
         if ( $this->is_wp_user() ) {
             \update_user_meta( $this->user_id, $meta_key, $meta_value );
         } else {
@@ -149,7 +151,7 @@ class People extends Item {
      * @param string $meta_key
      * @param string $meta_value
      */
-    function delete_meta( $meta_key ) {
+    public function delete_meta( $meta_key ) {
         if ( $this->is_wp_user() ) {
             \delete_user_meta( $this->user_id, $meta_key );
         } else {
@@ -165,17 +167,16 @@ class People extends Item {
      * @param $property
      * @param $value
      *
-     * @return \WP_Error
+     * @return WP_Error
      */
     public function update_property( $property, $value ) {
         $data_array = json_decode( json_encode( $this->data ), true );
+
         if ( $data_array && ! array_key_exists( $property, $data_array ) ) {
-            return new \WP_Error( 'unauthorized-erp-people-property', __( 'Unauthorized people property', 'erp' ) );
+            return new WP_Error( 'unauthorized-erp-people-property', __( 'Unauthorized people property', 'erp' ) );
         }
 
         $people = \WeDevs\ERP\Framework\Models\People::find( $this->id  );
-        $wor = $people->update([$property => $value]);
+        $wor    = $people->update( [$property => $value] );
     }
-
-
 }

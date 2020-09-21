@@ -1,12 +1,14 @@
 <?php
+
 namespace WeDevs\ERP;
 
-use \WeDevs\ERP\Framework\ERP_Settings_Page;
+use WeDevs\ERP\Framework\ERP_Settings_Page;
 
 /**
  * Integration Class
  */
 class Integration extends ERP_Settings_Page {
+
     /**
      * Integration instances.
      */
@@ -17,7 +19,7 @@ class Integration extends ERP_Settings_Page {
      *
      * @var array
      */
-    public $form_fields = array();
+    public $form_fields = [];
 
     /**
      * Initializes the WeDevs_ERP() class
@@ -48,7 +50,7 @@ class Integration extends ERP_Settings_Page {
      *
      * @return array
      */
-    function init_integrations() {
+    public function init_integrations() {
         $this->integrations = apply_filters( 'erp_integration_classes', $this->integrations );
     }
 
@@ -64,7 +66,7 @@ class Integration extends ERP_Settings_Page {
     /**
      * Get an registered integration instance
      *
-     * @param  string  $class_name
+     * @param string $class_name
      *
      * @return \Integration|false
      */
@@ -87,6 +89,7 @@ class Integration extends ERP_Settings_Page {
 
     /**
      * Get the form fields after they are initialized.
+     *
      * @return array of options
      */
     public function get_form_fields() {
@@ -98,7 +101,7 @@ class Integration extends ERP_Settings_Page {
      *
      * @return void
      */
-    function generate_settings_html() {
+    public function generate_settings_html() {
         $settings = $this->get_form_fields();
         $this->output_fields( $settings );
     }
@@ -106,8 +109,8 @@ class Integration extends ERP_Settings_Page {
     /**
      * Get integration setting by key
      *
-     * @param  string  $option
-     * @param  string  $default
+     * @param string $option
+     * @param string $default
      *
      * @return string
      */
@@ -137,8 +140,7 @@ class Integration extends ERP_Settings_Page {
              *
              * @param string $integration The integration object
              */
-            do_action( 'erp_integration_settings_before', $this );
-        ?>
+            do_action( 'erp_integration_settings_before', $this ); ?>
 
         <table class="form-table">
             <?php $this->generate_settings_html(); ?>
@@ -150,9 +152,7 @@ class Integration extends ERP_Settings_Page {
              *
              * @param string $integration The integration object
              */
-            do_action( 'erp_integration_settings_after', $this );
-        ?>
+            do_action( 'erp_integration_settings_after', $this ); ?>
         <?php
     }
-
 }

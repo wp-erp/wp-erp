@@ -2,15 +2,16 @@
 
 namespace WeDevs\ERP\Accounting\API;
 
-use WP_REST_Server;
-use WP_REST_Response;
 use WP_Error;
+use WP_REST_Response;
+use WP_REST_Server;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
 
 class Tax_Cats_Controller extends \WeDevs\ERP\API\REST_Controller {
+
     /**
      * Endpoint namespace.
      *
@@ -33,75 +34,74 @@ class Tax_Cats_Controller extends \WeDevs\ERP\API\REST_Controller {
             $this->namespace,
             '/' . $this->rest_base,
             [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_tax_cats' ],
-					'args'                => [],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_view_sale' );
-					},
-				],
-				[
-					'methods'             => WP_REST_Server::CREATABLE,
-					'callback'            => [ $this, 'create_tax_cat' ],
-					'args'                => [],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_create_sales_invoice' );
-					},
-				],
-				'schema' => [ $this, 'get_item_schema' ],
-			]
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_tax_cats' ],
+                    'args'                => [],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_view_sale' );
+                    },
+                ],
+                [
+                    'methods'             => WP_REST_Server::CREATABLE,
+                    'callback'            => [ $this, 'create_tax_cat' ],
+                    'args'                => [],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_create_sales_invoice' );
+                    },
+                ],
+                'schema' => [ $this, 'get_item_schema' ],
+            ]
         );
 
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base . '/(?P<id>[\d]+)',
             [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_tax_cat' ],
-					'args'                => [],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_view_sale' );
-					},
-				],
-				[
-					'methods'             => WP_REST_Server::EDITABLE,
-					'callback'            => [ $this, 'update_tax_cat' ],
-					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_create_sales_invoice' );
-					},
-				],
-				[
-					'methods'             => WP_REST_Server::DELETABLE,
-					'callback'            => [ $this, 'delete_tax_cat' ],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_create_sales_invoice' );
-					},
-				],
-				'schema' => [ $this, 'get_public_item_schema' ],
-			]
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_tax_cat' ],
+                    'args'                => [],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_view_sale' );
+                    },
+                ],
+                [
+                    'methods'             => WP_REST_Server::EDITABLE,
+                    'callback'            => [ $this, 'update_tax_cat' ],
+                    'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_create_sales_invoice' );
+                    },
+                ],
+                [
+                    'methods'             => WP_REST_Server::DELETABLE,
+                    'callback'            => [ $this, 'delete_tax_cat' ],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_create_sales_invoice' );
+                    },
+                ],
+                'schema' => [ $this, 'get_public_item_schema' ],
+            ]
         );
 
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base . '/delete/(?P<ids>[\d,?]+)',
             [
-				[
-					'methods'             => WP_REST_Server::DELETABLE,
-					'callback'            => [ $this, 'bulk_delete' ],
-					'args'                => [
-						'ids' => [ 'required' => true ],
-					],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_create_sales_invoice' );
-					},
-				],
-				'schema' => [ $this, 'get_item_schema' ],
-			]
+                [
+                    'methods'             => WP_REST_Server::DELETABLE,
+                    'callback'            => [ $this, 'bulk_delete' ],
+                    'args'                => [
+                        'ids' => [ 'required' => true ],
+                    ],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_create_sales_invoice' );
+                    },
+                ],
+                'schema' => [ $this, 'get_item_schema' ],
+            ]
         );
-
     }
 
     /**
@@ -128,9 +128,9 @@ class Tax_Cats_Controller extends \WeDevs\ERP\API\REST_Controller {
         $tax_data    = erp_acct_get_all_tax_cats( $args );
         $total_items = erp_acct_get_all_tax_cats(
             [
-				'count'  => true,
-				'number' => -1,
-			]
+                'count'  => true,
+                'number' => -1,
+            ]
         );
 
         foreach ( $tax_data as $item ) {
@@ -153,7 +153,6 @@ class Tax_Cats_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         return $response;
     }
-
 
     /**
      * Get an tax
@@ -245,7 +244,6 @@ class Tax_Cats_Controller extends \WeDevs\ERP\API\REST_Controller {
         return $response;
     }
 
-
     /**
      * Delete an tax
      *
@@ -279,6 +277,7 @@ class Tax_Cats_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( ! $ids ) {
             return;
         }
+
         foreach ( $ids as $id ) {
             erp_acct_delete_tax_cat( $id );
         }
@@ -289,7 +288,7 @@ class Tax_Cats_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Prepare a single item for create or update
      *
-     * @param WP_REST_Request $request Request object.
+     * @param WP_REST_Request $request request object
      *
      * @return array $prepared_item
      */
@@ -299,6 +298,7 @@ class Tax_Cats_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['name'] ) ) {
             $prepared_item['name'] = $request['name'];
         }
+
         if ( isset( $request['description'] ) ) {
             $prepared_item['description'] = $request['description'];
         }
@@ -309,11 +309,11 @@ class Tax_Cats_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Prepare a single user output for response
      *
-     * @param array $item
-     * @param WP_REST_Request $request Request object.
-     * @param array $additional_fields (optional)
+     * @param array           $item
+     * @param WP_REST_Request $request           request object
+     * @param array           $additional_fields (optional)
      *
-     * @return WP_REST_Response $response Response data.
+     * @return WP_REST_Response $response response data
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
         $item = (object) $item;

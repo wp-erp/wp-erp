@@ -10,7 +10,8 @@ function erp_crm_contact_group_add_private_column_1_2_2() {
     global $wpdb;
 
     $table = $wpdb->prefix . 'erp_crm_contact_group';
-    $cols  = $wpdb->get_col( "DESC $table");
+    $cols  = $wpdb->get_col( "DESC $table" );
+
     if ( ! in_array( 'private', $cols ) ) {
         $wpdb->query( "ALTER TABLE $table ADD `private` TINYINT(1) DEFAULT NULL AFTER `description`" );
     }
@@ -29,7 +30,7 @@ function erp_crm_contact_subscriber_get_hashes_1_2_2() {
     global $wpdb;
 
     $table = $wpdb->prefix . 'erp_crm_contact_subscriber';
-    $cols  = $wpdb->get_col( "DESC $table");
+    $cols  = $wpdb->get_col( "DESC $table" );
 
     if ( in_array( 'hash', $cols ) ) {
         $subscribers = $wpdb->get_results( "SELECT user_id, hash from {$wpdb->prefix}erp_crm_contact_subscriber GROUP BY user_id" );

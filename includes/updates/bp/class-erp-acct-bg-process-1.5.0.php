@@ -1,19 +1,23 @@
 <?php
+
 namespace WeDevs\ERP\Updates\BP;
 
+use DateTime;
+use WP_Background_Process;
+
 if ( ! class_exists( 'WP_Async_Request', false ) ) {
-	require_once WPERP_INCLUDES . '/lib/bgprocess/wp-async-request.php';
+    require_once WPERP_INCLUDES . '/lib/bgprocess/wp-async-request.php';
 }
 
 if ( ! class_exists( 'WP_Background_Process', false ) ) {
-	require_once WPERP_INCLUDES . '/lib/bgprocess/wp-background-process.php';
+    require_once WPERP_INCLUDES . '/lib/bgprocess/wp-background-process.php';
 }
 
-class ERP_ACCT_BG_Process extends \WP_Background_Process {
+class ERP_ACCT_BG_Process extends WP_Background_Process {
 
-	/**
-	 * @var string
-	 */
+    /**
+     * @var string
+     */
     protected $action = 'erp_update_1_5_0_process';
 
     /**
@@ -21,14 +25,14 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
      */
     protected $currencies = [];
 
-	/**
-	 * Task
-	 *
-	 * @param mixed $item Queue item to iterate over
-	 *
-	 * @return mixed
-	 */
-	protected function task( $trn_id ) {
+    /**
+     * Task
+     *
+     * @param mixed $item Queue item to iterate over
+     *
+     * @return mixed
+     */
+    protected function task( $trn_id ) {
         global $wpdb;
 
         $exists = $wpdb->prepare( "SELECT id FROM {$wpdb->prefix}erp_acct_voucher_no WHERE id = %d", $trn_id );
@@ -51,6 +55,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
             case 'awaiting_approval':
                 $status = 'awaiting_payment';
                 break;
+
             case 'partial':
                 $status = 'partially_paid';
                 break;
@@ -58,13 +63,12 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                 $status = $trn['status'];
         }
 
-        $status = erp_acct_trn_status_by_id($status);
+        $status = erp_acct_trn_status_by_id( $status );
         $people = erp_get_people( $trn['user_id'] );
 
         // Start from here
 
         if ( 'invoice' === $trn['form_type'] ) {
-
             $wpdb->insert(
                 // `erp_acct_voucher_no`
                 "{$wpdb->prefix}erp_acct_voucher_no", [
@@ -72,7 +76,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                     'type'       => 'invoice',
                     'currency'   => $this->get_currecny_id( $trn['currency'] ),
                     'created_at' => $this->get_created_at( $trn['created_at'] ),
-                    'created_by' => $trn['created_by']
+                    'created_by' => $trn['created_by'],
                 ]
             );
 
@@ -94,13 +98,13 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                     'status'          => $status,
                     'particulars'     => $trn['summary'],
                     'created_at'      => $this->get_created_at( $trn['created_at'] ),
-                    'created_by'      => $trn['created_by']
+                    'created_by'      => $trn['created_by'],
                 ]
             );
 
-            $this->_helper_invoice_account_details_migration($trn, $trn_id);
-            $this->_helper_invoice_ledger_details_migration($trn, $trn_id);
-            $this->_helper_invoice_details_migration($trn_id);
+            $this->_helper_invoice_account_details_migration( $trn, $trn_id );
+            $this->_helper_invoice_ledger_details_migration( $trn, $trn_id );
+            $this->_helper_invoice_details_migration( $trn_id );
         } // invoice
 
         elseif ( 'payment' === $trn['form_type'] ) {
@@ -111,7 +115,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                     'type'       => 'payment',
                     'currency'   => $this->get_currecny_id( $trn['currency'] ),
                     'created_at' => $this->get_created_at( $trn['created_at'] ),
-                    'created_by' => $trn['created_by']
+                    'created_by' => $trn['created_by'],
                 ]
             );
 
@@ -125,16 +129,16 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                     'amount'           => $trn['total'],
                     'particulars'      => $trn['summary'],
                     'attachments'      => $trn['files'],
-                    'status'           => erp_acct_trn_status_by_id('closed'),
+                    'status'           => erp_acct_trn_status_by_id( 'closed' ),
                     'trn_by'           => 1,
                     'trn_by_ledger_id' => 1,
                     'created_at'       => $this->get_created_at( $trn['created_at'] ),
-                    'created_by'       => $trn['created_by']
+                    'created_by'       => $trn['created_by'],
                 ]
             );
 
-            $this->_helper_invoice_receipts_account_details_migration($trn, $trn_id);
-            $this->_helper_invoice_receipts_ledger_details_migration($trn, $trn_id);
+            $this->_helper_invoice_receipts_account_details_migration( $trn, $trn_id );
+            $this->_helper_invoice_receipts_ledger_details_migration( $trn, $trn_id );
             $this->_helper_invoice_receipts_details_migration( $trn_id );
         } // payment
 
@@ -146,7 +150,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                     'type'       => 'pay_purchase',
                     'currency'   => $this->get_currecny_id( $trn['currency'] ),
                     'created_at' => $this->get_created_at( $trn['created_at'] ),
-                    'created_by' => $trn['created_by']
+                    'created_by' => $trn['created_by'],
                 ]
             );
 
@@ -160,16 +164,16 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                     'amount'           => $trn['total'],
                     'particulars'      => $trn['summary'],
                     'attachments'      => $trn['files'],
-                    'status'           => erp_acct_trn_status_by_id('closed'),
+                    'status'           => erp_acct_trn_status_by_id( 'closed' ),
                     'trn_by'           => 1,
                     'trn_by_ledger_id' => 1,
                     'created_at'       => $this->get_created_at( $trn['created_at'] ),
-                    'created_by'       => $trn['created_by']
+                    'created_by'       => $trn['created_by'],
                 ]
             );
 
-            $this->_helper_payment_voucher_pay_purchase_account_details_migration($trn, $trn_id);
-            $this->_helper_payment_voucher_pay_purchase_ledger_details_migration($trn, $trn_id);
+            $this->_helper_payment_voucher_pay_purchase_account_details_migration( $trn, $trn_id );
+            $this->_helper_payment_voucher_pay_purchase_ledger_details_migration( $trn, $trn_id );
             $this->_helper_payment_voucher_pay_purchase_details_migration( $trn_id );
         } // payment_voucher
 
@@ -181,7 +185,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                     'type'       => 'purchase',
                     'currency'   => $this->get_currecny_id( $trn['currency'] ),
                     'created_at' => $this->get_created_at( $trn['created_at'] ),
-                    'created_by' => $trn['created_by']
+                    'created_by' => $trn['created_by'],
                 ]
             );
 
@@ -200,12 +204,12 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                     'status'         => $status,
                     'purchase_order' => 0,
                     'created_at'     => $this->get_created_at( $trn['created_at'] ),
-                    'created_by'     => $trn['created_by']
+                    'created_by'     => $trn['created_by'],
                 ]
             );
 
-            $this->_helper_vendor_credit_purchase_account_details_migration($trn, $trn_id);
-            $this->_helper_vendor_credit_purchase_ledger_details_migration($trn, $trn_id);
+            $this->_helper_vendor_credit_purchase_account_details_migration( $trn, $trn_id );
+            $this->_helper_vendor_credit_purchase_ledger_details_migration( $trn, $trn_id );
             $this->_helper_vendor_credit_purchase_details_migration( $trn_id );
         } // vendor_credit
 
@@ -217,11 +221,11 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                     'type'       => 'transfer_voucher',
                     'currency'   => $this->get_currecny_id( $trn['currency'] ),
                     'created_at' => $this->get_created_at( $trn['created_at'] ),
-                    'created_by' => $trn['created_by']
+                    'created_by' => $trn['created_by'],
                 ]
             );
 
-            $this->_helper_bank_transfers_migration($trn, $trn_id);
+            $this->_helper_bank_transfers_migration( $trn, $trn_id );
         } // transfer
 
         elseif ( 'journal' === $trn['type'] ) {
@@ -234,7 +238,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                     'type'       => $trn['type'],
                     'currency'   => $this->get_currecny_id( $trn['currency'] ),
                     'created_at' => $this->get_created_at( $trn['created_at'] ),
-                    'created_by' => $trn['created_by']
+                    'created_by' => $trn['created_by'],
                 ]
             );
             $voucher_no = $wpdb->insert_id;
@@ -242,14 +246,14 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
             // insert into erp_acct_journals table
             $wpdb->insert(
                 $wpdb->prefix . 'erp_acct_journals',
-                array(
+                [
                     'voucher_no'     => $voucher_no,
                     'trn_date'       => $this->get_created_at( $trn['created_at'] ),
                     'voucher_amount' => $trn['sub_total'],
                     'particulars'    => sprintf( __( 'Journal created with voucher no %s', 'erp' ), $voucher_no ),
                     'created_at'     => $this->get_created_at( $trn['created_at'] ),
-                    'created_by'     => $trn['created_by']
-                )
+                    'created_by'     => $trn['created_by'],
+                ]
             );
 
             // get data from wp_erp_ac_journals
@@ -261,15 +265,15 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
             foreach ( $items as $key => $item ) {
                 $wpdb->insert(
                     $wpdb->prefix . 'erp_acct_journal_details',
-                    array(
+                    [
                         'trn_no'      => $voucher_no,
                         'ledger_id'   => $item['ledger_id'],
                         'particulars' => sprintf( __( 'Journal created with voucher no %s', 'erp' ), $voucher_no ),
                         'debit'       => empty( $item['debit'] ) ? 0.00 : $item['debit'],
                         'credit'      => empty( $item['credit'] ) ? 0.00 : $item['credit'],
                         'created_at'  => $this->get_created_at( $trn['created_at'] ),
-                        'created_by'  => $trn['created_by']
-                    )
+                        'created_by'  => $trn['created_by'],
+                    ]
                 );
 
                 $wpdb->insert(
@@ -282,19 +286,19 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                         'credit'      => empty( $item['credit'] ) ? 0.00 : $item['credit'],
                         'trn_date'    => $this->get_created_at( $trn['created_at'] ),
                         'created_at'  => $this->get_created_at( $trn['created_at'] ),
-                        'created_by'  => $trn['created_by']
+                        'created_by'  => $trn['created_by'],
                     ]
                 );
             }
         }
 
-		return false;
-	}
+        return false;
+    }
 
-	/**
-	 * Complete
-	 */
-	protected function complete() {
+    /**
+     * Complete
+     */
+    protected function complete() {
         parent::complete();
     }
 
@@ -302,7 +306,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
      * Get formatted created at
      */
     protected function get_created_at( $created_at ) {
-        return \DateTime::createFromFormat('Y-m-d H:i:s', $created_at)->format('Y-m-d');
+        return DateTime::createFromFormat( 'Y-m-d H:i:s', $created_at )->format( 'Y-m-d' );
     }
 
     /**
@@ -321,23 +325,19 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
             //=============================
             // get currencies info (new)
             //=============================
-            $this->currencies = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}erp_acct_currency_info", ARRAY_A);
+            $this->currencies = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}erp_acct_currency_info", ARRAY_A );
         }
 
-        $currency = array_filter($this->currencies, function( $currency ) use ($name) {
+        $currency = array_filter( $this->currencies, function ( $currency ) use ( $name ) {
             return $currency['name'] === $name;
-        });
+        } );
 
         if ( empty( $currency ) ) {
-            return false;;
+            return false;
         }
 
-        return (int) reset($currency)['id'];
+        return (int) reset( $currency )['id'];
     }
-
-
-
-
 
     /*===---------=====---======----***************************----===========
     *
@@ -349,12 +349,14 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
      * Helper of invoice account details migration
      *
      * @param array $trn
-     * @param int $trn_no
+     * @param int   $trn_no
      *
      * @return void
      */
     protected function _helper_invoice_account_details_migration( $trn, $trn_no ) {
-        if ( 'draft' === $trn['status'] || 'void' === $trn['status'] ) return;
+        if ( 'draft' === $trn['status'] || 'void' === $trn['status'] ) {
+            return;
+        }
 
         global $wpdb;
 
@@ -368,7 +370,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                 'debit'       => 0,
                 'credit'      => 0,
                 'created_at'  => $this->get_created_at( $trn['created_at'] ),
-                'created_by'  => $trn['created_by']
+                'created_by'  => $trn['created_by'],
             ]
         );
     }
@@ -377,19 +379,21 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
      * Helper of invoice ledger details migration
      *
      * @param array $trn
-     * @param int $trn_no
+     * @param int   $trn_no
      *
      * @return void
      */
     protected function _helper_invoice_ledger_details_migration( $trn, $trn_no ) {
-        if ( 'draft' === $trn['status'] || 'void' === $trn['status'] ) return;
+        if ( 'draft' === $trn['status'] || 'void' === $trn['status'] ) {
+            return;
+        }
 
         global $wpdb;
 
         $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::get_instance();
 
-        $sales_ledger_id          = $ledger_map->get_ledger_id_by_slug('sales_revenue');
-        $sales_discount_ledger_id = $ledger_map->get_ledger_id_by_slug('sales_discount');
+        $sales_ledger_id          = $ledger_map->get_ledger_id_by_slug( 'sales_revenue' );
+        $sales_discount_ledger_id = $ledger_map->get_ledger_id_by_slug( 'sales_discount' );
 
         $wpdb->insert(
             // `erp_acct_ledger_details`
@@ -401,7 +405,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                 'debit'       => 0,
                 'credit'      => $trn['total'],
                 'created_at'  => $this->get_created_at( $trn['created_at'] ),
-                'created_by'  => $trn['created_by']
+                'created_by'  => $trn['created_by'],
             ]
         );
 
@@ -415,7 +419,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                 'debit'       => 0,
                 'credit'      => 0,
                 'created_at'  => $this->get_created_at( $trn['created_at'] ),
-                'created_by'  => $trn['created_by']
+                'created_by'  => $trn['created_by'],
             ]
         );
     }
@@ -437,9 +441,9 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                 LEFT JOIN {$wpdb->prefix}erp_ac_transaction_items AS tran_item ON tran.id = tran_item.transaction_id
                 WHERE tran.id = %d";
 
-        $transaction_items = $wpdb->get_results( $wpdb->prepare( $sql, $id ), ARRAY_A);
+        $transaction_items = $wpdb->get_results( $wpdb->prepare( $sql, $id ), ARRAY_A );
 
-        for ( $i = 0; $i < count($transaction_items); $i++ ) {
+        for ( $i = 0; $i < count( $transaction_items ); $i++ ) {
             $trn_item = $transaction_items[$i];
 
             $amount     = (float) $trn_item['unit_price'] * (int) $trn_item['qty'];
@@ -458,7 +462,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                     'tax'         => $tax,
                     'item_total'  => $amount,
                     'created_at'  => $this->get_created_at( $trn_item['created_at'] ),
-                    'created_by'  => $trn_item['created_by']
+                    'created_by'  => $trn_item['created_by'],
                 ]
             );
 
@@ -466,11 +470,11 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                 "UPDATE {$wpdb->prefix}erp_acct_invoices SET amount = amount + {$discount}, discount = discount + {$discount}, tax = tax + {$tax} WHERE voucher_no = %d",
                 "UPDATE {$wpdb->prefix}erp_acct_invoice_account_details SET debit = debit + {$amount} + {$tax} - {$discount} WHERE trn_no = %d",
                 "UPDATE {$wpdb->prefix}erp_acct_ledger_details SET debit = debit + {$discount} WHERE credit = 0.00 AND trn_no = %d",
-                "UPDATE {$wpdb->prefix}erp_acct_ledger_details SET credit = credit + {$discount} WHERE debit = 0.00 AND trn_no = %d"
+                "UPDATE {$wpdb->prefix}erp_acct_ledger_details SET credit = credit + {$discount} WHERE debit = 0.00 AND trn_no = %d",
             ];
 
             foreach ( $sqls as $sql ) {
-                $wpdb->query( $wpdb->prepare( $sql, $id) );
+                $wpdb->query( $wpdb->prepare( $sql, $id ) );
             }
         }
     }
@@ -480,10 +484,6 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
     * INVOICE ( END )
     *
     *===///=====================================================================*/
-
-
-
-
 
     /*===---------=====---======----***************************----===========
     *
@@ -495,12 +495,14 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
      * Helper of invoice receipts account details migration
      *
      * @param array $trn
-     * @param int $trn_no
+     * @param int   $trn_no
      *
      * @return void
      */
     protected function _helper_invoice_receipts_account_details_migration( $trn, $trn_no ) {
-        if ( 'draft' === $trn['status'] || 'void' === $trn['status'] ) return;
+        if ( 'draft' === $trn['status'] || 'void' === $trn['status'] ) {
+            return;
+        }
 
         global $wpdb;
 
@@ -516,7 +518,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
 
         if ( empty( $res1 ) ) { // it's direct payment transaction
             // erp_acct_people_account_details
-            $wpdb->insert( $wpdb->prefix . 'erp_acct_people_account_details', array(
+            $wpdb->insert( $wpdb->prefix . 'erp_acct_people_account_details', [
                 'people_id'    => $trn['user_id'],
                 'trn_no'       => $trn_no,
                 'trn_date'     => $trn['issue_date'],
@@ -526,12 +528,12 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                 'debit'        => 0,
                 'credit'       => $trn['total'],
                 'created_at'   => $this->get_created_at( $trn['created_at'] ),
-                'created_by'   => $trn['created_by']
-            ) );
+                'created_by'   => $trn['created_by'],
+            ] );
         } else {
             for ( $i = 0; $i < count( $res1 ); $i++ ) {
                 // erp_acct_invoice_account_details
-                $wpdb->insert( $wpdb->prefix . 'erp_acct_invoice_account_details', array(
+                $wpdb->insert( $wpdb->prefix . 'erp_acct_invoice_account_details', [
                     'invoice_no'  => $res1[$i]['child'],
                     'trn_no'      => $trn_no,
                     'trn_date'    => $trn['issue_date'],
@@ -539,8 +541,8 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                     'debit'       => 0,
                     'credit'      => $res2[$i]['credit'],
                     'created_at'  => $this->get_created_at( $trn['created_at'] ),
-                    'created_by'  => $trn['created_by']
-                ) );
+                    'created_by'  => $trn['created_by'],
+                ] );
             }
         }
     }
@@ -549,12 +551,14 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
      * Helper of invoice receipts ledger details migration
      *
      * @param array $trn
-     * @param int $trn_no
+     * @param int   $trn_no
      *
      * @return void
      */
     protected function _helper_invoice_receipts_ledger_details_migration( $trn, $trn_no ) {
-        if ( 'draft' === $trn['status'] || 'void' === $trn['status'] ) return;
+        if ( 'draft' === $trn['status'] || 'void' === $trn['status'] ) {
+            return;
+        }
 
         global $wpdb;
 
@@ -571,7 +575,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                 'debit'       => $trn['total'],
                 'credit'      => 0,
                 'created_at'  => $this->get_created_at( $trn['created_at'] ),
-                'created_by'  => $trn['created_by']
+                'created_by'  => $trn['created_by'],
             ]
         );
     }
@@ -596,7 +600,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
 
         $transaction_items = $wpdb->get_results( $wpdb->prepare( $sql, $id ), ARRAY_A );
 
-        for ( $i = 0; $i < count($transaction_items); $i++ ) {
+        for ( $i = 0; $i < count( $transaction_items ); $i++ ) {
             $trn_item = $transaction_items[$i];
 
             $wpdb->insert(
@@ -606,7 +610,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                     'invoice_no' => ! empty( $trn_item['child'] ) ? $trn_item['child'] : null,
                     'amount'     => $trn_item['line_total'],
                     'created_at' => $this->get_created_at( $trn_item['created_at'] ),
-                    'created_by' => $trn_item['created_by']
+                    'created_by' => $trn_item['created_by'],
                 ]
             );
         }
@@ -618,16 +622,11 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
     *
     *===///=====================================================================*/
 
-
-
-
-
     /*===---------=====---======----***************************----===========
     *
     * PAY PURCHASE ( START )
     *
     *===///=====================================================================*/
-
 
     /**
      * Helper of payment voucher details migration
@@ -647,7 +646,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
 
         $transaction_items = $wpdb->get_results( $wpdb->prepare( $sql, $id ), ARRAY_A );
 
-        for ( $i = 0; $i < count($transaction_items); $i++ ) {
+        for ( $i = 0; $i < count( $transaction_items ); $i++ ) {
             $trn_item = $transaction_items[$i];
 
             $wpdb->insert(
@@ -657,7 +656,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                     'purchase_no' => ! empty( $trn_item['child'] ) ? $trn_item['child'] : null,
                     'amount'      => $trn_item['line_total'],
                     'created_at'  => $this->get_created_at( $trn_item['created_at'] ),
-                    'created_by'  => $trn_item['created_by']
+                    'created_by'  => $trn_item['created_by'],
                 ]
             );
         }
@@ -667,12 +666,14 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
      * Helper of payment voucher account details migration
      *
      * @param array $trn
-     * @param int $trn_no
+     * @param int   $trn_no
      *
      * @return void
      */
     protected function _helper_payment_voucher_pay_purchase_account_details_migration( $trn, $trn_no ) {
-        if ( 'draft' === $trn['status'] || 'void' === $trn['status'] ) return;
+        if ( 'draft' === $trn['status'] || 'void' === $trn['status'] ) {
+            return;
+        }
 
         global $wpdb;
 
@@ -688,7 +689,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
 
         if ( empty( $res1 ) ) { // it's direct payment transaction
             // erp_acct_people_account_details
-            $wpdb->insert( $wpdb->prefix . 'erp_acct_people_account_details', array(
+            $wpdb->insert( $wpdb->prefix . 'erp_acct_people_account_details', [
                 'people_id'    => $trn['user_id'],
                 'trn_no'       => $trn_no,
                 'trn_date'     => $trn['issue_date'],
@@ -698,21 +699,21 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                 'debit'        => $trn['total'],
                 'credit'       => 0,
                 'created_at'   => $this->get_created_at( $trn['created_at'] ),
-                'created_by'   => $trn['created_by']
-            ) );
+                'created_by'   => $trn['created_by'],
+            ] );
         } else {
             for ( $i = 0; $i < count( $res1 ); $i++ ) {
                 // erp_acct_purchase_account_details
-                $wpdb->insert( $wpdb->prefix . 'erp_acct_purchase_account_details', array(
+                $wpdb->insert( $wpdb->prefix . 'erp_acct_purchase_account_details', [
                     'purchase_no'  => $res1[$i]['child'],
-                    'trn_no'      => $trn_no,
-                    'trn_date'    => $trn['issue_date'],
-                    'particulars' => $trn['summary'],
-                    'debit'       => $res2[$i]['debit'],
-                    'credit'      => 0,
-                    'created_at'  => $this->get_created_at( $trn['created_at'] ),
-                    'created_by'  => $trn['created_by']
-                ) );
+                    'trn_no'       => $trn_no,
+                    'trn_date'     => $trn['issue_date'],
+                    'particulars'  => $trn['summary'],
+                    'debit'        => $res2[$i]['debit'],
+                    'credit'       => 0,
+                    'created_at'   => $this->get_created_at( $trn['created_at'] ),
+                    'created_by'   => $trn['created_by'],
+                ] );
             }
         }
     }
@@ -721,12 +722,14 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
      * Helper of payment voucher ledger details migration
      *
      * @param array $trn
-     * @param int $trn_no
+     * @param int   $trn_no
      *
      * @return void
      */
     protected function _helper_payment_voucher_pay_purchase_ledger_details_migration( $trn, $trn_no ) {
-        if ( 'draft' === $trn['status'] || 'void' === $trn['status'] ) return;
+        if ( 'draft' === $trn['status'] || 'void' === $trn['status'] ) {
+            return;
+        }
 
         global $wpdb;
 
@@ -743,7 +746,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                 'debit'       => 0,
                 'credit'      => $trn['total'],
                 'created_at'  => $this->get_created_at( $trn['created_at'] ),
-                'created_by'  => $trn['created_by']
+                'created_by'  => $trn['created_by'],
             ]
         );
     }
@@ -753,9 +756,6 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
     * PAY PURCHASE ( END )
     *
     *===///=====================================================================*/
-
-
-
 
     /*===---------=====---======----***************************----===========
     *
@@ -767,18 +767,20 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
      * Helper of vendor credit purchase ledger details migration
      *
      * @param array $trn
-     * @param int $trn_no
+     * @param int   $trn_no
      *
      * @return void
      */
     protected function _helper_vendor_credit_purchase_ledger_details_migration( $trn, $trn_no ) {
-        if ( 'draft' === $trn['status'] || 'void' === $trn['status'] ) return;
+        if ( 'draft' === $trn['status'] || 'void' === $trn['status'] ) {
+            return;
+        }
 
         global $wpdb;
 
         $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::get_instance();
 
-        $purchase_ledger_id = $ledger_map->get_ledger_id_by_slug('purchase');
+        $purchase_ledger_id = $ledger_map->get_ledger_id_by_slug( 'purchase' );
 
         $wpdb->insert(
             // `erp_acct_ledger_details`
@@ -790,7 +792,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                 'debit'       => $trn['total'],
                 'credit'      => 0,
                 'created_at'  => $this->get_created_at( $trn['created_at'] ),
-                'created_by'  => $trn['created_by']
+                'created_by'  => $trn['created_by'],
             ]
         );
     }
@@ -814,7 +816,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
 
         $transaction_items = $wpdb->get_results( $wpdb->prepare( $sql, $id ), ARRAY_A );
 
-        for ( $i = 0; $i < count($transaction_items); $i++ ) {
+        for ( $i = 0; $i < count( $transaction_items ); $i++ ) {
             $trn_item = $transaction_items[$i];
 
             $wpdb->insert(
@@ -826,7 +828,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                     'price'      => $trn_item['unit_price'],
                     'amount'     => $trn_item['line_total'],
                     'created_at' => $this->get_created_at( $trn_item['created_at'] ),
-                    'created_by' => $trn_item['created_by']
+                    'created_by' => $trn_item['created_by'],
                 ]
             );
         }
@@ -836,12 +838,14 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
      * Helper of purchase account ledger details migration
      *
      * @param array $trn
-     * @param int $trn_no
+     * @param int   $trn_no
      *
      * @return void
      */
     protected function _helper_vendor_credit_purchase_account_details_migration( $trn, $trn_no ) {
-        if ( 'draft' === $trn['status'] || 'void' === $trn['status'] ) return;
+        if ( 'draft' === $trn['status'] || 'void' === $trn['status'] ) {
+            return;
+        }
 
         global $wpdb;
 
@@ -855,20 +859,16 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                 'debit'       => 0,
                 'credit'      => $trn['total'],
                 'created_at'  => $this->get_created_at( $trn['created_at'] ),
-                'created_by'  => $trn['created_by']
+                'created_by'  => $trn['created_by'],
             ]
         );
     }
-
 
     /*===---------=====---======----***************************----===========
     *
     * PURCHASE ( END )
     *
     *===///=====================================================================*/
-
-
-
 
     /*===---------=====---======----***************************----===========
     *
@@ -880,7 +880,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
      * Helper of bank ledger details migration
      *
      * @param array $trn
-     * @param int $voucher_no
+     * @param int   $voucher_no
      *
      * @return void
      */
@@ -888,14 +888,14 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
         global $wpdb;
 
         $trns = $wpdb->get_results(
-            $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}erp_ac_journals WHERE transaction_id = %d AND NOT(debit IS NULL AND credit IS NULL)", $trn_id),
+            $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}erp_ac_journals WHERE transaction_id = %d AND NOT(debit IS NULL AND credit IS NULL)", $trn_id ),
             ARRAY_A );
 
         foreach ( $trns as $trn ) {
             if ( 'main' == $trn['type'] ) {
                 $transfer['from_account_id'] = $trn['ledger_id'];
 
-                $wpdb->insert( $wpdb->prefix . 'erp_acct_ledger_details', array(
+                $wpdb->insert( $wpdb->prefix . 'erp_acct_ledger_details', [
                     'ledger_id'   => $trn['ledger_id'],
                     'trn_no'      => $trn_id,
                     'particulars' => $transfer['summary'],
@@ -904,13 +904,13 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                     'trn_date'    => $transfer['issue_date'],
                     'created_at'  => $this->get_created_at( $transfer['created_at'] ),
                     'created_by'  => get_current_user_id(),
-                ) );
+                ] );
             }
 
             if ( 'line_item' == $trn['type'] ) {
                 $transfer['to_account_id'] = $trn['ledger_id'];
 
-                $wpdb->insert( $wpdb->prefix . 'erp_acct_ledger_details', array(
+                $wpdb->insert( $wpdb->prefix . 'erp_acct_ledger_details', [
                     'ledger_id'   => $trn['ledger_id'],
                     'trn_no'      => $trn_id,
                     'particulars' => $transfer['summary'],
@@ -919,11 +919,11 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                     'trn_date'    => $transfer['issue_date'],
                     'created_at'  => $this->get_created_at( $transfer['created_at'] ),
                     'created_by'  => get_current_user_id(),
-                ) );
+                ] );
             }
         }
 
-        $wpdb->insert( $wpdb->prefix . 'erp_acct_transfer_voucher', array(
+        $wpdb->insert( $wpdb->prefix . 'erp_acct_transfer_voucher', [
             'voucher_no' => $trn_id,
             'amount'     => $transfer['total'],
             'ac_from'    => $transfer['from_account_id'],
@@ -932,7 +932,6 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
             'trn_date'   => $transfer['issue_date'],
             'created_at' => $this->get_created_at( $transfer['created_at'] ),
             'created_by' => get_current_user_id(),
-        ) );
+        ] );
     }
-
 }

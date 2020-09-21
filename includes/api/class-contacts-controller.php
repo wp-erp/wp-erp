@@ -1,11 +1,13 @@
 <?php
+
 namespace WeDevs\ERP\API;
 
-use WP_REST_Server;
-use WP_REST_Response;
 use WP_Error;
+use WP_REST_Response;
+use WP_REST_Server;
 
 class Contacts_Controller extends REST_Controller {
+
     /**
      * Endpoint namespace.
      *
@@ -102,6 +104,7 @@ class Contacts_Controller extends REST_Controller {
         $total_items = erp_get_peoples( [ 'count' => true ] );
 
         $formated_items = [];
+
         foreach ( $items as $item ) {
             $additional_fields = [];
 
@@ -111,12 +114,12 @@ class Contacts_Controller extends REST_Controller {
                 if ( in_array( 'owner', $include_params ) ) {
                     $contact_owner_id = erp_crm_get_contact_owner( $item->id );
 
-                    $item->owner = $this->get_user( $contact_owner_id );
+                    $item->owner       = $this->get_user( $contact_owner_id );
                     $additional_fields = ['owner' => $item->owner];
                 }
             }
 
-            $data = $this->prepare_item_for_response( $item, $request, $additional_fields );
+            $data             = $this->prepare_item_for_response( $item, $request, $additional_fields );
             $formated_items[] = $this->prepare_response_for_collection( $data );
         }
 
@@ -142,18 +145,19 @@ class Contacts_Controller extends REST_Controller {
         }
 
         $additional_fields = [];
+
         if ( isset( $request['include'] ) ) {
             $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
 
             if ( in_array( 'owner', $include_params ) ) {
                 $contact_owner_id = erp_crm_get_contact_owner( $item->id );
 
-                $item->owner = $this->get_user( $contact_owner_id );
+                $item->owner       = $this->get_user( $contact_owner_id );
                 $additional_fields = ['owner' => $item->owner];
             }
         }
 
-        $item  = $this->prepare_item_for_response( $item, $request, $additional_fields );
+        $item     = $this->prepare_item_for_response( $item, $request, $additional_fields );
         $response = rest_ensure_response( $item );
 
         return $response;
@@ -214,6 +218,7 @@ class Contacts_Controller extends REST_Controller {
         $id = (int) $request['id'];
 
         $item = erp_get_people( $id );
+
         if ( ! $item ) {
             return new WP_Error( 'rest_contact_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 400 ] );
         }
@@ -253,7 +258,7 @@ class Contacts_Controller extends REST_Controller {
         $data = [
             'id'   => $id,
             'hard' => false,
-            'type' => 'contact'
+            'type' => 'contact',
         ];
 
         erp_delete_people( $data );
@@ -264,7 +269,7 @@ class Contacts_Controller extends REST_Controller {
     /**
      * Prepare a single item for create or update
      *
-     * @param WP_REST_Request $request Request object.
+     * @param WP_REST_Request $request request object
      *
      * @return array $prepared_item
      */
@@ -275,9 +280,11 @@ class Contacts_Controller extends REST_Controller {
         if ( isset( $request['first_name'] ) ) {
             $prepared_item['first_name'] = $request['first_name'];
         }
+
         if ( isset( $request['last_name'] ) ) {
             $prepared_item['last_name'] = $request['last_name'];
         }
+
         if ( isset( $request['email'] ) ) {
             $prepared_item['email'] = $request['email'];
         }
@@ -286,54 +293,71 @@ class Contacts_Controller extends REST_Controller {
         if ( isset( $request['id'] ) ) {
             $prepared_item['id'] = absint( $request['id'] );
         }
+
         if ( isset( $request['company'] ) ) {
             $prepared_item['company'] = $request['company'];
         }
+
         if ( isset( $request['phone'] ) ) {
             $prepared_item['phone'] = $request['phone'];
         }
+
         if ( isset( $request['mobile'] ) ) {
             $prepared_item['mobile'] = $request['mobile'];
         }
+
         if ( isset( $request['other'] ) ) {
             $prepared_item['other'] = $request['other'];
         }
+
         if ( isset( $request['website'] ) ) {
             $prepared_item['website'] = $request['website'];
         }
+
         if ( isset( $request['fax'] ) ) {
             $prepared_item['fax'] = $request['fax'];
         }
+
         if ( isset( $request['notes'] ) ) {
             $prepared_item['notes'] = $request['notes'];
         }
+
         if ( isset( $request['street_1'] ) ) {
             $prepared_item['street_1'] = $request['street_1'];
         }
+
         if ( isset( $request['street_2'] ) ) {
             $prepared_item['street_2'] = $request['street_2'];
         }
+
         if ( isset( $request['city'] ) ) {
             $prepared_item['city'] = $request['city'];
         }
+
         if ( isset( $request['state'] ) ) {
             $prepared_item['state'] = $request['state'];
         }
+
         if ( isset( $request['postal_code'] ) ) {
             $prepared_item['postal_code'] = $request['postal_code'];
         }
+
         if ( isset( $request['country'] ) ) {
             $prepared_item['country'] = $request['country'];
         }
+
         if ( isset( $request['currency'] ) ) {
             $prepared_item['currency'] = $request['currency'];
         }
+
         if ( isset( $request['type'] ) ) {
             $prepared_item['type'] = $request['type'];
         }
+
         if ( isset( $request['owner'] ) ) {
             $prepared_item['contact_owner'] = $request['owner'];
         }
+
         if ( isset( $request['life_stage'] ) ) {
             $prepared_item['life_stage'] = $request['life_stage'];
         }
@@ -344,14 +368,14 @@ class Contacts_Controller extends REST_Controller {
     /**
      * Prepare a single user output for response
      *
-     * @param object $item
-     * @param WP_REST_Request $request Request object.
-     * @param array $additional_fields (optional)
+     * @param object          $item
+     * @param WP_REST_Request $request           request object
+     * @param array           $additional_fields (optional)
      *
-     * @return WP_REST_Response $response Response data.
+     * @return WP_REST_Response $response response data
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
-        wp_send_json($item);
+        wp_send_json( $item );
         $data = [
             'id'            => (int) $item->id,
             'first_name'    => $item->first_name,

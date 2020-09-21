@@ -1,4 +1,5 @@
 <?php
+
 namespace WeDevs\ERP\CRM;
 
 use WeDevs\ERP\Framework\Traits\Hooker;
@@ -9,7 +10,6 @@ use WeDevs\ERP\Framework\Traits\Hooker;
  * This is loaded in `init` action hook
  */
 class Customer_Relationship {
-
     use Hooker;
 
     /**
@@ -65,8 +65,8 @@ class Customer_Relationship {
      */
     private function define_constants() {
         define( 'WPERP_CRM_FILE', __FILE__ );
-        define( 'WPERP_CRM_PATH', dirname( __FILE__ ) );
-        define( 'WPERP_CRM_VIEWS', dirname( __FILE__ ) . '/views' );
+        define( 'WPERP_CRM_PATH', __DIR__ );
+        define( 'WPERP_CRM_VIEWS', __DIR__ . '/views' );
         define( 'WPERP_CRM_JS_TMPL', WPERP_CRM_VIEWS . '/js-templates' );
         define( 'WPERP_CRM_ASSETS', plugins_url( '/assets', __FILE__ ) );
     }
@@ -86,7 +86,7 @@ class Customer_Relationship {
         require_once WPERP_CRM_PATH . '/includes/contact-forms/class-contact-forms-integration.php';
 
         // cli command
-        if ( defined('WP_CLI') && WP_CLI ) {
+        if ( defined( 'WP_CLI' ) && WP_CLI ) {
             include WPERP_CRM_PATH . '/includes/cli/commands.php';
         }
     }
@@ -128,7 +128,6 @@ class Customer_Relationship {
      * @return void
      */
     private function init_filters() {
-
     }
 
     /**
@@ -170,19 +169,19 @@ class Customer_Relationship {
         wp_enqueue_style( 'erp-tiptip' );
         wp_enqueue_script( 'erp-tiptip' );
         wp_enqueue_script( 'erp-vuejs', false, [ 'jquery', 'erp-script' ], false, true );
-        wp_enqueue_script( 'erp-vue-table', WPERP_CRM_ASSETS . "/js/vue-table$suffix.js", array( 'erp-vuejs', 'jquery' ), date( 'Ymd' ), true );
+        wp_enqueue_script( 'erp-vue-table', WPERP_CRM_ASSETS . "/js/vue-table$suffix.js", [ 'erp-vuejs', 'jquery' ], date( 'Ymd' ), true );
 
-        wp_enqueue_style( 'email-attachment', WPERP_CRM_ASSETS . "/css/email-attachment.css", array(), false );
+        wp_enqueue_style( 'email-attachment', WPERP_CRM_ASSETS . '/css/email-attachment.css', [], false );
 
-        $localize_script = apply_filters( 'erp_crm_localize_script', array(
+        $localize_script = apply_filters( 'erp_crm_localize_script', [
             'ajaxurl'               => admin_url( 'admin-ajax.php' ),
             'nonce'                 => wp_create_nonce( 'wp-erp-crm-nonce' ),
-            'popup'                 => array(
+            'popup'                 => [
                 'customer_title'         => __( 'Add New Customer', 'erp' ),
                 'customer_update_title'  => __( 'Edit Customer', 'erp' ),
                 'customer_social_title'  => __( 'Customer Social Profile', 'erp' ),
                 'customer_assign_group'  => __( 'Add to Contact groups', 'erp' ),
-            ),
+            ],
             'asset_url'                   => WPERP_ASSETS,
             'add_submit'                  => __( 'Add New', 'erp' ),
             'update_submit'               => __( 'Update', 'erp' ),
@@ -199,7 +198,7 @@ class Customer_Relationship {
             'create_contact_text'         => __( 'Create new', 'erp' ),
             'current_user_id'             => get_current_user_id(),
             'successfully_created_wpuser' => __( 'WP User created successfully', 'erp' ),
-        ) );
+        ] );
 
         $contact_actvity_localize = apply_filters( 'erp_crm_contact_localize_var', [
             'ajaxurl'              => admin_url( 'admin-ajax.php' ),
@@ -214,11 +213,10 @@ class Customer_Relationship {
             'timeline_feed_body'   => apply_filters( 'erp_crm_contact_timeline_feeds_body', '' ),
         ] );
 
-        /**
+        /*
          * This below block is only needed for translations
          * Pleeease find some proper place for me
-         */
-        ?>
+         */ ?>
         <script>
             window.erpLocale = JSON.parse('<?php echo wp_kses_post( wp_slash(
                 json_encode( apply_filters( 'erp_localized_data', [] ) )
@@ -226,12 +224,11 @@ class Customer_Relationship {
         </script>
 
         <?php
-        wp_enqueue_script( 'erp-crm-i18n', WPERP_ASSETS . "/js/i18n.js", array(), date( 'Ymd' ), true );
+        wp_enqueue_script( 'erp-crm-i18n', WPERP_ASSETS . '/js/i18n.js', [], date( 'Ymd' ), true );
         /**
          * This above block is only needed for translations
          */
-
-        $section = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : 'dashboard' ;
+        $section = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : 'dashboard';
 
         switch ( $section ) {
 
@@ -244,10 +241,10 @@ class Customer_Relationship {
                 wp_enqueue_script( 'erp-flotchart-tooltip' );
                 break;
 
-            case 'contacts' :
+            case 'contacts':
                 $this->load_contact_company_scripts( $suffix, $contact_actvity_localize );
 
-                $customer = new Contact( null, 'contact' );
+                $customer                             = new Contact( null, 'contact' );
                 $localize_script['customer_empty']    = $customer->to_array();
                 $localize_script['statuses']          = erp_crm_customer_get_status_count( 'contact' );
                 $localize_script['contact_type']      = 'contact';
@@ -265,7 +262,7 @@ class Customer_Relationship {
             case 'companies':
                 $this->load_contact_company_scripts( $suffix, $contact_actvity_localize );
 
-                $customer = new Contact( null, 'company' );
+                $customer                             = new Contact( null, 'company' );
                 $localize_script['customer_empty']    = $customer->to_array();
                 $localize_script['statuses']          = erp_crm_customer_get_status_count( 'company' );
                 $localize_script['contact_type']      = 'company';
@@ -280,7 +277,7 @@ class Customer_Relationship {
                 wp_localize_script( 'erp-script', 'wpErpCountries', $country->load_country_states() );
                 break;
 
-            case 'schedules' :
+            case 'schedules':
                 wp_enqueue_style( 'erp-timepicker' );
                 wp_enqueue_script( 'erp-timepicker' );
                 wp_enqueue_script( 'underscore' );
@@ -288,41 +285,41 @@ class Customer_Relationship {
                 wp_enqueue_style( 'erp-trix-editor' );
                 break;
 
-            case 'activities' :
+            case 'activities':
                 wp_enqueue_script( 'underscore' );
                 wp_enqueue_script( 'erp-vuejs' );
                 wp_enqueue_style( 'erp-nprogress' );
                 wp_enqueue_script( 'erp-nprogress' );
-                wp_enqueue_script( 'wp-erp-crm-vue-component', WPERP_CRM_ASSETS . "/js/crm-components.js", apply_filters( 'crm_vue_customer_script', array( 'erp-nprogress', 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ) ), date( 'Ymd' ), true );
+                wp_enqueue_script( 'wp-erp-crm-vue-component', WPERP_CRM_ASSETS . '/js/crm-components.js', apply_filters( 'crm_vue_customer_script', [ 'erp-nprogress', 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ] ), date( 'Ymd' ), true );
 
                 do_action( 'erp_crm_load_contact_vue_scripts' );
 
-                wp_enqueue_script( 'wp-erp-crm-vue-customer', WPERP_CRM_ASSETS . "/js/crm-app$suffix.js", array( 'wp-erp-crm-vue-component', 'erp-nprogress', 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ), date( 'Ymd' ), true );
+                wp_enqueue_script( 'wp-erp-crm-vue-customer', WPERP_CRM_ASSETS . "/js/crm-app$suffix.js", [ 'wp-erp-crm-vue-component', 'erp-nprogress', 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ], date( 'Ymd' ), true );
                 wp_enqueue_script( 'post' );
 
                 $contact_actvity_localize['isActivityPage'] = true;
                 wp_localize_script( 'wp-erp-crm-vue-component', 'wpCRMvue', $contact_actvity_localize );
                 break;
 
-            case 'reports' :
+            case 'reports':
                 if ( isset( $_GET['type'] ) && $_GET['type'] === 'growth-report' ) {
                     wp_enqueue_script( 'erp-momentjs' );
-                    wp_enqueue_script( 'erp-crm-chart', WPERP_CRM_ASSETS . "/js/chart$suffix.min.js", array(), date( 'Ymd' ), true );
-                    wp_enqueue_script( 'erp-crm-report', WPERP_CRM_ASSETS . "/js/report$suffix.js", array(), date( 'Ymd' ), true );
+                    wp_enqueue_script( 'erp-crm-chart', WPERP_CRM_ASSETS . "/js/chart$suffix.min.js", [], date( 'Ymd' ), true );
+                    wp_enqueue_script( 'erp-crm-report', WPERP_CRM_ASSETS . "/js/report$suffix.js", [], date( 'Ymd' ), true );
                 }
                 break;
 
-            default :
+            default:
 
         }
 
         wp_localize_script( 'erp-vue-table', 'wpVueTable', [
             'ajaxurl' => admin_url( 'admin-ajax.php' ),
-            'nonce'   => wp_create_nonce( 'wp-erp-vue-table' )
+            'nonce'   => wp_create_nonce( 'wp-erp-vue-table' ),
         ] );
 
-        wp_enqueue_script( 'erp-crm', WPERP_CRM_ASSETS . "/js/crm$suffix.js", array( 'erp-script', 'erp-timepicker' ), date( 'Ymd' ), true );
-        wp_enqueue_script( 'erp-crm-contact', WPERP_CRM_ASSETS . "/js/crm-contacts$suffix.js", array( 'erp-vue-table', 'erp-script', 'erp-vuejs', 'underscore', 'erp-tiptip', 'jquery', 'erp-select2', 'erp-crm-i18n' ), date( 'Ymd' ), true );
+        wp_enqueue_script( 'erp-crm', WPERP_CRM_ASSETS . "/js/crm$suffix.js", [ 'erp-script', 'erp-timepicker' ], date( 'Ymd' ), true );
+        wp_enqueue_script( 'erp-crm-contact', WPERP_CRM_ASSETS . "/js/crm-contacts$suffix.js", [ 'erp-vue-table', 'erp-script', 'erp-vuejs', 'underscore', 'erp-tiptip', 'jquery', 'erp-select2', 'erp-crm-i18n' ], date( 'Ymd' ), true );
         wp_localize_script( 'erp-crm', 'wpErpCrm', $localize_script );
         wp_localize_script( 'erp-crm-contact', 'wpErpCrm', $localize_script );
 
@@ -338,8 +335,8 @@ class Customer_Relationship {
      */
     public function load_js_template() {
         global $current_screen;
-        $hook = str_replace( sanitize_title( __( 'CRM', 'erp' ) ) , 'crm', $current_screen->base );
-        $section = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : 'dashboard' ;
+        $hook    = str_replace( sanitize_title( __( 'CRM', 'erp' ) ), 'crm', $current_screen->base );
+        $section = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : 'dashboard';
 
         switch ( $section ) {
 
@@ -373,7 +370,8 @@ class Customer_Relationship {
 
             case 'contact-groups':
                 erp_get_js_template( WPERP_CRM_JS_TMPL . '/new-contact-group.php', 'erp-crm-new-contact-group' );
-                if( isset($_GET['groupaction']) && $_GET['groupaction'] == 'view-subscriber'){
+
+                if ( isset( $_GET['groupaction'] ) && $_GET['groupaction'] == 'view-subscriber' ) {
                     erp_get_js_template( WPERP_CRM_JS_TMPL . '/new-subscriber-contact.php', 'erp-crm-assign-subscriber-contact' );
                 }
                 break;
@@ -394,11 +392,11 @@ class Customer_Relationship {
 
             case 'schedules':
                 erp_get_js_template( WPERP_CRM_JS_TMPL . '/single-schedule-details.php', 'erp-crm-single-schedule-details' );
-                erp_get_js_template( WPERP_CRM_JS_TMPL . '/customer-add-schedules.php', 'erp-crm-customer-schedules');
+                erp_get_js_template( WPERP_CRM_JS_TMPL . '/customer-add-schedules.php', 'erp-crm-customer-schedules' );
                 break;
 
             default:
-                # code...
+                // code...
                 break;
         }
 
@@ -413,10 +411,9 @@ class Customer_Relationship {
      * Load commong scripts for company and contacts page
      *
      * @param $suffix
-     *
      * @param $contact_actvity_localize
      */
-    function load_contact_company_scripts( $suffix, $contact_actvity_localize ) {
+    public function load_contact_company_scripts( $suffix, $contact_actvity_localize ) {
         wp_enqueue_style( 'erp-timepicker' );
         wp_enqueue_script( 'erp-timepicker' );
         wp_enqueue_script( 'erp-vuejs' );
@@ -425,12 +422,12 @@ class Customer_Relationship {
         wp_enqueue_script( 'underscore' );
         wp_enqueue_style( 'erp-nprogress' );
         wp_enqueue_script( 'erp-nprogress' );
-        wp_enqueue_script( 'wp-erp-crm-vue-component', WPERP_CRM_ASSETS . "/js/crm-components.js", array( 'erp-nprogress', 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ), date( 'Ymd' ), true );
+        wp_enqueue_script( 'wp-erp-crm-vue-component', WPERP_CRM_ASSETS . '/js/crm-components.js', [ 'erp-nprogress', 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ], date( 'Ymd' ), true );
 
         do_action( 'erp_crm_load_contact_vue_scripts' );
 
         if ( isset( $_GET['action'] ) && $_GET['action'] == 'view' ) {
-            wp_enqueue_script( 'wp-erp-crm-vue-customer', WPERP_CRM_ASSETS . "/js/crm-app$suffix.js", apply_filters( 'crm_vue_customer_script', array( 'erp-nprogress', 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ) ), date( 'Ymd' ), true );
+            wp_enqueue_script( 'wp-erp-crm-vue-customer', WPERP_CRM_ASSETS . "/js/crm-app$suffix.js", apply_filters( 'crm_vue_customer_script', [ 'erp-nprogress', 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ] ), date( 'Ymd' ), true );
         }
 
         wp_localize_script( 'wp-erp-crm-vue-component', 'wpCRMvue', $contact_actvity_localize );
@@ -442,20 +439,19 @@ class Customer_Relationship {
      *
      * @param $hook
      */
-    function load_settings_scripts( $hook ) {
+    public function load_settings_scripts( $hook ) {
         $hook = str_replace( sanitize_title( __( 'CRM', 'erp' ) ), 'crm', $hook );
 
         if ( 'wp-erp_page_erp-settings' == $hook && isset( $_GET['tab'] ) && $_GET['tab'] == 'erp-crm' ) {
             wp_enqueue_script( 'erp-trix-editor' );
             wp_enqueue_style( 'erp-trix-editor' );
         }
-
     }
 
     /**
      * Load template for settings page
      */
-    function load_settings_js_templates() {
+    public function load_settings_js_templates() {
         global $current_screen;
         $hook = str_replace( sanitize_title( __( 'CRM', 'erp' ) ), 'crm', $current_screen->base );
 
@@ -463,5 +459,4 @@ class Customer_Relationship {
             erp_get_js_template( WPERP_CRM_JS_TMPL . '/new-save-replies.php', 'erp-crm-new-save-replies' );
         }
     }
-
 }

@@ -2,15 +2,16 @@
 
 namespace WeDevs\ERP\Accounting\API;
 
-use WP_REST_Server;
-use WP_REST_Response;
 use WP_Error;
+use WP_REST_Response;
+use WP_REST_Server;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
 
 class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
+
     /**
      * Endpoint namespace.
      *
@@ -33,105 +34,105 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
             $this->namespace,
             '/' . $this->rest_base,
             [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_vendors' ],
-					'args'                => $this->get_collection_params(),
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_view_vendor' );
-					},
-				],
-				[
-					'methods'             => WP_REST_Server::CREATABLE,
-					'callback'            => [ $this, 'create_vendor' ],
-					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_create_vendor' );
-					},
-				],
-				'schema' => [ $this, 'get_item_schema' ]
-			]
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_vendors' ],
+                    'args'                => $this->get_collection_params(),
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_view_vendor' );
+                    },
+                ],
+                [
+                    'methods'             => WP_REST_Server::CREATABLE,
+                    'callback'            => [ $this, 'create_vendor' ],
+                    'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_create_vendor' );
+                    },
+                ],
+                'schema' => [ $this, 'get_item_schema' ],
+            ]
         );
 
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base . '/(?P<id>[\d]+)',
             [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_vendor' ],
-					'args'                => [
-						'context' => $this->get_context_param( [ 'default' => 'view' ] ),
-					],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_view_vendor' );
-					},
-				],
-				[
-					'methods'             => WP_REST_Server::EDITABLE,
-					'callback'            => [ $this, 'update_vendor' ],
-					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_edit_vendor' );
-					},
-				],
-				[
-					'methods'             => WP_REST_Server::DELETABLE,
-					'callback'            => [ $this, 'delete_vendor' ],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_delete_vendor' );
-					},
-				],
-				'schema' => [ $this, 'get_item_schema' ]
-			]
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_vendor' ],
+                    'args'                => [
+                        'context' => $this->get_context_param( [ 'default' => 'view' ] ),
+                    ],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_view_vendor' );
+                    },
+                ],
+                [
+                    'methods'             => WP_REST_Server::EDITABLE,
+                    'callback'            => [ $this, 'update_vendor' ],
+                    'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_edit_vendor' );
+                    },
+                ],
+                [
+                    'methods'             => WP_REST_Server::DELETABLE,
+                    'callback'            => [ $this, 'delete_vendor' ],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_delete_vendor' );
+                    },
+                ],
+                'schema' => [ $this, 'get_item_schema' ],
+            ]
         );
 
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base . '/delete/(?P<ids>[\d,?]+)',
             [
-				[
-					'methods'             => WP_REST_Server::DELETABLE,
-					'callback'            => [ $this, 'bulk_delete_vendors' ],
-					'args'                => [
-						'ids' => [ 'required' => true ],
-					],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_delete_vendor' );
-					},
-				],
-				'schema' => [ $this, 'get_item_schema' ]
-			]
+                [
+                    'methods'             => WP_REST_Server::DELETABLE,
+                    'callback'            => [ $this, 'bulk_delete_vendors' ],
+                    'args'                => [
+                        'ids' => [ 'required' => true ],
+                    ],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_delete_vendor' );
+                    },
+                ],
+                'schema' => [ $this, 'get_item_schema' ],
+            ]
         );
 
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/transactions',
             [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_transactions' ],
-					'args'                => $this->get_collection_params(),
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_view_vendor' );
-					},
-				],
-			]
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_transactions' ],
+                    'args'                => $this->get_collection_params(),
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_view_vendor' );
+                    },
+                ],
+            ]
         );
 
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/transactions/filter',
             [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'filter_transactions' ],
-					'args'                => $this->get_collection_params(),
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_view_customer' );
-					},
-				],
-			]
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'filter_transactions' ],
+                    'args'                => $this->get_collection_params(),
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_view_customer' );
+                    },
+                ],
+            ]
         );
 
         register_rest_route(
@@ -142,7 +143,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'get_vendor_products' ],
                     'args'                => $this->get_collection_params(),
-                    'permission_callback' => function( $request ) {
+                    'permission_callback' => function ( $request ) {
                         return current_user_can( 'erp_ac_view_customer' );
                     },
                 ],
@@ -162,7 +163,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
             'number' => $request['per_page'],
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
             'type'   => 'vendor',
-            's'      => ! empty( $request['search'] ) ? $request['search'] : ''
+            's'      => ! empty( $request['search'] ) ? $request['search'] : '',
         ];
 
         $items       = erp_acct_get_accounting_people( $args );
@@ -227,6 +228,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
         $item['photo']    = wp_get_attachment_thumb_url( $photo_id );
 
         $additional_fields = [];
+
         if ( isset( $request['include'] ) ) {
             $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
 
@@ -290,6 +292,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
         $id = (int) $request['id'];
 
         $item = erp_get_people( $id );
+
         if ( ! $item ) {
             return new WP_Error( 'rest_vendor_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 400 ] );
         }
@@ -328,8 +331,8 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         if ( $exist ) {
             $error = new WP_Error( 'rest_customer_has_trans', __( 'Can not remove! Customer has transactions.' ) );
-            
-            wp_send_json_error($error);
+
+            wp_send_json_error( $error );
         }
 
         $data = [
@@ -364,8 +367,8 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
 
             if ( $exist ) {
                 $error = new WP_Error( 'rest_customer_has_trans', __( 'Can not remove! Customer has transactions.' ) );
-                
-                wp_send_json_error($error);
+
+                wp_send_json_error( $error );
             }
         }
 
@@ -394,6 +397,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
      * Get transaction by date
      *
      * @param object $request
+     *
      * @return array
      */
     public function filter_transactions( $request ) {
@@ -422,7 +426,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
         $args = [
             'number' => ! empty( $request['number'] ) ? (int) $request['number'] : 20,
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
-            'vendor' => ! empty( $request['id'] ) ? $request['id'] : 0
+            'vendor' => ! empty( $request['id'] ) ? $request['id'] : 0,
         ];
 
         $formatted_items   = [];
@@ -460,21 +464,21 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function add_log( $data, $action ) {
         erp_log()->add(
             [
-				'component'     => 'Accounting',
-				'sub_component' => __( 'Vendor', 'erp' ),
-				'old_value'     => '',
-				'new_value'     => '',
-				'message'       => $data['first_name'] . ' ' . $data['last_name'] . __( ' vendor has been created', 'erp' ),
-				'changetype'    => $action,
-				'created_by'    => get_current_user_id()
-			]
+                'component'     => 'Accounting',
+                'sub_component' => __( 'Vendor', 'erp' ),
+                'old_value'     => '',
+                'new_value'     => '',
+                'message'       => $data['first_name'] . ' ' . $data['last_name'] . __( ' vendor has been created', 'erp' ),
+                'changetype'    => $action,
+                'created_by'    => get_current_user_id(),
+            ]
         );
     }
 
     /**
      * Prepare a single item for create or update
      *
-     * @param WP_REST_Request $request Request object.
+     * @param WP_REST_Request $request request object
      *
      * @return array $prepared_item
      */
@@ -484,9 +488,11 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['first_name'] ) ) {
             $prepared_item['first_name'] = $request['first_name'];
         }
+
         if ( isset( $request['last_name'] ) ) {
             $prepared_item['last_name'] = $request['last_name'];
         }
+
         if ( isset( $request['email'] ) ) {
             $prepared_item['email'] = $request['email'];
         }
@@ -495,54 +501,69 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['id'] ) ) {
             $prepared_item['id'] = absint( $request['id'] );
         }
+
         if ( isset( $request['photo_id'] ) ) {
             $prepared_item['photo_id'] = $request['photo_id'];
         }
+
         if ( isset( $request['company'] ) ) {
             $prepared_item['company'] = $request['company'];
         }
+
         if ( isset( $request['phone'] ) ) {
             $prepared_item['phone'] = $request['phone'];
         }
+
         if ( isset( $request['mobile'] ) ) {
             $prepared_item['mobile'] = $request['mobile'];
         }
+
         if ( isset( $request['other'] ) ) {
             $prepared_item['other'] = $request['other'];
         }
+
         if ( isset( $request['website'] ) ) {
             $prepared_item['website'] = $request['website'];
         }
+
         if ( isset( $request['fax'] ) ) {
             $prepared_item['fax'] = $request['fax'];
         }
+
         if ( isset( $request['notes'] ) ) {
             $prepared_item['notes'] = $request['notes'];
         }
+
         if ( isset( $request['street_1'] ) ) {
             $prepared_item['street_1'] = $request['street_1'];
         }
+
         if ( isset( $request['street_2'] ) ) {
             $prepared_item['street_2'] = $request['street_2'];
         }
+
         if ( isset( $request['city'] ) ) {
             $prepared_item['city'] = $request['city'];
         }
+
         if ( ! empty( $request['state'] ) ) {
             $prepared_item['state'] = $request['state']['id'];
         }
+
         if ( isset( $request['postal_code'] ) ) {
             $prepared_item['postal_code'] = $request['postal_code'];
         }
+
         if ( ! empty( $request['country'] ) ) {
             $prepared_item['country'] = $request['country']['id'];
         }
+
         if ( isset( $request['currency'] ) ) {
             $prepared_item['currency'] = $request['currency'];
         }
 
         $prepared_item['raw_data'] = json_decode( $request->get_body(), true );
-        $prepared_item['type'] = 'vendor';
+        $prepared_item['type']     = 'vendor';
 
         return $prepared_item;
     }
@@ -550,11 +571,11 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Prepare a single user output for response
      *
-     * @param array | object $item
-     * @param WP_REST_Request $request Request object.
-     * @param array $additional_fields (optional)
+     * @param array | object  $item
+     * @param WP_REST_Request $request           request object
+     * @param array           $additional_fields (optional)
      *
-     * @return WP_REST_Response $response Response data.
+     * @return WP_REST_Response $response response data
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
         $item = (object) $item;
@@ -571,8 +592,8 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
             'mobile'     => $item->mobile,
             'fax'        => $item->fax,
             'other'      => $item->other,
-            'photo_id'   => !empty($item->photo_id) ? $item->photo_id : null,
-            'photo'      => !empty($item->photo) ? $item->photo : null,
+            'photo_id'   => !empty( $item->photo_id ) ? $item->photo_id : null,
+            'photo'      => !empty( $item->photo ) ? $item->photo : null,
             'billing'    => [
                 'first_name'  => $item->first_name,
                 'last_name'   => $item->last_name,
@@ -600,11 +621,11 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Prepare a single user output for response
      *
-     * @param array|object $item
-     * @param WP_REST_Request $request Request object.
-     * @param array $additional_fields (optional)
+     * @param array|object    $item
+     * @param WP_REST_Request $request           request object
+     * @param array           $additional_fields (optional)
      *
-     * @return WP_REST_Response $response Response data.
+     * @return WP_REST_Response $response response data
      */
     public function prepare_product_item_for_response( $item, $request, $additional_fields = [] ) {
         $item = (object) $item;
@@ -757,7 +778,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'photo_id'      => [
                     'description' => __( 'Photo ID for the resource.' ),
                     'type'        => 'integer',
-                    'context'     => [ 'view', 'edit' ]
+                    'context'     => [ 'view', 'edit' ],
                 ],
                 'photo'      => [
                     'description' => __( 'Photo for the resource.' ),
@@ -781,7 +802,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
                             'description' => __( 'Country name for the resource.', 'erp' ),
                             'type'        => 'string',
                             'context'     => [ 'view', 'edit' ],
-                        ]
+                        ],
                     ],
                 ],
                 'state'    => [
@@ -798,7 +819,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
                             'description' => __( 'State name for the resource.', 'erp' ),
                             'type'        => 'string',
                             'context'     => [ 'view', 'edit' ],
-                        ]
+                        ],
                     ],
                 ],
             ],

@@ -1,10 +1,14 @@
 <?php
+
 namespace WeDevs\ERP\HRM\CLI;
+
+use WP_CLI;
+use WP_CLI_Command;
 
 /**
  * HRM CLI class
  */
-class Commands extends \WP_CLI_Command {
+class Commands extends WP_CLI_Command {
 
     /**
      * Clean HRM tables
@@ -34,13 +38,12 @@ class Commands extends \WP_CLI_Command {
             'erp_hr_announcement',
         ];
 
-        foreach ($tables as $table) {
-            $wpdb->query( 'TRUNCATE TABLE ' . $wpdb->prefix . $table);
+        foreach ( $tables as $table ) {
+            $wpdb->query( 'TRUNCATE TABLE ' . $wpdb->prefix . $table );
         }
 
-        \WP_CLI::success( "Table deleted successfully!" );
+        WP_CLI::success( 'Table deleted successfully!' );
     }
-
 }
 
-\WP_CLI::add_command( 'hr', 'WeDevs\ERP\HRM\CLI\Commands' );
+WP_CLI::add_command( 'hr', 'WeDevs\ERP\HRM\CLI\Commands' );

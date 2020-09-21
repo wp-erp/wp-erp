@@ -6,10 +6,11 @@ use WeDevs\ERP\Framework\ERP_Settings_Page;
  * Integration class
  */
 class ERP_Integration_Settings extends ERP_Settings_Page {
+
     /**
      * Class constructor
      */
-    function __construct() {
+    public function __construct() {
         $this->id    = 'erp-integration';
         $this->label = __( 'Integrations', 'erp' );
 
@@ -27,12 +28,11 @@ class ERP_Integration_Settings extends ERP_Settings_Page {
                 'title' => __( 'Integrations', 'erp' ),
                 'desc'  => __( 'Various integrations to WP ERP. Click <strong>Configure</strong> to manage the settings.', 'erp' ),
                 'type'  => 'title',
-                'id'    => 'integration_settings'
+                'id'    => 'integration_settings',
             ],
 
             [ 'type' => 'integrations' ],
             [ 'type' => 'sectionend', 'id' => 'script_styling_options' ],
-
         ]; // End general settings
 
         return apply_filters( 'erp_integration_settings', $fields );
@@ -43,25 +43,23 @@ class ERP_Integration_Settings extends ERP_Settings_Page {
      *
      * @return void
      */
-    function integrations() {
-        $integrations = wperp()->integration->get_integrations();
-        ?>
+    public function integrations() {
+        $integrations = wperp()->integration->get_integrations(); ?>
         <tr valign="top">
             <td class="erp-settings-table-wrapper" colspan="2">
                 <table class="erp-settings-table widefat" cellspacing="0">
                     <thead>
                         <tr>
                             <?php
-                                $columns = apply_filters( 'erp_integration_setting_columns', array(
+                                $columns = apply_filters( 'erp_integration_setting_columns', [
                                     'name'        => __( 'Integration', 'erp' ),
                                     'description' => __( 'Description', 'erp' ),
-                                    'actions'     => ''
-                                ) );
+                                    'actions'     => '',
+                                ] );
 
                                 foreach ( $columns as $key => $column ) {
                                     echo '<th class="erp-settings-table-' . esc_attr( $key ) . '">' . esc_html( $column ) . '</th>';
-                                }
-                            ?>
+                                } ?>
                         </tr>
                     </thead>
                     <tbody>
@@ -71,9 +69,9 @@ class ERP_Integration_Settings extends ERP_Settings_Page {
 
                             foreach ( $columns as $key => $column ) {
                                 switch ( $key ) {
-                                    case 'name' :
+                                    case 'name':
                                         echo '<td class="erp-settings-table-' . esc_attr( $key ) . '">
-                                            <a href="' . esc_url( admin_url( 'admin.php?page=erp-settings&tab=erp-integration&section=' . esc_attr( strtolower( $integration_key ) ) ) ) . '">' .  esc_html( $integration->get_title() ) . '</a>
+                                            <a href="' . esc_url( admin_url( 'admin.php?page=erp-settings&tab=erp-integration&section=' . esc_attr( strtolower( $integration_key ) ) ) ) . '">' . esc_html( $integration->get_title() ) . '</a>
                                         </td>';
                                         break;
 
@@ -91,19 +89,18 @@ class ERP_Integration_Settings extends ERP_Settings_Page {
                                         </td>';
                                         break;
 
-                                    case 'actions' :
+                                    case 'actions':
                                         echo '<td class="erp-settings-table-' . esc_attr( $key ) . '">
                                             <a class="button alignright" href="' . esc_url( admin_url( 'admin.php?page=erp-settings&tab=erp-integration&section=' . strtolower( $integration_key ) ) ) . '">' . esc_html__( 'Configure', 'erp' ) . '</a>
                                         </td>';
                                         break;
 
-                                    default :
+                                    default:
                                         do_action( 'erp_integration_setting_column_' . $key, $integration );
                                     break;
                                 }
                             }
-                        }
-                        ?>
+                        } ?>
                     </tbody>
                 </table>
             </td>
@@ -116,7 +113,7 @@ class ERP_Integration_Settings extends ERP_Settings_Page {
     /**
      * Output the settings.
      *
-     * @param  boolean $section (optional)
+     * @param bool $section (optional)
      *
      * @return void
      */
@@ -141,12 +138,12 @@ class ERP_Integration_Settings extends ERP_Settings_Page {
     /**
      * Save the settings.
      *
-     * @param  boolean $section (optional)
+     * @param bool $section (optional)
      *
      * @return void
      */
-    function save( $section = false ) {
-        if ( isset( $_POST['_wpnonce']) && wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-settings-nonce' ) ) {
+    public function save( $section = false ) {
+        if ( isset( $_POST['_wpnonce'] ) && wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-settings-nonce' ) ) {
             $current_section = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : false;
 
             // saving individual integration settings
@@ -155,12 +152,11 @@ class ERP_Integration_Settings extends ERP_Settings_Page {
 
                 foreach ( $integrations as $integration_key => $integration ) {
                     if ( strtolower( $integration_key ) == $current_section ) {
-
                         $settings       = $integration->get_form_fields();
-                        $update_options = array();
+                        $update_options = [];
 
-                        if ( $settings) {
-                            foreach ($settings as $field) {
+                        if ( $settings ) {
+                            foreach ( $settings as $field ) {
                                 if ( ! isset( $field['id'] ) || ! isset( $_POST[ $field['id'] ] ) ) {
                                     continue;
                                 }
@@ -182,7 +178,6 @@ class ERP_Integration_Settings extends ERP_Settings_Page {
                         break;
                     }
                 }
-
             } else {
                 parent::save();
             }

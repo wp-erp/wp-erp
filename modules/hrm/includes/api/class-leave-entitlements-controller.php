@@ -1,12 +1,14 @@
 <?php
+
 namespace WeDevs\ERP\HRM\API;
 
-use WP_REST_Server;
-use WP_REST_Response;
-use WP_Error;
 use WeDevs\ERP\API\REST_Controller;
+use WP_Error;
+use WP_REST_Response;
+use WP_REST_Server;
 
 class Leave_Entitlements_Controller extends REST_Controller {
+
     /**
      * Endpoint namespace.
      *
@@ -49,7 +51,7 @@ class Leave_Entitlements_Controller extends REST_Controller {
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_entitlement' ],
-                'args'     => [
+                'args'                => [
                     'context' => $this->get_context_param( [ 'default' => 'view' ] ),
                 ],
                 'permission_callback' => function ( $request ) {
@@ -84,6 +86,7 @@ class Leave_Entitlements_Controller extends REST_Controller {
         $total_items = erp_hr_leave_count_entitlements();
 
         $formated_items = [];
+
         foreach ( $items as $item ) {
             $data             = $this->prepare_item_for_response( $item, $request );
             $formated_items[] = $this->prepare_response_for_collection( $data );
@@ -160,7 +163,7 @@ class Leave_Entitlements_Controller extends REST_Controller {
     /**
      * Prepare a single item for create or update
      *
-     * @param WP_REST_Request $request Request object.
+     * @param WP_REST_Request $request request object
      *
      * @return array $prepared_item
      */
@@ -194,11 +197,11 @@ class Leave_Entitlements_Controller extends REST_Controller {
     /**
      * Prepare a single user output for response
      *
-     * @param object $item
-     * @param WP_REST_Request $request Request object.
-     * @param array $additional_fields (optional)
+     * @param object          $item
+     * @param WP_REST_Request $request           request object
+     * @param array           $additional_fields (optional)
      *
-     * @return WP_REST_Response $response Response data.
+     * @return WP_REST_Response $response response data
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
         $data = [
@@ -216,11 +219,11 @@ class Leave_Entitlements_Controller extends REST_Controller {
             if ( in_array( 'policy', $include_params ) ) {
                 $policies_controller = new Leave_Policies_Controller();
 
-                $policy_id  = (int) $item->policy_id;
+                $policy_id      = (int) $item->policy_id;
                 $data['policy'] = null;
 
                 if ( $policy_id ) {
-                    $policy = $policies_controller->get_policy( ['id' => $policy_id ] );
+                    $policy         = $policies_controller->get_policy( ['id' => $policy_id ] );
                     $data['policy'] = ! is_wp_error( $policy ) ? $policy->get_data() : null;
                 }
             }

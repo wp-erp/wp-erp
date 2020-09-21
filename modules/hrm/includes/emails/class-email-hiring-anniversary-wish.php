@@ -1,24 +1,24 @@
 <?php
+
 namespace WeDevs\ERP\HRM\Emails;
 
+use DateTime;
 use WeDevs\ERP\Email;
 use WeDevs\ERP\Framework\Traits\Hooker;
-use DateTime;
 
 /**
  * Birthday wish
  */
 class Hiring_Anniversary_Wish extends Email {
-
     use Hooker;
 
-    function __construct() {
+    public function __construct() {
         $this->id             = 'hiring-anniversary-wish';
         $this->title          = __( 'Work Anniversary Wish', 'erp' );
         $this->description    = __( 'Work anniversary wish email to employees.', 'erp' );
 
-        $this->subject        = __( 'Congratulation for Your Work Anniversary', 'erp');
-        $this->heading        = __( 'Congratulation for Passing One More Year With Us :)', 'erp');
+        $this->subject        = __( 'Congratulation for Your Work Anniversary', 'erp' );
+        $this->heading        = __( 'Congratulation for Passing One More Year With Us :)', 'erp' );
 
         $this->find = [
             'full-name'       => '{full_name}',
@@ -34,9 +34,10 @@ class Hiring_Anniversary_Wish extends Email {
 
     public function get_year_diff( $hiring_date ) {
         //return $hiring_date;
-        $d1 = new DateTime( current_time( 'Y-m-d' ) );
-        $d2 = new DateTime( $hiring_date );
-        $diff = $d2->diff($d1);
+        $d1   = new DateTime( current_time( 'Y-m-d' ) );
+        $d2   = new DateTime( $hiring_date );
+        $diff = $d2->diff( $d1 );
+
         return $diff->y;
     }
 
@@ -55,7 +56,7 @@ class Hiring_Anniversary_Wish extends Email {
             'full-name'       => $employee->get_full_name(),
             'first-name'      => $employee->first_name,
             'last-name'       => $employee->last_name,
-            'total-year'      => $this->get_year_diff( $hiring_date )
+            'total-year'      => $this->get_year_diff( $hiring_date ),
         ];
 
         $this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
@@ -66,11 +67,10 @@ class Hiring_Anniversary_Wish extends Email {
      *
      * @return array
      */
-    function get_args() {
+    public function get_args() {
         return [
             'email_heading' => $this->get_heading(),
-            'email_body'    => wpautop( $this->get_option( 'body' ) )
+            'email_body'    => wpautop( $this->get_option( 'body' ) ),
         ];
     }
-
 }

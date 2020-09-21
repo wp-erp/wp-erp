@@ -2,11 +2,12 @@
 
 namespace WeDevs\ERP\Accounting\API;
 
-use WP_REST_Server;
-use WP_REST_Response;
 use WP_Error;
+use WP_REST_Response;
+use WP_REST_Server;
 
 class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
+
     /**
      * Endpoint namespace.
      *
@@ -24,6 +25,7 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Register the routes for the objects of the controller.
      */
+
     /**
      * Register the routes for the objects of the controller.
      */
@@ -32,111 +34,111 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
             $this->namespace,
             '/' . $this->rest_base,
             [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_opening_balances' ],
-					'args'                => [],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_view_journal' );
-					},
-				],
-				[
-					'methods'             => WP_REST_Server::CREATABLE,
-					'callback'            => [ $this, 'create_opening_balance' ],
-					'args'                => [],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_create_journal' );
-					},
-				],
-				'schema' => [ $this, 'get_item_schema' ],
-			]
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_opening_balances' ],
+                    'args'                => [],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_view_journal' );
+                    },
+                ],
+                [
+                    'methods'             => WP_REST_Server::CREATABLE,
+                    'callback'            => [ $this, 'create_opening_balance' ],
+                    'args'                => [],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_create_journal' );
+                    },
+                ],
+                'schema' => [ $this, 'get_item_schema' ],
+            ]
         );
 
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base . '/names',
             [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_opening_balance_names' ],
-					'args'                => [],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_view_journal' );
-					},
-				],
-				'schema' => [ $this, 'get_item_schema' ],
-			]
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_opening_balance_names' ],
+                    'args'                => [],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_view_journal' );
+                    },
+                ],
+                'schema' => [ $this, 'get_item_schema' ],
+            ]
         );
 
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base . '/(?P<id>[\d]+)',
             [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_opening_balance' ],
-					'args'                => [
-						'context' => $this->get_context_param( [ 'default' => 'view' ] ),
-					],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_view_journal' );
-					},
-				],
-				'schema' => [ $this, 'get_item_schema' ],
-			]
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_opening_balance' ],
+                    'args'                => [
+                        'context' => $this->get_context_param( [ 'default' => 'view' ] ),
+                    ],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_view_journal' );
+                    },
+                ],
+                'schema' => [ $this, 'get_item_schema' ],
+            ]
         );
 
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/count',
             [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_opening_balance_count_by_fy' ],
-					'args'                => [
-						'context' => $this->get_context_param( [ 'default' => 'view' ] ),
-					],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_view_journal' );
-					},
-				],
-				'schema' => [ $this, 'get_item_schema' ],
-			]
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_opening_balance_count_by_fy' ],
+                    'args'                => [
+                        'context' => $this->get_context_param( [ 'default' => 'view' ] ),
+                    ],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_view_journal' );
+                    },
+                ],
+                'schema' => [ $this, 'get_item_schema' ],
+            ]
         );
 
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base . '/virtual-accts' . '/(?P<id>[\d]+)',
             [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_virtual_accts_by_year' ],
-					'args'                => [
-						'context' => $this->get_context_param( [ 'default' => 'view' ] ),
-					],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_view_journal' );
-					},
-				],
-				'schema' => [ $this, 'get_item_schema' ],
-			]
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_virtual_accts_by_year' ],
+                    'args'                => [
+                        'context' => $this->get_context_param( [ 'default' => 'view' ] ),
+                    ],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_view_journal' );
+                    },
+                ],
+                'schema' => [ $this, 'get_item_schema' ],
+            ]
         );
 
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base . '/acc-payable-receivable',
             [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_acc_payable_receivable' ],
-					'args'                => [
-						'context' => $this->get_context_param( [ 'default' => 'view' ] ),
-					],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_view_journal' );
-					},
-				],
-			]
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_acc_payable_receivable' ],
+                    'args'                => [
+                        'context' => $this->get_context_param( [ 'default' => 'view' ] ),
+                    ],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_view_journal' );
+                    },
+                ],
+            ]
         );
     }
 
@@ -159,12 +161,13 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
         $items       = erp_acct_get_all_opening_balances( $args );
         $total_items = erp_acct_get_all_opening_balances(
             [
-				'count'  => true,
-				'number' => -1,
-			]
+                'count'  => true,
+                'number' => -1,
+            ]
         );
 
         $formatted_items = [];
+
         foreach ( $items as $item ) {
             $data              = $this->prepare_item_for_response( $item, $request, $additional_fields );
             $formatted_items[] = $this->prepare_response_for_collection( $data );
@@ -368,22 +371,22 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         erp_log()->add(
             [
-				'component'     => 'Accounting',
-				'sub_component' => __( 'Opening Balance', 'erp' ),
-				'old_value'     => '',
+                'component'     => 'Accounting',
+                'sub_component' => __( 'Opening Balance', 'erp' ),
+                'old_value'     => '',
                 'new_value'     => '',
                 // translators: %1$s: amount, %2$s: id
-				'message'       => sprintf( __( 'A opening balance of %1$s has been created by %2$s', 'erp' ), $data['amount'], get_current_user_id() ),
-				'changetype'    => $action,
-				'created_by'    => get_current_user_id(),
-			]
+                'message'       => sprintf( __( 'A opening balance of %1$s has been created by %2$s', 'erp' ), $data['amount'], get_current_user_id() ),
+                'changetype'    => $action,
+                'created_by'    => get_current_user_id(),
+            ]
         );
     }
 
     /**
      * Prepare a single item for create or update
      *
-     * @param WP_REST_Request $request Request object.
+     * @param WP_REST_Request $request request object
      *
      * @return array $prepared_item
      */
@@ -393,18 +396,23 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['year'] ) ) {
             $prepared_item['year'] = $request['year'];
         }
+
         if ( isset( $request['ledgers'] ) ) {
             $prepared_item['ledgers'] = $request['ledgers'];
         }
+
         if ( isset( $request['description'] ) ) {
             $prepared_item['description'] = $request['description'];
         }
+
         if ( isset( $request['acct_pay'] ) ) {
             $prepared_item['acct_pay'] = $request['acct_pay'];
         }
+
         if ( isset( $request['acct_rec'] ) ) {
             $prepared_item['acct_rec'] = $request['acct_rec'];
         }
+
         if ( isset( $request['tax_pay'] ) ) {
             $prepared_item['tax_pay'] = $request['tax_pay'];
         }
@@ -415,14 +423,13 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Prepare output for response
      *
-     * @param array|object $item
-     * @param WP_REST_Request $request Request object.
-     * @param array $additional_fields (optional)
+     * @param array|object    $item
+     * @param WP_REST_Request $request           request object
+     * @param array           $additional_fields (optional)
      *
-     * @return WP_REST_Response $response Response data.
+     * @return WP_REST_Response $response response data
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
-
         $item = (array) $item;
 
         $data = array_merge( $item, $additional_fields );
@@ -434,7 +441,6 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         return $response;
     }
-
 
     /**
      * Get currency's schema, conforming to JSON Schema
@@ -462,22 +468,22 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'ledgers' => [
                     'description' => __( 'Ledger names for the resource.' ),
                     'type'        => 'array',
-                    'context'     => [ 'edit' ]
+                    'context'     => [ 'edit' ],
                 ],
                 'acct_pay' => [
                     'description' => __( 'Ledger names for the resource.' ),
                     'type'        => 'array',
-                    'context'     => [ 'edit' ]
+                    'context'     => [ 'edit' ],
                 ],
                 'acct_rec' => [
                     'description' => __( 'Ledger names for the resource.' ),
                     'type'        => 'array',
-                    'context'     => [ 'edit' ]
+                    'context'     => [ 'edit' ],
                 ],
                 'tax_pay' => [
                     'description' => __( 'Ledger names for the resource.' ),
                     'type'        => 'array',
-                    'context'     => [ 'edit' ]
+                    'context'     => [ 'edit' ],
                 ],
                 'total_dr'      => [
                     'description' => __( 'Unique identifier for the resource.' ),

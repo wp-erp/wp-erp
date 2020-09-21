@@ -25,8 +25,11 @@
         "squizlabs/php_codesniffer": "3.3.2",
         "wp-coding-standards/wpcs": "dev-master",
         "dealerdirect/phpcodesniffer-composer-installer": "^0.4.3",
+        "tareq1988/wp-php-cs-fixer": "dev-master",
         "lucatume/wp-browser": "^2.2",
-        "fzaninotto/faker": "^1.9@dev"
+        "fzaninotto/faker": "^1.9@dev",
+        "phpcompatibility/phpcompatibility-wp": "dev-master",
+        "phpunit/phpunit": "7.5.9"
     },
     "scripts": {
         "phpcs": [

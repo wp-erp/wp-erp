@@ -2,15 +2,16 @@
 
 namespace WeDevs\ERP\Accounting\API;
 
-use WP_REST_Server;
-use WP_REST_Response;
 use WP_Error;
+use WP_REST_Response;
+use WP_REST_Server;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
 
 class People_Controller extends \WeDevs\ERP\API\REST_Controller {
+
     /**
      * Endpoint namespace.
      *
@@ -33,77 +34,76 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
             $this->namespace,
             '/' . $this->rest_base,
             [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_all_people' ],
-					'args'                => [],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_view_expense' );
-					},
-				],
-			]
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_all_people' ],
+                    'args'                => [],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_view_expense' );
+                    },
+                ],
+            ]
         );
 
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base . '/(?P<id>[\d]+)',
             [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_people' ],
-					'args'                => [],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_view_expense' );
-					},
-				],
-			]
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_people' ],
+                    'args'                => [],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_view_expense' );
+                    },
+                ],
+            ]
         );
 
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/address',
             [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_people_address' ],
-					'args'                => [],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_view_expense' );
-					},
-				],
-			]
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_people_address' ],
+                    'args'                => [],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_view_expense' );
+                    },
+                ],
+            ]
         );
 
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/opening-balance',
             [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_opening_balance' ],
-					'args'                => [],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_view_expense' );
-					},
-				],
-			]
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_opening_balance' ],
+                    'args'                => [],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_view_expense' );
+                    },
+                ],
+            ]
         );
 
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base . '/check-email',
             [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'check_people_email' ],
-					'args'                => [],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_view_expense' );
-					},
-				],
-			]
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'check_people_email' ],
+                    'args'                => [],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_view_expense' );
+                    },
+                ],
+            ]
         );
-
     }
 
     /**
@@ -122,9 +122,9 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
         $items       = erp_get_peoples( $args );
         $total_items = erp_get_peoples(
             [
-				'type'  => $args['type'],
-				'count' => true,
-			]
+                'type'  => $args['type'],
+                'count' => true,
+            ]
         );
         $total_items = is_array( $total_items ) ? count( $total_items ) : $total_items;
 
@@ -162,6 +162,7 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
      * Return formatted data of a people
      *
      * @param $id
+     *
      * @return string
      */
     public function get_people( $request ) {
@@ -183,6 +184,7 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
      * Return formatted address of a people
      *
      * @param $id
+     *
      * @return string
      */
     public function get_people_address( $request ) {
@@ -234,7 +236,7 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Prepare a single item for create or update
      *
-     * @param WP_REST_Request $request Request object.
+     * @param WP_REST_Request $request request object
      *
      * @return array $prepared_item
      */
@@ -244,9 +246,11 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['first_name'] ) ) {
             $prepared_item['first_name'] = $request['first_name'];
         }
+
         if ( isset( $request['last_name'] ) ) {
             $prepared_item['last_name'] = $request['last_name'];
         }
+
         if ( isset( $request['email'] ) ) {
             $prepared_item['email'] = $request['email'];
         }
@@ -255,42 +259,55 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['id'] ) ) {
             $prepared_item['id'] = absint( $request['id'] );
         }
+
         if ( isset( $request['phone'] ) ) {
             $prepared_item['phone'] = $request['phone'];
         }
+
         if ( isset( $request['website'] ) ) {
             $prepared_item['website'] = $request['website'];
         }
+
         if ( isset( $request['other'] ) ) {
             $prepared_item['other'] = $request['other'];
         }
+
         if ( isset( $request['notes'] ) ) {
             $prepared_item['notes'] = $request['notes'];
         }
+
         if ( isset( $request['street_1'] ) ) {
             $prepared_item['street_1'] = $request['street_1'];
         }
+
         if ( isset( $request['street_2'] ) ) {
             $prepared_item['street_2'] = $request['street_2'];
         }
+
         if ( isset( $request['city'] ) ) {
             $prepared_item['city'] = $request['city'];
         }
+
         if ( isset( $request['state'] ) ) {
             $prepared_item['state'] = $request['state']['id'];
         }
+
         if ( isset( $request['postal_code'] ) ) {
             $prepared_item['postal_code'] = $request['postal_code'];
         }
+
         if ( isset( $request['country'] ) ) {
             $prepared_item['country'] = $request['country']['id'];
         }
+
         if ( isset( $request['company'] ) ) {
             $prepared_item['company'] = $request['company'];
         }
+
         if ( isset( $request['mobile'] ) ) {
             $prepared_item['mobile'] = $request['mobile'];
         }
+
         if ( $request['fax'] ) {
             $prepared_item['fax'] = $request['fax'];
         }
@@ -303,11 +320,11 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Prepare a single user output for response
      *
-     * @param array|object $item
-     * @param WP_REST_Request $request Request object.
-     * @param array $additional_fields (optional)
+     * @param array|object    $item
+     * @param WP_REST_Request $request           request object
+     * @param array           $additional_fields (optional)
      *
-     * @return WP_REST_Response $response Response data.
+     * @return WP_REST_Response $response response data
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
         $item = (object) $item;
@@ -484,5 +501,4 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         return $schema;
     }
-
 }

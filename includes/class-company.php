@@ -1,6 +1,9 @@
 <?php
+
 namespace WeDevs\ERP;
+
 use WeDevs\ERP\Admin\Models\Company_Locations;
+use WP_Error;
 
 /**
  * Company class
@@ -41,13 +44,13 @@ class Company {
                 'city'      => __( 'City', 'erp' ),
                 'state'     => __( 'State', 'erp' ),
                 'postcode'  => '',
-                'country'   => 'US'
+                'country'   => 'US',
             ],
             'phone'    => '',
             'fax'      => '',
             'mobile'   => '',
             'website'  => '',
-            'currency' => 'USD'
+            'currency' => 'USD',
         ];
 
         return apply_filters( 'erp_company_defaults', $defaults );
@@ -73,7 +76,7 @@ class Company {
     /**
      * Update company data
      *
-     * @param  array   $args
+     * @param array $args
      *
      * @return void
      */
@@ -86,7 +89,7 @@ class Company {
     /**
      * Check if a company has logo
      *
-     * @return boolean
+     * @return bool
      */
     public function has_logo() {
         return (int) $this->logo;
@@ -131,14 +134,14 @@ class Company {
     public function get_formatted_address() {
         $country = Countries::instance();
 
-        return $country->get_formatted_address( array(
+        return $country->get_formatted_address( [
             'address_1' => isset( $this->address['address_1'] ) ? $this->address['address_1'] : '',
             'address_2' => isset( $this->address['address_2'] ) ? $this->address['address_2'] : '',
             'city'      => isset( $this->address['city'] ) ? $this->address['city'] : '',
             'state'     => isset( $this->address['state'] ) ? $this->address['state'] : '',
             'postcode'  => isset( $this->address['zip'] ) ? $this->address['zip'] : '',
-            'country'   => isset( $this->address['country'] ) ? $this->address['country'] : ''
-        ) );
+            'country'   => isset( $this->address['country'] ) ? $this->address['country'] : '',
+        ] );
     }
 
     /**
@@ -148,7 +151,7 @@ class Company {
      */
     public function get_edit_url() {
         $url = add_query_arg(
-            array( 'action' => 'edit' ),
+            [ 'action' => 'edit' ],
             admin_url( 'admin.php?page=erp-company' )
         );
 
@@ -160,7 +163,7 @@ class Company {
      *
      * @param  int   employee id
      *
-     * @return boolean
+     * @return bool
      */
     public function has_employee( $employee_id ) {
         return true;
@@ -175,10 +178,10 @@ class Company {
     /**
      * @param array $args
      *
-     * @return \WP_Error
+     * @return WP_Error
      */
     public function create_location( $args = [] ) {
-        $defaults = array(
+        $defaults = [
             'id'         => 0,
             'name'       => '',
             'address_1'  => '',
@@ -187,22 +190,22 @@ class Company {
             'state'      => '',
             'zip'        => '',
             'country'    => '',
-        );
-        $fields = wp_parse_args( $args, $defaults );
+        ];
+        $fields      = wp_parse_args( $args, $defaults );
         $location_id = intval( $fields['id'] );
         unset( $fields['id'] );
 
         // validation
         if ( empty( $fields['name'] ) ) {
-            return new \WP_Error( 'no-name', __( 'No location name provided.', 'erp' ) );
+            return new WP_Error( 'no-name', __( 'No location name provided.', 'erp' ) );
         }
 
         if ( empty( $fields['address_1'] ) ) {
-            return new \WP_Error( 'no-address_1', __( 'No address provided.', 'erp' ) );
+            return new WP_Error( 'no-address_1', __( 'No address provided.', 'erp' ) );
         }
 
         if ( empty( $fields['country'] ) ) {
-            return new \WP_Error( 'no-country', __( 'No country provided.', 'erp' ) );
+            return new WP_Error( 'no-country', __( 'No country provided.', 'erp' ) );
         }
 
         $location = new Company_Locations();
@@ -213,7 +216,6 @@ class Company {
             do_action( 'erp_company_location_new', $location->id, $fields );
 
             return $new_location->id;
-
         } else {
             $location->find( $location_id )->update( $fields );
 

@@ -1,13 +1,15 @@
 <?php
+
 namespace WeDevs\ERP\HRM\API;
 
 use WeDevs\ERP\API\REST_Controller;
 use WeDevs\ERP\HRM\Employee;
-use WP_REST_Server;
-use WP_REST_Response;
 use WP_Error;
+use WP_REST_Response;
+use WP_REST_Server;
 
 class Leave_Requests_Controller extends REST_Controller {
+
     /**
      * Endpoint namespace.
      *
@@ -72,25 +74,26 @@ class Leave_Requests_Controller extends REST_Controller {
         $args = [
             'number' => $request['per_page'],
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
-            'type'   => $request['type'] == 'upcoming' ? 'upcoming' : ''
+            'type'   => $request['type'] == 'upcoming' ? 'upcoming' : '',
         ];
 
-        $items = [];
+        $items           = [];
         $formatted_items = [];
-        $total = 0;
+        $total           = 0;
 
         if ( $args['type'] == 'upcoming' ) {
             $args['status']     = 1; // only approved leave request
-            $args['start_date'] = erp_current_datetime()->setTime(0, 0)->getTimestamp(); //today
+            $args['start_date'] = erp_current_datetime()->setTime( 0, 0 )->getTimestamp(); //today
             $args['end_date']   = erp_current_datetime()->modify( 'last day of next month' )->setTime( 23, 59, 59 )->getTimestamp();
         }
 
         $leave_requests = erp_hr_get_leave_requests( $args );
-        $items = $leave_requests['data'];
-        $total = $leave_requests['total'];
+        $items          = $leave_requests['data'];
+        $total          = $leave_requests['total'];
 
         $formatted_items = [];
-        foreach( $items as $item ) {
+
+        foreach ( $items as $item ) {
             $data              = $this->prepare_item_for_response( $item, $request );
             $formatted_items[] = $this->prepare_response_for_collection( $data );
         }
@@ -134,6 +137,7 @@ class Leave_Requests_Controller extends REST_Controller {
         $data = $request->get_body_params();
 
         $policies = erp_hr_get_assign_policy_from_entitlement( $data['employee_id'] );
+
         if ( ! $policies ) {
             return new WP_Error( 'rest_leave_request_required_entitlement', __( 'Set entitlement to the employee first.' ), [ 'status' => 400 ] );
         }
@@ -154,7 +158,7 @@ class Leave_Requests_Controller extends REST_Controller {
     /**
      * Prepare a single item for create or update
      *
-     * @param WP_REST_Request $request Request object.
+     * @param WP_REST_Request $request request object
      *
      * @return array $prepared_item
      */
@@ -193,21 +197,21 @@ class Leave_Requests_Controller extends REST_Controller {
     /**
      * Prepare a single user output for response
      *
-     * @param object $item
-     * @param WP_REST_Request $request Request object.
-     * @param array $additional_fields (optional)
+     * @param object          $item
+     * @param WP_REST_Request $request           request object
+     * @param array           $additional_fields (optional)
      *
-     * @return WP_REST_Response $response Response data.
+     * @return WP_REST_Response $response response data
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
-        $employee = new Employee($item->user_id);
+        $employee = new Employee( $item->user_id );
 
         $data = [
             'id'            => (int) $item->id,
             'user_id'       => (int) $item->user_id,
             'employee_id'   => (int) $employee->employee_id,
             'employee_name' => $employee->display_name,
-            'avatar_url'    => $employee->get_avatar_url(80),
+            'avatar_url'    => $employee->get_avatar_url( 80 ),
             'start_date'    => erp_format_date( $item->start_date, 'Y-m-d' ),
             'end_date'      => erp_format_date( $item->end_date, 'Y-m-d' ),
             'reason'        => $item->reason,
@@ -220,11 +224,11 @@ class Leave_Requests_Controller extends REST_Controller {
             if ( in_array( 'policy', $include_params ) ) {
                 $policies_controller = new Leave_Policies_Controller();
 
-                $policy_id  = (int) $item->policy_id;
+                $policy_id      = (int) $item->policy_id;
                 $data['policy'] = null;
 
                 if ( $policy_id ) {
-                    $policy = $policies_controller->get_policy( ['id' => $policy_id ] );
+                    $policy         = $policies_controller->get_policy( ['id' => $policy_id ] );
                     $data['policy'] = ! is_wp_error( $policy ) ? $policy->get_data() : null;
                 }
             }

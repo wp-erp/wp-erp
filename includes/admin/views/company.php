@@ -34,10 +34,10 @@
                 <div id="company-locations-inside">
                 <?php
                 $locations = $company->get_locations();
-                $country = \WeDevs\ERP\Countries::instance();
+                $country   = \WeDevs\ERP\Countries::instance();
 
                 if ( $locations ) {
-                    foreach ($locations as $num => $location) {
+                    foreach ( $locations as $num => $location ) {
                         ?>
                         <div class="company-location postbox">
                             <h3 class="hndle"><?php echo wp_kses_post( $location['name'] ); ?></h3>
@@ -45,15 +45,14 @@
                             <div class="inside">
                                 <address class="address">
                                     <?php
-                                    echo wp_kses_post( $country->get_formatted_address( array(
+                                    echo wp_kses_post( $country->get_formatted_address( [
                                         'address_1' => $location['address_1'],
                                         'address_2' => $location['address_2'],
                                         'city'      => $location['city'],
                                         'state'     => $location['state'],
                                         'postcode'  => $location['zip'],
-                                        'country'   => $location['country']
-                                    ) ) );
-                                    ?>
+                                        'country'   => $location['country'],
+                                    ] ) ); ?>
                                 </address>
                             </div><!-- .inside -->
 

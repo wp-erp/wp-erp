@@ -1,12 +1,12 @@
 <?php
+
 namespace WeDevs\ERP\Framework\Traits;
 
 /**
  * Ajax Trait
- *
- * @package WeDevs\ERP\Framework\Traits
  */
 trait Ajax {
+
     /**
      * Verify request nonce
      *
@@ -23,7 +23,7 @@ trait Ajax {
     /**
      * Wrapper function for sending success response
      *
-     * @param  mixed $data
+     * @param mixed $data
      *
      * @return void
      */
@@ -34,7 +34,7 @@ trait Ajax {
     /**
      * Wrapper function for sending error
      *
-     * @param  mixed $data
+     * @param mixed $data
      *
      * @return void
      */

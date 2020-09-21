@@ -1,27 +1,27 @@
 <?php
+
 namespace WeDevs\ERP\CRM;
+
+use WP_List_Table;
 
 /**
  * Customer List table class
- *
- * @package weDevs|wperp
  */
-class Contact_Group_List_Table extends \WP_List_Table {
+class Contact_Group_List_Table extends WP_List_Table {
+    private $counts = [];
 
-    private $counts = array();
-
-    function __construct() {
+    public function __construct() {
         global $status, $page;
 
-        parent::__construct( array(
+        parent::__construct( [
             'singular' => 'contactgroup',
             'plural'   => 'contactgroups',
-            'ajax'     => false
-        ) );
+            'ajax'     => false,
+        ] );
     }
 
-    function get_table_classes() {
-        return array( 'widefat', 'fixed', 'striped', 'contact-group-list-table', $this->_args['plural'] );
+    public function get_table_classes() {
+        return [ 'widefat', 'fixed', 'striped', 'contact-group-list-table', $this->_args['plural'] ];
     }
 
     /**
@@ -29,7 +29,7 @@ class Contact_Group_List_Table extends \WP_List_Table {
      *
      * @return void
      */
-    function no_items() {
+    public function no_items() {
         esc_attr_e( 'No contact group found.', 'erp' );
     }
 
@@ -39,12 +39,12 @@ class Contact_Group_List_Table extends \WP_List_Table {
      * @since 1.0.0
      * @since 1.2.0 Add unconfirmed column value
      *
-     * @param  object  $item
-     * @param  string  $column_name
+     * @param object $item
+     * @param string $column_name
      *
      * @return string
      */
-    function column_default( $contact_group, $column_name ) {
+    public function column_default( $contact_group, $column_name ) {
         $data = '';
 
         switch ( $column_name ) {
@@ -80,20 +80,19 @@ class Contact_Group_List_Table extends \WP_List_Table {
      *
      * @return array
      */
-    function get_columns() {
-        $columns = array(
+    public function get_columns() {
+        $columns = [
             'cb'           => '<input type="checkbox" />',
             'name'         => __( 'Name', 'erp' ),
             'subscribed'   => __( 'Subscribed', 'erp' ),
             'unconfirmed'  => __( 'Unconfirmed', 'erp' ),
             'unsubscribed' => __( 'Unsubscribed', 'erp' ),
-            'created_at'   => __( 'Created At', 'erp' )
-        );
+            'created_at'   => __( 'Created At', 'erp' ),
+        ];
 
         if ( current_user_can( 'erp_crm_agent' ) ) {
             unset( $columns['cb'] );
         }
-
 
         return apply_filters( 'erp_crm_contact_group_table_cols', $columns );
     }
@@ -104,13 +103,12 @@ class Contact_Group_List_Table extends \WP_List_Table {
      * @since 1.0.0
      * @since 1.2.2 Add private icon
      *
-     * @param  object  $item
+     * @param object $item
      *
      * @return string
      */
-    function column_name( $contact_group ) {
-
-        $actions             = array();
+    public function column_name( $contact_group ) {
+        $actions             = [];
         $delete_url          = '';
         $view_subscriber_url = add_query_arg( [ 'page'=>'erp-crm', 'section'=> 'contact-groups', 'groupaction' => 'view-subscriber', 'filter_contact_group' => $contact_group->id ], admin_url( 'admin.php' ) );
 
@@ -138,11 +136,11 @@ class Contact_Group_List_Table extends \WP_List_Table {
      *
      * @return array
      */
-    function get_sortable_columns() {
-        $sortable_columns = array(
-            'name'       => array( 'name', true ),
-            'created_at' => array( 'created_at', true ),
-        );
+    public function get_sortable_columns() {
+        $sortable_columns = [
+            'name'       => [ 'name', true ],
+            'created_at' => [ 'created_at', true ],
+        ];
 
         return $sortable_columns;
     }
@@ -152,24 +150,25 @@ class Contact_Group_List_Table extends \WP_List_Table {
      *
      * @return array
      */
-    function get_bulk_actions() {
+    public function get_bulk_actions() {
         if ( current_user_can( 'erp_crm_agent' ) ) {
             return;
         }
-        $actions = array(
+        $actions = [
             'contact_group_delete'  => __( 'Delete', 'erp' ),
-        );
+        ];
+
         return $actions;
     }
 
     /**
      * Render the checkbox column
      *
-     * @param  object  $item
+     * @param object $item
      *
      * @return string
      */
-    function column_cb( $item ) {
+    public function column_cb( $item ) {
         return sprintf(
             '<input type="checkbox" name="contact_group[]" value="%s" />', $item->id
         );
@@ -180,7 +179,7 @@ class Contact_Group_List_Table extends \WP_List_Table {
      *
      * @return void
      */
-    function prepare_items() {
+    public function prepare_items() {
         $columns               = $this->get_columns();
         $hidden                = [];
         $sortable              = $this->get_sortable_columns();
@@ -188,7 +187,7 @@ class Contact_Group_List_Table extends \WP_List_Table {
 
         $per_page              = 20;
         $current_page          = $this->get_pagenum();
-        $offset                = ( $current_page -1 ) * $per_page;
+        $offset                = ( $current_page - 1 ) * $per_page;
         $this->page_status     = isset( $_GET['status'] ) ? sanitize_text_field( wp_unslash( $_GET['status'] ) ) : 'all';
 
         // only ncessary because we have sample data
@@ -217,13 +216,12 @@ class Contact_Group_List_Table extends \WP_List_Table {
 
         // Render total customer according to above filter
         $args['count'] = true;
-        $total_items = erp_crm_get_contact_groups( $args );
+        $total_items   = erp_crm_get_contact_groups( $args );
 
         // Set pagination according to filter
         $this->set_pagination_args( [
             'total_items' => $total_items,
-            'per_page'    => $per_page
+            'per_page'    => $per_page,
         ] );
     }
-
 }

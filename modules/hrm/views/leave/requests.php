@@ -1,7 +1,7 @@
 <div class="wrap erp-hr-leave-requests">
     <h2><?php esc_html_e( 'Leave Requests', 'erp' ); ?>
         <?php if ( current_user_can( 'erp_leave_create_request' ) ) { ?>
-        <a href="<?php echo esc_url( add_query_arg( array( 'view' => 'new' ) ) ); ?>" class="add-new-h2"><?php esc_html_e( 'New Request', 'erp' ); ?></a>
+        <a href="<?php echo esc_url( add_query_arg( [ 'view' => 'new' ] ) ); ?>" class="add-new-h2"><?php esc_html_e( 'New Request', 'erp' ); ?></a>
         <?php } ?>
     </h2>
     <?php

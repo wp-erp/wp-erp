@@ -8,9 +8,9 @@
               <ol class="form-fields">
                 <li>
                     <# if ( _.contains( data.types, 'company' ) ) { #>
-                        <?php //erp_html_form_label( __( 'Company Photo', 'erp' ), 'company' ); ?>
+                        <?php //erp_html_form_label( __( 'Company Photo', 'erp' ), 'company' );?>
                     <# } else { #>
-                        <?php //erp_html_form_label( __( 'Contact Photo', 'erp' ), 'full-name' ); ?>
+                        <?php //erp_html_form_label( __( 'Contact Photo', 'erp' ), 'full-name' );?>
                     <# } #>
                     <div class="photo-container">
                         <input type="hidden" name="contact[meta][photo_id]" id="customer-photo-id" value="{{ data.avatar.id }}">
@@ -33,7 +33,7 @@
             <div class="col-4 right-column">
                 <div class="erp-crm-modal-right">
                 <# if ( _.contains( data.types, 'company' ) ) { #>
-                    <span class="required space-top">* <?php esc_attr_e( 'Company name and email are required', 'erp' ) ?></span>
+                    <span class="required space-top">* <?php esc_attr_e( 'Company name and email are required', 'erp' ); ?></span>
 
                     <?php do_action( 'erp_crm_company_form_top' ); ?>
                 <# } else { #>
@@ -50,34 +50,34 @@
                         <div class="row">
                             <# if ( _.contains( data.types, 'contact' ) ) { #>
                                 <div class="col-3">
-                                    <?php erp_html_form_input( array(
+                                    <?php erp_html_form_input( [
                                         'label'       => __( 'First Name', 'erp' ),
                                         'name'        => 'contact[main][first_name]',
                                         'id'          => 'first_name',
                                         'value'       => '{{ data.first_name }}',
-                                        'custom_attr' => array( 'maxlength' => $custom_attr_length ),
-                                        'required'    => true
-                                    ) ); ?>
+                                        'custom_attr' => [ 'maxlength' => $custom_attr_length ],
+                                        'required'    => true,
+                                    ] ); ?>
                                 </div>
                                 <div class="col-3">
-                                    <?php erp_html_form_input( array(
+                                    <?php erp_html_form_input( [
                                         'label'       => __( 'Last Name', 'erp' ),
                                         'name'        => 'contact[main][last_name]',
                                         'id'          => 'last_name',
                                         'value'       => '{{ data.last_name }}',
-                                        'custom_attr' => array( 'maxlength' => $custom_attr_length )
-                                    ) ); ?>
+                                        'custom_attr' => [ 'maxlength' => $custom_attr_length ],
+                                    ] ); ?>
                                 </div>
                             <# } else if ( _.contains( data.types, 'company' ) ) { #>
                                 <div class="col-3 full-width customer-company-name clearfix">
-                                    <?php erp_html_form_input( array(
+                                    <?php erp_html_form_input( [
                                         'label'       => __( 'Company Name', 'erp' ),
                                         'name'        => 'contact[main][company]',
                                         'id'          => 'company',
                                         'value'       => '{{ data.company }}',
-                                        'custom_attr' => array( 'maxlength' => $custom_attr_length ),
-                                        'required'    => true
-                                    ) ); ?>
+                                        'custom_attr' => [ 'maxlength' => $custom_attr_length ],
+                                        'required'    => true,
+                                    ] ); ?>
                                 </div>
                             <# } #>
                             </div>
@@ -85,50 +85,50 @@
 
                         <div class="row">
                             <div class="col-3">
-                                <?php erp_html_form_input( array(
-                                    'label'    => __( 'Email', 'erp' ),
-                                    'name'     => 'contact[main][email]',
-                                    'value'    => '{{ data.email }}',
-                                    'id'       => 'erp-crm-new-contact-email',
-                                    'type'     => 'email',
-                                    'required'    => true
-                                ) ); ?>
+                                <?php erp_html_form_input( [
+                                    'label'       => __( 'Email', 'erp' ),
+                                    'name'        => 'contact[main][email]',
+                                    'value'       => '{{ data.email }}',
+                                    'id'          => 'erp-crm-new-contact-email',
+                                    'type'        => 'email',
+                                    'required'    => true,
+                                ] ); ?>
                             </div>
 
                             <div class="col-3">
-                                <?php erp_html_form_input( array(
+                                <?php erp_html_form_input( [
                                     'label' => __( 'Phone Number', 'erp' ),
                                     'name'  => 'contact[main][phone]',
-                                    'value' => '{{ data.phone }}'
-                                ) ); ?>
+                                    'value' => '{{ data.phone }}',
+                                ] ); ?>
                             </div>
 
                             <div class="col-3" data-selected="{{ data.life_stage }}">
-                                <?php erp_html_form_input( array(
-                                    'label' => __( 'Life Stage', 'erp' ),
-                                    'name'  => 'contact[meta][life_stage]',
+                                <?php erp_html_form_input( [
+                                    'label'    => __( 'Life Stage', 'erp' ),
+                                    'name'     => 'contact[meta][life_stage]',
                                     'required' => true,
-                                    'type'  => 'select',
-                                    'class' => 'erp-select2',
-                                    'options' => erp_crm_get_life_stages_dropdown_raw( [ '' => __( '--Select Stage--', 'erp' ) ] )
-                                ) ); ?>
+                                    'type'     => 'select',
+                                    'class'    => 'erp-select2',
+                                    'options'  => erp_crm_get_life_stages_dropdown_raw( [ '' => __( '--Select Stage--', 'erp' ) ] ),
+                                ] ); ?>
                             </div>
 
-                            <?php if ( current_user_can( 'administrator' ) || current_user_can( 'erp_crm_manager' ) ): ?>
+                            <?php if ( current_user_can( 'administrator' ) || current_user_can( 'erp_crm_manager' ) ) { ?>
                                 <div class="col-3" data-selected = "{{ data.assign_to.id }}">
-                                    <?php erp_html_form_input( array(
+                                    <?php erp_html_form_input( [
                                         'label'       => __( 'Contact Owner', 'erp' ),
                                         'name'        => 'contact[meta][contact_owner]',
                                         'required'    => true,
                                         'type'        => 'select',
                                         'id'          => 'erp-crm-contact-owner-id',
                                         'class'       => 'erp-select2 erp-crm-contact-owner-class',
-                                        'options'     => erp_crm_get_crm_user_dropdown( [ '' => '--Select--' ] )
-                                    ) ); ?>
+                                        'options'     => erp_crm_get_crm_user_dropdown( [ '' => '--Select--' ] ),
+                                    ] ); ?>
                                 </div>
-                            <?php elseif ( current_user_can( 'erp_crm_agent' ) ): ?>
+                            <?php } elseif ( current_user_can( 'erp_crm_agent' ) ) { ?>
                                 <input type="hidden" name="contact[meta][contact_owner]" value="<?php echo esc_attr( get_current_user_id() ); ?>">
-                            <?php endif ?>
+                            <?php } ?>
 
                             <# if ( _.contains( data.types, 'company' ) ) { #>
                                 <?php do_action( 'erp_crm_company_form_basic' ); ?>
@@ -145,77 +145,77 @@
                         </p>
 
                         <fieldset class="others-info">
-                        <legend><?php esc_attr_e( 'Others Info', 'erp' ) ?></legend>
+                        <legend><?php esc_attr_e( 'Others Info', 'erp' ); ?></legend>
 
                         <div class="row">
 
                             <# if ( _.contains( data.types, 'contact' ) ) { #>
                             <div class="col-3">
-                                <?php erp_html_form_input( array(
+                                <?php erp_html_form_input( [
                                     'label' => __( 'Date of Birth', 'erp' ),
                                     'name'  => 'contact[meta][date_of_birth]',
                                     'value' => '{{ data.date_of_birth }}',
-                                    'class' => 'erp-date-field erp-crm-date-field'
-                                ) ); ?>
+                                    'class' => 'erp-date-field erp-crm-date-field',
+                                ] ); ?>
                             </div>
                             <div class="col-3">
-                                <?php erp_html_form_input( array(
-                                    'label' => __( 'Age (years)', 'erp' ),
-                                    'name'  => 'contact[meta][contact_age]',
-                                    'value' => '{{ data.contact_age }}',
-                                    'class' => '',
-                                    'type'  => 'number',
-                                    'custom_attr' => [ 'min' => 1, 'step' => 1 ]
-                                ) ); ?>
+                                <?php erp_html_form_input( [
+                                    'label'       => __( 'Age (years)', 'erp' ),
+                                    'name'        => 'contact[meta][contact_age]',
+                                    'value'       => '{{ data.contact_age }}',
+                                    'class'       => '',
+                                    'type'        => 'number',
+                                    'custom_attr' => [ 'min' => 1, 'step' => 1 ],
+                                ] ); ?>
                             </div>
                             <# } #>
 
                             <div class="col-3">
-                                <?php erp_html_form_input( array(
+                                <?php erp_html_form_input( [
                                     'label' => __( 'Mobile', 'erp' ),
                                     'name'  => 'contact[main][mobile]',
-                                    'value' => '{{ data.mobile }}'
-                                ) ); ?>
+                                    'value' => '{{ data.mobile }}',
+                                ] ); ?>
                             </div>
 
                             <div class="col-3">
-                                <?php erp_html_form_input( array(
+                                <?php erp_html_form_input( [
                                     'label' => __( 'Website', 'erp' ),
                                     'name'  => 'contact[main][website]',
-                                    'value' => '{{ data.website }}'
-                                ) ); ?>
+                                    'value' => '{{ data.website }}',
+                                ] ); ?>
                             </div>
 
                             <div class="col-3">
-                                <?php erp_html_form_input( array(
+                                <?php erp_html_form_input( [
                                     'label' => __( 'Fax Number', 'erp' ),
                                     'name'  => 'contact[main][fax]',
-                                    'value' => '{{ data.fax }}'
-                                ) ); ?>
+                                    'value' => '{{ data.fax }}',
+                                ] ); ?>
                             </div>
 
                             <div class="col-3">
-                                <?php erp_html_form_input( array(
+                                <?php erp_html_form_input( [
                                     'label' => __( 'Address 1', 'erp' ),
                                     'name'  => 'contact[main][street_1]',
-                                    'value' => '{{ data.street_1 }}'
-                                ) ); ?>
+                                    'value' => '{{ data.street_1 }}',
+                                ] ); ?>
                             </div>
 
                             <div class="col-3">
-                                <?php erp_html_form_input( array(
+                                <?php erp_html_form_input( [
                                     'label' => __( 'Address 2', 'erp' ),
                                     'name'  => 'contact[main][street_2]',
-                                    'value' => '{{ data.street_2 }}'
-                                ) ); ?>
+                                    'value' => '{{ data.street_2 }}',
+                                ] ); ?>
                             </div>
 
                             <div class="col-3">
-                                <?php erp_html_form_input( array(
+                                <?php erp_html_form_input( [
                                     'label' => __( 'City', 'erp' ),
                                     'name'  => 'contact[main][city]',
-                                    'value' => '{{ data.city }}'
-                                ) ); ?>
+                                    'value' => '{{ data.city }}',
+                                ] ); ?>
                             </div>
 
                             <div class="col-3" data-selected="{{ data.country }}">
@@ -223,32 +223,32 @@
                                 <select name="contact[main][country]" id="erp-popup-country" class="erp-country-select erp-select2" data-parent="ol">
                                     <?php $country = \WeDevs\ERP\Countries::instance(); ?>
                                     <?php echo wp_kses( $country->country_dropdown( erp_get_country() ),
-                                        array(
-                                            'option' => array(
-                                                'value' => array(),
-                                                'selected' => array()
-                                            ),
-                                        ) ); ?>
+                                        [
+                                            'option' => [
+                                                'value'    => [],
+                                                'selected' => [],
+                                            ],
+                                        ] ); ?>
                                 </select>
                             </div>
 
                             <div class="col-3 state-field" data-selected="{{ data.state }}">
-                                <?php erp_html_form_input( array(
+                                <?php erp_html_form_input( [
                                     'label'   => __( 'Province / State', 'erp' ),
                                     'name'    => 'contact[main][state]',
                                     'id'      => 'erp-state',
                                     'type'    => 'select',
                                     'class'   => 'erp-state-select erp-select2',
-                                    'options' => array( '' => __( '- Select -', 'erp' ) )
-                                ) ); ?>
+                                    'options' => [ '' => __( '- Select -', 'erp' ) ],
+                                ] ); ?>
                             </div>
 
                             <div class="col-3">
-                                <?php erp_html_form_input( array(
+                                <?php erp_html_form_input( [
                                     'label' => __( 'Post Code/Zip Code', 'erp' ),
                                     'name'  => 'contact[main][postal_code]',
-                                    'value' => '{{ data.postal_code }}'
-                                ) ); ?>
+                                    'value' => '{{ data.postal_code }}',
+                                ] ); ?>
                             </div>
 
                             <# if ( _.contains( data.types, 'company' ) ) { #>
@@ -260,20 +260,20 @@
                         </div>
                         </fieldset>
 
-                    <?php if ( erp_crm_get_contact_group_dropdown() ) : ?>
+                    <?php if ( erp_crm_get_contact_group_dropdown() ) { ?>
                         <fieldset class="contact-group">
-                            <legend><?php esc_attr_e( 'Contact Group', 'erp' ) ?></legend>
+                            <legend><?php esc_attr_e( 'Contact Group', 'erp' ); ?></legend>
 
                             <div class="row">
                                 <div class="col-6" id="erp-crm-contact-subscriber-group-checkbox" data-selected = "{{ data.group_id }}">
-                                    <?php erp_html_form_input( array(
+                                    <?php erp_html_form_input( [
                                         'label'       => __( 'Assign Group', 'erp' ),
                                         'name'        => 'group_id[]',
                                         'type'        => 'multicheckbox',
                                         'id'          => 'erp-crm-contact-group-id',
                                         'class'       => 'erp-crm-contact-group-class',
-                                        'options'     => erp_crm_get_contact_group_dropdown()
-                                    ) ); ?>
+                                        'options'     => erp_crm_get_contact_group_dropdown(),
+                                    ] ); ?>
                                 </div>
 
                                 <# if ( _.contains( data.types, 'company' ) ) { #>
@@ -286,39 +286,39 @@
 
                         </fieldset>
 
-                        <?php endif; ?>
+                        <?php } ?>
 
                         <fieldset class="additional-info">
-                        <legend><?php esc_attr_e( 'Additional Info', 'erp' ) ?></legend>
+                        <legend><?php esc_attr_e( 'Additional Info', 'erp' ); ?></legend>
 
                         <div class="row">
 
                             <div class="col-3" data-selected="{{ data.source }}">
-                                <?php erp_html_form_input( array(
+                                <?php erp_html_form_input( [
                                     'label'   => __( 'Contact Source', 'erp' ),
                                     'name'    => 'contact[meta][source]',
                                     'id'      => 'erp-source',
                                     'type'    => 'select',
                                     'class'   => 'erp-source-select',
-                                    'options' => erp_crm_contact_sources()
-                                ) ); ?>
+                                    'options' => erp_crm_contact_sources(),
+                                ] ); ?>
                             </div>
 
                             <div class="col-3">
-                                <?php erp_html_form_input( array(
+                                <?php erp_html_form_input( [
                                     'label'   => __( 'Others', 'erp' ),
                                     'name'    => 'contact[main][other]',
-                                    'value'   => '{{ data.other }}'
-                                ) ); ?>
+                                    'value'   => '{{ data.other }}',
+                                ] ); ?>
                             </div>
 
                             <div class="col-3">
-                                <?php erp_html_form_input( array(
+                                <?php erp_html_form_input( [
                                     'label'   => __( 'Notes', 'erp' ),
                                     'name'    => 'contact[main][notes]',
                                     'value'   => '{{ data.notes }}',
-                                    'type'   => 'textarea',
-                                ) ); ?>
+                                    'type'    => 'textarea',
+                                ] ); ?>
                             </div>
 
                             <# if ( _.contains( data.types, 'company' ) ) { #>
@@ -331,40 +331,40 @@
                         </fieldset>
 
                         <fieldset class="social-info">
-                        <legend><?php esc_attr_e( 'Social Info', 'erp' ) ?></legend>
+                        <legend><?php esc_attr_e( 'Social Info', 'erp' ); ?></legend>
 
                         <div class="row">
 
                             <div class="col-3">
-                                <?php erp_html_form_input( array(
+                                <?php erp_html_form_input( [
                                     'label'   => __( 'Facebook', 'erp' ),
                                     'name'    => 'contact[social][facebook]',
-                                    'value'   => '{{ data.social.facebook }}'
-                                ) ); ?>
+                                    'value'   => '{{ data.social.facebook }}',
+                                ] ); ?>
                             </div>
 
                             <div class="col-3">
-                                <?php erp_html_form_input( array(
+                                <?php erp_html_form_input( [
                                     'label'   => __( 'Twitter', 'erp' ),
                                     'name'    => 'contact[social][twitter]',
-                                    'value'   => '{{ data.social.twitter }}'
-                                ) ); ?>
+                                    'value'   => '{{ data.social.twitter }}',
+                                ] ); ?>
                             </div>
 
                             <div class="col-3">
-                                <?php erp_html_form_input( array(
+                                <?php erp_html_form_input( [
                                     'label'   => __( 'Google Plus', 'erp' ),
                                     'name'    => 'contact[social][googleplus]',
-                                    'value'   => '{{ data.social.googleplus }}'
-                                ) ); ?>
+                                    'value'   => '{{ data.social.googleplus }}',
+                                ] ); ?>
                             </div>
 
                             <div class="col-3">
-                                <?php erp_html_form_input( array(
+                                <?php erp_html_form_input( [
                                     'label'   => __( 'Linkedin', 'erp' ),
                                     'name'    => 'contact[social][linkedin]',
-                                    'value'   => '{{ data.social.linkedin }}'
-                                ) ); ?>
+                                    'value'   => '{{ data.social.linkedin }}',
+                                ] ); ?>
                             </div>
 
                             <# if ( _.contains( data.types, 'company' ) ) { #>

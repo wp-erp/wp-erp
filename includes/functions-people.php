@@ -39,7 +39,7 @@ function erp_get_peoples( $args = [] ) {
         'include'    => [],
         'exclude'    => [],
         's'          => '',
-        'no_object'  => false
+        'no_object'  => false,
     ];
     $args        = wp_parse_args( $args, $defaults );
 
@@ -55,7 +55,7 @@ function erp_get_peoples( $args = [] ) {
         extract( $args );
 
         $sql         = [];
-        $trashed_sql = $trashed ? "`deleted_at` is not null" : "`deleted_at` is null";
+        $trashed_sql = $trashed ? '`deleted_at` is not null' : '`deleted_at` is null';
 
         if ( is_array( $type ) ) {
             $type_sql = "and `name` IN ( '" . implode( "','", $type ) . "' )";
@@ -63,7 +63,7 @@ function erp_get_peoples( $args = [] ) {
             $type_sql = ( $type != 'all' ) ? "and `name` = '" . $type . "'" : '';
         }
 
-        $wrapper_select = "SELECT people.*, ";
+        $wrapper_select = 'SELECT people.*, ';
 
         $sql['select'][] = "GROUP_CONCAT( DISTINCT t.name SEPARATOR ',') AS types";
         $sql['join'][]   = "LEFT JOIN $type_rel_tb AS r ON people.id = r.people_id LEFT JOIN $types_tb AS t ON r.people_types_id = t.id";
@@ -75,7 +75,7 @@ function erp_get_peoples( $args = [] ) {
           ) >= 1";
         $sql['where']    = [ '' ];
 
-        $sql_group_by = "GROUP BY `people`.`id`";
+        $sql_group_by = 'GROUP BY `people`.`id`';
         $sql_order_by = "ORDER BY $orderby $order";
 
         // Check if want all data without any pagination
@@ -91,16 +91,17 @@ function erp_get_peoples( $args = [] ) {
             $sql['where'][] = "AND people_meta.meta_key='$meta_key' and people_meta.meta_value='$meta_value'";
         }
 
-        if( !empty($life_stage) ){
+        if ( !empty( $life_stage ) ) {
             $sql['where'][] = "AND people.life_stage='$life_stage'";
         }
 
-        if( !empty($contact_owner) ){
+        if ( !empty( $contact_owner ) ) {
             $sql['where'][] = "AND people.contact_owner='$contact_owner'";
         }
+
         if ( current_user_can( 'erp_crm_agent' ) ) {
             $current_user_id = get_current_user_id();
-            $sql['where'][] = "AND people.contact_owner='$current_user_id'";
+            $sql['where'][]  = "AND people.contact_owner='$current_user_id'";
         }
 
         // Check if the row want to search
@@ -112,41 +113,35 @@ function erp_get_peoples( $args = [] ) {
                 $args['erpadvancefilter'] = 'first_name[]=~' . implode( '&or&first_name[]=~', $words )
                                             . '&or&last_name[]=~' . implode( '&or&last_name[]=~', $words )
                                             . '&or&email[]=~' . implode( '&or&email[]=~', $words );
-
             } elseif ( $type === 'company' ) {
                 $args['erpadvancefilter'] = 'company[]=~' . implode( '&or&company[]=~', $words )
                                             . '&or&email[]=~' . implode( '&or&email[]=~', $words );
-
             } elseif ( is_array( $type ) ) {
                 $sql['where'][] = $wpdb->prepare(
                     'AND ( people.first_name ) LIKE %s OR ' .
                     '( people.last_name ) LIKE %s',
-                    array( $search_like, $search_like )
+                    [ $search_like, $search_like ]
                 );
             } elseif ( $type === 'customer' || $type === 'vendor' ) {
                 if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-
                     if ( $type === 'customer' ) {
                         $sql['where'][] = $wpdb->prepare(
                             'AND ( people.first_name ) LIKE %s OR ' .
                             '( people.last_name ) LIKE %s',
-                            array( $search_like, $search_like )
+                            [ $search_like, $search_like ]
                         );
-
                     } else {
-                        $sql['where'][] = $wpdb->prepare( 'AND ( people.company ) LIKE %s', array( $search_like ) );
+                        $sql['where'][] = $wpdb->prepare( 'AND ( people.company ) LIKE %s', [ $search_like ] );
                     }
-
                 } else {
                     $sql['where'][] = $wpdb->prepare(
                         'AND ( people.first_name ) LIKE %s OR ' .
                         '( people.last_name ) LIKE %s OR ' .
                         '( people.email ) LIKE %s OR ' .
                         '( people.company ) LIKE %s',
-                        array( $search_like, $search_like, $search_like, $search_like )
+                        [ $search_like, $search_like, $search_like, $search_like ]
                     );
                 }
-
             }
         }
 
@@ -161,6 +156,7 @@ function erp_get_peoples( $args = [] ) {
         $sql = apply_filters( 'erp_get_people_pre_query', $sql, $args );
 
         $post_where_queries = '';
+
         if ( ! empty( $sql['post_where_queries'] ) ) {
             $post_where_queries = 'AND ( 1 = 1 '
                                   . implode( ' ', $sql['post_where_queries'] )
@@ -203,12 +199,11 @@ function erp_get_peoples( $args = [] ) {
  *
  * @since 1.0
  *
- * @param  array $data
+ * @param array $data
  *
  * @return void
  */
 function erp_delete_people( $data = [] ) {
-
     if ( empty( $data['id'] ) ) {
         return new WP_Error( 'not-ids', __( 'No data found', 'erp' ) );
     }
@@ -223,7 +218,7 @@ function erp_delete_people( $data = [] ) {
         foreach ( $data['id'] as $key => $id ) {
             $people_ids[] = $id;
         }
-    } else if ( is_int( $data['id'] ) ) {
+    } elseif ( is_int( $data['id'] ) ) {
         $people_ids[] = $data['id'];
     }
 
@@ -234,7 +229,6 @@ function erp_delete_people( $data = [] ) {
 
     // seems like we got some
     foreach ( $people_ids as $people_id ) {
-
         do_action( 'erp_before_delete_people', $people_id, $data );
 
         if ( $data['hard'] ) {
@@ -249,7 +243,6 @@ function erp_delete_people( $data = [] ) {
                 \WeDevs\ERP\Framework\Models\Peoplemeta::where( 'erp_people_id', $people_id )->delete();
                 \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $people_id )->delete();
             }
-
         } else {
             $people   = \WeDevs\ERP\Framework\Models\People::with( 'types' )->find( $people_id );
             $type_obj = \WeDevs\ERP\Framework\Models\PeopleTypes::name( $data['type'] )->first();
@@ -267,12 +260,11 @@ function erp_delete_people( $data = [] ) {
  *
  * @since 1.0
  *
- * @param  array $data
+ * @param array $data
  *
  * @return void
  */
 function erp_restore_people( $data ) {
-
     if ( empty( $data['id'] ) ) {
         return new WP_Error( 'not-ids', __( 'No data found', 'erp' ) );
     }
@@ -287,7 +279,7 @@ function erp_restore_people( $data ) {
         foreach ( $data['id'] as $key => $id ) {
             $people_ids[] = $id;
         }
-    } else if ( is_int( $data['id'] ) ) {
+    } elseif ( is_int( $data['id'] ) ) {
         $people_ids[] = $data['id'];
     }
 
@@ -298,7 +290,6 @@ function erp_restore_people( $data ) {
 
     // seems like we got some
     foreach ( $people_ids as $people_id ) {
-
         do_action( 'erp_before_restoring_people', $people_id, $data );
 
         $people   = \WeDevs\ERP\Framework\Models\People::with( 'types' )->find( $people_id );
@@ -314,7 +305,7 @@ function erp_restore_people( $data ) {
  *
  * @since 1.0
  *
- * @param  array $args
+ * @param array $args
  *
  * @return array
  */
@@ -367,8 +358,8 @@ function erp_get_people( $id = 0 ) {
 /**
  * Retrieve people info by a given field
  *
- * @param  string $field
- * @param  mixed $value
+ * @param string $field
+ * @param mixed  $value
  *
  * @return object
  */
@@ -387,8 +378,7 @@ function erp_get_people_by( $field, $value ) {
     $people    = wp_cache_get( $cache_key, 'erp' );
 
     if ( false === $people ) {
-
-        $sql = "SELECT people.*, ";
+        $sql = 'SELECT people.*, ';
         $sql .= "GROUP_CONCAT(DISTINCT p_types.name) as types
         FROM {$wpdb->prefix}erp_peoples as people
         LEFT JOIN {$wpdb->prefix}erp_people_type_relations as p_types_rel on p_types_rel.people_id = people.id
@@ -397,12 +387,12 @@ function erp_get_people_by( $field, $value ) {
 
         if ( is_array( $value ) ) {
             $separeted_values = "'" . implode( "','", $value ) . "'";
-            $sql              .= " WHERE `people`.$field IN ( $separeted_values )";
+            $sql .= " WHERE `people`.$field IN ( $separeted_values )";
         } else {
             $sql .= " WHERE `people`.$field = '$value'";
         }
 
-        $sql .= " GROUP BY people.id ";
+        $sql .= ' GROUP BY people.id ';
 
         $results = $wpdb->get_results( $sql );
 
@@ -437,15 +427,14 @@ function erp_get_people_by( $field, $value ) {
  *
  * @return mixed integer on success, false otherwise
  */
-function erp_insert_people( $args = array(), $return_object = false ) {
-
+function erp_insert_people( $args = [], $return_object = false ) {
     if ( empty( $args['id'] ) ) {
         $args['id'] = 0;
     }
 
     $existing_people = \WeDevs\ERP\Framework\Models\People::firstOrNew( [ 'id' => $args['id'] ] );
 
-    $defaults = array(
+    $defaults = [
         'id'            => $existing_people->id,
         'first_name'    => $existing_people->first_name,
         'last_name'     => $existing_people->last_name,
@@ -468,11 +457,10 @@ function erp_insert_people( $args = array(), $return_object = false ) {
         'contact_owner' => $existing_people->contact_owner,
         'life_stage'    => $existing_people->life_stage,
         'hash'          => $existing_people->hash,
-        'type'          => ''
-    );
+        'type'          => '',
+    ];
 
     $args           = wp_parse_args( $args, $defaults );
-
 
     $errors         = [];
     $unchanged_data = [];
@@ -481,12 +469,12 @@ function erp_insert_people( $args = array(), $return_object = false ) {
     unset( $args['type'], $args['created'] );
 
     //sensitization
-    $args['email'] = strtolower( trim( $args['email'] ));
+    $args['email'] = strtolower( trim( $args['email'] ) );
 
     // Assign first name as company name for accounting customer search
     if ( $people_type == 'company' ) {
         $args['first_name'] = $args['company'];
-        $args['last_name'] = '(company)';
+        $args['last_name']  = '(company)';
     }
 
     if ( ! $existing_people->id ) {
@@ -553,11 +541,9 @@ function erp_insert_people( $args = array(), $return_object = false ) {
         if ( ! empty( $existing_people_by_email->email ) && $existing_people_by_email->hasType( $people_type ) ) {
             $is_existing_people = true;
             $people             = $existing_people_by_email;
-
-        } else if ( ! empty( $existing_people_by_email->email ) && ! $existing_people_by_email->hasType( $people_type ) ) {
+        } elseif ( ! empty( $existing_people_by_email->email ) && ! $existing_people_by_email->hasType( $people_type ) ) {
             $is_existing_people = true;
             $people             = $existing_people_by_email;
-
         } else {
             $people = \WeDevs\ERP\Framework\Models\People::create( [
                     'user_id'       => $user->ID,
@@ -566,7 +552,7 @@ function erp_insert_people( $args = array(), $return_object = false ) {
                     'hash'          => $args['hash'],
                     'contact_owner' => $args['contact_owner'],
                     'created_by'    => $args['created_by'],
-                    'created'       => current_time( 'mysql' )
+                    'created'       => current_time( 'mysql' ),
                 ]
             );
         }
@@ -589,7 +575,7 @@ function erp_insert_people( $args = array(), $return_object = false ) {
         $user_id = wp_update_user( [
             'ID'         => $user->ID,
             'user_url'   => ! empty( $args['website'] ) ? $args['website'] : $user->user_url,
-            'user_email' => ! empty( $args['email'] ) ? $args['email'] : $user->user_email
+            'user_email' => ! empty( $args['email'] ) ? $args['email'] : $user->user_email,
         ] );
 
         if ( is_wp_error( $user_id ) ) {
@@ -600,6 +586,7 @@ function erp_insert_people( $args = array(), $return_object = false ) {
             unset( $args['id'], $args['user_id'], $args['email'], $args['website'], $args['contact_owner'], $args['created_by'], $args['hash'] );
 
             wp_cache_delete( 'erp_people_id_user_' . $user->ID, 'erp' );
+
             foreach ( $args as $key => $value ) {
                 if ( ! update_user_meta( $user_id, $key, $value ) ) {
                     $unchanged_data[ $key ] = $value;
@@ -633,13 +620,16 @@ function erp_insert_people( $args = array(), $return_object = false ) {
 
     //unset created_by from meta
     unset( $meta_fields['created_by'] );
+
     if ( ! empty( $meta_fields ) ) {
-        $people_metada = array_keys( erp_people_get_meta( $people->id) );
+        $people_metada = array_keys( erp_people_get_meta( $people->id ) );
+
         foreach ( $people_metada as $single_data ) {
-            if ( ! array_key_exists( $single_data , $meta_fields ) ) {
+            if ( ! array_key_exists( $single_data, $meta_fields ) ) {
                 erp_people_delete_meta( $people->id, $single_data );
             }
         }
+
         foreach ( $meta_fields as $key => $value ) {
             if ( 'raw_data' !== $key ) {
                 erp_people_update_meta( $people->id, $key, $value );
@@ -660,9 +650,10 @@ function erp_insert_people( $args = array(), $return_object = false ) {
     }
 
     $hash = $people->hash;
+
     if ( empty( $hash ) ) {
         $hash_id = sha1( microtime() . 'erp-unique-hash-id' . $people->email );
-        $people->update(['hash', $hash_id]);
+        $people->update( ['hash', $hash_id] );
     }
 
     return $return_object ? $people : $people->id;
@@ -673,13 +664,13 @@ function erp_insert_people( $args = array(), $return_object = false ) {
  *
  * @since 1.0
  *
- * @param int $people_id People id.
- * @param string $meta_key Metadata name.
- * @param mixed $meta_value Metadata value. Must be serializable if non-scalar.
- * @param bool $unique Optional. Whether the same key should not be added.
+ * @param int    $people_id  people id
+ * @param string $meta_key   metadata name
+ * @param mixed  $meta_value Metadata value. Must be serializable if non-scalar.
+ * @param bool   $unique     Optional. Whether the same key should not be added.
  *                           Default false.
  *
- * @return int|false Meta id on success, false on failure.
+ * @return int|false meta id on success, false on failure
  */
 function erp_people_add_meta( $people_id, $meta_key, $meta_value, $unique = false ) {
     return add_metadata( 'erp_people', $people_id, $meta_key, $meta_value, $unique );
@@ -690,10 +681,10 @@ function erp_people_add_meta( $people_id, $meta_key, $meta_value, $unique = fals
  *
  * @since 1.0
  *
- * @param int $people_id People id.
- * @param string $key Optional. The meta key to retrieve. By default, returns
- *                        data for all keys. Default empty.
- * @param bool $single Optional. Whether to return a single value. Default false.
+ * @param int    $people_id people id
+ * @param string $key       Optional. The meta key to retrieve. By default, returns
+ *                          data for all keys. Default empty.
+ * @param bool   $single    Optional. Whether to return a single value. Default false.
  *
  * @return mixed Will be an array if $single is false. Will be value of meta data
  *               field if $single is true.
@@ -712,14 +703,14 @@ function erp_people_get_meta( $people_id, $key = '', $single = false ) {
  *
  * @since 1.0
  *
- * @param int $people_id People id.
- * @param string $meta_key Metadata key.
- * @param mixed $meta_value Metadata value. Must be serializable if non-scalar.
- * @param mixed $prev_value Optional. Previous value to check before removing.
+ * @param int    $people_id  people id
+ * @param string $meta_key   metadata key
+ * @param mixed  $meta_value Metadata value. Must be serializable if non-scalar.
+ * @param mixed  $prev_value Optional. Previous value to check before removing.
  *                           Default empty.
  *
- * @return int|bool Meta id if the key didn't exist, true on successful update,
- *                  false on failure.
+ * @return int|bool meta id if the key didn't exist, true on successful update,
+ *                  false on failure
  */
 function erp_people_update_meta( $people_id, $meta_key, $meta_value, $prev_value = '' ) {
     return update_metadata( 'erp_people', $people_id, $meta_key, $meta_value, $prev_value );
@@ -734,12 +725,12 @@ function erp_people_update_meta( $people_id, $meta_key, $meta_value, $prev_value
  *
  * @since 1.0
  *
- * @param int $people_id People id.
- * @param string $meta_key Metadata name.
- * @param mixed $meta_value Optional. Metadata value. Must be serializable if
+ * @param int    $people_id  people id
+ * @param string $meta_key   metadata name
+ * @param mixed  $meta_value Optional. Metadata value. Must be serializable if
  *                           non-scalar. Default empty.
  *
- * @return bool True on success, false on failure.
+ * @return bool true on success, false on failure
  */
 function erp_people_delete_meta( $people_id, $meta_key, $meta_value = '' ) {
     return delete_metadata( 'erp_people', $people_id, $meta_key, $meta_value );
@@ -774,7 +765,7 @@ function erp_get_people_main_field() {
         'currency',
         'created_by',
         'life_stage',
-        'created'
+        'created',
     ] );
 }
 
@@ -790,7 +781,6 @@ function erp_get_people_main_field() {
  * @return int|object people_id on success and WP_Error object on fail
  */
 function erp_convert_to_people( $args = [] ) {
-
     $type = ! empty( $args['type'] ) ? $args['type'] : 'contact';
 
     if ( $args['is_wp_user'] && $args['wp_user_id'] ) {
@@ -816,7 +806,7 @@ function erp_convert_to_people( $args = [] ) {
             'currency'    => get_user_meta( $wp_user->ID, 'currency', true ),
             'user_id'     => $wp_user->ID,
             'type'        => $type,
-            'photo_id'    => get_user_meta( $wp_user->ID, 'photo_id', true )
+            'photo_id'    => get_user_meta( $wp_user->ID, 'photo_id', true ),
         ];
 
         $people_id = erp_insert_people( $params );
@@ -824,7 +814,6 @@ function erp_convert_to_people( $args = [] ) {
         if ( is_wp_error( $people_id ) ) {
             return $people_id;
         }
-
     } else {
         $people_obj = \WeDevs\ERP\Framework\Models\People::find( $args['people_id'] );
 
@@ -854,7 +843,7 @@ function erp_convert_to_people( $args = [] ) {
 function erp_get_people_email( $id ) {
     global $wpdb;
 
-    $sql = $wpdb->prepare( "SELECT email FROM {$wpdb->prefix}erp_peoples WHERE id = %d", absint($id) );
+    $sql = $wpdb->prepare( "SELECT email FROM {$wpdb->prefix}erp_peoples WHERE id = %d", absint( $id ) );
 
     return $wpdb->get_var( $sql );
 }

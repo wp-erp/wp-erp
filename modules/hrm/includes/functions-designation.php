@@ -7,15 +7,15 @@
  *
  * @return int|false
  */
-function erp_hr_create_designation( $args = array() ) {
+function erp_hr_create_designation( $args = [] ) {
     global $wpdb;
 
-    $defaults = array(
+    $defaults = [
         'id'          => 0,
         'title'       => '',
         'description' => '',
-        'status'      => 1
-    );
+        'status'      => 1,
+    ];
 
     $fields = wp_parse_args( $args, $defaults );
 
@@ -31,15 +31,12 @@ function erp_hr_create_designation( $args = array() ) {
     $designation = new \WeDevs\ERP\HRM\Models\Designation();
 
     if ( ! $desig_id ) {
-
         $desig = $designation->create( $fields );
 
         do_action( 'erp_hr_desig_new', $desig->id, $fields );
 
         return $desig->id;
-
     } else {
-
         do_action( 'erp_hr_desig_before_updated', $desig_id, $fields );
 
         $designation->find( $desig_id )->update( $fields );
@@ -47,7 +44,6 @@ function erp_hr_create_designation( $args = array() ) {
         do_action( 'erp_hr_desig_after_updated', $desig_id, $fields );
 
         return $desig_id;
-
     }
 
     return false;
@@ -58,20 +54,19 @@ function erp_hr_create_designation( $args = array() ) {
  *
  * @param  int  the company id
  *
- * @return array  list of departments
+ * @return array list of departments
  */
-function erp_hr_get_designations( $args = array() ) {
-
-    $defaults = array(
+function erp_hr_get_designations( $args = [] ) {
+    $defaults = [
         'number'     => 20,
         'offset'     => 0,
         'orderby'    => 'title',
         'order'      => 'ASC',
-    );
+    ];
 
     $args = wp_parse_args( $args, $defaults );
 
-    $cache_key = 'erp-designations';
+    $cache_key    = 'erp-designations';
     $designations = wp_cache_get( $cache_key, 'erp' );
 
     $designation = new \WeDevs\ERP\HRM\Models\Designation();
@@ -84,9 +79,9 @@ function erp_hr_get_designations( $args = array() ) {
         }
 
         $results = $designation
-                ->orderBy( $args['orderby'], $args['order'] )
-                ->get()
-                ->toArray();
+            ->orderBy( $args['orderby'], $args['order'] )
+            ->get()
+            ->toArray();
 
         $designations = erp_array_to_object( $results );
 
@@ -104,9 +99,8 @@ function erp_hr_get_designations( $args = array() ) {
  * @return bool
  */
 function erp_hr_delete_designation( $designation_id ) {
-
     if ( is_array( $designation_id ) ) {
-        $exist_employee = [];
+        $exist_employee     = [];
         $not_exist_employee = [];
 
         foreach ( $designation_id as $key => $designation ) {
@@ -125,9 +119,9 @@ function erp_hr_delete_designation( $designation_id ) {
         }
 
         return $exist_employee;
-
     } else {
         $designation = new \WeDevs\ERP\HRM\Designation( $designation_id );
+
         if ( $designation->num_of_employees() ) {
             return new WP_Error( 'not-empty', __( 'You can not delete this designation because it contains employees.', 'erp' ) );
         }
@@ -136,7 +130,6 @@ function erp_hr_delete_designation( $designation_id ) {
 
         return \WeDevs\ERP\HRM\Models\Designation::find( $designation_id )->delete();
     }
-
 }
 
 /**
@@ -144,15 +137,15 @@ function erp_hr_delete_designation( $designation_id ) {
  *
  * @param  int  company id
  *
- * @return array  the key-value paired designations
+ * @return array the key-value paired designations
  */
 function erp_hr_get_designation_dropdown_raw( $select_text = '' ) {
-    $select_text = empty( $select_text ) ? __( '- Select Designation -', 'erp' ) : $select_text;
+    $select_text  = empty( $select_text ) ? __( '- Select Designation -', 'erp' ) : $select_text;
     $designations = erp_hr_get_designations( ['number' => -1 ] );
-    $dropdown     = array( '-1' => $select_text );
+    $dropdown     = [ '-1' => $select_text ];
 
     if ( $designations ) {
-        foreach ($designations as $key => $designation) {
+        foreach ( $designations as $key => $designation ) {
             $dropdown[$designation->id] = stripslashes( $designation->title );
         }
     }
@@ -166,14 +159,14 @@ function erp_hr_get_designation_dropdown_raw( $select_text = '' ) {
  * @param  int  company id
  * @param  string  selected designation
  *
- * @return string  the dropdown
+ * @return string the dropdown
  */
 function erp_hr_get_designation_dropdown( $selected = '' ) {
     $designations = erp_hr_get_designation_dropdown_raw();
     $dropdown     = '';
 
     if ( $designations ) {
-        foreach ($designations as $key => $title) {
+        foreach ( $designations as $key => $title ) {
             $dropdown .= sprintf( "<option value='%s'%s>%s</option>\n", $key, selected( $selected, $key, false ), $title );
         }
     }

@@ -1,5 +1,5 @@
 <?php
-$customer_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
+$customer_id        = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
 $notification_types = erp_crm_activity_schedule_notification_type();
 ?>
 
@@ -45,24 +45,24 @@ $notification_types = erp_crm_activity_schedule_notification_type();
 
     <div class="clearfix"></div>
     <p>
-        <select name="invite_contact" id="erp-crm-activity-invite-contact" v-model="feedData.inviteContact" v-selecttwo="feedData.inviteContact" class="select2" multiple="multiple" style="width: 100%" data-placeholder="<?php esc_attr_e( 'Agents or managers..', 'erp' ) ?>">
-            <?php echo wp_kses( erp_crm_get_crm_user_html_dropdown(), array(
-                'option' => array(
-                    'value' => array(),
-                    'selected' => array()
-                ),
-            ) ); ?>
+        <select name="invite_contact" id="erp-crm-activity-invite-contact" v-model="feedData.inviteContact" v-selecttwo="feedData.inviteContact" class="select2" multiple="multiple" style="width: 100%" data-placeholder="<?php esc_attr_e( 'Agents or managers..', 'erp' ); ?>">
+            <?php echo wp_kses( erp_crm_get_crm_user_html_dropdown(), [
+                'option' => [
+                    'value'    => [],
+                    'selected' => [],
+                ],
+            ] ); ?>
         </select>
     </p>
 
     <div class="schedule-notification">
 
         <p class="erp-left schedule-type">
-            <label><?php esc_attr_e( 'Schedule Type', 'erp' ) ?></label>
+            <label><?php esc_attr_e( 'Schedule Type', 'erp' ); ?></label>
             <span class="sep">:</span>
             <span class="value">
                 <select name="schedule_type" id="schedule_type" v-model="feedData.schedule_type">
-                    <option value=""><?php esc_attr_e( '--Select--', 'erp' ) ?></option>
+                    <option value=""><?php esc_attr_e( '--Select--', 'erp' ); ?></option>
                     <option value="meeting"><?php esc_attr_e( 'Meeting', 'erp' ); ?></option>
                     <option value="call"><?php esc_attr_e( 'Call', 'erp' ); ?></option>
                 </select>
@@ -82,9 +82,9 @@ $notification_types = erp_crm_activity_schedule_notification_type();
             <span class="value">
                 <select name="notification_via" id="notification_via" v-model="feedData.notification_via">
                     <option value=""><?php esc_attr_e( '--Select--', 'erp' ); ?></option>
-                    <?php foreach ( $notification_types as $key => $value ) : ?>
-                        <option value="<?php echo esc_attr( $key ) ?>"><?php echo esc_attr( $value ); ?></option>
-                    <?php endforeach; ?>
+                    <?php foreach ( $notification_types as $key => $value ) { ?>
+                        <option value="<?php echo esc_attr( $key ); ?>"><?php echo esc_attr( $value ); ?></option>
+                    <?php } ?>
                 </select>
             </span>
         </p>

@@ -1,11 +1,13 @@
 <?php
+
 namespace WeDevs\ERP\API;
 
-use WP_REST_Server;
-use WP_REST_Response;
 use WP_Error;
+use WP_REST_Response;
+use WP_REST_Server;
 
 class Schedules_Controller extends REST_Controller {
+
     /**
      * Endpoint namespace.
      *
@@ -80,16 +82,16 @@ class Schedules_Controller extends REST_Controller {
         $total_items = erp_crm_get_feed_activity( ['count' => true] );
 
         $formated_items = [];
+
         foreach ( $items as $item ) {
             $additional_fields = [];
 
-            $data = $this->prepare_item_for_response( $item, $request, $additional_fields );
+            $data             = $this->prepare_item_for_response( $item, $request, $additional_fields );
             $formated_items[] = $this->prepare_response_for_collection( $data );
         }
 
         $response = rest_ensure_response( $formated_items );
         $response = $this->format_collection_response( $response, $request, $total_items );
-
 
         return $response;
     }
@@ -102,15 +104,16 @@ class Schedules_Controller extends REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_todays_schedules( $request ) {
-        $items = erp_crm_get_todays_schedules_activity( 1 );
-        $items = erp_array_to_object( $items );
+        $items       = erp_crm_get_todays_schedules_activity( 1 );
+        $items       = erp_array_to_object( $items );
         $total_items = null;
 
         $formated_items = [];
+
         foreach ( $items as $item ) {
             $additional_fields = [];
 
-            $data = $this->prepare_item_for_response( $item, $request, $additional_fields );
+            $data             = $this->prepare_item_for_response( $item, $request, $additional_fields );
             $formated_items[] = $this->prepare_response_for_collection( $data );
         }
 
@@ -130,14 +133,15 @@ class Schedules_Controller extends REST_Controller {
     public function get_upcoming_schedules( $request ) {
         $items = erp_crm_get_next_seven_day_schedules_activities( 1 );
 
-        $items = erp_array_to_object( $items );
+        $items       = erp_array_to_object( $items );
         $total_items = null;
 
         $formated_items = [];
+
         foreach ( $items as $item ) {
             $additional_fields = [];
 
-            $data = $this->prepare_item_for_response( $item, $request, $additional_fields );
+            $data             = $this->prepare_item_for_response( $item, $request, $additional_fields );
             $formated_items[] = $this->prepare_response_for_collection( $data );
         }
 
@@ -150,11 +154,11 @@ class Schedules_Controller extends REST_Controller {
     /**
      * Prepare a single user output for response
      *
-     * @param object $item
-     * @param WP_REST_Request $request Request object.
-     * @param array $additional_fields (optional)
+     * @param object          $item
+     * @param WP_REST_Request $request           request object
+     * @param array           $additional_fields (optional)
      *
-     * @return WP_REST_Response $response Response data.
+     * @return WP_REST_Response $response response data
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
         // Convert to a standard type

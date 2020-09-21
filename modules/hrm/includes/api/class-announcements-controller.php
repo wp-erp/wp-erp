@@ -1,12 +1,15 @@
 <?php
+
 namespace WeDevs\ERP\HRM\API;
 
-use WP_REST_Server;
-use WP_REST_Response;
-use WP_Error;
+use DateTime;
 use WeDevs\ERP\API\REST_Controller;
+use WP_Error;
+use WP_REST_Response;
+use WP_REST_Server;
 
 class Announcements_Controller extends REST_Controller {
+
     /**
      * Endpoint namespace.
      *
@@ -96,6 +99,7 @@ class Announcements_Controller extends REST_Controller {
         $total_items = (int) $count_items->publish;
 
         $formated_items = [];
+
         foreach ( $items as $item ) {
             $item->id         = $item->ID;
             $data             = $this->prepare_item_for_response( $item, $request );
@@ -145,6 +149,7 @@ class Announcements_Controller extends REST_Controller {
         $type = ( $request['recipient_type'] == 'all_employees' ) ? 'all_employee' : 'selected_employee';
 
         $employees = [];
+
         if ( $type == 'selected_employee' ) {
             $employees = explode( ',', str_replace( ' ', '', $request['employees'] ) );
         }
@@ -174,18 +179,20 @@ class Announcements_Controller extends REST_Controller {
         $id = (int) $request['id'];
 
         $announcement = get_post( $id );
+
         if ( empty( $id ) || empty( $announcement->ID ) ) {
             return new WP_Error( 'rest_announcement_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 400 ] );
         }
 
         $item = $this->prepare_item_for_database( $request );
 
-        $id   = wp_insert_post( $item );
+        $id           = wp_insert_post( $item );
         $announcement = get_post( $id );
 
         $type = ( $request['recipient_type'] == 'all_employees' ) ? 'all_employee' : 'selected_employee';
 
         $employees = [];
+
         if ( $type == 'selected_employee' ) {
             $employees = explode( ',', str_replace( ' ', '', $request['employees'] ) );
         }
@@ -222,7 +229,7 @@ class Announcements_Controller extends REST_Controller {
     /**
      * Prepare a single item for create or update
      *
-     * @param WP_REST_Request $request Request object.
+     * @param WP_REST_Request $request request object
      *
      * @return array $prepared_item
      */
@@ -255,23 +262,23 @@ class Announcements_Controller extends REST_Controller {
     /**
      * Prepare a single user output for response
      *
-     * @param object $item
-     * @param WP_REST_Request $request Request object.
-     * @param array $additional_fields (optional)
+     * @param object          $item
+     * @param WP_REST_Request $request           request object
+     * @param array           $additional_fields (optional)
      *
-     * @return WP_REST_Response $response Response data.
+     * @return WP_REST_Response $response response data
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
-        $post_date   = new \DateTime($item->post_date);
-        $post_author = get_user_by('id', $item->post_author);
+        $post_date   = new DateTime( $item->post_date );
+        $post_author = get_user_by( 'id', $item->post_author );
 
         $data = [
             'id'     => (int) $item->id,
             'title'  => $item->post_title,
             'body'   => $item->post_content,
             'status' => $item->post_status,
-            'date'   => $post_date->format('Y-m-d'),
-            'author' => $post_author->user_login
+            'date'   => $post_date->format( 'Y-m-d' ),
+            'author' => $post_author->user_login,
         ];
 
         $data = array_merge( $data, $additional_fields );

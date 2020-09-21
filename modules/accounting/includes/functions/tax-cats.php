@@ -47,7 +47,6 @@ function erp_acct_get_all_tax_cats( $args = [] ) {
  *
  * @return mixed
  */
-
 function erp_acct_get_tax_cat( $tax_no ) {
     global $wpdb;
 
@@ -60,6 +59,7 @@ function erp_acct_get_tax_cat( $tax_no ) {
  * Insert tax category data
  *
  * @param $data
+ *
  * @return int
  */
 function erp_acct_insert_tax_cat( $data ) {
@@ -73,26 +73,26 @@ function erp_acct_insert_tax_cat( $data ) {
 
     $wpdb->insert(
         $wpdb->prefix . 'erp_acct_tax_categories',
-        array(
-			'name'        => $tax_data['name'],
-			'description' => $tax_data['description'],
-			'created_at'  => $tax_data['created_at'],
-			'created_by'  => $tax_data['created_by'],
-			'updated_at'  => $tax_data['updated_at'],
-			'updated_by'  => $tax_data['updated_by'],
-        )
+        [
+            'name'        => $tax_data['name'],
+            'description' => $tax_data['description'],
+            'created_at'  => $tax_data['created_at'],
+            'created_by'  => $tax_data['created_by'],
+            'updated_at'  => $tax_data['updated_at'],
+            'updated_by'  => $tax_data['updated_by'],
+        ]
     );
 
     $tax_id = $wpdb->insert_id;
 
     return $tax_id;
-
 }
 
 /**
  * Update tax category
  *
  * @param $data
+ *
  * @return int
  */
 function erp_acct_update_tax_cat( $data, $id ) {
@@ -106,21 +106,20 @@ function erp_acct_update_tax_cat( $data, $id ) {
 
     $wpdb->update(
         $wpdb->prefix . 'erp_acct_tax_categories',
-        array(
-			'name'        => $tax_data['name'],
-			'description' => $tax_data['description'],
-			'created_at'  => $tax_data['created_at'],
-			'created_by'  => $tax_data['created_by'],
-			'updated_at'  => $tax_data['updated_at'],
-			'updated_by'  => $tax_data['updated_by'],
-        ),
-        array(
-			'id' => $id,
-        )
+        [
+            'name'        => $tax_data['name'],
+            'description' => $tax_data['description'],
+            'created_at'  => $tax_data['created_at'],
+            'created_by'  => $tax_data['created_by'],
+            'updated_at'  => $tax_data['updated_at'],
+            'updated_by'  => $tax_data['updated_by'],
+        ],
+        [
+            'id' => $id,
+        ]
     );
 
     return $id;
-
 }
 
 /**
@@ -133,8 +132,7 @@ function erp_acct_update_tax_cat( $data, $id ) {
 function erp_acct_delete_tax_cat( $id ) {
     global $wpdb;
 
-    $wpdb->delete( $wpdb->prefix . 'erp_acct_tax_categories', array( 'id' => $id ) );
+    $wpdb->delete( $wpdb->prefix . 'erp_acct_tax_categories', [ 'id' => $id ] );
 
     return $id;
 }
-

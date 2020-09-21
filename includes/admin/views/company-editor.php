@@ -5,7 +5,7 @@
         <div class="updated">
             <p><?php esc_html_e( 'Company information has been updated!', 'erp' ); ?></p>
         </div>
-    <?php } else if ( isset( $_GET['msg'] ) && $_GET['msg'] == 'error' ) { ?>
+    <?php } elseif ( isset( $_GET['msg'] ) && $_GET['msg'] == 'error' ) { ?>
         <?php
             if ( ! empty( $_GET['error-company'] ) ) {
                 $errors[] = esc_html__( 'Company name is required', 'erp' );
@@ -41,33 +41,33 @@
                             <tr>
                                 <td><label for="address_1"><?php esc_html_e( 'Address Line 1 ', 'erp' ); ?></label></td>
                                 <td>
-                                    <?php erp_html_form_input(array(
+                                    <?php erp_html_form_input( [
                                         'name'  => 'address[address_1]',
                                         'value' => $company->address['address_1'],
-                                        'class' => 'regular-text'
-                                    )); ?>
+                                        'class' => 'regular-text',
+                                    ] ); ?>
                                 </td>
                             </tr>
 
                             <tr>
                                 <td><label for="address_2"><?php esc_html_e( 'Address Line 2 ', 'erp' ); ?></label></td>
                                 <td>
-                                    <?php erp_html_form_input(array(
+                                    <?php erp_html_form_input( [
                                         'name'  => 'address[address_2]',
                                         'value' => $company->address['address_2'],
-                                        'class' => 'regular-text'
-                                    )); ?>
+                                        'class' => 'regular-text',
+                                    ] ); ?>
                                 </td>
                             </tr>
 
                             <tr>
                                 <td><label for="city"><?php esc_html_e( 'City', 'erp' ); ?></label></td>
                                 <td>
-                                    <?php erp_html_form_input(array(
+                                    <?php erp_html_form_input( [
                                         'name'  => 'address[city]',
                                         'value' => $company->address['city'],
-                                        'class' => 'regular-text'
-                                    )); ?>
+                                        'class' => 'regular-text',
+                                    ] ); ?>
                                 </td>
                             </tr>
 
@@ -75,12 +75,12 @@
                                 <td><label for="erp-country"><?php esc_html_e( 'Country', 'erp' ); ?></label> <span class="required">*</span></td>
                                 <td>
                                     <select name="address[country]" id="erp-country" data-parent="table" class="erp-country-select select2" required="required">
-                                        <?php echo wp_kses( $country->country_dropdown( $company->address['country'] ), array(
-                                            'option' => array(
-                                                'value' => array(),
-                                                'selected' => array()
-                                            ),
-                                        ) ); ?>
+                                        <?php echo wp_kses( $country->country_dropdown( $company->address['country'] ), [
+                                            'option' => [
+                                                'value'    => [],
+                                                'selected' => [],
+                                            ],
+                                        ] ); ?>
                                     </select>
                                 </td>
                             </tr>
@@ -92,16 +92,17 @@
                                         <?php
                                         if ( $company->address['country'] ) {
                                             $states = $country->get_states( $company->address['country'] );
-                                            echo wp_kses( erp_html_generate_dropdown( $states, $company->address['state'] ), array(
-                                                'option' => array(
-                                                    'value' => array(),
-                                                    'selected' => array()
-                                                ),
-                                            ) );
+                                            echo wp_kses( erp_html_generate_dropdown( $states, $company->address['state'] ), [
+                                                'option' => [
+                                                    'value'    => [],
+                                                    'selected' => [],
+                                                ],
+                                            ] );
                                         } else {
                                             ?>
                                             <option value="-1"><?php esc_html_e( '- Select -', 'erp' ); ?></option>
-                                        <?php } ?>
+                                        <?php
+                                        } ?>
 
                                     </select>
                                 </td>
@@ -110,56 +111,56 @@
                             <tr>
                                 <td><label for="zip"><?php esc_html_e( 'Postal / Zip Code', 'erp' ); ?></label></td>
                                 <td>
-                                    <?php erp_html_form_input(array(
+                                    <?php erp_html_form_input( [
                                         'name'  => 'address[zip]',
                                         'value' => ( isset( $company->address['zip'] ) ? $company->address['zip'] : '' ),
-                                        'class' => 'regular-text'
-                                    )); ?>
+                                        'class' => 'regular-text',
+                                    ] ); ?>
                                 </td>
                             </tr>
 
                             <tr>
                                 <td><label for="phone"><?php esc_html_e( 'Phone', 'erp' ); ?></label></td>
                                 <td>
-                                    <?php erp_html_form_input(array(
+                                    <?php erp_html_form_input( [
                                         'name'  => 'phone',
                                         'value' => $company->phone,
-                                        'class' => 'regular-text'
-                                    )); ?>
+                                        'class' => 'regular-text',
+                                    ] ); ?>
                                 </td>
                             </tr>
 
                             <tr>
                                 <td><label for="fax"><?php esc_html_e( 'Fax', 'erp' ); ?></label></td>
                                 <td>
-                                    <?php erp_html_form_input(array(
+                                    <?php erp_html_form_input( [
                                         'name'  => 'fax',
                                         'value' => $company->fax,
-                                        'class' => 'regular-text'
-                                    )); ?>
+                                        'class' => 'regular-text',
+                                    ] ); ?>
                                 </td>
                             </tr>
 
                             <tr>
                                 <td><label for="mobile"><?php esc_html_e( 'Mobile', 'erp' ); ?></label></td>
                                 <td>
-                                    <?php erp_html_form_input(array(
+                                    <?php erp_html_form_input( [
                                         'name'  => 'mobile',
                                         'value' => $company->mobile,
-                                        'class' => 'regular-text'
-                                    )); ?>
+                                        'class' => 'regular-text',
+                                    ] ); ?>
                                 </td>
                             </tr>
 
                             <tr>
                                 <td><label for="website"><?php esc_html_e( 'Website', 'erp' ); ?></label></td>
                                 <td>
-                                    <?php erp_html_form_input(array(
+                                    <?php erp_html_form_input( [
                                         'name'  => 'website',
                                         'type'  => 'url',
                                         'value' => $company->website,
-                                        'class' => 'regular-text'
-                                    )); ?>
+                                        'class' => 'regular-text',
+                                    ] ); ?>
                                 </td>
                             </tr>
                             <tr>
@@ -167,7 +168,7 @@
                                     <label for="business_type"><?php esc_html_e( 'What sort of business do you do?', 'erp' ); ?></label>
                                 </td>
                                 <td>
-                                    <?php erp_html_form_input([
+                                    <?php erp_html_form_input( [
                                         'name'    => 'business_type',
                                         'type'    => 'select',
                                         'value'   => $company->business_type,
@@ -182,9 +183,9 @@
                                             'ecommerceWoo'     => 'eCommerce (WooCommerce)',
                                             'ecommerceShopify' => 'eCommerce (Shopify)',
                                             'ecommerceOther'   => 'eCommerce (Other)',
-                                            'Other'            => 'Other'
-                                        ]
-                                    ]); ?>
+                                            'Other'            => 'Other',
+                                        ],
+                                    ] ); ?>
                                 </td>
                             </tr>
                         </table>
@@ -209,7 +210,7 @@
                         <?php } else { ?>
 
                             <p class="hide-if-no-js">
-                                <a href="<?php echo esc_url( get_upload_iframe_src('image' ) ); ?>" id="set-company-thumbnail" class="thickbox"><?php esc_html_e( 'Upload company logo', 'erp' ); ?></a>
+                                <a href="<?php echo esc_url( get_upload_iframe_src( 'image' ) ); ?>" id="set-company-thumbnail" class="thickbox"><?php esc_html_e( 'Upload company logo', 'erp' ); ?></a>
                             </p>
 
                         <?php } ?>

@@ -1,11 +1,14 @@
 <?php
+
 namespace WeDevs\ERP\API;
 
-use WP_REST_Server;
-use WP_REST_Response;
+use DateTime;
 use WP_Error;
+use WP_REST_Response;
+use WP_REST_Server;
 
 class Activities_Controller extends REST_Controller {
+
     /**
      * Endpoint namespace.
      *
@@ -102,13 +105,14 @@ class Activities_Controller extends REST_Controller {
         $items = erp_array_to_object( $items );
 
         $args['count'] = true;
-        $total_items   = erp_crm_get_feed_activity( $args );;
+        $total_items   = erp_crm_get_feed_activity( $args );
 
         $formated_items = [];
+
         foreach ( $items as $item ) {
             $additional_fields = [];
 
-            $data = $this->prepare_item_for_response( $item, $request, $additional_fields );
+            $data             = $this->prepare_item_for_response( $item, $request, $additional_fields );
             $formated_items[] = $this->prepare_response_for_collection( $data );
         }
 
@@ -153,7 +157,7 @@ class Activities_Controller extends REST_Controller {
 
             case 'log':
                 $extra_data = [
-                    'invite_contact' => $item['invited_user']
+                    'invite_contact' => $item['invited_user'],
                 ];
                 $item['start_date'] = date( 'Y-m-d H:i:s', strtotime( $item['start_date'] ) );
                 $item['extra']      = base64_encode( json_encode( $extra_data ) );
@@ -173,8 +177,8 @@ class Activities_Controller extends REST_Controller {
                 ];
 
                 if ( $item['allow_notification'] == 'true' ) {
-                    $notify_date = new \DateTime( $item['start_date'] );
-                    $notify_date->modify('-' . $item['notification_time_interval'] . ' '. $item['notification_time'] );
+                    $notify_date = new DateTime( $item['start_date'] );
+                    $notify_date->modify( '-' . $item['notification_time_interval'] . ' ' . $item['notification_time'] );
                     $extra_data['notification_datetime'] = $notify_date->format( 'Y-m-d H:i:s' );
                 } else {
                     $extra_data['notification_datetime'] = '';
@@ -252,7 +256,7 @@ class Activities_Controller extends REST_Controller {
     /**
      * Prepare a single item for create or update
      *
-     * @param WP_REST_Request $request Request object.
+     * @param WP_REST_Request $request request object
      *
      * @return array $prepared_item
      */
@@ -332,7 +336,7 @@ class Activities_Controller extends REST_Controller {
                 }
 
                 if ( isset( $request['employee_ids'] ) ) {
-                    $prepared_item['invite_contact'] = explode( ",", str_replace( " ", "", $request['employee_ids'] ) );
+                    $prepared_item['invite_contact'] = explode( ',', str_replace( ' ', '', $request['employee_ids'] ) );
                 }
 
                 if ( isset( $request['schedule_type'] ) ) {
@@ -362,7 +366,7 @@ class Activities_Controller extends REST_Controller {
                 }
 
                 if ( isset( $request['employee_ids'] ) ) {
-                    $prepared_item['invite_contact'] = explode( ",", str_replace( " ", "", $request['employee_ids'] ) );
+                    $prepared_item['invite_contact'] = explode( ',', str_replace( ' ', '', $request['employee_ids'] ) );
                 }
 
                 if ( isset( $request['date_time'] ) ) {
@@ -381,11 +385,11 @@ class Activities_Controller extends REST_Controller {
     /**
      * Prepare a single user output for response
      *
-     * @param object $item
-     * @param WP_REST_Request $request Request object.
-     * @param array $additional_fields (optional)
+     * @param object          $item
+     * @param WP_REST_Request $request           request object
+     * @param array           $additional_fields (optional)
      *
-     * @return WP_REST_Response $response Response data.
+     * @return WP_REST_Response $response response data
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
         $types = array_flip( $this->activity_types );

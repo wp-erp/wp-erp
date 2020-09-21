@@ -6,9 +6,6 @@
  * The functions in this file are used primarily as convenient wrappers for
  * capability output in user profiles. This includes mapping capabilities and
  * groups to human readable strings,
- *
- * @package WP ERP
- * @subpackage HR
  */
 
 /**
@@ -39,14 +36,14 @@ function erp_hr_get_roles() {
         erp_hr_get_manager_role() => [
             'name'         => __( 'HR Manager', 'erp' ),
             'public'       => false,
-            'capabilities' => erp_hr_get_caps_for_role( erp_hr_get_manager_role() )
+            'capabilities' => erp_hr_get_caps_for_role( erp_hr_get_manager_role() ),
         ],
 
         erp_hr_get_employee_role() => [
             'name'         => __( 'Employee', 'erp' ),
             'public'       => true,
-            'capabilities' => erp_hr_get_caps_for_role( erp_hr_get_employee_role() )
-        ]
+            'capabilities' => erp_hr_get_caps_for_role( erp_hr_get_employee_role() ),
+        ],
     ];
 
     return apply_filters( 'erp_hr_get_roles', $roles );
@@ -55,7 +52,7 @@ function erp_hr_get_roles() {
 /**
  * Returns an array of capabilities based on the role that is being requested.
  *
- * @param  string $role
+ * @param string $role
  *
  * @return array
  */
@@ -138,7 +135,6 @@ function erp_hr_get_caps_for_role( $role = '' ) {
                 'erp_edit_attendance'   => true,
                 'erp_view_attendance'   => true,
                 'erp_delete_attendance' => true,
-
             ];
             break;
 
@@ -193,7 +189,7 @@ function erp_hr_get_caps_for_role( $role = '' ) {
                 'erp_delete_document'      => true,
 
                 // attendance
-                'erp_view_attendance'      => true
+                'erp_view_attendance'      => true,
             ];
 
             break;
@@ -205,14 +201,14 @@ function erp_hr_get_caps_for_role( $role = '' ) {
 /**
  * Maps HR capabilities to employee or HR manager
  *
- * @param array $caps Capabilities for meta capability
- * @param string $cap Capability name
- * @param int $user_id User id
- * @param mixed $args Arguments
+ * @param array  $caps    Capabilities for meta capability
+ * @param string $cap     Capability name
+ * @param int    $user_id User id
+ * @param mixed  $args    Arguments
  *
  * @return array Actual capabilities for meta capability
  */
-function erp_hr_map_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args = array() ) {
+function erp_hr_map_meta_caps( $caps = [], $cap = '', $user_id = 0, $args = [] ) {
     // What capability is being checked?
     switch ( $cap ) {
 
@@ -222,11 +218,13 @@ function erp_hr_map_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args =
                 $caps = [ $cap ];
             }
             break;
+
         case 'erp_view_list':
             if ( user_can( $user_id, 'employee' ) ) {
                 $caps = [ $cap ];
             }
             break;
+
         case 'erp_view_employee':
         case 'erp_edit_employee':
 
@@ -265,7 +263,7 @@ function erp_hr_map_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args =
                 $hr_manager_role = erp_hr_get_manager_role();
                 // HR manager can read any employee
                 if ( user_can( $user_id, $hr_manager_role ) ) {
-                    $caps = array( $hr_manager_role );
+                    $caps = [ $hr_manager_role ];
                 } else {
                     $caps = [ 'do_not_allow' ];
                 }
@@ -297,7 +295,7 @@ function erp_hr_map_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args =
             $hr_manager_role = erp_hr_get_manager_role();
 
             if ( user_can( $user_id, $hr_manager_role ) ) {
-                $caps = array( $hr_manager_role );
+                $caps = [ $hr_manager_role ];
             } else {
                 $caps = [ 'do_not_allow' ];
             }
@@ -334,7 +332,6 @@ function erp_hr_filter_editable_roles( $all_roles = [] ) {
     $roles = erp_hr_get_roles();
 
     foreach ( $roles as $hr_role_key => $hr_role ) {
-
         if ( isset( $hr_role['public'] ) && $hr_role['public'] === false ) {
 
             // Loop through WordPress roles
@@ -346,7 +343,6 @@ function erp_hr_filter_editable_roles( $all_roles = [] ) {
                 }
             }
         }
-
     }
 
     return $all_roles;
@@ -388,8 +384,8 @@ function erp_hr_get_user_role( $user_id = 0 ) {
 /**
  * Create a new employee when a user role is changed to employee
  *
- * @param  int $user_id
- * @param  string $role
+ * @param int    $user_id
+ * @param string $role
  *
  * @return void
  */
@@ -407,7 +403,7 @@ function erp_hr_existing_role_to_employee( $user_id, $role ) {
             'user_id'     => $user_id,
             'designation' => 0,
             'department'  => 0,
-            'status'      => 'active'
+            'status'      => 'active',
         ] );
     }
 }
@@ -415,7 +411,7 @@ function erp_hr_existing_role_to_employee( $user_id, $role ) {
 /**
  * When a new administrator is created, make him HR Manager by default
  *
- * @param  int $user_id
+ * @param int $user_id
  *
  * @return void
  */

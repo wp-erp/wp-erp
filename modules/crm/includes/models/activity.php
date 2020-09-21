@@ -1,12 +1,11 @@
 <?php
+
 namespace WeDevs\ERP\CRM\Models;
 
 use WeDevs\ERP\Framework\Model;
 
 /**
  * Class Dependents
- *
- * @package WeDevs\ERP\HRM\Models
  */
 class Activity extends Model {
     protected $table = 'erp_crm_customer_activities';
@@ -16,7 +15,7 @@ class Activity extends Model {
     public $timestamps = true;
 
     public function created_by() {
-        return $this->belongsTo( '\WeDevs\ORM\WP\User', 'created_by');
+        return $this->belongsTo( '\WeDevs\ORM\WP\User', 'created_by' );
     }
 
     public function contact() {
@@ -25,7 +24,7 @@ class Activity extends Model {
 
     public static function scopeSchedules( $query ) {
         return $query->where( 'start_date', '>', current_time( 'mysql' ) )
-                    ->where( 'type', 'log_activity' )
-                    ->where( 'sent_notification', false );
+            ->where( 'type', 'log_activity' )
+            ->where( 'sent_notification', false );
     }
 }
