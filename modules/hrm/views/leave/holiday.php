@@ -248,7 +248,7 @@ class Leave_Holiday_List_Table extends WP_List_Table {
 
     <div id="holiday_msg"></div>
 
-    <div class="erp-tip-container">
+    <div style="display: flex;">
         <h2><?php esc_html_e( 'Holiday', 'erp' ); ?></h2>
         <?php echo erp_help_tip( esc_html__( 'Add holidays for current year.', 'erp' ) ); ?>
         <h2>

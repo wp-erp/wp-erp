@@ -3,7 +3,7 @@ $tab            = ( isset( $_GET['tab'] ) && !empty( $_GET['tab'] ) ) ? sanitize
 $schedules_data = erp_crm_get_schedule_data( $tab );
 ?>
 <div class="wrap erp erp-crm-schedules" id="wp-erp">
-    <div class="erp-tip-container">
+    <div style="display: flex;">
         <h1><?php esc_attr_e( 'Schedules', 'erp' ); ?></h1>
         <?php echo erp_help_tip( esc_html__( 'Click on the date to create a schedule.', 'erp' ) ); ?>
     </div>

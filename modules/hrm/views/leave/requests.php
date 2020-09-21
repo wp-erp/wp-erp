@@ -1,5 +1,5 @@
 <div class="wrap erp-hr-leave-requests">
-    <div class="erp-tip-container">
+    <div style="display: flex;">
         <h2><?php esc_html_e( 'Leave Requests', 'erp' ); ?></h2>
         <?php if ( current_user_can( 'erp_leave_create_request' ) ) { ?>
             <?php echo erp_help_tip( esc_html__( 'To submit a new leave request you have to first create leave policy and leave entitlement for your employee.', 'erp' ) ); ?>

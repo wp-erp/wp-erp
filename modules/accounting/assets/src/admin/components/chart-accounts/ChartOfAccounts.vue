@@ -51,7 +51,7 @@
         </ul>
         <ul v-else>
             <li :key="index" v-for="(chart, index) in chartAccounts">
-                <div class="erp-tip-container">
+                <div style="display: flex;">
                     <h3>{{ chart.label }}</h3>
                     <span class="erp-help-tip .erp-tips" :title="__('System account could not be edited or deleted anyway as those are defined by the accounting terms.', 'erp')"></span>
                 </div>
