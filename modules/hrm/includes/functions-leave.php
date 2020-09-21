@@ -1067,9 +1067,17 @@ function erp_hr_leave_policy_delete( $policy_ids ) {
                                 $status->delete();
                             }
                         }
+
+                        if ( $request->details ) {
+                            foreach ( $request->details as $detail ) {
+                                $detail->delete();
+                            }
+                        }
+
                         if ( $request->unpaid ) {
                             $request->unpaid->delete();
                         }
+
                         $request->delete();
                     }
                 }
@@ -1527,6 +1535,7 @@ function erp_hr_get_leave_requests( $args = array() ) {
             $temp_data['message']        = $request->latest_approval_status ? $request->latest_approval_status->message : '';
             $temp_data['color']          = isset( $single_request['color'] ) ? $single_request['color'] : '';
             $temp_data['day_status_id']  = $request->day_status_id;
+            $temp_data['f_year']      = $request->entitlement->f_year;
 
             $formatted_data[] =  $temp_data;
         }
@@ -1546,7 +1555,7 @@ function erp_hr_get_leave_requests( $args = array() ) {
  *
  * @return array
  */
-function erp_hr_leave_get_requests_count() {
+function erp_hr_leave_get_requests_count( $f_year ) {
     global $wpdb;
 
     $statuses = erp_hr_leave_request_get_statuses();
@@ -1563,8 +1572,13 @@ function erp_hr_leave_get_requests_count() {
             $counts[ $status ] = array( 'count' => 0, 'label' => $label );
         }
 
-        $total_leave_count = $wpdb->get_results(
-            "SELECT last_status as id, COUNT( last_status ) as count from {$wpdb->prefix}erp_hr_leave_requests GROUP BY last_status", ARRAY_A
+        $total_leave_count = $wpdb->get_results($wpdb->prepare("
+            SELECT rq.last_status as id, COUNT( rq.last_status ) AS count
+            FROM {$wpdb->prefix}erp_hr_leave_requests AS rq
+            LEFT JOIN {$wpdb->prefix}erp_hr_leave_entitlements AS en ON en.id = rq.leave_entitlement_id
+            WHERE en.f_year = %d
+            GROUP BY last_status
+            ", $f_year), ARRAY_A
         );
 
         if ( is_array( $total_leave_count ) && ! empty( $total_leave_count ) ) {
@@ -1894,9 +1908,17 @@ function erp_hr_delete_leave_request( $request_id ) {
             $status->delete();
         }
     }
+
+    if ( $request->details ) {
+        foreach ( $request->details as $detail ) {
+            $detail->delete();
+        }
+    }
+
     if ( $request->unpaid ) {
         $request->unpaid->delete();
     }
+
     $request->delete();
 
     return $request_id;
@@ -2140,8 +2162,19 @@ function erp_hr_delete_entitlement( $id, $user_id, $entitlement_id ) {
 
     $entitlement = Leave_Entitlement::find( $entitlement_id );
 
+    // get policy
+    $policy = $entitlement->policy;
+
+    // check entitlement employee status
+    $employee = new Employee( $entitlement->user_id );
+
     if ( $entitlement->leave_requests ) {
         foreach( $entitlement->leave_requests as $request ) {
+
+            if ( $policy->employee_type !== '-1' && $policy->employee_type != $employee->get_type() ) {
+                continue;
+            }
+
             if ( $request->approval_status ) {
                 foreach ( $request->approval_status as $status ) {
                     if ( $status->entitlements ) {
@@ -2152,9 +2185,17 @@ function erp_hr_delete_entitlement( $id, $user_id, $entitlement_id ) {
                     $status->delete();
                 }
             }
+
+            if ( $request->details ) {
+                foreach ( $request->details as $detail ) {
+                    $detail->delete();
+                }
+            }
+
             if ( $request->unpaid ) {
                 $request->unpaid->delete();
             }
+
             $request->delete();
         }
     }
@@ -2177,11 +2218,18 @@ function erp_hr_delete_entitlement( $id, $user_id, $entitlement_id ) {
 function erp_hr_leave_get_balance( $user_id, $date = null ) {
     global $wpdb;
 
-    $query = "select en.id, en.leave_id, en.day_in, en.f_year, fy.start_date, fy.end_date, l.name as policy_name";
-    $query .= " from {$wpdb->prefix}erp_hr_leave_entitlements as en";
-    $query .= " LEFT JOIN {$wpdb->prefix}erp_hr_financial_years as fy on fy.id = en.f_year";
-    $query .= " LEFT JOIN {$wpdb->prefix}erp_hr_leaves as l on l.id = en.leave_id";
-    $query .= " where user_id = %d and trn_type='leave_policies'";
+    $query = "
+    SELECT en.id, en.leave_id, en.user_id, en.f_year, fy.start_date, fy.end_date, l.name AS policy_name,
+    IFNULL( sum(en.day_in), 0 ) AS policy_day_in,
+    IFNULL( ( SELECT sum(en2.day_in) AS total_day_in FROM {$wpdb->prefix}erp_hr_leave_entitlements AS en2 WHERE en2.user_id = en.user_id AND en2.leave_id = en.leave_id AND en2.f_year = en.f_year ), 0 ) AS total_day_in,
+    IFNULL( ( SELECT sum(en2.day_out) AS total_day_out FROM {$wpdb->prefix}erp_hr_leave_entitlements AS en2 WHERE en2.user_id = en.user_id AND en2.leave_id = en.leave_id AND en2.f_year = en.f_year ), 0 ) AS total_day_out,
+    IFNULL( ( SELECT sum(en2.day_in) AS extra_leaves FROM {$wpdb->prefix}erp_hr_leave_entitlements AS en2 WHERE en2.user_id = en.user_id AND en2.leave_id = en.leave_id AND en2.f_year = en.f_year AND en2.trn_type = 'unpaid_leave' ), 0 ) AS extra_leaves,
+    IFNULL( ( SELECT sum(rq.days) AS leave_spent FROM {$wpdb->prefix}erp_hr_leave_requests AS rq WHERE rq.user_id = en.user_id AND rq.leave_id = en.leave_id AND rq.last_status = 1 AND rq.start_date BETWEEN fy.start_date AND fy.end_date ), 0 ) AS leave_spent
+    FROM wp_erp_hr_leave_entitlements AS en
+    LEFT JOIN {$wpdb->prefix}erp_hr_financial_years AS fy ON fy.id = en.f_year
+    LEFT JOIN {$wpdb->prefix}erp_hr_leaves AS l ON l.id = en.leave_id
+    WHERE en.user_id = %d AND en.trn_type='leave_policies'
+    ";
 
     if ( $date === null ) {
         $financial_year = erp_hr_get_financial_year_from_date();
@@ -2189,74 +2237,34 @@ function erp_hr_leave_get_balance( $user_id, $date = null ) {
     }
 
     if ( $date !== null ) {
-        $query .= " and fy.id = " . absint( $date );
+        $query .= " AND fy.id = " . absint( $date );
     }
+
+    $query .= ' GROUP BY en.leave_id, en.f_year';
 
     $results = $wpdb->get_results( $wpdb->prepare( $query, $user_id ) );
 
     $balance = [];
 
-    if ( ! empty( $results ) ) {
+    if ( !empty( $results ) ) {
         foreach ( $results as $result ) {
-            $days_count = $wpdb->get_row(
-                $wpdb->prepare(
-                    "SELECT sum(day_in) as day_in, sum(day_out) as day_out FROM {$wpdb->prefix}erp_hr_leave_entitlements WHERE user_id = %d AND leave_id = %d and f_year = %d ",
-                    array( $user_id, $result->leave_id, $result->f_year )
-                ),
-                ARRAY_A
+            $balance[ $result->leave_id ] = array(
+                'entitlement_id' => $result->id,
+                'days'          => $result->policy_day_in,
+                'from_date'     => $result->start_date,
+                'to_date'       => $result->end_date,
+                'leave_id'      => $result->leave_id,
+                'policy_id'     => $result->id,
+                'policy'        => $result->policy_name,
+                'scheduled'     => 0,
+                'entitlement'   => $result->policy_day_in,
+                'total'         => $result->total_day_in,
+                'available'     => $result->total_day_in - $result->total_day_out,
+                'extra_leave'   => $result->extra_leaves,
+                'day_in'        => $result->total_day_in,
+                'day_out'       => $result->total_day_out,
+                'spent'         => $result->leave_spent,
             );
-
-            if ( is_array( $days_count ) && ! empty( $days_count ) ) {
-                $day_in = floatval( $days_count['day_in'] );
-                $day_out = floatval( $days_count['day_out'] );
-
-                // check for extra leave
-                $extra_leave = 0 ;
-                $available = $day_in - $day_out;
-                if ( $available == 0 ) {
-                    $extra_leave = $wpdb->get_var(
-                        $wpdb->prepare(
-                            "SELECT sum(day_in) as day_in FROM {$wpdb->prefix}erp_hr_leave_entitlements WHERE user_id = %d AND leave_id = %d and f_year = %d AND trn_type = %s",
-                            array( $user_id, $result->leave_id, $result->f_year, 'unpaid_leave' )
-                        )
-                    );
-                    $extra_leave = null === $extra_leave ? 0 : $extra_leave;
-                }
-
-                // total spent
-                $leave_spent = 0;
-                if ( $date !== null ) {
-                    $financial_year = Financial_Year::find( $date );
-                    $leave_spent = $wpdb->get_var(
-                        $wpdb->prepare(
-                            "SELECT sum(rq.days) FROM {$wpdb->prefix}erp_hr_leave_requests as rq
-                                WHERE rq.user_id = %d AND rq.leave_id = %d AND rq.last_status = %d AND rq.start_date BETWEEN %d AND %d",
-                            array( $user_id, $result->leave_id, 1, $financial_year->start_date, $financial_year->end_date )
-                        )
-                    );
-
-
-                    $leave_spent = null === $leave_spent ? 0 : $leave_spent;
-                }
-
-                $balance[ $result->leave_id ] = array(
-                    'entitlement_id' => $result->id,
-                    'days'          => $result->day_in,
-                    'from_date'     => $result->start_date,
-                    'to_date'       => $result->end_date,
-                    'leave_id'      => $result->leave_id,
-                    'policy_id'     => $result->id,
-                    'policy'        => $result->policy_name,
-                    'scheduled'     => 0,
-                    'entitlement'   => $result->day_in,
-                    'total'         => $day_in,
-                    'available'     => $available,
-                    'extra_leave'   => $extra_leave,
-                    'day_in'        => $day_in,
-                    'day_out'       => $day_out,
-                    'spent'         => $leave_spent,
-                );
-            }
         }
     }
 
@@ -2275,71 +2283,41 @@ function erp_hr_leave_get_balance( $user_id, $date = null ) {
 function erp_hr_leave_get_balance_for_single_entitlement( $entitlement_id ) {
     global $wpdb;
 
-    $query = "select en.id, en.user_id, en.leave_id, en.day_in, en.f_year, fy.start_date, fy.end_date, l.name as policy_name";
-    $query .= " from {$wpdb->prefix}erp_hr_leave_entitlements as en";
-    $query .= " LEFT JOIN {$wpdb->prefix}erp_hr_financial_years as fy on fy.id = en.f_year";
-    $query .= " LEFT JOIN {$wpdb->prefix}erp_hr_leaves as l on l.id = en.leave_id";
-    $query .= " where en.id = %d";
+    $query = "
+    SELECT en.id, en.leave_id, en.user_id, en.f_year, fy.start_date, fy.end_date, l.name AS policy_name,
+    IFNULL( sum(en.day_in), 0 ) AS policy_day_in,
+    IFNULL( ( SELECT sum(en2.day_in) AS total_day_in FROM {$wpdb->prefix}erp_hr_leave_entitlements AS en2 WHERE en2.user_id = en.user_id AND en2.leave_id = en.leave_id AND en2.f_year = en.f_year ), 0 ) AS total_day_in,
+    IFNULL( ( SELECT sum(en2.day_out) AS total_day_out FROM {$wpdb->prefix}erp_hr_leave_entitlements AS en2 WHERE en2.user_id = en.user_id AND en2.leave_id = en.leave_id AND en2.f_year = en.f_year ), 0 ) AS total_day_out,
+    IFNULL( ( SELECT sum(en2.day_in) AS extra_leaves FROM {$wpdb->prefix}erp_hr_leave_entitlements AS en2 WHERE en2.user_id = en.user_id AND en2.leave_id = en.leave_id AND en2.f_year = en.f_year AND en2.trn_type = 'unpaid_leave' ), 0 ) AS extra_leaves,
+    IFNULL( ( SELECT sum(rq.days) AS leave_spent FROM {$wpdb->prefix}erp_hr_leave_requests AS rq WHERE rq.user_id = en.user_id AND rq.leave_id = en.leave_id AND rq.last_status = 1 AND rq.start_date BETWEEN fy.start_date AND fy.end_date ), 0 ) AS leave_spent
+    FROM wp_erp_hr_leave_entitlements AS en
+    LEFT JOIN {$wpdb->prefix}erp_hr_financial_years AS fy ON fy.id = en.f_year
+    LEFT JOIN {$wpdb->prefix}erp_hr_leaves AS l ON l.id = en.leave_id
+    WHERE en.id = %d
+    ";
 
     $result = $wpdb->get_row( $wpdb->prepare( $query, $entitlement_id ) );
 
     $balance = [];
 
     if ( ! empty( $result ) ) {
-        $days_count = $wpdb->get_row(
-            $wpdb->prepare(
-                "SELECT sum(day_in) as day_in, sum(day_out) as day_out FROM {$wpdb->prefix}erp_hr_leave_entitlements WHERE user_id = %d AND leave_id = %d and f_year = %d ",
-                array( $result->user_id, $result->leave_id, $result->f_year )
-            ),
-            ARRAY_A
+        $balance = array(
+            'entitlement_id' => $result->id,
+            'days'          => $result->policy_day_in,
+            'from_date'     => $result->start_date,
+            'to_date'       => $result->end_date,
+            'leave_id'      => $result->leave_id,
+            'policy_id'     => $result->id,
+            'policy'        => $result->policy_name,
+            'scheduled'     => 0,
+            'entitlement'   => $result->policy_day_in,
+            'total'         => $result->total_day_in,
+            'available'     => $result->total_day_in - $result->total_day_out,
+            'extra_leave'   => $result->extra_leaves,
+            'day_in'        => $result->total_day_in,
+            'day_out'       => $result->total_day_out,
+            'spent'         => $result->leave_spent,
         );
-
-        if ( is_array( $days_count ) && ! empty( $days_count ) ) {
-            $day_in = floatval( $days_count['day_in'] );
-            $day_out = floatval( $days_count['day_out'] );
-
-            // check for extra leave
-            $extra_leave = 0 ;
-            $available = $day_in - $day_out;
-            if ( $available == 0 ) {
-                $extra_leave = $wpdb->get_var(
-                    $wpdb->prepare(
-                        "SELECT sum(day_in) as day_in FROM {$wpdb->prefix}erp_hr_leave_entitlements WHERE user_id = %d AND leave_id = %d and f_year = %d AND trn_type = %s",
-                        array( $result->user_id, $result->leave_id, $result->f_year, 'unpaid_leave' )
-                    )
-                );
-                $extra_leave = null === $extra_leave ? 0 : $extra_leave;
-            }
-
-            $financial_year = Financial_Year::find( $result->f_year );
-            $leave_spent = $wpdb->get_var(
-                $wpdb->prepare(
-                    "SELECT sum(rq.days) FROM {$wpdb->prefix}erp_hr_leave_requests as rq
-                                WHERE rq.user_id = %d AND rq.leave_id = %d AND rq.last_status = %d AND rq.start_date BETWEEN %d AND %d",
-                    array( $result->user_id, $result->leave_id, 1, $financial_year->start_date, $financial_year->end_date )
-                )
-            );
-
-            $leave_spent = null === $leave_spent ? 0 : $leave_spent;
-
-            $balance = array(
-                'entitlement_id' => $result->id,
-                'f_year'         => $result->f_year,
-                'days'          => $result->day_in,
-                'from_date'     => $result->start_date,
-                'to_date'       => $result->end_date,
-                'leave_id'      => $result->leave_id,
-                'policy'        => $result->policy_name,
-                'scheduled'     => 0,
-                'entitlement'   => $result->day_in,
-                'total'         => $day_in,
-                'available'     => $available,
-                'extra_leave'   => $extra_leave,
-                'day_in'        => $day_in,
-                'day_out'       => $day_out,
-                'spent'         => $leave_spent,
-            );
-        }
     }
 
     return $balance;
@@ -2372,37 +2350,7 @@ function erp_hr_leave_get_balance_for_single_policy( $entitlement ) {
         return new WP_Error( 'invalid-entitlement-object', esc_attr__( 'Invalid entitlement data.', 'erp' ) );
     }
 
-    $days_count = $wpdb->get_row(
-        $wpdb->prepare(
-            "SELECT sum(day_in) as day_in, sum(day_out) as day_out FROM {$wpdb->prefix}erp_hr_leave_entitlements WHERE user_id = %d AND leave_id = %d and f_year = %d ",
-            array( $entitlement->user_id, $entitlement->leave_id, $entitlement->f_year )
-        ),
-        ARRAY_A
-    );
-
-    $day_in = floatval( $days_count['day_in'] );
-    $day_out = floatval( $days_count['day_out'] );
-    $extra_leave = 0 ;
-    $available = $day_in - $day_out;
-    if ( $available == 0 ) {
-        $extra_leave = $wpdb->get_var(
-            $wpdb->prepare(
-                "SELECT sum(day_in) as day_in FROM {$wpdb->prefix}erp_hr_leave_entitlements WHERE user_id = %d AND leave_id = %d and f_year = %d AND trn_type = %s",
-                array( $entitlement->user_id, $entitlement->leave_id, $entitlement->f_year, 'unpaid_leave' )
-            )
-        );
-        $extra_leave = null === $extra_leave ? 0 : $extra_leave;
-    }
-
-    return array(
-        'leave_id'      => $entitlement->leave_id,
-        'scheduled'     => 0,
-        'entitlement'   => $entitlement->day_in,
-        'total'         => $day_in,
-        'spent'         => $day_out,
-        'available'     => $available,
-        'extra_leave'   => $extra_leave
-    );
+    return erp_hr_leave_get_balance_for_single_entitlement( $entitlement->id );
 }
 
 /**
