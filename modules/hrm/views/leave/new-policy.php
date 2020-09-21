@@ -106,7 +106,9 @@ $f_year = ! empty( $form_data ) ?  $form_data['f-year'] : ( ! empty( $leave_poli
                     'class'    => 'erp-hrm-select2',
                     'type'     => 'select',
                     'required' => true,
-                    'options'  => erp_hr_get_employee_types(),
+                    'options'  => array(
+                            '-1' => esc_html__( 'All Types', 'erp' )
+                        ) + erp_hr_get_employee_types(),
                     'disabled' => $disabled,
                 ) );
                 ?>
