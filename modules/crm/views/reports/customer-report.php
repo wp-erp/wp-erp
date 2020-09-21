@@ -10,6 +10,8 @@ $filter_type  = !empty( $_POST['filter_type'] ) ? sanitize_text_field( wp_unslas
 
 $reports      = erp_crm_customer_reporting_query( $start, $end, $filter_type );
 
+$life_stages  = erp_crm_get_life_stages_dropdown_raw();
+
 ?><div class="wrap">
     <h2 class="report-title"><?php esc_attr_e( 'Customer Report', 'erp' ); ?></h2>
     <div class="erp-crm-report-header-wrap">
@@ -20,10 +22,9 @@ $reports      = erp_crm_customer_reporting_query( $start, $end, $filter_type );
         <thead>
             <tr>
                 <th><?php esc_attr_e( 'Label', 'erp' ); ?></th>
-                <th><?php esc_attr_e( 'Subscriber', 'erp' ); ?></th>
-                <th><?php esc_attr_e( 'Opportunity', 'erp' ); ?></th>
-                <th><?php esc_attr_e( 'Lead', 'erp' ); ?></th>
-                <th><?php esc_attr_e( 'Customer', 'erp' ); ?></th>
+                <?php foreach( $life_stages as $life_stage ) : ?>
+                    <th><?php esc_attr_e( $life_stage, 'erp' ); ?></th>
+                <?php endforeach; ?>
             </tr>
         </thead>
 
@@ -32,13 +33,14 @@ $reports      = erp_crm_customer_reporting_query( $start, $end, $filter_type );
                 foreach ( $reports as $report ) {
                     $data[$report->life_stage] = $report->total;
                 }
+
+                $data =  apply_filters( 'erp_crm_customer_report', $data );
             ?>
             <tr>
-                <td>All</td>
-                <td><?php echo !empty( $data['subscriber'] )  ? esc_attr( $data['subscriber'] ) : 0; ?></td>
-                <td><?php echo !empty( $data['opportunity'] ) ? esc_attr( $data['opportunity'] ) : 0; ?></td>
-                <td><?php echo !empty( $data['lead'] )        ? esc_attr( $data['lead'] ) : 0; ?></td>
-                <td><?php echo !empty( $data['customer'] )    ? esc_attr( $data['customer'] ) : 0; ?></td>
+                <td><?php esc_attr_e( 'All', 'erp' ); ?></td>
+                <?php foreach( $life_stages as $slug => $title ) : ?>
+                    <td><?php echo array_key_exists( $slug, $data )  ? esc_attr( $data[ $slug ] ) : 0; ?></td>
+                <?php endforeach; ?>
             </tr>
 
             <?php elseif ( $filter_type === 'contact_owner' ) :
