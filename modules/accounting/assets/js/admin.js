@@ -60277,6 +60277,8 @@ var render = function() {
                     staticClass: "wperp-form-field",
                     attrs: {
                       type: "number",
+                      min: "0",
+                      step: "0.01",
                       placeholder: _vm.__("Enter Tax Amount", "erp")
                     },
                     domProps: { value: _vm.tax_amount },
