@@ -29,6 +29,14 @@
         }
     }
 ?>
+
+<?php
+if ( isset( $_GET['error'] ) && $_GET['error'] != '' ) {
+    $errors = new \WeDevs\ERP\ERP_Errors( sanitize_text_field( wp_unslash( $_GET['error'] ) ) );
+    echo $errors->display();
+}
+?>
+
 <div class="postbox">
     <div class="inside">
         <h3><?php esc_html_e( 'Import CSV', 'erp' ); ?></h3>

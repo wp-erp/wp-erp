@@ -1581,6 +1581,10 @@ function erp_process_import_export() {
         return;
     }
 
+    if ( ! current_user_can( 'erp_hr_manager' ) ) {
+        return new \WP_Error( 'no-permission', __( 'Sorry ! You do not have permission to access this page', 'erp' ) );
+    }
+
     $is_crm_activated = erp_is_module_active( 'crm' );
     $is_hrm_activated = erp_is_module_active( 'hrm' );
 
@@ -1624,7 +1628,7 @@ function erp_process_import_export() {
             return;
         }
 
-        $csv_file = isset( $_FILES['csv_file'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_FILES['csv_file'] ) ) : [];
+        $csv_file = isset( $_FILES['csv_file'] ) ? $_FILES['csv_file'] : []; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
         $data = [ 'type' => $type, 'fields' => $fields, 'file' => $csv_file ];
 
@@ -1675,9 +1679,9 @@ function erp_process_import_export() {
             ],
         ];
 
-        require_once WPERP_INCLUDES . '/lib/parsecsv.lib.php';
+        //require_once WPERP_INCLUDES . '/lib/parsecsv.lib.php';
 
-        $csv = new ParseCsv();
+        $csv = new ParseCsv\Csv();
         $csv->encoding( null, 'UTF-8' );
         $csv->parse( $csv_file['tmp_name'] );
 
@@ -1696,6 +1700,8 @@ function erp_process_import_export() {
 
         if ( ! empty( $csv_data ) ) {
             $count = 0;
+
+            do_action( 'validate_csv_data', $csv_data, $fields, $type );
 
             foreach ( $csv_data as $line ) {
                 if ( empty( $line ) ) {
