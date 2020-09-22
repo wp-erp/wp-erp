@@ -39,7 +39,6 @@
 
                             </div>
 
-
                             <div class="col-3">
                                 <?php erp_html_form_input( [
                                     'label'       => __( 'Middle Name', 'erp' ),
@@ -164,7 +163,7 @@
                                 <div class="col-6">
                                     <h3 class="modal-section-title"><?php esc_html_e( 'Work', 'erp' ); ?></h3>
                                 </div>
-
+                                <# } #>
                                 <div class="col-3 erp-hr-js-department" data-selected="{{ data.work.department }}">
                                     <?php erp_html_form_input( [
                                         'label'       => __( 'Department', 'erp' ),
@@ -213,7 +212,6 @@
                                         'options' => erp_hr_get_employees_dropdown_raw(),
                                     ] ); ?>
                                 </div>
-                                <# } #>
 
                                 <div class="col-3" data-selected="{{ data.work.hiring_source }}">
                                     <?php erp_html_form_input( [
