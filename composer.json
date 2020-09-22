@@ -34,11 +34,12 @@
     },
     "scripts": {
         "phpcs": [
-            "phpcs -p -s"
+            "./vendor/bin/phpcs -ps --report-file=phpcs-report.txt"
         ],
         "phpcbf": [
-            "phpcbf -p"
-        ]
+            "./vendor/bin/phpcbf -p"
+        ],
+        "php-cs-fixer": "php-cs-fixer --config=./.php_cs"
     },
     "autoload" : {
         "psr-4" : {
