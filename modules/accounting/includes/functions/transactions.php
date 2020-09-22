@@ -826,6 +826,16 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
         $trn_pdf->set_reference( $trn_id, __( 'Transaction Number', 'erp' ) );
     }
 
+    // Set Reference No
+    if ( $transaction->ref ) {
+        $trn_pdf->set_reference( $transaction->ref , __( 'Reference No', 'erp' ) );
+    }
+
+    // Set Due Date
+    if ( $transaction->due_date ) {
+        $trn_pdf->set_reference( $transaction->due_date , __( 'Due Date', 'erp' ) );
+    }
+
     // Set Issue Date
     $date = ! empty( $transaction->trn_date ) ? $transaction->trn_date : $transaction->date;
     $trn_pdf->set_reference( erp_format_date( $date ), __( 'Transaction Date', 'erp' ) );
@@ -1102,7 +1112,7 @@ add_action( 'erp_acct_new_transaction_estimate', 'erp_acct_send_email_on_transac
 add_action( 'erp_acct_new_transaction_purchase_order', 'erp_acct_send_email_on_transaction', 10, 2 );
 
 /**
- * Send pdf on transaction
+ * Generate PDF and Send to Email on Transaction
  *
  * @param $voucher_no
  * @param $transaction
