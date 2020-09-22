@@ -174,7 +174,7 @@ class Validate_Data {
                 return $this->validate_field( "First name", $dt_value, $type, "not_empty:true|max:60|min:2" );
                 break;
             case "middle_name":
-                return $this->validate_field( "Middle name", $dt_value, $type, "max:60|min:2" );
+                return $this->validate_field( "Middle name", $dt_value, $type, "max:60|" );
                 break;
             case "last_name":
                 return $this->validate_field( "Last name", $dt_value, $type, "not_empty:true|max:60|min:2" );
@@ -183,22 +183,22 @@ class Validate_Data {
                 return $this->validate_field( "Email", $dt_value, $type, "not_empty:true|max:90|min:2|email:true|unique:email|not_csv_column_duplicate:email" );
                 break;
             case "employee_id":
-                return $this->validate_field( "Employee id", $dt_value, $type, "max:20|min:3|unique:employee_id" );
+                return $this->validate_field( "Employee id", $dt_value, $type, "max:20|unique:employee_id" );
                 break;
             case "phone":
-                return $this->validate_field( "Phone", $dt_value, $type, "max:20|min:3|is_phone:true" );
+                return $this->validate_field( "Phone", $dt_value, $type, "max:20|is_phone:true" );
                 break;
             case "mobile":
-                return $this->validate_field( "Mobile", $dt_value, $type, "max:20|min:3|is_phone:true" );
+                return $this->validate_field( "Mobile", $dt_value, $type, "max:20|is_phone:true" );
                 break;
             case "other":
-                return $this->validate_field( "Other", $dt_value, $type, "max:50|min:3" );
+                return $this->validate_field( "Other", $dt_value, $type, "max:50|" );
                 break;
             case "website":
-                return $this->validate_field( "Webnsite", $dt_value, $type, "max:90|min:3" );
+                return $this->validate_field( "Website", $dt_value, $type, "max:90|" );
                 break;
             case "fax":
-                return $this->validate_field( "Fax", $dt_value, $type, "max:20|min:3" );
+                return $this->validate_field( "Fax", $dt_value, $type, "max:20|" );
                 break;
             case "notes":
                 return $this->validate_field( "Notes", $dt_value, $type, "max:250|" );
@@ -337,7 +337,7 @@ class Validate_Data {
                             }
                             break;
                         case "email":
-                            if ( $rule_value == 'true' && ! is_email( $field_value ) ) {
+                            if ( $rule_value == 'true' && ! is_email( $field_value ) && ! empty( $field_value ) ) {
                                 $errors[] = __( "{$field_name} should be a valid email", "erp" );
                             }
                             break;
@@ -430,7 +430,7 @@ class Validate_Data {
      * @return string
      */
     public function is_valid_date( $column, $value, $field_name ) {
-        if ( ! preg_match( "/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/", $value ) ) {
+        if ( ! preg_match( "/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/", $value ) && ! empty( $value ) ) {
             return __( "{$field_name} should be a valid date. Ex: YYYY-MM-DD", "erp" );
         }
     }
@@ -443,7 +443,7 @@ class Validate_Data {
      * @return string
      */
     public function is_valid_phone( $column, $value, $field_name ) {
-        if ( ! preg_match( "/\+[0-9]{2}+[0-9]{4}/s", $value ) ) {
+        if ( ! preg_match( "/\+[0-9]{2}+[0-9]{4}/s", $value ) && ! empty( $value ) ) {
             return __( "{$field_name} should be a valid phone/mobile no. Ex. +123456", "erp" );
         }
     }
@@ -465,5 +465,3 @@ class Validate_Data {
           }
     }
 }
-
-
