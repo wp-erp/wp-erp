@@ -47,6 +47,7 @@ function erp_acct_get_all_opening_balances( $args = [] ) {
 
     if ( $args['count'] ) {
         $wpdb->get_results( $sql );
+
         return $wpdb->num_rows;
     }
 
@@ -102,6 +103,7 @@ function erp_acct_get_virtual_acct( $year_id ) {
  * Insert opening_balance data
  *
  * @param $data
+ *
  * @return mixed
  */
 function erp_acct_insert_opening_balance( $data ) {
@@ -129,8 +131,7 @@ function erp_acct_insert_opening_balance( $data ) {
         $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}erp_acct_opening_balances WHERE financial_year_id = %d", $year_id ) );
 
         foreach ( $ledgers as $ledger ) {
-
-            if((isset( $ledger['debit'] ) && (float) $ledger['debit'] > 0)  || (isset( $ledger['credit'] ) && (float) $ledger['credit'] > 0)) {
+            if ( ( isset( $ledger['debit'] ) && (float) $ledger['debit'] > 0 ) || ( isset( $ledger['credit'] ) && (float) $ledger['credit'] > 0 ) ) {
                 $wpdb->insert(
                     $wpdb->prefix . 'erp_acct_opening_balances',
                     [
@@ -147,20 +148,18 @@ function erp_acct_insert_opening_balance( $data ) {
                     ]
                 );
             }
-
         }
 
         erp_acct_insert_ob_vir_accounts( $opening_balance_data, $year_id );
 
         $wpdb->query( 'COMMIT' );
-
     } catch ( Exception $e ) {
         $wpdb->query( 'ROLLBACK' );
+
         return new WP_error( 'opening_balance-exception', $e->getMessage() );
     }
 
     return erp_acct_get_opening_balance( $year_id );
-
 }
 
 /**
@@ -177,16 +176,16 @@ function erp_acct_insert_ob_vir_accounts( $data, $year_id ) {
             $wpdb->insert(
                 $wpdb->prefix . 'erp_acct_opening_balances',
                 [
-					'financial_year_id' => $year_id,
-					'ledger_id'         => $acct_rec['people']['id'],
-					'type'              => 'people',
-					'debit'             => $acct_rec['debit'],
-					'credit'            => 0,
-					'created_at'        => $data['created_at'],
-					'created_by'        => $data['created_by'],
-					'updated_at'        => $data['updated_at'],
-					'updated_by'        => $data['updated_by'],
-				]
+                    'financial_year_id' => $year_id,
+                    'ledger_id'         => $acct_rec['people']['id'],
+                    'type'              => 'people',
+                    'debit'             => $acct_rec['debit'],
+                    'credit'            => 0,
+                    'created_at'        => $data['created_at'],
+                    'created_by'        => $data['created_by'],
+                    'updated_at'        => $data['updated_at'],
+                    'updated_by'        => $data['updated_by'],
+                ]
             );
         }
     }
@@ -196,16 +195,16 @@ function erp_acct_insert_ob_vir_accounts( $data, $year_id ) {
             $wpdb->insert(
                 $wpdb->prefix . 'erp_acct_opening_balances',
                 [
-					'financial_year_id' => $year_id,
-					'ledger_id'         => $acct_pay['people']['id'],
-					'type'              => 'people',
-					'debit'             => 0,
-					'credit'            => $acct_pay['credit'],
-					'created_at'        => $data['created_at'],
-					'created_by'        => $data['created_by'],
-					'updated_at'        => $data['updated_at'],
-					'updated_by'        => $data['updated_by'],
-				]
+                    'financial_year_id' => $year_id,
+                    'ledger_id'         => $acct_pay['people']['id'],
+                    'type'              => 'people',
+                    'debit'             => 0,
+                    'credit'            => $acct_pay['credit'],
+                    'created_at'        => $data['created_at'],
+                    'created_by'        => $data['created_by'],
+                    'updated_at'        => $data['updated_at'],
+                    'updated_by'        => $data['updated_by'],
+                ]
             );
         }
     }
@@ -215,27 +214,27 @@ function erp_acct_insert_ob_vir_accounts( $data, $year_id ) {
             $wpdb->insert(
                 $wpdb->prefix . 'erp_acct_opening_balances',
                 [
-					'financial_year_id' => $year_id,
-					'ledger_id'         => $tax_pay['agency']['id'],
-					'type'              => 'tax_agency',
-					'debit'             => 0,
-					'credit'            => $tax_pay['credit'],
-					'created_at'        => $data['created_at'],
-					'created_by'        => $data['created_by'],
-					'updated_at'        => $data['updated_at'],
-					'updated_by'        => $data['updated_by'],
-				]
+                    'financial_year_id' => $year_id,
+                    'ledger_id'         => $tax_pay['agency']['id'],
+                    'type'              => 'tax_agency',
+                    'debit'             => 0,
+                    'credit'            => $tax_pay['credit'],
+                    'created_at'        => $data['created_at'],
+                    'created_by'        => $data['created_by'],
+                    'updated_at'        => $data['updated_at'],
+                    'updated_by'        => $data['updated_by'],
+                ]
             );
         }
     }
 }
-
 
 /**
  * Get formatted opening_balance data
  *
  * @param $data
  * @param $voucher_no
+ *
  * @return mixed
  */
 function erp_acct_get_formatted_opening_balance_data( $data ) {
@@ -328,7 +327,6 @@ function erp_acct_get_ob_virtual_acct( $year_id ) {
     }
 
     return $vir_ac;
-
 }
 
 /**
@@ -336,6 +334,7 @@ function erp_acct_get_ob_virtual_acct( $year_id ) {
  *
  * @param $ledger_id
  * @param array $args
+ *
  * @return mixed
  */
 function get_ledger_balance_with_opening_balance( $ledger_id, $start_date, $end_date ) {
@@ -361,7 +360,7 @@ function get_ledger_balance_with_opening_balance( $ledger_id, $start_date, $end_
         );
 
         $prev_ledger_details = $wpdb->get_var( $sql1 );
-        $opening_balance    += (float) $prev_ledger_details;
+        $opening_balance += (float) $prev_ledger_details;
     }
 
     // ledger details
@@ -385,7 +384,9 @@ function get_ledger_balance_with_opening_balance( $ledger_id, $start_date, $end_
 
     $l_data = erp_acct_get_ledger_by_id( $ledger_id );
 
-    if ( empty( $l_data ) ) return [];
+    if ( empty( $l_data ) ) {
+        return [];
+    }
 
     return [
         'id'           => $ledger_id,
@@ -402,6 +403,7 @@ function get_ledger_balance_with_opening_balance( $ledger_id, $start_date, $end_
  * Get opening balance invoice account details
  *
  * @param string $fy_start_date
+ *
  * @return int
  */
 function erp_acct_get_opb_invoice_account_details( $fy_start_date ) {
@@ -421,6 +423,7 @@ function erp_acct_get_opb_invoice_account_details( $fy_start_date ) {
  * Get opening balance bill & purchase
  *
  * @param string $fy_start_date
+ *
  * @return int
  */
 function erp_acct_get_opb_bill_purchase_account_details( $fy_start_date ) {
