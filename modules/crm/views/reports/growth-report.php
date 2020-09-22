@@ -5,7 +5,7 @@ if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_
 
 $data         = [];
 $start        = !empty( $_POST['start'] ) ? sanitize_text_field( wp_unslash( $_POST['start'] ) ) : false;
-$end          = !empty( $_POST['end'] ) ? sanitize_text_field( wp_unslash( $_POST['end'] ) ): date('Y-m-d');
+$end          = !empty( $_POST['end'] ) ? sanitize_text_field( wp_unslash( $_POST['end'] ) ) : date( 'Y-m-d' );
 $filter_type  = !empty( $_POST['filter_type'] ) ? sanitize_text_field( wp_unslash( $_POST['filter_type'] ) ) : 'this_year';
 
 $reports      = erp_crm_growth_reporting_query( $start, $end, $filter_type );
@@ -26,21 +26,21 @@ $life_stages  = erp_crm_get_life_stages_dropdown_raw();
         <thead>
             <tr>
                 <th><?php esc_attr_e( 'Label', 'erp' ); ?></th>
-                <?php foreach( $life_stages as $life_stage ) : ?>
+                <?php foreach ( $life_stages as $life_stage ) { ?>
                     <th><?php esc_attr_e( $life_stage, 'erp' ); ?></th>
-                <?php endforeach; ?>
+                <?php } ?>
             </tr>
         </thead>
 
         <tbody>
-            <?php foreach( $reports as $key => $report ) : ?>
+            <?php foreach ( $reports as $key => $report ) { ?>
                 <tr>
-                    <td><?php echo esc_html( $key ) ?></td>
-                    <?php foreach( $life_stages as $slug => $title ) : ?>
-                        <td><?php echo array_key_exists( $slug, $report )  ? esc_attr( $report[ $slug ] ) : 0; ?></td>
-                    <?php endforeach; ?>
+                    <td><?php echo esc_html( $key ); ?></td>
+                    <?php foreach ( $life_stages as $slug => $title ) { ?>
+                        <td><?php echo array_key_exists( $slug, $report ) ? esc_attr( $report[ $slug ] ) : 0; ?></td>
+                    <?php } ?>
                 </tr>
-            <?php endforeach; ?>
+            <?php } ?>
         </tbody>
     </table>
 
