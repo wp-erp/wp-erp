@@ -255,10 +255,10 @@ class Validate_Data {
                 return $this->validate_field( "Pay rate", $dt_value, $type, "max:11|" );
                 break;
             case "type":
-                $this->validate_field( "Type", $dt_value, $type, "max:20|" );
+                return $this->validate_field( "Type", $dt_value, $type, "max:20|" );
                 break;
             case "pay_type":
-                $this->validate_field( "Type", $dt_value, $type, "max:20|" );
+                return $this->validate_field( "Type", $dt_value, $type, "max:20|" );
                 break;
             case "status":
                 return $this->validate_field( "Statue", $dt_value, $type, "max:10|" );
@@ -307,80 +307,86 @@ class Validate_Data {
      */
     public function validate_field( $field_name, $field_value, $type, $rulesets ) {
 
-        $errors = [];
+        $errors     = [];
+        $rulesets   = explode('|', $rulesets );
 
-        $rulesets = explode('|', $rulesets );
+        if ( is_array( $rulesets ) ) {
+            foreach ( $rulesets as $ruleset ) {
 
-        foreach ( $rulesets as $ruleset ) {
-            $ruleset = explode(':', $ruleset );
-            $rule_name  = $ruleset[0];
-            $rule_value = $ruleset[1];
+                $ruleset = explode(':', $ruleset );
 
-            switch ( $rule_name ) {
+                if ( is_array( $ruleset ) && isset( $ruleset[0] ) && isset( $ruleset[1] ) ) {
+                    $rule_name  = $ruleset[0];
+                    $rule_value = $ruleset[1];
 
-                case "not_empty":
-                    if ( $rule_value == 'true' && empty( $field_value ) ) {
-                        $errors[] =  __( "{$field_name} can not be empty", "erp" );
+                    switch ( $rule_name ) {
+
+                        case "not_empty":
+                            if ( $rule_value == 'true' && empty( $field_value ) ) {
+                                $errors[] =  __( "{$field_name} can not be empty", "erp" );
+                            }
+                            break;
+                        case "max":
+                            if ( strlen( $field_value ) > $rule_value ) {
+                                $errors[] =  __( "{$field_name} can not be more than {$rule_value} charecters", "erp" );
+                            }
+                            break;
+                        case "min":
+                            if ( strlen( $field_value ) < $rule_value ) {
+                                $errors[] = __( "{$field_name} can not be less than {$rule_value} charecters", "erp" );
+                            }
+                            break;
+                        case "email":
+                            if ( $rule_value == 'true' && ! is_email( $field_value ) ) {
+                                $errors[] = __( "{$field_name} should be a valid email", "erp" );
+                            }
+                            break;
+                        case "is_date":
+                            if ( $rule_value == 'true' ) {
+                                $check_is_date = $this->is_valid_date( $rule_value, $field_value, $field_name );
+                                if ( $check_is_date ) {
+                                    $errors[] = $check_is_date;
+                                }
+                            }
+                            break;
+                        case "is_phone":
+                            if ( $rule_value == 'true' ) {
+                                $check_is_phone = $this->is_valid_phone( $rule_value, $field_value, $field_name );
+                                if ( $check_is_phone ) {
+                                    $errors[] = $check_is_phone;
+                                }
+                            }
+                            break;
+                        case "not_csv_column_duplicate":
+                            $check_is_duplicate_column = $this->is_duplicate_column( $rule_value, $field_value, $field_name );
+                            if ( $check_is_duplicate_column ) {
+                                $errors[] = $check_is_duplicate_column;
+                            }
+                            break;
+                        case "unique":
+                            if ( $type == 'employee' ) {
+                                $check_is_unique_emp = $this->check_unique_employee( $rule_value, $field_value, $field_name );
+                                if ( $check_is_unique_emp ) {
+                                    $errors[] = $check_is_unique_emp;
+                                }
+                            }
+                            if ( $type == 'contact' || $type == 'company' ) {
+                                $check_is_unique_cont = $this->check_unique_contact( $rule_value, $field_value, $field_name );
+                                if ( $check_is_unique_cont ) {
+                                    $errors[] = $check_is_unique_cont;
+                                }
+                            }
+                            break;
+                        default:
+                            $custom_error_check = apply_filters( 'custom_validation', $rule_value, $field_value, $field_name, $type );
+                            if ( $custom_error_check ) {
+                                $errors[] = $custom_error_check;
+                            }
                     }
-                    break;
-                case "max":
-                    if ( strlen( $field_value ) > $rule_value ) {
-                        $errors[] =  __( "{$field_name} can not be more than {$rule_value} charecters", "erp" );
-                    }
-                    break;
-                case "min":
-                    if ( strlen( $field_value ) < $rule_value ) {
-                        $errors[] = __( "{$field_name} can not be less than {$rule_value} charecters", "erp" );
-                    }
-                    break;
-                case "email":
-                    if ( $rule_value == 'true' && ! is_email( $field_value ) ) {
-                        $errors[] = __( "{$field_name} should be a valid email", "erp" );
-                    }
-                    break;
-                case "is_date":
-                    if ( $rule_value == 'true' ) {
-                        $check_is_date = $this->is_valid_date( $rule_value, $field_value, $field_name );
-                        if ( $check_is_date ) {
-                            $errors[] = $check_is_date;
-                        }
-                    }
-                    break;
-                case "is_phone":
-                    if ( $rule_value == 'true' ) {
-                        $check_is_phone = $this->is_valid_phone( $rule_value, $field_value, $field_name );
-                        if ( $check_is_phone ) {
-                            $errors[] = $check_is_phone;
-                        }
-                    }
-                    break;
-                case "not_csv_column_duplicate":
-                    $check_is_duplicate_column = $this->is_duplicate_column( $rule_value, $field_value, $field_name );
-                    if ( $check_is_duplicate_column ) {
-                        $errors[] = $check_is_duplicate_column;
-                    }
-                    break;
-                case "unique":
-                    if ( $type == 'employee' ) {
-                        $check_is_unique_emp = $this->check_unique_employee( $rule_value, $field_value, $field_name );
-                        if ( $check_is_unique_emp ) {
-                            $errors[] = $check_is_unique_emp;
-                        }
-                    }
-                    if ( $type == 'contact' || $type == 'company' ) {
-                        $check_is_unique_cont = $this->check_unique_contact( $rule_value, $field_value, $field_name );
-                        if ( $check_is_unique_cont ) {
-                            $errors[] = $check_is_unique_cont;
-                        }
-                    }
-                    break;
-                default:
-                    $custom_error_check = apply_filters( 'custom_validation', $rule_value, $field_value, $field_name, $type );
-                    if ( $custom_error_check ) {
-                        $errors[] = $custom_error_check;
-                    }
+                }
             }
         }
+
         return $errors;
     }
 
