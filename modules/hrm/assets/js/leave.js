@@ -358,7 +358,8 @@
                     location    = $('.leave-entitlement-form .location_id').select2('data'),
                     gender      = $('.leave-entitlement-form .gender').select2('data'),
                     marital     = $('.leave-entitlement-form .marital').select2('data'),
-                    f_year      = $('.leave-entitlement-form .f_year').select2('data');
+                    f_year      = $('.leave-entitlement-form .f_year').select2('data'),
+                    employee_type = $('.leave-entitlement-form .employee_type').select2('data');;
 
                 if ( typeof f_year === "undefined" ) {
                     return;
@@ -371,6 +372,7 @@
                 wp.ajax.send( 'erp-hr-leave-get-policies', {
                     data: {
                         '_wpnonce': wpErpHr.nonce,
+                        employee_type:      employee_type[0].id,
                         department_id:      department[0].id,
                         designation_id:     designation[0].id,
                         location_id:        location[0].id,
@@ -620,7 +622,7 @@
                 var self = $(this),
                 data = {
                     id : self.data('id')
-                }
+                };
 
                 $.erpPopup({
                     title: wpErpHr.popup.leave_approve,
@@ -642,7 +644,10 @@
                                     }
                                 }
                                 else if( res.redirect ) {
-                                    var approve_url = window.location.origin + window.location.pathname + '?page=erp-hr&section=leave&status=' + res.redirect;
+                                    var approve_url = window.location.origin + window.location.pathname + '?1=1';
+                                    $.each( res.redirect, function( key, val ) {
+                                        approve_url += '&' + key + '=' + val;
+                                    });
                                     window.location.replace( approve_url );
                                 }
                                 else {
@@ -664,7 +669,7 @@
                 var self = $(this),
                 data = {
                     id : self.data('id')
-                }
+                };
 
                 $.erpPopup({
                     title: wpErpHr.popup.leave_reject,
@@ -686,7 +691,10 @@
                                     }
                                 }
                                 else if( res.redirect ) {
-                                    var approve_url = window.location.origin + window.location.pathname + '?page=erp-hr&section=leave&status=' + res.redirect;
+                                    var approve_url = window.location.origin + window.location.pathname + '?1=1';
+                                    $.each( res.redirect, function( key, val ) {
+                                        approve_url += '&' + key + '=' + val;
+                                    });
                                     window.location.replace( approve_url );
                                 }
                                 else {

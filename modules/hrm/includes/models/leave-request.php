@@ -48,7 +48,7 @@ class Leave_Request extends Model {
      * @return object
      */
     public function details() {
-        return $this->hasMany( 'WeDevs\ERP\HRM\Models\Leave_Request_Detail' );
+        return $this->hasMany( 'WeDevs\ERP\HRM\Models\Leave_Request_Detail', 'leave_request_id', 'id' );
     }
 
     /**
