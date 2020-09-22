@@ -3,8 +3,10 @@ $tab            = ( isset( $_GET['tab'] ) && !empty( $_GET['tab'] ) ) ? sanitize
 $schedules_data = erp_crm_get_schedule_data( $tab );
 ?>
 <div class="wrap erp erp-crm-schedules" id="wp-erp">
-
-    <h1><?php esc_attr_e( 'Schedules', 'erp' ); ?></h1>
+    <div style="display: flex;">
+        <h1><?php esc_attr_e( 'Schedules', 'erp' ); ?></h1>
+        <?php echo erp_help_tip( esc_html__( 'Click on the date to create a schedule.', 'erp' ) ); ?>
+    </div>
 
     <?php if ( current_user_can( erp_crm_get_manager_role() ) ) { ?>
         <h2 class="nav-tab-wrapper erp-nav-tab-wrapper">
@@ -28,6 +30,11 @@ $schedules_data = erp_crm_get_schedule_data( $tab );
     }
     .fc-day-grid-event .fc-content {
         white-space: normal;
+    }
+    .erp-help-tip {
+        font-size: 1.8em;
+        top      : 0.9rem;
+        left     : 0.2rem;
     }
 </style>
 

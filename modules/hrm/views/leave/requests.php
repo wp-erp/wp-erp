@@ -1,9 +1,11 @@
 <div class="wrap erp-hr-leave-requests">
-    <h2><?php esc_html_e( 'Leave Requests', 'erp' ); ?>
+    <div style="display: flex;">
+        <h2><?php esc_html_e( 'Leave Requests', 'erp' ); ?></h2>
         <?php if ( current_user_can( 'erp_leave_create_request' ) ) { ?>
-        <a href="<?php echo esc_url( add_query_arg( [ 'view' => 'new' ] ) ); ?>" class="add-new-h2"><?php esc_html_e( 'New Request', 'erp' ); ?></a>
+            <?php echo erp_help_tip( esc_html__( 'To submit a new leave request you have to first create leave policy and leave entitlement for your employee.', 'erp' ) ); ?>
+            <h2><a href="<?php echo esc_url( add_query_arg( [ 'view' => 'new' ] ) ); ?>" class="add-new-h2"><?php esc_html_e( 'New Request', 'erp' ); ?></a></h2>
         <?php } ?>
-    </h2>
+    </div>
     <?php
     if ( isset( $_GET['error'] ) && $_GET['error'] != '' ) {
         $errors = new \WeDevs\ERP\ERP_Errors( sanitize_text_field( wp_unslash( $_GET['error'] ) ) );
@@ -32,3 +34,11 @@
         </div><!-- .list-table-wrap -->
     </div><!-- .erp-hr-leave-requests-inner -->
 </div><!-- .wrap -->
+
+<style>
+    .erp-help-tip {
+        font-size: 1.5em;
+        top      : 1.1rem;
+        width    : 25px;
+    }
+</style>
