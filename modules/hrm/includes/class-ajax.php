@@ -133,7 +133,18 @@ class Ajax_Handler {
 
         $update = erp_hr_leave_request_update_status( $request_id, 1, $comments );
 
-        $this->send_success( $update );
+        if ( is_wp_error( $update ) ) {
+            $this->send_error( $update->get_error_message() );
+        }
+
+        $ret['redirect'] = [
+            'page'        => 'erp-hr',
+            'section'     => 'leave',
+            'status'      => $update->last_status,
+            'filter_year' => $update->entitlement->f_year,
+        ];
+
+        $this->send_success( $ret );
     }
 
     /**
@@ -156,7 +167,18 @@ class Ajax_Handler {
 
         $update = erp_hr_leave_request_update_status( $request_id, 3, $comments );
 
-        $this->send_success( $update );
+        if ( is_wp_error( $update ) ) {
+            $this->send_error( $update->get_error_message() );
+        }
+
+        $ret['redirect'] = [
+            'page'        => 'erp-hr',
+            'section'     => 'leave',
+            'status'      => $update->last_status,
+            'filter_year' => $update->entitlement->f_year,
+        ];
+
+        $this->send_success( $ret );
     }
 
     /**
@@ -351,6 +373,7 @@ class Ajax_Handler {
         }
 
         $data = [
+            'employee_type'  => isset( $_POST['employee_type'] ) ? sanitize_text_field( wp_unslash( $_POST['employee_type'] ) ) : '-1',
             'department_id'  => isset( $_POST['department_id'] ) ? sanitize_text_field( wp_unslash( $_POST['department_id'] ) ) : '-1',
             'location_id'    => isset( $_POST['location_id'] ) ? sanitize_text_field( wp_unslash( $_POST['location_id'] ) ) : '-1',
             'designation_id' => isset( $_POST['designation_id'] ) ? sanitize_text_field( wp_unslash( $_POST['designation_id'] ) ) : '-1',
@@ -396,6 +419,7 @@ class Ajax_Handler {
             'designation'       => $policy->designation_id,
             'gender'            => $policy->gender,
             'marital_status'    => $policy->marital,
+            'type'              => $policy->employee_type,
         ];
 
         $employees = erp_hr_get_employees( $args );

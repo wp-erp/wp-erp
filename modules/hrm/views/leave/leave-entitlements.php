@@ -68,6 +68,21 @@ $active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['ta
                 </div>
 
                 <div class="row">
+                    <?php
+                    erp_html_form_input( [
+                        'label'    => __( 'Employee Type', 'erp' ),
+                        'name'     => 'employee_type',
+                        'value'    => 'permanent',
+                        'class'    => 'leave-policy-input erp-select2 employee_type change_policy',
+                        'type'     => 'select',
+                        'options'  => [
+                                '-1' => esc_html__( 'All Types', 'erp' ),
+                            ] + erp_hr_get_employee_types(),
+                    ] );
+                    ?>
+                </div>
+
+                <div class="row">
                     <?php erp_html_form_input( [
                         'label'    => __( 'Department', 'erp' ),
                         'name'     => 'department_id',
@@ -202,16 +217,18 @@ $active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['ta
 
                     foreach ( $policies as $policy ) {
                         $result[ $policy['f_year'] ][] = [
-                            'name'       => $policy->leave->name,
-                            'policy_id'  => $policy['id'],
+                            'name'          => $policy->leave->name,
+                            'policy_id'     => $policy['id'],
+                            'employee_type' => $policy['employee_type'],
                         ];
                     }
                     echo json_encode( $result );
                     ?>;
 
-                $('#erp-entitlement-table-wrap').on( 'change', '#financial_year', function (e) {
+                $('#erp-entitlement-table-wrap').on( 'change', '#financial_year, #filter_employee_type', function (e) {
 
-                    var f_year = $(this).val();
+                    var f_year = $('#financial_year').val();
+                    var employee_type = $('#filter_employee_type').val();
 
                     $('#leave_policy option').remove();
                     var option = new Option( select_string, '' );
@@ -219,13 +236,16 @@ $active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['ta
 
                     if ( policies[ f_year ] ) {
                         $.each( policies[ f_year ], function ( id, policy ) {
+                            if ( employee_type != '' && policy.employee_type != employee_type ) {
+                                return;
+                            }
                             var option = new Option(policy.name, policy.policy_id);
                             $('#leave_policy').append(option);
-                        } );
+                        });
                     }
                 });
 
-            })
+            });
         </script>
     <?php } ?>
 </div>

@@ -273,14 +273,14 @@ class Leave_Requests_List_Table extends \WP_List_Table {
      * @return string
      */
     public function column_name( $item ) {
-        $tpl         = '?page=erp-hr&section=leave&leave_action=%s&id=%d';
+        $tpl         = '?page=erp-hr&section=leave&leave_action=%s&id=%d&filter_year=%d';
         $nonce       = 'erp-hr-leave-req-nonce';
         $actions     = [];
 
-        $delete_url  = wp_nonce_url( sprintf( $tpl, 'delete', $item->id ), $nonce );
-        $reject_url  = wp_nonce_url( sprintf( $tpl, 'reject', $item->id ), $nonce );
-        $approve_url = wp_nonce_url( sprintf( $tpl, 'approve', $item->id ), $nonce );
-        $pending_url = wp_nonce_url( sprintf( $tpl, 'pending', $item->id ), $nonce );
+        $delete_url  = wp_nonce_url( sprintf( $tpl, 'delete', $item->id, $item->f_year ), $nonce );
+        $reject_url  = wp_nonce_url( sprintf( $tpl, 'reject', $item->id, $item->f_year ), $nonce );
+        $approve_url = wp_nonce_url( sprintf( $tpl, 'approve', $item->id, $item->f_year ), $nonce );
+        $pending_url = wp_nonce_url( sprintf( $tpl, 'pending', $item->id, $item->f_year ), $nonce );
 
         if ( erp_get_option( 'erp_debug_mode', 'erp_settings_general', 0 ) ) {
             $actions['delete'] = sprintf( '<a href="%s" data-id="%d" class="submitdelete">%s</a>', $delete_url, $item->id, __( 'Delete', 'erp' ) );
@@ -348,8 +348,12 @@ class Leave_Requests_List_Table extends \WP_List_Table {
      * @return array
      */
     public function get_views() {
+        // get current year as default f_year
+        $current_f_year = erp_hr_get_financial_year_from_date();
+        $f_year         = isset( $_GET['filter_year'] ) ? absint( wp_unslash( $_GET['filter_year'] ) ) : ( ! empty( $current_f_year ) ? $current_f_year->id : '' );
+
         $status_links   = [];
-        $base_link      = admin_url( 'admin.php?page=erp-hr&section=leave' );
+        $base_link      = admin_url( 'admin.php?page=erp-hr&section=leave&filter_year=' . $f_year );
 
         foreach ( $this->counts as $key => $value ) {
             $class                = ( $key == $this->page_status ) ? 'current' : 'status-' . $key;
@@ -376,8 +380,8 @@ class Leave_Requests_List_Table extends \WP_List_Table {
         $this->page_status     = isset( $_GET['status'] ) ? sanitize_text_field( wp_unslash( $_GET['status'] ) ) : '2';
 
         // get current year as default f_year
-        $f_year = erp_hr_get_financial_year_from_date();
-        $f_year = ! empty( $f_year ) ? $f_year->id : '';
+        $current_f_year = erp_hr_get_financial_year_from_date();
+        $f_year         = isset( $_GET['filter_year'] ) ? absint( wp_unslash( $_GET['filter_year'] ) ) : ( ! empty( $current_f_year ) ? $current_f_year->id : '' );
 
         // only necessary because we have sample data
         $args = [
@@ -394,7 +398,7 @@ class Leave_Requests_List_Table extends \WP_List_Table {
             $args['lead'] = get_current_user_id();
         }
 
-        $this->counts = erp_hr_leave_get_requests_count();
+        $this->counts = erp_hr_leave_get_requests_count( $f_year );
 
         $query_results  = erp_hr_get_leave_requests( $args );
         $this->items    = $query_results['data'];

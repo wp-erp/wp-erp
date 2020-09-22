@@ -816,12 +816,19 @@ class Form_Handler {
             'reason'       => $leave_reason,
         ] );
 
+        $entitlement = \WeDevs\ERP\HRM\Models\Leave_Entitlement::find( $leave_policy );
+        $f_year_text = '';
+
+        if ( $entitlement ) {
+            $f_year_text = '&filter_year=' . $entitlement->financial_year->id;
+        }
+
         if ( is_wp_error( $insert ) ) {
             $errors->add( $insert );
             $errors->save();
-            $redirect_to = admin_url( 'admin.php?page=erp-hr&section=leave&view=new&insert_error=new_leave_request' );
+            $redirect_to = admin_url( 'admin.php?page=erp-hr&section=leave&view=new&insert_error=new_leave_request' . $f_year_text );
         } else {
-            $redirect_to = admin_url( 'admin.php?page=erp-hr&section=leave&sub-section=leave-requests&status=2' );
+            $redirect_to = admin_url( 'admin.php?page=erp-hr&section=leave&sub-section=leave-requests&status=2' . $f_year_text );
         }
 
         wp_redirect( $redirect_to );
@@ -893,15 +900,18 @@ class Form_Handler {
             $return = erp_hr_leave_request_update_status( $request_id, $status );
         }
 
+        $current_f_year = erp_hr_get_financial_year_from_date();
+        $f_year         = isset( $_GET['filter_year'] ) ? absint( wp_unslash( $_GET['filter_year'] ) ) : ( ! empty( $current_f_year ) ? $current_f_year->id : '' );
+
         $redirect_to = remove_query_arg( [ 'status' ], admin_url( 'admin.php?page=erp-hr&section=leave' ) );
 
         if ( is_wp_error( $return ) ) {
             $errors = new ERP_Errors( 'leave_request_status_change' );
             $errors->add( $return );
             $errors->save();
-            $redirect_to = add_query_arg( [ 'error' => 'leave_request_status_change' ], $redirect_to );
+            $redirect_to = add_query_arg( [ 'error' => 'leave_request_status_change', 'filter_year' => $f_year ], $redirect_to );
         } else {
-            $redirect_to = add_query_arg( [ 'status' => $status ], $redirect_to );
+            $redirect_to = add_query_arg( [ 'status' => $status, 'filter_year' => $f_year ], $redirect_to );
         }
 
         // redirect the user back
@@ -1052,6 +1062,7 @@ class Form_Handler {
         $days                = ! empty( $_POST['days'] ) ? absint( wp_unslash( $_POST['days'] ) ) : 0;
         $f_year              = ! empty( $_POST['f-year'] ) ? absint( wp_unslash( $_POST['f-year'] ) ) : date( 'Y' );
         $desc                = ! empty( $_POST['description'] ) ? sanitize_text_field( wp_unslash( $_POST['description'] ) ) : '';
+        $employee_type       = ! empty( $_POST['employee_type'] ) ? sanitize_text_field( wp_unslash( $_POST['employee_type'] ) ) : '-1';
         $dept_id             = ! empty( $_POST['department'] ) ? sanitize_text_field( wp_unslash( $_POST['department'] ) ) : '-1';
         $desg_id             = ! empty( $_POST['designation'] ) ? sanitize_text_field( wp_unslash( $_POST['designation'] ) ) : '-1';
         $location_id         = ! empty( $_POST['location'] ) ? sanitize_text_field( wp_unslash( $_POST['location'] ) ) : '-1';
@@ -1107,6 +1118,7 @@ class Form_Handler {
 
         $data = [
             'leave_id'            => $leave_id,
+            'employee_type'       => $employee_type,
             'description'         => $desc,
             'days'                => $days,
             'color'               => $color,
@@ -1138,6 +1150,7 @@ class Form_Handler {
             'page'        => 'erp-hr',
             'section'     => 'leave',
             'sub-section' => 'policies',
+            'filter_year' => $f_year,
         ], admin_url( 'admin.php' ) ) );
         exit;
     }
