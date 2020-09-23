@@ -18,7 +18,7 @@
 
     <div class="postbox leads-actions">
         <div class="handlediv" title="<?php esc_html_e( 'Click to toggle', 'erp' ); ?>"><br></div>
-        <h3 class="hndle"><span><?php esc_html_e( 'Work', 'erp' ); ?></span></h3>
+        <h3 class="hndle"><span><?php esc_html_e( 'Work', 'erp' ); ?></span><?php echo erp_help_tip( esc_html__( 'To update work information of this employee, go to Job > Job Information > Update Job Information.', 'erp' ) ); ?></h3>
         <div class="inside">
             <ul class="erp-list two-col separated">
                 <li><?php erp_print_key_value( __( 'Department', 'erp' ), $employee->get_department( 'view' ) ); ?></li>
