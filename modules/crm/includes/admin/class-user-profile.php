@@ -31,22 +31,27 @@ class User_Profile {
         }
 
         add_action( 'erp_user_profile_role', [ $this, 'role' ] );
-        add_action( 'erp_update_user', [ $this, 'update_user' ], 10, 2 );
+        add_action( 'erp_update_user', [ $this, 'update_user' ], 10, 1 );
     }
 
     /**
      * Update user role from user profile
      *
      * @since 1.0
+     * @since 1.6.5 removed second argument
      *
-     * @param int    $user_id
-     * @param object $post
+     * @param int $user_id
      *
      * @return void
      */
-    public function update_user( $user_id, $post ) {
-        $new_crm_manager_role = isset( $post['crm_manager'] ) ? sanitize_text_field( $post['crm_manager'] ) : false;
-        $new_crm_agent_role   = isset( $post['crm_agent'] ) ? sanitize_text_field( $post['crm_agent'] ) : false;
+    public function update_user( $user_id ) {
+        // verify nonce
+        if ( ! isset( $_REQUEST['_erp_nonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_erp_nonce'] ), 'user_profile_update_role' ) ) {
+            return;
+        }
+
+        $new_crm_manager_role = isset( $_POST['crm_manager'] ) ? sanitize_text_field( wp_unslash( $_POST['crm_manager'] ) ) : false;
+        $new_crm_agent_role   = isset( $_POST['crm_agent'] ) ? sanitize_text_field( wp_unslash( $_POST['crm_agent'] ) ) : false;
 
         if ( ! $new_crm_manager_role && ! $new_crm_agent_role ) {
             return;

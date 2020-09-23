@@ -28,13 +28,17 @@ class User_Profile {
 
         // User profile edit/display actions
         add_action( 'erp_user_profile_role', [ $this, 'role' ] );
-        add_action( 'erp_update_user', [ $this, 'update_user' ], 10, 2 );
+        add_action( 'erp_update_user', [ $this, 'update_user' ], 10, 1 );
     }
 
-    public function update_user( $user_id, $post ) {
+    public function update_user( $user_id ) {
+        // verify nonce
+        if ( ! isset( $_REQUEST['_erp_nonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_erp_nonce'] ), 'user_profile_update_role' ) ) {
+            return;
+        }
 
         // AC role we want the user to have
-        $new_role = isset( $post['ac_manager'] ) ? sanitize_text_field( $post['ac_manager'] ) : false;
+        $new_role = isset( $_POST['ac_manager'] ) ? sanitize_text_field( wp_unslash( $_POST['ac_manager'] ) ) : false;
 
         if ( ! $new_role ) {
             return;

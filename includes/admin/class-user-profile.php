@@ -40,14 +40,13 @@ class User_Profile {
      * @return bool Always false
      */
     public static function role_display( $profileuser ) {
-
         // Bail if current user cannot edit users
-        if ( ! current_user_can( 'edit_user', $profileuser->ID ) || !current_user_can( 'manage_options' ) ) {
+        if ( ! current_user_can( 'edit_user', $profileuser->ID ) || ! current_user_can( 'manage_options' ) ) {
             return;
         } ?>
 
         <h3><?php esc_html_e( 'WP ERP Role', 'erp' ); ?></h3>
-
+        <?php wp_nonce_field( 'user_profile_update_role', '_erp_nonce' ); ?>
         <table class="form-table">
             <tbody>
                 <tr>
@@ -64,11 +63,18 @@ class User_Profile {
     }
 
     public static function profile_update_role( $user_id = 0 ) {
-        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'erp-nonce' ) ) {
+        // verify nonce
+        if ( ! isset( $_REQUEST['_erp_nonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_erp_nonce'] ), 'user_profile_update_role' ) ) {
+            return;
         }
 
         // Bail if no user ID was passed
         if ( empty( $user_id ) ) {
+            return;
+        }
+
+        // Bail if current user cannot edit users
+        if ( ! current_user_can( 'edit_user', $user_id ) || ! current_user_can( 'manage_options' ) ) {
             return;
         }
 
