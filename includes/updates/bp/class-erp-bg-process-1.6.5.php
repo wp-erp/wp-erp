@@ -1,4 +1,5 @@
 <?php
+
 namespace WeDevs\ERP\Updates\BP;
 
 if ( ! class_exists( 'WP_Async_Request', false ) ) {
@@ -10,12 +11,12 @@ if ( ! class_exists( 'WP_Background_Process', false ) ) {
 }
 
 // don't call the file directly
-if ( ! defined( 'ABSPATH' ) ) exit;
-
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 
 /**
  * Class ERP_BG_PROCESS_1_6_5
- * @package WeDevs\ERP\Updates\BP
  */
 class ERP_BG_PROCESS_1_6_5 extends \WP_Background_Process {
 
@@ -34,16 +35,16 @@ class ERP_BG_PROCESS_1_6_5 extends \WP_Background_Process {
      * in the next pass through. Or, return false to remove the
      * item from the queue.
      *
-     * @param array $leave_request Queue item to iterate over.
+     * @param array $db_data queue item to iterate over
      *
      * @return mixed
      */
     protected function task( $db_data ) {
         global $wpdb;
 
-        require_once( ABSPATH . 'wp-admin/install-helper.php' );
+        require_once ABSPATH . 'wp-admin/install-helper.php';
 
-        if (  isset( $db_data['fields'] ) && is_array( $db_data['fields'] ) ) {
+        if ( isset( $db_data['fields'] ) && is_array( $db_data['fields'] ) ) {
 
             // get required data from input array
             $table_name     = $wpdb->prefix . $db_data['table'];
@@ -55,12 +56,11 @@ class ERP_BG_PROCESS_1_6_5 extends \WP_Background_Process {
             foreach ( $db_data['fields'] as $field ) {
                 // Check the column.
                 if ( ! check_column( $table_name, $field, $col_type ) ) {
-
                     $query = "ALTER TABLE $table_name MODIFY COLUMN $field $col_type $null DEFAULT '$default_value' ";
-                    $q = $wpdb->query( $query );
+                    $q     = $wpdb->query( $query );
 
                     if ( $wpdb->last_error ) {
-                        error_log( __FILE__ . ' ' . __LINE__ . ' ' .$wpdb->last_error . PHP_EOL );
+                        error_log( __FILE__ . ' ' . __LINE__ . ' ' . $wpdb->last_error . PHP_EOL );
                     }
                 }
             }
