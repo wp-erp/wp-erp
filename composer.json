@@ -44,7 +44,7 @@
         "phpcbf": [
             "./vendor/bin/phpcbf -p"
         ],
-        "php-cs-fixer": "php-cs-fixer --config=./.php_cs"
+        "phpcsf": "php-cs-fixer --config=./.php_cs fix"
     },
     "autoload" : {
         "psr-4" : {
