@@ -52,9 +52,17 @@
     <rule ref="Squiz.Commenting">
         <severity>0</severity>
     </rule>
-    <rule ref="PEAR.Functions.FunctionCallSignature.MultipleArguments">
+
+    <rule ref="PEAR.Functions.FunctionCallSignature">
+        <properties>
+            <property name="requiredSpacesAfterOpen" value="1"/>
+            <property name="requiredSpacesBeforeClose" value="1"/>
+        </properties>
         <severity>0</severity>
     </rule>
+    <rule ref="PEAR.Functions.FunctionCallSignature.SpaceAfterOpenBracket" />
+    <rule ref="PEAR.Functions.FunctionCallSignature.SpaceBeforeCloseBracket" />
+
     <rule ref="Generic.Commenting.DocComment.SpacingBeforeTags">
         <severity>0</severity>
     </rule>
