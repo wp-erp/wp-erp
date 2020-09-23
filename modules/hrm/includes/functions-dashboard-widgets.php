@@ -6,7 +6,7 @@ function erp_hr_dashboard_widget_birthday_callback() {
     erp_admin_dash_metabox( __( '<i class="fa fa-paper-plane"></i> Who is out', 'erp' ), 'erp_hr_dashboard_widget_whoisout' );
 
     if ( current_user_can( 'erp_hr_manager' ) ) {
-        erp_admin_dash_metabox( __( '<i class="fa fa-paper-plane"></i> About to end <span class="erp-help-tip erp-tips" title="List of contractual & trainee employees whose job periods are about to end."></span>', 'erp' ), 'erp_hr_dashboard_widget_about_to_end' );
+        erp_admin_dash_metabox( __( '<i class="fa fa-paper-plane"></i> About to end ', 'erp' ) . erp_help_tip( esc_html__( 'List of contractual & trainee employees whose job periods are about to end.', 'erp' ) ), 'erp_hr_dashboard_widget_about_to_end' );
     }
 }
 
