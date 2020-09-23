@@ -27,19 +27,23 @@ class User_Profile {
 
         // User profile edit/display actions
         add_action( 'erp_user_profile_role', [ $this, 'role' ] );
-        add_action( 'erp_update_user', [ $this, 'update_user' ], 10, 2 );
+        add_action( 'erp_update_user', [ $this, 'update_user' ], 10, 1 );
 
         //notification disable checkbox
         add_action( 'edit_user_profile', [ $this, 'profile_settings' ] );
         add_action( 'show_user_profile', [ $this, 'profile_settings' ] );
 
-        add_action( 'erp_update_user', [ $this, 'update_profile_settings' ], 10, 2 );
+        add_action( 'erp_update_user', [ $this, 'update_profile_settings' ], 10, 1 );
     }
 
-    public function update_user( $user_id, $post ) {
+    public function update_user( $user_id ) {
+        // verify nonce
+        if ( ! isset( $_REQUEST['_erp_nonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_erp_nonce'] ), 'user_profile_update_role' ) ) {
+            return;
+        }
 
         // HR role we want the user to have
-        $new_hr_manager_role = isset( $post['hr_manager'] ) ? sanitize_text_field( $post['hr_manager'] ) : false;
+        $new_hr_manager_role = isset( $_POST['hr_manager'] ) ? sanitize_text_field( wp_unslash( $_POST['hr_manager'] ) ) : false;
 
         if ( ! $new_hr_manager_role ) {
             return;
@@ -93,9 +97,14 @@ class User_Profile {
         <?php
     }
 
-    public function update_profile_settings( $user_id, $posted ) {
+    public function update_profile_settings( $user_id ) {
+        // verify nonce
+        if ( ! isset( $_REQUEST['_erp_nonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_erp_nonce'] ), 'user_profile_update_role' ) ) {
+            return;
+        }
+
         if ( current_user_can( 'edit_user', $user_id ) ) {
-            $erp_hr_disable_notification = isset( $posted['erp_hr_disable_notification'] ) ? $posted['erp_hr_disable_notification'] : '';
+            $erp_hr_disable_notification = isset( $_POST['erp_hr_disable_notification'] ) ? sanitize_text_field( wp_unslash( $_POST['erp_hr_disable_notification'] ) ) : '';
             update_user_meta( $user_id, 'erp_hr_disable_notification', $erp_hr_disable_notification );
         }
     }
