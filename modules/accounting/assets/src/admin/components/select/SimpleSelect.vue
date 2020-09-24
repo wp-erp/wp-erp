@@ -1,6 +1,7 @@
 <template>
     <div v-if="checkOptions" class="vue-select" :style="'width:' + width + 'px'">
-        <select v-model="select_val" @change="onChange">
+        <select v-model="select_val" @change="handleInput">
+            <option value="">All</option>
             <option :key="option.id" v-for="option in options" :value="option.id">{{ option.name }}</option>
         </select>
         <i class="select--icon" />
@@ -22,12 +23,13 @@ export default {
         options: {
             type: Array,
             default: () => []
-        }
+        },
+        value: String | Number
 
     },
     data() {
         return {
-            select_val: null
+            select_val: this.value
         };
     },
     computed: {
@@ -41,6 +43,9 @@ export default {
         }
     },
     methods: {
+        handleInput (e) {
+            this.$emit('input', this.select_val)
+        },
         onChange() {
             this.$root.$emit('SimpleSelectChange', {
                 selected: this.select_val

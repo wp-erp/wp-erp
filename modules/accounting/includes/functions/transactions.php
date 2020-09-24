@@ -22,6 +22,7 @@ function erp_acct_get_sales_transactions( $args = [] ) {
         'customer_id' => false,
         's'           => '',
         'status'      => '',
+        'type'      => '',
     ];
 
     $args = wp_parse_args( $args, $defaults );
@@ -43,6 +44,18 @@ function erp_acct_get_sales_transactions( $args = [] ) {
             $where .= " AND invoice.status={$args['status']} OR invoice_receipt.status={$args['status']} ";
         }
     }
+    if ( ! empty( $args['type'] ) ) {
+        if($args['type'] === 'estimate'){
+            $where .= " AND invoice.estimate = 1 ";
+        }
+        if($args['type'] === 'payment'){
+            $where .= " AND voucher.type = '{$args['type']}' ";
+        }
+        if($args['type'] === 'invoice'){
+            $where .= " AND voucher.type = '{$args['type']}' AND invoice.estimate = 0 ";
+        }
+    }
+
     if ( -1 !== $args['number'] ) {
         $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
     }
@@ -557,6 +570,7 @@ function erp_acct_get_expense_transactions( $args = [] ) {
         'vendor_id' => false,
         's'         => '',
         'status'    => '',
+        'type'    => '',
     ];
 
     $args = wp_parse_args( $args, $defaults );
@@ -578,6 +592,12 @@ function erp_acct_get_expense_transactions( $args = [] ) {
             $where .= " AND bill.status={$args['status']} OR pay_bill.status={$args['status']} OR expense.status={$args['status']} ";
         }
     }
+
+    if ($args['type'] ) {
+        $where .= " AND voucher.type = '{$args['type']}' ";
+    }
+
+
     if ( -1 !== $args['number'] ) {
         $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
     }
@@ -666,6 +686,9 @@ function erp_acct_get_purchase_transactions( $args = [] ) {
         if ( ! empty( $args['status'] ) ) {
             $where .= " AND purchase.status={$args['status']} OR pay_purchase.status={$args['status']} ";
         }
+    }
+    if ( ! empty( $args['type'] ) ) {
+        $where .= " AND voucher.type = '{$args['start_date']}'";
     }
     if ( -1 !== $args['number'] ) {
         $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
