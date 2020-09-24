@@ -55,7 +55,7 @@
                                 <th scope="col" class="col--qty">{{ __('Qty', 'erp') }}</th>
                                 <th scope="col" class="col--unit-price">{{ __('Unit Price', 'erp') }}</th>
                                 <th scope="col" class="col--amount">{{ __('Amount', 'erp') }}</th>
-                                <th scope="col" class="col--tax">{{ __('Tax', 'erp') }}</th>
+                                <th scope="col" class="col--tax">{{ __('Tax', 'erp') }} <span class="erp-help-tip .erp-tips" :title="__('Make sure you have created tax category, zone and rate. Also, make sure the tax category is added on the product.', 'erp')"></span></th>
                                 <th scope="col" class="col--actions"></th>
                             </tr>
                         </thead>
@@ -745,6 +745,11 @@ export default {
             .with-multiselect .multiselect__placeholder {
                 margin-top: 3px;
             }
+        }
+
+        .invoice-create .erp-help-tip {
+            color    : #2f4f4f;
+            font-size: 1.2em;
         }
     }
 </style>

@@ -6,7 +6,7 @@ if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_
 $data    = [];
 $total   = 0;
 $start   = !empty( $_POST['start'] ) ? sanitize_text_field( wp_unslash( $_POST['start'] ) ) : false;
-$end     = !empty( $_POST['end'] ) ? sanitize_text_field( wp_unslash( $_POST['end'] ) ) : date('Y-m-d');
+$end     = !empty( $_POST['end'] ) ? sanitize_text_field( wp_unslash( $_POST['end'] ) ) : date( 'Y-m-d' );
 
 $reports = erp_crm_activity_reporting_query( $start, $end );
 
@@ -47,8 +47,8 @@ foreach ( $reports as $report ) {
         <tbody>
             <?php
             foreach ( $data as $key => $value ) {
-                echo "<tr><td>" . esc_attr__( $key, 'erp' ) . "</td>";
-                echo "<td>" . esc_attr( $value ) . "</td></tr>";
+                echo '<tr><td>' . esc_attr__( $key, 'erp' ) . '</td>';
+                echo '<td>' . esc_attr( $value ) . '</td></tr>';
 
                 $total += $value;
             }
@@ -57,7 +57,7 @@ foreach ( $reports as $report ) {
 
         <tfoot>
             <tr>
-                <td><?php esc_attr_e('Total', 'erp') ?></td>
+                <td><?php esc_attr_e( 'Total', 'erp' ); ?></td>
                 <td><?php echo esc_attr( $total ); ?></td>
             </tr>
         </tfoot>

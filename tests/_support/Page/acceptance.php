@@ -1,13 +1,18 @@
 <?php
+
 namespace Page;
 
-class acceptance
-{
+use AcceptanceTester;
+
+class acceptance {
+
  // include url of current page
     public static $URL = '/wp-admin';
 
     public static $usernameField = '#loginform #user_login';
+
     public static $passwordField = '#loginform #user_pass';
+
     public static $loginButton = 'Log In';
 
     /**
@@ -21,9 +26,8 @@ class acceptance
      * You can append any additional parameter to URL
      * and use it in tests like: Page\Edit::route('/123-post');
      */
-    public static function route($param)
-    {
-        return static::$URL.$param;
+    public static function route( $param ) {
+        return static::$URL . $param;
     }
 
     /**
@@ -31,21 +35,18 @@ class acceptance
      */
     protected $acceptanceTester;
 
-    public function __construct(\AcceptanceTester $I)
-    {
+    public function __construct( AcceptanceTester $I ) {
         $this->acceptanceTester = $I;
     }
 
-    public function login($name, $password)
-    {
+    public function login( $name, $password ) {
         $I = $this->acceptanceTester;
 
-        $I->amOnPage(self::$URL);
-        $I->fillField(self::$usernameField, $name);
-        $I->fillField(self::$passwordField, $password);
-        $I->click(self::$loginButton);
+        $I->amOnPage( self::$URL );
+        $I->fillField( self::$usernameField, $name );
+        $I->fillField( self::$passwordField, $password );
+        $I->click( self::$loginButton );
 
         return $this;
     }
-
 }

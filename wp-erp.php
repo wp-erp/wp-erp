@@ -5,7 +5,7 @@
  * Plugin URI: https://wperp.com
  * Author: weDevs
  * Author URI: https://wedevs.com
- * Version: 1.6.4
+ * Version: 1.6.5
  * License: GPL2
  * Text Domain: erp
  * Domain Path: /i18n/languages/
@@ -52,7 +52,7 @@ final class WeDevs_ERP {
      *
      * @var string
      */
-    public $version = '1.6.4';
+    public $version = '1.6.5';
 
     /**
      * Minimum PHP version required
@@ -66,7 +66,7 @@ final class WeDevs_ERP {
      *
      * @var array
      */
-    private $container = array();
+    private $container = [];
 
     /**
      * @var object
@@ -88,7 +88,7 @@ final class WeDevs_ERP {
      */
     public static function init() {
         if ( ! isset( self::$instance ) && ! ( self::$instance instanceof WeDevs_ERP ) ) {
-            self::$instance = new WeDevs_ERP;
+            self::$instance = new WeDevs_ERP();
             self::$instance->setup();
         }
 
@@ -103,11 +103,10 @@ final class WeDevs_ERP {
      * @since 1.2.1
      *
      * @return void
-     *
      */
     private function setup() {
         // dry check on older PHP versions, if found deactivate itself with an error
-        register_activation_hook( __FILE__, array( $this, 'auto_deactivate' ) );
+        register_activation_hook( __FILE__, [ $this, 'auto_deactivate' ] );
 
         if ( ! $this->is_supported_php() ) {
             return;
@@ -176,7 +175,7 @@ final class WeDevs_ERP {
      *
      * @return void
      */
-    function auto_deactivate() {
+    public function auto_deactivate() {
         if ( $this->is_supported_php() ) {
             return;
         }
@@ -191,10 +190,10 @@ final class WeDevs_ERP {
         wp_die(
             wp_kses_post( $error ),
             esc_html__( 'Plugin Activation Error', 'erp' ),
-            array(
-				'response'  => 200,
-				'back_link' => true,
-            )
+            [
+                'response'  => 200,
+                'back_link' => true,
+            ]
         );
     }
 
@@ -220,7 +219,7 @@ final class WeDevs_ERP {
      * @return void
      */
     private function includes() {
-        include dirname( __FILE__ ) . '/vendor/autoload.php';
+        include __DIR__ . '/vendor/autoload.php';
         require_once WPERP_INCLUDES . '/functions.php';
         require_once WPERP_INCLUDES . '/class-install.php';
         require_once WPERP_INCLUDES . '/actions-filters.php';
@@ -247,6 +246,12 @@ final class WeDevs_ERP {
         require_once WPERP_INCLUDES . '/updates/bp/leave_1_6_0/class-erp-hr-leave-entitlements.php';
         require_once WPERP_INCLUDES . '/updates/bp/leave_1_6_0/class-erp-hr-leave-request.php';
 
+        // Version 1.6.5 background files
+        require_once WPERP_INCLUDES . '/updates/bp/class-erp-bg-process-1.6.5.php';
+
+        // Validates data
+        require_once WPERP_INCLUDES . '/class-validate-data.php';
+
         // cli command
         if ( defined( 'WP_CLI' ) && WP_CLI ) {
             include WPERP_INCLUDES . '/cli/commands.php';
@@ -271,6 +276,7 @@ final class WeDevs_ERP {
         new \WeDevs\ERP\Promotion();
         new \WeDevs\ERP\AddonTask();
         new \WeDevs\ERP\ERP_i18n();
+        new \WeDevs\ERP\Validate_Data();
 
         // Appsero Tracker
         \WeDevs\ERP\Tracker::get_instance()->init();
@@ -292,19 +298,19 @@ final class WeDevs_ERP {
      */
     private function init_actions() {
         // Localize our plugin
-        add_action( 'init', array( $this, 'localization_setup' ) );
+        add_action( 'init', [ $this, 'localization_setup' ] );
 
         // initialize emailer class
-        add_action( 'erp_loaded', array( $this->container['emailer'], 'init_emails' ) );
+        add_action( 'erp_loaded', [ $this->container['emailer'], 'init_emails' ] );
 
         // initialize integration class
-        add_action( 'erp_loaded', array( $this->container['integration'], 'init_integrations' ) );
+        add_action( 'erp_loaded', [ $this->container['integration'], 'init_integrations' ] );
 
         // Add plugin action links
         add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), [ $this, 'plugin_action_links' ] );
 
         // Admin footer text
-        add_filter( 'admin_footer_text', array( $this, 'admin_footer_text' ), 10, 1 );
+        add_filter( 'admin_footer_text', [ $this, 'admin_footer_text' ], 10, 1 );
     }
 
     /**
@@ -317,6 +323,7 @@ final class WeDevs_ERP {
     public function plugin_action_links( $links ) {
         $links[] = '<a href="' . admin_url( 'admin.php?page=erp-settings' ) . '">' . __( 'Settings', 'erp-deals' ) . '</a>';
         $links[] = '<a target="_blank" href="https://wperp.com/documentation/?utm_source=Free+Plugin&utm_medium=CTA&utm_content=Backend&utm_campaign=Docs">' . __( 'Docs', 'erp' ) . '</a>';
+
         return $links;
     }
 
@@ -356,7 +363,6 @@ final class WeDevs_ERP {
         }
 
         foreach ( $modules as $key => $module ) {
-
             if ( ! $this->modules->is_module_active( $key ) ) {
                 continue;
             }
@@ -371,7 +377,9 @@ final class WeDevs_ERP {
      * Admin footer text
      *
      * @since 1.4.2
-     * @param  string $text
+     *
+     * @param string $text
+     *
      * @return string
      */
     public function admin_footer_text( $text ) {

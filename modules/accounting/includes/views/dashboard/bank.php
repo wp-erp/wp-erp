@@ -3,16 +3,17 @@
         <ul class="wperp-list-unstyled list-table-content list-table-content--border">
             <?php
             $balance = 0;
+
             foreach ( $items as $item ) {
-                $balance += (float) $item['balance'] ?>
+                $balance += (float) $item['balance']; ?>
                 <li>
                     <div class="left">
                         <i class="flaticon-menu-1"></i>
                         <?php
                         $open = 'closed';
-                        if ( ! empty( $item['additional'] ) ) {
-                            $open = 'open';
-                            ?>
+
+                if ( ! empty( $item['additional'] ) ) {
+                    $open = 'open'; ?>
                             <details <?php echo esc_html( $open ); ?>>
                                 <summary><?php echo esc_html( $item['name'] ); ?></summary>
                                 <?php foreach ( $item['additional'] as $additional ) { ?>
@@ -22,7 +23,8 @@
                                     </p>
                                 <?php } ?>
                             </details>
-                        <?php } else { ?>
+                        <?php
+                } else { ?>
                             <span> <?php echo esc_html( $item['name'] ); ?> </span>
                         <?php } ?>
                     </div>
@@ -30,7 +32,8 @@
                         <span class="price"><?php echo esc_html( $item['balance'] ); ?></span>
                     </div>
                 </li>
-            <?php } ?>
+            <?php
+            } ?>
             <li class="total">
                 <span class="account-title"><?php esc_attr_e( 'Total Balance ', 'erp' ); ?></span> <span class="price"><a
                         href="#"><?php echo esc_html( $balance ); ?></a></span>

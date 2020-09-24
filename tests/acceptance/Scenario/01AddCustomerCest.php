@@ -1,30 +1,28 @@
-<?php 
+<?php
+
 // namespace Scenario;
 
-
-class AddCustomerCest
-{
-    public function _before(\Step\Acceptance\AllSteps $I)
-    {
+class AddCustomerCest {
+    public function _before( Step\Acceptance\AllSteps $I ) {
         $I->loginAsAdmin();
         $I->previewUsers();
     }
 
     // tests
-    public function addCustomer(\Step\Acceptance\AllSteps $I)
-    {
-    	//Add new Customer
-    	
-        $I->click('Customers');
-        $I->wait(5);
-        $I->click('Add New Customer');
-        $I->fillField('#first_name', randomGenerate()->firstName);
-        $I->fillField('#last_name', randomGenerate()->lastName);
-        $I->fillField('#email', randomGenerate()->email);
-        $I->fillField('#phone', randomGenerate()->phoneNumber);
-        $I->fillField('#company', randomGenerate()->company);
-        $I->click('//div[@id="wperp-add-customer-modal"]/div/div/form/div[2]/div/button[2]');
+    public function addCustomer( Step\Acceptance\AllSteps $I ) {
+        //Add new Customer
+
+        $I->click( 'Customers' );
+        $I->wait( 5 );
+        $I->click( 'Add New Customer' );
+        $I->fillField( '#first_name', randomGenerate()->firstName );
+        $I->fillField( '#last_name', randomGenerate()->lastName );
+        $I->fillField( '#email', randomGenerate()->email );
+        $I->fillField( '#phone', randomGenerate()->phoneNumber );
+        $I->fillField( '#company', randomGenerate()->company );
+        $I->click( '//div[@id="wperp-add-customer-modal"]/div/div/form/div[2]/div/button[2]' );
     }
+
     // // tests
     // public function addVendor(\Step\Acceptance\AllSteps $I)
     // {
@@ -44,5 +42,5 @@ class AddCustomerCest
 }
 
 function randomGenerate() {
-  return \Faker\Factory::create();
+    return \Faker\Factory::create();
 }

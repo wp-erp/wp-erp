@@ -1,14 +1,18 @@
 <?php
+
 namespace WeDevs\ERP\Framework;
+
 use WeDevs\ERP\Framework\Traits\Hooker;
+use WP_Error;
 
 /**
  * Modules Class
- *
- * @package WeDevs\ERP\Framework
  */
 class Modules {
 
+    /*
+     * Hooks
+     */
     use Hooker;
 
     /**
@@ -39,22 +43,22 @@ class Modules {
                 'slug'        => 'erp-hrm',
                 'description' => __( 'Human Resource Management', 'erp' ),
                 'callback'    => '\WeDevs\ERP\HRM\Human_Resource',
-                'modules'     => apply_filters( 'erp_hr_modules', [ ] )
+                'modules'     => apply_filters( 'erp_hr_modules', [] ),
             ],
             'crm' => [
                 'title'       => __( 'CR Management', 'erp' ),
                 'slug'        => 'erp-crm',
                 'description' => __( 'Customer Relationship Management', 'erp' ),
                 'callback'    => '\WeDevs\ERP\CRM\Customer_Relationship',
-                'modules'     => apply_filters( 'erp_crm_modules', [ ] )
+                'modules'     => apply_filters( 'erp_crm_modules', [] ),
             ],
             'accounting' => [
                 'title'       => __( 'Accounting', 'erp' ),
                 'slug'        => 'erp-accounting',
                 'description' => __( 'Accounting Management', 'erp' ),
                 'callback'    => '\WeDevs\ERP\Accounting\Accounting',
-                'modules'     => apply_filters( 'erp_ac_modules', [ ] )
-            ]
+                'modules'     => apply_filters( 'erp_ac_modules', [] ),
+            ],
         ];
     }
 
@@ -133,7 +137,7 @@ class Modules {
      *
      * @since 0.1
      *
-     * @return boolean
+     * @return bool
      */
     public function is_module_active( $module_key ) {
         $modules = $this->get_active_modules();
@@ -184,7 +188,6 @@ class Modules {
      * @return array
      */
     public function get_query_modules( $tab = false ) {
-
         switch ( $tab ) {
             case 'active':
                 return $this->get_active_modules();
@@ -217,8 +220,8 @@ class Modules {
         $erp_module_names = array_keys( $this->modules );
 
         foreach ( $modules as $module_name ) {
-            if ( ! in_array( $module_name , $erp_module_names ) ) {
-                return new \WP_Error( 'invalid-module-name', sprintf( __( 'Invalid module name %s', 'erp' ), $module_name ) );
+            if ( ! in_array( $module_name, $erp_module_names ) ) {
+                return new WP_Error( 'invalid-module-name', sprintf( __( 'Invalid module name %s', 'erp' ), $module_name ) );
             }
         }
 
@@ -290,5 +293,4 @@ class Modules {
 
         return true;
     }
-
 }

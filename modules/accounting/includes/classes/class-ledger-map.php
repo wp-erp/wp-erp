@@ -15,7 +15,7 @@ class Ledger_Map {
 
     public static function get_instance() {
         if ( null === static::$instance ) {
-            static::$instance = new Ledger_Map;
+            static::$instance = new Ledger_Map();
         }
 
         return static::$instance;
@@ -25,6 +25,7 @@ class Ledger_Map {
         if ( ! empty( $this->ledgers[ $slug ] ) ) {
             return $this->ledgers[ $slug ]->id;
         }
+
         return false;
     }
 
@@ -32,6 +33,7 @@ class Ledger_Map {
         if ( ! empty( $this->ledgers[ $slug ] ) ) {
             return $this->ledgers[ $slug ];
         }
+
         return false;
     }
 }

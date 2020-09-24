@@ -2,6 +2,7 @@
 
 namespace WeDevs\ERP\HRM;
 
+use ICal;
 use WeDevs\ERP\Framework\Traits\Ajax;
 use WeDevs\ERP\Framework\Traits\Hooker;
 use WeDevs\ERP\HRM\Models\Dependents;
@@ -10,15 +11,11 @@ use WeDevs\ERP\HRM\Models\Financial_Year;
 use WeDevs\ERP\HRM\Models\Leave_Entitlement;
 use WeDevs\ERP\HRM\Models\Leave_Policy;
 use WeDevs\ERP\HRM\Models\Leave_Request;
-use WeDevs\ERP\HRM\Models\Work_Experience;
 
 /**
  * Ajax handler
- *
- * @package WP-ERP
  */
 class Ajax_Handler {
-
     use Ajax;
     use Hooker;
 
@@ -66,7 +63,7 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp_hr_announcement_view', 'view_announcement' );
 
         // Birthday Wish
-        $this->action ( 'wp_ajax_erp_hr_birthday_wish', 'birthday_wish' );
+        $this->action( 'wp_ajax_erp_hr_birthday_wish', 'birthday_wish' );
 
         // Performance
         $this->action( 'wp_ajax_erp-hr-emp-update-performance-reviews', 'employee_update_performance' );
@@ -121,8 +118,7 @@ class Ajax_Handler {
     /**
      * Leave approve
      */
-    function leave_approve() {
-
+    public function leave_approve() {
         if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'wp-erp-hr-nonce' ) ) {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
@@ -137,14 +133,24 @@ class Ajax_Handler {
 
         $update = erp_hr_leave_request_update_status( $request_id, 1, $comments );
 
-        $this->send_success( $update );
+        if ( is_wp_error( $update ) ) {
+            $this->send_error( $update->get_error_message() );
+        }
+
+        $ret['redirect'] = [
+            'page'        => 'erp-hr',
+            'section'     => 'leave',
+            'status'      => $update->last_status,
+            'filter_year' => $update->entitlement->f_year,
+        ];
+
+        $this->send_success( $ret );
     }
 
     /**
      * Leave reject
      */
-    function leave_reject() {
-
+    public function leave_reject() {
         if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'wp-erp-hr-nonce' ) ) {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
@@ -161,14 +167,24 @@ class Ajax_Handler {
 
         $update = erp_hr_leave_request_update_status( $request_id, 3, $comments );
 
-        $this->send_success( $update );
+        if ( is_wp_error( $update ) ) {
+            $this->send_error( $update->get_error_message() );
+        }
+
+        $ret['redirect'] = [
+            'page'        => 'erp-hr',
+            'section'     => 'leave',
+            'status'      => $update->last_status,
+            'filter_year' => $update->entitlement->f_year,
+        ];
+
+        $this->send_success( $ret );
     }
 
     /**
      * @since 1.6.0
      */
-    function remove_leave_request() {
-
+    public function remove_leave_request() {
         if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'wp-erp-hr-nonce' ) ) {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
@@ -196,7 +212,7 @@ class Ajax_Handler {
      *
      * @return json
      */
-    function holiday_remove() {
+    public function holiday_remove() {
         //$this->verify_nonce( 'wp-erp-hr-nonce' );
         if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'wp-erp-hr-nonce' ) ) {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
@@ -209,7 +225,7 @@ class Ajax_Handler {
 
         $holiday_id = ( isset( $_POST['id'] ) ) ? sanitize_text_field( wp_unslash( $_POST['id'] ) ) : '';
 
-        $holiday = erp_hr_delete_holidays( array( 'id' => intval( $holiday_id ) ) );
+        $holiday = erp_hr_delete_holidays( [ 'id' => intval( $holiday_id ) ] );
         $this->send_success();
     }
 
@@ -220,7 +236,7 @@ class Ajax_Handler {
      *
      * @return json
      */
-    function get_holiday() {
+    public function get_holiday() {
         //$this->verify_nonce( 'wp-erp-hr-nonce' );
         if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'wp-erp-hr-nonce' ) ) {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
@@ -230,14 +246,14 @@ class Ajax_Handler {
 
         $holiday = erp_hr_get_holidays( [
             'id'     => absint( $holiday_id ),
-            'number' => - 1
+            'number' => - 1,
         ] );
 
         $holiday          = (array) reset( $holiday );
         $holiday['end']   = date( 'Y-m-d', strtotime( $holiday['end'] . '-1day' ) );
         $holiday['start'] = date( 'Y-m-d', strtotime( $holiday['start'] ) );
 
-        $this->send_success( array( 'holiday' => $holiday ) );
+        $this->send_success( [ 'holiday' => $holiday ] );
     }
 
     /**
@@ -247,7 +263,7 @@ class Ajax_Handler {
      *
      * @return json
      */
-    function import_ical() {
+    public function import_ical() {
         $this->verify_nonce( 'wp-erp-hr-nonce' );
 
         if ( empty( $_FILES['ics']['tmp_name'] ) ) {
@@ -261,7 +277,6 @@ class Ajax_Handler {
         $first_day_of_year = strtotime( date( 'Y-01-01 00:00:00' ) );
         $last_day_of_year  = strtotime( date( 'Y-12-31 23:59:59' ) );
 
-
         /*
          * We'll ignore duplicate entries with the same title and
          * start date in the foreach loop when inserting an entry
@@ -272,15 +287,15 @@ class Ajax_Handler {
         $temp_name = isset( $_FILES['ics']['tmp_name'] ) ? sanitize_text_field( wp_unslash( $_FILES['ics']['tmp_name'] ) ) : '';
 
         /***** check if file is csv start ******/
-        $mimes = array( 'application/vnd.ms-excel', 'text/csv' );
-        if( in_array( sanitize_text_field( wp_unslash( $_FILES['ics']['type'] ) ), $mimes ) ) {
+        $mimes = [ 'application/vnd.ms-excel', 'text/csv' ];
+
+        if ( in_array( sanitize_text_field( wp_unslash( $_FILES['ics']['type'] ) ), $mimes ) ) {
             $import_csv_data = import_holidays_csv( $_FILES['ics']['tmp_name'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
             $this->send_success( $import_csv_data );
         }
         /***** check if file is csv end ******/
 
-
-        $ical      = new \ICal( $temp_name );
+        $ical      = new ICal( $temp_name );
         $events    = $ical->events();
 
         foreach ( $events as $event ) {
@@ -295,17 +310,17 @@ class Ajax_Handler {
 
                 // check for duplicate entries
                 $holiday = $holiday_model->where( 'title', '=', $title )
-                                         ->where( 'start', '=', $start );
+                    ->where( 'start', '=', $start );
 
                 // insert only unique one
                 if ( ! $holiday->count() ) {
-                    erp_hr_leave_insert_holiday( array(
+                    erp_hr_leave_insert_holiday( [
                         'id'          => 0,
                         'title'       => $title,
                         'start'       => $start,
                         'end'         => $end,
                         'description' => sanitize_text_field( $description ),
-                    ) );
+                    ] );
                 }
             }
         }
@@ -325,7 +340,6 @@ class Ajax_Handler {
         if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'wp-erp-hr-nonce' ) ) {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
-
 
         // Check permission
         if ( ! current_user_can( 'erp_leave_manage' ) ) {
@@ -352,23 +366,23 @@ class Ajax_Handler {
      * @return json
      */
     public function get_policies_for_entitlement() {
-
         $this->verify_nonce( 'wp-erp-hr-nonce' );
 
         if ( ! current_user_can( 'erp_leave_manage' ) ) {
             wp_die( esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
-        $data = array(
-            'department_id' => isset( $_POST['department_id'] ) ? sanitize_text_field( wp_unslash( $_POST['department_id'] ) ) :  '-1',
-            'location_id'   => isset( $_POST['location_id'] ) ? sanitize_text_field( wp_unslash( $_POST['location_id'] ) ) :  '-1',
-            'designation_id' => isset( $_POST['designation_id'] ) ? sanitize_text_field( wp_unslash( $_POST['designation_id'] ) ) :  '-1',
-            'gender'        => isset( $_POST['gender'] ) ? sanitize_text_field( wp_unslash( $_POST['gender'] ) ) :  '-1',
-            'marital'       => isset( $_POST['marital'] ) ? sanitize_text_field( wp_unslash( $_POST['marital'] ) ) :  '-1',
-            'f_year'        => isset( $_POST['f_year'] ) ? sanitize_text_field( wp_unslash( $_POST['f_year'] ) ) :  '',
-        );
+        $data = [
+            'employee_type'  => isset( $_POST['employee_type'] ) ? sanitize_text_field( wp_unslash( $_POST['employee_type'] ) ) : '-1',
+            'department_id'  => isset( $_POST['department_id'] ) ? sanitize_text_field( wp_unslash( $_POST['department_id'] ) ) : '-1',
+            'location_id'    => isset( $_POST['location_id'] ) ? sanitize_text_field( wp_unslash( $_POST['location_id'] ) ) : '-1',
+            'designation_id' => isset( $_POST['designation_id'] ) ? sanitize_text_field( wp_unslash( $_POST['designation_id'] ) ) : '-1',
+            'gender'         => isset( $_POST['gender'] ) ? sanitize_text_field( wp_unslash( $_POST['gender'] ) ) : '-1',
+            'marital'        => isset( $_POST['marital'] ) ? sanitize_text_field( wp_unslash( $_POST['marital'] ) ) : '-1',
+            'f_year'         => isset( $_POST['f_year'] ) ? sanitize_text_field( wp_unslash( $_POST['f_year'] ) ) : '',
+        ];
 
-        $this->send_success(  array( 0 => __( '- Select -', 'erp' ) ) + erp_hr_leave_get_policies_dropdown_raw( $data ) );
+        $this->send_success(  [ 0 => __( '- Select -', 'erp' ) ] + erp_hr_leave_get_policies_dropdown_raw( $data ) );
     }
 
     /**
@@ -379,14 +393,13 @@ class Ajax_Handler {
      * @return json
      */
     public function get_employees() {
-
         $this->verify_nonce( 'wp-erp-hr-nonce' );
 
         if ( ! current_user_can( 'erp_leave_manage' ) ) {
             wp_die( esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
-        $policy_id = isset( $_POST['policy_id'] ) ? absint( wp_unslash( $_POST['policy_id'] ) ) :  '0';
+        $policy_id = isset( $_POST['policy_id'] ) ? absint( wp_unslash( $_POST['policy_id'] ) ) : '0';
 
         if ( empty( $policy_id ) ) {
             $this->send_error( esc_attr__( 'Invalid Policy id.', 'erp' ) );
@@ -398,19 +411,20 @@ class Ajax_Handler {
             $this->send_error( esc_attr__( 'No policy found with given policy id.', 'erp' ) );
         }
 
-        $args = array(
-            'number'        => '-1',
-            'no_object'     => true,
-            'department'    => $policy->department_id,
-            'location'      => $policy->location_id,
-            'designation'   => $policy->designation_id,
-            'gender'        => $policy->gender,
+        $args = [
+            'number'            => '-1',
+            'no_object'         => true,
+            'department'        => $policy->department_id,
+            'location'          => $policy->location_id,
+            'designation'       => $policy->designation_id,
+            'gender'            => $policy->gender,
             'marital_status'    => $policy->marital,
-        );
+            'type'              => $policy->employee_type,
+        ];
 
         $employees = erp_hr_get_employees( $args );
 
-        $this->send_success(  array( 0 => __( '- Select -', 'erp' ) ) + wp_list_pluck( $employees, 'display_name', 'user_id' ) );
+        $this->send_success(  [ 0 => __( '- Select -', 'erp' ) ] + wp_list_pluck( $employees, 'display_name', 'user_id' ) );
     }
 
     /**
@@ -423,7 +437,7 @@ class Ajax_Handler {
     public function employee_template_refresh() {
         ob_start();
         include WPERP_HRM_JS_TMPL . '/new-employee.php';
-        $this->send_success( array( 'content' => ob_get_clean() ) );
+        $this->send_success( [ 'content' => ob_get_clean() ] );
     }
 
     /**
@@ -436,7 +450,7 @@ class Ajax_Handler {
     public function new_dept_tmp_reload() {
         ob_start();
         include WPERP_HRM_JS_TMPL . '/new-dept.php';
-        $this->send_success( array( 'content' => ob_get_clean() ) );
+        $this->send_success( [ 'content' => ob_get_clean() ] );
     }
 
     /**
@@ -451,7 +465,6 @@ class Ajax_Handler {
         if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'wp-erp-hr-nonce' ) ) {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
-
 
         $id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
 
@@ -476,7 +489,6 @@ class Ajax_Handler {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
-
         //check permission
         if ( ! current_user_can( 'erp_manage_department' ) ) {
             $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
@@ -489,7 +501,7 @@ class Ajax_Handler {
         $parent  = isset( $_POST['parent'] ) ? intval( $_POST['parent'] ) : 0;
 
         $exist = \WeDevs\ERP\HRM\Models\Department::where( 'id', '!=', $dept_id )
-                    ->where( 'title', 'like', $title )->first();
+            ->where( 'title', 'like', $title )->first();
 
         if ( $exist && $dept_id !== $exist->id ) {
             $this->send_error( __( 'Multiple department with the same name is not allowed.', 'erp' ) );
@@ -500,25 +512,25 @@ class Ajax_Handler {
             $parent = 0;
         }
 
-        $dept_id = erp_hr_create_department( array(
+        $dept_id = erp_hr_create_department( [
             'id'          => $dept_id,
             'title'       => $title,
             'description' => $desc,
             'lead'        => $lead,
-            'parent'      => $parent
-        ) );
+            'parent'      => $parent,
+        ] );
 
         if ( is_wp_error( $dept_id ) ) {
             $this->send_error( $dept_id->get_error_message() );
         }
 
-        $this->send_success( array(
+        $this->send_success( [
             'id'       => $dept_id,
             'title'    => $title,
             'lead'     => $lead,
             'parent'   => $parent,
-            'employee' => 0
-        ) );
+            'employee' => 0,
+        ] );
     }
 
     /**
@@ -538,6 +550,7 @@ class Ajax_Handler {
         }
 
         $id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
+
         if ( $id ) {
             $deleted = erp_hr_delete_department( $id );
 
@@ -556,7 +569,7 @@ class Ajax_Handler {
      *
      * @return void
      */
-    function designation_create() {
+    public function designation_create() {
         //$this->verify_nonce( 'erp-new-desig' );
         if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'erp-new-desig' ) ) {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
@@ -572,26 +585,27 @@ class Ajax_Handler {
         $desig_id = isset( $_POST['desig_id'] ) ? intval( $_POST['desig_id'] ) : 0;
 
         $exist = \WeDevs\ERP\HRM\Models\Designation::where( 'id', '!=', $desig_id )
-                    ->where( 'title', 'Like', $title )->first();
+            ->where( 'title', 'Like', $title )->first();
+
         if ( $exist && $desig_id !== $exist->id ) {
             $this->send_error( __( 'Multiple designation with the same name is not allowed.', 'erp' ) );
         }
 
-        $desig_id = erp_hr_create_designation( array(
+        $desig_id = erp_hr_create_designation( [
             'id'          => $desig_id,
             'title'       => $title,
-            'description' => $desc
-        ) );
+            'description' => $desc,
+        ] );
 
         if ( is_wp_error( $desig_id ) ) {
             $this->send_error( $desig_id->get_error_message() );
         }
 
-        $this->send_success( array(
+        $this->send_success( [
             'id'       => $desig_id,
             'title'    => $title,
-            'employee' => 0
-        ) );
+            'employee' => 0,
+        ] );
     }
 
     /**
@@ -632,6 +646,7 @@ class Ajax_Handler {
         }
 
         $id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
+
         if ( $id ) {
             // @TODO: check permission
             $deleted = erp_hr_delete_designation( $id );
@@ -666,6 +681,7 @@ class Ajax_Handler {
         // Check permission for editing and adding new employee
         if ( isset( $posted['user_id'] ) && $posted['user_id'] ) {
             $user_id = absint( $posted['user_id'] );
+
             if ( ! current_user_can( 'erp_edit_employee', $posted['user_id'] ) ) {
                 $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
             }
@@ -679,9 +695,7 @@ class Ajax_Handler {
             if ( erp_is_employee_exist( $posted['user_email'], $user_id ) ) {
                 $this->send_error( __( 'User with the same email address already exist. Please try with different email.', 'erp' ) );
             }
-
         }
-
 
         $employee = new Employee( $user_id );
 
@@ -794,7 +808,6 @@ class Ajax_Handler {
         $this->send_success( __( 'Employee has been restore successfully', 'erp' ) );
     }
 
-
     /**
      * Update employment status
      *
@@ -815,6 +828,7 @@ class Ajax_Handler {
         }
 
         $employee = new Employee( $user_id );
+
         if ( ! $employee->is_employee() ) {
             $this->send_error( __( 'No employee found', 'erp' ) );
         }
@@ -842,7 +856,6 @@ class Ajax_Handler {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
-
         $user_id = isset( $_REQUEST['user_id'] ) ? intval( $_REQUEST['user_id'] ) : 0;
 
         // Check permission
@@ -851,6 +864,7 @@ class Ajax_Handler {
         }
 
         $employee = new Employee( $user_id );
+
         if ( ! $employee->is_employee() ) {
             $this->send_error( __( 'No employee found', 'erp' ) );
         }
@@ -860,7 +874,7 @@ class Ajax_Handler {
             'pay_type' => ( isset( $_POST['pay_type'] ) ) ? sanitize_text_field( wp_unslash( $_POST['pay_type'] ) ) : '',
             'reason'   => ( isset( $_POST['change-reason'] ) ) ? sanitize_text_field( wp_unslash( $_POST['change-reason'] ) ) : '',
             'pay_rate' => ( isset( $_POST['pay_rate'] ) ) ? sanitize_text_field( wp_unslash( $_POST['pay_rate'] ) ) : '',
-            'date'     => ( isset( $_POST['date'] ) ) ? sanitize_text_field( wp_unslash( $_POST['date'] ) ) : ''
+            'date'     => ( isset( $_POST['date'] ) ) ? sanitize_text_field( wp_unslash( $_POST['date'] ) ) : '',
         ] );
 
         if ( is_wp_error( $created ) ) {
@@ -880,7 +894,6 @@ class Ajax_Handler {
         if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'wp-erp-hr-nonce' ) ) {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
-
 
         $history_id = isset( $_POST['history_id'] ) ? intval( $_POST['history_id'] ) : 0;
         $user_id    = isset( $_POST['user_id'] ) ? intval( $_POST['user_id'] ) : 0;
@@ -916,7 +929,6 @@ class Ajax_Handler {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
-
         $user_id = isset( $_POST['user_id'] ) ? intval( $_POST['user_id'] ) : 0;
         // Check permission
         if ( ! current_user_can( 'erp_edit_employee', $user_id ) ) {
@@ -924,6 +936,7 @@ class Ajax_Handler {
         }
 
         $employee = new Employee( $user_id );
+
         if ( ! $employee->is_employee() ) {
             $this->send_error( __( 'No employee found', 'erp' ) );
         }
@@ -933,7 +946,7 @@ class Ajax_Handler {
             'designation'  => ( isset( $_POST['designation'] ) ) ? sanitize_text_field( wp_unslash( $_POST['designation'] ) ) : '',
             'department'   => ( isset( $_POST['department'] ) ) ? sanitize_text_field( wp_unslash( $_POST['department'] ) ) : '',
             'reporting_to' => ( isset( $_POST['reporting_to'] ) ) ? sanitize_text_field( wp_unslash( $_POST['reporting_to'] ) ) : '',
-            'location'     => ( isset( $_POST['location'] ) ) ? sanitize_text_field( wp_unslash( $_POST['location'] ) ) : ''
+            'location'     => ( isset( $_POST['location'] ) ) ? sanitize_text_field( wp_unslash( $_POST['location'] ) ) : '',
         ] );
 
         if ( is_wp_error( $created ) ) {
@@ -952,7 +965,6 @@ class Ajax_Handler {
         if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'wp-erp-hr-employee-nonce' ) ) {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
-
 
         $user_id = isset( $_POST['user_id'] ) ? intval( $_POST['user_id'] ) : 0;
         $note    = isset( $_POST['note'] ) ? strip_tags( sanitize_text_field( wp_unslash( $_POST['note'] ) ) ) : 0;
@@ -982,7 +994,6 @@ class Ajax_Handler {
             // $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
-
         $employee_id = isset( $_POST['user_id'] ) ? intval( $_POST['user_id'] ) : 0;
         $total_no    = isset( $_POST['total_no'] ) ? intval( $_POST['total_no'] ) : 0;
         $offset_no   = isset( $_POST['offset_no'] ) ? intval( $_POST['offset_no'] ) : 0;
@@ -995,7 +1006,7 @@ class Ajax_Handler {
         include WPERP_HRM_VIEWS . '/employee/tab-notes-row.php';
         $content = ob_get_clean();
 
-        $this->send_success( array( 'content' => $content ) );
+        $this->send_success( [ 'content' => $content ] );
     }
 
     /**
@@ -1036,7 +1047,6 @@ class Ajax_Handler {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
-
         $user_id             = isset( $_POST['user_id'] ) ? intval( $_POST['user_id'] ) : 0;
         $terminate_date      = ( empty( $_POST['terminate_date'] ) ) ? current_time( 'mysql' ) : sanitize_text_field( wp_unslash( $_POST['terminate_date'] ) );
         $termination_type    = isset( $_POST['termination_type'] ) ? sanitize_text_field( wp_unslash( $_POST['termination_type'] ) ) : '';
@@ -1048,7 +1058,7 @@ class Ajax_Handler {
             'terminate_date'      => $terminate_date,
             'termination_type'    => $termination_type,
             'termination_reason'  => $termination_reason,
-            'eligible_for_rehire' => $eligible_for_rehire
+            'eligible_for_rehire' => $eligible_for_rehire,
         ];
 
         // Check permission
@@ -1157,11 +1167,10 @@ class Ajax_Handler {
                 'user_id'     => $user->ID,
                 'designation' => 0,
                 'department'  => 0,
-                'status'      => 'active'
+                'status'      => 'active',
             ] );
 
             $this->send_success( $employee );
-
         } else {
             $this->send_error( __( 'Employee already exist.', 'erp' ) );
         }
@@ -1172,7 +1181,7 @@ class Ajax_Handler {
      *
      * @since 0.1
      *
-     * @return json|boolean
+     * @return json|bool
      */
     public function mark_read_announcement() {
         //$this->verify_nonce( 'wp-erp-hr-nonce' );
@@ -1180,7 +1189,7 @@ class Ajax_Handler {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
-        $row_id  = ( isset( $_POST['id'] ) )  ? intval( $_POST['id'] ) : '';
+        $row_id  = ( isset( $_POST['id'] ) ) ? intval( $_POST['id'] ) : '';
         $user_id = get_current_user_id();
         \WeDevs\ERP\HRM\Models\Announcement::find( $row_id )->where( 'user_id', $user_id )->update( [ 'status' => 'read' ] );
 
@@ -1204,6 +1213,7 @@ class Ajax_Handler {
         }
 
         $post_id = ( isset( $_POST['id'] ) ) ? intval( $_POST['id'] ) : '';
+
         if ( ! $post_id ) {
             $this->send_error();
         }
@@ -1215,7 +1225,7 @@ class Ajax_Handler {
 
         $post_data = [
             'title'   => get_the_title(),
-            'content' => wpautop( get_the_content() )
+            'content' => wpautop( get_the_content() ),
         ];
 
         wp_reset_postdata();
@@ -1230,11 +1240,11 @@ class Ajax_Handler {
      *
      * @return string
      */
-     public function birthday_wish() {
+    public function birthday_wish() {
         //$this->verify_nonce( 'wp-erp-hr-nonce' );
-         if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'wp-erp-hr-nonce' ) ) {
-             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
-         }
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'wp-erp-hr-nonce' ) ) {
+            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
 
         $employee_user_id = ( isset( $_POST[ 'employee_user_id' ] ) ) ? intval( $_POST[ 'employee_user_id' ] ) : '';
 
@@ -1244,7 +1254,7 @@ class Ajax_Handler {
 
         $emailer = wperp()->emailer->get_email( 'Birthday_Wish' );
 
-        if ( is_a( $emailer, '\WeDevs\ERP\Email') ) {
+        if ( is_a( $emailer, '\WeDevs\ERP\Email' ) ) {
             $emailer->trigger( $employee_user_id );
         }
 
@@ -1262,7 +1272,7 @@ class Ajax_Handler {
             //$this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
-        $employee_id     = isset( $_POST['employee_id'] ) ? sanitize_text_field( wp_unslash( $_POST['employee_id'] ) ) : 0;
+        $employee_id        = isset( $_POST['employee_id'] ) ? sanitize_text_field( wp_unslash( $_POST['employee_id'] ) ) : 0;
         $department_lead_id = erp_hr_get_department_lead_by_user( $employee_id );
 
         if (
@@ -1353,7 +1363,7 @@ class Ajax_Handler {
             'job_title'    => $job_title,
             'from'         => $from,
             'to'           => $to,
-            'description'  => $description
+            'description'  => $description,
         ];
 
         $employee = new Employee( $employee_id );
@@ -1435,7 +1445,7 @@ class Ajax_Handler {
             'finished'        => $finished,
             'notes'           => $notes,
             'interest'        => $interest,
-            'expiration_date' => $exp_date
+            'expiration_date' => $exp_date,
         ];
 
         $employee = new Employee( $employee_id );
@@ -1577,26 +1587,26 @@ class Ajax_Handler {
         $title        = isset( $_POST['title'] ) ? sanitize_text_field( wp_unslash( $_POST['title'] ) ) : '';
         $start_date   = isset( $_POST['start_date'] ) ? sanitize_text_field( wp_unslash( $_POST['start_date'] ) ) : '';
         $end_date     = isset( $_POST['end_date'] ) && ! empty( $_POST['end_date'] ) ? sanitize_text_field( wp_unslash( $_POST['end_date'] ) ) : $start_date;
-        $end_date     = date( 'Y-m-d 23:59:59', strtotime($end_date) );
+        $end_date     = date( 'Y-m-d 23:59:59', strtotime( $end_date ) );
         $description  = isset( $_POST['description'] ) ? sanitize_text_field( wp_unslash( $_POST['description'] ) ) : '';
         $range_status = isset( $_POST['range'] ) ? sanitize_text_field( wp_unslash( $_POST['range'] ) ) : 'off';
         $error        = true;
 
         if ( $range_status == 'off' ) {
-            $end_date = date( 'Y-m-d 23:59:59', strtotime($start_date) );
+            $end_date = date( 'Y-m-d 23:59:59', strtotime( $start_date ) );
         }
 
         if ( is_wp_error( $error ) ) {
             $this->send_error( $error->get_error_message() );
         }
 
-        $holiday_id = erp_hr_leave_insert_holiday( array(
+        $holiday_id = erp_hr_leave_insert_holiday( [
             'id'          => $holiday_id,
             'title'       => $title,
             'start'       => $start_date,
             'end'         => $end_date,
             'description' => $description,
-        ) );
+        ] );
 
         if ( is_wp_error( $holiday_id ) ) {
             $this->send_error( $holiday_id->get_error_message() );
@@ -1622,6 +1632,7 @@ class Ajax_Handler {
         }
 
         $id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
+
         if ( $id ) {
             erp_hr_leave_policy_delete( $id );
 
@@ -1674,8 +1685,8 @@ class Ajax_Handler {
             $this->send_error( esc_attr__( 'Invalid leave policy.', 'erp' ) );
         }
 
-        $f_year_start = erp_current_datetime()->setTimestamp( $entitlement->financial_year->start_date)->format( 'Y-m-d' );
-        $f_year_end = erp_current_datetime()->setTimestamp( $entitlement->financial_year->end_date)->format( 'Y-m-d' );
+        $f_year_start = erp_current_datetime()->setTimestamp( $entitlement->financial_year->start_date )->format( 'Y-m-d' );
+        $f_year_end   = erp_current_datetime()->setTimestamp( $entitlement->financial_year->end_date )->format( 'Y-m-d' );
 
         if ( ( $start_date < $f_year_start || $start_date > $f_year_end ) || ( $end_date < $f_year_start || $end_date > $f_year_end )  ) {
             $this->send_error( sprintf( esc_attr__( 'Invalid leave duration. Please apply between %s and %s.', 'erp' ), erp_format_date( $f_year_start ), erp_format_date( $f_year_end ) ) );
@@ -1683,6 +1694,7 @@ class Ajax_Handler {
 
         // handle overlapped leaves
         $leave_record_exist = erp_hrm_is_leave_recored_exist_between_date( $start_date, $end_date, $id, $entitlement->f_year );
+
         if ( $leave_record_exist ) {
             $this->send_error( esc_attr__( 'Existing Leave Record found within selected range!', 'erp' ) );
         }
@@ -1712,10 +1724,10 @@ class Ajax_Handler {
         $days['total'] = sprintf( '%d %s', $days['total'], _n( 'day', 'days', $days['total'], 'erp' ) );
 
         if ( $days['sandwich'] == 1 ) {
-            $days['total'] .=  ' ' . esc_attr__( '(Sandwich rule applied)', 'erp');
+            $days['total'] .= ' ' . esc_attr__( '(Sandwich rule applied)', 'erp' );
         }
 
-        $this->send_success( array( 'print' => $days, 'leave_count' => $leave_count ) );
+        $this->send_success( [ 'print' => $days, 'leave_count' => $leave_count ] );
     }
 
     /**
@@ -1733,7 +1745,7 @@ class Ajax_Handler {
         }
 
         $employee_id = isset( $_POST['employee_id'] ) && !empty( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : false;
-        $f_year = isset( $_POST['f_year'] ) && !empty( $_POST['f_year'] ) ? intval( $_POST['f_year'] ) : false;
+        $f_year      = isset( $_POST['f_year'] ) && !empty( $_POST['f_year'] ) ? intval( $_POST['f_year'] ) : false;
 
         if ( ! $employee_id ) {
             $this->send_error( esc_attr__( 'Please select an employee.', 'erp' ) );
@@ -1750,23 +1762,25 @@ class Ajax_Handler {
         }
 
         $policies = erp_hr_get_assign_policy_from_entitlement( $employee_id, $financial_year->start_date );
+
         if ( $policies ) {
             ob_start();
-            erp_html_form_input( array(
+            erp_html_form_input( [
                 'label'    => __( 'Leave Type', 'erp' ),
                 'name'     => 'leave_policy',
                 'id'       => 'erp-hr-leave-req-leave-policy',
                 'value'    => '',
                 'required' => true,
                 'type'     => 'select',
-                'options'  => array( '' => __( '- Select -', 'erp' ) ) + array_unique( $policies )
-            ) );
+                'options'  => [ '' => __( '- Select -', 'erp' ) ] + array_unique( $policies ),
+            ] );
             $content = ob_get_clean();
 
             return $this->send_success( $content );
         }
 
         $error_string = esc_html__( 'Employee is not entitled to any leave policy. Set leave entitlement to apply for leave.', 'erp' );
+
         if ( ! current_user_can( 'erp_leave_manage' ) ) {
             $error_string = esc_html__( 'No entitlement found for selected year. Please contact with HR.', 'erp' );
         }
@@ -1802,7 +1816,6 @@ class Ajax_Handler {
 
         $balance = erp_hr_leave_get_balance_for_single_entitlement( $policy_id );
 
-
         if ( array_key_exists( 'available', $balance ) ) {
             $available = $balance['available'];
         }
@@ -1812,7 +1825,7 @@ class Ajax_Handler {
         }
 
         if ( $available <= 0 ) {
-            $content = sprintf( '<span class="description red"> %d %s</span>', erp_number_format_i18n( $available ), _n( 'day available', 'days are available', $available+1, 'erp' ) );
+            $content = sprintf( '<span class="description red"> %d %s</span>', erp_number_format_i18n( $available ), _n( 'day available', 'days are available', $available + 1, 'erp' ) );
         } elseif ( $available > 0 ) {
             $content = sprintf( '<span class="description green"> %s %s</span>', erp_number_format_i18n( $available ), __( 'days are available', 'erp' ) );
         } else {
@@ -1849,7 +1862,7 @@ class Ajax_Handler {
             $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
-        if( empty( trim( sanitize_text_field( wp_unslash( $_POST['leave_reason'] ) ) ) ) ){
+        if ( empty( trim( sanitize_text_field( wp_unslash( $_POST['leave_reason'] ) ) ) ) ) {
             $this->send_error( __( 'Leave reason field can not be blank', 'erp' ) );
         }
 
@@ -1859,13 +1872,13 @@ class Ajax_Handler {
 
         $leave_reason = isset( $_POST['leave_reason'] ) ? strip_tags( sanitize_text_field( wp_unslash( $_POST['leave_reason'] ) ) ) : '';
 
-        $request_id = erp_hr_leave_insert_request( array(
+        $request_id = erp_hr_leave_insert_request( [
             'user_id'      => $employee_id,
             'leave_policy' => $leave_policy,
             'start_date'   => $start_date,
             'end_date'     => $end_date,
-            'reason'       => $leave_reason
-        ) );
+            'reason'       => $leave_reason,
+        ] );
 
         if ( ! is_wp_error( $request_id ) ) {
 
@@ -1904,12 +1917,12 @@ class Ajax_Handler {
         $policy  = isset( $_POST['leave_policy'] ) ? intval( $_POST['leave_policy'] ) : 'all';
         $status  = isset( $_POST['status'] ) ? sanitize_text_field( $_POST['status'] ) : 'all';
 
-        $args = array(
+        $args = [
             'f_year'    => $year,
             'user_id'   => $user_id,
             'status'    => $status,
             'orderby'   => 'start_date',
-        );
+        ];
 
         if ( $policy != 'all' ) {
             $args['policy_id'] = $policy;

@@ -125,16 +125,17 @@ function erp_acct_clsbl_close_balance_sheet_now( $args ) {
     } // ledger loop
 
     $chart_id_bank = 7;
+    $final_accounts_helper = new \WeDevs\ERP\Accounting\Includes\Classes\FinalAccountsHelper($args);
 
     // get bank balance
-    $bank_balance = erp_acct_bank_balance( $args, 'balance' );
+    //$bank_balance = erp_acct_bank_balance( $args, 'balance' );
 
-    if ( is_array( $bank_balance ) ) {
-        foreach ( $bank_balance as $b_balance ) {
+    if ( is_array( $final_accounts_helper->cashAtBankBreakdowns ) ) {
+        foreach ( $final_accounts_helper->cashAtBankBreakdowns  as $b_balance ) {
             erp_acct_clsbl_insert_into_opening_balance(
                 $next_f_year_id,
                 $chart_id_bank,
-                $b_balance['id'],
+                $b_balance['ledger_id'],
                 'ledger',
                 $b_balance['balance'],
                 0.00
@@ -143,14 +144,14 @@ function erp_acct_clsbl_close_balance_sheet_now( $args ) {
     }
 
     // get bank loan
-    $bank_loan = erp_acct_bank_balance( $args, 'loan' );
+    //$bank_loan = erp_acct_bank_balance( $args, 'loan' );
 
-    if ( is_array( $bank_loan ) ) {
-        foreach ( $bank_loan as $b_loan ) {
+    if ( is_array( $final_accounts_helper->loanAtBankBreakdowns ) ) {
+        foreach ( $final_accounts_helper->loanAtBankBreakdowns as $b_loan ) {
             erp_acct_clsbl_insert_into_opening_balance(
                 $next_f_year_id,
                 $chart_id_bank,
-                $b_loan['id'],
+                $b_loan['ledger_id'],
                 'ledger',
                 0.00,
                 abs( $b_loan['balance'] )
@@ -245,12 +246,12 @@ function erp_acct_clsbl_close_balance_sheet_now( $args ) {
 /**
  * Insert closing balance data into opening balance
  *
- * @param int $f_year_id
- * @param int $chart_id
- * @param int $ledger_id
+ * @param int    $f_year_id
+ * @param int    $chart_id
+ * @param int    $ledger_id
  * @param string $type
- * @param int $debit
- * @param int $credit
+ * @param int    $debit
+ * @param int    $credit
  *
  * @return void
  */
@@ -270,7 +271,6 @@ function erp_acct_clsbl_insert_into_opening_balance( $f_year_id, $chart_id, $led
             'created_by'        => get_current_user_id(),
         ]
     );
-
 }
 
 /**
@@ -330,7 +330,7 @@ function erp_acct_clsbl_get_accounts_payable_balance_with_people( $args ) {
  * Get people account receivable calculate with opening balance within financial year date range
  *
  * @param string $bs_start_date
- * @param float $data => account details data on balance sheet date range
+ * @param float  $data          => account details data on balance sheet date range
  * @param string $sql
  * @param string $type
  *
@@ -365,13 +365,12 @@ function erp_acct_clsbl_people_ar_calc_with_opening_balance( $bs_start_date ) {
  * Get people account payable calculate with opening balance within financial year date range
  *
  * @param string $bs_start_date
- * @param float $data => account details data on balance sheet date range
+ * @param float  $data          => account details data on balance sheet date range
  * @param string $sql
  * @param string $type
  *
  * @return array
  */
-
 function erp_acct_clsbl_vendor_ap_calc_with_opening_balance( $bs_start_date ) {
     global $wpdb;
 
@@ -477,7 +476,7 @@ function erp_acct_clsbl_sales_tax_agency( $args, $type ) {
  * Get sales tax payable calculate with opening balance within financial year date range
  *
  * @param string $bs_start_date
- * @param float $data => agency details data on trial balance date range
+ * @param float  $data          => agency details data on trial balance date range
  * @param string $sql
  * @param string $type
  *
@@ -509,12 +508,12 @@ function erp_acct_clsbl_sales_tax_agency_with_opening_balance( $bs_start_date, $
     $agency_details_balance = $wpdb->get_results( $wpdb->prepare( $sql, $closest_fy_date['start_date'], $prev_date_of_tb_start ), ARRAY_A );
 
     $merged = array_merge( $result, $agency_details_balance );
+
     return erp_acct_clsbl_get_formatted_people_balance( $merged );
 }
 
 /**
- *
- * @param int $id
+ * @param int    $id
  * @param string $type
  *
  * @return void

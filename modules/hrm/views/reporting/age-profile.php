@@ -11,18 +11,17 @@
         $emp_data     = erp_hr_get_age_breakdown_data();
 
         foreach ( $departments as $department ) {
+            array_push( $yaxis_ticks, [$index, $department->title] );
 
-            array_push( $yaxis_ticks, [$index, $department->title]);
-
-            $emp_by_dept      = $employees->where( array( 'department' => $department->id, 'status' => 'active' ) )->get();
+            $emp_by_dept      = $employees->where( [ 'department' => $department->id, 'status' => 'active' ] )->get();
             $emp_by_dept_data = get_employee_breakdown_by_age( $emp_by_dept );
 
-            $_under18[]       = [$emp_by_dept_data['_under_18'], $index];
-            $_18_to_25[]      = [$emp_by_dept_data['_18_to_25'], $index];
-            $_26_to_35[]      = [$emp_by_dept_data['_26_to_35'], $index];
-            $_36_to_45[]      = [$emp_by_dept_data['_36_to_45'], $index];
-            $_46_to_55[]      = [$emp_by_dept_data['_46_to_55'], $index];
-            $_56_to_65[]      = [$emp_by_dept_data['_56_to_65'], $index];
+            $_under18[]        = [$emp_by_dept_data['_under_18'], $index];
+            $_18_to_25[]       = [$emp_by_dept_data['_18_to_25'], $index];
+            $_26_to_35[]       = [$emp_by_dept_data['_26_to_35'], $index];
+            $_36_to_45[]       = [$emp_by_dept_data['_36_to_45'], $index];
+            $_46_to_55[]       = [$emp_by_dept_data['_46_to_55'], $index];
+            $_56_to_65[]       = [$emp_by_dept_data['_56_to_65'], $index];
             $_65_plus[]        = [$emp_by_dept_data['_65_plus'], $index];
 
             $index++;
@@ -32,14 +31,14 @@
     <div class="erp-single-container">
         <div class="erp-area-left" id="poststuff">
         <?php
-            echo wp_kses_post( erp_admin_dash_metabox( __( '<i class="fa fa-bar-chart"></i> Employee Age Breakdown Chart', 'erp' ), function() {
-        ?>
+            echo wp_kses_post( erp_admin_dash_metabox( __( '<i class="fa fa-bar-chart"></i> Employee Age Breakdown Chart', 'erp' ), function () {
+                ?>
             <div id="emp-age-breakdown-chart" class="erp-report-chart"></div>
         <?php
             } ) );
 
-            echo wp_kses_post( erp_admin_dash_metabox( __( '<i class="fa fa-bar-chart-o"></i> Employee Age Breakdown by Department', 'erp' ), function() {
-        ?>
+            echo wp_kses_post( erp_admin_dash_metabox( __( '<i class="fa fa-bar-chart-o"></i> Employee Age Breakdown by Department', 'erp' ), function () {
+                ?>
             <div id="emp-age-breakdown-by-department" class="erp-report-chart"></div>
         <?php
             } ) );
@@ -173,7 +172,7 @@
                             showTooltip(item.pageX,
                             item.pageY,
                             color,
-                            "<?php esc_html_e(' Age :', 'erp' ); ?><strong>" + item.series.xaxis.ticks[x].label + "  yr</strong><br><?php esc_html_e( 'Employee :', 'erp' ); ?> <strong>" + y + "</strong>");
+                            "<?php esc_html_e( ' Age :', 'erp' ); ?><strong>" + item.series.xaxis.ticks[x].label + "  yr</strong><br><?php esc_html_e( 'Employee :', 'erp' ); ?> <strong>" + y + "</strong>");
                         }
                     } else {
                         $("#tooltip").remove();

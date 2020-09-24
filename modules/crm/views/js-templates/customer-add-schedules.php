@@ -8,7 +8,7 @@
                 </p>
 
                 <p class="erp-left schedule-assign-user">
-                    <select name="user_id" required class="erp-crm-contact-list-dropdown" id="assign-contact" style="width: 100%" data-types="contact,company" data-placeholder="<?php esc_attr_e( 'Assign to a contact..', 'erp' ) ?>">
+                    <select name="user_id" required class="erp-crm-contact-list-dropdown" id="assign-contact" style="width: 100%" data-types="contact,company" data-placeholder="<?php esc_attr_e( 'Assign to a contact..', 'erp' ); ?>">
                         <option value=""></option>
                     </select>
                 </p>
@@ -42,28 +42,28 @@
             </div>
             <p>
                 <input id="activity_messageesc_attr_edit" type="hidden" name="message" required value="">
-                <trix-editor input="activity_messageesc_attr_edit" placeholder="<?php esc_attr_e( 'Enter your schedule description .....', 'erp' ); ?>"></trix-editor>
+                <trix-editor class="trix-content" input="activity_messageesc_attr_edit" placeholder="<?php esc_attr_e( 'Enter your schedule description .....', 'erp' ); ?>"></trix-editor>
             </p>
             <div class="clearfix"></div>
 
             <p>
-                <select name="invite_contact[]" id="erp-crm-activity-invite-contact" class="select2" multiple="multiple" style="width: 100%" data-placeholder="<?php esc_attr_e( 'Agents or managers..', 'erp' ) ?>">
-                    <?php echo wp_kses( erp_crm_get_crm_user_html_dropdown(), array(
-                        'option' => array(
-                            'value' => array(),
-                            'selected' => array()
-                        ),
-                    ) ); ?>
+                <select name="invite_contact[]" id="erp-crm-activity-invite-contact" class="select2" multiple="multiple" style="width: 100%" data-placeholder="<?php esc_attr_e( 'Agents or managers..', 'erp' ); ?>">
+                    <?php echo wp_kses( erp_crm_get_crm_user_html_dropdown(), [
+                        'option' => [
+                            'value'    => [],
+                            'selected' => [],
+                        ],
+                    ] ); ?>
                 </select>
             </p>
 
             <div class="schedule-notification">
                 <p class="erp-left schedule-type">
-                    <label><?php esc_attr_e( 'Schedule Type', 'erp' ) ?></label>
+                    <label><?php esc_attr_e( 'Schedule Type', 'erp' ); ?></label>
                     <span class="sep">:</span>
                     <span class="value">
                         <select name="schedule_type" id="schedule_type" required>
-                            <option value="" selected><?php esc_attr_e( '--Select--', 'erp' ) ?></option>
+                            <option value="" selected><?php esc_attr_e( '--Select--', 'erp' ); ?></option>
                             <option value="meeting"><?php esc_attr_e( 'Meeting', 'erp' ); ?></option>
                             <option value="call"><?php esc_attr_e( 'Call', 'erp' ); ?></option>
                         </select>
@@ -72,6 +72,7 @@
 
                 <p class="erp-left schedule-notification-allow">
                     <input type="checkbox" name="allow_notification" value="true"> <?php esc_attr_e( 'Allow notification', 'erp' ); ?>
+                    <?php echo erp_help_tip( esc_html__( "You can send reminder notification through SMS or Email.", 'erp' ) ); ?>
                 </p>
                 <div class="clearfix"></div>
             </div>
@@ -109,18 +110,18 @@
     <# } else { #>
         <div class="feed-log-activity">
             <p>
-                <select required name="user_id" class="erp-crm-contact-list-dropdown" id="assign-contact"  data-types="contact,company" style="width: 100%" data-placeholder="<?php esc_attr_e( 'Assign to a contact..', 'erp' ) ?>">
+                <select required name="user_id" class="erp-crm-contact-list-dropdown" id="assign-contact"  data-types="contact,company" style="width: 100%" data-placeholder="<?php esc_attr_e( 'Assign to a contact..', 'erp' ); ?>">
                     <option value=""></option>
                 </select>
             </p>
 
             <p>
                 <select name="log_type" required id="erp-crm-feed-log-type" class="erp-left">
-                    <option value=""><?php esc_attr_e( '-- Select type --', 'erp' ) ?></option>
-                    <option value="call"><?php esc_attr_e( 'Log a Call', 'erp' ) ?></option>
-                    <option value="meeting"><?php esc_attr_e( 'Log a Meeting', 'erp' ) ?></option>
-                    <option value="email"><?php esc_attr_e( 'Log an Email', 'erp' ) ?></option>
-                    <option value="sms"><?php esc_attr_e( 'Log an SMS', 'erp' ) ?></option>
+                    <option value=""><?php esc_attr_e( '-- Select type --', 'erp' ); ?></option>
+                    <option value="call"><?php esc_attr_e( 'Log a Call', 'erp' ); ?></option>
+                    <option value="meeting"><?php esc_attr_e( 'Log a Meeting', 'erp' ); ?></option>
+                    <option value="email"><?php esc_attr_e( 'Log an Email', 'erp' ); ?></option>
+                    <option value="sms"><?php esc_attr_e( 'Log an SMS', 'erp' ); ?></option>
                 </select>
                 <input class="erp-right erp-time-field" type="text" required placeholder="12.00pm" size="10" name="log_time">
                 <input class="erp-right erp-date-field" disabled="disabled" name="log_date" value="{{ data.current_date }}" type="text" placeholder="yy-mm-dd">
@@ -137,13 +138,13 @@
             </p>
 
             <p class="log-selected-contact erp-hide">
-                <select name="invite_contact[]" id="erp-crm-activity-invite-contact" class="select2" multiple="multiple" style="width: 100%" data-placeholder="<?php esc_attr_e( 'Agents or managers..', 'erp' ) ?>">
-                    <?php echo wp_kses( erp_crm_get_crm_user_html_dropdown(), array(
-                        'option' => array(
-                            'value' => array(),
-                            'selected' => array()
-                        ),
-                    ) ); ?>
+                <select name="invite_contact[]" id="erp-crm-activity-invite-contact" class="select2" multiple="multiple" style="width: 100%" data-placeholder="<?php esc_attr_e( 'Agents or managers..', 'erp' ); ?>">
+                    <?php echo wp_kses( erp_crm_get_crm_user_html_dropdown(), [
+                        'option' => [
+                            'value'    => [],
+                            'selected' => [],
+                        ],
+                    ] ); ?>
                 </select>
             </p>
 
@@ -159,3 +160,11 @@
         <?php wp_nonce_field( 'wp-erp-crm-customer-feed' ); ?>
     </div>
 </div>
+
+<style>
+    .erp-help-tip {
+        font-size: 1.1em;
+        top      : 0;
+        left     : 0;
+    }
+</style>

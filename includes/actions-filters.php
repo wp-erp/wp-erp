@@ -9,7 +9,7 @@ add_action( 'admin_init', 'erp_process_import_export' );
 add_action( 'admin_notices', 'erp_importer_notices' );
 add_action( 'admin_init', 'erp_import_export_download_sample_action' );
 
-/** Filters *******************************************************************/
+/* Filters *******************************************************************/
 
 add_filter( 'map_meta_cap', 'erp_map_meta_caps', 10, 4 );
 add_filter( 'cron_schedules', 'erp_cron_intervals', 10, 1 );
@@ -23,4 +23,4 @@ add_action( 'erp_email_setting_column_is_enable', 'add_enable_disable_section_to
 add_action( 'admin_init', 'add_enable_disable_option_save' );
 add_filter( 'erp_email_setting_columns', 'erp_email_setting_columns_add_enable_disable' );
 add_filter( 'erp_settings_email_section_fields', 'add_checkbox_hidden_field', 10, 2 );
-add_filter('creating_email_instance', 'filter_enabled_email');
+add_filter( 'creating_email_instance', 'filter_enabled_email' );

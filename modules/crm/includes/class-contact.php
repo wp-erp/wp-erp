@@ -1,15 +1,15 @@
 <?php
+
 namespace WeDevs\ERP\CRM;
 
-/**
-* Customer Class
-*
-* @since 1.0
-*
-* @package WP-ERP|CRM
-*/
-class Contact extends \WeDevs\ERP\People {
+use WP_Error;
 
+/**
+ * Customer Class
+ *
+ * @since 1.0
+ */
+class Contact extends \WeDevs\ERP\People {
     protected $contact_type;
 
     /**
@@ -25,7 +25,7 @@ class Contact extends \WeDevs\ERP\People {
         }
 
         parent::__construct( $contact );
-        $this->types = $type ? (array)$type : $this->types;
+        $this->types = $type ? (array) $type : $this->types;
     }
 
     /**
@@ -34,37 +34,37 @@ class Contact extends \WeDevs\ERP\People {
      * @return array
      */
     public function to_array() {
-        $fields = array(
+        $fields = [
             'id'            => 0,
             'user_id'       => '',
             'first_name'    => '',
             'last_name'     => '',
             'company'       => '',
-            'avatar'        => array(
+            'avatar'        => [
                 'id'  => 0,
-                'url' => ''
-            ),
-            'life_stage'    => '',
-            'email'         => '',
-            'date_of_birth' => '',
-            'phone'         => '',
-            'mobile'        => '',
-            'website'       => '',
-            'fax'           => '',
-            'street_1'      => '',
-            'street_2'      => '',
-            'city'          => '',
-            'country'       => '',
-            'state'         => '',
-            'postal_code'   => '',
-            'types'         => [],
-            'notes'         => '',
-            'other'         => '',
-            'currency'      => '',
+                'url' => '',
+            ],
+            'life_stage'         => '',
+            'email'              => '',
+            'date_of_birth'      => '',
+            'phone'              => '',
+            'mobile'             => '',
+            'website'            => '',
+            'fax'                => '',
+            'street_1'           => '',
+            'street_2'           => '',
+            'city'               => '',
+            'country'            => '',
+            'state'              => '',
+            'postal_code'        => '',
+            'types'              => [],
+            'notes'              => '',
+            'other'              => '',
+            'currency'           => '',
             'contact_owner'      => '',
-            'social'        => [],
-            'source'        => '',
-            'assign_to'     => [
+            'social'             => [],
+            'source'             => '',
+            'assign_to'          => [
                 'id'           => 0,
                 'avatar'       => '',
                 'first_name'   => '',
@@ -74,7 +74,7 @@ class Contact extends \WeDevs\ERP\People {
             ],
             'contact_age'   => '',
             'group_id'      => [],
-        );
+        ];
 
         $social_field = erp_crm_get_social_field();
 
@@ -104,7 +104,6 @@ class Contact extends \WeDevs\ERP\People {
                 $fields['social'][$key] = $this->get_meta( $key, true );
             }
 
-
             $contact_groups           = erp_crm_get_editable_assign_contact( $this->id );
             $fields['contact_groups'] = $contact_groups;
             $fields['group_id']       = wp_list_pluck( $contact_groups, 'group_id' );
@@ -120,7 +119,7 @@ class Contact extends \WeDevs\ERP\People {
                     'first_name'   => $user->first_name,
                     'last_name'    => $user->last_name,
                     'display_name' => $user->display_name,
-                    'email'        => $user->user_email
+                    'email'        => $user->user_email,
                 ];
 
                 $fields['assign_to']      = $contact_owner;
@@ -145,13 +144,12 @@ class Contact extends \WeDevs\ERP\People {
      */
     public function get_details_url() {
         if ( $this->id ) {
-
             if ( in_array( 'contact', $this->types ) ) {
-                return add_query_arg( ['page' => 'erp-crm', 'section' => 'contacts', 'action' => 'view' , 'id' => $this->id ], admin_url('admin.php') );
+                return add_query_arg( ['page' => 'erp-crm', 'section' => 'contacts', 'action' => 'view', 'id' => $this->id ], admin_url( 'admin.php' ) );
             }
 
             if ( in_array( 'company', $this->types ) ) {
-                return add_query_arg( ['page' => 'erp-crm', 'section' => 'companies', 'action' => 'view' , 'id' => $this->id ], admin_url('admin.php') );
+                return add_query_arg( ['page' => 'erp-crm', 'section' => 'companies', 'action' => 'view', 'id' => $this->id ], admin_url( 'admin.php' ) );
             }
         }
     }
@@ -159,17 +157,17 @@ class Contact extends \WeDevs\ERP\People {
     /**
      * Get an customer avatar
      *
-     * @param  integer  avatar size in pixels
+     * @param  int  avatar size in pixels
      *
-     * @return string  image with HTML tag
+     * @return string image with HTML tag
      */
     public function get_avatar( $size = 32 ) {
         if ( $this->id ) {
-
             $user_photo_id = $this->get_meta( 'photo_id', true );
 
             if ( ! empty( $user_photo_id ) ) {
                 $image = wp_get_attachment_thumb_url( $user_photo_id );
+
                 return sprintf( '<img src="%1$s" alt="" class="avatar avatar-%2$s photo" height="auto" width="%2$s" />', $image, $size );
             }
         }
@@ -177,7 +175,7 @@ class Contact extends \WeDevs\ERP\People {
         $avatar = get_avatar( $this->email, $size );
 
         if ( ! $avatar ) {
-            $image = WPERP_ASSETS . '/images/mystery-person.png';
+            $image  = WPERP_ASSETS . '/images/mystery-person.png';
             $avatar = sprintf( '<img src="%1$s" alt="" class="avatar avatar-%2$s photo" height="auto" width="%2$s" />', $image, $size );
         }
 
@@ -357,6 +355,7 @@ class Contact extends \WeDevs\ERP\People {
      */
     public function get_birthday() {
         $birth_day = $this->get_meta( 'date_of_birth', true );
+
         if ( $birth_day ) {
             return erp_format_date( $birth_day );
         }
@@ -371,6 +370,7 @@ class Contact extends \WeDevs\ERP\People {
      */
     public function get_contact_age() {
         $contact_age = $this->get_meta( 'contact_age', true );
+
         return $contact_age ? $contact_age : '—';
     }
 
@@ -383,9 +383,9 @@ class Contact extends \WeDevs\ERP\People {
      */
     public function get_source() {
         $sources = erp_crm_contact_sources();
-        $source = $this->get_meta( 'source', true );
+        $source  = $this->get_meta( 'source', true );
 
-        if ( array_key_exists( $source , $sources ) ) {
+        if ( array_key_exists( $source, $sources ) ) {
             $source = $sources[ $source ];
         }
 
@@ -405,22 +405,23 @@ class Contact extends \WeDevs\ERP\People {
 
     /**
      * Update life stage
+     *
      * @since 1.2.7
      *
      * @param $stage
      *
-     * @return bool|string|\WP_Error
+     * @return bool|string|WP_Error
      */
     public function update_life_stage( $stage ) {
-        if( $this->life_stage == $stage ){
+        if ( $this->life_stage == $stage ) {
             return true;
         }
 
-        if( ! in_array( $stage, array_keys(erp_crm_get_life_stages_dropdown_raw())) ){
-            return new \WP_Error( 'unknown-erp-life-stage', __( 'Life stage does not exists', 'erp' ) );
+        if ( ! in_array( $stage, array_keys( erp_crm_get_life_stages_dropdown_raw() ) ) ) {
+            return new WP_Error( 'unknown-erp-life-stage', __( 'Life stage does not exists', 'erp' ) );
         }
 
-        $this->update_property('life_stage', $stage);
+        $this->update_property( 'life_stage', $stage );
     }
 
     /**
@@ -441,8 +442,8 @@ class Contact extends \WeDevs\ERP\People {
      *
      * @param $contact_owner
      */
-    public function update_contact_owner($contact_owner){
-        $this->update_property('contact_owner', $contact_owner);
+    public function update_contact_owner( $contact_owner ) {
+        $this->update_property( 'contact_owner', $contact_owner );
     }
 
     /**
@@ -463,8 +464,7 @@ class Contact extends \WeDevs\ERP\People {
      *
      * @param $hash
      */
-    public function update_contact_hash( $hash ){
-
-        $this->update_property('hash', $hash );
+    public function update_contact_hash( $hash ) {
+        $this->update_property( 'hash', $hash );
     }
 }

@@ -1,19 +1,18 @@
 <?php
+
 namespace WeDevs\ERP\HRM\Models;
 
 use WeDevs\ERP\Framework\Model;
 
 /**
  * Class Leave_Entitlement
- *
- * @package WeDevs\ERP\HRM\Models
  */
 class Leave_Entitlement extends Model {
     protected $table = 'erp_hr_leave_entitlements';
 
     protected $fillable = [
         'user_id', 'leave_id', 'created_by', 'trn_id', 'trn_type',
-        'day_in', 'day_out', 'description', 'f_year'
+        'day_in', 'day_out', 'description', 'f_year',
     ];
 
     /**
@@ -49,7 +48,7 @@ class Leave_Entitlement extends Model {
      * @return object
      */
     public function leave_requests() {
-        return $this->hasMany( 'WeDevs\ERP\HRM\Models\Leave_Request', 'leave_entitlement_id', 'id' )->orderBy('id', 'desc');
+        return $this->hasMany( 'WeDevs\ERP\HRM\Models\Leave_Request', 'leave_entitlement_id', 'id' )->orderBy( 'id', 'desc' );
     }
 
     /**

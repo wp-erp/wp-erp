@@ -12,7 +12,7 @@
             moreField(e) {
                 e.preventDefault();
 
-                let clone = '<div class="erp-ac-ob-field-clone"><div class="row">' + '<label for="ob_names[]">Name</label><input type="text" name="ob_names[]"><label for="ob_starts[]"> Start Date</label><input type="text" class="erp-date-field" name="ob_starts[]"><label for="ob_ends[]"> End Date</label><input type="text" name="ob_ends[]" class="erp-date-field"> <span><i class="fa fa-times-circle erp-ac-ob-remove-field"></i></span></div></div>';
+                let clone = '<div class="erp-ac-ob-field-clone"><div class="row">' + '<label for="ob_names[]">Name</label><input type="text" name="ob_names[]"><label for="ob_starts[]"> Start Date</label><input type="text" autocomplete="off" class="erp-date-field" name="ob_starts[]"><label for="ob_ends[]"> End Date</label><input type="text" autocomplete="off" name="ob_ends[]" class="erp-date-field"> <span><i class="fa fa-times-circle erp-ac-ob-remove-field"></i></span></div></div>';
 
                 $('.erp-ac-multiple-ob-field').append(clone).find('.fa-times-circle').show();
 

@@ -1,5 +1,8 @@
 <?php
+
 namespace WeDevs\ERP;
+
+use Exception;
 
 /**
  * Incoming email reader class
@@ -18,6 +21,7 @@ namespace WeDevs\ERP;
  * =========================================================
  */
 class Imap {
+
     /**
      * Mailbox
      */
@@ -31,13 +35,13 @@ class Imap {
     /**
      * Class contsructor
      *
-     * @param  string  $host
-     * @param  string  $port (993|995)
-     * @param  string  $protocol
-     * @param  string  $username
-     * @param  string  $password
-     * @param  string  $authentication (ssl|tls|notls)
-     * @param  boolean $cert
+     * @param string $host
+     * @param string $port           (993|995)
+     * @param string $protocol
+     * @param string $username
+     * @param string $password
+     * @param string $authentication (ssl|tls|notls)
+     * @param bool   $cert
      *
      * @return void
      */
@@ -60,27 +64,27 @@ class Imap {
             $option .= '/novalidate-cert';
         }
 
-        if ( preg_match( "/google|gmail/i", $host ) ) {
-            $this->mailbox = "{" . $host . ":" . $port . $option . "}INBOX";
+        if ( preg_match( '/google|gmail/i', $host ) ) {
+            $this->mailbox = '{' . $host . ':' . $port . $option . '}INBOX';
         } else {
-            $this->mailbox = "{" . $host . ":" . $port . $option . "}";
+            $this->mailbox = '{' . $host . ':' . $port . $option . '}';
         }
 
         if ( ! $this->is_extension_loaded() ) {
-            throw new \Exception( 'Your server isn\'t connected with imap.' );
+            throw new Exception( 'Your server isn\'t connected with imap.' );
         }
 
         $this->connection = imap_open( $this->mailbox, $username, $password );
 
         if ( ! $this->connection ) {
-            throw new \Exception( 'Cannot connect to Email: ' . imap_last_error() );
+            throw new Exception( 'Cannot connect to Email: ' . imap_last_error() );
         }
     }
 
     /**
      * Determine the imap entension is loaded or try to load it dynamically
      *
-     * @return boolean
+     * @return bool
      */
     public function is_extension_loaded() {
         if ( ! extension_loaded( 'imap' ) || ! function_exists( 'imap_open' ) ) {
@@ -100,7 +104,7 @@ class Imap {
     /**
      * Determine if the imap stream is connected
      *
-     * @return boolean
+     * @return bool
      */
     public function is_connected() {
         if ( imap_ping( $this->connection ) ) {
@@ -113,8 +117,8 @@ class Imap {
     /**
      * Open the inbox
      *
-     * @param  string $mailbox (optional)
-     * @param  string $query (optional)
+     * @param string $mailbox (optional)
+     * @param string $query   (optional)
      *
      * @return array
      */
@@ -122,7 +126,7 @@ class Imap {
         if ( strtolower( $mailbox ) != 'inbox' ) {
             $mailboxes = imap_list( $this->connection, $this->mailbox, $mailbox );
 
-            imap_reopen( $this->connection , $mailboxes[0] );
+            imap_reopen( $this->connection, $mailboxes[0] );
         }
 
         $emails = imap_search( $this->connection, $query );
@@ -139,8 +143,8 @@ class Imap {
     /**
      * Get all emails with body & attachments
      *
-     * @param  string $mailbox (optional)
-     * @param  string $query (optional)
+     * @param string $mailbox (optional)
+     * @param string $query   (optional)
      *
      * @return array
      */
@@ -165,7 +169,7 @@ class Imap {
     /**
      * Get email overview
      *
-     * @param  int $email_id
+     * @param int $email_id
      *
      * @return array
      */
@@ -178,7 +182,7 @@ class Imap {
     /**
      * Get email headers
      *
-     * @param  int $email_id
+     * @param int $email_id
      *
      * @return array
      */
@@ -194,7 +198,7 @@ class Imap {
     /**
      * Get email subject
      *
-     * @param  int $email_id
+     * @param int $email_id
      *
      * @return string
      */
@@ -207,16 +211,16 @@ class Imap {
     /**
      * Get email body
      *
-     * @param  int $email_id
+     * @param int $email_id
      *
      * @return text
      */
     public function get_body( $email_id ) {
-        $body = $this->get_part( $email_id, "TEXT/HTML" );
+        $body = $this->get_part( $email_id, 'TEXT/HTML' );
 
         // if HTML body is empty, try getting text body
-        if ( $body == "" ) {
-            $body = $this->get_part( $email_id, "TEXT/PLAIN" );
+        if ( $body == '' ) {
+            $body = $this->get_part( $email_id, 'TEXT/PLAIN' );
         }
 
         return $body;
@@ -225,10 +229,10 @@ class Imap {
     /**
      * Get email part for decoding email body
      *
-     * @param  int $email_id
-     * @param  int $mimetype
-     * @param  int $structure
-     * @param  int $part_number
+     * @param int $email_id
+     * @param int $mimetype
+     * @param int $structure
+     * @param int $part_number
      *
      * @return string
      */
@@ -247,18 +251,20 @@ class Imap {
 
                 switch ( $structure->encoding ) {
                     case 3: return imap_base64( $text );
+
                     case 4: return imap_qprint( $text );
 
                     default: return $text;
                }
-           }
+            }
 
             // multipart
             if ( $structure->type == 1 ) {
                 foreach ( $structure->parts as $index => $sub_struct ) {
-                    $prefix = "";
+                    $prefix = '';
+
                     if ( $part_number ) {
-                        $prefix = $part_number . ".";
+                        $prefix = $part_number . '.';
                     }
 
                     $data = $this->get_part( $email_id, $mimetype, $sub_struct, $prefix . ( $index + 1 ) );
@@ -276,24 +282,24 @@ class Imap {
     /**
      * Get mimetype by given email structure
      *
-     * @param  array $structure
+     * @param array $structure
      *
      * @return string
      */
     protected function get_mime_type( $structure ) {
-        $primary_mimetypes = [ "TEXT", "MULTIPART", "MESSAGE", "APPLICATION", "AUDIO", "IMAGE", "VIDEO", "OTHER" ];
+        $primary_mimetypes = [ 'TEXT', 'MULTIPART', 'MESSAGE', 'APPLICATION', 'AUDIO', 'IMAGE', 'VIDEO', 'OTHER' ];
 
         if ( $structure->subtype ) {
-           return $primary_mimetypes[(int)$structure->type] . "/" . $structure->subtype;
+            return $primary_mimetypes[(int) $structure->type] . '/' . $structure->subtype;
         }
 
-        return "TEXT/PLAIN";
+        return 'TEXT/PLAIN';
     }
 
     /**
      * Get email attachments
      *
-     * @param  int $email_id
+     * @param int $email_id
      *
      * @return array
      */
@@ -305,17 +311,17 @@ class Imap {
         /* if any attachment found... */
         if ( isset( $structure->parts ) && count( $structure->parts ) ) {
             for ( $i = 0; $i < count( $structure->parts ); $i++ ) {
-                $attachments[$i] = array(
+                $attachments[$i] = [
                     'is_attachment' => false,
                     'filename'      => '',
                     'attachment'    => '',
-                );
+                ];
 
                 if ( $structure->parts[$i]->ifdparameters ) {
                     foreach ( $structure->parts[$i]->dparameters as $object ) {
-                        if ( strtolower($object->attribute ) == 'filename' ) {
+                        if ( strtolower( $object->attribute ) == 'filename' ) {
                             $attachments[$i]['is_attachment'] = true;
-                            $attachments[$i]['filename'] = $object->value;
+                            $attachments[$i]['filename']      = $object->value;
                         }
                     }
                 }
@@ -324,7 +330,7 @@ class Imap {
                     foreach ( $structure->parts[$i]->parameters as $object ) {
                         if ( strtolower( $object->attribute ) == 'name' ) {
                             $attachments[$i]['is_attachment'] = true;
-                            $attachments[$i]['filename'] = $object->value;
+                            $attachments[$i]['filename']      = $object->value;
                         }
                     }
                 }
@@ -334,7 +340,7 @@ class Imap {
 
                     if ( $structure->parts[$i]->encoding == 3 ) {
                         $attachments[$i]['attachment'] = base64_decode( $attachments[$i]['attachment'] );
-                    } else if ( $structure->parts[$i]->encoding == 4 ) {
+                    } elseif ( $structure->parts[$i]->encoding == 4 ) {
                         $attachments[$i]['attachment'] = quoted_printable_decode( $attachments[$i]['attachment'] );
                     }
                 }
@@ -342,6 +348,7 @@ class Imap {
         }
 
         $filtered_attachments = [];
+
         foreach ( $attachments as $attachment ) {
             if ( $attachment['is_attachment'] ) {
                 $filtered_attachments[] = $attachment;
@@ -354,9 +361,9 @@ class Imap {
     /**
      * Mark emails as seen
      *
-     * @param  array $email_ids
+     * @param array $email_ids
      *
-     * @return boolean
+     * @return bool
      */
     public function mark_seen_emails( $email_ids ) {
         $comma_separated_ids = implode( ',', $email_ids );
@@ -365,7 +372,7 @@ class Imap {
             return false;
         }
 
-        $status = imap_setflag_full( $this->connection, $comma_separated_ids, "\\Seen" );
+        $status = imap_setflag_full( $this->connection, $comma_separated_ids, '\\Seen' );
 
         return $status;
     }
@@ -373,29 +380,29 @@ class Imap {
     /**
      * Download email attachments as zip
      *
-     * @param  array $attachments
+     * @param array $attachments
      *
      * @return void
      */
     public function download_attachments( $attachments ) {
         $zip_file = 'email-attachment.zip';
 
-        $zip = new ZipArchive;
+        $zip = new ZipArchive();
         $zip->open( $zip_file, ZipArchive::CREATE | ZipArchive::OVERWRITE );
 
         foreach ( $attachments as $file ) {
-            $zip->addFromString( $file['filename'], $file['attachment'] ) ;
+            $zip->addFromString( $file['filename'], $file['attachment'] );
         }
 
         $zip->close();
 
-        header( "Content-Description: File Transfer" );
-        header( "Content-Type: application/octet-stream" );
-        header( "Content-Disposition: attachment; filename=email-attachment.zip" );
-        header( "Content-Transfer-Encoding: binary" );
-        header( "Expires: 0" );
-        header( "Cache-Control: must-revalidate" );
-        header( "Pragma: public" );
+        header( 'Content-Description: File Transfer' );
+        header( 'Content-Type: application/octet-stream' );
+        header( 'Content-Disposition: attachment; filename=email-attachment.zip' );
+        header( 'Content-Transfer-Encoding: binary' );
+        header( 'Expires: 0' );
+        header( 'Cache-Control: must-revalidate' );
+        header( 'Pragma: public' );
 
         readfile( $zip_file );
         exit;

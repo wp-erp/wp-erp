@@ -1,27 +1,27 @@
 <?php
+
 namespace WeDevs\ERP\CRM;
+
+use WP_List_Table;
 
 /**
  * Campaign List table class
- *
- * @package weDevs|wperp
  */
-class Campaign_List_Table extends \WP_List_Table {
+class Campaign_List_Table extends WP_List_Table {
+    private $counts = [];
 
-    private $counts = array();
-
-    function __construct() {
+    public function __construct() {
         global $status, $page;
 
-        parent::__construct( array(
+        parent::__construct( [
             'singular' => 'campaign',
             'plural'   => 'campaigns',
-            'ajax'     => false
-        ) );
+            'ajax'     => false,
+        ] );
     }
 
-    function get_table_classes() {
-        return array( 'widefat', 'fixed', 'striped', 'campaign-list-table', $this->_args['plural'] );
+    public function get_table_classes() {
+        return [ 'widefat', 'fixed', 'striped', 'campaign-list-table', $this->_args['plural'] ];
     }
 
     /**
@@ -29,26 +29,26 @@ class Campaign_List_Table extends \WP_List_Table {
      *
      * @return void
      */
-    function no_items() {
+    public function no_items() {
         esc_attr_e( 'No campaign found.', 'erp' );
     }
 
     /**
      * Default column values if no callback found
      *
-     * @param  object  $item
-     * @param  string  $column_name
+     * @param object $item
+     * @param string $column_name
      *
      * @return string
      */
-    function column_default( $campaign, $column_name ) {
-
+    public function column_default( $campaign, $column_name ) {
         switch ( $column_name ) {
             case 'name':
 
             case 'assigned_group':
                 $groups = wp_list_pluck( $campaign->groups, 'name', 'id' );
-                return implode(', ', $groups );
+
+                return implode( ', ', $groups );
 
             case 'created_at':
                 return erp_format_date( $campaign->created_at );
@@ -63,13 +63,13 @@ class Campaign_List_Table extends \WP_List_Table {
      *
      * @return array
      */
-    function get_columns() {
-        $columns = array(
+    public function get_columns() {
+        $columns = [
             'cb'             => '<input type="checkbox" />',
             'name'           => __( 'Title', 'erp' ),
             'assigned_group' => __( 'Lists', 'erp' ),
-            'created_at'     => __( 'Created At', 'erp' )
-        );
+            'created_at'     => __( 'Created At', 'erp' ),
+        ];
 
         return apply_filters( 'erp_crm_campaign_table_cols', $columns );
     }
@@ -77,13 +77,12 @@ class Campaign_List_Table extends \WP_List_Table {
     /**
      * Render the campaign name column
      *
-     * @param  object  $item
+     * @param object $item
      *
      * @return string
      */
-    function column_name( $campaign ) {
-
-        $actions             = array();
+    public function column_name( $campaign ) {
+        $actions             = [];
         $delete_url          = '';
 
         $actions['edit']     = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $delete_url, $campaign->id, __( 'Edit this Contact Group', 'erp' ), __( 'Edit', 'erp' ) );
@@ -97,11 +96,11 @@ class Campaign_List_Table extends \WP_List_Table {
      *
      * @return array
      */
-    function get_sortable_columns() {
-        $sortable_columns = array(
-            'name'       => array( 'title', true ),
-            'created_at' => array( 'created_at', true ),
-        );
+    public function get_sortable_columns() {
+        $sortable_columns = [
+            'name'       => [ 'title', true ],
+            'created_at' => [ 'created_at', true ],
+        ];
 
         return $sortable_columns;
     }
@@ -111,21 +110,22 @@ class Campaign_List_Table extends \WP_List_Table {
      *
      * @return array
      */
-    function get_bulk_actions() {
-        $actions = array(
+    public function get_bulk_actions() {
+        $actions = [
             'campaign_delete'  => __( 'Delete', 'erp' ),
-        );
+        ];
+
         return $actions;
     }
 
     /**
      * Render the checkbox column
      *
-     * @param  object  $item
+     * @param object $item
      *
      * @return string
      */
-    function column_cb( $item ) {
+    public function column_cb( $item ) {
         return sprintf(
             '<input type="checkbox" name="campaign_id[]" value="%s" />', $item->id
         );
@@ -136,7 +136,7 @@ class Campaign_List_Table extends \WP_List_Table {
      *
      * @return void
      */
-    function prepare_items() {
+    public function prepare_items() {
         $columns               = $this->get_columns();
         $hidden                = [];
         $sortable              = $this->get_sortable_columns();
@@ -144,7 +144,7 @@ class Campaign_List_Table extends \WP_List_Table {
 
         $per_page              = 20;
         $current_page          = $this->get_pagenum();
-        $offset                = ( $current_page -1 ) * $per_page;
+        $offset                = ( $current_page - 1 ) * $per_page;
         $this->page_status     = isset( $_GET['status'] ) ? sanitize_text_field( wp_unslash( $_GET['status'] ) ) : 'all';
 
         // only ncessary because we have sample data
@@ -168,13 +168,12 @@ class Campaign_List_Table extends \WP_List_Table {
 
         // Render total customer according to above filter
         $args['count'] = true;
-        $total_items = erp_crm_get_campaigns( $args );
+        $total_items   = erp_crm_get_campaigns( $args );
 
         // Set pagination according to filter
         $this->set_pagination_args( [
             'total_items' => $total_items,
-            'per_page'    => $per_page
+            'per_page'    => $per_page,
         ] );
     }
-
 }

@@ -1,11 +1,11 @@
 <?php
+
 namespace WeDevs\ERP;
 
 /**
  * Tracker class
  */
 class Tracker {
-
     private static $instance = null;
 
     private $insights;
@@ -30,7 +30,7 @@ class Tracker {
         $this->client = new \Appsero\Client( 'd8539710-7e93-422a-a293-11739b118d6a', 'WP ERP', WPERP_FILE );
 
         $this->insights = $this->client->insights()
-                                 ->add_extra( array( $this, 'get_extra_data' ) );
+            ->add_extra( [ $this, 'get_extra_data' ] );
     }
 
     /**
@@ -39,14 +39,14 @@ class Tracker {
      * @return array
      */
     public function get_extra_data() {
-        $data = array(
+        $data = [
             'active_modules' => get_option( 'erp_modules', [] ),
             'contacts'       => $this->get_people_count( 'contact' ),
             // 'customer'       => $this->get_people_count( 'customer' ),
             // 'vendor'         => $this->get_people_count( 'vendor' ),
             // 'sales'          => $this->transaction_type_count( 'sales' ),
             // 'expense'        => $this->transaction_type_count( 'expense' ),
-        );
+        ];
 
         return $data;
     }
@@ -54,9 +54,9 @@ class Tracker {
     /**
      * Get people type count
      *
-     * @param  string  $type
+     * @param string $type
      *
-     * @return integer
+     * @return int
      */
     private function get_people_count( $type ) {
         return \WeDevs\ERP\Framework\Models\People::type( $type )->count();
@@ -89,5 +89,4 @@ class Tracker {
     public function not_allowed() {
         return ! $this->insights->tracking_allowed();
     }
-
 }

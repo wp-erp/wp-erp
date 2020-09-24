@@ -40,7 +40,7 @@ function erp_html_form_error( $value = '' ) {
  */
 function erp_html_form_label( $label, $field_id = '', $required = false, $tooltip = '' ) {
     $req = $required ? ' <span class="required">*</span>' : '';
-    $tip = ! empty( $tooltip ) ? ' ' . erp_help_tip( $tooltip, true, 'title' ) : '';
+    $tip = ! empty( $tooltip ) ? ' ' . erp_help_tip( $tooltip, true ) : '';
     echo '<label for="' . esc_attr( $field_id ) . '">' . wp_kses_post( $label ) . wp_kses_post( $req ) . $tip . '</label>';
 }
 
@@ -51,8 +51,8 @@ function erp_html_form_label( $label, $field_id = '', $required = false, $toolti
  *
  * @return array
  */
-function erp_html_form_custom_attr( $attr = array(), $other_attr = array() ) {
-    $custom_attributes = array();
+function erp_html_form_custom_attr( $attr = [], $other_attr = [] ) {
+    $custom_attributes = [];
 
     if ( ! empty( $attr ) && is_array( $attr ) ) {
         foreach ( $attr as $attribute => $value ) {
@@ -78,8 +78,8 @@ function erp_html_form_custom_attr( $attr = array(), $other_attr = array() ) {
  *
  * @return void
  */
-function erp_html_form_input( $args = array() ) {
-    $defaults = array(
+function erp_html_form_input( $args = [] ) {
+    $defaults = [
         'placeholder'   => '',
         'required'      => false,
         'disabled'      => false,
@@ -96,19 +96,19 @@ function erp_html_form_input( $args = array() ) {
         'addon'         => '',
         'addon_pos'     => 'before',
         'tooltip'       => '',
-        'custom_attr'   => array(),
-        'options'       => array(),
-    );
+        'custom_attr'   => [],
+        'options'       => [],
+    ];
 
     $field    = wp_parse_args( $args, $defaults );
     $field_id = empty( $field['id'] ) ? $field['name'] : $field['id'];
 
-    $field_attributes = array_merge( array(
+    $field_attributes = array_merge( [
         'name'        => $field['name'],
         'id'          => $field_id,
         'class'       => $field['class'],
         'placeholder' => $field['placeholder'],
-    ), $field['custom_attr'] );
+    ], $field['custom_attr'] );
 
     if ( $field['required'] ) {
         $field_attributes['required'] = 'required';
@@ -154,7 +154,8 @@ function erp_html_form_input( $args = array() ) {
         case 'select':
             if ( $field['options'] ) {
                 echo '<select ' . wp_kses_post( implode( ' ', $custom_attributes ) ) . '>';
-                foreach ($field['options'] as $key => $value) {
+
+                foreach ( $field['options'] as $key => $value ) {
                     printf( "<option value='%s'%s>%s</option>\n", esc_attr( $key ), selected( $field['value'], esc_attr( $key ), false ), esc_html( $value ) );
                 }
                 echo '</select>';
@@ -171,7 +172,6 @@ function erp_html_form_input( $args = array() ) {
                 'textarea_rows' => isset( $field['custom_attr']['rows'] ) ? $field['custom_attr']['rows'] : 10,
                 'media_buttons' => isset( $field['custom_attr']['media'] ) ? $field['custom_attr']['media'] : false,
                 'teeny'         => isset( $field['custom_attr']['teeny'] ) ? $field['custom_attr']['teeny'] : true,
-
             ];
 
             wp_editor( $field['value'], $field['name'], $editor_args );
@@ -181,7 +181,7 @@ function erp_html_form_input( $args = array() ) {
             //echo '<input type="hidden" value="off" name="' . $field['name'] . '" />';
             echo '<span class="checkbox">';
             echo '<label for="' . esc_attr( $field_attributes['id'] ) . '">';
-            echo '<input type="checkbox" '.checked( $field['value'], 'on', false ).' value="on" ' . wp_kses_post( implode( ' ', $custom_attributes ) ) . ' />';
+            echo '<input type="checkbox" ' . checked( $field['value'], 'on', false ) . ' value="on" ' . wp_kses_post( implode( ' ', $custom_attributes ) ) . ' />';
             echo wp_kses_post( $field['help'] );
             echo '</label>';
             echo '</span>';
@@ -193,12 +193,13 @@ function erp_html_form_input( $args = array() ) {
             unset( $custom_attributes['id'] );
 
             foreach ( $field['options'] as $key => $value ) {
-                echo '<label for="' . esc_attr( $field_attributes['id'] ) . '-' . esc_attr( $key ) .'">';
+                echo '<label for="' . esc_attr( $field_attributes['id'] ) . '-' . esc_attr( $key ) . '">';
+
                 if ( ! empty( $field['value'] ) ) {
                     if ( is_array( $field['value'] ) ) {
                         $checked = in_array( $key, $field['value'] ) ? 'checked' : '';
-                    } else if ( is_string( $field['value'] ) ) {
-                        $checked = in_array( $key, explode(',', $field['value'] ) ) ? 'checked' : '';
+                    } elseif ( is_string( $field['value'] ) ) {
+                        $checked = in_array( $key, explode( ',', $field['value'] ) ) ? 'checked' : '';
                     } else {
                         $checked = '';
                     }
@@ -206,7 +207,7 @@ function erp_html_form_input( $args = array() ) {
                     $checked = '';
                 }
 
-                echo '<input type="checkbox" '. esc_attr( $checked ) .' id="' . esc_attr( $field_attributes['id'] ) . '-' . esc_attr( $key ) . '" value="'. esc_attr( $key ) .'" ' . wp_kses_post( implode( ' ', $custom_attributes ) ) . ' />';
+                echo '<input type="checkbox" ' . esc_attr( $checked ) . ' id="' . esc_attr( $field_attributes['id'] ) . '-' . esc_attr( $key ) . '" value="' . esc_attr( $key ) . '" ' . wp_kses_post( implode( ' ', $custom_attributes ) ) . ' />';
                 echo '<span class="checkbox-value">' . wp_kses_post( $value ) . '</span>';
                 echo '</label>';
             }
@@ -215,9 +216,10 @@ function erp_html_form_input( $args = array() ) {
 
         case 'radio':
             echo '<span class="checkbox">';
+
             if ( $field['options'] ) {
-                foreach ( $field['options'] as $key => $value) {
-                    echo '<input type="radio" '.checked( $field['value'], $key, false ).' value="'.esc_attr( $key ).'" ' . wp_kses_post( implode( ' ', $custom_attributes ) ) . ' id="'. esc_attr( $field_attributes['id'] ) . '-' . esc_attr( $key ) . '"/>'. esc_html( $value ) . '&nbsp;';
+                foreach ( $field['options'] as $key => $value ) {
+                    echo '<input type="radio" ' . checked( $field['value'], $key, false ) . ' value="' . esc_attr( $key ) . '" ' . wp_kses_post( implode( ' ', $custom_attributes ) ) . ' id="' . esc_attr( $field_attributes['id'] ) . '-' . esc_attr( $key ) . '"/>' . esc_html( $value ) . '&nbsp;';
                 }
             }
              echo '</span>';
@@ -229,7 +231,7 @@ function erp_html_form_input( $args = array() ) {
             $pick_files = $id . '-upload-pickfiles';
             $drop       = $id . '-drop-files';
             $action     = isset( $field['action'] ) ? $field['action'] : 'erp_file_upload';
-            $call_back  = isset( $field['callback'] ) ? json_encode( $field['callback'] ) : json_encode([]);
+            $call_back  = isset( $field['callback'] ) ? json_encode( $field['callback'] ) : json_encode( [] );
             $values     = is_array( $field['value'] ) ? $field['value'] : [];
             ?>
 
@@ -240,6 +242,7 @@ function erp_html_form_input( $args = array() ) {
                         <ul class="erp-attachment-list">
                             <?php
                                 $uploader = new \WeDevs\ERP\Uploader();
+
                                 foreach ( $values as $key => $attach_id ) {
                                     echo wp_kses_post( $uploader->attach_html( $attach_id, $custom_attributes ) );
                                 }
@@ -269,12 +272,11 @@ function erp_html_form_input( $args = array() ) {
             break;
 
         default:
-            # code...
+            // code...
             break;
     }
 
     if ( ! empty( $field['addon'] ) ) {
-
         if ( $field['addon_pos'] == 'after' ) {
             echo '<span class="input-group-addon">' . esc_html( $field['addon'] ) . '</span>';
         }
@@ -299,16 +301,16 @@ function erp_html_form_input( $args = array() ) {
 /**
  * Generate an HTML dropdown option by provided values
  *
- * @param  array   $values
- * @param  string  $selected
+ * @param array  $values
+ * @param string $selected
  *
  * @return string
  */
-function erp_html_generate_dropdown( $values = array(), $selected = null ) {
+function erp_html_generate_dropdown( $values = [], $selected = null ) {
     $dropdown  = '';
 
     if ( $values ) {
-        foreach ($values as $key => $label) {
+        foreach ( $values as $key => $label ) {
             $dropdown .= sprintf( "<option value='%s'%s>%s</option>\n", $key, selected( $selected, $key, false ), $label );
         }
     }
@@ -319,14 +321,14 @@ function erp_html_generate_dropdown( $values = array(), $selected = null ) {
 /**
  * Print notices for WordPress
  *
- * @param  string  $text
- * @param  string  $type
+ * @param string $text
+ * @param string $type
  *
  * @return void
  */
 function erp_html_show_notice( $text, $type = 'updated', $dismissible = false ) {
     ?>
-    <div class="notice <?php echo esc_attr( $type ); ?> <?php echo ($dismissible == true) ? 'is-dismissible' : ''; ?>">
+    <div class="notice <?php echo esc_attr( $type ); ?> <?php echo ( $dismissible == true ) ? 'is-dismissible' : ''; ?>">
         <p><strong><?php echo esc_html( $text ); ?></strong></p>
     </div>
     <?php

@@ -44,7 +44,7 @@ function erp_acct_get_currencies_for_dropdown() {
 function erp_acct_get_currency_symbol() {
     global $wpdb;
 
-    $active_currency_id = erp_get_currency(true);
+    $active_currency_id = erp_get_currency( true );
 
     return $wpdb->get_var(
         $wpdb->prepare(
@@ -69,12 +69,15 @@ function erp_acct_get_price_format() {
         case 'left':
             $format = '%s%v';
             break;
+
         case 'right':
             $format = '%v%s';
             break;
+
         case 'left_space':
             $format = '%s&nbsp;%v';
             break;
+
         case 'right_space':
             $format = '%v&nbsp;%s';
             break;
@@ -94,16 +97,19 @@ function erp_acct_get_price_format_php() {
     $currency_pos = erp_get_option( 'erp_ac_currency_position', false, 'left' );
     $format       = '%1$s%2$s';
 
-    switch ($currency_pos) {
+    switch ( $currency_pos ) {
         case 'left':
             $format = '%1$s%2$s';
             break;
+
         case 'right':
             $format = '%2$s%1$s';
             break;
+
         case 'left_space':
             $format = '%1$s&nbsp;%2$s';
             break;
+
         case 'right_space':
             $format = '%2$s&nbsp;%1$s';
             break;
@@ -116,26 +122,25 @@ function erp_acct_get_price_format_php() {
  * Format the price with a currency symbol.
  *
  * @param float $price
- *
- * @param array $args (default: array())
+ * @param array $args  (default: array())
  *
  * @return string
  */
-function erp_acct_get_price( $main_price, $args = array() ) {
+function erp_acct_get_price( $main_price, $args = [] ) {
     extract(
         apply_filters(
             'erp_acct_price_args',
             wp_parse_args(
                 $args,
-                array(
-					'currency'           => erp_get_currency(),
-					'decimal_separator'  => erp_get_option( 'erp_ac_de_separator', false, '.' ),
-					'thousand_separator' => erp_get_option( 'erp_ac_th_separator', false, ',' ),
-					'decimals'           => absint( erp_get_option( 'erp_ac_nm_decimal', false, 2 ) ),
-					'price_format'       => erp_acct_get_price_format_php(),
-					'symbol'             => true,
-					'currency_symbol'    => erp_acct_get_currency_symbol(),
-                )
+                [
+                    'currency'           => erp_get_currency(),
+                    'decimal_separator'  => erp_get_option( 'erp_ac_de_separator', false, '.' ),
+                    'thousand_separator' => erp_get_option( 'erp_ac_th_separator', false, ',' ),
+                    'decimals'           => absint( erp_get_option( 'erp_ac_nm_decimal', false, 2 ) ),
+                    'price_format'       => erp_acct_get_price_format_php(),
+                    'symbol'             => true,
+                    'currency_symbol'    => erp_acct_get_currency_symbol(),
+                ]
             )
         )
     );

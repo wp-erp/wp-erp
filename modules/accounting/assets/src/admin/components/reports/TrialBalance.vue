@@ -109,6 +109,7 @@ export default {
     },
 
     created() {
+        this.fetchFnYears();
         // ? why is nextTick here ...? I don't know.
         this.$nextTick(function() {
             // with leading zero, and JS month are zero index based
@@ -124,8 +125,6 @@ export default {
             }
         });
 
-        this.fetchFnYears();
-
         this.getChartOfAccts();
     },
 
@@ -136,9 +135,18 @@ export default {
                 this.end_date   = response.data.end_date;
 
                 this.getTrialBalance();
+                this.setFnYear(response.data);
             });
         },
 
+        setFnYear(closestYear){
+
+            let year =  this.fyears.filter( item=>{
+                return item.id === closestYear.id
+            })
+
+            this.selectedYear = year.length ? year[0] : null ;
+        },
         onYearSelected() {
             this.start_date = this.selectedYear.start_date;
             this.end_date   = this.selectedYear.end_date;
@@ -149,11 +157,11 @@ export default {
         },
 
         updateDate() {
-            this.$router.push({ path: this.$route.path,
+           /* this.$router.push({ path: this.$route.path,
                 query: {
                     start: this.start_date,
                     end  : this.end_date
-                } });
+                } });*/
         },
 
         getChartOfAccts() {
@@ -165,7 +173,7 @@ export default {
         },
 
         setDateAndGetTb() {
-            this.updateDate();
+           // this.updateDate();
             this.getTrialBalance();
         },
 

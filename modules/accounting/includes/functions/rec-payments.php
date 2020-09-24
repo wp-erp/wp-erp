@@ -66,6 +66,7 @@ function erp_acct_get_payment( $invoice_no ) {
     pay_inv.attachments,
     pay_inv.status,
     pay_inv.created_at,
+    pay_inv.transaction_charge,
 
     pay_inv_detail.invoice_no,
     pay_inv_detail.amount as pay_inv_detail_amount,
@@ -93,6 +94,7 @@ function erp_acct_get_payment( $invoice_no ) {
  * Insert payment info
  *
  * @param $data
+ *
  * @return mixed
  */
 function erp_acct_insert_payment( $data ) {
@@ -102,21 +104,21 @@ function erp_acct_insert_payment( $data ) {
     $data['created_at'] = date( 'Y-m-d H:i:s' );
     $data['created_by'] = $created_by;
     $voucher_no         = null;
-    $currency           = erp_get_currency(true);
+    $currency           = erp_get_currency( true );
 
     try {
         $wpdb->query( 'START TRANSACTION' );
 
         $wpdb->insert(
             $wpdb->prefix . 'erp_acct_voucher_no',
-            array(
-				'type'       => 'payment',
-				'currency'   => $currency,
-				'created_at' => $data['created_at'],
-				'created_by' => $data['created_by'],
-				'updated_at' => isset( $data['updated_at'] ) ? $data['updated_at'] : '',
-				'updated_by' => isset( $data['updated_by'] ) ? $data['updated_by'] : '',
-            )
+            [
+                'type'       => 'payment',
+                'currency'   => $currency,
+                'created_at' => $data['created_at'],
+                'created_by' => $data['created_by'],
+                'updated_at' => isset( $data['updated_at'] ) ? $data['updated_at'] : '',
+                'updated_by' => isset( $data['updated_by'] ) ? $data['updated_by'] : '',
+            ]
         );
 
         $voucher_no = $wpdb->insert_id;
@@ -125,37 +127,38 @@ function erp_acct_insert_payment( $data ) {
 
         // check transaction charge
         $transaction_charge = 0;
-        if ( isset( $payment_data['bank_trn_charge'] ) && 0 < (float)$payment_data['bank_trn_charge'] && 2 === (int)$payment_data['trn_by'] ) {
-            $transaction_charge = (float)$payment_data['bank_trn_charge'];
+
+        if ( isset( $payment_data['bank_trn_charge'] ) && 0 < (float) $payment_data['bank_trn_charge'] && 2 === (int) $payment_data['trn_by'] ) {
+            $transaction_charge = (float) $payment_data['bank_trn_charge'];
         }
 
         $wpdb->insert(
             $wpdb->prefix . 'erp_acct_invoice_receipts',
-            array(
-				'voucher_no'         => $voucher_no,
-				'customer_id'        => $payment_data['customer_id'],
-				'customer_name'      => $payment_data['customer_name'],
-				'trn_date'           => $payment_data['trn_date'],
-				'particulars'        => $payment_data['particulars'],
-				'amount'             => $payment_data['amount'],
+            [
+                'voucher_no'         => $voucher_no,
+                'customer_id'        => $payment_data['customer_id'],
+                'customer_name'      => $payment_data['customer_name'],
+                'trn_date'           => $payment_data['trn_date'],
+                'particulars'        => $payment_data['particulars'],
+                'amount'             => $payment_data['amount'],
                 'transaction_charge' => $transaction_charge,
-				'ref'                => $payment_data['ref'],
-				'trn_by'             => $payment_data['trn_by'],
-				'attachments'        => $payment_data['attachments'],
-				'status'             => $payment_data['status'],
-				'trn_by_ledger_id'   => $payment_data['deposit_to'],
-				'created_at'         => $payment_data['created_at'],
-				'created_by'         => $payment_data['created_by'],
-				'updated_at'         => $payment_data['updated_at'],
-				'updated_by'         => $payment_data['updated_by'],
-            )
+                'ref'                => $payment_data['ref'],
+                'trn_by'             => $payment_data['trn_by'],
+                'attachments'        => $payment_data['attachments'],
+                'status'             => $payment_data['status'],
+                'trn_by_ledger_id'   => $payment_data['deposit_to'],
+                'created_at'         => $payment_data['created_at'],
+                'created_by'         => $payment_data['created_by'],
+                'updated_at'         => $payment_data['updated_at'],
+                'updated_by'         => $payment_data['updated_by'],
+            ]
         );
-
 
         $items = $payment_data['line_items'];
 
         // for bank transaction charge
         $deduct_unit_for_trn_charge = 0;
+
         if ( $transaction_charge ) {
             $deduct_unit_for_trn_charge = $transaction_charge / $payment_data['amount'];
         }
@@ -165,7 +168,7 @@ function erp_acct_insert_payment( $data ) {
             $bank_transaction_charge = $deduct_unit_for_trn_charge ? $deduct_unit_for_trn_charge * $item['line_total'] : 0;
 
             $invoice_no[ $key ] = $payment_data['invoice_no'];
-            $total             += $item['line_total'];
+            $total += $item['line_total'];
 
             $payment_data['amount'] = $total - $bank_transaction_charge;
 
@@ -188,9 +191,9 @@ function erp_acct_insert_payment( $data ) {
         do_action( 'erp_acct_after_payment_create', $payment_data, $voucher_no );
 
         $wpdb->query( 'COMMIT' );
-
     } catch ( Exception $e ) {
         $wpdb->query( 'ROLLBACK' );
+
         return new WP_error( 'payment-exception', $e->getMessage() );
     }
 
@@ -214,6 +217,7 @@ function erp_acct_insert_payment( $data ) {
  * @param $invoice_no
  * @param $voucher_no
  * @param $due
+ *
  * @return int
  */
 function erp_acct_insert_payment_line_items( $data, $item, $voucher_no ) {
@@ -226,15 +230,15 @@ function erp_acct_insert_payment_line_items( $data, $item, $voucher_no ) {
 
     $wpdb->insert(
         $wpdb->prefix . 'erp_acct_invoice_receipts_details',
-        array(
-			'voucher_no' => $voucher_no,
-			'invoice_no' => $item['invoice_no'],
-			'amount'     => $item['line_total'],
-			'created_at' => $payment_data['created_at'],
-			'created_by' => $payment_data['created_by'],
-			'updated_at' => $payment_data['updated_at'],
-			'updated_by' => $payment_data['updated_by'],
-        )
+        [
+            'voucher_no' => $voucher_no,
+            'invoice_no' => $item['invoice_no'],
+            'amount'     => $item['line_total'],
+            'created_at' => $payment_data['created_at'],
+            'created_by' => $payment_data['created_by'],
+            'updated_at' => $payment_data['updated_at'],
+            'updated_by' => $payment_data['updated_by'],
+        ]
     );
 
     if ( 1 === $payment_data['status'] ) {
@@ -243,24 +247,23 @@ function erp_acct_insert_payment_line_items( $data, $item, $voucher_no ) {
 
     $wpdb->insert(
         $wpdb->prefix . 'erp_acct_invoice_account_details',
-        array(
-			'invoice_no'  => $item['invoice_no'],
-			'trn_no'      => $voucher_no,
-			'trn_date'    => $payment_data['trn_date'],
-			'particulars' => $payment_data['particulars'],
-			'debit'       => 0,
-			'credit'      => $item['line_total'],
-			'created_at'  => $payment_data['created_at'],
-			'created_by'  => $payment_data['created_by'],
-			'updated_at'  => $payment_data['updated_at'],
-			'updated_by'  => $payment_data['updated_by'],
-        )
+        [
+            'invoice_no'  => $item['invoice_no'],
+            'trn_no'      => $voucher_no,
+            'trn_date'    => $payment_data['trn_date'],
+            'particulars' => $payment_data['particulars'],
+            'debit'       => 0,
+            'credit'      => $item['line_total'],
+            'created_at'  => $payment_data['created_at'],
+            'created_by'  => $payment_data['created_by'],
+            'updated_at'  => $payment_data['updated_at'],
+            'updated_by'  => $payment_data['updated_by'],
+        ]
     );
 
     erp_acct_insert_payment_data_into_ledger( $payment_data );
 
     return $voucher_no;
-
 }
 
 /**
@@ -268,6 +271,7 @@ function erp_acct_insert_payment_line_items( $data, $item, $voucher_no ) {
  *
  * @param $data
  * @param $invoice_no
+ *
  * @return mixed
  */
 function erp_acct_update_payment( $data, $voucher_no ) {
@@ -284,20 +288,20 @@ function erp_acct_update_payment( $data, $voucher_no ) {
 
         $wpdb->update(
             $wpdb->prefix . 'erp_acct_invoice_receipts',
-            array(
-				'trn_date'         => $payment_data['trn_date'],
-				'particulars'      => $payment_data['particulars'],
-				'amount'           => $payment_data['amount'],
-				'trn_by'           => $payment_data['trn_by'],
-				'trn_by_ledger_id' => $payment_data['deposit_to'],
-				'created_at'       => $payment_data['created_at'],
-				'created_by'       => $payment_data['created_by'],
-				'updated_at'       => $payment_data['updated_at'],
-				'updated_by'       => $payment_data['updated_by'],
-            ),
-            array(
-				'voucher_no' => $voucher_no,
-            )
+            [
+                'trn_date'         => $payment_data['trn_date'],
+                'particulars'      => $payment_data['particulars'],
+                'amount'           => $payment_data['amount'],
+                'trn_by'           => $payment_data['trn_by'],
+                'trn_by_ledger_id' => $payment_data['deposit_to'],
+                'created_at'       => $payment_data['created_at'],
+                'created_by'       => $payment_data['created_by'],
+                'updated_at'       => $payment_data['updated_at'],
+                'updated_by'       => $payment_data['updated_by'],
+            ],
+            [
+                'voucher_no' => $voucher_no,
+            ]
         );
 
         $items = $payment_data['line_items'];
@@ -306,7 +310,7 @@ function erp_acct_update_payment( $data, $voucher_no ) {
             $total = 0;
 
             $invoice_no[ $key ] = $item['invoice_id'];
-            $total             += $item['line_total'];
+            $total += $item['line_total'];
 
             $payment_data['amount'] = $total;
 
@@ -318,9 +322,9 @@ function erp_acct_update_payment( $data, $voucher_no ) {
         }
 
         $wpdb->query( 'COMMIT' );
-
     } catch ( Exception $e ) {
         $wpdb->query( 'ROLLBACK' );
+
         return new WP_error( 'payment-exception', $e->getMessage() );
     }
 
@@ -329,7 +333,6 @@ function erp_acct_update_payment( $data, $voucher_no ) {
     }
 
     return erp_acct_get_payment( $voucher_no );
-
 }
 
 /**
@@ -339,6 +342,7 @@ function erp_acct_update_payment( $data, $voucher_no ) {
  * @param $invoice_no
  * @param $voucher_no
  * @param $due
+ *
  * @return int
  */
 function erp_acct_update_payment_line_items( $data, $invoice_no, $voucher_no ) {
@@ -348,17 +352,17 @@ function erp_acct_update_payment_line_items( $data, $invoice_no, $voucher_no ) {
 
     $wpdb->update(
         $wpdb->prefix . 'erp_acct_invoice_receipts_details',
-        array(
-			'voucher_no' => $voucher_no,
-			'amount'     => $payment_data['amount'],
-			'created_at' => $payment_data['created_at'],
-			'created_by' => $payment_data['created_by'],
-			'updated_at' => $payment_data['updated_at'],
-			'updated_by' => $payment_data['updated_by'],
-        ),
-        array(
-			'invoice_no' => $invoice_no,
-        )
+        [
+            'voucher_no' => $voucher_no,
+            'amount'     => $payment_data['amount'],
+            'created_at' => $payment_data['created_at'],
+            'created_by' => $payment_data['created_by'],
+            'updated_at' => $payment_data['updated_at'],
+            'updated_by' => $payment_data['updated_by'],
+        ],
+        [
+            'invoice_no' => $invoice_no,
+        ]
     );
 
     if ( 1 === $payment_data['status'] ) {
@@ -367,26 +371,25 @@ function erp_acct_update_payment_line_items( $data, $invoice_no, $voucher_no ) {
 
     $wpdb->update(
         $wpdb->prefix . 'erp_acct_invoice_account_details',
-        array(
-			'trn_no'      => $voucher_no,
-			'particulars' => $payment_data['particulars'],
-			'trn_date'    => $payment_data['trn_date'],
-			'debit'       => 0,
-			'credit'      => $payment_data['amount'],
-			'created_at'  => $payment_data['created_at'],
-			'created_by'  => $payment_data['created_by'],
-			'updated_at'  => $payment_data['updated_at'],
-			'updated_by'  => $payment_data['updated_by'],
-        ),
-        array(
-			'invoice_no' => $invoice_no,
-        )
+        [
+            'trn_no'      => $voucher_no,
+            'particulars' => $payment_data['particulars'],
+            'trn_date'    => $payment_data['trn_date'],
+            'debit'       => 0,
+            'credit'      => $payment_data['amount'],
+            'created_at'  => $payment_data['created_at'],
+            'created_by'  => $payment_data['created_by'],
+            'updated_at'  => $payment_data['updated_at'],
+            'updated_by'  => $payment_data['updated_by'],
+        ],
+        [
+            'invoice_no' => $invoice_no,
+        ]
     );
 
     erp_acct_insert_payment_data_into_ledger( $payment_data );
 
     return $voucher_no;
-
 }
 
 /**
@@ -395,6 +398,7 @@ function erp_acct_update_payment_line_items( $data, $invoice_no, $voucher_no ) {
  * @param $data
  * @param $voucher_no
  * @param $invoice_no
+ *
  * @return mixed
  */
 function erp_acct_get_formatted_payment_data( $data, $voucher_no, $invoice_no = 0 ) {
@@ -404,18 +408,18 @@ function erp_acct_get_formatted_payment_data( $data, $voucher_no, $invoice_no = 
     $user_info = erp_get_people( $data['customer_id'] );
     $company   = new \WeDevs\ERP\Company();
 
-    $payment_data['voucher_no']    = ! empty( $voucher_no ) ? $voucher_no : 0;
-    $payment_data['invoice_no']    = ! empty( $invoice_no ) ? $invoice_no : 0;
-    $payment_data['customer_id']   = isset( $data['customer_id'] ) ? $data['customer_id'] : null;
-    $payment_data['customer_name'] = isset( $user_info ) ? $user_info->first_name . ' ' . $user_info->last_name : '';
-    $payment_data['trn_date']      = isset( $data['trn_date'] ) ? $data['trn_date'] : date( 'Y-m-d' );
-    $payment_data['line_items']    = isset( $data['line_items'] ) ? $data['line_items'] : array();
-    $payment_data['created_at']    = date( 'Y-m-d' );
-    $payment_data['amount']        = isset( $data['amount'] ) ? $data['amount'] : 0;
+    $payment_data['voucher_no']      = ! empty( $voucher_no ) ? $voucher_no : 0;
+    $payment_data['invoice_no']      = ! empty( $invoice_no ) ? $invoice_no : 0;
+    $payment_data['customer_id']     = isset( $data['customer_id'] ) ? $data['customer_id'] : null;
+    $payment_data['customer_name']   = isset( $user_info ) ? $user_info->first_name . ' ' . $user_info->last_name : '';
+    $payment_data['trn_date']        = isset( $data['trn_date'] ) ? $data['trn_date'] : date( 'Y-m-d' );
+    $payment_data['line_items']      = isset( $data['line_items'] ) ? $data['line_items'] : [];
+    $payment_data['created_at']      = date( 'Y-m-d' );
+    $payment_data['amount']          = isset( $data['amount'] ) ? $data['amount'] : 0;
     $payment_data['bank_trn_charge'] = isset( $data['bank_trn_charge'] ) ? $data['bank_trn_charge'] : 0;
-    $payment_data['ref']           = isset( $data['ref'] ) ? $data['ref'] : null;
-    $payment_data['attachments']   = isset( $data['attachments'] ) ? $data['attachments'] : '';
-    $payment_data['voucher_type']  = isset( $data['type'] ) ? $data['type'] : '';
+    $payment_data['ref']             = isset( $data['ref'] ) ? $data['ref'] : null;
+    $payment_data['attachments']     = isset( $data['attachments'] ) ? $data['attachments'] : '';
+    $payment_data['voucher_type']    = isset( $data['type'] ) ? $data['type'] : '';
     // translators: %s: voucher_no
     $payment_data['particulars']  = ! empty( $data['particulars'] ) ? $data['particulars'] : sprintf( __( 'Invoice receipt created with voucher no %s', 'erp' ), $voucher_no );
     $payment_data['trn_by']       = isset( $data['trn_by'] ) ? $data['trn_by'] : '';
@@ -444,9 +448,9 @@ function erp_acct_get_formatted_payment_data( $data, $voucher_no, $invoice_no = 
 function erp_acct_delete_payment( $id ) {
     global $wpdb;
 
-    $wpdb->delete( $wpdb->prefix . 'erp_acct_invoice_receipts', array( 'voucher_no' => $id ) );
-    $wpdb->delete( $wpdb->prefix . 'erp_acct_invoice_receipts_details', array( 'voucher_no' => $id ) );
-    $wpdb->delete( $wpdb->prefix . 'erp_acct_invoice_account_details', array( 'invoice_no' => $id ) );
+    $wpdb->delete( $wpdb->prefix . 'erp_acct_invoice_receipts', [ 'voucher_no' => $id ] );
+    $wpdb->delete( $wpdb->prefix . 'erp_acct_invoice_receipts_details', [ 'voucher_no' => $id ] );
+    $wpdb->delete( $wpdb->prefix . 'erp_acct_invoice_account_details', [ 'invoice_no' => $id ] );
 }
 
 /**
@@ -465,15 +469,14 @@ function erp_acct_void_payment( $id ) {
 
     $wpdb->update(
         $wpdb->prefix . 'erp_acct_invoice_receipts',
-        array(
+        [
             'status' => 8,
-        ),
-        array( 'voucher_no' => $id )
+        ],
+        [ 'voucher_no' => $id ]
     );
 
-    $wpdb->delete( $wpdb->prefix . 'erp_acct_ledger_details', array( 'trn_no' => $id ) );
-    $wpdb->delete( $wpdb->prefix . 'erp_acct_invoice_account_details', array( 'trn_no' => $id ) );
-
+    $wpdb->delete( $wpdb->prefix . 'erp_acct_ledger_details', [ 'trn_no' => $id ] );
+    $wpdb->delete( $wpdb->prefix . 'erp_acct_invoice_account_details', [ 'trn_no' => $id ] );
 }
 
 /**
@@ -491,18 +494,18 @@ function erp_acct_change_invoice_status( $invoice_no ) {
     if ( 0.00 === $due ) {
         $wpdb->update(
             $wpdb->prefix . 'erp_acct_invoices',
-            array(
+            [
                 'status' => 4,
-            ),
-            array( 'voucher_no' => $invoice_no )
+            ],
+            [ 'voucher_no' => $invoice_no ]
         );
     } else {
         $wpdb->update(
             $wpdb->prefix . 'erp_acct_invoices',
-            array(
+            [
                 'status' => 5,
-            ),
-            array( 'voucher_no' => $invoice_no )
+            ],
+            [ 'voucher_no' => $invoice_no ]
         );
     }
 }
@@ -524,18 +527,18 @@ function erp_acct_insert_payment_data_into_ledger( $payment_data ) {
     // Insert amount in ledger_details
     $wpdb->insert(
         $wpdb->prefix . 'erp_acct_ledger_details',
-        array(
-			'ledger_id'   => $payment_data['deposit_to'],
-			'trn_no'      => $payment_data['voucher_no'],
-			'particulars' => $payment_data['particulars'],
-			'debit'       => $payment_data['amount'],
-			'credit'      => 0,
-			'trn_date'    => $payment_data['trn_date'],
-			'created_at'  => $payment_data['created_at'],
-			'created_by'  => $payment_data['created_by'],
-			'updated_at'  => $payment_data['updated_at'],
-			'updated_by'  => $payment_data['updated_by'],
-        )
+        [
+            'ledger_id'   => $payment_data['deposit_to'],
+            'trn_no'      => $payment_data['voucher_no'],
+            'particulars' => $payment_data['particulars'],
+            'debit'       => $payment_data['amount'],
+            'credit'      => 0,
+            'trn_date'    => $payment_data['trn_date'],
+            'created_at'  => $payment_data['created_at'],
+            'created_by'  => $payment_data['created_by'],
+            'updated_at'  => $payment_data['updated_at'],
+            'updated_by'  => $payment_data['updated_by'],
+        ]
     );
 }
 
@@ -549,19 +552,20 @@ function erp_acct_insert_payment_data_into_ledger( $payment_data ) {
 function erp_acct_insert_bank_transaction_charge_into_ledger( $payment_data ) {
     global $wpdb;
 
-    if ( 1 === $payment_data['status'] || (isset( $payment_data['trn_by'] ) && 4 === $payment_data['trn_by']) ) {
+    if ( 1 === $payment_data['status'] || ( isset( $payment_data['trn_by'] ) && 4 === $payment_data['trn_by'] ) ) {
         return;
     }
 
     // Insert amount in ledger_details
     // get ledger id of "Bank Transaction Charge"
     $ledger_data = erp_acct_get_ledger_by( 'slug', 'bank_transaction_charge' );
+
     if ( empty( $ledger_data ) ) {
         return;
     }
     $wpdb->insert(
         $wpdb->prefix . 'erp_acct_ledger_details',
-        array(
+        [
             'ledger_id'   => $ledger_data['id'],
             'trn_no'      => $payment_data['voucher_no'],
             'particulars' => $payment_data['particulars'],
@@ -572,7 +576,7 @@ function erp_acct_insert_bank_transaction_charge_into_ledger( $payment_data ) {
             'created_by'  => $payment_data['created_by'],
             'updated_at'  => $payment_data['updated_at'],
             'updated_by'  => $payment_data['updated_by'],
-        )
+        ]
     );
 }
 
@@ -580,7 +584,7 @@ function erp_acct_insert_bank_transaction_charge_into_ledger( $payment_data ) {
  * Update Payment/s data into ledger
  *
  * @param array $payment_data
- * @param int $invoice_no
+ * @param int   $invoice_no
  *
  * @return mixed
  */
@@ -594,20 +598,20 @@ function erp_acct_update_payment_data_in_ledger( $payment_data, $invoice_no ) {
     // Update amount in ledger_details
     $wpdb->update(
         $wpdb->prefix . 'erp_acct_ledger_details',
-        array(
-			'ledger_id'   => $payment_data['deposit_to'],
-			'particulars' => $payment_data['particulars'],
-			'debit'       => $payment_data['amount'],
-			'credit'      => 0,
-			'trn_date'    => $payment_data['trn_date'],
-			'created_at'  => $payment_data['created_at'],
-			'created_by'  => $payment_data['created_by'],
-			'updated_at'  => $payment_data['updated_at'],
-			'updated_by'  => $payment_data['updated_by'],
-        ),
-        array(
-			'trn_no' => $invoice_no,
-        )
+        [
+            'ledger_id'   => $payment_data['deposit_to'],
+            'particulars' => $payment_data['particulars'],
+            'debit'       => $payment_data['amount'],
+            'credit'      => 0,
+            'trn_date'    => $payment_data['trn_date'],
+            'created_at'  => $payment_data['created_at'],
+            'created_by'  => $payment_data['created_by'],
+            'updated_at'  => $payment_data['updated_at'],
+            'updated_by'  => $payment_data['updated_by'],
+        ],
+        [
+            'trn_no' => $invoice_no,
+        ]
     );
 }
 
@@ -645,4 +649,3 @@ function erp_acct_format_payment_line_items( $invoice = 'all' ) {
 
     return $wpdb->get_results( $sql, ARRAY_A );
 }
-

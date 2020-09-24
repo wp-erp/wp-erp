@@ -1,6 +1,8 @@
 <?php
+
 namespace WeDevs\ERP\HRM\Emails;
 
+use PasswordHash;
 use WeDevs\ERP\Email;
 use WeDevs\ERP\Framework\Traits\Hooker;
 
@@ -8,16 +10,15 @@ use WeDevs\ERP\Framework\Traits\Hooker;
  * Employee welcome
  */
 class New_Employee_Welcome extends Email {
-
     use Hooker;
 
-    function __construct() {
+    public function __construct() {
         $this->id             = 'employee-welcome';
         $this->title          = __( 'Employee welcome', 'erp' );
         $this->description    = __( 'Welcome email to new employees.', 'erp' );
 
-        $this->subject        = __( 'Welcome {employee_name} to {company_name}', 'erp');
-        $this->heading        = __( 'Welcome Onboard!', 'erp');
+        $this->subject        = __( 'Welcome {employee_name} to {company_name}', 'erp' );
+        $this->heading        = __( 'Welcome Onboard!', 'erp' );
 
         $this->find = [
             'full-name'       => '{full_name}',
@@ -33,7 +34,7 @@ class New_Employee_Welcome extends Email {
             'compnay-address' => '{company_address}',
             'compnay-phone'   => '{company_phone}',
             'compnay-website' => '{company_website}',
-            'login-info'      => '{login_info}'
+            'login-info'      => '{login_info}',
         ];
 
         $this->action( 'erp_admin_field_' . $this->id . '_help_texts', 'replace_keys' );
@@ -61,7 +62,7 @@ class New_Employee_Welcome extends Email {
             'first-name'      => $employee->first_name,
             'last-name'       => $employee->last_name,
             'job-title'       => $employee->get_job_title(),
-            'dept-title'      => $employee->get_department('view'),
+            'dept-title'      => $employee->get_department( 'view' ),
             'status'          => $employee->get_status(),
             'type'            => $employee->get_type(),
             'joined-date'     => $employee->get_joined_date(),
@@ -70,9 +71,8 @@ class New_Employee_Welcome extends Email {
             'compnay-address' => $company->get_formatted_address(),
             'compnay-phone'   => $company->phone,
             'compnay-website' => $company->website,
-            'login-info'      => ''
+            'login-info'      => '',
         ];
-
 
         if ( $send_login ) {
             global $wpdb, $wp_hasher;
@@ -83,21 +83,20 @@ class New_Employee_Welcome extends Email {
             // Now insert the key, hashed, into the DB.
             if ( empty( $wp_hasher ) ) {
                 require_once ABSPATH . WPINC . '/class-phpass.php';
-                $wp_hasher = new \PasswordHash( 8, true );
+                $wp_hasher = new PasswordHash( 8, true );
             }
 
             $hashed = time() . ':' . $wp_hasher->HashPassword( $key );
-            $wpdb->update( $wpdb->users, array( 'user_activation_key' => $hashed ), array( 'user_login' => $employee->user_login ) );
+            $wpdb->update( $wpdb->users, [ 'user_activation_key' => $hashed ], [ 'user_login' => $employee->user_login ] );
 
-            $password = '<a class="button sm" href="' . network_site_url("wp-login.php?action=rp&key=$key&login=" . rawurlencode($employee->user_login), 'login') . '">' . __( 'Set Your Password', 'erp' ) . '</a>';
+            $password = '<a class="button sm" href="' . network_site_url( "wp-login.php?action=rp&key=$key&login=" . rawurlencode( $employee->user_login ), 'login' ) . '">' . __( 'Set Your Password', 'erp' ) . '</a>';
 
             $login_info = '<h3>' . __( 'Login Details:', 'erp' ) . '</h3>';
-            $login_info .= sprintf( __( 'Username: <em>%s</em>', 'erp' ), $employee->user_login) . '<br>';
+            $login_info .= sprintf( __( 'Username: <em>%s</em>', 'erp' ), $employee->user_login ) . '<br>';
             $login_info .= sprintf( __( 'Password: %s', 'erp' ), $password ) . '<br>';
 
             $this->replace['login-info'] = $login_info;
         }
-
 
         $this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
     }
@@ -107,11 +106,10 @@ class New_Employee_Welcome extends Email {
      *
      * @return array
      */
-    function get_args() {
+    public function get_args() {
         return [
             'email_heading' => $this->get_heading(),
-            'email_body'    => wpautop( $this->get_option( 'body' ) )
+            'email_body'    => wpautop( $this->get_option( 'body' ) ),
         ];
     }
-
 }

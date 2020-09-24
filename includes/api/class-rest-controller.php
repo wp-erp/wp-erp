@@ -2,9 +2,8 @@
 
 namespace WeDevs\ERP\API;
 
-use WP_REST_Server;
 use WP_REST_Response;
-use WP_Error;
+use WP_REST_Server;
 
 abstract class REST_Controller {
 
@@ -25,9 +24,9 @@ abstract class REST_Controller {
     /**
      * Prepare a response for inserting into a collection.
      *
-     * @param WP_REST_Response $response Response object.
+     * @param WP_REST_Response $response response object
      *
-     * @return array Response data, ready for insertion into collection data.
+     * @return array response data, ready for insertion into collection data
      */
     public function prepare_response_for_collection( $response ) {
         if ( ! ( $response instanceof WP_REST_Response ) ) {
@@ -134,15 +133,18 @@ abstract class REST_Controller {
             'validate_callback' => 'rest_validate_request_arg',
         ];
         $schema        = $this->get_item_schema();
+
         if ( empty( $schema['properties'] ) ) {
             return array_merge( $param_details, $args );
         }
         $contexts = [];
+
         foreach ( $schema['properties'] as $attributes ) {
             if ( ! empty( $attributes['context'] ) ) {
                 $contexts = array_merge( $contexts, $attributes['context'] );
             }
         }
+
         if ( ! empty( $contexts ) ) {
             $param_details['enum'] = array_unique( $contexts );
             rsort( $param_details['enum'] );
@@ -178,7 +180,6 @@ abstract class REST_Controller {
      * @return array $endpoint_args
      */
     public function get_endpoint_args_for_item_schema( $method = WP_REST_Server::CREATABLE ) {
-
         $schema            = $this->get_item_schema();
         $schema_properties = ! empty( $schema['properties'] ) ? $schema['properties'] : [];
         $endpoint_args     = [];
@@ -220,7 +221,7 @@ abstract class REST_Controller {
                 if ( WP_REST_Server::CREATABLE !== $method ) {
                     $params['arg_options'] = array_diff_key( $params['arg_options'], [
                         'required' => '',
-                        'default'  => ''
+                        'default'  => '',
                     ] );
                 }
 
@@ -234,13 +235,13 @@ abstract class REST_Controller {
     /**
      * Adds multiple links to the response.
      *
-     * @param   object $response
-     * @param   object $item
-     * @param   array $additional_fields
+     * @param object $response
+     * @param object $item
+     * @param array  $additional_fields
      *
-     * @return  object
+     * @return object
      */
-    protected function add_links( $response, $item, $additional_fields = array() ) {
+    protected function add_links( $response, $item, $additional_fields = [] ) {
         $response->data['_links'] = $this->prepare_links( $item, $additional_fields );
 
         return $response;
@@ -249,13 +250,13 @@ abstract class REST_Controller {
     /**
      * Prepare links for the request.
      *
-     * @param  object $item
-     * @param  string $namespace
-     * @param  string $rest_base
+     * @param object $item
+     * @param string $namespace
+     * @param string $rest_base
      *
-     * @return array Links for the given user.
+     * @return array links for the given user
      */
-    protected function prepare_links( $item, $additional_fields = array() ) {
+    protected function prepare_links( $item, $additional_fields = [] ) {
         if ( empty( $additional_fields ) ) {
             $links = [
                 'self' => [
@@ -263,7 +264,7 @@ abstract class REST_Controller {
                 ],
                 'collection' => [
                     'href' => rest_url( sprintf( '%s/%s', $this->namespace, $this->rest_base ) ),
-                ]
+                ],
             ];
 
             return $links;
@@ -288,7 +289,7 @@ abstract class REST_Controller {
             ],
             'collection' => [
                 'href' => rest_url( sprintf( '%s/%s', $namespace, $rest_base ) ),
-            ]
+            ],
         ];
 
         return $links;
@@ -297,10 +298,10 @@ abstract class REST_Controller {
     /**
      * Format item's collection for response
      *
-     * @param  object $response
-     * @param  object $request
-     * @param  array $items
-     * @param  int $total_items
+     * @param object $response
+     * @param object $request
+     * @param array  $items
+     * @param int    $total_items
      *
      * @return object
      */
@@ -322,14 +323,15 @@ abstract class REST_Controller {
 
         if ( $page > 1 ) {
             $prev_page = $page - 1;
+
             if ( $prev_page > $max_pages ) {
                 $prev_page = $max_pages;
             }
             $prev_link = add_query_arg( 'page', $prev_page, $base );
             $response->link_header( 'prev', $prev_link );
         }
-        if ( $max_pages > $page ) {
 
+        if ( $max_pages > $page ) {
             $next_page = $page + 1;
             $next_link = add_query_arg( 'page', $next_page, $base );
             $response->link_header( 'next', $next_link );
@@ -341,7 +343,7 @@ abstract class REST_Controller {
     /**
      * Retrieve a wp user
      *
-     * @param  integer $user_id
+     * @param int $user_id
      *
      * @return array
      */
@@ -365,7 +367,7 @@ abstract class REST_Controller {
                 ],
                 'collection' => [
                     'href' => rest_url( sprintf( '%s/%s', $this->namespace, $this->rest_base ) ),
-                ]
+                ],
             ],
         ];
 

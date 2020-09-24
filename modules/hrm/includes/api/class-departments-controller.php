@@ -2,12 +2,13 @@
 
 namespace WeDevs\ERP\HRM\API;
 
-use WP_REST_Server;
-use WP_REST_Response;
-use WP_Error;
 use WeDevs\ERP\API\REST_Controller;
+use WP_Error;
+use WP_REST_Response;
+use WP_REST_Server;
 
 class Departments_Controller extends REST_Controller {
+
     /**
      * Endpoint namespace.
      *
@@ -93,6 +94,7 @@ class Departments_Controller extends REST_Controller {
         $total_items = erp_hr_count_departments();
 
         $formated_items = [];
+
         foreach ( $items as $item ) {
             $additional_fields = [];
 
@@ -159,13 +161,15 @@ class Departments_Controller extends REST_Controller {
         $id = (int) $request['id'];
 
         $department = new \WeDevs\ERP\HRM\Department( $id );
+
         if ( ! $department ) {
             return new WP_Error( 'rest_department_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 400 ] );
         }
 
         $item = $this->prepare_item_for_database( $request );
         $id   = erp_hr_create_department( $item );
-        if( is_wp_error( $id ) ){
+
+        if ( is_wp_error( $id ) ) {
             return $id;
         }
 
@@ -191,14 +195,15 @@ class Departments_Controller extends REST_Controller {
         $id = (int) $request['id'];
 
         erp_hr_delete_department( $id );
-        $response = rest_ensure_response(true);
+        $response = rest_ensure_response( true );
+
         return new WP_REST_Response( $response, 204 );
     }
 
     /**
      * Prepare a single item for create or update
      *
-     * @param \WP_REST_Request $request Request object.
+     * @param \WP_REST_Request $request request object
      *
      * @return array $prepared_item
      */
@@ -234,10 +239,10 @@ class Departments_Controller extends REST_Controller {
      * Prepare a single user output for response
      *
      * @param object          $item
-     * @param WP_REST_Request $request Request object.
+     * @param WP_REST_Request $request           request object
      * @param array           $additional_fields (optional)
      *
-     * @return WP_REST_Response $response Response data.
+     * @return WP_REST_Response $response response data
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
         $data = [
@@ -246,11 +251,12 @@ class Departments_Controller extends REST_Controller {
             'lead'            => $item->lead,
             'parent'          => $item->parent,
             'description'     => $item->description,
-            'total_employees' => $item->num_of_employees()
+            'total_employees' => $item->num_of_employees(),
         ];
 
         if ( isset( $request['include'] ) ) {
             $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
+
             if ( in_array( 'parent', $include_params ) ) {
                 $data['parent'] = $this->get_parent_department( $item );
             }
@@ -273,7 +279,7 @@ class Departments_Controller extends REST_Controller {
     /**
      * Get the parent of a department
      *
-     * @param  object $item
+     * @param object $item
      *
      * @return array
      */

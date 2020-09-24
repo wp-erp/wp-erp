@@ -15,8 +15,8 @@ function erp_updater_db_collate() {
         ARRAY_A
     );
 
-    foreach( $tables as $table ) {
-        $wpdb->query("ALTER TABLE {$table['table_name']}
+    foreach ( $tables as $table ) {
+        $wpdb->query( "ALTER TABLE {$table['table_name']}
             CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
         );
     }
@@ -33,7 +33,7 @@ function erp_updater_generate_holiday_leave_tables() {
     $charset = 'CHARSET=utf8mb4';
     $collate = 'COLLATE=utf8mb4_unicode_ci';
 
-    if ( defined('DB_COLLATE') && DB_COLLATE )  {
+    if ( defined( 'DB_COLLATE' ) && DB_COLLATE ) {
         $charset = 'CHARSET=' . DB_CHARSET;
         $collate = 'COLLATE=' . DB_COLLATE;
     }
@@ -63,7 +63,8 @@ function erp_updater_generate_holiday_leave_tables() {
         ) $charset_collate;",
     ];
 
-    require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+    require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+
     foreach ( $table_schema as $table ) {
         dbDelta( $table );
     }
@@ -77,8 +78,8 @@ function erp_updater_generate_holiday_leave_tables() {
 function erp_acct_updater_estimate_order_status() {
     global $wpdb;
 
-    $wpdb->query("UPDATE {$wpdb->prefix}erp_acct_invoices SET status = 3 WHERE estimate = 1");
-    $wpdb->query("UPDATE {$wpdb->prefix}erp_acct_purchase SET status = 3 WHERE purchase_order = 1");
+    $wpdb->query( "UPDATE {$wpdb->prefix}erp_acct_invoices SET status = 3 WHERE estimate = 1" );
+    $wpdb->query( "UPDATE {$wpdb->prefix}erp_acct_purchase SET status = 3 WHERE purchase_order = 1" );
 }
 
 /**
@@ -99,10 +100,10 @@ function erp_acct_populate_charts_ledgers_155() {
         LEFT JOIN {$wpdb->prefix}erp_ac_chart_classes AS chart ON chart_cat.class_id = chart.id ORDER BY chart_id", ARRAY_A );
 
     if ( ! empty( $o_ledgers ) ) {
-        for( $i = 0; $i < count( $o_ledgers ); $i++ ) {
+        for ( $i = 0; $i < count( $o_ledgers ); $i++ ) {
             if ( $o_ledgers[$i]['chart_id'] == 3 ) {
                 $o_ledgers[$i]['chart_id'] = 5;
-            } else if ( $o_ledgers[$i]['chart_id'] == 5 ) {
+            } elseif ( $o_ledgers[$i]['chart_id'] == 5 ) {
                 $o_ledgers[$i]['chart_id'] = 3;
             }
         }
@@ -128,7 +129,7 @@ function erp_acct_populate_charts_ledgers_155() {
                 'slug'     => slugify( $old_ledger['name'] ),
                 'code'     => $old_ledger['code'],
                 'unused'   => isset( $old_ledger['unused'] ) ? $old_ledger['unused'] : null,
-                'system'   => $old_ledger['system']
+                'system'   => $old_ledger['system'],
             ]
         );
     }
@@ -142,7 +143,7 @@ function erp_acct_populate_charts_ledgers_155() {
                     'name'     => $value['name'],
                     'slug'     => slugify( $value['name'] ),
                     'code'     => $value['code'],
-                    'system'   => $value['system']
+                    'system'   => $value['system'],
                 ]
             );
         }
@@ -155,17 +156,17 @@ function erp_acct_populate_charts_ledgers_155() {
                 'chart_id' => 7,
                 'name'     => $old_bank['name'],
                 'slug'     => slugify( $old_bank['name'] ),
-                'code'     => $old_bank['code']
+                'code'     => $old_bank['code'],
             ]
         );
     }
-
 }
 
 /**
  * This method will rename petty_cash to cash on ledger table
  *
  * @since 1.6.0
+ *
  * @return void
  */
 function erp_acct_rename_petty_cash() {
@@ -175,7 +176,7 @@ function erp_acct_rename_petty_cash() {
     $petty_cash_chart_id = $wpdb->get_var(
         $wpdb->prepare(
             "SELECT id FROM {$wpdb->prefix}erp_acct_ledgers WHERE code = %d",
-            array( 90 )
+            [ 90 ]
         )
     );
 
@@ -184,7 +185,7 @@ function erp_acct_rename_petty_cash() {
         $wpdb->query(
             $wpdb->prepare(
                 "UPDATE {$wpdb->prefix}erp_acct_ledgers SET name = %s, slug = %s WHERE id = %d",
-                array( 'Cash', slugify( 'Cash' ), $petty_cash_chart_id )
+                [ 'Cash', slugify( 'Cash' ), $petty_cash_chart_id ]
             )
         );
     }

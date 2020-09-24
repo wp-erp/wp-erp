@@ -21,6 +21,7 @@ function erp_acct_get_all_charts() {
  * Get Ledger name by id
  *
  * @param $ledger_id
+ *
  * @return mixed
  */
 function erp_acct_get_ledger_name_by_id( $ledger_id ) {
@@ -52,9 +53,9 @@ function erp_acct_create_ledger_category( $args ) {
         $wpdb->insert(
             "{$wpdb->prefix}erp_acct_ledger_categories",
             [
-				'name'      => $args['name'],
-				'parent_id' => ! empty( $args['parent'] ) ? $args['parent'] : null,
-			]
+                'name'      => $args['name'],
+                'parent_id' => ! empty( $args['parent'] ) ? $args['parent'] : null,
+            ]
         );
 
         return $wpdb->insert_id;
@@ -106,11 +107,11 @@ function erp_acct_delete_ledger_category( $id ) {
     );
 
     return $wpdb->delete( $table, [ 'id' => $id ] );
-
 }
 
 /**
  * @param $chart_id
+ *
  * @return array|object|null
  */
 function erp_acct_get_ledgers_by_chart_id( $chart_id ) {
@@ -129,6 +130,7 @@ function erp_acct_get_ledgers_by_chart_id( $chart_id ) {
  * Get ledger transaction count
  *
  * @param $ledger_id
+ *
  * @return mixed
  */
 function erp_acct_get_ledger_trn_count( $ledger_id ) {
@@ -143,6 +145,7 @@ function erp_acct_get_ledger_trn_count( $ledger_id ) {
  * Get ledger balance
  *
  * @param $ledger_id
+ *
  * @return mixed
  */
 function erp_acct_get_ledger_balance( $ledger_id ) {
@@ -153,7 +156,6 @@ function erp_acct_get_ledger_balance( $ledger_id ) {
     return $ledger['balance'];
 }
 
-
 /**============
  * Ledger CRUD
  * ===============*/
@@ -162,6 +164,7 @@ function erp_acct_get_ledger_balance( $ledger_id ) {
  * Get a ledger by id
  *
  * @param $id
+ *
  * @return array|object|void|null
  */
 function erp_acct_get_ledger( $id ) {
@@ -174,6 +177,7 @@ function erp_acct_get_ledger( $id ) {
  * Insert a ledger
  *
  * @param $item
+ *
  * @return array|object|void|null
  */
 function erp_acct_insert_ledger( $item ) {
@@ -182,12 +186,12 @@ function erp_acct_insert_ledger( $item ) {
     $wpdb->insert(
         "{$wpdb->prefix}erp_acct_ledgers",
         [
-			'chart_id'    => $item['chart_id'],
-			'category_id' => $item['category_id'],
-			'name'        => $item['name'],
-			'slug'        => slugify( $item['name'] ),
-			'code'        => $item['code'],
-		]
+            'chart_id'    => $item['chart_id'],
+            'category_id' => $item['category_id'],
+            'name'        => $item['name'],
+            'slug'        => slugify( $item['name'] ),
+            'code'        => $item['code'],
+        ]
     );
 
     return erp_acct_get_ledger( $wpdb->insert_id );
@@ -198,6 +202,7 @@ function erp_acct_insert_ledger( $item ) {
  *
  * @param $item
  * @param $id
+ *
  * @return array|object|void|null
  */
 function erp_acct_update_ledger( $item, $id ) {
@@ -206,11 +211,11 @@ function erp_acct_update_ledger( $item, $id ) {
     $wpdb->update(
         "{$wpdb->prefix}erp_acct_ledgers",
         [
-			'chart_id'    => $item['chart_id'],
-			'category_id' => $item['category_id'],
-			'name'        => $item['name'],
-			'slug'        => slugify( $item['name'] ),
-			'code'        => $item['code'],
+            'chart_id'    => $item['chart_id'],
+            'category_id' => $item['category_id'],
+            'name'        => $item['name'],
+            'slug'        => slugify( $item['name'] ),
+            'code'        => $item['code'],
         ],
         [ 'id' => $id ]
     );
@@ -305,7 +310,7 @@ function erp_acct_ledgers_opening_balance_by_fn_year_id( $id ) {
 function erp_acct_ledger_balance_with_opening_balance( $ledgers, $data, $opening_balance ) {
     $temp_data = [];
 
-    /**
+    /*
      * Start writing a very `inefficient :(` foreach loop
      */
     foreach ( $ledgers as $ledger ) {
@@ -350,21 +355,27 @@ function erp_acct_get_chart_id_by_slug( $key ) {
         case 'asset':
             $id = 1;
             break;
+
         case 'liability':
             $id = 2;
             break;
+
         case 'equity':
             $id = 3;
             break;
+
         case 'income':
             $id = 4;
             break;
+
         case 'expense':
             $id = 5;
             break;
+
         case 'asset_liability':
             $id = 6;
             break;
+
         case 'bank':
             $id = 7;
             break;
@@ -379,6 +390,7 @@ function erp_acct_get_chart_id_by_slug( $key ) {
  * Get ledgers
  *
  * @param $chart_id
+ *
  * @return array|object|null
  */
 function erp_acct_get_ledgers() {

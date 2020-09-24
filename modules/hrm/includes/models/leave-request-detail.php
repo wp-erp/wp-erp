@@ -1,19 +1,18 @@
 <?php
+
 namespace WeDevs\ERP\HRM\Models;
 
 use WeDevs\ERP\Framework\Model;
 
 /**
  * Class Leave_Request_Detail
- *
- * @package WeDevs\ERP\HRM\Models
  */
 class Leave_Request_Detail extends Model {
     protected $table = 'erp_hr_leave_request_details';
 
     protected $fillable = [
         'leave_request_id', 'leave_approval_status_id',
-        'workingday_status', 'user_id', 'leave_date'
+        'workingday_status', 'user_id', 'leave_date',
     ];
 
     /**
