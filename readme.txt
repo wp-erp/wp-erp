@@ -3,9 +3,9 @@ Contributors: tareq1988, nizamuddinbabu, wedevs
 Donate Link: https://tareq.co/donate
 Tags: business manager, erp, accounting, crm, hr, project manager, small business, SME, contact, contacts, Customer Relationship Management, employee, leave management, hr, human resource management, job, jobs, job listing, lead management, opportunity, schedule, task, lead, holiday, company
 Requires at least: 4.4
-Tested up to: 5.5
+Tested up to: 5.5.1
 Requires PHP: 5.6
-Stable tag: 1.6.4
+Stable tag: 1.6.5
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -279,6 +279,35 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+
+= v1.6.5 -> September 24, 2020 =
+--------------------------
+- [new] Added csv data validation when importing contact, company & employee
+- [new] Added csv data validation when importing holidays
+- [update] Updated parseCsv library to support php 7.4
+- [update] Updated Trix Editor version
+- [fix] Fixed Menus responsive issue with iPad 11 inch view
+- [fix] Fixed email heading html tag support issue
+- [new] added support for "dd.mm.yyyy" as new ERP "Date Format"
+- [new] added new filter hook “erp_pre_contact_form_people_data”
+- [new] added new action hook “erp_crm_email_opened”
+- [new] added various tooltips for easy access of various features
+
+- [fix] Fixed responsive issue of leave application form
+- [fix] Fixed Leave requests table 'Employee Search' filter
+- [fix] fixed timezone problem of leave request modal
+- [new] added employee type filter on leave policy, now user can create leave policy based on employee types
+- [update] added proper redirect based on various actions on hrm leave related sections
+
+- [fix] Fixed issue with Company and contact filtering where data not loading correctly
+- [fix] Fixed Problem creating CRM schedule/notes(All text field) from Mobile
+- [fix] fixed Import contacts from WP users is broken
+
+- [new] Increased accounting DB fields limit to decimal(20,2)
+- [update] add transaction charge for payment
+- [update] add new sub head 'bank transaction charge' to ledger
+- [update] update opening balance/ acct financial year date picker problem
+- [update] update trial balance, Balance Sheet: total Cash At Bank, cash At Bank Breakdowns, total Loan At Bank
 
 = v1.6.4 -> August 25, 2020 =
 --------------------------
