@@ -1,19 +1,22 @@
 <div class="permission-tab-wrap">
-    <h3><?php esc_html_e( 'Permission Management', 'erp' ) ?></h3>
+    <h3>
+        <?php esc_html_e( 'Permission Management', 'erp' ); ?>
+        <?php echo erp_help_tip( esc_html__( 'This is the additional permission for that user if you want to give him/her extra access', 'erp' ) ); ?>
+    </h3>
 
     <form action="" class="permission-form erp-form" method="post">
 
         <?php
         $is_manager = user_can( $employee->get_user_id(), erp_hr_get_manager_role() ) ? 'on' : 'off';
 
-        erp_html_form_input( array(
+        erp_html_form_input( [
             'label' => __( 'HR Manager', 'erp' ),
             'name'  => 'enable_manager',
             'type'  => 'checkbox',
             'tag'   => 'div',
             'value' => $is_manager,
-            'help'  => __( 'This Employee is HR Manager', 'erp'  )
-        ) );
+            'help'  => __( 'This Employee is HR Manager', 'erp'  ),
+        ] );
         ?>
 
         <?php do_action( 'erp_hr_permission_management', $employee ); ?>

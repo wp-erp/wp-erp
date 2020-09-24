@@ -59,6 +59,7 @@ function erp_acct_get_tax_rate_name( $tax_no ) {
  * Insert tax rate name
  *
  * @param $data
+ *
  * @return int
  */
 function erp_acct_insert_tax_rate_name( $data ) {
@@ -76,15 +77,15 @@ function erp_acct_insert_tax_rate_name( $data ) {
 
     $wpdb->insert(
         $wpdb->prefix . 'erp_acct_taxes',
-        array(
-			'tax_rate_name' => $tax_data['tax_rate_name'],
-			'tax_number'    => $tax_data['tax_number'],
-			'default'       => $tax_data['default'],
-			'created_at'    => $tax_data['created_at'],
-			'created_by'    => $tax_data['created_by'],
-			'updated_at'    => $tax_data['updated_at'],
-			'updated_by'    => $tax_data['updated_by'],
-        )
+        [
+            'tax_rate_name' => $tax_data['tax_rate_name'],
+            'tax_number'    => $tax_data['tax_number'],
+            'default'       => $tax_data['default'],
+            'created_at'    => $tax_data['created_at'],
+            'created_by'    => $tax_data['created_by'],
+            'updated_at'    => $tax_data['updated_at'],
+            'updated_by'    => $tax_data['updated_by'],
+        ]
     );
 
     return $wpdb->insert_id;
@@ -94,6 +95,7 @@ function erp_acct_insert_tax_rate_name( $data ) {
  * Update tax rate name
  *
  * @param $data
+ *
  * @return int
  */
 function erp_acct_update_tax_rate_name( $data, $id ) {
@@ -111,16 +113,16 @@ function erp_acct_update_tax_rate_name( $data, $id ) {
 
     $wpdb->update(
         $wpdb->prefix . 'erp_acct_taxes',
-        array(
-			'tax_rate_name' => $tax_data['tax_rate_name'],
-			'tax_number'    => $tax_data['tax_number'],
-			'default'       => $tax_data['default'],
-			'updated_at'    => $tax_data['updated_at'],
-			'updated_by'    => $tax_data['updated_by'],
-        ),
-        array(
-			'id' => $id,
-        )
+        [
+            'tax_rate_name' => $tax_data['tax_rate_name'],
+            'tax_number'    => $tax_data['tax_number'],
+            'default'       => $tax_data['default'],
+            'updated_at'    => $tax_data['updated_at'],
+            'updated_by'    => $tax_data['updated_by'],
+        ],
+        [
+            'id' => $id,
+        ]
     );
 
     return $id;
@@ -136,11 +138,10 @@ function erp_acct_update_tax_rate_name( $data, $id ) {
 function erp_acct_delete_tax_rate_name( $id ) {
     global $wpdb;
 
-    $wpdb->delete( $wpdb->prefix . 'erp_acct_taxes', array( 'id' => $id ) );
+    $wpdb->delete( $wpdb->prefix . 'erp_acct_taxes', [ 'id' => $id ] );
 
     return $id;
 }
-
 
 /**
  * Get formatted tax rate name data

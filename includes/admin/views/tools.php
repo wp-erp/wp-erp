@@ -7,9 +7,10 @@
         $is_hrm_activated = erp_is_module_active( 'hrm' );
 
         $erp_import_export_fields = erp_get_import_export_fields();
-        $keys = array_keys( $erp_import_export_fields );
+        $keys                     = array_keys( $erp_import_export_fields );
 
         $import_export_types = [];
+
         foreach ( $keys as $type ) {
             $import_export_types[ $type ] = esc_html__( ucwords( $type ), 'erp' );
         }
@@ -32,7 +33,7 @@
             $tabs['export'] = esc_html__( 'Export', 'erp' );
         }
 
-        $tabs['misc'] = esc_html__( 'Misc.', 'erp' );
+        $tabs['misc']   = esc_html__( 'Misc.', 'erp' );
         $tabs['status'] =   esc_html__( 'Status', 'erp' );
         $tabs['log']    =   esc_html__( 'Audit Log', 'erp' );
 
@@ -40,7 +41,7 @@
     ?>
 
     <h2 class="nav-tab-wrapper erp-nav-tab-wrapper">
-        <?php foreach ($tabs as $tab_key => $tab_label) { ?>
+        <?php foreach ( $tabs as $tab_key => $tab_label ) { ?>
             <a class="nav-tab <?php echo esc_attr( ( $current_tab == $tab_key ) ? 'nav-tab-active' : '' ); ?>" href="<?php echo esc_url( admin_url( 'admin.php?page=erp-tools&tab=' ) ) . esc_html( $tab_key ); ?>"><?php echo esc_html( $tab_label ); ?></a>
         <?php } ?>
     </h2>
@@ -60,12 +61,13 @@
             case 'misc':
                 include __DIR__ . '/tools/misc.php';
                 break;
+
             case 'status':
                 new \WeDevs\ERP\Status();
                 break;
 
             case 'log':
-                include_once dirname( __FILE__ ) . '/log.php';
+                include_once __DIR__ . '/log.php';
                 break;
 
             case 'general':

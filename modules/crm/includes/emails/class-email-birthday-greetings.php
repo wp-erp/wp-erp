@@ -1,4 +1,5 @@
 <?php
+
 namespace WeDevs\ERP\CRM\Emails;
 
 use WeDevs\ERP\Email;
@@ -8,20 +9,19 @@ use WeDevs\ERP\Framework\Traits\Hooker;
  * Birthday wish
  */
 class Birthday_Greetings extends Email {
-
     use Hooker;
 
-    function __construct() {
+    public function __construct() {
         $this->id             = 'birthday-greetings';
         $this->title          = __( 'Birthday Greetings To Contacts', 'erp' );
         $this->description    = __( 'Birthday greetings email to contacts.', 'erp' );
 
-        $this->subject        = __( 'Birthday Greetings to {first_name} {last_name}', 'erp');
-        $this->heading        = __( 'Happy Birthday :)', 'erp');
+        $this->subject        = __( 'Birthday Greetings to {first_name} {last_name}', 'erp' );
+        $this->heading        = __( 'Happy Birthday :)', 'erp' );
 
         $this->find = [
             'first-name'      => '{first_name}',
-            'last-name'       => '{last_name}'
+            'last-name'       => '{last_name}',
         ];
 
         $this->action( 'erp_admin_field_' . $this->id . '_help_texts', 'replace_keys' );
@@ -31,7 +31,7 @@ class Birthday_Greetings extends Email {
 
     public function trigger() {
         $contacts =  erp_get_peoples( [
-            'type'  =>  'contact'
+            'type'  => 'contact',
         ] );
 
         if ( ! $contacts ) {
@@ -39,8 +39,8 @@ class Birthday_Greetings extends Email {
         }
 
         foreach ( $contacts as $contact ) {
-            $birthday = erp_people_get_meta( $contact->id, 'date_of_birth', true );
-            $current_date = date('Y-m-d');
+            $birthday     = erp_people_get_meta( $contact->id, 'date_of_birth', true );
+            $current_date = date( 'Y-m-d' );
 
             if ( $birthday != $current_date ) {
                 continue;
@@ -52,9 +52,9 @@ class Birthday_Greetings extends Email {
 
             $first_name        = isset( $contact->first_name ) ? $contact->first_name : '';
             $last_name         = isset( $contact->last_name ) ? $contact->last_name : '';
-            $this->replace = [
+            $this->replace     = [
                 'first-name'      => $first_name,
-                'last-name'       => $last_name
+                'last-name'       => $last_name,
             ];
 
             $this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
@@ -66,11 +66,10 @@ class Birthday_Greetings extends Email {
      *
      * @return array
      */
-    function get_args() {
+    public function get_args() {
         return [
             'email_heading' => $this->get_heading(),
-            'email_body'    => wpautop( $this->get_option( 'body' ) )
+            'email_body'    => wpautop( $this->get_option( 'body' ) ),
         ];
     }
-
 }

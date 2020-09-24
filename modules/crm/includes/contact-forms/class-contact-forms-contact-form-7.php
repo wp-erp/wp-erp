@@ -1,10 +1,12 @@
 <?php
+
 namespace WeDevs\ERP\CRM\ContactForms;
 
 use WeDevs\ERP\Framework\Traits\Hooker;
+use WP_Query;
+use WPCF7_ContactForm;
 
 class CF7 {
-
     use Hooker;
 
     public function __construct() {
@@ -22,8 +24,8 @@ class CF7 {
      */
     public function add_to_plugin_list( $plugins ) {
         $plugins['contact_form_7'] = [
-            'title' => __( 'Contact Form 7', 'erp' ),
-            'is_active' => class_exists( 'WPCF7_ContactForm' )
+            'title'     => __( 'Contact Form 7', 'erp' ),
+            'is_active' => class_exists( 'WPCF7_ContactForm' ),
         ];
 
         return $plugins;
@@ -38,31 +40,29 @@ class CF7 {
         $forms = [];
 
         $args = [
-            'post_type' => 'wpcf7_contact_form',
+            'post_type'      => 'wpcf7_contact_form',
             'posts_per_page' => -1,
         ];
 
-        $cf7_query = new \WP_Query( $args );
+        $cf7_query = new WP_Query( $args );
 
         if ( !$cf7_query->have_posts() ) {
             return $forms;
-
         } else {
             while ( $cf7_query->have_posts() ) {
                 $cf7_query->the_post();
                 global $post;
 
-
-                $cf7 = \WPCF7_ContactForm::get_instance( $post->ID );
+                $cf7 = WPCF7_ContactForm::get_instance( $post->ID );
 
                 $saved_settings = get_option( 'wperp_crm_contact_forms', '' );
 
                 $forms[ $post->ID ] = [
-                    'name' => $post->post_name,
-                    'title' => $post->post_title,
-                    'fields' => [],
+                    'name'         => $post->post_name,
+                    'title'        => $post->post_title,
+                    'fields'       => [],
                     'contactGroup' => '0',
-                    'contactOwner' => '0'
+                    'contactOwner' => '0',
                 ];
 
                 foreach ( $cf7->collect_mail_tags() as $tag ) {
@@ -114,9 +114,8 @@ class CF7 {
 
         $cf7_settings = $cfi_settings['contact_form_7'];
 
-        if ( in_array( sanitize_text_field( wp_unslash( $_POST['_wpcf7'] ) ) , array_keys( $cf7_settings ) ) ) {
-            do_action( "wperp_integration_contact_form_7_form_submit", array_map( 'sanitize_text_field', wp_unslash( $_POST ) ), 'contact_form_7', sanitize_text_field( wp_unslash( $_POST['_wpcf7'] ) ) );
+        if ( in_array( sanitize_text_field( wp_unslash( $_POST['_wpcf7'] ) ), array_keys( $cf7_settings ) ) ) {
+            do_action( 'wperp_integration_contact_form_7_form_submit', array_map( 'sanitize_text_field', wp_unslash( $_POST ) ), 'contact_form_7', sanitize_text_field( wp_unslash( $_POST['_wpcf7'] ) ) );
         }
     }
-
 }

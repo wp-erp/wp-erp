@@ -4,15 +4,12 @@ namespace WeDevs\ERP\Accounting\Includes\Classes;
 
 use WeDevs\ERP\Email;
 
-
 class Send_Email extends Email {
-
-    function __construct() {
+    public function __construct() {
         parent::__construct();
     }
 
     public function trigger( $receiver_emails, $subject = 'Default subject', $body = 'Default body', $attachment = '' ) {
-
         $results = [];
 
         if ( is_array( $receiver_emails ) ) {

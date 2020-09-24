@@ -5,10 +5,12 @@ if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_
 
 $data         = [];
 $start        = !empty( $_POST['start'] ) ? sanitize_text_field( wp_unslash( $_POST['start'] ) ) : false;
-$end          = !empty( $_POST['end'] ) ? sanitize_text_field( wp_unslash( $_POST['end'] ) ): date('Y-m-d');
+$end          = !empty( $_POST['end'] ) ? sanitize_text_field( wp_unslash( $_POST['end'] ) ) : date( 'Y-m-d' );
 $filter_type  = !empty( $_POST['filter_type'] ) ? sanitize_text_field( wp_unslash( $_POST['filter_type'] ) ) : 'life_stage';
 
 $reports      = erp_crm_customer_reporting_query( $start, $end, $filter_type );
+
+$life_stages  = erp_crm_get_life_stages_dropdown_raw();
 
 ?><div class="wrap">
     <h2 class="report-title"><?php esc_attr_e( 'Customer Report', 'erp' ); ?></h2>
@@ -20,38 +22,39 @@ $reports      = erp_crm_customer_reporting_query( $start, $end, $filter_type );
         <thead>
             <tr>
                 <th><?php esc_attr_e( 'Label', 'erp' ); ?></th>
-                <th><?php esc_attr_e( 'Subscriber', 'erp' ); ?></th>
-                <th><?php esc_attr_e( 'Opportunity', 'erp' ); ?></th>
-                <th><?php esc_attr_e( 'Lead', 'erp' ); ?></th>
-                <th><?php esc_attr_e( 'Customer', 'erp' ); ?></th>
+                <?php foreach ( $life_stages as $life_stage ) { ?>
+                    <th><?php esc_attr_e( $life_stage, 'erp' ); ?></th>
+                <?php } ?>
             </tr>
         </thead>
 
         <tbody>
-            <?php if ( $filter_type === 'life_stage' ) :
-                foreach ( $reports as $report ) {
-                    $data[$report->life_stage] = $report->total;
-                }
-            ?>
+            <?php if ( $filter_type === 'life_stage' ) {
+    foreach ( $reports as $report ) {
+        $data[$report->life_stage] = $report->total;
+    }
+
+    $data =  apply_filters( 'erp_crm_customer_report', $data ); ?>
             <tr>
-                <td>All</td>
-                <td><?php echo !empty( $data['subscriber'] )  ? esc_attr( $data['subscriber'] ) : 0; ?></td>
-                <td><?php echo !empty( $data['opportunity'] ) ? esc_attr( $data['opportunity'] ) : 0; ?></td>
-                <td><?php echo !empty( $data['lead'] )        ? esc_attr( $data['lead'] ) : 0; ?></td>
-                <td><?php echo !empty( $data['customer'] )    ? esc_attr( $data['customer'] ) : 0; ?></td>
+                <td><?php esc_attr_e( 'All', 'erp' ); ?></td>
+                <?php foreach ( $life_stages as $slug => $title ) { ?>
+                    <td><?php echo array_key_exists( $slug, $data ) ? esc_attr( $data[ $slug ] ) : 0; ?></td>
+                <?php } ?>
             </tr>
 
-            <?php elseif ( $filter_type === 'contact_owner' ) :
-                foreach ( $reports as $report ) {
-                    $data[ucwords( $report->contact_owner )] = $report->owner_data;
-                }
+            <?php
+} elseif ( $filter_type === 'contact_owner' ) {
+        foreach ( $reports as $report ) {
+            $data[ucwords( $report->contact_owner )] = $report->owner_data;
+        }
 
-                foreach ( $data as $key => $value ) : ?>
+        foreach ( $data as $key => $value ) { ?>
                     <tr>
                         <td><?php echo esc_attr( $key ); ?></td>
 
                         <td>
                         <?php $num = 0;
+
                             foreach ( $value as $key => $detail ) {
                                 if ( $detail->life_stage === 'subscriber' ) {
                                     $num = $detail->num;
@@ -64,6 +67,7 @@ $reports      = erp_crm_customer_reporting_query( $start, $end, $filter_type );
 
                         <td>
                         <?php $num = 0;
+
                             foreach ( $value as $key => $detail ) {
                                 if ( $detail->life_stage === 'opportunity' ) {
                                     $num = $detail->num;
@@ -76,6 +80,7 @@ $reports      = erp_crm_customer_reporting_query( $start, $end, $filter_type );
 
                         <td>
                         <?php $num = 0;
+
                             foreach ( $value as $key => $detail ) {
                                 if ( $detail->life_stage === 'lead' ) {
                                     $num = $detail->num;
@@ -88,6 +93,7 @@ $reports      = erp_crm_customer_reporting_query( $start, $end, $filter_type );
 
                         <td>
                         <?php $num = 0;
+
                             foreach ( $value as $key => $detail ) {
                                 if ( $detail->life_stage === 'customer' ) {
                                     $num = $detail->num;
@@ -98,19 +104,21 @@ $reports      = erp_crm_customer_reporting_query( $start, $end, $filter_type );
                         ?>
                         </td>
                     </tr>
-                <?php endforeach; ?>
+                <?php } ?>
 
-            <?php elseif ( $filter_type === 'country' ) :
-                foreach ( $reports as $report ) {
-                    $data[ $report->country ] = $report->country_data;
-                }
+            <?php
+    } elseif ( $filter_type === 'country' ) {
+        foreach ( $reports as $report ) {
+            $data[ $report->country ] = $report->country_data;
+        }
 
-                foreach ( $data as $key => $value ) : ?>
+        foreach ( $data as $key => $value ) { ?>
                     <tr>
                         <td><?php echo esc_attr( $key ) !== -1 ? esc_html( erp_get_country_name( $key ) ) : 'Other'; ?></td>
 
                         <td>
                         <?php $num = 0;
+
                             foreach ( $value as $key => $detail ) {
                                 if ( $detail->life_stage === 'subscriber' ) {
                                     $num = $detail->num;
@@ -123,6 +131,7 @@ $reports      = erp_crm_customer_reporting_query( $start, $end, $filter_type );
 
                         <td>
                         <?php $num = 0;
+
                             foreach ( $value as $key => $detail ) {
                                 if ( $detail->life_stage === 'opportunity' ) {
                                     $num = $detail->num;
@@ -135,6 +144,7 @@ $reports      = erp_crm_customer_reporting_query( $start, $end, $filter_type );
 
                         <td>
                         <?php $num = 0;
+
                             foreach ( $value as $key => $detail ) {
                                 if ( $detail->life_stage === 'lead' ) {
                                     $num = $detail->num;
@@ -147,6 +157,7 @@ $reports      = erp_crm_customer_reporting_query( $start, $end, $filter_type );
 
                         <td>
                         <?php $num = 0;
+
                             foreach ( $value as $key => $detail ) {
                                 if ( $detail->life_stage === 'customer' ) {
                                     $num = $detail->num;
@@ -157,16 +168,15 @@ $reports      = erp_crm_customer_reporting_query( $start, $end, $filter_type );
                         ?>
                         </td>
                     </tr>
-                <?php endforeach;
-
-            elseif ( $filter_type === 'source' ) :
-
-                foreach ( $reports as $key => $value ) : ?>
+                <?php }
+    } elseif ( $filter_type === 'source' ) {
+        foreach ( $reports as $key => $value ) { ?>
                     <tr>
                         <td><?php echo esc_attr( $key ); ?></td>
 
                         <td>
                         <?php $num = 0;
+
                             foreach ( $value as $key => $detail ) {
                                 if ( $key === 'subscriber' ) {
                                     $num = $detail;
@@ -179,6 +189,7 @@ $reports      = erp_crm_customer_reporting_query( $start, $end, $filter_type );
 
                         <td>
                         <?php $num = 0;
+
                             foreach ( $value as $key => $detail ) {
                                 if ( $key === 'opportunity' ) {
                                     $num = $detail;
@@ -191,6 +202,7 @@ $reports      = erp_crm_customer_reporting_query( $start, $end, $filter_type );
 
                         <td>
                         <?php $num = 0;
+
                             foreach ( $value as $key => $detail ) {
                                 if ( $key === 'lead' ) {
                                     $num = $detail;
@@ -203,6 +215,7 @@ $reports      = erp_crm_customer_reporting_query( $start, $end, $filter_type );
 
                         <td>
                         <?php $num = 0;
+
                             foreach ( $value as $key => $detail ) {
                                 if ( $key === 'customer' ) {
                                     $num = $detail;
@@ -213,16 +226,15 @@ $reports      = erp_crm_customer_reporting_query( $start, $end, $filter_type );
                         ?>
                         </td>
                     </tr>
-                <?php endforeach;
-
-            elseif ( $filter_type === 'group' ) :
-
-                foreach ( $reports as $key => $value ) : ?>
+                <?php }
+    } elseif ( $filter_type === 'group' ) {
+        foreach ( $reports as $key => $value ) { ?>
                     <tr>
                         <td><?php echo esc_attr( $key ); ?></td>
 
                         <td>
                         <?php $num = 0;
+
                             foreach ( $value as $key => $detail ) {
                                 if ( $key === 'subscriber' ) {
                                     $num = $detail;
@@ -235,6 +247,7 @@ $reports      = erp_crm_customer_reporting_query( $start, $end, $filter_type );
 
                         <td>
                         <?php $num = 0;
+
                             foreach ( $value as $key => $detail ) {
                                 if ( $key === 'opportunity' ) {
                                     $num = $detail;
@@ -247,6 +260,7 @@ $reports      = erp_crm_customer_reporting_query( $start, $end, $filter_type );
 
                         <td>
                         <?php $num = 0;
+
                             foreach ( $value as $key => $detail ) {
                                 if ( $key === 'lead' ) {
                                     $num = $detail;
@@ -259,6 +273,7 @@ $reports      = erp_crm_customer_reporting_query( $start, $end, $filter_type );
 
                         <td>
                         <?php $num = 0;
+
                             foreach ( $value as $key => $detail ) {
                                 if ( $key === 'customer' ) {
                                     $num = $detail;
@@ -269,9 +284,10 @@ $reports      = erp_crm_customer_reporting_query( $start, $end, $filter_type );
                         ?>
                         </td>
                     </tr>
-                <?php endforeach; ?>
+                <?php } ?>
 
-            <?php endif; ?>
+            <?php
+    } ?>
 
         </tbody>
     </table>

@@ -3,11 +3,10 @@
  * Argentina's states
  *
  * @category i18n
- * @package WPERP/i18n
  */
 global $states;
 
-$states['AR'] = array(
+$states['AR'] = [
     'DF' => __( 'Ciudad de Buenos Aires', 'erp' ),
     'BA' => __( 'Buenos Aires', 'erp' ),
     'CT' => __( 'Catamarca', 'erp' ),
@@ -32,4 +31,4 @@ $states['AR'] = array(
     'SE' => __( 'Santiago del Estero', 'erp' ),
     'TF' => __( 'Tierra del Fuego', 'erp' ),
     'TM' => __( 'Tucuman', 'erp' ),
-);
+];

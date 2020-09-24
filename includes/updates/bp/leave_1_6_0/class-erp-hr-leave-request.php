@@ -1,5 +1,8 @@
 <?php
+
 namespace WeDevs\ERP\Updates\BP\Leave;
+
+use WP_Background_Process;
 
 if ( ! class_exists( 'WP_Async_Request', false ) ) {
     require_once WPERP_INCLUDES . '/lib/bgprocess/wp-async-request.php';
@@ -16,9 +19,8 @@ if ( ! class_exists( 'WP_Background_Process', false ) ) {
  * leave entitlements table and leave request details table.
  *
  * @since 1.6.0
- * @package WeDevs\ERP\Updates\BP\Leave
  */
-class ERP_HR_Leave_Request extends \WP_Background_Process {
+class ERP_HR_Leave_Request extends WP_Background_Process {
 
     /**
      * Background process name.
@@ -32,7 +34,7 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
      *
      * @var array
      */
-    protected $request_data = array(
+    protected $request_data = [
         'task'                     => 'leave_request',
         'id'                       => 0,
         'user_id'                  => 0,
@@ -53,7 +55,7 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
         'leave_policy_id'          => 0,
         'leave_approval_status_id' => 0,
         'leave_entitlement_id'     => 0,
-    );
+    ];
 
     /**
      * Task
@@ -63,7 +65,7 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
      * in the next pass through. Or, return false to remove the
      * item from the queue.
      *
-     * @param array $leave_request Queue item to iterate over.
+     * @param array $leave_request queue item to iterate over
      *
      * @return mixed
      */
@@ -95,6 +97,7 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
                 break;
 
         }
+
         return $ret;
     }
 
@@ -103,7 +106,7 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
      *
      * @since 1.6.0
      *
-     * @return array will return updated data to further run current background process.
+     * @return array will return updated data to further run current background process
      */
     protected function insert_leave_request() {
         global $wpdb;
@@ -112,7 +115,7 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
         $leave_request_data = $wpdb->get_row(
             $wpdb->prepare(
                 "SELECT * FROM {$wpdb->prefix}erp_hr_leave_requests WHERE id = %d",
-                array( $this->request_data['id'] )
+                [ $this->request_data['id'] ]
             ),
             ARRAY_A
         );
@@ -120,17 +123,16 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
         if ( null === $leave_request_data ) {
             error_log(
                 print_r(
-                    array(
+                    [
                         'file'    => __FILE__,
                         'line'    => __LINE__,
                         'message' => 'No old leave request data.',
-                    ),
+                    ],
                     true
                 )
             );
-            // no result found: can be because of query error, handle this problem here probably log this error.
+        // no result found: can be because of query error, handle this problem here probably log this error.
             // todo: keep log here.
-
         } elseif ( is_array( $leave_request_data ) && ! empty( $leave_request_data ) ) {
             // store datas for further use.
             $this->request_data = wp_parse_args( $leave_request_data, $this->request_data );
@@ -144,7 +146,7 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
             $f_year_id = $wpdb->get_var(
                 $wpdb->prepare(
                     "SELECT id FROM {$wpdb->prefix}erp_hr_financial_years_new WHERE start_date >= %d AND end_date <= %d LIMIT 1",
-                    array( $start_date->getTimestamp(), $end_date->getTimestamp() )
+                    [ $start_date->getTimestamp(), $end_date->getTimestamp() ]
                 )
             );
             $this->request_data['f_year'] = $f_year_id;
@@ -170,7 +172,7 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
             $policy_data = $wpdb->get_row(
                 $wpdb->prepare(
                     "SELECT leave_id FROM {$wpdb->prefix}erp_hr_leave_policies_new WHERE old_policy_id = %d AND f_year = %d",
-                    array( $this->request_data['policy_id'], $f_year_id )
+                    [ $this->request_data['policy_id'], $f_year_id ]
                 ),
                 ARRAY_A
             );
@@ -179,11 +181,11 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
                 // no result found: can be because of query error, handle this problem here probably log this error.
                 error_log(
                     print_r(
-                        array(
+                        [
                             'file'    => __FILE__,
                             'line'    => __LINE__,
                             'message' => '(Query error) No policies data found from new table. ' . $wpdb->last_error,
-                        ),
+                        ],
                         true
                     )
                 );
@@ -194,34 +196,34 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
                 $entitlement_id = $wpdb->get_var(
                     $wpdb->prepare(
                         "SELECT id FROM {$wpdb->prefix}erp_hr_leave_entitlements_new WHERE trn_type = %s AND user_id = %d AND leave_id = %d AND f_year = %d",
-                        array(
+                        [
                             'leave_policies',
                             $this->request_data['user_id'],
                             $this->request_data['leave_id'],
                             $f_year_id,
-                        )
+                        ]
                     )
                 );
 
                 $this->request_data['leave_policy_id'] = $entitlement_id;
 
                 // insert into new leave request table.
-                $table_data = array(
-                    'user_id'       => $this->request_data['user_id'],
-                    'leave_id'      => $this->request_data['leave_id'],
+                $table_data = [
+                    'user_id'              => $this->request_data['user_id'],
+                    'leave_id'             => $this->request_data['leave_id'],
                     'leave_entitlement_id' => $entitlement_id,
-                    'day_status_id' => 1,
-                    'days'          => $this->request_data['days'],
-                    'start_date'    => $this->request_data['start_date'],
-                    'end_date'      => $this->request_data['end_date'],
-                    'reason'        => wp_kses_post( $this->request_data['reason'] ),
-                    'last_status'   => $this->request_data['status'],
-                    'created_by'    => $this->request_data['created_by'],
-                    'created_at'    => $this->request_data['created_on'],
-                    'updated_at'    => $this->request_data['updated_on'],
-                );
+                    'day_status_id'        => 1,
+                    'days'                 => $this->request_data['days'],
+                    'start_date'           => $this->request_data['start_date'],
+                    'end_date'             => $this->request_data['end_date'],
+                    'reason'               => wp_kses_post( $this->request_data['reason'] ),
+                    'last_status'          => $this->request_data['status'],
+                    'created_by'           => $this->request_data['created_by'],
+                    'created_at'           => $this->request_data['created_on'],
+                    'updated_at'           => $this->request_data['updated_on'],
+                ];
 
-                $table_format = array(
+                $table_format = [
                     '%d',
                     '%d',
                     '%d',
@@ -234,16 +236,16 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
                     '%d',
                     '%d',
                     '%d',
-                );
+                ];
 
                 if ( $wpdb->insert( "{$wpdb->prefix}erp_hr_leave_requests_new", $table_data, $table_format ) === false ) {
                     error_log(
                         print_r(
-                            array(
+                            [
                                 'file'    => __FILE__,
                                 'line'    => __LINE__,
                                 'message' => '(Query error) Insertion failed into new leave requests table: ' . $wpdb->last_error,
-                            ),
+                            ],
                             true
                         )
                     );
@@ -253,6 +255,7 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
             }
         }
         $this->request_data['task'] = 'leave_approval_status';
+
         return $this->request_data;
     }
 
@@ -261,28 +264,28 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
      *
      * @since 1.6.0
      *
-     * @return array will return updated data to further run current background process.
+     * @return array will return updated data to further run current background process
      */
     protected function insert_leave_approval_status() {
         // insert only if leave is approved or rejected and request is already made.
-        if ( isset( $this->request_data['status'] ) && in_array( $this->request_data['status'], array( 1, 3 ) ) && isset( $this->request_data['leave_request_id'] ) && $this->request_data['leave_request_id'] > 0 ) {
+        if ( isset( $this->request_data['status'] ) && in_array( $this->request_data['status'], [ 1, 3 ] ) && isset( $this->request_data['leave_request_id'] ) && $this->request_data['leave_request_id'] > 0 ) {
             // leave approved or rejected.
             global $wpdb;
-            $table_data = array(
+            $table_data = [
                 'leave_request_id'   => $this->request_data['leave_request_id'],
                 'approval_status_id' => $this->request_data['status'],
                 'approved_by'        => $this->request_data['updated_by'],
                 'created_at'         => $this->request_data['updated_on'],
                 'updated_at'         => $this->request_data['updated_on'],
-            );
+            ];
 
-            $table_format = array(
+            $table_format = [
                 '%d',
                 '%d',
                 '%d',
                 '%d',
                 '%d',
-            );
+            ];
 
             if ( isset( $this->request_data['comments'] ) && $this->request_data['comments'] != '' ) {
                 $table_data['message'] = wp_kses_post( $this->request_data['comments'] );
@@ -292,11 +295,11 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
             if ( $wpdb->insert( "{$wpdb->prefix}erp_hr_leave_approval_status_new", $table_data, $table_format ) === false ) {
                 error_log(
                     print_r(
-                        array(
+                        [
                             'file'    => __FILE__,
                             'line'    => __LINE__,
                             'message' => '(Query error) Insertion failed into new leave approval status table: ' . $wpdb->last_error,
-                        ),
+                        ],
                         true
                     )
                 );
@@ -305,15 +308,15 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
             }
         }
         $this->request_data['task'] = 'leave_entitlements';
+
         return $this->request_data;
     }
 
     protected function insert_leave_entitlement() {
         if ( isset( $this->request_data['leave_approval_status_id'] ) && $this->request_data['leave_approval_status_id'] > 0 && isset( $this->request_data['status'] ) && $this->request_data['status'] == 1 ) {
-
             global $wpdb;
 
-            $table_data = array(
+            $table_data = [
                 'user_id'     => $this->request_data['user_id'],
                 'leave_id'    => $this->request_data['leave_id'],
                 'created_by'  => $this->request_data['updated_by'],
@@ -325,9 +328,9 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
                 'f_year'      => $this->request_data['f_year'],
                 'created_at'  => $this->request_data['created_on'],
                 'updated_at'  => $this->request_data['created_on'],
-            );
+            ];
 
-            $table_format = array(
+            $table_format = [
                 '%d',
                 '%d',
                 '%d',
@@ -339,20 +342,20 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
                 '%d',
                 '%d',
                 '%d',
-            );
+            ];
 
             if ( $wpdb->insert( "{$wpdb->prefix}erp_hr_leave_entitlements_new", $table_data, $table_format ) === false ) {
                 error_log(
                     print_r(
-                        array(
+                        [
                             'file'    => __FILE__,
                             'line'    => __LINE__,
                             'message' => '(Query error) Insertion failed into new leave entitlement table: ' . $wpdb->last_error,
-                        ),
+                        ],
                         true
                     )
                 );
-                // todo: query error, do logging or something here.
+            // todo: query error, do logging or something here.
             } else {
                 $this->request_data['leave_entitlement_id'] = $wpdb->insert_id;
 
@@ -360,14 +363,14 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
                 $policy_days = $wpdb->get_var(
                     $wpdb->prepare(
                         "SELECT days FROM {$wpdb->prefix}erp_hr_leave_policies_new WHERE old_policy_id = %d AND f_year = %d",
-                        array( $this->request_data['policy_id'], $this->request_data['f_year'] )
+                        [ $this->request_data['policy_id'], $this->request_data['f_year'] ]
                     )
                 );
 
                 $days_count = $wpdb->get_var(
                     $wpdb->prepare(
                         "SELECT SUM(days) FROM {$wpdb->prefix}erp_hr_leave_requests_new WHERE leave_entitlement_id = %d and user_id = %d and id <= %d and last_status = 1",
-                        array( $this->request_data['leave_policy_id'], $this->request_data['user_id'], $this->request_data['leave_request_id'] )
+                        [ $this->request_data['leave_policy_id'], $this->request_data['user_id'], $this->request_data['leave_request_id'] ]
                     )
                 );
 
@@ -377,14 +380,14 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
                     $extra_days_count = $wpdb->get_var(
                         $wpdb->prepare(
                             "SELECT SUM(days) FROM {$wpdb->prefix}erp_hr_leaves_unpaid_new WHERE leave_id = %d and user_id = %d and f_year = %d and leave_request_id < %d",
-                            array( $this->request_data['leave_id'], $this->request_data['user_id'], $this->request_data['f_year'], $this->request_data['leave_request_id'] )
+                            [ $this->request_data['leave_id'], $this->request_data['user_id'], $this->request_data['f_year'], $this->request_data['leave_request_id'] ]
                         )
                     );
 
                     $current_count = absint( $days_count ) - absint( $policy_days ) - absint( $extra_days_count );
 
                     // insert into new unpaid leave table.
-                    $table_data = array(
+                    $table_data = [
                         'leave_id'                 => $this->request_data['leave_id'],
                         'leave_request_id'         => $this->request_data['leave_request_id'],
                         'leave_approval_status_id' => $this->request_data['leave_approval_status_id'],
@@ -395,9 +398,9 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
                         'f_year'                   => $this->request_data['f_year'],
                         'created_at'               => $this->request_data['created_on'],
                         'updated_at'               => $this->request_data['updated_on'],
-                    );
+                    ];
 
-                    $table_format = array(
+                    $table_format = [
                         '%d',
                         '%d',
                         '%d',
@@ -408,21 +411,21 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
                         '%d',
                         '%d',
                         '%d',
-                    );
+                    ];
 
                     if ( $wpdb->insert( "{$wpdb->prefix}erp_hr_leaves_unpaid_new", $table_data, $table_format ) === false ) {
                         error_log(
                             print_r(
-                                array(
+                                [
                                     'file'    => __FILE__,
                                     'line'    => __LINE__,
                                     'message' => '(Query error) Insertion failed new unpaid leave table: ' . $wpdb->last_error,
-                                ),
+                                ],
                                 true
                             )
                         );
                     } else {
-                        $table_data = array(
+                        $table_data = [
                             'user_id'     => $this->request_data['user_id'],
                             'leave_id'    => $this->request_data['leave_id'],
                             'created_by'  => $this->request_data['updated_by'],
@@ -434,9 +437,9 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
                             'f_year'      => $this->request_data['f_year'],
                             'created_at'  => $this->request_data['created_on'],
                             'updated_at'  => $this->request_data['created_on'],
-                        );
+                        ];
 
-                        $table_format = array(
+                        $table_format = [
                             '%d',
                             '%d',
                             '%d',
@@ -448,16 +451,16 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
                             '%d',
                             '%d',
                             '%d',
-                        );
+                        ];
 
                         if ( $wpdb->insert( "{$wpdb->prefix}erp_hr_leave_entitlements_new", $table_data, $table_format ) === false ) {
                             error_log(
                                 print_r(
-                                    array(
+                                    [
                                         'file'    => __FILE__,
                                         'line'    => __LINE__,
                                         'message' => '(Query error) Insertion failed new leave entitlements table: ' . $wpdb->last_error,
-                                    ),
+                                    ],
                                     true
                                 )
                             );
@@ -467,6 +470,7 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
             }
         }
         $this->request_data['task'] = 'leave_request_details';
+
         return $this->request_data;
     }
 
@@ -475,7 +479,7 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
      *
      * @since 1.6.0
      *
-     * @return array will return false on success that will prevent for this task to run further and remove this task from current queue.
+     * @return array will return false on success that will prevent for this task to run further and remove this task from current queue
      */
     protected function insert_leave_request_details() {
         if ( isset( $this->request_data['leave_entitlement_id'] ) && $this->request_data['leave_entitlement_id'] > 0 ) {
@@ -484,14 +488,15 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
             $hr_leaves_data = $wpdb->get_col(
                 $wpdb->prepare(
                     "SELECT `date` FROM {$wpdb->prefix}erp_hr_leaves WHERE request_id = %d",
-                    array( $this->request_data['id'] )
+                    [ $this->request_data['id'] ]
                 )
             );
 
             if ( is_array( $hr_leaves_data ) && ! empty( $hr_leaves_data ) ) {
-                $table_rows = array();
+                $table_rows = [];
+
                 foreach ( $hr_leaves_data as $leave_date ) {
-                    $table_rows[] = array(
+                    $table_rows[] = [
                         'leave_request_id'         => $this->request_data['leave_request_id'],
                         'leave_approval_status_id' => $this->request_data['leave_approval_status_id'],
                         'workingday_status'        => 1,
@@ -500,17 +505,18 @@ class ERP_HR_Leave_Request extends \WP_Background_Process {
                         'leave_date'               => erp_mysqldate_to_phptimestamp( $leave_date ),
                         'created_at'               => $this->request_data['created_on'],
                         'updated_at'               => $this->request_data['created_on'],
-                    );
+                    ];
                 }
+
                 if ( ! empty( $table_rows ) ) {
                     if ( erp_wp_insert_rows( $table_rows, "{$wpdb->prefix}erp_hr_leave_request_details_new" ) === false ) {
                         error_log(
                             print_r(
-                                array(
+                                [
                                     'file'    => __FILE__,
                                     'line'    => __LINE__,
                                     'message' => '(Query error) Insertion failed new leave request details table: ' . $wpdb->last_error,
-                                ),
+                                ],
                                 true
                             )
                         );

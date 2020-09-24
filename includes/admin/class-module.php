@@ -1,18 +1,16 @@
 <?php
+
 namespace WeDevs\ERP\Admin;
 
 /**
  * Administration Module Class
- *
- * @package payroll
  */
 class Admin_Module {
+    public function __construct() {
+        $this->output();
+    }
 
-	function __construct() {
-		$this->output();
-	}
-
-	function output() {
-		require_once WPERP_VIEWS . '/module.php';
-	}
+    public function output() {
+        require_once WPERP_VIEWS . '/module.php';
+    }
 }

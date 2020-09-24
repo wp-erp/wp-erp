@@ -1,10 +1,11 @@
 <?php
+
 namespace WeDevs\ERP\Admin;
 
 use WeDevs\ERP\Admin\Models\Company_Locations;
 use WeDevs\ERP\Company;
-use WeDevs\ERP\Framework\Traits\Hooker;
 use WeDevs\ERP\Framework\Models\APIKey;
+use WeDevs\ERP\Framework\Traits\Hooker;
 
 /**
  * The ajax handler class
@@ -12,7 +13,6 @@ use WeDevs\ERP\Framework\Models\APIKey;
  * Handles the requests from core ERP, not from modules
  */
 class Ajax {
-
     use \WeDevs\ERP\Framework\Traits\Ajax;
     use Hooker;
 
@@ -20,21 +20,21 @@ class Ajax {
      * Bind events
      */
     public function __construct() {
-        $this->action( 'wp_ajax_erp-company-location', 'location_create');
-        $this->action( 'wp_ajax_erp-delete-comp-location', 'location_remove');
-        $this->action( 'wp_ajax_erp_audit_log_view', 'view_edit_log_changes');
+        $this->action( 'wp_ajax_erp-company-location', 'location_create' );
+        $this->action( 'wp_ajax_erp-delete-comp-location', 'location_remove' );
+        $this->action( 'wp_ajax_erp_audit_log_view', 'view_edit_log_changes' );
         $this->action( 'wp_ajax_erp_file_upload', 'file_uploader' );
         $this->action( 'wp_ajax_erp_file_del', 'file_delete' );
         $this->action( 'wp_ajax_erp_people_exists', 'check_people' );
         $this->action( 'wp_ajax_erp_smtp_test_connection', 'smtp_test_connection' );
         $this->action( 'wp_ajax_erp_imap_test_connection', 'imap_test_connection' );
         $this->action( 'wp_ajax_erp_import_users_as_contacts', 'import_users_as_contacts' );
-        $this->action( 'wp_ajax_erp-api-key', 'new_api_key');
-        $this->action( 'wp_ajax_erp-api-delete-key', 'delete_api_key');
+        $this->action( 'wp_ajax_erp-api-key', 'new_api_key' );
+        $this->action( 'wp_ajax_erp-api-delete-key', 'delete_api_key' );
         $this->action( 'wp_ajax_erp-dismiss-promotional-offer-notice', 'dismiss_promotional_offer' );
     }
 
-    function file_delete() {
+    public function file_delete() {
         if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'erp-nonce' ) ) {
             return;
         }
@@ -43,7 +43,7 @@ class Ajax {
         $custom_attr = isset( $_POST['custom_attr'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['custom_attr'] ) ) : [];
         $upload      = new \WeDevs\ERP\Uploader();
 
-        if ( is_array( $attach_id) ) {
+        if ( is_array( $attach_id ) ) {
             foreach ( $attach_id as $id ) {
                 do_action( 'erp_before_delete_file', $id, $custom_attr );
                 $delete = $upload->delete_file( $id );
@@ -65,7 +65,7 @@ class Ajax {
      *
      * @return void
      */
-    function file_uploader() {
+    public function file_uploader() {
         if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-nonce' ) ) {
             return;
         }
@@ -90,7 +90,7 @@ class Ajax {
         $address_2     = isset( $_POST['address_2'] ) ? sanitize_text_field( wp_unslash( $_POST['address_2'] ) ) : '';
         $city          = isset( $_POST['city'] ) ? sanitize_text_field( wp_unslash( $_POST['city'] ) ) : '';
         $state         = isset( $_POST['state'] ) ? sanitize_text_field( wp_unslash( $_POST['state'] ) ) : '';
-        $zip           = isset( $_POST['zip'] ) ? sanitize_text_field( wp_unslash( $_POST['zip'] ) )  : '';
+        $zip           = isset( $_POST['zip'] ) ? sanitize_text_field( wp_unslash( $_POST['zip'] ) ) : '';
         $country       = isset( $_POST['country'] ) ? sanitize_text_field( wp_unslash( $_POST['country'] ) ) : '';
         $location_id   = isset( $_POST['location_id'] ) ? intval( wp_unslash( $_POST['location_id'] ) ) : 0;
 
@@ -102,17 +102,17 @@ class Ajax {
             'city'       => $city,
             'state'      => $state,
             'zip'        => $zip,
-            'country'    => $country
+            'country'    => $country,
         ];
 
-        $company = new Company();
+        $company     = new Company();
         $location_id = $company->create_location( $args );
 
         if ( is_wp_error( $location_id ) ) {
             $this->send_error( $location_id->get_error_message() );
         }
 
-        $this->send_success( array( 'id' => $location_id, 'title' => $location_name ) );
+        $this->send_success( [ 'id' => $location_id, 'title' => $location_name ] );
     }
 
     /**
@@ -145,11 +145,10 @@ class Ajax {
             $this->send_error();
         }
 
-        $log = \WeDevs\ERP\Admin\Models\Audit_Log::find( $log_id );
+        $log       = \WeDevs\ERP\Admin\Models\Audit_Log::find( $log_id );
         $old_value = maybe_unserialize( base64_decode( $log->old_value ) );
         $new_value = maybe_unserialize( base64_decode( $log->new_value ) );
-        ob_start();
-        ?>
+        ob_start(); ?>
         <div class="wrap">
             <table class="wp-list-table widefat fixed audit-log-change-table">
                 <thead>
@@ -170,9 +169,9 @@ class Ajax {
 
                 <tbody>
                     <?php $i=1; ?>
-                    <?php foreach( $old_value as $key => $value ) { ?>
+                    <?php foreach ( $old_value as $key => $value ) { ?>
                         <tr class="<?php echo $i % 2 == 0 ? 'alternate' : 'odd'; ?>">
-                            <td class="col-date"><?php echo esc_html( ucfirst( str_replace('_', ' ', $key ) ) ); ?></td>
+                            <td class="col-date"><?php echo esc_html( ucfirst( str_replace( '_', ' ', $key ) ) ); ?></td>
                             <td><?php echo ( $value ) ? esc_html( wp_unslash( $value ) ) : '--'; ?></td>
                             <td><?php echo ( $new_value[$key] ) ? esc_html( wp_unslash( $new_value[$key] ) ) : '--'; ?></td>
                         </tr>
@@ -184,8 +183,8 @@ class Ajax {
         $content = ob_get_clean();
 
         $data = [
-            'title' => esc_html__( 'Log changes', 'erp' ),
-            'content' => $content
+            'title'   => esc_html__( 'Log changes', 'erp' ),
+            'content' => $content,
         ];
 
         $this->send_success( $data );
@@ -208,11 +207,11 @@ class Ajax {
         if ( false === $user ) {
             $people = erp_get_people_by( 'email', $email );
         } else {
-            $peep = \WeDevs\ERP\Framework\Models\People::with('types')->whereUserId( $user->ID )->first();
+            $peep = \WeDevs\ERP\Framework\Models\People::with( 'types' )->whereUserId( $user->ID )->first();
 
             if ( null === $peep ) {
                 $user->data->types = 'wp_user';
-                $people = $user;
+                $people            = $user;
             } else {
                 $people        = (object) $peep->toArray();
                 $people->types = wp_list_pluck( $peep->types->toArray(), 'name' );
@@ -269,15 +268,14 @@ class Ajax {
         global $phpmailer, $wp_version;
 
         // (Re)create it, if it's gone missing.
-        if ( version_compare( $wp_version,'5.5' ) >= 0 ) {
+        if ( version_compare( $wp_version, '5.5' ) >= 0 ) {
             if ( ! ( $phpmailer instanceof \PHPMailer\PHPMailer\PHPMailer ) ) {
                 require_once ABSPATH . WPINC . '/PHPMailer/PHPMailer.php';
                 require_once ABSPATH . WPINC . '/PHPMailer/SMTP.php';
                 require_once ABSPATH . WPINC . '/PHPMailer/Exception.php';
                 $phpmailer = new \PHPMailer\PHPMailer\PHPMailer( true );
             }
-        }
-        else {
+        } else {
             if ( ! ( $phpmailer instanceof PHPMailer ) ) {
                 require_once ABSPATH . WPINC . '/class-phpmailer.php';
                 require_once ABSPATH . WPINC . '/class-smtp.php';
@@ -324,13 +322,13 @@ class Ajax {
             $phpmailer->Password   = $password;
         }
 
-        $phpmailer->isHTML(true);
+        $phpmailer->isHTML( true );
 
         try {
             $result = $phpmailer->Send();
 
             $this->send_success( esc_html__( 'Test email has been sent.', 'erp' ) );
-        } catch( \Exception $e ) {
+        } catch ( \Exception $e ) {
             $this->send_error( $e->getMessage() );
         }
     }
@@ -373,7 +371,7 @@ class Ajax {
             $imap->is_connected();
 
             $this->send_success( esc_html__( 'Your IMAP connection is established.', 'erp' ) );
-        } catch( \Exception $e ) {
+        } catch ( \Exception $e ) {
             $this->send_error( $e->getMessage() );
         }
     }
@@ -392,7 +390,7 @@ class Ajax {
             return;
         }
 
-        define( 'ERP_IS_IMPORTING' , true );
+        define( 'ERP_IS_IMPORTING', true );
 
         $limit = 50; // Limit to import per request
 
@@ -442,7 +440,7 @@ class Ajax {
                 'postal_code'   => $postal_code,
                 'country'       => $country,
                 'contact_owner' => $contact_owner,
-                'life_stage'    => $life_stage
+                'life_stage'    => $life_stage,
             ];
 
             $people = erp_insert_people( $data, true );
@@ -452,10 +450,9 @@ class Ajax {
             } else {
                 $contact = new \WeDevs\ERP\CRM\Contact( absint( $people->id ), 'contact' );
 
-                if ( ! $people->exists) {
-                    $contact->update_life_stage($life_stage);
+                if ( ! $people->exists ) {
+                    $contact->update_life_stage( $life_stage );
                     $contact->update_contact_owner( $contact_owner );
-
                 } else {
                     if ( ! $contact->get_life_stage() ) {
                         $contact->update_life_stage( $life_stage );
@@ -471,14 +468,14 @@ class Ajax {
                 if ( empty( $existing_data ) ) {
                     $hash = sha1( microtime() . 'erp-subscription-form' . $contact_group . $people->id );
 
-                    erp_crm_create_new_contact_subscriber([
+                    erp_crm_create_new_contact_subscriber( [
                         'group_id'          => $contact_group,
                         'user_id'           => $people->id,
                         'status'            => 'subscribe',
                         'subscribe_at'      => current_time( 'mysql' ),
                         'unsubscribe_at'    => null,
-                        'hash'              => $hash
-                    ]);
+                        'hash'              => $hash,
+                    ] );
                 }
             }
         }
@@ -514,7 +511,7 @@ class Ajax {
 
             $api_key->update( [
                 'name'    => isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '',
-                'user_id' => isset( $_POST['user_id'] ) ? intval( wp_unslash( $_POST['user_id'] ) ) : 0
+                'user_id' => isset( $_POST['user_id'] ) ? intval( wp_unslash( $_POST['user_id'] ) ) : 0,
             ] );
 
             $this->send_success( $api_key );
@@ -575,7 +572,6 @@ class Ajax {
 
         wp_die();
     }
-
 }
 
 new Ajax();

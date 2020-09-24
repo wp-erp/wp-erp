@@ -1,10 +1,12 @@
 <?php
+
 namespace WeDevs\ERP\API;
 
 /**
  * API_Registrar class
  */
 class API_Registrar {
+
     /**
      * Constructor
      */
@@ -24,7 +26,7 @@ class API_Registrar {
      */
     public function register_rest_routes() {
         $controllers = [
-            '\WeDevs\ERP\API\Utility_Controller'
+            '\WeDevs\ERP\API\Utility_Controller',
         ];
 
         if ( erp_is_module_active( 'crm' ) ) {
