@@ -836,8 +836,9 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
         $trn_id = $transaction->trn_no;
     }
 
+    $title =  isset($transaction->estimate) ? 'Estimate' : $type ;
     //Set type
-    $trn_pdf->set_type( erp_acct_get_transaction_type( $trn_id ) );
+    $trn_pdf->set_type( $title);
 
     // Set barcode
     if ( $trn_id ) {
