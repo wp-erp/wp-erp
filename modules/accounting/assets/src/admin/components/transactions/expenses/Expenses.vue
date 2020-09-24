@@ -51,7 +51,7 @@ export default {
                 { namedRoute: 'PayBillCreate', name: __('Pay Bill', 'erp') }
             ],
 
-            filterTypes:[{id: 'expense', name: 'Expense'}, {id: 'bill', name: 'Bill'}],
+            filterTypes:[{id: 'expense', name: 'Expense'}, {id: 'bill', name: 'Bill'}, {id: 'pay_bill', name: 'Bill Payment'}, {id: 'check', name: 'Check'}],
         };
     },
     created() {

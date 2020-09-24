@@ -593,7 +593,7 @@ function erp_acct_get_expense_transactions( $args = [] ) {
         }
     }
 
-    if ($args['type'] ) {
+    if ( ! empty($args['type']) ) {
         $where .= " AND voucher.type = '{$args['type']}' ";
     }
 
