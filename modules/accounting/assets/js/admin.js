@@ -26375,6 +26375,12 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       }, {
         id: 'bill',
         name: 'Bill'
+      }, {
+        id: 'pay_bill',
+        name: 'Bill Payment'
+      }, {
+        id: 'check',
+        name: 'Check'
       }]
     };
   },
