@@ -2188,7 +2188,7 @@ function erp_hr_leave_get_balance( $user_id, $date = null ) {
     IFNULL( ( SELECT sum(en2.day_out) AS total_day_out FROM {$wpdb->prefix}erp_hr_leave_entitlements AS en2 WHERE en2.user_id = en.user_id AND en2.leave_id = en.leave_id AND en2.f_year = en.f_year ), 0 ) AS total_day_out,
     IFNULL( ( SELECT sum(en2.day_in) AS extra_leaves FROM {$wpdb->prefix}erp_hr_leave_entitlements AS en2 WHERE en2.user_id = en.user_id AND en2.leave_id = en.leave_id AND en2.f_year = en.f_year AND en2.trn_type = 'unpaid_leave' ), 0 ) AS extra_leaves,
     IFNULL( ( SELECT sum(rq.days) AS leave_spent FROM {$wpdb->prefix}erp_hr_leave_requests AS rq WHERE rq.user_id = en.user_id AND rq.leave_id = en.leave_id AND rq.last_status = 1 AND rq.start_date BETWEEN fy.start_date AND fy.end_date ), 0 ) AS leave_spent
-    FROM wp_erp_hr_leave_entitlements AS en
+    FROM {$wpdb->prefix}erp_hr_leave_entitlements AS en
     LEFT JOIN {$wpdb->prefix}erp_hr_financial_years AS fy ON fy.id = en.f_year
     LEFT JOIN {$wpdb->prefix}erp_hr_leaves AS l ON l.id = en.leave_id
     WHERE en.user_id = %d AND en.trn_type='leave_policies'
@@ -2253,7 +2253,7 @@ function erp_hr_leave_get_balance_for_single_entitlement( $entitlement_id ) {
     IFNULL( ( SELECT sum(en2.day_out) AS total_day_out FROM {$wpdb->prefix}erp_hr_leave_entitlements AS en2 WHERE en2.user_id = en.user_id AND en2.leave_id = en.leave_id AND en2.f_year = en.f_year ), 0 ) AS total_day_out,
     IFNULL( ( SELECT sum(en2.day_in) AS extra_leaves FROM {$wpdb->prefix}erp_hr_leave_entitlements AS en2 WHERE en2.user_id = en.user_id AND en2.leave_id = en.leave_id AND en2.f_year = en.f_year AND en2.trn_type = 'unpaid_leave' ), 0 ) AS extra_leaves,
     IFNULL( ( SELECT sum(rq.days) AS leave_spent FROM {$wpdb->prefix}erp_hr_leave_requests AS rq WHERE rq.user_id = en.user_id AND rq.leave_id = en.leave_id AND rq.last_status = 1 AND rq.start_date BETWEEN fy.start_date AND fy.end_date ), 0 ) AS leave_spent
-    FROM wp_erp_hr_leave_entitlements AS en
+    FROM {$wpdb->prefix}erp_hr_leave_entitlements AS en
     LEFT JOIN {$wpdb->prefix}erp_hr_financial_years AS fy ON fy.id = en.f_year
     LEFT JOIN {$wpdb->prefix}erp_hr_leaves AS l ON l.id = en.leave_id
     WHERE en.id = %d
