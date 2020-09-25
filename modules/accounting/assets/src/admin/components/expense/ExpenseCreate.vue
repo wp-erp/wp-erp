@@ -442,6 +442,7 @@ export default {
             HTTP.post('/expenses', requestData).then(res => {
                 this.$store.dispatch('spinner/setSpinner', false);
                 this.showAlert('success', 'Expense Created!');
+                this.$router.push({ name: 'Expenses' });
             }).catch(error => {
                 this.$store.dispatch('spinner/setSpinner', false);
                 throw error;

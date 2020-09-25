@@ -24800,6 +24800,10 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         _this8.$store.dispatch('spinner/setSpinner', false);
 
         _this8.showAlert('success', 'Expense Created!');
+
+        _this8.$router.push({
+          name: 'Expenses'
+        });
       }).catch(function (error) {
         _this8.$store.dispatch('spinner/setSpinner', false);
 
