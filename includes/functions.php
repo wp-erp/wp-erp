@@ -1742,7 +1742,7 @@ function erp_process_import_export() {
 
                     $item_insert_id = erp_hr_employee_create( $line_data );
 
-                    if ( is_wp_error( $item_insert_id ) ) {
+                    if ( is_wp_error( $item_insert_id ) || is_string( $item_insert_id ) ) {
                         continue;
                     }
                 }

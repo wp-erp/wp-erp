@@ -15,10 +15,10 @@ $current_tab        = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $
 ?>
 
 <div class="wrap erp-settings">
-    <div style="display: flex;">
-        <h2><?php esc_html_e( 'Modules', 'erp' ); ?> </h2>
+    <h2>
+        <?php esc_html_e( 'Modules', 'erp' ); ?>
         <?php echo erp_help_tip( esc_html__( "If you do not require any of the modules, you may deactivate it from here.", 'erp' ) ); ?>
-    </div>
+    </h2>
 
 	<ul class="erp-subsubsub">
 		<li><a class="erp-nav-tab<?php echo esc_attr( $current_tab ) == '' ? ' erp-nav-tab-active' : ''; ?>" href="<?php echo esc_url( $all_url ); ?>"><?php esc_html( printf( esc_html__( 'All (%s) |', 'erp' ), esc_html( $count_all ) ) ); ?></a></li>
@@ -91,8 +91,7 @@ $current_tab        = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $
 
 <style>
     .erp-help-tip {
-        font-size: 1.5em;
-        top      : 1.1rem;
-        left     : 0.2rem;
+        left: 0.1rem;
+        bottom: 0.3rem;
     }
 </style>
