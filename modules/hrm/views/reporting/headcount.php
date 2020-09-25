@@ -1,5 +1,5 @@
 <div class="wrap">
-    <h3><?php esc_html_e( 'Headcount', 'erp' ); ?></h3>
+    <h2><?php esc_html_e( 'Headcount', 'erp' ); ?></h2>
     <?php
         global $wpdb;
 
