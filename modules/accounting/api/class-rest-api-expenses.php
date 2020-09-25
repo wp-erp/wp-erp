@@ -435,6 +435,7 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
             'date'         => $item->trn_date,
             'address'      => $item->address,
             'bill_details' => $item->bill_details,
+            'pdf_link'     => $item->pdf_link,
             'total'        => (float) $item->amount,
             'ref'          => ! empty( $item->ref ) ? $item->ref : '',
             'check_no'     => $item->check_no,

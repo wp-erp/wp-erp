@@ -75,6 +75,7 @@ function erp_acct_get_pay_purchase( $purchase_no ) {
     );
 
     $row['purchase_details'] = erp_acct_format_pay_purchase_line_items( $purchase_no );
+    $row['pdf_link']    = erp_acct_pdf_abs_path_to_url( $purchase_no );
 
     return $row;
 }

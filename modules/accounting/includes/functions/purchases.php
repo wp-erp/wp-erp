@@ -83,6 +83,7 @@ function erp_acct_get_purchase( $purchase_no ) {
     $row['line_items']  = erp_acct_format_purchase_line_items( $purchase_no );
     $row['attachments'] = unserialize( $row['attachments'] );
     $row['total_due']   = $row['credit'] - $row['debit'];
+    $row['pdf_link']    = erp_acct_pdf_abs_path_to_url( $purchase_no );
 
     return $row;
 }

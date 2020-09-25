@@ -72,6 +72,7 @@ function erp_acct_get_pay_bill( $bill_no ) {
     );
 
     $row['bill_details'] = erp_acct_format_paybill_line_items( $bill_no );
+    $row['pdf_link']    = erp_acct_pdf_abs_path_to_url( $bill_no );
 
     return $row;
 }

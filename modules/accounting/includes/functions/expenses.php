@@ -79,6 +79,7 @@ function erp_acct_get_expense( $expense_no ) {
     $row = $wpdb->get_row( $sql, ARRAY_A );
 
     $row['bill_details'] = erp_acct_format_expense_line_items( $expense_no );
+    $row['pdf_link']    = erp_acct_pdf_abs_path_to_url( $expense_no );
 
     $check_data = erp_acct_get_check_data_of_expense( $expense_no );
 

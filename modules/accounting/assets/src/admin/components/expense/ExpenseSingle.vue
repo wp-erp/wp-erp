@@ -18,6 +18,7 @@
                         </template>
                         <template slot="dropdown">
                             <ul role="menu">
+                                <li> <a :href="pdf_link">{{ __('Export as PDF', 'erp') }}</a> </li>
                                 <li><a href="#" @click.prevent="showModal = true">Send Mail</a></li>
                             </ul>
                         </template>
@@ -175,7 +176,8 @@ export default {
             print_data  : null,
             type        : 'expense',
             showModal   : false,
-            people_id   : null
+            people_id   : null,
+            pdf_link    : '#'
         };
     },
 
@@ -204,6 +206,7 @@ export default {
             HTTP.get(`/expenses/${this.$route.params.id}`).then(response => {
                 this.expense_data = response.data;
                 this.people_id = this.expense_data.people_id;
+                this.pdf_link   = this.expense_data.pdf_link;
                 this.$store.dispatch('spinner/setSpinner', false);
             }).catch(error => {
                 this.$store.dispatch('spinner/setSpinner', false);

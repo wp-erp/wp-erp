@@ -20634,6 +20634,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 //
 //
 //
+//
 
 
 
@@ -20656,7 +20657,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       print_data: null,
       type: 'bill',
       showModal: false,
-      people_id: null
+      people_id: null,
+      pdf_link: '#'
     };
   },
   created: function created() {
@@ -20686,6 +20688,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get("/bills/".concat(this.$route.params.id)).then(function (response) {
         _this3.bill = response.data;
         _this3.people_id = _this3.bill.vendor_id;
+        _this3.pdf_link = _this3.bill.pdf_link;
 
         _this3.$store.dispatch('spinner/setSpinner', false);
       }).catch(function (error) {
@@ -21360,6 +21363,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 //
 //
 //
+//
 
 
 
@@ -21382,7 +21386,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       print_data: null,
       type: 'pay_bill',
       showModal: false,
-      people_id: null
+      people_id: null,
+      pdf_link: '#'
     };
   },
   created: function created() {
@@ -21412,6 +21417,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get("/pay-bills/".concat(this.$route.params.id)).then(function (response) {
         _this3.payBill = response.data;
         _this3.people_id = _this3.payBill.vendor_id;
+        _this3.pdf_link = _this3.payBill.pdf_link;
 
         _this3.$store.dispatch('spinner/setSpinner', false);
       }).catch(function (error) {
@@ -22408,6 +22414,7 @@ if (false) {(function () {
 //
 //
 //
+//
 
 
 
@@ -22430,7 +22437,8 @@ if (false) {(function () {
       print_data: null,
       type: 'purchase',
       showModal: false,
-      people_id: null
+      people_id: null,
+      pdf_link: '#'
     };
   },
   created: function created() {
@@ -22460,6 +22468,7 @@ if (false) {(function () {
       __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get("/purchases/".concat(this.$route.params.id)).then(function (response) {
         _this3.purchase = response.data;
         _this3.people_id = _this3.purchase.vendor_id;
+        _this3.pdf_link = _this3.purchase.pdf_link;
 
         _this3.$store.dispatch('spinner/setSpinner', false);
       }).then(function (e) {}).then(function () {
@@ -23156,6 +23165,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 //
 //
 //
+//
 
 
 
@@ -23178,7 +23188,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       print_data: null,
       type: 'pay_purchase',
       showModal: false,
-      people_id: null
+      people_id: null,
+      pdf_link: '#'
     };
   },
   created: function created() {
@@ -23208,6 +23219,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get("/pay-purchases/".concat(this.$route.params.id)).then(function (response) {
         _this3.payPurchase = response.data;
         _this3.people_id = _this3.payPurchase.vendor_id;
+        _this3.pdf_link = _this3.payPurchase.pdf_link;
 
         _this3.$store.dispatch('spinner/setSpinner', false);
       }).catch(function (error) {
@@ -27177,6 +27189,7 @@ setTimeout(function () {
 //
 //
 //
+//
 
 
 
@@ -27201,7 +27214,8 @@ setTimeout(function () {
       print_data: null,
       type: 'expense',
       showModal: false,
-      people_id: null
+      people_id: null,
+      pdf_link: '#'
     };
   },
   created: function created() {
@@ -27231,6 +27245,7 @@ setTimeout(function () {
       __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get("/expenses/".concat(this.$route.params.id)).then(function (response) {
         _this3.expense_data = response.data;
         _this3.people_id = _this3.expense_data.people_id;
+        _this3.pdf_link = _this3.expense_data.pdf_link;
 
         _this3.$store.dispatch('spinner/setSpinner', false);
       }).catch(function (error) {
@@ -49393,6 +49408,12 @@ var render = function() {
                   _c("template", { slot: "dropdown" }, [
                     _c("ul", { attrs: { role: "menu" } }, [
                       _c("li", [
+                        _c("a", { attrs: { href: _vm.pdf_link } }, [
+                          _vm._v(_vm._s(_vm.__("Export as PDF", "erp")))
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c("li", [
                         _c(
                           "a",
                           {
@@ -50400,6 +50421,12 @@ var render = function() {
                   _vm._v(" "),
                   _c("template", { slot: "dropdown" }, [
                     _c("ul", { attrs: { role: "menu" } }, [
+                      _c("li", [
+                        _c("a", { attrs: { href: _vm.pdf_link } }, [
+                          _vm._v(_vm._s(_vm.__("Export as PDF", "erp")))
+                        ])
+                      ]),
+                      _vm._v(" "),
                       _c("li", [
                         _c(
                           "a",
@@ -51639,6 +51666,12 @@ var render = function() {
                   _c("template", { slot: "dropdown" }, [
                     _c("ul", { attrs: { role: "menu" } }, [
                       _c("li", [
+                        _c("a", { attrs: { href: _vm.pdf_link } }, [
+                          _vm._v(_vm._s(_vm.__("Export as PDF", "erp")))
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c("li", [
                         _c(
                           "a",
                           {
@@ -52704,6 +52737,12 @@ var render = function() {
                   _vm._v(" "),
                   _c("template", { slot: "dropdown" }, [
                     _c("ul", { attrs: { role: "menu" } }, [
+                      _c("li", [
+                        _c("a", { attrs: { href: _vm.pdf_link } }, [
+                          _vm._v(_vm._s(_vm.__("Export as PDF", "erp")))
+                        ])
+                      ]),
+                      _vm._v(" "),
                       _c("li", [
                         _c(
                           "a",
@@ -58175,6 +58214,12 @@ var render = function() {
                   _vm._v(" "),
                   _c("template", { slot: "dropdown" }, [
                     _c("ul", { attrs: { role: "menu" } }, [
+                      _c("li", [
+                        _c("a", { attrs: { href: _vm.pdf_link } }, [
+                          _vm._v(_vm._s(_vm.__("Export as PDF", "erp")))
+                        ])
+                      ]),
+                      _vm._v(" "),
                       _c("li", [
                         _c(
                           "a",
