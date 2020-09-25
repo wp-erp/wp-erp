@@ -246,15 +246,13 @@ class Leave_Holiday_List_Table extends WP_List_Table {
 
     <div id="holiday_msg"></div>
 
-    <div style="display: flex;">
-        <h2><?php esc_html_e( 'Holiday', 'erp' ); ?></h2>
+    <h2>
+        <?php esc_html_e( 'Holiday', 'erp' ); ?>
         <?php echo erp_help_tip( esc_html__( 'Add holidays for current year.', 'erp' ) ); ?>
-        <h2>
-            <a href="#" id="erp-hr-new-holiday" class="add-new-h2"><?php esc_html_e( 'Add New', 'erp' ); ?></a>
-            <a href="#import-ical" id="erp-hr-import-ical" class="add-new-h2"><?php esc_html_e( 'Import iCal / CSV', 'erp' ); ?></a>
-            <a href="<?php echo esc_attr( WPERP_HRM_ASSETS . '/sample/holiday-sample.csv' ); ?>" class="add-new-h2"><?php esc_html_e( 'Sample CSV', 'erp' ); ?></a>
-        </h2>
-    </div>
+        <a href="#" id="erp-hr-new-holiday" class="add-new-h2"><?php esc_html_e( 'Add New', 'erp' ); ?></a>
+        <a href="#import-ical" id="erp-hr-import-ical" class="add-new-h2"><?php esc_html_e( 'Import iCal / CSV', 'erp' ); ?></a>
+        <a href="<?php echo esc_attr( WPERP_HRM_ASSETS . '/sample/holiday-sample.csv' ); ?>" class="add-new-h2"><?php esc_html_e( 'Sample CSV', 'erp' ); ?></a>
+    </h2>
 
     <div class="list-table-wrap">
         <div class="list-wrap-inner">
@@ -286,8 +284,7 @@ class Leave_Holiday_List_Table extends WP_List_Table {
 
 <style>
     .erp-help-tip {
-        font-size: 1.5em;
-        top      : 1.1rem;
-        width    : 25px;
+        width: 15px;
+        bottom: 0.2rem;
     }
 </style>
