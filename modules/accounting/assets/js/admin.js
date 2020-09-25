@@ -57223,9 +57223,7 @@ var render = function() {
               })
             ],
             2
-          ),
-          _vm._v(" "),
-          _c("i", { staticClass: "select--icon" })
+          )
         ]
       )
     : _vm._e()

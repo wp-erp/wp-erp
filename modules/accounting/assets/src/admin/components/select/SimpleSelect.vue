@@ -4,7 +4,7 @@
             <option value="">All</option>
             <option :key="option.id" v-for="option in options" :value="option.id">{{ option.name }}</option>
         </select>
-        <i class="select--icon" />
+    <!--    <i class="select&#45;&#45;icon" />-->
     </div>
 </template>
 
@@ -69,7 +69,7 @@ export default {
         -webkit-appearance: none;
         box-shadow: none;
         font-size: 15px;
-        width: 130%;
+        width: 100%;
         border: 0;
     }
     .vue-select select:focus {
