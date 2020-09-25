@@ -5,7 +5,7 @@ Tags: business manager, erp, accounting, crm, hr, project manager, small busines
 Requires at least: 4.4
 Tested up to: 5.5.1
 Requires PHP: 5.6
-Stable tag: 1.6.5
+Stable tag: 1.6.6
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -111,7 +111,7 @@ Free features of [WPERP Accounting](https://wperp.com/accounting/) module:
 Getting Started with WP ERP is only a matter of moments.
 Check out the detailed [documentation](https://wperp.com/documentation/) created by us to help you out to run WP ERP in the best way.
 
-= ♦ WP ERP Pro - Premium extensions & features ♦ =
+== ♦ WP ERP Pro - Premium extensions & features ♦ ==
 Automate & Manage your growing business even better using Human Resource, Customer Relations, Accounts Management right inside your WordPress
 
 = Why WP ERP Pro =
@@ -279,6 +279,12 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+
+= v1.6.6 -> September 25, 2020 =
+--------------------------
+- [fix] Fixed category creating issue, set default value as 0 if no parent category assigned
+- [fix] Fixed notice display conflict
+- [fix] Fixed imported csv count issue
 
 = v1.6.5 -> September 24, 2020 =
 --------------------------
