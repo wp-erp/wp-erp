@@ -36022,11 +36022,11 @@ var render = function() {
                 key: "debit",
                 fn: function(data) {
                   return [
-                    _vm._v(
-                      "\n                    " +
-                        _vm._s(_vm.moneyFormat(data.row.debit)) +
-                        "\n                "
-                    )
+                    data.row.debit
+                      ? _c("span", [
+                          _vm._v(_vm._s(_vm.moneyFormat(data.row.debit)))
+                        ])
+                      : _c("span", [_vm._v("-")])
                   ]
                 }
               },
@@ -36034,11 +36034,13 @@ var render = function() {
                 key: "credit",
                 fn: function(data) {
                   return [
-                    _vm._v(
-                      "\n                    " +
-                        _vm._s(_vm.moneyFormat(data.row.credit)) +
-                        "\n                "
-                    )
+                    data.row.credit
+                      ? _c("span", [
+                          _vm._v(
+                            " " + _vm._s(_vm.moneyFormat(data.row.credit)) + " "
+                          )
+                        ])
+                      : _c("span", [_vm._v("-")])
                   ]
                 }
               }
