@@ -1,4 +1,5 @@
 <?php
+
 namespace WeDevs\ERP;
 
 /**
@@ -6,8 +7,11 @@ namespace WeDevs\ERP;
  */
 class Promotion {
 
+    /**
+     * Initialize the class
+     */
     public function __construct() {
-        add_action( 'admin_notices', array( $this, 'promotional_offer' ) );
+        add_action( 'admin_notices', [ $this, 'promotional_offer' ] );
         // add_action( 'wp_ajax_erp-dismiss-promotional-offer-notice', array( $this, 'dismiss_promotional_offer' ) );
     }
 
@@ -25,7 +29,7 @@ class Promotion {
         }
 
         // 2018-03-26 23:59:00
-        if ( time() > strtotime('30-4-2018') ) {
+        if ( time() > strtotime( '30-4-2018' ) ) {
             return;
         }
 
@@ -37,14 +41,12 @@ class Promotion {
         }
 
         $offer_msg = sprintf( __( '<p><strong class="highlight-text" style="font-size: 18px">It\'s Our Birthday <span class="erp-cake" style="font-size: 20px"> &#x1F382;</span>
-                                        But You Get The Present <span class="erp-gift" style="font-size: 20px"> &#x1F381;</span> </strong><br>
-                                        Get 33&#37; Discount with coupon:
-                                        <a target="_blank" href="%1$s"><strong> Birthday2018 </strong></a>
-                                        <br>
-                                        Offer ending soon!
-                                    </p>', 'erp' ), 'https://wperp.com/in/wordpress-erp-3rd-birthday' );
-
-        ?>
+                But You Get The Present <span class="erp-gift" style="font-size: 20px"> &#x1F381;</span> </strong><br>
+                Get 33&#37; Discount with coupon:
+                <a target="_blank" href="%1$s"><strong> Birthday2018 </strong></a>
+                <br>
+                Offer ending soon!
+            </p>', 'erp' ), 'https://wperp.com/in/wordpress-erp-3rd-birthday' ); ?>
             <div class="notice is-dismissible" id="erp-promotional-offer-notice">
                 <table>
                     <tbody>
@@ -180,14 +182,13 @@ class Promotion {
         <?php
     }
 
-
-   /**
-    * Dismiss promotion notice
-    *
-    * @since  2.5
-    *
-    * @return void
-    */
+    /*
+     * Dismiss promotion notice
+     *
+     * @since  2.5
+     *
+     * @return void
+     */
 //    public function dismiss_promotional_offer() {
 //         if ( ! empty( $_POST['dismissed'] ) ) {
 //             $offer_key = 'erp_birthday2018_promotional_offer_notice';

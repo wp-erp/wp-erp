@@ -1,19 +1,20 @@
 <?php
+
 namespace WeDevs\ERP\HRM;
 
-use \WeDevs\ERP\HRM\Models\Leave;
+use WeDevs\ERP\HRM\Models\Leave;
+use WP_List_Table;
 
 /**
  * List table class
  */
-class Leave_Policy_Name_List_Table extends \WP_List_Table {
-
-    function __construct() {
-        parent::__construct( array(
+class Leave_Policy_Name_List_Table extends WP_List_Table {
+    public function __construct() {
+        parent::__construct( [
             'singular' => 'type',
             'plural'   => 'types',
-            'ajax'     => false
-        ) );
+            'ajax'     => false,
+        ] );
 
         $this->table_css();
     }
@@ -23,7 +24,7 @@ class Leave_Policy_Name_List_Table extends \WP_List_Table {
      *
      * @return void
      */
-    function no_items() {
+    public function no_items() {
         esc_html_e( 'No leave types found.', 'erp' );
     }
 
@@ -32,10 +33,10 @@ class Leave_Policy_Name_List_Table extends \WP_List_Table {
      *
      * @return array
      */
-    function get_bulk_actions() {
-        $actions = array(
+    public function get_bulk_actions() {
+        $actions = [
             'delete'  => __( 'Delete', 'erp' ),
-        );
+        ];
 
         return $actions;
     }
@@ -43,12 +44,12 @@ class Leave_Policy_Name_List_Table extends \WP_List_Table {
     /**
      * Default column values if no callback found
      *
-     * @param  object  $item
-     * @param  string  $column_name
+     * @param object $item
+     * @param string $column_name
      *
      * @return string
      */
-    function column_default( $item, $column_name ) {
+    public function column_default( $item, $column_name ) {
         switch ( $column_name ) {
             case 'name':
                 return stripslashes( $item->name );
@@ -69,13 +70,13 @@ class Leave_Policy_Name_List_Table extends \WP_List_Table {
      *
      * @return array
      */
-    function get_columns() {
-        $columns = array(
+    public function get_columns() {
+        $columns = [
             'cb'          => '<input type="checkbox" />',
             'name'        => esc_html__( 'Leave Type', 'erp' ),
             'description' => esc_html__( 'Description', 'erp' ),
             'created_at'  => esc_html__( 'Created At', 'erp' ),
-        );
+        ];
 
         return $columns;
     }
@@ -83,27 +84,27 @@ class Leave_Policy_Name_List_Table extends \WP_List_Table {
     /**
      * Render the employee name column
      *
-     * @param  object  $item
+     * @param object $item
      *
      * @return string
      */
-    function column_name( $item ) {
-        $actions = array();
+    public function column_name( $item ) {
+        $actions = [];
 
-        $params = array(
+        $params = [
             'page'        => 'erp-hr',
             'section'     => 'leave',
             'sub-section' => 'policies',
             'type'        => 'policy-name',
-            'id'          => $item->id
-        );
+            'id'          => $item->id,
+        ];
 
         $params['action'] = 'edit';
-        $edit_url = add_query_arg( $params, admin_url( 'admin.php' ) );
+        $edit_url         = add_query_arg( $params, admin_url( 'admin.php' ) );
 
-        $params['action'] = 'delete';
+        $params['action']   = 'delete';
         $params['_wpnonce'] = wp_create_nonce( 'delete_policy_name' );
-        $delete_url = add_query_arg( $params, admin_url( 'admin.php' ) );
+        $delete_url         = add_query_arg( $params, admin_url( 'admin.php' ) );
 
         $actions['edit']   = sprintf( '<a href="%s" data-id="%d">%s</a>', $edit_url, $item->id, esc_html__( 'Edit', 'erp' ) );
         $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d">%s</a>', $delete_url, $item->id, esc_html__( 'Delete', 'erp' ) );
@@ -114,11 +115,11 @@ class Leave_Policy_Name_List_Table extends \WP_List_Table {
     /**
      * Render the checkbox column
      *
-     * @param  object  $item
+     * @param object $item
      *
      * @return string
      */
-    function column_cb( $item ) {
+    public function column_cb( $item ) {
         return sprintf(
             '<input type="checkbox" name="ids[]" value="%s" />', $item->id
         );
@@ -155,15 +156,14 @@ class Leave_Policy_Name_List_Table extends \WP_List_Table {
      *
      * @return void
      */
-    function prepare_items() {
+    public function prepare_items() {
         $this->process_bulk_action();
 
         $columns               = $this->get_columns();
-        $hidden                = array();
-        $this->_column_headers = array( $columns, $hidden );
+        $hidden                = [];
+        $this->_column_headers = [ $columns, $hidden ];
 
         $this->counts = Leave::count();
         $this->items  = Leave::all();
     }
-
 }

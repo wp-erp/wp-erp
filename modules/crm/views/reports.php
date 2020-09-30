@@ -10,7 +10,7 @@
             $sections = count( $reports );
 
             if ( $sections ) {
-                $left_column = array_slice( $reports, 0, $sections / 2 );
+                $left_column  = array_slice( $reports, 0, $sections / 2 );
                 $right_column = array_slice( $reports, $sections / 2 );
             }
         ?>
@@ -29,7 +29,7 @@
                     </div>
                 </div><!-- .postbox -->
             <?php
-                }
+            }
             ?>
 
             </div><!-- .meta-box-sortables -->
@@ -42,8 +42,7 @@
             foreach ( $right_column as $key => $report ) {
                 if ( empty( $report['title'] ) ) {
                     return;
-                }
-                ?>
+                } ?>
                 <div class="postbox">
                     <h2 class="hndle"><span><?php echo esc_html( $report['title'] ); ?></span></h2>
                     <div class="inside">
@@ -52,7 +51,7 @@
                     </div>
                 </div><!-- .postbox -->
             <?php
-                }
+            }
             ?>
 
             </div><!-- .meta-box-sortables -->

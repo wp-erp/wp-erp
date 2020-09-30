@@ -12,3 +12,4 @@ debug.log
 plugin-deploy.sh
 package-lock.json
 .env
+phpcs-report.txt

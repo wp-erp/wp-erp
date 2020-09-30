@@ -2,18 +2,17 @@
 
 namespace WeDevs\ERP\Accounting\API;
 
-use WP_REST_Server;
-use WP_REST_Response;
 use WeDevs\ERP\HRM\Employee;
-use WeDevs\ERP\HRM\Models\Department;
-use WeDevs\ERP\HRM\Models\Designation;
 use WP_Error;
+use WP_REST_Response;
+use WP_REST_Server;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
 
 class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
+
     /**
      * Endpoint namespace.
      *
@@ -36,51 +35,50 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
             $this->namespace,
             '/' . $this->rest_base,
             [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_employees' ],
-					'args'                => $this->get_collection_params(),
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_view_list' );
-					},
-				],
-				'schema' => [ $this, 'get_public_item_schema' ],
-			]
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_employees' ],
+                    'args'                => $this->get_collection_params(),
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_view_list' );
+                    },
+                ],
+                'schema' => [ $this, 'get_public_item_schema' ],
+            ]
         );
 
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base . '/(?P<id>[\d]+)',
             [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_employee' ],
-					'args'                => [
-						'context' => $this->get_context_param( [ 'default' => 'view' ] ),
-					],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_list_employee' );
-					},
-				],
-				'schema' => [ $this, 'get_public_item_schema' ],
-			]
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_employee' ],
+                    'args'                => [
+                        'context' => $this->get_context_param( [ 'default' => 'view' ] ),
+                    ],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_list_employee' );
+                    },
+                ],
+                'schema' => [ $this, 'get_public_item_schema' ],
+            ]
         );
 
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/transactions',
             [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_transactions' ],
-					'args'                => $this->get_collection_params(),
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_view_list' );
-					},
-				],
-			]
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_transactions' ],
+                    'args'                => $this->get_collection_params(),
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_view_list' );
+                    },
+                ],
+            ]
         );
-
     }
 
     /**
@@ -88,7 +86,7 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @param $request
      *
-     * @return mixed|object|\WP_REST_Response
+     * @return mixed|object|WP_REST_Response
      */
     public function get_employees( $request ) {
         $args = [
@@ -178,11 +176,11 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Prepare a single user output for response
      *
-     * @param array|object $item
+     * @param array|object          $item
      * @param \WP_REST_Request|null $request
-     * @param array $additional_fields
+     * @param array                 $additional_fields
      *
-     * @return mixed|object|\WP_REST_Response
+     * @return mixed|object|WP_REST_Response
      */
     public function prepare_item_for_response( $item, $request = null, $additional_fields = [] ) {
         $item     = $item->data;
@@ -206,11 +204,11 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Prepare a single employee output for response
      *
-     * @param array|object $item
+     * @param array|object          $item
      * @param \WP_REST_Request|null $request
-     * @param array $additional_fields
+     * @param array                 $additional_fields
      *
-     * @return mixed|object|\WP_REST_Response
+     * @return mixed|object|WP_REST_Response
      */
     public function prepare_employee_item_for_response( $item, $request = null, $additional_fields = [] ) {
         // Wrap the data in a response object
@@ -224,7 +222,7 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Prepare a single item for create or update
      *
-     * @param \WP_REST_Request $request Request object.
+     * @param \WP_REST_Request $request request object
      *
      * @return array $prepared_item
      */
@@ -381,13 +379,13 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['postal_code'] ) ) {
             $prepared_item['personal']['postal_code'] = $request['postal_code'];
         }
+
         if ( isset( $request['photo_id'] ) ) {
             $prepared_item['personal']['photo_id'] = $request['photo_id'];
         }
 
         return $prepared_item;
     }
-
 
     /**
      * Get the query params for collections.
@@ -422,5 +420,4 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
             ],
         ];
     }
-
 }

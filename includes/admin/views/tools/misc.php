@@ -19,15 +19,15 @@
                             <label for="to"><?php esc_html_e( 'To', 'erp' ); ?> <span class="required">*</span></label>
                         </th>
                         <td>
-                            <?php erp_html_form_input([
+                            <?php erp_html_form_input( [
                                 'type'        => 'email',
                                 'name'        => 'to',
                                 'value'       => wp_get_current_user()->user_email,
                                 'placeholder' => 'recipient@domain.com',
                                 'custom_attr' => [
-                                    'size' => 40
-                                ]
-                            ]); ?>
+                                    'size' => 40,
+                                ],
+                            ] ); ?>
                         </td>
                     </tr>
                     <tr>
@@ -41,15 +41,15 @@
                                 $from_name  = ( ! empty( $email_settings['from_name'] ) ) ? $email_settings['from_name'] : $current_user->display_name;
                                 $from_email = ( ! empty( $email_settings['from_email'] ) ) ? $email_settings['from_email'] : get_option( 'admin_email' );
 
-                                erp_html_form_input([
+                                erp_html_form_input( [
                                     'type'        => 'text',
                                     'name'        => 'from',
                                     'value'       => sprintf( '%s <%s>', esc_html( $from_name ), esc_html( $from_email ) ),
                                     'custom_attr' => [
                                         'readonly' => 'readonly',
-                                        'size'     => 40
-                                    ]
-                                ]);
+                                        'size'     => 40,
+                                    ],
+                                ] );
                             ?>
                         </td>
                     </tr>
@@ -58,15 +58,15 @@
                             <label for="body"><?php esc_html_e( 'Message', 'erp' ); ?></label>
                         </th>
                         <td>
-                            <?php erp_html_form_input([
+                            <?php erp_html_form_input( [
                                 'type'        => 'textarea',
                                 'name'        => 'body',
                                 'placeholder' => esc_html__( 'Leave blank to send default texts', 'erp' ),
                                 'custom_attr' => [
                                     'cols' => 45,
-                                    'rows' => 6
-                                ]
-                            ]); ?>
+                                    'rows' => 6,
+                                ],
+                            ] ); ?>
                         </td>
                     </tr>
                 </tbody>

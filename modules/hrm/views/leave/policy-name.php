@@ -1,11 +1,11 @@
 <?php
 
-$id = isset( $_GET['id'] ) ? absint( wp_unslash( $_GET['id'] ) ) : 0;
-$submit_button = esc_attr('Save', 'erp');
+$id            = isset( $_GET['id'] ) ? absint( wp_unslash( $_GET['id'] ) ) : 0;
+$submit_button = esc_attr( 'Save', 'erp' );
 
 if ( $id ) {
-    $leave = \WeDevs\ERP\HRM\Models\Leave::find( $id );
-    $submit_button = esc_attr('Update', 'erp');
+    $leave         = \WeDevs\ERP\HRM\Models\Leave::find( $id );
+    $submit_button = esc_attr( 'Update', 'erp' );
 }
 
 ?>
@@ -22,8 +22,10 @@ if ( $id ) {
 
                 <!-- show error message -->
                 <?php global $policy_name_create_error;
+
                     if ( isset( $policy_name_create_error ) && count( $policy_name_create_error->errors ) ) {
                         echo '<ul>';
+
                         foreach ( $policy_name_create_error->get_error_messages() as $error ) {
                             echo '<li style="color: #ef5350">* ' . $error . '</li>';
                         }
@@ -32,27 +34,27 @@ if ( $id ) {
                 ?>
 
                 <div class="form-field">
-                    <?php erp_html_form_input( array(
+                    <?php erp_html_form_input( [
                         'label'       => esc_html__( 'Leave Type', 'erp' ),
                         'name'        => 'name',
                         'value'       => empty( $leave ) ? '' : $leave->name,
                         'required'    => true,
                         'help'        => esc_html__( 'Unique leave type eg: Annual Leave, Casual Leave etc.', 'erp' ),
-                        'placeholder' => 'Annual leave'
-                    ) ); ?>
+                        'placeholder' => 'Annual leave',
+                    ] ); ?>
                 </div>
 
                 <div class="form-field">
-                    <?php erp_html_form_input( array(
+                    <?php erp_html_form_input( [
                         'label'       => esc_html__( 'Description', 'erp' ),
                         'type'        => 'textarea',
                         'name'        => 'description',
                         'value'       => empty( $leave ) ? '' : $leave->description,
                         'placeholder' => esc_html__( '(optional)', 'erp' ),
                         'custom_attr' => [
-                            'rows' => 6
-                        ]
-                    ) ); ?>
+                            'rows' => 6,
+                        ],
+                    ] ); ?>
                 </div>
 
                 <?php wp_nonce_field( 'erp-leave-policy' ); ?>

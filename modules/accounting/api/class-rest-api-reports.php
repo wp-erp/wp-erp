@@ -2,15 +2,16 @@
 
 namespace WeDevs\ERP\Accounting\API;
 
-use WP_REST_Server;
-use WP_REST_Response;
 use WP_Error;
+use WP_REST_Response;
+use WP_REST_Server;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
 
 class Reports_Controller extends \WeDevs\ERP\API\REST_Controller {
+
     /**
      * Endpoint namespace.
      *
@@ -29,97 +30,95 @@ class Reports_Controller extends \WeDevs\ERP\API\REST_Controller {
      * Register the routes for the objects of the controller.
      */
     public function register_routes() {
-
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base . '/trial-balance',
             [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_trial_balance' ],
-					'args'                => [],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_view_sales_summary' );
-					},
-				],
-			]
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_trial_balance' ],
+                    'args'                => [],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_view_sales_summary' );
+                    },
+                ],
+            ]
         );
 
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base . '/ledger-report',
             [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_ledger_report' ],
-					'args'                => [],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_view_sales_summary' );
-					},
-				],
-			]
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_ledger_report' ],
+                    'args'                => [],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_view_sales_summary' );
+                    },
+                ],
+            ]
         );
 
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base . '/sales-tax-report',
             [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_sales_tax_report' ],
-					'args'                => [],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_view_sales_summary' );
-					},
-				],
-			]
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_sales_tax_report' ],
+                    'args'                => [],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_view_sales_summary' );
+                    },
+                ],
+            ]
         );
 
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base . '/income-statement',
             [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_income_statement' ],
-					'args'                => [],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_view_sales_summary' );
-					},
-				],
-			]
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_income_statement' ],
+                    'args'                => [],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_view_sales_summary' );
+                    },
+                ],
+            ]
         );
 
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base . '/balance-sheet',
             [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_balance_sheet' ],
-					'args'                => [],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_view_sales_summary' );
-					},
-				],
-			]
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_balance_sheet' ],
+                    'args'                => [],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_view_sales_summary' );
+                    },
+                ],
+            ]
         );
 
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base . '/closest-fn-year',
             [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_closest_fn_year' ],
-					'args'                => [],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_view_sales_summary' );
-					},
-				],
-			]
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_closest_fn_year' ],
+                    'args'                => [],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_view_sales_summary' );
+                    },
+                ],
+            ]
         );
-
     }
 
     /**
@@ -273,9 +272,9 @@ class Reports_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Get closest financial year
      *
-     * @param WP_REST_Request $request Request object.
+     * @param WP_REST_Request $request request object
      *
-     * @return WP_REST_Response $response Response data.
+     * @return WP_REST_Response $response response data
      */
     public function get_closest_fn_year( $request ) {
         $data = erp_acct_get_closest_fn_year_date( date( 'Y-m-d' ) );
@@ -290,14 +289,13 @@ class Reports_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Prepare a single user output for response
      *
-     * @param object|array $item
-     * @param WP_REST_Request $request Request object.
-     * @param array $additional_fields (optional)
+     * @param object|array    $item
+     * @param WP_REST_Request $request           request object
+     * @param array           $additional_fields (optional)
      *
-     * @return WP_REST_Response $response Response data.
+     * @return WP_REST_Response $response response data
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
-
         $data = array_merge( $item, $additional_fields );
 
         // Wrap the data in a response object
@@ -307,5 +305,4 @@ class Reports_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         return $response;
     }
-
 }

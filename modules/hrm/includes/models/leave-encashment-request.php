@@ -1,19 +1,18 @@
 <?php
+
 namespace WeDevs\ERP\HRM\Models;
 
 use WeDevs\ERP\Framework\Model;
 
 /**
  * Class Leave_Encashment_Request
- *
- * @package WeDevs\ERP\HRM\Models
  */
 class Leave_Encashment_Request extends Model {
     protected $table = 'erp_hr_leave_encashment_requests';
 
     protected $fillable = [
         'user_id', 'leave_id', 'approved_by', 'approval_status_id',
-        'f_year', 'encash_days', 'forward_days', 'amount', 'total'
+        'f_year', 'encash_days', 'forward_days', 'amount', 'total',
     ];
 
     /**
@@ -84,5 +83,4 @@ class Leave_Encashment_Request extends Model {
     public function financial_year() {
         return $this->belongsTo( 'WeDevs\ERP\HRM\Models\Financial_Year', 'f_year', 'id' );
     }
-
 }

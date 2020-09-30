@@ -20,12 +20,12 @@
 
         <span class="field">
             <select name="lead" id="dept-lead">
-                <?php echo wp_kses( erp_hr_get_employees_dropdown(), array(
-                    'option' => array(
-                        'value' => array(),
-                        'selected' => array()
-                    ),
-                ) ); ?>
+                <?php echo wp_kses( erp_hr_get_employees_dropdown(), [
+                    'option' => [
+                        'value'    => [],
+                        'selected' => [],
+                    ],
+                ] ); ?>
             </select>
         </span>
     </div>
@@ -35,12 +35,12 @@
 
         <span class="field">
             <select name="parent" id="dept-parent">
-                <?php echo wp_kses( erp_hr_get_departments_dropdown(), array(
-                    'option' => array(
-                        'value' => array(),
-                        'selected' => array()
-                    ),
-                ) ); ?>
+                <?php echo wp_kses( erp_hr_get_departments_dropdown(), [
+                    'option' => [
+                        'value'    => [],
+                        'selected' => [],
+                    ],
+                ] ); ?>
             </select>
         </span>
     </div>

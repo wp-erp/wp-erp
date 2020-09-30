@@ -1,4 +1,5 @@
 <?php
+
 namespace WeDevs\ERP\HRM;
 
 use WeDevs\ERP\Framework\Traits\Hooker;
@@ -13,25 +14,25 @@ use WeDevs\ERP\Framework\Traits\Hooker;
  *  @author weDevs <info@wedevs.com>
  */
 class Announcement {
-
     use Hooker;
 
     private $post_type = 'erp_hr_announcement';
-    private $assign_type = array();
+
+    private $assign_type = [];
 
     /**
      *  Load autometically all actions
      */
-    function __construct() {
-        $this->assign_type = array(
-            ''                  => __( '-- Select --', 'erp' ),
-            'all_employee'      => __( 'All Employees', 'erp' ),
-            'selected_employee' => __( 'Selected Employee', 'erp' ),
-            'by_department'     => __( 'By Department', 'erp' ),
-            'by_designation'     => __( 'By Designation', 'erp' )
-        );
+    public function __construct() {
+        $this->assign_type = [
+            ''                   => __( '-- Select --', 'erp' ),
+            'all_employee'       => __( 'All Employees', 'erp' ),
+            'selected_employee'  => __( 'Selected Employee', 'erp' ),
+            'by_department'      => __( 'By Department', 'erp' ),
+            'by_designation'     => __( 'By Designation', 'erp' ),
+        ];
 
-        $this->action( 'init', 'post_types' ) ;
+        $this->action( 'init', 'post_types' );
         $this->action( 'do_meta_boxes', 'do_metaboxes' );
         $this->action( 'save_post', 'save_announcement_meta', 10, 2 );
 
@@ -54,7 +55,7 @@ class Announcement {
      *
      * @return void
      */
-    function filter_admin_sidebar_menu_items() {
+    public function filter_admin_sidebar_menu_items() {
         global $menu, $submenu_file, $typenow;
 
         $hr_menu = array_filter( $menu, function ( $item ) {
@@ -63,12 +64,12 @@ class Announcement {
 
         $announcement_pages = [
             'post-new.php?post_type=erp_hr_announcement',
-            'edit.php?post_type=erp_hr_announcement'
+            'edit.php?post_type=erp_hr_announcement',
         ];
 
-        if ( in_array( $submenu_file , $announcement_pages ) ) {
-            $submenu_file = 'edit.php?post_type=erp_hr_announcement';
-            $typenow = null;
+        if ( in_array( $submenu_file, $announcement_pages ) ) {
+            $submenu_file        = 'edit.php?post_type=erp_hr_announcement';
+            $typenow             = null;
             $_SERVER['PHP_SELF'] = 'erp-hr';
 
             add_filter( 'parent_file', function () {
@@ -84,11 +85,11 @@ class Announcement {
     /**
      * Fix parent file
      *
-     * @param  string  $parent_file
+     * @param string $parent_file
      *
      * @return string
      */
-    function fix_parent_file( $parent_file ) {
+    public function fix_parent_file( $parent_file ) {
         global $current_screen;
 
         if ( $current_screen->post_type == $this->post_type ) {
@@ -101,11 +102,11 @@ class Announcement {
     /**
      * Set submenu file
      *
-     * @param  string  $submenu_file
+     * @param string $submenu_file
      *
      * @return string
      */
-    function submenu_file( $submenu_file ) {
+    public function submenu_file( $submenu_file ) {
         global $current_screen;
 
         if ( $current_screen->post_type == $this->post_type ) {
@@ -122,10 +123,10 @@ class Announcement {
      *
      * @return void
      */
-    function post_types() {
+    public function post_types() {
         $capability = 'erp_hr_manager';
 
-        register_post_type( $this->post_type, array(
+        register_post_type( $this->post_type, [
             'label'               => __( 'Announcement', 'erp' ),
             'description'         => '',
             'public'              => true,
@@ -136,10 +137,10 @@ class Announcement {
             'publicly_queryable'  => false,
             'capability_type'     => 'post',
             'hierarchical'        => false,
-            'rewrite'             => array( 'slug' => '' ),
+            'rewrite'             => [ 'slug' => '' ],
             'query_var'           => false,
-            'supports'            => array( 'title', 'editor' ),
-            'capabilities'        => array(
+            'supports'            => [ 'title', 'editor' ],
+            'capabilities'        => [
                 'edit_post'          => $capability,
                 'read_post'          => $capability,
                 'delete_posts'       => $capability,
@@ -149,8 +150,8 @@ class Announcement {
                 'read_private_posts' => $capability,
                 'create_posts'       => $capability,
                 'delete_post'        => $capability,
-            ),
-            'labels'          => array(
+            ],
+            'labels'          => [
                 'name'               => __( 'Announcements', 'erp' ),
                 'singular_name'      => __( 'Announcement', 'erp' ),
                 'menu_name'          => __( 'HR Announcement', 'erp' ),
@@ -164,9 +165,9 @@ class Announcement {
                 'search_items'       => __( 'Search Announcement', 'erp' ),
                 'not_found'          => __( 'No Announcement Found', 'erp' ),
                 'not_found_in_trash' => __( 'No Announcement found in trash', 'erp' ),
-                'parent'             => __( 'Parent Announcement', 'erp' )
-            ),
-        ) );
+                'parent'             => __( 'Parent Announcement', 'erp' ),
+            ],
+        ] );
     }
 
     /**
@@ -176,18 +177,18 @@ class Announcement {
      *
      * @return void
      */
-    function do_metaboxes() {
-        add_meta_box( 'erp-hr-announcement-meta-box', __('Announcement Settings', 'erp'), array( $this, 'meta_boxes_cb' ), $this->post_type, 'advanced', 'high' );
+    public function do_metaboxes() {
+        add_meta_box( 'erp-hr-announcement-meta-box', __( 'Announcement Settings', 'erp' ), [ $this, 'meta_boxes_cb' ], $this->post_type, 'advanced', 'high' );
     }
 
     /**
      * Announcement metabox callback function
      *
-     * @param  integer $post_id
+     * @param int $post_id
      *
      * @return void
      */
-    function meta_boxes_cb( $post_id ) {
+    public function meta_boxes_cb( $post_id ) {
         global $post;
 
         $employees    = erp_hr_get_employees( [ 'number' => -1, 'no_object' => true ] );
@@ -199,19 +200,17 @@ class Announcement {
         $announce_departments     = get_post_meta( $post->ID, '_announcement_department', true );
         $announce_designations    = get_post_meta( $post->ID, '_announcement_designation', true );
 
-        $announcement_employee    = ( $announcement_users )    ? $announcement_users    : array();
-        $announcement_department  = ( $announce_departments )  ? $announce_departments  : array();
-        $announcement_designation = ( $announce_designations ) ? $announce_designations : array();
-
-        ?>
+        $announcement_employee    = ( $announcement_users ) ? $announcement_users : [];
+        $announcement_department  = ( $announce_departments ) ? $announce_departments : [];
+        $announcement_designation = ( $announce_designations ) ? $announce_designations : []; ?>
             <table class="form-table erp-hr-announcement-meta-wrap-table">
                 <tr>
                     <th><?php esc_html_e( 'Send Announcement To', 'erp' ); ?></th>
                     <td>
                         <select name="hr_announcement_assign_type" id="hr_announcement_assign_type" style="width:60%">
-                            <?php foreach ( $this->assign_type as $key => $type ): ?>
+                            <?php foreach ( $this->assign_type as $key => $type ) { ?>
                                 <option value="<?php echo esc_attr( $key ); ?>" <?php selected( $announcement_type, $key ); ?>><?php echo esc_attr( $type ); ?></option>
-                            <?php endforeach ?>
+                            <?php } ?>
                         </select>
                     </td>
                 </tr>
@@ -224,13 +223,10 @@ class Announcement {
                             foreach ( $employees as $user ) {
                                 if ( $user->user_id == get_current_user_id() ) {
                                     continue;
-                                }
-
-                                ?>
-                                    <option <?php echo in_array( $user->user_id, $announcement_employee ) ? 'selected="selected"' : ''; ?> value='<?php echo esc_attr( $user->user_id );  ?>'><?php echo esc_html( $user->display_name ); ?></option>
+                                } ?>
+                                    <option <?php echo in_array( $user->user_id, $announcement_employee ) ? 'selected="selected"' : ''; ?> value='<?php echo esc_attr( $user->user_id ); ?>'><?php echo esc_html( $user->display_name ); ?></option>
                                 <?php
-                            }
-                            ?>
+                            } ?>
                         </select>
                     </td>
                 </tr>
@@ -244,8 +240,7 @@ class Announcement {
                                 ?>
                                 <option <?php echo in_array( $department->id, $announcement_department ) ? 'selected="selected"' : ''; ?> value='<?php echo esc_attr( $department->id ); ?>'><?php echo esc_html( $department->title ); ?></option>
                                 <?php
-                            }
-                            ?>
+                            } ?>
                         </select>
                     </td>
                 </tr>
@@ -259,8 +254,7 @@ class Announcement {
                                 ?>
                                 <option <?php echo in_array( $designation->id, $announcement_designation ) ? 'selected="selected"' : ''; ?> value='<?php echo esc_attr( $designation->id ); ?>'><?php echo esc_html( $designation->title ); ?></option>
                                 <?php
-                            }
-                            ?>
+                            } ?>
                         </select>
                     </td>
                 </tr>
@@ -351,7 +345,7 @@ class Announcement {
      *
      * @param array $columns
      */
-    function add_type_columns( $columns ) {
+    public function add_type_columns( $columns ) {
         unset( $columns['date'] );
 
         $columns['assign_type'] = __( 'Sent To', 'erp' );
@@ -366,12 +360,12 @@ class Announcement {
      *
      * @since  0.1
      *
-     * @param  string $column
-     * @param  integer $post_id
+     * @param string $column
+     * @param int    $post_id
      *
      * @return void
      */
-    function assign_type_edit_columns( $column, $post_id ) {
+    public function assign_type_edit_columns( $column, $post_id ) {
         global $post;
 
         if ( $column == 'assign_type' ) {
@@ -396,13 +390,12 @@ class Announcement {
      *
      * @since  0.1
      *
-     * @param  integer $post_id
-     * @param  object $post
+     * @param int    $post_id
+     * @param object $post
      *
      * @return void
      */
-    function save_announcement_meta( $post_id, $post ) {
-
+    public function save_announcement_meta( $post_id, $post ) {
         if ( ! isset( $_POST['hr_announcement_meta_action_nonce'] ) ) {
             return $post_id;
         }
@@ -425,10 +418,10 @@ class Announcement {
             return $post_id;
         }
 
-        $type         = ( isset( $_POST['hr_announcement_assign_type'] ) ) ? sanitize_text_field( wp_unslash( $_POST['hr_announcement_assign_type'] ) ): '';
-        $employees    = ( isset( $_POST['hr_announcement_assign_employee'] ) ) ? array_map( 'sanitize_text_field', $_POST['hr_announcement_assign_employee'] ) : array();
-        $departments  = ( isset( $_POST['hr_announcement_assign_department'] ) ) ? array_map( 'sanitize_text_field', $_POST['hr_announcement_assign_department'] ) : array();
-        $designations = ( isset( $_POST['hr_announcement_assign_designation'] ) ) ? array_map( 'sanitize_text_field', $_POST['hr_announcement_assign_designation'] ) : array();
+        $type         = ( isset( $_POST['hr_announcement_assign_type'] ) ) ? sanitize_text_field( wp_unslash( $_POST['hr_announcement_assign_type'] ) ) : '';
+        $employees    = ( isset( $_POST['hr_announcement_assign_employee'] ) ) ? array_map( 'sanitize_text_field', $_POST['hr_announcement_assign_employee'] ) : [];
+        $departments  = ( isset( $_POST['hr_announcement_assign_department'] ) ) ? array_map( 'sanitize_text_field', $_POST['hr_announcement_assign_department'] ) : [];
+        $designations = ( isset( $_POST['hr_announcement_assign_designation'] ) ) ? array_map( 'sanitize_text_field', $_POST['hr_announcement_assign_designation'] ) : [];
 
         if ( $type == 'by_department' ) {
             $selected = $departments;
@@ -438,7 +431,7 @@ class Announcement {
             $selected = $employees;
         }
 
-		// Assign / Send announcements to the selected group
+        // Assign / Send announcements to the selected group
         erp_hr_assign_announcements_to_employees( $post_id, $type, $selected );
 
         //Redirect to announment list page
@@ -447,5 +440,4 @@ class Announcement {
 
         //do_action( 'hr_annoucement_save', $post_id, $selected );
     }
-
 }
