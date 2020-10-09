@@ -109,6 +109,7 @@ class Ajax_Handler {
      * Get all contact
      *
      * @since 1.1.0
+     * @since 1.6.7 fixed '<' charecter being encoded to '&lt;'
      *
      * @return json
      */
@@ -173,6 +174,11 @@ class Ajax_Handler {
 
         if ( isset( $_REQUEST['erpadvancefilter'] ) && ! empty( $_REQUEST['erpadvancefilter'] ) ) {
             $args['erpadvancefilter'] = sanitize_text_field( wp_unslash( $_REQUEST['erpadvancefilter'] ) );
+
+            // after sanitization, '<' gets encoded, so decoding it back
+            if ( strpos( $args['erpadvancefilter'], '&lt;' ) !== false ) {
+                $args['erpadvancefilter'] = str_replace( '&lt;', '<',  $args['erpadvancefilter'] );
+            }
         }
 
         if ( isset( $_REQUEST['filter_contact_company'] ) && ! empty( $_REQUEST['filter_contact_company'] ) ) {
