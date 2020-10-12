@@ -404,6 +404,10 @@
             font-size: 24.5px;
         }
 
+        .erp_pro_addons_wrapper .banner_section .image-item[class] {
+            margin-right: 0;
+        }
+
         .button-wrap[class] img {
             width: auto;
         }
@@ -696,8 +700,12 @@
         border-radius: 5px;
         display: flex;
         align-items: center;
-        justify-content: space-around;
         height: 364px;
+        padding: 0 49px;
+    }
+
+    .erp_pro_addons_wrapper .banner_section .image-item {
+        margin-right: 35px;
     }
 
     .erp_pro_addons_wrapper .banner_section img {
