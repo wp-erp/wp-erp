@@ -3731,10 +3731,9 @@ function erp_is_valid_age( $age ) {
  * @return bool
  */
 function erp_is_valid_date( $date ) {
-    $date_formatted = date( 'm-d-Y', strtotime( $date ) );
-    $date_arr       = explode( '-', $date_formatted );
+    $date_arr  = explode( '-', $date );
 
-    if ( count( $date_arr ) === 3 && checkdate( $date_arr[0], $date_arr[1], $date_arr[2] ) ) {
+    if ( count( $date_arr ) === 3 && checkdate( $date_arr[2], $date_arr[1], $date_arr[0] ) ) {
         return true;
     }
 

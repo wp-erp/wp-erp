@@ -530,7 +530,7 @@ function erp_insert_people( $args = [], $return_object = false ) {
         return new WP_Error( 'invalid-life-stage', esc_attr__( 'Please select a valid life stage', 'erp' ) );
     }
 
-    if ( ! empty( $args['phone'] ) && ! preg_match( "/^\+?(?:[0-9]( |-)?){6,14}[0-9]$/", $args['phone'] ) ) {
+    if ( ! empty( $args['phone'] ) && ! erp_is_valid_contact_no( $args['phone'] ) ) {
         return new WP_Error( 'invalid-phone', esc_attr__( 'Please provide a valid phone number', 'erp' ) );
     }
 
