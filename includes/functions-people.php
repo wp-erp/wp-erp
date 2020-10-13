@@ -422,6 +422,7 @@ function erp_get_people_by( $field, $value ) {
  * @since 1.2.7  contact_owner, life_stage, hash brought to main table
  * @since 1.2.7  Assign first name as company name for accounting customer search
  * @since 1.3.13 Pass $people_type in create and update people hooks
+ * @since 1.6.7 added validation for almost all input fields
  *
  * @param array $args erp_insert_people
  *
@@ -494,23 +495,75 @@ function erp_insert_people( $args = [], $return_object = false ) {
 
     if ( 'contact' == $people_type ) {
         if ( empty( $args['user_id'] ) ) {
-            // Check if contact first name or email or phone provided or not
+            // Check if contact first name or email or phone provided or not or provided name is valid
             if ( empty( $args['first_name'] ) || empty( $args['email'] ) ) {
                 return new WP_Error( 'no-basic-data', esc_attr__( 'You must need to fill up both first name and email fields', 'erp' ) );
+            } else {
+                if ( ! erp_is_valid_name( $args['first_name'] ) ) {
+                    return new WP_Error( 'invalid-first-name', esc_attr__( 'Please provide a valid first name', 'erp' ) );
+                }
+
+                if ( ! empty( $args['last_name'] ) && ! erp_is_valid_name( $args['last_name'] ) ) {
+                    return new WP_Error( 'invalid-last-name', esc_attr__( 'Please provide a valid last name', 'erp' ) );
+                }
             }
         }
     }
 
-    // Check if company name provide or not
+    // Check if company name provide or not or provided name is valid
     if ( 'company' == $people_type ) {
         if ( empty( $args['company'] ) || empty( $args['email'] ) ) {
             return new WP_Error( 'no-company', esc_attr__( 'You must need to fill up both Company name and email fields', 'erp' ) );
+        } else {
+            if ( ! erp_is_valid_company( $args['company'] ) ) {
+                return new WP_Error( 'invalid-company', esc_attr__( 'Please provide a valid company name', 'erp' ) );
+            }
         }
     }
 
     // Check if not empty and valid email
     if ( ! empty( $args['email'] ) && ! is_email( $args['email'] ) ) {
-        return new WP_Error( 'invalid-email', __( 'Please provide a valid email address', 'erp' ) );
+        return new WP_Error( 'invalid-email', esc_attr__( 'Please provide a valid email address', 'erp' ) );
+    }
+
+    if ( ! empty( $args['life_stage'] ) && ! array_key_exists( $args['life_stage'], erp_crm_get_life_stages_dropdown_raw() ) ) {
+        return new WP_Error( 'invalid-life-stage', esc_attr__( 'Please select a valid life stage', 'erp' ) );
+    }
+
+    if ( ! empty( $args['phone'] ) && ! preg_match( "/^\+?(?:[0-9]( |-)?){6,14}[0-9]$/", $args['phone'] ) ) {
+        return new WP_Error( 'invalid-phone', esc_attr__( 'Please provide a valid phone number', 'erp' ) );
+    }
+
+    if ( ! empty( $args['date_of_birth'] ) && ! erp_is_valid_date( $args['date_of_birth'] ) ) {
+        return new WP_Error( 'invalid-date-of-birth', esc_attr__( 'Please provide a valid date of birth', 'erp' ) );
+    }
+
+    if ( ! empty( $args['contact_age'] ) && ! erp_is_valid_age( $args['contact_age'] ) ) {
+        return new WP_Error( 'invalid-age', esc_attr__( 'Please provide a valid age', 'erp' ) );
+    }
+
+    if ( ! empty( $args['mobile'] ) && ! erp_is_valid_contact_no( $args['mobile'] ) ) {
+        return new WP_Error( 'invalid-mobile', esc_attr__( 'Please provide a valid mobile number', 'erp' ) );
+    }
+
+    if ( ! empty( $args['website'] ) && ! erp_is_valid_url( $args['website'] ) ) {
+        return new WP_Error( 'invalid-website', esc_attr__( 'Please provide a valid website', 'erp' ) );
+    }
+
+    if ( ! empty( $args['fax'] ) && ! erp_is_valid_contact_no( $args['fax'] ) ) {
+        return new WP_Error( 'invalid-fax', esc_attr__( 'Please provide a valid fax number', 'erp' ) );
+    }
+
+    if ( ! empty( $args['city'] ) && ! erp_is_valid_name( $args['city'] ) ) {
+        return new WP_Error( 'invalid-city', esc_attr__( 'Please provide a valid city name', 'erp' ) );
+    }
+
+    if ( ! empty( $args['postal_code'] ) && ! erp_is_valid_zip_code( $args['postal_code'] ) ) {
+        return new WP_Error( 'invalid-postal-code', esc_attr__( 'Please provide a valid postal code', 'erp' ) );
+    }
+
+    if ( ! empty( $args['source'] ) && ! array_key_exists( $args['source'], erp_crm_contact_sources() ) ) {
+        return new WP_Error( 'invalid-contact-source', esc_attr__( 'Please select a valid contact source', 'erp' ) );
     }
 
     $errors = apply_filters( 'erp_people_validation_error', [], $args );

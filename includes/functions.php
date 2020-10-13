@@ -3675,3 +3675,133 @@ function erp_is_timestamp( $string ) {
 
     return true;
 }
+
+/**
+ * Validates people's name
+ *
+ * @since 1.6.7
+ *
+ * @param string $name
+ *
+ * @return bool
+ */
+function erp_is_valid_name( $name ) {
+    return ctype_alpha( iconv( "UTF-8", "ISO-8859-1", preg_replace( '/\s/', '', $name ) ) );
+}
+
+/**
+ * Validates company's name
+ *
+ * @since 1.6.7
+ *
+ * @param string $company
+ *
+ * @return bool
+ */
+function erp_is_valid_company( $company ) {
+    return preg_match( "/^[A-Z0-9][ ._\-A-Z0-9]+$/i", $company );
+}
+
+/**
+ * Validates customer's age
+ *
+ * @since 1.6.7
+ *
+ * @param string $age
+ *
+ * @return bool
+ */
+function erp_is_valid_age( $age ) {
+    if ( preg_match( "/^[1-9]{2,3}$/", $age ) ) {
+        if ( intval( $age ) >= 16 && intval( $age ) <= 150 ) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+/**
+ * Validates date
+ *
+ * @since 1.6.7
+ *
+ * @param string $date
+ *
+ * @return bool
+ */
+function erp_is_valid_date( $date ) {
+    $date_formatted = date( 'm-d-Y', strtotime( $date ) );
+    $date_arr       = explode( '-', $date_formatted );
+
+    if ( count( $date_arr ) === 3 && checkdate( $date_arr[0], $date_arr[1], $date_arr[2] ) ) {
+        return true;
+    }
+
+    return false;
+}
+
+/**
+ * Validates mobile, phone, fax
+ *
+ * @since 1.6.7
+ *
+ * @param string $contact_no
+ *
+ * @return bool
+ */
+function erp_is_valid_contact_no( $contact_no ) {
+    return preg_match( "/^\+?(?:[0-9]( |-)?){6,14}[0-9]$/", $contact_no );
+}
+
+/**
+ * Validates zip code
+ *
+ * @since 1.6.7
+ *
+ * @param string $zip_code
+ *
+ * @return bool
+ */
+function erp_is_valid_zip_code( $zip_code ) {
+    return preg_match( "/^[A-Z0-9][ \-A-Z0-9]{3,8}+$/", $zip_code );
+}
+
+/**
+ * Validates website url
+ *
+ * @since 1.6.7
+ *
+ * @param string $url
+ *
+ * @return bool
+ */
+function erp_is_valid_url( $url ) {
+    return filter_var( $url, FILTER_VALIDATE_URL );
+}
+
+/**
+ * Validates employee id
+ *
+ * @since 1.6.7
+ *
+ * @param string $emp_id
+ *
+ * @return bool
+ */
+function erp_is_valid_employee_id( $emp_id ) {
+    return preg_match( "/^[A-Z0-9][\-A-Z0-9]+$/i", $emp_id );
+}
+
+/**
+ * Validates currency amount
+ *
+ * @since 1.6.7
+ *
+ * @param string $amount
+ *
+ * @return bool
+ */
+function erp_is_valid_currency_amount( $amount ) {
+    return preg_match( "/^[1-9](?:,?[0-9])*(?:.[0-9]{4})?$/", $amount );
+}
