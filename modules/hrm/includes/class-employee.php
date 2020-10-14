@@ -293,7 +293,7 @@ class Employee {
             }
         }
 
-        if ( ! empty( $data['personal']['employee_id'] ) && ! erp_is_valid_name( $data['personal']['employee_id'] ) ) {
+        if ( ! empty( $data['personal']['employee_id'] ) && ! erp_is_valid_employee_id( $data['personal']['employee_id'] ) ) {
             return new WP_Error( 'invalid-employee-id', esc_attr__( 'Please provide a valid employee id', 'erp' ) );
         }
 
@@ -345,7 +345,7 @@ class Employee {
             return new WP_Error( 'invalid-pay-type', esc_attr__( 'Please select a valid pay type', 'erp' ) );
         }
 
-        if ( ! empty( $data['work']['work_phone'] ) && ! erp_is_valid_contact_no( $data['work']['work_phone'] ) ) {
+        if ( ! empty( $data['personal']['work_phone'] ) && ! erp_is_valid_contact_no( $data['personal']['work_phone'] ) ) {
             return new WP_Error( 'invalid-work-phone', esc_attr__( 'Please provide a valid work phone number', 'erp' ) );
         }
 
