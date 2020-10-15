@@ -820,10 +820,13 @@ class Employee {
      * @return mixed|string
      */
     public function get_department( $context = 'edit' ) {
+
         if ( $this->is_employee() && isset( $this->erp_user->department ) ) {
-            if ( $context == 'edit' ) {
+
+            if ( $context === 'edit' ) {
                 return $this->erp_user->department;
             }
+
             $department = HRDepartment::find( $this->department );
 
             if ( $department ) {
@@ -860,10 +863,13 @@ class Employee {
      * @return int
      */
     public function get_location( $context = 'edit' ) {
+
         if ( $this->is_employee() && isset( $this->erp_user->location ) ) {
-            if ( $context == 'edit' ) {
+
+            if ( $context === 'edit' ) {
                 return $this->erp_user->location;
             }
+
             $location = Company_Locations::find( $this->location );
 
             if ( $location ) {
@@ -878,12 +884,14 @@ class Employee {
      * @return string
      */
     public function get_status( $context = 'edit' ) {
+
         if ( isset( $this->erp_user->status ) ) {
             $status = $this->erp_user->status;
 
-            if ( $context == 'edit' ) {
+            if ( $context === 'edit' ) {
                 return $status;
             }
+
             $statuses = erp_hr_get_employee_statuses();
 
             if ( array_key_exists( $status, $statuses ) ) {
@@ -900,10 +908,11 @@ class Employee {
      * @return mixed
      */
     public function get_type( $context = 'edit' ) {
+
         if ( $this->is_employee() && isset( $this->erp_user->type ) ) {
             $type = $this->erp_user->type;
 
-            if ( $context == 'edit' ) {
+            if ( $context === 'edit' ) {
                 return $type;
             }
 
@@ -921,10 +930,13 @@ class Employee {
      * @return string
      */
     public function get_hiring_source( $context = 'edit' ) {
+
         if ( $this->is_employee() && ! empty( $this->erp_user->hiring_source ) ) {
-            if ( $context == 'edit' ) {
+
+            if ( $context === 'edit' ) {
                 return $this->erp_user->hiring_source;
             }
+
             $sources = erp_hr_get_employee_sources();
 
             if ( array_key_exists( $this->erp_user->hiring_source, $sources ) ) {
@@ -939,10 +951,13 @@ class Employee {
      * @return string
      */
     public function get_gender( $context = 'edit' ) {
+
         if ( $this->is_employee() && ! empty( $this->wp_user->gender ) ) {
-            if ( $context == 'edit' ) {
+
+            if ( $context === 'edit' ) {
                 return $this->wp_user->gender;
             }
+
             $genders = erp_hr_get_genders();
 
             if ( array_key_exists( $this->wp_user->gender, $genders ) ) {
@@ -959,8 +974,10 @@ class Employee {
      * @return string
      */
     public function get_marital_status( $context = 'edit' ) {
+
         if ( $this->is_employee() && ! empty( $this->wp_user->marital_status ) ) {
-            if ( $context == 'edit' ) {
+
+            if ( $context === 'edit' ) {
                 return $this->wp_user->marital_status;
             }
 
@@ -980,8 +997,10 @@ class Employee {
      * @return string
      */
     public function get_nationality( $context = 'edit' ) {
+
         if ( $this->is_employee() && ! empty( $this->wp_user->nationality ) ) {
-            if ( $context == 'edit' ) {
+
+            if ( $context === 'edit' ) {
                 return $this->wp_user->nationality;
             }
 
@@ -1099,8 +1118,10 @@ class Employee {
      * @return string
      */
     public function get_country( $context = 'edit' ) {
+
         if ( $this->is_employee() && isset( $this->wp_user->country ) ) {
-            if ( $context == 'edit' ) {
+
+            if ( $context === 'edit' ) {
                 return $this->wp_user->country;
             }
 
@@ -1118,8 +1139,10 @@ class Employee {
      * @return mixed|string
      */
     public function get_state( $context = 'edit' ) {
+
         if ( $this->is_employee() && isset( $this->wp_user->state ) ) {
-            if ( $context == 'edit' ) {
+
+            if ( $context === 'edit' ) {
                 return $this->wp_user->state;
             }
 
@@ -1433,6 +1456,7 @@ class Employee {
         if ( ! is_valid_date( $args['from'] ) && $args['from'] ) {
             return new WP_Error( 'invalid-required-params', __( 'Invalid date format', 'erp' ) );
         }
+
         $args['from'] = date( 'Y-m-d', strtotime( $args['from'] ) );
         $args['to']   = date( 'Y-m-d', strtotime( $args['to'] ) );
 
@@ -1485,7 +1509,7 @@ class Employee {
         $formatted_histories = [];
 
         foreach ( $histories as $history ) {
-            if ( $history['module'] == 'employment' ) {
+            if ( $history['module'] === 'employment' ) {
                 $item                                        = [
                     'id'       => $history['id'],
                     'type'     => $history['type'],
@@ -1496,7 +1520,7 @@ class Employee {
                 $formatted_histories[ $history['module'] ][] = $item;
             }
 
-            if ( $history['module'] == 'compensation' ) {
+            if ( $history['module'] === 'compensation' ) {
                 $item                                        = [
                     'id'       => $history['id'],
                     'comment'  => $history['comment'],
@@ -1509,7 +1533,7 @@ class Employee {
                 $formatted_histories[ $history['module'] ][] = $item;
             }
 
-            if ( $history['module'] == 'job' ) {
+            if ( $history['module'] === 'job' ) {
                 $item                                        = [
                     'id'           => $history['id'],
                     'date'         => $history['date'],
@@ -1781,7 +1805,7 @@ class Employee {
             return new WP_Error( 'invalid-required-params', __( 'Invalid date format', 'erp' ) );
         }
 
-        if ( $args['type'] == 'reviews' ) {
+        if ( $args['type'] === 'reviews' ) {
             $reporting_to = new Employee( $args['reporting_to'] );
 
             if ( ! $reporting_to->is_employee() ) {
@@ -1789,7 +1813,7 @@ class Employee {
             }
         }
 
-        if ( $args['type'] == 'comments' ) {
+        if ( $args['type'] === 'comments' ) {
             $reviewer = new Employee( $args['reviewer'] );
 
             if ( ! $reviewer->is_employee() ) {
@@ -1797,7 +1821,7 @@ class Employee {
             }
         }
 
-        if ( $args['type'] == 'goals' ) {
+        if ( $args['type'] === 'goals' ) {
             if ( empty( $args['completion_date'] ) ) {
                 return new WP_Error( 'missing-required-params', __( 'Missing Date', 'erp' ) );
             }

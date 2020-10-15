@@ -91,11 +91,11 @@ function erp_get_peoples( $args = [] ) {
             $sql['where'][] = "AND people_meta.meta_key='$meta_key' and people_meta.meta_value='$meta_value'";
         }
 
-        if ( !empty( $life_stage ) ) {
+        if ( ! empty( $life_stage ) ) {
             $sql['where'][] = "AND people.life_stage='$life_stage'";
         }
 
-        if ( !empty( $contact_owner ) ) {
+        if ( ! empty( $contact_owner ) ) {
             $sql['where'][] = "AND people.contact_owner='$contact_owner'";
         }
 
@@ -422,7 +422,7 @@ function erp_get_people_by( $field, $value ) {
  * @since 1.2.7  contact_owner, life_stage, hash brought to main table
  * @since 1.2.7  Assign first name as company name for accounting customer search
  * @since 1.3.13 Pass $people_type in create and update people hooks
- * @since 1.6.7 added validation for almost all input fields
+ * @since 1.6.7 Added validation for almost all input fields
  *
  * @param array $args erp_insert_people
  *
@@ -473,14 +473,14 @@ function erp_insert_people( $args = [], $return_object = false ) {
     $args['email'] = strtolower( trim( $args['email'] ) );
 
     // Assign first name as company name for accounting customer search
-    if ( $people_type == 'company' ) {
+    if ( $people_type === 'company' ) {
         $args['first_name'] = $args['company'];
         $args['last_name']  = '(company)';
     }
 
     if ( ! $existing_people->id ) {
         // if an empty type provided
-        if ( '' == $people_type ) {
+        if ( '' === $people_type ) {
             return new WP_Error( 'no-type', __( 'No user type provided.', 'erp' ) );
         }
 
@@ -493,7 +493,7 @@ function erp_insert_people( $args = [], $return_object = false ) {
         }
     }
 
-    if ( 'contact' == $people_type ) {
+    if ( 'contact' === $people_type ) {
         if ( empty( $args['user_id'] ) ) {
             // Check if contact first name or email or phone provided or not or provided name is valid
             if ( empty( $args['first_name'] ) || empty( $args['email'] ) ) {
@@ -511,7 +511,7 @@ function erp_insert_people( $args = [], $return_object = false ) {
     }
 
     // Check if company name provide or not or provided name is valid
-    if ( 'company' == $people_type ) {
+    if ( 'company' === $people_type ) {
         if ( empty( $args['company'] ) || empty( $args['email'] ) ) {
             return new WP_Error( 'no-company', esc_attr__( 'You must need to fill up both Company name and email fields', 'erp' ) );
         } else {
