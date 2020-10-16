@@ -207,6 +207,7 @@ class Human_Resource {
             'employee_exit'          => __( 'This employee already exists', 'erp' ),
             'employee_created'       => __( 'Employee successfully created', 'erp' ),
             'create_employee_text'   => __( 'Click to create employee', 'erp' ),
+            'required_field_notice'  => __( 'Please fill all the required fields. You have {count} required field(s) empty. Check the Advanced Fields if necessary.', 'erp' ),
             'empty_entitlement_text' => sprintf( '<span>%s <a href="%s" title="%s">%s</a></span>', __( 'Please create entitlement first', 'erp' ), add_query_arg( [
                 'page'          => 'erp-hr',
                 'section'       => 'leave',

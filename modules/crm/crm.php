@@ -198,6 +198,7 @@ class Customer_Relationship {
             'create_contact_text'         => __( 'Create new', 'erp' ),
             'current_user_id'             => get_current_user_id(),
             'successfully_created_wpuser' => __( 'WP User created successfully', 'erp' ),
+            'required_field_notice'       => __( 'Please fill all the required fields. You have {count} required field(s) empty. Check the Advanced Fields if necessary.', 'erp' ),
         ] );
 
         $contact_actvity_localize = apply_filters( 'erp_crm_contact_localize_var', [
