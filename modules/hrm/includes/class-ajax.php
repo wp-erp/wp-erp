@@ -113,6 +113,9 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp_hr_script_reload', 'employee_template_refresh' );
         $this->action( 'wp_ajax_erp_hr_new_dept_tmp_reload', 'new_dept_tmp_reload' );
         $this->action( 'wp_ajax_erp-hr-holiday-delete', 'holiday_remove' );
+
+        // Get leave & holiday data for hr dashboard calender
+        $this->action( 'wp_ajax_erp-hr-get-leave-by-date', 'get_leave_holiday_by_date' );
     }
 
     /**
@@ -1941,5 +1944,85 @@ class Ajax_Handler {
         $content = ob_get_clean();
 
         $this->send_success( $content );
+    }
+
+    /**
+     * Get leave & holiday by date
+     */
+    public function get_leave_holiday_by_date() {
+
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'wp-erp-hr-nonce' ) ) {
+            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
+
+        $start      = isset( $_POST['start'] ) ? sanitize_text_field( wp_unslash( $_POST['start'] ) ) : current_time( 'mysql' );
+        $end        = isset( $_POST['end'] ) ? sanitize_text_field( wp_unslash( $_POST['end'] ) ) : current_time( 'mysql' );
+
+
+        $start      = erp_current_datetime()->modify( $start )->setTime( 0, 0, 0 )->getTimestamp();
+        $end        = erp_current_datetime()->modify( $end )->setTime( 0, 0, 0 )->getTimestamp();
+
+        $start_date = erp_current_datetime()->setTimestamp( $start )->setTime( 0, 0, 0 )->format(  'Y-m-d 00:00:00' );
+        $end_date   = erp_current_datetime()->setTimestamp( $end )->setTime( 0, 0, 0 )->format(  'Y-m-d 23:59:59' );
+
+        $user_id        = get_current_user_id();
+        $args = [
+            'user_id'    => $user_id,
+            'status'     => 'all',
+            'number'     => '-1',
+            'start_date' => $start,
+            'end_date'   => $end,
+        ];
+        $leave_requests = erp_hr_get_leave_requests( $args );
+        $leave_requests = $leave_requests['data'];
+        $holidays       = erp_array_to_object( \WeDevs\ERP\HRM\Models\Leave_Holiday::where( 'start', '>=', $start_date )
+                                                                                   ->where( 'end', '<=', $end_date )
+                                                                                   ->get()
+                                                                                   ->toArray() );
+        $events         = [];
+        $holiday_events = [];
+        $event_data     = [];
+
+        foreach ( $leave_requests as $key => $leave_request ) {
+            if ( 3 == $leave_request->status ) {
+                continue;
+            }
+            //if status pending
+            $event_label = $leave_request->policy_name;
+
+            if ( 2 == $leave_request->status ) {
+                $event_label .= sprintf( ' ( %s ) ', __( 'Pending', 'erp' ) );
+            }
+
+            // Half day leave
+            if ( $leave_request->day_status_id != 1 ) {
+                $event_label .= '(' . erp_hr_leave_request_get_day_statuses( $leave_request->day_status_id ) . ')';
+            }
+
+            $events[] = [
+                'id'        => $leave_request->id,
+                'title'     => $event_label,
+                'start'     => erp_current_datetime()->setTimestamp( $leave_request->start_date )->setTime( 0, 0, 0 )->format(  'Y-m-d h:i:s' ),
+                'end'       => erp_current_datetime()->setTimestamp( $leave_request->end_date )->setTime( 23, 59, 59 )->format( 'Y-m-d h:i:s' ),
+                'url'       => erp_hr_url_single_employee( $leave_request->user_id, 'leave' ),
+                'color'     => $leave_request->color,
+            ];
+        }
+
+        foreach ( $holidays as $key => $holiday ) {
+            $holiday_events[] = [
+                'id'        => $holiday->id,
+                'title'     => $holiday->title,
+                'start'     => $holiday->start,
+                'end'       => $holiday->end,
+                'color'     => '#FF5354',
+                'img'       => '',
+                'holiday'   => true,
+            ];
+        }
+
+        $event_data = array_merge( $events, $holiday_events );
+
+        $this->send_success( $event_data );
     }
 }

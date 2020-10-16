@@ -329,58 +329,7 @@ function erp_hr_dashboard_widget_whoisout() {
  */
 function erp_hr_dashboard_widget_leave_calendar() {
     $user_id        = get_current_user_id();
-    $args           = [
-        'user_id'           => $user_id,
-        'status'            => 'all',
-        'number'            => '-1',
-    ];
-
-    $leave_requests = erp_hr_get_leave_requests( $args );
-    $leave_requests = $leave_requests['data'];
-    $holidays       = erp_array_to_object( \WeDevs\ERP\HRM\Models\Leave_Holiday::all()->toArray() );
-    $events         = [];
-    $holiday_events = [];
-    $event_data     = [];
-
-    foreach ( $leave_requests as $key => $leave_request ) {
-        if ( 3 == $leave_request->status ) {
-            continue;
-        }
-        //if status pending
-        $event_label = $leave_request->policy_name;
-
-        if ( 2 == $leave_request->status ) {
-            $event_label .= sprintf( ' ( %s ) ', __( 'Pending', 'erp' ) );
-        }
-
-        // Half day leave
-        if ( $leave_request->day_status_id != 1 ) {
-            $event_label .= '(' . erp_hr_leave_request_get_day_statuses( $leave_request->day_status_id ) . ')';
-        }
-
-        $events[] = [
-            'id'        => $leave_request->id,
-            'title'     => $event_label,
-            'start'     => erp_current_datetime()->setTimestamp( $leave_request->start_date )->setTime( 0, 0, 0 )->format(  'Y-m-d h:i:s' ),
-            'end'       => erp_current_datetime()->setTimestamp( $leave_request->end_date )->setTime( 23, 59, 59 )->format( 'Y-m-d h:i:s' ),
-            'url'       => erp_hr_url_single_employee( $leave_request->user_id, 'leave' ),
-            'color'     => $leave_request->color,
-        ];
-    }
-
-    foreach ( $holidays as $key => $holiday ) {
-        $holiday_events[] = [
-            'id'        => $holiday->id,
-            'title'     => $holiday->title,
-            'start'     => $holiday->start,
-            'end'       => $holiday->end,
-            'color'     => '#FF5354',
-            'img'       => '',
-            'holiday'   => true,
-        ];
-    }
-
-    $event_data = array_merge( $events, $holiday_events ); ?>
+    ?>
     <style>
         .fc-time {
             display:none;
@@ -417,11 +366,24 @@ function erp_hr_dashboard_widget_leave_calendar() {
             },
             editable: false,
             eventLimit: true,
-            events: <?php echo json_encode( $event_data ); ?>,
             eventRender: function(event, element, calEvent) {
                 if ( event.holiday ) {
                     element.find('.fc-content').find('.fc-title').css({ 'top':'0px', 'left' : '3px', 'fontSize' : '13px', 'padding':'2px' });
                 };
+            },
+            viewRender: function(view, element) {
+                wp.ajax.send( 'erp-hr-get-leave-by-date', {
+                    data: {
+                        start : view.start.format('L'),
+                        end : view.end.format('L'),
+                        _wpnonce: wpErpHr.nonce
+                    },
+                    success: function(response) {
+                        $('#erp-hr-calendar').fullCalendar('removeEvents');
+                        $('#erp-hr-calendar').fullCalendar('addEventSource', response);
+                        $('#erp-hr-calendar').fullCalendar('rerenderEvents' );
+                    }
+                });
             },
         });
     });
