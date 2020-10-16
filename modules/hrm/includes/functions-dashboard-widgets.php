@@ -345,6 +345,9 @@ function erp_hr_dashboard_widget_leave_calendar() {
         .fc-title {
             position: relative;
         }
+        #view_hr_dashboard_leave_modal .button-primary{
+            display: none;
+        }
     </style>
 
     <?php if ( erp_hr_get_assign_policy_from_entitlement( $user_id ) ) { ?>
@@ -385,10 +388,58 @@ function erp_hr_dashboard_widget_leave_calendar() {
                     }
                 });
             },
+            eventClick: function(calEvent, jsEvent, view) {
+                jQuery.erpPopup({
+                    title: "Leave/Holiday",
+                    id: "view_hr_dashboard_leave_modal",
+                    extraClass: 'erp_att_hr_dashboard_leave_popup',
+                    content: jQuery('#hr_dashboard_leave_popup').html(),
+                    onReady: function () {
+                        var modal = this;
+                        jQuery('header', modal).after(jQuery('<div class="loader"></div>').show());
+                        jQuery('#hdlp_policy').html( calEvent.title );
+                        jQuery('#hdlp_startdate').html( calEvent.start.format('L') )
+                        jQuery('#hdlp_enddate').html( calEvent.end.format('L') )
+                        jQuery('#hdlp_action a').attr( 'href', calEvent.go_to );
+                        jQuery('.loader', modal).remove();
+                    }
+                });
+
+
+
+            }
         });
     });
 
     </script>
+
+    <!-- Individual log edit start -->
+
+    <script type="text/html" id="hr_dashboard_leave_popup">
+        <div>
+            <table class="wp-list-table widefat fixed striped">
+                <tr>
+                    <th>Policy</th>
+                    <td id="hdlp_policy">fff</td>
+                </tr>
+                <tr>
+                    <th>Start date</th>
+                    <td id="hdlp_startdate">fff</td>
+                </tr>
+                <tr>
+                    <th>End date</th>
+                    <td id="hdlp_enddate">fff</td>
+                </tr>
+                <tr>
+                    <th>Action</th>
+                    <td id="hdlp_action"><a href="#">Go to</a></td>
+                </tr>
+            </table>
+        </div>
+    </script>
+
+    <!-- Individual log edit end -->
+
     <?php
 }
 

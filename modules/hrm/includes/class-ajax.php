@@ -2002,9 +2002,10 @@ class Ajax_Handler {
             $events[] = [
                 'id'        => $leave_request->id,
                 'title'     => $event_label,
-                'start'     => erp_current_datetime()->setTimestamp( $leave_request->start_date )->setTime( 0, 0, 0 )->format(  'Y-m-d h:i:s' ),
-                'end'       => erp_current_datetime()->setTimestamp( $leave_request->end_date )->setTime( 23, 59, 59 )->format( 'Y-m-d h:i:s' ),
-                'url'       => erp_hr_url_single_employee( $leave_request->user_id, 'leave' ),
+                'start'     => erp_current_datetime()->setTimestamp( $leave_request->start_date )->setTime( 0, 0, 0 )->format(  'Y-m-d 00:00:00' ),
+                'end'       => erp_current_datetime()->setTimestamp( $leave_request->end_date )->setTime( 23, 59, 59 )->format( 'Y-m-d 23:59:59' ),
+                'url'       => /*erp_hr_url_single_employee( $leave_request->user_id, 'leave' )*/ 'javascript:void(0)',
+                'go_to'     => erp_hr_url_single_employee( $leave_request->user_id, 'leave' ),
                 'color'     => $leave_request->color,
             ];
         }
@@ -2017,6 +2018,7 @@ class Ajax_Handler {
                 'end'       => $holiday->end,
                 'color'     => '#FF5354',
                 'img'       => '',
+                'url'       => 'javascript:void(0)',
                 'holiday'   => true,
             ];
         }
