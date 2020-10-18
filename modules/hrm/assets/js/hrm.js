@@ -36,6 +36,7 @@
             $( '.erp-hr-employees' ).on( 'click', 'span.edit a', this.employee.edit );
             $( '.erp-hr-employees' ).on( 'click', 'a.submitdelete', this.employee.remove );
             $( '.erp-hr-employees' ).on( 'click', 'a.submitrestore', this.employee.restore );
+            $( '.erp-hr-employees' ).on( 'click', 'a#erp-empl-type', this.employee.updateJobStatus );
             $( '.erp-hr-employees' ).on( 'click', 'a#erp-empl-status', this.employee.updateJobStatus );
             $( '.erp-hr-employees' ).on( 'click', 'a#erp-empl-compensation', this.employee.updateJobStatus );
             $( '.erp-hr-employees' ).on( 'click', 'a#erp-empl-jobinfo', this.employee.updateJobStatus );
@@ -640,7 +641,7 @@
              * @param  {event}
              */
             removePhoto: function(e) {
-                e.preventDefault();                
+                e.preventDefault();
 
                 var mystery_person = wpErpHr.asset_url + '/images/mystery-person.png';
 
@@ -685,7 +686,7 @@
                             }
                         });
 
-                        $( '#advanced_fields' ).click( function() {                          
+                        $( '#advanced_fields' ).click( function() {
                             if ( $( this ).is(' :checked ')) {
                                 $( '.employee-work' ).show();
                                 $( '.employee-personal' ).show();
@@ -801,7 +802,7 @@
                                 WeDevs_ERP_HR.employee.select2Action('erp-hrm-select2');
                                 WeDevs_ERP_HR.employee.select2AddMoreContent();
 
-                                $( '#advanced_fields' ).click( function() {                      
+                                $( '#advanced_fields' ).click( function() {
                                     if ( $( this ).is(' :checked ')) {
                                         $( '.employee-work' ).show();
                                         $( '.employee-personal' ).show();
@@ -1443,7 +1444,7 @@
                             content: '',
                             extraClass: 'smaller',
                             onReady: function() {
-                                var html = wp.template('erp-employment-status')(window.wpErpCurrentEmployee);
+                                var html = wp.template('erp-employment-type')(window.wpErpCurrentEmployee);
                                 $( '.content', this ).html( html );
                                 WeDevs_ERP_HR.initDateField();
                             },

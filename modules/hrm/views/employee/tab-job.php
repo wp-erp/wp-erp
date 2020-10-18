@@ -2,44 +2,67 @@
 
     <?php $histories = $employee->get_job_histories(); ?>
 
-    <?php
-    if ( current_user_can( 'erp_manage_jobinfo' ) ) {
-        ?>
-        <h3><?php esc_html_e( 'Employee Main Status', 'erp' ); ?></h3>
-
-        <form action="" method="post">
-            <?php erp_html_form_input( [
-                'label'       => __( 'Employee Status : ', 'erp' ),
-                'name'        => 'employee_status',
-                'value'       => $employee->get_status(),
-                'class'       => 'select2',
-                'type'        => 'select',
-                'id'          => 'erp-hr-employee-status-option',
-                'custom_attr' => [ 'data-selected' => $employee->get_status() ],
-                'options'     => [ 0 => __( '- Select -', 'erp' ) ] + erp_hr_get_employee_statuses(),
-            ] ); ?>
-
-            <input type="hidden" name="user_id" id="erp-employee-id" value="<?php echo esc_html( $employee->get_user_id() ); ?>">
-            <input type="hidden" name="action" id="erp-employee-status-action" value="erp-hr-employee-status">
-            <?php wp_nonce_field( 'wp-erp-hr-employee-update-nonce' ); ?>
-            <input type="submit" class="button" data-title="<?php esc_html_e( 'Terminate Employee', 'erp' ); ?>" id="erp-hr-employee-status-update" name="employee_update_status" value="<?php esc_attr_e( 'Update', 'erp' ); ?>">
-        </form>
-        <?php
-    }
-    ?>
-
-
-    <h3><?php esc_html_e( 'Employment Status', 'erp' ); ?></h3>
+    <h3><?php esc_html_e( 'Employee Status', 'erp' ); ?></h3>
     <?php if ( current_user_can( 'erp_manage_jobinfo' ) ) { ?>
         <a href="#" id="erp-empl-status" class="action button" data-id="<?php echo esc_html( $employee->get_user_id() ); ?>"
             data-template="erp-employment-status"
-            data-title="<?php esc_html_e( 'Employment Status', 'erp' ); ?>"><?php esc_html_e( 'Update Status', 'erp' ); ?></a>
+            data-title="<?php esc_html_e( 'Employee Status', 'erp' ); ?>"><?php esc_html_e( 'Update Status', 'erp' ); ?></a>
     <?php } ?>
     <table class="widefat">
         <thead>
             <tr>
                 <th><?php esc_html_e( 'Date', 'erp' ); ?></th>
-                <th><?php esc_html_e( 'Employment Status', 'erp' ); ?></th>
+                <th><?php esc_html_e( 'Employee Status', 'erp' ); ?></th>
+                <th><?php esc_html_e( 'Comment', 'erp' ); ?></th>
+                <th class="action">&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            if ( ! empty( $histories['employee'] ) ) {
+                $statuses = erp_hr_get_employee_statuses();
+
+                foreach ( $histories['employee'] as $num => $employment_history ) {?>
+                    <tr class="<?php echo $num % 2 == 0 ? 'alternate' : 'odd'; ?>">
+                        <td><?php echo esc_html( erp_format_date( $employment_history['date'] ) ); ?></td>
+                        <td>
+                            <?php echo ( ! empty( $employment_history['status'] ) ) ? wp_kses_post( $employment_history['status'] ) : '--'; ?>
+                        </td>
+                        <td>
+                            <?php echo ( ! empty( $employment_history['comments'] ) ) ? wp_kses_post( $employment_history['comments'] ) : '--'; ?>
+                        </td>
+                        <td class="action">
+                            <?php if ( current_user_can( 'erp_manage_jobinfo', $employee->get_user_id() ) ) { ?>
+                                <a href="#" class="remove" data-id="<?php echo esc_html( $employment_history['id'] ); ?>"><span class="dashicons dashicons-trash"></span></a>
+                            <?php } ?>
+                        </td>
+                    </tr>
+                    <?php
+                }
+            } else {
+                ?>
+                <tr class="alternate">
+                    <td colspan="4"><?php esc_html_e( 'No history found!', 'erp' ); ?></td>
+                </tr>
+            <?php
+            } ?>
+
+        </tbody>
+    </table>
+
+    <hr />
+
+    <h3><?php esc_html_e( 'Employment Type', 'erp' ); ?></h3>
+    <?php if ( current_user_can( 'erp_manage_jobinfo' ) ) { ?>
+        <a href="#" id="erp-empl-type" class="action button" data-id="<?php echo esc_html( $employee->get_user_id() ); ?>"
+            data-template="erp-employment-type"
+            data-title="<?php esc_html_e( 'Employment Type', 'erp' ); ?>"><?php esc_html_e( 'Update Type', 'erp' ); ?></a>
+    <?php } ?>
+    <table class="widefat">
+        <thead>
+            <tr>
+                <th><?php esc_html_e( 'Date', 'erp' ); ?></th>
+                <th><?php esc_html_e( 'Employment Type', 'erp' ); ?></th>
                 <th><?php esc_html_e( 'Comment', 'erp' ); ?></th>
                 <th class="action">&nbsp;</th>
             </tr>
