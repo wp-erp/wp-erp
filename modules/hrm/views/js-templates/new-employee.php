@@ -84,6 +84,7 @@
                             </div>
 
                             <?php if ( current_user_can( 'erp_edit_employee' ) ) { ?>
+                            <# if ( ! data.id ) { #>
                             <div class="col-3" data-selected="{{ data.work.type }}">
                                 <?php
                                 erp_html_form_input( [
@@ -98,7 +99,22 @@
                                 ?>
                             </div>
 
-                            <div class="col-3" style="clear:left">
+                            <div class="col-3" data-selected="{{ data.work.status }}">
+                                <?php
+                                erp_html_form_input( [
+                                    'label'    => __( 'Employee Status', 'erp' ),
+                                    'name'     => 'work[status]',
+                                    'value'    => '{{ data.work.status }}',
+                                    'class'    => 'erp-hrm-select2',
+                                    'type'     => 'select',
+                                    'required' => true,
+                                    'options'  => [ '' => __( '- Select -', 'erp' ) ] + erp_hr_get_employee_statuses(),
+                                ] );
+                                ?>
+                            </div>
+                            <# } #>
+
+                            <div class="col-3">
                                 <?php
                                 erp_html_form_input( [
                                     'label'       => __( 'Employee End Date', 'erp' ),
@@ -114,22 +130,7 @@
                                 ?>
                             </div>
 
-
-                            <div class="col-3" data-selected="{{ data.work.status }}">
-                                <?php
-                                erp_html_form_input( [
-                                    'label'    => __( 'Employee Status', 'erp' ),
-                                    'name'     => 'work[status]',
-                                    'value'    => '{{ data.work.status }}',
-                                    'class'    => 'erp-hrm-select2',
-                                    'type'     => 'select',
-                                    'required' => true,
-                                    'options'  => [ '' => __( '- Select -', 'erp' ) ] + erp_hr_get_employee_statuses(),
-                                ] );
-                                ?>
-                            </div>
-
-                            <div class="col-3" style="clear:left">
+                            <div class="col-3">
                                 <?php
                                     erp_html_form_input( [
                                         'label'       => __( 'Date of Hire', 'erp' ),
