@@ -11,11 +11,11 @@
 
     <div class="row">
         <?php erp_html_form_input( [
-            'label'   => __( 'Employment Status', 'erp' ),
+            'label'   => __( 'Employee Status', 'erp' ),
             'name'    => 'status',
             'value'   => '',
             'type'    => 'select',
-            'options' => [ 0 => __( '- Select -', 'erp' ) ] + erp_hr_get_employee_types(),
+            'options' => [ 0 => __( '- Select -', 'erp' ) ] + erp_hr_get_employee_statuses(),
         ] ); ?>
     </div>
 
