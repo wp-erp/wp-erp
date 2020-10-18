@@ -1370,7 +1370,7 @@ class Employee {
         $formatted_histories = [];
 
         foreach ( $histories as $history ) {
-            if ( $history['module'] == 'employment' ) {
+            if ( $history['module'] === 'employment' ) {
                 $item                                        = [
                     'id'       => $history['id'],
                     'type'     => $history['type'],
@@ -1381,7 +1381,18 @@ class Employee {
                 $formatted_histories[ $history['module'] ][] = $item;
             }
 
-            if ( $history['module'] == 'compensation' ) {
+            if ( $history['module'] === 'employee' ) {
+                $item                                        = [
+                    'id'       => $history['id'],
+                    'status'   => $history['category'],
+                    'comments' => $history['comment'],
+                    'date'     => $history['date'],
+                    'module'   => $history['module'],
+                ];
+                $formatted_histories[ $history['module'] ][] = $item;
+            }
+
+            if ( $history['module'] === 'compensation' ) {
                 $item                                        = [
                     'id'       => $history['id'],
                     'comment'  => $history['comment'],
@@ -1394,7 +1405,7 @@ class Employee {
                 $formatted_histories[ $history['module'] ][] = $item;
             }
 
-            if ( $history['module'] == 'job' ) {
+            if ( $history['module'] === 'job' ) {
                 $item                                        = [
                     'id'           => $history['id'],
                     'date'         => $history['date'],
@@ -1437,43 +1448,62 @@ class Employee {
     }
 
     /**
-     * date employment status
+     * Date employment type/status
      *
      * @param array $args
+     *
+     * @since 1.6.7 Added employee status and type seperately
      *
      * @return array|WP_Error
      */
     public function update_employment_status( $args = [] ) {
         $default = [
             'id'       => '',
+            'module'   => '',
+            'category' => '',
             'type'     => '',
             'comments' => '',
             'date'     => current_time( 'mysql' ),
         ];
 
-        $args = wp_parse_args( $args, $default );
+        $args     = wp_parse_args( $args, $default );
 
-        $types = erp_hr_get_employee_types();
+        $types    = erp_hr_get_employee_types();
+        $statuses = erp_hr_get_employee_statuses();
 
-        if ( empty( $args['type'] ) || ! array_key_exists( $args['type'], $types ) ) {
-            return new WP_Error( 'invalid-employment-type', __( 'Invalid Employment Type', 'erp' ) );
+        if ( empty( $args['category'] ) ) {
+            if ( empty( $args['type'] ) || ! array_key_exists( $args['type'], $types ) ) {
+                return new WP_Error( 'invalid-employment-type', __( 'Invalid Employment Type', 'erp' ) );
+            }
+        } else {
+            if ( ! array_key_exists( $args['category'], $statuses ) ) {
+                return new WP_Error( 'invalid-employment-status', __( 'Invalid Employment Status', 'erp' ) );
+            }
         }
 
         do_action( 'erp_hr_employee_employment_status_create', $this->get_user_id() );
 
-        $this->erp_user->update( [
-            'type' => $args['type'],
-        ] );
+        if ( ! empty( $args['type'] ) ) {
+            $this->erp_user->update( [
+                'type' => $args['type'],
+            ] );
+        } else {
+            $this->erp_user->update( [
+                'status' => $args['category'],
+            ] );
+        }
 
         $history = $this->get_erp_user()->histories()->updateOrCreate( [ 'id' => $args['id'] ], [
-            'module'  => 'employment',
-            'type'    => $args['type'],
-            'comment' => $args['comments'],
-            'date'    => $args['date'],
+            'module'   => $args['module'],
+            'category' => $args['category'],
+            'type'     => $args['type'],
+            'comment'  => $args['comments'],
+            'date'     => $args['date'],
         ] );
 
         return [
             'id'       => $history['id'],
+            'category' => $history['category'],
             'type'     => $history['type'],
             'comments' => $history['comment'],
             'date'     => $history['date'],

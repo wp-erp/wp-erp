@@ -836,6 +836,7 @@ function erp_hr_employee_single_tab_permission( $employee ) {
  */
 function erp_hr_employee_history_modules() {
     $modules = [
+        'employee',
         'employment',
         'compensation',
         'job',

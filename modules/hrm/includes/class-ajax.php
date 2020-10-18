@@ -46,6 +46,7 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-hr-emp-delete', 'employee_remove' );
         $this->action( 'wp_ajax_erp-hr-emp-restore', 'employee_restore' );
         $this->action( 'wp_ajax_erp-hr-emp-update-status', 'employee_update_employment' );
+        $this->action( 'wp_ajax_erp-hr-emp-update-type', 'employee_update_employment' );
         $this->action( 'wp_ajax_erp-hr-emp-update-comp', 'employee_update_compensation' );
         $this->action( 'wp_ajax_erp-hr-emp-delete-history', 'employee_remove_history' );
         $this->action( 'wp_ajax_erp-hr-emp-update-jobinfo', 'employee_update_job_info' );
@@ -809,7 +810,7 @@ class Ajax_Handler {
     }
 
     /**
-     * Update employment status
+     * Update employment type
      *
      * @return void
      */
@@ -833,11 +834,20 @@ class Ajax_Handler {
             $this->send_error( __( 'No employee found', 'erp' ) );
         }
 
-        $created = $employee->update_employment_status( [
-            'type'     => ( isset( $_POST['status'] ) ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : '',
+        $args = [
             'comments' => ( isset( $_POST['comment'] ) ) ? sanitize_text_field( wp_unslash( $_POST['comment'] ) ) : '',
             'date'     => ( isset( $_POST['date'] ) ) ? sanitize_text_field( wp_unslash( $_POST['date'] ) ) : '',
-        ] );
+        ];
+
+        if ( isset( $_POST['type'] ) ) {
+            $args['module'] = 'employment';
+            $args['type']   = sanitize_text_field( wp_unslash( $_POST['type'] ) );
+        } else if ( isset( $_POST['status'] ) ) {
+            $args['module']   = 'employee';
+            $args['category'] = sanitize_text_field( wp_unslash( $_POST['status'] ) );
+        }
+
+        $created = $employee->update_employment_status( $args );
 
         if ( is_wp_error( $created ) ) {
             $this->send_error( $created->get_error_message() );
