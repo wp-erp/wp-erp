@@ -179,7 +179,7 @@
 
             if( count ) {
                 var notice = wpErpHr.required_field_notice.replace('{count}', count);
-                alert( notice );
+                swal( '', notice , 'warning' );
             }
         },
 

@@ -1336,7 +1336,7 @@
 
                                 if( count ) {
                                     var notice = wpErpCrm.required_field_notice.replace('{count}', count);
-                                    alert( notice );
+                                    swal( '', notice, 'warning' );
                                 }
                             });
                         },
@@ -1447,7 +1447,7 @@
 
                                 if( count ) {
                                     var notice = wpErpCrm.required_field_notice.replace('{count}', count);
-                                    alert( notice );
+                                    swal( '', notice , 'warning' );
                                 }
                             });
                         },
