@@ -2301,7 +2301,7 @@ function erp_crm_contact_advance_filter( $custom_sql, $args ) {
                                 $start_date      = gmdate( 'Y-m-d 00:00:00', strtotime( $key_value[0] ) );
                                 $where_condition = " created_at > '{$start_date}'";
                             } else if ( '<' === $condition ) {
-                                $end_date        = gmdate( 'Y-m-d 23:59:59', strtotime( $key_value[0] ) );
+                                $end_date        = gmdate( 'Y-m-d 00:00:00', strtotime( $key_value[0] ) );
                                 $where_condition = " created_at < '{$end_date}'";
                             }
 
