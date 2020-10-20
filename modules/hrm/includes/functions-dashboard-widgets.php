@@ -348,6 +348,13 @@ function erp_hr_dashboard_widget_leave_calendar() {
         #view_hr_dashboard_leave_modal .button-primary{
             display: none;
         }
+        #view_hr_dashboard_leave_modal table tr td,
+        #view_hr_dashboard_leave_modal table tr th{
+            text-align: center;
+        }
+        #hdlp_action a{
+            display: inline-block !important;
+        }
     </style>
 
     <?php if ( erp_hr_get_assign_policy_from_entitlement( $user_id ) ) { ?>
@@ -398,9 +405,17 @@ function erp_hr_dashboard_widget_leave_calendar() {
                         var modal = this;
                         jQuery('header', modal).after(jQuery('<div class="loader"></div>').show());
                         jQuery('#hdlp_policy').html( calEvent.title );
-                        jQuery('#hdlp_startdate').html( calEvent.start.format('L') )
-                        jQuery('#hdlp_enddate').html( calEvent.end.format('L') )
+                        jQuery('#hdlp_startdate').html( calEvent.start.format('LL') );
+                        jQuery('#hdlp_enddate').html( calEvent.end.format('LL') );
+                        jQuery('#hdlp_reason').html( calEvent.reason );
                         jQuery('#hdlp_action a').attr( 'href', calEvent.go_to );
+
+                        if( calEvent.holiday ) {
+                            jQuery('.conditional_action_wrap').hide();
+                        } else {
+                            jQuery('.conditional_action_wrap').show()
+                        }
+
                         jQuery('.loader', modal).remove();
                     }
                 });
@@ -419,20 +434,24 @@ function erp_hr_dashboard_widget_leave_calendar() {
         <div>
             <table class="wp-list-table widefat fixed striped">
                 <tr>
-                    <th>Policy</th>
-                    <td id="hdlp_policy">fff</td>
+                    <th><strong><?php esc_html_e( 'Policy', 'erp' ) ;?></strong></th>
+                    <td id="hdlp_policy"></td>
                 </tr>
                 <tr>
-                    <th>Start date</th>
-                    <td id="hdlp_startdate">fff</td>
+                    <th><strong><?php esc_html_e( 'Start date', 'erp' ) ;?></strong></th>
+                    <td id="hdlp_startdate"></td>
                 </tr>
                 <tr>
-                    <th>End date</th>
-                    <td id="hdlp_enddate">fff</td>
+                    <th><strong><?php esc_html_e( 'End date', 'erp' ) ;?></strong></th>
+                    <td id="hdlp_enddate"></td>
                 </tr>
-                <tr>
-                    <th>Action</th>
-                    <td id="hdlp_action"><a href="#">Go to</a></td>
+                <tr class="conditional_action_wrap">
+                    <th><strong><?php esc_html_e( 'Reason', 'erp' ) ;?></strong></th>
+                    <td id="hdlp_reason"></td>
+                </tr>
+                <tr class="conditional_action_wrap">
+                    <th><strong><?php esc_html_e( 'Action', 'erp' ) ;?></strong></th>
+                    <td id="hdlp_action"><a target="_blank" class="button button-primary" href="#">Go to</a></td>
                 </tr>
             </table>
         </div>

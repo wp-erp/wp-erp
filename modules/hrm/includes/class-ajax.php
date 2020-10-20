@@ -2007,6 +2007,7 @@ class Ajax_Handler {
                 'url'       => /*erp_hr_url_single_employee( $leave_request->user_id, 'leave' )*/ 'javascript:void(0)',
                 'go_to'     => erp_hr_url_single_employee( $leave_request->user_id, 'leave' ),
                 'color'     => $leave_request->color,
+                'reason'    => $leave_request->reason,
             ];
         }
 
