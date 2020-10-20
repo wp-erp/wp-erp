@@ -1375,9 +1375,9 @@ function erp_crm_get_user_assignable_groups( $user_id ) {
 
     $data = \WeDevs\ERP\CRM\Models\ContactSubscriber::with( 'groups' )
         ->where( [
-                                                        'user_id' => $user_id,
-                                                        'status'  => 'subscribe',
-                                                    ] )
+                'user_id' => $user_id,
+                'status'  => 'subscribe',
+            ] )
         ->whereNotNull( 'subscribe_at' )
         ->distinct()->get()->toArray();
 
@@ -1452,10 +1452,10 @@ function erp_crm_edit_contact_subscriber( $groups, $user_id ) {
             $updated = \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $user_id )
                 ->where( 'group_id', $unsubscribe_group_id )
                 ->update( [
-                                                                   'status'         => 'subscribe',
-                                                                   'subscribe_at'   => current_time( 'mysql' ),
-                                                                   'unsubscribe_at' => null,
-                                                               ] );
+                            'status'         => 'subscribe',
+                            'subscribe_at'   => current_time( 'mysql' ),
+                            'unsubscribe_at' => null,
+                        ] );
 
             if ( $updated ) {
                 $subscriber = \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $user_id )
@@ -1486,10 +1486,10 @@ function erp_crm_edit_contact_subscriber( $groups, $user_id ) {
                 ->where( 'group_id', $del_group_id )
                 ->where( 'status', 'subscribe' )
                 ->update( [
-                                                        'status'         => 'unsubscribe',
-                                                        'subscribe_at'   => null,
-                                                        'unsubscribe_at' => current_time( 'mysql' ),
-                                                    ] );
+                            'status'         => 'unsubscribe',
+                            'subscribe_at'   => null,
+                            'unsubscribe_at' => current_time( 'mysql' ),
+                        ] );
 
             do_action( 'erp_crm_delete_contact_subscriber', $subscriber );
         }
@@ -1800,11 +1800,11 @@ function erp_crm_get_serach_key( $type = '' ) {
         ],
     ];
 
-    if ( 'contact' == $type ) {
+    if ( 'contact' === $type ) {
         $fields = erp_crm_get_customer_serach_key() + $fields;
     }
 
-    if ( 'company' == $type ) {
+    if ( 'company' === $type ) {
         $fields = erp_crm_get_company_serach_key() + $fields;
     }
 
@@ -2009,7 +2009,7 @@ function erp_crm_get_save_search_item( $args = [] ) {
     foreach ( $search_keys as $key => $search_values ) {
         $item = [];
 
-        if ( $key == 0 ) {
+        if ( $key === 0 ) {
             $item = [
                 'id'      => __( 'own_search', 'erp' ),
                 'name'    => __( 'Own Search', 'erp' ),
@@ -2130,7 +2130,7 @@ function erp_crm_contact_advance_filter( $custom_sql, $args ) {
         foreach ( $query_data as $key => $or_query ) {
             if ( $or_query ) {
                 $i                     = 0;
-                $custom_sql['where'][] = ( $key == 0 ) ? 'AND (' : 'OR (';
+                $custom_sql['where'][] = ( $key === 0 ) ? 'AND (' : 'OR (';
 
                 foreach ( $or_query as $field => $value ) {
                     if ( in_array( $field, $pep_fileds ) ) {
@@ -2155,7 +2155,7 @@ function erp_crm_contact_advance_filter( $custom_sql, $args ) {
 
                             $custom_sql['where'][] = ( $i == count( $or_query ) - 1 ) ? ')' : ' ) AND';
                         }
-                    } elseif ( $field == 'country_state' ) {
+                    } elseif ( $field === 'country_state' ) {
                         $custom_sql['where'][] = '(';
                         $j                     = 0;
 
@@ -2173,8 +2173,8 @@ function erp_crm_contact_advance_filter( $custom_sql, $args ) {
 
                             $j ++;
                         }
-                        $custom_sql['where'][] = ( $i == count( $or_query ) - 1 ) ? ')' : ' ) AND';
-                    } elseif ( $field == 'contact_group' ) {
+                        $custom_sql['where'][] = ( $i === count( $or_query ) - 1 ) ? ')' : ' ) AND';
+                    } elseif ( $field === 'contact_group' ) {
                         if ( ! $is_contact_group_joined ) {
                             $custom_sql['join'][] = "LEFT JOIN {$wpdb->prefix}erp_crm_contact_subscriber as subscriber ON people.id = subscriber.user_id";
 
@@ -2190,7 +2190,7 @@ function erp_crm_contact_advance_filter( $custom_sql, $args ) {
                         $and_clause = [];
 
                         foreach ( $value as $j => $search ) {
-                            $addOr                 = ( $j == count( $value ) - 1 ) ? '' : ' OR ';
+                            $addOr                 = ( $j === count( $value ) - 1 ) ? '' : ' OR ';
                             $search_condition_regx = erp_crm_get_save_search_regx( $search );
                             $condition             = array_shift( $search_condition_regx );
 
@@ -2217,8 +2217,8 @@ function erp_crm_contact_advance_filter( $custom_sql, $args ) {
                             $custom_sql['where'][] = '1=1';
                         }
 
-                        $custom_sql['where'][] = ( $i == count( $or_query ) - 1 ) ? ')' : ' ) AND';
-                    } elseif ( $field == 'tags' ) {
+                        $custom_sql['where'][] = ( $i === count( $or_query ) - 1 ) ? ')' : ' ) AND';
+                    } elseif ( $field === 'tags' ) {
                         if ( ! $tag_table_joined ) {
                             $custom_sql['join'][] = "INNER JOIN {$wpdb->prefix}term_relationships as term_relation on (people.id = term_relation.object_id)";
                             $custom_sql['join'][] = "INNER JOIN {$wpdb->prefix}term_taxonomy AS term_taxonomy ON (term_relation.term_taxonomy_id = term_taxonomy.term_taxonomy_id)";
@@ -2269,11 +2269,11 @@ function erp_crm_contact_advance_filter( $custom_sql, $args ) {
                             foreach ( $val as $search_val => $search_condition ) {
                                 $addOr = ( $j == count( $val ) - 1 ) ? '' : ' OR ';
 
-                                if ( 'has_not' == $search_val ) {
+                                if ( 'has_not' === $search_val ) {
                                     $custom_sql['where'][] = "( $name.meta_key='$field' AND ( $name.meta_value is null OR $name.meta_value = '' ) ) $addOr";
-                                } elseif ( 'if_has' == $search_val ) {
+                                } elseif ( 'if_has' === $search_val ) {
                                     $custom_sql['where'][] = "( $name.meta_key='$field' AND ( $name.meta_value is not null AND $name.meta_value != '' ) ) $addOr";
-                                } elseif ( 'BETWEEN' == $search_condition ) {
+                                } elseif ( 'BETWEEN' === $search_condition ) {
                                     $formatted_val         = explode( ',', $search_val );
                                     $custom_sql['where'][] = "( $name.meta_key='$field' AND ( $name.meta_value >= '$formatted_val[0]' AND $name.meta_value <= '$formatted_val[1]' ) ) $addOr";
                                 } else {
@@ -2284,31 +2284,32 @@ function erp_crm_contact_advance_filter( $custom_sql, $args ) {
                             }
                             $custom_sql['where'][] = ( $i == count( $or_query ) - 1 ) ? ')' : ' ) AND';
                         }
-                    } else if ( $field == 'inactive' ) {
+                    } else if ( $field === 'inactive' ) {
                         $j                     = 0;
                         $custom_sql['where'][] = '(';
                         $search_condition_regx = erp_crm_get_save_search_regx( $value );
 
                         foreach ( $search_condition_regx as $search_key => $condition ) {
                             $key_value = explode( ',', $search_key );
-                            $addOr     = ( $j == count( $value ) - 1 ) ? '': ' OR ';
+                            $addOr     = ( $j === count( $value ) - 1 ) ? '' : ' OR ';
 
                             if ( count( $key_value ) > 1 ) {
-                                $start_date = date( 'Y-m-d 00:00:00', strtotime( $key_value[0] ) );
-                                $end_date = date( 'Y-m-d 23:59:59', strtotime( $key_value[1] ) );
+                                $start_date      = gmdate( 'Y-m-d 00:00:00', strtotime( $key_value[0] ) );
+                                $end_date        = gmdate( 'Y-m-d 23:59:59', strtotime( $key_value[1] ) );
+                                $where_condition = " created_at BETWEEN '{$start_date}' AND '{$end_date}'";
                             } else if ( '>' === $condition ) {
-                                $start_date = date( 'Y-m-d 00:00:00', strtotime( $key_value[0] ) );
-                                $end_date = date( 'Y-m-d 23:59:59', strtotime( current_time( 'mysql' ) ) );
+                                $start_date      = gmdate( 'Y-m-d 00:00:00', strtotime( $key_value[0] ) );
+                                $where_condition = " created_at > '{$start_date}'";
                             } else if ( '<' === $condition ) {
-                                $start_date = date( 'Y-m-d 00:00:00', strtotime( time() ) );
-                                $end_date = date( 'Y-m-d 23:59:59', strtotime( $key_value[0] ) );
+                                $end_date        = gmdate( 'Y-m-d 23:59:59', strtotime( $key_value[0] ) );
+                                $where_condition = " created_at < '{$end_date}'";
                             }
 
-                            $custom_sql['where'][] = "(SELECT MAX(created_at) as max_act_date FROM {$wpdb->prefix}erp_crm_customer_activities WHERE user_id = people.id GROUP BY user_id) NOT BETWEEN '{$start_date}' AND '{$end_date}' $addOr";
+                            $custom_sql['where'][] = "people.id NOT IN ( SELECT user_id FROM {$wpdb->prefix}erp_crm_customer_activities WHERE " . $where_condition . " ) $addOr";
                             $j ++;
                         }
 
-                        $custom_sql['where'][] = ( $i == count( $or_query ) - 1 ) ? ')' : ') AND';
+                        $custom_sql['where'][] = ( $i === count( $or_query ) - 1 ) ? ')' : ') AND';
                     } else {
                         $custom_sql = apply_filters( 'erp_crm_customer_segmentation_sql', $custom_sql, $field, $value, $or_query, $i, $table_alias );
                     }
@@ -3976,7 +3977,7 @@ function erp_crm_check_company_contact_relations( $id, $id_type ) {
 
     if ( isset( $id ) && isset( $id_type ) ) {
         if ( !empty( $id_type ) ) {
-            if ( $id_type == 'contact' ) {
+            if ( $id_type === 'contact' ) {
                 $id_type = 'customer';
             }
             $rel_count = $wpdb->get_var( "SELECT count(*) FROM {$wpdb->prefix}erp_crm_customer_companies WHERE {$id_type}_id = {$id}" );
@@ -3985,25 +3986,3 @@ function erp_crm_check_company_contact_relations( $id, $id_type ) {
         }
     }
 }
-
-// SELECT people.*,  GROUP_CONCAT( DISTINCT t.name SEPARATOR ',') AS types
-// FROM wp_erp_peoples AS people
-// LEFT JOIN wp_erp_people_type_relations AS r ON people.id = r.people_id
-// LEFT JOIN wp_erp_people_types AS t ON r.people_types_id = t.id
-// LEFT JOIN wp_erp_peoplemeta as people_meta_1_1 on people.id = people_meta_1_1.`erp_people_id`
-// where ( select count(*) from wp_erp_people_types
-//             inner join  wp_erp_people_type_relations
-//                 on wp_erp_people_types.`id` = wp_erp_people_type_relations.`people_types_id`
-//                 where wp_erp_people_type_relations.`people_id` = people.`id` and `name` = 'contact' and `deleted_at` is null
-//           ) >= 1 AND ( 1=1  AND ( ( ( people_meta_1_1.meta_key='contact_age' AND people_meta_1_1.meta_value = '' )  ) )  )GROUP BY `people`.`id` ORDER BY created DESC LIMIT 20 OFFSET 0
-
-// SELECT people.*,  GROUP_CONCAT( DISTINCT t.name SEPARATOR ',') AS types
-// FROM wp_erp_peoples AS people
-// LEFT JOIN wp_erp_people_type_relations AS r ON people.id = r.people_id
-// LEFT JOIN wp_erp_people_types AS t ON r.people_types_id = t.id
-// INNER JOIN wp_erp_crm_customer_activities AS activity ON (people.id = activity.user_id)
-// where ( select count(*) from wp_erp_people_types
-// inner join  wp_erp_people_type_relations
-//     on wp_erp_people_types.`id` = wp_erp_people_type_relations.`people_types_id`
-//     where wp_erp_people_type_relations.`people_id` = people.`id` and `name` = 'contact' and `deleted_at` is null
-// ) >= 1 AND ( 1=1  AND ( (activity.created_at NOT BETWEEN '2020-10-01 00:00:00' AND '2020-10-08 23:59:59') ) )  )GROUP BY `people`.`id` ORDER BY created DESC LIMIT 20 OFFSET 0
