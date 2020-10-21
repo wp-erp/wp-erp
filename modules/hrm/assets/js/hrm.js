@@ -183,6 +183,20 @@
             } );
         },
 
+        ajaxReq: function(data, modal) {
+            wp.ajax.send( {
+                data: data,
+                success: function() {
+                    WeDevs_ERP_HR.reloadPage();
+                    modal.closeModal();
+                },
+                error: function(error) {
+                    modal.enableButton();
+                    modal.showError( error );
+                }
+            });
+        },
+
         dashboard : {
             markAnnouncementRead: function(e) {
                 e.preventDefault();
@@ -1000,8 +1014,8 @@
 
                         if(data.status) {
                             if(status == data.status) {
-                                alert(wpErpHr.popup.already_selected);
-                                $('.erp-loader').hide();
+                                modal.closeModal();
+                                swal('', wpErpHr.popup.already_selected, 'error' );
                             } else if(data.status == 'terminated') {
                                 modal.closeModal();
                                 $.erpPopup({
@@ -1014,25 +1028,12 @@
                                         var html = wp.template( 'erp-employment-terminate' )({});
                                         $( '.content', this ).html( html );
                                         WeDevs_ERP_HR.initDateField();
-
                                     },
                                     onSubmit: function(modal) {
                                         wp.ajax.send( {
                                             data: this.serializeObject(),
                                             success: function() {
-                                                // WeDevs_ERP_HR.reloadPage();
-                                                // modal.closeModal();
-                                                wp.ajax.send( {
-                                                    data: data,
-                                                    success: function() {
-                                                        WeDevs_ERP_HR.reloadPage();
-                                                        modal.closeModal();
-                                                    },
-                                                    error: function(error) {
-                                                        modal.enableButton();
-                                                        modal.showError( error );
-                                                    }
-                                                });
+                                                WeDevs_ERP_HR.ajaxReq(data, modal);
                                             },
                                             error: function(error) {
                                                 modal.enableButton();
@@ -1058,19 +1059,7 @@
                                         wp.ajax.send( {
                                             data: this.serializeObject(),
                                             success: function() {
-                                                // modal.closeModal();
-                                                // form.submit();
-                                                wp.ajax.send( {
-                                                    data: data,
-                                                    success: function() {
-                                                        WeDevs_ERP_HR.reloadPage();
-                                                        modal.closeModal();
-                                                    },
-                                                    error: function(error) {
-                                                        modal.enableButton();
-                                                        modal.showError( error );
-                                                    }
-                                                });
+                                                WeDevs_ERP_HR.ajaxReq(data, modal);
                                             },
                                             error: function(error) {
                                                 modal.enableButton();
@@ -1080,47 +1069,17 @@
                                     }
                                 });
                             } else {
-                                wp.ajax.send( {
-                                    data: data,
-                                    success: function() {
-                                        WeDevs_ERP_HR.reloadPage();
-                                        modal.closeModal();
-                                    },
-                                    error: function(error) {
-                                        modal.enableButton();
-                                        modal.showError( error );
-                                    }
-                                });
+                                WeDevs_ERP_HR.ajaxReq(data, modal);
                             }
                         } else if ( data.type ) {
                             if(type == data.type) {
-                                alert(wpErpHr.popup.already_selected);
-                                $('.erp-loader').hide();
+                                modal.closeModal();
+                                swal('', wpErpHr.popup.already_selected, 'error' );
                             } else {
-                                wp.ajax.send( {
-                                    data: data,
-                                    success: function() {
-                                        WeDevs_ERP_HR.reloadPage();
-                                        modal.closeModal();
-                                    },
-                                    error: function(error) {
-                                        modal.enableButton();
-                                        modal.showError( error );
-                                    }
-                                });
+                                WeDevs_ERP_HR.ajaxReq(data, modal);
                             }
                         } else {
-                            wp.ajax.send( {
-                                data: data,
-                                success: function() {
-                                    WeDevs_ERP_HR.reloadPage();
-                                    modal.closeModal();
-                                },
-                                error: function(error) {
-                                    modal.enableButton();
-                                    modal.showError( error );
-                                }
-                            });
+                            WeDevs_ERP_HR.ajaxReq(data, modal);
                         }
                     }
                 });
