@@ -339,10 +339,19 @@ class Employee {
         // if reached here, seems like we have success creating the user
         $this->load_employee( $user_id );
 
+        if ( ! empty( $work['status'] ) ) {
+            $this->update_employment_status( [
+                'module'   => 'employee',
+                'category' => $work['status'],
+                'date'     => $work['hiring_date'],
+            ] );
+        }
+
         if ( ! empty( $work['type'] ) ) {
             $this->update_employment_status( [
-                'type' => $work['type'],
-                'date' => $work['hiring_date'],
+                'module' => 'employment',
+                'type'   => $work['type'],
+                'date'   => $work['hiring_date'],
             ] );
         }
 
@@ -1363,15 +1372,16 @@ class Employee {
             $histories = $histories->where( 'module', $module );
         }
 
-        $histories = $histories->skip( $offset )
-            ->take( $limit )
-            ->get();
+        $histories = $histories->orderBy( 'id', 'desc' )
+                            ->skip( $offset )
+                            ->take( $limit )
+                            ->get();
 
         $formatted_histories = [];
 
         foreach ( $histories as $history ) {
             if ( $history['module'] === 'employment' ) {
-                $item                                        = [
+                $item = [
                     'id'       => $history['id'],
                     'type'     => $history['type'],
                     'comments' => $history['comment'],
@@ -1382,7 +1392,7 @@ class Employee {
             }
 
             if ( $history['module'] === 'employee' ) {
-                $item                                        = [
+                $item = [
                     'id'       => $history['id'],
                     'status'   => $history['category'],
                     'comments' => $history['comment'],
@@ -1393,7 +1403,7 @@ class Employee {
             }
 
             if ( $history['module'] === 'compensation' ) {
-                $item                                        = [
+                $item = [
                     'id'       => $history['id'],
                     'comment'  => $history['comment'],
                     'pay_type' => $history['category'],
@@ -1406,7 +1416,7 @@ class Employee {
             }
 
             if ( $history['module'] === 'job' ) {
-                $item                                        = [
+                $item = [
                     'id'           => $history['id'],
                     'date'         => $history['date'],
                     'designation'  => $history['comment'],
@@ -1487,7 +1497,9 @@ class Employee {
             $this->erp_user->update( [
                 'type' => $args['type'],
             ] );
-        } else {
+        }
+
+        if ( ! empty( $args['category'] ) ) {
             $this->erp_user->update( [
                 'status' => $args['category'],
             ] );

@@ -24,9 +24,14 @@
 
                 foreach ( $histories['employee'] as $num => $employment_history ) {?>
                     <tr class="<?php echo $num % 2 == 0 ? 'alternate' : 'odd'; ?>">
-                        <td><?php echo esc_html( erp_format_date( $employment_history['date'] ) ); ?></td>
                         <td>
-                            <?php echo ( ! empty( $employment_history['status'] ) ) ? wp_kses_post( $employment_history['status'] ) : '--'; ?>
+                            <?php echo esc_html( erp_format_date( $employment_history['date'] ) ); ?>
+                            <?php if ( 0 === $num ) : ?>
+                                <span class="active_dot"></span>
+                            <?php endif; ?>
+                        </td>
+                        <td>
+                            <?php echo ( ! empty( $employment_history['status'] ) && array_key_exists( $employment_history['status'], $statuses ) ) ? wp_kses_post( $statuses[ $employment_history['status'] ] ) : '--'; ?>
                         </td>
                         <td>
                             <?php echo ( ! empty( $employment_history['comments'] ) ) ? wp_kses_post( $employment_history['comments'] ) : '--'; ?>
@@ -74,9 +79,14 @@
 
                 foreach ( $histories['employment'] as $num => $employment_history ) {?>
                     <tr class="<?php echo $num % 2 == 0 ? 'alternate' : 'odd'; ?>">
-                        <td><?php echo esc_html( erp_format_date( $employment_history['date'] ) ); ?></td>
                         <td>
-                            <?php echo ( ! empty( $employment_history['type'] ) ) ? wp_kses_post( $employment_history['type'] ) : '--'; ?>
+                            <?php echo esc_html( erp_format_date( $employment_history['date'] ) ); ?>
+                            <?php if ( 0 === $num ) : ?>
+                                <span class="active_dot"></span>
+                            <?php endif; ?>
+                        </td>
+                        <td>
+                            <?php echo ( ! empty( $employment_history['type'] ) && array_key_exists( $employment_history['type'], $types ) ) ? wp_kses_post( $types[ $employment_history['type'] ] ) : '--'; ?>
                         </td>
                         <td>
                             <?php echo ( ! empty( $employment_history['comments'] ) ) ? wp_kses_post( $employment_history['comments'] ) : '--'; ?>
@@ -123,26 +133,26 @@
             <tbody>
                 <?php
                 if ( ! empty( $histories['compensation'] ) ) {
+                    $pay_type = erp_hr_get_pay_type();
+                    $reason   = erp_hr_get_pay_change_reasons();
+
                     foreach ( $histories['compensation'] as $num => $compensation ) {
                         ?>
                         <tr class="<?php echo $num % 2 == 0 ? 'alternate' : 'odd'; ?>">
                             <td>
                                 <?php echo esc_html( erp_format_date( $compensation['date'] ) ); ?>
-                                <?php
-                                 if ( ( count( $histories['compensation'] ) - 1 ) == $num ) {
-                                     ?>
+                                <?php if ( 0 === $num ) : ?>
                                     <span class="active_dot"></span>
-                                    <?php
-                                 } ?>
+                                <?php endif; ?>
                             </td>
                             <td>
                                 <?php echo ( ! empty( $compensation['pay_rate'] ) ) ? wp_kses_post( $compensation['pay_rate'] ) : '--'; ?>
                             </td>
                             <td>
-                                <?php echo ( ! empty( $compensation['pay_type'] ) ) ? wp_kses_post( $compensation['pay_type'] ) : '--'; ?>
+                                <?php echo ( ! empty( $compensation['pay_type'] ) && array_key_exists( $compensation['pay_type'], $pay_type ) ) ? wp_kses_post( $pay_type[ $compensation['pay_type'] ] ) : '--'; ?>
                             </td>
                             <td>
-                                <?php echo ( ! empty( $compensation['reason'] ) ) ? wp_kses_post( $compensation['reason'] ) : '--'; ?>
+                                <?php echo ( ! empty( $compensation['reason'] ) && array_key_exists( $compensation['reason'], $reason ) ) ? wp_kses_post( $reason[ $compensation['reason'] ] ) : '--'; ?>
                             </td>
                             <td>
                                 <?php echo ( ! empty( $compensation['comment'] ) ) ? wp_kses_post( $compensation['comment'] ) : '--'; ?>
@@ -192,7 +202,12 @@
             foreach ( $histories['job'] as $num => $row ) {
                 ?>
                 <tr class="<?php echo $num % 2 == 0 ? 'alternate' : 'odd'; ?>">
-                    <td><?php echo esc_html( erp_format_date( $row['date'] ) ); ?></td>
+                    <td>
+                        <?php echo esc_html( erp_format_date( $row['date'] ) ); ?>
+                        <?php if ( 0 === $num ) : ?>
+                            <span class="active_dot"></span>
+                        <?php endif; ?>
+                    </td>
                     <td>
                         <?php
                             $location = ( ! empty( $row['location'] ) ) ? esc_html( $row['location'] ) : erp_get_company_default_location_name();
