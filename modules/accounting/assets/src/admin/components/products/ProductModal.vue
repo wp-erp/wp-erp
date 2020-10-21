@@ -288,7 +288,7 @@ export default {
                 this.showAlert('success', type === 'put' ? 'Product Updated!' : 'Product Created!');
             }).catch(error => {
                 this.$store.dispatch('spinner/setSpinner', false);
-                throw error;
+                this.showAlert('warning',  error.response.data.message);
             });
         },
 
@@ -349,7 +349,7 @@ export default {
             if ( ! this.ProductFields.vendor ) {
                 return false;
             }
-            
+
             return true;
         },
 

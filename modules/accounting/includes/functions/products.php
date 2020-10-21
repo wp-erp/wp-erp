@@ -102,7 +102,7 @@ function erp_acct_get_product( $product_id ) {
  * Insert product data
  *
  * @param $data
- * @return int
+ * @return WP_Error
  */
 function erp_acct_insert_product( $data ) {
     global $wpdb;
@@ -115,6 +115,19 @@ function erp_acct_insert_product( $data ) {
     try {
         $wpdb->query( 'START TRANSACTION' );
         $product_data = erp_acct_get_formatted_product_data( $data );
+
+        $product_check =  $wpdb->get_row(
+            $wpdb->prepare(
+                "SELECT * FROM {$wpdb->prefix}erp_acct_products where name = %s",
+                $product_data['name']
+            ),
+            OBJECT
+        );
+
+        if($product_check){
+            throw new \Exception("Product Duplicate problem") ;
+        }
+
 
         $wpdb->insert(
             $wpdb->prefix . 'erp_acct_products',
@@ -139,7 +152,7 @@ function erp_acct_insert_product( $data ) {
 
     } catch ( Exception $e ) {
         $wpdb->query( 'ROLLBACK' );
-        return new WP_error( 'product-exception', $e->getMessage() );
+        return new WP_Error( 400,  $e->getMessage()   );
     }
 
     return erp_acct_get_product( $product_id );
