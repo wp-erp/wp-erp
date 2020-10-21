@@ -1,3 +1,13 @@
+<?php
+$id = isset( $_GET['id'] ) ? $_GET['id'] : 0;
+$value = '';
+
+if ( $id ) {
+    $employee = new \WeDevs\ERP\HRM\Employee( $id );
+    $value = $employee->get_type();
+}
+?>
+
 <div class="type-form-wrap">
     <div class="row">
         <?php erp_html_form_input( [
@@ -11,11 +21,12 @@
 
     <div class="row">
         <?php erp_html_form_input( [
-            'label'   => __( 'Employment Type', 'erp' ),
-            'name'    => 'type',
-            'value'   => '',
-            'type'    => 'select',
-            'options' => [ 0 => __( '- Select -', 'erp' ) ] + erp_hr_get_employee_types(),
+            'label'       => __( 'Employment Type', 'erp' ),
+            'name'        => 'type',
+            'value'       => $value,
+            'type'        => 'select',
+            'custom_attr' => [ 'data-selected' => $value ],
+            'options'     => [ 0 => __( '- Select -', 'erp' ) ] + erp_hr_get_employee_types(),
         ] ); ?>
     </div>
 

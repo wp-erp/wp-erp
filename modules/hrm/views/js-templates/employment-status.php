@@ -1,3 +1,13 @@
+<?php
+$id = isset( $_GET['id'] ) ? $_GET['id'] : 0;
+$value = '';
+
+if ( $id ) {
+    $employee = new \WeDevs\ERP\HRM\Employee( $id );
+    $value = $employee->get_status();
+}
+?>
+
 <div class="status-form-wrap">
     <div class="row">
         <?php erp_html_form_input( [
@@ -11,11 +21,13 @@
 
     <div class="row">
         <?php erp_html_form_input( [
-            'label'   => __( 'Employee Status', 'erp' ),
-            'name'    => 'status',
-            'value'   => '',
-            'type'    => 'select',
-            'options' => [ 0 => __( '- Select -', 'erp' ) ] + erp_hr_get_employee_statuses(),
+            'label'       => __( 'Employee Status', 'erp' ),
+            'name'        => 'status',
+            'value'       => $value,
+            'type'        => 'select',
+            'id'          => 'erp-hr-employee-status-option',
+            'custom_attr' => [ 'data-selected' => $value ],
+            'options'     => [ 0 => __( '- Select -', 'erp' ) ] + erp_hr_get_employee_statuses(),
         ] ); ?>
     </div>
 
