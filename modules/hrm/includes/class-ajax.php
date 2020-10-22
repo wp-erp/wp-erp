@@ -1955,39 +1955,63 @@ class Ajax_Handler {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
-        $start      = isset( $_POST['start'] ) ? sanitize_text_field( wp_unslash( $_POST['start'] ) ) : current_time( 'mysql' );
-        $end        = isset( $_POST['end'] ) ? sanitize_text_field( wp_unslash( $_POST['end'] ) ) : current_time( 'mysql' );
+        $start = isset( $_POST['start'] ) ? sanitize_text_field( wp_unslash( $_POST['start'] ) ) : erp_current_datetime()->modify( 'start of this month' )->format( 'Y-m-d H:i:s' );
+        $end   = isset( $_POST['end'] ) ? sanitize_text_field( wp_unslash( $_POST['end'] ) ) : erp_current_datetime()->modify( 'end of this month' )->format( 'Y-m-d H:i:s' );
 
-
-        $start      = erp_current_datetime()->modify( $start )->setTime( 0, 0, 0 )->getTimestamp();
-        $end        = erp_current_datetime()->modify( $end )->setTime( 0, 0, 0 )->getTimestamp();
-
-        $start_date = erp_current_datetime()->setTimestamp( $start )->setTime( 0, 0, 0 )->format(  'Y-m-d 00:00:00' );
-        $end_date   = erp_current_datetime()->setTimestamp( $end )->setTime( 0, 0, 0 )->format(  'Y-m-d 23:59:59' );
+        $start = erp_current_datetime()->modify( $start )->setTime( 0, 0, 0 );
+        $end   = erp_current_datetime()->modify( $end )->setTime( 23, 59, 59 );
 
         $user_id        = get_current_user_id();
-        $args = [
+        $args           = array(
             'user_id'    => $user_id,
             'status'     => 'all',
             'number'     => '-1',
-            'start_date' => $start,
-            'end_date'   => $end,
-        ];
+            'start_date' => $start->getTimestamp(),
+            'end_date'   => $end->getTimestamp(),
+        );
         $leave_requests = erp_hr_get_leave_requests( $args );
         $leave_requests = $leave_requests['data'];
-        $holidays       = erp_array_to_object( \WeDevs\ERP\HRM\Models\Leave_Holiday::where( 'start', '>=', $start_date )
-                                                                                   ->where( 'end', '<=', $end_date )
-                                                                                   ->get()
-                                                                                   ->toArray() );
-        $events         = [];
-        $holiday_events = [];
-        $event_data     = [];
+
+        $start_date = $start->format( 'Y-m-d H:i:s' );
+        $end_date   = $end->format( 'Y-m-d H:i:s' );
+
+        $holiday = new \WeDevs\ERP\HRM\Models\Leave_Holiday();
+        $holiday = $holiday->where(
+            function ( $condition ) use ( $start_date ) {
+                $condition->where( 'start', '<=', $start_date );
+                $condition->where( 'end', '>=', $start_date );
+            }
+        );
+        $holiday = $holiday->orWhere(
+            function ( $condition ) use ( $end_date ) {
+                $condition->where( 'start', '<=', $end_date );
+                $condition->where( 'end', '>=', $end_date );
+            }
+        );
+        $holiday = $holiday->orWhere(
+            function ( $condition ) use ( $start_date, $end_date ) {
+                $condition->where( 'start', '>=', $start_date );
+                $condition->where( 'start', '<=', $end_date );
+            }
+        );
+        $holiday = $holiday->orWhere(
+            function ( $condition ) use ( $start_date, $end_date ) {
+                $condition->where( 'end', '>=', $start_date );
+                $condition->where( 'end', '<=', $end_date );
+            }
+        );
+
+        $holidays = $holiday->get()->toArray();
+
+        $events         = array();
+        $holiday_events = array();
+        $event_data     = array();
 
         foreach ( $leave_requests as $key => $leave_request ) {
             if ( 3 == $leave_request->status ) {
                 continue;
             }
-            //if status pending
+            // if status pending
             $event_label = $leave_request->policy_name;
 
             if ( 2 == $leave_request->status ) {
@@ -1999,29 +2023,29 @@ class Ajax_Handler {
                 $event_label .= '(' . erp_hr_leave_request_get_day_statuses( $leave_request->day_status_id ) . ')';
             }
 
-            $events[] = [
-                'id'        => $leave_request->id,
-                'title'     => $event_label,
-                'start'     => erp_current_datetime()->setTimestamp( $leave_request->start_date )->setTime( 0, 0, 0 )->format(  'Y-m-d 00:00:00' ),
-                'end'       => erp_current_datetime()->setTimestamp( $leave_request->end_date )->setTime( 23, 59, 59 )->format( 'Y-m-d 23:59:59' ),
-                'url'       => /*erp_hr_url_single_employee( $leave_request->user_id, 'leave' )*/ 'javascript:void(0)',
-                'go_to'     => erp_hr_url_single_employee( $leave_request->user_id, 'leave' ),
-                'color'     => $leave_request->color,
-                'reason'    => $leave_request->reason,
-            ];
+            $events[] = array(
+                'id'     => $leave_request->id,
+                'title'  => $event_label,
+                'start'  => erp_current_datetime()->setTimestamp( $leave_request->start_date )->setTime( 0, 0, 0 )->format( 'Y-m-d H:i:s' ),
+                'end'    => erp_current_datetime()->setTimestamp( $leave_request->end_date )->setTime( 23, 59, 59 )->format( 'Y-m-d H:i:s' ),
+                'url'    => /*erp_hr_url_single_employee( $leave_request->user_id, 'leave' )*/ 'javascript:void(0)',
+                'go_to'  => erp_hr_url_single_employee( $leave_request->user_id, 'leave' ),
+                'color'  => $leave_request->color,
+                'reason' => $leave_request->reason,
+            );
         }
 
-        foreach ( $holidays as $key => $holiday ) {
-            $holiday_events[] = [
-                'id'        => $holiday->id,
-                'title'     => $holiday->title,
-                'start'     => $holiday->start,
-                'end'       => $holiday->end,
-                'color'     => '#FF5354',
-                'img'       => '',
-                'url'       => 'javascript:void(0)',
-                'holiday'   => true,
-            ];
+        foreach ( erp_array_to_object( $holidays ) as $key => $holiday ) {
+            $holiday_events[] = array(
+                'id'      => $holiday->id,
+                'title'   => $holiday->title,
+                'start'   => $holiday->start,
+                'end'     => $holiday->end,
+                'color'   => '#FF5354',
+                'img'     => '',
+                'url'     => 'javascript:void(0)',
+                'holiday' => true,
+            );
         }
 
         $event_data = array_merge( $events, $holiday_events );
