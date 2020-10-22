@@ -316,7 +316,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
         global $wpdb;
 
         $statuses = $wpdb->get_results( "SELECT id, type_name as name, slug FROM {$wpdb->prefix}erp_acct_trn_status_types", ARRAY_A );
-        array_unshift(
+       /* array_unshift(
             $statuses,
             [
                 'id'        => '0',
@@ -325,6 +325,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'slug'      => 'all',
             ]
         );
+       */
 
         $response = rest_ensure_response( $statuses );
 
@@ -347,6 +348,8 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
             'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date'],
             'status'     => empty( $request['status'] ) ? '' : $request['status'],
+            'type'       => empty( $request['type'] ) ? '' : $request['type'],
+            'customer_id'=> empty( $request['customer_id'] ) ? '' : $request['customer_id'],
         ];
 
         $formatted_items   = [];
@@ -502,6 +505,8 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
             'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date'],
             'status'     => empty( $request['status'] ) ? '' : $request['status'],
+            'type'     => empty( $request['type'] ) ? '' : $request['type'],
+            'vendor_id'     => empty( $request['vendor_id'] ) ? '' : $request['vendor_id'],
         ];
 
         $formatted_items   = [];
@@ -589,6 +594,8 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
             'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date'],
             'status'     => empty( $request['status'] ) ? '' : $request['status'],
+            'type'       => empty( $request['type'] ) ? '' : $request['type'],
+            'vendor_id'  => empty( $request['vendor_id'] ) ? '' : $request['vendor_id'],
         ];
 
         $formatted_items   = [];
@@ -652,8 +659,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @param object|array    $item
      * @param WP_REST_Request $request           request object
      * @param array           $additional_fields (optional)
-     *
-     * @return WP_REST_Response $response response data
+     * @return object $response Response data.
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
         $status = null;
@@ -688,6 +694,8 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $item['status']      = erp_acct_get_trn_status_by_id( $status );
         $item['status_code'] = $status;
+        $item['ref'] = $item['ref'] ? $item['ref'] : $item['pay_ref'];
+        $item['ref'] = $item['ref'] ? $item['ref'] : $item['exp_ref']; // for set expense reference no
 
         $data = array_merge( $item, $additional_fields );
 

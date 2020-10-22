@@ -22,6 +22,7 @@ function erp_acct_get_sales_transactions( $args = [] ) {
         'customer_id' => false,
         's'           => '',
         'status'      => '',
+        'type'      => '',
     ];
 
     $args = wp_parse_args( $args, $defaults );
@@ -43,6 +44,18 @@ function erp_acct_get_sales_transactions( $args = [] ) {
     } else {
         if ( ! empty( $args['status'] ) ) {
             $where .= " AND invoice.status={$args['status']} OR invoice_receipt.status={$args['status']} ";
+        }
+    }
+
+    if ( ! empty( $args['type'] ) ) {
+        if($args['type'] === 'estimate'){
+            $where .= " AND invoice.estimate = 1 ";
+        }
+        if($args['type'] === 'payment'){
+            $where .= " AND voucher.type = '{$args['type']}' ";
+        }
+        if($args['type'] === 'invoice'){
+            $where .= " AND voucher.type = '{$args['type']}' AND invoice.estimate = 0 ";
         }
     }
 
@@ -563,6 +576,7 @@ function erp_acct_get_expense_transactions( $args = [] ) {
         'vendor_id' => false,
         's'         => '',
         'status'    => '',
+        'type'    => '',
     ];
 
     $args = wp_parse_args( $args, $defaults );
@@ -587,6 +601,10 @@ function erp_acct_get_expense_transactions( $args = [] ) {
         }
     }
 
+    if ( ! empty($args['type']) ) {
+        $where .= " AND voucher.type = '{$args['type']}' ";
+    }
+
     if ( -1 !== $args['number'] ) {
         $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
     }
@@ -609,6 +627,7 @@ function erp_acct_get_expense_transactions( $args = [] ) {
             bill.amount,
             bill.ref,
             expense.ref AS exp_ref,
+            pay_bill.ref AS pay_ref,
             pay_bill.amount as pay_bill_amount,
             expense.amount as expense_amount,
             SUM(bill_acct_details.debit - bill_acct_details.credit) AS due,
@@ -679,6 +698,10 @@ function erp_acct_get_purchase_transactions( $args = [] ) {
         }
     }
 
+    if ( ! empty( $args['type'] ) ) {
+        $where .= " AND voucher.type = '{$args['start_date']}'";
+    }
+
     if ( -1 !== $args['number'] ) {
         $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
     }
@@ -698,6 +721,7 @@ function erp_acct_get_purchase_transactions( $args = [] ) {
             purchase.due_date,
             purchase.amount,
             purchase.ref,
+            pay_purchase.ref as pay_ref,
             purchase.purchase_order,
             pay_purchase.amount as pay_bill_amount,
             ABS(SUM(purchase_acct_details.debit - purchase_acct_details.credit)) AS due,
@@ -825,8 +849,9 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
         $trn_id = $transaction->trn_no;
     }
 
+    $title =  isset($transaction->estimate) ? 'Estimate' : $type ;
     //Set type
-    $trn_pdf->set_type( erp_acct_get_transaction_type( $trn_id ) );
+    $trn_pdf->set_type( $title);
 
     // Set barcode
     if ( $trn_id ) {
@@ -836,6 +861,16 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
     // Set reference
     if ( $trn_id ) {
         $trn_pdf->set_reference( $trn_id, __( 'Transaction Number', 'erp' ) );
+    }
+
+    // Set Reference No
+    if ( $transaction->ref ) {
+        $trn_pdf->set_reference( $transaction->ref , __( 'Reference No', 'erp' ) );
+    }
+
+    // Set Due Date
+    if ( $transaction->due_date ) {
+        $trn_pdf->set_reference( $transaction->due_date , __( 'Due Date', 'erp' ) );
     }
 
     // Set Issue Date
@@ -1114,7 +1149,7 @@ add_action( 'erp_acct_new_transaction_estimate', 'erp_acct_send_email_on_transac
 add_action( 'erp_acct_new_transaction_purchase_order', 'erp_acct_send_email_on_transaction', 10, 2 );
 
 /**
- * Send pdf on transaction
+ * Generate PDF and Send to Email on Transaction
  *
  * @param $voucher_no
  * @param $transaction

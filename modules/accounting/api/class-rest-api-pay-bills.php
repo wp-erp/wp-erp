@@ -381,6 +381,7 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
             'trn_date'        => $item->trn_date,
             'amount'          => $item->amount,
             'billing_address' => ! empty( $item->billing_address ) ? $item->billing_address : erp_acct_get_people_address( $item->vendor_id ),
+            'pdf_link'        => $item->pdf_link ,
             'bill_details'    => ! empty( $item->bill_details ) ? $item->bill_details : [],
             'type'            => ! empty( $item->type ) ? $item->type : 'pay_bill',
             'status'          => $item->status,

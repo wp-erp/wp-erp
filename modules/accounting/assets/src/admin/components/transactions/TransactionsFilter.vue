@@ -28,17 +28,44 @@
                                         </div>
                                     </div>
                                     <br>
-                                    <h3>{{ __('Status', 'erp') }}</h3>
+                                    <div class="form-fields">
+                                        <div class="form-field-wrapper">
+                                            <h3>{{ __('Status', 'erp') }}</h3>
+                                            <div class="form-fields">
+                                                <simple-select
+                                                    v-model="filters.status"
+                                                    :options="statuses"
+                                                >
+                                                </simple-select>
+                                            </div>
+                                        </div>
+                                        <div  class="form-field-wrapper" v-if="types.length">
+                                        <h3>{{ __('Type', 'erp') }}</h3>
+                                            <div class="form-fields">
+                                                <simple-select
+                                                    v-model="filters.type"
+                                                    :options="types"
+                                                >
+                                                </simple-select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                <div class="people" v-if="people.items.length">
+                                    <br>
+                                    <h3>{{ __(people.title, 'erp') }}</h3>
                                     <div class="form-fields">
                                         <simple-select
-                                            v-model="filters.status"
-                                            :options="statuses"
+                                            v-model="filters.people_id"
+                                            :options="people.items"
                                         >
                                         </simple-select>
                                     </div>
                                 </div>
+                                </div>
                                 <div class="wperp-panel-footer">
-                                    <input type="reset" value="Cancel" class="wperp-btn btn--default" @click="toggleFilter">
+                                    <input type="reset" value="Cancel" class="wperp-btn btn--default"
+                                           @click="toggleFilter">
                                     <input type="submit" value="Submit" class="wperp-btn btn--primary">
                                 </div>
                             </div>
@@ -62,6 +89,26 @@ import SimpleSelect from 'admin/components/select/SimpleSelect.vue';
 export default {
     name: 'TransactionsFilter',
 
+    props: {
+        types: {
+            type: Array,
+            required: false,
+            default: function () {
+                return []
+            }
+        },
+        people: {
+            type: Object,
+            required: false,
+            default: function () {
+                return {
+                    title: '',
+                    items: []
+                }
+            }
+        }
+    },
+
     components: {
         Datepicker,
         SimpleSelect
@@ -73,7 +120,9 @@ export default {
             filters: {
                 start_date: '',
                 end_date: '',
-                status: ''
+                status: '',
+                type: '',
+                customer_id: ''
             },
             statuses: []
         };
@@ -86,10 +135,10 @@ export default {
             throw error;
         });
 
-        this.$root.$on('SimpleSelectChange', (data) => {
+       /* this.$root.$on('SimpleSelectChange', (data) => {
             const status = this.statuses.find(o => o.id === data.selected);
             this.filters.status = parseInt(status.id);
-        });
+        });*/
     },
 
     methods: {
@@ -106,3 +155,11 @@ export default {
     }
 };
 </script>
+<style>
+.form-fields .vue-select {
+    width: 100% !important;
+}
+.form-fields .form-field-wrapper:first-child{
+    padding-right: 10px;
+}
+</style>

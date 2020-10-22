@@ -16,7 +16,7 @@
         <!-- End .header-section -->
 
         <purchases-stats />
-        <transactions-filter />
+        <transactions-filter  :types="filterTypes" :people="{title: 'Vendor', items: vendors}"/>
         <purchases-list />
 
     </div>
@@ -30,6 +30,7 @@ import ComboBox from 'admin/components/select/ComboBox.vue';
 import PurchasesStats from 'admin/components/transactions/purchases/PurchasesStats.vue';
 import PurchasesList from 'admin/components/transactions/purchases/PurchasesList.vue';
 import TransactionsFilter from 'admin/components/transactions/TransactionsFilter.vue';
+import {mapState} from "vuex";
 
 export default {
     name: 'Purchases',
@@ -47,8 +48,21 @@ export default {
                 { namedRoute: 'PurchaseCreate', name: __('Create Purchase', 'erp') },
                 { namedRoute: 'PayPurchaseCreate', name: __('Pay Purchase', 'erp') },
                 { namedRoute: 'PurchaseOrderCreate', name:  __('Create Purchase Order', 'erp') }
-            ]
+            ],
+
+            filterTypes:[{id: 'purchase', name: 'Purchase'}, {id: 'pay_purchase', name: 'Purchase Payment'}],
         };
+    },
+
+    computed: mapState({
+        vendors: state => state.purchase.vendors
+    }),
+
+    created() {
+        if(!this.vendors.length){
+            this.$store.dispatch('purchase/fetchVendors');
+        }
     }
-};
+
+    };
 </script>

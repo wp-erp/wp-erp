@@ -61,6 +61,7 @@ function erp_acct_get_payment( $invoice_no ) {
     pay_inv.trn_date,
     pay_inv.amount,
     pay_inv.trn_by,
+    pay_inv.ref,
     pay_inv.trn_by_ledger_id,
     pay_inv.particulars,
     pay_inv.attachments,
@@ -543,6 +544,7 @@ function erp_acct_insert_payment_data_into_ledger( $payment_data ) {
 }
 
 /**
+
  * Insert Payment/s data into "Bank Transaction Charge"
  *
  * @param array $payment_data
