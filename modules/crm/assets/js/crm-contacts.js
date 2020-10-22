@@ -2254,6 +2254,21 @@
                                     self.initFields();
                                 }
                             });
+
+                            $( 'button[type=submit]' ).click( function() {
+                                var count = 0;
+
+                                $( '#erp-customer-edit form' ).find( 'input, select, textarea' ).each( function() {
+                                    if( $(this).prop('required') && $(this).val() === '' ) {
+                                        count++;
+                                    }
+                                });
+
+                                if( count ) {
+                                    var notice = wpErpCrm.required_field_notice.replace('{count}', count);
+                                    swal( '', notice , 'warning' );
+                                }
+                            });
                         },
                         onSubmit: function(modal) {
                             modal.disableButton();
