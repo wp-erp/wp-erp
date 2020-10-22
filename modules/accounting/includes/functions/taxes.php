@@ -599,10 +599,12 @@ function erp_acct_tax_summary() {
     return $wpdb->get_results(
         "SELECT
         tax.id AS tax_rate_id,
+        tax.id AS tax_zone_id,
         tax.tax_rate_name,
         tax.default,
         tca.tax_cat_id,
-        sum(tca.tax_rate) AS tax_rate
+        tca.agency_id,
+        tca.tax_rate
         FROM {$wpdb->prefix}erp_acct_tax_cat_agency AS tca
         INNER JOIN {$wpdb->prefix}erp_acct_taxes AS tax ON tax.id = tca.tax_id
         GROUP BY tca.tax_cat_id, tax.id order by tax_cat_id",
