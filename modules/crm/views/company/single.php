@@ -8,8 +8,12 @@ $contact_tags = wp_list_pluck( $contact_tags, 'name' );
 ?>
 <div class="wrap erp erp-crm-customer erp-single-customer" id="wp-erp">
 
-    <h2><?php esc_attr_e( 'Company #', 'erp' ); echo esc_attr( $customer->id ); ?>
-        <a href="<?php echo esc_url_raw( add_query_arg( ['page' => 'erp-crm', 'section' => 'companies' ], admin_url( 'admin.php' ) ) ); ?>" id="erp-contact-list" class="add-new-h2"><?php esc_attr_e( 'Back to Company list', 'erp' ); ?></a>
+    <h2>
+        <?php
+        esc_attr_e( 'Company #', 'erp' );
+        echo esc_attr( $customer->id );
+        ?>
+        <a href="<?php echo esc_url_raw( add_query_arg( [ 'page' => 'erp-crm', 'section' => 'companies' ], admin_url( 'admin.php' ) ) ); ?>" id="erp-contact-list" class="add-new-h2"><?php esc_attr_e( 'Back to Company list', 'erp' ); ?></a>
 
         <?php if ( current_user_can( 'erp_crm_edit_contact', $customer->id ) || current_user_can( erp_crm_get_manager_role() ) ) { ?>
             <span class="edit">
@@ -45,7 +49,7 @@ $contact_tags = wp_list_pluck( $contact_tags, 'name' );
                                     </p>
                                 <?php } ?>
 
-                                <?php if ( $customer->get_mobile() != '—' ) { ?>
+                                <?php if ( $customer->get_mobile() !== '—' ) { ?>
                                     <p>
                                         <i class="fa fa-phone"></i>&nbsp;
                                         <?php echo wp_kses_post( $customer->get_mobile() ); ?>
@@ -96,15 +100,15 @@ $contact_tags = wp_list_pluck( $contact_tags, 'name' );
                                     <div class="user-wrap">
                                         <div class="user-wrap-content">
                                             <?php
-                                                $crm_user_id = $customer->get_contact_owner();
+                                            $crm_user_id = $customer->get_contact_owner();
 
-                                                if ( !empty( $crm_user_id ) ) {
-                                                    $user        = get_user_by( 'id', $crm_user_id );
-                                                    $user_string = esc_html( $user->display_name );
-                                                    $user_email  = $user->get( 'user_email' );
-                                                } else {
-                                                    $user_string = '';
-                                                }
+                                            if ( ! empty( $crm_user_id ) ) {
+                                                $user        = get_user_by( 'id', $crm_user_id );
+                                                $user_string = esc_html( $user->display_name );
+                                                $user_email  = $user->get( 'user_email' );
+                                            } else {
+                                                $user_string = '';
+                                            }
                                             ?>
                                             <?php if ( $crm_user_id && ! empty( $user ) ) { ?>
                                                 <?php echo wp_kses_post( erp_crm_get_avatar( $crm_user_id, $user_email, $crm_user_id, 32 ) ); ?>
@@ -167,7 +171,7 @@ $contact_tags = wp_list_pluck( $contact_tags, 'name' );
                                         <label class="screen-reader-text" for="new-tag-erp-crm-tag"></label>
                                         <p>
                                             <input style="width: 82%;" data-wp-taxonomy="erp_crm_tag" type="text" id="new-tag-erp-crm-tag" name="newtag[erp_crm_tag]" class="newtag form-input-tip" size="16" autocomplete="on" aria-describedby="new-tag-erp-crm-tag-desc" value="" />
-                                            <input type="button" id="add-crm-tag" class="button tagadd" value="<?php esc_attr_e( 'Add' ); ?>" /></p>
+                                            <input type="button" id="add-crm-tag" class="button tagadd" value="<?php esc_attr_e( 'Add', 'erp' ); ?>" /></p>
                                     </div>
                                     <p class="howto" id="new-tag-erp-crm-tag-desc"><?php esc_attr_e( 'Separate tags with commas', 'erp' ); ?></p>
 
