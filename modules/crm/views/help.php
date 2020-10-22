@@ -6,35 +6,35 @@
         </a>
     </h1>
     <?php
-    $erp_doc_sections = array(
-        __( 'General', 'erp' )            => array(
+    $erp_doc_sections = [
+        __( 'General', 'erp' )            => [
             __( 'What are the differences between CRM life stages?', 'erp' ) => 'https://wperp.com/docs/crm/getting-started/contact-stages/',
-        ),
-        __( 'Contact Management', 'erp' ) => array(
+        ],
+        __( 'Contact Management', 'erp' ) => [
             __( 'How to add a new contact?', 'erp' )                                      => 'https://wperp.com/docs/crm/contacts-management/adding-a-new-contact/',
             __( 'How can I search contacts by using filters and search segment?', 'erp' ) => 'https://wperp.com/docs/crm/contacts-management/contacts-filtering/',
             __( 'How to send Emails to contact by using templates?', 'erp' )              => 'https://wperp.com/docs/crm/contacts-management/sending-a-mail-from-template/',
             __( 'How can I set up a meeting with a contact?', 'erp' )                     => 'https://wperp.com/docs/crm/contacts-management/setting-up-a-meeting/',
             __( 'How to assign contacts to the companies?', 'erp' )                       => 'https://wperp.com/docs/crm/contacts-management/assigning-a-contact-to-a-company/',
-        ),
-        __( 'Company Management', 'erp' ) => array(
+        ],
+        __( 'Company Management', 'erp' ) => [
             __( 'How to add a new company?', 'erp' )                => 'https://wperp.com/docs/crm/company-management/creating-or-updating-a-new-company/',
             __( 'How to add a company to a contact group?', 'erp' ) => 'https://wperp.com/docs/crm/company-management/adding-a-company-to-a-contact-group/',
-        ),
-        __( 'Miscellaneous', 'erp' )      => array(
+        ],
+        __( 'Miscellaneous', 'erp' )      => [
             __( 'How to create contacts group?', 'erp' )                 => 'https://wperp.com/docs/crm/contact-groups/creating-groups/',
             __( 'How to create an event or log from calendar?', 'erp' )  => 'https://wperp.com/docs/crm/contact-groups/creating-groups/',
             __( 'How to use Subscription Form (CRM) in WP ERP?', 'erp' ) => 'https://wperp.com/docs/crm/subscription-forms/',
-            __( 'Do you have tutorials on youtube?', 'erp' )             => 'https://wperp.com/docs/crm/tutorial-videos-on-youtube/'
-        )
-    );
+            __( 'Do you have tutorials on youtube?', 'erp' )             => 'https://wperp.com/docs/crm/tutorial-videos-on-youtube/',
+        ],
+    ];
 
     $sections = apply_filters( 'erp_crm_help_docs', $erp_doc_sections );
 
-    if ( ! empty( $sections ) ):?>
+    if ( ! empty( $sections ) ) { ?>
         <div id="dashboard-widgets-wrap">
             <div id="dashboard-widgets" class="metabox-holder">
-                <?php foreach ( $sections as $section_title => $docs ): ?>
+                <?php foreach ( $sections as $section_title => $docs ) { ?>
                     <div class="erp-help-section postbox-container">
                         <div class="metabox-holder">
 
@@ -43,19 +43,19 @@
                                 <div class="postbox">
                                     <h2 class="hndle"><?php echo esc_html( $section_title ); ?></h2>
 
-                                    <?php if ( !empty($docs) ) { ?>
+                                    <?php if ( !empty( $docs ) ) { ?>
                                         <div class="erp-help-questions">
                                             <ul>
-                                                <?php foreach ($docs as $title => $link) { ?>
+                                                <?php foreach ( $docs as $title => $link ) { ?>
                                                     <?php
                                                     $tracking_url = add_query_arg(
-                                                        array(
+                                                        [
                                                             'utm_source'   => 'doc',
                                                             'utm_medium'   => 'erp',
                                                             'utm_campaign' => 'manik',
                                                             'utm_content'  => 'aion',
-                                                        ),
-                                                        untrailingslashit($link)
+                                                        ],
+                                                        untrailingslashit( $link )
                                                     );
                                                     ?>
 
@@ -72,12 +72,12 @@
 
                         </div>
                     </div>
-                <?php endforeach; ?>
+                <?php } ?>
             </div>
         </div>
-    <?php else: ?>
+    <?php } else { ?>
 
-    <?php endif; ?>
+    <?php } ?>
 
 </div>
 

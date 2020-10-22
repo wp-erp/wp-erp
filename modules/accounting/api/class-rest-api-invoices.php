@@ -2,15 +2,16 @@
 
 namespace WeDevs\ERP\Accounting\API;
 
-use WP_REST_Server;
-use WP_REST_Response;
 use WP_Error;
+use WP_REST_Response;
+use WP_REST_Server;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
 
 class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
+
     /**
      * Endpoint namespace.
      *
@@ -33,110 +34,109 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
             $this->namespace,
             '/' . $this->rest_base,
             [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_invoices' ],
-					'args'                => $this->get_collection_params(),
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_view_sale' );
-					},
-				],
-				[
-					'methods'             => WP_REST_Server::CREATABLE,
-					'callback'            => [ $this, 'create_invoice' ],
-					'args'                => [],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_create_sales_invoice' );
-					},
-				],
-				'schema' => [ $this, 'get_item_schema' ],
-			]
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_invoices' ],
+                    'args'                => $this->get_collection_params(),
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_view_sale' );
+                    },
+                ],
+                [
+                    'methods'             => WP_REST_Server::CREATABLE,
+                    'callback'            => [ $this, 'create_invoice' ],
+                    'args'                => [],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_create_sales_invoice' );
+                    },
+                ],
+                'schema' => [ $this, 'get_item_schema' ],
+            ]
         );
 
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base . '/(?P<id>[\d]+)',
             [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_invoice' ],
-					'args'                => [],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_view_sales_summary' );
-					},
-				],
-				[
-					'methods'             => WP_REST_Server::EDITABLE,
-					'callback'            => [ $this, 'update_invoice' ],
-					'args'                => [],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_create_sales_invoice' );
-					},
-				],
-				'schema' => [ $this, 'get_item_schema' ],
-			]
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_invoice' ],
+                    'args'                => [],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_view_sales_summary' );
+                    },
+                ],
+                [
+                    'methods'             => WP_REST_Server::EDITABLE,
+                    'callback'            => [ $this, 'update_invoice' ],
+                    'args'                => [],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_create_sales_invoice' );
+                    },
+                ],
+                'schema' => [ $this, 'get_item_schema' ],
+            ]
         );
 
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/void',
             [
-				[
-					'methods'             => WP_REST_Server::CREATABLE,
-					'callback'            => [ $this, 'void_invoice' ],
-					'args'                => $this->get_collection_params(),
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_create_sales_invoice' );
-					},
-				],
-			]
+                [
+                    'methods'             => WP_REST_Server::CREATABLE,
+                    'callback'            => [ $this, 'void_invoice' ],
+                    'args'                => $this->get_collection_params(),
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_create_sales_invoice' );
+                    },
+                ],
+            ]
         );
 
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base . '/due' . '/(?P<id>[\d]+)',
             [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'due_invoices' ],
-					'args'                => $this->get_collection_params(),
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_create_sales_invoice' );
-					},
-				],
-			]
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'due_invoices' ],
+                    'args'                => $this->get_collection_params(),
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_create_sales_invoice' );
+                    },
+                ],
+            ]
         );
 
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base . '/attachments',
             [
-				[
-					'methods'             => WP_REST_Server::CREATABLE,
-					'callback'            => [ $this, 'upload_attachments' ],
-					'args'                => [],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_create_sales_invoice' );
-					},
-				]
-			]
+                [
+                    'methods'             => WP_REST_Server::CREATABLE,
+                    'callback'            => [ $this, 'upload_attachments' ],
+                    'args'                => [],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_create_sales_invoice' );
+                    },
+                ],
+            ]
         );
 
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base . '/overview-receivable',
             [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_overview_receivables' ],
-					'args'                => [],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_create_sales_invoice' );
-					},
-				]
-			]
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_overview_receivables' ],
+                    'args'                => [],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_create_sales_invoice' );
+                    },
+                ],
+            ]
         );
-
     }
 
     /**
@@ -163,9 +163,9 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
         $invoice_data = erp_acct_get_all_invoices( $args );
         $total_items  = erp_acct_get_all_invoices(
             [
-				'count'  => true,
-				'number' => -1,
-			]
+                'count'  => true,
+                'number' => -1,
+            ]
         );
 
         foreach ( $invoice_data as $item ) {
@@ -189,7 +189,6 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
         return $response;
     }
 
-
     /**
      * Get an invoice
      *
@@ -209,10 +208,10 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
         $link_hash    = erp_acct_get_invoice_link_hash( $id, 'invoice' );
         $readonly_url = add_query_arg(
             [
-				'query'    => 'readonly_invoice',
-				'trans_id' => $id,
-				'auth'     => $link_hash,
-			],
+                'query'    => 'readonly_invoice',
+                'trans_id' => $id,
+                'auth'     => $link_hash,
+            ],
             site_url()
         );
 
@@ -248,8 +247,8 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
         foreach ( $items as $value ) {
             $sub_total = $value['qty'] * $value['unit_price'];
 
-            $item_total          += $sub_total;
-            $item_tax_total      += $value['tax'];
+            $item_total += $sub_total;
+            $item_tax_total += $value['tax'];
             $item_discount_total += $value['discount'];
         }
 
@@ -309,8 +308,8 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
         foreach ( $items as $value ) {
             $sub_total = $value['qty'] * $value['unit_price'];
 
-            $item_total          += $sub_total;
-            $item_tax_total      += $value['tax'];
+            $item_total += $sub_total;
+            $item_tax_total += $value['tax'];
             $item_discount_total += $value['discount'];
         }
 
@@ -413,7 +412,7 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return mixed|WP_REST_Response
      */
-    function get_overview_receivables( $request ) {
+    public function get_overview_receivables( $request ) {
         $items    = erp_acct_get_recievables_overview();
         $response = rest_ensure_response( $items );
 
@@ -430,7 +429,6 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Request
      */
     public function upload_attachments( $request ) {
-
         $file = $_FILES['attachments'];
 
         $movefiles = erp_acct_upload_attachments( $file );
@@ -450,66 +448,76 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function add_log( $data, $action ) {
         erp_log()->add(
             [
-				'component'     => 'Accounting',
-				'sub_component' => __( 'Invoice', 'erp' ),
-				'old_value'     => '',
+                'component'     => 'Accounting',
+                'sub_component' => __( 'Invoice', 'erp' ),
+                'old_value'     => '',
                 'new_value'     => '',
                 // translators: %1$s: amount, %2$s: id
-				'message'       => sprintf( __( 'An invoice of %1$s has been created for %2$s', 'erp' ), $data['amount'], erp_acct_get_people_name_by_people_id( $data['customer_id'] ) ),
-				'changetype'    => $action,
-				'created_by'    => get_current_user_id(),
-
-			]
+                'message'       => sprintf( __( 'An invoice of %1$s has been created for %2$s', 'erp' ), $data['amount'], erp_acct_get_people_name_by_people_id( $data['customer_id'] ) ),
+                'changetype'    => $action,
+                'created_by'    => get_current_user_id(),
+            ]
         );
     }
 
     /**
      * Prepare a single item for create or update
      *
-     * @param WP_REST_Request $request Request object.
+     * @param WP_REST_Request $request request object
      *
      * @return array $prepared_item
      */
     protected function prepare_item_for_database( $request ) {
-
         $prepared_item = [];
 
         if ( isset( $request['customer_id'] ) ) {
             $prepared_item['customer_id'] = $request['customer_id'];
         }
+
         if ( isset( $request['date'] ) ) {
             $prepared_item['date'] = $request['date'];
         }
+
         if ( isset( $request['due_date'] ) ) {
             $prepared_item['due_date'] = $request['due_date'];
         }
+
         if ( isset( $request['billing_address'] ) ) {
             $prepared_item['billing_address'] = maybe_serialize( $request['billing_address'] );
         }
+
         if ( isset( $request['line_items'] ) ) {
             $prepared_item['line_items'] = $request['line_items'];
         }
+
         if ( isset( $request['discount_type'] ) ) {
             $prepared_item['discount_type'] = $request['discount_type'];
         }
+
         if ( isset( $request['tax_rate_id'] ) ) {
             $prepared_item['tax_rate_id'] = $request['tax_rate_id'];
         }
+
         if ( isset( $request['status'] ) ) {
             $prepared_item['status'] = $request['status'];
         }
+
         if ( isset( $request['estimate'] ) ) {
             $prepared_item['estimate'] = $request['estimate'];
         }
+
         if ( isset( $request['attachments'] ) ) {
             $prepared_item['attachments'] = maybe_serialize( $request['attachments'] );
         }
+
         if ( isset( $request['particulars'] ) ) {
             $prepared_item['particulars'] = $request['particulars'];
         }
+
         if ( isset( $request['transaction_by'] ) ) {
             $prepared_item['transaction_by'] = $request['transaction_by'];
         }
+
         if ( isset( $request['convert'] ) ) {
             $prepared_item['convert'] = $request['convert'];
         }
@@ -522,14 +530,13 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Prepare a single user output for response
      *
-     * @param object|array $item
-     * @param WP_REST_Request $request Request object.
-     * @param array $additional_fields (optional)
+     * @param object|array    $item
+     * @param WP_REST_Request $request           request object
+     * @param array           $additional_fields (optional)
      *
-     * @return WP_REST_Response $response Response data.
+     * @return WP_REST_Response $response response data
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
-
         $data = array_merge( $item, $additional_fields );
 
         // Wrap the data in a response object
@@ -581,7 +588,7 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'context'     => [ 'view', 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
-                    ]
+                    ],
                 ],
                 'discount_type' => [
                     'description' => __( 'Discount type data.', 'erp' ),
@@ -589,12 +596,12 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'context'     => [ 'view', 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
-                    ]
+                    ],
                 ],
                 'tax_rate_id' => [
                     'description' => __( 'Tax rate id.', 'erp' ),
                     'type'        => 'integer',
-                    'context'     => [ 'view', 'edit' ]
+                    'context'     => [ 'view', 'edit' ],
                 ],
                 'line_items'      => [
                     'description' => __( 'List of line items data.', 'erp' ),
@@ -612,7 +619,7 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
                             'context'     => [ 'view', 'edit' ],
                             'arg_options' => [
                                 'sanitize_callback' => 'sanitize_text_field',
-                            ]
+                            ],
                         ],
                         'tax_cat_id' => [
                             'description' => __( 'Product type.', 'erp' ),
@@ -662,7 +669,7 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'status'          => [
                     'description' => __( 'Status for the resource.' ),
                     'type'        => 'integer',
-                    'context'     => [ 'edit' ]
+                    'context'     => [ 'edit' ],
                 ],
                 'particulars'          => [
                     'description' => __( 'Status for the resource.' ),
@@ -676,7 +683,7 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'description' => __( 'Status for the resource.' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],
-                    'required'    => true
+                    'required'    => true,
                 ],
             ],
         ];

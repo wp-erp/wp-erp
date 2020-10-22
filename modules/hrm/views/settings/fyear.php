@@ -15,15 +15,15 @@ $fin_val_compare_msg = __( 'Second value must be greater than the first value!',
     <table>
         <thead>
             <tr>
-                <td><?php esc_html_e('Name', 'erp'); ?></td>
-                <td><?php esc_html_e('Start Date', 'erp'); ?></td>
-                <td><?php esc_html_e('End Date', 'erp'); ?></td>
+                <td><?php esc_html_e( 'Name', 'erp' ); ?></td>
+                <td><?php esc_html_e( 'Start Date', 'erp' ); ?></td>
+                <td><?php esc_html_e( 'End Date', 'erp' ); ?></td>
                 <td></td>
             </tr>
         </thead>
 
         <tbody>
-            <?php if ( empty( $f_years ) ) : ?>
+            <?php if ( empty( $f_years ) ) { ?>
                 <tr class="fyear-clone">
                     <td>
                         <input
@@ -51,22 +51,22 @@ $fin_val_compare_msg = __( 'Second value must be greater than the first value!',
                     </td>
                     <td></td>
                 </tr>
-            <?php else: ?>
-                <?php foreach( $f_years as $year ) : ?>
+            <?php } else { ?>
+                <?php foreach ( $f_years as $year ) { ?>
                 <tr class="fyear-clone">
                     <td>
                         <input
                             name="fyear-name[<?php echo 'id-' . $year['id']; ?>]"
                             class="fyear-name"
                             type="text"
-                            value="<?php echo $year['fy_name'] ?>"
+                            value="<?php echo $year['fy_name']; ?>"
                             autocomplete="off" required>
                     </td>
                     <td>
                         <input
                             name="fyear-start[<?php echo 'id-' . $year['id']; ?>]"
                             class="fyear-start-date hr-fyear-date-field"
-                            value="<?php echo erp_current_datetime()->setTimestamp( $year['start_date'] )->format('Y-m-d'); ?>"
+                            value="<?php echo erp_current_datetime()->setTimestamp( $year['start_date'] )->format( 'Y-m-d' ); ?>"
                             type="text"
                             autocomplete="off" required>
                     </td>
@@ -74,15 +74,15 @@ $fin_val_compare_msg = __( 'Second value must be greater than the first value!',
                         <input
                             name="fyear-end[<?php echo 'id-' . $year['id']; ?>]"
                             class="fyear-end-date hr-fyear-date-field"
-                            value="<?php echo erp_current_datetime()->setTimestamp( $year['end_date'] )->format('Y-m-d'); ?>"
+                            value="<?php echo erp_current_datetime()->setTimestamp( $year['end_date'] )->format( 'Y-m-d' ); ?>"
                             type="text"
                             autocomplete="off" required>
                     </td>
                     <td></td>
                 </tr>
-                <?php endforeach; ?>
+                <?php } ?>
 
-            <?php endif; ?>
+            <?php } ?>
         </tbody>
     </table>
 

@@ -6,13 +6,13 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
     <input type="hidden" v-model="customer_id" value="<?php echo esc_attr( $customer->id ); ?>" name="customer_id">
     <div class="activity-form">
         <ul class="erp-list list-inline nav-item">
-            <?php foreach ( $feeds_tab as $name => $value ) : ?>
+            <?php foreach ( $feeds_tab as $name => $value ) { ?>
                 <li :class="'<?php echo sanitize_html_class( $name ); ?>' == tabShow ? 'active': ''">
                     <a href="#<?php echo esc_url( $name ); ?>" @click.prevent="showTab('<?php echo esc_attr( $name ); ?>')">
-                        <?php echo wp_kses_post( sprintf('%s %s', $value['icon'], $value['title'] ) ); ?>
+                        <?php echo wp_kses_post( sprintf( '%s %s', $value['icon'], $value['title'] ) ); ?>
                     </a>
                 </li>
-            <?php endforeach ?>
+            <?php } ?>
         </ul>
 
         <div class="nav-content" id="erp-crm-feed-nav-content">

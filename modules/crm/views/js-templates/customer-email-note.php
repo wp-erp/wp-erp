@@ -1,23 +1,23 @@
 <?php
 global $current_user;
-$customer_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
-$customer = new \WeDevs\ERP\CRM\Contact( $customer_id );
+$customer_id  = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
+$customer     = new \WeDevs\ERP\CRM\Contact( $customer_id );
 $save_replies = erp_crm_get_save_replies();
-$block = !erp_crm_sync_is_active() ? 'crm-blocked' : '';
+$block        = !erp_crm_sync_is_active() ? 'crm-blocked' : '';
 $settings_url = add_query_arg( [ 'page' => 'erp-settings', 'tab' => 'erp-crm', 'section' => 'email_connect' ], admin_url( 'admin.php' ) );
 ?>
 <div id="email" class="<?php echo esc_html( $block ); ?>">
 
-    <?php if( !erp_crm_sync_is_active() ) : ?>
+    <?php if ( !erp_crm_sync_is_active() ) { ?>
         <a class="button button-primary" style="z-index: 2;position: relative;top: 150px;left: 43%;" href="<?php echo esc_url_raw( $settings_url ); ?>"><?php esc_attr_e( 'Configure Settings', 'erp' ); ?></a>
-    <?php endif; ?>
+    <?php } ?>
 
     <p class="email-templates">
         <select name="select_templates" id="erp-crm-activity-insert-templates" v-model="emailTemplates" v-selecttwo="emailTemplates" class="select2" v-on:change="insertSaveReplies()" style="width: 100%" data-placeholder="Select a templates...">
             <option value=""><?php esc_attr_e( 'Select a templates', 'erp' ); ?></option>
-            <?php foreach ( $save_replies as $key => $save_reply ) : ?>
-                <option value="<?php echo esc_attr( $save_reply->id ) ?>"><?php echo esc_attr( $save_reply->name ) ?></option>
-            <?php endforeach ?>
+            <?php foreach ( $save_replies as $key => $save_reply ) { ?>
+                <option value="<?php echo esc_attr( $save_reply->id ); ?>"><?php echo esc_attr( $save_reply->name ); ?></option>
+            <?php } ?>
         </select>
     </p>
 
@@ -30,7 +30,7 @@ $settings_url = add_query_arg( [ 'page' => 'erp-settings', 'tab' => 'erp-crm', '
 
     <p class="email-to" v-if="!feed">
         <input type="hidden" name="user_id" v-model="feedData.user_id" value="<?php echo esc_attr( $customer->id ); ?>">
-        <label><?php esc_attr_e( 'To', 'erp' ) ?></label>
+        <label><?php esc_attr_e( 'To', 'erp' ); ?></label>
         <span class="sep">:</span>
         <span class="value"><?php echo esc_attr( $customer->get_full_name() ); ?></span>
     </p>

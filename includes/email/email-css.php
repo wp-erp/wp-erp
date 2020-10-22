@@ -2,8 +2,9 @@
 /**
  * Email Styles
  */
-
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+} // Exit if accessed directly
 
 // Load colours
 $bg              = get_option( 'erp_email_background_color', '#f5f5f5' );

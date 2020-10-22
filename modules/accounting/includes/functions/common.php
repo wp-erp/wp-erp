@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function erp_acct_upload_attachments( $files ) {
     if ( ! function_exists( 'wp_handle_upload' ) ) {
-        require_once( ABSPATH . 'wp-admin/includes/file.php' );
+        require_once ABSPATH . 'wp-admin/includes/file.php';
     }
 
     $attachments = [];
@@ -41,7 +41,7 @@ function erp_acct_upload_attachments( $files ) {
  * @param $from
  * @param $to
  *
- * @return array|null|object
+ * @return array|object|null
  */
 function erp_acct_get_payables( $from, $to ) {
     global $wpdb;
@@ -87,7 +87,6 @@ function erp_acct_get_payables( $from, $to ) {
     if ( empty( $purchase_results ) ) {
         return $bill_results;
     }
-
 }
 
 /**
@@ -119,22 +118,22 @@ function erp_acct_get_payables_overview() {
 
             //segment by date difference
             switch ( $diff ) {
-                case ( 0 === $diff ):
+                case  0 === $diff:
                     $data['first'][] = $item_data;
                     $amount['first'] = $amount['first'] + abs( $item->due );
                     break;
 
-                case ( $diff <= 30 ):
+                case  $diff <= 30:
                     $data['first'][] = $item_data;
                     $amount['first'] = $amount['first'] + abs( $item->due );
                     break;
 
-                case ( $diff <= 60 ):
+                case  $diff <= 60:
                     $data['second'][] = $item_data;
                     $amount['second'] = $amount['second'] + abs( $item->due );
                     break;
 
-                case ( $diff <= 90 ):
+                case  $diff <= 90:
                     $data['third'][] = $item_data;
                     $amount['third'] = $amount['third'] + abs( $item->due );
                     break;
@@ -145,9 +144,9 @@ function erp_acct_get_payables_overview() {
     }
 
     return [
-		'data'   => $data,
-		'amount' => $amount,
-	];
+        'data'   => $data,
+        'amount' => $amount,
+    ];
 }
 
 /**
@@ -162,19 +161,19 @@ function erp_acct_insert_check_data( $check_data ) {
 
     $wpdb->insert(
         $wpdb->prefix . 'erp_acct_expense_checks',
-        array(
-			'trn_no'       => $check_data['voucher_no'],
-			'check_no'     => $check_data['check_no'],
-			'voucher_type' => $check_data['voucher_type'],
-			'amount'       => $check_data['amount'],
-			'bank'         => $check_data['bank'],
-			'name'         => $check_data['name'],
-			'pay_to'       => $check_data['pay_to'],
-			'created_at'   => $check_data['created_at'],
-			'created_by'   => $check_data['created_by'],
-			'updated_at'   => $check_data['updated_at'],
-			'updated_by'   => $check_data['updated_by'],
-        )
+        [
+            'trn_no'       => $check_data['voucher_no'],
+            'check_no'     => $check_data['check_no'],
+            'voucher_type' => $check_data['voucher_type'],
+            'amount'       => $check_data['amount'],
+            'bank'         => $check_data['bank'],
+            'name'         => $check_data['name'],
+            'pay_to'       => $check_data['pay_to'],
+            'created_at'   => $check_data['created_at'],
+            'created_by'   => $check_data['created_by'],
+            'updated_at'   => $check_data['updated_at'],
+            'updated_by'   => $check_data['updated_by'],
+        ]
     );
 }
 
@@ -191,21 +190,21 @@ function erp_acct_update_check_data( $check_data, $check_no ) {
 
     $wpdb->insert(
         $wpdb->prefix . 'erp_acct_expense_checks',
-        array(
-			'trn_no'       => $check_data['voucher_no'],
-			'voucher_type' => $check_data['voucher_type'],
-			'amount'       => $check_data['amount'],
-			'bank'         => $check_data['bank'],
-			'name'         => $check_data['name'],
-			'pay_to'       => $check_data['pay_to'],
-			'created_at'   => $check_data['created_at'],
-			'created_by'   => $check_data['created_by'],
-			'updated_at'   => $check_data['updated_at'],
-			'updated_by'   => $check_data['updated_by'],
-        ),
-        array(
-			'check_no' => $check_no,
-        )
+        [
+            'trn_no'       => $check_data['voucher_no'],
+            'voucher_type' => $check_data['voucher_type'],
+            'amount'       => $check_data['amount'],
+            'bank'         => $check_data['bank'],
+            'name'         => $check_data['name'],
+            'pay_to'       => $check_data['pay_to'],
+            'created_at'   => $check_data['created_at'],
+            'created_by'   => $check_data['created_by'],
+            'updated_at'   => $check_data['updated_at'],
+            'updated_by'   => $check_data['updated_by'],
+        ],
+        [
+            'check_no' => $check_no,
+        ]
     );
 }
 
@@ -243,6 +242,7 @@ function erp_acct_get_ledger_by_id( $ledger_id ) {
  * Get sing ledger row data by id, slug or code
  *
  * @since 1.6.3
+ *
  * @param $field string id, code or slug field name to search by
  * @param $value string $field value to search
  *
@@ -260,6 +260,7 @@ function erp_acct_get_ledger_by( $field = 'id', $value = '' ) {
     if ( empty( $value ) ) {
         return null;
     }
+
     return $wpdb->get_row(
         $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}erp_acct_ledgers WHERE $field = %s LIMIT 1", $value ),
         ARRAY_A
@@ -392,7 +393,6 @@ function erp_acct_get_check_trn_type_by_id( $trn_type_id ) {
     return $row;
 }
 
-
 /**
  * Get Accounting Quick Access Menus
  *
@@ -480,11 +480,11 @@ function slugify( $str ) {
     return strtolower( $str );
 }
 
-
 /**
  * Check voucher edit state
  *
  * @param int $id
+ *
  * @return bool
  */
 function erp_acct_check_voucher_edit_state( $id ) {
@@ -499,6 +499,7 @@ function erp_acct_check_voucher_edit_state( $id ) {
  * Check if people exists (customer/vendor)
  *
  * @param string $email
+ *
  * @return bool
  */
 function erp_acct_check_people_exists( $email ) {
@@ -520,6 +521,7 @@ function erp_acct_check_people_exists( $email ) {
  * Get transaction id by status slug
  *
  * @param string $slug
+ *
  * @return int
  */
 function erp_acct_trn_status_by_id( $slug ) {
@@ -551,10 +553,8 @@ add_action( 'erp_crm_contact_created', 'erp_acct_customer_auto_create_from_crm',
  * @param  $data
  *
  * @since  1.2.7
- *
  */
 function erp_acct_customer_create_from_crm( $customer, $customer_id, $data ) {
-
     $customer_auto_import = (int) erp_get_option( 'customer_auto_import', false, 0 );
     $crm_user_type        = erp_get_option( 'crm_user_type', false, [] ); // Contact or Company
 
@@ -593,16 +593,12 @@ function erp_acct_customer_create_from_crm( $customer, $customer_id, $data ) {
  *
  * @since  1.2.8
  *
- * @param  int $contact_id
- * @param  object $data
- *
+ * @param int    $contact_id
+ * @param object $data
  */
 function erp_acct_customer_auto_create_from_crm( $contact_id, $data ) {
     erp_acct_customer_create_from_crm( [], $contact_id, $data );
 }
-
-
-
 
 /**
  * Insert Payment/s data into "Bank Transaction Charge"

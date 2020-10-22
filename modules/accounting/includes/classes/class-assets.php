@@ -6,9 +6,7 @@ namespace WeDevs\ERP\Accounting\Includes\Classes;
  * Scripts and Styles Class
  */
 class Assets {
-
-    function __construct() {
-
+    public function __construct() {
         if ( is_admin() ) {
             add_action( 'admin_enqueue_scripts', [ $this, 'register' ], 5 );
         } else {
@@ -26,17 +24,19 @@ class Assets {
 
         if ( is_admin() ) {
             $screen = get_current_screen();
+
             if ( 'wp-erp_page_erp-settings' === $screen->base ) {
-                wp_enqueue_script( 'accounting-helper', ERP_ACCOUNTING_ASSETS . '/js/accounting-helper.js', array( 'jquery', 'erp-tiptip' ), false, true );
+                wp_enqueue_script( 'accounting-helper', ERP_ACCOUNTING_ASSETS . '/js/accounting-helper.js', [ 'jquery', 'erp-tiptip' ], false, true );
 
                 wp_localize_script(
                     'accounting-helper',
                     'erp_acct_helper',
-                    array(
-						'fin_overlap_msg'  => __( 'Financial year values must not be overlapped!', 'erp' ),
-						'fin_val_comp_msg' => __( 'Second value must be greater than the first value!', 'erp' ),
-                    )
+                    [
+                        'fin_overlap_msg'  => __( 'Financial year values must not be overlapped!', 'erp' ),
+                        'fin_val_comp_msg' => __( 'Second value must be greater than the first value!', 'erp' ),
+                    ]
                 );
+
                 return;
             } elseif ( 'wp-erp_page_erp-accounting' !== $screen->base && $section !== 'reimbursement' ) {
                 return;
@@ -79,20 +79,21 @@ class Assets {
             //check items for capabilities
             $items = array_filter(
                 $menus,
-                function( $item ) {
-					if ( ! isset( $item['capability'] ) ) {
-						return false;
-					}
-					return current_user_can( $item['capability'] );
-				}
+                function ( $item ) {
+                    if ( ! isset( $item['capability'] ) ) {
+                        return false;
+                    }
+
+                    return current_user_can( $item['capability'] );
+                }
             );
 
             //sort items for position
             uasort(
                 $menus,
-                function( $a, $b ) {
-					return $a['position'] > $b['position'];
-				}
+                function ( $a, $b ) {
+                    return $a['position'] > $b['position'];
+                }
             );
         }
 
@@ -103,7 +104,7 @@ class Assets {
         $ledgers      = erp_acct_get_ledgers_with_balances();
         $trn_statuses = erp_acct_get_all_trn_statuses();
 
-        wp_localize_script( 'accounting-bootstrap', 'erp_acct_var', array(
+        wp_localize_script( 'accounting-bootstrap', 'erp_acct_var', [
             'user_id'            => $u_id,
             'site_url'           => $site_url,
             'logout_url'         => $logout_url,
@@ -128,14 +129,14 @@ class Assets {
                 'width'       => 600,
                 'height'      => 600,
                 'flex-width'  => true,
-                'flex-height' => true
+                'flex-height' => true,
             ],
-            'rest' => array(
+            'rest' => [
                 'root'    => esc_url_raw( get_rest_url() ),
                 'nonce'   => wp_create_nonce( 'wp_rest' ),
                 'version' => 'erp/v1',
-            ),
-        ) );
+            ],
+        ] );
     }
 
     /**
@@ -208,5 +209,4 @@ class Assets {
 
         return $styles;
     }
-
 }

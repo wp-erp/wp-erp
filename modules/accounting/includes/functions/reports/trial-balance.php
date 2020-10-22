@@ -76,7 +76,7 @@ function erp_acct_bank_balance( $args, $type ) {
 /**
  * Trial balance helper
  *
- * @param array $args
+ * @param array  $args
  * @param string $type
  *
  * @return int
@@ -179,7 +179,7 @@ function erp_acct_get_owners_equity( $args, $type ) {
  * @param string $date1
  * @param string $date2
  *
- * @return boolean
+ * @return bool
  */
 function erp_acct_has_date_diff( $date1, $date2 ) {
     $interval = date_diff( date_create( $date1 ), date_create( $date2 ) );
@@ -226,7 +226,7 @@ function erp_acct_calculate_people_balance( $sql, $start_date, $end_date ) {
 function erp_acct_get_balance_with_opening_balance( $ledgers, $data, $opening_balance ) {
     $temp_data = [];
 
-    /**
+    /*
      * Start writing a very `inefficient :(` foreach loop
      */
     foreach ( $ledgers as $ledger ) {
@@ -300,7 +300,7 @@ function erp_acct_get_balance_within_ledger_details_and_trial_balance( $sql, $te
  * Get trial balance calculate with opening balance within financial year date range
  *
  * @param string $tb_start_date
- * @param array $data => ledger details data on trial balance date range
+ * @param array  $data          => ledger details data on trial balance date range
  * @param string $sql
  *
  * @return array
@@ -350,7 +350,7 @@ function erp_acct_calc_with_opening_balance( $tb_start_date, $data, $sql ) {
  * Get trial balance cash at bank calculate with opening balance within financial year date range
  *
  * @param string $tb_start_date
- * @param array $data => ledger details data on trial balance date range
+ * @param array  $data          => ledger details data on trial balance date range
  * @param string $sql
  * @param string $type
  *
@@ -395,7 +395,7 @@ function erp_acct_bank_cash_calc_with_opening_balance( $tb_start_date, $data, $s
  * Get trial balance bank balance calculate with opening balance within financial year date range
  *
  * @param string $tb_start_date
- * @param array $data => ledger details data on trial balance date range
+ * @param array  $data          => ledger details data on trial balance date range
  * @param string $sql
  * @param string $type
  *
@@ -434,7 +434,7 @@ function erp_acct_bank_balance_calc_with_opening_balance( $tb_start_date, $data,
  * Get trial balance sales tax calculate with opening balance within financial year date range
  *
  * @param string $tb_start_date
- * @param float $data => ledger details data on trial balance date range
+ * @param float  $data          => ledger details data on trial balance date range
  * @param string $sql
  * @param string $type
  *
@@ -481,7 +481,7 @@ function erp_acct_sales_tax_calc_with_opening_balance( $tb_start_date, $data, $s
  * and with people account details data
  *
  * @param string $tb_start_date
- * @param float $data => ledger details data on trial balance date range
+ * @param float  $data          => ledger details data on trial balance date range
  * @param string $sql
  * @param string $type
  *
@@ -544,7 +544,7 @@ function erp_acct_calc_with_people_account_details( $closest_fy_start_date, $tb_
  * Get trial balance owners equity calculate with opening balance within financial year date range
  *
  * @param string $tb_start_date
- * @param float $data => ledger details data on trial balance date range
+ * @param float  $data          => ledger details data on trial balance date range
  * @param string $sql
  * @param string $type
  *
@@ -629,7 +629,7 @@ function erp_acct_opening_balance_by_fn_year_id( $id, $chart_id = null ) {
 /**
  * Get bank opening balance data by financial year id
  *
- * @param int $id
+ * @param int    $id
  * @param string $type
  *
  * @return array
@@ -647,7 +647,7 @@ function erp_acct_bank_cash_opening_balance_by_fn_year_id( $id ) {
 /**
  * Get bank opening balance data by financial year id
  *
- * @param int $id
+ * @param int    $id
  * @param string $type
  *
  * @return array
@@ -671,7 +671,7 @@ function erp_acct_sales_tax_opening_balance_by_fn_year_id( $id, $type ) {
 /**
  * Get bank balance opening balance data by financial year id
  *
- * @param int $id
+ * @param int    $id
  * @param string $type
  *
  * @return array
@@ -690,7 +690,7 @@ function erp_acct_bank_balance_opening_balance_by_fn_year_id( $id ) {
 /**
  * Get bank balance opening balance data by financial year id
  *
- * @param int $id
+ * @param int    $id
  * @param string $type
  *
  * @return mixed
@@ -746,7 +746,7 @@ function erp_acct_get_trial_balance( $args ) {
     // All calculated DB results are inside `rows` key
     $results['rows'] = erp_acct_calc_with_opening_balance( $args['start_date'], $data, $sql );
 
-    /**
+    /*
      * Let's create some virtual ledgers
      */
 

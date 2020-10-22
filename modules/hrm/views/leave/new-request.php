@@ -14,8 +14,9 @@
             } elseif ( isset( $_GET['msg'] ) && $_GET['msg'] == 'submitted' ) {
                 erp_html_show_notice( __( 'Leave request has been submitted successfully.', 'erp' ), 'updated', true );
             }
-            $financial_years = array();
-            $current_f_year = erp_hr_get_financial_year_from_date();
+            $financial_years = [];
+            $current_f_year  = erp_hr_get_financial_year_from_date();
+
             foreach ( Financial_Year::all() as $f_year ) {
                 if ( $f_year['start_date'] < $current_f_year->start_date ) {
                     continue;
@@ -23,34 +24,34 @@
                 $financial_years[ $f_year['id'] ] = $f_year['fy_name'];
             }
             $f_year_help_text = '';
+
             if ( current_user_can( 'erp_leave_create_request' ) ) {
-                $f_year_help_text .=  ' ' . sprintf( '<a href="?page=erp-settings&tab=erp-hr&section=financial">%s</a>', __( 'Add New', 'erp' ) );
+                $f_year_help_text .= ' ' . sprintf( '<a href="?page=erp-settings&tab=erp-hr&section=financial">%s</a>', __( 'Add New', 'erp' ) );
             }
             ?>
 
             <form action="" method="post" class="new-leave-request-form" enctype="multipart/form-data">
                 <?php
                 if ( count( $financial_years ) === 1 ) { ?>
-                    <input type="hidden" name="f_year" id="f_year" class="f_year" value="<?php echo key( $financial_years );?>" />
+                    <input type="hidden" name="f_year" id="f_year" class="f_year" value="<?php echo key( $financial_years ); ?>" />
                     <?php
-                }
-                else {
+                } else {
                     echo '<div class="row">';
-                    erp_html_form_input( array(
+                    erp_html_form_input( [
                         'label'    => esc_html__( 'Year', 'erp' ),
                         'name'     => 'f_year',
-                        'value'    =>  '',
+                        'value'    => '',
                         'required' => true,
                         'class'    => 'f_year',
                         'type'     => 'select',
                         'options'  => $financial_years,
-                    ) );
+                    ] );
                     echo '</div>';
                 }?>
 
                 <?php if ( current_user_can( 'erp_leave_create_request' ) ) { ?>
                     <div class="row">
-                        <?php erp_html_form_input( array(
+                        <?php erp_html_form_input( [
                             'label'    => __( 'Employee', 'erp' ),
                             'name'     => 'employee_id',
                             'id'       => 'erp-hr-leave-req-employee-id',
@@ -58,8 +59,8 @@
                             'class'    => 'erp-select2',
                             'required' => true,
                             'type'     => 'select',
-                            'options'  => erp_hr_get_employees_dropdown_raw()
-                        ) ); ?>
+                            'options'  => erp_hr_get_employees_dropdown_raw(),
+                        ] ); ?>
                     </div>
                 <?php } ?>
 
@@ -69,56 +70,56 @@
 
                 <div class="row two-col">
                     <div class="cols">
-                        <?php erp_html_form_input( array(
-                            'label'    => __( 'From', 'erp' ),
-                            'name'     => 'leave_from',
-                            'id'       => 'erp-hr-leave-req-from-date',
-                            'value'    => '',
-                            'required' => true,
-                            'class'    => 'erp-leave-date-field',
-                            'custom_attr' => array(
-                                'disabled' => 'disabled',
+                        <?php erp_html_form_input( [
+                            'label'       => __( 'From', 'erp' ),
+                            'name'        => 'leave_from',
+                            'id'          => 'erp-hr-leave-req-from-date',
+                            'value'       => '',
+                            'required'    => true,
+                            'class'       => 'erp-leave-date-field',
+                            'custom_attr' => [
+                                'disabled'     => 'disabled',
                                 'autocomplete' => 'off',
-                            ),
-                        ) ); ?>
+                            ],
+                        ] ); ?>
                     </div>
 
                     <div class="cols last erp-leave-to-date">
-                        <?php erp_html_form_input( array(
-                            'label'    => __( 'To', 'erp' ),
-                            'name'     => 'leave_to',
-                            'id'       => 'erp-hr-leave-req-to-date',
-                            'value'    => '',
-                            'required' => true,
-                            'class'    => 'erp-leave-date-field',
-                            'custom_attr' => array(
-                                'disabled' => 'disabled',
+                        <?php erp_html_form_input( [
+                            'label'       => __( 'To', 'erp' ),
+                            'name'        => 'leave_to',
+                            'id'          => 'erp-hr-leave-req-to-date',
+                            'value'       => '',
+                            'required'    => true,
+                            'class'       => 'erp-leave-date-field',
+                            'custom_attr' => [
+                                'disabled'     => 'disabled',
                                 'autocomplete' => 'off',
-                            ),
-                        ) ); ?>
+                            ],
+                        ] ); ?>
                     </div>
                 </div>
 
                 <div class="row erp-hr-leave-req-show-days show-days"></div>
 
                 <div class="row">
-                    <?php erp_html_form_input( array(
+                    <?php erp_html_form_input( [
                         'label'       => __( 'Reason', 'erp' ),
                         'name'        => 'leave_reason',
                         'type'        => 'textarea',
                         'required'    => true,
-                        'custom_attr' => array( 'cols' => 30, 'rows' => 3, 'disabled' => 'disabled' )
-                    ) ); ?>
+                        'custom_attr' => [ 'cols' => 30, 'rows' => 3, 'disabled' => 'disabled' ],
+                    ] ); ?>
                 </div>
 
                 <div class="row">
-                    <label for="leave_document"><?php echo esc_html__( 'Document', 'wp-erp' );?></label>
+                    <label for="leave_document"><?php echo esc_html__( 'Document', 'wp-erp' ); ?></label>
                     <input type="file" name="leave_document[]" id="leave_document" multiple>
                 </div>
 
                 <input type="hidden" name="erp-action" value="hr-leave-req-new">
                 <?php wp_nonce_field( 'erp-leave-req-new' ); ?>
-                <?php submit_button( __( 'Submit Request', 'erp' ), 'primary', 'submit', true, array( 'disabled' => 'disabled' )  ); ?>
+                <?php submit_button( __( 'Submit Request', 'erp' ), 'primary', 'submit', true, [ 'disabled' => 'disabled' ]  ); ?>
 
             </form>
         </div><!-- .inside-->

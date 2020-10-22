@@ -1,4 +1,5 @@
 <?php
+
 namespace WeDevs\ERP\Accounting\Includes\Emails;
 
 use WeDevs\ERP\Email;
@@ -8,16 +9,15 @@ use WeDevs\ERP\Framework\Traits\Hooker;
  * Approved Leave Request
  */
 class Transactional_Email_Payments extends Email {
-
     use Hooker;
 
-    function __construct() {
+    public function __construct() {
         $this->id             = 'transectional-email-payments';
         $this->title          = __( 'New transaction payment', 'erp' );
         $this->description    = __( 'New Payment notification alert', 'erp' );
 
-        $this->subject        = __( 'An invoice has been paid', 'erp');
-        $this->heading        = __( 'New transaction payment', 'erp');
+        $this->subject        = __( 'An invoice has been paid', 'erp' );
+        $this->heading        = __( 'New transaction payment', 'erp' );
 
         $this->find = [
             'customer_name' => '{customer_name}',
@@ -27,13 +27,12 @@ class Transactional_Email_Payments extends Email {
             'company_name'  => '{company_name}',
         ];
 
-
         $this->action( 'erp_admin_field_' . $this->id . '_help_texts', 'replace_keys' );
 
         parent::__construct();
     }
 
-    function get_args() {
+    public function get_args() {
         return [
             'email_heading' => $this->heading,
             'email_body'    => wpautop( $this->get_option( 'body' ) ),
@@ -41,8 +40,6 @@ class Transactional_Email_Payments extends Email {
     }
 
     public function trigger( $receiver_email, $attachment = '', $voucher_no, $company ) {
-
-
         $this->recipient   = $receiver_email;
         $this->heading     = $this->get_option( 'heading', $this->heading );
         $this->subject     = $this->get_option( 'subject', $this->subject );
@@ -54,9 +51,8 @@ class Transactional_Email_Payments extends Email {
             'invoide_ID'    => $voucher_no,
             'amount'        => $voucher_details['amount'],
             'trn_date'      => $voucher_details['trn_date'],
-            'company_name'  => $company->name
+            'company_name'  => $company->name,
         ];
-
 
         if ( ! $this->get_recipient() ) {
             return;
@@ -64,5 +60,4 @@ class Transactional_Email_Payments extends Email {
 
         $this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $attachment );
     }
-
 }

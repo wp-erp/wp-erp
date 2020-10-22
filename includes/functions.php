@@ -10,7 +10,7 @@ function erp_process_actions() {
     if ( isset( $_REQUEST['erp-action'] ) ) {
         $action = sanitize_text_field( wp_unslash( $_REQUEST['erp-action'] ) );
 
-        do_action( 'erp_action_' .$action, $_REQUEST );
+        do_action( 'erp_action_' . $action, $_REQUEST );
     }
 }
 
@@ -26,13 +26,12 @@ function erp_get_version() {
 /**
  * Maps various caps to built in WordPress caps
  *
- *
- * @param array  $caps Capabilities for meta capability
- * @param string $cap Capability name
+ * @param array  $caps    Capabilities for meta capability
+ * @param string $cap     Capability name
  * @param int    $user_id User id
- * @param mixed  $args Arguments
+ * @param mixed  $args    Arguments
  */
-function erp_map_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args = array() ) {
+function erp_map_meta_caps( $caps = [], $cap = '', $user_id = 0, $args = [] ) {
     return apply_filters( 'erp_map_meta_caps', $caps, $cap, $user_id, $args );
 }
 
@@ -287,7 +286,7 @@ function erp_get_currency( $get_only_id = false ) {
 
     $usd = 148;
 
-    $currency_id = erp_get_option('erp_currency', 'erp_settings_general', $usd);
+    $currency_id = erp_get_option( 'erp_currency', 'erp_settings_general', $usd );
 
     if ( $get_only_id ) {
         return $currency_id;
@@ -322,7 +321,6 @@ function erp_get_currency_symbol( $currency = '' ) {
      * or not supported by UTF-8 like 'GEL'. For those symbols currency codes
      * are used as symbols
      */
-
     $currency_symbols = [
         'AED' => 'د.إ',
         'AFN' => '؋',
@@ -495,7 +493,6 @@ function erp_get_currency_symbol( $currency = '' ) {
     } else {
         return apply_filters( 'erp_currency_symbol_list', $currency_symbols );
     }
-
 }
 
 /**
@@ -541,7 +538,6 @@ function erp_get_vue_component_template( $file_path, $id ) {
     }
 }
 
-
 if ( ! function_exists( 'strip_tags_deep' ) ) {
 
     /**
@@ -549,7 +545,7 @@ if ( ! function_exists( 'strip_tags_deep' ) ) {
      *
      * @param  mixed  array or string to strip
      *
-     * @return mixed  stripped value
+     * @return mixed stripped value
      */
     function strip_tags_deep( $value ) {
         if ( is_array( $value ) ) {
@@ -571,7 +567,7 @@ if ( ! function_exists( 'trim_deep' ) ) {
      *
      * @param  mixed  array or string to trim
      *
-     * @return mixed  timmed value
+     * @return mixed timmed value
      */
     function trim_deep( $value ) {
         if ( is_array( $value ) ) {
@@ -593,17 +589,16 @@ if ( ! function_exists( 'trim_deep' ) ) {
  * @since 1.1.14 Add $type param
  * @since 1.1.16 Apply if-else condition to set `$value`
  *
- * @param  string $label the label
- * @param  string $value the value to print
- * @param  string $sep separator
- * @param  string $type field type
+ * @param string $label the label
+ * @param string $value the value to print
+ * @param string $sep   separator
+ * @param string $type  field type
  *
  * @return void
  */
 function erp_print_key_value( $label, $value, $sep = ' : ', $type = 'text' ) {
     if ( empty( $value ) ) {
         $value = '&mdash;';
-
     } else {
         switch ( $type ) {
             case 'email':
@@ -628,7 +623,7 @@ function erp_print_key_value( $label, $value, $sep = ' : ', $type = 'text' ) {
  * @param  string  type. e.g: email|phone|url
  * @param  string  the value
  *
- * @return string  the link
+ * @return string the link
  */
 function erp_get_clickable( $type = 'email', $value = '' ) {
     if ( 'email' == $type ) {
@@ -643,9 +638,9 @@ function erp_get_clickable( $type = 'email', $value = '' ) {
 /**
  * Get a formatted date from WordPress format
  *
- * @param  string $date the date
+ * @param string $date the date
  *
- * @return string  formatted date
+ * @return string formatted date
  */
 function erp_format_date( $date, $format = false ) {
     if ( ! $format ) {
@@ -653,10 +648,10 @@ function erp_format_date( $date, $format = false ) {
     }
 
     if ( ! is_numeric( $date ) ) {
-        $date = strtotime( $date );
+        $date = erp_current_datetime()->modify( $date )->getTimestamp();
     }
 
-    if ( function_exists('wp_date') ) {
+    if ( function_exists( 'wp_date' ) ) {
         return wp_date( $format, $date );
     }
 
@@ -666,8 +661,8 @@ function erp_format_date( $date, $format = false ) {
 /**
  * Extract dates between two date range
  *
- * @param  string $start_date example: 2016-12-16 00:00:00
- * @param  string $end_date example: 2016-12-16 23:59:59
+ * @param string $start_date example: 2016-12-16 00:00:00
+ * @param string $end_date   example: 2016-12-16 23:59:59
  *
  * @return array
  */
@@ -683,9 +678,9 @@ function erp_extract_dates( $start_date, $end_date ) {
     }
 
     if ( $start_date > $end_date ) {
-        $temp = $start_date;
+        $temp       = $start_date;
         $start_date = $end_date;
-        $end_date = $temp;
+        $end_date   = $temp;
     }
 
     $start_date = new DateTime( $start_date );
@@ -701,7 +696,8 @@ function erp_extract_dates( $start_date, $end_date ) {
     $period   = new DatePeriod( $start_date, $interval, $end_date );
 
     // prepare the periods
-    $dates = array();
+    $dates = [];
+
     foreach ( $period as $dt ) {
         $dates[] = $dt->format( 'Y-m-d' );
     }
@@ -712,7 +708,7 @@ function erp_extract_dates( $start_date, $end_date ) {
 /**
  * Convert an two dimentational array to one dimentional array object
  *
- * @param  array $array array of arrays
+ * @param array $array array of arrays
  *
  * @return array
  */
@@ -731,9 +727,9 @@ function erp_array_to_object( $array = [] ) {
 /**
  * Check date in range or not
  *
- * @param  date $start_date
- * @param  date $end_date
- * @param  date $date_from_user
+ * @param date $start_date
+ * @param date $end_date
+ * @param date $date_from_user
  *
  * @return boolen
  */
@@ -754,15 +750,14 @@ function erp_check_date_in_range( $start_date, $end_date, $date_from_user ) {
 /**
  * Check date range any point in range or not
  *
- * @param  date $start_date
- * @param  date $end_date
- * @param  date $user_date_start
- * @param  date $user_date_end
+ * @param date $start_date
+ * @param date $end_date
+ * @param date $user_date_start
+ * @param date $user_date_end
  *
  * @return boolen
  */
 function erp_check_date_range_in_range_exist( $start_date, $end_date, $user_date_start, $user_date_end ) {
-
     if ( erp_check_date_in_range( $start_date, $end_date, $user_date_start ) ) {
         return true;
     }
@@ -777,10 +772,10 @@ function erp_check_date_range_in_range_exist( $start_date, $end_date, $user_date
 /**
  * Get durataion between two date
  *
- * @param  date $start_date
- * @param  date $end_date
+ * @param date $start_date
+ * @param date $end_date
  *
- * @return integer
+ * @return int
  */
 function erp_date_duration( $start_date, $end_date ) {
     $diff       = abs( strtotime( $start_date ) - strtotime( $end_date ) );
@@ -794,19 +789,18 @@ function erp_date_duration( $start_date, $end_date ) {
  *
  * @since 0.1
  *
- * @param  string $selected
+ * @param string $selected
  *
  * @return array
  */
 function erp_performance_rating( $selected = '' ) {
-
-    $rating = apply_filters( 'erp_performance_rating', array(
+    $rating = apply_filters( 'erp_performance_rating', [
         '1' => __( 'Very Bad', 'erp' ),
         '2' => __( 'Poor', 'erp' ),
         '3' => __( 'Average', 'erp' ),
         '4' => __( 'Good', 'erp' ),
-        '5' => __( 'Excellent', 'erp' )
-    ) );
+        '5' => __( 'Excellent', 'erp' ),
+    ] );
 
     if ( $selected ) {
         return isset( $rating[ $selected ] ) ? $rating[ $selected ] : '';
@@ -818,14 +812,13 @@ function erp_performance_rating( $selected = '' ) {
 /**
  * Get erp option from settings framework
  *
- * @param  string $option_name name of the option
- * @param  string $section name of the section. if it's a separate option, don't provide any
- * @param  string $default default option
+ * @param string $option_name name of the option
+ * @param string $section     name of the section. if it's a separate option, don't provide any
+ * @param string $default     default option
  *
  * @return string
  */
 function erp_get_option( $option_name, $section = false, $default = '' ) {
-
     if ( $section ) {
         $option = get_option( $section );
 
@@ -864,7 +857,6 @@ function erp_get_site_logo() {
  * @return array
  */
 function erp_months_dropdown( $title = false ) {
-
     $months = [];
 
     if ( $title ) {
@@ -876,7 +868,6 @@ function erp_months_dropdown( $title = false ) {
     }
 
     return $months;
-
 }
 
 /**
@@ -945,8 +936,8 @@ function erp_log() {
  *
  * @since 0.1
  *
- * @param  string $message
- * @param  string $type
+ * @param string $message
+ * @param string $type
  *
  * @return void
  */
@@ -972,12 +963,11 @@ function erp_get_people_types() {
  *
  * @since 1.0
  *
- * @param  string $code
+ * @param string $code
  *
  * @return string
  */
 function erp_get_country_name( $country ) {
-
     $load_cuntries_states = \WeDevs\ERP\Countries::instance();
     $countries            = $load_cuntries_states->countries;
 
@@ -996,8 +986,8 @@ function erp_get_country_name( $country ) {
  *
  * @since 1.0
  *
- * @param  string $country
- * @param  string $state
+ * @param string $country
+ * @param string $state
  *
  * @return string
  */
@@ -1016,46 +1006,45 @@ function erp_get_state_name( $country, $state ) {
  *
  * @since 1.0
  *
- * @param  array $schedules
+ * @param array $schedules
  *
  * @return array
  */
 function erp_cron_intervals( $schedules ) {
-
-    $schedules['per_minute'] = array(
+    $schedules['per_minute'] = [
         'interval' => MINUTE_IN_SECONDS,
-        'display'  => __( 'Every Minute', 'erp' )
-    );
+        'display'  => __( 'Every Minute', 'erp' ),
+    ];
 
-    $schedules['two_min'] = array(
+    $schedules['two_min'] = [
         'interval' => MINUTE_IN_SECONDS * 2,
-        'display'  => __( 'Every 2 Minutes', 'erp' )
-    );
+        'display'  => __( 'Every 2 Minutes', 'erp' ),
+    ];
 
-    $schedules['five_min'] = array(
+    $schedules['five_min'] = [
         'interval' => MINUTE_IN_SECONDS * 5,
-        'display'  => __( 'Every 5 Minutes', 'erp' )
-    );
+        'display'  => __( 'Every 5 Minutes', 'erp' ),
+    ];
 
-    $schedules['ten_min'] = array(
+    $schedules['ten_min'] = [
         'interval' => MINUTE_IN_SECONDS * 10,
-        'display'  => __( 'Every 10 Minutes', 'erp' )
-    );
+        'display'  => __( 'Every 10 Minutes', 'erp' ),
+    ];
 
-    $schedules['fifteen_min'] = array(
+    $schedules['fifteen_min'] = [
         'interval' => MINUTE_IN_SECONDS * 15,
-        'display'  => __( 'Every 15 Minutes', 'erp' )
-    );
+        'display'  => __( 'Every 15 Minutes', 'erp' ),
+    ];
 
-    $schedules['thirty_min'] = array(
+    $schedules['thirty_min'] = [
         'interval' => MINUTE_IN_SECONDS * 30,
-        'display'  => __( 'Every 30 Minutes', 'erp' )
-    );
+        'display'  => __( 'Every 30 Minutes', 'erp' ),
+    ];
 
-    $schedules['weekly'] = array(
+    $schedules['weekly'] = [
         'interval' => DAY_IN_SECONDS * 7,
-        'display'  => __( 'Once Weekly', 'erp' )
-    );
+        'display'  => __( 'Once Weekly', 'erp' ),
+    ];
 
     return (array) $schedules;
 }
@@ -1065,7 +1054,7 @@ function erp_cron_intervals( $schedules ) {
  *
  * @since 1.0
  *
- * @param  string $query
+ * @param string $query
  *
  * @return string
  */
@@ -1107,7 +1096,7 @@ function erp_addon_licenses() {
  *
  * @since 1.0
  *
- * @param  array $addon
+ * @param array $addon
  *
  * @return string
  */
@@ -1122,10 +1111,9 @@ function erp_get_license_status( $addon ) {
     $status_class = 'has-error';
 
     if ( false === $license->success ) {
-
         switch ( $license->error ) {
 
-            case 'expired' :
+            case 'expired':
 
                 $messages[] = sprintf(
                     __( 'Your license key expired on %s. Please <a href="%s" target="_blank" title="Renew your license key">renew your license key</a>.', 'erp' ),
@@ -1134,7 +1122,7 @@ function erp_get_license_status( $addon ) {
                 );
                 break;
 
-            case 'missing' :
+            case 'missing':
 
                 $messages[] = sprintf(
                     __( 'Invalid license. Please <a href="%s" target="_blank" title="Visit account page">visit your account page</a> and verify it.', 'erp' ),
@@ -1142,8 +1130,8 @@ function erp_get_license_status( $addon ) {
                 );
                 break;
 
-            case 'invalid' :
-            case 'site_inactive' :
+            case 'invalid':
+            case 'site_inactive':
 
                 $messages[] = sprintf(
                     __( 'Your %s is not active for this URL. Please <a href="%s" target="_blank" title="Visit account page">visit your account page</a> to manage your license key URLs.', 'erp' ),
@@ -1152,7 +1140,7 @@ function erp_get_license_status( $addon ) {
                 );
                 break;
 
-            case 'item_name_mismatch' :
+            case 'item_name_mismatch':
 
                 $messages[] = sprintf( __( 'This is not a %s.', 'erp' ), $addon['name'] );
                 break;
@@ -1163,9 +1151,8 @@ function erp_get_license_status( $addon ) {
 
         }
     } else {
-
         switch ( $license->license ) {
-            case 'expired' :
+            case 'expired':
 
                 $messages[] = sprintf(
                     __( 'Your license key expired on %s. Please <a href="%s" target="_blank" title="Renew your license key">renew your license key</a>.', 'erp' ),
@@ -1180,37 +1167,28 @@ function erp_get_license_status( $addon ) {
                 $expiration   = strtotime( $license->expires, current_time( 'timestamp' ) );
 
                 if ( 'lifetime' === $license->expires ) {
-
                     $messages[] = __( 'License key never expires.', 'erp' );
-
                 } elseif ( $expiration > $now && $expiration - $now < ( DAY_IN_SECONDS * 30 ) ) {
-
                     $messages[] = sprintf(
                         __( 'Your license key expires soon! It expires on %s. <a href="%s" target="_blank" title="Renew license">Renew your license key</a>.', 'erp' ),
                         date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ),
                         'https://wperp.com/checkout/?edd_license_key=' . $addon['license'] . '&utm_campaign=admin&utm_source=licenses&utm_medium=renew'
                     );
-
                 } else {
-
                     $messages[] = sprintf(
                         __( 'Your license key expires on %s.', 'erp' ),
                         date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) )
                     );
-
                 }
                 break;
         }
-
     }
 
     if ( ! empty( $messages ) ) {
         foreach ( $messages as $message ) {
-
             $html .= '<div class="erp-license-status ' . $status_class . '">';
             $html .= '<p class="help">' . $message . '</p>';
             $html .= '</div>';
-
         }
     }
 
@@ -1227,7 +1205,7 @@ function erp_get_import_export_fields() {
         'contact'  => [
             'required_fields' => [
                 'first_name',
-                'email'
+                'email',
             ],
             'fields'          => [
                 'first_name',
@@ -1246,7 +1224,7 @@ function erp_get_import_export_fields() {
                 'postal_code',
                 'country',
                 'currency',
-            ]
+            ],
         ],
         'company'  => [
             'required_fields' => [
@@ -1269,7 +1247,7 @@ function erp_get_import_export_fields() {
                 'postal_code',
                 'country',
                 'currency',
-            ]
+            ],
         ],
         'employee' => [
             'required_fields' => [
@@ -1311,8 +1289,8 @@ function erp_get_import_export_fields() {
                 'country',
                 'state',
                 'postal_code',
-            ]
-        ]
+            ],
+        ],
     ];
 
     return apply_filters( 'erp_import_export_csv_fields', $erp_fields );
@@ -1328,6 +1306,7 @@ function erp_get_import_export_fields() {
 function erp_import_export_javascript() {
     global $current_screen;
     $hook = str_replace( sanitize_title( __( 'ERP Settings', 'erp' ) ), 'erp-settings', $current_screen->base );
+
     if ( 'wp-erp_page_erp-tools' !== $current_screen->base ) {
         return;
     }
@@ -1336,8 +1315,7 @@ function erp_import_export_javascript() {
         return;
     }
 
-    $erp_fields = erp_get_import_export_fields();
-    ?>
+    $erp_fields = erp_get_import_export_fields(); ?>
     <script type="text/javascript">
         jQuery(document).ready(function ($) {
 
@@ -1603,6 +1581,10 @@ function erp_process_import_export() {
         return;
     }
 
+    if ( ! current_user_can( 'erp_hr_manager' ) ) {
+        return new \WP_Error( 'no-permission', __( 'Sorry ! You do not have permission to access this page', 'erp' ) );
+    }
+
     $is_crm_activated = erp_is_module_active( 'crm' );
     $is_hrm_activated = erp_is_module_active( 'hrm' );
 
@@ -1628,7 +1610,7 @@ function erp_process_import_export() {
     }
 
     $field_builder_employee_options = get_option( 'erp-employee-fields' );
-    $field_builder_employees_fields = array();
+    $field_builder_employees_fields = [];
 
     if ( ! empty( $field_builder_employee_options ) ) {
         foreach ( $field_builder_employee_options as $field ) {
@@ -1639,14 +1621,14 @@ function erp_process_import_export() {
     if ( isset( $_POST['erp_import_csv'] ) ) {
         define( 'ERP_IS_IMPORTING', true );
 
-        $fields = ! empty( $_POST['fields'] ) ?  array_map( 'sanitize_text_field', wp_unslash( $_POST['fields'] ) ) : [];
+        $fields = ! empty( $_POST['fields'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['fields'] ) ) : [];
         $type   = isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
 
         if ( empty( $type ) ) {
             return;
         }
 
-        $csv_file = isset( $_FILES['csv_file'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_FILES['csv_file'] ) ) : [];
+        $csv_file = isset( $_FILES['csv_file'] ) ? $_FILES['csv_file'] : []; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
         $data = [ 'type' => $type, 'fields' => $fields, 'file' => $csv_file ];
 
@@ -1694,17 +1676,17 @@ function erp_process_import_export() {
                 'country',
                 'state',
                 'postal_code',
-            ]
+            ],
         ];
 
-        require_once WPERP_INCLUDES . '/lib/parsecsv.lib.php';
+        //require_once WPERP_INCLUDES . '/lib/parsecsv.lib.php';
 
-        $csv = new ParseCsv();
+        $csv = new ParseCsv\Csv();
         $csv->encoding( null, 'UTF-8' );
         $csv->parse( $csv_file['tmp_name'] );
 
         if ( empty( $csv->data ) ) {
-            wp_redirect( admin_url( "admin.php?page=erp-tools&tab=import" ) );
+            wp_redirect( admin_url( 'admin.php?page=erp-tools&tab=import' ) );
             exit;
         }
 
@@ -1719,6 +1701,8 @@ function erp_process_import_export() {
         if ( ! empty( $csv_data ) ) {
             $count = 0;
 
+            do_action( 'validate_csv_data', $csv_data, $fields, $type );
+
             foreach ( $csv_data as $line ) {
                 if ( empty( $line ) ) {
                     continue;
@@ -1727,26 +1711,24 @@ function erp_process_import_export() {
                 $line_data = [];
 
                 if ( is_array( $fields ) && ! empty( $fields ) ) {
-                    foreach ($fields as $key => $value) {
-
-                        if (!empty($line[$value]) && is_numeric($value)) {
-                            if ($type == 'employee') {
-                                if (in_array($key, $employee_fields['work'])) {
-                                    if ($key == 'designation') {
-                                        $line_data['work'][$key] = array_search($line[$value], $designations);
-                                    } else if ($key == 'department') {
-                                        $line_data['work'][$key] = array_search($line[$value], $departments);
+                    foreach ( $fields as $key => $value ) {
+                        if ( !empty( $line[$value] ) && is_numeric( $value ) ) {
+                            if ( $type == 'employee' ) {
+                                if ( in_array( $key, $employee_fields['work'] ) ) {
+                                    if ( $key == 'designation' ) {
+                                        $line_data['work'][$key] = array_search( $line[$value], $designations );
+                                    } elseif ( $key == 'department' ) {
+                                        $line_data['work'][$key] = array_search( $line[$value], $departments );
                                     } else {
                                         $line_data['work'][$key] = $line[$value];
                                     }
-
-                                } else if (in_array($key, $employee_fields['personal'])) {
+                                } elseif ( in_array( $key, $employee_fields['personal'] ) ) {
                                     $line_data['personal'][$key] = $line[$value];
                                 } else {
                                     $line_data[$key] = $line[$value];
                                 }
                             } else {
-                                $line_data[$key] = isset($line[$value]) ? $line[$value] : '';
+                                $line_data[$key]   = isset( $line[$value] ) ? $line[$value] : '';
                                 $line_data['type'] = $type;
                             }
                         }
@@ -1758,18 +1740,17 @@ function erp_process_import_export() {
                         $line_data['work']['status'] = 'active';
                     }
 
-
                     $item_insert_id = erp_hr_employee_create( $line_data );
 
-                    if ( is_wp_error( $item_insert_id ) ) {
+                    if ( is_wp_error( $item_insert_id ) || is_string( $item_insert_id ) ) {
                         continue;
                     }
                 }
 
                 if ( ( $type == 'contact' || $type == 'company' ) && $is_crm_activated ) {
-                    $contact_owner = isset( $_POST['contact_owner'] ) ? absint( $_POST['contact_owner'] ) : erp_crm_get_default_contact_owner();
+                    $contact_owner              = isset( $_POST['contact_owner'] ) ? absint( $_POST['contact_owner'] ) : erp_crm_get_default_contact_owner();
                     $line_data['contact_owner'] = $contact_owner;
-                    $people = erp_insert_people( $line_data, true );
+                    $people                     = erp_insert_people( $line_data, true );
 
                     if ( is_wp_error( $people ) ) {
                         continue;
@@ -1779,7 +1760,6 @@ function erp_process_import_export() {
 
                         if ( ! $people->exists ) {
                             $contact->update_life_stage( $life_stage );
-
                         } else {
                             if ( ! $contact->get_life_stage() ) {
                                 $contact->update_life_stage( $life_stage );
@@ -1791,7 +1771,7 @@ function erp_process_import_export() {
 
                             $existing_data = \WeDevs\ERP\CRM\Models\ContactSubscriber::where( [
                                 'group_id' => $contact_group,
-                                'user_id'  => $people->id
+                                'user_id'  => $people->id,
                             ] )->first();
 
                             if ( empty( $existing_data ) ) {
@@ -1803,11 +1783,10 @@ function erp_process_import_export() {
                                     'status'         => 'subscribe',
                                     'subscribe_at'   => current_time( 'mysql' ),
                                     'unsubscribe_at' => null,
-                                    'hash'           => $hash
+                                    'hash'           => $hash,
                                 ] );
                             }
                         }
-
 
                         if ( ! empty( $field_builder_contacts_fields ) ) {
                             foreach ( $field_builder_contacts_fields as $field ) {
@@ -1821,7 +1800,6 @@ function erp_process_import_export() {
 
                 ++ $count;
             }
-
         }
 
         wp_redirect( admin_url( "admin.php?page=erp-tools&tab=import&imported=$count" ) );
@@ -1836,7 +1814,7 @@ function erp_process_import_export() {
             if ( $type == 'employee' && $is_hrm_activated ) {
                 $args = [
                     'number' => - 1,
-                    'status' => 'all'
+                    'status' => 'all',
                 ];
 
                 $items = erp_hr_get_employees( $args );
@@ -1861,15 +1839,14 @@ function erp_process_import_export() {
             $csv_items = [];
 
             $x = 0;
-            foreach ( $items as $item ) {
 
+            foreach ( $items as $item ) {
                 if ( empty( $fields ) ) {
                     continue;
                 }
 
                 foreach ( $fields as $field ) {
                     if ( $type == 'employee' ) {
-
                         if ( in_array( $field, $field_builder_employees_fields ) ) {
                             $csv_items[ $x ][ $field ] = get_user_meta( $item->id, $field, true );
                         } else {
@@ -1887,7 +1864,6 @@ function erp_process_import_export() {
                                     break;
                             }
                         }
-
                     } else {
                         if ( $type == 'contact' ) {
                             if ( in_array( $field, $field_builder_contacts_fields ) ) {
@@ -1896,6 +1872,7 @@ function erp_process_import_export() {
                                 $csv_items[ $x ][ $field ] = $item->{$field};
                             }
                         }
+
                         if ( $type == 'company' ) {
                             if ( in_array( $field, $field_builder_companies_fields ) ) {
                                 $csv_items[ $x ][ $field ] = erp_people_get_meta( $item->id, $field, true );
@@ -1912,9 +1889,8 @@ function erp_process_import_export() {
             $file_name = 'export_' . date( 'd_m_Y' ) . '.csv';
 
             erp_make_csv_file( $csv_items, $file_name );
-
         } else {
-            wp_redirect( admin_url( "admin.php?page=erp-tools&tab=export" ) );
+            wp_redirect( admin_url( 'admin.php?page=erp-tools&tab=export' ) );
             exit();
         }
     }
@@ -1922,7 +1898,6 @@ function erp_process_import_export() {
 
 /**
  * Display importer tool notice.
- *
  *
  * @return void
  */
@@ -1934,12 +1909,12 @@ function erp_importer_notices() {
     if ( isset( $_REQUEST['imported'] ) ) {
         if ( intval( $_REQUEST['imported'] ) == 0 ) {
             $message = __( 'Nothing to import or items are already exists.', 'erp' );
-            echo "<div class='notice error'><p>" . esc_html( $message ) . "</p></div>";
+            echo "<div class='notice error'><p>" . esc_html( $message ) . '</p></div>';
         } else {
             $message = sprintf( __( '%s items successfully imported.', 'erp' ),
                 number_format_i18n( sanitize_text_field( wp_unslash( $_REQUEST['imported'] ) ) )
             );
-            echo "<div class='notice updated'><p>" . esc_html( $message ) . "</p></div>";
+            echo "<div class='notice updated'><p>" . esc_html( $message ) . '</p></div>';
         }
     }
 }
@@ -1950,8 +1925,8 @@ function erp_importer_notices() {
  * This function is similiar to wordpress wp_parse_args().
  * It's support multidimensional array.
  *
- * @param  array $args
- * @param  array $defaults Optional.
+ * @param array $args
+ * @param array $defaults optional
  *
  * @return array
  */
@@ -1985,10 +1960,9 @@ function erp_parse_args_recursive( &$args, $defaults = [] ) {
  * @param array        $attachments
  * @param array        $custom_headers
  *
- * @return boolean
+ * @return bool
  */
 function erp_mail( $to, $subject, $message, $headers = '', $attachments = [], $custom_headers = [] ) {
-
     if ( defined( 'ERP_IS_IMPORTING' ) && ERP_IS_IMPORTING ) {
         return true;
     }
@@ -2048,6 +2022,7 @@ function erp_mail( $to, $subject, $message, $headers = '', $attachments = [], $c
     ob_start();
     $is_mail_sent = wp_mail( $to, $subject, $message, $headers, $attachments );
     $debug_log    = ob_get_clean();
+
     if ( ! $is_mail_sent ) {
         error_log( $debug_log );
     }
@@ -2058,19 +2033,17 @@ function erp_mail( $to, $subject, $message, $headers = '', $attachments = [], $c
 }
 
 function erp_mail_send_via_gmail( $to, $subject, $message, $headers = '', $attachments = [], $custom_headers = [] ) {
-
     global $phpmailer, $wp_version;
 
     // (Re)create it, if it's gone missing.
-    if ( version_compare( $wp_version,'5.5' ) >= 0 ) {
+    if ( version_compare( $wp_version, '5.5' ) >= 0 ) {
         if ( ! ( $phpmailer instanceof \PHPMailer\PHPMailer\PHPMailer ) ) {
             require_once ABSPATH . WPINC . '/PHPMailer/PHPMailer.php';
             require_once ABSPATH . WPINC . '/PHPMailer/SMTP.php';
             require_once ABSPATH . WPINC . '/PHPMailer/Exception.php';
             $phpmailer = new \PHPMailer\PHPMailer\PHPMailer( true );
         }
-    }
-    else {
+    } else {
         if ( ! ( $phpmailer instanceof PHPMailer ) ) {
             require_once ABSPATH . WPINC . '/class-phpmailer.php';
             require_once ABSPATH . WPINC . '/class-smtp.php';
@@ -2079,10 +2052,10 @@ function erp_mail_send_via_gmail( $to, $subject, $message, $headers = '', $attac
     }
 
     // Headers
-    $cc = $bcc = $reply_to = array();
+    $cc = $bcc = $reply_to = [];
 
     if ( empty( $headers ) ) {
-        $headers = array();
+        $headers = [];
     } else {
         if ( !is_array( $headers ) ) {
             // Explode the headers out, so this function can take both
@@ -2091,16 +2064,16 @@ function erp_mail_send_via_gmail( $to, $subject, $message, $headers = '', $attac
         } else {
             $tempheaders = $headers;
         }
-        $headers = array();
+        $headers = [];
 
         // If it's actually got contents
         if ( !empty( $tempheaders ) ) {
             // Iterate through the raw headers
             foreach ( (array) $tempheaders as $header ) {
-                if ( strpos($header, ':') === false ) {
+                if ( strpos( $header, ':' ) === false ) {
                     if ( false !== stripos( $header, 'boundary=' ) ) {
-                        $parts = preg_split('/boundary=/i', trim( $header ) );
-                        $boundary = trim( str_replace( array( "'", '"' ), '', $parts[1] ) );
+                        $parts    = preg_split( '/boundary=/i', trim( $header ) );
+                        $boundary = trim( str_replace( [ "'", '"' ], '', $parts[1] ) );
                     }
                     continue;
                 }
@@ -2115,6 +2088,7 @@ function erp_mail_send_via_gmail( $to, $subject, $message, $headers = '', $attac
                     // Mainly for legacy -- process a From: header if it's there
                     case 'from':
                         $bracket_pos = strpos( $content, '<' );
+
                         if ( $bracket_pos !== false ) {
                             // Text before the bracketed email is the "From" name.
                             if ( $bracket_pos > 0 ) {
@@ -2127,20 +2101,22 @@ function erp_mail_send_via_gmail( $to, $subject, $message, $headers = '', $attac
                             $from_email = str_replace( '>', '', $from_email );
                             $from_email = trim( $from_email );
 
-                            // Avoid setting an empty $from_email.
+                        // Avoid setting an empty $from_email.
                         } elseif ( '' !== trim( $content ) ) {
                             $from_email = trim( $content );
                         }
                         break;
+
                     case 'content-type':
                         if ( strpos( $content, ';' ) !== false ) {
                             list( $type, $charset_content ) = explode( ';', $content );
-                            $content_type = trim( $type );
+                            $content_type                   = trim( $type );
+
                             if ( false !== stripos( $charset_content, 'charset=' ) ) {
-                                $charset = trim( str_replace( array( 'charset=', '"' ), '', $charset_content ) );
+                                $charset = trim( str_replace( [ 'charset=', '"' ], '', $charset_content ) );
                             } elseif ( false !== stripos( $charset_content, 'boundary=' ) ) {
-                                $boundary = trim( str_replace( array( 'BOUNDARY=', 'boundary=', '"' ), '', $charset_content ) );
-                                $charset = '';
+                                $boundary = trim( str_replace( [ 'BOUNDARY=', 'boundary=', '"' ], '', $charset_content ) );
+                                $charset  = '';
                             }
 
                             // Avoid setting an empty $content_type.
@@ -2148,12 +2124,15 @@ function erp_mail_send_via_gmail( $to, $subject, $message, $headers = '', $attac
                             $content_type = trim( $content );
                         }
                         break;
+
                     case 'cc':
                         $cc = array_merge( (array) $cc, explode( ',', $content ) );
                         break;
+
                     case 'bcc':
                         $bcc = array_merge( (array) $bcc, explode( ',', $content ) );
                         break;
+
                     case 'reply-to':
                         $reply_to = array_merge( (array) $reply_to, explode( ',', $content ) );
                         break;
@@ -2181,8 +2160,9 @@ function erp_mail_send_via_gmail( $to, $subject, $message, $headers = '', $attac
     $phpmailer->ContentType = apply_filters( 'erp_mail_content_type', $content_type );
 
     // Set whether it's plaintext, depending on $content_type
-    if ( 'text/html' == $content_type )
+    if ( 'text/html' == $content_type ) {
         $phpmailer->isHTML( true );
+    }
 
     //Return-Path
     $phpmailer->Sender = apply_filters( 'erp_mail_return_path', $phpmailer->From );
@@ -2197,8 +2177,8 @@ function erp_mail_send_via_gmail( $to, $subject, $message, $headers = '', $attac
     $phpmailer->Subject = $subject;
     $phpmailer->Body    = $message;
     // Set destination addresses, using appropriate methods for handling addresses
-    $address_headers = compact( 'to', 'cc', 'bcc', 'reply_to' );
-    $address_headers['reply_to'] = [ $from_name. ' <'.$from_email.'>' ];
+    $address_headers             = compact( 'to', 'cc', 'bcc', 'reply_to' );
+    $address_headers['reply_to'] = [ $from_name . ' <' . $from_email . '>' ];
 
     foreach ( $address_headers as $address_header => $addresses ) {
         if ( empty( $addresses ) ) {
@@ -2221,12 +2201,15 @@ function erp_mail_send_via_gmail( $to, $subject, $message, $headers = '', $attac
                     case 'to':
                         $phpmailer->addAddress( $address, $recipient_name );
                         break;
+
                     case 'cc':
                         $phpmailer->addCc( $address, $recipient_name );
                         break;
+
                     case 'bcc':
                         $phpmailer->addBcc( $address, $recipient_name );
                         break;
+
                     case 'reply_to':
                         $phpmailer->addReplyTo( $address, $recipient_name );
                         break;
@@ -2242,8 +2225,7 @@ function erp_mail_send_via_gmail( $to, $subject, $message, $headers = '', $attac
         foreach ( $attachments as $attachment ) {
             try {
                 $phpmailer->addAttachment( $attachment );
-            }
-            catch ( phpmailerException $e ) {
+            } catch ( phpmailerException $e ) {
                 continue;
             }
         }
@@ -2254,25 +2236,27 @@ function erp_mail_send_via_gmail( $to, $subject, $message, $headers = '', $attac
     $email = new \Google_Service_Gmail_Message();
 
     $base64 = str_replace(
-        array( '+', '/', '=' ),
-        array( '-', '_', '' ),
+        [ '+', '/', '=' ],
+        [ '-', '_', '' ],
         base64_encode( $phpmailer->getSentMIMEMessage() )
     ); // url safe.
 
     $email->setRaw( $base64 );
 
     $service = new \Google_Service_Gmail( wperp()->google_auth->get_client() );
+
     try {
         $response = $service->users_messages->send( 'me', $email );
-        error_log('Sending email to : '. $to);
+        error_log( 'Sending email to : ' . $to );
     } catch ( Google_Service_Exception $exception ) {
         error_log( 'Failed sending email to : ------------------------ ' );
-        error_log(print_r( $to,1 ) );
-        error_log(print_r( $subject,1 ) );
-        error_log(print_r( $headers,1 ) );
-        error_log( print_r( $exception->getMessage(), 1));
+        error_log( print_r( $to, 1 ) );
+        error_log( print_r( $subject, 1 ) );
+        error_log( print_r( $headers, 1 ) );
+        error_log( print_r( $exception->getMessage(), 1 ) );
 //        error_log(print_r(debug_backtrace(),1));
         error_log( '-------------------------------' );
+
         return false;
     }
 
@@ -2286,8 +2270,7 @@ function erp_mail_send_via_gmail( $to, $subject, $message, $headers = '', $attac
  */
 function erp_email_settings_javascript() {
     wp_enqueue_style( 'erp-sweetalert' );
-    wp_enqueue_script( 'erp-sweetalert' );
-    ?>
+    wp_enqueue_script( 'erp-sweetalert' ); ?>
     <script type="text/javascript">
         jQuery(document).ready(function ($) {
             $("a#smtp-test-connection").click(function (e) {
@@ -2304,7 +2287,7 @@ function erp_email_settings_javascript() {
                     'username': $('input[name=username]').val(),
                     'password': $('input[name=password]').val(),
                     'to': $('#smtp_test_email_address').val(),
-                    '_wpnonce': '<?php echo esc_html( wp_create_nonce( "erp-smtp-test-connection-nonce" ) ); ?>'
+                    '_wpnonce': '<?php echo esc_html( wp_create_nonce( 'erp-smtp-test-connection-nonce' ) ); ?>'
                 };
 
                 $.post(ajaxurl, data, function (response) {
@@ -2340,7 +2323,7 @@ function erp_email_settings_javascript() {
                     'protocol': $('select[name=protocol]').val(),
                     'port': $('input[name=port]').val(),
                     'authentication': $('select[name=authentication]').val(),
-                    '_wpnonce': '<?php echo esc_html( wp_create_nonce( "erp-imap-test-connection-nonce" ) ); ?>'
+                    '_wpnonce': '<?php echo esc_html( wp_create_nonce( 'erp-imap-test-connection-nonce' ) ); ?>'
                 };
 
                 $.post(ajaxurl, data, function (response) {
@@ -2421,12 +2404,12 @@ function email_setting_css() {
 /**
  * Determine if the inbound/imap mail feature is active or not.
  *
- * @return boolean
+ * @return bool
  */
 function erp_is_imap_active() {
     $options = get_option( 'erp_settings_erp-crm_email_connect_imap', [] );
 
-    $imap_status = (boolean) isset( $options['imap_status'] ) ? $options['imap_status'] : 0;
+    $imap_status = (bool) isset( $options['imap_status'] ) ? $options['imap_status'] : 0;
     $enable_imap = ( isset( $options['enable_imap'] ) && $options['enable_imap'] == 'yes' ) ? true : false;
 
     if ( $enable_imap && $imap_status ) {
@@ -2441,7 +2424,7 @@ function erp_is_imap_active() {
  *
  * @since 1.1.6
  *
- * @return boolean
+ * @return bool
  */
 function erp_is_smtp_enabled() {
     $erp_email_smtp_settings = get_option( 'erp_settings_erp-email_smtp', [] );
@@ -2456,7 +2439,7 @@ function erp_is_smtp_enabled() {
 /**
  * Determine if the module is active or not.
  *
- * @return boolean
+ * @return bool
  */
 function erp_is_module_active( $module_key ) {
     $modules = get_option( 'erp_modules', [] );
@@ -2467,10 +2450,9 @@ function erp_is_module_active( $module_key ) {
 /**
  * Make csv file from array and force download
  *
- * @param array   $items
- * @param boolean $field_data (optional)
- *
- * @param string  $file_name
+ * @param array  $items
+ * @param bool   $field_data (optional)
+ * @param string $file_name
  */
 function erp_make_csv_file( $items, $file_name, $field_data = true ) {
     $file_name = ( ! empty( $file_name ) ) ? $file_name : 'csv_' . date( 'd_m_Y' ) . '.csv';
@@ -2497,13 +2479,11 @@ function erp_make_csv_file( $items, $file_name, $field_data = true ) {
     if ( $field_data ) {
         foreach ( $items as $item ) {
             $csv_row = array_map( function ( $item_val ) {
-
                 if ( is_array( $item_val ) ) {
                     return implode( ', ', $item_val );
                 }
 
                 return $item_val;
-
             }, $item );
 
             fputcsv( $output, $csv_row );
@@ -2519,7 +2499,6 @@ function erp_make_csv_file( $items, $file_name, $field_data = true ) {
  * @param void
  */
 function erp_import_export_download_sample_action() {
-
     $type = isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
 
     if ( ! isset( $_GET['action'] ) || $_GET['action'] != 'download_sample' ) {
@@ -2581,7 +2560,7 @@ function enqueue_fullcalendar_locale() {
     }
 
     if ( file_exists( WPERP_PATH . "/assets/vendor/fullcalendar/lang/{$script}.js" ) ) {
-        wp_enqueue_script( 'erp-fullcalendar-locale', WPERP_ASSETS . "/vendor/fullcalendar/lang/{$script}.js", array( 'erp-fullcalendar' ), null, true );
+        wp_enqueue_script( 'erp-fullcalendar-locale', WPERP_ASSETS . "/vendor/fullcalendar/lang/{$script}.js", [ 'erp-fullcalendar' ], null, true );
     }
 }
 
@@ -2647,9 +2626,9 @@ function erp_remove_other_select2_sources() {
  *
  * @since 1.1.16
  *
- * @param string $word The word in singular form.
+ * @param string $word the word in singular form
  *
- * @return string The word in plural form.
+ * @return string the word in plural form
  */
 function erp_pluralize( $word ) {
     return \Doctrine\Common\Inflector\Inflector::pluralize( $word );
@@ -2667,15 +2646,15 @@ function erp_get_client_ip() {
 
     if ( isset( $_SERVER['HTTP_CLIENT_IP'] ) ) {
         $ipaddress = sanitize_text_field( wp_unslash( $_SERVER['HTTP_CLIENT_IP'] ) );
-    } else if ( isset( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
+    } elseif ( isset( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
         $ipaddress = sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_FORWARDED_FOR'] ) );
-    } else if ( isset( $_SERVER['HTTP_X_FORWARDED'] ) ) {
+    } elseif ( isset( $_SERVER['HTTP_X_FORWARDED'] ) ) {
         $ipaddress = sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_FORWARDED'] ) );
-    } else if ( isset( $_SERVER['HTTP_FORWARDED_FOR'] ) ) {
+    } elseif ( isset( $_SERVER['HTTP_FORWARDED_FOR'] ) ) {
         $ipaddress = sanitize_text_field( wp_unslash( $_SERVER['HTTP_FORWARDED_FOR'] ) );
-    } else if ( isset( $_SERVER['HTTP_FORWARDED'] ) ) {
+    } elseif ( isset( $_SERVER['HTTP_FORWARDED'] ) ) {
         $ipaddress = sanitize_text_field( wp_unslash( $_SERVER['HTTP_FORWARDED'] ) );
-    } else if ( isset( $_SERVER['REMOTE_ADDR'] ) ) {
+    } elseif ( isset( $_SERVER['REMOTE_ADDR'] ) ) {
         $ipaddress = sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) );
     } else {
         $ipaddress = 'UNKNOWN';
@@ -2691,7 +2670,7 @@ function erp_get_client_ip() {
  *
  * @param mixed $value
  *
- * @return boolean
+ * @return bool
  */
 function erp_validate_boolean( $value ) {
     return filter_var( $value, FILTER_VALIDATE_BOOLEAN );
@@ -2699,22 +2678,25 @@ function erp_validate_boolean( $value ) {
 
 /**
  * Get financial year start and end dates
+ *
  * @param $date
+ *
  * @since 1.2.0
  * since 1.3.0 $date added
  * @since 1.6.0 added timestamp support
+ *
  * @return array
  */
 function erp_get_financial_year_dates( $date = null ) {
     $start_month = erp_get_option( 'gen_financial_month', 'erp_settings_general', 1 );
+
     if ( $date == null ) {
         $year  = date( 'Y' );
         $month = date( 'n' );
     } else {
         if ( ! is_numeric( $date ) ) {
-            $timestamp = strtotime( $date );
-        }
-        else {
+            $timestamp = erp_current_datetime()->modify( $date )->getTimestamp();
+        } else {
             $timestamp = $date;
         }
         $year  = date( 'Y', $timestamp );
@@ -2738,7 +2720,7 @@ function erp_get_financial_year_dates( $date = null ) {
 
     return [
         'start' => $start,
-        'end'   => $end
+        'end'   => $end,
     ];
 }
 
@@ -2746,7 +2728,6 @@ function erp_get_financial_year_dates( $date = null ) {
  * Get financial start and end years that a date belongs to
  *
  * @since 1.2.0
- *
  * @since 1.6.0 added timestamp support
  *
  * @param string $date
@@ -2757,26 +2738,24 @@ function get_financial_year_from_date( $date ) {
     $fy_start_month = erp_get_option( 'gen_financial_month', 'erp_settings_general', 1 );
     $fy_start_month = absint( $fy_start_month );
 
-    $date_timestamp = !is_numeric( $date ) ? strtotime( $date ) : $date;
+    $date_timestamp = ! is_numeric( $date ) ? erp_current_datetime()->modify( $date )->getTimestamp() : $date;
     $date_year      = absint( date( 'Y', $date_timestamp ) );
     $date_month     = absint( date( 'n', $date_timestamp ) );
 
     if ( 1 === $fy_start_month ) {
         return [
             'start' => $date_year,
-            'end'   => $date_year
+            'end'   => $date_year,
         ];
-
-    } else if ( $date_month <= ( $fy_start_month - 1 ) ) {
+    } elseif ( $date_month <= ( $fy_start_month - 1 ) ) {
         return [
             'start' => ( $date_year - 1 ),
-            'end'   => $date_year
+            'end'   => $date_year,
         ];
-
     } else {
         return [
             'start' => $date_year,
-            'end'   => ( $date_year + 1 )
+            'end'   => ( $date_year + 1 ),
         ];
     }
 }
@@ -2815,7 +2794,8 @@ function erp_array_flatten( $array ) {
     if ( ! is_array( $array ) ) {
         return false;
     }
-    $result = array();
+    $result = [];
+
     foreach ( $array as $key => $value ) {
         if ( is_array( $value ) ) {
             $result = array_merge( $result, erp_array_flatten( $value ) );
@@ -2827,23 +2807,22 @@ function erp_array_flatten( $array ) {
     return $result;
 }
 
-
-
 /**
  * Fetch a filtered list of user roles that the current user is
  * allowed to edit.
+ *
  * @since 1.3.1 function has been from crm
  * @since 1.2.4
  *
  * @return array
  */
-function erp_get_editable_roles (){
-    if(!  function_exists('get_editable_roles')){
-        require_once(ABSPATH . 'wp-admin/includes/user.php');
+function erp_get_editable_roles() {
+    if ( !  function_exists( 'get_editable_roles' ) ) {
+        require_once ABSPATH . 'wp-admin/includes/user.php';
     }
     $wp_roles = get_editable_roles();
 
-    if( !current_user_can( 'administrator' ) ){
+    if ( !current_user_can( 'administrator' ) ) {
         unset( $wp_roles['administrator'] );
     }
 
@@ -2863,18 +2842,15 @@ function erp_get_editable_roles (){
  * @param string $output_format
  *
  * @return array
- *
  */
-function erp_get_dates_in_range($first, $last, $step = '+1 day', $output_format = 'Y-m-d' ) {
+function erp_get_dates_in_range( $first, $last, $step = '+1 day', $output_format = 'Y-m-d' ) {
+    $dates   = [];
+    $current = strtotime( $first );
+    $last    = strtotime( $last );
 
-    $dates = array();
-    $current = strtotime($first);
-    $last = strtotime($last);
-
-    while( $current <= $last ) {
-
-        $dates[] = date($output_format, $current);
-        $current = strtotime($step, $current);
+    while ( $current <= $last ) {
+        $dates[] = date( $output_format, $current );
+        $current = strtotime( $step, $current );
     }
 
     return $dates;
@@ -2885,30 +2861,35 @@ function erp_get_dates_in_range($first, $last, $step = '+1 day', $output_format 
  * Tooltips are encoded with htmlspecialchars to prevent XSS. Should not be used in conjunction with esc_attr()
  *
  * @param string $var
+ *
  * @return string
+ *
  * @since 1.3.4
  */
 function erp_sanitize_tooltip( $var ) {
-    return htmlspecialchars( wp_kses( html_entity_decode( $var ), array(
-        'br'     => array(),
-        'em'     => array(),
-        'strong' => array(),
-        'small'  => array(),
-        'span'   => array(),
-        'ul'     => array(),
-        'li'     => array(),
-        'ol'     => array(),
-        'p'      => array(),
-    ) ) );
+    return htmlspecialchars( wp_kses( html_entity_decode( $var ), [
+        'br'     => [],
+        'em'     => [],
+        'strong' => [],
+        'small'  => [],
+        'span'   => [],
+        'ul'     => [],
+        'li'     => [],
+        'ol'     => [],
+        'p'      => [],
+    ] ) );
 }
 
 /**
  * Display an ERP help tip.
  *
- * @param  string $tip        Help tip text
- * @param  bool   $allow_html Allow sanitized HTML if true or escape
+ * @param string $tip        Help tip text
+ * @param bool   $allow_html Allow sanitized HTML if true or escape
+ *
  * @return string
+ *
  * @since 1.3.4
+ * @since 1.6.5
  */
 function erp_help_tip( $tip, $allow_html = false, $tag = 'tips' ) {
     if ( $allow_html ) {
@@ -2917,17 +2898,16 @@ function erp_help_tip( $tip, $allow_html = false, $tag = 'tips' ) {
         $tip = wp_kses_post( $tip );
     }
 
-    if ( 'tips' === $tag ) {
-        return sprintf( '<span class="erp-help-tip erp-tips" data-tip="%s"></span>', $tip );
-    }
-
     return sprintf( '<span class="erp-help-tip erp-tips" title="%s"></span>', $tip );
 }
 
 /**
  * Letter to number converter
+ *
  * @param  $size
+ *
  * @return $ret
+ *
  * @since 1.3.4
  */
 function erp_let_to_num( $size ) {
@@ -2936,12 +2916,16 @@ function erp_let_to_num( $size ) {
     switch ( strtoupper( $l ) ) {
         case 'P':
             $ret *= 1024;
+            // no break
         case 'T':
             $ret *= 1024;
+            // no break
         case 'G':
             $ret *= 1024;
+            // no break
         case 'M':
             $ret *= 1024;
+            // no break
         case 'K':
             $ret *= 1024;
     }
@@ -2958,6 +2942,7 @@ function erp_let_to_num( $size ) {
  */
 function erp_menu() {
     $menu = [];
+
     return apply_filters( 'erp_menu', $menu );
 }
 
@@ -2966,18 +2951,17 @@ function erp_menu() {
  *
  * @since 1.4.0
  *
- * @param String $component Name of Component to add menu
- *
- * @param array $args
+ * @param string $component Name of Component to add menu
+ * @param array  $args
  *
  * @return void
  */
 function erp_add_menu( $component, $args ) {
-    add_filter('erp_menu', function($menu) use( $component, $args ) {
+    add_filter( 'erp_menu', function ( $menu ) use ( $component, $args ) {
         $menu[ $component ][$args['slug']] = $args;
 
         return $menu;
-    });
+    } );
 }
 
 /**
@@ -2986,10 +2970,8 @@ function erp_add_menu( $component, $args ) {
  * @since 1.4.0
  *
  * @param string $component Name of Component to add menu
- *
- * @param string $parent Slug of Parent menu item
- *
- * @param array $args
+ * @param string $parent    Slug of Parent menu item
+ * @param array  $args
  *
  * @return void
  */
@@ -3026,7 +3008,7 @@ function erp_render_menu( $component ) {
     echo "<div class='erp-nav-container erp-hide-print'>";
     echo erp_render_menu_header( $component );
     echo wp_kses_post( erp_build_menu( $menu[$component], $tab, $component ) );
-    echo "</div>";
+    echo '</div>';
 }
 
 /**
@@ -3035,23 +3017,20 @@ function erp_render_menu( $component ) {
  * @since 1.4.0
  *
  * @param $items
- *
  * @param $active
- *
  * @param $component main component slug
- *
  * @param bool $dropdown
  *
  * @return string
  */
 function erp_build_menu( $items, $active, $component, $dropdown = false ) {
 
-
     //check capability
-    $items = array_filter( $items, function( $item ) {
+    $items = array_filter( $items, function ( $item ) {
         if ( !isset( $item['capability'] ) ) {
             return false;
         }
+
         return current_user_can( $item['capability'] );
     } );
 
@@ -3065,9 +3044,9 @@ function erp_build_menu( $items, $active, $component, $dropdown = false ) {
     if ( $dropdown ) {
         $html = '<ul class="erp-nav-dropdown">';
     }
-    foreach ( $items as $item ) {
 
-        $link = add_query_arg( [ 'page' => 'erp-'.$component, 'section' => $item['slug'] ], admin_url( 'admin.php' ) );
+    foreach ( $items as $item ) {
+        $link = add_query_arg( [ 'page' => 'erp-' . $component, 'section' => $item['slug'] ], admin_url( 'admin.php' ) );
 
         $class = $active == $item['slug'] ? 'active ' : '';
 
@@ -3083,7 +3062,7 @@ function erp_build_menu( $items, $active, $component, $dropdown = false ) {
         $submenu =  '';
 
         if ( isset( $item['submenu'] ) ) {
-            $class.= "dropdown-nav";
+            $class .= 'dropdown-nav';
             $submenu .= erp_build_menu( $item['submenu'], $active, $component, true );
         }
 
@@ -3152,6 +3131,7 @@ function erp_is_current_page( $page, $section, $subsection = '' ) {
  */
 function erp_get_menu_headers() {
     $menu = [];
+
     return apply_filters( 'erp_menu_headers', $menu );
 }
 
@@ -3162,11 +3142,12 @@ function erp_get_menu_headers() {
  * @param $title
  * @param string $icon
  */
-function erp_add_menu_header( $component, $title, $icon = "" ) {
-    add_filter('erp_menu_headers', function($menu) use( $component, $title, $icon ) {
+function erp_add_menu_header( $component, $title, $icon = '' ) {
+    add_filter( 'erp_menu_headers', function ( $menu ) use ( $component, $title, $icon ) {
         $menu[ $component ] = [ 'title' => $title, 'icon' => $icon ];
+
         return $menu;
-    });
+    } );
 }
 
 /**
@@ -3178,8 +3159,9 @@ function erp_add_menu_header( $component, $title, $icon = "" ) {
  */
 function erp_render_menu_header( $component ) {
     $headers = erp_get_menu_headers();
+
     if ( empty( $headers[$component] ) ) {
-       return "";
+        return '';
     }
 
     $html = sprintf( '<div class="erp-page-header">
@@ -3199,17 +3181,16 @@ function erp_render_menu_header( $component ) {
  * @return void
  */
 function erp_web_feed() {
-    $url="https://wperp.com/feed/";
+    $url='https://wperp.com/feed/';
     $ch = curl_init();
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
+    curl_setopt( $ch, CURLOPT_URL, $url );
 
-    $data = curl_exec($ch);
-    curl_close($ch);
+    $data = curl_exec( $ch );
+    curl_close( $ch );
 
-    return simplexml_load_string($data);
+    return simplexml_load_string( $data );
 }
-
 
 /**
  * Build Mega for html for ERP Mega menu
@@ -3217,11 +3198,8 @@ function erp_web_feed() {
  * @since 1.4.0
  *
  * @param $items
- *
  * @param $active
- *
  * @param $component main component slug
- *
  * @param bool $dropdown
  *
  * @return string
@@ -3229,10 +3207,11 @@ function erp_web_feed() {
 function erp_build_mega_menu( $items, $active, $component, $dropdown = false ) {
 
     //check capability
-    $items = array_filter( $items, function( $item ) {
+    $items = array_filter( $items, function ( $item ) {
         if ( !isset( $item['capability'] ) ) {
             return false;
         }
+
         return current_user_can( $item['capability'] );
     } );
 
@@ -3246,15 +3225,16 @@ function erp_build_mega_menu( $items, $active, $component, $dropdown = false ) {
     if ( $dropdown ) {
         $html = '<ul class="erp-nav-dropdown">';
     }
-    foreach ( $items as $item ) {
 
+    foreach ( $items as $item ) {
         if ( $component === 'accounting' ) {
-            $link = add_query_arg( [ 'page' => 'erp-'.$component . '#/' . $item['slug'] ], admin_url( 'admin.php' ) );
+            $link = add_query_arg( [ 'page' => 'erp-' . $component . '#/' . $item['slug'] ], admin_url( 'admin.php' ) );
         } else {
-            $link = add_query_arg( [ 'page' => 'erp-'.$component, 'section' => $item['slug'] ], admin_url( 'admin.php' ) );
+            $link = add_query_arg( [ 'page' => 'erp-' . $component, 'section' => $item['slug'] ], admin_url( 'admin.php' ) );
         }
 
         $class = $active == $item['slug'] ? 'active ' : '';
+
         if ( $dropdown ) {
             $link = add_query_arg( [ 'page' => 'erp-' . $component, 'section' => $item['parent'], 'sub-section' => $item['slug'] ], admin_url( 'admin.php' ) );
             $class .= ( !empty( $_GET['sub-section'] ) && $_GET['sub-section'] == $item['slug'] ) ? 'active ' : '';
@@ -3295,7 +3275,7 @@ function erp_get_currencies_for_dropdown() {
  * Old functions
  * should be updated ASAP
  *
-================================*/
+ * ================================*/
 
 /**
  * Return the thousand separator for prices.
@@ -3310,7 +3290,6 @@ function erp_ac_get_price_thousand_separator() {
     return $separator;
 }
 
-
 /**** Add Enable Disable section for All Pre-generated email End ****/
 
 /**
@@ -3321,7 +3300,6 @@ function erp_ac_get_price_thousand_separator() {
  * @return string
  */
 function add_enable_disable_section_to_email_column( $email ) {
-
     $get_option_id    = $email->get_option_id();
     $get_option_value = get_option( $get_option_id );
 
@@ -3339,15 +3317,16 @@ function add_enable_disable_section_to_email_column( $email ) {
         'erp_email_settings_employee-asset-request',
         'erp_email_settings_employee-asset-approve',
         'erp_email_settings_employee-asset-reject',
-        'erp_email_settings_employee-asset-overdue'
+        'erp_email_settings_employee-asset-overdue',
     ] );
+
     if ( in_array( $get_option_id, $can_not_be_disabled ) ) {
         echo '<td class="erp-settings-table-is_enable">
             <label class=""> &nbsp; </label>
         </td>';
     } else {
         echo '<td class="erp-settings-table-is_enable">
-            <label class="cus_switch"><input type="checkbox" name="isEnableEmail['. esc_attr( $get_option_id ) .']"  ' . esc_attr( $is_enable ) . '><span class="cus_slider cus_round"></span></label>
+            <label class="cus_switch"><input type="checkbox" name="isEnableEmail[' . esc_attr( $get_option_id ) . ']"  ' . esc_attr( $is_enable ) . '><span class="cus_slider cus_round"></span></label>
         </td>';
     }
     /*echo '<td class="erp-settings-table-is_enable">
@@ -3369,21 +3348,24 @@ function add_enable_disable_option_save() {
 
     if ( isset( $_POST['save_email_enable_or_disable'] ) && $_POST['save_email_enable_or_disable'] == 'save_email_enable_or_disable' ) {
         $registered_email = array_keys( wperp()->emailer->get_emails() );
-        foreach( $registered_email as $remail ) {
+
+        foreach ( $registered_email as $remail ) {
             $cur_email_init     = wperp()->emailer->get_email( $remail );
-            $cur_email_id       = 'erp_email_settings_'.$cur_email_init->id;
+            $cur_email_id       = 'erp_email_settings_' . $cur_email_init->id;
             $cur_email_option   = get_option( $cur_email_id );
+
             if ( isset( $cur_email_option['is_enable'] ) ) {
                 unset( $cur_email_option['is_enable'] );
                 update_option( $cur_email_id, $cur_email_option );
             }
         }
-        if ( isset( $_POST['isEnableEmail'] ) ) {
 
+        if ( isset( $_POST['isEnableEmail'] ) ) {
             $is_enable_email = array_map( 'sanitize_text_field', $_POST['isEnableEmail'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash
             $is_enable_email = array_map( 'wp_unslash', $is_enable_email );
-            foreach ($is_enable_email as $key => $value) {
-                $email_arr = get_option($key);
+
+            foreach ( $is_enable_email as $key => $value ) {
+                $email_arr              = get_option( $key );
                 $email_arr['is_enable'] = 'yes';
                 update_option( $key, $email_arr );
             }
@@ -3398,16 +3380,19 @@ function add_enable_disable_option_save() {
  *
  * @return array
  */
-function erp_email_setting_columns_add_enable_disable( $array ){
-    $arr = [];
+function erp_email_setting_columns_add_enable_disable( $array ) {
+    $arr     = [];
     $counter = 1;
-    foreach( $array as $key => $value ) {
+
+    foreach ( $array as $key => $value ) {
         $arr[$key] = $value;
+
         if ( count( $array ) - 1 == $counter ) {
             $arr['is_enable'] = __( 'Enable/Disable', 'erp' );
         }
         $counter++;
     }
+
     return $arr;
 }
 
@@ -3423,8 +3408,8 @@ function add_checkbox_hidden_field( $fields, $section ) {
         'default'   => 'save_email_enable_or_disable',
         'type'      => 'hidden',
         'id'        => 'save_email_enable_or_disable',
-
     ];
+
     return $fields;
 }
 
@@ -3436,7 +3421,6 @@ function add_checkbox_hidden_field( $fields, $section ) {
  * @return string
  */
 function filter_enabled_email( $email ) {
-
     $get_option_id          = $email->get_option_id();
     $can_not_be_disabled    = apply_filters( 'email_settings_enable_filter', [
         'erp_email_settings_new-leave-request',
@@ -3445,18 +3429,21 @@ function filter_enabled_email( $email ) {
         'erp_email_settings_employee-asset-request',
         'erp_email_settings_employee-asset-approve',
         'erp_email_settings_employee-asset-reject',
-        'erp_email_settings_employee-asset-overdue'
+        'erp_email_settings_employee-asset-overdue',
     ] );
+
     if ( in_array( $get_option_id, $can_not_be_disabled ) ) {
         return $email;
     }
     $get_email_settings = get_option( $get_option_id );
+
     if ( isset( $get_email_settings['is_enable'] ) && $get_email_settings['is_enable'] == 'yes' ) {
         return $email;
     }
-    add_filter( 'erp_email_recipient_'.$email->id, function( $recipient, $object){
+    add_filter( 'erp_email_recipient_' . $email->id, function ( $recipient, $object ) {
         return '';
     }, 10, 2 );
+
     return $email;
 }
 /**** Add Enable Disable section for All Pre-generated email End ****/
@@ -3488,26 +3475,27 @@ function filter_enabled_email( $email ) {
  *
  * @since 1.6.0
  *
- * @param array   $row_arrays key value pairs of row data.
- * @param string  $wp_table_name table name with prefix added.
- * @param boolean $update set true for data updates, you need to specify primary_key parameter.
- * @param string  $primary_key primary key field name, provide this field if you want to update the given data.
+ * @param array  $row_arrays    key value pairs of row data
+ * @param string $wp_table_name table name with prefix added
+ * @param bool   $update        set true for data updates, you need to specify primary_key parameter
+ * @param string $primary_key   primary key field name, provide this field if you want to update the given data
  *
- * @return false|int return false on query error, otherwise return number of row effected, output can be 0 if no row is updated, consider this while checking for errors.
+ * @return false|int return false on query error, otherwise return number of row effected, output can be 0 if no row is updated, consider this while checking for errors
  *
  * @author  Ugur Mirza ZEYREK
  * @contributor Travis Grenell
  */
-function erp_wp_insert_rows( $row_arrays = array(), $wp_table_name, $update = false, $primary_key = null ) {
+function erp_wp_insert_rows( $row_arrays = [], $wp_table_name, $update = false, $primary_key = null ) {
     global $wpdb;
     $wp_table_name = esc_sql( $wp_table_name );
     // Setup arrays for Actual Values, and Placeholders.
-    $values        = array();
-    $place_holders = array();
+    $values        = [];
+    $place_holders = [];
     $query         = '';
     $query_columns = '';
 
     $query .= "INSERT INTO `{$wp_table_name}` (";
+
     foreach ( $row_arrays as $count => $row_array ) {
         foreach ( $row_array as $key => $value ) {
             if ( $count == 0 ) {
@@ -3521,6 +3509,7 @@ function erp_wp_insert_rows( $row_arrays = array(), $wp_table_name, $update = fa
             $values[] = $value;
 
             $symbol = '%s';
+
             if ( is_numeric( $value ) ) {
                 if ( is_float( $value ) ) {
                     $symbol = '%f';
@@ -3528,6 +3517,7 @@ function erp_wp_insert_rows( $row_arrays = array(), $wp_table_name, $update = fa
                     $symbol = '%d';
                 }
             }
+
             if ( isset( $place_holders[ $count ] ) ) {
                 $place_holders[ $count ] .= ", '$symbol'";
             } else {
@@ -3546,6 +3536,7 @@ function erp_wp_insert_rows( $row_arrays = array(), $wp_table_name, $update = fa
         //$update = " ON DUPLICATE KEY UPDATE $primary_key=VALUES( $primary_key ),";
         $update = ' ON DUPLICATE KEY UPDATE ';
         $cnt    = 0;
+
         foreach ( $row_arrays[0] as $key => $value ) {
             if ( $cnt == 0 ) {
                 $update .= "$key=VALUES($key)";
@@ -3560,19 +3551,17 @@ function erp_wp_insert_rows( $row_arrays = array(), $wp_table_name, $update = fa
     return $wpdb->query( $wpdb->prepare( $query, $values ) ) === false ? false : true;
 }
 
-
 /**
  * This function will get mysql date string as input and will return php timestamp with default WordPress timzone
  *
  * @since 1.6.0
  *
- * @param string $time mysql date format: Y-m-d H:i:s or Y-m-d. In case of Y-m-d only string H:i:s will be set to 00:00:00.
- * @param bool   $timestamp return false to get DateTimeImmutable object.
+ * @param string $time      mysql date format: Y-m-d H:i:s or Y-m-d. In case of Y-m-d only string H:i:s will be set to 00:00:00.
+ * @param bool   $timestamp return false to get DateTimeImmutable object
  *
  * @return bool|int|DateTimeImmutable false on return php timestamp on success
  */
 function erp_mysqldate_to_phptimestamp( $time, $timestamp = true ) {
-
     if ( ! preg_match( '/\d{2}:\d{2}:\d{2}$/', $time ) ) {
         $time = $time . ' 00:00:00';
     }
@@ -3649,6 +3638,7 @@ function erp_wp_timezone_string() {
 
 /**
  * This method will return input value as integer if there is no . value, otherwise will return a float value
+ *
  * @param $number
  *
  * @return int|float
@@ -3660,10 +3650,12 @@ function erp_number_format_i18n( $number ) {
     // check if . exist
     if ( strpos( $number, '.' ) !== false ) {
         $extract = explode( '.', $number );
+
         if ( isset( $extract[1] ) && absint( $extract[1] > 0 ) ) {
             return number_format_i18n( $number, 1 );
         }
     }
+
     return number_format_i18n( $number );
 }
 
@@ -3676,9 +3668,10 @@ function erp_number_format_i18n( $number ) {
  */
 function erp_is_timestamp( $string ) {
     try {
-        new DateTime('@' . $string);
-    } catch(Exception $e) {
+        new DateTime( '@' . $string );
+    } catch ( Exception $e ) {
         return false;
     }
+
     return true;
 }

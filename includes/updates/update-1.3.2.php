@@ -15,4 +15,3 @@ function wperp_update_1_3_2_set_role() {
     $installer->create_roles();
 }
 wperp_update_1_3_2_set_role();
-

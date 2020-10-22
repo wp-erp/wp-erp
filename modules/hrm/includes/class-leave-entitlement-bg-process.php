@@ -1,5 +1,8 @@
 <?php
+
 namespace WeDevs\ERP\HRM;
+
+use WP_Background_Process;
 
 if ( ! class_exists( 'WP_Async_Request', false ) ) {
     require_once WPERP_INCLUDES . '/lib/bgprocess/wp-async-request.php';
@@ -11,9 +14,8 @@ if ( ! class_exists( 'WP_Background_Process', false ) ) {
 
 /**
  * Class Leave_Entitlement_BG_Process
- * @package WeDevs\ERP\HRM
  */
-class Leave_Entitlement_BG_Process extends \WP_Background_Process {
+class Leave_Entitlement_BG_Process extends WP_Background_Process {
 
     /**
      * Background process id, must be unique.
@@ -22,7 +24,7 @@ class Leave_Entitlement_BG_Process extends \WP_Background_Process {
      */
     protected $action = 'erp_leave_entl_bg_process';
 
-    protected $request_data = array(
+    protected $request_data = [
         'user_id'       => 0,
         'leave_id'      => 0,
         'created_by'    => 0,
@@ -32,8 +34,7 @@ class Leave_Entitlement_BG_Process extends \WP_Background_Process {
         'day_out'       => 0,
         'description'   => 'Generated',
         'f_year'        => 0,
-    );
-
+    ];
 
     /**
      * Task
@@ -49,7 +50,8 @@ class Leave_Entitlement_BG_Process extends \WP_Background_Process {
      */
     protected function task( $args ) {
         $this->request_data = wp_parse_args( $args, $this->request_data );
-        $inserted = erp_hr_leave_insert_entitlement( $this->request_data );
+        $inserted           = erp_hr_leave_insert_entitlement( $this->request_data );
+
         return false;
     }
 

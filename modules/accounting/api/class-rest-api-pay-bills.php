@@ -2,15 +2,16 @@
 
 namespace WeDevs\ERP\Accounting\API;
 
-use WP_REST_Server;
-use WP_REST_Response;
 use WP_Error;
+use WP_REST_Response;
+use WP_REST_Server;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
 
 class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
+
     /**
      * Endpoint namespace.
      *
@@ -33,63 +34,63 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
             $this->namespace,
             '/' . $this->rest_base,
             [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_pay_bills' ],
-					'args'                => [],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_view_expense' );
-					},
-				],
-				[
-					'methods'             => WP_REST_Server::CREATABLE,
-					'callback'            => [ $this, 'create_pay_bill' ],
-					'args'                => [],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_create_expenses_voucher' );
-					},
-				],
-				'schema' => [ $this, 'get_item_schema' ],
-			]
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_pay_bills' ],
+                    'args'                => [],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_view_expense' );
+                    },
+                ],
+                [
+                    'methods'             => WP_REST_Server::CREATABLE,
+                    'callback'            => [ $this, 'create_pay_bill' ],
+                    'args'                => [],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_create_expenses_voucher' );
+                    },
+                ],
+                'schema' => [ $this, 'get_item_schema' ],
+            ]
         );
 
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base . '/(?P<id>[\d]+)',
             [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_pay_bill' ],
-					'args'                => [],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_view_expense' );
-					},
-				],
-				[
-					'methods'             => WP_REST_Server::EDITABLE,
-					'callback'            => [ $this, 'update_pay_bill' ],
-					'args'                => [],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_create_expenses_voucher' );
-					},
-				],
-				'schema' => [ $this, 'get_item_schema' ],
-			]
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_pay_bill' ],
+                    'args'                => [],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_view_expense' );
+                    },
+                ],
+                [
+                    'methods'             => WP_REST_Server::EDITABLE,
+                    'callback'            => [ $this, 'update_pay_bill' ],
+                    'args'                => [],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_create_expenses_voucher' );
+                    },
+                ],
+                'schema' => [ $this, 'get_item_schema' ],
+            ]
         );
 
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/void',
             [
-				[
-					'methods'             => WP_REST_Server::CREATABLE,
-					'callback'            => [ $this, 'void_pay_bill' ],
-					'args'                => [],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_publish_expenses_voucher' );
-					},
-				],
-			]
+                [
+                    'methods'             => WP_REST_Server::CREATABLE,
+                    'callback'            => [ $this, 'void_pay_bill' ],
+                    'args'                => [],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_publish_expenses_voucher' );
+                    },
+                ],
+            ]
         );
     }
 
@@ -115,9 +116,9 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         $pay_bill_data = erp_acct_get_pay_bills( $args );
         $total_items   = erp_acct_get_pay_bills(
             [
-				'count'  => true,
-				'number' => -1,
-			]
+                'count'  => true,
+                'number' => -1,
+            ]
         );
 
         foreach ( $pay_bill_data as $item ) {
@@ -272,75 +273,88 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function add_log( $data, $action ) {
         erp_log()->add(
             [
-				'component'     => 'Accounting',
-				'sub_component' => __( 'Pay Bill', 'erp' ),
-				'old_value'     => '',
+                'component'     => 'Accounting',
+                'sub_component' => __( 'Pay Bill', 'erp' ),
+                'old_value'     => '',
                 'new_value'     => '',
                 // translators: %1$s: amount, %2$s: id
-				'message'       => sprintf( __( 'A bill payment of %1$s has been created for %2$s', 'erp' ), $data['amount'], erp_acct_get_people_name_by_people_id( $data['vendor_id'] ) ),
-				'changetype'    => $action,
-				'created_by'    => get_current_user_id(),
-
-			]
+                'message'       => sprintf( __( 'A bill payment of %1$s has been created for %2$s', 'erp' ), $data['amount'], erp_acct_get_people_name_by_people_id( $data['vendor_id'] ) ),
+                'changetype'    => $action,
+                'created_by'    => get_current_user_id(),
+            ]
         );
     }
 
     /**
      * Prepare a single item for create or update
      *
-     * @param WP_REST_Request $request Request object.
+     * @param WP_REST_Request $request request object
      *
      * @return array $prepared_item
      */
     protected function prepare_item_for_database( $request ) {
-
         $prepared_item = [];
 
         if ( isset( $request['vendor_id'] ) ) {
             $prepared_item['vendor_id'] = $request['vendor_id'];
         }
+
         if ( isset( $request['ref'] ) ) {
             $prepared_item['ref'] = $request['ref'];
         }
+
         if ( isset( $request['trn_date'] ) ) {
             $prepared_item['trn_date'] = $request['trn_date'];
         }
+
         if ( isset( $request['billing_address'] ) ) {
             $prepared_item['billing_address'] = maybe_serialize( $request['billing_address'] );
         }
+
         if ( isset( $request['bill_details'] ) ) {
             $prepared_item['bill_details'] = $request['bill_details'];
         }
+
         if ( isset( $request['particulars'] ) ) {
             $prepared_item['particulars'] = $request['particulars'];
         }
+
         if ( isset( $request['attachments'] ) ) {
             $prepared_item['attachments'] = maybe_serialize( $request['attachments'] );
         }
+
         if ( isset( $request['trn_by'] ) ) {
             $prepared_item['trn_by'] = $request['trn_by'];
         }
+
         if ( isset( $request['type'] ) ) {
             $prepared_item['voucher_type'] = $request['type'];
         }
+
         if ( isset( $request['amount'] ) ) {
             $prepared_item['amount'] = $request['amount'];
         }
+
         if ( isset( $request['due'] ) ) {
             $prepared_item['due'] = $request['due'];
         }
+
         if ( isset( $request['status'] ) ) {
             $prepared_item['status'] = $request['status'];
         }
+
         if ( isset( $request['check_no'] ) ) {
             $prepared_item['check_no'] = $request['check_no'];
         }
+
         if ( isset( $request['deposit_to'] ) ) {
             $prepared_item['deposit_to'] = $request['deposit_to'];
         }
+
         if ( isset( $request['name'] ) ) {
             $prepared_item['name'] = $request['name'];
         }
+
         if ( isset( $request['bank'] ) ) {
             $prepared_item['bank'] = $request['bank'];
         }
@@ -351,11 +365,11 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Prepare a single user output for response
      *
-     * @param array|object $item
-     * @param WP_REST_Request $request Request object.
-     * @param array $additional_fields (optional)
+     * @param array|object    $item
+     * @param WP_REST_Request $request           request object
+     * @param array           $additional_fields (optional)
      *
-     * @return WP_REST_Response $response Response data.
+     * @return WP_REST_Response $response response data
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
         $item = (object) $item;
@@ -416,7 +430,7 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'context'     => [ 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
-                    ]
+                    ],
                 ],
                 'trn_date'     => [
                     'description' => __( 'Trans Date for the resource.' ),
@@ -430,7 +444,7 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'trn_by'       => [
                     'description' => __( 'Voucher no. for the resource.' ),
                     'type'        => 'integer',
-                    'context'     => [ 'edit' ]
+                    'context'     => [ 'edit' ],
                 ],
                 'bill_details' => [
                     'description' => __( 'List of line items data.', 'erp' ),
@@ -453,7 +467,7 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
                             'context'     => [ 'view', 'edit' ],
                             'arg_options' => [
                                 'sanitize_callback' => 'sanitize_text_field',
-                            ]
+                            ],
                         ],
                         'amount'         => [
                             'description' => __( 'Amount for the resource.' ),
@@ -494,7 +508,7 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'status'       => [
                     'description' => __( 'Status for the resource.' ),
                     'type'        => 'integer',
-                    'context'     => [ 'edit' ]
+                    'context'     => [ 'edit' ],
                 ],
                 'particulars'       => [
                     'description' => __( 'Particulars for the resource.' ),
@@ -507,7 +521,7 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'deposit_to'      => [
                     'description' => __( 'Deposit to for the resource.' ),
                     'type'        => 'integer',
-                    'context'     => [ 'edit' ]
+                    'context'     => [ 'edit' ],
                 ],
             ],
         ];

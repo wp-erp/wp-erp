@@ -2,15 +2,16 @@
 
 namespace WeDevs\ERP\Accounting\API;
 
-use WP_REST_Server;
-use WP_REST_Response;
 use WP_Error;
+use WP_REST_Response;
+use WP_REST_Server;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
 
 class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
+
     /**
      * Endpoint namespace.
      *
@@ -33,80 +34,79 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
             $this->namespace,
             '/' . $this->rest_base,
             [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_expenses' ],
-					'args'                => [],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_view_expense' );
-					},
-				],
-				[
-					'methods'             => WP_REST_Server::CREATABLE,
-					'callback'            => [ $this, 'create_expense' ],
-					'args'                => [],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_create_expenses_voucher' );
-					},
-				],
-				'schema' => [ $this, 'get_public_item_schema' ],
-			]
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_expenses' ],
+                    'args'                => [],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_view_expense' );
+                    },
+                ],
+                [
+                    'methods'             => WP_REST_Server::CREATABLE,
+                    'callback'            => [ $this, 'create_expense' ],
+                    'args'                => [],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_create_expenses_voucher' );
+                    },
+                ],
+                'schema' => [ $this, 'get_public_item_schema' ],
+            ]
         );
 
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base . '/(?P<id>[\d]+)',
             [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_expense' ],
-					'args'                => [],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_view_expense' );
-					},
-				],
-				[
-					'methods'             => WP_REST_Server::EDITABLE,
-					'callback'            => [ $this, 'update_expense' ],
-					'args'                => [],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_create_expenses_voucher' );
-					},
-				],
-				'schema' => [ $this, 'get_public_item_schema' ],
-			]
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_expense' ],
+                    'args'                => [],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_view_expense' );
+                    },
+                ],
+                [
+                    'methods'             => WP_REST_Server::EDITABLE,
+                    'callback'            => [ $this, 'update_expense' ],
+                    'args'                => [],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_create_expenses_voucher' );
+                    },
+                ],
+                'schema' => [ $this, 'get_public_item_schema' ],
+            ]
         );
 
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/void',
             [
-				[
-					'methods'             => WP_REST_Server::CREATABLE,
-					'callback'            => [ $this, 'void_expense' ],
-					'args'                => [],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_publish_expenses_voucher' );
-					},
-				],
-			]
+                [
+                    'methods'             => WP_REST_Server::CREATABLE,
+                    'callback'            => [ $this, 'void_expense' ],
+                    'args'                => [],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_publish_expenses_voucher' );
+                    },
+                ],
+            ]
         );
 
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base . '/checks' . '/(?P<id>[\d]+)',
             [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_check' ],
-					'args'                => [],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_view_expense' );
-					},
-				],
-			]
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_check' ],
+                    'args'                => [],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_view_expense' );
+                    },
+                ],
+            ]
         );
-
     }
 
     /**
@@ -131,9 +131,9 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
         $expense_data = erp_acct_get_expenses( $args );
         $total_items  = erp_acct_get_expenses(
             [
-				'count'  => true,
-				'number' => -1,
-			]
+                'count'  => true,
+                'number' => -1,
+            ]
         );
 
         foreach ( $expense_data as $item ) {
@@ -325,23 +325,22 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function add_log( $data, $action ) {
         erp_log()->add(
             [
-				'component'     => 'Accounting',
-				'sub_component' => __( 'Expense', 'erp' ),
-				'old_value'     => '',
+                'component'     => 'Accounting',
+                'sub_component' => __( 'Expense', 'erp' ),
+                'old_value'     => '',
                 'new_value'     => '',
                 // translators: %1$s: amount, %2$s: id
-				'message'       => sprintf( __( 'An expense of %1$s has been created for %2$s', 'erp' ), $data['amount'], erp_acct_get_people_name_by_people_id( $data['people_id'] ) ),
-				'changetype'    => $action,
-				'created_by'    => get_current_user_id(),
-
-			]
+                'message'       => sprintf( __( 'An expense of %1$s has been created for %2$s', 'erp' ), $data['amount'], erp_acct_get_people_name_by_people_id( $data['people_id'] ) ),
+                'changetype'    => $action,
+                'created_by'    => get_current_user_id(),
+            ]
         );
     }
 
     /**
      * Prepare a single item for create or update
      *
-     * @param WP_REST_Request $request Request object.
+     * @param WP_REST_Request $request request object
      *
      * @return array $prepared_item
      */
@@ -351,63 +350,83 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['people_id'] ) ) {
             $prepared_item['people_id'] = $request['people_id'];
         }
+
         if ( isset( $request['ref'] ) ) {
             $prepared_item['ref'] = $request['ref'];
         }
+
         if ( isset( $request['bank'] ) ) {
             $prepared_item['bank'] = $request['bank'];
         }
+
         if ( isset( $request['check_no'] ) ) {
             $prepared_item['check_no'] = $request['check_no'];
         }
+
         if ( isset( $request['trn_date'] ) ) {
             $prepared_item['trn_date'] = $request['trn_date'];
         }
+
         if ( isset( $request['due_date'] ) ) {
             $prepared_item['due_date'] = $request['due_date'];
         }
+
         if ( isset( $request['amount'] ) ) {
             $prepared_item['total'] = $request['amount'];
         }
+
         if ( isset( $request['trn_no'] ) ) {
             $prepared_item['trn_no'] = $request['trn_no'];
         }
+
         if ( isset( $request['attachments'] ) ) {
             $prepared_item['attachments'] = $request['attachments'];
         }
+
         if ( isset( $request['deposit_to'] ) ) {
             $prepared_item['trn_by_ledger_id'] = $request['deposit_to'];
         }
+
         if ( isset( $request['trn_by'] ) ) {
             $prepared_item['trn_by'] = $request['trn_by'];
         }
+
         if ( isset( $request['bank_trn_charge'] ) ) {
             $prepared_item['bank_trn_charge'] = $request['bank_trn_charge'];
         }
+
         if ( isset( $request['bill_details'] ) ) {
             $prepared_item['bill_details'] = $request['bill_details'];
         }
+
         if ( isset( $request['billing_address'] ) ) {
             $prepared_item['billing_address'] = $request['billing_address'];
         }
+
         if ( isset( $request['particulars'] ) ) {
             $prepared_item['particulars'] = $request['particulars'];
         }
+
         if ( isset( $request['status'] ) ) {
             $prepared_item['status'] = $request['status'];
         }
+
         if ( isset( $request['attachments'] ) ) {
             $prepared_item['attachments'] = $request['attachments'];
         }
+
         if ( isset( $request['name'] ) ) {
             $prepared_item['name'] = $request['name'];
         }
+
         if ( isset( $request['pay_to'] ) ) {
             $prepared_item['pay_to'] = $request['pay_to'];
         }
+
         if ( isset( $request['type'] ) ) {
             $prepared_item['voucher_type'] = $request['type'];
         }
+
         if ( isset( $request['convert'] ) ) {
             $prepared_item['convert'] = $request['convert'];
         }
@@ -418,11 +437,11 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Prepare a single user output for response
      *
-     * @param array|object $item
-     * @param WP_REST_Request $request Request object.
-     * @param array $additional_fields (optional)
+     * @param array|object    $item
+     * @param WP_REST_Request $request           request object
+     * @param array           $additional_fields (optional)
      *
-     * @return WP_REST_Response $response Response data.
+     * @return WP_REST_Response $response response data
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
         $item = (object) $item;
@@ -479,7 +498,7 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'voucher_no'      => [
                     'description' => __( 'Voucher no. for the resource.' ),
                     'type'        => 'integer',
-                    'context'     => [ 'edit' ]
+                    'context'     => [ 'edit' ],
                 ],
                 'people_id'       => [
                     'description' => __( 'People id for the resource.' ),
@@ -493,7 +512,7 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'context'     => [ 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
-                    ]
+                    ],
                 ],
                 'trn_date'        => [
                     'description' => __( 'Date for the resource.' ),
@@ -507,7 +526,7 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'trn_by'        => [
                     'description' => __( 'Trans by for the resource.' ),
                     'type'        => 'integer',
-                    'context'     => [ 'edit' ]
+                    'context'     => [ 'edit' ],
                 ],
                 'billing_address' => [
                     'description' => __( 'Billing address for the resource.' ),
@@ -515,7 +534,7 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'context'     => [ 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
-                    ]
+                    ],
                 ],
                 'bill_details' => [
                     'description' => __( 'List of line items data.', 'erp' ),
@@ -534,14 +553,14 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
                             'context'     => [ 'view', 'edit' ],
                             'arg_options' => [
                                 'sanitize_callback' => 'sanitize_text_field',
-                            ]
+                            ],
                         ],
                         'amount'      => [
                             'description' => __( 'Bill Amount', 'erp' ),
                             'type'        => 'number',
                             'context'     => [ 'view', 'edit' ],
-                            'required'    => true
-                        ]
+                            'required'    => true,
+                        ],
                     ],
                 ],
                 'particulars'     => [
@@ -555,7 +574,7 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'status'          => [
                     'description' => __( 'Status for the resource.' ),
                     'type'        => 'integer',
-                    'context'     => [ 'edit' ]
+                    'context'     => [ 'edit' ],
                 ],
                 'type'            => [
                     'description' => __( 'Item Type.', 'erp' ),
@@ -577,7 +596,7 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'description' => __( 'Account for the resource.' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],
-                    'required'    => true
+                    'required'    => true,
                 ],
             ],
         ];

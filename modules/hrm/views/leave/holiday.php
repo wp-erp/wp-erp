@@ -3,16 +3,14 @@
  * List table class
  */
 class Leave_Holiday_List_Table extends WP_List_Table {
-
-    function __construct() {
+    public function __construct() {
         global $status, $page;
 
-        parent::__construct( array(
+        parent::__construct( [
             'singular' => 'holiday',
             'plural'   => 'holiday',
-            'ajax'     => false
-        ) );
-
+            'ajax'     => false,
+        ] );
     }
 
     /**
@@ -20,21 +18,22 @@ class Leave_Holiday_List_Table extends WP_List_Table {
      *
      * @return array
      */
-    function get_table_classes() {
-        return array( 'widefat', 'fixed', 'striped', 'erp-leave-policy-list-table', $this->_args['plural'] );
+    public function get_table_classes() {
+        return [ 'widefat', 'fixed', 'striped', 'erp-leave-policy-list-table', $this->_args['plural'] ];
     }
 
-    function extra_tablenav( $which ) {
-        if ( $which != 'top' ) return;
+    public function extra_tablenav( $which ) {
+        if ( $which != 'top' ) {
+            return;
+        }
 
         $from         = isset( $_GET['from'] ) ? sanitize_text_field( wp_unslash( $_GET['from'] ) ) : date( 'Y-01-01' );
-        $to           = isset( $_GET['to'] ) ? sanitize_text_field( wp_unslash( $_GET['to'] ) ) : date( 'Y-12-31' );
-        ?>
+        $to           = isset( $_GET['to'] ) ? sanitize_text_field( wp_unslash( $_GET['to'] ) ) : date( 'Y-12-31' ); ?>
 
-        <label class="screen-reader-text" for="new_role"><?php esc_html_e( 'From', 'erp' ) ?></label>
+        <label class="screen-reader-text" for="new_role"><?php esc_html_e( 'From', 'erp' ); ?></label>
         <input type="text" placeholder="<?php esc_html_e( 'From date', 'erp' ); ?>" name="from" value="<?php echo esc_attr( $from ); ?>" class="erp-leave-date-picker-from">
 
-        <label class="screen-reader-text" for="new_role"><?php esc_html_e( 'To', 'erp' ) ?></label>
+        <label class="screen-reader-text" for="new_role"><?php esc_html_e( 'To', 'erp' ); ?></label>
         <input type="text" placeholder="<?php esc_html_e( 'To date', 'erp' ); ?>" name="to" value="<?php echo esc_attr( $to ); ?>" class="erp-leave-date-picker-to">
         <?php
         submit_button( __( 'Filter' ), 'button', 'filter', false );
@@ -45,33 +44,34 @@ class Leave_Holiday_List_Table extends WP_List_Table {
      *
      * @return void
      */
-    function no_items() {
+    public function no_items() {
         esc_html_e( 'No holiday record found!', 'erp' );
     }
 
     /**
      * Default column values if no callback found
      *
-     * @param  object  $item
-     * @param  string  $column_name
+     * @param object $item
+     * @param string $column_name
      *
      * @return string
      */
-    function column_default( $holiday, $column_name ) {
-
+    public function column_default( $holiday, $column_name ) {
         switch ( $column_name ) {
             case 'name':
                 return $holiday->title;
+
             case 'start':
                 return erp_format_date( $holiday->start );
 
             case 'end':
-                return erp_format_date( date( 'Y-m-d' , strtotime( $holiday->end ) ) );
+                return erp_format_date( date( 'Y-m-d', strtotime( $holiday->end ) ) );
 
             case 'duration':
 
                 $days = erp_date_duration( $holiday->start, $holiday->end );
-                return $days .' '. _n( __( 'day', 'erp' ), __( 'days', 'erp' ), $days );
+
+                return $days . ' ' . _n( __( 'day', 'erp' ), __( 'days', 'erp' ), $days );
 
             case 'description':
                 return ! empty( $holiday->description ) ? $holiday->description : '--';
@@ -85,15 +85,15 @@ class Leave_Holiday_List_Table extends WP_List_Table {
      *
      * @return array
      */
-    function get_columns() {
-        $columns = array(
+    public function get_columns() {
+        $columns = [
             'cb'          => '<input type="checkbox" />',
             'name'        => __( 'Title', 'erp' ),
             'start'       => __( 'Start Date', 'erp' ),
             'end'         => __( 'End Date', 'erp' ),
             'duration'    => __( 'Duration', 'erp' ),
-            'description' => __( 'Description', 'erp' )
-        );
+            'description' => __( 'Description', 'erp' ),
+        ];
 
         return apply_filters( 'erp_hr_holiday_table_cols', $columns );
     }
@@ -101,13 +101,12 @@ class Leave_Holiday_List_Table extends WP_List_Table {
     /**
      * Render the leave policy name column
      *
-     * @param  object  $item
+     * @param object $item
      *
      * @return string
      */
-    function column_name( $holiday ) {
-
-        $actions           = array();
+    public function column_name( $holiday ) {
+        $actions           = [];
         $delete_url        = '';
         $actions['edit']   = sprintf( '<a href="%s" data-id="%d" class="erp-hr-holiday-edit" title="%s">%s</a>', $delete_url, $holiday->id, __( 'Edit this item', 'erp' ), __( 'Edit', 'erp' ) );
         $actions['delete'] = sprintf( '<a href="%s" class="erp-hr-holiday-delete" data-id="%d" title="%s">%s</a>', $delete_url, $holiday->id, __( 'Delete this item', 'erp' ), __( 'Delete', 'erp' ) );
@@ -118,11 +117,11 @@ class Leave_Holiday_List_Table extends WP_List_Table {
     /**
      * Modify single row element
      *
-     * @param  array $item
+     * @param array $item
      *
      * @return void
      */
-    function single_row( $item ) {
+    public function single_row( $item ) {
         ?>
             <tr data-json='<?php echo json_encode( $item ); ?>'>
                 <?php $this->single_row_columns( $item ); ?>
@@ -135,11 +134,11 @@ class Leave_Holiday_List_Table extends WP_List_Table {
      *
      * @return array
      */
-    function get_sortable_columns() {
-        $sortable_columns = array(
-            'title' => array( 'title', true ),
-            'start' => array( 'start', true ),
-        );
+    public function get_sortable_columns() {
+        $sortable_columns = [
+            'title' => [ 'title', true ],
+            'start' => [ 'start', true ],
+        ];
 
         return $sortable_columns;
     }
@@ -149,21 +148,22 @@ class Leave_Holiday_List_Table extends WP_List_Table {
      *
      * @return array
      */
-    function get_bulk_actions() {
-        $actions = array(
+    public function get_bulk_actions() {
+        $actions = [
             'trash'  => __( 'Delete', 'erp' ),
-        );
+        ];
+
         return $actions;
     }
 
     /**
      * Render the checkbox column
      *
-     * @param  object  $item
+     * @param object $item
      *
      * @return string
      */
-    function column_cb( $item ) {
+    public function column_cb( $item ) {
         return sprintf(
             '<input type="checkbox" name="holiday_id[]" value="%s" />', $item->id
         );
@@ -175,12 +175,12 @@ class Leave_Holiday_List_Table extends WP_List_Table {
      * @return array
      */
     public function get_views_() {
-        $status_links   = array();
+        $status_links   = [];
         $base_link      = admin_url( 'admin.php?page=erp-hr&section=leave' );
 
-        foreach ($this->counts as $key => $value) {
-            $class = ( $key == $this->page_status ) ? 'current' : 'status-' . $key;
-            $status_links[ $key ] = sprintf( '<a href="%s" class="%s">%s <span class="count">(%s)</span></a>', add_query_arg( array( 'status' => $key ), $base_link ), $class, $value['label'], $value['count'] );
+        foreach ( $this->counts as $key => $value ) {
+            $class                = ( $key == $this->page_status ) ? 'current' : 'status-' . $key;
+            $status_links[ $key ] = sprintf( '<a href="%s" class="%s">%s <span class="count">(%s)</span></a>', add_query_arg( [ 'status' => $key ], $base_link ), $class, $value['label'], $value['count'] );
         }
 
         return $status_links;
@@ -191,25 +191,24 @@ class Leave_Holiday_List_Table extends WP_List_Table {
      *
      * @return void
      */
-    function prepare_items() {
-
+    public function prepare_items() {
         $columns               = $this->get_columns();
-        $hidden                = array();
+        $hidden                = [];
         $sortable              = $this->get_sortable_columns();
-        $this->_column_headers = array( $columns, $hidden, $sortable );
+        $this->_column_headers = [ $columns, $hidden, $sortable ];
 
         $per_page              = 20;
         $current_page          = $this->get_pagenum();
-        $offset                = ( $current_page -1 ) * $per_page;
+        $offset                = ( $current_page - 1 ) * $per_page;
         $this->page_status     = isset( $_GET['status'] ) ? sanitize_text_field( wp_unslash( $_GET['status'] ) ) : '2';
 
         // only ncessary because we have sample data
-        $args = array(
-            'offset' => $offset,
-            'number' => $per_page,
+        $args = [
+            'offset'  => $offset,
+            'number'  => $per_page,
             'orderby' => 'start',
-            'order' => 'ASC'
-        );
+            'order'   => 'ASC',
+        ];
 
         if ( ! empty( $_GET['s'] ) ) {
             $args['s'] = sanitize_text_field( wp_unslash( $_GET['s'] ) );
@@ -229,17 +228,16 @@ class Leave_Holiday_List_Table extends WP_List_Table {
 
         if ( isset( $_REQUEST['orderby'] ) && isset( $_REQUEST['order'] ) ) {
             $args['orderby'] = sanitize_text_field( wp_unslash( $_REQUEST['orderby'] ) );
-            $args['order'] = sanitize_text_field( wp_unslash( $_REQUEST['order'] ) ) ;
+            $args['order']   = sanitize_text_field( wp_unslash( $_REQUEST['order'] ) );
         }
 
         $this->items  = erp_hr_get_holidays( $args );
 
-        $this->set_pagination_args( array(
+        $this->set_pagination_args( [
             'total_items' => erp_hr_count_holidays( $args ),
-            'per_page'    => $per_page
-        ) );
+            'per_page'    => $per_page,
+        ] );
     }
-
 }
 
 ?>
@@ -250,9 +248,10 @@ class Leave_Holiday_List_Table extends WP_List_Table {
 
     <h2>
         <?php esc_html_e( 'Holiday', 'erp' ); ?>
+        <?php echo erp_help_tip( esc_html__( 'Add holidays for current year.', 'erp' ) ); ?>
         <a href="#" id="erp-hr-new-holiday" class="add-new-h2"><?php esc_html_e( 'Add New', 'erp' ); ?></a>
         <a href="#import-ical" id="erp-hr-import-ical" class="add-new-h2"><?php esc_html_e( 'Import iCal / CSV', 'erp' ); ?></a>
-        <a href="<?php echo esc_attr( WPERP_HRM_ASSETS . '/sample/holiday-sample.csv' ) ;?>" class="add-new-h2"><?php esc_html_e( 'Sample CSV', 'erp' ); ?></a>
+        <a href="<?php echo esc_attr( WPERP_HRM_ASSETS . '/sample/holiday-sample.csv' ); ?>" class="add-new-h2"><?php esc_html_e( 'Sample CSV', 'erp' ); ?></a>
     </h2>
 
     <div class="list-table-wrap">
@@ -266,7 +265,7 @@ class Leave_Holiday_List_Table extends WP_List_Table {
 
                 $holiday = new Leave_Holiday_List_Table();
                 $holiday->prepare_items();
-                $holiday->search_box( __( 'Search Holiday', 'erp' ), 'erp-hr-holiday-serach');
+                $holiday->search_box( __( 'Search Holiday', 'erp' ), 'erp-hr-holiday-serach' );
 
                 $holiday->views();
 
@@ -282,3 +281,10 @@ class Leave_Holiday_List_Table extends WP_List_Table {
     </div><!-- .list-table-wrap -->
 
 </div>
+
+<style>
+    .erp-help-tip {
+        width: 15px;
+        bottom: 0.2rem;
+    }
+</style>

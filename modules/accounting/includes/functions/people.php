@@ -25,62 +25,62 @@ function erp_acct_add_employee_as_people( $data, $update = false ) {
     if ( $update ) {
         $wpdb->update(
             $wpdb->prefix . 'erp_peoples',
-            array(
-				'first_name'    => $data['personal']['first_name'],
-				'last_name'     => $data['personal']['last_name'],
-				'company'       => $company->name,
-				'email'         => $data['user_email'],
-				'phone'         => $data['personal']['phone'],
-				'mobile'        => $data['personal']['mobile'],
-				'other'         => '',
-				'website'       => '',
-				'fax'           => '',
-				'notes'         => $data['personal']['description'],
-				'street_1'      => $data['personal']['street_1'],
-				'street_2'      => $data['personal']['street_2'],
-				'city'          => $data['personal']['city'],
-				'state'         => $data['personal']['state'],
-				'postal_code'   => $data['personal']['postal_code'],
-				'country'       => $data['personal']['country'],
-				'currency'      => '',
-				'life_stage'    => '',
-				'contact_owner' => '',
-				'hash'          => '',
-				'created_by'    => get_current_user_id(),
-				'created'       => '',
-            ),
-            array(
-				'user_id' => $data['user_id'],
-            )
+            [
+                'first_name'    => $data['personal']['first_name'],
+                'last_name'     => $data['personal']['last_name'],
+                'company'       => $company->name,
+                'email'         => $data['user_email'],
+                'phone'         => $data['personal']['phone'],
+                'mobile'        => $data['personal']['mobile'],
+                'other'         => '',
+                'website'       => '',
+                'fax'           => '',
+                'notes'         => $data['personal']['description'],
+                'street_1'      => $data['personal']['street_1'],
+                'street_2'      => $data['personal']['street_2'],
+                'city'          => $data['personal']['city'],
+                'state'         => $data['personal']['state'],
+                'postal_code'   => $data['personal']['postal_code'],
+                'country'       => $data['personal']['country'],
+                'currency'      => '',
+                'life_stage'    => '',
+                'contact_owner' => '',
+                'hash'          => '',
+                'created_by'    => get_current_user_id(),
+                'created'       => '',
+            ],
+            [
+                'user_id' => $data['user_id'],
+            ]
         );
     } else {
         $wpdb->insert(
             $wpdb->prefix . 'erp_peoples',
-            array(
-				'user_id'       => $data['user_id'],
-				'first_name'    => $data['personal']['first_name'],
-				'last_name'     => $data['personal']['last_name'],
-				'company'       => $company->name,
-				'email'         => $data['user_email'],
-				'phone'         => $data['personal']['phone'],
-				'mobile'        => $data['personal']['mobile'],
-				'other'         => '',
-				'website'       => '',
-				'fax'           => '',
-				'notes'         => $data['personal']['description'],
-				'street_1'      => $data['personal']['street_1'],
-				'street_2'      => $data['personal']['street_2'],
-				'city'          => $data['personal']['city'],
-				'state'         => $data['personal']['state'],
-				'postal_code'   => $data['personal']['postal_code'],
-				'country'       => $data['personal']['country'],
-				'currency'      => '',
-				'life_stage'    => '',
-				'contact_owner' => '',
-				'hash'          => '',
-				'created_by'    => get_current_user_id(),
-				'created'       => '',
-            )
+            [
+                'user_id'       => $data['user_id'],
+                'first_name'    => $data['personal']['first_name'],
+                'last_name'     => $data['personal']['last_name'],
+                'company'       => $company->name,
+                'email'         => $data['user_email'],
+                'phone'         => $data['personal']['phone'],
+                'mobile'        => $data['personal']['mobile'],
+                'other'         => '',
+                'website'       => '',
+                'fax'           => '',
+                'notes'         => $data['personal']['description'],
+                'street_1'      => $data['personal']['street_1'],
+                'street_2'      => $data['personal']['street_2'],
+                'city'          => $data['personal']['city'],
+                'state'         => $data['personal']['state'],
+                'postal_code'   => $data['personal']['postal_code'],
+                'country'       => $data['personal']['country'],
+                'currency'      => '',
+                'life_stage'    => '',
+                'contact_owner' => '',
+                'hash'          => '',
+                'created_by'    => get_current_user_id(),
+                'created'       => '',
+            ]
         );
 
         $people_id = $wpdb->insert_id;
@@ -92,8 +92,9 @@ function erp_acct_add_employee_as_people( $data, $update = false ) {
 /**
  * Get transaction by date
  *
- * @param integer $people_id
+ * @param int   $people_id
  * @param array $args
+ *
  * @return array
  */
 function erp_people_filter_transaction( $people_id, $args = [] ) {
@@ -102,6 +103,7 @@ function erp_people_filter_transaction( $people_id, $args = [] ) {
     $end_date   = isset( $args['end_date'] ) ? $args['start_date'] : '';
 
     $rows = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}erp_acct_people_account_details WHERE trn_date >= '{$start_date}' AND trn_date <= '{$end_date}' AND people_id = {$people_id}", ARRAY_A );
+
     return $rows;
 }
 
@@ -109,6 +111,7 @@ function erp_people_filter_transaction( $people_id, $args = [] ) {
  * Get address of a people
  *
  * @param $people_id
+ *
  * @return mixed
  */
 function erp_acct_get_people_address( $people_id ) {
@@ -178,10 +181,10 @@ function erp_acct_get_people_transactions( $args = [] ) {
         $args['end_date'] = date( 'Y-m-d', strtotime( 'last day of this month' ) );
     }
 
+
     if ( ! empty( $args['start_date'] ) ) {
         $where .= " AND people.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
     }
-
 
     if ( '-1' === $args['number'] ) {
         $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
@@ -209,6 +212,7 @@ function erp_acct_get_people_transactions( $args = [] ) {
 
     if ( $args['count'] ) {
         $wpdb->get_results( $sql );
+
         return $wpdb->num_rows;
     }
 
@@ -311,6 +315,7 @@ function erp_acct_get_people_previous_balance( $args = [] ) {
  * Get People type by people id
  *
  * @param $people_id
+ *
  * @return mixed
  */
 function erp_acct_get_people_type_by_id( $people_id ) {
@@ -325,6 +330,7 @@ function erp_acct_get_people_type_by_id( $people_id ) {
  * Get people type by type id
  *
  * @param $type_id
+ *
  * @return mixed
  */
 function erp_acct_get_people_type_by_type_id( $type_id ) {
@@ -366,7 +372,7 @@ function erp_acct_get_people_name_by_people_id( $people_id ) {
  *
  * @param $user_id
  *
- * @return boolean
+ * @return bool
  */
 function erp_acct_is_employee_people( $user_id ) {
     global $wpdb;
@@ -386,7 +392,9 @@ function erp_acct_is_employee_people( $user_id ) {
 
 /**
  * Get $user_id by $people_id
+ *
  * @param $people_id
+ *
  * @return mixed
  */
 function erp_acct_get_user_id_by_people_id( $people_id ) {
@@ -475,31 +483,29 @@ function erp_acct_get_accounting_people( $args = [] ) {
 
             if ( $type == 'customer' || $type == 'vendor' ) {
                 if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-
                     if ( $type === 'customer' ) {
                         $sql['where'][] = $wpdb->prepare(
                             'AND ( people.first_name ) LIKE %s OR ' .
                             '( people.last_name ) LIKE %s',
-                            array( $search_like, $search_like )
+                            [ $search_like, $search_like ]
                         );
-
                     } else {
-                        $sql['where'][] = $wpdb->prepare( 'AND ( people.company ) LIKE %s', array( $search_like ) );
+                        $sql['where'][] = $wpdb->prepare( 'AND ( people.company ) LIKE %s', [ $search_like ] );
                     }
-				} else {
+                } else {
                     $sql['where'][] = $wpdb->prepare(
                         'AND ( people.first_name ) LIKE %s OR ' .
                         '( people.last_name ) LIKE %s OR ' .
                         '( people.email ) LIKE %s OR ' .
                         '( people.company ) LIKE %s',
-                        array( $search_like, $search_like, $search_like, $search_like )
+                        [ $search_like, $search_like, $search_like, $search_like ]
                     );
                 }
-			} elseif ( is_array( $type ) ) {
+            } elseif ( is_array( $type ) ) {
                 $sql['where'][] = $wpdb->prepare(
                     'AND ( people.first_name ) LIKE %s OR ' .
                     '( people.last_name ) LIKE %s',
-                    array( $search_like, $search_like )
+                    [ $search_like, $search_like ]
                 );
             }
         }
@@ -515,6 +521,7 @@ function erp_acct_get_accounting_people( $args = [] ) {
         $sql = apply_filters( 'erp_get_people_pre_query', $sql, $args );
 
         $post_where_queries = '';
+
         if ( ! empty( $sql['post_where_queries'] ) ) {
             $post_where_queries = 'AND ( 1 = 1 '
                 . implode( ' ', $sql['post_where_queries'] )
@@ -543,8 +550,8 @@ function erp_acct_get_accounting_people( $args = [] ) {
             array_walk(
                 $results,
                 function ( &$results ) {
-					$results['types'] = explode( ',', $results['types'] );
-				}
+                    $results['types'] = explode( ',', $results['types'] );
+                }
             );
 
             $items = ( $no_object ) ? $results : erp_array_to_object( $results );

@@ -1,4 +1,5 @@
 <?php
+
 namespace WeDevs\ERP;
 
 /**
@@ -14,16 +15,11 @@ abstract class Item {
      * @param int|object  the item numeric id or a wpdb row
      */
     public function __construct( $item = null ) {
-
         if ( is_object( $item ) ) {
-
             $this->populate( $item );
-
         } elseif ( is_int( $item ) ) {
-
             $fetched = $this->get_by_id( $item );
             $this->populate( $fetched );
-
         }
     }
 
@@ -58,7 +54,7 @@ abstract class Item {
      *
      * @param  int  item id
      *
-     * @return object  wpdb object
+     * @return object wpdb object
      */
     abstract protected function get_by_id( $item_id );
 }

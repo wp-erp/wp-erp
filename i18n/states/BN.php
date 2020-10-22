@@ -1,11 +1,10 @@
-<?php 
-global $states; 
+<?php
 
-$states['BN'] = array(
+global $states;
 
-    "BELAIT"         => __("Belait", 'erp'),
-    "BRUNEIANDMUARA" => __("Brunei and Muara", 'erp'),
-    "TEMBURONG"      => __("Temburong", 'erp'),
-    "TUTONG"         => __("Tutong", 'erp'),
-
-);
+$states['BN'] = [
+    'BELAIT'         => __( 'Belait', 'erp' ),
+    'BRUNEIANDMUARA' => __( 'Brunei and Muara', 'erp' ),
+    'TEMBURONG'      => __( 'Temburong', 'erp' ),
+    'TUTONG'         => __( 'Tutong', 'erp' ),
+];

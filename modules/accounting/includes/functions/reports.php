@@ -15,9 +15,10 @@ require_once ERP_ACCOUNTING_INCLUDES . '/functions/reports/trial-balance.php';
 /**
  * get ledger report
  *
- * @param int $ledger_id
+ * @param int    $ledger_id
  * @param string $start_date
  * @param string $end_date
+ *
  * @return mixed
  */
 function erp_acct_get_ledger_report( $ledger_id, $start_date, $end_date ) {
@@ -43,7 +44,7 @@ function erp_acct_get_ledger_report( $ledger_id, $start_date, $end_date ) {
         );
 
         $prev_ledger_details = $wpdb->get_var( $sql1 );
-        $opening_balance    += (float) $prev_ledger_details;
+        $opening_balance += (float) $prev_ledger_details;
     }
 
     $raw_opening_balance = $opening_balance;
@@ -65,7 +66,7 @@ function erp_acct_get_ledger_report( $ledger_id, $start_date, $end_date ) {
     $total_credit = 0;
 
     foreach ( $details as $key => $detail ) {
-        $total_debit  += (float) $detail['debit'];
+        $total_debit += (float) $detail['debit'];
         $total_credit += (float) $detail['credit'];
 
         if ( '0.00' === $detail['debit'] ) {
@@ -109,14 +110,14 @@ function erp_acct_get_ledger_report( $ledger_id, $start_date, $end_date ) {
     array_unshift(
         $details,
         [
-			'trn_no'      => null,
-			'particulars' => 'Opening Balance =',
-			'debit'       => null,
-			'credit'      => null,
-			'trn_date'    => $start_date,
-			'balance'     => $balance,
-			'created_at'  => null,
-		]
+            'trn_no'      => null,
+            'particulars' => 'Opening Balance =',
+            'debit'       => null,
+            'credit'      => null,
+            'trn_date'    => $start_date,
+            'balance'     => $balance,
+            'created_at'  => null,
+        ]
     );
 
     return [
@@ -128,11 +129,12 @@ function erp_acct_get_ledger_report( $ledger_id, $start_date, $end_date ) {
     ];
 }
 
-
 /**
  * Ledger report opening balance helper
+ *
  * @param $id
  * @param $ledger_id
+ *
  * @return string|null
  */
 function erp_acct_ledger_report_opening_balance_by_fn_year_id( $id, $ledger_id ) {
@@ -144,7 +146,6 @@ function erp_acct_ledger_report_opening_balance_by_fn_year_id( $id, $ledger_id )
     return $wpdb->get_var( $wpdb->prepare( $sql, $id, $ledger_id ) );
 }
 
-
 /**
  * ===================================================
  * Sales Tax Report
@@ -154,9 +155,10 @@ function erp_acct_ledger_report_opening_balance_by_fn_year_id( $id, $ledger_id )
 /**
  * get sales tax report
  *
- * @param int $agency_id
+ * @param int    $agency_id
  * @param string $start_date
  * @param string $end_date
+ *
  * @return mixed
  */
 function erp_acct_get_sales_tax_report( $agency_id, $start_date, $end_date ) {
@@ -182,7 +184,7 @@ function erp_acct_get_sales_tax_report( $agency_id, $start_date, $end_date ) {
 
     // Please refactor me
     foreach ( $details as $key => $detail ) {
-        $total_debit  += (float) $detail['debit'];
+        $total_debit += (float) $detail['debit'];
         $total_credit += (float) $detail['credit'];
 
         if ( '0.00' === $detail['debit'] ) {
@@ -191,7 +193,6 @@ function erp_acct_get_sales_tax_report( $agency_id, $start_date, $end_date ) {
                 // opening balance is negative
                 $opening_balance            = $opening_balance + ( - (float) $detail['credit'] );
                 $details[ $key ]['balance'] = abs( $opening_balance ) . ' Cr';
-
             } elseif ( $opening_balance >= 0 ) {
                 // opening balance is positive
                 $opening_balance = $opening_balance + ( - (float) $detail['credit'] );
@@ -202,7 +203,7 @@ function erp_acct_get_sales_tax_report( $agency_id, $start_date, $end_date ) {
                 } elseif ( $opening_balance < 0 ) {
                     $details[ $key ]['balance'] = abs( $opening_balance ) . ' Cr';
                 }
-			} else {
+            } else {
                 // opening balance is 0
                 $details[ $key ]['balance'] = '0 Dr';
             }
@@ -215,7 +216,6 @@ function erp_acct_get_sales_tax_report( $agency_id, $start_date, $end_date ) {
                 // opening balance is negative
                 $opening_balance            = $opening_balance + (float) $detail['debit'];
                 $details[ $key ]['balance'] = abs( $opening_balance ) . ' Cr';
-
             } elseif ( $opening_balance >= 0 ) {
                 // opening balance is positive
                 $opening_balance = $opening_balance + (float) $detail['debit'];
@@ -226,7 +226,7 @@ function erp_acct_get_sales_tax_report( $agency_id, $start_date, $end_date ) {
                 } elseif ( $opening_balance < 0 ) {
                     $details[ $key ]['balance'] = abs( $opening_balance ) . ' Cr';
                 }
-			} else {
+            } else {
                 // opening balance is 0
                 $details[ $key ]['balance'] = '0 Dr';
             }
@@ -245,14 +245,14 @@ function erp_acct_get_sales_tax_report( $agency_id, $start_date, $end_date ) {
     array_unshift(
         $details,
         [
-			'trn_no'      => null,
-			'particulars' => 'Opening Balance =',
-			'debit'       => null,
-			'credit'      => null,
-			'trn_date'    => $start_date,
-			'balance'     => $balance,
-			'created_at'  => null,
-		]
+            'trn_no'      => null,
+            'particulars' => 'Opening Balance =',
+            'debit'       => null,
+            'credit'      => null,
+            'trn_date'    => $start_date,
+            'balance'     => $balance,
+            'created_at'  => null,
+        ]
     );
 
     return [
@@ -263,7 +263,6 @@ function erp_acct_get_sales_tax_report( $agency_id, $start_date, $end_date ) {
         ],
     ];
 }
-
 
 /**
  * ===================================================
@@ -299,9 +298,9 @@ function erp_acct_get_income_statement( $args ) {
  * @param $data
  * @param $sql
  * @param $chart_id
+ *
  * @return array
  */
-
 function erp_acct_income_statement_calculate_with_opening_balance( $is_start_date, $data, $sql, $chart_id ) {
     global $wpdb;
 
@@ -311,7 +310,7 @@ function erp_acct_income_statement_calculate_with_opening_balance( $is_start_dat
     // get opening balance data within that(^) financial year
     $opening_balance = erp_acct_is_opening_balance_by_fn_year_id( $closest_fy_date['id'], $chart_id );
 
-    $ledgers   = $wpdb->get_results( $wpdb->prepare( "SELECT ledger.id, ledger.name FROM {$wpdb->prefix}erp_acct_ledgers AS ledger WHERE ledger.chart_id = %d" , $chart_id ), ARRAY_A );
+    $ledgers   = $wpdb->get_results( $wpdb->prepare( "SELECT ledger.id, ledger.name FROM {$wpdb->prefix}erp_acct_ledgers AS ledger WHERE ledger.chart_id = %d", $chart_id ), ARRAY_A );
     $temp_data = erp_acct_get_is_balance_with_opening_balance( $ledgers, $data, $opening_balance );
     $result    = [];
 
@@ -374,6 +373,7 @@ function erp_acct_get_is_balance_with_opening_balance( $ledgers, $data, $opening
 
     foreach ( $ledgers as $ledger ) {
         $balance = 0;
+
         foreach ( $data as $row ) {
             if ( $row['balance'] && $row['id'] === $ledger['id'] ) {
                 $balance += (float) abs( $row['balance'] );
@@ -434,6 +434,7 @@ function erp_acct_is_opening_balance_by_fn_year_id( $id, $chart_id ) {
  * Get balance sheet
  *
  * @param $args
+ *
  * @return mixed
  */
 function erp_acct_get_balance_sheet( $args ) {
@@ -442,6 +443,7 @@ function erp_acct_get_balance_sheet( $args ) {
     if ( empty( $args['start_date'] ) ) {
         $args['start_date'] = date( 'Y-m-d', strtotime( 'first day of this month' ) );
     }
+
     if ( empty( $args['end_date'] ) ) {
         $args['end_date'] = date( 'Y-m-d', strtotime( 'last day of this month' ) );
     }
@@ -622,9 +624,9 @@ function erp_acct_get_balance_sheet( $args ) {
  * @param $data
  * @param $sql
  * @param $chart_id
+ *
  * @return array
  */
-
 function erp_acct_balance_sheet_calculate_with_opening_balance( $bs_start_date, $data, $sql, $chart_id ) {
     global $wpdb;
 
@@ -702,6 +704,7 @@ function erp_acct_get_bs_balance_with_opening_balance( $ledgers, $data, $opening
 
     foreach ( $ledgers as $ledger ) {
         $balance = 0;
+
         foreach ( $data as $row ) {
             if ( $row['balance'] && $row['id'] === $ledger['id'] ) {
                 $balance += (float) $row['balance'];
