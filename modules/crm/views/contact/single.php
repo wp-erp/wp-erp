@@ -1,4 +1,8 @@
 <?php
+if ( ! current_user_can( erp_crm_get_manager_role() ) && ! current_user_can( 'manage_options' ) && intval( $customer->contact_owner ) !== get_current_user_id() ) {
+    return new \WP_Error( '403', 'Forbidden' );
+}
+
 $contact_tags     = wp_get_object_terms( $customer->id, 'erp_crm_tag', ['orderby' => 'name', 'order' => 'ASC'] );
 $contact_tags     = wp_list_pluck( $contact_tags, 'name' );
 $contact_list_url = add_query_arg( ['page' => 'erp-crm', 'section' => 'contacts'], admin_url( 'admin.php' ) );
