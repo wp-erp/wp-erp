@@ -1,5 +1,4 @@
 <div class="job-tab-wrap">
-
     <?php $histories = $employee->get_job_histories(); ?>
 
     <h3><?php esc_html_e( 'Employee Status', 'erp' ); ?></h3>
@@ -22,8 +21,9 @@
             if ( ! empty( $histories['employee'] ) ) {
                 $statuses = erp_hr_get_employee_statuses();
 
-                foreach ( $histories['employee'] as $num => $employment_history ) {?>
-                    <tr class="<?php echo $num % 2 == 0 ? 'alternate' : 'odd'; ?>">
+                foreach ( $histories['employee'] as $num => $employment_history ) {
+                    ?>
+                    <tr class="<?php echo $num % 2 === 0 ? 'alternate' : 'odd'; ?>">
                         <td>
                             <?php echo esc_html( erp_format_date( $employment_history['date'] ) ); ?>
                             <?php if ( 0 === $num ) : ?>
@@ -49,9 +49,7 @@
                 <tr class="alternate">
                     <td colspan="4"><?php esc_html_e( 'No history found!', 'erp' ); ?></td>
                 </tr>
-            <?php
-            } ?>
-
+            <?php } ?>
         </tbody>
     </table>
 
@@ -75,10 +73,11 @@
         <tbody>
             <?php
             if ( ! empty( $histories['employment'] ) ) {
-                $types = erp_hr_get_employee_types() + ['terminated' => __( 'Terminated', 'erp' ) ];
+                $types = erp_hr_get_employee_types() + [ 'terminated' => __( 'Terminated', 'erp' ) ];
 
-                foreach ( $histories['employment'] as $num => $employment_history ) {?>
-                    <tr class="<?php echo $num % 2 == 0 ? 'alternate' : 'odd'; ?>">
+                foreach ( $histories['employment'] as $num => $employment_history ) {
+                    ?>
+                    <tr class="<?php echo $num % 2 === 0 ? 'alternate' : 'odd'; ?>">
                         <td>
                             <?php echo esc_html( erp_format_date( $employment_history['date'] ) ); ?>
                             <?php if ( 0 === $num ) : ?>
@@ -104,9 +103,7 @@
                 <tr class="alternate">
                     <td colspan="4"><?php esc_html_e( 'No history found!', 'erp' ); ?></td>
                 </tr>
-            <?php
-            } ?>
-
+            <?php } ?>
         </tbody>
     </table>
 
@@ -138,7 +135,7 @@
 
                     foreach ( $histories['compensation'] as $num => $compensation ) {
                         ?>
-                        <tr class="<?php echo $num % 2 == 0 ? 'alternate' : 'odd'; ?>">
+                        <tr class="<?php echo $num % 2 === 0 ? 'alternate' : 'odd'; ?>">
                             <td>
                                 <?php echo esc_html( erp_format_date( $compensation['date'] ) ); ?>
                                 <?php if ( 0 === $num ) : ?>
@@ -170,8 +167,7 @@
                     <tr class="alternate">
                         <td colspan="6"><?php esc_html_e( 'No history found!', 'erp' ); ?></td>
                     </tr>
-                <?php
-                } ?>
+                <?php } ?>
             </tbody>
         </table>
 
@@ -201,7 +197,7 @@
 
             foreach ( $histories['job'] as $num => $row ) {
                 ?>
-                <tr class="<?php echo $num % 2 == 0 ? 'alternate' : 'odd'; ?>">
+                <tr class="<?php echo $num % 2 === 0 ? 'alternate' : 'odd'; ?>">
                     <td>
                         <?php echo esc_html( erp_format_date( $row['date'] ) ); ?>
                         <?php if ( 0 === $num ) : ?>
@@ -210,8 +206,9 @@
                     </td>
                     <td>
                         <?php
-                            $location = ( ! empty( $row['location'] ) ) ? esc_html( $row['location'] ) : erp_get_company_default_location_name();
-                echo esc_html( $location ); ?>
+                        $location = ( ! empty( $row['location'] ) ) ? esc_html( $row['location'] ) : erp_get_company_default_location_name();
+                        echo esc_html( $location );
+                        ?>
                     </td>
                     <td>
                         <?php echo ( ! empty( $row['department'] ) ) ? esc_html( $row['department'] ) : '--'; ?>
@@ -220,13 +217,15 @@
                         <?php echo ( ! empty( $row['designation'] ) ) ? esc_html( $row['designation'] ) : '--'; ?>
                     </td>
                     <td>
-                        <?php if ( ! empty( $row['reporting_to'] ) ) {
-                    $emp = new \WeDevs\ERP\HRM\Employee( intval( $row['reporting_to'] ) );
+                    <?php
+                    if ( ! empty( $row['reporting_to'] ) ) {
+                        $emp = new \WeDevs\ERP\HRM\Employee( intval( $row['reporting_to'] ) );
 
-                    if ( $emp->is_employee() ) {
-                        echo wp_kses_post( $emp->get_link() );
+                        if ( $emp->is_employee() ) {
+                            echo wp_kses_post( $emp->get_link() );
+                        }
                     }
-                } ?>
+                    ?>
                     </td>
                     <td class="action">
                         <?php if ( current_user_can( 'erp_manage_jobinfo', $employee->get_user_id() ) ) { ?>
@@ -241,8 +240,7 @@
             <tr class="alternate">
                 <td colspan="6"><?php esc_html_e( 'No history found!', 'erp' ); ?></td>
             </tr>
-        <?php
-        } ?>
+        <?php } ?>
         </tbody>
     </table>
 

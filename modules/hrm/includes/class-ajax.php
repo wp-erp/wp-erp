@@ -1,5 +1,4 @@
 <?php
-
 namespace WeDevs\ERP\HRM;
 
 use ICal;
@@ -251,8 +250,8 @@ class Ajax_Handler {
         ] );
 
         $holiday          = (array) reset( $holiday );
-        $holiday['end']   = date( 'Y-m-d', strtotime( $holiday['end'] . '-1day' ) );
-        $holiday['start'] = date( 'Y-m-d', strtotime( $holiday['start'] ) );
+        $holiday['end']   = gmdate( 'Y-m-d', strtotime( $holiday['end'] . '-1day' ) );
+        $holiday['start'] = gmdate( 'Y-m-d', strtotime( $holiday['start'] ) );
 
         $this->send_success( [ 'holiday' => $holiday ] );
     }
@@ -275,8 +274,8 @@ class Ajax_Handler {
          * An iCal may contain events from previous and future years.
          * We'll import only events from current year
          */
-        $first_day_of_year = strtotime( date( 'Y-01-01 00:00:00' ) );
-        $last_day_of_year  = strtotime( date( 'Y-12-31 23:59:59' ) );
+        $first_day_of_year = strtotime( gmdate( 'Y-01-01 00:00:00' ) );
+        $last_day_of_year  = strtotime( gmdate( 'Y-12-31 23:59:59' ) );
 
         /*
          * We'll ignore duplicate entries with the same title and
@@ -287,14 +286,14 @@ class Ajax_Handler {
         // create the ical parser object
         $temp_name = isset( $_FILES['ics']['tmp_name'] ) ? sanitize_text_field( wp_unslash( $_FILES['ics']['tmp_name'] ) ) : '';
 
-        /***** check if file is csv start ******/
+        /***** Check if file is csv start ******/
         $mimes = [ 'application/vnd.ms-excel', 'text/csv' ];
 
-        if ( in_array( sanitize_text_field( wp_unslash( $_FILES['ics']['type'] ) ), $mimes ) ) {
+        if ( in_array( sanitize_text_field( wp_unslash( $_FILES['ics']['type'] ) ), $mimes, true ) ) {
             $import_csv_data = import_holidays_csv( $_FILES['ics']['tmp_name'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
             $this->send_success( $import_csv_data );
         }
-        /***** check if file is csv end ******/
+        /***** Check if file is csv end ******/
 
         $ical      = new ICal( $temp_name );
         $events    = $ical->events();
@@ -425,7 +424,7 @@ class Ajax_Handler {
 
         $employees = erp_hr_get_employees( $args );
 
-        $this->send_success(  [ 0 => __( '- Select -', 'erp' ) ] + wp_list_pluck( $employees, 'display_name', 'user_id' ) );
+        $this->send_success( [ 0 => __( '- Select -', 'erp' ) ] + wp_list_pluck( $employees, 'display_name', 'user_id' ) );
     }
 
     /**
@@ -495,8 +494,8 @@ class Ajax_Handler {
             $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
-        $title   = isset( $_POST['title'] ) ? trim( strip_tags( sanitize_text_field( wp_unslash( $_POST['title'] ) ) ) ) : '';
-        $desc    = isset( $_POST['dept-desc'] ) ? trim( strip_tags( sanitize_text_field( wp_unslash( $_POST['dept-desc'] ) ) ) ) : '';
+        $title   = isset( $_POST['title'] ) ? trim( wp_strip_all_tags( sanitize_text_field( wp_unslash( $_POST['title'] ) ) ) ) : '';
+        $desc    = isset( $_POST['dept-desc'] ) ? trim( wp_strip_all_tags( sanitize_text_field( wp_unslash( $_POST['dept-desc'] ) ) ) ) : '';
         $dept_id = isset( $_POST['dept_id'] ) ? intval( $_POST['dept_id'] ) : 0;
         $lead    = isset( $_POST['lead'] ) ? intval( $_POST['lead'] ) : 0;
         $parent  = isset( $_POST['parent'] ) ? intval( $_POST['parent'] ) : 0;
@@ -509,7 +508,7 @@ class Ajax_Handler {
         }
 
         // on update, ensure $parent != $dept_id
-        if ( $dept_id == $parent ) {
+        if ( $dept_id === $parent ) {
             $parent = 0;
         }
 
@@ -581,8 +580,8 @@ class Ajax_Handler {
             $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
-        $title    = isset( $_POST['title'] ) ? trim( strip_tags( sanitize_text_field( wp_unslash( $_POST['title'] ) ) ) ) : '';
-        $desc     = isset( $_POST['desig-desc'] ) ? trim( strip_tags( sanitize_text_field( wp_unslash( $_POST['desig-desc'] ) ) ) ) : '';
+        $title    = isset( $_POST['title'] ) ? trim( wp_strip_all_tags( sanitize_text_field( wp_unslash( $_POST['title'] ) ) ) ) : '';
+        $desc     = isset( $_POST['desig-desc'] ) ? trim( wp_strip_all_tags( sanitize_text_field( wp_unslash( $_POST['desig-desc'] ) ) ) ) : '';
         $desig_id = isset( $_POST['desig_id'] ) ? intval( $_POST['desig_id'] ) : 0;
 
         $exist = \WeDevs\ERP\HRM\Models\Designation::where( 'id', '!=', $desig_id )
@@ -719,7 +718,7 @@ class Ajax_Handler {
         $data['url']            = $employee->get_details_url();
 
         // user notification email
-        if ( isset( $posted['user_notification'] ) && $posted['user_notification'] == 'on' ) {
+        if ( isset( $posted['user_notification'] ) && $posted['user_notification'] === 'on' ) {
             $emailer    = wperp()->emailer->get_email( 'New_Employee_Welcome' );
             $send_login = isset( $posted['login_info'] ) ? true : false;
 
@@ -775,7 +774,7 @@ class Ajax_Handler {
             $this->send_error( __( 'No employee found', 'erp' ) );
         }
 
-        if ( in_array( 'employee', $user->roles ) ) {
+        if ( in_array( 'employee', $user->roles, true ) ) {
             $hard = apply_filters( 'erp_employee_delete_hard', $hard );
             erp_employee_delete( $employee_id, $hard );
         }
@@ -802,7 +801,7 @@ class Ajax_Handler {
             $this->send_error( __( 'No employee found', 'erp' ) );
         }
 
-        if ( in_array( 'employee', $user->roles ) ) {
+        if ( in_array( 'employee', $user->roles, true ) ) {
             erp_employee_restore( $employee_id );
         }
 
@@ -842,7 +841,7 @@ class Ajax_Handler {
         if ( isset( $_POST['type'] ) ) {
             $args['module'] = 'employment';
             $args['type']   = sanitize_text_field( wp_unslash( $_POST['type'] ) );
-        } else if ( isset( $_POST['status'] ) ) {
+        } elseif ( isset( $_POST['status'] ) ) {
             $args['module']   = 'employee';
             $args['category'] = sanitize_text_field( wp_unslash( $_POST['status'] ) );
         }
@@ -977,7 +976,7 @@ class Ajax_Handler {
         }
 
         $user_id = isset( $_POST['user_id'] ) ? intval( $_POST['user_id'] ) : 0;
-        $note    = isset( $_POST['note'] ) ? strip_tags( sanitize_text_field( wp_unslash( $_POST['note'] ) ) ) : 0;
+        $note    = isset( $_POST['note'] ) ? wp_strip_all_tags( sanitize_text_field( wp_unslash( $_POST['note'] ) ) ) : 0;
         $note_by = get_current_user_id();
 
         $employee = new Employee( $user_id );
@@ -1256,7 +1255,7 @@ class Ajax_Handler {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
-        $employee_user_id = ( isset( $_POST[ 'employee_user_id' ] ) ) ? intval( $_POST[ 'employee_user_id' ] ) : '';
+        $employee_user_id = ( isset( $_POST['employee_user_id'] ) ) ? intval( wp_unslash( $_POST['employee_user_id'] ) ) : '';
 
         // To prevent sending wish multiple time
         // set email already sent status: true
@@ -1279,7 +1278,7 @@ class Ajax_Handler {
     public function employee_update_performance() {
         // check permission for adding performance
         if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'wp-erp-hr-nonce' ) ) {
-            //$this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
         $employee_id        = isset( $_POST['employee_id'] ) ? sanitize_text_field( wp_unslash( $_POST['employee_id'] ) ) : 0;
@@ -1361,11 +1360,11 @@ class Ajax_Handler {
         }
 
         $exp_id       = isset( $_POST['exp_id'] ) ? intval( $_POST['exp_id'] ) : 0;
-        $company_name = isset( $_POST['company_name'] ) ? strip_tags( sanitize_text_field( wp_unslash( $_POST['company_name'] ) ) ) : '';
-        $job_title    = isset( $_POST['job_title'] ) ? strip_tags( sanitize_text_field( wp_unslash( $_POST['job_title'] ) ) ) : '';
-        $from         = isset( $_POST['from'] ) ? strip_tags( sanitize_text_field( wp_unslash( $_POST['from'] ) ) ) : '';
-        $to           = isset( $_POST['to'] ) ? strip_tags( sanitize_text_field( wp_unslash( $_POST['to'] ) ) ) : '';
-        $description  = isset( $_POST['description'] ) ? strip_tags( sanitize_text_field( wp_unslash( $_POST['description'] ) ) ) : '';
+        $company_name = isset( $_POST['company_name'] ) ? wp_strip_all_tags( sanitize_text_field( wp_unslash( $_POST['company_name'] ) ) ) : '';
+        $job_title    = isset( $_POST['job_title'] ) ? wp_strip_all_tags( sanitize_text_field( wp_unslash( $_POST['job_title'] ) ) ) : '';
+        $from         = isset( $_POST['from'] ) ? wp_strip_all_tags( sanitize_text_field( wp_unslash( $_POST['from'] ) ) ) : '';
+        $to           = isset( $_POST['to'] ) ? wp_strip_all_tags( sanitize_text_field( wp_unslash( $_POST['to'] ) ) ) : '';
+        $description  = isset( $_POST['description'] ) ? wp_strip_all_tags( sanitize_text_field( wp_unslash( $_POST['description'] ) ) ) : '';
 
         $fields = [
             'id'           => $exp_id,
@@ -1439,13 +1438,13 @@ class Ajax_Handler {
         }
 
         $edu_id   = isset( $_POST['edu_id'] ) ? intval( $_POST['edu_id'] ) : 0;
-        $school   = isset( $_POST['school'] ) ? strip_tags( sanitize_text_field( wp_unslash( $_POST['school'] ) ) ) : '';
-        $degree   = isset( $_POST['degree'] ) ? strip_tags( sanitize_text_field( wp_unslash( $_POST['degree'] ) ) ) : '';
-        $field    = isset( $_POST['field'] ) ? strip_tags( sanitize_text_field( wp_unslash( $_POST['field'] ) ) ) : '';
+        $school   = isset( $_POST['school'] ) ? wp_strip_all_tags( sanitize_text_field( wp_unslash( $_POST['school'] ) ) ) : '';
+        $degree   = isset( $_POST['degree'] ) ? wp_strip_all_tags( sanitize_text_field( wp_unslash( $_POST['degree'] ) ) ) : '';
+        $field    = isset( $_POST['field'] ) ? wp_strip_all_tags( sanitize_text_field( wp_unslash( $_POST['field'] ) ) ) : '';
         $finished = isset( $_POST['finished'] ) ? intval( $_POST['finished'] ) : '';
-        $notes    = isset( $_POST['notes'] ) ? strip_tags( sanitize_text_field( wp_unslash( $_POST['notes'] ) ) ) : '';
-        $interest = isset( $_POST['interest'] ) ? strip_tags( sanitize_text_field( wp_unslash( $_POST['interest'] ) ) ) : '';
-        $exp_date = isset( $_POST['expiration_date'] ) ? strip_tags( sanitize_text_field( wp_unslash( $_POST['expiration_date'] ) ) ) : '';
+        $notes    = isset( $_POST['notes'] ) ? wp_strip_all_tags( sanitize_text_field( wp_unslash( $_POST['notes'] ) ) ) : '';
+        $interest = isset( $_POST['interest'] ) ? wp_strip_all_tags( sanitize_text_field( wp_unslash( $_POST['interest'] ) ) ) : '';
+        $exp_date = isset( $_POST['expiration_date'] ) ? wp_strip_all_tags( sanitize_text_field( wp_unslash( $_POST['expiration_date'] ) ) ) : '';
 
         $fields = [
             'id'              => $edu_id,
@@ -1521,9 +1520,9 @@ class Ajax_Handler {
         }
 
         $dep_id   = isset( $_POST['dep_id'] ) ? intval( $_POST['dep_id'] ) : 0;
-        $name     = isset( $_POST['name'] ) ? strip_tags( sanitize_text_field( wp_unslash( $_POST['name'] ) ) ) : '';
-        $relation = isset( $_POST['relation'] ) ? strip_tags( sanitize_text_field( wp_unslash( $_POST['relation'] ) ) ) : '';
-        $dob      = isset( $_POST['dob'] ) ? strip_tags( sanitize_text_field( wp_unslash( $_POST['dob'] ) ) ) : '';
+        $name     = isset( $_POST['name'] ) ? wp_strip_all_tags( sanitize_text_field( wp_unslash( $_POST['name'] ) ) ) : '';
+        $relation = isset( $_POST['relation'] ) ? wp_strip_all_tags( sanitize_text_field( wp_unslash( $_POST['relation'] ) ) ) : '';
+        $dob      = isset( $_POST['dob'] ) ? wp_strip_all_tags( sanitize_text_field( wp_unslash( $_POST['dob'] ) ) ) : '';
 
         $fields = [
             'id'       => $dep_id,
@@ -1597,13 +1596,13 @@ class Ajax_Handler {
         $title        = isset( $_POST['title'] ) ? sanitize_text_field( wp_unslash( $_POST['title'] ) ) : '';
         $start_date   = isset( $_POST['start_date'] ) ? sanitize_text_field( wp_unslash( $_POST['start_date'] ) ) : '';
         $end_date     = isset( $_POST['end_date'] ) && ! empty( $_POST['end_date'] ) ? sanitize_text_field( wp_unslash( $_POST['end_date'] ) ) : $start_date;
-        $end_date     = date( 'Y-m-d 23:59:59', strtotime( $end_date ) );
+        $end_date     = gmdate( 'Y-m-d 23:59:59', strtotime( $end_date ) );
         $description  = isset( $_POST['description'] ) ? sanitize_text_field( wp_unslash( $_POST['description'] ) ) : '';
         $range_status = isset( $_POST['range'] ) ? sanitize_text_field( wp_unslash( $_POST['range'] ) ) : 'off';
         $error        = true;
 
-        if ( $range_status == 'off' ) {
-            $end_date = date( 'Y-m-d 23:59:59', strtotime( $start_date ) );
+        if ( $range_status === 'off' ) {
+            $end_date = gmdate( 'Y-m-d 23:59:59', strtotime( $start_date ) );
         }
 
         if ( is_wp_error( $error ) ) {
@@ -1669,13 +1668,13 @@ class Ajax_Handler {
             $this->send_error( esc_attr__( 'Error: Nonce verification failed', 'erp' ) );
         }
 
-        $id = isset( $_POST['employee_id'] ) && !empty( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : false;
+        $id = isset( $_POST['employee_id'] ) && ! empty( $_POST['employee_id'] ) ? intval( wp_unslash( $_POST['employee_id'] ) ) : false;
 
         if ( ! $id ) {
             $this->send_error( esc_attr__( 'Please select an employee', 'erp' ) );
         }
 
-        $policy_id = isset( $_POST['type'] ) && !empty( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : false;
+        $policy_id = isset( $_POST['type'] ) && ! empty( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : false;
 
         if ( ! $policy_id ) {
             $this->send_error( esc_attr__( 'Please select a policy', 'erp' ) );
@@ -1698,7 +1697,7 @@ class Ajax_Handler {
         $f_year_start = erp_current_datetime()->setTimestamp( $entitlement->financial_year->start_date )->format( 'Y-m-d' );
         $f_year_end   = erp_current_datetime()->setTimestamp( $entitlement->financial_year->end_date )->format( 'Y-m-d' );
 
-        if ( ( $start_date < $f_year_start || $start_date > $f_year_end ) || ( $end_date < $f_year_start || $end_date > $f_year_end )  ) {
+        if ( ( $start_date < $f_year_start || $start_date > $f_year_end ) || ( $end_date < $f_year_start || $end_date > $f_year_end ) ) {
             $this->send_error( sprintf( esc_attr__( 'Invalid leave duration. Please apply between %s and %s.', 'erp' ), erp_format_date( $f_year_start ), erp_format_date( $f_year_end ) ) );
         }
 
@@ -1733,7 +1732,7 @@ class Ajax_Handler {
         $leave_count   = $days['total'];
         $days['total'] = sprintf( '%d %s', $days['total'], _n( 'day', 'days', $days['total'], 'erp' ) );
 
-        if ( $days['sandwich'] == 1 ) {
+        if ( intval( $days['sandwich'] ) === 1 ) {
             $days['total'] .= ' ' . esc_attr__( '(Sandwich rule applied)', 'erp' );
         }
 
@@ -1754,8 +1753,8 @@ class Ajax_Handler {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
-        $employee_id = isset( $_POST['employee_id'] ) && !empty( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : false;
-        $f_year      = isset( $_POST['f_year'] ) && !empty( $_POST['f_year'] ) ? intval( $_POST['f_year'] ) : false;
+        $employee_id = isset( $_POST['employee_id'] ) && ! empty( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : false;
+        $f_year      = isset( $_POST['f_year'] ) && ! empty( $_POST['f_year'] ) ? intval( $_POST['f_year'] ) : false;
 
         if ( ! $employee_id ) {
             $this->send_error( esc_attr__( 'Please select an employee.', 'erp' ) );
@@ -1812,8 +1811,8 @@ class Ajax_Handler {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
-        $employee_id = isset( $_POST['employee_id'] ) && !empty( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : false;
-        $policy_id   = isset( $_POST['policy_id'] ) && !empty( $_POST['policy_id'] ) ? intval( $_POST['policy_id'] ) : false; // @since 1.6.0 this is now entitlement id
+        $employee_id = isset( $_POST['employee_id'] ) && ! empty( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : false;
+        $policy_id   = isset( $_POST['policy_id'] ) && ! empty( $_POST['policy_id'] ) ? intval( $_POST['policy_id'] ) : false; // @since 1.6.0 this is now entitlement id
         $available   = 0;
 
         if ( ! $employee_id ) {
@@ -1843,7 +1842,7 @@ class Ajax_Handler {
             //$content          = sprintf( '<span class="description">%d %s</span>', number_format_i18n( $leave_policy_day ), __( 'days are available', 'erp' ) );
         }
 
-        if (  $extra_leaves > 0 ) {
+        if ( $extra_leaves > 0 ) {
             $content .= sprintf( '<span class="description red"> (%s %s)</span>', erp_number_format_i18n( $extra_leaves ), _n( 'day extra', 'days extra', $extra_leaves, 'erp' ) );
         }
 
@@ -1861,7 +1860,7 @@ class Ajax_Handler {
      * @return json
      */
     public function leave_request() {
-        if ( !isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'erp-leave-req-new' ) ) {
+        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'erp-leave-req-new' ) ) {
             $this->send_error( __( 'Something went wrong!', 'erp' ) );
         }
 
@@ -1880,7 +1879,7 @@ class Ajax_Handler {
         $start_date = isset( $_POST['leave_from'] ) ? sanitize_text_field( wp_unslash( $_POST['leave_from'] . ' 00:00:00' ) ) : date_i18n( 'Y-m-d 00:00:00' );
         $end_date   = isset( $_POST['leave_to'] ) ? sanitize_text_field( wp_unslash( $_POST['leave_to'] . ' 23:59:59' ) ) : date_i18n( 'Y-m-d 23:59:59' );
 
-        $leave_reason = isset( $_POST['leave_reason'] ) ? strip_tags( sanitize_text_field( wp_unslash( $_POST['leave_reason'] ) ) ) : '';
+        $leave_reason = isset( $_POST['leave_reason'] ) ? wp_strip_all_tags( sanitize_text_field( wp_unslash( $_POST['leave_reason'] ) ) ) : '';
 
         $request_id = erp_hr_leave_insert_request( [
             'user_id'      => $employee_id,
@@ -1922,10 +1921,10 @@ class Ajax_Handler {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
-        $year    = isset( $_POST['f_year'] ) ? intval( $_POST['f_year'] ) : date( 'Y' );
+        $year    = isset( $_POST['f_year'] ) ? intval( $_POST['f_year'] ) : gmdate( 'Y' );
         $user_id = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
         $policy  = isset( $_POST['leave_policy'] ) ? intval( $_POST['leave_policy'] ) : 'all';
-        $status  = isset( $_POST['status'] ) ? sanitize_text_field( $_POST['status'] ) : 'all';
+        $status  = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : 'all';
 
         $args = [
             'f_year'    => $year,
@@ -1934,7 +1933,7 @@ class Ajax_Handler {
             'orderby'   => 'start_date',
         ];
 
-        if ( $policy != 'all' ) {
+        if ( $policy !== 'all' ) {
             $args['policy_id'] = $policy;
         }
 

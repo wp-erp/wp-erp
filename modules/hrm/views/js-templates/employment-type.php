@@ -1,5 +1,5 @@
 <?php
-$id = isset( $_GET['id'] ) ? $_GET['id'] : 0;
+$id = isset( $_GET['id'] ) ? absint( wp_unslash( $_GET['id'] ) ) : 0;
 $value = '';
 
 if ( $id ) {
@@ -10,35 +10,41 @@ if ( $id ) {
 
 <div class="type-form-wrap">
     <div class="row">
-        <?php erp_html_form_input( [
+        <?php
+        erp_html_form_input( [
             'label'    => __( 'Date', 'erp' ),
             'name'     => 'date',
-            'value'    => date( 'Y-m-d', current_time( 'timestamp' ) ),
+            'value'    => gmdate( 'Y-m-d', current_time( 'timestamp' ) ),
             'required' => true,
             'class'    => 'erp-date-field',
-        ] ); ?>
+        ] );
+        ?>
     </div>
 
     <div class="row">
-        <?php erp_html_form_input( [
+        <?php
+        erp_html_form_input( [
             'label'       => __( 'Employment Type', 'erp' ),
             'name'        => 'type',
             'value'       => $value,
             'type'        => 'select',
             'custom_attr' => [ 'data-selected' => $value ],
             'options'     => [ 0 => __( '- Select -', 'erp' ) ] + erp_hr_get_employee_types(),
-        ] ); ?>
+        ] );
+        ?>
     </div>
 
     <div class="row">
-        <?php erp_html_form_input( [
+        <?php
+        erp_html_form_input( [
             'label'       => __( 'Comment', 'erp' ),
             'name'        => 'comment',
             'value'       => '',
             'placeholder' => __( 'Optional comment', 'erp' ),
             'type'        => 'textarea',
             'custom_attr' => [ 'rows' => 4, 'cols' => 25 ],
-        ] ); ?>
+        ] );
+        ?>
     </div>
 
     <?php wp_nonce_field( 'employee_update_employment' ); ?>

@@ -1,5 +1,4 @@
 <?php
-
 namespace WeDevs\ERP\HRM;
 
 use WeDevs\ERP\Admin\Models\Company_Locations;
@@ -12,14 +11,14 @@ use WP_User;
 class Employee {
 
     /**
-     * user id
+     * User id
      *
      * @var int
      */
     public $user_id;
 
     /**
-     * wp user \WP_User
+     * WP user \WP_User
      *
      * @var object
      */
@@ -143,7 +142,7 @@ class Employee {
      * @return string
      */
     public function __get( $key ) {
-        if ( in_array( $key, $this->restricted_data ) ) {
+        if ( in_array( $key, $this->restricted_data, true ) ) {
             return null;
         }
 
@@ -242,7 +241,7 @@ class Employee {
         }
 
         //if duplicate employee id
-        if ( $employee_id && $employee_id != $this->employee_id ) {
+        if ( $employee_id && $employee_id !== intval( $this->employee_id ) ) {
             $erp_user = \WeDevs\ERP\HRM\Models\Employee::where( 'employee_id', $employee_id )->first();
 
             if ( $erp_user ) {
@@ -304,8 +303,7 @@ class Employee {
             if ( is_wp_error( $user_id ) ) {
                 return $user_id;
             }
-        }
-        else if ( ! in_array( erp_hr_get_employee_role(), (array) $wp_user->roles ) ) {
+        } elseif ( ! in_array( erp_hr_get_employee_role(), (array) $wp_user->roles ) ) {
             // set user role as employee
             $wp_user->set_role( erp_hr_get_employee_role() );
         }
@@ -526,7 +524,7 @@ class Employee {
      */
     public function is_employee() {
         //exceptional case for admin
-        if ( in_array( 'administrator', $this->get_roles()['roles'] ) ) {
+        if ( in_array( 'administrator', $this->get_roles()['roles'], true ) ) {
             return true;
         }
 
@@ -564,7 +562,7 @@ class Employee {
     }
 
     /**
-     * get photo id
+     * Get photo id
      *
      * @return int|null
      */
@@ -682,7 +680,7 @@ class Employee {
      */
     public function get_designation( $context = 'edit' ) {
         if ( $this->is_employee() && isset( $this->erp_user->designation ) ) {
-            if ( $context == 'edit' ) {
+            if ( $context === 'edit' ) {
                 return $this->erp_user->designation;
             }
             $designation = Designation::find( $this->designation );
@@ -715,7 +713,7 @@ class Employee {
      */
     public function get_department( $context = 'edit' ) {
         if ( $this->is_employee() && isset( $this->erp_user->department ) ) {
-            if ( $context == 'edit' ) {
+            if ( $context === 'edit' ) {
                 return $this->erp_user->department;
             }
             $department = HRDepartment::find( $this->department );
@@ -755,7 +753,7 @@ class Employee {
      */
     public function get_location( $context = 'edit' ) {
         if ( $this->is_employee() && isset( $this->erp_user->location ) ) {
-            if ( $context == 'edit' ) {
+            if ( $context === 'edit' ) {
                 return $this->erp_user->location;
             }
             $location = Company_Locations::find( $this->location );
@@ -775,7 +773,7 @@ class Employee {
         if ( isset( $this->erp_user->status ) ) {
             $status = $this->erp_user->status;
 
-            if ( $context == 'edit' ) {
+            if ( $context === 'edit' ) {
                 return $status;
             }
             $statuses = erp_hr_get_employee_statuses();
@@ -797,7 +795,7 @@ class Employee {
         if ( $this->is_employee() && isset( $this->erp_user->type ) ) {
             $type = $this->erp_user->type;
 
-            if ( $context == 'edit' ) {
+            if ( $context === 'edit' ) {
                 return $type;
             }
 
@@ -816,7 +814,7 @@ class Employee {
      */
     public function get_hiring_source( $context = 'edit' ) {
         if ( $this->is_employee() && ! empty( $this->erp_user->hiring_source ) ) {
-            if ( $context == 'edit' ) {
+            if ( $context === 'edit' ) {
                 return $this->erp_user->hiring_source;
             }
             $sources = erp_hr_get_employee_sources();
@@ -834,7 +832,7 @@ class Employee {
      */
     public function get_gender( $context = 'edit' ) {
         if ( $this->is_employee() && ! empty( $this->wp_user->gender ) ) {
-            if ( $context == 'edit' ) {
+            if ( $context === 'edit' ) {
                 return $this->wp_user->gender;
             }
             $genders = erp_hr_get_genders();
@@ -854,7 +852,7 @@ class Employee {
      */
     public function get_marital_status( $context = 'edit' ) {
         if ( $this->is_employee() && ! empty( $this->wp_user->marital_status ) ) {
-            if ( $context == 'edit' ) {
+            if ( $context === 'edit' ) {
                 return $this->wp_user->marital_status;
             }
 
@@ -875,7 +873,7 @@ class Employee {
      */
     public function get_nationality( $context = 'edit' ) {
         if ( $this->is_employee() && ! empty( $this->wp_user->nationality ) ) {
-            if ( $context == 'edit' ) {
+            if ( $context === 'edit' ) {
                 return $this->wp_user->nationality;
             }
 
@@ -894,12 +892,12 @@ class Employee {
      */
     public function set_hiring_date( $date ) {
         if ( ! empty( $date ) ) {
-            $this->changes['work']['hiring_date'] = date( 'Y-m-d', strtotime( $date ) );
+            $this->changes['work']['hiring_date'] = gmdate( 'Y-m-d', strtotime( $date ) );
         }
     }
 
     /**
-     * get hiring date
+     * Get hiring date
      *
      * @since 1.3.0
      * @since 1.6.0 removed erp_format_date() from return value due to date string parse error
@@ -939,7 +937,7 @@ class Employee {
 
     public function set_date_of_birth( $date ) {
         if ( ! empty( $date ) ) {
-            $this->changes['work']['date_of_birth'] = date( 'Y-m-d', strtotime( $date ) );
+            $this->changes['work']['date_of_birth'] = gmdate( 'Y-m-d', strtotime( $date ) );
         }
     }
 
@@ -994,7 +992,7 @@ class Employee {
      */
     public function get_country( $context = 'edit' ) {
         if ( $this->is_employee() && isset( $this->wp_user->country ) ) {
-            if ( $context == 'edit' ) {
+            if ( $context === 'edit' ) {
                 return $this->wp_user->country;
             }
 
@@ -1013,7 +1011,7 @@ class Employee {
      */
     public function get_state( $context = 'edit' ) {
         if ( $this->is_employee() && isset( $this->wp_user->state ) ) {
-            if ( $context == 'edit' ) {
+            if ( $context === 'edit' ) {
                 return $this->wp_user->state;
             }
 
@@ -1167,7 +1165,7 @@ class Employee {
 
         foreach ( $requires as $key => $value ) {
             if ( empty( $args[ $key ] ) ) {
-                return $this->send_error( 'empty-' . $key, __( sprintf( '%s is required.', $value ), 'erp' ) );
+                return $this->send_error( 'empty-' . $key, sprintf( __( '%s is required.', 'erp' ), $value ) );
             }
         }
 
@@ -1238,7 +1236,7 @@ class Employee {
 
         foreach ( $requires as $key => $value ) {
             if ( empty( $args[ $key ] ) ) {
-                return $this->send_error( 'empty-' . $key, __( sprintf( '%s is required.', $value ), 'erp' ) );
+                return $this->send_error( 'empty-' . $key, sprintf( __( '%s is required.', 'erp' ), $value ) );
             }
         }
 
@@ -1246,7 +1244,7 @@ class Employee {
             if ( ! is_valid_date( $args['dob'] ) ) {
                 return new WP_Error( 'invalid-required-params', __( 'Invalid date format', 'erp' ) );
             }
-            $args['dob'] = date( 'Y-m-d', strtotime( $args['dob'] ) );
+            $args['dob'] = gmdate( 'Y-m-d', strtotime( $args['dob'] ) );
         }
 
         if ( ! $args['id'] ) {
@@ -1327,8 +1325,8 @@ class Employee {
         if ( ! is_valid_date( $args['from'] ) && $args['from'] ) {
             return new WP_Error( 'invalid-required-params', __( 'Invalid date format', 'erp' ) );
         }
-        $args['from'] = date( 'Y-m-d', strtotime( $args['from'] ) );
-        $args['to']   = date( 'Y-m-d', strtotime( $args['to'] ) );
+        $args['from'] = gmdate( 'Y-m-d', strtotime( $args['from'] ) );
+        $args['to']   = gmdate( 'Y-m-d', strtotime( $args['to'] ) );
 
         $experience = $this->erp_user->experiences()->updateOrCreate( [ 'id' => $args['id'] ], $args )->toArray();
 
@@ -1368,7 +1366,7 @@ class Employee {
         $modules   = erp_hr_employee_history_modules();
         $histories = $this->erp_user->histories();
 
-        if ( ( $module !== 'all' ) && ( in_array( $module, $modules ) ) ) {
+        if ( ( $module !== 'all' ) && ( in_array( $module, $modules, true ) ) ) {
             $histories = $histories->where( 'module', $module );
         }
 
@@ -1477,7 +1475,6 @@ class Employee {
         ];
 
         $args     = wp_parse_args( $args, $default );
-
         $types    = erp_hr_get_employee_types();
         $statuses = erp_hr_get_employee_statuses();
 
@@ -1552,7 +1549,7 @@ class Employee {
             return new WP_Error( 'invalid-pay-rate', __( 'Invalid Pay Rate', 'erp' ) );
         }
 
-        if ( !empty( $args['reason'] ) && ! array_key_exists( $args['reason'], $reasons ) ) {
+        if ( ! empty( $args['reason'] ) && ! array_key_exists( $args['reason'], $reasons ) ) {
             return new WP_Error( 'invalid-reason', __( 'Invalid Reason Type', 'erp' ) );
         }
 
@@ -1584,7 +1581,7 @@ class Employee {
     }
 
     /**
-     * update job info
+     * Update job info
      *
      * @param $args array
      *
@@ -1602,17 +1599,17 @@ class Employee {
         ];
 
         $args = wp_parse_args( $args, $default );
-//        if ( empty( $args['designation'] ) || ! is_numeric( $args['designation'] ) ) {
-//            return new \WP_Error( 'invalid-designation-id', __( 'Invalid Designation Type', 'erp' ) );
-//        }
-//
-//        if ( empty( $args['department'] ) || ! is_numeric( $args['department'] ) ) {
-//            return new \WP_Error( 'invalid-department-id', __( 'Invalid Department Type', 'erp' ) );
-//        }
-//
-//        if ( empty( $args['reporting_to'] ) || ! is_numeric( $args['reporting_to'] ) ) {
-//            return new \WP_Error( 'invalid-reporting-to-user', __( 'Invalid Reporting To User', 'erp' ) );
-//        }
+        // if ( empty( $args['designation'] ) || ! is_numeric( $args['designation'] ) ) {
+        //     return new \WP_Error( 'invalid-designation-id', __( 'Invalid Designation Type', 'erp' ) );
+        // }
+
+        // if ( empty( $args['department'] ) || ! is_numeric( $args['department'] ) ) {
+        //     return new \WP_Error( 'invalid-department-id', __( 'Invalid Department Type', 'erp' ) );
+        // }
+
+        // if ( empty( $args['reporting_to'] ) || ! is_numeric( $args['reporting_to'] ) ) {
+        //     return new \WP_Error( 'invalid-reporting-to-user', __( 'Invalid Reporting To User', 'erp' ) );
+        // }
 
         do_action( 'erp_hr_employee_job_info_create', $this->get_user_id() );
 
@@ -1657,7 +1654,7 @@ class Employee {
 
         $performances = $this->erp_user->performances();
 
-        if ( ( $type !== 'all' ) && ( in_array( $type, $types ) ) ) {
+        if ( ( $type !== 'all' ) && ( in_array( $type, $types, true ) ) ) {
             $performances = $performances->where( 'type', $type );
         }
 
@@ -1670,7 +1667,7 @@ class Employee {
     }
 
     /**
-     * add Performance
+     * Add Performance
      *
      * @param $args
      *
@@ -1696,7 +1693,7 @@ class Employee {
         ];
         $args    = wp_parse_args( $args, $default );
 
-        if ( empty( $args['type'] ) || ! in_array( $args['type'], [ 'reviews', 'comments', 'goals' ] ) ) {
+        if ( empty( $args['type'] ) || ! in_array( $args['type'], [ 'reviews', 'comments', 'goals' ], true ) ) {
             return new WP_Error( 'invalid-performance-type', __( 'Invalid Performance Type received', 'erp' ) );
         }
 
@@ -1708,7 +1705,7 @@ class Employee {
             return new WP_Error( 'invalid-required-params', __( 'Invalid date format', 'erp' ) );
         }
 
-        if ( $args['type'] == 'reviews' ) {
+        if ( $args['type'] === 'reviews' ) {
             $reporting_to = new Employee( $args['reporting_to'] );
 
             if ( ! $reporting_to->is_employee() ) {
@@ -1716,7 +1713,7 @@ class Employee {
             }
         }
 
-        if ( $args['type'] == 'comments' ) {
+        if ( $args['type'] === 'comments' ) {
             $reviewer = new Employee( $args['reviewer'] );
 
             if ( ! $reviewer->is_employee() ) {
@@ -1724,7 +1721,7 @@ class Employee {
             }
         }
 
-        if ( $args['type'] == 'goals' ) {
+        if ( $args['type'] === 'goals' ) {
             if ( empty( $args['completion_date'] ) ) {
                 return new WP_Error( 'missing-required-params', __( 'Missing Date', 'erp' ) );
             }
@@ -1810,7 +1807,7 @@ class Employee {
     }
 
     /**
-     * delete note
+     * Delete note
      *
      * @param $id
      *
@@ -1896,7 +1893,7 @@ class Employee {
             return $result;
         }
 
-        $defaults             = [
+        $defaults = [
             'policy_id' => 0,       // @since 1.5.1 will be use as leave_id
             'f_year'    => $f_year->id,
             'number'    => 20,
@@ -1952,7 +1949,7 @@ class Employee {
             return $result;
         }
 
-        $result =  erp_hr_leave_get_balance( $this->user_id, $f_year->id );
+        $result = erp_hr_leave_get_balance( $this->user_id, $f_year->id );
 
         return erp_array_to_object( $result );
     }
@@ -2017,34 +2014,34 @@ class Employee {
             $leave_requests = $leave_requests['data'];
         }
 
-        $holidays       = Leave_Holiday::whereDate( 'start', '>=', $date_range['start'] )
+        $holidays = Leave_Holiday::whereDate( 'start', '>=', $date_range['start'] )
             ->whereDate( 'end', '<=', $date_range['end'] )
             ->get();
 
         $events = [];
 
         foreach ( $leave_requests as $leave_request ) {
-            $request_rejected   =   3;
+            $request_rejected = 3;
 
-            if ( $leave_request->status == $request_rejected ) {
+            if ( intval( $leave_request->status ) === intval( $request_rejected ) ) {
                 continue;
             }
 
             //if status pending
             $title = $leave_request->policy_name;
 
-            if ( 2 == $leave_request->status ) {
+            if ( 2 === intval( $leave_request->status ) ) {
                 $title .= sprintf( ' ( %s ) ', __( 'Pending', 'erp' ) );
             }
 
             // Half day leave
-            if ( $leave_request->day_status_id != 1 ) {
+            if ( intval( $leave_request->day_status_id ) !== 1 ) {
                 $title .= '(' . erp_hr_leave_request_get_day_statuses( $leave_request->day_status_id ) . ')';
             }
 
             $event = [
                 'id'        => $leave_request->id,
-                'start'     => erp_current_datetime()->setTimestamp( $leave_request->start_date )->setTime( 0, 0, 0 )->format(  'Y-m-d h:i:s' ),
+                'start'     => erp_current_datetime()->setTimestamp( $leave_request->start_date )->setTime( 0, 0, 0 )->format( 'Y-m-d h:i:s' ),
                 'end'       => erp_current_datetime()->setTimestamp( $leave_request->end_date )->setTime( 23, 59, 59 )->format( 'Y-m-d h:i:s' ),
                 'color'     => $leave_request->color,
                 'title'     => $title,
@@ -2058,8 +2055,8 @@ class Employee {
         foreach ( $holidays as $holiday ) {
             $event = [
                 'id'      => $holiday->id,
-                'start'   => date( 'Y-m-d', strtotime( $holiday->start ) ),
-                'end'     => date( 'Y-m-d', strtotime( $holiday->end ) ),
+                'start'   => gmdate( 'Y-m-d', strtotime( $holiday->start ) ),
+                'end'     => gmdate( 'Y-m-d', strtotime( $holiday->end ) ),
                 'color'   => '#FF5354',
                 'title'   => $holiday->title,
                 'img'     => '',
@@ -2132,7 +2129,7 @@ class Employee {
         $wp_user         = new WP_User( $this->id );
 
         foreach ( $roles as $role => $boolean ) {
-            if ( ! in_array( $role, $available_roles ) ) {
+            if ( ! in_array( $role, $available_roles, true ) ) {
                 continue;
             }
             $add_roles = filter_var( $boolean, FILTER_VALIDATE_BOOLEAN );
@@ -2197,7 +2194,7 @@ class Employee {
     }
 
     /**
-     * get restricted data
+     * Get restricted data
      *
      * @since 1.3.0
      *
