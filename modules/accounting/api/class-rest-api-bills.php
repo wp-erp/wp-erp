@@ -187,13 +187,9 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         }
 
         $bill_data = erp_acct_get_bill( $id );
-        // $bill_data['id'] = $id;
-
-        // $bill_data['created_by'] = $this->get_user( $bill_data['created_by'] );
 
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
-
         $data            = $this->prepare_item_for_response( $bill_data, $request, $additional_fields );
         $formatted_items = $this->prepare_response_for_collection( $data );
         $response        = rest_ensure_response( $formatted_items );
@@ -230,12 +226,10 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $this->add_log( $bill, 'add' );
 
-        // $bill_data['voucher_no'] = $bill_id;
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
         $bill_data = $this->prepare_item_for_response( $bill, $request, $additional_fields );
-
         $response = rest_ensure_response( $bill_data );
         $response->set_status( 201 );
 
@@ -281,7 +275,6 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $this->add_log( $bill, 'update' );
 
-        // $bill_data['voucher_no'] = $bill_id;
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
