@@ -168,6 +168,8 @@ class Customer_Relationship {
         wp_enqueue_media();
         wp_enqueue_style( 'erp-tiptip' );
         wp_enqueue_script( 'erp-tiptip' );
+        wp_enqueue_style( 'erp-sweetalert' );
+        wp_enqueue_script( 'erp-sweetalert' );
         wp_enqueue_script( 'erp-vuejs', false, [ 'jquery', 'erp-script' ], false, true );
         wp_enqueue_script( 'erp-vue-table', WPERP_CRM_ASSETS . "/js/vue-table$suffix.js", [ 'erp-vuejs', 'jquery' ], date( 'Ymd' ), true );
 
