@@ -316,16 +316,6 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
         global $wpdb;
 
         $statuses = $wpdb->get_results( "SELECT id, type_name as name, slug FROM {$wpdb->prefix}erp_acct_trn_status_types", ARRAY_A );
-       /* array_unshift(
-            $statuses,
-            [
-                'id'        => '0',
-                'type_name' => 'all',
-                'name'      => 'All',
-                'slug'      => 'all',
-            ]
-        );
-       */
 
         $response = rest_ensure_response( $statuses );
 
@@ -779,16 +769,16 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
         $sales_statuses    = erp_acct_get_sales_chart_status( $args );
         $purchase_statuses = erp_acct_get_purchase_chart_status( $args );
 
-        for ( $i = 0; $i < count( $chart_statuses ); $i++ ) {
-            $chart_statuses[ $i ]['sub_total'] = (int) $chart_statuses[ $i ]['sub_total'];
+        foreach ( $chart_statuses as $key => $item ) {
+            $chart_statuses[ $key ]['sub_total'] = (int) $chart_statuses[ $key ]['sub_total'];
         }
 
-        for ( $i = 0; $i < count( $sales_statuses ); $i++ ) {
-            $sales_statuses[ $i ]['sub_total'] = (int) $sales_statuses[ $i ]['sub_total'];
+        foreach ( $sales_statuses  as $key => $item) {
+            $sales_statuses[ $key ]['sub_total'] = (int) $sales_statuses[ $key ]['sub_total'];
         }
 
-        for ( $i = 0; $i < count( $purchase_statuses ); $i++ ) {
-            $purchase_statuses[ $i ]['sub_total'] = (int) $purchase_statuses[ $i ]['sub_total'];
+        foreach (  $purchase_statuses as $key => $item) {
+            $purchase_statuses[ $key ]['sub_total'] = (int) $purchase_statuses[ $key ]['sub_total'];
         }
 
         if ( ! empty( $expense_status ) ) {
