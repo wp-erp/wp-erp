@@ -60,7 +60,7 @@ function erp_get_peoples( $args = [] ) {
         if ( is_array( $type ) ) {
             $type_sql = "and `name` IN ( '" . implode( "','", $type ) . "' )";
         } else {
-            $type_sql = ( $type != 'all' ) ? "and `name` = '" . $type . "'" : '';
+            $type_sql = ( $type !== 'all' ) ? "and `name` = '" . $type . "'" : '';
         }
 
         $wrapper_select = 'SELECT people.*, ';
@@ -314,7 +314,7 @@ function erp_get_peoples_array( $args = [] ) {
     $peoples = erp_get_peoples( $args );
 
     foreach ( $peoples as $user ) {
-        $users[ $user->id ] = ( in_array( 'company', $user->types ) ) ? $user->company : $user->first_name . ' ' . $user->last_name;
+        $users[ $user->id ] = ( in_array( 'company', $user->types, true ) ) ? $user->company : $user->first_name . ' ' . $user->last_name;
     }
 
     return $users;
@@ -462,7 +462,6 @@ function erp_insert_people( $args = [], $return_object = false ) {
     ];
 
     $args           = wp_parse_args( $args, $defaults );
-
     $errors         = [];
     $unchanged_data = [];
 
@@ -599,15 +598,14 @@ function erp_insert_people( $args = [], $return_object = false ) {
             $people             = $existing_people_by_email;
         } else {
             $people = \WeDevs\ERP\Framework\Models\People::create( [
-                    'user_id'       => $user->ID,
-                    'email'         => ! empty( $args['email'] ) ? $args['email'] : $user->user_email,
-                    'website'       => ! empty( $args['website'] ) ? $args['website'] : $user->user_url,
-                    'hash'          => $args['hash'],
-                    'contact_owner' => $args['contact_owner'],
-                    'created_by'    => $args['created_by'],
-                    'created'       => current_time( 'mysql' ),
-                ]
-            );
+                'user_id'       => $user->ID,
+                'email'         => ! empty( $args['email'] ) ? $args['email'] : $user->user_email,
+                'website'       => ! empty( $args['website'] ) ? $args['website'] : $user->user_url,
+                'hash'          => $args['hash'],
+                'contact_owner' => $args['contact_owner'],
+                'created_by'    => $args['created_by'],
+                'created'       => current_time( 'mysql' ),
+            ] );
         }
 
         if ( ! $people->id ) {
@@ -616,7 +614,7 @@ function erp_insert_people( $args = [], $return_object = false ) {
     } else {
         $existing_people_by_email = \WeDevs\ERP\Framework\Models\People::type( $people_type )->where( 'email', $args['email'] )->first();
 
-        if ( ! empty( $existing_people_by_email->email ) && $existing_people_by_email->id != $existing_people->id ) {
+        if ( ! empty( $existing_people_by_email->email ) && intval( $existing_people_by_email->id ) !== intval( $existing_people->id ) ) {
             $is_existing_people = true;
         }
 
@@ -706,7 +704,7 @@ function erp_insert_people( $args = [], $return_object = false ) {
 
     if ( empty( $hash ) ) {
         $hash_id = sha1( microtime() . 'erp-unique-hash-id' . $people->email );
-        $people->update( ['hash', $hash_id] );
+        $people->update( [ 'hash', $hash_id ] );
     }
 
     return $return_object ? $people : $people->id;
