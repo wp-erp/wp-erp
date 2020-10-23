@@ -1,4 +1,5 @@
 <?php
+
 namespace WeDevs\ERP;
 
 /**
@@ -6,6 +7,9 @@ namespace WeDevs\ERP;
  */
 class ERP_i18n {
 
+    /**
+     * Initialize
+     */
     public function __construct() {
         add_filter( 'erp_localized_data', [ $this, 'add_i18n_data' ] );
     }
@@ -21,19 +25,19 @@ class ERP_i18n {
      *
      * @since 0.1.0
      *
-     * @param  string $domain Translation domain.
+     * @param string $domain translation domain
      *
      * @return array
      */
-    function get_jed_locale_data( $domain ) {
+    public function get_jed_locale_data( $domain ) {
         $translations = get_translations_for_domain( $domain );
 
-        $locale = array(
-            '' => array(
+        $locale = [
+            '' => [
                 'domain' => $domain,
                 'lang'   => is_admin() ? get_user_locale() : get_locale(),
-            ),
-        );
+            ],
+        ];
 
         if ( ! empty( $translations->headers['Plural-Forms'] ) ) {
             $locale['']['plural_forms'] = $translations->headers['Plural-Forms'];

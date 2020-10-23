@@ -2,15 +2,16 @@
 
 namespace WeDevs\ERP\Accounting\API;
 
-use WP_REST_Server;
-use WP_REST_Response;
 use WP_Error;
+use WP_REST_Response;
+use WP_REST_Server;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
 
 class Company_Controller extends \WeDevs\ERP\API\REST_Controller {
+
     /**
      * Endpoint namespace.
      *
@@ -29,23 +30,21 @@ class Company_Controller extends \WeDevs\ERP\API\REST_Controller {
      * Register the routes for the objects of the controller.
      */
     public function register_routes() {
-
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base,
             [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_company' ],
-					'args'                => [],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_view_list' );
-					},
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_company' ],
+                    'args'                => [],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_view_list' );
+                    },
                 ],
                 'schema' => [ $this, 'get_item_schema' ],
-			]
+            ]
         );
-
     }
 
     /**
@@ -69,10 +68,10 @@ class Company_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $response = rest_ensure_response(
             [
-				'logo'    => $url,
-				'name'    => $company->name,
-				'address' => $company->address,
-			]
+                'logo'    => $url,
+                'name'    => $company->name,
+                'address' => $company->address,
+            ]
         );
 
         $response->set_status( 200 );
@@ -94,12 +93,12 @@ class Company_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'logo'         => [
                     'description' => __( 'Company logo for the resource.' ),
                     'type'        => 'string',
-                    'context'     => [ 'embed', 'view' ]
+                    'context'     => [ 'embed', 'view' ],
                 ],
                 'name' => [
                     'description' => __( 'Company name for the resource.' ),
                     'type'        => 'string',
-                    'context'     => [ 'view' ]
+                    'context'     => [ 'view' ],
                 ],
                 'address'    => [
                     'description' => __( 'Address data.', 'erp' ),
@@ -115,9 +114,9 @@ class Company_Controller extends \WeDevs\ERP\API\REST_Controller {
                             'description' => __( 'Company address 2 for the resource.', 'erp' ),
                             'type'        => 'string',
                             'context'     => [ 'view' ],
-                        ]
+                        ],
                     ],
-                ]
+                ],
             ],
         ];
 

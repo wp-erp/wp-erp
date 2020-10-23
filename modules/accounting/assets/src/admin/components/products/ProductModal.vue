@@ -133,7 +133,7 @@
                                                 </div>
                                             </div>
                                             <div class="wperp-col-sm-3 wperp-col-xs-12">
-                                                <label>{{ __('Tax Category', 'erp') }}</label>
+                                                <label>{{ __('Tax Category', 'erp') }}  <span class="erp-help-tip .erp-tips" :title="__('Selecting tax category is important if you want to have tax on that product while selling.', 'erp')"></span></label>
                                             </div>
                                             <div class="wperp-col-sm-9 wperp-col-xs-12">
                                                 <div class="with-multiselect">

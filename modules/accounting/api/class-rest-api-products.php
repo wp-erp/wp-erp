@@ -2,11 +2,12 @@
 
 namespace WeDevs\ERP\Accounting\API;
 
-use WP_REST_Server;
-use WP_REST_Response;
 use WP_Error;
+use WP_REST_Response;
+use WP_REST_Server;
 
 class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
+
     /**
      * Endpoint namespace.
      *
@@ -29,92 +30,92 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
             $this->namespace,
             '/' . $this->rest_base,
             [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_inventory_products' ],
-					'args'                => $this->get_collection_params(),
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_manager' );
-					},
-				],
-				[
-					'methods'             => WP_REST_Server::CREATABLE,
-					'callback'            => [ $this, 'create_inventory_product' ],
-					'args'                => $this->get_collection_params(),
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_manager' );
-					},
-				],
-				'schema' => [ $this, 'get_public_item_schema' ],
-			]
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_inventory_products' ],
+                    'args'                => $this->get_collection_params(),
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_manager' );
+                    },
+                ],
+                [
+                    'methods'             => WP_REST_Server::CREATABLE,
+                    'callback'            => [ $this, 'create_inventory_product' ],
+                    'args'                => $this->get_collection_params(),
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_manager' );
+                    },
+                ],
+                'schema' => [ $this, 'get_public_item_schema' ],
+            ]
         );
 
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base . '/(?P<id>[\d]+)',
             [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_inventory_product' ],
-					'args'                => [
-						'context' => $this->get_context_param( [ 'default' => 'view' ] ),
-					],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_manager' );
-					},
-				],
-				[
-					'methods'             => WP_REST_Server::EDITABLE,
-					'callback'            => [ $this, 'update_inventory_product' ],
-					'args'                => $this->get_collection_params(),
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_manager' );
-					},
-				],
-				[
-					'methods'             => WP_REST_Server::DELETABLE,
-					'callback'            => [ $this, 'delete_inventory_product' ],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_manager' );
-					},
-				],
-				'schema' => [ $this, 'get_public_item_schema' ],
-			]
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_inventory_product' ],
+                    'args'                => [
+                        'context' => $this->get_context_param( [ 'default' => 'view' ] ),
+                    ],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_manager' );
+                    },
+                ],
+                [
+                    'methods'             => WP_REST_Server::EDITABLE,
+                    'callback'            => [ $this, 'update_inventory_product' ],
+                    'args'                => $this->get_collection_params(),
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_manager' );
+                    },
+                ],
+                [
+                    'methods'             => WP_REST_Server::DELETABLE,
+                    'callback'            => [ $this, 'delete_inventory_product' ],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_manager' );
+                    },
+                ],
+                'schema' => [ $this, 'get_public_item_schema' ],
+            ]
         );
 
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base . '/delete/(?P<ids>[\d,?]+)',
             [
-				[
-					'methods'             => WP_REST_Server::DELETABLE,
-					'callback'            => [ $this, 'bulk_delete' ],
-					'args'                => [
-						'ids' => [ 'required' => true ],
-					],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_manager' );
-					},
-				],
-				'schema' => [ $this, 'get_public_item_schema' ],
-			]
+                [
+                    'methods'             => WP_REST_Server::DELETABLE,
+                    'callback'            => [ $this, 'bulk_delete' ],
+                    'args'                => [
+                        'ids' => [ 'required' => true ],
+                    ],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_manager' );
+                    },
+                ],
+                'schema' => [ $this, 'get_public_item_schema' ],
+            ]
         );
 
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base . '/types',
             [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_product_types' ],
-					'args'                => [
-						'context' => $this->get_context_param( [ 'default' => 'view' ] ),
-					],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_manager' );
-					},
-				],
-			]
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_product_types' ],
+                    'args'                => [
+                        'context' => $this->get_context_param( [ 'default' => 'view' ] ),
+                    ],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_manager' );
+                    },
+                ],
+            ]
         );
     }
 
@@ -128,7 +129,7 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function get_inventory_products( $request ) {
         $args = [
             'number' => ! empty( $request['number'] ) ? (int) $request['number'] : 20,
-            'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) )
+            'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
         ];
 
         $formatted_items   = [];
@@ -140,9 +141,9 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
         $product_data = erp_acct_get_all_products( $args );
         $total_items  = erp_acct_get_all_products(
             [
-				'count'  => true,
-				'number' => -1,
-			]
+                'count'  => true,
+                'number' => -1,
+            ]
         );
 
         foreach ( $product_data as $item ) {
@@ -237,7 +238,6 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
         return $response;
     }
 
-
     /**
      * Delete an inventory product
      *
@@ -256,7 +256,7 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Prepare a single item for create or update
      *
-     * @param WP_REST_Request $request Request object.
+     * @param WP_REST_Request $request request object
      *
      * @return array $prepared_item
      */
@@ -297,11 +297,11 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Prepare a single user output for response
      *
-     * @param array|object $item
-     * @param WP_REST_Request $request Request object.
-     * @param array $additional_fields (optional)
+     * @param array|object    $item
+     * @param WP_REST_Request $request           request object
+     * @param array           $additional_fields (optional)
      *
-     * @return WP_REST_Response $response Response data.
+     * @return WP_REST_Response $response response data
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
         $item = (object) $item;
@@ -375,7 +375,7 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
                             'arg_options' => [
                                 'sanitize_callback' => 'sanitize_text_field',
                             ],
-                        ]
+                        ],
                     ],
                 ],
                 'category_id'    => [
@@ -397,7 +397,7 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
                             'description' => __( 'Parent category for the resource.', 'erp' ),
                             'type'        => 'integer',
                             'context'     => [ 'view', 'edit' ],
-                        ]
+                        ],
                     ],
                 ],
                 'tax_cat_id'    => [
@@ -419,7 +419,7 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
                             'description' => __( 'Description for the resource.', 'erp' ),
                             'type'        => 'integer',
                             'context'     => [ 'view', 'edit' ],
-                        ]
+                        ],
                     ],
                 ],
                 'vendor'    => [
@@ -431,7 +431,7 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
                             'description' => __( 'Unique identifier for the resource.', 'erp' ),
                             'type'        => 'integer',
                             'context'     => [ 'view', 'edit' ],
-                            'required'    => false
+                            'required'    => false,
                         ],
                         'name' => [
                             'description' => __( 'Name for the resource.', 'erp' ),
@@ -439,8 +439,8 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
                             'context'     => [ 'view', 'edit' ],
                             'arg_options' => [
                                 'sanitize_callback' => 'sanitize_text_field',
-                            ]
-                        ]
+                            ],
+                        ],
                     ],
                 ],
                 'cost_price'      => [
@@ -454,7 +454,7 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'type'        => 'number',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
-                ]
+                ],
             ],
         ];
 
@@ -469,6 +469,7 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function get_product_types() {
         $types    = erp_acct_get_product_types();
         $response = rest_ensure_response( $types );
+
         return $response;
     }
 
@@ -486,6 +487,7 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( ! $ids ) {
             return;
         }
+
         foreach ( $ids as $id ) {
             erp_acct_delete_product( $id );
         }

@@ -17,11 +17,11 @@
                 <?php $xml = erp_web_feed(); ?>
                 <ul class="erp-rss-feed">
                     <?php if ( property_exists( $xml, 'channel' ) ) { ?>
-                        <?php foreach( $xml->channel->item as $entry ) : ?>
-                        <li><a target="_blank" href="<?php echo esc_url( $entry->link.'?utm_source=ERP+Dashboard&utm_medium=CTA&utm_content=Backend&utm_campaign=Docs' ); ?>" title="<?php echo esc_html(  $entry->title ); ?>"><?php echo esc_html( $entry->title ); ?></a></li>
-                        <?php endforeach; ?>
+                        <?php foreach ( $xml->channel->item as $entry ) { ?>
+                        <li><a target="_blank" href="<?php echo esc_url( $entry->link . '?utm_source=ERP+Dashboard&utm_medium=CTA&utm_content=Backend&utm_campaign=Docs' ); ?>" title="<?php echo esc_html(  $entry->title ); ?>"><?php echo esc_html( $entry->title ); ?></a></li>
+                        <?php } ?>
                     <?php } else {
-                        echo "<li>" . esc_html_e( 'No available blog right now.', 'erp' )  . "</li>";
+                        echo '<li>' . esc_html_e( 'No available blog right now.', 'erp' ) . '</li>';
                     } ?>
                 </ul>
 
@@ -45,7 +45,7 @@
                     include WPERP_CRM_VIEWS . '/dashboard-badge.php';
                 }
 
-                if ( erp_is_module_active('accounting') ) {
+                if ( erp_is_module_active( 'accounting' ) ) {
                     include ERP_ACCOUNTING_VIEWS . '/dashboard/dashboard.php';
                 }
             ?>

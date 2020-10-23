@@ -1,13 +1,12 @@
 <?php
+
 namespace WeDevs\ERP\CRM;
 
 /**
-* Form request data handler class
-*
-* @since 1.0
-*
-* @package WP-ERP\CRM
-*/
+ * Form request data handler class
+ *
+ * @since 1.0
+ */
 class Form_Handler {
 
     /**
@@ -22,7 +21,7 @@ class Form_Handler {
         add_action( 'erp_hr_after_employee_permission_set', [ $this, 'crm_permission_set' ], 10, 2 );
 
         $crm = sanitize_title( esc_html__( 'CRM', 'erp' ) );
-        add_action( "admin_init", [ $this, 'contact_groups_bulk_action' ] );
+        add_action( 'admin_init', [ $this, 'contact_groups_bulk_action' ] );
     }
 
     /**
@@ -30,8 +29,8 @@ class Form_Handler {
      *
      * @since 1.0.1
      *
-     * @param  array $post
-     * @param  object $user
+     * @param array  $post
+     * @param object $user
      *
      * @return void
      */
@@ -40,7 +39,7 @@ class Form_Handler {
         $enable_crm_agent   = isset( $post['crm_agent'] ) ? filter_var( $post['crm_agent'], FILTER_VALIDATE_BOOLEAN ) : false;
 
         $crm_manager_role = erp_crm_get_manager_role();
-        $crm_agent_role = erp_crm_get_agent_role();
+        $crm_agent_role   = erp_crm_get_agent_role();
 
         // TODO::We are duplicating \WeDevs\ERP\CRM\User_Profile->update_user() process here,
         // which we shouldn't. We should update above method and use that.
@@ -56,7 +55,6 @@ class Form_Handler {
             } else {
                 $user->remove_role( $crm_agent_role );
             }
-
         }
     }
 
@@ -85,7 +83,6 @@ class Form_Handler {
      * @return void
      */
     public function contact_groups_bulk_action() {
-
         if ( current_user_can( 'erp_crm_agent' ) ) {
             return;
         }
@@ -94,7 +91,7 @@ class Form_Handler {
             return;
         }
 
-        if ( empty( $_GET['section'] ) ||  $_GET['section'] != 'contact-groups' ) {
+        if ( empty( $_GET['section'] ) || $_GET['section'] != 'contact-groups' ) {
             return;
         }
 
@@ -108,14 +105,12 @@ class Form_Handler {
             }
         }
 
-
         $customer_table = new \WeDevs\ERP\CRM\Contact_Subscriber_List_Table();
         $action         = $customer_table->current_action();
 
         if ( $action ) {
-
             $redirect_uri = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
-            $redirect = remove_query_arg( array( '_wp_http_referer', '_wpnonce', 'filter_group' ),  $redirect_uri );
+            $redirect     = remove_query_arg( [ '_wp_http_referer', '_wpnonce', 'filter_group' ], $redirect_uri );
 
             switch ( $action ) {
 

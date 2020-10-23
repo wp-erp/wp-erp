@@ -30,6 +30,6 @@ add_filter( 'erp_map_meta_caps', 'erp_crm_map_meta_caps', 10, 4 );
 add_filter( 'erp_get_people_pre_query', 'erp_crm_contact_advance_filter', 10, 2 );
 add_filter( 'erp_get_people_pre_query', 'erp_crm_is_people_belongs_to_saved_search', 10, 2 );
 add_filter( 'woocommerce_prevent_admin_access', 'erp_crm_wc_prevent_admin_access' );
-add_filter( 'erp_login_redirect', 'erp_crm_login_redirect', 10, 2);
+add_filter( 'erp_login_redirect', 'erp_crm_login_redirect', 10, 2 );
 add_filter( 'editable_roles', 'erp_crm_filter_editable_roles' );
 add_filter( 'crm_vue_customer_script', 'crm_vue_customer_script_dep' );

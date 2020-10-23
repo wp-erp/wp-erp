@@ -1,9 +1,10 @@
 <?php
+
 namespace WeDevs\ERP;
 
 use WeDevs\ERP\Framework\Traits\Hooker;
 
-/**
+/*
  * Installation related functions and actions.
  *
  * @author Tareq Hasan
@@ -11,45 +12,45 @@ use WeDevs\ERP\Framework\Traits\Hooker;
  */
 
 // don't call the file directly
-if ( !defined( 'ABSPATH' ) ) exit;
+if ( !defined( 'ABSPATH' ) ) {
+    exit;
+}
 
 /**
  * Installer Class
- *
- * @package ERP
  */
 class Updates {
-
     use Hooker;
 
     /** @var array DB updates that need to be run */
     private static $updates = [
-        '1.0'    => 'updates/update-1.0.php',
-        '1.1.0'  => 'updates/update-1.1.0.php',
-        '1.1.1'  => 'updates/update-1.1.1.php',
-        '1.1.2'  => 'updates/update-1.1.2.php',
-        '1.1.3'  => 'updates/update-1.1.3.php',
-        '1.1.5'  => 'updates/update-1.1.5.php',
-        '1.1.6'  => 'updates/update-1.1.6.php',
-        '1.1.7'  => 'updates/update-1.1.7.php',
-        '1.1.8'  => 'updates/update-1.1.8.php',
-        '1.1.9'  => 'updates/update-1.1.9.php',
-        '1.1.17' => 'updates/update-1.1.17.php',
-        '1.2.1'  => 'updates/update-1.2.1.php',
-        '1.2.2'  => 'updates/update-1.2.2.php',
-        '1.2.5'  => 'updates/update-1.2.5.php',
-        '1.2.7'  => 'updates/update-1.2.7.php',
-        '1.3.2'  => 'updates/update-1.3.2.php',
-        '1.3.3'  => 'updates/update-1.3.3.php',
-        '1.3.4'  => 'updates/update-1.3.4.php',
-        '1.5.0'  => 'updates/update-1.5.0.php',
-        '1.5.2'  => 'updates/update-1.5.2.php',
-        '1.5.4'  => 'updates/update-1.5.4.php',
-        '1.5.5'  => 'updates/update-1.5.5.php',
-        '1.5.6'  => 'updates/update-1.5.6.php',
+        '1.0'     => 'updates/update-1.0.php',
+        '1.1.0'   => 'updates/update-1.1.0.php',
+        '1.1.1'   => 'updates/update-1.1.1.php',
+        '1.1.2'   => 'updates/update-1.1.2.php',
+        '1.1.3'   => 'updates/update-1.1.3.php',
+        '1.1.5'   => 'updates/update-1.1.5.php',
+        '1.1.6'   => 'updates/update-1.1.6.php',
+        '1.1.7'   => 'updates/update-1.1.7.php',
+        '1.1.8'   => 'updates/update-1.1.8.php',
+        '1.1.9'   => 'updates/update-1.1.9.php',
+        '1.1.17'  => 'updates/update-1.1.17.php',
+        '1.2.1'   => 'updates/update-1.2.1.php',
+        '1.2.2'   => 'updates/update-1.2.2.php',
+        '1.2.5'   => 'updates/update-1.2.5.php',
+        '1.2.7'   => 'updates/update-1.2.7.php',
+        '1.3.2'   => 'updates/update-1.3.2.php',
+        '1.3.3'   => 'updates/update-1.3.3.php',
+        '1.3.4'   => 'updates/update-1.3.4.php',
+        '1.5.0'   => 'updates/update-1.5.0.php',
+        '1.5.2'   => 'updates/update-1.5.2.php',
+        '1.5.4'   => 'updates/update-1.5.4.php',
+        '1.5.5'   => 'updates/update-1.5.5.php',
+        '1.5.6'   => 'updates/update-1.5.6.php',
         '1.5.16'  => 'updates/update-1.5.16.php',
-        '1.6.0' => 'updates/update-1.6.0.php',
-        '1.6.3' => 'updates/update-1.6.3.php',
+        '1.6.0'   => 'updates/update-1.6.0.php',
+        '1.6.3'   => 'updates/update-1.6.3.php',
+        '1.6.5'   => 'updates/update-1.6.5.php',
     ];
 
     /**
@@ -68,7 +69,7 @@ class Updates {
      *
      * @return void
      */
-    function __construct() {
+    public function __construct() {
         $this->action( 'admin_notices', 'show_update_notice' );
         $this->action( 'admin_init', 'do_updates' );
 
@@ -81,7 +82,7 @@ class Updates {
      *
      * @since 1.0
      *
-     * @return boolean
+     * @return bool
      */
     public function is_needs_update() {
         $installed_version = get_option( 'wp_erp_version' );
@@ -143,8 +144,8 @@ class Updates {
         global $bg_process;
         global $bg_process_people_trn;
 
-        $bg_process                        = new \WeDevs\ERP\Updates\BP\ERP_ACCT_BG_Process;
-        $bg_process_people_trn             = new \WeDevs\ERP\Updates\BP\ERP_ACCT_BG_Process_People_Trn;
+        $bg_process            = new \WeDevs\ERP\Updates\BP\ERP_ACCT_BG_Process();
+        $bg_process_people_trn = new \WeDevs\ERP\Updates\BP\ERP_ACCT_BG_Process_People_Trn();
 
         if ( isset( $_GET['wperp_do_update'] ) && sanitize_text_field( wp_unslash( $_GET['wperp_do_update'] ) ) ) {
             $this->perform_updates();

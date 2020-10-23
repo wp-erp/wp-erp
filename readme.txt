@@ -3,9 +3,9 @@ Contributors: tareq1988, nizamuddinbabu, wedevs
 Donate Link: https://tareq.co/donate
 Tags: business manager, erp, accounting, crm, hr, project manager, small business, SME, contact, contacts, Customer Relationship Management, employee, leave management, hr, human resource management, job, jobs, job listing, lead management, opportunity, schedule, task, lead, holiday, company
 Requires at least: 4.4
-Tested up to: 5.5
+Tested up to: 5.5.1
 Requires PHP: 5.6
-Stable tag: 1.6.4
+Stable tag: 1.6.6
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -111,17 +111,38 @@ Free features of [WPERP Accounting](https://wperp.com/accounting/) module:
 Getting Started with WP ERP is only a matter of moments.
 Check out the detailed [documentation](https://wperp.com/documentation/) created by us to help you out to run WP ERP in the best way.
 
-= ♦️Powerful Extensions available in Premium Plans♦️ =
-A host of WordPress extensions are available at your service to supercharge your all-in-one business manager, WP ERP:
+== ♦ WP ERP Pro - Premium extensions & features ♦ ==
+Automate & Manage your growing business even better using Human Resource, Customer Relations, Accounts Management right inside your WordPress
+
+= Why WP ERP Pro =
+Build a modern, convenient and reliable business management system for your company
+
+* Gain access to nine powerful extensions and different features with a single purchase
+* Add only those individual extensions which suit your business
+* Priority support system
+* Save money: User-based Pricing
+* Easy & simple to upgrade or downgrade
+
+= What you will get =
+Take your business to the next level with 9 accessible premium extensions & different features
+
+* **[Advanced Leave Management](https://wperp.com/downloads/advanced-leave-management/)**: Create and manage multiple types of leave across your organisation.
+* **[WP ERP HR Frontend](https://wperp.com/downloads/hr-frontend/)**: Bring the powerful HR Module of WP ERP to your web front using this handy extension. Let staff check-in, check-out, and even take leaves from the web-front.
+* **[Awesome Support Sync](https://wperp.com/downloads/awesome-support-sync/)**: Using Awesome Support to provide support to your customers? Easily bring them to your CRM so you get full relationship management features!
+* **[Gravity Forms Sync](https://wperp.com/downloads/crm-gravity-forms/)**: Create users in the CRM module automatically with the data you receive on a form created by Gravity Forms.
+* **[Help Scout Integration](https://wperp.com/downloads/help-scout-integration/)**: Sync Help Scout contacts with your CRM & view your CRM contact data on Help Scout with this two-way integration!
+* **[Mailchimp Contacts Sync](https://wperp.com/downloads/mailchimp-contacts-sync/):** Import and Sync all your MailChimp mailing lists into WP-ERP CRM system and vice versa.
+* **[Salesforce Contacts Sync](https://wperp.com/downloads/salesforce-contact-sync/)**: Import and Sync all your SalesForce mailing lists into WP-ERP CRM system and vice versa.
+* **[Hubspot Contacts Sync](https://wperp.com/downloads/hubspot-contacts-sync/)**: Import and Sync all your Hubspot contacts into WP-ERP CRM system and vice versa.
+* **[Zendesk Integration](https://wperp.com/downloads/zendesk-integration/)**: Increase CRM contacts, lead and customers by integrating Zendesk ticket support system and respond to clients faster.
+
+= Choose other premium extensions that match your business =
 
 * **[Payment Gateway](https://wperp.com/downloads/payment-gateway/)**: This feature extension allows you to take payments from most popular payment gateways- PayPal and Stripe.
 * **[Recruitment](https://wperp.com/downloads/recruitment/)**: This is a Job Manager and complete Job Vacancy, Resume and Employment Manager. You can directly create, publish and manage your recruitment from your WordPress powered company website, as well as manage candidates.
-experience.
 * **[Attendance](https://wperp.com/downloads/attendance/)**: Track work hours of your employees and balance them with their leaves with this feature extension.
-* **[HR Frontend](https://wperp.com/downloads/hr-frontend/)**: Bring the powerful HR Module of WP ERP to your web front using this handy extension. Let staff check-in, check-out, and even take leaves from the web-front.
 * **[Training](https://wperp.com/downloads/training/)**: Monitor training programs for different teams & employees.
 * **[WoCommerce Integration](https://wperp.com/downloads/woocommerce-crm/)**: Sync your WooCommerce order details and customer data with WP ERP and allow your CRM agent to track your sales.
-* **[Email Campaign](https://wperp.com/downloads/wp-erp-email-campaign/)**: Create personalized, automated and beautifully designed outbound emails for marketing, campaigns or customer follow up.
 * **[Custom Field Builder](https://wperp.com/downloads/custom-field-builder/)**: Add more fields to your ERP forms.
 * **[Payroll](https://wperp.com/downloads/payroll/)**: Manage your employee salaries more easily and automate the payment system with this amazing extension of WP ERP
 * **[Deals](https://wperp.com/downloads/deals/)**: Deals is a great tool to manage and guide your CRM agents on a faster and organized sales process.
@@ -129,15 +150,7 @@ experience.
 * **[Reimbursement](https://wperp.com/downloads/reimbursement/)**: Manage your employee expenses and complete payments in an easy and effective way using ERP Reimbursement.
 * **[Document Manager](https://wperp.com/downloads/document-manager/)**: Store and access your company and employee documents on-site.
 * **[Inventory](https://wperp.com/downloads/inventory/)**: Stock management for your products within your accounting software.
-* **[SMS Notification](https://wperp.com/downloads/sms-notification/)**: Send SMS notifications to your CRM contacts and employees in your HR module directly from your ERP system using famous SMS gateways.
 * **[Asset Manager](https://wperp.com/downloads/asset-manager/)**: Create your company assets virtually, assign them to employees and keep track of all your company assets in one place.
-* **[Gravity Forms](https://wperp.com/downloads/crm-gravity-forms/)**: Create users in CRM module automatically with the data you receive on a form created by Gravity Forms.
-* **[Salesforce Contacts Sync](https://wperp.com/downloads/salesforce-contact-sync/)**: Import and Sync all your SalesForce mailing lists into WP-ERP CRM system and vice versa.
-* **[Hubspot Contacts Sync](https://wperp.com/downloads/hubspot-contacts-sync/)**: Import and Sync all your Hubspot contacts into WP-ERP CRM system and vice versa.
-* **[Mailchimp Contacts Sync](https://wperp.com/downloads/mailchimp-contacts-sync/):** Import and Sync all your MailChimp mailing lists into WP-ERP CRM system and vice versa.
-* **[Help Scout Sync](https://wperp.com/downloads/help-scout-integration/)**: Sync Help Scout contacts with your CRM & view your CRM contact data on Help Scout with this two-way integration!
-* **[Awesome Support Sync](https://wperp.com/downloads/awesome-support-sync/)**: Using Awesome Support to provide support to your customers? Easily bring them to your CRM so you get full relationship management features!
-* **[Zendesk Sync](https://wperp.com/downloads/zendesk-integration/)**: Increase CRM contacts, lead and customers by integrating Zendesk ticket support system and respond to clients faster.
 
 = Some of our resources on WP ERP: =
 👉 [WP ERP v1.4 Brings a Critical Revamp to the Entire User Interface](https://wperp.com/22918/wp-erp-1-4-new-user-interface-and-menu/)
@@ -266,6 +279,41 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+
+= v1.6.6 -> September 25, 2020 =
+--------------------------
+- [fix] Fixed category creating issue, set default value as 0 if no parent category assigned
+- [fix] Fixed notice display conflict
+- [fix] Fixed imported csv count issue
+
+= v1.6.5 -> September 24, 2020 =
+--------------------------
+- [new] Added csv data validation when importing contact, company & employee
+- [new] Added csv data validation when importing holidays
+- [update] Updated parseCsv library to support php 7.4
+- [update] Updated Trix Editor version
+- [fix] Fixed Menus responsive issue with iPad 11 inch view
+- [fix] Fixed email heading html tag support issue
+- [new] added support for "dd.mm.yyyy" as new ERP "Date Format"
+- [new] added new filter hook “erp_pre_contact_form_people_data”
+- [new] added new action hook “erp_crm_email_opened”
+- [new] added various tooltips for easy access of various features
+
+- [fix] Fixed responsive issue of leave application form
+- [fix] Fixed Leave requests table 'Employee Search' filter
+- [fix] fixed timezone problem of leave request modal
+- [new] added employee type filter on leave policy, now user can create leave policy based on employee types
+- [update] added proper redirect based on various actions on hrm leave related sections
+
+- [fix] Fixed issue with Company and contact filtering where data not loading correctly
+- [fix] Fixed Problem creating CRM schedule/notes(All text field) from Mobile
+- [fix] fixed Import contacts from WP users is broken
+
+- [new] Increased accounting DB fields limit to decimal(20,2)
+- [update] add transaction charge for payment
+- [update] add new sub head 'bank transaction charge' to ledger
+- [update] update opening balance/ acct financial year date picker problem
+- [update] update trial balance, Balance Sheet: total Cash At Bank, cash At Bank Breakdowns, total Loan At Bank
 
 = v1.6.4 -> August 25, 2020 =
 --------------------------

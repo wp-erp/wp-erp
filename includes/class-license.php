@@ -1,6 +1,8 @@
 <?php
+
 namespace WeDevs\ERP;
 
+use EDD_SL_Plugin_Updater;
 use WeDevs\ERP\Framework\Traits\Hooker;
 
 /**
@@ -9,12 +11,16 @@ use WeDevs\ERP\Framework\Traits\Hooker;
  * @author WP ERP
  */
 class License {
-
     use Hooker;
 
+    /**
+     * API Endpoint
+     *
+     * @var string
+     */
     private $api_url = 'https://wperp.com/';
 
-    function __construct( $file, $addon_name, $version, $author, $api_url = null ) {
+    public function __construct( $file, $addon_name, $version, $author, $api_url = null ) {
 
         // bail out if it's a local server
         if ( $this->is_local_server() ) {
@@ -39,7 +45,7 @@ class License {
      * @return void
      */
     private function includes() {
-        if ( ! class_exists( 'EDD_SL_Plugin_Updater' ) )  {
+        if ( ! class_exists( 'EDD_SL_Plugin_Updater' ) ) {
             require_once __DIR__ . '/lib/EDD_SL_Plugin_Updater.php';
         }
     }
@@ -47,13 +53,13 @@ class License {
     /**
      * Check if the current server is localhost
      *
-     * @return boolean
+     * @return bool
      */
     private function is_local_server() {
         $addr = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
         $host = isset( $_SERVER['HTTP_HOST'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : '';
 
-        $is_local = ( in_array( $addr, array( '127.0.0.1', '::1' ) ) || substr( $host, -4 ) == '.dev' );
+        $is_local = ( in_array( $addr, [ '127.0.0.1', '::1' ] ) || substr( $host, -4 ) == '.dev' );
 
         return apply_filters( 'erp_lc_is_local_server', $is_local );
     }
@@ -117,7 +123,7 @@ class License {
     /**
      * Register the add-on for the license settings page
      *
-     * @param  array  $settings
+     * @param array $settings
      *
      * @return array
      */
@@ -127,7 +133,7 @@ class License {
             'id'      => $this->get_license_option_key(),
             'license' => $this->get_license_key(),
             'version' => $this->version,
-            'status'  => $this->get_license_status()
+            'status'  => $this->get_license_status(),
         ];
 
         return $settings;
@@ -144,11 +150,11 @@ class License {
             'license'   => $this->get_license_key(),
             'author'    => $this->author,
             'item_name' => $this->item_name,
-            'url'       => home_url()
+            'url'       => home_url(),
         ];
 
         // Setup the updater
-        $edd_updater = new \EDD_SL_Plugin_Updater(
+        $edd_updater = new EDD_SL_Plugin_Updater(
             $this->api_url,
             $this->file,
             $args
@@ -157,19 +163,19 @@ class License {
 
     public function api_request( $action = 'check_license' ) {
         // data to send in our API request
-        $api_params = array(
+        $api_params = [
             'edd_action'=> $action,
             'license'   => $this->get_license_key(),
             'item_name' => urlencode( $this->item_name ),
-            'url'       => home_url()
-        );
+            'url'       => home_url(),
+        ];
 
         // Call the API
-        $response = wp_remote_post( $this->api_url, array(
+        $response = wp_remote_post( $this->api_url, [
             'timeout'   => 15,
             'sslverify' => false,
-            'body'      => $api_params
-        ) );
+            'body'      => $api_params,
+        ] );
 
         // make sure the response came back okay
         if ( is_wp_error( $response ) ) {
@@ -222,6 +228,7 @@ class License {
 
             // don't do anything if we have a valid license
             $license_status = $this->get_license_status();
+
             if ( is_object( $license_status ) && 'valid' === $license_status->license ) {
                 return;
             }
@@ -254,6 +261,7 @@ class License {
 
         if ( empty( $license_key ) ) {
             $this->show_error( sprintf( __( 'Please <a href="%s">enter</a> <strong>%s</strong> license key to get automatic updates and support', 'erp' ), $url, $this->item_name ) );
+
             return;
         }
 
@@ -271,20 +279,20 @@ class License {
     /**
      * Show a error message
      *
-     * @param  string  $message
+     * @param string $message
      *
      * @return void
      */
     public function show_error( $message ) {
         echo '<div class="error">';
-            echo '<p>' . wp_kses_post( $message ) . '</p>';
+        echo '<p>' . wp_kses_post( $message ) . '</p>';
         echo '</div>';
     }
 
     /**
      * Displays message inline on plugin row that the license key is missing
      *
-     * @return  void
+     * @return void
      */
     public function plugin_row_license_missing( $plugin_data, $version_info ) {
         static $showed_imissing_key_message;
@@ -292,10 +300,8 @@ class License {
         $license = $this->get_license_status();
 
         if ( ( ! is_object( $license ) || 'valid' !== $license->license ) && empty( $showed_imissing_key_message[ $this->get_license_option_key() ] ) ) {
-
             echo '&nbsp;<strong><a href="' . esc_url( admin_url( 'admin.php?page=erp-settings&tab=erp-license' ) ) . '">' . esc_html__( 'Enter valid license key for automatic updates.', 'erp' ) . '</a></strong>';
             $showed_imissing_key_message[ $this->get_license_option_key() ] = true;
         }
-
     }
 }

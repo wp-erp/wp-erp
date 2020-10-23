@@ -1,15 +1,14 @@
 <?php
+
 namespace WeDevs\ERP\Accounting\Includes\Classes;
 
 /**
  * Loads Accounting users in admin area
  */
 class User_Profile {
+
     /**
      * The HR users admin loader
-     *
-     * @package WP-ERP\HR
-     * @subpackage Administration
      */
     public function __construct() {
         $this->setup_actions();
@@ -20,7 +19,7 @@ class User_Profile {
      *
      * @return void
      */
-    function setup_actions() {
+    public function setup_actions() {
 
         // Bail if in network admin
         if ( is_network_admin() ) {
@@ -28,14 +27,18 @@ class User_Profile {
         }
 
         // User profile edit/display actions
-        add_action( 'erp_user_profile_role', array( $this, 'role' ) );
-        add_action( 'erp_update_user', array( $this, 'update_user' ), 10, 2 );
+        add_action( 'erp_user_profile_role', [ $this, 'role' ] );
+        add_action( 'erp_update_user', [ $this, 'update_user' ], 10, 1 );
     }
 
-    function update_user( $user_id, $post ) {
+    public function update_user( $user_id ) {
+        // verify nonce
+        if ( ! isset( $_REQUEST['_erp_nonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_erp_nonce'] ), 'user_profile_update_role' ) ) {
+            return;
+        }
 
         // AC role we want the user to have
-        $new_role = isset( $post['ac_manager'] ) ? sanitize_text_field( $post['ac_manager'] ) : false;
+        $new_role = isset( $_POST['ac_manager'] ) ? sanitize_text_field( wp_unslash( $_POST['ac_manager'] ) ) : false;
 
         if ( ! $new_role ) {
             return;
@@ -56,12 +59,11 @@ class User_Profile {
         }
     }
 
-    function role( $profileuser ) {
+    public function role( $profileuser ) {
         if ( ! current_user_can( 'manage_options' ) ) {
             return;
         }
-        $checked = in_array( erp_ac_get_manager_role(), $profileuser->roles, true ) ? 'checked' : '';
-        ?>
+        $checked = in_array( erp_ac_get_manager_role(), $profileuser->roles, true ) ? 'checked' : ''; ?>
         <label for="erp-ac-manager">
             <input type="checkbox" id="erp-ac-manager" <?php echo esc_attr( $checked ); ?> name="ac_manager" value="<?php echo esc_attr( erp_ac_get_manager_role() ); ?>">
             <span class="description"><?php esc_html_e( 'Accounting Manager', 'erp' ); ?></span>
@@ -69,5 +71,4 @@ class User_Profile {
 
         <?php
     }
-
 }

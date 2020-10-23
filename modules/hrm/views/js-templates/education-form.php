@@ -1,37 +1,37 @@
 <div class="work-exp-form-wrap">
 
     <div class="row">
-        <?php erp_html_form_input( array(
-            'label'    => __( 'School Name', 'erp' ),
-            'name'     => 'school',
-            'value'    => '{{ data.school }}',
-            'required' => true,
-            'placeholder' => __( 'ABC School', 'erp' )
-        ) ); ?>
+        <?php erp_html_form_input( [
+            'label'       => __( 'School Name', 'erp' ),
+            'name'        => 'school',
+            'value'       => '{{ data.school }}',
+            'required'    => true,
+            'placeholder' => __( 'ABC School', 'erp' ),
+        ] ); ?>
     </div>
 
     <div class="row">
-        <?php erp_html_form_input( array(
+        <?php erp_html_form_input( [
             'label'       => __( 'Degree', 'erp' ),
             'name'        => 'degree',
             'value'       => '{{ data.degree }}',
             'required'    => true,
-            'placeholder' => __( 'Bachelor in Science', 'erp' )
-        ) ); ?>
+            'placeholder' => __( 'Bachelor in Science', 'erp' ),
+        ] ); ?>
     </div>
 
     <div class="row">
-        <?php erp_html_form_input( array(
+        <?php erp_html_form_input( [
             'label'       => __( 'Field of Study', 'erp' ),
             'name'        => 'field',
             'value'       => '{{ data.field }}',
             'required'    => true,
-            'placeholder' => __( 'Physics', 'erp' )
-        ) ); ?>
+            'placeholder' => __( 'Physics', 'erp' ),
+        ] ); ?>
     </div>
 
     <div class="row">
-        <?php erp_html_form_input( array(
+        <?php erp_html_form_input( [
             'label'       => __( 'Year of Completion', 'erp' ),
             'name'        => 'finished',
             'type'        => 'number',
@@ -41,38 +41,38 @@
             'custom_attr' => [
                 'min'  => 1970,
                 'max'  => 2099,
-                'step' => 1
-            ]
-        ) ); ?>
+                'step' => 1,
+            ],
+        ] ); ?>
     </div>
 
     <div class="row">
-        <?php erp_html_form_input( array(
+        <?php erp_html_form_input( [
             'label'       => __( 'Notes', 'erp' ),
             'name'        => 'notes',
             'type'        => 'textarea',
             'value'       => '{{ data.notes }}',
-            'placeholder' => __( 'Additional notes', 'erp' )
-        ) ); ?>
+            'placeholder' => __( 'Additional notes', 'erp' ),
+        ] ); ?>
     </div>
 
     <div class="row">
-        <?php erp_html_form_input( array(
+        <?php erp_html_form_input( [
             'label'       => __( 'Interests', 'erp' ),
             'name'        => 'interest',
             'type'        => 'textarea',
-            'value'       => '{{ data.interest }}'
-        ) ); ?>
+            'value'       => '{{ data.interest }}',
+        ] ); ?>
     </div>
 
     <div class="row">
-        <?php erp_html_form_input( array(
-            'label'       => __('Expiration date', 'erp'),
+        <?php erp_html_form_input( [
+            'label'       => __( 'Expiration date', 'erp' ),
             'name'        => 'expiration_date',
             'type'        => 'text',
             'value'       => '{{ data.expiration_date }}',
-            'class'       => 'erp-date-field'
-        ) ); ?>
+            'class'       => 'erp-date-field',
+        ] ); ?>
     </div>
 
     <?php wp_nonce_field( 'erp-hr-education-form' ); ?>

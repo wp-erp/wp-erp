@@ -19,22 +19,32 @@
         "symfony/var-dumper": "^2.8",
         "google/apiclient": "^2.0",
         "google/apiclient-services": "^0.64",
-        "appsero/client": "^1.1"
+        "appsero/client": "^1.1",
+        "parsecsv/php-parsecsv": "^1.2"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "3.3.2",
         "wp-coding-standards/wpcs": "dev-master",
         "dealerdirect/phpcodesniffer-composer-installer": "^0.4.3",
+        "tareq1988/wp-php-cs-fixer": "dev-master",
         "lucatume/wp-browser": "^2.2",
-        "fzaninotto/faker": "^1.9@dev"
+        "fzaninotto/faker": "^1.9@dev",
+        "phpcompatibility/phpcompatibility-wp": "dev-master",
+        "phpunit/phpunit": "^5.7.27"
+    },
+    "config": {
+        "platform": {
+            "php": "5.6.40"
+        }
     },
     "scripts": {
         "phpcs": [
-            "phpcs -p -s"
+            "./vendor/bin/phpcs -ps --report-file=phpcs-report.txt"
         ],
         "phpcbf": [
-            "phpcbf -p"
-        ]
+            "./vendor/bin/phpcbf -p"
+        ],
+        "phpcsf": "php-cs-fixer --config=./.php_cs fix"
     },
     "autoload" : {
         "psr-4" : {

@@ -1,33 +1,33 @@
 <div class="work-exp-form-wrap">
 
     <div class="row">
-        <?php erp_html_form_input( array(
-            'label'    => __( 'Name', 'erp' ),
-            'name'     => 'name',
-            'value'    => '{{ data.name }}',
-            'required' => true,
-            'placeholder' => __( 'Name of the person', 'erp' )
-        ) ); ?>
+        <?php erp_html_form_input( [
+            'label'       => __( 'Name', 'erp' ),
+            'name'        => 'name',
+            'value'       => '{{ data.name }}',
+            'required'    => true,
+            'placeholder' => __( 'Name of the person', 'erp' ),
+        ] ); ?>
     </div>
 
     <div class="row">
-        <?php erp_html_form_input( array(
+        <?php erp_html_form_input( [
             'label'       => __( 'Relationship', 'erp' ),
             'name'        => 'relation',
             'value'       => '{{ data.relation }}',
             'required'    => true,
-            'placeholder' => __( 'Father', 'erp' )
-        ) ); ?>
+            'placeholder' => __( 'Father', 'erp' ),
+        ] ); ?>
     </div>
 
     <div class="row">
-        <?php erp_html_form_input( array(
+        <?php erp_html_form_input( [
             'label'       => __( 'Date of Birth', 'erp' ),
             'name'        => 'dob',
             'value'       => '{{ data.dob }}',
             'class'       => 'erp-date-field',
-            'placeholder' => '1988-03-18'
-        ) ); ?>
+            'placeholder' => '1988-03-18',
+        ] ); ?>
     </div>
 
     <?php wp_nonce_field( 'erp-hr-dependent-form' ); ?>
