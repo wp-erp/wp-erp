@@ -1,4 +1,5 @@
 <?php
+
 namespace WeDevs\ERP\CRM\Emails;
 
 use WeDevs\ERP\Email;
@@ -8,16 +9,15 @@ use WeDevs\ERP\Framework\Traits\Hooker;
  * New Task Assigned
  */
 class New_Task_Assigned extends Email {
-
     use Hooker;
 
-    function __construct() {
+    public function __construct() {
         $this->id          = 'new-task-assigned';
         $this->title       = __( 'New Task Assigned', 'erp' );
         $this->description = __( 'New task assigned notification to employee.', 'erp' );
 
-        $this->subject     = __( 'New task has been assigned to you', 'erp');
-        $this->heading     = __( 'New Task Assigned', 'erp');
+        $this->subject     = __( 'New task has been assigned to you', 'erp' );
+        $this->heading     = __( 'New Task Assigned', 'erp' );
 
         $this->find = [
             'employee_name' => '{employee_name}',
@@ -31,7 +31,7 @@ class New_Task_Assigned extends Email {
         parent::__construct();
     }
 
-    function get_args() {
+    public function get_args() {
         return [
             'email_heading' => $this->heading,
             'email_body'    => wpautop( $this->get_option( 'body' ) ),
@@ -55,12 +55,11 @@ class New_Task_Assigned extends Email {
         $this->heading = $this->get_option( 'heading', $this->heading );
         $this->subject = $this->get_option( 'subject', $this->subject );
 
-
-        foreach ($data['user_ids'] as $id) {
+        foreach ( $data['user_ids'] as $id ) {
             $employee = new \WeDevs\ERP\HRM\Employee( intval( $id ) );
 
             $this->recipient    = $employee->user_email;
-            $this->replace = [
+            $this->replace      = [
                 'employee_name' => $employee->get_full_name(),
                 'task_title'    => $extra->task_title,
                 'due_date'      => erp_format_date( $activity->start_date ),
@@ -72,5 +71,4 @@ class New_Task_Assigned extends Email {
             }
         }
     }
-
 }

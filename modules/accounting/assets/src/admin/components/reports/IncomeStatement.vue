@@ -133,7 +133,7 @@ export default {
                 this.end_date   = erp_acct_var.current_date;
             };
 
-            this.updateDate();
+           // this.updateDate();
 
             this.fetchItems();
         });

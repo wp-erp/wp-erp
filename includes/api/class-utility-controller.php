@@ -1,10 +1,12 @@
 <?php
+
 namespace WeDevs\ERP\API;
 
-use WP_Error;
 use WP_REST_Response;
 use WP_REST_Server;
+
 class Utility_Controller extends REST_Controller {
+
     /**
      * Endpoint namespace.
      *
@@ -23,13 +25,13 @@ class Utility_Controller extends REST_Controller {
      * Register the routes for the objects of the controller.
      */
     public function register_routes() {
-        register_rest_route( $this->namespace, '/' . $this->rest_base .'/get-active-plugins', [
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/get-active-plugins', [
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_active_plugins' ],
                 'args'                => $this->get_collection_params(),
                 'permission_callback' => function ( $request ) {
-                    return current_user_can('erp_view_list' );
+                    return current_user_can( 'erp_view_list' );
                 },
             ],
             'schema' => [ $this, 'get_public_item_schema' ],
@@ -45,9 +47,9 @@ class Utility_Controller extends REST_Controller {
      *
      * @return mixed|WP_REST_Response
      */
-    public function get_active_plugins( $request ){
-        $active_plugins = get_option('active_plugins');
-        $response = rest_ensure_response( $active_plugins );
+    public function get_active_plugins( $request ) {
+        $active_plugins = get_option( 'active_plugins' );
+        $response       = rest_ensure_response( $active_plugins );
 
         return $response;
     }

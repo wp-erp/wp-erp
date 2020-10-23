@@ -2,11 +2,12 @@
 
 namespace WeDevs\ERP\Accounting\API;
 
-use WP_REST_Server;
-use WP_REST_Response;
 use WP_Error;
+use WP_REST_Response;
+use WP_REST_Server;
 
 class Currencies_Controller extends \WeDevs\ERP\API\REST_Controller {
+
     /**
      * Endpoint namespace.
      *
@@ -29,16 +30,16 @@ class Currencies_Controller extends \WeDevs\ERP\API\REST_Controller {
             $this->namespace,
             '/' . $this->rest_base,
             [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_currencies' ],
-					'args'                => [],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_view_dashboard' );
-					},
-				],
-				'schema' => [ $this, 'get_item_schema' ],
-			]
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_currencies' ],
+                    'args'                => [],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_view_dashboard' );
+                    },
+                ],
+                'schema' => [ $this, 'get_item_schema' ],
+            ]
         );
     }
 
@@ -59,6 +60,7 @@ class Currencies_Controller extends \WeDevs\ERP\API\REST_Controller {
         $total_items = erp_acct_get_all_currencies( true );
 
         $formatted_items = [];
+
         foreach ( $items as $item ) {
             $data              = $this->prepare_item_for_response( $item, $request, $additional_fields );
             $formatted_items[] = $this->prepare_response_for_collection( $data );
@@ -75,11 +77,11 @@ class Currencies_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Prepare output for response
      *
-     * @param object $item
-     * @param WP_REST_Request $request Request object.
-     * @param array $additional_fields (optional)
+     * @param object          $item
+     * @param WP_REST_Request $request           request object
+     * @param array           $additional_fields (optional)
      *
-     * @return WP_REST_Response $response Response data.
+     * @return WP_REST_Response $response response data
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
         $item = (object) $item;
@@ -99,7 +101,6 @@ class Currencies_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         return $response;
     }
-
 
     /**
      * Get currency's schema, conforming to JSON Schema

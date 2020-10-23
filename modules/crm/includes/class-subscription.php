@@ -1,14 +1,15 @@
 <?php
+
 namespace WeDevs\ERP\CRM;
 
-use WeDevs\ERP\Framework\Traits\Hooker;
 use WeDevs\ERP\Framework\Traits\Ajax;
+use WeDevs\ERP\Framework\Traits\Hooker;
+use WP_Error;
 
 /**
  * ERP Subscription
  */
 class Subscription {
-
     use Hooker;
     use Ajax;
 
@@ -44,7 +45,7 @@ class Subscription {
      *
      * @since 1.1.17
      *
-     * @var integer
+     * @var int
      */
     public $sub_page_id = 0;
 
@@ -53,9 +54,9 @@ class Subscription {
      *
      * @since 1.2.2
      *
-     * @var integer
+     * @var int
      */
-    public  $people_id = 0;
+    public $people_id = 0;
 
     /**
      * Subscriber hash that stored in erp_peoplemeta table
@@ -64,7 +65,7 @@ class Subscription {
      *
      * @var string
      */
-    public  $hash = '';
+    public $hash = '';
 
     /**
      * Initializes the class
@@ -164,35 +165,33 @@ class Subscription {
             'email_lbl'  => isset( $attrs['email'] ) ? $attrs['email'] : __( 'Email', 'erp' ),
             'extra_arg'  => isset( $attrs['extra_arg'] ) ? $attrs['extra_arg'] : null,
             //placeholder support
-            'email_placeholder' => isset( $attrs['email_placeholder'] ) ? $attrs['email_placeholder'] : '',
+            'email_placeholder'      => isset( $attrs['email_placeholder'] ) ? $attrs['email_placeholder'] : '',
             'first_name_placeholder' => isset( $attrs['first_name_placeholder'] ) ? $attrs['first_name_placeholder'] : '',
-            'last_name_placeholder' => isset( $attrs['last_name_placeholder'] ) ? $attrs['last_name_placeholder'] : '',
-            'full_name_placeholder' => isset( $attrs['full_name_placeholder'] ) ? $attrs['full_name_placeholder'] : '',
+            'last_name_placeholder'  => isset( $attrs['last_name_placeholder'] ) ? $attrs['last_name_placeholder'] : '',
+            'full_name_placeholder'  => isset( $attrs['full_name_placeholder'] ) ? $attrs['full_name_placeholder'] : '',
         ];
 
         if ( ! empty( $attrs['first_name'] ) ) {
             $args['first_name_lbl'] = $attrs['first_name'];
-
-        } else if ( in_array( 'first_name', $attrs ) ) {
+        } elseif ( in_array( 'first_name', $attrs ) ) {
             $args['first_name_lbl'] = __( 'First Name', 'erp' );
         }
 
         if ( ! empty( $attrs['last_name'] ) ) {
             $args['last_name_lbl'] = $attrs['last_name'];
-
-        } else if ( in_array( 'last_name', $attrs ) ) {
+        } elseif ( in_array( 'last_name', $attrs ) ) {
             $args['last_name_lbl'] = __( 'Last Name', 'erp' );
         }
 
         if ( ! empty( $attrs['full_name'] ) ) {
             $args['full_name_lbl'] = $attrs['full_name'];
-
-        } else if ( in_array( 'full_name', $attrs ) ) {
+        } elseif ( in_array( 'full_name', $attrs ) ) {
             $args['full_name_lbl'] = __( 'Full Name', 'erp' );
         }
 
         ob_start();
         $this->subscription_form( $args );
+
         return ob_get_clean();
     }
 
@@ -207,7 +206,7 @@ class Subscription {
      */
     public function subscription_form( $args ) {
         if ( empty( $args['group'] ) ) {
-            return new \WP_Error( 'erp_subs_form_no_group_found', __( 'Group attribute is required', 'erp' ) );
+            return new WP_Error( 'erp_subs_form_no_group_found', __( 'Group attribute is required', 'erp' ) );
         }
 
         $groups         = is_array( $args['group'] ) ? $args['group'] : explode( ',', $args['group'] );
@@ -231,7 +230,6 @@ class Subscription {
 
         if ( empty( $args['full_name_lbl'] ) && empty( $args['first_name_lbl'] ) && empty( $args['last_name_lbl'] ) ) {
             $class_names[] = 'no-optional-field';
-
         } else {
             $class_names[] = 'has-optional-field';
         }
@@ -258,11 +256,9 @@ class Subscription {
         // validations
         if ( empty( $_POST['form_data'] ) ) {
             $this->send_error( [ 'msg' => __( 'Invalid operation', 'erp' ) ] );
-
         } else {
             parse_str( $_POST['form_data'], $form_data ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         }
-
 
         if ( empty( $form_data['contact']['email'] ) || ! is_email( $form_data['contact']['email'] ) ) {
             $this->send_error( [ 'msg' => __( 'Please provide a valid email address', 'erp' ) ] );
@@ -276,8 +272,7 @@ class Subscription {
 
         if ( is_wp_error( $success ) ) {
             $this->send_error( $success->get_error_message() );
-
-        } else if ( 'already-subscribed' === $success ) {
+        } elseif ( 'already-subscribed' === $success ) {
             $this->send_success( [ 'msg' => __( 'You are already subscribed. Thank you!', 'erp' ) ] );
         }
 
@@ -311,7 +306,6 @@ class Subscription {
             } else {
                 $life_stage = $args['life_stage'];
             }
-
         } else {
             $life_stage = $default_life_stage;
         }
@@ -327,13 +321,11 @@ class Subscription {
 
             if ( count( $name_arr ) > 1 ) {
                 $contact['last_name']  = array_pop( $name_arr );
-                $contact['first_name'] = implode( ' ' , $name_arr );
-
+                $contact['first_name'] = implode( ' ', $name_arr );
             } else {
-                $contact['first_name'] = implode( ' ' , $name_arr );
+                $contact['first_name'] = implode( ' ', $name_arr );
             }
-
-        } else if ( ! empty( $args['contact']['first_name'] ) ){
+        } elseif ( ! empty( $args['contact']['first_name'] ) ) {
             $contact['first_name'] = $args['contact']['first_name'];
             $contact['last_name']  = isset( $args['contact']['last_name'] ) ? $args['contact']['last_name'] : '';
         }
@@ -344,7 +336,7 @@ class Subscription {
         $existing_contact = erp_get_people_by( 'email', $contact['email'] );
 
         // for existing contact override the $_POST values with existing values
-        if ( ! empty( $existing_contact ) )  {
+        if ( ! empty( $existing_contact ) ) {
             foreach ( $contact as $prop => $value ) {
                 if ( ! empty( $existing_contact->$prop ) ) {
                     $contact[ $prop ] = $existing_contact->$prop;
@@ -357,7 +349,7 @@ class Subscription {
         $contact_id = erp_insert_people( $contact );
 
         if ( is_wp_error( $contact_id ) ) {
-            return new \WP_Error( 'error-insert-people', __( 'Unable to save data, please try again', 'erp' ) );
+            return new WP_Error( 'error-insert-people', __( 'Unable to save data, please try again', 'erp' ) );
         }
 
         $contact = new \WeDevs\ERP\CRM\Contact( absint( $contact_id ), 'contact' );
@@ -373,6 +365,7 @@ class Subscription {
 
         // subscribe to contact group
         $subscribed_groups = [];
+
         foreach ( $args['groups'] as $group_id ) {
             $contact_group = Models\ContactGroup::find( $group_id );
 
@@ -382,7 +375,7 @@ class Subscription {
 
             $existing_subscriber = Models\ContactSubscriber::where( [
                 'user_id'  => $contact_id,
-                'group_id' => $group_id
+                'group_id' => $group_id,
             ] )->first();
 
             $hash = sha1( microtime() . 'erp-subscription-form' . $group_id . $contact_id );
@@ -402,11 +395,10 @@ class Subscription {
                     'group_id' => $group_id,
                     'user_id'  => $contact_id,
                     'status'   => $status,
-                    'hash'     => $hash
+                    'hash'     => $hash,
                 ];
 
                 $subscribed_groups[] = erp_crm_create_new_contact_subscriber( $subs_args );
-
             } else {
                 if ( ! $existing_subscriber->hash ) {
                     $existing_subscriber->hash = $hash;
@@ -475,7 +467,7 @@ class Subscription {
             $content = preg_replace( '/\[contact_groups_to_confirm\]/', $group_names, $content );
         }
 
-        if ( preg_match( '/\[activation_link\](.+?)\[\/activation_link\]/' , $content, $match ) ) {
+        if ( preg_match( '/\[activation_link\](.+?)\[\/activation_link\]/', $content, $match ) ) {
             $anchor = '<a href="' . $confirmation_page_url . '">' . $match[1] . '</a>';
 
             $content = str_replace( $match[0], $anchor, $content );
@@ -549,7 +541,6 @@ class Subscription {
             }
 
             if ( ! empty( $this->sub_page_id ) && absint( $page->ID ) === $this->sub_page_id ) {
-
                 if ( ! empty( $_GET['subscription-id'] ) ) {
                     $subscription_ids = explode( ':', sanitize_text_field( wp_unslash( $_GET['subscription-id'] ) ) );
 
@@ -561,11 +552,10 @@ class Subscription {
 
                     $this->page_action = 'confirm';
                     $this->confirm_subscription();
-
-                } else if ( ! empty( $_GET['id'] ) ) {
+                } elseif ( ! empty( $_GET['id'] ) ) {
                     $meta = \WeDevs\ERP\Framework\Models\Peoplemeta::where( 'meta_value', sanitize_text_field( wp_unslash( $_GET['id'] ) ) )
-                                ->where( 'meta_key', 'hash' )
-                                ->first();
+                        ->where( 'meta_key', 'hash' )
+                        ->first();
 
                     if ( empty( $meta ) ) {
                         return;
@@ -576,7 +566,7 @@ class Subscription {
 
                     switch ( $_GET['erp-subscription-action'] ) {
                         case 'edit':
-                            $this->page_action = 'edit';
+                            $this->page_action     = 'edit';
                             $erp_subscription_edit = [
                                 'ajaxurl'  => admin_url( 'admin-ajax.php' ),
                                 'nonce'    => wp_create_nonce( 'erp-subscription-edit' ),
@@ -610,7 +600,7 @@ class Subscription {
      */
     private function confirm_subscription() {
         foreach ( $this->subscribed_groups as $group ) {
-            $group->status = 'subscribe';
+            $group->status          = 'subscribe';
             $group->subscribe_at    = $group->unsubscribe_at ? $group->unsubscribe_at : current_time( 'mysql' );
             $group->unsubscribe_at  = null;
             $group->save();
@@ -621,6 +611,7 @@ class Subscription {
         $people_id = $this->subscribed_groups->first()->user_id;
 
         $contact = new Contact( $people_id );
+
         if ( ! $contact->hash ) {
             $hash = sha1( microtime() . 'erp-confirm-subscription' . $people_id );
             $contact->update_contact_hash( $hash );
@@ -650,7 +641,7 @@ class Subscription {
                     if ( empty( $group->private ) ) {
                         $subscriber = $group->contact_subscriber()->where( 'user_id', $this->people_id )->first();
 
-                        if ($subscriber) {
+                        if ( $subscriber ) {
                             $subscriber->status          = 'unsubscribe';
                             $subscriber->subscribe_at    = null;
                             $subscriber->unsubscribe_at  = current_time( 'mysql' );
@@ -737,6 +728,7 @@ class Subscription {
             case 'unsubscribe':
             default:
                 $content = erp_get_option( 'unsubs_page_content', 'erp_settings_erp-crm_subscription', __( 'You are successfully unsubscribed from list(s):', 'erp' ) );
+
                 if ( ! empty( $this->unsubscribed_groups ) ) {
                     $group_names = [];
 
@@ -760,18 +752,17 @@ class Subscription {
      *
      * @since 1.2.2
      *
-     * @param integer $people_id
+     * @param int $people_id
      *
      * @return object Eloquent collection object of related models
      */
     public function get_lists_subscriber_belongs_to( $people_id, $with_private = false ) {
         $lists = [
-            'contact_group' => Models\ContactGroup::getGroupSubscriber( $people_id, $with_private )->get()
+            'contact_group' => Models\ContactGroup::getGroupSubscriber( $people_id, $with_private )->get(),
         ];
 
         return apply_filters( 'erp_subscription_lists_subscriber_belongs_to', $lists, $with_private, $this );
     }
-
 
     /**
      * Save edit subscription page data
@@ -788,7 +779,6 @@ class Subscription {
         // validations
         if ( empty( $_POST['form_data'] ) ) {
             $this->send_error( [ 'msg' => __( 'Invalid operation', 'erp' ) ] );
-
         } else {
             parse_str( sanitize_text_field( wp_unslash( $_POST['form_data'] ) ), $form_data );
         }
@@ -798,8 +788,8 @@ class Subscription {
         }
 
         $meta = \WeDevs\ERP\Framework\Models\Peoplemeta::where( 'meta_value', $form_data['id'] )
-                    ->where( 'meta_key', 'hash' )
-                    ->first();
+            ->where( 'meta_key', 'hash' )
+            ->first();
 
         if ( empty( $meta ) ) {
             $this->send_error( [ 'msg' => __( 'Subscriber does not exists', 'erp' ) ] );
@@ -810,7 +800,7 @@ class Subscription {
 
         $contact_lists = $this->get_lists_subscriber_belongs_to( $this->people_id, true );
 
-        $contact_groups = $contact_lists['contact_group'];
+        $contact_groups    = $contact_lists['contact_group'];
         $subscribed_groups = [];
 
         $contact_groups->each( function ( $contact_group ) use ( $form_data, &$subscribed_groups ) {
@@ -827,5 +817,4 @@ class Subscription {
 
         $this->send_success( [ 'msg' => $success_msg ] );
     }
-
 }

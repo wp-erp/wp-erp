@@ -1,10 +1,9 @@
 <?php
+
 global $states;
 
-$states['GL'] = array(
-
-    "AVANNAA(NORDGRONLAND)" => __("Avannaa (Nordgronland)", 'erp'),
-    "TUNU(OSTGRONLAND)"     => __("Tunu (Ostgronland)", 'erp'),
-    "KITAA(VESTGRONLAND)"   => __("Kitaa (Vestgronland)", 'erp'),
-
-);
+$states['GL'] = [
+    'AVANNAA(NORDGRONLAND)' => __( 'Avannaa (Nordgronland)', 'erp' ),
+    'TUNU(OSTGRONLAND)'     => __( 'Tunu (Ostgronland)', 'erp' ),
+    'KITAA(VESTGRONLAND)'   => __( 'Kitaa (Vestgronland)', 'erp' ),
+];

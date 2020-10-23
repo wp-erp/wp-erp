@@ -1,12 +1,14 @@
 <?php
+
 namespace WeDevs\ERP\HRM\API;
 
-use WP_REST_Server;
-use WP_REST_Response;
-use WP_Error;
 use WeDevs\ERP\API\REST_Controller;
+use WP_Error;
+use WP_REST_Response;
+use WP_REST_Server;
 
 class Leave_Holidays_Controller extends REST_Controller {
+
     /**
      * Endpoint namespace.
      *
@@ -92,6 +94,7 @@ class Leave_Holidays_Controller extends REST_Controller {
         $total_items = erp_hr_count_holidays( $args );
 
         $formated_items = [];
+
         foreach ( $items as $item ) {
             $data             = $this->prepare_item_for_response( $item, $request );
             $formated_items[] = $this->prepare_response_for_collection( $data );
@@ -157,6 +160,7 @@ class Leave_Holidays_Controller extends REST_Controller {
         $id = (int) $request['id'];
 
         $holiday = \WeDevs\ERP\HRM\Models\Leave_Holiday::find( $id );
+
         if ( empty( $id ) || empty( $holiday->id ) ) {
             return new WP_Error( 'rest_holiday_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 400 ] );
         }
@@ -193,7 +197,7 @@ class Leave_Holidays_Controller extends REST_Controller {
     /**
      * Prepare a single item for create or update
      *
-     * @param WP_REST_Request $request Request object.
+     * @param WP_REST_Request $request request object
      *
      * @return array $prepared_item
      */
@@ -214,7 +218,7 @@ class Leave_Holidays_Controller extends REST_Controller {
             $prepared_item['id'] = absint( $request['id'] );
         }
 
-        $prepared_item['end'] = isset( $request['end_date'] ) ? date( 'Y-m-d', strtotime( $request['end_date'] ) ) : date( 'Y-m-d', strtotime( $request['start_date'] . "+1 days" ) );
+        $prepared_item['end'] = isset( $request['end_date'] ) ? date( 'Y-m-d', strtotime( $request['end_date'] ) ) : date( 'Y-m-d', strtotime( $request['start_date'] . '+1 days' ) );
 
         if ( isset( $request['description'] ) ) {
             $prepared_item['description'] = $request['description'];
@@ -226,11 +230,11 @@ class Leave_Holidays_Controller extends REST_Controller {
     /**
      * Prepare a single user output for response
      *
-     * @param object $item
-     * @param WP_REST_Request $request Request object.
-     * @param array $additional_fields (optional)
+     * @param object          $item
+     * @param WP_REST_Request $request           request object
+     * @param array           $additional_fields (optional)
      *
-     * @return WP_REST_Response $response Response data.
+     * @return WP_REST_Response $response response data
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
         $data = [

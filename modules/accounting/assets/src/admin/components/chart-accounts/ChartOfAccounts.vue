@@ -51,7 +51,10 @@
         </ul>
         <ul v-else>
             <li :key="index" v-for="(chart, index) in chartAccounts">
-                <h3>{{ chart.label }}</h3>
+                <div style="display: flex;">
+                    <h3>{{ chart.label }}</h3>
+                    <span class="erp-help-tip .erp-tips" :title="__('System account could not be edited or deleted anyway as those are defined by the accounting terms.', 'erp')"></span>
+                </div>
 
                 <list-table
                     tableClass="wperp-table table-striped table-dark widefat table2 chart-list"
@@ -243,5 +246,11 @@ export default {
 
     .chart-list tr .ledger_name {
         width: 40%;
+    }
+
+    .chart-accounts .erp-help-tip {
+        font-size: 1.3em;
+        left: 3px;
+        top: 3.5px;
     }
 </style>

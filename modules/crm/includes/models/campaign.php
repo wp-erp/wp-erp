@@ -1,12 +1,11 @@
 <?php
+
 namespace WeDevs\ERP\CRM\Models;
 
 use WeDevs\ERP\Framework\Model;
 
 /**
  * Class Dependents
- *
- * @package WeDevs\ERP\HRM\Models
  */
 class Campaign extends Model {
     protected $table = 'erp_crm_campaigns';
@@ -25,5 +24,4 @@ class Campaign extends Model {
     public function groups() {
         return $this->belongsToMany( '\WeDevs\ERP\CRM\Models\ContactGroup', $this->getConnection()->db->prefix . 'erp_crm_campaign_group', 'campaign_id', 'group_id' );
     }
-
 }

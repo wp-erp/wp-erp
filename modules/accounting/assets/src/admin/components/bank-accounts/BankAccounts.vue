@@ -5,6 +5,7 @@
                 <div class="wperp-col">
                     <h2 class="content-header__title">{{ __('Accounts', 'erp') }}</h2>
                     <combo-box :options="pages" :hasUrl="true" :placeholder="__('New Transaction', 'erp')" />
+                    <span class="erp-help-tip .erp-tips" :title="__('To edit a bank account, please navigate to the Chart of Accounts.', 'erp')"></span>
                 </div>
             </div>
         </div>
@@ -196,5 +197,10 @@ export default {
         .wperp-table tbody tr:not(.inline-edit-row):not(.no-items) td {
             padding-left: 10px;
         }
+    }
+
+    .app-customers .erp-help-tip {
+        font-size: 1.9em;
+        top: 0.4rem;
     }
 </style>

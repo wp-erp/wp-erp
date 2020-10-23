@@ -9,12 +9,12 @@
  */
 function wperp_update_1_3_3_update_holidays_table() {
     $holidays = \WeDevs\ERP\HRM\Models\Leave_Holiday::all();
+
     foreach ( $holidays as $holiday ) {
-        $end = $holiday->end;
-        $corrected_end = date('Y-m-d 23:59:59', strtotime('-1 day', strtotime($end)));
-        $holiday->end = $corrected_end;
+        $end           = $holiday->end;
+        $corrected_end = date( 'Y-m-d 23:59:59', strtotime( '-1 day', strtotime( $end ) ) );
+        $holiday->end  = $corrected_end;
         $holiday->save();
     }
 }
 wperp_update_1_3_3_update_holidays_table();
-

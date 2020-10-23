@@ -2,12 +2,13 @@
 
 namespace WeDevs\ERP\HRM\API;
 
-use WP_REST_Server;
-use WP_REST_Response;
-use WP_Error;
 use WeDevs\ERP\API\REST_Controller;
+use WP_Error;
+use WP_REST_Response;
+use WP_REST_Server;
 
 class HRM_Reports_Controller extends REST_Controller {
+
     /**
      * Endpoint namespace.
      *
@@ -91,7 +92,7 @@ class HRM_Reports_Controller extends REST_Controller {
         $args = [
             'number'    => $request['per_page'],
             'offset'    => ( $request['per_page'] * ( $request['page'] - 1 ) ),
-            'dimension' => isset( $request['dimension'] ) ? $request['dimension'] : 'general'
+            'dimension' => isset( $request['dimension'] ) ? $request['dimension'] : 'general',
         ];
 
         $employees = new \WeDevs\ERP\HRM\Models\Employee();
@@ -100,6 +101,7 @@ class HRM_Reports_Controller extends REST_Controller {
             $departments = erp_hr_get_departments();
 
             $emp_all_data = [];
+
             foreach ( $departments as $department ) {
                 $emp_by_dept = $employees->where( 'department', $department->id )->get();
                 $breakdown   = get_employee_breakdown_by_age( $emp_by_dept );
@@ -130,13 +132,14 @@ class HRM_Reports_Controller extends REST_Controller {
         $args = [
             'number'    => $request['per_page'],
             'offset'    => ( $request['per_page'] * ( $request['page'] - 1 ) ),
-            'dimension' => isset( $request['dimension'] ) ? $request['dimension'] : 'general'
+            'dimension' => isset( $request['dimension'] ) ? $request['dimension'] : 'general',
         ];
 
         if ( $args['dimension'] == 'department' ) {
             $departments = erp_hr_get_departments();
 
             $gender_ratio = [];
+
             foreach ( $departments as $department ) {
                 $count_by_dept = erp_hr_get_gender_count( $department->id );
 
@@ -167,26 +170,28 @@ class HRM_Reports_Controller extends REST_Controller {
         $args = [
             'number' => $request['per_page'],
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
-            'type'   => isset( $request['type'] ) ? $request['type'] : 'summary'
+            'type'   => isset( $request['type'] ) ? $request['type'] : 'summary',
         ];
 
         if ( ! in_array( $request['type'], [ 'summary', 'list' ] ) ) {
-            return new WP_Error( 'rest_performance_invalid_type', __( 'Invalid Type received' ), array( 'status' => 400 ) );
+            return new WP_Error( 'rest_performance_invalid_type', __( 'Invalid Type received' ), [ 'status' => 400 ] );
         }
 
         $formatted_items = [];
         $total           = 0;
+
         if ( $args['type'] == 'summary' ) {
             $this_month = current_time( 'Y-m-01' );
             $chart_data = [];
+
             for ( $i = 0; $i <= 11; $i ++ ) {
-                $month    = date( "Y-m", strtotime( $this_month . " -$i months" ) );
+                $month    = date( 'Y-m', strtotime( $this_month . " -$i months" ) );
                 $js_month = strtotime( $month . '-01' ) * 1000;
                 $count    = erp_hr_get_headcount( $month, '', 'month' );
 
                 $chart_data[] = (object) [
                     'month' => $month,
-                    'count' => $count
+                    'count' => $count,
                 ];
             }
             $formatted_items = $chart_data;
@@ -202,7 +207,7 @@ class HRM_Reports_Controller extends REST_Controller {
                 $employee            = new \WeDevs\ERP\HRM\Employee( intval( $user_id ) );
                 $data['id']          = $user_id;
                 $data['name']        = $employee->get_full_name();
-                $data['avatar_url']  = $employee->get_avatar_url(80);
+                $data['avatar_url']  = $employee->get_avatar_url( 80 );
                 $data['hiring_date'] = $employee->hiring_date;
                 $data['job_title']   = $employee->get_job_title();
                 $data['department']  = $employee->get_department_title();
@@ -210,8 +215,6 @@ class HRM_Reports_Controller extends REST_Controller {
                 $data['status']      = $employee->get_status();
                 $formatted_items[]   = $data;
             }
-
-
         }
 
         $response = rest_ensure_response( $formatted_items );
@@ -238,22 +241,22 @@ class HRM_Reports_Controller extends REST_Controller {
         $user_ids    = $wpdb->get_col( "SELECT user_id FROM {$wpdb->prefix}erp_hr_employees LIMIT {$args['number']} OFFSET {$args['offset']}" );
         $total_items = (int) $wpdb->get_var( "SELECT count(*) FROM {$wpdb->prefix}erp_hr_employees" );
 
-
         $date_format = get_option( 'date_format' );
 
         $formated_items = [];
+
         foreach ( $user_ids as $user_id ) {
             $employee      = new \WeDevs\ERP\HRM\Employee( intval( $user_id ) );
             $compensations = $employee->get_job_histories( 'compensation' );
 
             $data = [];
 
-            if (!empty( $compensations['compensation']) ) {
+            if ( !empty( $compensations['compensation'] ) ) {
                 foreach ( $compensations['compensation'] as $compensation ) {
                     $data[] = [
                         'employee_id'   => (int) esc_attr( $employee->id ),
                         'employee_name' => $employee->display_name,
-                        'avatar_url'    => $employee->get_avatar_url(80),
+                        'avatar_url'    => $employee->get_avatar_url( 80 ),
                         'date'          => date( $date_format, strtotime( esc_attr( $compensation['date'] ) ) ),
                         'pay_rate'      => (int) esc_attr( $compensation['pay_rate'] ),
                         'pay_type'      => esc_attr( $compensation['pay_type'] ),
@@ -291,6 +294,7 @@ class HRM_Reports_Controller extends REST_Controller {
         $total_items = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}erp_hr_employees WHERE status = 'active'" );
 
         $hire_data = [];
+
         foreach ( $user_ids as $user_id ) {
             $employee = new \WeDevs\ERP\HRM\Employee( intval( $user_id ) );
             $date     = date_parse_from_format( 'Y-m-d', $employee->hiring_date );

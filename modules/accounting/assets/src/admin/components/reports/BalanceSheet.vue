@@ -56,11 +56,14 @@
                         :showCb="false">
                         <template slot="name" slot-scope="data">
                             <span v-html="data.row.name"></span>
+                            <p class="additional" v-for="additional in data.row.additional">{{additional.name}}   <em>{{ moneyFormat( Math.abs(additional.balance) ) }}</em> </p>
                         </template>
                         <template slot="balance" slot-scope="data">
                             <span v-if="isNaN(data.row.balance)">{{data.row.balance}}</span>
                             <span v-else>{{ transformBalance(data.row.balance) }} </span>
                         </template>
+
+
                         <template slot="tfoot">
                             <tr class="t-foot">
                                 <td>{{ __('Total Asset', 'erp') }}</td>
@@ -79,6 +82,7 @@
                         :showCb="false">
                         <template slot="name" slot-scope="data">
                             <span v-html="data.row.name"> </span>
+                         <p  class="additional" v-for="additional in data.row.additional">{{additional.name}}   <em>{{ moneyFormat( Math.abs(additional.balance) ) }}</em> </p>
                         </template>
                         <template slot="balance" slot-scope="data">
                             <span v-if="isNaN(data.row.balance)">{{data.row.balance}}</span>
@@ -191,7 +195,7 @@ export default {
 
     created() {
         // ? why is nextTick here ...? i don't know.
-        this.$nextTick(function() {
+      /*  this.$nextTick(function() {
             const dateObj = new Date();
 
             // with leading zero, and JS month are zero index based
@@ -201,7 +205,7 @@ export default {
             this.end_date   = erp_acct_var.current_date;
 
             this.fetchItems();
-        });
+        });*/
 
         this.fetchFnYears();
     },
@@ -274,7 +278,6 @@ export default {
             HTTP.get('/opening-balances/names').then(response => {
                 // get only last 5
                 this.fyears = response.data.reverse().slice(0).slice(-5);
-
                 this.getCurrentFnYear();
             });
         },
@@ -282,6 +285,9 @@ export default {
         getCurrentFnYear() {
             HTTP.get('/closing-balance/closest-fn-year').then(response => {
                 this.selectedYear = response.data;
+                this.start_date = response.data.start_date;
+                this.end_date   = response.data.end_date;
+                this.fetchItems();
             });
         },
 
@@ -290,18 +296,24 @@ export default {
         },
 
         checkClosingPossibility() {
-            this.$store.dispatch('spinner/setSpinner', true);
+            if(!this.end_date){
+                this.showAlert('error',  __('Please select financial year', 'erp'));
+                return false;
+            }
 
+            this.$store.dispatch('spinner/setSpinner', true);
             HTTP.get('/closing-balance/next-fn-year', {
                 params: {
                     date : this.end_date
                 }
             }).then(response => {
-                if (response.data === null) {
-                    alert(`Please create a financial year which start after '${this.end_date}'`);
+
+                if (!response.data) {
+                    this.showAlert('error', __('Please create a financial year which start after ', 'erp') + this.end_date );
+                }else{
+                    this.closeBalancesheet(response.data.id);
                 }
 
-                this.closeBalancesheet(response.data.id);
             }).catch(error => {
                 this.$store.dispatch('spinner/setSpinner', false);
                 throw error;
@@ -316,7 +328,7 @@ export default {
                 start_date: this.start_date,
                 end_date  : this.end_date
             }).then(response => {
-                this.showAlert('success', 'Balance Sheet Closed!');
+                this.showAlert('success', __('Balance Sheet Closed!', 'erp') ) ;
                 this.closingBtnVisibility = false;
             }).catch(error => {
                 this.$store.dispatch('spinner/setSpinner', false);
@@ -470,6 +482,15 @@ export default {
             &:last-child td:nth-child(2) {
                 font-size: 16px;
             }
+        }
+    }
+
+    .additional{
+        max-width: 300px;
+        padding-left: 30px;
+        em{
+           float: right;
+            display: inline-block;
         }
     }
 

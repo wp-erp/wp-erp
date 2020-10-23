@@ -1,7 +1,8 @@
 <?php
+
 namespace WeDevs\ERP;
 
-use \WeDevs\ERP\Framework\ERP_Settings_Page;
+use WeDevs\ERP\Framework\ERP_Settings_Page;
 
 /**
  * Email Class
@@ -11,7 +12,7 @@ class Email extends ERP_Settings_Page {
     /**
      * Email method ID.
      *
-     * @var String
+     * @var string
      */
     public $id;
 
@@ -111,7 +112,7 @@ class Email extends ERP_Settings_Page {
      *
      * @var array
      */
-    public $form_fields = array();
+    public $form_fields = [];
 
     /**
      * Email type
@@ -125,10 +126,11 @@ class Email extends ERP_Settings_Page {
      * used in conjunction with $replace.
      * https://raw.github.com/ushahidi/wp-silcc/master/class.html2text.inc
      *
-     * @var array $search
+     * @var array
+     *
      * @see $replace
      */
-    public $plain_search = array(
+    public $plain_search = [
         "/\r/",                                          // Non-legal carriage return
         '/&(nbsp|#160);/i',                              // Non-breaking space
         '/&(quot|rdquo|ldquo|#8220|#8221|#147|#148);/i', // Double quotes
@@ -148,16 +150,17 @@ class Email extends ERP_Settings_Page {
         '/&(euro|#8364);/i',                             // Euro sign
         '/&#36;/',                                       // Dollar sign
         '/&[^&\s;]+;/i',                                 // Unknown/unhandled entities
-        '/[ ]{2,}/'                                      // Runs of spaces, post-handling
-    );
+        '/[ ]{2,}/',                                      // Runs of spaces, post-handling
+    ];
 
     /**
      * List of pattern replacements corresponding to patterns searched.
      *
-     * @var array $replace
+     * @var array
+     *
      * @see $search
      */
-    public $plain_replace = array(
+    public $plain_replace = [
         '',                                             // Non-legal carriage return
         ' ',                                            // Non-breaking space
         '"',                                            // Double quotes
@@ -177,8 +180,8 @@ class Email extends ERP_Settings_Page {
         'EUR',                                          // Euro sign. € ?
         '$',                                            // Dollar sign
         '',                                             // Unknown/unhandled entities
-        ' '                                             // Runs of spaces, post-handling
-    );
+        ' ',                                             // Runs of spaces, post-handling
+    ];
 
     public function __construct() {
         $this->init_form_fields();
@@ -205,6 +208,7 @@ class Email extends ERP_Settings_Page {
      * format_string function.
      *
      * @param mixed $string
+     *
      * @return string
      */
     public function format_string( $string ) {
@@ -244,7 +248,7 @@ class Email extends ERP_Settings_Page {
      * @return string
      */
     public function get_headers() {
-        return apply_filters( 'erp_email_headers', "Content-Type: " . $this->get_content_type() . "\r\n", $this->id, $this->object );
+        return apply_filters( 'erp_email_headers', 'Content-Type: ' . $this->get_content_type() . "\r\n", $this->id, $this->object );
     }
 
     /**
@@ -253,7 +257,7 @@ class Email extends ERP_Settings_Page {
      * @return string|array
      */
     public function get_attachments() {
-        return apply_filters( 'erp_email_attachments', array(), $this->id, $this->object );
+        return apply_filters( 'erp_email_attachments', [], $this->id, $this->object );
     }
 
     /**
@@ -272,11 +276,12 @@ class Email extends ERP_Settings_Page {
      */
     public function get_content_type() {
         switch ( $this->get_email_type() ) {
-            case 'html' :
+            case 'html':
                 return 'text/html';
-            case 'multipart' :
+
+            case 'multipart':
                 return 'multipart/alternative';
-            default :
+            default:
                 return 'text/plain';
         }
     }
@@ -296,7 +301,6 @@ class Email extends ERP_Settings_Page {
      * @return string
      */
     public function get_content() {
-
         $this->sending = true;
 
         if ( $this->get_email_type() == 'plain' ) {
@@ -312,11 +316,12 @@ class Email extends ERP_Settings_Page {
      * Apply inline styles to dynamic content.
      *
      * @param string|null $content
+     *
      * @return string
      */
     public function style_inline( $content ) {
         // make sure we only inline CSS for html emails
-        if ( in_array( $this->get_content_type(), array( 'text/html', 'multipart/alternative' ) ) && class_exists( 'DOMDocument' ) ) {
+        if ( in_array( $this->get_content_type(), [ 'text/html', 'multipart/alternative' ] ) && class_exists( 'DOMDocument' ) ) {
 
             // get CSS styles
             ob_start();
@@ -327,10 +332,8 @@ class Email extends ERP_Settings_Page {
 
                 // apply CSS styles inline for picky email clients
                 $emogrifier = new \WeDevs\ERP\Lib\Emogrifier( $content, $css );
-                $content = $emogrifier->emogrify();
-
+                $content    = $emogrifier->emogrify();
             } catch ( \Exception $e ) {
-
                 echo esc_html( $e->getMessage() );
             }
         }
@@ -340,6 +343,7 @@ class Email extends ERP_Settings_Page {
 
     /**
      * Get the form fields after they are initialized.
+     *
      * @return array of options
      */
     public function get_form_fields() {
@@ -354,6 +358,7 @@ class Email extends ERP_Settings_Page {
      * @param string $message
      * @param string $headers
      * @param string $attachments
+     *
      * @return bool
      */
     public function send( $to, $subject, $message, $headers, $attachments ) {
@@ -361,6 +366,7 @@ class Email extends ERP_Settings_Page {
         $recipients = apply_filters( 'erp_mail_recipients', $to );
 
         $return = false;
+
         if ( ! empty( $recipients ) ) {
             $return = erp_mail( $recipients, $subject, $message, $headers, $attachments );
         }
@@ -368,7 +374,7 @@ class Email extends ERP_Settings_Page {
         return $return;
     }
 
-    function generate_settings_html() {
+    public function generate_settings_html() {
         $settings = $this->get_form_fields();
         $this->output_fields( $settings );
     }
@@ -378,14 +384,15 @@ class Email extends ERP_Settings_Page {
 
         ob_start();
         include $file_path;
+
         return ob_get_clean();
     }
 
     /**
      * Get email setting by key
      *
-     * @param  string  $option
-     * @param  string  $default
+     * @param string $option
+     * @param string $default
      *
      * @return string
      */
@@ -410,8 +417,7 @@ class Email extends ERP_Settings_Page {
              *
              * @param string $email The email object
              */
-            do_action( 'erp_email_settings_before', $this );
-        ?>
+            do_action( 'erp_email_settings_before', $this ); ?>
 
         <table class="form-table">
             <?php $this->generate_settings_html(); ?>
@@ -423,18 +429,16 @@ class Email extends ERP_Settings_Page {
              *
              * @param string $email The email object
              */
-            do_action( 'erp_email_settings_after', $this );
-        ?>
+            do_action( 'erp_email_settings_after', $this ); ?>
         <?php
     }
 
     /**
      * get_content_html function.
      *
-     * @access public
      * @return string
      */
-    function get_content_html() {
+    public function get_content_html() {
         $message = $this->get_template_content( WPERP_INCLUDES . '/email/email-body.php', $this->get_args() );
 
         return $this->format_string( $message );
@@ -443,10 +447,9 @@ class Email extends ERP_Settings_Page {
     /**
      * get_content_plain function.
      *
-     * @access public
      * @return string
      */
-    function get_content_plain() {
+    public function get_content_plain() {
         $message = $this->get_template_content( WPERP_INCLUDES . '/email/email-body.php', $this->get_args() );
 
         return $message;
@@ -461,7 +464,7 @@ class Email extends ERP_Settings_Page {
                 'title'       => __( 'Is Enabled', 'erp' ),
                 'id'          => 'is_enable',
                 'type'        => 'checkbox',
-                'default'     => $this->is_enable
+                'default'     => $this->is_enable,
             ],
             [
                 'title'       => __( 'Subject', 'erp' ),
@@ -470,7 +473,7 @@ class Email extends ERP_Settings_Page {
                 'description' => sprintf( __( 'This controls the email subject line. Leave blank to use the default subject: <code>%s</code>.', 'erp' ), $this->subject ),
                 'placeholder' => '',
                 'default'     => $this->subject,
-                'desc_tip'    => true
+                'desc_tip'    => true,
             ],
             [
                 'title'       => __( 'Email Heading', 'erp' ),
@@ -479,7 +482,7 @@ class Email extends ERP_Settings_Page {
                 'description' => sprintf( __( 'This controls the main heading contained within the email notification. Leave blank to use the default heading: <code>%s</code>.', 'erp' ), $this->heading ),
                 'placeholder' => '',
                 'default'     => $this->heading,
-                'desc_tip'    => true
+                'desc_tip'    => true,
             ],
             [
                 'title'             => __( 'Email Body', 'erp' ),
@@ -491,12 +494,12 @@ class Email extends ERP_Settings_Page {
                 'desc_tip'          => true,
                 'custom_attributes' => [
                     'rows' => 5,
-                    'cols' => 45
-                ]
+                    'cols' => 45,
+                ],
             ],
             [
-                'type' => $this->id . '_help_texts'
-            ]
+                'type' => $this->id . '_help_texts',
+            ],
         ];
     }
 
@@ -505,7 +508,7 @@ class Email extends ERP_Settings_Page {
      *
      * @return void
      */
-    function replace_keys() {
+    public function replace_keys() {
         ?>
         <tr valign="top" class="single_select_page">
             <th scope="row" class="titledesc"><?php esc_html_e( 'Template Tags', 'erp' ); ?></th>
@@ -517,4 +520,3 @@ class Email extends ERP_Settings_Page {
         <?php
     }
 }
-

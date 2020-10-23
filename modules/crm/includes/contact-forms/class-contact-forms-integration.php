@@ -1,13 +1,12 @@
 <?php
+
 namespace WeDevs\ERP\CRM\ContactForms;
 
 /**
  * CRM Contact Forms class
  */
 class Contact_Forms_Integration {
-
     use ContactForms;
-
 
     /**
      * The class constructor
@@ -75,8 +74,8 @@ class Contact_Forms_Integration {
     /**
      * Save form sumitted data as new CRM Contact
      *
-     * @param array $data submitted form data
-     * @param string $plugin plugin slug defined in get_plugin_list function
+     * @param array  $data    submitted form data
+     * @param string $plugin  plugin slug defined in get_plugin_list function
      * @param string $form_id submitted form id
      *
      * @return void
@@ -90,7 +89,7 @@ class Contact_Forms_Integration {
             $contact_group  =  $cfi_settings[ $plugin ][ $form_id ]['contact_group'];
 
             $contact = [
-                'type' => 'contact'
+                'type' => 'contact',
             ];
 
             foreach ( $settings as $field => $option ) {
@@ -99,8 +98,8 @@ class Contact_Forms_Integration {
                         $name_arr = explode( ' ', $data[ $field ] );
 
                         if ( count( $name_arr ) > 1 ) {
-                            $contact[ 'last_name' ] = array_pop( $name_arr );
-                            $contact[ 'first_name' ] = implode( ' ' , $name_arr );
+                            $contact[ 'last_name' ]  = array_pop( $name_arr );
+                            $contact[ 'first_name' ] = implode( ' ', $name_arr );
                         }
                     } else {
                         // check for nested options like social.facebook
@@ -111,7 +110,6 @@ class Contact_Forms_Integration {
                         } else {
                             $contact[ $option ] = $data[ $field ];
                         }
-
                     }
                 }
             }
@@ -124,12 +122,17 @@ class Contact_Forms_Integration {
                 $contact['contact_owner'] = $contact_owner;
             }
 
+            /**
+             * @since 1.6.5
+             */
+            $contact = apply_filters( 'erp_pre_contact_form_people_data', $contact, $data, $plugin, $form_id );
+
             $people_id = erp_insert_people( $contact );
 
             if ( ! is_wp_error( $people_id ) ) {
                 $customer = new \WeDevs\ERP\CRM\Contact( absint( $people_id ), 'contact' );
 
-                $customer->update_life_stage('lead');
+                $customer->update_life_stage( 'lead' );
                 $customer->update_meta( 'source', 'contact_form' );
 
                 if ( ! empty( $cfi_settings[ $plugin ][ $form_id ]['contact_owner'] ) ) {
@@ -137,34 +140,29 @@ class Contact_Forms_Integration {
                 }
 
                 if ( ! empty( $cfi_settings[ $plugin ][ $form_id ]['contact_group'] ) ) {
-                    $groups = array( $cfi_settings[ $plugin ][ $form_id ]['contact_group'] );
+                    $groups = [ $cfi_settings[ $plugin ][ $form_id ]['contact_group'] ];
                     erp_crm_edit_contact_subscriber( $groups, $people_id );
                 }
 
                 // update meta data
-                $people = new \WeDevs\ERP\Framework\Models\People();
+                $people         = new \WeDevs\ERP\Framework\Models\People();
                 $people_columns = $people->getFillable();
                 $people_columns = array_merge( $people_columns, [ 'type', 'id' ] );
 
                 foreach ( $contact as $option => $value ) {
                     if ( ! in_array( $option, $people_columns ) ) {
-
                         if ( is_array( $value ) ) {
                             foreach ( $value as $child_option => $child_value ) {
                                 $customer->update_meta( $child_option, $child_value );
                             }
-
                         } else {
                             $customer->update_meta( $option, $value );
                         }
-
                     }
                 }
 
                 do_action( 'erp_save_contact_form_data', $customer, $data, $plugin, $form_id );
             }
-
         }
     }
-
 }

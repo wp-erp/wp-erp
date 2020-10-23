@@ -13,13 +13,11 @@
         $gender_data  = [];
 
         foreach ( $departments as $department ) {
-
-            array_push( $yaxis, [$index, $department->title]);
+            array_push( $yaxis, [$index, $department->title] );
 
             $count_by_dept = erp_hr_get_gender_count( $department->id );
 
             if ( $count_by_dept ) {
-
                 array_push( $male, [$count_by_dept['male'], $index] );
                 array_push( $female, [$count_by_dept['female'], $index] );
                 array_push( $unspecified, [$count_by_dept['other'], $index] );
@@ -29,21 +27,20 @@
                 'dept_name' => $department->title,
                 'male'      => $count_by_dept['male'],
                 'female'    => $count_by_dept['female'],
-                'other'     => $count_by_dept['other']
+                'other'     => $count_by_dept['other'],
             ];
 
             $index++;
-
         }
     ?>
 
     <div class="erp-area-left" id="poststuff">
 
-        <?php echo wp_kses_post( erp_admin_dash_metabox( __( '<i class="fa fa-bar-chart"></i> Employee Gender Count', 'erp' ), function() {
-            ?>
+        <?php echo wp_kses_post( erp_admin_dash_metabox( __( '<i class="fa fa-bar-chart"></i> Employee Gender Count', 'erp' ), function () {
+        ?>
             <div id="emp-gender-ratio" style="width:50%;height:400px;"></div>
             <?php
-            } ) );
+    } ) );
         ?>
 
         <table class="widefat striped">
@@ -74,11 +71,11 @@
         <br>
 
         <?php
-        echo wp_kses_post( erp_admin_dash_metabox( __( '<i class="fa fa-bar-chart"></i> Employee Gender Ratio By Department', 'erp' ), function() {
-           ?>
+        echo wp_kses_post( erp_admin_dash_metabox( __( '<i class="fa fa-bar-chart"></i> Employee Gender Ratio By Department', 'erp' ), function () {
+            ?>
             <div id="emp-gender-ratio-by-department" class="erp-report-chart"></div>
            <?php
-          } ) );
+        } ) );
         ?>
 
         <table class="widefat striped">
@@ -93,7 +90,6 @@
             <tbody>
                 <?php
                     foreach ( $gender_data as $single_data ) {
-
                         echo '<tr>';
                         echo '<td>' . esc_attr( $single_data['dept_name'] ) . '</td>';
                         echo '<td>' . esc_attr( $single_data['male'] ) . '</td>';

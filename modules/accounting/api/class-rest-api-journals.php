@@ -2,11 +2,12 @@
 
 namespace WeDevs\ERP\Accounting\API;
 
-use WP_REST_Server;
-use WP_REST_Response;
 use WP_Error;
+use WP_REST_Response;
+use WP_REST_Server;
 
 class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
+
     /**
      * Endpoint namespace.
      *
@@ -29,58 +30,58 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
             $this->namespace,
             '/' . $this->rest_base,
             [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_journals' ],
-					'args'                => [],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_view_journal' );
-					},
-				],
-				[
-					'methods'             => WP_REST_Server::CREATABLE,
-					'callback'            => [ $this, 'create_journal' ],
-					'args'                => [],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_create_journal' );
-					},
-				],
-				'schema' => [ $this, 'get_item_schema' ],
-			]
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_journals' ],
+                    'args'                => [],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_view_journal' );
+                    },
+                ],
+                [
+                    'methods'             => WP_REST_Server::CREATABLE,
+                    'callback'            => [ $this, 'create_journal' ],
+                    'args'                => [],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_create_journal' );
+                    },
+                ],
+                'schema' => [ $this, 'get_item_schema' ],
+            ]
         );
 
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base . '/(?P<id>[\d]+)',
             [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_journal' ],
-					'args'                => [
-						'context' => $this->get_context_param( [ 'default' => 'view' ] ),
-					],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_view_journal' );
-					},
-				],
-				'schema' => [ $this, 'get_item_schema' ],
-			]
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_journal' ],
+                    'args'                => [
+                        'context' => $this->get_context_param( [ 'default' => 'view' ] ),
+                    ],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_view_journal' );
+                    },
+                ],
+                'schema' => [ $this, 'get_item_schema' ],
+            ]
         );
 
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base . '/next',
             [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_next_journal_id' ],
-					'args'                => [],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_view_journal' );
-					},
-				],
-				'schema' => [ $this, 'get_item_schema' ],
-			]
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_next_journal_id' ],
+                    'args'                => [],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_view_journal' );
+                    },
+                ],
+                'schema' => [ $this, 'get_item_schema' ],
+            ]
         );
     }
 
@@ -103,12 +104,13 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
         $items       = erp_acct_get_all_journals( $args );
         $total_items = erp_acct_get_all_journals(
             [
-				'count'  => true,
-				'number' => -1,
-			]
+                'count'  => true,
+                'number' => -1,
+            ]
         );
 
         $formatted_items = [];
+
         foreach ( $items as $item ) {
             $data              = $this->prepare_item_for_response( $item, $request, $additional_fields );
             $formatted_items[] = $this->prepare_response_for_collection( $data );
@@ -215,23 +217,22 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function add_log( $data, $action ) {
         erp_log()->add(
             [
-				'component'     => 'Accounting',
-				'sub_component' => __( 'Journal', 'erp' ),
-				'old_value'     => '',
+                'component'     => 'Accounting',
+                'sub_component' => __( 'Journal', 'erp' ),
+                'old_value'     => '',
                 'new_value'     => '',
                 // translators: %s: amount
-				'message'       => sprintf( __( 'An journal of %s has been created', 'erp' ), $data['voucher_amount'] ),
-				'changetype'    => $action,
-				'created_by'    => get_current_user_id(),
-
-			]
+                'message'       => sprintf( __( 'An journal of %s has been created', 'erp' ), $data['voucher_amount'] ),
+                'changetype'    => $action,
+                'created_by'    => get_current_user_id(),
+            ]
         );
     }
 
     /**
      * Prepare a single item for create or update
      *
-     * @param WP_REST_Request $request Request object.
+     * @param WP_REST_Request $request request object
      *
      * @return array $prepared_item
      */
@@ -241,18 +242,23 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['type'] ) ) {
             $prepared_item['type'] = $request['type'];
         }
+
         if ( isset( $request['trn_date'] ) ) {
             $prepared_item['date'] = $request['trn_date'];
         }
+
         if ( isset( $request['attachments'] ) ) {
             $prepared_item['attachments'] = maybe_serialize( $request['attachments'] );
         }
+
         if ( isset( $request['particulars'] ) ) {
             $prepared_item['particulars'] = $request['particulars'];
         }
+
         if ( isset( $request['line_items'] ) ) {
             $prepared_item['line_items'] = $request['line_items'];
         }
+
         if ( isset( $request['ref'] ) ) {
             $prepared_item['ref'] = $request['ref'];
         }
@@ -263,11 +269,11 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Prepare a single user output for response
      *
-     * @param object $item
-     * @param WP_REST_Request $request Request object.
-     * @param array $additional_fields (optional)
+     * @param object          $item
+     * @param WP_REST_Request $request           request object
+     * @param array           $additional_fields (optional)
      *
-     * @return WP_REST_Response $response Response data.
+     * @return WP_REST_Response $response response data
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
         $item = (object) $item;
@@ -301,7 +307,6 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         return $response;
     }
-
 
     /**
      * Get the User's schema, conforming to JSON Schema
@@ -360,7 +365,7 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
                             'context'     => [ 'view', 'edit' ],
                             'arg_options' => [
                                 'sanitize_callback' => 'sanitize_text_field',
-                            ]
+                            ],
                         ],
                         'debit' => [
                             'description' => __( 'Debit balance.', 'erp' ),
@@ -371,7 +376,7 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
                             'description' => __( 'Credit balance.', 'erp' ),
                             'type'        => 'number',
                             'context'     => [ 'view', 'edit' ],
-                        ]
+                        ],
                     ],
                 ],
                 'particulars' => [

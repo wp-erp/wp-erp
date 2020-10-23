@@ -6,10 +6,9 @@ use WeDevs\ERP\Framework\ERP_Settings_Page;
  * Email settings class
  */
 class ERP_Email_Settings extends ERP_Settings_Page {
-
-    function __construct() {
-        $this->id = 'erp-email';
-        $this->label = __( 'Emails', 'erp' );
+    public function __construct() {
+        $this->id       = 'erp-email';
+        $this->label    = __( 'Emails', 'erp' );
         $this->sections = $this->get_sections();
 
         add_action( 'erp_admin_field_notification_emails', [ $this, 'notification_emails' ] );
@@ -26,7 +25,7 @@ class ERP_Email_Settings extends ERP_Settings_Page {
     public function get_sections() {
         $sections = [
             'general'   => __( 'General', 'erp' ),
-            'smtp'      => __( 'SMTP', 'erp' )
+            'smtp'      => __( 'SMTP', 'erp' ),
         ];
 
         return apply_filters( 'erp_settings_email_sections', $sections );
@@ -38,11 +37,10 @@ class ERP_Email_Settings extends ERP_Settings_Page {
      * @return array
      */
     public function get_section_fields( $section = '' ) {
-
         $fields['general'][] = [
             'title' => __( 'Email Sender Options', 'erp' ),
             'type'  => 'title',
-            'desc'  => __( 'Email notification settings for ERP. Customize the look and feel of outgoing emails.', 'erp' )
+            'desc'  => __( 'Email notification settings for ERP. Customize the look and feel of outgoing emails.', 'erp' ),
         ];
 
         $fields['general'][] = [
@@ -51,7 +49,7 @@ class ERP_Email_Settings extends ERP_Settings_Page {
             'type'    => 'text',
             'default' => get_bloginfo( 'name' ),
             'tooltip' => true,
-            'desc'    => __( 'The senders name appears on the outgoing emails', 'erp' )
+            'desc'    => __( 'The senders name appears on the outgoing emails', 'erp' ),
         ];
 
         $fields['general'][] = [
@@ -60,7 +58,7 @@ class ERP_Email_Settings extends ERP_Settings_Page {
             'type'    => 'text',
             'default' => get_option( 'admin_email' ),
             'tooltip' => true,
-            'desc'    => __( 'The senders email appears on the outgoing emails', 'erp' )
+            'desc'    => __( 'The senders email appears on the outgoing emails', 'erp' ),
         ];
 
         $fields['general'][] = [
@@ -70,8 +68,8 @@ class ERP_Email_Settings extends ERP_Settings_Page {
             'desc'              => __( 'Upload a logo/banner and provide the URL here.', 'erp' ),
             'tooltip'           => true,
             'custom_attributes' => [
-                'placeholder' => 'http://example.com/path/to/logo.png'
-            ]
+                'placeholder' => 'http://example.com/path/to/logo.png',
+            ],
         ];
 
         $fields['general'][] = [
@@ -81,11 +79,11 @@ class ERP_Email_Settings extends ERP_Settings_Page {
             'css'     => 'min-width:300px;',
             'tooltip' => true,
             'default' => sprintf( '%s  - Powered by WP ERP', get_bloginfo( 'name' ) ),
-            'desc'    => __( 'The text apears on each emails footer area.', 'erp' )
+            'desc'    => __( 'The text apears on each emails footer area.', 'erp' ),
         ];
 
         $fields['general'][] = [
-            'type' => 'sectionend', 'id' => 'script_styling_options'
+            'type' => 'sectionend', 'id' => 'script_styling_options',
         ];
 
         if ( ! empty( wperp()->emailer->get_emails() ) ) {
@@ -93,30 +91,30 @@ class ERP_Email_Settings extends ERP_Settings_Page {
                 'title' => __( 'Notification Emails', 'erp' ),
                 'desc'  => __( 'Email notifications sent from WP ERP are listed below. Click on an email to configure it.', 'erp' ),
                 'type'  => 'title',
-                'id'    => 'email_notification_settings'
+                'id'    => 'email_notification_settings',
             ];
 
             $fields['general'][] = [
-                'desc'  => '<ul class="email_tab_view"><li id="bt_hrm" class="bt_active">'. __( 'HRM', 'erp' ) .'</li><li id="bt_crm">'. __( 'CRM', 'erp' ) .'</li><li id="bt_accounting">'. __( 'Accounting', 'erp' ) .'</li><li id="bt_others">'. __( 'Others', 'erp' ) .'</li></ul>',
+                'desc'  => '<ul class="email_tab_view"><li id="bt_hrm" class="bt_active">' . __( 'HRM', 'erp' ) . '</li><li id="bt_crm">' . __( 'CRM', 'erp' ) . '</li><li id="bt_accounting">' . __( 'Accounting', 'erp' ) . '</li><li id="bt_others">' . __( 'Others', 'erp' ) . '</li></ul>',
                 'type'  => 'title',
-                'id'    => 'email_notification_tab'
+                'id'    => 'email_notification_tab',
             ];
 
             $fields['general'][] = [
-                'type' => 'notification_emails'
+                'type' => 'notification_emails',
             ];
         }
 
         $fields['general'][] = [
             'type' => 'sectionend',
-            'id'   => 'script_styling_options'
+            'id'   => 'script_styling_options',
         ];
         // End general settings
 
         $fields['smtp'][] = [
             'title' => __( 'SMTP Options', 'erp' ),
             'type'  => 'title',
-            'desc'  => __( 'Email outgoing settings for ERP.', 'erp' )
+            'desc'  => __( 'Email outgoing settings for ERP.', 'erp' ),
         ];
 
         $fields['smtp'][] = [
@@ -124,7 +122,7 @@ class ERP_Email_Settings extends ERP_Settings_Page {
             'id'      => 'enable_smtp',
             'type'    => 'radio',
             'options' => [ 'yes' => 'Yes', 'no' => 'No' ],
-            'default' => 'no'
+            'default' => 'no',
         ];
 
         $fields['smtp'][] = [
@@ -132,7 +130,7 @@ class ERP_Email_Settings extends ERP_Settings_Page {
             'id'                => 'mail_server',
             'type'              => 'text',
             'custom_attributes' => [
-                'placeholder' => 'smtp.gmail.com'
+                'placeholder' => 'smtp.gmail.com',
             ],
             'desc'              => __( 'SMTP host address.', 'erp' ),
         ];
@@ -157,7 +155,7 @@ class ERP_Email_Settings extends ERP_Settings_Page {
             'id'                => 'username',
             'type'              => 'text',
             'custom_attributes' => [
-                'placeholder' => 'email@example.com'
+                'placeholder' => 'email@example.com',
             ],
             'desc'              => __( 'Your email id.', 'erp' ),
         ];
@@ -166,7 +164,7 @@ class ERP_Email_Settings extends ERP_Settings_Page {
             'title' => __( 'Password', 'erp' ),
             'id'    => 'password',
             'type'  => 'password',
-            'desc'  => __( 'Your email password.', 'erp' )
+            'desc'  => __( 'Your email password.', 'erp' ),
         ];
 
         $fields['smtp'][] = [
@@ -174,7 +172,7 @@ class ERP_Email_Settings extends ERP_Settings_Page {
             'id'      => 'debug',
             'type'    => 'radio',
             'options' => [ 'yes' => 'Yes', 'no' => 'No' ],
-            'default' => 'no'
+            'default' => 'no',
         ];
 
         $fields['smtp'][] = [
@@ -183,7 +181,7 @@ class ERP_Email_Settings extends ERP_Settings_Page {
 
         $fields['smtp'][] = [
             'type' => 'sectionend',
-            'id'   => 'script_styling_options'
+            'id'   => 'script_styling_options',
         ];
         // End SMTP settings
 
@@ -203,31 +201,28 @@ class ERP_Email_Settings extends ERP_Settings_Page {
         return $section;
     }
 
-    function notification_emails() {
-        $email_templates = wperp()->emailer->get_emails();
-        ?>
+    public function notification_emails() {
+        $email_templates = wperp()->emailer->get_emails(); ?>
         <tr valign="top">
             <td class="erp-settings-table-wrapper" colspan="2">
                 <table class="erp-settings-table widefat" cellspacing="0">
                     <thead>
                     <tr>
                         <?php
-                        $columns = apply_filters( 'erp_email_setting_columns', array(
+                        $columns = apply_filters( 'erp_email_setting_columns', [
                             'name'        => __( 'Email', 'erp' ),
                             'description' => __( 'Description', 'erp' ),
-                            'actions'     => ''
-                        ) );
+                            'actions'     => '',
+                        ] );
 
-                        foreach ( $columns as $key => $column ) {
-                            echo '<th class="erp-settings-table-' . esc_attr( $key ) . '">' . esc_html( $column ) . '</th>';
-                        }
-                        ?>
+        foreach ( $columns as $key => $column ) {
+            echo '<th class="erp-settings-table-' . esc_attr( $key ) . '">' . esc_html( $column ) . '</th>';
+        } ?>
                     </tr>
                     </thead>
                     <tbody id="email_list_view">
                     <?php
                     foreach ( $email_templates as $email_key => $email ) {
-
                         if ( strpos( get_class( $email ), 'HRM' ) !== false ||
                             strpos( get_class( $email ), 'ERP_Document' ) !== false ||
                             strpos( get_class( $email ), 'ERP_Recruitment' ) !== false ||
@@ -242,11 +237,11 @@ class ERP_Email_Settings extends ERP_Settings_Page {
                             $tr_class = 'others';
                         }
 
-                        echo '<tr class="tag_'. $tr_class .'">';
+                        echo '<tr class="tag_' . $tr_class . '">';
 
                         foreach ( $columns as $key => $column ) {
                             switch ( $key ) {
-                                case 'name' :
+                                case 'name':
                                     echo '<td class="erp-settings-table-' . esc_attr( $key ) . '">
                                             <a href="' . esc_url( admin_url( 'admin.php?page=erp-settings&tab=erp-email&section=general&sub_section=' . esc_attr( strtolower( $email_key ) ) ) ) . '">' . esc_html( $email->get_title() ) . '</a>
                                         </td>';
@@ -266,19 +261,18 @@ class ERP_Email_Settings extends ERP_Settings_Page {
                                         </td>';
                                     break;
 
-                                case 'actions' :
+                                case 'actions':
                                     echo '<td class="erp-settings-table-' . esc_attr( $key ) . '">
                                             <a class="button alignright" href="' . esc_url( admin_url( 'admin.php?page=erp-settings&tab=erp-email&section=general&sub_section=' . strtolower( $email_key ) ) ) . '">' . esc_html__( 'Configure', 'erp' ) . '</a>
                                         </td>';
                                     break;
 
-                                default :
+                                default:
                                     do_action( 'erp_email_setting_column_' . $key, $email );
                                     break;
                             }
                         }
-                    }
-                    ?>
+                    } ?>
                     </tbody>
                 </table>
             </td>
@@ -310,8 +304,6 @@ class ERP_Email_Settings extends ERP_Settings_Page {
         <?php
     }
 
-
-
     /**
      * Get IMAP Settings Fields.
      *
@@ -326,7 +318,7 @@ class ERP_Email_Settings extends ERP_Settings_Page {
                     '%s' . __( 'Your server does not have PHP IMAP extension loaded. To enable this feature, please contact your hosting provider and ask to enable PHP IMAP extension.', 'erp' ) . '%s',
                     '<section class="notice notice-warning"><p>',
                     '</p></section>'
-                )
+                ),
             ];
 
             return $fields;
@@ -335,7 +327,7 @@ class ERP_Email_Settings extends ERP_Settings_Page {
         $fields[] = [
             'title' => __( 'IMAP/POP3 Options', 'erp' ),
             'type'  => 'title',
-            'desc'  => __( 'Email incoming settings for ERP.', 'erp' )
+            'desc'  => __( 'Email incoming settings for ERP.', 'erp' ),
         ];
 
         $fields[] = [
@@ -347,12 +339,13 @@ class ERP_Email_Settings extends ERP_Settings_Page {
             'id'      => 'enable_imap',
             'type'    => 'radio',
             'options' => [ 'yes' => 'Yes', 'no' => 'No' ],
-            'default' => 'no'
+            'default' => 'no',
         ];
 
         $schedules = wp_get_schedules();
 
         $cron_schedules = [];
+
         foreach ( $schedules as $key => $value ) {
             $cron_schedules[$key] = $value['display'];
         }
@@ -371,7 +364,7 @@ class ERP_Email_Settings extends ERP_Settings_Page {
             'id'                => 'mail_server',
             'type'              => 'text',
             'custom_attributes' => [
-                'placeholder' => 'imap.gmail.com'
+                'placeholder' => 'imap.gmail.com',
             ],
             'desc'              => __( 'IMAP/POP3 host address.', 'erp' ),
         ];
@@ -382,15 +375,15 @@ class ERP_Email_Settings extends ERP_Settings_Page {
             'type'              => 'text',
             'desc'              => __( 'Your email id.', 'erp' ),
             'custom_attributes' => [
-                'placeholder' => 'email@example.com'
-            ]
+                'placeholder' => 'email@example.com',
+            ],
         ];
 
         $fields[] = [
             'title' => __( 'Password', 'erp' ),
             'id'    => 'password',
             'type'  => 'password',
-            'desc'  => __( 'Your email password.', 'erp' )
+            'desc'  => __( 'Your email password.', 'erp' ),
         ];
 
         $fields[] = [
@@ -430,7 +423,7 @@ class ERP_Email_Settings extends ERP_Settings_Page {
 
         $fields[] = [
             'type' => 'sectionend',
-            'id'   => 'script_styling_options'
+            'id'   => 'script_styling_options',
         ];
 
         return $fields;
@@ -463,9 +456,8 @@ class ERP_Email_Settings extends ERP_Settings_Page {
         }
     }
 
-    function save( $section = false ) {
+    public function save( $section = false ) {
         if ( isset( $_POST['_wpnonce'] ) && wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-settings-nonce' ) ) {
-
             if ( !isset( $_GET['sub_section'] ) ) {
                 parent::save( $section );
 
@@ -474,16 +466,14 @@ class ERP_Email_Settings extends ERP_Settings_Page {
 
             $current_section = isset( $_GET['sub_section'] ) ? sanitize_key( $_GET['sub_section'] ) : false;
 
-
             // saving individual email settings
             if ( $current_section ) {
                 $email_templates = wperp()->emailer->get_emails();
 
                 foreach ( $email_templates as $email_key => $email ) {
                     if ( strtolower( $email_key ) == $current_section ) {
-
-                        $settings = $email->get_form_fields();
-                        $update_options = array();
+                        $settings       = $email->get_form_fields();
+                        $update_options = [];
 
                         if ( $settings ) {
                             foreach ( $settings as $field ) {
@@ -504,7 +494,6 @@ class ERP_Email_Settings extends ERP_Settings_Page {
                         break;
                     }
                 }
-
             } else {
                 parent::save();
             }

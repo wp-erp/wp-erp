@@ -4,11 +4,11 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
 
-
 /**
  * Get all sales transactions
  *
  * @param array $args
+ *
  * @return mixed
  */
 function erp_acct_get_sales_transactions( $args = [] ) {
@@ -33,9 +33,11 @@ function erp_acct_get_sales_transactions( $args = [] ) {
     if ( ! empty( $args['customer_id'] ) ) {
         $where .= " AND invoice.customer_id = {$args['customer_id']} OR invoice_receipt.customer_id = {$args['customer_id']} ";
     }
+
     if ( ! empty( $args['start_date'] ) ) {
         $where .= " AND invoice.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}' OR invoice_receipt.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
     }
+
     if ( empty( $args['status'] ) ) {
         $where .= '';
     } else {
@@ -43,6 +45,7 @@ function erp_acct_get_sales_transactions( $args = [] ) {
             $where .= " AND invoice.status={$args['status']} OR invoice_receipt.status={$args['status']} ";
         }
     }
+
     if ( -1 !== $args['number'] ) {
         $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
     }
@@ -78,6 +81,7 @@ function erp_acct_get_sales_transactions( $args = [] ) {
 
     if ( $args['count'] ) {
         $wpdb->get_results( $sql );
+
         return $wpdb->num_rows;
     }
 
@@ -85,10 +89,11 @@ function erp_acct_get_sales_transactions( $args = [] ) {
     return $wpdb->get_results( $sql, ARRAY_A );
 }
 
-
 /**
  * Get sales chart status
+ *
  * @param array $args
+ *
  * @return array|object|null
  */
 function erp_acct_get_sales_chart_status( $args = [] ) {
@@ -113,10 +118,11 @@ function erp_acct_get_sales_chart_status( $args = [] ) {
     return $wpdb->get_results( $sql, ARRAY_A );
 }
 
-
 /**
  * Get sales chart payment
+ *
  * @param array $args
+ *
  * @return array|object|void|null
  */
 function erp_acct_get_sales_chart_payment( $args = [] ) {
@@ -142,13 +148,12 @@ function erp_acct_get_sales_chart_payment( $args = [] ) {
     return $wpdb->get_row( $sql, ARRAY_A );
 }
 
-
 /**
  * Get bill chart data
  *
  * @param array $args
  *
- * @return array|null|object
+ * @return array|object|null
  */
 function erp_acct_get_bill_chart_data( $args = [] ) {
     global $wpdb;
@@ -172,13 +177,12 @@ function erp_acct_get_bill_chart_data( $args = [] ) {
     return $wpdb->get_row( $sql, ARRAY_A );
 }
 
-
 /**
  * Get bill chart status
  *
  * @param array $args
  *
- * @return array|null|object
+ * @return array|object|null
  */
 function erp_acct_get_bill_chart_status( $args = [] ) {
     global $wpdb;
@@ -203,13 +207,12 @@ function erp_acct_get_bill_chart_status( $args = [] ) {
     return $wpdb->get_results( $sql, ARRAY_A );
 }
 
-
 /**
  * Get expense chart data
  *
  * @param array $args
  *
- * @return array|null|object
+ * @return array|object|null
  */
 function erp_acct_get_purchase_chart_data( $args = [] ) {
     global $wpdb;
@@ -235,13 +238,12 @@ function erp_acct_get_purchase_chart_data( $args = [] ) {
     return $result;
 }
 
-
 /**
  * Get expense chart status
  *
  * @param array $args
  *
- * @return array|null|object
+ * @return array|object|null
  */
 function erp_acct_get_purchase_chart_status( $args = [] ) {
     global $wpdb;
@@ -268,18 +270,18 @@ function erp_acct_get_purchase_chart_status( $args = [] ) {
     return $result;
 }
 
-
 /**
  * Get expense chart data
  *
  * @param array $args
  *
- * @return array|null|object
+ * @return array|object|null
  */
 function erp_acct_get_expense_chart_data( $args = [] ) {
     global $wpdb;
 
     $where = '';
+
     if ( ! empty( $args['start_date'] ) ) {
         $where .= "WHERE bill.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
     }
@@ -301,7 +303,7 @@ function erp_acct_get_expense_chart_data( $args = [] ) {
  *
  * @param array $args
  *
- * @return array|null|object
+ * @return array|object|null
  */
 function erp_acct_get_expense_chart_status( $args = [] ) {
     global $wpdb;
@@ -326,14 +328,12 @@ function erp_acct_get_expense_chart_status( $args = [] ) {
     return $wpdb->get_row( $sql, ARRAY_A );
 }
 
-
 /**
  * Get Income Expense Chart data for dashbaord
  *
- * @return array|null|object
+ * @return array|object|null
  */
 function erp_acct_get_income_expense_chart_data() {
-
     $income_chart_id  = 4; //Default db value
     $expense_chart_id = 5; //Default db value
 
@@ -346,8 +346,8 @@ function erp_acct_get_income_expense_chart_data() {
 
     $this_month = [
         'labels'  => array_keys( $incomes_monthly ),
-		'income'  => array_values( $incomes_monthly ),
-		'expense' => array_values( $expenses_monthly ),
+        'income'  => array_values( $incomes_monthly ),
+        'expense' => array_values( $expenses_monthly ),
     ];
 
     //Generate last month data
@@ -359,8 +359,8 @@ function erp_acct_get_income_expense_chart_data() {
 
     $last_month = [
         'labels'  => array_keys( $incomes_monthly ),
-		'income'  => array_values( $incomes_monthly ),
-		'expense' => array_values( $expenses_monthly ),
+        'income'  => array_values( $incomes_monthly ),
+        'expense' => array_values( $expenses_monthly ),
     ];
 
     $current_year = date( 'Y' );
@@ -375,8 +375,8 @@ function erp_acct_get_income_expense_chart_data() {
 
     $this_year = [
         'labels'  => array_keys( $income_data ),
-		'income'  => array_values( $income_data ),
-		'expense' => array_values( $expense_data ),
+        'income'  => array_values( $income_data ),
+        'expense' => array_values( $expense_data ),
     ];
 
     //Generate last year data
@@ -391,16 +391,16 @@ function erp_acct_get_income_expense_chart_data() {
     $expense_data = erp_acct_format_monthly_data_to_yearly_data( $expenses );
     $last_yr      = [
         'labels'  => array_keys( $income_data ),
-		'income'  => array_values( $income_data ),
-		'expense' => array_values( $expense_data ),
+        'income'  => array_values( $income_data ),
+        'expense' => array_values( $expense_data ),
     ];
 
     return [
-		'thisMonth' => $this_month,
-		'lastMonth' => $last_month,
-		'thisYear'  => $this_year,
-		'lastYear'  => $last_yr,
-	];
+        'thisMonth' => $this_month,
+        'lastMonth' => $last_month,
+        'thisYear'  => $this_year,
+        'lastYear'  => $last_yr,
+    ];
 }
 
 /**
@@ -410,7 +410,7 @@ function erp_acct_get_income_expense_chart_data() {
  * @param $end_date
  * @param $chart_id
  *
- * @return array|null|object
+ * @return array|object|null
  */
 function erp_acct_get_monthly_balance_by_chart_id( $start_date, $end_date, $chart_id ) {
     global $wpdb;
@@ -428,6 +428,7 @@ function erp_acct_get_monthly_balance_by_chart_id( $start_date, $end_date, $char
               Group By Month(ld.trn_date)";
 
     $results = $wpdb->get_results( $wpdb->prepare( $query, $chart_id, $start_date, $end_date ), ARRAY_A );
+
     return $results;
 }
 
@@ -455,11 +456,12 @@ function erp_acct_format_monthly_data_to_yearly_data( $result ) {
     ];
 
     $result = array_map(
-        function( $item ) {
-				$item['month']   = date( 'M', mktime( 0, 0, 0, $item['month'] ) );
-				$item['balance'] = abs( $item['balance'] );
-				return $item;
-		},
+        function ( $item ) {
+            $item['month']   = date( 'M', mktime( 0, 0, 0, $item['month'] ) );
+            $item['balance'] = abs( $item['balance'] );
+
+            return $item;
+        },
         $result
     );
 
@@ -477,9 +479,9 @@ function erp_acct_format_monthly_data_to_yearly_data( $result ) {
  * Get Balance amount for given chart of account in time range
  *
  * @param $chart_id
- *
  * @param string $month
- * @return array|null|object
+ *
+ * @return array|object|null
  */
 function erp_acct_get_daily_balance_by_chart_id( $chart_id, $month = 'current' ) {
     global $wpdb;
@@ -491,6 +493,7 @@ function erp_acct_get_daily_balance_by_chart_id( $chart_id, $month = 'current' )
             $start_date = date( 'Y-m-d', strtotime( 'first day of this month' ) );
             $end_date   = date( 'Y-m-d', strtotime( 'last day of this month' ) );
             break;
+
         case 'last':
             $start_date = date( 'Y-m-d', strtotime( 'first day of previous month' ) );
             $end_date   = date( 'Y-m-d', strtotime( 'last day of previous month' ) );
@@ -512,6 +515,7 @@ function erp_acct_get_daily_balance_by_chart_id( $chart_id, $month = 'current' )
               Group By ld.trn_date";
 
     $results = $wpdb->get_results( $wpdb->prepare( $query, $chart_id, $start_date, $end_date ), ARRAY_A );
+
     return $results;
 }
 
@@ -524,11 +528,12 @@ function erp_acct_get_daily_balance_by_chart_id( $chart_id, $month = 'current' )
  */
 function erp_acct_format_daily_data_to_yearly_data( $result ) {
     $result = array_map(
-        function( $item ) {
-				$item['day']     = date( 'd-m', strtotime( $item['day'] ) );
-				$item['balance'] = abs( $item['balance'] );
-				return $item;
-		},
+        function ( $item ) {
+            $item['day']     = date( 'd-m', strtotime( $item['day'] ) );
+            $item['balance'] = abs( $item['balance'] );
+
+            return $item;
+        },
         $result
     );
 
@@ -544,6 +549,7 @@ function erp_acct_format_daily_data_to_yearly_data( $result ) {
  * Get all Expenses
  *
  * @param array $args
+ *
  * @return mixed
  */
 function erp_acct_get_expense_transactions( $args = [] ) {
@@ -568,9 +574,11 @@ function erp_acct_get_expense_transactions( $args = [] ) {
     if ( ! empty( $args['vendor_id'] ) ) {
         $where .= " AND bill.vendor_id = {$args['vendor_id']} OR pay_bill.vendor_id = {$args['vendor_id']} ";
     }
+
     if ( ! empty( $args['start_date'] ) ) {
         $where .= " AND bill.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}' OR pay_bill.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
     }
+
     if ( 0 === $args['status'] ) {
         $where .= '';
     } else {
@@ -578,6 +586,7 @@ function erp_acct_get_expense_transactions( $args = [] ) {
             $where .= " AND bill.status={$args['status']} OR pay_bill.status={$args['status']} OR expense.status={$args['status']} ";
         }
     }
+
     if ( -1 !== $args['number'] ) {
         $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
     }
@@ -620,6 +629,7 @@ function erp_acct_get_expense_transactions( $args = [] ) {
 
     if ( $args['count'] ) {
         $wpdb->get_results( $sql );
+
         return $wpdb->num_rows;
     }
 
@@ -627,11 +637,11 @@ function erp_acct_get_expense_transactions( $args = [] ) {
     return $wpdb->get_results( $sql, ARRAY_A );
 }
 
-
 /**
  * Get all Purchases
  *
  * @param array $args
+ *
  * @return mixed
  */
 function erp_acct_get_purchase_transactions( $args = [] ) {
@@ -656,9 +666,11 @@ function erp_acct_get_purchase_transactions( $args = [] ) {
     if ( ! empty( $args['vendor_id'] ) ) {
         $where .= " AND purchase.vendor_id = {$args['vendor_id']} OR pay_purchase.vendor_id = {$args['vendor_id']} ";
     }
+
     if ( ! empty( $args['start_date'] ) ) {
         $where .= " AND purchase.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}' OR pay_purchase.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
     }
+
     if ( empty( $args['status'] ) ) {
         $where .= '';
     } else {
@@ -666,6 +678,7 @@ function erp_acct_get_purchase_transactions( $args = [] ) {
             $where .= " AND purchase.status={$args['status']} OR pay_purchase.status={$args['status']} ";
         }
     }
+
     if ( -1 !== $args['number'] ) {
         $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
     }
@@ -700,6 +713,7 @@ function erp_acct_get_purchase_transactions( $args = [] ) {
 
     if ( $args['count'] ) {
         $wpdb->get_results( $sql );
+
         return $wpdb->num_rows;
     }
 
@@ -730,7 +744,6 @@ function erp_acct_generate_transaction_pdfs() {
     $voucher_nos = $wpdb->get_results( "SELECT id, type FROM {$wpdb->prefix}erp_acct_voucher_no", ARRAY_A );
 
     for ( $i = 0; $i < count( $voucher_nos ); $i++ ) {
-
         if ( 'journal' === $voucher_nos[ $i ]['type'] ) {
             continue;
         }
@@ -749,10 +762,9 @@ function erp_acct_generate_transaction_pdfs() {
  * @param string $file_name
  * @param string $output_method
  *
- * @return boolean
+ * @return bool
  */
 function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output_method = 'D' ) {
-
     if ( ! is_plugin_active( 'erp-pdf-invoice/wp-erp-pdf.php' ) ) {
         return;
     }
@@ -778,9 +790,11 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
     if ( ! empty( $transaction->customer_id ) ) {
         $user_id = $transaction->customer_id;
     }
+
     if ( ! empty( $transaction->vendor_id ) ) {
         $user_id = $transaction->vendor_id;
     }
+
     if ( ! empty( $transaction->people_id ) ) {
         $user_id = $transaction->people_id;
     }
@@ -837,6 +851,7 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
 
     // Set to Address
     $to_address = array_values( erp_acct_get_people_address( $user_id ) );
+
     if ( empty( $to_address ) ) {
         $to_address = erp_get_people( $user_id )->email;
     }
@@ -867,7 +882,7 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
         // Add particulars
         if ( $transaction->particulars ) {
             $trn_pdf->add_title( __( 'Notes', 'erp' ) );
-            $trn_pdf->add_paragraph($transaction->particulars );
+            $trn_pdf->add_paragraph( $transaction->particulars );
         }
     }
 
@@ -883,7 +898,7 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
         // Add particulars
         if ( $transaction->particulars ) {
             $trn_pdf->add_title( __( 'Notes', 'erp' ) );
-            $trn_pdf->add_paragraph($transaction->particulars );
+            $trn_pdf->add_paragraph( $transaction->particulars );
         }
 
         $trn_pdf->add_badge( __( 'PAID', 'erp' ) );
@@ -903,7 +918,7 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
         // Add particulars
         if ( $transaction->particulars ) {
             $trn_pdf->add_title( __( 'Notes', 'erp' ) );
-            $trn_pdf->add_paragraph($transaction->particulars );
+            $trn_pdf->add_paragraph( $transaction->particulars );
         }
 
         $trn_pdf->add_badge( __( 'PENDING', 'erp' ) );
@@ -924,7 +939,7 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
         // Add particulars
         if ( $transaction->particulars ) {
             $trn_pdf->add_title( __( 'Notes', 'erp' ) );
-            $trn_pdf->add_paragraph($transaction->particulars );
+            $trn_pdf->add_paragraph( $transaction->particulars );
         }
 
         $trn_pdf->add_badge( __( 'PAID', 'erp' ) );
@@ -944,7 +959,7 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
         // Add particulars
         if ( $transaction->particulars ) {
             $trn_pdf->add_title( __( 'Notes', 'erp' ) );
-            $trn_pdf->add_paragraph($transaction->particulars );
+            $trn_pdf->add_paragraph( $transaction->particulars );
         }
 
         $trn_pdf->add_badge( __( 'PENDING', 'erp' ) );
@@ -964,7 +979,7 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
         // Add particulars
         if ( $transaction->particulars ) {
             $trn_pdf->add_title( __( 'Notes', 'erp' ) );
-            $trn_pdf->add_paragraph($transaction->particulars );
+            $trn_pdf->add_paragraph( $transaction->particulars );
         }
 
         $trn_pdf->add_badge( __( 'PAID', 'erp' ) );
@@ -985,7 +1000,7 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
         // Add particulars
         if ( $transaction->particulars ) {
             $trn_pdf->add_title( __( 'Notes', 'erp' ) );
-            $trn_pdf->add_paragraph($transaction->particulars );
+            $trn_pdf->add_paragraph( $transaction->particulars );
         }
 
         $trn_pdf->add_badge( __( 'PAID', 'erp' ) );
@@ -1005,7 +1020,7 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
         // Add particulars
         if ( $transaction->particulars ) {
             $trn_pdf->add_title( __( 'Notes', 'erp' ) );
-            $trn_pdf->add_paragraph($transaction->particulars );
+            $trn_pdf->add_paragraph( $transaction->particulars );
         }
 
         $trn_pdf->add_badge( __( 'PAID', 'erp' ) );
@@ -1023,7 +1038,7 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
         // Add particulars
         if ( $transaction->particulars ) {
             $trn_pdf->add_title( __( 'Notes', 'erp' ) );
-            $trn_pdf->add_paragraph($transaction->particulars );
+            $trn_pdf->add_paragraph( $transaction->particulars );
         }
 
         $trn_pdf->add_total( __( 'SUB TOTAL', 'erp' ), $transaction->balance );
@@ -1055,7 +1070,7 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
  * @param $file_name
  * @param string $output_method
  *
- * @return boolean
+ * @return bool
  */
 function erp_acct_send_email_with_pdf_attached( $request, $transaction, $file_name, $output_method = 'D' ) {
     if ( ! is_plugin_active( 'erp-pdf-invoice/wp-erp-pdf.php' ) ) {
@@ -1085,8 +1100,7 @@ function erp_acct_send_email_with_pdf_attached( $request, $transaction, $file_na
     return $result;
 }
 
-
-/**
+/*
  * Send pdf on transaction
  */
 add_action( 'erp_acct_new_transaction_sales', 'erp_acct_send_email_on_transaction', 10, 2 );
@@ -1104,7 +1118,8 @@ add_action( 'erp_acct_new_transaction_purchase_order', 'erp_acct_send_email_on_t
  *
  * @param $voucher_no
  * @param $transaction
- * @return boolean
+ *
+ * @return bool
  */
 function erp_acct_send_email_on_transaction( $voucher_no, $transaction ) {
     if ( ! is_plugin_active( 'erp-pdf-invoice/wp-erp-pdf.php' ) ) {
@@ -1124,45 +1139,50 @@ function erp_acct_send_email_on_transaction( $voucher_no, $transaction ) {
     $pdf_file  = erp_acct_generate_pdf( $request, $transaction, $file_name, 'F' );
 
     if ( $pdf_file ) {
-
         switch ( current_action() ) {
-            case "erp_acct_new_transaction_sales":
-                $email_type = "Transactional_Email";
+            case 'erp_acct_new_transaction_sales':
+                $email_type = 'Transactional_Email';
                 break;
-            case "erp_acct_new_transaction_payment":
-                $email_type = "Transactional_Email_Payments";
+
+            case 'erp_acct_new_transaction_payment':
+                $email_type = 'Transactional_Email_Payments';
                 break;
-            case "erp_acct_new_transaction_bill":
-                $email_type = "Transactional_Email_Bill";
+
+            case 'erp_acct_new_transaction_bill':
+                $email_type = 'Transactional_Email_Bill';
                 break;
-            case "erp_acct_new_transaction_pay_bill":
-                $email_type = "Transactional_Email_Pay_Bill";
+
+            case 'erp_acct_new_transaction_pay_bill':
+                $email_type = 'Transactional_Email_Pay_Bill';
                 break;
-            case "erp_acct_new_transaction_purchase":
-                $email_type = "Transactional_Email_Purchase";
+
+            case 'erp_acct_new_transaction_purchase':
+                $email_type = 'Transactional_Email_Purchase';
                 break;
-            case "erp_acct_new_transaction_pay_purchase":
-                $email_type = "Transactional_Email_Pay_Purchase";
+
+            case 'erp_acct_new_transaction_pay_purchase':
+                $email_type = 'Transactional_Email_Pay_Purchase';
                 break;
-            case "erp_acct_new_transaction_expense":
-                $email_type = "Transactional_Email_Expense";
+
+            case 'erp_acct_new_transaction_expense':
+                $email_type = 'Transactional_Email_Expense';
                 break;
-            case "erp_acct_new_transaction_estimate":
-                $email_type = "Transactional_Email_Estimate";
+
+            case 'erp_acct_new_transaction_estimate':
+                $email_type = 'Transactional_Email_Estimate';
                 break;
-            case "erp_acct_new_transaction_purchase_order":
-                $email_type = "Transactional_Email_Purchase_Order";
+
+            case 'erp_acct_new_transaction_purchase_order':
+                $email_type = 'Transactional_Email_Purchase_Order';
                 break;
             default:
-                $email_type = "Transactional_Email";
+                $email_type = 'Transactional_Email';
         }
 
         acct_send_email( $request['receiver'], $pdf_file, $email_type, $voucher_no );
-
     } else {
         wp_die( esc_html__( 'PDF not generated!', 'erp' ) );
     }
-
 }
 
 /**
@@ -1171,15 +1191,14 @@ function erp_acct_send_email_on_transaction( $voucher_no, $transaction ) {
  * @param $receiver
  * @param $pdf
  * @param $type
- * @return boolean
+ *
+ * @return bool
  */
 function acct_send_email( $receiver, $pdf_file, $email_type, $voucher_no ) {
-
     $emailer = wperp()->emailer->get_email( $email_type );
     $company = new \WeDevs\ERP\Company();
 
     if ( is_a( $emailer, '\WeDevs\ERP\Email' ) ) {
-
         if ( is_array( $receiver ) ) {
             foreach ( $receiver as $email ) {
                 $emailer->trigger( $email, $pdf_file, $voucher_no, $company );
@@ -1187,15 +1206,14 @@ function acct_send_email( $receiver, $pdf_file, $email_type, $voucher_no ) {
         } else {
             $emailer->trigger( $receiver, $pdf_file, $voucher_no, $company );
         }
-
     }
-
 }
-
 
 /**
  * Get voucher type by id
+ *
  * @param $voucher_no
+ *
  * @return string|null
  */
 function erp_acct_get_transaction_type( $voucher_no ) {
@@ -1210,17 +1228,16 @@ function erp_acct_get_transaction_type( $voucher_no ) {
  * @return mixed
  */
 function erp_acct_get_transaction( $transaction_id ) {
-
     $transaction = [];
 
     $transaction_type = erp_acct_get_transaction_type( $transaction_id );
     $link_hash        = erp_acct_get_invoice_link_hash( $transaction_id, $transaction_type );
     $readonly_url     = add_query_arg(
         [
-			'query'    => 'readonly_invoice',
-			'trans_id' => $transaction_id,
-			'auth'     => $link_hash,
-		],
+            'query'    => 'readonly_invoice',
+            'trans_id' => $transaction_id,
+            'auth'     => $link_hash,
+        ],
         site_url()
     );
 
@@ -1228,25 +1245,32 @@ function erp_acct_get_transaction( $transaction_id ) {
         case 'invoice':
             $transaction = erp_acct_get_invoice( $transaction_id );
             break;
+
         case 'payment':
             $transaction = erp_acct_get_payment( $transaction_id );
             break;
+
         case 'bill':
             $transaction = erp_acct_get_bill( $transaction_id );
             break;
+
         case 'pay_bill':
             $transaction = erp_acct_get_pay_bill( $transaction_id );
             break;
+
         case 'purchase':
             $transaction = erp_acct_get_purchase( $transaction_id );
             break;
+
         case 'pay_purchase':
             $transaction = erp_acct_get_pay_purchase( $transaction_id );
             break;
+
         case 'expense':
         case 'check':
             $transaction = erp_acct_get_expense( $transaction_id );
             break;
+
         case 'transfer_voucher':
             $transaction = erp_acct_get_single_voucher( $transaction_id );
             break;
@@ -1258,7 +1282,6 @@ function erp_acct_get_transaction( $transaction_id ) {
     $transaction['readonly_url'] = $readonly_url;
 
     return $transaction;
-
 }
 
 /**
@@ -1272,9 +1295,7 @@ function erp_acct_get_transaction( $transaction_id ) {
  * @return bool
  */
 function erp_acct_verify_invoice_link_hash( $transaction_id, $transaction_type, $hash_to_verify = '', $algo = 'sha256' ) {
-
     if ( $transaction_id && $transaction_type && $hash_to_verify ) {
-
         $to_hash       = $transaction_id . $transaction_type;
         $hash_original = hash( $algo, $to_hash );
 
@@ -1310,6 +1331,7 @@ function erp_acct_get_invoice_link_hash( $transaction_id, $transaction_type, $al
  * Get pdf file name
  *
  * @param $voucher_no
+ *
  * @return string
  */
 function erp_acct_get_pdf_filename( $voucher_no ) {
@@ -1323,7 +1345,6 @@ function erp_acct_get_pdf_filename( $voucher_no ) {
 
     return $pdf_file;
 }
-
 
 /**
  * Insert data into `erp_acct_people_trn_details` table
@@ -1350,18 +1371,18 @@ function erp_acct_insert_data_into_people_trn_details( $transaction, $voucher_no
 
     $wpdb->insert(
         $wpdb->prefix . 'erp_acct_people_trn_details',
-        array(
-			'people_id'   => $people_id,
-			'voucher_no'  => $voucher_no,
-			'debit'       => $transaction['dr'],
-			'credit'      => $transaction['cr'],
-			'trn_date'    => $date,
-			'particulars' => $transaction['particulars'],
-			'created_at'  => $transaction['created_at'],
-			'created_by'  => $transaction['created_by'],
-			'updated_at'  => $transaction['updated_at'],
-			'updated_by'  => $transaction['updated_by'],
-        )
+        [
+            'people_id'   => $people_id,
+            'voucher_no'  => $voucher_no,
+            'debit'       => $transaction['dr'],
+            'credit'      => $transaction['cr'],
+            'trn_date'    => $date,
+            'particulars' => $transaction['particulars'],
+            'created_at'  => $transaction['created_at'],
+            'created_by'  => $transaction['created_by'],
+            'updated_at'  => $transaction['updated_at'],
+            'updated_by'  => $transaction['updated_by'],
+        ]
     );
 }
 
@@ -1374,19 +1395,19 @@ function erp_acct_insert_data_into_people_trn_details( $transaction, $voucher_no
 function erp_acct_update_data_into_people_trn_details( $transaction, $voucher_no ) {
     global $wpdb;
 
-    $wpdb->delete( $wpdb->prefix . 'erp_acct_people_trn_details', array( 'voucher_no' => $voucher_no ) );
-
+    $wpdb->delete( $wpdb->prefix . 'erp_acct_people_trn_details', [ 'voucher_no' => $voucher_no ] );
 }
 
 /**
  * Return url from a absolute path
  *
  * @param $voucher_no
+ *
  * @return string
  */
 function erp_acct_pdf_abs_path_to_url( $voucher_no ) {
     $upload_url = wp_upload_dir();
     $url        = $upload_url['baseurl'] . '/erp-pdfs/' . "voucher_{$voucher_no}.pdf";
+
     return esc_url_raw( $url );
 }
-

@@ -3,8 +3,6 @@
  * Setup wizard class
  *
  * Walkthrough to the basic setup upon installation
- *
- * @package WP-ERP\Admin
  */
 
 namespace WeDevs\ERP\Admin;
@@ -18,7 +16,7 @@ class Setup_Wizard {
     private $step   = '';
 
     /** @var array Steps for the setup wizard */
-    private $steps  = array();
+    private $steps  = [];
 
     /**
      * Hook in tabs.
@@ -30,8 +28,8 @@ class Setup_Wizard {
         update_option( 'erp_setup_wizard_ran', '1' );
 
         if ( apply_filters( 'erp_enable_setup_wizard', true ) && current_user_can( 'manage_options' ) ) {
-            add_action( 'admin_menu', array( $this, 'admin_menus' ) );
-            add_action( 'admin_init', array( $this, 'setup_wizard' ) );
+            add_action( 'admin_menu', [ $this, 'admin_menus' ] );
+            add_action( 'admin_init', [ $this, 'setup_wizard' ] );
         }
     }
 
@@ -54,57 +52,57 @@ class Setup_Wizard {
             return;
         }
 
-        $this->steps = array(
-            'introduction' => array(
-                'name'    =>  __( 'Introduction', 'erp' ),
-                'view'    => array( $this, 'setup_step_introduction' ),
-                'handler' => ''
-            ),
-            'basic' => array(
-                'name'    =>  __( 'Basic', 'erp' ),
-                'view'    => array( $this, 'setup_step_basic' ),
-                'handler' => array( $this, 'setup_step_basic_save' )
-            ),
-            'module' => array(
-                'name'    =>  __( 'Module', 'erp' ),
-                'view'    => array( $this, 'setup_step_module' ),
-                'handler' => array( $this, 'setup_step_module_save' )
-            ),
-            'department' => array(
-                'name'    =>  __( 'Departments', 'erp' ),
-                'view'    => array( $this, 'setup_step_departments' ),
-                'handler' => array( $this, 'setup_step_departments_save' )
-            ),
-            'designation' => array(
-                'name'    =>  __( 'Designations', 'erp' ),
-                'view'    => array( $this, 'setup_step_designation' ),
-                'handler' => array( $this, 'setup_step_designation_save' ),
-            ),
-            'workdays' => array(
-                'name'    =>  __( 'Work Days', 'erp' ),
-                'view'    => array( $this, 'setup_step_workdays' ),
-                'handler' => array( $this, 'setup_step_workdays_save' ),
-            ),
+        $this->steps = [
+            'introduction' => [
+                'name'    => __( 'Introduction', 'erp' ),
+                'view'    => [ $this, 'setup_step_introduction' ],
+                'handler' => '',
+            ],
+            'basic' => [
+                'name'    => __( 'Basic', 'erp' ),
+                'view'    => [ $this, 'setup_step_basic' ],
+                'handler' => [ $this, 'setup_step_basic_save' ],
+            ],
+            'module' => [
+                'name'    => __( 'Module', 'erp' ),
+                'view'    => [ $this, 'setup_step_module' ],
+                'handler' => [ $this, 'setup_step_module_save' ],
+            ],
+            'department' => [
+                'name'    => __( 'Departments', 'erp' ),
+                'view'    => [ $this, 'setup_step_departments' ],
+                'handler' => [ $this, 'setup_step_departments_save' ],
+            ],
+            'designation' => [
+                'name'    => __( 'Designations', 'erp' ),
+                'view'    => [ $this, 'setup_step_designation' ],
+                'handler' => [ $this, 'setup_step_designation_save' ],
+            ],
+            'workdays' => [
+                'name'    => __( 'Work Days', 'erp' ),
+                'view'    => [ $this, 'setup_step_workdays' ],
+                'handler' => [ $this, 'setup_step_workdays_save' ],
+            ],
             // 'newsletter' => array(
             //     'name'    =>  __( 'Newsletter', 'erp' ),
             //     'view'    => array( $this, 'setup_step_newsletter' ),
             //     'handler' => array( $this, 'setup_step_newsletter_save' ),
             // ),
-            'next_steps' => array(
-                'name'    =>  __( 'Ready!', 'erp' ),
-                'view'    => array( $this, 'setup_step_ready' ),
-                'handler' => ''
-            )
-        );
+            'next_steps' => [
+                'name'    => __( 'Ready!', 'erp' ),
+                'view'    => [ $this, 'setup_step_ready' ],
+                'handler' => '',
+            ],
+        ];
 
         $this->step = isset( $_GET['step'] ) ? sanitize_key( $_GET['step'] ) : current( array_keys( $this->steps ) );
         $suffix     = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '';
 
         wp_enqueue_style( 'jquery-ui', WPERP_ASSETS . '/vendor/jquery-ui/jquery-ui-1.9.1.custom.css' );
-        wp_enqueue_style( 'erp-setup', WPERP_ASSETS . '/css/setup.css', array( 'dashicons', 'install' ) );
+        wp_enqueue_style( 'erp-setup', WPERP_ASSETS . '/css/setup.css', [ 'dashicons', 'install' ] );
 
         wp_register_script( 'erp-select2', WPERP_ASSETS . '/vendor/select2/select2.full.min.js', false, false, true );
-        wp_register_script( 'erp-setup', WPERP_ASSETS . "/js/erp$suffix.js", array( 'jquery', 'jquery-ui-datepicker', 'erp-select2' ), date( 'Ymd' ), true );
+        wp_register_script( 'erp-setup', WPERP_ASSETS . "/js/erp$suffix.js", [ 'jquery', 'jquery-ui-datepicker', 'erp-select2' ], date( 'Ymd' ), true );
 
         if ( ! empty( $_POST['save_step'] ) && isset( $this->steps[ $this->step ]['handler'] ) ) {
             call_user_func( $this->steps[ $this->step ]['handler'] );
@@ -120,6 +118,7 @@ class Setup_Wizard {
 
     public function get_next_step_link() {
         $keys = array_keys( $this->steps );
+
         return add_query_arg( 'step', $keys[ array_search( $this->step, array_keys( $this->steps ) ) + 1 ], remove_query_arg( 'translation_updated' ) );
     }
 
@@ -148,9 +147,9 @@ class Setup_Wizard {
      */
     public function setup_wizard_footer() {
         ?>
-            <?php if ( 'next_steps' === $this->step ) : ?>
+            <?php if ( 'next_steps' === $this->step ) { ?>
                 <a class="erp-return-to-dashboard" href="<?php echo esc_url( admin_url() ); ?>"><?php esc_html_e( 'Return to the WordPress Dashboard', 'erp' ); ?></a>
-            <?php endif; ?>
+            <?php } ?>
             </body>
         </html>
         <?php
@@ -161,10 +160,9 @@ class Setup_Wizard {
      */
     public function setup_wizard_steps() {
         $output_steps = $this->steps;
-        array_shift( $output_steps );
-        ?>
+        array_shift( $output_steps ); ?>
         <ol class="erp-setup-steps">
-            <?php foreach ( $output_steps as $step_key => $step ) : ?>
+            <?php foreach ( $output_steps as $step_key => $step ) { ?>
                 <li class="<?php
                     if ( $step_key === $this->step ) {
                         echo 'active';
@@ -173,7 +171,7 @@ class Setup_Wizard {
                     }
                     ?>"><a href="<?php echo esc_url( admin_url( 'index.php?page=erp-setup&step=' . $step_key ) ); ?>"><?php echo esc_html( $step['name'] ); ?></a>
                 </li>
-            <?php endforeach; ?>
+            <?php } ?>
         </ol>
         <?php
     }
@@ -203,7 +201,7 @@ class Setup_Wizard {
     public function setup_step_introduction() {
         ?>
         <h1><?php esc_html_e( 'Welcome to WP ERP!', 'erp' ); ?></h1>
-        <p><?php echo wp_kses_post( __('Thank you for choosing WP-ERP. An easier way to manage your company! This quick setup wizard will help you configure the basic settings. <strong>It’s completely optional and shouldn’t take longer than three minutes.</strong>', 'erp' ) ); ?></p>
+        <p><?php echo wp_kses_post( __( 'Thank you for choosing WP-ERP. An easier way to manage your company! This quick setup wizard will help you configure the basic settings. <strong>It’s completely optional and shouldn’t take longer than three minutes.</strong>', 'erp' ) ); ?></p>
         <p><?php esc_html_e( 'No time right now? If you don’t want to go through the wizard, you can skip and return to the WordPress dashboard. Come back anytime if you change your mind!', 'erp' ); ?></p>
         <p class="erp-setup-actions step">
             <a href="<?php echo esc_url( $this->get_next_step_link() ); ?>" class="button-primary button button-large button-next"><?php esc_html_e( 'Let\'s Go!', 'erp' ); ?></a>
@@ -213,13 +211,12 @@ class Setup_Wizard {
     }
 
     public function setup_step_basic() {
-        $general         = get_option( 'erp_settings_general', array() );
+        $general         = get_option( 'erp_settings_general', [] );
         $company         = new \WeDevs\ERP\Company();
         $business_type   = $company->business_type;
 
         $financial_month = isset( $general['gen_financial_month'] ) ? sanitize_text_field( wp_unslash( $general['gen_financial_month'] ) ) : '1';
-        $company_started = isset( $general['gen_com_start'] ) ? sanitize_text_field( wp_unslash( $general['gen_com_start'] ) ) : '';
-        ?>
+        $company_started = isset( $general['gen_com_start'] ) ? sanitize_text_field( wp_unslash( $general['gen_com_start'] ) ) : ''; ?>
         <h1><?php esc_html_e( 'Basic Settings', 'erp' ); ?></h1>
 
         <form method="post">
@@ -228,57 +225,57 @@ class Setup_Wizard {
                 <tr>
                     <th scope="row"><label for="company_name"><?php esc_html_e( 'Company Name', 'erp' ); ?></label></th>
                     <td>
-                        <?php erp_html_form_input([
+                        <?php erp_html_form_input( [
                             'name'    => 'company_name',
                             'id'      => 'company_name',
                             'type'    => 'text',
                             'value'   => $company->name,
                             'help'    => __( 'This name will be shown as your company name.', 'erp' ),
-                        ]); ?>
+                        ] ); ?>
                     </td>
                 </tr>
                 <tr>
                     <th scope="row"><label for="gen_financial_month"><?php esc_html_e( 'Financial Year Starts', 'erp' ); ?></label></th>
                     <td>
-                        <?php erp_html_form_input([
+                        <?php erp_html_form_input( [
                             'name'    => 'gen_financial_month',
                             'id'      => 'gen_financial_month',
                             'type'    => 'select',
                             'value'   => $financial_month,
                             'options' => erp_months_dropdown(),
                             'help'    => esc_html__( 'Financial and tax calculation starts from this month of every year.', 'erp' ),
-                        ]); ?>
+                        ] ); ?>
                     </td>
                 </tr>
                 <tr>
                     <th scope="row"><label for="gen_com_start"><?php esc_html_e( 'Company Start Date', 'erp' ); ?></label></th>
                     <td>
-                        <?php erp_html_form_input([
+                        <?php erp_html_form_input( [
                             'name'        => 'gen_com_start',
                             'type'        => 'text',
                             'value'       => $company_started,
                             'help'        => esc_html__( 'The date the company officially started.', 'erp' ),
                             'class'       => 'erp-date-field',
-                            'placeholder' => 'YYYY-MM-DD'
-                        ]); ?>
+                            'placeholder' => 'YYYY-MM-DD',
+                        ] ); ?>
                     </td>
                 </tr>
                 <tr>
                     <th scope="row"><label for="base_currency"><?php esc_html_e( 'Currency', 'erp' ); ?></label></th>
                     <td>
-                        <?php erp_html_form_input([
+                        <?php erp_html_form_input( [
                             'name'    => 'base_currency',
                             'type'    => 'select',
                             'value'   => '1',
                             'options' => erp_get_currencies_for_dropdown(),
                             'desc'    => esc_html__( 'Format of date to show accross the system.', 'erp' ),
-                        ]); ?>
+                        ] ); ?>
                     </td>
                 </tr>
                 <tr>
                     <th scope="row"><label for="date_format"><?php esc_html_e( 'Date Format', 'erp' ); ?></label></th>
                     <td>
-                        <?php erp_html_form_input([
+                        <?php erp_html_form_input( [
                             'name'    => 'date_format',
                             'type'    => 'select',
                             'value'   => 'd-m-Y',
@@ -290,13 +287,13 @@ class Setup_Wizard {
                                 'Y-m-d' => 'yyyy-mm-dd',
                             ],
                             'help' => esc_html__( 'Format of date to show accross the system.', 'erp' ),
-                        ]); ?>
+                        ] ); ?>
                     </td>
                 </tr>
                 <tr>
                     <th scope="row"><label for="business_type"><?php esc_html_e( 'What sort of business do you do?', 'erp' ); ?></label></th>
                     <td>
-                        <?php erp_html_form_input([
+                        <?php erp_html_form_input( [
                             'name'    => 'business_type',
                             'type'    => 'select',
                             'value'   => $business_type,
@@ -311,13 +308,13 @@ class Setup_Wizard {
                                 'ecommerceWoo'     => 'eCommerce (WooCommerce)',
                                 'ecommerceShopify' => 'eCommerce (Shopify)',
                                 'ecommerceOther'   => 'eCommerce (Other)',
-                                'Other'            => 'Other'
-                            ]
-                        ]); ?>
+                                'Other'            => 'Other',
+                            ],
+                        ] ); ?>
                     </td>
                 </tr>
 
-                <?php if ( \WeDevs\ERP\Tracker::get_instance()->not_allowed() ) : ?>
+                <?php if ( \WeDevs\ERP\Tracker::get_instance()->not_allowed() ) { ?>
 
                 <tr>
                     <th scope="row"><label for="share_essentials"><?php esc_html_e( 'Share Essentials', 'erp' ); ?></label></th>
@@ -341,7 +338,7 @@ class Setup_Wizard {
                         });
                     </script>
                 </tr>
-                <?php endif; ?>
+                <?php } ?>
             </table>
 
             <?php $this->next_step_buttons(); ?>
@@ -370,17 +367,17 @@ class Setup_Wizard {
             \WeDevs\ERP\Tracker::get_instance()->optout();
         }
 
-        $company->update( array(
+        $company->update( [
             'name'          => $company_name,
-            'business_type' => $business_type
-        ) );
+            'business_type' => $business_type,
+        ] );
 
         update_option( 'erp_settings_general', [
             'gen_financial_month' => $financial_month,
             'gen_com_start'       => $company_started,
             'date_format'         => $date_format,
             'erp_currency'        => $base_currency,
-            'erp_debug_mode'      => 0
+            'erp_debug_mode'      => 0,
         ] );
 
         wp_redirect( esc_url_raw( $this->get_next_step_link() ) );
@@ -389,6 +386,7 @@ class Setup_Wizard {
 
     /**
      * Module setup step
+     *
      * @since 1.3.4
      */
     public function setup_step_module() {
@@ -399,18 +397,17 @@ class Setup_Wizard {
         $modules['pm'] = [
             'title'       => 'WP Project Manager',
             'slug'        => 'wp-project-manager',
-            'description' => 'Project, Task Management & Team Collaboration Software'
+            'description' => 'Project, Task Management & Team Collaboration Software',
         ];
 
         // Should `WP Project Manager` plugin installs by default?
         $include_pm = get_option( 'include_project_manager' );
 
-        if ( false ==  $include_pm || 'yes' == $include_pm ) {
+        if ( false == $include_pm || 'yes' == $include_pm ) {
             $all_active_modules['pm'] = [
-                'slug' => 'wp-project-manager'
+                'slug' => 'wp-project-manager',
             ];
-        }
-        ?>
+        } ?>
 
         <h1><?php esc_html_e( 'Active Modules', 'erp' ); ?></h1>
 
@@ -418,8 +415,7 @@ class Setup_Wizard {
             <table class="form-table">
             <?php
             foreach ( $modules as $slug => $module ) {
-                $checked = array_key_exists( $slug, $all_active_modules ) ? $slug : '';
-                ?>
+                $checked = array_key_exists( $slug, $all_active_modules ) ? $slug : ''; ?>
                 <tr>
                     <th scope="row">
                         <label for="erp_module_<?php echo esc_attr( $slug ); ?>"><?php echo isset( $module['title'] ) ? esc_html( $module['title'] ) : ''; ?></label>
@@ -433,7 +429,8 @@ class Setup_Wizard {
                         <span class="description"><?php echo isset( $module['description'] ) ? esc_html( $module['description'] ) : ''; ?></span>
                     </td>
                 </tr>
-                <?php } ?>
+                <?php
+            } ?>
             </table>
 
             <span class="plugin-install-info">
@@ -450,9 +447,9 @@ class Setup_Wizard {
                 var erpModulePm       = jQuery('#erp_module_pm');
                 var pluginInstallInfo = jQuery('.plugin-install-info');
 
-                <?php if ( 'no' == $include_pm ) : ?>
+                <?php if ( 'no' == $include_pm ) { ?>
                     pluginInstallInfo.css('display', 'none');
-                <?php endif; ?>
+                <?php } ?>
 
                 // toggle project manager on/off
                 erpModulePm.on('click', function(e) {
@@ -471,6 +468,7 @@ class Setup_Wizard {
 
     /**
      * Module setup step save
+     *
      * @since 1.3.4
      *
      * Add project manager plugin
@@ -571,11 +569,11 @@ class Setup_Wizard {
         $departments = isset( $_POST['departments'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['departments'] ) ) : [];
 
         if ( $departments ) {
-            foreach ($departments as $department) {
+            foreach ( $departments as $department ) {
                 if ( ! empty( $department ) ) {
-                    erp_hr_create_department([
-                        'title' => $department
-                    ]);
+                    erp_hr_create_department( [
+                        'title' => $department,
+                    ] );
                 }
             }
         }
@@ -621,11 +619,11 @@ class Setup_Wizard {
         $designations = isset( $_POST['designations'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['designations'] ) ) : [];
 
         if ( $designations ) {
-            foreach ($designations as $designation) {
+            foreach ( $designations as $designation ) {
                 if ( ! empty( $designation ) ) {
-                    erp_hr_create_designation([
-                        'title' => $designation
-                    ]);
+                    erp_hr_create_designation( [
+                        'title' => $designation,
+                    ] );
                 }
             }
         }
@@ -636,41 +634,41 @@ class Setup_Wizard {
 
     public function setup_step_workdays() {
         $working_days = erp_company_get_working_days();
-        $options = array(
+        $options      = [
             '8' => __( 'Full Day', 'erp' ),
             '4' => __( 'Half Day', 'erp' ),
-            '0' => __( 'Non-working Day', 'erp' )
-        );
-        $days = array(
+            '0' => __( 'Non-working Day', 'erp' ),
+        ];
+        $days = [
             'mon' => __( 'Monday', 'erp' ),
             'tue' => __( 'Tuesday', 'erp' ),
             'wed' => __( 'Wednesday', 'erp' ),
             'thu' => __( 'Thursday', 'erp' ),
             'fri' => __( 'Friday', 'erp' ),
             'sat' => __( 'Saturday', 'erp' ),
-            'sun' => __( 'Sunday', 'erp' )
-        );
-        ?>
+            'sun' => __( 'Sunday', 'erp' ),
+        ]; ?>
         <h1><?php esc_html_e( 'Workdays Setup', 'erp' ); ?></h1>
 
         <form method="post">
             <table class="form-table">
 
                 <?php
-                foreach( $days as $key => $day ) {
+                foreach ( $days as $key => $day ) {
                     ?>
                     <tr>
                         <th scope="row"><label for="gen_financial_month"><?php echo esc_html( $day ); ?></label></th>
                         <td>
-                            <?php wp_kses_post( erp_html_form_input( array(
+                            <?php wp_kses_post( erp_html_form_input( [
                                 'name'     => 'day[' . $key . ']',
                                 'value'    => $working_days[ $key ],
                                 'type'     => 'select',
-                                'options'  => $options
-                            ) ) ); ?>
+                                'options'  => $options,
+                            ] ) ); ?>
                         </td>
                     </tr>
-                <?php } ?>
+                <?php
+                } ?>
 
             </table>
 
@@ -705,6 +703,7 @@ class Setup_Wizard {
 
     /**
      * Newsletter setup step
+     *
      * @since 1.3.4
      */
     public function setup_step_newsletter() {
@@ -712,8 +711,7 @@ class Setup_Wizard {
         <h1><?php esc_html_e( 'Newsletter Setup', 'erp' ); ?></h1>
 
         <?php
-        $subscription = new \WeDevs\ERP\CRM\Subscription();
-        ?>
+        $subscription = new \WeDevs\ERP\CRM\Subscription(); ?>
 
         <form method="post">
 
@@ -723,12 +721,12 @@ class Setup_Wizard {
                         <label for="full_name"><?php esc_html_e( 'Your Name', 'erp' ); ?></label>
                     </th>
                     <td>
-                        <?php erp_html_form_input( array(
+                        <?php erp_html_form_input( [
                             'name'     => 'full_name',
                             'value'    => '',
                             'type'     => 'text',
-                            'help'    => __( 'This name will be used for newsletter name.', 'erp' ),
-                        ) ); ?>
+                            'help'     => __( 'This name will be used for newsletter name.', 'erp' ),
+                        ] ); ?>
                     </td>
                 </tr>
 
@@ -737,12 +735,12 @@ class Setup_Wizard {
                         <label for="subs_email"><?php esc_html_e( 'Your Email', 'erp' ); ?></label>
                     </th>
                     <td>
-                        <?php erp_html_form_input( array(
+                        <?php erp_html_form_input( [
                             'name'     => 'full_name',
                             'value'    => '',
                             'type'     => 'email',
-                            'help'    => __( 'Email to get update critical updates.', 'erp' ),
-                        ) ); ?>
+                            'help'     => __( 'Email to get update critical updates.', 'erp' ),
+                        ] ); ?>
                     </td>
                 </tr>
             </table>
@@ -754,12 +752,11 @@ class Setup_Wizard {
 
     /**
      * Newsletter setup step save
+     *
      * @since 1.3.4
      */
     public function setup_step_newsletter_save() {
         check_admin_referer( 'erp-setup' );
-
-        //
 
         wp_redirect( esc_url_raw( $this->get_next_step_link() ) );
         exit;
@@ -777,12 +774,12 @@ class Setup_Wizard {
                     <?php
                         $is_hrm_activated = erp_is_module_active( 'hrm' );
 
-                        if ( $is_hrm_activated ) : ?>
+        if ( $is_hrm_activated ) { ?>
                             <a class="button button-primary button-large btn-add-employees"
                                 href="<?php echo esc_url( admin_url( 'admin.php?page=erp-hr&section=employee' ) ); ?>">
                                 <?php esc_html_e( 'Add your employees!', 'erp' ); ?>
                             </a>
-                        <?php endif; ?>
+                        <?php } ?>
 
                         <a class="button button-primary button-large"
                             href="<?php echo esc_url( admin_url( 'admin.php?page=erp' ) ); ?>">
@@ -795,133 +792,136 @@ class Setup_Wizard {
     }
 
     /**
-	 * Install a plugin from .org in the background via a cron job (used by
-	 * installer - opt in).
-	 *
-	 * @param string $plugin_to_install_id Plugin ID.
-	 * @param array  $plugin_to_install Plugin information.
-	 *
-	 * @throws Exception If unable to proceed with plugin installation.
-	 * @since  1.4.2
-	 */
-	private function background_installer( $plugin_to_install_id, $plugin_to_install ) {
-		if ( ! empty( $plugin_to_install['repo-slug'] ) ) {
-			require_once ABSPATH . 'wp-admin/includes/file.php';
-			require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
-			require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
-			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+     * Install a plugin from .org in the background via a cron job (used by
+     * installer - opt in).
+     *
+     * @param string $plugin_to_install_id plugin ID
+     * @param array  $plugin_to_install    plugin information
+     *
+     * @throws Exception if unable to proceed with plugin installation
+     *
+     * @since  1.4.2
+     */
+    private function background_installer( $plugin_to_install_id, $plugin_to_install ) {
+        if ( ! empty( $plugin_to_install['repo-slug'] ) ) {
+            require_once ABSPATH . 'wp-admin/includes/file.php';
+            require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
+            require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+            require_once ABSPATH . 'wp-admin/includes/plugin.php';
 
-			WP_Filesystem();
+            WP_Filesystem();
 
-			$skin              = new \Automatic_Upgrader_Skin();
-			$upgrader          = new \WP_Upgrader( $skin );
-			$installed_plugins = array_reduce( array_keys( get_plugins() ), array( $this, 'associate_plugin_file' ), array() );
-			$plugin_slug       = $plugin_to_install['repo-slug'];
-			$plugin_file       = isset( $plugin_to_install['file'] ) ? $plugin_to_install['file'] : $plugin_slug . '.php';
-			$installed         = false;
-			$activate          = false;
+            $skin              = new \Automatic_Upgrader_Skin();
+            $upgrader          = new \WP_Upgrader( $skin );
+            $installed_plugins = array_reduce( array_keys( get_plugins() ), [ $this, 'associate_plugin_file' ], [] );
+            $plugin_slug       = $plugin_to_install['repo-slug'];
+            $plugin_file       = isset( $plugin_to_install['file'] ) ? $plugin_to_install['file'] : $plugin_slug . '.php';
+            $installed         = false;
+            $activate          = false;
 
-			// See if the plugin is installed already.
-			if ( isset( $installed_plugins[ $plugin_file ] ) ) {
-				$installed = true;
-				$activate  = ! is_plugin_active( $installed_plugins[ $plugin_file ] );
-			}
+            // See if the plugin is installed already.
+            if ( isset( $installed_plugins[ $plugin_file ] ) ) {
+                $installed = true;
+                $activate  = ! is_plugin_active( $installed_plugins[ $plugin_file ] );
+            }
 
-			// Install this thing!
-			if ( ! $installed ) {
-				// Suppress feedback.
-				ob_start();
+            // Install this thing!
+            if ( ! $installed ) {
+                // Suppress feedback.
+                ob_start();
 
-				try {
-					$plugin_information = plugins_api(
-						'plugin_information',
-						array(
-							'slug'   => $plugin_slug,
-							'fields' => array(
-								'short_description' => false,
-								'sections'          => false,
-								'requires'          => false,
-								'rating'            => false,
-								'ratings'           => false,
-								'downloaded'        => false,
-								'last_updated'      => false,
-								'added'             => false,
-								'tags'              => false,
-								'homepage'          => false,
-								'donate_link'       => false,
-								'author_profile'    => false,
-								'author'            => false,
-							),
-						)
-					);
+                try {
+                    $plugin_information = plugins_api(
+                        'plugin_information',
+                        [
+                            'slug'   => $plugin_slug,
+                            'fields' => [
+                                'short_description' => false,
+                                'sections'          => false,
+                                'requires'          => false,
+                                'rating'            => false,
+                                'ratings'           => false,
+                                'downloaded'        => false,
+                                'last_updated'      => false,
+                                'added'             => false,
+                                'tags'              => false,
+                                'homepage'          => false,
+                                'donate_link'       => false,
+                                'author_profile'    => false,
+                                'author'            => false,
+                            ],
+                        ]
+                    );
 
-					if ( is_wp_error( $plugin_information ) ) {
-						throw new \Exception( $plugin_information->get_error_message() );
-					}
+                    if ( is_wp_error( $plugin_information ) ) {
+                        throw new \Exception( $plugin_information->get_error_message() );
+                    }
 
-					$package  = $plugin_information->download_link;
-					$download = $upgrader->download_package( $package );
+                    $package  = $plugin_information->download_link;
+                    $download = $upgrader->download_package( $package );
 
-					if ( is_wp_error( $download ) ) {
-						throw new \Exception( $download->get_error_message() );
-					}
+                    if ( is_wp_error( $download ) ) {
+                        throw new \Exception( $download->get_error_message() );
+                    }
 
-					$working_dir = $upgrader->unpack_package( $download, true );
+                    $working_dir = $upgrader->unpack_package( $download, true );
 
-					if ( is_wp_error( $working_dir ) ) {
-						throw new \Exception( $working_dir->get_error_message() );
-					}
+                    if ( is_wp_error( $working_dir ) ) {
+                        throw new \Exception( $working_dir->get_error_message() );
+                    }
 
-					$result = $upgrader->install_package(
-						array(
-							'source'                      => $working_dir,
-							'destination'                 => WP_PLUGIN_DIR,
-							'clear_destination'           => false,
-							'abort_if_destination_exists' => false,
-							'clear_working'               => true,
-							'hook_extra'                  => array(
-								'type'   => 'plugin',
-								'action' => 'install',
-							),
-						)
-					);
+                    $result = $upgrader->install_package(
+                        [
+                            'source'                      => $working_dir,
+                            'destination'                 => WP_PLUGIN_DIR,
+                            'clear_destination'           => false,
+                            'abort_if_destination_exists' => false,
+                            'clear_working'               => true,
+                            'hook_extra'                  => [
+                                'type'   => 'plugin',
+                                'action' => 'install',
+                            ],
+                        ]
+                    );
 
-					if ( is_wp_error( $result ) ) {
-						throw new \Exception( $result->get_error_message() );
-					}
+                    if ( is_wp_error( $result ) ) {
+                        throw new \Exception( $result->get_error_message() );
+                    }
 
-					$activate = true;
+                    $activate = true;
+                } catch ( \Exception $e ) {
+                }
 
-				} catch ( \Exception $e ) {}
+                // Discard feedback.
+                ob_end_clean();
+            }
 
-				// Discard feedback.
-				ob_end_clean();
-			}
-
-			wp_clean_plugins_cache();
+            wp_clean_plugins_cache();
 
             // Activate this thing.
-			if ( $activate ) {
-				try {
+            if ( $activate ) {
+                try {
                     $result = activate_plugin( $installed ? $installed_plugins[ $plugin_file ] : $plugin_slug . '/' . $plugin_file );
 
                     // Stop page redirection after project manager activated via erp setup-wizard
                     delete_transient( '_pm_setup_page_redirect' );
 
-					if ( is_wp_error( $result ) ) {
-						throw new \Exception( $result->get_error_message() );
-					}
-				} catch ( \Exception $e ) {}
-			}
-		}
+                    if ( is_wp_error( $result ) ) {
+                        throw new \Exception( $result->get_error_message() );
+                    }
+                } catch ( \Exception $e ) {
+                }
+            }
+        }
     }
 
     private function associate_plugin_file( $plugins, $key ) {
-		$path                 = explode( '/', $key );
-		$filename             = end( $path );
-		$plugins[ $filename ] = $key;
-		return $plugins;
-	}
+        $path                 = explode( '/', $key );
+        $filename             = end( $path );
+        $plugins[ $filename ] = $key;
+
+        return $plugins;
+    }
 }
 
 return new Setup_Wizard();

@@ -1,6 +1,6 @@
 <div class="performance-tab-wrap">
 
-    <?php $performance = $employee->get_performances(); ?>
+    <?php $performance        = $employee->get_performances(); ?>
     <?php $performance_rating = erp_performance_rating(); ?>
 
     <h3><?php esc_html_e( 'Performance Reviews', 'erp' ); ?></h3>
@@ -25,13 +25,13 @@
     <table class="widefat">
         <thead>
         <tr>
-            <th><?php esc_html_e( 'Date', 'erp' ) ?></th>
-            <th><?php esc_html_e( 'Reporting To', 'erp' ) ?></th>
-            <th><?php esc_html_e( 'Job Knowledge', 'erp' ) ?></th>
-            <th><?php esc_html_e( 'Work Quality', 'erp' ) ?></th>
-            <th><?php esc_html_e( 'Attendance/Punctuality', 'erp' ) ?></th>
-            <th><?php esc_html_e( 'Communication/Listening', 'erp' ) ?></th>
-            <th><?php esc_html_e( 'Dependability', 'erp' ) ?></th>
+            <th><?php esc_html_e( 'Date', 'erp' ); ?></th>
+            <th><?php esc_html_e( 'Reporting To', 'erp' ); ?></th>
+            <th><?php esc_html_e( 'Job Knowledge', 'erp' ); ?></th>
+            <th><?php esc_html_e( 'Work Quality', 'erp' ); ?></th>
+            <th><?php esc_html_e( 'Attendance/Punctuality', 'erp' ); ?></th>
+            <th><?php esc_html_e( 'Communication/Listening', 'erp' ); ?></th>
+            <th><?php esc_html_e( 'Dependability', 'erp' ); ?></th>
             <th>&nbsp;</th>
         </tr>
         </thead>
@@ -49,10 +49,10 @@
                     <td>
                         <?php
                         $reporting_user = new \WeDevs\ERP\HRM\Employee( intval( $row->reporting_to ) );
-                        if ( $reporting_user->is_employee() ) {
-                            echo esc_html( $reporting_user->get_full_name() );
-                        }
-                        ?>
+
+                if ( $reporting_user->is_employee() ) {
+                    echo esc_html( $reporting_user->get_full_name() );
+                } ?>
                     </td>
                     <td><?php echo isset( $performance_rating[ $row->job_knowledge ] ) ? esc_html( $performance_rating[ $row->job_knowledge ] ) : '-'; ?></td>
 
@@ -75,7 +75,6 @@
                 </tr>
                 <?php
             }
-
         } else { ?>
             <tr class="alternate">
                 <td colspan="8"><?php esc_html_e( 'No performance reviews found!', 'erp' ); ?></td>
@@ -101,9 +100,9 @@
     <table class="widefat">
         <thead>
         <tr>
-            <th><?php esc_html_e( 'Date', 'erp' ) ?></th>
-            <th><?php esc_html_e( 'Reviewer', 'erp' ) ?></th>
-            <th><?php esc_html_e( 'Comments', 'erp' ) ?></th>
+            <th><?php esc_html_e( 'Date', 'erp' ); ?></th>
+            <th><?php esc_html_e( 'Reviewer', 'erp' ); ?></th>
+            <th><?php esc_html_e( 'Comments', 'erp' ); ?></th>
             <th>&nbsp;</th>
         </tr>
         </thead>
@@ -121,10 +120,10 @@
                     <td>
                         <?php
                         $reporting_user = new \WeDevs\ERP\HRM\Employee( intval( $row->reviewer ) );
-                        if ( $reporting_user->is_employee() ) {
-                            echo esc_html( $reporting_user->get_full_name() );
-                        }
-                        ?>
+
+                if ( $reporting_user->is_employee() ) {
+                    echo esc_html( $reporting_user->get_full_name() );
+                } ?>
                     </td>
 
                     <td><?php echo esc_textarea( $row->comments ); ?></td>
@@ -146,7 +145,8 @@
             <tr class="alternate">
                 <td colspan="4"><?php esc_html_e( 'No performance comments found!', 'erp' ); ?></td>
             </tr>
-        <?php } ?>
+        <?php
+        } ?>
         </tbody>
     </table>
 
@@ -163,12 +163,12 @@
     <table class="widefat">
         <thead>
         <tr>
-            <th><?php esc_html_e( 'Set Date', 'erp' ) ?></th>
-            <th><?php esc_html_e( 'Completion Date', 'erp' ) ?></th>
-            <th><?php esc_html_e( 'Goal Description', 'erp' ) ?></th>
-            <th><?php esc_html_e( 'Employee Assessment', 'erp' ) ?></th>
-            <th><?php esc_html_e( 'Supervisor', 'erp' ) ?></th>
-            <th><?php esc_html_e( 'Supervisor Assessment', 'erp' ) ?></th>
+            <th><?php esc_html_e( 'Set Date', 'erp' ); ?></th>
+            <th><?php esc_html_e( 'Completion Date', 'erp' ); ?></th>
+            <th><?php esc_html_e( 'Goal Description', 'erp' ); ?></th>
+            <th><?php esc_html_e( 'Employee Assessment', 'erp' ); ?></th>
+            <th><?php esc_html_e( 'Supervisor', 'erp' ); ?></th>
+            <th><?php esc_html_e( 'Supervisor Assessment', 'erp' ); ?></th>
             <th>&nbsp;</th>
         </tr>
         </thead>
@@ -176,7 +176,6 @@
         <tbody>
         <?php
         if ( isset( $performance['goals'] ) ) {
-
             foreach ( $performance['goals'] as $num => $row ) {
                 ?>
                 <tr class="<?php echo $num % 2 == 0 ? 'alternate' : 'odd'; ?>">
@@ -187,10 +186,10 @@
                     <td>
                         <?php
                         $reporting_user = new \WeDevs\ERP\HRM\Employee( intval( $row->supervisor ) );
-                        if ( $reporting_user->is_employee() ) {
-                            echo esc_html( $reporting_user->get_full_name() );
-                        }
-                        ?>
+
+                if ( $reporting_user->is_employee() ) {
+                    echo esc_html( $reporting_user->get_full_name() );
+                } ?>
                     </td>
                     <td><?php echo esc_textarea( $row->supervisor_assessment ); ?></td>
 
@@ -211,7 +210,8 @@
             <tr class="alternate">
                 <td colspan="7"><?php esc_html_e( 'No performance goals found!', 'erp' ); ?></td>
             </tr>
-        <?php } ?>
+        <?php
+        } ?>
         </tbody>
     </table>
 

@@ -28,6 +28,6 @@ function erp_crm_get_contact_feeds_localize_string() {
         'logHeaderTextSingleUser'      => sprintf( __( '<strong>%1s</strong> logged %2s on %3s for <strong>%4s</strong> and <strong>%5s</strong>', 'erp' ), '{{createdUserName}}', '{{logType}}', '{{logDateTime}}', '{{createdForUser}}', '{{otherUser}}' ),
         'scheduleHeaderTextSingleUser' => sprintf( __( '<strong>%1s</strong> have scheduled %2s with <strong>%3s</strong> and <strong>%4s</strong>', 'erp' ), '{{createdUserName}}', '{{logType}}', '{{createdForUser}}', '{{otherUser}}' ),
         'taskDate'                     => __( 'Task Date', 'erp' ),
-        'taskHeaderText'               => sprintf( __( '<strong>%1s</strong> created a task for', 'erp' ), '{{createdUserName}}' )
+        'taskHeaderText'               => sprintf( __( '<strong>%1s</strong> created a task for', 'erp' ), '{{createdUserName}}' ),
     ] );
 }

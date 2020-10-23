@@ -6,8 +6,6 @@ use WeDevs\ERP\Framework\Model;
 
 /**
  * Class Leave_Policies
- *
- * @package WeDevs\ERP\HRM\Models
  */
 class Leave_Policy extends Model {
     protected $table = 'erp_hr_leave_policies';
@@ -17,7 +15,7 @@ class Leave_Policy extends Model {
         'department_id', 'location_id', 'designation_id', 'f_year', 'apply_for_new_users',
         'carryover_days', 'carryover_uses_limit', 'encashment_days',
         'encashment_based_on', 'gender', 'marital', 'applicable_from_days',
-        'accrued_max_days', 'accrued_amount', 'accrued_based_on', 'halfday_enable'
+        'accrued_max_days', 'accrued_amount', 'accrued_based_on', 'halfday_enable', 'employee_type',
     ];
 
     /**
@@ -110,5 +108,4 @@ class Leave_Policy extends Model {
     public function location() {
         return $this->belongsTo( 'WeDevs\ERP\Admin\Models\Company_Locations', 'location_id', 'id' );
     }
-
 }

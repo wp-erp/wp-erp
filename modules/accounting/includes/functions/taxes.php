@@ -47,7 +47,6 @@ function erp_acct_get_all_tax_rates( $args = [] ) {
  *
  * @return mixed
  */
-
 function erp_acct_get_tax_rate( $tax_no ) {
     global $wpdb;
 
@@ -91,6 +90,7 @@ function erp_acct_get_tax_rate( $tax_no ) {
  * Insert tax data
  *
  * @param $data
+ *
  * @return int
  */
 function erp_acct_insert_tax_rate( $data ) {
@@ -109,17 +109,17 @@ function erp_acct_insert_tax_rate( $data ) {
     foreach ( $items as $key => $item ) {
         $wpdb->insert(
             $wpdb->prefix . 'erp_acct_tax_cat_agency',
-            array(
-				'tax_id'         => $tax_id,
-				'component_name' => $item['component_name'],
-				'tax_cat_id'     => $item['tax_category_id'],
-				'agency_id'      => $item['agency_id'],
-				'tax_rate'       => $item['tax_rate'],
-				'created_at'     => $tax_data['created_at'],
-				'created_by'     => $tax_data['created_by'],
-				'updated_at'     => $tax_data['updated_at'],
-				'updated_by'     => $tax_data['updated_by'],
-            )
+            [
+                'tax_id'         => $tax_id,
+                'component_name' => $item['component_name'],
+                'tax_cat_id'     => $item['tax_category_id'],
+                'agency_id'      => $item['agency_id'],
+                'tax_rate'       => $item['tax_rate'],
+                'created_at'     => $tax_data['created_at'],
+                'created_by'     => $tax_data['created_by'],
+                'updated_at'     => $tax_data['updated_at'],
+                'updated_by'     => $tax_data['updated_by'],
+            ]
         );
     }
 
@@ -130,6 +130,7 @@ function erp_acct_insert_tax_rate( $data ) {
  * Update tax data
  *
  * @param $data
+ *
  * @return int
  */
 function erp_acct_update_tax_rate( $data, $id ) {
@@ -143,18 +144,18 @@ function erp_acct_update_tax_rate( $data, $id ) {
 
     $wpdb->update(
         $wpdb->prefix . 'erp_acct_taxes',
-        array(
-			'tax_rate_id' => $tax_data['tax_rate_id'],
-			'tax_number'  => $tax_data['tax_number'],
-			'default'     => $tax_data['default'],
-			'created_at'  => $tax_data['created_at'],
-			'created_by'  => $tax_data['created_by'],
-			'updated_at'  => $tax_data['updated_at'],
-			'updated_by'  => $tax_data['updated_by'],
-        ),
-        array(
-			'id' => $id,
-        )
+        [
+            'tax_rate_id' => $tax_data['tax_rate_id'],
+            'tax_number'  => $tax_data['tax_number'],
+            'default'     => $tax_data['default'],
+            'created_at'  => $tax_data['created_at'],
+            'created_by'  => $tax_data['created_by'],
+            'updated_at'  => $tax_data['updated_at'],
+            'updated_by'  => $tax_data['updated_by'],
+        ],
+        [
+            'id' => $id,
+        ]
     );
 
     if ( ! empty( $tax_data['default'] ) && $tax_data['default'] ) {
@@ -166,19 +167,19 @@ function erp_acct_update_tax_rate( $data, $id ) {
     foreach ( $items as $key => $item ) {
         $wpdb->update(
             $wpdb->prefix . 'erp_acct_tax_cat_agency',
-            array(
-				'component_name' => $item['component_name'],
-				'tax_cat_id'     => $item['tax_cat_id'],
-				'agency_id'      => $item['agency_id'],
-				'tax_rate'       => $item['tax_rate'],
-				'created_at'     => $tax_data['created_at'],
-				'created_by'     => $tax_data['created_by'],
-				'updated_at'     => $tax_data['updated_at'],
-				'updated_by'     => $tax_data['updated_by'],
-            ),
-            array(
-				'tax_id' => $id,
-            )
+            [
+                'component_name' => $item['component_name'],
+                'tax_cat_id'     => $item['tax_cat_id'],
+                'agency_id'      => $item['agency_id'],
+                'tax_rate'       => $item['tax_rate'],
+                'created_at'     => $tax_data['created_at'],
+                'created_by'     => $tax_data['created_by'],
+                'updated_at'     => $tax_data['updated_at'],
+                'updated_by'     => $tax_data['updated_by'],
+            ],
+            [
+                'tax_id' => $id,
+            ]
         );
     }
 
@@ -189,6 +190,7 @@ function erp_acct_update_tax_rate( $data, $id ) {
  * Update tax data
  *
  * @param $data
+ *
  * @return int
  */
 function erp_acct_quick_edit_tax_rate( $data, $id ) {
@@ -206,25 +208,25 @@ function erp_acct_quick_edit_tax_rate( $data, $id ) {
 
     $wpdb->update(
         $wpdb->prefix . 'erp_acct_taxes',
-        array(
-			'tax_number' => $tax_data['tax_number'],
-			'default'    => $tax_data['default'],
-			'updated_at' => $tax_data['updated_at'],
-			'updated_by' => $tax_data['updated_by'],
-        ),
-        array(
-			'id' => $id,
-        )
+        [
+            'tax_number' => $tax_data['tax_number'],
+            'default'    => $tax_data['default'],
+            'updated_at' => $tax_data['updated_at'],
+            'updated_by' => $tax_data['updated_by'],
+        ],
+        [
+            'id' => $id,
+        ]
     );
 
     return $id;
-
 }
 
 /**
  * Add line item of a tax rate
  *
  * @param $data
+ *
  * @return int
  */
 function erp_acct_add_tax_rate_line( $data ) {
@@ -238,17 +240,17 @@ function erp_acct_add_tax_rate_line( $data ) {
 
     $wpdb->insert(
         $wpdb->prefix . 'erp_acct_tax_cat_agency',
-        array(
-			'tax_id'         => $tax_data['tax_id'],
-			'component_name' => $tax_data['component_name'],
-			'tax_cat_id'     => $tax_data['tax_cat_id'],
-			'agency_id'      => $tax_data['agency_id'],
-			'tax_rate'       => $tax_data['tax_rate'],
-			'created_at'     => $tax_data['created_at'],
-			'created_by'     => $tax_data['created_by'],
-			'updated_at'     => $tax_data['updated_at'],
-			'updated_by'     => $tax_data['updated_by'],
-        )
+        [
+            'tax_id'         => $tax_data['tax_id'],
+            'component_name' => $tax_data['component_name'],
+            'tax_cat_id'     => $tax_data['tax_cat_id'],
+            'agency_id'      => $tax_data['agency_id'],
+            'tax_rate'       => $tax_data['tax_rate'],
+            'created_at'     => $tax_data['created_at'],
+            'created_by'     => $tax_data['created_by'],
+            'updated_at'     => $tax_data['updated_at'],
+            'updated_by'     => $tax_data['updated_by'],
+        ]
     );
 
     return $tax_data['tax_id'];
@@ -258,6 +260,7 @@ function erp_acct_add_tax_rate_line( $data ) {
  * Update line item of a tax rate
  *
  * @param $data
+ *
  * @return int
  */
 function erp_acct_edit_tax_rate_line( $data ) {
@@ -271,19 +274,19 @@ function erp_acct_edit_tax_rate_line( $data ) {
 
     $wpdb->update(
         $wpdb->prefix . 'erp_acct_tax_cat_agency',
-        array(
-			'component_name' => $tax_data['component_name'],
-			'tax_cat_id'     => $tax_data['tax_cat_id'],
-			'agency_id'      => $tax_data['agency_id'],
-			'tax_rate'       => $tax_data['tax_rate'],
-			'created_at'     => $tax_data['created_at'],
-			'created_by'     => $tax_data['created_by'],
-			'updated_at'     => $tax_data['updated_at'],
-			'updated_by'     => $tax_data['updated_by'],
-        ),
-        array(
-			'id' => $tax_data['db_id'],
-        )
+        [
+            'component_name' => $tax_data['component_name'],
+            'tax_cat_id'     => $tax_data['tax_cat_id'],
+            'agency_id'      => $tax_data['agency_id'],
+            'tax_rate'       => $tax_data['tax_rate'],
+            'created_at'     => $tax_data['created_at'],
+            'created_by'     => $tax_data['created_by'],
+            'updated_at'     => $tax_data['updated_at'],
+            'updated_by'     => $tax_data['updated_by'],
+        ],
+        [
+            'id' => $tax_data['db_id'],
+        ]
     );
 
     return $tax_data['db_id'];
@@ -299,7 +302,7 @@ function erp_acct_edit_tax_rate_line( $data ) {
 function erp_acct_delete_tax_rate_line( $line_no ) {
     global $wpdb;
 
-    $wpdb->delete( $wpdb->prefix . 'erp_acct_tax_cat_agency', array( 'id' => $line_no ) );
+    $wpdb->delete( $wpdb->prefix . 'erp_acct_tax_cat_agency', [ 'id' => $line_no ] );
 
     return $line_no;
 }
@@ -314,7 +317,7 @@ function erp_acct_delete_tax_rate_line( $line_no ) {
 function erp_acct_delete_tax_rate( $tax_no ) {
     global $wpdb;
 
-    $wpdb->delete( $wpdb->prefix . 'erp_acct_taxes', array( 'id' => $tax_no ) );
+    $wpdb->delete( $wpdb->prefix . 'erp_acct_taxes', [ 'id' => $tax_no ] );
 
     return $tax_no;
 }
@@ -390,6 +393,7 @@ function erp_acct_get_tax_pay_record( $voucher_no ) {
  * Make a tax payment
  *
  * @param $data
+ *
  * @return array
  */
 function erp_acct_pay_tax( $data ) {
@@ -398,18 +402,18 @@ function erp_acct_pay_tax( $data ) {
     $created_by         = get_current_user_id();
     $data['created_at'] = date( 'Y-m-d H:i:s' );
     $data['created_by'] = $created_by;
-    $currency           = erp_get_currency(true);
+    $currency           = erp_get_currency( true );
 
     $wpdb->insert(
         $wpdb->prefix . 'erp_acct_voucher_no',
-        array(
-			'type'       => 'tax_payment',
-			'currency'   => $currency,
-			'created_at' => $data['created_at'],
-			'created_by' => $data['created_by'],
-			'updated_at' => isset( $data['updated_at'] ) ? $data['updated_at'] : null,
-			'updated_by' => isset( $data['updated_by'] ) ? $data['updated_by'] : null,
-        )
+        [
+            'type'       => 'tax_payment',
+            'currency'   => $currency,
+            'created_at' => $data['created_at'],
+            'created_by' => $data['created_by'],
+            'updated_at' => isset( $data['updated_at'] ) ? $data['updated_at'] : null,
+            'updated_by' => isset( $data['updated_by'] ) ? $data['updated_by'] : null,
+        ]
     );
 
     $voucher_no = $wpdb->insert_id;
@@ -418,21 +422,21 @@ function erp_acct_pay_tax( $data ) {
 
     $wpdb->insert(
         $wpdb->prefix . 'erp_acct_tax_pay',
-        array(
-			'voucher_no'   => $voucher_no,
+        [
+            'voucher_no'   => $voucher_no,
             'trn_date'     => $tax_data['trn_date'],
             // translators: %s: voucher_no
-			'particulars'  => ! empty( $tax_data['particulars'] ) ? $tax_data['particulars'] : sprintf( __( 'Invoice created with voucher no %s', 'erp' ), $voucher_no ),
-			'amount'       => $tax_data['amount'],
-			'voucher_type' => $tax_data['voucher_type'],
-			'trn_by'       => $tax_data['trn_by'],
-			'agency_id'    => $tax_data['agency_id'],
-			'ledger_id'    => $tax_data['ledger_id'],
-			'created_at'   => $tax_data['created_at'],
-			'created_by'   => $tax_data['created_by'],
-			'updated_at'   => $tax_data['updated_at'],
-			'updated_by'   => $tax_data['updated_by'],
-        )
+            'particulars'  => ! empty( $tax_data['particulars'] ) ? $tax_data['particulars'] : sprintf( __( 'Invoice created with voucher no %s', 'erp' ), $voucher_no ),
+            'amount'       => $tax_data['amount'],
+            'voucher_type' => $tax_data['voucher_type'],
+            'trn_by'       => $tax_data['trn_by'],
+            'agency_id'    => $tax_data['agency_id'],
+            'ledger_id'    => $tax_data['ledger_id'],
+            'created_at'   => $tax_data['created_at'],
+            'created_by'   => $tax_data['created_by'],
+            'updated_at'   => $tax_data['updated_at'],
+            'updated_by'   => $tax_data['updated_by'],
+        ]
     );
 
     if ( 'debit' === $tax_data['voucher_type'] ) {
@@ -447,16 +451,16 @@ function erp_acct_pay_tax( $data ) {
     $wpdb->insert(
         $wpdb->prefix . 'erp_acct_tax_agency_details',
         [
-			'agency_id'   => $tax_data['agency_id'],
-			'trn_no'      => $voucher_no,
+            'agency_id'   => $tax_data['agency_id'],
+            'trn_no'      => $voucher_no,
             'trn_date'    => $tax_data['trn_date'],
             // translators: %s: voucher_no
-			'particulars' => ! empty( $tax_data['particulars'] ) ? $tax_data['particulars'] : sprintf( __( 'Invoice created with voucher no %s', 'erp' ), $voucher_no ),
-			'debit'       => $debit,
-			'credit'      => $credit,
-			'created_at'  => $tax_data['created_at'],
-			'created_by'  => $tax_data['created_by'],
-		]
+            'particulars' => ! empty( $tax_data['particulars'] ) ? $tax_data['particulars'] : sprintf( __( 'Invoice created with voucher no %s', 'erp' ), $voucher_no ),
+            'debit'       => $debit,
+            'credit'      => $credit,
+            'created_at'  => $tax_data['created_at'],
+            'created_by'  => $tax_data['created_by'],
+        ]
     );
 
     $tax_data['voucher_no'] = $voucher_no;
@@ -466,7 +470,6 @@ function erp_acct_pay_tax( $data ) {
     $tax_pay = erp_acct_get_tax_pay_record( $voucher_no );
 
     return $tax_pay;
-
 }
 
 /**
@@ -490,18 +493,18 @@ function erp_acct_insert_tax_pay_data_into_ledger( $tax_data ) {
     // Insert amount in ledger_details
     $wpdb->insert(
         $wpdb->prefix . 'erp_acct_ledger_details',
-        array(
-			'ledger_id'   => $tax_data['ledger_id'],
-			'trn_no'      => $tax_data['voucher_no'],
-			'particulars' => $tax_data['particulars'],
-			'debit'       => $debit,
-			'credit'      => $credit,
-			'trn_date'    => $tax_data['trn_date'],
-			'created_at'  => $tax_data['created_at'],
-			'created_by'  => $tax_data['created_by'],
-			'updated_at'  => $tax_data['updated_at'],
-			'updated_by'  => $tax_data['updated_by'],
-        )
+        [
+            'ledger_id'   => $tax_data['ledger_id'],
+            'trn_no'      => $tax_data['voucher_no'],
+            'particulars' => $tax_data['particulars'],
+            'debit'       => $debit,
+            'credit'      => $credit,
+            'trn_date'    => $tax_data['trn_date'],
+            'created_at'  => $tax_data['created_at'],
+            'created_by'  => $tax_data['created_by'],
+            'updated_at'  => $tax_data['updated_at'],
+            'updated_by'  => $tax_data['updated_by'],
+        ]
     );
 }
 
@@ -534,6 +537,7 @@ function erp_acct_format_tax_line_items( $tax = 'all' ) {
  *
  * @param $data
  * @param $voucher_no
+ *
  * @return mixed
  */
 function erp_acct_get_formatted_tax_data( $data ) {
@@ -570,6 +574,7 @@ function erp_acct_get_formatted_tax_data( $data ) {
  *
  * @param $data
  * @param $voucher_no
+ *
  * @return mixed
  */
 function erp_acct_get_formatted_tax_line_data( $data ) {

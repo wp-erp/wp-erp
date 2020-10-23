@@ -2,15 +2,20 @@
 
 namespace WeDevs\ERP\CRM;
 
+use Exception;
+use Google_Service_Exception;
+use Google_Service_Gmail;
+use Google_Service_Gmail_Message;
+
 class Gmail_Sync {
 
     /**
-     * @var \Google_Service_Gmail
+     * @var Google_Service_Gmail
      */
     private $gmail;
 
     /**
-     * @var \Google_Auth
+     * @var Google_Auth
      */
     private $client;
 
@@ -18,10 +23,11 @@ class Gmail_Sync {
 
     public function __construct() {
         $this->client = wperp()->google_auth;
-        if( !$this->client->get_client() ){
+
+        if ( !$this->client->get_client() ) {
             return;
         }
-        $this->gmail = new \Google_Service_Gmail( $this->client->get_client() );
+        $this->gmail = new Google_Service_Gmail( $this->client->get_client() );
     }
 
     /**
@@ -42,6 +48,7 @@ class Gmail_Sync {
 
     public function get_historyid() {
         $history = get_option( 'erp_gsync_historyid' );
+
         return $history;
     }
 
@@ -49,6 +56,7 @@ class Gmail_Sync {
         if ( $id < $this->get_historyid() ) {
             return false;
         }
+
         return update_option( 'erp_gsync_historyid', $id );
     }
 
@@ -58,11 +66,13 @@ class Gmail_Sync {
 
     private function get_inbound_email() {
         $email = get_option( 'erp_gmail_authenticated_email', '' );
+
         if ( !empty( $email ) ) {
             return $email;
         }
 
         $profile = $this->update_profile();
+
         return $profile->getEmailAddress();
     }
 
@@ -96,10 +106,11 @@ class Gmail_Sync {
         //get all messages after history id
         try {
             $data = $this->gmail->users_history->listUsersHistory( $this->userid, [ 'startHistoryId' => $historyid ] );
-        } catch ( \Google_Service_Exception $e ) {
+        } catch ( Google_Service_Exception $e ) {
             error_log( 'Gmail API SYNC error : ' );
-            error_log( $e->getMessage());
+            error_log( $e->getMessage() );
             $this->full_sync();
+
             return;
         }
 
@@ -108,6 +119,7 @@ class Gmail_Sync {
         if ( empty( $histories ) ) {
             //update historyid as no new history is found
             $this->update_historyid( $data->getHistoryId() );
+
             return;
         }
 
@@ -115,14 +127,15 @@ class Gmail_Sync {
 
         foreach ( $histories as $history ) {
             $item = $history->getMessagesAdded();
+
             if ( !isset( $item[0] ) ) {
                 continue;
             }
             /**
-             * @var \Google_Service_Gmail_Message
+             * @var Google_Service_Gmail_Message
              */
             $message = $item[0]->getMessage();
-            $labels = $message->getLabelIds();
+            $labels  = $message->getLabelIds();
 
             //skip DRAFT and SENT messages
             if ( in_array( 'DRAFT', $labels ) || in_array( 'SENT', $labels ) ) {
@@ -132,8 +145,10 @@ class Gmail_Sync {
         }
 
         $emails = [];
+
         if ( empty( $added_messages ) ) {
             $this->update_historyid( $data->getHistoryId() );
+
             return true;
         }
         $emails = $this->get_messages( $added_messages );
@@ -143,17 +158,16 @@ class Gmail_Sync {
     }
 
     public function format_email( $message ) {
-
-        if ( !$message instanceof \Google_Service_Gmail_Message ) {
+        if ( !$message instanceof Google_Service_Gmail_Message ) {
             return false;
         }
 
-        $headers = $message->getPayload()->getHeaders();
-        $parts   = $message->getPayload()->getParts();
+        $headers     = $message->getPayload()->getHeaders();
+        $parts       = $message->getPayload()->getParts();
         $attachments = [];
 
         $headers = array_reduce( $headers, [ $this, 'format_header' ] );
-        $body = $this->get_message_body( $message );
+        $body    = $this->get_message_body( $message );
 
         foreach ( $parts as $key => $value ) {
             if ( !isset( $value['body']['attachmentId'] ) ) {
@@ -161,17 +175,16 @@ class Gmail_Sync {
             }
 
             try {
-                $att = $this->gmail->users_messages_attachments->get( $this->userid, $message->getId(), $value['body']['attachmentId'] );
+                $att  = $this->gmail->users_messages_attachments->get( $this->userid, $message->getId(), $value['body']['attachmentId'] );
                 $data = $att->getData();
-            }
-            catch ( \Exception $e ) {
+            } catch ( Exception $e ) {
                 error_log( 'Failed to fetch attachment : ', $e->getMessage() );
                 continue;
-            };
+            }
             $data = [ 'id'   => $value['body']['attachmentId'],
                       'type' => $value->getMimeType(),
                       'name' => $value->getfilename(),
-                      'data' => $this->base64url_decode( $data )
+                      'data' => $this->base64url_decode( $data ),
             ];
 
             array_push( $attachments, $data );
@@ -183,7 +196,7 @@ class Gmail_Sync {
             'headers'     => $headers,
             'body'        => $this->base64url_decode( $body ),
             'subject'     => $headers['Subject'],
-            'attachments' => $attachments
+            'attachments' => $attachments,
         ];
     }
 
@@ -194,26 +207,26 @@ class Gmail_Sync {
 
         $subdir      = apply_filters( 'crm_attachmet_directory', 'crm-attachments' );
         $upload_dir  = wp_upload_dir();
-        $dir         = $upload_dir['basedir'].'/'.$subdir.'/';
+        $dir         = $upload_dir['basedir'] . '/' . $subdir . '/';
 
         //Create CRM attachments directory
         if ( !file_exists( $dir ) ) {
-            wp_mkdir_p($dir);
+            wp_mkdir_p( $dir );
         }
 
         foreach ( $attachments as $key => $item ) {
             $name = $item['name'];
             $file = wp_check_filetype( $item['name'] );
 
-            if ( file_exists( $dir.$name ) ) {
-                $name = uniqid().'.'.$file['ext'];
+            if ( file_exists( $dir . $name ) ) {
+                $name = uniqid() . '.' . $file['ext'];
             }
 
-            $saved = file_put_contents( $dir.$name, $item['data'] );
+            $saved = file_put_contents( $dir . $name, $item['data'] );
 
             if ( $saved ) {
                 $attachments[$key]['slug'] = $name;
-                $attachments[$key]['path'] = $dir.$name;
+                $attachments[$key]['path'] = $dir . $name;
                 //remove image data
                 unset( $attachments[$key]['data'] );
                 unset( $attachments[$key]['id'] );
@@ -223,18 +236,18 @@ class Gmail_Sync {
         }
 
         return $attachments;
-
     }
 
     public function format_header( $headers, $item ) {
         $headers[$item->name] = $item->value;
+
         return $headers;
     }
 
     public function get_messages( $ids ) {
-
         $batch = $this->gmail->createBatch();
         $this->gmail->getClient()->setUseBatch( true );
+
         foreach ( $ids as $id ) {
             $batch->add( $this->gmail->users_messages->get( 'me', $id ), $id );
         }
@@ -243,6 +256,7 @@ class Gmail_Sync {
         $messages = $batch->execute();
         $this->gmail->getClient()->setUseBatch( false );
         $emails = [];
+
         if ( !empty( $messages ) ) {
             foreach ( $messages as $message ) {
                 $emails[] = $this->format_email( $message );
@@ -250,33 +264,30 @@ class Gmail_Sync {
         }
 
         return $emails;
-
     }
 
     public function process_emails( $emails ) {
-
         do_action( 'erp_crm_new_inbound_emails', $emails );
 
-        $http_host = isset( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST']  : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+        $http_host = isset( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
         $email_regexp = '([a-z0-9]+[.][0-9]+[.][0-9]+[.][r][1|2])@' . $http_host;
-        foreach ( $emails as $email ) {
 
+        foreach ( $emails as $email ) {
             if ( !isset( $email['headers']['References'] ) ) {
                 $this->update_historyid( $email['history_id'] );
                 continue;
             }
 
             if ( isset( $email['headers']['References'] ) && preg_match( '/<' . $email_regexp . '>/', $email['headers']['References'], $matches ) ) {
-
                 $filtered_emails[] = $email;
 
-                $message_id = $matches[1];
+                $message_id       = $matches[1];
                 $message_id_parts = explode( '.', $message_id );
 
                 $email['hash'] = $message_id_parts[0];
-                $email['cid'] = $message_id_parts[1];
-                $email['sid'] = $message_id_parts[2];
+                $email['cid']  = $message_id_parts[1];
+                $email['sid']  = $message_id_parts[2];
 
                 $email['attachments'] = $this->save_attachments( $email['attachments'] );
                 // Save & sent the email
@@ -284,12 +295,13 @@ class Gmail_Sync {
                     case 'r1':
                         $customer_feed_data = erp_crm_save_email_activity( $email, $this->get_inbound_email() );
                         break;
+
                     case 'r2':
                         $customer_feed_data = erp_crm_save_contact_owner_email_activity( $email, $this->get_inbound_email() );
                         break;
                 }
 
-                $type = ( $message_id_parts[3] == 'r2' ) ? 'owner_to_contact' : 'contact_to_owner';
+                $type          = ( $message_id_parts[3] == 'r2' ) ? 'owner_to_contact' : 'contact_to_owner';
                 $email['type'] = $type;
                 //update history id
                 $this->update_historyid( $email['history_id'] );
@@ -299,7 +311,7 @@ class Gmail_Sync {
     }
 
     private function base64url_decode( $data ) {
-        return base64_decode( str_replace( array( '-', '_' ), array( '+', '/' ), $data ) );
+        return base64_decode( str_replace( [ '-', '_' ], [ '+', '/' ], $data ) );
     }
 
     private function base64url_encode( $data ) {
@@ -307,12 +319,9 @@ class Gmail_Sync {
     }
 
     /**
-     * @param \Google_Service_Gmail_Message $message
-     *
      * @return string body
      */
-    private function get_message_body( \Google_Service_Gmail_Message $message ) {
-
+    private function get_message_body( Google_Service_Gmail_Message $message ) {
         if ( $message->getPayload()->getBody()->getData() ) {
             return $message->getPayload()->getBody()->getData();
         }
@@ -321,17 +330,16 @@ class Gmail_Sync {
 
         if ( !empty( $parts ) ) {
             foreach ( $parts as $part ) {
-
                 if ( !empty( $part['parts'] ) ) {
                     return array_last( $part['parts'] )->getBody()->getData();
                 }
 
-                if ( $part['mimeType'] != 'text/html' )
+                if ( $part['mimeType'] != 'text/html' ) {
                     continue;
+                }
 
                 return $part->getBody()->getData();
             }
         }
     }
-
 }

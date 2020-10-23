@@ -2,8 +2,6 @@
 /**
  * Create tables
  *
- * @package WPERP/Accounting
- *
  * @since 1.1.0
  *
  * @return void
@@ -14,17 +12,16 @@ function erp_ac_create_table() {
     $collate = '';
 
     if ( $wpdb->has_cap( 'collation' ) ) {
-        if ( ! empty($wpdb->charset ) ) {
+        if ( ! empty( $wpdb->charset ) ) {
             $collate .= "DEFAULT CHARACTER SET $wpdb->charset";
         }
 
-        if ( ! empty($wpdb->collate ) ) {
+        if ( ! empty( $wpdb->collate ) ) {
             $collate .= " COLLATE $wpdb->collate";
         }
     }
 
     $table_schema = [
-
         "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_ac_chart_classes` (
             `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
             `name` varchar(100) DEFAULT NULL,
@@ -153,10 +150,9 @@ function erp_ac_create_table() {
         `tax_rate` float NOT NULL,
         PRIMARY KEY (`id`)
       ) $collate;",
-
     ];
 
-    require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+    require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
     foreach ( $table_schema as $table ) {
         dbDelta( $table );
@@ -165,8 +161,6 @@ function erp_ac_create_table() {
 
 /**
  * Populate all table datas
- *
- * @package WPERP/Accounting
  *
  * @since 1.1.0
  *
@@ -197,7 +191,6 @@ function erp_ac_populate_data() {
 
     // check if ledger exists
     if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_ac_ledger` LIMIT 0, 1" ) ) {
-
         $sql = "INSERT INTO `{$wpdb->prefix}erp_ac_ledger` (`id`, `code`, `name`, `description`, `parent`, `type_id`, `currency`, `tax`, `cash_account`, `reconcile`, `system`, `active`)
                     VALUES
                     (1,'120','Accounts Receivable',NULL,0,1,'',NULL,0,0,1,1),
@@ -278,8 +271,6 @@ function erp_ac_populate_data() {
 /**
  * Update existing tables
  *
- * @package WPERP/Accounting
- *
  * @since 1.1.0
  *
  * @return void
@@ -288,7 +279,7 @@ function erp_ac_table_update() {
     global $wpdb;
 
     $table = $wpdb->prefix . 'erp_ac_transactions';
-    $cols = $wpdb->get_col( "DESC " . $table );
+    $cols  = $wpdb->get_col( 'DESC ' . $table );
 
     if ( ! in_array( 'sub_total', $cols ) ) {
         $wpdb->query( "ALTER TABLE $table ADD `sub_total` DECIMAL(13,4) NOT NULL AFTER `conversion_rate`" );
@@ -296,16 +287,16 @@ function erp_ac_table_update() {
 
     $ledger = $wpdb->prefix . 'erp_ac_ledger';
 
-    $cols = $wpdb->get_col( "DESC " . $ledger );
+    $cols = $wpdb->get_col( 'DESC ' . $ledger );
 
     if ( ! in_array( 'created_by', $cols ) ) {
         $wpdb->query( "ALTER TABLE $ledger ADD `created_by` bigint(20) NOT NULL AFTER `active`" );
     }
 
     $item_table = $wpdb->prefix . 'erp_ac_transaction_items';
-    $item_cols  = $wpdb->get_col( "DESC " . $item_table );
+    $item_cols  = $wpdb->get_col( 'DESC ' . $item_table );
 
-    if ( ! in_array( 'tax_rate',$item_cols ) ) {
+    if ( ! in_array( 'tax_rate', $item_cols ) ) {
         $wpdb->query( "ALTER TABLE $item_table ADD `tax_rate` DECIMAL(13,4) NOT NULL AFTER `tax`" );
     }
 
@@ -319,30 +310,26 @@ function erp_ac_table_update() {
 
     $account_table = $wpdb->prefix . 'erp_ac_banks';
 
-    $wpdb->update( $account_table, array( 'ledger_id' => 62 ), array( 'id' => 2, 'ledger_id' => 60 ), array( '%d' ), array( '%d', '%d' ) );
+    $wpdb->update( $account_table, [ 'ledger_id' => 62 ], [ 'id' => 2, 'ledger_id' => 60 ], [ '%d' ], [ '%d', '%d' ] );
 }
 
 /**
  * Update manager capabilities
- *
- * @package WPERP/Accounting
  *
  * @since 1.1.0
  *
  * @return void
  */
 function erp_ac_update_manager_capabilities() {
-  remove_role( 'erp_ac_manager' );
+    remove_role( 'erp_ac_manager' );
 
-	$installer = new \WeDevs_ERP_Installer();
-	$installer->create_roles();
-	$installer->set_role();
+    $installer = new \WeDevs_ERP_Installer();
+    $installer->create_roles();
+    $installer->set_role();
 }
 
 /**
  * Update existing tables
- *
- * @package WPERP/CRM
  *
  * @since 1.1.0
  *
@@ -353,8 +340,8 @@ function erp_crm_update_table_column() {
 
     $save_search_tb     = $wpdb->prefix . 'erp_crm_save_search';
     $people_tb          = $wpdb->prefix . 'erp_peoples';
-    $save_search_tb_col = $wpdb->get_col( "DESC " . $save_search_tb );
-    $people_tb_col      = $wpdb->get_col( "DESC " . $people_tb );
+    $save_search_tb_col = $wpdb->get_col( 'DESC ' . $save_search_tb );
+    $people_tb_col      = $wpdb->get_col( 'DESC ' . $people_tb );
 
     if ( ! in_array( 'type', $save_search_tb_col ) ) {
         $wpdb->query( "ALTER TABLE {$wpdb->prefix}erp_crm_save_search ADD `type` VARCHAR(255) AFTER `id`" );
@@ -376,8 +363,6 @@ function erp_crm_update_table_column() {
 /**
  * Update some data for newly added column
  *
- * @package WPERP/Accounting
- *
  * @since 1.1.0
  *
  * @return void
@@ -385,8 +370,8 @@ function erp_crm_update_table_column() {
 function erp_crm_update_column_data() {
     global $wpdb;
 
-    $super_user_email = get_option('admin_email');
-    $user_info        = get_user_by('email', $super_user_email );
+    $super_user_email = get_option( 'admin_email' );
+    $user_info        = get_user_by( 'email', $super_user_email );
 
     $wpdb->query( "UPDATE {$wpdb->prefix}erp_crm_save_search SET `type`='contact' WHERE `search_val` LIKE '%first_name%' OR `search_val` LIKE '%last_name%'" );
     $wpdb->query( "UPDATE {$wpdb->prefix}erp_crm_save_search SET `type`='company' WHERE `search_val` LIKE '%company%'" );
@@ -401,8 +386,6 @@ function erp_crm_update_column_data() {
 /**
  * Set active module
  *
- * @package WPERP/Accounting
- *
  * @since 1.1.0
  *
  * @return void
@@ -416,13 +399,12 @@ function erp_ac_active_module() {
             'slug'        => 'erp-accounting',
             'description' => __( 'Accountig Management', 'erp' ),
             'callback'    => '\WeDevs\ERP\Accounting\Accountig',
-            'modules'     => apply_filters( 'erp_accounting_modules', [ ] )
+            'modules'     => apply_filters( 'erp_accounting_modules', [ ] ),
         ];
     }
 
     update_option( 'erp_modules', $module );
 }
-
 
 // Update all accounting releated function
 erp_ac_create_table();

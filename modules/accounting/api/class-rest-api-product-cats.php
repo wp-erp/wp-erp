@@ -2,11 +2,12 @@
 
 namespace WeDevs\ERP\Accounting\API;
 
-use WP_REST_Server;
-use WP_REST_Response;
 use WP_Error;
+use WP_REST_Response;
+use WP_REST_Server;
 
 class Inventory_Product_Cats_Controller extends \WeDevs\ERP\API\REST_Controller {
+
     /**
      * Endpoint namespace.
      *
@@ -29,74 +30,74 @@ class Inventory_Product_Cats_Controller extends \WeDevs\ERP\API\REST_Controller 
             $this->namespace,
             '/' . $this->rest_base,
             [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_all_inventory_product_cats' ],
-					'args'                => $this->get_collection_params(),
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_manager' );
-					},
-				],
-				[
-					'methods'             => WP_REST_Server::CREATABLE,
-					'callback'            => [ $this, 'create_inventory_product_cat' ],
-					'args'                => $this->get_collection_params(),
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_manager' );
-					},
-				],
-				'schema' => [ $this, 'get_item_schema' ],
-			]
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_all_inventory_product_cats' ],
+                    'args'                => $this->get_collection_params(),
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_manager' );
+                    },
+                ],
+                [
+                    'methods'             => WP_REST_Server::CREATABLE,
+                    'callback'            => [ $this, 'create_inventory_product_cat' ],
+                    'args'                => $this->get_collection_params(),
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_manager' );
+                    },
+                ],
+                'schema' => [ $this, 'get_item_schema' ],
+            ]
         );
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base . '/(?P<id>[\d]+)',
             [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_inventory_product_cat' ],
-					'args'                => [
-						'context' => $this->get_context_param( [ 'default' => 'view' ] ),
-					],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_manager' );
-					},
-				],
-				[
-					'methods'             => WP_REST_Server::EDITABLE,
-					'callback'            => [ $this, 'update_inventory_product_cat' ],
-					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_manager' );
-					},
-				],
-				[
-					'methods'             => WP_REST_Server::DELETABLE,
-					'callback'            => [ $this, 'delete_inventory_product_cat' ],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_manager' );
-					},
-				],
-				'schema' => [ $this, 'get_item_schema' ],
-			]
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_inventory_product_cat' ],
+                    'args'                => [
+                        'context' => $this->get_context_param( [ 'default' => 'view' ] ),
+                    ],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_manager' );
+                    },
+                ],
+                [
+                    'methods'             => WP_REST_Server::EDITABLE,
+                    'callback'            => [ $this, 'update_inventory_product_cat' ],
+                    'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_manager' );
+                    },
+                ],
+                [
+                    'methods'             => WP_REST_Server::DELETABLE,
+                    'callback'            => [ $this, 'delete_inventory_product_cat' ],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_manager' );
+                    },
+                ],
+                'schema' => [ $this, 'get_item_schema' ],
+            ]
         );
 
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base . '/delete/(?P<ids>[\d,?]+)',
             [
-				[
-					'methods'             => WP_REST_Server::DELETABLE,
-					'callback'            => [ $this, 'bulk_delete_cat' ],
-					'args'                => [
-						'ids' => [ 'required' => true ],
-					],
-					'permission_callback' => function( $request ) {
-						return current_user_can( 'erp_ac_manager' );
-					},
-				],
-				'schema' => [ $this, 'get_item_schema' ],
-			]
+                [
+                    'methods'             => WP_REST_Server::DELETABLE,
+                    'callback'            => [ $this, 'bulk_delete_cat' ],
+                    'args'                => [
+                        'ids' => [ 'required' => true ],
+                    ],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_manager' );
+                    },
+                ],
+                'schema' => [ $this, 'get_item_schema' ],
+            ]
         );
     }
 
@@ -235,6 +236,7 @@ class Inventory_Product_Cats_Controller extends \WeDevs\ERP\API\REST_Controller 
         if ( ! $ids ) {
             return;
         }
+
         foreach ( $ids as $id ) {
             erp_acct_delete_product_cat( $id );
         }
@@ -245,7 +247,7 @@ class Inventory_Product_Cats_Controller extends \WeDevs\ERP\API\REST_Controller 
     /**
      * Prepare a single item for create or update
      *
-     * @param WP_REST_Request $request Request object.
+     * @param WP_REST_Request $request request object
      *
      * @return array $prepared_item
      */
@@ -266,11 +268,11 @@ class Inventory_Product_Cats_Controller extends \WeDevs\ERP\API\REST_Controller 
     /**
      * Prepare a single user output for response
      *
-     * @param array|object $item
-     * @param WP_REST_Request $request Request object.
-     * @param array $additional_fields (optional)
+     * @param array|object    $item
+     * @param WP_REST_Request $request           request object
+     * @param array           $additional_fields (optional)
      *
-     * @return WP_REST_Response $response Response data.
+     * @return WP_REST_Response $response response data
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
         $item = (object) $item;
@@ -331,7 +333,7 @@ class Inventory_Product_Cats_Controller extends \WeDevs\ERP\API\REST_Controller 
                             'description' => __( 'Name for the resource.', 'erp' ),
                             'type'        => 'string',
                             'context'     => [ 'view', 'edit' ],
-                        ]
+                        ],
                     ],
                 ],
             ],

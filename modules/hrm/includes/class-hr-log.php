@@ -1,19 +1,16 @@
 <?php
+
 namespace WeDevs\ERP\HRM;
 
-use \WeDevs\ERP\Framework\Traits\Hooker;
-use \WeDevs\ERP\HRM\Models\announcment;
-use \WeDevs\ERP\HRM\Models\employee;
-use \WeDevs\ERP\HRM\Models\Dependents;
-use \WeDevs\ERP\HRM\Models\Designation;
+use WeDevs\ERP\Framework\Traits\Hooker;
+use WeDevs\ERP\HRM\Models\Dependents;
+use WeDevs\ERP\HRM\Models\Designation;
+use WeDevs\ERP\HRM\Models\employee;
 
 /**
  * Ajax handler
- *
- * @package WP-ERP
  */
 class Hr_Log {
-
     use Hooker;
 
     /**
@@ -89,14 +86,13 @@ class Hr_Log {
      *
      * @since 0.1
      *
-     * @param  array $new_data
-     * @param  array $old_data
+     * @param array $new_data
+     * @param array $old_data
      *
      * @return array
      */
     public function get_array_diff( $new_data, $old_data, $is_seriazie = false ) {
-
-        $old_value = $new_value = [];
+        $old_value   = $new_value   = [];
         $changes_key = array_keys( array_diff_assoc( $new_data, $old_data ) );
 
         foreach ( $changes_key as $key => $change_field_key ) {
@@ -107,12 +103,12 @@ class Hr_Log {
         if ( ! $is_seriazie ) {
             return [
                 'new_val' => $new_value ? base64_encode( maybe_serialize( $new_value ) ) : '',
-                'old_val' => $old_value ? base64_encode( maybe_serialize( $old_value ) ) : ''
+                'old_val' => $old_value ? base64_encode( maybe_serialize( $old_value ) ) : '',
             ];
         } else {
             return [
                 'new_val' => $new_value,
-                'old_val' => $old_value
+                'old_val' => $old_value,
             ];
         }
     }
@@ -122,17 +118,17 @@ class Hr_Log {
      *
      * @since 0.1
      *
-     * @param  integer $emp_id
-     * @param  array $fields
+     * @param int   $emp_id
+     * @param array $fields
      *
      * @return void
      */
     public function create_employee( $emp_id, $fields ) {
-        erp_log()->add([
+        erp_log()->add( [
             'sub_component' => 'employee',
             'message'       => sprintf( __( '<strong>%s</strong> employee has been created', 'erp' ), $fields['personal']['first_name'] ),
-            'created_by'    => get_current_user_id()
-        ]);
+            'created_by'    => get_current_user_id(),
+        ] );
     }
 
     /**
@@ -140,24 +136,23 @@ class Hr_Log {
      *
      * @since 0.1
      *
-     * @param  integer $emp_id
+     * @param int $emp_id
      *
      * @return void
      */
     public function delete_employee( $emp_id ) {
-
         if ( ! $emp_id ) {
             return;
         }
 
         $employee = new \WeDevs\ERP\HRM\Employee( intval( $emp_id ) );
 
-        erp_log()->add([
+        erp_log()->add( [
             'sub_component' => 'employee',
             'message'       => sprintf( __( '<strong>%s</strong> employee has been deleted', 'erp' ), $employee->get_full_name() ),
             'created_by'    => get_current_user_id(),
             'changetype'    => 'delete',
-        ]);
+        ] );
     }
 
     /**
@@ -165,8 +160,8 @@ class Hr_Log {
      *
      * @since 0.1
      *
-     * @param  integer $emp_id
-     * @param  array $fields
+     * @param int   $emp_id
+     * @param array $fields
      *
      * @return void
      */
@@ -188,14 +183,14 @@ class Hr_Log {
         //}
 
         if ( $message ) {
-            erp_log()->add([
+            erp_log()->add( [
                 'sub_component' => 'employee',
                 'message'       => $message,
                 'created_by'    => get_current_user_id(),
                 'changetype'    => 'edit',
-                'old_value'     => '',//$changes['old_val'],
-                'new_value'     => ''//$changes['new_val']
-            ]);
+                'old_value'     => '', //$changes['old_val'],
+                'new_value'     => '', //$changes['new_val']
+            ] );
         }
     }
 
@@ -204,19 +199,18 @@ class Hr_Log {
      *
      * @since 0.1
      *
-     * @param  array $fields
+     * @param array $fields
      *
      * @return void
      */
     public function create_experience( $fields ) {
-
         $employee = new \WeDevs\ERP\HRM\Employee( intval( $fields['user_id'] ) );
 
-        erp_log()->add([
+        erp_log()->add( [
             'sub_component' => 'employee',
             'message'       => sprintf( __( '<strong>%s</strong> employee experience has been created', 'erp' ), $employee->get_full_name() ),
-            'created_by'    => get_current_user_id()
-        ]);
+            'created_by'    => get_current_user_id(),
+        ] );
     }
 
     /**
@@ -224,12 +218,11 @@ class Hr_Log {
      *
      * @since 0.1
      *
-     * @param  integer $exp_id
+     * @param int $exp_id
      *
      * @return void
      */
     public function delete_experience( $exp_id ) {
-
         if ( ! $exp_id ) {
             return;
         }
@@ -238,12 +231,12 @@ class Hr_Log {
 
         $employee = new \WeDevs\ERP\HRM\Employee( intval( $exp['employee_id'] ) );
 
-        erp_log()->add([
+        erp_log()->add( [
             'sub_component' => 'employee',
             'message'       => sprintf( __( '<strong>%s</strong> employee experience has been deleted', 'erp' ), $employee->get_full_name() ),
             'created_by'    => get_current_user_id(),
             'changetype'    => 'delete',
-        ]);
+        ] );
     }
 
     /**
@@ -251,19 +244,18 @@ class Hr_Log {
      *
      * @since 0.1
      *
-     * @param  array $fields
+     * @param array $fields
      *
      * @return void
      */
     public function create_education( $fields ) {
-
         $employee = new \WeDevs\ERP\HRM\Employee( intval( $fields['user_id'] ) );
 
-        erp_log()->add([
+        erp_log()->add( [
             'sub_component' => 'employee',
             'message'       => sprintf( __( '<strong>%s</strong> employee education has been created', 'erp' ), $employee->get_full_name() ),
-            'created_by'    => get_current_user_id()
-        ]);
+            'created_by'    => get_current_user_id(),
+        ] );
     }
 
     /**
@@ -271,12 +263,11 @@ class Hr_Log {
      *
      * @since 0.1
      *
-     * @param  integer $edu_id
+     * @param int $edu_id
      *
      * @return void
      */
     public function delete_education( $edu_id ) {
-
         if ( ! $edu_id ) {
             return;
         }
@@ -285,12 +276,12 @@ class Hr_Log {
 
         $employee = new \WeDevs\ERP\HRM\Employee( intval( $exp['employee_id'] ) );
 
-        erp_log()->add([
+        erp_log()->add( [
             'sub_component' => 'employee',
             'message'       => sprintf( __( '<strong>%s</strong> employee education has been deleted', 'erp' ), $employee->get_full_name() ),
             'created_by'    => get_current_user_id(),
             'changetype'    => 'delete',
-        ]);
+        ] );
     }
 
     /**
@@ -298,19 +289,18 @@ class Hr_Log {
      *
      * @since 0.1
      *
-     * @param  array $fields
+     * @param array $fields
      *
      * @return void
      */
     public function create_dependents( $fields ) {
-
         $employee = new \WeDevs\ERP\HRM\Employee( intval( $fields['user_id'] ) );
 
-        erp_log()->add([
+        erp_log()->add( [
             'sub_component' => 'employee',
             'message'       => sprintf( __( '<strong>%s</strong> employee dependents has been created', 'erp' ), $employee->get_full_name() ),
-            'created_by'    => get_current_user_id()
-        ]);
+            'created_by'    => get_current_user_id(),
+        ] );
     }
 
     /**
@@ -318,12 +308,11 @@ class Hr_Log {
      *
      * @since 0.1
      *
-     * @param  integer $dep_id
+     * @param int $dep_id
      *
      * @return void
      */
     public function delete_dependents( $dep_id ) {
-
         if ( ! $dep_id ) {
             return;
         }
@@ -332,12 +321,12 @@ class Hr_Log {
 
         $employee = new \WeDevs\ERP\HRM\Employee( intval( $dep['employee_id'] ) );
 
-        erp_log()->add([
+        erp_log()->add( [
             'sub_component' => 'employee',
             'message'       => sprintf( __( '<strong>%s</strong> employee dependents has been deleted', 'erp' ), $employee->get_full_name() ),
             'created_by'    => get_current_user_id(),
             'changetype'    => 'delete',
-        ]);
+        ] );
     }
 
     /**
@@ -345,19 +334,18 @@ class Hr_Log {
      *
      * @since 0.1
      *
-     * @param  array $fields
+     * @param array $fields
      *
      * @return void
      */
     public function create_employment_status( $eid ) {
-
         $employee = new \WeDevs\ERP\HRM\Employee( intval( $eid ) );
 
-        erp_log()->add([
+        erp_log()->add( [
             'sub_component' => 'employee',
             'message'       => sprintf( __( '<strong>%s</strong> employee employment status has been created', 'erp' ), $employee->get_full_name() ),
-            'created_by'    => get_current_user_id()
-        ]);
+            'created_by'    => get_current_user_id(),
+        ] );
     }
 
     /**
@@ -365,12 +353,11 @@ class Hr_Log {
      *
      * @since 0.1
      *
-     * @param  integer $history_id
+     * @param int $history_id
      *
      * @return void
      */
     public function delete_employment_status( $history_id ) {
-
         if ( ! $history_id ) {
             return;
         }
@@ -378,17 +365,17 @@ class Hr_Log {
         global $wpdb;
         $query = "SELECT user_id
                     FROM {$wpdb->prefix}erp_hr_employee_history
-                    WHERE id=".$history_id;
-        $user_id = $wpdb->get_var($query);
+                    WHERE id=" . $history_id;
+        $user_id = $wpdb->get_var( $query );
 
         $employee = new \WeDevs\ERP\HRM\Employee( intval( $user_id ) );
 
-        erp_log()->add([
+        erp_log()->add( [
             'sub_component' => 'employee',
             'message'       => sprintf( __( '<strong>%s</strong> employee employment status has been deleted', 'erp' ), $employee->get_full_name() ),
             'created_by'    => get_current_user_id(),
             'changetype'    => 'delete',
-        ]);
+        ] );
     }
 
     /**
@@ -396,19 +383,18 @@ class Hr_Log {
      *
      * @since 0.1
      *
-     * @param  array $emp_id
+     * @param array $emp_id
      *
      * @return void
      */
     public function create_compensation( $emp_id ) {
-
         $employee = new \WeDevs\ERP\HRM\Employee( intval( $emp_id ) );
 
-        erp_log()->add([
+        erp_log()->add( [
             'sub_component' => 'employee',
             'message'       => sprintf( __( '<strong>%s</strong> employee compensation has been created', 'erp' ), $employee->get_full_name() ),
-            'created_by'    => get_current_user_id()
-        ]);
+            'created_by'    => get_current_user_id(),
+        ] );
     }
 
     /**
@@ -416,12 +402,11 @@ class Hr_Log {
      *
      * @since 0.1
      *
-     * @param  integer $history_id
+     * @param int $history_id
      *
      * @return void
      */
     public function delete_compensation( $history_id ) {
-
         if ( ! $history_id ) {
             return;
         }
@@ -429,17 +414,17 @@ class Hr_Log {
         global $wpdb;
         $query = "SELECT user_id
                     FROM {$wpdb->prefix}erp_hr_employee_history
-                    WHERE id=".$history_id;
-        $user_id = $wpdb->get_var($query);
+                    WHERE id=" . $history_id;
+        $user_id = $wpdb->get_var( $query );
 
         $employee = new \WeDevs\ERP\HRM\Employee( intval( $user_id ) );
 
-        erp_log()->add([
+        erp_log()->add( [
             'sub_component' => 'employee',
             'message'       => sprintf( __( '<strong>%s</strong> employee compensation has been deleted', 'erp' ), $employee->get_full_name() ),
             'created_by'    => get_current_user_id(),
             'changetype'    => 'delete',
-        ]);
+        ] );
     }
 
     /**
@@ -447,19 +432,18 @@ class Hr_Log {
      *
      * @since 0.1
      *
-     * @param  array $emp_id
+     * @param array $emp_id
      *
      * @return void
      */
     public function create_job_info( $emp_id ) {
-
         $employee = new \WeDevs\ERP\HRM\Employee( intval( $emp_id ) );
 
-        erp_log()->add([
+        erp_log()->add( [
             'sub_component' => 'employee',
             'message'       => sprintf( __( '<strong>%s</strong> employee job info has been created', 'erp' ), $employee->get_full_name() ),
-            'created_by'    => get_current_user_id()
-        ]);
+            'created_by'    => get_current_user_id(),
+        ] );
     }
 
     /**
@@ -467,12 +451,11 @@ class Hr_Log {
      *
      * @since 0.1
      *
-     * @param  integer $history_id
+     * @param int $history_id
      *
      * @return void
      */
     public function delete_job_info( $history_id ) {
-
         if ( ! $history_id ) {
             return;
         }
@@ -480,17 +463,17 @@ class Hr_Log {
         global $wpdb;
         $query = "SELECT user_id
                     FROM {$wpdb->prefix}erp_hr_employee_history
-                    WHERE id=".$history_id;
-        $user_id = $wpdb->get_var($query);
+                    WHERE id=" . $history_id;
+        $user_id = $wpdb->get_var( $query );
 
         $employee = new \WeDevs\ERP\HRM\Employee( intval( $user_id ) );
 
-        erp_log()->add([
+        erp_log()->add( [
             'sub_component' => 'employee',
             'message'       => sprintf( __( '<strong>%s</strong> employee job info has been deleted', 'erp' ), $employee->get_full_name() ),
             'created_by'    => get_current_user_id(),
             'changetype'    => 'delete',
-        ]);
+        ] );
     }
 
     /**
@@ -498,17 +481,17 @@ class Hr_Log {
      *
      * @since 0.1
      *
-     * @param  integer $dept_id
-     * @param  array $fields
+     * @param int   $dept_id
+     * @param array $fields
      *
      * @return void
      */
     public function create_department( $dept_id, $fields ) {
-        erp_log()->add([
+        erp_log()->add( [
             'sub_component' => 'department',
             'message'       => sprintf( __( '<strong>%s</strong> department has been created', 'erp' ), $fields['title'] ),
-            'created_by'    => get_current_user_id()
-        ]);
+            'created_by'    => get_current_user_id(),
+        ] );
     }
 
     /**
@@ -516,24 +499,23 @@ class Hr_Log {
      *
      * @since 0.1
      *
-     * @param  integer $dept_id
+     * @param int $dept_id
      *
      * @return void
      */
     public function delete_department( $dept_id ) {
-
         if ( ! $dept_id ) {
             return;
         }
 
         $department = new \WeDevs\ERP\HRM\Department( intval( $dept_id ) );
 
-        erp_log()->add([
+        erp_log()->add( [
             'sub_component' => 'department',
             'message'       => sprintf( __( '<strong>%s</strong> department has been deleted', 'erp' ), $department->title ),
             'created_by'    => get_current_user_id(),
             'changetype'    => 'delete',
-        ]);
+        ] );
     }
 
     /**
@@ -541,13 +523,12 @@ class Hr_Log {
      *
      * @since 0.1
      *
-     * @param  integer $dept_id
-     * @param  array $fields
+     * @param int   $dept_id
+     * @param array $fields
      *
      * @return void
      */
     public function update_department( $dept_id, $fields ) {
-
         if ( ! $dept_id ) {
             return;
         }
@@ -560,9 +541,9 @@ class Hr_Log {
         if ( empty( $changes['old_val'] ) && empty( $changes['new_val'] ) ) {
             $message = false;
         } else {
-            array_walk ( $changes, function ( &$key ) {
+            array_walk( $changes, function ( &$key ) {
                 if ( isset( $key['lead'] ) ) {
-                    if( $key['lead'] ) {
+                    if ( $key['lead'] ) {
                         $employee = new \WeDevs\ERP\HRM\Employee( intval( $key['lead'] ) );
                         $key['department_lead'] = $employee->get_full_name();
                     } else {
@@ -572,7 +553,7 @@ class Hr_Log {
                 }
 
                 if ( isset( $key['parent'] ) ) {
-                    if( $key['parent'] ) {
+                    if ( $key['parent'] ) {
                         $department = new \WeDevs\ERP\HRM\Department( intval( $key['parent'] ) );
                         $key['parent_department'] = $department->title;
                     } else {
@@ -586,16 +567,15 @@ class Hr_Log {
         }
 
         if ( $message ) {
-            erp_log()->add([
+            erp_log()->add( [
                 'sub_component' => 'department',
                 'message'       => $message,
                 'created_by'    => get_current_user_id(),
                 'changetype'    => 'edit',
                 'old_value'     => $changes['old_val'] ? base64_encode( maybe_serialize( $changes['old_val'] ) ) : '',
-                'new_value'     => $changes['new_val'] ? base64_encode( maybe_serialize( $changes['new_val'] ) ) : ''
-            ]);
+                'new_value'     => $changes['new_val'] ? base64_encode( maybe_serialize( $changes['new_val'] ) ) : '',
+            ] );
         }
-
     }
 
     /**
@@ -603,17 +583,17 @@ class Hr_Log {
      *
      * @since 0.1
      *
-     * @param  integer $desig_id
-     * @param  array $fields
+     * @param int   $desig_id
+     * @param array $fields
      *
      * @return void
      */
     public function create_designation( $desig_id, $fields ) {
-        erp_log()->add([
+        erp_log()->add( [
             'sub_component' => 'designation',
             'message'       => sprintf( __( '<strong>%s</strong> designation has been created', 'erp' ), $fields['title'] ),
-            'created_by'    => get_current_user_id()
-        ]);
+            'created_by'    => get_current_user_id(),
+        ] );
     }
 
     /**
@@ -621,7 +601,7 @@ class Hr_Log {
      *
      * @since 0.1
      *
-     * @param  integer $dept_id
+     * @param int $dept_id
      *
      * @return void
      */
@@ -630,12 +610,12 @@ class Hr_Log {
             return;
         }
 
-        erp_log()->add([
+        erp_log()->add( [
             'sub_component' => 'designation',
             'message'       => sprintf( __( '<strong>%s</strong> designation has been deleted', 'erp' ), $desig->title ),
             'created_by'    => get_current_user_id(),
             'changetype'    => 'delete',
-        ]);
+        ] );
     }
 
     /**
@@ -643,8 +623,8 @@ class Hr_Log {
      *
      * @since 0.1
      *
-     * @param  integer $desig_id
-     * @param  array $fields
+     * @param int   $desig_id
+     * @param array $fields
      *
      * @return void
      */
@@ -665,14 +645,14 @@ class Hr_Log {
         }
 
         if ( $message ) {
-            erp_log()->add([
+            erp_log()->add( [
                 'sub_component' => 'designation',
                 'message'       => $message,
                 'created_by'    => get_current_user_id(),
                 'changetype'    => 'edit',
                 'old_value'     => $changes['old_val'],
-                'new_value'     => $changes['new_val']
-            ]);
+                'new_value'     => $changes['new_val'],
+            ] );
         }
     }
 
@@ -681,22 +661,21 @@ class Hr_Log {
      *
      * @since 0.1
      *
-     * @param  integer $policy_id
+     * @param int $policy_id
      *
      * @return void
      */
     public function create_policy( $policy_id ) {
-
         if ( ! $policy_id ) {
             return;
         }
 
-        erp_log()->add([
+        erp_log()->add( [
             'sub_component' => 'leave',
             'message'       => sprintf( __( '<strong>policy %d</strong> has been created', 'erp' ), $policy_id ),
             'created_by'    => get_current_user_id(),
             'changetype'    => 'add',
-        ]);
+        ] );
     }
 
     /**
@@ -705,7 +684,7 @@ class Hr_Log {
      * @since 0.1
      * @since 1.2.0 Using $policy eloquent object instead of $policy_id
      *
-     * @param  object $policy
+     * @param object $policy
      *
      * @return void
      */
@@ -714,12 +693,12 @@ class Hr_Log {
             return;
         }
 
-        erp_log()->add([
+        erp_log()->add( [
             'sub_component' => 'leave',
             'message'       => sprintf( __( '<strong>%s</strong> policy has been deleted', 'erp' ), $policy->name ),
             'created_by'    => get_current_user_id(),
             'changetype'    => 'delete',
-        ]);
+        ] );
     }
 
     /**
@@ -727,19 +706,18 @@ class Hr_Log {
      *
      * @since 0.1
      *
-     * @param  integer $policy_id
-     * @param  array $fields
+     * @param int   $policy_id
+     * @param array $fields
      *
      * @return void
      */
     public function update_policy( $policy_id, $fields ) {
-
         if ( ! $policy_id ) {
             return;
         }
 
         $old_policy = \WeDevs\ERP\HRM\Models\Leave_Policy::find( $policy_id )->toArray();
-        unset( $old_policy['created_at'], $old_policy['updated_at'], $fields['instant_apply'] ) ;
+        unset( $old_policy['created_at'], $old_policy['updated_at'], $fields['instant_apply'] );
 
         $old_policy['effective_date'] = erp_format_date( $old_policy['effective_date'], 'Y-m-d' );
         $fields['effective_date']     = erp_format_date( $fields['effective_date'], 'Y-m-d' );
@@ -753,8 +731,7 @@ class Hr_Log {
         if ( empty( $changes['old_val'] ) && empty( $changes['new_val'] ) ) {
             $message = false;
         } else {
-            array_walk ( $changes, function ( &$key ) {
-
+            array_walk( $changes, function ( &$key ) {
                 if ( isset( $key['color'] ) ) {
                     $key['calender_color'] = sprintf( '<div style="width:60px; height:20px; background-color:%s"></div>', $key['color'] );
                     unset( $key['color'] );
@@ -798,7 +775,7 @@ class Hr_Log {
                 }
 
                 if ( isset( $key['activate'] ) ) {
-                    $activate = array( '1' => __( 'Immediately apply after hiring', 'erp' ), '2' => __( 'Apply after X days from hiring', 'erp' ), '3' => __( 'Manually', 'erp' ) );
+                    $activate = [ '1' => __( 'Immediately apply after hiring', 'erp' ), '2' => __( 'Apply after X days from hiring', 'erp' ), '3' => __( 'Manually', 'erp' ) ];
 
                     if ( $key['activate'] == 2 ) {
                         $key['activation']   = str_replace( 'X', $key['execute_day'], $activate[$key['activate']] );
@@ -814,21 +791,20 @@ class Hr_Log {
                     $key['policy_effective_date'] = erp_format_date( $key['effective_date'] );
                     unset( $key['effective_date'] );
                 }
-
             } );
 
             $message = sprintf( __( '<strong>%s</strong> policy has been edited', 'erp' ), $old_policy['name'] );
         }
 
         if ( $message ) {
-            erp_log()->add([
+            erp_log()->add( [
                 'sub_component' => 'leave',
                 'message'       => $message,
                 'created_by'    => get_current_user_id(),
                 'changetype'    => 'edit',
                 'old_value'     => $changes['old_val'] ? base64_encode( maybe_serialize( $changes['old_val'] ) ) : '',
-                'new_value'     => $changes['new_val'] ? base64_encode( maybe_serialize( $changes['new_val'] ) ) : ''
-            ]);
+                'new_value'     => $changes['new_val'] ? base64_encode( maybe_serialize( $changes['new_val'] ) ) : '',
+            ] );
         }
     }
 
@@ -837,14 +813,13 @@ class Hr_Log {
      *
      * @since 0.1
      *
-     * @param  integer $request_id
-     * @param  array $request
-     * @param  array $leaves
+     * @param int   $request_id
+     * @param array $request
+     * @param array $leaves
      *
      * @return void
      */
     public function create_leave_request( $request_id, $request, $leaves ) {
-
         if ( ! $request_id ) {
             return;
         }
@@ -858,12 +833,12 @@ class Hr_Log {
             $request['days']
         );
 
-        erp_log()->add([
+        erp_log()->add( [
             'sub_component' => 'leave',
             'message'       => $message,
             'created_by'    => get_current_user_id(),
             'changetype'    => 'add',
-        ]);
+        ] );
     }
 
     /**
@@ -871,25 +846,24 @@ class Hr_Log {
      *
      * @since 0.1
      *
-     * @param  integer $entitlement_id
-     * @param  array $fields
+     * @param int   $entitlement_id
+     * @param array $fields
      *
      * @return void
      */
     public function create_entitlement( $entitlement_id, $fields ) {
-
         if ( ! $entitlement_id ) {
             return;
         }
 
         $message  = sprintf( '%s <strong>%s</strong>', __( 'A new entitlement has been created for', 'erp' ), erp_hr_get_employee_name( intval( $fields['user_id'] ) ) );
 
-        erp_log()->add([
+        erp_log()->add( [
             'sub_component' => 'leave',
             'message'       => $message,
             'created_by'    => get_current_user_id(),
             'changetype'    => 'add',
-        ]);
+        ] );
     }
 
     /**
@@ -897,23 +871,22 @@ class Hr_Log {
      *
      * @since 0.1
      *
-     * @param  integer $holiday_id
-     * @param  array $fields
+     * @param int   $holiday_id
+     * @param array $fields
      *
      * @return void
      */
     public function create_holiday( $holiday_id, $fields ) {
-
         if ( ! $holiday_id ) {
             return;
         }
 
-        erp_log()->add([
+        erp_log()->add( [
             'sub_component' => 'leave',
             'message'       => sprintf( __( 'A new holiday named <strong>%s</strong> has been created', 'erp' ), $fields['title'] ),
             'created_by'    => get_current_user_id(),
             'changetype'    => 'add',
-        ]);
+        ] );
     }
 
     /**
@@ -921,12 +894,11 @@ class Hr_Log {
      *
      * @since 0.1
      *
-     * @param  integer $holiday_id
+     * @param int $holiday_id
      *
      * @return void
      */
     public function delete_holiday( $holiday_id ) {
-
         if ( ! $holiday_id ) {
             return;
         }
@@ -937,12 +909,12 @@ class Hr_Log {
             return;
         }
 
-        erp_log()->add([
+        erp_log()->add( [
             'sub_component' => 'leave',
             'message'       => sprintf( __( '<strong>%s</strong> holiday has been deleted', 'erp' ), $holiday->title ),
             'created_by'    => get_current_user_id(),
             'changetype'    => 'delete',
-        ]);
+        ] );
     }
 
     /**
@@ -950,13 +922,12 @@ class Hr_Log {
      *
      * @since 0.1
      *
-     * @param  integer $holiday_id
-     * @param  array $fields
+     * @param int   $holiday_id
+     * @param array $fields
      *
      * @return void
      */
     public function update_holiday( $holiday_id, $fields ) {
-
         if ( ! $holiday_id ) {
             return;
         }
@@ -975,7 +946,7 @@ class Hr_Log {
         if ( empty( $changes['old_val'] ) && empty( $changes['new_val'] ) ) {
             $message = false;
         } else {
-            array_walk ( $changes, function ( &$key ) {
+            array_walk( $changes, function ( &$key ) {
                 if ( isset( $key['start'] ) ) {
                     $key['start_date'] = erp_format_date( $key['start'] );
                     unset( $key['start'] );
@@ -990,14 +961,14 @@ class Hr_Log {
         }
 
         if ( $message ) {
-            erp_log()->add([
+            erp_log()->add( [
                 'sub_component' => 'leave',
                 'message'       => $message,
                 'created_by'    => get_current_user_id(),
                 'changetype'    => 'edit',
                 'old_value'     => $changes['old_val'] ? base64_encode( maybe_serialize( $changes['old_val'] ) ) : '',
-                'new_value'     => $changes['new_val'] ? base64_encode( maybe_serialize( $changes['new_val'] ) ) : ''
-            ]);
+                'new_value'     => $changes['new_val'] ? base64_encode( maybe_serialize( $changes['new_val'] ) ) : '',
+            ] );
         }
     }
 
@@ -1006,9 +977,9 @@ class Hr_Log {
      *
      * @since 0.1
      *
-     * @param  string $new_status
-     * @param  string $old_status
-     * @param  object $post
+     * @param string $new_status
+     * @param string $old_status
+     * @param object $post
      *
      * @return void
      */
@@ -1021,23 +992,21 @@ class Hr_Log {
             return;
         }
 
-        $overview = add_query_arg( array( 'page' => 'erp-hr' ), admin_url('admin.php') );
+        $overview = add_query_arg( [ 'page' => 'erp-hr' ], admin_url( 'admin.php' ) );
 
         if ( 'publish' === $old_status ) {
-            $message     = sprintf( __( "<strong>%s</strong> announcement has been edited", 'erp' ), $post->post_title );
+            $message     = sprintf( __( '<strong>%s</strong> announcement has been edited', 'erp' ), $post->post_title );
             $change_type = 'edit';
         } else {
-            $message     = sprintf( __( "<strong>%s</strong> announcement has been created", 'erp' ), $post->post_title );
+            $message     = sprintf( __( '<strong>%s</strong> announcement has been created', 'erp' ), $post->post_title );
             $change_type = 'add';
         }
 
-        erp_log()->add([
+        erp_log()->add( [
             'sub_component' => 'announcement',
             'message'       => $message,
             'created_by'    => get_current_user_id(),
             'changetype'    => $change_type,
-        ]);
-
+        ] );
     }
-
 }

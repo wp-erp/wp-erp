@@ -235,26 +235,25 @@
                         <th>{{ __('Account', 'erp') }}</th>
                         <th>{{ __('Debit', 'erp') }}</th>
                         <th>{{ __('Credit', 'erp') }}</th>
-                        <th></th>
+                    <!--    <th></th>-->
                     </tr>
                     </thead>
                     <tbody>
                     <tr :key="idx" v-for="(acct,idx) in ledgers[7]">
-                        <td><div class="wperp-form-group ob-people with-multiselect">
-                            <multi-select v-model="acct.bank" :options="banks" /></div></td>
+                        <td>{{acct.name}}</td>
                         <td><input type="number" step="0.01"  class="wperp-form-field" @keyup="calculateAmount" v-model="acct.debit"></td>
                         <td><input type="number" step="0.01"  class="wperp-form-field" @keyup="calculateAmount" v-model="acct.credit"></td>
-                        <td class="delete-row" data-colname="Remove">
+                      <!--  <td class="delete-row" data-colname="Remove">
                             <a @click.prevent="removeBankRow(idx)" href="#"><i class="flaticon-trash"></i></a>
-                        </td>
+                        </td>-->
                     </tr>
                     <tr class="add-new-line">
                         <td v-if="undefined === ledgers[7]" style="float: left;">
                            {{ __( 'No Bank Account Found!', 'erp' ) }}
                         </td>
-                        <td v-else colspan="9" style="text-align: left;">
-                            <button @click.prevent="ledgers[7].push({})" class="wperp-btn btn--primary add-line-trigger"><i class="flaticon-add-plus-button"></i>{{ __('Add Bank', 'erp') }}</button>
-                        </td>
+                     <!--   <td v-else colspan="9" style="text-align: left;">
+                            <button @click.prevent="ledgers[7].push({})" class="wperp-btn btn&#45;&#45;primary add-line-trigger"><i class="flaticon-add-plus-button"></i>{{ __('Add Bank', 'erp') }}</button>
+                        </td>-->
                     </tr>
                     </tbody>
                 </table>
@@ -600,7 +599,7 @@ export default {
             HTTP.get(`/opening-balances/${year.id}/count`).then(response => {
                 count = parseInt(response.data);
             }).then(() => {
-                if (count === 0) {
+                if (parseInt(count) === 0) {
                     this.fetchLedgers();
                 } else {
                     HTTP.get(`/opening-balances/${year.id}`).then(response => {
@@ -611,8 +610,16 @@ export default {
                             ledger.balance = this.transformBalance(ledger.balance);
                             this.totalDebit += parseFloat(ledger.debit);
                             this.totalCredit += parseFloat(ledger.credit);
+
+                             this.ledgers[ledger.chart_id].map((item, i)=>{
+                                if(item.ledger_id == ledger.ledger_id){
+                                    item.credit = ledger.credit
+                                    item.debit = ledger.debit
+                                }
+                            })
                         });
-                        this.ledgers = this.groupBy(response.data, 'chart_id');
+
+                      // this.ledgers = this.groupBy(response.data, 'chart_id');
                         this.fetchVirtualAccts(year);
                     }).then(() => {
                         if (!Object.prototype.hasOwnProperty.call(this.ledgers, '7')) {

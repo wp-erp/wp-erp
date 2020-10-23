@@ -1,4 +1,5 @@
 <?php
+
 namespace WeDevs\ERP\HRM\Emails;
 
 use WeDevs\ERP\Email;
@@ -8,16 +9,15 @@ use WeDevs\ERP\Framework\Traits\Hooker;
  * Approved Leave Request
  */
 class Approved_Leave_Request extends Email {
-
     use Hooker;
 
-    function __construct() {
+    public function __construct() {
         $this->id             = 'approved-leave-request';
         $this->title          = __( 'Approved Leave Request', 'erp' );
         $this->description    = __( 'Approved leave request notification to employee.', 'erp' );
 
-        $this->subject        = __( 'Your leave request has been approved', 'erp');
-        $this->heading        = __( 'Leave Request Approved', 'erp');
+        $this->subject        = __( 'Your leave request has been approved', 'erp' );
+        $this->heading        = __( 'Leave Request Approved', 'erp' );
 
         $this->find = [
             'full-name'    => '{employee_name}',
@@ -33,7 +33,7 @@ class Approved_Leave_Request extends Email {
         parent::__construct();
     }
 
-    function get_args() {
+    public function get_args() {
         return [
             'email_heading' => $this->heading,
             'email_body'    => wpautop( $this->get_option( 'body' ) ),
@@ -68,5 +68,4 @@ class Approved_Leave_Request extends Email {
 
         $this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
     }
-
 }
