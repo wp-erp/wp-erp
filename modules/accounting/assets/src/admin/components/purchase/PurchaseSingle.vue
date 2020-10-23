@@ -18,6 +18,7 @@
                         </template>
                         <template slot="dropdown">
                             <ul role="menu">
+                                <li> <a :href="pdf_link">{{ __('Export as PDF', 'erp') }}</a> </li>
                                 <li><a href="#" @click.prevent="showModal = true">{{ __('Send Mail', 'erp') }}</a></li>
                             </ul>
                         </template>
@@ -60,6 +61,10 @@
                                         <td>#{{ purchase.voucher_no }}</td>
                                     </tr>
                                     <tr>
+                                        <th>{{ __('Reference No', 'erp') }}:</th>
+                                        <td> <span v-if="purchase.ref"> #{{ purchase.ref }} </span></td>
+                                    </tr>
+                                    <tr>
                                         <th>{{ __('Transaction Date', 'erp') }}:</th>
                                         <td>{{ purchase.date }}</td>
                                     </tr>
@@ -79,29 +84,30 @@
                     <div class="wperp-invoice-table" v-if="null != purchase">
                         <table class="wperp-table wperp-form-table invoice-table">
                             <thead>
-                                <tr>
-                                    <th>{{ __('Sl.', 'erp') }}</th>
-                                    <th>{{ __('Item name', 'erp') }}</th>
-                                    <th>{{ __('Qty', 'erp') }}</th>
-                                    <th>{{ __('Unit Price', 'erp') }}</th>
-                                    <th>{{ __('Amount', 'erp') }}</th>
-                                </tr>
+                            <tr>
+                                <th>{{ __('Sl.', 'erp') }}</th>
+                                <th>{{ __('Item name', 'erp') }}</th>
+                                <th>{{ __('Qty', 'erp') }}</th>
+                                <th>{{ __('Unit Price', 'erp') }}</th>
+                                <th>{{ __('Amount', 'erp') }}</th>
+                            </tr>
                             </thead>
                             <tbody>
-                                <tr :key="index" v-for="(line, index) in purchase.line_items">
-                                    <td>{{ index+1 }}</td>
-                                    <td>{{ line.name }}</td>
-                                    <td>{{ line.qty }}</td>
-                                    <td>{{ moneyFormat(line.price) }}</td>
-                                    <td>{{ moneyFormat(line.amount) }}</td>
-                                </tr>
+                            <tr :key="index" v-for="(line, index) in purchase.line_items">
+                                <td>{{ index+1 }}</td>
+                                <td>{{ line.name }}</td>
+                                <td>{{ line.qty }}</td>
+                                <td>{{ moneyFormat(line.price) }}</td>
+                                <td>{{ moneyFormat(line.amount) }}</td>
+                            </tr>
                             </tbody>
                             <tfoot>
                             <tr>
                                 <td colspan="7">
                                     <ul>
-                                        <li><span>{{ __('Subtotal', 'erp') }}:</span> {{ moneyFormat(purchase.amount) }}</li>
-                                        <li><span>{{ __('Total', 'erp') }}:</span> {{ moneyFormat(purchase.amount) }}</li>
+                                        <li><span>{{ __('Subtotal', 'erp') }}:</span> {{ moneyFormat(total.basic) }}</li>
+                                        <li v-if="total.tax"><span>{{ __('Tax', 'erp') }}:</span> {{ moneyFormat(total.tax) }}</li>
+                                        <li><span>{{ __('Total', 'erp') }}:</span> {{ moneyFormat(total.final) }}</li>
                                     </ul>
                                 </td>
                             </tr>
@@ -132,74 +138,84 @@
 </template>
 
 <script>
-import HTTP from 'admin/http';
-import SendMail from 'admin/components/email/SendMail.vue';
-import Dropdown from 'admin/components/base/Dropdown.vue';
-import TransParticulars from 'admin/components/transactions/TransParticulars.vue';
+    import HTTP from 'admin/http';
+    import SendMail from 'admin/components/email/SendMail.vue';
+    import Dropdown from 'admin/components/base/Dropdown.vue';
+    import TransParticulars from 'admin/components/transactions/TransParticulars.vue';
 
-export default {
-    name: 'PurchaseSingle',
+    export default {
+        name: 'PurchaseSingle',
 
-    components: {
-        SendMail,
-        Dropdown,
-        TransParticulars
-    },
-
-    data() {
-        return {
-            company   : null,
-            purchase  : {},
-            isWorking : false,
-            acct_var  : erp_acct_var,   /* global erp_acct_var */
-            print_data: null,
-            type      : 'purchase',
-            showModal : false,
-            people_id : null
-        };
-    },
-
-    created() {
-        this.getCompanyInfo();
-        this.getPurchase();
-
-        this.$root.$on('close', () => {
-            this.showModal = false;
-        });
-    },
-
-    methods: {
-        getCompanyInfo() {
-            HTTP.get(`/company`).then(response => {
-                this.company = response.data;
-            }).then(e => {}).then(() => {
-                this.isWorking = false;
-            });
+        components: {
+            SendMail,
+            Dropdown,
+            TransParticulars
         },
 
-        getPurchase() {
-            this.isWorking = true;
-            this.$store.dispatch('spinner/setSpinner', true);
-
-            HTTP.get(`/purchases/${this.$route.params.id}`).then(response => {
-                this.purchase  = response.data;
-                this.people_id = this.purchase.vendor_id;
-                this.$store.dispatch('spinner/setSpinner', false);
-            }).then(e => {}).then(() => {
-                this.print_data = this.purchase;
-                this.isWorking = false;
-            }).catch(error => {
-                this.$store.dispatch('spinner/setSpinner', false);
-                throw error;
-            });
+        data() {
+            return {
+                company   : null,
+                purchase  : {},
+                isWorking : false,
+                acct_var  : erp_acct_var,   /* global erp_acct_var */
+                print_data: null,
+                type      : 'purchase',
+                showModal : false,
+                people_id : null,
+                pdf_link  : '#'
+            };
         },
 
-        printPopup() {
-            window.print();
+        created() {
+            this.getCompanyInfo();
+            this.getPurchase();
+
+            this.$root.$on('close', () => {
+                this.showModal = false;
+            });
+        },
+        computed:{
+            total(){
+                return {
+                    basic:  parseFloat( this.purchase.amount ) ,
+                    tax:  parseFloat( this.purchase.tax ) ,
+                    final:  parseFloat( this.purchase.amount ) + parseFloat( this.purchase.tax )
+                }
+            }
+        },
+        methods: {
+            getCompanyInfo() {
+                HTTP.get(`/company`).then(response => {
+                    this.company = response.data;
+                }).then(e => {}).then(() => {
+                    this.isWorking = false;
+                });
+            },
+
+            getPurchase() {
+                this.isWorking = true;
+                this.$store.dispatch('spinner/setSpinner', true);
+
+                HTTP.get(`/purchases/${this.$route.params.id}`).then(response => {
+                    this.purchase  = response.data;
+                    this.people_id = this.purchase.vendor_id;
+                    this.pdf_link = this.purchase.pdf_link;
+                    this.$store.dispatch('spinner/setSpinner', false);
+                }).then(e => {}).then(() => {
+                    this.print_data = this.purchase;
+                    this.isWorking = false;
+                }).catch(error => {
+                    this.$store.dispatch('spinner/setSpinner', false);
+                    throw error;
+                });
+            },
+
+            printPopup() {
+                window.print();
+            }
         }
-    }
 
-};
+    };
 </script>
 
 <style lang="less">

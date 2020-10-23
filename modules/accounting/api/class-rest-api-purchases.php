@@ -247,11 +247,13 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $items      = $request['line_items'];
         $item_total = [];
-
+        $item_tax_total = [];
         foreach ( $items as $key => $item ) {
-            $item_total[ $key ] = $item['item_total'];
+            $item_total[ $key ]      = $item['item_total'];
+            $item_tax_total[ $key ]  = $item['tax_amount'];
         }
 
+        $purchase_data['tax']            = array_sum( $item_tax_total );
         $purchase_data['amount']        = array_sum( $item_total );
         $purchase_data['attachments']   = maybe_serialize( $request['attachments'] );
         $additional_fields['namespace'] = $this->namespace;
@@ -293,11 +295,14 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $items      = $request['line_items'];
         $item_total = [];
+        $item_tax_total = [];
 
         foreach ( $items as $key => $item ) {
-            $item_total[ $key ] = $item['item_total'];
+            $item_total[ $key ]      = $item['item_total'];
+            $item_tax_total[ $key ]  = $item['tax_amount'];
         }
 
+        $purchase_data['tax']            = array_sum( $item_tax_total );
         $purchase_data['attachments']     = maybe_serialize( $purchase_data['attachments'] );
         $purchase_data['billing_address'] = isset( $purchase_data['billing_address'] ) ? maybe_serialize( $purchase_data['billing_address'] ) : '';
         $purchase_data['amount']          = array_sum( $item_total );
@@ -406,7 +411,9 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['line_items'] ) ) {
             $prepared_item['line_items'] = $request['line_items'];
         }
-
+        if ( isset( $request['tax_rate'] ) ) {
+            $prepared_item['tax_rate'] = $request['tax_rate'];
+        }
         if ( isset( $request['attachments'] ) ) {
             $prepared_item['attachments'] = maybe_serialize( $request['attachments'] );
         }
@@ -444,8 +451,11 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
             'due_date'       => $item->due_date,
             'line_items'     => $item->line_items,
             'type'           => ! empty( $item->type ) ? $item->type : 'purchase',
+            'tax'            => $item->tax,
+            'tax_zone_id'    => $item->tax_zone_id,
             'ref'            => $item->ref,
             'billing_address'=> erp_acct_format_people_address( erp_acct_get_people_address( (int) $item->vendor_id ) ),
+            'pdf_link'       => $item->pdf_link,
             'status'         => $item->status,
             'purchase_order' => $item->purchase_order,
             'amount'         => $item->amount,
