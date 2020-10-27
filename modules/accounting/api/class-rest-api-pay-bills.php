@@ -153,7 +153,7 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_pay_bill_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 404,  __( 'Invalid resource id.' ) );
         }
 
         $item = erp_acct_get_pay_bill( $id );
@@ -215,7 +215,7 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_pay_bill_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 404,  __( 'Invalid resource id.' )  );
         }
 
         $pay_bill_data = $this->prepare_item_for_database( $request );
