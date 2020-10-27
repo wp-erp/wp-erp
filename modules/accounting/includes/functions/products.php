@@ -102,12 +102,7 @@ function erp_acct_get_product( $product_id ) {
  * Insert product data
  *
  * @param $data
-<<<<<<< HEAD
- * @return WP_Error
-=======
- *
- * @return int
->>>>>>> product_duplicate_emran_prev
+ * @return WP_Error | integer
  */
 function erp_acct_insert_product( $data ) {
     global $wpdb;
@@ -129,9 +124,9 @@ function erp_acct_insert_product( $data ) {
             OBJECT
         );
 
-        if($product_check){
+       if( $product_check ){
             throw new \Exception("Product Duplicate problem") ;
-        }
+         }
 
 
         $wpdb->insert(
