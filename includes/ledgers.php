@@ -220,6 +220,14 @@ $old_ledgers = [
         'name'        => 'Bank Transaction Charge',
     ],
     [
+        'code'        => '607',
+        'id'          => 108,
+        'system'      => 0,
+        'category_id' => 12,
+        'chart_id'    => 5,
+        'name'        => 'Sales Return',
+    ],
+    [
         'code'        => '610',
         'id'          => 27,
         'system'      => 0,
@@ -442,6 +450,22 @@ $old_ledgers = [
         'category_id' => 13,
         'chart_id'    => 4,
         'name'        => 'Sales',
+    ],
+    [
+        'code'        => '405',
+        'id'          => 58,
+        'system'      => 1,
+        'category_id' => 13,
+        'chart_id'    => 4,
+        'name'        => 'Sales Return Discount',
+    ],
+    [
+        'code'        => '406',
+        'id'          => 59,
+        'system'      => 1,
+        'category_id' => 13,
+        'chart_id'    => 4,
+        'name'        => 'Sales Return Tax',
     ],
     [
         'code'        => '460',
@@ -687,6 +711,16 @@ $ledgers = [
              'code'   => 1405,
              'system' => 1,
          ],
+         [
+             'code'        => 1406,
+             'system'      => 1,
+             'name'        => 'Sales Return Discount',
+         ],
+         [
+             'name'        => 'Sales Return Tax',
+             'code'        => 1407,
+             'system'      => 1,
+         ],
      ],
      'expense' => [
          [
@@ -728,6 +762,16 @@ $ledgers = [
              'name'   => 'Sales Returns and Allowance',
              'code'   => 1403,
              'system' => 1,
+         ],
+         [
+             'name'        => 'Bank Transaction Charge',
+             'code'        => '1508',
+             'system'      => 1,
+         ],
+         [
+             'name'        => 'Sales Return',
+             'code'        => '1509',
+             'system'      => 1,
          ],
      ],
  ];
