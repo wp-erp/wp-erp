@@ -242,29 +242,29 @@ function erp_acct_insert_expense( $data ) {
         }
 
 
-        $wpdb->insert(
+    $wpdb->insert(
             $wpdb->prefix . 'erp_acct_expenses',
-            array(
-				'voucher_no'       => $expense_data['voucher_no'],
-				'people_id'        => $expense_data['people_id'],
-				'people_name'      => $expense_data['people_name'],
-				'address'          => $expense_data['billing_address'],
-				'trn_date'         => $expense_data['trn_date'],
-				'amount'           => $expense_data['amount'],
-                'transaction_charge' => $transaction_charge,
-				'ref'              => $expense_data['ref'],
-				'check_no'         => $expense_data['check_no'],
-				'particulars'      => $expense_data['particulars'],
-				'status'           => $expense_data['status'],
-				'trn_by'           => $expense_data['trn_by'],
-				'trn_by_ledger_id' => $expense_data['trn_by_ledger_id'],
-				'attachments'      => $expense_data['attachments'],
-				'created_at'       => $expense_data['created_at'],
-				'created_by'       => $expense_data['created_by'],
-				'updated_at'       => $expense_data['updated_at'],
-				'updated_by'       => $expense_data['updated_by'],
-            )
-        );
+        [
+            'voucher_no'         => $expense_data['voucher_no'],
+            'people_id'          => $expense_data['people_id'],
+            'people_name'        => $expense_data['people_name'],
+            'address'            => $expense_data['billing_address'],
+            'trn_date'           => $expense_data['trn_date'],
+            'amount'             => $expense_data['amount'],
+            'transaction_charge' => $transaction_charge,
+            'ref'                => $expense_data['ref'],
+            'check_no'           => $expense_data['check_no'],
+            'particulars'        => $expense_data['particulars'],
+            'status'             => $expense_data['status'],
+            'trn_by'             => $expense_data['trn_by'],
+            'trn_by_ledger_id'   => $expense_data['trn_by_ledger_id'],
+            'attachments'        => $expense_data['attachments'],
+            'created_at'         => $expense_data['created_at'],
+            'created_by'         => $expense_data['created_by'],
+            'updated_at'         => $expense_data['updated_at'],
+            'updated_by'         => $expense_data['updated_by'],
+        ]
+    );
 
         $items = $expense_data['bill_details'];
 
@@ -618,22 +618,21 @@ function erp_acct_get_formatted_expense_data( $data, $voucher_no ) {
     $people  = erp_get_people( $data['people_id'] );
     $company = new \WeDevs\ERP\Company();
 
-    $expense_data['voucher_no']      = ! empty( $voucher_no ) ? $voucher_no : 0;
-    $expense_data['people_id']       = isset( $data['people_id'] ) ? $data['people_id'] : get_current_user_id();
-    $expense_data['people_name']     = isset( $people ) ? $people->first_name . ' ' . $people->last_name : '';
-    $expense_data['billing_address'] = isset( $data['billing_address'] ) ? $data['billing_address'] : '';
-    $expense_data['trn_date']        = isset( $data['trn_date'] ) ? $data['trn_date'] : date( 'Y-m-d' );
-    $expense_data['amount']          = isset( $data['amount'] ) ? $data['amount'] : 0;
-    $expense_data['attachments']     = isset( $data['attachments'] ) ? $data['attachments'] : '';
-    $expense_data['ref']             = isset( $data['ref'] ) ? $data['ref'] : '';
-    $expense_data['check_no']        = isset( $data['check_no'] ) ? $data['check_no'] : null;
-    // translators: %s: voucher_no
+    $expense_data['voucher_no']       = ! empty( $voucher_no ) ? $voucher_no : 0;
+    $expense_data['people_id']        = isset( $data['people_id'] ) ? $data['people_id'] : get_current_user_id();
+    $expense_data['people_name']      = isset( $people ) ? $people->first_name . ' ' . $people->last_name : '';
+    $expense_data['billing_address']  = isset( $data['billing_address'] ) ? $data['billing_address'] : '';
+    $expense_data['trn_date']         = isset( $data['trn_date'] ) ? $data['trn_date'] : date( 'Y-m-d' );
+    $expense_data['amount']           = isset( $data['amount'] ) ? $data['amount'] : 0;
+    $expense_data['attachments']      = isset( $data['attachments'] ) ? $data['attachments'] : '';
+    $expense_data['ref']              = isset( $data['ref'] ) ? $data['ref'] : '';
+    $expense_data['check_no']         = isset( $data['check_no'] ) ? $data['check_no'] : null;
     $expense_data['particulars']      = ! empty( $data['particulars'] ) ? $data['particulars'] : sprintf( __( 'Expense created with voucher no %s', 'erp' ), $voucher_no );
     $expense_data['bill_details']     = isset( $data['bill_details'] ) ? $data['bill_details'] : '';
     $expense_data['status']           = isset( $data['status'] ) ? $data['status'] : 1;
     $expense_data['trn_by_ledger_id'] = isset( $data['trn_by_ledger_id'] ) ? $data['trn_by_ledger_id'] : null;
     $expense_data['trn_by']           = isset( $data['trn_by'] ) ? $data['trn_by'] : null;
-    $expense_data['bank_trn_charge']           = isset( $data['bank_trn_charge'] ) ? $data['bank_trn_charge'] : null;
+    $expense_data['bank_trn_charge']  = isset( $data['bank_trn_charge'] ) ? $data['bank_trn_charge'] : null;
     $expense_data['created_at']       = date( 'Y-m-d' );
     $expense_data['created_by']       = isset( $data['created_by'] ) ? $data['created_by'] : '';
     $expense_data['updated_at']       = isset( $data['updated_at'] ) ? $data['updated_at'] : '';

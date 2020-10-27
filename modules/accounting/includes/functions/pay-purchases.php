@@ -146,27 +146,26 @@ function erp_acct_insert_pay_purchase( $data ) {
             $transaction_charge = (float)$pay_purchase_data['bank_trn_charge'];
         }
 
-
         $wpdb->insert(
-            $wpdb->prefix . 'erp_acct_pay_purchase',
-            array(
-                'voucher_no'         => $voucher_no,
-				'vendor_id'          => $pay_purchase_data['vendor_id'],
-				'vendor_name'        => $pay_purchase_data['vendor_name'],
-				'trn_date'           => $pay_purchase_data['trn_date'],
-				'ref'                => $pay_purchase_data['ref'],
-				'amount'             => $pay_purchase_data['amount'],
-				'trn_by'             => $pay_purchase_data['trn_by'],
-				'transaction_charge' => $transaction_charge,
-				'trn_by_ledger_id'   => $pay_purchase_data['trn_by_ledger_id'],
-				'particulars'        => $pay_purchase_data['particulars'],
-				'attachments'        => $pay_purchase_data['attachments'],
-				'status'             => $pay_purchase_data['status'],
-				'created_at'         => $pay_purchase_data['created_at'],
-				'created_by'         => $created_by,
-				'updated_at'         => $pay_purchase_data['updated_at'],
-				'updated_by'         => $pay_purchase_data['updated_by'],
-            )
+        $wpdb->prefix . 'erp_acct_pay_purchase',
+            [
+            'voucher_no'         => $voucher_no,
+            'vendor_id'          => $pay_purchase_data['vendor_id'],
+            'vendor_name'        => $pay_purchase_data['vendor_name'],
+            'trn_date'           => $pay_purchase_data['trn_date'],
+            'ref'                => $pay_purchase_data['ref'],
+            'amount'             => $pay_purchase_data['amount'],
+            'trn_by'             => $pay_purchase_data['trn_by'],
+            'transaction_charge' => $transaction_charge,
+            'trn_by_ledger_id'   => $pay_purchase_data['trn_by_ledger_id'],
+            'particulars'        => $pay_purchase_data['particulars'],
+            'attachments'        => $pay_purchase_data['attachments'],
+            'status'             => $pay_purchase_data['status'],
+            'created_at'         => $pay_purchase_data['created_at'],
+            'created_by'         => $created_by,
+            'updated_at'         => $pay_purchase_data['updated_at'],
+            'updated_by'         => $pay_purchase_data['updated_by'],
+           ]
         );
 
         $items = $pay_purchase_data['purchase_details'];

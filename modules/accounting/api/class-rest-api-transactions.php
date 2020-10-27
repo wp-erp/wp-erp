@@ -495,8 +495,8 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
             'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date'],
             'status'     => empty( $request['status'] ) ? '' : $request['status'],
-            'type'     => empty( $request['type'] ) ? '' : $request['type'],
-            'vendor_id'     => empty( $request['vendor_id'] ) ? '' : $request['vendor_id'],
+            'type'       => empty( $request['type'] ) ? '' : $request['type'],
+            'vendor_id'  => empty( $request['vendor_id'] ) ? '' : $request['vendor_id'],
         ];
 
         $formatted_items   = [];
