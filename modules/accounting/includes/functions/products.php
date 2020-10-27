@@ -4,11 +4,13 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
 
+
 /**
  * Get all products
  *
  * @return mixed
  */
+
 function erp_acct_get_all_products( $args = [] ) {
     global $wpdb;
 
