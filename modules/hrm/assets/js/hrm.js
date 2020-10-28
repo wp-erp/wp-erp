@@ -167,6 +167,22 @@
             } );
         },
 
+        requiredAlert: function( action ) {
+            var count = 0;
+            var selector = ( action === 'edit' ) ? '#erp-employee-edit form' : '#erp-new-employee-popup form';
+
+            $( selector ).find( 'input, select, textarea' ).each( function() {
+                if( $(this).prop('required') && $(this).val() === '' ) {
+                    count++;
+                }
+            });
+
+            if( count ) {
+                var notice = wpErpHr.required_field_notice.replace('{count}', count);
+                swal( '', notice , 'warning' );
+            }
+        },
+
         initDateField: function() {
             $( '.erp-date-field').datepicker({
                 dateFormat: 'yy-mm-dd',
@@ -640,7 +656,7 @@
              * @param  {event}
              */
             removePhoto: function(e) {
-                e.preventDefault();                
+                e.preventDefault();
 
                 var mystery_person = wpErpHr.asset_url + '/images/mystery-person.png';
 
@@ -685,7 +701,7 @@
                             }
                         });
 
-                        $( '#advanced_fields' ).click( function() {                          
+                        $( '#advanced_fields' ).click( function() {
                             if ( $( this ).is(' :checked ')) {
                                 $( '.employee-work' ).show();
                                 $( '.employee-personal' ).show();
@@ -694,6 +710,8 @@
                                 $( '.employee-personal' ).hide();
                             }
                         } );
+
+                        $( 'button[type=submit]' ).click( WeDevs_ERP_HR.requiredAlert );
                     },
 
                     /**
@@ -719,7 +737,7 @@
                                 modal.showError(error);
                             }
                         });
-                    }
+                    },
                 });
             },
 
@@ -801,7 +819,7 @@
                                 WeDevs_ERP_HR.employee.select2Action('erp-hrm-select2');
                                 WeDevs_ERP_HR.employee.select2AddMoreContent();
 
-                                $( '#advanced_fields' ).click( function() {                      
+                                $( '#advanced_fields' ).click( function() {
                                     if ( $( this ).is(' :checked ')) {
                                         $( '.employee-work' ).show();
                                         $( '.employee-personal' ).show();
@@ -830,6 +848,8 @@
                                 $('#work_reporting_to option[value="' + response.id + '"]', modal).attr( 'disabled', 'disabled' );
                             }
                         });
+
+                        $( 'button[type=submit]' ).click( function() { WeDevs_ERP_HR.requiredAlert('edit'); });
                     },
                     onSubmit: function(modal) {
                         modal.disableButton();

@@ -1,5 +1,4 @@
 <?php
-
 namespace WeDevs\ERP\HRM;
 
 use WeDevs\ERP\Framework\Traits\Hooker;
@@ -149,16 +148,16 @@ class Human_Resource {
         wp_enqueue_media();
         wp_enqueue_script( 'erp-tiptip' );
 
-        if ( isset( $_GET['section'] ) && $_GET['section'] == 'employee' ) {
+        if ( isset( $_GET['section'] ) && $_GET['section'] === 'employee' ) {
             wp_enqueue_style( 'erp-sweetalert' );
             wp_enqueue_script( 'erp-sweetalert' );
         }
 
-        wp_enqueue_script( 'wp-erp-hr', WPERP_HRM_ASSETS . "/js/hrm$suffix.js", [ 'erp-script' ], date( 'Ymd' ), true );
+        wp_enqueue_script( 'wp-erp-hr', WPERP_HRM_ASSETS . "/js/hrm$suffix.js", [ 'erp-script' ], gmdate( 'Ymd' ), true );
         wp_enqueue_script( 'wp-erp-hr-leave', WPERP_HRM_ASSETS . "/js/leave$suffix.js", [
             'erp-script',
             'wp-color-picker',
-        ], date( 'Ymd' ), true );
+        ], gmdate( 'Ymd' ), true );
 
         $localize_script = apply_filters( 'erp_hr_localize_script', [
             'nonce'                  => wp_create_nonce( 'wp-erp-hr-nonce' ),
@@ -207,6 +206,7 @@ class Human_Resource {
             'employee_exit'          => __( 'This employee already exists', 'erp' ),
             'employee_created'       => __( 'Employee successfully created', 'erp' ),
             'create_employee_text'   => __( 'Click to create employee', 'erp' ),
+            'required_field_notice'  => __( 'Please fill all the required fields. You have {count} required field(s) empty. Check the Advanced Fields if necessary.', 'erp' ),
             'empty_entitlement_text' => sprintf( '<span>%s <a href="%s" title="%s">%s</a></span>', __( 'Please create entitlement first', 'erp' ), add_query_arg( [
                 'page'          => 'erp-hr',
                 'section'       => 'leave',
@@ -214,7 +214,7 @@ class Human_Resource {
             ], admin_url( 'admin.php' ) ), __( 'Create Entitlement', 'erp' ), __( 'Create Entitlement', 'erp' ) ),
         ] );
 
-        $section    =   isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : 'dashboard';
+        $section = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : 'dashboard';
 
         switch ( $section ) {
             case 'employee':
@@ -230,7 +230,7 @@ class Human_Resource {
                 wp_enqueue_script( 'erp-flotchart-axislables' );
                 wp_enqueue_script( 'erp-flotchart-valuelabel' );
                 wp_enqueue_style( 'erp-flotchart-valuelabel-css' );
-            break;
+                break;
 
             case 'report':
                 wp_enqueue_script( 'erp-flotchart' );
@@ -240,7 +240,7 @@ class Human_Resource {
                 wp_enqueue_script( 'erp-flotchart-axislables' );
                 wp_enqueue_script( 'erp-flotchart-valuelabel' );
                 wp_enqueue_style( 'erp-flotchart-valuelabel-css' );
-            break;
+                break;
 
             case 'my-profile':
                 wp_enqueue_script( 'erp-flotchart' );
@@ -252,7 +252,6 @@ class Human_Resource {
                 wp_enqueue_script( 'erp-flotchart-valuelabel' );
                 wp_enqueue_style( 'erp-flotchart-valuelabel-css' );
                 break;
-
         }
 
         // if its an employee page
@@ -280,7 +279,7 @@ class Human_Resource {
             erp_get_js_template( WPERP_HRM_JS_TMPL . '/leave-days.php', 'erp-leave-days' );
         }
 
-        $section    =   isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : 'dashboard';
+        $section = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : 'dashboard';
         switch ( $section ) {
             case 'department':
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/new-dept.php', 'erp-new-dept' );
@@ -317,7 +316,7 @@ class Human_Resource {
 
         // leave menu
         // $hook = str_replace( sanitize_title( __( 'Leave', 'erp' ) ), 'leave', $current_screen->base );
-        $sub_section    =   isset( $_GET['sub-section'] ) ? sanitize_text_field( wp_unslash( $_GET['sub-section'] ) ) : '';
+        $sub_section = isset( $_GET['sub-section'] ) ? sanitize_text_field( wp_unslash( $_GET['sub-section'] ) ) : '';
         switch ( $sub_section ) {
             case 'policies':
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/leave-policy.php', 'erp-leave-policy' );
