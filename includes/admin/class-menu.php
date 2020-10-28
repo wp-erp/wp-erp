@@ -127,7 +127,7 @@ class Admin_Menu {
         add_submenu_page( 'erp', __( 'Company', 'erp' ), __( 'Company', 'erp' ), 'manage_options', 'erp-company', [ $this, 'company_page' ] );
         add_submenu_page( 'erp', __( 'Tools', 'erp' ), __( 'Tools', 'erp' ), 'manage_options', 'erp-tools', [ $this, 'tools_page' ] );
         add_submenu_page( 'erp', __( 'Modules', 'erp' ), __( 'Modules', 'erp' ), 'manage_options', 'erp-modules', [ $this, 'module' ] );
-        add_submenu_page( 'erp', __( 'Add-Ons', 'erp' ), __( 'Add-Ons', 'erp' ), 'manage_options', 'erp-addons', [ $this, 'addon_page' ] );
+        add_submenu_page( 'erp', __( 'WP ERP Pro', 'erp' ), __( 'WP ERP Pro', 'erp' ), 'manage_options', 'erp-addons', [ $this, 'addon_page' ] );
         add_submenu_page( 'erp', __( 'Settings', 'erp' ), __( 'Settings', 'erp' ), 'manage_options', 'erp-settings', [ $this, 'router' ] );
         erp_add_menu( 'settings', [
             'title'         => __( 'Settings', 'erp' ),
