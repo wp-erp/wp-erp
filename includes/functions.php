@@ -1114,7 +1114,7 @@ function erp_get_license_status( $addon ) {
             case 'expired':
                 $messages[] = sprintf(
                     __( 'Your license key expired on %s. Please <a href="%s" target="_blank" title="Renew your license key">renew your license key</a>.', 'erp' ),
-                    date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ),
+                    date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'mysql' ) ) ),
                     'https://wperp.com/checkout/?edd_license_key=' . $addon['license'] . '&utm_campaign=admin&utm_source=licenses&utm_medium=expired'
                 );
                 break;
@@ -1149,28 +1149,28 @@ function erp_get_license_status( $addon ) {
             case 'expired':
                 $messages[] = sprintf(
                     __( 'Your license key expired on %s. Please <a href="%s" target="_blank" title="Renew your license key">renew your license key</a>.', 'erp' ),
-                    date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ),
+                    date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'mysql' ) ) ),
                     'https://wperp.com/checkout/?edd_license_key=' . $addon['license'] . '&utm_campaign=admin&utm_source=licenses&utm_medium=expired'
                 );
                 break;
 
             case 'valid':
                 $status_class = 'no-error';
-                $now          = current_time( 'timestamp' );
-                $expiration   = strtotime( $license->expires, current_time( 'timestamp' ) );
+                $now          = current_time( 'mysql' );
+                $expiration   = strtotime( $license->expires, current_time( 'mysql' ) );
 
                 if ( 'lifetime' === $license->expires ) {
                     $messages[] = __( 'License key never expires.', 'erp' );
                 } elseif ( $expiration > $now && $expiration - $now < ( DAY_IN_SECONDS * 30 ) ) {
                     $messages[] = sprintf(
                         __( 'Your license key expires soon! It expires on %s. <a href="%s" target="_blank" title="Renew license">Renew your license key</a>.', 'erp' ),
-                        date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ),
+                        date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'mysql' ) ) ),
                         'https://wperp.com/checkout/?edd_license_key=' . $addon['license'] . '&utm_campaign=admin&utm_source=licenses&utm_medium=renew'
                     );
                 } else {
                     $messages[] = sprintf(
                         __( 'Your license key expires on %s.', 'erp' ),
-                        date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) )
+                        date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'mysql' ) ) )
                     );
                 }
                 break;
@@ -1743,15 +1743,15 @@ function erp_process_import_export() {
                     foreach ( $fields as $key => $value ) {
                         if ( ! empty( $line[ $value ] ) && is_numeric( $value ) ) {
                             if ( $type === 'employee' ) {
-                                if ( in_array( $key, $employee_fields['work'] ) ) {
+                                if ( in_array( $key, $employee_fields['work'], true ) ) {
                                     if ( $key === 'designation' ) {
-                                        $line_data['work'][ $key ] = array_search( $line[ $value ], $designations );
+                                        $line_data['work'][ $key ] = array_search( $line[ $value ], $designations, true );
                                     } elseif ( $key === 'department' ) {
-                                        $line_data['work'][ $key ] = array_search( $line[ $value ], $departments );
+                                        $line_data['work'][ $key ] = array_search( $line[ $value ], $departments, true );
                                     } else {
                                         $line_data['work'][ $key ] = $line[ $value ];
                                     }
-                                } elseif ( in_array( $key, $employee_fields['personal'] ) ) {
+                                } elseif ( in_array( $key, $employee_fields['personal'], true ) ) {
                                     $line_data['personal'][ $key ] = $line[ $value ];
                                 } else {
                                     $line_data[ $key ] = $line[ $value ];
@@ -1922,7 +1922,7 @@ function erp_process_import_export() {
                         }
 
                         if ( $type === 'vendor' ) {
-                            if ( in_array( $field, $field_builder_vendors_fields ) ) {
+                            if ( in_array( $field, $field_builder_vendors_fields, true ) ) {
                                 $csv_items[ $x ][ $field ] = erp_people_get_meta( $item->id, $field, true );
                             } else {
                                 $csv_items[ $x ][ $field ] = $item->{$field};
@@ -1934,7 +1934,7 @@ function erp_process_import_export() {
                 $x ++;
             }
 
-            $file_name = 'export_' . date( 'd_m_Y' ) . '.csv';
+            $file_name = 'export_' . gmdate( 'd_m_Y' ) . '.csv';
 
             erp_make_csv_file( $csv_items, $file_name );
         } else {
@@ -2506,7 +2506,7 @@ function erp_is_module_active( $module_key ) {
  * @param string $file_name
  */
 function erp_make_csv_file( $items, $file_name, $field_data = true ) {
-    $file_name = ( ! empty( $file_name ) ) ? $file_name : 'csv_' . date( 'd_m_Y' ) . '.csv';
+    $file_name = ( ! empty( $file_name ) ) ? $file_name : 'csv_' . gmdate( 'd_m_Y' ) . '.csv';
 
     if ( empty( $items ) ) {
         return;
@@ -2742,16 +2742,16 @@ function erp_get_financial_year_dates( $date = null ) {
     $start_month = erp_get_option( 'gen_financial_month', 'erp_settings_general', 1 );
 
     if ( $date == null ) {
-        $year  = date( 'Y' );
-        $month = date( 'n' );
+        $year  = gmdate( 'Y' );
+        $month = gmdate( 'n' );
     } else {
         if ( ! is_numeric( $date ) ) {
             $timestamp = erp_current_datetime()->modify( $date )->getTimestamp();
         } else {
             $timestamp = $date;
         }
-        $year  = date( 'Y', $timestamp );
-        $month = date( 'n', $timestamp );
+        $year  = gmdate( 'Y', $timestamp );
+        $month = gmdate( 'n', $timestamp );
     }
 
     /**
@@ -3398,7 +3398,7 @@ function add_enable_disable_option_save() {
         return;
     }
 
-    if ( isset( $_POST['save_email_enable_or_disable'] ) && $_POST['save_email_enable_or_disable'] == 'save_email_enable_or_disable' ) {
+    if ( isset( $_POST['save_email_enable_or_disable'] ) && $_POST['save_email_enable_or_disable'] === 'save_email_enable_or_disable' ) {
         $registered_email = array_keys( wperp()->emailer->get_emails() );
 
         foreach ( $registered_email as $remail ) {
@@ -3485,7 +3485,7 @@ function filter_enabled_email( $email ) {
         'erp_email_settings_employee-asset-overdue',
     ] );
 
-    if ( in_array( $get_option_id, $can_not_be_disabled ) ) {
+    if ( in_array( $get_option_id, $can_not_be_disabled, true ) ) {
         return $email;
     }
     $get_email_settings = get_option( $get_option_id );

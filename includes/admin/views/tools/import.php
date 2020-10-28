@@ -1,37 +1,36 @@
 <?php
+if ( ! $is_crm_activated && ! $is_hrm_activated && ! $is_acc_activated ) {
+    return;
+}
 
-    if ( ! $is_crm_activated && ! $is_hrm_activated && ! $is_acc_activated ) {
-        return;
+$page           = '?page=erp-tools&tab=import&action=download_sample';
+$nonce          = 'erp-emport-export-sample-nonce';
+$csv_sample_url = wp_nonce_url( $page, $nonce );
+
+$users       = [];
+$life_stages = [];
+$groups      = [];
+
+if ( $is_crm_activated ) {
+    $life_stages    = erp_crm_get_life_stages_dropdown_raw();
+    $crm_users      = erp_crm_get_crm_user();
+
+    foreach ( $crm_users as $user ) {
+        $users[ $user->ID ] = $user->display_name . ' &lt;' . $user->user_email . '&gt;';
     }
 
-    $page           = '?page=erp-tools&tab=import&action=download_sample';
-    $nonce          = 'erp-emport-export-sample-nonce';
-    $csv_sample_url = wp_nonce_url( $page, $nonce );
+    $contact_groups = erp_crm_get_contact_groups( [ 'number' => '-1' ] );
 
-    $users       = [];
-    $life_stages = [];
-    $groups      = [];
+    $groups = [ '' => __( '&mdash; Select Group &mdash;', 'erp' ) ];
 
-    if ( $is_crm_activated ) {
-        $life_stages    = erp_crm_get_life_stages_dropdown_raw();
-        $crm_users      = erp_crm_get_crm_user();
-
-        foreach ( $crm_users as $user ) {
-            $users[ $user->ID ] = $user->display_name . ' &lt;' . $user->user_email . '&gt;';
-        }
-
-        $contact_groups = erp_crm_get_contact_groups( [ 'number' => '-1' ] );
-
-        $groups = ['' => __( '&mdash; Select Group &mdash;', 'erp' )];
-
-        foreach ( $contact_groups as $group ) {
-            $groups[ $group->id ] = $group->name;
-        }
+    foreach ( $contact_groups as $group ) {
+        $groups[ $group->id ] = $group->name;
     }
+}
 ?>
 
 <?php
-if ( isset( $_GET['error'] ) && $_GET['error'] != '' ) {
+if ( isset( $_GET['error'] ) && $_GET['error'] !== '' ) {
     $errors = new \WeDevs\ERP\ERP_Errors( sanitize_text_field( wp_unslash( $_GET['error'] ) ) );
     echo $errors->display();
 }
@@ -64,7 +63,12 @@ if ( isset( $_GET['error'] ) && $_GET['error'] != '' ) {
                         </th>
                         <td>
                             <input type="file" name="csv_file" id="csv_file" />
-                            <p class="description"><?php esc_html_e( 'Upload a csv file.', 'erp' ); ?><?php echo erp_help_tip( esc_html__( 'Make sure CSV meets the sample CSV format exactly.', 'erp' ) ) ?></p>
+                            <p class="description">
+                                <?php
+                                esc_html_e( 'Upload a csv file.', 'erp' );
+                                echo erp_help_tip( esc_html__( 'Make sure CSV meets the sample CSV format exactly.', 'erp' ) );
+                                ?>
+                            </p>
                             <p id="download_sample_wrap">
                                 <input type="hidden" value="<?php echo esc_url( $csv_sample_url ); ?>" />
                                 <button class="button button-primary"> Download Sample CSV</button>
@@ -80,13 +84,13 @@ if ( isset( $_GET['error'] ) && $_GET['error'] != '' ) {
                         <td>
                             <select name="contact_owner" id="contact_owner">
                                 <?php
-                                    $current_user = get_current_user_id();
-                                    echo wp_kses( erp_html_generate_dropdown( $users, $current_user ), [
-                                        'option' => [
-                                            'value'    => [],
-                                            'selected' => [],
-                                        ],
-                                    ] );
+                                $current_user = get_current_user_id();
+                                echo wp_kses( erp_html_generate_dropdown( $users, $current_user ), [
+                                    'option' => [
+                                        'value'    => [],
+                                        'selected' => [],
+                                    ],
+                                ] );
                                 ?>
                             </select>
                             <p class="description"><?php esc_html_e( 'Contact owner for contact.', 'erp' ); ?></p>
@@ -98,12 +102,16 @@ if ( isset( $_GET['error'] ) && $_GET['error'] != '' ) {
                         </th>
                         <td>
                             <select name="life_stage" id="life_stage">
-                                <?php echo wp_kses( erp_html_generate_dropdown( $life_stages ), [
-                                    'option' => [
-                                        'value'    => [],
-                                        'selected' => [],
-                                    ],
-                                ] ); ?>
+                                <?php
+                                echo wp_kses(
+                                    erp_html_generate_dropdown( $life_stages ), [
+                                        'option' => [
+                                            'value'    => [],
+                                            'selected' => [],
+                                        ],
+                                    ]
+                                );
+                                ?>
                             </select>
                             <p class="description"><?php esc_html_e( 'Life stage for contact.', 'erp' ); ?></p>
                         </td>
@@ -114,12 +122,14 @@ if ( isset( $_GET['error'] ) && $_GET['error'] != '' ) {
                         </th>
                         <td>
                             <select name="contact_group">
-                                <?php echo wp_kses( erp_html_generate_dropdown( $groups ), [
+                                <?php
+                                echo wp_kses( erp_html_generate_dropdown( $groups ), [
                                     'option' => [
                                         'value'    => [],
                                         'selected' => [],
                                     ],
-                                ] ); ?>
+                                ] );
+                                ?>
                             </select>
                             <p class="description"><?php esc_html_e( 'Imported contacts will be subscribed in selected group.', 'erp' ); ?></p>
                         </td>
@@ -160,12 +170,14 @@ if ( isset( $_GET['error'] ) && $_GET['error'] != '' ) {
                             </th>
                             <td>
                                 <select name="user_role" class="erp-select2" id="user_role" multiple="true">
-                                    <?php echo wp_kses( erp_html_generate_dropdown( $roles, $default_role ), [
+                                    <?php
+                                    echo wp_kses( erp_html_generate_dropdown( $roles, $default_role ), [
                                         'option' => [
                                             'value'    => [],
                                             'selected' => [],
                                         ],
-                                    ] ); ?>
+                                    ] );
+                                    ?>
                                 </select>
                                 <p class="description"><?php esc_html_e( 'Selected user role are considered to import.', 'erp' ); ?></p>
                             </td>
@@ -177,13 +189,13 @@ if ( isset( $_GET['error'] ) && $_GET['error'] != '' ) {
                             <td>
                                 <select name="contact_owner" id="contact_owner">
                                     <?php
-                                        $current_user = get_current_user_id();
-                                        echo wp_kses( erp_html_generate_dropdown( $users, $current_user ), [
-                                            'option' => [
-                                                'value'    => [],
-                                                'selected' => [],
-                                            ],
-                                        ] );
+                                    $current_user = get_current_user_id();
+                                    echo wp_kses( erp_html_generate_dropdown( $users, $current_user ), [
+                                        'option' => [
+                                            'value'    => [],
+                                            'selected' => [],
+                                        ],
+                                    ] );
                                     ?>
                                 </select>
                                 <p class="description"><?php esc_html_e( 'Contact owner for contact.', 'erp' ); ?></p>
@@ -195,12 +207,14 @@ if ( isset( $_GET['error'] ) && $_GET['error'] != '' ) {
                             </th>
                             <td>
                                 <select name="life_stage" id="life_stage">
-                                    <?php echo wp_kses( erp_html_generate_dropdown( $life_stages ), [
+                                    <?php
+                                    echo wp_kses( erp_html_generate_dropdown( $life_stages ), [
                                         'option' => [
                                             'value'    => [],
                                             'selected' => [],
                                         ],
-                                    ] ); ?>
+                                    ] );
+                                    ?>
                                 </select>
                                 <p class="description"><?php esc_html_e( 'Life stage for contact.', 'erp' ); ?></p>
                             </td>
@@ -211,12 +225,14 @@ if ( isset( $_GET['error'] ) && $_GET['error'] != '' ) {
                             </th>
                             <td>
                                 <select name="contact_group">
-                                    <?php echo wp_kses( erp_html_generate_dropdown( $groups ), [
+                                    <?php
+                                    echo wp_kses( erp_html_generate_dropdown( $groups ), [
                                         'option' => [
                                             'value'    => [],
                                             'selected' => [],
                                         ],
-                                    ] ); ?>
+                                    ] );
+                                    ?>
                                 </select>
                                 <p class="description"><?php esc_html_e( 'Imported contacts will be subscribed in selected group.', 'erp' ); ?></p>
                             </td>
@@ -242,6 +258,4 @@ if ( isset( $_GET['error'] ) && $_GET['error'] != '' ) {
             </form>
         </div><!-- .inside -->
     </div><!-- .postbox -->
-<?php
-    }
-?>
+<?php } ?>
