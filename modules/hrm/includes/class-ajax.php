@@ -1277,9 +1277,9 @@ class Ajax_Handler {
      */
     public function employee_update_performance() {
         // check permission for adding performance
-        // if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'wp-erp-hr-nonce' ) ) {
-        //     $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
-        // }
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'employee_update_performance' ) ) {
+            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
 
         $employee_id        = isset( $_POST['employee_id'] ) ? sanitize_text_field( wp_unslash( $_POST['employee_id'] ) ) : 0;
         $department_lead_id = erp_hr_get_department_lead_by_user( $employee_id );
