@@ -9,7 +9,7 @@ $customer_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
         </p>
         <p class="assign-taskes-users">
             <select name="selected_contact" v-model="feedData.inviteContact" v-selecttwo="feedData.inviteContact" class="select2" multiple="multiple" style="width: 100%" data-placeholder="<?php esc_attr_e( 'Agents or managers..', 'erp' ); ?>">
-                <?php echo wp_kses( erp_crm_get_crm_user_html_dropdown(), [
+                <?php echo wp_kses( erp_crm_activity_assign_dropdown_html( $customer_id ), [
                     'option' => [
                         'value'    => [],
                         'selected' => [],
