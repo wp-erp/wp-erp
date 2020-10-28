@@ -3,7 +3,6 @@
 namespace WeDevs\ERP\CRM;
 
 use Exception;
-use Google_Auth;
 use Google_Service_Exception;
 use Google_Service_Gmail;
 use Google_Service_Gmail_Message;
