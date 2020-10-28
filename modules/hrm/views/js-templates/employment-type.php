@@ -4,11 +4,11 @@ $value = '';
 
 if ( $id ) {
     $employee = new \WeDevs\ERP\HRM\Employee( $id );
-    $value = $employee->get_status();
+    $value = $employee->get_type();
 }
 ?>
 
-<div class="status-form-wrap">
+<div class="type-form-wrap">
     <div class="row">
         <?php
         erp_html_form_input( [
@@ -24,13 +24,12 @@ if ( $id ) {
     <div class="row">
         <?php
         erp_html_form_input( [
-            'label'       => __( 'Employee Status', 'erp' ),
-            'name'        => 'status',
+            'label'       => __( 'Employment Type', 'erp' ),
+            'name'        => 'type',
             'value'       => $value,
             'type'        => 'select',
-            'id'          => 'erp-hr-employee-status-option',
             'custom_attr' => [ 'data-selected' => $value ],
-            'options'     => [ 0 => __( '- Select -', 'erp' ) ] + erp_hr_get_employee_statuses(),
+            'options'     => [ 0 => __( '- Select -', 'erp' ) ] + erp_hr_get_employee_types(),
         ] );
         ?>
     </div>
@@ -49,6 +48,6 @@ if ( $id ) {
     </div>
 
     <?php wp_nonce_field( 'employee_update_employment' ); ?>
-    <input type="hidden" name="action" id="status-action" value="erp-hr-emp-update-status">
+    <input type="hidden" name="action" id="type-action" value="erp-hr-emp-update-type">
     <input type="hidden" name="user_id" id="emp-id" value="{{ data.user_id }}">
 </div>
