@@ -1,6 +1,6 @@
 <?php
 
-    if ( ! $is_crm_activated && ! $is_hrm_activated ) {
+    if ( ! $is_crm_activated && ! $is_hrm_activated && ! $is_acc_activated ) {
         return;
     }
 

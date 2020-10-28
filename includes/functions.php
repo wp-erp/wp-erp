@@ -1291,6 +1291,30 @@ function erp_get_import_export_fields() {
                 'postal_code',
             ],
         ],
+        'vendor' => [
+            'required_fields' => [
+                'first_name',
+                'last_name',
+                'email',
+            ],
+            'fields'          => [
+                'first_name',
+                'last_name',
+                'email',
+                'phone',
+                'company',
+                'mobile',
+                'fax',
+                'website',
+                'notes',
+                'street_1',
+                'street_2',
+                'city',
+                'country',
+                'state',
+                'postal_code',
+            ],
+        ],
     ];
 
     return apply_filters( 'erp_import_export_csv_fields', $erp_fields );
@@ -1464,7 +1488,9 @@ function erp_import_export_javascript() {
                 erp_csv_importer_field_handler(this);
             });
 
-            if ($('form#import_form').find('#type').val() == 'employee') {
+            var exportType = $('form#import_form').find('#type').val();
+
+            if (exportType == 'employee' || exportType == 'vendor') {
                 $('form#import_form').find('#crm_contact_lifestage_owner_wrap').hide();
             } else {
                 $('form#import_form').find('#crm_contact_lifestage_owner_wrap').show();
@@ -1474,7 +1500,7 @@ function erp_import_export_javascript() {
                 $('#fields_container').html('');
                 $('#fields_container').hide();
 
-                if ($(this).val() == 'employee') {
+                if ($(this).val() == 'employee' || $(this).val() == 'vendor') {
                     $('form#import_form').find('#crm_contact_lifestage_owner_wrap').hide();
                 } else {
                     $('form#import_form').find('#crm_contact_lifestage_owner_wrap').show();
@@ -1587,6 +1613,7 @@ function erp_process_import_export() {
 
     $is_crm_activated = erp_is_module_active( 'crm' );
     $is_hrm_activated = erp_is_module_active( 'hrm' );
+    $is_acc_activated = erp_is_module_active( 'accounting' );
 
     $departments  = $is_hrm_activated ? erp_hr_get_departments_dropdown_raw() : [];
     $designations = $is_hrm_activated ? erp_hr_get_designation_dropdown_raw() : [];
@@ -1618,6 +1645,15 @@ function erp_process_import_export() {
         }
     }
 
+    $field_builder_vendor_options = get_option( 'erp-vendor-fields' );
+    $field_builder_vendors_fields = [];
+
+    if ( ! empty( $field_builder_vendor_options ) ) {
+        foreach ( $field_builder_vendor_options as $field ) {
+            $field_builder_vendors_fields[] = $field['name'];
+        }
+    }
+
     if ( isset( $_POST['erp_import_csv'] ) ) {
         define( 'ERP_IS_IMPORTING', true );
 
@@ -1634,7 +1670,7 @@ function erp_process_import_export() {
 
         do_action( 'erp_tool_import_csv_action', $data );
 
-        if ( ! in_array( $type, [ 'contact', 'company', 'employee' ] ) ) {
+        if ( ! in_array( $type, [ 'contact', 'company', 'employee', 'vendor' ] ) ) {
             return;
         }
 
@@ -1747,6 +1783,14 @@ function erp_process_import_export() {
                     }
                 }
 
+                if ( $type === 'vendor' && $is_acc_activated ) {
+                    $item_insert_id = erp_insert_people( $line_data );
+
+                    if ( is_wp_error( $item_insert_id ) ) {
+                        continue;
+                    }
+                }
+
                 if ( ( $type == 'contact' || $type == 'company' ) && $is_crm_activated ) {
                     $contact_owner              = isset( $_POST['contact_owner'] ) ? absint( $_POST['contact_owner'] ) : erp_crm_get_default_contact_owner();
                     $line_data['contact_owner'] = $contact_owner;
@@ -1814,13 +1858,12 @@ function erp_process_import_export() {
             if ( $type == 'employee' && $is_hrm_activated ) {
                 $args = [
                     'number' => - 1,
-                    'status' => 'all',
                 ];
 
                 $items = erp_hr_get_employees( $args );
             }
 
-            if ( ( $type == 'contact' || $type == 'company' ) && $is_crm_activated ) {
+            if ( ( ( $type === 'contact' || $type === 'company' ) && $is_crm_activated ) || ( $type === 'vendor' && $is_hrm_activated ) ) {
                 $args        = [
                     'type'  => $type,
                     'count' => true,
@@ -1846,7 +1889,7 @@ function erp_process_import_export() {
                 }
 
                 foreach ( $fields as $field ) {
-                    if ( $type == 'employee' ) {
+                    if ( $type === 'employee' ) {
                         if ( in_array( $field, $field_builder_employees_fields ) ) {
                             $csv_items[ $x ][ $field ] = get_user_meta( $item->id, $field, true );
                         } else {
@@ -1865,7 +1908,7 @@ function erp_process_import_export() {
                             }
                         }
                     } else {
-                        if ( $type == 'contact' ) {
+                        if ( $type === 'contact' ) {
                             if ( in_array( $field, $field_builder_contacts_fields ) ) {
                                 $csv_items[ $x ][ $field ] = erp_people_get_meta( $item->id, $field, true );
                             } else {
@@ -1873,8 +1916,16 @@ function erp_process_import_export() {
                             }
                         }
 
-                        if ( $type == 'company' ) {
+                        if ( $type === 'company' ) {
                             if ( in_array( $field, $field_builder_companies_fields ) ) {
+                                $csv_items[ $x ][ $field ] = erp_people_get_meta( $item->id, $field, true );
+                            } else {
+                                $csv_items[ $x ][ $field ] = $item->{$field};
+                            }
+                        }
+
+                        if ( $type === 'vendor' ) {
+                            if ( in_array( $field, $field_builder_vendors_fields ) ) {
                                 $csv_items[ $x ][ $field ] = erp_people_get_meta( $item->id, $field, true );
                             } else {
                                 $csv_items[ $x ][ $field ] = $item->{$field};

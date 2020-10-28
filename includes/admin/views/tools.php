@@ -5,6 +5,7 @@
 
         $is_crm_activated = erp_is_module_active( 'crm' );
         $is_hrm_activated = erp_is_module_active( 'hrm' );
+        $is_acc_activated = erp_is_module_active( 'accounting' );
 
         $erp_import_export_fields = erp_get_import_export_fields();
         $keys                     = array_keys( $erp_import_export_fields );
@@ -24,11 +25,15 @@
             unset( $import_export_types['employee'] );
         }
 
+        if ( ! $is_acc_activated ) {
+            unset( $import_export_types['vendor'] );
+        }
+
         $tabs = [
             'general' => esc_html__( 'General', 'erp' ),
         ];
 
-        if ( $is_crm_activated || $is_hrm_activated ) {
+        if ( $is_crm_activated || $is_hrm_activated || $is_acc_activated ) {
             $tabs['import'] = esc_html__( 'Import', 'erp' );
             $tabs['export'] = esc_html__( 'Export', 'erp' );
         }

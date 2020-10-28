@@ -22,6 +22,7 @@ class Validate_Data {
     public function __construct() {
         $this->action( 'erp_tool_import_csv_action', 'pre_validate_csv_data' );
         $this->action( 'validate_csv_data', 'validate_csv_data', 10, 3 );
+        $this->filter( 'validate_field', 'validate_custom_field', 10, 3 );
     }
 
     /**
@@ -370,7 +371,7 @@ class Validate_Data {
                                     $errors[] = $check_is_unique_emp;
                                 }
                             }
-                            if ( $type == 'contact' || $type == 'company' ) {
+                            if ( $type == 'contact' || $type == 'company' || $type === 'vendor' ) {
                                 $check_is_unique_cont = $this->check_unique_contact( $rule_value, $field_value, $field_name );
                                 if ( $check_is_unique_cont ) {
                                     $errors[] = $check_is_unique_cont;
@@ -443,7 +444,7 @@ class Validate_Data {
      * @return string
      */
     public function is_valid_phone( $column, $value, $field_name ) {
-        if ( ! preg_match( "/\+[0-9]{2}+[0-9]{4}/s", $value ) && ! empty( $value ) ) {
+        if ( ! preg_match( "/[0-9]{2}+[0-9]{4}/s", $value ) && ! empty( $value ) ) {
             return __( "{$field_name} should be a valid phone/mobile no. Ex. +123456", "erp" );
         }
     }
@@ -463,5 +464,12 @@ class Validate_Data {
           if ( count( $indexes ) > 1 ) {
             return __( "Duplicate {$field_name} found at this file", "erp" );
           }
+    }
+
+    public function validate_custom_field( $dt_key, $dt_value, $type ) {
+        switch ( $dt_key ) {
+            default:
+                return 0;
+        }
     }
 }
