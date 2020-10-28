@@ -214,7 +214,9 @@ class Employee {
 
     /**
      * @param array $args
+     *
      * @since 1.6.5 added hook pre_erp_hr_employee_args
+     * @since 1.6.7 added validation for almost all input fields
      *
      * @return $this|int|WP_Error
      */
@@ -272,15 +274,128 @@ class Employee {
         //if yet not wp user found then we have to create wp user and erp user
         if ( empty( $data['personal']['first_name'] ) ) {
             return new WP_Error( 'empty-first-name', __( 'Please provide the first name.', 'erp' ) );
+        } else {
+            if ( ! erp_is_valid_name( $data['personal']['first_name'] ) ) {
+                return new WP_Error( 'invalid-first-name', esc_attr__( 'Please provide a valid first name', 'erp' ) );
+            }
+        }
+
+        if ( ! empty( $data['personal']['middle_name'] ) && ! erp_is_valid_name( $data['personal']['middle_name'] ) ) {
+            return new WP_Error( 'invalid-middle-name', esc_attr__( 'Please provide a valid middle name', 'erp' ) );
         }
 
         if ( empty( $data['personal']['last_name'] ) ) {
             return new WP_Error( 'empty-last-name', __( 'Please provide the last name.', 'erp' ) );
+        } else {
+            if ( ! empty( $data['personal']['last_name'] ) && ! erp_is_valid_name( $data['personal']['last_name'] ) ) {
+                return new WP_Error( 'invalid-last-name', esc_attr__( 'Please provide a valid last name', 'erp' ) );
+            }
+        }
+
+        if ( ! empty( $data['personal']['employee_id'] ) && ! erp_is_valid_employee_id( $data['personal']['employee_id'] ) ) {
+            return new WP_Error( 'invalid-employee-id', esc_attr__( 'Please provide a valid employee id', 'erp' ) );
         }
 
         if ( ! is_email( $data['user_email'] ) ) {
             return new WP_Error( 'invalid-email', __( 'Please provide a valid email address.', 'erp' ) );
         }
+
+        if ( ! empty( $data['work']['type'] ) && ! array_key_exists( $data['work']['type'], erp_hr_get_employee_types() ) ) {
+            return new WP_Error( 'invalid-type', esc_attr__( 'Please select a valid employee type', 'erp' ) );
+        }
+
+        if ( ! empty( $data['work']['end_date'] ) && ! erp_is_valid_date( $data['work']['end_date'] ) ) {
+            return new WP_Error( 'invalid-end-date', esc_attr__( 'Please select a valid employee end date', 'erp' ) );
+        }
+
+        if ( ! empty( $data['work']['hiring_date'] ) && ! erp_is_valid_date( $data['work']['hiring_date'] ) ) {
+            return new WP_Error( 'invalid-hire-date', esc_attr__( 'Please select a valid employee hire date', 'erp' ) );
+        }
+
+        if ( ! empty( $data['work']['status'] ) && ! array_key_exists( $data['work']['status'], erp_hr_get_employee_statuses() ) ) {
+            return new WP_Error( 'invalid-status', esc_attr__( 'Please select a valid employee status', 'erp' ) );
+        }
+
+        if ( ! empty( $data['work']['department'] ) && ! array_key_exists( $data['work']['department'], erp_hr_get_departments_dropdown_raw() ) ) {
+            return new WP_Error( 'invalid-department', esc_attr__( 'Please select a valid employee department', 'erp' ) );
+        }
+
+        if ( ! empty( $data['work']['designation'] ) && ! array_key_exists( $data['work']['designation'], erp_hr_get_designation_dropdown_raw() ) ) {
+            return new WP_Error( 'invalid-designation', esc_attr__( 'Please select a valid employee designation', 'erp' ) );
+        }
+
+        if ( ! empty( $data['work']['location'] ) && ! array_key_exists( $data['work']['location'], erp_company_get_location_dropdown_raw() ) ) {
+            return new WP_Error( 'invalid-location', esc_attr__( 'Please select a valid employee location', 'erp' ) );
+        }
+
+        if ( ! empty( $data['work']['reporting_to'] ) && ! array_key_exists( $data['work']['reporting_to'], erp_hr_get_employees_dropdown_raw() ) ) {
+            return new WP_Error( 'invalid-reporting-to', esc_attr__( 'Please select a valid employee reporting to', 'erp' ) );
+        }
+
+        if ( ! empty( $data['work']['hiring_source'] ) && ! array_key_exists( $data['work']['hiring_source'], erp_hr_get_employee_sources() ) && $data['work']['hiring_source'] != '-1' ) {
+            return new WP_Error( 'invalid-source', esc_attr__( 'Please select a valid employee source', 'erp' ) );
+        }
+
+        if ( ! empty( $data['work']['pay_rate'] ) && ! erp_is_valid_currency_amount( $data['work']['pay_rate'] ) ) {
+            return new WP_Error( 'invalid-pay-rate', esc_attr__( 'Please provide a valid amount for pay rate', 'erp' ) );
+        }
+
+        if ( ! empty( $data['work']['pay_type'] ) && ! array_key_exists( $data['work']['pay_type'], erp_hr_get_employee_sources() ) && $data['work']['pay_type'] != '-1' ) {
+            return new WP_Error( 'invalid-pay-type', esc_attr__( 'Please select a valid pay type', 'erp' ) );
+        }
+
+        if ( ! empty( $data['personal']['work_phone'] ) && ! erp_is_valid_contact_no( $data['personal']['work_phone'] ) ) {
+            return new WP_Error( 'invalid-work-phone', esc_attr__( 'Please provide a valid work phone number', 'erp' ) );
+        }
+
+        if ( ! empty( $data['personal']['spouse_name'] ) && ! erp_is_valid_name( $data['personal']['spouse_name'] ) ) {
+            return new WP_Error( 'invalid-spouse-name', esc_attr__( 'Please provide a valid spouse\'s name', 'erp' ) );
+        }
+
+        if ( ! empty( $data['personal']['father_name'] ) && ! erp_is_valid_name( $data['personal']['father_name'] ) ) {
+            return new WP_Error( 'invalid-father-name', esc_attr__( 'Please provide a valid father\'s name', 'erp' ) );
+        }
+
+        if ( ! empty( $data['personal']['mother_name'] ) && ! erp_is_valid_name( $data['personal']['mother_name'] ) ) {
+            return new WP_Error( 'invalid-mother-name', esc_attr__( 'Please provide a valid mother\'s name', 'erp' ) );
+        }
+
+        if ( ! empty( $data['personal']['mobile'] ) && ! erp_is_valid_contact_no( $data['personal']['mobile'] ) ) {
+            return new WP_Error( 'invalid-mobile', esc_attr__( 'Please provide a valid mobile number', 'erp' ) );
+        }
+
+        if ( ! empty( $data['personal']['phone'] ) && ! erp_is_valid_contact_no( $data['personal']['phone'] ) ) {
+            return new WP_Error( 'invalid-phone', esc_attr__( 'Please provide a valid phone number', 'erp' ) );
+        }
+
+        if ( ! empty( $data['personal']['other_email'] ) && ! is_email( $data['personal']['other_email'] ) ) {
+            return new WP_Error( 'invalid-other-email', __( 'Please provide a valid other email address.', 'erp' ) );
+        }
+
+        if ( ! empty( $data['work']['date_of_birth'] ) && ! erp_is_valid_date( $data['work']['date_of_birth'] ) ) {
+            return new WP_Error( 'invalid-date-of-birth', esc_attr__( 'Please provide a valid date of birth', 'erp' ) );
+        }
+
+        if ( ! empty( $data['personal']['gender'] ) && ! array_key_exists( $data['personal']['gender'], erp_hr_get_genders() ) ) {
+            return new WP_Error( 'invalid-gender', esc_attr__( 'Please select a valid gender', 'erp' ) );
+        }
+
+        if ( ! empty( $data['personal']['marital_status'] ) && ! array_key_exists( $data['personal']['marital_status'], erp_hr_get_marital_statuses() ) ) {
+            return new WP_Error( 'invalid-marital-status', esc_attr__( 'Please select a valid marital status', 'erp' ) );
+        }
+
+        if ( ! empty( $data['personal']['user_url'] ) && ! erp_is_valid_url( $data['personal']['user_url'] ) ) {
+            return new WP_Error( 'invalid-user-url', esc_attr__( 'Please provide a valid user url', 'erp' ) );
+        }
+
+        if ( ! empty( $data['personal']['city'] ) && ! erp_is_valid_name( $data['personal']['city'] ) ) {
+            return new WP_Error( 'invalid-city', esc_attr__( 'Please provide a valid city name', 'erp' ) );
+        }
+
+        if ( ! empty( $data['personal']['postal_code'] ) && ! erp_is_valid_zip_code( $data['personal']['postal_code'] ) ) {
+            return new WP_Error( 'invalid-post-code', esc_attr__( 'Please provide a valid postal code', 'erp' ) );
+        }
+
         $first_name  = isset( $data['personal']['first_name'] ) ? $data['personal']['first_name'] : '';
         $middle_name = isset( $data['personal']['middle_name'] ) ? $data['personal']['middle_name'] : '';
         $last_name   = isset( $data['personal']['last_name'] ) ? $data['personal']['last_name'] : '';
@@ -712,10 +827,13 @@ class Employee {
      * @return mixed|string
      */
     public function get_department( $context = 'edit' ) {
+
         if ( $this->is_employee() && isset( $this->erp_user->department ) ) {
+
             if ( $context === 'edit' ) {
                 return $this->erp_user->department;
             }
+
             $department = HRDepartment::find( $this->department );
 
             if ( $department ) {
@@ -752,10 +870,13 @@ class Employee {
      * @return int
      */
     public function get_location( $context = 'edit' ) {
+
         if ( $this->is_employee() && isset( $this->erp_user->location ) ) {
+
             if ( $context === 'edit' ) {
                 return $this->erp_user->location;
             }
+
             $location = Company_Locations::find( $this->location );
 
             if ( $location ) {
@@ -770,12 +891,14 @@ class Employee {
      * @return string
      */
     public function get_status( $context = 'edit' ) {
+
         if ( isset( $this->erp_user->status ) ) {
             $status = $this->erp_user->status;
 
             if ( $context === 'edit' ) {
                 return $status;
             }
+
             $statuses = erp_hr_get_employee_statuses();
 
             if ( array_key_exists( $status, $statuses ) ) {
@@ -792,6 +915,7 @@ class Employee {
      * @return mixed
      */
     public function get_type( $context = 'edit' ) {
+
         if ( $this->is_employee() && isset( $this->erp_user->type ) ) {
             $type = $this->erp_user->type;
 
@@ -813,10 +937,13 @@ class Employee {
      * @return string
      */
     public function get_hiring_source( $context = 'edit' ) {
+
         if ( $this->is_employee() && ! empty( $this->erp_user->hiring_source ) ) {
+
             if ( $context === 'edit' ) {
                 return $this->erp_user->hiring_source;
             }
+
             $sources = erp_hr_get_employee_sources();
 
             if ( array_key_exists( $this->erp_user->hiring_source, $sources ) ) {
@@ -831,10 +958,13 @@ class Employee {
      * @return string
      */
     public function get_gender( $context = 'edit' ) {
+
         if ( $this->is_employee() && ! empty( $this->wp_user->gender ) ) {
+
             if ( $context === 'edit' ) {
                 return $this->wp_user->gender;
             }
+
             $genders = erp_hr_get_genders();
 
             if ( array_key_exists( $this->wp_user->gender, $genders ) ) {
@@ -851,7 +981,9 @@ class Employee {
      * @return string
      */
     public function get_marital_status( $context = 'edit' ) {
+
         if ( $this->is_employee() && ! empty( $this->wp_user->marital_status ) ) {
+
             if ( $context === 'edit' ) {
                 return $this->wp_user->marital_status;
             }
@@ -872,7 +1004,9 @@ class Employee {
      * @return string
      */
     public function get_nationality( $context = 'edit' ) {
+
         if ( $this->is_employee() && ! empty( $this->wp_user->nationality ) ) {
+
             if ( $context === 'edit' ) {
                 return $this->wp_user->nationality;
             }
@@ -991,7 +1125,9 @@ class Employee {
      * @return string
      */
     public function get_country( $context = 'edit' ) {
+
         if ( $this->is_employee() && isset( $this->wp_user->country ) ) {
+
             if ( $context === 'edit' ) {
                 return $this->wp_user->country;
             }
@@ -1010,7 +1146,9 @@ class Employee {
      * @return mixed|string
      */
     public function get_state( $context = 'edit' ) {
+
         if ( $this->is_employee() && isset( $this->wp_user->state ) ) {
+
             if ( $context === 'edit' ) {
                 return $this->wp_user->state;
             }
@@ -1325,6 +1463,7 @@ class Employee {
         if ( ! is_valid_date( $args['from'] ) && $args['from'] ) {
             return new WP_Error( 'invalid-required-params', __( 'Invalid date format', 'erp' ) );
         }
+
         $args['from'] = gmdate( 'Y-m-d', strtotime( $args['from'] ) );
         $args['to']   = gmdate( 'Y-m-d', strtotime( $args['to'] ) );
 
@@ -1379,6 +1518,7 @@ class Employee {
 
         foreach ( $histories as $history ) {
             if ( $history['module'] === 'employment' ) {
+
                 $item = [
                     'id'       => $history['id'],
                     'type'     => $history['type'],
