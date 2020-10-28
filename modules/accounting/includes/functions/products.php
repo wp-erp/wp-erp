@@ -156,7 +156,7 @@ function erp_acct_insert_product( $data ) {
         return new WP_Error( 'duplicate-product', $e->getMessage(), array( 'status' => 400 ) );
     }
 
-    return  $product_id  ;
+    return  erp_acct_get_product( $product_id );
 }
 
 /**
