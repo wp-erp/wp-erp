@@ -445,7 +445,7 @@ class Validate_Data {
      */
     public function is_valid_phone( $column, $value, $field_name ) {
         if ( ! preg_match( "/[0-9]{2}+[0-9]{4}/s", $value ) && ! empty( $value ) ) {
-            return __( "{$field_name} should be a valid phone/mobile no. Ex. +123456", "erp" );
+            return __( "{$field_name} should be a valid phone/mobile no. Ex. 123456", "erp" );
         }
     }
 

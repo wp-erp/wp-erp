@@ -18,7 +18,7 @@ function erp_hr_employee_on_delete( $user_id, $hard = 0 ) {
 
     $role = reset( $user->roles );
 
-    if ( 'employee' == $role ) {
+    if ( 'employee' === $role ) {
         \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $user_id )->withTrashed()->forceDelete();
     }
 }
@@ -69,11 +69,11 @@ function erp_hr_get_employees( $args = [] ) {
     $employees    = \WeDevs\ERP\HRM\Models\Employee::select( [ $employee_tbl . '.user_id', 'display_name' ] )
         ->leftJoin( $wpdb->users, $employee_tbl . '.user_id', '=', $wpdb->users . '.ID' )
         ->leftJoin( "{$wpdb->prefix}usermeta as gender", function ( $join ) use ( $employee_tbl ) {
-                                                        $join->on( $employee_tbl . '.user_id', '=', 'gender.user_id' )->where( 'gender.meta_key', '=', 'gender' );
-                                                    } )
+            $join->on( $employee_tbl . '.user_id', '=', 'gender.user_id' )->where( 'gender.meta_key', '=', 'gender' );
+        } )
         ->leftJoin( "{$wpdb->prefix}usermeta as marital_status", function ( $join ) use ( $employee_tbl ) {
-                                                        $join->on( $employee_tbl . '.user_id', '=', 'marital_status.user_id' )->where( 'marital_status.meta_key', '=', 'marital_status' );
-                                                    } );
+            $join->on( $employee_tbl . '.user_id', '=', 'marital_status.user_id' )->where( 'marital_status.meta_key', '=', 'marital_status' );
+        } );
 
     if ( isset( $args['designation'] ) && $args['designation'] != '-1' ) {
         $employees = $employees->where( 'designation', $args['designation'] );
@@ -337,10 +337,10 @@ function erp_employee_delete( $employee_ids, $force = false ) {
             $wp_user->remove_role( erp_hr_get_manager_role() );
             $wp_user->remove_role( erp_hr_get_employee_role() );
 
-            //finally remove from wordpress user
+            //finally remove from WordPress user
             $remove_wp_user = get_option( 'erp_hrm_remove_wp_user', 'no' );
 
-            if ( 'yes' == $remove_wp_user ) {
+            if ( 'yes' === $remove_wp_user ) {
                 $current_user = get_current_user_id();
                 wp_delete_user( $employee_wp_user_id, $current_user );
             }
@@ -402,7 +402,7 @@ function erp_hr_get_employees_dropdown_raw( $exclude = null ) {
 
     if ( $employees ) {
         foreach ( $employees as $key => $employee ) {
-            if ( $exclude && $employee->user_id == $exclude ) {
+            if ( $exclude && intval( $employee->user_id ) === intval( $exclude ) ) {
                 continue;
             }
 
@@ -726,7 +726,7 @@ function erp_hr_url_single_employee( $employee_id, $tab = null ) {
     $user    = wp_get_current_user();
     $section = ( $user->ID === $employee_id ) ? 'my-profile' : 'employee';
 
-    if ( in_array( 'employee', (array) $user->roles ) ) {
+    if ( in_array( 'employee', (array) $user->roles, true ) ) {
         add_query_arg( [ 'page' => 'erp-hrm', 'section' => $section, 'id' => $employee_id . $tab ], admin_url( 'admin.php' ) );
         $url = admin_url( 'admin.php?page=erp-hr&section=' . $section . '&action=view&id=' . $employee_id . $tab );
     } else {
@@ -836,6 +836,7 @@ function erp_hr_employee_single_tab_permission( $employee ) {
  */
 function erp_hr_employee_history_modules() {
     $modules = [
+        'employee',
         'employment',
         'compensation',
         'job',
@@ -854,7 +855,7 @@ function erp_hr_employee_history_modules() {
 function erp_hr_translate_employee_history( array $history = [], $inserting = false ) {
     $available_modules = erp_hr_employee_history_modules();
 
-    if ( empty( $history['module'] ) || ! in_array( $history['module'], $available_modules ) ) {
+    if ( empty( $history['module'] ) || ! in_array( $history['module'], $available_modules, true ) ) {
         return new \WP_Error( 'invalid-module-type', __( 'Unsupported module type', 'erp' ) );
     }
 
@@ -906,7 +907,7 @@ function erp_hr_translate_employee_history( array $history = [], $inserting = fa
 }
 
 /**
- * control user data visibility
+ * Control user data visibility
  *
  * @since  1.3.0
  *
@@ -990,7 +991,7 @@ function erp_hr_get_single_link( $user_id ) {
 }
 
 /**
- * check if employee exist by email
+ * Check if employee exist by email
  *
  * @since 1.3.12
  *
@@ -1021,16 +1022,16 @@ add_filter( 'user_has_cap', 'erp_revoke_terminated_employee_access', 10, 4 );
  * @return array $capabilities
  */
 function erp_revoke_terminated_employee_access( $capabilities, $caps, $args, $user ) {
-    if ( ! in_array( 'erp_list_employee', $caps ) &&
-         ! in_array( 'upload_files', $caps ) &&
-         ! in_array( 'erp_ac_manager', $caps ) &&
-         ! in_array( 'erp_crm_manage_dashboard', $caps )
+    if ( ! in_array( 'erp_list_employee', $caps, true ) &&
+         ! in_array( 'upload_files', $caps, true ) &&
+         ! in_array( 'erp_ac_manager', $caps, true ) &&
+         ! in_array( 'erp_crm_manage_dashboard', $caps, true )
     ) {
         return $capabilities;
     }
 
     //check if user is employee
-    if ( ! in_array( erp_hr_get_employee_role(), $user->roles ) ) {
+    if ( ! in_array( erp_hr_get_employee_role(), $user->roles, true ) ) {
         return $capabilities;
     }
 
