@@ -50,17 +50,17 @@ function erp_acct_insert_product_cat( $data ) {
         $wpdb->query( 'START TRANSACTION' );
         $product_cat_data = erp_acct_get_formatted_product_cat_data( $data );
 
-        $wpdb->insert(
-            $wpdb->prefix . 'erp_acct_product_categories',
+    $wpdb->insert(
+        $wpdb->prefix . 'erp_acct_product_categories',
             [
-				'name'       => $product_cat_data['name'],
-				'parent'     => isset($product_cat_data['parent']['id']) ? $product_cat_data['parent']['id'] : 0,
-				'created_at' => $product_cat_data['created_at'],
-				'created_by' => $product_cat_data['created_by'],
-				'updated_at' => $product_cat_data['updated_at'],
-				'updated_by' => $product_cat_data['updated_by'],
-            ]
-        );
+            'name'       => $product_cat_data['name'],
+            'parent'     => isset($product_cat_data['parent']['id']) ? $product_cat_data['parent']['id'] : 0,
+            'created_at' => $product_cat_data['created_at'],
+            'created_by' => $product_cat_data['created_by'],
+            'updated_at' => $product_cat_data['updated_at'],
+            'updated_by' => $product_cat_data['updated_by'],
+         ]
+    );
 
         $product_cat_id = $wpdb->insert_id;
 

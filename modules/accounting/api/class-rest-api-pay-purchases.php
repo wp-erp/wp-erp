@@ -373,20 +373,20 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
         $item = (object) $item;
 
         $data = [
-            'id'               => (int) $item->id,
-            'voucher_no'       => (int) $item->voucher_no,
-            'vendor_id'        => (int) $item->vendor_id,
-            'trn_date'         => $item->trn_date,
-            'purchase_details' => $item->purchase_details,
-            'pdf_link'         => $item->pdf_link,
-            'ref'              =>  $item->ref,
-            'amount'           => (float) $item->amount,
-            'particulars'      => $item->particulars,
-            'attachments'      => maybe_unserialize( $item->attachments ),
-            'status'           => $item->status,
-            'created_at'       => $item->created_at,
+            'id'                 => (int) $item->id,
+            'voucher_no'         => (int) $item->voucher_no,
+            'vendor_id'          => (int) $item->vendor_id,
+            'trn_date'           => $item->trn_date,
+            'purchase_details'   => $item->purchase_details,
+            'pdf_link'           => $item->pdf_link,
+            'ref'                =>  $item->ref,
+            'amount'             => (float) $item->amount,
+            'particulars'        => $item->particulars,
+            'attachments'        => maybe_unserialize( $item->attachments ),
+            'status'             => $item->status,
+            'created_at'         => $item->created_at,
             'transaction_charge' => $item->transaction_charge,
-            'trn_by'           => erp_acct_get_payment_method_by_id( $item->trn_by )->name,
+            'trn_by'             => erp_acct_get_payment_method_by_id( $item->trn_by )->name,
         ];
 
         $data = array_merge( $data, $additional_fields );
