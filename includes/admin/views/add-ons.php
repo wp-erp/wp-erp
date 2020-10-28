@@ -57,6 +57,9 @@
             padding: 0 4px;
         }
 
+        .erp_pro_addons_wrapper .single_extension .desc[class] {
+            padding-right: 0;
+        }
 
         .erp_pro_addons_wrapper .single_extension[class] {
             align-items: inherit;
@@ -77,6 +80,7 @@
 
         .erp_pro_addons_wrapper .single_extension .image[class] img {
             width: 100%;
+            height: auto;
         }
         .erp_pro_addons_wrapper .single_extension .desc[class] {
             flex-basis: 65%;
@@ -240,6 +244,15 @@
         margin-right: 20px;
         padding-left: 24px;
 
+    }
+
+    .erp_pro_addons_wrapper .single_extension .image img {
+        width: 98px;
+        height: 65px;
+    }
+
+    .erp_pro_addons_wrapper .single_extension .desc {
+        padding-right: 10px;
     }
 
     .erp_pro_addons_wrapper .single_extension .desc h4{
