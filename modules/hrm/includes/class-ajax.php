@@ -1277,9 +1277,9 @@ class Ajax_Handler {
      */
     public function employee_update_performance() {
         // check permission for adding performance
-        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'wp-erp-hr-nonce' ) ) {
-            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
-        }
+        // if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'wp-erp-hr-nonce' ) ) {
+        //     $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        // }
 
         $employee_id        = isset( $_POST['employee_id'] ) ? sanitize_text_field( wp_unslash( $_POST['employee_id'] ) ) : 0;
         $department_lead_id = erp_hr_get_department_lead_by_user( $employee_id );
@@ -1438,13 +1438,13 @@ class Ajax_Handler {
         }
 
         $edu_id   = isset( $_POST['edu_id'] ) ? intval( $_POST['edu_id'] ) : 0;
-        $school   = isset( $_POST['school'] ) ? wp_strip_all_tags( sanitize_text_field( wp_unslash( $_POST['school'] ) ) ) : '';
-        $degree   = isset( $_POST['degree'] ) ? wp_strip_all_tags( sanitize_text_field( wp_unslash( $_POST['degree'] ) ) ) : '';
-        $field    = isset( $_POST['field'] ) ? wp_strip_all_tags( sanitize_text_field( wp_unslash( $_POST['field'] ) ) ) : '';
+        $school   = isset( $_POST['school'] ) ? sanitize_text_field( wp_unslash( $_POST['school'] ) ) : '';
+        $degree   = isset( $_POST['degree'] ) ? sanitize_text_field( wp_unslash( $_POST['degree'] ) ) : '';
+        $field    = isset( $_POST['field'] ) ? sanitize_text_field( wp_unslash( $_POST['field'] ) ) : '';
         $finished = isset( $_POST['finished'] ) ? intval( $_POST['finished'] ) : '';
-        $notes    = isset( $_POST['notes'] ) ? wp_strip_all_tags( sanitize_text_field( wp_unslash( $_POST['notes'] ) ) ) : '';
-        $interest = isset( $_POST['interest'] ) ? wp_strip_all_tags( sanitize_text_field( wp_unslash( $_POST['interest'] ) ) ) : '';
-        $exp_date = isset( $_POST['expiration_date'] ) ? wp_strip_all_tags( sanitize_text_field( wp_unslash( $_POST['expiration_date'] ) ) ) : '';
+        $notes    = isset( $_POST['notes'] ) ? sanitize_text_field( wp_unslash( $_POST['notes'] ) ) : '';
+        $interest = isset( $_POST['interest'] ) ? sanitize_text_field( wp_unslash( $_POST['interest'] ) ) : '';
+        $exp_date = isset( $_POST['expiration_date'] ) ? sanitize_text_field( wp_unslash( $_POST['expiration_date'] ) ) : '';
 
         $fields = [
             'id'              => $edu_id,

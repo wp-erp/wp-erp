@@ -14,7 +14,7 @@ if ( $id ) {
         erp_html_form_input( [
             'label'    => __( 'Date', 'erp' ),
             'name'     => 'date',
-            'value'    => gmdate( 'Y-m-d', current_time( 'timestamp' ) ),
+            'value'    => erp_current_datetime()->format('Y-m-d'),
             'required' => true,
             'class'    => 'erp-date-field',
         ] );
