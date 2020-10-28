@@ -21368,6 +21368,10 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 //
 //
 //
+//
+//
+//
+//
 
 
 
@@ -49917,7 +49921,7 @@ var render = function() {
                     _c("div", { staticClass: "wperp-col-sm-4" }, [
                       _c("div", { staticClass: "wperp-form-group" }, [
                         _c("label", [
-                          _vm._v(_vm._s(_vm.__("Reference", "erp")))
+                          _vm._v(_vm._s(_vm.__("Reference NO", "erp")))
                         ]),
                         _vm._v(" "),
                         _c("input", {
@@ -50594,6 +50598,16 @@ var render = function() {
                             _c("td", [
                               _vm._v("#" + _vm._s(_vm.payBill.voucher_no))
                             ])
+                          ]),
+                          _vm._v(" "),
+                          _c("tr", [
+                            _c("th", [
+                              _vm._v(
+                                _vm._s(_vm.__("Reference No", "erp")) + ":"
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v("#" + _vm._s(_vm.payBill.ref))])
                           ]),
                           _vm._v(" "),
                           _c("tr", [

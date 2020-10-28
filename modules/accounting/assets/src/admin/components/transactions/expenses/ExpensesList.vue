@@ -130,6 +130,7 @@ export default {
                     vendor_id: filters.people_id
                 }
             }).then((response) => {
+
                 this.rows = response.data;
 
                 this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);

@@ -61,6 +61,7 @@ function erp_acct_get_pay_bill( $bill_no ) {
             pay_bill.vendor_name,
             pay_bill.trn_date,
             pay_bill.amount,
+            pay_bill.ref,
             pay_bill.trn_by,
             pay_bill.particulars,
             pay_bill.created_at,
@@ -148,6 +149,7 @@ function erp_acct_insert_pay_bill( $data ) {
                 'vendor_id'        => $pay_bill_data['vendor_id'],
                 'vendor_name'      => $pay_bill_data['people_name'],
                 'amount'           => $pay_bill_data['amount'],
+                'ref'              => $pay_bill_data['ref'],
                 'trn_by'           => $pay_bill_data['trn_by'],
                 'trn_by_ledger_id' => $pay_bill_data['trn_by_ledger_id'],
                 'particulars'      => $pay_bill_data['particulars'],
@@ -366,15 +368,14 @@ function erp_acct_get_formatted_pay_bill_data( $data, $voucher_no ) {
     $user_info = erp_get_people( $data['vendor_id'] );
     $company   = new \WeDevs\ERP\Company();
 
-    $pay_bill_data['voucher_no']  = ! empty( $voucher_no ) ? $voucher_no : 0;
-    $pay_bill_data['trn_no']      = ! empty( $voucher_no ) ? $voucher_no : 0;
-    $pay_bill_data['vendor_id']   = isset( $data['vendor_id'] ) ? $data['vendor_id'] : null;
-    $pay_bill_data['people_name'] = isset( $user_info ) ? $user_info->first_name . ' ' . $user_info->last_name : '';
-    $pay_bill_data['trn_date']    = isset( $data['trn_date'] ) ? $data['trn_date'] : date( 'Y-m-d' );
-    $pay_bill_data['amount']      = isset( $data['amount'] ) ? $data['amount'] : 0;
-    $pay_bill_data['ref']         = isset( $data['ref'] ) ? $data['ref'] : 0;
-    $pay_bill_data['trn_by']      = isset( $data['trn_by'] ) ? $data['trn_by'] : 0;
-    // translators: %s: voucher_no
+    $pay_bill_data['voucher_no']       = ! empty( $voucher_no ) ? $voucher_no : 0;
+    $pay_bill_data['trn_no']           = ! empty( $voucher_no ) ? $voucher_no : 0;
+    $pay_bill_data['vendor_id']        = isset( $data['vendor_id'] ) ? $data['vendor_id'] : null;
+    $pay_bill_data['people_name']      = isset( $user_info ) ? $user_info->first_name . ' ' . $user_info->last_name : '';
+    $pay_bill_data['trn_date']         = isset( $data['trn_date'] ) ? $data['trn_date'] : date( 'Y-m-d' );
+    $pay_bill_data['amount']           = isset( $data['amount'] ) ? $data['amount'] : 0;
+    $pay_bill_data['ref']              = isset( $data['ref'] ) ? $data['ref'] : '';
+    $pay_bill_data['trn_by']           = isset( $data['trn_by'] ) ? $data['trn_by'] : 0;
     $pay_bill_data['particulars']      = ! empty( $data['particulars'] ) ? $data['particulars'] : sprintf( __( 'Bill payment created with voucher no %s', 'erp' ), $voucher_no );
     $pay_bill_data['attachments']      = isset( $data['attachments'] ) ? $data['attachments'] : '';
     $pay_bill_data['bill_details']     = isset( $data['bill_details'] ) ? $data['bill_details'] : '';

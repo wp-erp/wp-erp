@@ -60,6 +60,10 @@
                                         <td>#{{ payBill.voucher_no }}</td>
                                     </tr>
                                     <tr>
+                                        <th>{{ __('Reference No', 'erp') }}:</th>
+                                        <td>#{{ payBill.ref }}</td>
+                                    </tr>
+                                    <tr>
                                         <th>{{ __('Transaction Date', 'erp') }}:</th>
                                         <td>{{ payBill.trn_date }}</td>
                                     </tr>

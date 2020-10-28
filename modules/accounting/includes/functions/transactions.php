@@ -849,7 +849,7 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
         $trn_id = $transaction->trn_no;
     }
 
-    $title =  isset($transaction->estimate) ? 'Estimate' : $type ;
+    $title =  isset($transaction->estimate) && (int)$transaction->estimate ? 'Estimate' : $type ;
     //Set type
     $trn_pdf->set_type( $title);
 
@@ -868,14 +868,15 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
         $trn_pdf->set_reference( $transaction->ref , __( 'Reference No', 'erp' ) );
     }
 
-    // Set Due Date
-    if ( $transaction->due_date ) {
-        $trn_pdf->set_reference( $transaction->due_date , __( 'Due Date', 'erp' ) );
-    }
 
     // Set Issue Date
     $date = ! empty( $transaction->trn_date ) ? $transaction->trn_date : $transaction->date;
     $trn_pdf->set_reference( erp_format_date( $date ), __( 'Transaction Date', 'erp' ) );
+
+    // Set Due Date
+    if ( $transaction->due_date ) {
+        $trn_pdf->set_reference( $transaction->due_date , __( 'Due Date', 'erp' ) );
+    }
 
     // Set from Address
     $from_address = explode( '<br/>', $company->get_formatted_address() );
@@ -897,10 +898,8 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
 
     /* Customize columns based on transaction type */
     if ( 'invoice' == $type ) {
-        // Set Date Due
-        $trn_pdf->set_reference( erp_format_date( $transaction->due_date ), __( 'Due Date', 'erp' ) );
 
-        // Set Column Headers
+             // Set Column Headers
         $trn_pdf->set_table_headers( [ __( 'PRODUCT', 'erp' ), __( 'QUANTITY', 'erp' ), __( 'UNIT PRICE', 'erp' ), __( 'AMOUNT', 'erp' ) ] );
 
         // Add Table Items
