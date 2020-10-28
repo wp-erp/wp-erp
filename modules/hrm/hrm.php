@@ -174,6 +174,7 @@ class Human_Resource {
                 'employee_create'       => __( 'Create Employee', 'erp' ),
                 'employee_update'       => __( 'Update Employee', 'erp' ),
                 'employment_status'     => __( 'Employment Status', 'erp' ),
+                'employment_type'       => __( 'Employment Type', 'erp' ),
                 'update_status'         => __( 'Update', 'erp' ),
                 'policy'                => __( 'Leave Policy', 'erp' ),
                 'policy_create'         => __( 'Create Policy', 'erp' ),
@@ -189,6 +190,7 @@ class Human_Resource {
                 'leave_reject_btn'      => __( 'Reject Request', 'erp' ),
                 'already_terminate'     => __( 'Sorry, this employee is already terminated', 'erp' ),
                 'already_active'        => __( 'Sorry, this employee is already active', 'erp' ),
+                'already_selected'      => __( 'The selected option is already active. Try different one.', 'erp' ),
             ],
             'asset_url'              => WPERP_ASSETS,
             'emp_upload_photo'       => __( 'Upload Photo', 'erp' ),
@@ -295,6 +297,7 @@ class Human_Resource {
             case 'my-profile':
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/new-employee.php', 'erp-new-employee' );
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/row-employee.php', 'erp-employee-row' );
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/employment-type.php', 'erp-employment-type' );
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/employment-status.php', 'erp-employment-status' );
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/compensation.php', 'erp-employment-compensation' );
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/job-info.php', 'erp-employment-jobinfo' );
