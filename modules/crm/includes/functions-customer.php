@@ -2863,6 +2863,49 @@ function erp_crm_get_crm_user_dropdown( $label = [] ) {
 }
 
 /**
+ * Retrieves crm manager and contact owner html dropdown for assigning activity
+ *
+ * @since 1.6.7
+ *
+ * @param int $contact_id
+ * @param string $selected
+ *
+ * @return string
+ */
+function erp_crm_activity_assign_dropdown_html( $contact_id, $selected = '' ) {
+    $dropdown  = '';
+    $contact   = erp_get_people( $contact_id );
+
+    if ( current_user_can( 'manage_options' ) || erp_crm_is_current_user_manager() ) {
+        $crm_users = erp_crm_get_crm_user();
+
+        if ( $crm_users ) {
+            foreach ( $crm_users as $key => $user ) {
+                if ( 'erp_crm_manager' === erp_crm_get_user_role( $user->ID ) || $user->ID === intval( $contact->contact_owner ) ) {
+
+                    if ( $user->ID == get_current_user_id() ) {
+                        $title = sprintf( '%s ( %s )', __( 'Me', 'erp' ), $user->display_name );
+                    } else {
+                        $title = $user->display_name;
+                    }
+
+                    $dropdown .= sprintf( "<option value='%s'%s>%s</option>\n", $user->ID, selected( $selected, $user->ID, false ), $title );
+                }
+            }
+        }
+    } else {
+        $curr_user = wp_get_current_user();
+
+        if( intval( $curr_user->ID ) === intval( $contact->contact_owner ) ) {
+            $title = sprintf( '%s ( %s )', __( 'Me', 'erp' ), $curr_user->display_name );
+            $dropdown .= sprintf( "<option value='%s'%s>%s</option>", $curr_user->ID, 'selected', $title );
+        }
+    }
+
+    return $dropdown;
+}
+
+/**
  * Get schedule notification type
  *
  * @since 1.0
