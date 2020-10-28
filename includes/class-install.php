@@ -217,6 +217,107 @@ May you enjoy the fruits of your labors for years to come',
         ];
 
         update_option( 'erp_email_settings_hiring-anniversary-wish', $hiring_date_anniversary );
+
+        /**** Accounting email template ****/
+
+        $transectional_email = [
+            'subject' => 'New invoice has been created',
+            'heading' => 'New transaction invoice',
+            'body'    => 'Dear {customer_name},
+
+We are contacting you in regard to a new invoice #{invoide_ID} that has been created on your account. You may find the invoice attached. Please pay the balance of {amount} by {due_date}.
+
+
+Kind Regards,
+Account Manager
+{company_name}
+',
+        ];
+
+        update_option( 'erp_email_settings_transectional-email', $transectional_email );
+
+        $transectional_email_payments = [
+            'subject' => 'An invoice has been paid',
+            'heading' => 'New transaction payment',
+            'body'    => 'Dear {customer_name},
+
+I just wanted to drop you a quick note to let you know that we have received your recent payment in respect of invoice {invoice_id}. Thank you very much. We really appreciate it.
+
+Kind Regards,
+Account Manager
+{company_name}
+',
+        ];
+
+        update_option( 'erp_email_settings_transectional-email-payments', $transectional_email_payments );
+
+        $transectional_email_purchase = [
+            'subject' => 'An purchase has been created',
+            'heading' => 'New transaction purchase',
+            'body'    => 'Dear {vendor_name},
+
+I just wanted to drop you a quick note to let you know that we have created a purchase invoice to pay you in respect of invoice {invoide_ID}. Thank you very much. We really appreciate it.
+
+Kind Regards,
+Account Manager
+{company_name}
+',
+        ];
+
+        update_option( 'erp_email_settings_transectional-email-purchase', $transectional_email_purchase );
+
+        $transectional_email_estimate = [
+            'subject' => 'An estimate has been created',
+            'heading' => 'New transaction estimate',
+            'body'    => 'Hi {customer_name},
+
+Thanks for providing us the opportunity to do business with you. You will find an estimate containing each of the products/services we are proposing to complete attached with this email. Please review the estimate and reply to this email at your earliest convenience. We look forward to doing business together. If you have any questions, feel free to contact us.
+
+
+Best Regards,
+Project Manager
+{company_name}
+',
+        ];
+
+        update_option( 'erp_email_settings_transectional-email-estimate', $transectional_email_estimate );
+
+        $transectional_email_purchase_order = [
+            'subject' => 'An purchase order has been created',
+            'heading' => 'New transaction purchase order',
+            'body'    => 'Dear (vendor_name)
+
+With reference to our discussion, we would like to inform you that the order of {invoide_ID} has been approved. Please proceed the delivery of the product further.
+
+Please feel free to contact me if you need any sort of clarification. Please dispatch the goods latest by the promised time.
+
+We hope to have a long term business association with you.
+
+
+Best Regards,
+Account Manager
+{company_name}
+',
+        ];
+
+        update_option( 'erp_email_settings_transectional-email-purchase-order', $transectional_email_purchase_order );
+
+        $transectional_email_pay_purchase = [
+            'subject' => 'An invoice has been paid',
+            'heading' => 'New transaction pay purchase',
+            'body'    => 'Dear {vendor_name},
+
+We are contacting you in regard to a new invoice #{invoide_ID} that has been created on your account. You may find the invoice attached.
+
+
+Kind Regards,
+Account Manager
+{company_name}',
+        ];
+
+        update_option( 'erp_email_settings_transectional-email-pay-purchase', $transectional_email_pay_purchase );
+
+        /***/
     }
 
     /**
