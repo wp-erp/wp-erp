@@ -619,7 +619,7 @@
 <?php
 $add_ons = get_transient( 'wperp_pro_addons' );
 
-if ( false === $add_ons ) {
+if ( false === $add_ons || empty( $add_ons ) ) {
     $help_url = 'https://www.wperp.com/wp-json/erp-pro/v1/modules';
     $response = wp_remote_get( $help_url, [ 'timeout' => 15 ] );
     $add_ons  = (array) json_decode( wp_remote_retrieve_body( $response ) );
@@ -628,12 +628,14 @@ if ( false === $add_ons ) {
         $add_ons = '[]';
     }
 
-    //sort using title
-    usort( $add_ons, function ( $a, $b ) {
-        return strcmp( $a->title, $b->title );
-    } );
+    if ( ! empty( $add_ons ) ) {
+        //sort using title
+        usort( $add_ons, function ( $a, $b ) {
+            return strcmp( $a->title, $b->title );
+        } );
 
-    set_transient( 'wperp_pro_addons', $add_ons, 12 * HOUR_IN_SECONDS );
+        set_transient( 'wperp_pro_addons', $add_ons, 12 * HOUR_IN_SECONDS );
+    }
 }
 ?>
 
