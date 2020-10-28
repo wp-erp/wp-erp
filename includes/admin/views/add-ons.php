@@ -1,5 +1,5 @@
 <?php
-$add_ons = get_transient( 'wperp_addons' );
+$add_ons = get_transient( 'wperp_pro_addons' );
 
 if ( false === $add_ons ) {
 	$help_url = 'https://www.wperp.com/wp-json/erp-pro/v1/modules';
@@ -10,13 +10,13 @@ if ( false === $add_ons ) {
 		$add_ons = '[]';
 	}
 
-	set_transient( 'wperp_addons', $add_ons, 12 * HOUR_IN_SECONDS );
+	set_transient( 'wperp_pro_addons', $add_ons, 12 * HOUR_IN_SECONDS );
 }
 ?>
 <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700;900&display=swap" rel="stylesheet">
 
 <div class="wrap">
-	<h1><?php esc_html_e( 'Add-ons', 'erp' ); ?> <a href="http://wperp.com/downloads/" target="_blank" class="page-title-action"><?php esc_html_e( 'View all Add-ons', 'erp' ); ?></a></h1>
+	<h1><?php esc_html_e( 'WP ERP Pro', 'erp' ); ?> <a href="http://wperp.com/downloads/" target="_blank" class="page-title-action"><?php esc_html_e( 'View All Extensions', 'erp' ); ?></a></h1>
 
 	<div class="erp_pro_addons_wrapper">
 		<div class="banner_section">
@@ -24,11 +24,11 @@ if ( false === $add_ons ) {
 				<img src="<?php echo esc_url( WPERP_ASSETS . '/images/wperp-addons/banner-image.svg' ); ?>" alt="">
 			</div>
 			<div class="details">
-				<a href="#" class="btn pro-btn">WP ERP Pro</a>
+				<a href="https://wperp.com/pro/" target="_blank" class="btn pro-btn">WP ERP Pro</a>
 				<h1>The Ultimate Company<br>& Business Management<br>Solution</h1>
 				<div class="button-wrap">
-					<a href="https://wperp.com/pricing/" class="btn get-started-btn">Get Started Now <img src="<?php echo esc_url( WPERP_ASSETS . '/images/wperp-addons/arrow-right.svg' ); ?>" alt=""></a>
-					<a href="https://wperp.com/demo/" class="btn try-demo-btn">Try Demo</a>
+					<a target="_blank" href="https://wperp.com/pricing/" class="btn get-started-btn">Get Started Now <img src="<?php echo esc_url( WPERP_ASSETS . '/images/wperp-addons/arrow-right.svg' ); ?>" alt=""></a>
+					<a target="_blank" href="https://wperp.com/demo/" class="btn try-demo-btn">Try Demo</a>
 				</div>
 			</div>
 		</div>
@@ -100,7 +100,7 @@ if ( false === $add_ons ) {
 										<img src="<?php echo esc_url( $add_on->thumbnail_url ); ?>" alt="">
 									</div>
 									<div class="desc">
-										<h4><a href="<?php echo esc_url( $add_on->permalink ); ?>"><?php echo esc_html( $add_on->title ); ?></a></h4>
+										<h4><a target="_blank" href="<?php echo esc_url( $add_on->permalink ); ?>"><?php echo esc_html( $add_on->title ); ?></a></h4>
 										<p><?php echo esc_html( $add_on->excerpt ); ?></p>
 									</div>
 								</div>
@@ -194,7 +194,7 @@ if ( false === $add_ons ) {
 							<img src="<?php echo esc_url( $add_on->thumbnail_url ); ?>" alt="">
 						</div>
 						<div class="desc">
-							<h4><a href="<?php echo esc_url( $add_on->permalink ); ?>"><?php echo esc_html( $add_on->title ); ?></a></h4>
+							<h4><a target="_blank" href="<?php echo esc_url( $add_on->permalink ); ?>"><?php echo esc_html( $add_on->title ); ?></a></h4>
 							<p><?php echo esc_html( $add_on->excerpt ); ?></p>
 						</div>
 					</div>
@@ -211,7 +211,7 @@ if ( false === $add_ons ) {
 			<div class="say_hello_inner_section">
 				<h3>Say Hello to WP ERP <span>Pro</span></h3>
 				<p>And goodbye to papers, spreadsheets, wasted time,<br> uncertainty, frustration - run business smoothly.</p>
-				<a href="https://wperp.com/pro/">Get Started Now <img src="<?php echo esc_url( WPERP_ASSETS . '/images/wperp-addons/arrow-right.svg' ); ?>" alt=""></a>
+				<a target="_blank" href="https://wperp.com/pro/">Get Started Now <img src="<?php echo esc_url( WPERP_ASSETS . '/images/wperp-addons/arrow-right.svg' ); ?>" alt=""></a>
 			</div>
 		</div>
 		<!-- end say hello section -->
