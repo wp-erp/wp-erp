@@ -2181,8 +2181,8 @@ class Employee {
 
             $event = [
                 'id'        => $leave_request->id,
-                'start'     => erp_current_datetime()->setTimestamp( $leave_request->start_date )->setTime( 0, 0, 0 )->format( 'Y-m-d h:i:s' ),
-                'end'       => erp_current_datetime()->setTimestamp( $leave_request->end_date )->setTime( 23, 59, 59 )->format( 'Y-m-d h:i:s' ),
+                'start'     => erp_current_datetime()->setTimestamp( $leave_request->start_date )->setTime( 0, 0, 0 )->format( 'Y-m-d H:i:s' ),
+                'end'       => erp_current_datetime()->setTimestamp( $leave_request->end_date )->setTime( 23, 59, 59 )->format( 'Y-m-d H:i:s' ),
                 'color'     => $leave_request->color,
                 'title'     => $title,
                 'img'       => '',
