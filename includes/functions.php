@@ -3710,7 +3710,7 @@ function erp_is_valid_company( $company ) {
  * @return bool
  */
 function erp_is_valid_age( $age ) {
-    return preg_match( '/^[1-9]{1,3}$/', $age );
+    return preg_match( '/^[1-9][0-9]{0,2}$/', $age );
 }
 
 /**
