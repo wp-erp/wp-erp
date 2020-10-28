@@ -622,10 +622,12 @@ $add_ons = get_transient( 'wperp_pro_addons' );
 if ( false === $add_ons || empty( $add_ons ) ) {
     $help_url = 'https://www.wperp.com/wp-json/erp-pro/v1/modules';
     $response = wp_remote_get( $help_url, [ 'timeout' => 15 ] );
-    $add_ons  = (array) json_decode( wp_remote_retrieve_body( $response ) );
 
     if ( is_wp_error( $response ) || $response['response']['code'] !== 200 ) {
-        $add_ons = '[]';
+        $add_ons = [];
+    }
+    else {
+        $add_ons  = (array) json_decode( wp_remote_retrieve_body( $response ) );
     }
 
     if ( ! empty( $add_ons ) ) {
