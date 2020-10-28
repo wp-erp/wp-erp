@@ -127,7 +127,7 @@ function erp_acct_insert_product( $data ) {
         );
 
        if ( $product_check ) {
-            throw new \Exception( __( $product_data['name']." product already exists!" ) ) ;
+           throw new \Exception( $product_data['name'] . ' ' . __( "product already exists!" , "erp") ) ;
          }
 
 
