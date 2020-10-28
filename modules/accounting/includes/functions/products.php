@@ -126,8 +126,8 @@ function erp_acct_insert_product( $data ) {
             OBJECT
         );
 
-       if( $product_check ){
-            throw new \Exception("Product Duplicate problem") ;
+       if ( $product_check ) {
+            throw new \Exception( __( $product_data['name']." product already exists!" ) ) ;
          }
 
 
@@ -153,7 +153,7 @@ function erp_acct_insert_product( $data ) {
         $wpdb->query( 'COMMIT' );
     } catch ( Exception $e ) {
         $wpdb->query( 'ROLLBACK' );
-        return new WP_Error( 400,  $e->getMessage() );
+        return new WP_Error( 'duplicate-product', $e->getMessage(), array( 'status' => 400 ) );
     }
 
     return  $product_id  ;
