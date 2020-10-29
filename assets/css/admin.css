@@ -4408,3 +4408,223 @@ div.erp-nav-container.--show-secondary .-secondary {
 .wpdt-c #adminmenuback {
   z-index: 1 !important;
 }
+/*****/
+/**
+* Media Query for responsive
+*
+**/
+/* Tab and small screen (portrait and landscape ) ----------- */
+@media only screen and (max-width: 960px) {
+  .erp-modal,
+  .erp-modal.smaller {
+    top: 8%;
+    bottom: 1%;
+    right: 2%;
+    left: 4%;
+  }
+  .content-container {
+    padding: 1.25em !important;
+  }
+}
+/* Smartphones (portrait and landscape) ----------- */
+@media only screen and (max-width: 782px) {
+  .erp-badge-hr-count {
+    flex-direction: column;
+  }
+  .erp-badge-hr-count .erp-count-box {
+    width: 100% !important;
+    margin-bottom: 20px !important;
+  }
+  p.search-box {
+    position: static;
+    margin-top: 20px;
+    width: 100%;
+    display: flex;
+    height: 50px;
+    margin-bottom: 0;
+  }
+  .update-nag {
+    margin-bottom: 20px;
+  }
+  div.erp-nav-container .-secondary {
+    left: auto;
+    right: 0;
+  }
+  .postbox h3.hndle {
+    display: flex;
+  }
+  .erp-hr-leave-request-new.erp-hr-leave-reqs-wrap .row {
+    max-width: 100%;
+  }
+  .erp-hr-leave-request-new.erp-hr-leave-reqs-wrap .row .cols,
+  .erp-hr-leave-request-new.erp-hr-leave-reqs-wrap .row input,
+  .erp-hr-leave-request-new.erp-hr-leave-reqs-wrap .row select,
+  .erp-hr-leave-request-new.erp-hr-leave-reqs-wrap .row textarea {
+    width: 100% !important;
+    margin-right: 0;
+  }
+  .erp-hr-leave-request-new.erp-hr-leave-reqs-wrap .row .cols:not(.last) {
+    margin-bottom: 10px;
+  }
+  #erp-new-leave-request {
+    margin-top: 10px;
+    display: inline-block;
+  }
+  .leave-entitlement-form .form-group .row {
+    display: block;
+    max-width: 100%;
+  }
+  .leave-entitlement-form .form-group .row label {
+    width: 100%;
+    margin-bottom: 5px;
+  }
+  .leave-entitlement-form .form-group .row select,
+  .leave-entitlement-form .form-group .row .select2-container {
+    min-width: initial;
+    max-width: 100%;
+    width: 100% !important;
+  }
+  .leave-policy-form,
+  .leave-entitlement-form {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  .leave-policy-form .form-group,
+  .leave-entitlement-form .form-group {
+    padding-right: 10px;
+  }
+  .leave-policy-form .form-group .row .description,
+  .leave-entitlement-form .form-group .row .description,
+  .leave-policy-form .form-group .row .error-text,
+  .leave-entitlement-form .form-group .row .error-text {
+    margin-left: 0;
+  }
+  .leave-policy-form .form-group .leave-policy-input,
+  .leave-entitlement-form .form-group .leave-policy-input {
+    min-width: initial;
+    max-width: 100%;
+    width: 100%;
+  }
+  .wrap h2 {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .wrap h2 a {
+    display: inline-flex;
+    top: 0 !important;
+    justify-content: center;
+    margin-top: 5px !important;
+    margin-left: 0 !important;
+    flex-basis: 35%;
+  }
+  .erp-info-box {
+    flex-direction: column;
+    margin-bottom: 0px;
+  }
+  .erp-info-box .erp-info-box-item {
+    margin-bottom: -20px;
+  }
+  .erp-modal,
+  .erp-modal.smaller {
+    top: 8%;
+    bottom: 1%;
+    right: 2%;
+    left: 2%;
+  }
+  .content-container {
+    padding: 1em !important;
+  }
+  .content-container .content {
+    margin: 0 0;
+  }
+  .content-container .content li label {
+    display: block !important;
+    width: 100% !important;
+  }
+  .content-container .content li select {
+    width: 100%;
+  }
+  .content-container .content li .select2-container {
+    width: 95% !important;
+  }
+  .content-container .content .name-container ol {
+    width: 100% !important;
+  }
+  .content-container .content .name-container ol li {
+    width: 100%;
+  }
+  .content-container .content .name-container li.middle-name {
+    width: 100% !important;
+  }
+  .content-container .content .name-container input {
+    width: 95% !important;
+  }
+  .content-container .content .name-container label:first-child {
+    display: none;
+  }
+  .content-container .content .two-col li {
+    width: 100% !important ;
+  }
+  .content-container .content .two-col label {
+    display: block;
+    width: 100% !important;
+  }
+  .content-container .content input[type="text"],
+  .content-container .content input[type="password"],
+  .content-container .content input[type="color"],
+  .content-container .content input[type="date"],
+  .content-container .content input[type="datetime"],
+  .content-container .content input[type="datetime-local"],
+  .content-container .content input[type="email"],
+  .content-container .content input[type="month"],
+  .content-container .content input[type="number"],
+  .content-container .content input[type="password"],
+  .content-container .content input[type="search"],
+  .content-container .content input[type="tel"],
+  .content-container .content input[type="text"],
+  .content-container .content input[type="time"],
+  .content-container .content input[type="url"],
+  .content-container .content input[type="week"],
+  .content-container .content select,
+  .content-container .content textarea {
+    width: 95%;
+  }
+  .erp-table {
+    border: 0;
+  }
+  .erp-table caption {
+    font-size: 1.3em;
+  }
+  .erp-table thead {
+    border: none;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+  }
+  .erp-table tr {
+    border-bottom: 3px solid #ddd;
+    display: block;
+    margin-bottom: 0.625em;
+  }
+  .erp-table td {
+    border-bottom: 1px solid #ddd;
+    display: block;
+    font-size: 0.8em;
+    text-align: right;
+  }
+  .erp-table td:before {
+    content: attr(data-label);
+    float: left;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+  .erp-table td:last-child {
+    border-bottom: 0;
+  }
+}
