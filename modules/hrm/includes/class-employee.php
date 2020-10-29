@@ -324,7 +324,7 @@ class Employee {
             return new WP_Error( 'invalid-designation', esc_attr__( 'Please select a valid employee designation', 'erp' ) );
         }
 
-        if ( ! empty( $data['work']['location'] ) && ! array_key_exists( $data['work']['location'], erp_company_get_location_dropdown_raw() ) ) {
+        if ( ! empty( $data['work']['location'] ) && ! array_key_exists( $data['work']['location'], erp_company_get_location_dropdown_raw() ) && $data['work']['location'] !== '-1' ) {
             return new WP_Error( 'invalid-location', esc_attr__( 'Please select a valid employee location', 'erp' ) );
         }
 
@@ -332,7 +332,7 @@ class Employee {
             return new WP_Error( 'invalid-reporting-to', esc_attr__( 'Please select a valid employee reporting to', 'erp' ) );
         }
 
-        if ( ! empty( $data['work']['hiring_source'] ) && ! array_key_exists( $data['work']['hiring_source'], erp_hr_get_employee_sources() ) && $data['work']['hiring_source'] != '-1' ) {
+        if ( ! empty( $data['work']['hiring_source'] ) && ! array_key_exists( $data['work']['hiring_source'], erp_hr_get_employee_sources() ) && $data['work']['hiring_source'] !== '-1' ) {
             return new WP_Error( 'invalid-source', esc_attr__( 'Please select a valid employee source', 'erp' ) );
         }
 
@@ -340,7 +340,7 @@ class Employee {
             return new WP_Error( 'invalid-pay-rate', esc_attr__( 'Please provide a valid amount for pay rate', 'erp' ) );
         }
 
-        if ( ! empty( $data['work']['pay_type'] ) && ! array_key_exists( $data['work']['pay_type'], erp_hr_get_employee_sources() ) && $data['work']['pay_type'] != '-1' ) {
+        if ( ! empty( $data['work']['pay_type'] ) && ! array_key_exists( $data['work']['pay_type'], erp_hr_get_pay_type() ) && $data['work']['pay_type'] !== '-1' ) {
             return new WP_Error( 'invalid-pay-type', esc_attr__( 'Please select a valid pay type', 'erp' ) );
         }
 
