@@ -5,7 +5,7 @@ Tags: business manager, erp, accounting, crm, hr, project manager, small busines
 Requires at least: 4.4
 Tested up to: 5.5.1
 Requires PHP: 5.6
-Stable tag: 1.6.6
+Stable tag: 1.6.7
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -279,6 +279,25 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+
+= v1.6.7 -> October 29, 2020 =
+--------------------------
+- [fix] Fixed phone no validation issue while importing contact or company from CSV
+- [fix] Fixed email body style support issue
+- [fix] Added asynchronous loading of holiday & leave data at HR calendar
+- [new] Added inactive contact/company segmentation for CRM
+- [new] Added validation for all fields of employee, contact, and company forms
+- [new] Added validation to alert for number of empty required fields on submitting employee, contact, and company forms
+- [fix] Fixed employee type update history tracker, previously stated as employee status
+- [new] Added history tracker on updating employee status
+- [update] Updated edit employee form to remove employee status and type fields
+- [update] Updated task/schedule assign user dropdown to include CRM managers and contact owner only
+- [fix] Fixed showing status, type, pay type and pay reason with localized values, previously db keys were shown.
+- [update] Rearranged employee job histories in descending order, added indicator for all latest histories
+- [update] Updated activity assign permission so that crm agents can assign activities to themselves only, involving only the contacts/company they own
+- [new] Added WP ERP Pro sub menu
+- [fix] Fixed responsive issues on mobile devices
+- [fix] removed unnecessary use of wrongly called Google_Auth class reference, this was causing fatal error for some users.
 
 = v1.6.6 -> September 25, 2020 =
 --------------------------
