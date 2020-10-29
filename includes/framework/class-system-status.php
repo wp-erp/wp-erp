@@ -308,19 +308,27 @@ class System_Status {
 
         switch ( $type ) {
             case 'hrm_manager':
-                $roles[] = erp_hr_get_manager_role();
+                if ( wperp()->modules->is_module_active( 'hrm' ) ) {
+                    $roles[] = erp_hr_get_manager_role();
+                }
                 break;
 
             case 'crm_manager':
-                $roles[] = erp_crm_get_manager_role();
+                if ( wperp()->modules->is_module_active( 'crm' ) ) {
+                    $roles[] = erp_crm_get_manager_role();
+                }
                 break;
 
             case 'crm_agent':
-                $roles[] = erp_crm_get_agent_role();
+                if ( wperp()->modules->is_module_active( 'crm' ) ) {
+                    $roles[] = erp_crm_get_agent_role();
+                }
                 break;
 
             case 'accounting_manager':
-                $roles[] = erp_ac_get_manager_role();
+                if ( wperp()->modules->is_module_active( 'accounting' ) ) {
+                    $roles[] = erp_ac_get_manager_role();
+                }
                 break;
 
             case 'active_users':
