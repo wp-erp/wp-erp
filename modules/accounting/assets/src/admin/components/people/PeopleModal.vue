@@ -430,6 +430,11 @@ export default {
             float: left;
             margin-right: 10px;
 
+            @media ( max-width: 767px ) {
+                float: none;
+                margin-bottom: 10px;
+            }
+
             img {
                 width: 200px;
             }
