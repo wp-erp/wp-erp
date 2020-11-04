@@ -35,7 +35,7 @@ class Validate_Data {
 
         $errors = new ERP_Errors( 'import_csv_data' );
         // Check if current user has permission
-        if ( ! current_user_can( 'erp_hr_manager' ) ) {
+        if ( ! current_user_can( 'administrator' ) ) {
             $errors->add( new \WP_Error( 'no-permission', __( 'Sorry ! You do not have permission to access this page', 'erp' ) ) );
         }
 
@@ -294,7 +294,7 @@ class Validate_Data {
                 return $this->validate_field( "Description", $dt_value, $type, "max:200|" );
                 break;
             default:
-                return apply_filters( 'validate_field', $dt_key, $dt_value, $type );
+                return apply_filters( 'validate_field', [], $dt_key, $dt_value, $type );
         }
     }
 

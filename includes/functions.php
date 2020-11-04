@@ -1574,7 +1574,7 @@ function erp_process_import_export() {
         return;
     }
 
-    if ( ! current_user_can( 'erp_hr_manager' ) ) {
+    if ( ! current_user_can( 'administrator' ) ) {
         return new \WP_Error( 'no-permission', __( 'Sorry ! You do not have permission to access this page', 'erp' ) );
     }
 
