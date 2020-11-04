@@ -11,6 +11,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function erp_acct_get_sales_voucher( $args = [] ) {
     global $wpdb;
+
     $sql = '' ;
+
     return $wpdb->get_results( $sql, ARRAY_A );
+
 }

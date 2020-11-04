@@ -1,242 +1,182 @@
 <template>
     <div class="wperp-container invoice-create">
 
-        <!-- Start .header-section -->
-        <div class="content-header-section separator">
-            <div class="wperp-row wperp-between-xs">
-                <div class="wperp-col">
-                    <h2 v-if="estimateToInvoice()">{{ __('Convert into Invoice', 'erp') }}</h2>
-                    <h2 v-else class="content-header__title">{{  __('Sales Return', 'erp') }}</h2>
-                </div>
-            </div>
-        </div>
-        <!-- End .header-section -->
-        <div class="wperp-row">
-        <div class="wperp-form-group wperp-col-sm-8">
-            <label>Voucher Number</label>
-            <input type="text" class="wperp-form-field" placeholder="Sales Voucher Number">
-        </div>
-        <div class="wperp-form-group wperp-col-sm-4">
-            <button type="submit" class="wperp-btn btn--primary voucher-search">Search</button>
-        </div>
-        </div>
 
-        <form action="" method="post" @submit.prevent="submitInvoiceForm" v-if="voucher_found">
 
-        <div class="wperp-panel wperp-panel-default" style="padding-bottom: 0;">
+        <div class="wperp-modal-dialog sales-single" >
 
-            <show-errors :error_msgs="form_errors"></show-errors>
+            <div class="wperp-modal-content">
 
-            <div class="wperp-panel-body">
-                    <div class="wperp-row">
-                        <div class="wperp-col-sm-4">
-                            <select-customers v-model="basic_fields.customer"></select-customers>
-                        </div>
-                        <div class="wperp-col-sm-4">
-                            <div class="wperp-form-group">
-                                <label>{{ __('Transaction Date', 'erp') }}<span class="wperp-required-sign">*</span></label>
-                                <datepicker v-model="basic_fields.trn_date"></datepicker>
-                            </div>
-                        </div>
-                        <div class="wperp-col-sm-4">
-                            <div class="wperp-form-group">
-                                <label>{{ __('Due Date', 'erp') }}<span class="wperp-required-sign">*</span></label>
-                                <datepicker v-model="basic_fields.due_date"></datepicker>
-                            </div>
-                        </div>
-                        <div class="wperp-col-sm-6">
-                            <label>{{ __('Billing Address', 'erp') }}</label>
-                            <textarea v-model="basic_fields.billing_address" rows="4" class="wperp-form-field" :placeholder="__('Type here', 'erp')"></textarea>
+                <!-- Start .header-section -->
+                <div class="content-header-section separator">
+                    <div class="wperp-row wperp-between-xs">
+                        <div class="wperp-col">
+                            <h2 v-if="estimateToInvoice()">{{ __('Convert into Invoice', 'erp') }}</h2>
+                            <h2 v-else class="content-header__title">{{ __('Sales Return', 'erp') }}</h2>
                         </div>
                     </div>
-                <!-- </form> -->
+                </div>
 
+
+                <div class="wperp-modal-body">
+
+                    <form action="" method="post" @submit.prevent="searchVoucher">
+                        <!-- End .header-section -->
+                        <div class="wperp-row">
+                            <div class="wperp-form-group wperp-col-sm-8">
+                                <label>Voucher Number</label>
+                                <input type="text" v-model="voucher_no" class="wperp-form-field" placeholder="Sales Voucher Number">
+                            </div>
+                            <div class="wperp-form-group wperp-col-sm-4">
+                                <button type="submit" class="wperp-btn btn--primary voucher-search">Search</button>
+                            </div>
+                        </div>
+                    </form>
+
+
+                    <div class="wperp-invoice-panel" v-if="this.invoice.id">
+
+                        <div class="invoice-body">
+                            <h4> Sales Invoice</h4>
+                            <div class="wperp-row">
+                                <div class="wperp-col-sm-6">
+                                    <h5>{{ __('Bill to', 'erp') }}:</h5>
+                                    <div class="persons-info">
+                                        <strong>{{ invoice.customer_name }}</strong><br>
+                                        {{ invoice.billing_address }}
+                                    </div>
+                                </div>
+                                <div class="wperp-col-sm-6">
+                                    <table class="invoice-info">
+                                        <tr>
+                                            <th>{{ __('Voucher No', 'erp') }}:</th>
+                                            <td>#{{ invoice.voucher_no }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>{{ __('Transaction Date', 'erp') }}:</th>
+                                            <td>{{ invoice.trn_date }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>{{ __('Due Date', 'erp') }}:</th>
+                                            <td>{{ invoice.due_date }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>{{ __('Created At', 'erp') }}:</th>
+                                            <td>{{ invoice.created_at }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>{{ __('Amount Due', 'erp') }}:</th>
+                                            <!--<td>{{ moneyFormat( invoice.total_due ) }}</td>-->
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="wperp-invoice-table">
+                            <table class="wperp-table wperp-form-table invoice-table">
+                                <thead>
+                                <tr>
+                                    <th>{{ __('Sl', 'erp') }}.</th>
+                                    <th>{{ __('Product', 'erp') }}</th>
+                                    <th>{{ __('Qty', 'erp') }}</th>
+                                    <th>{{ __('Unit Price', 'erp') }}</th>
+                                    <th>{{ __('Amount', 'erp') }}</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr :key="index" v-for="(detail, index) in invoice.line_items">
+                                    <th>{{ index + 1 }}</th>
+                                    <th>{{ detail.name }}</th>
+                                    <td>{{ detail.qty }}</td>
+                                    <td>{{ moneyFormat(detail.unit_price) }}</td>
+                                    <td>{{ moneyFormat(detail.item_total) }}</td>
+                                </tr>
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <td class="wperp-invoice-amounts" colspan="7">
+                                        <ul>
+                                            <li><span>{{ __('Subtotal', 'erp') }}:</span> {{ moneyFormat(invoice.amount)
+                                                }}
+                                            </li>
+                                            <li><span>{{ __('Discount', 'erp') }}:</span> (-) {{
+                                                moneyFormat(invoice.discount)
+                                                }}
+                                            </li>
+                                            <li><span>{{ __('Tax', 'erp') }}:</span> (+) {{ moneyFormat(invoice.tax) }}
+                                            </li>
+                                            <!--  <li><span>{{ __('Total', 'erp') }}:</span> {{ moneyFormat( total ) }}</li>-->
+                                        </ul>
+                                    </td>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
             </div>
         </div>
 
-            <div class="wperp-table-responsive">
-                <!-- Start Invoice Items Table -->
-                <div class="table-container">
-                    <table class="wperp-table wperp-form-table">
-                        <thead>
-                            <tr>
-                                <th scope="col" class="col--products">{{ __('Product/Service', 'erp') }}</th>
-                                <th scope="col" class="col--qty">{{ __('Qty', 'erp') }}</th>
-                                <th scope="col" class="col--unit-price">{{ __('Unit Price', 'erp') }}</th>
-                                <th scope="col" class="col--amount">{{ __('Amount', 'erp') }}</th>
-                                <th scope="col" class="col--tax">{{ __('Tax', 'erp') }} <span class="erp-help-tip .erp-tips" :title="__('Make sure you have created tax category, zone and rate. Also, make sure the tax category is added on the product.', 'erp')"></span></th>
-                                <th scope="col" class="col--actions"></th>
-                            </tr>
-                        </thead>
-                        <tbody v-if="null != taxSummary">
-                         <!--   <invoice-trn-row
-                                :line="line"
-                                :products="products"
-                                :taxSummary="taxSummary"
-                                :key="index"
-                                v-for="(line, index) in transactionLines"
-                            ></invoice-trn-row>-->
-
-                            <tr class="add-new-line">
-                                <td colspan="9" style="text-align: left;">
-                                    <button @click.prevent="addLine" class="wperp-btn btn--primary add-line-trigger"><i class="flaticon-add-plus-button"></i>{{ __('Add Line', 'erp') }}</button>
-                                </td>
-                            </tr>
-
-                            <tr class="discount-rate-row">
-                                <td colspan="4" class="text-right with-multiselect">
-                                    <select v-model="discountType">
-                                        <option value="discount-percent">{{ __('Discount percent', 'erp') }}</option>
-                                        <option value="discount-value">{{ __('Discount value', 'erp') }}</option>
-                                    </select>
-                                </td>
-                                <td><input type="text" class="wperp-form-field" v-model="discount"
-                                    :placeholder="discountType">
-                                    <em v-show="'discount-percent' === discountType">%</em>
-                                </td>
-                                <td></td>
-                            </tr>
-
-                            <tr class="tax-rate-row">
-                                <td colspan="4" class="text-right with-multiselect">
-                                    <multi-select v-model="taxRate"
-                                        :options="taxRates"
-                                        class="tax-rates"
-                                        :placeholder="__('Select sales tax', 'erp')" />
-                                </td>
-                                <td><input type="text" class="wperp-form-field" :value="moneyFormat(taxTotalAmount)" readonly></td>
-                                <td></td>
-                            </tr>
-
-                            <tr class="total-amount-row">
-                                <td colspan="4" class="text-right">
-                                    <span>{{ __('Total Amount', 'erp') }} =</span>
-                                </td>
-                                <td><input type="text" class="wperp-form-field" :value="moneyFormat(finalTotalAmount)" readonly></td>
-                                <td></td>
-                            </tr>
-                            <tr class="wperp-form-group">
-                                <td colspan="9" style="text-align: left;">
-                                    <label>{{ __('Particulars', 'erp') }}</label>
-                                    <textarea v-model="particulars" rows="4" maxlength="250" class="wperp-form-field display-flex" :placeholder="__('Particulars', 'erp')"></textarea>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="attachment-item" :key="index" v-for="(file, index) in attachments">
-                                        <img :src="erp_acct_assets + '/images/file-thumb.png'">
-                                        <span class="remove-file" @click="removeFile(index)">&#10007;</span>
-
-                                        <div class="attachment-meta">
-                                            <h3>{{ getFileName(file) }}</h3>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr class="add-attachment-row">
-                                <td colspan="9" style="text-align: left;">
-                                    <div class="attachment-container">
-                                        <label class="col--attachement">{{ __('Attachment', 'erp') }}</label>
-                                        <file-upload v-model="attachments" url="/invoices/attachments"/>
-                                    </div>
-                                </td>
-                            </tr>
-                            <component
-                                v-for="(component, compKey) in extraFields"
-                                :key="'key-' + compKey"
-                                :is="component"
-                                :tran-type="inv_title" />
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td v-if="estimateToInvoice()" colspan="9" style="text-align: right;">
-                                    <combo-button :options="[{ id: 'update', text: 'Save Conversion' }]" />
-                                </td>
-                                <td v-else colspan="9" style="text-align: right;">
-                                    <combo-button v-if="editMode" :options="updateButtons" />
-                                    <combo-button v-else :options="createButtons" />
-                                </td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-            </div>
-
-        </form>
-
-        <!-- End .wperp-crm-table -->
     </div>
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import {mapState} from 'vuex';
 
-import HTTP from 'admin/http';
-import Datepicker from 'admin/components/base/Datepicker.vue';
-import FileUpload from 'admin/components/base/FileUpload.vue';
-import ComboButton from 'admin/components/select/ComboButton.vue';
-import InvoiceTrnRow from 'admin/components/invoice/InvoiceTrnRow.vue';
-import SelectCustomers from 'admin/components/people/SelectCustomers.vue';
-import MultiSelect from 'admin/components/select/MultiSelect.vue';
-import ShowErrors from 'admin/components/base/ShowErrors.vue';
 
-/* global erp_acct_var */
 export default {
     name: 'InvoiceCreate',
 
     components: {
-        MultiSelect,
-        Datepicker,
-        FileUpload,
-        ComboButton,
-        InvoiceTrnRow,
-        SelectCustomers,
-        ShowErrors
     },
 
     data() {
         return {
+            voucher_no: '',
+            invoice: {line_items: []},
             basic_fields: {
-                customer       : '',
-                trn_date       : '',
-                due_date       : '',
+                customer: '',
+                trn_date: '',
+                due_date: '',
                 billing_address: ''
             },
-            voucher_found :  false,
+            voucher_found: false,
 
             createButtons: [
-                { id: 'save', text: 'Save' },
+                {id: 'save', text: 'Save'},
                 // {id: 'send_create', text: 'Create and Send'},
-                { id: 'new_create', text: 'Save and New' },
-                { id: 'draft', text: 'Save as Draft' }
+                {id: 'new_create', text: 'Save and New'},
+                {id: 'draft', text: 'Save as Draft'}
             ],
 
             updateButtons: [
-                { id: 'update', text: 'Update' },
+                {id: 'update', text: 'Update'},
                 // {id: 'send_update', text: 'Update and Send'},
-                { id: 'new_update', text: 'Update and New' },
-                { id: 'draft', text: 'Save as Draft' }
+                {id: 'new_update', text: 'Update and New'},
+                {id: 'draft', text: 'Save as Draft'}
             ],
 
-            extraFields     : window.acct.hooks.applyFilters('acctInvoiceExtraFields', []),
-            editMode        : false,
-            voucherNo       : 0,
-            discountType    : 'discount-percent',
-            discount        : 0,
-            status          : null,
-            taxRate         : null,
-            taxSummary      : null,
-            products        : [],
-            particulars     : '',
-            attachments     : [],
+            extraFields: window.acct.hooks.applyFilters('acctInvoiceExtraFields', []),
+            editMode: false,
+            voucherNo: 0,
+            discountType: 'discount-percent',
+            discount: 0,
+            status: null,
+            taxRate: null,
+            taxSummary: null,
+            products: [],
+            particulars: '',
+            attachments: [],
             transactionLines: [],
-            taxRates        : [],
-            taxTotalAmount  : 0,
+            taxRates: [],
+            taxTotalAmount: 0,
             finalTotalAmount: 0,
-            inv_title       : '',
-            inv_type        : {},
-            erp_acct_assets : erp_acct_var.acct_assets,
-            form_errors     : []
+            inv_title: '',
+            inv_type: {},
+            erp_acct_assets: erp_acct_var.acct_assets,
+            form_errors: []
         };
     },
 
@@ -248,7 +188,7 @@ export default {
         },
 
         taxRate(newVal) {
-           // this.$store.dispatch('sales/setTaxRateID', newVal.id);
+            // this.$store.dispatch('sales/setTaxRateID', newVal.id);
         },
 
         discount() {
@@ -265,32 +205,21 @@ export default {
     },
 
     computed: {
-        ...mapState({ invoiceTotalAmount: state => state.sales.invoiceTotalAmount }),
-        ...mapState({ actionType: state => state.combo.btnID })
+        ...mapState({invoiceTotalAmount: state => state.sales.invoiceTotalAmount}),
+        ...mapState({actionType: state => state.combo.btnID})
     },
 
     created() {
-        if (this.$route.name === 'EstimateCreate') {
-            this.inv_title = 'Estimate';
-            this.inv_type  = { id: 1, name: 'Estimate' };
-        } else {
-            this.inv_title = 'Invoice';
-            this.inv_type  = { id: 0, name: 'Invoice' };
-        }
 
-        this.prepareDataLoad();
-
-        this.$root.$on('remove-row', index => {
-            this.$delete(this.transactionLines, index);
-            this.updateFinalAmount();
-        });
-
-        this.$root.$on('total-updated', amount => {
-            this.updateFinalAmount();
-        });
     },
 
     methods: {
+        async searchVoucher() {
+            let Voucher = await getRequest('invoices/' + this.voucher_no, {name: 'alemran'})
+            if (Voucher) {
+                this.invoice = Voucher
+            }
+        },
         async prepareDataLoad() {
             /**
              * ----------------------------------------------
@@ -308,9 +237,11 @@ export default {
                  * load products and taxes, before invoice load
                  */
                 const [request1, request2] = await Promise.all([
-                    HTTP.get('/products', { params: {
-                        number: -1
-                    } }),
+                    HTTP.get('/products', {
+                        params: {
+                            number: -1
+                        }
+                    }),
                     HTTP.get('/taxes/summary')
                 ]);
                 const request3 = await HTTP.get(`/invoices/${this.$route.params.id}`);
@@ -327,9 +258,9 @@ export default {
                     return;
                 }
 
-                this.products   = request1.data;
+                this.products = request1.data;
                 this.taxSummary = request2.data;
-                this.taxRates   = this.getUniqueTaxRates(request2.data);
+                this.taxRates = this.getUniqueTaxRates(request2.data);
                 this.setDataForEdit(request3.data);
 
                 // initialize combo button id with `update`
@@ -353,17 +284,17 @@ export default {
         },
 
         setDataForEdit(invoice) {
-            this.basic_fields.customer        = { id: parseInt(invoice.customer_id), name: invoice.customer_name };
+            this.basic_fields.customer = {id: parseInt(invoice.customer_id), name: invoice.customer_name};
             this.basic_fields.billing_address = invoice.billing_address;
-            this.basic_fields.trn_date        = invoice.trn_date;
-            this.basic_fields.due_date        = invoice.due_date;
-            this.status                       = invoice.status;
-            this.transactionLines             = invoice.line_items;
-            this.taxTotalAmount               = invoice.tax;
-            this.finalTotalAmount             = invoice.debit;
-            this.particulars                  = invoice.particulars;
-            this.attachments                  = invoice.attachments;
-            this.discountType                 = invoice.discount_type;
+            this.basic_fields.trn_date = invoice.trn_date;
+            this.basic_fields.due_date = invoice.due_date;
+            this.status = invoice.status;
+            this.transactionLines = invoice.line_items;
+            this.taxTotalAmount = invoice.tax;
+            this.finalTotalAmount = invoice.debit;
+            this.particulars = invoice.particulars;
+            this.attachments = invoice.attachments;
+            this.discountType = invoice.discount_type;
 
             if (invoice.discount_type === 'discount-percent') {
                 this.discount = (parseFloat(invoice.discount) * 100) / parseFloat(invoice.amount);
@@ -378,7 +309,7 @@ export default {
 
             if (invoice.estimate === '1') {
                 this.inv_title = 'Estimate';
-                this.inv_type = { id: 1, name: 'Estimate' };
+                this.inv_type = {id: 1, name: 'Estimate'};
                 this.finalTotalAmount = parseFloat(invoice.amount) +
                     parseFloat(invoice.tax) - parseFloat(this.discount);
             }
@@ -393,9 +324,11 @@ export default {
         getProducts() {
             this.$store.dispatch('spinner/setSpinner', true);
 
-            HTTP.get('/products', { params: {
-                number: -1
-            } }).then(response => {
+            HTTP.get('/products', {
+                params: {
+                    number: -1
+                }
+            }).then(response => {
                 this.products = response.data;
 
                 this.$store.dispatch('spinner/setSpinner', false);
@@ -416,12 +349,12 @@ export default {
             HTTP.get(`/people/${customer_id}`).then(response => {
                 const billing = response.data;
 
-                let street_1    = billing.street_1 ? billing.street_1 + ',' : '';
-                let street_2    = billing.street_2 ? billing.street_2 : '';
-                let city        = billing.city ? billing.city : '';
-                let state       = billing.state ? billing.state + ',' : '';
+                let street_1 = billing.street_1 ? billing.street_1 + ',' : '';
+                let street_2 = billing.street_2 ? billing.street_2 : '';
+                let city = billing.city ? billing.city : '';
+                let state = billing.state ? billing.state + ',' : '';
                 let postal_code = billing.postal_code ? billing.postal_code : '';
-                let country     = billing.country ? billing.country : '';
+                let country = billing.country ? billing.country : '';
 
                 const address = `${street_1} ${street_2} \n${city} \n${state} ${postal_code} \n${country}`;
 
@@ -466,7 +399,7 @@ export default {
 
                 if (tax.default) {
                     // set default tax rate name for invoice
-                    this.taxRate = { id: tax_rate_id, name: tax.tax_rate_name };
+                    this.taxRate = {id: tax_rate_id, name: tax.tax_rate_name};
                     this.$store.dispatch('sales/setTaxRateID', tax_rate_id);
                 }
 
@@ -482,15 +415,15 @@ export default {
         },
 
         updateFinalAmount() {
-            let taxAmount     = 0;
+            let taxAmount = 0;
             let totalDiscount = 0;
-            let totalAmount   = 0;
+            let totalAmount = 0;
 
             this.transactionLines.forEach(element => {
                 if (element.qty) {
-                    taxAmount     += parseFloat(element.taxAmount);
+                    taxAmount += parseFloat(element.taxAmount);
                     totalDiscount += isNaN(element.discount) ? 0.00 : parseFloat(element.discount);
-                    totalAmount   += parseFloat(element.amount);
+                    totalAmount += parseFloat(element.amount);
                 }
             });
 
@@ -498,7 +431,7 @@ export default {
 
             const finalAmount = (totalAmount - totalDiscount) + taxAmount;
 
-            this.taxTotalAmount   = taxAmount.toFixed(2);
+            this.taxTotalAmount = taxAmount.toFixed(2);
             this.finalTotalAmount = finalAmount.toFixed(2);
         },
 
@@ -508,15 +441,15 @@ export default {
             this.transactionLines.forEach(line => {
                 if (line.qty) {
                     lineItems.push({
-                        product_id       : line.selectedProduct.id,
+                        product_id: line.selectedProduct.id,
                         product_type_name: line.selectedProduct.product_type_name,
-                        tax_cat_id       : line.taxCatID,
-                        qty              : line.qty,
-                        unit_price       : line.unitPrice,
-                        tax              : line.taxAmount,
-                        tax_rate         : line.taxRate,
-                        discount         : line.discount,
-                        item_total       : line.amount
+                        tax_cat_id: line.taxCatID,
+                        qty: line.qty,
+                        unit_price: line.unitPrice,
+                        tax: line.taxAmount,
+                        tax_rate: line.taxRate,
+                        discount: line.discount,
+                        item_total: line.amount
                     });
                 }
             });
@@ -542,7 +475,7 @@ export default {
                 throw error;
             }).then(() => {
                 if (this.actionType === 'update' || this.actionType === 'draft') {
-                    this.$router.push({ name: 'Sales' });
+                    this.$router.push({name: 'Sales'});
                 } else if (this.actionType === 'new_update') {
                     this.resetFields();
                 }
@@ -560,7 +493,7 @@ export default {
                 throw error;
             }).then(() => {
                 if (this.actionType === 'save' || this.actionType === 'draft') {
-                    this.$router.push({ name: 'Sales' });
+                    this.$router.push({name: 'Sales'});
                 } else if (this.actionType === 'new_create') {
                     this.resetFields();
                 }
@@ -587,19 +520,19 @@ export default {
             }
 
             const requestData = window.acct.hooks.applyFilters('requestData', {
-                customer_id    : this.basic_fields.customer.id,
-                date           : this.basic_fields.trn_date,
-                due_date       : this.basic_fields.due_date,
+                customer_id: this.basic_fields.customer.id,
+                date: this.basic_fields.trn_date,
+                due_date: this.basic_fields.due_date,
                 billing_address: this.basic_fields.billing_address,
-                discount_type  : this.discountType,
-                tax_rate_id    : this.taxRate !== null ? this.taxRate.id : null,
-                line_items     : this.formatLineItems(),
-                attachments    : this.attachments,
-                particulars    : this.particulars,
-                type           : 'invoice',
-                status         : parseInt(this.status),
-                estimate       : this.inv_type.id,
-                convert        : this.$route.query.convert
+                discount_type: this.discountType,
+                tax_rate_id: this.taxRate !== null ? this.taxRate.id : null,
+                line_items: this.formatLineItems(),
+                attachments: this.attachments,
+                particulars: this.particulars,
+                type: 'invoice',
+                status: parseInt(this.status),
+                estimate: this.inv_type.id,
+                convert: this.$route.query.convert
             });
 
             if (this.editMode) {
@@ -616,18 +549,18 @@ export default {
         resetFields() {
             // why can't we use `form.reset()` ?
 
-            this.basic_fields.customer        = { id: null, name: null };
-            this.basic_fields.trn_date        = erp_acct_var.current_date;
-            this.basic_fields.due_date        = erp_acct_var.current_date;
+            this.basic_fields.customer = {id: null, name: null};
+            this.basic_fields.trn_date = erp_acct_var.current_date;
+            this.basic_fields.due_date = erp_acct_var.current_date;
             this.basic_fields.billing_address = '';
-            this.particulars                  = '';
-            this.attachments                  = [];
-            this.transactionLines             = [];
-            this.discountType                 = 'discount-percent';
-            this.discount                     = 0;
-            this.taxTotalAmount               = 0;
-            this.finalTotalAmount             = 0;
-            this.isWorking                    = false;
+            this.particulars = '';
+            this.attachments = [];
+            this.transactionLines = [];
+            this.discountType = 'discount-percent';
+            this.discount = 0;
+            this.taxTotalAmount = 0;
+            this.finalTotalAmount = 0;
+            this.isWorking = false;
 
             this.transactionLines.push({}, {}, {});
 
@@ -663,107 +596,107 @@ export default {
 </script>
 
 <style lang="less">
-    tr.padded {
-        height: 50px;
+tr.padded {
+    height: 50px;
+}
+
+.discount-rate-row {
+    select {
+        width: 235px;
+        height: 34px;
     }
 
-    .discount-rate-row {
-        select {
-            width: 235px;
-            height: 34px;
-        }
+    input {
+        width: 130px !important;
+    }
+}
 
-        input {
-            width: 130px !important;
-        }
+.tax-rate-row {
+    .tax-rates {
+        width: 235px;
+        float: right;
+    }
+}
+
+.attachment-item {
+    box-shadow: 0 0 0 1px rgba(76, 175, 80, 0.3);
+    padding: 3px;
+    position: relative;
+    height: 58px;
+    margin: 10px 0;
+
+    .remove-file {
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        font-size: 13px;
+        color: #fff;
+        cursor: pointer;
+        background: #f44336;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        text-align: center;
     }
 
-    .tax-rate-row {
-        .tax-rates {
-            width: 235px;
-            float: right;
-        }
+    img {
+        float: left;
+    }
+}
+
+.attachment-meta {
+    h3 {
+        margin-left: 50px;
+        text-align: left;
+        line-height: 2;
+    }
+}
+
+.invoice-create {
+    .dropdown {
+        width: 100%;
     }
 
-    .attachment-item {
-        box-shadow: 0 0 0 1px rgba(76, 175, 80, 0.3);
-        padding: 3px;
-        position: relative;
-        height: 58px;
-        margin: 10px 0;
-
-        .remove-file {
-            position: absolute;
-            top: -10px;
-            right: -10px;
-            font-size: 13px;
-            color: #fff;
-            cursor: pointer;
-            background: #f44336;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            text-align: center;
-        }
-
-        img {
-            float: left;
-        }
+    .col--products {
+        width: 400px;
     }
 
-    .attachment-meta {
-        h3 {
-            margin-left: 50px;
-            text-align: left;
-            line-height: 2;
-        }
+    .col--qty {
+        width: 80px;
     }
 
-    .invoice-create {
-        .dropdown {
-            width: 100%;
+    .col--unit-price {
+        width: 120px;
+    }
+
+    .col--amount {
+        width: 200px;
+    }
+
+    .col--tax {
+        text-align: center;
+        width: 100px;
+    }
+
+    .product-select {
+        .with-multiselect .multiselect__select,
+        .with-multiselect .multiselect__tags {
+            min-height: 33px !important;
+            margin-top: 4px;
         }
 
-        .col--products {
-            width: 400px;
-        }
-
-        .col--qty {
-            width: 80px;
-        }
-
-        .col--unit-price {
-            width: 120px;
-        }
-
-        .col--amount {
-            width: 200px;
-        }
-
-        .col--tax {
-            text-align: center;
-            width: 100px;
-        }
-
-        .product-select {
-            .with-multiselect .multiselect__select,
-            .with-multiselect .multiselect__tags {
-                min-height: 33px !important;
-                margin-top: 4px;
-            }
-
-            .with-multiselect .multiselect__placeholder {
-                margin-top: 3px;
-            }
-        }
-
-        .invoice-create .erp-help-tip {
-            color    : #2f4f4f;
-            font-size: 1.2em;
+        .with-multiselect .multiselect__placeholder {
+            margin-top: 3px;
         }
     }
 
-    .voucher-search{
-        margin-top: 30px;
+    .invoice-create .erp-help-tip {
+        color: #2f4f4f;
+        font-size: 1.2em;
     }
+}
+
+.voucher-search {
+    margin-top: 30px;
+}
 </style>

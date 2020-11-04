@@ -29,6 +29,14 @@ Vue.mixin(i18nMixin);
 // vue click outside directive
 Vue.directive('click-outside', clickOutside);
 
+
+import {getRequest} from 'admin/request';
+
+(function () {
+    window.getRequest = getRequest;
+})();
+
+
 const accountingContainer = document.getElementById('erp-accounting');
 
 if (accountingContainer !== null) {
