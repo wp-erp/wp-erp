@@ -1,7 +1,7 @@
 <template>
     <div v-if="checkOptions" class="vue-select" :style="'width:' + width + 'px'">
         <select v-model="select_val" @change="handleInput">
-            <option value="">All</option>
+            <option value=""> {{ __('All', 'erp') }}</option>
             <option :key="option.id" v-for="option in options" :value="option.id">{{ option.name }}</option>
         </select>
     <!--    <i class="select&#45;&#45;icon" />-->

@@ -57330,7 +57330,9 @@ var render = function() {
               }
             },
             [
-              _c("option", { attrs: { value: "" } }, [_vm._v("All")]),
+              _c("option", { attrs: { value: "" } }, [
+                _vm._v(" " + _vm._s(_vm.__("All", "erp")))
+              ]),
               _vm._v(" "),
               _vm._l(_vm.options, function(option) {
                 return _c(
@@ -57591,13 +57593,15 @@ var render = function() {
                           _c("div", { staticClass: "wperp-panel-footer" }, [
                             _c("input", {
                               staticClass: "wperp-btn btn--default",
-                              attrs: { type: "reset", value: "Cancel" },
+                              attrs: { type: "reset" },
+                              domProps: { value: _vm.__("Cancel", "erp") },
                               on: { click: _vm.toggleFilter }
                             }),
                             _vm._v(" "),
                             _c("input", {
                               staticClass: "wperp-btn btn--primary",
-                              attrs: { type: "submit", value: "Submit" }
+                              attrs: { type: "submit" },
+                              domProps: { value: _vm.__("Submit", "erp") }
                             })
                           ])
                         ]
