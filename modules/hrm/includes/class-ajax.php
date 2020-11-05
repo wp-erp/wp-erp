@@ -2012,6 +2012,8 @@ class Ajax_Handler {
 
         $holidays = $holiday->get()->toArray();
 
+        $holidays = apply_filters( 'filter_holidays', $holidays, $start_date, $end_date );
+
         $events         = array();
         $holiday_events = array();
         $event_data     = array();
