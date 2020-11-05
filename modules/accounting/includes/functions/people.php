@@ -253,7 +253,7 @@ function erp_acct_get_people_transactions( $args = [] ) {
 
          $results[ $index ]['debit'] =  abs( (float)$result['debit'] );
          $results[ $index ]['credit'] =  abs( (float)$result['credit'] );
-         $results[ $index ]['balance'] =  abs($balance) . ( $balance > 0 ? __(' Dr', 'erp') : __(' Cr', 'erp')  );
+         $results[ $index ]['balance'] =  abs($balance) . ( $balance > 0 ? __( ' Dr', 'erp' ) : __( ' Cr', 'erp' )  );
 
     }
 
