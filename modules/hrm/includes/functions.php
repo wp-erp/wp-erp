@@ -23,7 +23,7 @@ function erp_hr_get_work_days() {
 
     $wizard_settings = get_option( $option_key, $default );
 
-    return [
+    $days = [
         'mon' => get_option( 'mon', $wizard_settings['mon'] ),
         'tue' => get_option( 'tue', $wizard_settings['tue'] ),
         'wed' => get_option( 'wed', $wizard_settings['wed'] ),
@@ -32,6 +32,8 @@ function erp_hr_get_work_days() {
         'sat' => get_option( 'sat', $wizard_settings['sat'] ),
         'sun' => get_option( 'sun', $wizard_settings['sun'] ),
     ];
+
+    return apply_filters( 'work_days', $days );
 }
 
 /**
