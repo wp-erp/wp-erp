@@ -2058,7 +2058,7 @@ class Ajax_Handler {
                 'rendering' => isset( $holiday->background )
                                && $holiday->background ? 'background' : '',
                 'color'     => isset( $holiday->background )
-                               && $holiday->background ? '#F5F5F5' : '#FF5354'
+                               && $holiday->background ? '#c5bfbf' : '#FF5354'
             );
         }
 
