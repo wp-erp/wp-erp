@@ -14837,7 +14837,7 @@ function validateHookName(hookName) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {/*!
-  * vue-router v3.4.7
+  * vue-router v3.4.9
   * (c) 2020 Evan You
   * @license MIT
   */
@@ -16203,6 +16203,14 @@ function addRouteRecord (
         path || name
       )) + " cannot be a " + "string id. Use an actual component instead."
     );
+
+    warn(
+      // eslint-disable-next-line no-control-regex
+      !/[^\u0000-\u007F]+/.test(path),
+      "Route with path \"" + path + "\" contains unencoded characters, make sure " +
+        "your path is correctly encoded before passing it to the router. Use " +
+        "encodeURI to encode static segments of your path."
+    );
   }
 
   var pathToRegexpOptions =
@@ -16508,14 +16516,6 @@ function matchRoute (
   path,
   params
 ) {
-  try {
-    path = decodeURI(path);
-  } catch (err) {
-    if (process.env.NODE_ENV !== 'production') {
-      warn(false, ("Error decoding \"" + path + "\". Leaving it intact."));
-    }
-  }
-
   var m = path.match(regex);
 
   if (!m) {
@@ -16528,7 +16528,7 @@ function matchRoute (
     var key = regex.keys[i - 1];
     if (key) {
       // Fix #1994: using * with props: true generates a param named 0
-      params[key.name || 'pathMatch'] = m[i];
+      params[key.name || 'pathMatch'] = typeof m[i] === 'string' ? decode(m[i]) : m[i];
     }
   }
 
@@ -16718,7 +16718,17 @@ function scrollToPosition (shouldScroll, position) {
   }
 
   if (position) {
-    window.scrollTo(position.x, position.y);
+    // $flow-disable-line
+    if ('scrollBehavior' in document.documentElement.style) {
+      window.scrollTo({
+        left: position.x,
+        top: position.y,
+        // $flow-disable-line
+        behavior: shouldScroll.behavior
+      });
+    } else {
+      window.scrollTo(position.x, position.y);
+    }
   }
 }
 
@@ -17883,7 +17893,7 @@ function createHref (base, fullPath, mode) {
 }
 
 VueRouter.install = install;
-VueRouter.version = '3.4.7';
+VueRouter.version = '3.4.9';
 VueRouter.isNavigationFailure = isNavigationFailure;
 VueRouter.NavigationFailureType = NavigationFailureType;
 
@@ -35750,9 +35760,7 @@ function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
@@ -35887,7 +35895,7 @@ var validationGetters = {
     var vals = this.validations;
     return _objectSpread({}, buildFromKeys(this.nestedKeys, function (key) {
       return vals[key] && vals[key].$params || null;
-    }), {}, buildFromKeys(this.ruleKeys, function (key) {
+    }), buildFromKeys(this.ruleKeys, function (key) {
       return _this6.getRef(key).$params;
     }));
   }
@@ -36155,7 +36163,7 @@ var getComponent = function getComponent(Vue) {
             value: Object.defineProperties({}, _objectSpread({}, keyDefs))
           }
         } : {};
-        return Object.defineProperties({}, _objectSpread({}, keyDefs, {}, iterDefs, {
+        return Object.defineProperties({}, _objectSpread({}, keyDefs, iterDefs, {
           $model: {
             enumerable: true,
             get: function get() {
@@ -36177,14 +36185,14 @@ var getComponent = function getComponent(Vue) {
               }
             }
           }
-        }, getterDefs, {}, methodDefs));
+        }, getterDefs, methodDefs));
       },
       children: function children() {
         var _this10 = this;
 
-        return [].concat(_toConsumableArray(this.nestedKeys.map(function (key) {
+        return _toConsumableArray(this.nestedKeys.map(function (key) {
           return renderNested(_this10, key);
-        })), _toConsumableArray(this.ruleKeys.map(function (key) {
+        })).concat(_toConsumableArray(this.ruleKeys.map(function (key) {
           return renderRule(_this10, key);
         }))).filter(Boolean);
       }
@@ -36581,9 +36589,7 @@ exports.popParams = popParams;
 exports.withParams = withParams;
 exports._setTarget = exports.target = void 0;
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
@@ -36624,7 +36630,7 @@ function popParams() {
 
 function addParams(params) {
   if (_typeof(params) === 'object' && !Array.isArray(params)) {
-    exports.target = target = _objectSpread({}, target, {}, params);
+    exports.target = target = _objectSpread({}, target, params);
   } else {
     throw new Error('params must be an object');
   }
