@@ -2048,14 +2048,17 @@ class Ajax_Handler {
 
         foreach ( erp_array_to_object( $holidays ) as $key => $holiday ) {
             $holiday_events[] = array(
-                'id'      => $holiday->id,
-                'title'   => $holiday->title,
-                'start'   => $holiday->start,
-                'end'     => $holiday->end,
-                'color'   => '#FF5354',
-                'img'     => '',
-                'url'     => 'javascript:void(0)',
-                'holiday' => true,
+                'id'        => $holiday->id,
+                'title'     => $holiday->title,
+                'start'     => $holiday->start,
+                'end'       => $holiday->end,
+                'img'       => '',
+                'url'       => 'javascript:void(0)',
+                'holiday'   => true,
+                'rendering' => isset( $holiday->background )
+                               && $holiday->background ? 'background' : '',
+                'color'     => isset( $holiday->background )
+                               && $holiday->background ? '#F5F5F5' : '#FF5354'
             );
         }
 
