@@ -514,7 +514,7 @@ function erp_insert_people( $args = [], $return_object = false ) {
         if ( empty( $args['company'] ) || empty( $args['email'] ) ) {
             return new WP_Error( 'no-company', esc_attr__( 'You must need to fill up both Company name and email fields', 'erp' ) );
         } else {
-            if ( ! erp_is_valid_company( $args['company'] ) ) {
+            if ( ! erp_is_valid_object_name( $args['company'] ) ) {
                 return new WP_Error( 'invalid-company', esc_attr__( 'Please provide a valid company name', 'erp' ) );
             }
         }
@@ -553,7 +553,7 @@ function erp_insert_people( $args = [], $return_object = false ) {
         return new WP_Error( 'invalid-fax', esc_attr__( 'Please provide a valid fax number', 'erp' ) );
     }
 
-    if ( ! empty( $args['city'] ) && ! erp_is_valid_name( $args['city'] ) ) {
+    if ( ! empty( $args['city'] ) && ! erp_is_valid_object_name( $args['city'] ) ) {
         return new WP_Error( 'invalid-city', esc_attr__( 'Please provide a valid city name', 'erp' ) );
     }
 
