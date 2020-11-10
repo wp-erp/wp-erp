@@ -849,7 +849,7 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
         $trn_id = $transaction->trn_no;
     }
 
-    $title =  isset($transaction->estimate) && (int)$transaction->estimate ? 'Estimate' : $type ;
+    $title =  isset($transaction->estimate) && (int)$transaction->estimate ? __( 'Estimate', 'erp' )  : __( $type, 'erp' ) ;
     //Set type
     $trn_pdf->set_type( $title);
 

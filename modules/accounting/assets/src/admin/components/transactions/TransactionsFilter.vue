@@ -64,9 +64,9 @@
                                 </div>
                                 </div>
                                 <div class="wperp-panel-footer">
-                                    <input type="reset" value="Cancel" class="wperp-btn btn--default"
+                                    <input type="reset" :value="__( 'Cancel', 'erp' )" class="wperp-btn btn--default"
                                            @click="toggleFilter">
-                                    <input type="submit" value="Submit" class="wperp-btn btn--primary">
+                                    <input type="submit" :value="__( 'Submit', 'erp' )" class="wperp-btn btn--primary">
                                 </div>
                             </div>
                         </div>
