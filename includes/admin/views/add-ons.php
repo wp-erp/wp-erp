@@ -57,6 +57,9 @@
             padding: 0 4px;
         }
 
+        .erp_pro_addons_wrapper .single_extension .desc[class] {
+            padding-right: 0;
+        }
 
         .erp_pro_addons_wrapper .single_extension[class] {
             align-items: inherit;
@@ -77,6 +80,7 @@
 
         .erp_pro_addons_wrapper .single_extension .image[class] img {
             width: 100%;
+            height: auto;
         }
         .erp_pro_addons_wrapper .single_extension .desc[class] {
             flex-basis: 65%;
@@ -240,6 +244,15 @@
         margin-right: 20px;
         padding-left: 24px;
 
+    }
+
+    .erp_pro_addons_wrapper .single_extension .image img {
+        width: 98px;
+        height: 65px;
+    }
+
+    .erp_pro_addons_wrapper .single_extension .desc {
+        padding-right: 10px;
     }
 
     .erp_pro_addons_wrapper .single_extension .desc h4{
@@ -606,21 +619,25 @@
 <?php
 $add_ons = get_transient( 'wperp_pro_addons' );
 
-if ( false === $add_ons ) {
+if ( false === $add_ons || empty( $add_ons ) ) {
     $help_url = 'https://www.wperp.com/wp-json/erp-pro/v1/modules';
     $response = wp_remote_get( $help_url, [ 'timeout' => 15 ] );
-    $add_ons  = (array) json_decode( wp_remote_retrieve_body( $response ) );
 
     if ( is_wp_error( $response ) || $response['response']['code'] !== 200 ) {
-        $add_ons = '[]';
+        $add_ons = [];
+    }
+    else {
+        $add_ons  = (array) json_decode( wp_remote_retrieve_body( $response ) );
     }
 
-    //sort using title
-    usort( $add_ons, function ( $a, $b ) {
-        return strcmp( $a->title, $b->title );
-    } );
+    if ( ! empty( $add_ons ) ) {
+        //sort using title
+        usort( $add_ons, function ( $a, $b ) {
+            return strcmp( $a->title, $b->title );
+        } );
 
-    set_transient( 'wperp_pro_addons', $add_ons, 12 * HOUR_IN_SECONDS );
+        set_transient( 'wperp_pro_addons', $add_ons, 12 * HOUR_IN_SECONDS );
+    }
 }
 ?>
 
