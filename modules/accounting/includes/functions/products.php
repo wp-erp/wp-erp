@@ -127,7 +127,7 @@ function erp_acct_insert_product( $data ) {
         );
 
        if ( $product_check ) {
-           throw new \Exception( $product_data['name'] . ' ' . __( "product already exists!" , "erp") ) ;
+           throw new \Exception( $product_data['name'] . ' ' . __( "Product already exists!" , "erp") ) ;
          }
 
 
@@ -164,7 +164,7 @@ function erp_acct_insert_product( $data ) {
  *
  * @param $data
  *
- * @return int
+ * @return WP_Error | Object
  */
 function erp_acct_update_product( $data, $id ) {
     global $wpdb;
@@ -176,6 +176,19 @@ function erp_acct_update_product( $data, $id ) {
     try {
         $wpdb->query( 'START TRANSACTION' );
         $product_data = erp_acct_get_formatted_product_data( $data );
+
+        $product_name_check =  $wpdb->get_row(
+            $wpdb->prepare(
+                "SELECT * FROM {$wpdb->prefix}erp_acct_products where name = %s AND id NOT IN(%d)",
+                $product_data['name'],
+                $id
+            ),
+            OBJECT
+        );
+
+        if ( $product_name_check ) {
+            throw new \Exception( $product_data['name'] . ' ' . __( "Product name already exists!" , "erp") ) ;
+        }
 
         $wpdb->update(
             $wpdb->prefix . 'erp_acct_products',
@@ -201,7 +214,7 @@ function erp_acct_update_product( $data, $id ) {
     } catch ( Exception $e ) {
         $wpdb->query( 'ROLLBACK' );
 
-        return new WP_error( 'product-exception', $e->getMessage() );
+        return new WP_Error( 'duplicate-product', $e->getMessage(), array( 'status' => 400 ) );
     }
 
     return erp_acct_get_product( $id );

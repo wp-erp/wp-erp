@@ -226,6 +226,10 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
         $item = $this->prepare_item_for_database( $request );
 
         $id         = erp_acct_update_product( $item, $id );
+        if ( is_wp_error( $id ) ) {
+            return $id;
+        }
+
         $item['id'] = $id;
 
         $additional_fields['namespace'] = $this->namespace;
