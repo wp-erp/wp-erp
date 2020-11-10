@@ -268,11 +268,6 @@ function erp_acct_insert_expense( $data ) {
 
         $items = $expense_data['bill_details'];
 
-        // for bank transaction charge
-        $deduct_unit_for_trn_charge = 0;
-        if ( $transaction_charge ) {
-            $deduct_unit_for_trn_charge = $transaction_charge / $expense_data['amount'];
-        }
 
 
         foreach ( $items as $key => $item ) {
@@ -289,9 +284,6 @@ function erp_acct_insert_expense( $data ) {
                     'updated_by'  => $expense_data['updated_by'],
                 ]
             );
-
-            $bank_transaction_charge = $deduct_unit_for_trn_charge ? $deduct_unit_for_trn_charge * $item['amount'] : 0;
-            $item['amount'] =  (float)$item['amount'] - $bank_transaction_charge;
 
             erp_acct_insert_expense_data_into_ledger( $expense_data, $item );
         }

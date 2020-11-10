@@ -170,11 +170,7 @@ function erp_acct_insert_pay_purchase( $data ) {
 
         $items = $pay_purchase_data['purchase_details'];
 
-        // for bank transaction charge
-        $deduct_unit_for_trn_charge = 0;
-        if ( $transaction_charge ) {
-            $deduct_unit_for_trn_charge = $transaction_charge / $pay_purchase_data['amount'];
-        }
+
 
         foreach ( $items as $key => $item ) {
             $wpdb->insert(
@@ -190,8 +186,6 @@ function erp_acct_insert_pay_purchase( $data ) {
                 ]
             );
 
-            $bank_transaction_charge = $deduct_unit_for_trn_charge ? $deduct_unit_for_trn_charge * $item['line_total'] : 0;
-            $item['line_total'] =  (float)$item['line_total'] - $bank_transaction_charge;
             erp_acct_insert_pay_purchase_data_into_ledger( $pay_purchase_data, $item );
         }
 
