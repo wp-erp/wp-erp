@@ -3675,7 +3675,7 @@ function erp_is_timestamp( $string ) {
 }
 
 /**
- * Validates people's name
+ * Checks if people's name contains some specific special charecters which should not e allowed
  *
  * @since 1.6.7
  *
@@ -3688,16 +3688,16 @@ function erp_is_valid_name( $name ) {
 }
 
 /**
- * Validates company/city name
+ * Checks if a string contains some disallowed special charecters
  *
  * @since 1.6.8
  *
- * @param string $name
+ * @param string $str
  *
  * @return bool
  */
-function erp_is_valid_object_name( $name ) {
-    return ! preg_match_all( '/[%;"=<>\\/\*\+\?\$\^\{\}\[\]]/', $name );
+function erp_contains_disallowed_chars( $str ) {
+    return preg_match_all( '/[%;"=<>\\/\*\+\?\$\^\{\}\[\]]/', $str );
 }
 
 /**
