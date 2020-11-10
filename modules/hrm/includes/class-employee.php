@@ -388,7 +388,7 @@ class Employee {
             return new WP_Error( 'invalid-user-url', esc_attr__( 'Please provide a valid user url', 'erp' ) );
         }
 
-        if ( ! empty( $data['personal']['city'] ) && ! erp_is_valid_object_name( $data['personal']['city'] ) ) {
+        if ( ! empty( $data['personal']['city'] ) && erp_contains_disallowed_chars( $data['personal']['city'] ) ) {
             return new WP_Error( 'invalid-city', esc_attr__( 'Please provide a valid city name', 'erp' ) );
         }
 
