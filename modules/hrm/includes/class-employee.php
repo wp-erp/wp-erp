@@ -423,6 +423,13 @@ class Employee {
             $wp_user->set_role( erp_hr_get_employee_role() );
         }
 
+        // update user display name
+        if ( $wp_user ) {
+            $full_name =  $first_name . ' ' . $middle_name . ' ' . $last_name ;
+            wp_update_user( array( 'ID' => $user_id, 'display_name' =>  $full_name ) );
+
+        }
+
         // inserting the user for the first time
         $work                = $data['work'];
         $hiring_date         = ! empty( $data['work']['hiring_date'] ) ? $data['work']['hiring_date'] : current_time( 'mysql' );
