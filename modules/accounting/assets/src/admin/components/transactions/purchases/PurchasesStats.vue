@@ -61,7 +61,7 @@ export default {
 
     created() {
         this.$root.$on('transactions-filter', filters => {
-            this.getChartData(filters);
+           // this.getChartData(filters);
         });
 
         const filters = {};
