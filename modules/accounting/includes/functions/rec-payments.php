@@ -157,21 +157,14 @@ function erp_acct_insert_payment( $data ) {
 
         $items = $payment_data['line_items'];
 
-        // for bank transaction charge
-        $deduct_unit_for_trn_charge = 0;
-
-        if ( $transaction_charge ) {
-            $deduct_unit_for_trn_charge = $transaction_charge / $payment_data['amount'];
-        }
 
         foreach ( $items as $key => $item ) {
             $total                   = 0;
-            $bank_transaction_charge = $deduct_unit_for_trn_charge ? $deduct_unit_for_trn_charge * $item['line_total'] : 0;
 
             $invoice_no[ $key ] = $payment_data['invoice_no'];
             $total += $item['line_total'];
 
-            $payment_data['amount'] = $total - $bank_transaction_charge;
+            $payment_data['amount'] = $total ;
 
             erp_acct_insert_payment_line_items( $payment_data, $item, $voucher_no );
         }

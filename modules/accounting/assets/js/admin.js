@@ -15176,7 +15176,7 @@ module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFs
       }).catch(function (error) {
         _this2.$store.dispatch('spinner/setSpinner', false);
 
-        throw error;
+        _this2.showAlert('warning', error.response.data.message);
       });
     },
     loaded: function loaded() {

@@ -145,7 +145,7 @@ class Admin_Menu {
 
         $request_capabilities = 'erp_leave_manage';
 
-        if ( class_exists( '\weDevs\ERP_PRO\PRO\AdvancedLeave\Module' ) && get_option( 'erp_pro_multilevel_approval' ) === 'yes' ) {
+        if ( class_exists( '\WeDevs\ERP_PRO\PRO\AdvancedLeave\Module' ) && get_option( 'erp_pro_multilevel_approval' ) === 'yes' ) {
             $request_capabilities = erp_hr_is_current_user_dept_lead() ? 'erp_list_employee' : 'erp_leave_manage';
         }
 
