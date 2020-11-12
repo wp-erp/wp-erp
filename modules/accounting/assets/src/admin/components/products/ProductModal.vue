@@ -48,7 +48,7 @@
                                                     <multi-select
                                                         v-model="ProductFields.type"
                                                         :options="productType"
-                                                        :disabled="isDisabled"
+                                                        :disabled="false"
                                                         :multiple="false"/>
                                                     <!-- <i class="flaticon-arrow-down-sign-to-navigate"></i> -->
                                                 </div>
@@ -210,7 +210,7 @@ export default {
             const product                 = this.product;
             this.ProductFields.name       = product.name;
             this.ProductFields.id         = product.id;
-            this.ProductFields.type       = { id: product.product_type_id, name: product.type_name };
+            this.ProductFields.type       = { id: product.product_type_id, name: product.product_type_name };
             this.ProductFields.categories = { id: product.category_id, name: product.cat_name };
             this.ProductFields.tax_cat_id = { id: product.tax_cat_id, name: product.tax_cat_name };
             this.ProductFields.salePrice  = product.sale_price;
@@ -326,8 +326,6 @@ export default {
         getProductTypes() {
             HTTP.get('products/types').then(response => {
                 this.productType = response.data;
-
-                this.ProductFields.type = { id: parseInt(response.data[0].id), name: response.data[0].name };
             });
         },
 
