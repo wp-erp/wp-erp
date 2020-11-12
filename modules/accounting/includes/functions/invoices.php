@@ -251,7 +251,7 @@ function erp_acct_insert_invoice( $data ) {
     } catch ( Exception $e ) {
         $wpdb->query( 'ROLLBACK' );
 
-        return new WP_error( 'invoice-exception', $e->getMessage() );
+        return new WP_Error( 'invoice-exception', $e->getMessage() );
     }
 
     $invoice = erp_acct_get_invoice( $voucher_no );
@@ -688,13 +688,12 @@ function erp_acct_get_formatted_invoice_data( $data, $voucher_no ) {
     $invoice_data['tax']             = isset( $data['tax'] ) ? $data['tax'] : 0;
     $invoice_data['attachments']     = ! empty( $data['attachments'] ) ? $data['attachments'] : '';
     $invoice_data['status']          = isset( $data['status'] ) ? $data['status'] : 1;
-    // translators: %s: voucher_no
-    $invoice_data['particulars'] = ! empty( $data['particulars'] ) ? $data['particulars'] : sprintf( __( 'Invoice created with voucher no %s', 'erp' ), $voucher_no );
-    $invoice_data['estimate']    = isset( $data['estimate'] ) ? $data['estimate'] : 1;
-    $invoice_data['created_at']  = isset( $data['created_at'] ) ? $data['created_at'] : null;
-    $invoice_data['created_by']  = isset( $data['created_by'] ) ? $data['created_by'] : null;
-    $invoice_data['updated_at']  = isset( $data['updated_at'] ) ? $data['updated_at'] : null;
-    $invoice_data['updated_by']  = isset( $data['updated_by'] ) ? $data['updated_by'] : null;
+    $invoice_data['particulars']     = ! empty( $data['particulars'] ) ? $data['particulars'] : sprintf( __( 'Invoice created with voucher no %s', 'erp' ), $voucher_no );
+    $invoice_data['estimate']        = isset( $data['estimate'] ) ? $data['estimate'] : 0;
+    $invoice_data['created_at']      = isset( $data['created_at'] ) ? $data['created_at'] : null;
+    $invoice_data['created_by']      = isset( $data['created_by'] ) ? $data['created_by'] : null;
+    $invoice_data['updated_at']      = isset( $data['updated_at'] ) ? $data['updated_at'] : null;
+    $invoice_data['updated_by']      = isset( $data['updated_by'] ) ? $data['updated_by'] : null;
 
     $draft   = 1;
     $pending = 3;

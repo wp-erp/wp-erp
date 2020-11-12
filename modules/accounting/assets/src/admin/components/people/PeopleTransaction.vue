@@ -63,10 +63,10 @@
                         </strong>
                     </template>
                     <template slot="debit" slot-scope="data">
-                        {{ moneyFormat( data.row.debit ) }}
+                      <span v-if="data.row.debit">{{ moneyFormat( data.row.debit ) }}</span> <span v-else>-</span>
                     </template>
                     <template slot="credit" slot-scope="data">
-                        {{ moneyFormat( data.row.credit ) }}
+                        <span v-if="data.row.credit"> {{ moneyFormat( data.row.credit ) }} </span> <span v-else>-</span>
                     </template>
                 </list-table>
             </div>

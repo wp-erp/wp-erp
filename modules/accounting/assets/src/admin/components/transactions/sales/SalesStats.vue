@@ -60,7 +60,7 @@ export default {
 
     created() {
         this.$root.$on('transactions-filter', filters => {
-            this.getSalesChartData(filters);
+           //  this.getSalesChartData(filters);
         });
 
         const filters = {};
