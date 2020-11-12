@@ -9778,8 +9778,7 @@ Object(__WEBPACK_IMPORTED_MODULE_1_v_calendar__["setupCalendar"])({
   },
   watch: {
     value: function value(newVal) {
-      if (!newVal) {
-        this.selectedDate = this.getCurrentDate();
+      if (!newVal) {// this.selectedDate = this.getCurrentDate();
       } else {
         this.selectedDate = newVal;
       }
