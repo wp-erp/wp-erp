@@ -61,7 +61,7 @@ export default {
 
     created() {
         this.$root.$on('transactions-filter', filters => {
-            this.getExpenseChartData(filters);
+            //this.getExpenseChartData(filters);
         });
 
         const filters = {};
