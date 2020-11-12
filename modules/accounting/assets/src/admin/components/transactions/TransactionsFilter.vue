@@ -135,10 +135,10 @@ export default {
             throw error;
         });
 
-       /* this.$root.$on('SimpleSelectChange', (data) => {
+         this.$root.$on('SimpleSelectChange', (data) => {
             const status = this.statuses.find(o => o.id === data.selected);
             this.filters.status = parseInt(status.id);
-        });*/
+        });
     },
 
     methods: {
@@ -149,7 +149,7 @@ export default {
         filterList() {
             this.toggleFilter();
 
-            this.$root.$emit('transactions-filter', this.filters);
+           this.$root.$emit('transactions-filter', this.filters);
         }
 
     }

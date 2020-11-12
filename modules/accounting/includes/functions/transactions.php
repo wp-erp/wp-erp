@@ -20,7 +20,6 @@ function erp_acct_get_sales_transactions( $args = [] ) {
         'order'       => 'DESC',
         'count'       => false,
         'customer_id' => false,
-        's'           => '',
         'status'      => '',
         'type'      => '',
     ];
@@ -32,19 +31,16 @@ function erp_acct_get_sales_transactions( $args = [] ) {
     $where = "WHERE (voucher.type = 'invoice' OR voucher.type = 'payment')";
 
     if ( ! empty( $args['customer_id'] ) ) {
-        $where .= " AND invoice.customer_id = {$args['customer_id']} OR invoice_receipt.customer_id = {$args['customer_id']} ";
+        $where .= " AND (invoice.customer_id = {$args['customer_id']} OR invoice_receipt.customer_id = {$args['customer_id']}) ";
     }
 
     if ( ! empty( $args['start_date'] ) ) {
-        $where .= " AND invoice.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}' OR invoice_receipt.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
+        $where .= " AND ( (invoice.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}') OR (invoice_receipt.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}') )";
     }
 
-    if ( empty( $args['status'] ) ) {
-        $where .= '';
-    } else {
-        if ( ! empty( $args['status'] ) ) {
-            $where .= " AND invoice.status={$args['status']} OR invoice_receipt.status={$args['status']} ";
-        }
+
+    if ( ! empty( $args['status'] ) ) {
+        $where .= " AND (invoice.status={$args['status']} OR invoice_receipt.status={$args['status']}) ";
     }
 
     if ( ! empty( $args['type'] ) ) {
@@ -574,7 +570,6 @@ function erp_acct_get_expense_transactions( $args = [] ) {
         'order'     => 'DESC',
         'count'     => false,
         'vendor_id' => false,
-        's'         => '',
         'status'    => '',
         'type'    => '',
     ];
@@ -586,18 +581,18 @@ function erp_acct_get_expense_transactions( $args = [] ) {
     $where = "WHERE (voucher.type = 'pay_bill' OR voucher.type = 'bill' OR voucher.type = 'expense' OR voucher.type = 'check' ) ";
 
     if ( ! empty( $args['vendor_id'] ) ) {
-        $where .= " AND bill.vendor_id = {$args['vendor_id']} OR pay_bill.vendor_id = {$args['vendor_id']} ";
+        $where .= " AND (bill.vendor_id = {$args['vendor_id']} OR pay_bill.vendor_id = {$args['vendor_id']}) ";
     }
 
     if ( ! empty( $args['start_date'] ) ) {
-        $where .= " AND bill.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}' OR pay_bill.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
+        $where .= " AND ( (bill.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}') OR (pay_bill.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}') )";
     }
 
     if ( 0 === $args['status'] ) {
         $where .= '';
     } else {
         if ( ! empty( $args['status'] ) ) {
-            $where .= " AND bill.status={$args['status']} OR pay_bill.status={$args['status']} OR expense.status={$args['status']} ";
+            $where .= " AND (bill.status={$args['status']} OR pay_bill.status={$args['status']} OR expense.status={$args['status']} )";
         }
     }
 
@@ -683,18 +678,18 @@ function erp_acct_get_purchase_transactions( $args = [] ) {
     $where = "WHERE (voucher.type = 'pay_purchase' OR voucher.type = 'purchase')";
 
     if ( ! empty( $args['vendor_id'] ) ) {
-        $where .= " AND purchase.vendor_id = {$args['vendor_id']} OR pay_purchase.vendor_id = {$args['vendor_id']} ";
+        $where .= " AND (purchase.vendor_id = {$args['vendor_id']} OR pay_purchase.vendor_id = {$args['vendor_id']}) ";
     }
 
     if ( ! empty( $args['start_date'] ) ) {
-        $where .= " AND purchase.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}' OR pay_purchase.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
+        $where .= " AND ( (purchase.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}') OR (pay_purchase.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}') )";
     }
 
     if ( empty( $args['status'] ) ) {
         $where .= '';
     } else {
         if ( ! empty( $args['status'] ) ) {
-            $where .= " AND purchase.status={$args['status']} OR pay_purchase.status={$args['status']} ";
+            $where .= " AND (purchase.status={$args['status']} OR pay_purchase.status={$args['status']}) ";
         }
     }
 

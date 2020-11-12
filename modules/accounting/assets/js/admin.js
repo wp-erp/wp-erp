@@ -26249,10 +26249,13 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
     }).catch(function (error) {
       throw error;
     });
-    /* this.$root.$on('SimpleSelectChange', (data) => {
-         const status = this.statuses.find(o => o.id === data.selected);
-         this.filters.status = parseInt(status.id);
-     });*/
+    this.$root.$on('SimpleSelectChange', function (data) {
+      var status = _this.statuses.find(function (o) {
+        return o.id === data.selected;
+      });
+
+      _this.filters.status = parseInt(status.id);
+    });
   },
   methods: {
     toggleFilter: function toggleFilter() {

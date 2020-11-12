@@ -342,6 +342,8 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
             'customer_id'=> empty( $request['customer_id'] ) ? '' : $request['customer_id'],
         ];
 
+
+
         $formatted_items   = [];
         $additional_fields = [];
 
