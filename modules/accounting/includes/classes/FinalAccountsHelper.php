@@ -2,10 +2,9 @@
 
 
 namespace WeDevs\ERP\Accounting\Includes\Classes;
+use WeDevs\ERP\Accounting\Includes\Classes\Common;
 
-
-class FinalAccountsHelper
-{
+class FinalAccountsHelper {
     private $db;
     public $totalCashAtBank = 0;
     public $totalLoanAtBank = 0;
@@ -19,7 +18,7 @@ class FinalAccountsHelper
         $this->db   = $wpdb;
         $this->args = $args;
 
-        $this->getClosestFinYear();
+        $this->financialYear =Common::getClosestFinYear( $this->args['start_date']);
         $this->setBankData();
 
     }
@@ -126,14 +125,5 @@ class FinalAccountsHelper
 
     }
 
-    /**
-     * get closest financial year by start date
-     */
-   private function getClosestFinYear() {
-
-        $sql = "SELECT id, name, start_date, end_date FROM {$this->db->prefix}erp_acct_financial_years WHERE start_date <= '%s' ORDER BY start_date DESC LIMIT 1";
-
-        $this->financialYear = $this->db->get_row( $this->db->prepare( $sql, $this->args['start_date'] ), ARRAY_A );
-    }
 
 }

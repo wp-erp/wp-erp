@@ -20,8 +20,8 @@ function erp_acct_get_sales_transactions( $args = [] ) {
         'order'       => 'DESC',
         'count'       => false,
         'customer_id' => false,
-        's'           => '',
         'status'      => '',
+        'type'      => '',
     ];
 
     $args = wp_parse_args( $args, $defaults );
@@ -31,18 +31,27 @@ function erp_acct_get_sales_transactions( $args = [] ) {
     $where = "WHERE (voucher.type = 'invoice' OR voucher.type = 'payment')";
 
     if ( ! empty( $args['customer_id'] ) ) {
-        $where .= " AND invoice.customer_id = {$args['customer_id']} OR invoice_receipt.customer_id = {$args['customer_id']} ";
+        $where .= " AND (invoice.customer_id = {$args['customer_id']} OR invoice_receipt.customer_id = {$args['customer_id']}) ";
     }
 
     if ( ! empty( $args['start_date'] ) ) {
-        $where .= " AND invoice.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}' OR invoice_receipt.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
+        $where .= " AND ( (invoice.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}') OR (invoice_receipt.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}') )";
     }
 
-    if ( empty( $args['status'] ) ) {
-        $where .= '';
-    } else {
-        if ( ! empty( $args['status'] ) ) {
-            $where .= " AND invoice.status={$args['status']} OR invoice_receipt.status={$args['status']} ";
+
+    if ( ! empty( $args['status'] ) ) {
+        $where .= " AND (invoice.status={$args['status']} OR invoice_receipt.status={$args['status']}) ";
+    }
+
+    if ( ! empty( $args['type'] ) ) {
+        if($args['type'] === 'estimate'){
+            $where .= " AND invoice.estimate = 1 ";
+        }
+        if($args['type'] === 'payment'){
+            $where .= " AND voucher.type = '{$args['type']}' ";
+        }
+        if($args['type'] === 'invoice'){
+            $where .= " AND voucher.type = '{$args['type']}' AND invoice.estimate = 0 ";
         }
     }
 
@@ -561,8 +570,8 @@ function erp_acct_get_expense_transactions( $args = [] ) {
         'order'     => 'DESC',
         'count'     => false,
         'vendor_id' => false,
-        's'         => '',
         'status'    => '',
+        'type'    => '',
     ];
 
     $args = wp_parse_args( $args, $defaults );
@@ -572,19 +581,23 @@ function erp_acct_get_expense_transactions( $args = [] ) {
     $where = "WHERE (voucher.type = 'pay_bill' OR voucher.type = 'bill' OR voucher.type = 'expense' OR voucher.type = 'check' ) ";
 
     if ( ! empty( $args['vendor_id'] ) ) {
-        $where .= " AND bill.vendor_id = {$args['vendor_id']} OR pay_bill.vendor_id = {$args['vendor_id']} ";
+        $where .= " AND (bill.vendor_id = {$args['vendor_id']} OR pay_bill.vendor_id = {$args['vendor_id']}) ";
     }
 
     if ( ! empty( $args['start_date'] ) ) {
-        $where .= " AND bill.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}' OR pay_bill.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
+        $where .= " AND ( (bill.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}') OR (pay_bill.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}') )";
     }
 
     if ( 0 === $args['status'] ) {
         $where .= '';
     } else {
         if ( ! empty( $args['status'] ) ) {
-            $where .= " AND bill.status={$args['status']} OR pay_bill.status={$args['status']} OR expense.status={$args['status']} ";
+            $where .= " AND (bill.status={$args['status']} OR pay_bill.status={$args['status']} OR expense.status={$args['status']} )";
         }
+    }
+
+    if ( ! empty($args['type']) ) {
+        $where .= " AND voucher.type = '{$args['type']}' ";
     }
 
     if ( -1 !== $args['number'] ) {
@@ -609,6 +622,7 @@ function erp_acct_get_expense_transactions( $args = [] ) {
             bill.amount,
             bill.ref,
             expense.ref AS exp_ref,
+            pay_bill.ref AS pay_ref,
             pay_bill.amount as pay_bill_amount,
             expense.amount as expense_amount,
             SUM(bill_acct_details.debit - bill_acct_details.credit) AS due,
@@ -664,19 +678,23 @@ function erp_acct_get_purchase_transactions( $args = [] ) {
     $where = "WHERE (voucher.type = 'pay_purchase' OR voucher.type = 'purchase')";
 
     if ( ! empty( $args['vendor_id'] ) ) {
-        $where .= " AND purchase.vendor_id = {$args['vendor_id']} OR pay_purchase.vendor_id = {$args['vendor_id']} ";
+        $where .= " AND (purchase.vendor_id = {$args['vendor_id']} OR pay_purchase.vendor_id = {$args['vendor_id']}) ";
     }
 
     if ( ! empty( $args['start_date'] ) ) {
-        $where .= " AND purchase.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}' OR pay_purchase.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
+        $where .= " AND ( (purchase.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}') OR (pay_purchase.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}') )";
     }
 
     if ( empty( $args['status'] ) ) {
         $where .= '';
     } else {
         if ( ! empty( $args['status'] ) ) {
-            $where .= " AND purchase.status={$args['status']} OR pay_purchase.status={$args['status']} ";
+            $where .= " AND (purchase.status={$args['status']} OR pay_purchase.status={$args['status']}) ";
         }
+    }
+
+    if ( ! empty( $args['type'] ) ) {
+        $where .= " AND voucher.type = '{$args['start_date']}'";
     }
 
     if ( -1 !== $args['number'] ) {
@@ -698,6 +716,7 @@ function erp_acct_get_purchase_transactions( $args = [] ) {
             purchase.due_date,
             purchase.amount,
             purchase.ref,
+            pay_purchase.ref as pay_ref,
             purchase.purchase_order,
             pay_purchase.amount as pay_bill_amount,
             ABS(SUM(purchase_acct_details.debit - purchase_acct_details.credit)) AS due,
@@ -825,8 +844,9 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
         $trn_id = $transaction->trn_no;
     }
 
+    $title =  isset($transaction->estimate) && (int)$transaction->estimate ? __( 'Estimate', 'erp' )  : __( $type, 'erp' ) ;
     //Set type
-    $trn_pdf->set_type( erp_acct_get_transaction_type( $trn_id ) );
+    $trn_pdf->set_type( $title);
 
     // Set barcode
     if ( $trn_id ) {
@@ -838,9 +858,20 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
         $trn_pdf->set_reference( $trn_id, __( 'Transaction Number', 'erp' ) );
     }
 
+    // Set Reference No
+    if ( $transaction->ref ) {
+        $trn_pdf->set_reference( $transaction->ref , __( 'Reference No', 'erp' ) );
+    }
+
+
     // Set Issue Date
     $date = ! empty( $transaction->trn_date ) ? $transaction->trn_date : $transaction->date;
     $trn_pdf->set_reference( erp_format_date( $date ), __( 'Transaction Date', 'erp' ) );
+
+    // Set Due Date
+    if ( $transaction->due_date ) {
+        $trn_pdf->set_reference( $transaction->due_date , __( 'Due Date', 'erp' ) );
+    }
 
     // Set from Address
     $from_address = explode( '<br/>', $company->get_formatted_address() );
@@ -862,10 +893,8 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
 
     /* Customize columns based on transaction type */
     if ( 'invoice' == $type ) {
-        // Set Date Due
-        $trn_pdf->set_reference( erp_format_date( $transaction->due_date ), __( 'Due Date', 'erp' ) );
 
-        // Set Column Headers
+             // Set Column Headers
         $trn_pdf->set_table_headers( [ __( 'PRODUCT', 'erp' ), __( 'QUANTITY', 'erp' ), __( 'UNIT PRICE', 'erp' ), __( 'AMOUNT', 'erp' ) ] );
 
         // Add Table Items
@@ -1114,7 +1143,7 @@ add_action( 'erp_acct_new_transaction_estimate', 'erp_acct_send_email_on_transac
 add_action( 'erp_acct_new_transaction_purchase_order', 'erp_acct_send_email_on_transaction', 10, 2 );
 
 /**
- * Send pdf on transaction
+ * Generate PDF and Send to Email on Transaction
  *
  * @param $voucher_no
  * @param $transaction

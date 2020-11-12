@@ -61,6 +61,8 @@ function erp_acct_get_pay_purchase( $purchase_no ) {
             pay_purchase.vendor_name,
             pay_purchase.trn_date,
             pay_purchase.amount,
+            pay_purchase.transaction_charge,
+            pay_purchase.ref,
             pay_purchase.trn_by,
             pay_purchase.status,
             pay_purchase.particulars,
@@ -75,6 +77,7 @@ function erp_acct_get_pay_purchase( $purchase_no ) {
     );
 
     $row['purchase_details'] = erp_acct_format_pay_purchase_line_items( $purchase_no );
+    $row['pdf_link']    = erp_acct_pdf_abs_path_to_url( $purchase_no );
 
     return $row;
 }
@@ -137,27 +140,37 @@ function erp_acct_insert_pay_purchase( $data ) {
 
         $pay_purchase_data = erp_acct_get_formatted_pay_purchase_data( $data, $voucher_no );
 
+        // check transaction charge
+        $transaction_charge = 0;
+        if ( isset( $pay_purchase_data['bank_trn_charge'] ) && 0 < (float)$pay_purchase_data['bank_trn_charge'] && 2 === (int)$pay_purchase_data['trn_by'] ) {
+            $transaction_charge = (float)$pay_purchase_data['bank_trn_charge'];
+        }
+
         $wpdb->insert(
-            $wpdb->prefix . 'erp_acct_pay_purchase',
+        $wpdb->prefix . 'erp_acct_pay_purchase',
             [
-                'voucher_no'       => $voucher_no,
-                'vendor_id'        => $pay_purchase_data['vendor_id'],
-                'vendor_name'      => $pay_purchase_data['vendor_name'],
-                'trn_date'         => $pay_purchase_data['trn_date'],
-                'amount'           => $pay_purchase_data['amount'],
-                'trn_by'           => $pay_purchase_data['trn_by'],
-                'trn_by_ledger_id' => $pay_purchase_data['trn_by_ledger_id'],
-                'particulars'      => $pay_purchase_data['particulars'],
-                'attachments'      => $pay_purchase_data['attachments'],
-                'status'           => $pay_purchase_data['status'],
-                'created_at'       => $pay_purchase_data['created_at'],
-                'created_by'       => $created_by,
-                'updated_at'       => $pay_purchase_data['updated_at'],
-                'updated_by'       => $pay_purchase_data['updated_by'],
-            ]
+            'voucher_no'         => $voucher_no,
+            'vendor_id'          => $pay_purchase_data['vendor_id'],
+            'vendor_name'        => $pay_purchase_data['vendor_name'],
+            'trn_date'           => $pay_purchase_data['trn_date'],
+            'ref'                => $pay_purchase_data['ref'],
+            'amount'             => $pay_purchase_data['amount'],
+            'trn_by'             => $pay_purchase_data['trn_by'],
+            'transaction_charge' => $transaction_charge,
+            'trn_by_ledger_id'   => $pay_purchase_data['trn_by_ledger_id'],
+            'particulars'        => $pay_purchase_data['particulars'],
+            'attachments'        => $pay_purchase_data['attachments'],
+            'status'             => $pay_purchase_data['status'],
+            'created_at'         => $pay_purchase_data['created_at'],
+            'created_by'         => $created_by,
+            'updated_at'         => $pay_purchase_data['updated_at'],
+            'updated_by'         => $pay_purchase_data['updated_by'],
+           ]
         );
 
         $items = $pay_purchase_data['purchase_details'];
+
+
 
         foreach ( $items as $key => $item ) {
             $wpdb->insert(
@@ -175,6 +188,12 @@ function erp_acct_insert_pay_purchase( $data ) {
 
             erp_acct_insert_pay_purchase_data_into_ledger( $pay_purchase_data, $item );
         }
+
+        // add transaction charge entry to ledger
+        if ( $transaction_charge ) {
+            erp_acct_insert_bank_transaction_charge_into_ledger( $pay_purchase_data );
+        }
+
 
         if ( 1 === $pay_purchase_data['status'] ) {
             $wpdb->query( 'COMMIT' );
@@ -376,6 +395,7 @@ function erp_acct_get_formatted_pay_purchase_data( $data, $voucher_no ) {
     $pay_purchase_data['trn_date']         = isset( $data['trn_date'] ) ? $data['trn_date'] : date( 'Y-m-d' );
     $pay_purchase_data['amount']           = isset( $data['amount'] ) ? $data['amount'] : 0;
     $pay_purchase_data['trn_by']           = isset( $data['trn_by'] ) ? $data['trn_by'] : '';
+    $pay_purchase_data['bank_trn_charge']           = isset( $data['bank_trn_charge'] ) ? $data['bank_trn_charge'] : '';
     $pay_purchase_data['attachments']      = isset( $data['attachments'] ) ? $data['attachments'] : '';
     $pay_purchase_data['ref']              = isset( $data['ref'] ) ? $data['ref'] : '';
     // translators: %s: voucher_no
