@@ -18,6 +18,7 @@
                         </template>
                         <template slot="dropdown">
                             <ul role="menu">
+                                <li> <a :href="pdf_link">{{ __('Export as PDF', 'erp') }}</a> </li>
                                 <li><a href="#" @click.prevent="showModal = true">Send Mail</a></li>
                             </ul>
                         </template>
@@ -60,6 +61,10 @@
                                         <td>#{{ expense_data.voucher_no }}</td>
                                     </tr>
                                     <tr>
+                                        <th>{{ __('Reference No', 'erp') }}:</th>
+                                        <td> <span v-if="expense_data.ref"> #{{ expense_data.ref }} </span></td>
+                                    </tr>
+                                    <tr>
                                         <th>{{ __('Transaction Date', 'erp') }}:</th>
                                         <td>{{ expense_data.date }}</td>
                                     </tr>
@@ -67,10 +72,14 @@
                                         <th>{{ __('Created At', 'erp') }}:</th>
                                         <td>{{ expense_data.created_at }}</td>
                                     </tr>
+                                    <tr v-if="parseFloat(expense_data.transaction_charge)">
+                                        <th>{{ __('Transaction Charge', 'erp') }}:</th>
+                                        <td>{{ expense_data.transaction_charge }}</td>
+                                    </tr>
                                 </table>
                             </div>
                         </div>
-                        <div class="wperp-row" v-if="expense_data.check_data.length">
+                        <div class="wperp-row" v-if="expense_data.check_data">
                             <div class="wperp-col-sm-12">
                                 <table>
                                     <tr>
@@ -161,13 +170,14 @@ export default {
     data() {
         return {
             company     : null,
-            expense_data: {},
+            expense_data: {check_data: []},
             isWorking   : false,
             acct_var    : erp_acct_var,   /* global erp_acct_var */
             print_data  : null,
             type        : 'expense',
             showModal   : false,
-            people_id   : null
+            people_id   : null,
+            pdf_link    : '#'
         };
     },
 
@@ -196,6 +206,7 @@ export default {
             HTTP.get(`/expenses/${this.$route.params.id}`).then(response => {
                 this.expense_data = response.data;
                 this.people_id = this.expense_data.people_id;
+                this.pdf_link   = this.expense_data.pdf_link;
                 this.$store.dispatch('spinner/setSpinner', false);
             }).catch(error => {
                 this.$store.dispatch('spinner/setSpinner', false);

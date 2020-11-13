@@ -165,7 +165,7 @@ export default {
                             this.$store.dispatch('spinner/setSpinner', false);
                             this.showAlert('success', 'Deleted !');
                         }
-                                                
+
                         this.$store.dispatch('spinner/setSpinner', false);
                         this.showAlert('error', response.data.data[0].message);
                         // or loop through the erros and show a list
@@ -237,6 +237,33 @@ export default {
         .people-header {
             display: flex;
             align-items: center;
+
+            @media (max-width: 767px) {
+                flex-direction: column;
+
+                .add-new-people, .people-search {
+                    width: 100% !important;
+
+                    h4 {
+                        display: none;
+                    }
+                }
+
+                .people-search {
+                    margin: 20px 0;
+                }
+
+                .people-search {
+                    .input-with-addon {
+                        margin: 0 !important;
+                    }
+
+                    form {
+                        width: 100%;
+                        justify-content: space-between;
+                    }
+                }
+            }
 
             .add-new-people {
                 align-items: center;

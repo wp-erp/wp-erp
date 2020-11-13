@@ -316,15 +316,6 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
         global $wpdb;
 
         $statuses = $wpdb->get_results( "SELECT id, type_name as name, slug FROM {$wpdb->prefix}erp_acct_trn_status_types", ARRAY_A );
-        array_unshift(
-            $statuses,
-            [
-                'id'        => '0',
-                'type_name' => 'all',
-                'name'      => 'All',
-                'slug'      => 'all',
-            ]
-        );
 
         $response = rest_ensure_response( $statuses );
 
@@ -347,7 +338,11 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
             'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date'],
             'status'     => empty( $request['status'] ) ? '' : $request['status'],
+            'type'       => empty( $request['type'] ) ? '' : $request['type'],
+            'customer_id'=> empty( $request['customer_id'] ) ? '' : $request['customer_id'],
         ];
+
+
 
         $formatted_items   = [];
         $additional_fields = [];
@@ -502,6 +497,8 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
             'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date'],
             'status'     => empty( $request['status'] ) ? '' : $request['status'],
+            'type'       => empty( $request['type'] ) ? '' : $request['type'],
+            'vendor_id'  => empty( $request['vendor_id'] ) ? '' : $request['vendor_id'],
         ];
 
         $formatted_items   = [];
@@ -589,6 +586,8 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
             'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date'],
             'status'     => empty( $request['status'] ) ? '' : $request['status'],
+            'type'       => empty( $request['type'] ) ? '' : $request['type'],
+            'vendor_id'  => empty( $request['vendor_id'] ) ? '' : $request['vendor_id'],
         ];
 
         $formatted_items   = [];
@@ -652,8 +651,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @param object|array    $item
      * @param WP_REST_Request $request           request object
      * @param array           $additional_fields (optional)
-     *
-     * @return WP_REST_Response $response response data
+     * @return object $response Response data.
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
         $status = null;
@@ -688,6 +686,8 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $item['status']      = erp_acct_get_trn_status_by_id( $status );
         $item['status_code'] = $status;
+        $item['ref'] = $item['ref'] ? $item['ref'] : $item['pay_ref'];
+        $item['ref'] = $item['ref'] ? $item['ref'] : $item['exp_ref']; // for set expense reference no
 
         $data = array_merge( $item, $additional_fields );
 
@@ -771,16 +771,16 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
         $sales_statuses    = erp_acct_get_sales_chart_status( $args );
         $purchase_statuses = erp_acct_get_purchase_chart_status( $args );
 
-        for ( $i = 0; $i < count( $chart_statuses ); $i++ ) {
-            $chart_statuses[ $i ]['sub_total'] = (int) $chart_statuses[ $i ]['sub_total'];
+        foreach ( $chart_statuses as $key => $item ) {
+            $chart_statuses[ $key ]['sub_total'] = (int) $chart_statuses[ $key ]['sub_total'];
         }
 
-        for ( $i = 0; $i < count( $sales_statuses ); $i++ ) {
-            $sales_statuses[ $i ]['sub_total'] = (int) $sales_statuses[ $i ]['sub_total'];
+        foreach ( $sales_statuses  as $key => $item) {
+            $sales_statuses[ $key ]['sub_total'] = (int) $sales_statuses[ $key ]['sub_total'];
         }
 
-        for ( $i = 0; $i < count( $purchase_statuses ); $i++ ) {
-            $purchase_statuses[ $i ]['sub_total'] = (int) $purchase_statuses[ $i ]['sub_total'];
+        foreach (  $purchase_statuses as $key => $item) {
+            $purchase_statuses[ $key ]['sub_total'] = (int) $purchase_statuses[ $key ]['sub_total'];
         }
 
         if ( ! empty( $expense_status ) ) {

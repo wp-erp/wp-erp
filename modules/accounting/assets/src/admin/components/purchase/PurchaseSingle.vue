@@ -215,7 +215,7 @@
             }
         }
 
-    };
+    }
 </script>
 
 <style lang="less">

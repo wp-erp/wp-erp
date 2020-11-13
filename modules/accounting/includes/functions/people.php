@@ -164,6 +164,8 @@ function erp_acct_get_people_transactions( $args = [] ) {
 
     $args = wp_parse_args( $args, $defaults );
 
+    $financialYear = \WeDevs\ERP\Accounting\Includes\Classes\Common::getClosestFinYear($args['start_date'] ? $args['start_date']  : date('Y-m-d')) ;
+
     $limit = '';
 
     $where = '';
@@ -172,12 +174,16 @@ function erp_acct_get_people_transactions( $args = [] ) {
         $where .= " AND people.people_id = {$args['people_id']} ";
     }
 
-    if ( ! empty( $args['start_date'] ) ) {
-        $where .= " AND people.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
+    if ( empty( $args['start_date'] ) ) {
+        $args['start_date']  =   $financialYear['start_date'] ;
     }
-
     if ( empty( $args['end_date'] ) ) {
         $args['end_date'] = date( 'Y-m-d', strtotime( 'last day of this month' ) );
+    }
+
+
+    if ( ! empty( $args['start_date'] ) ) {
+        $where .= " AND people.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
     }
 
     if ( '-1' === $args['number'] ) {
@@ -210,74 +216,80 @@ function erp_acct_get_people_transactions( $args = [] ) {
         return $wpdb->num_rows;
     }
 
+
     $results = $wpdb->get_results( $sql, ARRAY_A );
 
-    $total     = erp_acct_get_people_opening_balance( $args );
-    $o_balance = erp_acct_get_people_opening_balance( $args );
-    $dr_total  = 0;
-    $cr_total  = 0;
+    $previous_balance_data  = [
+        'start_date'        => $financialYear['start_date'],
+        'end_date'          =>  date('Y-m-d', strtotime('-1 day', strtotime( $args['start_date'] ) ) ),
+        'people_id'         => $args['people_id'],
+        'financial_year_id' => $financialYear['id']
+    ];
 
-    if ( $o_balance > 0 ) {
+    $previousBalance     = erp_acct_get_people_previous_balance( $previous_balance_data);  // get previous balance from financial year start date to previous date of start date
+
+
+
+/*    if ( $previousBalance > 0 ) {
         $dr_total = (float) $o_balance;
         $temp     = $o_balance . ' Dr';
     } else {
         $cr_total = (float) $o_balance;
         $temp     = $o_balance . ' Cr';
+    }*/
+
+/*   */
+    $total_debit  = 0;
+    $total_credit  = 0;
+    $balance =  (float)$previousBalance ;
+
+    foreach ($results as $index => $result) {
+
+        $total_debit   += (float) $result['debit'];
+        $total_credit  += (float) $result['credit'];
+
+         $debit   = (float)$result['debit'] + $balance ;
+         $balance = $debit - (float)$result['credit'] ;
+
+         $results[ $index ]['debit'] =  abs( (float)$result['debit'] );
+         $results[ $index ]['credit'] =  abs( (float)$result['credit'] );
+         $results[ $index ]['balance'] =  abs($balance) . ( $balance > 0 ? __( ' Dr', 'erp' ) : __( ' Cr', 'erp' )  );
+
     }
 
     array_unshift(
         $results,
         [
-            'voucher_no'  => null,
-            'particulars' => 'Opening Balance',
-            'people_id'   => null,
-            'trn_no'      => null,
-            'trn_date'    => null,
-            'created_at'  => null,
-            'debit'       => null,
-            'credit'      => null,
-            'balance'     => $o_balance,
+        'voucher_no'  => null,
+        'particulars' => 'Opening Balance',
+        'people_id'   => null,
+        'trn_no'      => null,
+        'trn_date'    => null,
+        'created_at'  => null,
+        'debit'       => null,
+        'credit'      => null,
+        'balance'     => abs( $previousBalance ) .($previousBalance > 0 ? ' Dr' : ' Cr'),
         ]
     );
-
-    for ( $idx = 0; $idx < count( $results ); $idx++ ) {
-        if ( 0 == $idx ) {
-            $results[ $idx ]['balance_val'] = 0;
-            continue;
-        }
-        $dr_total += (float) $results[ $idx ]['debit'];
-        $cr_total += (float) $results[ $idx ]['credit'];
-        $balance   = (float) $results[ $idx - 1 ]['balance_val'] + (float) $results[ $idx ]['debit'] - (float) $results[ $idx ]['credit'];
-
-        if ( $balance >= 0 ) {
-            $results[ $idx ]['balance_val'] = $balance;
-            $results[ $idx ]['balance']     = erp_get_currency_symbol( erp_get_currency() ) . abs( (float) $results[ $idx ]['balance_val'] ) . ' Dr';
-        } else {
-            $results[ $idx ]['balance_val'] = $balance;
-            $results[ $idx ]['balance']     = erp_get_currency_symbol( erp_get_currency() ) . abs( (float) $results[ $idx ]['balance_val'] ) . ' Cr';
-        }
-        $total = $balance;
-    }
-
-    $results[0]['balance'] = $total;
 
     array_push(
         $results,
         [
-            'voucher_no'  => null,
-            'particulars' => 'Total',
-            'people_id'   => null,
-            'trn_no'      => null,
-            'trn_date'    => null,
-            'created_at'  => null,
-            'debit'       => $dr_total,
-            'credit'      => $cr_total,
-            'balance'     => null,
-        ]
+        'voucher_no'  => null,
+        'particulars' => 'Total',
+        'people_id'   => null,
+        'trn_no'      => null,
+        'trn_date'    => null,
+        'created_at'  => null,
+        'debit'       => $total_debit,
+        'credit'      => $total_credit,
+        'balance'     => abs( $balance ) .($balance > 0 ? ' Dr' : ' Cr'),
+		]
     );
 
     return $results;
 }
+
 
 /**
  * Get opening balance
@@ -286,37 +298,18 @@ function erp_acct_get_people_transactions( $args = [] ) {
  *
  * @return mixed
  */
-function erp_acct_get_people_opening_balance( $args = [] ) {
+function erp_acct_get_people_previous_balance( $args = [] ) {
     global $wpdb;
 
-    $defaults = [
-        'number' => 20,
-        'offset' => 0,
-        'order'  => 'ASC',
-        'count'  => false,
-        's'      => '',
-    ];
+    $opening_balance_query     = $wpdb->prepare( "SELECT SUM(debit - credit) AS opening_balance FROM {$wpdb->prefix}erp_acct_opening_balances where type = 'people' AND ledger_id = %d AND financial_year_id = %d", $args['people_id'], $args['financial_year_id'] );
+    $opening_balance_result    = $wpdb->get_row( $opening_balance_query, ARRAY_A );
+    $opening_balance           =  isset( $opening_balance_result['opening_balance'] ) ? $opening_balance_result['opening_balance'] : 0;
 
-    $args = wp_parse_args( $args, $defaults );
+    $people_transaction_query  =  $wpdb->prepare( "SELECT SUM(debit - credit) AS balance FROM {$wpdb->prefix}erp_acct_people_trn_details where   people_id = %d AND trn_date BETWEEN %s AND %s", $args['people_id'], $args['start_date'], $args['end_date'] );
+    $people_transaction_result = $wpdb->get_row( $people_transaction_query, ARRAY_A );
+    $balance                   =  isset( $people_transaction_result['balance'] ) ? $people_transaction_result['balance'] : 0;
 
-    $where = '';
-
-    if ( ! empty( $args['people_id'] ) ) {
-        $where .= " WHERE people_id = {$args['people_id']} ";
-    }
-
-    if ( ! empty( $args['start_date'] ) ) {
-        $where .= " AND trn_date < '{$args['start_date']}'";
-    } else {
-        $args['start_date'] = date( 'Y-m-d', strtotime( 'first day of january this year' ) );
-        $where .= " AND trn_date < '{$args['start_date']}'";
-    }
-
-    $sql = "SELECT SUM(debit - credit) AS opening_balance FROM {$wpdb->prefix}erp_acct_people_trn_details {$where}";
-
-    $result = $wpdb->get_row( $sql, ARRAY_A );
-
-    return isset( $result['opening_balance'] ) ? $result['opening_balance'] : 0;
+    return ($balance + $opening_balance) ;
 }
 
 /**
