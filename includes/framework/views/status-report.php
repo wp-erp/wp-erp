@@ -162,17 +162,17 @@ $security         = $system_status->get_security_info();
 		<tr>
 			<td data-export-label="Company Start Date"><?php esc_html_e( 'Company Start Date', 'erp' ); ?>:</td>
 			<td class="help"><?php echo wp_kses_post( erp_help_tip( esc_html__( 'The date the company officially started.', 'erp' ) ) ); ?></td>
-			<td><?php echo esc_html( erp_get_option( 'gen_com_start', 'erp_settings_general' ) ); ?></td>
+			<td><?php echo esc_html( apply_filters( 'erp_set_date_format', erp_get_option( 'gen_com_start', 'erp_settings_general' ) ) ); ?></td>
 		</tr>
 		<tr>
 			<td data-export-label="Financial Year Start Date"><?php esc_html_e( 'Financial Year Start Date', 'erp' ); ?>:</td>
 			<td class="help"><?php echo wp_kses_post( erp_help_tip( esc_html__( 'Financial and tax calculation starts from this month of every year.', 'erp' ) ) ); ?></td>
-			<td><?php echo esc_html( erp_financial_start_date() ); ?></td>
+			<td><?php echo esc_html( apply_filters( 'erp_set_date_format', erp_financial_start_date() ) ); ?></td>
 		</tr>
 		<tr>
 			<td data-export-label="Financial Year End Date"><?php esc_html_e( 'Financial Year End Date', 'erp' ); ?>:</td>
 			<td class="help"><?php echo wp_kses_post( erp_help_tip( esc_html__( 'The date the company\'s financial year ends.', 'erp' ) ) ); ?></td>
-			<td><?php echo esc_html( erp_financial_end_date() ); ?></td>
+			<td><?php echo esc_html( apply_filters( 'erp_set_date_format', erp_financial_end_date() ) ); ?></td>
 		</tr>
 		<tr>
 			<td data-export-label="Date Format"><?php esc_html_e( 'Date Format', 'erp' ); ?>:</td>
