@@ -61,15 +61,15 @@
                                     </tr>
                                     <tr>
                                         <th>{{ __('Transaction Date', 'erp') }}:</th>
-                                        <td>{{ purchase.date }}</td>
+                                        <td>{{ formatDate(purchase.date) }}</td>
                                     </tr>
                                     <tr>
                                         <th>{{ __('Due Date', 'erp') }}:</th>
-                                        <td>{{ purchase.due_date }}</td>
+                                        <td>{{ formatDate(purchase.due_date) }}</td>
                                     </tr>
                                     <tr>
                                         <th>{{ __('Created At', 'erp') }}:</th>
-                                        <td>{{ purchase.created_at }}</td>
+                                        <td>{{ formatDate(purchase.created_at) }}</td>
                                     </tr>
                                 </table>
                             </div>
