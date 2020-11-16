@@ -1663,7 +1663,7 @@ function erp_process_import_export() {
 
         do_action( 'erp_tool_import_csv_action', $data );
 
-        if ( ! in_array( $type, [ 'contact', 'company', 'employee' ], true ) ) {
+        if ( ! in_array( $type, [ 'contact', 'company', 'employee', 'vendor' ], true ) ) {
             return;
         }
 
@@ -1859,8 +1859,8 @@ function erp_process_import_export() {
             if (
                 ( ( $type === 'contact' || $type === 'company' ) && $is_crm_activated )
                 ||
-                ( $type === 'vendor' && $is_hrm_activated )
-                ) {
+                ( $type === 'vendor' && $is_acc_activated )
+            ) {
                 $args        = [
                     'type'  => $type,
                     'count' => true,
