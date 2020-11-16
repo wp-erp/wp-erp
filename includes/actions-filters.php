@@ -24,7 +24,3 @@ add_action( 'admin_init', 'add_enable_disable_option_save' );
 add_filter( 'erp_email_setting_columns', 'erp_email_setting_columns_add_enable_disable' );
 add_filter( 'erp_settings_email_section_fields', 'add_checkbox_hidden_field', 10, 2 );
 add_filter( 'creating_email_instance', 'filter_enabled_email' );
-
-// Set date format according to erp settings
-add_filter( 'erp_set_date_format', 'erp_format_date', 10, 2 );
-add_filter( 'erp_get_date_format', 'erp_get_date_format' );

@@ -107,7 +107,7 @@ class Employee_List_Table extends \WP_List_Table {
                 return $employee->get_type( 'view' );
 
             case 'date_of_hire':
-                return apply_filters( 'erp_set_date_format', $employee->get_joined_date() );
+                return erp_format_date( $employee->get_joined_date() );
 
             case 'status':
                 return $this->get_employee_status_styled_text( $employee->status );
