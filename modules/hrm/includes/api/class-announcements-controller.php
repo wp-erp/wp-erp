@@ -146,7 +146,7 @@ class Announcements_Controller extends REST_Controller {
 
         $id   = wp_insert_post( $item );
 
-        $type = ( $request['recipient_type'] == 'all_employees' ) ? 'all_employee' : 'selected_employee';
+        $type = ( $request['recipient_type'] == 'all_employee' ) ? 'all_employee' : 'selected_employee';
 
         $employees = [];
 
