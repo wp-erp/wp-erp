@@ -80,6 +80,8 @@
                                     <th>{{ __('Sl', 'erp') }}.</th>
                                     <th>{{ __('Product', 'erp') }}</th>
                                     <th>{{ __('Qty', 'erp') }}</th>
+                                    <th>{{ __('Return Quantity', 'erp') }}</th>
+                                    <th>{{ __('Discount', 'erp') }}</th>
                                     <th>{{ __('Unit Price', 'erp') }}</th>
                                     <th>{{ __('Amount', 'erp') }}</th>
                                 </tr>
@@ -93,9 +95,11 @@
                                        </label>
                                     </th>
                                     <th>{{ detail.name }}</th>
-                                    <td> <input v-if="detail.selected" type="number" :value="detail.qty" /> <span v-else> {{ detail.qty }} </span></td>
+                                    <td> {{ detail.qty }} </td>
+                                    <td> <input v-if="detail.selected" type="number" :value="detail.qty" /> <span v-else> 0</span></td>
+                                    <td>{{ moneyFormat( detail.discount ) }}</td>
                                     <td>{{ moneyFormat(detail.unit_price) }}</td>
-                                    <td>{{ moneyFormat(detail.item_total) }}</td>
+                                    <td>{{ moneyFormat(detail.item_total - detail.discount) }}</td>
                                 </tr>
                                 </tbody>
                                 <tfoot>

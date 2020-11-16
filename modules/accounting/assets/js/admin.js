@@ -33323,6 +33323,10 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'InvoiceCreate',
@@ -67157,6 +67161,12 @@ var render = function() {
                           _c("th", [_vm._v(_vm._s(_vm.__("Qty", "erp")))]),
                           _vm._v(" "),
                           _c("th", [
+                            _vm._v(_vm._s(_vm.__("Return Quantity", "erp")))
+                          ]),
+                          _vm._v(" "),
+                          _c("th", [_vm._v(_vm._s(_vm.__("Discount", "erp")))]),
+                          _vm._v(" "),
+                          _c("th", [
                             _vm._v(_vm._s(_vm.__("Unit Price", "erp")))
                           ]),
                           _vm._v(" "),
@@ -67238,15 +67248,19 @@ var render = function() {
                             _vm._v(" "),
                             _c("th", [_vm._v(_vm._s(detail.name))]),
                             _vm._v(" "),
+                            _c("td", [_vm._v(" " + _vm._s(detail.qty) + " ")]),
+                            _vm._v(" "),
                             _c("td", [
                               detail.selected
                                 ? _c("input", {
                                     attrs: { type: "number" },
                                     domProps: { value: detail.qty }
                                   })
-                                : _c("span", [
-                                    _vm._v(" " + _vm._s(detail.qty) + " ")
-                                  ])
+                                : _c("span", [_vm._v(" 0")])
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [
+                              _vm._v(_vm._s(_vm.moneyFormat(detail.discount)))
                             ]),
                             _vm._v(" "),
                             _c("td", [
@@ -67254,7 +67268,13 @@ var render = function() {
                             ]),
                             _vm._v(" "),
                             _c("td", [
-                              _vm._v(_vm._s(_vm.moneyFormat(detail.item_total)))
+                              _vm._v(
+                                _vm._s(
+                                  _vm.moneyFormat(
+                                    detail.item_total - detail.discount
+                                  )
+                                )
+                              )
                             ])
                           ])
                         }),
