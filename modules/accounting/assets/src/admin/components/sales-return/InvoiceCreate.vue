@@ -3,7 +3,7 @@
 
 
 
-        <div class="wperp-modal-dialog sales-single" >
+        <div class="wperp-modal-dialog" >
 
             <div class="wperp-modal-content">
 
@@ -86,9 +86,14 @@
                                 </thead>
                                 <tbody>
                                 <tr :key="index" v-for="(detail, index) in invoice.line_items">
-                                    <th>{{ index + 1 }}</th>
+                                    <th>
+                                       <label :for="'select-item-'+index">
+                                           <input type="checkbox" class=" custom-checkbox" v-model="detail.selected" :id="'select-item-'+index" value="edit.php?post_type=page">
+                                           {{ index + 1 }}
+                                       </label>
+                                    </th>
                                     <th>{{ detail.name }}</th>
-                                    <td>{{ detail.qty }}</td>
+                                    <td> <input v-if="detail.selected" type="number" :value="detail.qty" /> <span v-else> {{ detail.qty }} </span></td>
                                     <td>{{ moneyFormat(detail.unit_price) }}</td>
                                     <td>{{ moneyFormat(detail.item_total) }}</td>
                                 </tr>
@@ -694,9 +699,10 @@ tr.padded {
         color: #2f4f4f;
         font-size: 1.2em;
     }
-}
+ }
 
-.voucher-search {
-    margin-top: 30px;
-}
+    .voucher-search {
+        margin-top: 30px;
+    }
+
 </style>
