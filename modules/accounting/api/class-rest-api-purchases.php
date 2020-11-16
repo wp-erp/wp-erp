@@ -243,17 +243,17 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function create_purchase( $request ) {
-        $purchase_data = $this->prepare_item_for_database( $request );
 
-        $items      = $request['line_items'];
-        $item_total = [];
+        $purchase_data  = $this->prepare_item_for_database( $request );
+        $items          = $request['line_items'];
+        $item_total     = [];
         $item_tax_total = [];
         foreach ( $items as $key => $item ) {
             $item_total[ $key ]      = $item['item_total'];
             $item_tax_total[ $key ]  = $item['tax_amount'];
         }
 
-        $purchase_data['tax']            = array_sum( $item_tax_total );
+        $purchase_data['tax']           = array_sum( $item_tax_total );
         $purchase_data['amount']        = array_sum( $item_total );
         $purchase_data['attachments']   = maybe_serialize( $request['attachments'] );
         $additional_fields['namespace'] = $this->namespace;

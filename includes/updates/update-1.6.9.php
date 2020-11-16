@@ -3,7 +3,7 @@ namespace WeDevs\ERP\HRM\Update;
 /*
  * Add transaction_charge column in `erp_acct_pay_bill` table
  */
-function erp_acct_alter_purchase_1_6_8() {
+function erp_acct_alter_purchase_1_6_9() {
     global $wpdb;
 
     $table = $wpdb->prefix . 'erp_acct_purchase';
@@ -31,7 +31,7 @@ function erp_acct_alter_purchase_1_6_8() {
 /*
  * Add transaction_charge column in `erp_acct_pay_bill` table
  */
-function erp_acct_alter_purchase_details_1_6_8() {
+function erp_acct_alter_purchase_details_1_6_9() {
     global $wpdb;
 
     $table = $wpdb->prefix . 'erp_acct_purchase_details';
@@ -49,7 +49,7 @@ function erp_acct_alter_purchase_details_1_6_8() {
 }
 
 
-function crate_erp_acct_purchase_details_tax_table_1_6_8() {
+function crate_erp_acct_purchase_details_tax_table_1_6_9() {
 
     global $wpdb;
     $sql = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}erp_acct_purchase_details_tax (
@@ -68,6 +68,6 @@ function crate_erp_acct_purchase_details_tax_table_1_6_8() {
 }
 
 
-erp_acct_alter_purchase_1_6_8();
-erp_acct_alter_purchase_details_1_6_8();
-crate_erp_acct_purchase_details_tax_table_1_6_8();
+erp_acct_alter_purchase_1_6_9();
+erp_acct_alter_purchase_details_1_6_9();
+crate_erp_acct_purchase_details_tax_table_1_6_9();

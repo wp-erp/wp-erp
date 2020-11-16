@@ -158,7 +158,7 @@ function erp_acct_insert_purchase( $data ) {
 
         $wpdb->insert(
             $wpdb->prefix . 'erp_acct_voucher_no',
-            array(
+            [
                 'type'       => 'purchase',
                 'currency'   => $currency,
                 'editable'   => 1,
@@ -166,7 +166,7 @@ function erp_acct_insert_purchase( $data ) {
                 'created_by' => $created_by,
                 'updated_at' => isset( $data['updated_at'] ) ? $data['updated_at'] : '',
                 'updated_by' => isset( $data['updated_by'] ) ? $data['updated_by'] : '',
-            )
+            ]
         );
 
         $voucher_no  = $wpdb->insert_id;
@@ -176,7 +176,7 @@ function erp_acct_insert_purchase( $data ) {
 
         $wpdb->insert(
             $wpdb->prefix . 'erp_acct_purchase',
-            array(
+            [
                 'voucher_no'      => $voucher_no,
                 'vendor_id'       => $purchase_data['vendor_id'],
                 'vendor_name'     => $purchase_data['vendor_name'],
@@ -195,7 +195,7 @@ function erp_acct_insert_purchase( $data ) {
                 'created_by'      => $created_by,
                 'updated_at'      => $purchase_data['updated_at'],
                 'updated_by'      => $purchase_data['updated_by'],
-            )
+            ]
         );
 
         $items = $data['line_items'];
@@ -249,7 +249,7 @@ function erp_acct_insert_purchase( $data ) {
 
         $wpdb->insert(
             $wpdb->prefix . 'erp_acct_purchase_account_details',
-            array(
+            [
                 'purchase_no' => $purchase_no,
                 'trn_no'      => $voucher_no,
                 'trn_date'    => $purchase_data['trn_date'],
@@ -260,7 +260,7 @@ function erp_acct_insert_purchase( $data ) {
                 'created_by'  => $created_by,
                 'updated_at'  => $purchase_data['updated_at'],
                 'updated_by'  => $purchase_data['updated_by'],
-            )
+            ]
         );
 
         erp_acct_insert_purchase_data_into_ledger( $purchase_data );
@@ -341,7 +341,7 @@ function erp_acct_update_purchase( $purchase_data, $purchase_id ) {
 
             $wpdb->update(
                 $wpdb->prefix . 'erp_acct_purchase',
-                array(
+                [
                     'vendor_id'      => $purchase_data['vendor_id'],
                     'vendor_name'    => $purchase_data['vendor_name'],
                     'trn_date'       => $purchase_data['trn_date'],
@@ -358,10 +358,10 @@ function erp_acct_update_purchase( $purchase_data, $purchase_id ) {
                     'created_by'     => $purchase_data['created_by'],
                     'updated_at'     => $purchase_data['updated_at'],
                     'updated_by'     => $purchase_data['updated_by'],
-                ),
-                array(
+                ],
+                [
                     'voucher_no' => $purchase_id,
-                )
+                ]
             );
 
             /**
@@ -431,7 +431,7 @@ function erp_acct_update_purchase( $purchase_data, $purchase_id ) {
             // insert contra voucher
             $wpdb->insert(
                 $wpdb->prefix . 'erp_acct_voucher_no',
-                array(
+                [
                     'type'       => 'purchase',
                     'currency'   => $currency,
                     'editable'   => 0,
@@ -439,7 +439,7 @@ function erp_acct_update_purchase( $purchase_data, $purchase_id ) {
                     'created_by' => $data['created_by'],
                     'updated_at' => $data['updated_at'],
                     'updated_by' => $data['updated_by'],
-                )
+                ]
             );
 
             $voucher_no = $wpdb->insert_id;
@@ -478,7 +478,7 @@ function erp_acct_update_purchase( $purchase_data, $purchase_id ) {
             foreach ( $items as $key => $item ) {
                 $wpdb->insert(
                     $wpdb->prefix . 'erp_acct_purchase_details',
-                    array(
+                    [
                         'trn_no'     => $voucher_no,
                         'product_id' => $item['product_id'],
                         'qty'        => $item['qty'],
@@ -486,13 +486,13 @@ function erp_acct_update_purchase( $purchase_data, $purchase_id ) {
                         'amount'     => (float) $item['qty'] * (float) $item['unit_price'],
                         'updated_at' => date( 'Y-m-d H:i:s' ),
                         'updated_by' => $user_id,
-                    )
+                    ]
                 );
             }
 
             $wpdb->insert(
                 $wpdb->prefix . 'erp_acct_purchase_account_details',
-                array(
+                [
                     'purchase_no' => $purchase_id,
                     'trn_no'      => $voucher_no,
                     'trn_date'    => $purchase_data['trn_date'],
@@ -500,7 +500,7 @@ function erp_acct_update_purchase( $purchase_data, $purchase_id ) {
                     'debit'       => $old_purchase['amount'],
                     'updated_at'  => date( 'Y-m-d H:i:s' ),
                     'updated_by'  => $user_id,
-                )
+                ]
             );
 
             do_action( 'erp_acct_after_purchase_update', $purchase_data, $purchase_id );
