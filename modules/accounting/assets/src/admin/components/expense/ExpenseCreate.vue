@@ -28,7 +28,7 @@
                             </div>
                             <div class="wperp-col-sm-4">
                                 <div class="wperp-form-group">
-                                    <label>{{ __('Reference', 'erp') }}</label>
+                                    <label>{{ __('Reference No', 'erp') }}</label>
                                     <input type="text" class="wperp-form-field" v-model="basic_fields.trn_ref">
                                 </div>
                             </div>
@@ -442,18 +442,19 @@ export default {
             HTTP.post('/expenses', requestData).then(res => {
                 this.$store.dispatch('spinner/setSpinner', false);
                 this.showAlert('success', 'Expense Created!');
+                this.$router.push({ name: 'Expenses' });
             }).catch(error => {
                 this.$store.dispatch('spinner/setSpinner', false);
                 throw error;
             }).then(() => {
-                this.isWorking = false;
-                this.reset = true;
+               // this.isWorking = false;
+               // this.reset = true;
 
-                if (this.actionType === 'save' || this.actionType === 'draft') {
+               /* if (this.actionType === 'save' || this.actionType === 'draft') {
                     this.$router.push({ name: 'Expenses' });
                 } else if (this.actionType === 'new_create') {
                     this.resetFields();
-                }
+                }*/
             });
         },
 

@@ -115,10 +115,11 @@ export default {
     created() {
         this.$store.dispatch('spinner/setSpinner', true);
         this.$root.$on('transactions-filter', filters => {
-            this.$router.push({
+          /*  this.$router.push({
                 path : '/transactions/purchases',
                 query: { start: filters.start_date, end: filters.end_date, status: filters.status }
             });
+            */
             this.fetchItems(filters);
             this.fetched = true;
         });
@@ -154,7 +155,9 @@ export default {
                     page      : this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page,
                     start_date: filters.start_date,
                     end_date  : filters.end_date,
-                    status    : filters.status
+                    status    : filters.status,
+                    type    : filters.type,
+                    vendor_id: filters.people_id
                 }
             }).then((response) => {
                 const mappedData = response.data.map(item => {

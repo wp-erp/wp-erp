@@ -18,6 +18,7 @@
                         </template>
                         <template slot="dropdown">
                             <ul role="menu">
+                                <li> <a :href="pdf_link">{{ __('Export as PDF', 'erp') }}</a> </li>
                                 <li><a href="#" @click.prevent="showModal = true">{{ __('Send Mail', 'erp') }}</a></li>
                             </ul>
                         </template>
@@ -58,6 +59,10 @@
                                     <tr>
                                         <th>{{ __('Voucher No', 'erp') }}:</th>
                                         <td>#{{ purchase.voucher_no }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>{{ __('Reference No', 'erp') }}:</th>
+                                        <td> <span v-if="purchase.ref"> #{{ purchase.ref }} </span></td>
                                     </tr>
                                     <tr>
                                         <th>{{ __('Transaction Date', 'erp') }}:</th>
@@ -155,7 +160,8 @@ export default {
             print_data: null,
             type      : 'purchase',
             showModal : false,
-            people_id : null
+            people_id : null,
+            pdf_link  : '#'
         };
     },
 
@@ -184,6 +190,7 @@ export default {
             HTTP.get(`/purchases/${this.$route.params.id}`).then(response => {
                 this.purchase  = response.data;
                 this.people_id = this.purchase.vendor_id;
+                this.pdf_link = this.purchase.pdf_link;
                 this.$store.dispatch('spinner/setSpinner', false);
             }).then(e => {}).then(() => {
                 this.print_data = this.purchase;

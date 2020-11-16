@@ -47,7 +47,7 @@
                         <div class="wperp-col-sm-4 wperp-col-xs-12">
                             <div class="wperp-form-group">
                                 <label>{{ __('Tax Amount', 'erp') }}</label>
-                                <input type="number" v-model="tax_amount" class="wperp-form-field" :placeholder="__('Enter Tax Amount', 'erp')">
+                                <input type="number" min="0" step="0.01" v-model="tax_amount" class="wperp-form-field" :placeholder="__('Enter Tax Amount', 'erp')">
 
                                 <span>{{ __('Due Amount', 'erp') }}: <span class="text-theme">{{ moneyFormat(dueAmount) }}</span></span>
                             </div>
