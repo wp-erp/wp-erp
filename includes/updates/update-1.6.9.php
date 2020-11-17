@@ -61,7 +61,7 @@ function crate_erp_acct_purchase_details_tax_table_1_6_9() {
               `created_by` int(20) DEFAULT NULL,
               `updated_at` timestamp DEFAULT NULL,
               `updated_by` int(20) DEFAULT NULL,
-              PRIMARY KEY (`id`)
+              PRIMARY KEY  (`id`)
             ) DEFAULT CHARSET=utf8";
 
     dbDelta($sql);
