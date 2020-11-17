@@ -115,7 +115,7 @@
                                             </li>
                                             <li><span>{{ __('Tax', 'erp') }}:</span> (+) {{ moneyFormat(invoice.tax) }}
                                             </li>
-                                            <!--  <li><span>{{ __('Total', 'erp') }}:</span> {{ moneyFormat( total ) }}</li>-->
+                                             <li><span>{{ __('Total', 'erp') }}:</span> {{ moneyFormat( total ) }}</li>
                                         </ul>
                                     </td>
                                 </tr>
@@ -190,32 +190,15 @@ export default {
     },
 
     watch: {
-        'basic_fields.customer'() {
-            if (!this.editMode) {
-                this.getCustomerAddress();
-            }
-        },
 
-        taxRate(newVal) {
-            // this.$store.dispatch('sales/setTaxRateID', newVal.id);
-        },
-
-        discount() {
-            this.discountChanged();
-        },
-
-        discountType() {
-            this.discountChanged();
-        },
-
-        invoiceTotalAmount() {
-            this.discountChanged();
-        }
     },
 
     computed: {
         ...mapState({invoiceTotalAmount: state => state.sales.invoiceTotalAmount}),
-        ...mapState({actionType: state => state.combo.btnID})
+        ...mapState({actionType: state => state.combo.btnID}),
+        total(){
+          return this.invoice.amount - (this.invoice.discount + this.invoice.tax)
+        }
     },
 
     created() {
@@ -227,6 +210,17 @@ export default {
             let Voucher = await getRequest('invoices/' + this.voucher_no, {name: 'alemran'})
             if (Voucher) {
                 this.invoice = Voucher
+                this.invoice.amount =  parseFloat(this.invoice.amount)
+                this.invoice.discount =  parseFloat(this.invoice.discount)
+                this.invoice.tax =  parseFloat(this.invoice.tax)
+                this.invoice.line_items.map(item=>{
+                    item.item_total = parseFloat( item.item_total )
+                    item.sale_price = parseFloat( item.sale_price )
+                    item.tax = parseFloat( item.tax )
+                    item.qty = parseFloat( item.qty )
+                    item.discount = parseFloat( item.discount )
+                })
+
             }
         },
         async prepareDataLoad() {

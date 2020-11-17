@@ -33387,25 +33387,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       form_errors: []
     };
   },
-  watch: {
-    'basic_fields.customer': function basic_fieldsCustomer() {
-      if (!this.editMode) {
-        this.getCustomerAddress();
-      }
-    },
-    taxRate: function taxRate(newVal) {// this.$store.dispatch('sales/setTaxRateID', newVal.id);
-    },
-    discount: function discount() {
-      this.discountChanged();
-    },
-    discountType: function discountType() {
-      this.discountChanged();
-    },
-    invoiceTotalAmount: function invoiceTotalAmount() {
-      this.discountChanged();
-    }
-  },
-  computed: _objectSpread(_objectSpread({}, Object(__WEBPACK_IMPORTED_MODULE_3_vuex__["b" /* mapState */])({
+  watch: {},
+  computed: _objectSpread(_objectSpread(_objectSpread({}, Object(__WEBPACK_IMPORTED_MODULE_3_vuex__["b" /* mapState */])({
     invoiceTotalAmount: function invoiceTotalAmount(state) {
       return state.sales.invoiceTotalAmount;
     }
@@ -33413,7 +33396,11 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
     actionType: function actionType(state) {
       return state.combo.btnID;
     }
-  })),
+  })), {}, {
+    total: function total() {
+      return this.invoice.amount - (this.invoice.discount + this.invoice.tax);
+    }
+  }),
   created: function created() {},
   methods: {
     searchVoucher: function searchVoucher() {
@@ -33435,6 +33422,17 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
                 if (Voucher) {
                   _this.invoice = Voucher;
+                  _this.invoice.amount = parseFloat(_this.invoice.amount);
+                  _this.invoice.discount = parseFloat(_this.invoice.discount);
+                  _this.invoice.tax = parseFloat(_this.invoice.tax);
+
+                  _this.invoice.line_items.map(function (item) {
+                    item.item_total = parseFloat(item.item_total);
+                    item.sale_price = parseFloat(item.sale_price);
+                    item.tax = parseFloat(item.tax);
+                    item.qty = parseFloat(item.qty);
+                    item.discount = parseFloat(item.discount);
+                  });
                 }
 
               case 4:
@@ -67329,6 +67327,15 @@ var render = function() {
                                     " (+) " +
                                       _vm._s(_vm.moneyFormat(_vm.invoice.tax)) +
                                       "\n                                        "
+                                  )
+                                ]),
+                                _vm._v(" "),
+                                _c("li", [
+                                  _c("span", [
+                                    _vm._v(_vm._s(_vm.__("Total", "erp")) + ":")
+                                  ]),
+                                  _vm._v(
+                                    " " + _vm._s(_vm.moneyFormat(_vm.total))
                                   )
                                 ])
                               ])
