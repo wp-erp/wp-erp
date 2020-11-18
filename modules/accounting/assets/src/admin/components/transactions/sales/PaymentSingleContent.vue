@@ -34,11 +34,11 @@
                             </tr>
                             <tr>
                                 <th>{{ __('Transaction Date', 'erp') }}:</th>
-                                <td>{{ payment.trn_date }}</td>
+                                <td>{{ formatDate( payment.trn_date ) }}</td>
                             </tr>
                             <tr>
                                 <th>{{ __('Created At', 'erp') }}:</th>
-                                <td>{{ payment.created_at }}</td>
+                                <td>{{ formatDate( payment.created_at ) }}</td>
                             </tr>
                             <tr>
                                 <th>{{ __('Deposit To', 'erp') }}:</th>
