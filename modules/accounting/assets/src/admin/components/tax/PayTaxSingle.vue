@@ -60,7 +60,7 @@
                                     </tr>
                                     <tr>
                                         <th>{{ __('Payment Date', 'erp') }}:</th>
-                                        <td>{{ tax_pay_data.trn_date }}</td>
+                                        <td>{{ formatDate(tax_pay_data.trn_date) }}</td>
                                     </tr>
                                 </table>
                             </div>

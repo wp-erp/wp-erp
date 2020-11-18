@@ -122,8 +122,6 @@ export default {
             HTTP.get(this.req_url + '/' + id, {
                 params: {}
             }).then((response) => {
-                console.log(response.data);
-
                 this.resData = response.data;
             });
         },
@@ -133,6 +131,11 @@ export default {
 
             HTTP.get(this.req_url + '/' + this.userId + '/transactions').then(res => {
                 this.transactions = res.data;
+
+                this.transactions.forEach(item => {
+                    item.trn_date = this.formatDate(item.trn_date);
+                    item.created_at = this.formatDate(item.created_at);
+                });
 
                 this.$store.dispatch('spinner/setSpinner', false);
             }).catch(error => {
