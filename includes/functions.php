@@ -635,6 +635,21 @@ function erp_get_clickable( $type = 'email', $value = '' ) {
 }
 
 /**
+ * Get erp date format setting
+ *
+ * @since 1.6.9
+ *
+ * @param mixed $format
+ *
+ * @return string
+ */
+function erp_get_date_format( $format = false ) {
+    $format = $format ? $format : 'd-m-Y';
+
+    return erp_get_option( 'date_format', 'erp_settings_general', $format );
+}
+
+/**
  * Get a formatted date from WordPress format
  *
  * @param string $date the date
@@ -643,7 +658,7 @@ function erp_get_clickable( $type = 'email', $value = '' ) {
  */
 function erp_format_date( $date, $format = false ) {
     if ( ! $format ) {
-        $format = erp_get_option( 'date_format', 'erp_settings_general', 'd-m-Y' );
+        $format = erp_get_date_format();
     }
 
     if ( ! is_numeric( $date ) ) {

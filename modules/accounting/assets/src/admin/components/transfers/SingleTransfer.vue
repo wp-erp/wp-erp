@@ -57,7 +57,7 @@
                                 <table class="invoice-info">
                                     <tr>
                                         <th>{{ __('Transaction Date', 'erp') }}:</th>
-                                        <td>{{ voucher.trn_date }}</td>
+                                        <td>{{ formatDate( voucher.trn_date ) }}</td>
                                     </tr>
                                 </table>
                             </div>
