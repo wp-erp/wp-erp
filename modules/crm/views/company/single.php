@@ -4,7 +4,7 @@ if (
     ! current_user_can( 'manage_options' ) &&
     intval( $customer->contact_owner ) !== get_current_user_id()
 ) {
-    die();
+    wp_die( __( 'Unauthorized request.', 'erp' ), 401 );
 }
 
 $contact_tags = wp_get_object_terms( $customer->id, 'erp_crm_tag', ['orderby' => 'name', 'order' => 'ASC'] );
