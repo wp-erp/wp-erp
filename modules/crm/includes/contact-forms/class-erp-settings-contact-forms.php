@@ -319,16 +319,11 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
-        if ( !erp_crm_is_current_user_manager() ) {
+        if ( ! erp_crm_is_current_user_manager() ) {
             $response['msg'] = __( 'Unauthorized operation', 'erp' );
         }
 
-        if ( empty( $_POST['contactOwner'] ) ) {
-            $response['msg'] = __( 'Error: Please select a contact owner', 'erp' );
-            wp_send_json( $response );
-        }
-
-        if ( !empty( $_POST['plugin'] ) && !empty( $_POST['formId'] ) && !empty( $_POST['map'] ) ) {
+        if ( ! empty( $_POST['plugin'] ) && !empty( $_POST['formId'] ) && !empty( $_POST['map'] ) ) {
             $required_options = $this->get_required_crm_contact_options();
 
             // if map contains full_name, then remove first and last names from required options
@@ -353,7 +348,7 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
                     __( '%s fields are required', 'erp' ),
                     implode( ', ', $required_options )
                 );
-            } elseif ( empty( $_POST['contactOwner'] ) && absint( $_POST['contactOwner'] ) ) {
+            } elseif ( empty( $_POST['contactOwner'] ) ) {
                 $response['msg'] = __( 'Please set a contact owner.', 'erp' );
             } else {
                 $settings = get_option( 'wperp_crm_contact_forms' );
