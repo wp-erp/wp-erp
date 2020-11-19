@@ -167,15 +167,15 @@ class Validate_Data {
     public function validate( $dt_key, $dt_value, $type ) {
         switch ( $dt_key ) {
             case 'first_name':
-                return $this->validate_field( 'First name', $dt_value, $type, 'not_empty:true|max:60|min:2' );
+                return $this->validate_field( 'First name', $dt_value, $type, 'not_empty:true|max:60|min:2|is_valid_name:true' );
             case 'middle_name':
-                return $this->validate_field( 'Middle name', $dt_value, $type, 'max:60|' );
+                return $this->validate_field( 'Middle name', $dt_value, $type, 'max:60|is_valid_name:true' );
             case 'last_name':
-                return $this->validate_field( 'Last name', $dt_value, $type, 'not_empty:true|max:60|min:2' );
+                return $this->validate_field( 'Last name', $dt_value, $type, 'not_empty:true|max:60|min:2|is_valid_name:true' );
             case 'email':
                 return $this->validate_field( 'Email', $dt_value, $type, 'not_empty:true|max:90|min:2|email:true|unique:email|not_csv_column_duplicate:email' );
             case 'employee_id':
-                return $this->validate_field( 'Employee id', $dt_value, $type, 'max:20|unique:employee_id' );
+                return $this->validate_field( 'Employee id', $dt_value, $type, 'max:20|unique:employee_id|is_valid_emp_id:true' );
             case 'phone':
                 return $this->validate_field( 'Phone', $dt_value, $type, 'max:20|is_phone:true' );
             case 'mobile':
@@ -193,11 +193,11 @@ class Validate_Data {
             case 'street_2':
                 return $this->validate_field( 'Street 2', $dt_value, $type, 'max:250|' );
             case 'city':
-                return $this->validate_field( 'City', $dt_value, $type, 'max:80|' );
+                return $this->validate_field( 'City', $dt_value, $type, 'max:80|is_valid_name:true' );
             case 'state':
                 return $this->validate_field( 'State', $dt_value, $type, 'max:50|' );
             case 'postal_code':
-                return $this->validate_field( 'Postal code', $dt_value, $type, 'max:10|' );
+                return $this->validate_field( 'Postal code', $dt_value, $type, 'max:10|zip:true' );
             case 'country':
                 return $this->validate_field( 'Country', $dt_value, $type, 'max:20|' );
             case 'currency':
@@ -221,7 +221,7 @@ class Validate_Data {
             case 'reporting_to':
                 return $this->validate_field( 'Reporting to', $dt_value, $type, 'max:20|' );
             case 'pay_rate':
-                return $this->validate_field( 'Pay rate', $dt_value, $type, 'max:11|' );
+                return $this->validate_field( 'Pay rate', $dt_value, $type, 'max:11|is_valid_amount:true' );
             case 'type':
                 return $this->validate_field( 'Type', $dt_value, $type, 'max:20|' );
             case 'pay_type':
@@ -257,6 +257,7 @@ class Validate_Data {
      * Validate individual field data
      *
      * @since 1.6.5
+     * @since 1.6.9 Added validation for name, zip code, and employee id
      *
      * @return array
      */
@@ -302,11 +303,8 @@ class Validate_Data {
                             }
                             break;
                         case 'is_phone':
-                            if ( $rule_value == 'true' ) {
-                                $check_is_phone = $this->is_valid_phone( $rule_value, $field_value, $field_name );
-                                if ( $check_is_phone ) {
-                                    $errors[] = $check_is_phone;
-                                }
+                            if ( $rule_value == 'true' && ! empty( $field_value ) && ! erp_is_valid_contact_no( $field_value ) ) {
+                                $errors[] = __( "{$field_name} should be a valid phone/mobile number", 'erp' );
                             }
                             break;
                         case 'not_csv_column_duplicate':
@@ -327,6 +325,34 @@ class Validate_Data {
                                 if ( $check_is_unique_cont ) {
                                     $errors[] = $check_is_unique_cont;
                                 }
+                            }
+                            break;
+                        case 'is_valid_name':
+                            if ( $rule_value === 'true' ) {
+                                if ( $type === 'company' || $field_name === 'City' ) {
+                                    if ( ! empty( $field_value ) && erp_contains_disallowed_chars( $field_value ) ) {
+                                        $errors[] = __( "{$field_name} should not contain special charecters like %;\"=<>\/*+?$^{}[]", 'erp' );
+                                    }
+                                } else {
+                                    if ( ! empty( $field_value ) && ! erp_is_valid_name( $field_value ) ) {
+                                        $errors[] = __( "{$field_name} should not contain digits and special charecters like !_@%#&:;\"=<>\/*+?$^{}[]", 'erp' );
+                                    }
+                                }
+                            }
+                            break;
+                        case 'is_valid_emp_id':
+                            if ( $rule_value === 'true' && ! empty( $field_value ) && ! erp_is_valid_employee_id( $field_value ) ) {
+                                $errors[] = __( "{$field_name} is not valid. It should start with letter or digit and may contain letters, digits and hyphen (-) only", 'erp' );
+                            }
+                            break;
+                        case 'zip':
+                            if ( $rule_value === 'true' && ! empty( $field_value ) && ! erp_is_valid_zip_code( $field_value ) ) {
+                                $errors[] = __( "{$field_name} is not valid. It should start with letter or digit and may contain letters, digits, space and hyphen (-) only", 'erp' );
+                            }
+                            break;
+                        case 'is_valid_amount':
+                            if ( $rule_value === 'true' && ! empty( $field_value ) && ! erp_is_valid_currency_amount( $field_value ) ) {
+                                $errors[] = __( "{$field_name} is not valid. It should not start with zero and may contain letters and commas(,) only. Also, Decimal point values are allowed.", 'erp' );
                             }
                             break;
                         default:
@@ -429,6 +455,17 @@ class Validate_Data {
         }
     }
 
+    /**
+     * Validates custom fields
+     *
+     * @since 1.6.9
+     *
+     * @param string $dt_key
+     * @param string $dt_value
+     * @param string $type
+     *
+     * @return mixed
+     */
     public function validate_custom_field( $dt_key, $dt_value, $type ) {
         switch ( $dt_key ) {
             default:
