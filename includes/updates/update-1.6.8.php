@@ -2,29 +2,12 @@
 namespace WeDevs\ERP\HRM\Update;
 
 
-/*
- * Add transaction_charge column in `erp_acct_expenses` table
- */
-function erp_acct_alter_acct_expenses_1_6_8() {
-    global $wpdb;
-
-    $table = $wpdb->prefix . 'erp_acct_expenses';
-    $cols  = $wpdb->get_col( "DESC $table" );
-
-    if ( !in_array( 'transaction_charge', $cols ) ) {
-        $wpdb->query(
-            $wpdb->prepare(
-                "ALTER TABLE $table ADD `transaction_charge` decimal(20,2) DEFAULT 0 AFTER `trn_by`;"
-            )
-        );
-    }
-
-}
 
 
 function crate_erp_acct_sales_return_table_1_6_8() {
 
     global $wpdb;
+    $charset_collate = $wpdb->get_charset_collate();
     $sql = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}erp_acct_sales_return (
               `id` int(20) UNSIGNED NOT NULL AUTO_INCREMENT,
               `invoice_id` int(20) NOT NULL,
@@ -42,8 +25,8 @@ function crate_erp_acct_sales_return_table_1_6_8() {
               `created_by` int(20) DEFAULT NULL,
               `updated_at` timestamp DEFAULT NULL,
               `updated_by` int(20) DEFAULT NULL,
-              PRIMARY KEY (`id`)
-            ) DEFAULT CHARSET=utf8";
+              PRIMARY KEY  (`id`)
+            ) DEFAULT $charset_collate";
 
     dbDelta($sql);
 }
@@ -52,8 +35,10 @@ function crate_erp_acct_sales_return_table_1_6_8() {
 function crate_erp_return_details_table_1_6_8() {
 
     global $wpdb;
+    $charset_collate = $wpdb->get_charset_collate();
     $sql = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}erp_acct_sales_return_details (
               `id` int(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+              `invoice_details_id` int(20) NOT NULL,
               `trn_no` int(20) NOT NULL,
               `product_id` int(20) NOT NULL,
               `qty` int(20) NOT NULL,
@@ -67,7 +52,7 @@ function crate_erp_return_details_table_1_6_8() {
               `updated_at` timestamp DEFAULT NULL,
               `updated_by` int(20) DEFAULT NULL,
               PRIMARY KEY (`id`)
-            ) DEFAULT CHARSET=utf8";
+            ) DEFAULT $charset_collate";
 
     dbDelta($sql);
 }
@@ -75,22 +60,6 @@ function crate_erp_return_details_table_1_6_8() {
 
 function erp_acct_insert_to_erp_acct_ledgers_1_6_8() {
     global $wpdb;
-
-    $checkSalesReturn = $wpdb->get_row(
-        $wpdb->prepare(
-            "SELECT * FROM {$wpdb->prefix}erp_acct_ledgers WHERE slug = %s", [ 'sales_return' ]
-        )
-    );
-
-    if ( empty( $checkSalesReturn ) ) {
-        $wpdb->query(
-            $wpdb->prepare(
-                "INSERT INTO {$wpdb->prefix}erp_acct_ledgers ( `chart_id`, `name`, `slug`, `code`, `system`, `created_at` ) VALUES ( %d, %s, %s, %s, %d, %s )",
-                [ 5, 'Sales Return', 'sales_return', '1509', 1, date( 'Y-m-d' ) ]
-            )
-        );
-    }
-
 
     $checkSalesReturnDiscount = $wpdb->get_row(
         $wpdb->prepare(

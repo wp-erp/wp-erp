@@ -9,7 +9,7 @@ const axiosConfig =  axios.create({
     }
 });
 
-export const getRequest = function ( url, data, silent = false ) {
+export const getRequest = function ( url, data = {}, silent = false ) {
 
     if (!silent) {
         store.dispatch('spinner/setSpinner', true);
@@ -45,7 +45,7 @@ export const getRequest = function ( url, data, silent = false ) {
 }
 
 
-export const postRequest = function ( url, data, silent = false, multipart = false ) {
+export const postRequest = function ( url, data= {}, silent = false, multipart = false ) {
 
     if (!silent) {
         store.dispatch('spinner/setSpinner', true);

@@ -1533,6 +1533,44 @@ May you enjoy the fruits of your labors for years to come',
                 `updated_by` varchar(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
             ) $charset_collate;",
+
+            "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}erp_acct_sales_return (
+              `id` int(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+              `invoice_id` int(20) NOT NULL,
+              `voucher_no` int(20) NOT NULL,
+              `customer_id` int(20) DEFAULT NULL,
+              `customer_name` varchar(255) DEFAULT NULL,
+              `trn_date` date  NOT NULL,
+              `amount` decimal(20,2) NOT NULL,
+              `discount` decimal(20,2) DEFAULT 0,
+              `discount_type` varchar(255) DEFAULT NULL,
+              `tax` decimal(20,2) DEFAULT 0,
+              `reason` text DEFAULT NULL,
+              `comments` text DEFAULT NULL,
+              `created_at` timestamp DEFAULT NULL,
+              `created_by` int(20) DEFAULT NULL,
+              `updated_at` timestamp DEFAULT NULL,
+              `updated_by` int(20) DEFAULT NULL,
+              PRIMARY KEY  (`id`)
+            ) DEFAULT $charset_collate",
+
+            "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}erp_acct_sales_return_details (
+              `id` int(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+              `invoice_details_id` int(20) NOT NULL,
+              `trn_no` int(20) NOT NULL,
+              `product_id` int(20) NOT NULL,
+              `qty` int(20) NOT NULL,
+              `unit_price` decimal(20,2) NOT NULL,
+              `discount` decimal(20,2) DEFAULT 0,
+              `tax` decimal(20,2) DEFAULT 0,
+              `item_total` decimal(20,2) NOT NULL,
+              `ecommerce_type` varchar(255) DEFAULT NULL,
+              `created_at` timestamp DEFAULT NULL,
+              `created_by` int(20) DEFAULT NULL,
+              `updated_at` timestamp DEFAULT NULL,
+              `updated_by` int(20) DEFAULT NULL,
+              PRIMARY KEY (`id`)
+            ) DEFAULT $charset_collate",
         ];
 
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
