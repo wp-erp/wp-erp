@@ -3,7 +3,6 @@ namespace WeDevs\ERP\HRM\Update;
 
 
 
-
 function crate_erp_acct_sales_return_table_1_6_8() {
 
     global $wpdb;
@@ -21,6 +20,7 @@ function crate_erp_acct_sales_return_table_1_6_8() {
               `tax` decimal(20,2) DEFAULT 0,
               `reason` text DEFAULT NULL,
               `comments` text DEFAULT NULL,
+              `status` int(20) DEFAULT NULL COMMENT '0 means drafted, 1 means confirmed return',
               `created_at` timestamp DEFAULT NULL,
               `created_by` int(20) DEFAULT NULL,
               `updated_at` timestamp DEFAULT NULL,
@@ -92,8 +92,6 @@ function erp_acct_insert_to_erp_acct_ledgers_1_6_8() {
     }
 }
 
-
-erp_acct_alter_acct_expenses_1_6_8();
 crate_erp_acct_sales_return_table_1_6_8();
 crate_erp_return_details_table_1_6_8();
 erp_acct_insert_to_erp_acct_ledgers_1_6_8();

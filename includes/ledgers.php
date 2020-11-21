@@ -767,11 +767,6 @@ $ledgers = [
              'name'        => 'Bank Transaction Charge',
              'code'        => '1508',
              'system'      => 1,
-         ],
-         [
-             'name'        => 'Sales Return',
-             'code'        => '1509',
-             'system'      => 1,
-         ],
+         ]
      ],
  ];
