@@ -68,6 +68,11 @@ class Setup_Wizard {
                 'view'    => [ $this, 'setup_step_module' ],
                 'handler' => [ $this, 'setup_step_module_save' ],
             ],
+            'email' => [
+                'name'    => __( 'E-Marketing', 'erp' ),
+                'view'    => [ $this, 'setup_step_email' ],
+                'handler' => [ $this, 'setup_step_email_save' ],
+            ],
             'department' => [
                 'name'    => __( 'Departments', 'erp' ),
                 'view'    => [ $this, 'setup_step_departments' ],
@@ -504,12 +509,121 @@ class Setup_Wizard {
 
         update_option( 'erp_modules', $all_modules );
 
+        // when HCRM is inactive hide related steps
+        if ( ! in_array( 'crm', $modules ) ) {
+            unset( $this->steps['email'] );
+        }
+
         // when HRM is inactive hide related steps
         if ( ! in_array( 'hrm', $modules ) ) {
             unset( $this->steps['department'] );
             unset( $this->steps['designation'] );
             unset( $this->steps['workdays'] );
         }
+
+        wp_redirect( esc_url_raw( $this->get_next_step_link() ) );
+        exit;
+    }
+
+
+    /**
+     * Wemail setup step
+     *
+     * @since 1.6.11
+     *
+     * @return void
+     */
+    public function setup_step_email() {
+        // Should `weMail` plugin installs by default?
+        $include_wm  = get_option( 'include_wemail' );
+        $admin_email = get_option( 'admin_email' );
+
+        ?>
+        <h1><?php esc_html_e( 'Email Marketing Setup', 'erp' ); ?></h1>
+        <form method="post">
+            <table class="form-table">
+                <tr>
+                    <td>
+                        <label for="wemail_install">
+                            <span class="description">
+                                <?php printf( esc_html__( 'To collect and create your CRM leads and subscriers, we recommend installing %s plugin. ', 'erp' ), '<em style="color: #19ACB8;">weMail</em>' ); ?><br/>
+                                <?php printf( esc_html__( 'It simplifies email marketing inside the WordPress dashboard and it has tight integration with %s plugin.', 'erp' ), '<em style="color: #19ACB8;">WP ERP</em>' ); ?>
+                            </span>
+                        </label><br/><br/>
+                        <input type="checkbox" name="wemail_install" id="wemail_install" class="switch-input" value="yes" checked>
+                        <label for="wemail_install" class="switch-label">
+                            <span class="toggle--on"></span>
+                            <span class="toggle--off"></span>
+                            <?php esc_html_e( 'Install weMail plugin for email marketing', 'erp' ); ?>
+                        </label>
+                    </td>
+                </tr>
+            </table>
+
+            <span class="plugin-install-info">
+                <span class="plugin-install-info-label"><?php esc_html_e( 'The following plugin will be installed and activated for you: ', 'erp' ); ?></span>
+                <br>
+                <span class="plugin-install-info-list">
+                    <span class="plugin-install-info-list-item">
+                        <a href="https://wordpress.org/plugins/wemail/" target="_blank">weMail</a>
+                    </span>
+                </span>
+            </span>
+
+            <script type="text/javascript">
+                var weMailIstall      = jQuery('#wemail_install');
+                var weMailInstallInfo = jQuery('.plugin-install-info');
+
+                <?php if ( 'no' == $include_wm ) { ?>
+                    weMailInstallInfo.css('display', 'none');
+                <?php } ?>
+
+                // toggle project manager on/off
+                weMailIstall.on('click', function(e) {
+                    if ( weMailIstall.is(':checked') ) {
+                        weMailInstallInfo.css('display', 'block');
+                    } else {
+                        weMailInstallInfo.css('display', 'none');
+                    }
+                });
+            </script>
+
+            <?php $this->next_step_buttons(); ?>
+        </form>
+        <?php
+    }
+
+    /**
+     * WeMail setup step save
+     *
+     * @since 1.6.11
+     *
+     * @return void
+     */
+    public function setup_step_email_save() {
+        check_admin_referer( 'erp-setup' );
+
+        $install_wemail   = isset( $_POST['wemail_install'] ) ? sanitize_text_field( wp_unslash( $_POST['wemail_install'] ) )    : 'no';
+        $collect_data     = isset( $_POST['collect_data'] ) ? sanitize_text_field( wp_unslash( $_POST['collect_data'] ) )        : 'no';
+        $subscribe_wemail = isset( $_POST['wemail_subscribe'] ) ? sanitize_text_field( wp_unslash( $_POST['wemail_subscribe'] ) ): 'no';
+
+        if ( 'yes' === $subscribe_wemail ) {
+            $admin_email = isset( $_POST['wm_email'] ) ? sanitize_text_field( wp_unslash( $_POST['wm_email'] ) ) : get_option( 'admin_email' );
+        }
+
+        // if `weMail` plugin needs to be installed
+        if ( 'yes' === $install_wemail ) {
+            $wemail_plugin_id = 'wemail';
+            $wemail_plugin    = [
+                'name'      => __( 'weMail', 'erp' ),
+                'repo-slug' => 'wemail',
+                'file'      => 'wemail.php',
+            ];
+
+            $this->background_installer( $wemail_plugin_id, $wemail_plugin );
+        }
+
+        update_option( 'include_wemail', $install_wemail );
 
         wp_redirect( esc_url_raw( $this->get_next_step_link() ) );
         exit;
