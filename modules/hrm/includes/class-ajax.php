@@ -2010,9 +2010,45 @@ class Ajax_Handler {
             }
         );
 
-        $holidays = $holiday->get()->toArray();
+        $holidays        = $holiday->get()->toArray();
+        $match_holidays  = array();
+        $filter_holidays = apply_filters( 'filter_holidays', [], $start_date, $end_date );
 
-        $holidays = apply_filters( 'filter_holidays', $holidays, $start_date, $end_date );
+        if ( empty( $filter_holidays ) ) {
+            $weekends   = array();
+            $work_days  = erp_hr_get_work_days();
+
+            array_walk( $work_days, function( $value, $key ) use ( &$weekends ) {
+                if ( 0 === ( int ) $value ) {
+                    $weekends[] = $key ;
+                };
+            } );
+
+            $dates = new \DatePeriod(
+                new \DateTime( $start_date ),
+                new \DateInterval( 'P1D' ),
+                new \DateTime( $end_date )
+            );
+
+            foreach ( $dates as $index => $date ) {
+                $weekday = strtolower( $date->format( 'D' ) );
+                if ( in_array( $weekday, $weekends ) ) {
+                    $match_holidays[] = array(
+                        'title'      => __( 'Weekly Holiday', 'erp-pro' ),
+                        'start'      => erp_current_datetime()
+                            ->modify( $date->format( 'Y-m-d' ) )
+                            ->setTime( 0, 0, 0 )->format( 'Y-m-d' ),
+                        'end'        => erp_current_datetime()
+                            ->modify( $date->format( 'Y-m-d' ) )
+                            ->setTime( 23, 59, 59 )->format( 'Y-m-d' ),
+                        'id'         => $index,
+                        'background' => true
+                    );
+                }
+            }
+        }
+
+        $holidays = array_merge( $holidays, $filter_holidays, $match_holidays );
 
         $events         = array();
         $holiday_events = array();
