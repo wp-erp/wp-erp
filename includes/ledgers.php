@@ -687,6 +687,16 @@ $ledgers = [
              'code'   => 1405,
              'system' => 1,
          ],
+         [
+             'name'   => 'Purchase Return',
+             'code'   => 1408,
+             'system' => 1,
+         ],
+         [
+             'name'   => 'Purchase Return Tax',
+             'code'   => 1409,
+             'system' => 1,
+         ],
      ],
      'expense' => [
          [
@@ -727,6 +737,11 @@ $ledgers = [
          [
              'name'   => 'Sales Returns and Allowance',
              'code'   => 1403,
+             'system' => 1,
+         ],
+         [
+             'name'   => 'Purchase Return Discount',
+             'code'   => 1410,
              'system' => 1,
          ],
      ],

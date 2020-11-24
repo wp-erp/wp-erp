@@ -47,7 +47,9 @@ export default {
             pages: [
                 { namedRoute: 'PurchaseCreate', name: __('Create Purchase', 'erp') },
                 { namedRoute: 'PayPurchaseCreate', name: __('Pay Purchase', 'erp') },
-                { namedRoute: 'PurchaseOrderCreate', name:  __('Create Purchase Order', 'erp') }
+                { namedRoute: 'PurchaseOrderCreate', name:  __('Create Purchase Order', 'erp') },
+                { namedRoute: 'purchasesReturnList', name:  __('Create Purchase Return List', 'erp') },
+                { namedRoute: 'purchasesReturn', name:  __('Create Purchase Return', 'erp') },
             ],
 
             filterTypes:[{id: 'purchase', name: 'Purchase'}, {id: 'pay_purchase', name: 'Purchase Payment'}],

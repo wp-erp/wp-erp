@@ -11,7 +11,7 @@
                 <div class="content-header-section separator">
                     <div class="wperp-row wperp-between-xs">
                         <div class="wperp-col">
-                            <h2 class="content-header__title">{{ __('Sales Return', 'erp') }}</h2>
+                            <h2 class="content-header__title">{{ __('Purchase Return', 'erp') }}</h2>
                         </div>
                     </div>
                 </div>
@@ -36,12 +36,12 @@
                     <div class="wperp-invoice-panel" v-if="this.invoice.id">
 
                         <div class="invoice-body">
-                            <h4> Sales Invoice</h4>
+                            <h4> Purchase Invoice</h4>
                             <div class="wperp-row">
                                 <div class="wperp-col-sm-6">
                                     <h5>{{ __('Bill to', 'erp') }}:</h5>
                                     <div class="persons-info">
-                                        <strong>{{ invoice.customer_name }}</strong><br>
+                                        <strong>{{ invoice.vendor_name }}</strong><br>
                                         {{ invoice.billing_address }}
                                     </div>
                                 </div>
@@ -103,8 +103,8 @@
                                     <th>{{ detail.name }}</th>
                                     <td> <input v-if="detail.selected" type="number" v-model="detail.qty" /> <span v-else> {{ detail.qty }}</span> </td>
                                     <td>{{ moneyFormat( detail.discount ) }}</td>
-                                    <td>{{ moneyFormat(detail.unit_price) }}</td>
-                                    <td>{{ moneyFormat((detail.unit_price * parseFloat(detail.qty) ) - ( detail.discount + parseFloat(detail.qty) ) ) }}</td>
+                                    <td>{{ moneyFormat(detail.price) }}</td>
+                                    <td>{{ moneyFormat((detail.price * parseFloat(detail.qty) ) - ( detail.discount + parseFloat(detail.qty) ) ) }}</td>
                                     <td   class="col--actions delete-row">
                                         <span  @click="deleteItem(index)" class="wperp-btn"> <i  class="flaticon-trash"></i></span>
                                     </td>
@@ -181,9 +181,9 @@ export default {
             this.invoice.line_items.forEach(item=>{
                 if(item.selected){
 
-                    s.line_total += item.unit_price  * parseFloat(item.qty)
+                    s.line_total += item.price  * parseFloat(item.qty)
                     s.tax += ( item.tax || 0 ) * parseFloat(item.qty)
-                    s.discount += item.discount * parseFloat(item.qty)
+                    s.discount += 0
 
                 }
 
@@ -193,43 +193,39 @@ export default {
         }
     },
 
-    created() {
-
-    },
+    created() {},
 
     methods: {
         async searchVoucher() {
-            let Voucher = await getRequest('/sales-return/search-invoice/'+ this.voucher_no )
+            let Voucher = await getRequest('/purchase-return/search-invoice/'+ this.voucher_no )
             if (Voucher) {
                 this.invoice = Voucher
                 this.invoice.amount =  parseFloat(this.invoice.amount)
                 this.invoice.discount =  parseFloat(this.invoice.discount)
                 this.invoice.tax =  parseFloat(this.invoice.tax)
                 this.invoice.return_reason =  ''
+                this.invoice.discount_type = null
                 this.invoice.line_items.map(item=>{
-                    item.unit_price = parseFloat( item.unit_price )
+                    item.price = parseFloat( item.price )
                     item.tax = ( parseFloat( item.tax ) || 0) / parseFloat(item.qty)
                     item.qty = parseFloat( item.qty ) - ( parseFloat(item.return_qty) || 0 )
                     item.existing_qty = item.qty
-                    item.discount = parseFloat( item.discount ) / item.qty
+                    item.discount = 0
                 })
 
             }
         },
         submitReturn(){
-console.log(this.summery.total)
             if(!this.summery.total || this.summery.total < 1){
                 Swal.fire('Please , Select minimum one item', '', 'info')  ;
                 return false;
             }
 
             Swal.fire({
-                title: 'Are you sure to submit sales return ?',
+                title: 'Are you sure to submit purchase return ?',
                 showDenyButton: true,
                 showCancelButton: true,
             }).then( async (result) => {
-                console.log(result)
-                /* Read more about isConfirmed, isDenied below */
                 if (result.value) {
 
                     this.invoice.line_items.forEach( (item, index) =>{
@@ -238,7 +234,7 @@ console.log(this.summery.total)
                         }
                     })
 
-                    let salesReturn = await postRequest('/sales-return/create', this.invoice )
+                    let salesReturn = await postRequest('/purchase-return/create', this.invoice )
                     if (salesReturn) {
 
                     }

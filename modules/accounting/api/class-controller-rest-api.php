@@ -42,6 +42,7 @@ class REST_API {
                 '\WeDevs\ERP\Accounting\API\Tax_Rate_Names_Controller',
                 '\WeDevs\ERP\Accounting\API\People_Controller',
                 '\WeDevs\ERP\Accounting\API\Reports_Controller',
+                '\WeDevs\ERP\Accounting\API\Purchase_Return_Controller',
             ]
         );
 

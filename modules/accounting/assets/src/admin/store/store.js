@@ -10,6 +10,7 @@ Vue.use(Vuex);
 
 const debug = process.env.NODE_ENV !== 'production';
 
+/*
 export default new Vuex.Store({
     modules: {
         sales,
@@ -21,3 +22,19 @@ export default new Vuex.Store({
     strict: debug,
     plugins: []
 });
+*/
+
+
+const store = new Vuex.Store({
+    modules: {
+        sales,
+        expense,
+        purchase,
+        spinner,
+        combo
+    },
+    strict: debug,
+    plugins: []
+});
+
+export default store;
