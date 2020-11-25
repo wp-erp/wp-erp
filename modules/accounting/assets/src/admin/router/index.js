@@ -58,7 +58,8 @@ import HelpContent from 'admin/components/help/HelpContent.vue';
 
 
 import SalesReturn from 'admin/components/sales-return/InvoiceCreate.vue';
-import ReturnDetails from 'admin/components/sales-return/ReturnDetails.vue';
+import SalesReturnDetails from 'admin/components/sales-return/SalesSingle.vue';
+import SalesReturnLists from 'admin/components/sales-return/SalesList.vue';
 
 Vue.use(Router);
 
@@ -225,16 +226,6 @@ export default new Router({
                             path: 'page/:page',
                             name: 'PaginateSales',
                             component: Sales
-                        },
-                        {
-                            path: 'sales/return',
-                            name: 'SalesReturn',
-                            component: SalesReturn
-                        },
-                        {
-                            path: 'sales/return/:id',
-                            name: 'ReturnDetails',
-                            component: ReturnDetails
                         }
                     ]
                 },
@@ -357,6 +348,21 @@ export default new Router({
                     path: ':id/edit',
                     name: 'InvoiceEdit',
                     component: InvoiceCreate
+                },
+                {
+                    path: 'sales/return',
+                    name: 'SalesReturn',
+                    component: SalesReturn
+                },
+                {
+                    path: 'sales/return/:id',
+                    name: 'SalesReturnDetails',
+                    component: SalesReturnDetails
+                },
+                {
+                    path: 'sales/list',
+                    name: 'SalesReturnLists',
+                    component: SalesReturnLists
                 }
             ]
         },

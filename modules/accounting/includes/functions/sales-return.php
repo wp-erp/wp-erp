@@ -4,6 +4,93 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
 
+
+
+
+/**
+ * Get all sales transactions
+ *
+ * @param array $args
+ *
+ * @return mixed
+ */
+function erp_acct_get_sales_return_transactions( $args = [] ) {
+    global $wpdb;
+
+    $defaults = [
+        'number'      => 20,
+        'offset'      => 0,
+        'order'       => 'DESC',
+        'count'       => false,
+        'customer_id' => false,
+        's'           => '',
+        'status'      => '',
+    ];
+
+    $args = wp_parse_args( $args, $defaults );
+
+    $limit = '';
+
+    $where = "WHERE voucher.type = 'sales_return'";
+
+    if ( ! empty( $args['customer_id'] ) ) {
+        $where .= " AND invoice.customer_id = {$args['customer_id']} ";
+    }
+
+    if ( ! empty( $args['start_date'] ) ) {
+        $where .= " AND invoice.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}' ";
+    }
+
+    if ( empty( $args['status'] ) ) {
+        $where .= '';
+    } else {
+        if ( ! empty( $args['status'] ) ) {
+            $where .= " AND invoice.status={$args['status']} ";
+        }
+    }
+
+    if ( -1 !== $args['number'] ) {
+        $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+    }
+
+    $sql = 'SELECT';
+
+    if ( $args['count'] ) {
+        $sql .= ' COUNT( DISTINCT voucher.id ) AS total_number';
+    } else {
+        $sql .= ' voucher.id,
+            voucher.type,
+            voucher.editable,
+            invoice.invoice_id as sales_invoice_id,
+            invoice.customer_id,
+            invoice.customer_name, 
+            invoice.trn_date,   
+            invoice.amount,   
+            invoice.discount,   
+            invoice.discount_type,   
+            invoice.tax,   
+            invoice.reason,
+            invoice.comments,
+            (invoice.amount + invoice.tax) - invoice.discount AS sales_amount,  
+            invoice.status as inv_status';
+    }
+
+    $sql .= " FROM {$wpdb->prefix}erp_acct_voucher_no AS voucher
+        INNER JOIN {$wpdb->prefix}erp_acct_sales_return AS invoice ON invoice.voucher_no = voucher.id  
+        {$where} GROUP BY voucher.id ORDER BY voucher.id {$args['order']} {$limit}";
+
+    if ( $args['count'] ) {
+        $wpdb->get_results( $sql );
+
+        return $wpdb->num_rows;
+    }
+
+    // error_log(print_r($sql, true));
+    return $wpdb->get_results( $sql, ARRAY_A );
+}
+
+
+
 /**
  * Get an single invoice
  *
@@ -68,6 +155,49 @@ function erp_acct_get_invoice_for_return( $invoice_no ) {
     return $row;
 }
 
+/**
+ * Get an single invoice
+ *
+ * @param $invoice_no
+ *
+ * @return mixed
+ */
+function erp_acct_get_sales_return_invoice( $invoice_no ) {
+    global $wpdb;
+
+    $sql = $wpdb->prepare(
+        "Select
+    voucher.editable,
+    voucher.currency,
+    invoice.id,
+    invoice.invoice_id as sales_voucher_id,
+    invoice.voucher_no,
+    invoice.customer_id,
+    invoice.customer_name,
+    invoice.trn_date,  
+    invoice.amount,
+    invoice.amount,
+    invoice.discount,
+    invoice.discount_type,
+    invoice.tax,  
+    invoice.status,
+    invoice.reason,
+    invoice.created_at 
+
+    FROM {$wpdb->prefix}erp_acct_sales_return as invoice
+    LEFT JOIN {$wpdb->prefix}erp_acct_voucher_no as voucher ON invoice.voucher_no = voucher.id  
+    WHERE invoice.voucher_no = %d",
+        $invoice_no
+    );
+
+    $row = $wpdb->get_row( $sql, ARRAY_A );
+
+
+    $row['line_items']  = erp_acct_format_sales_return_invoice_line_items( $invoice_no );
+
+    return $row;
+}
+
 
 
 /**
@@ -122,6 +252,42 @@ function erp_acct_format_invoice_line_items_for_return( $voucher_no ) {
     }
 
     return $results;
+}
+
+
+
+/**
+ * Get formatted line items
+ */
+function erp_acct_format_sales_return_invoice_line_items( $voucher_no ) {
+    global $wpdb;
+
+    $sql = $wpdb->prepare(
+        "SELECT 
+        inv_detail.id,
+        inv_detail.invoice_details_id,
+        inv_detail.product_id,
+        inv_detail.qty,
+        inv_detail.unit_price,
+        inv_detail.discount,
+        inv_detail.tax,
+        inv_detail.item_total,
+        inv_detail.ecommerce_type, 
+        product.name,
+        product.product_type_id,
+        product.category_id,
+        product.vendor,
+        product.cost_price,
+        product.sale_price,
+        product.tax_cat_id
+
+        FROM  {$wpdb->prefix}erp_acct_sales_return_details as inv_detail  
+        LEFT JOIN {$wpdb->prefix}erp_acct_products as product ON inv_detail.product_id = product.id
+        WHERE inv_detail.trn_no = %d GROUP BY inv_detail.id",
+        $voucher_no
+    );
+
+    return $wpdb->get_results( $sql, ARRAY_A );
 }
 
 

@@ -50,6 +50,40 @@ class Sales_Return_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         register_rest_route(
             $this->namespace,
+            '/' . $this->rest_base .'/list',
+            [
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_sales_return_list' ],
+                    'args'                => [],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_view_sales_summary' );
+                    },
+                ],
+
+            ]
+        );
+
+
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base .'/(?P<id>[\d]+)',
+            [
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_sales_return' ],
+                    'args'                => [],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_view_sales_summary' );
+                    },
+                ],
+
+            ]
+        );
+
+
+        register_rest_route(
+            $this->namespace,
             '/' . $this->rest_base . '/search-invoice'.'/(?P<id>[\d]+)',
             [
                 [
@@ -66,7 +100,71 @@ class Sales_Return_Controller extends \WeDevs\ERP\API\REST_Controller {
 
     }
 
+
+
+
     /**
+     * Get Purchase transactions
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return object
+     */
+    public function get_sales_return_list( $request ) {
+        $args = [
+            'number'     => empty( $request['per_page'] ) ? 20 : (int) $request['per_page'],
+            'offset'     => ( $request['per_page'] * ( $request['page'] - 1 ) ),
+            'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
+            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date'],
+            'status'     => empty( $request['status'] ) ? '' : $request['status'],
+        ];
+
+        $formatted_items   = [];
+        $additional_fields = [];
+
+        $additional_fields['namespace'] = $this->namespace;
+        $additional_fields['rest_base'] = $this->rest_base;
+
+        $transactions = erp_acct_get_sales_return_transactions( $args );
+        $total_items  = erp_acct_get_sales_transactions(
+            [
+                'count'  => true,
+                'number' => -1,
+            ]
+        );
+
+        $response = rest_ensure_response( $transactions );
+        $response = $this->format_collection_response( $response, $request, $total_items );
+
+        $response->set_status( 200 );
+
+        return $response;
+    }
+
+
+
+    /**
+     * Get a collection of invoices
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Response
+     */
+    public function get_sales_return( $request ) {
+        $args = [
+            'voucher_no'     => $request['id']
+        ];
+
+        $invoice_data = erp_acct_get_sales_return_invoice( $args );
+
+
+        $response = rest_ensure_response( $invoice_data );
+        $response->set_status( 200 );
+
+        return $response;
+    }
+
+   /**
      * Get a collection of invoices
      *
      * @param WP_REST_Request $request
