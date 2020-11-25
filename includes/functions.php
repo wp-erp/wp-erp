@@ -3800,7 +3800,7 @@ function erp_is_valid_date( $date ) {
  * @return bool
  */
 function erp_is_valid_contact_no( $contact_no ) {
-    return preg_match( '/^\+?(?:[0-9]( |-)?){6,14}[0-9]$/', $contact_no );
+    return preg_match( '/^\+?[0-9]{1,3}([\s\.\-]?[0-9]{1,5}){3}$/', $contact_no );
 }
 
 /**
@@ -3826,7 +3826,7 @@ function erp_is_valid_zip_code( $zip_code ) {
  * @return bool
  */
 function erp_is_valid_url( $url ) {
-    return filter_var( $url, FILTER_VALIDATE_URL );
+    return preg_match( '/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i', $url );
 }
 
 /**
@@ -3852,5 +3852,5 @@ function erp_is_valid_employee_id( $emp_id ) {
  * @return bool
  */
 function erp_is_valid_currency_amount( $amount ) {
-    return preg_match( '/^[1-9](?:,?[0-9])*(?:.[0-9]{4})?$/', $amount );
+    return preg_match( '/^[0-9](?:,?[0-9])*(?:.[0-9]{4})?$/', $amount );
 }
