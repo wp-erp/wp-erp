@@ -177,15 +177,15 @@ class Validate_Data {
             case 'employee_id':
                 return $this->validate_field( 'Employee id', $dt_value, $type, 'max:20|unique:employee_id|is_valid_emp_id:true' );
             case 'phone':
-                return $this->validate_field( 'Phone', $dt_value, $type, 'max:20|is_phone:true' );
+                return $this->validate_field( 'Phone', $dt_value, $type, 'min:4|max:22|is_phone:true' );
             case 'mobile':
-                return $this->validate_field( 'Mobile', $dt_value, $type, 'max:20|is_phone:true' );
+                return $this->validate_field( 'Mobile', $dt_value, $type, 'min:4|max:22|is_phone:true' );
             case 'other':
                 return $this->validate_field( 'Other', $dt_value, $type, 'max:50|' );
             case 'website':
-                return $this->validate_field( 'Website', $dt_value, $type, 'max:90|' );
+                return $this->validate_field( 'Website', $dt_value, $type, 'max:90|is_valid_url:true' );
             case 'fax':
-                return $this->validate_field( 'Fax', $dt_value, $type, 'max:20|' );
+                return $this->validate_field( 'Fax', $dt_value, $type, 'max:20|is_phone:true' );
             case 'notes':
                 return $this->validate_field( 'Notes', $dt_value, $type, 'max:250|' );
             case 'street_1':
@@ -285,7 +285,7 @@ class Validate_Data {
                             }
                             break;
                         case 'min':
-                            if ( strlen( $field_value ) < $rule_value ) {
+                            if ( ! empty( $field_value ) && strlen( $field_value ) < $rule_value ) {
                                 $errors[] = __( "{$field_name} can not be less than {$rule_value} charecters", 'erp' );
                             }
                             break;
@@ -303,8 +303,12 @@ class Validate_Data {
                             }
                             break;
                         case 'is_phone':
-                            if ( $rule_value == 'true' && ! empty( $field_value ) && ! erp_is_valid_contact_no( $field_value ) ) {
-                                $errors[] = __( "{$field_name} should be a valid phone/mobile number", 'erp' );
+                            if ( $rule_value === 'true' && ! empty( $field_value ) && ! erp_is_valid_contact_no( $field_value ) ) {
+                                if ( false !== strpos( $field_value, 'E' ) ) {
+                                    $errors[] = __( "The input ({$field_value}) for {$field_name} may be exponential. Please change your number in proper format.", 'erp' );
+                                } else {
+                                    $errors[] = __( "{$field_name} is not valid. Minimum 4 and maximum 18 digits are expected and it may contain space, dot(.), hyphen(-) only.", 'erp' );
+                                }
                             }
                             break;
                         case 'not_csv_column_duplicate':
@@ -352,7 +356,12 @@ class Validate_Data {
                             break;
                         case 'is_valid_amount':
                             if ( $rule_value === 'true' && ! empty( $field_value ) && ! erp_is_valid_currency_amount( $field_value ) ) {
-                                $errors[] = __( "{$field_name} is not valid. It should not start with zero and may contain letters and commas(,) only. Also, Decimal point values are allowed.", 'erp' );
+                                $errors[] = __( "{$field_name} is not valid. It may contain digits and commas(,) and decimal point values only.", 'erp' );
+                            }
+                            break;
+                        case 'is_valid_url':
+                            if ( $rule_value === 'true' && ! empty( $field_value ) && ! erp_is_valid_url( $field_value ) ) {
+                                $errors[] = __( "{$field_name} is not valid. It should start with http, https, ftp or www", 'erp' );
                             }
                             break;
                         default:
