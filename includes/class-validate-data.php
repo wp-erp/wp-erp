@@ -361,7 +361,7 @@ class Validate_Data {
                             break;
                         case 'is_valid_url':
                             if ( $rule_value === 'true' && ! empty( $field_value ) && ! erp_is_valid_url( $field_value ) ) {
-                                $errors[] = __( "{$field_name} is not valid. It should start with http, https, ftp or www", 'erp' );
+                                $errors[] = __( "{$field_name} is not valid. Please provide a valid one.", 'erp' );
                             }
                             break;
                         default:

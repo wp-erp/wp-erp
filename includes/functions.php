@@ -3826,7 +3826,7 @@ function erp_is_valid_zip_code( $zip_code ) {
  * @return bool
  */
 function erp_is_valid_url( $url ) {
-    return preg_match( '/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i', $url );
+    return preg_match( '/^(?:(?:https?|ftp):\/\/)?(?:[a-z0-9-]+\.)*((?:[a-z0-9-]+\.)[a-z]+)/i', $url );
 }
 
 /**
