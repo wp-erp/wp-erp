@@ -23,7 +23,7 @@
                         <!-- End .header-section -->
                         <div class="wperp-row">
                             <div class="wperp-form-group wperp-col-sm-8">
-                                <label>Voucher Number</label>
+                                <label> {{ __('Voucher Number', 'erp')}} </label>
                                 <input type="text" v-model="voucher_no" class="wperp-form-field" placeholder="Sales Voucher Number">
                             </div>
                             <div class="wperp-form-group wperp-col-sm-4">
@@ -36,7 +36,7 @@
                     <div class="wperp-invoice-panel" v-if="this.invoice.id">
 
                         <div class="invoice-body">
-                            <h4> Sales Invoice</h4>
+                            <h4> {{ __('Sales Invoice', 'erp') }} </h4>
                             <div class="wperp-row">
                                 <div class="wperp-col-sm-6">
                                     <h5>{{ __('Bill to', 'erp') }}:</h5>
@@ -100,7 +100,7 @@
                                            {{ index + 1 }}
                                        </label>
                                     </th>
-                                    <th>{{ detail.name }}</th>
+                                    <th>{{ detail.name }} <span v-if="detail.return_qty">(Returned {{detail.return_qty}}/{{detail.existing_qty}})</span></th>
                                     <td> <input v-if="detail.selected" type="number" v-model="detail.qty" /> <span v-else> {{ detail.qty }}</span> </td>
                                     <td>{{ moneyFormat( detail.discount ) }}</td>
                                     <td>{{ moneyFormat(detail.unit_price) }}</td>
@@ -156,7 +156,7 @@ import Swal from 'sweetalert2'
 import Datepicker from 'admin/components/base/Datepicker.vue';
 
 export default {
-    name: 'InvoiceCreate',
+    name: 'SalesReturnInvoiceCreate',
 
     components: {
         Datepicker
@@ -209,27 +209,38 @@ export default {
                 this.invoice.line_items.map(item=>{
                     item.unit_price = parseFloat( item.unit_price )
                     item.tax = ( parseFloat( item.tax ) || 0) / parseFloat(item.qty)
-                    item.qty = parseFloat( item.qty ) - ( parseFloat(item.return_qty) || 0 )
                     item.existing_qty = item.qty
+                    item.qty = parseFloat( item.qty ) - ( parseFloat(item.return_qty) || 0 )
                     item.discount = parseFloat( item.discount ) / item.qty
                 })
 
             }
         },
         submitReturn(){
-console.log(this.summery.total)
+
+            /*
+            validate return item.
+            if return item is selected then summery.total will calculate with computed hook.
+             */
             if(!this.summery.total || this.summery.total < 1){
-                Swal.fire('Please , Select minimum one item', '', 'info')  ;
+                Swal.fire( __( 'Please Select minimum one item', 'erp' ), '', 'info' )  ;
                 return false;
             }
 
+
+
+
             Swal.fire({
-                title: 'Are you sure to submit sales return ?',
-                showDenyButton: true,
+                title: __( 'Are you sure?', 'erp' ),
+                text: __( "You won't be able to revert this!", 'erp' ),
+                type: 'warning',
                 showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: __( 'Yes, Confirm!', 'erp' ),
+                reverseButtons: true
             }).then( async (result) => {
-                console.log(result)
-                /* Read more about isConfirmed, isDenied below */
+
                 if (result.value) {
 
                     this.invoice.line_items.forEach( (item, index) =>{
@@ -241,9 +252,20 @@ console.log(this.summery.total)
                     let salesReturn = await postRequest('/sales-return/create', this.invoice )
                     if (salesReturn) {
 
-                    }
+                        this.invoice = {
+                            line_items: []
+                        }
 
-                } else if (result.isDenied) {
+                        Swal({
+                            position: 'center',
+                            type: 'success',
+                            title: __( "Invoice Saved successfully", 'erp' ),
+                            showConfirmButton: false,
+                            timer: 2500
+                        });
+
+
+                    }
 
                 }
 

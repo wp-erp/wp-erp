@@ -34,7 +34,7 @@
                         </router-link>
                     </strong>
                     <strong v-else>
-                        <router-link :to="{ name: 'PurchaseSingle', params: { id: data.row.id }}">
+                        <router-link :to="{ name: 'SalesReturnDetails', params: { id: data.row.id }}">
                             #{{ data.row.id }}
                         </router-link>
                     </strong>
@@ -71,7 +71,7 @@
 </template>
 
 <script>
-import HTTP from 'admin/http';
+
 import ListTable from 'admin/components/list-table/ListTable.vue';
 import TransactionsFilter from 'admin/components/transactions/TransactionsFilter.vue';
 import {mapState} from "vuex";

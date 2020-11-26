@@ -17,9 +17,9 @@ export const getRequest = function ( url, data = {}, silent = false ) {
 
     return new Promise( ( resolve, reject ) => {
 
-        store.dispatch('spinner/setSpinner', true);
+            store.dispatch('spinner/setSpinner', true);
 
-        axiosConfig.get(url, { params: data } ).then( ( response ) => {
+            axiosConfig.get(url, { params: data } ).then( ( response ) => {
 
             store.dispatch( 'spinner/setSpinner', false );
             resolve( response.data );
@@ -70,6 +70,7 @@ export const postRequest = function ( url, data= {}, silent = false, multipart =
         ).then( response => {
 
             store.dispatch('spinner/setSpinner', false);
+
             resolve(response.data);
 
         }).catch( errors => {

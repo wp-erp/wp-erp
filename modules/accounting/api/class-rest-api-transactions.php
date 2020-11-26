@@ -356,6 +356,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields['rest_base'] = $this->rest_base;
 
         $transactions = erp_acct_get_sales_transactions( $args );
+
         $total_items  = erp_acct_get_sales_transactions(
             [
                 'count'  => true,

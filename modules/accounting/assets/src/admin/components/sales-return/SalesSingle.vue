@@ -2,7 +2,7 @@
     <div class="wperp-modal-dialog sales-single">
         <div class="wperp-modal-content">
             <div class="wperp-modal-header">
-                <h2 v-if="null != type">{{ 'payment' == type ? 'Receive Payment' : getInvoiceType() }}</h2>
+                <h2>{{ __("Sales Return Invoice", "erp") }}</h2>
                 <div class="d-print-none">
                     <a href="#" class="wperp-btn btn--default print-btn" @click.prevent="printPopup">
                         <i class="flaticon-printer-1"></i>
@@ -37,13 +37,7 @@
             </div>
 
             <invoice-single-content
-                v-if="null != invoice && null != company"
                 :invoice="invoice"
-                :company="company" />
-
-            <payment-single-content
-                v-if="null != payment && null != company"
-                :payment="payment"
                 :company="company" />
 
             <send-mail v-if="showModal" :userid="user_id" :data="print_data" :type="type"/>
@@ -55,7 +49,6 @@
 <script>
     import HTTP from 'admin/http';
     import InvoiceSingleContent from 'admin/components/transactions/sales/InvoiceSingleContent.vue';
-    import PaymentSingleContent from 'admin/components/transactions/sales/PaymentSingleContent.vue';
     import SendMail from 'admin/components/email/SendMail.vue';
     import Dropdown from 'admin/components/base/Dropdown.vue';
 
@@ -65,10 +58,9 @@
         data() {
             return {
                 isWorking : false,
-                invoice   : null,
-                payment   : null,
+                invoice   : {},
                 type      : null,
-                company   : null,
+                company   : {},
                 acct_var  : erp_acct_var, /* global erp_acct_var */
                 showModal : false,
                 print_data: null,
@@ -80,7 +72,6 @@
 
         components: {
             InvoiceSingleContent,
-            PaymentSingleContent,
             SendMail,
             Dropdown
         },

@@ -1,15 +1,15 @@
 <template>
     <div class="wperp-modal-body">
         <div class="wperp-invoice-panel">
-            <div class="invoice-header">
+            <div class="invoice-header" v-if="company.name">
                 <div class="invoice-logo">
                     <img :src="company.logo" alt="logo name" width="100" height="100">
                 </div>
-                <div class="invoice-address">
+                <div class="invoice-address" >
                     <address>
                         <strong>{{ company.name }}</strong><br>
                         {{ company.address.address_1 }}<br>
-                        {{ company.address.address_2 }}<br>
+                        {{ company.address.address_2 }}<br>address_1
                         {{ company.address.city }}<br>
                         {{ company.address.country }}
                     </address>
@@ -28,6 +28,10 @@
                     </div>
                     <div class="wperp-col-sm-6">
                         <table class="invoice-info">
+                            <tr v-if="invoice.sales_voucher_id">
+                                <th>{{ __('Sales Voucher No', 'erp') }}:</th>
+                                <td>#{{ invoice.sales_voucher_id }}</td>
+                            </tr>
                             <tr>
                                 <th>{{ __('Voucher No', 'erp') }}:</th>
                                 <td>#{{ invoice.voucher_no }}</td>
@@ -36,7 +40,7 @@
                                 <th>{{ __('Transaction Date', 'erp') }}:</th>
                                 <td>{{ invoice.trn_date }}</td>
                             </tr>
-                            <tr>
+                            <tr v-if="invoice.due_date">
                                 <th>{{ __('Due Date', 'erp') }}:</th>
                                 <td>{{ invoice.due_date }}</td>
                             </tr>
@@ -44,7 +48,7 @@
                                 <th>{{ __('Created At', 'erp') }}:</th>
                                 <td>{{ invoice.created_at }}</td>
                             </tr>
-                            <tr>
+                            <tr v-if="invoice.total_due">
                                 <th>{{ __('Amount Due', 'erp') }}:</th>
                                 <td>{{ moneyFormat( invoice.total_due ) }}</td>
                             </tr>
@@ -142,6 +146,8 @@ export default {
         getInvoiceType() {
             if (this.invoice !== null && this.invoice.estimate === '1') {
                 return 'Estimate';
+            } else if( this.invoice.sales_voucher_id ) {
+                return 'Sales Return Invoice';
             } else {
                 return 'Invoice';
             }

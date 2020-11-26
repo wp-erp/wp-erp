@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 
 /**
- * Get all sales transactions
+ * Get all sales return lists with pagination
  *
  * @param array $args
  *
@@ -63,20 +63,19 @@ function erp_acct_get_sales_return_transactions( $args = [] ) {
             voucher.editable,
             invoice.invoice_id as sales_invoice_id,
             invoice.customer_id,
-            invoice.customer_name, 
-            invoice.trn_date,   
-            invoice.amount,   
-            invoice.discount,   
-            invoice.discount_type,   
-            invoice.tax,   
+            invoice.customer_name,
+            invoice.trn_date,
+            invoice.amount,
+            invoice.discount,
+            invoice.discount_type,
+            invoice.tax,
             invoice.reason,
             invoice.comments,
-            (invoice.amount + invoice.tax) - invoice.discount AS sales_amount,  
-            invoice.status as inv_status';
+            (invoice.amount + invoice.tax) - invoice.discount AS sales_amount';
     }
 
     $sql .= " FROM {$wpdb->prefix}erp_acct_voucher_no AS voucher
-        INNER JOIN {$wpdb->prefix}erp_acct_sales_return AS invoice ON invoice.voucher_no = voucher.id  
+        INNER JOIN {$wpdb->prefix}erp_acct_sales_return AS invoice ON invoice.voucher_no = voucher.id
         {$where} GROUP BY voucher.id ORDER BY voucher.id {$args['order']} {$limit}";
 
     if ( $args['count'] ) {
@@ -85,14 +84,13 @@ function erp_acct_get_sales_return_transactions( $args = [] ) {
         return $wpdb->num_rows;
     }
 
-    // error_log(print_r($sql, true));
     return $wpdb->get_results( $sql, ARRAY_A );
 }
 
 
 
 /**
- * Get an single invoice
+ * Get an single sales invoice for return
  *
  * @param $invoice_no
  *
@@ -141,7 +139,7 @@ function erp_acct_get_invoice_for_return( $invoice_no ) {
     $row = $wpdb->get_row( $sql, ARRAY_A );
 
     $row['line_items']  = erp_acct_format_invoice_line_items_for_return( $invoice_no );
-    $row['tax_rate_id'] = erp_acct_get_default_tax_rate_name_id();
+
 
     // calculate every line total
     foreach ( $row['line_items'] as $key => $value ) {
@@ -156,7 +154,7 @@ function erp_acct_get_invoice_for_return( $invoice_no ) {
 }
 
 /**
- * Get an single invoice
+ * Get an single sales return invoice
  *
  * @param $invoice_no
  *
@@ -174,18 +172,18 @@ function erp_acct_get_sales_return_invoice( $invoice_no ) {
     invoice.voucher_no,
     invoice.customer_id,
     invoice.customer_name,
-    invoice.trn_date,  
+    invoice.trn_date,
     invoice.amount,
     invoice.amount,
     invoice.discount,
     invoice.discount_type,
-    invoice.tax,  
+    invoice.tax,
     invoice.status,
     invoice.reason,
-    invoice.created_at 
+    invoice.created_at
 
     FROM {$wpdb->prefix}erp_acct_sales_return as invoice
-    LEFT JOIN {$wpdb->prefix}erp_acct_voucher_no as voucher ON invoice.voucher_no = voucher.id  
+    LEFT JOIN {$wpdb->prefix}erp_acct_voucher_no as voucher ON invoice.voucher_no = voucher.id
     WHERE invoice.voucher_no = %d",
         $invoice_no
     );
@@ -201,7 +199,7 @@ function erp_acct_get_sales_return_invoice( $invoice_no ) {
 
 
 /**
- * Get formatted line items
+ * Get sales items of sales invoice
  */
 function erp_acct_format_invoice_line_items_for_return( $voucher_no ) {
     global $wpdb;
@@ -257,13 +255,13 @@ function erp_acct_format_invoice_line_items_for_return( $voucher_no ) {
 
 
 /**
- * Get formatted line items
+ * Get return items
  */
 function erp_acct_format_sales_return_invoice_line_items( $voucher_no ) {
     global $wpdb;
 
     $sql = $wpdb->prepare(
-        "SELECT 
+        "SELECT
         inv_detail.id,
         inv_detail.invoice_details_id,
         inv_detail.product_id,
@@ -272,7 +270,7 @@ function erp_acct_format_sales_return_invoice_line_items( $voucher_no ) {
         inv_detail.discount,
         inv_detail.tax,
         inv_detail.item_total,
-        inv_detail.ecommerce_type, 
+        inv_detail.ecommerce_type,
         product.name,
         product.product_type_id,
         product.category_id,
@@ -281,7 +279,7 @@ function erp_acct_format_sales_return_invoice_line_items( $voucher_no ) {
         product.sale_price,
         product.tax_cat_id
 
-        FROM  {$wpdb->prefix}erp_acct_sales_return_details as inv_detail  
+        FROM  {$wpdb->prefix}erp_acct_sales_return_details as inv_detail
         LEFT JOIN {$wpdb->prefix}erp_acct_products as product ON inv_detail.product_id = product.id
         WHERE inv_detail.trn_no = %d GROUP BY inv_detail.id",
         $voucher_no
@@ -333,10 +331,10 @@ function erp_acct_insert_sales_return( $data ) {
 
         $invoice_data = erp_acct_get_formatted_sales_return_data( $data, $voucher_no );
 
-        $wpdb->insert(
+        $insertReturn = $wpdb->insert(
             $wpdb->prefix . 'erp_acct_sales_return',
             [
-                'invoice_id'      => $invoice_data['voucher_no'],
+                'invoice_id'      => $invoice_data['sales_voucher_no'],
                 'voucher_no'      => $invoice_data['voucher_no'],
                 'customer_id'     => $invoice_data['customer_id'],
                 'customer_name'   => $invoice_data['customer_name'],
@@ -376,24 +374,51 @@ function erp_acct_insert_sales_return( $data ) {
 
         }
 
+
         erp_acct_insert_sales_return_data_into_ledger( $invoice_data, $voucher_no );
 
-       // $data['dr'] = $invoice_data['amount'];
-      //  $data['cr'] = 0;
-       // erp_acct_insert_data_into_people_trn_details( $data, $voucher_no );
+        //account
+        $wpdb->insert(
+
+            "{$wpdb->prefix}erp_acct_invoice_account_details", [
+                'invoice_no'  => $voucher_no,
+                'trn_no'      => $invoice_data['sales_voucher_no'],
+                'trn_date'    => $invoice_data['return_date'],
+                'particulars' => __("Sales returned with voucher no ", "erp" ).$voucher_no,
+                'debit'       => 0,
+                'credit'      => ( $invoice_data['amount'] +  $invoice_data['amount']  ) - $invoice_data['discount'] ,
+                'created_at'  => $invoice_data['created_at'],
+                'created_by'  => $user_id,
+            ]
+        );
+
+
+        // add people transaction
+        $data['date'] = $invoice_data['return_date'];
+        $data['dr'] = 0;
+        $data['cr'] = $invoice_data['amount'];
+        erp_acct_insert_data_into_people_trn_details( $data, $voucher_no );
+
+        if($invoice_data['discount']){
+            $data['dr'] = $invoice_data['discount'];
+            $data['cr'] = 0;
+            erp_acct_insert_data_into_people_trn_details( $data, $voucher_no );
+        }
+
+        if($invoice_data['tax']){
+            $data['dr'] = 0;
+            $data['cr'] = $invoice_data['tax'];
+            erp_acct_insert_data_into_people_trn_details( $data, $voucher_no );
+        }
 
         $wpdb->query( 'COMMIT' );
 
-    } catch ( Exception $e ) {
+    } catch ( \Exception $e ) {
 
         $wpdb->query( 'ROLLBACK' );
 
         return new WP_error( 'sales-return-exception', $e->getMessage() );
     }
-
-  //  $invoice = erp_acct_get_invoice_for_return($voucher_no) ;
-
-  //  do_action( 'erp_acct_new_transaction_sales_return', $voucher_no, $invoice );
 
     return $voucher_no;
 }
@@ -449,6 +474,8 @@ function erp_acct_get_formatted_sales_return_data( $data, $voucher_no ) {
  *
  * @param array $invoice_data
  *
+ * @param int $voucher_no
+ * @param bool $contra
  * @return mixed
  */
 function erp_acct_insert_sales_return_data_into_ledger( $invoice_data, $voucher_no = 0, $contra = false ) {
@@ -509,7 +536,7 @@ function erp_acct_insert_sales_return_data_into_ledger( $invoice_data, $voucher_
             [
                 'ledger_id'   => $sales_return_discount_ledger_id,
                 'trn_no'      => $voucher_no,
-                'particulars' => "Sales returned with voucher no ".$voucher_no,
+                'particulars' => __("Sales returned with voucher no ", "erp" ).$voucher_no,
                 'debit'       => $invoice_data['discount'],
                 'credit'      => 0,
                 'trn_date'    => $invoice_data['return_date'],

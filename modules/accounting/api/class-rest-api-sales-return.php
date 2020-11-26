@@ -4,7 +4,9 @@ namespace WeDevs\ERP\Accounting\API;
 
 use WeDevs\ERP\Accounting\Includes\Classes\RequestHandler;
 use WP_Error;
+use WP_HTTP_Response;
 use WP_REST_Request;
+use WP_REST_Response;
 use WP_REST_Server;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -14,8 +16,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Sales_Return_Controller extends \WeDevs\ERP\API\REST_Controller {
 
     /**
+     * this class for sales return invoice create, view, list
+     * from version of 1.7.0
+     */
+
+
+    /**
      * Endpoint namespace.
-     *
      * @var string
      */
     protected $namespace = 'erp/v1';
@@ -28,7 +35,7 @@ class Sales_Return_Controller extends \WeDevs\ERP\API\REST_Controller {
     protected $rest_base = 'accounting/v1/sales-return';
 
     /**
-     * Register the routes for the objects of the controller.
+     * Register the routes for creating sales return invoice.
      */
     public function register_routes() {
 
@@ -48,6 +55,9 @@ class Sales_Return_Controller extends \WeDevs\ERP\API\REST_Controller {
             ]
         );
 
+        /**
+         *  Register the routes for sales return list.
+         */
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base .'/list',
@@ -65,6 +75,9 @@ class Sales_Return_Controller extends \WeDevs\ERP\API\REST_Controller {
         );
 
 
+        /**
+         *  Register the routes for single sales return invoice.
+         */
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base .'/(?P<id>[\d]+)',
@@ -82,6 +95,9 @@ class Sales_Return_Controller extends \WeDevs\ERP\API\REST_Controller {
         );
 
 
+        /**
+         *  Register the routes for searching sales invoice for return
+         */
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base . '/search-invoice'.'/(?P<id>[\d]+)',
@@ -101,13 +117,9 @@ class Sales_Return_Controller extends \WeDevs\ERP\API\REST_Controller {
     }
 
 
-
-
     /**
-     * Get Purchase transactions
-     *
+     * Get sales return list
      * @param WP_REST_Request $request
-     *
      * @return object
      */
     public function get_sales_return_list( $request ) {
@@ -119,19 +131,17 @@ class Sales_Return_Controller extends \WeDevs\ERP\API\REST_Controller {
             'status'     => empty( $request['status'] ) ? '' : $request['status'],
         ];
 
-        $formatted_items   = [];
-        $additional_fields = [];
-
-        $additional_fields['namespace'] = $this->namespace;
-        $additional_fields['rest_base'] = $this->rest_base;
-
+        // get paginated
         $transactions = erp_acct_get_sales_return_transactions( $args );
-        $total_items  = erp_acct_get_sales_transactions(
+
+        // get total item number for  pagination
+        $total_items  = erp_acct_get_sales_return_transactions(
             [
                 'count'  => true,
                 'number' => -1,
             ]
         );
+
 
         $response = rest_ensure_response( $transactions );
         $response = $this->format_collection_response( $response, $request, $total_items );
@@ -142,13 +152,12 @@ class Sales_Return_Controller extends \WeDevs\ERP\API\REST_Controller {
     }
 
 
-
     /**
-     * Get a collection of invoices
+     * Get sales return single invoice
      *
      * @param WP_REST_Request $request
      *
-     * @return WP_Error|WP_REST_Response
+     * @return WP_Error|WP_HTTP_Response|WP_REST_Response
      */
     public function get_sales_return( $request ) {
         $args = [
@@ -165,7 +174,7 @@ class Sales_Return_Controller extends \WeDevs\ERP\API\REST_Controller {
     }
 
    /**
-     * Get a collection of invoices
+     * get sales invoice for return
      *
      * @param WP_REST_Request $request
      *
@@ -187,7 +196,7 @@ class Sales_Return_Controller extends \WeDevs\ERP\API\REST_Controller {
 
 
     /**
-     * Create an invoice
+     * Create sales return invoice
      *
      * @param WP_REST_Request $request
      *
@@ -200,7 +209,6 @@ class Sales_Return_Controller extends \WeDevs\ERP\API\REST_Controller {
         $item_total          = 0;
         $item_discount_total = 0;
         $item_tax_total      = 0;
-        $additional_fields   = [];
 
         $items = $request['line_items'];
 
