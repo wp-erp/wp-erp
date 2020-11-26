@@ -657,6 +657,10 @@ function erp_get_date_format( $format = false ) {
  * @return string formatted date
  */
 function erp_format_date( $date, $format = false ) {
+    if ( empty( $date ) ) {
+        return;
+    }
+
     if ( ! $format ) {
         $format = erp_get_date_format();
     }
