@@ -165,7 +165,7 @@ class Auditlog_List_Table extends \WP_List_Table {
                 return $audit_log->display_name;
 
             case 'created_at':
-                return erp_format_date( $audit_log->created_at );
+                return ! empty( $audit_log->created_at ) ? gmdate( erp_get_date_format() . ', h:i:s', strtotime( $audit_log->created_at ) ) : $audit_log->created_at;
 
             default:
                 return isset( $audit_log->$column_name ) ? $audit_log->$column_name : '';
