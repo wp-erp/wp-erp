@@ -23,7 +23,7 @@
         <ul class="report-header" v-if="null !== selectedAgency">
             <li><strong>{{ __('Account Name', 'erp') }}:</strong> <em>{{ selectedAgency.name }}</em></li>
             <li><strong>{{ __('Currency', 'erp') }}:</strong> <em>{{ symbol }}</em></li>
-            <li><strong>{{ __('For the period of ( Transaction date )', 'erp') }}:</strong> <em>{{ start_date }}</em> to <em>{{ end_date }}</em></li>
+            <li><strong>{{ __('For the period of ( Transaction date )', 'erp') }}:</strong> <em>{{ formatDate(start_date) }}</em> to <em>{{ formatDate(end_date) }}</em></li>
         </ul>
 
         <list-table
@@ -143,6 +143,11 @@ export default {
                 this.rows        = response.data.details;
                 this.totalDebit  = response.data.extra.total_debit;
                 this.totalCredit = response.data.extra.total_credit;
+
+                this.rows.forEach(item => {
+                    item.trn_date = this.formatDate(item.trn_date);
+                    item.created_at = this.formatDate(item.created_at);
+                });
 
                 this.$store.dispatch('spinner/setSpinner', false);
             }).catch(e => {

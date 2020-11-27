@@ -72,4 +72,8 @@ export default {
         color: #1a9ed4 !important;
     }
 
+    .with-multiselect .multiselect__select{
+        z-index: 99;
+    }
+
 </style>

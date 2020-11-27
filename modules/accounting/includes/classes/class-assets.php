@@ -125,6 +125,7 @@ class Assets {
             'pdf_plugin_active'  => is_plugin_active( 'erp-pdf-invoice/wp-erp-pdf.php' ),
             'link_copy_success'  => __( 'Link has been successfully copied.', 'erp' ),
             'link_copy_error'    => __( 'Failed to copy the link.', 'erp' ),
+            'date_format'        => erp_get_date_format(),
             'banner_dimension'   => [
                 'width'       => 600,
                 'height'      => 600,
