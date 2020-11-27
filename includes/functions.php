@@ -658,7 +658,7 @@ function erp_get_date_format( $format = false ) {
  */
 function erp_format_date( $date, $format = false ) {
     if ( empty( $date ) ) {
-        return;
+        return false;
     }
 
     if ( ! $format ) {
