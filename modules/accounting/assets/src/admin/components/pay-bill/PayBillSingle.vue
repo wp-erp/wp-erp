@@ -18,6 +18,7 @@
                         </template>
                         <template slot="dropdown">
                             <ul role="menu">
+                                <li> <a :href="pdf_link">{{ __('Export as PDF', 'erp') }}</a> </li>
                                 <li><a href="#" @click.prevent="showModal = true">{{ __('Send Mail', 'erp') }}</a></li>
                             </ul>
                         </template>
@@ -59,12 +60,16 @@
                                         <td>#{{ payBill.voucher_no }}</td>
                                     </tr>
                                     <tr>
+                                        <th>{{ __('Reference No', 'erp') }}:</th>
+                                        <td>#{{ payBill.ref }}</td>
+                                    </tr>
+                                    <tr>
                                         <th>{{ __('Transaction Date', 'erp') }}:</th>
-                                        <td>{{ payBill.trn_date }}</td>
+                                        <td>{{ formatDate(payBill.trn_date) }}</td>
                                     </tr>
                                     <tr>
                                         <th>{{ __('Created At', 'erp') }}:</th>
-                                        <td>{{ payBill.created_at }}</td>
+                                        <td>{{ formatDate(payBill.created_at) }}</td>
                                     </tr>
                                     <tr>
                                         <th>{{ __('Transaction From', 'erp') }}:</th>
@@ -150,7 +155,8 @@ export default {
             print_data : null,
             type       : 'pay_bill',
             showModal  : false,
-            people_id  : null
+            people_id  : null,
+            pdf_link   : '#'
         };
     },
 
@@ -178,6 +184,7 @@ export default {
             HTTP.get(`/pay-bills/${this.$route.params.id}`).then(response => {
                 this.payBill = response.data;
                 this.people_id = this.payBill.vendor_id;
+                this.pdf_link = this.payBill.pdf_link;
                 this.$store.dispatch('spinner/setSpinner', false);
             }).catch(error => {
                 this.$store.dispatch('spinner/setSpinner', false);

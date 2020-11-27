@@ -739,7 +739,6 @@
                     updateSegmentText       : __( 'Update this Segment', 'erp' ),
                     deleteSegmentText       : __( 'Delete this Segment', 'erp' ),
                     resetFilterText         : __( 'Reset all filter', 'erp' )
-                    
                 }
             },
 
@@ -1326,6 +1325,20 @@
                         onReady: function() {
                             self.initFields();
                             $( 'select.erp-country-select').change();
+                            $( 'button[type=submit]' ).click( function() {
+                                var count = 0;
+
+                                $( '#erp-crm-new-contact form' ).find( 'input, select, textarea' ).each( function() {
+                                    if( $(this).prop('required') && $(this).val() === '' ) {
+                                        count++;
+                                    }
+                                });
+
+                                if( count ) {
+                                    var notice = wpErpCrm.required_field_notice.replace('{count}', count);
+                                    swal( '', notice, 'warning' );
+                                }
+                            });
                         },
                         onSubmit: function(modal) {
                             modal.disableButton();
@@ -1420,6 +1433,21 @@
                                     });
 
                                     self.initFields();
+                                }
+                            });
+
+                            $( 'button[type=submit]' ).click( function() {
+                                var count = 0;
+
+                                $( '#erp-customer-edit form' ).find( 'input, select, textarea' ).each( function() {
+                                    if( $(this).prop('required') && $(this).val() === '' ) {
+                                        count++;
+                                    }
+                                });
+
+                                if( count ) {
+                                    var notice = wpErpCrm.required_field_notice.replace('{count}', count);
+                                    swal( '', notice , 'warning' );
                                 }
                             });
                         },
@@ -2224,6 +2252,21 @@
                                     //});
 
                                     self.initFields();
+                                }
+                            });
+
+                            $( 'button[type=submit]' ).click( function() {
+                                var count = 0;
+
+                                $( '#erp-customer-edit form' ).find( 'input, select, textarea' ).each( function() {
+                                    if( $(this).prop('required') && $(this).val() === '' ) {
+                                        count++;
+                                    }
+                                });
+
+                                if( count ) {
+                                    var notice = wpErpCrm.required_field_notice.replace('{count}', count);
+                                    swal( '', notice , 'warning' );
                                 }
                             });
                         },

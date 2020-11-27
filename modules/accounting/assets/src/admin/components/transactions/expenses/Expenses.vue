@@ -14,7 +14,7 @@
 
         <expenses-stats />
 
-        <transactions-filter />
+        <transactions-filter :types="filterTypes"  :people="{title: 'Pay to', items: people}" />
 
         <expenses-list />
 
@@ -30,6 +30,7 @@ import ComboBox from 'admin/components/select/ComboBox.vue';
 import ExpensesStats from 'admin/components/transactions/expenses/ExpensesStats.vue';
 import ExpensesList from 'admin/components/transactions/expenses/ExpensesList.vue';
 import TransactionsFilter from 'admin/components/transactions/TransactionsFilter.vue';
+import {mapState} from "vuex";
 
 export default {
     name: 'Expenses',
@@ -48,8 +49,18 @@ export default {
                 { namedRoute: 'CheckCreate', name: __('Create Check', 'erp') },
                 { namedRoute: 'BillCreate', name: __('Create Bill', 'erp') },
                 { namedRoute: 'PayBillCreate', name: __('Pay Bill', 'erp') }
-            ]
+            ],
+
+            filterTypes:[{id: 'expense', name: 'Expense'}, {id: 'bill', name: 'Bill'}, {id: 'pay_bill', name: 'Bill Payment'}, {id: 'check', name: 'Check'}],
         };
-    }
+    },
+    created() {
+        if(!this.people.length){
+            this.$store.dispatch('expense/fetchPeople');
+        }
+    },
+    computed: mapState({
+        people: state => state.expense.people
+    }),
 };
 </script>

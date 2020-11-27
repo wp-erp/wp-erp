@@ -85,10 +85,11 @@ export default {
     created() {
         this.$store.dispatch('spinner/setSpinner', true);
         this.$root.$on('transactions-filter', filters => {
-            this.$router.push({
+          /*  this.$router.push({
                 path : '/transactions/expenses',
                 query: { start: filters.start_date, end: filters.end_date, status: filters.status }
             });
+            */
             this.fetchItems(filters);
             this.fetched = true;
         });
@@ -124,9 +125,12 @@ export default {
                     page      : this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page,
                     start_date: filters.start_date,
                     end_date  : filters.end_date,
-                    status    : filters.status
+                    status    : filters.status,
+                    type      : filters.type,
+                    vendor_id: filters.people_id
                 }
             }).then((response) => {
+
                 this.rows = response.data;
 
                 this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
@@ -240,7 +244,7 @@ export default {
                         trn_type   : 'pay_bill',
                         ref        : item.ref ? item.ref : '-',
                         vendor_name: item.pay_bill_vendor_name,
-                        trn_date   : item.pay_bill_trn_date,
+                        trn_date   : this.formatDate(item.pay_bill_trn_date),
                         due_date   : '-',
                         due        : '-',
                         amount     : this.formatAmount(item.pay_bill_amount),
@@ -261,8 +265,8 @@ export default {
                         ref        : item.ref ? item.ref : '-',
                         vendor_id  : item.vendor_id,
                         vendor_name: item.vendor_name,
-                        trn_date   : item.bill_trn_date,
-                        due_date   : item.due_date,
+                        trn_date   : this.formatDate(item.bill_trn_date),
+                        due_date   : this.formatDate(item.due_date),
                         due        : this.formatAmount(item.due),
                         amount     : this.formatAmount(item.amount),
                         status     : item.status,
@@ -283,7 +287,7 @@ export default {
                         trn_type   : 'expense',
                         ref        : item.exp_ref ? item.exp_ref : '-',
                         vendor_name: item.expense_people_name,
-                        trn_date   : item.expense_trn_date,
+                        trn_date   : this.formatDate(item.expense_trn_date),
                         due_date   : '-',
                         due        : '-',
                         amount     : this.formatAmount(item.expense_amount),
@@ -303,7 +307,7 @@ export default {
                         trn_type   : 'check',
                         ref        : item.ref ? item.ref : '-',
                         vendor_name: item.expense_people_name,
-                        trn_date   : item.expense_trn_date,
+                        trn_date   : this.formatDate(item.expense_trn_date),
                         due_date   : '-',
                         due        : '-',
                         amount     : this.formatAmount(item.expense_amount),

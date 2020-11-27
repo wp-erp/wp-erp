@@ -2,7 +2,6 @@
 global $wpdb;
 
 $all_user_id = $wpdb->get_col( "SELECT user_id FROM {$wpdb->prefix}erp_hr_employees WHERE status = 'active' ORDER BY hiring_date DESC" );
-$date_format = get_option( 'date_format' );
 ?>
 <div class="wrap">
     <h1><?php esc_html_e( 'Salary History', 'erp' ); ?></h1>
@@ -32,7 +31,7 @@ $date_format = get_option( 'date_format' );
                             $emp_url      = ( 0 == $line ? wp_kses_post( $employee_url ) : '' );
                             echo '<tr>';
                             echo '<td>' . wp_kses_post( $emp_url ) . '</td>';
-                            echo '<td>' . esc_html( date( $date_format, strtotime( esc_attr( $compensation['date'] ) ) ) ) . '</td>';
+                            echo '<td>' . erp_format_date( esc_attr( $compensation['date'] ) ) . '</td>';
                             echo '<td>' . esc_attr( $compensation['pay_rate'] ) . '</td>';
                             echo '<td>' . esc_attr( $compensation['pay_type'] ) . '</td>';
                             echo '<td>' . esc_attr( $employee->get_user_id() ) . '</td>';

@@ -25,8 +25,8 @@ foreach ( $leave_requests as $key => $leave_request ) {
     $events[] = [
         'id'        => $leave_request->id,
         'title'     => $event_label,
-        'start'     => erp_current_datetime()->setTimestamp( $leave_request->start_date )->setTime( 0, 0, 0 )->format(  'Y-m-d h:i:s' ),
-        'end'       => erp_current_datetime()->setTimestamp( $leave_request->end_date )->setTime( 23, 59, 59 )->format( 'Y-m-d h:i:s' ),
+        'start'     => erp_current_datetime()->setTimestamp( $leave_request->start_date )->setTime( 0, 0, 0 )->format(  'Y-m-d H:i:s' ),
+        'end'       => erp_current_datetime()->setTimestamp( $leave_request->end_date )->setTime( 23, 59, 59 )->format( 'Y-m-d H:i:s' ),
         'url'       => erp_hr_url_single_employee( $leave_request->user_id ),
         'color'     => $leave_request->color,
         'img'       => get_avatar( $leave_request->user_id, 16 ),
@@ -95,6 +95,7 @@ foreach ( $leave_requests as $key => $leave_request ) {
                 right: 'month,agendaWeek,agendaDay'
             },
             editable: false,
+            firstDay: <?php echo esc_html( get_option( 'start_of_week', 1 ) );?>,
             eventLimit: 4, // allow "more" link when too many events
             events: <?php echo json_encode( $events ); ?>,
             eventRender: function( event, element, calEvent ) {

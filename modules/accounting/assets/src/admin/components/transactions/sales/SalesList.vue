@@ -42,10 +42,10 @@
                     {{ isPayment(data.row) ? data.row.pay_cus_name : data.row.inv_cus_name }}
                 </template>
                 <template slot="trn_date" slot-scope="data">
-                    {{ isPayment(data.row) ? data.row.payment_trn_date : data.row.invoice_trn_date }}
+                    {{ isPayment(data.row) ? formatDate( data.row.payment_trn_date ) : formatDate( data.row.invoice_trn_date ) }}
                 </template>
                 <template slot="due_date" slot-scope="data">
-                    {{ isPayment(data.row) ? '-' : data.row.due_date }}
+                    {{ isPayment(data.row) ? '-' : formatDate( data.row.due_date ) }}
                 </template>
                 <template slot="due" slot-scope="data">
                     {{ isPayment(data.row) ? '-' : formatAmount(data.row.due) }}
@@ -113,10 +113,10 @@ export default {
         this.$store.dispatch('spinner/setSpinner', true);
 
         this.$root.$on('transactions-filter', filters => {
-            this.$router.push({
+          /*  this.$router.push({
                 path : '/transactions/sales',
-                query: { start: filters.start_date, end: filters.end_date, status: filters.status }
-            });
+                query: { start: filters.start_date, end: filters.end_date, status: filters.status, type: filters.type }
+            });*/
             this.fetchItems(filters);
             this.fetched = true;
         });
@@ -151,7 +151,9 @@ export default {
                     page      : this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page,
                     start_date: filters.start_date,
                     end_date  : filters.end_date,
-                    status    : filters.status
+                    status    : filters.status,
+                    type      : filters.type,
+                    customer_id: filters.people_id
                 }
             }).then(response => {
                 this.rows = response.data.map(item => {

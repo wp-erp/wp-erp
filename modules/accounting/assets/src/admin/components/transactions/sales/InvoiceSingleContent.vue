@@ -38,15 +38,15 @@
                             </tr>
                             <tr>
                                 <th>{{ __('Transaction Date', 'erp') }}:</th>
-                                <td>{{ invoice.trn_date }}</td>
+                                <td>{{ formatDate( invoice.trn_date ) }}</td>
                             </tr>
                             <tr v-if="invoice.due_date">
                                 <th>{{ __('Due Date', 'erp') }}:</th>
-                                <td>{{ invoice.due_date }}</td>
+                                <td>{{ formatDate( invoice.due_date ) }}</td>
                             </tr>
                             <tr>
                                 <th>{{ __('Created At', 'erp') }}:</th>
-                                <td>{{ invoice.created_at }}</td>
+                                <td>{{ formatDate( invoice.created_at ) }}</td>
                             </tr>
                             <tr v-if="invoice.total_due">
                                 <th>{{ __('Amount Due', 'erp') }}:</th>
