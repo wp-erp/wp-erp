@@ -104,7 +104,7 @@
                                     <td> <input v-if="detail.selected" type="number" v-model="detail.qty" /> <span v-else> {{ detail.qty }}</span> </td>
                                     <td>{{ moneyFormat( detail.discount ) }}</td>
                                     <td>{{ moneyFormat(detail.unit_price) }}</td>
-                                    <td>{{ moneyFormat((detail.unit_price * parseFloat(detail.qty) ) - ( detail.discount + parseFloat(detail.qty) ) ) }}</td>
+                                    <td>{{ moneyFormat((detail.unit_price * parseFloat(detail.qty) ) - detail.discount ) }}</td>
                                     <td   class="col--actions delete-row">
                                         <span  @click="deleteItem(index)" class="wperp-btn"> <i  class="flaticon-trash"></i></span>
                                     </td>
