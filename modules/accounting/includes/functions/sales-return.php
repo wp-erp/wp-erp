@@ -5,8 +5,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 
-
-
 /**
  * Get all sales return lists with pagination
  *
@@ -49,7 +47,7 @@ function erp_acct_get_sales_return_transactions( $args = [] ) {
         }
     }
 
-    if ( -1 !== $args['number'] ) {
+    if ( - 1 !== $args['number'] ) {
         $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
     }
 
@@ -86,7 +84,6 @@ function erp_acct_get_sales_return_transactions( $args = [] ) {
 
     return $wpdb->get_results( $sql, ARRAY_A );
 }
-
 
 
 /**
@@ -138,7 +135,7 @@ function erp_acct_get_invoice_for_return( $invoice_no ) {
 
     $row = $wpdb->get_row( $sql, ARRAY_A );
 
-    $row['line_items']  = erp_acct_format_invoice_line_items_for_return( $invoice_no );
+    $row['line_items'] = erp_acct_format_invoice_line_items_for_return( $invoice_no );
 
 
     // calculate every line total
@@ -191,11 +188,10 @@ function erp_acct_get_sales_return_invoice( $invoice_no ) {
     $row = $wpdb->get_row( $sql, ARRAY_A );
 
 
-    $row['line_items']  = erp_acct_format_sales_return_invoice_line_items( $invoice_no );
+    $row['line_items'] = erp_acct_format_sales_return_invoice_line_items( $invoice_no );
 
     return $row;
 }
-
 
 
 /**
@@ -253,7 +249,6 @@ function erp_acct_format_invoice_line_items_for_return( $voucher_no ) {
 }
 
 
-
 /**
  * Get return items
  */
@@ -289,9 +284,6 @@ function erp_acct_format_sales_return_invoice_line_items( $voucher_no ) {
 }
 
 
-
-
-
 /**
  * Insert invoice data
  *
@@ -310,8 +302,8 @@ function erp_acct_insert_sales_return( $data ) {
     $data['updated_at'] = date( 'Y-m-d H:i:s' );
     $data['updated_by'] = $user_id;
 
-    $voucher_no    = null;
-    $currency      = erp_get_currency( true );
+    $voucher_no = null;
+    $currency   = erp_get_currency( true );
 
     try {
         $wpdb->query( 'START TRANSACTION' );
@@ -331,31 +323,37 @@ function erp_acct_insert_sales_return( $data ) {
 
         $invoice_data = erp_acct_get_formatted_sales_return_data( $data, $voucher_no );
 
+
         $insertReturn = $wpdb->insert(
             $wpdb->prefix . 'erp_acct_sales_return',
             [
-                'invoice_id'      => $invoice_data['sales_voucher_no'],
-                'voucher_no'      => $invoice_data['voucher_no'],
-                'customer_id'     => $invoice_data['customer_id'],
-                'customer_name'   => $invoice_data['customer_name'],
-                'trn_date'        => $invoice_data['return_date'],
-                'amount'          => $invoice_data['amount'],
-                'discount'        => $invoice_data['discount'],
-                'discount_type'   => $invoice_data['discount_type'],
-                'tax'             => $invoice_data['tax'],
-                'reason'          => $invoice_data['return_reason'],
-                'status'          => $invoice_data['status'],
-                'created_at'      => $invoice_data['created_at'],
-                'created_by'      => $invoice_data['created_by'],
+                'invoice_id'    => $invoice_data['sales_voucher_no'],
+                'voucher_no'    => $invoice_data['voucher_no'],
+                'customer_id'   => $invoice_data['customer_id'],
+                'customer_name' => $invoice_data['customer_name'],
+                'trn_date'      => $invoice_data['return_date'],
+                'amount'        => $invoice_data['amount'],
+                'discount'      => $invoice_data['discount'],
+                'discount_type' => $invoice_data['discount_type'],
+                'tax'           => $invoice_data['tax'],
+                'reason'        => $invoice_data['return_reason'],
+                'status'        => $invoice_data['status'],
+                'created_at'    => $invoice_data['created_at'],
+                'created_by'    => $invoice_data['created_by'],
             ]
         );
 
-        foreach( $invoice_data['line_items'] as $item ){
+        if ( ! $insertReturn ) {
+            throw new \Exception( __( "Something went wrong sales invoice", "erp" ) );
+        }
 
-            $totalTax = (float)$item['tax'] * (int)$item['qty'] ;
-            $totalDiscount = (float)$item['discount'] * (int)$item['qty'];
 
-            $wpdb->insert(
+        foreach ( $invoice_data['line_items'] as $item ) {
+
+            $totalTax      = (float) $item['tax'] * (int) $item['qty'];
+            $totalDiscount = (float) $item['discount'] * (int) $item['qty'];
+
+            $insertDetails = $wpdb->insert(
                 $wpdb->prefix . 'erp_acct_sales_return_details',
                 [
                     'invoice_details_id' => $item['invoice_details_id'],
@@ -372,21 +370,26 @@ function erp_acct_insert_sales_return( $data ) {
                 ]
             );
 
+            if ( ! $insertDetails ) {
+                throw new \Exception( __( "Something went wrong with item", "erp" ) );
+            }
+
         }
 
 
+        // insert data to sales return, return discount, return tax ledger
         erp_acct_insert_sales_return_data_into_ledger( $invoice_data, $voucher_no );
 
-        //account
+        // insert into sales account details
         $wpdb->insert(
 
             "{$wpdb->prefix}erp_acct_invoice_account_details", [
                 'invoice_no'  => $voucher_no,
                 'trn_no'      => $invoice_data['sales_voucher_no'],
                 'trn_date'    => $invoice_data['return_date'],
-                'particulars' => __("Sales returned with voucher no ", "erp" ).$voucher_no,
+                'particulars' => __( "Sales returned with voucher no ", "erp" ) . $voucher_no,
                 'debit'       => 0,
-                'credit'      => ( $invoice_data['amount'] +  $invoice_data['amount']  ) - $invoice_data['discount'] ,
+                'credit'      => ( $invoice_data['amount'] + $invoice_data['amount'] ) - $invoice_data['discount'],
                 'created_at'  => $invoice_data['created_at'],
                 'created_by'  => $user_id,
             ]
@@ -395,17 +398,17 @@ function erp_acct_insert_sales_return( $data ) {
 
         // add people transaction
         $data['date'] = $invoice_data['return_date'];
-        $data['dr'] = 0;
-        $data['cr'] = $invoice_data['amount'];
+        $data['dr']   = 0;
+        $data['cr']   = $invoice_data['amount'];
         erp_acct_insert_data_into_people_trn_details( $data, $voucher_no );
 
-        if($invoice_data['discount']){
+        if ( $invoice_data['discount'] ) {
             $data['dr'] = $invoice_data['discount'];
             $data['cr'] = 0;
             erp_acct_insert_data_into_people_trn_details( $data, $voucher_no );
         }
 
-        if($invoice_data['tax']){
+        if ( $invoice_data['tax'] ) {
             $data['dr'] = 0;
             $data['cr'] = $invoice_data['tax'];
             erp_acct_insert_data_into_people_trn_details( $data, $voucher_no );
@@ -422,8 +425,6 @@ function erp_acct_insert_sales_return( $data ) {
 
     return $voucher_no;
 }
-
-
 
 
 /**
@@ -445,25 +446,25 @@ function erp_acct_get_formatted_sales_return_data( $data, $voucher_no ) {
         $customer_name = $data['customer_name'];
     }
 
-    $invoice_data['sales_voucher_no']= isset( $data['sales_voucher_no'] ) ? $data['sales_voucher_no'] : null;
-    $invoice_data['voucher_no']      = ! empty( $voucher_no ) ? $voucher_no : 0;
-    $invoice_data['customer_id']     = isset( $data['customer_id'] ) ? $data['customer_id'] : null;
-    $invoice_data['customer_name']   = $customer_name;
-    $invoice_data['return_date']     = isset( $data['return_date'] ) ? $data['return_date'] : date( 'Y-m-d' );
-    $invoice_data['amount']          = isset( $data['amount'] ) ? $data['amount'] : 0;
-    $invoice_data['discount']        = isset( $data['discount'] ) ? $data['discount'] : 0;
-    $invoice_data['discount_type']   = isset( $data['discount_type'] ) ? $data['discount_type'] : null;
-    $invoice_data['tax_rate_id']     = isset( $data['tax_rate_id'] ) ? $data['tax_rate_id'] : 0;
-    $invoice_data['line_items']      = isset( $data['line_items'] ) ? $data['line_items'] : [];
-    $invoice_data['tax']             = isset( $data['tax'] ) ? $data['tax'] : 0;
-    $invoice_data['attachments']     = ! empty( $data['attachments'] ) ? $data['attachments'] : '';
-    $invoice_data['status']          = isset( $data['status'] ) ? $data['status'] : 1;
+    $invoice_data['sales_voucher_no'] = isset( $data['sales_voucher_no'] ) ? $data['sales_voucher_no'] : null;
+    $invoice_data['voucher_no']       = ! empty( $voucher_no ) ? $voucher_no : 0;
+    $invoice_data['customer_id']      = isset( $data['customer_id'] ) ? $data['customer_id'] : null;
+    $invoice_data['customer_name']    = $customer_name;
+    $invoice_data['return_date']      = isset( $data['return_date'] ) ? $data['return_date'] : date( 'Y-m-d' );
+    $invoice_data['amount']           = isset( $data['amount'] ) ? $data['amount'] : 0;
+    $invoice_data['discount']         = isset( $data['discount'] ) ? $data['discount'] : 0;
+    $invoice_data['discount_type']    = isset( $data['discount_type'] ) ? $data['discount_type'] : null;
+    $invoice_data['tax_rate_id']      = isset( $data['tax_rate_id'] ) ? $data['tax_rate_id'] : 0;
+    $invoice_data['line_items']       = isset( $data['line_items'] ) ? $data['line_items'] : [];
+    $invoice_data['tax']              = isset( $data['tax'] ) ? $data['tax'] : 0;
+    $invoice_data['attachments']      = ! empty( $data['attachments'] ) ? $data['attachments'] : '';
+    $invoice_data['status']           = isset( $data['status'] ) ? $data['status'] : 1;
 
     $invoice_data['return_reason'] = ! empty( $data['return_reason'] ) ? $data['return_reason'] : sprintf( __( 'Invoice created with voucher no %s', 'erp' ), $voucher_no );
-    $invoice_data['created_at']  = isset( $data['created_at'] ) ? $data['created_at'] : null;
-    $invoice_data['created_by']  = isset( $data['created_by'] ) ? $data['created_by'] : null;
-    $invoice_data['updated_at']  = isset( $data['updated_at'] ) ? $data['updated_at'] : null;
-    $invoice_data['updated_by']  = isset( $data['updated_by'] ) ? $data['updated_by'] : null;
+    $invoice_data['created_at']    = isset( $data['created_at'] ) ? $data['created_at'] : null;
+    $invoice_data['created_by']    = isset( $data['created_by'] ) ? $data['created_by'] : null;
+    $invoice_data['updated_at']    = isset( $data['updated_at'] ) ? $data['updated_at'] : null;
+    $invoice_data['updated_by']    = isset( $data['updated_by'] ) ? $data['updated_by'] : null;
 
     return $invoice_data;
 }
@@ -476,6 +477,7 @@ function erp_acct_get_formatted_sales_return_data( $data, $voucher_no ) {
  *
  * @param int $voucher_no
  * @param bool $contra
+ *
  * @return mixed
  */
 function erp_acct_insert_sales_return_data_into_ledger( $invoice_data, $voucher_no = 0, $contra = false ) {
@@ -487,7 +489,7 @@ function erp_acct_insert_sales_return_data_into_ledger( $invoice_data, $voucher_
     $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::get_instance();
 
     $sales_return_ledger_id          = $ledger_map->get_ledger_id_by_slug( 'sales_returns_and_allowance' );
-    $sales_return_tax_ledger_id          = $ledger_map->get_ledger_id_by_slug( 'sales_return_tax' );
+    $sales_return_tax_ledger_id      = $ledger_map->get_ledger_id_by_slug( 'sales_return_tax' );
     $sales_return_discount_ledger_id = $ledger_map->get_ledger_id_by_slug( 'sales_return_discount' );
 
 
@@ -497,7 +499,7 @@ function erp_acct_insert_sales_return_data_into_ledger( $invoice_data, $voucher_
         [
             'ledger_id'   => $sales_return_ledger_id,
             'trn_no'      => $voucher_no,
-            'particulars' => "Sales returned with voucher no ".$voucher_no,
+            'particulars' => "Sales returned with voucher no " . $voucher_no,
             'debit'       => $invoice_data['amount'],
             'credit'      => 0,
             'trn_date'    => $invoice_data['return_date'],
@@ -508,14 +510,14 @@ function erp_acct_insert_sales_return_data_into_ledger( $invoice_data, $voucher_
         ]
     );
 
-    if( $invoice_data['tax'] >  0 ){
+    if ( $invoice_data['tax'] > 0 ) {
 
         $wpdb->insert(
             $wpdb->prefix . 'erp_acct_ledger_details',
             [
                 'ledger_id'   => $sales_return_tax_ledger_id,
                 'trn_no'      => $voucher_no,
-                'particulars' => "Sales returned with voucher no ".$voucher_no,
+                'particulars' => "Sales returned with voucher no " . $voucher_no,
                 'debit'       => $invoice_data['tax'],
                 'credit'      => 0,
                 'trn_date'    => $invoice_data['return_date'],
@@ -529,14 +531,14 @@ function erp_acct_insert_sales_return_data_into_ledger( $invoice_data, $voucher_
     }
 
 
-    if( $invoice_data['discount'] >  0 ){
+    if ( $invoice_data['discount'] > 0 ) {
 
         $wpdb->insert(
             $wpdb->prefix . 'erp_acct_ledger_details',
             [
                 'ledger_id'   => $sales_return_discount_ledger_id,
                 'trn_no'      => $voucher_no,
-                'particulars' => __("Sales returned with voucher no ", "erp" ).$voucher_no,
+                'particulars' => __( "Sales returned with voucher no ", "erp" ) . $voucher_no,
                 'debit'       => $invoice_data['discount'],
                 'credit'      => 0,
                 'trn_date'    => $invoice_data['return_date'],

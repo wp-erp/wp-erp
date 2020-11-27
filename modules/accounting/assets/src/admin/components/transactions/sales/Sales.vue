@@ -44,8 +44,7 @@ export default {
                 { namedRoute: 'InvoiceCreate', name: __('Create Invoice', 'erp') },
                 { namedRoute: 'RecPaymentCreate', name: __('Receive Payment', 'erp') },
                 { namedRoute: 'EstimateCreate', name: __('Create Estimate', 'erp') },
-                { namedRoute: 'SalesReturn', name: __('Sales Return', 'erp') },
-                { namedRoute: 'SalesReturnLists', name: __('Sales Return List', 'erp') }
+                { namedRoute: 'SalesReturnLists', name: __('Sales Return', 'erp') }
             ]
         };
     }

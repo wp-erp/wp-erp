@@ -41,7 +41,7 @@ class Sales_Return_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         register_rest_route(
             $this->namespace,
-            '/' . $this->rest_base .'/create',
+            '/' . $this->rest_base . '/create',
             [
                 [
                     'methods'             => WP_REST_Server::CREATABLE,
@@ -60,7 +60,7 @@ class Sales_Return_Controller extends \WeDevs\ERP\API\REST_Controller {
          */
         register_rest_route(
             $this->namespace,
-            '/' . $this->rest_base .'/list',
+            '/' . $this->rest_base . '/list',
             [
                 [
                     'methods'             => WP_REST_Server::READABLE,
@@ -80,7 +80,7 @@ class Sales_Return_Controller extends \WeDevs\ERP\API\REST_Controller {
          */
         register_rest_route(
             $this->namespace,
-            '/' . $this->rest_base .'/(?P<id>[\d]+)',
+            '/' . $this->rest_base . '/(?P<id>[\d]+)',
             [
                 [
                     'methods'             => WP_REST_Server::READABLE,
@@ -100,7 +100,7 @@ class Sales_Return_Controller extends \WeDevs\ERP\API\REST_Controller {
          */
         register_rest_route(
             $this->namespace,
-            '/' . $this->rest_base . '/search-invoice'.'/(?P<id>[\d]+)',
+            '/' . $this->rest_base . '/search-invoice' . '/(?P<id>[\d]+)',
             [
                 [
                     'methods'             => WP_REST_Server::READABLE,
@@ -119,7 +119,9 @@ class Sales_Return_Controller extends \WeDevs\ERP\API\REST_Controller {
 
     /**
      * Get sales return list
+     *
      * @param WP_REST_Request $request
+     *
      * @return object
      */
     public function get_sales_return_list( $request ) {
@@ -135,10 +137,10 @@ class Sales_Return_Controller extends \WeDevs\ERP\API\REST_Controller {
         $transactions = erp_acct_get_sales_return_transactions( $args );
 
         // get total item number for  pagination
-        $total_items  = erp_acct_get_sales_return_transactions(
+        $total_items = erp_acct_get_sales_return_transactions(
             [
                 'count'  => true,
-                'number' => -1,
+                'number' => - 1,
             ]
         );
 
@@ -161,7 +163,7 @@ class Sales_Return_Controller extends \WeDevs\ERP\API\REST_Controller {
      */
     public function get_sales_return( $request ) {
         $args = [
-            'voucher_no'     => $request['id']
+            'voucher_no' => $request['id'],
         ];
 
         $invoice_data = erp_acct_get_sales_return_invoice( $args );
@@ -173,7 +175,7 @@ class Sales_Return_Controller extends \WeDevs\ERP\API\REST_Controller {
         return $response;
     }
 
-   /**
+    /**
      * get sales invoice for return
      *
      * @param WP_REST_Request $request
@@ -182,7 +184,7 @@ class Sales_Return_Controller extends \WeDevs\ERP\API\REST_Controller {
      */
     public function search_voucher( $request ) {
         $args = [
-            'voucher_no'     => $request['id']
+            'voucher_no' => $request['id'],
         ];
 
         $invoice_data = erp_acct_get_invoice_for_return( $args );
@@ -202,10 +204,9 @@ class Sales_Return_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function create_sales_return($request ) {
+    public function create_sales_return( $request ) {
 
-
-        $invoice_data =  $this->prepare_item_for_database($request) ;
+        $invoice_data        = $this->prepare_item_for_database( $request );
         $item_total          = 0;
         $item_discount_total = 0;
         $item_tax_total      = 0;
@@ -215,18 +216,23 @@ class Sales_Return_Controller extends \WeDevs\ERP\API\REST_Controller {
         foreach ( $items as $value ) {
             $sub_total = $value['qty'] * $value['unit_price'];
 
-            $item_total += $sub_total;
-            $item_tax_total += $value['tax'] * $value['qty'];
+            $item_total          += $sub_total;
+            $item_tax_total      += $value['tax'] * $value['qty'];
             $item_discount_total += $value['discount'] * $value['qty'];
         }
 
-        $invoice_data['discount']        = $item_discount_total;
-        $invoice_data['discount_type']   = $request['discount_type'];
-        $invoice_data['tax_rate_id']     = $request['tax_rate_id'];
-        $invoice_data['tax']             = $item_tax_total;
-        $invoice_data['amount']          = $item_total;
+        $invoice_data['discount']      = $item_discount_total;
+        $invoice_data['discount_type'] = $request['discount_type'];
+        $invoice_data['tax_rate_id']   = $request['tax_rate_id'];
+        $invoice_data['tax']           = $item_tax_total;
+        $invoice_data['amount']        = $item_total;
 
         $invoice_id = erp_acct_insert_sales_return( $invoice_data );
+
+        // if insert failed
+        if ( is_wp_error( $invoice_id ) ) {
+            return $invoice_id;
+        }
 
         $invoice_data['id'] = $invoice_id;
 
@@ -237,7 +243,6 @@ class Sales_Return_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         return $response;
     }
-
 
 
     /**
@@ -262,7 +267,7 @@ class Sales_Return_Controller extends \WeDevs\ERP\API\REST_Controller {
     }
 
 
-    public function prepare_item_for_database($request){
+    public function prepare_item_for_database( $request ) {
         $prepared_item = [];
 
         if ( isset( $request['customer_id'] ) ) {
@@ -293,7 +298,7 @@ class Sales_Return_Controller extends \WeDevs\ERP\API\REST_Controller {
             $prepared_item['return_reason'] = $request['return_reason'];
         }
 
-        if ( isset( $request['sales_voucher_no'] ) ) {
+        if ( isset( $request['voucher_no'] ) ) {
             $prepared_item['sales_voucher_no'] = $request['voucher_no'];
         }
 

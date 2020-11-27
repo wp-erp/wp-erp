@@ -1,13 +1,13 @@
 <?php
+
 namespace WeDevs\ERP\HRM\Update;
 
 
-
-function crate_erp_acct_sales_return_table_1_6_8() {
+function crate_erp_acct_sales_return_table_1_7_0() {
 
     global $wpdb;
     $charset_collate = $wpdb->get_charset_collate();
-    $sql = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}erp_acct_sales_return (
+    $sql             = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}erp_acct_sales_return (
               `id` int(20) UNSIGNED NOT NULL AUTO_INCREMENT,
               `invoice_id` int(20) NOT NULL,
               `voucher_no` int(20) NOT NULL,
@@ -28,15 +28,15 @@ function crate_erp_acct_sales_return_table_1_6_8() {
               PRIMARY KEY  (`id`)
             ) DEFAULT $charset_collate";
 
-    dbDelta($sql);
+    dbDelta( $sql );
 }
 
 
-function crate_erp_return_details_table_1_6_8() {
+function crate_erp_return_details_table_1_7_0() {
 
     global $wpdb;
     $charset_collate = $wpdb->get_charset_collate();
-    $sql = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}erp_acct_sales_return_details (
+    $sql             = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}erp_acct_sales_return_details (
               `id` int(20) UNSIGNED NOT NULL AUTO_INCREMENT,
               `invoice_details_id` int(20) NOT NULL,
               `trn_no` int(20) NOT NULL,
@@ -54,11 +54,11 @@ function crate_erp_return_details_table_1_6_8() {
               PRIMARY KEY (`id`)
             ) DEFAULT $charset_collate";
 
-    dbDelta($sql);
+    dbDelta( $sql );
 }
 
 
-function erp_acct_insert_to_erp_acct_ledgers_1_6_8() {
+function erp_acct_insert_to_erp_acct_ledgers_1_7_0() {
     global $wpdb;
 
     $checkSalesReturnDiscount = $wpdb->get_row(
@@ -82,7 +82,7 @@ function erp_acct_insert_to_erp_acct_ledgers_1_6_8() {
         )
     );
 
-    if ( empty( $checkSalesReturnDiscount ) ) {
+    if ( empty( $checkSalesReturnTax ) ) {
         $wpdb->query(
             $wpdb->prepare(
                 "INSERT INTO {$wpdb->prefix}erp_acct_ledgers ( `chart_id`, `name`, `slug`, `code`, `system`, `created_at` ) VALUES ( %d, %s, %s, %s, %d, %s )",
@@ -92,6 +92,6 @@ function erp_acct_insert_to_erp_acct_ledgers_1_6_8() {
     }
 }
 
-crate_erp_acct_sales_return_table_1_6_8();
-crate_erp_return_details_table_1_6_8();
-erp_acct_insert_to_erp_acct_ledgers_1_6_8();
+crate_erp_acct_sales_return_table_1_7_0();
+crate_erp_return_details_table_1_7_0();
+erp_acct_insert_to_erp_acct_ledgers_1_7_0();

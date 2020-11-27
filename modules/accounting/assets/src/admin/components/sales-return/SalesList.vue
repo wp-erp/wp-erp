@@ -11,7 +11,9 @@
             </div>
 
 
-            <h4>{{ __('Sales Return  List', 'erp') }}</h4>
+            <h4 class="top-title-bar">{{ __('Sales Return', 'erp') }}
+            <router-link class="wperp-btn btn--primary add-line-trigger pull-right" :to="{ name: 'SalesReturn' }" > {{ __( "Create Return Invoice ", "erp" ) }}</router-link>
+            </h4>
             <transactions-filter  />
 
             <list-table
@@ -52,7 +54,7 @@
                     {{ formatAmount(data.row.amount) }}
                 </template>
                 <template slot="status" slot-scope="data">
-                    {{ data.row.status }}
+                    {{ __( "returned", "erp" )}}
                 </template>
 
                 <!-- custom row actions -->
@@ -198,5 +200,10 @@ export default {
         .check-column {
             display: none;
         }
+    }
+
+
+    h4.top-title-bar{
+        margin-top:25px
     }
 </style>
