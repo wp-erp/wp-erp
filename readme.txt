@@ -3,9 +3,9 @@ Contributors: tareq1988, nizamuddinbabu, wedevs
 Donate Link: https://tareq.co/donate
 Tags: business manager, erp, accounting, crm, hr, project manager, small business, SME, contact, contacts, Customer Relationship Management, employee, leave management, hr, human resource management, job, jobs, job listing, lead management, opportunity, schedule, task, lead, holiday, company
 Requires at least: 4.4
-Tested up to: 5.5.1
+Tested up to: 5.5.3
 Requires PHP: 5.6
-Stable tag: 1.6.7
+Stable tag: 1.6.8
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -279,6 +279,23 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+
+= v1.6.8 -> November 12, 2020 =
+--------------------------
+- [new] Added prevention of product duplication when product create and update
+- [new] Added transaction charge for purchase payment , expense
+- [new] Added filter at WP ERP title & CRM title
+- [new] Added reference number for expense, bill, bill payment
+- [update] Updated csv export import permission
+- [update] Updated employee display name when update employe information
+- [update] Updated PDF export system for Expense, bill, bill pay, purchase, purchase pay voucher with reference number, due date and dynamic invoice type
+- [update] Updated expense, sales, purchase filtering system with type and people
+- [update] Updated reference no in purchase list
+- [update] Updated customer transaction ledger
+- [fix] Fixed Employee/Contact/Company name and city name validation issue to lessen the restrictions
+- [fix] Fixed tax payment for decimal value support
+- [fix] Fixed redirect to expense list after saving or update expense
+- [fix] Fixed validation issue for name & city
 
 = v1.6.7 -> October 29, 2020 =
 --------------------------

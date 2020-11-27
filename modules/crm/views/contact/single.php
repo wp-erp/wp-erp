@@ -1,10 +1,22 @@
 <?php
-$contact_tags     = wp_get_object_terms( $customer->id, 'erp_crm_tag', ['orderby' => 'name', 'order' => 'ASC'] );
+if (
+    ! current_user_can( erp_crm_get_manager_role() ) &&
+    ! current_user_can( 'manage_options' ) &&
+    intval( $customer->contact_owner ) !== get_current_user_id()
+) {
+    wp_die( __( 'Unauthorized request.', 'erp' ), 401 );
+}
+
+$contact_tags     = wp_get_object_terms( $customer->id, 'erp_crm_tag', [ 'orderby' => 'name', 'order' => 'ASC' ] );
 $contact_tags     = wp_list_pluck( $contact_tags, 'name' );
-$contact_list_url = add_query_arg( ['page' => 'erp-crm', 'section' => 'contacts'], admin_url( 'admin.php' ) );
+$contact_list_url = add_query_arg( [ 'page' => 'erp-crm', 'section' => 'contacts' ], admin_url( 'admin.php' ) );
 ?>
 <div class="wrap erp erp-crm-customer erp-single-customer" id="wp-erp" v-cloak>
-    <h2><?php esc_attr_e( 'Contact #', 'erp' ); echo esc_attr( $customer->id ); ?>
+    <h2>
+        <?php
+        esc_attr_e( 'Contact #', 'erp' );
+        echo esc_attr( $customer->id );
+        ?>
         <a href="<?php echo esc_url_raw( $contact_list_url ); ?>" id="erp-contact-list" class="add-new-h2"><?php esc_attr_e( 'Back to Contact list', 'erp' ); ?></a>
 
         <?php if ( current_user_can( 'erp_crm_edit_contact', $customer->id ) || current_user_can( erp_crm_get_manager_role() ) ) { ?>
@@ -40,7 +52,7 @@ $contact_list_url = add_query_arg( ['page' => 'erp-crm', 'section' => 'contacts'
                                     </p>
                                 <?php } ?>
 
-                                <?php if ( $customer->get_mobile() != '—' ) { ?>
+                                <?php if ( $customer->get_mobile() !== '—' ) { ?>
                                     <p>
                                         <i class="fa fa-phone"></i>&nbsp;
                                         <?php echo wp_kses_post( $customer->get_mobile() ); ?>
@@ -95,21 +107,21 @@ $contact_list_url = add_query_arg( ['page' => 'erp-crm', 'section' => 'contacts'
                                     <div class="user-wrap">
                                         <div class="user-wrap-content">
                                             <?php
-                                                $crm_user_id = $customer->get_contact_owner();
+                                            $crm_user_id = $customer->get_contact_owner();
 
-                                                if ( !empty( $crm_user_id ) ) {
-                                                    $user        = get_user_by( 'id', $crm_user_id );
-                                                    $user_string = esc_html( $user->display_name );
-                                                    $user_email  = $user->get( 'user_email' );
-                                                } else {
-                                                    $user_string = '';
-                                                }
+                                            if ( ! empty( $crm_user_id ) ) {
+                                                $user        = get_user_by( 'id', $crm_user_id );
+                                                $user_string = esc_html( $user->display_name );
+                                                $user_email  = $user->get( 'user_email' );
+                                            } else {
+                                                $user_string = '';
+                                            }
                                             ?>
                                             <?php if ( $crm_user_id && ! empty( $user ) ) { ?>
                                                 <?php echo wp_kses_post( erp_crm_get_avatar( $crm_user_id, $user_email, $crm_user_id, 32 ) ); ?>
                                                 <div class="user-details">
                                                     <a href="#"><?php echo esc_attr( get_the_author_meta( 'display_name', $crm_user_id ) ); ?></a>
-                                                    <span><?php echo esc_attr(  get_the_author_meta( 'user_email', $crm_user_id ) ); ?></span>
+                                                    <span><?php echo esc_attr( get_the_author_meta( 'user_email', $crm_user_id ) ); ?></span>
                                                 </div>
                                             <?php } else { ?>
                                                 <div class="user-details">

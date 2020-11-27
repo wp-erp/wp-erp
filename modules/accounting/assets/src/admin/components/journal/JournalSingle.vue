@@ -42,7 +42,7 @@
                                     </tr>
                                     <tr>
                                         <th>{{ __('Journal Date', 'erp') }}:</th>
-                                        <td>{{ journal.trn_date }}</td>
+                                        <td>{{ formatDate(journal.trn_date) }}</td>
                                     </tr>
                                 </table>
                             </div>

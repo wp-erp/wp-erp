@@ -66,11 +66,15 @@
                                     </tr>
                                     <tr>
                                         <th>{{ __('Transaction Date', 'erp') }}:</th>
-                                        <td>{{ expense_data.date }}</td>
+                                        <td>{{ formatDate(expense_data.date) }}</td>
                                     </tr>
                                     <tr>
                                         <th>{{ __('Created At', 'erp') }}:</th>
-                                        <td>{{ expense_data.created_at }}</td>
+                                        <td>{{ formatDate(expense_data.created_at) }}</td>
+                                    </tr>
+                                    <tr v-if="parseFloat(expense_data.transaction_charge)">
+                                        <th>{{ __('Transaction Charge', 'erp') }}:</th>
+                                        <td>{{ expense_data.transaction_charge }}</td>
                                     </tr>
                                     <tr v-if="parseFloat(expense_data.transaction_charge)">
                                         <th>{{ __('Transaction Charge', 'erp') }}:</th>
