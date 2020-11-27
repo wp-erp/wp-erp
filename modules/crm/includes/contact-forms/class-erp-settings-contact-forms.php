@@ -274,7 +274,7 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
                                 <label>
                                     {{ i18n.labelContactOwner }} <span class="required">*</span>
                                     <select class="cfi-contact-group" v-model="formData.contactOwner" required>
-                                        <option value="" disabled selected>{{ i18n.labelSelectOwner }}</option>
+                                        <option value="" disabled>{{ i18n.labelSelectOwner }}</option>
                                         <option v-for="(userId, user) in contactOwners" value="{{ userId }}">{{ user }}</option>
                                     </select>
                                 </label>
