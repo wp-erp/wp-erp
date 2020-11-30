@@ -44,10 +44,10 @@
                     {{ isPayment(data.row) ? data.row.pay_bill_vendor_name : data.row.vendor_name }}
                 </template>
                 <template slot="trn_date" slot-scope="data">
-                    {{ isPayment(data.row) ? data.row.pay_bill_trn_date : data.row.bill_trn_date }}
+                    {{ isPayment(data.row) ? formatDate(data.row.pay_bill_trn_date) : formatDate(data.row.bill_trn_date) }}
                 </template>
                 <template slot="due_date" slot-scope="data">
-                    {{ isPayment(data.row) ? '-' : data.row.due_date }}
+                    {{ isPayment(data.row) ? '-' : formatDate(data.row.due_date) }}
                 </template>
                 <template slot="due" slot-scope="data">
                     {{ isPayment(data.row) ? '-' : formatAmount(data.row.due) }}

@@ -2010,7 +2010,45 @@ class Ajax_Handler {
             }
         );
 
-        $holidays = $holiday->get()->toArray();
+        $holidays        = $holiday->get()->toArray();
+        $match_holidays  = array();
+        $filter_holidays = apply_filters( 'filter_holidays', [], $start_date, $end_date );
+
+        if ( empty( $filter_holidays ) ) {
+            $weekends   = array();
+            $work_days  = erp_hr_get_work_days();
+
+            array_walk( $work_days, function( $value, $key ) use ( &$weekends ) {
+                if ( 0 === ( int ) $value ) {
+                    $weekends[] = $key ;
+                };
+            } );
+
+            $dates = new \DatePeriod(
+                new \DateTime( $start_date ),
+                new \DateInterval( 'P1D' ),
+                new \DateTime( $end_date )
+            );
+
+            foreach ( $dates as $index => $date ) {
+                $weekday = strtolower( $date->format( 'D' ) );
+                if ( in_array( $weekday, $weekends ) ) {
+                    $match_holidays[] = array(
+                        'title'      => __( 'Weekly Holiday', 'erp-pro' ),
+                        'start'      => erp_current_datetime()
+                            ->modify( $date->format( 'Y-m-d' ) )
+                            ->setTime( 0, 0, 0 )->format( 'Y-m-d' ),
+                        'end'        => erp_current_datetime()
+                            ->modify( $date->format( 'Y-m-d' ) )
+                            ->setTime( 23, 59, 59 )->format( 'Y-m-d' ),
+                        'id'         => $index,
+                        'background' => true
+                    );
+                }
+            }
+        }
+
+        $holidays = array_merge( $holidays, $filter_holidays, $match_holidays );
 
         $events         = array();
         $holiday_events = array();
@@ -2046,14 +2084,17 @@ class Ajax_Handler {
 
         foreach ( erp_array_to_object( $holidays ) as $key => $holiday ) {
             $holiday_events[] = array(
-                'id'      => $holiday->id,
-                'title'   => $holiday->title,
-                'start'   => $holiday->start,
-                'end'     => $holiday->end,
-                'color'   => '#FF5354',
-                'img'     => '',
-                'url'     => 'javascript:void(0)',
-                'holiday' => true,
+                'id'        => $holiday->id,
+                'title'     => $holiday->title,
+                'start'     => $holiday->start,
+                'end'       => $holiday->end,
+                'img'       => '',
+                'url'       => 'javascript:void(0)',
+                'holiday'   => true,
+                'rendering' => isset( $holiday->background )
+                               && $holiday->background ? 'background' : '',
+                'color'     => isset( $holiday->background )
+                               && $holiday->background ? '#c5bfbf' : '#FF5354'
             );
         }
 

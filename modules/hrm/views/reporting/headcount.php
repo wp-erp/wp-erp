@@ -158,18 +158,18 @@
         </thead>
         <tbody>
             <?php
-                foreach ( $user_filtered as $user_id ) {
-                    $employee     = new \WeDevs\ERP\HRM\Employee( intval( $user_id ) );
-                    $employee_url = '<a href="' . admin_url( 'admin.php?page=erp-hr&section=employee&action=view&id=' . $employee->get_user_id() ) . '">' . $employee->display_name . '</a>';
-                    $date_format  = get_option( 'date_format' ); ?>
-                    <tr>
-                        <td><?php echo wp_kses_post( $employee_url ); ?></td>
-                        <td><?php echo esc_html( date( $date_format, strtotime( esc_attr( $employee->hiring_date ) ) ) ); ?></td>
-                        <td><?php echo esc_attr( $employee->designation_title ); ?></td>
-                        <td><?php echo esc_attr( $employee->department_title ); ?></td>
-                        <td><?php echo esc_attr( $employee->location_name ); ?></td>
-                        <td><?php echo esc_attr( $employee->status ); ?></td>
-                    </tr>
+            foreach ( $user_filtered as $user_id ) {
+                $employee     = new \WeDevs\ERP\HRM\Employee( intval( $user_id ) );
+                $employee_url = '<a href="' . admin_url( 'admin.php?page=erp-hr&section=employee&action=view&id=' . $employee->get_user_id() ) . '">' . $employee->display_name . '</a>';
+            ?>
+                <tr>
+                    <td><?php echo wp_kses_post( $employee_url ); ?></td>
+                    <td><?php echo erp_format_date( esc_attr( $employee->hiring_date ) ); ?></td>
+                    <td><?php echo esc_attr( $employee->designation_title ); ?></td>
+                    <td><?php echo esc_attr( $employee->department_title ); ?></td>
+                    <td><?php echo esc_attr( $employee->location_name ); ?></td>
+                    <td><?php echo esc_attr( $employee->status ); ?></td>
+                </tr>
             <?php
                 }
              ?>

@@ -74,6 +74,9 @@ class Contact_Forms_Integration {
     /**
      * Save form sumitted data as new CRM Contact
      *
+     * @since 1.6.5 added filter hook 'erp_pre_contact_form_people_data'
+     * @since 1.6.8 added existing contact checking to prevent reseting contact owner
+     *
      * @param array  $data    submitted form data
      * @param string $plugin  plugin slug defined in get_plugin_list function
      * @param string $form_id submitted form id
@@ -122,9 +125,12 @@ class Contact_Forms_Integration {
                 $contact['contact_owner'] = $contact_owner;
             }
 
-            /**
-             * @since 1.6.5
-             */
+            $existing_people_by_email = \WeDevs\ERP\Framework\Models\People::type( $contact['type'] )->where( 'email', $contact['email'] )->first();
+
+            if ( ! empty( $existing_people_by_email->email ) ) {
+                $contact['contact_owner'] = $existing_people_by_email->contact_owner;
+            }
+
             $contact = apply_filters( 'erp_pre_contact_form_people_data', $contact, $data, $plugin, $form_id );
 
             $people_id = erp_insert_people( $contact );

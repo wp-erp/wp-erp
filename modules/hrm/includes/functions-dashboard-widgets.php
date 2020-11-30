@@ -376,6 +376,7 @@ function erp_hr_dashboard_widget_leave_calendar() {
             },
             editable: false,
             eventLimit: true,
+            firstDay: <?php echo esc_html( get_option( 'start_of_week', 1 ) );?>,
             eventRender: function(event, element, calEvent) {
                 if ( event.holiday ) {
                     element.find('.fc-content').find('.fc-title').css({ 'top':'0px', 'left' : '3px', 'fontSize' : '13px', 'padding':'2px' });

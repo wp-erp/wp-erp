@@ -72,7 +72,7 @@ export default {
             const items = this.rows;
             items.map(item => {
                 item.l_id          = item.voucher_no;
-                item.l_date        = item.trn_date;
+                item.l_date        = this.formatDate(item.trn_date);
                 item.l_particulars = item.particulars;
                 item.amount        = item.total;
             });

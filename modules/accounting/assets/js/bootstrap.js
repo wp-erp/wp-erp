@@ -10843,6 +10843,7 @@ var currencyOptions = {
   thousand: erp_acct_var.thousand_separator,
   format: erp_acct_var.currency_format
 };
+var dateFormat = erp_acct_var.date_format;
 /* harmony default export */ __webpack_exports__["a"] = ({
   methods: {
     formatAmount: function formatAmount(val) {
@@ -10926,6 +10927,53 @@ var currencyOptions = {
       }
 
       return nofillLines;
+    },
+    formatDate: function formatDate(d) {
+      if (!d) {
+        return '';
+      }
+
+      var date = new Date(d),
+          month = date.getMonth() + 1,
+          day = date.getDate(),
+          year = date.getFullYear();
+
+      if (month.toString().length < 2) {
+        month = '0' + month;
+      }
+
+      if (day.toString().length < 2) {
+        day = '0' + day;
+      }
+
+      switch (dateFormat) {
+        case 'd/m/Y':
+          // -- 31/12/2020
+          return [day, month, year].join('/');
+
+        case 'm/d/Y':
+          // -- 12/31/2020
+          return [month, day, year].join('/');
+
+        case 'm-d-Y':
+          // -- 12-31-2020
+          return [month, day, year].join('-');
+
+        case 'd-m-Y':
+          // -- 31-12-2020
+          return [day, month, year].join('-');
+
+        case 'Y-m-d':
+          // -- 2020-12-31
+          return [year, month, day].join('-');
+
+        case 'd.m.Y':
+          // -- 31.12.2020
+          return [day, month, year].join('.');
+
+        default:
+          return date.toDateString().replace(/^\S+\s/, '');
+      }
     }
   }
 });

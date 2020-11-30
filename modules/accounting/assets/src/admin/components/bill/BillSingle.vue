@@ -66,15 +66,15 @@
                                     </tr>
                                     <tr>
                                         <th>{{ __('Transaction Date', 'erp') }}:</th>
-                                        <td>{{ bill.trn_date }}</td>
+                                        <td>{{ formatDate(bill.trn_date) }}</td>
                                     </tr>
                                     <tr>
                                         <th>{{ __('Due Date', 'erp') }}:</th>
-                                        <td>{{ bill.due_date }}</td>
+                                        <td>{{ formatDate(bill.due_date) }}</td>
                                     </tr>
                                     <tr>
                                         <th>{{ __('Created At', 'erp') }}:</th>
-                                        <td>{{ bill.created_at }}</td>
+                                        <td>{{ formatDate(bill.created_at) }}</td>
                                     </tr>
                                     <tr>
                                         <th>{{ __('Amount Due', 'erp') }}:</th>
