@@ -13,7 +13,7 @@
             <h4 class="top-title-bar">{{ __('Purchase Return', 'erp') }}
                 <router-link class="wperp-btn btn--primary add-line-trigger pull-right" :to="{ name: 'purchasesReturn' }" > {{ __( "Create Return Invoice ", "erp" ) }}</router-link>
             </h4>
-            <transactions-filter  />
+            <transactions-filter :status="false" />
 
             <list-table
                 :loading="listLoading"
@@ -48,7 +48,7 @@
                     {{ isPayment(data.row) ? formatAmount(data.row.pay_bill_amount) : formatAmount(data.row.amount) }}
                 </template>
                 <template slot="status" slot-scope="data">
-                    {{ data.row.status }}
+                    {{ __('Returned', 'erp') }}
                 </template>
 
                 <!-- custom row actions -->

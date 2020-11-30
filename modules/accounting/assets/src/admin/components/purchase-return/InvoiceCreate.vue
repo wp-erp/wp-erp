@@ -96,12 +96,12 @@
                                 <tr :key="index" v-for="(detail, index) in invoice.line_items">
                                     <th>
                                        <label :for="'select-item-'+index">
-                                           <input v-if="detail.qty > 0" type="checkbox" class=" custom-checkbox" v-model="detail.selected" :id="'select-item-'+index" value="edit.php?post_type=page">
+                                           <input v-if="detail.qty > 0"  type="checkbox" class=" custom-checkbox" v-model="detail.selected" :id="'select-item-'+index" value="edit.php?post_type=page">
                                            {{ index + 1 }}
                                        </label>
                                     </th>
-                                    <th>{{ detail.name }}</th>
-                                    <td> <input v-if="detail.selected" type="number" v-model="detail.qty" /> <span v-else> {{ detail.qty }}</span> </td>
+                                    <th>{{ detail.name }} <span v-if="detail.return_qty">(Returned {{detail.return_qty}}/{{detail.existing_qty}})</span></th>
+                                    <td> <input v-if="detail.selected" @keyup="quantityUpdate(detail, index)" type="number" v-model="detail.qty" /> <span v-else> {{ detail.qty }}</span> </td>
                                     <td>{{ moneyFormat( detail.discount ) }}</td>
                                     <td>{{ moneyFormat(detail.price) }}</td>
                                     <td>{{ moneyFormat( (detail.price * parseFloat(detail.qty) ) - ( detail.discount * parseFloat(detail.qty) ) ) }}</td>
@@ -206,6 +206,8 @@ export default {
                 this.invoice.return_reason =  ''
                 this.invoice.discount_type = null
                 this.invoice.line_items.map(item=>{
+                    item.return_qty = parseFloat( item.return_qty )
+                    item.returnable_qty = parseFloat(item.qty) - parseFloat( item.return_qty )
                     item.price = parseFloat( item.price )
                     item.tax = ( parseFloat( item.tax ) || 0) / parseFloat(item.qty)
                     item.existing_qty = item.qty
@@ -215,16 +217,28 @@ export default {
 
             }
         },
+        quantityUpdate(item, index){
+
+           if( parseFloat(item.qty) > item.returnable_qty){
+                item.qty =  item.returnable_qty ;
+           }
+        },
         submitReturn(){
+
             if(!this.summery.total || this.summery.total < 1){
                 Swal.fire('Please , Select minimum one item', '', 'info')  ;
                 return false;
             }
 
             Swal.fire({
-                title: 'Are you sure to submit purchase return ?',
-                showDenyButton: true,
+                title: __( 'Are you sure?', 'erp' ),
+                text: __( "You won't be able to revert this!", 'erp' ),
+                type: 'warning',
                 showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: __( 'Yes, Confirm!', 'erp' ),
+                reverseButtons: true
             }).then( async (result) => {
                 if (result.value) {
 

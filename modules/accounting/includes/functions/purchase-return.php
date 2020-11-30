@@ -462,8 +462,8 @@ function erp_acct_insert_purchase_return_data_into_ledger( $invoice_data, $vouch
     $ledger_map = Ledger_Map::get_instance();
 
     $purchase_return_ledger_id          = $ledger_map->get_ledger_id_by_slug( 'purchase_return' );
-    $purchase_return_tax_ledger_id      = $ledger_map->get_ledger_id_by_slug( 'sales_return_tax' );
-    $purchase_return_discount_ledger_id = $ledger_map->get_ledger_id_by_slug( 'sales_return_discount' );
+    $purchase_return_tax_ledger_id      = $ledger_map->get_ledger_id_by_slug( 'purchase_return_tax' );
+    $purchase_return_discount_ledger_id = $ledger_map->get_ledger_id_by_slug( 'purchase_return_discount' );
 
 
     // insert amount in ledger_details
@@ -511,7 +511,7 @@ function erp_acct_insert_purchase_return_data_into_ledger( $invoice_data, $vouch
             [
                 'ledger_id'   => $purchase_return_discount_ledger_id,
                 'trn_no'      => $voucher_no,
-                'particulars' => "Sales returned with voucher no " . $voucher_no,
+                'particulars' => "Purchase returned with voucher no " . $voucher_no,
                 'debit'       => $invoice_data['discount'],
                 'credit'      => 0,
                 'trn_date'    => $invoice_data['return_date'],

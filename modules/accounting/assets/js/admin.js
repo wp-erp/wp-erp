@@ -26222,6 +26222,13 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'TransactionsFilter',
   props: {
+    status: {
+      type: Boolean,
+      required: false,
+      default: function _default() {
+        return true;
+      }
+    },
     types: {
       type: Array,
       required: false,
@@ -33492,6 +33499,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
                   _this.invoice.discount_type = null;
 
                   _this.invoice.line_items.map(function (item) {
+                    item.return_qty = parseFloat(item.return_qty);
+                    item.returnable_qty = parseFloat(item.qty) - parseFloat(item.return_qty);
                     item.price = parseFloat(item.price);
                     item.tax = (parseFloat(item.tax) || 0) / parseFloat(item.qty);
                     item.existing_qty = item.qty;
@@ -33508,6 +33517,11 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         }, _callee);
       }))();
     },
+    quantityUpdate: function quantityUpdate(item, index) {
+      if (parseFloat(item.qty) > item.returnable_qty) {
+        item.qty = item.returnable_qty;
+      }
+    },
     submitReturn: function submitReturn() {
       var _this2 = this;
 
@@ -33517,9 +33531,14 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       }
 
       __WEBPACK_IMPORTED_MODULE_3_sweetalert2___default.a.fire({
-        title: 'Are you sure to submit purchase return ?',
-        showDenyButton: true,
-        showCancelButton: true
+        title: __('Are you sure?', 'erp'),
+        text: __("You won't be able to revert this!", 'erp'),
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: __('Yes, Confirm!', 'erp'),
+        reverseButtons: true
       }).then( /*#__PURE__*/function () {
         var _ref = __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator___default()( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(result) {
           var salesReturn;
@@ -58517,29 +58536,39 @@ var render = function() {
                             _c("br"),
                             _vm._v(" "),
                             _c("div", { staticClass: "form-fields" }, [
-                              _c("div", { staticClass: "form-field-wrapper" }, [
-                                _c("h3", [
-                                  _vm._v(_vm._s(_vm.__("Status", "erp")))
-                                ]),
-                                _vm._v(" "),
-                                _c(
-                                  "div",
-                                  { staticClass: "form-fields" },
-                                  [
-                                    _c("simple-select", {
-                                      attrs: { options: _vm.statuses },
-                                      model: {
-                                        value: _vm.filters.status,
-                                        callback: function($$v) {
-                                          _vm.$set(_vm.filters, "status", $$v)
-                                        },
-                                        expression: "filters.status"
-                                      }
-                                    })
-                                  ],
-                                  1
-                                )
-                              ]),
+                              _vm.status
+                                ? _c(
+                                    "div",
+                                    { staticClass: "form-field-wrapper" },
+                                    [
+                                      _c("h3", [
+                                        _vm._v(_vm._s(_vm.__("Status", "erp")))
+                                      ]),
+                                      _vm._v(" "),
+                                      _c(
+                                        "div",
+                                        { staticClass: "form-fields" },
+                                        [
+                                          _c("simple-select", {
+                                            attrs: { options: _vm.statuses },
+                                            model: {
+                                              value: _vm.filters.status,
+                                              callback: function($$v) {
+                                                _vm.$set(
+                                                  _vm.filters,
+                                                  "status",
+                                                  $$v
+                                                )
+                                              },
+                                              expression: "filters.status"
+                                            }
+                                          })
+                                        ],
+                                        1
+                                      )
+                                    ]
+                                  )
+                                : _vm._e(),
                               _vm._v(" "),
                               _vm.types.length
                                 ? _c(
@@ -67819,7 +67848,20 @@ var render = function() {
                               )
                             ]),
                             _vm._v(" "),
-                            _c("th", [_vm._v(_vm._s(detail.name))]),
+                            _c("th", [
+                              _vm._v(_vm._s(detail.name) + " "),
+                              detail.return_qty
+                                ? _c("span", [
+                                    _vm._v(
+                                      "(Returned " +
+                                        _vm._s(detail.return_qty) +
+                                        "/" +
+                                        _vm._s(detail.existing_qty) +
+                                        ")"
+                                    )
+                                  ])
+                                : _vm._e()
+                            ]),
                             _vm._v(" "),
                             _c("td", [
                               detail.selected
@@ -67835,6 +67877,9 @@ var render = function() {
                                     attrs: { type: "number" },
                                     domProps: { value: detail.qty },
                                     on: {
+                                      keyup: function($event) {
+                                        return _vm.quantityUpdate(detail, index)
+                                      },
                                       input: function($event) {
                                         if ($event.target.composing) {
                                           return
@@ -68622,7 +68667,7 @@ var render = function() {
             1
           ),
           _vm._v(" "),
-          _c("transactions-filter"),
+          _c("transactions-filter", { attrs: { status: false } }),
           _vm._v(" "),
           _c("list-table", {
             attrs: {
@@ -68733,7 +68778,7 @@ var render = function() {
                   return [
                     _vm._v(
                       "\n                " +
-                        _vm._s(data.row.status) +
+                        _vm._s(_vm.__("Returned", "erp")) +
                         "\n            "
                     )
                   ]
