@@ -33944,6 +33944,9 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
   computed: Object(__WEBPACK_IMPORTED_MODULE_3_vuex__["b" /* mapState */])({
     vendors: function vendors(state) {
       return state.purchase.vendors;
+    },
+    customers: function customers(state) {
+      return state.sales.customers;
     }
   }),
   created: function created() {
@@ -33951,11 +33954,6 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
     this.$store.dispatch('spinner/setSpinner', true);
     this.$root.$on('transactions-filter', function (filters) {
-      /*  this.$router.push({
-            path : '/transactions/purchases',
-            query: { start: filters.start_date, end: filters.end_date, status: filters.status }
-        });
-        */
       _this.fetchItems(filters);
 
       _this.fetched = true;
@@ -33967,12 +33965,12 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       filters.end_date = this.$route.query.end;
     }
 
-    if (this.$route.query.status) {
-      filters.status = this.$route.query.status;
-    }
-
     if (!this.fetched) {
       this.fetchItems(filters);
+    }
+
+    if (!this.customers.length) {
+      this.$store.dispatch('sales/fillCustomers', []);
     }
   },
   methods: {
@@ -68289,7 +68287,12 @@ var render = function() {
             1
           ),
           _vm._v(" "),
-          _c("transactions-filter", { attrs: { status: false } }),
+          _c("transactions-filter", {
+            attrs: {
+              status: false,
+              people: { title: "Customer", items: _vm.customers }
+            }
+          }),
           _vm._v(" "),
           _c("list-table", {
             attrs: {

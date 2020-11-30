@@ -123,7 +123,6 @@ function erp_acct_get_sales_chart_status( $args = [] ) {
             LEFT JOIN {$wpdb->prefix}erp_acct_invoices AS invoice ON invoice.status = status_type.id {$where}
             GROUP BY status_type.id HAVING COUNT(invoice.status) > 0 ORDER BY status_type.type_name ASC";
 
-    // error_log(print_r($sql, true));
     return $wpdb->get_results( $sql, ARRAY_A );
 }
 

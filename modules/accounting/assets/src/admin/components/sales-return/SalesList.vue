@@ -14,7 +14,7 @@
             <h4 class="top-title-bar">{{ __('Sales Return', 'erp') }}
             <router-link class="wperp-btn btn--primary add-line-trigger pull-right" :to="{ name: 'SalesReturn' }" > {{ __( "Create Return Invoice ", "erp" ) }}</router-link>
             </h4>
-            <transactions-filter :status="false" />
+            <transactions-filter :status="false" :people="{title: 'Customer', items: customers}"/>
 
             <list-table
                 :loading="listLoading"
@@ -109,17 +109,15 @@ export default {
             fetched       : false,
         };
     },
+
     computed: mapState({
-        vendors: state => state.purchase.vendors
+        vendors: state => state.purchase.vendors,
+        customers: state => state.sales.customers
     }),
     created() {
+
         this.$store.dispatch('spinner/setSpinner', true);
         this.$root.$on('transactions-filter', filters => {
-          /*  this.$router.push({
-                path : '/transactions/purchases',
-                query: { start: filters.start_date, end: filters.end_date, status: filters.status }
-            });
-            */
             this.fetchItems(filters);
             this.fetched = true;
         });
@@ -131,12 +129,14 @@ export default {
             filters.start_date = this.$route.query.start;
             filters.end_date   = this.$route.query.end;
         }
-        if (this.$route.query.status) {
-            filters.status = this.$route.query.status;
-        }
+
 
         if (!this.fetched) {
             this.fetchItems(filters);
+        }
+
+        if(!this.customers.length){
+            this.$store.dispatch('sales/fillCustomers', []);
         }
     },
 
