@@ -44,9 +44,11 @@ export default {
             pages: [
                 { namedRoute: 'InvoiceCreate', name: __('Create Invoice', 'erp') },
                 { namedRoute: 'RecPaymentCreate', name: __('Receive Payment', 'erp') },
-                { namedRoute: 'EstimateCreate', name: __('Create Estimate', 'erp') }
+                { namedRoute: 'EstimateCreate', name: __('Create Estimate', 'erp') },
+                { namedRoute: 'SalesReturnLists', name: __('Sales Return', 'erp') },
             ],
             filterTypes:[{id: 'invoice', name: 'Invoice'}, {id: 'payment', name: 'Payment'}, {id: 'estimate', name: 'Estimate'}],
+
         };
     },
     created() {

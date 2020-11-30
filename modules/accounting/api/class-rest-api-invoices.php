@@ -29,6 +29,7 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Register the routes for the objects of the controller.
      */
+
     public function register_routes() {
         register_rest_route(
             $this->namespace,
