@@ -27340,9 +27340,6 @@ setTimeout(function () {
       }, {
         namedRoute: 'purchasesReturnList',
         name: __('Purchase Return', 'erp')
-      }, {
-        namedRoute: 'purchasesReturn',
-        name: __('Create Purchase Return', 'erp')
       }],
       filterTypes: [{
         id: 'purchase',
