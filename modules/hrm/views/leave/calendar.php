@@ -95,6 +95,7 @@ foreach ( $leave_requests as $key => $leave_request ) {
                 right: 'month,agendaWeek,agendaDay'
             },
             editable: false,
+            firstDay: <?php echo esc_html( get_option( 'start_of_week', 1 ) );?>,
             eventLimit: 4, // allow "more" link when too many events
             events: <?php echo json_encode( $events ); ?>,
             eventRender: function( event, element, calEvent ) {
