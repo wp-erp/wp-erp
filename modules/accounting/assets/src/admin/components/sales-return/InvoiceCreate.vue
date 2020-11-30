@@ -101,7 +101,7 @@
                                        </label>
                                     </th>
                                     <th>{{ detail.name }} <span v-if="detail.return_qty">(Returned {{detail.return_qty}}/{{detail.existing_qty}})</span></th>
-                                    <td> <input v-if="detail.selected" type="number" v-model="detail.qty" /> <span v-else> {{ detail.qty }}</span> </td>
+                                    <td> <input v-if="detail.selected" @keyup="quantityUpdate(detail, index)" type="number" v-model="detail.qty" /> <span v-else> {{ detail.qty }}</span> </td>
                                     <td>{{ moneyFormat( detail.discount ) }}</td>
                                     <td>{{ moneyFormat(detail.unit_price) }}</td>
                                     <td>{{ moneyFormat((detail.unit_price * parseFloat(detail.qty) ) - ( detail.discount + parseFloat(detail.qty) ) ) }}</td>
@@ -198,6 +198,12 @@ export default {
     },
 
     methods: {
+        quantityUpdate(item, index){
+
+            if( parseFloat(item.qty) > item.returnable_qty){
+                item.qty =  item.returnable_qty ;
+            }
+        },
         async searchVoucher() {
             let Voucher = await getRequest('/sales-return/search-invoice/'+ this.voucher_no )
             if (Voucher) {
@@ -210,7 +216,9 @@ export default {
                     item.unit_price = parseFloat( item.unit_price )
                     item.tax = ( parseFloat( item.tax ) || 0) / parseFloat(item.qty)
                     item.existing_qty = item.qty
+                    item.return_qty = parseFloat(item.return_qty)
                     item.qty = parseFloat( item.qty ) - ( parseFloat(item.return_qty) || 0 )
+                    item.returnable_qty = item.qty
                     item.discount = parseFloat( item.discount ) / item.qty
                 })
 

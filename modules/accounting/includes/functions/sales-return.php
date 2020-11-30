@@ -1,5 +1,7 @@
 <?php
 
+use WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map;
+
 if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
@@ -344,7 +346,7 @@ function erp_acct_insert_sales_return( $data ) {
         );
 
         if ( ! $insertReturn ) {
-            throw new \Exception( __( "Something went wrong sales invoice", "erp" ) );
+            throw new Exception( __( "Something went wrong sales invoice", "erp" ) );
         }
 
 
@@ -371,7 +373,7 @@ function erp_acct_insert_sales_return( $data ) {
             );
 
             if ( ! $insertDetails ) {
-                throw new \Exception( __( "Something went wrong with item", "erp" ) );
+                throw new Exception( __( "Something went wrong with item", "erp" ) );
             }
 
         }
@@ -389,7 +391,7 @@ function erp_acct_insert_sales_return( $data ) {
                 'trn_date'    => $invoice_data['return_date'],
                 'particulars' => __( "Sales returned with voucher no ", "erp" ) . $voucher_no,
                 'debit'       => 0,
-                'credit'      => ( $invoice_data['amount'] + $invoice_data['amount'] ) - $invoice_data['discount'],
+                'credit'      => ( $invoice_data['amount'] + $invoice_data['tax'] ) - $invoice_data['discount'],
                 'created_at'  => $invoice_data['created_at'],
                 'created_by'  => $user_id,
             ]
@@ -397,26 +399,29 @@ function erp_acct_insert_sales_return( $data ) {
 
 
         // add people transaction
-        $data['date'] = $invoice_data['return_date'];
-        $data['dr']   = 0;
-        $data['cr']   = $invoice_data['amount'];
+        $data['date']        = $invoice_data['return_date'];
+        $data['dr']          = 0;
+        $data['cr']          = $invoice_data['amount'];
+        $data['particulars'] = __( "Total sales return", "erp" );
         erp_acct_insert_data_into_people_trn_details( $data, $voucher_no );
 
         if ( $invoice_data['discount'] ) {
-            $data['dr'] = $invoice_data['discount'];
-            $data['cr'] = 0;
+            $data['dr']          = $invoice_data['discount'];
+            $data['cr']          = 0;
+            $data['particulars'] = __( "Sales return discount", "erp" );
             erp_acct_insert_data_into_people_trn_details( $data, $voucher_no );
         }
 
         if ( $invoice_data['tax'] ) {
-            $data['dr'] = 0;
-            $data['cr'] = $invoice_data['tax'];
+            $data['dr']          = 0;
+            $data['cr']          = $invoice_data['tax'];
+            $data['particulars'] = __( "Sales return tax", "erp" );
             erp_acct_insert_data_into_people_trn_details( $data, $voucher_no );
         }
 
         $wpdb->query( 'COMMIT' );
 
-    } catch ( \Exception $e ) {
+    } catch ( Exception $e ) {
 
         $wpdb->query( 'ROLLBACK' );
 
@@ -486,7 +491,7 @@ function erp_acct_insert_sales_return_data_into_ledger( $invoice_data, $voucher_
     $user_id = get_current_user_id();
     $date    = date( 'Y-m-d H:i:s' );
 
-    $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::get_instance();
+    $ledger_map = Ledger_Map::get_instance();
 
     $sales_return_ledger_id          = $ledger_map->get_ledger_id_by_slug( 'sales_returns_and_allowance' );
     $sales_return_tax_ledger_id      = $ledger_map->get_ledger_id_by_slug( 'sales_return_tax' );

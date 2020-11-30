@@ -26283,6 +26283,13 @@ if (false) {(function () {
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'TransactionsFilter',
   props: {
+    status: {
+      type: Boolean,
+      required: false,
+      default: function _default() {
+        return true;
+      }
+    },
     types: {
       type: Array,
       required: false,
@@ -33526,6 +33533,11 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
   }),
   created: function created() {},
   methods: {
+    quantityUpdate: function quantityUpdate(item, index) {
+      if (parseFloat(item.qty) > item.returnable_qty) {
+        item.qty = item.returnable_qty;
+      }
+    },
     searchVoucher: function searchVoucher() {
       var _this = this;
 
@@ -33552,7 +33564,9 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
                     item.unit_price = parseFloat(item.unit_price);
                     item.tax = (parseFloat(item.tax) || 0) / parseFloat(item.qty);
                     item.existing_qty = item.qty;
+                    item.return_qty = parseFloat(item.return_qty);
                     item.qty = parseFloat(item.qty) - (parseFloat(item.return_qty) || 0);
+                    item.returnable_qty = item.qty;
                     item.discount = parseFloat(item.discount) / item.qty;
                   });
                 }
@@ -58388,29 +58402,39 @@ var render = function() {
                             _c("br"),
                             _vm._v(" "),
                             _c("div", { staticClass: "form-fields" }, [
-                              _c("div", { staticClass: "form-field-wrapper" }, [
-                                _c("h3", [
-                                  _vm._v(_vm._s(_vm.__("Status", "erp")))
-                                ]),
-                                _vm._v(" "),
-                                _c(
-                                  "div",
-                                  { staticClass: "form-fields" },
-                                  [
-                                    _c("simple-select", {
-                                      attrs: { options: _vm.statuses },
-                                      model: {
-                                        value: _vm.filters.status,
-                                        callback: function($$v) {
-                                          _vm.$set(_vm.filters, "status", $$v)
-                                        },
-                                        expression: "filters.status"
-                                      }
-                                    })
-                                  ],
-                                  1
-                                )
-                              ]),
+                              _vm.status
+                                ? _c(
+                                    "div",
+                                    { staticClass: "form-field-wrapper" },
+                                    [
+                                      _c("h3", [
+                                        _vm._v(_vm._s(_vm.__("Status", "erp")))
+                                      ]),
+                                      _vm._v(" "),
+                                      _c(
+                                        "div",
+                                        { staticClass: "form-fields" },
+                                        [
+                                          _c("simple-select", {
+                                            attrs: { options: _vm.statuses },
+                                            model: {
+                                              value: _vm.filters.status,
+                                              callback: function($$v) {
+                                                _vm.$set(
+                                                  _vm.filters,
+                                                  "status",
+                                                  $$v
+                                                )
+                                              },
+                                              expression: "filters.status"
+                                            }
+                                          })
+                                        ],
+                                        1
+                                      )
+                                    ]
+                                  )
+                                : _vm._e(),
                               _vm._v(" "),
                               _vm.types.length
                                 ? _c(
@@ -67725,6 +67749,9 @@ var render = function() {
                                     attrs: { type: "number" },
                                     domProps: { value: detail.qty },
                                     on: {
+                                      keyup: function($event) {
+                                        return _vm.quantityUpdate(detail, index)
+                                      },
                                       input: function($event) {
                                         if ($event.target.composing) {
                                           return
@@ -68262,7 +68289,7 @@ var render = function() {
             1
           ),
           _vm._v(" "),
-          _c("transactions-filter"),
+          _c("transactions-filter", { attrs: { status: false } }),
           _vm._v(" "),
           _c("list-table", {
             attrs: {
@@ -68384,7 +68411,7 @@ var render = function() {
                   return [
                     _vm._v(
                       "\n                " +
-                        _vm._s(_vm.__("returned", "erp")) +
+                        _vm._s(_vm.__("Returned", "erp")) +
                         "\n            "
                     )
                   ]
