@@ -10,7 +10,9 @@
             </div>
 
 
-            <h4>{{ __('Purchase Return  List', 'erp') }}</h4>
+            <h4 class="top-title-bar">{{ __('Purchase Return', 'erp') }}
+                <router-link class="wperp-btn btn--primary add-line-trigger pull-right" :to="{ name: 'purchasesReturn' }" > {{ __( "Create Return Invoice ", "erp" ) }}</router-link>
+            </h4>
             <transactions-filter  />
 
             <list-table
@@ -27,13 +29,8 @@
                 :actions="[]"
                 @action:click="onActionClick">
                 <template slot="trn_no" slot-scope="data">
-                    <strong v-if="isPayment(data.row)">
-                        <router-link :to="{ name: 'PayPurchaseSingle', params: { id: data.row.id }}">
-                            #{{ data.row.id }}
-                        </router-link>
-                    </strong>
-                    <strong v-else>
-                        <router-link :to="{ name: 'PurchaseSingle', params: { id: data.row.id }}">
+                    <strong>
+                        <router-link :to="{ name: 'purchasesReturnDetails', params: { id: data.row.id }}">
                             #{{ data.row.id }}
                         </router-link>
                     </strong>

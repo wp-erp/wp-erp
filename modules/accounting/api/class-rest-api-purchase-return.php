@@ -3,15 +3,17 @@
 namespace WeDevs\ERP\Accounting\API;
 
 use WeDevs\ERP\Accounting\Includes\Classes\RequestHandler;
+use WeDevs\ERP\API\REST_Controller;
 use WP_Error;
 use WP_REST_Request;
+use WP_REST_Response;
 use WP_REST_Server;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
 
-class Purchase_Return_Controller extends \WeDevs\ERP\API\REST_Controller {
+class Purchase_Return_Controller extends REST_Controller {
 
     /**
      * Endpoint namespace.
@@ -34,7 +36,7 @@ class Purchase_Return_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         register_rest_route(
             $this->namespace,
-            '/' . $this->rest_base .'/list',
+            '/' . $this->rest_base . '/list',
             [
                 [
                     'methods'             => WP_REST_Server::READABLE,
@@ -50,7 +52,7 @@ class Purchase_Return_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         register_rest_route(
             $this->namespace,
-            '/' . $this->rest_base .'/create',
+            '/' . $this->rest_base . '/create',
             [
                 [
                     'methods'             => WP_REST_Server::CREATABLE,
@@ -65,10 +67,9 @@ class Purchase_Return_Controller extends \WeDevs\ERP\API\REST_Controller {
         );
 
 
-
         register_rest_route(
             $this->namespace,
-            '/' . $this->rest_base .'/(?P<id>[\d]+)',
+            '/' . $this->rest_base . '/(?P<id>[\d]+)',
             [
                 [
                     'methods'             => WP_REST_Server::READABLE,
@@ -84,7 +85,7 @@ class Purchase_Return_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         register_rest_route(
             $this->namespace,
-            '/' . $this->rest_base . '/search-invoice'.'/(?P<id>[\d]+)',
+            '/' . $this->rest_base . '/search-invoice' . '/(?P<id>[\d]+)',
             [
                 [
                     'methods'             => WP_REST_Server::READABLE,
@@ -100,19 +101,18 @@ class Purchase_Return_Controller extends \WeDevs\ERP\API\REST_Controller {
 
     }
 
+
     /**
-     * Get a collection of invoices
+     * search purchase voucher for return
      *
      * @param WP_REST_Request $request
      *
      * @return WP_Error|WP_REST_Response
      */
     public function search_voucher( $request ) {
-        $args = [
-            'voucher_no'     => $request['id']
-        ];
+        $voucherNo = $request['id'];
 
-        $invoice_data = erp_acct_get_invoice_for_purchase_return( $args );
+        $invoice_data = erp_acct_get_invoice_for_purchase_return( $voucherNo );
 
 
         $response = rest_ensure_response( $invoice_data );
@@ -120,7 +120,6 @@ class Purchase_Return_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         return $response;
     }
-
 
 
     /**
@@ -141,17 +140,12 @@ class Purchase_Return_Controller extends \WeDevs\ERP\API\REST_Controller {
             'vendor_id'  => empty( $request['vendor_id'] ) ? '' : $request['vendor_id'],
         ];
 
-        $formatted_items   = [];
-        $additional_fields = [];
-
-        $additional_fields['namespace'] = $this->namespace;
-        $additional_fields['rest_base'] = $this->rest_base;
 
         $transactions = erp_acct_get_purchase_return_list( $args );
         $total_items  = erp_acct_get_purchase_transactions(
             [
                 'count'  => true,
-                'number' => -1,
+                'number' => - 1,
             ]
         );
 
@@ -165,7 +159,6 @@ class Purchase_Return_Controller extends \WeDevs\ERP\API\REST_Controller {
     }
 
 
-
     /**
      * Get a collection of invoices
      *
@@ -175,7 +168,7 @@ class Purchase_Return_Controller extends \WeDevs\ERP\API\REST_Controller {
      */
     public function return_invoice( $request ) {
         $args = [
-            'voucher_no'     => $request['id']
+            'voucher_no' => $request['id'],
         ];
 
         $invoice_data = erp_acct_get_purchase_return_invoice( $args );
@@ -195,28 +188,28 @@ class Purchase_Return_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function create_purchase_return($request ) {
+    public function create_purchase_return( $request ) {
 
 
-        $invoice_data =  $this->prepare_item_for_database($request) ;
+        $invoice_data = $this->prepare_item_for_database( $request );
 
         $item_total          = 0;
         $item_discount_total = 0;
         $item_tax_total      = 0;
-        $items = $request['line_items'];
+        $items               = $request['line_items'];
 
         foreach ( $items as $value ) {
             $sub_total = $value['qty'] * $value['price'];
 
-            $item_total += $sub_total;
-            $item_tax_total += $value['tax'] * $value['qty'];
+            $item_total          += $sub_total;
+            $item_tax_total      += $value['tax'] * $value['qty'];
             $item_discount_total += $value['discount'] * $value['qty'];
         }
 
-        $invoice_data['discount']        = $item_discount_total;
-        $invoice_data['discount_type']   = $request['discount_type'];
-        $invoice_data['tax']             = $item_tax_total;
-        $invoice_data['amount']          = $item_total;
+        $invoice_data['discount']      = $item_discount_total;
+        $invoice_data['discount_type'] = $request['discount_type'];
+        $invoice_data['tax']           = $item_tax_total;
+        $invoice_data['amount']        = $item_total;
 
         $invoice_id = erp_acct_insert_purchase_return( $invoice_data );
 
@@ -230,31 +223,7 @@ class Purchase_Return_Controller extends \WeDevs\ERP\API\REST_Controller {
         return $response;
     }
 
-
-
-    /**
-     * Log when invoice is created
-     *
-     * @param $data
-     * @param $action
-     */
-    public function add_log( $data, $action ) {
-        erp_log()->add(
-            [
-                'component'     => 'Accounting',
-                'sub_component' => __( 'Sales Return', 'erp' ),
-                'old_value'     => '',
-                'new_value'     => '',
-                // translators: %1$s: amount, %2$s: id
-                'message'       => sprintf( __( 'An invoice of %1$s has been return for %2$s', 'erp' ), $data['amount'], erp_acct_get_people_name_by_people_id( $data['customer_id'] ) ),
-                'changetype'    => $action,
-                'created_by'    => get_current_user_id(),
-            ]
-        );
-    }
-
-
-    public function prepare_item_for_database($request){
+    public function prepare_item_for_database( $request ) {
         $prepared_item = [];
 
         if ( isset( $request['vendor_id'] ) ) {
@@ -292,6 +261,27 @@ class Purchase_Return_Controller extends \WeDevs\ERP\API\REST_Controller {
         $prepared_item['request'] = $request;
 
         return $prepared_item;
+    }
+
+    /**
+     * Log when invoice is created
+     *
+     * @param $data
+     * @param $action
+     */
+    public function add_log( $data, $action ) {
+        erp_log()->add(
+            [
+                'component'     => 'Accounting',
+                'sub_component' => __( 'Sales Return', 'erp' ),
+                'old_value'     => '',
+                'new_value'     => '',
+                // translators: %1$s: amount, %2$s: id
+                'message'       => sprintf( __( 'An invoice of %1$s has been return for %2$s', 'erp' ), $data['amount'], erp_acct_get_people_name_by_people_id( $data['customer_id'] ) ),
+                'changetype'    => $action,
+                'created_by'    => get_current_user_id(),
+            ]
+        );
     }
 
 }

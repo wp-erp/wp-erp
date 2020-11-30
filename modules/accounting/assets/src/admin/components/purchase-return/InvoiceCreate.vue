@@ -104,7 +104,7 @@
                                     <td> <input v-if="detail.selected" type="number" v-model="detail.qty" /> <span v-else> {{ detail.qty }}</span> </td>
                                     <td>{{ moneyFormat( detail.discount ) }}</td>
                                     <td>{{ moneyFormat(detail.price) }}</td>
-                                    <td>{{ moneyFormat((detail.price * parseFloat(detail.qty) ) - ( detail.discount + parseFloat(detail.qty) ) ) }}</td>
+                                    <td>{{ moneyFormat( (detail.price * parseFloat(detail.qty) ) - ( detail.discount * parseFloat(detail.qty) ) ) }}</td>
                                     <td   class="col--actions delete-row">
                                         <span  @click="deleteItem(index)" class="wperp-btn"> <i  class="flaticon-trash"></i></span>
                                     </td>
@@ -208,8 +208,8 @@ export default {
                 this.invoice.line_items.map(item=>{
                     item.price = parseFloat( item.price )
                     item.tax = ( parseFloat( item.tax ) || 0) / parseFloat(item.qty)
-                    item.qty = parseFloat( item.qty ) - ( parseFloat(item.return_qty) || 0 )
                     item.existing_qty = item.qty
+                    item.qty = parseFloat( item.qty ) - ( parseFloat(item.return_qty) || 0 )
                     item.discount = 0
                 })
 
@@ -236,7 +236,14 @@ export default {
 
                     let salesReturn = await postRequest('/purchase-return/create', this.invoice )
                     if (salesReturn) {
-
+                        this.invoice = { line_items: [] }
+                        Swal({
+                            position: 'center',
+                            type: 'success',
+                            title: __( "Invoice Saved successfully", 'erp' ),
+                            showConfirmButton: false,
+                            timer: 2500
+                        });
                     }
 
                 } else if (result.isDenied) {

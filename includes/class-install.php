@@ -1473,6 +1473,55 @@ Account Manager
                 PRIMARY KEY (`id`)
             ) $charset_collate;",
 
+            "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}erp_acct_purchase_details_tax (
+              `id` int(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+              `invoice_details_id` int(20) NOT NULL,
+              `agency_id` int(20) DEFAULT NULL,
+              `tax_rate` decimal(20,2) NOT NULL,
+              `created_at` timestamp DEFAULT NULL,
+              `created_by` int(20) DEFAULT NULL,
+              `updated_at` timestamp DEFAULT NULL,
+              `updated_by` int(20) DEFAULT NULL,
+              PRIMARY KEY  (`id`)
+            ) $charset_collate;",
+
+            "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}erp_acct_purchase_return (
+              `id` int(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+              `invoice_id` int(20) NOT NULL,
+              `voucher_no` int(20) NOT NULL,
+              `vendor_id` int(20) DEFAULT NULL,
+              `vendor_name` varchar(255) DEFAULT NULL,
+              `trn_date` date  NOT NULL,
+              `amount` decimal(20,2) NOT NULL,
+              `discount` decimal(20,2) DEFAULT 0,
+              `discount_type` varchar(255) DEFAULT NULL,
+              `tax` decimal(20,2) DEFAULT 0,
+              `reason` text DEFAULT NULL,
+              `comments` text DEFAULT NULL,
+              `status` int(20) DEFAULT NULL COMMENT '0 means drafted, 1 means confirmed return',
+              `created_at` timestamp DEFAULT NULL,
+              `created_by` int(20) DEFAULT NULL,
+              `updated_at` timestamp DEFAULT NULL,
+              `updated_by` int(20) DEFAULT NULL,
+              PRIMARY KEY  (`id`)
+            ) $charset_collate;",
+
+            "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}erp_acct_purchase_return_details (
+              `id` int(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+              `invoice_details_id` int(20) NOT NULL,
+              `trn_no` int(20) NOT NULL,
+              `product_id` int(20) NOT NULL,
+              `qty` int(20) NOT NULL,
+              `price` decimal(20,2) NOT NULL,
+              `discount` decimal(20,2) DEFAULT 0,
+              `tax` decimal(20,2) DEFAULT 0,
+              `created_at` timestamp DEFAULT NULL,
+              `created_by` int(20) DEFAULT NULL,
+              `updated_at` timestamp DEFAULT NULL,
+              `updated_by` int(20) DEFAULT NULL,
+              PRIMARY KEY  (`id`)
+            ) $charset_collate;",
+
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_tax_categories` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
                 `name` varchar(100) DEFAULT NULL,

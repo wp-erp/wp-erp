@@ -70,6 +70,7 @@ export const postRequest = function ( url, data= {}, silent = false, multipart =
         ).then( response => {
 
             store.dispatch('spinner/setSpinner', false);
+
             resolve(response.data);
 
         }).catch( errors => {
@@ -94,6 +95,3 @@ export const postRequest = function ( url, data= {}, silent = false, multipart =
     })
 
 }
-
-
-

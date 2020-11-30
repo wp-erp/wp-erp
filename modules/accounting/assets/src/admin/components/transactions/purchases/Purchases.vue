@@ -48,7 +48,7 @@ export default {
                 { namedRoute: 'PurchaseCreate', name: __('Create Purchase', 'erp') },
                 { namedRoute: 'PayPurchaseCreate', name: __('Pay Purchase', 'erp') },
                 { namedRoute: 'PurchaseOrderCreate', name:  __('Create Purchase Order', 'erp') },
-                { namedRoute: 'purchasesReturnList', name:  __('Create Purchase Return List', 'erp') },
+                { namedRoute: 'purchasesReturnList', name:  __('Purchase Return', 'erp') },
                 { namedRoute: 'purchasesReturn', name:  __('Create Purchase Return', 'erp') },
             ],
 
