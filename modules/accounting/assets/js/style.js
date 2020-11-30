@@ -7,8 +7,4 @@ pluginWebpack([3],{
 
 /***/ })
 
-<<<<<<< HEAD
-},[561]);
-=======
 },[575]);
->>>>>>> origin/purchase_return_emran
