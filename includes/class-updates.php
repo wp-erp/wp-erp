@@ -52,6 +52,7 @@ class Updates {
         '1.6.3'   => 'updates/update-1.6.3.php',
         '1.6.5'   => 'updates/update-1.6.5.php',
         '1.6.8'   => 'updates/update-1.6.8.php',
+        '1.7.0'   => 'updates/update-1.7.0.php',
     ];
 
     /**
