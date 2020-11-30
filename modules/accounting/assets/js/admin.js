@@ -33991,6 +33991,10 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
     if (!this.fetched) {
       this.fetchItems(filters);
     }
+
+    if (!this.vendors.length) {
+      this.$store.dispatch('purchase/fetchVendors');
+    }
   },
   methods: {
     fetchItems: function fetchItems() {
@@ -68667,7 +68671,12 @@ var render = function() {
             1
           ),
           _vm._v(" "),
-          _c("transactions-filter", { attrs: { status: false } }),
+          _c("transactions-filter", {
+            attrs: {
+              status: false,
+              people: { title: "Vendor", items: _vm.vendors }
+            }
+          }),
           _vm._v(" "),
           _c("list-table", {
             attrs: {

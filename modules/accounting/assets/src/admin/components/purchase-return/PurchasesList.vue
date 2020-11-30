@@ -13,7 +13,7 @@
             <h4 class="top-title-bar">{{ __('Purchase Return', 'erp') }}
                 <router-link class="wperp-btn btn--primary add-line-trigger pull-right" :to="{ name: 'purchasesReturn' }" > {{ __( "Create Return Invoice ", "erp" ) }}</router-link>
             </h4>
-            <transactions-filter :status="false" />
+            <transactions-filter :status="false" :people="{title: 'Vendor', items: vendors}"/>
 
             <list-table
                 :loading="listLoading"
@@ -133,6 +133,10 @@ export default {
 
         if (!this.fetched) {
             this.fetchItems(filters);
+        }
+
+        if(!this.vendors.length){
+            this.$store.dispatch('purchase/fetchVendors');
         }
     },
 
