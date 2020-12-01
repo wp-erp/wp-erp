@@ -9,6 +9,7 @@ if (
 
 $contact_tags = wp_get_object_terms( $customer->id, 'erp_crm_tag', ['orderby' => 'name', 'order' => 'ASC'] );
 $contact_tags = wp_list_pluck( $contact_tags, 'name' );
+$trashed      = erp_is_people_trashed( $customer->id );
 ?>
 <div class="wrap erp erp-crm-customer erp-single-customer" id="wp-erp">
 
@@ -19,16 +20,18 @@ $contact_tags = wp_list_pluck( $contact_tags, 'name' );
         ?>
         <a href="<?php echo esc_url_raw( add_query_arg( [ 'page' => 'erp-crm', 'section' => 'companies' ], admin_url( 'admin.php' ) ) ); ?>" id="erp-contact-list" class="add-new-h2"><?php esc_attr_e( 'Back to Company list', 'erp' ); ?></a>
 
-        <?php if ( current_user_can( 'erp_crm_edit_contact', $customer->id ) || current_user_can( erp_crm_get_manager_role() ) ) { ?>
-            <span class="edit">
-                <a href="#" @click.prevent="editContact( 'company', '<?php echo esc_attr( $customer->id ); ?>', '<?php esc_attr_e( 'Edit this company', 'erp' ); ?>' )" data-id="<?php echo esc_attr( $customer->id ); ?>" data-single_view="1" title="<?php esc_attr_e( 'Edit this Company', 'erp' ); ?>" class="add-new-h2"><?php esc_attr_e( 'Edit this Company', 'erp' ); ?></a>
-            </span>
-            <?php if ( ! $customer->user_id && erp_crm_current_user_can_make_wp_user() ) { ?>
-                <span class="make-wp-user">
-                    <a href="#" @click.prevent="makeWPUser( 'company', '<?php echo esc_attr( $customer->id ); ?>', '<?php esc_attr_e( 'Make WP User', 'erp' ); ?>', '<?php echo esc_attr( $customer->email ); ?>' )" data-single_view="1" title="<?php esc_attr_e( 'Make this contact as a WP User', 'erp' ); ?>" class="add-new-h2"><?php esc_attr_e( 'Make WP User', 'erp' ); ?></a>
+        <?php if ( ! $trashed ) : ?>
+            <?php if ( current_user_can( 'erp_crm_edit_contact', $customer->id ) || current_user_can( erp_crm_get_manager_role() ) ) { ?>
+                <span class="edit">
+                    <a href="#" @click.prevent="editContact( 'company', '<?php echo esc_attr( $customer->id ); ?>', '<?php esc_attr_e( 'Edit this company', 'erp' ); ?>' )" data-id="<?php echo esc_attr( $customer->id ); ?>" data-single_view="1" title="<?php esc_attr_e( 'Edit this Company', 'erp' ); ?>" class="add-new-h2"><?php esc_attr_e( 'Edit this Company', 'erp' ); ?></a>
                 </span>
+                <?php if ( ! $customer->user_id && erp_crm_current_user_can_make_wp_user() ) { ?>
+                    <span class="make-wp-user">
+                        <a href="#" @click.prevent="makeWPUser( 'company', '<?php echo esc_attr( $customer->id ); ?>', '<?php esc_attr_e( 'Make WP User', 'erp' ); ?>', '<?php echo esc_attr( $customer->email ); ?>' )" data-single_view="1" title="<?php esc_attr_e( 'Make this contact as a WP User', 'erp' ); ?>" class="add-new-h2"><?php esc_attr_e( 'Make WP User', 'erp' ); ?></a>
+                    </span>
+                <?php } ?>
             <?php } ?>
-        <?php } ?>
+        <?php endif; ?>
     </h2>
 
     <div class="erp-grid-container erp-single-customer-content">
