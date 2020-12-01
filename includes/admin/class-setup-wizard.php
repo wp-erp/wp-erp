@@ -509,7 +509,7 @@ class Setup_Wizard {
 
         update_option( 'erp_modules', $all_modules );
 
-        // when HCRM is inactive hide related steps
+        // when CRM is inactive hide related steps
         if ( ! in_array( 'crm', $modules ) ) {
             unset( $this->steps['email'] );
         }
@@ -529,7 +529,7 @@ class Setup_Wizard {
     /**
      * Wemail setup step
      *
-     * @since 1.6.11
+     * @since 1.7.1
      *
      * @return void
      */
@@ -596,7 +596,7 @@ class Setup_Wizard {
     /**
      * WeMail setup step save
      *
-     * @since 1.6.11
+     * @since 1.7.1
      *
      * @return void
      */
