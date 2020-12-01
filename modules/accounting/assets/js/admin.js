@@ -16776,6 +16776,11 @@ pluginWebpack([0],[
             _this3.totalDebit = response.data.extra.total_debit;
             _this3.totalCredit = response.data.extra.total_credit;
 
+            _this3.rows.forEach(function (item) {
+              item.trn_date = _this3.formatDate(item.trn_date);
+              item.created_at = _this3.formatDate(item.created_at);
+            });
+
             _this3.$store.dispatch('spinner/setSpinner', false);
           }).catch(function (e) {
             _this3.$store.dispatch('spinner/setSpinner', false);
@@ -16947,6 +16952,11 @@ pluginWebpack([0],[
             _this2.totalDebit = response.data.extra.total_debit;
             _this2.totalCredit = response.data.extra.total_credit;
 
+            _this2.rows.forEach(function (item) {
+              item.trn_date = _this2.formatDate(item.trn_date);
+              item.created_at = _this2.formatDate(item.created_at);
+            });
+
             _this2.$store.dispatch('spinner/setSpinner', false);
           }).catch(function (e) {
             _this2.$store.dispatch('spinner/setSpinner', false);
@@ -17093,7 +17103,6 @@ pluginWebpack([0],[
           __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get(this.req_url + '/' + id, {
             params: {}
           }).then(function (response) {
-            console.log(response.data);
             _this2.resData = response.data;
           });
         },
@@ -17103,6 +17112,11 @@ pluginWebpack([0],[
           this.$store.dispatch('spinner/setSpinner', true);
           __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get(this.req_url + '/' + this.userId + '/transactions').then(function (res) {
             _this3.transactions = res.data;
+
+            _this3.transactions.forEach(function (item) {
+              item.trn_date = _this3.formatDate(item.trn_date);
+              item.created_at = _this3.formatDate(item.created_at);
+            });
 
             _this3.$store.dispatch('spinner/setSpinner', false);
           }).catch(function (error) {
@@ -23326,10 +23340,12 @@ pluginWebpack([0],[
       },
       computed: {
         row_data: function row_data() {
+          var _this = this;
+
           var items = this.rows;
           items.map(function (item) {
             item.l_id = item.voucher_no;
-            item.l_date = item.trn_date;
+            item.l_date = _this.formatDate(item.trn_date);
             item.l_particulars = item.particulars;
             item.amount = item.total;
           });
@@ -23338,7 +23354,7 @@ pluginWebpack([0],[
       },
       methods: {
         fetchItems: function fetchItems() {
-          var _this = this;
+          var _this2 = this;
 
           this.rows = [];
           __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('/journals', {
@@ -23347,13 +23363,13 @@ pluginWebpack([0],[
               page: this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page
             }
           }).then(function (response) {
-            _this.rows = response.data;
-            _this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
-            _this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
+            _this2.rows = response.data;
+            _this2.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
+            _this2.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
 
-            _this.$store.dispatch('spinner/setSpinner', false);
+            _this2.$store.dispatch('spinner/setSpinner', false);
           }).catch(function (error) {
-            _this.$store.dispatch('spinner/setSpinner', false);
+            _this2.$store.dispatch('spinner/setSpinner', false);
 
             throw error;
           });
@@ -26901,7 +26917,7 @@ pluginWebpack([0],[
                   trn_type: 'pay_bill',
                   ref: item.ref ? item.ref : '-',
                   vendor_name: item.pay_bill_vendor_name,
-                  trn_date: item.pay_bill_trn_date,
+                  trn_date: _this4.formatDate(item.pay_bill_trn_date),
                   due_date: '-',
                   due: '-',
                   amount: _this4.formatAmount(item.pay_bill_amount),
@@ -26928,8 +26944,8 @@ pluginWebpack([0],[
                   ref: item.ref ? item.ref : '-',
                   vendor_id: item.vendor_id,
                   vendor_name: item.vendor_name,
-                  trn_date: item.bill_trn_date,
-                  due_date: item.due_date,
+                  trn_date: _this4.formatDate(item.bill_trn_date),
+                  due_date: _this4.formatDate(item.due_date),
                   due: _this4.formatAmount(item.due),
                   amount: _this4.formatAmount(item.amount),
                   status: item.status,
@@ -26960,7 +26976,7 @@ pluginWebpack([0],[
                   trn_type: 'expense',
                   ref: item.exp_ref ? item.exp_ref : '-',
                   vendor_name: item.expense_people_name,
-                  trn_date: item.expense_trn_date,
+                  trn_date: _this4.formatDate(item.expense_trn_date),
                   due_date: '-',
                   due: '-',
                   amount: _this4.formatAmount(item.expense_amount),
@@ -26986,7 +27002,7 @@ pluginWebpack([0],[
                   trn_type: 'check',
                   ref: item.ref ? item.ref : '-',
                   vendor_name: item.expense_people_name,
-                  trn_date: item.expense_trn_date,
+                  trn_date: _this4.formatDate(item.expense_trn_date),
                   due_date: '-',
                   due: '-',
                   amount: _this4.formatAmount(item.expense_amount),
@@ -44893,9 +44909,9 @@ pluginWebpack([0],[
                     )
                   ]),
                   _vm._v(" "),
-                  _c("em", [_vm._v(_vm._s(_vm.start_date))]),
+                  _c("em", [_vm._v(_vm._s(_vm.formatDate(_vm.start_date)))]),
                   _vm._v(" to "),
-                  _c("em", [_vm._v(_vm._s(_vm.end_date))])
+                  _c("em", [_vm._v(_vm._s(_vm.formatDate(_vm.end_date)))])
                 ])
               ])
             : _vm._e(),
@@ -45209,9 +45225,9 @@ pluginWebpack([0],[
                     )
                   ]),
                   _vm._v(" "),
-                  _c("em", [_vm._v(_vm._s(_vm.start_date))]),
+                  _c("em", [_vm._v(_vm._s(_vm.formatDate(_vm.start_date)))]),
                   _vm._v(" to "),
-                  _c("em", [_vm._v(_vm._s(_vm.end_date))])
+                  _c("em", [_vm._v(_vm._s(_vm.formatDate(_vm.end_date)))])
                 ])
               ])
             : _vm._e(),
@@ -49615,7 +49631,9 @@ pluginWebpack([0],[
                                   )
                                 ]),
                                 _vm._v(" "),
-                                _c("td", [_vm._v(_vm._s(_vm.bill.trn_date))])
+                                _c("td", [
+                                  _vm._v(_vm._s(_vm.formatDate(_vm.bill.trn_date)))
+                                ])
                               ]),
                               _vm._v(" "),
                               _c("tr", [
@@ -49623,7 +49641,9 @@ pluginWebpack([0],[
                                   _vm._v(_vm._s(_vm.__("Due Date", "erp")) + ":")
                                 ]),
                                 _vm._v(" "),
-                                _c("td", [_vm._v(_vm._s(_vm.bill.due_date))])
+                                _c("td", [
+                                  _vm._v(_vm._s(_vm.formatDate(_vm.bill.due_date)))
+                                ])
                               ]),
                               _vm._v(" "),
                               _c("tr", [
@@ -49631,7 +49651,11 @@ pluginWebpack([0],[
                                   _vm._v(_vm._s(_vm.__("Created At", "erp")) + ":")
                                 ]),
                                 _vm._v(" "),
-                                _c("td", [_vm._v(_vm._s(_vm.bill.created_at))])
+                                _c("td", [
+                                  _vm._v(
+                                    _vm._s(_vm.formatDate(_vm.bill.created_at))
+                                  )
+                                ])
                               ]),
                               _vm._v(" "),
                               _c("tr", [
@@ -50620,7 +50644,11 @@ pluginWebpack([0],[
                                   )
                                 ]),
                                 _vm._v(" "),
-                                _c("td", [_vm._v(_vm._s(_vm.payBill.trn_date))])
+                                _c("td", [
+                                  _vm._v(
+                                    _vm._s(_vm.formatDate(_vm.payBill.trn_date))
+                                  )
+                                ])
                               ]),
                               _vm._v(" "),
                               _c("tr", [
@@ -50628,7 +50656,11 @@ pluginWebpack([0],[
                                   _vm._v(_vm._s(_vm.__("Created At", "erp")) + ":")
                                 ]),
                                 _vm._v(" "),
-                                _c("td", [_vm._v(_vm._s(_vm.payBill.created_at))])
+                                _c("td", [
+                                  _vm._v(
+                                    _vm._s(_vm.formatDate(_vm.payBill.created_at))
+                                  )
+                                ])
                               ]),
                               _vm._v(" "),
                               _c("tr", [
@@ -51887,7 +51919,9 @@ pluginWebpack([0],[
                                   )
                                 ]),
                                 _vm._v(" "),
-                                _c("td", [_vm._v(_vm._s(_vm.purchase.date))])
+                                _c("td", [
+                                  _vm._v(_vm._s(_vm.formatDate(_vm.purchase.date)))
+                                ])
                               ]),
                               _vm._v(" "),
                               _c("tr", [
@@ -51895,7 +51929,11 @@ pluginWebpack([0],[
                                   _vm._v(_vm._s(_vm.__("Due Date", "erp")) + ":")
                                 ]),
                                 _vm._v(" "),
-                                _c("td", [_vm._v(_vm._s(_vm.purchase.due_date))])
+                                _c("td", [
+                                  _vm._v(
+                                    _vm._s(_vm.formatDate(_vm.purchase.due_date))
+                                  )
+                                ])
                               ]),
                               _vm._v(" "),
                               _c("tr", [
@@ -51903,7 +51941,11 @@ pluginWebpack([0],[
                                   _vm._v(_vm._s(_vm.__("Created At", "erp")) + ":")
                                 ]),
                                 _vm._v(" "),
-                                _c("td", [_vm._v(_vm._s(_vm.purchase.created_at))])
+                                _c("td", [
+                                  _vm._v(
+                                    _vm._s(_vm.formatDate(_vm.purchase.created_at))
+                                  )
+                                ])
                               ])
                             ])
                           ])
@@ -52959,7 +53001,11 @@ pluginWebpack([0],[
                                   )
                                 ]),
                                 _vm._v(" "),
-                                _c("td", [_vm._v(_vm._s(_vm.payPurchase.trn_date))])
+                                _c("td", [
+                                  _vm._v(
+                                    _vm._s(_vm.formatDate(_vm.payPurchase.trn_date))
+                                  )
+                                ])
                               ]),
                               _vm._v(" "),
                               _c("tr", [
@@ -52968,7 +53014,11 @@ pluginWebpack([0],[
                                 ]),
                                 _vm._v(" "),
                                 _c("td", [
-                                  _vm._v(_vm._s(_vm.payPurchase.created_at))
+                                  _vm._v(
+                                    _vm._s(
+                                      _vm.formatDate(_vm.payPurchase.created_at)
+                                    )
+                                  )
                                 ])
                               ]),
                               _vm._v(" "),
@@ -54073,7 +54123,9 @@ pluginWebpack([0],[
                                 _vm._v(_vm._s(_vm.__("Journal Date", "erp")) + ":")
                               ]),
                               _vm._v(" "),
-                              _c("td", [_vm._v(_vm._s(_vm.journal.trn_date))])
+                              _c("td", [
+                                _vm._v(_vm._s(_vm.formatDate(_vm.journal.trn_date)))
+                              ])
                             ])
                           ])
                         ])
@@ -54921,7 +54973,9 @@ pluginWebpack([0],[
                                 )
                               ]),
                               _vm._v(" "),
-                              _c("td", [_vm._v(_vm._s(_vm.voucher.trn_date))])
+                              _c("td", [
+                                _vm._v(_vm._s(_vm.formatDate(_vm.voucher.trn_date)))
+                              ])
                             ])
                           ])
                         ])
@@ -55955,19 +56009,25 @@ pluginWebpack([0],[
                         _vm._v(_vm._s(_vm.__("Transaction Date", "erp")) + ":")
                       ]),
                       _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(_vm.invoice.trn_date))])
+                      _c("td", [
+                        _vm._v(_vm._s(_vm.formatDate(_vm.invoice.trn_date)))
+                      ])
                     ]),
                     _vm._v(" "),
                     _c("tr", [
                       _c("th", [_vm._v(_vm._s(_vm.__("Due Date", "erp")) + ":")]),
                       _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(_vm.invoice.due_date))])
+                      _c("td", [
+                        _vm._v(_vm._s(_vm.formatDate(_vm.invoice.due_date)))
+                      ])
                     ]),
                     _vm._v(" "),
                     _c("tr", [
                       _c("th", [_vm._v(_vm._s(_vm.__("Created At", "erp")) + ":")]),
                       _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(_vm.invoice.created_at))])
+                      _c("td", [
+                        _vm._v(_vm._s(_vm.formatDate(_vm.invoice.created_at)))
+                      ])
                     ]),
                     _vm._v(" "),
                     _c("tr", [
@@ -56262,13 +56322,17 @@ pluginWebpack([0],[
                         _vm._v(_vm._s(_vm.__("Transaction Date", "erp")) + ":")
                       ]),
                       _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(_vm.payment.trn_date))])
+                      _c("td", [
+                        _vm._v(_vm._s(_vm.formatDate(_vm.payment.trn_date)))
+                      ])
                     ]),
                     _vm._v(" "),
                     _c("tr", [
                       _c("th", [_vm._v(_vm._s(_vm.__("Created At", "erp")) + ":")]),
                       _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(_vm.payment.created_at))])
+                      _c("td", [
+                        _vm._v(_vm._s(_vm.formatDate(_vm.payment.created_at)))
+                      ])
                     ]),
                     _vm._v(" "),
                     _c("tr", [
@@ -57093,8 +57157,8 @@ pluginWebpack([0],[
                           "\n                " +
                             _vm._s(
                               _vm.isPayment(data.row)
-                                ? data.row.payment_trn_date
-                                : data.row.invoice_trn_date
+                                ? _vm.formatDate(data.row.payment_trn_date)
+                                : _vm.formatDate(data.row.invoice_trn_date)
                             ) +
                             "\n            "
                         )
@@ -57108,7 +57172,9 @@ pluginWebpack([0],[
                         _vm._v(
                           "\n                " +
                             _vm._s(
-                              _vm.isPayment(data.row) ? "-" : data.row.due_date
+                              _vm.isPayment(data.row)
+                                ? "-"
+                                : _vm.formatDate(data.row.due_date)
                             ) +
                             "\n            "
                         )
@@ -58440,7 +58506,11 @@ pluginWebpack([0],[
                                   )
                                 ]),
                                 _vm._v(" "),
-                                _c("td", [_vm._v(_vm._s(_vm.expense_data.date))])
+                                _c("td", [
+                                  _vm._v(
+                                    _vm._s(_vm.formatDate(_vm.expense_data.date))
+                                  )
+                                ])
                               ]),
                               _vm._v(" "),
                               _c("tr", [
@@ -58449,7 +58519,11 @@ pluginWebpack([0],[
                                 ]),
                                 _vm._v(" "),
                                 _c("td", [
-                                  _vm._v(_vm._s(_vm.expense_data.created_at))
+                                  _vm._v(
+                                    _vm._s(
+                                      _vm.formatDate(_vm.expense_data.created_at)
+                                    )
+                                  )
                                 ])
                               ]),
                               _vm._v(" "),
@@ -59071,8 +59145,8 @@ pluginWebpack([0],[
                           "\n                " +
                             _vm._s(
                               _vm.isPayment(data.row)
-                                ? data.row.pay_bill_trn_date
-                                : data.row.bill_trn_date
+                                ? _vm.formatDate(data.row.pay_bill_trn_date)
+                                : _vm.formatDate(data.row.bill_trn_date)
                             ) +
                             "\n            "
                         )
@@ -59086,7 +59160,9 @@ pluginWebpack([0],[
                         _vm._v(
                           "\n                " +
                             _vm._s(
-                              _vm.isPayment(data.row) ? "-" : data.row.due_date
+                              _vm.isPayment(data.row)
+                                ? "-"
+                                : _vm.formatDate(data.row.due_date)
                             ) +
                             "\n            "
                         )
@@ -61887,7 +61963,11 @@ pluginWebpack([0],[
                                 _vm._v(_vm._s(_vm.__("Payment Date", "erp")) + ":")
                               ]),
                               _vm._v(" "),
-                              _c("td", [_vm._v(_vm._s(_vm.tax_pay_data.trn_date))])
+                              _c("td", [
+                                _vm._v(
+                                  _vm._s(_vm.formatDate(_vm.tax_pay_data.trn_date))
+                                )
+                              ])
                             ])
                           ])
                         ])
@@ -63178,7 +63258,11 @@ pluginWebpack([0],[
                                 )
                               ]),
                               _vm._v(" "),
-                              _c("td", [_vm._v(_vm._s(_vm.expense_data.date))])
+                              _c("td", [
+                                _vm._v(
+                                  _vm._s(_vm.formatDate(_vm.expense_data.date))
+                                )
+                              ])
                             ]),
                             _vm._v(" "),
                             _c("tr", [
@@ -63187,7 +63271,11 @@ pluginWebpack([0],[
                               ]),
                               _vm._v(" "),
                               _c("td", [
-                                _vm._v(_vm._s(_vm.expense_data.created_at))
+                                _vm._v(
+                                  _vm._s(
+                                    _vm.formatDate(_vm.expense_data.created_at)
+                                  )
+                                )
                               ])
                             ])
                           ])
