@@ -898,3 +898,26 @@ function erp_get_people_email( $id ) {
 
     return $wpdb->get_var( $sql );
 }
+
+/**
+ * Checks a people is trashed or not
+ *
+ * @since 1.7.1
+ *
+ * @param int $id
+ *
+ * @return bool
+ */
+function erp_is_people_trashed( $id ) {
+    global $wpdb;
+
+    $trashed = $wpdb->get_var(
+        $wpdb->prepare( "SELECT deleted_at FROM {$wpdb->prefix}erp_people_type_relations WHERE people_id = %d", absint( $id ) )
+    );
+
+    if ( $trashed ) {
+        return true;
+    }
+
+    return false;
+}
