@@ -551,8 +551,6 @@ class Setup_Wizard {
     public function setup_step_email() {
         // Should `weMail` plugin installs by default?
         $include_wm  = get_option( 'include_wemail' );
-        $admin_email = get_option( 'admin_email' );
-
         ?>
         <h1><?php esc_html_e( 'Email Marketing Setup', 'erp' ); ?></h1>
         <form method="post">
@@ -618,13 +616,7 @@ class Setup_Wizard {
     public function setup_step_email_save() {
         check_admin_referer( 'erp-setup' );
 
-        $install_wemail   = isset( $_POST['wemail_install'] ) ? sanitize_text_field( wp_unslash( $_POST['wemail_install'] ) )    : 'no';
-        $collect_data     = isset( $_POST['collect_data'] ) ? sanitize_text_field( wp_unslash( $_POST['collect_data'] ) )        : 'no';
-        $subscribe_wemail = isset( $_POST['wemail_subscribe'] ) ? sanitize_text_field( wp_unslash( $_POST['wemail_subscribe'] ) ): 'no';
-
-        if ( 'yes' === $subscribe_wemail ) {
-            $admin_email = isset( $_POST['wm_email'] ) ? sanitize_text_field( wp_unslash( $_POST['wm_email'] ) ) : get_option( 'admin_email' );
-        }
+        $install_wemail   = isset( $_POST['wemail_install'] ) ? sanitize_text_field( wp_unslash( $_POST['wemail_install'] ) ) : 'no';
 
         // if `weMail` plugin needs to be installed
         if ( 'yes' === $install_wemail ) {
