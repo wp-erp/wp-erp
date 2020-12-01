@@ -300,19 +300,7 @@ class Employee_List_Table extends \WP_List_Table {
      * @return void
      */
     public function search_box( $text, $input_id ) {
-        if ( empty( $_REQUEST['s'] ) && !$this->has_items() ) {
-            return;
-        }
-
-        $input_id = $input_id . '-search-input';
-
-        if ( ! empty( $_REQUEST['orderby'] ) ) {
-            echo '<input type="hidden" name="orderby" value="' . esc_attr( sanitize_text_field( wp_unslash( $_REQUEST['orderby'] ) ) ) . '" />';
-        }
-
-        if ( ! empty( $_REQUEST['order'] ) ) {
-            echo '<input type="hidden" name="order" value="' . esc_attr( sanitize_text_field( wp_unslash( $_REQUEST['order'] ) ) ) . '" />';
-        }
+        parent::search_box( $text, $input_id );
 
         if ( ! empty( $_REQUEST['status'] ) ) {
             echo '<input type="hidden" name="status" value="' . esc_attr( sanitize_text_field( wp_unslash( $_REQUEST['status'] ) ) ) . '" />';
@@ -324,13 +312,7 @@ class Employee_List_Table extends \WP_List_Table {
 
         if ( ! empty( $_REQUEST['detached'] ) ) {
             echo '<input type="hidden" name="detached" value="' . esc_attr( sanitize_text_field( wp_unslash( $_REQUEST['detached'] ) ) ) . '" />';
-        } ?>
-        <p class="search-box">
-            <label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>"><?php echo esc_html( $text ); ?>:</label>
-            <input type="search" id="<?php echo esc_attr( $input_id ); ?>" name="s" value="<?php _admin_search_query(); ?>" />
-            <?php submit_button( $text, 'button', 'employee_search', false, [ 'id' => 'search-submit' ] ); ?>
-        </p>
-        <?php
+        }
     }
 
     /**
