@@ -204,8 +204,11 @@ class Admin_Menu {
             case 'view':
                 $customer = new Contact( $id );
 
-                if ( ! $customer->id ) {
-                    wp_die( esc_html__( 'Contact not found!', 'erp' ) );
+                if (
+                    ! $customer->id ||
+                    ! in_array( 'contact', (array) $customer->types, true )
+                ) {
+                    wp_die( esc_html__( 'Contact not found!', 'erp' ), 404 );
                 }
 
                 $template = WPERP_CRM_VIEWS . '/contact/single.php';
@@ -239,7 +242,10 @@ class Admin_Menu {
             case 'view':
                 $customer = new Contact( $id );
 
-                if ( ! $customer->id ) {
+                if (
+                    ! $customer->id ||
+                    ! in_array( 'company', (array) $customer->types, true )
+                ) {
                     wp_die( esc_html__( 'Company not found!', 'erp' ) );
                 }
 
