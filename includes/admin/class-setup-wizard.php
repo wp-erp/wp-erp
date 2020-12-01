@@ -190,6 +190,11 @@ class Setup_Wizard {
         echo '</div>';
     }
 
+    /**
+     * Renders next step buttons
+     *
+     * @return void
+     */
     public function next_step_buttons() {
         ?>
         <p class="erp-setup-actions step">
@@ -215,6 +220,11 @@ class Setup_Wizard {
         <?php
     }
 
+    /**
+     * Basic setup steps
+     *
+     * @return void
+     */
     public function setup_step_basic() {
         $general         = get_option( 'erp_settings_general', [] );
         $company         = new \WeDevs\ERP\Company();
@@ -351,6 +361,11 @@ class Setup_Wizard {
         <?php
     }
 
+    /**
+     * Saves data from basic step
+     *
+     * @return void
+     */
     public function setup_step_basic_save() {
         check_admin_referer( 'erp-setup' );
 
@@ -629,6 +644,11 @@ class Setup_Wizard {
         exit;
     }
 
+    /**
+     * Departments setup step
+     *
+     * @return void
+     */
     public function setup_step_departments() {
         ?>
         <h1><?php esc_html_e( 'Departments Setup', 'erp' ); ?></h1>
@@ -660,6 +680,11 @@ class Setup_Wizard {
         $this->script_input_duplicator();
     }
 
+    /**
+     * Input duplicator script
+     *
+     * @return void
+     */
     public function script_input_duplicator() {
         ?>
         <script type="text/javascript">
@@ -677,6 +702,11 @@ class Setup_Wizard {
         <?php
     }
 
+    /**
+     * Saves departments setup step data
+     *
+     * @return void
+     */
     public function setup_step_departments_save() {
         check_admin_referer( 'erp-setup' );
 
@@ -696,6 +726,11 @@ class Setup_Wizard {
         exit;
     }
 
+    /**
+     * Designations setup step
+     *
+     * @return void
+     */
     public function setup_step_designation() {
         ?>
         <h1><?php esc_html_e( 'Designation Setup', 'erp' ); ?></h1>
@@ -727,6 +762,11 @@ class Setup_Wizard {
         $this->script_input_duplicator();
     }
 
+    /**
+     * Saves departments setup step data
+     *
+     * @return void
+     */
     public function setup_step_designation_save() {
         check_admin_referer( 'erp-setup' );
 
@@ -746,6 +786,13 @@ class Setup_Wizard {
         exit;
     }
 
+    /**
+     * Step to set workdays
+     *
+     * @since 1.0.0
+     *
+     * @return void
+     */
     public function setup_step_workdays() {
         $working_days = erp_company_get_working_days();
         $options      = [
@@ -876,6 +923,11 @@ class Setup_Wizard {
         exit;
     }
 
+    /**
+     * Final setup step meaning ready to go
+     *
+     * @return void
+     */
     public function setup_step_ready() {
         ?>
 
@@ -888,7 +940,7 @@ class Setup_Wizard {
                     <?php
                         $is_hrm_activated = erp_is_module_active( 'hrm' );
 
-        if ( $is_hrm_activated ) { ?>
+                        if ( $is_hrm_activated ) { ?>
                             <a class="button button-primary button-large btn-add-employees"
                                 href="<?php echo esc_url( admin_url( 'admin.php?page=erp-hr&section=employee' ) ); ?>">
                                 <?php esc_html_e( 'Add your employees!', 'erp' ); ?>
@@ -1029,6 +1081,14 @@ class Setup_Wizard {
         }
     }
 
+    /**
+     * Returns associative plugin files for background installer
+     *
+     * @param array $plugins
+     * @param string $key
+     *
+     * @return void
+     */
     private function associate_plugin_file( $plugins, $key ) {
         $path                 = explode( '/', $key );
         $filename             = end( $path );
