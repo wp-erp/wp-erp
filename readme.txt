@@ -5,7 +5,7 @@ Tags: business manager, erp, accounting, crm, hr, project manager, small busines
 Requires at least: 4.4
 Tested up to: 5.5.3
 Requires PHP: 5.6
-Stable tag: 1.6.8
+Stable tag: 1.7.0
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -279,6 +279,27 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+
+= v1.7.0 -> November 30, 2020 =
+--------------------------
+- [new] Added Accounting vendor import option in the CSV import feature
+- [new] Added Accounting vendor export option in the CSV export feature
+- [new] Added filter at holiday calender
+- [new] Added hr calendar weekend marker
+- [new] Added filter at workdays
+- [fix] Fixed issue of deleting all leave related references when an employee is permanently deleted
+- [fix] Fixed permission issue of contact and company single pages to ensure no unauthorized user can access those pages
+- [fix] Fixed CRM contact form integration issue to prevent contact owner from being reset every time a contact form is submitted by an existing contact
+- [fix] Fixed issue of contact form settings so that the settings can not be saved without selecting contact owner as a required field
+- [fix] Set hr calendar starting day as per settings
+- [fix] Fixed announcement employee selection tag
+- [fix] Fixed issue of deleting all leave related references when an employee is permanently deleted
+- [update] Updated weekend from setting at hr leave calendar
+- [update] Updated validation for CSV import to show row-wise detailed error notice when import operation fails
+
+= v1.6.9 -> November 20, 2020 =
+--------------------------
+- [update] Improved the code quality & fixed some minor issues to make your usages smoother
 
 = v1.6.8 -> November 12, 2020 =
 --------------------------
