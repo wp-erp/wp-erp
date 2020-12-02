@@ -12,7 +12,7 @@ class Promotion {
      */
     public function __construct() {
         add_action( 'admin_notices', [ $this, 'promotional_offer' ] );
-        // add_action( 'wp_ajax_erp-dismiss-promotional-offer-notice', array( $this, 'dismiss_promotional_offer' ) );
+        add_action( 'wp_ajax_erp-dismiss-promotional-offer-notice-temp', array( $this, 'dismiss_promotional_offer' ) );
     }
 
     /**
@@ -27,172 +27,93 @@ class Promotion {
         if ( ! current_user_can( 'manage_options' ) ) {
             return;
         }
-
-        // 2018-03-26 23:59:00
-        if ( time() > strtotime( '30-4-2018' ) ) {
+        $current_time       = erp_current_datetime()->setTimezone ( new \DateTimeZone( 'America/New_York' ) );
+        $promotion1_start   = $current_time->setDate( 2020, 11, 23 )->setTime( 9, 0, 0 );
+        $promotion1_end     = $promotion1_start->setTime( 14, 0, 0 );
+        $promotion2_start   = $promotion1_end->setTime( 14, 0, 1 );
+        $promotion2_end     = $promotion2_start->modify( '+4 days' )->setTime( 23, 59, 59 );
+        $promotion3_start   = $promotion2_end->modify( 'next day' )->setTime( 0, 0, 0 );
+        $promotion3_end     = $current_time->setDate( 2020, 12, 4 )->setTime( 23, 59, 59 );
+        // 2020-12-04 23:59:00
+        if ( $current_time > $promotion3_end || $current_time < $promotion1_start ) {
             return;
         }
+        if ( $current_time >= $promotion1_start && $current_time <= $promotion1_end ) {
+            $msg            = 'Enjoy Flat 50% OFF on WP ERP Pro. Get Your Early Bird Black Friday';
+            $option_name    = 'erp_2020_early_black_friday';
+            $this->generate_notice( $msg, $option_name );
+            return;
+        }
+        if ( $current_time >= $promotion2_start && $current_time <= $promotion2_end ) {
+            $msg            = 'Enjoy Up To 50% OFF on WP ERP Pro. Get Your Black Friday';
+            $option_name    = 'erp_2020_black_friday';
+            $this->generate_notice( $msg, $option_name );
+            return;
+        }
+        if ( $current_time >= $promotion3_start && $current_time <= $promotion3_end ) {
+            $msg            = 'Enjoy Up To 50% OFF on WP ERP Pro. Get Your Cyber Monday';
+            $option_name    = 'erp_2020_cyber_monday';
+            $this->generate_notice( $msg, $option_name );
+            return;
+        }
+    }
 
+    /**
+     * Generate offer notice
+     *
+     * @since 1.6.9
+     *
+     * @return void
+     */
+    public function generate_notice( $msg, $option_name ) {
         // check if it has already been dismissed
-        $hide_notice = get_option( 'erp_birthday2018_promotional_offer_notice', 'no' );
+        $hide_notice = get_option( $option_name, 'no' );
 
-        if ( 'hide' == $hide_notice ) {
+        if ( 'hide' === $hide_notice ) {
             return;
         }
 
-        $offer_msg = sprintf( __( '<p><strong class="highlight-text" style="font-size: 18px">It\'s Our Birthday <span class="erp-cake" style="font-size: 20px"> &#x1F382;</span>
-                But You Get The Present <span class="erp-gift" style="font-size: 20px"> &#x1F381;</span> </strong><br>
-                Get 33&#37; Discount with coupon:
-                <a target="_blank" href="%1$s"><strong> Birthday2018 </strong></a>
-                <br>
-                Offer ending soon!
-            </p>', 'erp' ), 'https://wperp.com/in/wordpress-erp-3rd-birthday' ); ?>
-            <div class="notice is-dismissible" id="erp-promotional-offer-notice">
-                <table>
-                    <tbody>
-                        <tr>
-                            <td class="image-container">
-                                <img src="https://ps.w.org/erp/assets/icon-256x256.png" alt="">
-                            </td>
-                            <td class="message-container">
-                                <?php echo wp_kses_post( $offer_msg ); ?>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+        $offer_msg = '<p><strong class="highlight-text" style="font-size: 18px">' . $msg . '
+                <a target="_blank" href="https://wperp.com/pricing/?nocache&utm_medium=text&utm_source=wordpress-erp">  Deals Now </a>.</strong>
+            </p>';
+        ?>
+        <div class="notice is-dismissible" id="erp-promotional-offer-notice">
+            <?php echo wp_kses_post( $offer_msg ); ?>
+        </div><!-- #erp-promotional-offer-notice -->
 
-                <span class="dashicons dashicons-megaphone"></span>
-                <a href="https://wperp.com/in/wordpress-erp-3rd-birthday" class="button button-primary promo-btn" target="_blank"><?php esc_html_e( 'Get the Offer', 'erp' ); ?></a>
-            </div><!-- #erp-promotional-offer-notice -->
+        <script type='text/javascript'>
+            jQuery('body').on('click', '#erp-promotional-offer-notice .notice-dismiss', function(e) {
+                e.preventDefault();
 
-            <style>
-                #erp-promotional-offer-notice {
-                    background-color: #4caf50;
-                    border: 0px;
-                    padding: 0;
-                    opacity: 0;
-                }
-
-                .wrap > #erp-promotional-offer-notice {
-                    opacity: 1;
-                }
-
-                #erp-promotional-offer-notice table {
-                    border-collapse: collapse;
-                    width: 100%;
-                }
-
-                #erp-promotional-offer-notice table td {
-                    padding: 0;
-                }
-
-                #erp-promotional-offer-notice table td.image-container {
-                    background-color: #fff;
-                    vertical-align: middle;
-                    width: 95px;
-                }
-
-
-                #erp-promotional-offer-notice img {
-                    max-width: 100%;
-                    max-height: 100px;
-                    vertical-align: middle;
-                }
-
-                #erp-promotional-offer-notice table td.message-container {
-                    padding: 0 10px;
-                }
-
-                #erp-promotional-offer-notice h2{
-                    color: rgba(250, 250, 250, 0.77);
-                    margin-bottom: 10px;
-                    font-weight: normal;
-                    margin: 16px 0 14px;
-                    -webkit-text-shadow: 0.1px 0.1px 0px rgba(250, 250, 250, 0.24);
-                    -moz-text-shadow: 0.1px 0.1px 0px rgba(250, 250, 250, 0.24);
-                    -o-text-shadow: 0.1px 0.1px 0px rgba(250, 250, 250, 0.24);
-                    text-shadow: 0.1px 0.1px 0px rgba(250, 250, 250, 0.24);
-                }
-
-
-                #erp-promotional-offer-notice h2 span {
-                    position: relative;
-                    top: 0;
-                }
-
-                #erp-promotional-offer-notice p{
-                    color: rgba(250, 250, 250, 0.77);
-                    font-size: 14px;
-                    margin-bottom: 10px;
-                    -webkit-text-shadow: 0.1px 0.1px 0px rgba(250, 250, 250, 0.24);
-                    -moz-text-shadow: 0.1px 0.1px 0px rgba(250, 250, 250, 0.24);
-                    -o-text-shadow: 0.1px 0.1px 0px rgba(250, 250, 250, 0.24);
-                    text-shadow: 0.1px 0.1px 0px rgba(250, 250, 250, 0.24);
-                }
-
-                #erp-promotional-offer-notice p strong.highlight-text{
-                    color: #fff;
-                }
-
-                #erp-promotional-offer-notice p a {
-                    color: #fafafa;
-                }
-
-                #erp-promotional-offer-notice .notice-dismiss:before {
-                    color: #fff;
-                }
-
-                #erp-promotional-offer-notice span.dashicons-megaphone {
-                    position: absolute;
-                    bottom: 46px;
-                    right: 248px;
-                    color: rgba(253, 253, 253, 0.29);
-                    font-size: 96px;
-                    transform: rotate(-21deg);
-                }
-
-                #erp-promotional-offer-notice a.promo-btn{
-                    background: #fff;
-                    border-color: #fafafa #fafafa #fafafa;
-                    box-shadow: 0 1px 0 #fafafa;
-                    color: #4caf4f;
-                    text-decoration: none;
-                    text-shadow: none;
-                    position: absolute;
-                    top: 30px;
-                    right: 26px;
-                    height: 40px;
-                    line-height: 40px;
-                    width: 130px;
-                    text-align: center;
-                    font-weight: 600;
-                }
-
-            </style>
-
-            <script type='text/javascript'>
-                jQuery('body').on('click', '#erp-promotional-offer-notice .notice-dismiss', function(e) {
-                    e.preventDefault();
-
-                    wp.ajax.post('erp-dismiss-promotional-offer-notice', {
-                        dismissed: true
-                    });
-                });
-            </script>
+                wp.ajax.post('erp-dismiss-promotional-offer-notice-temp', {
+                    dismissed: true,
+                    option_name : '<?php echo esc_html( $option_name ); ?>',
+                    _wpnonce : '<?php echo wp_create_nonce( 'erp_admin' ); ?>',
+                } );
+            });
+        </script>
         <?php
     }
 
-    /*
+    /**
      * Dismiss promotion notice
      *
      * @since  2.5
      *
      * @return void
      */
-//    public function dismiss_promotional_offer() {
-//         if ( ! empty( $_POST['dismissed'] ) ) {
-//             $offer_key = 'erp_birthday2018_promotional_offer_notice';
-//             update_option( $offer_key, 'hide' );
-//         }
-//     }
+    public function dismiss_promotional_offer() {
+        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp_admin' ) ) {
+            wp_send_json_error( esc_html__( 'Invalid nonce', 'erp' ) );
+        }
+
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( esc_html__( 'You have no permission to do that', 'erp' ) );
+        }
+
+        if ( ! empty( $_POST['dismissed'] ) ) {
+            $offer_key = ! empty( $_POST['option_name'] ) ? sanitize_text_field( wp_unslash( $_POST['option_name'] ) ) : '';
+            update_option( $offer_key, 'hide' );
+        }
+    }
 }
