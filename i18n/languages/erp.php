@@ -133,7 +133,7 @@ return [
 	__( 'Can I create a bank account in Accounting?', 'erp' ),
 	__( 'How can I receive, spend transfer between bank accounts?', 'erp' ),
 	__( 'Products', 'erp' ),
-	__( 'Can I create products / services / product categoty?', 'erp' ),
+	__( 'Can I create products / services / product category?', 'erp' ),
 	__( 'Tax', 'erp' ),
 	__( 'What is Tax Zone?', 'erp' ),
 	__( 'What is Tax Category?', 'erp' ),
