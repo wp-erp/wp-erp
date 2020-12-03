@@ -720,8 +720,13 @@ $ledgers = [
              'system' => 1,
          ],
          [
+             'name'   => 'Purchase Vat',
+             'code'   => 1509,
+             'system' => 1,
+         ],
+         [
              'name'   => 'Asset Purchase',
-             'code'   => 1506,
+             'code'   => 1507,
              'system' => 1,
          ],
          [

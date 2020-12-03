@@ -1458,7 +1458,7 @@ Account Manager
                 `created_by` varchar(50) DEFAULT NULL,
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
-                PRIMARY KEY (`id`)
+                PRIMARY KEY  (`id`)
             ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_purchase_details` (
@@ -1473,7 +1473,7 @@ Account Manager
                 `created_by` varchar(50) DEFAULT NULL,
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
-                PRIMARY KEY (`id`)
+                PRIMARY KEY  (`id`)
             ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}erp_acct_purchase_details_tax (
