@@ -68,6 +68,11 @@ class Setup_Wizard {
                 'view'    => [ $this, 'setup_step_module' ],
                 'handler' => [ $this, 'setup_step_module_save' ],
             ],
+            'email' => [
+                'name'    => __( 'E-Marketing', 'erp' ),
+                'view'    => [ $this, 'setup_step_email' ],
+                'handler' => [ $this, 'setup_step_email_save' ],
+            ],
             'department' => [
                 'name'    => __( 'Departments', 'erp' ),
                 'view'    => [ $this, 'setup_step_departments' ],
@@ -185,6 +190,11 @@ class Setup_Wizard {
         echo '</div>';
     }
 
+    /**
+     * Renders next step buttons
+     *
+     * @return void
+     */
     public function next_step_buttons() {
         ?>
         <p class="erp-setup-actions step">
@@ -210,6 +220,11 @@ class Setup_Wizard {
         <?php
     }
 
+    /**
+     * Basic setup steps
+     *
+     * @return void
+     */
     public function setup_step_basic() {
         $general         = get_option( 'erp_settings_general', [] );
         $company         = new \WeDevs\ERP\Company();
@@ -346,6 +361,11 @@ class Setup_Wizard {
         <?php
     }
 
+    /**
+     * Saves data from basic step
+     *
+     * @return void
+     */
     public function setup_step_basic_save() {
         check_admin_referer( 'erp-setup' );
 
@@ -504,6 +524,11 @@ class Setup_Wizard {
 
         update_option( 'erp_modules', $all_modules );
 
+        // when CRM is inactive hide related steps
+        if ( ! in_array( 'crm', $modules ) ) {
+            unset( $this->steps['email'] );
+        }
+
         // when HRM is inactive hide related steps
         if ( ! in_array( 'hrm', $modules ) ) {
             unset( $this->steps['department'] );
@@ -515,6 +540,107 @@ class Setup_Wizard {
         exit;
     }
 
+
+    /**
+     * Wemail setup step
+     *
+     * @since 1.7.1
+     *
+     * @return void
+     */
+    public function setup_step_email() {
+        // Should `weMail` plugin installs by default?
+        $include_wm  = get_option( 'include_wemail' );
+        ?>
+        <h1><?php esc_html_e( 'Email Marketing Setup', 'erp' ); ?></h1>
+        <form method="post">
+            <table class="form-table">
+                <tr>
+                    <td>
+                        <label for="wemail_install">
+                            <span class="description">
+                                <?php printf( esc_html__( 'To collect and create your CRM leads and subscriers, we recommend installing %s plugin. ', 'erp' ), '<em style="color: #19ACB8;">weMail</em>' ); ?><br/>
+                                <?php printf( esc_html__( 'It simplifies email marketing inside the WordPress dashboard and it has tight integration with %s plugin.', 'erp' ), '<em style="color: #19ACB8;">WP ERP</em>' ); ?>
+                            </span>
+                        </label><br/><br/>
+                        <input type="checkbox" name="wemail_install" id="wemail_install" class="switch-input" value="yes" checked>
+                        <label for="wemail_install" class="switch-label">
+                            <span class="toggle--on"></span>
+                            <span class="toggle--off"></span>
+                            <?php esc_html_e( 'Install weMail plugin for email marketing', 'erp' ); ?>
+                        </label>
+                    </td>
+                </tr>
+            </table>
+
+            <span class="plugin-install-info">
+                <span class="plugin-install-info-label"><?php esc_html_e( 'The following plugin will be installed and activated for you: ', 'erp' ); ?></span>
+                <br>
+                <span class="plugin-install-info-list">
+                    <span class="plugin-install-info-list-item">
+                        <a href="https://wordpress.org/plugins/wemail/" target="_blank">weMail</a>
+                    </span>
+                </span>
+            </span>
+
+            <script type="text/javascript">
+                var weMailIstall      = jQuery('#wemail_install');
+                var weMailInstallInfo = jQuery('.plugin-install-info');
+
+                <?php if ( 'no' == $include_wm ) { ?>
+                    weMailInstallInfo.css('display', 'none');
+                <?php } ?>
+
+                // toggle project manager on/off
+                weMailIstall.on('click', function(e) {
+                    if ( weMailIstall.is(':checked') ) {
+                        weMailInstallInfo.css('display', 'block');
+                    } else {
+                        weMailInstallInfo.css('display', 'none');
+                    }
+                });
+            </script>
+
+            <?php $this->next_step_buttons(); ?>
+        </form>
+        <?php
+    }
+
+    /**
+     * WeMail setup step save
+     *
+     * @since 1.7.1
+     *
+     * @return void
+     */
+    public function setup_step_email_save() {
+        check_admin_referer( 'erp-setup' );
+
+        $install_wemail   = isset( $_POST['wemail_install'] ) ? sanitize_text_field( wp_unslash( $_POST['wemail_install'] ) ) : 'no';
+
+        // if `weMail` plugin needs to be installed
+        if ( 'yes' === $install_wemail ) {
+            $wemail_plugin_id = 'wemail';
+            $wemail_plugin    = [
+                'name'      => __( 'weMail', 'erp' ),
+                'repo-slug' => 'wemail',
+                'file'      => 'wemail.php',
+            ];
+
+            $this->background_installer( $wemail_plugin_id, $wemail_plugin );
+        }
+
+        update_option( 'include_wemail', $install_wemail );
+
+        wp_redirect( esc_url_raw( $this->get_next_step_link() ) );
+        exit;
+    }
+
+    /**
+     * Departments setup step
+     *
+     * @return void
+     */
     public function setup_step_departments() {
         ?>
         <h1><?php esc_html_e( 'Departments Setup', 'erp' ); ?></h1>
@@ -546,6 +672,11 @@ class Setup_Wizard {
         $this->script_input_duplicator();
     }
 
+    /**
+     * Input duplicator script
+     *
+     * @return void
+     */
     public function script_input_duplicator() {
         ?>
         <script type="text/javascript">
@@ -563,6 +694,11 @@ class Setup_Wizard {
         <?php
     }
 
+    /**
+     * Saves departments setup step data
+     *
+     * @return void
+     */
     public function setup_step_departments_save() {
         check_admin_referer( 'erp-setup' );
 
@@ -582,6 +718,11 @@ class Setup_Wizard {
         exit;
     }
 
+    /**
+     * Designations setup step
+     *
+     * @return void
+     */
     public function setup_step_designation() {
         ?>
         <h1><?php esc_html_e( 'Designation Setup', 'erp' ); ?></h1>
@@ -613,6 +754,11 @@ class Setup_Wizard {
         $this->script_input_duplicator();
     }
 
+    /**
+     * Saves departments setup step data
+     *
+     * @return void
+     */
     public function setup_step_designation_save() {
         check_admin_referer( 'erp-setup' );
 
@@ -632,6 +778,13 @@ class Setup_Wizard {
         exit;
     }
 
+    /**
+     * Step to set workdays
+     *
+     * @since 1.0.0
+     *
+     * @return void
+     */
     public function setup_step_workdays() {
         $working_days = erp_company_get_working_days();
         $options      = [
@@ -762,6 +915,11 @@ class Setup_Wizard {
         exit;
     }
 
+    /**
+     * Final setup step meaning ready to go
+     *
+     * @return void
+     */
     public function setup_step_ready() {
         ?>
 
@@ -774,7 +932,7 @@ class Setup_Wizard {
                     <?php
                         $is_hrm_activated = erp_is_module_active( 'hrm' );
 
-        if ( $is_hrm_activated ) { ?>
+                        if ( $is_hrm_activated ) { ?>
                             <a class="button button-primary button-large btn-add-employees"
                                 href="<?php echo esc_url( admin_url( 'admin.php?page=erp-hr&section=employee' ) ); ?>">
                                 <?php esc_html_e( 'Add your employees!', 'erp' ); ?>
@@ -915,6 +1073,14 @@ class Setup_Wizard {
         }
     }
 
+    /**
+     * Returns associative plugin files for background installer
+     *
+     * @param array $plugins
+     * @param string $key
+     *
+     * @return void
+     */
     private function associate_plugin_file( $plugins, $key ) {
         $path                 = explode( '/', $key );
         $filename             = end( $path );
