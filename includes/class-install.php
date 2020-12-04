@@ -1481,9 +1481,9 @@ Account Manager
               `invoice_details_id` int(20) NOT NULL,
               `agency_id` int(20) DEFAULT NULL,
               `tax_rate` decimal(20,2) NOT NULL,
-              `created_at` timestamp DEFAULT NULL,
+              `created_at` timestamp NULL DEFAULT NULL,
               `created_by` int(20) DEFAULT NULL,
-              `updated_at` timestamp DEFAULT NULL,
+              `updated_at` timestamp NULL DEFAULT NULL,
               `updated_by` int(20) DEFAULT NULL,
               PRIMARY KEY  (`id`)
             ) $charset_collate;",
