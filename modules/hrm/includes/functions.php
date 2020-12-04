@@ -479,3 +479,35 @@ function erp_hr_send_birthday_wish_email( $user_id ) {
     }
 }
 /****************** Send Birthday wish email End ********************/
+
+/**
+ * Send holiday reminder email to employees
+ *
+ * @since 1.7.1
+ *
+ * @return void
+ */
+function erp_hr_holiday_reminder_to_employees() {
+    $start_date = erp_current_datetime()->format( 'Y-m-d H:i:s' );
+    $end_date   = erp_current_datetime()->modify( 'next day' )->format( 'Y-m-d H:i:s' );
+
+    $holiday = new \WeDevs\ERP\HRM\Models\Leave_Holiday();
+    $holiday = $holiday->where(
+        function ( $condition ) use ( $start_date, $end_date ) {
+            $condition->whereBetween( 'start', [ $start_date, $end_date ] );
+        }
+    );
+    $holidays        = $holiday->get()->toArray();
+    $employees       = erp_hr_get_employees( [ 'number' => -1 ] );
+    $emailer         = wperp()->emailer->get_email( 'Govt_Holiday_Reminder' );
+    if ( ! is_a( $emailer, '\WeDevs\ERP\Email' ) ) {
+        return;
+    }
+    foreach ( $holidays as $holiday ) {
+        $holiday_title = $holiday['title'];
+        foreach ( $employees as $employee ) {
+            $user_id = $employee->user_id;
+            $emailer->trigger( $user_id, $holiday_title );
+        }
+    }
+}
