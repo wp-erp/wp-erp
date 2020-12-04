@@ -20,10 +20,12 @@ class Govt_Holiday_Reminder extends Email {
         $this->heading        = __( 'Upcoming government holiday reminder', 'erp' );
 
         $this->find = [
-            'full-name'       => '{full_name}',
-            'first-name'      => '{first_name}',
-            'last-name'       => '{last_name}',
-            'holiday-name'    => '{holiday_name}',
+            'full-name'        => '{full_name}',
+            'first-name'       => '{first_name}',
+            'last-name'        => '{last_name}',
+            'holiday-name'     => '{holiday_name}',
+            'holiday-duration' => '{holiday_duration}',
+            'reopen-day'       => '{reopen_day}',
         ];
 
         $this->action( 'erp_admin_field_' . $this->id . '_help_texts', 'replace_keys' );
@@ -31,7 +33,7 @@ class Govt_Holiday_Reminder extends Email {
         parent::__construct();
     }
 
-    public function trigger( $employee_user_id = null, $holiday_name = '' ) {
+    public function trigger( $employee_user_id = null, $holiday_name = '', $holiday_duration = '', $reopen_day = '' ) {
         if ( ! $employee_user_id ) {
             return;
         }
@@ -43,10 +45,12 @@ class Govt_Holiday_Reminder extends Email {
         $this->subject     = $this->get_option( 'subject', $this->subject );
 
         $this->replace = [
-            'full-name'       => $employee->get_full_name(),
-            'first-name'      => $employee->first_name,
-            'last-name'       => $employee->last_name,
-            'holiday-name'    => $holiday_name,
+            'full-name'        => $employee->get_full_name(),
+            'first-name'       => $employee->first_name,
+            'last-name'        => $employee->last_name,
+            'holiday-name'     => $holiday_name,
+            'holiday-duration' => $holiday_duration,
+            'reopen-day'       => $reopen_day,
         ];
 
         $this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
