@@ -17,7 +17,7 @@ class Govt_Holiday_Reminder extends Email {
         $this->description    = __( 'Government holiday reminder email to employees.', 'erp' );
 
         $this->subject        = __( 'Upcoming government holiday reminder', 'erp' );
-        $this->heading        = __( 'Upcoming government holiday reminder', 'erp' );
+        $this->heading        = __( 'Reminder', 'erp' );
 
         $this->find = [
             'full-name'        => '{full_name}',
