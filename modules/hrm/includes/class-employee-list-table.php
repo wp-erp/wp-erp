@@ -305,14 +305,6 @@ class Employee_List_Table extends \WP_List_Table {
         if ( ! empty( $_REQUEST['status'] ) ) {
             echo '<input type="hidden" name="status" value="' . esc_attr( sanitize_text_field( wp_unslash( $_REQUEST['status'] ) ) ) . '" />';
         }
-
-        if ( ! empty( $_REQUEST['post_mime_type'] ) ) {
-            echo '<input type="hidden" name="post_mime_type" value="' . esc_attr( sanitize_text_field( wp_unslash( $_REQUEST['post_mime_type'] ) ) ) . '" />';
-        }
-
-        if ( ! empty( $_REQUEST['detached'] ) ) {
-            echo '<input type="hidden" name="detached" value="' . esc_attr( sanitize_text_field( wp_unslash( $_REQUEST['detached'] ) ) ) . '" />';
-        }
     }
 
     /**
