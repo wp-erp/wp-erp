@@ -1254,10 +1254,11 @@ function erp_hr_get_leave_request( $request_id ) {
  * @since 1.6.0
  *
  * @param array $args
+ * @param boolean $cached
  *
  * @return array
  */
-function erp_hr_get_leave_requests( $args = [] ) {
+function erp_hr_get_leave_requests( $args = [], $cached = true ) {
     global $wpdb;
 
     $defaults = [
@@ -1319,7 +1320,7 @@ function erp_hr_get_leave_requests( $args = [] ) {
     $cache_key = 'erp_hr_leave_requests_' . md5( serialize( $args ) );
     $requests  = wp_cache_get( $cache_key, 'erp' );
 
-    if ( false !== $requests ) {
+    if ( false !== $requests && true === $cached ) {
         return $requests;
     }
 
