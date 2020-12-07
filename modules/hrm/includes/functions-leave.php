@@ -1170,8 +1170,8 @@ function erp_hr_leave_insert_request( $args = [] ) {
     }
 
     // check start_date and end_date are in the same f_year
-    $f_year_start = erp_current_datetime()->setTimestamp( $entitlement->financial_year->start_date )->format( 'Y-m-d' );
-    $f_year_end   = erp_current_datetime()->setTimestamp( $entitlement->financial_year->end_date )->format( 'Y-m-d' );
+    $f_year_start = erp_current_datetime()->setTimestamp( $entitlement->financial_year->start_date )->setTime( 0, 0, 0 )->format( 'Y-m-d H:i:s' );
+    $f_year_end   = erp_current_datetime()->setTimestamp( $entitlement->financial_year->end_date )->setTime( 23, 59,59 )->format( 'Y-m-d H:i:s' );
 
     if ( ( $args['start_date'] < $f_year_start || $args['start_date'] > $f_year_end ) || ( $args['end_date'] < $f_year_start || $args['end_date'] > $f_year_end )  ) {
         return new WP_Error( 'invalid-dates', sprintf( esc_attr__( 'Invalid leave duration. Please apply between %s and %s.', 'erp' ), erp_format_date( $f_year_start ), erp_format_date( $f_year_end ) ) );
