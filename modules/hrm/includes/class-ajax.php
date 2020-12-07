@@ -1990,7 +1990,7 @@ class Ajax_Handler {
             'start_date' => $start->getTimestamp(),
             'end_date'   => $end->getTimestamp(),
         );
-        $leave_requests = erp_hr_get_leave_requests( $args );
+        $leave_requests = erp_hr_get_leave_requests( $args, false );
         $leave_requests = $leave_requests['data'];
 
         $start_date = $start->format( 'Y-m-d H:i:s' );
