@@ -1,4 +1,5 @@
-
+import Vue from 'vue';
+import Router from 'vue-router';
 import People from 'admin/components/people/People.vue';
 import Products from 'admin/components/products/Products.vue';
 import Employees from 'admin/components/people/Employees.vue';
@@ -55,8 +56,12 @@ import DynamicTrnLoader from 'admin/components/transactions/DynamicTrnLoader.vue
 import OpeningBalance from 'admin/components/opening-balance/OpeningBalance.vue';
 import HelpContent from 'admin/components/help/HelpContent.vue';
 
+Vue.use(Router);
+
 /* global acct */
-export default [
+export default new Router({
+    linkActiveClass: 'router-link-active',
+    routes: acct.hooks.applyFilters('erp_acct_admin_routes', [
         {
             path: '/',
             component: DashBoard,
@@ -789,4 +794,6 @@ export default [
                 }
             ]
         }
-    ] ;
+    ]
+    )
+});

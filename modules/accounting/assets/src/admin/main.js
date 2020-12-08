@@ -1,5 +1,5 @@
 import App from './App.vue';
-import router from './router';
+import router from './router/main';
 import store from './store/store';
 
 // get lib reference

@@ -22,10 +22,10 @@
         </li>
 
         <li>
-            <h3>{{ __('Sales Tax', 'erp') }}</h3>
+            <h3>{{ __('Tax', 'erp') }}</h3>
             <p>{{ __('It generates report based on the sales tax charged or paid for the current financial cycle/year', 'erp') }}.</p>
 
-            <router-link class="wperp-btn btn--primary" :to="{ name: 'SalesTax' }">{{ __('View Report', 'erp') }}</router-link>
+            <router-link class="wperp-btn btn--primary" :to="{ name: 'TaxReport' }">{{ __('View Report', 'erp') }}</router-link>
         </li>
 
         <li>

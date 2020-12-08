@@ -204,6 +204,7 @@ function erp_acct_insert_purchase( $data ) {
                 'qty'        => $item['qty'],
                 'price'      => $item['unit_price'],
                 'amount'     => $item['item_total'],
+                'tax_cat_id' => isset( $item['tax_cat_id'] ) ? $item['tax_cat_id'] : null,
                 'created_at' => $purchase_data['created_at'],
                 'created_by' => $created_by,
                 'updated_at' => $purchase_data['updated_at'],

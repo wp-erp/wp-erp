@@ -303,11 +303,68 @@ if (false) {(function () {
 
 /***/ }),
 
-/***/ 206:
+/***/ 21:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__mtr_datepicker_min__ = __webpack_require__(541);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_PeopleModal_vue__ = __webpack_require__(29);
+/* unused harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_16c47a18_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_PeopleModal_vue__ = __webpack_require__(65);
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(58)
+}
+var normalizeComponent = __webpack_require__(0)
+/* script */
+
+
+/* template */
+
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_PeopleModal_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_16c47a18_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_PeopleModal_vue__["a" /* default */],
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "modules/accounting/assets/src/admin/components/people/PeopleModal.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-16c47a18", Component.options)
+  } else {
+    hotAPI.reload("data-v-16c47a18", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
+
+
+/***/ }),
+
+/***/ 214:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__mtr_datepicker_min__ = __webpack_require__(575);
 //
 //
 //
@@ -377,63 +434,6 @@ if (false) {(function () {
     });
   }
 });
-
-/***/ }),
-
-/***/ 21:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_PeopleModal_vue__ = __webpack_require__(29);
-/* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_16c47a18_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_PeopleModal_vue__ = __webpack_require__(65);
-var disposed = false
-function injectStyle (ssrContext) {
-  if (disposed) return
-  __webpack_require__(58)
-}
-var normalizeComponent = __webpack_require__(0)
-/* script */
-
-
-/* template */
-
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = injectStyle
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_PeopleModal_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_16c47a18_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_PeopleModal_vue__["a" /* default */],
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "modules/accounting/assets/src/admin/components/people/PeopleModal.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-16c47a18", Component.options)
-  } else {
-    hotAPI.reload("data-v-16c47a18", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
-
 
 /***/ }),
 
@@ -10634,20 +10634,225 @@ if (false) {(function () {
 
 /***/ }),
 
-/***/ 517:
+/***/ 52:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_BulkActionsTpl_vue__ = __webpack_require__(27);
+/* unused harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_55f8d8ef_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_BulkActionsTpl_vue__ = __webpack_require__(54);
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(53)
+}
+var normalizeComponent = __webpack_require__(0)
+/* script */
+
+
+/* template */
+
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = "data-v-55f8d8ef"
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_BulkActionsTpl_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_55f8d8ef_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_BulkActionsTpl_vue__["a" /* default */],
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "modules/accounting/assets/src/admin/components/list-table/BulkActionsTpl.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-55f8d8ef", Component.options)
+  } else {
+    hotAPI.reload("data-v-55f8d8ef", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
+
+
+/***/ }),
+
+/***/ 53:
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
+/***/ 54:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("tr", [
+    _vm.showCb
+      ? _c("td", { staticClass: "manage-column column-cb check-column" }, [
+          _c("div", { staticClass: "form-check" }, [
+            _c("label", { staticClass: "form-check-label" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.bulkSelectAll,
+                    expression: "bulkSelectAll"
+                  }
+                ],
+                ref: "removeBulkAction",
+                staticClass: "form-check-input",
+                attrs: { type: "checkbox" },
+                domProps: {
+                  checked: Array.isArray(_vm.bulkSelectAll)
+                    ? _vm._i(_vm.bulkSelectAll, null) > -1
+                    : _vm.bulkSelectAll
+                },
+                on: {
+                  change: [
+                    function($event) {
+                      var $$a = _vm.bulkSelectAll,
+                        $$el = $event.target,
+                        $$c = $$el.checked ? true : false
+                      if (Array.isArray($$a)) {
+                        var $$v = null,
+                          $$i = _vm._i($$a, $$v)
+                        if ($$el.checked) {
+                          $$i < 0 && (_vm.bulkSelectAll = $$a.concat([$$v]))
+                        } else {
+                          $$i > -1 &&
+                            (_vm.bulkSelectAll = $$a
+                              .slice(0, $$i)
+                              .concat($$a.slice($$i + 1)))
+                        }
+                      } else {
+                        _vm.bulkSelectAll = $$c
+                      }
+                    },
+                    _vm.changeBulkCheckbox
+                  ]
+                }
+              }),
+              _vm._v(" "),
+              _vm._m(0)
+            ])
+          ])
+        ])
+      : _vm._e(),
+    _vm._v(" "),
+    _vm.hasBulkActions
+      ? _c("th", { attrs: { colspan: _vm.columnsCount } }, [
+          _c(
+            "ul",
+            { staticClass: "wp-erp-bulk-actions" },
+            [
+              _vm._l(_vm.bulkActions, function(bulkAction) {
+                return _c(
+                  "li",
+                  {
+                    key: bulkAction.key,
+                    on: {
+                      click: function($event) {
+                        return _vm.bulkActionSelect(bulkAction.key)
+                      }
+                    }
+                  },
+                  [
+                    _c("a", { attrs: { href: "#" } }, [
+                      _c("i", { class: bulkAction.iconClass }),
+                      _vm._v(" "),
+                      _c("span", [_vm._v(_vm._s(bulkAction.label))])
+                    ])
+                  ]
+                )
+              }),
+              _vm._v(" "),
+              _c("li", [
+                _c(
+                  "a",
+                  {
+                    staticClass: "close-div",
+                    attrs: { href: "#" },
+                    on: {
+                      click: function($event) {
+                        $event.preventDefault()
+                        return _vm.removeBulkActions($event)
+                      }
+                    }
+                  },
+                  [_c("i", { staticClass: "flaticon-close" })]
+                )
+              ])
+            ],
+            2
+          )
+        ])
+      : _vm._e()
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "form-check-sign" }, [
+      _c("span", { staticClass: "check" })
+    ])
+  }
+]
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-55f8d8ef", esExports)
+  }
+}
+
+/***/ }),
+
+/***/ 55:
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
+/***/ 551:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__i18n__ = __webpack_require__(518);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__i18n__ = __webpack_require__(552);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue__ = __webpack_require__(24);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Datepicker_vue__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_list_table_ListTable_vue__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_components_base_Dropdown_vue__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_admin_components_email_SendMail_vue__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_vue_sweetalert2__ = __webpack_require__(530);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__mixins_common__ = __webpack_require__(534);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__mixins_i18n__ = __webpack_require__(536);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_vue_sweetalert2__ = __webpack_require__(564);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__mixins_common__ = __webpack_require__(568);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__mixins_i18n__ = __webpack_require__(570);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_vue_loading_overlay__ = __webpack_require__(96);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_vue_loading_overlay___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_9_vue_loading_overlay__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_admin_http__ = __webpack_require__(1);
@@ -10657,15 +10862,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_14_admin_components_select_ComboButton_vue__ = __webpack_require__(16);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_15_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_16_admin_components_select_SelectAccounts_vue__ = __webpack_require__(23);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17_admin_components_timepicker_TimePicker_vue__ = __webpack_require__(537);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17_admin_components_timepicker_TimePicker_vue__ = __webpack_require__(571);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_18_admin_components_people_SelectPeople_vue__ = __webpack_require__(25);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19_vuelidate__ = __webpack_require__(543);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19_vuelidate__ = __webpack_require__(577);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_19_vuelidate___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_19_vuelidate__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_20_admin_components_chart_PieChart_vue__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_21_admin_components_transactions_DynamicTrnLoader_vue__ = __webpack_require__(89);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_22_vue_clipboards__ = __webpack_require__(546);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_22_vue_clipboards__ = __webpack_require__(580);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_23__wordpress_hooks__ = __webpack_require__(90);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_24__directive_directives__ = __webpack_require__(560);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_24__directive_directives__ = __webpack_require__(594);
 
 
 
@@ -10739,11 +10944,11 @@ acct.addFilter = function (hookName, namespace, component) {
 
 /***/ }),
 
-/***/ 518:
+/***/ 552:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__wordpress_i18n__ = __webpack_require__(519);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__wordpress_i18n__ = __webpack_require__(553);
 
 /* global erpAcct */
 
@@ -10758,75 +10963,86 @@ window.sprintf = __WEBPACK_IMPORTED_MODULE_0__wordpress_i18n__["c" /* sprintf */
 
 /***/ }),
 
-/***/ 52:
+/***/ 56:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_BulkActionsTpl_vue__ = __webpack_require__(27);
-/* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_55f8d8ef_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_BulkActionsTpl_vue__ = __webpack_require__(54);
-var disposed = false
-function injectStyle (ssrContext) {
-  if (disposed) return
-  __webpack_require__(53)
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "dropdown wperp-has-dropdown",
+      on: {
+        click: function($event) {
+          $event.preventDefault()
+          return _vm.toggleDropdown($event)
+        }
+      }
+    },
+    [
+      _vm._t("button", [
+        _c(
+          "button",
+          {
+            staticClass: "btn btn-secondary dropdown-toggle",
+            attrs: {
+              type: "button",
+              "data-toggle": "dropdown",
+              "aria-haspopup": "true",
+              "aria-expanded": "false"
+            }
+          },
+          [_vm._v("\n            Dropdown\n        ")]
+        )
+      ]),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          ref: "menu",
+          class: [
+            "dropdown-popper dropdown-menu",
+            _vm.dropdownClasses,
+            { show: _vm.visible }
+          ],
+          on: {
+            click: function($event) {
+              $event.stopPropagation()
+            }
+          }
+        },
+        [
+          _c("div", { staticClass: "popper__arrow", attrs: { "x-arrow": "" } }),
+          _vm._v(" "),
+          _vm._t("dropdown")
+        ],
+        2
+      )
+    ],
+    2
+  )
 }
-var normalizeComponent = __webpack_require__(0)
-/* script */
-
-
-/* template */
-
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = injectStyle
-/* scopeId */
-var __vue_scopeId__ = "data-v-55f8d8ef"
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_BulkActionsTpl_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_55f8d8ef_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_BulkActionsTpl_vue__["a" /* default */],
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "modules/accounting/assets/src/admin/components/list-table/BulkActionsTpl.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
+var staticRenderFns = []
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
   module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-55f8d8ef", Component.options)
-  } else {
-    hotAPI.reload("data-v-55f8d8ef", Component.options)
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-1e20af2e", esExports)
   }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
-
+}
 
 /***/ }),
 
-/***/ 53:
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-
-/***/ 534:
+/***/ 568:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_accounting__ = __webpack_require__(535);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_accounting__ = __webpack_require__(569);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_accounting___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_accounting__);
 function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 
@@ -10980,7 +11196,832 @@ var dateFormat = erp_acct_var.date_format;
 
 /***/ }),
 
-/***/ 536:
+/***/ 57:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { class: { "table-loading": _vm.loading } }, [
+    _vm.loading
+      ? _c("div", { staticClass: "table-loader-wrap" }, [
+          _c("div", { staticClass: "table-loader-center" }, [
+            _c("div", { staticClass: "table-loader" }, [
+              _vm._v(_vm._s(_vm.__("Loading", "erp")))
+            ])
+          ])
+        ])
+      : _vm._e(),
+    _vm._v(" "),
+    _c("div", { staticClass: "tablenav top" }, [
+      _c("div", { staticClass: "alignleft actions" }, [_vm._t("filters")], 2),
+      _vm._v(" "),
+      _c("div", { staticClass: "tablenav-pages" }, [
+        _vm.showItemNumbers
+          ? _c("span", { staticClass: "displaying-num" }, [
+              _vm._v(
+                _vm._s(_vm.itemsTotal) + " " + _vm._s(_vm.__("items", "erp"))
+              )
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.hasPagination
+          ? _c("span", { staticClass: "pagination-links" }, [
+              _vm.disableFirst
+                ? _c(
+                    "span",
+                    {
+                      staticClass: "tablenav-pages-navspan",
+                      attrs: { "aria-hidden": "true" }
+                    },
+                    [_vm._v("«")]
+                  )
+                : _c(
+                    "a",
+                    {
+                      staticClass: "first-page",
+                      attrs: { href: "#" },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.goToPage(1)
+                        }
+                      }
+                    },
+                    [
+                      _c("span", { attrs: { "aria-hidden": "true" } }, [
+                        _vm._v("«")
+                      ])
+                    ]
+                  ),
+              _vm._v(" "),
+              _vm.disablePrev
+                ? _c(
+                    "span",
+                    {
+                      staticClass: "tablenav-pages-navspan",
+                      attrs: { "aria-hidden": "true" }
+                    },
+                    [_vm._v("‹")]
+                  )
+                : _c(
+                    "a",
+                    {
+                      staticClass: "prev-page",
+                      attrs: { href: "#" },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.goToPage(_vm.currentPage - 1)
+                        }
+                      }
+                    },
+                    [
+                      _c("span", { attrs: { "aria-hidden": "true" } }, [
+                        _vm._v("‹")
+                      ])
+                    ]
+                  ),
+              _vm._v(" "),
+              _c("span", { staticClass: "paging-input" }, [
+                _c("span", { staticClass: "tablenav-paging-text" }, [
+                  _c("input", {
+                    staticClass: "current-page",
+                    attrs: {
+                      type: "text",
+                      name: "paged",
+                      "aria-describedby": "table-paging",
+                      size: "1"
+                    },
+                    domProps: { value: _vm.currentPage },
+                    on: {
+                      keyup: function($event) {
+                        if (
+                          !$event.type.indexOf("key") &&
+                          _vm._k(
+                            $event.keyCode,
+                            "enter",
+                            13,
+                            $event.key,
+                            "Enter"
+                          )
+                        ) {
+                          return null
+                        }
+                        return _vm.goToCustomPage($event)
+                      }
+                    }
+                  }),
+                  _vm._v(" of\n                        "),
+                  _c("span", { staticClass: "total-pages" }, [
+                    _vm._v(_vm._s(_vm.totalPages))
+                  ])
+                ])
+              ]),
+              _vm._v(" "),
+              _vm.disableNext
+                ? _c(
+                    "span",
+                    {
+                      staticClass: "tablenav-pages-navspan",
+                      attrs: { "aria-hidden": "true" }
+                    },
+                    [_vm._v("›")]
+                  )
+                : _c(
+                    "a",
+                    {
+                      staticClass: "next-page",
+                      attrs: { href: "#" },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.goToPage(_vm.currentPage + 1)
+                        }
+                      }
+                    },
+                    [
+                      _c("span", { attrs: { "aria-hidden": "true" } }, [
+                        _vm._v("›")
+                      ])
+                    ]
+                  ),
+              _vm._v(" "),
+              _vm.disableLast
+                ? _c(
+                    "span",
+                    {
+                      staticClass: "tablenav-pages-navspan",
+                      attrs: { "aria-hidden": "true" }
+                    },
+                    [_vm._v("»")]
+                  )
+                : _c(
+                    "a",
+                    {
+                      staticClass: "last-page",
+                      attrs: { href: "#" },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.goToPage(_vm.totalPages)
+                        }
+                      }
+                    },
+                    [
+                      _c("span", { attrs: { "aria-hidden": "true" } }, [
+                        _vm._v("»")
+                      ])
+                    ]
+                  )
+            ])
+          : _vm._e()
+      ])
+    ]),
+    _vm._v(" "),
+    _c("table", { class: _vm.tableClass }, [
+      _c(
+        "thead",
+        [
+          _vm.checkedItems.length
+            ? _c("bulk-actions-tpl", {
+                attrs: {
+                  "select-all": _vm.selectAll,
+                  "bulk-actions": _vm.bulkActions,
+                  "show-cb": _vm.showCb,
+                  "columns-count": _vm.columnsCount
+                }
+              })
+            : _c(
+                "tr",
+                [
+                  _vm.showCb
+                    ? _c(
+                        "td",
+                        {
+                          staticClass:
+                            "manage-column column-cb check-column col--check"
+                        },
+                        [
+                          _c("div", { staticClass: "form-check" }, [
+                            _c("label", { staticClass: "form-check-label" }, [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.selectAll,
+                                    expression: "selectAll"
+                                  }
+                                ],
+                                staticClass: "form-check-input",
+                                attrs: { type: "checkbox" },
+                                domProps: {
+                                  checked: Array.isArray(_vm.selectAll)
+                                    ? _vm._i(_vm.selectAll, null) > -1
+                                    : _vm.selectAll
+                                },
+                                on: {
+                                  change: function($event) {
+                                    var $$a = _vm.selectAll,
+                                      $$el = $event.target,
+                                      $$c = $$el.checked ? true : false
+                                    if (Array.isArray($$a)) {
+                                      var $$v = null,
+                                        $$i = _vm._i($$a, $$v)
+                                      if ($$el.checked) {
+                                        $$i < 0 &&
+                                          (_vm.selectAll = $$a.concat([$$v]))
+                                      } else {
+                                        $$i > -1 &&
+                                          (_vm.selectAll = $$a
+                                            .slice(0, $$i)
+                                            .concat($$a.slice($$i + 1)))
+                                      }
+                                    } else {
+                                      _vm.selectAll = $$c
+                                    }
+                                  }
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c("span", { staticClass: "form-check-sign" }, [
+                                _c("span", { staticClass: "check" })
+                              ])
+                            ])
+                          ])
+                        ]
+                      )
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm._l(_vm.columns, function(value, key) {
+                    return _c(
+                      "th",
+                      {
+                        key: key,
+                        class: [
+                          "column",
+                          key,
+                          value.isColPrimary ? "column-primary" : "",
+                          { sortable: _vm.isSortable(value) },
+                          { sorted: _vm.isSorted(key) },
+                          { asc: _vm.isSorted(key) && _vm.sortOrder === "asc" },
+                          {
+                            desc: _vm.isSorted(key) && _vm.sortOrder === "desc"
+                          }
+                        ]
+                      },
+                      [
+                        !_vm.isSortable(value)
+                          ? [
+                              _vm._v(
+                                "\n                    " +
+                                  _vm._s(value.label) +
+                                  "\n                "
+                              )
+                            ]
+                          : _c(
+                              "a",
+                              {
+                                attrs: { href: "#" },
+                                on: {
+                                  click: function($event) {
+                                    $event.preventDefault()
+                                    return _vm.handleSortBy(key)
+                                  }
+                                }
+                              },
+                              [
+                                _c("span", [_vm._v(_vm._s(value.label))]),
+                                _vm._v(" "),
+                                _c("span", { staticClass: "sorting-indicator" })
+                              ]
+                            )
+                      ],
+                      2
+                    )
+                  })
+                ],
+                2
+              )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "tfoot",
+        [
+          _vm._t("tfoot", [
+            _vm.checkedItems.length
+              ? _c("bulk-actions-tpl", {
+                  attrs: {
+                    "select-all": _vm.selectAll,
+                    "bulk-actions": _vm.bulkActions,
+                    "show-cb": _vm.showCb,
+                    "columns-count": _vm.columnsCount
+                  }
+                })
+              : _c(
+                  "tr",
+                  [
+                    _vm.showCb
+                      ? _c(
+                          "td",
+                          {
+                            staticClass: "manage-column column-cb check-column"
+                          },
+                          [
+                            _c("div", { staticClass: "form-check" }, [
+                              _c("label", { staticClass: "form-check-label" }, [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.selectAll,
+                                      expression: "selectAll"
+                                    }
+                                  ],
+                                  staticClass: "form-check-input",
+                                  attrs: { type: "checkbox" },
+                                  domProps: {
+                                    checked: Array.isArray(_vm.selectAll)
+                                      ? _vm._i(_vm.selectAll, null) > -1
+                                      : _vm.selectAll
+                                  },
+                                  on: {
+                                    change: function($event) {
+                                      var $$a = _vm.selectAll,
+                                        $$el = $event.target,
+                                        $$c = $$el.checked ? true : false
+                                      if (Array.isArray($$a)) {
+                                        var $$v = null,
+                                          $$i = _vm._i($$a, $$v)
+                                        if ($$el.checked) {
+                                          $$i < 0 &&
+                                            (_vm.selectAll = $$a.concat([$$v]))
+                                        } else {
+                                          $$i > -1 &&
+                                            (_vm.selectAll = $$a
+                                              .slice(0, $$i)
+                                              .concat($$a.slice($$i + 1)))
+                                        }
+                                      } else {
+                                        _vm.selectAll = $$c
+                                      }
+                                    }
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c("span", { staticClass: "form-check-sign" }, [
+                                  _c("span", { staticClass: "check" })
+                                ])
+                              ])
+                            ])
+                          ]
+                        )
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm._l(_vm.columns, function(value, key) {
+                      return _c(
+                        "th",
+                        {
+                          key: key,
+                          class: [
+                            "column",
+                            key,
+                            value.isColPrimary ? "column-primary" : ""
+                          ]
+                        },
+                        [_vm._v(_vm._s(value.label) + "\n                ")]
+                      )
+                    })
+                  ],
+                  2
+                )
+          ])
+        ],
+        2
+      ),
+      _vm._v(" "),
+      _c(
+        "tbody",
+        [
+          _vm.rows.length
+            ? _vm._l(_vm.rows, function(row, i) {
+                return _c(
+                  "tr",
+                  { key: row[_vm.index], class: _vm.collapsRow(row) },
+                  [
+                    _vm.showCb
+                      ? _c(
+                          "th",
+                          {
+                            staticClass: "col--check check-column",
+                            attrs: { scope: "row" }
+                          },
+                          [
+                            _c("div", { staticClass: "form-check" }, [
+                              _c("label", { staticClass: "form-check-label" }, [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.checkedItems,
+                                      expression: "checkedItems"
+                                    }
+                                  ],
+                                  staticClass: "form-check-input",
+                                  attrs: { type: "checkbox", name: "item[]" },
+                                  domProps: {
+                                    value: row[_vm.index],
+                                    checked: Array.isArray(_vm.checkedItems)
+                                      ? _vm._i(
+                                          _vm.checkedItems,
+                                          row[_vm.index]
+                                        ) > -1
+                                      : _vm.checkedItems
+                                  },
+                                  on: {
+                                    change: function($event) {
+                                      var $$a = _vm.checkedItems,
+                                        $$el = $event.target,
+                                        $$c = $$el.checked ? true : false
+                                      if (Array.isArray($$a)) {
+                                        var $$v = row[_vm.index],
+                                          $$i = _vm._i($$a, $$v)
+                                        if ($$el.checked) {
+                                          $$i < 0 &&
+                                            (_vm.checkedItems = $$a.concat([
+                                              $$v
+                                            ]))
+                                        } else {
+                                          $$i > -1 &&
+                                            (_vm.checkedItems = $$a
+                                              .slice(0, $$i)
+                                              .concat($$a.slice($$i + 1)))
+                                        }
+                                      } else {
+                                        _vm.checkedItems = $$c
+                                      }
+                                    }
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _vm._m(0, true)
+                              ])
+                            ])
+                          ]
+                        )
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm._l(_vm.columns, function(value, key) {
+                      return _c(
+                        "td",
+                        {
+                          key: key,
+                          class: [
+                            "column",
+                            key,
+                            value.isColPrimary ? "column-primary" : "",
+                            _vm.actionColumn === key && _vm.hasActions
+                              ? "col--actions"
+                              : "",
+                            {
+                              selected: _vm.checkedItems.includes(
+                                row[_vm.index]
+                              )
+                            }
+                          ],
+                          attrs: { "data-colname": _vm.ucFirst(key) }
+                        },
+                        [
+                          _vm._t(
+                            key,
+                            [
+                              "actions" !== key
+                                ? [
+                                    _vm._v(
+                                      "\n                            " +
+                                        _vm._s(row[key]) +
+                                        "\n                        "
+                                    )
+                                  ]
+                                : _vm._e()
+                            ],
+                            { row: row }
+                          ),
+                          _vm._v(" "),
+                          value.isColPrimary
+                            ? _c(
+                                "button",
+                                {
+                                  staticClass: "wperp-toggle-row",
+                                  attrs: { type: "button" },
+                                  on: {
+                                    click: function($event) {
+                                      $event.preventDefault()
+                                      return _vm.toggleRow(row)
+                                    }
+                                  }
+                                },
+                                [
+                                  _c(
+                                    "span",
+                                    { staticClass: "screen-reader-text" },
+                                    [_vm._v("Show more details")]
+                                  )
+                                ]
+                              )
+                            : _vm._e(),
+                          _vm._v(" "),
+                          _vm.actionColumn === key
+                            ? _c(
+                                "div",
+                                { staticClass: "row-actions" },
+                                [
+                                  _vm._t(
+                                    "row-actions",
+                                    [
+                                      _c(
+                                        "dropdown",
+                                        { attrs: { placement: "left-start" } },
+                                        [
+                                          _c("template", { slot: "button" }, [
+                                            _c(
+                                              "a",
+                                              {
+                                                staticClass: "dropdown-trigger"
+                                              },
+                                              [
+                                                _c("i", {
+                                                  staticClass: "flaticon-menu"
+                                                })
+                                              ]
+                                            )
+                                          ]),
+                                          _vm._v(" "),
+                                          _c("template", { slot: "dropdown" }, [
+                                            _c(
+                                              "ul",
+                                              {
+                                                attrs: {
+                                                  slot: "action-items",
+                                                  role: "menu"
+                                                },
+                                                slot: "action-items"
+                                              },
+                                              [
+                                                _vm._t(
+                                                  "action-list",
+                                                  _vm._l(_vm.actions, function(
+                                                    action
+                                                  ) {
+                                                    return _c(
+                                                      "li",
+                                                      {
+                                                        key: action.key,
+                                                        class: action.key
+                                                      },
+                                                      [
+                                                        _c(
+                                                          "a",
+                                                          {
+                                                            attrs: {
+                                                              href: "#"
+                                                            },
+                                                            on: {
+                                                              click: function(
+                                                                $event
+                                                              ) {
+                                                                $event.preventDefault()
+                                                                return _vm.actionClicked(
+                                                                  action.key,
+                                                                  row,
+                                                                  i
+                                                                )
+                                                              }
+                                                            }
+                                                          },
+                                                          [
+                                                            _c("i", {
+                                                              class:
+                                                                action.iconClass
+                                                            }),
+                                                            _vm._v(
+                                                              _vm._s(
+                                                                action.label
+                                                              )
+                                                            )
+                                                          ]
+                                                        )
+                                                      ]
+                                                    )
+                                                  }),
+                                                  { row: row }
+                                                )
+                                              ],
+                                              2
+                                            )
+                                          ])
+                                        ],
+                                        2
+                                      )
+                                    ],
+                                    { row: row }
+                                  )
+                                ],
+                                2
+                              )
+                            : _vm._e()
+                        ],
+                        2
+                      )
+                    })
+                  ],
+                  2
+                )
+              })
+            : _c("tr", [
+                _c(
+                  "td",
+                  { staticClass: "not-found", attrs: { colspan: _vm.colspan } },
+                  [_vm._v(_vm._s(_vm.notFound))]
+                )
+              ])
+        ],
+        2
+      )
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "tablenav bottom" }, [
+      _c("div", { staticClass: "tablenav-pages" }, [
+        _vm.showItemNumbers
+          ? _c("span", { staticClass: "displaying-num" }, [
+              _vm._v(
+                _vm._s(_vm.itemsTotal) + " " + _vm._s(_vm.__("items", "erp"))
+              )
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.hasPagination
+          ? _c("span", { staticClass: "pagination-links" }, [
+              _vm.disableFirst
+                ? _c(
+                    "span",
+                    {
+                      staticClass: "tablenav-pages-navspan",
+                      attrs: { "aria-hidden": "true" }
+                    },
+                    [_vm._v("«")]
+                  )
+                : _c(
+                    "a",
+                    {
+                      staticClass: "first-page",
+                      attrs: { href: "#" },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.goToPage(1)
+                        }
+                      }
+                    },
+                    [
+                      _c("span", { attrs: { "aria-hidden": "true" } }, [
+                        _vm._v("«")
+                      ])
+                    ]
+                  ),
+              _vm._v(" "),
+              _vm.disablePrev
+                ? _c(
+                    "span",
+                    {
+                      staticClass: "tablenav-pages-navspan",
+                      attrs: { "aria-hidden": "true" }
+                    },
+                    [_vm._v("‹")]
+                  )
+                : _c(
+                    "a",
+                    {
+                      staticClass: "prev-page",
+                      attrs: { href: "#" },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.goToPage(_vm.currentPage - 1)
+                        }
+                      }
+                    },
+                    [
+                      _c("span", { attrs: { "aria-hidden": "true" } }, [
+                        _vm._v("‹")
+                      ])
+                    ]
+                  ),
+              _vm._v(" "),
+              _c("span", { staticClass: "paging-input" }, [
+                _c("span", { staticClass: "tablenav-paging-text" }, [
+                  _vm._v(
+                    "\n                " +
+                      _vm._s(_vm.currentPage) +
+                      " of\n                "
+                  ),
+                  _c("span", { staticClass: "total-pages" }, [
+                    _vm._v(_vm._s(_vm.totalPages))
+                  ])
+                ])
+              ]),
+              _vm._v(" "),
+              _vm.disableNext
+                ? _c(
+                    "span",
+                    {
+                      staticClass: "tablenav-pages-navspan",
+                      attrs: { "aria-hidden": "true" }
+                    },
+                    [_vm._v("›")]
+                  )
+                : _c(
+                    "a",
+                    {
+                      staticClass: "next-page",
+                      attrs: { href: "#" },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.goToPage(_vm.currentPage + 1)
+                        }
+                      }
+                    },
+                    [
+                      _c("span", { attrs: { "aria-hidden": "true" } }, [
+                        _vm._v("›")
+                      ])
+                    ]
+                  ),
+              _vm._v(" "),
+              _vm.disableLast
+                ? _c(
+                    "span",
+                    {
+                      staticClass: "tablenav-pages-navspan",
+                      attrs: { "aria-hidden": "true" }
+                    },
+                    [_vm._v("»")]
+                  )
+                : _c(
+                    "a",
+                    {
+                      staticClass: "last-page",
+                      attrs: { href: "#" },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.goToPage(_vm.totalPages)
+                        }
+                      }
+                    },
+                    [
+                      _c("span", { attrs: { "aria-hidden": "true" } }, [
+                        _vm._v("»")
+                      ])
+                    ]
+                  )
+            ])
+          : _vm._e()
+      ])
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "form-check-sign" }, [
+      _c("span", { staticClass: "check" })
+    ])
+  }
+]
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-76656a36", esExports)
+  }
+}
+
+/***/ }),
+
+/***/ 570:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -11022,19 +12063,19 @@ var dateFormat = erp_acct_var.date_format;
 
 /***/ }),
 
-/***/ 537:
+/***/ 571:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_TimePicker_vue__ = __webpack_require__(206);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_TimePicker_vue__ = __webpack_require__(214);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_240bd389_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_TimePicker_vue__ = __webpack_require__(542);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_240bd389_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_TimePicker_vue__ = __webpack_require__(576);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(538)
-  __webpack_require__(539)
-  __webpack_require__(540)
+  __webpack_require__(572)
+  __webpack_require__(573)
+  __webpack_require__(574)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -11081,162 +12122,28 @@ if (false) {(function () {
 
 /***/ }),
 
-/***/ 538:
+/***/ 572:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
 
-/***/ 539:
+/***/ 573:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
 
-/***/ 54:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("tr", [
-    _vm.showCb
-      ? _c("td", { staticClass: "manage-column column-cb check-column" }, [
-          _c("div", { staticClass: "form-check" }, [
-            _c("label", { staticClass: "form-check-label" }, [
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.bulkSelectAll,
-                    expression: "bulkSelectAll"
-                  }
-                ],
-                ref: "removeBulkAction",
-                staticClass: "form-check-input",
-                attrs: { type: "checkbox" },
-                domProps: {
-                  checked: Array.isArray(_vm.bulkSelectAll)
-                    ? _vm._i(_vm.bulkSelectAll, null) > -1
-                    : _vm.bulkSelectAll
-                },
-                on: {
-                  change: [
-                    function($event) {
-                      var $$a = _vm.bulkSelectAll,
-                        $$el = $event.target,
-                        $$c = $$el.checked ? true : false
-                      if (Array.isArray($$a)) {
-                        var $$v = null,
-                          $$i = _vm._i($$a, $$v)
-                        if ($$el.checked) {
-                          $$i < 0 && (_vm.bulkSelectAll = $$a.concat([$$v]))
-                        } else {
-                          $$i > -1 &&
-                            (_vm.bulkSelectAll = $$a
-                              .slice(0, $$i)
-                              .concat($$a.slice($$i + 1)))
-                        }
-                      } else {
-                        _vm.bulkSelectAll = $$c
-                      }
-                    },
-                    _vm.changeBulkCheckbox
-                  ]
-                }
-              }),
-              _vm._v(" "),
-              _vm._m(0)
-            ])
-          ])
-        ])
-      : _vm._e(),
-    _vm._v(" "),
-    _vm.hasBulkActions
-      ? _c("th", { attrs: { colspan: _vm.columnsCount } }, [
-          _c(
-            "ul",
-            { staticClass: "wp-erp-bulk-actions" },
-            [
-              _vm._l(_vm.bulkActions, function(bulkAction) {
-                return _c(
-                  "li",
-                  {
-                    key: bulkAction.key,
-                    on: {
-                      click: function($event) {
-                        return _vm.bulkActionSelect(bulkAction.key)
-                      }
-                    }
-                  },
-                  [
-                    _c("a", { attrs: { href: "#" } }, [
-                      _c("i", { class: bulkAction.iconClass }),
-                      _vm._v(" "),
-                      _c("span", [_vm._v(_vm._s(bulkAction.label))])
-                    ])
-                  ]
-                )
-              }),
-              _vm._v(" "),
-              _c("li", [
-                _c(
-                  "a",
-                  {
-                    staticClass: "close-div",
-                    attrs: { href: "#" },
-                    on: {
-                      click: function($event) {
-                        $event.preventDefault()
-                        return _vm.removeBulkActions($event)
-                      }
-                    }
-                  },
-                  [_c("i", { staticClass: "flaticon-close" })]
-                )
-              ])
-            ],
-            2
-          )
-        ])
-      : _vm._e()
-  ])
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("span", { staticClass: "form-check-sign" }, [
-      _c("span", { staticClass: "check" })
-    ])
-  }
-]
-render._withStripped = true
-var esExports = { render: render, staticRenderFns: staticRenderFns }
-/* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-55f8d8ef", esExports)
-  }
-}
-
-/***/ }),
-
-/***/ 540:
+/***/ 574:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
 
-/***/ 541:
+/***/ 575:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -12108,7 +13015,7 @@ function MtrDatepicker(a) {
 
 /***/ }),
 
-/***/ 542:
+/***/ 576:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -12139,939 +13046,6 @@ if (false) {
   module.hot.accept()
   if (module.hot.data) {
     require("vue-hot-reload-api")      .rerender("data-v-240bd389", esExports)
-  }
-}
-
-/***/ }),
-
-/***/ 55:
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-
-/***/ 56:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      staticClass: "dropdown wperp-has-dropdown",
-      on: {
-        click: function($event) {
-          $event.preventDefault()
-          return _vm.toggleDropdown($event)
-        }
-      }
-    },
-    [
-      _vm._t("button", [
-        _c(
-          "button",
-          {
-            staticClass: "btn btn-secondary dropdown-toggle",
-            attrs: {
-              type: "button",
-              "data-toggle": "dropdown",
-              "aria-haspopup": "true",
-              "aria-expanded": "false"
-            }
-          },
-          [_vm._v("\n            Dropdown\n        ")]
-        )
-      ]),
-      _vm._v(" "),
-      _c(
-        "div",
-        {
-          ref: "menu",
-          class: [
-            "dropdown-popper dropdown-menu",
-            _vm.dropdownClasses,
-            { show: _vm.visible }
-          ],
-          on: {
-            click: function($event) {
-              $event.stopPropagation()
-            }
-          }
-        },
-        [
-          _c("div", { staticClass: "popper__arrow", attrs: { "x-arrow": "" } }),
-          _vm._v(" "),
-          _vm._t("dropdown")
-        ],
-        2
-      )
-    ],
-    2
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-var esExports = { render: render, staticRenderFns: staticRenderFns }
-/* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-1e20af2e", esExports)
-  }
-}
-
-/***/ }),
-
-/***/ 560:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return clickOutside; });
-var clickOutside = {
-  bind: function bind(el, binding, vnode) {
-    var bubble = binding.modifiers.bubble;
-
-    var handler = function handler(e) {
-      if (bubble || !el.contains(e.target) && el !== e.target) {
-        binding.value(e);
-      }
-    };
-
-    el.__vueClickOutside__ = handler;
-    document.addEventListener('click', handler);
-  },
-  unbind: function unbind(el, binding) {
-    document.removeEventListener('click', el.__vueClickOutside__);
-    el.__vueClickOutside__ = null;
-  }
-};
-
-/***/ }),
-
-/***/ 57:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", { class: { "table-loading": _vm.loading } }, [
-    _vm.loading
-      ? _c("div", { staticClass: "table-loader-wrap" }, [
-          _c("div", { staticClass: "table-loader-center" }, [
-            _c("div", { staticClass: "table-loader" }, [
-              _vm._v(_vm._s(_vm.__("Loading", "erp")))
-            ])
-          ])
-        ])
-      : _vm._e(),
-    _vm._v(" "),
-    _c("div", { staticClass: "tablenav top" }, [
-      _c("div", { staticClass: "alignleft actions" }, [_vm._t("filters")], 2),
-      _vm._v(" "),
-      _c("div", { staticClass: "tablenav-pages" }, [
-        _vm.showItemNumbers
-          ? _c("span", { staticClass: "displaying-num" }, [
-              _vm._v(
-                _vm._s(_vm.itemsTotal) + " " + _vm._s(_vm.__("items", "erp"))
-              )
-            ])
-          : _vm._e(),
-        _vm._v(" "),
-        _vm.hasPagination
-          ? _c("span", { staticClass: "pagination-links" }, [
-              _vm.disableFirst
-                ? _c(
-                    "span",
-                    {
-                      staticClass: "tablenav-pages-navspan",
-                      attrs: { "aria-hidden": "true" }
-                    },
-                    [_vm._v("«")]
-                  )
-                : _c(
-                    "a",
-                    {
-                      staticClass: "first-page",
-                      attrs: { href: "#" },
-                      on: {
-                        click: function($event) {
-                          $event.preventDefault()
-                          return _vm.goToPage(1)
-                        }
-                      }
-                    },
-                    [
-                      _c("span", { attrs: { "aria-hidden": "true" } }, [
-                        _vm._v("«")
-                      ])
-                    ]
-                  ),
-              _vm._v(" "),
-              _vm.disablePrev
-                ? _c(
-                    "span",
-                    {
-                      staticClass: "tablenav-pages-navspan",
-                      attrs: { "aria-hidden": "true" }
-                    },
-                    [_vm._v("‹")]
-                  )
-                : _c(
-                    "a",
-                    {
-                      staticClass: "prev-page",
-                      attrs: { href: "#" },
-                      on: {
-                        click: function($event) {
-                          $event.preventDefault()
-                          return _vm.goToPage(_vm.currentPage - 1)
-                        }
-                      }
-                    },
-                    [
-                      _c("span", { attrs: { "aria-hidden": "true" } }, [
-                        _vm._v("‹")
-                      ])
-                    ]
-                  ),
-              _vm._v(" "),
-              _c("span", { staticClass: "paging-input" }, [
-                _c("span", { staticClass: "tablenav-paging-text" }, [
-                  _c("input", {
-                    staticClass: "current-page",
-                    attrs: {
-                      type: "text",
-                      name: "paged",
-                      "aria-describedby": "table-paging",
-                      size: "1"
-                    },
-                    domProps: { value: _vm.currentPage },
-                    on: {
-                      keyup: function($event) {
-                        if (
-                          !$event.type.indexOf("key") &&
-                          _vm._k(
-                            $event.keyCode,
-                            "enter",
-                            13,
-                            $event.key,
-                            "Enter"
-                          )
-                        ) {
-                          return null
-                        }
-                        return _vm.goToCustomPage($event)
-                      }
-                    }
-                  }),
-                  _vm._v(" of\n                        "),
-                  _c("span", { staticClass: "total-pages" }, [
-                    _vm._v(_vm._s(_vm.totalPages))
-                  ])
-                ])
-              ]),
-              _vm._v(" "),
-              _vm.disableNext
-                ? _c(
-                    "span",
-                    {
-                      staticClass: "tablenav-pages-navspan",
-                      attrs: { "aria-hidden": "true" }
-                    },
-                    [_vm._v("›")]
-                  )
-                : _c(
-                    "a",
-                    {
-                      staticClass: "next-page",
-                      attrs: { href: "#" },
-                      on: {
-                        click: function($event) {
-                          $event.preventDefault()
-                          return _vm.goToPage(_vm.currentPage + 1)
-                        }
-                      }
-                    },
-                    [
-                      _c("span", { attrs: { "aria-hidden": "true" } }, [
-                        _vm._v("›")
-                      ])
-                    ]
-                  ),
-              _vm._v(" "),
-              _vm.disableLast
-                ? _c(
-                    "span",
-                    {
-                      staticClass: "tablenav-pages-navspan",
-                      attrs: { "aria-hidden": "true" }
-                    },
-                    [_vm._v("»")]
-                  )
-                : _c(
-                    "a",
-                    {
-                      staticClass: "last-page",
-                      attrs: { href: "#" },
-                      on: {
-                        click: function($event) {
-                          $event.preventDefault()
-                          return _vm.goToPage(_vm.totalPages)
-                        }
-                      }
-                    },
-                    [
-                      _c("span", { attrs: { "aria-hidden": "true" } }, [
-                        _vm._v("»")
-                      ])
-                    ]
-                  )
-            ])
-          : _vm._e()
-      ])
-    ]),
-    _vm._v(" "),
-    _c("table", { class: _vm.tableClass }, [
-      _c(
-        "thead",
-        [
-          _vm.checkedItems.length
-            ? _c("bulk-actions-tpl", {
-                attrs: {
-                  "select-all": _vm.selectAll,
-                  "bulk-actions": _vm.bulkActions,
-                  "show-cb": _vm.showCb,
-                  "columns-count": _vm.columnsCount
-                }
-              })
-            : _c(
-                "tr",
-                [
-                  _vm.showCb
-                    ? _c(
-                        "td",
-                        {
-                          staticClass:
-                            "manage-column column-cb check-column col--check"
-                        },
-                        [
-                          _c("div", { staticClass: "form-check" }, [
-                            _c("label", { staticClass: "form-check-label" }, [
-                              _c("input", {
-                                directives: [
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                    value: _vm.selectAll,
-                                    expression: "selectAll"
-                                  }
-                                ],
-                                staticClass: "form-check-input",
-                                attrs: { type: "checkbox" },
-                                domProps: {
-                                  checked: Array.isArray(_vm.selectAll)
-                                    ? _vm._i(_vm.selectAll, null) > -1
-                                    : _vm.selectAll
-                                },
-                                on: {
-                                  change: function($event) {
-                                    var $$a = _vm.selectAll,
-                                      $$el = $event.target,
-                                      $$c = $$el.checked ? true : false
-                                    if (Array.isArray($$a)) {
-                                      var $$v = null,
-                                        $$i = _vm._i($$a, $$v)
-                                      if ($$el.checked) {
-                                        $$i < 0 &&
-                                          (_vm.selectAll = $$a.concat([$$v]))
-                                      } else {
-                                        $$i > -1 &&
-                                          (_vm.selectAll = $$a
-                                            .slice(0, $$i)
-                                            .concat($$a.slice($$i + 1)))
-                                      }
-                                    } else {
-                                      _vm.selectAll = $$c
-                                    }
-                                  }
-                                }
-                              }),
-                              _vm._v(" "),
-                              _c("span", { staticClass: "form-check-sign" }, [
-                                _c("span", { staticClass: "check" })
-                              ])
-                            ])
-                          ])
-                        ]
-                      )
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _vm._l(_vm.columns, function(value, key) {
-                    return _c(
-                      "th",
-                      {
-                        key: key,
-                        class: [
-                          "column",
-                          key,
-                          value.isColPrimary ? "column-primary" : "",
-                          { sortable: _vm.isSortable(value) },
-                          { sorted: _vm.isSorted(key) },
-                          { asc: _vm.isSorted(key) && _vm.sortOrder === "asc" },
-                          {
-                            desc: _vm.isSorted(key) && _vm.sortOrder === "desc"
-                          }
-                        ]
-                      },
-                      [
-                        !_vm.isSortable(value)
-                          ? [
-                              _vm._v(
-                                "\n                    " +
-                                  _vm._s(value.label) +
-                                  "\n                "
-                              )
-                            ]
-                          : _c(
-                              "a",
-                              {
-                                attrs: { href: "#" },
-                                on: {
-                                  click: function($event) {
-                                    $event.preventDefault()
-                                    return _vm.handleSortBy(key)
-                                  }
-                                }
-                              },
-                              [
-                                _c("span", [_vm._v(_vm._s(value.label))]),
-                                _vm._v(" "),
-                                _c("span", { staticClass: "sorting-indicator" })
-                              ]
-                            )
-                      ],
-                      2
-                    )
-                  })
-                ],
-                2
-              )
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c(
-        "tfoot",
-        [
-          _vm._t("tfoot", [
-            _vm.checkedItems.length
-              ? _c("bulk-actions-tpl", {
-                  attrs: {
-                    "select-all": _vm.selectAll,
-                    "bulk-actions": _vm.bulkActions,
-                    "show-cb": _vm.showCb,
-                    "columns-count": _vm.columnsCount
-                  }
-                })
-              : _c(
-                  "tr",
-                  [
-                    _vm.showCb
-                      ? _c(
-                          "td",
-                          {
-                            staticClass: "manage-column column-cb check-column"
-                          },
-                          [
-                            _c("div", { staticClass: "form-check" }, [
-                              _c("label", { staticClass: "form-check-label" }, [
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: _vm.selectAll,
-                                      expression: "selectAll"
-                                    }
-                                  ],
-                                  staticClass: "form-check-input",
-                                  attrs: { type: "checkbox" },
-                                  domProps: {
-                                    checked: Array.isArray(_vm.selectAll)
-                                      ? _vm._i(_vm.selectAll, null) > -1
-                                      : _vm.selectAll
-                                  },
-                                  on: {
-                                    change: function($event) {
-                                      var $$a = _vm.selectAll,
-                                        $$el = $event.target,
-                                        $$c = $$el.checked ? true : false
-                                      if (Array.isArray($$a)) {
-                                        var $$v = null,
-                                          $$i = _vm._i($$a, $$v)
-                                        if ($$el.checked) {
-                                          $$i < 0 &&
-                                            (_vm.selectAll = $$a.concat([$$v]))
-                                        } else {
-                                          $$i > -1 &&
-                                            (_vm.selectAll = $$a
-                                              .slice(0, $$i)
-                                              .concat($$a.slice($$i + 1)))
-                                        }
-                                      } else {
-                                        _vm.selectAll = $$c
-                                      }
-                                    }
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _c("span", { staticClass: "form-check-sign" }, [
-                                  _c("span", { staticClass: "check" })
-                                ])
-                              ])
-                            ])
-                          ]
-                        )
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _vm._l(_vm.columns, function(value, key) {
-                      return _c(
-                        "th",
-                        {
-                          key: key,
-                          class: [
-                            "column",
-                            key,
-                            value.isColPrimary ? "column-primary" : ""
-                          ]
-                        },
-                        [_vm._v(_vm._s(value.label) + "\n                ")]
-                      )
-                    })
-                  ],
-                  2
-                )
-          ])
-        ],
-        2
-      ),
-      _vm._v(" "),
-      _c(
-        "tbody",
-        [
-          _vm.rows.length
-            ? _vm._l(_vm.rows, function(row, i) {
-                return _c(
-                  "tr",
-                  { key: row[_vm.index], class: _vm.collapsRow(row) },
-                  [
-                    _vm.showCb
-                      ? _c(
-                          "th",
-                          {
-                            staticClass: "col--check check-column",
-                            attrs: { scope: "row" }
-                          },
-                          [
-                            _c("div", { staticClass: "form-check" }, [
-                              _c("label", { staticClass: "form-check-label" }, [
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: _vm.checkedItems,
-                                      expression: "checkedItems"
-                                    }
-                                  ],
-                                  staticClass: "form-check-input",
-                                  attrs: { type: "checkbox", name: "item[]" },
-                                  domProps: {
-                                    value: row[_vm.index],
-                                    checked: Array.isArray(_vm.checkedItems)
-                                      ? _vm._i(
-                                          _vm.checkedItems,
-                                          row[_vm.index]
-                                        ) > -1
-                                      : _vm.checkedItems
-                                  },
-                                  on: {
-                                    change: function($event) {
-                                      var $$a = _vm.checkedItems,
-                                        $$el = $event.target,
-                                        $$c = $$el.checked ? true : false
-                                      if (Array.isArray($$a)) {
-                                        var $$v = row[_vm.index],
-                                          $$i = _vm._i($$a, $$v)
-                                        if ($$el.checked) {
-                                          $$i < 0 &&
-                                            (_vm.checkedItems = $$a.concat([
-                                              $$v
-                                            ]))
-                                        } else {
-                                          $$i > -1 &&
-                                            (_vm.checkedItems = $$a
-                                              .slice(0, $$i)
-                                              .concat($$a.slice($$i + 1)))
-                                        }
-                                      } else {
-                                        _vm.checkedItems = $$c
-                                      }
-                                    }
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _vm._m(0, true)
-                              ])
-                            ])
-                          ]
-                        )
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _vm._l(_vm.columns, function(value, key) {
-                      return _c(
-                        "td",
-                        {
-                          key: key,
-                          class: [
-                            "column",
-                            key,
-                            value.isColPrimary ? "column-primary" : "",
-                            _vm.actionColumn === key && _vm.hasActions
-                              ? "col--actions"
-                              : "",
-                            {
-                              selected: _vm.checkedItems.includes(
-                                row[_vm.index]
-                              )
-                            }
-                          ],
-                          attrs: { "data-colname": _vm.ucFirst(key) }
-                        },
-                        [
-                          _vm._t(
-                            key,
-                            [
-                              "actions" !== key
-                                ? [
-                                    _vm._v(
-                                      "\n                            " +
-                                        _vm._s(row[key]) +
-                                        "\n                        "
-                                    )
-                                  ]
-                                : _vm._e()
-                            ],
-                            { row: row }
-                          ),
-                          _vm._v(" "),
-                          value.isColPrimary
-                            ? _c(
-                                "button",
-                                {
-                                  staticClass: "wperp-toggle-row",
-                                  attrs: { type: "button" },
-                                  on: {
-                                    click: function($event) {
-                                      $event.preventDefault()
-                                      return _vm.toggleRow(row)
-                                    }
-                                  }
-                                },
-                                [
-                                  _c(
-                                    "span",
-                                    { staticClass: "screen-reader-text" },
-                                    [_vm._v("Show more details")]
-                                  )
-                                ]
-                              )
-                            : _vm._e(),
-                          _vm._v(" "),
-                          _vm.actionColumn === key
-                            ? _c(
-                                "div",
-                                { staticClass: "row-actions" },
-                                [
-                                  _vm._t(
-                                    "row-actions",
-                                    [
-                                      _c(
-                                        "dropdown",
-                                        { attrs: { placement: "left-start" } },
-                                        [
-                                          _c("template", { slot: "button" }, [
-                                            _c(
-                                              "a",
-                                              {
-                                                staticClass: "dropdown-trigger"
-                                              },
-                                              [
-                                                _c("i", {
-                                                  staticClass: "flaticon-menu"
-                                                })
-                                              ]
-                                            )
-                                          ]),
-                                          _vm._v(" "),
-                                          _c("template", { slot: "dropdown" }, [
-                                            _c(
-                                              "ul",
-                                              {
-                                                attrs: {
-                                                  slot: "action-items",
-                                                  role: "menu"
-                                                },
-                                                slot: "action-items"
-                                              },
-                                              [
-                                                _vm._t(
-                                                  "action-list",
-                                                  _vm._l(_vm.actions, function(
-                                                    action
-                                                  ) {
-                                                    return _c(
-                                                      "li",
-                                                      {
-                                                        key: action.key,
-                                                        class: action.key
-                                                      },
-                                                      [
-                                                        _c(
-                                                          "a",
-                                                          {
-                                                            attrs: {
-                                                              href: "#"
-                                                            },
-                                                            on: {
-                                                              click: function(
-                                                                $event
-                                                              ) {
-                                                                $event.preventDefault()
-                                                                return _vm.actionClicked(
-                                                                  action.key,
-                                                                  row,
-                                                                  i
-                                                                )
-                                                              }
-                                                            }
-                                                          },
-                                                          [
-                                                            _c("i", {
-                                                              class:
-                                                                action.iconClass
-                                                            }),
-                                                            _vm._v(
-                                                              _vm._s(
-                                                                action.label
-                                                              )
-                                                            )
-                                                          ]
-                                                        )
-                                                      ]
-                                                    )
-                                                  }),
-                                                  { row: row }
-                                                )
-                                              ],
-                                              2
-                                            )
-                                          ])
-                                        ],
-                                        2
-                                      )
-                                    ],
-                                    { row: row }
-                                  )
-                                ],
-                                2
-                              )
-                            : _vm._e()
-                        ],
-                        2
-                      )
-                    })
-                  ],
-                  2
-                )
-              })
-            : _c("tr", [
-                _c(
-                  "td",
-                  { staticClass: "not-found", attrs: { colspan: _vm.colspan } },
-                  [_vm._v(_vm._s(_vm.notFound))]
-                )
-              ])
-        ],
-        2
-      )
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "tablenav bottom" }, [
-      _c("div", { staticClass: "tablenav-pages" }, [
-        _vm.showItemNumbers
-          ? _c("span", { staticClass: "displaying-num" }, [
-              _vm._v(
-                _vm._s(_vm.itemsTotal) + " " + _vm._s(_vm.__("items", "erp"))
-              )
-            ])
-          : _vm._e(),
-        _vm._v(" "),
-        _vm.hasPagination
-          ? _c("span", { staticClass: "pagination-links" }, [
-              _vm.disableFirst
-                ? _c(
-                    "span",
-                    {
-                      staticClass: "tablenav-pages-navspan",
-                      attrs: { "aria-hidden": "true" }
-                    },
-                    [_vm._v("«")]
-                  )
-                : _c(
-                    "a",
-                    {
-                      staticClass: "first-page",
-                      attrs: { href: "#" },
-                      on: {
-                        click: function($event) {
-                          $event.preventDefault()
-                          return _vm.goToPage(1)
-                        }
-                      }
-                    },
-                    [
-                      _c("span", { attrs: { "aria-hidden": "true" } }, [
-                        _vm._v("«")
-                      ])
-                    ]
-                  ),
-              _vm._v(" "),
-              _vm.disablePrev
-                ? _c(
-                    "span",
-                    {
-                      staticClass: "tablenav-pages-navspan",
-                      attrs: { "aria-hidden": "true" }
-                    },
-                    [_vm._v("‹")]
-                  )
-                : _c(
-                    "a",
-                    {
-                      staticClass: "prev-page",
-                      attrs: { href: "#" },
-                      on: {
-                        click: function($event) {
-                          $event.preventDefault()
-                          return _vm.goToPage(_vm.currentPage - 1)
-                        }
-                      }
-                    },
-                    [
-                      _c("span", { attrs: { "aria-hidden": "true" } }, [
-                        _vm._v("‹")
-                      ])
-                    ]
-                  ),
-              _vm._v(" "),
-              _c("span", { staticClass: "paging-input" }, [
-                _c("span", { staticClass: "tablenav-paging-text" }, [
-                  _vm._v(
-                    "\n                " +
-                      _vm._s(_vm.currentPage) +
-                      " of\n                "
-                  ),
-                  _c("span", { staticClass: "total-pages" }, [
-                    _vm._v(_vm._s(_vm.totalPages))
-                  ])
-                ])
-              ]),
-              _vm._v(" "),
-              _vm.disableNext
-                ? _c(
-                    "span",
-                    {
-                      staticClass: "tablenav-pages-navspan",
-                      attrs: { "aria-hidden": "true" }
-                    },
-                    [_vm._v("›")]
-                  )
-                : _c(
-                    "a",
-                    {
-                      staticClass: "next-page",
-                      attrs: { href: "#" },
-                      on: {
-                        click: function($event) {
-                          $event.preventDefault()
-                          return _vm.goToPage(_vm.currentPage + 1)
-                        }
-                      }
-                    },
-                    [
-                      _c("span", { attrs: { "aria-hidden": "true" } }, [
-                        _vm._v("›")
-                      ])
-                    ]
-                  ),
-              _vm._v(" "),
-              _vm.disableLast
-                ? _c(
-                    "span",
-                    {
-                      staticClass: "tablenav-pages-navspan",
-                      attrs: { "aria-hidden": "true" }
-                    },
-                    [_vm._v("»")]
-                  )
-                : _c(
-                    "a",
-                    {
-                      staticClass: "last-page",
-                      attrs: { href: "#" },
-                      on: {
-                        click: function($event) {
-                          $event.preventDefault()
-                          return _vm.goToPage(_vm.totalPages)
-                        }
-                      }
-                    },
-                    [
-                      _c("span", { attrs: { "aria-hidden": "true" } }, [
-                        _vm._v("»")
-                      ])
-                    ]
-                  )
-            ])
-          : _vm._e()
-      ])
-    ])
-  ])
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("span", { staticClass: "form-check-sign" }, [
-      _c("span", { staticClass: "check" })
-    ])
-  }
-]
-render._withStripped = true
-var esExports = { render: render, staticRenderFns: staticRenderFns }
-/* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-76656a36", esExports)
   }
 }
 
@@ -13138,6 +13112,32 @@ if (false) {(function () {
 
 /* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
+
+/***/ }),
+
+/***/ 594:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return clickOutside; });
+var clickOutside = {
+  bind: function bind(el, binding, vnode) {
+    var bubble = binding.modifiers.bubble;
+
+    var handler = function handler(e) {
+      if (bubble || !el.contains(e.target) && el !== e.target) {
+        binding.value(e);
+      }
+    };
+
+    el.__vueClickOutside__ = handler;
+    document.addEventListener('click', handler);
+  },
+  unbind: function unbind(el, binding) {
+    document.removeEventListener('click', el.__vueClickOutside__);
+    el.__vueClickOutside__ = null;
+  }
+};
 
 /***/ }),
 
@@ -15185,4 +15185,4 @@ if (false) {(function () {
 
 /***/ })
 
-},[517]);
+},[551]);
