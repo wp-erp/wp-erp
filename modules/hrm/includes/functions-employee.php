@@ -3,6 +3,8 @@
 /**
  * Delete an employee if removed from WordPress usre table
  *
+ * @since 1.7.1 Added erp_hr_after_delete_employee action hook
+ *
  * @param  int  the user id
  *
  * @return void
@@ -19,7 +21,11 @@ function erp_hr_employee_on_delete( $user_id, $hard = 0 ) {
     $role = reset( $user->roles );
 
     if ( 'employee' === $role ) {
-        \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $user_id )->withTrashed()->forceDelete();
+        $deleted = \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $user_id )->withTrashed()->forceDelete();
+
+        if ( true === $deleted ) {
+            do_action( 'erp_hr_after_delete_employee', $user_id, true );
+        }
     }
 }
 
