@@ -3,7 +3,7 @@ namespace WeDevs\ERP\HRM\Update;
 
 
 
-function crate_erp_acct_sales_return_table_1_7_0() {
+function crate_erp_acct_sales_return_table_1_7_1() {
 
     global $wpdb;
     $charset_collate = $wpdb->get_charset_collate();
@@ -32,7 +32,7 @@ function crate_erp_acct_sales_return_table_1_7_0() {
 }
 
 
-function crate_erp_return_details_table_1_7_0() {
+function crate_erp_return_details_table_1_7_1() {
 
     global $wpdb;
     $charset_collate = $wpdb->get_charset_collate();
@@ -56,7 +56,7 @@ function crate_erp_return_details_table_1_7_0() {
 }
 
 
-function erp_acct_insert_to_erp_acct_ledgers_1_7_0() {
+function erp_acct_insert_to_erp_acct_ledgers_1_7_1() {
     global $wpdb;
 
     $checkPurchaseReturn  = $wpdb->get_row(
@@ -105,6 +105,6 @@ function erp_acct_insert_to_erp_acct_ledgers_1_7_0() {
     }
 }
 
-crate_erp_acct_sales_return_table_1_7_0();
-crate_erp_return_details_table_1_7_0();
-erp_acct_insert_to_erp_acct_ledgers_1_7_0();
+crate_erp_acct_sales_return_table_1_7_1();
+crate_erp_return_details_table_1_7_1();
+erp_acct_insert_to_erp_acct_ledgers_1_7_1();
