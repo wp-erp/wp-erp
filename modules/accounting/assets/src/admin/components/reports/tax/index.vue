@@ -1,7 +1,7 @@
 <template>
     <ul class="reports-overview">
         <li>
-            <h3>{{ __('Sales Tax Report', 'erp') }}</h3>
+            <h3>{{ __('Sales Tax report (Transaction wise)', 'erp') }}</h3>
             <p>{{ __('Invoice Based Sales Tax Report ', 'erp') }}.</p>
 
             <router-link class="wperp-btn btn--primary" :to="{ name: 'SalesTaxReport' }">{{ __('View Report', 'erp')
@@ -10,24 +10,24 @@
         </li>
 
         <li>
-
-            <p>{{ __('Customer Based Sales Tax Report', 'erp') }}</p>
+            <h3>{{ __('Sales Tax report (Customer wise)', 'erp') }}</h3>
+            <p>{{ __('Sales Tax report (Customer wise)', 'erp') }}</p>
 
             <router-link class="wperp-btn btn--primary" :to="{ name: 'SalesTaxReportCustomerBased' }">{{ __('View Report', 'erp') }}
             </router-link>
         </li>
 
         <li>
-            <h3>{{ __('Sales Tax Report Category Based', 'erp') }}</h3>
-            <p>{{ __('Category Based Sales Tax Report', 'erp') }}.</p>
+            <h3>{{ __('Sales Tax report (Category wise)', 'erp') }}</h3>
+            <p>{{ __('Sales Tax report (Category wise)', 'erp') }}.</p>
 
             <router-link class="wperp-btn btn--primary" :to="{ name: 'SalesTaxReportCategoryBased' }">View Report
             </router-link>
         </li>
 
         <li>
-            <h3>{{ __('Sales Tax Report Agency Based', 'erp') }}</h3>
-            <p>{{ __('Agency Based Sales Tax Report', 'erp') }}.</p>
+            <h3>{{ __('Sales Tax report (Agency wise)', 'erp') }}</h3>
+            <p>{{ __('Sales Tax report (Agency wise)', 'erp') }}.</p>
 
             <router-link class="wperp-btn btn--primary" :to="{ name: 'SalesTaxReportAgencyBased' }">View Report
             </router-link>
@@ -35,25 +35,33 @@
 
 
         <li>
-            <h3>{{ __('Purchase Tax Report', 'erp') }}</h3>
-            <p>{{ __('Purchase Tax Report Transaction Based', 'erp') }}.</p>
+            <h3>{{ __('Purchase VAT report (Transaction wise)', 'erp') }}</h3>
+            <p>{{ __('Purchase VAT report (Transaction wise)', 'erp') }}.</p>
 
             <router-link class="wperp-btn btn--primary" :to="{ name: 'purchaseTaxReport' }">View Report</router-link>
         </li>
 
         <li>
-            <h3>{{ __('Purchase Tax Report Vendor Based', 'erp') }}</h3>
-            <p>{{ __('Purchase Tax Report Vendor Based', 'erp') }}.</p>
+            <h3>{{ __('Purchase VAT report (Vendor wise) ', 'erp') }}</h3>
+            <p>{{ __('Purchase VAT report (Vendor wise) ', 'erp') }}.</p>
 
             <router-link class="wperp-btn btn--primary" :to="{ name: 'purchaseTaxReportVendorWise' }"> View Report
             </router-link>
         </li>
 
         <li>
-            <h3>{{ __('Purchase Tax Report Category Based', 'erp') }}</h3>
-            <p>{{ __('Purchase Tax Report Category Based', 'erp') }}.</p>
+            <h3>{{ __('Purchase VAT report (Category wise)', 'erp') }}</h3>
+            <p>{{ __('Purchase VAT report (Category wise)', 'erp') }}.</p>
 
             <router-link class="wperp-btn btn--primary" :to="{ name: 'purchaseTaxReportCategoryBased' }"> View Report
+            </router-link>
+        </li>
+
+        <li>
+            <h3>{{ __('Purchase VAT report (Agency wise)', 'erp') }}</h3>
+            <p>{{ __('Purchase VAT report (Agency wise)', 'erp') }}.</p>
+
+            <router-link class="wperp-btn btn--primary" :to="{ name: 'purchaseTaxReportAgencyBased' }"> View Report
             </router-link>
         </li>
 

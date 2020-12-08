@@ -143,6 +143,21 @@ class TaxReportController extends REST_Controller {
             ]
         );
 
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/agency-wise-purchase',
+            [
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_purchase_tax_agency_wise' ],
+                    'args'                => [],
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_view_sales_summary' );
+                    },
+                ],
+            ]
+        );
+
     }
 
     /**
@@ -288,6 +303,31 @@ class TaxReportController extends REST_Controller {
         WHERE tax > 0 AND tax_cat_id = %d AND created_at BETWEEN '%s' AND '%s' GROUP BY trn_no";
 
         $taxData = $wpdb->get_results( $wpdb->prepare( $sql, $args['category_id'], $args['start_date'], $args['end_date'] ), ARRAY_A );
+
+        return wp_send_json( $taxData );
+    }
+
+    /**
+     * get Purchase vat : Agency  Based
+     *
+     * @param $request
+     *
+     * @return WP_Error|WP_REST_Response
+     */
+    public function get_purchase_tax_agency_wise( $request ) {
+        global $wpdb;
+        $args = [
+            'start_date'  => ! empty( $request['start_date'] ) ? $request['start_date'] : null,
+            'end_date'    => ! empty( $request['end_date'] ) ? $request['end_date'] : null,
+            'agency_id'   => ! empty( $request['agency_id'] ) ? $request['agency_id'] : null,
+        ];
+
+        $sql = "SELECT details.created_at as trn_date,trn_no as voucher_no, sum(details.tax) as tax_amount,agency_id
+        FROM {$wpdb->prefix}erp_acct_purchase_details  as details
+        INNER JOIN {$wpdb->prefix}erp_acct_purchase_details_tax  as tax ON tax.invoice_details_id = details.id
+        WHERE details.tax > 0 AND agency_id = %d AND details.created_at BETWEEN '%s' AND '%s' GROUP BY details.trn_no";
+
+        $taxData = $wpdb->get_results( $wpdb->prepare( $sql, $args['agency_id'], $args['start_date'], $args['end_date'] ), ARRAY_A );
 
         return wp_send_json( $taxData );
     }

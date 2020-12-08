@@ -360,11 +360,11 @@ if (false) {(function () {
 
 /***/ }),
 
-/***/ 214:
+/***/ 215:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__mtr_datepicker_min__ = __webpack_require__(575);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__mtr_datepicker_min__ = __webpack_require__(579);
 //
 //
 //
@@ -10839,20 +10839,20 @@ if (false) {
 
 /***/ }),
 
-/***/ 551:
+/***/ 555:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__i18n__ = __webpack_require__(552);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__i18n__ = __webpack_require__(556);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue__ = __webpack_require__(24);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Datepicker_vue__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_list_table_ListTable_vue__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_components_base_Dropdown_vue__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_admin_components_email_SendMail_vue__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_vue_sweetalert2__ = __webpack_require__(564);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__mixins_common__ = __webpack_require__(568);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__mixins_i18n__ = __webpack_require__(570);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_vue_sweetalert2__ = __webpack_require__(568);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__mixins_common__ = __webpack_require__(572);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__mixins_i18n__ = __webpack_require__(574);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_vue_loading_overlay__ = __webpack_require__(96);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_vue_loading_overlay___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_9_vue_loading_overlay__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_admin_http__ = __webpack_require__(1);
@@ -10862,15 +10862,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_14_admin_components_select_ComboButton_vue__ = __webpack_require__(16);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_15_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_16_admin_components_select_SelectAccounts_vue__ = __webpack_require__(23);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17_admin_components_timepicker_TimePicker_vue__ = __webpack_require__(571);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17_admin_components_timepicker_TimePicker_vue__ = __webpack_require__(575);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_18_admin_components_people_SelectPeople_vue__ = __webpack_require__(25);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19_vuelidate__ = __webpack_require__(577);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19_vuelidate__ = __webpack_require__(581);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_19_vuelidate___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_19_vuelidate__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_20_admin_components_chart_PieChart_vue__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_21_admin_components_transactions_DynamicTrnLoader_vue__ = __webpack_require__(89);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_22_vue_clipboards__ = __webpack_require__(580);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_22_vue_clipboards__ = __webpack_require__(584);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_23__wordpress_hooks__ = __webpack_require__(90);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_24__directive_directives__ = __webpack_require__(594);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_24__directive_directives__ = __webpack_require__(598);
 
 
 
@@ -10944,11 +10944,11 @@ acct.addFilter = function (hookName, namespace, component) {
 
 /***/ }),
 
-/***/ 552:
+/***/ 556:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__wordpress_i18n__ = __webpack_require__(553);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__wordpress_i18n__ = __webpack_require__(557);
 
 /* global erpAcct */
 
@@ -11035,164 +11035,6 @@ if (false) {
     require("vue-hot-reload-api")      .rerender("data-v-1e20af2e", esExports)
   }
 }
-
-/***/ }),
-
-/***/ 568:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_accounting__ = __webpack_require__(569);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_accounting___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_accounting__);
-function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-
-/* global erp_acct_var */
-
-var currencyOptions = {
-  symbol: erp_acct_var.symbol,
-  decimal: erp_acct_var.decimal_separator,
-  thousand: erp_acct_var.thousand_separator,
-  format: erp_acct_var.currency_format
-};
-var dateFormat = erp_acct_var.date_format;
-/* harmony default export */ __webpack_exports__["a"] = ({
-  methods: {
-    formatAmount: function formatAmount(val) {
-      var prefix = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-
-      if (val < 0) {
-        return prefix ? "Cr. ".concat(this.moneyFormat(Math.abs(val))) : "".concat(this.moneyFormat(Math.abs(val)));
-      }
-
-      return prefix ? "Dr. ".concat(this.moneyFormat(val)) : "".concat(this.moneyFormat(Math.abs(val)));
-    },
-    formatDBAmount: function formatDBAmount(val) {
-      var prefix = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-
-      if (val < 0) {
-        return "(-) ".concat(this.moneyFormat(Math.abs(val)));
-      }
-
-      return this.moneyFormat(val);
-    },
-    showAlert: function showAlert(type, message) {
-      this.$swal({
-        position: 'center',
-        type: type,
-        title: message,
-        showConfirmButton: false,
-        timer: 1500
-      });
-    },
-    getFileName: function getFileName(path) {
-      // eslint-disable-next-line no-useless-escape
-      return path.replace(/^.*[\\\/]/, '');
-    },
-    decodeHtml: function decodeHtml(str) {
-      var regex = /^[A-Za-z0-9 ]+$/;
-
-      if (regex.test(str)) {
-        return str;
-      }
-
-      var txt = document.createElement('textarea');
-      txt.innerHTML = str;
-      return txt.value;
-    },
-    moneyFormat: function moneyFormat(number) {
-      return __WEBPACK_IMPORTED_MODULE_0_accounting___default.a.formatMoney(number, currencyOptions);
-    },
-    moneyFormatwithDrCr: function moneyFormatwithDrCr(value) {
-      var DrCr = null;
-
-      if (value.indexOf('Dr') > 0) {
-        DrCr = 'Dr ';
-      } else if (value.indexOf('Dr') === -1) {
-        DrCr = 'Cr ';
-      }
-
-      var money = __WEBPACK_IMPORTED_MODULE_0_accounting___default.a.formatMoney(value, currencyOptions);
-      return DrCr + money;
-    },
-    noFulfillLines: function noFulfillLines(lines, selected) {
-      var nofillLines = false;
-
-      var _iterator = _createForOfIteratorHelper(lines),
-          _step;
-
-      try {
-        for (_iterator.s(); !(_step = _iterator.n()).done;) {
-          var item = _step.value;
-
-          if (!Object.prototype.hasOwnProperty.call(item, selected)) {
-            nofillLines = true;
-          } else {
-            nofillLines = false;
-            break;
-          }
-        }
-      } catch (err) {
-        _iterator.e(err);
-      } finally {
-        _iterator.f();
-      }
-
-      return nofillLines;
-    },
-    formatDate: function formatDate(d) {
-      if (!d) {
-        return '';
-      }
-
-      var date = new Date(d),
-          month = date.getMonth() + 1,
-          day = date.getDate(),
-          year = date.getFullYear();
-
-      if (month.toString().length < 2) {
-        month = '0' + month;
-      }
-
-      if (day.toString().length < 2) {
-        day = '0' + day;
-      }
-
-      switch (dateFormat) {
-        case 'd/m/Y':
-          // -- 31/12/2020
-          return [day, month, year].join('/');
-
-        case 'm/d/Y':
-          // -- 12/31/2020
-          return [month, day, year].join('/');
-
-        case 'm-d-Y':
-          // -- 12-31-2020
-          return [month, day, year].join('-');
-
-        case 'd-m-Y':
-          // -- 31-12-2020
-          return [day, month, year].join('-');
-
-        case 'Y-m-d':
-          // -- 2020-12-31
-          return [year, month, day].join('-');
-
-        case 'd.m.Y':
-          // -- 31.12.2020
-          return [day, month, year].join('.');
-
-        default:
-          return date.toDateString().replace(/^\S+\s/, '');
-      }
-    }
-  }
-});
 
 /***/ }),
 
@@ -12021,7 +11863,165 @@ if (false) {
 
 /***/ }),
 
-/***/ 570:
+/***/ 572:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_accounting__ = __webpack_require__(573);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_accounting___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_accounting__);
+function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+
+/* global erp_acct_var */
+
+var currencyOptions = {
+  symbol: erp_acct_var.symbol,
+  decimal: erp_acct_var.decimal_separator,
+  thousand: erp_acct_var.thousand_separator,
+  format: erp_acct_var.currency_format
+};
+var dateFormat = erp_acct_var.date_format;
+/* harmony default export */ __webpack_exports__["a"] = ({
+  methods: {
+    formatAmount: function formatAmount(val) {
+      var prefix = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+      if (val < 0) {
+        return prefix ? "Cr. ".concat(this.moneyFormat(Math.abs(val))) : "".concat(this.moneyFormat(Math.abs(val)));
+      }
+
+      return prefix ? "Dr. ".concat(this.moneyFormat(val)) : "".concat(this.moneyFormat(Math.abs(val)));
+    },
+    formatDBAmount: function formatDBAmount(val) {
+      var prefix = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+      if (val < 0) {
+        return "(-) ".concat(this.moneyFormat(Math.abs(val)));
+      }
+
+      return this.moneyFormat(val);
+    },
+    showAlert: function showAlert(type, message) {
+      this.$swal({
+        position: 'center',
+        type: type,
+        title: message,
+        showConfirmButton: false,
+        timer: 1500
+      });
+    },
+    getFileName: function getFileName(path) {
+      // eslint-disable-next-line no-useless-escape
+      return path.replace(/^.*[\\\/]/, '');
+    },
+    decodeHtml: function decodeHtml(str) {
+      var regex = /^[A-Za-z0-9 ]+$/;
+
+      if (regex.test(str)) {
+        return str;
+      }
+
+      var txt = document.createElement('textarea');
+      txt.innerHTML = str;
+      return txt.value;
+    },
+    moneyFormat: function moneyFormat(number) {
+      return __WEBPACK_IMPORTED_MODULE_0_accounting___default.a.formatMoney(number, currencyOptions);
+    },
+    moneyFormatwithDrCr: function moneyFormatwithDrCr(value) {
+      var DrCr = null;
+
+      if (value.indexOf('Dr') > 0) {
+        DrCr = 'Dr ';
+      } else if (value.indexOf('Dr') === -1) {
+        DrCr = 'Cr ';
+      }
+
+      var money = __WEBPACK_IMPORTED_MODULE_0_accounting___default.a.formatMoney(value, currencyOptions);
+      return DrCr + money;
+    },
+    noFulfillLines: function noFulfillLines(lines, selected) {
+      var nofillLines = false;
+
+      var _iterator = _createForOfIteratorHelper(lines),
+          _step;
+
+      try {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
+          var item = _step.value;
+
+          if (!Object.prototype.hasOwnProperty.call(item, selected)) {
+            nofillLines = true;
+          } else {
+            nofillLines = false;
+            break;
+          }
+        }
+      } catch (err) {
+        _iterator.e(err);
+      } finally {
+        _iterator.f();
+      }
+
+      return nofillLines;
+    },
+    formatDate: function formatDate(d) {
+      if (!d) {
+        return '';
+      }
+
+      var date = new Date(d),
+          month = date.getMonth() + 1,
+          day = date.getDate(),
+          year = date.getFullYear();
+
+      if (month.toString().length < 2) {
+        month = '0' + month;
+      }
+
+      if (day.toString().length < 2) {
+        day = '0' + day;
+      }
+
+      switch (dateFormat) {
+        case 'd/m/Y':
+          // -- 31/12/2020
+          return [day, month, year].join('/');
+
+        case 'm/d/Y':
+          // -- 12/31/2020
+          return [month, day, year].join('/');
+
+        case 'm-d-Y':
+          // -- 12-31-2020
+          return [month, day, year].join('-');
+
+        case 'd-m-Y':
+          // -- 31-12-2020
+          return [day, month, year].join('-');
+
+        case 'Y-m-d':
+          // -- 2020-12-31
+          return [year, month, day].join('-');
+
+        case 'd.m.Y':
+          // -- 31.12.2020
+          return [day, month, year].join('.');
+
+        default:
+          return date.toDateString().replace(/^\S+\s/, '');
+      }
+    }
+  }
+});
+
+/***/ }),
+
+/***/ 574:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -12063,19 +12063,19 @@ if (false) {
 
 /***/ }),
 
-/***/ 571:
+/***/ 575:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_TimePicker_vue__ = __webpack_require__(214);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_TimePicker_vue__ = __webpack_require__(215);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_240bd389_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_TimePicker_vue__ = __webpack_require__(576);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_240bd389_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_TimePicker_vue__ = __webpack_require__(580);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(572)
-  __webpack_require__(573)
-  __webpack_require__(574)
+  __webpack_require__(576)
+  __webpack_require__(577)
+  __webpack_require__(578)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -12122,28 +12122,28 @@ if (false) {(function () {
 
 /***/ }),
 
-/***/ 572:
+/***/ 576:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
 
-/***/ 573:
+/***/ 577:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
 
-/***/ 574:
+/***/ 578:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
 
-/***/ 575:
+/***/ 579:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -13015,7 +13015,14 @@ function MtrDatepicker(a) {
 
 /***/ }),
 
-/***/ 576:
+/***/ 58:
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
+/***/ 580:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -13048,13 +13055,6 @@ if (false) {
     require("vue-hot-reload-api")      .rerender("data-v-240bd389", esExports)
   }
 }
-
-/***/ }),
-
-/***/ 58:
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
 
 /***/ }),
 
@@ -13115,7 +13115,7 @@ if (false) {(function () {
 
 /***/ }),
 
-/***/ 594:
+/***/ 598:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -15185,4 +15185,4 @@ if (false) {(function () {
 
 /***/ })
 
-},[551]);
+},[555]);

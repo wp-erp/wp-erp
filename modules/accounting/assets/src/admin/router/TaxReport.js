@@ -8,6 +8,7 @@ import SalesTaxReportAgencyBased from 'admin/components/reports/tax/sales/Agency
 import purchaseTaxReport from 'admin/components/reports/tax/purchase/TransactionBased.vue';
 import purchaseTaxReportVendorBased from 'admin/components/reports/tax/purchase/VendorBased.vue';
 import purchaseTaxReportCategoryBased from 'admin/components/reports/tax/purchase/CategoryBased.vue';
+import purchaseTaxReportAgencyBased from 'admin/components/reports/tax/purchase/AgencyBased.vue';
 
 export default [
     {
@@ -80,6 +81,14 @@ export default [
         component: purchaseTaxReportCategoryBased,
         meta: {
             title: "Purchase Tax Report Category Based"
+        }
+    },
+    {
+        path: "/tax-report/purchase/agency-based",
+        name: "purchaseTaxReportAgencyBased",
+        component: purchaseTaxReportAgencyBased,
+        meta: {
+            title: "Purchase Tax Report Agency Based"
         }
     },
 
