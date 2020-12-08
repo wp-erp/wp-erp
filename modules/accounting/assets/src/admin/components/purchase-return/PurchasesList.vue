@@ -36,7 +36,7 @@
                     </strong>
                 </template>
                 <template slot="type" slot-scope="data">
-                   Purchase Return
+                   {{ __("Purchase Return", "erp") }}
                 </template>
                 <template slot="customer_name" slot-scope="data">
                     {{ isPayment(data.row) ? data.row.pay_bill_vendor_name : data.row.vendor_name }}

@@ -140,7 +140,7 @@ function erp_acct_get_invoice_for_purchase_return( $invoice_no ) {
     $row['line_items']  = erp_acct_format_invoice_line_items_for_return( $invoice_no );
     $row['tax_rate_id'] = erp_acct_get_default_tax_rate_name_id();
 
-    $row['attachments'] = unserialize( $row['attachments'] );
+    $row['attachments'] = null;
 
     return $row;
 }

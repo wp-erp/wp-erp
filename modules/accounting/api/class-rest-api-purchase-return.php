@@ -223,6 +223,14 @@ class Purchase_Return_Controller extends REST_Controller {
         return $response;
     }
 
+
+    /**
+     * prepare requested data for insert
+     *
+     * @param $request
+     *
+     * @return array
+     */
     public function prepare_item_for_database( $request ) {
         $prepared_item = [];
 

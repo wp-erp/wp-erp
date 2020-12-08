@@ -225,7 +225,7 @@ module.exports = function normalizeComponent (
 /* unused harmony export mapMutations */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return mapState; });
 /*!
- * vuex v3.6.0
+ * vuex v3.5.1
  * (c) 2020 Evan You
  * @license MIT
  */
@@ -512,11 +512,7 @@ ModuleCollection.prototype.isRegistered = function isRegistered (path) {
   var parent = this.get(path.slice(0, -1));
   var key = path[path.length - 1];
 
-  if (parent) {
-    return parent.hasChild(key)
-  }
-
-  return false
+  return parent.hasChild(key)
 };
 
 function update (path, targetModule, newModule) {
@@ -1456,7 +1452,7 @@ function pad (num, maxLength) {
 var index = {
   Store: Store,
   install: install,
-  version: '3.6.0',
+  version: '3.5.1',
   mapState: mapState,
   mapMutations: mapMutations,
   mapGetters: mapGetters,

@@ -1,12 +1,7 @@
 <template>
     <div class="wperp-container invoice-create">
-
-
-
         <div class="wperp-modal-dialog" >
-
             <div class="wperp-modal-content">
-
                 <!-- Start .header-section -->
                 <div class="content-header-section separator">
                     <div class="wperp-row wperp-between-xs">
@@ -15,28 +10,22 @@
                         </div>
                     </div>
                 </div>
-
-
                 <div class="wperp-modal-body">
-
                     <form action="" method="post" @submit.prevent="searchVoucher">
                         <!-- End .header-section -->
                         <div class="wperp-row">
                             <div class="wperp-form-group wperp-col-sm-8">
-                                <label>Voucher Number</label>
-                                <input type="text" v-model="voucher_no" class="wperp-form-field" placeholder="Sales Voucher Number">
+                                <label> {{__("Voucher Number", "erp")}}</label>
+                                <input type="text" v-model="voucher_no" class="wperp-form-field" :placeholder="__('Sales Voucher Number', 'erp')">`
                             </div>
                             <div class="wperp-form-group wperp-col-sm-4">
-                                <button type="submit" class="wperp-btn btn--primary voucher-search">Search</button>
+                                <button type="submit" class="wperp-btn btn--primary voucher-search">{{__("Search", "erp")}}</button>
                             </div>
                         </div>
                     </form>
-
-
                     <div class="wperp-invoice-panel" v-if="this.invoice.id">
-
                         <div class="invoice-body">
-                            <h4> Purchase Invoice</h4>
+                            <h4> {{__("Purchase Invoice", "erp")}}</h4>
                             <div class="wperp-row">
                                 <div class="wperp-col-sm-6">
                                     <h5>{{ __('Bill to', 'erp') }}:</h5>
@@ -172,7 +161,6 @@ export default {
     watch: {
 
     },
-
     computed: {
         ...mapState({invoiceTotalAmount: state => state.sales.invoiceTotalAmount}),
         ...mapState({actionType: state => state.combo.btnID}),
@@ -192,9 +180,7 @@ export default {
           return s ;
         }
     },
-
     created() {},
-
     methods: {
         async searchVoucher() {
             let Voucher = await getRequest('/purchase-return/search-invoice/'+ this.voucher_no )
@@ -226,7 +212,7 @@ export default {
         submitReturn(){
 
             if(!this.summery.total || this.summery.total < 1){
-                Swal.fire('Please , Select minimum one item', '', 'info')  ;
+                Swal.fire(__('Please Select minimum one item', 'erp'), '', 'info')  ;
                 return false;
             }
 
