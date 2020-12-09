@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP ERP 1.7.0\n"
+"Project-Id-Version: WP ERP 1.7.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-erp\n"
-"POT-Creation-Date: 2020-11-30 08:42:15+00:00\n"
+"POT-Creation-Date: 2020-12-09 08:05:49+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -19500,12 +19500,14 @@ msgstr ""
 msgid "Your IMAP connection is established."
 msgstr ""
 
-#: build/includes/admin/class-ajax.php:561 includes/admin/class-ajax.php:561
+#: build/includes/admin/class-ajax.php:561
+#: build/includes/class-promotion.php:107 includes/admin/class-ajax.php:561
 #: includes/class-promotion.php:107
 msgid "Invalid nonce"
 msgstr ""
 
-#: build/includes/admin/class-ajax.php:565 includes/admin/class-ajax.php:565
+#: build/includes/admin/class-ajax.php:565
+#: build/includes/class-promotion.php:111 includes/admin/class-ajax.php:565
 #: includes/class-promotion.php:111
 msgid "You have no permission to do that"
 msgstr ""
@@ -21421,25 +21423,6 @@ msgstr ""
 
 #: build/includes/class-people.php:176 includes/class-people.php:176
 msgid "Unauthorized people property"
-msgstr ""
-
-#: build/includes/class-promotion.php:43
-msgid ""
-"<p><strong class=\"highlight-text\" style=\"font-size: 18px\">It's Our "
-"Birthday <span class=\"erp-cake\" style=\"font-size: 20px\"> "
-"&#x1F382;</span>\r\n"
-"                But You Get The Present <span class=\"erp-gift\" "
-"style=\"font-size: 20px\"> &#x1F381;</span> </strong><br>\r\n"
-"                Get 33&#37; Discount with coupon:\r\n"
-"                <a target=\"_blank\" href=\"%1$s\"><strong> Birthday2018 "
-"</strong></a>\r\n"
-"                <br>\r\n"
-"                Offer ending soon!\r\n"
-"            </p>"
-msgstr ""
-
-#: build/includes/class-promotion.php:65
-msgid "Get the Offer"
 msgstr ""
 
 #: build/includes/class-scripts.php:163 includes/class-scripts.php:163
