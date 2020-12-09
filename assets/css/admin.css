@@ -4408,6 +4408,10 @@ div.erp-nav-container.--show-secondary .-secondary {
 .wpdt-c #adminmenuback {
   z-index: 1 !important;
 }
+/* Resolving conflicts after WP 5.6 released */
+.erp-count-class {
+  display: block !important;
+}
 /*****/
 /**
 * Media Query for responsive
