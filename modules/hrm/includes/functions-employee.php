@@ -3,7 +3,7 @@
 /**
  * Delete an employee if removed from WordPress usre table
  *
- * @since 1.7.1 Added erp_hr_after_delete_employee action hook
+ * @since 1.7.2 Added erp_hr_after_delete_employee action hook
  *
  * @param  int  the user id
  *
