@@ -1608,6 +1608,7 @@ class Employee {
      * @param array $args
      *
      * @since 1.6.7 Added employee status and type seperately
+     * @since 1.7.2 Added action erp_hr_employee_after_update_status
      *
      * @return array|WP_Error
      */
@@ -1647,6 +1648,8 @@ class Employee {
             $this->erp_user->update( [
                 'status' => $args['category'],
             ] );
+
+            do_action( 'erp_hr_employee_after_update_status', $this->erp_user->user_id, $args['category'] );
         }
 
         $history = $this->get_erp_user()->histories()->updateOrCreate( [ 'id' => $args['id'] ], [
