@@ -210,6 +210,8 @@ class Tax_Agencies_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $tax_data['id'] = $tax_id;
 
+        $this->add_log( $tax_data, 'add' );
+
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
@@ -236,8 +238,10 @@ class Tax_Agencies_Controller extends \WeDevs\ERP\API\REST_Controller {
         }
 
         $tax_data = $this->prepare_item_for_database( $request );
+        $old_data = erp_acct_get_tax_agency( $id );
+        $tax_id   = erp_acct_update_tax_agency( $tax_data, $id );
 
-        $tax_id = erp_acct_update_tax_agency( $tax_data, $id );
+        $this->add_log( $tax_data, 'edit', $old_data );
 
         $tax_data['id']                 = $tax_id;
         $additional_fields['namespace'] = $this->namespace;
@@ -291,7 +295,11 @@ class Tax_Agencies_Controller extends \WeDevs\ERP\API\REST_Controller {
             return new WP_Error( 'rest_tax_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
 
+        $item = erp_acct_get_tax_agency( $id );
+
         erp_acct_delete_tax_agency( $id );
+
+        $this->add_log( $item, 'delete' );
 
         return new WP_REST_Response( true, 204 );
     }
@@ -312,10 +320,49 @@ class Tax_Agencies_Controller extends \WeDevs\ERP\API\REST_Controller {
         }
 
         foreach ( $ids as $id ) {
+            $item = erp_acct_get_tax_agency( $id );
+
             erp_acct_delete_tax_agency( $id );
+
+            $this->add_log( $item, 'delete' );
         }
 
         return new WP_REST_Response( true, 204 );
+    }
+
+    /**
+     * Log for tax agency related actions
+     *
+     * @param array $data
+     * @param string $action
+     * @param array $old_data
+     *
+     * @return void
+     */
+    public function add_log( $data, $action, $old_data = [] ) {
+        switch ( $action ) {
+            case 'edit':
+                $operation = 'updated';
+                $changes   = ! empty( $old_data ) ? erp_get_array_diff( $data, $old_data ) : [];
+                break;
+            case 'delete':
+                $operation = 'deleted';
+                break;
+            default:
+                $operation = 'created';
+        }
+
+        erp_log()->add(
+            [
+                'component'     => 'Accounting',
+                'sub_component' => __( 'Tax', 'erp' ),
+                'old_value'     => isset( $changes['old_value'] ) ? $changes['old_value'] : '',
+                'new_value'     => isset( $changes['new_value'] ) ? $changes['new_value'] : '',
+                'message'       => '<strong>' . $data['agency_name'] . '</strong>' . sprintf( __( ' tax agency has been %s', 'erp' ), $operation ),
+                'changetype'    => $action,
+                'created_by'    => get_current_user_id(),
+            ]
+        );
     }
 
     /**
