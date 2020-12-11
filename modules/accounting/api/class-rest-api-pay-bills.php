@@ -229,7 +229,11 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $pay_bill_data['amount'] = array_sum( $item_total );
 
+        $old_data = erp_acct_get_pay_bill( $id );
+
         $pay_bill_id = erp_acct_update_pay_bill( $pay_bill_data, $id );
+
+        $this->add_log( $pay_bill_data, 'edit', $old_data );
 
         $pay_bill_data['id']            = $pay_bill_id;
         $additional_fields              = [];
@@ -259,26 +263,44 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
             return new WP_Error( 'rest_pay_bill_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
 
+        $old_data = erp_acct_get_pay_bill( $id );
+
         erp_acct_void_pay_bill( $id );
+
+        $this->add_log( $old_data, 'delete' );
 
         return new WP_REST_Response( true, 204 );
     }
 
     /**
-     * Log when bill payment is created
+     * Log for pay bill related actions
      *
-     * @param $data
-     * @param $action
+     * @param array $data
+     * @param string $action
+     * @param array $old_data
+     *
+     * @return void
      */
-    public function add_log( $data, $action ) {
+    public function add_log( $data, $action, $old_data = [] ) {
+        switch ( $action ) {
+            case 'edit':
+                $operation = 'updated';
+                $changes   = ! empty( $old_data ) ? erp_get_array_diff( $data, $old_data ) : [];
+                break;
+            case 'delete':
+                $operation = 'deleted';
+                break;
+            default:
+                $operation = 'created';
+        }
+
         erp_log()->add(
             [
                 'component'     => 'Accounting',
                 'sub_component' => __( 'Pay Bill', 'erp' ),
-                'old_value'     => '',
-                'new_value'     => '',
-                // translators: %1$s: amount, %2$s: id
-                'message'       => sprintf( __( 'A bill payment of %1$s has been created for %2$s', 'erp' ), $data['amount'], erp_acct_get_people_name_by_people_id( $data['vendor_id'] ) ),
+                'old_value'     => isset( $changes['old_value'] ) ? $changes['old_value'] : '',
+                'new_value'     => isset( $changes['new_value'] ) ? $changes['new_value'] : '',
+                'message'       => sprintf( __( 'A bill payment of %1$s has been %2$s for %3$s', 'erp' ), $data['amount'], $operation, erp_acct_get_people_name_by_people_id( $data['vendor_id'] ) ),
                 'changetype'    => $action,
                 'created_by'    => get_current_user_id(),
             ]
