@@ -241,7 +241,7 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
         $expense_data['amount']      = array_sum( $item_total );
 
         $expense = erp_acct_insert_expense( $expense_data );
-        $this->add_log( $expense, 'add' );
+        $this->add_log( (array) $expense, 'add' );
 
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
@@ -283,7 +283,10 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
         $expense_data['attachments'] = maybe_serialize( $request['attachments'] );
         $expense_data['amount']      = array_sum( $item_total );
 
+        $old_data   = erp_acct_get_expense( $id );
         $expense_id = erp_acct_update_expense( $expense_data, $id );
+
+        $this->add_log( $expense_data, 'edit', $old_data );
 
         $expense_data['id']             = $expense_id;
         $additional_fields['namespace'] = $this->namespace;
@@ -317,20 +320,34 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
     }
 
     /**
-     * Log when expense
+     * Log for expense related actions
      *
-     * @param $data
-     * @param $action
+     * @param array $data
+     * @param string $action
+     * @param array $old_data
+     *
+     * @return void
      */
-    public function add_log( $data, $action ) {
+    public function add_log( $data, $action, $old_data = [] ) {
+        switch ( $action ) {
+            case 'edit':
+                $operation = 'updated';
+                $changes   = ! empty( $old_data ) ? erp_get_array_diff( $data, $old_data ) : [];
+                break;
+            case 'delete':
+                $operation = 'deleted';
+                break;
+            default:
+                $operation = 'created';
+        }
+
         erp_log()->add(
             [
                 'component'     => 'Accounting',
                 'sub_component' => __( 'Expense', 'erp' ),
-                'old_value'     => '',
-                'new_value'     => '',
-                // translators: %1$s: amount, %2$s: id
-                'message'       => sprintf( __( 'An expense of %1$s has been created for %2$s', 'erp' ), $data['amount'], erp_acct_get_people_name_by_people_id( $data['people_id'] ) ),
+                'old_value'     => isset( $changes['old_value'] ) ? $changes['old_value'] : '',
+                'new_value'     => isset( $changes['new_value'] ) ? $changes['new_value'] : '',
+                'message'       => sprintf( __( 'An expense of %1$s has been %2$s for %3$s', 'erp' ), $data['amount'], $operation, erp_acct_get_people_name_by_people_id( $data['people_id'] ) ),
                 'changetype'    => $action,
                 'created_by'    => get_current_user_id(),
             ]
