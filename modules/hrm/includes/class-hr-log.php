@@ -82,38 +82,6 @@ class Hr_Log {
     }
 
     /**
-     * Get different array from two array
-     *
-     * @since 0.1
-     *
-     * @param array $new_data
-     * @param array $old_data
-     *
-     * @return array
-     */
-    public function get_array_diff( $new_data, $old_data, $is_seriazie = false ) {
-        $old_value   = $new_value   = [];
-        $changes_key = array_keys( array_diff_assoc( $new_data, $old_data ) );
-
-        foreach ( $changes_key as $key => $change_field_key ) {
-            $old_value[$change_field_key] = $old_data[$change_field_key];
-            $new_value[$change_field_key] = $new_data[$change_field_key];
-        }
-
-        if ( ! $is_seriazie ) {
-            return [
-                'new_val' => $new_value ? base64_encode( maybe_serialize( $new_value ) ) : '',
-                'old_val' => $old_value ? base64_encode( maybe_serialize( $old_value ) ) : '',
-            ];
-        } else {
-            return [
-                'new_val' => $new_value,
-                'old_val' => $old_value,
-            ];
-        }
-    }
-
-    /**
      * Add log when new employee created
      *
      * @since 0.1
@@ -170,17 +138,18 @@ class Hr_Log {
             return;
         }
 
-        //$old_employee_data = \WeDevs\ERP\HRM\Models\Employee::find( $emp_id )->toArray();
-        //$employee = new \WeDevs\ERP\HRM\Employee( intval( $emp_id ) );
-        //unset( $old_employee_data['created_at'], $old_employee_data['updated_at'] );
+        $employee = new \WeDevs\ERP\HRM\Employee( intval( $emp_id ) );
+        $new_data = erp_extract_recusrsive_array( $fields );
+        $old_data = erp_extract_recusrsive_array( $employee->get_data() );
+        unset( $new_data['created_at'], $new_data['updated_at'], $old_data['full_name'] );
 
-        //$changes = $this->get_array_diff( $fields, $old_employee_data );
+        $changes = erp_get_array_diff( $new_data, $old_data );
 
-        //if ( empty( $changes['old_val'] ) && empty( $changes['new_val'] ) ) {
-        //$message = false;
-        //} else {
-        $message = sprintf( __( '<strong>%s</strong> employee has been edited', 'erp' ), $fields['personal']['first_name'] );
-        //}
+        if ( empty( $changes['old_value'] ) && empty( $changes['new_value'] ) ) {
+            $message = false;
+        } else {
+            $message = sprintf( __( '<strong>%s</strong> employee has been edited', 'erp' ), $old_data['personal']['first_name'] );
+        }
 
         if ( $message ) {
             erp_log()->add( [
@@ -188,8 +157,8 @@ class Hr_Log {
                 'message'       => $message,
                 'created_by'    => get_current_user_id(),
                 'changetype'    => 'edit',
-                'old_value'     => '', //$changes['old_val'],
-                'new_value'     => '', //$changes['new_val']
+                'old_value'     => $changes['old_value'],
+                'new_value'     => $changes['new_value']
             ] );
         }
     }
@@ -536,9 +505,9 @@ class Hr_Log {
         $old_department = \WeDevs\ERP\HRM\Models\Department::find( $dept_id )->toArray();
         unset( $old_department['created_at'], $old_department['updated_at'] );
 
-        $changes = $this->get_array_diff( $fields, $old_department, true );
+        $changes = erp_get_array_diff( $fields, $old_department, true );
 
-        if ( empty( $changes['old_val'] ) && empty( $changes['new_val'] ) ) {
+        if ( empty( $changes['old_value'] ) && empty( $changes['new_value'] ) ) {
             $message = false;
         } else {
             array_walk( $changes, function ( &$key ) {
@@ -572,8 +541,8 @@ class Hr_Log {
                 'message'       => $message,
                 'created_by'    => get_current_user_id(),
                 'changetype'    => 'edit',
-                'old_value'     => $changes['old_val'] ? base64_encode( maybe_serialize( $changes['old_val'] ) ) : '',
-                'new_value'     => $changes['new_val'] ? base64_encode( maybe_serialize( $changes['new_val'] ) ) : '',
+                'old_value'     => $changes['old_value'] ? base64_encode( maybe_serialize( $changes['old_value'] ) ) : '',
+                'new_value'     => $changes['new_value'] ? base64_encode( maybe_serialize( $changes['new_value'] ) ) : '',
             ] );
         }
     }
@@ -636,12 +605,12 @@ class Hr_Log {
         $old_desig = \WeDevs\ERP\HRM\Models\Designation::find( $desig_id )->toArray();
         unset( $old_desig['created_at'], $old_desig['updated_at'] );
 
-        $changes = $this->get_array_diff( $fields, $old_desig );
+        $changes = erp_get_array_diff( $fields, $old_desig );
 
-        if ( empty( $changes['old_val'] ) && empty( $changes['new_val'] ) ) {
+        if ( empty( $changes['old_value'] ) && empty( $changes['new_value'] ) ) {
             $message = false;
         } else {
-            $message = sprintf( __( '<strong>%s</strong> designation has been edited', 'erp' ), $old_desig['title'] );
+            $message = sprintf( __( '<strong>%s</strong> designation has been updated', 'erp' ), $old_desig['title'] );
         }
 
         if ( $message ) {
@@ -650,8 +619,8 @@ class Hr_Log {
                 'message'       => $message,
                 'created_by'    => get_current_user_id(),
                 'changetype'    => 'edit',
-                'old_value'     => $changes['old_val'],
-                'new_value'     => $changes['new_val'],
+                'old_value'     => $changes['old_value'],
+                'new_value'     => $changes['new_value'],
             ] );
         }
     }
@@ -707,28 +676,29 @@ class Hr_Log {
      * @since 0.1
      *
      * @param int   $policy_id
-     * @param array $fields
+     * @param array $old_policy
      *
      * @return void
      */
-    public function update_policy( $policy_id, $fields ) {
+    public function update_policy( $policy_id, $old_policy ) {
         if ( ! $policy_id ) {
             return;
         }
 
-        $old_policy = \WeDevs\ERP\HRM\Models\Leave_Policy::find( $policy_id )->toArray();
-        unset( $old_policy['created_at'], $old_policy['updated_at'], $fields['instant_apply'] );
+        $new_policy = \WeDevs\ERP\HRM\Models\Leave_Policy::find( $policy_id )->toArray();
 
         $old_policy['effective_date'] = erp_format_date( $old_policy['effective_date'], 'Y-m-d' );
-        $fields['effective_date']     = erp_format_date( $fields['effective_date'], 'Y-m-d' );
+        $new_policy['effective_date'] = erp_format_date( $new_policy['effective_date'], 'Y-m-d' );
 
-        if ( isset( $fields['activate'] ) && $fields['activate'] == 1 ) {
-            unset( $fields['execute_day'], $old_policy['execute_day'] );
+        if ( isset( $new_policy['activate'] ) && $new_policy['activate'] == 1 ) {
+            unset( $new_policy['execute_day'], $old_policy['execute_day'] );
         }
 
-        $changes = $this->get_array_diff( $fields, $old_policy, true );
+        unset( $new_policy['updated_at'], $old_policy['updated_at'] );
 
-        if ( empty( $changes['old_val'] ) && empty( $changes['new_val'] ) ) {
+        $changes = erp_get_array_diff( $new_policy, $old_policy );
+
+        if ( empty( $changes['old_value'] ) && empty( $changes['new_value'] ) ) {
             $message = false;
         } else {
             array_walk( $changes, function ( &$key ) {
@@ -793,7 +763,7 @@ class Hr_Log {
                 }
             } );
 
-            $message = sprintf( __( '<strong>%s</strong> policy has been edited', 'erp' ), $old_policy['name'] );
+            $message = sprintf( __( '<strong>%s</strong> policy has been updated', 'erp' ), $old_policy['description'] );
         }
 
         if ( $message ) {
@@ -802,8 +772,8 @@ class Hr_Log {
                 'message'       => $message,
                 'created_by'    => get_current_user_id(),
                 'changetype'    => 'edit',
-                'old_value'     => $changes['old_val'] ? base64_encode( maybe_serialize( $changes['old_val'] ) ) : '',
-                'new_value'     => $changes['new_val'] ? base64_encode( maybe_serialize( $changes['new_val'] ) ) : '',
+                'old_value'     => $changes['old_value'],
+                'new_value'     => $changes['new_value'],
             ] );
         }
     }
@@ -941,9 +911,9 @@ class Hr_Log {
         $fields['start'] = erp_format_date( $fields['start'], 'Y-m-d' );
         $fields['end']   = erp_format_date( $fields['end'], 'Y-m-d' );
 
-        $changes = $this->get_array_diff( $fields, $old_holiday, true );
+        $changes = erp_get_array_diff( $fields, $old_holiday, true );
 
-        if ( empty( $changes['old_val'] ) && empty( $changes['new_val'] ) ) {
+        if ( empty( $changes['old_value'] ) && empty( $changes['new_value'] ) ) {
             $message = false;
         } else {
             array_walk( $changes, function ( &$key ) {
@@ -957,7 +927,7 @@ class Hr_Log {
                     unset( $key['end'] );
                 }
             } );
-            $message = sprintf( __( '<strong>%s</strong> holiday has been edited', 'erp' ), $old_holiday['title'] );
+            $message = sprintf( __( '<strong>%s</strong> holiday has been updated', 'erp' ), $old_holiday['title'] );
         }
 
         if ( $message ) {
@@ -966,8 +936,8 @@ class Hr_Log {
                 'message'       => $message,
                 'created_by'    => get_current_user_id(),
                 'changetype'    => 'edit',
-                'old_value'     => $changes['old_val'] ? base64_encode( maybe_serialize( $changes['old_val'] ) ) : '',
-                'new_value'     => $changes['new_val'] ? base64_encode( maybe_serialize( $changes['new_val'] ) ) : '',
+                'old_value'     => $changes['old_value'] ? base64_encode( maybe_serialize( $changes['old_value'] ) ) : '',
+                'new_value'     => $changes['new_value'] ? base64_encode( maybe_serialize( $changes['new_value'] ) ) : '',
             ] );
         }
     }
@@ -995,7 +965,7 @@ class Hr_Log {
         $overview = add_query_arg( [ 'page' => 'erp-hr' ], admin_url( 'admin.php' ) );
 
         if ( 'publish' === $old_status ) {
-            $message     = sprintf( __( '<strong>%s</strong> announcement has been edited', 'erp' ), $post->post_title );
+            $message     = sprintf( __( '<strong>%s</strong> announcement has been updated', 'erp' ), $post->post_title );
             $change_type = 'edit';
         } else {
             $message     = sprintf( __( '<strong>%s</strong> announcement has been created', 'erp' ), $post->post_title );

@@ -230,10 +230,13 @@ function erp_hr_leave_insert_policy( $args = [] ) {
         // won't update days
         unset( $extra['days'] );
 
+        $old_policy = \WeDevs\ERP\HRM\Models\Leave_Policy::find( $args['id'] )->toArray();
+
         $leave_policy = Leave_Policy::find( $args['id'] );
         $leave_policy->update( $extra );
 
         do_action( 'erp_hr_leave_update_policy', $args['id'] );
+        do_action( 'erp_hr_leave_before_policy_updated', $args['id'], $old_policy );
 
         return $leave_policy->id;
     }
