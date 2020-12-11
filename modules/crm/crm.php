@@ -101,6 +101,7 @@ class Customer_Relationship {
             new Form_Handler();
             new Admin_Menu();
             new User_Profile();
+            new Log();
             new Emailer();
             new Admin_Dashboard();
         }
