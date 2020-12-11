@@ -331,6 +331,8 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $tax_data['id'] = $tax_id;
 
+        $this->add_log( $tax_data, 'add' );
+
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
@@ -371,6 +373,8 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $tax_data['id'] = $tax_id;
 
+        $this->add_log( $tax_data, 'edit' );
+
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
@@ -404,6 +408,8 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         $tax_id = erp_acct_quick_edit_tax_rate( $tax_data, $id );
 
         $tax_data['id'] = $tax_id;
+
+        $this->add_log( $tax_data, 'edit' );
 
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
@@ -508,7 +514,11 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
             return new WP_Error( 'rest_tax_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
 
+        $item = erp_acct_get_tax_rate( $id );
+
         erp_acct_delete_tax_rate( $id );
+
+        $this->add_log( $item, 'delete' );
 
         return new WP_REST_Response( true, 204 );
     }
@@ -606,6 +616,8 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $tax_data['voucher_no'] = $tax_id; // do we need it?
 
+        $this->add_log( $tax_data, 'add', true );
+
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
@@ -657,27 +669,52 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         }
 
         foreach ( $ids as $id ) {
+            $item = erp_acct_get_tax_rate( $id );
+
             erp_acct_delete_tax_rate( $id );
+
+            $this->add_log( $item, 'delete' );
         }
 
         return new WP_REST_Response( true, 204 );
     }
 
     /**
-     * Log when tax payment is created
+     * Log tax related actions
      *
-     * @param $data
-     * @param $action
+     * @param array $data
+     * @param string $action
+     * @param bool $is_payment
+     *
+     * @return void
      */
-    public function add_log( $data, $action ) {
+    public function add_log( $data, $action, $is_payment = false ) {
+        switch ( $action ) {
+            case 'edit':
+                $operation = 'updated';
+                break;
+            case 'delete':
+                $operation = 'deleted';
+                break;
+            default:
+                $operation = 'created';
+        }
+
+        if ( ! $is_payment ) {
+            $sub_comp = __( 'Tax Rate', 'erp' );
+            $message  = sprintf( __( 'A tax rate has been %s', 'erp' ), $operation );
+        } else {
+            $sub_comp = __( 'Tax Payment', 'erp' );
+            $message  = sprintf( __( 'A tax payment of %1$s has been %2$s', 'erp' ), $data['amount'], $operation );
+        }
+
         erp_log()->add(
             [
                 'component'     => 'Accounting',
-                'sub_component' => __( 'Tax Payment', 'erp' ),
+                'sub_component' => $sub_comp,
                 'old_value'     => '',
                 'new_value'     => '',
-                // translators: %1$s: amount, %2$s: id
-                'message'       => sprintf( __( 'A tax payment of %1$s has been created for %2$s', 'erp' ), $data['amount'], erp_acct_get_people_name_by_people_id( $data['people_id'] ) ),
+                'message'       => $message,
                 'changetype'    => $action,
                 'created_by'    => get_current_user_id(),
             ]
