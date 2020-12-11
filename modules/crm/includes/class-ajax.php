@@ -308,10 +308,20 @@ class Ajax_Handler {
             $this->send_error( __( 'You don\'t have any permission to edit this contact', 'erp' ) );
         }
 
+        if ( $data['id'] ) {
+            $customer_data = erp_get_people( intval( $data['id'] ) );
+        }
+
         $customer_id = erp_insert_people( $data );
 
         if ( is_wp_error( $customer_id ) ) {
             $this->send_error( $customer_id->get_error_message() );
+        }
+
+        if ( $data['id'] ) {
+            do_action( 'erp_crm_log_customer_edit', $data, $customer_data );
+        } else {
+            do_action( 'erp_crm_log_customer_new', $data );
         }
 
         if ( intval( $current_user_id ) !== intval( $data['contact_owner'] ) ) {
@@ -404,6 +414,11 @@ class Ajax_Handler {
             $this->send_error( __( 'Can not delete - You do not own this contact(s)', 'erp' ) );
         }
 
+        foreach ( $ids as $id ) {
+            $customer    = new Contact( $id );
+            $customers[] = $customer->to_array();
+        }
+
         $data = [
             'id'   => $ids,
             'hard' => $hard,
@@ -417,6 +432,10 @@ class Ajax_Handler {
         }
 
         $statuses = erp_crm_customer_get_status_count( $type );
+
+        foreach ( $customers as $customer ) {
+            do_action( 'erp_crm_log_customer_del', $customer, $type, $hard );
+        }
 
         $this->send_success( [ 'statuses' => $statuses ] );
     }
@@ -446,6 +465,8 @@ class Ajax_Handler {
         if ( is_wp_error( $restored ) ) {
             $this->send_error( $restored->get_error_message() );
         }
+
+        do_action( 'erp_crm_log_customer_restore', $data );
 
         $statuses = erp_crm_customer_get_status_count( $type );
 
@@ -497,6 +518,8 @@ class Ajax_Handler {
                 ];
 
                 erp_crm_create_new_contact_subscriber( $contact_subscriber );
+
+                do_action( 'erp_crm_log_assign_contact_group', $group_id, $user_id );
             }
         }
 
@@ -576,10 +599,14 @@ class Ajax_Handler {
 
         if ( $type === 'assign_customer' ) {
             erp_crm_customer_add_company( $customer_id, $id );
+
+            do_action( 'erp_crm_log_assign_contact_company', $type, $id, $customer_id );
         }
 
         if ( $type === 'assign_company' ) {
             erp_crm_customer_add_company( $id, $company_id );
+
+            do_action( 'erp_crm_log_assign_contact_company', $type, $id, $company_id );
         }
 
         $this->send_success( __( 'Company has been added successfully', 'erp' ) );
@@ -830,6 +857,8 @@ class Ajax_Handler {
 
         erp_crm_save_contact_group( $data );
 
+        do_action( 'erp_crm_log_contact_group_new', $data );
+
         $this->send_success( __( 'Contact group save successfully', 'erp' ) );
     }
 
@@ -875,7 +904,11 @@ class Ajax_Handler {
             $this->send_error( __( 'Somthing wrong, Please try later', 'erp' ) );
         }
 
+        $data = erp_crm_get_contact_group_by_id( $query_id );
+
         erp_crm_contact_group_delete( $query_id );
+
+        do_action( 'erp_crm_log_contact_group_del', $data );
 
         $this->send_success( __( 'Contact group delete successfully', 'erp' ) );
     }
@@ -961,6 +994,8 @@ class Ajax_Handler {
                 'user_id'  => $user_id,
                 'group_id' => $group_id,
             ];
+
+            do_action( 'erp_crm_log_assign_contact_group', $group_id, $user_id );
         }
 
         erp_crm_create_new_contact_subscriber( $data );
@@ -1137,6 +1172,8 @@ class Ajax_Handler {
                     $this->send_error( __( 'Somthing is wrong, Please try later', 'erp' ) );
                 }
 
+                do_action( 'erp_crm_log_activity_new', $postdata );
+
                 $this->send_success( $data );
 
                 break;
@@ -1249,6 +1286,8 @@ class Ajax_Handler {
                     $this->send_error( __( 'Somthing is wrong, Please try later', 'erp' ) );
                 }
 
+                do_action( 'erp_crm_log_activity_new', $postdata );
+
                 $this->send_success( $data );
 
                 break;
@@ -1263,6 +1302,8 @@ class Ajax_Handler {
                 if ( ! $data ) {
                     $this->send_error( __( 'Somthing is wrong, Please try later', 'erp' ) );
                 }
+
+                do_action( 'erp_crm_log_activity_new', $postdata );
 
                 $this->send_success( $data );
 
@@ -1294,6 +1335,8 @@ class Ajax_Handler {
                 do_action( 'erp_crm_save_customer_tasks_activity_feed', $save_data, $postdata );
 
                 erp_crm_assign_task_to_users( $data, $save_data );
+
+                do_action( 'erp_crm_log_activity_new', $postdata );
 
                 $this->send_success( $data );
 
