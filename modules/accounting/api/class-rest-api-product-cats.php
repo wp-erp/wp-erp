@@ -169,6 +169,8 @@ class Inventory_Product_Cats_Controller extends \WeDevs\ERP\API\REST_Controller 
         $id         = erp_acct_insert_product_cat( $item );
         $item['id'] = $id;
 
+        $this->add_log( $item, 'add' );
+
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
@@ -194,7 +196,12 @@ class Inventory_Product_Cats_Controller extends \WeDevs\ERP\API\REST_Controller 
         if ( empty( $id ) ) {
             return new WP_Error( 'rest_inventory_product_cat_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
-        $id         = erp_acct_update_product_cat( $item, $id );
+
+        $old_data = erp_acct_get_product_cat( $id );
+        $id       = erp_acct_update_product_cat( $item, $id );
+
+        $this->add_log( $item, 'edit', $old_data );
+
         $item['id'] = $id;
 
         $additional_fields['namespace'] = $this->namespace;
@@ -217,7 +224,11 @@ class Inventory_Product_Cats_Controller extends \WeDevs\ERP\API\REST_Controller 
     public function delete_inventory_product_cat( $request ) {
         $term_id = (int) $request['id'];
 
+        $item = erp_acct_get_product_cat( $term_id );
+
         erp_acct_delete_product_cat( $term_id );
+
+        $this->add_log( $item, 'delete' );
 
         return new WP_REST_Response( true, 204 );
     }
@@ -238,10 +249,47 @@ class Inventory_Product_Cats_Controller extends \WeDevs\ERP\API\REST_Controller 
         }
 
         foreach ( $ids as $id ) {
+            $item = erp_acct_get_product_cat( $id );
             erp_acct_delete_product_cat( $id );
+            $this->add_log( $item, 'delete' );
         }
 
         return new WP_REST_Response( true, 204 );
+    }
+
+    /**
+     * Log for product category related actions
+     *
+     * @param array $data
+     * @param string $action
+     * @param array $old_data
+     *
+     * @return void
+     */
+    public function add_log( $data, $action, $old_data = [] ) {
+        switch ( $action ) {
+            case 'edit':
+                $operation = 'updated';
+                $changes   = ! empty( $old_data ) ? erp_get_array_diff( $data, $old_data ) : [];
+                break;
+            case 'delete':
+                $operation = 'deleted';
+                break;
+            default:
+                $operation = 'created';
+        }
+
+        erp_log()->add(
+            [
+                'component'     => 'Accounting',
+                'sub_component' => __( 'Product Category', 'erp' ),
+                'old_value'     => isset( $changes['old_value'] ) ? $changes['old_value'] : '',
+                'new_value'     => isset( $changes['new_value'] ) ? $changes['new_value'] : '',
+                'message'       => sprintf( __( '<strong>%1$s</strong> product category has been %2$s', 'erp' ), $data['name'], $operation ),
+                'changetype'    => $action,
+                'created_by'    => get_current_user_id(),
+            ]
+        );
     }
 
     /**
