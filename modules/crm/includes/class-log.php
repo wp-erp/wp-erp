@@ -12,7 +12,7 @@ class Log {
     /**
      * Load autometically when class inistantiate
      *
-     * @since 1.7.1
+     * @since 1.7.2
      *
      * @return void
      */
@@ -48,7 +48,7 @@ class Log {
     /**
      * Add log when new customer created
      *
-     * @since 1.7.1
+     * @since 1.7.2
      *
      * @param array $data
      *
@@ -69,7 +69,7 @@ class Log {
     /**
      * Add log when a customer updated
      *
-     * @since 1.7.1
+     * @since 1.7.2
      *
      * @param array $data
      * @param array $old_data
@@ -98,7 +98,7 @@ class Log {
     /**
      * Add log when a customer deleted
      *
-     * @since 1.7.1
+     * @since 1.7.2
      *
      * @param array $data
      * @param string $type
@@ -122,7 +122,7 @@ class Log {
     /**
      * Add log when a customer restored
      *
-     * @since 1.7.1
+     * @since 1.7.2
      *
      * @param array $data
      *
@@ -144,7 +144,7 @@ class Log {
     /**
      * Add log when new activity created
      *
-     * @since 1.7.1
+     * @since 1.7.2
      *
      * @param array $data
      *
@@ -192,7 +192,7 @@ class Log {
     /**
      * Add log when a contact group created
      *
-     * @since 1.7.1
+     * @since 1.7.2
      *
      * @param array $data
      *
@@ -213,7 +213,7 @@ class Log {
     /**
      * Add log when a contact group deleted
      *
-     * @since 1.7.1
+     * @since 1.7.2
      *
      * @param array $data
      *
@@ -234,7 +234,7 @@ class Log {
     /**
      * Add log when a customer assigned to a contact group
      *
-     * @since 1.7.1
+     * @since 1.7.2
      *
      * @param array $group_id
      * @param array $contact_id
@@ -257,7 +257,7 @@ class Log {
     /**
      * Add log when a customer assigned to a contact group
      *
-     * @since 1.7.1
+     * @since 1.7.2
      *
      * @param string $type
      * @param int $assigned_to
