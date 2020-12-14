@@ -1593,7 +1593,8 @@ function erp_hr_leave_request_update_status( $request_id, $status, $comments = '
         return new WP_Error( 'no-permission', esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
     }
 
-    $request = Leave_Request::find( $request_id );
+    $request  = Leave_Request::find( $request_id );
+    $old_data = $request->toArray();
 
     if ( empty( $request ) ) {
         return new WP_Error( 'no-request-found', __( 'Invalid leave request', 'erp' ) );
@@ -1838,6 +1839,7 @@ function erp_hr_leave_request_update_status( $request_id, $status, $comments = '
     $status = ( $status == 1 ) ? 'approved' : ( $status == 2 ? 'pending' : 'reject' );
 
     do_action( "erp_hr_leave_request_{$status}", $request_id, $request );
+    do_action( 'erp_hr_leave_update', $request_id, $old_data );
 
     return $request;
 }
