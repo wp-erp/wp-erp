@@ -438,13 +438,16 @@ class Employee {
         $work['pay_type']    = $pay_type;
 
         $erp_user = \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $user_id )->first();
+        $old_data = $this->get_data();
 
         //if user_id and erp_user is found then load user and update data
         if ( $wp_user && $erp_user ) {
             $this->load_employee( absint( $user_id ) );
-            do_action( 'erp_hr_employee_new', $user_id, $data );
+            $updated  = $this->update_employee( $data );
 
-            return $this->update_employee( $data );
+            do_action( 'erp_hr_employee_update', $user_id, $old_data );
+
+            return $updated;
         }
 
         if ( ! $erp_user ) {
@@ -564,8 +567,6 @@ class Employee {
         if ( empty( $this->changes ) ) {
             return $this;
         }
-
-        do_action( 'erp_hr_employee_update', $this->user_id, wp_parse_args( $this->data, $this->changes ) );
 
         if ( ! empty( $this->changes['work'] ) ) {
             $this->erp_user->update( $this->changes['work'] );
