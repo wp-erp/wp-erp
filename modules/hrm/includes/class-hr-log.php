@@ -6,6 +6,7 @@ use WeDevs\ERP\Framework\Traits\Hooker;
 use WeDevs\ERP\HRM\Models\Dependents;
 use WeDevs\ERP\HRM\Models\Designation;
 use WeDevs\ERP\HRM\Models\employee;
+use WeDevs\ERP\HRM\Models\Leave_Request;
 
 /**
  * Ajax handler
@@ -68,6 +69,7 @@ class Hr_Log {
 
         //Leave Request
         $this->action( 'erp_hr_leave_new', 'create_leave_request', 10, 3 );
+        $this->action( 'erp_hr_leave_update', 'update_leave_request', 10, 2 );
 
         //Entitlement
         $this->action( 'erp_hr_leave_insert_new_entitlement', 'create_entitlement', 10, 2 );
@@ -79,6 +81,7 @@ class Hr_Log {
 
         // Announcement
         $this->action( 'transition_post_status', 'announcment_log', 10, 3 );
+        $this->action( 'before_delete_post', 'announcment_delete_log' );
     }
 
     /**
@@ -139,16 +142,43 @@ class Hr_Log {
         }
 
         $employee = new \WeDevs\ERP\HRM\Employee( intval( $emp_id ) );
-        $new_data = erp_extract_recusrsive_array( $fields );
-        $old_data = erp_extract_recusrsive_array( $employee->get_data() );
-        unset( $new_data['created_at'], $new_data['updated_at'], $old_data['full_name'] );
-
-        $changes = erp_get_array_diff( $new_data, $old_data );
+        $old_data = erp_extract_recusrsive_array( $fields );
+        $new_data = erp_extract_recusrsive_array( $employee->get_data() );
+        $changes  = erp_get_array_diff( $new_data, $old_data, true );
 
         if ( empty( $changes['old_value'] ) && empty( $changes['new_value'] ) ) {
             $message = false;
         } else {
-            $message = sprintf( __( '<strong>%s</strong> employee has been edited', 'erp' ), $old_data['personal']['first_name'] );
+            $message = sprintf( __( '<strong>%s</strong> employee has been edited', 'erp' ), $old_data['first_name'] );
+
+            array_walk( $changes, function ( &$key ) {
+                if ( isset( $key['reporting_to'] ) ) {
+                    if ( $key['reporting_to'] ) {
+                        $employee            = new \WeDevs\ERP\HRM\Employee( intval( $key['reporting_to'] ) );
+                        $key['reporting_to'] = $employee->get_full_name();
+                    } else {
+                        $key['department'] = __( 'No Manager', 'erp' );
+                    }
+                }
+
+                if ( isset( $key['department'] ) ) {
+                    if ( $key['department'] && $key['department'] != '-1' ) {
+                        $department        = new \WeDevs\ERP\HRM\Department( intval( $key['department'] ) );
+                        $key['department'] = $department->title;
+                    } else {
+                        $key['department'] = __( 'No Department', 'erp' );
+                    }
+                }
+
+                if ( isset( $key['designation'] ) ) {
+                    if ( $key['designation'] && $key['designation'] != '-1' ) {
+                        $designation        = new \WeDevs\ERP\HRM\Designation( intval( $key['designation'] ) );
+                        $key['designation'] = $designation->title;
+                    } else {
+                        $key['designation'] = __( 'No Designation', 'erp' );
+                    }
+                }
+            } );
         }
 
         if ( $message ) {
@@ -157,8 +187,8 @@ class Hr_Log {
                 'message'       => $message,
                 'created_by'    => get_current_user_id(),
                 'changetype'    => 'edit',
-                'old_value'     => $changes['old_value'],
-                'new_value'     => $changes['new_value']
+                'old_value'     => $changes['old_value'] ? base64_encode( maybe_serialize( $changes['old_value'] ) ) : '',
+                'new_value'     => $changes['new_value'] ? base64_encode( maybe_serialize( $changes['new_value'] ) ) : '',
             ] );
         }
     }
@@ -696,7 +726,7 @@ class Hr_Log {
 
         unset( $new_policy['updated_at'], $old_policy['updated_at'] );
 
-        $changes = erp_get_array_diff( $new_policy, $old_policy );
+        $changes = erp_get_array_diff( $new_policy, $old_policy, true );
 
         if ( empty( $changes['old_value'] ) && empty( $changes['new_value'] ) ) {
             $message = false;
@@ -808,6 +838,54 @@ class Hr_Log {
             'message'       => $message,
             'created_by'    => get_current_user_id(),
             'changetype'    => 'add',
+        ] );
+    }
+
+    /**
+     * Add log when leave request updated
+     *
+     * @since 1.7.2
+     *
+     * @param int   $request_id
+     * @param array $old_data
+     *
+     * @return void
+     */
+    public function update_leave_request( $request_id, $old_data ) {
+        if ( ! $request_id ) {
+            return;
+        }
+
+        $employee = new \WeDevs\ERP\HRM\Employee( intval( $old_data['user_id'] ) );
+        $request  = Leave_Request::find( $request_id );
+        $changes  = erp_get_array_diff( $request->toArray(), $old_data, true );
+
+        if ( ! empty( $changes['old_value'] ) || ! empty( $changes['new_value'] ) ) {
+            array_walk( $changes, function ( &$key ) {
+                if ( isset( $key['last_status'] ) ) {
+                    $status = [
+                        1 => 'Approved',
+                        2 => 'pending',
+                        3 => 'Rejected',
+                    ];
+                    $key['status'] = $status[ $key['last_status'] ];
+                    unset( $key['last_status'] );
+                }
+                unset( $key['updated_at'] );
+            } );
+        }
+
+        $message = sprintf( __( 'A leave request by <strong>%s</strong> has been updated', 'erp' ),
+            $employee->get_full_name()
+        );
+
+        erp_log()->add( [
+            'sub_component' => 'leave',
+            'message'       => $message,
+            'created_by'    => get_current_user_id(),
+            'changetype'    => 'edit',
+            'old_value'     => $changes['old_value'] ? base64_encode( maybe_serialize( $changes['old_value'] ) ) : '',
+            'new_value'     => $changes['new_value'] ? base64_encode( maybe_serialize( $changes['new_value'] ) ) : '',
         ] );
     }
 
@@ -977,6 +1055,30 @@ class Hr_Log {
             'message'       => $message,
             'created_by'    => get_current_user_id(),
             'changetype'    => $change_type,
+        ] );
+    }
+
+    /**
+     * Add log when announcement deleted
+     *
+     * @since 1.7.2
+     *
+     * @param int $post_id
+     *
+     * @return void
+     */
+    public function announcment_delete_log( $post_id ) {
+        $post = \get_post( $post_id );
+
+        if ( 'erp_hr_announcement' != $post->post_type ) {
+            return;
+        }
+
+        erp_log()->add( [
+            'sub_component' => 'announcement',
+            'message'       => sprintf( __( '<strong>%s</strong> announcement has been deleted', 'erp' ), $post->post_title ),
+            'created_by'    => get_current_user_id(),
+            'changetype'    => 'delete',
         ] );
     }
 }
