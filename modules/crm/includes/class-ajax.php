@@ -309,7 +309,7 @@ class Ajax_Handler {
         }
 
         if ( $data['id'] ) {
-            $customer_data = erp_get_people( intval( $data['id'] ) );
+            $customer_data = new Contact( $data['id'] );
         }
 
         $customer_id = erp_insert_people( $data );
@@ -319,7 +319,7 @@ class Ajax_Handler {
         }
 
         if ( $data['id'] ) {
-            do_action( 'erp_crm_log_customer_edit', $data, $customer_data );
+            do_action( 'erp_crm_log_customer_edit', $data, $customer_data->to_array() );
         } else {
             do_action( 'erp_crm_log_customer_new', $data );
         }
