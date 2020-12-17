@@ -77,12 +77,42 @@ class Log {
      * @return void
      */
     public function update_customer( $data, $old_data ) {
-        $old_data = erp_extract_recusrsive_array( (array) $old_data );
-        $type     = $data['type'];
-        $name     = $type === 'company' ? $old_data['company']: $old_data['first_name'] . ' ' . $old_data['last_name'];
+        $type = $data['type'];
+        $name = $type === 'company' ? $old_data['company']: $old_data['first_name'] . ' ' . $old_data['last_name'];
+        unset( $old_data['avatar'], $old_data['types'], $old_data['assign_to'] );
+        $old_data = erp_array_flatten( (array) $old_data );
+        $changes  = erp_get_array_diff( $data, $old_data, true );
 
-        unset( $data['type'] );
-        $array_diff = erp_get_array_diff( $data, $old_data );
+        array_walk( $changes, function ( &$key ) {
+            if ( isset( $key['contact_owner'] ) ) {
+                if ( $key['contact_owner'] ) {
+                    $owner                = \get_user_by( 'ID', intval( $key['contact_owner'] ) );
+                    $key['contact_owner'] = $owner->display_name;
+                } else {
+                    $key['contact_owner'] = __( 'No Owner', 'erp' );
+                }
+            }
+
+            if ( isset( $key['life_stage'] ) ) {
+                if ( $key['life_stage'] ) {
+                    $life_stages       = erp_crm_get_life_stages_dropdown_raw();
+                    $key['life_stage'] = $life_stages[ $key['life_stage'] ];
+                } else {
+                    $key['life_stage'] = __( 'No Life Stage', 'erp' );
+                }
+            }
+
+            if ( isset( $key['source'] ) ) {
+                if ( $key['source'] && $key['source'] != '-1' ) {
+                    $sources       = erp_crm_contact_sources();
+                    $key['source'] = $sources[ $key['source'] ];
+                } else {
+                    $key['source'] = __( 'No Source', 'erp' );
+                }
+            }
+
+            unset( $key['type'], $key['photo_id'] );
+        } );
 
         erp_log()->add( [
             'component'     => 'CRM',
@@ -90,8 +120,8 @@ class Log {
             'changetype'    => 'edit',
             'message'       => sprintf( __( '<strong>%1$s</strong> %2$s has been updated', 'erp' ), $name, $type ),
             'created_by'    => get_current_user_id(),
-            'old_value'     => $array_diff['old_value'],
-            'new_value'     => $array_diff['new_value'],
+            'old_value'     => $changes['old_value'] ? base64_encode( maybe_serialize( $changes['old_value'] ) ) : '',
+            'new_value'     => $changes['new_value'] ? base64_encode( maybe_serialize( $changes['new_value'] ) ) : '',
         ] );
     }
 
@@ -284,44 +314,6 @@ class Log {
             'changetype'    => 'add',
             'message'       => sprintf( __( '<strong>%1$s</strong> %2$s has been assigned to <strong>%3$s</strong> %4$s', 'erp' ), $assigned->get_full_name(), $assigned_type, $assigned_to->get_full_name(), $assigned_to_type ),
             'created_by'    => get_current_user_id(),
-        ] );
-    }
-
-    /**
-     * Add log when announcement create or edit
-     *
-     * @since 0.1
-     *
-     * @param string $new_status
-     * @param string $old_status
-     * @param object $post
-     *
-     * @return void
-     */
-    public function announcment_log( $new_status, $old_status, $post ) {
-        if ( 'erp_hr_announcement' != $post->post_type ) {
-            return;
-        }
-
-        if ( 'publish' !== $new_status ) {
-            return;
-        }
-
-        $overview = add_query_arg( [ 'page' => 'erp-hr' ], admin_url( 'admin.php' ) );
-
-        if ( 'publish' === $old_status ) {
-            $message     = sprintf( __( '<strong>%s</strong> announcement has been edited', 'erp' ), $post->post_title );
-            $change_type = 'edit';
-        } else {
-            $message     = sprintf( __( '<strong>%s</strong> announcement has been created', 'erp' ), $post->post_title );
-            $change_type = 'add';
-        }
-
-        erp_log()->add( [
-            'sub_component' => 'announcement',
-            'message'       => $message,
-            'created_by'    => get_current_user_id(),
-            'changetype'    => $change_type,
         ] );
     }
 }
