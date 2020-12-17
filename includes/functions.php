@@ -3873,3 +3873,36 @@ function erp_is_valid_employee_id( $emp_id ) {
 function erp_is_valid_currency_amount( $amount ) {
     return preg_match( '/^[0-9](?:,?[0-9])*(?:.[0-9]{4})?$/', $amount );
 }
+
+/**
+ * Get different array from two array
+ *
+ * @since 1.7.2
+ *
+ * @param array $new_data
+ * @param array $old_data
+ *
+ * @return array
+ */
+function erp_get_array_diff( $new_data, $old_data, $is_seriazie = false ) {
+    $old_value   = $new_value   = [];
+    $changes_key = array_keys( array_diff_assoc( $new_data, $old_data ) );
+
+    foreach ( $changes_key as $key => $change_field_key ) {
+        $old_value[$change_field_key] = $old_data[$change_field_key];
+        $new_value[$change_field_key] = $new_data[$change_field_key];
+    }
+
+    if ( ! $is_seriazie ) {
+        return [
+            'new_value' => $new_value ? base64_encode( maybe_serialize( $new_value ) ) : '',
+            'old_value' => $old_value ? base64_encode( maybe_serialize( $old_value ) ) : '',
+        ];
+    } else {
+        return [
+            'new_value' => $new_value,
+            'old_value' => $old_value,
+        ];
+    }
+}
+

@@ -3,6 +3,8 @@
 /**
  * Delete an employee if removed from WordPress usre table
  *
+ * @since 1.7.2 Added erp_hr_after_delete_employee action hook
+ *
  * @param  int  the user id
  *
  * @return void
@@ -19,7 +21,11 @@ function erp_hr_employee_on_delete( $user_id, $hard = 0 ) {
     $role = reset( $user->roles );
 
     if ( 'employee' === $role ) {
-        \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $user_id )->withTrashed()->forceDelete();
+        $deleted = \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $user_id )->withTrashed()->forceDelete();
+
+        if ( true === $deleted ) {
+            do_action( 'erp_hr_after_delete_employee', $user_id, true );
+        }
     }
 }
 
@@ -1078,12 +1084,14 @@ function erp_hr_get_contractual_employee() {
  * Get Contractual Employees
  *
  * @since 1.5.6 Add Closing date for employee
+ * @since 1.7.2 Added user url for employee
  *
  * @return object collection of fields;
  */
 function get_employee_additional_fields( $fields, $id, $user ) {
-    $user_id                    = $fields['user_id'];
-    $fields['work']['end_date'] = get_user_meta( $user_id, 'end_date' );
+    $user_id                        = $fields['user_id'];
+    $fields['work']['end_date']     = get_user_meta( $user_id, 'end_date' );
+    $fields['personal']['user_url'] = get_user_meta( $user_id, 'user_url' ) ? get_user_meta( $user_id, 'user_url' ) : '';
 
     return $fields;
 }

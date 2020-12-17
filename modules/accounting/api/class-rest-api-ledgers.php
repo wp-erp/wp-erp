@@ -291,7 +291,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $result = erp_acct_insert_ledger( $item );
 
-        $this->add_log( $result, 'add' );
+        $this->add_log( (array) $result, 'add' );
 
         $request->set_param( 'context', 'edit' );
         $response = $this->prepare_item_for_response( $result, $request );
@@ -320,7 +320,11 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $item = $this->prepare_item_for_database( $request );
 
+        $old_data = erp_acct_get_ledger( $id );
+
         $result = erp_acct_update_ledger( $item, $id );
+
+        $this->add_log( $item, 'edit', $old_data );
 
         $request->set_param( 'context', 'edit' );
         $response = $this->prepare_item_for_response( $result, $request );
@@ -347,7 +351,11 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
             return new WP_Error( 'rest_ledger_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
 
+        $item = erp_acct_get_ledger( $id );
+
         $wpdb->delete( "{$wpdb->prefix}erp_acct_ledgers", [ 'id' => $id ] );
+
+        $this->add_log( $item, 'delete' );
 
         return new WP_REST_Response( true, 204 );
     }
@@ -518,21 +526,34 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
     }
 
     /**
-     * Log when ledger is created
+     * Log for ledger related actions
      *
-     * @param $data
-     * @param $action
+     * @param array $data
+     * @param string $action
+     * @param array $old_data
+     *
+     * @return void
      */
-    public function add_log( $data, $action ) {
-        $data = (array) $data;
+    public function add_log( $data, $action, $old_data = [] ) {
+        switch ( $action ) {
+            case 'edit':
+                $operation = 'updated';
+                $changes   = ! empty( $old_data ) ? erp_get_array_diff( $data, (array) $old_data ) : [];
+                break;
+            case 'delete':
+                $operation = 'deleted';
+                break;
+            default:
+                $operation = 'created';
+        }
+
         erp_log()->add(
             [
                 'component'     => 'Accounting',
                 'sub_component' => __( 'Ledger Account', 'erp' ),
-                'old_value'     => '',
-                'new_value'     => '',
-                // translators: %1$s: name, %2$s: id
-                'message'       => sprintf( __( 'A ledger account named %1$s has been created for %2$s', 'erp' ), $data['name'], erp_acct_get_people_name_by_people_id( $data['people_id'] ) ),
+                'old_value'     => isset( $changes['old_value'] ) ? $changes['old_value'] : '',
+                'new_value'     => isset( $changes['new_value'] ) ? $changes['new_value'] : '',
+                'message'       => sprintf( __( 'A ledger account named %1$s has been %2$s for %3$s', 'erp' ), $data['name'], $operation, erp_acct_get_people_name_by_people_id( $data['people_id'] ) ),
                 'changetype'    => $action,
                 'created_by'    => get_current_user_id(),
             ]
