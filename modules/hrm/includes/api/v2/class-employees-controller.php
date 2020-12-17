@@ -6,6 +6,7 @@ use Exception;
 use WeDevs\ERP\HRM\Employee;
 use WeDevs\ERP\HRM\Models\Department;
 use WeDevs\ERP\HRM\Models\Designation;
+use WeDevs\ERP\Framework\Traits\Api;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -13,6 +14,8 @@ use WP_REST_Server;
 use WP_REST_Controller;
 
 class Employees_Controller extends WP_REST_Controller {
+
+    use Api;
 
     /**
      * Endpoint namespace.
@@ -52,14 +55,18 @@ class Employees_Controller extends WP_REST_Controller {
      */
     public function get_employees( WP_REST_Request $request ) {
         $args = [
-            'number'      => $request['per_page'],
-            'offset'      => ( $request['per_page'] * ( $request['page'] - 1 ) ),
-            'status'      => ( $request['status'] ) ? $request['status'] : 'active',
-            'department'  => ( $request['department'] ) ? $request['department'] : '-1',
-            'designation' => ( $request['designation'] ) ? $request['designation'] : '-1',
-            'location'    => ( $request['location'] ) ? $request['location'] : '-1',
-            'type'        => ( $request['type'] ) ? $request['type'] : '-1',
-            's'           => ( $request['s'] ) ? $request['s'] : '',
+            'number'            => $request['per_page'],
+            'offset'            => ( $request['per_page'] * ( $request['page'] - 1 ) ),
+            'status'            => ( $request['status'] ) ? $request['status'] : 'active',
+            'department'        => ( $request['department'] ) ? $request['department'] : '-1',
+            'designation'       => ( $request['designation'] ) ? $request['designation'] : '-1',
+            'location'          => ( $request['location'] ) ? $request['location'] : '-1',
+            'gender'            => ( $request['gender'] ) ? $request['gender'] : '-1',
+            'marital_status'    => ( $request['marital_status'] ) ? $request['marital_status'] : '-1',
+            'orderby'           => ( $request['orderby'] ) ? $request['orderby'] : 'hiring_date',
+            'order'             => ( $request['order'] ) ? $request['order'] : 'DESC',
+            'type'              => ( $request['type'] ) ? $request['type'] : '-1',
+            's'                 => ( $request['s'] ) ? $request['s'] : '',
         ];
 
         $items = erp_hr_get_employees( $args );
@@ -76,51 +83,6 @@ class Employees_Controller extends WP_REST_Controller {
         }
         $response = rest_ensure_response( $formatted_items );
         $response = $this->format_collection_response( $response, $request, (int) $total_items );
-
-        return $response;
-    }
-
-    /**
-     * Format item's collection for response
-     *
-     * @param object $response
-     * @param object $request
-     * @param array  $items
-     * @param int    $total_items
-     *
-     * @return object
-     */
-    public function format_collection_response( $response, $request, $total_items ) {
-        if ( $total_items === 0 ) {
-            return $response;
-        }
-
-        // Store pagation values for headers then unset for count query.
-        $per_page = (int) ( ! empty( $request['per_page'] ) ? $request['per_page'] : 20 );
-        $page     = (int) ( ! empty( $request['page'] ) ? $request['page'] : 1 );
-
-        $response->header( 'X-WP-Total', (int) $total_items );
-
-        $max_pages = ceil( $total_items / $per_page );
-
-        $response->header( 'X-WP-TotalPages', (int) $max_pages );
-        $base = add_query_arg( $request->get_query_params(), rest_url( sprintf( '/%s/%s', $this->namespace, $this->rest_base ) ) );
-
-        if ( $page > 1 ) {
-            $prev_page = $page - 1;
-
-            if ( $prev_page > $max_pages ) {
-                $prev_page = $max_pages;
-            }
-            $prev_link = add_query_arg( 'page', $prev_page, $base );
-            $response->link_header( 'prev', $prev_link );
-        }
-
-        if ( $max_pages > $page ) {
-            $next_page = $page + 1;
-            $next_link = add_query_arg( 'page', $next_page, $base );
-            $response->link_header( 'next', $next_link );
-        }
 
         return $response;
     }
@@ -375,7 +337,7 @@ class Employees_Controller extends WP_REST_Controller {
     /**
      * Get the query params for collections.
      *
-     * @return array
+     * @return array Query parameters for the collection.
      */
     public function get_collection_params() {
         return [
@@ -404,68 +366,5 @@ class Employees_Controller extends WP_REST_Controller {
                 'validate_callback' => 'rest_validate_request_arg',
             ],
         ];
-    }
-
-    /**
-     * Adds multiple links to the response.
-     *
-     * @param object $response
-     * @param object $item
-     * @param array  $additional_fields
-     *
-     * @return object
-     */
-    protected function add_links( $response, $item, $additional_fields = [] ) {
-        $response->data['_links'] = $this->prepare_links( $item, $additional_fields );
-
-        return $response;
-    }
-
-    /**
-     * Prepare links for the request.
-     *
-     * @param object $item
-     * @param string $namespace
-     * @param string $rest_base
-     *
-     * @return array links for the given user
-     */
-    protected function prepare_links( $item, $additional_fields = [] ) {
-        if ( empty( $additional_fields ) ) {
-            $links = [
-                'self' => [
-                    'href' => rest_url( sprintf( '%s/%s/%d', $this->namespace, $this->rest_base, $item->id ) ),
-                ],
-                'collection' => [
-                    'href' => rest_url( sprintf( '%s/%s', $this->namespace, $this->rest_base ) ),
-                ],
-            ];
-
-            return $links;
-        }
-
-        $item = (array) $item;
-
-        $namespace = $additional_fields['namespace'];
-        $rest_base = $additional_fields['rest_base'];
-
-        if ( empty( $item['id'] ) && isset( $additional_fields['id'] ) ) {
-            $item['id'] = $additional_fields['id'];
-        }
-
-        if ( empty( $item['id'] ) && empty( $additional_fields['id'] ) ) {
-            $item['id'] = '';
-        }
-
-        $links = [
-            'self' => [
-                'href' => rest_url( sprintf( '%s/%s/%d', $namespace, $rest_base, $item['id'] ) ),
-            ],
-            'collection' => [
-                'href' => rest_url( sprintf( '%s/%s', $namespace, $rest_base ) ),
-            ],
-        ];
-
-        return $links;
     }
 }
