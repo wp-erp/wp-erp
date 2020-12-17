@@ -3875,25 +3875,6 @@ function erp_is_valid_currency_amount( $amount ) {
 }
 
 /**
- * Search an array recursively and extract all the key-value pair in a linear form
- *
- * @since 1.7.2
- *
- * @param array $in_array
- *
- * @return array
- */
-function erp_extract_recusrsive_array( $in_array ) {
-    $out_array = [];
-
-    array_walk_recursive( $in_array, function( $value, $key ) use ( &$out_array ) {
-        $out_array[ $key ] = $value;
-    }, $out_array );
-
-    return $out_array;
-}
-
-/**
  * Get different array from two array
  *
  * @since 1.7.2

@@ -5,7 +5,7 @@ namespace WeDevs\ERP\HRM;
 use WeDevs\ERP\Framework\Traits\Hooker;
 use WeDevs\ERP\HRM\Models\Dependents;
 use WeDevs\ERP\HRM\Models\Designation;
-use WeDevs\ERP\HRM\Models\employee;
+use WeDevs\ERP\HRM\Models\Employee;
 use WeDevs\ERP\HRM\Models\Leave_Request;
 
 /**
@@ -142,8 +142,8 @@ class Hr_Log {
         }
 
         $employee = new \WeDevs\ERP\HRM\Employee( intval( $emp_id ) );
-        $old_data = erp_extract_recusrsive_array( $fields );
-        $new_data = erp_extract_recusrsive_array( $employee->get_data() );
+        $old_data = erp_array_flatten( $fields );
+        $new_data = erp_array_flatten( $employee->get_data() );
         $changes  = erp_get_array_diff( $new_data, $old_data, true );
 
         if ( empty( $changes['old_value'] ) && empty( $changes['new_value'] ) ) {
@@ -157,7 +157,7 @@ class Hr_Log {
                         $employee            = new \WeDevs\ERP\HRM\Employee( intval( $key['reporting_to'] ) );
                         $key['reporting_to'] = $employee->get_full_name();
                     } else {
-                        $key['department'] = __( 'No Manager', 'erp' );
+                        $key['reporting_to'] = __( 'No Manager', 'erp' );
                     }
                 }
 
