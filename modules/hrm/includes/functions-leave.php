@@ -230,10 +230,13 @@ function erp_hr_leave_insert_policy( $args = [] ) {
         // won't update days
         unset( $extra['days'] );
 
+        $old_policy = \WeDevs\ERP\HRM\Models\Leave_Policy::find( $args['id'] )->toArray();
+
         $leave_policy = Leave_Policy::find( $args['id'] );
         $leave_policy->update( $extra );
 
         do_action( 'erp_hr_leave_update_policy', $args['id'] );
+        do_action( 'erp_hr_leave_before_policy_updated', $args['id'], $old_policy );
 
         return $leave_policy->id;
     }
@@ -1167,8 +1170,8 @@ function erp_hr_leave_insert_request( $args = [] ) {
     }
 
     // check start_date and end_date are in the same f_year
-    $f_year_start = erp_current_datetime()->setTimestamp( $entitlement->financial_year->start_date )->format( 'Y-m-d' );
-    $f_year_end   = erp_current_datetime()->setTimestamp( $entitlement->financial_year->end_date )->format( 'Y-m-d' );
+    $f_year_start = erp_current_datetime()->setTimestamp( $entitlement->financial_year->start_date )->setTime( 0, 0, 0 )->format( 'Y-m-d H:i:s' );
+    $f_year_end   = erp_current_datetime()->setTimestamp( $entitlement->financial_year->end_date )->setTime( 23, 59,59 )->format( 'Y-m-d H:i:s' );
 
     if ( ( $args['start_date'] < $f_year_start || $args['start_date'] > $f_year_end ) || ( $args['end_date'] < $f_year_start || $args['end_date'] > $f_year_end )  ) {
         return new WP_Error( 'invalid-dates', sprintf( esc_attr__( 'Invalid leave duration. Please apply between %s and %s.', 'erp' ), erp_format_date( $f_year_start ), erp_format_date( $f_year_end ) ) );
@@ -1254,10 +1257,11 @@ function erp_hr_get_leave_request( $request_id ) {
  * @since 1.6.0
  *
  * @param array $args
+ * @param boolean $cached
  *
  * @return array
  */
-function erp_hr_get_leave_requests( $args = [] ) {
+function erp_hr_get_leave_requests( $args = [], $cached = true ) {
     global $wpdb;
 
     $defaults = [
@@ -1319,7 +1323,7 @@ function erp_hr_get_leave_requests( $args = [] ) {
     $cache_key = 'erp_hr_leave_requests_' . md5( serialize( $args ) );
     $requests  = wp_cache_get( $cache_key, 'erp' );
 
-    if ( false !== $requests ) {
+    if ( false !== $requests && true === $cached ) {
         return $requests;
     }
 
@@ -1590,7 +1594,8 @@ function erp_hr_leave_request_update_status( $request_id, $status, $comments = '
         return new WP_Error( 'no-permission', esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
     }
 
-    $request = Leave_Request::find( $request_id );
+    $request  = Leave_Request::find( $request_id );
+    $old_data = $request->toArray();
 
     if ( empty( $request ) ) {
         return new WP_Error( 'no-request-found', __( 'Invalid leave request', 'erp' ) );
@@ -1835,6 +1840,7 @@ function erp_hr_leave_request_update_status( $request_id, $status, $comments = '
     $status = ( $status == 1 ) ? 'approved' : ( $status == 2 ? 'pending' : 'reject' );
 
     do_action( "erp_hr_leave_request_{$status}", $request_id, $request );
+    do_action( 'erp_hr_leave_update', $request_id, $old_data );
 
     return $request;
 }

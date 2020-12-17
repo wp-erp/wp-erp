@@ -297,6 +297,8 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
             return new WP_Error( 'rest_vendor_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 400 ] );
         }
 
+        $old_data = (array) $item;
+
         $item = $this->prepare_item_for_database( $request );
 
         $id = erp_insert_people( $item );
@@ -304,7 +306,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
         $vendor       = (array) erp_get_people( $id );
         $vendor['id'] = $id;
 
-        $this->add_log( $vendor, 'add' );
+        $this->add_log( (array) $item, 'edit', $vendor );
 
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
@@ -341,7 +343,11 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
             'type' => 'vendor',
         ];
 
+        $vendor = (array) erp_get_people( (int) $id );
+
         erp_delete_people( $data );
+
+        $this->add_log( $vendor, 'delete' );
 
         return new WP_REST_Response( true, 204 );
     }
@@ -370,9 +376,15 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
 
                 wp_send_json_error( $error );
             }
+
+            $vendors[] = (array) erp_get_people( (int) $id );
         }
 
         erp_delete_people( $data );
+
+        foreach ( $vendors as $vendor ) {
+            $this->add_log( $vendor, 'delete' );
+        }
 
         return new WP_REST_Response( true, 204 );
     }
@@ -456,19 +468,35 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
     }
 
     /**
-     * Log when vendor insert or update
+     * Log for vendor related actions
      *
-     * @param $data
-     * @param $action
+     * @param array $data
+     * @param string $action
+     * @param array $old_data
+     *
+     * @return void
      */
-    public function add_log( $data, $action ) {
+    public function add_log( $data, $action, $old_data = [] ) {
+        switch ( $action ) {
+            case 'edit':
+                $operation = 'updated';
+                unset( $data['photo_id'], $data['raw_data'], $data['type'] );
+                $changes   = ! empty( $old_data ) ? erp_get_array_diff( $data, $old_data ) : [];
+                break;
+            case 'delete':
+                $operation = 'deleted';
+                break;
+            default:
+                $operation = 'created';
+        }
+
         erp_log()->add(
             [
                 'component'     => 'Accounting',
                 'sub_component' => __( 'Vendor', 'erp' ),
-                'old_value'     => '',
-                'new_value'     => '',
-                'message'       => $data['first_name'] . ' ' . $data['last_name'] . __( ' vendor has been created', 'erp' ),
+                'old_value'     => isset( $changes['old_value'] ) ? $changes['old_value'] : '',
+                'new_value'     => isset( $changes['new_value'] ) ? $changes['new_value'] : '',
+                'message'       => '<strong>' . $data['first_name'] . ' ' . $data['last_name'] . '</strong>' . sprintf( __( ' vendor has been %s', 'erp' ), $operation ),
                 'changetype'    => $action,
                 'created_by'    => get_current_user_id(),
             ]

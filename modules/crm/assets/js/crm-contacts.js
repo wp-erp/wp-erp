@@ -1137,7 +1137,7 @@
                         attrTitle: __('Edit this contact', 'erp'),
                         class: 'edit',
                         action: 'edit',
-                        showIf: 'checkPermission'
+                        showIf: 'whenNotTrased'
                     },
                     {
                         title: __('View', 'erp'),

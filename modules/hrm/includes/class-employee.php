@@ -442,9 +442,12 @@ class Employee {
         //if user_id and erp_user is found then load user and update data
         if ( $wp_user && $erp_user ) {
             $this->load_employee( absint( $user_id ) );
-            do_action( 'erp_hr_employee_new', $user_id, $data );
+            $old_data = $this->get_data();
+            $updated  = $this->update_employee( $data );
 
-            return $this->update_employee( $data );
+            do_action( 'erp_hr_employee_update', $user_id, $old_data );
+
+            return $updated;
         }
 
         if ( ! $erp_user ) {
@@ -513,7 +516,7 @@ class Employee {
     public function update_employee( $data = [] ) {
         $restricted = [
             'user_id',
-            'user_url',
+            // 'user_url',
             'id',
             'ID',
         ];
@@ -564,8 +567,6 @@ class Employee {
         if ( empty( $this->changes ) ) {
             return $this;
         }
-
-        do_action( 'erp_hr_employee_update', $this->user_id, wp_parse_args( $this->data, $this->changes ) );
 
         if ( ! empty( $this->changes['work'] ) ) {
             $this->erp_user->update( $this->changes['work'] );
@@ -1608,6 +1609,7 @@ class Employee {
      * @param array $args
      *
      * @since 1.6.7 Added employee status and type seperately
+     * @since 1.7.2 Added action erp_hr_employee_after_update_status
      *
      * @return array|WP_Error
      */
@@ -1647,6 +1649,8 @@ class Employee {
             $this->erp_user->update( [
                 'status' => $args['category'],
             ] );
+
+            do_action( 'erp_hr_employee_after_update_status', $this->erp_user->user_id, $args['category'] );
         }
 
         $history = $this->get_erp_user()->histories()->updateOrCreate( [ 'id' => $args['id'] ], [

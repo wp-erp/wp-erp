@@ -231,7 +231,11 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $pay_purchase_data['amount'] = array_sum( $item_total );
 
+        $old_data = erp_acct_get_pay_purchase( $id );
+
         $pay_purchase_id = erp_acct_update_pay_purchase( $pay_purchase_data, $id );
+
+        $this->add_log( $pay_purchase_data, 'edit', $old_data );
 
         $response = rest_ensure_response( $pay_purchase_data );
         $response = $this->format_collection_response( $response, $request, 1 );
@@ -253,7 +257,11 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
             return new WP_Error( 'rest_pay_purchase_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
 
+        $item = erp_acct_get_pay_purchase( $id );
+
         erp_acct_void_pay_purchase( $id );
+
+        $this->add_log( $item, 'delete' );
 
         return new WP_REST_Response( true, 204 );
     }
@@ -261,18 +269,30 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Log when purchase payment is created
      *
-     * @param $data
-     * @param $action
+     * @param array $data
+     * @param string $action
+     * @param array $old_data
      */
-    public function add_log( $data, $action ) {
+    public function add_log( $data, $action, $old_data = [] ) {
+        switch ( $action ) {
+            case 'edit':
+                $operation = 'updated';
+                $changes   = ! empty( $old_data ) ? erp_get_array_diff( $data, $old_data ) : [];
+                break;
+            case 'delete':
+                $operation = 'deleted';
+                break;
+            default:
+                $operation = 'created';
+        }
+
         erp_log()->add(
             [
                 'component'     => 'Accounting',
                 'sub_component' => __( 'Pay Purchase', 'erp' ),
-                'old_value'     => '',
-                'new_value'     => '',
-                // translators: %1$s: amount, %2$s: id
-                'message'       => sprintf( __( 'A purchase payment of %1$s has been created for %2$s', 'erp' ), $data['amount'], erp_acct_get_people_name_by_people_id( $data['people_id'] ) ),
+                'old_value'     => isset( $changes['old_value'] ) ? $changes['old_value'] : '',
+                'new_value'     => isset( $changes['new_value'] ) ? $changes['new_value'] : '',
+                'message'       => sprintf( __( 'A purchase payment of %1$s has been %2$s for %3$s', 'erp' ), $data['amount'], $operation, erp_acct_get_people_name_by_people_id( $data['people_id'] ) ),
                 'changetype'    => $action,
                 'created_by'    => get_current_user_id(),
             ]

@@ -849,11 +849,15 @@ class Ajax_Handler {
             $args['category'] = sanitize_text_field( wp_unslash( $_POST['status'] ) );
         }
 
-        $created = $employee->update_employment_status( $args );
+        $old_data = $employee->get_data();
+        $created  = $employee->update_employment_status( $args );
 
         if ( is_wp_error( $created ) ) {
             $this->send_error( $created->get_error_message() );
         }
+
+        do_action( 'erp_hr_employee_update', $user_id, $old_data );
+
         $this->send_success();
     }
 
@@ -881,7 +885,8 @@ class Ajax_Handler {
             $this->send_error( __( 'No employee found', 'erp' ) );
         }
 
-        $created = $employee->update_compensation( [
+        $old_data = $employee->get_data();
+        $created  = $employee->update_compensation( [
             'comment'  => ( isset( $_POST['comment'] ) ) ? sanitize_text_field( wp_unslash( $_POST['comment'] ) ) : '',
             'pay_type' => ( isset( $_POST['pay_type'] ) ) ? sanitize_text_field( wp_unslash( $_POST['pay_type'] ) ) : '',
             'reason'   => ( isset( $_POST['change-reason'] ) ) ? sanitize_text_field( wp_unslash( $_POST['change-reason'] ) ) : '',
@@ -892,6 +897,9 @@ class Ajax_Handler {
         if ( is_wp_error( $created ) ) {
             $this->send_error( $created->get_error_message() );
         }
+
+        do_action( 'erp_hr_employee_update', $user_id, $old_data );
+
         $this->send_success();
     }
 
@@ -953,7 +961,8 @@ class Ajax_Handler {
             $this->send_error( __( 'No employee found', 'erp' ) );
         }
 
-        $created = $employee->update_job_info( [
+        $old_data = $employee->get_data();
+        $created  = $employee->update_job_info( [
             'date'         => ( isset( $_POST['date'] ) ) ? sanitize_text_field( wp_unslash( $_POST['date'] ) ) : '',
             'designation'  => ( isset( $_POST['designation'] ) ) ? sanitize_text_field( wp_unslash( $_POST['designation'] ) ) : '',
             'department'   => ( isset( $_POST['department'] ) ) ? sanitize_text_field( wp_unslash( $_POST['department'] ) ) : '',
@@ -964,6 +973,9 @@ class Ajax_Handler {
         if ( is_wp_error( $created ) ) {
             $this->send_error( $created->get_error_message() );
         }
+
+        do_action( 'erp_hr_employee_update', $user_id, $old_data );
+
         $this->send_success();
     }
 
@@ -1978,7 +1990,7 @@ class Ajax_Handler {
             'start_date' => $start->getTimestamp(),
             'end_date'   => $end->getTimestamp(),
         );
-        $leave_requests = erp_hr_get_leave_requests( $args );
+        $leave_requests = erp_hr_get_leave_requests( $args, false );
         $leave_requests = $leave_requests['data'];
 
         $start_date = $start->format( 'Y-m-d H:i:s' );

@@ -323,11 +323,13 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields['namespace']  = $this->namespace;
         $additional_fields['rest_base']  = $this->rest_base;
 
+        $old_data = erp_acct_get_invoice( $id );
+
         $invoice_id = erp_acct_update_invoice( $invoice_data, $id );
 
-        $invoice_data['id'] = $invoice_id;
+        $this->add_log( $invoice_data, 'edit', $old_data );
 
-        $this->add_log( $invoice_data, 'update' );
+        $invoice_data['id'] = $invoice_id;
 
         $invoice_data = $this->prepare_item_for_response( $invoice_data, $request, $additional_fields );
 
@@ -440,20 +442,34 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
     }
 
     /**
-     * Log when invoice is created
+     * Log for invoice related actions
      *
-     * @param $data
-     * @param $action
+     * @param array $data
+     * @param string $action
+     * @param array $old_data
+     *
+     * @return void
      */
-    public function add_log( $data, $action ) {
+    public function add_log( $data, $action, $old_data = [] ) {
+        switch ( $action ) {
+            case 'edit':
+                $operation = 'updated';
+                $changes   = ! empty( $old_data ) ? erp_get_array_diff( $data, (array) $old_data ) : [];
+                break;
+            case 'delete':
+                $operation = 'deleted';
+                break;
+            default:
+                $operation = 'created';
+        }
+
         erp_log()->add(
             [
                 'component'     => 'Accounting',
                 'sub_component' => __( 'Invoice', 'erp' ),
-                'old_value'     => '',
-                'new_value'     => '',
-                // translators: %1$s: amount, %2$s: id
-                'message'       => sprintf( __( 'An invoice of %1$s has been created for %2$s', 'erp' ), $data['amount'], erp_acct_get_people_name_by_people_id( $data['customer_id'] ) ),
+                'old_value'     => isset( $changes['old_value'] ) ? $changes['old_value'] : '',
+                'new_value'     => isset( $changes['new_value'] ) ? $changes['new_value'] : '',
+                'message'       => sprintf( __( 'An invoice of %1$s has been %2$s for %3$s', 'erp' ), $data['amount'], $operation, erp_acct_get_people_name_by_people_id( $data['customer_id'] ) ),
                 'changetype'    => $action,
                 'created_by'    => get_current_user_id(),
             ]
