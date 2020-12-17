@@ -438,11 +438,11 @@ class Employee {
         $work['pay_type']    = $pay_type;
 
         $erp_user = \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $user_id )->first();
-        $old_data = $this->get_data();
 
         //if user_id and erp_user is found then load user and update data
         if ( $wp_user && $erp_user ) {
             $this->load_employee( absint( $user_id ) );
+            $old_data = $this->get_data();
             $updated  = $this->update_employee( $data );
 
             do_action( 'erp_hr_employee_update', $user_id, $old_data );
@@ -516,7 +516,7 @@ class Employee {
     public function update_employee( $data = [] ) {
         $restricted = [
             'user_id',
-            'user_url',
+            // 'user_url',
             'id',
             'ID',
         ];
