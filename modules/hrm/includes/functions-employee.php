@@ -1089,9 +1089,9 @@ function erp_hr_get_contractual_employee() {
  * @return object collection of fields;
  */
 function get_employee_additional_fields( $fields, $id, $user ) {
-    $user_id                    = $fields['user_id'];
-    $fields['work']['end_date'] = get_user_meta( $user_id, 'end_date' );
-    $fields['personal']['user_url'] = get_user_meta( $user_id, 'user_url' );
+    $user_id                        = $fields['user_id'];
+    $fields['work']['end_date']     = get_user_meta( $user_id, 'end_date' );
+    $fields['personal']['user_url'] = get_user_meta( $user_id, 'user_url' ) ? get_user_meta( $user_id, 'user_url' ) : '';
 
     return $fields;
 }
