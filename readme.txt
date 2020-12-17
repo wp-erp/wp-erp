@@ -5,7 +5,7 @@ Tags: business manager, erp, accounting, crm, hr, project manager, small busines
 Requires at least: 4.4
 Tested up to: 5.6
 Requires PHP: 5.6
-Stable tag: 1.7.1
+Stable tag: 1.7.2
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -279,6 +279,16 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+
+= v1.7.2 -> December 17, 2020 =
+--------------------------
+- [fix] Fixed searching employee was not working in other languages except english
+- [fix] Fixed type checking issue while accessing contact/company single page
+- [fix] Fixed leave creating problem for 31st December
+- [fix] Fixed user given website is not saved while creating or updating employee
+- [new] Added restriction for trashed contact/company. From now on, trashed contact/company cannot be edited or made WP user.
+- [update] Updated audit logger to log all activities for CRM, HRM, and Accounting
+- [new] Added email marketing step for weMail setup in installation wizard
 
 = v1.7.1 -> December 09, 2020 =
 --------------------------
