@@ -1084,12 +1084,14 @@ function erp_hr_get_contractual_employee() {
  * Get Contractual Employees
  *
  * @since 1.5.6 Add Closing date for employee
+ * @since 1.7.2 Added user url for employee
  *
  * @return object collection of fields;
  */
 function get_employee_additional_fields( $fields, $id, $user ) {
     $user_id                    = $fields['user_id'];
     $fields['work']['end_date'] = get_user_meta( $user_id, 'end_date' );
+    $fields['personal']['user_url'] = get_user_meta( $user_id, 'user_url' );
 
     return $fields;
 }
