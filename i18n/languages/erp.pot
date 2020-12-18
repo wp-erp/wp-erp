@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP ERP 1.7.2\n"
+"Project-Id-Version: WP ERP 1.7.3\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-erp\n"
-"POT-Creation-Date: 2020-12-17 08:24:55+00:00\n"
+"POT-Creation-Date: 2020-12-18 09:07:59+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1163,8 +1163,8 @@ msgstr ""
 #: build/modules/crm/assets/js/crm-contacts.js:275
 #: build/modules/crm/includes/functions-customer.php:1602
 #: build/modules/crm/includes/functions-customer.php:3013
-#: build/modules/crm/views/company/single.php:87
-#: build/modules/crm/views/contact/single.php:89
+#: build/modules/crm/views/company/single.php:90
+#: build/modules/crm/views/contact/single.php:92
 #: build/modules/hrm/views/js-templates/new-employee.php:359
 #: includes/admin/views/company-editor.php:123
 #: modules/accounting/assets/js/admin.js:14453
@@ -1183,7 +1183,7 @@ msgstr ""
 
 #: build/i18n/languages/erp.php:12
 #: build/modules/crm/assets/js/crm-contacts.js:279
-#: build/modules/crm/views/contact/single.php:99
+#: build/modules/crm/views/contact/single.php:102
 #: modules/crm/assets/js/crm-contacts.js:279
 #: modules/crm/views/contact/single.php:102
 msgid "Life stage"
@@ -1374,7 +1374,7 @@ msgstr ""
 
 #: build/i18n/languages/erp.php:26 build/includes/class-scripts.php:168
 #: build/modules/crm/assets/js/crm-contacts.js:733
-#: build/modules/crm/crm.php:188
+#: build/modules/crm/crm.php:189
 #: build/modules/crm/views/edit-subscription-form.php:29
 #: build/modules/hrm/hrm.php:178 includes/class-scripts.php:168
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:10
@@ -1392,7 +1392,7 @@ msgstr ""
 
 #: build/i18n/languages/erp.php:27
 #: build/modules/crm/assets/js/crm-contacts.js:734
-#: build/modules/crm/crm.php:189
+#: build/modules/crm/crm.php:190
 #: modules/accounting/assets/src/admin/components/journal/JournalCreate.vue:111
 #: modules/accounting/assets/src/admin/components/opening-balance/OpeningBalance.vue:284
 #: modules/accounting/assets/src/admin/components/product-category/ProductCategory.vue:24
@@ -1408,8 +1408,8 @@ msgstr ""
 
 #: build/i18n/languages/erp.php:28
 #: build/modules/crm/assets/js/crm-contacts.js:735
-#: build/modules/crm/views/company/single.php:151
-#: build/modules/crm/views/contact/single.php:157
+#: build/modules/crm/views/company/single.php:154
+#: build/modules/crm/views/contact/single.php:160
 #: build/modules/crm/views/js-templates/customer-email-note.php:71
 #: build/modules/crm/views/js-templates/customer-log-activity.php:52
 #: build/modules/crm/views/js-templates/customer-newnote.php:19
@@ -1544,7 +1544,7 @@ msgstr ""
 
 #: build/i18n/languages/erp.php:39
 #: build/modules/crm/assets/js/crm-contacts.js:1137
-#: build/modules/crm/views/contact/single.php:24
+#: build/modules/crm/views/contact/single.php:26
 #: modules/crm/assets/js/crm-contacts.js:1137
 #: modules/crm/views/contact/single.php:26
 msgid "Edit this contact"
@@ -1748,10 +1748,10 @@ msgstr ""
 #: build/modules/accounting/includes/views/settings/opening-balance.php:43
 #: build/modules/crm/includes/class-contact-group-list-table.php:86
 #: build/modules/crm/includes/class-contact-subscriber-list-table.php:169
-#: build/modules/crm/views/company/single.php:86
+#: build/modules/crm/views/company/single.php:89
 #: build/modules/crm/views/js-templates/new-contact-group.php:5
 #: build/modules/crm/views/js-templates/new-save-replies.php:5
-#: build/modules/hrm/includes/class-employee.php:1378
+#: build/modules/hrm/includes/class-employee.php:1379
 #: build/modules/hrm/views/employee/tab-general.php:217
 #: build/modules/hrm/views/js-templates/dependents.php:5
 #: build/modules/hrm/views/reporting/headcount.php:151
@@ -1842,7 +1842,7 @@ msgid "Actions"
 msgstr ""
 
 #: build/i18n/languages/erp.php:67
-#: build/modules/accounting/api/class-rest-api-customers.php:446
+#: build/modules/accounting/api/class-rest-api-customers.php:472
 #: build/modules/crm/includes/functions-customer.php:193
 #: build/modules/crm/includes/functions-customer.php:220
 #: modules/accounting/api/class-rest-api-customers.php:472
@@ -1858,7 +1858,7 @@ msgid "Customer"
 msgstr ""
 
 #: build/i18n/languages/erp.php:68
-#: build/modules/accounting/api/class-rest-api-vendors.php:468
+#: build/modules/accounting/api/class-rest-api-vendors.php:496
 #: modules/accounting/api/class-rest-api-vendors.php:496
 #: modules/accounting/assets/js/admin.js:14497
 #: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseSingle.vue:94
@@ -1890,6 +1890,7 @@ msgid "Vendors"
 msgstr ""
 
 #: build/i18n/languages/erp.php:71
+#: build/modules/accounting/api/class-rest-api-products.php:296
 #: build/modules/accounting/includes/views/transactions/invoice-readonly.php:82
 #: modules/accounting/api/class-rest-api-products.php:296
 #: modules/accounting/assets/js/admin.js:15069
@@ -2017,7 +2018,7 @@ msgid "Create Invoice"
 msgstr ""
 
 #: build/i18n/languages/erp.php:79
-#: build/modules/accounting/api/class-rest-api-rec-payments.php:276
+#: build/modules/accounting/api/class-rest-api-rec-payments.php:294
 #: modules/accounting/api/class-rest-api-rec-payments.php:294
 #: modules/accounting/assets/js/admin.js:25554
 #: modules/accounting/assets/js/admin.js:25968
@@ -2212,7 +2213,7 @@ msgid "Create Bill"
 msgstr ""
 
 #: build/i18n/languages/erp.php:94
-#: build/modules/accounting/api/class-rest-api-pay-bills.php:277
+#: build/modules/accounting/api/class-rest-api-pay-bills.php:300
 #: modules/accounting/api/class-rest-api-pay-bills.php:300
 #: modules/accounting/assets/js/admin.js:26413
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillSingle.vue:5
@@ -2255,7 +2256,7 @@ msgid "Create Purchase"
 msgstr ""
 
 #: build/i18n/languages/erp.php:100
-#: build/modules/accounting/api/class-rest-api-pay-purchases.php:271
+#: build/modules/accounting/api/class-rest-api-pay-purchases.php:292
 #: modules/accounting/api/class-rest-api-pay-purchases.php:292
 #: modules/accounting/assets/js/admin.js:27352
 #: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseSingle.vue:5
@@ -2506,6 +2507,9 @@ msgid "Can I create products / services / product categoty?"
 msgstr ""
 
 #: build/i18n/languages/erp.php:137
+#: build/modules/accounting/api/class-rest-api-tax-agencies.php:358
+#: build/modules/accounting/api/class-rest-api-tax-cats.php:326
+#: build/modules/accounting/api/class-rest-api-tax-rate-names.php:317
 #: build/modules/accounting/includes/classes/class-admin.php:188
 #: build/modules/accounting/includes/views/transactions/invoice-readonly.php:113
 #: modules/accounting/api/class-rest-api-tax-agencies.php:358
@@ -2616,7 +2620,7 @@ msgid "Please complete these fields"
 msgstr ""
 
 #: build/i18n/languages/erp.php:154
-#: build/modules/accounting/api/class-rest-api-bills.php:389
+#: build/modules/accounting/api/class-rest-api-bills.php:405
 #: modules/accounting/api/class-rest-api-bills.php:405
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:8
 msgid "Bill"
@@ -2887,9 +2891,9 @@ msgid "Chart of Accounts"
 msgstr ""
 
 #: build/i18n/languages/erp.php:179
-#: build/includes/admin/class-setup-wizard.php:537
-#: build/includes/admin/class-setup-wizard.php:604
-#: build/modules/crm/crm.php:187 build/modules/hrm/views/departments.php:3
+#: build/includes/admin/class-setup-wizard.php:663
+#: build/includes/admin/class-setup-wizard.php:745
+#: build/modules/crm/crm.php:188 build/modules/hrm/views/departments.php:3
 #: build/modules/hrm/views/designation.php:3
 #: build/modules/hrm/views/employee/single.php:10
 #: build/modules/hrm/views/employee.php:9
@@ -3225,7 +3229,7 @@ msgid "Transaction Charge"
 msgstr ""
 
 #: build/i18n/languages/erp.php:220
-#: build/modules/accounting/api/class-rest-api-expenses.php:329
+#: build/modules/accounting/api/class-rest-api-expenses.php:347
 #: modules/accounting/api/class-rest-api-expenses.php:347
 #: modules/accounting/assets/src/admin/components/expense/ExpenseSingle.vue:5
 #: modules/accounting/assets/src/admin/components/expense/ExpenseSingle.vue:49
@@ -3584,7 +3588,7 @@ msgstr ""
 #: build/modules/crm/includes/class-subscription.php:177
 #: build/modules/crm/includes/functions-customer.php:1827
 #: build/modules/crm/includes/functions-customer.php:2993
-#: build/modules/crm/views/contact/single.php:85
+#: build/modules/crm/views/contact/single.php:88
 #: build/modules/crm/views/js-templates/new-customer.php:54
 #: build/modules/hrm/views/employee/tab-general.php:8
 #: build/modules/hrm/views/js-templates/new-employee.php:33
@@ -3606,7 +3610,7 @@ msgstr ""
 #: build/modules/crm/includes/class-subscription.php:183
 #: build/modules/crm/includes/functions-customer.php:1841
 #: build/modules/crm/includes/functions-customer.php:2998
-#: build/modules/crm/views/contact/single.php:86
+#: build/modules/crm/views/contact/single.php:89
 #: build/modules/crm/views/js-templates/new-customer.php:64
 #: build/modules/hrm/views/employee/tab-general.php:9
 #: build/modules/hrm/views/js-templates/new-employee.php:58
@@ -3634,8 +3638,8 @@ msgstr ""
 #: build/includes/admin/views/company-editor.php:156
 #: build/modules/crm/includes/functions-customer.php:1630
 #: build/modules/crm/includes/functions-customer.php:3023
-#: build/modules/crm/views/company/single.php:89
-#: build/modules/crm/views/contact/single.php:91
+#: build/modules/crm/views/company/single.php:92
+#: build/modules/crm/views/contact/single.php:94
 #: build/modules/crm/views/js-templates/new-customer.php:183
 #: build/modules/hrm/views/js-templates/new-employee.php:450
 #: includes/admin/views/company-editor.php:156
@@ -3658,8 +3662,8 @@ msgstr ""
 #: build/i18n/languages/erp.php:274
 #: build/includes/admin/views/company-editor.php:134
 #: build/modules/crm/includes/functions-customer.php:3028
-#: build/modules/crm/views/company/single.php:88
-#: build/modules/crm/views/contact/single.php:90
+#: build/modules/crm/views/company/single.php:91
+#: build/modules/crm/views/contact/single.php:93
 #: includes/admin/views/company-editor.php:134
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:77
 #: modules/accounting/assets/src/admin/components/userinfo/UserBasic.vue:34
@@ -3672,8 +3676,8 @@ msgstr ""
 #: build/i18n/languages/erp.php:275
 #: build/modules/crm/includes/functions-customer.php:1656
 #: build/modules/crm/includes/functions-customer.php:3033
-#: build/modules/crm/views/company/single.php:90
-#: build/modules/crm/views/contact/single.php:92
+#: build/modules/crm/views/company/single.php:93
+#: build/modules/crm/views/contact/single.php:95
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:81
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:82
 #: modules/crm/includes/functions-customer.php:1656
@@ -3686,8 +3690,8 @@ msgstr ""
 #: build/i18n/languages/erp.php:276
 #: build/modules/crm/includes/functions-customer.php:1670
 #: build/modules/crm/includes/functions-customer.php:3038
-#: build/modules/crm/views/company/single.php:91
-#: build/modules/crm/views/contact/single.php:93
+#: build/modules/crm/views/company/single.php:94
+#: build/modules/crm/views/contact/single.php:96
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:85
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:86
 #: modules/crm/includes/functions-customer.php:1670
@@ -3701,8 +3705,8 @@ msgstr ""
 #: build/includes/admin/views/company-editor.php:64
 #: build/includes/class-company.php:44
 #: build/modules/crm/includes/functions-customer.php:1644
-#: build/modules/crm/views/company/single.php:92
-#: build/modules/crm/views/contact/single.php:94
+#: build/modules/crm/views/company/single.php:95
+#: build/modules/crm/views/contact/single.php:97
 #: build/modules/crm/views/js-templates/new-customer.php:215
 #: build/modules/hrm/views/employee/tab-general.php:65
 #: build/modules/hrm/views/js-templates/new-employee.php:481
@@ -3728,8 +3732,8 @@ msgstr ""
 #: build/includes/admin/views/address.php:37
 #: build/includes/admin/views/company-editor.php:75
 #: build/modules/crm/includes/functions-customer.php:3043
-#: build/modules/crm/views/company/single.php:94
-#: build/modules/crm/views/contact/single.php:96
+#: build/modules/crm/views/company/single.php:97
+#: build/modules/crm/views/contact/single.php:99
 #: build/modules/crm/views/js-templates/new-customer.php:222
 #: build/modules/hrm/views/employee/tab-general.php:66
 #: build/modules/hrm/views/js-templates/new-employee.php:489
@@ -3800,8 +3804,8 @@ msgid "Parent Category"
 msgstr ""
 
 #: build/i18n/languages/erp.php:289
-#: build/modules/crm/views/company/single.php:178
-#: build/modules/crm/views/contact/single.php:183
+#: build/modules/crm/views/company/single.php:181
+#: build/modules/crm/views/contact/single.php:186
 #: modules/accounting/assets/src/admin/components/products/ProductModal.vue:8
 #: modules/crm/views/company/single.php:181
 #: modules/crm/views/contact/single.php:186
@@ -3869,7 +3873,7 @@ msgid "Add New Product"
 msgstr ""
 
 #: build/i18n/languages/erp.php:301
-#: build/modules/accounting/api/class-rest-api-purchases.php:349
+#: build/modules/accounting/api/class-rest-api-purchases.php:365
 #: modules/accounting/api/class-rest-api-purchases.php:365
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseSingle.vue:5
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseSingle.vue:49
@@ -3987,7 +3991,7 @@ msgid "Account No"
 msgstr ""
 
 #: build/i18n/languages/erp.php:323
-#: build/includes/admin/class-setup-wizard.php:264
+#: build/includes/admin/class-setup-wizard.php:279
 #: build/includes/framework/settings/general.php:56
 #: build/includes/framework/views/status-report.php:193
 #: includes/admin/class-setup-wizard.php:279
@@ -4088,16 +4092,16 @@ msgstr ""
 #: build/modules/hrm/includes/class-hr-log.php:768
 #: build/modules/hrm/includes/class-hr-log.php:773
 #: build/modules/hrm/includes/class-policy-list-table.php:85
-#: build/modules/hrm/includes/functions-employee.php:216
-#: build/modules/hrm/includes/functions-leave.php:796
-#: build/modules/hrm/includes/functions-leave.php:797
-#: build/modules/hrm/includes/functions-leave.php:798
+#: build/modules/hrm/includes/functions-employee.php:222
 #: build/modules/hrm/includes/functions-leave.php:799
 #: build/modules/hrm/includes/functions-leave.php:800
 #: build/modules/hrm/includes/functions-leave.php:801
-#: build/modules/hrm/includes/functions-leave.php:1902
-#: build/modules/hrm/includes/functions-leave.php:1926
-#: build/modules/hrm/includes/functions-leave.php:2723
+#: build/modules/hrm/includes/functions-leave.php:802
+#: build/modules/hrm/includes/functions-leave.php:803
+#: build/modules/hrm/includes/functions-leave.php:804
+#: build/modules/hrm/includes/functions-leave.php:1908
+#: build/modules/hrm/includes/functions-leave.php:1932
+#: build/modules/hrm/includes/functions-leave.php:2729
 #: build/modules/hrm/views/leave/leave-entitlements.php:124
 #: build/modules/hrm/views/leave/leave-entitlements.php:135
 #: build/modules/hrm/views/leave/new-policy.php:112
@@ -4168,6 +4172,7 @@ msgid "Component Name"
 msgstr ""
 
 #: build/i18n/languages/erp.php:344
+#: build/modules/accounting/api/class-rest-api-taxes.php:704
 #: modules/accounting/api/class-rest-api-taxes.php:704
 #: modules/accounting/assets/src/admin/components/tax/NewTaxRate.vue:44
 #: modules/accounting/assets/src/admin/components/tax/TaxRateLineAdd.vue:31
@@ -4218,7 +4223,7 @@ msgid "Is this tax default"
 msgstr ""
 
 #: build/i18n/languages/erp.php:353
-#: build/modules/accounting/api/class-rest-api-taxes.php:676
+#: build/modules/accounting/api/class-rest-api-taxes.php:707
 #: modules/accounting/api/class-rest-api-taxes.php:707
 #: modules/accounting/assets/src/admin/components/tax/PayTaxSingle.vue:5
 msgid "Tax Payment"
@@ -19461,7 +19466,7 @@ msgstr ""
 #: build/includes/admin/class-ajax.php:202
 #: build/includes/admin/class-ajax.php:250
 #: build/includes/admin/class-ajax.php:351
-#: build/modules/hrm/includes/class-ajax.php:1132
+#: build/modules/hrm/includes/class-ajax.php:1144
 #: includes/admin/class-ajax.php:202 includes/admin/class-ajax.php:250
 #: includes/admin/class-ajax.php:351 modules/hrm/includes/class-ajax.php:1144
 msgid "No email address provided"
@@ -19507,13 +19512,13 @@ msgstr ""
 
 #: build/includes/admin/class-ajax.php:561
 #: build/includes/class-promotion.php:107 includes/admin/class-ajax.php:561
-#: includes/class-promotion.php:107
+#: includes/class-promotion.php:91
 msgid "Invalid nonce"
 msgstr ""
 
 #: build/includes/admin/class-ajax.php:565
 #: build/includes/class-promotion.php:111 includes/admin/class-ajax.php:565
-#: includes/class-promotion.php:111
+#: includes/class-promotion.php:95
 msgid "You have no permission to do that"
 msgstr ""
 
@@ -19664,6 +19669,11 @@ msgid "Basic"
 msgstr ""
 
 #: build/includes/admin/class-setup-wizard.php:72
+#: includes/admin/class-setup-wizard.php:72
+msgid "E-Marketing"
+msgstr ""
+
+#: build/includes/admin/class-setup-wizard.php:77
 #: build/includes/admin/views/welcome-screen.php:14
 #: build/includes/framework/views/status-report.php:62
 #: build/modules/hrm/includes/admin/class-menu.php:58
@@ -19681,7 +19691,7 @@ msgstr ""
 msgid "Departments"
 msgstr ""
 
-#: build/includes/admin/class-setup-wizard.php:77
+#: build/includes/admin/class-setup-wizard.php:82
 #: build/includes/admin/views/welcome-screen.php:15
 #: build/includes/framework/views/status-report.php:67
 #: build/modules/hrm/includes/admin/class-menu.php:66
@@ -19695,44 +19705,44 @@ msgstr ""
 msgid "Designations"
 msgstr ""
 
-#: build/includes/admin/class-setup-wizard.php:82
+#: build/includes/admin/class-setup-wizard.php:87
 #: build/modules/hrm/includes/class-settings.php:65
 #: includes/admin/class-setup-wizard.php:87
 #: modules/hrm/includes/class-settings.php:65
 msgid "Work Days"
 msgstr ""
 
-#: build/includes/admin/class-setup-wizard.php:92
+#: build/includes/admin/class-setup-wizard.php:97
 #: includes/admin/class-setup-wizard.php:97
 msgid "Ready!"
 msgstr ""
 
-#: build/includes/admin/class-setup-wizard.php:135
+#: build/includes/admin/class-setup-wizard.php:140
 #: includes/admin/class-setup-wizard.php:140
 msgid "WP ERP &rsaquo; Setup Wizard"
 msgstr ""
 
-#: build/includes/admin/class-setup-wizard.php:151
+#: build/includes/admin/class-setup-wizard.php:156
 #: includes/admin/class-setup-wizard.php:156
 msgid "Return to the WordPress Dashboard"
 msgstr ""
 
-#: build/includes/admin/class-setup-wizard.php:191
+#: build/includes/admin/class-setup-wizard.php:201
 #: includes/admin/class-setup-wizard.php:201
 msgid "Continue"
 msgstr ""
 
-#: build/includes/admin/class-setup-wizard.php:192
+#: build/includes/admin/class-setup-wizard.php:202
 #: includes/admin/class-setup-wizard.php:202
 msgid "Skip this step"
 msgstr ""
 
-#: build/includes/admin/class-setup-wizard.php:203
+#: build/includes/admin/class-setup-wizard.php:213
 #: includes/admin/class-setup-wizard.php:213
 msgid "Welcome to WP ERP!"
 msgstr ""
 
-#: build/includes/admin/class-setup-wizard.php:204
+#: build/includes/admin/class-setup-wizard.php:214
 #: includes/admin/class-setup-wizard.php:214
 msgid ""
 "Thank you for choosing WP-ERP. An easier way to manage your company! This "
@@ -19740,7 +19750,7 @@ msgid ""
 "completely optional and shouldn’t take longer than three minutes.</strong>"
 msgstr ""
 
-#: build/includes/admin/class-setup-wizard.php:205
+#: build/includes/admin/class-setup-wizard.php:215
 #: includes/admin/class-setup-wizard.php:215
 msgid ""
 "No time right now? If you don’t want to go through the wizard, you can skip "
@@ -19748,22 +19758,22 @@ msgid ""
 "mind!"
 msgstr ""
 
-#: build/includes/admin/class-setup-wizard.php:207
+#: build/includes/admin/class-setup-wizard.php:217
 #: includes/admin/class-setup-wizard.php:217
 msgid "Let's Go!"
 msgstr ""
 
-#: build/includes/admin/class-setup-wizard.php:208
+#: build/includes/admin/class-setup-wizard.php:218
 #: includes/admin/class-setup-wizard.php:218
 msgid "Not right now"
 msgstr ""
 
-#: build/includes/admin/class-setup-wizard.php:220
+#: build/includes/admin/class-setup-wizard.php:235
 #: includes/admin/class-setup-wizard.php:235
 msgid "Basic Settings"
 msgstr ""
 
-#: build/includes/admin/class-setup-wizard.php:226
+#: build/includes/admin/class-setup-wizard.php:241
 #: build/modules/crm/includes/functions-customer.php:1866
 #: build/modules/crm/includes/functions-customer.php:3003
 #: build/modules/crm/views/js-templates/new-assign-company.php:6
@@ -19776,19 +19786,19 @@ msgstr ""
 msgid "Company Name"
 msgstr ""
 
-#: build/includes/admin/class-setup-wizard.php:233
+#: build/includes/admin/class-setup-wizard.php:248
 #: includes/admin/class-setup-wizard.php:248
 msgid "This name will be shown as your company name."
 msgstr ""
 
-#: build/includes/admin/class-setup-wizard.php:238
+#: build/includes/admin/class-setup-wizard.php:253
 #: build/includes/framework/settings/general.php:33
 #: includes/admin/class-setup-wizard.php:253
 #: includes/framework/settings/general.php:33
 msgid "Financial Year Starts"
 msgstr ""
 
-#: build/includes/admin/class-setup-wizard.php:246
+#: build/includes/admin/class-setup-wizard.php:261
 #: build/includes/framework/settings/general.php:37
 #: build/includes/framework/views/status-report.php:169
 #: includes/admin/class-setup-wizard.php:261
@@ -19797,7 +19807,7 @@ msgstr ""
 msgid "Financial and tax calculation starts from this month of every year."
 msgstr ""
 
-#: build/includes/admin/class-setup-wizard.php:251
+#: build/includes/admin/class-setup-wizard.php:266
 #: build/includes/framework/settings/general.php:25
 #: build/includes/framework/views/status-report.php:163
 #: includes/admin/class-setup-wizard.php:266
@@ -19806,7 +19816,7 @@ msgstr ""
 msgid "Company Start Date"
 msgstr ""
 
-#: build/includes/admin/class-setup-wizard.php:257
+#: build/includes/admin/class-setup-wizard.php:272
 #: build/includes/framework/settings/general.php:28
 #: build/includes/framework/views/status-report.php:164
 #: includes/admin/class-setup-wizard.php:272
@@ -19815,8 +19825,8 @@ msgstr ""
 msgid "The date the company officially started."
 msgstr ""
 
-#: build/includes/admin/class-setup-wizard.php:271
-#: build/includes/admin/class-setup-wizard.php:289
+#: build/includes/admin/class-setup-wizard.php:286
+#: build/includes/admin/class-setup-wizard.php:304
 #: build/includes/framework/settings/general.php:43
 #: build/includes/framework/views/status-report.php:179
 #: includes/admin/class-setup-wizard.php:286
@@ -19826,7 +19836,7 @@ msgstr ""
 msgid "Format of date to show accross the system."
 msgstr ""
 
-#: build/includes/admin/class-setup-wizard.php:276
+#: build/includes/admin/class-setup-wizard.php:291
 #: build/includes/framework/settings/general.php:41
 #: build/includes/framework/views/status-report.php:178
 #: includes/admin/class-setup-wizard.php:291
@@ -19835,82 +19845,116 @@ msgstr ""
 msgid "Date Format"
 msgstr ""
 
-#: build/includes/admin/class-setup-wizard.php:294
+#: build/includes/admin/class-setup-wizard.php:309
 #: build/includes/admin/views/company-editor.php:168
 #: includes/admin/class-setup-wizard.php:309
 #: includes/admin/views/company-editor.php:168
 msgid "What sort of business do you do?"
 msgstr ""
 
-#: build/includes/admin/class-setup-wizard.php:320
+#: build/includes/admin/class-setup-wizard.php:335
 #: includes/admin/class-setup-wizard.php:335
 msgid "Share Essentials"
 msgstr ""
 
-#: build/includes/admin/class-setup-wizard.php:412
+#: build/includes/admin/class-setup-wizard.php:432
 #: build/includes/framework/views/status-report.php:152
 #: includes/admin/class-setup-wizard.php:432
 #: includes/framework/views/status-report.php:152
 msgid "Active Modules"
 msgstr ""
 
-#: build/includes/admin/class-setup-wizard.php:488
+#: build/includes/admin/class-setup-wizard.php:508
 #: includes/admin/class-setup-wizard.php:508
 msgid "WP Project Manager"
 msgstr ""
 
-#: build/includes/admin/class-setup-wizard.php:520
+#: build/includes/admin/class-setup-wizard.php:555
+#: includes/admin/class-setup-wizard.php:555
+msgid "Email Marketing Setup"
+msgstr ""
+
+#: build/includes/admin/class-setup-wizard.php:562
+#: includes/admin/class-setup-wizard.php:562
+msgid ""
+"To collect and create your CRM leads and subscriers, we recommend "
+"installing %s plugin. "
+msgstr ""
+
+#: build/includes/admin/class-setup-wizard.php:563
+#: includes/admin/class-setup-wizard.php:563
+msgid ""
+"It simplifies email marketing inside the WordPress dashboard and it has "
+"tight integration with %s plugin."
+msgstr ""
+
+#: build/includes/admin/class-setup-wizard.php:570
+#: includes/admin/class-setup-wizard.php:570
+msgid "Install weMail plugin for email marketing"
+msgstr ""
+
+#: build/includes/admin/class-setup-wizard.php:577
+#: includes/admin/class-setup-wizard.php:577
+msgid "The following plugin will be installed and activated for you: "
+msgstr ""
+
+#: build/includes/admin/class-setup-wizard.php:625
+#: includes/admin/class-setup-wizard.php:625
+msgid "weMail"
+msgstr ""
+
+#: build/includes/admin/class-setup-wizard.php:646
 #: includes/admin/class-setup-wizard.php:646
 msgid "Departments Setup"
 msgstr ""
 
-#: build/includes/admin/class-setup-wizard.php:525
+#: build/includes/admin/class-setup-wizard.php:651
 #: includes/admin/class-setup-wizard.php:651
 msgid ""
 "Create some departments for your company. e.g. HR, Engineering, Marketing, "
 "Support, etc. "
 msgstr ""
 
-#: build/includes/admin/class-setup-wizard.php:526
+#: build/includes/admin/class-setup-wizard.php:652
 #: includes/admin/class-setup-wizard.php:652
 msgid "Leave empty for not to create any departments."
 msgstr ""
 
-#: build/includes/admin/class-setup-wizard.php:532
-#: build/includes/admin/class-setup-wizard.php:535
+#: build/includes/admin/class-setup-wizard.php:658
+#: build/includes/admin/class-setup-wizard.php:661
 #: includes/admin/class-setup-wizard.php:658
 #: includes/admin/class-setup-wizard.php:661
 msgid "Department name"
 msgstr ""
 
-#: build/includes/admin/class-setup-wizard.php:587
+#: build/includes/admin/class-setup-wizard.php:728
 #: includes/admin/class-setup-wizard.php:728
 msgid "Designation Setup"
 msgstr ""
 
-#: build/includes/admin/class-setup-wizard.php:592
+#: build/includes/admin/class-setup-wizard.php:733
 #: includes/admin/class-setup-wizard.php:733
 msgid ""
 "Create some designations for your company. e.g. Manager, Senior Developer, "
 "Marketing Manager, Support Executive, etc. "
 msgstr ""
 
-#: build/includes/admin/class-setup-wizard.php:593
+#: build/includes/admin/class-setup-wizard.php:734
 #: includes/admin/class-setup-wizard.php:734
 msgid "Leave empty for not to create any designations."
 msgstr ""
 
-#: build/includes/admin/class-setup-wizard.php:599
-#: build/includes/admin/class-setup-wizard.php:602
+#: build/includes/admin/class-setup-wizard.php:740
+#: build/includes/admin/class-setup-wizard.php:743
 #: includes/admin/class-setup-wizard.php:740
 #: includes/admin/class-setup-wizard.php:743
 msgid "Designation name"
 msgstr ""
 
-#: build/includes/admin/class-setup-wizard.php:638
+#: build/includes/admin/class-setup-wizard.php:791
 #: build/modules/hrm/includes/class-settings.php:47
-#: build/modules/hrm/includes/functions-leave.php:1927
-#: build/modules/hrm/includes/functions-leave.php:2724
+#: build/modules/hrm/includes/functions-leave.php:1933
+#: build/modules/hrm/includes/functions-leave.php:2730
 #: includes/admin/class-setup-wizard.php:791
 #: modules/hrm/includes/class-settings.php:47
 #: modules/hrm/includes/functions-leave.php:1933
@@ -19918,115 +19962,115 @@ msgstr ""
 msgid "Full Day"
 msgstr ""
 
-#: build/includes/admin/class-setup-wizard.php:639
+#: build/includes/admin/class-setup-wizard.php:792
 #: build/modules/hrm/includes/class-settings.php:48
 #: includes/admin/class-setup-wizard.php:792
 #: modules/hrm/includes/class-settings.php:48
 msgid "Half Day"
 msgstr ""
 
-#: build/includes/admin/class-setup-wizard.php:640
+#: build/includes/admin/class-setup-wizard.php:793
 #: build/modules/hrm/includes/class-settings.php:49
 #: includes/admin/class-setup-wizard.php:793
 #: modules/hrm/includes/class-settings.php:49
 msgid "Non-working Day"
 msgstr ""
 
-#: build/includes/admin/class-setup-wizard.php:643
+#: build/includes/admin/class-setup-wizard.php:796
 #: build/modules/hrm/includes/class-settings.php:53
 #: includes/admin/class-setup-wizard.php:796
 #: modules/hrm/includes/class-settings.php:53
 msgid "Monday"
 msgstr ""
 
-#: build/includes/admin/class-setup-wizard.php:644
+#: build/includes/admin/class-setup-wizard.php:797
 #: build/modules/hrm/includes/class-settings.php:54
 #: includes/admin/class-setup-wizard.php:797
 #: modules/hrm/includes/class-settings.php:54
 msgid "Tuesday"
 msgstr ""
 
-#: build/includes/admin/class-setup-wizard.php:645
+#: build/includes/admin/class-setup-wizard.php:798
 #: build/modules/hrm/includes/class-settings.php:55
 #: includes/admin/class-setup-wizard.php:798
 #: modules/hrm/includes/class-settings.php:55
 msgid "Wednesday"
 msgstr ""
 
-#: build/includes/admin/class-setup-wizard.php:646
+#: build/includes/admin/class-setup-wizard.php:799
 #: build/modules/hrm/includes/class-settings.php:56
 #: includes/admin/class-setup-wizard.php:799
 #: modules/hrm/includes/class-settings.php:56
 msgid "Thursday"
 msgstr ""
 
-#: build/includes/admin/class-setup-wizard.php:647
+#: build/includes/admin/class-setup-wizard.php:800
 #: build/modules/hrm/includes/class-settings.php:57
 #: includes/admin/class-setup-wizard.php:800
 #: modules/hrm/includes/class-settings.php:57
 msgid "Friday"
 msgstr ""
 
-#: build/includes/admin/class-setup-wizard.php:648
+#: build/includes/admin/class-setup-wizard.php:801
 #: build/modules/hrm/includes/class-settings.php:58
 #: includes/admin/class-setup-wizard.php:801
 #: modules/hrm/includes/class-settings.php:58
 msgid "Saturday"
 msgstr ""
 
-#: build/includes/admin/class-setup-wizard.php:649
+#: build/includes/admin/class-setup-wizard.php:802
 #: build/modules/hrm/includes/class-settings.php:59
 #: includes/admin/class-setup-wizard.php:802
 #: modules/hrm/includes/class-settings.php:59
 msgid "Sunday"
 msgstr ""
 
-#: build/includes/admin/class-setup-wizard.php:651
+#: build/includes/admin/class-setup-wizard.php:804
 #: includes/admin/class-setup-wizard.php:804
 msgid "Workdays Setup"
 msgstr ""
 
-#: build/includes/admin/class-setup-wizard.php:711
+#: build/includes/admin/class-setup-wizard.php:864
 #: includes/admin/class-setup-wizard.php:864
 msgid "Newsletter Setup"
 msgstr ""
 
-#: build/includes/admin/class-setup-wizard.php:721
+#: build/includes/admin/class-setup-wizard.php:874
 #: includes/admin/class-setup-wizard.php:874
 msgid "Your Name"
 msgstr ""
 
-#: build/includes/admin/class-setup-wizard.php:728
+#: build/includes/admin/class-setup-wizard.php:881
 #: includes/admin/class-setup-wizard.php:881
 msgid "This name will be used for newsletter name."
 msgstr ""
 
-#: build/includes/admin/class-setup-wizard.php:735
+#: build/includes/admin/class-setup-wizard.php:888
 #: includes/admin/class-setup-wizard.php:888
 msgid "Your Email"
 msgstr ""
 
-#: build/includes/admin/class-setup-wizard.php:742
+#: build/includes/admin/class-setup-wizard.php:895
 #: includes/admin/class-setup-wizard.php:895
 msgid "Email to get update critical updates."
 msgstr ""
 
-#: build/includes/admin/class-setup-wizard.php:769
+#: build/includes/admin/class-setup-wizard.php:927
 #: includes/admin/class-setup-wizard.php:927
 msgid "Your Site is Ready!"
 msgstr ""
 
-#: build/includes/admin/class-setup-wizard.php:773
+#: build/includes/admin/class-setup-wizard.php:931
 #: includes/admin/class-setup-wizard.php:931
 msgid "Next Steps &rarr;"
 msgstr ""
 
-#: build/includes/admin/class-setup-wizard.php:780
+#: build/includes/admin/class-setup-wizard.php:938
 #: includes/admin/class-setup-wizard.php:938
 msgid "Add your employees!"
 msgstr ""
 
-#: build/includes/admin/class-setup-wizard.php:786
+#: build/includes/admin/class-setup-wizard.php:944
 #: includes/admin/class-setup-wizard.php:944
 msgid "Go to ERP Dashboard!"
 msgstr ""
@@ -20080,7 +20124,7 @@ msgstr ""
 #: build/modules/crm/views/js-templates/new-customer.php:242
 #: build/modules/hrm/includes/class-ajax.php:388
 #: build/modules/hrm/includes/class-ajax.php:430
-#: build/modules/hrm/includes/class-ajax.php:1787
+#: build/modules/hrm/includes/class-ajax.php:1799
 #: build/modules/hrm/views/js-templates/compensation.php:27
 #: build/modules/hrm/views/js-templates/compensation.php:37
 #: build/modules/hrm/views/js-templates/employee-terminate.php:23
@@ -20486,8 +20530,8 @@ msgstr ""
 #: build/includes/admin/views/tools/import.php:82
 #: build/includes/admin/views/tools/import.php:187
 #: build/modules/crm/includes/contact-forms/class-erp-settings-contact-forms.php:82
-#: build/modules/crm/views/company/single.php:103
-#: build/modules/crm/views/contact/single.php:106
+#: build/modules/crm/views/company/single.php:106
+#: build/modules/crm/views/contact/single.php:109
 #: build/modules/crm/views/js-templates/new-customer.php:120
 #: includes/admin/views/tools/import.php:82
 #: includes/admin/views/tools/import.php:187
@@ -20531,8 +20575,8 @@ msgstr ""
 #: build/includes/admin/views/tools/import.php:224
 #: build/modules/crm/includes/contact-forms/class-erp-settings-contact-forms.php:80
 #: build/modules/crm/includes/functions-customer.php:1735
-#: build/modules/crm/views/company/single.php:200
-#: build/modules/crm/views/contact/single.php:205
+#: build/modules/crm/views/company/single.php:203
+#: build/modules/crm/views/contact/single.php:208
 #: build/modules/crm/views/js-templates/new-customer.php:265
 #: includes/admin/views/tools/import.php:121
 #: includes/admin/views/tools/import.php:224
@@ -20700,65 +20744,65 @@ msgstr ""
 #: build/modules/accounting/api/class-rest-api-accounts-transfer.php:203
 #: build/modules/accounting/api/class-rest-api-bills.php:186
 #: build/modules/accounting/api/class-rest-api-bills.php:250
-#: build/modules/accounting/api/class-rest-api-bills.php:300
-#: build/modules/accounting/api/class-rest-api-bills.php:319
+#: build/modules/accounting/api/class-rest-api-bills.php:301
+#: build/modules/accounting/api/class-rest-api-bills.php:320
 #: build/modules/accounting/api/class-rest-api-customers.php:222
 #: build/modules/accounting/api/class-rest-api-customers.php:297
 #: build/modules/accounting/api/class-rest-api-employees.php:142
 #: build/modules/accounting/api/class-rest-api-expenses.php:171
 #: build/modules/accounting/api/class-rest-api-expenses.php:201
 #: build/modules/accounting/api/class-rest-api-expenses.php:268
-#: build/modules/accounting/api/class-rest-api-expenses.php:311
+#: build/modules/accounting/api/class-rest-api-expenses.php:314
 #: build/modules/accounting/api/class-rest-api-invoices.php:203
 #: build/modules/accounting/api/class-rest-api-invoices.php:290
-#: build/modules/accounting/api/class-rest-api-invoices.php:351
-#: build/modules/accounting/api/class-rest-api-invoices.php:370
+#: build/modules/accounting/api/class-rest-api-invoices.php:353
+#: build/modules/accounting/api/class-rest-api-invoices.php:372
 #: build/modules/accounting/api/class-rest-api-journals.php:139
 #: build/modules/accounting/api/class-rest-api-ledgers.php:263
 #: build/modules/accounting/api/class-rest-api-ledgers.php:318
-#: build/modules/accounting/api/class-rest-api-ledgers.php:347
-#: build/modules/accounting/api/class-rest-api-ledgers.php:489
-#: build/modules/accounting/api/class-rest-api-ledgers.php:512
+#: build/modules/accounting/api/class-rest-api-ledgers.php:351
+#: build/modules/accounting/api/class-rest-api-ledgers.php:497
+#: build/modules/accounting/api/class-rest-api-ledgers.php:520
 #: build/modules/accounting/api/class-rest-api-opening-balances.php:198
 #: build/modules/accounting/api/class-rest-api-opening-balances.php:240
 #: build/modules/accounting/api/class-rest-api-opening-balances.php:264
 #: build/modules/accounting/api/class-rest-api-pay-bills.php:156
 #: build/modules/accounting/api/class-rest-api-pay-bills.php:218
-#: build/modules/accounting/api/class-rest-api-pay-bills.php:259
+#: build/modules/accounting/api/class-rest-api-pay-bills.php:263
 #: build/modules/accounting/api/class-rest-api-pay-purchases.php:156
 #: build/modules/accounting/api/class-rest-api-pay-purchases.php:220
-#: build/modules/accounting/api/class-rest-api-pay-purchases.php:253
+#: build/modules/accounting/api/class-rest-api-pay-purchases.php:257
 #: build/modules/accounting/api/class-rest-api-people.php:172
 #: build/modules/accounting/api/class-rest-api-people.php:196
 #: build/modules/accounting/api/class-rest-api-product-cats.php:145
-#: build/modules/accounting/api/class-rest-api-product-cats.php:195
+#: build/modules/accounting/api/class-rest-api-product-cats.php:197
 #: build/modules/accounting/api/class-rest-api-products.php:173
-#: build/modules/accounting/api/class-rest-api-products.php:223
+#: build/modules/accounting/api/class-rest-api-products.php:225
 #: build/modules/accounting/api/class-rest-api-purchases.php:171
 #: build/modules/accounting/api/class-rest-api-purchases.php:222
 #: build/modules/accounting/api/class-rest-api-purchases.php:283
-#: build/modules/accounting/api/class-rest-api-purchases.php:331
+#: build/modules/accounting/api/class-rest-api-purchases.php:332
 #: build/modules/accounting/api/class-rest-api-rec-payments.php:156
 #: build/modules/accounting/api/class-rest-api-rec-payments.php:218
-#: build/modules/accounting/api/class-rest-api-rec-payments.php:258
+#: build/modules/accounting/api/class-rest-api-rec-payments.php:261
 #: build/modules/accounting/api/class-rest-api-tax-agencies.php:183
-#: build/modules/accounting/api/class-rest-api-tax-agencies.php:235
-#: build/modules/accounting/api/class-rest-api-tax-agencies.php:265
-#: build/modules/accounting/api/class-rest-api-tax-agencies.php:291
+#: build/modules/accounting/api/class-rest-api-tax-agencies.php:237
+#: build/modules/accounting/api/class-rest-api-tax-agencies.php:269
+#: build/modules/accounting/api/class-rest-api-tax-agencies.php:295
 #: build/modules/accounting/api/class-rest-api-tax-cats.php:168
-#: build/modules/accounting/api/class-rest-api-tax-cats.php:220
-#: build/modules/accounting/api/class-rest-api-tax-cats.php:258
+#: build/modules/accounting/api/class-rest-api-tax-cats.php:222
+#: build/modules/accounting/api/class-rest-api-tax-cats.php:263
 #: build/modules/accounting/api/class-rest-api-tax-rate-names.php:168
-#: build/modules/accounting/api/class-rest-api-tax-rate-names.php:220
-#: build/modules/accounting/api/class-rest-api-tax-rate-names.php:250
+#: build/modules/accounting/api/class-rest-api-tax-rate-names.php:222
+#: build/modules/accounting/api/class-rest-api-tax-rate-names.php:254
 #: build/modules/accounting/api/class-rest-api-taxes.php:294
-#: build/modules/accounting/api/class-rest-api-taxes.php:357
-#: build/modules/accounting/api/class-rest-api-taxes.php:397
-#: build/modules/accounting/api/class-rest-api-taxes.php:430
-#: build/modules/accounting/api/class-rest-api-taxes.php:460
-#: build/modules/accounting/api/class-rest-api-taxes.php:489
-#: build/modules/accounting/api/class-rest-api-taxes.php:508
-#: build/modules/accounting/api/class-rest-api-taxes.php:577
+#: build/modules/accounting/api/class-rest-api-taxes.php:359
+#: build/modules/accounting/api/class-rest-api-taxes.php:401
+#: build/modules/accounting/api/class-rest-api-taxes.php:436
+#: build/modules/accounting/api/class-rest-api-taxes.php:466
+#: build/modules/accounting/api/class-rest-api-taxes.php:495
+#: build/modules/accounting/api/class-rest-api-taxes.php:514
+#: build/modules/accounting/api/class-rest-api-taxes.php:587
 #: build/modules/accounting/api/class-rest-api-transactions.php:637
 #: build/modules/accounting/api/class-rest-api-transactions.php:713
 #: build/modules/accounting/api/class-rest-api-vendors.php:222
@@ -20886,38 +20930,38 @@ msgstr ""
 #: build/includes/api/class-contacts-controller.php:425
 #: build/includes/api/class-contacts-groups-controller.php:353
 #: build/modules/accounting/api/class-rest-api-accounts-transfer.php:527
-#: build/modules/accounting/api/class-rest-api-bills.php:521
+#: build/modules/accounting/api/class-rest-api-bills.php:536
 #: build/modules/accounting/api/class-rest-api-currencies.php:117
-#: build/modules/accounting/api/class-rest-api-customers.php:607
-#: build/modules/accounting/api/class-rest-api-customers.php:734
-#: build/modules/accounting/api/class-rest-api-customers.php:751
-#: build/modules/accounting/api/class-rest-api-expenses.php:493
+#: build/modules/accounting/api/class-rest-api-customers.php:633
+#: build/modules/accounting/api/class-rest-api-customers.php:760
+#: build/modules/accounting/api/class-rest-api-customers.php:777
+#: build/modules/accounting/api/class-rest-api-expenses.php:510
 #: build/modules/accounting/api/class-rest-api-journals.php:323
-#: build/modules/accounting/api/class-rest-api-ledgers.php:642
+#: build/modules/accounting/api/class-rest-api-ledgers.php:663
 #: build/modules/accounting/api/class-rest-api-opening-balances.php:457
 #: build/modules/accounting/api/class-rest-api-opening-balances.php:463
 #: build/modules/accounting/api/class-rest-api-opening-balances.php:489
 #: build/modules/accounting/api/class-rest-api-opening-balances.php:495
 #: build/modules/accounting/api/class-rest-api-opening-balances.php:501
-#: build/modules/accounting/api/class-rest-api-pay-bills.php:417
-#: build/modules/accounting/api/class-rest-api-pay-purchases.php:414
+#: build/modules/accounting/api/class-rest-api-pay-bills.php:439
+#: build/modules/accounting/api/class-rest-api-pay-purchases.php:434
 #: build/modules/accounting/api/class-rest-api-people.php:381
-#: build/modules/accounting/api/class-rest-api-product-cats.php:308
-#: build/modules/accounting/api/class-rest-api-product-cats.php:328
-#: build/modules/accounting/api/class-rest-api-products.php:350
-#: build/modules/accounting/api/class-rest-api-products.php:370
-#: build/modules/accounting/api/class-rest-api-products.php:391
-#: build/modules/accounting/api/class-rest-api-products.php:413
-#: build/modules/accounting/api/class-rest-api-products.php:435
-#: build/modules/accounting/api/class-rest-api-purchases.php:481
-#: build/modules/accounting/api/class-rest-api-rec-payments.php:433
-#: build/modules/accounting/api/class-rest-api-tax-agencies.php:377
-#: build/modules/accounting/api/class-rest-api-tax-cats.php:349
-#: build/modules/accounting/api/class-rest-api-tax-rate-names.php:337
-#: build/modules/accounting/api/class-rest-api-taxes.php:915
-#: build/modules/accounting/api/class-rest-api-vendors.php:670
-#: build/modules/accounting/api/class-rest-api-vendors.php:797
-#: build/modules/accounting/api/class-rest-api-vendors.php:814
+#: build/modules/accounting/api/class-rest-api-product-cats.php:356
+#: build/modules/accounting/api/class-rest-api-product-cats.php:376
+#: build/modules/accounting/api/class-rest-api-products.php:396
+#: build/modules/accounting/api/class-rest-api-products.php:416
+#: build/modules/accounting/api/class-rest-api-products.php:437
+#: build/modules/accounting/api/class-rest-api-products.php:459
+#: build/modules/accounting/api/class-rest-api-products.php:481
+#: build/modules/accounting/api/class-rest-api-purchases.php:496
+#: build/modules/accounting/api/class-rest-api-rec-payments.php:450
+#: build/modules/accounting/api/class-rest-api-tax-agencies.php:424
+#: build/modules/accounting/api/class-rest-api-tax-cats.php:397
+#: build/modules/accounting/api/class-rest-api-tax-rate-names.php:384
+#: build/modules/accounting/api/class-rest-api-taxes.php:952
+#: build/modules/accounting/api/class-rest-api-vendors.php:698
+#: build/modules/accounting/api/class-rest-api-vendors.php:825
+#: build/modules/accounting/api/class-rest-api-vendors.php:842
 #: build/modules/hrm/includes/api/class-announcements-controller.php:306
 #: build/modules/hrm/includes/api/class-departments-controller.php:314
 #: build/modules/hrm/includes/api/class-designations-controller.php:264
@@ -20990,17 +21034,17 @@ msgid "Body for the resource."
 msgstr ""
 
 #: build/includes/api/class-announcements-controller.php:337
-#: build/modules/accounting/api/class-rest-api-bills.php:601
-#: build/modules/accounting/api/class-rest-api-expenses.php:575
-#: build/modules/accounting/api/class-rest-api-invoices.php:670
-#: build/modules/accounting/api/class-rest-api-invoices.php:675
-#: build/modules/accounting/api/class-rest-api-invoices.php:683
-#: build/modules/accounting/api/class-rest-api-pay-bills.php:510
-#: build/modules/accounting/api/class-rest-api-pay-purchases.php:512
-#: build/modules/accounting/api/class-rest-api-pay-purchases.php:525
-#: build/modules/accounting/api/class-rest-api-pay-purchases.php:531
-#: build/modules/accounting/api/class-rest-api-purchases.php:585
-#: build/modules/accounting/api/class-rest-api-rec-payments.php:548
+#: build/modules/accounting/api/class-rest-api-bills.php:616
+#: build/modules/accounting/api/class-rest-api-expenses.php:592
+#: build/modules/accounting/api/class-rest-api-invoices.php:686
+#: build/modules/accounting/api/class-rest-api-invoices.php:691
+#: build/modules/accounting/api/class-rest-api-invoices.php:699
+#: build/modules/accounting/api/class-rest-api-pay-bills.php:532
+#: build/modules/accounting/api/class-rest-api-pay-purchases.php:532
+#: build/modules/accounting/api/class-rest-api-pay-purchases.php:545
+#: build/modules/accounting/api/class-rest-api-pay-purchases.php:551
+#: build/modules/accounting/api/class-rest-api-purchases.php:600
+#: build/modules/accounting/api/class-rest-api-rec-payments.php:565
 #: build/modules/hrm/includes/api/class-announcements-controller.php:330
 #: includes/api/class-announcements-controller.php:337
 #: modules/accounting/api/class-rest-api-bills.php:616
@@ -21026,9 +21070,9 @@ msgid "Recipient type for the resource."
 msgstr ""
 
 #: build/includes/api/class-contacts-controller.php:431
-#: build/modules/accounting/api/class-rest-api-customers.php:613
+#: build/modules/accounting/api/class-rest-api-customers.php:639
 #: build/modules/accounting/api/class-rest-api-people.php:387
-#: build/modules/accounting/api/class-rest-api-vendors.php:676
+#: build/modules/accounting/api/class-rest-api-vendors.php:704
 #: includes/api/class-contacts-controller.php:431
 #: modules/accounting/api/class-rest-api-customers.php:639
 #: modules/accounting/api/class-rest-api-people.php:387
@@ -21037,9 +21081,9 @@ msgid "First name for the resource."
 msgstr ""
 
 #: build/includes/api/class-contacts-controller.php:440
-#: build/modules/accounting/api/class-rest-api-customers.php:622
+#: build/modules/accounting/api/class-rest-api-customers.php:648
 #: build/modules/accounting/api/class-rest-api-people.php:396
-#: build/modules/accounting/api/class-rest-api-vendors.php:685
+#: build/modules/accounting/api/class-rest-api-vendors.php:713
 #: includes/api/class-contacts-controller.php:440
 #: modules/accounting/api/class-rest-api-customers.php:648
 #: modules/accounting/api/class-rest-api-people.php:396
@@ -21048,10 +21092,10 @@ msgid "Last name for the resource."
 msgstr ""
 
 #: build/includes/api/class-contacts-controller.php:449
-#: build/modules/accounting/api/class-rest-api-customers.php:631
+#: build/modules/accounting/api/class-rest-api-customers.php:657
 #: build/modules/accounting/api/class-rest-api-people.php:405
 #: build/modules/accounting/api/class-rest-api-people.php:487
-#: build/modules/accounting/api/class-rest-api-vendors.php:694
+#: build/modules/accounting/api/class-rest-api-vendors.php:722
 #: includes/api/class-contacts-controller.php:449
 #: modules/accounting/api/class-rest-api-customers.php:657
 #: modules/accounting/api/class-rest-api-people.php:405
@@ -21068,7 +21112,7 @@ msgstr ""
 #: build/includes/api/class-contacts-controller.php:464
 #: build/modules/accounting/api/class-rest-api-people.php:412
 #: build/modules/accounting/api/class-rest-api-people.php:493
-#: build/modules/accounting/api/class-rest-api-rec-payments.php:490
+#: build/modules/accounting/api/class-rest-api-rec-payments.php:507
 #: includes/api/class-contacts-controller.php:464
 #: modules/accounting/api/class-rest-api-people.php:412
 #: modules/accounting/api/class-rest-api-people.php:493
@@ -21096,8 +21140,8 @@ msgid "Website of the resource."
 msgstr ""
 
 #: build/includes/api/class-contacts-controller.php:494
-#: build/modules/accounting/api/class-rest-api-customers.php:676
-#: build/modules/accounting/api/class-rest-api-vendors.php:739
+#: build/modules/accounting/api/class-rest-api-customers.php:702
+#: build/modules/accounting/api/class-rest-api-vendors.php:767
 #: includes/api/class-contacts-controller.php:494
 #: modules/accounting/api/class-rest-api-customers.php:702
 #: modules/accounting/api/class-rest-api-vendors.php:767
@@ -21105,9 +21149,9 @@ msgid "Fax of the resource."
 msgstr ""
 
 #: build/includes/api/class-contacts-controller.php:502
-#: build/modules/accounting/api/class-rest-api-customers.php:668
+#: build/modules/accounting/api/class-rest-api-customers.php:694
 #: build/modules/accounting/api/class-rest-api-people.php:434
-#: build/modules/accounting/api/class-rest-api-vendors.php:731
+#: build/modules/accounting/api/class-rest-api-vendors.php:759
 #: includes/api/class-contacts-controller.php:502
 #: modules/accounting/api/class-rest-api-customers.php:694
 #: modules/accounting/api/class-rest-api-people.php:434
@@ -21169,11 +21213,11 @@ msgstr ""
 
 #: build/includes/api/class-contacts-groups-controller.php:359
 #: build/modules/accounting/api/class-rest-api-currencies.php:123
-#: build/modules/accounting/api/class-rest-api-ledgers.php:659
-#: build/modules/accounting/api/class-rest-api-product-cats.php:314
-#: build/modules/accounting/api/class-rest-api-product-cats.php:333
-#: build/modules/accounting/api/class-rest-api-products.php:356
-#: build/modules/accounting/api/class-rest-api-products.php:441
+#: build/modules/accounting/api/class-rest-api-ledgers.php:680
+#: build/modules/accounting/api/class-rest-api-product-cats.php:362
+#: build/modules/accounting/api/class-rest-api-product-cats.php:381
+#: build/modules/accounting/api/class-rest-api-products.php:402
+#: build/modules/accounting/api/class-rest-api-products.php:487
 #: build/modules/hrm/includes/api/class-leave-holidays-controller.php:276
 #: build/modules/hrm/includes/api/class-leave-policies-controller.php:362
 #: includes/api/class-contacts-groups-controller.php:359
@@ -21214,8 +21258,8 @@ msgstr ""
 
 #: build/includes/class-company.php:45
 #: build/modules/crm/includes/functions-customer.php:3048
-#: build/modules/crm/views/company/single.php:93
-#: build/modules/crm/views/contact/single.php:95
+#: build/modules/crm/views/company/single.php:96
+#: build/modules/crm/views/contact/single.php:98
 #: build/modules/hrm/views/employee/tab-general.php:67
 #: includes/class-company.php:45
 #: modules/crm/includes/functions-customer.php:3048
@@ -21446,8 +21490,8 @@ msgstr ""
 msgid "You didn't save your changes!"
 msgstr ""
 
-#: build/includes/class-scripts.php:170 build/modules/crm/crm.php:192
-#: build/modules/crm/crm.php:212 build/modules/hrm/hrm.php:198
+#: build/includes/class-scripts.php:170 build/modules/crm/crm.php:193
+#: build/modules/crm/crm.php:213 build/modules/hrm/hrm.php:198
 #: includes/class-scripts.php:170 modules/crm/crm.php:193
 #: modules/crm/crm.php:213 modules/hrm/hrm.php:198
 msgid "Are you sure?"
@@ -21609,8 +21653,8 @@ msgstr ""
 
 #: build/includes/framework/settings/email.php:98
 #: build/includes/framework/views/status-report.php:83
-#: build/modules/crm/crm.php:334 build/modules/crm/crm.php:437
-#: build/modules/crm/crm.php:450
+#: build/modules/crm/crm.php:335 build/modules/crm/crm.php:438
+#: build/modules/crm/crm.php:451
 #: build/modules/crm/includes/admin/class-menu.php:32
 #: build/modules/crm/includes/admin/class-settings.php:17
 #: build/modules/crm/includes/class-form-handler.php:23
@@ -21987,39 +22031,39 @@ msgstr ""
 #: build/modules/crm/includes/class-ajax.php:234
 #: build/modules/crm/includes/class-ajax.php:267
 #: build/modules/crm/includes/class-ajax.php:294
-#: build/modules/crm/includes/class-ajax.php:345
-#: build/modules/crm/includes/class-ajax.php:367
-#: build/modules/crm/includes/class-ajax.php:433
-#: build/modules/crm/includes/class-ajax.php:464
-#: build/modules/crm/includes/class-ajax.php:515
-#: build/modules/crm/includes/class-ajax.php:557
-#: build/modules/crm/includes/class-ajax.php:593
-#: build/modules/crm/includes/class-ajax.php:609
-#: build/modules/crm/includes/class-ajax.php:630
-#: build/modules/crm/includes/class-ajax.php:686
-#: build/modules/crm/includes/class-ajax.php:726
-#: build/modules/crm/includes/class-ajax.php:761
-#: build/modules/crm/includes/class-ajax.php:810
-#: build/modules/crm/includes/class-ajax.php:845
-#: build/modules/crm/includes/class-ajax.php:864
-#: build/modules/crm/includes/class-ajax.php:892
-#: build/modules/crm/includes/class-ajax.php:909
-#: build/modules/crm/includes/class-ajax.php:943
-#: build/modules/crm/includes/class-ajax.php:980
-#: build/modules/crm/includes/class-ajax.php:1012
-#: build/modules/crm/includes/class-ajax.php:1053
-#: build/modules/crm/includes/class-ajax.php:1102
-#: build/modules/crm/includes/class-ajax.php:1317
-#: build/modules/crm/includes/class-ajax.php:1344
-#: build/modules/crm/includes/class-ajax.php:1406
-#: build/modules/crm/includes/class-ajax.php:1475
-#: build/modules/crm/includes/class-ajax.php:1498
-#: build/modules/crm/includes/class-ajax.php:1525
-#: build/modules/crm/includes/class-ajax.php:1548
-#: build/modules/crm/includes/class-ajax.php:1577
-#: build/modules/crm/includes/class-ajax.php:1604
-#: build/modules/crm/includes/class-ajax.php:1631
-#: build/modules/crm/includes/class-ajax.php:1653
+#: build/modules/crm/includes/class-ajax.php:355
+#: build/modules/crm/includes/class-ajax.php:377
+#: build/modules/crm/includes/class-ajax.php:452
+#: build/modules/crm/includes/class-ajax.php:485
+#: build/modules/crm/includes/class-ajax.php:538
+#: build/modules/crm/includes/class-ajax.php:580
+#: build/modules/crm/includes/class-ajax.php:620
+#: build/modules/crm/includes/class-ajax.php:636
+#: build/modules/crm/includes/class-ajax.php:657
+#: build/modules/crm/includes/class-ajax.php:713
+#: build/modules/crm/includes/class-ajax.php:753
+#: build/modules/crm/includes/class-ajax.php:788
+#: build/modules/crm/includes/class-ajax.php:837
+#: build/modules/crm/includes/class-ajax.php:874
+#: build/modules/crm/includes/class-ajax.php:893
+#: build/modules/crm/includes/class-ajax.php:925
+#: build/modules/crm/includes/class-ajax.php:942
+#: build/modules/crm/includes/class-ajax.php:976
+#: build/modules/crm/includes/class-ajax.php:1015
+#: build/modules/crm/includes/class-ajax.php:1047
+#: build/modules/crm/includes/class-ajax.php:1088
+#: build/modules/crm/includes/class-ajax.php:1137
+#: build/modules/crm/includes/class-ajax.php:1360
+#: build/modules/crm/includes/class-ajax.php:1387
+#: build/modules/crm/includes/class-ajax.php:1449
+#: build/modules/crm/includes/class-ajax.php:1518
+#: build/modules/crm/includes/class-ajax.php:1541
+#: build/modules/crm/includes/class-ajax.php:1568
+#: build/modules/crm/includes/class-ajax.php:1591
+#: build/modules/crm/includes/class-ajax.php:1620
+#: build/modules/crm/includes/class-ajax.php:1647
+#: build/modules/crm/includes/class-ajax.php:1674
+#: build/modules/crm/includes/class-ajax.php:1696
 #: build/modules/crm/includes/class-subscription.php:253
 #: build/modules/crm/includes/class-subscription.php:776
 #: build/modules/crm/includes/contact-forms/class-erp-settings-contact-forms.php:319
@@ -22039,31 +22083,31 @@ msgstr ""
 #: build/modules/hrm/includes/class-ajax.php:675
 #: build/modules/hrm/includes/class-ajax.php:744
 #: build/modules/hrm/includes/class-ajax.php:823
-#: build/modules/hrm/includes/class-ajax.php:868
-#: build/modules/hrm/includes/class-ajax.php:907
-#: build/modules/hrm/includes/class-ajax.php:941
-#: build/modules/hrm/includes/class-ajax.php:978
-#: build/modules/hrm/includes/class-ajax.php:1059
-#: build/modules/hrm/includes/class-ajax.php:1100
-#: build/modules/hrm/includes/class-ajax.php:1161
-#: build/modules/hrm/includes/class-ajax.php:1201
-#: build/modules/hrm/includes/class-ajax.php:1224
-#: build/modules/hrm/includes/class-ajax.php:1258
-#: build/modules/hrm/includes/class-ajax.php:1284
-#: build/modules/hrm/includes/class-ajax.php:1327
-#: build/modules/hrm/includes/class-ajax.php:1355
-#: build/modules/hrm/includes/class-ajax.php:1400
-#: build/modules/hrm/includes/class-ajax.php:1433
-#: build/modules/hrm/includes/class-ajax.php:1482
-#: build/modules/hrm/includes/class-ajax.php:1515
-#: build/modules/hrm/includes/class-ajax.php:1556
-#: build/modules/hrm/includes/class-ajax.php:1591
-#: build/modules/hrm/includes/class-ajax.php:1639
-#: build/modules/hrm/includes/class-ajax.php:1671
-#: build/modules/hrm/includes/class-ajax.php:1756
-#: build/modules/hrm/includes/class-ajax.php:1814
-#: build/modules/hrm/includes/class-ajax.php:1924
-#: build/modules/hrm/includes/class-ajax.php:1964
+#: build/modules/hrm/includes/class-ajax.php:872
+#: build/modules/hrm/includes/class-ajax.php:915
+#: build/modules/hrm/includes/class-ajax.php:949
+#: build/modules/hrm/includes/class-ajax.php:990
+#: build/modules/hrm/includes/class-ajax.php:1071
+#: build/modules/hrm/includes/class-ajax.php:1112
+#: build/modules/hrm/includes/class-ajax.php:1173
+#: build/modules/hrm/includes/class-ajax.php:1213
+#: build/modules/hrm/includes/class-ajax.php:1236
+#: build/modules/hrm/includes/class-ajax.php:1270
+#: build/modules/hrm/includes/class-ajax.php:1296
+#: build/modules/hrm/includes/class-ajax.php:1339
+#: build/modules/hrm/includes/class-ajax.php:1367
+#: build/modules/hrm/includes/class-ajax.php:1412
+#: build/modules/hrm/includes/class-ajax.php:1445
+#: build/modules/hrm/includes/class-ajax.php:1494
+#: build/modules/hrm/includes/class-ajax.php:1527
+#: build/modules/hrm/includes/class-ajax.php:1568
+#: build/modules/hrm/includes/class-ajax.php:1603
+#: build/modules/hrm/includes/class-ajax.php:1651
+#: build/modules/hrm/includes/class-ajax.php:1683
+#: build/modules/hrm/includes/class-ajax.php:1768
+#: build/modules/hrm/includes/class-ajax.php:1826
+#: build/modules/hrm/includes/class-ajax.php:1936
+#: build/modules/hrm/includes/class-ajax.php:1976
 #: includes/framework/traits/Ajax.php:19
 #: modules/crm/includes/class-ajax.php:117
 #: modules/crm/includes/class-ajax.php:234
@@ -22240,7 +22284,7 @@ msgstr ""
 #: build/modules/crm/includes/admin/class-menu.php:45
 #: build/modules/crm/includes/admin/class-settings.php:50
 #: build/modules/crm/includes/functions-dashboard.php:298
-#: build/modules/crm/views/company/single.php:194
+#: build/modules/crm/views/company/single.php:197
 #: build/modules/crm/views/contact-tag/contacts.php:3
 #: includes/framework/views/status-report.php:87
 #: modules/crm/includes/admin/class-menu.php:45
@@ -22279,7 +22323,7 @@ msgstr ""
 #: build/includes/framework/views/status-report.php:102
 #: build/modules/crm/includes/admin/class-menu.php:53
 #: build/modules/crm/includes/functions-dashboard.php:327
-#: build/modules/crm/views/contact/single.php:199
+#: build/modules/crm/views/contact/single.php:202
 #: includes/framework/views/status-report.php:102
 #: modules/crm/includes/admin/class-menu.php:53
 #: modules/crm/includes/functions-dashboard.php:327
@@ -24065,7 +24109,7 @@ msgstr ""
 
 #: build/modules/accounting/api/class-rest-api-accounts-transfer.php:314
 #: build/modules/accounting/api/class-rest-api-accounts-transfer.php:344
-#: build/modules/accounting/api/class-rest-api-ledgers.php:383
+#: build/modules/accounting/api/class-rest-api-ledgers.php:391
 #: build/modules/accounting/includes/functions/bank.php:106
 #: modules/accounting/api/class-rest-api-accounts-transfer.php:314
 #: modules/accounting/api/class-rest-api-accounts-transfer.php:344
@@ -24086,12 +24130,12 @@ msgid "%1$s has been transferred from %2$s to %3$s"
 msgstr ""
 
 #: build/modules/accounting/api/class-rest-api-accounts-transfer.php:533
-#: build/modules/accounting/api/class-rest-api-bills.php:541
-#: build/modules/accounting/api/class-rest-api-expenses.php:518
-#: build/modules/accounting/api/class-rest-api-invoices.php:568
-#: build/modules/accounting/api/class-rest-api-pay-purchases.php:442
-#: build/modules/accounting/api/class-rest-api-purchases.php:512
-#: build/modules/accounting/api/class-rest-api-rec-payments.php:456
+#: build/modules/accounting/api/class-rest-api-bills.php:556
+#: build/modules/accounting/api/class-rest-api-expenses.php:535
+#: build/modules/accounting/api/class-rest-api-invoices.php:584
+#: build/modules/accounting/api/class-rest-api-pay-purchases.php:462
+#: build/modules/accounting/api/class-rest-api-purchases.php:527
+#: build/modules/accounting/api/class-rest-api-rec-payments.php:473
 #: modules/accounting/api/class-rest-api-accounts-transfer.php:533
 #: modules/accounting/api/class-rest-api-bills.php:556
 #: modules/accounting/api/class-rest-api-expenses.php:535
@@ -24113,17 +24157,17 @@ msgid "To account id for the resource."
 msgstr ""
 
 #: build/modules/accounting/api/class-rest-api-accounts-transfer.php:554
-#: build/modules/accounting/api/class-rest-api-pay-bills.php:474
+#: build/modules/accounting/api/class-rest-api-pay-bills.php:496
 #: modules/accounting/api/class-rest-api-accounts-transfer.php:554
 #: modules/accounting/api/class-rest-api-pay-bills.php:496
 msgid "Amount for the resource."
 msgstr ""
 
 #: build/modules/accounting/api/class-rest-api-accounts-transfer.php:560
-#: build/modules/accounting/api/class-rest-api-expenses.php:567
+#: build/modules/accounting/api/class-rest-api-expenses.php:584
 #: build/modules/accounting/api/class-rest-api-journals.php:383
-#: build/modules/accounting/api/class-rest-api-pay-bills.php:515
-#: build/modules/accounting/api/class-rest-api-pay-purchases.php:517
+#: build/modules/accounting/api/class-rest-api-pay-bills.php:537
+#: build/modules/accounting/api/class-rest-api-pay-purchases.php:537
 #: modules/accounting/api/class-rest-api-accounts-transfer.php:560
 #: modules/accounting/api/class-rest-api-expenses.php:584
 #: modules/accounting/api/class-rest-api-journals.php:383
@@ -24141,17 +24185,17 @@ msgstr ""
 msgid "Invalid edit permission for update."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-bills.php:393
-#. translators: %1$s: amount, %2$s: id
-msgid "A bill of %1$s has been created for %2$s"
+#: build/modules/accounting/api/class-rest-api-bills.php:408
+#: modules/accounting/api/class-rest-api-bills.php:408
+msgid "A bill of %1$s has been %2$s for %3$s"
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-bills.php:527
-#: build/modules/accounting/api/class-rest-api-expenses.php:499
-#: build/modules/accounting/api/class-rest-api-pay-bills.php:446
-#: build/modules/accounting/api/class-rest-api-pay-purchases.php:420
-#: build/modules/accounting/api/class-rest-api-purchases.php:487
-#: build/modules/accounting/api/class-rest-api-rec-payments.php:439
+#: build/modules/accounting/api/class-rest-api-bills.php:542
+#: build/modules/accounting/api/class-rest-api-expenses.php:516
+#: build/modules/accounting/api/class-rest-api-pay-bills.php:468
+#: build/modules/accounting/api/class-rest-api-pay-purchases.php:440
+#: build/modules/accounting/api/class-rest-api-purchases.php:502
+#: build/modules/accounting/api/class-rest-api-rec-payments.php:456
 #: modules/accounting/api/class-rest-api-bills.php:542
 #: modules/accounting/api/class-rest-api-expenses.php:516
 #: modules/accounting/api/class-rest-api-pay-bills.php:468
@@ -24161,17 +24205,17 @@ msgstr ""
 msgid "Voucher no. for the resource."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-bills.php:532
-#: build/modules/accounting/api/class-rest-api-expenses.php:504
+#: build/modules/accounting/api/class-rest-api-bills.php:547
+#: build/modules/accounting/api/class-rest-api-expenses.php:521
 #: modules/accounting/api/class-rest-api-bills.php:547
 #: modules/accounting/api/class-rest-api-expenses.php:521
 msgid "People id for the resource."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-bills.php:550
-#: build/modules/accounting/api/class-rest-api-invoices.php:577
-#: build/modules/accounting/api/class-rest-api-pay-bills.php:466
-#: build/modules/accounting/api/class-rest-api-purchases.php:521
+#: build/modules/accounting/api/class-rest-api-bills.php:565
+#: build/modules/accounting/api/class-rest-api-invoices.php:593
+#: build/modules/accounting/api/class-rest-api-pay-bills.php:488
+#: build/modules/accounting/api/class-rest-api-purchases.php:536
 #: modules/accounting/api/class-rest-api-bills.php:565
 #: modules/accounting/api/class-rest-api-invoices.php:593
 #: modules/accounting/api/class-rest-api-pay-bills.php:488
@@ -24179,26 +24223,26 @@ msgstr ""
 msgid "Due date for the resource."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-bills.php:559
+#: build/modules/accounting/api/class-rest-api-bills.php:574
 #: modules/accounting/api/class-rest-api-bills.php:574
 msgid "Reference number for the resource."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-bills.php:567
-#: build/modules/accounting/api/class-rest-api-expenses.php:532
+#: build/modules/accounting/api/class-rest-api-bills.php:582
+#: build/modules/accounting/api/class-rest-api-expenses.php:549
 #: modules/accounting/api/class-rest-api-bills.php:582
 #: modules/accounting/api/class-rest-api-expenses.php:549
 msgid "Billing address for the resource."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-bills.php:576
-#: build/modules/accounting/api/class-rest-api-expenses.php:540
-#: build/modules/accounting/api/class-rest-api-invoices.php:607
+#: build/modules/accounting/api/class-rest-api-bills.php:591
+#: build/modules/accounting/api/class-rest-api-expenses.php:557
+#: build/modules/accounting/api/class-rest-api-invoices.php:623
 #: build/modules/accounting/api/class-rest-api-journals.php:353
-#: build/modules/accounting/api/class-rest-api-pay-bills.php:451
-#: build/modules/accounting/api/class-rest-api-pay-purchases.php:451
-#: build/modules/accounting/api/class-rest-api-purchases.php:530
-#: build/modules/accounting/api/class-rest-api-rec-payments.php:497
+#: build/modules/accounting/api/class-rest-api-pay-bills.php:473
+#: build/modules/accounting/api/class-rest-api-pay-purchases.php:471
+#: build/modules/accounting/api/class-rest-api-purchases.php:545
+#: build/modules/accounting/api/class-rest-api-rec-payments.php:514
 #: modules/accounting/api/class-rest-api-bills.php:591
 #: modules/accounting/api/class-rest-api-expenses.php:557
 #: modules/accounting/api/class-rest-api-invoices.php:623
@@ -24210,8 +24254,8 @@ msgstr ""
 msgid "List of line items data."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-bills.php:581
-#: build/modules/accounting/api/class-rest-api-expenses.php:545
+#: build/modules/accounting/api/class-rest-api-bills.php:596
+#: build/modules/accounting/api/class-rest-api-expenses.php:562
 #: build/modules/accounting/api/class-rest-api-journals.php:358
 #: modules/accounting/api/class-rest-api-bills.php:596
 #: modules/accounting/api/class-rest-api-expenses.php:562
@@ -24219,26 +24263,26 @@ msgstr ""
 msgid "Ledger id."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-bills.php:586
+#: build/modules/accounting/api/class-rest-api-bills.php:601
 #: modules/accounting/api/class-rest-api-bills.php:601
 msgid "Item Particular."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-bills.php:594
-#: build/modules/accounting/api/class-rest-api-expenses.php:559
+#: build/modules/accounting/api/class-rest-api-bills.php:609
+#: build/modules/accounting/api/class-rest-api-expenses.php:576
 #: modules/accounting/api/class-rest-api-bills.php:609
 #: modules/accounting/api/class-rest-api-expenses.php:576
 msgid "Bill Amount"
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-bills.php:607
-#: build/modules/accounting/api/class-rest-api-expenses.php:580
+#: build/modules/accounting/api/class-rest-api-bills.php:622
+#: build/modules/accounting/api/class-rest-api-expenses.php:597
 #: modules/accounting/api/class-rest-api-bills.php:622
 #: modules/accounting/api/class-rest-api-expenses.php:597
 msgid "Item Type."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-bills.php:615
+#: build/modules/accounting/api/class-rest-api-bills.php:630
 #: modules/accounting/api/class-rest-api-bills.php:630
 msgid "Bill Particular."
 msgstr ""
@@ -24264,8 +24308,8 @@ msgid "Company logo for the resource."
 msgstr ""
 
 #: build/modules/accounting/api/class-rest-api-company.php:99
-#: build/modules/accounting/api/class-rest-api-customers.php:646
-#: build/modules/accounting/api/class-rest-api-vendors.php:709
+#: build/modules/accounting/api/class-rest-api-customers.php:672
+#: build/modules/accounting/api/class-rest-api-vendors.php:737
 #: modules/accounting/api/class-rest-api-company.php:99
 #: modules/accounting/api/class-rest-api-customers.php:672
 #: modules/accounting/api/class-rest-api-vendors.php:737
@@ -24300,9 +24344,9 @@ msgid "Email already exists!"
 msgstr ""
 
 #: build/modules/accounting/api/class-rest-api-customers.php:332
-#: build/modules/accounting/api/class-rest-api-customers.php:368
-#: build/modules/accounting/api/class-rest-api-vendors.php:333
-#: build/modules/accounting/api/class-rest-api-vendors.php:369
+#: build/modules/accounting/api/class-rest-api-customers.php:372
+#: build/modules/accounting/api/class-rest-api-vendors.php:335
+#: build/modules/accounting/api/class-rest-api-vendors.php:375
 #: modules/accounting/api/class-rest-api-customers.php:332
 #: modules/accounting/api/class-rest-api-customers.php:372
 #: modules/accounting/api/class-rest-api-vendors.php:335
@@ -24310,188 +24354,189 @@ msgstr ""
 msgid "Can not remove! Customer has transactions."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-customers.php:449
-msgid " customer has been created"
+#: build/modules/accounting/api/class-rest-api-customers.php:475
+#: modules/accounting/api/class-rest-api-customers.php:475
+msgid " customer has been %s"
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-customers.php:638
-#: build/modules/accounting/api/class-rest-api-vendors.php:701
+#: build/modules/accounting/api/class-rest-api-customers.php:664
+#: build/modules/accounting/api/class-rest-api-vendors.php:729
 #: modules/accounting/api/class-rest-api-customers.php:664
 #: modules/accounting/api/class-rest-api-vendors.php:729
 msgid "Mobile number for the resource."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-customers.php:654
-#: build/modules/accounting/api/class-rest-api-vendors.php:717
+#: build/modules/accounting/api/class-rest-api-customers.php:680
+#: build/modules/accounting/api/class-rest-api-vendors.php:745
 #: modules/accounting/api/class-rest-api-customers.php:680
 #: modules/accounting/api/class-rest-api-vendors.php:745
 msgid "Phone number for the resource."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-customers.php:662
-#: build/modules/accounting/api/class-rest-api-vendors.php:725
+#: build/modules/accounting/api/class-rest-api-customers.php:688
+#: build/modules/accounting/api/class-rest-api-vendors.php:753
 #: modules/accounting/api/class-rest-api-customers.php:688
 #: modules/accounting/api/class-rest-api-vendors.php:753
 msgid "Website link of the resource."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-customers.php:684
-#: build/modules/accounting/api/class-rest-api-vendors.php:747
+#: build/modules/accounting/api/class-rest-api-customers.php:710
+#: build/modules/accounting/api/class-rest-api-vendors.php:775
 #: modules/accounting/api/class-rest-api-customers.php:710
 #: modules/accounting/api/class-rest-api-vendors.php:775
 msgid "Stree 1 for the resource."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-customers.php:692
-#: build/modules/accounting/api/class-rest-api-vendors.php:755
+#: build/modules/accounting/api/class-rest-api-customers.php:718
+#: build/modules/accounting/api/class-rest-api-vendors.php:783
 #: modules/accounting/api/class-rest-api-customers.php:718
 #: modules/accounting/api/class-rest-api-vendors.php:783
 msgid "Stree 2 for the resource."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-customers.php:700
-#: build/modules/accounting/api/class-rest-api-vendors.php:763
+#: build/modules/accounting/api/class-rest-api-customers.php:726
+#: build/modules/accounting/api/class-rest-api-vendors.php:791
 #: modules/accounting/api/class-rest-api-customers.php:726
 #: modules/accounting/api/class-rest-api-vendors.php:791
 msgid "City for the resource."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-customers.php:708
-#: build/modules/accounting/api/class-rest-api-vendors.php:771
+#: build/modules/accounting/api/class-rest-api-customers.php:734
+#: build/modules/accounting/api/class-rest-api-vendors.php:799
 #: modules/accounting/api/class-rest-api-customers.php:734
 #: modules/accounting/api/class-rest-api-vendors.php:799
 msgid "Zip code for the resource."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-customers.php:716
-#: build/modules/accounting/api/class-rest-api-vendors.php:779
+#: build/modules/accounting/api/class-rest-api-customers.php:742
+#: build/modules/accounting/api/class-rest-api-vendors.php:807
 #: modules/accounting/api/class-rest-api-customers.php:742
 #: modules/accounting/api/class-rest-api-vendors.php:807
 msgid "Photo ID for the resource."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-customers.php:721
-#: build/modules/accounting/api/class-rest-api-vendors.php:784
+#: build/modules/accounting/api/class-rest-api-customers.php:747
+#: build/modules/accounting/api/class-rest-api-vendors.php:812
 #: modules/accounting/api/class-rest-api-customers.php:747
 #: modules/accounting/api/class-rest-api-vendors.php:812
 msgid "Photo for the resource."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-customers.php:729
-#: build/modules/accounting/api/class-rest-api-vendors.php:792
+#: build/modules/accounting/api/class-rest-api-customers.php:755
+#: build/modules/accounting/api/class-rest-api-vendors.php:820
 #: modules/accounting/api/class-rest-api-customers.php:755
 #: modules/accounting/api/class-rest-api-vendors.php:820
 msgid "List of countries data."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-customers.php:739
-#: build/modules/accounting/api/class-rest-api-vendors.php:802
+#: build/modules/accounting/api/class-rest-api-customers.php:765
+#: build/modules/accounting/api/class-rest-api-vendors.php:830
 #: modules/accounting/api/class-rest-api-customers.php:765
 #: modules/accounting/api/class-rest-api-vendors.php:830
 msgid "Country name for the resource."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-customers.php:746
-#: build/modules/accounting/api/class-rest-api-products.php:365
-#: build/modules/accounting/api/class-rest-api-vendors.php:809
+#: build/modules/accounting/api/class-rest-api-customers.php:772
+#: build/modules/accounting/api/class-rest-api-products.php:411
+#: build/modules/accounting/api/class-rest-api-vendors.php:837
 #: modules/accounting/api/class-rest-api-customers.php:772
 #: modules/accounting/api/class-rest-api-products.php:411
 #: modules/accounting/api/class-rest-api-vendors.php:837
 msgid "State for the resource."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-customers.php:756
-#: build/modules/accounting/api/class-rest-api-vendors.php:819
+#: build/modules/accounting/api/class-rest-api-customers.php:782
+#: build/modules/accounting/api/class-rest-api-vendors.php:847
 #: modules/accounting/api/class-rest-api-customers.php:782
 #: modules/accounting/api/class-rest-api-vendors.php:847
 msgid "State name for the resource."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-expenses.php:333
-#. translators: %1$s: amount, %2$s: id
-msgid "An expense of %1$s has been created for %2$s"
+#: build/modules/accounting/api/class-rest-api-expenses.php:350
+#: modules/accounting/api/class-rest-api-expenses.php:350
+msgid "An expense of %1$s has been %2$s for %3$s"
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-expenses.php:510
+#: build/modules/accounting/api/class-rest-api-expenses.php:527
 #: build/modules/accounting/api/class-rest-api-journals.php:337
-#: build/modules/accounting/api/class-rest-api-pay-bills.php:429
+#: build/modules/accounting/api/class-rest-api-pay-bills.php:451
 #: modules/accounting/api/class-rest-api-expenses.php:527
 #: modules/accounting/api/class-rest-api-journals.php:337
 #: modules/accounting/api/class-rest-api-pay-bills.php:451
 msgid "Reference for the resource."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-expenses.php:527
+#: build/modules/accounting/api/class-rest-api-expenses.php:544
 #: modules/accounting/api/class-rest-api-expenses.php:544
 msgid "Trans by for the resource."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-expenses.php:551
+#: build/modules/accounting/api/class-rest-api-expenses.php:568
 #: modules/accounting/api/class-rest-api-expenses.php:568
 msgid "Bill Particulars."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-expenses.php:588
+#: build/modules/accounting/api/class-rest-api-expenses.php:605
 #: modules/accounting/api/class-rest-api-expenses.php:605
 msgid "Payment method for the resource."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-expenses.php:596
+#: build/modules/accounting/api/class-rest-api-expenses.php:613
 #: modules/accounting/api/class-rest-api-expenses.php:613
 msgid "Account for the resource."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-invoices.php:452
+#: build/modules/accounting/api/class-rest-api-invoices.php:469
 #: modules/accounting/api/class-rest-api-invoices.php:469
 msgid "Invoice"
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-invoices.php:456
-#. translators: %1$s: amount, %2$s: id
-msgid "An invoice of %1$s has been created for %2$s"
+#: build/modules/accounting/api/class-rest-api-invoices.php:472
+#: modules/accounting/api/class-rest-api-invoices.php:472
+msgid "An invoice of %1$s has been %2$s for %3$s"
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-invoices.php:562
-#: build/modules/accounting/api/class-rest-api-purchases.php:495
-#: build/modules/accounting/api/class-rest-api-purchases.php:504
+#: build/modules/accounting/api/class-rest-api-invoices.php:578
+#: build/modules/accounting/api/class-rest-api-purchases.php:510
+#: build/modules/accounting/api/class-rest-api-purchases.php:519
 #: modules/accounting/api/class-rest-api-invoices.php:578
 #: modules/accounting/api/class-rest-api-purchases.php:510
 #: modules/accounting/api/class-rest-api-purchases.php:519
 msgid "Customer id for the resource."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-invoices.php:586
+#: build/modules/accounting/api/class-rest-api-invoices.php:602
 #: build/modules/accounting/api/class-rest-api-people.php:442
-#: build/modules/accounting/api/class-rest-api-rec-payments.php:465
+#: build/modules/accounting/api/class-rest-api-rec-payments.php:482
 #: modules/accounting/api/class-rest-api-invoices.php:602
 #: modules/accounting/api/class-rest-api-people.php:442
 #: modules/accounting/api/class-rest-api-rec-payments.php:482
 msgid "List of billing address data."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-invoices.php:594
+#: build/modules/accounting/api/class-rest-api-invoices.php:610
 #: modules/accounting/api/class-rest-api-invoices.php:610
 msgid "Discount type data."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-invoices.php:602
+#: build/modules/accounting/api/class-rest-api-invoices.php:618
 #: modules/accounting/api/class-rest-api-invoices.php:618
 msgid "Tax rate id."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-invoices.php:612
-#: build/modules/accounting/api/class-rest-api-pay-purchases.php:456
-#: build/modules/accounting/api/class-rest-api-purchases.php:535
+#: build/modules/accounting/api/class-rest-api-invoices.php:628
+#: build/modules/accounting/api/class-rest-api-pay-purchases.php:476
+#: build/modules/accounting/api/class-rest-api-purchases.php:550
 #: modules/accounting/api/class-rest-api-invoices.php:628
 #: modules/accounting/api/class-rest-api-pay-purchases.php:476
 #: modules/accounting/api/class-rest-api-purchases.php:550
 msgid "Product id."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-invoices.php:617
-#: build/modules/accounting/api/class-rest-api-invoices.php:625
-#: build/modules/accounting/api/class-rest-api-pay-purchases.php:461
-#: build/modules/accounting/api/class-rest-api-purchases.php:540
+#: build/modules/accounting/api/class-rest-api-invoices.php:633
+#: build/modules/accounting/api/class-rest-api-invoices.php:641
+#: build/modules/accounting/api/class-rest-api-pay-purchases.php:481
+#: build/modules/accounting/api/class-rest-api-purchases.php:555
 #: modules/accounting/api/class-rest-api-invoices.php:633
 #: modules/accounting/api/class-rest-api-invoices.php:641
 #: modules/accounting/api/class-rest-api-pay-purchases.php:481
@@ -24499,26 +24544,26 @@ msgstr ""
 msgid "Product type."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-invoices.php:630
-#: build/modules/accounting/api/class-rest-api-purchases.php:545
+#: build/modules/accounting/api/class-rest-api-invoices.php:646
+#: build/modules/accounting/api/class-rest-api-purchases.php:560
 #: modules/accounting/api/class-rest-api-invoices.php:646
 #: modules/accounting/api/class-rest-api-purchases.php:560
 msgid "Product quantity."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-invoices.php:635
-#: build/modules/accounting/api/class-rest-api-pay-purchases.php:466
-#: build/modules/accounting/api/class-rest-api-purchases.php:550
+#: build/modules/accounting/api/class-rest-api-invoices.php:651
+#: build/modules/accounting/api/class-rest-api-pay-purchases.php:486
+#: build/modules/accounting/api/class-rest-api-purchases.php:565
 #: modules/accounting/api/class-rest-api-invoices.php:651
 #: modules/accounting/api/class-rest-api-pay-purchases.php:486
 #: modules/accounting/api/class-rest-api-purchases.php:565
 msgid "Unit price."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-invoices.php:640
-#: build/modules/accounting/api/class-rest-api-pay-purchases.php:471
-#: build/modules/accounting/api/class-rest-api-pay-purchases.php:476
-#: build/modules/accounting/api/class-rest-api-purchases.php:555
+#: build/modules/accounting/api/class-rest-api-invoices.php:656
+#: build/modules/accounting/api/class-rest-api-pay-purchases.php:491
+#: build/modules/accounting/api/class-rest-api-pay-purchases.php:496
+#: build/modules/accounting/api/class-rest-api-purchases.php:570
 #: modules/accounting/api/class-rest-api-invoices.php:656
 #: modules/accounting/api/class-rest-api-pay-purchases.php:491
 #: modules/accounting/api/class-rest-api-pay-purchases.php:496
@@ -24526,37 +24571,37 @@ msgstr ""
 msgid "Discount."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-invoices.php:645
-#: build/modules/accounting/api/class-rest-api-purchases.php:560
+#: build/modules/accounting/api/class-rest-api-invoices.php:661
+#: build/modules/accounting/api/class-rest-api-purchases.php:575
 #: modules/accounting/api/class-rest-api-invoices.php:661
 #: modules/accounting/api/class-rest-api-purchases.php:575
 msgid "Tax."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-invoices.php:650
-#: build/modules/accounting/api/class-rest-api-purchases.php:565
+#: build/modules/accounting/api/class-rest-api-invoices.php:666
+#: build/modules/accounting/api/class-rest-api-purchases.php:580
 #: modules/accounting/api/class-rest-api-invoices.php:666
 #: modules/accounting/api/class-rest-api-purchases.php:580
 msgid "Tax percent."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-invoices.php:655
-#: build/modules/accounting/api/class-rest-api-pay-purchases.php:481
-#: build/modules/accounting/api/class-rest-api-purchases.php:570
+#: build/modules/accounting/api/class-rest-api-invoices.php:671
+#: build/modules/accounting/api/class-rest-api-pay-purchases.php:501
+#: build/modules/accounting/api/class-rest-api-purchases.php:585
 #: modules/accounting/api/class-rest-api-invoices.php:671
 #: modules/accounting/api/class-rest-api-pay-purchases.php:501
 #: modules/accounting/api/class-rest-api-purchases.php:585
 msgid "Item total."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-invoices.php:662
+#: build/modules/accounting/api/class-rest-api-invoices.php:678
 #: build/modules/accounting/api/class-rest-api-journals.php:345
-#: build/modules/accounting/api/class-rest-api-ledgers.php:648
-#: build/modules/accounting/api/class-rest-api-pay-bills.php:502
-#: build/modules/accounting/api/class-rest-api-pay-purchases.php:425
-#: build/modules/accounting/api/class-rest-api-pay-purchases.php:504
-#: build/modules/accounting/api/class-rest-api-purchases.php:577
-#: build/modules/accounting/api/class-rest-api-rec-payments.php:540
+#: build/modules/accounting/api/class-rest-api-ledgers.php:669
+#: build/modules/accounting/api/class-rest-api-pay-bills.php:524
+#: build/modules/accounting/api/class-rest-api-pay-purchases.php:445
+#: build/modules/accounting/api/class-rest-api-pay-purchases.php:524
+#: build/modules/accounting/api/class-rest-api-purchases.php:592
+#: build/modules/accounting/api/class-rest-api-rec-payments.php:557
 #: modules/accounting/api/class-rest-api-invoices.php:678
 #: modules/accounting/api/class-rest-api-journals.php:345
 #: modules/accounting/api/class-rest-api-ledgers.php:669
@@ -24609,30 +24654,30 @@ msgstr ""
 msgid "Name already exist."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-ledgers.php:468
-#: build/modules/accounting/api/class-rest-api-ledgers.php:495
+#: build/modules/accounting/api/class-rest-api-ledgers.php:476
+#: build/modules/accounting/api/class-rest-api-ledgers.php:503
 #: modules/accounting/api/class-rest-api-ledgers.php:476
 #: modules/accounting/api/class-rest-api-ledgers.php:503
 msgid "Category already exist."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-ledgers.php:531
+#: build/modules/accounting/api/class-rest-api-ledgers.php:553
 #: modules/accounting/api/class-rest-api-ledgers.php:553
 msgid "Ledger Account"
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-ledgers.php:535
-#. translators: %1$s: name, %2$s: id
-msgid "A ledger account named %1$s has been created for %2$s"
+#: build/modules/accounting/api/class-rest-api-ledgers.php:556
+#: modules/accounting/api/class-rest-api-ledgers.php:556
+msgid "A ledger account named %1$s has been %2$s for %3$s"
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-ledgers.php:654
+#: build/modules/accounting/api/class-rest-api-ledgers.php:675
 #: modules/accounting/api/class-rest-api-ledgers.php:675
 msgid "Code for the resource."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-ledgers.php:668
-#: build/modules/accounting/api/class-rest-api-products.php:423
+#: build/modules/accounting/api/class-rest-api-ledgers.php:689
+#: build/modules/accounting/api/class-rest-api-products.php:469
 #: build/modules/hrm/includes/api/class-departments-controller.php:329
 #: build/modules/hrm/includes/api/class-designations-controller.php:279
 #: build/modules/hrm/includes/api/class-leave-holidays-controller.php:302
@@ -24673,66 +24718,66 @@ msgstr ""
 msgid "Ledger names for the resource."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-pay-bills.php:281
-#. translators: %1$s: amount, %2$s: id
-msgid "A bill payment of %1$s has been created for %2$s"
+#: build/modules/accounting/api/class-rest-api-pay-bills.php:303
+#: modules/accounting/api/class-rest-api-pay-bills.php:303
+msgid "A bill payment of %1$s has been %2$s for %3$s"
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-pay-bills.php:423
-#: build/modules/accounting/api/class-rest-api-pay-purchases.php:433
-#: build/modules/accounting/api/class-rest-api-rec-payments.php:447
+#: build/modules/accounting/api/class-rest-api-pay-bills.php:445
+#: build/modules/accounting/api/class-rest-api-pay-purchases.php:453
+#: build/modules/accounting/api/class-rest-api-rec-payments.php:464
 #: modules/accounting/api/class-rest-api-pay-bills.php:445
 #: modules/accounting/api/class-rest-api-pay-purchases.php:453
 #: modules/accounting/api/class-rest-api-rec-payments.php:464
 msgid "Vendor id for the resource."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-pay-bills.php:437
+#: build/modules/accounting/api/class-rest-api-pay-bills.php:459
 #: modules/accounting/api/class-rest-api-pay-bills.php:459
 msgid "Trans Date for the resource."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-pay-bills.php:456
+#: build/modules/accounting/api/class-rest-api-pay-bills.php:478
 #: modules/accounting/api/class-rest-api-pay-bills.php:478
 msgid "Unique identifier for the line item."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-pay-bills.php:461
+#: build/modules/accounting/api/class-rest-api-pay-bills.php:483
 #: modules/accounting/api/class-rest-api-pay-bills.php:483
 msgid "Voucher no for line item."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-pay-bills.php:479
+#: build/modules/accounting/api/class-rest-api-pay-bills.php:501
 #: modules/accounting/api/class-rest-api-pay-bills.php:501
 msgid "Item due."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-pay-bills.php:486
-#: build/modules/accounting/api/class-rest-api-pay-purchases.php:488
-#: build/modules/accounting/api/class-rest-api-rec-payments.php:524
+#: build/modules/accounting/api/class-rest-api-pay-bills.php:508
+#: build/modules/accounting/api/class-rest-api-pay-purchases.php:508
+#: build/modules/accounting/api/class-rest-api-rec-payments.php:541
 #: modules/accounting/api/class-rest-api-pay-bills.php:508
 #: modules/accounting/api/class-rest-api-pay-purchases.php:508
 #: modules/accounting/api/class-rest-api-rec-payments.php:541
 msgid "Check no for the resource."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-pay-bills.php:494
-#: build/modules/accounting/api/class-rest-api-pay-purchases.php:496
-#: build/modules/accounting/api/class-rest-api-rec-payments.php:532
+#: build/modules/accounting/api/class-rest-api-pay-bills.php:516
+#: build/modules/accounting/api/class-rest-api-pay-purchases.php:516
+#: build/modules/accounting/api/class-rest-api-rec-payments.php:549
 #: modules/accounting/api/class-rest-api-pay-bills.php:516
 #: modules/accounting/api/class-rest-api-pay-purchases.php:516
 #: modules/accounting/api/class-rest-api-rec-payments.php:549
 msgid "Check name for the resource."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-pay-bills.php:523
+#: build/modules/accounting/api/class-rest-api-pay-bills.php:545
 #: modules/accounting/api/class-rest-api-pay-bills.php:545
 msgid "Deposit to for the resource."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-pay-purchases.php:275
-#. translators: %1$s: amount, %2$s: id
-msgid "A purchase payment of %1$s has been created for %2$s"
+#: build/modules/accounting/api/class-rest-api-pay-purchases.php:295
+#: modules/accounting/api/class-rest-api-pay-purchases.php:295
+msgid "A purchase payment of %1$s has been %2$s for %3$s"
 msgstr ""
 
 #: build/modules/accounting/api/class-rest-api-people.php:447
@@ -24756,178 +24801,214 @@ msgid "Address line 2"
 msgstr ""
 
 #: build/modules/accounting/api/class-rest-api-people.php:467
-#: build/modules/accounting/api/class-rest-api-rec-payments.php:470
+#: build/modules/accounting/api/class-rest-api-rec-payments.php:487
 #: modules/accounting/api/class-rest-api-people.php:467
 #: modules/accounting/api/class-rest-api-rec-payments.php:487
 msgid "City name."
 msgstr ""
 
 #: build/modules/accounting/api/class-rest-api-people.php:472
-#: build/modules/accounting/api/class-rest-api-rec-payments.php:475
+#: build/modules/accounting/api/class-rest-api-rec-payments.php:492
 #: modules/accounting/api/class-rest-api-people.php:472
 #: modules/accounting/api/class-rest-api-rec-payments.php:492
 msgid "ISO code or name of the state, province or district."
 msgstr ""
 
 #: build/modules/accounting/api/class-rest-api-people.php:477
-#: build/modules/accounting/api/class-rest-api-rec-payments.php:480
+#: build/modules/accounting/api/class-rest-api-rec-payments.php:497
 #: modules/accounting/api/class-rest-api-people.php:477
 #: modules/accounting/api/class-rest-api-rec-payments.php:497
 msgid "Postal code."
 msgstr ""
 
 #: build/modules/accounting/api/class-rest-api-people.php:482
-#: build/modules/accounting/api/class-rest-api-rec-payments.php:485
+#: build/modules/accounting/api/class-rest-api-rec-payments.php:502
 #: modules/accounting/api/class-rest-api-people.php:482
 #: modules/accounting/api/class-rest-api-rec-payments.php:502
 msgid "ISO code of the country."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-product-cats.php:323
+#: build/modules/accounting/api/class-rest-api-product-cats.php:285
+#: modules/accounting/api/class-rest-api-product-cats.php:285
+msgid "Product Category"
+msgstr ""
+
+#: build/modules/accounting/api/class-rest-api-product-cats.php:288
+#: modules/accounting/api/class-rest-api-product-cats.php:288
+msgid "<strong>%1$s</strong> product category has been %2$s"
+msgstr ""
+
+#: build/modules/accounting/api/class-rest-api-product-cats.php:371
 #: build/modules/hrm/includes/api/class-departments-controller.php:337
 #: modules/accounting/api/class-rest-api-product-cats.php:371
 #: modules/hrm/includes/api/class-departments-controller.php:337
 msgid "Parent for the resource."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-products.php:376
-#: build/modules/accounting/api/class-rest-api-products.php:396
+#: build/modules/accounting/api/class-rest-api-products.php:299
+#: modules/accounting/api/class-rest-api-products.php:299
+msgid "<strong>%1$s</strong> product has been %2$s"
+msgstr ""
+
+#: build/modules/accounting/api/class-rest-api-products.php:422
+#: build/modules/accounting/api/class-rest-api-products.php:442
 #: modules/accounting/api/class-rest-api-products.php:422
 #: modules/accounting/api/class-rest-api-products.php:442
 msgid "Type name for the resource."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-products.php:386
+#: build/modules/accounting/api/class-rest-api-products.php:432
 #: modules/accounting/api/class-rest-api-products.php:432
 msgid "Category id for the resource."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-products.php:401
+#: build/modules/accounting/api/class-rest-api-products.php:447
 #: modules/accounting/api/class-rest-api-products.php:447
 msgid "Parent category for the resource."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-products.php:408
-#: build/modules/accounting/api/class-rest-api-taxes.php:947
+#: build/modules/accounting/api/class-rest-api-products.php:454
+#: build/modules/accounting/api/class-rest-api-taxes.php:984
 #: modules/accounting/api/class-rest-api-products.php:454
 #: modules/accounting/api/class-rest-api-taxes.php:984
 msgid "Tax category id for the resource."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-products.php:418
+#: build/modules/accounting/api/class-rest-api-products.php:464
 #: modules/accounting/api/class-rest-api-products.php:464
 msgid "Tax category name for the resource."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-products.php:430
+#: build/modules/accounting/api/class-rest-api-products.php:476
 #: modules/accounting/api/class-rest-api-products.php:476
 msgid "Vendor for the resource."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-products.php:451
+#: build/modules/accounting/api/class-rest-api-products.php:497
 #: modules/accounting/api/class-rest-api-products.php:497
 msgid "Cost price for the resource."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-products.php:457
+#: build/modules/accounting/api/class-rest-api-products.php:503
 #: modules/accounting/api/class-rest-api-products.php:503
 msgid "Sale price for the resource."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-purchases.php:353
-#. translators: %1$s: amount, %2$s: id
-msgid "A purchase of %1$s has been created for %2$s"
+#: build/modules/accounting/api/class-rest-api-purchases.php:368
+#: modules/accounting/api/class-rest-api-purchases.php:368
+msgid "A purchase of %1$s has been %2$s for %3$s"
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-rec-payments.php:280
-#. translators: %1$s: amount, %2$s: id
-msgid "An invoice payment of %1$s has been created for %2$s"
+#: build/modules/accounting/api/class-rest-api-rec-payments.php:297
+#: modules/accounting/api/class-rest-api-rec-payments.php:297
+msgid "An invoice payment of %1$s has been %2$s for %3$s"
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-rec-payments.php:502
+#: build/modules/accounting/api/class-rest-api-rec-payments.php:519
 #: modules/accounting/api/class-rest-api-rec-payments.php:519
 msgid "Invoice no."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-rec-payments.php:507
+#: build/modules/accounting/api/class-rest-api-rec-payments.php:524
 #: modules/accounting/api/class-rest-api-rec-payments.php:524
 msgid "Invoice amount."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-rec-payments.php:512
+#: build/modules/accounting/api/class-rest-api-rec-payments.php:529
 #: modules/accounting/api/class-rest-api-rec-payments.php:529
 msgid "Invoice due."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-rec-payments.php:517
+#: build/modules/accounting/api/class-rest-api-rec-payments.php:534
 #: modules/accounting/api/class-rest-api-rec-payments.php:534
 msgid "Total."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-tax-agencies.php:383
+#: build/modules/accounting/api/class-rest-api-tax-agencies.php:361
+#: modules/accounting/api/class-rest-api-tax-agencies.php:361
+msgid " tax agency has been %s"
+msgstr ""
+
+#: build/modules/accounting/api/class-rest-api-tax-agencies.php:430
 #: modules/accounting/api/class-rest-api-tax-agencies.php:430
 msgid "Tax agency name for the resource."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-tax-cats.php:355
+#: build/modules/accounting/api/class-rest-api-tax-cats.php:329
+#: modules/accounting/api/class-rest-api-tax-cats.php:329
+msgid " tax category has been %s"
+msgstr ""
+
+#: build/modules/accounting/api/class-rest-api-tax-cats.php:403
 #: modules/accounting/api/class-rest-api-tax-cats.php:403
 msgid "Tax Category name for the resource."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-tax-cats.php:363
+#: build/modules/accounting/api/class-rest-api-tax-cats.php:411
 #: modules/accounting/api/class-rest-api-tax-cats.php:411
 msgid "Tax Category Description for the resource."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-tax-rate-names.php:343
-#: build/modules/accounting/api/class-rest-api-taxes.php:921
+#: build/modules/accounting/api/class-rest-api-tax-rate-names.php:320
+#: modules/accounting/api/class-rest-api-tax-rate-names.php:320
+msgid " tax zone has been %s"
+msgstr ""
+
+#: build/modules/accounting/api/class-rest-api-tax-rate-names.php:390
+#: build/modules/accounting/api/class-rest-api-taxes.php:958
 #: modules/accounting/api/class-rest-api-tax-rate-names.php:390
 #: modules/accounting/api/class-rest-api-taxes.php:958
 msgid "Tax rate name for the resource."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-tax-rate-names.php:351
+#: build/modules/accounting/api/class-rest-api-tax-rate-names.php:398
 #: modules/accounting/api/class-rest-api-tax-rate-names.php:398
 msgid "Tax number for the resource."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-tax-rate-names.php:359
+#: build/modules/accounting/api/class-rest-api-tax-rate-names.php:406
 #: modules/accounting/api/class-rest-api-tax-rate-names.php:406
 msgid "Tax default value for the resource."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-taxes.php:680
-#. translators: %1$s: amount, %2$s: id
-msgid "A tax payment of %1$s has been created for %2$s"
+#: build/modules/accounting/api/class-rest-api-taxes.php:705
+#: modules/accounting/api/class-rest-api-taxes.php:705
+msgid "A tax rate has been %s"
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-taxes.php:927
+#: build/modules/accounting/api/class-rest-api-taxes.php:708
+#: modules/accounting/api/class-rest-api-taxes.php:708
+msgid "A tax payment of %1$s has been %2$s"
+msgstr ""
+
+#: build/modules/accounting/api/class-rest-api-taxes.php:964
 #: modules/accounting/api/class-rest-api-taxes.php:964
 msgid "Tax type for the resource."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-taxes.php:932
+#: build/modules/accounting/api/class-rest-api-taxes.php:969
 #: modules/accounting/api/class-rest-api-taxes.php:969
 msgid "Components for the resource."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-taxes.php:937
+#: build/modules/accounting/api/class-rest-api-taxes.php:974
 #: modules/accounting/api/class-rest-api-taxes.php:974
 msgid "Component name for the resource."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-taxes.php:942
+#: build/modules/accounting/api/class-rest-api-taxes.php:979
 #: modules/accounting/api/class-rest-api-taxes.php:979
 msgid "Agency id for the resource."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-taxes.php:952
+#: build/modules/accounting/api/class-rest-api-taxes.php:989
 #: modules/accounting/api/class-rest-api-taxes.php:989
 msgid "Tax rate for the resource."
 msgstr ""
 
-#: build/modules/accounting/api/class-rest-api-vendors.php:471
-msgid " vendor has been created"
+#: build/modules/accounting/api/class-rest-api-vendors.php:499
+#: modules/accounting/api/class-rest-api-vendors.php:499
+msgid " vendor has been %s"
 msgstr ""
 
 #: build/modules/accounting/includes/classes/class-admin.php:102
@@ -25684,23 +25765,23 @@ msgstr ""
 msgid "Powered By "
 msgstr ""
 
-#: build/modules/crm/crm.php:181 modules/crm/crm.php:182
+#: build/modules/crm/crm.php:182 modules/crm/crm.php:182
 msgid "Add New Customer"
 msgstr ""
 
-#: build/modules/crm/crm.php:182 modules/crm/crm.php:183
+#: build/modules/crm/crm.php:183 modules/crm/crm.php:183
 msgid "Edit Customer"
 msgstr ""
 
-#: build/modules/crm/crm.php:183 modules/crm/crm.php:184
+#: build/modules/crm/crm.php:184 modules/crm/crm.php:184
 msgid "Customer Social Profile"
 msgstr ""
 
-#: build/modules/crm/crm.php:184 modules/crm/crm.php:185
+#: build/modules/crm/crm.php:185 modules/crm/crm.php:185
 msgid "Add to Contact groups"
 msgstr ""
 
-#: build/modules/crm/crm.php:190
+#: build/modules/crm/crm.php:191
 #: build/modules/crm/views/js-templates/new-customer.php:25
 #: build/modules/hrm/hrm.php:196
 #: build/modules/hrm/views/js-templates/new-employee.php:17
@@ -25709,44 +25790,44 @@ msgstr ""
 msgid "Upload Photo"
 msgstr ""
 
-#: build/modules/crm/crm.php:191 build/modules/hrm/hrm.php:197
+#: build/modules/crm/crm.php:192 build/modules/hrm/hrm.php:197
 #: modules/crm/crm.php:192 modules/hrm/hrm.php:197
 msgid "Set Photo"
 msgstr ""
 
-#: build/modules/crm/crm.php:193 modules/crm/crm.php:194
+#: build/modules/crm/crm.php:194 modules/crm/crm.php:194
 msgid "Are you sure to delete?"
 msgstr ""
 
-#: build/modules/crm/crm.php:194 modules/crm/crm.php:195
+#: build/modules/crm/crm.php:195 modules/crm/crm.php:195
 msgid "Are you sure to delete this?"
 msgstr ""
 
-#: build/modules/crm/crm.php:195 modules/crm/crm.php:196
+#: build/modules/crm/crm.php:196 modules/crm/crm.php:196
 msgid "Select atleast one group"
 msgstr ""
 
-#: build/modules/crm/crm.php:196 modules/crm/crm.php:197
+#: build/modules/crm/crm.php:197 modules/crm/crm.php:197
 msgid "Already exists as a contact or company"
 msgstr ""
 
-#: build/modules/crm/crm.php:197 modules/crm/crm.php:198
+#: build/modules/crm/crm.php:198 modules/crm/crm.php:198
 msgid "This user already exists! Do you want to make this user as a"
 msgstr ""
 
-#: build/modules/crm/crm.php:198 modules/crm/crm.php:199
+#: build/modules/crm/crm.php:199 modules/crm/crm.php:199
 msgid "This is wp user! Do you want to create this user as a"
 msgstr ""
 
-#: build/modules/crm/crm.php:199 modules/crm/crm.php:200
+#: build/modules/crm/crm.php:200 modules/crm/crm.php:200
 msgid "Create new"
 msgstr ""
 
-#: build/modules/crm/crm.php:201 modules/crm/crm.php:202
+#: build/modules/crm/crm.php:202 modules/crm/crm.php:202
 msgid "WP User created successfully"
 msgstr ""
 
-#: build/modules/crm/crm.php:202 build/modules/hrm/hrm.php:211
+#: build/modules/crm/crm.php:203 build/modules/hrm/hrm.php:211
 #: modules/crm/crm.php:203 modules/hrm/hrm.php:211
 msgid ""
 "Please fill all the required fields. You have {count} required field(s) "
@@ -25801,12 +25882,12 @@ msgstr ""
 msgid "<span class=\"erp-help\">Help</span>"
 msgstr ""
 
-#: build/modules/crm/includes/admin/class-menu.php:208
+#: build/modules/crm/includes/admin/class-menu.php:211
 #: modules/crm/includes/admin/class-menu.php:211
 msgid "Contact not found!"
 msgstr ""
 
-#: build/modules/crm/includes/admin/class-menu.php:243
+#: build/modules/crm/includes/admin/class-menu.php:249
 #: modules/crm/includes/admin/class-menu.php:249
 msgid "Company not found!"
 msgstr ""
@@ -25896,7 +25977,7 @@ msgstr ""
 #: build/modules/crm/includes/admin/class-settings.php:155
 #: build/modules/crm/includes/admin/class-settings.php:157
 #: build/modules/crm/views/js-templates/new-contact-group.php:33
-#: build/modules/hrm/includes/functions-employee.php:595
+#: build/modules/hrm/includes/functions-employee.php:601
 #: modules/crm/includes/admin/class-settings.php:155
 #: modules/crm/includes/admin/class-settings.php:157
 #: modules/crm/views/js-templates/new-contact-group.php:33
@@ -26168,12 +26249,12 @@ msgstr ""
 msgid "You don't have any permission to edit this contact"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:352
+#: build/modules/crm/includes/class-ajax.php:362
 #: modules/crm/includes/class-ajax.php:362
 msgid "Cotact does not exists."
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:380
+#: build/modules/crm/includes/class-ajax.php:390
 #: modules/crm/includes/class-ajax.php:390
 msgid ""
 "You can't delete this contact as this contact has a relation with a "
@@ -26181,7 +26262,7 @@ msgid ""
 "before deleting."
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:384
+#: build/modules/crm/includes/class-ajax.php:394
 #: modules/crm/includes/class-ajax.php:394
 msgid ""
 "You can't delete this company as this company has a relation with a "
@@ -26189,60 +26270,60 @@ msgid ""
 "before deleting."
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:398
+#: build/modules/crm/includes/class-ajax.php:408
 #: modules/crm/includes/class-ajax.php:408
 msgid "You don't have any permission to delete this contact"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:404
+#: build/modules/crm/includes/class-ajax.php:414
 #: modules/crm/includes/class-ajax.php:414
 msgid "Can not delete - You do not own this contact(s)"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:473
+#: build/modules/crm/includes/class-ajax.php:494
 #: modules/crm/includes/class-ajax.php:494
 msgid "Contact must be required"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:477
+#: build/modules/crm/includes/class-ajax.php:498
 #: modules/crm/includes/class-ajax.php:498
 msgid "Atleast one group must be selected"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:489
+#: build/modules/crm/includes/class-ajax.php:510
 #: modules/crm/includes/class-ajax.php:510
 msgid "Can not assign any group - You do not own this contact(s)"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:503
+#: build/modules/crm/includes/class-ajax.php:526
 #: modules/crm/includes/class-ajax.php:526
 msgid "Selected contact are successfully subscribed"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:523
-#: build/modules/hrm/includes/class-ajax.php:1167
+#: build/modules/crm/includes/class-ajax.php:546
+#: build/modules/hrm/includes/class-ajax.php:1179
 #: modules/crm/includes/class-ajax.php:546
 #: modules/hrm/includes/class-ajax.php:1179
 msgid "User not found"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:527
+#: build/modules/crm/includes/class-ajax.php:550
 #: modules/crm/includes/class-ajax.php:550
 msgid "Type not found"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:566
+#: build/modules/crm/includes/class-ajax.php:589
 #: modules/crm/includes/class-ajax.php:589
 msgid "Company already assigned. Choose another company"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:570
+#: build/modules/crm/includes/class-ajax.php:593
 #: modules/crm/includes/class-ajax.php:593
 msgid "Contact already assigned. Choose another contact"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:574
-#: build/modules/crm/includes/class-ajax.php:739
+#: build/modules/crm/includes/class-ajax.php:597
+#: build/modules/crm/includes/class-ajax.php:766
 #: build/modules/crm/includes/functions-customer.php:382
 #: build/modules/crm/includes/functions-customer.php:1373
 #: build/modules/crm/includes/functions-customer.php:3165
@@ -26256,53 +26337,53 @@ msgstr ""
 msgid "No contact found"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:585
+#: build/modules/crm/includes/class-ajax.php:612
 #: modules/crm/includes/class-ajax.php:612
 msgid "Company has been added successfully"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:601
+#: build/modules/crm/includes/class-ajax.php:628
 #: modules/crm/includes/class-ajax.php:628
 msgid "Company has been updated successfully"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:618
+#: build/modules/crm/includes/class-ajax.php:645
 #: modules/crm/includes/class-ajax.php:645
 msgid "hello"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:734
+#: build/modules/crm/includes/class-ajax.php:761
 #: modules/crm/includes/class-ajax.php:761
 msgid "Please select a user"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:748
+#: build/modules/crm/includes/class-ajax.php:775
 #: modules/crm/includes/class-ajax.php:775
 msgid "Assign to agent successfully"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:771
+#: build/modules/crm/includes/class-ajax.php:798
 #: modules/crm/includes/class-ajax.php:798
 msgid "Contact not found"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:775
+#: build/modules/crm/includes/class-ajax.php:802
 #: modules/crm/includes/class-ajax.php:802
 msgid "Contact type not found"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:781
+#: build/modules/crm/includes/class-ajax.php:808
 #: modules/crm/includes/class-ajax.php:808
 msgid "Not allowed to crated user with the selected role"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:815
-#: build/modules/crm/includes/class-ajax.php:871
-#: build/modules/crm/includes/class-ajax.php:1115
-#: build/modules/crm/includes/class-ajax.php:1321
-#: build/modules/crm/includes/class-ajax.php:1348
-#: build/modules/crm/includes/class-ajax.php:1410
-#: build/modules/crm/includes/class-ajax.php:1502
+#: build/modules/crm/includes/class-ajax.php:842
+#: build/modules/crm/includes/class-ajax.php:900
+#: build/modules/crm/includes/class-ajax.php:1150
+#: build/modules/crm/includes/class-ajax.php:1364
+#: build/modules/crm/includes/class-ajax.php:1391
+#: build/modules/crm/includes/class-ajax.php:1453
+#: build/modules/crm/includes/class-ajax.php:1545
 #: build/modules/hrm/includes/class-ajax.php:131
 #: build/modules/hrm/includes/class-ajax.php:165
 #: build/modules/hrm/includes/class-ajax.php:197
@@ -26318,24 +26399,24 @@ msgstr ""
 #: build/modules/hrm/includes/class-ajax.php:693
 #: build/modules/hrm/includes/class-ajax.php:769
 #: build/modules/hrm/includes/class-ajax.php:830
-#: build/modules/hrm/includes/class-ajax.php:875
-#: build/modules/hrm/includes/class-ajax.php:915
-#: build/modules/hrm/includes/class-ajax.php:947
-#: build/modules/hrm/includes/class-ajax.php:990
-#: build/modules/hrm/includes/class-ajax.php:1039
-#: build/modules/hrm/includes/class-ajax.php:1078
-#: build/modules/hrm/includes/class-ajax.php:1111
-#: build/modules/hrm/includes/class-ajax.php:1295
-#: build/modules/hrm/includes/class-ajax.php:1339
-#: build/modules/hrm/includes/class-ajax.php:1362
-#: build/modules/hrm/includes/class-ajax.php:1414
-#: build/modules/hrm/includes/class-ajax.php:1440
-#: build/modules/hrm/includes/class-ajax.php:1496
-#: build/modules/hrm/includes/class-ajax.php:1522
-#: build/modules/hrm/includes/class-ajax.php:1570
-#: build/modules/hrm/includes/class-ajax.php:1595
-#: build/modules/hrm/includes/class-ajax.php:1643
-#: build/modules/hrm/includes/class-ajax.php:1874
+#: build/modules/hrm/includes/class-ajax.php:879
+#: build/modules/hrm/includes/class-ajax.php:923
+#: build/modules/hrm/includes/class-ajax.php:955
+#: build/modules/hrm/includes/class-ajax.php:1002
+#: build/modules/hrm/includes/class-ajax.php:1051
+#: build/modules/hrm/includes/class-ajax.php:1090
+#: build/modules/hrm/includes/class-ajax.php:1123
+#: build/modules/hrm/includes/class-ajax.php:1307
+#: build/modules/hrm/includes/class-ajax.php:1351
+#: build/modules/hrm/includes/class-ajax.php:1374
+#: build/modules/hrm/includes/class-ajax.php:1426
+#: build/modules/hrm/includes/class-ajax.php:1452
+#: build/modules/hrm/includes/class-ajax.php:1508
+#: build/modules/hrm/includes/class-ajax.php:1534
+#: build/modules/hrm/includes/class-ajax.php:1582
+#: build/modules/hrm/includes/class-ajax.php:1607
+#: build/modules/hrm/includes/class-ajax.php:1655
+#: build/modules/hrm/includes/class-ajax.php:1886
 #: build/modules/hrm/includes/class-form-handler.php:197
 #: build/modules/hrm/includes/class-form-handler.php:251
 #: build/modules/hrm/includes/class-form-handler.php:281
@@ -26352,10 +26433,10 @@ msgstr ""
 #: build/modules/hrm/includes/class-form-handler.php:1055
 #: build/modules/hrm/includes/class-form-handler.php:1177
 #: build/modules/hrm/includes/functions-leave.php:186
-#: build/modules/hrm/includes/functions-leave.php:1015
-#: build/modules/hrm/includes/functions-leave.php:1590
-#: build/modules/hrm/includes/functions-leave.php:1603
-#: build/modules/hrm/includes/functions-leave.php:1854
+#: build/modules/hrm/includes/functions-leave.php:1018
+#: build/modules/hrm/includes/functions-leave.php:1594
+#: build/modules/hrm/includes/functions-leave.php:1608
+#: build/modules/hrm/includes/functions-leave.php:1860
 #: modules/crm/includes/class-ajax.php:842
 #: modules/crm/includes/class-ajax.php:900
 #: modules/crm/includes/class-ajax.php:1150
@@ -26419,116 +26500,116 @@ msgstr ""
 msgid "You do not have sufficient permissions to do this action"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:819
+#: build/modules/crm/includes/class-ajax.php:846
 #: modules/crm/includes/class-ajax.php:846
 msgid "Contact Group Name must be required"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:833
+#: build/modules/crm/includes/class-ajax.php:862
 #: modules/crm/includes/class-ajax.php:862
 msgid "Contact group save successfully"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:875
-#: build/modules/crm/includes/class-ajax.php:1583
-#: build/modules/crm/includes/class-ajax.php:1610
+#: build/modules/crm/includes/class-ajax.php:904
+#: build/modules/crm/includes/class-ajax.php:1626
+#: build/modules/crm/includes/class-ajax.php:1653
 #: modules/crm/includes/class-ajax.php:904
 #: modules/crm/includes/class-ajax.php:1626
 #: modules/crm/includes/class-ajax.php:1653
 msgid "Somthing wrong, Please try later"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:880
-#: build/modules/crm/includes/class-ajax.php:1000
+#: build/modules/crm/includes/class-ajax.php:913
+#: build/modules/crm/includes/class-ajax.php:1035
 #: modules/crm/includes/class-ajax.php:913
 #: modules/crm/includes/class-ajax.php:1035
 msgid "Contact group delete successfully"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:916
+#: build/modules/crm/includes/class-ajax.php:949
 #: modules/crm/includes/class-ajax.php:949
 msgid "Contact not found. Try again"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:926
+#: build/modules/crm/includes/class-ajax.php:959
 #: modules/crm/includes/class-ajax.php:959
 msgid "Subscribed on"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:927
+#: build/modules/crm/includes/class-ajax.php:960
 #: modules/crm/includes/class-ajax.php:960
 msgid "Unsubscribed on"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:952
+#: build/modules/crm/includes/class-ajax.php:985
 #: modules/crm/includes/class-ajax.php:985
 msgid "No user data found"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:956
+#: build/modules/crm/includes/class-ajax.php:989
 #: modules/crm/includes/class-ajax.php:989
 msgid "You don't have any permission to assign this contact in a group"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:968
+#: build/modules/crm/includes/class-ajax.php:1003
 #: modules/crm/includes/class-ajax.php:1003
 msgid "Succesfully subscriber for this user"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:987
+#: build/modules/crm/includes/class-ajax.php:1022
 #: modules/crm/includes/class-ajax.php:1022
 msgid "You don't have any permission to remove this contact from a group"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:991
+#: build/modules/crm/includes/class-ajax.php:1026
 #: modules/crm/includes/class-ajax.php:1026
 msgid "No subscriber contact found"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:995
+#: build/modules/crm/includes/class-ajax.php:1030
 #: modules/crm/includes/class-ajax.php:1030
 msgid "No subscriber group found"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:1019
+#: build/modules/crm/includes/class-ajax.php:1054
 #: modules/crm/includes/class-ajax.php:1054
 msgid "You don't have any permission to assign this contact"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:1023
+#: build/modules/crm/includes/class-ajax.php:1058
 #: modules/crm/includes/class-ajax.php:1058
 msgid "No subscriber user found"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:1028
+#: build/modules/crm/includes/class-ajax.php:1063
 #: modules/crm/includes/class-ajax.php:1063
 msgid "Contact group edit successfully"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:1062
+#: build/modules/crm/includes/class-ajax.php:1097
 #: modules/crm/includes/class-ajax.php:1097
 msgid "No customer found"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:1071
+#: build/modules/crm/includes/class-ajax.php:1106
 #: modules/crm/includes/class-ajax.php:1106
 msgid "Succesfully added social profiles"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:1110
+#: build/modules/crm/includes/class-ajax.php:1145
 #: modules/crm/includes/class-ajax.php:1145
 msgid "Customer not found"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:1119
+#: build/modules/crm/includes/class-ajax.php:1154
 #: modules/crm/includes/class-ajax.php:1154
 msgid "Content must be required"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:1137
-#: build/modules/crm/includes/class-ajax.php:1249
-#: build/modules/crm/includes/class-ajax.php:1264
-#: build/modules/crm/includes/class-ajax.php:1291
+#: build/modules/crm/includes/class-ajax.php:1172
+#: build/modules/crm/includes/class-ajax.php:1286
+#: build/modules/crm/includes/class-ajax.php:1303
+#: build/modules/crm/includes/class-ajax.php:1332
 #: modules/crm/includes/class-ajax.php:1172
 #: modules/crm/includes/class-ajax.php:1286
 #: modules/crm/includes/class-ajax.php:1303
@@ -26536,121 +26617,121 @@ msgstr ""
 msgid "Somthing is wrong, Please try later"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:1216
+#: build/modules/crm/includes/class-ajax.php:1253
 #: modules/crm/includes/class-ajax.php:1253
 msgid "Can not send email, Please try later"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:1220
+#: build/modules/crm/includes/class-ajax.php:1257
 #: modules/crm/includes/class-ajax.php:1257
 msgid "Something went wrong, Please try later"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:1325
+#: build/modules/crm/includes/class-ajax.php:1368
 #: modules/crm/includes/class-ajax.php:1368
 msgid "Feeds Not found"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:1332
+#: build/modules/crm/includes/class-ajax.php:1375
 #: modules/crm/includes/class-ajax.php:1375
 msgid "Feed Deleted successfully"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:1354
-#: build/modules/crm/includes/class-ajax.php:1416
+#: build/modules/crm/includes/class-ajax.php:1397
+#: build/modules/crm/includes/class-ajax.php:1459
 #: modules/crm/includes/class-ajax.php:1397
 #: modules/crm/includes/class-ajax.php:1459
 msgid "No data not found"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:1358
-#: build/modules/crm/includes/class-ajax.php:1481
+#: build/modules/crm/includes/class-ajax.php:1401
+#: build/modules/crm/includes/class-ajax.php:1524
 #: modules/crm/includes/class-ajax.php:1401
 #: modules/crm/includes/class-ajax.php:1524
 msgid "Search name not found"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:1362
+#: build/modules/crm/includes/class-ajax.php:1405
 #: modules/crm/includes/class-ajax.php:1405
 msgid "Contact Type not found"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:1366
+#: build/modules/crm/includes/class-ajax.php:1409
 #: modules/crm/includes/class-ajax.php:1409
 msgid "Search filters not found"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:1372
+#: build/modules/crm/includes/class-ajax.php:1415
 #: modules/crm/includes/class-ajax.php:1415
 msgid "Query not found"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:1387
+#: build/modules/crm/includes/class-ajax.php:1430
 #: modules/crm/includes/class-ajax.php:1430
 msgid "Segment name alreday exists."
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:1393
+#: build/modules/crm/includes/class-ajax.php:1436
 #: modules/crm/includes/class-ajax.php:1436
 msgid "Search does not save"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:1420
+#: build/modules/crm/includes/class-ajax.php:1463
 #: modules/crm/includes/class-ajax.php:1463
 msgid "Group name not found"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:1424
+#: build/modules/crm/includes/class-ajax.php:1467
 #: modules/crm/includes/class-ajax.php:1467
 msgid "No search fields found"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:1442
+#: build/modules/crm/includes/class-ajax.php:1485
 #: modules/crm/includes/class-ajax.php:1485
 msgid "Could not create group."
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:1460
+#: build/modules/crm/includes/class-ajax.php:1503
 #: modules/crm/includes/class-ajax.php:1503
 msgid "Successfully created group and assigned selected contacts to the group."
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:1463
+#: build/modules/crm/includes/class-ajax.php:1506
 #: modules/crm/includes/class-ajax.php:1506
 msgid "Could not import contacts to the group."
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:1508
+#: build/modules/crm/includes/class-ajax.php:1551
 #: modules/crm/includes/class-ajax.php:1551
 msgid "Search segment not found"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:1533
+#: build/modules/crm/includes/class-ajax.php:1576
 #: modules/crm/includes/class-ajax.php:1576
 msgid "Schedule data no found"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:1592
+#: build/modules/crm/includes/class-ajax.php:1635
 #: modules/crm/includes/class-ajax.php:1635
 msgid "No results found"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:1619
+#: build/modules/crm/includes/class-ajax.php:1662
 #: modules/crm/includes/class-ajax.php:1662
 msgid "Save reply item delete successfully"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:1657
+#: build/modules/crm/includes/class-ajax.php:1700
 #: modules/crm/includes/class-ajax.php:1700
 msgid "could not find contact id"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:1668
+#: build/modules/crm/includes/class-ajax.php:1711
 #: modules/crm/includes/class-ajax.php:1711
 msgid "tags updated successfully"
 msgstr ""
 
-#: build/modules/crm/includes/class-ajax.php:1670
+#: build/modules/crm/includes/class-ajax.php:1713
 #: modules/crm/includes/class-ajax.php:1713
 msgid "tags update failed please try again"
 msgstr ""
@@ -26883,6 +26964,68 @@ msgstr ""
 msgid "Life stage does not exists"
 msgstr ""
 
+#: build/modules/crm/includes/class-log.php:64
+#: modules/crm/includes/class-log.php:64
+msgid "<strong>%1$s</strong> %2$s has been created"
+msgstr ""
+
+#: build/modules/crm/includes/class-log.php:92
+#: modules/crm/includes/class-log.php:92
+msgid "No Owner"
+msgstr ""
+
+#: build/modules/crm/includes/class-log.php:101
+#: modules/crm/includes/class-log.php:101
+msgid "No Life Stage"
+msgstr ""
+
+#: build/modules/crm/includes/class-log.php:110
+#: modules/crm/includes/class-log.php:110
+msgid "No Source"
+msgstr ""
+
+#: build/modules/crm/includes/class-log.php:121
+#: modules/crm/includes/class-log.php:121
+msgid "<strong>%1$s</strong> %2$s has been updated"
+msgstr ""
+
+#: build/modules/crm/includes/class-log.php:147
+#: modules/crm/includes/class-log.php:147
+msgid "<strong>%1$s</strong> %2$s has been %3$s"
+msgstr ""
+
+#: build/modules/crm/includes/class-log.php:168
+#: modules/crm/includes/class-log.php:168
+msgid "<strong>%1$s</strong> %2$s has been restored from trash"
+msgstr ""
+
+#: build/modules/crm/includes/class-log.php:212
+#: modules/crm/includes/class-log.php:212
+msgid "A <strong>%1$s</strong> %2$s has been created for <strong>%3$s</strong> %4$s"
+msgstr ""
+
+#: build/modules/crm/includes/class-log.php:238
+#: modules/crm/includes/class-log.php:238
+msgid "<strong>%1$s</strong> %2$s contact group has been created"
+msgstr ""
+
+#: build/modules/crm/includes/class-log.php:259
+#: modules/crm/includes/class-log.php:259
+msgid "<strong>%1$s</strong> %2$s contact group has been deleted"
+msgstr ""
+
+#: build/modules/crm/includes/class-log.php:282
+#: modules/crm/includes/class-log.php:282
+msgid ""
+"<strong>%1$s</strong> has been subscribed to <strong>%2$s</strong> contact "
+"group"
+msgstr ""
+
+#: build/modules/crm/includes/class-log.php:315
+#: modules/crm/includes/class-log.php:315
+msgid "<strong>%1$s</strong> %2$s has been assigned to <strong>%3$s</strong> %4$s"
+msgstr ""
+
 #: build/modules/crm/includes/class-subscription-widget.php:20
 #: modules/crm/includes/class-subscription-widget.php:20
 msgid "Add a newsletter subscription form"
@@ -26910,7 +27053,7 @@ msgstr ""
 
 #: build/modules/crm/includes/class-subscription-widget.php:91
 #: build/modules/crm/views/js-templates/new-contact-group.php:34
-#: build/modules/hrm/includes/functions-employee.php:596
+#: build/modules/hrm/includes/functions-employee.php:602
 #: modules/crm/includes/class-subscription-widget.php:91
 #: modules/crm/views/js-templates/new-contact-group.php:34
 #: modules/hrm/includes/functions-employee.php:602
@@ -27422,8 +27565,8 @@ msgstr ""
 
 #: build/modules/crm/includes/functions-customer.php:1695
 #: build/modules/crm/includes/functions-customer.php:3053
-#: build/modules/crm/views/company/single.php:95
-#: build/modules/crm/views/contact/single.php:97
+#: build/modules/crm/views/company/single.php:98
+#: build/modules/crm/views/contact/single.php:100
 #: modules/crm/includes/functions-customer.php:1695
 #: modules/crm/includes/functions-customer.php:3053
 #: modules/crm/views/company/single.php:98
@@ -27517,7 +27660,7 @@ msgid "Between"
 msgstr ""
 
 #: build/modules/crm/includes/functions-customer.php:1795
-#: build/modules/hrm/includes/functions-employee.php:453
+#: build/modules/hrm/includes/functions-employee.php:459
 #: modules/crm/includes/functions-customer.php:1795
 #: modules/hrm/includes/functions-employee.php:459
 msgid "Inactive"
@@ -27598,7 +27741,7 @@ msgid "%s contacts created."
 msgstr ""
 
 #: build/modules/crm/includes/functions-customer.php:3495
-#: build/modules/hrm/includes/functions-employee.php:510
+#: build/modules/hrm/includes/functions-employee.php:516
 #: modules/crm/includes/functions-customer.php:3495
 #: modules/hrm/includes/functions-employee.php:516
 msgid "Advertisement"
@@ -27710,8 +27853,8 @@ msgid "No email found for creating wp user"
 msgstr ""
 
 #: build/modules/crm/includes/functions-customer.php:3976
-#: build/modules/crm/views/company/single.php:163
-#: build/modules/crm/views/contact/single.php:168
+#: build/modules/crm/views/company/single.php:166
+#: build/modules/crm/views/contact/single.php:171
 #: modules/crm/includes/functions-customer.php:3976
 #: modules/crm/views/company/single.php:166
 #: modules/crm/views/contact/single.php:171
@@ -28085,44 +28228,44 @@ msgstr ""
 msgid "Unauthorized request."
 msgstr ""
 
-#: build/modules/crm/views/company/single.php:17
+#: build/modules/crm/views/company/single.php:18
 #: modules/crm/views/company/single.php:18
 msgid "Company #"
 msgstr ""
 
-#: build/modules/crm/views/company/single.php:20
+#: build/modules/crm/views/company/single.php:21
 #: modules/crm/views/company/single.php:21
 msgid "Back to Company list"
 msgstr ""
 
-#: build/modules/crm/views/company/single.php:24
+#: build/modules/crm/views/company/single.php:26
 #: modules/crm/views/company/single.php:26
 msgid "Edit this company"
 msgstr ""
 
-#: build/modules/crm/views/company/single.php:24
+#: build/modules/crm/views/company/single.php:26
 #: modules/crm/views/company/single.php:26
 msgid "Edit this Company"
 msgstr ""
 
-#: build/modules/crm/views/company/single.php:28
-#: build/modules/crm/views/contact/single.php:29
+#: build/modules/crm/views/company/single.php:30
+#: build/modules/crm/views/contact/single.php:31
 #: modules/crm/views/company/single.php:30
 #: modules/crm/views/contact/single.php:31
 msgid "Make WP User"
 msgstr ""
 
-#: build/modules/crm/views/company/single.php:28
-#: build/modules/crm/views/contact/single.php:29
+#: build/modules/crm/views/company/single.php:30
+#: build/modules/crm/views/contact/single.php:31
 #: modules/crm/views/company/single.php:30
 #: modules/crm/views/contact/single.php:31
 msgid "Make this contact as a WP User"
 msgstr ""
 
-#: build/modules/crm/views/company/single.php:82
-#: build/modules/crm/views/company/single.php:162
-#: build/modules/crm/views/contact/single.php:81
-#: build/modules/crm/views/contact/single.php:167
+#: build/modules/crm/views/company/single.php:85
+#: build/modules/crm/views/company/single.php:165
+#: build/modules/crm/views/contact/single.php:84
+#: build/modules/crm/views/contact/single.php:170
 #: build/modules/hrm/views/employee/tab-general.php:4
 #: build/modules/hrm/views/employee/tab-general.php:20
 #: build/modules/hrm/views/employee/tab-general.php:55
@@ -28144,8 +28287,8 @@ msgstr ""
 msgid "Click to toggle"
 msgstr ""
 
-#: build/modules/crm/views/company/single.php:83
-#: build/modules/crm/views/contact/single.php:82
+#: build/modules/crm/views/company/single.php:86
+#: build/modules/crm/views/contact/single.php:85
 #: build/modules/hrm/views/employee/tab-general.php:5
 #: modules/crm/views/company/single.php:86
 #: modules/crm/views/contact/single.php:85
@@ -28153,55 +28296,55 @@ msgstr ""
 msgid "Basic Info"
 msgstr ""
 
-#: build/modules/crm/views/company/single.php:96
-#: build/modules/crm/views/contact/single.php:98
+#: build/modules/crm/views/company/single.php:99
+#: build/modules/crm/views/contact/single.php:101
 #: modules/crm/views/company/single.php:99
 #: modules/crm/views/contact/single.php:101
 msgid "Source"
 msgstr ""
 
-#: build/modules/crm/views/company/single.php:125
-#: build/modules/crm/views/contact/single.php:128
+#: build/modules/crm/views/company/single.php:128
+#: build/modules/crm/views/contact/single.php:131
 #: modules/crm/views/company/single.php:128
 #: modules/crm/views/contact/single.php:131
 msgid "Nobody"
 msgstr ""
 
-#: build/modules/crm/views/company/single.php:140
-#: build/modules/crm/views/contact/single.php:145
+#: build/modules/crm/views/company/single.php:143
+#: build/modules/crm/views/contact/single.php:148
 #: modules/crm/views/company/single.php:143
 #: modules/crm/views/contact/single.php:148
 msgid "Search a crm agent"
 msgstr ""
 
-#: build/modules/crm/views/company/single.php:141
-#: build/modules/crm/views/contact/single.php:146
+#: build/modules/crm/views/company/single.php:144
+#: build/modules/crm/views/contact/single.php:149
 #: modules/crm/views/company/single.php:144
 #: modules/crm/views/contact/single.php:149
 msgid "Select a agent"
 msgstr ""
 
-#: build/modules/crm/views/company/single.php:150
-#: build/modules/crm/views/contact/single.php:156
+#: build/modules/crm/views/company/single.php:153
+#: build/modules/crm/views/contact/single.php:159
 #: modules/crm/views/company/single.php:153
 #: modules/crm/views/contact/single.php:159
 msgid "Assign"
 msgstr ""
 
-#: build/modules/crm/views/company/single.php:180
-#: build/modules/crm/views/contact/single.php:185
+#: build/modules/crm/views/company/single.php:183
+#: build/modules/crm/views/contact/single.php:188
 #: modules/crm/views/company/single.php:183
 #: modules/crm/views/contact/single.php:188
 msgid "Separate tags with commas"
 msgstr ""
 
-#: build/modules/crm/views/company/single.php:193
+#: build/modules/crm/views/company/single.php:196
 #: modules/crm/views/company/single.php:196
 msgid "Assign a contact"
 msgstr ""
 
-#: build/modules/crm/views/company/single.php:199
-#: build/modules/crm/views/contact/single.php:204
+#: build/modules/crm/views/company/single.php:202
+#: build/modules/crm/views/contact/single.php:207
 #: modules/crm/views/company/single.php:202
 #: modules/crm/views/contact/single.php:207
 msgid "Assign Contact Groups"
@@ -28215,22 +28358,22 @@ msgstr ""
 msgid "Add Search Segment"
 msgstr ""
 
-#: build/modules/crm/views/contact/single.php:17
+#: build/modules/crm/views/contact/single.php:18
 #: modules/crm/views/contact/single.php:18
 msgid "Contact #"
 msgstr ""
 
-#: build/modules/crm/views/contact/single.php:20
+#: build/modules/crm/views/contact/single.php:21
 #: modules/crm/views/contact/single.php:21
 msgid "Back to Contact list"
 msgstr ""
 
-#: build/modules/crm/views/contact/single.php:24
+#: build/modules/crm/views/contact/single.php:26
 #: modules/crm/views/contact/single.php:26
 msgid "Edit this Contact"
 msgstr ""
 
-#: build/modules/crm/views/contact/single.php:87
+#: build/modules/crm/views/contact/single.php:90
 #: build/modules/crm/views/js-templates/new-customer.php:155
 #: build/modules/hrm/views/employee/tab-general.php:72
 #: build/modules/hrm/views/employee/tab-general.php:219
@@ -28245,12 +28388,12 @@ msgstr ""
 msgid "Date of Birth"
 msgstr ""
 
-#: build/modules/crm/views/contact/single.php:88
+#: build/modules/crm/views/contact/single.php:91
 #: modules/crm/views/contact/single.php:91
 msgid "Age"
 msgstr ""
 
-#: build/modules/crm/views/contact/single.php:198
+#: build/modules/crm/views/contact/single.php:201
 #: modules/crm/views/contact/single.php:201
 msgid "Assign a company"
 msgstr ""
@@ -28537,7 +28680,7 @@ msgstr ""
 
 #: build/modules/crm/views/js-templates/customer-add-schedules.php:102
 #: build/modules/crm/views/js-templates/customer-schedule-note.php:101
-#: build/modules/hrm/includes/class-ajax.php:1736
+#: build/modules/hrm/includes/class-ajax.php:1748
 #: build/modules/hrm/includes/class-entitlements-list-table.php:166
 #: build/modules/hrm/includes/class-entitlements-list-table.php:186
 #: build/modules/hrm/includes/class-entitlements-list-table.php:188
@@ -29437,7 +29580,7 @@ msgstr ""
 #: build/modules/hrm/includes/class-ajax.php:479
 #: build/modules/hrm/includes/class-ajax.php:632
 #: build/modules/hrm/includes/class-ajax.php:664
-#: build/modules/hrm/includes/class-ajax.php:1867
+#: build/modules/hrm/includes/class-ajax.php:1879
 #: build/modules/hrm/includes/class-form-handler.php:639
 #: build/modules/hrm/includes/class-form-handler.php:784
 #: modules/hrm/includes/class-ajax.php:479
@@ -29460,7 +29603,7 @@ msgid "Department has been deleted"
 msgstr ""
 
 #: build/modules/hrm/includes/class-ajax.php:567
-#: build/modules/hrm/includes/class-ajax.php:1654
+#: build/modules/hrm/includes/class-ajax.php:1666
 #: modules/hrm/includes/class-ajax.php:567
 #: modules/hrm/includes/class-ajax.php:1666
 msgid "Something went worng!"
@@ -29496,11 +29639,11 @@ msgstr ""
 #: build/modules/hrm/includes/class-ajax.php:777
 #: build/modules/hrm/includes/class-ajax.php:804
 #: build/modules/hrm/includes/class-ajax.php:836
-#: build/modules/hrm/includes/class-ajax.php:881
-#: build/modules/hrm/includes/class-ajax.php:953
-#: build/modules/hrm/includes/class-ajax.php:1409
-#: build/modules/hrm/includes/class-ajax.php:1491
-#: build/modules/hrm/includes/class-ajax.php:1565
+#: build/modules/hrm/includes/class-ajax.php:885
+#: build/modules/hrm/includes/class-ajax.php:961
+#: build/modules/hrm/includes/class-ajax.php:1421
+#: build/modules/hrm/includes/class-ajax.php:1503
+#: build/modules/hrm/includes/class-ajax.php:1577
 #: build/modules/hrm/includes/functions-dashboard-widgets.php:149
 #: modules/hrm/includes/class-ajax.php:777
 #: modules/hrm/includes/class-ajax.php:804
@@ -29524,111 +29667,111 @@ msgstr ""
 msgid "Employee has been restore successfully"
 msgstr ""
 
-#: build/modules/hrm/includes/class-ajax.php:921
+#: build/modules/hrm/includes/class-ajax.php:929
 #: modules/hrm/includes/class-ajax.php:929
 msgid "Invalid Employee received."
 msgstr ""
 
-#: build/modules/hrm/includes/class-ajax.php:1106
+#: build/modules/hrm/includes/class-ajax.php:1118
 #: modules/hrm/includes/class-ajax.php:1118
 msgid "Something wrong"
 msgstr ""
 
-#: build/modules/hrm/includes/class-ajax.php:1187
+#: build/modules/hrm/includes/class-ajax.php:1199
 #: modules/hrm/includes/class-ajax.php:1199
 msgid "Employee already exist."
 msgstr ""
 
-#: build/modules/hrm/includes/class-ajax.php:1301
+#: build/modules/hrm/includes/class-ajax.php:1313
 #: modules/hrm/includes/class-ajax.php:1313
 msgid "No performance type selected"
 msgstr ""
 
-#: build/modules/hrm/includes/class-ajax.php:1307
+#: build/modules/hrm/includes/class-ajax.php:1319
 #: modules/hrm/includes/class-ajax.php:1319
 msgid "Could not find the employee"
 msgstr ""
 
-#: build/modules/hrm/includes/class-ajax.php:1384
-#: build/modules/hrm/includes/class-ajax.php:1466
-#: build/modules/hrm/includes/class-ajax.php:1540
+#: build/modules/hrm/includes/class-ajax.php:1396
+#: build/modules/hrm/includes/class-ajax.php:1478
+#: build/modules/hrm/includes/class-ajax.php:1552
 #: modules/hrm/includes/class-ajax.php:1396
 #: modules/hrm/includes/class-ajax.php:1478
 #: modules/hrm/includes/class-ajax.php:1552
 msgid "You have to be an employee to do this action"
 msgstr ""
 
-#: build/modules/hrm/includes/class-ajax.php:1651
+#: build/modules/hrm/includes/class-ajax.php:1663
 #: modules/hrm/includes/class-ajax.php:1663
 msgid "Policy has been deleted"
 msgstr ""
 
-#: build/modules/hrm/includes/class-ajax.php:1677
-#: build/modules/hrm/includes/class-ajax.php:1822
+#: build/modules/hrm/includes/class-ajax.php:1689
+#: build/modules/hrm/includes/class-ajax.php:1834
 #: modules/hrm/includes/class-ajax.php:1689
 #: modules/hrm/includes/class-ajax.php:1834
 msgid "Please select an employee"
 msgstr ""
 
-#: build/modules/hrm/includes/class-ajax.php:1683
-#: build/modules/hrm/includes/class-ajax.php:1826
+#: build/modules/hrm/includes/class-ajax.php:1695
+#: build/modules/hrm/includes/class-ajax.php:1838
 #: modules/hrm/includes/class-ajax.php:1695
 #: modules/hrm/includes/class-ajax.php:1838
 msgid "Please select a policy"
 msgstr ""
 
-#: build/modules/hrm/includes/class-ajax.php:1690
+#: build/modules/hrm/includes/class-ajax.php:1702
 #: modules/hrm/includes/class-ajax.php:1702
 msgid "Invalid date range"
 msgstr ""
 
-#: build/modules/hrm/includes/class-ajax.php:1697
+#: build/modules/hrm/includes/class-ajax.php:1709
 #: modules/hrm/includes/class-ajax.php:1709
 msgid "Invalid leave policy."
 msgstr ""
 
-#: build/modules/hrm/includes/class-ajax.php:1704
-#: build/modules/hrm/includes/functions-leave.php:1174
-#: build/modules/hrm/includes/functions-leave.php:1720
+#: build/modules/hrm/includes/class-ajax.php:1716
+#: build/modules/hrm/includes/functions-leave.php:1177
+#: build/modules/hrm/includes/functions-leave.php:1725
 #: modules/hrm/includes/class-ajax.php:1716
 #: modules/hrm/includes/functions-leave.php:1177
 #: modules/hrm/includes/functions-leave.php:1725
 msgid "Invalid leave duration. Please apply between %s and %s."
 msgstr ""
 
-#: build/modules/hrm/includes/class-ajax.php:1711
-#: build/modules/hrm/includes/functions-leave.php:1181
+#: build/modules/hrm/includes/class-ajax.php:1723
+#: build/modules/hrm/includes/functions-leave.php:1184
 #: modules/hrm/includes/class-ajax.php:1723
 #: modules/hrm/includes/functions-leave.php:1184
 msgid "Existing Leave Record found within selected range!"
 msgstr ""
 
-#: build/modules/hrm/includes/class-ajax.php:1720
+#: build/modules/hrm/includes/class-ajax.php:1732
 #: modules/hrm/includes/class-ajax.php:1732
 msgid "Sorry! You do not have any leave left under this leave policy"
 msgstr ""
 
-#: build/modules/hrm/includes/class-ajax.php:1739
+#: build/modules/hrm/includes/class-ajax.php:1751
 #: modules/hrm/includes/class-ajax.php:1751
 msgid "(Sandwich rule applied)"
 msgstr ""
 
-#: build/modules/hrm/includes/class-ajax.php:1763
+#: build/modules/hrm/includes/class-ajax.php:1775
 #: modules/hrm/includes/class-ajax.php:1775
 msgid "Please select an employee."
 msgstr ""
 
-#: build/modules/hrm/includes/class-ajax.php:1767
+#: build/modules/hrm/includes/class-ajax.php:1779
 #: modules/hrm/includes/class-ajax.php:1779
 msgid "Please select a year."
 msgstr ""
 
-#: build/modules/hrm/includes/class-ajax.php:1773
+#: build/modules/hrm/includes/class-ajax.php:1785
 #: modules/hrm/includes/class-ajax.php:1785
 msgid "Invalid year."
 msgstr ""
 
-#: build/modules/hrm/includes/class-ajax.php:1781
+#: build/modules/hrm/includes/class-ajax.php:1793
 #: build/modules/hrm/includes/class-leave-policy-name-list-table.php:76
 #: build/modules/hrm/views/leave/new-policy.php:90
 #: build/modules/hrm/views/leave/policy-name.php:38
@@ -29639,65 +29782,65 @@ msgstr ""
 msgid "Leave Type"
 msgstr ""
 
-#: build/modules/hrm/includes/class-ajax.php:1794
+#: build/modules/hrm/includes/class-ajax.php:1806
 #: modules/hrm/includes/class-ajax.php:1806
 msgid ""
 "Employee is not entitled to any leave policy. Set leave entitlement to "
 "apply for leave."
 msgstr ""
 
-#: build/modules/hrm/includes/class-ajax.php:1797
+#: build/modules/hrm/includes/class-ajax.php:1809
 #: modules/hrm/includes/class-ajax.php:1809
 msgid "No entitlement found for selected year. Please contact with HR."
 msgstr ""
 
-#: build/modules/hrm/includes/class-ajax.php:1840
+#: build/modules/hrm/includes/class-ajax.php:1852
 #: modules/hrm/includes/class-ajax.php:1852
 msgid "day available"
 msgid_plural "days are available"
 msgstr[0] ""
 msgstr[1] ""
 
-#: build/modules/hrm/includes/class-ajax.php:1842
+#: build/modules/hrm/includes/class-ajax.php:1854
 #: modules/hrm/includes/class-ajax.php:1854
 msgid "days are available"
 msgstr ""
 
-#: build/modules/hrm/includes/class-ajax.php:1849
+#: build/modules/hrm/includes/class-ajax.php:1861
 #: modules/hrm/includes/class-ajax.php:1861
 msgid "day extra"
 msgid_plural "days extra"
 msgstr[0] ""
 msgstr[1] ""
 
-#: build/modules/hrm/includes/class-ajax.php:1878
+#: build/modules/hrm/includes/class-ajax.php:1890
 #: modules/hrm/includes/class-ajax.php:1890
 msgid "Leave reason field can not be blank"
 msgstr ""
 
-#: build/modules/hrm/includes/class-ajax.php:1904
+#: build/modules/hrm/includes/class-ajax.php:1916
 #: modules/hrm/includes/class-ajax.php:1916
 msgid "Leave request has been submitted successfully!"
 msgstr ""
 
-#: build/modules/hrm/includes/class-ajax.php:1908
+#: build/modules/hrm/includes/class-ajax.php:1920
 #: modules/hrm/includes/class-ajax.php:1920
 msgid "Something went wrong, please try again."
 msgstr ""
 
-#: build/modules/hrm/includes/class-ajax.php:1946
+#: build/modules/hrm/includes/class-ajax.php:1958
 #: modules/hrm/includes/class-ajax.php:1958
 msgid "Invalid request permission."
 msgstr ""
 
-#: build/modules/hrm/includes/class-ajax.php:2037
+#: build/modules/hrm/includes/class-ajax.php:2049
 #: modules/hrm/includes/class-ajax.php:2049
 msgid "Weekly Holiday"
 msgstr ""
 
-#: build/modules/hrm/includes/class-ajax.php:2065
-#: build/modules/hrm/includes/class-employee.php:2181
-#: build/modules/hrm/includes/functions-leave.php:1904
+#: build/modules/hrm/includes/class-ajax.php:2077
+#: build/modules/hrm/includes/class-employee.php:2185
+#: build/modules/hrm/includes/functions-leave.php:1910
 #: modules/hrm/includes/class-ajax.php:2077
 #: modules/hrm/includes/class-employee.php:2185
 #: modules/hrm/includes/functions-leave.php:1910
@@ -30072,7 +30215,7 @@ msgstr ""
 msgid "Please provide a valid user url"
 msgstr ""
 
-#: build/modules/hrm/includes/class-employee.php:1305
+#: build/modules/hrm/includes/class-employee.php:1306
 #: build/modules/hrm/views/employee/tab-general.php:153
 #: build/modules/hrm/views/js-templates/education-form.php:5
 #: modules/hrm/includes/class-employee.php:1306
@@ -30081,7 +30224,7 @@ msgstr ""
 msgid "School Name"
 msgstr ""
 
-#: build/modules/hrm/includes/class-employee.php:1306
+#: build/modules/hrm/includes/class-employee.php:1307
 #: build/modules/hrm/views/employee/tab-general.php:154
 #: build/modules/hrm/views/js-templates/education-form.php:15
 #: modules/hrm/includes/class-employee.php:1307
@@ -30090,37 +30233,37 @@ msgstr ""
 msgid "Degree"
 msgstr ""
 
-#: build/modules/hrm/includes/class-employee.php:1307
+#: build/modules/hrm/includes/class-employee.php:1308
 #: modules/hrm/includes/class-employee.php:1308
 msgid "Field"
 msgstr ""
 
-#: build/modules/hrm/includes/class-employee.php:1308
+#: build/modules/hrm/includes/class-employee.php:1309
 #: modules/hrm/includes/class-employee.php:1309
 msgid "Completion date"
 msgstr ""
 
-#: build/modules/hrm/includes/class-employee.php:1313
-#: build/modules/hrm/includes/class-employee.php:1384
+#: build/modules/hrm/includes/class-employee.php:1314
+#: build/modules/hrm/includes/class-employee.php:1385
 #: modules/hrm/includes/class-employee.php:1314
 #: modules/hrm/includes/class-employee.php:1385
 msgid "%s is required."
 msgstr ""
 
-#: build/modules/hrm/includes/class-employee.php:1327
+#: build/modules/hrm/includes/class-employee.php:1328
 #: modules/hrm/includes/class-employee.php:1328
 msgid "Could not create education."
 msgstr ""
 
-#: build/modules/hrm/includes/class-employee.php:1379
+#: build/modules/hrm/includes/class-employee.php:1380
 #: modules/hrm/includes/class-employee.php:1380
 msgid "Relation"
 msgstr ""
 
-#: build/modules/hrm/includes/class-employee.php:1390
-#: build/modules/hrm/includes/class-employee.php:1471
-#: build/modules/hrm/includes/class-employee.php:1852
-#: build/modules/hrm/includes/class-employee.php:1877
+#: build/modules/hrm/includes/class-employee.php:1391
+#: build/modules/hrm/includes/class-employee.php:1472
+#: build/modules/hrm/includes/class-employee.php:1856
+#: build/modules/hrm/includes/class-employee.php:1881
 #: modules/hrm/includes/class-employee.php:1391
 #: modules/hrm/includes/class-employee.php:1472
 #: modules/hrm/includes/class-employee.php:1856
@@ -30128,101 +30271,101 @@ msgstr ""
 msgid "Invalid date format"
 msgstr ""
 
-#: build/modules/hrm/includes/class-employee.php:1405
+#: build/modules/hrm/includes/class-employee.php:1406
 #: modules/hrm/includes/class-employee.php:1406
 msgid "Could not create dependent."
 msgstr ""
 
-#: build/modules/hrm/includes/class-employee.php:1455
+#: build/modules/hrm/includes/class-employee.php:1456
 #: modules/hrm/includes/class-employee.php:1456
 msgid "Missing Company Name"
 msgstr ""
 
-#: build/modules/hrm/includes/class-employee.php:1459
+#: build/modules/hrm/includes/class-employee.php:1460
 #: modules/hrm/includes/class-employee.php:1460
 msgid "Missing Job Title"
 msgstr ""
 
-#: build/modules/hrm/includes/class-employee.php:1463
+#: build/modules/hrm/includes/class-employee.php:1464
 #: modules/hrm/includes/class-employee.php:1464
 msgid "Missing From Date"
 msgstr ""
 
-#: build/modules/hrm/includes/class-employee.php:1467
+#: build/modules/hrm/includes/class-employee.php:1468
 #: modules/hrm/includes/class-employee.php:1468
 msgid "Missing To Date"
 msgstr ""
 
-#: build/modules/hrm/includes/class-employee.php:1480
+#: build/modules/hrm/includes/class-employee.php:1481
 #: modules/hrm/includes/class-employee.php:1481
 msgid "Could not create work experience."
 msgstr ""
 
-#: build/modules/hrm/includes/class-employee.php:1593
+#: build/modules/hrm/includes/class-employee.php:1594
 #: modules/hrm/includes/class-employee.php:1594
 msgid "This job history does not exist or does not belongs to the supplied user"
 msgstr ""
 
-#: build/modules/hrm/includes/class-employee.php:1630
+#: build/modules/hrm/includes/class-employee.php:1632
 #: modules/hrm/includes/class-employee.php:1632
 msgid "Invalid Employment Type"
 msgstr ""
 
-#: build/modules/hrm/includes/class-employee.php:1634
+#: build/modules/hrm/includes/class-employee.php:1636
 #: modules/hrm/includes/class-employee.php:1636
 msgid "Invalid Employment Status"
 msgstr ""
 
-#: build/modules/hrm/includes/class-employee.php:1692
+#: build/modules/hrm/includes/class-employee.php:1696
 #: modules/hrm/includes/class-employee.php:1696
 msgid "Invalid Pay Type"
 msgstr ""
 
-#: build/modules/hrm/includes/class-employee.php:1696
+#: build/modules/hrm/includes/class-employee.php:1700
 #: modules/hrm/includes/class-employee.php:1700
 msgid "Invalid Pay Rate"
 msgstr ""
 
-#: build/modules/hrm/includes/class-employee.php:1700
+#: build/modules/hrm/includes/class-employee.php:1704
 #: modules/hrm/includes/class-employee.php:1704
 msgid "Invalid Reason Type"
 msgstr ""
 
-#: build/modules/hrm/includes/class-employee.php:1844
+#: build/modules/hrm/includes/class-employee.php:1848
 #: modules/hrm/includes/class-employee.php:1848
 msgid "Invalid Performance Type received"
 msgstr ""
 
-#: build/modules/hrm/includes/class-employee.php:1848
-#: build/modules/hrm/includes/class-employee.php:1873
+#: build/modules/hrm/includes/class-employee.php:1852
+#: build/modules/hrm/includes/class-employee.php:1877
 #: modules/hrm/includes/class-employee.php:1852
 #: modules/hrm/includes/class-employee.php:1877
 msgid "Missing Date"
 msgstr ""
 
-#: build/modules/hrm/includes/class-employee.php:1859
+#: build/modules/hrm/includes/class-employee.php:1863
 #: modules/hrm/includes/class-employee.php:1863
 msgid "Invalid reporting to used."
 msgstr ""
 
-#: build/modules/hrm/includes/class-employee.php:1867
+#: build/modules/hrm/includes/class-employee.php:1871
 #: modules/hrm/includes/class-employee.php:1871
 msgid "Invalid reviewer user."
 msgstr ""
 
-#: build/modules/hrm/includes/class-employee.php:1883
+#: build/modules/hrm/includes/class-employee.php:1887
 #: modules/hrm/includes/class-employee.php:1887
 msgid "Invalid supervisor user."
 msgstr ""
 
-#: build/modules/hrm/includes/class-employee.php:1901
-#: build/modules/hrm/includes/class-employee.php:1967
+#: build/modules/hrm/includes/class-employee.php:1905
+#: build/modules/hrm/includes/class-employee.php:1971
 #: modules/hrm/includes/class-employee.php:1905
 #: modules/hrm/includes/class-employee.php:1971
 msgid "This note does not exist or does not belongs to the supplied user"
 msgstr ""
 
-#: build/modules/hrm/includes/class-employee.php:2325
+#: build/modules/hrm/includes/class-employee.php:2329
 #: build/modules/hrm/views/employee/tab-general.php:266
 #: build/modules/hrm/views/js-templates/employee-terminate.php:16
 #: modules/hrm/includes/class-employee.php:2329
@@ -30231,7 +30374,7 @@ msgstr ""
 msgid "Termination Type"
 msgstr ""
 
-#: build/modules/hrm/includes/class-employee.php:2327
+#: build/modules/hrm/includes/class-employee.php:2331
 #: build/modules/hrm/views/employee/tab-general.php:267
 #: build/modules/hrm/views/js-templates/employee-terminate.php:29
 #: modules/hrm/includes/class-employee.php:2331
@@ -30240,7 +30383,7 @@ msgstr ""
 msgid "Termination Reason"
 msgstr ""
 
-#: build/modules/hrm/includes/class-employee.php:2329
+#: build/modules/hrm/includes/class-employee.php:2333
 #: build/modules/hrm/views/employee/tab-general.php:268
 #: modules/hrm/includes/class-employee.php:2333
 #: modules/hrm/views/employee/tab-general.php:268
@@ -30287,7 +30430,7 @@ msgid "All Policy"
 msgstr ""
 
 #: build/modules/hrm/includes/class-entitlements-list-table.php:140
-#: build/modules/hrm/includes/functions-leave.php:1991
+#: build/modules/hrm/includes/functions-leave.php:1997
 #: modules/hrm/includes/class-entitlements-list-table.php:140
 #: modules/hrm/includes/functions-leave.php:1997
 msgid "No entitlement found."
@@ -30392,126 +30535,142 @@ msgstr ""
 msgid "Year for leave"
 msgstr ""
 
-#: build/modules/hrm/includes/class-hr-log.php:129
+#: build/modules/hrm/includes/class-hr-log.php:100
 #: modules/hrm/includes/class-hr-log.php:100
 msgid "<strong>%s</strong> employee has been created"
 msgstr ""
 
-#: build/modules/hrm/includes/class-hr-log.php:152
+#: build/modules/hrm/includes/class-hr-log.php:123
 #: modules/hrm/includes/class-hr-log.php:123
 msgid "<strong>%s</strong> employee has been deleted"
 msgstr ""
 
-#: build/modules/hrm/includes/class-hr-log.php:182
+#: build/modules/hrm/includes/class-hr-log.php:152
 #: modules/hrm/includes/class-hr-log.php:152
 msgid "<strong>%s</strong> employee has been edited"
 msgstr ""
 
-#: build/modules/hrm/includes/class-hr-log.php:211
+#: build/modules/hrm/includes/class-hr-log.php:160
+#: modules/hrm/includes/class-hr-log.php:160
+msgid "No Manager"
+msgstr ""
+
+#: build/modules/hrm/includes/class-hr-log.php:169
+#: modules/hrm/includes/class-hr-log.php:169
+msgid "No Department"
+msgstr ""
+
+#: build/modules/hrm/includes/class-hr-log.php:178
+#: modules/hrm/includes/class-hr-log.php:178
+msgid "No Designation"
+msgstr ""
+
+#: build/modules/hrm/includes/class-hr-log.php:210
 #: modules/hrm/includes/class-hr-log.php:210
 msgid "<strong>%s</strong> employee experience has been created"
 msgstr ""
 
-#: build/modules/hrm/includes/class-hr-log.php:236
+#: build/modules/hrm/includes/class-hr-log.php:235
 #: modules/hrm/includes/class-hr-log.php:235
 msgid "<strong>%s</strong> employee experience has been deleted"
 msgstr ""
 
-#: build/modules/hrm/includes/class-hr-log.php:256
+#: build/modules/hrm/includes/class-hr-log.php:255
 #: modules/hrm/includes/class-hr-log.php:255
 msgid "<strong>%s</strong> employee education has been created"
 msgstr ""
 
-#: build/modules/hrm/includes/class-hr-log.php:281
+#: build/modules/hrm/includes/class-hr-log.php:280
 #: modules/hrm/includes/class-hr-log.php:280
 msgid "<strong>%s</strong> employee education has been deleted"
 msgstr ""
 
-#: build/modules/hrm/includes/class-hr-log.php:301
+#: build/modules/hrm/includes/class-hr-log.php:300
 #: modules/hrm/includes/class-hr-log.php:300
 msgid "<strong>%s</strong> employee dependents has been created"
 msgstr ""
 
-#: build/modules/hrm/includes/class-hr-log.php:326
+#: build/modules/hrm/includes/class-hr-log.php:325
 #: modules/hrm/includes/class-hr-log.php:325
 msgid "<strong>%s</strong> employee dependents has been deleted"
 msgstr ""
 
-#: build/modules/hrm/includes/class-hr-log.php:346
+#: build/modules/hrm/includes/class-hr-log.php:345
 #: modules/hrm/includes/class-hr-log.php:345
 msgid "<strong>%s</strong> employee employment status has been created"
 msgstr ""
 
-#: build/modules/hrm/includes/class-hr-log.php:375
+#: build/modules/hrm/includes/class-hr-log.php:374
 #: modules/hrm/includes/class-hr-log.php:374
 msgid "<strong>%s</strong> employee employment status has been deleted"
 msgstr ""
 
-#: build/modules/hrm/includes/class-hr-log.php:395
+#: build/modules/hrm/includes/class-hr-log.php:394
 #: modules/hrm/includes/class-hr-log.php:394
 msgid "<strong>%s</strong> employee compensation has been created"
 msgstr ""
 
-#: build/modules/hrm/includes/class-hr-log.php:424
+#: build/modules/hrm/includes/class-hr-log.php:423
 #: modules/hrm/includes/class-hr-log.php:423
 msgid "<strong>%s</strong> employee compensation has been deleted"
 msgstr ""
 
-#: build/modules/hrm/includes/class-hr-log.php:444
+#: build/modules/hrm/includes/class-hr-log.php:443
 #: modules/hrm/includes/class-hr-log.php:443
 msgid "<strong>%s</strong> employee job info has been created"
 msgstr ""
 
-#: build/modules/hrm/includes/class-hr-log.php:473
+#: build/modules/hrm/includes/class-hr-log.php:472
 #: modules/hrm/includes/class-hr-log.php:472
 msgid "<strong>%s</strong> employee job info has been deleted"
 msgstr ""
 
-#: build/modules/hrm/includes/class-hr-log.php:492
+#: build/modules/hrm/includes/class-hr-log.php:491
 #: modules/hrm/includes/class-hr-log.php:491
 msgid "<strong>%s</strong> department has been created"
 msgstr ""
 
-#: build/modules/hrm/includes/class-hr-log.php:515
+#: build/modules/hrm/includes/class-hr-log.php:514
 #: modules/hrm/includes/class-hr-log.php:514
 msgid "<strong>%s</strong> department has been deleted"
 msgstr ""
 
-#: build/modules/hrm/includes/class-hr-log.php:550
+#: build/modules/hrm/includes/class-hr-log.php:549
 #: modules/hrm/includes/class-hr-log.php:549
 msgid "No deparment leader"
 msgstr ""
 
-#: build/modules/hrm/includes/class-hr-log.php:560
+#: build/modules/hrm/includes/class-hr-log.php:559
 #: modules/hrm/includes/class-hr-log.php:559
 msgid "No Parent Department"
 msgstr ""
 
-#: build/modules/hrm/includes/class-hr-log.php:566
+#: build/modules/hrm/includes/class-hr-log.php:565
 #: modules/hrm/includes/class-hr-log.php:565
 msgid "<strong>%s</strong> department has been edited"
 msgstr ""
 
-#: build/modules/hrm/includes/class-hr-log.php:594
+#: build/modules/hrm/includes/class-hr-log.php:593
 #: modules/hrm/includes/class-hr-log.php:593
 msgid "<strong>%s</strong> designation has been created"
 msgstr ""
 
-#: build/modules/hrm/includes/class-hr-log.php:615
+#: build/modules/hrm/includes/class-hr-log.php:614
 #: modules/hrm/includes/class-hr-log.php:614
 msgid "<strong>%s</strong> designation has been deleted"
 msgstr ""
 
-#: build/modules/hrm/includes/class-hr-log.php:644
-msgid "<strong>%s</strong> designation has been edited"
+#: build/modules/hrm/includes/class-hr-log.php:643
+#: modules/hrm/includes/class-hr-log.php:643
+msgid "<strong>%s</strong> designation has been updated"
 msgstr ""
 
-#: build/modules/hrm/includes/class-hr-log.php:675
+#: build/modules/hrm/includes/class-hr-log.php:674
 #: modules/hrm/includes/class-hr-log.php:674
 msgid "<strong>policy %d</strong> has been created"
 msgstr ""
 
-#: build/modules/hrm/includes/class-hr-log.php:698
+#: build/modules/hrm/includes/class-hr-log.php:697
 #: modules/hrm/includes/class-hr-log.php:697
 msgid "<strong>%s</strong> policy has been deleted"
 msgstr ""
@@ -30551,7 +30710,8 @@ msgid "Manually"
 msgstr ""
 
 #: build/modules/hrm/includes/class-hr-log.php:796
-msgid "<strong>%s</strong> policy has been edited"
+#: modules/hrm/includes/class-hr-log.php:796
+msgid "<strong>%s</strong> policy has been updated"
 msgstr ""
 
 #: build/modules/hrm/includes/class-hr-log.php:829
@@ -30561,32 +30721,44 @@ msgid ""
 "<strong>%s</strong> for <strong>%d</strong> days"
 msgstr ""
 
-#: build/modules/hrm/includes/class-hr-log.php:859
+#: build/modules/hrm/includes/class-hr-log.php:878
+#: modules/hrm/includes/class-hr-log.php:878
+msgid "A leave request by <strong>%s</strong> has been updated"
+msgstr ""
+
+#: build/modules/hrm/includes/class-hr-log.php:907
 #: modules/hrm/includes/class-hr-log.php:907
 msgid "A new entitlement has been created for"
 msgstr ""
 
-#: build/modules/hrm/includes/class-hr-log.php:886
+#: build/modules/hrm/includes/class-hr-log.php:934
 #: modules/hrm/includes/class-hr-log.php:934
 msgid "A new holiday named <strong>%s</strong> has been created"
 msgstr ""
 
-#: build/modules/hrm/includes/class-hr-log.php:914
+#: build/modules/hrm/includes/class-hr-log.php:962
 #: modules/hrm/includes/class-hr-log.php:962
 msgid "<strong>%s</strong> holiday has been deleted"
 msgstr ""
 
-#: build/modules/hrm/includes/class-hr-log.php:960
-msgid "<strong>%s</strong> holiday has been edited"
+#: build/modules/hrm/includes/class-hr-log.php:1008
+#: modules/hrm/includes/class-hr-log.php:1008
+msgid "<strong>%s</strong> holiday has been updated"
 msgstr ""
 
-#: build/modules/hrm/includes/class-hr-log.php:998
-msgid "<strong>%s</strong> announcement has been edited"
+#: build/modules/hrm/includes/class-hr-log.php:1046
+#: modules/hrm/includes/class-hr-log.php:1046
+msgid "<strong>%s</strong> announcement has been updated"
 msgstr ""
 
-#: build/modules/hrm/includes/class-hr-log.php:1001
+#: build/modules/hrm/includes/class-hr-log.php:1049
 #: modules/hrm/includes/class-hr-log.php:1049
 msgid "<strong>%s</strong> announcement has been created"
+msgstr ""
+
+#: build/modules/hrm/includes/class-hr-log.php:1079
+#: modules/hrm/includes/class-hr-log.php:1079
+msgid "<strong>%s</strong> announcement has been deleted"
 msgstr ""
 
 #: build/modules/hrm/includes/class-leave-policy-name-list-table.php:28
@@ -31134,20 +31306,20 @@ msgstr ""
 msgid "- Select Designation -"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-employee.php:409
+#: build/modules/hrm/includes/functions-employee.php:415
 #: modules/hrm/includes/functions-employee.php:415
 msgid "- Select Employee -"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-employee.php:452
-#: build/modules/hrm/includes/functions-employee.php:469
+#: build/modules/hrm/includes/functions-employee.php:458
+#: build/modules/hrm/includes/functions-employee.php:475
 #: modules/hrm/includes/functions-employee.php:458
 #: modules/hrm/includes/functions-employee.php:475
 msgid "Active"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-employee.php:454
-#: build/modules/hrm/includes/functions-employee.php:470
+#: build/modules/hrm/includes/functions-employee.php:460
+#: build/modules/hrm/includes/functions-employee.php:476
 #: build/modules/hrm/views/employee/tab-job.php:76
 #: modules/hrm/includes/functions-employee.php:460
 #: modules/hrm/includes/functions-employee.php:476
@@ -31155,177 +31327,177 @@ msgstr ""
 msgid "Terminated"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-employee.php:455
-#: build/modules/hrm/includes/functions-employee.php:471
+#: build/modules/hrm/includes/functions-employee.php:461
+#: build/modules/hrm/includes/functions-employee.php:477
 #: modules/hrm/includes/functions-employee.php:461
 #: modules/hrm/includes/functions-employee.php:477
 msgid "Deceased"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-employee.php:456
-#: build/modules/hrm/includes/functions-employee.php:472
+#: build/modules/hrm/includes/functions-employee.php:462
+#: build/modules/hrm/includes/functions-employee.php:478
 #: modules/hrm/includes/functions-employee.php:462
 #: modules/hrm/includes/functions-employee.php:478
 msgid "Resigned"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-employee.php:489
+#: build/modules/hrm/includes/functions-employee.php:495
 #: modules/hrm/includes/functions-employee.php:495
 msgid "Full Time"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-employee.php:490
+#: build/modules/hrm/includes/functions-employee.php:496
 #: modules/hrm/includes/functions-employee.php:496
 msgid "Part Time"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-employee.php:491
+#: build/modules/hrm/includes/functions-employee.php:497
 #: modules/hrm/includes/functions-employee.php:497
 msgid "On Contract"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-employee.php:492
+#: build/modules/hrm/includes/functions-employee.php:498
 #: modules/hrm/includes/functions-employee.php:498
 msgid "Temporary"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-employee.php:493
+#: build/modules/hrm/includes/functions-employee.php:499
 #: modules/hrm/includes/functions-employee.php:499
 msgid "Trainee"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-employee.php:506
+#: build/modules/hrm/includes/functions-employee.php:512
 #: modules/hrm/includes/functions-employee.php:512
 msgid "Direct"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-employee.php:507
+#: build/modules/hrm/includes/functions-employee.php:513
 #: modules/hrm/includes/functions-employee.php:513
 msgid "Referral"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-employee.php:508
+#: build/modules/hrm/includes/functions-employee.php:514
 #: modules/hrm/includes/functions-employee.php:514
 msgid "Web"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-employee.php:509
+#: build/modules/hrm/includes/functions-employee.php:515
 #: modules/hrm/includes/functions-employee.php:515
 msgid "Newspaper"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-employee.php:511
+#: build/modules/hrm/includes/functions-employee.php:517
 #: modules/hrm/includes/functions-employee.php:517
 msgid "Social Network"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-employee.php:512
-#: build/modules/hrm/includes/functions-employee.php:642
+#: build/modules/hrm/includes/functions-employee.php:518
 #: build/modules/hrm/includes/functions-employee.php:648
+#: build/modules/hrm/includes/functions-employee.php:654
 #: modules/hrm/includes/functions-employee.php:518
 #: modules/hrm/includes/functions-employee.php:648
 #: modules/hrm/includes/functions-employee.php:654
 msgid "Other"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-employee.php:527
 #: build/modules/hrm/includes/functions-employee.php:533
+#: build/modules/hrm/includes/functions-employee.php:539
 #: modules/hrm/includes/functions-employee.php:533
 #: modules/hrm/includes/functions-employee.php:539
 msgid "Single"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-employee.php:528
 #: build/modules/hrm/includes/functions-employee.php:534
+#: build/modules/hrm/includes/functions-employee.php:540
 #: modules/hrm/includes/functions-employee.php:534
 #: modules/hrm/includes/functions-employee.php:540
 msgid "Married"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-employee.php:529
 #: build/modules/hrm/includes/functions-employee.php:535
+#: build/modules/hrm/includes/functions-employee.php:541
 #: modules/hrm/includes/functions-employee.php:535
 #: modules/hrm/includes/functions-employee.php:541
 msgid "Widowed"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-employee.php:549
+#: build/modules/hrm/includes/functions-employee.php:555
 #: modules/hrm/includes/functions-employee.php:555
 msgid "Voluntary"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-employee.php:550
+#: build/modules/hrm/includes/functions-employee.php:556
 #: modules/hrm/includes/functions-employee.php:556
 msgid "Involuntary"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-employee.php:567
+#: build/modules/hrm/includes/functions-employee.php:573
 #: modules/hrm/includes/functions-employee.php:573
 msgid "Attendance"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-employee.php:568
+#: build/modules/hrm/includes/functions-employee.php:574
 #: modules/hrm/includes/functions-employee.php:574
 msgid "Better Employment Conditions"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-employee.php:569
+#: build/modules/hrm/includes/functions-employee.php:575
 #: modules/hrm/includes/functions-employee.php:575
 msgid "Career Prospect"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-employee.php:570
+#: build/modules/hrm/includes/functions-employee.php:576
 #: modules/hrm/includes/functions-employee.php:576
 msgid "Death"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-employee.php:571
+#: build/modules/hrm/includes/functions-employee.php:577
 #: modules/hrm/includes/functions-employee.php:577
 msgid "Desertion"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-employee.php:572
+#: build/modules/hrm/includes/functions-employee.php:578
 #: modules/hrm/includes/functions-employee.php:578
 msgid "Dismissed"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-employee.php:573
+#: build/modules/hrm/includes/functions-employee.php:579
 #: modules/hrm/includes/functions-employee.php:579
 msgid "Dissatisfaction with the job"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-employee.php:574
+#: build/modules/hrm/includes/functions-employee.php:580
 #: modules/hrm/includes/functions-employee.php:580
 msgid "Higher Pay"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-employee.php:575
+#: build/modules/hrm/includes/functions-employee.php:581
 #: modules/hrm/includes/functions-employee.php:581
 msgid "Other Employment"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-employee.php:576
+#: build/modules/hrm/includes/functions-employee.php:582
 #: modules/hrm/includes/functions-employee.php:582
 msgid "Personality Conflicts"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-employee.php:577
+#: build/modules/hrm/includes/functions-employee.php:583
 #: modules/hrm/includes/functions-employee.php:583
 msgid "Relocation"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-employee.php:578
+#: build/modules/hrm/includes/functions-employee.php:584
 #: modules/hrm/includes/functions-employee.php:584
 msgid "Retirement"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-employee.php:597
+#: build/modules/hrm/includes/functions-employee.php:603
 #: modules/hrm/includes/functions-employee.php:603
 msgid "Upon Review"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-employee.php:640
 #: build/modules/hrm/includes/functions-employee.php:646
+#: build/modules/hrm/includes/functions-employee.php:652
 #: build/modules/hrm/views/reporting/gender-profile.php:85
 #: modules/hrm/includes/functions-employee.php:646
 #: modules/hrm/includes/functions-employee.php:652
@@ -31333,8 +31505,8 @@ msgstr ""
 msgid "Male"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-employee.php:641
 #: build/modules/hrm/includes/functions-employee.php:647
+#: build/modules/hrm/includes/functions-employee.php:653
 #: build/modules/hrm/views/reporting/gender-profile.php:86
 #: modules/hrm/includes/functions-employee.php:647
 #: modules/hrm/includes/functions-employee.php:653
@@ -31342,42 +31514,42 @@ msgstr ""
 msgid "Female"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-employee.php:662
+#: build/modules/hrm/includes/functions-employee.php:668
 #: modules/hrm/includes/functions-employee.php:668
 msgid "Hourly"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-employee.php:663
+#: build/modules/hrm/includes/functions-employee.php:669
 #: modules/hrm/includes/functions-employee.php:669
 msgid "Daily"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-employee.php:664
+#: build/modules/hrm/includes/functions-employee.php:670
 #: modules/hrm/includes/functions-employee.php:670
 msgid "Weekly"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-employee.php:665
+#: build/modules/hrm/includes/functions-employee.php:671
 #: modules/hrm/includes/functions-employee.php:671
 msgid "Biweekly"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-employee.php:666
+#: build/modules/hrm/includes/functions-employee.php:672
 #: modules/hrm/includes/functions-employee.php:672
 msgid "Monthly"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-employee.php:667
+#: build/modules/hrm/includes/functions-employee.php:673
 #: modules/hrm/includes/functions-employee.php:673
 msgid "Contract"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-employee.php:680
+#: build/modules/hrm/includes/functions-employee.php:686
 #: modules/hrm/includes/functions-employee.php:686
 msgid "Promotion"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-employee.php:681
+#: build/modules/hrm/includes/functions-employee.php:687
 #: build/modules/hrm/views/employee/empty-employee.php:135
 #: build/modules/hrm/views/employee/single.php:122
 #: modules/hrm/includes/functions-employee.php:687
@@ -31386,169 +31558,169 @@ msgstr ""
 msgid "Performance"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-employee.php:682
+#: build/modules/hrm/includes/functions-employee.php:688
 #: modules/hrm/includes/functions-employee.php:688
 msgid "Increment"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-employee.php:867
+#: build/modules/hrm/includes/functions-employee.php:873
 #: modules/hrm/includes/functions-employee.php:873
 msgid "Unsupported module type"
 msgstr ""
 
 #: build/modules/hrm/includes/functions-leave.php:227
-#: build/modules/hrm/includes/functions-leave.php:247
+#: build/modules/hrm/includes/functions-leave.php:250
 #: modules/hrm/includes/functions-leave.php:227
 #: modules/hrm/includes/functions-leave.php:250
 msgid "Policy already exists."
 msgstr ""
 
-#: build/modules/hrm/includes/functions-leave.php:399
+#: build/modules/hrm/includes/functions-leave.php:402
 #: modules/hrm/includes/functions-leave.php:402
 msgid "No employee provided."
 msgstr ""
 
-#: build/modules/hrm/includes/functions-leave.php:403
+#: build/modules/hrm/includes/functions-leave.php:406
 #: modules/hrm/includes/functions-leave.php:406
 msgid "No policy provided."
 msgstr ""
 
-#: build/modules/hrm/includes/functions-leave.php:407
+#: build/modules/hrm/includes/functions-leave.php:410
 #: modules/hrm/includes/functions-leave.php:410
 msgid "No transaction id is provided."
 msgstr ""
 
-#: build/modules/hrm/includes/functions-leave.php:411
+#: build/modules/hrm/includes/functions-leave.php:414
 #: modules/hrm/includes/functions-leave.php:414
 msgid "No transaction type is provided."
 msgstr ""
 
-#: build/modules/hrm/includes/functions-leave.php:415
+#: build/modules/hrm/includes/functions-leave.php:418
 #: modules/hrm/includes/functions-leave.php:418
 msgid "No year is provided."
 msgstr ""
 
-#: build/modules/hrm/includes/functions-leave.php:440
+#: build/modules/hrm/includes/functions-leave.php:443
 #: modules/hrm/includes/functions-leave.php:443
 msgid "Error: Invalid Employee. No employee found with given ID: "
 msgstr ""
 
-#: build/modules/hrm/includes/functions-leave.php:445
+#: build/modules/hrm/includes/functions-leave.php:448
 #: modules/hrm/includes/functions-leave.php:448
 msgid "Error: Invalid Employee. Employee job status is not active: "
 msgstr ""
 
-#: build/modules/hrm/includes/functions-leave.php:452
+#: build/modules/hrm/includes/functions-leave.php:455
 #: modules/hrm/includes/functions-leave.php:455
 msgid "Error: Invalid Policy. No leave policy found with given ID: "
 msgstr ""
 
-#: build/modules/hrm/includes/functions-leave.php:463
+#: build/modules/hrm/includes/functions-leave.php:466
 #: modules/hrm/includes/functions-leave.php:466
 msgid "Error: Invalid Employee. Policy does not match with employee profile."
 msgstr ""
 
-#: build/modules/hrm/includes/functions-leave.php:479
+#: build/modules/hrm/includes/functions-leave.php:482
 #: modules/hrm/includes/functions-leave.php:482
 msgid "Error: Employee joining date is in the future: "
 msgstr ""
 
-#: build/modules/hrm/includes/functions-leave.php:485
+#: build/modules/hrm/includes/functions-leave.php:488
 #: modules/hrm/includes/functions-leave.php:488
 msgid "Error: Employee is not eligible for this leave policy yet: "
 msgstr ""
 
-#: build/modules/hrm/includes/functions-leave.php:488
+#: build/modules/hrm/includes/functions-leave.php:491
 #: modules/hrm/includes/functions-leave.php:491
 msgid "Error: Employee joining date is invalid: "
 msgstr ""
 
-#: build/modules/hrm/includes/functions-leave.php:657
+#: build/modules/hrm/includes/functions-leave.php:660
 #: modules/hrm/includes/functions-leave.php:660
 msgid "No title provided."
 msgstr ""
 
-#: build/modules/hrm/includes/functions-leave.php:661
+#: build/modules/hrm/includes/functions-leave.php:664
 #: modules/hrm/includes/functions-leave.php:664
 msgid "No start date provided."
 msgstr ""
 
-#: build/modules/hrm/includes/functions-leave.php:665
+#: build/modules/hrm/includes/functions-leave.php:668
 #: modules/hrm/includes/functions-leave.php:668
 msgid "No end date provided."
 msgstr ""
 
-#: build/modules/hrm/includes/functions-leave.php:1135
+#: build/modules/hrm/includes/functions-leave.php:1138
 #: modules/hrm/includes/functions-leave.php:1138
 msgid "No employee ID provided."
 msgstr ""
 
-#: build/modules/hrm/includes/functions-leave.php:1139
+#: build/modules/hrm/includes/functions-leave.php:1142
 #: modules/hrm/includes/functions-leave.php:1142
 msgid "No leave policy provided."
 msgstr ""
 
-#: build/modules/hrm/includes/functions-leave.php:1152
+#: build/modules/hrm/includes/functions-leave.php:1155
 #: modules/hrm/includes/functions-leave.php:1155
 msgid "No entitlement found with given id."
 msgstr ""
 
-#: build/modules/hrm/includes/functions-leave.php:1157
+#: build/modules/hrm/includes/functions-leave.php:1160
 #: modules/hrm/includes/functions-leave.php:1160
 msgid "Invalid date range."
 msgstr ""
 
-#: build/modules/hrm/includes/functions-leave.php:1165
+#: build/modules/hrm/includes/functions-leave.php:1168
 #: modules/hrm/includes/functions-leave.php:1168
 msgid "Sorry! You do not have any leave left under this leave policy."
 msgstr ""
 
-#: build/modules/hrm/includes/functions-leave.php:1596
+#: build/modules/hrm/includes/functions-leave.php:1601
 #: modules/hrm/includes/functions-leave.php:1601
 msgid "Invalid leave request"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-leave.php:1613
+#: build/modules/hrm/includes/functions-leave.php:1618
 #: modules/hrm/includes/functions-leave.php:1618
 msgid "Invalid leave status. Please check your input."
 msgstr ""
 
-#: build/modules/hrm/includes/functions-leave.php:1618
+#: build/modules/hrm/includes/functions-leave.php:1623
 #: modules/hrm/includes/functions-leave.php:1623
 msgid "Please provide a reject reason for given leave request."
 msgstr ""
 
-#: build/modules/hrm/includes/functions-leave.php:1623
+#: build/modules/hrm/includes/functions-leave.php:1628
 #: modules/hrm/includes/functions-leave.php:1628
 msgid "No Entitlement found for given request."
 msgstr ""
 
-#: build/modules/hrm/includes/functions-leave.php:1633
+#: build/modules/hrm/includes/functions-leave.php:1638
 #: modules/hrm/includes/functions-leave.php:1638
 msgid "No current leave year found."
 msgstr ""
 
-#: build/modules/hrm/includes/functions-leave.php:1644
+#: build/modules/hrm/includes/functions-leave.php:1649
 #: modules/hrm/includes/functions-leave.php:1649
 msgid "Error: You can not modify past leave year requests."
 msgstr ""
 
-#: build/modules/hrm/includes/functions-leave.php:1684
+#: build/modules/hrm/includes/functions-leave.php:1689
 #: modules/hrm/includes/functions-leave.php:1689
 msgid "Invalid Request: No previous records found for given request."
 msgstr ""
 
-#: build/modules/hrm/includes/functions-leave.php:1727
+#: build/modules/hrm/includes/functions-leave.php:1732
 #: modules/hrm/includes/functions-leave.php:1732
 msgid "Approved leave request found within given range!"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-leave.php:1733
+#: build/modules/hrm/includes/functions-leave.php:1738
 #: modules/hrm/includes/functions-leave.php:1738
 msgid "No entitlement found for given request. Please check your input."
 msgstr ""
 
-#: build/modules/hrm/includes/functions-leave.php:1750
+#: build/modules/hrm/includes/functions-leave.php:1755
 #: modules/hrm/includes/functions-leave.php:1755
 msgid ""
 "Sorry! given request do not have any leave left under this leave policy. If "
@@ -31556,98 +31728,98 @@ msgid ""
 "from settings."
 msgstr ""
 
-#: build/modules/hrm/includes/functions-leave.php:1812
+#: build/modules/hrm/includes/functions-leave.php:1817
 #: modules/hrm/includes/functions-leave.php:1817
 msgid "Invalid leave request status."
 msgstr ""
 
-#: build/modules/hrm/includes/functions-leave.php:1860
+#: build/modules/hrm/includes/functions-leave.php:1866
 #: modules/hrm/includes/functions-leave.php:1866
 msgid "No leave request found with give request id."
 msgstr ""
 
-#: build/modules/hrm/includes/functions-leave.php:1903
+#: build/modules/hrm/includes/functions-leave.php:1909
 #: modules/hrm/includes/functions-leave.php:1909
 msgid "Approved"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-leave.php:1905
+#: build/modules/hrm/includes/functions-leave.php:1911
 #: modules/hrm/includes/functions-leave.php:1911
 msgid "Rejected"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-leave.php:1928
-#: build/modules/hrm/includes/functions-leave.php:2725
+#: build/modules/hrm/includes/functions-leave.php:1934
+#: build/modules/hrm/includes/functions-leave.php:2731
 #: modules/hrm/includes/functions-leave.php:1934
 #: modules/hrm/includes/functions-leave.php:2731
 msgid "Morning"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-leave.php:1929
-#: build/modules/hrm/includes/functions-leave.php:2726
+#: build/modules/hrm/includes/functions-leave.php:1935
+#: build/modules/hrm/includes/functions-leave.php:2732
 #: modules/hrm/includes/functions-leave.php:1935
 #: modules/hrm/includes/functions-leave.php:2732
 msgid "Afternoon"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-leave.php:1979
+#: build/modules/hrm/includes/functions-leave.php:1985
 #: modules/hrm/includes/functions-leave.php:1985
 msgid "No leave year found with given date."
 msgstr ""
 
-#: build/modules/hrm/includes/functions-leave.php:2312
+#: build/modules/hrm/includes/functions-leave.php:2318
 #: modules/hrm/includes/functions-leave.php:2318
 msgid "Invalid entitlement data."
 msgstr ""
 
-#: build/modules/hrm/includes/functions-leave.php:2644
+#: build/modules/hrm/includes/functions-leave.php:2650
 #: modules/hrm/includes/functions-leave.php:2650
 msgid "Title can not be empty"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-leave.php:2648
+#: build/modules/hrm/includes/functions-leave.php:2654
 #: modules/hrm/includes/functions-leave.php:2654
 msgid "Title can not be more than 200 charecters"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-leave.php:2652
+#: build/modules/hrm/includes/functions-leave.php:2658
 #: modules/hrm/includes/functions-leave.php:2658
 msgid "Start OR End date can not be empty"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-leave.php:2656
+#: build/modules/hrm/includes/functions-leave.php:2662
 #: modules/hrm/includes/functions-leave.php:2662
 msgid "Title, Start & End must be"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-leave.php:2660
+#: build/modules/hrm/includes/functions-leave.php:2666
 #: modules/hrm/includes/functions-leave.php:2666
 msgid "Start date should be valid format. Ex YYYY-MM-DD 00:00:00"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-leave.php:2664
+#: build/modules/hrm/includes/functions-leave.php:2670
 #: modules/hrm/includes/functions-leave.php:2670
 msgid "End date should be valid format. Ex YYYY-MM-DD 23:59:59"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-leave.php:2700
+#: build/modules/hrm/includes/functions-leave.php:2706
 #: modules/hrm/includes/functions-leave.php:2706
 msgid "Successfully imported %u data<br>"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-leave.php:2706
+#: build/modules/hrm/includes/functions-leave.php:2712
 #: modules/hrm/includes/functions-leave.php:2712
 msgid "Something went wrong. Failed to import line no  %s."
 msgstr ""
 
-#: build/modules/hrm/includes/functions-leave.php:2759
-#: build/modules/hrm/includes/functions-leave.php:2773
+#: build/modules/hrm/includes/functions-leave.php:2765
+#: build/modules/hrm/includes/functions-leave.php:2779
 #: modules/hrm/includes/functions-leave.php:2765
 #: modules/hrm/includes/functions-leave.php:2779
 msgid "Name already exists"
 msgstr ""
 
-#: build/modules/hrm/includes/functions-leave.php:2792
+#: build/modules/hrm/includes/functions-leave.php:2798
 #: modules/hrm/includes/functions-leave.php:2798
 msgid "Can not remove, connected with policy"
 msgstr ""
@@ -33153,110 +33325,6 @@ msgstr ""
 msgid "https://wordpress.org/support/plugin/erp/reviews/?filter=5"
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:72
-msgid "E-Marketing"
-msgstr ""
-
-#: includes/admin/class-setup-wizard.php:555
-msgid "Email Marketing Setup"
-msgstr ""
-
-#: includes/admin/class-setup-wizard.php:562
-msgid ""
-"To collect and create your CRM leads and subscriers, we recommend "
-"installing %s plugin. "
-msgstr ""
-
-#: includes/admin/class-setup-wizard.php:563
-msgid ""
-"It simplifies email marketing inside the WordPress dashboard and it has "
-"tight integration with %s plugin."
-msgstr ""
-
-#: includes/admin/class-setup-wizard.php:570
-msgid "Install weMail plugin for email marketing"
-msgstr ""
-
-#: includes/admin/class-setup-wizard.php:577
-msgid "The following plugin will be installed and activated for you: "
-msgstr ""
-
-#: includes/admin/class-setup-wizard.php:625
-msgid "weMail"
-msgstr ""
-
-#: modules/accounting/api/class-rest-api-bills.php:408
-msgid "A bill of %1$s has been %2$s for %3$s"
-msgstr ""
-
-#: modules/accounting/api/class-rest-api-customers.php:475
-msgid " customer has been %s"
-msgstr ""
-
-#: modules/accounting/api/class-rest-api-expenses.php:350
-msgid "An expense of %1$s has been %2$s for %3$s"
-msgstr ""
-
-#: modules/accounting/api/class-rest-api-invoices.php:472
-msgid "An invoice of %1$s has been %2$s for %3$s"
-msgstr ""
-
-#: modules/accounting/api/class-rest-api-ledgers.php:556
-msgid "A ledger account named %1$s has been %2$s for %3$s"
-msgstr ""
-
-#: modules/accounting/api/class-rest-api-pay-bills.php:303
-msgid "A bill payment of %1$s has been %2$s for %3$s"
-msgstr ""
-
-#: modules/accounting/api/class-rest-api-pay-purchases.php:295
-msgid "A purchase payment of %1$s has been %2$s for %3$s"
-msgstr ""
-
-#: modules/accounting/api/class-rest-api-product-cats.php:285
-msgid "Product Category"
-msgstr ""
-
-#: modules/accounting/api/class-rest-api-product-cats.php:288
-msgid "<strong>%1$s</strong> product category has been %2$s"
-msgstr ""
-
-#: modules/accounting/api/class-rest-api-products.php:299
-msgid "<strong>%1$s</strong> product has been %2$s"
-msgstr ""
-
-#: modules/accounting/api/class-rest-api-purchases.php:368
-msgid "A purchase of %1$s has been %2$s for %3$s"
-msgstr ""
-
-#: modules/accounting/api/class-rest-api-rec-payments.php:297
-msgid "An invoice payment of %1$s has been %2$s for %3$s"
-msgstr ""
-
-#: modules/accounting/api/class-rest-api-tax-agencies.php:361
-msgid " tax agency has been %s"
-msgstr ""
-
-#: modules/accounting/api/class-rest-api-tax-cats.php:329
-msgid " tax category has been %s"
-msgstr ""
-
-#: modules/accounting/api/class-rest-api-tax-rate-names.php:320
-msgid " tax zone has been %s"
-msgstr ""
-
-#: modules/accounting/api/class-rest-api-taxes.php:705
-msgid "A tax rate has been %s"
-msgstr ""
-
-#: modules/accounting/api/class-rest-api-taxes.php:708
-msgid "A tax payment of %1$s has been %2$s"
-msgstr ""
-
-#: modules/accounting/api/class-rest-api-vendors.php:499
-msgid " vendor has been %s"
-msgstr ""
-
 #: modules/accounting/assets/js/admin.js:11187
 #: modules/accounting/assets/js/bootstrap.js:11179
 msgid "i"
@@ -33313,92 +33381,6 @@ msgstr ""
 
 #: modules/accounting/assets/js/admin.js:47438
 msgid "ul"
-msgstr ""
-
-#: modules/crm/includes/class-log.php:64
-msgid "<strong>%1$s</strong> %2$s has been created"
-msgstr ""
-
-#: modules/crm/includes/class-log.php:92
-msgid "No Owner"
-msgstr ""
-
-#: modules/crm/includes/class-log.php:101
-msgid "No Life Stage"
-msgstr ""
-
-#: modules/crm/includes/class-log.php:110
-msgid "No Source"
-msgstr ""
-
-#: modules/crm/includes/class-log.php:121
-msgid "<strong>%1$s</strong> %2$s has been updated"
-msgstr ""
-
-#: modules/crm/includes/class-log.php:147
-msgid "<strong>%1$s</strong> %2$s has been %3$s"
-msgstr ""
-
-#: modules/crm/includes/class-log.php:168
-msgid "<strong>%1$s</strong> %2$s has been restored from trash"
-msgstr ""
-
-#: modules/crm/includes/class-log.php:212
-msgid "A <strong>%1$s</strong> %2$s has been created for <strong>%3$s</strong> %4$s"
-msgstr ""
-
-#: modules/crm/includes/class-log.php:238
-msgid "<strong>%1$s</strong> %2$s contact group has been created"
-msgstr ""
-
-#: modules/crm/includes/class-log.php:259
-msgid "<strong>%1$s</strong> %2$s contact group has been deleted"
-msgstr ""
-
-#: modules/crm/includes/class-log.php:282
-msgid ""
-"<strong>%1$s</strong> has been subscribed to <strong>%2$s</strong> contact "
-"group"
-msgstr ""
-
-#: modules/crm/includes/class-log.php:315
-msgid "<strong>%1$s</strong> %2$s has been assigned to <strong>%3$s</strong> %4$s"
-msgstr ""
-
-#: modules/hrm/includes/class-hr-log.php:160
-msgid "No Manager"
-msgstr ""
-
-#: modules/hrm/includes/class-hr-log.php:169
-msgid "No Department"
-msgstr ""
-
-#: modules/hrm/includes/class-hr-log.php:178
-msgid "No Designation"
-msgstr ""
-
-#: modules/hrm/includes/class-hr-log.php:643
-msgid "<strong>%s</strong> designation has been updated"
-msgstr ""
-
-#: modules/hrm/includes/class-hr-log.php:796
-msgid "<strong>%s</strong> policy has been updated"
-msgstr ""
-
-#: modules/hrm/includes/class-hr-log.php:878
-msgid "A leave request by <strong>%s</strong> has been updated"
-msgstr ""
-
-#: modules/hrm/includes/class-hr-log.php:1008
-msgid "<strong>%s</strong> holiday has been updated"
-msgstr ""
-
-#: modules/hrm/includes/class-hr-log.php:1046
-msgid "<strong>%s</strong> announcement has been updated"
-msgstr ""
-
-#: modules/hrm/includes/class-hr-log.php:1079
-msgid "<strong>%s</strong> announcement has been deleted"
 msgstr ""
 
 #. Plugin URI of the plugin/theme
