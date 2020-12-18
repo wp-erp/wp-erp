@@ -84,6 +84,7 @@ class Employees_Controller extends WP_REST_Controller {
         $response = rest_ensure_response( $formatted_items );
         $response = $this->format_collection_response( $response, $request, (int) $total_items );
 
+        $response->set_status( 200 );
         return $response;
     }
 
@@ -359,9 +360,72 @@ class Employees_Controller extends WP_REST_Controller {
                 'sanitize_callback' => 'absint',
                 'validate_callback' => 'rest_validate_request_arg',
             ],
-            'search'   => [
+            's'   => [
                 'description'       => __( 'Limit results to those matching a string.' ),
                 'type'              => 'string',
+                'sanitize_callback' => 'sanitize_text_field',
+                'validate_callback' => 'rest_validate_request_arg',
+            ],
+            'status'   => [
+                'description'       => __( 'Items to be returned with specific status' ),
+                'type'              => 'string',
+                'default'           => 'active',
+                'sanitize_callback' => 'sanitize_text_field',
+                'validate_callback' => 'rest_validate_request_arg',
+            ],
+            'department'   => [
+                'description'       => __( 'Items to be returned with specific department' ),
+                'type'              => 'integer',
+                'default'           => -1,
+                'sanitize_callback' => 'sanitize_text_field',
+                'validate_callback' => 'rest_validate_request_arg',
+            ],
+            'designation'   => [
+                'description'       => __( 'Items to be returned with specific designation' ),
+                'type'              => 'integer',
+                'default'           => -1,
+                'sanitize_callback' => 'sanitize_text_field',
+                'validate_callback' => 'rest_validate_request_arg',
+            ],
+            'location'   => [
+                'description'       => __( 'Items to be returned with specific location' ),
+                'type'              => 'integer',
+                'default'           => -1,
+                'sanitize_callback' => 'sanitize_text_field',
+                'validate_callback' => 'rest_validate_request_arg',
+            ],
+            'gender'   => [
+                'description'       => __( 'Items to be returned with specific gender' ),
+                'type'              => 'string',
+                'default'           => '-1',
+                'sanitize_callback' => 'sanitize_text_field',
+                'validate_callback' => 'rest_validate_request_arg',
+            ],
+            'marital_status'   => [
+                'description'       => __( 'Items to be returned with specific marital status' ),
+                'type'              => 'string',
+                'default'           => '-1',
+                'sanitize_callback' => 'sanitize_text_field',
+                'validate_callback' => 'rest_validate_request_arg',
+            ],
+            'orderby'   => [
+                'description'       => __( 'Items to be returned with specific field name' ),
+                'type'              => 'string',
+                'default'           => 'hiring_date',
+                'sanitize_callback' => 'sanitize_text_field',
+                'validate_callback' => 'rest_validate_request_arg',
+            ],
+            'order'   => [
+                'description'       => __( 'Items to be returned either asc OR desc' ),
+                'type'              => 'string',
+                'default'           => 'DESC',
+                'sanitize_callback' => 'sanitize_text_field',
+                'validate_callback' => 'rest_validate_request_arg',
+            ],
+            'type'   => [
+                'description'       => __( 'Items to be returned with specific type' ),
+                'type'              => 'string',
+                'default'           => '-1',
                 'sanitize_callback' => 'sanitize_text_field',
                 'validate_callback' => 'rest_validate_request_arg',
             ],
