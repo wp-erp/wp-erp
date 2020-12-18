@@ -28,31 +28,15 @@ class Promotion {
             return;
         }
         $current_time       = erp_current_datetime()->setTimezone ( new \DateTimeZone( 'America/New_York' ) );
-        $promotion1_start   = $current_time->setDate( 2020, 11, 23 )->setTime( 9, 0, 0 );
-        $promotion1_end     = $promotion1_start->setTime( 14, 0, 0 );
-        $promotion2_start   = $promotion1_end->setTime( 14, 0, 1 );
-        $promotion2_end     = $promotion2_start->modify( '+4 days' )->setTime( 23, 59, 59 );
-        $promotion3_start   = $promotion2_end->modify( 'next day' )->setTime( 0, 0, 0 );
-        $promotion3_end     = $current_time->setDate( 2020, 12, 4 )->setTime( 23, 59, 59 );
-        // 2020-12-04 23:59:00
-        if ( $current_time > $promotion3_end || $current_time < $promotion1_start ) {
+        $promotion_start   = $current_time->setDate( 2020, 12, 22 )->setTime( 9, 0, 0 );
+        $promotion_end     = $promotion_start->modify( '+17 days' )->setTime( 23, 59, 59 );
+        // 2020-12-22 09:00:00 - 2021-01-08 23:59:59
+        if ( $current_time > $promotion_end || $current_time < $promotion_start ) {
             return;
         }
-        if ( $current_time >= $promotion1_start && $current_time <= $promotion1_end ) {
-            $msg            = 'Enjoy Flat 50% OFF on WP ERP Pro. Get Your Early Bird Black Friday';
-            $option_name    = 'erp_2020_early_black_friday';
-            $this->generate_notice( $msg, $option_name );
-            return;
-        }
-        if ( $current_time >= $promotion2_start && $current_time <= $promotion2_end ) {
-            $msg            = 'Enjoy Up To 50% OFF on WP ERP Pro. Get Your Black Friday';
-            $option_name    = 'erp_2020_black_friday';
-            $this->generate_notice( $msg, $option_name );
-            return;
-        }
-        if ( $current_time >= $promotion3_start && $current_time <= $promotion3_end ) {
-            $msg            = 'Enjoy Up To 50% OFF on WP ERP Pro. Get Your Cyber Monday';
-            $option_name    = 'erp_2020_cyber_monday';
+        if ( $current_time >= $promotion_start && $current_time <= $promotion_end ) {
+            $msg            = 'Enjoy Up To 50% OFF on WP ERP Pro. Get Your ';
+            $option_name    = 'erp_2020_holiday';
             $this->generate_notice( $msg, $option_name );
             return;
         }
@@ -74,7 +58,7 @@ class Promotion {
         }
 
         $offer_msg = '<p><strong class="highlight-text" style="font-size: 18px">' . $msg . '
-                <a target="_blank" href="https://wperp.com/pricing/?nocache&utm_medium=text&utm_source=wordpress-erp">  Deals Now </a>.</strong>
+                <a target="_blank" href="https://wperp.com/pricing/?nocache&utm_medium=text&utm_source=wordpress-erp-holidays">  Holiday Deals Now</a>.</strong>
             </p>';
         ?>
         <div class="notice is-dismissible" id="erp-promotional-offer-notice">
