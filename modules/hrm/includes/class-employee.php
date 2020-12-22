@@ -1650,7 +1650,7 @@ class Employee {
                 'status' => $args['category'],
             ] );
 
-            do_action( 'erp_hr_employee_after_update_status', $this->erp_user->user_id, $args['category'] );
+            do_action( 'erp_hr_employee_after_update_status', $this->erp_user->user_id, $args['category'], $args['date'] );
         }
 
         $history = $this->get_erp_user()->histories()->updateOrCreate( [ 'id' => $args['id'] ], [
