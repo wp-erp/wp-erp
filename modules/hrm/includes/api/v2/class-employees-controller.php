@@ -44,6 +44,14 @@ class Employees_Controller extends WP_REST_Controller {
                     return current_user_can( 'erp_view_list' );
                 },*/
             ],
+            [
+                'methods'             => WP_REST_Server::CREATABLE,
+                'callback'            => [ $this, 'create_employee' ],
+                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
+                /*'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_create_employee' );
+                },*/
+            ],
             'schema' => [ $this, 'get_public_item_schema' ],
         ] );
     }
@@ -86,6 +94,29 @@ class Employees_Controller extends WP_REST_Controller {
 
         $response->set_status( 200 );
         return $response;
+    }
+
+    /**
+     * Create employees
+     *
+     * @param $request
+     *
+     * @return $this|int|WP_Error|WP_REST_Response
+     */
+    public function create_employees( WP_REST_Request $request ) {
+        $employees = json_decode( $request->get_body(), true );
+
+        foreach ( $employees as $employee ) {
+            $item_data = $this->prepare_item_for_database( $employee );
+            $item      = new Employee( null );
+            $created   = $item->create_employee( $item_data );
+
+            if ( is_wp_error( $created ) ) {
+                return $created;
+            }
+        }
+
+        return new WP_REST_Response( true, 201 );
     }
 
     /**
@@ -430,5 +461,186 @@ class Employees_Controller extends WP_REST_Controller {
                 'validate_callback' => 'rest_validate_request_arg',
             ],
         ];
+    }
+
+    /**
+     * Get the Employee schema, conforming to JSON Schema
+     *
+     * @return array
+     */
+    public function get_item_schema() {
+        $schema = [
+            '$schema'    => 'http://json-schema.org/draft-04/schema#',
+            'title'      => 'contact',
+            'type'       => 'object',
+            'properties' => [
+                'id'          => [
+                    'description' => __( 'Unique identifier for the resource.' ),
+                    'type'        => 'integer',
+                    'context'     => [ 'embed', 'view', 'edit' ],
+                    'readonly'    => true,
+                ],
+                'first_name'  => [
+                    'description' => __( 'First name for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                    'required'    => true,
+                ],
+                'middle_name'     => [
+                    'description' => __( 'Company for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'last_name'   => [
+                    'description' => __( 'Last name for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                    'required'    => true,
+                ],
+                'email'       => [
+                    'description' => __( 'The email address for the resource.' ),
+                    'type'        => 'string',
+                    'format'      => 'email',
+                    'context'     => [ 'edit' ],
+                    'required'    => true,
+                ],
+                'phone'       => [
+                    'description' => __( 'Phone for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'mobile'      => [
+                    'description' => __( 'Mobile for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'other'       => [
+                    'description' => __( 'Other for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'website'         => [
+                    'description' => __( 'Website of the resource.' ),
+                    'type'        => 'string',
+                    'format'      => 'uri',
+                    'context'     => [ 'embed', 'view', 'edit' ],
+                ],
+                'fax'             => [
+                    'description' => __( 'Fax of the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'embed', 'view', 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'notes'           => [
+                    'description' => __( 'Notes of the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'embed', 'view', 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'street_1'        => [
+                    'description' => __( 'Street 1 of the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'embed', 'view', 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'street_2'        => [
+                    'description' => __( 'Street 1 of the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'embed', 'view', 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'city'            => [
+                    'description' => __( 'City of the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'embed', 'view', 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'state'           => [
+                    'description' => __( 'State of the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'embed', 'view', 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'postal_code'     => [
+                    'description' => __( 'Postal Code of the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'embed', 'view', 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'country'         => [
+                    'description' => __( 'Country of the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'embed', 'view', 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'currency'        => [
+                    'description' => __( 'Currency of the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'embed', 'view', 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'type'            => [
+                    'description' => __( 'Type of the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'embed', 'view', 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'owner'           => [
+                    'description' => __( 'Owner of the resource.' ),
+                    'type'        => 'integer',
+                    'context'     => [ 'embed', 'view', 'edit' ],
+                    'required'    => true,
+                ],
+                'life_stage'      => [
+                    'description' => __( 'Life stage of the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'embed', 'view', 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                    'required'    => true,
+                ],
+            ],
+        ];
+
+        return $schema;
     }
 }
