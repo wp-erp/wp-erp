@@ -58,7 +58,7 @@
                             <th scope="col">{{ __('Qty', 'erp') }}</th>
                             <th scope="col">{{ __('Unit Price', 'erp') }}</th>
                             <th scope="col">{{ __('Amount', 'erp') }}</th>
-                            <th scope="col">{{ __('Tax', 'erp') }}</th>
+                            <th scope="col" v-if="pro_activated">{{ __('Tax', 'erp') }}</th>
                             <th scope="col"></th>
                         </tr>
                         </thead>
@@ -89,7 +89,7 @@
                             <td class="col--amount" data-colname="Amount">
                                 <input type="number" min="0" step="0.01" v-model="line.amount" class="wperp-form-field text-right" readonly>
                             </td>
-                            <td class="col--tax" data-colname="Tax">
+                            <td class="col--tax" data-colname="Tax" v-if="pro_activated">
                                 <input type="checkbox"  @change="disableLineTax(index)" v-model="line.applyTax"  class="wperp-form-field">
 
                             </td>
@@ -105,7 +105,7 @@
                             </td>
                         </tr>
 
-                        <tr class="tax-rate-row">
+                        <tr class="tax-rate-row" v-if="pro_activated">
                             <td colspan="3" class="text-right with-multiselect">
                                 <multi-select v-model="taxRate"
                                               :options="taxZones"
@@ -234,11 +234,13 @@
                 purchase_order  : 0,
                 page_title      : '',
                 taxRates        : [],
-                taxRate         : ''
+                taxRate         : '',
+                pro_activated   :  false
             };
         },
 
         watch: {
+
             'basic_fields.vendor'() {
                 if (!this.editMode) {
                     this.getvendorData();
@@ -267,6 +269,10 @@
             }
         },
 
+        mounted(){
+
+
+        },
         computed: {
             ...mapState({ actionType: state => state.combo.btnID }),
             totalAmount(){
@@ -316,6 +322,12 @@
         },
 
         created() {
+
+            setTimeout(()=>{
+                this.pro_activated =  this.$store.state.erp_pro_activated ?  this.$store.state.erp_pro_activated : false
+            }, 200);
+
+
             if (this.$route.name === 'PurchaseOrderCreate') {
                 this.page_title = 'Purchase Order';
                 this.purchase_order = 1;
@@ -478,7 +490,10 @@
                         });
                     });
 
-                    this.getTaxRates();
+                    if(this.pro_activated){
+                        this.getTaxRates();
+                    }
+
 
                     this.$store.dispatch('spinner/setSpinner', false);
                 }).catch(error => {

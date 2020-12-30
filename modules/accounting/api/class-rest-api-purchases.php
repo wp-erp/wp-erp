@@ -254,7 +254,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
         }
 
         $purchase_data['tax']           = array_sum( $item_tax_total );
-        $purchase_data['amount']        = array_sum( $item_total );
+        $purchase_data['amount']        = array_sum( $item_total ) + $purchase_data['tax'] ;
         $purchase_data['attachments']   = maybe_serialize( $request['attachments'] );
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
