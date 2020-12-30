@@ -2634,6 +2634,12 @@ function import_holidays_csv( $file ) {
     $csv->encoding( null, 'UTF-8' );
     $csv->parse( $file );
 
+    /*
+     * We'll ignore duplicate entries with the same title and
+     * start date in the foreach loop when inserting an entry
+     */
+    $holiday_model = new \WeDevs\ERP\HRM\Models\Leave_Holiday();
+
     $error_msg    = '';
     $parsed_data  = [];
 
@@ -2672,6 +2678,13 @@ function import_holidays_csv( $file ) {
         } elseif ( DateTime::createFromFormat( 'Y-m-d H:i:s', $end ) === false ) {
             $end = erp_current_datetime()->modify( $end )->format( 'Y-m-d 23:59:59' );
             $csv->data[ $data_key ]['end'] = $end;
+        }
+
+        // check for duplicate entries
+        $holiday = $holiday_model->where( 'title', '=', $title )->where( 'start', '=', $start );
+
+        if ( $holiday->count() ) {
+            $line_error .= __( 'Holiday entry already exists', 'wp-erp' ) . '<br>';
         }
 
         if ( ! empty( $line_error ) ) {
