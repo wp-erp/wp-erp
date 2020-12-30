@@ -45,13 +45,20 @@ export default {
                 { namedRoute: 'InvoiceCreate', name: __('Create Invoice', 'erp') },
                 { namedRoute: 'RecPaymentCreate', name: __('Receive Payment', 'erp') },
                 { namedRoute: 'EstimateCreate', name: __('Create Estimate', 'erp') },
-                { namedRoute: 'SalesReturnLists', name: __('Sales Return', 'erp') },
             ],
             filterTypes:[{id: 'invoice', name: 'Invoice'}, {id: 'payment', name: 'Payment'}, {id: 'estimate', name: 'Estimate'}],
+            pro_activated: false
 
         };
     },
     created() {
+        setTimeout(()=>{
+            this.pro_activated =  this.$store.state.erp_pro_activated ?  this.$store.state.erp_pro_activated : false
+            if(this.pro_activated ){
+                this.pages.push({ namedRoute: 'SalesReturnLists', name: __('Sales Return', 'erp') })
+            }
+        }, 200);
+
         if(!this.customers.length){
             this.$store.dispatch('sales/fillCustomers', []);
         }

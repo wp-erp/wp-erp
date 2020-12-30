@@ -26614,9 +26614,6 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       }, {
         namedRoute: 'EstimateCreate',
         name: __('Create Estimate', 'erp')
-      }, {
-        namedRoute: 'SalesReturnLists',
-        name: __('Sales Return', 'erp')
       }],
       filterTypes: [{
         id: 'invoice',
@@ -26627,10 +26624,24 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       }, {
         id: 'estimate',
         name: 'Estimate'
-      }]
+      }],
+      pro_activated: false
     };
   },
   created: function created() {
+    var _this = this;
+
+    setTimeout(function () {
+      _this.pro_activated = _this.$store.state.erp_pro_activated ? _this.$store.state.erp_pro_activated : false;
+
+      if (_this.pro_activated) {
+        _this.pages.push({
+          namedRoute: 'SalesReturnLists',
+          name: __('Sales Return', 'erp')
+        });
+      }
+    }, 200);
+
     if (!this.customers.length) {
       this.$store.dispatch('sales/fillCustomers', []);
     }
