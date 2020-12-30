@@ -147,6 +147,8 @@ class Human_Resource {
 
         wp_enqueue_media();
         wp_enqueue_script( 'erp-tiptip' );
+        wp_enqueue_style( 'erp-datetimepicker' );
+        wp_enqueue_script( 'erp-datetimepicker' );
 
         if ( isset( $_GET['section'] ) && $_GET['section'] === 'employee' ) {
             wp_enqueue_style( 'erp-sweetalert' );
@@ -181,6 +183,8 @@ class Human_Resource {
                 'holiday'               => __( 'Holiday', 'erp' ),
                 'holiday_create'        => __( 'Create Holiday', 'erp' ),
                 'holiday_update'        => __( 'Update Holiday', 'erp' ),
+                'holiday_import'        => __( 'Import Holidays', 'erp' ),
+                'import'                => __( 'Import', 'erp' ),
                 'new_leave_req'         => __( 'Leave Request', 'erp' ),
                 'take_leave'            => __( 'Send Leave Request', 'erp' ),
                 'terminate'             => __( 'Terminate', 'erp' ),
@@ -209,6 +213,8 @@ class Human_Resource {
             'employee_created'       => __( 'Employee successfully created', 'erp' ),
             'create_employee_text'   => __( 'Click to create employee', 'erp' ),
             'required_field_notice'  => __( 'Please fill all the required fields. You have {count} required field(s) empty. Check the Advanced Fields if necessary.', 'erp' ),
+            'import_hint'            => __( 'Double click on the item to edit it', 'erp' ),
+            'no_data'                => __( 'No data found.', 'erp' ),
             'empty_entitlement_text' => sprintf( '<span>%s <a href="%s" title="%s">%s</a></span>', __( 'Please create entitlement first', 'erp' ), add_query_arg( [
                 'page'          => 'erp-hr',
                 'section'       => 'leave',
@@ -327,6 +333,7 @@ class Human_Resource {
 
             case 'holidays':
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/holiday.php', 'erp-hr-holiday-js-tmp' );
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/holiday-import.php', 'erp-hr-holiday-import' );
                 break;
 
             case 'leave-requests':
