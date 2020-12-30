@@ -11,6 +11,8 @@
 
     <span class="erp-loader erp-hide" id="erp-holiday-uploading"></span>
 
+    <div id="holiday-import-hint" class="pull-right"></div>
+
     <div class="holiday-data-wrap">
         <table class="wp-list-table widefat fixed striped" id="erp-hr-holiday-data">
             <thead>
@@ -28,8 +30,6 @@
         </table>
     </div>
 
-    <div id="holiday-import-hint" class="pull-right"></div>
-
     <?php wp_nonce_field( 'erp-leave-holiday-import' ); ?>
     <input type="hidden" name="action" id="erp-hr-holiday-action" value="erp_hr_holiday_import">
 </div>
@@ -37,6 +37,7 @@
 <style>
 #erp-hr-holiday-data {
   height: auto;
+  max-height: 330px;
 }
 
 input:read-only {
@@ -55,5 +56,13 @@ input:read-only:focus {
   max-height: 330px;
   overflow: auto;
   width: 100%;
+}
+
+#holiday-import-hint {
+  color: #e04a4a;
+}
+
+.ui-datepicker{
+  z-index: 1000000 !important;
 }
 </style>
