@@ -2660,14 +2660,14 @@ function import_holidays_csv( $file ) {
             $line_error .= __( 'Title, Start & End must be', 'wp-erp' ) . '<br>';
         }
 
-        if ( DateTime::createFromFormat( 'Y-m-d', $start ) === false  ) {
+        if ( ! preg_match ( "/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/", $start ) ) {
             $line_error .= __( 'Start date should be valid format. Ex YYYY-MM-DD', 'wp-erp' ) . '<br>';
         } elseif ( DateTime::createFromFormat( 'Y-m-d H:i:s', $start ) === false ) {
             $start = erp_current_datetime()->modify( $start )->format( 'Y-m-d 00:00:00' );
             $csv->data[ $data_key ]['start'] = $start;
         }
 
-        if ( DateTime::createFromFormat( 'Y-m-d', $end ) === false  ) {
+        if ( ! preg_match ( "/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/", $end )  ) {
             $line_error .= __( 'End date should be valid format. Ex YYYY-MM-DD', 'wp-erp' ) . '<br>';
         } elseif ( DateTime::createFromFormat( 'Y-m-d H:i:s', $end ) === false ) {
             $end = erp_current_datetime()->modify( $end )->format( 'Y-m-d 23:59:59' );
