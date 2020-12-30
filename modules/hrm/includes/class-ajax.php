@@ -254,7 +254,7 @@ class Ajax_Handler {
         ] );
 
         $holiday          = (array) reset( $holiday );
-        $holiday['end']   = gmdate( 'Y-m-d', strtotime( $holiday['end'] . '-1day' ) );
+        $holiday['end']   = gmdate( 'Y-m-d', strtotime( $holiday['end'] ) );
         $holiday['start'] = gmdate( 'Y-m-d', strtotime( $holiday['start'] ) );
 
         $this->send_success( [ 'holiday' => $holiday ] );
