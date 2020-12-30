@@ -3,6 +3,8 @@ import Vue from 'vue';
 import Datepicker from 'admin/components/base/Datepicker.vue';
 import ListTable from 'admin/components/list-table/ListTable.vue';
 import Dropdown from 'admin/components/base/Dropdown.vue';
+import TransactionsFilter from 'admin/components/transactions/TransactionsFilter.vue';
+import InvoiceSingleContent from 'admin/components/transactions/sales/InvoiceSingleContent.vue';
 import SendMail from 'admin/components/email/SendMail.vue';
 import VueSweetalert2 from 'vue-sweetalert2';
 import commonMixins from './mixins/common';
@@ -23,6 +25,7 @@ import DynamicTrnLoader from 'admin/components/transactions/DynamicTrnLoader.vue
 import VueClipboards from 'vue-clipboards';
 import { createHooks } from '@wordpress/hooks';
 import { clickOutside } from './directive/directives';
+import Swal from 'sweetalert2'
 
 // global acct var
 window.acct = {
@@ -53,6 +56,9 @@ window.acct.libs['Vuelidate']        = Vuelidate;
 window.acct.libs['PieChart']         = PieChart;
 window.acct.libs['VueClipboards']    = VueClipboards;
 window.acct.libs['clickOutside']     = clickOutside;
+window.acct.libs['TransactionsFilter']    = TransactionsFilter;
+window.acct.libs['InvoiceSingleContent']  = TransactionsFilter;
+window.acct.libs['Swal']                  = Swal;
 
 // get lib reference from window
 window.acct_get_lib = function(lib) {

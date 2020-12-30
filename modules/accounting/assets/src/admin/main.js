@@ -2,6 +2,9 @@ import App from './App.vue';
 import router from './router';
 import store from './store/store';
 
+import { createHooks } from '@wordpress/hooks';
+window.erpAccountingHooks = createHooks();
+
 // get lib reference
 /* global acct_get_lib */
 const Vue            = acct_get_lib('Vue');
@@ -41,10 +44,10 @@ import {getRequest, postRequest} from 'admin/request';
 const accountingContainer = document.getElementById('erp-accounting');
 
 if (accountingContainer !== null) {
-    (() => new Vue({
+    window.erp_acct_vue_instance = new Vue({
         el: '#erp-accounting',
         router,
         store,
         render: h => h(App)
-    }))();
+    });
 }

@@ -56,11 +56,6 @@ import DynamicTrnLoader from 'admin/components/transactions/DynamicTrnLoader.vue
 import OpeningBalance from 'admin/components/opening-balance/OpeningBalance.vue';
 import HelpContent from 'admin/components/help/HelpContent.vue';
 
-
-import SalesReturn from 'admin/components/sales-return/InvoiceCreate.vue';
-import SalesReturnDetails from 'admin/components/sales-return/SalesSingle.vue';
-import SalesReturnLists from 'admin/components/sales-return/SalesList.vue';
-
 Vue.use(Router);
 
 /* global acct */
@@ -348,21 +343,6 @@ export default new Router({
                     path: ':id/edit',
                     name: 'InvoiceEdit',
                     component: InvoiceCreate
-                },
-                {
-                    path: 'sales/return',
-                    name: 'SalesReturn',
-                    component: SalesReturn
-                },
-                {
-                    path: 'sales/return/:id',
-                    name: 'SalesReturnDetails',
-                    component: SalesReturnDetails
-                },
-                {
-                    path: 'sales/list',
-                    name: 'SalesReturnLists',
-                    component: SalesReturnLists
                 }
             ]
         },
