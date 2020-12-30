@@ -309,8 +309,8 @@ class Ajax_Handler {
 
             if ( ( $start >= $first_day_of_year ) && ( $end <= $last_day_of_year ) ) {
                 $title       = sanitize_text_field( $event['SUMMARY'] );
-                $start       = date( 'Y-m-d H:i:s', $start );
-                $end         = date( 'Y-m-d H:i:s', $end );
+                $start       = date( 'Y-m-d 00:00:00', $start );
+                $end         = date( 'Y-m-d 23:59:59', $end );
                 $description = ( ! empty( $event['DESCRIPTION'] ) ) ? sanitize_text_field( $event['DESCRIPTION'] ) : $title;
 
                 // check for duplicate entries
@@ -337,7 +337,7 @@ class Ajax_Handler {
         }
 
         if ( empty( $ical_data ) ) {
-            $this->send_success( __( 'No data found.', 'erp' ) );
+            $this->send_success( __( 'No valid data found.', 'erp' ) );
         }
 
         $this->send_success( $ical_data );
