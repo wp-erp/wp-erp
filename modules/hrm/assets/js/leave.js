@@ -28,8 +28,10 @@
             $( '.erp-hr-holiday-wrap' ).on( 'click', '.erp-hr-holiday-delete', self, this.holiday.remove );
             $( '.erp-hr-holiday-wrap' ).on( 'click', 'a#erp-hr-import-holiday', self, this.holiday.import );
             $( 'body' ).on( 'change', '.erp-hr-holiday-date-range', self, this.holiday.checkRange );
+
             $( 'body' ).on( 'dblclick', '#erp-hr-holiday-data input', function() {
                 $(this).removeAttr( 'readonly' );
+                $(this).removeAttr( 'onfocus' );
             } );
 
             // ICal calendar import
@@ -838,16 +840,19 @@
                     if ( res && res.length && typeof res === 'object' ) {
                         res.forEach(function(row, index) {
                             tbody += '<tr data-id="' + index + '">'
-                                  + '<td><input readonly type="text" name="title[]" value="' + row.title + '"/></td>'
-                                  + '<td><input readonly type="text" name="start[]" class="erp-leave-datetime-picker-from" value="' + row.start + '"/></td>'
-                                  + '<td><input readonly type="text" name="end[]" class="erp-leave-datetime-picker-to" value="' + row.end + '"/></td>'
+                                  + '<td><input readonly onfocus="this.blur()" type="text" name="title[]" value="' + row.title + '"/></td>'
+                                  + '<td><input readonly onfocus="this.blur()" type="text" name="start[]" class="erp-leave-datetime-picker-from" value="' + row.start + '"/></td>'
+                                  + '<td><input readonly onfocus="this.blur()" type="text" name="end[]" class="erp-leave-datetime-picker-to" value="' + row.end + '"/></td>'
                                   + '<td id="duration-' + index + '">' + row.duration + '</td></tr>'
                                   + '<input type="hidden" name="description[]" value="' + row.description + '"/>';
                         });
 
                         $( '#holiday-import-hint' ).html( '** ' + wpErpHr.import_hint );
+                        $( '#erp-hr-holiday-data thead' ).show();
                     } else {
                         tbody += '<tr><td colspan="4">' + res + '</td></tr>';
+                        $( '#holiday-import-hint' ).html( '' );
+                        $( '#erp-hr-holiday-data thead' ).hide();
                     }
 
                     $( '#erp-hr-holiday-data tbody' ).html( tbody );
