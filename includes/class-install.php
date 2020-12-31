@@ -218,6 +218,19 @@ May you enjoy the fruits of your labors for years to come',
 
         update_option( 'erp_email_settings_hiring-anniversary-wish', $hiring_date_anniversary );
 
+        $govt_holiday_reminder = [
+            'subject' => 'Upcoming government holiday reminder',
+            'heading' => 'Reminder',
+            'body'    => 'Hello {full_name}
+
+This is an official announcement for all employees that the {holiday_name} holidays will be observed {holiday_duration}.Let us take the days off on this {holiday_name} and the office will re-open the next day,{reopen_day}. See you all back to work again.Regards
+
+HR Manager
+XYZ Limited',
+        ];
+
+        update_option( 'erp_email_settings_govt-holiday-reminder', $govt_holiday_reminder );
+
         /**** Accounting email template ****/
 
         $transectional_email = [
