@@ -5,7 +5,7 @@ Tags: business manager, erp, accounting, crm, hr, project manager, small busines
 Requires at least: 4.4
 Tested up to: 5.6
 Requires PHP: 5.6
-Stable tag: 1.7.3
+Stable tag: 1.7.4
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -279,6 +279,14 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+
+= v1.7.4 -> December 31, 2020 =
+--------------------------
+- [new] Added holiday reminder email
+- [new] Added action to synchronize employee status with attendance shifts
+- [update] Updated calendar library.
+- [update] Updated importing holidays from iCal/CSV to ensure the holidays can be customized before importing
+- [fix] Fixed some minor issues
 
 = v1.7.3 -> December 18, 2020 =
 --------------------------
