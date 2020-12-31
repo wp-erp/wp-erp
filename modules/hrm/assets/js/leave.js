@@ -26,10 +26,16 @@
             $( '.erp-hr-holiday-wrap' ).on( 'click', 'a#erp-hr-new-holiday', self, this.holiday.create );
             $( '.erp-hr-holiday-wrap' ).on( 'click', '.erp-hr-holiday-edit', self, this.holiday.edit );
             $( '.erp-hr-holiday-wrap' ).on( 'click', '.erp-hr-holiday-delete', self, this.holiday.remove );
+            $( '.erp-hr-holiday-wrap' ).on( 'click', 'a#erp-hr-import-holiday', self, this.holiday.import );
             $( 'body' ).on( 'change', '.erp-hr-holiday-date-range', self, this.holiday.checkRange );
 
+            $( 'body' ).on( 'dblclick', '#erp-hr-holiday-data input', function() {
+                $(this).removeAttr( 'readonly' );
+                $(this).removeAttr( 'onfocus' );
+            } );
+
             // ICal calendar import
-            $( '.erp-hr-holiday-wrap' ).on( 'click', '#erp-hr-import-ical', self, this.importICalInit );
+            $( 'body' ).on( 'click', '#erp-hr-import-ical', self, this.importICalInit );
             $( '.erp-hr-holiday-wrap' ).on( 'change', '#erp-ical-input', self, this.uploadICal );
 
             $( '.erp-hr-leave-requests' ).on( 'click', '.erp-hr-leave-approve-btn', self, this.leave.approve );
@@ -157,6 +163,55 @@
                 }
             });
 
+            $( ".erp-leave-datetime-picker-from" ).datetimepicker({
+                dateFormat: 'yy-mm-dd',
+                timeFormat: 'HH:mm:ss',
+                changeYear: true,
+                changeMonth: true,
+                numberOfMonths: 1,
+                onClose: function( selectedDate ) {
+                    $( ".erp-leave-datetime-picker-to" ).datetimepicker({
+                        dateFormat: 'yy-mm-dd',
+                        timeFormat: 'HH:mm:ss',
+                        timeInput: true,
+                        minDate: selectedDate
+                    });
+
+                    var id = $(this).parent().parent().data('id'),
+                        start = new Date( $(this).val().trim() ),
+                        end = new Date( $(this).closest('td').next('td').find('input').val().trim() ),
+                        diff = Math.round( (end - start) / 1000 / 3600 / 24 ),
+                        days = diff > 1 ? ' days' : ' day';
+
+                    $( '#duration-' + id ).html( diff + days );
+                }
+            });
+
+            $( ".erp-leave-datetime-picker-to" ).datetimepicker({
+                dateFormat: 'yy-mm-dd',
+                timeFormat: 'HH:mm:ss',
+                timeInput: true,
+                changeMonth: true,
+                changeYear: true,
+                numberOfMonths: 1,
+                onClose: function( selectedDate ) {
+                    $( ".erp-leave-datetime-picker-from" ).datetimepicker({
+                        dateFormat: 'yy-mm-dd',
+                        timeFormat: 'HH:mm:ss',
+                        timeInput: true,
+                        maxDate: selectedDate
+                    });
+
+                    var id = $(this).parent().parent().data('id'),
+                        end = new Date( $(this).val().trim() ),
+                        start = new Date( $(this).closest('td').prev('td').find('input').val().trim() ),
+                        diff = Math.round( (end - start) / 1000 / 3600 / 24 ),
+                        days = diff > 1 ? ' days' : ' day';
+
+                    $( '#duration-' + id ).html( diff + days );
+                }
+            });
+
             $('.erp-color-picker').wpColorPicker();
         },
 
@@ -271,12 +326,14 @@
             submit: function(modal) {
                 wp.ajax.send( {
                     data: this.serializeObject(),
-                    success: function() {
+                    success: function(res) {
                         modal.closeModal();
 
                         $( '.list-table-wrap' ).load( window.location.href + ' .list-wrap-inner', function() {
                             Leave.initDateField();
                             Leave.initToggleCheckbox();
+
+                            $('#holiday_msg').html( res );
                         } );
                     },
                     error: function(error) {
@@ -284,6 +341,25 @@
                         modal.showError( error );
                     }
                 });
+            },
+
+            import: function(e) {
+                e.preventDefault();
+
+                $.erpPopup({
+                    title: wpErpHr.popup.holiday_import,
+                    button: wpErpHr.popup.import,
+                    id: 'erp-hr-holiday-create-popup',
+                    content: wperp.template('erp-hr-holiday-import')({ data: null }).trim(),
+                    extraClass: 'small',
+                    onReady: function() {
+                        Leave.initDateField();
+                        Leave.holiday.checkRange();
+                    },
+                    onSubmit: function(modal) {
+                        e.data.holiday.submit.call(this, modal);
+                    }
+                }); //popup
             },
         },
 
@@ -755,20 +831,43 @@
                 cache: false,
                 processData: false,
                 contentType: false,
+                beforeSend: function() {
+                    $( '#erp-holiday-uploading' ).show();
+                },
                 success: function( res ) {
-                    $( '.list-table-wrap' ).load( window.location.href + ' .list-wrap-inner', function() {
-                        Leave.initDateField();
-                        $('#holiday_msg').html( res );
-                    } );
+                    var tbody = '';
 
+                    if ( res && res.length && typeof res === 'object' ) {
+                        res.forEach(function(row, index) {
+                            tbody += '<tr data-id="' + index + '">'
+                                  + '<td><input readonly onfocus="this.blur()" type="text" name="title[]" value="' + row.title + '"/></td>'
+                                  + '<td><input readonly onfocus="this.blur()" type="text" name="start[]" class="erp-leave-datetime-picker-from" value="' + row.start + '"/></td>'
+                                  + '<td><input readonly onfocus="this.blur()" type="text" name="end[]" class="erp-leave-datetime-picker-to" value="' + row.end + '"/></td>'
+                                  + '<td id="duration-' + index + '">' + row.duration + '</td></tr>'
+                                  + '<input type="hidden" name="description[]" value="' + row.description + '"/>';
+                        });
+
+                        $( '#holiday-import-hint' ).html( '** ' + wpErpHr.import_hint );
+                        $( '#erp-hr-holiday-data thead' ).show();
+                    } else {
+                        tbody += '<tr><td colspan="4">' + res + '</td></tr>';
+                        $( '#holiday-import-hint' ).html( '' );
+                        $( '#erp-hr-holiday-data thead' ).hide();
+                    }
+
+                    $( '#erp-hr-holiday-data tbody' ).html( tbody );
+                    Leave.initDateField();
                     form[0].reset();
+                    $( '#erp-holiday-uploading' ).hide();
                 },
                 error: function(error) {
                     form[0].reset();
                     alert( error );
+                    $( '#erp-holiday-uploading' ).hide();
                 }
             });
         },
+
         customFilterLeaveReport: function() {
             if ( 'custom' != this.value ) {
                 $('#custom-input').remove();

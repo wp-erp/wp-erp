@@ -2634,17 +2634,21 @@ function import_holidays_csv( $file ) {
     $csv->encoding( null, 'UTF-8' );
     $csv->parse( $file );
 
-    $error_list   = [];
-    $valid_import = [];
-    $line         = 1;
-    $msg          = '';
+    /*
+     * We'll ignore duplicate entries with the same title and
+     * start date in the foreach loop when inserting an entry
+     */
+    $holiday_model = new \WeDevs\ERP\HRM\Models\Leave_Holiday();
+
     $error_msg    = '';
+    $parsed_data  = [];
 
     foreach ( $csv->data as $data_key => $data ) {
         $line_error  = '';
         $title       = ( isset( $data['title'] ) ) ? $data['title'] : '';
         $start       = ( isset( $data['start'] ) ) ? $data['start'] : '';
         $end         = ( isset( $data['end'] ) ) ? $data['end'] : '';
+        $description = ( isset( $data['description'] ) ) ? $data['description'] : '';
 
         if ( empty( $title ) ) {
             $line_error .= __( 'Title can not be empty', 'wp-erp' ) . '<br>';
@@ -2662,57 +2666,51 @@ function import_holidays_csv( $file ) {
             $line_error .= __( 'Title, Start & End must be', 'wp-erp' ) . '<br>';
         }
 
-        if ( DateTime::createFromFormat( 'Y-m-d H:i:s', $start ) === false  ) {
-            $line_error .= __( 'Start date should be valid format. Ex YYYY-MM-DD 00:00:00', 'wp-erp' ) . '<br>';
+        if ( ! preg_match ( "/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/", $start ) ) {
+            $line_error .= __( 'Start date should be valid format. Ex YYYY-MM-DD', 'wp-erp' ) . '<br>';
+        } elseif ( DateTime::createFromFormat( 'Y-m-d H:i:s', $start ) === false ) {
+            $start = erp_current_datetime()->modify( $start )->format( 'Y-m-d 00:00:00' );
+            $csv->data[ $data_key ]['start'] = $start;
         }
 
-        if ( DateTime::createFromFormat( 'Y-m-d H:i:s', $end ) === false  ) {
-            $line_error .= __( 'End date should be valid format. Ex YYYY-MM-DD 23:59:59', 'wp-erp' ) . '<br>';
+        if ( ! preg_match ( "/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/", $end )  ) {
+            $line_error .= __( 'End date should be valid format. Ex YYYY-MM-DD', 'wp-erp' ) . '<br>';
+        } elseif ( DateTime::createFromFormat( 'Y-m-d H:i:s', $end ) === false ) {
+            $end = erp_current_datetime()->modify( $end )->format( 'Y-m-d 23:59:59' );
+            $csv->data[ $data_key ]['end'] = $end;
+        }
+
+        // check for duplicate entries
+        $holiday = $holiday_model->where( 'title', '=', $title )->where( 'start', '=', $start );
+
+        if ( $holiday->count() ) {
+            $line_error .= __( 'Holiday entry already exists', 'wp-erp' ) . '<br>';
         }
 
         if ( ! empty( $line_error ) ) {
             $error_msg .= __( '<strong>Error at #ROW ' . ( $data_key + 1 ) . '</strong>', 'wp-erp' ) . '<br>';
             $error_msg .= $line_error;
         }
+
+        $days = erp_date_duration( $start, $end );
+        $days = $days . ' ' . _n( __( 'day', 'erp' ), __( 'days', 'erp' ), $days );
+
+        $parsed_data[] = [
+            'title'       => $title,
+            'start'       => $start,
+            'end'         => $end,
+            'duration'    => $days,
+            'description' => $description,
+        ];
     }
 
     if ( ! empty( $error_msg ) ) {
         return "<div class='error  notice'><p>{$error_msg}</p></div>";
+    } elseif ( empty( $parsed_data ) ) {
+        return __( 'No data found.', 'erp' );
     }
 
-    foreach ( $csv->data as $data ) {
-        $title       = ( isset( $data['title'] ) ) ? $data['title'] : '';
-        $start       = ( isset( $data['start'] ) ) ? $data['start'] : '';
-        $end         = ( isset( $data['end'] ) ) ? $data['end'] : '';
-        $description = ( isset( $data['description'] ) ) ? $data['description'] : '';
-
-        $holiday_id = erp_hr_leave_insert_holiday( [
-            'title'       => $title,
-            'start'       => $start,
-            'end'         => $end,
-            'description' => $description,
-        ] );
-
-        if ( is_wp_error( $holiday_id ) ) {
-            $error_list[] = $line;
-        } else {
-            $valid_import[] = $line;
-        }
-        $line++;
-    }
-
-    if ( count( $valid_import ) > 0 ) {
-        $html_class = 'updated notice';
-        $msg .= sprintf( __( 'Successfully imported %u data<br>', 'wp-erp' ), count( $valid_import ) );
-    }
-
-    if ( count( $error_list ) > 0 ) {
-        $html_class = 'error  notice';
-        $err_string = implode( ',', $error_list );
-        $msg .= sprintf( __( 'Something went wrong. Failed to import line no  %s.', 'wp-erp' ), $err_string );
-    }
-
-    return "<div class='{$html_class}'><p>{$msg}</p></div>";
+    return $parsed_data;
 }
 
 /**

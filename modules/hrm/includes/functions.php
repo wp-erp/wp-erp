@@ -479,3 +479,53 @@ function erp_hr_send_birthday_wish_email( $user_id ) {
     }
 }
 /****************** Send Birthday wish email End ********************/
+
+/**
+ * Send holiday reminder email to employees
+ *
+ * @since 1.7.1
+ *
+ * @return void
+ */
+function erp_hr_holiday_reminder_to_employees() {
+    $start_date = erp_current_datetime()->format( 'Y-m-d H:i:s' );
+    $end_date   = erp_current_datetime()->modify( 'next day' )->format( 'Y-m-d H:i:s' );
+
+    $holiday = new \WeDevs\ERP\HRM\Models\Leave_Holiday();
+    $holiday = $holiday->where(
+        function ( $condition ) use ( $start_date, $end_date ) {
+            $condition->whereBetween( 'start', [ $start_date, $end_date ] );
+        }
+    );
+    $holidays        = $holiday->get()->toArray();
+    $employees       = erp_hr_get_employees( [ 'number' => -1 ] );
+
+    $emailer         = wperp()->emailer->get_email( 'Govt_Holiday_Reminder' );
+
+    if ( ! is_a( $emailer, '\WeDevs\ERP\Email' ) ) {
+        return;
+    }
+    foreach ( $holidays as $holiday ) {
+        $holiday_title = $holiday['title'];
+        $holiday_start = erp_current_datetime()->modify( $holiday['start'] );
+        $holiday_end   = erp_current_datetime()->modify( $holiday['end'] );
+        $day_diff      = $holiday_start->diff( $holiday_end )->days;
+        $reopen_date   = $holiday_end->modify( 'next day' )->format( 'l, F j, Y' );
+
+        $holiday_title_formated = '<strong>' . $holiday_title . '</strong>';
+        $holiday_start_formated = $holiday_start->format( 'l, F j, Y' );
+        $holiday_end_formated   = $holiday_end->format( 'l, F j, Y' );
+        $reopen_date_formated   = '<strong>' . $reopen_date . '</strong>';
+
+        if ( 0 === $day_diff ) {
+            $holiday_duration = 'on <strong>' . $holiday_start_formated . '</strong>';
+        } else {
+            $holiday_duration = 'from <strong>' . $holiday_start_formated . ' to ' . $holiday_end_formated . '</strong>';
+        }
+
+        foreach ( $employees as $employee ) {
+            $user_id = $employee->user_id;
+            $emailer->trigger( $user_id, $holiday_title_formated, $holiday_duration, $reopen_date_formated );
+        }
+    }
+}
