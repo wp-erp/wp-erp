@@ -181,7 +181,7 @@ class Assets {
             ],
             'accounting-admin'     => [
                 'src'       => ERP_ACCOUNTING_ASSETS . '/js/admin.js',
-                'deps'      => [ 'jquery', 'accounting-vendor' ],
+                'deps'      => [ 'jquery', 'accounting-vendor', 'accounting-bootstrap'],
                 'version'   => filemtime( ERP_ACCOUNTING_PATH . '/assets/js/admin.js' ),
                 'in_footer' => true,
             ],

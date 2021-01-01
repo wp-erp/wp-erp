@@ -57,9 +57,6 @@ import OpeningBalance from 'admin/components/opening-balance/OpeningBalance.vue'
 import HelpContent from 'admin/components/help/HelpContent.vue';
 
 
-import purchaseReturnInvoice from 'admin/components/purchase-return/InvoiceCreate.vue';
-import purchaseReturnDetails from 'admin/components/purchase-return/PurchaseSingle.vue';
-import purchasesReturnList from 'admin/components/purchase-return/PurchasesList.vue';
 
 Vue.use(Router);
 
@@ -461,21 +458,6 @@ export default new Router({
                     path: ':id/edit',
                     name: 'PurchaseEdit',
                     component: PurchaseCreate
-                },
-                {
-                    path: 'purchase/return-list',
-                    name: 'purchasesReturnList',
-                    component: purchasesReturnList
-                },
-                {
-                    path: 'purchase/return',
-                    name: 'purchasesReturn',
-                    component: purchaseReturnInvoice
-                },
-                {
-                    path: 'purchase/return/:id',
-                    name: 'purchasesReturnDetails',
-                    component: purchaseReturnDetails
                 }
             ]
         },
