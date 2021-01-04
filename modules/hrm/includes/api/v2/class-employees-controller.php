@@ -40,17 +40,17 @@ class Employees_Controller extends WP_REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_employees' ],
                 'args'                => $this->get_collection_params(),
-                /*'permission_callback' => function ( $request ) {
+                'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_view_list' );
-                },*/
+                },
             ],
             [
                 'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => [ $this, 'create_employee' ],
                 'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
-                /*'permission_callback' => function ( $request ) {
+                'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_create_employee' );
-                },*/
+                },
             ],
             'schema' => [ $this, 'get_public_item_schema' ],
         ] );
@@ -490,7 +490,7 @@ class Employees_Controller extends WP_REST_Controller {
                     'required'    => true,
                 ],
                 'middle_name'     => [
-                    'description' => __( 'Company for the resource.' ),
+                    'description' => __( 'Middle name for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -529,8 +529,115 @@ class Employees_Controller extends WP_REST_Controller {
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
-                'other'       => [
-                    'description' => __( 'Other for the resource.' ),
+                'employee_id'       => [
+                    'description' => __( 'Employee ID for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'type'       => [
+                    'description' => __( 'Employee type for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                    'required'    => true,
+                ],
+                'status'       => [
+                    'description' => __( 'Status for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                    'required'    => true,
+                ],
+                'end_date'       => [
+                    'description' => __( 'End date for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'hiring_date'       => [
+                    'description' => __( 'Hiring date for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                    'required'    => true,
+                ],
+                'department'       => [
+                    'description' => __( 'Department for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'designation'       => [
+                    'description' => __( 'Designation for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'location'       => [
+                    'description' => __( 'Location for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'reporting_to'       => [
+                    'description' => __( 'Reporting to for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'hiring_source'       => [
+                    'description' => __( 'Hiring date for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'pay_rate'       => [
+                    'description' => __( 'Pay rate for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'pay_type'       => [
+                    'description' => __( 'Pay type for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'work_phone'       => [
+                    'description' => __( 'Work phone for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'termination_date'       => [
+                    'description' => __( 'Termination date for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -545,14 +652,6 @@ class Employees_Controller extends WP_REST_Controller {
                 ],
                 'fax'             => [
                     'description' => __( 'Fax of the resource.' ),
-                    'type'        => 'string',
-                    'context'     => [ 'embed', 'view', 'edit' ],
-                    'arg_options' => [
-                        'sanitize_callback' => 'sanitize_text_field',
-                    ],
-                ],
-                'notes'           => [
-                    'description' => __( 'Notes of the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'arg_options' => [
@@ -606,37 +705,6 @@ class Employees_Controller extends WP_REST_Controller {
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
-                ],
-                'currency'        => [
-                    'description' => __( 'Currency of the resource.' ),
-                    'type'        => 'string',
-                    'context'     => [ 'embed', 'view', 'edit' ],
-                    'arg_options' => [
-                        'sanitize_callback' => 'sanitize_text_field',
-                    ],
-                ],
-                'type'            => [
-                    'description' => __( 'Type of the resource.' ),
-                    'type'        => 'string',
-                    'context'     => [ 'embed', 'view', 'edit' ],
-                    'arg_options' => [
-                        'sanitize_callback' => 'sanitize_text_field',
-                    ],
-                ],
-                'owner'           => [
-                    'description' => __( 'Owner of the resource.' ),
-                    'type'        => 'integer',
-                    'context'     => [ 'embed', 'view', 'edit' ],
-                    'required'    => true,
-                ],
-                'life_stage'      => [
-                    'description' => __( 'Life stage of the resource.' ),
-                    'type'        => 'string',
-                    'context'     => [ 'embed', 'view', 'edit' ],
-                    'arg_options' => [
-                        'sanitize_callback' => 'sanitize_text_field',
-                    ],
-                    'required'    => true,
                 ],
             ],
         ];
