@@ -50,6 +50,36 @@ function erp_hr_create_designation( $args = [] ) {
 }
 
 /**
+ * Update a designation
+ *
+ * @since 1.7.5
+ *
+ * @param array arguments
+ *
+ * @return int|false
+ */
+function erp_hr_update_designation( $args = [] ) {
+    // validation
+    if ( isset( $args['title'] ) && empty( $args['title'] ) ) {
+        return new WP_Error( 'no-name', __( 'No designation name provided.', 'erp' ) );
+    }
+
+    // unset the department id
+    $desig_id = $args['id'];
+    unset( $args['id'] );
+
+    $designation = new \WeDevs\ERP\HRM\Models\Designation();
+
+    do_action( 'erp_hr_desig_before_updated', $desig_id, $args );
+
+    $designation->find( $desig_id )->update( $args );
+
+    do_action( 'erp_hr_desig_after_updated', $desig_id, $args );
+
+    return $desig_id;
+}
+
+/**
  * Get all the departments of a company
  *
  * @param  int  the company id
