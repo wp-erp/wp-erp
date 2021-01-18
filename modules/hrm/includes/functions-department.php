@@ -53,6 +53,36 @@ function erp_hr_create_department( $args = [] ) {
 }
 
 /**
+ * Update a department
+ *
+ * @since 1.7.5
+ *
+ * @param array arguments
+ *
+ * @return int|false
+ */
+function erp_hr_update_department( $args = [] ) {
+    // validation
+    if ( isset( $args['title'] ) && empty( $args['title'] ) ) {
+        return new WP_Error( 'no-name', __( 'No department name provided.', 'erp' ) );
+    }
+
+    // unset the department id
+    $dept_id = $args['id'];
+    unset( $args['id'] );
+
+    $department = new \WeDevs\ERP\HRM\Models\Department();
+
+    do_action( 'erp_hr_dept_before_updated', $dept_id, $args );
+
+    $department->find( $dept_id )->update( $args );
+
+    do_action( 'erp_hr_dept_after_updated', $dept_id, $args );
+
+    return $dept_id;
+}
+
+/**
  * Get all the departments of a company
  *
  * @param  int  the company id
