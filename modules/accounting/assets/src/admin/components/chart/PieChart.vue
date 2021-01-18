@@ -78,7 +78,7 @@ export default {
 
                                 data.datasets[tooltipItem.datasetIndex].data.forEach(function(element) {
                                     if (element !== 0) {
-                                        total += element;
+                                        total += parseFloat(element);
                                     }
                                 });
 
