@@ -54,6 +54,35 @@ class Employees_Controller extends WP_REST_Controller {
             ],
             'schema' => [ $this, 'get_public_item_schema' ],
         ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_employee' ],
+                'args'                => [
+                    'context' => $this->get_context_param( [ 'default' => 'view' ] ),
+                ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_list_employee' );
+                },
+            ],
+            [
+                'methods'             => WP_REST_Server::EDITABLE,
+                'callback'            => [ $this, 'update_employee' ],
+                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_edit_employee', $request['user_id'] );
+                },
+            ],
+            [
+                'methods'             => WP_REST_Server::DELETABLE,
+                'callback'            => [ $this, 'delete_employee' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_delete_employee' );
+                },
+            ],
+            'schema' => [ $this, 'get_public_item_schema' ],
+        ] );
     }
 
     /**
@@ -97,26 +126,107 @@ class Employees_Controller extends WP_REST_Controller {
     }
 
     /**
-     * Create employees
+     * Get a specific employee
      *
-     * @param $request
-     *
-     * @return $this|int|WP_Error|WP_REST_Response
+     * @return WP_Error|WP_REST_Response
      */
-    public function create_employees( WP_REST_Request $request ) {
-        $employees = json_decode( $request->get_body(), true );
+    public function get_employee( WP_REST_Request $request ) {
+        $user_id = (int) $request['user_id'];
+        $item    = new Employee( $user_id );
 
-        foreach ( $employees as $employee ) {
-            $item_data = $this->prepare_item_for_database( $employee );
-            $item      = new Employee( null );
-            $created   = $item->create_employee( $item_data );
+        if ( ! $item->is_employee() ) {
+            return new WP_Error( 'rest_employee_invalid_id', __( 'Invalid Employee id.' ), [ 'status' => 404 ] );
+        }
 
-            if ( is_wp_error( $created ) ) {
-                return $created;
+        $item     = $this->prepare_item_for_response( $item, $request );
+        $response = rest_ensure_response( $item );
+
+        return $response;
+    }
+
+    /**
+     * Create an employee
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Request
+     */
+    public function create_employee( $request ) {
+        $item_data = $this->prepare_item_for_database( $request );
+
+        $employee = new Employee( null );
+        $created  = $employee->create_employee( $item_data );
+
+        if ( is_wp_error( $created ) ) {
+            return $created;
+        }
+        $request->set_param( 'context', 'edit' );
+        $item     = new Employee( $created->user_id );
+
+        // User Notification
+        if ( isset( $request['user_notification'] ) && $request['user_notification'] == true ) {
+            $emailer    = wperp()->emailer->get_email( 'New_Employee_Welcome' );
+            $send_login = isset( $request['login_info'] ) ? true : false;
+
+            if ( is_a( $emailer, '\WeDevs\ERP\Email' ) ) {
+                $emailer->trigger( $employee->get_user_id(), $send_login );
             }
         }
 
-        return new WP_REST_Response( true, 201 );
+        $response = $this->prepare_item_for_response( $item, $request );
+        $response = rest_ensure_response( $response );
+        $response->set_status( 201 );
+        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $employee->get_user_id() ) ) );
+
+        return $response;
+    }
+
+    /**
+     * Update an employee
+     *
+     * @return $this|mixed|object|WP_Error|WP_REST_Response
+     */
+    public function update_employee( WP_REST_Request $request ) {
+        $id = (int) $request['user_id'];
+
+        $employee = new Employee( $id );
+
+        if ( ! $employee ) {
+            return new WP_Error( 'rest_employee_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 400 ] );
+        }
+
+        $data    = $this->prepare_item_for_database( $request );
+        $updated = $employee->update_employee( $data );
+
+        if ( is_wp_error( $updated ) ) {
+            return $updated;
+        }
+
+        $request->set_param( 'context', 'edit' );
+        $updated_user = new Employee( $updated->user_id );
+        $response     = $this->prepare_item_for_response( $updated_user, $request );
+
+        $response = rest_ensure_response( $response );
+        $response->set_status( 201 );
+        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $id ) ) );
+
+        return $response;
+    }
+
+    /**
+     * Delete an employee
+     *
+     * @param $request
+     *
+     * @return WP_REST_Response
+     */
+    public function delete_employee( WP_REST_Request $request ) {
+        $id = (int) $request['user_id'];
+
+        erp_employee_delete( $id );
+        $response = rest_ensure_response( true );
+
+        return new WP_REST_Response( $response, 204 );
     }
 
     /**
