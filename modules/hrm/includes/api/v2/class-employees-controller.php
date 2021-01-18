@@ -83,6 +83,20 @@ class Employees_Controller extends WP_REST_Controller {
             ],
             'schema' => [ $this, 'get_public_item_schema' ],
         ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/bulk', [
+            [
+                'methods'             => WP_REST_Server::CREATABLE,
+                'callback'            => [ $this, 'create_employees' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_create_employee' );
+                },
+                'args'                => [
+                    'context'  => $this->get_context_param(),
+                ],
+            ],
+            'schema' => [ $this, 'get_public_item_schema' ],
+        ] );
     }
 
     /**
