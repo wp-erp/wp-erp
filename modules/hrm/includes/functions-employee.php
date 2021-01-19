@@ -1016,9 +1016,7 @@ function erp_hr_get_single_link( $user_id ) {
 function erp_is_employee_exist( $email, $user_id ) {
     global $wpdb;
     $user_email = sanitize_email( $email );
-    $sql        = "select user.ID from {$wpdb->prefix}erp_hr_employees as employee inner join {$wpdb->prefix}users as user on user.ID=employee.user_id where user.user_email='{$user_email}' AND user.ID !='{$user_id}'";
-
-    return $wpdb->get_col( $sql );
+    return $wpdb->get_col( $wpdb->prepare( "select ID from {$wpdb->prefix}users where user_email=%s AND ID !=%s", $user_email, $user_id ) );
 }
 
 add_filter( 'user_has_cap', 'erp_revoke_terminated_employee_access', 10, 4 );
