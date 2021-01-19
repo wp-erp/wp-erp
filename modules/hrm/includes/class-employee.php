@@ -251,6 +251,12 @@ class Employee {
             }
         }
 
+        if ( isset( $user_email ) && ! empty( $user_email ) ) {
+            if ( erp_is_employee_exist( $user_email, $user_id ) ) {
+                return new WP_Error( 'employee-email-exist', sprintf( __( 'Employee with the employee email %s already exist. Please use different one.', 'erp' ), $user_email ) );
+            }
+        }
+
         $data = apply_filters( 'pre_erp_hr_employee_args', $data );
 
         if ( is_wp_error( $data ) ) {
