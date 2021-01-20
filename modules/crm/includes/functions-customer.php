@@ -3255,7 +3255,7 @@ function erp_handle_user_bulk_actions() {
 
             $created       = 0;
             $users         = [];
-            $user_ids      = isset( $_REQUEST['users'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['users'] ) ) : [];
+            $user_ids      = isset( $_REQUEST['users'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_REQUEST['users'] ) ) : [];
             $life_stage    = isset( $_POST['life_stage'] ) ? sanitize_text_field( wp_unslash( $_POST['life_stage'] ) ) : [];
             $contact_owner = isset( $_POST['contact_owner'] ) ? sanitize_text_field( wp_unslash( $_POST['contact_owner'] ) ) : [];
 
