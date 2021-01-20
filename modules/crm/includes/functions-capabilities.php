@@ -258,26 +258,26 @@ function erp_crm_map_meta_caps( $caps = [], $cap = '', $user_id = 0, $args = [] 
             $crm_agent_role   = erp_crm_get_agent_role();
 
             if ( ! user_can( $user_id, $crm_manager_role ) && user_can( $user_id, $crm_agent_role ) ) {
-                $contact_user_id = \WeDevs\ERP\Framework\Models\People::select( 'user_id' )->where( 'id', $contact_id )->first();
+                $contact_user_id = \WeDevs\ERP\Framework\Models\People::select( 'user_id', 'contact_owner' )->where( 'id', $contact_id )->first();
 
                 if ( isset( $contact_user_id->user_id ) && $contact_user_id->user_id ) {
                     $assign_id = get_user_meta( $contact_user_id->user_id, 'contact_owner', true );
                 } else {
-                    $assign_id = erp_people_get_meta( $contact_id, 'contact_owner', true );
+                    $assign_id = (int) $contact_user_id->contact_owner;
                 }
 
-                if ( $assign_id != $user_id ) {
-                    $caps = ['do_not_allow'];
+                if ( $assign_id !== $user_id ) {
+                    $caps = [ 'do_not_allow' ];
                 } else {
                     if ( $data_hard ) {
-                        $caps = ['do_not_allow'];
+                        $caps = [ 'do_not_allow' ];
                     }
                 }
             } elseif ( ! user_can( $user_id, $crm_manager_role ) ) {
-                $caps = ['do_not_allow'];
+                $caps = [ 'do_not_allow' ];
             }
 
-        break;
+            break;
     }
 
     return apply_filters( 'erp_crm_map_meta_caps', $caps, $cap, $user_id, $args );
