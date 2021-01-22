@@ -823,7 +823,7 @@ Account Manager
                 `currency` varchar(5) DEFAULT NULL,
                 `life_stage` VARCHAR(100) DEFAULT NULL,
                 `contact_owner` bigint(20) DEFAULT NULL,
-                `hash` VARCHAR(40) NULL DEFAULT NULL,
+                `hash` VARCHAR(40) DEFAULT NULL,
                 `created_by` BIGINT(20) DEFAULT NULL,
                 `created` datetime DEFAULT NULL,
                 PRIMARY KEY (`id`),
@@ -935,7 +935,7 @@ Account Manager
                 `status` varchar(25) DEFAULT NULL,
                 `subscribe_at` datetime DEFAULT NULL,
                 `unsubscribe_at` datetime DEFAULT NULL,
-                `hash` VARCHAR(40) NULL DEFAULT NULL,
+                `hash` VARCHAR(40) DEFAULT NULL,
                 PRIMARY KEY (`id`),
                 UNIQUE KEY `user_group` (`user_id`,`group_id`),
                 KEY `status` (`status`),
@@ -1282,7 +1282,7 @@ Account Manager
                 `trn_by` varchar(255) DEFAULT NULL,
                 `trn_by_ledger_id` int(11) DEFAULT NULL,
                 `particulars` varchar(255) DEFAULT NULL,
-                `ref` varchar(255) NULL DEFAULT NULL,
+                `ref` varchar(255) DEFAULT NULL,
                 `attachments` varchar(255) DEFAULT NULL,
                 `status` int(11) DEFAULT NULL,
                 `created_at` date DEFAULT NULL,
@@ -1313,7 +1313,7 @@ Account Manager
                 `amount` decimal(20,2) DEFAULT 0,
                 `trn_by` varchar(255) DEFAULT NULL,
                 `transaction_charge` decimal(20,2) DEFAULT 0,
-                `ref` varchar(255) NULL DEFAULT NULL,
+                `ref` varchar(255) DEFAULT NULL,
                 `trn_by_ledger_id` int(11) DEFAULT NULL,
                 `particulars` varchar(255) DEFAULT NULL,
                 `attachments` varchar(255) DEFAULT NULL,
@@ -1433,7 +1433,7 @@ Account Manager
                 `created_by` varchar(50) DEFAULT NULL,
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
-                PRIMARY KEY (`id`)
+                PRIMARY KEY  (`id`)
             ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_purchase` (
@@ -1445,6 +1445,8 @@ Account Manager
                 `trn_date` date DEFAULT NULL,
                 `due_date` date DEFAULT NULL,
                 `amount` decimal(20,2) DEFAULT 0,
+                `tax` decimal(20,2) DEFAULT NULL ,
+                `tax_zone_id` integer DEFAULT NULL,
                 `ref` varchar(255) DEFAULT NULL,
                 `status` int(11) DEFAULT NULL,
                 `purchase_order` boolean DEFAULT NULL,
@@ -1454,7 +1456,7 @@ Account Manager
                 `created_by` varchar(50) DEFAULT NULL,
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
-                PRIMARY KEY (`id`)
+                PRIMARY KEY  (`id`)
             ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_purchase_account_details` (
@@ -1469,7 +1471,7 @@ Account Manager
                 `created_by` varchar(50) DEFAULT NULL,
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
-                PRIMARY KEY (`id`)
+                PRIMARY KEY  (`id`)
             ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_purchase_details` (
@@ -1479,11 +1481,24 @@ Account Manager
                 `qty` int(11) DEFAULT NULL,
                 `price` decimal(20,2) DEFAULT 0,
                 `amount` decimal(20,2) DEFAULT 0,
+                `tax` decimal(20,2) DEFAULT NULL,
                 `created_at` date DEFAULT NULL,
                 `created_by` varchar(50) DEFAULT NULL,
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
-                PRIMARY KEY (`id`)
+                PRIMARY KEY  (`id`)
+            ) $charset_collate;",
+
+            "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}erp_acct_purchase_details_tax (
+                `id` int(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+                `invoice_details_id` int(20) NOT NULL,
+                `agency_id` int(20) DEFAULT NULL,
+                `tax_rate` decimal(20,2) NOT NULL,
+                `created_at` timestamp DEFAULT NULL,
+                `created_by` int(20) DEFAULT NULL,
+                `updated_at` timestamp DEFAULT NULL,
+                `updated_by` int(20) DEFAULT NULL,
+                PRIMARY KEY  (`id`)
             ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_tax_categories` (
