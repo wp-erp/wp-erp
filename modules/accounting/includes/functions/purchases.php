@@ -69,6 +69,8 @@ function erp_acct_get_purchase( $purchase_no ) {
     purchase.attachments,
     purchase.particulars,
     purchase.created_at,
+    purchase.tax,
+    purchase.tax_zone_id,
 
     purchase_acc_detail.purchase_no,
     purchase_acc_detail.debit,
@@ -183,6 +185,8 @@ function erp_acct_insert_purchase( $data ) {
                 'trn_date'        => $purchase_data['trn_date'],
                 'due_date'        => $purchase_data['due_date'],
                 'amount'          => $purchase_data['amount'],
+                'tax'             => $purchase_data['tax'],
+                'tax_zone_id'     => isset( $purchase_data['tax_rate']['id'] ) ? $purchase_data['tax_rate']['id'] : null,
                 'ref'             => $purchase_data['ref'],
                 'status'          => $purchase_data['status'],
                 'purchase_order'  => $purchase_data['purchase_order'],
@@ -203,12 +207,30 @@ function erp_acct_insert_purchase( $data ) {
                 'product_id' => $item['product_id'],
                 'qty'        => $item['qty'],
                 'price'      => $item['unit_price'],
+                'tax'        => $item['tax_amount'],
                 'amount'     => $item['item_total'],
                 'created_at' => $purchase_data['created_at'],
                 'created_by' => $created_by,
                 'updated_at' => $purchase_data['updated_at'],
                 'updated_by' => $purchase_data['updated_by'],
             ] );
+        }
+
+        $details_id = $wpdb->insert_id;
+
+        if ( isset( $purchase_data['tax_rate'] ) && isset( $purchase_data['tax_rate']['agency_id'] ) ) {
+            $tax_rate_agency = get_purchase_tax_rate_with_agency( $purchase_data['tax_rate']['id'], $item['tax_cat_id'] );
+
+            $wpdb->insert(
+                $wpdb->prefix . 'erp_acct_purchase_details_tax',
+                [
+                    'invoice_details_id' => $details_id,
+                    'agency_id'          => isset( $purchase_data['tax_rate']['agency_id'] ) ? $purchase_data['tax_rate']['agency_id'] : null,
+                    'tax_rate'           => $tax_rate_agency->tax_rate,
+                    'updated_at'         => $purchase_data['updated_at'],
+                    'updated_by'         => $purchase_data['updated_by'],
+                ]
+            );
         }
 
         do_action( 'erp_acct_after_purchase_create', $data, $voucher_no );
@@ -242,8 +264,10 @@ function erp_acct_insert_purchase( $data ) {
 
         erp_acct_insert_purchase_data_into_ledger( $purchase_data );
 
-        $data['dr'] = 0;
-        $data['cr'] = $purchase_data['amount'];
+        $data['dr']          = 0;
+        $data['cr']          = $purchase_data['amount'];
+        $data['particulars'] = __( 'Purchase Total', 'erp' );
+
         erp_acct_insert_data_into_people_trn_details( $data, $voucher_no );
 
         $wpdb->query( 'COMMIT' );
@@ -260,6 +284,22 @@ function erp_acct_insert_purchase( $data ) {
     do_action( 'erp_acct_new_transaction_purchase', $voucher_no, $purchase );
 
     return $purchase;
+}
+
+/**
+ * Tax category with agency
+ */
+function get_purchase_tax_rate_with_agency( $tax_id, $tax_cat_id ) {
+    global $wpdb;
+
+    return $wpdb->get_row(
+        $wpdb->prepare(
+            "SELECT agency_id, tax_rate FROM {$wpdb->prefix}erp_acct_tax_cat_agency where tax_id = %d and tax_cat_id = %d",
+            absint( $tax_id ),
+            absint( $tax_cat_id )
+        ),
+        OBJECT
+    );
 }
 
 /**
@@ -304,6 +344,8 @@ function erp_acct_update_purchase( $purchase_data, $purchase_id ) {
                     'trn_date'       => $purchase_data['trn_date'],
                     'due_date'       => $purchase_data['due_date'],
                     'amount'         => $purchase_data['amount'],
+                    'tax'            => $purchase_data['tax'],
+                    'tax_zone_id'    => isset($purchase_data['tax_rate']['id']) ? $purchase_data['tax_rate']['id'] : null,
                     'ref'            => $purchase_data['ref'],
                     'status'         => $purchase_data['status'],
                     'purchase_order' => $purchase_data['purchase_order'],
@@ -332,6 +374,8 @@ function erp_acct_update_purchase( $purchase_data, $purchase_id ) {
 
             $wpdb->delete( $wpdb->prefix . 'erp_acct_purchase_details', [ 'trn_no' => $purchase_id ] );
 
+            $wpdb->query( "DELETE FROM {$wpdb->prefix}erp_acct_purchase_details_tax WHERE invoice_details_id IN($prev_detail_ids)" ); // delete previous tax data
+
             $items = $purchase_data['purchase_details'];
 
             foreach ( $items as $key => $item ) {
@@ -342,6 +386,7 @@ function erp_acct_update_purchase( $purchase_data, $purchase_id ) {
                         'qty'        => $item['qty'],
                         'price'      => $item['unit_price'],
                         'amount'     => $item['item_total'],
+                        'tax'        => $item['tax_amount'],
                         'created_at' => $purchase_data['created_at'],
                         'created_by' => $purchase_data['created_by'],
                         'updated_at' => $purchase_data['updated_at'],
@@ -351,6 +396,24 @@ function erp_acct_update_purchase( $purchase_data, $purchase_id ) {
                         'trn_no' => $purchase_id,
                     ]
                 );
+
+                $details_id = $wpdb->insert_id;
+
+                if(isset($purchase_data['tax_rate']) && isset($purchase_data['tax_rate']['agency_id'])){
+
+                    $tax_rate_agency = get_purchase_tax_rate_with_agency( $purchase_data['tax_rate']['id'], $item['tax_cat_id'] );
+
+                    $wpdb->insert(
+                        $wpdb->prefix . 'erp_acct_purchase_details_tax',
+                        [
+                            'invoice_details_id' => $details_id,
+                            'agency_id'          => isset($purchase_data['tax_rate']['agency_id']) ? $purchase_data['tax_rate']['agency_id'] : null,
+                            'tax_rate'           => $tax_rate_agency->tax_rate ,
+                            'updated_at'         => $purchase_data['updated_at'],
+                            'updated_by'         => $purchase_data['updated_by']
+                        ]
+                    );
+                }
             }
 
             $wpdb->query( 'COMMIT' );
@@ -588,6 +651,8 @@ function erp_acct_get_formatted_purchase_data( $data, $voucher_no ) {
     $purchase_data['trn_date']        = isset( $data['trn_date'] ) ? $data['trn_date'] : date( 'Y-m-d' );
     $purchase_data['due_date']        = isset( $data['due_date'] ) ? $data['due_date'] : date( 'Y-m-d' );
     $purchase_data['amount']          = isset( $data['amount'] ) ? floatval( $data['amount'] ) : 0;
+    $purchase_data['tax']             = isset( $data['tax'] ) ? floatval( $data['tax'] ) : 0;
+    $purchase_data['tax_rate']        = isset( $data['tax_rate'] ) ?   $data['tax_rate']  : [];
     $purchase_data['attachments']     = isset( $data['attachments'] ) ? $data['attachments'] : '';
     $purchase_data['status']          = isset( $data['status'] ) ? intval( $data['status'] ) : '';
     $purchase_data['line_items']      = isset( $data['line_items'] ) ? $data['line_items'] : [];
@@ -618,16 +683,16 @@ function erp_acct_insert_purchase_data_into_ledger( $purchase_data ) {
     global $wpdb;
 
     $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::get_instance();
-    $ledger_id  = $ledger_map->get_ledger_id_by_slug( 'purchase' );
+    $purchase_ledger_id  = $ledger_map->get_ledger_id_by_slug( 'purchase' );
 
-    if ( ! $ledger_id ) {
+    if ( ! $purchase_ledger_id ) {
         return new WP_Error( 505, 'Ledger ID not found for purchase', $purchase_data );
     }
     // Insert amount in ledger_details
     $wpdb->insert(
         $wpdb->prefix . 'erp_acct_ledger_details',
         [
-            'ledger_id'   => $ledger_id,
+            'ledger_id'   => $purchase_ledger_id,
             'trn_no'      => $purchase_data['voucher_no'],
             'particulars' => $purchase_data['particulars'],
             'debit'       => $purchase_data['amount'],
@@ -639,6 +704,32 @@ function erp_acct_insert_purchase_data_into_ledger( $purchase_data ) {
             'updated_by'  => $purchase_data['updated_by'],
         ]
     );
+
+    if ( $purchase_data['tax'] ) {
+
+        $purchase_vat_ledger_id = $ledger_map->get_ledger_id_by_slug( 'purchase_vat' );
+        if ( ! $purchase_vat_ledger_id ) {
+            return new WP_Error( 505, 'Ledger ID not found for purchase vat', $purchase_data );
+        }
+
+        // Insert amount in ledger_details
+        $wpdb->insert(
+            $wpdb->prefix . 'erp_acct_ledger_details',
+            [
+                'ledger_id'   => $purchase_vat_ledger_id,
+                'trn_no'      => $purchase_data['voucher_no'],
+                'particulars' => __( "Purchase Vat of voucher no-" . $purchase_data['voucher_no'], "erp" ),
+                'debit'       => $purchase_data['tax'],
+                'credit'      => 0,
+                'trn_date'    => $purchase_data['trn_date'],
+                'created_at'  => $purchase_data['created_at'],
+                'created_by'  => $purchase_data['created_by'],
+                'updated_at'  => $purchase_data['updated_at'],
+                'updated_by'  => $purchase_data['updated_by'],
+            ]
+        );
+
+    }
 }
 
 /**
