@@ -68,6 +68,7 @@
     "browser-sync": "^2.26.7",
     "browser-sync-webpack-plugin": "^2.0.1",
     "chalk": "^2.0.1",
+    "codeceptjs": "^3.0.4",
     "copy-webpack-plugin": "^4.0.1",
     "cross-env": "^5.2.1",
     "css-loader": "^0.28.8",
@@ -113,11 +114,25 @@
     "vue-loader": "^13.7.0",
     "vue-style-loader": "^3.0.1",
     "vue-template-compiler": "^2.6.11",
+    "webdriverio": "^6.12.1",
     "webpack": "^3.12.0",
     "webpack-bundle-analyzer": "^3.6.0",
     "webpack-cli": "^2.0.14",
     "webpack-dev-server": "^3.10.1",
     "webpack-merge": "^4.2.2",
     "wp-vue-i18n": "^1.1.4"
-  }
+  },
+  "main": "Gruntfile.js",
+  "directories": {
+    "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rink9/wp-erp.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/Rink9/wp-erp/issues"
+  },
+  "homepage": "https://github.com/Rink9/wp-erp#readme"
 }
