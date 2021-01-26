@@ -58,7 +58,7 @@
                             <th scope="col">{{ __('Qty', 'erp') }}</th>
                             <th scope="col">{{ __('Unit Price', 'erp') }}</th>
                             <th scope="col">{{ __('Amount', 'erp') }}</th>
-                            <th scope="col">{{ __('Tax', 'erp') }}</th>
+                            <th scope="col">{{ __('VAT', 'erp') }}</th>
                             <th scope="col"></th>
                         </tr>
                         </thead>
@@ -302,7 +302,7 @@
                 let zones = []
                 let id = ''
                 this.taxRates.forEach( item => {
-                    zones[item.tax_zone_id] = {
+                    zones[item.tax_rate_id] = {
                         id                    : item.tax_rate_id,
                         name                  : item.tax_rate_name,
                         tax_rate              : item.tax_rate,

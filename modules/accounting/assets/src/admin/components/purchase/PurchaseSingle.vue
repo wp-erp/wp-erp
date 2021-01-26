@@ -106,7 +106,7 @@
                                 <td colspan="7">
                                     <ul>
                                         <li><span>{{ __('Subtotal', 'erp') }}:</span> {{ moneyFormat(total.basic) }}</li>
-                                        <li v-if="total.tax"><span>{{ __('Tax', 'erp') }}:</span> {{ moneyFormat(total.tax) }}</li>
+                                        <li v-if="total.tax"><span>{{ __('VAT', 'erp') }}:</span> {{ moneyFormat(total.tax) }}</li>
                                         <li><span>{{ __('Total', 'erp') }}:</span> {{ moneyFormat(total.final) }}</li>
                                     </ul>
                                 </td>
