@@ -688,6 +688,9 @@ function erp_acct_insert_purchase_data_into_ledger( $purchase_data ) {
     if ( ! $purchase_ledger_id ) {
         return new WP_Error( 505, 'Ledger ID not found for purchase', $purchase_data );
     }
+
+    $purchase_data['tax'] = $purchase_data['tax'] ? (int) $purchase_data['tax'] : 0;
+
     // Insert amount in ledger_details
     $wpdb->insert(
         $wpdb->prefix . 'erp_acct_ledger_details',
@@ -695,7 +698,7 @@ function erp_acct_insert_purchase_data_into_ledger( $purchase_data ) {
             'ledger_id'   => $purchase_ledger_id,
             'trn_no'      => $purchase_data['voucher_no'],
             'particulars' => $purchase_data['particulars'],
-            'debit'       => $purchase_data['amount'],
+            'debit'       => $purchase_data['amount'] - $purchase_data['tax'],
             'credit'      => 0,
             'trn_date'    => $purchase_data['trn_date'],
             'created_at'  => $purchase_data['created_at'],
