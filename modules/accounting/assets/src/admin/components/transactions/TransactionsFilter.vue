@@ -29,7 +29,7 @@
                                     </div>
                                     <br>
                                     <div class="form-fields">
-                                        <div class="form-field-wrapper">
+                                        <div class="form-field-wrapper" v-if="status">
                                             <h3>{{ __('Status', 'erp') }}</h3>
                                             <div class="form-fields">
                                                 <simple-select
@@ -90,6 +90,13 @@ export default {
     name: 'TransactionsFilter',
 
     props: {
+        status: {
+            type: Boolean,
+            required: false,
+            default: function () {
+                return true
+            }
+        },
         types: {
             type: Array,
             required: false,
