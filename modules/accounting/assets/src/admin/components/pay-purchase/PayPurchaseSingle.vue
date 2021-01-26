@@ -107,7 +107,6 @@
                             <tr>
                                 <td colspan="7">
                                     <ul>
-                                        <li><span>{{ __('Subtotal', 'erp') }}:</span> {{ moneyFormat(payPurchase.amount) }}</li>
                                         <li><span>{{ __('Total', 'erp') }}:</span> {{ moneyFormat(payPurchase.amount) }}</li>
                                     </ul>
                                 </td>
