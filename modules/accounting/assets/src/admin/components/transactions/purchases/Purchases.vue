@@ -51,6 +51,7 @@ export default {
             ],
 
             filterTypes:[{id: 'purchase', name: 'Purchase'}, {id: 'pay_purchase', name: 'Purchase Payment'}],
+            pro_activated: false,
         };
     },
 
@@ -59,6 +60,13 @@ export default {
     }),
 
     created() {
+        setTimeout(()=>{
+            this.pro_activated =  this.$store.state.erp_pro_activated ?  this.$store.state.erp_pro_activated : false
+            if(this.pro_activated ){
+                this.pages.push({ namedRoute: 'purchasesReturnList', name:  __('Purchase Return', 'erp') })
+             }
+        }, 200);
+        
         if(!this.vendors.length){
             this.$store.dispatch('purchase/fetchVendors');
         }
