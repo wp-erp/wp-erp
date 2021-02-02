@@ -142,6 +142,7 @@ function erp_acct_insert_pay_purchase( $data ) {
 
         // check transaction charge
         $transaction_charge = 0;
+        
         if ( isset( $pay_purchase_data['bank_trn_charge'] ) && 0 < (float)$pay_purchase_data['bank_trn_charge'] && 2 === (int)$pay_purchase_data['trn_by'] ) {
             $transaction_charge = (float)$pay_purchase_data['bank_trn_charge'];
         }
@@ -398,7 +399,6 @@ function erp_acct_get_formatted_pay_purchase_data( $data, $voucher_no ) {
     $pay_purchase_data['bank_trn_charge']           = isset( $data['bank_trn_charge'] ) ? $data['bank_trn_charge'] : '';
     $pay_purchase_data['attachments']      = isset( $data['attachments'] ) ? $data['attachments'] : '';
     $pay_purchase_data['ref']              = isset( $data['ref'] ) ? $data['ref'] : '';
-    // translators: %s: voucher_no
     $pay_purchase_data['particulars']      = ! empty( $data['particulars'] ) ? $data['particulars'] : sprintf( __( 'Purchase payment created with voucher no %s', 'erp' ), $voucher_no );
     $pay_purchase_data['status']           = isset( $data['status'] ) ? $data['status'] : '';
     $pay_purchase_data['trn_by_ledger_id'] = isset( $data['deposit_to'] ) ? $data['deposit_to'] : null;
