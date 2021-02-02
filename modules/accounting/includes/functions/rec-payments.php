@@ -147,7 +147,7 @@ function erp_acct_insert_payment( $data ) {
                 'trn_by'             => $payment_data['trn_by'],
                 'attachments'        => $payment_data['attachments'],
                 'status'             => $payment_data['status'],
-                'trn_by_ledger_id'   => $payment_data['deposit_to'],
+                'trn_by_ledger_id'   => $payment_data['trn_by_ledger_id'],
                 'created_at'         => $payment_data['created_at'],
                 'created_by'         => $payment_data['created_by'],
                 'updated_at'         => $payment_data['updated_at'],
@@ -287,7 +287,7 @@ function erp_acct_update_payment( $data, $voucher_no ) {
                 'particulars'      => $payment_data['particulars'],
                 'amount'           => $payment_data['amount'],
                 'trn_by'           => $payment_data['trn_by'],
-                'trn_by_ledger_id' => $payment_data['deposit_to'],
+                'trn_by_ledger_id' => $payment_data['trn_by_ledger_id'],
                 'created_at'       => $payment_data['created_at'],
                 'created_by'       => $payment_data['created_by'],
                 'updated_at'       => $payment_data['updated_at'],
@@ -402,32 +402,32 @@ function erp_acct_get_formatted_payment_data( $data, $voucher_no, $invoice_no = 
     $user_info = erp_get_people( $data['customer_id'] );
     $company   = new \WeDevs\ERP\Company();
 
-    $payment_data['voucher_no']      = ! empty( $voucher_no ) ? $voucher_no : 0;
-    $payment_data['invoice_no']      = ! empty( $invoice_no ) ? $invoice_no : 0;
-    $payment_data['customer_id']     = isset( $data['customer_id'] ) ? $data['customer_id'] : null;
-    $payment_data['customer_name']   = isset( $user_info ) ? $user_info->first_name . ' ' . $user_info->last_name : '';
-    $payment_data['trn_date']        = isset( $data['trn_date'] ) ? $data['trn_date'] : date( 'Y-m-d' );
-    $payment_data['line_items']      = isset( $data['line_items'] ) ? $data['line_items'] : [];
-    $payment_data['created_at']      = date( 'Y-m-d' );
-    $payment_data['amount']          = isset( $data['amount'] ) ? $data['amount'] : 0;
-    $payment_data['bank_trn_charge'] = isset( $data['bank_trn_charge'] ) ? $data['bank_trn_charge'] : 0;
-    $payment_data['ref']             = isset( $data['ref'] ) ? $data['ref'] : null;
-    $payment_data['attachments']     = isset( $data['attachments'] ) ? $data['attachments'] : '';
-    $payment_data['voucher_type']    = isset( $data['type'] ) ? $data['type'] : '';
-    // translators: %s: voucher_no
-    $payment_data['particulars']  = ! empty( $data['particulars'] ) ? $data['particulars'] : sprintf( __( 'Invoice receipt created with voucher no %s', 'erp' ), $voucher_no );
-    $payment_data['trn_by']       = isset( $data['trn_by'] ) ? $data['trn_by'] : '';
-    $payment_data['deposit_to']   = isset( $data['deposit_to'] ) ? $data['deposit_to'] : null;
-    $payment_data['status']       = isset( $data['status'] ) ? $data['status'] : null;
-    $payment_data['check_no']     = isset( $data['check_no'] ) ? $data['check_no'] : 0;
-    $payment_data['pay_to']       = isset( $user_info ) ? $user_info->first_name . ' ' . $user_info->last_name : '';
-    $payment_data['name']         = isset( $data['name'] ) ? $data['name'] : $company->name;
-    $payment_data['bank']         = isset( $data['bank'] ) ? $data['bank'] : '';
-    $payment_data['voucher_type'] = isset( $data['type'] ) ? $data['type'] : '';
-    $payment_data['created_at']   = isset( $data['created_at'] ) ? $data['created_at'] : null;
-    $payment_data['created_by']   = isset( $data['created_by'] ) ? $data['created_by'] : '';
-    $payment_data['updated_at']   = isset( $data['updated_at'] ) ? $data['updated_at'] : null;
-    $payment_data['updated_by']   = isset( $data['updated_by'] ) ? $data['updated_by'] : '';
+    $payment_data['voucher_no']       = ! empty( $voucher_no ) ? $voucher_no : 0;
+    $payment_data['invoice_no']       = ! empty( $invoice_no ) ? $invoice_no : 0;
+    $payment_data['customer_id']      = isset( $data['customer_id'] ) ? $data['customer_id'] : null;
+    $payment_data['customer_name']    = isset( $user_info ) ? $user_info->first_name . ' ' . $user_info->last_name : '';
+    $payment_data['trn_date']         = isset( $data['trn_date'] ) ? $data['trn_date'] : date( 'Y-m-d' );
+    $payment_data['line_items']       = isset( $data['line_items'] ) ? $data['line_items'] : [];
+    $payment_data['created_at']       = date( 'Y-m-d' );
+    $payment_data['amount']           = isset( $data['amount'] ) ? $data['amount'] : 0;
+    $payment_data['bank_trn_charge']  = isset( $data['bank_trn_charge'] ) ? $data['bank_trn_charge'] : 0;
+    $payment_data['ref']              = isset( $data['ref'] ) ? $data['ref'] : null;
+    $payment_data['attachments']      = isset( $data['attachments'] ) ? $data['attachments'] : '';
+    $payment_data['voucher_type']     = isset( $data['type'] ) ? $data['type'] : '';
+    $payment_data['particulars']      = ! empty( $data['particulars'] ) ? $data['particulars'] : sprintf( __( 'Invoice receipt created with voucher no %s', 'erp' ), $voucher_no );
+    $payment_data['trn_by']           = isset( $data['trn_by'] ) ? $data['trn_by'] : '';
+    $payment_data['trn_by_ledger_id'] = isset( $data['deposit_to'] ) ? $data['deposit_to'] : null;
+    $payment_data['status']           = isset( $data['status'] ) ? $data['status'] : null;
+    $payment_data['check_no']         = isset( $data['check_no'] ) ? $data['check_no'] : 0;
+    $payment_data['pay_to']           = isset( $user_info ) ? $user_info->first_name . ' ' . $user_info->last_name : '';
+    $payment_data['name']             = isset( $data['name'] ) ? $data['name'] : $company->name;
+    $payment_data['bank']             = isset( $data['bank'] ) ? $data['bank'] : '';
+    $payment_data['voucher_type']     = isset( $data['type'] ) ? $data['type'] : '';
+    $payment_data['created_at']       = isset( $data['created_at'] ) ? $data['created_at'] : null;
+    $payment_data['created_by']       = isset( $data['created_by'] ) ? $data['created_by'] : '';
+    $payment_data['updated_at']       = isset( $data['updated_at'] ) ? $data['updated_at'] : null;
+    $payment_data['updated_by']       = isset( $data['updated_by'] ) ? $data['updated_by'] : '';
+    $payment_data['trn_by_ledger_id'] = empty( $payment_data['trn_by_ledger_id'] ) ? $data['trn_by_ledger_id'] : $payment_data['trn_by_ledger_id'];
 
     return $payment_data;
 }
@@ -518,11 +518,13 @@ function erp_acct_insert_payment_data_into_ledger( $payment_data ) {
         return;
     }
 
+    error_log( 'payment_data: ' . print_r( $payment_data, true ) );
+
     // Insert amount in ledger_details
     $wpdb->insert(
         $wpdb->prefix . 'erp_acct_ledger_details',
         [
-            'ledger_id'   => $payment_data['deposit_to'],
+            'ledger_id'   => $payment_data['trn_by_ledger_id'],
             'trn_no'      => $payment_data['voucher_no'],
             'particulars' => $payment_data['particulars'],
             'debit'       => $payment_data['amount'],
@@ -555,7 +557,7 @@ function erp_acct_update_payment_data_in_ledger( $payment_data, $invoice_no ) {
     $wpdb->update(
         $wpdb->prefix . 'erp_acct_ledger_details',
         [
-            'ledger_id'   => $payment_data['deposit_to'],
+            'ledger_id'   => $payment_data['trn_by_ledger_id'],
             'particulars' => $payment_data['particulars'],
             'debit'       => $payment_data['amount'],
             'credit'      => 0,
