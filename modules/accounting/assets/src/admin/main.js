@@ -31,7 +31,7 @@ Vue.mixin(i18nMixin);
 // vue click outside directive
 Vue.directive('click-outside', clickOutside);
 
-import {getRequest, postRequest} from 'admin/request';
+import {getRequest, postRequest} from './request';
 
 (function () {
     window.postRequest = postRequest;
