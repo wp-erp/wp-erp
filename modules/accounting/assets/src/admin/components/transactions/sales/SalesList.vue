@@ -136,6 +136,12 @@ export default {
         }
     },
 
+    computed: {
+        proActivated() {
+            return this.$store.state.erp_pro_activated ?  this.$store.state.erp_pro_activated : false;
+        }
+    },
+
     // watch: {
     //     $route: 'fetchItems'
     // },
@@ -175,6 +181,10 @@ export default {
                                 { key: 'edit', label: __('Edit', 'erp') },
                                 { key: 'void', label: 'Void' }
                             ];
+
+                            if ( this.proActivated ) {
+                                item.actions.splice( 1, 0, { key: 'return', label: __('Recieve Return', 'erp') } );
+                            }
                         } else {
                             item['actions'] = [
                                 { key: 'void', label: 'Void' }
@@ -235,6 +245,12 @@ export default {
                         customer_id  : row.inv_cus_id,
                         customer_name: row.inv_cus_name
                     }
+                });
+                break;
+
+            case 'return':
+                this.$router.push({
+                    path: `/transactions/sales/return/${row.id}/create`,
                 });
                 break;
 
