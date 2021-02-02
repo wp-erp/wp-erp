@@ -140,6 +140,12 @@ export default {
         }
     },
 
+    computed: {
+        proActivated() {
+            return this.$store.state.erp_pro_activated ?  this.$store.state.erp_pro_activated : false;
+        }
+    },
+
     // watch: {
     //     $route: 'fetchItems'
     // },
@@ -179,6 +185,10 @@ export default {
                                 { key: 'edit', label: __('Edit', 'erp') },
                                 { key: 'void', label: 'Void' }
                             ];
+
+                            if ( this.proActivated ) {
+                                item.actions.splice( 1, 0, { key: 'return', label: __('Return', 'erp') } );
+                            }
                         } else {
                             item['actions'] = [
                                 { key: 'void', label: 'Void' }
@@ -234,6 +244,13 @@ export default {
                         }
                     });
                 }
+                break;
+
+            case 'return':
+                this.$router.push({
+                    name: 'PurchaseReturnInvoice',
+                    params: {id: row.id},
+                });
                 break;
 
             case 'void':
