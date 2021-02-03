@@ -1831,6 +1831,7 @@ Account Manager
                 'Approved',
                 'Closed',
                 'Void',
+                'Returned'
             ];
 
             for ( $i = 0; $i < count( $statuses ); $i++ ) {
