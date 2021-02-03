@@ -172,28 +172,32 @@ export default {
                         item['actions'] = [
                             { key: '#', label: __('No actions found', 'erp') }
                         ];
-                    } else if (item.type === 'invoice' && item.status_code !== '4') {
-                        if (item.status_code === '7') {
-                            delete item['actions'];
-                        } else if (item.status_code === '2' || item.status_code === '3' || item.status_code === '5') {
-                            item['actions'] = [
-                                { key: 'receive', label: __('Receive Payment', 'erp') },
-                                { key: 'edit', label: __('Edit', 'erp') },
-                                { key: 'void', label: 'Void' }
-                            ];
-
+                    } else if (item.type === 'invoice') {
+                        if ( item.status_code !== '4' ) {
+                            if (item.status_code === '7') {
+                                delete item['actions'];
+                            } else if (item.status_code === '2' || item.status_code === '3' || item.status_code === '5') {
+                                item['actions'] = [
+                                    { key: 'receive', label: __('Receive Payment', 'erp') },
+                                    { key: 'edit', label: __('Edit', 'erp') },
+                                    { key: 'void', label: 'Void' }
+                                ];
+                            } else {
+                                item['actions'] = [
+                                    { key: 'void', label: 'Void' }
+                                ];
+                            }
+                            
                             if ( this.proActivated ) {
-                                item.actions.splice( 1, 0, { key: 'return', label: __('Recieve Return', 'erp') } );
+                                if ( item.status_code === '2' || item.status_code === '4' || item.status_code === '5' || item.status_code === '6' ) {
+                                    item.actions.splice( 1, 0, { key: 'return', label: __('Recieve Return', 'erp') } );
+                                }
                             }
                         } else {
                             item['actions'] = [
-                                { key: 'void', label: 'Void' }
+                                { key: '#', label: __('No actions found', 'erp') }
                             ];
                         }
-                    } else {
-                        item['actions'] = [
-                            { key: '#', label: __('No actions found', 'erp') }
-                        ];
                     }
 
                     return item;
