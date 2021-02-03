@@ -52,13 +52,13 @@ function erp_acct_insert_to_erp_acct_ledgers_1_7_5() {
         );
     }
 
-    $purchase_return_tax_exists = $wpdb->get_row(
+    $purchase_return_vat_exists = $wpdb->get_row(
         $wpdb->prepare(
-            "SELECT * FROM {$wpdb->prefix}erp_acct_ledgers WHERE slug = %s", [ 'purchase_return_tax' ]
+            "SELECT * FROM {$wpdb->prefix}erp_acct_ledgers WHERE slug = %s", [ 'purchase_return_vat' ]
         )
     );
 
-    if ( empty( $purchase_return_tax_exists ) ) {
+    if ( empty( $purchase_return_vat_exists ) ) {
         $wpdb->query(
             $wpdb->prepare(
                 "INSERT INTO {$wpdb->prefix}erp_acct_ledgers ( `chart_id`, `name`, `slug`, `code`, `system`, `created_at` ) VALUES ( %d, %s, %s, %s, %d, %s )",
@@ -197,6 +197,20 @@ function erp_acct_insert_into_table_trn_status_types_1_7_5() {
         $wpdb->insert( "{$wpdb->prefix}erp_acct_trn_status_types", [
             'type_name' => 'Returned',
             'slug'      => 'returned',
+        ] );
+    }
+
+    $part_returned_trn_type = $wpdb->get_row(
+        $wpdb->prepare(
+            "SELECT id FROM {$wpdb->prefix}erp_acct_trn_status_types WHERE slug = %s",
+            'partially_returned'
+        )
+    );
+
+    if ( empty( $part_returned_trn_type ) ) {
+        $wpdb->insert( "{$wpdb->prefix}erp_acct_trn_status_types", [
+            'type_name' => 'Partially Returned',
+            'slug'      => 'partially_returned',
         ] );
     }
 }
