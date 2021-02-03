@@ -173,7 +173,7 @@ export default {
                             { key: '#', label: __('No actions found', 'erp') }
                         ];
                     } else if (item.type === 'invoice') {
-                        if ( item.status_code !== '4' ) {
+                        if ( item.status_code !== '4' || item.status_code !== '9' ) {
                             if (item.status_code === '7') {
                                 delete item['actions'];
                             } else if (item.status_code === '2' || item.status_code === '3' || item.status_code === '5') {
@@ -182,6 +182,10 @@ export default {
                                     { key: 'edit', label: __('Edit', 'erp') },
                                     { key: 'void', label: 'Void' }
                                 ];
+                            } else if (item.status_code === '10') {
+                                item['actions'] = [
+                                    { key: 'receive', label: __('Receive Payment', 'erp') },
+                                ]
                             } else {
                                 item['actions'] = [
                                     { key: 'void', label: 'Void' }
@@ -189,8 +193,12 @@ export default {
                             }
                             
                             if ( this.proActivated ) {
-                                if ( item.status_code === '2' || item.status_code === '4' || item.status_code === '5' || item.status_code === '6' ) {
-                                    item.actions.splice( 1, 0, { key: 'return', label: __('Recieve Return', 'erp') } );
+                                if ( item.status_code === '2' || item.status_code === '4' || item.status_code === '5' || item.status_code === '6'  || item.status_code === '10' ) {
+                                    if ( item.status_code.length ) {
+                                        item.actions.splice( 1, 0, { key: 'return', label: __('Return', 'erp') } );
+                                    } else {
+                                        item['actions'] = [ { key: 'return', label: __('Return', 'erp') } ];
+                                    }
                                 }
                             }
                         } else {
@@ -198,6 +206,10 @@ export default {
                                 { key: '#', label: __('No actions found', 'erp') }
                             ];
                         }
+                    } else {
+                        item['actions'] = [
+                            { key: '#', label: __('No actions found', 'erp') }
+                        ];
                     }
 
                     return item;
