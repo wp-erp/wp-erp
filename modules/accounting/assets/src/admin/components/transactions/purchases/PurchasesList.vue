@@ -176,23 +176,27 @@ export default {
                         item['actions'] = [
                             { key: '#', label: __('No actions found', 'erp') }
                         ];
-                    } else if (item.type === 'purchase' && item.status_code !== '4') {
-                        if (item.status_code === '7') {
-                            delete item['actions'];
-                        } else if (item.status_code === '2' || item.status_code === '3' || item.status_code === '5') {
-                            item['actions'] = [
-                                { key: 'payment', label: __('Make Payment', 'erp') },
-                                { key: 'edit', label: __('Edit', 'erp') },
-                                { key: 'void', label: 'Void' }
-                            ];
-
-                            if ( this.proActivated ) {
-                                item.actions.splice( 1, 0, { key: 'return', label: __('Return', 'erp') } );
+                    } else if (item.type === 'purchase') {
+                        if (item.status_code !== '4') {
+                            if (item.status_code === '7') {
+                                delete item['actions'];
+                            } else if (item.status_code === '2' || item.status_code === '3' || item.status_code === '5') {
+                                item['actions'] = [
+                                    { key: 'payment', label: __('Make Payment', 'erp') },
+                                    { key: 'edit', label: __('Edit', 'erp') },
+                                    { key: 'void', label: 'Void' }
+                                ];
                             }
                         } else {
                             item['actions'] = [
                                 { key: 'void', label: 'Void' }
                             ];
+                        }
+
+                        if ( this.proActivated ) {
+                            if ( item.status_code === '2' || item.status_code === '4' || item.status_code === '5' || item.status_code === '6' ) {
+                                item.actions.splice( 1, 0, { key: 'return', label: __('Return', 'erp') } );
+                            }
                         }
                     } else {
                         item['actions'] = [
