@@ -819,7 +819,7 @@ function erp_acct_get_due_purchases_by_vendor( $args ) {
             HAVING due > 0
         ) as ps
         ON purchase.voucher_no = ps.purchase_no
-        WHERE purchase.vendor_id = %d AND purchase.status != 1 AND purchase.purchase_order != 1
+        WHERE purchase.vendor_id = %d AND purchase.status != 1 AND purchase.status != 9 AND purchase.purchase_order != 1
         ORDER BY %s %s $limit",
         $args['vendor_id'],
         $args['orderby'],
