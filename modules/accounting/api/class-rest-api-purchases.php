@@ -295,14 +295,17 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $items      = $request['line_items'];
         $item_total = [];
+        $tax_total  = [];
 
         foreach ( $items as $key => $item ) {
             $item_total[ $key ] = $item['item_total'];
+            $tax_total[ $key ]  = $item['tax_amount'];
         }
 
         $purchase_data['attachments']     = maybe_serialize( $purchase_data['attachments'] );
         $purchase_data['billing_address'] = isset( $purchase_data['billing_address'] ) ? maybe_serialize( $purchase_data['billing_address'] ) : '';
         $purchase_data['amount']          = array_sum( $item_total );
+        $purchase_data['tax']             = array_sum( $tax_total );
 
         $old_data = erp_acct_get_purchase( $id );
         $purchase = erp_acct_update_purchase( $purchase_data, $id );
