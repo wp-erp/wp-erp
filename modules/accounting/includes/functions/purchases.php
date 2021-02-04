@@ -315,7 +315,6 @@ function erp_acct_update_purchase( $purchase_data, $purchase_id ) {
 
     if ( 1 === $purchase_data['purchase_order'] && $purchase_data['convert'] ) {
         erp_acct_convert_order_to_purchase( $purchase_data, $purchase_id );
-
         return;
     }
 
@@ -343,7 +342,7 @@ function erp_acct_update_purchase( $purchase_data, $purchase_id ) {
                     'vendor_name'    => $purchase_data['vendor_name'],
                     'trn_date'       => $purchase_data['trn_date'],
                     'due_date'       => $purchase_data['due_date'],
-                    'amount'         => $purchase_data['amount'],
+                    'amount'         => $purchase_data['amount'] + $purchase_data['tax'],
                     'tax'            => $purchase_data['tax'],
                     'tax_zone_id'    => isset($purchase_data['tax_rate']['id']) ? $purchase_data['tax_rate']['id'] : null,
                     'ref'            => $purchase_data['ref'],
@@ -422,7 +421,6 @@ function erp_acct_update_purchase( $purchase_data, $purchase_id ) {
         } else {
             // disable editing on old bill
             $wpdb->update( $wpdb->prefix . 'erp_acct_voucher_no', [ 'editable' => 0 ], [ 'id' => $purchase_id ] );
-
             // insert contra voucher
             $wpdb->insert(
                 $wpdb->prefix . 'erp_acct_voucher_no',
@@ -545,7 +543,8 @@ function erp_acct_convert_order_to_purchase( $purchase_data, $purchase_id ) {
                 'vendor_name'    => $purchase_data['vendor_name'],
                 'trn_date'       => $purchase_data['trn_date'],
                 'due_date'       => $purchase_data['due_date'],
-                'amount'         => $purchase_data['amount'],
+                'amount'         => $purchase_data['amount'] + $purchase_data['tax'],
+                'tax'            => $purchase_data['tax'],
                 'ref'            => $purchase_data['ref'],
                 'status'         => 2,
                 'purchase_order' => false,
