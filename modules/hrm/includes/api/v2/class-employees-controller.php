@@ -590,6 +590,134 @@ class Employees_Controller extends WP_REST_Controller {
             [
                 'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => [ $this, 'create_performance' ],
+                'args'                => [
+                    'reporting_to'  => [
+                        'description' => __( 'Reporting to for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => false,
+                    ],
+                    'job_knowledge'  => [
+                        'description' => __( 'Job knowledge name for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => false,
+                    ],
+                    'work_quality'  => [
+                        'description' => __( 'Work quality for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => false,
+                    ],
+                    'attendance'  => [
+                        'description' => __( 'Attendance for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => false,
+                    ],
+                    'communication'  => [
+                        'description' => __( 'Communication for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => false,
+                    ],
+                    'dependablity'  => [
+                        'description' => __( 'Dependablity for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => false,
+                    ],
+                    'reviewer'  => [
+                        'description' => __( 'Reviewer for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => false,
+                    ],
+                    'comments'  => [
+                        'description' => __( 'Comments for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => false,
+                    ],
+                    'completion_date'  => [
+                        'description' => __( 'Completion date for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => false,
+                    ],
+                    'goal_description'  => [
+                        'description' => __( 'Goal description for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => false,
+                    ],
+                    'employee_assessment'  => [
+                        'description' => __( 'Employee assessment for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => false,
+                    ],
+                    'supervisor'  => [
+                        'description' => __( 'Supervisor for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => false,
+                    ],
+                    'type'  => [
+                        'description' => __( 'Type for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => false,
+                    ],
+                    'performance_date'  => [
+                        'description' => __( 'Performance date for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => false,
+                    ],
+                ],
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_manage_jobinfo' );
                 },
