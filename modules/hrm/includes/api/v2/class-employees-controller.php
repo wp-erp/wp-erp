@@ -195,6 +195,53 @@ class Employees_Controller extends WP_REST_Controller {
             [
                 'methods'             => WP_REST_Server::EDITABLE,
                 'callback'            => [ $this, 'update_experience' ],
+                'args'                => [
+                    'company_name'  => [
+                        'description' => __( 'Company name for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => true,
+                    ],
+                    'job_title'  => [
+                        'description' => __( 'Job title for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => true,
+                    ],
+                    'from'  => [
+                        'description' => __( 'From date for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => true,
+                    ],
+                    'to'  => [
+                        'description' => __( 'To date for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => true,
+                    ],
+                    'description'  => [
+                        'description' => __( 'Description for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => false,
+                    ],
+                ],
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_edit_experience', $request['user_id'] );
                 },
