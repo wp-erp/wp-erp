@@ -186,10 +186,18 @@ export default {
                                     { key: 'edit', label: __('Edit', 'erp') },
                                     { key: 'void', label: 'Void' }
                                 ];
+
+                                if ( this.proActivated && item.status_code !== '3' ) {
+                                    item.actions.splice( 1, 0, { key: 'return', label: __('Return', 'erp') } );
+                                }
                             } else if (item.status_code === '10') {
                                 item['actions'] = [
                                     { key: 'payment', label: __('Make Payment', 'erp') },
-                                ]
+                                ];
+
+                                if ( this.proActivated ) {
+                                    item.actions.splice( 1, 0, { key: 'return', label: __('Return', 'erp') } );
+                                }
                             } else if (item.status_code === '9') {
                                 item['actions'] = [
                                     { key: '#', label: __('No actions found', 'erp') }
@@ -198,24 +206,20 @@ export default {
                                 item['actions'] = [
                                     { key: 'void', label: 'Void' }
                                 ];
-                            } 
-                        } else {
-                            item['actions'] = [
-                                { key: '#', label: __('No actions found', 'erp') }
-                            ];
-                        }
 
-                        if ( this.proActivated ) {
-                            if ( item.status_code === '2' || item.status_code === '4' || item.status_code === '5' || item.status_code === '6' || item.status_code === '10' ) {
-                                if ( item['actions'] ) {
-                                    if ( item.actions[0].key === '#' ) {
-                                        item.actions[0] = [ { key: 'return', label: __('Return', 'erp') } ];
-                                    } else {
-                                        item.actions.splice( 1, 0, { key: 'return', label: __('Return', 'erp') } );
-                                    }
-                                } else {
-                                    item['actions'] = [ { key: 'return', label: __('Return', 'erp') } ];
+                                if ( this.proActivated && item.status_code === '6' ) {
+                                    item.actions.splice( 1, 0, { key: 'return', label: __('Return', 'erp') } );
                                 }
+                            }
+                        } else {
+                            if ( this.proActivated ) {
+                                item['actions'] = [
+                                    { key: 'return', label: __('Return', 'erp') }                                
+                                ];
+                            } else {
+                                item['actions'] = [
+                                    { key: '#', label: __('No actions found', 'erp') }
+                                ];
                             }
                         }
                     } else {
