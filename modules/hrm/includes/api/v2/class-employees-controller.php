@@ -273,6 +273,62 @@ class Employees_Controller extends WP_REST_Controller {
             [
                 'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => [ $this, 'create_education' ],
+                'args'                => [
+                    'school'  => [
+                        'description' => __( 'School name for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => true,
+                    ],
+                    'degree'  => [
+                        'description' => __( 'Degree name for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => true,
+                    ],
+                    'field'  => [
+                        'description' => __( 'Field name for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => true,
+                    ],
+                    'finished'  => [
+                        'description' => __( 'Finished name for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => true,
+                    ],
+                    'notes'  => [
+                        'description' => __( 'Notes for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => false,
+                    ],
+                    'interest'  => [
+                        'description' => __( 'Interest for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => false,
+                    ],
+                ],
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_create_education', $request['user_id'] );
                 },
@@ -293,6 +349,62 @@ class Employees_Controller extends WP_REST_Controller {
             [
                 'methods'             => WP_REST_Server::EDITABLE,
                 'callback'            => [ $this, 'update_education' ],
+                'args'                => [
+                    'school'  => [
+                        'description' => __( 'School name for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => true,
+                    ],
+                    'degree'  => [
+                        'description' => __( 'Degree name for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => true,
+                    ],
+                    'field'  => [
+                        'description' => __( 'Field name for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => true,
+                    ],
+                    'finished'  => [
+                        'description' => __( 'Finished name for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => true,
+                    ],
+                    'notes'  => [
+                        'description' => __( 'Notes for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => false,
+                    ],
+                    'interest'  => [
+                        'description' => __( 'Interest for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => false,
+                    ],
+                ],
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_edit_education', $request['user_id'] );
                 },
