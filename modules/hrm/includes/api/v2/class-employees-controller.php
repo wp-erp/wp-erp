@@ -56,6 +56,12 @@ class Employees_Controller extends WP_REST_Controller {
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)', [
+            'args' => [
+                'user_id' => [
+                    'description' => __( 'Unique identifier for the object.', 'erp-pro' ),
+                    'type'        => 'integer',
+                ],
+            ],
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_employee' ],
@@ -99,6 +105,12 @@ class Employees_Controller extends WP_REST_Controller {
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/experiences', [
+            'args' => [
+                'user_id' => [
+                    'description' => __( 'Unique identifier for the object.', 'erp-pro' ),
+                    'type'        => 'integer',
+                ],
+            ],
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_experiences' ],
@@ -116,6 +128,16 @@ class Employees_Controller extends WP_REST_Controller {
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/experiences' . '/(?P<id>[\d]+)', [
+            'args' => [
+                'user_id' => [
+                    'description' => __( 'Unique identifier for the object.', 'erp-pro' ),
+                    'type'        => 'integer',
+                ],
+                'id' => [
+                    'description' => __( 'Unique identifier for the object.', 'erp-pro' ),
+                    'type'        => 'integer',
+                ],
+            ],
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_experience' ],
@@ -141,6 +163,12 @@ class Employees_Controller extends WP_REST_Controller {
 
         //education
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/educations', [
+            'args' => [
+                'user_id' => [
+                    'description' => __( 'Unique identifier for the object.', 'erp-pro' ),
+                    'type'        => 'integer',
+                ],
+            ],
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_educations' ],
@@ -158,6 +186,16 @@ class Employees_Controller extends WP_REST_Controller {
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/educations' . '/(?P<id>[\d]+)', [
+            'args' => [
+                'user_id' => [
+                    'description' => __( 'Unique identifier for the object.', 'erp-pro' ),
+                    'type'        => 'integer',
+                ],
+                'id' => [
+                    'description' => __( 'Unique identifier for the object.', 'erp-pro' ),
+                    'type'        => 'integer',
+                ],
+            ],
             [
                 'methods'             => WP_REST_Server::EDITABLE,
                 'callback'            => [ $this, 'update_education' ],
@@ -176,6 +214,12 @@ class Employees_Controller extends WP_REST_Controller {
 
         //dependents
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/dependents', [
+            'args' => [
+                'user_id' => [
+                    'description' => __( 'Unique identifier for the object.', 'erp-pro' ),
+                    'type'        => 'integer',
+                ],
+            ],
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_dependents' ],
@@ -193,6 +237,16 @@ class Employees_Controller extends WP_REST_Controller {
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/dependents' . '/(?P<id>[\d]+)', [
+            'args' => [
+                'user_id' => [
+                    'description' => __( 'Unique identifier for the object.', 'erp-pro' ),
+                    'type'        => 'integer',
+                ],
+                'id' => [
+                    'description' => __( 'Unique identifier for the object.', 'erp-pro' ),
+                    'type'        => 'integer',
+                ],
+            ],
             [
                 'methods'             => WP_REST_Server::EDITABLE,
                 'callback'            => [ $this, 'update_dependent' ],
@@ -211,6 +265,12 @@ class Employees_Controller extends WP_REST_Controller {
 
         //job histories
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/job_histories', [
+            'args' => [
+                'user_id' => [
+                    'description' => __( 'Unique identifier for the object.', 'erp-pro' ),
+                    'type'        => 'integer',
+                ],
+            ],
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_histories' ],
@@ -228,6 +288,16 @@ class Employees_Controller extends WP_REST_Controller {
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/job_histories' . '/(?P<id>[\d]+)', [
+            'args' => [
+                'user_id' => [
+                    'description' => __( 'Unique identifier for the object.', 'erp-pro' ),
+                    'type'        => 'integer',
+                ],
+                'id' => [
+                    'description' => __( 'Unique identifier for the object.', 'erp-pro' ),
+                    'type'        => 'integer',
+                ],
+            ],
             [
                 'methods'             => WP_REST_Server::DELETABLE,
                 'callback'            => [ $this, 'delete_history' ],
@@ -240,6 +310,12 @@ class Employees_Controller extends WP_REST_Controller {
         //performances
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/performances', [
+            'args' => [
+                'user_id' => [
+                    'description' => __( 'Unique identifier for the object.', 'erp-pro' ),
+                    'type'        => 'integer',
+                ],
+            ],
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_performances' ],
@@ -257,6 +333,16 @@ class Employees_Controller extends WP_REST_Controller {
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/performances' . '/(?P<id>[\d]+)', [
+            'args' => [
+                'user_id' => [
+                    'description' => __( 'Unique identifier for the object.', 'erp-pro' ),
+                    'type'        => 'integer',
+                ],
+                'id' => [
+                    'description' => __( 'Unique identifier for the object.', 'erp-pro' ),
+                    'type'        => 'integer',
+                ],
+            ],
             [
                 'methods'             => WP_REST_Server::DELETABLE,
                 'callback'            => [ $this, 'delete_performance' ],
@@ -268,6 +354,12 @@ class Employees_Controller extends WP_REST_Controller {
 
         //events
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/events', [
+            'args' => [
+                'user_id' => [
+                    'description' => __( 'Unique identifier for the object.', 'erp-pro' ),
+                    'type'        => 'integer',
+                ],
+            ],
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_events' ],
@@ -279,6 +371,12 @@ class Employees_Controller extends WP_REST_Controller {
 
         //terminate
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/terminate', [
+            'args' => [
+                'user_id' => [
+                    'description' => __( 'Unique identifier for the object.', 'erp-pro' ),
+                    'type'        => 'integer',
+                ],
+            ],
             [
                 'methods'             => WP_REST_Server::EDITABLE,
                 'callback'            => [ $this, 'create_terminate' ],
@@ -290,6 +388,12 @@ class Employees_Controller extends WP_REST_Controller {
 
         //announcements
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/announcements', [
+            'args' => [
+                'user_id' => [
+                    'description' => __( 'Unique identifier for the object.', 'erp-pro' ),
+                    'type'        => 'integer',
+                ],
+            ],
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_announcements' ],
@@ -300,6 +404,12 @@ class Employees_Controller extends WP_REST_Controller {
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/announcements', [
+            'args' => [
+                'user_id' => [
+                    'description' => __( 'Unique identifier for the object.', 'erp-pro' ),
+                    'type'        => 'integer',
+                ],
+            ],
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_announcements' ],
@@ -319,6 +429,12 @@ class Employees_Controller extends WP_REST_Controller {
 
         //policies
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/policies', [
+            'args' => [
+                'user_id' => [
+                    'description' => __( 'Unique identifier for the object.', 'erp-pro' ),
+                    'type'        => 'integer',
+                ],
+            ],
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_policies' ],
@@ -329,6 +445,12 @@ class Employees_Controller extends WP_REST_Controller {
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/leaves', [
+            'args' => [
+                'user_id' => [
+                    'description' => __( 'Unique identifier for the object.', 'erp-pro' ),
+                    'type'        => 'integer',
+                ],
+            ],
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_leaves' ],
@@ -346,6 +468,12 @@ class Employees_Controller extends WP_REST_Controller {
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/notes', [
+            'args' => [
+                'user_id' => [
+                    'description' => __( 'Unique identifier for the object.', 'erp-pro' ),
+                    'type'        => 'integer',
+                ],
+            ],
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_notes' ],
@@ -362,6 +490,16 @@ class Employees_Controller extends WP_REST_Controller {
             ],
         ] );
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/notes' . '/(?P<note_id>[\d]+)', [
+            'args' => [
+                'user_id' => [
+                    'description' => __( 'Unique identifier for the object.', 'erp-pro' ),
+                    'type'        => 'integer',
+                ],
+                'note_id' => [
+                    'description' => __( 'Unique identifier for the object.', 'erp-pro' ),
+                    'type'        => 'integer',
+                ],
+            ],
             [
                 'methods'             => WP_REST_Server::DELETABLE,
                 'callback'            => [ $this, 'delete_note' ],
@@ -373,6 +511,12 @@ class Employees_Controller extends WP_REST_Controller {
 
         //roles
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/roles', [
+            'args' => [
+                'user_id' => [
+                    'description' => __( 'Unique identifier for the object.', 'erp-pro' ),
+                    'type'        => 'integer',
+                ],
+            ],
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_roles' ],
