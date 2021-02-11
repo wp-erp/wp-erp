@@ -141,7 +141,7 @@ function erp_acct_get_account_payable( $args ) {
 
     $purchase_sql = "SELECT SUM(balance) AS amount
         FROM ( SELECT SUM( debit - credit ) AS balance FROM {$wpdb->prefix}erp_acct_purchase_account_details WHERE trn_date <= '%s'
-        GROUP BY purchase_no HAVING balance < 0 )
+        GROUP BY purchase_no HAVING balance <> 0 )
         AS get_amount";
 
     $bill_amount     = $wpdb->get_var( $wpdb->prepare( $bill_sql, $args['end_date'] ) );
