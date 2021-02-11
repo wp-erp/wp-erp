@@ -1,5 +1,4 @@
 <?php
-namespace WeDevs\ERP\HRM\Update;
 
 /**
  * Insert necessary ledgers for purchase return
@@ -155,9 +154,9 @@ function erp_acct_create_erp_acct_purchase_details_tax_1_7_5() {
                 invoice_details_id int(20) NOT NULL,
                 agency_id int(20) DEFAULT NULL,
                 tax_rate decimal(20,2) NOT NULL,
-                created_at timestamp DEFAULT NULL,
+                created_at datetime DEFAULT NULL,
                 created_by int(20) DEFAULT NULL,
-                updated_at timestamp DEFAULT NULL,
+                updated_at datetime DEFAULT NULL,
                 updated_by int(20) DEFAULT NULL,
                 PRIMARY KEY  (`id`)
             ) $charset_collate";
