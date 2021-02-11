@@ -436,6 +436,35 @@ class Employees_Controller extends WP_REST_Controller {
             [
                 'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => [ $this, 'create_dependent' ],
+                'args'                => [
+                    'name'  => [
+                        'description' => __( 'Name for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => true,
+                    ],
+                    'relation'  => [
+                        'description' => __( 'Relation for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => true,
+                    ],
+                    'dob'  => [
+                        'description' => __( 'DOB for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => false,
+                    ],
+                ],
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_create_dependent', $request['user_id'] );
                 },
@@ -456,6 +485,35 @@ class Employees_Controller extends WP_REST_Controller {
             [
                 'methods'             => WP_REST_Server::EDITABLE,
                 'callback'            => [ $this, 'update_dependent' ],
+                'args'                => [
+                    'name'  => [
+                        'description' => __( 'Name for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => true,
+                    ],
+                    'relation'  => [
+                        'description' => __( 'Relation for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => true,
+                    ],
+                    'dob'  => [
+                        'description' => __( 'DOB for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => false,
+                    ],
+                ],
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_edit_dependent', $request['user_id'] );
                 },
