@@ -1223,12 +1223,12 @@ class Form_Handler {
             return;
         }
 
-        if ( ! isset( $_POST['action'] ) && $_POST['action'] !== 'erp-hr-fyears-setting' ) {
+        if ( ! isset( $_POST['action'] ) || $_POST['action'] !== 'erp-hr-fyears-setting' ) {
             return;
         }
 
         if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-settings-nonce' ) ) {
-            die( 'Nonce failed.' );
+            die( esc_html__( 'Nonce failed.', 'erp' ) );
         }
 
         $fnames = isset( $_POST['fyear-name'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['fyear-name'] ) ) : [];
