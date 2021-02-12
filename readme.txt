@@ -3,9 +3,9 @@ Contributors: tareq1988, nizamuddinbabu, wedevs
 Donate Link: https://tareq.co/donate
 Tags: business manager, erp, accounting, crm, hr, project manager, small business, SME, contact, contacts, Customer Relationship Management, employee, leave management, hr, human resource management, job, jobs, job listing, lead management, opportunity, schedule, task, lead, holiday, company
 Requires at least: 4.4
-Tested up to: 5.6
+Tested up to: 5.6.1
 Requires PHP: 5.6
-Stable tag: 1.7.4
+Stable tag: 1.7.5
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -279,6 +279,17 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+
+= v1.7.5 -> February 12, 2021 =
+--------------------------
+- [fix] Fixed nonce verification issue while leave year is being saved
+- [fix] Issue with importing WP user to CRM contact fixed
+- [fix] CRM agent was not able edit their own contact- this has been fixed
+- [fix] Fixed extra slash issue if CRM first name last name has apostrophe
+- [fix] Fixed the Admin access loosing issue when adding an Employee with the Admin email address
+- [fix] Fixed accounting transaction summary piechart was not showing the percentage value
+- [fix] Fixed static cache key issue at designation list page
+- [update] Updated already existing employee check functionality
 
 = v1.7.4 -> December 31, 2020 =
 --------------------------

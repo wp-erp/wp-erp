@@ -66,7 +66,8 @@ function erp_hr_get_designations( $args = [] ) {
 
     $args = wp_parse_args( $args, $defaults );
 
-    $cache_key    = 'erp-designations';
+    //$cache_key    = 'erp-designations';
+    $cache_key    = 'erp-designations-'  . md5( serialize( $args ) );
     $designations = wp_cache_get( $cache_key, 'erp' );
 
     $designation = new \WeDevs\ERP\HRM\Models\Designation();

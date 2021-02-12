@@ -2330,7 +2330,7 @@ if (false) {(function () {
                 var total = 0;
                 data.datasets[tooltipItem.datasetIndex].data.forEach(function (element) {
                   if (element !== 0) {
-                    total += element;
+                    total += parseFloat(element);
                   }
                 });
                 var value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
