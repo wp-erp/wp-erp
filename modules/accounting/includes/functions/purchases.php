@@ -711,7 +711,7 @@ function erp_acct_insert_purchase_data_into_ledger( $purchase_data ) {
 
         $purchase_vat_ledger_id = $ledger_map->get_ledger_id_by_slug( 'purchase_vat' );
         if ( ! $purchase_vat_ledger_id ) {
-            return new WP_Error( 505, 'Ledger ID not found for purchase vat', $purchase_data );
+            return new WP_Error( 505, __( 'Ledger ID not found for purchase vat', 'erp' ), $purchase_data );
         }
 
         // Insert amount in ledger_details
@@ -720,7 +720,7 @@ function erp_acct_insert_purchase_data_into_ledger( $purchase_data ) {
             [
                 'ledger_id'   => $purchase_vat_ledger_id,
                 'trn_no'      => $purchase_data['voucher_no'],
-                'particulars' => __( "Purchase Vat of voucher no-" . $purchase_data['voucher_no'], "erp" ),
+                'particulars' => sprintf( __( 'Purchase Vat of voucher no- %1$s', 'erp' ), $purchase_data['voucher_no'] ),
                 'debit'       => $purchase_data['tax'],
                 'credit'      => 0,
                 'trn_date'    => $purchase_data['trn_date'],
