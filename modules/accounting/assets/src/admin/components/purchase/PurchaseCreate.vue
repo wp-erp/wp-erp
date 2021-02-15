@@ -300,10 +300,10 @@
         },
         created() {
             if (this.$route.name === 'PurchaseOrderCreate') {
-                this.page_title = 'Purchase Order';
+                this.page_title = __( 'Purchase Order', 'erp' );
                 this.purchase_order = 1;
             } else {
-                this.page_title = 'Purchase';
+                this.page_title = __( 'Purchase', 'erp' );
                 if (this.$route.query.convert) {
                     this.purchase_order = 1;
                 } else {
@@ -505,9 +505,9 @@
             updatePurchase(requestData) {
                 HTTP.put(`/purchases/${this.voucherNo}`, requestData).then(res => {
                     this.$store.dispatch('spinner/setSpinner', false);
-                    let message = 'Purchase Updated!';
+                    let message = __( 'Purchase Updated!', 'erp' );
                     if (this.orderToPurchase()) {
-                        message = 'Conversion Successful!';
+                        message = __( 'Conversion Successful!', 'erp' );
                     }
                     this.showAlert('success', message);
                 }).then(() => {
