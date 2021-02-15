@@ -3,7 +3,7 @@
 /**
  * Insert necessary ledgers for purchase return
  */
-function erp_acct_insert_to_erp_acct_ledgers_1_7_5() {
+function erp_acct_insert_to_erp_acct_ledgers_1_7_6() {
     global $wpdb;
 
     $sales_return_discount_exists = $wpdb->get_row(
@@ -100,7 +100,7 @@ function erp_acct_insert_to_erp_acct_ledgers_1_7_5() {
 /*
  * Add tax and tax_zone_id columns in `erp_acct_purchase` table
  */
-function erp_acct_alter_table_erp_acct_purchase_1_7_5() {
+function erp_acct_alter_table_erp_acct_purchase_1_7_6() {
     global $wpdb;
 
     $table = $wpdb->prefix . 'erp_acct_purchase';
@@ -126,7 +126,7 @@ function erp_acct_alter_table_erp_acct_purchase_1_7_5() {
 /*
  * Add tax column in `erp_acct_purchase_details` table
  */
-function erp_acct_alter_table_erp_acct_purchase_details_1_7_5() {
+function erp_acct_alter_table_erp_acct_purchase_details_1_7_6() {
     global $wpdb;
 
     $table = $wpdb->prefix . 'erp_acct_purchase_details';
@@ -144,7 +144,7 @@ function erp_acct_alter_table_erp_acct_purchase_details_1_7_5() {
 /*
  * Create `erp_acct_purchase_details_tax` table
  */
-function erp_acct_create_erp_acct_purchase_details_tax_1_7_5() {
+function erp_acct_create_erp_acct_purchase_details_tax_1_7_6() {
     global $wpdb;
 
     $charset_collate = $wpdb->get_charset_collate();
@@ -167,7 +167,7 @@ function erp_acct_create_erp_acct_purchase_details_tax_1_7_5() {
 /*
  * Update `Asset Purchase` system ledger
  */
-function erp_acct_update_table_erp_acct_ledgers_1_7_5() {
+function erp_acct_update_table_erp_acct_ledgers_1_7_6() {
     global $wpdb;
 
     $wpdb->update(
@@ -182,7 +182,7 @@ function erp_acct_update_table_erp_acct_ledgers_1_7_5() {
 /*
  * Add `returned` transaction status type
  */
-function erp_acct_insert_into_table_trn_status_types_1_7_5() {
+function erp_acct_insert_into_table_trn_status_types_1_7_6() {
     global $wpdb;
 
     $returned_trn_type = $wpdb->get_row(
@@ -214,9 +214,9 @@ function erp_acct_insert_into_table_trn_status_types_1_7_5() {
     }
 }
 
-erp_acct_alter_table_erp_acct_purchase_1_7_5();
-erp_acct_alter_table_erp_acct_purchase_details_1_7_5();
-erp_acct_create_erp_acct_purchase_details_tax_1_7_5();
-erp_acct_insert_to_erp_acct_ledgers_1_7_5();
-erp_acct_update_table_erp_acct_ledgers_1_7_5();
-erp_acct_insert_into_table_trn_status_types_1_7_5();
+erp_acct_alter_table_erp_acct_purchase_1_7_6();
+erp_acct_alter_table_erp_acct_purchase_details_1_7_6();
+erp_acct_create_erp_acct_purchase_details_tax_1_7_6();
+erp_acct_insert_to_erp_acct_ledgers_1_7_6();
+erp_acct_update_table_erp_acct_ledgers_1_7_6();
+erp_acct_insert_into_table_trn_status_types_1_7_6();
