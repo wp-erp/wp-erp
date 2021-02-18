@@ -74,7 +74,7 @@
                             <th>{{ detail.name }}</th>
                             <td>{{ detail.qty }}</td>
                             <td>{{ moneyFormat( detail.unit_price ) }}</td>
-                            <td>{{ moneyFormat( detail.item_total ) }}</td>
+                            <td>{{ moneyFormat( parseFloat(detail.unit_price) * parseFloat(detail.qty) ) }}</td>
                         </tr>
                     </tbody>
                     <tfoot>
