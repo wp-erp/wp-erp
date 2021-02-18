@@ -5,7 +5,7 @@
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
-                    <h2 class="content-header__title">{{ __('Receive Payment', 'erp') }}</h2>
+                    <h2 class="content-header__title">{{ __('Payment', 'erp') }}</h2>
                 </div>
             </div>
         </div>
@@ -75,7 +75,7 @@
                         <th scope="col" class="col--id column-primary">{{ __('Voucher No', 'erp') }}</th>
                         <th scope="col">{{ __('Due Date', 'erp') }}</th>
                         <th scope="col">{{ __('Total', 'erp') }}</th>
-                        <th scope="col">{{ __('Due', 'erp') }}</th>
+                        <th scope="col">{{ __('Balance', 'erp') }}</th>
                         <th scope="col">{{ __('Amount', 'erp') }}</th>
                         <th scope="col" class="col--actions"></th>
                     </tr>
@@ -85,9 +85,9 @@
                         <td scope="row" class="col--id column-primary">#{{invoice.invoice_no}}</td>
                         <td class="col--due-date" data-colname="Due Date">{{invoice.due_date}}</td>
                         <td class="col--total" data-colname="Total">{{moneyFormat(invoice.amount)}}</td>
-                        <td class="col--due" data-colname="Due">{{moneyFormat(invoice.due)}}</td>
+                        <td class="col--due" data-colname="Due">{{formatAmount(invoice.due, true)}}</td>
                         <td class="col--amount" data-colname="Amount">
-                            <input type="number" min="0" step="0.01" v-model="totalAmounts[key]" @keyup="updateFinalAmount" class="wperp-form-field text-right"/>
+                            <input type="number" step="0.01" v-model="totalAmounts[key]" @keyup="updateFinalAmount" class="wperp-form-field text-right"/>
                         </td>
                         <td class="delete-row" data-colname="Remove Above Selection">
                             <a @click.prevent="removeRow(key)" href="#"><i class="flaticon-trash"></i></a>
