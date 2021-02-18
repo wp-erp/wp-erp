@@ -50,7 +50,7 @@
                     {{ isPayment(data.row) ? '-' : formatDate(data.row.due_date) }}
                 </template>
                 <template slot="due" slot-scope="data">
-                    {{ isPayment(data.row) ? '-' : formatAmount(data.row.due) }}
+                    <span :class="(parseFloat(data.row.due) < 0) ? 'cr-balance' : 'dr-balance'">{{ isPayment(data.row) ? '-' : formatAmount(data.row.due, true) }}</span>
                 </template>
                 <template slot="amount" slot-scope="data">
                     {{ isPayment(data.row) ? formatAmount(data.row.pay_bill_amount) : formatAmount(data.row.amount) }}
@@ -94,7 +94,7 @@ export default {
                 customer_name: { label: __('Customer', 'erp') },
                 trn_date     : { label: __('Trn Date', 'erp') },
                 due_date     : { label: __('Due Date', 'erp') },
-                due          : { label: __('Due', 'erp') },
+                due          : { label: __('Balance', 'erp') },
                 amount       : { label: __('Total', 'erp') },
                 status       : { label: __('Status', 'erp') },
                 actions      : { label: '' }
@@ -180,6 +180,11 @@ export default {
                         if (item.status_code !== '4') {
                             if (item.status_code === '7') {
                                 delete item['actions'];
+
+                                item['actions'] = [
+                                    { key: '#', label: __('No actions found', 'erp') }
+                                ];
+                                
                             } else if (item.status_code === '2' || item.status_code === '3' || item.status_code === '5') {
                                 item['actions'] = [
                                     { key: 'payment', label: __('Make Payment', 'erp') },
@@ -350,5 +355,17 @@ export default {
         .check-column {
             display: none;
         }
+    }
+
+    .due {
+        font-weight: 600;
+    }
+
+    .dr-balance {
+        color: #00b33c;
+    }
+
+    .cr-balance {
+        color: #ff6666;
     }
 </style>
