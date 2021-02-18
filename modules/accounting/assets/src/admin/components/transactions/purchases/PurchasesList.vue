@@ -187,7 +187,7 @@ export default {
                                 
                             } else if (item.status_code === '2' || item.status_code === '3' || item.status_code === '5') {
                                 item['actions'] = [
-                                    { key: 'payment', label: __('Make Payment', 'erp') },
+                                    { key: 'payment', label: __('Payment', 'erp') },
                                     { key: 'edit', label: __('Edit', 'erp') },
                                     { key: 'void', label: 'Void' }
                                 ];
@@ -197,16 +197,22 @@ export default {
                                 }
                             } else if (item.status_code === '10') {
                                 item['actions'] = [
-                                    { key: 'payment', label: __('Make Payment', 'erp') },
+                                    { key: 'payment', label: __('Payment', 'erp') },
                                 ];
 
                                 if ( this.proActivated ) {
                                     item.actions.splice( 1, 0, { key: 'return', label: __('Return', 'erp') } );
                                 }
                             } else if (item.status_code === '9') {
-                                item['actions'] = [
-                                    { key: '#', label: __('No actions found', 'erp') }
-                                ];
+                                if ( parseFloat( item.due ) !== 0 ) {
+                                    item['actions'] = [
+                                        { key: 'payment', label: __('Payment', 'erp') },
+                                    ];
+                                } else {
+                                    item['actions'] = [
+                                        { key: '#', label: __('No actions found', 'erp') }
+                                    ];
+                                }
                             } else {
                                 item['actions'] = [
                                     { key: 'void', label: 'Void' }
