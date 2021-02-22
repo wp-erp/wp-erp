@@ -110,10 +110,16 @@ function erp_acct_insert_payment( $data ) {
     try {
         $wpdb->query( 'START TRANSACTION' );
 
+        if ( floatval( $data['amount'] ) < 0 ) {
+            $trn_type = 'return_payment';
+        } else {
+            $trn_type = 'payment';
+        }
+
         $wpdb->insert(
             $wpdb->prefix . 'erp_acct_voucher_no',
             [
-                'type'       => 'payment',
+                'type'       => $trn_type,
                 'currency'   => $currency,
                 'created_at' => $data['created_at'],
                 'created_by' => $data['created_by'],
@@ -157,10 +163,8 @@ function erp_acct_insert_payment( $data ) {
 
         $items = $payment_data['line_items'];
 
-
         foreach ( $items as $key => $item ) {
-            $total                   = 0;
-
+            $total              = 0;
             $invoice_no[ $key ] = $payment_data['invoice_no'];
             $total += $item['line_total'];
 
@@ -383,9 +387,9 @@ function erp_acct_update_payment_line_items( $data, $invoice_no, $voucher_no ) {
     $credit = 0;
 
     if ( floatval( $payment_data['amount'] ) < 0 ) {
-        $credit = abs( floatval( $payment_data['amount'] ) );
+        $debit = abs( floatval( $payment_data['amount'] ) );
     } else {
-        $debit  = $payment_data['amount'];
+        $credit  = $payment_data['amount'];
     }
 
     $wpdb->update(
@@ -637,14 +641,17 @@ function erp_acct_get_payment_count() {
 function erp_acct_format_payment_line_items( $invoice = 'all' ) {
     global $wpdb;
 
-    $sql = 'SELECT id, voucher_no, invoice_no, amount ';
+    $sql = 'SELECT inv_rec_detail.id, inv_rec_detail.voucher_no, inv_rec_detail.invoice_no, inv_rec_detail.amount, voucher.type ';
 
     if ( 'all' === $invoice ) {
         $invoice_sql = '';
     } else {
         $invoice_sql = 'WHERE voucher_no = ' . $invoice;
     }
-    $sql .= "FROM {$wpdb->prefix}erp_acct_invoice_receipts_details {$invoice_sql}";
+    $sql .= "FROM {$wpdb->prefix}erp_acct_invoice_receipts_details AS inv_rec_detail
+            LEFT JOIN {$wpdb->prefix}erp_acct_voucher_no AS voucher
+            ON inv_rec_detail.voucher_no = voucher.id
+            {$invoice_sql}";
 
     return $wpdb->get_results( $sql, ARRAY_A );
 }
