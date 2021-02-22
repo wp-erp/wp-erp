@@ -82,7 +82,7 @@
                             <td class="col--total" data-colname="Total">{{moneyFormat(item.total)}}</td>
                             <td class="col--due" data-colname="Due">{{formatAmount(item.due, true)}}</td>
                             <td class="col--amount" data-colname="Amount">
-                                <input type="number" step="0.01" :max="item.due" name="amount" v-model="totalAmounts[key]" @keyup="updateFinalAmount" class="text-right wperp-form-field">
+                                <input type="number" step="0.01" :max="Math.abs(item.due)" name="amount" v-model="totalAmounts[key]" @keyup="updateFinalAmount" class="text-right wperp-form-field">
                             </td>
                             <td class="delete-row" data-colname="Remove Above Selection">
                                 <a href="#" @click.prevent="remove_item(key)"><i class="flaticon-trash"></i></a>
@@ -195,7 +195,9 @@ export default {
             particulars     : '',
             isWorking       : false,
             accts_by_chart  : [],
-            acct_assets     : erp_acct_var.acct_assets
+            acct_assets     : erp_acct_var.acct_assets,
+            negativeAmount  : [],
+            negativeTotal   : false,
         };
     },
 
@@ -274,12 +276,22 @@ export default {
                     });
                 });
             }).then(() => {
-                this.pay_purchases.forEach(element => {
-                    this.totalAmounts[idx++] = parseFloat(element.due);
+                this.pay_purchases.forEach((element, index) => {
+                    this.totalAmounts[idx++] = Math.abs((parseFloat(element.due)));
+                    
+                    if (parseFloat(element.due) < 0) {
+                        this.negativeAmount[index] = true;
+                    }
+
                     finalAmount += parseFloat(element.due);
                 });
 
-                this.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
+                if (parseFloat(finalAmount) < 0) {
+                    this.negativeTotal = true;
+                }
+
+                this.finalTotalAmount  = Math.abs(parseFloat(finalAmount).toFixed(2));
+                this.pay_purchases.due = Math.abs(this.pay_purchases.due);
             });
         },
 
@@ -310,16 +322,17 @@ export default {
         updateFinalAmount() {
             let finalAmount = 0;
 
-            this.totalAmounts.forEach(element => {
-                finalAmount += parseFloat(element);
+            this.totalAmounts.forEach((element, index) => {
+                finalAmount += this.negativeAmount[index] ? (-1 * parseFloat(element)) : parseFloat(element);
             });
 
-            this.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
+            this.negativeTotal    = (parseFloat(finalAmount) < 0) ? true : false;
+            this.finalTotalAmount = Math.abs(parseFloat(finalAmount).toFixed(2));
         },
 
         SubmitForPayment() {
             this.pay_purchases.forEach((element, index) => {
-                element['line_total'] = parseFloat(this.totalAmounts[index]);
+                element['line_total'] = this.negativeAmount[index] ? (-1 * parseFloat(this.totalAmounts[index])) : parseFloat(this.totalAmounts[index]);
             });
 
             this.validateForm();
@@ -368,7 +381,7 @@ export default {
                 name            : this.check_data.payer_name
             }).then(res => {
                 this.$store.dispatch('spinner/setSpinner', false);
-                this.showAlert('success', 'Pay Purchase Created!');
+                this.showAlert('success', __('Pay Purchase Created!', 'erp'));
 
                 if (this.actionType === 'save' || this.actionType === 'draft') {
                     this.$router.push({ name: 'Purchases' });
@@ -377,7 +390,7 @@ export default {
                 }
             }).catch(error => {
                 this.$store.dispatch('spinner/setSpinner', false);
-                this.showAlert('error', 'Something went wrong!');
+                this.showAlert('error', __('Something went wrong!', 'erp') );
                 throw error;
             });
         },
@@ -422,27 +435,27 @@ export default {
             this.form_errors = [];
 
             if (!Object.prototype.hasOwnProperty.call(this.basic_fields.vendor, 'id')) {
-                this.form_errors.push('Vendor Name is required.');
+                this.form_errors.push( __('Vendor Name is required.', 'erp') );
             }
 
             if (!this.basic_fields.payment_date) {
-                this.form_errors.push('Transaction Date is required.');
+                this.form_errors.push( __('Transaction Date is required.', 'erp') );
             }
 
             if (!Object.prototype.hasOwnProperty.call(this.basic_fields.deposit_to, 'id')) {
-                this.form_errors.push('Transaction Account is required.');
+                this.form_errors.push( __('Transaction Account is required.', 'erp') );
             }
 
             if (!Object.prototype.hasOwnProperty.call(this.basic_fields.trn_by, 'id')) {
-                this.form_errors.push('Payment Method is required.');
+                this.form_errors.push( __('Payment Method is required.', 'erp') );
             }
 
             if (parseFloat(this.basic_fields.deposit_to.balance) < parseFloat(this.finalTotalAmount)) {
-                this.form_errors.push('Not enough balance in selected account.');
+                this.form_errors.push( __('Not enough balance in selected account.', 'erp') );
             }
 
             if (!parseFloat(this.finalTotalAmount)) {
-                this.form_errors.push('Total amount can\'t be zero.');
+                this.form_errors.push( __('Total amount can\'t be zero.', 'erp') );
             }
         },
 
@@ -487,6 +500,7 @@ export default {
             this.$delete(this.pay_purchases, index);
             this.$delete(this.totalAmounts, index);
             this.updateFinalAmount();
+            this.$delete(this.negativeAmount, index);
         }
     },
 
