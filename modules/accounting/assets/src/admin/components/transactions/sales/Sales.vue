@@ -16,9 +16,8 @@
         <!-- End .header-section -->
 
         <sales-stats />
-        <transactions-filter :types="filterTypes" :people="{title: 'Customer', items: customers}"/>
+        <transactions-filter :types="filterTypes" :people="{title: __('Customer', 'erp'), items: customers}"/>
         <sales-list />
-
     </div>
 </template>
 
@@ -46,10 +45,18 @@ export default {
                 { namedRoute: 'RecPaymentCreate', name: __('Receive Payment', 'erp') },
                 { namedRoute: 'EstimateCreate', name: __('Create Estimate', 'erp') }
             ],
-            filterTypes:[{id: 'invoice', name: 'Invoice'}, {id: 'payment', name: 'Payment'}, {id: 'estimate', name: 'Estimate'}],
+
+            filterTypes:[
+                { id: 'invoice', name: __('Invoice', 'erp') },
+                { id: 'payment', name: __('Receive', 'erp') },
+                { id: 'return_payment', name: __('Payment', 'erp') },
+                { id: 'estimate', name: __('Estimate', 'erp') }
+            ],
+
             pro_activated: false,
         };
     },
+
     created() {
         setTimeout(()=>{
             this.pro_activated =  this.$store.state.erp_pro_activated ?  this.$store.state.erp_pro_activated : false
@@ -62,6 +69,7 @@ export default {
             this.$store.dispatch('sales/fillCustomers', []);
         }
     },
+
     computed: mapState({
         customers: state => state.sales.customers
     }),

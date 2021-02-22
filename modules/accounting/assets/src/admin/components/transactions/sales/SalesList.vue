@@ -26,7 +26,7 @@
                     <strong>
                         <router-link :to="{ name: 'SalesSingle', params: {
                             id: data.row.id,
-                            type: isPayment(data.row) ? 'payment' : 'invoice'
+                            type: data.row.type
                         }}">
                             #{{ data.row.id }}
                         </router-link>
@@ -86,7 +86,7 @@ export default {
     data() {
         return {
             columns       : {
-                trn_no       : { label:  __('Voucher No.', 'erp') },
+                trn_no       : { label: __('Voucher No.', 'erp') },
                 type         : { label: __('Type', 'erp') },
                 ref          : { label: __('Ref', 'erp') },
                 customer_name: { label: __('Customer', 'erp') },
@@ -165,8 +165,8 @@ export default {
                 this.rows = response.data.map(item => {
                     if (item.estimate === '1' || item.status_code === '1') {
                         item['actions'] = [
-                            { key: 'edit', label: 'Edit' },
-                            { key: 'to_invoice', label: 'Make Invoice' }
+                            { key: 'edit', label: __('Edit', 'erp') },
+                            { key: 'to_invoice', label: __('Make Invoice', 'erp') }
                         ];
                     } else if (item.status_code === '8') {
                         item['actions'] = [
@@ -184,7 +184,7 @@ export default {
                                 item['actions'] = [
                                     { key: 'receive', label: __('Payment', 'erp') },
                                     { key: 'edit', label: __('Edit', 'erp') },
-                                    { key: 'void', label: 'Void' }
+                                    { key: 'void', label: __('Void', 'erp') }
                                 ];
 
                                 if ( this.proActivated && item.status_code !== '3' ) {
@@ -201,7 +201,7 @@ export default {
                             } else if (item.status_code === '9') {
                                 if ( parseFloat( item.due ) !== 0 ) {
                                     item['actions'] = [
-                                        { key: 'payment', label: __('Payment', 'erp') },
+                                        { key: 'receive', label: __('Payment', 'erp') },
                                     ];
                                 } else {
                                     item['actions'] = [
@@ -258,7 +258,7 @@ export default {
                         this.$delete(this.rows, index);
 
                         this.$store.dispatch('spinner/setSpinner', false);
-                        this.showAlert('success', 'Deleted !');
+                        this.showAlert('success', __('Deleted !', 'erp'));
                     }).catch(error => {
                         this.$store.dispatch('spinner/setSpinner', false);
                         throw error;
@@ -271,7 +271,7 @@ export default {
                     this.$router.push({ name: 'InvoiceEdit', params: { id: row.id } });
                 }
 
-                if (row.type === 'payment') {
+                if (row.type === 'payment' || row.type === 'return_payment') {
                     this.$router.push({ name: 'RecPaymentEdit', params: { id: row.id } });
                 }
                 break;
@@ -293,17 +293,17 @@ export default {
                 break;
 
             case 'void':
-                if (confirm('Are you sure to void the transaction?')) {
+                if (confirm(__('Are you sure to void the transaction?', 'erp'))) {
                     if (row.type === 'invoice') {
                         HTTP.post('invoices/' + row.id + '/void').then(response => {
-                            this.showAlert('success', 'Transaction has been void!');
+                            this.showAlert('success', __('Transaction has been void!', 'erp'));
                         }).catch(error => {
                             throw error;
                         });
                     }
                     if (row.type === 'payment') {
                         HTTP.post('payments/' + row.id + '/void').then(response => {
-                            this.showAlert('success', 'Transaction has been void!');
+                            this.showAlert('success', __('Transaction has been void!', 'erp'));
                         }).then(() => {
                             this.$router.push({ name: 'Sales' });
                         }).catch(error => {
@@ -336,17 +336,24 @@ export default {
         },
 
         isPayment(row) {
-            return row.type === 'payment';
+            return row.type === 'payment' || row.type === 'return_payment';
+        },
+
+        isReturnPayment(row) {
+            return row.type === 'return_payment';
         },
 
         getTrnType(row) {
             if (row.type === 'invoice') {
                 if (row.estimate == '1') {
-                    return 'Estimate';
+                    return __('Estimate', 'erp');
                 }
-                return 'Invoice';
+
+                return __('Invoice', 'erp');
+            } else if (row.type === 'return_payment') {
+                return __('Payment', 'erp');
             } else {
-                return 'Payment';
+                return __('Receive', 'erp');
             }
         }
     }
