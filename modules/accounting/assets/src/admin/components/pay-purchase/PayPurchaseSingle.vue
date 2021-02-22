@@ -2,7 +2,7 @@
     <div class="wperp-modal-dialog paypurchase-single">
         <div class="wperp-modal-content">
             <div class="wperp-modal-header">
-                <h2>{{ __('Pay Purchase', 'erp') }}</h2>
+                <h2>{{ trnType() }}</h2>
                 <div class="d-print-none">
                     <a href="#" class="wperp-btn btn--default print-btn" @click.prevent="printPopup">
                         <i class="flaticon-printer-1"></i>
@@ -46,9 +46,10 @@
                     </div>
 
                     <div class="invoice-body">
-                        <h4>{{ __('Pay Purchase', 'erp') }}</h4>
+                        <h4>{{ __('Payment Details', 'erp') }}</h4>
                         <div class="wperp-row" v-if="null != payPurchase">
                             <div class="wperp-col-sm-6">
+                                <h5>{{ type === "pay_purchase" ? __('Payment To', 'erp') : __('Payment From', 'erp') }}:</h5>
                                 <div class="persons-info">
                                     <strong>{{ payPurchase.vendor_name }}</strong><br>
                                     {{ payPurchase.billing_address }}
@@ -159,7 +160,7 @@ export default {
             isWorking  : false,
             acct_var   : erp_acct_var, /* global erp_acct_var */
             print_data : null,
-            type       : 'pay_purchase',
+            type       : null,
             showModal  : false,
             people_id  : null,
             pdf_link   : '#'
@@ -167,6 +168,7 @@ export default {
     },
 
     created() {
+        this.type = this.$route.params.type;
         this.getCompanyInfo();
         this.getPurchase();
 
@@ -190,7 +192,6 @@ export default {
 
             HTTP.get(`/pay-purchases/${this.$route.params.id}`).then(response => {
                 this.payPurchase = response.data;
-                this.type = this.$route.params.type;
                 this.people_id = this.payPurchase.vendor_id;
                 this.pdf_link = this.payPurchase.pdf_link;
                 this.$store.dispatch('spinner/setSpinner', false);
@@ -202,6 +203,14 @@ export default {
                 this.isWorking = false;
             });
         },
+
+        trnType() {
+            if (this.type === 'receive_pay_purchase') {
+                return __('Receive', 'erp');
+            }
+
+            return __('Payment', 'erp');
+        }, 
 
         printPopup() {
             window.print();

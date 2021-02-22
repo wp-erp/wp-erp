@@ -17,10 +17,10 @@
             </div>
 
             <div class="invoice-body">
-                <h4>{{ __('Payment', 'erp') }}</h4>
+                <h4>{{ __('Payment Details', 'erp') }}</h4>
                 <div class="wperp-row">
                     <div class="wperp-col-sm-6">
-                        <h5>{{ __('Payment From', 'erp') }}:</h5>
+                        <h5>{{ type === "payment" ? __('Payment From', 'erp') : __('Payment To', 'erp') }}:</h5>
                         <div class="persons-info">
                             <strong>{{ payment.customer_name }}</strong><br>
                             <!-- {{ payment.billing_address }} -->
@@ -66,14 +66,14 @@
                         <tr :key="index" v-for="(detail, index) in payment.line_items">
                             <th>#{{ index+1 }}</th>
                             <th>{{ detail.invoice_no }}</th>
-                            <td>{{ moneyFormat( detail.amount ) }}</td>
+                            <td>{{ detail.type === "return_payment" ? formatAmount(-1 * detail.amount, true) : formatAmount(detail.amount, true) }}</td>
                         </tr>
                     </tbody>
                     <tfoot>
                         <tr>
                             <td colspan="7">
                                 <ul>
-                                    <li><span>{{ __('Total', 'erp') }}:</span> {{ moneyFormat( payment.amount ) }}</li>
+                                    <li><span>{{ __('Total', 'erp') }}:</span> {{ type === "return_payment" ? formatAmount(-1 * payment.amount, true) : formatAmount(payment.amount, true) }}</li>
                                 </ul>
                             </td>
                         </tr>
@@ -117,7 +117,10 @@ export default {
         },
         company: {
             type: Object
-        }
+        },
+        type: {
+            type: String
+        },
     },
 
     data() {
