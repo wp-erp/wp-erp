@@ -100,14 +100,14 @@
                                     <td>{{ line.id }}</td>
                                     <td>{{ line.purchase_no }}</td>
                                     <td>{{ line.vendor_name }}</td>
-                                    <td>{{ moneyFormat(line.amount) }}</td>
+                                    <td>{{ line.type === "receive_pay_purchase" ? formatAmount(-1 * line.amount, true) : formatAmount(line.amount, true) }}</td>
                                 </tr>
                             </tbody>
                             <tfoot>
                             <tr>
                                 <td colspan="7">
                                     <ul>
-                                        <li><span>{{ __('Total', 'erp') }}:</span> {{ moneyFormat(payPurchase.amount) }}</li>
+                                        <li><span>{{ __('Total', 'erp') }}:</span> {{ type === "receive_pay_purchase" ? formatAmount(-1 * payPurchase.amount, true) : formatAmount(payPurchase.amount, true) }}</li>
                                     </ul>
                                 </td>
                             </tr>
@@ -190,6 +190,7 @@ export default {
 
             HTTP.get(`/pay-purchases/${this.$route.params.id}`).then(response => {
                 this.payPurchase = response.data;
+                this.type = this.$route.params.type;
                 this.people_id = this.payPurchase.vendor_id;
                 this.pdf_link = this.payPurchase.pdf_link;
                 this.$store.dispatch('spinner/setSpinner', false);
