@@ -1060,3 +1060,32 @@ function erp_acct_get_invoice_due( $invoice_no ) {
 
     return $result['due'];
 }
+
+/**
+ * Retrieves tax details of an invoice
+ * 
+ * @since 1.8.0
+ *
+ * @param int|string $invoice_no
+ * @param int|string $product_id
+ * 
+ * @return array
+ */
+function erp_acct_get_invoice_tax_details( $invoice_no, $product_id ) {
+    global $wpdb;
+
+    $tax_rates = $wpdb->get_results(
+        $wpdb->prepare(
+            "SELECT inv_tax.agency_id, inv_tax.tax_rate
+            FROM {$wpdb->prefix}erp_acct_invoice_details AS inv
+            RIGHT JOIN {$wpdb->prefix}erp_acct_invoice_details_tax AS inv_tax
+            ON inv.id = inv_tax.invoice_details_id
+            WHERE inv.trn_no = %d
+            AND inv.product_id = %d",
+            [ (int) $invoice_no, (int) $product_id ]
+        ),
+        ARRAY_A
+    );
+    
+    return $tax_rates;
+}
