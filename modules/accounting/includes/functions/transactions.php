@@ -1546,7 +1546,7 @@ function erp_acct_pdf_abs_path_to_url( $voucher_no ) {
 /**
  * Get formatted transaction status for pdf voucher
  * 
- * @since 1.7.6
+ * @since 1.8.0
  * 
  * @param int|string $trn_status
  * 
