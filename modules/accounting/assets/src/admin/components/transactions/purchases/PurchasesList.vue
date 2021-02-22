@@ -24,7 +24,7 @@
                 @action:click="onActionClick">
                 <template slot="trn_no" slot-scope="data">
                     <strong v-if="isPayment(data.row)">
-                        <router-link :to="{ name: 'PayPurchaseSingle', params: { id: data.row.id }}">
+                        <router-link :to="{ name: 'PayPurchaseSingle', params: { id: data.row.id, type: data.row.type }}">
                             #{{ data.row.id }}
                         </router-link>
                     </strong>
@@ -88,7 +88,7 @@ export default {
     data() {
         return {
             columns       : {
-                trn_no       : { label:  __('Voucher No.', 'erp') },
+                trn_no       : { label: __('Voucher No.', 'erp') },
                 type         : { label: __('Type', 'erp') },
                 ref          : { label: __('Ref', 'erp') },
                 customer_name: { label: __('Customer', 'erp') },
@@ -169,8 +169,8 @@ export default {
                 const mappedData = response.data.map(item => {
                     if (item.purchase_order === '1' || item.status_code === '1') {
                         item['actions'] = [
-                            { key: 'edit', label: 'Edit' },
-                            { key: 'to_purchase', label: 'Make Purchase' }
+                            { key: 'edit', label: __('Edit', 'erp') },
+                            { key: 'to_purchase', label: __('Make Purchase', 'erp') }
                         ];
                     } else if (item.status_code === '8') {
                         item['actions'] = [
@@ -189,7 +189,7 @@ export default {
                                 item['actions'] = [
                                     { key: 'payment', label: __('Payment', 'erp') },
                                     { key: 'edit', label: __('Edit', 'erp') },
-                                    { key: 'void', label: 'Void' }
+                                    { key: 'void', label: __('Void', 'erp') }
                                 ];
 
                                 if ( this.proActivated && item.status_code !== '3' ) {
@@ -215,7 +215,7 @@ export default {
                                 }
                             } else {
                                 item['actions'] = [
-                                    { key: 'void', label: 'Void' }
+                                    { key: 'void', label: __('Void', 'erp') }
                                 ];
 
                                 if ( this.proActivated && item.status_code === '6' ) {
@@ -259,7 +259,7 @@ export default {
         onActionClick(action, row, index) {
             switch (action) {
             case 'trash':
-                if (confirm('Are you sure to delete?')) {
+                if (confirm( __('Are you sure to delete?', 'erp') )) {
                     HTTP.delete('purchases/' + row.id).then(response => {
                         this.$delete(this.rows, index);
                     });
@@ -293,17 +293,17 @@ export default {
                 break;
 
             case 'void':
-                if (confirm('Are you sure to void the transaction?')) {
+                if ( confirm( __('Are you sure to void the transaction?', 'erp') ) ) {
                     if (row.type === 'purchase') {
                         HTTP.post('purchases/' + row.id + '/void').then(response => {
-                            this.showAlert('success', 'Transaction has been void!');
+                            this.showAlert('success', __( 'Transaction has been void!', 'erp' ) );
                         }).catch(error => {
                             throw error;
                         });
                     }
-                    if (row.type === 'pay_purchase') {
+                    if (row.type === 'pay_purchase' || row.type === 'receive_pay_purchase') {
                         HTTP.post('pay-purchases/' + row.id + '/void').then(response => {
-                            this.showAlert('success', 'Transaction has been void!');
+                            this.showAlert( 'success', __( 'Transaction has been void!', 'erp' ) );
                         }).then(() => {
                             this.$router.push({ name: 'Purchases' });
                         }).catch(error => {
@@ -336,19 +336,22 @@ export default {
         },
 
         isPayment(row) {
-            return row.type === 'pay_purchase';
+            return row.type === 'pay_purchase' || row.type === 'receive_pay_purchase';
         },
 
         getTrnType(row) {
             if (row.type === 'purchase') {
                 if (row.purchase_order === '1') {
-                    return 'Purchase Order';
+                    return __('Purchase Order', 'erp-pro');
                 }
-                return 'Purchase';
+
+                return __('Purchase', 'erp-pro');
+            } else if (row.type === 'pay_purchase') {
+                return __('Payment', 'erp-pro');
             } else {
-                return 'Pay Purchase';
+                return __('Receive', 'erp-pro');
             }
-        }
+        },
     }
 
 };

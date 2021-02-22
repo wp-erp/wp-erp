@@ -49,8 +49,11 @@ export default {
                 { namedRoute: 'PayPurchaseCreate', name: __('Pay Purchase', 'erp') },
                 { namedRoute: 'PurchaseOrderCreate', name:  __('Create Purchase Order', 'erp') }
             ],
-
-            filterTypes:[{id: 'purchase', name: 'Purchase'}, {id: 'pay_purchase', name: 'Purchase Payment'}],
+            filterTypes:[
+                { id: 'purchase', name: __('Purchase', 'erp') },
+                { id: 'pay_purchase', name: __('Payment', 'erp') },
+                { id: 'receive_pay_purchase', name: __('Receive', 'erp') },
+            ],
             pro_activated: false,
         };
     },
