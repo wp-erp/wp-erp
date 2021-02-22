@@ -28,7 +28,7 @@ function erp_acct_get_sales_transactions( $args = [] ) {
 
     $limit = '';
 
-    $where = "WHERE (voucher.type = 'invoice' OR voucher.type = 'payment')";
+    $where = "WHERE (voucher.type = 'invoice' OR voucher.type = 'payment' OR voucher.type = 'return_payment')";
 
     if ( ! empty( $args['customer_id'] ) ) {
         $where .= " AND (invoice.customer_id = {$args['customer_id']} OR invoice_receipt.customer_id = {$args['customer_id']}) ";
@@ -671,7 +671,7 @@ function erp_acct_get_purchase_transactions( $args = [] ) {
 
     $limit = '';
 
-    $where = "WHERE (voucher.type = 'pay_purchase' OR voucher.type = 'purchase')";
+    $where = "WHERE (voucher.type = 'pay_purchase' OR voucher.type = 'receive_pay_purchase' OR voucher.type = 'purchase')";
 
     if ( ! empty( $args['vendor_id'] ) ) {
         $where .= " AND (purchase.vendor_id = {$args['vendor_id']} OR pay_purchase.vendor_id = {$args['vendor_id']}) ";
@@ -715,7 +715,7 @@ function erp_acct_get_purchase_transactions( $args = [] ) {
             pay_purchase.ref as pay_ref,
             purchase.purchase_order,
             pay_purchase.amount as pay_bill_amount,
-            ABS(SUM(purchase_acct_details.debit - purchase_acct_details.credit)) AS due,
+            SUM(purchase_acct_details.debit - purchase_acct_details.credit) AS due,
             purchase.status AS purchase_status,
             pay_purchase.status AS pay_purchase_status';
     }
@@ -933,6 +933,26 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
         $trn_pdf->add_total( __( 'TOTAL', 'erp' ), $transaction->amount );
     }
 
+    if ( 'return_payment' === $type ) {
+        // Set Column Headers
+        $trn_pdf->set_table_headers( [ __( 'INVOICE NO', 'erp' ), __( 'TRN DATE', 'erp' ), __( 'AMOUNT', 'erp' ) ] );
+
+        // Add Table Items
+        foreach ( $transaction->line_items as $line ) {
+            $trn_pdf->add_item( [ $line['invoice_no'], $transaction->trn_date, $line['amount'] ] );
+        }
+
+        // Add particulars
+        if ( $transaction->particulars ) {
+            $trn_pdf->add_title( __( 'Notes', 'erp' ) );
+            $trn_pdf->add_paragraph( $transaction->particulars );
+        }
+
+        $trn_pdf->add_badge( __( 'PAID', 'erp' ) );
+        $trn_pdf->add_total( __( 'SUB TOTAL', 'erp' ), $transaction->amount );
+        $trn_pdf->add_total( __( 'TOTAL', 'erp' ), $transaction->amount );
+    }
+
     if ( 'purchase_return' === $type ) {
         // Set Column Headers
         $trn_pdf->set_table_headers( [ __( 'PRODUCT', 'erp' ), __( 'QUANTITY', 'erp' ), __( 'UNIT PRICE', 'erp' ), __( 'AMOUNT', 'erp' ) ] );
@@ -1048,6 +1068,27 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
     }
 
     if ( 'pay_purchase' === $type ) {
+        // Set Column Headers
+        $trn_pdf->set_table_headers( [ __( 'PURCHASE NO', 'erp' ), __( 'DUE DATE', 'erp' ), __( 'AMOUNT', 'erp' ) ] );
+
+        // Add Table Items
+        foreach ( $transaction->purchase_details as $line ) {
+            $trn_pdf->add_item( [ $line['purchase_no'], $transaction->due_date, $line['amount'] ] );
+        }
+
+        // Add particulars
+        if ( $transaction->particulars ) {
+            $trn_pdf->add_title( __( 'Notes', 'erp' ) );
+            $trn_pdf->add_paragraph( $transaction->particulars );
+        }
+
+        $trn_pdf->add_badge( __( 'PAID', 'erp' ) );
+        // $trn_pdf->add_total( __( 'DUE', 'erp' ), $transaction->due );
+        $trn_pdf->add_total( __( 'SUB TOTAL', 'erp' ), $transaction->amount );
+        $trn_pdf->add_total( __( 'TOTAL', 'erp' ), $transaction->amount );
+    }
+    
+    if ( 'receive_pay_purchase' === $type ) {
         // Set Column Headers
         $trn_pdf->set_table_headers( [ __( 'PURCHASE NO', 'erp' ), __( 'DUE DATE', 'erp' ), __( 'AMOUNT', 'erp' ) ] );
 
