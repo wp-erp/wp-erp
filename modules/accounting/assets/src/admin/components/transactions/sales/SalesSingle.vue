@@ -2,7 +2,7 @@
     <div class="wperp-modal-dialog sales-single">
         <div class="wperp-modal-content">
             <div class="wperp-modal-header">
-                <h2 v-if="null != type">{{ 'payment' == type ? 'Receive Payment' : getInvoiceType() }}</h2>
+                <h2 v-if="null != type">{{ trnType(type) }}</h2>
                 <div class="d-print-none">
                     <a href="#" class="wperp-btn btn--default print-btn" @click.prevent="printPopup">
                         <i class="flaticon-printer-1"></i>
@@ -44,7 +44,8 @@
             <payment-single-content
                 v-if="null != payment && null != company"
                 :payment="payment"
-                :company="company" />
+                :company="company"
+                :type="type" />
 
             <send-mail v-if="showModal" :userid="user_id" :data="print_data" :type="type"/>
 
@@ -126,16 +127,16 @@ export default {
 
             if (type === 'invoice') {
                 this.getInvoice();
-            } else if (type === 'payment') {
+            } else if (type === 'payment' || type === 'return_payment') {
                 this.getPayment();
             }
         },
 
         getInvoiceType() {
             if (this.invoice !== null && this.invoice.estimate === '1') {
-                return 'Estimate';
+                return __('Estimate', 'erp');
             } else {
-                return 'Invoice';
+                return __('Invoice', 'erp');
             }
         },
 
@@ -165,6 +166,16 @@ export default {
                 this.isWorking  = false;
             });
         },
+
+        trnType(type) {
+            if (type === 'payment') {
+                return __('Receive', 'erp');
+            } else if (type === 'return_payment') {
+                return __('Payment', 'erp');
+            }
+    
+            return getInvoiceType();
+        }, 
 
         printPopup() {
             window.print();
