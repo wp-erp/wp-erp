@@ -123,14 +123,14 @@
                 <table class="wperp-table table-striped table-dark widefat liability-equity-balance report-table">
                     <tbody>
                         <tr>
-                            <td><strong>{{ __('Assets', 'erp') }} = </strong></td>
-                            <td>{{ transformBalance(totalAsset) }}</td>
+                            <td style="font-size: 16px; color: #00b33c;">{{ __('Assets', 'erp') }} = </td>
+                            <td style="font-size: 16px; color: #00b33c;">{{ transformBalance(totalAsset) }}</td>
                             <td class="no-print"></td>
                             <td class="no-print"></td>
                         </tr>
                         <tr>
-                            <td><strong>{{ __('Liability', 'erp') }} + {{ __('Equity', 'erp') }} = </strong></td>
-                            <td>{{ transformBalance(liability_equity) }}</td>
+                            <td style="font-size: 16px; color: #ff6666;">{{ __('Liability', 'erp') }} + {{ __('Equity', 'erp') }} = </td>
+                            <td style="font-size: 16px; color: #ff6666;">{{ transformBalance(liability_equity) }}</td>
                             <td class="no-print"></td>
                             <td class="no-print"></td>
                         </tr>
