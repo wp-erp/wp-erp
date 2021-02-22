@@ -93,6 +93,8 @@ function erp_acct_format_pay_purchase_line_items( $voucher_no ) {
             "SELECT * FROM {$wpdb->prefix}erp_acct_pay_purchase AS pay_purchase
             LEFT JOIN {$wpdb->prefix}erp_acct_pay_purchase_details AS pay_purchase_detail
             ON pay_purchase.voucher_no = pay_purchase_detail.voucher_no
+            LEFT JOIN {$wpdb->prefix}erp_acct_voucher_no AS voucher
+            ON pay_purchase_detail.voucher_no = voucher.id
             WHERE pay_purchase.voucher_no = %d",
             $voucher_no
         ),
@@ -123,11 +125,17 @@ function erp_acct_insert_pay_purchase( $data ) {
     try {
         $wpdb->query( 'START TRANSACTION' );
 
+        if ( floatval( $data['amount'] ) < 0 ) {
+            $trn_type = 'pay_purchase';
+        } else {
+            $trn_type = 'receive_pay_purchase';
+        }
+
         //create voucher
         $wpdb->insert(
             $wpdb->prefix . 'erp_acct_voucher_no',
             [
-                'type'       => 'pay_purchase',
+                'type'       => $trn_type,
                 'currency'   => $currency,
                 'created_at' => $data['created_at'],
                 'created_by' => $data['created_by'],
@@ -205,9 +213,9 @@ function erp_acct_insert_pay_purchase( $data ) {
             $credit = 0;
 
             if ( floatval( $item['line_total'] ) < 0 ) {
-                $credit = abs( floatval( $item['line_total'] ) );
+                $debit = abs( floatval( $item['line_total'] ) );
             } else {
-                $debit  = floatval( $item['line_total'] );
+                $credit  = floatval( $item['line_total'] );
             }
 
             $wpdb->insert(
@@ -235,9 +243,9 @@ function erp_acct_insert_pay_purchase( $data ) {
         $data['cr'] = 0;
 
         if ( floatval( $pay_purchase_data['amount'] ) < 0 ) {
-            $data['cr'] = abs( floatval( $pay_purchase_data['amount'] ) );
+            $data['dr'] = abs( floatval( $pay_purchase_data['amount'] ) );
         } else {
-            $data['dr'] = $pay_purchase_data['amount'];
+            $data['cr'] = $pay_purchase_data['amount'];
         }
 
         erp_acct_insert_data_into_people_trn_details( $data, $voucher_no );
@@ -333,9 +341,9 @@ function erp_acct_update_pay_purchase( $data, $pay_purchase_id ) {
             $credit = 0;
 
             if ( floatval( $item['line_total'] ) < 0 ) {
-                $credit = abs( floatval( $item['amount'] ) );
+                $debit = abs( floatval( $item['amount'] ) );
             } else {
-                $debit  = floatval( $item['amount'] );
+                $credit  = floatval( $item['amount'] );
             }
 
             $wpdb->update(
@@ -457,9 +465,9 @@ function erp_acct_insert_pay_purchase_data_into_ledger( $pay_purchase_data, $ite
     $credit = 0;
 
     if ( floatval( $item_data['line_total'] ) < 0 ) {
-        $debit = abs( floatval( $item_data['line_total'] ) );
+        $credit = abs( floatval( $item_data['line_total'] ) );
     } else {
-        $credit = floatval( $item_data['line_total'] );
+        $debit = floatval( $item_data['line_total'] );
     }
 
     // Insert amount in ledger_details
@@ -500,9 +508,9 @@ function erp_acct_update_pay_purchase_data_into_ledger( $pay_purchase_data, $pay
     $credit = 0;
 
     if ( floatval( $item_data['line_total'] ) < 0 ) {
-        $debit  = abs( floatval( $item_data['line_total'] ) );
+        $credit  = abs( floatval( $item_data['line_total'] ) );
     } else {
-        $credit = floatval( $item_data['line_total'] );
+        $debit = floatval( $item_data['line_total'] );
     }
 
     // Update amount in ledger_details
