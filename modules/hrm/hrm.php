@@ -357,18 +357,17 @@ class Human_Resource {
      */
     public function load_hrm_rest_controllers( $controller ) {
         $hrm_controller = [
-            '\WeDevs\ERP\HRM\API\Employees_Controller',
-            '\WeDevs\ERP\HRM\API\Departments_Controller',
-            '\WeDevs\ERP\HRM\API\Designations_Controller',
-            '\WeDevs\ERP\HRM\API\Birthdays_Controller',
-            '\WeDevs\ERP\HRM\API\HRM_Reports_Controller',
-            '\WeDevs\ERP\HRM\API\Leave_Entitlements_Controller',
-            '\WeDevs\ERP\HRM\API\Leave_Holidays_Controller',
-            '\WeDevs\ERP\HRM\API\Leave_Policies_Controller',
-            '\WeDevs\ERP\HRM\API\Leave_Requests_Controller',
-            '\WeDevs\ERP\HRM\API\Announcements_Controller',
-            '\WeDevs\ERP\HRM\API\Company_Controller',
             '\WeDevs\ERP\HRM\API\V2\Employees_Controller',
+            '\WeDevs\ERP\HRM\API\V2\Departments_Controller',
+            '\WeDevs\ERP\HRM\API\V2\Designations_Controller',
+            '\WeDevs\ERP\HRM\API\V2\Birthdays_Controller',
+            '\WeDevs\ERP\HRM\API\V2\HRM_Reports_Controller',
+            '\WeDevs\ERP\HRM\API\V2\Leave_Entitlements_Controller',
+            '\WeDevs\ERP\HRM\API\V2\Leave_Holidays_Controller',
+            '\WeDevs\ERP\HRM\API\V2\Leave_Policies_Controller',
+            '\WeDevs\ERP\HRM\API\V2\Leave_Requests_Controller',
+            '\WeDevs\ERP\HRM\API\V2\Announcements_Controller',
+            '\WeDevs\ERP\HRM\API\V2\Company_Controller',
             '\WeDevs\ERP\HRM\API\V2\Overview_Controller',
         ];
         $hrm_controller = apply_filters( 'erp_hrm_rest_api_controllers', $hrm_controller );
