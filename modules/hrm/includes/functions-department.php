@@ -61,8 +61,8 @@ function erp_hr_create_department( $args = [] ) {
  */
 function erp_hr_get_departments( $args = [] ) {
     $defaults = [
-        'number'     => 20,
-        'offset'     => 0,
+        'per_page'   => 100,
+        'page'       => 1,
         'orderby'    => 'id',
         'order'      => 'asc',
         'no_object'  => false,
