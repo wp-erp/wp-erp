@@ -2,6 +2,9 @@
 
 namespace WeDevs\ERP\HRM\API\V2;
 
+use WeDevs\ERP\HRM\Models\Employee;
+use WeDevs\ERP\HRM\Models\Department;
+use WeDevs\ERP\HRM\Models\Designation;
 use DateTime;
 use WP_REST_Controller;
 use WP_REST_Request;
@@ -53,7 +56,21 @@ class Overview_Controller extends WP_REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_hrm_overview_all_counts( WP_REST_Request $request ) {
-        return $request->get_params();
+
+        $employees    = Employee::where( 'status', 'active' )->count();
+        $departments  = Department::count();
+        $designations = Designation::count();
+
+        $items = array(
+            'employees'    => $employees,
+            'departments'  => $departments,
+            'designations' => $designations,
+        );
+
+        $response = rest_ensure_response( $items );
+
+        return $response;
+
     }
 
 
