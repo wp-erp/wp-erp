@@ -1112,6 +1112,26 @@ class Employees_Controller extends WP_REST_Controller {
     }
 
     /**
+     * Get employee's experience by id
+     *
+     * @param \WP_REST_Request $request
+     *
+     * @return mixed|object|\WP_Error|\WP_REST_Response
+     */
+    public function get_experience( \WP_REST_Request $request ) {
+        $employee_id = (int) $request['user_id'];
+        $exp_id      = (int) $request['id'];
+        $experience = new \WeDevs\ERP\HRM\Models\Work_Experience();
+        $items = $experience
+            ->where( 'employee_id', $employee_id )
+            ->where( 'id', $exp_id )
+            ->get()
+            ->first();
+        $response    = rest_ensure_response( $items );
+        return $response;
+    }
+
+    /**
      * Get a collection of employee's experiences
      *
      * @return mixed|object|WP_Error|WP_REST_Response
