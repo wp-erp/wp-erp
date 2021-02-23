@@ -106,10 +106,25 @@ class Leave_Policies_Controller extends WP_REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_policies( $request ) {
-        $args = [
-            'number' => $request['per_page'],
-            'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
-        ];
+        $per_page       = $request->get_param( 'per_page' );
+        $page           = $request->get_param( 'page' );
+        $status         = $request->get_param( 'status' );
+        $filter_year    = $request->get_param( 'filter_year' );
+        $orderby        = $request->get_param( 'orderby' );
+        $order          = $request->get_param( 'order' );
+        $search         = $request->get_param( 's' );
+
+
+        // only ncessary because we have sample data
+        $current_f_year = erp_hr_get_financial_year_from_date();
+        $f_year = null !== $current_f_year ? $current_f_year->id : '';
+        $args = array(
+            'offset' => ( $per_page * ( $page - 1 ) ),
+            'number' => $per_page,
+            'f_year'  => isset( $filter_year ) ? $filter_year : $f_year,
+            'orderby' => isset( $orderby ) ? $orderby : 'created_at',
+            'order'   => isset( $order ) ? $order : 'DESC',
+        );
 
         $items       = erp_hr_leave_get_policies( $args );
         $total_items = erp_hr_count_leave_policies();
