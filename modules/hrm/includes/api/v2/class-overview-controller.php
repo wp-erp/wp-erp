@@ -133,5 +133,5 @@ class Overview_Controller extends WP_REST_Controller {
 
         return $response;
     }
-    
+
 }
