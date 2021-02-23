@@ -351,7 +351,7 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no, $c
         // insert data into {$wpdb->prefix}erp_acct_tax_agency_details
         foreach ( $tax_agency_details as $agency_id => $tax_agency_detail ) {
             if ( $contra ) {
-                $debit  = $invoice_data['tax'];
+                $debit  = $tax_agency_detail;
                 $credit = 0;
             } else {
                 $debit  = 0;
