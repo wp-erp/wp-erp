@@ -174,7 +174,7 @@ export default {
                 return __('Payment', 'erp');
             }
     
-            return getInvoiceType();
+            return this.getInvoiceType();
         }, 
 
         printPopup() {
