@@ -64,6 +64,18 @@ class Leave_Requests_Controller extends WP_REST_Controller {
             ],
             'schema' => [ $this, 'get_public_item_schema' ],
         ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/action', [
+            [
+                'methods'             => WP_REST_Server::CREATABLE,
+                'callback'            => [ $this, 'leave_request_action' ],
+                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_list_employee' );
+                },
+            ],
+            'schema' => [ $this, 'get_public_item_schema' ],
+        ] );
     }
 
     /**
@@ -137,6 +149,46 @@ class Leave_Requests_Controller extends WP_REST_Controller {
         $response = rest_ensure_response( $item );
 
         return $response;
+    }
+
+    /**
+     * Approve OR Reject leave requests
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Response
+     */
+    public function leave_request_action( \WP_REST_Request $request ) {
+
+        $id         = $request->get_param( 'id' );
+        $reason     = $request->get_param( 'reason' );
+        $type       = $request->get_param( 'type' );
+
+        if ( isset( $id ) && ! empty( $id ) ) {
+            switch ( $type ) {
+                case 'approved':
+                    $status = 1;
+                    break;
+
+                case 'pending':
+                    $status = 2;
+                    break;
+
+                case 'rejected':
+                    $status = 3;
+                    break;
+
+                case 'forwarded':
+                    $status = 4;
+                    break;
+
+                default:
+                    $status = 3;
+                    break;
+            }
+            $response = erp_hr_leave_request_update_status( $id, $status, $reason );
+            return rest_ensure_response( $response );
+        }
     }
 
     /**
