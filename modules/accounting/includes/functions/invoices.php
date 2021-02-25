@@ -284,6 +284,7 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no, $c
     $estimate_type      = 1;
     $draft              = 1;
     $tax_agency_details = [];
+    $tax_by_agency      = [];
 
     $items = $invoice_data['line_items'];
 
@@ -345,19 +346,22 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no, $c
                 );
             }
         }
+
+        $invoice_tax_agency = erp_acct_get_invoice_tax_details( $invoice_data['voucher_no'], $item['product_id'] );
+
+        if ( ! empty( $invoice_tax_agency ) ) {
+            foreach ( $invoice_tax_agency as $inv_tax_ag ) {
+                if ( array_key_exists( $inv_tax_ag['agency_id'], $tax_by_agency ) ) {
+                    $tax_by_agency[ $inv_tax_ag['agency_id'] ] += (float) $inv_tax_ag['tax_amount'];
+                } else {
+                    $tax_by_agency[ $inv_tax_ag['agency_id'] ] = (float) $inv_tax_ag['tax_amount'];
+                }
+            }
+        }
     }
 
-    if ( ! empty( $tax_agency_details ) ) {
-        // insert data into {$wpdb->prefix}erp_acct_tax_agency_details
+    if ( ! empty( $tax_agency_details ) && ! $contra ) {
         foreach ( $tax_agency_details as $agency_id => $tax_agency_detail ) {
-            if ( $contra ) {
-                $debit  = $tax_agency_detail;
-                $credit = 0;
-            } else {
-                $debit  = 0;
-                $credit = $tax_agency_detail;
-            }
-
             $wpdb->insert(
                 $wpdb->prefix . 'erp_acct_tax_agency_details',
                 [
@@ -365,8 +369,26 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no, $c
                     'trn_no'      => $voucher_no,
                     'trn_date'    => $invoice_data['trn_date'],
                     'particulars' => 'sales',
-                    'debit'       => $debit,
-                    'credit'      => $credit,
+                    'debit'       => 0,
+                    'credit'      => $tax_agency_detail,
+                    'created_at'  => $invoice_data['created_at'],
+                    'created_by'  => $invoice_data['created_by'],
+                ]
+            );
+        }
+    }
+
+    if ( ! empty( $tax_by_agency ) && $contra ) {
+        foreach( $tax_by_agency as $agency => $tax ) {
+            $wpdb->insert(
+                $wpdb->prefix . 'erp_acct_tax_agency_details',
+                [
+                    'agency_id'   => $agency,
+                    'trn_no'      => $voucher_no,
+                    'trn_date'    => $invoice_data['trn_date'],
+                    'particulars' => 'sales',
+                    'debit'       => $tax,
+                    'credit'      => 0,
                     'created_at'  => $invoice_data['created_at'],
                     'created_by'  => $invoice_data['created_by'],
                 ]
@@ -1076,9 +1098,9 @@ function erp_acct_get_invoice_tax_details( $invoice_no, $product_id ) {
 
     $tax_rates = $wpdb->get_results(
         $wpdb->prepare(
-            "SELECT inv_tax.agency_id, inv_tax.tax_rate
+            "SELECT inv_tax.agency_id, inv_tax.tax_rate, inv_tax.tax_amount
             FROM {$wpdb->prefix}erp_acct_invoice_details AS inv
-            RIGHT JOIN {$wpdb->prefix}erp_acct_invoice_details_tax AS inv_tax
+            INNER JOIN {$wpdb->prefix}erp_acct_invoice_details_tax AS inv_tax
             ON inv.id = inv_tax.invoice_details_id
             WHERE inv.trn_no = %d
             AND inv.product_id = %d",
