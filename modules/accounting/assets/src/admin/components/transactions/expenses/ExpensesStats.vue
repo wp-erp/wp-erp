@@ -103,7 +103,7 @@ export default {
                 response.data.forEach(element => {
                     if (typeof element === 'object' && element !== null) {
                         this.chartStatus.labels.push(element.type_name);
-                        this.chartStatus.values.push(element.sub_total);
+                        this.chartStatus.values.push(parseInt(element.sub_total));
                     }
                 });
             });
