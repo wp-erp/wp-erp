@@ -300,6 +300,7 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no, $c
                 'unit_price'     => $item['unit_price'],
                 'discount'       => $item['discount'],
                 'tax'            => $item['tax'],
+                'tax_cat_id'     => $item['tax_cat_id'],
                 'item_total'     => $sub_total,
                 'ecommerce_type' => ! empty( $item['ecommerce_type'] ) ? $item['ecommerce_type'] : null,
                 'created_at'     => $invoice_data['created_at'],

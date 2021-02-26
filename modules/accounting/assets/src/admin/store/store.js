@@ -5,6 +5,7 @@ import expense from './modules/expense';
 import purchase from './modules/purchase';
 import spinner from './modules/spinner';
 import combo from './modules/combo-btn';
+import common from './modules/common';
 
 Vue.use(Vuex);
 
@@ -16,7 +17,8 @@ export default new Vuex.Store({
         expense,
         purchase,
         spinner,
-        combo
+        combo,
+        common
     },
     strict: debug,
     plugins: []

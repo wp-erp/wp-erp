@@ -8,7 +8,7 @@ import VueSweetalert2 from 'vue-sweetalert2';
 import commonMixins from './mixins/common';
 import i18nMixin from './mixins/i18n';
 import Loading from 'vue-loading-overlay';
-import HTTP from 'admin/http';
+import HTTP from 'http';
 import FileUpload from 'admin/components/base/FileUpload.vue';
 import ShowErrors from 'admin/components/base/ShowErrors.vue';
 import SubmitButton from 'admin/components/base/SubmitButton.vue';
@@ -23,7 +23,7 @@ import DynamicTrnLoader from 'admin/components/transactions/DynamicTrnLoader.vue
 import VueClipboards from 'vue-clipboards';
 import { createHooks } from '@wordpress/hooks';
 import { clickOutside } from './directive/directives';
-
+import Vuex from 'vuex';
 // global acct var
 window.acct = {
     libs: {}
@@ -31,6 +31,7 @@ window.acct = {
 
 // assign libs to window for global use
 window.acct.libs['Vue']              = Vue;
+window.acct.libs['Vuex']              = Vue;
 window.acct.libs['Datepicker']       = Datepicker;
 window.acct.libs['ListTable']        = ListTable;
 window.acct.libs['Dropdown']         = Dropdown;
