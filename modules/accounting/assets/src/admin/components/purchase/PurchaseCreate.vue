@@ -200,7 +200,7 @@
                     { id: 'draft', text: 'Save as Draft' }
                 ],
                 updateButtons: [
-                    { id: 'update', text: 'Update Purchase' },
+                    { id: 'update', text: 'Update' },
                     // {id: 'send_update', text: 'Update and Send'},
                     { id: 'new_update', text: 'Update and New' },
                     { id: 'draft', text: 'Save as Draft' }
