@@ -116,9 +116,6 @@ function erp_acct_get_account_receivable( $args ) {
 
     $data = $wpdb->get_var( $wpdb->prepare( $sql, $args['start_date'], $args['end_date'] ) );
 
-    error_log( 'data: ' . print_r( $data, true ) );
-
-
     return erp_acct_people_calc_with_opening_balance( $args, $data, 'receivable', $sql );
 }
 
