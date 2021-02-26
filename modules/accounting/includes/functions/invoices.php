@@ -348,16 +348,6 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no, $c
         }
 
         $invoice_tax_agency = erp_acct_get_invoice_tax_details( $invoice_data['voucher_no'], $item['product_id'] );
-
-        if ( ! empty( $invoice_tax_agency ) ) {
-            foreach ( $invoice_tax_agency as $inv_tax_ag ) {
-                if ( array_key_exists( $inv_tax_ag['agency_id'], $tax_by_agency ) ) {
-                    $tax_by_agency[ $inv_tax_ag['agency_id'] ] += (float) $inv_tax_ag['tax_amount'];
-                } else {
-                    $tax_by_agency[ $inv_tax_ag['agency_id'] ] = (float) $inv_tax_ag['tax_amount'];
-                }
-            }
-        }
     }
 
     if ( ! empty( $tax_agency_details ) && ! $contra ) {
@@ -375,6 +365,16 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no, $c
                     'created_by'  => $invoice_data['created_by'],
                 ]
             );
+        }
+    }
+
+    if ( ! empty( $invoice_tax_agency ) ) {
+        foreach ( $invoice_tax_agency as $inv_tax_ag ) {
+            if ( array_key_exists( $inv_tax_ag['agency_id'], $tax_by_agency ) ) {
+                $tax_by_agency[ $inv_tax_ag['agency_id'] ] += (float) $inv_tax_ag['tax_amount'];
+            } else {
+                $tax_by_agency[ $inv_tax_ag['agency_id'] ] = (float) $inv_tax_ag['tax_amount'];
+            }
         }
     }
 
