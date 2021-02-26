@@ -1,32 +1,35 @@
 <?php
 
-namespace WeDevs\ERP\HRM\API;
+namespace WeDevs\ERP\HRM\API\V2;
 
 use Exception;
-use WeDevs\ERP\API\REST_Controller;
 use WeDevs\ERP\HRM\Employee;
 use WeDevs\ERP\HRM\Models\Department;
 use WeDevs\ERP\HRM\Models\Designation;
+use WeDevs\ERP\Framework\Traits\Api;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
+use WP_REST_Controller;
 
-class Employees_Controller extends REST_Controller {
+class Training_Controller extends WP_REST_Controller {
+
+    use Api;
 
     /**
      * Endpoint namespace.
      *
      * @var string
      */
-    protected $namespace = 'erp/v1';
+    protected $namespace = 'erp/v2';
 
     /**
      * Route base.
      *
      * @var string
      */
-    protected $rest_base = 'hrm/employees';
+    protected $rest_base = 'hrm/payroll';
 
     /**
      * Register the routes for the objects of the controller.
@@ -52,18 +55,13 @@ class Employees_Controller extends REST_Controller {
             'schema' => [ $this, 'get_public_item_schema' ],
         ] );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/bulk', [
-            [
-                'methods'             => WP_REST_Server::CREATABLE,
-                'callback'            => [ $this, 'create_employees' ],
-                'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_create_employee' );
-                },
-            ],
-            'schema' => [ $this, 'get_public_item_schema' ],
-        ] );
-
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)', [
+            'args' => [
+                'user_id' => [
+                    'description' => __( 'Unique identifier for the object.', 'erp-pro' ),
+                    'type'        => 'integer',
+                ],
+            ],
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_employee' ],
@@ -92,7 +90,27 @@ class Employees_Controller extends REST_Controller {
             'schema' => [ $this, 'get_public_item_schema' ],
         ] );
 
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/bulk', [
+            [
+                'methods'             => WP_REST_Server::CREATABLE,
+                'callback'            => [ $this, 'create_employees' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_create_employee' );
+                },
+                'args'                => [
+                    'context'  => $this->get_context_param(),
+                ],
+            ],
+            'schema' => [ $this, 'get_public_item_schema' ],
+        ] );
+
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/experiences', [
+            'args' => [
+                'user_id' => [
+                    'description' => __( 'Unique identifier for the object.', 'erp-pro' ),
+                    'type'        => 'integer',
+                ],
+            ],
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_experiences' ],
@@ -103,6 +121,53 @@ class Employees_Controller extends REST_Controller {
             [
                 'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => [ $this, 'create_experience' ],
+                'args'                => [
+                    'company_name'  => [
+                        'description' => __( 'Company name for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => true,
+                    ],
+                    'job_title'  => [
+                        'description' => __( 'Job title for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => true,
+                    ],
+                    'from'  => [
+                        'description' => __( 'From date for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => true,
+                    ],
+                    'to'  => [
+                        'description' => __( 'To date for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => true,
+                    ],
+                    'description'  => [
+                        'description' => __( 'Description for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => false,
+                    ],
+                ],
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_create_experience', $request['user_id'] );
                 },
@@ -110,6 +175,16 @@ class Employees_Controller extends REST_Controller {
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/experiences' . '/(?P<id>[\d]+)', [
+            'args' => [
+                'user_id' => [
+                    'description' => __( 'Unique identifier for the object.', 'erp-pro' ),
+                    'type'        => 'integer',
+                ],
+                'id' => [
+                    'description' => __( 'Unique identifier for the object.', 'erp-pro' ),
+                    'type'        => 'integer',
+                ],
+            ],
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_experience' ],
@@ -120,6 +195,53 @@ class Employees_Controller extends REST_Controller {
             [
                 'methods'             => WP_REST_Server::EDITABLE,
                 'callback'            => [ $this, 'update_experience' ],
+                'args'                => [
+                    'company_name'  => [
+                        'description' => __( 'Company name for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => true,
+                    ],
+                    'job_title'  => [
+                        'description' => __( 'Job title for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => true,
+                    ],
+                    'from'  => [
+                        'description' => __( 'From date for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => true,
+                    ],
+                    'to'  => [
+                        'description' => __( 'To date for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => true,
+                    ],
+                    'description'  => [
+                        'description' => __( 'Description for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => false,
+                    ],
+                ],
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_edit_experience', $request['user_id'] );
                 },
@@ -135,6 +257,12 @@ class Employees_Controller extends REST_Controller {
 
         //education
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/educations', [
+            'args' => [
+                'user_id' => [
+                    'description' => __( 'Unique identifier for the object.', 'erp-pro' ),
+                    'type'        => 'integer',
+                ],
+            ],
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_educations' ],
@@ -145,6 +273,62 @@ class Employees_Controller extends REST_Controller {
             [
                 'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => [ $this, 'create_education' ],
+                'args'                => [
+                    'school'  => [
+                        'description' => __( 'School name for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => true,
+                    ],
+                    'degree'  => [
+                        'description' => __( 'Degree name for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => true,
+                    ],
+                    'field'  => [
+                        'description' => __( 'Field name for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => true,
+                    ],
+                    'finished'  => [
+                        'description' => __( 'Finished name for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => true,
+                    ],
+                    'notes'  => [
+                        'description' => __( 'Notes for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => false,
+                    ],
+                    'interest'  => [
+                        'description' => __( 'Interest for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => false,
+                    ],
+                ],
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_create_education', $request['user_id'] );
                 },
@@ -152,9 +336,75 @@ class Employees_Controller extends REST_Controller {
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/educations' . '/(?P<id>[\d]+)', [
+            'args' => [
+                'user_id' => [
+                    'description' => __( 'Unique identifier for the object.', 'erp-pro' ),
+                    'type'        => 'integer',
+                ],
+                'id' => [
+                    'description' => __( 'Unique identifier for the object.', 'erp-pro' ),
+                    'type'        => 'integer',
+                ],
+            ],
             [
                 'methods'             => WP_REST_Server::EDITABLE,
                 'callback'            => [ $this, 'update_education' ],
+                'args'                => [
+                    'school'  => [
+                        'description' => __( 'School name for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => true,
+                    ],
+                    'degree'  => [
+                        'description' => __( 'Degree name for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => true,
+                    ],
+                    'field'  => [
+                        'description' => __( 'Field name for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => true,
+                    ],
+                    'finished'  => [
+                        'description' => __( 'Finished name for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => true,
+                    ],
+                    'notes'  => [
+                        'description' => __( 'Notes for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => false,
+                    ],
+                    'interest'  => [
+                        'description' => __( 'Interest for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => false,
+                    ],
+                ],
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_edit_education', $request['user_id'] );
                 },
@@ -170,6 +420,12 @@ class Employees_Controller extends REST_Controller {
 
         //dependents
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/dependents', [
+            'args' => [
+                'user_id' => [
+                    'description' => __( 'Unique identifier for the object.', 'erp-pro' ),
+                    'type'        => 'integer',
+                ],
+            ],
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_dependents' ],
@@ -180,6 +436,35 @@ class Employees_Controller extends REST_Controller {
             [
                 'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => [ $this, 'create_dependent' ],
+                'args'                => [
+                    'name'  => [
+                        'description' => __( 'Name for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => true,
+                    ],
+                    'relation'  => [
+                        'description' => __( 'Relation for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => true,
+                    ],
+                    'dob'  => [
+                        'description' => __( 'DOB for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => false,
+                    ],
+                ],
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_create_dependent', $request['user_id'] );
                 },
@@ -187,9 +472,48 @@ class Employees_Controller extends REST_Controller {
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/dependents' . '/(?P<id>[\d]+)', [
+            'args' => [
+                'user_id' => [
+                    'description' => __( 'Unique identifier for the object.', 'erp-pro' ),
+                    'type'        => 'integer',
+                ],
+                'id' => [
+                    'description' => __( 'Unique identifier for the object.', 'erp-pro' ),
+                    'type'        => 'integer',
+                ],
+            ],
             [
                 'methods'             => WP_REST_Server::EDITABLE,
                 'callback'            => [ $this, 'update_dependent' ],
+                'args'                => [
+                    'name'  => [
+                        'description' => __( 'Name for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => true,
+                    ],
+                    'relation'  => [
+                        'description' => __( 'Relation for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => true,
+                    ],
+                    'dob'  => [
+                        'description' => __( 'DOB for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => false,
+                    ],
+                ],
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_edit_dependent', $request['user_id'] );
                 },
@@ -205,6 +529,12 @@ class Employees_Controller extends REST_Controller {
 
         //job histories
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/job_histories', [
+            'args' => [
+                'user_id' => [
+                    'description' => __( 'Unique identifier for the object.', 'erp-pro' ),
+                    'type'        => 'integer',
+                ],
+            ],
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_histories' ],
@@ -222,6 +552,16 @@ class Employees_Controller extends REST_Controller {
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/job_histories' . '/(?P<id>[\d]+)', [
+            'args' => [
+                'user_id' => [
+                    'description' => __( 'Unique identifier for the object.', 'erp-pro' ),
+                    'type'        => 'integer',
+                ],
+                'id' => [
+                    'description' => __( 'Unique identifier for the object.', 'erp-pro' ),
+                    'type'        => 'integer',
+                ],
+            ],
             [
                 'methods'             => WP_REST_Server::DELETABLE,
                 'callback'            => [ $this, 'delete_history' ],
@@ -234,6 +574,12 @@ class Employees_Controller extends REST_Controller {
         //performances
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/performances', [
+            'args' => [
+                'user_id' => [
+                    'description' => __( 'Unique identifier for the object.', 'erp-pro' ),
+                    'type'        => 'integer',
+                ],
+            ],
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_performances' ],
@@ -244,6 +590,134 @@ class Employees_Controller extends REST_Controller {
             [
                 'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => [ $this, 'create_performance' ],
+                'args'                => [
+                    'reporting_to'  => [
+                        'description' => __( 'Reporting to for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => false,
+                    ],
+                    'job_knowledge'  => [
+                        'description' => __( 'Job knowledge name for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => false,
+                    ],
+                    'work_quality'  => [
+                        'description' => __( 'Work quality for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => false,
+                    ],
+                    'attendance'  => [
+                        'description' => __( 'Attendance for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => false,
+                    ],
+                    'communication'  => [
+                        'description' => __( 'Communication for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => false,
+                    ],
+                    'dependablity'  => [
+                        'description' => __( 'Dependablity for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => false,
+                    ],
+                    'reviewer'  => [
+                        'description' => __( 'Reviewer for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => false,
+                    ],
+                    'comments'  => [
+                        'description' => __( 'Comments for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => false,
+                    ],
+                    'completion_date'  => [
+                        'description' => __( 'Completion date for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => false,
+                    ],
+                    'goal_description'  => [
+                        'description' => __( 'Goal description for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => false,
+                    ],
+                    'employee_assessment'  => [
+                        'description' => __( 'Employee assessment for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => false,
+                    ],
+                    'supervisor'  => [
+                        'description' => __( 'Supervisor for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => false,
+                    ],
+                    'type'  => [
+                        'description' => __( 'Type for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => false,
+                    ],
+                    'performance_date'  => [
+                        'description' => __( 'Performance date for the resource.' ),
+                        'type'        => 'string',
+                        'context'     => [ 'edit' ],
+                        'arg_options' => [
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'required'    => false,
+                    ],
+                ],
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_manage_jobinfo' );
                 },
@@ -251,6 +725,16 @@ class Employees_Controller extends REST_Controller {
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/performances' . '/(?P<id>[\d]+)', [
+            'args' => [
+                'user_id' => [
+                    'description' => __( 'Unique identifier for the object.', 'erp-pro' ),
+                    'type'        => 'integer',
+                ],
+                'id' => [
+                    'description' => __( 'Unique identifier for the object.', 'erp-pro' ),
+                    'type'        => 'integer',
+                ],
+            ],
             [
                 'methods'             => WP_REST_Server::DELETABLE,
                 'callback'            => [ $this, 'delete_performance' ],
@@ -262,6 +746,12 @@ class Employees_Controller extends REST_Controller {
 
         //events
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/events', [
+            'args' => [
+                'user_id' => [
+                    'description' => __( 'Unique identifier for the object.', 'erp-pro' ),
+                    'type'        => 'integer',
+                ],
+            ],
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_events' ],
@@ -273,6 +763,12 @@ class Employees_Controller extends REST_Controller {
 
         //terminate
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/terminate', [
+            'args' => [
+                'user_id' => [
+                    'description' => __( 'Unique identifier for the object.', 'erp-pro' ),
+                    'type'        => 'integer',
+                ],
+            ],
             [
                 'methods'             => WP_REST_Server::EDITABLE,
                 'callback'            => [ $this, 'create_terminate' ],
@@ -284,6 +780,12 @@ class Employees_Controller extends REST_Controller {
 
         //announcements
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/announcements', [
+            'args' => [
+                'user_id' => [
+                    'description' => __( 'Unique identifier for the object.', 'erp-pro' ),
+                    'type'        => 'integer',
+                ],
+            ],
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_announcements' ],
@@ -294,6 +796,12 @@ class Employees_Controller extends REST_Controller {
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/announcements', [
+            'args' => [
+                'user_id' => [
+                    'description' => __( 'Unique identifier for the object.', 'erp-pro' ),
+                    'type'        => 'integer',
+                ],
+            ],
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_announcements' ],
@@ -313,6 +821,12 @@ class Employees_Controller extends REST_Controller {
 
         //policies
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/policies', [
+            'args' => [
+                'user_id' => [
+                    'description' => __( 'Unique identifier for the object.', 'erp-pro' ),
+                    'type'        => 'integer',
+                ],
+            ],
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_policies' ],
@@ -323,6 +837,12 @@ class Employees_Controller extends REST_Controller {
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/leaves', [
+            'args' => [
+                'user_id' => [
+                    'description' => __( 'Unique identifier for the object.', 'erp-pro' ),
+                    'type'        => 'integer',
+                ],
+            ],
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_leaves' ],
@@ -340,6 +860,12 @@ class Employees_Controller extends REST_Controller {
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/notes', [
+            'args' => [
+                'user_id' => [
+                    'description' => __( 'Unique identifier for the object.', 'erp-pro' ),
+                    'type'        => 'integer',
+                ],
+            ],
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_notes' ],
@@ -356,6 +882,16 @@ class Employees_Controller extends REST_Controller {
             ],
         ] );
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/notes' . '/(?P<note_id>[\d]+)', [
+            'args' => [
+                'user_id' => [
+                    'description' => __( 'Unique identifier for the object.', 'erp-pro' ),
+                    'type'        => 'integer',
+                ],
+                'note_id' => [
+                    'description' => __( 'Unique identifier for the object.', 'erp-pro' ),
+                    'type'        => 'integer',
+                ],
+            ],
             [
                 'methods'             => WP_REST_Server::DELETABLE,
                 'callback'            => [ $this, 'delete_note' ],
@@ -367,6 +903,12 @@ class Employees_Controller extends REST_Controller {
 
         //roles
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/roles', [
+            'args' => [
+                'user_id' => [
+                    'description' => __( 'Unique identifier for the object.', 'erp-pro' ),
+                    'type'        => 'integer',
+                ],
+            ],
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_roles' ],
@@ -403,57 +945,24 @@ class Employees_Controller extends REST_Controller {
     }
 
     /**
-     * Upload employee photo
-     *
-     * @return array
-     */
-    public function upload_photo( WP_REST_Request $request ) {
-        $file = isset( $_FILES['image'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_FILES['image'] ) ) : [];
-
-        if ( ! $file ) {
-            return;
-        }
-
-        require_once ABSPATH . 'wp-admin/includes/image.php';
-        require_once ABSPATH . 'wp-admin/includes/file.php';
-        require_once ABSPATH . 'wp-admin/includes/media.php';
-
-        $attachment_id =  media_handle_upload( 'image', 0 );
-
-        $response = [
-            'photo_id'  => $attachment_id,
-        ];
-
-        return $response;
-    }
-
-    /**
-     * Update Photo
-     *
-     * @return bool
-     */
-    public function update_photo( WP_REST_Request $request ) {
-        $photo_id   = isset( $request['photo_id'] ) ? $request['photo_id'] : 0;
-        $user_id    = isset( $request['user_id'] ) ? $request['user_id'] : 0;
-
-        update_user_meta( $user_id, 'photo_id', $photo_id );
-    }
-
-    /**
      * Get a collection of employees
      *
      * @return mixed|object|WP_REST_Response
      */
     public function get_employees( WP_REST_Request $request ) {
         $args = [
-            'number'      => $request['per_page'],
-            'offset'      => ( $request['per_page'] * ( $request['page'] - 1 ) ),
-            'status'      => ( $request['status'] ) ? $request['status'] : 'active',
-            'department'  => ( $request['department'] ) ? $request['department'] : '-1',
-            'designation' => ( $request['designation'] ) ? $request['designation'] : '-1',
-            'location'    => ( $request['location'] ) ? $request['location'] : '-1',
-            'type'        => ( $request['type'] ) ? $request['type'] : '-1',
-            's'           => ( $request['s'] ) ? $request['s'] : '',
+            'number'            => $request['per_page'],
+            'offset'            => ( $request['per_page'] * ( $request['page'] - 1 ) ),
+            'status'            => ( $request['status'] ) ? $request['status'] : 'active',
+            'department'        => ( $request['department'] ) ? $request['department'] : '-1',
+            'designation'       => ( $request['designation'] ) ? $request['designation'] : '-1',
+            'location'          => ( $request['location'] ) ? $request['location'] : '-1',
+            'gender'            => ( $request['gender'] ) ? $request['gender'] : '-1',
+            'marital_status'    => ( $request['marital_status'] ) ? $request['marital_status'] : '-1',
+            'orderby'           => ( $request['orderby'] ) ? $request['orderby'] : 'hiring_date',
+            'order'             => ( $request['order'] ) ? $request['order'] : 'DESC',
+            'type'              => ( $request['type'] ) ? $request['type'] : '-1',
+            's'                 => ( $request['s'] ) ? $request['s'] : '',
         ];
 
         $items = erp_hr_get_employees( $args );
@@ -471,6 +980,7 @@ class Employees_Controller extends REST_Controller {
         $response = rest_ensure_response( $formatted_items );
         $response = $this->format_collection_response( $response, $request, (int) $total_items );
 
+        $response->set_status( 200 );
         return $response;
     }
 
@@ -491,29 +1001,6 @@ class Employees_Controller extends REST_Controller {
         $response = rest_ensure_response( $item );
 
         return $response;
-    }
-
-    /**
-     * Create employees
-     *
-     * @param $request
-     *
-     * @return $this|int|WP_Error|WP_REST_Response
-     */
-    public function create_employees( WP_REST_Request $request ) {
-        $employees = json_decode( $request->get_body(), true );
-
-        foreach ( $employees as $employee ) {
-            $item_data = $this->prepare_item_for_database( $employee );
-            $item      = new Employee( null );
-            $created   = $item->create_employee( $item_data );
-
-            if ( is_wp_error( $created ) ) {
-                return $created;
-            }
-        }
-
-        return new WP_REST_Response( true, 201 );
     }
 
     /**
@@ -551,6 +1038,29 @@ class Employees_Controller extends REST_Controller {
         $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $employee->get_user_id() ) ) );
 
         return $response;
+    }
+
+    /**
+     * Create employees
+     *
+     * @param $request
+     *
+     * @return $this|int|WP_Error|WP_REST_Response
+     */
+    public function create_employees( WP_REST_Request $request ) {
+        $employees = json_decode( $request->get_body(), true );
+
+        foreach ( $employees as $employee ) {
+            $item_data = $this->prepare_item_for_database( $employee );
+            $item      = new Employee( null );
+            $created   = $item->create_employee( $item_data );
+
+            if ( is_wp_error( $created ) ) {
+                return $created;
+            }
+        }
+
+        return new WP_REST_Response( true, 201 );
     }
 
     /**
@@ -1460,13 +1970,50 @@ class Employees_Controller extends REST_Controller {
     }
 
     /**
+     * Upload employee photo
+     *
+     * @return array
+     */
+    public function upload_photo( WP_REST_Request $request ) {
+        $file = isset( $_FILES['image'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_FILES['image'] ) ) : [];
+
+        if ( ! $file ) {
+            return;
+        }
+
+        require_once ABSPATH . 'wp-admin/includes/image.php';
+        require_once ABSPATH . 'wp-admin/includes/file.php';
+        require_once ABSPATH . 'wp-admin/includes/media.php';
+
+        $attachment_id =  media_handle_upload( 'image', 0 );
+
+        $response = [
+            'photo_id'  => $attachment_id,
+        ];
+
+        return $response;
+    }
+
+    /**
+     * Update Photo
+     *
+     * @return bool
+     */
+    public function update_photo( WP_REST_Request $request ) {
+        $photo_id   = isset( $request['photo_id'] ) ? $request['photo_id'] : 0;
+        $user_id    = isset( $request['user_id'] ) ? $request['user_id'] : 0;
+
+        update_user_meta( $user_id, 'photo_id', $photo_id );
+    }
+
+    /**
      * Prepare a single user output for response
      *
      * @param array $additional_fields
      *
      * @return mixed|object|WP_REST_Response
      */
-    public function prepare_item_for_response( Employee $item, WP_REST_Request $request = null, $additional_fields = [] ) {
+    public function prepare_item_for_response( $item, $request = null, $additional_fields = [] ) {
         $default = [
             'user_id'         => '',
             'employee_id'     => '',
@@ -1709,7 +2256,7 @@ class Employees_Controller extends REST_Controller {
     /**
      * Get the query params for collections.
      *
-     * @return array
+     * @return array Query parameters for the collection.
      */
     public function get_collection_params() {
         return [
@@ -1731,12 +2278,324 @@ class Employees_Controller extends REST_Controller {
                 'sanitize_callback' => 'absint',
                 'validate_callback' => 'rest_validate_request_arg',
             ],
-            'search'   => [
+            's'   => [
                 'description'       => __( 'Limit results to those matching a string.' ),
                 'type'              => 'string',
                 'sanitize_callback' => 'sanitize_text_field',
                 'validate_callback' => 'rest_validate_request_arg',
             ],
+            'status'   => [
+                'description'       => __( 'Items to be returned with specific status' ),
+                'type'              => 'string',
+                'default'           => 'active',
+                'sanitize_callback' => 'sanitize_text_field',
+                'validate_callback' => 'rest_validate_request_arg',
+            ],
+            'department'   => [
+                'description'       => __( 'Items to be returned with specific department' ),
+                'type'              => 'integer',
+                'default'           => -1,
+                'sanitize_callback' => 'sanitize_text_field',
+                'validate_callback' => 'rest_validate_request_arg',
+            ],
+            'designation'   => [
+                'description'       => __( 'Items to be returned with specific designation' ),
+                'type'              => 'integer',
+                'default'           => -1,
+                'sanitize_callback' => 'sanitize_text_field',
+                'validate_callback' => 'rest_validate_request_arg',
+            ],
+            'location'   => [
+                'description'       => __( 'Items to be returned with specific location' ),
+                'type'              => 'integer',
+                'default'           => -1,
+                'sanitize_callback' => 'sanitize_text_field',
+                'validate_callback' => 'rest_validate_request_arg',
+            ],
+            'gender'   => [
+                'description'       => __( 'Items to be returned with specific gender' ),
+                'type'              => 'string',
+                'default'           => '-1',
+                'sanitize_callback' => 'sanitize_text_field',
+                'validate_callback' => 'rest_validate_request_arg',
+            ],
+            'marital_status'   => [
+                'description'       => __( 'Items to be returned with specific marital status' ),
+                'type'              => 'string',
+                'default'           => '-1',
+                'sanitize_callback' => 'sanitize_text_field',
+                'validate_callback' => 'rest_validate_request_arg',
+            ],
+            'orderby'   => [
+                'description'       => __( 'Items to be returned with specific field name' ),
+                'type'              => 'string',
+                'default'           => 'hiring_date',
+                'sanitize_callback' => 'sanitize_text_field',
+                'validate_callback' => 'rest_validate_request_arg',
+            ],
+            'order'   => [
+                'description'       => __( 'Items to be returned either asc OR desc' ),
+                'type'              => 'string',
+                'default'           => 'DESC',
+                'sanitize_callback' => 'sanitize_text_field',
+                'validate_callback' => 'rest_validate_request_arg',
+            ],
+            'type'   => [
+                'description'       => __( 'Items to be returned with specific type' ),
+                'type'              => 'string',
+                'default'           => '-1',
+                'sanitize_callback' => 'sanitize_text_field',
+                'validate_callback' => 'rest_validate_request_arg',
+            ],
         ];
+    }
+
+    /**
+     * Get the Employee schema, conforming to JSON Schema
+     *
+     * @return array
+     */
+    public function get_item_schema() {
+        $schema = [
+            '$schema'    => 'http://json-schema.org/draft-04/schema#',
+            'title'      => 'contact',
+            'type'       => 'object',
+            'properties' => [
+                'id'          => [
+                    'description' => __( 'Unique identifier for the resource.' ),
+                    'type'        => 'integer',
+                    'context'     => [ 'embed', 'view', 'edit' ],
+                    'readonly'    => true,
+                ],
+                'first_name'  => [
+                    'description' => __( 'First name for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                    'required'    => true,
+                ],
+                'middle_name'     => [
+                    'description' => __( 'Middle name for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'last_name'   => [
+                    'description' => __( 'Last name for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                    'required'    => true,
+                ],
+                'email'       => [
+                    'description' => __( 'The email address for the resource.' ),
+                    'type'        => 'string',
+                    'format'      => 'email',
+                    'context'     => [ 'edit' ],
+                    'required'    => true,
+                ],
+                'phone'       => [
+                    'description' => __( 'Phone for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'mobile'      => [
+                    'description' => __( 'Mobile for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'employee_id'       => [
+                    'description' => __( 'Employee ID for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'type'       => [
+                    'description' => __( 'Employee type for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                    'required'    => true,
+                ],
+                'status'       => [
+                    'description' => __( 'Status for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                    'required'    => true,
+                ],
+                'end_date'       => [
+                    'description' => __( 'End date for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'hiring_date'       => [
+                    'description' => __( 'Hiring date for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                    'required'    => true,
+                ],
+                'department'       => [
+                    'description' => __( 'Department for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'designation'       => [
+                    'description' => __( 'Designation for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'location'       => [
+                    'description' => __( 'Location for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'reporting_to'       => [
+                    'description' => __( 'Reporting to for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'hiring_source'       => [
+                    'description' => __( 'Hiring date for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'pay_rate'       => [
+                    'description' => __( 'Pay rate for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'pay_type'       => [
+                    'description' => __( 'Pay type for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'work_phone'       => [
+                    'description' => __( 'Work phone for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'termination_date'       => [
+                    'description' => __( 'Termination date for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'website'         => [
+                    'description' => __( 'Website of the resource.' ),
+                    'type'        => 'string',
+                    'format'      => 'uri',
+                    'context'     => [ 'embed', 'view', 'edit' ],
+                ],
+                'fax'             => [
+                    'description' => __( 'Fax of the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'embed', 'view', 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'street_1'        => [
+                    'description' => __( 'Street 1 of the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'embed', 'view', 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'street_2'        => [
+                    'description' => __( 'Street 1 of the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'embed', 'view', 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'city'            => [
+                    'description' => __( 'City of the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'embed', 'view', 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'state'           => [
+                    'description' => __( 'State of the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'embed', 'view', 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'postal_code'     => [
+                    'description' => __( 'Postal Code of the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'embed', 'view', 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'country'         => [
+                    'description' => __( 'Country of the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'embed', 'view', 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+            ],
+        ];
+
+        return $schema;
     }
 }

@@ -1,21 +1,24 @@
 <?php
 
-namespace WeDevs\ERP\HRM\API;
+namespace WeDevs\ERP\HRM\API\V2;
 
-use WeDevs\ERP\API\REST_Controller;
+use WP_REST_Controller;
 use WeDevs\ERP\HRM\Employee;
 use WP_Error;
 use WP_REST_Response;
 use WP_REST_Server;
+use WeDevs\ERP\Framework\Traits\Api;
 
-class Birthdays_Controller extends REST_Controller {
+class Birthdays_Controller extends WP_REST_Controller {
+
+    use Api;
 
     /**
      * Endpoint namespace.
      *
      * @var string
      */
-    protected $namespace = 'erp/v1';
+    protected $namespace = 'erp/v2';
 
     /**
      * Route base.

@@ -1,27 +1,30 @@
 <?php
 
-namespace WeDevs\ERP\HRM\API;
+namespace WeDevs\ERP\HRM\API\V2;
 
-use WeDevs\ERP\API\REST_Controller;
+use WP_REST_Controller;
 use WP_Error;
 use WP_REST_Response;
 use WP_REST_Server;
+use WeDevs\ERP\Framework\Traits\Api;
 
-class Designations_Controller extends REST_Controller {
+class Departments_Controller extends WP_REST_Controller {
+
+    use Api;
 
     /**
      * Endpoint namespace.
      *
      * @var string
      */
-    protected $namespace = 'erp/v1';
+    protected $namespace = 'erp/v2';
 
     /**
      * Route base.
      *
      * @var string
      */
-    protected $rest_base = 'hrm/designations';
+    protected $rest_base = 'hrm/departments';
 
     /**
      * Register the routes for the objects of the controller.
@@ -30,7 +33,7 @@ class Designations_Controller extends REST_Controller {
         register_rest_route( $this->namespace, '/' . $this->rest_base, [
             [
                 'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_designations' ],
+                'callback'            => [ $this, 'get_departments' ],
                 'args'                => $this->get_collection_params(),
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_view_list' );
@@ -38,10 +41,9 @@ class Designations_Controller extends REST_Controller {
             ],
             [
                 'methods'             => WP_REST_Server::CREATABLE,
-                'callback'            => [ $this, 'create_designation' ],
-                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
+                'callback'            => [ $this, 'create_department' ],
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_manage_designation' );
+                    return current_user_can( 'erp_manage_department' );
                 },
             ],
             'schema' => [ $this, 'get_public_item_schema' ],
@@ -50,7 +52,7 @@ class Designations_Controller extends REST_Controller {
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', [
             [
                 'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_designation' ],
+                'callback'            => [ $this, 'get_department' ],
                 'args'                => [
                     'context' => $this->get_context_param( [ 'default' => 'view' ] ),
                 ],
@@ -60,17 +62,17 @@ class Designations_Controller extends REST_Controller {
             ],
             [
                 'methods'             => WP_REST_Server::EDITABLE,
-                'callback'            => [ $this, 'update_designation' ],
+                'callback'            => [ $this, 'update_department' ],
                 'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_manage_designation' );
+                    return current_user_can( 'erp_manage_department' );
                 },
             ],
             [
                 'methods'             => WP_REST_Server::DELETABLE,
-                'callback'            => [ $this, 'delete_designation' ],
+                'callback'            => [ $this, 'delete_department' ],
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_manage_designation' );
+                    return current_user_can( 'erp_manage_department' );
                 },
             ],
             'schema' => [ $this, 'get_public_item_schema' ],
@@ -78,26 +80,28 @@ class Designations_Controller extends REST_Controller {
     }
 
     /**
-     * Get a collection of designations
+     * Get a collection of departments
      *
      * @param WP_REST_Request $request
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_designations( $request ) {
+    public function get_departments( $request ) {
         $args = [
-            'number' => $request['per_page'],
-            'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
-            's'      => $request['s'] ? $request['s'] : '',
+            'per_page' => $request['per_page'],
+            'page'     => $request['page'],
+            's'        => $request['s'] ? $request['s'] : '',
         ];
 
-        $items       = erp_hr_get_designations( $args );
-        $total_items = erp_hr_count_designation();
+        $items       = erp_hr_get_departments( $args );
+        $total_items = erp_hr_count_departments();
 
         $formated_items = [];
 
         foreach ( $items as $item ) {
-            $data             = $this->prepare_item_for_response( $item, $request );
+            $additional_fields = [];
+
+            $data             = $this->prepare_item_for_response( $item, $request, $additional_fields );
             $formated_items[] = $this->prepare_response_for_collection( $data );
         }
 
@@ -108,18 +112,18 @@ class Designations_Controller extends REST_Controller {
     }
 
     /**
-     * Get a specific designation
+     * Get a specific department
      *
      * @param WP_REST_Request $request
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_designation( $request ) {
+    public function get_department( $request ) {
         $id   = (int) $request['id'];
-        $item = new \WeDevs\ERP\HRM\Designation( $id );
+        $item = new \WeDevs\ERP\HRM\Department( $id );
 
         if ( empty( $id ) || empty( $item->id ) ) {
-            return new WP_Error( 'rest_designation_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_department_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
 
         $item     = $this->prepare_item_for_response( $item, $request );
@@ -129,20 +133,19 @@ class Designations_Controller extends REST_Controller {
     }
 
     /**
-     * Create a designation
+     * Create a department
      *
      * @param WP_REST_Request $request
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function create_designation( $request ) {
-        $item = $this->prepare_item_for_database( $request );
-        $id   = erp_hr_create_designation( $item );
-
-        $designation = new \WeDevs\ERP\HRM\Designation( $id );
+    public function create_department( $request ) {
+        $item       = $this->prepare_item_for_database( $request );
+        $id         = erp_hr_create_department( $item );
+        $department = new \WeDevs\ERP\HRM\Department( $id );
 
         $request->set_param( 'context', 'edit' );
-        $response = $this->prepare_item_for_response( $designation, $request );
+        $response = $this->prepare_item_for_response( $department, $request );
         $response = rest_ensure_response( $response );
         $response->set_status( 201 );
         $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $id ) ) );
@@ -151,26 +154,30 @@ class Designations_Controller extends REST_Controller {
     }
 
     /**
-     * Update a designation
+     * Update a department
      *
      * @param WP_REST_Request $request
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function update_designation( $request ) {
+    public function update_department( $request ) {
         $id = (int) $request['id'];
 
-        $designation = new \WeDevs\ERP\HRM\Designation( $id );
+        $department = new \WeDevs\ERP\HRM\Department( $id );
 
-        if ( ! $designation ) {
-            return new WP_Error( 'rest_designation_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 400 ] );
+        if ( ! $department ) {
+            return new WP_Error( 'rest_department_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 400 ] );
         }
 
         $item = $this->prepare_item_for_database( $request );
-        $id   = erp_hr_create_designation( $item );
+        $id   = erp_hr_create_department( $item );
+
+        if ( is_wp_error( $id ) ) {
+            return $id;
+        }
 
         $request->set_param( 'context', 'edit' );
-        $response = $this->prepare_item_for_response( $designation, $request );
+        $response = $this->prepare_item_for_response( $department, $request );
         $response = rest_ensure_response( $response );
         $response->set_status( 201 );
         $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $id ) ) );
@@ -179,24 +186,27 @@ class Designations_Controller extends REST_Controller {
     }
 
     /**
-     * Delete a designation
+     * Delete a department
      *
-     * @param WP_REST_Request $request
+     * @since 1.0.0
      *
-     * @return WP_Error|WP_REST_Request
+     * @param $request
+     *
+     * @return WP_REST_Response
      */
-    public function delete_designation( $request ) {
+    public function delete_department( $request ) {
         $id = (int) $request['id'];
 
-        erp_hr_delete_designation( $id );
+        erp_hr_delete_department( $id );
+        $response = rest_ensure_response( true );
 
-        return new WP_REST_Response( true, 204 );
+        return new WP_REST_Response( $response, 204 );
     }
 
     /**
      * Prepare a single item for create or update
      *
-     * @param WP_REST_Request $request request object
+     * @param \WP_REST_Request $request request object
      *
      * @return array $prepared_item
      */
@@ -204,17 +214,25 @@ class Designations_Controller extends REST_Controller {
         $prepared_item = [];
 
         // required arguments.
-        if ( isset( $request['title'] ) ) {
+        if ( ! empty( $request['title'] ) ) {
             $prepared_item['title'] = $request['title'];
         }
 
         // optional arguments.
-        if ( isset( $request['id'] ) ) {
+        if ( ! empty( $request['id'] ) ) {
             $prepared_item['id'] = absint( $request['id'] );
         }
 
-        if ( isset( $request['description'] ) ) {
+        if ( ! empty( $request['description'] ) ) {
             $prepared_item['description'] = $request['description'];
+        }
+
+        if ( ! empty( $request['parent'] ) ) {
+            $prepared_item['parent'] = absint( $request['parent'] );
+        }
+
+        if ( ! empty( $request['head'] ) ) {
+            $prepared_item['lead'] = absint( $request['head'] );
         }
 
         return $prepared_item;
@@ -230,14 +248,26 @@ class Designations_Controller extends REST_Controller {
      * @return WP_REST_Response $response response data
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
-        $total_employees = \WeDevs\ERP\HRM\Models\Employee::where( [ 'status' => 'active', 'designation' => $item->id ] )->count();
-
         $data = [
             'id'              => (int) $item->id,
             'title'           => $item->title,
+            'lead'            => $item->lead,
+            'parent'          => $item->parent,
             'description'     => $item->description,
-            'total_employees' => $total_employees,
+            'total_employees' => $item->num_of_employees(),
         ];
+
+        if ( isset( $request['include'] ) ) {
+            $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
+
+            if ( in_array( 'parent', $include_params ) ) {
+                $data['parent'] = $this->get_parent_department( $item );
+            }
+
+            if ( in_array( 'head', $include_params ) ) {
+                $data['head'] = $this->get_user( intval( $item->lead ) );
+            }
+        }
 
         $data = array_merge( $data, $additional_fields );
 
@@ -250,6 +280,29 @@ class Designations_Controller extends REST_Controller {
     }
 
     /**
+     * Get the parent of a department
+     *
+     * @param object $item
+     *
+     * @return array
+     */
+    public function get_parent_department( $item ) {
+        $parent_id = (int) $item->get_parent_id( $item->id );
+
+        if ( ! $parent_id ) {
+            return null;
+        }
+
+        $parent = new \WeDevs\ERP\HRM\Department( $parent_id );
+
+        return [
+            'id'     => $parent->id,
+            'title'  => $parent->title,
+            '_links' => $this->prepare_links( $parent ),
+        ];
+    }
+
+    /**
      * Get the User's schema, conforming to JSON Schema
      *
      * @return array
@@ -257,16 +310,16 @@ class Designations_Controller extends REST_Controller {
     public function get_item_schema() {
         $schema = [
             '$schema'    => 'http://json-schema.org/draft-04/schema#',
-            'title'      => 'designation',
+            'title'      => 'department',
             'type'       => 'object',
             'properties' => [
-                'id'            => [
+                'id'          => [
                     'description' => __( 'Unique identifier for the resource.' ),
                     'type'        => 'integer',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
-                'title'         => [
+                'title'       => [
                     'description' => __( 'Title for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
@@ -275,13 +328,23 @@ class Designations_Controller extends REST_Controller {
                     ],
                     'required'    => true,
                 ],
-                'description'  => [
+                'description' => [
                     'description' => __( 'Description for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
+                ],
+                'parent'      => [
+                    'description' => __( 'Parent for the resource.' ),
+                    'type'        => 'integer',
+                    'context'     => [ 'edit' ],
+                ],
+                'head'        => [
+                    'description' => __( 'Head for the resource.' ),
+                    'type'        => 'integer',
+                    'context'     => [ 'edit' ],
                 ],
             ],
         ];

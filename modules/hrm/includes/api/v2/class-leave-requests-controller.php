@@ -1,21 +1,24 @@
 <?php
 
-namespace WeDevs\ERP\HRM\API;
+namespace WeDevs\ERP\HRM\API\V2;
 
-use WeDevs\ERP\API\REST_Controller;
+use WP_REST_Controller;
 use WeDevs\ERP\HRM\Employee;
 use WP_Error;
 use WP_REST_Response;
 use WP_REST_Server;
+use WeDevs\ERP\Framework\Traits\Api;
 
-class Leave_Requests_Controller extends REST_Controller {
+class Leave_Requests_Controller extends WP_REST_Controller {
+
+    use Api;
 
     /**
      * Endpoint namespace.
      *
      * @var string
      */
-    protected $namespace = 'erp/v1';
+    protected $namespace = 'erp/v2';
 
     /**
      * Route base.
@@ -61,6 +64,18 @@ class Leave_Requests_Controller extends REST_Controller {
             ],
             'schema' => [ $this, 'get_public_item_schema' ],
         ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/action', [
+            [
+                'methods'             => WP_REST_Server::CREATABLE,
+                'callback'            => [ $this, 'leave_request_action' ],
+                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_list_employee' );
+                },
+            ],
+            'schema' => [ $this, 'get_public_item_schema' ],
+        ] );
     }
 
     /**
@@ -70,21 +85,32 @@ class Leave_Requests_Controller extends REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_leave_requests( $request ) {
-        $args = [
-            'number' => $request['per_page'],
-            'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
-            'type'   => $request['type'] == 'upcoming' ? 'upcoming' : '',
-        ];
+    public function get_leave_requests( \WP_REST_Request $request ) {
 
-        $items           = [];
-        $formatted_items = [];
-        $total           = 0;
+        $per_page       = $request->get_param( 'per_page' );
+        $page           = $request->get_param( 'page' );
+        $status         = $request->get_param( 'status' );
+        $filter_year    = $request->get_param( 'filter_year' );
+        $orderby        = $request->get_param( 'orderby' );
+        $order          = $request->get_param( 'order' );
+        $search         = $request->get_param( 's' );
 
-        if ( $args['type'] == 'upcoming' ) {
-            $args['status']     = 1; // only approved leave request
-            $args['start_date'] = erp_current_datetime()->setTime( 0, 0 )->getTimestamp(); //today
-            $args['end_date']   = erp_current_datetime()->modify( 'last day of next month' )->setTime( 23, 59, 59 )->getTimestamp();
+        // get current year as default f_year
+        $f_year = erp_hr_get_financial_year_from_date();
+        $f_year = ! empty( $f_year ) ? $f_year->id : '';
+
+        $args = array(
+            'offset'  => ( $per_page * ( $page - 1 ) ),
+            'number'  => $per_page,
+            'status'  => $status,
+            'f_year'  => isset( $filter_year ) ? $filter_year : $f_year,
+            'orderby' => isset( $orderby ) ? $orderby : 'created_at',
+            'order'   => isset( $order ) ? $order : 'DESC',
+            's'       => isset( $search ) ? $search : ''
+        );
+
+        if ( erp_hr_is_current_user_dept_lead() && ! current_user_can( 'erp_leave_manage' ) ) {
+            $args['lead'] = get_current_user_id();
         }
 
         $leave_requests = erp_hr_get_leave_requests( $args );
@@ -92,8 +118,7 @@ class Leave_Requests_Controller extends REST_Controller {
         $total          = $leave_requests['total'];
 
         $formatted_items = [];
-
-        foreach ( $items as $item ) {
+        foreach( $items as $item ) {
             $data              = $this->prepare_item_for_response( $item, $request );
             $formatted_items[] = $this->prepare_response_for_collection( $data );
         }
@@ -102,6 +127,7 @@ class Leave_Requests_Controller extends REST_Controller {
         $response = $this->format_collection_response( $response, $request, $total );
 
         return $response;
+
     }
 
     /**
@@ -123,6 +149,46 @@ class Leave_Requests_Controller extends REST_Controller {
         $response = rest_ensure_response( $item );
 
         return $response;
+    }
+
+    /**
+     * Approve OR Reject leave requests
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Response
+     */
+    public function leave_request_action( \WP_REST_Request $request ) {
+
+        $id         = $request->get_param( 'id' );
+        $reason     = $request->get_param( 'reason' );
+        $type       = $request->get_param( 'type' );
+
+        if ( isset( $id ) && ! empty( $id ) ) {
+            switch ( $type ) {
+                case 'approved':
+                    $status = 1;
+                    break;
+
+                case 'pending':
+                    $status = 2;
+                    break;
+
+                case 'rejected':
+                    $status = 3;
+                    break;
+
+                case 'forwarded':
+                    $status = 4;
+                    break;
+
+                default:
+                    $status = 3;
+                    break;
+            }
+            $response = erp_hr_leave_request_update_status( $id, $status, $reason );
+            return rest_ensure_response( $response );
+        }
     }
 
     /**
@@ -207,15 +273,22 @@ class Leave_Requests_Controller extends REST_Controller {
         $employee = new Employee( $item->user_id );
 
         $data = [
-            'id'            => (int) $item->id,
-            'user_id'       => (int) $item->user_id,
-            'employee_id'   => (int) $employee->employee_id,
-            'employee_name' => $employee->display_name,
-            'avatar_url'    => $employee->get_avatar_url( 80 ),
-            'start_date'    => erp_format_date( $item->start_date, 'Y-m-d' ),
-            'end_date'      => erp_format_date( $item->end_date, 'Y-m-d' ),
-            'reason'        => $item->reason,
-            'comments'      => isset( $item->comments ) ? $item->comments : '',
+            'id'                   => (int)$item->id,
+            'user_id'              => (int)$item->user_id,
+            'employee_id'          => (int)$employee->employee_id,
+            'employee_name'        => $employee->display_name,
+            'display_name'         => $item->display_name,
+            'employee_designation' => $employee->get_designation('view'),
+            'policy_name'          => $item->policy_name,
+            'avatar_url'           => $employee->get_avatar_url(80),
+            'start_date'           => erp_format_date($item->start_date, 'Y-m-d'),
+            'end_date'             => erp_format_date($item->end_date, 'Y-m-d'),
+            'reason'               => $item->reason,
+            'message'              => $item->message,
+            'leave_id'             => $item->leave_id,
+            'days'                 => $item->days,
+            'available'            => $item->available,
+            'spent'                => $item->spent
         ];
 
         if ( isset( $request['include'] ) ) {
@@ -237,7 +310,7 @@ class Leave_Requests_Controller extends REST_Controller {
         $data = array_merge( $data, $additional_fields );
 
         // Wrap the data in a response object
-        $response = rest_ensure_response( $data );
+        $response = rest_ensure_response( apply_filters( 'filter_leave_request', $data, $request ) );
 
         $response = $this->add_links( $response, $item );
 

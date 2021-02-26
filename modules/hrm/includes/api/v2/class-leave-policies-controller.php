@@ -1,20 +1,23 @@
 <?php
 
-namespace WeDevs\ERP\HRM\API;
+namespace WeDevs\ERP\HRM\API\V2;
 
-use WeDevs\ERP\API\REST_Controller;
+use WP_REST_Controller;
 use WP_Error;
 use WP_REST_Response;
 use WP_REST_Server;
+use WeDevs\ERP\Framework\Traits\Api;
 
-class Leave_Policies_Controller extends REST_Controller {
+class Leave_Policies_Controller extends WP_REST_Controller {
+
+    use Api;
 
     /**
      * Endpoint namespace.
      *
      * @var string
      */
-    protected $namespace = 'erp/v1';
+    protected $namespace = 'erp/v2';
 
     /**
      * Route base.
@@ -103,10 +106,25 @@ class Leave_Policies_Controller extends REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_policies( $request ) {
-        $args = [
-            'number' => $request['per_page'],
-            'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
-        ];
+        $per_page       = $request->get_param( 'per_page' );
+        $page           = $request->get_param( 'page' );
+        $status         = $request->get_param( 'status' );
+        $filter_year    = $request->get_param( 'filter_year' );
+        $orderby        = $request->get_param( 'orderby' );
+        $order          = $request->get_param( 'order' );
+        $search         = $request->get_param( 's' );
+
+
+        // only ncessary because we have sample data
+        $current_f_year = erp_hr_get_financial_year_from_date();
+        $f_year = null !== $current_f_year ? $current_f_year->id : '';
+        $args = array(
+            'offset' => ( $per_page * ( $page - 1 ) ),
+            'number' => $per_page,
+            'f_year'  => isset( $filter_year ) ? $filter_year : $f_year,
+            'orderby' => isset( $orderby ) ? $orderby : 'created_at',
+            'order'   => isset( $order ) ? $order : 'DESC',
+        );
 
         $items       = erp_hr_leave_get_policies( $args );
         $total_items = erp_hr_count_leave_policies();
@@ -155,15 +173,60 @@ class Leave_Policies_Controller extends REST_Controller {
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function create_policy( $request ) {
-        $item   = $this->prepare_item_for_database( $request );
-        $policy = erp_hr_leave_insert_policy( $item );
+    public function create_policy( \WP_REST_Request $request ) {
 
-        $request->set_param( 'context', 'edit' );
-        $response = $this->prepare_item_for_response( $policy, $request );
+
+        $id                     = $request->get_param( 'policy-id' );
+        $leave_id               = $request->get_param( 'leave-id' );
+        $days                   = $request->get_param( 'days' );
+        $f_year                 = $request->get_param( 'f-year' );
+        $desc                   = $request->get_param( 'description' );
+        $dept_id                = $request->get_param( 'department' );
+        $desg_id                = $request->get_param( 'designation' );
+        $location_id            = $request->get_param( 'location' );
+        $color                  = $request->get_param( 'color' );
+        $gender                 = $request->get_param( 'gender' );
+        $marital                = $request->get_param( 'marital' );
+        $applicable             = $request->get_param( 'applicable-from' );
+        $apply_for_new_users    = $request->get_param( 'apply-for-new-users' );
+
+
+        $id                     = ! empty( $id ) ? absint( $id ) : 0;
+        $leave_id               = ! empty( $leave_id ) ? absint( $leave_id ) : 0;
+        $days                   = ! empty( $days ) ? absint( $days ) : 0;
+        $f_year                 = ! empty( $f_year ) ? absint( $f_year ) : date('Y');
+        $desc                   = ! empty( $desc ) ? $desc : '';
+        $dept_id                = ! empty( $dept_id ) ? $dept_id : '-1';
+        $desg_id                = ! empty( $desg_id ) ? $desg_id : '-1';
+        $location_id            = ! empty( $location_id) ? $location_id : '-1';
+        $color                  = ! empty( $color ) ? $color : '';
+        $gender                 = ! empty( $gender ) ? $gender : '-1';
+        $marital                = ! empty( $marital ) ? $marital : '-1';
+        $applicable             = ! empty( $applicable ) ? absint( $applicable ) : 0;
+        $apply_for_new_users    = ! empty( $apply_for_new_users ) ? 1 : 0;
+
+        $data = array(
+            'leave_id'        => $leave_id,
+            'description'     => $desc,
+            'days'            => $days,
+            'color'           => $color,
+            'department_id'   => $dept_id,
+            'designation_id'  => $desg_id,
+            'location_id'     => $location_id,
+            'gender'          => $gender,
+            'marital'         => $marital,
+            'f_year'          => $f_year,
+            'applicable_from' => $applicable,
+            'apply_for_new_users' => $apply_for_new_users
+        );
+
+        if ( $id ) {
+            $data['id'] = $id;
+        }
+
+        $response = erp_hr_leave_insert_policy( $data );
+
         $response = rest_ensure_response( $response );
-        $response->set_status( 201 );
-        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $id ) ) );
 
         return $response;
     }
