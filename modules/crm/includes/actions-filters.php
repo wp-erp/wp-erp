@@ -8,8 +8,9 @@ add_action( 'wp_ajax_nopriv_erp_crm_track_email_opened', 'erp_crm_track_email_op
 add_action( 'erp_crm_dashboard_widgets_right', 'erp_crm_dashboard_right_widgets_area' );
 add_action( 'erp_crm_dashboard_widgets_left', 'erp_crm_dashboard_left_widgets_area' );
 add_action( 'plugins_loaded', 'erp_crm_contact_forms' );
-add_action( 'erp_settings_pages', 'erp_settings_pages_contact_forms' );
+// add_action( 'erp_settings_pages', 'erp_settings_pages_contact_forms' );
 add_action( 'erp_settings_pages', 'erp_crm_settings_pages' );
+add_action( 'admin_init', 'erp_crm_contact_form_section' );
 add_action( 'erp_hr_permission_management', 'erp_crm_permission_management_field' );
 add_action( 'admin_footer-users.php', 'erp_user_bulk_actions' );
 add_action( 'load-users.php', 'erp_handle_user_bulk_actions' );
@@ -21,6 +22,8 @@ add_action( 'updated_user_meta', 'erp_crm_sync_people_meta_data', 10, 4 );
 add_action( 'added_user_meta', 'erp_crm_sync_people_meta_data', 10, 4 );
 add_action( 'delete_user', 'erp_crm_contact_on_delete' );
 add_action( 'erp_daily_scheduled_events', 'erp_crm_send_birthday_greetings' );
+add_action( 'erp_crm_contact_menu_dropdown', 'erp_crm_get_contacts_menu_dropdown_html' );
+add_action( 'erp_crm_task_menu_dropdown', 'erp_crm_get_tasks_menu_dropdown_html' );
 
 // Register the taxonomies
 add_action( 'init', 'erp_crm_add_tag_taxonomy' );
