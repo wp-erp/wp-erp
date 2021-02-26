@@ -1121,6 +1121,7 @@ Account Manager
                 `discount` decimal(20,2) DEFAULT 0,
                 `discount_type` varchar(255) DEFAULT NULL,
                 `tax` decimal(20,2) DEFAULT 0,
+                `tax_zone_id` int(11) DEFAULT NULL,
                 `estimate` boolean DEFAULT NULL,
                 `attachments` varchar(255) DEFAULT NULL,
                 `status` int(11) DEFAULT NULL,
