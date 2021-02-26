@@ -79,6 +79,7 @@ function erp_acct_get_invoice( $invoice_no ) {
     invoice.discount,
     invoice.discount_type,
     invoice.tax,
+    invoice.tax_zone_id,
     invoice.estimate,
     invoice.attachments,
     invoice.status,
@@ -98,7 +99,8 @@ function erp_acct_get_invoice( $invoice_no ) {
     $row = $wpdb->get_row( $sql, ARRAY_A );
 
     $row['line_items']  = erp_acct_format_invoice_line_items( $invoice_no );
-    $row['tax_rate_id'] = erp_acct_get_default_tax_rate_name_id();
+
+    $row['tax_rate_id'] = empty( $row['tax_zone_id'] ) ? erp_acct_get_default_tax_rate_name_id() : (int) $row['tax_zone_id'];
 
     // calculate every line total
     foreach ( $row['line_items'] as $key => $value ) {
@@ -218,6 +220,7 @@ function erp_acct_insert_invoice( $data ) {
                 'discount'        => $invoice_data['discount'],
                 'discount_type'   => $invoice_data['discount_type'],
                 'tax'             => $invoice_data['tax'],
+                'tax_zone_id'     => $invoice_data['tax_rate_id'],
                 'estimate'        => $invoice_data['estimate'],
                 'attachments'     => $invoice_data['attachments'],
                 'status'          => $invoice_data['status'],
@@ -347,7 +350,19 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no, $c
             }
         }
 
-        $invoice_tax_agency = erp_acct_get_invoice_tax_details( $invoice_data['voucher_no'], $item['product_id'] );
+        if ( $contra ) {
+            $invoice_tax_agency = erp_acct_get_invoice_tax_details( $invoice_data['voucher_no'], $item['product_id'], $item['qty'] );
+
+            if ( ! empty( $invoice_tax_agency ) ) {
+                foreach ( $invoice_tax_agency as $inv_tax_ag ) {
+                    if ( array_key_exists( $inv_tax_ag['agency_id'], $tax_by_agency ) ) {
+                        $tax_by_agency[ $inv_tax_ag['agency_id'] ] += (float) $inv_tax_ag['tax_amount'];
+                    } else {
+                        $tax_by_agency[ $inv_tax_ag['agency_id'] ] = (float) $inv_tax_ag['tax_amount'];
+                    }
+                }
+            }
+        }
     }
 
     if ( ! empty( $tax_agency_details ) && ! $contra ) {
@@ -368,17 +383,7 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no, $c
         }
     }
 
-    if ( ! empty( $invoice_tax_agency ) ) {
-        foreach ( $invoice_tax_agency as $inv_tax_ag ) {
-            if ( array_key_exists( $inv_tax_ag['agency_id'], $tax_by_agency ) ) {
-                $tax_by_agency[ $inv_tax_ag['agency_id'] ] += (float) $inv_tax_ag['tax_amount'];
-            } else {
-                $tax_by_agency[ $inv_tax_ag['agency_id'] ] = (float) $inv_tax_ag['tax_amount'];
-            }
-        }
-    }
-
-    if ( ! empty( $tax_by_agency ) && $contra ) {
+    if ( ! empty( $tax_by_agency ) ) {
         foreach( $tax_by_agency as $agency => $tax ) {
             $wpdb->insert(
                 $wpdb->prefix . 'erp_acct_tax_agency_details',
@@ -1090,21 +1095,30 @@ function erp_acct_get_invoice_due( $invoice_no ) {
  *
  * @param int|string $invoice_no
  * @param int|string $product_id
+ * @param int|string $product_qty
  * 
  * @return array
  */
-function erp_acct_get_invoice_tax_details( $invoice_no, $product_id ) {
+function erp_acct_get_invoice_tax_details( $invoice_no, $product_id, $product_qty = false ) {
     global $wpdb;
 
-    $tax_rates = $wpdb->get_results(
-        $wpdb->prepare(
-            "SELECT inv_tax.agency_id, inv_tax.tax_rate, inv_tax.tax_amount
+    $sql = "SELECT inv_tax.agency_id, inv_tax.tax_rate, inv_tax.tax_amount
             FROM {$wpdb->prefix}erp_acct_invoice_details AS inv
             INNER JOIN {$wpdb->prefix}erp_acct_invoice_details_tax AS inv_tax
             ON inv.id = inv_tax.invoice_details_id
             WHERE inv.trn_no = %d
-            AND inv.product_id = %d",
-            [ (int) $invoice_no, (int) $product_id ]
+            AND inv.product_id = %d";
+
+    $values = [ (int) $invoice_no, (int) $product_id ];
+
+    if ( false !== $product_qty ) {
+        $sql .= " AND qty = %d";
+        array_push( $values, (int) $product_qty );
+    }
+
+    $tax_rates = $wpdb->get_results(
+        $wpdb->prepare(
+            $sql, $values
         ),
         ARRAY_A
     );
