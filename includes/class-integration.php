@@ -131,7 +131,7 @@ class Integration extends ERP_Settings_Page {
      */
     public function admin_options() {
         ?>
-        <h3><?php echo esc_html( $this->get_title() ); ?></h3>
+        <h3 style="padding-top: 10px;"><?php echo esc_html( $this->get_title() ); ?></h3>
         <?php echo wp_kses_post( wpautop( $this->get_description() ) ); ?>
 
         <?php
