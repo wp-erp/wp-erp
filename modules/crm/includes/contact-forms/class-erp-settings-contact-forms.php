@@ -2,45 +2,28 @@
 
 namespace WeDevs\ERP\CRM\ContactForms;
 
-use WeDevs\ERP\Framework\ERP_Settings_Page;
-
 /**
  * ERP Settings Contact Form class
  */
-class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
+class ERP_Settings_Contact_Forms {
     use ContactForms;
 
-    public $id = '';
-
-    public $label = '';
-
-    public $sections = [];
-
     protected $crm_options = [];
-
     protected $active_plugin_list = [];
-
     protected $forms = [];
 
     /**
      * Class constructor
      */
     public function __construct() {
-        $this->crm_options        = $this->get_crm_contact_options();
-        $this->active_plugin_list = $this->get_active_plugin_list();
-
-        // option field type
-        $this->action( 'erp_admin_field_match_form_fields', 'output_match_form_fields' );
+        $this->filter( 'erp_settings_crm_section_fields', 'crm_contact_forms_section_fields', 10, 2 );
+        $this->action( 'erp_admin_field_contact_form_options', 'output_contact_form_options' );
 
         foreach ( $this->active_plugin_list as $slug => $plugin ) {
             $this->forms[ $slug ] = apply_filters( "crm_get_{$slug}_forms", [] );
         }
 
-        $this->admin_scripts();
-
-        $this->id       = 'contact_forms';
-        $this->label    = __( 'Contact Forms', 'erp' );
-        $this->sections = $this->get_sections();
+        add_action( 'admin_enqueue_scripts', [ $this, 'admin_scripts' ] );
     }
 
     /**
@@ -92,103 +75,91 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
     }
 
     /**
-     * Get settings array
+     * Settings fields for contact forms
      *
-     * This description will display when no supported plugin is active
+     * @param array $fields
+     * @param array $sections
      *
      * @return array
      */
-    public function get_settings() {
-        $fields = [
-            [
-                'title' => __( 'Contact Forms Integration', 'erp' ),
-                'type'  => 'title',
-                'desc'  => sprintf(
-                            '%s' . __( 'No supported contact form plugin is currently active. WP ERP has built-in support for <strong>Contact Form 7</strong> and <strong>Ninja Forms</strong>.', 'erp' ) . '%s',
-                            '<section class="notice notice-warning cfi-hide-submit"><p>',
-                            '</p></section>'
-                        ),
-                'id' => 'contact_form_options',
-            ],
+    public function crm_contact_forms_section_fields( $fields, $sections ) {
+        $plugins = $this->active_plugin_list;
 
-            [ 'type' => 'sectionend', 'id' => 'contact_form_options' ],
-        ];
+        if ( empty( $plugins ) ) {
+            $fields['contact_forms'] = [
+                [
+                    'title' => __( 'Contact Forms Integration', 'erp' ),
+                    'type'  => 'title',
+                    'desc'  => sprintf(
+                                '%s' . __( 'No supported contact form plugin is currently active. WP ERP has built-in support for <strong>Contact Form 7</strong> and <strong>Ninja Forms</strong>.', 'erp' ) . '%s',
+                                '<section class="notice notice-warning cfi-hide-submit"><p>',
+                                '</p></section>'
+                            ),
+                    'id' => 'contact_form_options',
+                ],
+            ];
+
+            return $fields;
+        }
+
+        $keys        = array_keys( $plugins );
+        $cur_section = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : '';
+        $sub_section = isset( $_GET['sub-section'] ) ? sanitize_text_field( wp_unslash( $_GET['sub-section'] ) ) : $keys[0];
+        $forms       = $this->forms[ $sub_section ];
+
+        if ( 'contact_forms' === $cur_section ) {
+            printf( '<ul class="subsubsub" style="margin-bottom: 15px; background-color: white;">' );
+
+            foreach ( $plugins as $slug => $plugin ) {
+                printf(
+                    '<li"><a href="%s" class="%s">%s</a> %s </li>',
+                    esc_url( admin_url( 'admin.php?page=erp-settings&tab=erp-crm&section=contact_forms&sub-section=' . sanitize_title( $slug ) ) ),
+                    ( $sub_section === $slug ? 'current' : '' ),
+                    esc_html( $plugin['title'] ),
+                    ( end( $keys ) === $slug ? '' : '|' )
+                );
+            }
+
+            printf( '</ul><br class="clear" />' );
+        }
+
+        if ( empty( $forms ) ) {
+            /* If no form created with respective plugin this notice will show.
+                Also if there is no function hook to the "crm_get_{$slug}_forms",
+                filter we'll see this notice */
+            $fields['contact_forms'] = [
+                [
+                    'title' => $plugins[ $sub_section ]['title'],
+                    'type'  => 'title',
+                    'desc'  => sprintf(
+                                '%s' . __( "You don't have any form created with %s!", 'erp' ) . '%s',
+                                '<section class="notice notice-warning cfi-hide-submit"><p>',
+                                $plugins[ $sub_section ]['title'],
+                                '</p></section>'
+                            ),
+                    'id' => 'section_' . $sub_section,
+                ],
+            ];
+        } else {
+            foreach ( $forms as $form_id => $form ) {
+                $fields['contact_forms'][] = [
+                    'title' => $form['title'],
+                    'type'  => 'title',
+                    'desc'  => '',
+                    'id'    => 'section_' . $form['name'],
+                ];
+
+                $fields['contact_forms'][] = [
+                    'plugin'        => $sub_section,
+                    'form_id'       => $form_id,
+                    'type'          => 'contact_form_options',
+                ];
+
+                $fields['contact_forms'][] = [ 'type' => 'sectionend', 'id' => 'section_' . $form['name'] ];
+            }
+        }
 
         return $fields;
-    }
-
-    /**
-     * Get sections
-     *
-     * @return array
-     */
-    public function get_sections() {
-        $sections = [];
-
-        if ( !empty( $this->active_plugin_list ) ) {
-            foreach ( $this->active_plugin_list as $slug => $plugin ) {
-                $sections[ $slug ] = $plugin['title'];
-            }
-        }
-
-        return $sections;
-    }
-
-    /**
-     * Get sections fields
-     *
-     * @param string $section current settings tab section
-     *
-     * @return array
-     */
-    public function get_section_fields( $section = '' ) {
-        $fields = [];
-
-        foreach ( $this->active_plugin_list as $slug => $plugin ) {
-            $forms = $this->forms[ $slug ];
-
-            if ( empty( $forms ) ) {
-                /* If no form created with respective plugin this notice will show.
-                   Also if there is no function hook to the "crm_get_{$slug}_forms",
-                   filter we'll see this notice */
-                $fields[ $slug ] = [
-                    [
-                        'title' => $plugin['title'],
-                        'type'  => 'title',
-                        'desc'  => sprintf(
-                                    '%s' . __( "You don't have any form created with %s!", 'erp' ) . '%s',
-                                    '<section class="notice notice-warning cfi-hide-submit"><p>',
-                                    $plugin['title'],
-                                    '</p></section>'
-                                ),
-                        'id' => 'section_' . $slug,
-                    ],
-
-                    [ 'type' => 'sectionend', 'id' => 'script_styling_options' ],
-                ];
-            } else {
-                foreach ( $forms as $form_id => $form ) {
-                    $fields[ $slug ][] = [
-                        'title' => $form['title'],
-                        'type'  => 'title',
-                        'desc'  => '',
-                        'id'    => 'section_' . $form['name'],
-                    ];
-
-                    $fields[ $slug ][] = [
-                        'plugin'        => $slug,
-                        'form_id'       => $form_id,
-                        'type'          => 'match_form_fields',
-                    ];
-
-                    $fields[ $slug ][] = [ 'type' => 'sectionend', 'id' => 'section_' . $form['name'] ];
-                }
-            }
-        }
-
-        $section = !$section ? array_shift( $fields ) : $fields[ $section ];
-
-        return $section;
     }
 
     /**
@@ -198,7 +169,7 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
      *
      * @return void
      */
-    public function output_match_form_fields( $value ) {
+    public function output_contact_form_options( $value ) {
         ?>
         <tr class="cfi-table-container cfi-hide-submit">
             <td style="padding-left: 0; padding-top: 0;">
@@ -212,7 +183,7 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
                     <tbody>
                         <tr>
                             <th class="cfi-table-wide-column"><?php esc_html_e( 'Form Field', 'erp' ); ?></th>
-                            <th class="cfi-table-wide-column"><?php esc_html_e( 'CRM Contact Option' ); ?></th>
+                            <th class="cfi-table-wide-column"><?php esc_html_e( 'CRM Contact Option', 'erp' ); ?></th>
                             <th class="cfi-table-narrow-column">&nbsp;</th>
                         </tr>
                     </tbody>
@@ -273,8 +244,8 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
                             <td colspan="3">
                                 <label>
                                     {{ i18n.labelContactOwner }} <span class="required">*</span>
-                                    <select class="cfi-contact-group" v-model="formData.contactOwner" required>
-                                        <option value="" disabled>{{ i18n.labelSelectOwner }}</option>
+                                    <select class="cfi-contact-group" v-model="formData.contactOwner">
+                                        <option value="0">{{ i18n.labelSelectOwner }}</option>
                                         <option v-for="(userId, user) in contactOwners" value="{{ userId }}">{{ user }}</option>
                                     </select>
                                 </label>
@@ -299,13 +270,11 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
             </td>
             <td></td>
         </tr>
-    <?php
+        <?php
     }
 
     /**
      * Ajax hook function to save the ERP Settings
-     *
-     * @since 1.6.8 added contact owner validation
      *
      * @return void prints json object
      */
@@ -323,15 +292,15 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
             $response['msg'] = __( 'Unauthorized operation', 'erp' );
         }
 
-        if ( ! empty( $_POST['plugin'] ) && !empty( $_POST['formId'] ) && !empty( $_POST['map'] ) ) {
+        if ( ! empty( $_POST['plugin'] ) && ! empty( $_POST['formId'] ) && ! empty( $_POST['map'] ) ) {
             $required_options = $this->get_required_crm_contact_options();
 
             // if map contains full_name, then remove first and last names from required options
-            if ( in_array( 'full_name', $_POST['map'] ) ) {
+            if ( in_array( 'full_name', $_POST['map'], true ) ) {
                 $index = array_search( 'first_name', $required_options );
                 unset( $required_options[ $index ] );
 
-                $index = array_search( 'last_name', $required_options );
+                $index = array_search( 'last_name', $required_options, true );
                 unset( $required_options[ $index ] );
 
                 array_unshift( $required_options, 'full_name' );
@@ -339,7 +308,7 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
 
             $diff = array_diff( $required_options, array_map( 'sanitize_text_field', wp_unslash( $_POST['map'] ) ) );
 
-            if ( !empty( $diff ) ) {
+            if ( ! empty( $diff ) ) {
                 $required_options = array_map( function ( $option ) {
                     return ucwords( str_replace( '_', ' ', $option ) );
                 }, $required_options );
@@ -348,7 +317,7 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
                     __( '%s fields are required', 'erp' ),
                     implode( ', ', $required_options )
                 );
-            } elseif ( empty( $_POST['contactOwner'] ) ) {
+            } elseif ( empty( $_POST['contactOwner'] ) && absint( $_POST['contactOwner'] ) ) {
                 $response['msg'] = __( 'Please set a contact owner.', 'erp' );
             } else {
                 $settings = get_option( 'wperp_crm_contact_forms' );
@@ -388,12 +357,12 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
-        if ( !erp_crm_is_current_user_manager() ) {
+        if ( ! erp_crm_is_current_user_manager() ) {
             $response['msg'] = __( 'Unauthorized operation', 'erp' );
-        } elseif ( !empty( $_POST['plugin'] ) && !empty( $_POST['formId'] ) ) {
+        } elseif ( ! empty( $_POST['plugin'] ) && !empty( $_POST['formId'] ) ) {
             $settings = get_option( 'wperp_crm_contact_forms' );
 
-            if ( !empty( $settings[ $_POST['plugin'] ][ $_POST['formId'] ] ) ) {
+            if ( ! empty( $settings[ $_POST['plugin'] ][ $_POST['formId'] ] ) ) {
                 $map = $settings[ sanitize_text_field( wp_unslash( $_POST['plugin'] ) ) ][ sanitize_text_field( wp_unslash( $_POST['formId'] ) ) ]['map'];
 
                 unset( $settings[ $_POST['plugin'] ][ $_POST['formId'] ] );
