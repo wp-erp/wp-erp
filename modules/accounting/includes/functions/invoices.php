@@ -1078,7 +1078,7 @@ function erp_acct_get_invoice_due( $invoice_no ) {
 function erp_acct_get_invoice_tax_details( $invoice_no, $product_id, $product_qty = false ) {
     global $wpdb;
 
-    $sql = "SELECT inv_tax.agency_id, inv_tax.tax_rate, inv_tax.tax_amount
+    $sql = "SELECT DISTINCT inv_tax.agency_id, inv_tax.tax_rate, inv_tax.tax_amount
             FROM {$wpdb->prefix}erp_acct_invoice_details AS inv
             INNER JOIN {$wpdb->prefix}erp_acct_invoice_details_tax AS inv_tax
             ON inv.id = inv_tax.invoice_details_id
