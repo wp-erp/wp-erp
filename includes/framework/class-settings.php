@@ -33,9 +33,10 @@ class ERP_Admin_Settings {
             $settings = [];
 
             $settings[] = include __DIR__ . '/settings/general.php';
-            $settings[] = include __DIR__ . '/settings/email.php';
 
             $settings   = apply_filters( 'erp_settings_pages', $settings );
+
+            $settings[] = include __DIR__ . '/settings/email.php';
 
             // Display integrations tab only if any integration exist.
             $integrations = wperp()->integration->get_integrations();
