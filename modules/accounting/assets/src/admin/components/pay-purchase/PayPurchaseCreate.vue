@@ -499,8 +499,8 @@ export default {
         remove_item(index) {
             this.$delete(this.pay_purchases, index);
             this.$delete(this.totalAmounts, index);
-            this.updateFinalAmount();
             this.$delete(this.negativeAmount, index);
+            this.updateFinalAmount();
         }
     },
 
