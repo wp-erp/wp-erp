@@ -548,6 +548,7 @@ export default {
         removeRow(index) {
             this.$delete(this.invoices, index);
             this.$delete(this.totalAmounts, index);
+            this.$delete(this.negativeAmount, index);
             this.updateFinalAmount();
         }
     }
