@@ -2736,20 +2736,14 @@ function erp_crm_contact_forms() {
 }
 
 /**
- * Add a new ERP settings tab with erp_settings_pages hook
+ * Instanciates contact form settings in CRM section
  *
- * @since  1.0
+ * @since 1.8.0
  *
- * @param array $settings ERP settings tabs
- *
- * @return array
+ * @return void
  */
-function erp_settings_pages_contact_forms( $settings ) {
-    if ( erp_crm_is_current_user_manager() ) {
-        $settings[] = \WeDevs\ERP\CRM\ContactForms\ERP_Settings_Contact_Forms::init();
-    }
-
-    return $settings;
+function erp_crm_contact_form_section() {
+    \WeDevs\ERP\CRM\ContactForms\ERP_Settings_Contact_Forms::init();
 }
 
 function erp_crm_settings_pages( $settings ) {
