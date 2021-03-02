@@ -1065,39 +1065,23 @@ function erp_acct_get_invoice_due( $invoice_no ) {
 }
 
 /**
- * Retrieves tax details of an invoice
+ * Retrieves tax zone of an invoice
  * 
  * @since 1.8.0
  *
- * @param int|string $invoice_no
- * @param int|string $product_id
- * @param int|string $product_qty
+ * @param [type] $invoice_no
  * 
- * @return array
+ * @return int|string
  */
-function erp_acct_get_invoice_tax_details( $invoice_no, $product_id, $product_qty = false ) {
+function erp_acct_get_invoice_tax_zone( $invoice_no ) {
     global $wpdb;
 
-    $sql = "SELECT DISTINCT inv_tax.agency_id, inv_tax.tax_rate, inv_tax.tax_amount
-            FROM {$wpdb->prefix}erp_acct_invoice_details AS inv
-            INNER JOIN {$wpdb->prefix}erp_acct_invoice_details_tax AS inv_tax
-            ON inv.id = inv_tax.invoice_details_id
-            WHERE inv.trn_no = %d
-            AND inv.product_id = %d";
-
-    $values = [ (int) $invoice_no, (int) $product_id ];
-
-    if ( false !== $product_qty ) {
-        $sql .= " AND qty = %d";
-        array_push( $values, (int) $product_qty );
-    }
-
-    $tax_rates = $wpdb->get_results(
+    $tax_zone = $wpdb->get_var(
         $wpdb->prepare(
-            $sql, $values
-        ),
-        ARRAY_A
+            "SELECT tax_zone_id FROM {$wpdb->prefix}erp_acct_invoices WHERE voucher_no = %d",
+            [ (int) $invoice_no ]
+        )
     );
-    
-    return $tax_rates;
+
+    return $tax_zone;
 }
