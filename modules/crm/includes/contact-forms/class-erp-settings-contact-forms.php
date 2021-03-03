@@ -16,6 +16,9 @@ class ERP_Settings_Contact_Forms {
      * Class constructor
      */
     public function __construct() {
+        $this->crm_options        = $this->get_crm_contact_options();
+        $this->active_plugin_list = $this->get_active_plugin_list();
+
         $this->filter( 'erp_settings_crm_section_fields', 'crm_contact_forms_section_fields', 10, 2 );
         $this->action( 'erp_admin_field_contact_form_options', 'output_contact_form_options' );
 
@@ -84,6 +87,8 @@ class ERP_Settings_Contact_Forms {
      */
     public function crm_contact_forms_section_fields( $fields, $sections ) {
         $plugins = $this->active_plugin_list;
+
+        error_log( 'plugins: ' . print_r( $plugins, true ) );
 
         if ( empty( $plugins ) ) {
             $fields['contact_forms'] = [
