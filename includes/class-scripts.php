@@ -142,6 +142,9 @@ class Scripts {
 
         // core css files
         wp_register_style( 'erp-styles', $css . '/admin.css', false, $this->version );
+
+        // custom menu design
+        wp_register_style( 'erp-custom-menu', $css . '/custom-menu.css', false, $this->version );
     }
 
     /**
@@ -174,7 +177,7 @@ class Scripts {
             'plupload'        => [
                 'url'              => admin_url( 'admin-ajax.php' ) . '?nonce=' . wp_create_nonce( 'erp_featured_img' ),
                 'flash_swf_url'    => includes_url( 'js/plupload/plupload.flash.swf' ),
-                'filters'          => [['title' => __( 'Allowed Files' ), 'extensions' => '*']],
+                'filters'          => [ [ 'title' => __( 'Allowed Files', 'erp' ), 'extensions' => '*' ] ],
                 'multipart'        => true,
                 'urlstream_upload' => true,
             ],
@@ -205,7 +208,7 @@ class Scripts {
         wp_enqueue_style( 'erp-fontawesome' );
         wp_enqueue_style( 'erp-select2' );
         wp_enqueue_style( 'jquery-ui' );
-
         wp_enqueue_style( 'erp-styles' );
+        wp_enqueue_style( 'erp-custom-menu' );
     }
 }
