@@ -297,7 +297,7 @@ export default new Router({
             ]
         },
         {
-            path: '/charts',
+            path: '/settings',
             component: {
                 render(c) {
                     return c('router-view');
@@ -306,25 +306,197 @@ export default new Router({
             children: [
                 {
                     path: '',
-                    name: 'ChartOfAccounts',
+                    name: 'Settings',
                     component: ChartOfAccounts
                 },
                 {
-                    path: 'new',
-                    name: 'AddChartAccounts',
-                    component: AddChartAccounts
+                    path: 'charts',
+                    component: {
+                        render(c) {
+                            return c('router-view');
+                        }
+                    },
+                    children: [
+                        {
+                            path: '',
+                            name: 'ChartOfAccounts',
+                            component: ChartOfAccounts
+                        },
+                        {
+                            path: 'new',
+                            name: 'AddChartAccounts',
+                            component: AddChartAccounts
+                        },
+                        {
+                            path: ':id/edit',
+                            name: 'ChartAccountsEdit',
+                            component: AddChartAccounts
+                        }
+                    ]
                 },
                 {
-                    path: ':id/edit',
-                    name: 'ChartAccountsEdit',
-                    component: AddChartAccounts
-                }
+                    path: 'banks',
+                    component: {
+                        render(c) {
+                            return c('router-view');
+                        }
+                    },
+                    children: [
+                        {
+                            path: '',
+                            name: 'BankAccounts',
+                            component: BankAccounts
+                        },
+                        {
+                            path: 'transfers',
+                            component: {
+                                render(c) {
+                                    return c('router-view');
+                                }
+                            },
+                            children: [
+                                {
+                                    path: '',
+                                    name: 'Transfers',
+                                    component: Transfers
+                                },
+                                {
+                                    path: 'new',
+                                    name: 'NewTransfer',
+                                    component: NewTransfer
+                                },
+                                {
+                                    path: ':id',
+                                    name: 'SingleTransfer',
+                                    component: SingleTransfer
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    path: 'taxes',
+                    component: {
+                        render(c) {
+                            return c('router-view');
+                        }
+                    },
+                    children: [
+                        {
+                            path: 'tax-records',
+                            component: {
+                                render(c) {
+                                    return c('router-view');
+                                }
+                            },
+                            children: [
+                                {
+                                    path: '',
+                                    name: 'TaxRecords',
+                                    component: TaxRecords
+                                },
+                                {
+                                    path: 'page/:page',
+                                    name: 'PaginateTaxRecords',
+                                    component: TaxRecords
+                                },
+                                {
+                                    path: ':id',
+                                    name: 'PayTaxSingle',
+                                    component: PayTaxSingle
+                                },
+
+                            ]
+                        },
+                        {
+                            path: 'tax-rates',
+                            component: {
+                                render(c) {
+                                    return c('router-view');
+                                }
+                            },
+                            children : [
+                                {
+                                    path: '',
+                                    name: 'TaxRates',
+                                    component: TaxRates,
+                                    alias: 'tax-rates'
+                                },
+                                {
+                                    path: 'new',
+                                    name: 'NewTaxRate',
+                                    component: NewTaxRate
+                                },
+                            ]
+                        },
+                        {
+                            path: 'rate-names',
+                            name: 'TaxZones',
+                            component: TaxZones
+                        },
+                        {
+                            path: 'agencies',
+                            name: 'TaxAgencies',
+                            component: TaxAgencies
+                        },
+                        {
+                            path: 'categories',
+                            name: 'TaxCategories',
+                            component: TaxCategories
+                        },
+                        {
+                            path: 'new-rate-name',
+                            name: 'NewTaxZone',
+                            component: NewTaxZone
+                        },
+                        {
+                            path: 'new-agency',
+                            name: 'NewTaxAgency',
+                            component: NewTaxAgency
+                        },
+                        {
+                            path: 'new-tax-cat',
+                            name: 'NewTaxCategory',
+                            component: NewTaxCategory
+                        },
+                        {
+                            path: ':id',
+                            name: 'SingleTaxRate',
+                            component: SingleTaxRate
+                        },
+                        {
+                            path: ':id/edit',
+                            name: 'EditSingleTaxRate',
+                            component: SingleTaxRate
+                        },
+                        {
+                            path: 'page/:page',
+                            name: 'PaginateTaxRates',
+                            component: TaxRates
+                        },
+                        {
+                            path: 'rate-names/page/:page',
+                            name: 'PaginateTaxZones',
+                            component: TaxZones
+                        },
+                        {
+                            path: 'categories/page/:page',
+                            name: 'PaginateTaxCategories',
+                            component: TaxCategories
+                        },
+                        {
+                            path: 'agencies/page/:page',
+                            name: 'PaginateTaxAgencies',
+                            component: TaxAgencies
+                        },
+                    ]
+                },
+                {
+                    path: 'pay-tax',
+                    name: 'RecordPayTax',
+                    component: RecordPayTax
+                },
             ]
-        },
-        {
-            path: '/banks',
-            name: 'BankAccounts',
-            component: BankAccounts
         },
         {
             path: '/invoices',
@@ -562,137 +734,6 @@ export default new Router({
             ]
         },
         {
-            path: '/taxes',
-            component: {
-                render(c) {
-                    return c('router-view');
-                }
-            },
-            children: [
-                {
-                    path: 'tax-records',
-                    component: {
-                        render(c) {
-                            return c('router-view');
-                        }
-                    },
-                    children: [
-                        {
-                            path: '',
-                            name: 'TaxRecords',
-                            component: TaxRecords
-                        },
-                        {
-                            path: 'page/:page',
-                            name: 'PaginateTaxRecords',
-                            component: TaxRecords
-                        },
-                        {
-                            path: ':id',
-                            name: 'PayTaxSingle',
-                            component: PayTaxSingle
-                        }
-                    ]
-                },
-                {
-                    path: 'tax-rates',
-                    name: 'TaxRates',
-                    component: TaxRates,
-                    alias: '/taxes'
-                },
-                {
-                    path: 'new',
-                    name: 'NewTaxRate',
-                    component: NewTaxRate
-                },
-                {
-                    path: 'rate-names',
-                    name: 'TaxZones',
-                    component: TaxZones
-                },
-                {
-                    path: 'agencies',
-                    name: 'TaxAgencies',
-                    component: TaxAgencies
-                },
-                {
-                    path: 'categories',
-                    name: 'TaxCategories',
-                    component: TaxCategories
-                },
-                {
-                    path: 'new-rate-name',
-                    name: 'NewTaxZone',
-                    component: NewTaxZone
-                },
-                {
-                    path: 'new-agency',
-                    name: 'NewTaxAgency',
-                    component: NewTaxAgency
-                },
-                {
-                    path: 'new-tax-cat',
-                    name: 'NewTaxCategory',
-                    component: NewTaxCategory
-                },
-                {
-                    path: ':id',
-                    name: 'SingleTaxRate',
-                    component: SingleTaxRate
-                },
-                {
-                    path: ':id/edit',
-                    name: 'EditSingleTaxRate',
-                    component: SingleTaxRate
-                },
-                {
-                    path: 'page/:page',
-                    name: 'PaginateTaxRates',
-                    component: TaxRates
-                },
-                {
-                    path: 'rate-names/page/:page',
-                    name: 'PaginateTaxZones',
-                    component: TaxZones
-                },
-                {
-                    path: 'categories/page/:page',
-                    name: 'PaginateTaxCategories',
-                    component: TaxCategories
-                },
-                {
-                    path: 'agencies/page/:page',
-                    name: 'PaginateTaxAgencies',
-                    component: TaxAgencies
-                }
-            ]
-        },
-        {
-            path: '/transfers',
-            component: {
-                render(c) {
-                    return c('router-view');
-                }
-            },
-            children: [
-                {
-                    path: '',
-                    name: 'Transfers',
-                    component: Transfers
-                },
-                {
-                    path: 'new',
-                    name: 'NewTransfer',
-                    component: NewTransfer
-                },
-                {
-                    path: ':id',
-                    name: 'SingleTransfer',
-                    component: SingleTransfer
-                }
-            ]
-        },
-        {
             path: '/expenses',
             component: {
                 render(c) {
@@ -743,11 +784,6 @@ export default new Router({
                     component: CheckCreate
                 }
             ]
-        },
-        {
-            path: '/pay-tax',
-            name: 'RecordPayTax',
-            component: RecordPayTax
         },
         {
             path: '/trn-loader',
