@@ -159,11 +159,11 @@ function erp_crm_get_crm_user_html_dropdown( $selected = '' ) {
 function erp_crm_get_details_url( $id, $type ) {
     if ( $id ) {
         if ( in_array( 'contact', $type, true ) ) {
-            return add_query_arg( ['page' => 'erp-crm', 'section' => 'contacts', 'action' => 'view', 'id' => $id ], admin_url( 'admin.php' ) );
+            return add_query_arg( ['page' => 'erp-crm', 'section' => 'contact', 'sub-section' => 'contacts', 'action' => 'view', 'id' => $id ], admin_url( 'admin.php' ) );
         }
 
         if ( in_array( 'company', $type, true ) ) {
-            return add_query_arg( ['page' => 'erp-crm', 'section' => 'companies', 'action' => 'view', 'id' => $id ], admin_url( 'admin.php' ) );
+            return add_query_arg( ['page' => 'erp-crm', 'section' => 'contact', 'sub-section' => 'companies', 'action' => 'view', 'id' => $id ], admin_url( 'admin.php' ) );
         }
     }
 
@@ -449,7 +449,7 @@ function erp_crm_company_get_customers( $postdata ) {
  * @return string admin url
  */
 function erp_crm_get_customer_details_url( $id ) {
-    return add_query_arg( ['page' => 'erp-crm', 'section' => 'contacts', 'action' => 'view', 'id' => $id ], admin_url( 'admin.php' ) );
+    return add_query_arg( [ 'page' => 'erp-crm', 'section' => 'contact', 'sub-section' => 'contacts', 'action' => 'view', 'id' => $id ], admin_url( 'admin.php' ) );
 }
 
 /**
@@ -4020,4 +4020,71 @@ function erp_crm_check_company_contact_relations( $id, $id_type ) {
             return $rel_count;
         }
     }
+}
+
+/**
+ * Retrieves html for contacts menu
+ *
+ * @since 1.8.0
+ *
+ * @param string $selected
+ *
+ * @return void
+ */
+function erp_crm_get_contacts_menu_html( $selected = 'contacts' ) {
+    $dropdown = [
+        'contacts'       => esc_html__( 'Contacts', 'erp' ),
+        'companies'      => esc_html__( 'Companies', 'erp' ),
+        'activities'     => esc_html__( 'Activities', 'erp' ),
+        'contact-groups' => esc_html__( 'Contact Groups', 'erp' ),
+    ];
+
+    $dropdown = apply_filters( 'erp_crm_contacts_menu_items', $dropdown );
+
+    ob_start();
+    ?>
+    
+    <div class="erp-custom-menu-container">
+        <ul class="erp-nav">
+            <?php foreach ( $dropdown as $key => $value ) : ?>
+                <?php if ( 'crm_life_stages' === $key ) : ?>
+                <li><a href="<?php echo add_query_arg( array( 'section' => $key ), admin_url( 'admin.php?page=erp-settings&tab=erp-crm' ) ); ?>" class="" data-key="<?php echo $key; ?>"><?php echo $value; ?></a></li>
+                <?php else : ?>
+                <li class="<?php echo $key === $selected ? 'active' : ''; ?>"><a href="<?php echo add_query_arg( array( 'sub-section' => $key ), admin_url( 'admin.php?page=erp-crm&section=contact' ) ); ?>" class="" data-key="<?php echo $key; ?>"><?php echo $value; ?></a></li>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+
+    <?php
+    echo ob_get_clean();
+}
+
+/**
+ * Retrieves html for tasks menu
+ *
+ * @since 1.8.0
+ *
+ * @param string $selected
+ *
+ * @return void
+ */
+function erp_crm_get_tasks_menu_html( $selected = '' ) {
+    $dropdown = [ 'schedules' => esc_html__( 'Schedules', 'erp' ) ];
+
+    $dropdown = apply_filters( 'erp_crm_tasks_menu_items', $dropdown );
+
+    ob_start();
+    ?>
+
+    <div class="erp-custom-menu-container" style="background: none; border: none; margin: 15px 0 15px 0; padding-left: 0;">
+        <ul class="erp-nav">
+            <?php foreach ( $dropdown as $key => $value ) : ?>
+            <li class="<?php echo $key === $selected ? 'active' : ''; ?>"><a href="<?php echo add_query_arg( array( 'sub-section' => $key ), admin_url( 'admin.php?page=erp-crm&section=task' ) ); ?>" data-key="<?php echo $key; ?>"><?php echo $value; ?></a></li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+
+    <?php
+    echo ob_get_clean();
 }
