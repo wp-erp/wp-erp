@@ -143,17 +143,14 @@ class Human_Resource {
             return;
         }
 
-        $suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+        $section     = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) )        : 'dashboard';
+        $sub_section = isset( $_GET['sub-section'] ) ? sanitize_text_field( wp_unslash( $_GET['sub-section'] ) ): 'employee';
+        $suffix      = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? ''                                       : '.min';
 
         wp_enqueue_media();
         wp_enqueue_script( 'erp-tiptip' );
         wp_enqueue_style( 'erp-datetimepicker' );
         wp_enqueue_script( 'erp-datetimepicker' );
-
-        if ( isset( $_GET['section'] ) && $_GET['section'] === 'employee' ) {
-            wp_enqueue_style( 'erp-sweetalert' );
-            wp_enqueue_script( 'erp-sweetalert' );
-        }
 
         wp_enqueue_script( 'wp-erp-hr', WPERP_HRM_ASSETS . "/js/hrm$suffix.js", [ 'erp-script' ], gmdate( 'Ymd' ), true );
         wp_enqueue_script( 'wp-erp-hr-leave', WPERP_HRM_ASSETS . "/js/leave$suffix.js", [
@@ -222,22 +219,25 @@ class Human_Resource {
             ], admin_url( 'admin.php' ) ), __( 'Create Entitlement', 'erp' ), __( 'Create Entitlement', 'erp' ) ),
         ] );
 
-        $section = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : 'dashboard';
-
         switch ( $section ) {
-            case 'employee':
-                wp_enqueue_script( 'post' );
-                $employee                          = new Employee();
-                $localize_script['employee_empty'] = $employee->to_array();
+            case 'people':
+                if ( $sub_section === 'employee' ) {
+                    wp_enqueue_script( 'post' );
+                    $employee                          = new Employee();
+                    $localize_script['employee_empty'] = $employee->to_array();
 
-                wp_enqueue_script( 'erp-flotchart' );
-                wp_enqueue_script( 'erp-flotchart-stack' );
-                wp_enqueue_script( 'erp-flotchart-time' );
-                wp_enqueue_script( 'erp-flotchart-pie' );
-                wp_enqueue_script( 'erp-flotchart-orerbars' );
-                wp_enqueue_script( 'erp-flotchart-axislables' );
-                wp_enqueue_script( 'erp-flotchart-valuelabel' );
-                wp_enqueue_style( 'erp-flotchart-valuelabel-css' );
+                    wp_enqueue_script( 'erp-flotchart' );
+                    wp_enqueue_script( 'erp-flotchart-stack' );
+                    wp_enqueue_script( 'erp-flotchart-time' );
+                    wp_enqueue_script( 'erp-flotchart-pie' );
+                    wp_enqueue_script( 'erp-flotchart-orerbars' );
+                    wp_enqueue_script( 'erp-flotchart-axislables' );
+                    wp_enqueue_script( 'erp-flotchart-valuelabel' );
+                    wp_enqueue_style( 'erp-flotchart-valuelabel-css' );
+                    wp_enqueue_style( 'erp-sweetalert' );
+                    wp_enqueue_script( 'erp-sweetalert' );
+                }
+
                 break;
 
             case 'report':
@@ -288,18 +288,9 @@ class Human_Resource {
         }
 
         $section = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : 'dashboard';
+
         switch ( $section ) {
-            case 'department':
-                erp_get_js_template( WPERP_HRM_JS_TMPL . '/new-dept.php', 'erp-new-dept' );
-                erp_get_js_template( WPERP_HRM_JS_TMPL . '/row-dept.php', 'erp-dept-row' );
-                break;
-
-            case 'designation':
-                erp_get_js_template( WPERP_HRM_JS_TMPL . '/new-designation.php', 'erp-new-desig' );
-                erp_get_js_template( WPERP_HRM_JS_TMPL . '/row-desig.php', 'erp-desig-row' );
-                break;
-
-            case 'employee':
+            case 'people':
             case 'my-profile':
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/new-employee.php', 'erp-new-employee' );
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/row-employee.php', 'erp-employee-row' );
@@ -326,6 +317,7 @@ class Human_Resource {
         // leave menu
         // $hook = str_replace( sanitize_title( __( 'Leave', 'erp' ) ), 'leave', $current_screen->base );
         $sub_section = isset( $_GET['sub-section'] ) ? sanitize_text_field( wp_unslash( $_GET['sub-section'] ) ) : '';
+
         switch ( $sub_section ) {
             case 'policies':
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/leave-policy.php', 'erp-leave-policy' );
@@ -340,8 +332,32 @@ class Human_Resource {
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/leave-reject.php', 'erp-hr-leave-reject-js-tmp' );
                 break;
 
-            default:
-                // code...
+            case 'department':
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/new-dept.php', 'erp-new-dept' );
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/row-dept.php', 'erp-dept-row' );
+                break;
+
+            case 'designation':
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/new-designation.php', 'erp-new-desig' );
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/row-desig.php', 'erp-desig-row' );
+                break;
+
+            case 'employee':
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/new-employee.php', 'erp-new-employee' );
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/row-employee.php', 'erp-employee-row' );
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/employment-type.php', 'erp-employment-type' );
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/employment-status.php', 'erp-employment-status' );
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/compensation.php', 'erp-employment-compensation' );
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/job-info.php', 'erp-employment-jobinfo' );
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/work-experience.php', 'erp-employment-work-experience' );
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/education-form.php', 'erp-employment-education' );
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/performance-reviews.php', 'erp-employment-performance-reviews' );
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/performance-comments.php', 'erp-employment-performance-comments' );
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/performance-goals.php', 'erp-employment-performance-goals' );
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/dependents.php', 'erp-employment-dependent' );
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/new-dept.php', 'erp-new-dept' );
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/new-designation.php', 'erp-new-desig' );
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/employee-terminate.php', 'erp-employment-terminate' );
                 break;
         }
     }
