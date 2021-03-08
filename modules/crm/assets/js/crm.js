@@ -59,6 +59,16 @@
 
             $( 'body').on( 'change', '#crm-filter-duration', this.report.customFilter );
 
+            $('body').on( 'change', '.wp-list-table', function(e) {
+                var selector = $('.wp-list-table tbody tr th input[type="checkbox"]');
+                
+                if ( selector.is(':checked') ) {
+                    $('.tablenav .bulkactions').show();
+                } else {
+                    $('.tablenav .bulkactions').hide();
+                }
+            });
+
             // CRM tag
             this.initTagAddByEnterPressed();
 
