@@ -5,7 +5,8 @@ $crm_users = erp_crm_get_crm_user();
 ?>
 <div class="wrap erp erp-crm-activities erp-single-customer" id="wp-erp">
 
-    <h2><?php esc_attr_e( 'Activities', 'erp' ); ?></h2>
+    <h2><?php esc_attr_e( 'Contacts', 'erp' ); ?></h2>
+    <?php do_action( 'erp_crm_contact_menu', 'activities' ); ?>
     <hr>
     <div class="erp-customer-feeds" id="erp-customer-feeds" v-cloak>
 

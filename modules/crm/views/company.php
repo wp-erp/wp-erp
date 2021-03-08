@@ -17,13 +17,16 @@ if ( isset( $_GET['filter_assign_contact' ] ) && !empty( $_GET['filter_assign_co
 ?>
 <div class="wrap erp-crm-customer erp-crm-customer-listing" id="wp-erp">
 
-    <h2><?php esc_attr_e( 'Company', 'erp' ); ?>
+    <h2>
+        <?php esc_attr_e( 'Contacts', 'erp' ); ?>
         <?php if ( current_user_can( 'erp_crm_add_contact' ) ) { ?>
             <a href="#" @click.prevent="addContact( 'company', '<?php esc_attr_e( 'Add New Company', 'erp' ); ?>' )" id="erp-company-new" class="erp-contact-new add-new-h2" data-type="company" title="<?php esc_attr_e( 'Add New Company', 'erp' ); ?>"><?php esc_attr_e( 'Add New Company', 'erp' ); ?></a>
         <?php } ?>
 
         <a href="#" @click.prevent="addSearchSegment()" id="erp-contact-search-segmen" class="erp-search-segment add-new-h2" v-text="( showHideSegment ) ? '<?php esc_attr_e( 'Hide Search Segment', 'erp' ); ?>' : '<?php esc_attr_e( 'Add Search Segment', 'erp' ); ?>'"></a>
     </h2>
+
+    <?php do_action( 'erp_crm_contact_menu', 'companies' ); ?>
 
     <!-- Advance search filter vue component -->
     <advance-search :show-hide-segment="showHideSegment"></advance-search>
@@ -36,7 +39,7 @@ if ( isset( $_GET['filter_assign_contact' ] ) && !empty( $_GET['filter_assign_co
         row-checkbox-name="company_id"
         action="erp-crm-get-contacts"
         :wpnonce="wpnonce"
-        page = "<?php echo esc_url_raw( add_query_arg( [ 'page' => 'erp-crm', 'section' => 'companies' ], admin_url( 'admin.php' ) ) ); ?>"
+        page = "<?php echo esc_url_raw( add_query_arg( [ 'page' => 'erp-crm', 'section' => 'contact', 'sub-section' => 'companies' ], admin_url( 'admin.php' ) ) ); ?>"
         per-page="20"
         :fields=fields
         :item-row-actions=itemRowActions
