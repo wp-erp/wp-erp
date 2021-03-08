@@ -25,7 +25,7 @@
                                             if ( $contact_key == 'all' || $contact_key == 'trash' ) {
                                                 continue;
                                             }
-                                            $contact_url = add_query_arg( [ 'page' => 'erp-crm', 'section' => 'contacts', 'status' => $contact_key ], admin_url( 'admin.php' ) ); ?>
+                                            $contact_url = add_query_arg( [ 'page' => 'erp-crm', 'section' => 'contact', 'sub-section' => 'contacts', 'status' => $contact_key ], admin_url( 'admin.php' ) ); ?>
                                             <li>
                                                 <a href="<?php echo esc_url_raw( $contact_url ); ?>">
                                                     <i class="fa fa-square" aria-hidden="true"></i>&nbsp;
@@ -40,7 +40,7 @@
                             </div>
                         </div>
                         <div class="erp-info-box-footer">
-                            <a href="<?php echo esc_url_raw( admin_url( 'admin.php?page=erp-crm&section=contacts' ) ); ?>"><?php esc_attr_e( 'View all Contacts', 'erp' ); ?></a>
+                            <a href="<?php echo esc_url_raw( admin_url( 'admin.php?page=erp-crm&section=contact&sub-section=contacts' ) ); ?>"><?php esc_attr_e( 'View all Contacts', 'erp' ); ?></a>
                         </div>
                     </div>
                 </div>
@@ -61,9 +61,11 @@
                                             if ( $company_key == 'all' || $company_key == 'trash' ) {
                                                 continue;
                                             }
-                                            $company_url = add_query_arg( [ 'page'      => 'erp-crm',
-                                                                              'section' => 'companies',
-                                                                              'status'  => $company_key,
+                                            $company_url = add_query_arg( [
+                                                'page'        => 'erp-crm',
+                                                'section'     => 'contact',
+                                                'sub-section' => 'companies',
+                                                'status'      => $company_key,
                                             ], admin_url( 'admin.php' ) ); ?>
                                             <li>
                                                 <a href="<?php echo esc_url_raw( $company_url ); ?>">
@@ -78,7 +80,7 @@
                                 </div>
                             </div>
                         </div>
-                        <?php $companies_url = add_query_arg( ['page' => 'erp-crm', 'section' => 'companies'], admin_url( 'admin.php' ) ); ?>
+                        <?php $companies_url = add_query_arg( [ 'page' => 'erp-crm', 'section' => 'contact', 'sub-section' => 'companies' ], admin_url( 'admin.php' ) ); ?>
                         <div class="erp-info-box-footer">
                             <a href="<?php echo  esc_url_raw( $companies_url ); ?>"><?php esc_attr_e( 'View all Companies', 'erp' ); ?></a>
                         </div>
