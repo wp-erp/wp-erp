@@ -993,7 +993,7 @@ class Form_Handler {
 
         do_action( 'erp_hr_after_employee_permission_set', $_POST, $user );
 
-        $redirect_to = admin_url( 'admin.php?page=erp-hr&section=employee&action=view&id=' . $user->ID . '&tab=permission&msg=success' );
+        $redirect_to = admin_url( 'admin.php?page=erp-hr&section=people&sub-section=employee&action=view&id=' . $user->ID . '&tab=permission&msg=success' );        wp_redirect( $redirect_to );
         wp_redirect( $redirect_to );
         exit;
     }

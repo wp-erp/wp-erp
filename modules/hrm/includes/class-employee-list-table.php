@@ -40,42 +40,54 @@ class Employee_List_Table extends \WP_List_Table {
         $selected_desingnation = ( isset( $_GET['filter_designation'] ) ) ? sanitize_text_field( wp_unslash( $_GET['filter_designation'] ) ) : 0;
         $selected_department   = ( isset( $_GET['filter_department'] ) ) ? sanitize_text_field( wp_unslash( $_GET['filter_department'] ) ) : 0;
         $selected_type         = ( isset( $_GET['filter_employment_type'] ) ) ? sanitize_text_field( wp_unslash( $_GET['filter_employment_type'] ) ) : ''; ?>
-        <div class="alignleft actions">
 
-            <label class="screen-reader-text" for="new_role"><?php esc_html_e( 'Filter by Designation', 'erp' ); ?></label>
-            <select name="filter_designation" id="filter_designation">
-                <?php echo wp_kses( erp_hr_get_designation_dropdown( $selected_desingnation ), [
-                    'option' => [
-                        'value'    => [],
-                        'selected' => [],
-                    ],
-                ] ); ?>
-            </select>
+        <div class="wperp-filter-dropdown" style="margin: -53px 0 0 0;">
+            <a class="wperp-btn btn--default"><span class="dashicons dashicons-filter"></span>Filters<span class="dashicons dashicons-arrow-down-alt2"></span></a>
+            <div class="erp-dropdown-filter-content" id="erp-dropdown-content">
+                <div class="wperp-filter-panel wperp-filter-panel-default">
+                    <h3>Filter</h3>
+                    <div class="wperp-filter-panel-body">
+                        <label class="screen-reader-text" for="new_role"><?php esc_html_e( 'Filter by Designation', 'erp' ); ?></label>
+                        <select name="filter_designation" id="filter_designation">
+                            <?php echo wp_kses( erp_hr_get_designation_dropdown( $selected_desingnation ), [
+                                'option' => [
+                                    'value'    => [],
+                                    'selected' => [],
+                                ],
+                            ] ); ?>
+                        </select>
 
-            <label class="screen-reader-text" for="new_role"><?php esc_html_e( 'Filter by Designation', 'erp' ); ?></label>
-            <select name="filter_department" id="filter_department">
-                <?php echo wp_kses( erp_hr_get_departments_dropdown( $selected_department ), [
-                    'option' => [
-                        'value'    => [],
-                        'selected' => [],
-                    ],
-                ] ); ?>
-            </select>
+                        <label class="screen-reader-text" for="new_role"><?php esc_html_e( 'Filter by Designation', 'erp' ); ?></label>
+                        <select name="filter_department" id="filter_department">
+                            <?php echo wp_kses( erp_hr_get_departments_dropdown( $selected_department ), [
+                                'option' => [
+                                    'value'    => [],
+                                    'selected' => [],
+                                ],
+                            ] ); ?>
+                        </select>
 
-            <label class="screen-reader-text" for="new_role"><?php esc_html_e( 'Filter by Employment Type', 'erp' ); ?></label>
-            <select name="filter_employment_type" id="filter_employment_type">
-                <option value="-1"><?php esc_html_e( '- Select Employment Type -', 'erp' ); ?></option>
-                <?php
-                    $types = erp_hr_get_employee_types();
+                        <label class="screen-reader-text" for="new_role"><?php esc_html_e( 'Filter by Employment Type', 'erp' ); ?></label>
+                        <select name="filter_employment_type" id="filter_employment_type">
+                            <option value="-1"><?php esc_html_e( '- Select Employment Type -', 'erp' ); ?></option>
+                            <?php
+                            $types = erp_hr_get_employee_types();
 
-        foreach ( $types as $key => $title ) {
-            echo sprintf( "<option value='%s'%s>%s</option>\n", esc_html( $key ), selected( $selected_type, esc_html( $key ), false ), esc_html( $title ) );
-        } ?>
-            </select>
+                            foreach ( $types as $key => $title ) {
+                                echo sprintf( "<option value='%s'%s>%s</option>\n", esc_html( $key ), selected( $selected_type, esc_html( $key ), false ), esc_html( $title ) );
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="wperp-filter-panel-footer">
+                        <input type="submit" class="wperp-btn btn--cancel" value="Cancel" name="hide_filter">
+                        <?php submit_button( __( 'Filter', 'erp' ), 'submit', 'filter_employee', false, [ 'id' => 'filter', 'class' => 'wperp-btn btn--primary' ] ); ?>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-            <?php
-            submit_button( __( 'Filter' ), 'button', 'filter_employee', false );
-        echo '</div>';
+    <?php
     }
 
     /**
@@ -277,7 +289,7 @@ class Employee_List_Table extends \WP_List_Table {
      */
     public function get_views() {
         $status_links   = [];
-        $base_link      = admin_url( 'admin.php?page=erp-hr&section=employee&orderby=employee_name&order=asc' );
+        $base_link      = admin_url( 'admin.php?page=erp-hr&section=people&sub-section=employee&orderby=employee_name&order=asc' );
 
         foreach ( $this->counts as $key => $value ) {
             $class                = ( $key == $this->page_status ) ? 'current' : 'status-' . $key;
