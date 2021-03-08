@@ -34,8 +34,7 @@
                         if ( is_admin() ) {
                             ?>
                             <div class="badge-footer wp-ui-highlight">
-                                <a href="<?php echo esc_url( admin_url( 'admin.php?page=erp-hr&section=department' ) ); ?>"><?php esc_html_e( 'View Departments', 'erp' ); ?></a>
-                            </div>
+                            <a href="<?php echo esc_url( admin_url( 'admin.php?page=erp-hr&section=people&sub-section=department' ) ); ?>"><?php esc_html_e( 'View Departments', 'erp' ); ?></a>                            </div>
                             <?php
                         }
                         ?>
@@ -51,7 +50,7 @@
                         if ( is_admin() ) {
                             ?>
                             <div class="badge-footer wp-ui-highlight">
-                                <a href="<?php echo esc_url( admin_url( 'admin.php?page=erp-hr&section=designation' ) ); ?>"><?php esc_html_e( 'View Designation', 'erp' ); ?></a>
+                            <a href="<?php echo esc_url( admin_url( 'admin.php?page=erp-hr&section=people&sub-section=designation' ) ); ?>"><?php esc_html_e( 'View Designation', 'erp' ); ?></a>
                             </div>
                             <?php
                         }
