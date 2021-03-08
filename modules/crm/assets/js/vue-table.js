@@ -1,33 +1,23 @@
-Vue.component('vtable', {
+vt = Vue.component('vtable', {
     template:
-        '<div class="vtable-wrap list-table-wrap {{ wrapperClass }}">'
-            +'<div class="list-table-inner {{ tableWrapper }}">'
-                +'<form method="get">'
-                    +'<p class="search-box {{ search.wrapperClass }}">'
-                        +'<label class="screen-reader-text" for="{{ search.inputId }}">{{ search.screenReaderText }}</label>'
-                        +'<input type="search" v-model="searchQuery" id="{{ search.inputId }}" value="" name="s" placeholder="{{ search.placeholder }}" @input.prevent="searchAction( searchQuery )" >'
-                    +'</p>'
-                    +'<ul v-if="!hasTopNavFilter()" class="subsubsub">'
-                        +'<li v-for="( key, filter ) in topNavFilter.data" class="{{key}}"><a href="#" @click.prevent="callTopNavFilterAction( key, filter )" :class="{ \'current\': iscurrentTopNavFilter( key ) }">{{ filter.label }} <span class="count">({{ filter.count }})</span></a> <span v-if="!ifTopNavFilterLastItem( key )"> | </span></li>'
-                    +'</ul>'
-                    +'<div class="tablenav top">'
-                        +'<div class="alignleft actions bulkactions" v-if="hasBulkAction()">'
-                            +'<label for="bulk-action-selector-top" class="screen-reader-text">Select bulk action</label>'
-                            +'<select name="action" id="bulk-action-selector-top" v-model="bulkaction1">'
-                                +'<option value="-1">{{ bulkActions }}</option>'
-                                +'<option v-if="showRowAction( actions )" v-for="actions in bulkactions" value="{{ actions.id }}">{{ actions.text }}</option>'
-                            +'</select>'
-                            +'<input type="submit" id="doaction" @click.prevent="handleBulkAction(bulkaction1)" class="button action" :value="applyText">'
-                        +'</div>'
-
-                        +'<template v-if="hasExtraBulkAction()">'
-                            +'<div class="alignleft actions bulkactions">'
-                                +'<label for="bulk-action-selector-top" class="screen-reader-text">Select bulk action</label>'
+        '<div class="content-header-section">'
+        +'<form method="get">'
+            +'<p class="search-box erp-list-table-search {{ search.wrapperClass }}">'
+                +'<label class="screen-reader-text" for="{{ search.inputId }}">{{ search.screenReaderText }}</label>'
+                +'<input type="search" v-model="searchQuery" id="{{ search.inputId }}" value="" name="s" placeholder="{{ search.placeholder }}" @input.prevent="searchAction( searchQuery )" >'
+            +'</p>'
+            +'<template v-if="hasExtraBulkAction()">'
+                +'<div class="wperp-filter-dropdown">'
+                    +'<a @click.prevent="toggleDropdown()" class="wperp-btn btn--default"><span class="dashicons dashicons-filter"></span>Filters<span class="dashicons dashicons-arrow-down-alt2"></span></a>'
+                    +'<div class="erp-dropdown-filter-content" id="erp-dropdown-content">'
+                        +'<div class="wperp-filter-panel wperp-filter-panel-default">'
+                            +'<h3>Filter</h3>'
+                            +'<div class="wperp-filter-panel-body">'
                                 +'<template v-for="extraActions in extraBulkAction">'
-                                    +'<select v-if="( extraActions.type == \'select\')" name="{{ extraActions.name }}" id="{{ extraActions.id }}" class="v-select-field {{ extraActions.class }}" style="width:200px;">'
+                                    +'<select v-if="( extraActions.type == \'select\')" name="{{ extraActions.name }}" id="{{ extraActions.id }}" class="v-select-field {{ extraActions.class }}">'
                                         +'<option v-for="bulkOption in extraActions.options" value="{{ bulkOption.id }}">{{ bulkOption.text }}</option>'
                                     +'</select>'
-                                    +'<select v-if="( extraActions.type == \'select_optgroup\')" name="{{ extraActions.name }}" id="{{ extraActions.id }}" class="v-select-field {{ extraActions.class }}" data-placeholder="{{ extraActions.placeholder }}" style="width:200px;">'
+                                    +'<select v-if="( extraActions.type == \'select_optgroup\')" name="{{ extraActions.name }}" id="{{ extraActions.id }}" class="v-select-field {{ extraActions.class }}" data-placeholder="{{ extraActions.placeholder }}">'
                                         + '<template v-if="extraActions.default">'
                                             + '<option disabled="disabled" selected="selected" value="{{ extraActions.default.id }}">{{ extraActions.default.text }}</option>'
                                         + '</template>'
@@ -37,9 +27,24 @@ Vue.component('vtable', {
                                     +'</select>'
                                     +'<input v-if="extraActions.type == \'email\' || extraActions.type == \'text\' || extraActions.type == \'date\' || extraActions.type == \'number\'" type="{{ extraActions.type }}" name="{{ extraActions.name }}" id="{{ extraActions.id }}" class="{{ extraActions.class }}" v-model="extraBulkActionData[extraActions.name]">'
                                 +'</template>'
-                                +'<input type="submit" id="filter" @click.prevent="handleExtraBulkAction()" class="button action" :value="filterText">'
                             +'</div>'
-                        +'</template>'
+                            +'<div class="wperp-filter-panel-footer">'
+                                +'<input type="submit" class="wperp-btn btn--cancel" value="Cancel" @click.prevent="toggleDropdown()">'
+                                +'<input type="submit" class="wperp-btn btn--primary" id="filter" @click.prevent="handleExtraBulkAction()" :value="filterText">'
+                            +'</div>'
+                        +'</div>'
+                    +'</div>'
+                +'</div>'
+            +'</template>'
+        +'</form>'
+        +'</div>'
+        +'<div class="vtable-wrap list-table-wrap {{ wrapperClass }}">'
+            +'<div class="list-table-inner {{ tableWrapper }}">'
+                +'<form method="get">'
+                    +'<div class="tablenav top">'
+                        +'<ul v-if="!hasTopNavFilter()" class="subsubsub">'
+                            +'<li v-for="( key, filter ) in topNavFilter.data" class="{{key}}"><a href="#" @click.prevent="callTopNavFilterAction( key, filter )" :class="{ \'current\': iscurrentTopNavFilter( key ) }">{{ filter.label }} <span class="count">({{ filter.count }})</span></a> <span v-if="!ifTopNavFilterLastItem( key )"> | </span></li>'
+                        +'</ul>'
 
                         +'<div class="tablenav-pages" :class="{ \'one-page\': hidePagination }">'
                             +'<span v-if="totalItem" class="displaying-num">{{ totalItem }} {{ totalItem | pluralize \'item\' }}</span>'
@@ -69,7 +74,17 @@ Vue.component('vtable', {
                                         +'<label class="screen-reader-text" for="cb-select-all-1">{{ selectAllText }}</label>'
                                         +'<input id="cb-select-all-1" v-model="checkAllCheckbox" @change="triggerAllCheckBox()" type="checkbox">'
                                     +'</td>'
-                                    +'<template v-for="(i,field) in fields">'
+
+                                    +'<td class="actions bulkactions" v-if="hasBulkAction() && checkboxItems.length" colspan="{{fields.length}}">'
+                                        +'<label for="bulk-action-selector-top" class="screen-reader-text">Select bulk action</label>'
+                                        +'<select name="action" id="bulk-action-selector-top" v-model="bulkaction1">'
+                                            +'<option value="-1">{{ bulkActions }}</option>'
+                                            +'<option v-if="showRowAction( actions )" v-for="actions in bulkactions" value="{{ actions.id }}">{{ actions.text }}</option>'
+                                        +'</select>'
+                                        +'<input type="submit" id="doaction" @click.prevent="handleBulkAction(bulkaction1)" class="button action" :value="applyText">'
+                                    +'</td>'
+
+                                    +'<template v-for="(i,field) in fields" v-if="!checkboxItems.length">'
                                         +'<template v-if="i==0">'
                                             +'<th v-if="!isSortable( field )" scope="col" id="{{ field.name }}" class="manage-column column-{{ field.name }} column-primary">{{ field.title }}</th>'
                                             +'<th v-else scope="col" id="{{ field.name }}" class="manage-column column-{{ field.name }} column-primary sortable {{ sortOrder.direction }}">'
@@ -150,7 +165,17 @@ Vue.component('vtable', {
                                         +'<label class="screen-reader-text" for="cb-select-all-2">Select All</label>'
                                         +'<input id="cb-select-all-2" v-model="checkAllCheckbox" @change="triggerAllCheckBox()" type="checkbox">'
                                     +'</td>'
-                                    +'<template v-for="(i,field) in fields">'
+
+                                    +'<td class="actions bulkactions" v-if="hasBulkAction() && checkboxItems.length" colspan="{{fields.length}}">'
+                                        +'<label for="bulk-action-selector-top" class="screen-reader-text">Select bulk action</label>'
+                                        +'<select name="action" id="bulk-action-selector-top" v-model="bulkaction1">'
+                                            +'<option value="-1">{{ bulkActions }}</option>'
+                                            +'<option v-if="showRowAction( actions )" v-for="actions in bulkactions" value="{{ actions.id }}">{{ actions.text }}</option>'
+                                        +'</select>'
+                                        +'<input type="submit" id="doaction" @click.prevent="handleBulkAction(bulkaction1)" class="button action" :value="applyText">'
+                                    +'</td>'
+
+                                    +'<template v-for="(i,field) in fields" v-if="!checkboxItems.length">'
                                         +'<template v-if="i==0">'
                                             +'<th v-if="!isSortable( field )" scope="col" id="{{ field.name }}" class="manage-column column-{{ field.name }} column-primary">{{ field.title }}</th>'
                                             +'<th v-else scope="col" id="{{ field.name }}" class="manage-column column-{{ field.name }} column-primary sortable {{ sortOrder.direction }}">'
@@ -175,36 +200,6 @@ Vue.component('vtable', {
                         +'</table>'
                         +'<div class="vtable-loader-bg" v-if="ajaxloader"></div>'
                         +'<div class="vtable-loader" v-if="ajaxloader"></div>'
-                    +'</div>'
-                    +'<div class="tablenav bottom">'
-                        +'<div class="alignleft actions bulkactions" v-if="hasBulkAction()">'
-                            +'<label for="bulk-action-selector-bottom" class="screen-reader-text">Select bulk action</label>'
-                            +'<select name="action2" id="bulk-action-selector-bottom" v-model="bulkaction2">'
-                                +'<option value="-1">{{ bulkActions }}</option>'
-                                +'<option v-if="showRowAction( actions )" v-for="actions in bulkactions" value="{{ actions.id }}">{{ actions.text }}</option>'
-                            +'</select>'
-                            +'<input type="submit" id="doaction2" @click.prevent="handleBulkAction( bulkaction2 )" class="button action" :value="applyText">'
-                        +'</div>'
-
-                        +'<div class="tablenav-pages" :class="{ \'one-page\': hidePagination }">'
-                            +'<span v-if="totalItem" class="displaying-num">{{ totalItem }} {{ totalItem | pluralize \'item\' }}</span>'
-                            +'<span class="pagination-links">'
-                                +'<span v-if="isFirstPage()" class="tablenav-pages-navspan" aria-hidden="true">«</span>'
-                                +'<a v-else class="first-page" href="#" @click.prevent="goFirstPage()"><span class="screen-reader-text">First page</span><span aria-hidden="true">«</span></a>'
-
-                                +'<span v-if="currentPage == 1"class="tablenav-pages-navspan" aria-hidden="true">‹</span>'
-                                +'<a v-else class="prev-page" href="#" @click.prevent="goToPage(\'prev\')"><span class="screen-reader-text">Previous page</span><span aria-hidden="true">‹</span></a>'
-
-                                +'<span class="screen-reader-text">Current Page</span><span id="table-paging" class="paging-input">{{ currentPage }} of <span class="total-pages">{{ totalPage }}</span></span>'
-
-                                +'<span v-if="currentPage == totalPage"class="tablenav-pages-navspan" aria-hidden="true">›</span>'
-                                +'<a v-else class="next-page" href="#" @click.prevent="goToPage(\'next\')"><span class="screen-reader-text">Next page</span><span aria-hidden="true">›</span></a>'
-
-                                +'<span v-if="isLastPage()" class="tablenav-pages-navspan" aria-hidden="true">»</span>'
-                                +'<a v-else class="last-page" href="#" @click.prevent="goLastPage()"><span class="screen-reader-text">Last page</span><span aria-hidden="true">»</span></a>'
-                            +'</span>'
-                        +'</div>'
-                        +'<br class="clear">'
                     +'</div>'
                 +'</form>'
             +'</div><!-- .list-table-inner -->'
@@ -462,6 +457,7 @@ Vue.component('vtable', {
 
         handleExtraBulkAction: function() {
             var data = jQuery.extend( {}, this.extraBulkActionData, this.extraBulkActionSelectData );
+            this.toggleDropdown();
             this.$dispatch('vtable:extra-bulk-action', data, this.checkboxItems );
             this.additionalParams = jQuery.extend( true, this.additionalParams, data );
             this.fetchData();
@@ -978,7 +974,11 @@ Vue.component('vtable', {
             });
 
             return res.join('&or&')
-        }
+        },
+
+        toggleDropdown: function() {
+            document.getElementById("erp-dropdown-content").classList.toggle("show");
+        },
     },
 
     events: {
