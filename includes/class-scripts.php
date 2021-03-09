@@ -209,6 +209,11 @@ class Scripts {
         wp_enqueue_style( 'erp-select2' );
         wp_enqueue_style( 'jquery-ui' );
         wp_enqueue_style( 'erp-styles' );
-        wp_enqueue_style( 'erp-custom-menu' );
+
+        $page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
+
+        if ( ! empty( $page ) && ( 'erp-hr' === $page || 'erp-crm' === $page || 'erp-settings' === $page ) ) {
+            wp_enqueue_style( 'erp-custom-menu' );
+        }
     }
 }
