@@ -934,7 +934,7 @@ class Setup_Wizard {
 
                         if ( $is_hrm_activated ) { ?>
                             <a class="button button-primary button-large btn-add-employees"
-                                href="<?php echo esc_url( admin_url( 'admin.php?page=erp-hr&section=employee' ) ); ?>">
+                                href="<?php echo esc_url( admin_url( 'admin.php?page=erp-hr&section=people&sub-section=employee' ) ); ?>">
                                 <?php esc_html_e( 'Add your employees!', 'erp' ); ?>
                             </a>
                         <?php } ?>

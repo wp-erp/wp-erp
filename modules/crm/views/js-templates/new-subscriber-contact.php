@@ -23,7 +23,7 @@
             ] ); ?>
         </div>
     <?php } else { ?>
-        <p><?php echo wp_kses_post( sprintf( '%s <a href="%s">%s</a>', __( 'No group founds. Please add group first', 'erp' ), add_query_arg( [ 'page' => 'erp-crm', 'section' => 'contact-groups' ], admin_url( 'admin.php' ) ), __( 'Add New Group', 'erp' ) ) ); ?></p>
+        <p><?php echo wp_kses_post( sprintf( '%s <a href="%s">%s</a>', __( 'No group founds. Please add group first', 'erp' ), add_query_arg( [ 'page' => 'erp-crm', 'section' => 'contact', 'sub-section' => 'contact-groups' ], admin_url( 'admin.php' ) ), __( 'Add New Group', 'erp' ) ) ); ?></p>
     <?php } ?>
 
     <?php wp_nonce_field( 'wp-erp-crm-contact-subscriber' ); ?>

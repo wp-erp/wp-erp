@@ -139,6 +139,8 @@ class Settings extends ERP_Settings_Page {
             ],
         ]; // End opening balance settings
 
+        $fields = apply_filters( 'erp_settings_acct_section_fields', $fields, $section );
+
         $section = false === $section ? $fields['checkout'] : isset( $fields[ $section ] ) ? $fields[ $section ] : [];
 
         return apply_filters( 'erp_ac_settings_section_fields_' . $this->id, $section );
