@@ -81,7 +81,7 @@ class Employee_List_Table extends \WP_List_Table {
                     </div>
                     <div class="wperp-filter-panel-footer">
                         <input type="submit" class="wperp-btn btn--cancel" value="Cancel" name="hide_filter">
-                        <?php submit_button( __( 'Filter', 'erp' ), 'submit', 'filter_employee', false, [ 'id' => 'filter', 'class' => 'wperp-btn btn--primary' ] ); ?>
+                        <?php submit_button( __( 'Apply', 'erp' ), 'submit', 'filter_employee', false, [ 'id' => 'filter', 'class' => 'wperp-btn btn--primary' ] ); ?>
                     </div>
                 </div>
             </div>
