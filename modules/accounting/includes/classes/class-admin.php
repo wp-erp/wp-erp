@@ -141,20 +141,10 @@ class Admin {
                 'accounting',
                 'transactions',
                 [
-                    'title'      => __( 'Reimbursement', 'erp' ),
+                    'title'      => __( 'Reimbursements', 'erp' ),
                     'capability' => 'erp_ac_manager',
                     'slug'       => 'transactions/reimbursements',
                     'position'   => 30
-                ]
-            );
-            erp_add_submenu(
-                'accounting',
-                'transactions',
-                [
-                    'title'      => __( 'Requests', 'erp' ),
-                    'capability' => 'erp_ac_manager',
-                    'slug'       => 'transactions/reimbursements/requests',
-                    'position'   => 35
                 ]
             );
         }
@@ -165,7 +155,7 @@ class Admin {
                 'title'      => __( 'Settings', 'erp' ),
                 'capability' => $account_charts,
                 'slug'       => 'settings',
-                'position'   => 30,
+                'position'   => 80,
             ]
         );
         erp_add_submenu(
@@ -214,7 +204,7 @@ class Admin {
                 'title'      => __( 'Products', 'erp' ),
                 'capability' => 'erp_ac_view_sale',
                 'slug'       => 'products',
-                'position'   => 45,
+                'position'   => 30,
             ]
         );
         erp_add_submenu(
