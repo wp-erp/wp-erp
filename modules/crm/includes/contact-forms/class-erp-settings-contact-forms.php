@@ -113,7 +113,7 @@ class ERP_Settings_Contact_Forms {
         $forms       = $this->forms[ $sub_section ];
 
         if ( 'contact_forms' === $cur_section ) {
-            printf( '<ul class="subsubsub" style="margin-bottom: 15px; background-color: white;">' );
+            printf( '<ul class="subsubsub" style="margin: -12px 0 20px 0;">' );
 
             foreach ( $plugins as $slug => $plugin ) {
                 printf(
