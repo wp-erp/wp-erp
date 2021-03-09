@@ -121,7 +121,7 @@ class ERP_Admin_Settings {
             return;
         }
 
-        echo '<h2 class="nav-tab-wrapper erp-nav-tab-wrapper">';
+        echo '<h2 class="nav-tab-wrapper erp-nav-tab-wrapper" style="margin-bottom: 20px;">';
 
         foreach ( $settings as $obj ) {
             $url   = sprintf( 'admin.php?page=erp-settings&tab=%s', $obj->get_id() );
@@ -175,19 +175,17 @@ class ERP_Admin_Settings {
             return;
         }
 
-        echo '<ul class="erp-subsubsub">';
+        ?>
+        <div class="erp-custom-menu-container">
+            <ul class="erp-nav">
 
-        echo '<li>';
+            <?php foreach ( $tab_sections as $slug => $label ) : ?>
+                <li class="<?php echo $current_section == $slug ? 'active' : ''; ?>"><a href="<?php echo esc_url( admin_url( 'admin.php?page=erp-settings&tab=' . $current_tab . '&section=' . sanitize_title( $slug ) ) ); ?>"><?php esc_html_e( $label ); ?></a></li>
+            <?php endforeach; ?>
 
-        foreach ( $tab_sections as $slug => $label ) {
-            $url    = 'admin.php?page=erp-settings&tab=' . $current_tab . '&section=' . $slug;
-            $class  = ( $current_section == $slug ) ? ' erp-nav-tab-active' : '';
-            $link[] = '<a class="erp-nav-tab' . $class . '" href="' . $url . '">' . $label . '</a>';
-        }
-
-        echo wp_kses_post( implode( ' | </li><li>', $link ) );
-        echo '</li>';
-
-        echo '</ul>';
+            </ul>
+            <br class="clear" />
+        </div>
+        <?php
     }
 }
