@@ -78,7 +78,7 @@ class Designation_List_Table extends WP_List_Table {
     public function column_name( $designation ) {
         $actions           = [];
         $delete_url        = '';
-        $link_to_employee  = add_query_arg( [ 'page'=>'erp-hr', 'section' => 'employee', 'filter_designation' => $designation->id ], admin_url( 'admin.php' ) );
+        $link_to_employee  = add_query_arg( [ 'page' => 'erp-hr', 'section' => 'people', 'sub-section' => 'employee', 'filter_designation' => $designation->id ], admin_url( 'admin.php' ) );
         $actions['edit']   = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $delete_url, $designation->id, __( 'Edit this item', 'erp' ), __( 'Edit', 'erp' ) );
         $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" title="%s">%s</a>', $delete_url, $designation->id, __( 'Delete this item', 'erp' ), __( 'Delete', 'erp' ) );
 

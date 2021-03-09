@@ -529,3 +529,37 @@ function erp_hr_holiday_reminder_to_employees() {
         }
     }
 }
+
+/**
+ * Retrieves html for hr people menu
+ *
+ * @since 1.8.0
+ *
+ * @param string $selected
+ *
+ * @return void
+ */
+function erp_hr_get_people_menu_html( $selected = 'employee' ) {
+    $dropdown = [
+        'employee'     => esc_html__( 'Employees', 'erp' ),
+        'department'   => esc_html__( 'Departments', 'erp' ),
+        'designation'  => esc_html__( 'Designations', 'erp' ),
+        'announcement' => esc_html__( 'Announcements', 'erp' ),
+    ];
+
+    $dropdown = apply_filters( 'erp_hr_people_menu_items', $dropdown );
+
+    ob_start();
+    ?>
+
+    <div class="erp-custom-menu-container">
+        <ul class="erp-nav">
+            <?php foreach ( $dropdown as $key => $value ) : ?>
+                <li class="<?php echo $key === $selected ? 'active' : ''; ?>"><a href="<?php echo add_query_arg( array( 'sub-section' => $key ), admin_url( 'admin.php?page=erp-hr&section=people' ) ); ?>" class="" data-key="<?php echo $key; ?>"><?php echo $value; ?></a></li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+
+    <?php
+    echo ob_get_clean();
+}

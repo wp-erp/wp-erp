@@ -753,7 +753,7 @@ class Employee {
      */
     public function get_details_url() {
         if ( $this->user_id ) {
-            return admin_url( 'admin.php?page=erp-hr&section=employee&action=view&id=' . $this->user_id );
+            return admin_url( 'admin.php?page=erp-hr&section=people&sub-section=employee&action=view&id=' . $this->user_id );
         }
     }
 
