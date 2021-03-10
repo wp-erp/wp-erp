@@ -49,27 +49,31 @@ class Employee_List_Table extends \WP_List_Table {
                     <div class="wperp-filter-panel-body">
                         <label class="screen-reader-text" for="new_role"><?php esc_html_e( 'Filter by Designation', 'erp' ); ?></label>
                         <select name="filter_designation" id="filter_designation">
-                            <?php echo wp_kses( erp_hr_get_designation_dropdown( $selected_desingnation ), [
-                                'option' => [
-                                    'value'    => [],
-                                    'selected' => [],
-                                ],
-                            ] ); ?>
+                            <option value="-1"><?php esc_html_e( 'Designation', 'erp' ); ?></option>
+                            <?php
+                            $designations = erp_hr_get_designations( ['number' => -1 ] );
+
+                            foreach ( $designations as $key => $designation ) {
+                                echo sprintf( "<option value='%s'%s>%s</option>\n", esc_html( $key ), selected( $selected_desingnation, esc_html( $key ), false ), esc_html( $designation ) );
+                            };
+                            ?>
                         </select>
 
                         <label class="screen-reader-text" for="new_role"><?php esc_html_e( 'Filter by Designation', 'erp' ); ?></label>
                         <select name="filter_department" id="filter_department">
-                            <?php echo wp_kses( erp_hr_get_departments_dropdown( $selected_department ), [
-                                'option' => [
-                                    'value'    => [],
-                                    'selected' => [],
-                                ],
-                            ] ); ?>
+                            <option value="-1"><?php esc_html_e( 'Department', 'erp' ); ?></option>
+                            <?php
+                            $departments = erp_hr_get_departments();
+
+                            foreach ( $departments as $key => $department ) {
+                                echo sprintf( "<option value='%s'%s>%s</option>\n", esc_html( $key ), selected( $selected_department, esc_html( $key ), false ), esc_html( $department ) );
+                            };
+                            ?>
                         </select>
 
                         <label class="screen-reader-text" for="new_role"><?php esc_html_e( 'Filter by Employment Type', 'erp' ); ?></label>
                         <select name="filter_employment_type" id="filter_employment_type">
-                            <option value="-1"><?php esc_html_e( '- Select Employment Type -', 'erp' ); ?></option>
+                            <option value="-1"><?php esc_html_e( 'Employment Type', 'erp' ); ?></option>
                             <?php
                             $types = erp_hr_get_employee_types();
 
