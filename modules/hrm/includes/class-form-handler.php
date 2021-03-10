@@ -58,23 +58,31 @@ class Form_Handler {
      * @since 1.3.14
      */
     public function handle_actions() {
-        $section = !empty( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : false;
+        $section = ! empty( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : false;
+        $sub_section = ! empty( $_GET['sub-section'] ) ? sanitize_text_field( wp_unslash( $_GET['sub-section'] ) ) : false;
 
-        if ( !$section ) {
+        if ( ! $section ) {
             return;
         }
 
         switch ( $section ) {
-            case 'employee':
-                $this->employee_bulk_action();
-                break;
-
-            case 'department':
-                $this->department_bulk_action();
-                break;
-
-            case 'designation':
-                $this->designation_bulk_action();
+            case 'people':
+                switch ( $sub_section ) {
+                    case 'employee':
+                        $this->employee_bulk_action();
+                        break;
+        
+                    case 'department':
+                        $this->department_bulk_action();
+                        break;
+        
+                    case 'designation':
+                        $this->designation_bulk_action();
+                        break;
+                    
+                    default:
+                        return;
+                }
                 break;
 
             case 'report':
