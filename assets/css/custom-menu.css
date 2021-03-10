@@ -293,7 +293,8 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
 }
 
 .erp-dropdown-filter-content .wperp-filter-panel h3 {
-    padding: 10px 0 0 20px !important;
+    padding: 17px 0 0 20px !important;
+    margin: 0 !important;
 }
 
 .erp-dropdown-filter-content .wperp-filter-panel .wperp-filter-panel-body select {
@@ -394,7 +395,7 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
 .wperp-filter-dropdown {
     position: relative;
     float: right;
-    margin: -41px 0 20px 0;
+    margin: -41px 0 0 0;
 }
 
 @media screen and (max-width: 782px) and (min-width: 244px) {
