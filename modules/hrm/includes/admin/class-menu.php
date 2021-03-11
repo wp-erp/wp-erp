@@ -250,9 +250,6 @@ class Admin_Menu {
             $this->department_page();
         } elseif ( 'designation' === $subsection ) {
             $this->designation_page();
-        } elseif ( 'announcement' === $subsection ) {
-            wp_redirect( admin_url( 'edit.php?post_type=erp_hr_announcement' ) );
-            exit();
         }
     }
 
