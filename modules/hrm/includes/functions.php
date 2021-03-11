@@ -555,7 +555,11 @@ function erp_hr_get_people_menu_html( $selected = 'employee' ) {
     <div class="erp-custom-menu-container">
         <ul class="erp-nav">
             <?php foreach ( $dropdown as $key => $value ) : ?>
-                <li class="<?php echo $key === $selected ? 'active' : ''; ?>"><a href="<?php echo add_query_arg( array( 'sub-section' => $key ), admin_url( 'admin.php?page=erp-hr&section=people' ) ); ?>" class="" data-key="<?php echo $key; ?>"><?php echo $value; ?></a></li>
+                <?php if ( 'announcement' !== $key ) : ?>
+                    <li class="<?php echo $key === $selected ? 'active' : ''; ?>"><a href="<?php echo add_query_arg( array( 'sub-section' => $key ), admin_url( 'admin.php?page=erp-hr&section=people' ) ); ?>" class="" data-key="<?php echo $key; ?>"><?php echo $value; ?></a></li>
+                <?php else: ?>
+                    <li class="<?php echo $key === $selected ? 'active' : ''; ?>"><a href="<?php echo admin_url( 'edit.php?post_type=erp_hr_announcement' ); ?>" class="" data-key="<?php echo $key; ?>"><?php echo $value; ?></a></li>
+                <?php endif; ?>
             <?php endforeach; ?>
         </ul>
     </div>
