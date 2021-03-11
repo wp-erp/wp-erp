@@ -51,7 +51,7 @@ class Employee_List_Table extends \WP_List_Table {
                         <select name="filter_designation" id="filter_designation">
                             <option value="-1"><?php esc_html_e( 'Designation', 'erp' ); ?></option>
                             <?php
-                            $designations = erp_hr_get_designations( ['number' => -1 ] );
+                            $designations = erp_hr_get_designation_dropdown_raw();
 
                             foreach ( $designations as $key => $designation ) {
                                 echo sprintf( "<option value='%s'%s>%s</option>\n", esc_html( $key ), selected( $selected_desingnation, esc_html( $key ), false ), esc_html( $designation ) );
@@ -63,7 +63,7 @@ class Employee_List_Table extends \WP_List_Table {
                         <select name="filter_department" id="filter_department">
                             <option value="-1"><?php esc_html_e( 'Department', 'erp' ); ?></option>
                             <?php
-                            $departments = erp_hr_get_departments();
+                            $departments = erp_hr_get_departments_dropdown_raw();
 
                             foreach ( $departments as $key => $department ) {
                                 echo sprintf( "<option value='%s'%s>%s</option>\n", esc_html( $key ), selected( $selected_department, esc_html( $key ), false ), esc_html( $department ) );
