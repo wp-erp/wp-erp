@@ -141,7 +141,15 @@ class Settings extends ERP_Settings_Page {
 
         $fields = apply_filters( 'erp_settings_acct_section_fields', $fields, $section );
 
-        $section = false === $section ? $fields['checkout'] : isset( $fields[ $section ] ) ? $fields[ $section ] : [];
+        if ( false !== $section ) {
+            if ( isset( $fields[ $section ] ) ) {
+                $section = $fields[ $section ];
+            } else {
+                $section = [];
+            }
+        } else {
+            $section = $fields['checkout'];
+        }
 
         return apply_filters( 'erp_ac_settings_section_fields_' . $this->id, $section );
     }
