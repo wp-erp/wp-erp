@@ -5,7 +5,7 @@
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
-                    <h2 class="content-header__title">{{ __('Receive Payment', 'erp') }}</h2>
+                    <h2 class="content-header__title">{{ __('Payment', 'erp') }}</h2>
                 </div>
             </div>
         </div>
@@ -75,7 +75,7 @@
                         <th scope="col" class="col--id column-primary">{{ __('Voucher No', 'erp') }}</th>
                         <th scope="col">{{ __('Due Date', 'erp') }}</th>
                         <th scope="col">{{ __('Total', 'erp') }}</th>
-                        <th scope="col">{{ __('Due', 'erp') }}</th>
+                        <th scope="col">{{ __('Balance', 'erp') }}</th>
                         <th scope="col">{{ __('Amount', 'erp') }}</th>
                         <th scope="col" class="col--actions"></th>
                     </tr>
@@ -85,9 +85,9 @@
                         <td scope="row" class="col--id column-primary">#{{invoice.invoice_no}}</td>
                         <td class="col--due-date" data-colname="Due Date">{{invoice.due_date}}</td>
                         <td class="col--total" data-colname="Total">{{moneyFormat(invoice.amount)}}</td>
-                        <td class="col--due" data-colname="Due">{{moneyFormat(invoice.due)}}</td>
+                        <td class="col--due" data-colname="Due">{{formatAmount(invoice.due, true)}}</td>
                         <td class="col--amount" data-colname="Amount">
-                            <input type="number" min="0" step="0.01" v-model="totalAmounts[key]" @keyup="updateFinalAmount" class="wperp-form-field text-right"/>
+                            <input type="number" step="0.01" :max="Math.abs(invoice.due)" v-model="totalAmounts[key]" @keyup="updateFinalAmount" class="wperp-form-field text-right"/>
                         </td>
                         <td class="delete-row" data-colname="Remove Above Selection">
                             <a @click.prevent="removeRow(key)" href="#"><i class="flaticon-trash"></i></a>
@@ -211,7 +211,9 @@ export default {
             isWorking       : false,
             accts_by_chart  : [],
             erp_acct_assets : erp_acct_var.acct_assets, /* global erp_acct_var */
-            reset           : false
+            reset           : false,
+            negativeAmount  : [],
+            negativeTotal   : false,
         };
     },
 
@@ -271,7 +273,7 @@ export default {
                 const request2 = await HTTP.get(`/invoices/${this.$route.params.id}`);
 
                 if (!request2.data.line_items.length) {
-                    this.showAlert('error', 'Invoice does not exists!');
+                    this.showAlert('error', __('Invoice does not exists!', 'erp'));
                     return;
                 }
 
@@ -328,12 +330,22 @@ export default {
                     });
                 });
             }).then(() => {
-                this.invoices.forEach(element => {
-                    this.totalAmounts[idx++] = parseFloat(element.due);
+                this.invoices.forEach((element, index) => {
+                    this.totalAmounts[idx++] = Math.abs(parseFloat(element.due));
+
+                    if (parseFloat(element.due) < 0) {
+                        this.negativeAmount[index] = true;
+                    }
+
                     finalAmount += parseFloat(element.due);
                 });
 
-                this.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
+                if (parseFloat(finalAmount) < 0) {
+                    this.negativeTotal = true;
+                }
+
+                this.finalTotalAmount  = Math.abs(parseFloat(finalAmount).toFixed(2));
+                this.invoices.due      = Math.abs(this.invoices.due);
             });
         },
 
@@ -364,11 +376,12 @@ export default {
         updateFinalAmount() {
             let finalAmount = 0;
 
-            this.totalAmounts.forEach(element => {
-                finalAmount += parseFloat(element);
+            this.totalAmounts.forEach((element, index) => {
+                finalAmount += this.negativeAmount[index] ? (-1 * parseFloat(element)) : parseFloat(element);
             });
 
-            this.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
+            this.negativeTotal    = (parseFloat(finalAmount) < 0) ? true : false;
+            this.finalTotalAmount = Math.abs(parseFloat(finalAmount).toFixed(2));
         },
 
         SubmitForPayment(event) {
@@ -383,8 +396,9 @@ export default {
             }
 
             this.invoices.forEach((element, index) => {
-                element['line_total'] = parseFloat(this.totalAmounts[index]);
+                element['line_total'] = this.negativeAmount[index] ? (-1 * parseFloat(this.totalAmounts[index])) : parseFloat(this.totalAmounts[index]);
             });
+
             this.$store.dispatch('spinner/setSpinner', true);
 
             let trn_status = null;
@@ -425,7 +439,7 @@ export default {
             }).then(res => {
                 this.$store.dispatch('spinner/setSpinner', false);
 
-                this.showAlert('success', 'Payment Created!');
+                this.showAlert('success', __('Payment Created!', 'erp'));
                 this.reset = true;
 
                 if (this.actionType === 'save' || this.actionType === 'draft') {
@@ -479,23 +493,23 @@ export default {
             this.form_errors = [];
 
             if (!Object.prototype.hasOwnProperty.call(this.basic_fields.customer, 'id')) {
-                this.form_errors.push('Customer Name is required.');
+                this.form_errors.push(__('Customer Name is required.', 'erp'));
             }
 
             if (!this.basic_fields.payment_date) {
-                this.form_errors.push('Transaction Date is required.');
+                this.form_errors.push(__('Transaction Date is required.', 'erp'));
             }
 
             if (!Object.prototype.hasOwnProperty.call(this.basic_fields.deposit_to, 'id')) {
-                this.form_errors.push('Deposit Account is required.');
+                this.form_errors.push(__('Deposit Account is required.', 'erp'));
             }
 
             if (!Object.prototype.hasOwnProperty.call(this.basic_fields.trn_by, 'id')) {
-                this.form_errors.push('Payment Method is required.');
+                this.form_errors.push(__('Payment Method is required.', 'erp'));
             }
 
             if (!parseFloat(this.finalTotalAmount)) {
-                this.form_errors.push('Total amount can\'t be zero.');
+                this.form_errors.push(__('Total amount can\'t be zero.', 'erp'));
             }
         },
 
@@ -534,6 +548,7 @@ export default {
         removeRow(index) {
             this.$delete(this.invoices, index);
             this.$delete(this.totalAmounts, index);
+            this.$delete(this.negativeAmount, index);
             this.updateFinalAmount();
         }
     }

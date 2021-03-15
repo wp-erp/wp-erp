@@ -79,6 +79,15 @@ class Google_Auth {
     public function set_access_token( $code ) {
         $access_token = $this->client->fetchAccessTokenWithAuthCode( $code );
 //        $access_token = $this->client->getAccessToken();
+
+        if ( is_string( $access_token ) ) {
+            $access_token = json_decode( $access_token, true );
+        }
+
+        if ( array_key_exists( 'error', (array) $access_token ) ) {
+            $access_token = [];
+        }
+
         update_option( 'erp_google_access_token', $access_token );
     }
 

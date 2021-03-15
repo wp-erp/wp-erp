@@ -212,7 +212,7 @@ class Department_List_Table extends \WP_List_Table {
 
                         $actions           = [];
                         $delete_url        = '';
-                        $link_to_employee  = add_query_arg( [ 'page'=>'erp-hr', 'section' => 'employee', 'filter_department' => $department->id ], admin_url( 'admin.php' ) );
+                        $link_to_employee  = add_query_arg( [ 'page' => 'erp-hr', 'section' => 'people', 'sub-section' => 'employee', 'filter_department' => $department->id ], admin_url( 'admin.php' ) );
                         $actions['edit']   = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $delete_url, $department->id, __( 'Edit this item', 'erp' ), __( 'Edit', 'erp' ) );
                         $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" title="%s">%s</a>', $delete_url, $department->id, __( 'Delete this item', 'erp' ), __( 'Delete', 'erp' ) );
 
