@@ -4033,10 +4033,10 @@ function erp_crm_check_company_contact_relations( $id, $id_type ) {
  */
 function erp_crm_get_contacts_menu_html( $selected = 'contacts' ) {
     $dropdown = [
-        'contacts'       => esc_html__( 'Contacts', 'erp' ),
-        'companies'      => esc_html__( 'Companies', 'erp' ),
-        'activities'     => esc_html__( 'Activities', 'erp' ),
-        'contact-groups' => esc_html__( 'Contact Groups', 'erp' ),
+        'contacts'       => [ 'title' => esc_html__( 'Contacts', 'erp' ), 'caps' => 'erp_crm_list_contact' ],
+        'companies'      => [ 'title' => esc_html__( 'Companies', 'erp' ), 'caps' => 'erp_crm_list_contact' ],
+        'activities'     => [ 'title' => esc_html__( 'Activities', 'erp' ), 'caps' => 'erp_crm_manage_activites' ],
+        'contact-groups' => [ 'title' => esc_html__( 'Contact Groups', 'erp' ), 'caps' => 'erp_crm_manage_groups' ],
     ];
 
     $dropdown = apply_filters( 'erp_crm_contacts_menu_items', $dropdown );
@@ -4047,10 +4047,10 @@ function erp_crm_get_contacts_menu_html( $selected = 'contacts' ) {
     <div class="erp-custom-menu-container">
         <ul class="erp-nav">
             <?php foreach ( $dropdown as $key => $value ) : ?>
-                <?php if ( 'crm_life_stages' === $key ) : ?>
-                <li><a href="<?php echo add_query_arg( array( 'section' => $key ), admin_url( 'admin.php?page=erp-settings&tab=erp-crm' ) ); ?>" class="" data-key="<?php echo $key; ?>"><?php echo $value; ?></a></li>
-                <?php else : ?>
-                <li class="<?php echo $key === $selected ? 'active' : ''; ?>"><a href="<?php echo add_query_arg( array( 'sub-section' => $key ), admin_url( 'admin.php?page=erp-crm&section=contact' ) ); ?>" class="" data-key="<?php echo $key; ?>"><?php echo $value; ?></a></li>
+                <?php if ( 'crm_life_stages' === $key && current_user_can( $value['caps'] ) ) : ?>
+                <li><a href="<?php echo add_query_arg( array( 'section' => $key ), admin_url( 'admin.php?page=erp-settings&tab=erp-crm' ) ); ?>" class="" data-key="<?php echo $key; ?>"><?php echo $value['title']; ?></a></li>
+                <?php elseif ( current_user_can( $value['caps'] ) ) : ?>
+                <li class="<?php echo $key === $selected ? 'active' : ''; ?>"><a href="<?php echo add_query_arg( array( 'sub-section' => $key ), admin_url( 'admin.php?page=erp-crm&section=contact' ) ); ?>" class="" data-key="<?php echo $key; ?>"><?php echo $value['title']; ?></a></li>
                 <?php endif; ?>
             <?php endforeach; ?>
         </ul>
