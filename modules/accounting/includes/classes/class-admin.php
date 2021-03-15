@@ -135,22 +135,67 @@ class Admin {
                 'position'   => 25,
             ]
         );
+
+        if ( function_exists( 'wp_erp_pro' ) && wp_erp_pro()->module->is_active( 'reimbursement' ) ) {
+            erp_add_submenu(
+                'accounting',
+                'transactions',
+                [
+                    'title'      => __( 'Reimbursements', 'erp' ),
+                    'capability' => 'erp_ac_manager',
+                    'slug'       => 'transactions/reimbursements',
+                    'position'   => 30
+                ]
+            );
+        }
+
         erp_add_menu(
             'accounting',
+            [
+                'title'      => __( 'Settings', 'erp' ),
+                'capability' => $account_charts,
+                'slug'       => 'settings',
+                'position'   => 80,
+            ]
+        );
+        erp_add_submenu(
+            'accounting',
+            'settings',
             [
                 'title'      => __( 'Chart of Accounts', 'erp' ),
                 'capability' => $account_charts,
-                'slug'       => 'charts',
-                'position'   => 30,
+                'slug'       => 'settings/charts',
+                'position'   => 5,
             ]
         );
-        erp_add_menu(
+        erp_add_submenu(
             'accounting',
+            'settings',
             [
                 'title'      => __( 'Bank Accounts', 'erp' ),
                 'capability' => $bank,
-                'slug'       => 'banks',
-                'position'   => 35,
+                'slug'       => 'settings/banks',
+                'position'   => 10,
+            ]
+        );
+        erp_add_submenu(
+            'accounting',
+            'settings',
+            [
+                'title'      => __( 'Tax Rates', 'erp' ),
+                'capability' => $sale,
+                'slug'       => 'settings/taxes/tax-rates',
+                'position'   => 15,
+            ]
+        );
+        erp_add_submenu(
+            'accounting',
+            'settings',
+            [
+                'title'      => __( 'Tax Payments', 'erp' ),
+                'capability' => $sale,
+                'slug'       => 'settings/taxes/tax-records',
+                'position'   => 20,
             ]
         );
         erp_add_menu(
@@ -159,7 +204,7 @@ class Admin {
                 'title'      => __( 'Products', 'erp' ),
                 'capability' => 'erp_ac_view_sale',
                 'slug'       => 'products',
-                'position'   => 45,
+                'position'   => 30,
             ]
         );
         erp_add_submenu(
@@ -182,35 +227,20 @@ class Admin {
                 'position'   => 10,
             ]
         );
-        erp_add_menu(
-            'accounting',
-            [
-                'title'      => __( 'Tax', 'erp' ),
-                'capability' => 'erp_ac_view_sale',
-                'slug'       => 'taxes',
-                'position'   => 45,
-            ]
-        );
-        erp_add_submenu(
-            'accounting',
-            'taxes',
-            [
-                'title'      => __( 'Tax Rates', 'erp' ),
-                'capability' => $sale,
-                'slug'       => 'taxes/tax-rates',
-                'position'   => 5,
-            ]
-        );
-        erp_add_submenu(
-            'accounting',
-            'taxes',
-            [
-                'title'      => __( 'Tax Payments', 'erp' ),
-                'capability' => $sale,
-                'slug'       => 'taxes/tax-records',
-                'position'   => 10,
-            ]
-        );
+
+        if ( function_exists( 'wp_erp_pro' ) && wp_erp_pro()->module->is_active( 'inventory' ) ) {
+            erp_add_submenu(
+                'accounting',
+                'products',
+                [
+                    'title'      => __( 'Inventory', 'erp' ),
+                    'capability' => 'erp_ac_view_sale',
+                    'slug'       => 'products/inventory',
+                    'position'   => 15,
+                ]
+            );
+        }
+        
         erp_add_menu(
             'accounting',
             [

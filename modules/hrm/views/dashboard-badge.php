@@ -56,7 +56,7 @@ $announcements = get_posts( [
 
             <?php if ( is_admin() ) { ?>
             <div class="count-footer">
-                <a href="<?php echo esc_url( admin_url( 'admin.php?page=erp-hr&section=department' ) ); ?>"><?php esc_html_e( 'View Departments', 'erp' ); ?></a>
+                <a href="<?php echo esc_url( admin_url( 'admin.php?page=erp-hr&section=people&sub-section=department' ) ); ?>"><?php esc_html_e( 'View Departments', 'erp' ); ?></a>
             </div>
             <?php } ?>
         </li><!-- .count-box -->
@@ -69,7 +69,7 @@ $announcements = get_posts( [
 
             <?php if ( is_admin() ) { ?>
             <div class="count-footer">
-                <a href="<?php echo esc_url( admin_url( 'admin.php?page=erp-hr&section=designation' ) ); ?>"><?php esc_html_e( 'View Designations', 'erp' ); ?></a>
+                <a href="<?php echo esc_url( admin_url( 'admin.php?page=erp-hr&section=people&sub-section=designation' ) ); ?>"><?php esc_html_e( 'View Designations', 'erp' ); ?></a>
             </div>
             <?php } ?>
         </li><!-- .count-box -->

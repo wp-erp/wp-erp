@@ -34,7 +34,7 @@
             </div>
 
             <!-- Accounts Receivable Section -->
-            <div class="erp-accordion">
+            <!-- <div class="erp-accordion">
                 <div class="erp-accordion-expand"
                      @click="open5=!open5"
                      :class="open5?'active':'before-border'">
@@ -71,10 +71,10 @@
                     </tr>
                     </tbody>
                 </table>
-            </div>
+            </div> -->
 
             <!-- Accounts Payable Section -->
-            <div v-if="acct_pay" class="erp-accordion">
+            <!-- <div v-if="acct_pay" class="erp-accordion">
                 <div class="erp-accordion-expand"
                      @click="open6=!open6"
                      :class="open6?'active':'before-border'">
@@ -111,7 +111,7 @@
                     </tr>
                     </tbody>
                 </table>
-            </div>
+            </div> -->
 
             <!-- Tax Payable Section -->
             <div v-if="tax_pay" class="erp-accordion">

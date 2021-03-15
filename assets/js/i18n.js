@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 5);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -68,480 +68,42 @@
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return createI18n; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_esm_defineProperty__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_tannin__ = __webpack_require__(8);
-
-
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { Object(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_esm_defineProperty__["a" /* default */])(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
 /**
- * External dependencies
- */
-
-/**
- * @typedef {Record<string,any>} LocaleData
- */
-
-/**
- * Default locale data to use for Tannin domain when not otherwise provided.
- * Assumes an English plural forms expression.
+ * Validate a hookName string.
  *
- * @type {LocaleData}
- */
-
-var DEFAULT_LOCALE_DATA = {
-  '': {
-    /** @param {number} n */
-    plural_forms: function plural_forms(n) {
-      return n === 1 ? 0 : 1;
-    }
-  }
-};
-/**
- * An i18n instance
+ * @param  {string} hookName The hook name to validate. Should be a non empty string containing
+ *                           only numbers, letters, dashes, periods and underscores. Also,
+ *                           the hook name cannot begin with `__`.
  *
- * @typedef {Object} I18n
- * @property {Function} setLocaleData Merges locale data into the Tannin instance by domain. Accepts data in a
- *                                    Jed-formatted JSON object shape.
- * @property {Function} __            Retrieve the translation of text.
- * @property {Function} _x            Retrieve translated string with gettext context.
- * @property {Function} _n            Translates and retrieves the singular or plural form based on the supplied
- *                                    number.
- * @property {Function} _nx           Translates and retrieves the singular or plural form based on the supplied
- *                                    number, with gettext context.
- * @property {Function} isRTL         Check if current locale is RTL.
+ * @return {boolean}            Whether the hook name is valid.
  */
-
-/**
- * Create an i18n instance
- *
- * @param {LocaleData} [initialData]    Locale data configuration.
- * @param {string}     [initialDomain]  Domain for which configuration applies.
- * @return {I18n}                       I18n instance
- */
-
-var createI18n = function createI18n(initialData, initialDomain) {
-  /**
-   * The underlying instance of Tannin to which exported functions interface.
-   *
-   * @type {Tannin}
-   */
-  var tannin = new __WEBPACK_IMPORTED_MODULE_1_tannin__["a" /* default */]({});
-  /**
-   * Merges locale data into the Tannin instance by domain. Accepts data in a
-   * Jed-formatted JSON object shape.
-   *
-   * @see http://messageformat.github.io/Jed/
-   *
-   * @param {LocaleData} [data]   Locale data configuration.
-   * @param {string}     [domain] Domain for which configuration applies.
-   */
-
-  var setLocaleData = function setLocaleData(data) {
-    var domain = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'default';
-    tannin.data[domain] = _objectSpread(_objectSpread(_objectSpread({}, DEFAULT_LOCALE_DATA), tannin.data[domain]), data); // Populate default domain configuration (supported locale date which omits
-    // a plural forms expression).
-
-    tannin.data[domain][''] = _objectSpread(_objectSpread({}, DEFAULT_LOCALE_DATA['']), tannin.data[domain]['']);
-  };
-  /**
-   * Wrapper for Tannin's `dcnpgettext`. Populates default locale data if not
-   * otherwise previously assigned.
-   *
-   * @param {string|undefined} domain   Domain to retrieve the translated text.
-   * @param {string|undefined} context  Context information for the translators.
-   * @param {string}           single   Text to translate if non-plural. Used as
-   *                                    fallback return value on a caught error.
-   * @param {string}           [plural] The text to be used if the number is
-   *                                    plural.
-   * @param {number}           [number] The number to compare against to use
-   *                                    either the singular or plural form.
-   *
-   * @return {string} The translated string.
-   */
-
-
-  var dcnpgettext = function dcnpgettext() {
-    var domain = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'default';
-    var context = arguments.length > 1 ? arguments[1] : undefined;
-    var single = arguments.length > 2 ? arguments[2] : undefined;
-    var plural = arguments.length > 3 ? arguments[3] : undefined;
-    var number = arguments.length > 4 ? arguments[4] : undefined;
-
-    if (!tannin.data[domain]) {
-      setLocaleData(undefined, domain);
-    }
-
-    return tannin.dcnpgettext(domain, context, single, plural, number);
-  };
-  /**
-   * Retrieve the translation of text.
-   *
-   * @see https://developer.wordpress.org/reference/functions/__/
-   *
-   * @param {string} text     Text to translate.
-   * @param {string} [domain] Domain to retrieve the translated text.
-   *
-   * @return {string} Translated text.
-   */
-
-
-  var __ = function __(text, domain) {
-    return dcnpgettext(domain, undefined, text);
-  };
-  /**
-   * Retrieve translated string with gettext context.
-   *
-   * @see https://developer.wordpress.org/reference/functions/_x/
-   *
-   * @param {string} text     Text to translate.
-   * @param {string} context  Context information for the translators.
-   * @param {string} [domain] Domain to retrieve the translated text.
-   *
-   * @return {string} Translated context string without pipe.
-   */
-
-
-  var _x = function _x(text, context, domain) {
-    return dcnpgettext(domain, context, text);
-  };
-  /**
-   * Translates and retrieves the singular or plural form based on the supplied
-   * number.
-   *
-   * @see https://developer.wordpress.org/reference/functions/_n/
-   *
-   * @param {string} single   The text to be used if the number is singular.
-   * @param {string} plural   The text to be used if the number is plural.
-   * @param {number} number   The number to compare against to use either the
-   *                          singular or plural form.
-   * @param {string} [domain] Domain to retrieve the translated text.
-   *
-   * @return {string} The translated singular or plural form.
-   */
-
-
-  var _n = function _n(single, plural, number, domain) {
-    return dcnpgettext(domain, undefined, single, plural, number);
-  };
-  /**
-   * Translates and retrieves the singular or plural form based on the supplied
-   * number, with gettext context.
-   *
-   * @see https://developer.wordpress.org/reference/functions/_nx/
-   *
-   * @param {string} single   The text to be used if the number is singular.
-   * @param {string} plural   The text to be used if the number is plural.
-   * @param {number} number   The number to compare against to use either the
-   *                          singular or plural form.
-   * @param {string} context  Context information for the translators.
-   * @param {string} [domain] Domain to retrieve the translated text.
-   *
-   * @return {string} The translated singular or plural form.
-   */
-
-
-  var _nx = function _nx(single, plural, number, context, domain) {
-    return dcnpgettext(domain, context, single, plural, number);
-  };
-  /**
-   * Check if current locale is RTL.
-   *
-   * **RTL (Right To Left)** is a locale property indicating that text is written from right to left.
-   * For example, the `he` locale (for Hebrew) specifies right-to-left. Arabic (ar) is another common
-   * language written RTL. The opposite of RTL, LTR (Left To Right) is used in other languages,
-   * including English (`en`, `en-US`, `en-GB`, etc.), Spanish (`es`), and French (`fr`).
-   *
-   * @return {boolean} Whether locale is RTL.
-   */
-
-
-  var isRTL = function isRTL() {
-    return 'rtl' === _x('ltr', 'text direction');
-  };
-
-  if (initialData) {
-    setLocaleData(initialData, initialDomain);
+function validateHookName(hookName) {
+  if ('string' !== typeof hookName || '' === hookName) {
+    // eslint-disable-next-line no-console
+    console.error('The hook name must be a non-empty string.');
+    return false;
   }
 
-  return {
-    setLocaleData: setLocaleData,
-    __: __,
-    _x: _x,
-    _n: _n,
-    _nx: _nx,
-    isRTL: isRTL
-  };
-};
-//# sourceMappingURL=create-i18n.js.map
+  if (/^__/.test(hookName)) {
+    // eslint-disable-next-line no-console
+    console.error('The hook name cannot begin with `__`.');
+    return false;
+  }
+
+  if (!/^[a-zA-Z][a-zA-Z0-9_.-]*$/.test(hookName)) {
+    // eslint-disable-next-line no-console
+    console.error('The hook name can only contain numbers, letters, dashes, periods and underscores.');
+    return false;
+  }
+
+  return true;
+}
+
+/* harmony default export */ __webpack_exports__["a"] = (validateHookName);
+//# sourceMappingURL=validateHookName.js.map
 
 /***/ }),
 /* 1 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__wordpress_i18n__ = __webpack_require__(2);
-
-
-/* global erpLocale */
-Object(__WEBPACK_IMPORTED_MODULE_0__wordpress_i18n__["b" /* setLocaleData */])(erpLocale.locale_data, 'erp');
-
-window.__ = __WEBPACK_IMPORTED_MODULE_0__wordpress_i18n__["a" /* __ */];
-window.sprintf = __WEBPACK_IMPORTED_MODULE_0__wordpress_i18n__["c" /* sprintf */];
-
-
-/***/ }),
-/* 2 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__sprintf__ = __webpack_require__(3);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return __WEBPACK_IMPORTED_MODULE_0__sprintf__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__create_i18n__ = __webpack_require__(0);
-/* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__default_i18n__ = __webpack_require__(13);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_2__default_i18n__["b"]; });
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_2__default_i18n__["a"]; });
-/* unused harmony reexport _x */
-/* unused harmony reexport _n */
-/* unused harmony reexport _nx */
-/* unused harmony reexport isRTL */
-
-
-
-//# sourceMappingURL=index.js.map
-
-/***/ }),
-/* 3 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = sprintf;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_memize__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_memize___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_memize__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_sprintf_js__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_sprintf_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_sprintf_js__);
-/**
- * External dependencies
- */
-
-
-/**
- * Log to console, once per message; or more precisely, per referentially equal
- * argument set. Because Jed throws errors, we log these to the console instead
- * to avoid crashing the application.
- *
- * @param {...*} args Arguments to pass to `console.error`
- */
-
-var logErrorOnce = __WEBPACK_IMPORTED_MODULE_0_memize___default()(console.error); // eslint-disable-line no-console
-
-/**
- * Returns a formatted string. If an error occurs in applying the format, the
- * original format string is returned.
- *
- * @param {string}    format The format of the string to generate.
- * @param {...*} args Arguments to apply to the format.
- *
- * @see http://www.diveintojavascript.com/projects/javascript-sprintf
- *
- * @return {string} The formatted string.
- */
-
-function sprintf(format) {
-  try {
-    for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-      args[_key - 1] = arguments[_key];
-    }
-
-    return __WEBPACK_IMPORTED_MODULE_1_sprintf_js___default.a.sprintf.apply(__WEBPACK_IMPORTED_MODULE_1_sprintf_js___default.a, [format].concat(args));
-  } catch (error) {
-    logErrorOnce('sprintf error: \n\n' + error.toString());
-    return format;
-  }
-}
-//# sourceMappingURL=sprintf.js.map
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function(process) {/**
- * Memize options object.
- *
- * @typedef MemizeOptions
- *
- * @property {number} [maxSize] Maximum size of the cache.
- */
-
-/**
- * Internal cache entry.
- *
- * @typedef MemizeCacheNode
- *
- * @property {?MemizeCacheNode|undefined} [prev] Previous node.
- * @property {?MemizeCacheNode|undefined} [next] Next node.
- * @property {Array<*>}                   args   Function arguments for cache
- *                                               entry.
- * @property {*}                          val    Function result.
- */
-
-/**
- * Properties of the enhanced function for controlling cache.
- *
- * @typedef MemizeMemoizedFunction
- *
- * @property {()=>void} clear Clear the cache.
- */
-
-/**
- * Accepts a function to be memoized, and returns a new memoized function, with
- * optional options.
- *
- * @template {Function} F
- *
- * @param {F}             fn        Function to memoize.
- * @param {MemizeOptions} [options] Options object.
- *
- * @return {F & MemizeMemoizedFunction} Memoized function.
- */
-function memize( fn, options ) {
-	var size = 0;
-
-	/** @type {?MemizeCacheNode|undefined} */
-	var head;
-
-	/** @type {?MemizeCacheNode|undefined} */
-	var tail;
-
-	options = options || {};
-
-	function memoized( /* ...args */ ) {
-		var node = head,
-			len = arguments.length,
-			args, i;
-
-		searchCache: while ( node ) {
-			// Perform a shallow equality test to confirm that whether the node
-			// under test is a candidate for the arguments passed. Two arrays
-			// are shallowly equal if their length matches and each entry is
-			// strictly equal between the two sets. Avoid abstracting to a
-			// function which could incur an arguments leaking deoptimization.
-
-			// Check whether node arguments match arguments length
-			if ( node.args.length !== arguments.length ) {
-				node = node.next;
-				continue;
-			}
-
-			// Check whether node arguments match arguments values
-			for ( i = 0; i < len; i++ ) {
-				if ( node.args[ i ] !== arguments[ i ] ) {
-					node = node.next;
-					continue searchCache;
-				}
-			}
-
-			// At this point we can assume we've found a match
-
-			// Surface matched node to head if not already
-			if ( node !== head ) {
-				// As tail, shift to previous. Must only shift if not also
-				// head, since if both head and tail, there is no previous.
-				if ( node === tail ) {
-					tail = node.prev;
-				}
-
-				// Adjust siblings to point to each other. If node was tail,
-				// this also handles new tail's empty `next` assignment.
-				/** @type {MemizeCacheNode} */ ( node.prev ).next = node.next;
-				if ( node.next ) {
-					node.next.prev = node.prev;
-				}
-
-				node.next = head;
-				node.prev = null;
-				/** @type {MemizeCacheNode} */ ( head ).prev = node;
-				head = node;
-			}
-
-			// Return immediately
-			return node.val;
-		}
-
-		// No cached value found. Continue to insertion phase:
-
-		// Create a copy of arguments (avoid leaking deoptimization)
-		args = new Array( len );
-		for ( i = 0; i < len; i++ ) {
-			args[ i ] = arguments[ i ];
-		}
-
-		node = {
-			args: args,
-
-			// Generate the result from original function
-			val: fn.apply( null, args ),
-		};
-
-		// Don't need to check whether node is already head, since it would
-		// have been returned above already if it was
-
-		// Shift existing head down list
-		if ( head ) {
-			head.prev = node;
-			node.next = head;
-		} else {
-			// If no head, follows that there's no tail (at initial or reset)
-			tail = node;
-		}
-
-		// Trim tail if we're reached max size and are pending cache insertion
-		if ( size === /** @type {MemizeOptions} */ ( options ).maxSize ) {
-			tail = /** @type {MemizeCacheNode} */ ( tail ).prev;
-			/** @type {MemizeCacheNode} */ ( tail ).next = null;
-		} else {
-			size++;
-		}
-
-		head = node;
-
-		return node.val;
-	}
-
-	memoized.clear = function() {
-		head = null;
-		tail = null;
-		size = 0;
-	};
-
-	if ( process.env.NODE_ENV === 'test' ) {
-		// Cache is not exposed in the public API, but used in tests to ensure
-		// expected list progression
-		memoized.getCache = function() {
-			return [ head, tail, size ];
-		};
-	}
-
-	// Ignore reason: There's not a clear solution to create an intersection of
-	// the function with additional properties, where the goal is to retain the
-	// function signature of the incoming argument and add control properties
-	// on the return value.
-
-	// @ts-ignore
-	return memoized;
-}
-
-module.exports = memize;
-
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
-
-/***/ }),
-/* 5 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -731,7 +293,646 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
+/* 2 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return createI18n; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_esm_defineProperty__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_tannin__ = __webpack_require__(11);
+
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { Object(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_esm_defineProperty__["a" /* default */])(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+/**
+ * External dependencies
+ */
+
+/**
+ * @typedef {Record<string,any>} LocaleData
+ */
+
+/**
+ * Default locale data to use for Tannin domain when not otherwise provided.
+ * Assumes an English plural forms expression.
+ *
+ * @type {LocaleData}
+ */
+
+var DEFAULT_LOCALE_DATA = {
+  '': {
+    /** @param {number} n */
+    plural_forms: function plural_forms(n) {
+      return n === 1 ? 0 : 1;
+    }
+  }
+};
+/* eslint-disable jsdoc/valid-types */
+
+/**
+ * @typedef {(data?: LocaleData, domain?: string) => void} SetLocaleData
+ * Merges locale data into the Tannin instance by domain. Accepts data in a
+ * Jed-formatted JSON object shape.
+ *
+ * @see http://messageformat.github.io/Jed/
+ */
+
+/**
+ * @typedef {(domain?: string) => string} GetFilterDomain
+ * Retrieve the domain to use when calling domain-specific filters.
+ */
+
+/**
+ * @typedef {(text: string, domain?: string) => string} __
+ *
+ * Retrieve the translation of text.
+ *
+ * @see https://developer.wordpress.org/reference/functions/__/
+ */
+
+/**
+ * @typedef {(text: string, context: string, domain?: string) => string} _x
+ *
+ * Retrieve translated string with gettext context.
+ *
+ * @see https://developer.wordpress.org/reference/functions/_x/
+ */
+
+/**
+ * @typedef {(single: string, plural: string, number: number, domain?: string) => string} _n
+ *
+ * Translates and retrieves the singular or plural form based on the supplied
+ * number.
+ *
+ * @see https://developer.wordpress.org/reference/functions/_n/
+ */
+
+/**
+ * @typedef {(single: string, plural: string, number: number, context: string, domain?: string) => string} _nx
+ *
+ * Translates and retrieves the singular or plural form based on the supplied
+ * number, with gettext context.
+ *
+ * @see https://developer.wordpress.org/reference/functions/_nx/
+ */
+
+/**
+ * @typedef {() => boolean} IsRtl
+ *
+ * Check if current locale is RTL.
+ *
+ * **RTL (Right To Left)** is a locale property indicating that text is written from right to left.
+ * For example, the `he` locale (for Hebrew) specifies right-to-left. Arabic (ar) is another common
+ * language written RTL. The opposite of RTL, LTR (Left To Right) is used in other languages,
+ * including English (`en`, `en-US`, `en-GB`, etc.), Spanish (`es`), and French (`fr`).
+ */
+
+/**
+ * @typedef {{ applyFilters: (hookName:string, ...args: unknown[]) => unknown}} ApplyFiltersInterface
+ */
+
+/* eslint-enable jsdoc/valid-types */
+
+/**
+ * An i18n instance
+ *
+ * @typedef I18n
+ * @property {SetLocaleData} setLocaleData Merges locale data into the Tannin instance by domain. Accepts data in a
+ *                                         Jed-formatted JSON object shape.
+ * @property {__} __                       Retrieve the translation of text.
+ * @property {_x} _x                       Retrieve translated string with gettext context.
+ * @property {_n} _n                       Translates and retrieves the singular or plural form based on the supplied
+ *                                         number.
+ * @property {_nx} _nx                     Translates and retrieves the singular or plural form based on the supplied
+ *                                         number, with gettext context.
+ * @property {IsRtl} isRTL                 Check if current locale is RTL.
+ */
+
+/**
+ * Create an i18n instance
+ *
+ * @param {LocaleData} [initialData]    Locale data configuration.
+ * @param {string}     [initialDomain]  Domain for which configuration applies.
+ * @param {ApplyFiltersInterface} [hooks]     Hooks implementation.
+ * @return {I18n}                       I18n instance
+ */
+
+var createI18n = function createI18n(initialData, initialDomain, hooks) {
+  /**
+   * The underlying instance of Tannin to which exported functions interface.
+   *
+   * @type {Tannin}
+   */
+  var tannin = new __WEBPACK_IMPORTED_MODULE_1_tannin__["a" /* default */]({});
+  /** @type {SetLocaleData} */
+
+  var setLocaleData = function setLocaleData(data) {
+    var domain = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'default';
+    tannin.data[domain] = _objectSpread(_objectSpread(_objectSpread({}, DEFAULT_LOCALE_DATA), tannin.data[domain]), data); // Populate default domain configuration (supported locale date which omits
+    // a plural forms expression).
+
+    tannin.data[domain][''] = _objectSpread(_objectSpread({}, DEFAULT_LOCALE_DATA['']), tannin.data[domain]['']);
+  };
+  /**
+   * Wrapper for Tannin's `dcnpgettext`. Populates default locale data if not
+   * otherwise previously assigned.
+   *
+   * @param {string|undefined} domain   Domain to retrieve the translated text.
+   * @param {string|undefined} context  Context information for the translators.
+   * @param {string}           single   Text to translate if non-plural. Used as
+   *                                    fallback return value on a caught error.
+   * @param {string}           [plural] The text to be used if the number is
+   *                                    plural.
+   * @param {number}           [number] The number to compare against to use
+   *                                    either the singular or plural form.
+   *
+   * @return {string} The translated string.
+   */
+
+
+  var dcnpgettext = function dcnpgettext() {
+    var domain = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'default';
+    var context = arguments.length > 1 ? arguments[1] : undefined;
+    var single = arguments.length > 2 ? arguments[2] : undefined;
+    var plural = arguments.length > 3 ? arguments[3] : undefined;
+    var number = arguments.length > 4 ? arguments[4] : undefined;
+
+    if (!tannin.data[domain]) {
+      setLocaleData(undefined, domain);
+    }
+
+    return tannin.dcnpgettext(domain, context, single, plural, number);
+  };
+  /** @type {GetFilterDomain} */
+
+
+  var getFilterDomain = function getFilterDomain(domain) {
+    if (typeof domain === 'undefined') {
+      return 'default';
+    }
+
+    return domain;
+  };
+  /** @type {__} */
+
+
+  var __ = function __(text, domain) {
+    var translation = dcnpgettext(domain, undefined, text);
+    /**
+     * Filters text with its translation.
+     *
+     * @param {string} translation Translated text.
+     * @param {string} text        Text to translate.
+     * @param {string} domain      Text domain. Unique identifier for retrieving translated strings.
+     */
+
+    if (typeof hooks === 'undefined') {
+      return translation;
+    }
+
+    translation =
+    /** @type {string} */
+
+    /** @type {*} */
+    hooks.applyFilters('i18n.gettext', translation, text, domain);
+    return (
+      /** @type {string} */
+
+      /** @type {*} */
+      hooks.applyFilters('i18n.gettext_' + getFilterDomain(domain), translation, text, domain)
+    );
+  };
+  /** @type {_x} */
+
+
+  var _x = function _x(text, context, domain) {
+    var translation = dcnpgettext(domain, context, text);
+    /**
+     * Filters text with its translation based on context information.
+     *
+     * @param {string} translation Translated text.
+     * @param {string} text        Text to translate.
+     * @param {string} context     Context information for the translators.
+     * @param {string} domain      Text domain. Unique identifier for retrieving translated strings.
+     */
+
+    if (typeof hooks === 'undefined') {
+      return translation;
+    }
+
+    translation =
+    /** @type {string} */
+
+    /** @type {*} */
+    hooks.applyFilters('i18n.gettext_with_context', translation, text, context, domain);
+    return (
+      /** @type {string} */
+
+      /** @type {*} */
+      hooks.applyFilters('i18n.gettext_with_context_' + getFilterDomain(domain), translation, text, context, domain)
+    );
+  };
+  /** @type {_n} */
+
+
+  var _n = function _n(single, plural, number, domain) {
+    var translation = dcnpgettext(domain, undefined, single, plural, number);
+
+    if (typeof hooks === 'undefined') {
+      return translation;
+    }
+    /**
+     * Filters the singular or plural form of a string.
+     *
+     * @param {string} translation Translated text.
+     * @param {string} single      The text to be used if the number is singular.
+     * @param {string} plural      The text to be used if the number is plural.
+     * @param {string} number      The number to compare against to use either the singular or plural form.
+     * @param {string} domain      Text domain. Unique identifier for retrieving translated strings.
+     */
+
+
+    translation =
+    /** @type {string} */
+
+    /** @type {*} */
+    hooks.applyFilters('i18n.ngettext', translation, single, plural, number, domain);
+    return (
+      /** @type {string} */
+
+      /** @type {*} */
+      hooks.applyFilters('i18n.ngettext_' + getFilterDomain(domain), translation, single, plural, number, domain)
+    );
+  };
+  /** @type {_nx} */
+
+
+  var _nx = function _nx(single, plural, number, context, domain) {
+    var translation = dcnpgettext(domain, context, single, plural, number);
+
+    if (typeof hooks === 'undefined') {
+      return translation;
+    }
+    /**
+     * Filters the singular or plural form of a string with gettext context.
+     *
+     * @param {string} translation Translated text.
+     * @param {string} single      The text to be used if the number is singular.
+     * @param {string} plural      The text to be used if the number is plural.
+     * @param {string} number      The number to compare against to use either the singular or plural form.
+     * @param {string} context     Context information for the translators.
+     * @param {string} domain      Text domain. Unique identifier for retrieving translated strings.
+     */
+
+
+    translation =
+    /** @type {string} */
+
+    /** @type {*} */
+    hooks.applyFilters('i18n.ngettext_with_context', translation, single, plural, number, context, domain);
+    return (
+      /** @type {string} */
+
+      /** @type {*} */
+      hooks.applyFilters('i18n.ngettext_with_context_' + getFilterDomain(domain), translation, single, plural, number, context, domain)
+    );
+  };
+  /** @type {IsRtl} */
+
+
+  var isRTL = function isRTL() {
+    return 'rtl' === _x('ltr', 'text direction');
+  };
+
+  if (initialData) {
+    setLocaleData(initialData, initialDomain);
+  }
+
+  return {
+    setLocaleData: setLocaleData,
+    __: __,
+    _x: _x,
+    _n: _n,
+    _nx: _nx,
+    isRTL: isRTL
+  };
+};
+//# sourceMappingURL=create-i18n.js.map
+
+/***/ }),
+/* 3 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/**
+ * Validate a namespace string.
+ *
+ * @param  {string} namespace The namespace to validate - should take the form
+ *                            `vendor/plugin/function`.
+ *
+ * @return {boolean}             Whether the namespace is valid.
+ */
+function validateNamespace(namespace) {
+  if ('string' !== typeof namespace || '' === namespace) {
+    // eslint-disable-next-line no-console
+    console.error('The namespace must be a non-empty string.');
+    return false;
+  }
+
+  if (!/^[a-zA-Z][a-zA-Z0-9_.\-\/]*$/.test(namespace)) {
+    // eslint-disable-next-line no-console
+    console.error('The namespace can only contain numbers, letters, dashes, periods, underscores and slashes.');
+    return false;
+  }
+
+  return true;
+}
+
+/* harmony default export */ __webpack_exports__["a"] = (validateNamespace);
+//# sourceMappingURL=validateNamespace.js.map
+
+/***/ }),
+/* 4 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = _arrayLikeToArray;
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+
+  for (var i = 0, arr2 = new Array(len); i < len; i++) {
+    arr2[i] = arr[i];
+  }
+
+  return arr2;
+}
+
+/***/ }),
+/* 5 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__wordpress_i18n__ = __webpack_require__(6);
+
+
+/* global erpLocale */
+Object(__WEBPACK_IMPORTED_MODULE_0__wordpress_i18n__["b" /* setLocaleData */])(erpLocale.locale_data, 'erp');
+
+window.__ = __WEBPACK_IMPORTED_MODULE_0__wordpress_i18n__["a" /* __ */];
+window.sprintf = __WEBPACK_IMPORTED_MODULE_0__wordpress_i18n__["c" /* sprintf */];
+
+
+/***/ }),
 /* 6 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__sprintf__ = __webpack_require__(7);
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return __WEBPACK_IMPORTED_MODULE_0__sprintf__["a"]; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__create_i18n__ = __webpack_require__(2);
+/* unused harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__default_i18n__ = __webpack_require__(16);
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_2__default_i18n__["b"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_2__default_i18n__["a"]; });
+/* unused harmony reexport _x */
+/* unused harmony reexport _n */
+/* unused harmony reexport _nx */
+/* unused harmony reexport isRTL */
+
+
+
+//# sourceMappingURL=index.js.map
+
+/***/ }),
+/* 7 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = sprintf;
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_memize__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_memize___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_memize__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_sprintf_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_sprintf_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_sprintf_js__);
+/**
+ * External dependencies
+ */
+
+
+/**
+ * Log to console, once per message; or more precisely, per referentially equal
+ * argument set. Because Jed throws errors, we log these to the console instead
+ * to avoid crashing the application.
+ *
+ * @param {...*} args Arguments to pass to `console.error`
+ */
+
+var logErrorOnce = __WEBPACK_IMPORTED_MODULE_0_memize___default()(console.error); // eslint-disable-line no-console
+
+/**
+ * Returns a formatted string. If an error occurs in applying the format, the
+ * original format string is returned.
+ *
+ * @param {string}    format The format of the string to generate.
+ * @param {...*} args Arguments to apply to the format.
+ *
+ * @see http://www.diveintojavascript.com/projects/javascript-sprintf
+ *
+ * @return {string} The formatted string.
+ */
+
+function sprintf(format) {
+  try {
+    for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+      args[_key - 1] = arguments[_key];
+    }
+
+    return __WEBPACK_IMPORTED_MODULE_1_sprintf_js___default.a.sprintf.apply(__WEBPACK_IMPORTED_MODULE_1_sprintf_js___default.a, [format].concat(args));
+  } catch (error) {
+    logErrorOnce('sprintf error: \n\n' + error.toString());
+    return format;
+  }
+}
+//# sourceMappingURL=sprintf.js.map
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(process) {/**
+ * Memize options object.
+ *
+ * @typedef MemizeOptions
+ *
+ * @property {number} [maxSize] Maximum size of the cache.
+ */
+
+/**
+ * Internal cache entry.
+ *
+ * @typedef MemizeCacheNode
+ *
+ * @property {?MemizeCacheNode|undefined} [prev] Previous node.
+ * @property {?MemizeCacheNode|undefined} [next] Next node.
+ * @property {Array<*>}                   args   Function arguments for cache
+ *                                               entry.
+ * @property {*}                          val    Function result.
+ */
+
+/**
+ * Properties of the enhanced function for controlling cache.
+ *
+ * @typedef MemizeMemoizedFunction
+ *
+ * @property {()=>void} clear Clear the cache.
+ */
+
+/**
+ * Accepts a function to be memoized, and returns a new memoized function, with
+ * optional options.
+ *
+ * @template {Function} F
+ *
+ * @param {F}             fn        Function to memoize.
+ * @param {MemizeOptions} [options] Options object.
+ *
+ * @return {F & MemizeMemoizedFunction} Memoized function.
+ */
+function memize( fn, options ) {
+	var size = 0;
+
+	/** @type {?MemizeCacheNode|undefined} */
+	var head;
+
+	/** @type {?MemizeCacheNode|undefined} */
+	var tail;
+
+	options = options || {};
+
+	function memoized( /* ...args */ ) {
+		var node = head,
+			len = arguments.length,
+			args, i;
+
+		searchCache: while ( node ) {
+			// Perform a shallow equality test to confirm that whether the node
+			// under test is a candidate for the arguments passed. Two arrays
+			// are shallowly equal if their length matches and each entry is
+			// strictly equal between the two sets. Avoid abstracting to a
+			// function which could incur an arguments leaking deoptimization.
+
+			// Check whether node arguments match arguments length
+			if ( node.args.length !== arguments.length ) {
+				node = node.next;
+				continue;
+			}
+
+			// Check whether node arguments match arguments values
+			for ( i = 0; i < len; i++ ) {
+				if ( node.args[ i ] !== arguments[ i ] ) {
+					node = node.next;
+					continue searchCache;
+				}
+			}
+
+			// At this point we can assume we've found a match
+
+			// Surface matched node to head if not already
+			if ( node !== head ) {
+				// As tail, shift to previous. Must only shift if not also
+				// head, since if both head and tail, there is no previous.
+				if ( node === tail ) {
+					tail = node.prev;
+				}
+
+				// Adjust siblings to point to each other. If node was tail,
+				// this also handles new tail's empty `next` assignment.
+				/** @type {MemizeCacheNode} */ ( node.prev ).next = node.next;
+				if ( node.next ) {
+					node.next.prev = node.prev;
+				}
+
+				node.next = head;
+				node.prev = null;
+				/** @type {MemizeCacheNode} */ ( head ).prev = node;
+				head = node;
+			}
+
+			// Return immediately
+			return node.val;
+		}
+
+		// No cached value found. Continue to insertion phase:
+
+		// Create a copy of arguments (avoid leaking deoptimization)
+		args = new Array( len );
+		for ( i = 0; i < len; i++ ) {
+			args[ i ] = arguments[ i ];
+		}
+
+		node = {
+			args: args,
+
+			// Generate the result from original function
+			val: fn.apply( null, args ),
+		};
+
+		// Don't need to check whether node is already head, since it would
+		// have been returned above already if it was
+
+		// Shift existing head down list
+		if ( head ) {
+			head.prev = node;
+			node.next = head;
+		} else {
+			// If no head, follows that there's no tail (at initial or reset)
+			tail = node;
+		}
+
+		// Trim tail if we're reached max size and are pending cache insertion
+		if ( size === /** @type {MemizeOptions} */ ( options ).maxSize ) {
+			tail = /** @type {MemizeCacheNode} */ ( tail ).prev;
+			/** @type {MemizeCacheNode} */ ( tail ).next = null;
+		} else {
+			size++;
+		}
+
+		head = node;
+
+		return node.val;
+	}
+
+	memoized.clear = function() {
+		head = null;
+		tail = null;
+		size = 0;
+	};
+
+	if ( process.env.NODE_ENV === 'test' ) {
+		// Cache is not exposed in the public API, but used in tests to ensure
+		// expected list progression
+		memoized.getCache = function() {
+			return [ head, tail, size ];
+		};
+	}
+
+	// Ignore reason: There's not a clear solution to create an intersection of
+	// the function with additional properties, where the goal is to retain the
+	// function signature of the incoming argument and add control properties
+	// on the return value.
+
+	// @ts-ignore
+	return memoized;
+}
+
+module.exports = memize;
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+
+/***/ }),
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_RESULT__;/* global window, exports, define */
@@ -969,7 +1170,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/* global window, exports, define */
 
 
 /***/ }),
-/* 7 */
+/* 10 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -990,12 +1191,12 @@ function _defineProperty(obj, key, value) {
 }
 
 /***/ }),
-/* 8 */
+/* 11 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = Tannin;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__tannin_plural_forms__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__tannin_plural_forms__ = __webpack_require__(12);
 
 
 /**
@@ -1212,12 +1413,12 @@ Tannin.prototype.dcnpgettext = function( domain, context, singular, plural, n ) 
 
 
 /***/ }),
-/* 9 */
+/* 12 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = pluralForms;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__tannin_compile__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__tannin_compile__ = __webpack_require__(13);
 
 
 /**
@@ -1239,13 +1440,13 @@ function pluralForms( expression ) {
 
 
 /***/ }),
-/* 10 */
+/* 13 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = compile;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__tannin_postfix__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__tannin_evaluate__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__tannin_postfix__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__tannin_evaluate__ = __webpack_require__(15);
 
 
 
@@ -1278,7 +1479,7 @@ function compile( expression ) {
 
 
 /***/ }),
-/* 11 */
+/* 14 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1410,7 +1611,7 @@ function postfix( expression ) {
 
 
 /***/ }),
-/* 12 */
+/* 15 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1528,7 +1729,7 @@ function evaluate( postfix, variables ) {
 
 
 /***/ }),
-/* 13 */
+/* 16 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1538,12 +1739,20 @@ function evaluate( postfix, variables ) {
 /* unused harmony export _n */
 /* unused harmony export _nx */
 /* unused harmony export isRTL */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__create_i18n__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__wordpress_hooks__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__create_i18n__ = __webpack_require__(2);
+/**
+ * WordPress dependencies
+ */
+
 /**
  * Internal dependencies
  */
 
-var i18n = Object(__WEBPACK_IMPORTED_MODULE_0__create_i18n__["a" /* createI18n */])();
+
+var i18n = Object(__WEBPACK_IMPORTED_MODULE_1__create_i18n__["a" /* createI18n */])(undefined, undefined, {
+  applyFilters: __WEBPACK_IMPORTED_MODULE_0__wordpress_hooks__["a" /* applyFilters */]
+});
 /*
  * Comments in this file are duplicated from ./i18n due to
  * https://github.com/WordPress/gutenberg/pull/20318#issuecomment-590837722
@@ -1635,6 +1844,694 @@ var _nx = i18n._nx.bind(i18n);
 
 var isRTL = i18n.isRTL.bind(i18n);
 //# sourceMappingURL=default-i18n.js.map
+
+/***/ }),
+/* 17 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* unused harmony export addAction */
+/* unused harmony export addFilter */
+/* unused harmony export removeAction */
+/* unused harmony export removeFilter */
+/* unused harmony export hasAction */
+/* unused harmony export hasFilter */
+/* unused harmony export removeAllActions */
+/* unused harmony export removeAllFilters */
+/* unused harmony export doAction */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return applyFilters; });
+/* unused harmony export currentAction */
+/* unused harmony export currentFilter */
+/* unused harmony export doingAction */
+/* unused harmony export doingFilter */
+/* unused harmony export didAction */
+/* unused harmony export didFilter */
+/* unused harmony export actions */
+/* unused harmony export filters */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__createHooks__ = __webpack_require__(18);
+/* unused harmony reexport createHooks */
+/**
+ * Internal dependencies
+ */
+
+/** @typedef {(...args: any[])=>any} Callback */
+
+/**
+ * @typedef Handler
+ * @property {Callback} callback  The callback
+ * @property {string}   namespace The namespace
+ * @property {number}   priority  The namespace
+ */
+
+/**
+ * @typedef Hook
+ * @property {Handler[]} handlers Array of handlers
+ * @property {number}    runs     Run counter
+ */
+
+/**
+ * @typedef Current
+ * @property {string} name         Hook name
+ * @property {number} currentIndex The index
+ */
+
+/**
+ * @typedef {Record<string, Hook> & {__current: Current[]}} Store
+ */
+
+/**
+ * @typedef {'actions' | 'filters'} StoreKey
+ */
+
+/**
+ * @typedef {import('./createHooks').Hooks} Hooks
+ */
+
+var _createHooks = Object(__WEBPACK_IMPORTED_MODULE_0__createHooks__["a" /* default */])(),
+    addAction = _createHooks.addAction,
+    addFilter = _createHooks.addFilter,
+    removeAction = _createHooks.removeAction,
+    removeFilter = _createHooks.removeFilter,
+    hasAction = _createHooks.hasAction,
+    hasFilter = _createHooks.hasFilter,
+    removeAllActions = _createHooks.removeAllActions,
+    removeAllFilters = _createHooks.removeAllFilters,
+    doAction = _createHooks.doAction,
+    applyFilters = _createHooks.applyFilters,
+    currentAction = _createHooks.currentAction,
+    currentFilter = _createHooks.currentFilter,
+    doingAction = _createHooks.doingAction,
+    doingFilter = _createHooks.doingFilter,
+    didAction = _createHooks.didAction,
+    didFilter = _createHooks.didFilter,
+    actions = _createHooks.actions,
+    filters = _createHooks.filters;
+
+
+//# sourceMappingURL=index.js.map
+
+/***/ }),
+/* 18 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* unused harmony export _Hooks */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_esm_classCallCheck__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__createAddHook__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__createRemoveHook__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__createHasHook__ = __webpack_require__(22);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__createRunHook__ = __webpack_require__(23);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__createCurrentHook__ = __webpack_require__(29);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__createDoingHook__ = __webpack_require__(30);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__createDidHook__ = __webpack_require__(31);
+
+
+/**
+ * Internal dependencies
+ */
+
+
+
+
+
+
+
+/**
+ * Internal class for constructing hooks. Use `createHooks()` function
+ *
+ * Note, it is necessary to expose this class to make its type public.
+ *
+ * @private
+ */
+
+var _Hooks = function _Hooks() {
+  Object(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_esm_classCallCheck__["a" /* default */])(this, _Hooks);
+
+  /** @type {import('.').Store} actions */
+  this.actions = Object.create(null);
+  this.actions.__current = [];
+  /** @type {import('.').Store} filters */
+
+  this.filters = Object.create(null);
+  this.filters.__current = [];
+  this.addAction = Object(__WEBPACK_IMPORTED_MODULE_1__createAddHook__["a" /* default */])(this, 'actions');
+  this.addFilter = Object(__WEBPACK_IMPORTED_MODULE_1__createAddHook__["a" /* default */])(this, 'filters');
+  this.removeAction = Object(__WEBPACK_IMPORTED_MODULE_2__createRemoveHook__["a" /* default */])(this, 'actions');
+  this.removeFilter = Object(__WEBPACK_IMPORTED_MODULE_2__createRemoveHook__["a" /* default */])(this, 'filters');
+  this.hasAction = Object(__WEBPACK_IMPORTED_MODULE_3__createHasHook__["a" /* default */])(this, 'actions');
+  this.hasFilter = Object(__WEBPACK_IMPORTED_MODULE_3__createHasHook__["a" /* default */])(this, 'filters');
+  this.removeAllActions = Object(__WEBPACK_IMPORTED_MODULE_2__createRemoveHook__["a" /* default */])(this, 'actions', true);
+  this.removeAllFilters = Object(__WEBPACK_IMPORTED_MODULE_2__createRemoveHook__["a" /* default */])(this, 'filters', true);
+  this.doAction = Object(__WEBPACK_IMPORTED_MODULE_4__createRunHook__["a" /* default */])(this, 'actions');
+  this.applyFilters = Object(__WEBPACK_IMPORTED_MODULE_4__createRunHook__["a" /* default */])(this, 'filters', true);
+  this.currentAction = Object(__WEBPACK_IMPORTED_MODULE_5__createCurrentHook__["a" /* default */])(this, 'actions');
+  this.currentFilter = Object(__WEBPACK_IMPORTED_MODULE_5__createCurrentHook__["a" /* default */])(this, 'filters');
+  this.doingAction = Object(__WEBPACK_IMPORTED_MODULE_6__createDoingHook__["a" /* default */])(this, 'actions');
+  this.doingFilter = Object(__WEBPACK_IMPORTED_MODULE_6__createDoingHook__["a" /* default */])(this, 'filters');
+  this.didAction = Object(__WEBPACK_IMPORTED_MODULE_7__createDidHook__["a" /* default */])(this, 'actions');
+  this.didFilter = Object(__WEBPACK_IMPORTED_MODULE_7__createDidHook__["a" /* default */])(this, 'filters');
+};
+/** @typedef {_Hooks} Hooks */
+
+/**
+ * Returns an instance of the hooks object.
+ *
+ * @return {Hooks} A Hooks instance.
+ */
+
+function createHooks() {
+  return new _Hooks();
+}
+
+/* harmony default export */ __webpack_exports__["a"] = (createHooks);
+//# sourceMappingURL=createHooks.js.map
+
+/***/ }),
+/* 19 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = _classCallCheck;
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+}
+
+/***/ }),
+/* 20 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__validateNamespace_js__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__validateHookName_js__ = __webpack_require__(0);
+/**
+ * Internal dependencies
+ */
+
+
+/**
+ * @callback AddHook
+ *
+ * Adds the hook to the appropriate hooks container.
+ *
+ * @param {string}               hookName  Name of hook to add
+ * @param {string}               namespace The unique namespace identifying the callback in the form `vendor/plugin/function`.
+ * @param {import('.').Callback} callback  Function to call when the hook is run
+ * @param {number}               [priority=10]  Priority of this hook
+ */
+
+/**
+ * Returns a function which, when invoked, will add a hook.
+ *
+ * @param  {import('.').Hooks}    hooks Hooks instance.
+ * @param  {import('.').StoreKey} storeKey
+ *
+ * @return {AddHook} Function that adds a new hook.
+ */
+
+function createAddHook(hooks, storeKey) {
+  return function addHook(hookName, namespace, callback) {
+    var priority = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 10;
+    var hooksStore = hooks[storeKey];
+
+    if (!Object(__WEBPACK_IMPORTED_MODULE_1__validateHookName_js__["a" /* default */])(hookName)) {
+      return;
+    }
+
+    if (!Object(__WEBPACK_IMPORTED_MODULE_0__validateNamespace_js__["a" /* default */])(namespace)) {
+      return;
+    }
+
+    if ('function' !== typeof callback) {
+      // eslint-disable-next-line no-console
+      console.error('The hook callback must be a function.');
+      return;
+    } // Validate numeric priority
+
+
+    if ('number' !== typeof priority) {
+      // eslint-disable-next-line no-console
+      console.error('If specified, the hook priority must be a number.');
+      return;
+    }
+
+    var handler = {
+      callback: callback,
+      priority: priority,
+      namespace: namespace
+    };
+
+    if (hooksStore[hookName]) {
+      // Find the correct insert index of the new hook.
+      var handlers = hooksStore[hookName].handlers;
+      /** @type {number} */
+
+      var i;
+
+      for (i = handlers.length; i > 0; i--) {
+        if (priority >= handlers[i - 1].priority) {
+          break;
+        }
+      }
+
+      if (i === handlers.length) {
+        // If append, operate via direct assignment.
+        handlers[i] = handler;
+      } else {
+        // Otherwise, insert before index via splice.
+        handlers.splice(i, 0, handler);
+      } // We may also be currently executing this hook.  If the callback
+      // we're adding would come after the current callback, there's no
+      // problem; otherwise we need to increase the execution index of
+      // any other runs by 1 to account for the added element.
+
+
+      hooksStore.__current.forEach(function (hookInfo) {
+        if (hookInfo.name === hookName && hookInfo.currentIndex >= i) {
+          hookInfo.currentIndex++;
+        }
+      });
+    } else {
+      // This is the first hook of its type.
+      hooksStore[hookName] = {
+        handlers: [handler],
+        runs: 0
+      };
+    }
+
+    if (hookName !== 'hookAdded') {
+      hooks.doAction('hookAdded', hookName, namespace, callback, priority);
+    }
+  };
+}
+
+/* harmony default export */ __webpack_exports__["a"] = (createAddHook);
+//# sourceMappingURL=createAddHook.js.map
+
+/***/ }),
+/* 21 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__validateNamespace_js__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__validateHookName_js__ = __webpack_require__(0);
+/**
+ * Internal dependencies
+ */
+
+
+/**
+ * @callback RemoveHook
+ * Removes the specified callback (or all callbacks) from the hook with a given hookName
+ * and namespace.
+ *
+ * @param {string} hookName  The name of the hook to modify.
+ * @param {string} namespace The unique namespace identifying the callback in the
+ *                           form `vendor/plugin/function`.
+ *
+ * @return {number | undefined} The number of callbacks removed.
+ */
+
+/**
+ * Returns a function which, when invoked, will remove a specified hook or all
+ * hooks by the given name.
+ *
+ * @param  {import('.').Hooks}    hooks Hooks instance.
+ * @param  {import('.').StoreKey} storeKey
+ * @param  {boolean}              [removeAll=false] Whether to remove all callbacks for a hookName,
+ *                                                  without regard to namespace. Used to create
+ *                                                  `removeAll*` functions.
+ *
+ * @return {RemoveHook} Function that removes hooks.
+ */
+
+function createRemoveHook(hooks, storeKey) {
+  var removeAll = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+  return function removeHook(hookName, namespace) {
+    var hooksStore = hooks[storeKey];
+
+    if (!Object(__WEBPACK_IMPORTED_MODULE_1__validateHookName_js__["a" /* default */])(hookName)) {
+      return;
+    }
+
+    if (!removeAll && !Object(__WEBPACK_IMPORTED_MODULE_0__validateNamespace_js__["a" /* default */])(namespace)) {
+      return;
+    } // Bail if no hooks exist by this name
+
+
+    if (!hooksStore[hookName]) {
+      return 0;
+    }
+
+    var handlersRemoved = 0;
+
+    if (removeAll) {
+      handlersRemoved = hooksStore[hookName].handlers.length;
+      hooksStore[hookName] = {
+        runs: hooksStore[hookName].runs,
+        handlers: []
+      };
+    } else {
+      // Try to find the specified callback to remove.
+      var handlers = hooksStore[hookName].handlers;
+
+      var _loop = function _loop(i) {
+        if (handlers[i].namespace === namespace) {
+          handlers.splice(i, 1);
+          handlersRemoved++; // This callback may also be part of a hook that is
+          // currently executing.  If the callback we're removing
+          // comes after the current callback, there's no problem;
+          // otherwise we need to decrease the execution index of any
+          // other runs by 1 to account for the removed element.
+
+          hooksStore.__current.forEach(function (hookInfo) {
+            if (hookInfo.name === hookName && hookInfo.currentIndex >= i) {
+              hookInfo.currentIndex--;
+            }
+          });
+        }
+      };
+
+      for (var i = handlers.length - 1; i >= 0; i--) {
+        _loop(i);
+      }
+    }
+
+    if (hookName !== 'hookRemoved') {
+      hooks.doAction('hookRemoved', hookName, namespace);
+    }
+
+    return handlersRemoved;
+  };
+}
+
+/* harmony default export */ __webpack_exports__["a"] = (createRemoveHook);
+//# sourceMappingURL=createRemoveHook.js.map
+
+/***/ }),
+/* 22 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/**
+ * @callback HasHook
+ *
+ * Returns whether any handlers are attached for the given hookName and optional namespace.
+ *
+ * @param {string} hookName    The name of the hook to check for.
+ * @param {string} [namespace] Optional. The unique namespace identifying the callback
+ *                             in the form `vendor/plugin/function`.
+ *
+ * @return {boolean} Whether there are handlers that are attached to the given hook.
+ */
+
+/**
+ * Returns a function which, when invoked, will return whether any handlers are
+ * attached to a particular hook.
+ *
+ * @param  {import('.').Hooks}    hooks Hooks instance.
+ * @param  {import('.').StoreKey} storeKey
+ *
+ * @return {HasHook} Function that returns whether any handlers are
+ *                   attached to a particular hook and optional namespace.
+ */
+function createHasHook(hooks, storeKey) {
+  return function hasHook(hookName, namespace) {
+    var hooksStore = hooks[storeKey]; // Use the namespace if provided.
+
+    if ('undefined' !== typeof namespace) {
+      return hookName in hooksStore && hooksStore[hookName].handlers.some(function (hook) {
+        return hook.namespace === namespace;
+      });
+    }
+
+    return hookName in hooksStore;
+  };
+}
+
+/* harmony default export */ __webpack_exports__["a"] = (createHasHook);
+//# sourceMappingURL=createHasHook.js.map
+
+/***/ }),
+/* 23 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(process) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_esm_toConsumableArray__ = __webpack_require__(24);
+
+
+/**
+ * Returns a function which, when invoked, will execute all callbacks
+ * registered to a hook of the specified type, optionally returning the final
+ * value of the call chain.
+ *
+ * @param  {import('.').Hooks}    hooks Hooks instance.
+ * @param  {import('.').StoreKey} storeKey
+ * @param  {boolean}              [returnFirstArg=false] Whether each hook callback is expected to
+ *                                                       return its first argument.
+ *
+ * @return {(hookName:string, ...args: unknown[]) => unknown} Function that runs hook callbacks.
+ */
+function createRunHook(hooks, storeKey) {
+  var returnFirstArg = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+  return function runHooks(hookName) {
+    var hooksStore = hooks[storeKey];
+
+    if (!hooksStore[hookName]) {
+      hooksStore[hookName] = {
+        handlers: [],
+        runs: 0
+      };
+    }
+
+    hooksStore[hookName].runs++;
+    var handlers = hooksStore[hookName].handlers; // The following code is stripped from production builds.
+
+    if ('production' !== process.env.NODE_ENV) {
+      // Handle any 'all' hooks registered.
+      if ('hookAdded' !== hookName && hooksStore.all) {
+        handlers.push.apply(handlers, Object(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_esm_toConsumableArray__["a" /* default */])(hooksStore.all.handlers));
+      }
+    }
+
+    for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+      args[_key - 1] = arguments[_key];
+    }
+
+    if (!handlers || !handlers.length) {
+      return returnFirstArg ? args[0] : undefined;
+    }
+
+    var hookInfo = {
+      name: hookName,
+      currentIndex: 0
+    };
+
+    hooksStore.__current.push(hookInfo);
+
+    while (hookInfo.currentIndex < handlers.length) {
+      var handler = handlers[hookInfo.currentIndex];
+      var result = handler.callback.apply(null, args);
+
+      if (returnFirstArg) {
+        args[0] = result;
+      }
+
+      hookInfo.currentIndex++;
+    }
+
+    hooksStore.__current.pop();
+
+    if (returnFirstArg) {
+      return args[0];
+    }
+  };
+}
+
+/* harmony default export */ __webpack_exports__["a"] = (createRunHook);
+//# sourceMappingURL=createRunHook.js.map
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(1)))
+
+/***/ }),
+/* 24 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = _toConsumableArray;
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__arrayWithoutHoles_js__ = __webpack_require__(25);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__iterableToArray_js__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__unsupportedIterableToArray_js__ = __webpack_require__(27);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__nonIterableSpread_js__ = __webpack_require__(28);
+
+
+
+
+function _toConsumableArray(arr) {
+  return Object(__WEBPACK_IMPORTED_MODULE_0__arrayWithoutHoles_js__["a" /* default */])(arr) || Object(__WEBPACK_IMPORTED_MODULE_1__iterableToArray_js__["a" /* default */])(arr) || Object(__WEBPACK_IMPORTED_MODULE_2__unsupportedIterableToArray_js__["a" /* default */])(arr) || Object(__WEBPACK_IMPORTED_MODULE_3__nonIterableSpread_js__["a" /* default */])();
+}
+
+/***/ }),
+/* 25 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = _arrayWithoutHoles;
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__arrayLikeToArray_js__ = __webpack_require__(4);
+
+function _arrayWithoutHoles(arr) {
+  if (Array.isArray(arr)) return Object(__WEBPACK_IMPORTED_MODULE_0__arrayLikeToArray_js__["a" /* default */])(arr);
+}
+
+/***/ }),
+/* 26 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = _iterableToArray;
+function _iterableToArray(iter) {
+  if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
+}
+
+/***/ }),
+/* 27 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = _unsupportedIterableToArray;
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__arrayLikeToArray_js__ = __webpack_require__(4);
+
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return Object(__WEBPACK_IMPORTED_MODULE_0__arrayLikeToArray_js__["a" /* default */])(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return Object(__WEBPACK_IMPORTED_MODULE_0__arrayLikeToArray_js__["a" /* default */])(o, minLen);
+}
+
+/***/ }),
+/* 28 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = _nonIterableSpread;
+function _nonIterableSpread() {
+  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+
+/***/ }),
+/* 29 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/**
+ * Returns a function which, when invoked, will return the name of the
+ * currently running hook, or `null` if no hook of the given type is currently
+ * running.
+ *
+ * @param  {import('.').Hooks}    hooks Hooks instance.
+ * @param  {import('.').StoreKey} storeKey
+ *
+ * @return {() => string | null} Function that returns the current hook name or null.
+ */
+function createCurrentHook(hooks, storeKey) {
+  return function currentHook() {
+    var _hooksStore$__current, _hooksStore$__current2;
+
+    var hooksStore = hooks[storeKey];
+    return (_hooksStore$__current = (_hooksStore$__current2 = hooksStore.__current[hooksStore.__current.length - 1]) === null || _hooksStore$__current2 === void 0 ? void 0 : _hooksStore$__current2.name) !== null && _hooksStore$__current !== void 0 ? _hooksStore$__current : null;
+  };
+}
+
+/* harmony default export */ __webpack_exports__["a"] = (createCurrentHook);
+//# sourceMappingURL=createCurrentHook.js.map
+
+/***/ }),
+/* 30 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/**
+ * @callback DoingHook
+ * Returns whether a hook is currently being executed.
+ *
+ * @param  {string} [hookName] The name of the hook to check for.  If
+ *                             omitted, will check for any hook being executed.
+ *
+ * @return {boolean} Whether the hook is being executed.
+ */
+
+/**
+ * Returns a function which, when invoked, will return whether a hook is
+ * currently being executed.
+ *
+ * @param  {import('.').Hooks}    hooks Hooks instance.
+ * @param  {import('.').StoreKey} storeKey
+ *
+ * @return {DoingHook} Function that returns whether a hook is currently
+ *                     being executed.
+ */
+function createDoingHook(hooks, storeKey) {
+  return function doingHook(hookName) {
+    var hooksStore = hooks[storeKey]; // If the hookName was not passed, check for any current hook.
+
+    if ('undefined' === typeof hookName) {
+      return 'undefined' !== typeof hooksStore.__current[0];
+    } // Return the __current hook.
+
+
+    return hooksStore.__current[0] ? hookName === hooksStore.__current[0].name : false;
+  };
+}
+
+/* harmony default export */ __webpack_exports__["a"] = (createDoingHook);
+//# sourceMappingURL=createDoingHook.js.map
+
+/***/ }),
+/* 31 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__validateHookName_js__ = __webpack_require__(0);
+/**
+ * Internal dependencies
+ */
+
+/**
+ * @callback DidHook
+ *
+ * Returns the number of times an action has been fired.
+ *
+ * @param  {string} hookName The hook name to check.
+ *
+ * @return {number | undefined} The number of times the hook has run.
+ */
+
+/**
+ * Returns a function which, when invoked, will return the number of times a
+ * hook has been called.
+ *
+ * @param  {import('.').Hooks}    hooks Hooks instance.
+ * @param  {import('.').StoreKey} storeKey
+ *
+ * @return {DidHook} Function that returns a hook's call count.
+ */
+
+function createDidHook(hooks, storeKey) {
+  return function didHook(hookName) {
+    var hooksStore = hooks[storeKey];
+
+    if (!Object(__WEBPACK_IMPORTED_MODULE_0__validateHookName_js__["a" /* default */])(hookName)) {
+      return;
+    }
+
+    return hooksStore[hookName] && hooksStore[hookName].runs ? hooksStore[hookName].runs : 0;
+  };
+}
+
+/* harmony default export */ __webpack_exports__["a"] = (createDidHook);
+//# sourceMappingURL=createDidHook.js.map
 
 /***/ })
 /******/ ]);

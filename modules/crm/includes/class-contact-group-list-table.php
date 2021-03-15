@@ -110,7 +110,7 @@ class Contact_Group_List_Table extends WP_List_Table {
     public function column_name( $contact_group ) {
         $actions             = [];
         $delete_url          = '';
-        $view_subscriber_url = add_query_arg( [ 'page'=>'erp-crm', 'section'=> 'contact-groups', 'groupaction' => 'view-subscriber', 'filter_contact_group' => $contact_group->id ], admin_url( 'admin.php' ) );
+        $view_subscriber_url = add_query_arg( [ 'page'=>'erp-crm', 'section'=> 'contact', 'sub-section'=> 'contact-groups', 'groupaction' => 'view-subscriber', 'filter_contact_group' => $contact_group->id ], admin_url( 'admin.php' ) );
 
         if ( current_user_can( 'erp_crm_edit_groups' ) ) {
             $actions['edit'] = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $delete_url, $contact_group->id, __( 'Edit this Contact Group', 'erp' ), __( 'Edit', 'erp' ) );
@@ -173,6 +173,42 @@ class Contact_Group_List_Table extends WP_List_Table {
             '<input type="checkbox" name="contact_group[]" value="%s" />', $item->id
         );
     }
+
+    /**
+	 * Ovverrides the default search box.
+	 *
+	 * @since 1.8.0
+	 *
+	 * @param string $text     The 'submit' button label.
+	 * @param string $input_id ID attribute value for the search input field.
+	 */
+	public function search_box( $text, $input_id ) {
+		if ( empty( $_REQUEST['s'] ) && ! $this->has_items() ) {
+			return;
+		}
+
+		$input_id = $input_id . '-search-input';
+
+		if ( ! empty( $_REQUEST['orderby'] ) ) {
+			echo '<input type="hidden" name="orderby" value="' . esc_attr( $_REQUEST['orderby'] ) . '" />';
+		}
+		if ( ! empty( $_REQUEST['order'] ) ) {
+			echo '<input type="hidden" name="order" value="' . esc_attr( $_REQUEST['order'] ) . '" />';
+		}
+		if ( ! empty( $_REQUEST['post_mime_type'] ) ) {
+			echo '<input type="hidden" name="post_mime_type" value="' . esc_attr( $_REQUEST['post_mime_type'] ) . '" />';
+		}
+		if ( ! empty( $_REQUEST['detached'] ) ) {
+			echo '<input type="hidden" name="detached" value="' . esc_attr( $_REQUEST['detached'] ) . '" />';
+		}
+		?>
+        <p class="search-box">
+            <label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>"><?php echo $text; ?>:</label>
+            <input type="search" placeholder="<?php _e( 'Contact Group', 'erp' ); ?>" id="<?php echo esc_attr( $input_id ); ?>" name="s" value="<?php _admin_search_query(); ?>" />
+                <?php submit_button( $text, '', '', false, array( 'id' => 'search-submit' ) ); ?>
+        </p>
+		<?php
+	}
 
     /**
      * Prepare the class items

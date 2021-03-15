@@ -18,7 +18,7 @@ $trashed      = erp_is_people_trashed( $customer->id );
         esc_attr_e( 'Company #', 'erp' );
         echo esc_attr( $customer->id );
         ?>
-        <a href="<?php echo esc_url_raw( add_query_arg( [ 'page' => 'erp-crm', 'section' => 'companies' ], admin_url( 'admin.php' ) ) ); ?>" id="erp-contact-list" class="add-new-h2"><?php esc_attr_e( 'Back to Company list', 'erp' ); ?></a>
+        <a href="<?php echo esc_url_raw( add_query_arg( [ 'page' => 'erp-crm', 'section' => 'contact', 'sub-section' => 'companies' ], admin_url( 'admin.php' ) ) ); ?>" id="erp-contact-list" class="add-new-h2"><?php esc_attr_e( 'Back to Company list', 'erp' ); ?></a>
 
         <?php if ( ! $trashed ) : ?>
             <?php if ( current_user_can( 'erp_crm_edit_contact', $customer->id ) || current_user_can( erp_crm_get_manager_role() ) ) { ?>

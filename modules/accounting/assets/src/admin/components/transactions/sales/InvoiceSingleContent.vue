@@ -1,7 +1,7 @@
 <template>
     <div class="wperp-modal-body">
         <div class="wperp-invoice-panel">
-            <div class="invoice-header">
+            <div class="invoice-header" v-if="company.name">
                 <div class="invoice-logo">
                     <img :src="company.logo" alt="logo name" width="100" height="100">
                 </div>
@@ -28,6 +28,10 @@
                     </div>
                     <div class="wperp-col-sm-6">
                         <table class="invoice-info">
+                            <tr v-if="invoice.sales_voucher_id">
+                                <th>{{ __('Sales Voucher No', 'erp') }}:</th>
+                                <td>#{{ invoice.sales_voucher_id }}</td>
+                            </tr>
                             <tr>
                                 <th>{{ __('Voucher No', 'erp') }}:</th>
                                 <td>#{{ invoice.voucher_no }}</td>
@@ -36,7 +40,7 @@
                                 <th>{{ __('Transaction Date', 'erp') }}:</th>
                                 <td>{{ formatDate( invoice.trn_date ) }}</td>
                             </tr>
-                            <tr>
+                            <tr v-if="invoice.due_date">
                                 <th>{{ __('Due Date', 'erp') }}:</th>
                                 <td>{{ formatDate( invoice.due_date ) }}</td>
                             </tr>
@@ -44,7 +48,7 @@
                                 <th>{{ __('Created At', 'erp') }}:</th>
                                 <td>{{ formatDate( invoice.created_at ) }}</td>
                             </tr>
-                            <tr>
+                            <tr v-if="invoice.total_due">
                                 <th>{{ __('Amount Due', 'erp') }}:</th>
                                 <td>{{ moneyFormat( invoice.total_due ) }}</td>
                             </tr>
@@ -70,7 +74,7 @@
                             <th>{{ detail.name }}</th>
                             <td>{{ detail.qty }}</td>
                             <td>{{ moneyFormat( detail.unit_price ) }}</td>
-                            <td>{{ moneyFormat( detail.item_total ) }}</td>
+                            <td>{{ moneyFormat( parseFloat(detail.unit_price) * parseFloat(detail.qty) ) }}</td>
                         </tr>
                     </tbody>
                     <tfoot>
@@ -116,17 +120,19 @@ export default {
 
     props: {
         invoice: {
-            type: Object
+            type: [Object],
+            default: {}
         },
         company: {
-            type: Object
+            type: [Object],
+            default: {}
         }
     },
 
     data() {
         return {
             acct_var: erp_acct_var, /* global erp_acct_var */
-            total   : null
+            //total   : null
         };
     },
 
@@ -134,19 +140,29 @@ export default {
         TransParticulars
     },
 
+    computed: {
+        total () {
+            if ( !this.invoice.amount ) {
+                return '00.00';
+            }
+            
+            return parseFloat(this.invoice.amount) + parseFloat(this.invoice.tax) - parseFloat(this.invoice.discount);
+        }
+    },
+
     created() {
-        this.total = parseFloat(this.invoice.amount) + parseFloat(this.invoice.tax) - parseFloat(this.invoice.discount);
     },
 
     methods: {
         getInvoiceType() {
             if (this.invoice !== null && this.invoice.estimate === '1') {
                 return 'Estimate';
+            } else if ( this.invoice.sales_voucher_id ) {
+                return 'Sales Return Invoice';
             } else {
                 return 'Invoice';
             }
-        }
+        },
     }
-
 };
 </script>

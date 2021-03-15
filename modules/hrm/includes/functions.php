@@ -529,3 +529,41 @@ function erp_hr_holiday_reminder_to_employees() {
         }
     }
 }
+
+/**
+ * Retrieves html for hr people menu
+ *
+ * @since 1.8.0
+ *
+ * @param string $selected
+ *
+ * @return void
+ */
+function erp_hr_get_people_menu_html( $selected = 'employee' ) {
+    $dropdown = [
+        'employee'     => [ 'title' => esc_html__( 'Employees', 'erp' ), 'cap' => 'erp_list_employee' ],
+        'department'   => [ 'title' => esc_html__( 'Departments', 'erp' ), 'cap' => 'erp_manage_department' ],
+        'designation'  => [ 'title' => esc_html__( 'Designations', 'erp' ), 'cap' => 'erp_manage_designation' ],
+        'announcement' => [ 'title' => esc_html__( 'Announcements', 'erp' ), 'cap' => 'erp_manage_announcement' ],
+    ];
+
+    $dropdown = apply_filters( 'erp_hr_people_menu_items', $dropdown );
+
+    ob_start();
+    ?>
+
+    <div class="erp-custom-menu-container">
+        <ul class="erp-nav">
+            <?php foreach ( $dropdown as $key => $value ) : ?>
+                <?php if ( 'announcement' === $key && current_user_can( $value['cap'] ) ) : ?>
+                    <li class="<?php echo $key === $selected ? 'active' : ''; ?>"><a href="<?php echo admin_url( 'edit.php?post_type=erp_hr_announcement' ); ?>" class="" data-key="<?php echo $key; ?>"><?php echo $value['title']; ?></a></li>
+                <?php elseif ( current_user_can( $value['cap'] ) ) : ?>
+                    <li class="<?php echo $key === $selected ? 'active' : ''; ?>"><a href="<?php echo add_query_arg( array( 'sub-section' => $key ), admin_url( 'admin.php?page=erp-hr&section=people' ) ); ?>" class="" data-key="<?php echo $key; ?>"><?php echo $value['title']; ?></a></li>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+
+    <?php
+    echo ob_get_clean();
+}

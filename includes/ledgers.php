@@ -220,6 +220,14 @@ $old_ledgers = [
         'name'        => 'Bank Transaction Charge',
     ],
     [
+        'code'        => '607',
+        'id'          => 108,
+        'system'      => 0,
+        'category_id' => 12,
+        'chart_id'    => 5,
+        'name'        => 'Sales Return',
+    ],
+    [
         'code'        => '610',
         'id'          => 27,
         'system'      => 0,
@@ -667,67 +675,102 @@ $ledgers = [
          ],
      ],
      'income' => [
-         [
-             'name'   => 'Service Revenue',
-             'code'   => 1401,
-             'system' => 1,
-         ],
-         [
-             'name'   => 'Sales Revenue',
-             'code'   => 1402,
-             'system' => 1,
-         ],
-         [
-             'name'   => 'Gain on Disposal of Plant Assets',
-             'code'   => 1404,
-             'system' => 1,
-         ],
-         [
-             'name'   => 'Asset Sales',
-             'code'   => 1405,
-             'system' => 1,
-         ],
+        [
+            'name'   => 'Service Revenue',
+            'code'   => 1401,
+            'system' => 1,
+        ],
+        [
+            'name'   => 'Sales Revenue',
+            'code'   => 1402,
+            'system' => 1,
+        ],
+        [
+            'name'   => 'Gain on Disposal of Plant Assets',
+            'code'   => 1404,
+            'system' => 1,
+        ],
+        [
+        'name'    => 'Asset Sales',
+        'code'    => 1405,
+        'system'  => 1,
+        ],
+        [
+            'name'    => 'Sales Return Discount',
+            'code'    => 1406,
+            'system'  => 1,
+        ],
+        [
+            'name'    => 'Sales Return Tax',
+            'code'    => 1407,
+            'system'  => 1,
+        ],
+        [
+            'name'   => 'Purchase Return',
+            'code'   => 1408,
+            'system' => 1,
+        ],
+        [
+            'name'   => 'Purchase Return VAT',
+            'code'   => 1409,
+            'system' => 1,
+        ],
      ],
      'expense' => [
-         [
-             'name'   => 'Amortization Expense',
-             'code'   => 1501,
-             'system' => 1,
-         ],
-         [
-             'name'   => 'Freight-Out',
-             'code'   => 1502,
-             'system' => 1,
-         ],
-         [
-             'name'   => 'Insurance Expense',
-             'code'   => 1503,
-             'system' => 1,
-         ],
-         [
-             'name'   => 'Loss on Disposal of Plant Assets',
-             'code'   => 1504,
-             'system' => 1,
-         ],
-         [
-             'name'   => 'Maintenance and Repairs Expense',
-             'code'   => 1505,
-             'system' => 1,
-         ],
-         [
-             'name'   => 'Purchase',
-             'code'   => 1506,
-             'system' => 1,
-         ],
-         [
-             'name'   => 'Asset Purchase',
-             'code'   => 1506,
-             'system' => 1,
-         ],
-         [
-             'name'   => 'Sales Returns and Allowance',
-             'code'   => 1403,
-             'system' => 1,
-         ],
+        [
+            'name'   => 'Amortization Expense',
+            'code'   => 1501,
+            'system' => 1,
+        ],
+        [
+            'name'   => 'Freight-Out',
+            'code'   => 1502,
+            'system' => 1,
+        ],
+        [
+            'name'   => 'Insurance Expense',
+            'code'   => 1503,
+            'system' => 1,
+        ],
+        [
+            'name'   => 'Loss on Disposal of Plant Assets',
+            'code'   => 1504,
+            'system' => 1,
+        ],
+        [
+            'name'   => 'Maintenance and Repairs Expense',
+            'code'   => 1505,
+            'system' => 1,
+        ],
+        [
+            'name'   => 'Purchase',
+            'code'   => 1506,
+            'system' => 1,
+        ],
+        [
+            'name'   => 'Asset Purchase',
+            'code'   => 1507,
+            'system' => 1,
+        ],
+        [
+            'name'   => 'Purchase VAT',
+            'code'   => 1509,
+            'system' => 1,
+        ],
+        [
+            'name'   => 'Sales Returns and Allowance',
+            'code'   => 1403,
+            'system' => 1,
+        ],
+        [
+            'name'   => 'Purchase Return Discount',
+            'code'   => 1410,
+            'system' => 1,
+        ],
+        [
+            'name'   => 'Bank Transaction Charge',
+            'code'   => '1508',
+            'system' => 1,
+        ]
      ],
  ];

@@ -46,7 +46,7 @@ export default {
     data() {
         return {
             chartStatus: {
-                colors: ['#208DF8', '#E9485E', '#FF9900', '#2DCB67', '#9c27b0'],
+                colors: ['#208DF8', '#E9485E', '#FF9900', '#2DCB67', '#9c27b0', '#e3ff66'],
                 labels: [],
                 values: []
             },
@@ -102,7 +102,7 @@ export default {
             }).then(response => {
                 response.data.forEach(element => {
                     this.chartStatus.labels.push(element.type_name);
-                    this.chartStatus.values.push(element.sub_total);
+                    this.chartStatus.values.push(parseInt(element.sub_total));
                 });
             });
         }

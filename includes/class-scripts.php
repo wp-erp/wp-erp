@@ -142,6 +142,9 @@ class Scripts {
 
         // core css files
         wp_register_style( 'erp-styles', $css . '/admin.css', false, $this->version );
+
+        // custom menu design
+        wp_register_style( 'erp-custom-menu', $css . '/custom-menu.css', false, $this->version );
     }
 
     /**
@@ -174,7 +177,7 @@ class Scripts {
             'plupload'        => [
                 'url'              => admin_url( 'admin-ajax.php' ) . '?nonce=' . wp_create_nonce( 'erp_featured_img' ),
                 'flash_swf_url'    => includes_url( 'js/plupload/plupload.flash.swf' ),
-                'filters'          => [['title' => __( 'Allowed Files' ), 'extensions' => '*']],
+                'filters'          => [ [ 'title' => __( 'Allowed Files', 'erp' ), 'extensions' => '*' ] ],
                 'multipart'        => true,
                 'urlstream_upload' => true,
             ],
@@ -190,7 +193,7 @@ class Scripts {
             wp_localize_script( 'erp-script', 'wpErpCountries', $country->load_country_states() );
         }
 
-        if ( erp_is_current_page( 'erp-hr', 'employee' ) || erp_is_current_page( 'erp-hr', 'my-profile' ) || ( isset( $_GET['page'] ) && 'erp-company' === $_GET['page'] ) ) {
+        if ( erp_is_current_page( 'erp-hr', 'people', 'employee' ) || erp_is_current_page( 'erp-hr', 'my-profile' ) || ( isset( $_GET['page'] ) && 'erp-company' === $_GET['page'] ) ) {
             $country = \WeDevs\ERP\Countries::instance();
             wp_localize_script( 'erp-script', 'wpErpCountries', $country->load_country_states() );
         }
@@ -205,7 +208,12 @@ class Scripts {
         wp_enqueue_style( 'erp-fontawesome' );
         wp_enqueue_style( 'erp-select2' );
         wp_enqueue_style( 'jquery-ui' );
-
         wp_enqueue_style( 'erp-styles' );
+
+        $page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
+
+        if ( ! empty( $page ) && ( 'erp-hr' === $page || 'erp-crm' === $page || 'erp-settings' === $page ) ) {
+            wp_enqueue_style( 'erp-custom-menu' );
+        }
     }
 }

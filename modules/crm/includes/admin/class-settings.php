@@ -48,6 +48,7 @@ class CRM_Settings extends ERP_Settings_Page {
     public function get_sections() {
         $sections = [
             'contacts'      => __( 'Contacts', 'erp' ),
+            'contact_forms' => __( 'Contact Forms', 'erp' ),
             'templates'     => __( 'Templates', 'erp' ),
             'subscription'  => __( 'Subscription', 'erp' ),
             'email_connect' => __( 'Email Connectivity', 'erp' ),
