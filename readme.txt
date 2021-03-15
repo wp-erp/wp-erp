@@ -3,9 +3,9 @@ Contributors: tareq1988, nizamuddinbabu, wedevs
 Donate Link: https://tareq.co/donate
 Tags: business manager, erp, accounting, crm, hr, project manager, small business, SME, contact, contacts, Customer Relationship Management, employee, leave management, hr, human resource management, job, jobs, job listing, lead management, opportunity, schedule, task, lead, holiday, company
 Requires at least: 4.4
-Tested up to: 5.6.1
+Tested up to: 5.7
 Requires PHP: 5.6
-Stable tag: 1.7.5
+Stable tag: 1.8.0
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -279,6 +279,26 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+
+= v1.8.0 -> March 15, 2021 =
+--------------------------
+
+- [new] Added VAT on purchase feature in accounting
+- [new] Added both way payment system for sales and purchases to receive and pay amount for the same invoice/purchase
+- [notice] Added limited time promotion for weDevs’ birthday
+- [update] Updated menu arrangement to group some menus under their parent menu to make the arrangement more organized
+- [update] Updated transaction lists to track debit/credit balance
+- [update] Updated pdf invoices for all transactions
+- [update] Updated some frontend design of accounting to make the usability smoother
+- [update] Updated designs of list tables in CRM and HR
+- [update ] Updated settings tabs to organize the settings under their corresponding parent settings
+- [update] Updated the design of settings section menu
+- [fix] Fixed pdf export issues for some voucher types
+- [fix] Fixed wrong percentage issues of all transaction charts
+- [fix] Fixed user permission issue on viewing single invoice
+- [fix] Fixed google access token storing error response was generating fatal error
+- [fix] Fixed deprecation warning on some codebase
+- [fix] Fixed setup page design was broken with new WordPress update
 
 = v1.7.5 -> February 12, 2021 =
 --------------------------
