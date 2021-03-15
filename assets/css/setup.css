@@ -6,9 +6,13 @@ body {
 }
 .erp-logo {
   text-align: center;
+  border: none !important;
 }
 .erp-logo a {
   text-decoration: none;
+}
+.erp-setup {
+  border: none !important;
 }
 .erp-setup-content {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.13);

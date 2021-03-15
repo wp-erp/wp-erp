@@ -13,6 +13,7 @@
          * @return {void}
          */
         initialize: function() {
+            self = this;
             // Dasboard Overview
             $( 'ul.erp-dashboard-announcement' ).on( 'click', 'a.mark-read', this.dashboard.markAnnouncementRead );
             $( 'ul.erp-dashboard-announcement' ).on( 'click', 'a.view-full', this.dashboard.viewAnnouncement );
@@ -82,6 +83,27 @@
             // Trigger
             $('body').on( 'erp-hr-after-new-dept', this.department.afterNew );
             $('body').on( 'erp-hr-after-new-desig', this.designation.afterNew );
+
+            $('body').on( 'change', '.wp-list-table', function(e) {
+                var selector = $('.wp-list-table tbody tr th input[type="checkbox"]');
+                
+                if ( selector.is(':checked') ) {
+                    $('.tablenav .bulkactions').show();
+                    $(".tablenav").css("clear", "both");
+                    $(".wperp-filter-dropdown").css("margin-top", "-87px");
+                } else {
+                    $('.tablenav .bulkactions').hide();
+                    $(".tablenav").css("clear", "none");
+                    $(".wperp-filter-dropdown").css("margin-top", "-53px");
+                }
+            });
+
+            $('body').on( 'click', '.wperp-filter-dropdown a', this.employee.toggleFilterDropdown );
+
+            $('body').on( 'click', 'input[name="hide_filter"]', function(e) {
+                e.preventDefault();
+                self.employee.toggleFilterDropdown();
+            });
 
             this.initTipTip();
         },
@@ -938,6 +960,10 @@
                     });
                 }
 
+            },
+
+            toggleFilterDropdown: function() {
+                document.getElementById("erp-dropdown-content").classList.toggle("show");
             },
 
             general: {

@@ -58,23 +58,31 @@ class Form_Handler {
      * @since 1.3.14
      */
     public function handle_actions() {
-        $section = !empty( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : false;
+        $section = ! empty( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : false;
+        $sub_section = ! empty( $_GET['sub-section'] ) ? sanitize_text_field( wp_unslash( $_GET['sub-section'] ) ) : false;
 
-        if ( !$section ) {
+        if ( ! $section ) {
             return;
         }
 
         switch ( $section ) {
-            case 'employee':
-                $this->employee_bulk_action();
-                break;
-
-            case 'department':
-                $this->department_bulk_action();
-                break;
-
-            case 'designation':
-                $this->designation_bulk_action();
+            case 'people':
+                switch ( $sub_section ) {
+                    case 'employee':
+                        $this->employee_bulk_action();
+                        break;
+        
+                    case 'department':
+                        $this->department_bulk_action();
+                        break;
+        
+                    case 'designation':
+                        $this->designation_bulk_action();
+                        break;
+                    
+                    default:
+                        return;
+                }
                 break;
 
             case 'report':
@@ -993,7 +1001,7 @@ class Form_Handler {
 
         do_action( 'erp_hr_after_employee_permission_set', $_POST, $user );
 
-        $redirect_to = admin_url( 'admin.php?page=erp-hr&section=employee&action=view&id=' . $user->ID . '&tab=permission&msg=success' );
+        $redirect_to = admin_url( 'admin.php?page=erp-hr&section=people&sub-section=employee&action=view&id=' . $user->ID . '&tab=permission&msg=success' );        wp_redirect( $redirect_to );
         wp_redirect( $redirect_to );
         exit;
     }

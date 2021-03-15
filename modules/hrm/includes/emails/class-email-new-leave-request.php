@@ -65,8 +65,7 @@ class New_Leave_Request extends Email {
 
         $this->replace = [
             'full-name'    => $request->display_name,
-            'employee-url' => sprintf( '<a href="%s">%s</a>', admin_url( 'admin.php?page=erp-hr&section=employee&action=view&id=' . $request->user_id ), $request->display_name ),
-            'leave_type'   => $request->policy_name,
+            'employee-url' => sprintf( '<a href="%s">%s</a>', admin_url( 'admin.php?page=erp-hr&section=people&sub-section=employee&action=view&id=' . $request->user_id ), $request->display_name ),            'leave_type'   => $request->policy_name,
             'date_from'    => erp_format_date( $request->start_date ),
             'date_to'      => erp_format_date( $request->end_date ),
             'no_days'      => $request->days,

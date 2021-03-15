@@ -17,7 +17,7 @@ export default {
         HTTP.get(`/transactions/voucher-type/${this.voucher_no}`).then((response) => {
             this.voucher_type = response.data;
 
-            if (this.voucher_type === 'invoice' || this.voucher_type === 'estimate' || this.voucher_type === 'payment') {
+            if (this.voucher_type === 'invoice' || this.voucher_type === 'estimate' || this.voucher_type === 'payment' || this.voucher_type === 'return_payment') {
                 this.$router.push({ name: 'SalesSingle', params: { id: this.voucher_no } });
             }
             if (this.voucher_type === 'bill') {
@@ -29,7 +29,7 @@ export default {
             if (this.voucher_type === 'purchase' || this.voucher_type === 'purchase_order') {
                 this.$router.push({ name: 'PurchaseSingle', params: { id: this.voucher_no } });
             }
-            if (this.voucher_type === 'pay_purchase') {
+            if (this.voucher_type === 'pay_purchase' || this.voucher_type === 'receive_pay_purchase') {
                 this.$router.push({ name: 'PayPurchaseSingle', params: { id: this.voucher_no } });
             }
             if (this.voucher_type === 'expense') {

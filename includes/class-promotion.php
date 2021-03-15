@@ -27,16 +27,19 @@ class Promotion {
         if ( ! current_user_can( 'manage_options' ) ) {
             return;
         }
-        $current_time       = erp_current_datetime()->setTimezone ( new \DateTimeZone( 'America/New_York' ) );
-        $promotion_start   = $current_time->setDate( 2020, 12, 22 )->setTime( 9, 0, 0 );
-        $promotion_end     = $promotion_start->modify( '+17 days' )->setTime( 23, 59, 59 );
-        // 2020-12-22 09:00:00 - 2021-01-08 23:59:59
+        
+        $current_time      = erp_current_datetime()->setTimezone ( new \DateTimeZone( 'America/New_York' ) );
+        $promotion_start   = $current_time->setDate( 2021, 03, 15 )->setTime( 9, 0, 0 );
+        $promotion_end     = $promotion_start->modify( '+7 days' )->setTime( 23, 59, 59 );
+        
+        // 2021-03-15 09:00:00 EST - 2021-03-22 23:59:59 EST
         if ( $current_time > $promotion_end || $current_time < $promotion_start ) {
             return;
         }
+
         if ( $current_time >= $promotion_start && $current_time <= $promotion_end ) {
-            $msg            = 'Enjoy Up To 50% OFF on WP ERP Pro. Get Your ';
-            $option_name    = 'erp_2020_holiday';
+            $msg            = 'It\'s Our Birthday! Enjoy Up To  45% OFF  on WP ERP Pro.';
+            $option_name    = 'erp_wedevs_birthday_2021';
             $this->generate_notice( $msg, $option_name );
             return;
         }
@@ -57,11 +60,11 @@ class Promotion {
             return;
         }
 
-        $offer_msg = '<p><strong class="highlight-text" style="font-size: 18px">' . $msg . '
-                <a target="_blank" href="https://wperp.com/pricing/?nocache&utm_medium=text&utm_source=wordpress-erp-holidays">  Holiday Deals Now</a>.</strong>
+        $offer_msg = '<p><strong class="highlight-text">' . $msg . '</strong>' . 
+                ' <a target="_blank" href="https://wperp.com/pricing/?nocache&utm_medium=text&utm_source=wordpress-erp-holidays">Get Now</a>
             </p>';
         ?>
-        <div class="notice is-dismissible" id="erp-promotional-offer-notice">
+        <div class="notice is-dismissible erp-promotional-offer-notice" id="erp-promotional-offer-notice">
             <?php echo wp_kses_post( $offer_msg ); ?>
         </div><!-- #erp-promotional-offer-notice -->
 
@@ -76,6 +79,28 @@ class Promotion {
                 } );
             });
         </script>
+
+        <style>
+            .erp-promotional-offer-notice {
+                background: linear-gradient(45deg, #c03e3e, #fc9084);
+                color: rgb(255, 255, 222);
+                border-left: 6px solid rgb(252, 252, 198);
+            }
+
+            .erp-promotional-offer-notice p {
+                font-size: 25px;
+            }
+            
+            .erp-promotional-offer-notice a {
+                color: rgb(250, 250, 208);
+                border: 0.5px solid rgb(252, 252, 199);
+                border-radius: 4px;
+                padding: 3px;
+                text-decoration: none;
+                font-size: 25px;
+                font-weight: 200;
+            }
+        </style>
         <?php
     }
 

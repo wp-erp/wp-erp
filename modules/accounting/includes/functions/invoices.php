@@ -79,6 +79,7 @@ function erp_acct_get_invoice( $invoice_no ) {
     invoice.discount,
     invoice.discount_type,
     invoice.tax,
+    invoice.tax_zone_id,
     invoice.estimate,
     invoice.attachments,
     invoice.status,
@@ -98,7 +99,8 @@ function erp_acct_get_invoice( $invoice_no ) {
     $row = $wpdb->get_row( $sql, ARRAY_A );
 
     $row['line_items']  = erp_acct_format_invoice_line_items( $invoice_no );
-    $row['tax_rate_id'] = erp_acct_get_default_tax_rate_name_id();
+
+    $row['tax_rate_id'] = empty( $row['tax_zone_id'] ) ? erp_acct_get_default_tax_rate_name_id() : (int) $row['tax_zone_id'];
 
     // calculate every line total
     foreach ( $row['line_items'] as $key => $value ) {
@@ -218,6 +220,7 @@ function erp_acct_insert_invoice( $data ) {
                 'discount'        => $invoice_data['discount'],
                 'discount_type'   => $invoice_data['discount_type'],
                 'tax'             => $invoice_data['tax'],
+                'tax_zone_id'     => $invoice_data['tax_rate_id'],
                 'estimate'        => $invoice_data['estimate'],
                 'attachments'     => $invoice_data['attachments'],
                 'status'          => $invoice_data['status'],
@@ -348,16 +351,16 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no, $c
     }
 
     if ( ! empty( $tax_agency_details ) ) {
-        // insert data into {$wpdb->prefix}erp_acct_tax_agency_details
         foreach ( $tax_agency_details as $agency_id => $tax_agency_detail ) {
+            $debit = 0;
+            $credit = 0;
+            
             if ( $contra ) {
-                $debit  = $invoice_data['tax'];
-                $credit = 0;
+                $debit = $tax_agency_detail;
             } else {
-                $debit  = 0;
                 $credit = $tax_agency_detail;
             }
-
+            
             $wpdb->insert(
                 $wpdb->prefix . 'erp_acct_tax_agency_details',
                 [
@@ -925,7 +928,7 @@ function erp_acct_receive_payments_from_customer( $args = [] ) {
         (SELECT invoice_no, SUM( ia.debit - ia.credit) as due
         FROM $invoice_act_details as ia
         GROUP BY ia.invoice_no
-        HAVING due > 0) as invs
+        HAVING due <> 0) as invs
         ON invoice.voucher_no = invs.invoice_no
         WHERE invoice.customer_id = %d AND invoice.status != 1 AND invoice.estimate != 1
         ORDER BY %s %s $limit",
@@ -1059,4 +1062,26 @@ function erp_acct_get_invoice_due( $invoice_no ) {
     $result = $wpdb->get_row( $wpdb->prepare( "SELECT invoice_no, SUM( ia.debit - ia.credit) as due FROM {$wpdb->prefix}erp_acct_invoice_account_details as ia WHERE ia.invoice_no = %d GROUP BY ia.invoice_no", $invoice_no ), ARRAY_A );
 
     return $result['due'];
+}
+
+/**
+ * Retrieves tax zone of an invoice
+ * 
+ * @since 1.8.0
+ *
+ * @param [type] $invoice_no
+ * 
+ * @return int|string
+ */
+function erp_acct_get_invoice_tax_zone( $invoice_no ) {
+    global $wpdb;
+
+    $tax_zone = $wpdb->get_var(
+        $wpdb->prepare(
+            "SELECT tax_zone_id FROM {$wpdb->prefix}erp_acct_invoices WHERE voucher_no = %d",
+            [ (int) $invoice_no ]
+        )
+    );
+
+    return $tax_zone;
 }

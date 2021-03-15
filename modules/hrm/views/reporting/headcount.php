@@ -160,7 +160,7 @@
             <?php
             foreach ( $user_filtered as $user_id ) {
                 $employee     = new \WeDevs\ERP\HRM\Employee( intval( $user_id ) );
-                $employee_url = '<a href="' . admin_url( 'admin.php?page=erp-hr&section=employee&action=view&id=' . $employee->get_user_id() ) . '">' . $employee->display_name . '</a>';
+                $employee_url = '<a href="' . admin_url( 'admin.php?page=erp-hr&section=people&sub-section=employee&action=view&id=' . $employee->get_user_id() ) . '">' . $employee->display_name . '</a>';            ?>
             ?>
                 <tr>
                     <td><?php echo wp_kses_post( $employee_url ); ?></td>

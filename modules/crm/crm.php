@@ -241,73 +241,80 @@ class Customer_Relationship {
                 wp_enqueue_script( 'erp-flotchart-tooltip' );
                 break;
 
-            case 'contacts':
-                $this->load_contact_company_scripts( $suffix, $contact_actvity_localize );
-
-                $customer                             = new Contact( null, 'contact' );
-                $localize_script['customer_empty']    = $customer->to_array();
-                $localize_script['statuses']          = erp_crm_customer_get_status_count( 'contact' );
-                $localize_script['contact_type']      = 'contact';
-                $localize_script['life_stages']       = erp_crm_get_life_stages_dropdown_raw();
-                $localize_script['searchFields']      = erp_crm_get_serach_key( 'contact' );
-                $localize_script['saveAdvanceSearch'] = erp_crm_get_save_search_item( [ 'type' => 'contact' ] );
-                $localize_script['isAdmin']           = current_user_can( 'manage_options' );
-                $localize_script['isCrmManager']      = current_user_can( 'erp_crm_manager' );
-                $localize_script['isAgent']           = current_user_can( 'erp_crm_agent' );
-
-                $country = \WeDevs\ERP\Countries::instance();
-                wp_localize_script( 'erp-script', 'wpErpCountries', $country->load_country_states() );
-                break;
-
-            case 'companies':
-                $this->load_contact_company_scripts( $suffix, $contact_actvity_localize );
-
-                $customer                             = new Contact( null, 'company' );
-                $localize_script['customer_empty']    = $customer->to_array();
-                $localize_script['statuses']          = erp_crm_customer_get_status_count( 'company' );
-                $localize_script['contact_type']      = 'company';
-                $localize_script['life_stages']       = erp_crm_get_life_stages_dropdown_raw();
-                $localize_script['searchFields']      = erp_crm_get_serach_key( 'company' );
-                $localize_script['saveAdvanceSearch'] = erp_crm_get_save_search_item( [ 'type' => 'company' ] );
-                $localize_script['isAdmin']           = current_user_can( 'manage_options' );
-                $localize_script['isCrmManager']      = current_user_can( 'erp_crm_manager' );
-                $localize_script['isAgent']           = current_user_can( 'erp_crm_agent' );
-
-                $country = \WeDevs\ERP\Countries::instance();
-                wp_localize_script( 'erp-script', 'wpErpCountries', $country->load_country_states() );
-                break;
-
-            case 'schedules':
-                wp_enqueue_style( 'erp-timepicker' );
-                wp_enqueue_script( 'erp-timepicker' );
-                wp_enqueue_script( 'underscore' );
-                wp_enqueue_script( 'erp-trix-editor' );
-                wp_enqueue_style( 'erp-trix-editor' );
-                break;
-
-            case 'activities':
-                wp_enqueue_script( 'underscore' );
-                wp_enqueue_script( 'erp-vuejs' );
-                wp_enqueue_style( 'erp-nprogress' );
-                wp_enqueue_script( 'erp-nprogress' );
-                wp_enqueue_script( 'wp-erp-crm-vue-component', WPERP_CRM_ASSETS . '/js/crm-components.js', apply_filters( 'crm_vue_customer_script', [ 'erp-nprogress', 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ] ), gmdate( 'Ymd' ), true );
-
-                do_action( 'erp_crm_load_contact_vue_scripts' );
-
-                wp_enqueue_script( 'wp-erp-crm-vue-customer', WPERP_CRM_ASSETS . "/js/crm-app$suffix.js", [ 'wp-erp-crm-vue-component', 'erp-nprogress', 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ], gmdate( 'Ymd' ), true );
-                wp_enqueue_script( 'post' );
-
-                $contact_actvity_localize['isActivityPage'] = true;
-                wp_localize_script( 'wp-erp-crm-vue-component', 'wpCRMvue', $contact_actvity_localize );
-                break;
-
-            case 'reports':
-                if ( isset( $_GET['type'] ) && $_GET['type'] === 'growth-report' ) {
-                    wp_enqueue_script( 'erp-momentjs' );
-                    wp_enqueue_script( 'erp-crm-chart', WPERP_CRM_ASSETS . "/js/chart$suffix.min.js", [], gmdate( 'Ymd' ), true );
-                    wp_enqueue_script( 'erp-crm-report', WPERP_CRM_ASSETS . "/js/report$suffix.js", [], gmdate( 'Ymd' ), true );
-                }
-                break;
+                case 'contact':
+                    $sub_section = isset( $_GET['sub-section'] ) ? sanitize_text_field( wp_unslash( $_GET['sub-section'] ) ) : 'contacts';
+    
+                    switch ( $sub_section ) {
+                        case 'contacts':
+                            $this->load_contact_company_scripts( $suffix, $contact_actvity_localize );
+    
+                            $customer                             = new Contact( null, 'contact' );
+                            $localize_script['customer_empty']    = $customer->to_array();
+                            $localize_script['statuses']          = erp_crm_customer_get_status_count( 'contact' );
+                            $localize_script['contact_type']      = 'contact';
+                            $localize_script['life_stages']       = erp_crm_get_life_stages_dropdown_raw();
+                            $localize_script['searchFields']      = erp_crm_get_serach_key( 'contact' );
+                            $localize_script['saveAdvanceSearch'] = erp_crm_get_save_search_item( [ 'type' => 'contact' ] );
+                            $localize_script['isAdmin']           = current_user_can( 'manage_options' );
+                            $localize_script['isCrmManager']      = current_user_can( 'erp_crm_manager' );
+                            $localize_script['isAgent']           = current_user_can( 'erp_crm_agent' );
+    
+                            $country = \WeDevs\ERP\Countries::instance();
+                            wp_localize_script( 'erp-script', 'wpErpCountries', $country->load_country_states() );
+                            break;
+    
+                        case 'companies':
+                            $this->load_contact_company_scripts( $suffix, $contact_actvity_localize );
+    
+                            $customer                             = new Contact( null, 'company' );
+                            $localize_script['customer_empty']    = $customer->to_array();
+                            $localize_script['statuses']          = erp_crm_customer_get_status_count( 'company' );
+                            $localize_script['contact_type']      = 'company';
+                            $localize_script['life_stages']       = erp_crm_get_life_stages_dropdown_raw();
+                            $localize_script['searchFields']      = erp_crm_get_serach_key( 'company' );
+                            $localize_script['saveAdvanceSearch'] = erp_crm_get_save_search_item( [ 'type' => 'company' ] );
+                            $localize_script['isAdmin']           = current_user_can( 'manage_options' );
+                            $localize_script['isCrmManager']      = current_user_can( 'erp_crm_manager' );
+                            $localize_script['isAgent']           = current_user_can( 'erp_crm_agent' );
+    
+                            $country = \WeDevs\ERP\Countries::instance();
+                            wp_localize_script( 'erp-script', 'wpErpCountries', $country->load_country_states() );
+                            break;
+    
+                        case 'activities':
+                            wp_enqueue_script( 'underscore' );
+                            wp_enqueue_script( 'erp-vuejs' );
+                            wp_enqueue_style( 'erp-nprogress' );
+                            wp_enqueue_script( 'erp-nprogress' );
+                            wp_enqueue_script( 'wp-erp-crm-vue-component', WPERP_CRM_ASSETS . '/js/crm-components.js', apply_filters( 'crm_vue_customer_script', [ 'erp-nprogress', 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ] ), gmdate( 'Ymd' ), true );
+    
+                            do_action( 'erp_crm_load_contact_vue_scripts' );
+    
+                            wp_enqueue_script( 'wp-erp-crm-vue-customer', WPERP_CRM_ASSETS . "/js/crm-app$suffix.js", [ 'wp-erp-crm-vue-component', 'erp-nprogress', 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ], gmdate( 'Ymd' ), true );
+                            wp_enqueue_script( 'post' );
+    
+                            $contact_actvity_localize['isActivityPage'] = true;
+                            wp_localize_script( 'wp-erp-crm-vue-component', 'wpCRMvue', $contact_actvity_localize );
+                            break;
+                    }
+    
+                    break;
+    
+                case 'task':
+                    wp_enqueue_style( 'erp-timepicker' );
+                    wp_enqueue_script( 'erp-timepicker' );
+                    wp_enqueue_script( 'underscore' );
+                    wp_enqueue_script( 'erp-trix-editor' );
+                    wp_enqueue_style( 'erp-trix-editor' );
+                    break;
+    
+                case 'reports':
+                    if ( isset( $_GET['type'] ) && $_GET['type'] === 'growth-report' ) {
+                        wp_enqueue_script( 'erp-momentjs' );
+                        wp_enqueue_script( 'erp-crm-chart', WPERP_CRM_ASSETS . "/js/chart$suffix.min.js", [], gmdate( 'Ymd' ), true );
+                        wp_enqueue_script( 'erp-crm-report', WPERP_CRM_ASSETS . "/js/report$suffix.js", [], gmdate( 'Ymd' ), true );
+                    }
+                    break;    
         }
 
         wp_localize_script( 'erp-vue-table', 'wpVueTable', [
@@ -336,56 +343,63 @@ class Customer_Relationship {
         $section = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : 'dashboard';
 
         switch ( $section ) {
-            case 'contacts':
-            case 'companies':
-                erp_get_js_template( WPERP_CRM_JS_TMPL . '/new-customer.php', 'erp-crm-new-contact' );
-                erp_get_js_template( WPERP_CRM_JS_TMPL . '/make-wp-user.php', 'erp-make-wp-user' );
-                erp_get_js_template( WPERP_CRM_JS_TMPL . '/new-bulk-contact-group.php', 'erp-crm-new-bulk-contact-group' );
-                erp_get_vue_component_template( WPERP_CRM_JS_TMPL . '/save-search-fields.php', 'erp-crm-save-search-item' );
+            case 'contact':
+                $sub_section = isset( $_GET['sub-section'] ) ? sanitize_text_field( wp_unslash( $_GET['sub-section'] ) ) : 'contacts';
 
-                if ( isset( $_GET['action'] ) && $_GET['action'] === 'view' ) {
-                    erp_get_js_template( WPERP_CRM_JS_TMPL . '/new-assign-company.php', 'erp-crm-new-assign-company' );
-                    erp_get_js_template( WPERP_CRM_JS_TMPL . '/customer-social.php', 'erp-crm-customer-social' );
-                    erp_get_js_template( WPERP_CRM_JS_TMPL . '/customer-feed-edit.php', 'erp-crm-customer-edit-feed' );
-                    erp_get_js_template( WPERP_CRM_JS_TMPL . '/new-subscriber-contact.php', 'erp-crm-assign-subscriber-contact' );
-                    erp_get_vue_component_template( WPERP_CRM_JS_TMPL . '/timeline-new-note.php', 'erp-crm-timeline-feed-new-note' );
-                    erp_get_vue_component_template( WPERP_CRM_JS_TMPL . '/timeline-email.php', 'erp-crm-timeline-feed-email' );
-                    erp_get_vue_component_template( WPERP_CRM_JS_TMPL . '/timeline-log-activity.php', 'erp-crm-timeline-feed-log-activity' );
-                    erp_get_vue_component_template( WPERP_CRM_JS_TMPL . '/timeline-task.php', 'erp-crm-timeline-feed-task-note' );
-                    erp_get_vue_component_template( WPERP_CRM_JS_TMPL . '/customer-newnote.php', 'erp-crm-new-note-template' );
-                    erp_get_vue_component_template( WPERP_CRM_JS_TMPL . '/customer-log-activity.php', 'erp-crm-log-activity-template' );
-                    erp_get_vue_component_template( WPERP_CRM_JS_TMPL . '/customer-email-note.php', 'erp-crm-email-note-template' );
-                    erp_get_vue_component_template( WPERP_CRM_JS_TMPL . '/customer-schedule-note.php', 'erp-crm-schedule-note-template' );
-                    erp_get_vue_component_template( WPERP_CRM_JS_TMPL . '/customer-tasks-note.php', 'erp-crm-tasks-note-template' );
+                switch ( $sub_section ) {
+                    case 'contacts':
+                    case 'companies':
+                        erp_get_js_template( WPERP_CRM_JS_TMPL . '/new-customer.php', 'erp-crm-new-contact' );
+                        erp_get_js_template( WPERP_CRM_JS_TMPL . '/make-wp-user.php', 'erp-make-wp-user' );
+                        erp_get_js_template( WPERP_CRM_JS_TMPL . '/new-bulk-contact-group.php', 'erp-crm-new-bulk-contact-group' );
+                        erp_get_vue_component_template( WPERP_CRM_JS_TMPL . '/save-search-fields.php', 'erp-crm-save-search-item' );
 
-                    do_action( 'erp_crm_load_vue_js_template' );
+                        if ( isset( $_GET['action'] ) && $_GET['action'] === 'view' ) {
+                            erp_get_js_template( WPERP_CRM_JS_TMPL . '/new-assign-company.php', 'erp-crm-new-assign-company' );
+                            erp_get_js_template( WPERP_CRM_JS_TMPL . '/customer-social.php', 'erp-crm-customer-social' );
+                            erp_get_js_template( WPERP_CRM_JS_TMPL . '/customer-feed-edit.php', 'erp-crm-customer-edit-feed' );
+                            erp_get_js_template( WPERP_CRM_JS_TMPL . '/new-subscriber-contact.php', 'erp-crm-assign-subscriber-contact' );
+                            erp_get_vue_component_template( WPERP_CRM_JS_TMPL . '/timeline-new-note.php', 'erp-crm-timeline-feed-new-note' );
+                            erp_get_vue_component_template( WPERP_CRM_JS_TMPL . '/timeline-email.php', 'erp-crm-timeline-feed-email' );
+                            erp_get_vue_component_template( WPERP_CRM_JS_TMPL . '/timeline-log-activity.php', 'erp-crm-timeline-feed-log-activity' );
+                            erp_get_vue_component_template( WPERP_CRM_JS_TMPL . '/timeline-task.php', 'erp-crm-timeline-feed-task-note' );
+                            erp_get_vue_component_template( WPERP_CRM_JS_TMPL . '/customer-newnote.php', 'erp-crm-new-note-template' );
+                            erp_get_vue_component_template( WPERP_CRM_JS_TMPL . '/customer-log-activity.php', 'erp-crm-log-activity-template' );
+                            erp_get_vue_component_template( WPERP_CRM_JS_TMPL . '/customer-email-note.php', 'erp-crm-email-note-template' );
+                            erp_get_vue_component_template( WPERP_CRM_JS_TMPL . '/customer-schedule-note.php', 'erp-crm-schedule-note-template' );
+                            erp_get_vue_component_template( WPERP_CRM_JS_TMPL . '/customer-tasks-note.php', 'erp-crm-tasks-note-template' );
+
+                            do_action( 'erp_crm_load_vue_js_template' );
+                        }
+
+                        break;
+
+                    case 'contact-groups':
+                        erp_get_js_template( WPERP_CRM_JS_TMPL . '/new-contact-group.php', 'erp-crm-new-contact-group' );
+
+                        if ( isset( $_GET['groupaction'] ) && $_GET['groupaction'] === 'view-subscriber' ) {
+                            erp_get_js_template( WPERP_CRM_JS_TMPL . '/new-subscriber-contact.php', 'erp-crm-assign-subscriber-contact' );
+                        }
+                        break;
+
+                    case 'activities':
+                        erp_get_vue_component_template( WPERP_CRM_JS_TMPL . '/timeline-new-note.php', 'erp-crm-timeline-feed-new-note' );
+                        erp_get_vue_component_template( WPERP_CRM_JS_TMPL . '/timeline-email.php', 'erp-crm-timeline-feed-email' );
+                        erp_get_vue_component_template( WPERP_CRM_JS_TMPL . '/timeline-log-activity.php', 'erp-crm-timeline-feed-log-activity' );
+                        erp_get_vue_component_template( WPERP_CRM_JS_TMPL . '/timeline-task.php', 'erp-crm-timeline-feed-task-note' );
+
+                        do_action( 'erp_crm_load_vue_js_template' );
+
+                        break;
                 }
 
-                break;
-
-            case 'contact-groups':
-                erp_get_js_template( WPERP_CRM_JS_TMPL . '/new-contact-group.php', 'erp-crm-new-contact-group' );
-
-                if ( isset( $_GET['groupaction'] ) && $_GET['groupaction'] === 'view-subscriber' ) {
-                    erp_get_js_template( WPERP_CRM_JS_TMPL . '/new-subscriber-contact.php', 'erp-crm-assign-subscriber-contact' );
-                }
                 break;
 
             case 'dashboard':
                 erp_get_js_template( WPERP_CRM_JS_TMPL . '/single-schedule-details.php', 'erp-crm-single-schedule-details' );
                 break;
 
-            case 'activities':
-                erp_get_vue_component_template( WPERP_CRM_JS_TMPL . '/timeline-new-note.php', 'erp-crm-timeline-feed-new-note' );
-                erp_get_vue_component_template( WPERP_CRM_JS_TMPL . '/timeline-email.php', 'erp-crm-timeline-feed-email' );
-                erp_get_vue_component_template( WPERP_CRM_JS_TMPL . '/timeline-log-activity.php', 'erp-crm-timeline-feed-log-activity' );
-                erp_get_vue_component_template( WPERP_CRM_JS_TMPL . '/timeline-task.php', 'erp-crm-timeline-feed-task-note' );
-
-                do_action( 'erp_crm_load_vue_js_template' );
-
-                break;
-
-            case 'schedules':
+            case 'task':
                 erp_get_js_template( WPERP_CRM_JS_TMPL . '/single-schedule-details.php', 'erp-crm-single-schedule-details' );
                 erp_get_js_template( WPERP_CRM_JS_TMPL . '/customer-add-schedules.php', 'erp-crm-customer-schedules' );
                 break;
