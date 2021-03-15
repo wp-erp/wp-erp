@@ -26,7 +26,7 @@
                     <strong>
                         <router-link :to="{ name: 'SalesSingle', params: {
                             id: data.row.id,
-                            type: isPayment(data.row) ? 'payment' : 'invoice'
+                            type: data.row.type
                         }}">
                             #{{ data.row.id }}
                         </router-link>
@@ -48,7 +48,7 @@
                     {{ isPayment(data.row) ? '-' : formatDate( data.row.due_date ) }}
                 </template>
                 <template slot="due" slot-scope="data">
-                    {{ isPayment(data.row) ? '-' : formatAmount(data.row.due) }}
+                    <span :class="(parseFloat(data.row.due) < 0) ? 'cr-balance' : 'dr-balance'">{{ isPayment(data.row) ? '-' : formatAmount(data.row.due, true) }}</span>
                 </template>
                 <template slot="amount" slot-scope="data">
                     {{ isPayment(data.row) ? formatAmount(data.row.payment_amount) : formatAmount(data.row.sales_amount)
@@ -86,13 +86,13 @@ export default {
     data() {
         return {
             columns       : {
-                trn_no       : { label:  __('Voucher No.', 'erp') },
+                trn_no       : { label: __('Voucher No.', 'erp') },
                 type         : { label: __('Type', 'erp') },
                 ref          : { label: __('Ref', 'erp') },
                 customer_name: { label: __('Customer', 'erp') },
                 trn_date     : { label: __('Trn Date', 'erp') },
                 due_date     : { label: __('Due Date', 'erp') },
-                due          : { label: __('Due', 'erp') },
+                due          : { label: __('Balance', 'erp') },
                 amount       : { label: __('Total', 'erp') },
                 status       : { label: __('Status', 'erp') },
                 actions      : { label: '' }
@@ -136,6 +136,12 @@ export default {
         }
     },
 
+    computed: {
+        proActivated() {
+            return this.$store.state.erp_pro_activated ?  this.$store.state.erp_pro_activated : false;
+        }
+    },
+
     // watch: {
     //     $route: 'fetchItems'
     // },
@@ -159,26 +165,68 @@ export default {
                 this.rows = response.data.map(item => {
                     if (item.estimate === '1' || item.status_code === '1') {
                         item['actions'] = [
-                            { key: 'edit', label: 'Edit' },
-                            { key: 'to_invoice', label: 'Make Invoice' }
+                            { key: 'edit', label: __('Edit', 'erp') },
+                            { key: 'to_invoice', label: __('Make Invoice', 'erp') }
                         ];
                     } else if (item.status_code === '8') {
                         item['actions'] = [
                             { key: '#', label: __('No actions found', 'erp') }
                         ];
-                    } else if (item.type === 'invoice' && item.status_code !== '4') {
-                        if (item.status_code === '7') {
-                            delete item['actions'];
-                        } else if (item.status_code === '2' || item.status_code === '3' || item.status_code === '5') {
-                            item['actions'] = [
-                                { key: 'receive', label: __('Receive Payment', 'erp') },
-                                { key: 'edit', label: __('Edit', 'erp') },
-                                { key: 'void', label: 'Void' }
-                            ];
+                    } else if (item.type === 'invoice') {
+                        if ( item.status_code !== '4' ) {
+                            if (item.status_code === '7') {
+                                delete item['actions'];
+
+                                item['actions'] = [
+                                    { key: '#', label: __('No actions found', 'erp') }
+                                ];
+                            } else if (item.status_code === '2' || item.status_code === '3' || item.status_code === '5') {
+                                item['actions'] = [
+                                    { key: 'receive', label: __('Payment', 'erp') },
+                                    { key: 'edit', label: __('Edit', 'erp') },
+                                    { key: 'void', label: __('Void', 'erp') }
+                                ];
+
+                                if ( this.proActivated && item.status_code !== '3' ) {
+                                    item.actions.splice( 1, 0, { key: 'return', label: __('Receive Return', 'erp') } );
+                                }
+                            } else if (item.status_code === '10') {
+                                item['actions'] = [
+                                    { key: 'receive', label: __('Payment', 'erp') },
+                                ];
+
+                                if ( this.proActivated ) {
+                                    item.actions.splice( 1, 0, { key: 'return', label: __('Receive Return', 'erp') } );
+                                }
+                            } else if (item.status_code === '9') {
+                                if ( parseFloat( item.due ) !== 0 ) {
+                                    item['actions'] = [
+                                        { key: 'receive', label: __('Payment', 'erp') },
+                                    ];
+                                } else {
+                                    item['actions'] = [
+                                        { key: '#', label: __('No actions found', 'erp') }
+                                    ];
+                                }
+                            } else {
+                                item['actions'] = [
+                                    { key: 'void', label: 'Void' }
+                                ];
+
+                                if ( this.proActivated && item.status_code === '6' ) {
+                                    item.actions.splice( 1, 0, { key: 'return', label: __('Receive Return', 'erp') } );
+                                }
+                            }
                         } else {
-                            item['actions'] = [
-                                { key: 'void', label: 'Void' }
-                            ];
+                            if ( this.proActivated ) {
+                                item['actions'] = [
+                                    { key: 'return', label: __('Receive Return', 'erp') }                                
+                                ];
+                            } else {
+                                item['actions'] = [
+                                    { key: '#', label: __('No actions found', 'erp') }
+                                ];
+                            }
                         }
                     } else {
                         item['actions'] = [
@@ -210,7 +258,7 @@ export default {
                         this.$delete(this.rows, index);
 
                         this.$store.dispatch('spinner/setSpinner', false);
-                        this.showAlert('success', 'Deleted !');
+                        this.showAlert('success', __('Deleted !', 'erp'));
                     }).catch(error => {
                         this.$store.dispatch('spinner/setSpinner', false);
                         throw error;
@@ -223,7 +271,7 @@ export default {
                     this.$router.push({ name: 'InvoiceEdit', params: { id: row.id } });
                 }
 
-                if (row.type === 'payment') {
+                if (row.type === 'payment' || row.type === 'return_payment') {
                     this.$router.push({ name: 'RecPaymentEdit', params: { id: row.id } });
                 }
                 break;
@@ -238,18 +286,24 @@ export default {
                 });
                 break;
 
+            case 'return':
+                this.$router.push({
+                    path: `/transactions/sales/return/${row.id}/create`,
+                });
+                break;
+
             case 'void':
-                if (confirm('Are you sure to void the transaction?')) {
+                if (confirm(__('Are you sure to void the transaction?', 'erp'))) {
                     if (row.type === 'invoice') {
                         HTTP.post('invoices/' + row.id + '/void').then(response => {
-                            this.showAlert('success', 'Transaction has been void!');
+                            this.showAlert('success', __('Transaction has been void!', 'erp'));
                         }).catch(error => {
                             throw error;
                         });
                     }
                     if (row.type === 'payment') {
                         HTTP.post('payments/' + row.id + '/void').then(response => {
-                            this.showAlert('success', 'Transaction has been void!');
+                            this.showAlert('success', __('Transaction has been void!', 'erp'));
                         }).then(() => {
                             this.$router.push({ name: 'Sales' });
                         }).catch(error => {
@@ -282,17 +336,24 @@ export default {
         },
 
         isPayment(row) {
-            return row.type === 'payment';
+            return row.type === 'payment' || row.type === 'return_payment';
+        },
+
+        isReturnPayment(row) {
+            return row.type === 'return_payment';
         },
 
         getTrnType(row) {
             if (row.type === 'invoice') {
                 if (row.estimate == '1') {
-                    return 'Estimate';
+                    return __('Estimate', 'erp');
                 }
-                return 'Invoice';
+
+                return __('Invoice', 'erp');
+            } else if (row.type === 'return_payment') {
+                return __('Payment', 'erp');
             } else {
-                return 'Payment';
+                return __('Receive', 'erp');
             }
         }
     }
@@ -307,5 +368,17 @@ export default {
         .check-column {
             display: none;
         }
+    }
+
+    .due {
+        font-weight: 600;
+    }
+
+    .dr-balance {
+        color: #00b33c;
+    }
+
+    .cr-balance {
+        color: #ff6666;
     }
 </style>

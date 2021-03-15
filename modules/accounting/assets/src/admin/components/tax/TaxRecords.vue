@@ -147,7 +147,7 @@ export default {
         },
 
         addTaxPayment() {
-            this.$router.push('/pay-tax');
+            this.$router.push('/settings/pay-tax');
         },
 
         onActionClick(action, row, index) {

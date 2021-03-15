@@ -110,11 +110,11 @@ function erp_acct_get_account_receivable( $args ) {
     // mainly ( debit - credit )
     $sql = "SELECT SUM(balance) AS amount
         FROM ( SELECT SUM( debit - credit ) AS balance
-            FROM {$wpdb->prefix}erp_acct_invoice_account_details WHERE trn_date <= '%s'
-            GROUP BY invoice_no HAVING balance > 0 )
+            FROM {$wpdb->prefix}erp_acct_invoice_account_details WHERE trn_date BETWEEN '%s' AND '%s'
+            GROUP BY invoice_no HAVING balance <> 0 )
         AS get_amount";
 
-    $data = $wpdb->get_var( $wpdb->prepare( $sql, $args['end_date'] ) );
+    $data = $wpdb->get_var( $wpdb->prepare( $sql, $args['start_date'], $args['end_date'] ) );
 
     return erp_acct_people_calc_with_opening_balance( $args, $data, 'receivable', $sql );
 }
@@ -138,7 +138,7 @@ function erp_acct_get_account_payable( $args ) {
 
     $purchase_sql = "SELECT SUM(balance) AS amount
         FROM ( SELECT SUM( debit - credit ) AS balance FROM {$wpdb->prefix}erp_acct_purchase_account_details WHERE trn_date <= '%s'
-        GROUP BY purchase_no HAVING balance < 0 )
+        GROUP BY purchase_no HAVING balance <> 0 )
         AS get_amount";
 
     $bill_amount     = $wpdb->get_var( $wpdb->prepare( $bill_sql, $args['end_date'] ) );

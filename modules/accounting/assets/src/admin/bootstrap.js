@@ -20,9 +20,13 @@ import SelectPeople from 'admin/components/people/SelectPeople.vue';
 import Vuelidate from 'vuelidate';
 import PieChart from 'admin/components/chart/PieChart.vue';
 import DynamicTrnLoader from 'admin/components/transactions/DynamicTrnLoader.vue';
+import TransParticulars from 'admin/components/transactions/TransParticulars.vue';
+import TransactionsFilter from 'admin/components/transactions/TransactionsFilter.vue';
+import InvoiceSingleContent from 'admin/components/transactions/sales/InvoiceSingleContent.vue';
 import VueClipboards from 'vue-clipboards';
 import { createHooks } from '@wordpress/hooks';
 import { clickOutside } from './directive/directives';
+import Swal from 'sweetalert2' ;
 
 // global acct var
 window.acct = {
@@ -30,29 +34,33 @@ window.acct = {
 };
 
 // assign libs to window for global use
-window.acct.libs['Vue']              = Vue;
-window.acct.libs['Datepicker']       = Datepicker;
-window.acct.libs['ListTable']        = ListTable;
-window.acct.libs['Dropdown']         = Dropdown;
-window.acct.libs['SendMail']         = SendMail;
-window.acct.libs['VueSweetalert2']   = VueSweetalert2;
-window.acct.libs['commonMixins']     = commonMixins;
-window.acct.libs['i18nMixin']        = i18nMixin;
-window.acct.libs['Loading']          = Loading;
-window.acct.libs['HTTP']             = HTTP;
-window.acct.libs['FileUpload']       = FileUpload;
-window.acct.libs['ShowErrors']       = ShowErrors;
-window.acct.libs['SubmitButton']     = SubmitButton;
-window.acct.libs['ComboButton']      = ComboButton;
-window.acct.libs['MultiSelect']      = MultiSelect;
-window.acct.libs['SelectAccounts']   = SelectAccounts;
-window.acct.libs['TimePicker']       = TimePicker;
-window.acct.libs['SelectPeople']     = SelectPeople;
-window.acct.libs['DynamicTrnLoader'] = DynamicTrnLoader;
-window.acct.libs['Vuelidate']        = Vuelidate;
-window.acct.libs['PieChart']         = PieChart;
-window.acct.libs['VueClipboards']    = VueClipboards;
-window.acct.libs['clickOutside']     = clickOutside;
+window.acct.libs['Vue']                 = Vue;
+window.acct.libs['Datepicker']          = Datepicker;
+window.acct.libs['ListTable']           = ListTable;
+window.acct.libs['Dropdown']            = Dropdown;
+window.acct.libs['SendMail']            = SendMail;
+window.acct.libs['VueSweetalert2']      = VueSweetalert2;
+window.acct.libs['commonMixins']        = commonMixins;
+window.acct.libs['i18nMixin']           = i18nMixin;
+window.acct.libs['Loading']             = Loading;
+window.acct.libs['HTTP']                = HTTP;
+window.acct.libs['FileUpload']          = FileUpload;
+window.acct.libs['ShowErrors']          = ShowErrors;
+window.acct.libs['SubmitButton']        = SubmitButton;
+window.acct.libs['ComboButton']         = ComboButton;
+window.acct.libs['MultiSelect']         = MultiSelect;
+window.acct.libs['SelectAccounts']      = SelectAccounts;
+window.acct.libs['TimePicker']          = TimePicker;
+window.acct.libs['SelectPeople']        = SelectPeople;
+window.acct.libs['DynamicTrnLoader']    = DynamicTrnLoader;
+window.acct.libs['Vuelidate']           = Vuelidate;
+window.acct.libs['PieChart']            = PieChart;
+window.acct.libs['VueClipboards']       = VueClipboards;
+window.acct.libs['clickOutside']        = clickOutside;
+window.acct.libs['TransParticulars']    = TransParticulars;
+window.acct.libs['TransactionsFilter']  = TransactionsFilter;
+window.acct.libs['InvoiceSingleContent']= InvoiceSingleContent;
+window.acct.libs['Swal']                = Swal;
 
 // get lib reference from window
 window.acct_get_lib = function(lib) {

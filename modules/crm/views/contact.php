@@ -27,13 +27,15 @@ if ( isset( $_GET['filter_assign_contact' ] ) && !empty( $_GET['filter_assign_co
 <div class="wrap erp-crm-customer erp-crm-customer-listing" id="wp-erp" v-cloak>
 
     <h2>
-        <?php esc_attr_e( 'Contact', 'erp' ); ?>
+        <?php esc_attr_e( 'Contacts', 'erp' ); ?>    
         <?php if ( current_user_can( 'erp_crm_add_contact' ) ) { ?>
             <a href="#" @click.prevent="addContact( 'contact', '<?php esc_attr_e( 'Add New Contact', 'erp' ); ?>' )" id="erp-customer-new" class="erp-contact-new add-new-h2"><?php esc_attr_e( 'Add New Contact', 'erp' ); ?></a>
         <?php } ?>
 
         <a href="#" @click.prevent="addSearchSegment()" id="erp-contact-search-segmen" class="erp-search-segment add-new-h2">{{{ segmentBtnText }}}</a>
     </h2>
+
+    <?php do_action( 'erp_crm_contact_menu', 'contacts' ); ?>
 
     <!-- Advance search filter vue component -->
     <advance-search :show-hide-segment="showHideSegment"></advance-search>

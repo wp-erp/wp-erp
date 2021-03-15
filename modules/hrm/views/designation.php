@@ -1,6 +1,8 @@
 <div class="wrap erp erp-hr-designation">
-
-    <h2><?php esc_html_e( 'Designations', 'erp' ); ?> <a href="#" id="erp-new-designation" data-single="1" class="add-new-h2"><?php esc_html_e( 'Add New', 'erp' ); ?></a></h2>
+    <h2>
+        <?php esc_html_e( 'People', 'erp' ); ?>
+        <a href="#" id="erp-new-designation" data-single="1" class="add-new-h2"><?php esc_html_e( 'Add New', 'erp' ); ?></a>
+    </h2>
 
     <?php if ( isset( $_GET['desig_delete'] ) ) { ?>
         <div id="message" class="error notice is-dismissible below-h2">
@@ -9,18 +11,20 @@
         </div>
     <?php } ?>
 
+    <?php do_action( 'erp_hr_people_menu', 'designation' ); ?>
+
     <div id="erp-desig-table-wrap">
 
         <div class="list-table-inner">
 
             <form method="get">
                 <input type="hidden" name="page" value="erp-hr">
-                <input type="hidden" name="section" value="designation">
+                <input type="hidden" name="section" value="people">
+                <input type="hidden" name="sub-section" value="designation">
                 <?php
                 $designation = new \WeDevs\ERP\HRM\Designation_List_Table();
                 $designation->prepare_items();
                 $designation->views();
-
                 $designation->display();
                 ?>
             </form>

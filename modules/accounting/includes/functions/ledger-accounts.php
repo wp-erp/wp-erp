@@ -308,26 +308,32 @@ function erp_acct_ledgers_opening_balance_by_fn_year_id( $id ) {
  * @return array
  */
 function erp_acct_ledger_balance_with_opening_balance( $ledgers, $data, $opening_balance ) {
-    $temp_data = [];
+    $temp_data         = [];
+    $ledger_balance    = [];
+    $transaction_count = [];
 
     /*
-     * Start writing a very `inefficient :(` foreach loop
+     * Generate ledger balance and transaction count according to ledger id
      */
+    foreach ( $data as $row ) {
+        if ( ! isset( $ledger_balance[ $row['id'] ] ) ) {
+            $ledger_balance[ $row['id'] ]    = (float) $row['balance'];
+            $transaction_count[ $row['id'] ] = 1;
+        } else {
+            $ledger_balance[ $row['id'] ]    += (float) $row['balance'];
+            $transaction_count[ $row['id'] ] += 1;
+        }
+    }
+
+    foreach ( $opening_balance as $op_balance ) {
+        if ( ! isset( $ledger_balance[ $op_balance['id'] ] ) ) {
+            $ledger_balance[ $op_balance['id'] ] = 0.00;
+        }
+
+        $ledger_balance[ $op_balance['id'] ] += (float) $op_balance['balance'];
+    }
+
     foreach ( $ledgers as $ledger ) {
-        $balance = 0;
-
-        foreach ( $data as $row ) {
-            if ( $row['id'] === $ledger['id'] ) {
-                $balance += (float) $row['balance'];
-            }
-        }
-
-        foreach ( $opening_balance as $op_balance ) {
-            if ( $op_balance['id'] === $ledger['id'] ) {
-                $balance += (float) $op_balance['balance'];
-            }
-        }
-
         $temp_data[] = [
             'id'          => $ledger['id'],
             'chart_id'    => $ledger['chart_id'],
@@ -336,7 +342,8 @@ function erp_acct_ledger_balance_with_opening_balance( $ledgers, $data, $opening
             'slug'        => $ledger['slug'],
             'code'        => $ledger['code'],
             'system'      => $ledger['system'],
-            'balance'     => $balance,
+            'trn_count'   => isset( $transaction_count[ $ledger['id'] ] ) ? $transaction_count[ $ledger['id'] ] : 0,
+            'balance'     => isset( $ledger_balance[ $ledger['id'] ] ) ? $ledger_balance[ $ledger['id'] ] : 0.00,
         ];
     }
 

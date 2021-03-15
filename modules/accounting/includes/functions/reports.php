@@ -491,6 +491,13 @@ function erp_acct_get_balance_sheet( $args ) {
         'name'    => 'Accounts Receivable',
         'balance' => erp_acct_get_account_receivable( $args ),
     ];
+
+    $results['rows1'][] = [
+        'name'    => 'Sales Tax Receivable',
+        'slug'    => 'sales_tax',
+        'balance' => erp_acct_sales_tax_query( $args, 'receivable' ),
+    ];
+
     $results['rows1'][] = [
         'name'       => 'Cash at Bank',
         'balance'    => $final_accounts_helper->totalCashAtBank,  //erp_acct_cash_at_bank( $args, 'balance' ),

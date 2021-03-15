@@ -84,29 +84,30 @@
                     <div class="wperp-invoice-table" v-if="null != purchase">
                         <table class="wperp-table wperp-form-table invoice-table">
                             <thead>
-                                <tr>
-                                    <th>{{ __('Sl.', 'erp') }}</th>
-                                    <th>{{ __('Item name', 'erp') }}</th>
-                                    <th>{{ __('Qty', 'erp') }}</th>
-                                    <th>{{ __('Unit Price', 'erp') }}</th>
-                                    <th>{{ __('Amount', 'erp') }}</th>
-                                </tr>
+                            <tr>
+                                <th>{{ __('Sl.', 'erp') }}</th>
+                                <th>{{ __('Item name', 'erp') }}</th>
+                                <th>{{ __('Qty', 'erp') }}</th>
+                                <th>{{ __('Unit Price', 'erp') }}</th>
+                                <th>{{ __('Amount', 'erp') }}</th>
+                            </tr>
                             </thead>
                             <tbody>
-                                <tr :key="index" v-for="(line, index) in purchase.line_items">
-                                    <td>{{ index+1 }}</td>
-                                    <td>{{ line.name }}</td>
-                                    <td>{{ line.qty }}</td>
-                                    <td>{{ moneyFormat(line.price) }}</td>
-                                    <td>{{ moneyFormat(line.amount) }}</td>
-                                </tr>
+                            <tr :key="index" v-for="(line, index) in purchase.line_items">
+                                <td>{{ index+1 }}</td>
+                                <td>{{ line.name }}</td>
+                                <td>{{ line.qty }}</td>
+                                <td>{{ moneyFormat(line.price) }}</td>
+                                <td>{{ moneyFormat(line.amount) }}</td>
+                            </tr>
                             </tbody>
                             <tfoot>
                             <tr>
                                 <td colspan="7">
                                     <ul>
-                                        <li><span>{{ __('Subtotal', 'erp') }}:</span> {{ moneyFormat(purchase.amount) }}</li>
-                                        <li><span>{{ __('Total', 'erp') }}:</span> {{ moneyFormat(purchase.amount) }}</li>
+                                        <li><span>{{ __('Subtotal', 'erp') }}:</span> {{ moneyFormat(total.basic) }}</li>
+                                        <li v-if="total.tax"><span>{{ __('VAT', 'erp') }}:</span> {{ moneyFormat(total.tax) }}</li>
+                                        <li><span>{{ __('Total', 'erp') }}:</span> {{ moneyFormat(total.final) }}</li>
                                     </ul>
                                 </td>
                             </tr>
@@ -173,7 +174,15 @@ export default {
             this.showModal = false;
         });
     },
-
+    computed:{
+        total(){
+            return {
+                basic:  parseFloat( this.purchase.amount ) - parseFloat( this.purchase.tax ),
+                tax:  parseFloat( this.purchase.tax ),
+                final:  parseFloat( this.purchase.amount )
+            }
+        }
+    },
     methods: {
         getCompanyInfo() {
             HTTP.get(`/company`).then(response => {
@@ -206,7 +215,7 @@ export default {
         }
     }
 
-};
+}
 </script>
 
 <style lang="less">

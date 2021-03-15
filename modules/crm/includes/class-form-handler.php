@@ -91,7 +91,10 @@ class Form_Handler {
             return;
         }
 
-        if ( empty( $_GET['section'] ) || $_GET['section'] != 'contact-groups' ) {
+        $section     = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : '';
+        $sub_section = isset( $_GET['sub-section'] ) ? sanitize_text_field( wp_unslash( $_GET['sub-section'] ) ) : '';
+
+        if ( 'contact' !== $section || 'contact-groups' !== $sub_section ) {
             return;
         }
 
