@@ -90,7 +90,7 @@
                 if ( selector.is(':checked') ) {
                     $('.tablenav .bulkactions').show();
                     $(".tablenav").css("clear", "both");
-                    $(".wperp-filter-dropdown").css("margin-top", "-87px");
+                    $(".wperp-filter-dropdown").css("margin-top", "-63px");
                 } else {
                     $('.tablenav .bulkactions').hide();
                     $(".tablenav").css("clear", "none");
