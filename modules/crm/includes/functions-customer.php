@@ -706,7 +706,7 @@ function erp_crm_get_feed_activity( $postdata ) {
         $value['extra'] = json_decode( base64_decode( $value['extra'] ), true );
 
         if ( isset( $value['extra']['invite_contact'] ) && ! empty( $postdata['assigned_to'] ) ) {
-            if ( ! in_array( $postdata['assigned_to'], $value['extra']['invite_contact'], true ) ) {
+            if ( ! in_array( $postdata['assigned_to'], $value['extra']['invite_contact'] ) ) {
                 continue;
             }
         }
