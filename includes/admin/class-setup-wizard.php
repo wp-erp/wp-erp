@@ -140,7 +140,7 @@ class Setup_Wizard {
             <title><?php esc_html_e( 'WP ERP &rsaquo; Setup Wizard', 'erp' ); ?></title>
             <?php wp_print_scripts( 'erp-setup' ); ?>
             <?php do_action( 'admin_print_styles' ); ?>
-            <?php do_action( 'admin_head' ); ?>
+            <?php // do_action( 'admin_head' ); ?>
         </head>
         <body class="erp-setup wp-core-ui">
             <h1 class="erp-logo"><a href="http://wperp.com/">WP ERP</a></h1>
