@@ -161,6 +161,8 @@ function erp_acct_create_erp_acct_purchase_details_tax_1_8_0() {
                 PRIMARY KEY  (`id`)
             ) $charset_collate";
 
+    require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+
     dbDelta( $sql );
 }
 
