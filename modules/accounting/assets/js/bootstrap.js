@@ -11702,7 +11702,7 @@ window.acct_get_lib = function (lib) {
 /* global acct */
 
 
-acct.hooks = Object(__WEBPACK_IMPORTED_MODULE_26__wordpress_hooks__["b" /* createHooks */])();
+acct.hooks = Object(__WEBPACK_IMPORTED_MODULE_26__wordpress_hooks__["a" /* createHooks */])();
 
 acct.addFilter = function (hookName, namespace, component) {
   var priority = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 10;

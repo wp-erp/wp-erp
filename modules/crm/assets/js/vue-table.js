@@ -1,4 +1,4 @@
-vt = Vue.component('vtable', {
+Vue.component('vtable', {
     template:
         '<div class="content-header-section">'
         +'<form method="get">'

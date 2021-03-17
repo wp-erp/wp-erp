@@ -706,7 +706,7 @@ function erp_crm_get_feed_activity( $postdata ) {
         $value['extra'] = json_decode( base64_decode( $value['extra'] ), true );
 
         if ( isset( $value['extra']['invite_contact'] ) && ! empty( $postdata['assigned_to'] ) ) {
-            if ( ! in_array( $postdata['assigned_to'], $value['extra']['invite_contact'], true ) ) {
+            if ( ! in_array( $postdata['assigned_to'], $value['extra']['invite_contact'] ) ) {
                 continue;
             }
         }
@@ -2746,6 +2746,13 @@ function erp_crm_contact_form_section() {
     \WeDevs\ERP\CRM\ContactForms\ERP_Settings_Contact_Forms::init();
 }
 
+/**
+ * Renders the crm settings page
+ *
+ * @param array $settings
+ * 
+ * @return array
+ */
 function erp_crm_settings_pages( $settings ) {
     if ( erp_crm_is_current_user_manager() ) {
         $settings[] = new \WeDevs\ERP\CRM\CRM_Settings();

@@ -3,7 +3,7 @@
 /**
  * Insert necessary ledgers for purchase return
  */
-function erp_acct_insert_to_erp_acct_ledgers_1_8_0() {
+function erp_acct_insert_to_erp_acct_ledgers_1_8_1() {
     global $wpdb;
 
     $sales_return_discount_exists = $wpdb->get_row(
@@ -100,7 +100,7 @@ function erp_acct_insert_to_erp_acct_ledgers_1_8_0() {
 /*
  * Add tax and tax_zone_id columns in `erp_acct_purchase` table
  */
-function erp_acct_alter_table_erp_acct_purchase_1_8_0() {
+function erp_acct_alter_table_erp_acct_purchase_1_8_1() {
     global $wpdb;
 
     $table = $wpdb->prefix . 'erp_acct_purchase';
@@ -126,7 +126,7 @@ function erp_acct_alter_table_erp_acct_purchase_1_8_0() {
 /*
  * Add tax column in `erp_acct_purchase_details` table
  */
-function erp_acct_alter_table_erp_acct_purchase_details_1_8_0() {
+function erp_acct_alter_table_erp_acct_purchase_details_1_8_1() {
     global $wpdb;
 
     $table = $wpdb->prefix . 'erp_acct_purchase_details';
@@ -144,7 +144,7 @@ function erp_acct_alter_table_erp_acct_purchase_details_1_8_0() {
 /*
  * Create `erp_acct_purchase_details_tax` table
  */
-function erp_acct_create_erp_acct_purchase_details_tax_1_8_0() {
+function erp_acct_create_erp_acct_purchase_details_tax_1_8_1() {
     global $wpdb;
 
     $charset_collate = $wpdb->get_charset_collate();
@@ -158,7 +158,7 @@ function erp_acct_create_erp_acct_purchase_details_tax_1_8_0() {
                 created_by int(20) DEFAULT NULL,
                 updated_at datetime DEFAULT NULL,
                 updated_by int(20) DEFAULT NULL,
-                PRIMARY KEY  (`id`)
+                PRIMARY KEY  (id)
             ) $charset_collate";
 
     require_once ABSPATH . 'wp-admin/includes/upgrade.php';
@@ -169,7 +169,7 @@ function erp_acct_create_erp_acct_purchase_details_tax_1_8_0() {
 /*
  * Update `Asset Purchase` system ledger
  */
-function erp_acct_update_table_erp_acct_ledgers_1_8_0() {
+function erp_acct_update_table_erp_acct_ledgers_1_8_1() {
     global $wpdb;
 
     $wpdb->update(
@@ -184,7 +184,7 @@ function erp_acct_update_table_erp_acct_ledgers_1_8_0() {
 /*
  * Add `returned` transaction status type
  */
-function erp_acct_insert_into_table_trn_status_types_1_8_0() {
+function erp_acct_insert_into_table_trn_status_types_1_8_1() {
     global $wpdb;
 
     $returned_trn_type = $wpdb->get_row(
@@ -219,7 +219,7 @@ function erp_acct_insert_into_table_trn_status_types_1_8_0() {
 /*
  * Add tax_zone_id column in `erp_acct_invoices` table
  */
-function erp_acct_alter_table_erp_acct_invoices_1_8_0() {
+function erp_acct_alter_table_erp_acct_invoices_1_8_1() {
     global $wpdb;
 
     $cols = $wpdb->get_col( "DESC {$wpdb->prefix}erp_acct_invoices" );
@@ -233,10 +233,10 @@ function erp_acct_alter_table_erp_acct_invoices_1_8_0() {
     }
 }
 
-erp_acct_alter_table_erp_acct_purchase_1_8_0();
-erp_acct_alter_table_erp_acct_purchase_details_1_8_0();
-erp_acct_create_erp_acct_purchase_details_tax_1_8_0();
-erp_acct_insert_to_erp_acct_ledgers_1_8_0();
-erp_acct_update_table_erp_acct_ledgers_1_8_0();
-erp_acct_insert_into_table_trn_status_types_1_8_0();
-erp_acct_alter_table_erp_acct_invoices_1_8_0();
+erp_acct_alter_table_erp_acct_purchase_1_8_1();
+erp_acct_alter_table_erp_acct_purchase_details_1_8_1();
+erp_acct_create_erp_acct_purchase_details_tax_1_8_1();
+erp_acct_insert_to_erp_acct_ledgers_1_8_1();
+erp_acct_update_table_erp_acct_ledgers_1_8_1();
+erp_acct_insert_into_table_trn_status_types_1_8_1();
+erp_acct_alter_table_erp_acct_invoices_1_8_1();
