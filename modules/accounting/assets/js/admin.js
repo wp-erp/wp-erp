@@ -34458,7 +34458,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
-window.erpAccountingHooks = Object(__WEBPACK_IMPORTED_MODULE_3__wordpress_hooks__["b" /* createHooks */])(); // get lib reference
+window.erpAccountingHooks = Object(__WEBPACK_IMPORTED_MODULE_3__wordpress_hooks__["a" /* createHooks */])(); // get lib reference
 
 /* global acct_get_lib */
 

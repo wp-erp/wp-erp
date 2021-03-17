@@ -88,8 +88,6 @@ class ERP_Settings_Contact_Forms {
     public function crm_contact_forms_section_fields( $fields, $sections ) {
         $plugins = $this->active_plugin_list;
 
-        error_log( 'plugins: ' . print_r( $plugins, true ) );
-
         if ( empty( $plugins ) ) {
             $fields['contact_forms'] = [
                 [
