@@ -14774,6 +14774,7 @@ module.exports = __webpack_amd_options__;
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return defaultHooks; });
 /* unused harmony export addAction */
 /* unused harmony export addFilter */
 /* unused harmony export removeAction */
@@ -14783,7 +14784,7 @@ module.exports = __webpack_amd_options__;
 /* unused harmony export removeAllActions */
 /* unused harmony export removeAllFilters */
 /* unused harmony export doAction */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return applyFilters; });
+/* unused harmony export applyFilters */
 /* unused harmony export currentAction */
 /* unused harmony export currentFilter */
 /* unused harmony export doingAction */
@@ -14793,7 +14794,7 @@ module.exports = __webpack_amd_options__;
 /* unused harmony export actions */
 /* unused harmony export filters */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__createHooks__ = __webpack_require__(516);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_0__createHooks__["a"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_0__createHooks__["a"]; });
 /**
  * Internal dependencies
  */
@@ -14831,26 +14832,25 @@ module.exports = __webpack_amd_options__;
  * @typedef {import('./createHooks').Hooks} Hooks
  */
 
-var _createHooks = Object(__WEBPACK_IMPORTED_MODULE_0__createHooks__["a" /* default */])(),
-    addAction = _createHooks.addAction,
-    addFilter = _createHooks.addFilter,
-    removeAction = _createHooks.removeAction,
-    removeFilter = _createHooks.removeFilter,
-    hasAction = _createHooks.hasAction,
-    hasFilter = _createHooks.hasFilter,
-    removeAllActions = _createHooks.removeAllActions,
-    removeAllFilters = _createHooks.removeAllFilters,
-    doAction = _createHooks.doAction,
-    applyFilters = _createHooks.applyFilters,
-    currentAction = _createHooks.currentAction,
-    currentFilter = _createHooks.currentFilter,
-    doingAction = _createHooks.doingAction,
-    doingFilter = _createHooks.doingFilter,
-    didAction = _createHooks.didAction,
-    didFilter = _createHooks.didFilter,
-    actions = _createHooks.actions,
-    filters = _createHooks.filters;
-
+var defaultHooks = Object(__WEBPACK_IMPORTED_MODULE_0__createHooks__["a" /* default */])();
+var addAction = defaultHooks.addAction,
+    addFilter = defaultHooks.addFilter,
+    removeAction = defaultHooks.removeAction,
+    removeFilter = defaultHooks.removeFilter,
+    hasAction = defaultHooks.hasAction,
+    hasFilter = defaultHooks.hasFilter,
+    removeAllActions = defaultHooks.removeAllActions,
+    removeAllFilters = defaultHooks.removeAllFilters,
+    doAction = defaultHooks.doAction,
+    applyFilters = defaultHooks.applyFilters,
+    currentAction = defaultHooks.currentAction,
+    currentFilter = defaultHooks.currentFilter,
+    doingAction = defaultHooks.doingAction,
+    doingFilter = defaultHooks.doingFilter,
+    didAction = defaultHooks.didAction,
+    didFilter = defaultHooks.didFilter,
+    actions = defaultHooks.actions,
+    filters = defaultHooks.filters;
 
 //# sourceMappingURL=index.js.map
 
@@ -30280,14 +30280,38 @@ var DEFAULT_LOCALE_DATA = {
     }
   }
 };
-/* eslint-disable jsdoc/valid-types */
+/*
+ * Regular expression that matches i18n hooks like `i18n.gettext`, `i18n.ngettext`,
+ * `i18n.gettext_domain` or `i18n.ngettext_with_context` or `i18n.has_translation`.
+ */
+
+var I18N_HOOK_REGEXP = /^i18n\.(n?gettext|has_translation)(_|$)/;
+/**
+ * @typedef {(domain?: string) => LocaleData} GetLocaleData
+ *
+ * Returns locale data by domain in a
+ * Jed-formatted JSON object shape.
+ *
+ * @see http://messageformat.github.io/Jed/
+ */
 
 /**
  * @typedef {(data?: LocaleData, domain?: string) => void} SetLocaleData
+ *
  * Merges locale data into the Tannin instance by domain. Accepts data in a
  * Jed-formatted JSON object shape.
  *
  * @see http://messageformat.github.io/Jed/
+ */
+
+/** @typedef {() => void} SubscribeCallback */
+
+/** @typedef {() => void} UnsubscribeCallback */
+
+/**
+ * @typedef {(callback: SubscribeCallback) => UnsubscribeCallback} Subscribe
+ *
+ * Subscribes to changes of locale data
  */
 
 /**
@@ -30341,17 +30365,21 @@ var DEFAULT_LOCALE_DATA = {
  */
 
 /**
- * @typedef {{ applyFilters: (hookName:string, ...args: unknown[]) => unknown}} ApplyFiltersInterface
+ * @typedef {(single: string, context?: string, domain?: string) => boolean} HasTranslation
+ *
+ * Check if there is a translation for a given string in singular form.
  */
 
-/* eslint-enable jsdoc/valid-types */
+/** @typedef {import('@wordpress/hooks').Hooks} Hooks */
 
 /**
  * An i18n instance
  *
  * @typedef I18n
+ * @property {GetLocaleData} getLocaleData Returns locale data by domain in a Jed-formatted JSON object shape.
  * @property {SetLocaleData} setLocaleData Merges locale data into the Tannin instance by domain. Accepts data in a
  *                                         Jed-formatted JSON object shape.
+ * @property {Subscribe} subscribe         Subscribes to changes of Tannin locale data.
  * @property {__} __                       Retrieve the translation of text.
  * @property {_x} _x                       Retrieve translated string with gettext context.
  * @property {_n} _n                       Translates and retrieves the singular or plural form based on the supplied
@@ -30359,6 +30387,7 @@ var DEFAULT_LOCALE_DATA = {
  * @property {_nx} _nx                     Translates and retrieves the singular or plural form based on the supplied
  *                                         number, with gettext context.
  * @property {IsRtl} isRTL                 Check if current locale is RTL.
+ * @property {HasTranslation} hasTranslation Check if there is a translation for a given string.
  */
 
 /**
@@ -30366,7 +30395,7 @@ var DEFAULT_LOCALE_DATA = {
  *
  * @param {LocaleData} [initialData]    Locale data configuration.
  * @param {string}     [initialDomain]  Domain for which configuration applies.
- * @param {ApplyFiltersInterface} [hooks]     Hooks implementation.
+ * @param {Hooks} [hooks]     Hooks implementation.
  * @return {I18n}                       I18n instance
  */
 
@@ -30377,14 +30406,53 @@ var createI18n = function createI18n(initialData, initialDomain, hooks) {
    * @type {Tannin}
    */
   var tannin = new __WEBPACK_IMPORTED_MODULE_1_tannin__["a" /* default */]({});
-  /** @type {SetLocaleData} */
+  var listeners = new Set();
 
-  var setLocaleData = function setLocaleData(data) {
+  var notifyListeners = function notifyListeners() {
+    listeners.forEach(function (listener) {
+      return listener();
+    });
+  };
+  /**
+   * Subscribe to changes of locale data.
+   *
+   * @param {SubscribeCallback} callback Subscription callback.
+   * @return {UnsubscribeCallback} Unsubscribe callback.
+   */
+
+
+  var subscribe = function subscribe(callback) {
+    listeners.add(callback);
+    return function () {
+      return listeners.delete(callback);
+    };
+  };
+  /** @type {GetLocaleData} */
+
+
+  var getLocaleData = function getLocaleData() {
+    var domain = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'default';
+    return tannin.data[domain];
+  };
+  /**
+   * @param {LocaleData} [data]
+   * @param {string} [domain]
+   */
+
+
+  var doSetLocaleData = function doSetLocaleData(data) {
     var domain = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'default';
     tannin.data[domain] = _objectSpread(_objectSpread(_objectSpread({}, DEFAULT_LOCALE_DATA), tannin.data[domain]), data); // Populate default domain configuration (supported locale date which omits
     // a plural forms expression).
 
     tannin.data[domain][''] = _objectSpread(_objectSpread({}, DEFAULT_LOCALE_DATA['']), tannin.data[domain]['']);
+  };
+  /** @type {SetLocaleData} */
+
+
+  var setLocaleData = function setLocaleData(data, domain) {
+    doSetLocaleData(data, domain);
+    notifyListeners();
   };
   /**
    * Wrapper for Tannin's `dcnpgettext`. Populates default locale data if not
@@ -30411,7 +30479,8 @@ var createI18n = function createI18n(initialData, initialDomain, hooks) {
     var number = arguments.length > 4 ? arguments[4] : undefined;
 
     if (!tannin.data[domain]) {
-      setLocaleData(undefined, domain);
+      // use `doSetLocaleData` to set silently, without notifying listeners
+      doSetLocaleData(undefined, domain);
     }
 
     return tannin.dcnpgettext(domain, context, single, plural, number);
@@ -30419,11 +30488,8 @@ var createI18n = function createI18n(initialData, initialDomain, hooks) {
   /** @type {GetFilterDomain} */
 
 
-  var getFilterDomain = function getFilterDomain(domain) {
-    if (typeof domain === 'undefined') {
-      return 'default';
-    }
-
+  var getFilterDomain = function getFilterDomain() {
+    var domain = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'default';
     return domain;
   };
   /** @type {__} */
@@ -30431,6 +30497,10 @@ var createI18n = function createI18n(initialData, initialDomain, hooks) {
 
   var __ = function __(text, domain) {
     var translation = dcnpgettext(domain, undefined, text);
+
+    if (!hooks) {
+      return translation;
+    }
     /**
      * Filters text with its translation.
      *
@@ -30439,9 +30509,6 @@ var createI18n = function createI18n(initialData, initialDomain, hooks) {
      * @param {string} domain      Text domain. Unique identifier for retrieving translated strings.
      */
 
-    if (typeof hooks === 'undefined') {
-      return translation;
-    }
 
     translation =
     /** @type {string} */
@@ -30460,6 +30527,10 @@ var createI18n = function createI18n(initialData, initialDomain, hooks) {
 
   var _x = function _x(text, context, domain) {
     var translation = dcnpgettext(domain, context, text);
+
+    if (!hooks) {
+      return translation;
+    }
     /**
      * Filters text with its translation based on context information.
      *
@@ -30469,9 +30540,6 @@ var createI18n = function createI18n(initialData, initialDomain, hooks) {
      * @param {string} domain      Text domain. Unique identifier for retrieving translated strings.
      */
 
-    if (typeof hooks === 'undefined') {
-      return translation;
-    }
 
     translation =
     /** @type {string} */
@@ -30491,7 +30559,7 @@ var createI18n = function createI18n(initialData, initialDomain, hooks) {
   var _n = function _n(single, plural, number, domain) {
     var translation = dcnpgettext(domain, undefined, single, plural, number);
 
-    if (typeof hooks === 'undefined') {
+    if (!hooks) {
       return translation;
     }
     /**
@@ -30523,7 +30591,7 @@ var createI18n = function createI18n(initialData, initialDomain, hooks) {
   var _nx = function _nx(single, plural, number, context, domain) {
     var translation = dcnpgettext(domain, context, single, plural, number);
 
-    if (typeof hooks === 'undefined') {
+    if (!hooks) {
       return translation;
     }
     /**
@@ -30556,18 +30624,67 @@ var createI18n = function createI18n(initialData, initialDomain, hooks) {
   var isRTL = function isRTL() {
     return 'rtl' === _x('ltr', 'text direction');
   };
+  /** @type {HasTranslation} */
+
+
+  var hasTranslation = function hasTranslation(single, context, domain) {
+    var _tannin$data, _tannin$data2;
+
+    var key = context ? context + "\x04" + single : single;
+    var result = !!((_tannin$data = tannin.data) !== null && _tannin$data !== void 0 && (_tannin$data2 = _tannin$data[domain !== null && domain !== void 0 ? domain : 'default']) !== null && _tannin$data2 !== void 0 && _tannin$data2[key]);
+
+    if (hooks) {
+      /**
+       * Filters the presence of a translation in the locale data.
+       *
+       * @param {boolean} hasTranslation Whether the translation is present or not..
+       * @param {string} single The singular form of the translated text (used as key in locale data)
+       * @param {string} context Context information for the translators.
+       * @param {string} domain Text domain. Unique identifier for retrieving translated strings.
+       */
+      result =
+      /** @type { boolean } */
+
+      /** @type {*} */
+      hooks.applyFilters('i18n.has_translation', result, single, context, domain);
+      result =
+      /** @type { boolean } */
+
+      /** @type {*} */
+      hooks.applyFilters('i18n.has_translation_' + getFilterDomain(domain), result, single, context, domain);
+    }
+
+    return result;
+  };
 
   if (initialData) {
     setLocaleData(initialData, initialDomain);
   }
 
+  if (hooks) {
+    /**
+     * @param {string} hookName
+     */
+    var onHookAddedOrRemoved = function onHookAddedOrRemoved(hookName) {
+      if (I18N_HOOK_REGEXP.test(hookName)) {
+        notifyListeners();
+      }
+    };
+
+    hooks.addAction('hookAdded', 'core/i18n', onHookAddedOrRemoved);
+    hooks.addAction('hookRemoved', 'core/i18n', onHookAddedOrRemoved);
+  }
+
   return {
+    getLocaleData: getLocaleData,
     setLocaleData: setLocaleData,
+    subscribe: subscribe,
     __: __,
     _x: _x,
     _n: _n,
     _nx: _nx,
-    isRTL: isRTL
+    isRTL: isRTL,
+    hasTranslation: hasTranslation
   };
 };
 //# sourceMappingURL=create-i18n.js.map
@@ -37685,12 +37802,16 @@ function createDidHook(hooks, storeKey) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__create_i18n__ = __webpack_require__(217);
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__default_i18n__ = __webpack_require__(543);
+/* unused harmony reexport defaultI18n */
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_2__default_i18n__["b"]; });
+/* unused harmony reexport getLocaleData */
+/* unused harmony reexport subscribe */
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_2__default_i18n__["a"]; });
 /* unused harmony reexport _x */
 /* unused harmony reexport _n */
 /* unused harmony reexport _nx */
 /* unused harmony reexport isRTL */
+/* unused harmony reexport hasTranslation */
 
 
 
@@ -38723,26 +38844,32 @@ function evaluate( postfix, variables ) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* unused harmony export getLocaleData */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return setLocaleData; });
+/* unused harmony export subscribe */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __; });
 /* unused harmony export _x */
 /* unused harmony export _n */
 /* unused harmony export _nx */
 /* unused harmony export isRTL */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__wordpress_hooks__ = __webpack_require__(104);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__create_i18n__ = __webpack_require__(217);
-/**
- * WordPress dependencies
- */
-
+/* unused harmony export hasTranslation */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__create_i18n__ = __webpack_require__(217);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__wordpress_hooks__ = __webpack_require__(104);
 /**
  * Internal dependencies
  */
 
+/**
+ * WordPress dependencies
+ */
 
-var i18n = Object(__WEBPACK_IMPORTED_MODULE_1__create_i18n__["a" /* createI18n */])(undefined, undefined, {
-  applyFilters: __WEBPACK_IMPORTED_MODULE_0__wordpress_hooks__["a" /* applyFilters */]
-});
+
+var i18n = Object(__WEBPACK_IMPORTED_MODULE_0__create_i18n__["a" /* createI18n */])(undefined, undefined, __WEBPACK_IMPORTED_MODULE_1__wordpress_hooks__["b" /* defaultHooks */]);
+/**
+ * Default, singleton instance of `I18n`.
+ */
+
+/* unused harmony default export */ var _unused_webpack_default_export = (i18n);
 /*
  * Comments in this file are duplicated from ./i18n due to
  * https://github.com/WordPress/gutenberg/pull/20318#issuecomment-590837722
@@ -38750,8 +38877,20 @@ var i18n = Object(__WEBPACK_IMPORTED_MODULE_1__create_i18n__["a" /* createI18n *
 
 /**
  * @typedef {import('./create-i18n').LocaleData} LocaleData
+ * @typedef {import('./create-i18n').SubscribeCallback} SubscribeCallback
+ * @typedef {import('./create-i18n').UnsubscribeCallback} UnsubscribeCallback
  */
 
+/**
+ * Returns locale data by domain in a Jed-formatted JSON object shape.
+ *
+ * @see http://messageformat.github.io/Jed/
+ *
+ * @param {string} [domain] Domain for which to get the data.
+ * @return {LocaleData} Locale data.
+ */
+
+var getLocaleData = i18n.getLocaleData.bind(i18n);
 /**
  * Merges locale data into the Tannin instance by domain. Accepts data in a
  * Jed-formatted JSON object shape.
@@ -38763,6 +38902,14 @@ var i18n = Object(__WEBPACK_IMPORTED_MODULE_1__create_i18n__["a" /* createI18n *
  */
 
 var setLocaleData = i18n.setLocaleData.bind(i18n);
+/**
+ * Subscribes to changes of locale data
+ *
+ * @param {SubscribeCallback} callback Subscription callback
+ * @return {UnsubscribeCallback} Unsubscribe callback
+ */
+
+var subscribe = i18n.subscribe.bind(i18n);
 /**
  * Retrieve the translation of text.
  *
@@ -38833,6 +38980,16 @@ var _nx = i18n._nx.bind(i18n);
  */
 
 var isRTL = i18n.isRTL.bind(i18n);
+/**
+ * Check if there is a translation for a given string (in singular form).
+ *
+ * @param {string} single Singular form of the string to look up.
+ * @param {string} [context] Context information for the translators.
+ * @param {string} [domain] Domain to retrieve the translated text.
+ * @return {boolean} Whether the translation exists or not.
+ */
+
+var hasTranslation = i18n.hasTranslation.bind(i18n);
 //# sourceMappingURL=default-i18n.js.map
 
 /***/ }),
