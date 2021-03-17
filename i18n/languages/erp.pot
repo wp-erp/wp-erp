@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP ERP 1.8.0\n"
+"Project-Id-Version: WP ERP 1.8.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-erp\n"
-"POT-Creation-Date: 2021-03-15 06:52:33+00:00\n"
+"POT-Creation-Date: 2021-03-17 07:27:38+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -16096,7 +16096,7 @@ msgstr ""
 #: includes/admin/views/address.php:37
 #: includes/admin/views/company-editor.php:75
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:93
-#: modules/crm/includes/functions-customer.php:3037
+#: modules/crm/includes/functions-customer.php:3044
 #: modules/crm/views/company/single.php:97
 #: modules/crm/views/contact/single.php:99
 #: modules/crm/views/js-templates/new-customer.php:222
@@ -16242,7 +16242,7 @@ msgstr ""
 
 #: includes/admin/class-setup-wizard.php:241
 #: modules/crm/includes/functions-customer.php:1866
-#: modules/crm/includes/functions-customer.php:2997
+#: modules/crm/includes/functions-customer.php:3004
 #: modules/crm/views/js-templates/new-assign-company.php:6
 #: modules/crm/views/js-templates/new-customer.php:74
 msgid "Company Name"
@@ -16607,7 +16607,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/userinfo/UserBasic.vue:22
 #: modules/crm/assets/js/crm-contacts.js:275
 #: modules/crm/includes/functions-customer.php:1602
-#: modules/crm/includes/functions-customer.php:3007
+#: modules/crm/includes/functions-customer.php:3014
 #: modules/crm/views/company/single.php:90
 #: modules/crm/views/contact/single.php:92
 #: modules/hrm/views/js-templates/new-employee.php:359
@@ -16617,7 +16617,7 @@ msgstr ""
 #: includes/admin/views/company-editor.php:134
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:77
 #: modules/accounting/assets/src/admin/components/userinfo/UserBasic.vue:34
-#: modules/crm/includes/functions-customer.php:3022
+#: modules/crm/includes/functions-customer.php:3029
 #: modules/crm/views/company/single.php:91
 #: modules/crm/views/contact/single.php:93
 msgid "Fax"
@@ -16628,7 +16628,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:65
 #: modules/accounting/assets/src/admin/components/userinfo/UserBasic.vue:26
 #: modules/crm/includes/functions-customer.php:1616
-#: modules/crm/includes/functions-customer.php:3012
+#: modules/crm/includes/functions-customer.php:3019
 #: modules/crm/views/js-templates/new-customer.php:175
 #: modules/hrm/views/js-templates/new-employee.php:349
 msgid "Mobile"
@@ -16638,7 +16638,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:69
 #: modules/accounting/assets/src/admin/components/userinfo/UserBasic.vue:30
 #: modules/crm/includes/functions-customer.php:1630
-#: modules/crm/includes/functions-customer.php:3017
+#: modules/crm/includes/functions-customer.php:3024
 #: modules/crm/views/company/single.php:92
 #: modules/crm/views/contact/single.php:94
 #: modules/crm/views/js-templates/new-customer.php:183
@@ -16946,7 +16946,7 @@ msgid "New Posts"
 msgstr ""
 
 #: includes/admin/views/tools/general.php:39
-#: modules/crm/includes/contact-forms/class-erp-settings-contact-forms.php:270
+#: modules/crm/includes/contact-forms/class-erp-settings-contact-forms.php:268
 msgid "Save Changes"
 msgstr ""
 
@@ -17481,7 +17481,7 @@ msgid "Street Address 1"
 msgstr ""
 
 #: includes/class-company.php:45
-#: modules/crm/includes/functions-customer.php:3042
+#: modules/crm/includes/functions-customer.php:3049
 #: modules/crm/views/company/single.php:96
 #: modules/crm/views/contact/single.php:98
 #: modules/hrm/views/employee/tab-general.php:67
@@ -17697,17 +17697,17 @@ msgstr ""
 msgid "Allowed Files"
 msgstr ""
 
-#: includes/class-updates.php:122
+#: includes/class-updates.php:123
 msgid ""
 "<strong>WP ERP Data Update Required</strong> &#8211; We need to update your "
 "install to the latest version"
 msgstr ""
 
-#: includes/class-updates.php:123
+#: includes/class-updates.php:124
 msgid "Run the updater"
 msgstr ""
 
-#: includes/class-updates.php:128
+#: includes/class-updates.php:129
 msgid ""
 "It is strongly recommended that you backup your database before proceeding. "
 "Are you sure you wish to run the updater now?"
@@ -17949,8 +17949,8 @@ msgstr ""
 #: modules/crm/includes/class-subscription.php:165
 #: modules/crm/includes/functions-customer.php:527
 #: modules/crm/includes/functions-customer.php:1590
-#: modules/crm/includes/functions-customer.php:2911
-#: modules/crm/includes/functions-customer.php:3002
+#: modules/crm/includes/functions-customer.php:2918
+#: modules/crm/includes/functions-customer.php:3009
 #: modules/crm/views/js-templates/customer-add-schedules.php:87
 #: modules/crm/views/js-templates/new-customer.php:89
 #: modules/hrm/views/employee/tab-general.php:11
@@ -18158,8 +18158,8 @@ msgstr ""
 #: modules/crm/includes/class-ajax.php:1699
 #: modules/crm/includes/class-subscription.php:253
 #: modules/crm/includes/class-subscription.php:776
-#: modules/crm/includes/contact-forms/class-erp-settings-contact-forms.php:293
-#: modules/crm/includes/contact-forms/class-erp-settings-contact-forms.php:362
+#: modules/crm/includes/contact-forms/class-erp-settings-contact-forms.php:291
+#: modules/crm/includes/contact-forms/class-erp-settings-contact-forms.php:360
 #: modules/hrm/includes/class-ajax.php:127
 #: modules/hrm/includes/class-ajax.php:159
 #: modules/hrm/includes/class-ajax.php:193
@@ -18276,7 +18276,7 @@ msgstr ""
 #: includes/framework/views/status-report.php:87
 #: modules/crm/includes/admin/class-menu.php:45
 #: modules/crm/includes/admin/class-settings.php:50
-#: modules/crm/includes/functions-customer.php:4036
+#: modules/crm/includes/functions-customer.php:4043
 #: modules/crm/includes/functions-dashboard.php:298
 #: modules/crm/views/activities.php:8 modules/crm/views/company/single.php:197
 #: modules/crm/views/company.php:21 modules/crm/views/contact-groups.php:9
@@ -18306,7 +18306,7 @@ msgid "Total CRM Agent count."
 msgstr ""
 
 #: includes/framework/views/status-report.php:102
-#: modules/crm/includes/functions-customer.php:4037
+#: modules/crm/includes/functions-customer.php:4044
 #: modules/crm/includes/functions-dashboard.php:327
 #: modules/crm/views/contact/single.php:202
 msgid "Companies"
@@ -18318,7 +18318,7 @@ msgstr ""
 
 #: includes/framework/views/status-report.php:107
 #: modules/crm/includes/class-subscription-widget.php:76
-#: modules/crm/includes/functions-customer.php:4039
+#: modules/crm/includes/functions-customer.php:4046
 msgid "Contact Groups"
 msgstr ""
 
@@ -19007,12 +19007,12 @@ msgid "Something went wrong, please try again"
 msgstr ""
 
 #: includes/functions-people.php:872
-#: modules/crm/includes/functions-customer.php:3804
-#: modules/crm/includes/functions-customer.php:3824
-#: modules/crm/includes/functions-customer.php:3843
-#: modules/crm/includes/functions-customer.php:3863
-#: modules/crm/includes/functions-customer.php:3904
-#: modules/crm/includes/functions-customer.php:3924
+#: modules/crm/includes/functions-customer.php:3811
+#: modules/crm/includes/functions-customer.php:3831
+#: modules/crm/includes/functions-customer.php:3850
+#: modules/crm/includes/functions-customer.php:3870
+#: modules/crm/includes/functions-customer.php:3911
+#: modules/crm/includes/functions-customer.php:3931
 msgid "People not exists"
 msgstr ""
 
@@ -21830,7 +21830,7 @@ msgstr ""
 #: modules/crm/includes/class-subscription-widget.php:181
 #: modules/crm/includes/class-subscription.php:177
 #: modules/crm/includes/functions-customer.php:1827
-#: modules/crm/includes/functions-customer.php:2987
+#: modules/crm/includes/functions-customer.php:2994
 #: modules/crm/views/contact/single.php:88
 #: modules/crm/views/js-templates/new-customer.php:54
 #: modules/hrm/views/employee/tab-general.php:8
@@ -21843,7 +21843,7 @@ msgstr ""
 #: modules/crm/includes/class-subscription-widget.php:182
 #: modules/crm/includes/class-subscription.php:183
 #: modules/crm/includes/functions-customer.php:1841
-#: modules/crm/includes/functions-customer.php:2992
+#: modules/crm/includes/functions-customer.php:2999
 #: modules/crm/views/contact/single.php:89
 #: modules/crm/views/js-templates/new-customer.php:64
 #: modules/hrm/views/employee/tab-general.php:9
@@ -21863,7 +21863,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:81
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:82
 #: modules/crm/includes/functions-customer.php:1656
-#: modules/crm/includes/functions-customer.php:3027
+#: modules/crm/includes/functions-customer.php:3034
 #: modules/crm/views/company/single.php:93
 #: modules/crm/views/contact/single.php:95
 msgid "Street 1"
@@ -21872,7 +21872,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:85
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:86
 #: modules/crm/includes/functions-customer.php:1670
-#: modules/crm/includes/functions-customer.php:3032
+#: modules/crm/includes/functions-customer.php:3039
 #: modules/crm/views/company/single.php:94
 #: modules/crm/views/contact/single.php:96
 msgid "Street 2"
@@ -23892,8 +23892,8 @@ msgstr ""
 #: modules/crm/includes/class-ajax.php:769
 #: modules/crm/includes/functions-customer.php:382
 #: modules/crm/includes/functions-customer.php:1373
-#: modules/crm/includes/functions-customer.php:3159
-#: modules/crm/includes/functions-customer.php:3620
+#: modules/crm/includes/functions-customer.php:3166
+#: modules/crm/includes/functions-customer.php:3627
 msgid "No contact found"
 msgstr ""
 
@@ -24494,59 +24494,59 @@ msgstr ""
 msgid "Select Owner"
 msgstr ""
 
-#: modules/crm/includes/contact-forms/class-erp-settings-contact-forms.php:96
+#: modules/crm/includes/contact-forms/class-erp-settings-contact-forms.php:94
 msgid "Contact Forms Integration"
 msgstr ""
 
-#: modules/crm/includes/contact-forms/class-erp-settings-contact-forms.php:99
+#: modules/crm/includes/contact-forms/class-erp-settings-contact-forms.php:97
 msgid ""
 "No supported contact form plugin is currently active. WP ERP has built-in "
 "support for <strong>Contact Form 7</strong> and <strong>Ninja "
 "Forms</strong>."
 msgstr ""
 
-#: modules/crm/includes/contact-forms/class-erp-settings-contact-forms.php:140
+#: modules/crm/includes/contact-forms/class-erp-settings-contact-forms.php:138
 msgid "You don't have any form created with %s!"
 msgstr ""
 
-#: modules/crm/includes/contact-forms/class-erp-settings-contact-forms.php:190
+#: modules/crm/includes/contact-forms/class-erp-settings-contact-forms.php:188
 msgid "Form Field"
 msgstr ""
 
-#: modules/crm/includes/contact-forms/class-erp-settings-contact-forms.php:191
+#: modules/crm/includes/contact-forms/class-erp-settings-contact-forms.php:189
 msgid "CRM Contact Option"
 msgstr ""
 
-#: modules/crm/includes/contact-forms/class-erp-settings-contact-forms.php:265
+#: modules/crm/includes/contact-forms/class-erp-settings-contact-forms.php:263
 msgid "Reset"
 msgstr ""
 
-#: modules/crm/includes/contact-forms/class-erp-settings-contact-forms.php:297
-#: modules/crm/includes/contact-forms/class-erp-settings-contact-forms.php:366
+#: modules/crm/includes/contact-forms/class-erp-settings-contact-forms.php:295
+#: modules/crm/includes/contact-forms/class-erp-settings-contact-forms.php:364
 msgid "Unauthorized operation"
 msgstr ""
 
-#: modules/crm/includes/contact-forms/class-erp-settings-contact-forms.php:322
+#: modules/crm/includes/contact-forms/class-erp-settings-contact-forms.php:320
 msgid "%s fields are required"
 msgstr ""
 
-#: modules/crm/includes/contact-forms/class-erp-settings-contact-forms.php:326
+#: modules/crm/includes/contact-forms/class-erp-settings-contact-forms.php:324
 msgid "Please set a contact owner."
 msgstr ""
 
-#: modules/crm/includes/contact-forms/class-erp-settings-contact-forms.php:340
+#: modules/crm/includes/contact-forms/class-erp-settings-contact-forms.php:338
 msgid "Settings saved successfully"
 msgstr ""
 
-#: modules/crm/includes/contact-forms/class-erp-settings-contact-forms.php:344
+#: modules/crm/includes/contact-forms/class-erp-settings-contact-forms.php:342
 msgid "No settings data found"
 msgstr ""
 
-#: modules/crm/includes/contact-forms/class-erp-settings-contact-forms.php:384
+#: modules/crm/includes/contact-forms/class-erp-settings-contact-forms.php:382
 msgid "Settings reset successfully"
 msgstr ""
 
-#: modules/crm/includes/contact-forms/class-erp-settings-contact-forms.php:390
+#: modules/crm/includes/contact-forms/class-erp-settings-contact-forms.php:388
 msgid "Nothing to reset"
 msgstr ""
 
@@ -24602,8 +24602,8 @@ msgid "This Employee is CRM agent"
 msgstr ""
 
 #: modules/crm/includes/functions-customer.php:137
-#: modules/crm/includes/functions-customer.php:2881
-#: modules/crm/includes/functions-customer.php:2894
+#: modules/crm/includes/functions-customer.php:2888
+#: modules/crm/includes/functions-customer.php:2901
 msgid "Me"
 msgstr ""
 
@@ -24775,14 +24775,14 @@ msgid "Country/State"
 msgstr ""
 
 #: modules/crm/includes/functions-customer.php:1695
-#: modules/crm/includes/functions-customer.php:3047
+#: modules/crm/includes/functions-customer.php:3054
 #: modules/crm/views/company/single.php:98
 #: modules/crm/views/contact/single.php:100
 msgid "Postal Code"
 msgstr ""
 
 #: modules/crm/includes/functions-customer.php:1725
-#: modules/crm/includes/functions-customer.php:3971
+#: modules/crm/includes/functions-customer.php:3978
 msgid "Tags"
 msgstr ""
 
@@ -24868,144 +24868,144 @@ msgstr ""
 msgid "global_search"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:2926
+#: modules/crm/includes/functions-customer.php:2933
 msgid "Template name and body content are required"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:2945
+#: modules/crm/includes/functions-customer.php:2952
 msgid "Template name is required"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:2949
+#: modules/crm/includes/functions-customer.php:2956
 msgid "Template body is required"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:2958
+#: modules/crm/includes/functions-customer.php:2965
 msgid "<strong>%s</strong> has been updated"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:2966
+#: modules/crm/includes/functions-customer.php:2973
 msgid "<strong>%s</strong> has been created"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3114
-#: modules/crm/includes/functions-customer.php:3133
+#: modules/crm/includes/functions-customer.php:3121
+#: modules/crm/includes/functions-customer.php:3140
 msgid "No record found"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3155
+#: modules/crm/includes/functions-customer.php:3162
 msgid "No template found"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3205
-#: modules/crm/includes/functions-customer.php:3206
+#: modules/crm/includes/functions-customer.php:3212
+#: modules/crm/includes/functions-customer.php:3213
 msgid "Import into CRM"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3323
+#: modules/crm/includes/functions-customer.php:3330
 msgid "%s contacts created."
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3489
+#: modules/crm/includes/functions-customer.php:3496
 #: modules/hrm/includes/functions-employee.php:516
 msgid "Advertisement"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3490
+#: modules/crm/includes/functions-customer.php:3497
 msgid "Chat"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3491
+#: modules/crm/includes/functions-customer.php:3498
 msgid "Contact Form"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3492
+#: modules/crm/includes/functions-customer.php:3499
 msgid "Employee Referral"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3493
+#: modules/crm/includes/functions-customer.php:3500
 msgid "External Referral"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3494
+#: modules/crm/includes/functions-customer.php:3501
 msgid "Marketing campaign"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3495
+#: modules/crm/includes/functions-customer.php:3502
 msgid "Newsletter"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3496
+#: modules/crm/includes/functions-customer.php:3503
 msgid "OnlineStore"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3497
+#: modules/crm/includes/functions-customer.php:3504
 msgid "Optin Forms"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3498
+#: modules/crm/includes/functions-customer.php:3505
 msgid "Partner"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3499
+#: modules/crm/includes/functions-customer.php:3506
 msgid "Phone Call"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3500
+#: modules/crm/includes/functions-customer.php:3507
 msgid "Public Relations"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3501
+#: modules/crm/includes/functions-customer.php:3508
 msgid "Sales Mail Alias"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3502
+#: modules/crm/includes/functions-customer.php:3509
 msgid "Search Engine"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3503
+#: modules/crm/includes/functions-customer.php:3510
 msgid "Seminar-Internal"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3504
+#: modules/crm/includes/functions-customer.php:3511
 msgid "Seminar Partner"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3505
+#: modules/crm/includes/functions-customer.php:3512
 msgid "Social Media"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3506
+#: modules/crm/includes/functions-customer.php:3513
 msgid "Trade Show"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3507
+#: modules/crm/includes/functions-customer.php:3514
 msgid "Web Download"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3508
+#: modules/crm/includes/functions-customer.php:3515
 msgid "Web Research"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3616
+#: modules/crm/includes/functions-customer.php:3623
 msgid "You do not have permission to make WP User"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3630
+#: modules/crm/includes/functions-customer.php:3637
 msgid "No email found for creating wp user"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3970
+#: modules/crm/includes/functions-customer.php:3977
 #: modules/crm/views/company/single.php:166
 #: modules/crm/views/contact/single.php:171
 msgid "Tag"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:4038
+#: modules/crm/includes/functions-customer.php:4045
 msgid "Activities"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:4073
+#: modules/crm/includes/functions-customer.php:4080
 msgid "Schedules"
 msgstr ""
 
@@ -29273,7 +29273,7 @@ msgstr ""
 msgid "https://wedevs.com"
 msgstr ""
 
-#: assets/js/i18n.js:606
+#: assets/js/i18n.js:674
 msgctxt "text direction"
 msgid "ltr"
 msgstr ""
