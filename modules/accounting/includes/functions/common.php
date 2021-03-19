@@ -471,16 +471,6 @@ function erp_acct_quick_access_menu() {
 }
 
 /**
- * Change a string to slug
- */
-function slugify( $str ) {
-    // replace non letter or digits by _
-    $str = preg_replace( '~[^\pL\d]+~u', '_', $str );
-
-    return strtolower( $str );
-}
-
-/**
  * Check voucher edit state
  *
  * @param int $id
