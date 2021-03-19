@@ -353,8 +353,11 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
         $transactions = erp_acct_get_sales_transactions( $args );
         $total_items  = erp_acct_get_sales_transactions(
             [
-                'count'  => true,
-                'number' => -1,
+                'count'       => true,
+                'number'      => -1,
+                'status'      => $args['status'],
+                'type'        => $args['type'],
+                'customer_id' => $args['customer_id']
             ]
         );
 
