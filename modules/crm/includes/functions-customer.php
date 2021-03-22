@@ -128,8 +128,13 @@ function erp_crm_get_employees( $args = [] ) {
  * @return html
  */
 function erp_crm_get_crm_user_html_dropdown( $selected = '' ) {
-    $crm_users = erp_crm_get_crm_user();
     $dropdown  = '';
+    
+    if ( current_user_can( 'erp_crm_manager' ) || current_user_can( 'manage_options' ) ) {
+        $crm_users   = erp_crm_get_crm_user();
+    } else {
+        $crm_users[] = wp_get_current_user()->data;
+    }
 
     if ( $crm_users ) {
         foreach ( $crm_users as $key => $user ) {
