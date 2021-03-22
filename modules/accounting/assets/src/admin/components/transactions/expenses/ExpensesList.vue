@@ -90,6 +90,10 @@ export default {
                 query: { start: filters.start_date, end: filters.end_date, status: filters.status }
             });
             */
+
+            this.paginationData.currentPage = 1;
+            this.$router.push({ path: '/transactions/expenses' });
+
             this.fetchItems(filters);
             this.fetched = true;
         });

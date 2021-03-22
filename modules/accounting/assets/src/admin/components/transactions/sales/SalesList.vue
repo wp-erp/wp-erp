@@ -117,6 +117,10 @@ export default {
                 path : '/transactions/sales',
                 query: { start: filters.start_date, end: filters.end_date, status: filters.status, type: filters.type }
             });*/
+
+            this.paginationData.currentPage = 1;
+            this.$router.push({ path: '/transactions/sales' });
+
             this.fetchItems(filters);
             this.fetched = true;
         });
@@ -220,7 +224,7 @@ export default {
                         } else {
                             if ( this.proActivated ) {
                                 item['actions'] = [
-                                    { key: 'return', label: __('Receive Return', 'erp') }                                
+                                    { key: 'return', label: __('Receive Return', 'erp') }
                                 ];
                             } else {
                                 item['actions'] = [
