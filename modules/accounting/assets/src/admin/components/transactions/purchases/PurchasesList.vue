@@ -121,8 +121,10 @@ export default {
             });
             */
 
-            this.paginationData.currentPage = 1;
-            this.$router.push({ path: '/transactions/purchases' });
+            if(this.paginationData.currentPage !== 1){
+                this.paginationData.currentPage = 1;
+                this.$router.push({ path: '/transactions/purchases' });
+            }
 
             this.fetchItems(filters);
             this.fetched = true;

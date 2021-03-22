@@ -156,7 +156,7 @@ export default {
         filterList() {
             this.toggleFilter();
 
-           this.$root.$emit('transactions-filter', this.filters);
+            this.$root.$emit('transactions-filter', this.filters);
         }
 
     }

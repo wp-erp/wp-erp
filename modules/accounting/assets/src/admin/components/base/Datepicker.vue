@@ -1,7 +1,7 @@
 <template>
     <dropdown>
         <template slot="button">
-            <input ref="datePicker" v-model="selectedDate" class="wperp-form-field">
+            <input ref="datePicker" v-model="selectedDate" @input="onChangeDate" class="wperp-form-field">
         </template>
         <template slot="dropdown">
             <calendar
@@ -54,10 +54,14 @@ export default {
 
     watch: {
         value(newVal) {
-            if (!newVal) {
-                this.selectedDate = this.getCurrentDate();
+            if(newVal.length === 0) {
+                this.selectedDate = '';
             } else {
-                this.selectedDate = newVal;
+                if (!newVal) {
+                    this.selectedDate = this.getCurrentDate();
+                } else {
+                    this.selectedDate = newVal;
+                }
             }
 
             this.$emit('input', this.selectedDate);
@@ -78,6 +82,13 @@ export default {
             this.selectedDate = formattedDate;
             this.$refs.datePicker.click();
             this.$emit('input', this.selectedDate);
+        },
+
+        onChangeDate() {
+            if(this.selectedDate.length === 0){
+                this.selectedDate = '';
+                this.$emit('input', this.selectedDate);
+            }
         },
 
         getCurrentDate() {

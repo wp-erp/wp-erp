@@ -91,8 +91,10 @@ export default {
             });
             */
 
-            this.paginationData.currentPage = 1;
-            this.$router.push({ path: '/transactions/expenses' });
+            if(this.paginationData.currentPage !== 1){
+                this.paginationData.currentPage = 1;
+                this.$router.push({ path: '/transactions/expenses' });
+            }
 
             this.fetchItems(filters);
             this.fetched = true;

@@ -118,8 +118,10 @@ export default {
                 query: { start: filters.start_date, end: filters.end_date, status: filters.status, type: filters.type }
             });*/
 
-            this.paginationData.currentPage = 1;
-            this.$router.push({ path: '/transactions/sales' });
+            if(this.paginationData.currentPage !== 1){
+                this.paginationData.currentPage = 1;
+                this.$router.push({ path: '/transactions/sales' });
+            }
 
             this.fetchItems(filters);
             this.fetched = true;
