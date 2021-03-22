@@ -668,10 +668,6 @@ function erp_crm_get_feed_activity( $postdata ) {
         $results = $results->whereIn( 'user_id', $people_ids );
     }
 
-    if ( isset( $postdata['created_by'] ) && ! empty( $postdata['created_by'] ) ) {
-        $results = $results->where( 'created_by', $postdata['created_by'] );
-    }
-
     if ( isset( $postdata['type'] ) && ! empty( $postdata['type'] ) ) {
         if ( $postdata['type'] === 'schedule' ) {
             $results = $results->where( 'type', 'log_activity' )->where( 'start_date', '>', current_time( 'mysql' ) );
@@ -705,18 +701,32 @@ function erp_crm_get_feed_activity( $postdata ) {
     foreach ( $results as $key => $value ) {
         $value['extra'] = json_decode( base64_decode( $value['extra'] ), true );
 
-        if ( isset( $value['extra']['invite_contact'] ) && ! empty( $postdata['assigned_to'] ) ) {
-            if ( ! in_array( $postdata['assigned_to'], $value['extra']['invite_contact'] ) ) {
+        if ( isset( $value['extra']['invite_contact'] ) ) {
+            if ( isset( $postdata['assigned_to'] ) &&
+                ! empty( $postdata['assigned_to'] ) &&
+                ! in_array( $postdata['assigned_to'], $value['extra']['invite_contact'] )
+            ) {
+                continue;
+            }
+
+            if ( isset( $postdata['created_by'] ) &&
+                ! empty( $postdata['created_by'] ) &&
+                ! in_array( $postdata['created_by'], $value['extra']['invite_contact'] )
+            ) {
                 continue;
             }
         }
 
         if ( isset( $value['extra']['invite_contact'] ) && count( $value['extra']['invite_contact'] ) > 0 ) {
             foreach ( $value['extra']['invite_contact'] as $user_id ) {
-                $value['extra']['invited_user'][] = [
-                    'id'   => $user_id,
-                    'name' => get_the_author_meta( 'display_name', $user_id ),
-                ];
+                if ( isset( $value['extra']['invited_user'] ) ) {
+                    $value['extra']['invited_user'] = (array) $value['extra']['invited_user'];
+
+                    array_push( $value['extra']['invited_user'], [
+                        'id'   => $user_id,
+                        'name' => get_the_author_meta( 'display_name', $user_id ),
+                    ] );
+                }
             }
         } else {
             $value['extra']['invited_user'] = [];
