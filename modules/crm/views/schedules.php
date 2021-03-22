@@ -231,16 +231,22 @@ $schedules_data = erp_crm_get_schedule_data( $tab );
                                 var title = time + ' ' + log_title;
                                 var color = new Date( res.start_date ) < new Date() ? '#f05050' : '#03c756';
 
-                                var myEvent = {
-                                    schedule : res,
-                                    title: title,
-                                    start: start_date,
-                                    end: end_date,
-                                    color: color
-                                };
+                                // Add in current calendar only if current user id in invited_user array or not in own tab
+                                const currentUserId = <?php echo get_current_user_id() ?>;
+                                const currentTab    = "<?php echo $tab ?>";
+                                const existsArray   = res.extra.invited_user.filter(x => parseInt(x.id) === currentUserId);
 
-                                $('#erp-crm-schedule-calendar').fullCalendar( 'renderEvent', myEvent );
+                                if( existsArray.length > 0 || currentTab !== 'own' ){
+                                    const myEvent = {
+                                        schedule: res,
+                                        title   : title,
+                                        start   : start_date,
+                                        end     : end_date,
+                                        color   : color
+                                    };
 
+                                    $('#erp-crm-schedule-calendar').fullCalendar( 'renderEvent', myEvent );
+                                }
                                 modal.enableButton();
                                 modal.closeModal();
                             },
