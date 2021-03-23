@@ -1,6 +1,6 @@
 <?php
-$tab            = ( isset( $_GET['tab'] ) && !empty( $_GET['tab'] ) ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : 'own';
-$sub_section    = ( isset( $_GET['sub-section'] ) && !empty( $_GET['sub-section'] ) ) ? sanitize_text_field( wp_unslash( $_GET['sub-section'] ) ) : '';
+$tab            = ( isset( $_GET['tab'] ) && ! empty( $_GET['tab'] ) ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : 'own';
+$sub_section    = ( isset( $_GET['sub-section'] ) && ! empty( $_GET['sub-section'] ) ) ? sanitize_text_field( wp_unslash( $_GET['sub-section'] ) ) : '';
 $schedules_data = erp_crm_get_schedule_data( $tab );
 ?>
 <div class="wrap erp erp-crm-schedules" id="wp-erp">
