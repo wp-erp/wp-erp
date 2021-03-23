@@ -1,6 +1,6 @@
 <div class="erp-crm-new-schedule-wrapper">
 <?php
-    $tab  = ( isset( $_GET['tab'] ) && !empty( $_GET['tab'] ) ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ): 'own';
+    $tab  = ( isset( $_GET['tab'] ) && ! empty( $_GET['tab'] ) ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : 'own';
 ?>
     <# if( new Date( data.current_date ) >= new Date() ) { #>
         <div class="feed-schedule-wrapper">
