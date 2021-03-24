@@ -1,97 +1,251 @@
-<?php
+<style type="text/css">
+    .wrap * {
+        box-sizing: border-box;
+    }
 
-$tab                = isset( $_GET['tab'] ) && ! empty( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : false;
-$modules            = wperp()->modules->get_query_modules( $tab );
-$all_active_modules = wperp()->modules->get_active_modules();
-$count_all          = count( wperp()->modules->get_modules() );
-$count_active       = count( $all_active_modules );
-$count_inactive     = count( wperp()->modules->get_inactive_modules() );
+    .wrap .page_title h1 {
+        padding: 0;
+        margin: 20px 0;
+        font-size: 24px;
+        color: #000000;
+        letter-spacing: 0.22px;
+    }
 
-$all_url            = admin_url( 'admin.php?page=erp-modules' );
-$active_url         = admin_url( 'admin.php?page=erp-modules&tab=active' );
-$inactive_url       = admin_url( 'admin.php?page=erp-modules&tab=inactive' );
+    .modules_wrap {
+        margin-bottom: 20px;
+    }
 
-$current_tab        = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : '';
-?>
+    .module_items {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 0 -10px;
+    }
 
-<div class="wrap erp-settings">
-    <h2>
-        <?php esc_html_e( 'Modules', 'erp' ); ?>
-        <?php echo erp_help_tip( esc_html__( "If you do not require any of the modules, you may deactivate it from here.", 'erp' ) ); ?>
-    </h2>
+    .module_item_col {
+        padding: 0 10px;
+        max-width: 381px;
+        flex-basis: 33.33%;
+    }
 
-	<ul class="erp-subsubsub">
-		<li><a class="erp-nav-tab<?php echo esc_attr( $current_tab ) == '' ? ' erp-nav-tab-active' : ''; ?>" href="<?php echo esc_url( $all_url ); ?>"><?php esc_html( printf( esc_html__( 'All (%s) |', 'erp' ), esc_html( $count_all ) ) ); ?></a></li>
-		<li><a class="erp-nav-tab<?php echo esc_attr( $current_tab ) == 'active' ? ' erp-nav-tab-active' : ''; ?>" href="<?php echo esc_url( $active_url ); ?>"><?php esc_html( printf( esc_html__( 'Active (%s) |', 'erp' ), esc_html( $count_active ) ) ); ?></a></li>
-		<li><a class="erp-nav-tab<?php echo esc_attr( $current_tab ) == 'inactive' ? ' erp-nav-tab-active' : ''; ?>" href="<?php echo  esc_url( $inactive_url ); ?>"><?php esc_html( printf( esc_html__( 'Inactive (%s)', 'erp' ), esc_html( $count_inactive ) ) ); ?></a></li>
-	</ul>
+    .module_item {
+        padding: 20px;
+        background: #FFFFFF;
+        border: 1px solid #E2E2E2;
+        border-radius: 3px;
+    }
 
-	<form method="post">
-	<table class="widefat fixed plugins" cellspacing="0">
-		<thead>
-			<tr>
-				<td scope="col" id="cb" class="manage-column column-cb check-column">&nbsp;</td>
-				<th scope="col" id="name" class="manage-column column-name" style="width: 190px;"><?php esc_html_e( 'Title', 'erp' ); ?></th>
-				<th scope="col" id="description" class="manage-column column-description"><?php esc_html_e( 'Description', 'erp' ); ?></th>
-			</tr>
-		</thead>
+    .module_item .icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 100%;
+        margin-bottom: 14px;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-		<tfoot>
-			<tr>
-				<td scope="col" class="manage-column column-cb check-column">&nbsp;</td>
-				<th scope="col" class="manage-column column-name" style="width: 190px;"><?php esc_html_e( 'Title', 'erp' ); ?></th>
-				<th scope="col" class="manage-column column-description"><?php esc_html_e( 'Description', 'erp' ); ?></th>
-			</tr>
-		</tfoot>
+    .module_item.hrm .icon {
+        background-image: linear-gradient(180deg, #C2E998 0%, #02CC87 100%);
+    }
 
-		<tbody id="the-list">
+    .module_item.crm .icon {
+        background-image: linear-gradient(180deg, #72D0FF 0%, #349EFA 100%);
+    }
 
-		<?php
+    .module_item.accounting .icon {
+        background-image: linear-gradient(180deg, #FEDB4D 0%, #FFB84E 100%);
+    }
 
-            foreach ( $modules as $slug => $module ) {
-                $checked = array_key_exists( $slug, $all_active_modules ) ? $slug : ''; ?>
-				<tr class="active">
-					<th scope="row">
-						<input type="checkbox" name="modules[]" id="erp_module_<?php echo esc_attr( $slug ); ?>" value="<?php echo esc_attr( $slug ); ?>" <?php checked( $slug, $checked ); ?>>
-					</th>
-					<td class="plugin-title" style="width: 190px;">
-						<label for="erp_module_<?php echo esc_attr( $slug ); ?>">
-							<strong><?php echo isset( $module['title'] ) ? esc_html( $module['title'] ) : ''; ?></strong>
-						</label>
-					</td>
-					<td class="column-description desc">
-						<div class="plugin-description">
-							<p><?php echo isset( $module['description'] ) ? esc_html( $module['description'] ) : ''; ?></p>
-						</div>
-					</td>
-				</tr>
-				<?php
-            }
+    .module_item h3 {
+        font-size: 15px;
+        color: #000000;
+        letter-spacing: 0.14px;
+        line-height: 21px;
+        margin: 0 0 5px 0;
+    }
 
-            if ( ! $modules  ) {
-                ?>
-				<tr class="active">
-					<td colspan="3" class="column-description desc">
-						<?php esc_html_e( 'No modules found!', 'erp' ); ?>
-					</td>
-				</tr>
-				<?php
-            }
-        ?>
+    .module_item .subtitle {
+        padding: 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 12px;
+        color: #788383;
+        letter-spacing: 0.11px;
+    }
 
-		</tbody>
-	</table>
-	<p class="submit clear">
-		<?php wp_nonce_field( 'erp_nonce', 'erp_settings' ); ?>
-		<input class="button-primary" type="submit" name="erp_module_status"  value="Save Settings">
-	</p>
-	</form>
+    .module_item .switch {
+        min-width: 50px;
+        max-width: 50px;
+    }
 
-</div>
+    .erp_addon {
+        background: #FFFFFF;
+        border: 1px solid #E2E2E2;
+        border-radius: 3px;
+        padding: 20px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
 
-<style>
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 50px;
+        height: 22px;
+    }
+
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 18px;
+        width: 18px;
+        left: 3px;
+        bottom: 2px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+    input:checked + .slider {
+        background-color: #2196F3;
+    }
+
+    input:focus + .slider {
+        box-shadow: 0 0 1px #2196F3;
+    }
+
+    input:checked + .slider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+    }
+
+    /* Rounded sliders */
+    .slider.round {
+        border-radius: 34px;
+    }
+
+    .slider.round:before {
+        border-radius: 50%;
+    }
+
     .erp-help-tip {
         left: 0.1rem;
         bottom: 0.3rem;
     }
 </style>
+
+<div class="wrap erp-settings">
+
+    <div class="page_title">
+        <h1>
+            <?php esc_html_e( 'Modules', 'erp' ); ?>
+            <?php echo erp_help_tip( esc_html__( "If you do not require any of the modules, you may deactivate it from here.", 'erp' ) ); ?>
+        </h1>
+    </div>
+
+    <div class="modules_wrap">
+        <div class="module_items">
+            <div class="module_item_col">
+                <div class="module_item hrm">
+                    <div class="icon">
+                        <img src="<?php echo esc_url( WPERP_ASSETS . '/images/icons/hrm.svg' ); ?>" alt="<?php echo esc_attr( 'HRM' ); ?>" />
+                    </div>
+                    <h3 class="title"><?php esc_html_e( 'HR Management', 'erp' );?></h3>
+                    <div class="subtitle">
+                        <span><?php esc_html_e( 'Human Resource Management', 'erp' ); ?></span>
+                        <label class="switch">
+                            <input class="module_action" type="checkbox" data-module-id="hrm" <?php echo wperp()->modules->is_module_active('hrm') ? 'checked="checked"' : ''; ?>>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="module_item_col">
+                <div class="module_item crm">
+                    <div class="icon">
+                        <img src="<?php echo esc_url( WPERP_ASSETS . '/images/icons/crm.svg' ); ?>" alt="<?php echo esc_attr( 'CRM' ); ?>" />
+                    </div>
+                    <h3 class="title"><?php esc_html_e( 'CR Management', 'erp' );?></h3>
+                    <div class="subtitle">
+                        <span><?php esc_html_e( 'Cusomer Relationship Management', 'erp' ); ?></span>
+                        <label class="switch">
+                            <input class="module_action" type="checkbox" data-module-id="crm" <?php echo wperp()->modules->is_module_active('crm') ? 'checked="checked"' : ''; ?>>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="module_item_col">
+                <div class="module_item accounting">
+                    <div class="icon">
+                        <img src="<?php echo esc_url( WPERP_ASSETS . '/images/icons/accounting.svg' ); ?>" alt="<?php echo esc_attr( 'Accounting' ); ?>" />
+                    </div>
+                    <h3 class="title"><?php esc_html_e( 'Accounting', 'erp' );?></h3>
+                    <div class="subtitle">
+                        <span><?php esc_html_e( 'Accounting Management', 'erp' ); ?></span>
+                        <label class="switch">
+                            <input class="module_action" type="checkbox" data-module-id="accounting" <?php echo wperp()->modules->is_module_active('accounting') ? 'checked="checked"' : ''; ?>>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<script type="text/javascript">
+    jQuery( function( $ ) {
+
+        $( '.module_action' ).click( function() {
+            var module_id  = $(this).data('module-id');
+            var state      = $(this).prop( 'checked' );
+            var toggle     = ( state ) ? 'activate' : 'deactivate';
+
+            toastr.success( '<?php echo __( 'Please wait!', 'erp'); ?>', '', {timeOut: 1000} );
+
+            wp.ajax.send( 'erp-toggle-module', {
+                data: {
+                    '_wpnonce': '<?php echo wp_create_nonce( 'wp-erp-toggle-module' )  ?>',
+                    module_id:  module_id,
+                    toggle:     toggle
+                },
+                success: function( resp ) {
+                    toastr.success( resp );
+                    setTimeout( function() {
+                        location.reload();
+                    }, 1000 )
+                },
+                error: function( response ) {
+                    toastr.error( response );
+                }
+            });
+
+        } );
+
+    });
+</script>
