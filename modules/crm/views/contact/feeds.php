@@ -16,7 +16,7 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
         </ul>
 
         <div class="nav-content" id="erp-crm-feed-nav-content">
-            <form action="" method="post" @submit.prevent="addCustomerFeed()" id="erp-crm-activity-feed-form" enctype="multipart/form-data">
+            <form action="" method="post" @submit.prevent="addCustomerFeed()" id="erp-crm-activity-feed-form" enctype="multipart/form-data" autocomplete="off">
 
                 <new-note v-if="tabShow == 'new_note'" :feed="" keep-alive></new-note>
 
@@ -36,7 +36,7 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
 
     <div class="activity-content">
         <div class="activity-feed" style="margin-bottom: 10px">
-            <select name="" id="" v-model="findFeeds.type"> 
+            <select name="" id="" v-model="findFeeds.type">
                 <option value="all">All Activities</option>
                 <option value="email">Email</option>
                 <option value="tasks">Task</option>
