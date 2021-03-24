@@ -433,7 +433,6 @@ class Employee {
         if ( $wp_user ) {
             $full_name =  $first_name . ' ' . $middle_name . ' ' . $last_name ;
             wp_update_user( array( 'ID' => $user_id, 'display_name' =>  $full_name ) );
-
         }
 
         // inserting the user for the first time
@@ -498,8 +497,8 @@ class Employee {
         // update job info
         $this->update_job_info( [
             'date'         => $work['hiring_date'],
-            'designation'  => $work['designation'],
-            'department'   => $work['department'],
+            'designation'  => isset( $work['designation'] ) ? $work['designation'] : '',
+            'department'   => isset( $work['department'] ) ? $work['department'] : '',
             'reporting_to' => ! empty( $work['reporting_to'] ) ? $work['reporting_to'] : 0,
             'location'     => ! empty( $work['location'] ) ? $work['location'] : - 1,
         ] );
