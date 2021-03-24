@@ -257,12 +257,6 @@ class Employee {
             }
         }
 
-        $data = apply_filters( 'pre_erp_hr_employee_args', $data );
-
-        if ( is_wp_error( $data ) ) {
-            return $data;
-        }
-
         //if we received user_id
         if ( $user_id ) {
             $wp_user = get_user_by( 'ID', $user_id );
@@ -407,6 +401,12 @@ class Employee {
         $last_name   = isset( $data['personal']['last_name'] ) ? $data['personal']['last_name'] : '';
 
         if ( ! $wp_user ) {
+            $data = apply_filters( 'pre_erp_hr_employee_args', $data );
+
+            if ( is_wp_error( $data ) ) {
+                return $data;
+            }
+            
             $userdata = [
                 'user_login'   => $data['user_email'],
                 'user_email'   => $data['user_email'],
