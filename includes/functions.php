@@ -3858,7 +3858,7 @@ function erp_is_valid_url( $url ) {
  * @return bool
  */
 function erp_is_valid_employee_id( $emp_id ) {
-    return preg_match( '/^[A-Z0-9][\-A-Z0-9]+$/i', $emp_id );
+    return preg_match( '/^[A-Z0-9][\-A-Z0-9]*$/i', $emp_id );
 }
 
 /**
