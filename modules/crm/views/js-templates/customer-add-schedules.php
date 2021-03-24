@@ -1,6 +1,7 @@
 <div class="erp-crm-new-schedule-wrapper">
 <?php
-    $tab  = ( isset( $_GET['tab'] ) && ! empty( $_GET['tab'] ) ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : 'own';
+    $tab             = ( isset( $_GET['tab'] ) && ! empty( $_GET['tab'] ) ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : 'own';
+    $selected_user_id = ( $tab === 'own' ) ? get_current_user_id() : '';
 ?>
     <# if( new Date( data.current_date ) >= new Date() ) { #>
         <div class="feed-schedule-wrapper">
@@ -51,7 +52,7 @@
 
             <p>
                 <select name="invite_contact[]" id="erp-crm-activity-invite-contact" class="select2" multiple="multiple" style="width: 100%" data-placeholder="<?php esc_attr_e( 'Agents or managers..', 'erp' ); ?>">
-                    <?php echo wp_kses( erp_crm_get_crm_user_html_dropdown( $tab === 'own' ? get_current_user_id() : '' ), [
+                    <?php echo wp_kses( erp_crm_get_crm_user_html_dropdown( $selected_user_id ), [
                         'option' => [
                             'value'    => [],
                             'selected' => [],
@@ -142,7 +143,7 @@
 
             <p class="log-selected-contact erp-hide">
                 <select name="invite_contact[]" id="erp-crm-activity-invite-contact" class="select2" multiple="multiple" style="width: 100%" data-placeholder="<?php esc_attr_e( 'Agents or managers..', 'erp' ); ?>">
-                    <?php echo wp_kses( erp_crm_get_crm_user_html_dropdown( $tab === 'own' ? get_current_user_id() : '' ), [
+                    <?php echo wp_kses( erp_crm_get_crm_user_html_dropdown( $selected_user_id ), [
                         'option' => [
                             'value'    => [],
                             'selected' => [],
