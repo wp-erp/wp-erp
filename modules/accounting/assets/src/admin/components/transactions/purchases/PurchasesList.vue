@@ -158,12 +158,12 @@ export default {
             HTTP.get('/transactions/purchases', {
                 params: {
                     per_page  : this.paginationData.perPage,
-                    page      : this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page,
+                    page      : this.$route.params.page === undefined ? this.paginationData.currentPage: this.$route.params.page,
                     start_date: filters.start_date,
                     end_date  : filters.end_date,
                     status    : filters.status,
-                    type    : filters.type,
-                    vendor_id: filters.people_id
+                    type      : filters.type,
+                    vendor_id : filters.people_id
                 }
             }).then((response) => {
                 const mappedData = response.data.map(item => {
@@ -184,7 +184,7 @@ export default {
                                 item['actions'] = [
                                     { key: '#', label: __('No actions found', 'erp') }
                                 ];
-                                
+
                             } else if (item.status_code === '2' || item.status_code === '3' || item.status_code === '5') {
                                 item['actions'] = [
                                     { key: 'payment', label: __('Payment', 'erp') },
@@ -225,7 +225,7 @@ export default {
                         } else {
                             if ( this.proActivated ) {
                                 item['actions'] = [
-                                    { key: 'return', label: __('Return', 'erp') }                                
+                                    { key: 'return', label: __('Return', 'erp') }
                                 ];
                             } else {
                                 item['actions'] = [
@@ -342,14 +342,14 @@ export default {
         getTrnType(row) {
             if (row.type === 'purchase') {
                 if (row.purchase_order === '1') {
-                    return __('Purchase Order', 'erp-pro');
+                    return __('Purchase Order', 'erp');
                 }
 
-                return __('Purchase', 'erp-pro');
+                return __('Purchase', 'erp');
             } else if (row.type === 'pay_purchase') {
-                return __('Payment', 'erp-pro');
+                return __('Payment', 'erp');
             } else {
-                return __('Receive', 'erp-pro');
+                return __('Receive', 'erp');
             }
         },
     }

@@ -110,10 +110,10 @@ export default {
             isWorking     : false,
             form_errors   : [],
             trn_date      : erp_acct_var.current_date, /* global erp_acct_var */
-            voucher_type  : { id: 'debit', name: 'Debit' },
+            voucher_type  : { id: 'debit', name: __('Debit', 'erp') },
             voucher_types : [
-                { id: 'debit', name: 'Debit' },
-                { id: 'credit', name: 'Credit' }
+                { id: 'debit', name: __('Debit', 'erp') },
+                { id: 'credit', name: __('Credit', 'erp') }
             ]
         };
     },
@@ -215,7 +215,7 @@ export default {
                 throw error;
             }).then(res => {
                 this.$store.dispatch('spinner/setSpinner', false);
-                this.showAlert('success', 'Tax Paid!');
+                this.showAlert('success', __('Tax Paid!', 'erp'));
             }).then(() => {
                 this.$router.push({ name: 'TaxRecords' });
                 this.resetData();
@@ -233,38 +233,38 @@ export default {
             this.isWorking    = false;
             this.form_errors  = [];
             this.trn_date     = erp_acct_var.current_date;
-            this.voucher_type = { id: 'debit', name: 'Debit' };
+            this.voucher_type = { id: 'debit', name: __('Debit', 'erp') };
         },
 
         validateForm() {
             this.form_errors = [];
 
             if (!this.trn_by.id) {
-                this.form_errors.push('Payment method Name is required.');
+                this.form_errors.push(__('Payment method Name is required.', 'erp'));
             }
 
             if (!this.deposit_to.id) {
-                this.form_errors.push('Deposit to is required.');
+                this.form_errors.push(__('Deposit to is required.', 'erp'));
             }
 
             if (!this.agency.id) {
-                this.form_errors.push('Agency to is required.');
+                this.form_errors.push(__('Agency to is required.', 'erp'));
             }
 
             if (!this.trn_date) {
-                this.form_errors.push('Date is required.');
+                this.form_errors.push(__('Date is required.', 'erp'));
             }
 
             if (!this.tax_amount) {
-                this.form_errors.push('Tax amount is required.');
+                this.form_errors.push(__('Tax amount is required.', 'erp'));
             }
 
             // if ( this.tax_amount > this.dueAmount ) {
-            //     this.form_errors.push('Please pay according to your due balance.');
+            //     this.form_errors.push(__('Please pay according to your due balance.', 'erp'));
             // }
 
             if (parseFloat(this.deposit_to.balance) < parseFloat(this.finalTotalAmount)) {
-                this.form_errors.push('Not enough balance in selected account.');
+                this.form_errors.push(__('Not enough balance in selected account.', 'erp'));
             }
         }
     }

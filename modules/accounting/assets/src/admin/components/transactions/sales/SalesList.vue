@@ -220,7 +220,7 @@ export default {
                         } else {
                             if ( this.proActivated ) {
                                 item['actions'] = [
-                                    { key: 'return', label: __('Receive Return', 'erp') }                                
+                                    { key: 'return', label: __('Receive Return', 'erp') }
                                 ];
                             } else {
                                 item['actions'] = [
@@ -252,7 +252,7 @@ export default {
         onActionClick(action, row, index) {
             switch (action) {
             case 'trash':
-                if (confirm('Are you sure to delete?')) {
+                if (confirm(__('Are you sure to delete?', 'erp'))) {
                     this.$store.dispatch('spinner/setSpinner', true);
                     HTTP.delete('invoices/' + row.id).then(response => {
                         this.$delete(this.rows, index);
