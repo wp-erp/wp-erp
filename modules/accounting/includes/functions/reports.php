@@ -60,6 +60,8 @@ function erp_acct_get_ledger_report( $ledger_id, $start_date, $end_date ) {
         $end_date
     );
 
+    $wpdb->query( "SET SESSION sql_mode='';" );
+
     $details = $wpdb->get_results( $sql2, ARRAY_A );
 
     $total_debit  = 0;
