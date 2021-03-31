@@ -148,6 +148,8 @@ function erp_html_form_input( $args = [] ) {
         case 'hidden':
         case 'date':
         case 'url':
+        case 'password':
+        case 'time':
             echo '<input type="' . esc_attr( $field['type'] ) . '" value="' . esc_attr( $field['value'] ) . '" ' . wp_kses_post( implode( ' ', $custom_attributes ) ) . ' />';
             break;
 
