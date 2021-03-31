@@ -867,8 +867,10 @@
                                 } );
 
                                 $( 'div[data-selected]', modal ).each(function() {
-                                    var self = $(this),
-                                        selected = self.data('selected');
+                                    var self            = $(this),
+                                        unchecked       = 0,
+                                        selected        = self.data('selected'),
+                                        requiredCbItems = $("span.checkbox input[type=checkbox][required]");
 
                                     if ( selected !== '' ) {
                                         self.find( 'select' ).val( selected ).trigger('change');
@@ -876,8 +878,20 @@
                                         $.each(self.find("input[type=checkbox]"), function(index, data) {
                                             if($.inArray($(data).val(), selected.split(',')) != -1) {
                                                 $(data).prop('checked', true);
+                                            } else {
+                                                if($.inArray($(data), requiredCbItems)) {
+                                                    unchecked++;
+                                                }
                                             }
                                         });
+
+                                        if(unchecked !== requiredCbItems.length) {
+                                            $.each(self.find("span.checkbox input[type=checkbox][required]"), function(index, cb) {
+                                                if($.inArray($(cb).val(), selected.split(',')) == -1) {
+                                                    $(cb).removeAttr("required");
+                                                }
+                                            });
+                                        }
                                     }
                                 });
 
