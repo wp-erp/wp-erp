@@ -120,9 +120,10 @@ export default {
 
             // with leading zero, and JS month are zero index based
             const month = ('0' + (dateObj.getMonth() + 1)).slice(-2);
+            const day   = ('0' + dateObj.getDate()).slice(-2);
 
             this.start_date = `${dateObj.getFullYear()}-${month}-01`;
-            this.end_date   = erp_acct_var.current_date;
+            this.end_date   = `${dateObj.getFullYear()}-${month}-${day}`;
 
             if (this.$route.params.ledgerName) {
                 // Directly coming from chart of acounts
