@@ -112,6 +112,7 @@ export default {
                 this.isWorking = false;
                 this.$emit('line_close');
                 this.$root.$emit('refetch_tax_data');
+                this.$router.push({ name: 'TaxRates' });
             });
         },
 
