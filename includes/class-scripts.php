@@ -161,7 +161,6 @@ class Scripts {
         wp_enqueue_script( 'erp-popup' );
         wp_enqueue_script( 'erp-script' );
         wp_enqueue_script( 'erp-are-you-sure' );
-        wp_enqueue_script( 'erp-toastr' );
         wp_enqueue_media();
 
         wp_localize_script( 'erp-script', 'wpErp', [
@@ -210,7 +209,6 @@ class Scripts {
         wp_enqueue_style( 'erp-select2' );
         wp_enqueue_style( 'jquery-ui' );
         wp_enqueue_style( 'erp-styles' );
-        wp_enqueue_style( 'erp-toastr' );
 
         $page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
 
