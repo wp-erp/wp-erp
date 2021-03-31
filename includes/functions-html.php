@@ -217,14 +217,16 @@ function erp_html_form_input( $args = [] ) {
             break;
 
         case 'radio':
+
             echo '<span class="checkbox">';
 
             if ( $field['options'] ) {
                 foreach ( $field['options'] as $key => $value ) {
-                    echo '<input type="radio" ' . checked( $field['value'], $key, false ) . ' value="' . esc_attr( $key ) . '" ' . wp_kses_post( implode( ' ', $custom_attributes ) ) . ' id="' . esc_attr( $field_attributes['id'] ) . '-' . esc_attr( $key ) . '"/>' . esc_html( $value ) . '&nbsp;';
+                    echo '<input type="radio" ' . checked( $field['value'], $key, false ) . ' id="' . esc_attr( $field_attributes['id'] ) . '-' . esc_attr( $key ) . '" value="' . esc_attr( $key ) . '" ' . wp_kses_post( implode( ' ', $custom_attributes ) ) . '"/>' . esc_html( $value ) . '&nbsp;';
                 }
             }
-             echo '</span>';
+            
+            echo '</span>';
             break;
 
         case 'file':
