@@ -86,7 +86,7 @@
 
             $('body').on( 'change', '.wp-list-table', function(e) {
                 var selector = $('.wp-list-table tbody tr th input[type="checkbox"]');
-                
+
                 if ( selector.is(':checked') ) {
                     $('.tablenav .bulkactions').show();
                     $(".tablenav").css("clear", "both");
@@ -103,6 +103,14 @@
             $('body').on( 'click', 'input[name="hide_filter"]', function(e) {
                 e.preventDefault();
                 self.employee.toggleFilterDropdown();
+            });
+
+            $('body').on( 'click', 'input[name="reset_filter"]', function(e) {
+                e.preventDefault();
+                $( '#filter_designation option:selected' ).prop( 'selected', false );
+                $( '#filter_department option:selected' ).prop( 'selected', false );
+                $( '#filter_employment_type option:selected' ).prop( 'selected', false );
+                $( 'input[name=filter_employee]' ).click();
             });
 
             this.initTipTip();
@@ -963,7 +971,7 @@
             },
 
             toggleFilterDropdown: function() {
-                document.getElementById("erp-dropdown-content").classList.toggle("show");
+                document.getElementById( 'erp-dropdown-content' ).classList.toggle( 'show' );
             },
 
             general: {

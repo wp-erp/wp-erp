@@ -45,7 +45,7 @@ class Employee_List_Table extends \WP_List_Table {
             <a class="wperp-btn btn--default"><span class="dashicons dashicons-filter"></span>Filters<span class="dashicons dashicons-arrow-down-alt2"></span></a>
             <div class="erp-dropdown-filter-content" id="erp-dropdown-content">
                 <div class="wperp-filter-panel wperp-filter-panel-default">
-                    <h3>Filter</h3>
+                    <h3><?php esc_html_e('Filter', 'erp') ?></h3>
                     <div class="wperp-filter-panel-body">
                         <label class="screen-reader-text" for="new_role"><?php esc_html_e( 'Filter by Designation', 'erp' ); ?></label>
                         <select name="filter_designation" id="filter_designation">
@@ -84,7 +84,8 @@ class Employee_List_Table extends \WP_List_Table {
                         </select>
                     </div>
                     <div class="wperp-filter-panel-footer">
-                        <input type="submit" class="wperp-btn btn--cancel" value="Cancel" name="hide_filter">
+                        <input type="submit" class="wperp-btn btn--cancel" value="<?php __( 'Cancel', 'erp' ); ?>" name="hide_filter">
+                        <input type="reset" class="wperp-btn btn--reset" value="<?php __( 'Reset', 'erp' ); ?>" name="reset_filter" style="margin-right: 11px">
                         <?php submit_button( __( 'Apply', 'erp' ), 'submit', 'filter_employee', false, [ 'id' => 'filter', 'class' => 'wperp-btn btn--primary' ] ); ?>
                     </div>
                 </div>
