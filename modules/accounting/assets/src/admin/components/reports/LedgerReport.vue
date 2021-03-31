@@ -33,10 +33,10 @@
             :columns="columns"
             :rows="rows"
             :showCb="false">
-            <template slot="trn_no" slot-scope="data">
+            <template slot="trn_no" slot-scope="data" v-if="data.row.trn_no">
                 <strong>
                     <router-link :to="{ name: 'DynamicTrnLoader', params: { id: data.row.trn_no }}">
-                        <span v-if="data.row.trn_no">#{{ data.row.trn_no }}</span>
+                        <span>#{{ data.row.trn_no }}</span>
                     </router-link>
                 </strong>
             </template>
