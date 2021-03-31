@@ -8,6 +8,10 @@ namespace WeDevs\ERP\Admin;
 class Admin_Module {
     public function __construct() {
         $this->output();
+
+        // Enqueue toaster for this page only
+        wp_enqueue_style( 'erp-toastr' );
+        wp_enqueue_script( 'erp-toastr' );
     }
 
     public function output() {
