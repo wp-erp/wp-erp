@@ -149,6 +149,7 @@ export default {
             this.filters.status = parseInt(status.id);
         });
 
+        // Outside click of the div toggle filter
         window.addEventListener('click', (e) => {
             if (!this.$refs.filterArea.contains(e.target)){
                 this.showFilters = false;
@@ -193,16 +194,17 @@ export default {
 }
 
 .btn--cancel {
-    background: 0 0;
-    border: none;
-    box-shadow: none;
-    padding: 0 2px 1px;
-    width: auto;
+    color: #000;
+    background-color: #fff!important;
+    border: 1px solid #e2e2e2!important;
+    border-radius: 3px!important;
+    padding: .313rem .7rem!important;
+    float: left;
 }
 
 .btn--reset {
+    color: #3c9fd4;
     background-color: #fff!important;
-    color: #000!important;
     border: 1px solid #e2e2e2!important;
     border-radius: 3px!important;
     padding: .313rem .7rem!important;

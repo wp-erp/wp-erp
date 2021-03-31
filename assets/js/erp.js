@@ -795,9 +795,11 @@ jQuery.fn.serializeObject = function() {
     // ======================================================
 
     window.addEventListener( 'click', function(e) {
-        var dropdownArea = document.querySelectorAll( '.wperp-filter-dropdown' )[0];
+        var dropdownArea             = document.querySelectorAll( '.wperp-filter-dropdown' )[0];
+        var select2Container         = document.querySelector( '.select2-container--open' );
+        var targetNotContainDropdown = typeof dropdownArea !== 'undefined' && ! dropdownArea.contains( e.target );
 
-        if ( typeof dropdownArea !== 'undefined' && ! dropdownArea.contains( e.target )){
+        if ( targetNotContainDropdown && select2Container === null ){
             document.getElementById( 'erp-dropdown-content' ).classList.remove( 'show' );
         }
     });

@@ -54,7 +54,9 @@ class Employee_List_Table extends \WP_List_Table {
                             $designations = erp_hr_get_designation_dropdown_raw();
 
                             foreach ( $designations as $key => $designation ) {
-                                echo sprintf( "<option value='%s'%s>%s</option>\n", esc_html( $key ), selected( $selected_desingnation, esc_html( $key ), false ), esc_html( $designation ) );
+                                if( $key > 0 ) {
+                                    echo sprintf( "<option value='%s'%s>%s</option>\n", esc_html( $key ), selected( $selected_desingnation, esc_html( $key ), false ), esc_html( $designation ) );
+                                }
                             };
                             ?>
                         </select>
@@ -66,7 +68,9 @@ class Employee_List_Table extends \WP_List_Table {
                             $departments = erp_hr_get_departments_dropdown_raw();
 
                             foreach ( $departments as $key => $department ) {
-                                echo sprintf( "<option value='%s'%s>%s</option>\n", esc_html( $key ), selected( $selected_department, esc_html( $key ), false ), esc_html( $department ) );
+                                if( $key > 0 ) {
+                                    echo sprintf( "<option value='%s'%s>%s</option>\n", esc_html( $key ), selected( $selected_department, esc_html( $key ), false ), esc_html( $department ) );
+                                }
                             };
                             ?>
                         </select>
@@ -84,8 +88,8 @@ class Employee_List_Table extends \WP_List_Table {
                         </select>
                     </div>
                     <div class="wperp-filter-panel-footer">
-                        <input type="submit" class="wperp-btn btn--cancel" value="<?php esc_html_e( 'Cancel', 'erp' ); ?>" name="hide_filter">
-                        <input type="reset" class="wperp-btn btn--reset" value="<?php esc_html_e( 'Reset', 'erp' ); ?>" name="reset_filter" style="margin-right: 11px">
+                        <input type="submit" class="wperp-btn btn--cancel" style="float: left" value="<?php esc_html_e( 'Cancel', 'erp' ); ?>" name="hide_filter">
+                        <input type="reset" class="wperp-btn btn--cancel" style="color: #3c9fd4; margin-right: 5px" value="<?php esc_html_e( 'Reset', 'erp' ); ?>" name="reset_filter">
                         <?php submit_button( __( 'Apply', 'erp' ), 'submit', 'filter_employee', false, [ 'id' => 'filter', 'class' => 'wperp-btn btn--primary' ] ); ?>
                     </div>
                 </div>

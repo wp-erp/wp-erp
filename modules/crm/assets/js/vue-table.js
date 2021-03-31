@@ -29,8 +29,8 @@ Vue.component('vtable', {
                                 +'</template>'
                             +'</div>'
                             +'<div class="wperp-filter-panel-footer">'
-                                +'<input type="submit" class="wperp-btn btn--cancel" value="Cancel" @click.prevent="toggleDropdown()">'
-                                +'<input type="reset" class="wperp-btn btn--reset" value="Reset" @click.prevent="resetDropdown()">'
+                                +'<input type="submit" class="wperp-btn btn--cancel" style="float: left" value="Cancel" @click.prevent="toggleDropdown()">'
+                                +'<input type="reset" class="wperp-btn btn--cancel" style="color: #3c9fd4" value="Reset" @click.prevent="resetDropdown()">'
                                 +'<input type="submit" class="wperp-btn btn--primary" id="filter" @click.prevent="handleExtraBulkAction()" :value="filterText">'
                             +'</div>'
                         +'</div>'
@@ -883,6 +883,14 @@ Vue.component('vtable', {
 
             var filterArgs = advanceFilter ? '&erpadvancefilter=' + encodeURIComponent( advanceFilter.indexOf('&') == 0 ? advanceFilter.substring(1) : advanceFilter ) : '' ;
             var postData = postData + '&' + pagination.join('&') + filterArgs;
+
+            if( reset ) {
+                var afterPostData   = postData.split('&sub-section=contacts')[1];
+                var removableString = afterPostData.split('&type=contact')[0];
+                postData            = postData.replace(removableString,'');
+                var historyURL      = window.location.pathname +'?page=erp-crm&'+postData
+                window.history.pushState( null, null, historyURL );
+            }
 
             this.ajax = jQuery.post( wpVueTable.ajaxurl, postData, function( resp ) {
                 self.ajaxloader = false;
