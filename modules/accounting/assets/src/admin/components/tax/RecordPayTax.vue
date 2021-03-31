@@ -3,7 +3,7 @@
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
-                    <h2 class="content-header__title">{{ __('Record Sales Tax Payment', 'erp') }}</h2>
+                    <h2 class="content-header__title">{{ __('Record Tax Payment', 'erp') }}</h2>
                 </div>
             </div>
         </div>
