@@ -1,3 +1,5 @@
+<template></template>
+
 <script>
 import HTTP from 'admin/http';
 
