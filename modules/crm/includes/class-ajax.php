@@ -733,6 +733,14 @@ class Ajax_Handler {
 
         if ( ! empty( $crm_contacts ) ) {
             foreach ( $crm_contacts as $user ) {
+                if (
+                    ! current_user_can('erp_crm_manager') &&
+                    ! current_user_can('manage_options') &&
+                    (int) $user->contact_owner !== get_current_user_id()
+                ) {
+                    continue;;
+                }
+
                 if ( in_array( 'company', $user->types, true ) ) {
                     $found_crm_contact[ $user->id ] = $user->company;
                 } else {
