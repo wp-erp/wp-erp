@@ -1216,9 +1216,10 @@ function erp_crm_get_subscriber_contact( $args = [] ) {
         'count'   => false,
     ];
 
-    $args      = wp_parse_args( $args, $defaults );
-    $cache_key = 'erp-crm-subscriber-contact-' . md5( serialize( $args ) );
-    $items     = wp_cache_get( $cache_key, 'erp' );
+    $args           = wp_parse_args( $args, $defaults );
+    $last_changed   = erp_crm_cache_get_last_changed( 'contact_group_subscriber' );
+    $cache_key      = 'erp-crm-subscriber-contact-' . md5( serialize( $args ) ).":$last_changed";
+    $items          = wp_cache_get( $cache_key, 'erp' );
 
     if ( false === $items ) {
         $converted_data       = [];
@@ -1361,6 +1362,9 @@ function erp_crm_create_new_contact_subscriber( $args = [] ) {
         $contact->update_contact_hash( $hash_id );
     }
 
+    erp_crm_purge_cache( [ 'list' => 'contact_group_subscriber' ] );
+    erp_crm_purge_cache( [ 'list' => 'contact_groups' ] ); // as there is a count column like, total subscriber
+
     do_action( 'erp_crm_create_contact_subscriber', $subscriber, $hash_id );
 
     return $subscriber;
@@ -1424,10 +1428,15 @@ function erp_crm_contact_subscriber_delete( $id, $group_id ) {
     do_action( 'erp_crm_pre_unsubscribed_contact', $id, $group_id );
 
     if ( is_array( $id ) ) {
-        return \WeDevs\ERP\CRM\Models\ContactSubscriber::whereIn( 'user_id', $id )->where( 'group_id', $group_id )->delete();
+        $deleted = \WeDevs\ERP\CRM\Models\ContactSubscriber::whereIn( 'user_id', $id )->where( 'group_id', $group_id )->delete();
     } else {
-        return \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $id )->where( 'group_id', $group_id )->delete();
+        $deleted = \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $id )->where( 'group_id', $group_id )->delete();
     }
+
+    erp_crm_purge_cache( [ 'list' => 'contact_groups' ] );
+    erp_crm_purge_cache( [ 'list' => 'contact_group_subscriber' ] );
+
+    return $deleted;
 }
 
 /**
@@ -1519,6 +1528,9 @@ function erp_crm_edit_contact_subscriber( $groups, $user_id ) {
             do_action( 'erp_crm_delete_contact_subscriber', $subscriber );
         }
     }
+
+    erp_crm_purge_cache( [ 'list' => 'contact_groups' ] );
+    erp_crm_purge_cache( [ 'list' => 'contact_group_subscriber' ] );
 }
 
 /**
