@@ -3,7 +3,7 @@
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
-                    <h2 class="content-header__title">{{ __('Record Tax Payment', 'erp') }}</h2>
+                    <h2 class="content-header__title">{{ __('Record Sales Tax Payment', 'erp') }}</h2>
                 </div>
             </div>
         </div>
@@ -17,7 +17,7 @@
                     <div class="wperp-row wperp-gutter-20">
 
                         <div class="wperp-col-sm-4 with-multiselect">
-                            <label>{{ __('Payment Method', 'erp') }}<span class="wperp-required-sign">*</span></label>
+                            <label>{{ __('Payment Method', 'erp') }}<span class="wperp-required-sign"> *</span></label>
                             <multi-select v-model="trn_by" :options="pay_methods"></multi-select>
                         </div>
                         <div class="wperp-col-sm-4 mb-20">
@@ -31,7 +31,7 @@
                         </div>
                         <div class="wperp-col-sm-4 wperp-col-xs-12">
                             <div class="wperp-form-group">
-                                <label>{{ __('Payment Date', 'erp') }}</label>
+                                <label>{{ __('Payment Date', 'erp') }}<span class="wperp-required-sign"> *</span></label>
                                 <div class="wperp-has-datepicker pay-tax-date">
                                     <datepicker v-model="trn_date"></datepicker>
                                 </div>
