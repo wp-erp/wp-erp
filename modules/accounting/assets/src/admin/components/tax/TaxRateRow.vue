@@ -127,6 +127,10 @@ export default {
 
 <style scoped>
    .wperp-row {
-       padding: 10px !important;
+       padding: 10px 40px !important;
+   }
+
+   .wperp-modal span.modal-close {
+       line-height: 3 !important;
    }
 </style>
