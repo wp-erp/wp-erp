@@ -495,13 +495,20 @@ class Employee {
         }
 
         // update job info
-        $this->update_job_info( [
-            'date'         => $work['hiring_date'],
-            'designation'  => isset( $work['designation'] ) ? $work['designation'] : '',
-            'department'   => isset( $work['department'] ) ? $work['department'] : '',
-            'reporting_to' => ! empty( $work['reporting_to'] ) ? $work['reporting_to'] : 0,
-            'location'     => ! empty( $work['location'] ) ? $work['location'] : - 1,
-        ] );
+        if (
+            ! empty( $work['designation'] ) ||
+            ! empty( $work['department'] ) ||
+            ! empty( $work['reporting_to'] ) ||
+            ! empty( $work['location'] )
+        ) {
+            $this->update_job_info( [
+                'date'         => $work['hiring_date'],
+                'designation'  => isset( $work['designation'] ) ? $work['designation'] : '',
+                'department'   => isset( $work['department'] ) ? $work['department'] : '',
+                'reporting_to' => ! empty( $work['reporting_to'] ) ? $work['reporting_to'] : 0,
+                'location'     => ! empty( $work['location'] ) ? $work['location'] : - 1,
+            ] );
+        }
 
         $this->update_employee( array_merge( $data['work'], $data['personal'], $data['additional'] ) );
         do_action( 'erp_hr_employee_new', $this->id, $data );
@@ -2325,7 +2332,7 @@ class Employee {
         if ( ! $args['eligible_for_rehire'] ) {
             return new WP_Error( 'no-eligible-for-rehire', 'Eligible for rehire field is required' );
         }
-        
+
         $this->erp_user->update( [
             'status'           => 'terminated',
             'termination_date' => $args['terminate_date'],
