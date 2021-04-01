@@ -171,4 +171,7 @@
         top      : 0;
         left     : 0;
     }
+    .schedule-datetime .erp-date-field {
+        padding: 0px 0px !important;
+    }
 </style>
