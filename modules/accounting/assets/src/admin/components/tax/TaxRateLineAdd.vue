@@ -4,7 +4,7 @@
             <div class="wperp-modal-content">
                 <!-- modal body title -->
                 <div class="wperp-modal-header">
-                    <h3>{{ __('Add New', 'erp') }}</h3>
+                    <h3>{{ __('Add New Line', 'erp') }}</h3>
                     <span class="modal-close" @click.prevent="closeModal"><i class="flaticon-close"></i></span>
                 </div>
 
@@ -13,7 +13,7 @@
                         <div class="wperp-row">
                             <div class="wperp-col-sm-3 wperp-col-xs-12">
                                 <label>{{ __('Component', 'erp') }}</label>
-                                <input type="text" v-model="component_name" />
+                                <input type="text" class="wperp-form-field" v-model="component_name" />
                             </div>
                             <div class="wperp-col-sm-3 wperp-col-xs-12 with-multiselect">
                                 <label>{{ __('Agency', 'erp') }}</label>
@@ -29,7 +29,7 @@
                             </div>
                             <div class="wperp-col-sm-3 wperp-col-xs-12">
                                 <label>{{ __('Tax Rate', 'erp') }}</label>
-                                <input type="text" v-model="tax_rate"/>
+                                <input type="text" class="wperp-form-field" v-model="tax_rate"/>
                             </div>
 
                             <div class="wperp-col-sm-12">
@@ -100,6 +100,7 @@ export default {
                 this.isWorking = false;
                 this.$emit('line_close');
                 this.$root.$emit('refetch_tax_data');
+                this.$router.push({ name: 'TaxRates' });
             });
         },
 
