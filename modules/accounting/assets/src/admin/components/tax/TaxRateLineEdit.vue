@@ -105,4 +105,8 @@ export default {
     .wperp-modal-header {
         padding: 30px 0 20px 40px !important;
     }
+
+    .wperp-modal span.modal-close {
+       line-height: 3 !important;
+   }
 </style>
