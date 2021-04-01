@@ -1039,12 +1039,15 @@ function erp_crm_assign_task_to_users( $data, $save_data ) {
 function erp_crm_save_contact_group( $data ) {
     if ( ! empty( $data['id'] ) ) {
         $result = WeDevs\ERP\CRM\Models\ContactGroup::find( $data['id'] )->update( $data );
+        $args   = [ 'erp-crm-contact-group-detail'  => $data['id'] ];
         do_action( 'erp_crm_update_contact_group', $result );
     } else {
         $result = WeDevs\ERP\CRM\Models\ContactGroup::create( $data );
         do_action( 'erp_crm_create_contact_group', $result );
+        $args = [];
     }
 
+    erp_crm_purge_cache( $args );
     return $result;
 }
 
@@ -1064,9 +1067,11 @@ function erp_crm_get_contact_groups( $args = [] ) {
         'order'   => 'DESC',
         'count'   => false,
     ];
-    $args      = wp_parse_args( $args, $defaults );
-    $cache_key = 'erp-crm-contact-group-' . md5( serialize( $args ) );
-    $items     = wp_cache_get( $cache_key, 'erp' );
+
+    $last_changed = wp_cache_get_last_changed( 'erp' );
+    $args         = wp_parse_args( $args, $defaults );
+    $cache_key    = 'erp-crm-contact-group-' . md5( serialize( $args ) ).":$last_changed";
+    $items        = wp_cache_get( $cache_key, 'erp' );
 
     if ( false === $items ) {
         // Check if args count true, then return total count customer according to above filter
@@ -1152,7 +1157,16 @@ function erp_crm_get_contact_groups( $args = [] ) {
  * @return array
  */
 function erp_crm_get_contact_group_by_id( $id ) {
-    return WeDevs\ERP\CRM\Models\ContactGroup::find( $id )->toArray();
+
+    $contact_group = wp_cache_get( 'erp-crm-contact-group-detail-' . $id, 'erp' );
+
+    if( false === $contact_group ) {
+        $contact_group = WeDevs\ERP\CRM\Models\ContactGroup::find( $id )->toArray();
+
+        wp_cache_set( 'erp-crm-contact-group-detail-' . $id, $contact_group, 'erp' );
+    }
+
+    return $contact_group;
 }
 
 /**
@@ -1170,6 +1184,10 @@ function erp_crm_contact_group_delete( $id ) {
     } else {
         WeDevs\ERP\CRM\Models\ContactGroup::find( $id )->delete();
     }
+
+    $args = [ 'erp-crm-contact-group-detail' => $id ];
+
+    erp_crm_purge_cache( $args );
 
     do_action( 'erp_crm_delete_contact_group', $id );
 }
@@ -2750,7 +2768,7 @@ function erp_crm_contact_form_section() {
  * Renders the crm settings page
  *
  * @param array $settings
- * 
+ *
  * @return array
  */
 function erp_crm_settings_pages( $settings ) {
@@ -4050,7 +4068,7 @@ function erp_crm_get_contacts_menu_html( $selected = 'contacts' ) {
 
     ob_start();
     ?>
-    
+
     <div class="erp-custom-menu-container">
         <ul class="erp-nav">
             <?php foreach ( $dropdown as $key => $value ) : ?>
@@ -4094,4 +4112,25 @@ function erp_crm_get_tasks_menu_html( $selected = '' ) {
 
     <?php
     echo ob_get_clean();
+}
+
+/**
+ * Purge the cache for ERP CRM module
+ *
+ * Update cache and envalidate cache data
+ *
+ * @since 1.8.2
+ *
+ * @param array $args
+ *
+ * @return void
+ */
+function erp_crm_purge_cache( $args = [] ) {
+    $group = 'erp';
+
+    if ( isset( $args['erp-crm-contact-group-detail'] ) ) {
+        wp_cache_delete( 'erp-crm-contact-group-detail-' . $args['erp-crm-contact-group-detail'], $group );
+    }
+
+    wp_cache_set( 'last_changed', microtime(), $group );
 }
