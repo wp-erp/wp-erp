@@ -1039,12 +1039,16 @@ function erp_crm_assign_task_to_users( $data, $save_data ) {
 function erp_crm_save_contact_group( $data ) {
     if ( ! empty( $data['id'] ) ) {
         $result = WeDevs\ERP\CRM\Models\ContactGroup::find( $data['id'] )->update( $data );
-        $args   = [ 'erp-crm-contact-group-detail'  => $data['id'] ];
+        $args   = [
+            'list'                          => 'contact_groups',
+            'erp-crm-contact-group-detail'  => $data['id']
+        ];
+
         do_action( 'erp_crm_update_contact_group', $result );
     } else {
         $result = WeDevs\ERP\CRM\Models\ContactGroup::create( $data );
         do_action( 'erp_crm_create_contact_group', $result );
-        $args = [];
+        $args = [ 'list' => 'contact_groups' ];
     }
 
     erp_crm_purge_cache( $args );
@@ -1068,7 +1072,7 @@ function erp_crm_get_contact_groups( $args = [] ) {
         'count'   => false,
     ];
 
-    $last_changed = wp_cache_get_last_changed( 'erp' );
+    $last_changed = erp_crm_cache_get_last_changed( 'contact_groups' );
     $args         = wp_parse_args( $args, $defaults );
     $cache_key    = 'erp-crm-contact-group-' . md5( serialize( $args ) ).":$last_changed";
     $items        = wp_cache_get( $cache_key, 'erp' );
@@ -1185,7 +1189,7 @@ function erp_crm_contact_group_delete( $id ) {
         WeDevs\ERP\CRM\Models\ContactGroup::find( $id )->delete();
     }
 
-    $args = [ 'erp-crm-contact-group-detail' => $id ];
+    $args = [ 'list' => 'contact_groups', 'erp-crm-contact-group-detail' => $id ];
 
     erp_crm_purge_cache( $args );
 
@@ -4117,7 +4121,7 @@ function erp_crm_get_tasks_menu_html( $selected = '' ) {
 /**
  * Purge the cache for ERP CRM module
  *
- * Update cache and envalidate cache data
+ * Update cache and invalidate cache data
  *
  * @since 1.8.2
  *
@@ -4132,5 +4136,32 @@ function erp_crm_purge_cache( $args = [] ) {
         wp_cache_delete( 'erp-crm-contact-group-detail-' . $args['erp-crm-contact-group-detail'], $group );
     }
 
-    wp_cache_set( 'last_changed', microtime(), $group );
+    $last_changed_key = 'last_changed_crm:';
+
+    // change list for different type like, contact, contact_groups etc. and invalidate the last change key
+    if( $args['list'] ) {
+        $last_changed_key .= $args['list'];
+    }
+
+    wp_cache_set( $last_changed_key, microtime(), $group );
+}
+
+/**
+ * Get Last Time Cache Changed for menu/list wise
+ *
+ * @since 1.8.2
+ *
+ * @param string $list or menu name
+ *
+ * @return string $last_changed microtime
+ */
+function erp_crm_cache_get_last_changed ( $list_or_menu_name ) {
+    $last_changed = wp_cache_get( "last_changed_crm:$list_or_menu_name", 'erp' );
+
+    if ( ! $last_changed ) {
+        $last_changed = microtime();
+        wp_cache_set( "last_changed_crm:$list_or_menu_name", $last_changed, 'erp' );
+    }
+
+    return $last_changed;
 }
