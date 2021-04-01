@@ -88,9 +88,9 @@ class Employee_List_Table extends \WP_List_Table {
                         </select>
                     </div>
                     <div class="wperp-filter-panel-footer">
-                        <input type="submit" class="wperp-btn btn--cancel" style="float: left" value="<?php esc_html_e( 'Cancel', 'erp' ); ?>" name="hide_filter">
-                        <input type="reset" class="wperp-btn btn--cancel" style="color: #3c9fd4; margin-right: 5px" value="<?php esc_html_e( 'Reset', 'erp' ); ?>" name="reset_filter">
-                        <?php submit_button( __( 'Apply', 'erp' ), 'submit', 'filter_employee', false, [ 'id' => 'filter', 'class' => 'wperp-btn btn--primary' ] ); ?>
+                        <input type="submit" class="wperp-btn btn--cancel btn--filter" style="float: left" value="<?php esc_html_e( 'Cancel', 'erp' ); ?>" name="hide_filter">
+                        <input type="reset" class="wperp-btn btn--cancel btn--filter btn--reset" value="<?php esc_html_e( 'Reset', 'erp' ); ?>" name="reset_filter">
+                        <?php submit_button( __( 'Apply', 'erp' ), 'submit', 'filter_employee', false, [ 'id' => 'filter', 'class' => 'wperp-btn btn--primary', 'style' => 'background-color: #1a9ed4; color: #fff; border: 1px solid transparent' ] ); ?>
                     </div>
                 </div>
             </div>
