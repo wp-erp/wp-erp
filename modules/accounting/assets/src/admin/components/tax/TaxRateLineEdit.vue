@@ -91,9 +91,18 @@ export default {
     }
 };
 </script>
-<style lang="less">
+
+<style lang="less" scoped>
     .wperp-modal-dialog {
         max-width: 900px!important;
         margin: 50px auto;
+    }
+
+    .wperp-modal .wperp-modal-content  {
+       min-height: 50vh !important;
+    }
+
+    .wperp-modal-header {
+        padding: 30px 0 20px 40px !important;
     }
 </style>
