@@ -720,21 +720,19 @@ function erp_crm_get_feed_activity( $postdata ) {
             ) {
                 continue;
             }
-        }
 
-        if ( isset( $value['extra']['invite_contact'] ) && count( $value['extra']['invite_contact'] ) > 0 ) {
-            foreach ( $value['extra']['invite_contact'] as $user_id ) {
-                if ( isset( $value['extra']['invited_user'] ) ) {
-                    $value['extra']['invited_user'] = (array) $value['extra']['invited_user'];
-
+            if ( count( $value['extra']['invite_contact'] ) > 0 ) {
+                foreach ( $value['extra']['invite_contact'] as $user_id ) {
+                    $value['extra']['invited_user'] = isset( $value['extra']['invited_user'] ) ? (array) $value['extra']['invited_user'] : [];
+    
                     array_push( $value['extra']['invited_user'], [
                         'id'   => $user_id,
                         'name' => get_the_author_meta( 'display_name', $user_id ),
                     ] );
                 }
+            } else {
+                $value['extra']['invited_user'] = [];
             }
-        } else {
-            $value['extra']['invited_user'] = [];
         }
 
         if ( $value['contact']['user_id'] ) {
