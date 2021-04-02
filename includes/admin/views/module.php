@@ -671,7 +671,6 @@
                              <div class="erp-detail">
                                 <h3 class="title">
                                     <a href="<?php echo esc_url( $addon_url ); ?>" target="_blank"><?php echo esc_html( $module->name ); ?></a>
-                                    <em class="module_version">v<?php echo ( $module->version ) ?></em>
                                 </h3>
 
                                 <div class="text"><?php echo wp_kses_post( $module->description ); ?></div>
