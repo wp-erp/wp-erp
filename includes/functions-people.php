@@ -715,7 +715,7 @@ function erp_insert_people( $args = [], $return_object = false ) {
 
     erp_crm_purge_cache( [
         'list' => 'people',
-        'type' => $people_type ,
+        'type' => $people_type,
         'erp-people-by' => [ (int) $people->id, $people->email, (int) $people->user_id ]
     ] );
 
