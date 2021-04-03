@@ -27,6 +27,7 @@
                                     v-for="(component, extIndx) in extraFieldsTop"
                                     :key="`top-${extIndx}`"
                                     :is="component"
+                                    :people="people"
                                 />
 
                                 <div class="wperp-row wperp-gutter-20">
@@ -56,6 +57,7 @@
                                     v-for="(component, extIndx) in extraFieldsMiddle"
                                     :key="`middle-${extIndx}`"
                                     :is="component"
+                                    :people="people"
                                 />
 
                                 <!-- extra fields -->
@@ -118,6 +120,7 @@
                                     v-for="(component, extIndx) in extraFieldsBottom"
                                     :key="`bottom-${extIndx}`"
                                     :is="component"
+                                    :people="people"
                                 />
 
                                 <div class="form-check">
