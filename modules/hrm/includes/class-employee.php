@@ -452,8 +452,6 @@ class Employee {
             $updated  = $this->update_employee( $data );
 
             do_action( 'erp_hr_employee_update', $user_id, $old_data );
-
-            return $updated;
         }
 
         if ( ! $erp_user ) {
