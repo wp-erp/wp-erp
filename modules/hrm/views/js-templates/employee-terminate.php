@@ -8,6 +8,7 @@
             'value'    => '{{data.terminate_date}}',
             'required' => true,
             'class'    => 'erp-date-field',
+            'class'    => 'erp-date-field',
         ] ); ?>
     </div>
 
