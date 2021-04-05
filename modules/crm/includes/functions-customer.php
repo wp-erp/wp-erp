@@ -4197,7 +4197,7 @@ function erp_crm_purge_cache( $args = [] ) {
 
         array_map( function ( $value ) {
             $cache_key      = 'erp-people-by-' . md5( serialize( $value ) );
-            wp_cache_delete( $cache_key, $group );
+            wp_cache_delete( $cache_key, 'erp' );
         }, $values );
     }
 
