@@ -635,7 +635,7 @@
         $all_modules    = wperp()->modules->get_modules_extensions();
         $active_modules = wperp()->modules->get_active_modules();
         $my_modules     = [];
-        $purchase_url   = trailingslashit( 'https://wperp.com/' ) . 'pricing?utm_source=wp-admin&utm_medium=link&utm_campaign=erp-extension-page';
+        $purchase_url   = 'https://utm.guru/udfBI'; // URL with UTM for tracking
 
         asort( $all_modules );
 
