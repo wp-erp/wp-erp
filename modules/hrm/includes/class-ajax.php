@@ -883,6 +883,12 @@ class Ajax_Handler {
             $this->send_error( __( 'No employee found', 'erp' ) );
         }
 
+        $user = apply_filters( 'pre_erp_hr_employee_args', $user );
+
+        if ( is_wp_error( $user ) ) {
+            $this->send_error( $user->get_error_message() );
+        }
+
         if ( in_array( 'employee', $user->roles, true ) ) {
             erp_employee_restore( $employee_id );
         }
