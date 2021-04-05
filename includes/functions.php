@@ -3906,3 +3906,55 @@ function erp_get_array_diff( $new_data, $old_data, $is_seriazie = false ) {
     }
 }
 
+
+/**
+ * Get Last Time Cache Changed for a module/menu
+ *
+ * A custom `wp_cache_last_change` implementation
+ * It would give us a performance boost rather than using a simple `last_changed` for wp_cache
+ *
+ * @since 1.8.2
+ *
+ * @param string $module_name, eg: crm, hrm, accounting
+ * @param string $list or menu name, eg: contacts, employees
+ *
+ * @return string $last_changed microtime
+ */
+function erp_cache_get_last_changed ( $module_name, $list_or_menu_name ) {
+    $last_changed = wp_cache_get( "last_changed_$module_name:$list_or_menu_name", 'erp' );
+
+    if ( ! $last_changed ) {
+        $last_changed = microtime();
+        wp_cache_set( "last_changed_$module_name:$list_or_menu_name", $last_changed, 'erp' );
+    }
+
+    return $last_changed;
+}
+
+/**
+ * Purge the cache for ERP
+ *
+ * Update cache and invalidate cache data
+ * Change list for different types like: contacts, employees, deals, accounting etc.
+ *
+ * @since 1.8.2
+ *
+ * @param array $args
+ *
+ * @return void
+ */
+function erp_purge_cache( $args = [] ) {
+    $group = 'erp';
+
+    $defaults = [
+        'module' => '',
+        'list'   => '',
+    ];
+
+    $args = wp_parse_args( $args, $defaults );
+
+    $last_changed_key = 'last_changed_' . $args['module'] . ':' . $args['list'];
+
+    // invalidate the last change key for this module and list
+    wp_cache_set( $last_changed_key, microtime(), $group );
+}
