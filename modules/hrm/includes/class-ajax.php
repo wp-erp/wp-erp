@@ -926,6 +926,10 @@ class Ajax_Handler {
         } elseif ( isset( $_POST['status'] ) ) {
             $args['module']   = 'employee';
             $args['category'] = sanitize_text_field( wp_unslash( $_POST['status'] ) );
+
+            if ( 'terminated' === $args['category'] ) {
+                $this->send_success();
+            }
         }
 
         $old_data = $employee->get_data();
