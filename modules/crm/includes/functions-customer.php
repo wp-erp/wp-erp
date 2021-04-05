@@ -657,7 +657,7 @@ function erp_crm_get_feed_activity( $args = [] ) {
 
     $postdata = wp_parse_args( $args, $default );
 
-    $last_changed = erp_crm_cache_get_last_changed( 'feeds' );
+    $last_changed = erp_cache_get_last_changed( 'crm', 'feeds' );
     $cache_key    = 'erp-feeds-' . md5( serialize( $postdata ) ).": $last_changed";
     $feeds        = wp_cache_get( $cache_key, 'erp' );
 
@@ -1104,7 +1104,7 @@ function erp_crm_get_contact_groups( $args = [] ) {
         'count'   => false,
     ];
 
-    $last_changed = erp_crm_cache_get_last_changed( 'contact_groups' );
+    $last_changed = erp_cache_get_last_changed( 'crm', 'contact_groups' );
     $args         = wp_parse_args( $args, $defaults );
     $cache_key    = 'erp-crm-contact-group-' . md5( serialize( $args ) ).":$last_changed";
     $items        = wp_cache_get( $cache_key, 'erp' );
@@ -1249,7 +1249,7 @@ function erp_crm_get_subscriber_contact( $args = [] ) {
     ];
 
     $args           = wp_parse_args( $args, $defaults );
-    $last_changed   = erp_crm_cache_get_last_changed( 'contact_group_subscriber' );
+    $last_changed   = erp_cache_get_last_changed( 'crm', 'contact_group_subscriber' );
     $cache_key      = 'erp-crm-subscriber-contact-' . md5( serialize( $args ) ).":$last_changed";
     $items          = wp_cache_get( $cache_key, 'erp' );
 
@@ -4218,24 +4218,4 @@ function erp_crm_purge_cache( $args = [] ) {
 
         wp_cache_set( $last_changed_key, microtime(), $group );
     }
-}
-
-/**
- * Get Last Time Cache Changed for menu/list wise
- *
- * @since 1.8.2
- *
- * @param string $list or menu name
- *
- * @return string $last_changed microtime
- */
-function erp_crm_cache_get_last_changed ( $list_or_menu_name ) {
-    $last_changed = wp_cache_get( "last_changed_crm:$list_or_menu_name", 'erp' );
-
-    if ( ! $last_changed ) {
-        $last_changed = microtime();
-        wp_cache_set( "last_changed_crm:$list_or_menu_name", $last_changed, 'erp' );
-    }
-
-    return $last_changed;
 }

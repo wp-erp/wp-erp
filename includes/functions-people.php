@@ -45,7 +45,7 @@ function erp_get_peoples( $args = [] ) {
     $args         = wp_parse_args( $args, $defaults );
 
     $people_type  = is_array( $args['type'] ) ? implode( '-', $args['type'] )       : $args['type'];
-    $last_changed = erp_crm_cache_get_last_changed( 'people' );
+    $last_changed = erp_cache_get_last_changed( 'crm', 'people' );
     $cache_key    = 'erp-people-' . $people_type . '-' . md5( serialize( $args ) ).": $last_changed";
     $items        = wp_cache_get( $cache_key, 'erp' );
     $pep_tb       = $wpdb->prefix . 'erp_peoples';
