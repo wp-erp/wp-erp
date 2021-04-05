@@ -4197,25 +4197,22 @@ function erp_crm_purge_cache( $args = [] ) {
 
         array_map( function ( $value ) {
             $cache_key      = 'erp-people-by-' . md5( serialize( $value ) );
-            wp_cache_delete( $cache_key, 'erp' );
+            wp_cache_delete( $cache_key, $group );
         }, $values );
     }
 
     // Delete if any 'feed-detail' is in cache by id
     if ( ! empty ( $args['feed-detail'] ) ) {
-        wp_cache_delete( 'erp-feeds-by-' . $args['feed-detail'], 'erp' );
+        wp_cache_delete( 'erp-feeds-by-' . $args['feed-detail'], $group );
     }
-
-    $last_changed_key = 'last_changed_crm:';
 
     // change list for different type like, people, contact, contact_groups etc. and invalidate the last change key
     if( ! empty ( $args['list'] ) ) {
-        $last_changed_key .= $args['list'];
 
         if( $args['list'] === 'people' && ! empty ( $args['type'] ) ) {
-            wp_cache_delete( 'erp-crm-customer-status-counts-' . $args['type'], 'erp' );
+            wp_cache_delete( 'erp-crm-customer-status-counts-' . $args['type'], $group );
         }
 
-        wp_cache_set( $last_changed_key, microtime(), $group );
+        erp_purge_cache( ['module' => 'crm', 'list' => $args['list'] ] );
     }
 }
