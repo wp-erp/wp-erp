@@ -3953,8 +3953,13 @@ function erp_purge_cache( $args = [] ) {
 
     $args = wp_parse_args( $args, $defaults );
 
-    $last_changed_key = 'last_changed_' . $args['module'] . ':' . $args['list'];
+    $lists = explode( ',', $args['list'] );
 
-    // invalidate the last change key for this module and list
-    wp_cache_set( $last_changed_key, microtime(), $group );
+    foreach( $lists as $list ) {
+        $last_changed_key = 'last_changed_' . $args['module'] . ':' . $list;
+
+        // invalidate the last change key for this module and list
+        wp_cache_set( $last_changed_key, microtime(), $group );
+    }
+
 }
