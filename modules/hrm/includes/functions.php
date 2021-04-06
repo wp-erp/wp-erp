@@ -567,3 +567,33 @@ function erp_hr_get_people_menu_html( $selected = 'employee' ) {
     <?php
     echo ob_get_clean();
 }
+
+
+/**
+ * Purge cache data for HRM Module
+ *
+ * Remove all cache for HRM Module
+ *
+ * @since 1.8.2
+ *
+ * @param array $args
+ *
+ * @return void
+ */
+function erp_hrm_purge_cache_data( $args = [] ) {
+
+    if ( isset( $args['employee_id'] ) ) {
+        wp_cache_delete( 'erp-employee-by-' . $args['employee_id'], 'erp' );
+    }
+
+    if ( isset( $args['list'] ) ) {
+        $list = $args['list'];
+
+        if( $list === 'employee' ) {
+            wp_cache_delete( 'erp-hr-employee-status-counts', 'erp' );
+        }
+
+        erp_purge_cache( [ 'module' => 'hrm', 'list' => $args['list'] ] );
+    }
+
+}
