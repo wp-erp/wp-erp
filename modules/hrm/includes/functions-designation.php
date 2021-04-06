@@ -30,6 +30,8 @@ function erp_hr_create_designation( $args = [] ) {
 
     $designation = new \WeDevs\ERP\HRM\Models\Designation();
 
+    erp_hrm_purge_cache_data( [ 'list' => 'designation', 'designation_id' => $desig_id ] );
+
     if ( ! $desig_id ) {
         $desig = $designation->create( $fields );
 
@@ -66,13 +68,13 @@ function erp_hr_get_designations( $args = [] ) {
 
     $args = wp_parse_args( $args, $defaults );
 
-    //$cache_key    = 'erp-designations';
-    $cache_key    = 'erp-designations-'  . md5( serialize( $args ) );
-    $designations = wp_cache_get( $cache_key, 'erp' );
-
-    $designation = new \WeDevs\ERP\HRM\Models\Designation();
+    $last_changed  = erp_cache_get_last_changed( 'hrm', 'designation' );
+    $cache_key     = 'erp-get-designations-' . md5( serialize( $args ) ) . " : $last_changed";
+    $designations  = wp_cache_get( $cache_key, 'erp' );
 
     if ( false === $designations ) {
+
+        $designation = new \WeDevs\ERP\HRM\Models\Designation();
 
         // Check if want all data without any pagination
         if ( $args['number'] != '-1' ) {
@@ -93,9 +95,30 @@ function erp_hr_get_designations( $args = [] ) {
 }
 
 /**
- * Delete a department
+ * Get a single designation by id
  *
- * @param  int  department id
+ * @since 1.8.2
+ *
+ * @param int $designation_id
+ *
+ * @return object \WeDevs\ERP\HRM\Designation
+ */
+function erp_hr_get_single_designation( $designation_id ) {
+    $cache_key   = "erp-get-designation-by-$designation_id";
+    $designation = wp_cache_get( $cache_key, 'erp' );
+
+    if ( false === $designation ) {
+        $designation = new \WeDevs\ERP\HRM\Designation( $designation_id );
+        wp_cache_set( $cache_key, $designation, 'erp' );
+    }
+
+    return $designation;
+}
+
+/**
+ * Delete a designation
+ *
+ * @param int designation id
  *
  * @return bool
  */
@@ -103,6 +126,8 @@ function erp_hr_delete_designation( $designation_id ) {
     if ( is_array( $designation_id ) ) {
         $exist_employee     = [];
         $not_exist_employee = [];
+
+        erp_hrm_purge_cache_data( [ 'list' => 'designation', 'designation_id' => $designation_id ] );
 
         foreach ( $designation_id as $key => $designation ) {
             $desig = new \WeDevs\ERP\HRM\Designation( intval( $designation ) );

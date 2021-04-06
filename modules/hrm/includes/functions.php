@@ -586,6 +586,10 @@ function erp_hrm_purge_cache_data( $args = [] ) {
         wp_cache_delete( 'erp-employee-by-' . $args['employee_id'], 'erp' );
     }
 
+    if ( isset( $args['designation_id'] ) ) {
+        wp_cache_delete( 'erp-get-designation-by-' . $args['designation_id'], 'erp' );
+    }
+
     if ( isset( $args['list'] ) ) {
         $list = $args['list'];
 

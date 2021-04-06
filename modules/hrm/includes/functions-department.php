@@ -177,7 +177,7 @@ function erp_hr_delete_department( $department_id ) {
 
     $resp = \WeDevs\ERP\HRM\Models\Department::find( $department_id )->delete();
 
-    erp_hrm_purge_cache_data( [ 'list' => 'department,employee', 'department_id' => $department_id ] );
+    erp_hrm_purge_cache_data( [ 'list' => 'department', 'department_id' => $department_id ] );
 
     return $resp;
 }

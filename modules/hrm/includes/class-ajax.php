@@ -704,7 +704,7 @@ class Ajax_Handler {
         $id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
 
         if ( $id ) {
-            $designation = new Designation( $id );
+            $designation = erp_hr_get_single_designation( $id );
             $this->send_success( $designation );
         }
 
