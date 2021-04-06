@@ -238,6 +238,8 @@ function erp_hr_leave_insert_policy( $args = [] ) {
         do_action( 'erp_hr_leave_update_policy', $args['id'] );
         do_action( 'erp_hr_leave_before_policy_updated', $args['id'], $old_policy );
 
+        erp_hrm_purge_cache_data( ['list' => 'leave_policy', 'leave_policy_id' => $args['id'] ] );
+
         return $leave_policy->id;
     }
 
@@ -258,6 +260,8 @@ function erp_hr_leave_insert_policy( $args = [] ) {
     Leave_Policies_Segregation::create( $segre );
 
     do_action( 'erp_hr_leave_insert_policy', $leave_policy->id );
+
+    erp_hrm_purge_cache_data( ['list' => 'leave_policy', 'leave_policy_id' => $leave_policy->id ] );
 
     return $leave_policy->id;
 }
@@ -750,14 +754,25 @@ function erp_hr_leave_get_policies( $args = [] ) {
         }
     } );
 
-    $cache_key = 'erp-get-policies-' . md5( serialize( $args ) );
-    $policies  = wp_cache_get( $cache_key, 'erp' );
+    $last_changed = erp_cache_get_last_changed( 'hrm', 'leave_policy' );
+    $cache_key    = 'erp-get-policies-' . md5( serialize( $args ) ) . ": $last_changed";
+    $policies     = wp_cache_get( $cache_key, 'erp' );
+
+    $total_policies_cache_key = 'erp-policies-count-'. md5( serialize( $args ) ) . ": $last_changed";;
+    $total_row_found          = wp_cache_get( $total_policies_cache_key, 'erp' );
 
     if ( false === $policies ) {
         $policies = Leave_Policy::select( \WeDevs\ORM\Eloquent\Facades\DB::raw( 'SQL_CALC_FOUND_ROWS *' ) )
-            ->skip( $args['offset'] )
-            ->take( $args['number'] )
-            ->orderBy( $args['orderby'], $args['order'] );
+        ->skip( $args['offset'] )
+        ->take( $args['number'] );
+
+        // If filtered by name, Get the ID of this leave type by name and do ordering
+        if( $args['orderby'] === 'name' ) {
+            $policies = $policies->join( "{$wpdb->prefix}wp_erp_hr_leaves as leave", 'leave.id', '=', "{$wpdb->prefix}erp_hr_leave_policies.leave_id" )
+                        ->orderBy( 'leave.name', $args['order'] );
+        } else {
+            $policies = $policies->orderBy( $args['orderby'], $args['order'] );
+        }
 
         if ( $args['department_id'] ) {
             $policies->where( 'department_id', '=', $args['department_id'] );
@@ -790,6 +805,7 @@ function erp_hr_leave_get_policies( $args = [] ) {
         $policies = $policies->get();
 
         $total_row_found = absint( $wpdb->get_var( 'SELECT FOUND_ROWS()' ) );
+        wp_cache_set( $total_policies_cache_key, $total_row_found, 'erp' );
 
         $formatted_data = [];
 
@@ -1023,6 +1039,8 @@ function erp_hr_leave_policy_delete( $policy_ids ) {
     }
 
     $policies = Leave_Policy::find( $policy_ids );
+
+    erp_hrm_purge_cache_data( [ 'list' => 'leave_policy' ] );
 
     $policies->each( function ( $policy ) {
         if ( $policy->entitlements ) {
@@ -2750,6 +2768,8 @@ function erp_hr_insert_leave_policy_name( $args = [] ) {
     ];
 
     $args = wp_parse_args( $args, $defaults );
+
+    erp_hrm_purge_cache_data( ['list' => 'leave_policy' ] );
 
     /*
      * Update
