@@ -768,7 +768,7 @@ function erp_hr_leave_get_policies( $args = [] ) {
 
         // If filtered by name, Get the ID of this leave type by name and do ordering
         if( $args['orderby'] === 'name' ) {
-            $policies = $policies->join( "{$wpdb->prefix}wp_erp_hr_leaves as leave", 'leave.id', '=', "{$wpdb->prefix}erp_hr_leave_policies.leave_id" )
+            $policies = $policies->join( "{$wpdb->prefix}erp_hr_leaves as leave", 'leave.id', '=', "{$wpdb->prefix}erp_hr_leave_policies.leave_id" )
                         ->orderBy( 'leave.name', $args['order'] );
         } else {
             $policies = $policies->orderBy( $args['orderby'], $args['order'] );
