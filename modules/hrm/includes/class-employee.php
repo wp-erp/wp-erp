@@ -508,7 +508,7 @@ class Employee {
         do_action( 'erp_hr_employee_new', $this->id, $data );
 
         erp_hrm_purge_cache_data( [ 'list' => 'employee', 'employee_id' => $employee_id ] );
-        
+
         return $this;
     }
 
