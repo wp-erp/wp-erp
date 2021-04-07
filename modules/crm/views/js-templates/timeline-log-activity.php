@@ -19,6 +19,13 @@
         <div class="timeline-email-subject" v-if="isLog && islogTypeEmail">{{i18n.emailSubject}} : {{feed.email_subject}}</div>
         <div class="timeline-email-subject" v-if="isSchedule"><i class="fa fa-bookmark"></i> &nbsp; {{ feed.extra.schedule_title }}  &nbsp;|&nbsp;  <i class="fa fa-calendar-check-o"></i> &nbsp;{{ datetime }}</div>
         <div class="timeline-email-body">{{{ feed.message }}}</div>
+
+        <div class="timeline-activity-attachments" v-if="(feed.extra.attachments && feed.extra.attachments.length > 0)">
+            <?php esc_attr_e( 'Attachments : ', 'erp' ); ?>
+            <ul>
+                <li v-for="file in feed.extra.attachments"><a target="_blank" href="{{{file.url}}}">{{{file.name}}}</a></li>
+            </ul>
+        </div>
     </div>
 
     <div class="timeline-footer" v-if="!isActivityPage() && showFooter">
