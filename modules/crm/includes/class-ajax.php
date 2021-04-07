@@ -1281,6 +1281,7 @@ class Ajax_Handler {
             case 'log_activity':
                 $extra_data = [
                     'invite_contact' => ( isset( $postdata['invite_contact'] ) && ! empty( $postdata['invite_contact'] ) ) ? $postdata['invite_contact'] : [],
+                    'attachments'    => $attachments,
                 ];
 
                 $save_data = [
