@@ -1268,6 +1268,8 @@ function erp_hr_leave_insert_request( $args = [] ) {
 
             do_action( 'erp_hr_leave_new', $request_id, $request, $leaves );
 
+            erp_hrm_purge_cache_data( ['list' => 'leave_request'] );
+
             return $request_id;
         }
     }
@@ -1362,8 +1364,9 @@ function erp_hr_get_leave_requests( $args = [], $cached = true ) {
         $args['orderby'] = 'u.' . $args['orderby'];
     }
 
-    $cache_key = 'erp_hr_leave_requests_' . md5( serialize( $args ) );
-    $requests  = wp_cache_get( $cache_key, 'erp' );
+    $last_changed = erp_cache_get_last_changed( 'hrm', 'leave_request' );
+    $cache_key    = 'erp_hr_leave_requests_' . md5( serialize( $args ) ) . ": $last_changed";
+    $requests     = wp_cache_get( $cache_key, 'erp' );
 
     if ( false !== $requests && true === $cached ) {
         return $requests;
@@ -1884,6 +1887,8 @@ function erp_hr_leave_request_update_status( $request_id, $status, $comments = '
     do_action( "erp_hr_leave_request_{$status}", $request_id, $request );
     do_action( 'erp_hr_leave_update', $request_id, $old_data );
 
+    erp_hrm_purge_cache_data( [ 'list' => 'leave_request', 'request_id' => $request_id ] );
+
     return $request;
 }
 
@@ -1930,6 +1935,8 @@ function erp_hr_delete_leave_request( $request_id ) {
     }
 
     $request->delete();
+
+    erp_hrm_purge_cache_data( [ 'list' => 'leave_request', 'request_id' => $request_id ] );
 
     return $request_id;
 }

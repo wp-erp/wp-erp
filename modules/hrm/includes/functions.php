@@ -597,6 +597,10 @@ function erp_hrm_purge_cache_data( $args = [] ) {
             wp_cache_delete( 'erp-hr-employee-status-counts', 'erp' );
         }
 
+        if( $list === 'leave_request' ) {
+            wp_cache_delete( 'erp-hr-leave-request-counts', 'erp' );
+        }
+
         erp_purge_cache( [ 'module' => 'hrm', 'list' => $args['list'] ] );
     }
 
