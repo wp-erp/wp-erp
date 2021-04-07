@@ -6,7 +6,7 @@ $save_replies = erp_crm_get_save_replies();
 $block        = !erp_crm_sync_is_active() ? 'crm-blocked' : '';
 $settings_url = add_query_arg( [ 'page' => 'erp-settings', 'tab' => 'erp-crm', 'section' => 'email_connect' ], admin_url( 'admin.php' ) );
 ?>
-<div id="email" class="<?php //echo esc_html( $block ); ?>">
+<div id="email" class="<?php echo esc_html( $block ); ?>">
 
     <?php if ( !erp_crm_sync_is_active() ) { ?>
         <a class="button button-primary" style="z-index: 2;position: relative;top: 150px;left: 43%;" href="<?php echo esc_url_raw( $settings_url ); ?>"><?php esc_attr_e( 'Configure Settings', 'erp' ); ?></a>
@@ -46,13 +46,9 @@ $settings_url = add_query_arg( [ 'page' => 'erp-settings', 'tab' => 'erp-crm', '
     <trix-editor input="email_activity_message" placeholder="<?php esc_attr_e( 'Type your email body .....', 'erp' ); ?>"></trix-editor>
     <input id="email_activity_message" type="hidden" v-model="feedData.message" name="email_activity_message">
 
-    <div class="crm-attachments">
+    <div class="crm-attachments" id="crm-attachments">
        <div id="progress-wrp"><div class="progress-bar"></div ><div class="status">0%</div></div>
-        <div id="output">
-            <p v-for="file in files ">
-                {{ file }}
-            </p>
-        </div>
+       <div id="crm-atch-output"></div>
     </div>
 
     <div class="submit-action">
@@ -63,9 +59,8 @@ $settings_url = add_query_arg( [ 'page' => 'erp-settings', 'tab' => 'erp-crm', '
         <input type="hidden" name="action" v-model="feedData.action" value="erp_customer_feeds_save_notes">
         <input type="hidden" name="type" v-model="feedData.type" value="email">
         <input type="submit" v-if="!feed" :disabled = "!isValid" class="button button-primary" name="save_notes" value="<?php esc_attr_e( 'Send Email', 'erp' ); ?>">
-        <input type="file" name="attatchments[]" id="email-attachment" v-on:change="fileUpload()" multiple>
-        <label for="email-attachment" class="attachments-label" title="Attach File"><span class="btn-activity-atch dashicons dashicons-paperclip"></span><?php esc_attr_e( 'Attach File', 'erp' ); ?>
-        </label>
+        <input v-if="!feed" type="file" name="attachments[]" class="crm-activity-attachment" id="activity-attachment" v-on:change="addAttachments()" multiple>
+        <label v-if="!feed" for="activity-attachment" class="attachments-label" title="Attach File"><span class="btn-activity-atch dashicons dashicons-paperclip"></span><?php _e( 'Attach File', 'erp' ); ?></label>
         <input type="submit" v-if="feed" :disabled = "!isValid" class="button button-primary" name="edit_notes" value="<?php esc_attr_e( 'Reply Email', 'erp' ); ?>">
         <input type="reset" v-if="!feed" class="button button-default" value="<?php esc_attr_e( 'Discard', 'erp' ); ?>">
         <button class="button" v-if="feed" @click.prevent="cancelUpdateFeed"><?php esc_attr_e( 'Cancel', 'erp' ); ?></button>
