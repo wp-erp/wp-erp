@@ -107,18 +107,14 @@ $notification_types = erp_crm_activity_schedule_notification_type();
 
     <div class="crm-attachments" id="{{feed ? 'crm-attachments-' + feed.id : 'crm-attachments'}}">
        <div id="progress-wrp"><div class="progress-bar"></div ><div class="status">0%</div></div>
-        <div id="output">
-            <p v-for="file in files">
-                {{ file }}
-            </p>
-        </div>
+       <div id="crm-atch-output"></div>
     </div>
 
     <div class="timeline-body" v-if="feed">
         <div class="timeline-activity-attachments">
             <?php esc_attr_e( 'Attachments : ', 'erp' ); ?>
             <ul v-if="(feed.extra.attachments && feed.extra.attachments.length > 0)">
-                <li v-for="file in feed.extra.attachments"><a id="activity-atch-name-{{{feed.id}}}-{{{$index}}}" target="_blank" href="{{{file.url}}}">{{{file.name}}}{{{updateAttachments(feed.id, file, $index, false)}}}</a><span id="btn-activity-atch-{{{feed.id}}}-{{{$index}}}" v-on:click.prevent="updateAttachments(feed.id, file, $index, removeAtchFlag)" class="btn-activity-atch remove-atch dashicons dashicons-dismiss"></span></li>
+                <li v-for="file in feed.extra.attachments"><a id="activity-atch-name-{{{feed.id}}}-{{{$index}}}" target="_blank" href="{{{file.url}}}">{{{file.name}}}{{{updateAttachments(feed.id, file, $index, false)}}}</a><span id="btn-activity-atch-{{{feed.id}}}-{{{$index}}}" v-on:click.prevent="updateAttachments(feed.id, file, $index, removeAttch($index))" class="btn-activity-atch remove-atch dashicons dashicons-dismiss"></span></li>
             </ul>
             <input type="file" name="attachments[]" class="crm-activity-attachment" id="activity-attachment-{{feed.id}}" v-on:change="addAttachments(feed)" multiple>
             <label for="activity-attachment-{{feed.id}}" class="attachments-label" title="Add File"><?php _e( '+ Add File', 'erp' ); ?></label>
