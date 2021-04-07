@@ -1331,6 +1331,7 @@ class Ajax_Handler {
                 $extra_data = [
                     'task_title'     => ( isset( $postdata['task_title'] ) && ! empty( $postdata['task_title'] ) ) ? $postdata['task_title'] : '',
                     'invite_contact' => ( isset( $postdata['invite_contact'] ) && ! empty( $postdata['invite_contact'] ) ) ? $postdata['invite_contact'] : [],
+                    'attachments'    => $attachments,
                 ];
 
                 $save_data = [
