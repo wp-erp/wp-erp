@@ -679,6 +679,8 @@ function erp_hr_leave_insert_holiday( $args = [] ) {
 
     $holiday = new Leave_Holiday();
 
+    erp_hrm_purge_cache_data( ['list' => 'leave_holiday'] );
+
     if ( ! $holiday_id ) {
         // insert a new
         $leave_policy = $holiday->create( $args );
@@ -912,7 +914,10 @@ function erp_hr_get_holidays( $args = [] ) {
         $holiday_results = $holiday_results->where( 'id', '=', "$id" );
     }
 
-    $cache_key = 'erp-get-holidays-' . md5( serialize( $args ) );
+    $last_changed    = erp_cache_get_last_changed( 'hrm', 'leave_holiday' );
+    $cache_key       = 'erp-get-holidays-' . md5( serialize( $args ) ) . "  : $last_changed";
+    $cache_key_count = 'erp-holidays-count-' . md5( serialize( $args ) ) . ": $last_changed";
+
     $holidays  = wp_cache_get( $cache_key, 'erp' );
 
     if ( false === $holidays ) {
@@ -929,6 +934,7 @@ function erp_hr_get_holidays( $args = [] ) {
         }
 
         wp_cache_set( $cache_key, $holidays, 'erp' );
+        wp_cache_set( $cache_key_count, count($holidays), 'erp' );
     }
 
     return $holidays;
@@ -938,14 +944,25 @@ function erp_hr_get_holidays( $args = [] ) {
  * Count total holidays
  *
  * @since 0.1
+ * @since 1.8.2 add caching system
  *
  * @return \stdClass
  */
 function erp_hr_count_holidays( $args ) {
-    $holiday = new Leave_Holiday();
-    $holiday = erp_hr_holiday_filter_param( $holiday, $args );
 
-    return $holiday->count();
+    $last_changed   = erp_cache_get_last_changed( 'hrm', 'leave_holiday' );
+    $cache_key      = 'erp-holidays-count-' . md5( serialize( $args ) ) . ": $last_changed";
+    $holidays_count = wp_cache_get( $cache_key, 'erp' );
+
+    if( false === $holidays_count ) {
+        $holiday = new Leave_Holiday();
+        $holiday = erp_hr_holiday_filter_param( $holiday, $args );
+
+        $holidays_count = $holiday->count();
+        wp_cache_set( $cache_key, $holidays_count, 'erp' );
+    }
+
+    return $holidays_count;
 }
 
 /**
@@ -988,6 +1005,9 @@ function erp_hr_holiday_filter_param( $holiday, $args ) {
  * @return \stdClass
  */
 function erp_hr_delete_holidays( $holidays_id ) {
+
+    erp_hrm_purge_cache_data( ['list' => 'leave_holiday'] );
+
     if ( is_array( $holidays_id ) ) {
         foreach ( $holidays_id as $key => $holiday_id ) {
             do_action( 'erp_hr_leave_holiday_delete', $holiday_id );
@@ -2727,6 +2747,8 @@ function import_holidays_csv( $file ) {
     } elseif ( empty( $parsed_data ) ) {
         return __( 'No data found.', 'erp' );
     }
+
+    erp_hrm_purge_cache_data( ['list' => 'leave_holiday'] );
 
     return $parsed_data;
 }
