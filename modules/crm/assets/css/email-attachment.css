@@ -5,10 +5,6 @@
     border-top: 2px solid #eee;
     display: none;
 }
-#activity-attachments {
-    border-top: 2px solid #eee;
-    display: none;
-}
 #progress-wrp {
     border: 1px solid #0099CC;
     padding: 1px;
@@ -34,9 +30,12 @@
     display:inline-block;
     color: #000000;
 }
-#email-attachment,
-#note-attachment,
-#activity-attachment {
+#email-attachment {
+    opacity: 0;
+    width: 0;
+    cursor: pointer;
+}
+.crm-activity-attachment {
     opacity: 0;
     width: 0;
     cursor: pointer;
