@@ -6,7 +6,7 @@ $save_replies = erp_crm_get_save_replies();
 $block        = !erp_crm_sync_is_active() ? 'crm-blocked' : '';
 $settings_url = add_query_arg( [ 'page' => 'erp-settings', 'tab' => 'erp-crm', 'section' => 'email_connect' ], admin_url( 'admin.php' ) );
 ?>
-<div id="email" class="<?php echo esc_html( $block ); ?>">
+<div id="email" class="<?php //echo esc_html( $block ); ?>">
 
     <?php if ( !erp_crm_sync_is_active() ) { ?>
         <a class="button button-primary" style="z-index: 2;position: relative;top: 150px;left: 43%;" href="<?php echo esc_url_raw( $settings_url ); ?>"><?php esc_attr_e( 'Configure Settings', 'erp' ); ?></a>
@@ -64,7 +64,7 @@ $settings_url = add_query_arg( [ 'page' => 'erp-settings', 'tab' => 'erp-crm', '
         <input type="hidden" name="type" v-model="feedData.type" value="email">
         <input type="submit" v-if="!feed" :disabled = "!isValid" class="button button-primary" name="save_notes" value="<?php esc_attr_e( 'Send Email', 'erp' ); ?>">
         <input type="file" name="attatchments[]" id="email-attachment" v-on:change="fileUpload()" multiple>
-        <label for="email-attachment" class="attachments-label" title="Attach File"><?php esc_attr_e( 'Attach File', 'erp' ); ?>
+        <label for="email-attachment" class="attachments-label" title="Attach File"><span class="btn-activity-atch dashicons dashicons-paperclip"></span><?php esc_attr_e( 'Attach File', 'erp' ); ?>
         </label>
         <input type="submit" v-if="feed" :disabled = "!isValid" class="button button-primary" name="edit_notes" value="<?php esc_attr_e( 'Reply Email', 'erp' ); ?>">
         <input type="reset" v-if="!feed" class="button button-default" value="<?php esc_attr_e( 'Discard', 'erp' ); ?>">
