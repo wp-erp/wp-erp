@@ -185,6 +185,8 @@ Vue.component( 'new-note', {
 Vue.component( 'log-activity', {
     props: ['feed'],
 
+    mixins: [mixin],
+
     template: '#erp-crm-log-activity-template',
 
     data: function() {
@@ -195,11 +197,16 @@ Vue.component( 'log-activity', {
                 email_subject: '',
                 inviteContact: [],
                 dt: '',
-                tp: ''
+                tp: '',
+                removeAtchFlag: false,
             },
 
             isValid: false
         }
+    },
+
+    created: function() {
+        this.feedData.old_attachments = [];
     },
 
     methods: {
@@ -210,7 +217,32 @@ Vue.component( 'log-activity', {
         cancelUpdateFeed: function() {
             this.$parent.$data.isEditable = false;
             this.$parent.$data.editfeedData = {};
-        }
+        },
+
+        addAttachments: function(feed) {
+            var el           = feed ? $( `#crm-attachments-${feed.id}` ) : $( '#crm-attachments' ),
+                input        = feed ? $( `#activity-attachment-${feed.id}` ) : $( '#activity-attachment' );
+
+            this.uploadFile( input, el );
+        },
+
+        updateAttachments: function(feedId, file, index, remove) {
+            if (!this.feedData.old_attachments.includes(file) && !remove) {
+                this.feedData.old_attachments.push(file);
+                this.removeAtchFlag = true;
+
+                $( `#btn-activity-atch-${feedId}-${index}` ).removeClass( 'add-atch dashicons-plus-alt' ).addClass( 'remove-atch dashicons-dismiss' );
+                $( `#activity-atch-name-${feedId}-${index}` ).css( 'color', '#2271b1' );
+            }
+
+            if (this.feedData.old_attachments.includes(file) && remove) {
+                this.feedData.old_attachments.splice(this.feedData.old_attachments.indexOf(file), 1);
+                this.removeAtchFlag = false;
+
+                $( `#btn-activity-atch-${feedId}-${index}` ).removeClass( 'remove-atch dashicons-dismiss' ).addClass( 'add-atch dashicons-plus-alt' );
+                $( `#activity-atch-name-${feedId}-${index}`).css( 'color', '#bdbdbd' );
+            }
+        },
     },
 
     compiled: function() {
