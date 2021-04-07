@@ -1159,12 +1159,17 @@ class Ajax_Handler {
 
         switch ( $postdata['type'] ) {
             case 'new_note':
+                $extra_data = [
+                    'attachments' => $attachments,
+                ];
+
                 $save_data = [
                     'id'         => ( isset( $postdata['id'] ) && ! empty( $postdata['id'] ) ) ? $postdata['id'] : '',
                     'user_id'    => $postdata['user_id'],
                     'created_by' => $postdata['created_by'],
                     'message'    => $postdata['message'],
                     'type'       => $postdata['type'],
+                    'extra'      => base64_encode( wp_json_encode( $extra_data ) ),
                 ];
 
                 $data = erp_crm_save_customer_feed_data( $save_data );
