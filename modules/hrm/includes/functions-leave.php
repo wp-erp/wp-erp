@@ -100,7 +100,7 @@ function erp_hrm_is_leave_recored_exist_between_date( $start_date, $end_date, $u
 }
 
 /**
- * Check leave duration exist or not the plicy days
+ * Check leave duration exist or not the policy days
  *
  * @since  0.1
  * @since 1.6.0
@@ -521,6 +521,8 @@ function erp_hr_leave_insert_entitlement( $args = [] ) {
         do_action( 'erp_hr_leave_insert_new_entitlement', $entitlement->id, $fields );
     }
 
+    erp_hrm_purge_cache_data( ['list' => 'leave_entitlement'] );
+
     return $entitlement->id;
 }
 
@@ -566,6 +568,8 @@ function erp_hr_apply_policy_on_new_employee( $user_id ) {
 
         $inserted = erp_hr_leave_insert_entitlement( $data );
     } );
+
+    erp_hrm_purge_cache_data( ['list' => 'leave_entitlement'] );
 }
 
 /**
@@ -2067,55 +2071,72 @@ function erp_hr_leave_get_entitlements( $args = [] ) {
     ];
 
     $args  = wp_parse_args( $args, $defaults );
-    $where = "WHERE 1 = 1 AND en.trn_type = 'leave_policies'";
 
-    if ( absint( $args['year'] ) ) {
-        $where .= ' AND en.f_year = ' . absint( $args['year'] );
+    $last_changed       = erp_cache_get_last_changed( 'hrm', 'leave_entitlement' );
+    $cache_key          = 'erp-get-leave-entitlements-' . md5( serialize( $args ) ) . ": $last_changed";
+    $cache_key_total    = 'erp-get-leave-entitlements-counts-' . md5( serialize( $args ) ) . ": $last_changed";
+    $cache_key_sql      = 'erp-get-leave-entitlements-sql-' . md5( serialize( $args ) ) . ": $last_changed";
+
+    $leave_entitlements     = wp_cache_get( $cache_key, 'erp' );
+    $total_row_found        = wp_cache_get( $cache_key_total, 'erp' );
+    $leave_entitlements_sql = wp_cache_get( $cache_key_sql, 'erp' );
+
+    if( false === $leave_entitlements ) {
+        $where = "WHERE 1 = 1 AND en.trn_type = 'leave_policies'";
+
+        if ( absint( $args['year'] ) ) {
+            $where .= ' AND en.f_year = ' . absint( $args['year'] );
+        }
+
+        if ( absint( $args['user_id'] ) ) {
+            $where .= ' AND en.user_id = ' . absint( $args['user_id'] );
+        }
+
+        if ( ! empty( $args['search'] ) ) {
+            $where .= $wpdb->prepare( " AND u.display_name LIKE '%%%s%%' ", $args['search'] );
+        }
+
+        if ( $args['leave_id'] ) {
+            $where .= ' AND en.leave_id = ' . absint( $args['leave_id'] );
+        }
+
+        if ( $args['policy_id'] ) {
+            $where .= ' AND en.trn_id = ' . absint( $args['policy_id'] );
+        }
+
+        if ( $args['emp_status'] == 'active' ) {
+            $where .= " AND emp.status = 'active'";
+        }
+
+        if ( $args['employee_type'] ) {
+            $where .= " AND policy.employee_type = '" . esc_sql( $args['employee_type'] ) . "'";
+        }
+
+        $offset = absint( $args['offset'] );
+        $number = absint( $args['number'] );
+        $limit  = $args['number'] == '-1' ? '' : " LIMIT {$offset}, {$number}";
+
+        $query = "SELECT SQL_CALC_FOUND_ROWS en.*, u.display_name as employee_name, l.name as policy_name, emp.status as emp_status
+            FROM `{$wpdb->prefix}erp_hr_leave_entitlements` AS en
+            LEFT JOIN {$wpdb->prefix}erp_hr_leaves AS l ON l.id = en.leave_id
+            LEFT JOIN {$wpdb->users} AS u ON en.user_id = u.ID
+            LEFT JOIN {$wpdb->prefix}erp_hr_employees AS emp ON en.user_id = emp.user_id
+            LEFT JOIN {$wpdb->prefix}erp_hr_leave_policies AS policy ON en.trn_id = policy.id
+            $where
+            ORDER BY {$args['orderby']} {$args['order']}
+            {$limit};";
+
+        $leave_entitlements = $wpdb->get_results( $query );
+        wp_cache_set( $cache_key, $leave_entitlements, 'erp' );
+
+        $total_row_found = absint( $wpdb->get_var( 'SELECT FOUND_ROWS()' ) );
+        wp_cache_set( $cache_key_total, $total_row_found, 'erp' );
+
+        $leave_entitlements_sql = $query;
+        wp_cache_set( $cache_key_sql, $query, 'erp' );
     }
 
-    if ( absint( $args['user_id'] ) ) {
-        $where .= ' AND en.user_id = ' . absint( $args['user_id'] );
-    }
-
-    if ( ! empty( $args['search'] ) ) {
-        $where .= $wpdb->prepare( " AND u.display_name LIKE '%%%s%%' ", $args['search'] );
-    }
-
-    if ( $args['leave_id'] ) {
-        $where .= ' AND en.leave_id = ' . absint( $args['leave_id'] );
-    }
-
-    if ( $args['policy_id'] ) {
-        $where .= ' AND en.trn_id = ' . absint( $args['policy_id'] );
-    }
-
-    if ( $args['emp_status'] == 'active' ) {
-        $where .= " AND emp.status = 'active'";
-    }
-
-    if ( $args['employee_type'] ) {
-        $where .= " AND policy.employee_type = '" . esc_sql( $args['employee_type'] ) . "'";
-    }
-
-    $offset = absint( $args['offset'] );
-    $number = absint( $args['number'] );
-    $limit  = $args['number'] == '-1' ? '' : " LIMIT {$offset}, {$number}";
-
-    $query = "SELECT SQL_CALC_FOUND_ROWS en.*, u.display_name as employee_name, l.name as policy_name, emp.status as emp_status
-        FROM `{$wpdb->prefix}erp_hr_leave_entitlements` AS en
-        LEFT JOIN {$wpdb->prefix}erp_hr_leaves AS l ON l.id = en.leave_id
-        LEFT JOIN {$wpdb->users} AS u ON en.user_id = u.ID
-        LEFT JOIN {$wpdb->prefix}erp_hr_employees AS emp ON en.user_id = emp.user_id
-        LEFT JOIN {$wpdb->prefix}erp_hr_leave_policies AS policy ON en.trn_id = policy.id
-        $where
-        ORDER BY {$args['orderby']} {$args['order']}
-        {$limit};";
-
-    $results = $wpdb->get_results( $query );
-
-    $total_row_found = absint( $wpdb->get_var( 'SELECT FOUND_ROWS()' ) );
-
-    return [ 'data' => $results, 'total' => $total_row_found, 'sql' => $query ];
+    return [ 'data' => $leave_entitlements, 'total' => $total_row_found, 'sql' => $leave_entitlements_sql ];
 }
 
 /**
@@ -2206,6 +2227,8 @@ function erp_hr_delete_entitlement( $id, $user_id, $entitlement_id ) {
             $request->delete();
         }
     }
+
+    erp_hrm_purge_cache_data( ['list' => 'leave_entitlement'] );
 
     return $entitlement->delete();
 }
