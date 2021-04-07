@@ -3917,15 +3917,16 @@ function erp_get_array_diff( $new_data, $old_data, $is_seriazie = false ) {
  *
  * @param string $module_name, eg: crm, hrm, accounting
  * @param string $list or menu name, eg: contacts, employees
+ * @param string $group_name ie: erp, erp-asset, erp-attendance
  *
  * @return string $last_changed microtime
  */
-function erp_cache_get_last_changed ( $module_name, $list_or_menu_name ) {
-    $last_changed = wp_cache_get( "last_changed_$module_name:$list_or_menu_name", 'erp' );
+function erp_cache_get_last_changed ( $module_name, $list_or_menu_name, $group_name = 'erp' ) {
+    $last_changed = wp_cache_get( "last_changed_$module_name:$list_or_menu_name", $group_name );
 
     if ( ! $last_changed ) {
         $last_changed = microtime();
-        wp_cache_set( "last_changed_$module_name:$list_or_menu_name", $last_changed, 'erp' );
+        wp_cache_set( "last_changed_$module_name:$list_or_menu_name", $last_changed, $group_name );
     }
 
     return $last_changed;
@@ -3939,14 +3940,14 @@ function erp_cache_get_last_changed ( $module_name, $list_or_menu_name ) {
  *
  * @since 1.8.2
  *
- * @param array $args
+ * @param array $args ie: ['group'=>'erp','module','list']
  *
  * @return void
  */
 function erp_purge_cache( $args = [] ) {
-    $group = 'erp';
 
     $defaults = [
+        'group'  => 'erp',
         'module' => '',
         'list'   => '',
     ];
@@ -3959,7 +3960,7 @@ function erp_purge_cache( $args = [] ) {
         $last_changed_key = 'last_changed_' . $args['module'] . ':' . $list;
 
         // invalidate the last change key for this module and list
-        wp_cache_set( $last_changed_key, microtime(), $group );
+        wp_cache_set( $last_changed_key, microtime(), $args['group'] );
     }
 
 }
