@@ -60,7 +60,7 @@ class Ajax_Handler {
         add_action( 'wp_ajax_erp_crm_get_customer_activity', [ $this, 'fetch_all_activity' ] );
         add_action( 'wp_ajax_erp_customer_feeds_save_notes', [ $this, 'save_activity_feeds' ] );
         add_action( 'wp_ajax_erp_crm_delete_customer_activity', [ $this, 'delete_customer_activity_feeds' ] );
-        add_action( 'wp_ajax_email_attachment', [ $this, 'email_attachment' ] );
+        add_action( 'wp_ajax_erp_crm_activity_attachment', [ $this, 'activity_attachment' ] );
 
         // Schedule page
         add_action( 'wp_ajax_erp_crm_add_schedules_action', [ $this, 'save_activity_feeds' ] );
@@ -1187,6 +1187,7 @@ class Ajax_Handler {
                 $extra_data = [
                     'attachments' => $attachments,
                 ];
+
                 $save_data = [
                     'user_id'       => $postdata['user_id'],
                     'created_by'    => $postdata['created_by'],
@@ -1722,7 +1723,7 @@ class Ajax_Handler {
      *
      * @return void
      */
-    public function email_attachment() {
+    public function activity_attachment() {
         $files         = ( ! empty( $_FILES['files'] ) ) ? $_FILES['files'] : []; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         $wp_upload_dir = wp_upload_dir();
         $subdir        = apply_filters( 'crm_attachmet_directory', 'crm-attachments' );
