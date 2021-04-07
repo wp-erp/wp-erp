@@ -254,9 +254,11 @@ window.wpErpVue = window.wpErpVue || {};
 
         computed: {
             headerText: function() {
-                return this.i18n.newNoteHeadertext
+                return this.i18n.newNoteHeadertext ? 
+                        this.i18n.newNoteHeadertext
                         .replace( '{{createdUserName}}', this.createdUserName )
-                        .replace( '{{createdForUser}}', this.createdForUser );
+                        .replace( '{{createdForUser}}', this.createdForUser )
+                        : '';
             },
 
             createdUserImg: function() {
@@ -289,12 +291,17 @@ window.wpErpVue = window.wpErpVue || {};
 
         computed: {
             headerText: function() {
-                return ( ! this.isRepliedEmail ) ? this.i18n.emailHeadertext
-                        .replace( '{{createdUserName}}', this.createdUserName )
-                        .replace( '{{createdForUser}}', this.createdForUser )
-                        : this.i18n.replyEmailHeadertext
-                        .replace( '{{createdUserName}}', this.createdUserName )
-                        .replace( '{{createdForUser}}', this.createdForUser );
+                var headerText      = this.i18n.emailHeadertext ? this.i18n.emailHeadertext
+                                        .replace( '{{createdUserName}}', this.createdUserName )
+                                        .replace( '{{createdForUser}}', this.createdForUser )
+                                        : '';
+
+                var replyHeaderText = this.i18n.replyEmailHeadertext ? his.i18n.replyEmailHeadertext
+                                        .replace( '{{createdUserName}}', this.createdUserName )
+                                        .replace( '{{createdForUser}}', this.createdForUser )
+                                        : '';
+
+                return ( ! this.isRepliedEmail ) ? headerText : replyHeaderText;
             },
 
             emailViewedTime: function() {
