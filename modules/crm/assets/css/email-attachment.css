@@ -67,3 +67,7 @@
     color: #2271b1;
     background-color: none;
 }
+#crm-atch-output {
+    color: rgb(150, 150, 150);
+    font-weight: 300;
+}
