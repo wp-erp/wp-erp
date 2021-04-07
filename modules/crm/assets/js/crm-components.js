@@ -296,7 +296,7 @@ window.wpErpVue = window.wpErpVue || {};
                                         .replace( '{{createdForUser}}', this.createdForUser )
                                         : '';
 
-                var replyHeaderText = this.i18n.replyEmailHeadertext ? his.i18n.replyEmailHeadertext
+                var replyHeaderText = this.i18n.replyEmailHeadertext ? this.i18n.replyEmailHeadertext
                                         .replace( '{{createdUserName}}', this.createdUserName )
                                         .replace( '{{createdForUser}}', this.createdForUser )
                                         : '';
