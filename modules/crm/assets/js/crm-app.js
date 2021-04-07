@@ -13,8 +13,73 @@ $(document).on( "trix-file-accept", function(e) {
     e.preventDefault();
 });
 
+var mixin = {
+    data: function() {
+    },
+
+    methods: {
+        resetData: function() {
+            $( "#crm-attachments" ).hide();
+            vm.feedData.attachments = [];
+        },
+
+        uploadFile: function( input, el ) {
+            var formData = new FormData();
+
+            formData.append( 'action', 'erp_crm_activity_attachment' );
+            el.css( 'display', 'block' );
+            
+            $.each( input, function( index, object ) {
+                $.each( object.files, function( i, file ) {
+                    formData.append( 'files[]', file );
+                } );
+            } );
+
+            jQuery.ajax({
+                url: wpCRMvue.ajaxurl,
+                data:formData,
+                cache: false,
+                processData: false,
+                contentType: false,
+                type: 'POST',
+                success: function( response ) {
+                    if ( response.success ) {
+                        vm.feedData.attachments = response.data.url;
+                        vm.files = response.data.files;
+                    }
+                },
+
+                xhr: function(){
+                    //upload Progress
+                    var xhr = $.ajaxSettings.xhr();
+                    if (xhr.upload) {
+                        xhr.upload.addEventListener('progress', function(event) {
+                            var percent = 0;
+                            var position = event.loaded || event.position;
+                            var total = event.total;
+                            if (event.lengthComputable) {
+                                percent = Math.ceil(position / total * 100);
+                            }
+                            //update progressbar
+                            $( '.progress-bar' ).css( 'width', + percent +'%' );
+                            $( '.status' ).text(percent +'%');
+                        }, true);
+                    }
+
+                    return xhr;
+                },
+            });
+        }
+    },
+
+    watch: {
+    }
+};
+
 Vue.component( 'new-note', {
     props: ['feed'],
+
+    mixins: [mixin],
 
     template: '#erp-crm-new-note-template',
 
