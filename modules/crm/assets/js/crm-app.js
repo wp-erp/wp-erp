@@ -23,6 +23,39 @@ var mixin = {
             vm.feedData.attachments = [];
         },
 
+        addAttachments: function(feed) {
+            var el           = feed ? $( `#crm-attachments-${feed.id}` ) : $( '#crm-attachments' ),
+                input        = feed ? $( `#activity-attachment-${feed.id}` ) : $( '#activity-attachment' );
+
+            this.uploadFile( input, el );
+        },
+
+        updateAttachments: function(feedId, file, index, remove) {
+            if (!vm.removeAtchFlag) {
+                vm.removeAtchFlag = [];
+            }
+
+            if (!vm.feedData.old_attachments.includes(file) && !remove) {
+                vm.feedData.old_attachments.push(file);
+                vm.removeAtchFlag[index] = true;
+
+                $( `#btn-activity-atch-${feedId}-${index}` ).removeClass( 'add-atch dashicons-plus-alt' ).addClass( 'remove-atch dashicons-dismiss' );
+                $( `#activity-atch-name-${feedId}-${index}` ).css( 'color', '#2271b1' );
+            }
+
+            if (vm.feedData.old_attachments.includes(file) && remove) {
+                vm.feedData.old_attachments.splice(vm.feedData.old_attachments.indexOf(file), 1);
+                vm.removeAtchFlag[index] = false;
+
+                $( `#btn-activity-atch-${feedId}-${index}` ).removeClass( 'remove-atch dashicons-dismiss' ).addClass( 'add-atch dashicons-plus-alt' );
+                $( `#activity-atch-name-${feedId}-${index}`).css( 'color', '#bdbdbd' );
+            }
+        },
+
+        removeAttch: function(index) {
+            return vm.removeAtchFlag[index];
+        },
+
         uploadFile: function( input, el ) {
             var formData   = new FormData();
             vm.progressbar = true;
@@ -33,6 +66,7 @@ var mixin = {
             $.each( input, function( index, object ) {
                 $.each( object.files, function( i, file ) {
                     formData.append( 'files[]', file );
+                    $( `#${el.attr('id')}` ).find( '#crm-atch-output' ).append( `<p> ${i+1}. ${file.name}</p>` );
                 } );
             } );
 
@@ -72,9 +106,6 @@ var mixin = {
             });
         }
     },
-
-    watch: {
-    }
 };
 
 Vue.component( 'new-note', {
@@ -90,7 +121,7 @@ Vue.component( 'new-note', {
                 message: ''
             },
             isValid: false,
-            removeAtchFlag: false,
+            removeAtchFlag: [],
         }
     },
 
@@ -106,31 +137,6 @@ Vue.component( 'new-note', {
         cancelUpdateFeed: function() {
             this.$parent.$data.isEditable = false;
             this.$parent.$data.editfeedData = {};
-        },
-
-        addAttachments: function(feed) {
-            var el           = feed ? $( `#crm-attachments-${feed.id}` ) : $( '#crm-attachments' ),
-                input        = feed ? $( `#activity-attachment-${feed.id}` ) : $( '#activity-attachment' );
-
-            this.uploadFile( input, el );
-        },
-
-        updateAttachments: function(feedId, file, index, remove) {
-            if (!this.feedData.old_attachments.includes(file) && !remove) {
-                this.feedData.old_attachments.push(file);
-                this.removeAtchFlag = true;
-
-                $( `#btn-activity-atch-${feedId}-${index}` ).removeClass( 'add-atch dashicons-plus-alt' ).addClass( 'remove-atch dashicons-dismiss' );
-                $( `#activity-atch-name-${feedId}-${index}` ).css( 'color', '#2271b1' );
-            }
-
-            if (this.feedData.old_attachments.includes(file) && remove) {
-                this.feedData.old_attachments.splice(this.feedData.old_attachments.indexOf(file), 1);
-                this.removeAtchFlag = false;
-
-                $( `#btn-activity-atch-${feedId}-${index}` ).removeClass( 'remove-atch dashicons-dismiss' ).addClass( 'add-atch dashicons-plus-alt' );
-                $( `#activity-atch-name-${feedId}-${index}`).css( 'color', '#bdbdbd' );
-            }
         },
     },
 
@@ -150,7 +156,7 @@ Vue.component( 'new-note', {
             return Object.keys( validation ).every(function(key){
                 return validation[key]
             });
-        }
+        },
     },
 
     watch: {
@@ -198,7 +204,7 @@ Vue.component( 'log-activity', {
                 inviteContact: [],
                 dt: '',
                 tp: '',
-                removeAtchFlag: false,
+                removeAtchFlag: [],
             },
 
             isValid: false
@@ -217,31 +223,6 @@ Vue.component( 'log-activity', {
         cancelUpdateFeed: function() {
             this.$parent.$data.isEditable = false;
             this.$parent.$data.editfeedData = {};
-        },
-
-        addAttachments: function(feed) {
-            var el           = feed ? $( `#crm-attachments-${feed.id}` ) : $( '#crm-attachments' ),
-                input        = feed ? $( `#activity-attachment-${feed.id}` ) : $( '#activity-attachment' );
-
-            this.uploadFile( input, el );
-        },
-
-        updateAttachments: function(feedId, file, index, remove) {
-            if (!this.feedData.old_attachments.includes(file) && !remove) {
-                this.feedData.old_attachments.push(file);
-                this.removeAtchFlag = true;
-
-                $( `#btn-activity-atch-${feedId}-${index}` ).removeClass( 'add-atch dashicons-plus-alt' ).addClass( 'remove-atch dashicons-dismiss' );
-                $( `#activity-atch-name-${feedId}-${index}` ).css( 'color', '#2271b1' );
-            }
-
-            if (this.feedData.old_attachments.includes(file) && remove) {
-                this.feedData.old_attachments.splice(this.feedData.old_attachments.indexOf(file), 1);
-                this.removeAtchFlag = false;
-
-                $( `#btn-activity-atch-${feedId}-${index}` ).removeClass( 'remove-atch dashicons-dismiss' ).addClass( 'add-atch dashicons-plus-alt' );
-                $( `#activity-atch-name-${feedId}-${index}`).css( 'color', '#bdbdbd' );
-            }
         },
     },
 
@@ -325,6 +306,8 @@ Vue.component( 'tasks-note', {
 
     template: '#erp-crm-tasks-note-template',
 
+    mixins: [mixin],
+
     data: function() {
         return {
             feedData: {
@@ -333,7 +316,7 @@ Vue.component( 'tasks-note', {
                 inviteContact: [],
                 dt: '',
                 tp: '',
-                removeAtchFlag: false,
+                removeAtchFlag: [],
             },
 
             isValid: false
@@ -352,31 +335,6 @@ Vue.component( 'tasks-note', {
         cancelUpdateFeed: function() {
             this.$parent.$data.isEditable = false;
             this.$parent.$data.editfeedData = {};
-        },
-
-        addAttachments: function(feed) {
-            var el           = feed ? $( `#crm-attachments-${feed.id}` ) : $( '#crm-attachments' ),
-                input        = feed ? $( `#activity-attachment-${feed.id}` ) : $( '#activity-attachment' );
-
-            this.uploadFile( input, el );
-        },
-
-        updateAttachments: function(feedId, file, index, remove) {
-            if (!this.feedData.old_attachments.includes(file) && !remove) {
-                this.feedData.old_attachments.push(file);
-                this.removeAtchFlag = true;
-
-                $( `#btn-activity-atch-${feedId}-${index}` ).removeClass( 'add-atch dashicons-plus-alt' ).addClass( 'remove-atch dashicons-dismiss' );
-                $( `#activity-atch-name-${feedId}-${index}` ).css( 'color', '#2271b1' );
-            }
-
-            if (this.feedData.old_attachments.includes(file) && remove) {
-                this.feedData.old_attachments.splice(this.feedData.old_attachments.indexOf(file), 1);
-                this.removeAtchFlag = false;
-
-                $( `#btn-activity-atch-${feedId}-${index}` ).removeClass( 'remove-atch dashicons-dismiss' ).addClass( 'add-atch dashicons-plus-alt' );
-                $( `#activity-atch-name-${feedId}-${index}`).css( 'color', '#bdbdbd' );
-            }
         },
     },
 
@@ -454,6 +412,8 @@ Vue.component( 'tasks-note', {
 Vue.component( 'email-note', {
     props: ['feed'],
 
+    mixins: [mixin],
+
     template: '#erp-crm-email-note-template',
 
     data: function() {
@@ -508,56 +468,6 @@ Vue.component( 'email-note', {
                 }
             });
         },
-
-        fileUpload: function() {
-            var formData = new FormData();
-            var field    = $( '#email-attachment' );
-            var self     = ( this );
-            this.progressbar = true;
-
-            formData.append( 'action', 'erp_crm_activity_attachment' );
-            $( '.crm-attachments' ).css( 'display', 'block' );
-            $.each( field, function( index, object ) {
-                $.each( object.files, function( i, file ) {
-                    formData.append( 'files[]', file );
-                } );
-            } );
-
-            jQuery.ajax({
-                url: wpCRMvue.ajaxurl,
-                data:formData,
-                cache: false,
-                processData: false,
-                contentType: false,
-                type: 'POST',
-                success: function( response ) {
-                    if ( response.success ) {
-                        self.feedData.attachments = response.data.url;
-                        self.files = response.data.files;
-                    }
-                },
-
-                xhr: function(){
-                    //upload Progress
-                    var xhr = $.ajaxSettings.xhr();
-                    if (xhr.upload) {
-                        xhr.upload.addEventListener('progress', function(event) {
-                            var percent = 0;
-                            var position = event.loaded || event.position;
-                            var total = event.total;
-                            if (event.lengthComputable) {
-                                percent = Math.ceil(position / total * 100);
-                            }
-                            //update progressbar
-                            $( '.progress-bar' ).css( 'width', + percent +'%' );
-                            $( '.status' ).text(percent +'%');
-                        }, true);
-                    }
-
-                    return xhr;
-                },
-            });
-        }
     },
 
     computed: {
@@ -624,7 +534,10 @@ Vue.component( 'email-note', {
  */
 Vue.component( 'schedule-note', {
     props: ['feed'],
+
     template: '#erp-crm-schedule-note-template',
+
+    mixins: [mixin],
 
     data: function() {
         return {
@@ -641,11 +554,16 @@ Vue.component( 'schedule-note', {
                 tpStart                     : '',
                 dtEnd                       : '',
                 tpEnd                       : '',
-                inviteContact               : []
+                inviteContact               : [],
+                removeAtchFlag              : [],
             },
 
             isValid: false
         }
+    },
+
+    created: function() {
+        this.feedData.old_attachments = [];
     },
 
     compiled: function() {
@@ -681,7 +599,7 @@ Vue.component( 'schedule-note', {
         cancelUpdateFeed: function() {
             this.$parent.$data.isEditable   = false;
             this.$parent.$data.editfeedData = {};
-        }
+        },
     },
 
     computed: {
