@@ -24,7 +24,8 @@ var mixin = {
         },
 
         uploadFile: function( input, el ) {
-            var formData = new FormData();
+            var formData   = new FormData();
+            vm.progressbar = true;
 
             formData.append( 'action', 'erp_crm_activity_attachment' );
             el.css( 'display', 'block' );
@@ -88,8 +89,13 @@ Vue.component( 'new-note', {
             feedData: {
                 message: ''
             },
-            isValid: false
+            isValid: false,
+            removeAtchFlag: false,
         }
+    },
+
+    created: function() {
+        this.feedData.old_attachments = [];
     },
 
     methods: {
@@ -105,10 +111,26 @@ Vue.component( 'new-note', {
         addAttachments: function(feed) {
             var el           = feed ? $( `#crm-attachments-${feed.id}` ) : $( '#crm-attachments' ),
                 input        = feed ? $( `#activity-attachment-${feed.id}` ) : $( '#activity-attachment' );
-            
-            this.progressbar = true;
 
             this.uploadFile( input, el );
+        },
+
+        updateAttachments: function(feedId, file, index, remove) {
+            if (!this.feedData.old_attachments.includes(file) && !remove) {
+                this.feedData.old_attachments.push(file);
+                this.removeAtchFlag = true;
+
+                $( `#btn-activity-atch-${feedId}-${index}` ).removeClass( 'add-atch dashicons-plus-alt' ).addClass( 'remove-atch dashicons-dismiss' );
+                $( `#activity-atch-name-${feedId}-${index}` ).css( 'color', '#2271b1' );
+            }
+
+            if (this.feedData.old_attachments.includes(file) && remove) {
+                this.feedData.old_attachments.splice(this.feedData.old_attachments.indexOf(file), 1);
+                this.removeAtchFlag = false;
+
+                $( `#btn-activity-atch-${feedId}-${index}` ).removeClass( 'remove-atch dashicons-dismiss' ).addClass( 'add-atch dashicons-plus-alt' );
+                $( `#activity-atch-name-${feedId}-${index}`).css( 'color', '#bdbdbd' );
+            }
         },
     },
 
