@@ -577,11 +577,22 @@ function erp_crm_customer_prepare_schedule_postdata( $postdata ) {
         return;
     }
 
+    $attachments     = ( isset( $postdata['attachments'] ) ) ? $postdata['attachments'] : [];
+    $old_attachments = ( isset( $postdata['old_attachments'] ) ) ? $postdata['old_attachments'] : [];
+
+    if ( ! empty( $old_attachments) ) {
+        foreach( $old_attachments as $old_atch ) {
+            unset( $old_atch['url'] );
+            $attachments[] = $old_atch;
+        }
+    }
+
     $extra_data = [
         'schedule_title'     => ( isset( $postdata['schedule_title'] ) && ! empty( $postdata['schedule_title'] ) ) ? $postdata['schedule_title'] : '',
         'all_day'            => isset( $postdata['all_day'] ) ? (string) $postdata['all_day'] : 'false',
         'allow_notification' => isset( $postdata['allow_notification'] ) ? (string) $postdata['allow_notification'] : 'false',
         'invite_contact'     => ( isset( $postdata['invite_contact'] ) && ! empty( $postdata['invite_contact'] ) ) ? $postdata['invite_contact'] : [],
+        'attachments'        => ! empty ( $attachments ) ? $attachments : []
     ];
 
     $extra_data['notification_via']           = ( isset( $postdata['notification_via'] ) && $extra_data['allow_notification'] == 'true' ) ? $postdata['notification_via'] : '';
