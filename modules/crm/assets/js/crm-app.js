@@ -9,6 +9,10 @@
 
 var $ = jQuery; // To resolve undefined jQuery
 
+$(document).on( "trix-file-accept", function(e) {
+    e.preventDefault();
+});
+
 Vue.component( 'new-note', {
     props: ['feed'],
 
@@ -353,7 +357,7 @@ Vue.component( 'email-note', {
             var self     = ( this );
             this.progressbar = true;
 
-            formData.append( 'action', 'email_attachment' );
+            formData.append( 'action', 'erp_crm_activity_attachment' );
             $( '.crm-attachments' ).css( 'display', 'block' );
             $.each( field, function( index, object ) {
                 $.each( object.files, function( i, file ) {
@@ -625,7 +629,7 @@ var vm = new Vue({
     events: {
         'bindFeedData': function (feedData) {
             this.feedData = feedData;
-        }
+        },
     },
 
     watch: {
@@ -637,7 +641,7 @@ var vm = new Vue({
         },
 
         fileUpload: function() {
-            console.log('Hello');
+            console.log('Uploading...');
         }
     },
 
@@ -779,6 +783,7 @@ var vm = new Vue({
                 self.feedData.end_time       = self.feedData.tpEnd;
                 self.feedData.invite_contact = self.feedData.inviteContact;
             };
+            
             jQuery.post( wpCRMvue.ajaxurl, self.feedData, function( resp ) {
                 if ( ! resp.success ) {
                     alert( resp.data );
