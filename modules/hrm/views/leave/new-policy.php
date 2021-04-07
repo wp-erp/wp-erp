@@ -2,7 +2,6 @@
 
 use WeDevs\ERP\ERP_Errors;
 use WeDevs\ERP\HRM\Models\Financial_Year;
-use WeDevs\ERP\HRM\Models\Leave;
 use WeDevs\ERP\HRM\Models\Leave_Policy;
 
 $id            = isset( $_GET['id'] ) ? absint( wp_unslash( $_GET['id'] ) ) : 0;
@@ -13,7 +12,7 @@ $submit_button = esc_attr( 'Save', 'erp' );
 
 $leave_names   = [
                      '' => '&mdash; ' . esc_attr__( 'select leave type', 'erp' ) . ' &mdash;',
-                 ] + wp_list_pluck( Leave::all(), 'name', 'id' );
+                 ] + wp_list_pluck( erp_hr_get_leave_policy_names(), 'name', 'id' );
 
 // edit / copy
 if ( $id ) {

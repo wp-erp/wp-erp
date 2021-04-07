@@ -2756,6 +2756,46 @@ function erp_hr_leave_days_get_statuses( $status = false ) {
 }
 
 /**
+ * Get Leave Policy Names or Leave Types
+ *
+ * @since 1.8.2
+ *
+ * @param array $args
+ *
+ * @return array|integer \WeDevs\ERP\HRM\Models\Leave|leave type counts
+ */
+function erp_hr_get_leave_policy_names( $args = [] ) {
+    $defaults = [
+        'count' => false
+    ];
+
+    $args = wp_parse_args( $args, $defaults );
+
+    $last_changed = erp_cache_get_last_changed( 'hrm', 'leave_policy_name' );
+    $cache_key    = 'erp-get-policy-names-' . md5( serialize( $args ) ) . ": $last_changed";
+    $policy_names = wp_cache_get( $cache_key, 'erp' );
+
+    $policy_name_counts_cache_key = 'policy-names-counts';
+    $policy_names_counts          = wp_cache_get( $policy_name_counts_cache_key, 'erp' );
+
+    if( false === $policy_names ) {
+        $policy_names = \WeDevs\ERP\HRM\Models\Leave::all();
+        wp_cache_set( $cache_key, $policy_names, 'erp' );
+
+        if( $args['count'] ) {
+            $policy_names_counts = \WeDevs\ERP\HRM\Models\Leave::count();
+            wp_cache_set( $policy_name_counts_cache_key, $policy_names_counts, 'erp' );
+        }
+    }
+
+    if( $args['count'] ) {
+        return $policy_names_counts;
+    } else {
+        return $policy_names;
+    }
+}
+
+/**
  * Insert / Update new leave policy name
  *
  * @since 1.6.0
@@ -2769,7 +2809,7 @@ function erp_hr_insert_leave_policy_name( $args = [] ) {
 
     $args = wp_parse_args( $args, $defaults );
 
-    erp_hrm_purge_cache_data( ['list' => 'leave_policy' ] );
+    erp_hrm_purge_cache_data( ['list' => 'leave_policy_name' ] );
 
     /*
      * Update
@@ -2817,6 +2857,8 @@ function erp_hr_remove_leave_policy_name( $id ) {
     }
 
     $leave = Leave::find( $id );
+
+    erp_hrm_purge_cache_data( ['list' => 'leave_policy_name' ] );
 
     $leave->delete();
 }
