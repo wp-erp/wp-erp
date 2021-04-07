@@ -1140,9 +1140,17 @@ class Ajax_Handler {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
-        $save_data      = [];
-        $postdata       = $_POST;
-        $attachments    = ( isset( $postdata['attachments'] ) ) ? $postdata['attachments'] : [];
+        $save_data       = [];
+        $postdata        = $_POST;
+        $attachments     = ( isset( $postdata['attachments'] ) ) ? $postdata['attachments'] : [];
+        $old_attachments = ( isset( $postdata['old_attachments'] ) ) ? $postdata['old_attachments'] : [];
+
+        if ( ! empty( $old_attachments) ) {
+            foreach( $old_attachments as $old_atch ) {
+                unset( $old_atch['url'] );
+                $attachments[] = $old_atch;
+            }
+        }
 
         if ( ! isset( $postdata['user_id'] ) && empty( $postdata['user_id'] ) ) {
             $this->send_error( __( 'Customer not found', 'erp' ) );
