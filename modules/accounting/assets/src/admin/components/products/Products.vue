@@ -20,8 +20,8 @@
             :current-page="paginationData.currentPage"
             @pagination="goToPage"
             :actions="[
-                { key: 'edit', label: 'Edit' },
-                { key: 'trash', label: 'Delete' }
+                { key: 'edit', label: __('Edit', 'erp') },
+                { key: 'trash', label: __('Delete', 'erp') }
             ]">
 
         </list-table>
@@ -68,7 +68,9 @@ export default {
                 vendor_name: {
                     label: __('Vendor', 'erp')
                 },
-                actions: { label: 'Actions' }
+                actions: {
+                    label: __('Actions', 'erp')
+                }
             },
             bulkActions: [
                 {

@@ -71,7 +71,7 @@
                         <td class="col--particulars">
                             <textarea v-model="line.particulars" rows="1" maxlength="250" class="wperp-form-field display-flex" :placeholder="__('Particulars', 'erp')"></textarea>
                         </td>
-                        <td class="col--amount" :data-colname="__('Amount2', 'erp')">
+                        <td class="col--amount" :data-colname="__('Amount', 'erp')">
                             <input type="number" min="0" step="0.01" name="amount" v-model="line.amount"
                                 @keyup="updateFinalAmount" class="text-right wperp-form-field" :required="line.ledger_id ? true : false">
                         </td>
