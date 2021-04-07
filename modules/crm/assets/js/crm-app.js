@@ -100,7 +100,16 @@ Vue.component( 'new-note', {
         cancelUpdateFeed: function() {
             this.$parent.$data.isEditable = false;
             this.$parent.$data.editfeedData = {};
-        }
+        },
+
+        addAttachments: function(feed) {
+            var el           = feed ? $( `#crm-attachments-${feed.id}` ) : $( '#crm-attachments' ),
+                input        = feed ? $( `#activity-attachment-${feed.id}` ) : $( '#activity-attachment' );
+            
+            this.progressbar = true;
+
+            this.uploadFile( input, el );
+        },
     },
 
     computed: {
