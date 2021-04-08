@@ -3918,3 +3918,27 @@ function erp_get_array_diff( $new_data, $old_data, $is_seriazie = false ) {
 function erp_discard_non_numeric_chars( $str ) {
     return preg_replace( '/[^0-9]/', '', $str );
 }
+
+/**
+ * Sanitizes phone number to discard unwanted charecters
+ * 
+ * @since 1.8.2
+ *
+ * @param string $phone_no
+ * @param boolean $allow_plus
+ * 
+ * @return string
+ */
+function erp_sanitize_phone_no( $phone_no, $allow_plus = false ) {
+    $result = erp_discard_non_numeric_chars( $phone_no );
+
+    if ( ! $allow_plus ) {
+        return $result;
+    }
+
+    if ( 0 === strpos( $phone_no, '+' ) ) {
+        $result = '+' . $result;
+    }
+
+    return $result;
+}
