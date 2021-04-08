@@ -470,6 +470,10 @@ function erp_insert_people( $args = [], $return_object = false ) {
 
     //sensitization
     $args['email'] = strtolower( trim( $args['email'] ) );
+    
+    if ( ! empty( $args['phone'] ) ) {
+        erp_sanitize_phone_number( $args['phone'], true );
+    }
 
     // Assign first name as company name for accounting customer search
     if ( $people_type === 'company' ) {
