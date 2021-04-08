@@ -472,7 +472,11 @@ function erp_insert_people( $args = [], $return_object = false ) {
     $args['email'] = strtolower( trim( $args['email'] ) );
     
     if ( ! empty( $args['phone'] ) ) {
-        erp_sanitize_phone_number( $args['phone'], true );
+        $args['phone'] = erp_sanitize_phone_number( $args['phone'], true );
+    }
+    
+    if ( ! empty( $args['mobile'] ) ) {
+        $args['phone'] = erp_sanitize_phone_number( $args['mobile'], true );
     }
 
     // Assign first name as company name for accounting customer search
