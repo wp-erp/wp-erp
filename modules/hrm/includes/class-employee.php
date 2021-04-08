@@ -242,6 +242,18 @@ class Employee {
             $employee_id = intval( $data['personal']['employee_id'] );
         }
 
+        if ( ! empty( $data['personal']['work_phone'] ) ) {
+            $data['personal']['work_phone'] = erp_sanitize_phone_number( $data['personal']['work_phone'], true );
+        }
+
+        if ( ! empty( $data['personal']['mobile'] ) ) {
+            $data['personal']['mobile'] = erp_sanitize_phone_number( $data['personal']['mobile'], true );
+        }
+
+        if ( ! empty( $data['personal']['phone'] ) ) {
+            $data['personal']['phone'] = erp_sanitize_phone_number( $data['personal']['phone'], true );
+        }
+
         //if duplicate employee id
         if ( $employee_id && $employee_id !== intval( $this->employee_id ) ) {
             $erp_user = \WeDevs\ERP\HRM\Models\Employee::where( 'employee_id', $employee_id )->first();

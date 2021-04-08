@@ -476,7 +476,7 @@ function erp_insert_people( $args = [], $return_object = false ) {
     }
     
     if ( ! empty( $args['mobile'] ) ) {
-        $args['phone'] = erp_sanitize_phone_number( $args['mobile'], true );
+        $args['mobile'] = erp_sanitize_phone_number( $args['mobile'], true );
     }
 
     // Assign first name as company name for accounting customer search
