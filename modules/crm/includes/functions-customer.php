@@ -649,6 +649,8 @@ function erp_crm_get_feed_activity( $postdata ) {
     $feeds = [];
     $db    = new \WeDevs\ORM\Eloquent\Database();
 
+    error_log( 'post-data: ' . print_r( $postdata, true ) );
+
     $results = \WeDevs\ERP\CRM\Models\Activity::select( [
         '*',
         $db->raw( 'MONTHNAME(`created_at`) as feed_month, YEAR( `created_at` ) as feed_year' ),
@@ -706,7 +708,7 @@ function erp_crm_get_feed_activity( $postdata ) {
     foreach ( $results as $key => $value ) {
         $value['extra'] = json_decode( base64_decode( $value['extra'] ), true );
 
-        if ( isset( $value['extra']['invite_contact'] ) ) {
+        if ( ! empty( $value['extra']['invite_contact'] ) ) {
             if ( isset( $postdata['assigned_to'] ) &&
                 ! empty( $postdata['assigned_to'] ) &&
                 ! in_array( $postdata['assigned_to'], $value['extra']['invite_contact'] )
@@ -721,17 +723,13 @@ function erp_crm_get_feed_activity( $postdata ) {
                 continue;
             }
 
-            if ( count( $value['extra']['invite_contact'] ) > 0 ) {
-                foreach ( $value['extra']['invite_contact'] as $user_id ) {
-                    $value['extra']['invited_user'] = isset( $value['extra']['invited_user'] ) ? (array) $value['extra']['invited_user'] : [];
-    
-                    array_push( $value['extra']['invited_user'], [
-                        'id'   => $user_id,
-                        'name' => get_the_author_meta( 'display_name', $user_id ),
-                    ] );
-                }
-            } else {
-                $value['extra']['invited_user'] = [];
+            $value['extra']['invited_user'] = ! empty( $value['extra']['invited_user'] ) ? (array) $value['extra']['invited_user'] : [];
+
+            foreach ( $value['extra']['invite_contact'] as $user_id ) {
+                array_push( $value['extra']['invited_user'], [
+                    'id'   => $user_id,
+                    'name' => get_the_author_meta( 'display_name', $user_id ),
+                ] );
             }
         }
 
