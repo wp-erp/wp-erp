@@ -3929,7 +3929,7 @@ function erp_discard_non_numeric_chars( $str ) {
  * 
  * @return string
  */
-function erp_sanitize_phone_no( $phone_no, $allow_plus = false ) {
+function erp_sanitize_phone_number( $phone_no, $allow_plus = false ) {
     $result = erp_discard_non_numeric_chars( $phone_no );
 
     if ( ! $allow_plus ) {
