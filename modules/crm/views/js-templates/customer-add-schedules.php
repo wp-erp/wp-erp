@@ -4,7 +4,7 @@
 
             <div class="schedule-title-assign-user">
                 <p class="erp-left schedule-title">
-                    <input type="text" required name="schedule_title" placeholder="<?php esc_attr_e( 'Enter Schedule Title', 'erp' ); ?>">
+                    <input type="text" required name="schedule_title" autocomplete="off" placeholder="<?php esc_attr_e( 'Enter Schedule Title', 'erp' ); ?>">
                 </p>
 
                 <p class="erp-left schedule-assign-user">
