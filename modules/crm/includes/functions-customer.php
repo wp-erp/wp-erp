@@ -649,8 +649,6 @@ function erp_crm_get_feed_activity( $postdata ) {
     $feeds = [];
     $db    = new \WeDevs\ORM\Eloquent\Database();
 
-    error_log( 'post-data: ' . print_r( $postdata, true ) );
-
     $results = \WeDevs\ERP\CRM\Models\Activity::select( [
         '*',
         $db->raw( 'MONTHNAME(`created_at`) as feed_month, YEAR( `created_at` ) as feed_year' ),
