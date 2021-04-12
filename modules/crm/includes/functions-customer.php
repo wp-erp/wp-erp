@@ -729,6 +729,18 @@ function erp_crm_get_feed_activity( $postdata ) {
                     'name' => get_the_author_meta( 'display_name', $user_id ),
                 ] );
             }
+        } else {
+            if (
+                ( isset( $postdata['assigned_to'] ) || isset( $postdata['created_by'] ) ) &&
+                (int) $value['created_by']['ID'] !== get_current_user_id()
+            ) {
+                continue;
+            }
+
+            $value['extra']['invited_user'] = [
+                'id'   => $value['created_by']['ID'],
+                'name' => get_the_author_meta( 'display_name', $value['created_by']['ID'] )
+            ];
         }
 
         if ( $value['contact']['user_id'] ) {
