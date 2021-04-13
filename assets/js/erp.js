@@ -790,4 +790,18 @@ jQuery.fn.serializeObject = function() {
         .on('keydown.erp.dropdown.data-api', toggle, ERPDropdown.prototype.keydown)
         .on('keydown.erp.dropdown.data-api', '.erp-dropdown-menu', ERPDropdown.prototype.keydown)
 
+
+    // Dropdown Outside Click Detect and Hide Filter Dropdown
+    // ======================================================
+
+    window.addEventListener( 'click', function(e) {
+        var dropdownArea             = document.querySelectorAll( '.wperp-filter-dropdown' )[0];
+        var select2Container         = document.querySelector( '.select2-container--open' );
+        var targetNotContainDropdown = typeof dropdownArea !== 'undefined' && ! dropdownArea.contains( e.target );
+
+        if ( targetNotContainDropdown && select2Container === null ){
+            document.getElementById( 'erp-dropdown-content' ).classList.remove( 'show' );
+        }
+    });
+
 }(jQuery);
