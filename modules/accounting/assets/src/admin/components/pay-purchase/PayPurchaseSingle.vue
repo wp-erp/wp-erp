@@ -210,7 +210,7 @@ export default {
             }
 
             return __('Payment', 'erp');
-        }, 
+        },
 
         printPopup() {
             window.print();

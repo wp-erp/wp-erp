@@ -10,15 +10,15 @@
                 name="qty"
                 class="wperp-form-field" :required="line.selectedProduct ? true : false">
         </td>
-        <td class="col--uni_price" data-colname="Unit Price">
+        <td class="col--uni_price" :data-colname="__('Unit Price', 'erp')">
             <input type="number" min="0" step="0.01"
                 v-model="line.unitPrice"
                 @keyup="respondAtChange" class="wperp-form-field" :required="line.selectedProduct ? true : false">
         </td>
-        <td class="col--amount" data-colname="Amount">
+        <td class="col--amount" :data-colname="__('Amount', 'erp')">
             <input type="number" min="0" step="0.01" v-model="line.amount" class="wperp-form-field" readonly>
         </td>
-        <td class="col--tax" data-colname="Tax">
+        <td class="col--tax" :data-colname="__('Tax', 'erp')">
             <input type="checkbox" v-model="line.applyTax" @change="respondAtChange" class="wperp-form-field">
 
             <template v-if="'1' == debugMode">
@@ -26,7 +26,7 @@
                 <span style="color:#f44336" v-text="line.discount"></span>
             </template>
         </td>
-        <td class="col--actions delete-row" data-colname="Action">
+        <td class="col--actions delete-row" :data-colname="__('Action', 'erp')">
             <span class="wperp-btn" @click="removeRow"><i class="flaticon-trash"></i></span>
         </td>
     </tr>

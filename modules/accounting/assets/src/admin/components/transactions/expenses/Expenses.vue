@@ -14,7 +14,7 @@
 
         <expenses-stats />
 
-        <transactions-filter :types="filterTypes"  :people="{title: 'Pay to', items: people}" />
+        <transactions-filter :types="filterTypes"  :people="{title: __('Pay to', 'erp'), items: people}" />
 
         <expenses-list />
 
@@ -51,7 +51,12 @@ export default {
                 { namedRoute: 'PayBillCreate', name: __('Pay Bill', 'erp') }
             ],
 
-            filterTypes:[{id: 'expense', name: 'Expense'}, {id: 'bill', name: 'Bill'}, {id: 'pay_bill', name: 'Bill Payment'}, {id: 'check', name: 'Check'}],
+            filterTypes:[
+                {id: 'expense', name: __('Expense', 'erp')},
+                {id: 'bill', name: __('Bill', 'erp')},
+                {id: 'pay_bill', name: __('Bill Payment', 'erp')},
+                {id: 'check', name: __('Check', 'erp')}
+            ]
         };
     },
     created() {

@@ -5,7 +5,7 @@
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
-                    <h2 class="content-header__title">{{ editMode ? 'Edit' : 'New' }} {{ __('Bill', 'erp') }}</h2>
+                    <h2 class="content-header__title">{{ editMode ? __('Edit', 'erp') : __('New', 'erp') }} {{ __('Bill', 'erp') }}</h2>
                 </div>
             </div>
         </div> <!-- End .header-section -->
@@ -69,13 +69,13 @@
                             <td scope="row" class="col--id column-primary">{{key+1}}</td>
                             <td class="col--account with-multiselect"><multi-select v-model="line.ledger_id" :options="ledgers" /></td>
                             <td class="col--particulars"><textarea v-model="line.description" rows="1" maxlength="250" class="wperp-form-field display-flex" :placeholder="__('Particulars', 'erp')"></textarea></td>
-                            <td class="col--amount" data-colname="Amount">
+                            <td class="col--amount" :data-colname="__('Amount', 'erp')">
                                 <input type="text" name="amount" v-model="line.amount" @keyup="updateFinalAmount" class="wperp-form-field text-right" :required="line.ledger_id ? true : false"/>
                             </td>
-                            <td class="col--total" style="text-align: center" data-colname="Total">
+                            <td class="col--total" style="text-align: center" :data-colname="__('Total', 'erp')">
                                 <input type="text" class="wperp-form-field text-right" :value="moneyFormat(line.amount)" readonly disabled/>
                             </td>
-                            <td class="delete-row" data-colname="Remove Above Selection">
+                            <td class="delete-row" :data-colname="__('Remove Above Selection', 'erp')">
                                 <a @click.prevent="removeRow(key)" href="#"><i class="flaticon-trash"></i></a>
                             </td>
                         </tr>
@@ -87,7 +87,7 @@
 
                         <tr class="total-amount-row">
                             <td class="text-right pr-0 hide-sm" colspan="4">{{ __('Total Amount', 'erp') }}</td>
-                            <td class="text-right" data-colname="Total Amount">
+                            <td class="text-right" :data-colname="__('Total Amount', 'erp')">
                                 <input type="text" class="wperp-form-field text-right" name="finalamount" :value="moneyFormat(finalTotalAmount)" readonly disabled/></td>
                             <td class="text-right"></td>
                         </tr>
@@ -177,17 +177,17 @@ export default {
             form_errors: [],
 
             createButtons: [
-                { id: 'save', text: 'Save' },
-                // {id: 'send_create', text: 'Create and Send'},
-                { id: 'new_create', text: 'Save and New' },
-                { id: 'draft', text: 'Save as Draft' }
+                { id: 'save', text: __('Save', 'erp') },
+                // {id: 'send_create', text: __('Create and Send', 'erp') },
+                { id: 'new_create', text: __('Save and New', 'erp') },
+                { id: 'draft', text: __('Save as Draft', 'erp') }
             ],
 
             updateButtons: [
-                { id: 'update', text: 'Update' },
-                // {id: 'send_update', text: 'Update and Send'},
-                { id: 'new_update', text: 'Update and New' },
-                { id: 'draft', text: 'Save as Draft' }
+                { id: 'update', text: __('Update', 'erp') },
+                // {id: 'send_update', text: __('Update and Send', 'erp') },
+                { id: 'new_update', text: __('Update and New', 'erp') },
+                { id: 'draft', text: __('Save as Draft', 'erp') }
             ],
 
             editMode        : false,
@@ -238,14 +238,14 @@ export default {
                 const request2 = await HTTP.get(`/bills/${this.$route.params.id}`);
 
                 if (!request2.data.bill_details.length) {
-                    this.showAlert('error', 'Bill does not exists!');
+                    this.showAlert('error', __('Bill does not exists!', 'erp'));
                     return;
                 }
 
                 const canEdit = Boolean(Number(request2.data.editable));
 
                 if (!canEdit) {
-                    this.showAlert('error', 'Can\'t edit');
+                    this.showAlert('error', __('Can\'t edit', 'erp'));
                     return;
                 }
 
@@ -352,7 +352,7 @@ export default {
             this.$store.dispatch('spinner/setSpinner', true);
             HTTP.put(`/bills/${this.voucherNo}`, requestData).then(res => {
                 this.$store.dispatch('spinner/setSpinner', false);
-                this.showAlert('success', 'Bill Updated!');
+                this.showAlert('success', __('Bill Updated!', 'erp'));
             }).catch(error => {
                 this.$store.dispatch('spinner/setSpinner', false);
                 throw error;
@@ -371,7 +371,7 @@ export default {
             this.$store.dispatch('spinner/setSpinner', true);
             HTTP.post('/bills', requestData).then(res => {
                 this.$store.dispatch('spinner/setSpinner', false);
-                this.showAlert('success', 'Bill Created!');
+                this.showAlert('success', __('Bill Created!', 'erp'));
             }).catch(error => {
                 this.$store.dispatch('spinner/setSpinner', false);
                 throw error;
@@ -451,23 +451,23 @@ export default {
             this.form_errors = [];
 
             if (!Object.prototype.hasOwnProperty.call(this.basic_fields.user, 'id')) {
-                this.form_errors.push('People Name is required.');
+                this.form_errors.push(__('People Name is required.', 'erp'));
             }
 
             if (!this.basic_fields.trn_date) {
-                this.form_errors.push('Transaction Date is required.');
+                this.form_errors.push(__('Transaction Date is required.', 'erp'));
             }
 
             if (!this.basic_fields.due_date) {
-                this.form_errors.push('Due Date is required.');
+                this.form_errors.push(__('Due Date is required.', 'erp'));
             }
 
             if (!parseFloat(this.finalTotalAmount)) {
-                this.form_errors.push('Total amount can\'t be zero.');
+                this.form_errors.push(__('Total amount can\'t be zero.', 'erp'));
             }
 
             if (this.noFulfillLines(this.transactionLines, 'ledger_id')) {
-                this.form_errors.push('Please select an account.');
+                this.form_errors.push(__('Please select an account.', 'erp'));
             }
         },
 

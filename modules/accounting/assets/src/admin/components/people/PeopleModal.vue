@@ -258,7 +258,7 @@ export default {
             }
 
             if (this.emailExists) {
-                this.error_message.push('Email already exists as customer/vendor');
+                this.error_message.push(__('Email already exists as customer/vendor', 'erp'));
                 this.emailExists = false;
 
                 return false;
@@ -269,15 +269,15 @@ export default {
             }
 
             if (!this.peopleFields.first_name) {
-                this.error_message.push('First name is required');
+                this.error_message.push(__('First name is required', 'erp'));
             }
 
             if (!this.peopleFields.last_name) {
-                this.error_message.push('Last name is required');
+                this.error_message.push(__('Last name is required', 'erp'));
             }
 
             if (!this.peopleFields.email) {
-                this.error_message.push('Email is required');
+                this.error_message.push(__('Email is required', 'erp'));
             }
 
             return false;

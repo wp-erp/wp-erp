@@ -91,22 +91,22 @@ export default {
             bulkActions: [
                 {
                     key: 'trash',
-                    label: 'Move to Trash',
+                    label: __('Move to Trash', 'erp'),
                     img: erp_acct_var.erp_assets + '/images/trash.png' /* global erp_acct_var */
                 }
             ],
             columns: {
-                trn_date   : { label: 'Transaction Date' },
-                created_at : { label: 'Created At' },
-                voucher_no : { label: 'Voucher No' },
-                particulars: { label: 'Particulars' },
-                debit      : { label: 'Debit' },
-                credit     : { label: 'Credit' },
-                balance    : { label: 'Balance' }
+                trn_date   : { label: __('Transaction Date', 'erp') },
+                created_at : { label: __('Created At', 'erp') },
+                voucher_no : { label: __('Voucher No', 'erp') },
+                particulars: { label: __('Particulars', 'erp') },
+                debit      : { label: __('Debit', 'erp') },
+                credit     : { label: __('Credit', 'erp') },
+                balance    : { label: __('Balance', 'erp') }
             },
             actions : [
-                { key: 'edit', label: 'Edit' },
-                { key: 'trash', label: 'Delete' }
+                { key: 'edit', label: __('Edit', 'erp') },
+                { key: 'trash', label: __('Delete', 'erp') }
             ],
             showFilters: false,
             filters: {
@@ -129,7 +129,7 @@ export default {
         onActionClick(action, row, index) {
             switch (action) {
             case 'trash':
-                if (confirm('Are you sure to delete?')) {
+                if (confirm(__('Are you sure to delete?', 'erp'))) {
                     this.$root.$emit('delete-transaction', row.id);
                 }
                 break;

@@ -31,7 +31,7 @@ export default {
                 name: ''
             },
             showMenu: false,
-            placeholderText: '-Select-'
+            placeholderText: __('-Select-', 'erp')
         };
     },
     props: {

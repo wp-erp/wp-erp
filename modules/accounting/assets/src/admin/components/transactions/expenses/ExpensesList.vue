@@ -185,24 +185,24 @@ export default {
                 break;
 
             case 'void':
-                if (confirm('Are you sure to void the transaction?')) {
+                if (confirm(__('Are you sure to void the transaction?', 'erp'))) {
                     if (row.trn_type === 'expense' || row.trn_type === 'check') {
                         HTTP.post('expenses/' + row.id + '/void').then(response => {
-                            this.showAlert('success', 'Transaction has been void!');
+                            this.showAlert('success', __('Transaction has been void!', 'erp'));
                         }).catch(error => {
                             throw error;
                         });
                     }
                     if (row.trn_type === 'bill') {
                         HTTP.post('bills/' + row.id + '/void').then(response => {
-                            this.showAlert('success', 'Transaction has been void!');
+                            this.showAlert('success', __('Transaction has been void!', 'erp'));
                         }).catch(error => {
                             throw error;
                         });
                     }
                     if (row.trn_type === 'pay_bill') {
                         HTTP.post('pay-bills/' + row.id + '/void').then(response => {
-                            this.showAlert('success', 'Transaction has been void!');
+                            this.showAlert('success', __('Transaction has been void!', 'erp'));
                         }).then(() => {
                             this.$router.push({ name: 'Expenses' });
                         }).catch(error => {
@@ -246,7 +246,7 @@ export default {
                     temp = {
                         id         : item.id,
                         trn_no     : item.id,
-                        type       : 'Pay Bill',
+                        type       : __('Pay Bill', 'erp'),
                         trn_type   : 'pay_bill',
                         ref        : item.ref ? item.ref : '-',
                         vendor_name: item.pay_bill_vendor_name,
@@ -257,7 +257,7 @@ export default {
                         status     : item.status,
                         singleView : { name: 'PayBillSingle', params: { id: item.id } },
                         actions    : [
-                            { key: 'void', label: 'Void' }
+                            { key: 'void', label: __('Void', 'erp') }
                         ]
                     };
                     break;
@@ -266,7 +266,7 @@ export default {
                     temp = {
                         id         : item.id,
                         trn_no     : item.id,
-                        type       : 'Bill',
+                        type       : __('Bill', 'erp'),
                         trn_type   : 'bill',
                         ref        : item.ref ? item.ref : '-',
                         vendor_id  : item.vendor_id,
@@ -278,9 +278,9 @@ export default {
                         status     : item.status,
                         singleView : { name: 'BillSingle', params: { id: item.id } },
                         actions    : [
-                            { key: 'payment', label: 'Make Payment' },
-                            { key: 'edit', label: 'Edit' },
-                            { key: 'void', label: 'Void' }
+                            { key: 'payment', label: __('Make Payment', 'erp') },
+                            { key: 'edit', label: __('Edit', 'erp') },
+                            { key: 'void', label: __('Void', 'erp') }
                         ]
                     };
                     break;
@@ -289,7 +289,7 @@ export default {
                     temp = {
                         id         : item.id,
                         trn_no     : item.id,
-                        type       : 'Expense',
+                        type       : __('Expense', 'erp'),
                         trn_type   : 'expense',
                         ref        : item.exp_ref ? item.exp_ref : '-',
                         vendor_name: item.expense_people_name,
@@ -300,7 +300,7 @@ export default {
                         status     : item.status,
                         singleView : { name: 'ExpenseSingle', params: { id: item.id } },
                         actions    : [
-                            { key: 'void', label: 'Void' }
+                            { key: 'void', label: __('Void', 'erp') }
                         ]
                     };
                     break;
@@ -309,7 +309,7 @@ export default {
                     temp = {
                         id         : item.id,
                         trn_no     : item.id,
-                        type       : 'Check',
+                        type       : __('Check', 'erp'),
                         trn_type   : 'check',
                         ref        : item.ref ? item.ref : '-',
                         vendor_name: item.expense_people_name,
@@ -320,7 +320,7 @@ export default {
                         status     : item.status,
                         singleView : { name: 'CheckSingle', params: { id: item.id } },
                         actions    : [
-                            { key: 'void', label: 'Void' }
+                            { key: 'void', label: __('Void', 'erp') }
                         ]
                     };
                     break;
@@ -333,11 +333,11 @@ export default {
                     temp['actions'] = [
                         { key: 'payment', label: __('Make Payment', 'erp') },
                         { key: 'edit', label: __('Edit', 'erp') },
-                        { key: 'void', label: 'Void' }
+                        { key: 'void', label: __('Void', 'erp') }
                     ];
                 } else if (item.status_code === '1') {
                     temp['actions'] = [
-                        { key: 'to_expense', label: 'Make Expense' }
+                        { key: 'to_expense', label: __('Make Expense', 'erp') }
                     ];
                 } else {
                     temp['actions'] = [

@@ -139,7 +139,7 @@
                         </slot>
                         <button v-if="value.isColPrimary" type="button" class="wperp-toggle-row"
                                 @click.prevent="toggleRow(row)"><span
-                            class="screen-reader-text">Show more details</span></button>
+                            class="screen-reader-text">{{ __('Show more details', 'erp') }}</span></button>
 
                         <div v-if="actionColumn === key" class="row-actions">
                             <slot :row="row" name="row-actions">

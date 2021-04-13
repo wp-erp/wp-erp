@@ -86,13 +86,13 @@ export default {
             totalDebit    : 0,
             totalCredit   : 0,
             columns       : {
-                trn_date   : { label: 'Trns Date' },
-                created_at : { label: 'Created At' },
-                trn_no     : { label: 'Trns No' },
-                particulars: { label: 'Particulars' },
-                debit      : { label: 'Debit' },
-                credit     : { label: 'Credit' },
-                balance    : { label: 'Balance' }
+                trn_date   : { label: __('Trns Date', 'erp') },
+                created_at : { label: __('Created At', 'erp') },
+                trn_no     : { label: __('Trns No', 'erp') },
+                particulars: { label: __('Particulars', 'erp') },
+                debit      : { label: __('Debit', 'erp') },
+                credit     : { label: __('Credit', 'erp') },
+                balance    : { label: __('Balance', 'erp') }
             },
             symbol: erp_acct_var.symbol
         };

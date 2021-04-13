@@ -141,7 +141,7 @@
                         <tfoot>
                             <tr>
                                 <td v-if="estimateToInvoice()" colspan="9" style="text-align: right;">
-                                    <combo-button :options="[{ id: 'update', text: 'Save Conversion' }]" />
+                                    <combo-button :options="[{ id: 'update', text: __('Save Conversion', 'erp') }]" />
                                 </td>
                                 <td v-else colspan="9" style="text-align: right;">
                                     <combo-button v-if="editMode" :options="updateButtons" />
@@ -195,17 +195,17 @@ export default {
             },
 
             createButtons: [
-                { id: 'save', text: 'Save' },
-                // {id: 'send_create', text: 'Create and Send'},
-                { id: 'new_create', text: 'Save and New' },
-                { id: 'draft', text: 'Save as Draft' }
+                { id: 'save', text: __('Save', 'erp') },
+                // {id: 'send_create', text: __('Create and Send', 'erp')},
+                { id: 'new_create', text: __('Save and New', 'erp') },
+                { id: 'draft', text: __('Save as Draft', 'erp') }
             ],
 
             updateButtons: [
-                { id: 'update', text: 'Update' },
-                // {id: 'send_update', text: 'Update and Send'},
-                { id: 'new_update', text: 'Update and New' },
-                { id: 'draft', text: 'Save as Draft' }
+                { id: 'update', text: __('Update', 'erp') },
+                // {id: 'send_update', text: __('Update and Send', 'erp')},
+                { id: 'new_update', text: __('Update and New', 'erp') },
+                { id: 'draft', text: __('Save as Draft', 'erp') }
             ],
 
             extraFields     : window.acct.hooks.applyFilters('acctInvoiceExtraFields', []),
@@ -306,7 +306,7 @@ export default {
                 const request3 = await HTTP.get(`/invoices/${this.$route.params.id}`);
 
                 if (!request3.data.line_items.length) {
-                    this.showAlert('error', 'Invoice does not exists!');
+                    this.showAlert('error', __('Invoice does not exists!', 'erp'));
                     return;
                 }
 
@@ -520,10 +520,10 @@ export default {
             HTTP.put(`/invoices/${this.voucherNo}`, requestData).then(res => {
                 this.$store.dispatch('spinner/setSpinner', false);
 
-                let message = 'Invoice Updated!';
+                let message = __('Invoice Updated!', 'erp');
 
                 if (this.estimateToInvoice()) {
-                    message = 'Conversion Successful!';
+                    message = __('Conversion Successful!', 'erp');
                 }
 
                 this.showAlert('success', message);
@@ -628,23 +628,23 @@ export default {
             this.form_errors = [];
 
             if (!Object.prototype.hasOwnProperty.call(this.basic_fields.customer, 'id')) {
-                this.form_errors.push('Customer Name is required.');
+                this.form_errors.push(__('Customer Name is required.', 'erp'));
             }
 
             if (!this.basic_fields.trn_date) {
-                this.form_errors.push('Transaction Date is required.');
+                this.form_errors.push(__('Transaction Date is required.', 'erp'));
             }
 
             if (!this.basic_fields.due_date) {
-                this.form_errors.push('Due Date is required.');
+                this.form_errors.push(__('Due Date is required.', 'erp'));
             }
 
             if (!parseFloat(this.finalTotalAmount)) {
-                this.form_errors.push('Total amount can\'t be zero.');
+                this.form_errors.push(__('Total amount can\'t be zero.', 'erp'));
             }
 
             if (this.noFulfillLines(this.transactionLines, 'selectedProduct')) {
-                this.form_errors.push('Please select a product.');
+                this.form_errors.push(__('Please select a product.', 'erp'));
             }
         }
     }
