@@ -582,7 +582,7 @@ function erp_acct_get_expense_transactions( $args = [] ) {
     }
 
     if ( ! empty( $args['start_date'] ) ) {
-        $where .= " AND ( (bill.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}') OR (pay_bill.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}') )";
+        $where .= " AND ( (bill.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}') OR (pay_bill.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}') OR (expense.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}') )";
     }
 
     if ( 0 === $args['status'] ) {
@@ -637,6 +637,9 @@ function erp_acct_get_expense_transactions( $args = [] ) {
         {$where}
         GROUP BY voucher.id
         ORDER BY voucher.id {$args['order']} {$limit}";
+
+    $wpdb->query( "SET SESSION sql_mode='';" );
+
     if ( $args['count'] ) {
         $wpdb->get_results( $sql );
 
