@@ -40,16 +40,16 @@ export default {
             bulkActions: [
                 {
                     key: 'trash',
-                    label: 'Move to Trash',
+                    label: __('Move to Trash', 'erp'),
                     img: erp_acct_var.erp_assets + '/images/trash.png' /* global erp_acct_var */
                 }
             ],
             columns: {
-                employee: { label: 'Name' },
-                designation: { label: 'Designation' },
-                department: { label: 'Department' },
-                email: { label: 'Email' },
-                phone: { label: 'Phone' }
+                employee: { label: __('Name', 'erp') },
+                designation: { label: __('Designation', 'erp') },
+                department: { label: __('Department', 'erp') },
+                email: { label: __('Email', 'erp') },
+                phone: { label: __('Phone', 'erp') }
             },
             rows: [],
             paginationData: {

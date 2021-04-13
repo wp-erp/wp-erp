@@ -1,6 +1,6 @@
 <template>
     <div class="timepicker">
-        <p class="title">Select Time</p>
+        <p class="title">{{ __('Select Time', 'erp') }}</p>
 
         <div v-timepicker :id="elm"/>
         <input :value="value" type="text" style="display: none">

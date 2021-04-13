@@ -82,20 +82,20 @@ export default {
             showModal     : false,
             columns       : {
                 name   : {
-                    label: 'Category Name'
+                    label: __('Category Name', 'erp')
                 },
                 actions: {
-                    label: 'Actions'
+                    label: __('Actions', 'erp')
                 }
             },
             actions       : [
-                { key: 'edit', label: 'Edit' },
-                { key: 'trash', label: 'Delete' }
+                { key: 'edit', label: __('Edit', 'erp') },
+                { key: 'trash', label: __('Delete', 'erp') }
             ],
             bulkActions   : [
                 {
                     key  : 'trash',
-                    label: 'Move to Trash',
+                    label: __('Move to Trash', 'erp'),
                     img  : erp_acct_var.erp_assets + '/images/trash.png' /* global erp_acct_var */
                 }
             ]
@@ -130,13 +130,13 @@ export default {
                 row.isEdit    = true;
                 this.category = row;
             } else if (action === 'trash') {
-                if (confirm('Are you sure want to delete ?')) {
+                if (confirm(__('Are you sure want to delete?', 'erp'))) {
                     this.$store.dispatch('spinner/setSpinner', true);
                     HTTP.delete('product-cats/' + row.id).then((response) => {
                         this.$delete(this.categories, index);
 
                         this.$store.dispatch('spinner/setSpinner', false);
-                        this.showAlert('success', 'Deleted!');
+                        this.showAlert('success', __('Deleted !', 'erp'));
                     }).catch(error => {
                         this.$store.dispatch('spinner/setSpinner', false);
                         throw error;
@@ -147,7 +147,7 @@ export default {
 
         onBulkAction(action, items) {
             if (action === 'trash') {
-                if (confirm('Are you sure want to delete?')) {
+                if (confirm(__('Are you sure want to delete?', 'erp'))) {
                     this.$store.dispatch('spinner/setSpinner', true);
 
                     HTTP.delete('product-cats/delete/' + items).then(response => {
@@ -185,7 +185,7 @@ export default {
                 this.parentCategory = 0;
 
                 this.$store.dispatch('spinner/setSpinner', false);
-                this.showAlert('success', 'Product category added!');
+                this.showAlert('success', __('Product category added!', 'erp'));
             }).catch((error) => {
                 this.$store.dispatch('spinner/setSpinner', false);
                 throw error;
@@ -201,7 +201,7 @@ export default {
                 row.name = categoryName;
 
                 this.$store.dispatch('spinner/setSpinner', false);
-                this.showAlert('success', 'Product category updated!');
+                this.showAlert('success', __('Product category updated!', 'erp'));
             }).catch(error => {
                 row.isEdit = false;
                 this.$store.dispatch('spinner/setSpinner', false);

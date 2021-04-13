@@ -91,7 +91,7 @@ export default {
                 tax_rate: this.tax_rate
             }).then(res => {
                 this.$store.dispatch('spinner/setSpinner', false);
-                this.showAlert('success', 'Tax Rate Updated!');
+                this.showAlert('success', __('Tax Rate Updated!', 'erp'));
             }).catch(error => {
                 this.$store.dispatch('spinner/setSpinner', false);
                 throw error;

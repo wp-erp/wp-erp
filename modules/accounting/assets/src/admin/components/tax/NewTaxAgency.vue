@@ -4,7 +4,7 @@
             <div class="wperp-modal-content">
                 <!-- modal body title -->
                 <div class="wperp-modal-header">
-                    <h3>{{ is_update ? 'Edit' : 'Add' }} {{ __('Tax Agency', 'erp') }}</h3>
+                    <h3>{{ is_update ? __('Edit', 'erp') : __('Add', 'erp') }} {{ __('Tax Agency', 'erp') }}</h3>
                     <span class="modal-close" @click.prevent="closeModal"><i class="flaticon-close"></i></span>
                 </div>
 
@@ -101,11 +101,11 @@ export default {
             if (this.is_update) {
                 rest = 'put';
                 url = `/tax-agencies/${this.agency_id}`;
-                msg = 'Tax Agency Updated!';
+                msg = __('Tax Agency Updated!', 'erp');
             } else {
                 rest = 'post';
                 url = `/tax-agencies`;
-                msg = 'Tax Agency Created!';
+                msg = __('Tax Agency Created!', 'erp');
             }
 
             this.$store.dispatch('spinner/setSpinner', true);
@@ -130,7 +130,7 @@ export default {
             this.form_errors = [];
 
             if (!this.agency) {
-                this.form_errors.push('Agency Name is required.');
+                this.form_errors.push(__('Agency Name is required.', 'erp'));
             }
         },
 

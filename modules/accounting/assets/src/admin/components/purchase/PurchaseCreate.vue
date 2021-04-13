@@ -5,8 +5,8 @@
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
-                    <h2 v-if="orderToPurchase()">Convert into Purchase</h2>
-                    <h2 v-else class="content-header__title">{{ editMode ? 'Edit' : 'New' }} {{ page_title }}</h2>
+                    <h2 v-if="orderToPurchase()">{{ __('Convert into Purchase', 'erp') }}</h2>
+                    <h2 v-else class="content-header__title">{{ editMode ? __('Edit', 'erp') : __('New', 'erp') }} {{ page_title }}</h2>
                 </div>
             </div>
         </div>
@@ -74,20 +74,20 @@
                                         name="qty"
                                         class="wperp-form-field" :required="!!line.product">
                                 </td>
-                                <td class="col--uni_price" data-colname="Unit Price">
+                                <td class="col--uni_price" :data-colname="__('Unit Price', 'erp')">
                                     <input min="0" type="number" v-model="line.unitPrice"
                                         @keyup="lineUpdate(index)"
                                         step="0.01"
                                         class="wperp-form-field text-right" :required="!!line.product">
                                 </td>
-                                <td class="col--amount" data-colname="Amount">
+                                <td class="col--amount" :data-colname="__('Amount', 'erp')">
                                     <input type="number" min="0" step="0.01" v-model="line.amount" class="wperp-form-field text-right" readonly>
                                 </td>
-                                <td class="col--tax" data-colname="Tax">
+                                <td class="col--tax" :data-colname="__('Tax', 'erp')">
                                     <input type="checkbox"  @change="disableLineTax(index)" v-model="line.applyTax"  class="wperp-form-field">
 
                                 </td>
-                                <td class="col--actions delete-row" data-colname="Action">
+                                <td class="col--actions delete-row" :data-colname="__('Action', 'erp')">
                                     <span class="wperp-btn" @click="removeRow(index)"><i class="flaticon-trash"></i></span>
                                 </td>
                             </tr>
@@ -148,7 +148,7 @@
                         <tfoot>
                             <tr>
                                 <td v-if="orderToPurchase()" colspan="9" style="text-align: right;">
-                                    <combo-button :options="[{ id: 'update', text: 'Save Conversion' }]" />
+                                    <combo-button :options="[{ id: 'update', text: __('Save Conversion', 'erp') }]" />
                                 </td>
                                 <td v-else colspan="9" style="text-align: right;">
                                     <combo-button v-if="editMode" :options="updateButtons" />
@@ -194,16 +194,16 @@
                     billing_address: ''
                 },
                 createButtons: [
-                    { id: 'save', text: 'Save' },
-                    // {id: 'send_create', text: 'Create and Send'},
-                    { id: 'new_create', text: 'Save and New' },
-                    { id: 'draft', text: 'Save as Draft' }
+                    { id: 'save', text: __('Save', 'erp') },
+                    // {id: 'send_create', text: __('Create and Send', 'erp')},
+                    { id: 'new_create', text: __('Save and New', 'erp') },
+                    { id: 'draft', text: __('Save as Draft', 'erp') }
                 ],
                 updateButtons: [
-                    { id: 'update', text: 'Update' },
-                    // {id: 'send_update', text: 'Update and Send'},
-                    { id: 'new_update', text: 'Update and New' },
-                    { id: 'draft', text: 'Save as Draft' }
+                    { id: 'update', text: __('Update', 'erp') },
+                    // {id: 'send_update', text: __('Update and Send', 'erp')},
+                    { id: 'new_update', text: __('Update and New', 'erp') },
+                    { id: 'draft', text: __('Save as Draft', 'erp') }
                 ],
                 form_errors     : [],
                 editMode        : false,
@@ -251,7 +251,7 @@
             }
         },
         mounted(){
-        
+
         },
         computed: {
             ...mapState({ actionType: state => state.combo.btnID }),
@@ -315,7 +315,7 @@
         methods: {
             setLineData(line){
                 line.qty  = 1
-                
+
                 if (this.$route.params.id) {
                     line.unitPrice = parseFloat(line.product.cost_price);
                 } else {
@@ -342,7 +342,7 @@
             removeRow(index){
                 this.transactionLines.splice(index, 1) ;
             },
-            
+
             async prepareDataLoad() {
                 /**
                  * ----------------------------------------------
@@ -449,7 +449,7 @@
                     this.taxRates = response.data
                 })
             },
-            
+
             getvendorData() {
                 const vendor_id = this.basic_fields.vendor.id;
                 if (!vendor_id) {
@@ -578,19 +578,19 @@
             validateForm() {
                 this.form_errors = [];
                 if (!Object.prototype.hasOwnProperty.call(this.basic_fields.vendor, 'id')) {
-                    this.form_errors.push('Vendor Name is required.');
+                    this.form_errors.push(__('Vendor Name is required.', 'erp'));
                 }
                 if (!this.basic_fields.trn_date) {
-                    this.form_errors.push('Transaction Date is required.');
+                    this.form_errors.push(__('Transaction Date is required.', 'erp'));
                 }
                 if (!this.basic_fields.due_date) {
-                    this.form_errors.push('Due Date is required.');
+                    this.form_errors.push(__('Due Date is required.', 'erp'));
                 }
                 if (!this.totalAmount) {
-                    this.form_errors.push('Total amount can\'t be zero.');
+                    this.form_errors.push(__('Total amount can\'t be zero.', 'erp'));
                 }
                 if (this.noFulfillLines(this.transactionLines, 'product')) {
-                    this.form_errors.push('Please select a product.');
+                    this.form_errors.push(__('Please select a product.', 'erp'));
                 }
             }
         }

@@ -55,21 +55,21 @@
                                     <button type="button" class="wperp-toggle-row"
                                             @click.prevent="isRowExpanded = !isRowExpanded"></button>
                                 </td>
-                                <td class="col--agency with-multiselect" data-colname="Agency">
+                                <td class="col--agency with-multiselect" :data-colname="__('Agency', 'erp')">
                                     <multi-select v-model="line.agency_id" :options="agencies"/>
                                     <a href="#" @click.prevent="showAgencyModal = true" role="button"
                                        class="after-select-dropdown">{{ __('Add Tax Agency', 'erp') }}</a>
                                 </td>
-                                <td class="col--tax-category with-multiselect" data-colname="Tax Category">
+                                <td class="col--tax-category with-multiselect" :data-colname="__('Tax Category', 'erp')">
                                     <multi-select v-model="line.tax_category" :options="categories"/>
                                     <a href="#" @click.prevent="showCatModal = true" role="button"
                                        class="after-select-dropdown">{{ __('Add Tax Category', 'erp') }}</a>
                                 </td>
-                                <td class="col--tax-rate" data-colname="Tax Rate">
+                                <td class="col--tax-rate" :data-colname="__('Tax Rate', 'erp')">
                                     <input type="text" class="wperp-form-field text-right" v-model="line.tax_rate">
                                     <a href="#" @click.prevent="" class="vis-hide after-select-dropdown">{{ __('tax rate', 'erp') }}</a>
                                 </td>
-                                <td class="col--actions delete-row" data-colname="Remove Above Selection">
+                                <td class="col--actions delete-row" :data-colname="__('Remove Above Selection', 'erp')">
                                     <a @click.prevent="removeRow(key)" href="#"><i class="flaticon-trash"></i></a>
                                 </td>
                             </tr>
@@ -207,7 +207,7 @@ export default {
                 throw error;
             }).then(res => {
                 this.$store.dispatch('spinner/setSpinner', false);
-                this.showAlert('success', 'Tax Rate Created!');
+                this.showAlert('success', __('Tax Rate Created!', 'erp'));
             }).then(() => {
                 this.$router.push({ name: 'TaxRates' });
                 this.resetData();

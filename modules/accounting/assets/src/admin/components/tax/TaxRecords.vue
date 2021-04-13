@@ -61,12 +61,12 @@ export default {
             amount: 0,
             modalParams: null,
             columns: {
-                voucher_no: { label: 'Voucher No' },
-                agency_id : { label: 'Agency' },
-                trn_date  : { label: 'Date' },
-                // 'tax_period': {label: 'Tax Period'},
-                amount    : { label: 'Amount' },
-                actions   : { label: 'Actions' }
+                voucher_no: { label: __('Voucher No', 'erp') },
+                agency_id : { label: __('Agency', 'erp') },
+                trn_date  : { label: __('Date', 'erp') },
+                // 'tax_period': {label: __('Tax Period', 'erp')},
+                amount    : { label: __('Amount', 'erp') },
+                actions   : { label: __('Actions', 'erp') }
             },
             rows: [],
             paginationData: {
@@ -76,14 +76,13 @@ export default {
                 currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
             },
             actions : [
-                // { key: 'edit', label: 'Edit', iconClass: 'flaticon-edit' },
-                // { key: 'trash', label: 'Delete', iconClass: 'flaticon-trash' }
+                // { key: 'edit', label: __('Edit', 'erp'), iconClass: 'flaticon-edit' },
                 { key: '#', label: __('No action found', 'erp') }
             ],
             bulkActions: [
                 {
                     key: 'trash',
-                    label: 'Move to Trash',
+                    label: __('Move to Trash', 'erp'),
                     iconClass: 'flaticon-trash'
                 }
             ],
@@ -154,14 +153,14 @@ export default {
         onActionClick(action, row, index) {
             switch (action) {
             case 'trash':
-                if (confirm('Are you sure to delete?')) {
+                if (confirm(__('Are you sure to delete?', 'erp'))) {
                     this.$store.dispatch('spinner/setSpinner', true);
 
                     HTTP.delete(this.url + '/' + row.id).then(response => {
                         this.$delete(this.rows, index);
 
                         this.$store.dispatch('spinner/setSpinner', false);
-                        this.showAlert('success', 'Deleted !');
+                        this.showAlert('success', __('Deleted !', 'erp'));
                     }).catch(error => {
                         this.$store.dispatch('spinner/setSpinner', false);
                         throw error;
@@ -181,7 +180,7 @@ export default {
 
         onBulkAction(action, items) {
             if (action === 'trash') {
-                if (confirm('Are you sure to delete?')) {
+                if (confirm(__('Are you sure to delete?', 'erp'))) {
                     this.$store.dispatch('spinner/setSpinner', true);
 
                     HTTP.delete('taxes/delete/' + items.join(',')).then(response => {
@@ -194,7 +193,7 @@ export default {
 
                         this.fetchItems();
                         this.$store.dispatch('spinner/setSpinner', false);
-                        this.showAlert('success', 'Deleted !');
+                        this.showAlert('success', __('Deleted !', 'erp'));
                     }).catch(error => {
                         this.$store.dispatch('spinner/setSpinner', false);
                         throw error;
