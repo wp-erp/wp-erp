@@ -1416,8 +1416,10 @@
                                     });
 
                                     $( 'div[data-selected]', modal ).each(function() {
-                                        var self = $(this),
-                                            selected = self.data('selected');
+                                        var self            = $(this),
+                                            selected        = self.data('selected'),
+                                            unchecked       = 0,
+                                            requiredCbItems = $("span.checkbox input[type=checkbox][required]");
 
                                         if ( selected !== '' ) {
                                             self.find( 'select' ).val( selected ).trigger('change');
@@ -1427,6 +1429,18 @@
                                             $.each(self.find("input[type=checkbox]"), function(index, data) {
                                                 if($.inArray($(data).val(), selectedData) != -1) {
                                                     $(data).prop('checked', true);
+                                                } else {
+                                                    if($.inArray($(data), requiredCbItems)) {
+                                                        unchecked++;
+                                                    }
+                                                }
+                                            });
+                                        }
+
+                                        if(unchecked !== requiredCbItems.length) {
+                                            $.each(self.find("span.checkbox input[type=checkbox][required]"), function(index, cb) {
+                                                if($.inArray($(cb).val(), selectedData) == -1) {
+                                                    $(cb).removeAttr("required");
                                                 }
                                             });
                                         }
@@ -2228,8 +2242,10 @@
                                     $( 'select.erp-country-select').change();
 
                                     $( 'div[data-selected]', modal ).each(function() {
-                                        var self = $(this),
-                                            selected = self.data('selected');
+                                        var self            = $(this),
+                                            selected        = self.data('selected'),
+                                            unchecked       = 0,
+                                            requiredCbItems = $("span.checkbox input[type=checkbox][required]");
 
                                         if ( selected !== '' ) {
                                             self.find( 'select' ).val( selected ).trigger('change');
@@ -2239,6 +2255,18 @@
                                             $.each(self.find("input[type=checkbox]"), function(index, data) {
                                                 if($.inArray($(data).val(), selectedData) != -1) {
                                                     $(data).prop('checked', true);
+                                                } else {
+                                                    if($.inArray($(data), requiredCbItems)) {
+                                                        unchecked++;
+                                                    }
+                                                }
+                                            });
+                                        }
+
+                                        if (unchecked !== requiredCbItems.length) {
+                                            $.each(self.find("span.checkbox input[type=checkbox][required]"), function(index, cb) {
+                                                if($.inArray($(cb).val(), selectedData) == -1) {
+                                                    $(cb).removeAttr("required");
                                                 }
                                             });
                                         }

@@ -76,8 +76,8 @@ export default {
                 currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
             },
             actions : [
-                { key: 'edit', label: __('Edit', 'erp'), iconClass: 'flaticon-edit' },
-                { key: 'trash', label: __('Delete', 'erp'), iconClass: 'flaticon-trash' }
+                // { key: 'edit', label: __('Edit', 'erp'), iconClass: 'flaticon-edit' },
+                { key: '#', label: __('No action found', 'erp') }
             ],
             bulkActions: [
                 {

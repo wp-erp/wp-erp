@@ -283,6 +283,9 @@ window.wperp = window.wperp || {};
             // newsletter subscribe
             $( 'body' ).on( 'click', '.email-subscribe-btn', this.emailSubscribe );
 
+            // Validates custom required checkboxes
+            $( "body" ).on( "change", "span.checkbox input[required]", this.validateCheckbox );
+
             this.initFields();
         },
 
@@ -579,6 +582,7 @@ window.wperp = window.wperp || {};
             var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             return re.test(email);
         },
+
         emailSubscribe: function(e) {
             e.preventDefault();
 
@@ -604,7 +608,34 @@ window.wperp = window.wperp || {};
                 $('.erp-newsletter').find('.erp-form-wrap').css('display', 'none');
                 $('.erp-newsletter').find('.erp-thank-you').html(res.msg).css('display', 'block');
             });
-        }
+        },
+
+        validateCheckbox: function(e) {
+            var self     = $(this),
+                nameAttr = self.attr( "name" ),
+                cbItems  = $( "input[name='" + nameAttr + "']" );
+
+            if ( self[0].hasAttribute( "required" ) ) {
+                var unchecked = 0;
+
+                cbItems.each( function() {
+                    var cb = $(this);
+
+                    if ( cb.is( ":checked" ) ) {
+                        cb.attr( "required", "required" );
+                    } else {
+                        cb.removeAttr( "required" );
+                        unchecked++;
+                    }
+                });
+
+                if ( cbItems.length === unchecked ) {
+                    cbItems.each( function() {
+                        $(this).attr( "required", "required" );
+                    });
+                }
+            }
+        },
     };
 
     $(function() {
@@ -789,5 +820,19 @@ jQuery.fn.serializeObject = function() {
         .on('click.erp.dropdown.data-api', toggle, ERPDropdown.prototype.toggle)
         .on('keydown.erp.dropdown.data-api', toggle, ERPDropdown.prototype.keydown)
         .on('keydown.erp.dropdown.data-api', '.erp-dropdown-menu', ERPDropdown.prototype.keydown)
+
+
+    // Dropdown Outside Click Detect and Hide Filter Dropdown
+    // ======================================================
+
+    window.addEventListener( 'click', function(e) {
+        var dropdownArea             = document.querySelectorAll( '.wperp-filter-dropdown' )[0];
+        var select2Container         = document.querySelector( '.select2-container--open' );
+        var targetNotContainDropdown = typeof dropdownArea !== 'undefined' && ! dropdownArea.contains( e.target );
+
+        if ( targetNotContainDropdown && select2Container === null ){
+            document.getElementById( 'erp-dropdown-content' ).classList.remove( 'show' );
+        }
+    });
 
 }(jQuery);

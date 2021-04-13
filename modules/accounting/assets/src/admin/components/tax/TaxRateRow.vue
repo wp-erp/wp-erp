@@ -2,7 +2,7 @@
     <div class="wperp-row">
         <div class="wperp-col-sm-3 wperp-col-xs-12">
             <label>{{ __('Component', 'erp') }}</label>
-            <template v-if="is_update"><input type="text" v-model="component_line.component_name"/></template>
+            <template v-if="is_update"><input type="text" class="wperp-form-field" v-model="component_line.component_name"/></template>
             <template v-else>{{component_line.component_name}}</template>
         </div>
         <div class="wperp-col-sm-3 wperp-col-xs-12 with-multiselect">
@@ -25,7 +25,7 @@
         </div>
         <div class="wperp-col-sm-3 wperp-col-xs-12">
             <label>{{ __('Tax Rate', 'erp') }}</label>
-            <template v-if="is_update"><input type="text" v-model="component_line.tax_rate"/></template>
+            <template v-if="is_update"><input class="wperp-form-field" type="text" v-model="component_line.tax_rate"/></template>
             <template v-else>{{component_line.tax_rate}}</template>
         </div>
 
@@ -112,6 +112,7 @@ export default {
                 this.isWorking = false;
                 this.$emit('line_close');
                 this.$root.$emit('refetch_tax_data');
+                this.$router.push({ name: 'TaxRates' });
             });
         },
 
@@ -126,6 +127,6 @@ export default {
 
 <style scoped>
    .wperp-row {
-       padding: 10px !important;
+       padding: 10px 40px !important;
    }
 </style>
