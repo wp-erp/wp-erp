@@ -21,7 +21,7 @@ function erp_acct_get_sales_transactions( $args = [] ) {
         'count'       => false,
         'customer_id' => false,
         'status'      => '',
-        'type'      => '',
+        'type'        => '',
     ];
 
     $args = wp_parse_args( $args, $defaults );
@@ -568,7 +568,7 @@ function erp_acct_get_expense_transactions( $args = [] ) {
         'count'     => false,
         'vendor_id' => false,
         'status'    => '',
-        'type'    => '',
+        'type'      => '',
     ];
 
     $args = wp_parse_args( $args, $defaults );
@@ -667,6 +667,7 @@ function erp_acct_get_purchase_transactions( $args = [] ) {
         'vendor_id' => false,
         's'         => '',
         'status'    => '',
+        'type'      => '',
     ];
 
     $args = wp_parse_args( $args, $defaults );
@@ -692,7 +693,7 @@ function erp_acct_get_purchase_transactions( $args = [] ) {
     }
 
     if ( ! empty( $args['type'] ) ) {
-        $where .= " AND voucher.type = '{$args['start_date']}'";
+        $where .= " AND voucher.type = '{$args['type']}'";
     }
 
     if ( -1 !== $args['number'] ) {
@@ -1089,7 +1090,7 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
         $trn_pdf->add_total( __( 'SUB TOTAL', 'erp' ), $transaction->amount );
         $trn_pdf->add_total( __( 'TOTAL', 'erp' ), $transaction->amount );
     }
-    
+
     if ( 'receive_pay_purchase' === $type ) {
         // Set Column Headers
         $trn_pdf->set_table_headers( [ __( 'PURCHASE NO', 'erp' ), __( 'DUE DATE', 'erp' ), __( 'AMOUNT', 'erp' ) ] );
@@ -1547,21 +1548,21 @@ function erp_acct_pdf_abs_path_to_url( $voucher_no ) {
 
 /**
  * Get formatted transaction status for pdf voucher
- * 
+ *
  * @since 1.8.0
- * 
+ *
  * @param int|string $trn_status
- * 
+ *
  * @return $string
  */
 function erp_acct_get_formatted_status( $trn_status ) {
     $trn_status = erp_acct_get_trn_status_by_id( $trn_status );
     $trn_status = explode( '_', $trn_status );
     $status     = '';
-        
+
     foreach ( $trn_status as $i => $ts ) {
         $status .= strtoupper( $ts );
-            
+
         if ( $i < count( $trn_status ) - 1 ) {
             $status .= ' ';
         }

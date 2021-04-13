@@ -120,6 +120,12 @@ export default {
                 query: { start: filters.start_date, end: filters.end_date, status: filters.status }
             });
             */
+
+            if(this.paginationData.currentPage !== 1){
+                this.paginationData.currentPage = 1;
+                this.$router.push({ path: '/transactions/purchases' });
+            }
+
             this.fetchItems(filters);
             this.fetched = true;
         });
@@ -184,7 +190,7 @@ export default {
                                 item['actions'] = [
                                     { key: '#', label: __('No actions found', 'erp') }
                                 ];
-                                
+
                             } else if (item.status_code === '2' || item.status_code === '3' || item.status_code === '5') {
                                 item['actions'] = [
                                     { key: 'payment', label: __('Payment', 'erp') },
@@ -225,7 +231,7 @@ export default {
                         } else {
                             if ( this.proActivated ) {
                                 item['actions'] = [
-                                    { key: 'return', label: __('Return', 'erp') }                                
+                                    { key: 'return', label: __('Return', 'erp') }
                                 ];
                             } else {
                                 item['actions'] = [
