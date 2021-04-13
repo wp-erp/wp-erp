@@ -4,7 +4,7 @@
             <div class="wperp-col">
                 <h2 class="content-header__title">{{ __('Transactions', 'erp') }}</h2>
             </div>
-            <div class="wperp-col">
+            <div class="wperp-col" ref="filterArea">
                 <form class="wperp-form form--inline" action="" @submit.prevent="filterList">
                     <div :class="['wperp-has-dropdown', {'dropdown-opened': showFilters}]">
                         <a class="wperp-btn btn--default dropdown-trigger filter-button" @click.prevent="toggleFilter">
@@ -64,8 +64,10 @@
                                 </div>
                                 </div>
                                 <div class="wperp-panel-footer">
-                                    <input type="reset" :value="__( 'Cancel', 'erp' )" class="wperp-btn btn--default"
+                                    <input type="button" :value="__( 'Cancel', 'erp' )" class="wperp-btn btn--cancel"
                                            @click="toggleFilter">
+                                    <input type="reset" :value="__( 'Reset', 'erp' )" class="wperp-btn btn--reset"
+                                           @click="resetFilter">
                                     <input type="submit" :value="__( 'Submit', 'erp' )" class="wperp-btn btn--primary">
                                 </div>
                             </div>
@@ -146,6 +148,13 @@ export default {
             const status = this.statuses.find(o => o.id === data.selected);
             this.filters.status = parseInt(status.id);
         });
+
+        // Outside click of the div toggle filter
+        window.addEventListener('click', (e) => {
+            if (!this.$refs.filterArea.contains(e.target)){
+                this.showFilters = false;
+            }
+        })
     },
 
     methods: {
@@ -153,10 +162,23 @@ export default {
             this.showFilters = !this.showFilters;
         },
 
+        // Reset filter and reload list with those fields
+        resetFilter() {
+            this.filters = {
+                start_date : '',
+                end_date   : '',
+                status     : '',
+                type       : '',
+                customer_id: ''
+            };
+
+            this.filterList();
+        },
+
         filterList() {
             this.toggleFilter();
 
-           this.$root.$emit('transactions-filter', this.filters);
+            this.$root.$emit('transactions-filter', this.filters);
         }
 
     }
@@ -166,7 +188,25 @@ export default {
 .form-fields .vue-select {
     width: 100% !important;
 }
+
 .form-fields .form-field-wrapper:first-child{
     padding-right: 10px;
+}
+
+.btn--cancel {
+    color: #000;
+    background-color: #fff!important;
+    border: 1px solid #e2e2e2!important;
+    border-radius: 3px!important;
+    padding: .313rem .7rem!important;
+    float: left;
+}
+
+.btn--reset {
+    color: #3c9fd4;
+    background-color: #fff!important;
+    border: 1px solid #e2e2e2!important;
+    border-radius: 3px!important;
+    padding: .313rem .7rem!important;
 }
 </style>

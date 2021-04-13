@@ -1,3 +1,18 @@
+<style>
+    .wperp-filter-dropdown .wperp-btn.btn--cancel:hover {
+        background-color: transparent !important;
+        border: 1px solid #e2e2e2 !important;
+    }
+    .wperp-filter-dropdown .wperp-btn.btn--reset {
+        color: #3c9fd4 !important;
+        margin-right: 5px !important
+    }
+
+    .wperp-filter-dropdown .wperp-btn.btn--reset:hover {
+        color: #135e96 !important;
+    }
+</style>
+
 <?php
 if ( isset( $_GET['filter_assign_contact' ] ) && !empty( $_GET['filter_assign_contact' ] ) ) {
     $id          = intval( $_GET['filter_assign_contact'] );
@@ -27,7 +42,7 @@ if ( isset( $_GET['filter_assign_contact' ] ) && !empty( $_GET['filter_assign_co
 <div class="wrap erp-crm-customer erp-crm-customer-listing" id="wp-erp" v-cloak>
 
     <h2>
-        <?php esc_attr_e( 'Contacts', 'erp' ); ?>    
+        <?php esc_attr_e( 'Contacts', 'erp' ); ?>
         <?php if ( current_user_can( 'erp_crm_add_contact' ) ) { ?>
             <a href="#" @click.prevent="addContact( 'contact', '<?php esc_attr_e( 'Add New Contact', 'erp' ); ?>' )" id="erp-customer-new" class="erp-contact-new add-new-h2"><?php esc_attr_e( 'Add New Contact', 'erp' ); ?></a>
         <?php } ?>
