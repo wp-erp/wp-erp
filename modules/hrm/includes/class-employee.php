@@ -449,9 +449,12 @@ class Employee {
         if ( $wp_user && $erp_user ) {
             $this->load_employee( absint( $user_id ) );
             $old_data = $this->get_data();
-            $updated  = $this->update_employee( $data );
+            
+            $this->update_employee( $data );
 
             do_action( 'erp_hr_employee_update', $user_id, $old_data );
+        } else {
+            do_action( 'erp_hr_log_employee_new', $this->id, $data );
         }
 
         if ( ! $erp_user ) {

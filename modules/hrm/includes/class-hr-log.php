@@ -24,7 +24,7 @@ class Hr_Log {
     public function __construct() {
 
         // Employee
-        $this->action( 'erp_hr_employee_new', 'create_employee', 10, 2 );
+        $this->action( 'erp_hr_log_employee_new', 'create_employee', 10, 2 );
         $this->action( 'erp_hr_delete_employee', 'delete_employee', 10 );
         $this->action( 'erp_hr_employee_update', 'update_employee', 10, 2 );
 
