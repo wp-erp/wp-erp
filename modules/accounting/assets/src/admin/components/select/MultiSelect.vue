@@ -14,7 +14,7 @@
     @select="onSelect"
     @search-change="asyncFind">
 
-    <span slot="noResult">Oops! No elements found.</span>
+    <span slot="noResult">{{ __('Oops! No elements found.', 'erp') }}</span>
   </multiselect>
 </template>
 
@@ -54,7 +54,7 @@ export default {
 
         placeholder: {
             type: String,
-            default: 'Please search'
+            default: __('Please search', 'erp')
         }
     },
 

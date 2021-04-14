@@ -1,7 +1,7 @@
 <template>
     <div class="wperp-form-group invoice-customers with-multiselect">
         <people-modal title="Add new vendor" type="vendor" v-if="showModal"></people-modal>
-        <label>Vendor<span class="wperp-required-sign">*</span></label>
+        <label>{{ __('Vendor', 'erp') }}<span class="wperp-required-sign">*</span></label>
         <multi-select v-model="selected" :options="options" />
 
         <a href="#" class="add-new-customer" @click="showModal = true">

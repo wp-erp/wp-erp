@@ -883,6 +883,12 @@ class Ajax_Handler {
             $this->send_error( __( 'No employee found', 'erp' ) );
         }
 
+        $user = apply_filters( 'pre_erp_hr_employee_args', $user );
+
+        if ( is_wp_error( $user ) ) {
+            $this->send_error( $user->get_error_message() );
+        }
+
         if ( in_array( 'employee', $user->roles, true ) ) {
             erp_employee_restore( $employee_id );
         }
@@ -923,9 +929,23 @@ class Ajax_Handler {
         if ( isset( $_POST['type'] ) ) {
             $args['module'] = 'employment';
             $args['type']   = sanitize_text_field( wp_unslash( $_POST['type'] ) );
-        } elseif ( isset( $_POST['status'] ) ) {
+
+            if ( 'active' !== $employee->get_status() ) {
+                $args = apply_filters( 'pre_erp_hr_employee_args', $args );
+            }
+        } else if ( isset( $_POST['status'] ) ) {
             $args['module']   = 'employee';
             $args['category'] = sanitize_text_field( wp_unslash( $_POST['status'] ) );
+
+            if ( 'terminated' === $args['category'] ) {
+                $this->send_success();
+            } else if ( 'active' === $args['category'] ) {
+                $args = apply_filters( 'pre_erp_hr_employee_args', $args );
+            }
+        }
+
+        if ( is_wp_error( $args ) ) {
+            $this->send_error( $args->get_error_message() );
         }
 
         $old_data = $employee->get_data();

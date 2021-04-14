@@ -71,11 +71,11 @@ export default {
             addNewLine            : false,
             is_update             : false,
             columns               : {
-                component_name: { label: 'Component' },
-                agency_name   : { label: 'Agency' },
-                tax_cat_name  : { label: 'Tax Category' },
-                tax_rate      : { label: 'Tax Rate' },
-                actions       : { label: 'Actions' }
+                component_name: { label: __('Component', 'erp') },
+                agency_name   : { label: __('Agency', 'erp') },
+                tax_cat_name  : { label: __('Tax Category', 'erp') },
+                tax_rate      : { label: __('Tax Rate', 'erp') },
+                actions       : { label: __('Actions', 'erp') }
             },
             rows: [],
             paginationData: {
@@ -85,8 +85,8 @@ export default {
                 currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
             },
             actions: [
-                { key: 'edit', label: 'Edit', iconClass: 'flaticon-edit' },
-                { key: 'trash', label: 'Delete', iconClass: 'flaticon-trash' }
+                { key: 'edit', label: __('Edit', 'erp'), iconClass: 'flaticon-edit' },
+                { key: 'trash', label: __('Delete', 'erp'), iconClass: 'flaticon-trash' }
             ]
         };
     },
@@ -139,12 +139,12 @@ export default {
         onActionClick(action, row, index) {
             switch (action) {
             case 'trash':
-                if (confirm('Are you sure to delete?')) {
+                if (confirm(__('Are you sure to delete?', 'erp'))) {
                     this.$store.dispatch('spinner/setSpinner', true);
                     HTTP.delete('/taxes/' + this.tax_id + '/line-delete/' + row.db_id).then(response => {
                         this.$delete(this.rows, index);
                         this.$store.dispatch('spinner/setSpinner', false);
-                        this.showAlert('success', 'Deleted !');
+                        this.showAlert('success', __('Deleted !', 'erp'));
                     });
                 }
                 break;

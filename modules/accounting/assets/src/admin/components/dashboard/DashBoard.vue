@@ -105,12 +105,12 @@ export default {
 
     data() {
         return {
-            title1        : 'Income & Expenses',
-            title2        : 'Bank Accounts',
-            title3        : 'Invoices owed to you',
-            title4        : 'Bills to pay',
+            title1        : __('Income & Expenses', 'erp'),
+            title2        : __('Bank Accounts', 'erp'),
+            title3        : __('Invoices owed to you', 'erp'),
+            title4        : __('Bills to pay', 'erp'),
             closable      : true,
-            msg           : 'Accounting',
+            msg           : __('Accounting', 'erp'),
             to_receive    : [],
             to_pay        : []
         };

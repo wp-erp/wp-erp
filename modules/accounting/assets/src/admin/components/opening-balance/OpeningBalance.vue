@@ -29,7 +29,7 @@
 
             <div class="wperp-row">
                 <ul class="report-header" v-if="null !== fin_year">
-                    <li><strong>{{ __('For the period of ( Opening Balance date )', 'erp') }}:</strong> <em>{{ fin_year.start_date }}</em> to <em>{{ fin_year.end_date }}</em></li>
+                    <li><strong>{{ __('For the period of ( Opening Balance date )', 'erp') }}:</strong> <em>{{ fin_year.start_date }}</em> {{ __('to', 'erp') }} <em>{{ fin_year.end_date }}</em></li>
                 </ul>
             </div>
 
@@ -134,7 +134,7 @@
                         <td><div class="with-multiselect"><multi-select v-model="acct.agency" :options="agencies"/></div></td>
                         <td><input type="number" step="0.01"  class="wperp-form-field" @keyup="calculateAmount" disabled v-model="acct.debit"></td>
                         <td><input type="number" step="0.01"  class="wperp-form-field" @keyup="calculateAmount" v-model="acct.credit"></td>
-                        <td class="delete-row" data-colname="Remove">
+                        <td class="delete-row" :data-colname="__('Remove', 'erp')">
                             <a @click.prevent="removeTaxPayRow(idx)" href="#"><i class="flaticon-trash"></i></a>
                         </td>
                     </tr>
@@ -265,10 +265,10 @@
                     <td class="pl-10 text-right col--total-amount" style="width: 60%;">
                         <span>{{ __('Total Amount', 'erp') }}</span>
                     </td>
-                    <td data-colname="Total Debit">
+                    <td :data-colname="__('Total Debit', 'erp')">
                         <input type="text" class="text-right wperp-form-field" :value="moneyFormat(finalTotalDebit)" readonly>
                     </td>
-                    <td data-colname="Total Credit">
+                    <td :data-colname="__('Total Credit', 'erp')">
                         <input type="text" class="text-right wperp-form-field" :value="moneyFormat(finalTotalCredit)" readonly>
                     </td>
                 </tr>
@@ -515,28 +515,28 @@ export default {
 
             this.acct_rec.forEach((element) => {
                 if (typeof element !== 'undefined' && !Object.prototype.hasOwnProperty.call(element, 'people')) {
-                    this.form_errors.push('People is not selected in Accounts Receivable.');
+                    this.form_errors.push(__('People is not selected in Accounts Receivable.', 'erp'));
                 }
             });
 
             this.acct_pay.forEach((element) => {
                 if (typeof element !== 'undefined' && !Object.prototype.hasOwnProperty.call(element, 'people')) {
-                    this.form_errors.push('People is not selected in Accounts Payable.');
+                    this.form_errors.push(__('People is not selected in Accounts Payable.', 'erp'));
                 }
             });
 
             this.tax_pay.forEach((element) => {
                 if (typeof element !== 'undefined' && !Object.prototype.hasOwnProperty.call(element, 'agency')) {
-                    this.form_errors.push('Agency is not selected in Tax Payable.');
+                    this.form_errors.push(__('Agency is not selected in Tax Payable.', 'erp'));
                 }
             });
 
             if (!Object.prototype.hasOwnProperty.call(this.fin_year, 'id')) {
-                this.form_errors.push('Financial year is required.');
+                this.form_errors.push(__('Financial year is required.', 'erp'));
             }
 
             if (this.isWorking) {
-                this.form_errors.push('Debit and Credit must be Equal.');
+                this.form_errors.push(__('Debit and Credit must be Equal.', 'erp'));
             }
         },
 
@@ -565,7 +565,7 @@ export default {
 
             }).then(res => {
                 this.$store.dispatch('spinner/setSpinner', false);
-                this.showAlert('success', 'Opening Balance Created!');
+                this.showAlert('success', __('Opening Balance Created!', 'erp'));
             }).catch(error => {
                 this.$store.dispatch('spinner/setSpinner', false);
                 throw error;

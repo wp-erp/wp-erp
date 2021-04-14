@@ -128,8 +128,13 @@ function erp_crm_get_employees( $args = [] ) {
  * @return html
  */
 function erp_crm_get_crm_user_html_dropdown( $selected = '' ) {
-    $crm_users = erp_crm_get_crm_user();
     $dropdown  = '';
+    
+    if ( current_user_can( 'erp_crm_manager' ) || current_user_can( 'manage_options' ) ) {
+        $crm_users   = erp_crm_get_crm_user();
+    } else {
+        $crm_users[] = wp_get_current_user()->data;
+    }
 
     if ( $crm_users ) {
         foreach ( $crm_users as $key => $user ) {
@@ -672,15 +677,11 @@ function erp_crm_get_feed_activity( $postdata ) {
         $results = $results->where( 'user_id', $postdata['customer_id'] );
     }
 
-    if ( current_user_can( 'erp_crm_agent' ) ) {
+    if ( current_user_can( 'erp_crm_agent' ) && ! current_user_can( 'erp_crm_manager' ) ) {
         $contact_owner = get_current_user_id();
         $people_ids    = array_keys( $wpdb->get_results( "SELECT id FROM {$wpdb->prefix}erp_peoples WHERE contact_owner = {$contact_owner}", OBJECT_K ) );
 
         $results = $results->whereIn( 'user_id', $people_ids );
-    }
-
-    if ( isset( $postdata['created_by'] ) && ! empty( $postdata['created_by'] ) ) {
-        $results = $results->where( 'created_by', $postdata['created_by'] );
     }
 
     if ( isset( $postdata['type'] ) && ! empty( $postdata['type'] ) ) {
@@ -716,21 +717,41 @@ function erp_crm_get_feed_activity( $postdata ) {
     foreach ( $results as $key => $value ) {
         $value['extra'] = json_decode( base64_decode( $value['extra'] ), true );
 
-        if ( isset( $value['extra']['invite_contact'] ) && ! empty( $postdata['assigned_to'] ) ) {
-            if ( ! in_array( $postdata['assigned_to'], $value['extra']['invite_contact'] ) ) {
+        if ( ! empty( $value['extra']['invite_contact'] ) ) {
+            if ( isset( $postdata['assigned_to'] ) &&
+                ! empty( $postdata['assigned_to'] ) &&
+                ! in_array( $postdata['assigned_to'], $value['extra']['invite_contact'] )
+            ) {
                 continue;
             }
-        }
 
-        if ( isset( $value['extra']['invite_contact'] ) && count( $value['extra']['invite_contact'] ) > 0 ) {
+            if ( isset( $postdata['created_by'] ) &&
+                ! empty( $postdata['created_by'] ) &&
+                ! in_array( $postdata['created_by'], $value['extra']['invite_contact'] )
+            ) {
+                continue;
+            }
+
+            $value['extra']['invited_user'] = ! empty( $value['extra']['invited_user'] ) ? (array) $value['extra']['invited_user'] : [];
+
             foreach ( $value['extra']['invite_contact'] as $user_id ) {
-                $value['extra']['invited_user'][] = [
+                array_push( $value['extra']['invited_user'], [
                     'id'   => $user_id,
                     'name' => get_the_author_meta( 'display_name', $user_id ),
-                ];
+                ] );
             }
         } else {
-            $value['extra']['invited_user'] = [];
+            if (
+                ( isset( $postdata['assigned_to'] ) || isset( $postdata['created_by'] ) ) &&
+                (int) $value['created_by']['ID'] !== get_current_user_id()
+            ) {
+                continue;
+            }
+
+            $value['extra']['invited_user'] = [
+                'id'   => $value['created_by']['ID'],
+                'name' => get_the_author_meta( 'display_name', $value['created_by']['ID'] )
+            ];
         }
 
         if ( $value['contact']['user_id'] ) {
