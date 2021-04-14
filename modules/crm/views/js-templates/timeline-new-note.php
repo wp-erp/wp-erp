@@ -14,6 +14,12 @@
 
     <div class="timeline-body" @click="toggleFooter">
         <div class="timeline-email-body">{{{ feed.message }}}</div>
+        <div class="timeline-activity-attachments" v-if="(feed.extra.attachments && feed.extra.attachments.length > 0)">
+            <?php esc_attr_e( 'Attachments : ', 'erp' ); ?>
+            <ul>
+                <li v-for="file in feed.extra.attachments"><a target="_blank" href="{{{file.url}}}">{{{file.name}}}</a></li>
+            </ul>
+        </div>
     </div>
 
     <div class="timeline-footer" v-show="!isActivityPage() && showFooter">
