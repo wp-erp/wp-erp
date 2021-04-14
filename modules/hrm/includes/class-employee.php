@@ -1523,7 +1523,7 @@ class Employee {
             $histories = $histories->where( 'module', $module );
         }
 
-        $histories = $histories->orderBy( 'id', 'desc' )
+        $histories = $histories->orderBy( 'date', 'desc' )
                             ->skip( $offset )
                             ->take( $limit )
                             ->get();
