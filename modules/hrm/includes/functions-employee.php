@@ -625,11 +625,14 @@ function erp_hr_employee_terminate( $data ) {
     }
 
     $employee = new \WeDevs\ERP\HRM\Employee( intval( $data['user_id'] ) );
+    $old_data = $employee->get_data();
     $result   = $employee->terminate( $data );
 
     if ( is_wp_error( $result ) ) {
         return $result->get_error_message();
     }
+
+    do_action( 'erp_hr_employee_update', $data['user_id'] , $old_data );
 
     return $result;
 }

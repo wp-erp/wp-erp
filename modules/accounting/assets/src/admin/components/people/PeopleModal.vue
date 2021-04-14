@@ -27,6 +27,7 @@
                                     v-for="(component, extIndx) in extraFieldsTop"
                                     :key="`top-${extIndx}`"
                                     :is="component"
+                                    :people="people"
                                 />
 
                                 <div class="wperp-row wperp-gutter-20">
@@ -56,6 +57,7 @@
                                     v-for="(component, extIndx) in extraFieldsMiddle"
                                     :key="`middle-${extIndx}`"
                                     :is="component"
+                                    :people="people"
                                 />
 
                                 <!-- extra fields -->
@@ -118,6 +120,7 @@
                                     v-for="(component, extIndx) in extraFieldsBottom"
                                     :key="`bottom-${extIndx}`"
                                     :is="component"
+                                    :people="people"
                                 />
 
                                 <div class="form-check">
@@ -255,7 +258,7 @@ export default {
             }
 
             if (this.emailExists) {
-                this.error_message.push('Email already exists as customer/vendor');
+                this.error_message.push(__('Email already exists as customer/vendor', 'erp'));
                 this.emailExists = false;
 
                 return false;
@@ -266,15 +269,15 @@ export default {
             }
 
             if (!this.peopleFields.first_name) {
-                this.error_message.push('First name is required');
+                this.error_message.push(__('First name is required', 'erp'));
             }
 
             if (!this.peopleFields.last_name) {
-                this.error_message.push('Last name is required');
+                this.error_message.push(__('Last name is required', 'erp'));
             }
 
             if (!this.peopleFields.email) {
-                this.error_message.push('Email is required');
+                this.error_message.push(__('Email is required', 'erp'));
             }
 
             return false;
@@ -355,7 +358,7 @@ export default {
                 this.peopleFields.street_1    = people.billing.street_1;
                 this.peopleFields.street_2    = people.billing.street_2;
                 this.peopleFields.city        = people.billing.city;
-                this.peopleFields.country     = this.selectedCountry(people.billing.country);
+                this.peopleFields.country     = people.billing.country ? !!this.selectedCountry(people.billing.country) : '';
                 this.peopleFields.postal_code = people.billing.postal_code;
 
                 if (people.photo) {

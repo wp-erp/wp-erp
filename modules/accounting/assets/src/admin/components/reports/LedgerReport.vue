@@ -33,10 +33,10 @@
             :columns="columns"
             :rows="rows"
             :showCb="false">
-            <template slot="trn_no" slot-scope="data">
+            <template slot="trn_no" slot-scope="data" v-if="data.row.trn_no">
                 <strong>
                     <router-link :to="{ name: 'DynamicTrnLoader', params: { id: data.row.trn_no }}">
-                        <span v-if="data.row.trn_no">#{{ data.row.trn_no }}</span>
+                        <span>#{{ data.row.trn_no }}</span>
                     </router-link>
                 </strong>
             </template>
@@ -85,13 +85,13 @@ export default {
             ledgers       : [],
             openingBalance: 0,
             columns       : {
-                trn_date   : { label: 'Trns Date' },
-                created_at : { label: 'Created At' },
-                trn_no     : { label: 'Trns No' },
-                particulars: { label: 'Particulars' },
-                debit      : { label: 'Debit' },
-                credit     : { label: 'Credit' },
-                balance    : { label: 'Balance' }
+                trn_date   : { label: __('Trns Date', 'erp') },
+                created_at : { label: __('Created At', 'erp') },
+                trn_no     : { label: __('Trns No', 'erp') },
+                particulars: { label: __('Particulars', 'erp') },
+                debit      : { label: __('Debit', 'erp') },
+                credit     : { label: __('Credit', 'erp') },
+                balance    : { label: __('Balance', 'erp') }
             },
             rows       : [],
             totalDebit : 0,
@@ -120,9 +120,10 @@ export default {
 
             // with leading zero, and JS month are zero index based
             const month = ('0' + (dateObj.getMonth() + 1)).slice(-2);
+            const day   = ('0' + dateObj.getDate()).slice(-2);
 
             this.start_date = `${dateObj.getFullYear()}-${month}-01`;
-            this.end_date   = erp_acct_var.current_date;
+            this.end_date   = `${dateObj.getFullYear()}-${month}-${day}`;
 
             if (this.$route.params.ledgerName) {
                 // Directly coming from chart of acounts

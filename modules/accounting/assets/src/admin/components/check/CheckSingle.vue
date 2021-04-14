@@ -2,7 +2,7 @@
     <div class="wperp-modal-dialog expense-single">
         <div class="wperp-modal-content">
             <div class="wperp-modal-header">
-                <h2>Check</h2>
+                <h2>{{ __('Check', 'erp') }}</h2>
                 <div class="d-print-none">
                     <a href="#" class="wperp-btn btn--default print-btn" @click.prevent="printPopup">
                         <i class="flaticon-printer-1"></i>
@@ -94,8 +94,8 @@
                             <tr>
                                 <td colspan="7">
                                     <ul>
-                                        <li><span>Subtotal:</span> {{ moneyFormat(expense_data.total) }}</li>
-                                        <li><span>Total:</span> {{ moneyFormat(expense_data.total) }}</li>
+                                        <li><span>{{ __('Subtotal', 'erp') }}:</span> {{ moneyFormat(expense_data.total) }}</li>
+                                        <li><span>{{ __('Total', 'erp') }}:</span> {{ moneyFormat(expense_data.total) }}</li>
                                     </ul>
                                 </td>
                             </tr>

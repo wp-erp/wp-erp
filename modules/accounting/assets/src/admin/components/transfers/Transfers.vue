@@ -51,10 +51,10 @@ export default {
             money_transfer: false,
             transfer_list : [],
             columns       : {
-                voucher: { label: 'Voucher No' },
-                ac_from: { label: 'Account From' },
-                amount : { label: 'Amount' },
-                ac_to  : { label: 'Account To' }
+                voucher: { label: __('Voucher No', 'erp') },
+                ac_from: { label: __('Account From', 'erp') },
+                amount : { label: __('Amount', 'erp') },
+                ac_to  : { label: __('Account To', 'erp') }
             }
         };
     },
