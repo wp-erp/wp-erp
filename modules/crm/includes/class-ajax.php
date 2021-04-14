@@ -60,7 +60,7 @@ class Ajax_Handler {
         add_action( 'wp_ajax_erp_crm_get_customer_activity', [ $this, 'fetch_all_activity' ] );
         add_action( 'wp_ajax_erp_customer_feeds_save_notes', [ $this, 'save_activity_feeds' ] );
         add_action( 'wp_ajax_erp_crm_delete_customer_activity', [ $this, 'delete_customer_activity_feeds' ] );
-        add_action( 'wp_ajax_email_attachment', [ $this, 'email_attachment' ] );
+        add_action( 'wp_ajax_erp_crm_activity_attachment', [ $this, 'activity_attachment' ] );
 
         // Schedule page
         add_action( 'wp_ajax_erp_crm_add_schedules_action', [ $this, 'save_activity_feeds' ] );
@@ -1148,9 +1148,17 @@ class Ajax_Handler {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
-        $save_data      = [];
-        $postdata       = $_POST;
-        $attachments    = ( isset( $postdata['attachments'] ) ) ? $postdata['attachments'] : [];
+        $save_data       = [];
+        $postdata        = $_POST;
+        $attachments     = ( isset( $postdata['attachments'] ) ) ? $postdata['attachments'] : [];
+        $old_attachments = ( isset( $postdata['old_attachments'] ) ) ? $postdata['old_attachments'] : [];
+
+        if ( ! empty( $old_attachments) ) {
+            foreach( $old_attachments as $old_atch ) {
+                unset( $old_atch['url'] );
+                $attachments[] = $old_atch;
+            }
+        }
 
         if ( ! isset( $postdata['user_id'] ) && empty( $postdata['user_id'] ) ) {
             $this->send_error( __( 'Customer not found', 'erp' ) );
@@ -1167,12 +1175,17 @@ class Ajax_Handler {
 
         switch ( $postdata['type'] ) {
             case 'new_note':
+                $extra_data = [
+                    'attachments' => $attachments,
+                ];
+
                 $save_data = [
                     'id'         => ( isset( $postdata['id'] ) && ! empty( $postdata['id'] ) ) ? $postdata['id'] : '',
                     'user_id'    => $postdata['user_id'],
                     'created_by' => $postdata['created_by'],
                     'message'    => $postdata['message'],
                     'type'       => $postdata['type'],
+                    'extra'      => base64_encode( wp_json_encode( $extra_data ) ),
                 ];
 
                 $data = erp_crm_save_customer_feed_data( $save_data );
@@ -1195,6 +1208,7 @@ class Ajax_Handler {
                 $extra_data = [
                     'attachments' => $attachments,
                 ];
+
                 $save_data = [
                     'user_id'       => $postdata['user_id'],
                     'created_by'    => $postdata['created_by'],
@@ -1275,6 +1289,7 @@ class Ajax_Handler {
             case 'log_activity':
                 $extra_data = [
                     'invite_contact' => ( isset( $postdata['invite_contact'] ) && ! empty( $postdata['invite_contact'] ) ) ? $postdata['invite_contact'] : [ get_current_user_id() ],
+                    'attachments'    => $attachments,
                 ];
 
                 $save_data = [
@@ -1324,6 +1339,7 @@ class Ajax_Handler {
                 $extra_data = [
                     'task_title'     => ( isset( $postdata['task_title'] ) && ! empty( $postdata['task_title'] ) ) ? $postdata['task_title'] : '',
                     'invite_contact' => ( isset( $postdata['invite_contact'] ) && ! empty( $postdata['invite_contact'] ) ) ? $postdata['invite_contact'] : [],
+                    'attachments'    => $attachments,
                 ];
 
                 $save_data = [
@@ -1730,7 +1746,7 @@ class Ajax_Handler {
      *
      * @return void
      */
-    public function email_attachment() {
+    public function activity_attachment() {
         $files         = ( ! empty( $_FILES['files'] ) ) ? $_FILES['files'] : []; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         $wp_upload_dir = wp_upload_dir();
         $subdir        = apply_filters( 'crm_attachmet_directory', 'crm-attachments' );
