@@ -56,7 +56,9 @@
                         :showCb="false">
                         <template slot="name" slot-scope="data">
                             <span v-html="data.row.name"></span>
-                            <p class="additional" v-for="additional in data.row.additional">{{additional.name}}   <em>{{ moneyFormat( Math.abs(additional.balance) ) }}</em> </p>
+                            <p class="additional" v-for="additional in data.row.additional">
+                                {{additional.name}}   <em>{{ moneyFormat( Math.abs(additional.balance) ) }}</em>
+                            </p>
                         </template>
                         <template slot="balance" slot-scope="data">
                             <span v-if="isNaN(data.row.balance)">{{data.row.balance}}</span>
@@ -82,7 +84,9 @@
                         :showCb="false">
                         <template slot="name" slot-scope="data">
                             <span v-html="data.row.name"> </span>
-                         <p  class="additional" v-for="additional in data.row.additional">{{additional.name}}   <em>{{ moneyFormat( Math.abs(additional.balance) ) }}</em> </p>
+                            <p class="additional" v-for="additional in data.row.additional">
+                             {{additional.name}}   <em>{{ moneyFormat( Math.abs(additional.balance) ) }}</em>
+                            </p>
                         </template>
                         <template slot="balance" slot-scope="data">
                             <span v-if="isNaN(data.row.balance)">{{data.row.balance}}</span>
@@ -166,21 +170,21 @@ export default {
             bulkActions: [
                 {
                     key: 'trash',
-                    label: 'Move to Trash',
+                    label: __('Move to Trash', 'erp'),
                     img: erp_acct_var.erp_assets + '/images/trash.png' /* global erp_acct_var */
                 }
             ],
             columns1: {
-                name: { label: 'Assets' },
-                balance: { label: 'Amount' }
+                name: { label: __('Assets', 'erp') },
+                balance: { label: __('Amount', 'erp') }
             },
             columns2: {
-                name: { label: 'Liability' },
-                balance: { label: 'Amount' }
+                name: { label: __('Liability', 'erp') },
+                balance: { label: __('Amount', 'erp') }
             },
             columns3: {
-                name: { label: 'Equity' },
-                balance: { label: 'Amount' }
+                name: { label: __('Equity', 'erp') },
+                balance: { label: __('Amount', 'erp') }
             },
             rows1         : [],
             rows2         : [],

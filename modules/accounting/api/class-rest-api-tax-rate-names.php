@@ -221,7 +221,7 @@ class Tax_Rate_Names_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( empty( $id ) ) {
             return new WP_Error( 'rest_tax_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
-
+        
         $tax_data = $this->prepare_item_for_database( $request );
         $old_data = erp_acct_get_tax_rate_name( $id );
         $tax_id   = erp_acct_update_tax_rate_name( $tax_data, $id );
@@ -404,7 +404,7 @@ class Tax_Rate_Names_Controller extends \WeDevs\ERP\API\REST_Controller {
                 ],
                 'default' => [
                     'description' => __( 'Tax default value for the resource.' ),
-                    'type'        => [ 'integer', 'string' ],
+                    'type'        => [ 'integer', 'string', 'boolean' ],
                     'context'     => [ 'view', 'edit' ],
                 ],
             ],

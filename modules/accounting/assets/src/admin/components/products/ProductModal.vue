@@ -285,7 +285,7 @@ export default {
                 this.$parent.getProducts();
                 this.resetForm();
                 this.$store.dispatch('spinner/setSpinner', false);
-                this.showAlert('success', type === 'put' ? 'Product Updated!' : 'Product Created!');
+                this.showAlert('success', type === 'put' ? __('Product Updated!', 'erp') : __('Product Created!', 'erp'));
             }).catch(error => {
                 this.$store.dispatch('spinner/setSpinner', false);
                 this.showAlert('warning',  error.response.data.message);
@@ -364,19 +364,19 @@ export default {
             }
 
             if (!this.ProductFields.name) {
-                this.error_msg.push('Product name is required');
+                this.error_msg.push(__('Product name is required', 'erp'));
             }
 
             if (!this.ProductFields.type) {
-                this.error_msg.push('Product type is required');
+                this.error_msg.push(__('Product type is required', 'erp'));
             }
 
             if (this.ProductFields.salePrice <= 0) {
-                this.error_msg.push('Product sale price should be greater than 0');
+                this.error_msg.push(__('Product sale price should be greater than 0', 'erp'));
             }
 
             if (!this.selfOwner && !this.ProductFields.vendor) {
-                this.error_msg.push('Vendor is required');
+                this.error_msg.push(__('Vendor is required', 'erp'));
             }
 
             return false;

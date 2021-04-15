@@ -4,7 +4,7 @@
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
-                    <h2 class="content-header__title">{{ editMode ? 'Update' : 'Create New' }} {{ __('Account', 'erp') }}</h2>
+                    <h2 class="content-header__title">{{ editMode ? __('Update', 'erp') : __('Create New', 'erp') }} {{ __('Account', 'erp') }}</h2>
                 </div>
             </div>
         </div>
@@ -89,7 +89,7 @@ export default {
             },
 
             catData: {
-                title: 'Add New',
+                title: __('Add New', 'erp'),
                 node: null
             },
 
@@ -124,11 +124,13 @@ export default {
         //     this.catData.title = 'Add New';
         //     this.catData.node = null;
 
-        //     this.showAlert('success', 'Successful !');
+        //     this.showAlert('success', __('Successful !', 'erp'));
 
         //     this.fetchLedgerCategories();
         // });
     },
+
+
 
     methods: {
         async prepareDataLoad() {
@@ -168,10 +170,10 @@ export default {
         },
 
         setDataForEdit(ledger) {
-            this.ledgFields.chart_id = ledger.chart_id;
-            this.ledgFields.name = ledger.name;
+            this.ledgFields.chart_id    = ledger.chart_id;
+            this.ledgFields.name        = ledger.name;
             this.ledgFields.category_id = ledger.category_id;
-            this.ledgFields.code = ledger.code;
+            this.ledgFields.code        = ledger.code;
         },
 
         categoryAddModal() {
@@ -216,15 +218,15 @@ export default {
 
         editCategory(node) {
             this.catData.title = 'Update';
-            this.catData.node = node;
+            this.catData.node  = node;
 
-            this.catAddModal = true;
+            this.catAddModal   = true;
         },
 
         removeCategory(node) {
-            if (confirm('Are you sure to remove this category?')) {
+            if (confirm(__('Are you sure to remove this category?', 'erp'))) {
                 HTTP.delete(`/ledgers/categories/${node.id}`).then(response => {
-                    this.showAlert('error', 'Category Removed!');
+                    this.showAlert('error', __('Category Removed!', 'erp') );
 
                     this.fetchLedgerCategories();
                 });
@@ -236,7 +238,7 @@ export default {
 
             HTTP.post('/ledgers', requestData).then(res => {
                 this.$store.dispatch('spinner/setSpinner', false);
-                this.showAlert('success', 'Created !');
+                this.showAlert('success', __('Created !', 'erp'));
                 window.location.reload();
             }).catch(error => {
                 this.$store.dispatch('spinner/setSpinner', false);
@@ -251,7 +253,7 @@ export default {
 
             HTTP.put(`/ledgers/${this.ledgerID}`, requestData).then(res => {
                 this.$store.dispatch('spinner/setSpinner', false);
-                this.showAlert('success', 'Updated !');
+                this.showAlert('success', __('Updated !', 'erp'));
                 window.location.reload();
             }).catch(error => {
                 this.$store.dispatch('spinner/setSpinner', false);
@@ -293,7 +295,7 @@ export default {
             };
 
             if (this.isDuplicateLedger(requestData)) {
-                this.showAlert('error', 'Duplicate Account!');
+                this.showAlert('error', __('Duplicate Account!', 'erp'));
                 this.$store.dispatch('spinner/setSpinner', false);
                 return;
             }

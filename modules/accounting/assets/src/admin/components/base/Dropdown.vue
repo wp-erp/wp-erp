@@ -5,7 +5,7 @@
                     type="button"
                     data-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="false">
-                Dropdown
+                {{ __('Dropdown', 'erp') }}
             </button>
         </slot>
         <div ref="menu" :class="['dropdown-popper dropdown-menu', dropdownClasses, {'show': visible}]" @click.stop="">
