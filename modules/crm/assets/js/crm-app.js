@@ -15,6 +15,9 @@ $(document).on( "trix-file-accept", function(e) {
 
 var mixin = {
     data: function() {
+        return {
+            tooltip: erpCrmApp.remove,
+        }
     },
 
     methods: {
@@ -41,6 +44,7 @@ var mixin = {
 
                 $( `#btn-activity-atch-${feedId}-${index}` ).removeClass( 'add-atch dashicons-plus-alt' ).addClass( 'remove-atch dashicons-dismiss' );
                 $( `#activity-atch-name-${feedId}-${index}` ).css( 'color', '#2271b1' );
+                this.tooltip = erpCrmApp.remove;
             }
 
             if (vm.feedData.old_attachments.includes(file) && remove) {
@@ -49,6 +53,7 @@ var mixin = {
 
                 $( `#btn-activity-atch-${feedId}-${index}` ).removeClass( 'remove-atch dashicons-dismiss' ).addClass( 'add-atch dashicons-plus-alt' );
                 $( `#activity-atch-name-${feedId}-${index}`).css( 'color', '#bdbdbd' );
+                this.tooltip = erpCrmApp.reattach;
             }
         },
 
