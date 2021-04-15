@@ -886,9 +886,16 @@ Vue.component('vtable', {
 
             if( reset ) {
                 var afterPostData   = postData.split('&sub-section=contacts')[1];
-                var removableString = afterPostData.split('&type=contact')[0];
-                postData            = postData.replace(removableString,'');
-                var historyURL      = window.location.pathname +'?page=erp-crm&'+postData
+                var removableString = '';
+
+                if( typeof afterPostData === 'undefined' ) {
+                    afterPostData = postData.split('&sub-section=companies')[1];
+                } else {
+                    removableString = afterPostData.split('&type=contact')[0];
+                }
+
+                postData       = postData.replace(removableString,'');
+                var historyURL = window.location.pathname +'?page = erp-crm&'+postData
                 window.history.pushState( null, null, historyURL );
             }
 
@@ -1044,6 +1051,13 @@ Vue.component('vtable', {
 
         this.fetchData();
         this.pageNumberInput = this.currentPage;
+    },
+
+    created: function () {
+        // remove filterContactCompany key from extraBulkAction when vue table not for contact
+        if( this.rowCheckboxName !== 'customer_id' ) {
+            delete this.extraBulkAction.filterContactCompany;
+        }
     }
 
 });
