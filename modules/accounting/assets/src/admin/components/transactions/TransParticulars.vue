@@ -1,6 +1,6 @@
 <template>
     <div class="particulars" v-if="particulars">
-        <h4>Particulars</h4>
+        <h4>{{ __('Particulars', 'erp') }}</h4>
         <p :key="par"
             v-for="(particular, par) in particulars.split(/\r?\n/)"
         >{{ particular }}</p>

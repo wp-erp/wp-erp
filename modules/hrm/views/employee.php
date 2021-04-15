@@ -65,6 +65,19 @@ $employee_table->prepare_items();
         clear: none;
     }
 
+    .wperp-filter-dropdown .wperp-btn.btn--cancel:hover {
+        background-color: transparent !important;
+        border: 1px solid #e2e2e2 !important;
+    }
+    .wperp-filter-dropdown .wperp-btn.btn--reset {
+        color: #3c9fd4;
+        margin-right: 5px
+    }
+
+    .wperp-filter-dropdown .wperp-btn.btn--reset:hover {
+        color: #135e96 !important;
+    }
+
     @media screen and (max-width: 782px) and (min-width: 326px) {
         .wperp-filter-dropdown {
             margin-top: -2px !important;

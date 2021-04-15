@@ -87,13 +87,13 @@
                             <td class="col--particulars">
                                 <textarea v-model="line.particulars" rows="1" maxlength="250" class="wperp-form-field display-flex" :placeholder="__('Particulars', 'erp')"></textarea>
                             </td>
-                            <td class="col--amount" data-colname="Amount">
+                            <td class="col--amount" :data-colname="__('Amount', 'erp')">
                                 <input type="text" name="amount" autocomplete="off" v-model="line.amount" @keyup="updateFinalAmount" class="text-right wperp-form-field" :required="line.ledger_id ? true : false">
                             </td>
-                            <td class="col--total" data-colname="Total">
+                            <td class="col--total" :data-colname="__('Total', 'erp')">
                                 <input type="text" :value="moneyFormat(line.amount)" class="text-right wperp-form-field" readonly disabled>
                             </td>
-                            <td class="delete-row" data-colname="Remove Above Selection">
+                            <td class="delete-row" :data-colname="__('Remove Above Selection', 'erp')">
                                 <a @click.prevent="removeRow(key)" href="#"><i class="flaticon-trash"></i></a>
                             </td>
                         </tr>
@@ -105,7 +105,7 @@
 
                         <tr class="total-amount-row">
                             <td class="text-right pr-0 hide-sm" colspan="4">{{ __('Total Amount', 'erp') }}</td>
-                            <td class="text-right" data-colname="Total Amount">
+                            <td class="text-right" :data-colname="__('Total Amount', 'erp')">
                                 <input type="text" class="text-right wperp-form-field" name="finalamount" :value="moneyFormat(finalTotalAmount)" readonly disabled></td>
                             <td class="text-right"></td>
                         </tr>
@@ -140,7 +140,7 @@
                         <tfoot>
                         <tr>
                             <td colspan="9" style="text-align: right;">
-                                <combo-button v-if="draftToExpense()" :options="[{ id: 'update', text: 'Save Conversion' }]" />
+                                <combo-button v-if="draftToExpense()" :options="[{ id: 'update', text: __('Save Conversion', 'erp') }]" />
                                 <combo-button v-else-if="editMode" :options="updateButtons" />
                                 <combo-button v-else :options="createButtons" />
                             </td>
@@ -205,16 +205,16 @@ export default {
             form_errors: [],
 
             createButtons: [
-                { id: 'save', text: 'Save' },
-                // {id: 'send_create', text: 'Create and Send'},
-                { id: 'new_create', text: 'Save and New' },
-                { id: 'draft', text: 'Save as Draft' }
+                { id: 'save', text: __('Save', 'erp') },
+                // {id: 'send_create', text: __('Create and Send', 'erp') },
+                { id: 'new_create', text: __('Save and New', 'erp') },
+                { id: 'draft', text: __('Save as Draft', 'erp') }
             ],
 
             updateButtons: [
-                { id: 'update', text: 'Update' },
-                // {id: 'send_update', text: 'Update and Send'},
-                { id: 'new_update', text: 'Update and New' },
+                { id: 'update', text: __('Update', 'erp') },
+                // {id: 'send_update', text: __('Update and Send', 'erp')},
+                { id: 'new_update', text: __('Update and New', 'erp') },
                 { id: 'draft', text: 'Save as Draft' }
             ],
 
@@ -441,7 +441,7 @@ export default {
             this.$store.dispatch('spinner/setSpinner', true);
             HTTP.post('/expenses', requestData).then(res => {
                 this.$store.dispatch('spinner/setSpinner', false);
-                this.showAlert('success', 'Expense Created!');
+                this.showAlert('success', __('Expense Created!', 'erp'));
                 this.$router.push({ name: 'Expenses' });
             }).catch(error => {
                 this.$store.dispatch('spinner/setSpinner', false);
@@ -586,31 +586,31 @@ export default {
             this.form_errors = [];
 
             if (!Object.prototype.hasOwnProperty.call(this.basic_fields.people, 'id')) {
-                this.form_errors.push('People Name is required.');
+                this.form_errors.push(__('People Name is required.', 'erp'));
             }
 
             if (!this.basic_fields.trn_date) {
-                this.form_errors.push('Transaction Date is required.');
+                this.form_errors.push(__('Transaction Date is required.', 'erp'));
             }
 
             if (!Object.prototype.hasOwnProperty.call(this.basic_fields.deposit_to, 'id')) {
-                this.form_errors.push('Transaction Account is required.');
+                this.form_errors.push(__('Transaction Account is required.', 'erp'));
             }
 
             if (!Object.prototype.hasOwnProperty.call(this.basic_fields.trn_by, 'id')) {
-                this.form_errors.push('Payment Method is required.');
+                this.form_errors.push(__('Payment Method is required.', 'erp'));
             }
 
             if (parseFloat(this.basic_fields.deposit_to.balance) < parseFloat(this.finalTotalAmount)) {
-                this.form_errors.push('Not enough balance in selected account.');
+                this.form_errors.push(__('Not enough balance in selected account.', 'erp'));
             }
 
             if (!parseFloat(this.finalTotalAmount)) {
-                this.form_errors.push('Total amount can\'t be zero.');
+                this.form_errors.push(__('Total amount can\'t be zero.', 'erp'));
             }
 
             if (this.noFulfillLines(this.transactionLines, 'ledger_id')) {
-                this.form_errors.push('Please select an account.');
+                this.form_errors.push(__('Please select an account.', 'erp'));
             }
         },
 

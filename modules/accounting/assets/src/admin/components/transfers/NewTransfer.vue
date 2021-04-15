@@ -120,7 +120,7 @@ export default {
                 particulars    : this.particulars
             }).then(res => {
                 this.$store.dispatch('spinner/setSpinner', false);
-                this.showAlert('success', 'Transfer Successful!');
+                this.showAlert('success', __('Transfer Successful!', 'erp'));
                 this.fetchAccounts();
                 this.resetData();
                 this.$router.push('/transfers');

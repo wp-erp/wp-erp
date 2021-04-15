@@ -16,6 +16,7 @@ if ( $id ) {
             'name'     => 'date',
             'value'    => erp_current_datetime()->format('Y-m-d'),
             'required' => true,
+            'custom_attr' => [ 'autocomplete' => 'off' ],
             'class'    => 'erp-date-field',
         ] );
         ?>

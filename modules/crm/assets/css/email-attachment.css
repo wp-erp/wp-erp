@@ -35,9 +35,50 @@
     width: 0;
     cursor: pointer;
 }
+.crm-activity-attachment {
+    opacity: 0;
+    width: 0;
+    cursor: pointer;
+}
 .attachments-label{
     padding: 5px 15px;
     vertical-align: baseline !important;
     border-radius: 5px;
     cursor: pointer !important;
+}
+.btn-activity-atch {
+    font-size: 17px;
+    font-weight: 300;
+    border: none;
+    cursor: pointer;
+    margin: 5px 0 0 6px;
+}
+.btn-activity-atch.remove-atch {
+    color: #bdbdbd;
+}
+.btn-activity-atch.remove-atch:hover {
+    color: rgb(212, 91, 91);
+    background-color: none;
+}
+.btn-activity-atch.add-atch {
+    color: #bdbdbd;
+}
+.btn-activity-atch.add-atch:hover {
+    color: #2271b1;
+    background-color: none;
+}
+#crm-atch-output {
+    color: rgb(150, 150, 150);
+    font-weight: 300;
+}
+.btn-activity-atch .crm-tooltips {
+    visibility: hidden;
+    position: absolute;
+    font-size: 14px;
+    font-style: italic;
+    font-family: unset;
+    font-weight: 300;
+}
+.btn-activity-atch:hover .crm-tooltips {
+    visibility: visible;
 }

@@ -19,7 +19,7 @@
                         <template slot="dropdown">
                             <ul role="menu">
                                 <li> <a :href="pdf_link">{{ __('Export as PDF', 'erp') }}</a> </li>
-                                <li><a href="#" @click.prevent="showModal = true">Send Mail</a></li>
+                                <li><a href="#" @click.prevent="showModal = true">{{ __('Send Mail', 'erp') }}</a></li>
                             </ul>
                         </template>
                     </dropdown>

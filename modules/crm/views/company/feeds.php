@@ -16,7 +16,7 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
         </ul>
 
         <div class="nav-content" id="erp-crm-feed-nav-content">
-            <form action="" method="post" @submit.prevent = "addCustomerFeed()" id="erp-crm-activity-feed-form" enctype="multipart/form-data">
+            <form action="" method="post" @submit.prevent = "addCustomerFeed()" id="erp-crm-activity-feed-form" enctype="multipart/form-data" autocomplete="off">
 
                 <new-note v-if="tabShow == 'new_note'" :feed="" keep-alive></new-note>
 

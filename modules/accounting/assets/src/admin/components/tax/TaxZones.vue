@@ -74,13 +74,13 @@ export default {
                 currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
             },
             actions: [
-                { key: 'edit', label: 'Edit', iconClass: 'flaticon-edit' },
-                { key: 'trash', label: 'Delete', iconClass: 'flaticon-trash' }
+                { key: 'edit', label: __('Edit', 'erp'), iconClass: 'flaticon-edit' },
+                { key: 'trash', label: __('Delete', 'erp'), iconClass: 'flaticon-trash' }
             ],
             bulkActions: [
                 {
                     key: 'trash',
-                    label: 'Move to Trash',
+                    label: __('Move to Trash', 'erp'),
                     iconClass: 'flaticon-trash'
                 }
             ],
@@ -161,12 +161,12 @@ export default {
         onActionClick(action, row, index) {
             switch (action) {
             case 'trash':
-                if (confirm('Are you sure to delete?')) {
+                if (confirm(__('Are you sure to delete?', 'erp'))) {
                     this.$store.dispatch('spinner/setSpinner', true);
                     HTTP.delete('tax-rate-names' + '/' + row.id).then(response => {
                         this.$delete(this.rows, index);
                         this.$store.dispatch('spinner/setSpinner', false);
-                        this.showAlert('success', 'Deleted !');
+                        this.showAlert('success', __('Deleted !', 'erp'));
                     });
                 }
                 break;
@@ -185,7 +185,7 @@ export default {
 
         onBulkAction(action, items) {
             if (action === 'trash') {
-                if (confirm('Are you sure to delete?')) {
+                if (confirm(__('Are you sure to delete?', 'erp'))) {
                     this.$store.dispatch('spinner/setSpinner', true);
                     HTTP.delete('tax-rate-names/delete/' + items.join(',')).then(response => {
                         const toggleCheckbox = document.getElementsByClassName('column-cb')[0].childNodes[0];
@@ -197,7 +197,7 @@ export default {
 
                         this.fetchItems();
                         this.$store.dispatch('spinner/setSpinner', false);
-                        this.showAlert('success', 'Deleted !');
+                        this.showAlert('success', __('Deleted !', 'erp'));
                     }).catch(error => {
                         this.$store.dispatch('spinner/setSpinner', false);
                         throw error;

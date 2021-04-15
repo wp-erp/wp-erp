@@ -3858,7 +3858,7 @@ function erp_is_valid_url( $url ) {
  * @return bool
  */
 function erp_is_valid_employee_id( $emp_id ) {
-    return preg_match( '/^[A-Z0-9][\-A-Z0-9]+$/i', $emp_id );
+    return preg_match( '/^[A-Z0-9][\-A-Z0-9]*$/i', $emp_id );
 }
 
 /**
@@ -3906,3 +3906,39 @@ function erp_get_array_diff( $new_data, $old_data, $is_seriazie = false ) {
     }
 }
 
+/**
+ * Discards all non-numeric charecters from a given string
+ *
+ * @since 1.8.2
+ * 
+ * @param string $str
+ * 
+ * @return string
+ */
+function erp_discard_non_numeric_chars( $str ) {
+    return preg_replace( '/[^0-9]/', '', $str );
+}
+
+/**
+ * Sanitizes phone number to discard unwanted charecters
+ * 
+ * @since 1.8.2
+ *
+ * @param string $phone_no
+ * @param boolean $allow_plus
+ * 
+ * @return string
+ */
+function erp_sanitize_phone_number( $phone_no, $allow_plus = false ) {
+    $result = erp_discard_non_numeric_chars( $phone_no );
+
+    if ( ! $allow_plus ) {
+        return $result;
+    }
+
+    if ( 0 === strpos( $phone_no, '+' ) ) {
+        $result = '+' . $result;
+    }
+
+    return $result;
+}

@@ -4,7 +4,7 @@
             <div class="wperp-modal-content">
                 <!-- modal body title -->
                 <div class="wperp-modal-header">
-                    <h3>{{ is_update ? 'Edit' : 'Add' }} {{ __('Tax Zone', 'erp') }}</h3>
+                    <h3>{{ is_update ? __('Edit', 'erp') : __('Add', 'erp') }} {{ __('Tax Zone', 'erp') }}</h3>
                     <span class="modal-close" @click.prevent="closeModal"><i class="flaticon-close"></i></span>
                 </div>
                 <!-- end modal body title -->
@@ -117,11 +117,11 @@ export default {
             if (this.is_update) {
                 rest = 'put';
                 url = `/tax-rate-names/${this.rate_name_id}`;
-                msg = 'Tax Zone Updated!';
+                msg = __('Tax Zone Updated!', 'erp');
             } else {
                 rest = 'post';
                 url = `/tax-rate-names`;
-                msg = 'Tax Zone Created!';
+                msg = __('Tax Zone Created!', 'erp');
             }
 
             HTTP[rest](url, {
@@ -146,7 +146,7 @@ export default {
             this.form_errors = [];
 
             if (!this.rate_name) {
-                this.form_errors.push('Tax Zone Name is required.');
+                this.form_errors.push(__('Tax Zone Name is required.', 'erp'));
             }
         },
 

@@ -254,9 +254,11 @@ window.wpErpVue = window.wpErpVue || {};
 
         computed: {
             headerText: function() {
-                return this.i18n.newNoteHeadertext
+                return this.i18n.newNoteHeadertext ? 
+                        this.i18n.newNoteHeadertext
                         .replace( '{{createdUserName}}', this.createdUserName )
-                        .replace( '{{createdForUser}}', this.createdForUser );
+                        .replace( '{{createdForUser}}', this.createdForUser )
+                        : '';
             },
 
             createdUserImg: function() {
@@ -289,12 +291,17 @@ window.wpErpVue = window.wpErpVue || {};
 
         computed: {
             headerText: function() {
-                return ( ! this.isRepliedEmail ) ? this.i18n.emailHeadertext
-                        .replace( '{{createdUserName}}', this.createdUserName )
-                        .replace( '{{createdForUser}}', this.createdForUser )
-                        : this.i18n.replyEmailHeadertext
-                        .replace( '{{createdUserName}}', this.createdUserName )
-                        .replace( '{{createdForUser}}', this.createdForUser );
+                var headerText      = this.i18n.emailHeadertext ? this.i18n.emailHeadertext
+                                        .replace( '{{createdUserName}}', this.createdUserName )
+                                        .replace( '{{createdForUser}}', this.createdForUser )
+                                        : '';
+
+                var replyHeaderText = this.i18n.replyEmailHeadertext ? this.i18n.replyEmailHeadertext
+                                        .replace( '{{createdUserName}}', this.createdUserName )
+                                        .replace( '{{createdForUser}}', this.createdForUser )
+                                        : '';
+
+                return ( ! this.isRepliedEmail ) ? headerText : replyHeaderText;
             },
 
             emailViewedTime: function() {
@@ -348,33 +355,41 @@ window.wpErpVue = window.wpErpVue || {};
         computed: {
             headerText: function() {
                 if ( this.countUser == 1 ) {
-                    return this.i18n.logHeaderTextSingleUser
+                    return this.i18n.logHeaderTextSingleUser ?
+                    this.i18n.logHeaderTextSingleUser
                         .replace( '{{createdUserName}}', this.createdUserName )
                         .replace( '{{logType}}', this.logType )
                         .replace( '{{logDateTime}}', this.logDateTime )
                         .replace( '{{createdForUser}}', this.createdForUser )
-                        .replace( '{{otherUser}}', this.feed.extra.invited_user[0].name );
+                        .replace( '{{otherUser}}', this.feed.extra.invited_user[0].name )
+                        : '';
                 } else {
-                    return this.i18n.logHeaderText
+                    return this.i18n.logHeaderText ?
+                        this.i18n.logHeaderText
                         .replace( '{{createdUserName}}', this.createdUserName )
                         .replace( '{{logType}}', this.logType )
                         .replace( '{{logDateTime}}', this.logDateTime )
                         .replace( '{{createdForUser}}', this.createdForUser )
+                        : '';
                 }
             },
 
             headerScheduleText: function() {
                 if ( this.countUser == 1 ) {
-                    return this.i18n.scheduleHeaderTextSingleUser
+                    return this.i18n.scheduleHeaderTextSingleUser ?
+                        this.i18n.scheduleHeaderTextSingleUser
                         .replace( '{{createdUserName}}', this.createdUserName )
                         .replace( '{{logType}}', this.logType )
                         .replace( '{{createdForUser}}', this.createdForUser )
-                        .replace( '{{otherUser}}', this.feed.extra.invited_user[0].name );
+                        .replace( '{{otherUser}}', this.feed.extra.invited_user[0].name )
+                        : '';
                 } else {
-                    return this.i18n.scheduleHeaderText
+                    return this.i18n.scheduleHeaderText ?
+                        this.i18n.scheduleHeaderText
                         .replace( '{{createdUserName}}', this.createdUserName )
                         .replace( '{{logType}}', this.logType )
                         .replace( '{{createdForUser}}', this.createdForUser )
+                        : '';
                 }
             },
 
@@ -389,13 +404,13 @@ window.wpErpVue = window.wpErpVue || {};
 
             invitedUser: function() {
                 var self = this;
-                return this.feed.extra.invited_user.map( function( elm ) {
+                return this.feed.extra.invited_user ? this.feed.extra.invited_user.map( function( elm ) {
                     if ( elm.id == wpCRMvue.current_user_id ) {
                         return self.i18n.you;
                     } else {
                         return elm.name;
                     }
-                } ).join("<br>");
+                } ).join("<br>") : '';
             },
 
             createdUserImg: function() {
@@ -475,9 +490,11 @@ window.wpErpVue = window.wpErpVue || {};
 
         computed: {
             headerText: function() {
-                return this.i18n.taskHeaderText
+                return this.i18n.taskHeaderText ?
+                        this.i18n.taskHeaderText
                         .replace( '{{createdUserName}}', this.createdUserName )
-                        .replace( '{{createdForUser}}', this.createdForUser );
+                        .replace( '{{createdForUser}}', this.createdForUser )
+                        : '';
             },
 
             countUser: function () {
