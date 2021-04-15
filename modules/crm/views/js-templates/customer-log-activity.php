@@ -50,7 +50,12 @@ $customer_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
         <div class="timeline-activity-attachments">
             <?php esc_attr_e( 'Attachments : ', 'erp' ); ?>
             <ul v-if="(feed.extra.attachments && feed.extra.attachments.length > 0)">
-                <li v-for="file in feed.extra.attachments"><a id="activity-atch-name-{{{feed.id}}}-{{{$index}}}" target="_blank" href="{{{file.url}}}">{{{file.name}}}{{{updateAttachments(feed.id, file, $index, false)}}}</a><span id="btn-activity-atch-{{{feed.id}}}-{{{$index}}}" v-on:click.prevent="updateAttachments(feed.id, file, $index, removeAttch($index))" class="btn-activity-atch remove-atch dashicons dashicons-dismiss"></span></li>
+                <li v-for="file in feed.extra.attachments">
+                    <a id="activity-atch-name-{{{feed.id}}}-{{{$index}}}" target="_blank" href="{{{file.url}}}">{{{file.name}}}{{{updateAttachments(feed.id, file, $index, false)}}}</a>
+                    <span id="btn-activity-atch-{{{feed.id}}}-{{{$index}}}" v-on:click.prevent="updateAttachments(feed.id, file, $index, removeAttch($index))" class="btn-activity-atch remove-atch dashicons dashicons-dismiss">
+                        <span class="crm-tooltips">{{tooltip}}</span>
+                    </span>
+                </li>
             </ul>
             <input type="file" name="attachments[]" class="crm-activity-attachment" id="activity-attachment-{{feed.id}}" v-on:change="addAttachments(feed)" multiple>
             <label for="activity-attachment-{{feed.id}}" class="attachments-label" title="Add File"><?php _e( '+ Add File', 'erp' ); ?></label>
