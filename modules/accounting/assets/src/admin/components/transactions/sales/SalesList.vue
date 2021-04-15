@@ -117,6 +117,12 @@ export default {
                 path : '/transactions/sales',
                 query: { start: filters.start_date, end: filters.end_date, status: filters.status, type: filters.type }
             });*/
+
+            if(this.paginationData.currentPage !== 1){
+                this.paginationData.currentPage = 1;
+                this.$router.push({ path: '/transactions/sales' });
+            }
+
             this.fetchItems(filters);
             this.fetched = true;
         });
@@ -220,7 +226,7 @@ export default {
                         } else {
                             if ( this.proActivated ) {
                                 item['actions'] = [
-                                    { key: 'return', label: __('Receive Return', 'erp') }                                
+                                    { key: 'return', label: __('Receive Return', 'erp') }
                                 ];
                             } else {
                                 item['actions'] = [
@@ -252,7 +258,7 @@ export default {
         onActionClick(action, row, index) {
             switch (action) {
             case 'trash':
-                if (confirm('Are you sure to delete?')) {
+                if (confirm(__('Are you sure to delete?', 'erp'))) {
                     this.$store.dispatch('spinner/setSpinner', true);
                     HTTP.delete('invoices/' + row.id).then(response => {
                         this.$delete(this.rows, index);

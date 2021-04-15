@@ -72,20 +72,20 @@
                     <tbody>
                     <tr :key="key" v-for="(pay_bill,key) in pay_bills">
                         <td scope="row" class="col--id column-primary">#{{pay_bill.voucher_no}}</td>
-                        <td class="col--due-date" data-colname="Due Date">{{pay_bill.due_date}}</td>
-                        <td class="col--total" data-colname="Total">{{moneyFormat(pay_bill.amount)}}</td>
-                        <td class="col--due" data-colname="Due">{{pay_bill.due}}</td>
-                        <td class="col--amount text-right" data-colname="Amount">
+                        <td class="col--due-date" :data-colname="__('Due Date', 'erp')">{{pay_bill.due_date}}</td>
+                        <td class="col--total" :data-colname="__('Total', 'erp')">{{moneyFormat(pay_bill.amount)}}</td>
+                        <td class="col--due" :data-colname="__('Due', 'erp')">{{pay_bill.due}}</td>
+                        <td class="col--amount text-right" :data-colname="__('Amount', 'erp')">
                             <input type="text" min="0" :max="pay_bill.due" v-model="totalAmounts[key]" @keyup="updateFinalAmount" class="text-right"/>
                         </td>
-                        <td class="delete-row" data-colname="Remove Above Selection">
+                        <td class="delete-row" :data-colname="__('Remove Above Selection', 'erp')">
                             <a @click.prevent="removeRow(key)" href="#"><i class="flaticon-trash"></i></a>
                         </td>
                     </tr>
 
                     <tr class="total-amount-row">
                         <td class="text-right pr-0 hide-sm" colspan="4">{{ __('Total Amount', 'erp') }}</td>
-                        <td class="text-right" data-colname="Total Amount">
+                        <td class="text-right" :data-colname="__('Total Amount', 'erp')">
                             <input type="text" class="text-right" :value="moneyFormat(finalTotalAmount)" readonly disabled/></td>
                         <td class="text-right"></td>
                     </tr>
@@ -164,9 +164,9 @@ export default {
             },
 
             createButtons: [
-                { id: 'save', text: 'Save' },
-                { id: 'new_create', text: 'Save and New' },
-                { id: 'draft', text: 'Save as Draft' }
+                { id: 'save', text: __('Save', 'erp') },
+                { id: 'new_create', text: __('Save and New', 'erp') },
+                { id: 'draft', text: __('Save as Draft', 'erp') }
             ],
 
             form_errors     : [],
@@ -336,7 +336,7 @@ export default {
                 bank        : this.check_data.bank_name
             }).then(res => {
                 this.$store.dispatch('spinner/setSpinner', false);
-                this.showAlert('success', 'Pay-Bill Created!');
+                this.showAlert('success', __('Pay-Bill Created!', 'erp'));
 
                 if (this.actionType === 'save' || this.actionType === 'draft') {
                     this.$router.push({ name: 'Expenses' });
@@ -345,7 +345,7 @@ export default {
                 }
             }).catch(error => {
                 this.$store.dispatch('spinner/setSpinner', false);
-                this.showAlert('error', 'Something went wrong!');
+                this.showAlert('error', __('Something went wrong!', 'erp'));
                 throw error;
             }).then(() => {
                 this.resetFields();
@@ -393,27 +393,27 @@ export default {
             this.form_errors = [];
 
             if (!Object.prototype.hasOwnProperty.call(this.basic_fields.people, 'id')) {
-                this.form_errors.push('People Name is required.');
+                this.form_errors.push(__('People Name is required.', 'erp'));
             }
 
             if (!this.basic_fields.payment_date) {
-                this.form_errors.push('Transaction Date is required.');
+                this.form_errors.push(__('Transaction Date is required.', 'erp'));
             }
 
             if (!Object.prototype.hasOwnProperty.call(this.basic_fields.deposit_to, 'id')) {
-                this.form_errors.push('Transaction Account is required.');
+                this.form_errors.push(__('Transaction Account is required.', 'erp'));
             }
 
             if (!Object.prototype.hasOwnProperty.call(this.basic_fields.trn_by, 'id')) {
-                this.form_errors.push('Payment Method is required.');
+                this.form_errors.push(__('Payment Method is required.', 'erp'));
             }
 
             if (parseFloat(this.basic_fields.deposit_to.balance) < parseFloat(this.finalTotalAmount)) {
-                this.form_errors.push('Not enough balance in selected account.');
+                this.form_errors.push(__('Not enough balance in selected account.', 'erp'));
             }
 
             if (!parseFloat(this.finalTotalAmount)) {
-                this.form_errors.push('Total amount can\'t be zero.');
+                this.form_errors.push(__('Total amount can\'t be zero.', 'erp'));
             }
         },
 

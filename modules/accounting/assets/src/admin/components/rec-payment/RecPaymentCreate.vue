@@ -83,20 +83,20 @@
                     <tbody>
                     <tr :key="key" v-for="(invoice,key) in invoices">
                         <td scope="row" class="col--id column-primary">#{{invoice.invoice_no}}</td>
-                        <td class="col--due-date" data-colname="Due Date">{{invoice.due_date}}</td>
-                        <td class="col--total" data-colname="Total">{{moneyFormat(invoice.amount)}}</td>
-                        <td class="col--due" data-colname="Due">{{formatAmount(invoice.due, true)}}</td>
-                        <td class="col--amount" data-colname="Amount">
+                        <td class="col--due-date" :data-colname="__('Due Date', 'erp')">{{invoice.due_date}}</td>
+                        <td class="col--total" :data-colname="__('Total', 'erp')">{{moneyFormat(invoice.amount)}}</td>
+                        <td class="col--due" :data-colname="__('Due', 'erp')">{{formatAmount(invoice.due, true)}}</td>
+                        <td class="col--amount" :data-colname="__('Amount', 'erp')">
                             <input type="number" step="0.01" :max="Math.abs(invoice.due)" v-model="totalAmounts[key]" @keyup="updateFinalAmount" class="wperp-form-field text-right"/>
                         </td>
-                        <td class="delete-row" data-colname="Remove Above Selection">
+                        <td class="delete-row" :data-colname="__('Remove Above Selection', 'erp')">
                             <a @click.prevent="removeRow(key)" href="#"><i class="flaticon-trash"></i></a>
                         </td>
                     </tr>
 
                     <tr class="total-amount-row">
                         <td class="text-right pr-0 hide-sm" colspan="4">{{ __('Total Amount', 'erp') }}</td>
-                        <td class="text-right" data-colname="Total Amount">
+                        <td class="text-right" :data-colname="__('Total Amount', 'erp')">
                             <input type="text" class="wperp-form-field text-right" name="finalamount"
                             :value="moneyFormat(finalTotalAmount)" readonly disabled/></td>
                         <td class="text-right"></td>
@@ -193,9 +193,9 @@ export default {
             },
 
             createButtons: [
-                { id: 'save', text: 'Save' },
-                { id: 'new_create', text: 'Save and New' },
-                { id: 'draft', text: 'Save as Draft' }
+                { id: 'save', text: __('Save', 'erp') },
+                { id: 'new_create', text: __('Save and New', 'erp') },
+                { id: 'draft', text: __('Save as Draft', 'erp') }
             ],
 
             form_errors: [],

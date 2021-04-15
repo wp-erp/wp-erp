@@ -353,8 +353,13 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
         $transactions = erp_acct_get_sales_transactions( $args );
         $total_items  = erp_acct_get_sales_transactions(
             [
-                'count'  => true,
-                'number' => -1,
+                'count'       => true,
+                'number'      => -1,
+                'status'      => $args['status'],
+                'type'        => $args['type'],
+                'start_date'  => $args['start_date'],
+                'end_date'    => $args['end_date'],
+                'customer_id' => $args['customer_id'],
             ]
         );
 
@@ -510,8 +515,13 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
         $transactions = erp_acct_get_expense_transactions( $args );
         $total_items  = erp_acct_get_expense_transactions(
             [
-                'count'  => true,
-                'number' => -1,
+                'count'      => true,
+                'number'     => -1,
+                'status'     => $args['status'],
+                'type'       => $args['type'],
+                'start_date' => $args['start_date'],
+                'end_date'   => $args['end_date'],
+                'vendor_id'  => $args['vendor_id']
             ]
         );
 
@@ -599,8 +609,13 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
         $transactions = erp_acct_get_purchase_transactions( $args );
         $total_items  = erp_acct_get_purchase_transactions(
             [
-                'count'  => true,
-                'number' => -1,
+                'count'      => true,
+                'number'     => -1,
+                'status'     => $args['status'],
+                'type'       => $args['type'],
+                'start_date' => $args['start_date'],
+                'end_date'   => $args['end_date'],
+                'vendor_id'  => $args['vendor_id']
             ]
         );
 

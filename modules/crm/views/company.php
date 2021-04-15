@@ -1,3 +1,18 @@
+<style>
+    .wperp-filter-dropdown .wperp-btn.btn--cancel:hover {
+        background-color: transparent !important;
+        border: 1px solid #e2e2e2 !important;
+    }
+    .wperp-filter-dropdown .wperp-btn.btn--reset {
+        color: #3c9fd4 !important;
+        margin-right: 5px !important
+    }
+
+    .wperp-filter-dropdown .wperp-btn.btn--reset:hover {
+        color: #135e96 !important;
+    }
+</style>
+
 <?php
 if ( isset( $_GET['filter_assign_contact' ] ) && !empty( $_GET['filter_assign_contact' ] ) ) {
     $id = intval( $_GET['filter_assign_contact'] );

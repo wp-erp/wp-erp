@@ -45,7 +45,7 @@ class Employee_List_Table extends \WP_List_Table {
             <a class="wperp-btn btn--default"><span class="dashicons dashicons-filter"></span>Filters<span class="dashicons dashicons-arrow-down-alt2"></span></a>
             <div class="erp-dropdown-filter-content" id="erp-dropdown-content">
                 <div class="wperp-filter-panel wperp-filter-panel-default">
-                    <h3>Filter</h3>
+                    <h3><?php esc_html_e('Filter', 'erp') ?></h3>
                     <div class="wperp-filter-panel-body">
                         <label class="screen-reader-text" for="new_role"><?php esc_html_e( 'Filter by Designation', 'erp' ); ?></label>
                         <select name="filter_designation" id="filter_designation">
@@ -54,7 +54,9 @@ class Employee_List_Table extends \WP_List_Table {
                             $designations = erp_hr_get_designation_dropdown_raw();
 
                             foreach ( $designations as $key => $designation ) {
-                                echo sprintf( "<option value='%s'%s>%s</option>\n", esc_html( $key ), selected( $selected_desingnation, esc_html( $key ), false ), esc_html( $designation ) );
+                                if( $key > 0 ) {
+                                    echo sprintf( "<option value='%s'%s>%s</option>\n", esc_html( $key ), selected( $selected_desingnation, esc_html( $key ), false ), esc_html( $designation ) );
+                                }
                             };
                             ?>
                         </select>
@@ -66,7 +68,9 @@ class Employee_List_Table extends \WP_List_Table {
                             $departments = erp_hr_get_departments_dropdown_raw();
 
                             foreach ( $departments as $key => $department ) {
-                                echo sprintf( "<option value='%s'%s>%s</option>\n", esc_html( $key ), selected( $selected_department, esc_html( $key ), false ), esc_html( $department ) );
+                                if( $key > 0 ) {
+                                    echo sprintf( "<option value='%s'%s>%s</option>\n", esc_html( $key ), selected( $selected_department, esc_html( $key ), false ), esc_html( $department ) );
+                                }
                             };
                             ?>
                         </select>
@@ -84,8 +88,9 @@ class Employee_List_Table extends \WP_List_Table {
                         </select>
                     </div>
                     <div class="wperp-filter-panel-footer">
-                        <input type="submit" class="wperp-btn btn--cancel" value="Cancel" name="hide_filter">
-                        <?php submit_button( __( 'Apply', 'erp' ), 'submit', 'filter_employee', false, [ 'id' => 'filter', 'class' => 'wperp-btn btn--primary' ] ); ?>
+                        <input type="submit" class="wperp-btn btn--cancel btn--filter" style="float: left" value="<?php esc_html_e( 'Cancel', 'erp' ); ?>" name="hide_filter">
+                        <input type="reset" class="wperp-btn btn--cancel btn--filter btn--reset" value="<?php esc_html_e( 'Reset', 'erp' ); ?>" name="reset_filter">
+                        <?php submit_button( __( 'Apply', 'erp' ), 'submit', 'filter_employee', false, [ 'id' => 'filter', 'class' => 'wperp-btn btn--primary', 'style' => 'background-color: #1a9ed4; color: #fff; border: 1px solid transparent' ] ); ?>
                     </div>
                 </div>
             </div>

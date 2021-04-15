@@ -59,21 +59,21 @@
                         <td scope="row" class="column-primary">
                             {{ key+1 }}
                         </td>
-                        <td class="col--account" data-colname="Account">
+                        <td class="col--account" :data-colname="__('Account', 'erp')">
                             <div class="wperp-custom-select with-multiselect">
                                <multi-select v-model="account_ids[key]" :options="ledgers"></multi-select>
                             </div>
                         </td>
-                        <td class="col--particulars" data-colname="Particulars">
+                        <td class="col--particulars" :data-colname="__('Particulars', 'erp')">
                             <input type="text" v-model="particulars[key]" maxlength="250" class="wperp-form-field">
                         </td>
-                        <td class="col--debit" data-colname="Debit">
+                        <td class="col--debit" :data-colname="__('Debit', 'erp')">
                             <input type="text" @keyup="calculateAmount(key)" v-model="debitLine[key]" class="wperp-form-field text-right" :required="(Number(creditLine[key]) || 0) === 0 ? true : false">
                         </td>
-                        <td class="col--credit" data-colname="Credit">
+                        <td class="col--credit" :data-colname="__('Credit', 'erp')">
                             <input type="text" @keyup="calculateAmount(key)" v-model="creditLine[key]" class="wperp-form-field text-right" :required="(Number(debitLine[key]) || 0) === 0 ? true : false">
                         </td>
-                        <td class="col--actions delete-row" data-colname="Remove Selection">
+                        <td class="col--actions delete-row" :data-colname="__('Remove Selection', 'erp')">
                             <a href="#" @click.prevent="remove_item(key)"><i class="flaticon-trash"></i></a>
                         </td>
                     </tr>
@@ -86,11 +86,11 @@
                         <td colspan="3" class="pl-10 text-right col--total-amount">
                             <span>{{ __('Total Amount', 'erp') }}</span>
                         </td>
-                        <td data-colname="Debit">
+                        <td :data-colname="__('Debit', 'erp')">
                             <input type="text" class="wperp-form-field text-right"
                             :value="isNaN(totalDebit()) ? debit_total : moneyFormat(totalDebit())" readonly>
                         </td>
-                        <td data-colname="Credit">
+                        <td :data-colname="__('Credit', 'erp')">
                             <input type="text" class="wperp-form-field text-right"
                             :value="isNaN(totalCredit()) ? credit_total: moneyFormat(totalCredit())" readonly>
                         </td>
@@ -214,7 +214,7 @@ export default {
                 particulars: this.journal_parti
             }).then(res => {
                 this.$store.dispatch('spinner/setSpinner', false);
-                this.showAlert('success', 'Journal Entry Added!');
+                this.showAlert('success', __('Journal Entry Added!', 'erp'));
             }).catch(error => {
                 this.$store.dispatch('spinner/setSpinner', false);
                 throw error;
@@ -230,19 +230,19 @@ export default {
             this.form_errors = [];
 
             if (this.account_ids.length < 2) {
-                this.form_errors.push('Accounts are required.');
+                this.form_errors.push(__('Accounts are required.', 'erp'));
             }
 
             if (!this.basic_fields.trn_date) {
-                this.form_errors.push('Transaction Date is required.');
+                this.form_errors.push(__('Transaction Date is required.', 'erp'));
             }
 
             if (!this.debit_total) {
-                this.form_errors.push('Total amount can\'t be zero.');
+                this.form_errors.push(__('Total amount can\'t be zero.', 'erp'));
             }
 
             if (Math.abs(this.debit_total - this.credit_total)) {
-                this.form_errors.push('Debit and Credit must be Equal.');
+                this.form_errors.push(__('Debit and Credit must be Equal.', 'erp'));
             }
         },
 

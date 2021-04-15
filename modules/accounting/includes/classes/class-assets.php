@@ -117,7 +117,7 @@ class Assets {
             'currency_format'    => erp_acct_get_price_format(),
             'symbol'             => erp_acct_get_currency_symbol(),
             'erp_debug_mode'     => erp_get_option( 'erp_debug_mode', 'erp_settings_general', 0 ),
-            'current_date'       => date( 'Y-m-d' ),
+            'current_date'       => erp_current_datetime()->format( 'Y-m-d' ),
             'fy_lower_range'     => $fy_ranges['lower'],
             'fy_upper_range'     => $fy_ranges['upper'],
             'ledgers'            => $ledgers,

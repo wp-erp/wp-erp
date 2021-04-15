@@ -2,7 +2,7 @@
     <div class="wperp-products">
         <product-modal v-if="showModal" :product.sync="product"></product-modal>
         <h2 class="add-new-product">
-            <span>Products</span>
+            <span>{{ __('Products', 'erp') }}</span>
             <a href="" id="erp-product-new" @click.prevent="showModal = true">{{ __('Add New Product', 'erp') }}</a>
         </h2>
 
@@ -20,8 +20,8 @@
             :current-page="paginationData.currentPage"
             @pagination="goToPage"
             :actions="[
-                { key: 'edit', label: 'Edit' },
-                { key: 'trash', label: 'Delete' }
+                { key: 'edit', label: __('Edit', 'erp') },
+                { key: 'trash', label: __('Delete', 'erp') }
             ]">
 
         </list-table>
@@ -48,32 +48,34 @@ export default {
             showModal: false,
             columns  : {
                 name: {
-                    label: 'Product Name'
+                    label: __('Product Name', 'erp')
                 },
                 sale_price: {
-                    label: 'Sale Price'
+                    label: __('Sale Price', 'erp')
                 },
                 cost_price: {
-                    label: 'Cost Price'
+                    label: __('Cost Price', 'erp')
                 },
                 cat_name: {
-                    label: 'Product Category'
+                    label: __('Product Category', 'erp')
                 },
                 tax_cat_name: {
-                    label: 'Tax Category'
+                    label: __('Tax Category', 'erp')
                 },
                 product_type_name: {
-                    label: 'Product Type'
+                    label: __('Product Type', 'erp')
                 },
                 vendor_name: {
-                    label: 'Vendor'
+                    label: __('Vendor', 'erp')
                 },
-                actions: { label: 'Actions' }
+                actions: {
+                    label: __('Actions', 'erp')
+                }
             },
             bulkActions: [
                 {
                     key: 'trash',
-                    label: 'Move to Trash',
+                    label: __('Move to Trash', 'erp'),
                     img: erp_acct_var.erp_assets + '/images/trash.png' /* global erp_acct_var */
                 }
             ],
@@ -111,7 +113,7 @@ export default {
                 this.showModal = true;
                 this.product   = row;
             } else if (action === 'trash') {
-                if (confirm('Are sure want to Delete ?')) {
+                if (confirm(__('Are you sure want to delete?', 'erp'))) {
                     this.$store.dispatch('spinner/setSpinner', true);
 
                     HTTP.delete('products/' + row.id).then(response => {
@@ -129,7 +131,7 @@ export default {
 
         onBulkAction(action, items) {
             if (action === 'trash') {
-                if (confirm('Are you sure want to delete?')) {
+                if (confirm(__('Are you sure want to delete?', 'erp'))) {
                     this.$store.dispatch('spinner/setSpinner', true);
 
                     HTTP.delete('products/delete/' + items).then(response => {
