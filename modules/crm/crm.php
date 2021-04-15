@@ -440,6 +440,12 @@ class Customer_Relationship {
         }
 
         wp_localize_script( 'wp-erp-crm-vue-component', 'wpCRMvue', $contact_actvity_localize );
+        
+        wp_localize_script( 'wp-erp-crm-vue-customer', 'erpCrmApp', [
+            'reattach' => __( 'Reattach', 'erp' ),
+            'remove'   => __( 'Remove', 'erp' ),
+        ] );
+        
         wp_enqueue_script( 'post' );
     }
 
