@@ -4,7 +4,7 @@
             <div class="wperp-modal-content">
                 <!-- modal body title -->
                 <div class="wperp-modal-header">
-                    <h3>{{ is_update ? 'Edit' : 'Add' }} {{ __('Tax Category', 'erp') }}</h3>
+                    <h3>{{ is_update ? __('Edit', 'erp') : __('Add', 'erp') }} {{ __('Tax Category', 'erp') }}</h3>
                     <span class="modal-close" @click.prevent="closeModal"><i class="flaticon-close"></i></span>
                 </div>
 
@@ -108,11 +108,11 @@ export default {
             if (this.is_update) {
                 rest = 'put';
                 url = `/tax-cats/${this.cat_id}`;
-                msg = 'Tax Category Updated!';
+                msg = __('Tax Category Updated!', 'erp');
             } else {
                 rest = 'post';
                 url = `/tax-cats`;
-                msg = 'Tax Category Created!';
+                msg = __('Tax Category Created!', 'erp');
             }
 
             this.$store.dispatch('spinner/setSpinner', true);
@@ -138,7 +138,7 @@ export default {
             this.form_errors = [];
 
             if (!this.category) {
-                this.form_errors.push('Tax Category Name is required.');
+                this.form_errors.push(__('Tax Category Name is required.', 'erp'));
             }
         },
 

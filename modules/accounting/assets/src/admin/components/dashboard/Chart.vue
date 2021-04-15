@@ -50,12 +50,12 @@ export default {
                 labels : this.respData.thisMonth.labels,
                 datasets : [
                     {
-                        label: 'Income',
+                        label: __('Income', 'erp'),
                         data: this.respData.thisMonth.income,
                         backgroundColor: '#208DF8'
                     },
                     {
-                        label: 'Expense',
+                        label: __('Expense', 'erp'),
                         data: this.respData.thisMonth.expense,
                         backgroundColor: '#f86e2d'
                     }
@@ -68,12 +68,12 @@ export default {
                 labels : this.respData.lastMonth.labels,
                 datasets : [
                     {
-                        label: 'Income',
+                        label: __('Income', 'erp'),
                         data: this.respData.lastMonth.income,
                         backgroundColor: '#208DF8'
                     },
                     {
-                        label: 'Expense',
+                        label: __('Expense', 'erp'),
                         data: this.respData.lastYear.expense,
                         backgroundColor: '#f86e2d'
                     }
@@ -86,12 +86,12 @@ export default {
                 labels : this.respData.thisYear.labels,
                 datasets : [
                     {
-                        label: 'Income',
+                        label: __('Income', 'erp'),
                         data: this.respData.thisYear.income,
                         backgroundColor: '#208DF8'
                     },
                     {
-                        label: 'Expense',
+                        label: __('Expense', 'erp'),
                         data: this.respData.thisYear.expense,
                         backgroundColor: '#f86e2d'
                     }
@@ -104,12 +104,12 @@ export default {
                 labels : this.respData.lastYear.labels,
                 datasets : [
                     {
-                        label: 'Income',
+                        label: __('Income', 'erp'),
                         data: this.respData.lastYear.income,
                         backgroundColor: '#208DF8'
                     },
                     {
-                        label: 'Expense',
+                        label: __('Expense', 'erp'),
                         data: this.respData.lastYear.expense,
                         backgroundColor: '#f86e2d'
                     }
@@ -127,12 +127,12 @@ export default {
                 labels : labels,
                 datasets : [
                     {
-                        label: 'Income',
+                        label: __('Income', 'erp'),
                         data: newIncome,
                         backgroundColor: '#208DF8'
                     },
                     {
-                        label: 'Expense',
+                        label: __('Expense', 'erp'),
                         data: newExpense,
                         backgroundColor: '#f86e2d'
                     }
@@ -159,12 +159,12 @@ export default {
                 labels : labels,
                 datasets : [
                     {
-                        label: 'Income',
+                        label: __('Income', 'erp'),
                         data: newIncome,
                         backgroundColor: '#208DF8'
                     },
                     {
-                        label: 'Expense',
+                        label: __('Expense', 'erp'),
                         data: newExpense,
                         backgroundColor: '#f86e2d'
                     }

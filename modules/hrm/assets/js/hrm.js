@@ -86,7 +86,7 @@
 
             $('body').on( 'change', '.wp-list-table', function(e) {
                 var selector = $('.wp-list-table tbody tr th input[type="checkbox"]');
-                
+
                 if ( selector.is(':checked') ) {
                     $('.tablenav .bulkactions').show();
                     $(".tablenav").css("clear", "both");
@@ -103,6 +103,14 @@
             $('body').on( 'click', 'input[name="hide_filter"]', function(e) {
                 e.preventDefault();
                 self.employee.toggleFilterDropdown();
+            });
+
+            $('body').on( 'click', 'input[name="reset_filter"]', function(e) {
+                e.preventDefault();
+                $( '#filter_designation option:selected' ).prop( 'selected', false );
+                $( '#filter_department option:selected' ).prop( 'selected', false );
+                $( '#filter_employment_type option:selected' ).prop( 'selected', false );
+                $( 'input[name=filter_employee]' ).click();
             });
 
             this.initTipTip();
@@ -867,8 +875,10 @@
                                 } );
 
                                 $( 'div[data-selected]', modal ).each(function() {
-                                    var self = $(this),
-                                        selected = self.data('selected');
+                                    var self            = $(this),
+                                        unchecked       = 0,
+                                        selected        = self.data('selected'),
+                                        requiredCbItems = $("span.checkbox input[type=checkbox][required]");
 
                                     if ( selected !== '' ) {
                                         self.find( 'select' ).val( selected ).trigger('change');
@@ -876,8 +886,20 @@
                                         $.each(self.find("input[type=checkbox]"), function(index, data) {
                                             if($.inArray($(data).val(), selected.split(',')) != -1) {
                                                 $(data).prop('checked', true);
+                                            } else {
+                                                if($.inArray($(data), requiredCbItems)) {
+                                                    unchecked++;
+                                                }
                                             }
                                         });
+
+                                        if(unchecked !== requiredCbItems.length) {
+                                            $.each(self.find("span.checkbox input[type=checkbox][required]"), function(index, cb) {
+                                                if($.inArray($(cb).val(), selected.split(',')) == -1) {
+                                                    $(cb).removeAttr("required");
+                                                }
+                                            });
+                                        }
                                     }
                                 });
 
@@ -963,7 +985,7 @@
             },
 
             toggleFilterDropdown: function() {
-                document.getElementById("erp-dropdown-content").classList.toggle("show");
+                document.getElementById( 'erp-dropdown-content' ).classList.toggle( 'show' );
             },
 
             general: {
