@@ -404,13 +404,13 @@ window.wpErpVue = window.wpErpVue || {};
 
             invitedUser: function() {
                 var self = this;
-                return this.feed.extra.invited_user.map( function( elm ) {
+                return this.feed.extra.invited_user ? this.feed.extra.invited_user.map( function( elm ) {
                     if ( elm.id == wpCRMvue.current_user_id ) {
                         return self.i18n.you;
                     } else {
                         return elm.name;
                     }
-                } ).join("<br>");
+                } ).join("<br>") : '';
             },
 
             createdUserImg: function() {
