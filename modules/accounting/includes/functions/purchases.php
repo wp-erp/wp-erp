@@ -283,6 +283,8 @@ function erp_acct_insert_purchase( $data ) {
 
     do_action( 'erp_acct_new_transaction_purchase', $voucher_no, $purchase );
 
+    erp_acct_purge_cache( [ 'list' => 'purchase_transaction' ] );
+
     return $purchase;
 }
 
@@ -514,6 +516,8 @@ function erp_acct_update_purchase( $purchase_data, $purchase_id ) {
         return new WP_error( 'purchase-exception', $e->getMessage() );
     }
 
+    erp_acct_purge_cache( [ 'list' => 'purchase_transaction' ] );
+
     return erp_acct_get_purchase( $new_purchase['voucher_no'] );
 }
 
@@ -603,6 +607,8 @@ function erp_acct_convert_order_to_purchase( $purchase_data, $purchase_id ) {
 
     do_action( 'erp_acct_new_transaction_purchase', $purchase_id, $purchase );
 
+    erp_acct_purge_cache( [ 'list' => 'purchase_transaction' ] );
+
     return $purchase;
 }
 
@@ -630,6 +636,8 @@ function erp_acct_void_purchase( $id ) {
 
     $wpdb->delete( $wpdb->prefix . 'erp_acct_ledger_details', [ 'trn_no' => $id ] );
     $wpdb->delete( $wpdb->prefix . 'erp_acct_purchase_account_details', [ 'purchase_no' => $id ] );
+
+    erp_acct_purge_cache( [ 'list' => 'purchase_transaction' ] );
 }
 
 /**
