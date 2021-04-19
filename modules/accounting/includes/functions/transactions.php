@@ -26,75 +26,93 @@ function erp_acct_get_sales_transactions( $args = [] ) {
 
     $args = wp_parse_args( $args, $defaults );
 
-    $limit = '';
+    $last_changed      = erp_cache_get_last_changed( 'accounting', 'sales_transaction', 'erp-accounting' );
+    $cache_key         = 'erp-get-sales-transactions-' . md5( serialize( $args ) ) . " : $last_changed";
+    $sales_transaction = wp_cache_get( $cache_key, 'erp-accounting' );
 
-    $where = "WHERE (voucher.type = 'invoice' OR voucher.type = 'payment' OR voucher.type = 'return_payment')";
+    $cache_key_count         = 'erp-get-sales-transactions-count-' . md5( serialize( $args ) ) . " : $last_changed";
+    $sales_transaction_count = wp_cache_get( $cache_key_count, 'erp-accounting' );
 
-    if ( ! empty( $args['customer_id'] ) ) {
-        $where .= " AND (invoice.customer_id = {$args['customer_id']} OR invoice_receipt.customer_id = {$args['customer_id']}) ";
-    }
+    if ( false === $sales_transaction ) {
+        $limit = '';
 
-    if ( ! empty( $args['start_date'] ) ) {
-        $where .= " AND ( (invoice.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}') OR (invoice_receipt.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}') )";
-    }
+        $where = "WHERE (voucher.type = 'invoice' OR voucher.type = 'payment' OR voucher.type = 'return_payment')";
 
-
-    if ( ! empty( $args['status'] ) ) {
-        $where .= " AND (invoice.status={$args['status']} OR invoice_receipt.status={$args['status']}) ";
-    }
-
-    if ( ! empty( $args['type'] ) ) {
-        if($args['type'] === 'estimate'){
-            $where .= " AND invoice.estimate = 1 ";
+        if ( ! empty( $args['customer_id'] ) ) {
+            $where .= " AND (invoice.customer_id = {$args['customer_id']} OR invoice_receipt.customer_id = {$args['customer_id']}) ";
         }
-        if($args['type'] === 'payment'){
-            $where .= " AND voucher.type = '{$args['type']}' ";
+
+        if ( ! empty( $args['start_date'] ) ) {
+            $where .= " AND ( (invoice.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}') OR (invoice_receipt.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}') )";
         }
-        if($args['type'] === 'invoice'){
-            $where .= " AND voucher.type = '{$args['type']}' AND invoice.estimate = 0 ";
+
+
+        if ( ! empty( $args['status'] ) ) {
+            $where .= " AND (invoice.status={$args['status']} OR invoice_receipt.status={$args['status']}) ";
+        }
+
+        if ( ! empty( $args['type'] ) ) {
+            if($args['type'] === 'estimate'){
+                $where .= " AND invoice.estimate = 1 ";
+            }
+            if($args['type'] === 'payment'){
+                $where .= " AND voucher.type = '{$args['type']}' ";
+            }
+            if($args['type'] === 'invoice'){
+                $where .= " AND voucher.type = '{$args['type']}' AND invoice.estimate = 0 ";
+            }
+        }
+
+        if ( -1 !== $args['number'] ) {
+            $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+        }
+
+        $sql = 'SELECT';
+
+        if ( $args['count'] ) {
+            $sql .= ' COUNT( DISTINCT voucher.id ) AS total_number';
+        } else {
+            $sql .= ' voucher.id,
+                voucher.type,
+                voucher.editable,
+                invoice.customer_id AS inv_cus_id,
+                invoice.customer_name AS inv_cus_name,
+                invoice_receipt.customer_name AS pay_cus_name,
+                invoice.trn_date AS invoice_trn_date,
+                invoice_receipt.trn_date AS payment_trn_date,
+                invoice_receipt.ref,
+                invoice.due_date,
+                invoice.estimate,
+                (invoice.amount + invoice.tax) - invoice.discount AS sales_amount,
+                SUM(invoice_account_detail.debit - invoice_account_detail.credit) AS due,
+                invoice_receipt.amount AS payment_amount,
+                invoice.status as inv_status,
+                invoice_receipt.status as pay_status';
+        }
+
+        $sql .= " FROM {$wpdb->prefix}erp_acct_voucher_no AS voucher
+            LEFT JOIN {$wpdb->prefix}erp_acct_invoices AS invoice ON invoice.voucher_no = voucher.id
+            LEFT JOIN {$wpdb->prefix}erp_acct_invoice_receipts AS invoice_receipt ON invoice_receipt.voucher_no = voucher.id
+            LEFT JOIN {$wpdb->prefix}erp_acct_invoice_account_details AS invoice_account_detail ON invoice_account_detail.invoice_no = invoice.voucher_no
+            {$where} GROUP BY voucher.id ORDER BY voucher.id {$args['order']} {$limit}";
+
+        if ( $args['count'] ) {
+            $wpdb->get_results( $sql );
+            $sales_transaction_count = $wpdb->num_rows;
+
+            wp_cache_set( $cache_key_count, $sales_transaction_count, 'erp-accounting' );
+        } else {
+            $sales_transaction = $wpdb->get_results( $sql, ARRAY_A );
+
+            wp_cache_set( $cache_key, $sales_transaction, 'erp-accounting' );
         }
     }
-
-    if ( -1 !== $args['number'] ) {
-        $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
-    }
-
-    $sql = 'SELECT';
 
     if ( $args['count'] ) {
-        $sql .= ' COUNT( DISTINCT voucher.id ) AS total_number';
-    } else {
-        $sql .= ' voucher.id,
-            voucher.type,
-            voucher.editable,
-            invoice.customer_id AS inv_cus_id,
-            invoice.customer_name AS inv_cus_name,
-            invoice_receipt.customer_name AS pay_cus_name,
-            invoice.trn_date AS invoice_trn_date,
-            invoice_receipt.trn_date AS payment_trn_date,
-            invoice_receipt.ref,
-            invoice.due_date,
-            invoice.estimate,
-            (invoice.amount + invoice.tax) - invoice.discount AS sales_amount,
-            SUM(invoice_account_detail.debit - invoice_account_detail.credit) AS due,
-            invoice_receipt.amount AS payment_amount,
-            invoice.status as inv_status,
-            invoice_receipt.status as pay_status';
+        return $sales_transaction_count;
     }
 
-    $sql .= " FROM {$wpdb->prefix}erp_acct_voucher_no AS voucher
-        LEFT JOIN {$wpdb->prefix}erp_acct_invoices AS invoice ON invoice.voucher_no = voucher.id
-        LEFT JOIN {$wpdb->prefix}erp_acct_invoice_receipts AS invoice_receipt ON invoice_receipt.voucher_no = voucher.id
-        LEFT JOIN {$wpdb->prefix}erp_acct_invoice_account_details AS invoice_account_detail ON invoice_account_detail.invoice_no = invoice.voucher_no
-        {$where} GROUP BY voucher.id ORDER BY voucher.id {$args['order']} {$limit}";
-
-    if ( $args['count'] ) {
-        $wpdb->get_results( $sql );
-
-        return $wpdb->num_rows;
-    }
-
-    return $wpdb->get_results( $sql, ARRAY_A );
+    return $sales_transaction;
 }
 
 /**
@@ -1087,7 +1105,7 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
         $trn_pdf->add_total( __( 'SUB TOTAL', 'erp' ), $transaction->amount );
         $trn_pdf->add_total( __( 'TOTAL', 'erp' ), $transaction->amount );
     }
-    
+
     if ( 'receive_pay_purchase' === $type ) {
         // Set Column Headers
         $trn_pdf->set_table_headers( [ __( 'PURCHASE NO', 'erp' ), __( 'DUE DATE', 'erp' ), __( 'AMOUNT', 'erp' ) ] );
@@ -1545,25 +1563,51 @@ function erp_acct_pdf_abs_path_to_url( $voucher_no ) {
 
 /**
  * Get formatted transaction status for pdf voucher
- * 
+ *
  * @since 1.8.0
- * 
+ *
  * @param int|string $trn_status
- * 
+ *
  * @return $string
  */
 function erp_acct_get_formatted_status( $trn_status ) {
     $trn_status = erp_acct_get_trn_status_by_id( $trn_status );
     $trn_status = explode( '_', $trn_status );
     $status     = '';
-        
+
     foreach ( $trn_status as $i => $ts ) {
         $status .= strtoupper( $ts );
-            
+
         if ( $i < count( $trn_status ) - 1 ) {
             $status .= ' ';
         }
     }
 
     return $status;
+}
+
+
+/**
+ * Purge cache data for accounting module
+ *
+ * Remove all cache for accounting module
+ *
+ * @since 1.8.3
+ *
+ * @param array $args
+ *
+ * @return void
+ */
+function erp_acct_purge_cache( $args = [] ) {
+
+    $group = 'erp-accounting';
+
+    if ( isset( $args['transaction_id'] ) ) {
+        wp_cache_delete( "erp-transaction-by-" . $args['transaction_id'], $group );
+    }
+
+    if ( isset( $args['list'] ) ) {
+        erp_purge_cache( [ 'group' => $group, 'module' => 'accounting', 'list' => $args['list'] ] );
+    }
+
 }
