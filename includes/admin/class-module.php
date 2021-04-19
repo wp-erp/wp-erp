@@ -15,6 +15,6 @@ class Admin_Module {
     }
 
     public function output() {
-        require_once WPERP_VIEWS . '/module.php';
+        require_once WPERP_VIEWS . '/modules.php';
     }
 }
