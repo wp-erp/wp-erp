@@ -306,7 +306,7 @@ class Modules {
     /**
      * Get Modules Extensions
      *
-     * @since 1.8.2
+     * @since 1.8.3
      *
      * @return array Module extensions with detail information
      */
@@ -617,6 +617,6 @@ class Modules {
             ] );
         }
 
-        return $this->modules_extensions;
+        return apply_filters( 'erp_pro_modules_details', $this->modules_extensions );
     }
 }
