@@ -281,6 +281,7 @@ function erp_acct_delete_product( $product_id ) {
     global $wpdb;
 
     $wpdb->delete( $wpdb->prefix . 'erp_acct_products', [ 'id' => $product_id ] );
+    $wpdb->delete( $wpdb->prefix . 'erp_acct_product_details', [ 'product_id' => $product_id ] );
 
     erp_acct_purge_cache( ['list' => 'products,products_vendor'] );
 
