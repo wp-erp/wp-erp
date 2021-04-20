@@ -238,7 +238,7 @@ function erp_hr_leave_insert_policy( $args = [] ) {
         do_action( 'erp_hr_leave_update_policy', $args['id'] );
         do_action( 'erp_hr_leave_before_policy_updated', $args['id'], $old_policy );
 
-        erp_hrm_purge_cache_data( ['list' => 'leave_policy', 'leave_policy_id' => $args['id'] ] );
+        erp_hrm_purge_cache( ['list' => 'leave_policy', 'leave_policy_id' => $args['id'] ] );
 
         return $leave_policy->id;
     }
@@ -261,7 +261,7 @@ function erp_hr_leave_insert_policy( $args = [] ) {
 
     do_action( 'erp_hr_leave_insert_policy', $leave_policy->id );
 
-    erp_hrm_purge_cache_data( ['list' => 'leave_policy', 'leave_policy_id' => $leave_policy->id ] );
+    erp_hrm_purge_cache( ['list' => 'leave_policy', 'leave_policy_id' => $leave_policy->id ] );
 
     return $leave_policy->id;
 }
@@ -521,7 +521,7 @@ function erp_hr_leave_insert_entitlement( $args = [] ) {
         do_action( 'erp_hr_leave_insert_new_entitlement', $entitlement->id, $fields );
     }
 
-    erp_hrm_purge_cache_data( ['list' => 'leave_entitlement'] );
+    erp_hrm_purge_cache( ['list' => 'leave_entitlement'] );
 
     return $entitlement->id;
 }
@@ -569,7 +569,7 @@ function erp_hr_apply_policy_on_new_employee( $user_id ) {
         $inserted = erp_hr_leave_insert_entitlement( $data );
     } );
 
-    erp_hrm_purge_cache_data( ['list' => 'leave_entitlement'] );
+    erp_hrm_purge_cache( ['list' => 'leave_entitlement'] );
 }
 
 /**
@@ -683,7 +683,7 @@ function erp_hr_leave_insert_holiday( $args = [] ) {
 
     $holiday = new Leave_Holiday();
 
-    erp_hrm_purge_cache_data( ['list' => 'leave_holiday'] );
+    erp_hrm_purge_cache( ['list' => 'leave_holiday'] );
 
     if ( ! $holiday_id ) {
         // insert a new
@@ -1010,7 +1010,7 @@ function erp_hr_holiday_filter_param( $holiday, $args ) {
  */
 function erp_hr_delete_holidays( $holidays_id ) {
 
-    erp_hrm_purge_cache_data( ['list' => 'leave_holiday'] );
+    erp_hrm_purge_cache( ['list' => 'leave_holiday'] );
 
     if ( is_array( $holidays_id ) ) {
         foreach ( $holidays_id as $key => $holiday_id ) {
@@ -1064,7 +1064,7 @@ function erp_hr_leave_policy_delete( $policy_ids ) {
 
     $policies = Leave_Policy::find( $policy_ids );
 
-    erp_hrm_purge_cache_data( [ 'list' => 'leave_policy' ] );
+    erp_hrm_purge_cache( [ 'list' => 'leave_policy' ] );
 
     $policies->each( function ( $policy ) {
         if ( $policy->entitlements ) {
@@ -1268,7 +1268,7 @@ function erp_hr_leave_insert_request( $args = [] ) {
 
             do_action( 'erp_hr_leave_new', $request_id, $request, $leaves );
 
-            erp_hrm_purge_cache_data( ['list' => 'leave_request'] );
+            erp_hrm_purge_cache( ['list' => 'leave_request'] );
 
             return $request_id;
         }
@@ -1887,7 +1887,7 @@ function erp_hr_leave_request_update_status( $request_id, $status, $comments = '
     do_action( "erp_hr_leave_request_{$status}", $request_id, $request );
     do_action( 'erp_hr_leave_update', $request_id, $old_data );
 
-    erp_hrm_purge_cache_data( [ 'list' => 'leave_request', 'request_id' => $request_id ] );
+    erp_hrm_purge_cache( [ 'list' => 'leave_request', 'request_id' => $request_id ] );
 
     return $request;
 }
@@ -1936,7 +1936,7 @@ function erp_hr_delete_leave_request( $request_id ) {
 
     $request->delete();
 
-    erp_hrm_purge_cache_data( [ 'list' => 'leave_request', 'request_id' => $request_id ] );
+    erp_hrm_purge_cache( [ 'list' => 'leave_request', 'request_id' => $request_id ] );
 
     return $request_id;
 }
@@ -2235,7 +2235,7 @@ function erp_hr_delete_entitlement( $id, $user_id, $entitlement_id ) {
         }
     }
 
-    erp_hrm_purge_cache_data( ['list' => 'leave_entitlement'] );
+    erp_hrm_purge_cache( ['list' => 'leave_entitlement'] );
 
     return $entitlement->delete();
 }
@@ -2778,7 +2778,7 @@ function import_holidays_csv( $file ) {
         return __( 'No data found.', 'erp' );
     }
 
-    erp_hrm_purge_cache_data( ['list' => 'leave_holiday'] );
+    erp_hrm_purge_cache( ['list' => 'leave_holiday'] );
 
     return $parsed_data;
 }
@@ -2861,7 +2861,7 @@ function erp_hr_insert_leave_policy_name( $args = [] ) {
 
     $args = wp_parse_args( $args, $defaults );
 
-    erp_hrm_purge_cache_data( ['list' => 'leave_policy_name' ] );
+    erp_hrm_purge_cache( ['list' => 'leave_policy_name' ] );
 
     /*
      * Update
@@ -2910,7 +2910,7 @@ function erp_hr_remove_leave_policy_name( $id ) {
 
     $leave = Leave::find( $id );
 
-    erp_hrm_purge_cache_data( ['list' => 'leave_policy_name' ] );
+    erp_hrm_purge_cache( ['list' => 'leave_policy_name' ] );
 
     $leave->delete();
 }

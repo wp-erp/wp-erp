@@ -1623,33 +1623,3 @@ function erp_acct_get_formatted_status( $trn_status ) {
 
     return $status;
 }
-
-
-/**
- * Purge cache data for accounting module
- *
- * Remove all cache for accounting module
- *
- * @since 1.8.3
- *
- * @param array $args
- *
- * @return void
- */
-function erp_acct_purge_cache( $args = [] ) {
-
-    $group = 'erp-accounting';
-
-    if ( isset( $args['transaction_id'] ) ) {
-        wp_cache_delete( "erp-transaction-by-" . $args['transaction_id'], $group );
-    }
-
-    if ( isset( $args['key'] ) ) {
-        wp_cache_delete( $args['key'], $group );
-    }
-
-    if ( isset( $args['list'] ) ) {
-        erp_purge_cache( [ 'group' => $group, 'module' => 'accounting', 'list' => $args['list'] ] );
-    }
-
-}

@@ -328,6 +328,8 @@ function erp_employee_delete( $employee_ids, $force = false ) {
     foreach ( $employees as $employee_wp_user_id ) {
         do_action( 'erp_hr_delete_employee', $employee_wp_user_id, $force );
 
+        erp_hrm_purge_cache( ['list' => 'employee'] );
+
         if ( $force ) {
 
             // find leave entitlements and leave requests and delete them as well

@@ -30,7 +30,7 @@ function erp_hr_create_designation( $args = [] ) {
 
     $designation = new \WeDevs\ERP\HRM\Models\Designation();
 
-    erp_hrm_purge_cache_data( [ 'list' => 'designation', 'designation_id' => $desig_id ] );
+    erp_hrm_purge_cache( [ 'list' => 'designation', 'designation_id' => $desig_id ] );
 
     if ( ! $desig_id ) {
         $desig = $designation->create( $fields );
@@ -127,7 +127,7 @@ function erp_hr_delete_designation( $designation_id ) {
         $exist_employee     = [];
         $not_exist_employee = [];
 
-        erp_hrm_purge_cache_data( [ 'list' => 'designation', 'designation_id' => $designation_id ] );
+        erp_hrm_purge_cache( [ 'list' => 'designation', 'designation_id' => $designation_id ] );
 
         foreach ( $designation_id as $key => $designation ) {
             $desig = new \WeDevs\ERP\HRM\Designation( intval( $designation ) );
