@@ -166,6 +166,7 @@ export default {
                             this.showAlert('success', 'Deleted !');
                         }
 
+                        this.fetchItems();
                         this.$store.dispatch('spinner/setSpinner', false);
                         this.showAlert('error', response.data.data[0].message);
                         // or loop through the erros and show a list

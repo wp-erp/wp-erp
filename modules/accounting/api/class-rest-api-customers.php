@@ -342,6 +342,8 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $customer = (array) erp_get_people( $id );
 
+        erp_acct_purge_cache( [ 'group' => 'erp', 'list' => 'people', 'type' => $data['type'] ] );
+
         erp_delete_people( $data );
 
         $this->add_log( $customer, 'delete' );
