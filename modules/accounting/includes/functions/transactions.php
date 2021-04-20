@@ -1644,6 +1644,10 @@ function erp_acct_purge_cache( $args = [] ) {
         wp_cache_delete( "erp-transaction-by-" . $args['transaction_id'], $group );
     }
 
+    if ( isset( $args['key'] ) ) {
+        wp_cache_delete( $args['key'], $group );
+    }
+
     if ( isset( $args['list'] ) ) {
         erp_purge_cache( [ 'group' => $group, 'module' => 'accounting', 'list' => $args['list'] ] );
     }
