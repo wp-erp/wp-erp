@@ -156,17 +156,21 @@ function erp_crm_purge_cache( $args = [] ) {
  */
 function erp_acct_purge_cache( $args = [] ) {
 
-    $group = 'erp-accounting';
+    $defaults = [
+        'group' => 'erp-accounting'
+    ];
+
+    $args = wp_parse_args( $args, $defaults );
 
     if ( isset( $args['transaction_id'] ) ) {
-        wp_cache_delete( "erp-transaction-by-" . $args['transaction_id'], $group );
+        wp_cache_delete( "erp-transaction-by-" . $args['transaction_id'], $args['group'] );
     }
 
     if ( isset( $args['key'] ) ) {
-        wp_cache_delete( $args['key'], $group );
+        wp_cache_delete( $args['key'], $args['group'] );
     }
 
     if ( isset( $args['list'] ) ) {
-        erp_purge_cache( [ 'group' => $group, 'module' => 'accounting', 'list' => $args['list'] ] );
+        erp_purge_cache( [ 'group' => $args['group'], 'module' => 'accounting', 'list' => $args['list'] ] );
     }
 }
