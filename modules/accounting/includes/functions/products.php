@@ -176,6 +176,8 @@ function erp_acct_insert_product( $data ) {
 
     erp_acct_purge_cache( ['list' => 'products,products_vendor'] );
 
+    do_action( 'erp_acct_after_change_product_list' );
+
     return erp_acct_get_product( $product_id );
 }
 
@@ -239,6 +241,8 @@ function erp_acct_update_product( $data, $id ) {
 
     erp_acct_purge_cache( ['list' => 'products,products_vendor'] );
 
+    do_action( 'erp_acct_after_change_product_list' );
+
     return erp_acct_get_product( $id );
 }
 
@@ -279,6 +283,8 @@ function erp_acct_delete_product( $product_id ) {
     $wpdb->delete( $wpdb->prefix . 'erp_acct_products', [ 'id' => $product_id ] );
 
     erp_acct_purge_cache( ['list' => 'products,products_vendor'] );
+
+    do_action( 'erp_acct_after_change_product_list' );
 
     return $product_id;
 }

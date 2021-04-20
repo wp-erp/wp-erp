@@ -58,7 +58,6 @@ function erp_purge_cache( $args = [] ) {
     }
 }
 
-
 /**
  * Purge cache for HRM Module
  *
