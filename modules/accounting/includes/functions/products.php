@@ -25,42 +25,60 @@ function erp_acct_get_all_products( $args = [] ) {
 
     $args = wp_parse_args( $args, $defaults );
 
-    $where = '';
-    $limit = '';
+    $last_changed = erp_cache_get_last_changed( 'accounting', 'products', 'erp-accounting' );
+    $cache_key    = 'erp-get-products-' . md5( serialize( $args ) ) . ": $last_changed";
+    $products     = wp_cache_get( $cache_key, 'erp-accounting' );
 
-    if ( -1 !== $args['number'] ) {
-        $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+    $cache_key_count = 'erp-get-products-count-' . md5( serialize( $args ) ) . ": $last_changed";
+    $products_count  = wp_cache_get( $cache_key_count, 'erp-accounting' );
+
+    if ( false === $products ) {
+        $limit = '';
+
+        if ( -1 !== $args['number'] ) {
+            $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+        }
+
+        $sql = 'SELECT';
+
+        if ( $args['count'] ) {
+            $sql .= ' COUNT( product.id ) as total_number';
+        } else {
+            $sql .= " product.id,
+                product.name,
+                product.product_type_id,
+                product.cost_price,
+                product.sale_price,
+                product.tax_cat_id,
+                people.id AS vendor,
+                CONCAT(people.first_name, ' ',  people.last_name) AS vendor_name,
+                cat.id AS category_id,
+                cat.name AS cat_name,
+                product_type.name AS product_type_name";
+        }
+
+        $sql .= " FROM {$wpdb->prefix}erp_acct_products AS product
+            LEFT JOIN {$wpdb->prefix}erp_peoples AS people ON product.vendor = people.id
+            LEFT JOIN {$wpdb->prefix}erp_acct_product_categories AS cat ON product.category_id = cat.id
+            LEFT JOIN {$wpdb->prefix}erp_acct_product_types AS product_type ON product.product_type_id = product_type.id
+            WHERE product.product_type_id<>3 ORDER BY product.{$args['orderby']} {$args['order']} {$limit}";
+
+        if ( $args['count'] ) {
+            $products_count = $wpdb->get_var( $sql );
+
+            wp_cache_set( $cache_key_count, $products_count, 'erp-accounting' );
+        } else {
+            $products = $wpdb->get_results( $sql, ARRAY_A );
+
+            wp_cache_set( $cache_key, $products, 'erp-accounting' );
+        }
     }
-
-    $sql = 'SELECT';
 
     if ( $args['count'] ) {
-        $sql .= ' COUNT( product.id ) as total_number';
-    } else {
-        $sql .= " product.id,
-            product.name,
-            product.product_type_id,
-            product.cost_price,
-            product.sale_price,
-            product.tax_cat_id,
-            people.id AS vendor,
-            CONCAT(people.first_name, ' ',  people.last_name) AS vendor_name,
-            cat.id AS category_id,
-            cat.name AS cat_name,
-            product_type.name AS product_type_name";
+        return $products_count;
     }
 
-    $sql .= " FROM {$wpdb->prefix}erp_acct_products AS product
-        LEFT JOIN {$wpdb->prefix}erp_peoples AS people ON product.vendor = people.id
-        LEFT JOIN {$wpdb->prefix}erp_acct_product_categories AS cat ON product.category_id = cat.id
-        LEFT JOIN {$wpdb->prefix}erp_acct_product_types AS product_type ON product.product_type_id = product_type.id
-        WHERE product.product_type_id<>3 ORDER BY product.{$args['orderby']} {$args['order']} {$limit}";
-
-    if ( $args['count'] ) {
-        return $wpdb->get_var( $sql );
-    }
-
-    return $wpdb->get_results( $sql, ARRAY_A );
+    return $products;
 }
 
 /**
@@ -156,6 +174,8 @@ function erp_acct_insert_product( $data ) {
         return new WP_Error( 'duplicate-product', $e->getMessage(), array( 'status' => 400 ) );
     }
 
+    erp_acct_purge_cache( ['list' => 'products,products_vendor'] );
+
     return erp_acct_get_product( $product_id );
 }
 
@@ -217,6 +237,8 @@ function erp_acct_update_product( $data, $id ) {
         return new WP_Error( 'duplicate-product', $e->getMessage(), array( 'status' => 400 ) );
     }
 
+    erp_acct_purge_cache( ['list' => 'products,products_vendor'] );
+
     return erp_acct_get_product( $id );
 }
 
@@ -255,6 +277,8 @@ function erp_acct_delete_product( $product_id ) {
     global $wpdb;
 
     $wpdb->delete( $wpdb->prefix . 'erp_acct_products', [ 'id' => $product_id ] );
+
+    erp_acct_purge_cache( ['list' => 'products,products_vendor'] );
 
     return $product_id;
 }
@@ -309,40 +333,58 @@ function erp_acct_get_vendor_products( $args = [] ) {
 
     $args = wp_parse_args( $args, $defaults );
 
-    $where = '';
-    $limit = '';
+    $last_changed    = erp_cache_get_last_changed( 'accounting', 'products_vendor', 'erp-accounting' );
+    $cache_key       = 'erp-get-products_vendor-' . md5( serialize( $args ) ) . ": $last_changed";
+    $products_vendor = wp_cache_get( $cache_key, 'erp-accounting' );
 
-    if ( -1 !== $args['number'] ) {
-        $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+    $cache_key_count       = 'erp-get-products_vendor-count-' . md5( serialize( $args ) ) . ": $last_changed";
+    $products_vendor_count = wp_cache_get( $cache_key_count, 'erp-accounting' );
+
+    if ( false === $products_vendor ) {
+        $limit = '';
+
+        if ( -1 !== $args['number'] ) {
+            $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+        }
+
+        $sql = 'SELECT';
+
+        if ( $args['count'] ) {
+            $sql .= ' COUNT( product.id ) as total_number';
+        } else {
+            $sql .= " product.id,
+                product.name,
+                product.product_type_id,
+                product.cost_price,
+                product.sale_price,
+                product.tax_cat_id,
+                product.vendor,
+                CONCAT(people.first_name, ' ',  people.last_name) AS vendor_name,
+                cat.id AS category_id,
+                cat.name AS cat_name,
+                product_type.name AS product_type_name";
+        }
+
+        $sql .= " FROM {$wpdb->prefix}erp_acct_products AS product
+            LEFT JOIN {$wpdb->prefix}erp_peoples AS people ON product.vendor = people.id
+            LEFT JOIN {$wpdb->prefix}erp_acct_product_categories AS cat ON product.category_id = cat.id
+            LEFT JOIN {$wpdb->prefix}erp_acct_product_types AS product_type ON product.product_type_id = product_type.id
+            WHERE people.id={$args['vendor']} AND product.product_type_id<>3 ORDER BY product.{$args['orderby']} {$args['order']} {$limit}";
+
+        if ( $args['count'] ) {
+            $products_vendor_count = $wpdb->get_var( $sql );
+
+            wp_cache_set( $cache_key_count, $products_vendor_count, 'erp-accounting' );
+        } else {
+            $products_vendor = $wpdb->get_results( $sql, ARRAY_A );
+
+            wp_cache_set( $cache_key, $products_vendor, 'erp-accounting' );
+        }
     }
-
-    $sql = 'SELECT';
 
     if ( $args['count'] ) {
-        $sql .= ' COUNT( product.id ) as total_number';
-    } else {
-        $sql .= " product.id,
-            product.name,
-            product.product_type_id,
-            product.cost_price,
-            product.sale_price,
-            product.tax_cat_id,
-            product.vendor,
-            CONCAT(people.first_name, ' ',  people.last_name) AS vendor_name,
-            cat.id AS category_id,
-            cat.name AS cat_name,
-            product_type.name AS product_type_name";
+        return $products_vendor_count;
     }
 
-    $sql .= " FROM {$wpdb->prefix}erp_acct_products AS product
-        LEFT JOIN {$wpdb->prefix}erp_peoples AS people ON product.vendor = people.id
-        LEFT JOIN {$wpdb->prefix}erp_acct_product_categories AS cat ON product.category_id = cat.id
-        LEFT JOIN {$wpdb->prefix}erp_acct_product_types AS product_type ON product.product_type_id = product_type.id
-        WHERE people.id={$args['vendor']} AND product.product_type_id<>3 ORDER BY product.{$args['orderby']} {$args['order']} {$limit}";
-
-    if ( $args['count'] ) {
-        return $wpdb->get_var( $sql );
-    }
-
-    return $wpdb->get_results( $sql, ARRAY_A );
+    return $products_vendor;
 }
