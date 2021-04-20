@@ -23,21 +23,40 @@ function erp_acct_get_all_tax_rate_names( $args = [] ) {
 
     $args = wp_parse_args( $args, $defaults );
 
-    $limit = '';
+    $last_changed = erp_cache_get_last_changed( 'accounting', 'tax_rates', 'erp-accounting' );
+    $cache_key    = 'erp-get-tax-rates-' . md5( serialize( $args ) ) . ": $last_changed";
+    $tax_rates    = wp_cache_get( $cache_key, 'erp-accounting' );
 
-    if ( -1 !== $args['number'] ) {
-        $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+    $cache_key_count = 'erp-get-tax-rates-count-' . md5( serialize( $args ) ) . " : $last_changed";
+    $tax_rates_count  = wp_cache_get( $cache_key_count, 'erp-accounting' );
+
+    if ( false === $tax_rates ) {
+        $limit = '';
+
+        if ( -1 !== $args['number'] ) {
+            $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+        }
+
+        $sql  = 'SELECT';
+        $sql .= $args['count'] ? ' COUNT( id ) as total_number ' : ' * ';
+        $sql .= "FROM {$wpdb->prefix}erp_acct_taxes ORDER BY {$args['orderby']} {$args['order']} {$limit}";
+
+        if ( $args['count'] ) {
+            $tax_rates_count = $wpdb->get_var( $sql );
+
+            wp_cache_set( $cache_key_count, $tax_rates_count, 'erp-accounting' );
+        } else {
+            $tax_rates = $wpdb->get_results( $sql, ARRAY_A );
+
+            wp_cache_set( $cache_key, $tax_rates, 'erp-accounting' );
+        }
     }
-
-    $sql  = 'SELECT';
-    $sql .= $args['count'] ? ' COUNT( id ) as total_number ' : ' * ';
-    $sql .= "FROM {$wpdb->prefix}erp_acct_taxes ORDER BY {$args['orderby']} {$args['order']} {$limit}";
 
     if ( $args['count'] ) {
-        return $wpdb->get_var( $sql );
+        return $tax_rates_count;
     }
 
-    return $wpdb->get_results( $sql, ARRAY_A );
+    return $tax_rates;
 }
 
 /**
@@ -88,6 +107,8 @@ function erp_acct_insert_tax_rate_name( $data ) {
         ]
     );
 
+    erp_acct_purge_cache( ['list' => 'tax_rates'] );
+
     return $wpdb->insert_id;
 }
 
@@ -125,6 +146,8 @@ function erp_acct_update_tax_rate_name( $data, $id ) {
         ]
     );
 
+    erp_acct_purge_cache( ['list' => 'tax_rates'] );
+
     return $id;
 }
 
@@ -139,6 +162,8 @@ function erp_acct_delete_tax_rate_name( $id ) {
     global $wpdb;
 
     $wpdb->delete( $wpdb->prefix . 'erp_acct_taxes', [ 'id' => $id ] );
+
+    erp_acct_purge_cache( ['list' => 'tax_rates'] );
 
     return $id;
 }
