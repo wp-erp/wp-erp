@@ -374,21 +374,41 @@ function erp_acct_get_tax_pay_records( $args = [] ) {
 
     $args = wp_parse_args( $args, $defaults );
 
-    $limit = '';
+    $last_changed = erp_cache_get_last_changed( 'accounting', 'tax_pay', 'erp-accounting' );
+    $cache_key    = 'erp-get-tax-pay-' . md5( serialize( $args ) ) . ": $last_changed";
+    $tax_pay      = wp_cache_get( $cache_key, 'erp-accounting' );
 
-    if ( -1 !== $args['number'] ) {
-        $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+    $cache_key_count = 'erp-get-tax-pay-count-' . md5( serialize( $args ) ) . " : $last_changed";
+    $tax_pay_count   = wp_cache_get( $cache_key_count, 'erp-accounting' );
+
+    if ( false === $tax_pay ) {
+
+        $limit = '';
+
+        if ( -1 !== $args['number'] ) {
+            $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+        }
+
+        $sql  = 'SELECT';
+        $sql .= $args['count'] ? ' COUNT( id ) as total_number ' : ' * ';
+        $sql .= "FROM {$wpdb->prefix}erp_acct_tax_pay ORDER BY {$args['orderby']} {$args['order']} {$limit}";
+
+        if ( $args['count'] ) {
+            $tax_pay_count = $wpdb->get_var( $sql );
+
+            wp_cache_set( $cache_key_count, $tax_pay_count, 'erp-accounting' );
+        } else {
+            $tax_pay = $wpdb->get_results( $sql, ARRAY_A );
+
+            wp_cache_set( $cache_key, $tax_pay, 'erp-accounting' );
+        }
     }
-
-    $sql  = 'SELECT';
-    $sql .= $args['count'] ? ' COUNT( id ) as total_number ' : ' * ';
-    $sql .= "FROM {$wpdb->prefix}erp_acct_tax_pay ORDER BY {$args['orderby']} {$args['order']} {$limit}";
 
     if ( $args['count'] ) {
-        return $wpdb->get_var( $sql );
+        return $tax_pay_count;
     }
 
-    return $wpdb->get_results( $sql, ARRAY_A );
+    return $tax_pay;
 }
 
 /**
@@ -502,6 +522,8 @@ function erp_acct_pay_tax( $data ) {
 
     $tax_pay = erp_acct_get_tax_pay_record( $voucher_no );
 
+    erp_acct_purge_cache( ['list' => 'tax_pay'] );
+
     return $tax_pay;
 }
 
@@ -539,6 +561,8 @@ function erp_acct_insert_tax_pay_data_into_ledger( $tax_data ) {
             'updated_by'  => $tax_data['updated_by'],
         ]
     );
+
+    erp_acct_purge_cache( ['list' => 'tax_pay'] );
 }
 
 /**
