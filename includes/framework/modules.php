@@ -314,7 +314,7 @@ class Modules {
         if ( ! $this->modules_extensions ) {
             $thumbnail_dir  = WPERP_ASSETS . '/images/modules';
 
-            $this->modules_extensions = apply_filters( 'wp_erp_pro_modules', [
+            $this->modules_extensions = [
                 'advanced_leave' => [
                     'name'          => __('Advanced Leave Management', 'erp'),
                     'description'   => __('Advanced Leave Management for WP ERP.', 'erp'),
@@ -614,7 +614,7 @@ class Modules {
                     'doc_link'      => 'https://wperp.com/docs/accounting-add-ons/woocommerce-integration/',
                     'module_link'   => 'https://wperp.com/downloads/woocommerce-crm/',
                 ]
-            ] );
+            ];
         }
 
         return apply_filters( 'erp_pro_modules_details', $this->modules_extensions );
