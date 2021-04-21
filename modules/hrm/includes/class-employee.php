@@ -418,7 +418,7 @@ class Employee {
             if ( is_wp_error( $data ) ) {
                 return $data;
             }
-            
+
             $userdata = [
                 'user_login'   => $data['user_email'],
                 'user_email'   => $data['user_email'],
@@ -460,7 +460,7 @@ class Employee {
         if ( $wp_user && $erp_user ) {
             $this->load_employee( absint( $user_id ) );
             $old_data = $this->get_data();
-            
+
             $this->update_employee( $data );
 
             do_action( 'erp_hr_employee_update', $user_id, $old_data );
@@ -1308,6 +1308,7 @@ class Employee {
      * Create / Update Education
      *
      * @since 1.3.0
+     * @since 1.8.3 add result options
      *
      * @param array $data
      * @param bool  $return_id
@@ -1316,22 +1317,26 @@ class Employee {
      */
     public function add_education( $data, $return_id = true ) {
         $default = [
-            'id'       => '',
-            'school'   => '',
-            'degree'   => '',
-            'field'    => '',
-            'finished' => '',
-            'notes'    => '',
-            'interest' => '',
+            'id'          => '',
+            'school'      => '',
+            'degree'      => '',
+            'field'       => '',
+            'finished'    => '',
+            'result'      => '',
+            'result_type' => '',
+            'notes'       => '',
+            'interest'    => '',
         ];
 
         $args = wp_parse_args( $data, $default );
 
         $requires = [
-            'school'   => __( 'School Name', 'erp' ),
-            'degree'   => __( 'Degree', 'erp' ),
-            'field'    => __( 'Field', 'erp' ),
-            'finished' => __( 'Completion date', 'erp' ),
+            'school'      => __( 'School Name', 'erp' ),
+            'degree'      => __( 'Degree', 'erp' ),
+            'field'       => __( 'Field', 'erp' ),
+            'finished'    => __( 'Completion date', 'erp' ),
+            'result'      => __( 'Result', 'erp' ),
+            'result_type' => __( 'Result in', 'erp' ),
         ];
 
         foreach ( $requires as $key => $value ) {
@@ -2362,11 +2367,11 @@ class Employee {
         if ( ! isset( $args['module'] ) ) {
             $args['module'] = 'employee';
         }
-    
+
         if ( ! isset( $args['category'] ) ) {
             $args['category'] = 'terminated';
         }
-    
+
         if ( ! isset( $args['date'] ) ) {
             $args['date'] = $args['terminate_date'];
         }

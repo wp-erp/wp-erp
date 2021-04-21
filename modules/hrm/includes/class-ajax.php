@@ -1551,20 +1551,24 @@ class Ajax_Handler {
             $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
-        $edu_id   = isset( $_POST['edu_id'] ) ? intval( $_POST['edu_id'] ) : 0;
-        $school   = isset( $_POST['school'] ) ? sanitize_text_field( wp_unslash( $_POST['school'] ) ) : '';
-        $degree   = isset( $_POST['degree'] ) ? sanitize_text_field( wp_unslash( $_POST['degree'] ) ) : '';
-        $field    = isset( $_POST['field'] ) ? sanitize_text_field( wp_unslash( $_POST['field'] ) ) : '';
-        $finished = isset( $_POST['finished'] ) ? intval( $_POST['finished'] ) : '';
-        $notes    = isset( $_POST['notes'] ) ? sanitize_text_field( wp_unslash( $_POST['notes'] ) ) : '';
-        $interest = isset( $_POST['interest'] ) ? sanitize_text_field( wp_unslash( $_POST['interest'] ) ) : '';
-        $exp_date = isset( $_POST['expiration_date'] ) ? sanitize_text_field( wp_unslash( $_POST['expiration_date'] ) ) : '';
+        $edu_id      = isset( $_POST['edu_id'] ) ? intval( $_POST['edu_id'] ) : 0;
+        $school      = isset( $_POST['school'] ) ? sanitize_text_field( wp_unslash( $_POST['school'] ) ) : '';
+        $degree      = isset( $_POST['degree'] ) ? sanitize_text_field( wp_unslash( $_POST['degree'] ) ) : '';
+        $field       = isset( $_POST['field'] ) ? sanitize_text_field( wp_unslash( $_POST['field'] ) ) : '';
+        $result      = isset( $_POST['result'] ) ? sanitize_text_field( wp_unslash( $_POST['result'] ) ) : '0.000';
+        $result_type = isset( $_POST['result_type'] ) ? sanitize_text_field( wp_unslash( $_POST['result_type'] ) ) : null;
+        $finished    = isset( $_POST['finished'] ) ? intval( $_POST['finished'] ) : '';
+        $notes       = isset( $_POST['notes'] ) ? sanitize_text_field( wp_unslash( $_POST['notes'] ) ) : '';
+        $interest    = isset( $_POST['interest'] ) ? sanitize_text_field( wp_unslash( $_POST['interest'] ) ) : '';
+        $exp_date    = isset( $_POST['expiration_date'] ) ? sanitize_text_field( wp_unslash( $_POST['expiration_date'] ) ) : '';
 
         $fields = [
             'id'              => $edu_id,
             'school'          => $school,
             'degree'          => $degree,
             'field'           => $field,
+            'result'          => $result,
+            'result_type'     => $result_type,
             'finished'        => $finished,
             'notes'           => $notes,
             'interest'        => $interest,
