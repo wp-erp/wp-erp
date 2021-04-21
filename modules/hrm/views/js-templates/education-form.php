@@ -48,6 +48,33 @@
 
     <div class="row">
         <?php erp_html_form_input( [
+            'label'       => __( 'Result', 'erp' ),
+            'name'        => 'result',
+            'type'        => 'text',
+            'value'       => '{{ data.result }}',
+            'required'    => true,
+            'placeholder' => '5.0',
+            'custom_attr' => [
+                'min'  => 0,
+                'step' => '0.01'
+            ],
+        ] ); ?>
+    </div>
+
+    <div class="row" data-selected="{{ data.result_type }}">
+        <?php erp_html_form_input( [
+            'label'    => __( 'Result in', 'erp' ),
+            'name'     => 'result_type',
+            'value'    => '{{ data.result_type }}',
+            'required' => true,
+            'type'     => 'select',
+            'id'       => 'result_type',
+            'options'  => [ '' => __( '- Select -', 'erp' ) ] + erp_hr_get_education_result_type_options(),
+        ] ); ?>
+    </div>
+
+    <div class="row">
+        <?php erp_html_form_input( [
             'label'       => __( 'Notes', 'erp' ),
             'name'        => 'notes',
             'type'        => 'textarea',
