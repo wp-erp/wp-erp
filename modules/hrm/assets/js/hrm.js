@@ -1005,6 +1005,15 @@
                         button: self.data('button'),
                         onReady: function() {
                             WeDevs_ERP_HR.initDateField();
+
+                            $( '.row[data-selected]', this ).each(function() {
+                                var self = $(this),
+                                    selected = self.data('selected');
+
+                                if ( selected !== '' ) {
+                                    self.find( 'select' ).val( selected );
+                                }
+                            });
                         },
                         onSubmit: function(modal) {
                             wp.ajax.send( {
