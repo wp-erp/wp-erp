@@ -1685,6 +1685,7 @@ Account Manager
      */
     public function populate_data() {
         global $wpdb;
+        $current_date = date( 'Y-m-d' );
 
         // Subscription pages
         $subscription_settings = get_option( 'erp_settings_erp-crm_subscription', [] );
@@ -1723,6 +1724,24 @@ Account Manager
         if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_people_types` LIMIT 0, 1" ) ) {
             $wpdb->query( "INSERT INTO `{$wpdb->prefix}erp_people_types` (`id`, `name`)
             VALUES (1, 'contact'), (2, 'company'), (3, 'customer'), (4, 'vendor'), (5, 'employee')" );
+        }
+
+        // Add Standard Preset Data for Department in erp_hr_depts
+        if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_hr_depts` LIMIT 0, 1" ) ) {
+            $wpdb->query(
+                "INSERT INTO `{$wpdb->prefix}erp_hr_depts` (`id`, `title`, `created_at`, `updated_at`)
+                VALUES (1, 'General Management', '{$current_date}', '{$current_date}'),
+                (2, 'Marketing', '{$current_date}', '{$current_date}')"
+            );
+        }
+
+        // Add Standard Preset Data for Designation in erp_hr_designtions
+        if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_hr_designtions` LIMIT 0, 1" ) ) {
+            $wpdb->query(
+                "INSERT INTO `{$wpdb->prefix}erp_hr_designtions` (`id`, `title`, `created_at`, `updated_at`)
+                VALUES (1, 'CEO', '{$current_date}', '{$current_date}'),
+                (2, 'Founder', '{$current_date}', '{$current_date}')"
+            );
         }
 
         /* ===========
