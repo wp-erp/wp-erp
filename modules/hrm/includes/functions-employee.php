@@ -1117,8 +1117,8 @@ function get_employee_additional_fields( $fields, $id, $user ) {
  */
 function erp_hr_get_education_result_type_options( $selected = null ) {
     $types = [
-        'gpa'  => __( 'GPA',  'erp' ),
-        'cgpa' => __( 'CGPA', 'erp' )
+        'grade'      => __( 'Grade',  'erp' ),
+        'percentage' => __( 'Pecentage', 'erp' )
     ];
 
     $types = apply_filters( 'erp_hr_education_result_type_option', $types );
