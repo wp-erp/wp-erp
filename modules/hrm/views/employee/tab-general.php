@@ -168,7 +168,18 @@
                                 <td><?php echo esc_html( $education->degree ); ?></td>
                                 <td><?php echo esc_html( $education->field ); ?></td>
                                 <td><?php echo esc_html( $education->finished ); ?></td>
-                                <td><?php echo (($education->result !== '0.000') && ($education->result !== null)) ? esc_html( strtoupper( $education->result_type ) ) . ' '. esc_html( sprintf( '%g', $education->result ) ) : '-'; ?></td>
+                                <td>
+                                    <?php
+                                        $result_type = $education->result_type;
+                                        $result      = (object) json_decode( $education->result );
+
+                                        if ( $result_type === 'percentage' ) {
+                                            echo esc_html( $result->gpa ) . '%';
+                                        } else if ( $result_type === 'grade' ) {
+                                            echo esc_html( $result->gpa) . ' out of ' . esc_html( $result->scale );
+                                        }
+                                    ?>
+                                </td>
                                 <td><?php echo $education->notes ? esc_html( $education->notes ) : '-'; ?></td>
                                 <td><?php echo $education->interest ? esc_html( $education->interest ) : '-'; ?></td>
                                 <td>

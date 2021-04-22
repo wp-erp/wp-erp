@@ -1,4 +1,4 @@
-<div class="work-exp-form-wrap">
+<div class="education-form-wrap">
 
     <div class="row">
         <?php erp_html_form_input( [
@@ -46,14 +46,27 @@
         ] ); ?>
     </div>
 
-    <div class="row">
+    <div class="row" data-selected="{{ data.result_type ? data.result_type : null }}">
         <?php erp_html_form_input( [
-            'label'       => __( 'Result', 'erp' ),
-            'name'        => 'result',
+            'label'    => __( 'Result type', 'erp' ),
+            'name'     => 'result_type',
+            'value'    => '{{ data.result_type ? data.result_type : null }}',
+            'required' => true,
+            'type'     => 'select',
+            'id'       => 'result_type',
+            'options'  => [ '' => __( '- Select -', 'erp' ) ] + erp_hr_get_education_result_type_options(),
+        ] ); ?>
+    </div>
+
+    <div class="row" id="result_area">
+        <?php erp_html_form_input( [
+            'label'       => __( 'Result (Grade)', 'erp' ),
+            'name'        => 'gpa',
             'type'        => 'text',
-            'value'       => '{{ data.result }}',
+            'value'       => '{{ (data.result) ? JSON.parse(data.result).gpa : null }}',
             'required'    => true,
             'placeholder' => '5.0',
+            'id'          => 'gpa',
             'custom_attr' => [
                 'min'  => 0,
                 'step' => '0.01'
@@ -61,15 +74,19 @@
         ] ); ?>
     </div>
 
-    <div class="row" data-selected="{{ data.result_type }}">
+    <div class="row" id="result_scale">
         <?php erp_html_form_input( [
-            'label'    => __( 'Result in', 'erp' ),
-            'name'     => 'result_type',
-            'value'    => '{{ data.result_type }}',
-            'required' => true,
-            'type'     => 'select',
-            'id'       => 'result_type',
-            'options'  => [ '' => __( '- Select -', 'erp' ) ] + erp_hr_get_education_result_type_options(),
+            'label'       => __( 'Scale (Out of)', 'erp' ),
+            'name'        => 'scale',
+            'type'        => 'number',
+            'value'       => '{{ ( data.result ) ? JSON.parse(data.result).scale : null }}',
+            'required'    => true,
+            'placeholder' => '5.0',
+            'id'          => 'scale',
+            'custom_attr' => [
+                'min'  => 0,
+                'step' => '0.01'
+            ],
         ] ); ?>
     </div>
 

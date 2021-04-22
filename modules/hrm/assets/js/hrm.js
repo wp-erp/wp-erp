@@ -65,6 +65,7 @@
             $( '.erp-hr-employees' ).on( 'click', 'a#erp-empl-add-education', this.employee.general.create );
             $( '.erp-hr-employees' ).on( 'click', 'a.education-edit', this.employee.general.create );
             $( '.erp-hr-employees' ).on( 'click', 'a.education-delete', this.employee.general.remove );
+            $( 'body' ).on( 'change', '#result_type', self, this.employee.general.selectResultType );
 
             // dependent
             $( '.erp-hr-employees' ).on( 'click', 'a#erp-empl-add-dependent', this.employee.general.create );
@@ -1013,6 +1014,11 @@
                                 if ( selected !== '' ) {
                                     self.find( 'select' ).val( selected );
                                 }
+
+                                if( selected === 'percentage' ) {
+                                    $(".education-form-wrap #scale").removeAttr( 'required' );
+                                    $(".education-form-wrap #result_scale").fadeOut();
+                                }
                             });
                         },
                         onSubmit: function(modal) {
@@ -1052,6 +1058,21 @@
                         });
                     }
                 },
+
+                selectResultType: function(e) {
+                    var selectedType = $(this).val();
+                    if( selectedType === 'percentage' ) {
+                        $(".education-form-wrap #result_area label").html("Result (%) <span class='required'>*</span>");
+                        $(".education-form-wrap #gpa").attr("placeholder", "100");
+                        $(".education-form-wrap #scale").removeAttr( 'required' );
+                        $(".education-form-wrap #result_scale").fadeOut();
+                    } else {
+                        $(".education-form-wrap #result_area label").html("Result (Grade) <span class='required'>*</span>");
+                        $(".education-form-wrap #gpa").attr("placeholder", "5.0");
+                        $(".education-form-wrap #scale").attr( 'required', 'required' );
+                        $(".education-form-wrap #result_scale").fadeIn();
+                    }
+                }
             },
 
             updateJobStatus: function(e) {
