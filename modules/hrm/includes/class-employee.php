@@ -1322,8 +1322,8 @@ class Employee {
             'degree'      => '',
             'field'       => '',
             'finished'    => '',
-            'result'      => '',
             'result_type' => '',
+            'result'      => '',
             'notes'       => '',
             'interest'    => '',
         ];
@@ -1335,8 +1335,8 @@ class Employee {
             'degree'      => __( 'Degree', 'erp' ),
             'field'       => __( 'Field', 'erp' ),
             'finished'    => __( 'Completion date', 'erp' ),
+            'result_type' => __( 'Result type', 'erp' ),
             'result'      => __( 'Result', 'erp' ),
-            'result_type' => __( 'Result in', 'erp' ),
         ];
 
         foreach ( $requires as $key => $value ) {
