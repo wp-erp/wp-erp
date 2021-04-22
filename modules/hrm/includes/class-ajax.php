@@ -1555,12 +1555,15 @@ class Ajax_Handler {
         $school      = isset( $_POST['school'] ) ? sanitize_text_field( wp_unslash( $_POST['school'] ) ) : '';
         $degree      = isset( $_POST['degree'] ) ? sanitize_text_field( wp_unslash( $_POST['degree'] ) ) : '';
         $field       = isset( $_POST['field'] ) ? sanitize_text_field( wp_unslash( $_POST['field'] ) ) : '';
-        $result      = isset( $_POST['result'] ) ? sanitize_text_field( wp_unslash( $_POST['result'] ) ) : '0.000';
         $result_type = isset( $_POST['result_type'] ) ? sanitize_text_field( wp_unslash( $_POST['result_type'] ) ) : null;
         $finished    = isset( $_POST['finished'] ) ? intval( $_POST['finished'] ) : '';
         $notes       = isset( $_POST['notes'] ) ? sanitize_text_field( wp_unslash( $_POST['notes'] ) ) : '';
         $interest    = isset( $_POST['interest'] ) ? sanitize_text_field( wp_unslash( $_POST['interest'] ) ) : '';
         $exp_date    = isset( $_POST['expiration_date'] ) ? sanitize_text_field( wp_unslash( $_POST['expiration_date'] ) ) : '';
+
+        $result_gpa   = isset( $_POST['gpa'] ) ? sanitize_text_field( wp_unslash( $_POST['gpa'] ) ) : NULL;
+        $result_scale = isset( $_POST['scale'] ) ? sanitize_text_field( wp_unslash( $_POST['scale'] ) ) : NULL;
+        $result       = json_encode( [ 'gpa' => $result_gpa, 'scale' => $result_scale ] );
 
         $fields = [
             'id'              => $edu_id,
