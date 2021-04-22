@@ -1731,7 +1731,14 @@ Account Manager
             $wpdb->query(
                 "INSERT INTO `{$wpdb->prefix}erp_hr_depts` (`id`, `title`, `created_at`, `updated_at`)
                 VALUES (1, 'General Management', '{$current_date}', '{$current_date}'),
-                (2, 'Marketing', '{$current_date}', '{$current_date}')"
+                (2, 'Operations Department', '{$current_date}', '{$current_date}'),
+                (3, 'Finance Department', '{$current_date}', '{$current_date}'),
+                (4, 'Sales Department', '{$current_date}', '{$current_date}'),
+                (5, 'Human Resource Department', '{$current_date}', '{$current_date}'),
+                (6, 'Purchase Department', '{$current_date}', '{$current_date}'),
+                (7, 'Engineering Department', '{$current_date}', '{$current_date}'),
+                (8, 'Production Department', '{$current_date}', '{$current_date}'),
+                (9, 'Procurement Department', '{$current_date}', '{$current_date}')"
             );
         }
 
@@ -1739,8 +1746,26 @@ Account Manager
         if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_hr_designtions` LIMIT 0, 1" ) ) {
             $wpdb->query(
                 "INSERT INTO `{$wpdb->prefix}erp_hr_designtions` (`id`, `title`, `created_at`, `updated_at`)
-                VALUES (1, 'CEO', '{$current_date}', '{$current_date}'),
-                (2, 'Founder', '{$current_date}', '{$current_date}')"
+                VALUES (1, 'President', '{$current_date}', '{$current_date}'),
+                (2, 'Vice President', '{$current_date}', '{$current_date}'),
+                (3, 'CEO', '{$current_date}', '{$current_date}'),
+                (4, 'Managing Director', '{$current_date}', '{$current_date}'),
+                (5, 'Product Manager', '{$current_date}', '{$current_date}'),
+                (6, 'Project Manager', '{$current_date}', '{$current_date}'),
+                (7, 'Program Manager', '{$current_date}', '{$current_date}'),
+                (8, 'Operations Manager', '{$current_date}', '{$current_date}'),
+                (9, 'Marketing Manager', '{$current_date}', '{$current_date}'),
+                (10, 'Business Manager', '{$current_date}', '{$current_date}'),
+                (11, 'Technology Manager', '{$current_date}', '{$current_date}'),
+                (12, 'Finance/Accounts Manager', '{$current_date}', '{$current_date}'),
+                (13, 'Human Resource Manager', '{$current_date}', '{$current_date}'),
+                (14, 'Hiring Manager', '{$current_date}', '{$current_date}'),
+                (15, 'Senior Engineer', '{$current_date}', '{$current_date}'),
+                (16, 'Engineer', '{$current_date}', '{$current_date}'),
+                (17, 'Junior Engineer', '{$current_date}', '{$current_date}'),
+                (18, 'Business Executive', '{$current_date}', '{$current_date}'),
+                (19, 'Marketing Executive', '{$current_date}', '{$current_date}'),
+                (20, 'Customer Support Executive', '{$current_date}', '{$current_date}')"
             );
         }
 
