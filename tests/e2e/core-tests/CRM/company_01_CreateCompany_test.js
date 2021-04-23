@@ -4,8 +4,8 @@ Feature('Company');
 Scenario('Create a company',({ I }) => {
     I.loginAsAdmin();
     	I.click('WP ERP');
-        I.click('HR');
-        I.amOnPage('/wp-admin/admin.php?page=erp-crm&section=companies&section=companies');
+        I.click('CRM');
+        I.click('Companies');
         I.click('#erp-company-new');
         I.fillField('#company', faker.company.companyName());
         I.fillField('#erp-crm-new-contact-email', faker.internet.email());

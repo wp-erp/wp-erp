@@ -15,5 +15,4 @@ Scenario('Create new location',({ I }) => {
     	// I.click('#erp-state', 'Dhaka');
     	I.fillField('#zip', '1216');
 		I.click('Create');
-		pause()
 });

@@ -5,8 +5,8 @@ Scenario('@Products addCatagory',({ I }) => {
         I.click('WP ERP');
         I.click('Accounting');
         // I.wait(5);
-        I.moveCursorTo('//div[2]/div/div[2]/div/div/ul/li[6]/a');
+        I.moveCursorTo('//*[@id="erp-accounting"]/div[1]/ul/li[4]/a');
         I.click('Product Categories');
-        I.fillField('.wperp-form-field', 'Sports');
+        I.fillField('.wperp-form-field', 'Asset');
         I.click('Save');
 });

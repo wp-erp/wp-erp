@@ -1,7 +1,7 @@
 Feature('Expense');
 
 Scenario('@Expense payBill',({ I }) => {
-    I.loginAsAdmin();
+    I.loginAsAdmin();   
     	I.amOnPage('/wp-admin/admin.php?page=erp-accounting#/pay-bills/new');
         I.wait(5);
         I.click('div.multiselect');

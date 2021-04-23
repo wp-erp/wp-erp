@@ -2,8 +2,10 @@ Feature('Tax');
 
 Scenario('@Tax addTaxPayments',({ I }) => {
     I.loginAsAdmin();
-        I.amOnPage('/wp-admin/admin.php?page=erp-accounting#/taxes/tax-records');
-        //I.wait(10);
+        I.click('WP ERP');
+        I.click('Accounting');
+        I.moveCursorTo('//*[@id="erp-accounting"]/div[1]/ul/li[5]/a');
+        I.click('Tax Payments');
         I.click('New Tax Payment');
         I.click('//div[@class="wperp-col-sm-4 with-multiselect"]//span[@class="multiselect__single"]');
         I.wait(2);

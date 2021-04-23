@@ -10,9 +10,12 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "codeceptjs": "^3.0.5",
-    "faker": "^5.4.0",
-    "rosie": "^2.0.1",
-    "webdriverio": "^7.1.0"
+    "codeceptjs": "^3.0.6",
+    "faker": "^5.5.3",
+    "rosie": "^2.1.0",
+    "webdriverio": "^7.5.0"
+  },
+  "dependencies": {
+    "moment": "^2.29.1"
   }
 }

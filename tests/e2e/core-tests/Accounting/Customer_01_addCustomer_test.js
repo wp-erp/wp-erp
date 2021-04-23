@@ -6,7 +6,7 @@ Scenario('add customer',({ I }) => {
     I.loginAsAdmin();
         I.previewUsers();
         I.click('Customers');
-        I.wait(5);
+        I.wait(4);
         I.click('Add New Customer');
         I.fillField('#first_name', faker.name.firstName());
         I.fillField('#last_name', faker.name.lastName());

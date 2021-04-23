@@ -1,9 +1,11 @@
 Feature('Bank Accounts');
 
 Scenario('Bank transfer money',({ I }) => {
-    I.loginAsAdmin();
-    	I.amOnPage('/wp-admin/admin.php?page=erp-accounting#/banks');
-    	I.wait('5');
+	I.loginAsAdmin();
+		I.click('WP ERP');
+		I.click('Accounting');
+		I.moveCursorTo('//*[@id="erp-accounting"]/div[1]/ul/li[5]/a');
+		I.click('Bank Accounts')
     	I.click({ css : '.wperp-selected-option'});
     	I.click('Transfer Money');
     	I.wait(5);
