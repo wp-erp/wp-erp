@@ -806,18 +806,31 @@
              */
             select2AddMoreActive: function(element) {
                 var id = $(element).data('id');
-                $(element).select2({
-                    width: 'element',
-                    "language": {
-                        noResults: function(){
-                            return '<a href="#" class="button button-primary" id="'+id+'">Add New</a>';
-                        }
-                    },
-                    escapeMarkup: function (markup) {
-                        return markup;
-                    }
+                var addText = $(element).data('add');
 
-                });
+                if ( typeof addText !== 'undefined' && addText.length > 0 ) {
+                    $(element).select2().on('select2:open', function() {
+                        $(".select2-results:not(:has(a))")
+                        .append(
+                            '<div class="erp-select2-add">'+
+                            '<a href="#" id="'+id+'">'+addText+'</a>'+
+                            '</div>'
+                        );
+                    });;
+                } else {
+                    $(element).select2({
+                        width: 'element',
+                        "language": {
+                            noResults: function(){
+                                return '<a href="#" class="button button-primary" id="'+id+'">Add New</a>';
+                            }
+                        },
+                        escapeMarkup: function (markup) {
+                            return markup;
+                        }
+
+                    });
+                }
             },
 
             /**
