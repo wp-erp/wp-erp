@@ -74,6 +74,9 @@ function erp_hr_get_employees( $args = [] ) {
     $cache_key     = 'erp-get-employees-' . md5( serialize( $args ) ) . " : $last_changed";
     $results       = wp_cache_get( $cache_key, 'erp' );
 
+    $cache_key_counts = 'erp-get-employees-count-' . md5( serialize( $args ) ) . " : $last_changed";
+    $results_counts   = wp_cache_get( $cache_key_counts, 'erp' );
+
     if ( false === $results ) {
 
         $employee_tbl = $wpdb->prefix . 'erp_hr_employees';
@@ -143,6 +146,13 @@ function erp_hr_get_employees( $args = [] ) {
             $employees = $employees->skip( $args['offset'] )->take( $args['number'] );
         }
 
+        // Check if args count true, then return total count customer according to above filter
+        if ( $args['count'] ) {
+            $results_counts = $employees->count();
+
+            wp_cache_set( $cache_key_counts, $results_counts, 'erp', HOUR_IN_SECONDS );
+        }
+
         $results = $employees
             ->orderBy( $args['orderby'], $args['order'] )
             ->get()
@@ -162,11 +172,8 @@ function erp_hr_get_employees( $args = [] ) {
         wp_cache_set( $cache_key, $results, 'erp', HOUR_IN_SECONDS );
     }
 
-    // Check if args count true, then return total count customer according to above filter
-    if ( $args['count'] && false === $results ) {
-        return $employees->count();
-    } elseif( $args['count'] && false !== $results ) {
-        return count( $results );
+    if ( $args['count'] ) {
+        return $results_counts;
     }
 
     return $results;
@@ -290,6 +297,8 @@ function erp_employee_restore( $employee_ids ) {
     if ( is_int( $employee_ids ) ) {
         \WeDevs\ERP\HRM\Models\Employee::withTrashed()->where( 'user_id', $employee_ids )->restore();
     }
+
+    erp_hrm_purge_cache( ['list' => 'employee'] );
 }
 
 /**
