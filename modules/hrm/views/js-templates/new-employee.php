@@ -181,7 +181,7 @@
                                         'name'        => 'work[department]',
                                         'value'       => '',
                                         'class'       => 'erp-hrm-select2-add-more erp-hr-dept-drop-down',
-                                        'custom_attr' => [ 'data-id' => 'erp-new-dept' ],
+                                        'custom_attr' => [ 'data-id' => 'erp-new-dept', 'data-add' => __( '+ New Department', 'erp' ) ],
                                         'type'        => 'select',
                                         'options'     => erp_hr_get_departments_dropdown_raw(),
                                     ] );
@@ -195,7 +195,7 @@
                                         'name'        => 'work[designation]',
                                         'value'       => '{{ data.work.designation }}',
                                         'class'       => 'erp-hrm-select2-add-more erp-hr-desi-drop-down',
-                                        'custom_attr' => [ 'data-id' => 'erp-new-designation' ],
+                                        'custom_attr' => [ 'data-id' => 'erp-new-designation', 'data-add' => __( '+ New Designation', 'erp' ) ],
                                         'type'        => 'select',
                                         'options'     => erp_hr_get_designation_dropdown_raw(),
                                     ] );
