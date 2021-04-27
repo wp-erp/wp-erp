@@ -2381,7 +2381,6 @@ class Employee {
         }
 
         $this->update_employment_status( $args );
-    
 
         update_user_meta( $this->id, '_erp_hr_termination', $args );
 
