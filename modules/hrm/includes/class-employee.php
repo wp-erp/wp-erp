@@ -1644,19 +1644,27 @@ class Employee {
         }
 
         do_action( 'erp_hr_employee_employment_status_create', $this->get_user_id() );
+        
+        $future_history = $this->erp_user->histories()
+                                        ->where( 'module', $args['module'] )
+                                        ->where( 'date', '>', $args['date'] )
+                                        ->count();
 
-        if ( ! empty( $args['type'] ) ) {
-            $this->erp_user->update( [
-                'type' => $args['type'],
-            ] );
-        }
+        if ( (int) $future_history === 0 ) {
+            
+            if ( ! empty( $args['type'] ) ) {
+                $this->erp_user->update( [
+                    'type' => $args['type'],
+                ] );
+            }
 
-        if ( ! empty( $args['category'] ) ) {
-            $this->erp_user->update( [
-                'status' => $args['category'],
-            ] );
+            if ( ! empty( $args['category'] ) ) {
+                $this->erp_user->update( [
+                    'status' => $args['category'],
+                ] );
 
-            do_action( 'erp_hr_employee_after_update_status', $this->erp_user->user_id, $args['category'], $args['date'] );
+                do_action( 'erp_hr_employee_after_update_status', $this->erp_user->user_id, $args['category'], $args['date'] );
+            }
         }
 
         $history = $this->get_erp_user()->histories()->updateOrCreate( [ 'id' => $args['id'] ], [
