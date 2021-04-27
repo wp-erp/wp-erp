@@ -1524,6 +1524,7 @@ class Employee {
         }
 
         $histories = $histories->orderBy( 'date', 'desc' )
+                            ->orderBy( 'id', 'desc' )         
                             ->skip( $offset )
                             ->take( $limit )
                             ->get();
@@ -1632,6 +1633,8 @@ class Employee {
         $args     = wp_parse_args( $args, $default );
         $types    = erp_hr_get_employee_types();
         $statuses = erp_hr_get_employee_statuses();
+
+        $args['date'] = erp_current_datetime()->modify( $args['date'] )->format( 'Y-m-d H:i:s' );
 
         if ( empty( $args['category'] ) ) {
             if ( empty( $args['type'] ) || ! array_key_exists( $args['type'], $types ) ) {
