@@ -1158,7 +1158,7 @@ class Ajax_Handler {
 
         $fields = [
             'user_id'             => $user_id,
-            'terminate_date'      => $terminate_date,
+            'terminate_date'      => erp_current_datetime()->modify( $terminate_date )->format( 'Y-m-d H:i:s' ),
             'termination_type'    => $termination_type,
             'termination_reason'  => $termination_reason,
             'eligible_for_rehire' => $eligible_for_rehire,
