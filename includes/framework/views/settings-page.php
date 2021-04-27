@@ -1,4 +1,4 @@
-<div class="wrap erp-settings">
+<div class="wrap erp-settings" id="erp-settings">
 
 	<form method="post" id="mainform" action="" enctype="multipart/form-data">
 

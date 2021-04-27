@@ -42,6 +42,9 @@ Object.keys(moduleEntryPoints).forEach(function(erpModule) {
     });
 });
 
+// Settings config
+entryPoints[`../../assets/src/js/settings`] = `./assets/src/settings/main.js`;
+
 // Enviroment flag
 var plugins = [];
 var env = process.env.WEBPACK_ENV;
