@@ -2364,11 +2364,24 @@ class Employee {
             __( 'Eligible for Hire', 'erp' ),
             erp_hr_get_terminate_rehire_options( $args['eligible_for_rehire'] ) );
 
-        $this->update_employment_status( [
-            'status'   => 'terminated',
-            'comments' => $comments,
-            'date'     => $args['terminate_date'],
-        ] );
+        if ( ! isset( $args['module'] ) ) {
+            $args['module'] = 'employee';
+        }
+    
+        if ( ! isset( $args['category'] ) ) {
+            $args['category'] = 'terminated';
+        }
+    
+        if ( ! isset( $args['date'] ) ) {
+            $args['date'] = $args['terminate_date'];
+        }
+
+        if ( ! isset( $args['comments'] ) ) {
+            $args['comments'] = $comments;
+        }
+
+        $this->update_employment_status( $args );
+    
 
         update_user_meta( $this->id, '_erp_hr_termination', $args );
 
