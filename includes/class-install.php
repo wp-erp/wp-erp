@@ -1742,10 +1742,10 @@ Account Manager
             );
         }
 
-        // Add Standard Preset Data for Designation in erp_hr_designtions
-        if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_hr_designtions` LIMIT 0, 1" ) ) {
+        // Add Standard Preset Data for Designation in erp_hr_designations
+        if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_hr_designations` LIMIT 0, 1" ) ) {
             $wpdb->query(
-                "INSERT INTO `{$wpdb->prefix}erp_hr_designtions` (`id`, `title`, `created_at`, `updated_at`)
+                "INSERT INTO `{$wpdb->prefix}erp_hr_designations` (`id`, `title`, `created_at`, `updated_at`)
                 VALUES (1, 'President', '{$current_date}', '{$current_date}'),
                 (2, 'Vice President', '{$current_date}', '{$current_date}'),
                 (3, 'CEO', '{$current_date}', '{$current_date}'),
