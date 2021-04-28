@@ -1,6 +1,29 @@
 <template>
-    <div class="erp-nav-container">
-        <h2>Settings Demo</h2>
+    <div class="settings-navbar">
+        <h2>Settings</h2>
+        <ul class="settings-menu">
+            <li class="active">
+                <a href="/general">General</a>
+            </li>
+            <li>
+                <a href="/hr">HR</a>
+            </li>
+            <li>
+                <a href="/crm">CRM</a>
+            </li>
+            <li>
+                <a href="/accounting">Accounting</a>
+            </li>
+            <li>
+                <a href="/woocommerce">WooCommerce</a>
+            </li>
+            <li>
+                <a href="/email">Email</a>
+            </li>
+            <li>
+                <a href="/integrations">Integrations</a>
+            </li>
+        </ul>
     </div>
 </template>
 
@@ -9,14 +32,10 @@ export default {
     name: 'SettingsMenu',
 
     props: {},
-    data() {
-        /* global __ */
-        return {
-            // menuItems: erp_settings_var.erp_settings_menus, /* global erp_settings_var */
-            menuItems: [
 
-            ],
-            module_name: ''
+    data() {
+        return {
+            // menuItems: erp_settings_var.erp_settings_menus
         };
     },
 
@@ -26,7 +45,7 @@ export default {
 
     methods: {
         init() {
-
+            this.$store.dispatch('spinner/setSpinner', true);
         }
     }
 };
