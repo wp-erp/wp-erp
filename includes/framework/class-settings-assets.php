@@ -6,12 +6,10 @@ namespace WeDevs\ERP\Framework;
  * Scripts and Styles Class
  */
 class Settings_Assets {
+
     public function __construct() {
-        if ( is_admin() ) {
-            add_action( 'admin_enqueue_scripts', [ $this, 'register' ], 5 );
-        } else {
-            add_action( 'wp_enqueue_scripts', [ $this, 'register' ], 5 );
-        }
+        $this->register_assets();
+        $this->enquee_assets();
     }
 
     /**
@@ -19,9 +17,19 @@ class Settings_Assets {
      *
      * @return void
      */
-    public function register() {
+    public function register_assets() {
         $this->register_scripts( $this->get_scripts() );
         $this->register_styles( $this->get_styles() );
+    }
+
+    public function enquee_assets() {
+        // Load styles
+        wp_enqueue_style( 'erp-settings' );
+
+        // Load scripts
+        wp_enqueue_script( 'settings-vendor' );
+        wp_enqueue_script( 'erp-settings-bootstrap' );
+        wp_enqueue_script( 'erp-settings' );
     }
 
     /**
@@ -72,20 +80,26 @@ class Settings_Assets {
                     return $a['position'] > $b['position'];
                 }
             );
+
+            ?>
+            <script>
+                window.erpSettings = JSON.parse('<?php echo wp_kses_post( wp_slash(
+                    json_encode( apply_filters( 'erp_localized_data', [] ) )
+                ) ); ?>');
+            </script>
+            <?php
         }
 
-        wp_localize_script( 'settings-bootstrap', 'erp_acct_var', [
+        wp_localize_script( 'erp-settings-bootstrap', 'erp_settings_var', [
             'user_id'            => $u_id,
             'site_url'           => $site_url,
             'logout_url'         => $logout_url,
-            'acct_assets'        => ERP_ACCOUNTING_ASSETS,
+            'settings_assets'    => WPERP_ASSETS . '/src',
             'erp_assets'         => WPERP_ASSETS,
-            'erp_acct_menus'     => $menus,
+            'erp_settings_menus' => $menus,
+            'erp_settings_url'   => $settings_url,
             'erp_debug_mode'     => erp_get_option( 'erp_debug_mode', 'erp_settings_general', 0 ),
             'current_date'       => erp_current_datetime()->format( 'Y-m-d' ),
-            'pdf_plugin_active'  => is_plugin_active( 'erp-pdf-invoice/wp-erp-pdf.php' ),
-            'link_copy_success'  => __( 'Link has been successfully copied.', 'erp' ),
-            'link_copy_error'    => __( 'Failed to copy the link.', 'erp' ),
             'date_format'        => erp_get_date_format(),
             'rest' => [
                 'root'    => esc_url_raw( get_rest_url() ),
@@ -122,22 +136,18 @@ class Settings_Assets {
                 'version'   => filemtime( WPERP_PATH . '/assets/js/vendor.js' ),
                 'in_footer' => true,
             ],
-            'settings-bootstrap' => [
-                'src'       => ERP_ACCOUNTING_ASSETS . '/js/bootstrap.js',
-                'deps'      => [ 'settings-vendor' ],
-                'version'   => filemtime( ERP_ACCOUNTING_PATH . '/assets/js/bootstrap.js' ),
-                'in_footer' => true,
-            ],
-            'settings-frontend'  => [
-                'src'       => ERP_ACCOUNTING_ASSETS . '/js/frontend.js',
+
+            'erp-settings-bootstrap'     => [
+                'src'       => WPERP_ASSETS . '/src/js/erp-settings-bootstrap.js',
                 'deps'      => [ 'jquery', 'settings-vendor' ],
-                'version'   => filemtime( ERP_ACCOUNTING_PATH . '/assets/js/frontend.js' ),
+                'version'   => filemtime( WPERP_PATH . '/assets/src/js/erp-settings-bootstrap.js' ),
                 'in_footer' => true,
             ],
-            'settings-admin'     => [
-                'src'       => ERP_ACCOUNTING_ASSETS . '/js/admin.js',
-                'deps'      => [ 'jquery', 'settings-vendor', 'settings-bootstrap' ],
-                'version'   => filemtime( ERP_ACCOUNTING_PATH . '/assets/js/admin.js' ),
+
+            'erp-settings'     => [
+                'src'       => WPERP_ASSETS . '/src/js/erp-settings.js',
+                'deps'      => [ 'jquery', 'erp-settings-bootstrap' ],
+                'version'   => filemtime( WPERP_PATH . '/assets/src/js/erp-settings.js' ),
                 'in_footer' => true,
             ],
         ];
@@ -152,29 +162,11 @@ class Settings_Assets {
      */
     public function get_styles() {
         $styles = [
-            'settings-style'    => [
-                'src' => ERP_ACCOUNTING_ASSETS . '/css/style.css',
-            ],
-            'settings-frontend' => [
-                'src' => ERP_ACCOUNTING_ASSETS . '/css/frontend.css',
-            ],
-            'settings-admin'    => [
-                'src' => ERP_ACCOUNTING_ASSETS . '/css/admin.css',
-            ],
+            'erp-settings'    => [
+                'src' => WPERP_ASSETS . '/src/css/erp-settings.css',
+            ]
         ];
 
         return $styles;
-    }
-
-
-    /**
-     * Undocumented function
-     *
-     * @since 1.7.5
-     *
-     * @return void
-     */
-    public function includes() {
-
     }
 }

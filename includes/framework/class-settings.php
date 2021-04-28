@@ -7,6 +7,10 @@ namespace WeDevs\ERP\Framework;
  */
 class ERP_Admin_Settings {
 
+    public function __construct() {
+        new Settings_Assets();
+    }
+
     /**
      * Settings array
      *
