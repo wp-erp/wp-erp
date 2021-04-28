@@ -43,7 +43,9 @@ Object.keys(moduleEntryPoints).forEach(function(erpModule) {
 });
 
 // Settings config
-entryPoints[`../../assets/src/js/settings`] = `./assets/src/settings/main.js`;
+entryPoints[`../../assets/src/js/erp-settings-bootstrap`] = `./assets/src/settings/bootstrap.js`;
+entryPoints[`../../assets/src/js/erp-settings`] = `./assets/src/settings/main.js`;
+entryPoints[`../../assets/src/css/erp-settings`] = `./assets/src/less/settings.less`;
 
 // Enviroment flag
 var plugins = [];
