@@ -4,13 +4,11 @@ import store from './store/store';
 import { createHooks } from '@wordpress/hooks';
 window.erpSettingsHooks = createHooks();
 
-// get lib reference
 /* global settings_get_lib */
 const Vue            = settings_get_lib('Vue');
 const VueSweetalert2 = settings_get_lib('VueSweetalert2');
 const Loading        = settings_get_lib('Loading');
 const Vuelidate      = settings_get_lib('Vuelidate');
-const VueClipboards  = settings_get_lib('VueClipboards');
 const commonMixins   = settings_get_lib('commonMixins');
 const i18nMixin      = settings_get_lib('i18nMixin');
 const clickOutside   = settings_get_lib('clickOutside');
@@ -22,7 +20,6 @@ Vue.config.productionTip = false;
 Vue.use(VueSweetalert2);
 Vue.use(Loading);
 Vue.use(Vuelidate);
-Vue.use(VueClipboards);
 
 // mixin
 Vue.mixin(commonMixins);

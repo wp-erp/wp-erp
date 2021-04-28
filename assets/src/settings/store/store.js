@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-// import sales from './modules/sales';
+import spinner from './modules/spinner';
 
 Vue.use(Vuex);
 
@@ -8,7 +8,7 @@ const debug = process.env.NODE_ENV !== 'production';
 
 const store = new Vuex.Store({
     modules: {
-        // sales,
+        spinner
     },
     strict: debug,
     plugins: []

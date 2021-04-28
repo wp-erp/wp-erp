@@ -1,13 +1,16 @@
 import './i18n';
 import Vue from 'vue';
+import Vuelidate from 'vuelidate';
+import Swal from 'sweetalert2' ;
 import VueSweetalert2 from 'vue-sweetalert2';
 import Loading from 'vue-loading-overlay';
-import HTTP from 'admin/http';
-import Vuelidate from 'vuelidate';
 import { createHooks } from '@wordpress/hooks';
-import Swal from 'sweetalert2' ;
+import commonMixins from './mixins/common';
+import i18nMixin from './mixins/i18n';
+import { clickOutside } from './directive/directives';
+import HTTP from './http';
 
-// global settings var
+// global for settings var
 window.settings = {
     libs: {}
 };
@@ -16,12 +19,12 @@ window.settings = {
 window.settings.libs['Vue']                 = Vue;
 window.settings.libs['VueSweetalert2']      = VueSweetalert2;
 window.settings.libs['Loading']             = Loading;
+window.settings.libs['commonMixins']        = commonMixins;
+window.settings.libs['i18nMixin']           = i18nMixin;
 window.settings.libs['HTTP']                = HTTP;
-window.settings.libs['FileUpload']          = FileUpload;
 window.settings.libs['Vuelidate']           = Vuelidate;
-window.settings.libs['PieChart']            = PieChart;
-window.settings.libs['VueClipboards']       = VueClipboards;
 window.settings.libs['Swal']                = Swal;
+window.settings.libs['clickOutside']        = clickOutside;
 
 // get lib reference from window
 window.settings_get_lib = function(lib) {
