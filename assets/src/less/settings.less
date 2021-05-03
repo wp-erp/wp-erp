@@ -1,3 +1,5 @@
+@import "master.less";
+
 #erp-settings {
     .settings-area {
         display: flex;
@@ -14,12 +16,52 @@
 
         .settings-content {
             flex-basis: 90%;
+            padding: 0px 45px;
+
+            .search-area {
+                display: flex;
+                justify-content: flex-end;
+                margin-top: 40px;
+
+                .input-searchbar {
+                    width: 176px;
+                    border-radius: 0px;
+                    border: 1px solid #E2E2E2;
+                    height: 29px;
+
+                    &::placeholder {
+                        color: #CBCBCB;
+                        font-size: 12px;
+                    }
+                }
+            }
+
+            .section-title {
+                font-size: 24px;
+                margin: 10px 0px;
+            }
+
+            .sub-section-title {
+                font-size: 18px;
+                margin-top: 5px;
+                margin-bottom: 50px;
+                font-weight: bold;
+            }
+
+            .settings-box {
+                padding: 10px;
+                background: #ffffff;
+                border-radius: 2px;
+                margin: 40px 0px 0px 0px;
+                padding: 30px;
+                border: 1px solid #DFE2E7;
+            }
         }
 
         .settings-navbar {
             h2 {
                 font-size: 24px;
-                padding: 18px 30px;
+                padding: 45px 30px;
             }
 
             .settings-menu {
@@ -35,10 +77,96 @@
                         text-decoration: none;
                         font-size: 14px;
                         font-weight: 700;
-                        padding: 17px 30px 17px 30px;
+                        padding: 17px 30px;
+                        color: #444444;
+
+                        &:focus {
+                            outline: none;
+                            box-shadow: none;
+                        }
+
+                        i {
+                            margin-right: 12px;
+                            font-size: 16px;
+
+                            &.icon-general:before {
+                                color: #3B80F4;
+                            }
+
+                            &.icon-hr:before {
+                                color: #8D75F2;
+                            }
+
+                            &.icon-crm:before {
+                                color: #2CCB67;
+                            }
+
+                            &.icon-accounting:before {
+                                color: #FF9900;
+                            }
+
+                            &.icon-woocommerce:before {
+                                color: #8E44AD;
+                            }
+
+                            &.icon-email:before {
+                                color: #E9485E;
+                            }
+
+                            &.icon-integration:before {
+                                color: #00BFFF;
+                            }
+                        }
+
                     }
                 }
             }
         }
+    }
+
+    .erp-settings-tooltip {
+        position: relative;
+        display: inline-block;
+        margin-left: 15px;
+
+        .tooltiptext {
+            visibility: hidden;
+            width: auto;
+            min-width: 400px;
+            background-color: #f0f0f1;
+            color: #24282d;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            top: 100%;
+            margin-left: -100px;
+            font-weight: normal;
+        }
+
+        &:hover .tooltiptext {
+            visibility: visible;
+        }
+    }
+
+    .multiselect-custom-arrow {
+        position: absolute;
+        right: 0;
+        padding-right: 18px;
+        top: 6px;
+    }
+    .multiselect__tags input {
+        border: none;
+        font-size: 14px;
+    }
+    .multiselect {
+        min-height: 26px;
+    }
+    .multiselect__tags {
+        min-height: 26px;
+        padding: 5px 37px 0 8px;
+        border-radius: 3px;
+        border: 2px solid #eff2f7;
     }
 }

@@ -7,10 +7,6 @@ namespace WeDevs\ERP\Framework;
  */
 class ERP_Admin_Settings {
 
-    public function __construct() {
-        new Settings_Assets();
-    }
-
     /**
      * Settings array
      *
@@ -36,7 +32,7 @@ class ERP_Admin_Settings {
         if ( !self::$settings ) {
             $settings = [];
 
-            $settings[] = include __DIR__ . '/settings/general.php';
+            // $settings[] = include __DIR__ . '/settings/general.php';
 
             $settings   = apply_filters( 'erp_settings_pages', $settings );
 

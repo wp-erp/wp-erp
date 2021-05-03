@@ -2,6 +2,8 @@
 
 namespace WeDevs\ERP\Framework;
 
+use WeDevs\ERP\Framework\Settings\ERP_Settings_General;
+
 /**
  * Scripts and Styles Class
  */
@@ -30,6 +32,11 @@ class Settings_Assets {
         wp_enqueue_script( 'settings-vendor' );
         wp_enqueue_script( 'erp-settings-bootstrap' );
         wp_enqueue_script( 'erp-settings' );
+    }
+
+    public function get_settings_general_data () {
+        $settings_general = new ERP_Settings_General();
+        return $settings_general->get_settings();
     }
 
     /**
@@ -91,17 +98,18 @@ class Settings_Assets {
         }
 
         wp_localize_script( 'erp-settings-bootstrap', 'erp_settings_var', [
-            'user_id'            => $u_id,
-            'site_url'           => $site_url,
-            'logout_url'         => $logout_url,
-            'settings_assets'    => WPERP_ASSETS . '/src',
-            'erp_assets'         => WPERP_ASSETS,
-            'erp_settings_menus' => $menus,
-            'erp_settings_url'   => $settings_url,
-            'erp_debug_mode'     => erp_get_option( 'erp_debug_mode', 'erp_settings_general', 0 ),
-            'current_date'       => erp_current_datetime()->format( 'Y-m-d' ),
-            'date_format'        => erp_get_date_format(),
-            'rest' => [
+            'user_id'               => $u_id,
+            'site_url'              => $site_url,
+            'logout_url'            => $logout_url,
+            'settings_assets'       => WPERP_ASSETS . '/src',
+            'erp_assets'            => WPERP_ASSETS,
+            'erp_settings_menus'    => $menus,
+            'erp_settings_url'      => $settings_url,
+            'erp_debug_mode'        => erp_get_option( 'erp_debug_mode', 'erp_settings_general', 0 ),
+            'current_date'          => erp_current_datetime()->format( 'Y-m-d' ),
+            'date_format'           => erp_get_date_format(),
+            'settings_general_data' => $this->get_settings_general_data(),
+            'rest'                  => [
                 'root'    => esc_url_raw( get_rest_url() ),
                 'nonce'   => wp_create_nonce( 'wp_rest' ),
                 'version' => 'erp/v1',

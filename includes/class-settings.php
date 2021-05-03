@@ -34,7 +34,26 @@ class Settings {
         wp_enqueue_script( 'wp-color-picker' );
         wp_enqueue_script( 'erp-admin-settings' );
 
+        // Add Menus
+        $this->addMenus();
+
         // Add/Register scripts for SPA
         new Settings_Assets();
+    }
+
+
+    public function addMenus()
+    {
+        $general = 'erp_settings_view_general';
+
+        erp_add_menu(
+            'settings',
+            [
+                'title'      => __( 'General', 'erp' ),
+                'capability' => $general,
+                'slug'       => 'general',
+                'position'   => 1,
+            ]
+        );
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+namespace WeDevs\ERP\Framework\Settings;
+
 use WeDevs\ERP\Framework\ERP_Settings_Page;
 
 /**
