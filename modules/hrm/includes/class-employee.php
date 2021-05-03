@@ -1328,12 +1328,10 @@ class Employee {
         $args = wp_parse_args( $data, $default );
 
         $requires = [
-            'school'      => __( 'School Name', 'erp' ),
-            'degree'      => __( 'Degree', 'erp' ),
-            'field'       => __( 'Field', 'erp' ),
-            'finished'    => __( 'Completion date', 'erp' ),
-            'result'      => __( 'Result', 'erp' ),
-            'result_type' => __( 'Result in', 'erp' ),
+            'school'   => __( 'School Name', 'erp' ),
+            'degree'   => __( 'Degree', 'erp' ),
+            'field'    => __( 'Field', 'erp' ),
+            'finished' => __( 'Completion date', 'erp' ),
         ];
 
         foreach ( $requires as $key => $value ) {
