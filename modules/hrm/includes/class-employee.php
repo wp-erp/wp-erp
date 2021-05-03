@@ -1308,7 +1308,6 @@ class Employee {
      * Create / Update Education
      *
      * @since 1.3.0
-     * @since 1.8.3 add result options
      *
      * @param array $data
      * @param bool  $return_id
@@ -1317,15 +1316,13 @@ class Employee {
      */
     public function add_education( $data, $return_id = true ) {
         $default = [
-            'id'          => '',
-            'school'      => '',
-            'degree'      => '',
-            'field'       => '',
-            'finished'    => '',
-            'result'      => '',
-            'result_type' => '',
-            'notes'       => '',
-            'interest'    => '',
+            'id'       => '',
+            'school'   => '',
+            'degree'   => '',
+            'field'    => '',
+            'finished' => '',
+            'notes'    => '',
+            'interest' => '',
         ];
 
         $args = wp_parse_args( $data, $default );

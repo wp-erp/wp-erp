@@ -746,8 +746,6 @@ Account Manager
                 `school` varchar(100) DEFAULT NULL,
                 `degree` varchar(100) DEFAULT NULL,
                 `field` varchar(100) DEFAULT NULL,
-                `result` decimal(4,3) DEFAULT 0,
-                `result_type` enum('gpa', 'cgpa') DEFAULT NULL,
                 `finished` int(4) unsigned DEFAULT NULL,
                 `notes` text,
                 `interest` text,
