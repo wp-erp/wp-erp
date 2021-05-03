@@ -6,7 +6,7 @@
             </div>
             <div class="settings-content">
                 <h2 role="erp-wp-notice" data-text="Don't remove me, I am super important for admin notice"></h2>
-
+                <search-bar></search-bar>
                 <router-view/>
                 <loading
                     :active.sync="loader"
@@ -25,17 +25,18 @@
 import { mapState } from 'vuex';
 
 import SettingsMenu from 'settings/components/menu/SettingsMenu.vue';
+import SearchBar from 'settings/components/searchbar/SearchBar.vue';
 import Loading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/vue-loading.css';
 
-// import '../../font/flaticon.css';
-// import '../../css/master.css';
+import '../font/flaticon.css';
 
 export default {
     name: 'Settings',
 
     components: {
         SettingsMenu,
+        SearchBar,
         Loading
     },
 
