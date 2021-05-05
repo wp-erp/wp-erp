@@ -228,27 +228,47 @@ export default {
                 return false;
             }
 
-            this.$store.dispatch('spinner/setSpinner', true);
-    
-            var type = '';
-            var url = '';
+            var self = this;
 
-            if (!this.people) {
-                url = this.url;
-                type = 'post';
-            } else {
-                url = this.url + '/' + peopleFields.id;
-                type = 'put';
+            if (this.peopleFields.email) {
+                if (!this.people) {
+                    HTTP.get('/people/check-email', {
+                        params: {
+                            email: this.peopleFields.email
+                        }
+                    }).then((res) => {
+                        self.emailExists = res.data;
+
+                        if (res.data) {
+                            if (res.data == 'contact' || res.data == 'company') {
+                                swal({
+                                    title : '',
+                                    text : __('This email already exists in CRM! Do you want to import and update the contact?', 'erp'),
+                                    type : 'info',
+                                    showCancelButton : true,
+                                    cancelButtonText : __('Cancel', 'erp'),
+                                    cancelButtonColor : '#bababa',
+                                    confirmButtonText : __('Import & Update', 'erp'),
+                                    confirmButtonColor : '#58badb',
+                                },
+                                function(input) {
+                                    self.emailExists = false;
+                                    self.addPeople(peopleFields);
+                                });
+                            } else {
+                                self.error_message.push(__('Email already exists as customer/vendor', 'erp'));
+                                self.emailExists = false;
+                                
+                                return false;
+                            }
+                        } else {
+                            self.addPeople(peopleFields);
+                        }
+                    });
+                } else {
+                    self.addPeople(peopleFields);
+                }
             }
-
-            var message = (type === 'post') ? 'Created' : 'Updated';
-
-            HTTP[type](url, peopleFields).then(response => {
-                this.$root.$emit('peopleUpdate');
-                this.resetForm();
-                this.$store.dispatch('spinner/setSpinner', false);
-                this.showAlert('success', message);
-            });
         },
 
         checkForm() {
