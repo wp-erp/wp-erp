@@ -37,7 +37,7 @@
                             <?php echo ( ! empty( $employment_history['comments'] ) ) ? wp_kses_post( $employment_history['comments'] ) : '--'; ?>
                         </td>
                         <td class="action">
-                            <?php if ( current_user_can( 'erp_manage_jobinfo', $employee->get_user_id() ) ) { ?>
+                            <?php if ( current_user_can( 'erp_manage_jobinfo', $employee->get_user_id() ) && ( 0 !== $num ) ) { ?>
                                 <a href="#" class="remove" data-id="<?php echo esc_html( $employment_history['id'] ); ?>"><span class="dashicons dashicons-trash"></span></a>
                             <?php } ?>
                         </td>
