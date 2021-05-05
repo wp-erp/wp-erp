@@ -138,11 +138,17 @@ export default {
 
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .customer-identity {
     img {
         width: 100px;
         border-radius: 50%;
     }
+}
+
+.edit-badge {
+    position: absolute;
+    right: 20px;
+    bottom: 10px;
 }
 </style>
