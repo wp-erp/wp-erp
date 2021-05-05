@@ -526,6 +526,8 @@ class Employee {
         $this->update_employee( array_merge( $data['work'], $data['personal'], $data['additional'] ) );
         do_action( 'erp_hr_employee_new', $this->id, $data );
 
+        erp_hrm_purge_cache( [ 'list' => 'employee', 'employee_id' => $employee_id ] );
+
         return $this;
     }
 
@@ -1701,6 +1703,8 @@ class Employee {
             'date'     => $args['date'],
         ] );
 
+        erp_hrm_purge_cache( [ 'list' => 'employee', 'employee_id' => $args['id'] ] );
+
         return [
             'id'       => $history['id'],
             'category' => $history['category'],
@@ -2407,6 +2411,8 @@ class Employee {
         $this->update_employment_status( $args );
 
         update_user_meta( $this->id, '_erp_hr_termination', $args );
+
+        erp_hrm_purge_cache( [ 'list' => 'employee', 'employee_id' => $this->id ] );
 
         return $this;
     }

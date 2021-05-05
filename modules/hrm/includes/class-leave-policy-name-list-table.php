@@ -163,7 +163,7 @@ class Leave_Policy_Name_List_Table extends WP_List_Table {
         $hidden                = [];
         $this->_column_headers = [ $columns, $hidden ];
 
-        $this->counts = Leave::count();
-        $this->items  = Leave::all();
+        $this->counts = erp_hr_get_leave_policy_names( ['count' => true ] );
+        $this->items  = erp_hr_get_leave_policy_names();
     }
 }

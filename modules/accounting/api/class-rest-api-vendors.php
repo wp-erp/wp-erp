@@ -345,6 +345,8 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $vendor = (array) erp_get_people( (int) $id );
 
+        erp_acct_purge_cache( [ 'group' => 'erp', 'list' => 'people', 'type' => $data['type'] ] );
+
         erp_delete_people( $data );
 
         $this->add_log( $vendor, 'delete' );
@@ -379,6 +381,8 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
 
             $vendors[] = (array) erp_get_people( (int) $id );
         }
+
+        erp_acct_purge_cache( [ 'group' => 'erp', 'list' => 'people', 'type' => $data['type'] ] );
 
         erp_delete_people( $data );
 
