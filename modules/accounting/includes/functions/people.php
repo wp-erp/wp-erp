@@ -117,6 +117,18 @@ function erp_acct_insert_people( $args ) {
     $args = wp_parse_args( $args, (array) $people );
     $id   = erp_insert_people( $args );
 
+    if ( ! is_wp_error( $id ) ) {
+        global $wpdb;
+
+        $type_id = erp_acct_get_people_type_id_by_name( $args['type'] );
+        
+        $wpdb->insert(
+            "{$wpdb->prefix}erp_people_type_relations",
+            [ 'people_id' => $id, 'people_types_id' => $type_id ],
+            [ '%d', '%d' ]
+        );
+    }
+
     return $id;
 }
 
