@@ -1806,12 +1806,19 @@ class Employee {
 
         do_action( 'erp_hr_employee_job_info_create', $this->get_user_id() );
 
-        $this->erp_user->update( [
-            'designation'  => $args['designation'],
-            'department'   => $args['department'],
-            'reporting_to' => $args['reporting_to'],
-            'location'     => $args['location'],
-        ] );
+        $future_history = $this->erp_user->histories()
+                                        ->where( 'module', 'job' )
+                                        ->where( 'date', '>', $args['date'] )
+                                        ->count();
+
+        if ( (int) $future_history === 0 ) {
+            $this->erp_user->update( [
+                'designation'  => $args['designation'],
+                'department'   => $args['department'],
+                'reporting_to' => $args['reporting_to'],
+                'location'     => $args['location'],
+            ] );
+        }
 
         $history = $this->get_erp_user()->histories()->updateOrCreate( [ 'id' => $args['id'] ], [
             'date'     => $args['date'],
