@@ -182,7 +182,7 @@ function erp_acct_get_sales_chart_payment( $args = [] ) {
 function erp_acct_get_bill_chart_data( $args = [] ) {
     global $wpdb;
 
-    $where = ' WHERE bill.status != 1';
+    $where = ' WHERE bill.status != 1  AND bill.status!=7 AND bill.status!=8';
 
     if ( ! empty( $args['start_date'] ) ) {
         $where .= " AND bill.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
