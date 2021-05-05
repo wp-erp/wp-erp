@@ -1741,10 +1741,17 @@ class Employee {
 
         do_action( 'erp_hr_employee_compensation_create', $this->get_user_id() );
 
-        $this->erp_user->update( [
-            'pay_rate' => floatval( $args['pay_rate'] ),
-            'pay_type' => $args['pay_type'],
-        ] );
+        $future_history = $this->erp_user->histories()
+                                        ->where( 'module', 'compensation' )
+                                        ->where( 'date', '>', $args['date'] )
+                                        ->count();
+
+        if ( (int) $future_history === 0 ) {
+            $this->erp_user->update( [
+                'pay_rate' => floatval( $args['pay_rate'] ),
+                'pay_type' => $args['pay_type'],
+            ] );
+        }
 
         $history = $this->get_erp_user()->histories()->updateOrCreate( [ 'id' => $args['id'] ], [
             'module'   => 'compensation',
