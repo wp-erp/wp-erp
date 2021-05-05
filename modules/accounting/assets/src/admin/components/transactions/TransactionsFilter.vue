@@ -148,10 +148,12 @@ export default {
             const status = this.statuses.find(o => o.id === data.selected);
             this.filters.status = parseInt(status.id);
         });
+    },
 
-        // Outside click of the div toggle filter
+    mounted() {
+        // Outside click event to hide filter content
         window.addEventListener('click', (e) => {
-            if (!this.$refs.filterArea.contains(e.target)){
+            if ( this.$refs.filterArea && !this.$refs.filterArea.contains(e.target) ){
                 this.showFilters = false;
             }
         })
