@@ -498,7 +498,7 @@ function erp_acct_check_voucher_edit_state( $id ) {
 /**
  * Check if people exists in given types
  * 
- * @since 1.8.3
+ * @since 1.8.4
  *
  * @param string $email
  * @param array $types
