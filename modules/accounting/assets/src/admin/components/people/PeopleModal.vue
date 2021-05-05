@@ -359,7 +359,7 @@ export default {
                 this.peopleFields.street_1    = people.billing.street_1;
                 this.peopleFields.street_2    = people.billing.street_2;
                 this.peopleFields.city        = people.billing.city;
-                this.peopleFields.country     = people.billing.country ? !!this.selectedCountry(people.billing.country) : '';
+                this.peopleFields.country     = people.billing.country ? this.selectedCountry(people.billing.country) : '';
                 this.peopleFields.postal_code = people.billing.postal_code;
 
                 if (people.photo) {
