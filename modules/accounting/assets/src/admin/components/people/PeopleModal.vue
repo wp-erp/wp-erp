@@ -271,6 +271,30 @@ export default {
             }
         },
 
+        addPeople(peopleFields) {
+            this.$store.dispatch('spinner/setSpinner', true);
+    
+            var type = '';
+            var url = '';
+
+            if (!this.people) {
+                url = this.url;
+                type = 'post';
+            } else {
+                url = this.url + '/' + peopleFields.id;
+                type = 'put';
+            }
+
+            var message = (type === 'post') ? 'Created' : 'Updated';
+
+            HTTP[type](url, peopleFields).then(response => {
+                this.$root.$emit('peopleUpdate');
+                this.resetForm();
+                this.$store.dispatch('spinner/setSpinner', false);
+                this.showAlert('success', message);
+            });
+        },
+
         checkForm() {
             this.error_message = window.acct.hooks.applyFilters('acctPeopleFieldsError', []);
 
