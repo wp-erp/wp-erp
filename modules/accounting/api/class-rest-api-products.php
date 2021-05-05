@@ -194,9 +194,11 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
         $item = $this->prepare_item_for_database( $request );
 
         $id    = erp_acct_insert_product( $item );
+
         if ( is_wp_error( $id ) ) {
             return $id;
         }
+
         $item['id'] = $id;
 
         $this->add_log( $item, 'add' );
@@ -326,7 +328,7 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
         }
 
         if ( isset( $request['tax_cat_id'] ) ) {
-            $prepared_item['tax_cat_id'] = $request['tax_cat_id']['id'];
+            $prepared_item['tax_cat_id'] = $request['tax_cat_id'];
         }
 
         if ( isset( $request['vendor'] ) ) {
@@ -360,14 +362,14 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
             'id'                => $item->id,
             'name'              => $item->name,
             'product_type_id'   => $item->product_type_id,
-            'product_type_name' => $item->product_type_name,
+            'product_type_name' => ! empty( $item->product_type_name ) ? $item->product_type_name : '',
             'category_id'       => $item->category_id,
             'tax_cat_id'        => $item->tax_cat_id,
-            'vendor'            => $item->vendor,
+            'vendor'            => ! empty( $item->vendor ) ? $item->vendor : '',
             'cost_price'        => $item->cost_price,
             'sale_price'        => $item->sale_price,
-            'vendor_name'       => $item->vendor_name,
-            'cat_name'          => $item->cat_name,
+            'vendor_name'       => ! empty( $item->vendor_name ) ? $item->vendor_name : '',
+            'cat_name'          => ! empty( $item->cat_name ) ? $item->cat_name : '',
             'tax_cat_name'      => erp_acct_get_tax_category_by_id( $item->tax_cat_id ),
         ];
 
