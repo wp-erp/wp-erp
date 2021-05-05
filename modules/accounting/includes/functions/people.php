@@ -92,6 +92,35 @@ function erp_acct_add_employee_as_people( $data, $update = false ) {
 }
 
 /**
+ * Inserts accounting people
+ * 
+ * @since 1.8.4
+ *
+ * @param array $args
+ * 
+ * @return mixed
+ */
+function erp_acct_insert_people( $args ) {
+    $people = erp_get_people_by( 'email', $args['email'] );
+
+    // this $email belongs to nobody
+    if ( ! $people ) {
+        return erp_insert_people( $args );
+    }
+        
+    foreach ( $args as $key => $value ) {
+        if ( empty( $args[ $key ] ) ) {
+            unset( $args[ $key ] );
+        }
+    }
+
+    $args = wp_parse_args( $args, (array) $people );
+    $id   = erp_insert_people( $args );
+
+    return $id;
+}
+
+/**
  * Get transaction by date
  *
  * @param int   $people_id
@@ -347,7 +376,7 @@ function erp_acct_get_people_type_by_type_id( $type_id ) {
 /**
  * Get people type name by type id
  * 
- * @since 1.8.4
+ * @since 1.8.3
  *
  * @param $type_name
  *
