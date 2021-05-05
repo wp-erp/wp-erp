@@ -23,35 +23,55 @@ function erp_acct_get_all_journals( $args = [] ) {
 
     $args = wp_parse_args( $args, $defaults );
 
-    $where = '';
-    $limit = '';
+    $last_changed = erp_cache_get_last_changed( 'accounting', 'journals', 'erp-accounting' );
+    $cache_key    = 'erp-get-journals-' . md5( serialize( $args ) ) . ": $last_changed";
+    $journals     = wp_cache_get( $cache_key, 'erp-accounting' );
 
-    if ( ! empty( $args['start_date'] ) ) {
-        $where .= "WHERE journal.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
+    $cache_key_count = 'erp-get-sales-transactions-count-' . md5( serialize( $args ) ) . " : $last_changed";
+    $journals_count  = wp_cache_get( $cache_key_count, 'erp-accounting' );
+
+    if ( false === $journals ) {
+
+        $where = '';
+        $limit = '';
+
+        if ( ! empty( $args['start_date'] ) ) {
+            $where .= "WHERE journal.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
+        }
+
+        if ( '-1' === $args['number'] ) {
+            $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+        }
+
+        $sql = 'SELECT';
+
+        if ( $args['count'] ) {
+            $sql .= ' COUNT( DISTINCT journal.id ) as total_number';
+        } else {
+            $sql .= ' journal.*';
+        }
+
+        $sql .= " FROM {$wpdb->prefix}erp_acct_journals AS journal LEFT JOIN {$wpdb->prefix}erp_acct_journal_details AS journal_detail";
+        $sql .= " ON journal.voucher_no = journal_detail.trn_no {$where} GROUP BY journal.voucher_no ORDER BY journal.{$args['orderby']} {$args['order']} {$limit}";
+
+        if ( $args['count'] ) {
+            $wpdb->get_results( $sql );
+
+            $journals_count = $wpdb->num_rows;
+
+            wp_cache_set( $cache_key_count, $journals_count, 'erp-accounting' );
+        } else {
+            $journals = $wpdb->get_results( $sql, ARRAY_A );
+
+            wp_cache_set( $cache_key, $journals, 'erp-accounting' );
+        }
     }
-
-    if ( '-1' === $args['number'] ) {
-        $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
-    }
-
-    $sql = 'SELECT';
 
     if ( $args['count'] ) {
-        $sql .= ' COUNT( DISTINCT journal.id ) as total_number';
-    } else {
-        $sql .= ' journal.*';
+        return $journals_count;
     }
 
-    $sql .= " FROM {$wpdb->prefix}erp_acct_journals AS journal LEFT JOIN {$wpdb->prefix}erp_acct_journal_details AS journal_detail";
-    $sql .= " ON journal.voucher_no = journal_detail.trn_no {$where} GROUP BY journal.voucher_no ORDER BY journal.{$args['orderby']} {$args['order']} {$limit}";
-
-    if ( $args['count'] ) {
-        $wpdb->get_results( $sql );
-
-        return $wpdb->num_rows;
-    }
-
-    return $wpdb->get_results( $sql, ARRAY_A );
+    return $journals;
 }
 
 /**
@@ -183,6 +203,8 @@ function erp_acct_insert_journal( $data ) {
         return new WP_error( 'journal-exception', $e->getMessage() );
     }
 
+    erp_acct_purge_cache( ['list' => 'journals'] );
+
     return erp_acct_get_journal( $voucher_no );
 }
 
@@ -268,6 +290,8 @@ function erp_acct_update_journal( $data, $journal_no ) {
 
         return new WP_error( 'journal-exception', $e->getMessage() );
     }
+
+    erp_acct_purge_cache( ['list' => 'journals'] );
 
     return erp_acct_get_journal( $journal_no );
 }

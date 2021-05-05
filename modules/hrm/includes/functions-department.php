@@ -49,6 +49,8 @@ function erp_hr_create_department( $args = [] ) {
         return $dept_id;
     }
 
+    erp_hrm_purge_cache( [ 'list' => 'department', 'department_id' => $dept_id ] );
+
     return false;
 }
 
@@ -70,29 +72,29 @@ function erp_hr_get_departments( $args = [] ) {
 
     $args  = wp_parse_args( $args, $defaults );
 
-    $cache_key = 'erp-get-departments';
-    $results   = wp_cache_get( $cache_key, 'erp' );
-
-    $department = new \WeDevs\ERP\HRM\Models\Department();
-
-    if ( !empty( $args['s'] ) ) {
-        if ( isset( $_GET['s'] ) ) {
-            $s = sanitize_text_field( wp_unslash( $_GET['s'] ) );
-        } else {
-            $s = sanitize_text_field( wp_unslash( $args['s'] ) );
-        }
-
-        $results = $department
-            ->where( 'title', 'LIKE', '%' . $s . '%' )
-            ->get()
-            ->toArray();
-        $results = erp_array_to_object( $results );
-    }
+    $last_changed  = erp_cache_get_last_changed( 'hrm', 'department' );
+    $cache_key     = 'erp-get-departments-' . md5( serialize( $args ) ) . " : $last_changed";
+    $results       = wp_cache_get( $cache_key, 'erp' );
 
     if ( false === $results ) {
-        $results = $department
-            ->get()
-            ->toArray();
+
+        $department = new \WeDevs\ERP\HRM\Models\Department();
+
+        if ( !empty( $args['s'] ) ) {
+            if ( isset( $_GET['s'] ) ) {
+                $s = sanitize_text_field( wp_unslash( $_GET['s'] ) );
+            } else {
+                $s = sanitize_text_field( wp_unslash( $args['s'] ) );
+            }
+
+            $results = $department
+                ->where( 'title', 'LIKE', '%' . $s . '%' )
+                ->get()
+                ->toArray();
+            $results = erp_array_to_object( $results );
+        }
+
+        $results = $department->get()->toArray();
 
         $results = erp_array_to_object( $results );
         wp_cache_set( $cache_key, $results, 'erp' );
@@ -174,6 +176,8 @@ function erp_hr_delete_department( $department_id ) {
     }
 
     $resp = \WeDevs\ERP\HRM\Models\Department::find( $department_id )->delete();
+
+    erp_hrm_purge_cache( [ 'list' => 'department', 'department_id' => $department_id ] );
 
     return $resp;
 }

@@ -704,7 +704,7 @@ class Ajax_Handler {
         $id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
 
         if ( $id ) {
-            $designation = new Designation( $id );
+            $designation = erp_hr_get_single_designation( $id );
             $this->send_success( $designation );
         }
 
@@ -1178,7 +1178,7 @@ class Ajax_Handler {
 
         $fields = [
             'user_id'             => $user_id,
-            'terminate_date'      => $terminate_date,
+            'terminate_date'      => erp_current_datetime()->modify( $terminate_date )->format( 'Y-m-d H:i:s' ),
             'termination_type'    => $termination_type,
             'termination_reason'  => $termination_reason,
             'eligible_for_rehire' => $eligible_for_rehire,
@@ -1551,20 +1551,27 @@ class Ajax_Handler {
             $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
-        $edu_id   = isset( $_POST['edu_id'] ) ? intval( $_POST['edu_id'] ) : 0;
-        $school   = isset( $_POST['school'] ) ? sanitize_text_field( wp_unslash( $_POST['school'] ) ) : '';
-        $degree   = isset( $_POST['degree'] ) ? sanitize_text_field( wp_unslash( $_POST['degree'] ) ) : '';
-        $field    = isset( $_POST['field'] ) ? sanitize_text_field( wp_unslash( $_POST['field'] ) ) : '';
-        $finished = isset( $_POST['finished'] ) ? intval( $_POST['finished'] ) : '';
-        $notes    = isset( $_POST['notes'] ) ? sanitize_text_field( wp_unslash( $_POST['notes'] ) ) : '';
-        $interest = isset( $_POST['interest'] ) ? sanitize_text_field( wp_unslash( $_POST['interest'] ) ) : '';
-        $exp_date = isset( $_POST['expiration_date'] ) ? sanitize_text_field( wp_unslash( $_POST['expiration_date'] ) ) : '';
+        $edu_id      = isset( $_POST['edu_id'] ) ? intval( $_POST['edu_id'] ) : 0;
+        $school      = isset( $_POST['school'] ) ? sanitize_text_field( wp_unslash( $_POST['school'] ) ) : '';
+        $degree      = isset( $_POST['degree'] ) ? sanitize_text_field( wp_unslash( $_POST['degree'] ) ) : '';
+        $field       = isset( $_POST['field'] ) ? sanitize_text_field( wp_unslash( $_POST['field'] ) ) : '';
+        $result_type = isset( $_POST['result_type'] ) ? sanitize_text_field( wp_unslash( $_POST['result_type'] ) ) : null;
+        $finished    = isset( $_POST['finished'] ) ? intval( $_POST['finished'] ) : '';
+        $notes       = isset( $_POST['notes'] ) ? sanitize_text_field( wp_unslash( $_POST['notes'] ) ) : '';
+        $interest    = isset( $_POST['interest'] ) ? sanitize_text_field( wp_unslash( $_POST['interest'] ) ) : '';
+        $exp_date    = isset( $_POST['expiration_date'] ) ? sanitize_text_field( wp_unslash( $_POST['expiration_date'] ) ) : '';
+
+        $result_gpa   = isset( $_POST['gpa'] ) ? sanitize_text_field( wp_unslash( $_POST['gpa'] ) ) : NULL;
+        $result_scale = isset( $_POST['scale'] ) ? sanitize_text_field( wp_unslash( $_POST['scale'] ) ) : NULL;
+        $result       = json_encode( [ 'gpa' => $result_gpa, 'scale' => $result_scale ] );
 
         $fields = [
             'id'              => $edu_id,
             'school'          => $school,
             'degree'          => $degree,
             'field'           => $field,
+            'result'          => $result,
+            'result_type'     => $result_type,
             'finished'        => $finished,
             'notes'           => $notes,
             'interest'        => $interest,

@@ -86,6 +86,8 @@ function erp_acct_add_employee_as_people( $data, $update = false ) {
         $people_id = $wpdb->insert_id;
     }
 
+    erp_acct_purge_cache( ['list' => 'people'] );
+
     return $people_id;
 }
 
@@ -430,8 +432,11 @@ function erp_acct_get_accounting_people( $args = [] ) {
     $args     = wp_parse_args( $args, $defaults );
 
     $people_type = is_array( $args['type'] ) ? implode( '-', $args['type'] ) : $args['type'];
-    $cache_key   = 'erp-people-' . $people_type . '-' . md5( serialize( $args ) );
-    $items       = wp_cache_get( $cache_key, 'erp' );
+
+    $last_changed = erp_cache_get_last_changed( 'accounting', 'people', 'erp' );
+    $cache_key    = 'erp-accounting-people-' . $people_type . '-' . md5( serialize( $args ) ) . ":$last_changed";
+    $items        = wp_cache_get( $cache_key, 'erp' );
+
     $pep_tb      = $wpdb->prefix . 'erp_peoples';
     $pepmeta_tb  = $wpdb->prefix . 'erp_peoplemeta';
     $types_tb    = $wpdb->prefix . 'erp_people_types';

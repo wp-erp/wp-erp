@@ -23,21 +23,40 @@ function erp_acct_get_all_tax_cats( $args = [] ) {
 
     $args = wp_parse_args( $args, $defaults );
 
-    $limit = '';
+    $last_changed = erp_cache_get_last_changed( 'accounting', 'tax_cats', 'erp-accounting' );
+    $cache_key    = 'erp-get-tax-cats-' . md5( serialize( $args ) ) . ": $last_changed";
+    $tax_cats     = wp_cache_get( $cache_key, 'erp-accounting' );
 
-    if ( -1 !== $args['number'] ) {
-        $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+    $cache_key_count = 'erp-get-tax-cats-count-' . md5( serialize( $args ) ) . ": $last_changed";
+    $tax_cats_count  = wp_cache_get( $cache_key_count, 'erp-accounting' );
+
+    if ( false === $tax_cats ) {
+        $limit = '';
+
+        if ( -1 !== $args['number'] ) {
+            $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+        }
+
+        $sql  = 'SELECT';
+        $sql .= $args['count'] ? ' COUNT( id ) as total_number ' : ' * ';
+        $sql .= "FROM {$wpdb->prefix}erp_acct_tax_categories ORDER BY {$args['orderby']} {$args['order']} {$limit}";
+
+        if ( $args['count'] ) {
+            $tax_cats_count = $wpdb->get_var( $sql );
+
+            wp_cache_set( $cache_key_count, $tax_cats_count, 'erp-accounting' );
+        } else {
+            $tax_cats = $wpdb->get_results( $sql, ARRAY_A );
+
+            wp_cache_set( $cache_key, $tax_cats, 'erp-accounting' );
+        }
     }
-
-    $sql  = 'SELECT';
-    $sql .= $args['count'] ? ' COUNT( id ) as total_number ' : ' * ';
-    $sql .= "FROM {$wpdb->prefix}erp_acct_tax_categories ORDER BY {$args['orderby']} {$args['order']} {$limit}";
 
     if ( $args['count'] ) {
-        return $wpdb->get_var( $sql );
+        return $tax_cats_count;
     }
 
-    return $wpdb->get_results( $sql, ARRAY_A );
+    return $tax_cats;
 }
 
 /**
@@ -85,6 +104,8 @@ function erp_acct_insert_tax_cat( $data ) {
 
     $tax_id = $wpdb->insert_id;
 
+    erp_acct_purge_cache( ['list' => 'tax_cats'] );
+
     return $tax_id;
 }
 
@@ -119,6 +140,8 @@ function erp_acct_update_tax_cat( $data, $id ) {
         ]
     );
 
+    erp_acct_purge_cache( ['list' => 'tax_cats'] );
+
     return $id;
 }
 
@@ -133,6 +156,8 @@ function erp_acct_delete_tax_cat( $id ) {
     global $wpdb;
 
     $wpdb->delete( $wpdb->prefix . 'erp_acct_tax_categories', [ 'id' => $id ] );
+
+    erp_acct_purge_cache( ['list' => 'tax_cats'] );
 
     return $id;
 }

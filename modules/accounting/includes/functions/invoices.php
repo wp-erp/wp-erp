@@ -354,13 +354,13 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no, $c
         foreach ( $tax_agency_details as $agency_id => $tax_agency_detail ) {
             $debit = 0;
             $credit = 0;
-            
+
             if ( $contra ) {
                 $debit = $tax_agency_detail;
             } else {
                 $credit = $tax_agency_detail;
             }
-            
+
             $wpdb->insert(
                 $wpdb->prefix . 'erp_acct_tax_agency_details',
                 [
@@ -751,6 +751,8 @@ function erp_acct_void_invoice( $invoice_no ) {
     }
 
     $wpdb->delete( $wpdb->prefix . 'erp_acct_tax_agency_details', [ 'trn_no' => $invoice_no ] );
+
+    erp_acct_purge_cache( ['list' => 'sales_transaction'] );
 }
 
 /**
@@ -838,6 +840,8 @@ function erp_acct_insert_invoice_data_into_ledger( $invoice_data, $voucher_no = 
             'updated_by'  => $user_id,
         ]
     );
+
+    erp_acct_purge_cache( ['list' => 'sales_transaction'] );
 }
 
 /**
@@ -879,6 +883,8 @@ function erp_acct_update_invoice_data_in_ledger( $invoice_data, $invoice_no ) {
             'trn_no' => $invoice_no,
         ]
     );
+
+    erp_acct_purge_cache( ['list' => 'sales_transaction'] );
 }
 
 /**
@@ -1066,11 +1072,11 @@ function erp_acct_get_invoice_due( $invoice_no ) {
 
 /**
  * Retrieves tax zone of an invoice
- * 
+ *
  * @since 1.8.0
  *
  * @param [type] $invoice_no
- * 
+ *
  * @return int|string
  */
 function erp_acct_get_invoice_tax_zone( $invoice_no ) {

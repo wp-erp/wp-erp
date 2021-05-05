@@ -84,7 +84,7 @@
                                 }
                                 ?>
 
-                                <?php if ( $employee->get_status() != 'Terminated' && current_user_can( 'erp_create_employee' ) ) { ?>
+                                <?php if ( $employee->get_status() != 'terminated' && current_user_can( 'erp_create_employee' ) ) { ?>
                                     <a class="button" href="#" id="erp-employee-terminate" data-id="<?php echo esc_html( $employee->get_user_id() ); ?>" data-template="erp-employment-terminate" data-title="<?php esc_html_e( 'Terminate Employee', 'erp' ); ?>"><?php esc_html_e( 'Terminate', 'erp' ); ?></a>
                                 <?php } ?>
 

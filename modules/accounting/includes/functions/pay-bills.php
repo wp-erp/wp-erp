@@ -232,6 +232,8 @@ function erp_acct_insert_pay_bill( $data ) {
 
     do_action( 'erp_acct_new_transaction_pay_bill', $voucher_no, $pay_bill );
 
+    erp_acct_purge_cache( [ 'list' => 'sales_transaction,purchase_transaction,expense_transaction' ] );
+
     return $pay_bill;
 }
 
@@ -325,6 +327,8 @@ function erp_acct_update_pay_bill( $data, $pay_bill_id ) {
         erp_acct_change_bill_status( $item['voucher_no'] );
     }
 
+    erp_acct_purge_cache( [ 'list' => 'sales_transaction,purchase_transaction,expense_transaction' ] );
+
     return erp_acct_get_pay_bill( $pay_bill_id );
 }
 
@@ -352,6 +356,8 @@ function erp_acct_void_pay_bill( $id ) {
 
     $wpdb->delete( $wpdb->prefix . 'erp_acct_ledger_details', [ 'trn_no' => $id ] );
     $wpdb->delete( $wpdb->prefix . 'erp_acct_bill_account_details', [ 'trn_no' => $id ] );
+
+    erp_acct_purge_cache( [ 'list' => 'sales_transaction,purchase_transaction,expense_transaction' ] );
 }
 
 /**
