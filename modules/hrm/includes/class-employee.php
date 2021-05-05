@@ -1664,6 +1664,8 @@ class Employee {
 
         do_action( 'erp_hr_employee_employment_status_create', $this->get_user_id() );
 
+        $args['date'] = erp_current_datetime()->modify( $args['date'] )->format( 'Y-m-d H:i:s' );
+
         if ( ! empty( $args['type'] ) ) {
             $this->erp_user->update( [
                 'type' => $args['type'],
