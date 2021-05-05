@@ -638,11 +638,14 @@ function erp_hr_employee_terminate( $data ) {
     }
 
     $employee = new \WeDevs\ERP\HRM\Employee( intval( $data['user_id'] ) );
+    $old_data = $employee->get_data();
     $result   = $employee->terminate( $data );
 
     if ( is_wp_error( $result ) ) {
         return $result->get_error_message();
     }
+
+    do_action( 'erp_hr_employee_update', $data['user_id'] , $old_data );
 
     return $result;
 }
@@ -1114,4 +1117,28 @@ function get_employee_additional_fields( $fields, $id, $user ) {
     $fields['personal']['user_url'] = get_user_meta( $user_id, 'user_url' ) ? get_user_meta( $user_id, 'user_url' ) : '';
 
     return $fields;
+}
+
+/**
+ * Get Education Result Types
+ *
+ * @since 1.8.3
+ *
+ * @param string $selected value
+ *
+ * @return array all the types
+ */
+function erp_hr_get_education_result_type_options( $selected = null ) {
+    $types = [
+        'grade'      => __( 'Grade',  'erp' ),
+        'percentage' => __( 'Pecentage', 'erp' )
+    ];
+
+    $types = apply_filters( 'erp_hr_education_result_type_option', $types );
+
+    if ( $selected ) {
+        return ( isset( $types[ $selected ] ) ) ? $types[ $selected ] : '';
+    }
+
+    return $types;
 }

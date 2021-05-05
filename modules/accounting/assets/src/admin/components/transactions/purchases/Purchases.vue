@@ -16,7 +16,7 @@
         <!-- End .header-section -->
 
         <purchases-stats />
-        <transactions-filter  :types="filterTypes" :people="{title: 'Vendor', items: vendors}"/>
+        <transactions-filter  :types="filterTypes" :people="{title: __('Vendor', 'erp'), items: vendors}"/>
         <purchases-list />
 
     </div>
@@ -69,7 +69,7 @@ export default {
                 this.pages.push({ namedRoute: 'PurchaseReturnList', name:  __('Purchase Return', 'erp') })
              }
         }, 200);
-        
+
         if(!this.vendors.length){
             this.$store.dispatch('purchase/fetchVendors');
         }

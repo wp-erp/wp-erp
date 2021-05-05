@@ -21,7 +21,7 @@ function erp_acct_get_sales_transactions( $args = [] ) {
         'count'       => false,
         'customer_id' => false,
         'status'      => '',
-        'type'      => '',
+        'type'        => '',
     ];
 
     $args = wp_parse_args( $args, $defaults );
@@ -586,7 +586,7 @@ function erp_acct_get_expense_transactions( $args = [] ) {
         'count'     => false,
         'vendor_id' => false,
         'status'    => '',
-        'type'    => '',
+        'type'      => '',
     ];
 
     $args = wp_parse_args( $args, $defaults );
@@ -602,6 +602,10 @@ function erp_acct_get_expense_transactions( $args = [] ) {
         $limit = '';
 
         $where = "WHERE (voucher.type = 'pay_bill' OR voucher.type = 'bill' OR voucher.type = 'expense' OR voucher.type = 'check' ) ";
+
+        if ( ! empty( $args['start_date'] ) ) {
+            $where .= " AND ( (bill.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}') OR (pay_bill.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}') OR (expense.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}') )";
+        }
 
         if ( ! empty( $args['vendor_id'] ) ) {
             $where .= " AND (bill.vendor_id = {$args['vendor_id']} OR pay_bill.vendor_id = {$args['vendor_id']}) ";
@@ -628,6 +632,8 @@ function erp_acct_get_expense_transactions( $args = [] ) {
         }
 
         $sql = 'SELECT';
+
+        $wpdb->query( "SET SESSION sql_mode='';" );
 
         if ( $args['count'] ) {
             $sql .= ' COUNT( DISTINCT voucher.id ) AS total_number';
@@ -670,11 +676,11 @@ function erp_acct_get_expense_transactions( $args = [] ) {
             $expense_transaction_count =  $wpdb->num_rows;
 
             wp_cache_set( $cache_key_count, $expense_transaction_count, 'erp-accounting' );
+        } else {
+            $expense_transaction = $wpdb->get_results( $sql, ARRAY_A );
+
+            wp_cache_set( $cache_key, $expense_transaction, 'erp-accounting' );
         }
-
-        $expense_transaction = $wpdb->get_results( $sql, ARRAY_A );
-
-        wp_cache_set( $cache_key, $expense_transaction, 'erp-accounting' );
     }
 
     if ( $args['count'] ) {
@@ -702,6 +708,7 @@ function erp_acct_get_purchase_transactions( $args = [] ) {
         'vendor_id' => false,
         's'         => '',
         'status'    => '',
+        'type'      => '',
     ];
 
     $args = wp_parse_args( $args, $defaults );
@@ -724,6 +731,10 @@ function erp_acct_get_purchase_transactions( $args = [] ) {
 
         if ( ! empty( $args['start_date'] ) ) {
             $where .= " AND ( (purchase.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}') OR (pay_purchase.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}') )";
+        }
+
+        if ( ! empty( $args['type'] ) ) {
+            $where .= " AND voucher.type = '{$args['type']}'";
         }
 
         if ( empty( $args['status'] ) ) {

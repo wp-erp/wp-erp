@@ -154,6 +154,7 @@
                             <th><?php esc_html_e( 'Degree', 'erp' ); ?></th>
                             <th><?php esc_html_e( 'Field(s) of Study', 'erp' ); ?></th>
                             <th><?php esc_html_e( 'Year of Completion', 'erp' ); ?></th>
+                            <th><?php esc_html_e( 'Result', 'erp' ); ?></th>
                             <th><?php esc_html_e( 'Additional Notes', 'erp' ); ?></th>
                             <th><?php esc_html_e( 'Interests', 'erp' ); ?></th>
                             <th><?php esc_html_e( 'Expiration date', 'erp' ); ?></th>
@@ -167,6 +168,18 @@
                                 <td><?php echo esc_html( $education->degree ); ?></td>
                                 <td><?php echo esc_html( $education->field ); ?></td>
                                 <td><?php echo esc_html( $education->finished ); ?></td>
+                                <td>
+                                    <?php
+                                        $result_type = $education->result_type;
+                                        $result      = (object) json_decode( $education->result );
+
+                                        if ( $result_type === 'percentage' ) {
+                                            echo esc_html( $result->gpa ) . '%';
+                                        } else if ( $result_type === 'grade' ) {
+                                            echo esc_html( $result->gpa) . ' out of ' . esc_html( $result->scale );
+                                        }
+                                    ?>
+                                </td>
                                 <td><?php echo $education->notes ? esc_html( $education->notes ) : '-'; ?></td>
                                 <td><?php echo $education->interest ? esc_html( $education->interest ) : '-'; ?></td>
                                 <td>

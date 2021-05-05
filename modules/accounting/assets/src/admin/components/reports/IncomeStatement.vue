@@ -96,18 +96,18 @@ export default {
             bulkActions: [
                 {
                     key: 'trash',
-                    label: 'Move to Trash',
+                    label: __('Move to Trash', 'erp'),
                     img: erp_acct_var.erp_assets + '/images/trash.png' /* global erp_acct_var */
                 }
             ],
             columns1: {
-                name  : { label: 'Account Name' },
-                amount : { label: 'Amount' }
+                name  : { label: __('Account Name', 'erp') },
+                amount : { label: __('Amount', 'erp') }
             },
 
             columns2: {
-                name  : { label: 'Account Name' },
-                amount : { label: 'Amount' }
+                name  : { label: __('Account Name', 'erp') },
+                amount : { label: __('Amount', 'erp') }
             },
             rows1: [],
             rows2: [],

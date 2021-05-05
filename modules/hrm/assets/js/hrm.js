@@ -65,6 +65,7 @@
             $( '.erp-hr-employees' ).on( 'click', 'a#erp-empl-add-education', this.employee.general.create );
             $( '.erp-hr-employees' ).on( 'click', 'a.education-edit', this.employee.general.create );
             $( '.erp-hr-employees' ).on( 'click', 'a.education-delete', this.employee.general.remove );
+            $( 'body' ).on( 'change', '#result_type', self, this.employee.general.selectResultType );
 
             // dependent
             $( '.erp-hr-employees' ).on( 'click', 'a#erp-empl-add-dependent', this.employee.general.create );
@@ -86,7 +87,7 @@
 
             $('body').on( 'change', '.wp-list-table', function(e) {
                 var selector = $('.wp-list-table tbody tr th input[type="checkbox"]');
-                
+
                 if ( selector.is(':checked') ) {
                     $('.tablenav .bulkactions').show();
                     $(".tablenav").css("clear", "both");
@@ -103,6 +104,14 @@
             $('body').on( 'click', 'input[name="hide_filter"]', function(e) {
                 e.preventDefault();
                 self.employee.toggleFilterDropdown();
+            });
+
+            $('body').on( 'click', 'input[name="reset_filter"]', function(e) {
+                e.preventDefault();
+                $( '#filter_designation option:selected' ).prop( 'selected', false );
+                $( '#filter_department option:selected' ).prop( 'selected', false );
+                $( '#filter_employment_type option:selected' ).prop( 'selected', false );
+                $( 'input[name=filter_employee]' ).click();
             });
 
             this.initTipTip();
@@ -797,18 +806,31 @@
              */
             select2AddMoreActive: function(element) {
                 var id = $(element).data('id');
-                $(element).select2({
-                    width: 'element',
-                    "language": {
-                        noResults: function(){
-                            return '<a href="#" class="button button-primary" id="'+id+'">Add New</a>';
-                        }
-                    },
-                    escapeMarkup: function (markup) {
-                        return markup;
-                    }
+                var addText = $(element).data('add');
 
-                });
+                if ( typeof addText !== 'undefined' && addText.length > 0 ) {
+                    $(element).select2().on('select2:open', function() {
+                        $(".select2-results:not(:has(a))")
+                        .append(
+                            '<div class="erp-select2-add">'+
+                            '<a href="#" id="'+id+'">'+addText+'</a>'+
+                            '</div>'
+                        );
+                    });;
+                } else {
+                    $(element).select2({
+                        width: 'element',
+                        "language": {
+                            noResults: function(){
+                                return '<a href="#" class="button button-primary" id="'+id+'">Add New</a>';
+                            }
+                        },
+                        escapeMarkup: function (markup) {
+                            return markup;
+                        }
+
+                    });
+                }
             },
 
             /**
@@ -867,8 +889,10 @@
                                 } );
 
                                 $( 'div[data-selected]', modal ).each(function() {
-                                    var self = $(this),
-                                        selected = self.data('selected');
+                                    var self            = $(this),
+                                        unchecked       = 0,
+                                        selected        = self.data('selected'),
+                                        requiredCbItems = $("span.checkbox input[type=checkbox][required]");
 
                                     if ( selected !== '' ) {
                                         self.find( 'select' ).val( selected ).trigger('change');
@@ -876,8 +900,20 @@
                                         $.each(self.find("input[type=checkbox]"), function(index, data) {
                                             if($.inArray($(data).val(), selected.split(',')) != -1) {
                                                 $(data).prop('checked', true);
+                                            } else {
+                                                if($.inArray($(data), requiredCbItems)) {
+                                                    unchecked++;
+                                                }
                                             }
                                         });
+
+                                        if(unchecked !== requiredCbItems.length) {
+                                            $.each(self.find("span.checkbox input[type=checkbox][required]"), function(index, cb) {
+                                                if($.inArray($(cb).val(), selected.split(',')) == -1) {
+                                                    $(cb).removeAttr("required");
+                                                }
+                                            });
+                                        }
                                     }
                                 });
 
@@ -963,7 +999,7 @@
             },
 
             toggleFilterDropdown: function() {
-                document.getElementById("erp-dropdown-content").classList.toggle("show");
+                document.getElementById( 'erp-dropdown-content' ).classList.toggle( 'show' );
             },
 
             general: {
@@ -983,6 +1019,20 @@
                         button: self.data('button'),
                         onReady: function() {
                             WeDevs_ERP_HR.initDateField();
+
+                            $( '.row[data-selected]', this ).each(function() {
+                                var self = $(this),
+                                    selected = self.data('selected');
+
+                                if ( selected !== '' ) {
+                                    self.find( 'select' ).val( selected );
+                                }
+
+                                if( selected === 'percentage' ) {
+                                    $(".education-form-wrap #scale").removeAttr( 'required' );
+                                    $(".education-form-wrap #result_scale").fadeOut();
+                                }
+                            });
                         },
                         onSubmit: function(modal) {
                             wp.ajax.send( {
@@ -1021,6 +1071,21 @@
                         });
                     }
                 },
+
+                selectResultType: function(e) {
+                    var selectedType = $(this).val();
+                    if( selectedType === 'percentage' ) {
+                        $(".education-form-wrap #result_area label").html("Result (%) <span class='required'>*</span>");
+                        $(".education-form-wrap #gpa").attr("placeholder", "100");
+                        $(".education-form-wrap #scale").removeAttr( 'required' );
+                        $(".education-form-wrap #result_scale").fadeOut();
+                    } else {
+                        $(".education-form-wrap #result_area label").html("Result (Grade) <span class='required'>*</span>");
+                        $(".education-form-wrap #gpa").attr("placeholder", "5.0");
+                        $(".education-form-wrap #scale").attr( 'required', 'required' );
+                        $(".education-form-wrap #result_scale").fadeIn();
+                    }
+                }
             },
 
             updateJobStatus: function(e) {

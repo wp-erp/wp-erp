@@ -101,14 +101,14 @@ export default {
     data() {
         return {
             columns: {
-                code       : { label: 'Code' },
-                ledger_name: { label: 'Name' },
-                balance    : { label: 'Balance' },
-                trn_count  : { label: 'Count' },
-                actions    : { label: 'Actions' }
+                code       : { label: __('Code', 'erp') },
+                ledger_name: { label: __('Name', 'erp') },
+                balance    : { label: __('Balance', 'erp') },
+                trn_count  : { label: __('Count', 'erp') },
+                actions    : { label: __('Actions', 'erp') }
             },
             actions : [
-                { key: 'edit', label: 'Edit' }
+                { key: 'edit', label: __('Edit', 'erp') }
                 // { key: 'trash', label: 'Delete' }
             ],
 
@@ -185,7 +185,7 @@ export default {
         onActionClick(action, row, index) {
             switch (action) {
             case 'trash':
-                if (confirm('Are you sure to delete?')) {
+                if (confirm(__('Are you sure to delete?', 'erp'))) {
                     this.$store.dispatch('spinner/setSpinner', true);
 
                     HTTP.delete(`/ledgers/${row.id}`).then(response => {

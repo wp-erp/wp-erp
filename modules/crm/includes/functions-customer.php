@@ -128,8 +128,13 @@ function erp_crm_get_employees( $args = [] ) {
  * @return html
  */
 function erp_crm_get_crm_user_html_dropdown( $selected = '' ) {
-    $crm_users = erp_crm_get_crm_user();
     $dropdown  = '';
+
+    if ( current_user_can( 'erp_crm_manager' ) || current_user_can( 'manage_options' ) ) {
+        $crm_users   = erp_crm_get_crm_user();
+    } else {
+        $crm_users[] = wp_get_current_user()->data;
+    }
 
     if ( $crm_users ) {
         foreach ( $crm_users as $key => $user ) {
@@ -577,11 +582,22 @@ function erp_crm_customer_prepare_schedule_postdata( $postdata ) {
         return;
     }
 
+    $attachments     = ( isset( $postdata['attachments'] ) ) ? $postdata['attachments'] : [];
+    $old_attachments = ( isset( $postdata['old_attachments'] ) ) ? $postdata['old_attachments'] : [];
+
+    if ( ! empty( $old_attachments) ) {
+        foreach( $old_attachments as $old_atch ) {
+            unset( $old_atch['url'] );
+            $attachments[] = $old_atch;
+        }
+    }
+
     $extra_data = [
         'schedule_title'     => ( isset( $postdata['schedule_title'] ) && ! empty( $postdata['schedule_title'] ) ) ? $postdata['schedule_title'] : '',
         'all_day'            => isset( $postdata['all_day'] ) ? (string) $postdata['all_day'] : 'false',
         'allow_notification' => isset( $postdata['allow_notification'] ) ? (string) $postdata['allow_notification'] : 'false',
         'invite_contact'     => ( isset( $postdata['invite_contact'] ) && ! empty( $postdata['invite_contact'] ) ) ? $postdata['invite_contact'] : [],
+        'attachments'        => ! empty ( $attachments ) ? $attachments : []
     ];
 
     $extra_data['notification_via']           = ( isset( $postdata['notification_via'] ) && $extra_data['allow_notification'] == 'true' ) ? $postdata['notification_via'] : '';
@@ -723,21 +739,41 @@ function erp_crm_get_feed_activity( $args = [] ) {
         foreach ( $results as $key => $value ) {
             $value['extra'] = json_decode( base64_decode( $value['extra'] ), true );
 
-            if ( isset( $value['extra']['invite_contact'] ) && ! empty( $postdata['assigned_to'] ) ) {
-                if ( ! in_array( $postdata['assigned_to'], $value['extra']['invite_contact'] ) ) {
+            if ( ! empty( $value['extra']['invite_contact'] ) ) {
+                if ( isset( $postdata['assigned_to'] ) &&
+                    ! empty( $postdata['assigned_to'] ) &&
+                    ! in_array( $postdata['assigned_to'], $value['extra']['invite_contact'] )
+                ) {
                     continue;
                 }
-            }
 
-            if ( isset( $value['extra']['invite_contact'] ) && count( $value['extra']['invite_contact'] ) > 0 ) {
+                if ( isset( $postdata['created_by'] ) &&
+                    ! empty( $postdata['created_by'] ) &&
+                    ! in_array( $postdata['created_by'], $value['extra']['invite_contact'] )
+                ) {
+                    continue;
+                }
+
+                $value['extra']['invited_user'] = ! empty( $value['extra']['invited_user'] ) ? (array) $value['extra']['invited_user'] : [];
+
                 foreach ( $value['extra']['invite_contact'] as $user_id ) {
-                    $value['extra']['invited_user'][] = [
+                    array_push( $value['extra']['invited_user'], [
                         'id'   => $user_id,
                         'name' => get_the_author_meta( 'display_name', $user_id ),
-                    ];
+                    ] );
                 }
             } else {
-                $value['extra']['invited_user'] = [];
+                if (
+                    ( isset( $postdata['assigned_to'] ) || isset( $postdata['created_by'] ) ) &&
+                    (int) $value['created_by']['ID'] !== get_current_user_id()
+                ) {
+                    continue;
+                }
+
+                $value['extra']['invited_user'] = [
+                    'id'   => $value['created_by']['ID'],
+                    'name' => get_the_author_meta( 'display_name', $value['created_by']['ID'] )
+                ];
             }
 
             if ( $value['contact']['user_id'] ) {

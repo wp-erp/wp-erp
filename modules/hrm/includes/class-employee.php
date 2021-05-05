@@ -242,6 +242,18 @@ class Employee {
             $employee_id = intval( $data['personal']['employee_id'] );
         }
 
+        if ( ! empty( $data['personal']['work_phone'] ) ) {
+            $data['personal']['work_phone'] = erp_sanitize_phone_number( $data['personal']['work_phone'], true );
+        }
+
+        if ( ! empty( $data['personal']['mobile'] ) ) {
+            $data['personal']['mobile'] = erp_sanitize_phone_number( $data['personal']['mobile'], true );
+        }
+
+        if ( ! empty( $data['personal']['phone'] ) ) {
+            $data['personal']['phone'] = erp_sanitize_phone_number( $data['personal']['phone'], true );
+        }
+
         //if duplicate employee id
         if ( $employee_id && $employee_id !== intval( $this->employee_id ) ) {
             $erp_user = \WeDevs\ERP\HRM\Models\Employee::where( 'employee_id', $employee_id )->first();
@@ -255,12 +267,6 @@ class Employee {
             if ( erp_is_employee_exist( $user_email, $user_id ) ) {
                 return new WP_Error( 'employee-email-exist', sprintf( __( 'Employee with the employee email %s already exist. Please use different one.', 'erp' ), $user_email ) );
             }
-        }
-
-        $data = apply_filters( 'pre_erp_hr_employee_args', $data );
-
-        if ( is_wp_error( $data ) ) {
-            return $data;
         }
 
         //if we received user_id
@@ -407,6 +413,12 @@ class Employee {
         $last_name   = isset( $data['personal']['last_name'] ) ? $data['personal']['last_name'] : '';
 
         if ( ! $wp_user ) {
+            $data = apply_filters( 'pre_erp_hr_employee_args', $data );
+
+            if ( is_wp_error( $data ) ) {
+                return $data;
+            }
+
             $userdata = [
                 'user_login'   => $data['user_email'],
                 'user_email'   => $data['user_email'],
@@ -433,7 +445,6 @@ class Employee {
         if ( $wp_user ) {
             $full_name =  $first_name . ' ' . $middle_name . ' ' . $last_name ;
             wp_update_user( array( 'ID' => $user_id, 'display_name' =>  $full_name ) );
-
         }
 
         // inserting the user for the first time
@@ -449,11 +460,12 @@ class Employee {
         if ( $wp_user && $erp_user ) {
             $this->load_employee( absint( $user_id ) );
             $old_data = $this->get_data();
-            $updated  = $this->update_employee( $data );
+
+            $this->update_employee( $data );
 
             do_action( 'erp_hr_employee_update', $user_id, $old_data );
-
-            return $updated;
+        } else {
+            do_action( 'erp_hr_log_employee_new', $this->id, $data );
         }
 
         if ( ! $erp_user ) {
@@ -496,13 +508,20 @@ class Employee {
         }
 
         // update job info
-        $this->update_job_info( [
-            'date'         => $work['hiring_date'],
-            'designation'  => $work['designation'],
-            'department'   => $work['department'],
-            'reporting_to' => ! empty( $work['reporting_to'] ) ? $work['reporting_to'] : 0,
-            'location'     => ! empty( $work['location'] ) ? $work['location'] : - 1,
-        ] );
+        if (
+            ! empty( $work['designation'] ) ||
+            ! empty( $work['department'] ) ||
+            ! empty( $work['reporting_to'] ) ||
+            ! empty( $work['location'] )
+        ) {
+            $this->update_job_info( [
+                'date'         => $work['hiring_date'],
+                'designation'  => isset( $work['designation'] ) ? $work['designation'] : '',
+                'department'   => isset( $work['department'] ) ? $work['department'] : '',
+                'reporting_to' => ! empty( $work['reporting_to'] ) ? $work['reporting_to'] : 0,
+                'location'     => ! empty( $work['location'] ) ? $work['location'] : - 1,
+            ] );
+        }
 
         $this->update_employee( array_merge( $data['work'], $data['personal'], $data['additional'] ) );
         do_action( 'erp_hr_employee_new', $this->id, $data );
@@ -1291,6 +1310,7 @@ class Employee {
      * Create / Update Education
      *
      * @since 1.3.0
+     * @since 1.8.3 add result options
      *
      * @param array $data
      * @param bool  $return_id
@@ -1299,22 +1319,26 @@ class Employee {
      */
     public function add_education( $data, $return_id = true ) {
         $default = [
-            'id'       => '',
-            'school'   => '',
-            'degree'   => '',
-            'field'    => '',
-            'finished' => '',
-            'notes'    => '',
-            'interest' => '',
+            'id'          => '',
+            'school'      => '',
+            'degree'      => '',
+            'field'       => '',
+            'finished'    => '',
+            'result_type' => '',
+            'result'      => '',
+            'notes'       => '',
+            'interest'    => '',
         ];
 
         $args = wp_parse_args( $data, $default );
 
         $requires = [
-            'school'   => __( 'School Name', 'erp' ),
-            'degree'   => __( 'Degree', 'erp' ),
-            'field'    => __( 'Field', 'erp' ),
-            'finished' => __( 'Completion date', 'erp' ),
+            'school'      => __( 'School Name', 'erp' ),
+            'degree'      => __( 'Degree', 'erp' ),
+            'field'       => __( 'Field', 'erp' ),
+            'finished'    => __( 'Completion date', 'erp' ),
+            'result_type' => __( 'Result type', 'erp' ),
+            'result'      => __( 'Result', 'erp' ),
         ];
 
         foreach ( $requires as $key => $value ) {
@@ -1525,7 +1549,7 @@ class Employee {
             $histories = $histories->where( 'module', $module );
         }
 
-        $histories = $histories->orderBy( 'id', 'desc' )
+        $histories = $histories->orderBy( 'date', 'desc' )
                             ->skip( $offset )
                             ->take( $limit )
                             ->get();
@@ -1647,18 +1671,28 @@ class Employee {
 
         do_action( 'erp_hr_employee_employment_status_create', $this->get_user_id() );
 
-        if ( ! empty( $args['type'] ) ) {
-            $this->erp_user->update( [
-                'type' => $args['type'],
-            ] );
-        }
+        $args['date'] = erp_current_datetime()->modify( $args['date'] )->format( 'Y-m-d H:i:s' );
 
-        if ( ! empty( $args['category'] ) ) {
-            $this->erp_user->update( [
-                'status' => $args['category'],
-            ] );
+        $future_history = $this->erp_user->histories()
+                                        ->where( 'module', $args['module'] )
+                                        ->where( 'date', '>', $args['date'] )
+                                        ->count();
 
-            do_action( 'erp_hr_employee_after_update_status', $this->erp_user->user_id, $args['category'], $args['date'] );
+        if ( (int) $future_history === 0 ) {
+
+            if ( ! empty( $args['type'] ) ) {
+                $this->erp_user->update( [
+                    'type' => $args['type'],
+                ] );
+            }
+
+            if ( ! empty( $args['category'] ) ) {
+                $this->erp_user->update( [
+                    'status' => $args['category'],
+                ] );
+
+                do_action( 'erp_hr_employee_after_update_status', $this->erp_user->user_id, $args['category'], $args['date'] );
+            }
         }
 
         $history = $this->get_erp_user()->histories()->updateOrCreate( [ 'id' => $args['id'] ], [
@@ -1716,10 +1750,17 @@ class Employee {
 
         do_action( 'erp_hr_employee_compensation_create', $this->get_user_id() );
 
-        $this->erp_user->update( [
-            'pay_rate' => floatval( $args['pay_rate'] ),
-            'pay_type' => $args['pay_type'],
-        ] );
+        $future_history = $this->erp_user->histories()
+                                        ->where( 'module', 'compensation' )
+                                        ->where( 'date', '>', $args['date'] )
+                                        ->count();
+
+        if ( (int) $future_history === 0 ) {
+            $this->erp_user->update( [
+                'pay_rate' => floatval( $args['pay_rate'] ),
+                'pay_type' => $args['pay_type'],
+            ] );
+        }
 
         $history = $this->get_erp_user()->histories()->updateOrCreate( [ 'id' => $args['id'] ], [
             'module'   => 'compensation',
@@ -1774,12 +1815,19 @@ class Employee {
 
         do_action( 'erp_hr_employee_job_info_create', $this->get_user_id() );
 
-        $this->erp_user->update( [
-            'designation'  => $args['designation'],
-            'department'   => $args['department'],
-            'reporting_to' => $args['reporting_to'],
-            'location'     => $args['location'],
-        ] );
+        $future_history = $this->erp_user->histories()
+                                        ->where( 'module', 'job' )
+                                        ->where( 'date', '>', $args['date'] )
+                                        ->count();
+
+        if ( (int) $future_history === 0 ) {
+            $this->erp_user->update( [
+                'designation'  => $args['designation'],
+                'department'   => $args['department'],
+                'reporting_to' => $args['reporting_to'],
+                'location'     => $args['location'],
+            ] );
+        }
 
         $history = $this->get_erp_user()->histories()->updateOrCreate( [ 'id' => $args['id'] ], [
             'date'     => $args['date'],
@@ -2330,6 +2378,7 @@ class Employee {
         if ( ! $args['eligible_for_rehire'] ) {
             return new WP_Error( 'no-eligible-for-rehire', 'Eligible for rehire field is required' );
         }
+
         $this->erp_user->update( [
             'status'           => 'terminated',
             'termination_date' => $args['terminate_date'],
@@ -2343,11 +2392,23 @@ class Employee {
             __( 'Eligible for Hire', 'erp' ),
             erp_hr_get_terminate_rehire_options( $args['eligible_for_rehire'] ) );
 
-        $this->update_employment_status( [
-            'status'   => 'terminated',
-            'comments' => $comments,
-            'date'     => $args['terminate_date'],
-        ] );
+        if ( ! isset( $args['module'] ) ) {
+            $args['module'] = 'employee';
+        }
+
+        if ( ! isset( $args['category'] ) ) {
+            $args['category'] = 'terminated';
+        }
+
+        if ( ! isset( $args['date'] ) ) {
+            $args['date'] = $args['terminate_date'];
+        }
+
+        if ( ! isset( $args['comments'] ) ) {
+            $args['comments'] = $comments;
+        }
+
+        $this->update_employment_status( $args );
 
         update_user_meta( $this->id, '_erp_hr_termination', $args );
 

@@ -82,14 +82,14 @@ export default {
             bulkActions: [
                 {
                     key  : 'trash',
-                    label: 'Move to Trash',
+                    label: __('Move to Trash', 'erp'),
                     img  : erp_acct_var.erp_assets + '/images/trash.png' /* global erp_acct_var */
                 }
             ],
             columns: {
-                name  : { label: 'Account Name' },
-                debit : { label: 'Debit Total' },
-                credit: { label: 'Credit Total' }
+                name  : { label: __('Account Name', 'erp') },
+                debit : { label: __('Debit Total', 'erp') },
+                credit: { label: __('Credit Total', 'erp') }
             },
             rows        : [],
             fyears      : [],

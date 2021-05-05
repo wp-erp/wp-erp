@@ -13,7 +13,7 @@
                         <template slot="button">
                             <a href="#" class="wperp-btn btn--default">
                                 <i class="flaticon-settings-work-tool"></i>
-                                &nbsp; More Action
+                                &nbsp; {{ __('More Action', 'erp') }}
                             </a>
                         </template>
                         <template slot="dropdown">
@@ -46,7 +46,7 @@
                     </div>
 
                     <div class="invoice-body">
-                        <h4>Bill</h4>
+                        <h4>{{ __('Bill', 'erp') }}</h4>
                         <div class="wperp-row" v-if="null != bill">
                             <div class="wperp-col-sm-6">
                                 <div class="persons-info">
