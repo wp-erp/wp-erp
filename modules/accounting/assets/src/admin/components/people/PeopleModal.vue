@@ -97,7 +97,8 @@
                                                 <multi-select
                                                 v-model="peopleFields.country"
                                                 :options="countries"
-                                                :multiple="false" @input="getState( peopleFields.country )" />
+                                                :multiple="false"
+                                                @input="getState( peopleFields.country )" />
                                             </div>
                                         </div>
                                         <div class="wperp-col-sm-6 wperp-col-xs-12 wperp-form-group">
@@ -228,7 +229,7 @@ export default {
             }
 
             this.$store.dispatch('spinner/setSpinner', true);
-
+    
             var type = '';
             var url = '';
 
