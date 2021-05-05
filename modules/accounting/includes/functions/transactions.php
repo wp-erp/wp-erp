@@ -153,7 +153,7 @@ function erp_acct_get_sales_chart_status( $args = [] ) {
 function erp_acct_get_sales_chart_payment( $args = [] ) {
     global $wpdb;
 
-    $where = ' WHERE invoice.estimate<>1 AND invoice.status<>1';
+    $where = ' WHERE invoice.estimate<>1 AND invoice.status<>1 AND invoice.status<>7 AND invoice.status<>8';
 
     if ( ! empty( $args['start_date'] ) ) {
         $where .= " AND invoice.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
