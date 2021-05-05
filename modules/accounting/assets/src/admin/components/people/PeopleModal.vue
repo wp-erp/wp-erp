@@ -258,13 +258,6 @@ export default {
                 return false;
             }
 
-            if (this.emailExists) {
-                this.error_message.push(__('Email already exists as customer/vendor', 'erp'));
-                this.emailExists = false;
-
-                return false;
-            }
-
             if (this.peopleFields.first_name && this.peopleFields.last_name && this.peopleFields.email) {
                 return true;
             }
