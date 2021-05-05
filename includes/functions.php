@@ -3910,9 +3910,9 @@ function erp_get_array_diff( $new_data, $old_data, $is_seriazie = false ) {
  * Discards all non-numeric charecters from a given string
  *
  * @since 1.8.2
- * 
+ *
  * @param string $str
- * 
+ *
  * @return string
  */
 function erp_discard_non_numeric_chars( $str ) {
@@ -3921,12 +3921,12 @@ function erp_discard_non_numeric_chars( $str ) {
 
 /**
  * Sanitizes phone number to discard unwanted charecters
- * 
+ *
  * @since 1.8.2
  *
  * @param string $phone_no
  * @param boolean $allow_plus
- * 
+ *
  * @return string
  */
 function erp_sanitize_phone_number( $phone_no, $allow_plus = false ) {

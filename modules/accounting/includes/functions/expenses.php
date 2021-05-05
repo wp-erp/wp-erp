@@ -350,6 +350,8 @@ function erp_acct_insert_expense( $data ) {
 
     do_action( 'erp_acct_new_transaction_expense', $voucher_no, $expense );
 
+    erp_acct_purge_cache( [ 'list' => 'expense_transaction' ] );
+
     return $expense;
 }
 
@@ -436,6 +438,8 @@ function erp_acct_update_expense( $data, $expense_id ) {
 
         return new WP_error( 'expense-exception', $e->getMessage() );
     }
+
+    erp_acct_purge_cache( [ 'list' => 'expense_transaction' ] );
 
     return $expense_id;
 }
@@ -567,6 +571,8 @@ function erp_acct_convert_draft_to_expense( $data, $expense_id ) {
 
     do_action( 'erp_acct_new_transaction_expense', $expense_id, $expense );
 
+    erp_acct_purge_cache( [ 'list' => 'expense_transaction' ] );
+
     return $expense;
 }
 
@@ -594,6 +600,8 @@ function erp_acct_void_expense( $id ) {
 
     $wpdb->delete( $wpdb->prefix . 'erp_acct_ledger_details', [ 'trn_no' => $id ] );
     $wpdb->delete( $wpdb->prefix . 'erp_acct_expense_details', [ 'trn_no' => $id ] );
+
+    erp_acct_purge_cache( [ 'list' => 'expense_transaction' ] );
 }
 
 /**

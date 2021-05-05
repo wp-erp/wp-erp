@@ -228,6 +228,7 @@ final class WeDevs_ERP {
         require_once WPERP_INCLUDES . '/functions-people.php';
         require_once WPERP_INCLUDES . '/api/class-api-registrar.php';
         require_once WPERP_INCLUDES . '/class-i18n.php';
+        require_once WPERP_INCLUDES . '/functions-cache-helper.php';
 
         if ( is_admin() ) {
             require_once WPERP_INCLUDES . '/admin/functions.php';

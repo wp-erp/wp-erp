@@ -12,7 +12,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 function erp_acct_get_all_charts() {
     global $wpdb;
 
-    $charts = $wpdb->get_results( "SELECT id, name AS label FROM {$wpdb->prefix}erp_acct_chart_of_accounts", ARRAY_A );
+    $cache_key = 'erp-get-charts';
+    $charts    = wp_cache_get( $cache_key, 'erp-accounting' );
+
+    if ( false === $charts ) {
+        $charts = $wpdb->get_results( "SELECT id, name AS label FROM {$wpdb->prefix}erp_acct_chart_of_accounts", ARRAY_A );
+
+        wp_cache_set( $cache_key, $charts );
+    }
 
     return $charts;
 }
@@ -38,7 +45,16 @@ function erp_acct_get_ledger_name_by_id( $ledger_id ) {
 function erp_acct_get_ledger_categories( $chart_id ) {
     global $wpdb;
 
-    return $wpdb->get_results( $wpdb->prepare( "SELECT id, name AS label, chart_id, parent_id, system FROM {$wpdb->prefix}erp_acct_ledger_categories WHERE chart_id = %d", $chart_id ), ARRAY_A );
+    $cache_key         = 'erp-get-ledger-categories';
+    $ledger_categories = wp_cache_get( $cache_key, 'erp-accounting' );
+
+    if ( false === $ledger_categories ) {
+        $ledger_categories = $wpdb->get_results( $wpdb->prepare( "SELECT id, name AS label, chart_id, parent_id, system FROM {$wpdb->prefix}erp_acct_ledger_categories WHERE chart_id = %d", $chart_id ), ARRAY_A );
+
+        wp_cache_set( $cache_key, $ledger_categories );
+    }
+
+    return $ledger_categories;
 }
 
 /**
@@ -60,6 +76,8 @@ function erp_acct_create_ledger_category( $args ) {
 
         return $wpdb->insert_id;
     }
+
+    erp_acct_purge_cache( ['key' => 'erp-get-ledger-categories'] );
 
     return false;
 }
@@ -85,6 +103,8 @@ function erp_acct_update_ledger_category( $args ) {
         );
     }
 
+    erp_acct_purge_cache( ['key' => 'erp-get-ledger-categories'] );
+
     return false;
 }
 
@@ -105,6 +125,8 @@ function erp_acct_delete_ledger_category( $id ) {
         [ '%s' ],
         [ '%d' ]
     );
+
+    erp_acct_purge_cache( ['key' => 'erp-get-ledger-categories'] );
 
     return $wpdb->delete( $table, [ 'id' => $id ] );
 }

@@ -12,9 +12,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 function erp_acct_get_all_product_cats() {
     global $wpdb;
 
-    $row = $wpdb->get_results( 'SELECT * FROM ' . $wpdb->prefix . 'erp_acct_product_categories', ARRAY_A );
+    $cache_key  = 'erp-get-product-categories';
+    $categories = wp_cache_get( $cache_key, 'erp-accounting' );
 
-    return $row;
+    if ( false === $categories ) {
+        $categories = $wpdb->get_results( 'SELECT * FROM ' . $wpdb->prefix . 'erp_acct_product_categories', ARRAY_A );
+
+        wp_cache_set( $cache_key, $categories, 'erp-accounting' );
+    }
+
+    return $categories;
 }
 
 /**
@@ -71,6 +78,8 @@ function erp_acct_insert_product_cat( $data ) {
         return new WP_error( 'product-exception', $e->getMessage() );
     }
 
+    erp_acct_purge_cache( ['key' => 'erp-get-product-categories'] );
+
     return $product_cat_id;
 }
 
@@ -114,6 +123,8 @@ function erp_acct_update_product_cat( $data, $id ) {
         return new WP_error( 'product-exception', $e->getMessage() );
     }
 
+    erp_acct_purge_cache( ['key' => 'erp-get-product-categories'] );
+
     return $id;
 }
 
@@ -147,4 +158,6 @@ function erp_acct_delete_product_cat( $product_cat_id ) {
     global $wpdb;
 
     $wpdb->delete( $wpdb->prefix . 'erp_acct_product_categories', [ 'id' => $product_cat_id ] );
+
+    erp_acct_purge_cache( ['key' => 'erp-get-product-categories'] );
 }
