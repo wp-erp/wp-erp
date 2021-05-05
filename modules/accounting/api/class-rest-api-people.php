@@ -225,7 +225,7 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function check_people_email( $request ) {
-        $res = erp_acct_check_people_exists( $request['email'] );
+        $res      = erp_acct_exist_people( $request['email'], [ 'customer', 'vendor', 'contact', 'company' ] );
 
         $response = rest_ensure_response( $res );
         $response->set_status( 200 );
