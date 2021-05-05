@@ -312,9 +312,7 @@
                             id: self.data( 'id' )
                         },
                         success: function() {
-                            self.closest('tr').fadeOut( 'fast', function() {
-                                $(this).remove();
-                            });
+                            $( '.list-table-wrap' ).load( window.location.href + ' .list-wrap-inner');
                         },
                         error: function(response) {
                             alert( response );

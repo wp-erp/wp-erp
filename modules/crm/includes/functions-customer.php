@@ -129,7 +129,7 @@ function erp_crm_get_employees( $args = [] ) {
  */
 function erp_crm_get_crm_user_html_dropdown( $selected = '' ) {
     $dropdown  = '';
-    
+
     if ( current_user_can( 'erp_crm_manager' ) || current_user_can( 'manage_options' ) ) {
         $crm_users   = erp_crm_get_crm_user();
     } else {
@@ -650,132 +650,157 @@ function erp_crm_format_activity_feed_message( $message, $activity ) {
  * @since 1.0
  * @since 1.1.13 Add activity 'type' filtering
  *               For tasks type activity return activities depends on assgined to users
+ * @since 1.8.2 Add caching functionality for feeds
  *
  * @param int $customer_id
  *
  * @return array
  */
-function erp_crm_get_feed_activity( $postdata ) {
+function erp_crm_get_feed_activity( $args = [] ) {
     global $wpdb;
     $feeds = [];
     $db    = new \WeDevs\ORM\Eloquent\Database();
 
-    $results = \WeDevs\ERP\CRM\Models\Activity::select( [
-        '*',
-        $db->raw( 'MONTHNAME(`created_at`) as feed_month, YEAR( `created_at` ) as feed_year' ),
-    ] )
-        ->with( [
-            'contact'    => function ( $query ) {
-                $query->with( 'types' );
-            },
-            'created_by' => function ( $query1 ) {
-                $query1->select( 'ID', 'user_nicename', 'user_email', 'user_url', 'display_name' );
-            },
-        ] );
+    $default = [
+        'customer_id' => null,
+        'created_by'  => null,
+        'type'        => null,
+        'created_at'  => null,
+        'limit'       => null,
+        'count'       => null,
+        'assigned_to' => null
+    ];
 
-    if ( isset( $postdata['customer_id'] ) && ! empty( $postdata['customer_id'] ) ) {
-        $results = $results->where( 'user_id', $postdata['customer_id'] );
-    }
+    $postdata = wp_parse_args( $args, $default );
 
-    if ( current_user_can( 'erp_crm_agent' ) && ! current_user_can( 'erp_crm_manager' ) ) {
-        $contact_owner = get_current_user_id();
-        $people_ids    = array_keys( $wpdb->get_results( "SELECT id FROM {$wpdb->prefix}erp_peoples WHERE contact_owner = {$contact_owner}", OBJECT_K ) );
+    $last_changed = erp_cache_get_last_changed( 'crm', 'feeds' );
+    $cache_key    = 'erp-feeds-' . md5( serialize( $postdata ) ).": $last_changed";
+    $feeds        = wp_cache_get( $cache_key, 'erp' );
 
-        $results = $results->whereIn( 'user_id', $people_ids );
-    }
+    if ( false === $feeds ) {
+        $results = \WeDevs\ERP\CRM\Models\Activity::select( [
+            '*',
+            $db->raw( 'MONTHNAME(`created_at`) as feed_month, YEAR( `created_at` ) as feed_year' ),
+        ] )
+            ->with( [
+                'contact'    => function ( $query ) {
+                    $query->with( 'types' );
+                },
+                'created_by' => function ( $query1 ) {
+                    $query1->select( 'ID', 'user_nicename', 'user_email', 'user_url', 'display_name' );
+                },
+            ] );
 
-    if ( isset( $postdata['type'] ) && ! empty( $postdata['type'] ) ) {
-        if ( $postdata['type'] === 'schedule' ) {
-            $results = $results->where( 'type', 'log_activity' )->where( 'start_date', '>', current_time( 'mysql' ) );
-        } elseif ( $postdata['type'] === 'logs' ) {
-            $results = $results->where( 'type', 'log_activity' )->where( 'start_date', '<', current_time( 'mysql' ) );
-        } else {
-            if ( is_array( $postdata['type'] ) ) {
-                $results = $results->whereIn( 'type', $postdata['type'] );
+        if ( isset( $postdata['customer_id'] ) && ! empty( $postdata['customer_id'] ) ) {
+            $results = $results->where( 'user_id', $postdata['customer_id'] );
+        }
+
+        if ( current_user_can( 'erp_crm_agent' ) ) {
+            $contact_owner = get_current_user_id();
+            $people_ids    = array_keys( $wpdb->get_results( "SELECT id FROM {$wpdb->prefix}erp_peoples WHERE contact_owner = {$contact_owner}", OBJECT_K ) );
+
+            $results = $results->whereIn( 'user_id', $people_ids );
+        }
+
+        if ( isset( $postdata['created_by'] ) && ! empty( $postdata['created_by'] ) ) {
+            $results = $results->where( 'created_by', $postdata['created_by'] );
+        }
+
+        if ( isset( $postdata['type'] ) && ! empty( $postdata['type'] ) ) {
+            if ( $postdata['type'] === 'schedule' ) {
+                $results = $results->where( 'type', 'log_activity' )->where( 'start_date', '>', current_time( 'mysql' ) );
+            } elseif ( $postdata['type'] === 'logs' ) {
+                $results = $results->where( 'type', 'log_activity' )->where( 'start_date', '<', current_time( 'mysql' ) );
             } else {
-                $results = $results->where( 'type', $postdata['type'] );
+                if ( is_array( $postdata['type'] ) ) {
+                    $results = $results->whereIn( 'type', $postdata['type'] );
+                } else {
+                    $results = $results->where( 'type', $postdata['type'] );
+                }
             }
         }
-    }
 
-    if ( isset( $postdata['created_at'] ) && ! empty( $postdata['created_at'] ) ) {
-        $results = $results->where( $db->raw( "DATE_FORMAT( `created_at`, '%Y-%m-%d' )" ), $postdata['created_at'] );
-    }
-
-    $results = $results->orderBy( 'created_at', 'DESC' );
-
-    if ( isset( $postdata['limit'] ) && $postdata['limit'] != - 1 ) {
-        $results = $results->skip( $postdata['offset'] )->take( $postdata['limit'] );
-    }
-
-    if ( isset( $postdata['count'] ) && $postdata['count'] ) {
-        return $results->count();
-    }
-
-    $results = $results->get()->toArray();
-
-    foreach ( $results as $key => $value ) {
-        $value['extra'] = json_decode( base64_decode( $value['extra'] ), true );
-
-        if ( ! empty( $value['extra']['invite_contact'] ) ) {
-            if ( isset( $postdata['assigned_to'] ) &&
-                ! empty( $postdata['assigned_to'] ) &&
-                ! in_array( $postdata['assigned_to'], $value['extra']['invite_contact'] )
-            ) {
-                continue;
-            }
-
-            if ( isset( $postdata['created_by'] ) &&
-                ! empty( $postdata['created_by'] ) &&
-                ! in_array( $postdata['created_by'], $value['extra']['invite_contact'] )
-            ) {
-                continue;
-            }
-
-            $value['extra']['invited_user'] = ! empty( $value['extra']['invited_user'] ) ? (array) $value['extra']['invited_user'] : [];
-
-            foreach ( $value['extra']['invite_contact'] as $user_id ) {
-                array_push( $value['extra']['invited_user'], [
-                    'id'   => $user_id,
-                    'name' => get_the_author_meta( 'display_name', $user_id ),
-                ] );
-            }
-        } else {
-            if (
-                ( isset( $postdata['assigned_to'] ) || isset( $postdata['created_by'] ) ) &&
-                (int) $value['created_by']['ID'] !== get_current_user_id()
-            ) {
-                continue;
-            }
-
-            $value['extra']['invited_user'] = [
-                'id'   => $value['created_by']['ID'],
-                'name' => get_the_author_meta( 'display_name', $value['created_by']['ID'] )
-            ];
+        if ( isset( $postdata['created_at'] ) && ! empty( $postdata['created_at'] ) ) {
+            $results = $results->where( $db->raw( "DATE_FORMAT( `created_at`, '%Y-%m-%d' )" ), $postdata['created_at'] );
         }
 
-        if ( $value['contact']['user_id'] ) {
-            $value['contact']['first_name'] = get_user_meta( $value['contact']['user_id'], 'first_name', true );
-            $value['contact']['last_name']  = get_user_meta( $value['contact']['user_id'], 'last_name', true );
+        $results = $results->orderBy( 'created_at', 'DESC' );
+
+        if ( isset( $postdata['limit'] ) && $postdata['limit'] != - 1 ) {
+            $results = $results->skip( $postdata['offset'] )->take( $postdata['limit'] );
         }
 
-        if ( ! empty( $value['contact']['types'] ) ) {
-            $value['contact']['types'] = wp_list_pluck( $value['contact']['types'], 'name' );
-        } else {
-            $value['contact']['types'] = [];
+        if ( isset( $postdata['count'] ) && $postdata['count'] ) {
+            return $results->count();
         }
 
-        if ( isset( $value['extra']['attachments'] ) ) {
-            $value['extra']['attachments'] = erp_crm_process_attachment_data( $value['extra']['attachments'] );
+        $results = $results->get()->toArray();
+
+        foreach ( $results as $key => $value ) {
+            $value['extra'] = json_decode( base64_decode( $value['extra'] ), true );
+
+            if ( ! empty( $value['extra']['invite_contact'] ) ) {
+                if ( isset( $postdata['assigned_to'] ) &&
+                    ! empty( $postdata['assigned_to'] ) &&
+                    ! in_array( $postdata['assigned_to'], $value['extra']['invite_contact'] )
+                ) {
+                    continue;
+                }
+
+                if ( isset( $postdata['created_by'] ) &&
+                    ! empty( $postdata['created_by'] ) &&
+                    ! in_array( $postdata['created_by'], $value['extra']['invite_contact'] )
+                ) {
+                    continue;
+                }
+
+                $value['extra']['invited_user'] = ! empty( $value['extra']['invited_user'] ) ? (array) $value['extra']['invited_user'] : [];
+
+                foreach ( $value['extra']['invite_contact'] as $user_id ) {
+                    array_push( $value['extra']['invited_user'], [
+                        'id'   => $user_id,
+                        'name' => get_the_author_meta( 'display_name', $user_id ),
+                    ] );
+                }
+            } else {
+                if (
+                    ( isset( $postdata['assigned_to'] ) || isset( $postdata['created_by'] ) ) &&
+                    (int) $value['created_by']['ID'] !== get_current_user_id()
+                ) {
+                    continue;
+                }
+
+                $value['extra']['invited_user'] = [
+                    'id'   => $value['created_by']['ID'],
+                    'name' => get_the_author_meta( 'display_name', $value['created_by']['ID'] )
+                ];
+            }
+
+            if ( $value['contact']['user_id'] ) {
+                $value['contact']['first_name'] = get_user_meta( $value['contact']['user_id'], 'first_name', true );
+                $value['contact']['last_name']  = get_user_meta( $value['contact']['user_id'], 'last_name', true );
+            }
+
+            if ( ! empty( $value['contact']['types'] ) ) {
+                $value['contact']['types'] = wp_list_pluck( $value['contact']['types'], 'name' );
+            } else {
+                $value['contact']['types'] = [];
+            }
+
+            if ( isset( $value['extra']['attachments'] ) ) {
+                $value['extra']['attachments'] = erp_crm_process_attachment_data( $value['extra']['attachments'] );
+            }
+
+            unset( $value['extra']['invite_contact'] );
+            $value['message']               = erp_crm_format_activity_feed_message( $value['message'], $value );
+            $value['created_by']['avatar']  = get_avatar_url( $value['created_by']['ID'] );
+            $value['created_date']          = date( 'Y-m-d', strtotime( $value['created_at'] ) );
+            $value['created_timeline_date'] = date( 'Y-m-01', strtotime( $value['created_at'] ) );
+            // $value['component'] = 'timeline-item';
+            $feeds[] = $value;
         }
 
-        unset( $value['extra']['invite_contact'] );
-        $value['message']               = erp_crm_format_activity_feed_message( $value['message'], $value );
-        $value['created_by']['avatar']  = get_avatar_url( $value['created_by']['ID'] );
-        $value['created_date']          = date( 'Y-m-d', strtotime( $value['created_at'] ) );
-        $value['created_timeline_date'] = date( 'Y-m-01', strtotime( $value['created_at'] ) );
-        // $value['component'] = 'timeline-item';
-        $feeds[] = $value;
+        wp_cache_set( $cache_key, $feeds, 'erp' );
     }
 
     return $feeds;
@@ -841,6 +866,8 @@ function erp_crm_save_customer_feed_data( $data ) {
         $activity['extra']['attachments'] = erp_crm_process_attachment_data( $activity['extra']['attachments'] );
     }
 
+    erp_crm_purge_cache( [ 'list' => 'feeds' ] );
+
     return $activity;
 }
 
@@ -858,44 +885,51 @@ function erp_crm_customer_get_single_activity_feed( $feed_id ) {
         return;
     }
 
-    $results = [];
-    $data    = WeDevs\ERP\CRM\Models\Activity::with( [
-        'contact'    => function ( $query ) {
-            $query->with( 'types' );
-        },
-        'created_by' => function ( $query1 ) {
-            $query1->select( 'ID', 'user_nicename', 'user_email', 'user_url', 'display_name' );
-        },
-    ] )
-        ->find( $feed_id )->toArray();
+    $data = wp_cache_get( 'erp-feeds-by-' . $feed_id, 'erp' );
 
-    if ( ! $data ) {
-        return;
-    }
+    if ( false === $data ) {
 
-    $data['extra'] = json_decode( base64_decode( $data['extra'] ), true );
+        $results = [];
+        $data    = WeDevs\ERP\CRM\Models\Activity::with( [
+            'contact'    => function ( $query ) {
+                $query->with( 'types' );
+            },
+            'created_by' => function ( $query1 ) {
+                $query1->select( 'ID', 'user_nicename', 'user_email', 'user_url', 'display_name' );
+            },
+        ] )
+            ->find( $feed_id )->toArray();
 
-    if ( isset( $data['extra']['invite_contact'] ) && count( $data['extra']['invite_contact'] ) > 0 ) {
-        foreach ( $data['extra']['invite_contact'] as $user_id ) {
-            $data['extra']['invited_user'][] = [
-                'id'   => $user_id,
-                'name' => get_the_author_meta( 'display_name', $user_id ),
-            ];
+        if ( ! $data ) {
+            return;
         }
-    } else {
-        $data['extra']['invited_user'] = [];
-    }
 
-    if ( $data['contact']['user_id'] ) {
-        $data['contact']['first_name'] = get_user_meta( $data['contact']['user_id'], 'first_name', true );
-        $data['contact']['last_name']  = get_user_meta( $data['contact']['user_id'], 'last_name', true );
-    }
+        $data['extra'] = json_decode( base64_decode( $data['extra'] ), true );
 
-    $data['contact']['types'] = wp_list_pluck( $data['contact']['types'], 'name' );
-    $data['message']          = stripslashes( $data['message'] );
+        if ( isset( $data['extra']['invite_contact'] ) && count( $data['extra']['invite_contact'] ) > 0 ) {
+            foreach ( $data['extra']['invite_contact'] as $user_id ) {
+                $data['extra']['invited_user'][] = [
+                    'id'   => $user_id,
+                    'name' => get_the_author_meta( 'display_name', $user_id ),
+                ];
+            }
+        } else {
+            $data['extra']['invited_user'] = [];
+        }
 
-    if ( isset( $data['extra']['attachments'] ) ) {
-        $data['extra']['attachments'] = erp_crm_process_attachment_data( $data['extra']['attachments'] );
+        if ( $data['contact']['user_id'] ) {
+            $data['contact']['first_name'] = get_user_meta( $data['contact']['user_id'], 'first_name', true );
+            $data['contact']['last_name']  = get_user_meta( $data['contact']['user_id'], 'last_name', true );
+        }
+
+        $data['contact']['types'] = wp_list_pluck( $data['contact']['types'], 'name' );
+        $data['message']          = stripslashes( $data['message'] );
+
+        if ( isset( $data['extra']['attachments'] ) ) {
+            $data['extra']['attachments'] = erp_crm_process_attachment_data( $data['extra']['attachments'] );
+        }
+
+        wp_cache_set( 'erp-feeds-by-' . $feed_id, $data, 'erp' );
     }
 
     return $data;
@@ -934,6 +968,8 @@ function erp_crm_customer_delete_activity_feed( $feed_id ) {
     if ( $activity->type === 'tasks' ) {
         WeDevs\ERP\CRM\Models\ActivityUser::where( 'activity_id', $activity->id )->delete();
     }
+
+    erp_crm_purge_cache( [ 'list' => 'feeds', 'feed-detail' => $feed_id ] );
 
     return $activity->delete( $feed_id );
 }
@@ -1071,12 +1107,19 @@ function erp_crm_assign_task_to_users( $data, $save_data ) {
 function erp_crm_save_contact_group( $data ) {
     if ( ! empty( $data['id'] ) ) {
         $result = WeDevs\ERP\CRM\Models\ContactGroup::find( $data['id'] )->update( $data );
+        $args   = [
+            'list'                          => 'contact_groups',
+            'erp-crm-contact-group-detail'  => $data['id']
+        ];
+
         do_action( 'erp_crm_update_contact_group', $result );
     } else {
         $result = WeDevs\ERP\CRM\Models\ContactGroup::create( $data );
         do_action( 'erp_crm_create_contact_group', $result );
+        $args = [ 'list' => 'contact_groups' ];
     }
 
+    erp_crm_purge_cache( $args );
     return $result;
 }
 
@@ -1096,9 +1139,11 @@ function erp_crm_get_contact_groups( $args = [] ) {
         'order'   => 'DESC',
         'count'   => false,
     ];
-    $args      = wp_parse_args( $args, $defaults );
-    $cache_key = 'erp-crm-contact-group-' . md5( serialize( $args ) );
-    $items     = wp_cache_get( $cache_key, 'erp' );
+
+    $last_changed = erp_cache_get_last_changed( 'crm', 'contact_groups' );
+    $args         = wp_parse_args( $args, $defaults );
+    $cache_key    = 'erp-crm-contact-group-' . md5( serialize( $args ) ).":$last_changed";
+    $items        = wp_cache_get( $cache_key, 'erp' );
 
     if ( false === $items ) {
         // Check if args count true, then return total count customer according to above filter
@@ -1184,7 +1229,16 @@ function erp_crm_get_contact_groups( $args = [] ) {
  * @return array
  */
 function erp_crm_get_contact_group_by_id( $id ) {
-    return WeDevs\ERP\CRM\Models\ContactGroup::find( $id )->toArray();
+
+    $contact_group = wp_cache_get( 'erp-crm-contact-group-detail-' . $id, 'erp' );
+
+    if( false === $contact_group ) {
+        $contact_group = WeDevs\ERP\CRM\Models\ContactGroup::find( $id )->toArray();
+
+        wp_cache_set( 'erp-crm-contact-group-detail-' . $id, $contact_group, 'erp' );
+    }
+
+    return $contact_group;
 }
 
 /**
@@ -1202,6 +1256,10 @@ function erp_crm_contact_group_delete( $id ) {
     } else {
         WeDevs\ERP\CRM\Models\ContactGroup::find( $id )->delete();
     }
+
+    $args = [ 'list' => 'contact_groups', 'erp-crm-contact-group-detail' => $id ];
+
+    erp_crm_purge_cache( $args );
 
     do_action( 'erp_crm_delete_contact_group', $id );
 }
@@ -1226,9 +1284,10 @@ function erp_crm_get_subscriber_contact( $args = [] ) {
         'count'   => false,
     ];
 
-    $args      = wp_parse_args( $args, $defaults );
-    $cache_key = 'erp-crm-subscriber-contact-' . md5( serialize( $args ) );
-    $items     = wp_cache_get( $cache_key, 'erp' );
+    $args           = wp_parse_args( $args, $defaults );
+    $last_changed   = erp_cache_get_last_changed( 'crm', 'contact_group_subscriber' );
+    $cache_key      = 'erp-crm-subscriber-contact-' . md5( serialize( $args ) ).":$last_changed";
+    $items          = wp_cache_get( $cache_key, 'erp' );
 
     if ( false === $items ) {
         $converted_data       = [];
@@ -1371,6 +1430,9 @@ function erp_crm_create_new_contact_subscriber( $args = [] ) {
         $contact->update_contact_hash( $hash_id );
     }
 
+    erp_crm_purge_cache( [ 'list' => 'contact_group_subscriber' ] );
+    erp_crm_purge_cache( [ 'list' => 'contact_groups' ] ); // as there is a count column like, total subscriber
+
     do_action( 'erp_crm_create_contact_subscriber', $subscriber, $hash_id );
 
     return $subscriber;
@@ -1434,10 +1496,15 @@ function erp_crm_contact_subscriber_delete( $id, $group_id ) {
     do_action( 'erp_crm_pre_unsubscribed_contact', $id, $group_id );
 
     if ( is_array( $id ) ) {
-        return \WeDevs\ERP\CRM\Models\ContactSubscriber::whereIn( 'user_id', $id )->where( 'group_id', $group_id )->delete();
+        $deleted = \WeDevs\ERP\CRM\Models\ContactSubscriber::whereIn( 'user_id', $id )->where( 'group_id', $group_id )->delete();
     } else {
-        return \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $id )->where( 'group_id', $group_id )->delete();
+        $deleted = \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $id )->where( 'group_id', $group_id )->delete();
     }
+
+    erp_crm_purge_cache( [ 'list' => 'contact_groups' ] );
+    erp_crm_purge_cache( [ 'list' => 'contact_group_subscriber' ] );
+
+    return $deleted;
 }
 
 /**
@@ -1529,6 +1596,9 @@ function erp_crm_edit_contact_subscriber( $groups, $user_id ) {
             do_action( 'erp_crm_delete_contact_subscriber', $subscriber );
         }
     }
+
+    erp_crm_purge_cache( [ 'list' => 'contact_groups' ] );
+    erp_crm_purge_cache( [ 'list' => 'contact_group_subscriber' ] );
 }
 
 /**
@@ -2782,7 +2852,7 @@ function erp_crm_contact_form_section() {
  * Renders the crm settings page
  *
  * @param array $settings
- * 
+ *
  * @return array
  */
 function erp_crm_settings_pages( $settings ) {
@@ -4082,7 +4152,7 @@ function erp_crm_get_contacts_menu_html( $selected = 'contacts' ) {
 
     ob_start();
     ?>
-    
+
     <div class="erp-custom-menu-container">
         <ul class="erp-nav">
             <?php foreach ( $dropdown as $key => $value ) : ?>
