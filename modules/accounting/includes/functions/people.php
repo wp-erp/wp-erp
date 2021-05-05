@@ -345,6 +345,30 @@ function erp_acct_get_people_type_by_type_id( $type_id ) {
 }
 
 /**
+ * Get people type name by type id
+ * 
+ * @since 1.8.4
+ *
+ * @param $type_name
+ *
+ * @return int|string
+ */
+function erp_acct_get_people_type_id_by_name( $type_name ) {
+    global $wpdb;
+
+    $row = $wpdb->get_row(
+        $wpdb->prepare(
+            "SELECT id
+            FROM {$wpdb->prefix}erp_people_types
+            WHERE name = %s LIMIT 1",
+            $type_name
+        )
+    );
+
+    return $row->id;
+}
+
+/**
  * Get people id by user id
  *
  * @return mixed
