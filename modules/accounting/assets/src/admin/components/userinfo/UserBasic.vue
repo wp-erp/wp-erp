@@ -36,7 +36,7 @@
                         </li>
                         <li>
                             <strong>{{ __('Address', 'erp') }}:</strong>
-                            <span v-if="userData.billing">{{ userData.billing.street_1 }}, {{ userData.billing.city }} </span>
+                            <span v-if="address">{{ address }}</span>
                         </li>
 
                         <component
@@ -91,9 +91,26 @@ export default {
             userMeta : window.acct.hooks.applyFilters('acctPeopleMeta', [])
         };
     },
+
     computed: {
         user() {
             return this.userData;
+        },
+
+        address() {
+            let address = [];
+
+            if ( this.userData.billing ) {
+                let keys = [ 'street_1', 'street_2', 'city', 'state_name', 'postal_code', 'country_name' ];
+
+                keys.forEach( key => {
+                    if ( this.userData.billing[key] ) {
+                        address.push( this.userData.billing[key] );
+                    }
+                });
+            }
+
+            return address.join(', ');
         }
     },
 
