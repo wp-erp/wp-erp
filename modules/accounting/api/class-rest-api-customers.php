@@ -262,11 +262,7 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
             return new WP_Error( 'rest_customer_invalid_id', __( 'Email already exists!' ), [ 'status' => 400 ] );
         }
 
-        error_log('request:'. print_r($request,true));
         $item = $this->prepare_item_for_database( $request );
-
-        error_log('item:'. print_r($item,true));
-
         $id   = erp_acct_insert_people( $item );
 
         $customer       = (array) erp_get_people( $id );
