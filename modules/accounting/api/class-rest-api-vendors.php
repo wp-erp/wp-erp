@@ -264,7 +264,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $item = $this->prepare_item_for_database( $request );
 
-        $id = erp_insert_people( $item );
+        $id   = erp_acct_insert_people( $item );
 
         $vendor       = (array) erp_get_people( $id );
         $vendor['id'] = $id;
