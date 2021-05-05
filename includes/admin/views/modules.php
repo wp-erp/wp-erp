@@ -655,7 +655,7 @@
     <div class="erp_addon_wrap">
     <?php
         $all_modules  = wperp()->modules->get_modules_extensions();
-        $purchase_url = 'https://wperp.com/pricing?utm_source=wp-admin&utm_medium=link&utm_campaign=erp-pro-extension-page';
+        $purchase_url = 'https://utm.guru/udfBI'; // URL with UTM for tracking
 
         if ( $is_pro_active ) {
             $active_modules = wp_erp_pro()->module->get_active_modules();
