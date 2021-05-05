@@ -195,6 +195,8 @@ function erp_acct_insert_payment( $data ) {
 
         do_action( 'erp_acct_after_payment_create', $payment_data, $voucher_no );
 
+        erp_acct_purge_cache( ['list' => 'sales_transaction,purchase_transaction,expense_transaction'] );
+
         $wpdb->query( 'COMMIT' );
     } catch ( Exception $e ) {
         $wpdb->query( 'ROLLBACK' );
@@ -258,7 +260,7 @@ function erp_acct_insert_payment_line_items( $data, $item, $voucher_no ) {
     } else {
         $credit = $item['line_total'];
     }
-    
+
     $wpdb->insert(
         $wpdb->prefix . 'erp_acct_invoice_account_details',
         [

@@ -32,6 +32,7 @@ class Ajax {
         $this->action( 'wp_ajax_erp-api-key', 'new_api_key' );
         $this->action( 'wp_ajax_erp-api-delete-key', 'delete_api_key' );
         $this->action( 'wp_ajax_erp-dismiss-promotional-offer-notice', 'dismiss_promotional_offer' );
+        $this->action( 'wp_ajax_erp-toggle-module', 'toggle_module' );
     }
 
     public function file_delete() {
@@ -571,6 +572,55 @@ class Ajax {
         }
 
         wp_die();
+    }
+
+    /**
+     * Toggle Modules
+     *
+     * @since 1.8.2
+     *
+     * @return void
+     */
+    public function toggle_module() {
+        $this->verify_nonce( 'wp-erp-toggle-module' );
+
+        // Check permission
+        if ( current_user_can( 'manage_options' ) === false ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
+        if ( isset( $_POST['module_id'] ) && ! empty( $_POST['module_id'] ) ) {
+            if ( is_array( $_POST['module_id'] ) ) {
+                $module_ids   = array_map( 'sanitize_text_field', wp_unslash( $_POST['module_id'] ) );
+            } else {
+                $module_ids[] = isset( $_POST['module_id'] ) ? sanitize_text_field( wp_unslash( $_POST['module_id'] ) ) : '';
+            }
+        }
+
+        // check for valid module
+        if ( true !== ( $ret = wperp()->modules->is_valid_module( $module_ids ) ) ) {
+            $this->send_error( $ret->get_error_message() );
+        }
+
+        $toggle = isset( $_POST['toggle'] ) ? sanitize_text_field( wp_unslash( $_POST['toggle'] ) ) : '';
+
+        if ( ! empty( $toggle ) && $toggle != -1 && ! empty( $module_ids ) ) {
+
+            if ( 'activate' === $toggle ) {
+                // activate modules
+                wperp()->modules->activate_modules( $module_ids );
+            }
+            elseif ( 'deactivate' === $toggle ) {
+                // de-activate modules
+                wperp()->modules->deactivate_modules( $module_ids );
+            }
+
+            $this->send_success( esc_html__( 'Redirecting...', 'erp' ) );
+
+        } else {
+            $this->send_error( __( 'Invalid input.', 'erp') );
+        }
+
     }
 }
 

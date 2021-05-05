@@ -23,21 +23,41 @@ function erp_acct_get_all_tax_agencies( $args = [] ) {
 
     $args = wp_parse_args( $args, $defaults );
 
-    $limit = '';
+    $last_changed = erp_cache_get_last_changed( 'accounting', 'tax_agencies', 'erp-accounting' );
+    $cache_key    = 'erp-get-tax-agencies-' . md5( serialize( $args ) ) . ": $last_changed";
+    $tax_agencies = wp_cache_get( $cache_key, 'erp-accounting' );
 
-    if ( -1 !== $args['number'] ) {
-        $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+    $cache_key_count     = 'erp-get-tax-agencies-count-' . md5( serialize( $args ) ) . " : $last_changed";
+    $tax_agencies_count  = wp_cache_get( $cache_key_count, 'erp-accounting' );
+
+    if ( false === $tax_agencies ) {
+
+        $limit = '';
+
+        if ( -1 !== $args['number'] ) {
+            $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+        }
+
+        $sql  = 'SELECT';
+        $sql .= $args['count'] ? ' COUNT( id ) as total_number ' : ' * ';
+        $sql .= "FROM {$wpdb->prefix}erp_acct_tax_agencies ORDER BY {$args['orderby']} {$args['order']} {$limit}";
+
+        if ( $args['count'] ) {
+            $tax_agencies_count = $wpdb->get_var( $sql );
+
+            wp_cache_set( $cache_key_count, $tax_agencies_count, 'erp-accounting' );
+        } else {
+            $tax_agencies = $wpdb->get_results( $sql, ARRAY_A );
+
+            wp_cache_set( $cache_key, $tax_agencies, 'erp-accounting' );
+        }
     }
-
-    $sql  = 'SELECT';
-    $sql .= $args['count'] ? ' COUNT( id ) as total_number ' : ' * ';
-    $sql .= "FROM {$wpdb->prefix}erp_acct_tax_agencies ORDER BY {$args['orderby']} {$args['order']} {$limit}";
 
     if ( $args['count'] ) {
-        return $wpdb->get_var( $sql );
+        return $tax_agencies_count;
     }
 
-    return $wpdb->get_results( $sql, ARRAY_A );
+    return $tax_agencies;
 }
 
 /**
@@ -84,6 +104,8 @@ function erp_acct_insert_tax_agency( $data ) {
 
     $tax_id = $wpdb->insert_id;
 
+    erp_acct_purge_cache( ['list' => 'tax_agencies'] );
+
     return $tax_id;
 }
 
@@ -117,6 +139,8 @@ function erp_acct_update_tax_agency( $data, $id ) {
         ]
     );
 
+    erp_acct_purge_cache( ['list' => 'tax_agencies'] );
+
     return $id;
 }
 
@@ -131,6 +155,8 @@ function erp_acct_delete_tax_agency( $id ) {
     global $wpdb;
 
     $wpdb->delete( $wpdb->prefix . 'erp_acct_tax_agencies', [ 'id' => $id ] );
+
+    erp_acct_purge_cache( ['list' => 'tax_agencies'] );
 
     return $id;
 }

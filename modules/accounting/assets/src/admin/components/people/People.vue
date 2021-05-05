@@ -159,16 +159,18 @@ export default {
                 if (confirm(__('Are you sure to delete?', 'erp'))) {
                     this.$store.dispatch('spinner/setSpinner', true);
                     HTTP.delete(this.url + '/' + row.id).then(response => {
-                        if ( response.data.success ) {
-                            this.$delete(this.rows, index);
-
+                        if ( response.status !== 204 ) {
                             this.$store.dispatch('spinner/setSpinner', false);
-                            this.showAlert('success', __('Deleted !', 'erp'));
+                            this.showAlert('error', response.data.data[0].message);
+                            // or loop through the erros and show a list
+                            return;
                         }
 
+                        this.$delete(this.rows, index);
                         this.$store.dispatch('spinner/setSpinner', false);
-                        this.showAlert('error', response.data.data[0].message);
-                        // or loop through the erros and show a list
+                        this.showAlert('success', 'Deleted !');
+
+                        this.fetchItems();
                     }).catch(error => {
                         this.$store.dispatch('spinner/setSpinner', false);
                         throw error;
@@ -191,7 +193,7 @@ export default {
                 if (confirm(__('Are you sure to delete?', 'erp'))) {
                     this.$store.dispatch('spinner/setSpinner', true);
                     HTTP.delete(this.url + '/delete/' + items.join(',')).then(response => {
-                        if ( ! response.data.success ) {
+                        if ( response.status !== 204 ) {
                             this.$store.dispatch('spinner/setSpinner', false);
                             this.showAlert('error', response.data.data[0].message);
 
