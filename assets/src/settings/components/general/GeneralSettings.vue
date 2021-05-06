@@ -13,7 +13,7 @@
                             <tooltip :text="inputItems[1].desc" />
                         </label>
                         <date-picker class="wperp-form-field" :placeholder="__( 'Select date', 'erp' )"
-                                v-model="general_fields.gen_com_start"></date-picker >
+                                v-model="general_fields.gen_com_start" />
                     </div>
                 </div>
 
@@ -107,6 +107,9 @@ import DatePicker from 'settings/components/base/DatePicker.vue';
 import Tooltip from 'settings/components/base/Tooltip.vue';
 import SubmitButton from 'settings/components/base/SubmitButton.vue';
 import MultiSelect from 'settings/components/select/MultiSelect.vue';
+import HTTP from 'settings/http';
+
+var $ = jQuery;
 
 export default {
     name: 'GeneralSettings',
@@ -139,7 +142,52 @@ export default {
 
     methods: {
         submitGeneralForm() {
-            alert('Hello');
+
+            this.$store.dispatch('spinner/setSpinner', true);
+
+            let requestData = window.settings.hooks.applyFilters('requestData', {
+                gen_com_start: this.general_fields.gen_com_start,
+                gen_financial_month: this.general_fields.gen_financial_month,
+                date_format: this.general_fields.date_format,
+                erp_currency: this.general_fields.erp_currency ? this.general_fields.erp_currency.id : null,
+                erp_country: this.general_fields.erp_country ? this.general_fields.erp_country.id : null,
+                role_based_login_redirection: this.general_fields.role_based_login_redirection,
+                erp_debug_mode: this.general_fields.erp_debug_mode,
+                _wpnonce: erp_settings_var.nonce
+            });
+
+            var formData = new FormData();
+            formData.append('gen_com_start', requestData.gen_com_start);
+            formData.append('gen_financial_month', requestData.gen_financial_month);
+            formData.append('date_format', requestData.date_format);
+            formData.append('erp_currency', requestData.erp_currency);
+            formData.append('erp_country', requestData.erp_country);
+            formData.append('role_based_login_redirection', requestData.role_based_login_redirection);
+            formData.append('erp_debug_mode', requestData.erp_debug_mode);
+            formData.append('_wpnonce', requestData._wpnonce);
+            formData.append('action', erp_settings_var.action);
+
+            $.ajax({
+                url: erp_settings_var.ajax_url,
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    console.log(`response data`, response);
+
+                    if (response.success) {
+                        // Success
+                        // console.log('Success response:', response);
+                        alert('success');
+                    } else {
+                        // Errors
+                        // console.log('Error response:', response);
+                        alert('error');
+                    }
+                }
+            });
+            this.$store.dispatch('spinner/setSpinner', false);
         }
     },
 

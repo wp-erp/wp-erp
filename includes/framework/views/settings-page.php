@@ -4,7 +4,7 @@
 
 	<form method="post" id="mainform" action="" enctype="multipart/form-data">
 
-	    <!-- <?php WeDevs\ERP\Framework\ERP_Admin_Settings::output(); ?> -->
+	    <?php WeDevs\ERP\Framework\ERP_Admin_Settings::output(); ?>
 
 	    <?php
         global $current_class;
@@ -14,7 +14,7 @@
         $get_section_field_items = $current_class->get_section_field_items();
         $submit_btn_status       = isset( $get_section_field_items['submit_button'] ) ? $get_section_field_items['submit_button'] : true;
         ?>
-	    <!-- <?php
+	    <?php
         if ( $submit_btn_status ) {
             ?>
 	    	<p class="submit">
@@ -24,7 +24,7 @@
 		    	<?php wp_nonce_field( 'erp-settings-nonce' ); ?>
 		    </p>
 	    <?php
-        } ?> -->
+        } ?>
 
    </form>
 </div>

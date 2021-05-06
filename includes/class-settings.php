@@ -2,6 +2,7 @@
 
 namespace WeDevs\ERP;
 
+use WeDevs\ERP\Framework\Ajax_Handler;
 use WeDevs\ERP\Framework\Settings_Assets;
 
 /**
@@ -33,6 +34,9 @@ class Settings {
         wp_enqueue_script( 'erp-tiptip' );
         wp_enqueue_script( 'wp-color-picker' );
         wp_enqueue_script( 'erp-admin-settings' );
+
+        // Handle Ajax works for settings
+        new Ajax_Handler();
 
         // Add Menus
         $this->addMenus();
