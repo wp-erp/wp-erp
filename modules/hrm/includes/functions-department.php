@@ -74,10 +74,9 @@ function erp_hr_get_departments( $args = [] ) {
 
     $last_changed  = erp_cache_get_last_changed( 'hrm', 'department' );
     $cache_key     = 'erp-get-departments-' . md5( serialize( $args ) ) . " : $last_changed";
-    $departments   = wp_cache_get( $cache_key, 'erp' );
+    // $departments   = wp_cache_get( $cache_key, 'erp' );
 
-    if ( false === $departments ) {
-
+    // if ( false === $departments ) {
         $department = new \WeDevs\ERP\HRM\Models\Department();
 
         if ( !empty( $args['s'] ) ) {
@@ -111,7 +110,7 @@ function erp_hr_get_departments( $args = [] ) {
         }
 
         wp_cache_set( $cache_key, $departments, 'erp' );
-    }
+    // }
 
     return $departments;
 }
