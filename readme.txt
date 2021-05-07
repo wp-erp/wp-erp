@@ -5,7 +5,7 @@ Tags: business manager, erp, accounting, crm, hr, project manager, small busines
 Requires at least: 4.4
 Tested up to: 5.7.1
 Requires PHP: 5.6
-Stable tag: 1.8.3
+Stable tag: 1.8.4
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -279,6 +279,13 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+
+= v1.8.4 -> May 07, 2021 =
+--------------------------
+
+- [notice] Limited time promotional offer on account of Eid
+- [update] Applied status change action when an employee gets trashed
+- [fix] Department listing issue when there is no root parent
 
 = v1.8.3 -> May 05, 2021 =
 --------------------------

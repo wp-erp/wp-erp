@@ -861,6 +861,8 @@ class Ajax_Handler {
             erp_employee_delete( $employee_id, $hard );
         }
 
+        do_action( 'erp_hr_employee_after_update_status', $employee_id, 'trash', erp_current_datetime()->format( 'Y-m-d' ) );
+
         $this->send_success( __( 'Employee has been removed successfully', 'erp' ) );
     }
 

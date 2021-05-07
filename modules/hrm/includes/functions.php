@@ -268,6 +268,7 @@ function erp_hr_can_apply_sandwich_rules_between_dates( $start_date, $end_date, 
  * Sort parents before children
  *
  * @since 1.0
+ * @since 1.8.4 Fixed when there is no parent = 0
  *
  * @param array $objects input objects with attributes 'id' and 'parent'
  * @param array $result  (optional, reference) internal
