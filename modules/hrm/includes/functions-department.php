@@ -74,9 +74,9 @@ function erp_hr_get_departments( $args = [] ) {
 
     $last_changed  = erp_cache_get_last_changed( 'hrm', 'department' );
     $cache_key     = 'erp-get-departments-' . md5( serialize( $args ) ) . " : $last_changed";
-    $results       = wp_cache_get( $cache_key, 'erp' );
+    $departments   = wp_cache_get( $cache_key, 'erp' );
 
-    if ( false === $results ) {
+    if ( false === $departments ) {
 
         $department = new \WeDevs\ERP\HRM\Models\Department();
 
@@ -91,26 +91,26 @@ function erp_hr_get_departments( $args = [] ) {
                 ->where( 'title', 'LIKE', '%' . $s . '%' )
                 ->get()
                 ->toArray();
-            $results = erp_array_to_object( $results );
+        } else {
+            $results = $department->get()->toArray();
         }
-
-        $results = $department->get()->toArray();
 
         $results = erp_array_to_object( $results );
-        wp_cache_set( $cache_key, $results, 'erp' );
-    }
+        $results = erp_parent_sort( $results );
 
-    $results     = erp_parent_sort( $results );
-    $departments = [];
+        $departments = [];
 
-    if ( $results ) {
-        foreach ( $results as $key => $row ) {
-            if ( true === $args['no_object'] ) {
-                $departments[] = $row;
-            } else {
-                $departments[] = new WeDevs\ERP\HRM\Department( intval( $row->id ) );
+        if ( $results ) {
+            foreach ( $results as $key => $row ) {
+                if ( true === $args['no_object'] ) {
+                    $departments[] = $row;
+                } else {
+                    $departments[] = new WeDevs\ERP\HRM\Department( intval( $row->id ) );
+                }
             }
         }
+
+        wp_cache_set( $cache_key, $departments, 'erp' );
     }
 
     return $departments;
