@@ -84,20 +84,22 @@ class Promotion {
         <style>
             .erp-promotional-offer-notice {
                 background: linear-gradient(30deg, #f2f2f2, lightseagreen);
-                color: rgba(22, 134, 129, 0.89);
+                color: rgba(22, 134, 129, 1.1);
                 border-left: 5px solid lightseagreen;
             }
 
             .erp-promotional-offer-notice p {
                 font-size: 16px;
+                font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
             }
             
             .erp-promotional-offer-notice a {
                 color: lightcyan;
                 border: 0.5px solid lightseagreen;
-                border-radius: 4px;
-                padding: 2px 5px;
+                border-radius: 3px;
+                padding: 2px 5px 1px 5px;
                 text-decoration: none;
+                font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
                 font-size: 16px;
                 font-weight: 300;
                 background: lightseagreen;
