@@ -278,16 +278,6 @@ function erp_hr_can_apply_sandwich_rules_between_dates( $start_date, $end_date, 
  * @return array output
  */
 function erp_parent_sort( array $objects, array &$result = [], $parent = 0, $depth = 0 ) {
-
-    // If there is no parent=0, Find minimum parent no and sort
-    $parents = [];
-
-    foreach ( $objects as $object ) {
-        $parents[] = $object->parent;
-    }
-
-    $parent = intval( min( $parents ) );
-
     foreach ( $objects as $key => $object ) {
         if ( $object->parent == $parent ) {
             $object->depth = $depth;
