@@ -240,6 +240,8 @@ class Admin_Menu {
 
         if ( 'employee' === $subsection ) {
             $this->employee_page();
+        } elseif ( 'requests' === $subsection ) {
+            $this->requests_page();
         } elseif ( 'department' === $subsection ) {
             $this->department_page();
         } elseif ( 'designation' === $subsection ) {
