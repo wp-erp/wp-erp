@@ -151,6 +151,9 @@
             methods: {
                 init: function() {
                     this.allEmployees[0] = erpHrReq.filterEmployee;
+                    
+                    this.initDateRangePicker();
+                    this.select2Action('erp-hrm-select2');
                 },
 
                 getRequestList: function() {
@@ -254,6 +257,46 @@
                             self.isLoaded   = true;
                             self.ajaxloader = false;
                         }
+                    });
+                },
+
+                initDateRangePicker: function() {
+                    var elem = $( "input[name='filter_date']" );
+                    var self = this;
+
+                    elem.daterangepicker({
+                        autoUpdateInput : false,
+                        locale          : {
+                            cancelLabel : erpHrReq.clear
+                        },
+                        ranges : {
+                            'Today'      : [ moment(), moment() ],
+                            'This Week'  : [ moment().startOf( 'isoWeek' ), moment().endOf( 'isoWeek' ) ],
+                            'This Month' : [ moment().startOf( 'month' ), moment().endOf( 'month' ) ],
+                            'Last Month' : [ moment().subtract( 1, 'month' ).startOf( 'month' ), moment().subtract( 1, 'month' ).endOf( 'month' ) ],
+                            'This Year'  : [ moment().startOf( 'year' ), moment().endOf( 'year' ) ],
+                            'Last Year'  : [ moment().subtract( 1, 'year' ).startOf( 'year' ), moment().subtract( 1, 'year' ).endOf( 'year' ) ],
+                        }
+                    });
+
+                    elem.on( 'apply.daterangepicker', function(event, picker) {
+                        $( this ).val( picker.startDate.format( 'MMM DD, YYYY' ) + ' - ' + picker.endDate.format( 'MMM DD, YYYY' ) );
+
+                        self.date = {
+                            start : picker.startDate.format( 'DD.MM.YYYY' ),
+                            end   : picker.endDate.format( 'DD.MM.YYYY' )
+                        }
+                    });
+
+                    elem.on( 'cancel.daterangepicker', function(event, picker) {
+                        $( this ).val('');
+                        self.date = {};
+                    });
+                },
+
+                select2Action: function(element) {
+                    $('.'+element).select2({
+                        width: 'element',
                     });
                 },
             }
