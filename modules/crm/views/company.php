@@ -1,35 +1,21 @@
-<style>
-    .wperp-filter-dropdown .wperp-btn.btn--cancel:hover {
-        background-color: transparent !important;
-        border: 1px solid #e2e2e2 !important;
-    }
-    .wperp-filter-dropdown .wperp-btn.btn--reset {
-        color: #3c9fd4 !important;
-        margin-right: 5px !important
-    }
-
-    .wperp-filter-dropdown .wperp-btn.btn--reset:hover {
-        color: #135e96 !important;
-    }
-</style>
-
 <?php
-if ( isset( $_GET['filter_assign_contact' ] ) && !empty( $_GET['filter_assign_contact' ] ) ) {
-    $id = intval( $_GET['filter_assign_contact'] );
+    if ( isset( $_GET['filter_assign_contact' ] ) && !empty( $_GET['filter_assign_contact' ] ) ) {
+        $id = intval( $_GET['filter_assign_contact'] );
 
-    $custom_data = [
-        'filter_assign_contact' => [
-            'id'           => $id,
-            'display_name' => get_the_author_meta( 'display_name', $id ),
-        ],
-        'searchFields' => array_keys( erp_crm_get_serach_key( 'company' ) ),
-    ];
-} else {
-    $custom_data = [
-        'searchFields' => array_keys( erp_crm_get_serach_key( 'company' ) ),
-    ];
-}
+        $custom_data = [
+            'filter_assign_contact' => [
+                'id'           => $id,
+                'display_name' => get_the_author_meta( 'display_name', $id ),
+            ],
+            'searchFields' => array_keys( erp_crm_get_serach_key( 'company' ) ),
+        ];
+    } else {
+        $custom_data = [
+            'searchFields' => array_keys( erp_crm_get_serach_key( 'company' ) ),
+        ];
+    }
 ?>
+
 <div class="wrap erp-crm-customer erp-crm-customer-listing" id="wp-erp">
 
     <h2>
