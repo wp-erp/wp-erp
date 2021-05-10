@@ -322,7 +322,13 @@
                         });
                     });
                 },
-            }
+            },
+
+            watch: {
+                activeTopNav: function(val) {
+                    this.hideCb = ( val !== 'resigned' && val !== 'remote_work' );
+                }
+            },
         });
 
     }
