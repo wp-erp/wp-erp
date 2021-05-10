@@ -3946,7 +3946,7 @@ function erp_sanitize_phone_number( $phone_no, $allow_plus = false ) {
 /**
  * Checks if a user has permission to view a page
  * 
- * @since 1.8.4
+ * @since 1.8.5
  *
  * @param string $cap
  * 
