@@ -591,6 +591,22 @@
                         }
                     });
                 },
+
+                redirectUrl: function(id, status) {
+                    switch ( this.activeTopNav ) {
+                        case 'leave':
+                            return `${erpHrReq.adminurl}?page=erp-hr&section=leave&filter_year=1&status=${status}`;
+
+                        case 'asset':
+                            return `${erpHrReq.adminurl}?page=erp-hr&section=asset&sub-section=asset-request&status=${status}`;
+
+                        case 'reimburse':
+                            return `${erpHrReq.adminurl}?page=erp-accounting#/transactions/reimbursements/requests/${id}`;
+
+                        default:
+                            return '#';
+                    }
+                },
             },
 
             watch: {
