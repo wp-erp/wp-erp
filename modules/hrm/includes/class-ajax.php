@@ -121,6 +121,7 @@ class Ajax_Handler {
         // AJAX hooks for employee requests
         $this->action( 'wp_ajax_erp_hr_employee_get_requests', 'get_employee_requests' );
         $this->action( 'wp_ajax_erp_hr_get_total_pending_requests', 'get_total_pending_requests' );
+        $this->action( 'wp_ajax_erp_hr_employee_requests_bulk_action', 'employee_requests_bulk_action' );
     }
 
     /**
