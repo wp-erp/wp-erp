@@ -15,6 +15,17 @@
                                     
                                     <input id="cb-select-all-1" v-model="checkAllCheckbox" @change="triggerAllCheckBox()" type="checkbox">
                                 </td>
+
+                                <td class="actions bulkactions" v-if="hasBulkAction() && checkboxItems.length" :colspan="columnCount">
+                                    <label for="bulk-action-selector-top" class="screen-reader-text"><?php _e( 'Select bulk action', 'erp' ); ?></label>
+                                    
+                                    <select name="action" id="bulk-action-selector-top" v-model="bulkaction1">
+                                        <option value="-1"><?php _e( 'Bulk Actions', 'erp' ); ?></option>
+                                        <option v-for="actions in bulkactions" value="{{ actions.id }}">{{ actions.text }}</option>
+                                    </select>
+
+                                    <input type="submit" id="doaction" @click.prevent="handleBulkAction(bulkaction1)" class="button action" value="<?php esc_attr_e( 'Apply', 'erp' ); ?>">
+                                </td>
                                 
                                 <td v-if="!checkboxItems.length" v-for="header in tableHeaders" :class="header.class">{{ header.title }}</td>
                             </tr>
