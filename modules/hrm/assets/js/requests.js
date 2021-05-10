@@ -617,6 +617,14 @@
                         showConfirmButton : false,
                     });
                 },
+
+                showRowActions: function(index) {
+                    $( `#request-row-actions-${index}` ).toggleClass( 'show' );
+                },
+        
+                hasBulkAction: function() {
+                    return this.bulkactions.length > 0;
+                },
             },
 
             watch: {
