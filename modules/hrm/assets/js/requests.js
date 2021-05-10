@@ -148,6 +148,18 @@
                 this.getRequestList();
             },
 
+            ready: function() {
+                var self = this;
+        
+                $('select#erp-hr-filter-employee').on('change', function(e) {
+                    self.employee = $(this).val();
+                });
+
+                $('select#erp-hr-filter-status').on('change', function(e) {
+                    self.status = $(this).val();
+                });
+            },
+
             methods: {
                 init: function() {
                     this.allEmployees[0] = erpHrReq.filterEmployee;
