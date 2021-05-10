@@ -2344,7 +2344,7 @@ class Ajax_Handler {
      * @return int
      */
     public function get_total_pending_requests() {
-        $requests = erp_hr_get_employee_pending_requests_count( 'pending' );
+        $requests = erp_hr_get_employee_pending_requests_count();
         $pending  = 0;
 
         foreach ( $requests as $type => $count ) {
