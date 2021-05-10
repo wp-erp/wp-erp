@@ -160,6 +160,44 @@
                 });
             },
 
+            computed: {
+                statusFilter: function() {
+                    var status = {};
+
+                    switch ( this.activeTopNav ) {
+                        case 'resigned':
+                        case 'remote_work':
+                        case 'asset':
+                            status = {
+                                ''       : __( 'Status', 'erp' ),
+                                pending  : __( 'Pending', 'erp' ),
+                                approved : __( 'Approved', 'erp' ),
+                                rejected : __( 'Rejected', 'erp' ),
+                            };
+                            break;
+
+                        case 'leave':
+                            status = {
+                                '' : __( 'Status', 'erp' ),
+                                2  : __( 'Pending', 'erp' ),
+                                1  : __( 'Approved', 'erp' ),
+                                3  : __( 'Rejected', 'erp' ),
+                            };
+                            break;
+
+                        case 'reimburse':
+                            status = {
+                                '' : __( 'Status', 'erp' ),
+                                7  : __( 'Closed', 'erp' ),
+                                2  : __( 'Awaiting Payment', 'erp' ),
+                            }
+                            break;
+                    }
+
+                    return status;
+                },
+            },
+
             methods: {
                 init: function() {
                     this.allEmployees[0] = erpHrReq.filterEmployee;
