@@ -46,6 +46,14 @@
                                             <span class="dashicons dashicons-ellipsis"></span>
                                         </a>
                                     </div>
+
+                                    <div id="request-row-actions-{{ $index }}" class="dropdown-content">
+                                        <a v-for="(key, action) in request.actions"
+                                            href="#"
+                                            @click.prevent="onActionClick(request.id, action.id, request.status.id)">
+                                            <span v-if="action.class" :class="action.class"></span> {{ action.text }}
+                                        </a>
+                                    </div>
                                 </td>
                             </tr>
 
