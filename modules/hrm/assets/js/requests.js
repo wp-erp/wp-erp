@@ -196,6 +196,23 @@
 
                     return status;
                 },
+
+                bulkactions: function() {
+                    if ( this.activeTopNav == 'resigned' || this.activeTopNav == 'remote_work' ) {
+                        return this.bulkActionMap;
+                    }
+
+                    return [];
+                },
+
+                tableHeaders: function() {
+                    let headers = [];
+                    
+                    headers.push( ...this.tableHeaderMap.common );
+                    headers.splice( 1, 0, ...this.tableHeaderMap[this.activeTopNav] );
+                    
+                    return headers;
+                },
             },
 
             methods: {
