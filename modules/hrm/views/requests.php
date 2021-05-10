@@ -6,6 +6,23 @@
     <div class="list-table-wrap erp-hr-requests">
         <div class="list-table-inner">
             <form method="get">
+                <div class="tablenav top">
+                    <ul v-if="!hasTopNavFilter()" class="subsubsub">
+                        <li v-for="( key, filter ) in topNavFilter.data" :class="key">
+                            <a href="#"
+                                @click.prevent="filterTopNav( key, filter )"
+                                class="{{ isCurrentTopNavFilter( key ) ? 'current' : '' }}">
+                                {{ filter.label }} 
+                                <span class="count">({{ filter.count }})</span>
+                            </a> 
+
+                            <span v-if="!isTopNavFilterLastItem( key )">|</span>
+                        </li>
+                    </ul>
+                    
+                    <br class="clear">
+                </div>
+
                 <div class="erp-table-wrapper">
                     <table class="wp-list-table widefat fixed striped requests">
                         <thead>
