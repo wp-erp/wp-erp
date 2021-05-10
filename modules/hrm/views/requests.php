@@ -34,6 +34,23 @@
                                 id="erp-hr-filter-date"
                                 placeholder="<?php esc_attr_e( 'Date range', 'erp' ); ?>">
                         </div>
+
+                        <div class="wperp-filter-panel-footer">
+                            <input type="submit"
+                                class="wperp-btn btn--cancel btn--filter"
+                                @click.prevent="toggleDropdown()"
+                                value="<?php _e( 'Cancel', 'erp' ); ?>">
+                            
+                            <input type="submit"
+                                class="wperp-btn btn--reset btn--filter"
+                                @click.prevent="resetDropdown()"
+                                value="<?php _e( 'Reset', 'erp' ); ?>">
+                            
+                            <input type="submit"
+                                class="wperp-btn btn--primary"
+                                @click.prevent="filterData()"
+                                value="<?php _e( 'Apply', 'erp' ); ?>">
+                        </div>
                     </div>
                 </div>
             </div>
