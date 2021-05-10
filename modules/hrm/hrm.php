@@ -221,7 +221,7 @@ class Human_Resource {
 
         switch ( $section ) {
             case 'people':
-                if ( $sub_section === 'employee' ) {
+                if ( 'employee' === $sub_section ) {
                     wp_enqueue_script( 'post' );
                     $employee                          = new Employee();
                     $localize_script['employee_empty'] = $employee->to_array();
@@ -234,8 +234,15 @@ class Human_Resource {
                     wp_enqueue_script( 'erp-flotchart-axislables' );
                     wp_enqueue_script( 'erp-flotchart-valuelabel' );
                     wp_enqueue_style( 'erp-flotchart-valuelabel-css' );
+
+                } else if ( 'requests' === $sub_section ) {
                     wp_enqueue_style( 'erp-sweetalert' );
                     wp_enqueue_script( 'erp-sweetalert' );
+                    wp_enqueue_style( 'erp-daterangepicker' );
+                    wp_enqueue_script( 'erp-daterangepicker' );
+                    wp_enqueue_script( 'erp-hr-i18n', WPERP_ASSETS . '/js/i18n.js', [], gmdate( 'Ymd' ), true );
+                    wp_enqueue_script( 'erp-vuejs', false, [ 'jquery', 'erp-script' ], gmdate( 'Ymd' ), true );
+                    wp_enqueue_script( 'erp-hr-requests', WPERP_HRM_ASSETS . "/js/requests{$suffix}.js", [ 'erp-script', 'erp-vuejs', 'jquery', 'erp-hr-i18n' ], gmdate( 'Ymd' ), true );
                 }
 
                 break;
