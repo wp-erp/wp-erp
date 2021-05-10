@@ -149,6 +149,10 @@
             },
 
             methods: {
+                init: function() {
+                    this.allEmployees[0] = erpHrReq.filterEmployee;
+                },
+
                 getRequestList: function() {
                     var self        = this;
                     self.ajaxloader = true;
