@@ -106,6 +106,9 @@ class Scripts {
 
         // toastr.js
         wp_register_script( 'erp-toastr', $vendor . '/toastr/toastr.min.js', [], $this->version, true );
+
+        // date range picker
+        wp_register_script( 'erp-daterangepicker', $vendor . '/daterangepicker/daterangepicker.min.js', [ 'jquery' ], $this->version, true );
     }
 
     /**
