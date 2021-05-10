@@ -11,6 +11,31 @@
                     <?php _e( 'Filters', 'erp' ) ?>
                     <span class="dashicons dashicons-arrow-down-alt2"></span>
                 </a>
+
+                <div class="erp-dropdown-filter-content" id="erp-dropdown-content">
+                    <div class="wperp-filter-panel wperp-filter-panel-default">
+                        <h3><?php _e( 'Filter', 'erp' ); ?></h3>
+                        
+                        <div class="wperp-filter-panel-body">
+                            <select name="employee" id="erp-hr-filter-employee" class="erp-hrm-select2" v-model="employee">
+                                <option v-for="(id, emp) in allEmployees" :value="id">
+                                    {{ emp }}
+                                </option>
+                            </select>
+
+                            <select name="status" id="erp-hr-filter-status" class="erp-hrm-select2" v-model="status">
+                                <option v-for="(key, value) in statusFilter" :value="key">
+                                    {{ value }}
+                                </option>
+                            </select>
+
+                            <input type="text"
+                                name="filter_date"
+                                id="erp-hr-filter-date"
+                                placeholder="<?php esc_attr_e( 'Date range', 'erp' ); ?>">
+                        </div>
+                    </div>
+                </div>
             </div>
         </form>
     </div>
