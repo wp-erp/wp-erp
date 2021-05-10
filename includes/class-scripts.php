@@ -148,6 +148,9 @@ class Scripts {
 
         // custom menu design
         wp_register_style( 'erp-custom-menu', $css . '/custom-menu.css', false, $this->version );
+
+        // date range picker
+        wp_register_style( 'erp-daterangepicker', $vendor . '/daterangepicker/daterangepicker.min.css', false, $this->version );
     }
 
     /**
