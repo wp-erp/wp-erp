@@ -646,6 +646,33 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
     font-weight: 500;
 }
 
+.erp-row-action-dropdown .dropdown-content a .dashicons {
+    font-size: 17px;
+    opacity: 0.75;
+}
+
+.erp-row-action-dropdown .dropdown-content a:hover .dashicons {
+    font-size: 20px;
+    opacity: 1;
+}
+
+.erp-row-action-dropdown .dropdown-content a .edit {
+    color: rgb(60, 94, 95);
+}
+
+.erp-row-action-dropdown .dropdown-content a .delete,
+.erp-row-action-dropdown .dropdown-content a .reject {
+    color: rgb(221, 85, 85);
+}
+
+.erp-row-action-dropdown .dropdown-content a .view {
+    color: rgb(233, 154, 6);
+}
+
+.erp-row-action-dropdown .dropdown-content a .accept {
+    color: rgb(63, 155, 63);
+}
+
 .list-table-wrap .erp-table-wrapper {
     position: relative;
 }
