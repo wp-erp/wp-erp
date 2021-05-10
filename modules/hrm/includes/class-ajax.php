@@ -117,6 +117,9 @@ class Ajax_Handler {
 
         // Get leave & holiday data for hr dashboard calender
         $this->action( 'wp_ajax_erp-hr-get-leave-by-date', 'get_leave_holiday_by_date' );
+        
+        // AJAX hooks for employee requests
+        $this->action( 'wp_ajax_erp_hr_employee_get_requests', 'get_employee_requests' );
     }
 
     /**
@@ -2222,4 +2225,3 @@ class Ajax_Handler {
 
         $this->send_success( $event_data );
     }
-}
