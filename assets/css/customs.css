@@ -608,6 +608,44 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
     color: rgb(64, 174, 194);
 }
 
+.erp-row-action-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.erp-row-action-dropdown .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    min-width: max-content;
+    overflow: auto;
+    left: 0;
+    right: auto;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+@media screen and (max-width: 921) {
+    .erp-row-action-dropdown .dropdown-content {
+        right: 0;
+        left: auto;
+    }
+}
+
+.erp-row-action-dropdown .dropdown-content a {
+    color: rgb(145, 144, 144);
+    padding: 7px 12px 7px 8px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+}
+
+.erp-row-action-dropdown .dropdown-content a:hover {
+    color: rgb(88, 88, 88);
+    background-color: #ddd;
+    font-weight: 500;
+}
+
 .list-table-wrap .erp-table-wrapper {
     position: relative;
 }
