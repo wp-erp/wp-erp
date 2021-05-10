@@ -409,6 +409,19 @@
                     this.getRequestList();
                     this.toggleDropdown();
                 },
+
+                triggerAllCheckBox: function(){
+                    if ( this.checkAllCheckbox ) {
+                        this.checkboxItems = [];
+        
+                        for( let key in this.requests ) {
+                            this.checkboxItems.push( this.requests[key].id );
+                        }
+        
+                    } else {
+                        this.checkboxItems = [];
+                    }
+                },
             },
 
             watch: {
