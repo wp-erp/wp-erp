@@ -39,6 +39,14 @@
                                 <td class="text-center vertical-middle">
                                     <span class="req-status status-{{ request.status.id }}">{{ request.status.title }}</span>
                                 </td>
+
+                                <td class="text-center vertical-middle">
+                                    <div class="erp-row-action-dropdown">
+                                        <a href="#" @click.prevent="showRowActions($index)" class="erp-row-actions-btn {{ ! request.actions ? disabled : '' }}">
+                                            <span class="dashicons dashicons-ellipsis"></span>
+                                        </a>
+                                    </div>
+                                </td>
                             </tr>
 
                             <tr v-if="!requests.length || !isLoaded">
