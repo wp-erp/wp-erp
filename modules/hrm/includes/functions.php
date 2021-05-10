@@ -535,6 +535,7 @@ function erp_hr_holiday_reminder_to_employees() {
  * Retrieves html for hr people menu
  *
  * @since 1.8.0
+ * @since 1.8.5 Added `Requests` as new menu item
  *
  * @param string $selected
  *
@@ -573,9 +574,9 @@ function erp_hr_get_people_menu_html( $selected = 'employee' ) {
 /**
  * Retrieves all employee request types
  * 
- * @since 1.8.3
+ * @since 1.8.5
  *
- * @return void
+ * @return array
  */
 function erp_hr_get_employee_requests_types() {
     $results  = erp_hr_get_leave_requests();
@@ -593,9 +594,9 @@ function erp_hr_get_employee_requests_types() {
 /**
  * Retrieves all pending requests counts
  * 
- * @since 1.8.3
+ * @since 1.8.5
  * 
- * @return int
+ * @return array
  */
 function erp_hr_get_employee_pending_requests_count() {
     $leave_requests    = erp_hr_get_leave_requests( [ 'number' => -1, 'status' => 2 ] );
