@@ -20,7 +20,17 @@
                                 
                                 <td class="vertical-middle" v-if="request.item">{{ request.item.name }}</td>
                                 
+                                <td class="vertical-middle" v-if="request.category">{{ request.category.name }}</td>
+                                
+                                <td class="vertical-middle" v-if="request.amount">{{ request.amount }}</td>
+                                
+                                <td class="vertical-middle" v-if="request.trn_date">{{ request.trn_date }}</td>
+                                
                                 <td class="vertical-middle" v-if="request.date">{{ request.date }}</td>
+                                
+                                <td class="vertical-middle" v-if="request.start_date">{{ request.start_date }}</td>
+                                
+                                <td class="vertical-middle" v-if="request.end_date">{{ request.end_date }}</td>
                                 
                                 <td class="vertical-middle" v-if="request.created && activeTopNav != 'remote_work'">{{ request.created }}</td>
 
