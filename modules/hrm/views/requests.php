@@ -111,6 +111,10 @@
                             </tr>
                         </tfoot>
                     </table>
+
+                    <div class="erp-ajax-loader-bg" v-if="ajaxloader"></div>
+                    
+                    <div class="erp-ajax-loader" v-if="ajaxloader"></div>
                 </div>
             </form>
         </div>
