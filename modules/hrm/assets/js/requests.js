@@ -377,6 +377,32 @@
                         });
                     });
                 },
+
+                toggleDropdown: function() {
+                    $("#erp-dropdown-content").toggleClass("show");
+                },
+        
+                resetDropdown: function() {
+                    var self      = this;
+                    self.employee = 0;
+                    self.status   = '';
+                    self.date     = {};
+
+                    $('#select2-erp-hr-filter-employee-container').attr('title', self.allEmployees[self.employee]);
+                    $('#select2-erp-hr-filter-employee-container').html(self.allEmployees[self.employee]);
+                    $('#select2-erp-hr-filter-status-container').attr('title', self.statusFilter[self.status]);
+                    $('#select2-erp-hr-filter-status-container').html(self.statusFilter[self.status]);
+                    $("#erp-hr-filter-date").val('');
+                    
+                    self.resetData();
+                    self.getRequestList();
+                    self.toggleDropdown();
+                },
+
+                resetData: function() {
+                    this.currentPage     = 1;
+                    this.pageNumberInput = 1;
+                },
             },
 
             watch: {
