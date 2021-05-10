@@ -33,6 +33,8 @@
                                 <td class="vertical-middle" v-if="request.end_date">{{ request.end_date }}</td>
                                 
                                 <td class="vertical-middle" v-if="request.created && activeTopNav != 'remote_work'">{{ request.created }}</td>
+                                
+                                <td v-if="request.duration" class="text-center text-green vertical-middle">{{ request.duration.value }}</td>
 
                                 <td class="text-center vertical-middle">
                                     <span class="req-status status-{{ request.status.id }}">{{ request.status.title }}</span>
