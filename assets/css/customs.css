@@ -590,3 +590,28 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
         padding: 0 24px 0 8px !important;
     }
 }
+
+.cen-align {
+    text-align: center !important;
+    vertical-align: middle !important;
+}
+
+.vertical-middle {
+    vertical-align: middle !important;
+}
+
+.vertical-super {
+    vertical-align: super !important;
+}
+
+.text-center {
+    text-align: center !important;
+}
+
+.text-italic {
+    font-style: italic !important;
+}
+
+.text-green {
+    color: rgb(33, 131, 33) !important;
+}
