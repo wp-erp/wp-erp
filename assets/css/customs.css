@@ -591,6 +591,27 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
     }
 }
 
+.erp-row-actions-btn:hover {
+    color: rgb(64, 174, 194);
+}
+
+.erp-row-actions-btn.disabled {
+    color: #ddd;
+    pointer-events: none;
+}
+
+.erp-row-actions-btn::before,
+.erp-row-actions-btn::after,
+.erp-row-actions-btn:focus {
+    border: none !important;
+    box-shadow: none !important;
+    color: rgb(64, 174, 194);
+}
+
+.list-table-wrap .erp-table-wrapper {
+    position: relative;
+}
+
 .erp-table-wrapper .erp-ajax-loader-bg {
     width: 100%;
     height: 100%;
