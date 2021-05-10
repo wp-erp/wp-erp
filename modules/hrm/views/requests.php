@@ -3,6 +3,18 @@
 
     <?php do_action( 'erp_hr_people_menu', 'requests' ); ?>
 
+    <div class="content-header-section">
+        <form method="get">
+            <div class="wperp-filter-dropdown">
+                <a class="wperp-btn btn--default">
+                    <span class="dashicons dashicons-filter"></span>
+                    <?php _e( 'Filters', 'erp' ) ?>
+                    <span class="dashicons dashicons-arrow-down-alt2"></span>
+                </a>
+            </div>
+        </form>
+    </div>
+
     <div class="list-table-wrap erp-hr-requests">
         <div class="list-table-inner">
             <form method="get">
