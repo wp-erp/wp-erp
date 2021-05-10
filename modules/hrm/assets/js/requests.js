@@ -422,6 +422,28 @@
                         this.checkboxItems = [];
                     }
                 },
+
+                handleBulkAction: function(action) {
+                    var self = this;
+
+                    wp.ajax.send({
+                        data : {
+                            req_id      : self.checkboxItems,
+                            req_type    : self.activeTopNav,
+                            action_type : action,
+                            action      : "erp_hr_employee_requests_bulk_action",
+                            _wpnonce    : self.nonce
+                        },
+                        success: function(res) {
+                            self.showAlert('success', res);
+                            self.getRequestList();
+                            self.updateNotification();
+                        },
+                        error: function(error) {
+                            swal('', error, 'error');
+                        }
+                    });
+                },
             },
 
             watch: {
