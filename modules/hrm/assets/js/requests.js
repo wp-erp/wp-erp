@@ -607,6 +607,16 @@
                             return '#';
                     }
                 },
+
+                showAlert: function(type, message, title = '') {            
+                    swal({
+                        title : title,
+                        text  : message,
+                        type  : type,
+                        timer : 2200,
+                        showConfirmButton : false,
+                    });
+                },
             },
 
             watch: {
