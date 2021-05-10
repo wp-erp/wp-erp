@@ -8,6 +8,12 @@
             <form method="get">
                 <div class="erp-table-wrapper">
                     <table class="wp-list-table widefat fixed striped requests">
+                        <thead>
+                            <tr>
+                                <td v-if="!checkboxItems.length" v-for="header in tableHeaders" :class="header.class">{{ header.title }}</td>
+                            </tr>
+                        </thead>
+
                         <tbody id="the-list">
                             <tr v-if="requests" v-for="request in requests">
                                 <th v-if="!hideCb" scope="row" class="check-column vertical-middle">
@@ -45,14 +51,14 @@
                                         <a href="#" @click.prevent="showRowActions($index)" class="erp-row-actions-btn {{ ! request.actions ? disabled : '' }}">
                                             <span class="dashicons dashicons-ellipsis"></span>
                                         </a>
-                                    </div>
 
-                                    <div id="request-row-actions-{{ $index }}" class="dropdown-content">
-                                        <a v-for="(key, action) in request.actions"
-                                            href="#"
-                                            @click.prevent="onActionClick(request.id, action.id, request.status.id)">
-                                            <span v-if="action.class" :class="action.class"></span> {{ action.text }}
-                                        </a>
+                                        <div id="request-row-actions-{{ $index }}" class="dropdown-content">
+                                            <a v-for="(key, action) in request.actions"
+                                                href="#"
+                                                @click.prevent="onActionClick(request.id, action.id, request.status.id)">
+                                                <span v-if="action.class" :class="action.class"></span> {{ action.text }}
+                                            </a>
+                                        </div>
                                     </div>
                                 </td>
                             </tr>
