@@ -569,3 +569,23 @@ function erp_hr_get_people_menu_html( $selected = 'employee' ) {
     <?php
     echo ob_get_clean();
 }
+
+/**
+ * Retrieves all employee request types
+ * 
+ * @since 1.8.3
+ *
+ * @return void
+ */
+function erp_hr_get_employee_requests_types() {
+    $results  = erp_hr_get_leave_requests();
+
+    $types    = [
+        'leave' => [
+            'count'   => $results['total'],
+            'label'   => __( 'Leave', 'erp' ),
+        ]
+    ];
+
+    return apply_filters( 'erp_hr_employee_request_types', $types );
+}
