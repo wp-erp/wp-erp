@@ -19,6 +19,59 @@
                             <span v-if="!isTopNavFilterLastItem( key )">|</span>
                         </li>
                     </ul>
+
+                    <div class="tablenav-pages" :class="paginationClass">
+                        <span v-if="items" class="displaying-num">{{ items }} {{ items > 1 ? ' items' : ' item' }}</span>
+                        
+                        <span class="pagination-links">
+                            <span v-if="isFirstPage()" class="tablenav-pages-navspan button" disabled="disabled" aria-hidden="true">«</span>
+                            
+                            <a v-else class="first-page button" href="#" @click.prevent="goFirstPage()">
+                                <span class="screen-reader-text"><?php _e( 'First page', 'erp' ) ?></span>
+                                <span aria-hidden="true">«</span>
+                            </a>
+
+                            <span v-if="isFirstPage()" class="tablenav-pages-navspan button" disabled="disabled" aria-hidden="true">‹</span>
+                            
+                            <a v-else class="prev-page button" href="#" @click.prevent="goToPage('prev')">
+                                <span class="screen-reader-text"><?php _e( 'Previous page', 'erp' ) ?></span>
+                                <span aria-hidden="true">‹</span>
+                            </a>
+
+                            <span class="screen-reader-text"><?php _e( 'Current Page', 'erp' ) ?></span>
+                            
+                            <input type="text"
+                                value="1"
+                                size="1"
+                                class="current-page"
+                                id="current-page-selector"
+                                v-model="pageNumberInput"
+                                aria-describedby="table-paging"
+                                @keydown.enter.prevent="goToPage(pageNumberInput)">
+                                <?php _e( ' of ', 'erp' ) ?>
+                                <span class="total-pages">{{ totalPage }}</span>
+
+                            <span v-if="isLastPage()" class="tablenav-pages-navspan button" disabled="disabled" aria-hidden="true">›</span>
+
+                            <a v-else
+                                class="next-page button"
+                                href="#"
+                                @click.prevent="goToPage('next')">
+                                <span class="screen-reader-text"><?php _e( 'Next page', 'erp' ) ?></span>
+                                <span aria-hidden="true">›</span>
+                            </a>
+
+                            <span v-if="isLastPage()" class="tablenav-pages-navspan button" disabled="disabled" aria-hidden="true">»</span>
+
+                            <a v-else
+                                href="#"
+                                class="last-page button"
+                                @click.prevent="goLastPage()">
+                                <span class="screen-reader-text"><?php _e( 'Last page', 'erp' ) ?></span>
+                                <span aria-hidden="true">»</span>
+                            </a>
+                        </span>
+                    </div>
                     
                     <br class="clear">
                 </div>
