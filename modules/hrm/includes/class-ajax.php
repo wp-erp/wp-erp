@@ -2231,7 +2231,7 @@ class Ajax_Handler {
     /**
      * Retrieves employee requests
      * 
-     * @since 1.8.3
+     * @since 1.8.5
      * 
      * @return mixed
      */
@@ -2340,7 +2340,7 @@ class Ajax_Handler {
     /**
      * Retrieves total pending requests
      * 
-     * @since 1.8.3
+     * @since 1.8.5
      *
      * @return int
      */
@@ -2358,7 +2358,7 @@ class Ajax_Handler {
     /**
      * Processes bulk action on employee requests
      * 
-     * @since 1.8.3
+     * @since 1.8.5
      * 
      * @return mixed
      */
