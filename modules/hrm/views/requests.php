@@ -1,3 +1,27 @@
+<style>
+    #erp-hr-requests .req-status {
+        padding: 5px;
+        color: white;
+        border-radius: 2px;
+    }
+
+    #erp-hr-requests .req-status.status-approved,
+    #erp-hr-requests .req-status.status-1,
+    #erp-hr-requests .req-status.status-7 {
+        background-color: #6ecc26;
+    }
+
+    #erp-hr-requests .req-status.status-pending,
+    #erp-hr-requests .req-status.status-2 {
+        background-color: #ffc111;
+    }
+
+    #erp-hr-requests .req-status.status-rejected,
+    #erp-hr-requests .req-status.status-3 {
+        background-color: rgb(218, 67, 67);
+    }
+</style>
+
 <div class="wrap erp-hr-requests erp-hr-request-listing" id="erp-hr-requests" v-cloak>
     <h2><?php esc_attr_e( 'People', 'erp' ); ?></h2>
 
