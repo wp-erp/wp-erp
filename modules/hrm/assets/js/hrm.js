@@ -114,6 +114,7 @@
                 $( 'input[name=filter_employee]' ).click();
             });
 
+            this.showRequestNotification();
             this.initTipTip();
         },
 
