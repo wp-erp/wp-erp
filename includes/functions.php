@@ -644,7 +644,7 @@ function erp_get_clickable( $type = 'email', $value = '' ) {
  * @return string
  */
 function erp_get_date_format( $format = false ) {
-    $format = $format ? $format : 'd-m-Y';
+    $format = $format ? $format : 'Y-m-d';
 
     return erp_get_option( 'date_format', 'erp_settings_general', $format );
 }
@@ -3941,4 +3941,23 @@ function erp_sanitize_phone_number( $phone_no, $allow_plus = false ) {
     }
 
     return $result;
+}
+
+/**
+ * Checks if a user has permission to view a page
+ * 
+ * @since 1.8.4
+ *
+ * @param string $cap
+ * 
+ * @return void
+ */
+function erp_verify_page_access_permission( $cap ) {
+    if ( ! current_user_can( $cap ) ) {
+        $error_message  = '<h2 style="text-align: center; margin-top:40px">';
+        $error_message .= esc_html__( 'Sorry! You are not allowed to access this page.', 'erp' );
+        $error_message .= '</h2>';
+
+        wp_die( wp_kses_post( $error_message ) );
+    }
 }
