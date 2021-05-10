@@ -589,3 +589,18 @@ function erp_hr_get_employee_requests_types() {
 
     return apply_filters( 'erp_hr_employee_request_types', $types );
 }
+
+/**
+ * Retrieves all pending requests counts
+ * 
+ * @since 1.8.3
+ * 
+ * @return int
+ */
+function erp_hr_get_employee_pending_requests_count() {
+    $leave_requests    = erp_hr_get_leave_requests( [ 'number' => -1, 'status' => 2 ] );
+
+    $requests['leave'] = $leave_requests['total'];
+
+    return apply_filters( 'erp_hr_employee_pending_request_count', $requests );
+}
