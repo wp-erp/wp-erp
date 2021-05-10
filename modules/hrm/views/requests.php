@@ -10,6 +10,12 @@
                     <table class="wp-list-table widefat fixed striped requests">
                         <thead>
                             <tr>
+                                <td v-if="! hideCb" id="cb" class="manage-column column-cb check-column">
+                                    <label class="screen-reader-text" for="cb-select-all-1"><?php _e( 'Select All', 'erp' ); ?></label>
+                                    
+                                    <input id="cb-select-all-1" v-model="checkAllCheckbox" @change="triggerAllCheckBox()" type="checkbox">
+                                </td>
+                                
                                 <td v-if="!checkboxItems.length" v-for="header in tableHeaders" :class="header.class">{{ header.title }}</td>
                             </tr>
                         </thead>
