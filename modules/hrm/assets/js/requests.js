@@ -142,6 +142,11 @@
                     ]
                 },
             },
+
+            created: function() {
+                this.init();
+                this.getRequestList();
+            },
         });
 
     }
