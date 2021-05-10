@@ -264,9 +264,9 @@
             .then( function() {
                 if ( pending > 0 ) {
                     if ( ! $( selector ).find( child ).length ) {
-                        $( selector ).append( ` <span class="erp-notification">${pending}</span>` );
+                        $( selector ).append( ' <span class="erp-notification">' + pending + '</span>' );
                     } else {
-                        $( `${selector} ${child}` ).html( pending );
+                        $( selector + ' ' + child ).html( pending );
                     }
                 }
             });
