@@ -1294,6 +1294,17 @@ class Employee {
     }
 
     /**
+     * Get employee's job id
+     * 
+     * @since 1.8.5
+     * 
+     * @return string
+     */
+    public function get_job_id() {
+        return $this->employee_id;
+    }
+
+    /**
      * Get educational qualifications
      *
      * @return array the qualifications
