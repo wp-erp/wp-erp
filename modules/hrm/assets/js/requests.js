@@ -403,6 +403,12 @@
                     this.currentPage     = 1;
                     this.pageNumberInput = 1;
                 },
+
+                filterData: function() {
+                    this.resetData();
+                    this.getRequestList();
+                    this.toggleDropdown();
+                },
             },
 
             watch: {
