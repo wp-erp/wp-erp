@@ -660,6 +660,24 @@
                     this.getRequestList();
                 },
 
+                goToPage: function(direction) {
+                    if ( direction == 'prev' ) {
+                        this.currentPage--;
+                    } else if ( direction == 'next' ) {
+                        this.currentPage++;
+                    } else {
+                        if ( ! isNaN( direction ) ) {
+                            this.currentPage = direction > this.totalPage ? this.totalPage : ( direction < 1 ? 1 : direction );
+                        }
+                    }
+        
+                    this.pageNumberInput = this.currentPage;
+        
+                    this.getRequestList();
+        
+                    return false;
+                },
+
                 showAlert: function(type, message, title = '') {            
                     swal({
                         title : title,
