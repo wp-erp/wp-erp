@@ -642,6 +642,11 @@
                 isCurrentTopNavFilter: function(key) {
                     return this.activeTopNav == key;
                 },
+
+                filterTopNav: function(action, label) {
+                    this.activeTopNav = action;
+                    this.resetDropdown();
+                },
             },
 
             watch: {
