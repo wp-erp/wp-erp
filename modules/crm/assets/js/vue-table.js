@@ -29,9 +29,9 @@ Vue.component('vtable', {
                                 +'</template>'
                             +'</div>'
                             +'<div class="wperp-filter-panel-footer">'
-                                +'<input type="submit" class="wperp-btn btn--cancel btn--filter" style="float: left" value="Cancel" @click.prevent="toggleDropdown()">'
-                                +'<input type="reset" class="wperp-btn btn--cancel btn--filter btn--reset" value="Reset" @click.prevent="resetDropdown()">'
-                                +'<input type="submit" class="wperp-btn btn--primary" id="filter" @click.prevent="handleExtraBulkAction()" :value="filterText">'
+                                +'<input type="submit" class="wperp-btn btn--cancel btn--filter" :value="cancelText" @click.prevent="toggleDropdown()">'
+                                +'<input type="submit" class="wperp-btn btn--reset btn--filter" :value="resetText" @click.prevent="resetDropdown()">'
+                                +'<input type="submit" class="wperp-btn btn--primary" id="filter" @click.prevent="handleExtraBulkAction()" :value="applyText">'
                             +'</div>'
                         +'</div>'
                     +'</div>'
@@ -398,6 +398,8 @@ Vue.component('vtable', {
             bulkActions              : __('Bulk Actions', 'erp'),
             filterText               : __('Filter', 'erp'),
             applyText                : __('Apply', 'erp'),
+            cancelText               : __('Cancel', 'erp'),
+            resetText                : __('Reset', 'erp'),
             selectAllText            : __('Select All', 'erp'),
             loadingText              : __('Loading...', 'erp'),
         }
