@@ -147,7 +147,7 @@ class Scripts {
         wp_register_style( 'erp-styles', $css . '/admin.css', false, $this->version );
 
         // custom menu design
-        wp_register_style( 'erp-custom-menu', $css . '/custom-menu.css', false, $this->version );
+        wp_register_style( 'erp-custom-styles', $css . '/customs.css', false, $this->version );
 
         // date range picker
         wp_register_style( 'erp-daterangepicker', $vendor . '/daterangepicker/daterangepicker.min.css', false, $this->version );
@@ -219,7 +219,7 @@ class Scripts {
         $page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
 
         if ( ! empty( $page ) && ( 'erp-hr' === $page || 'erp-crm' === $page || 'erp-settings' === $page ) ) {
-            wp_enqueue_style( 'erp-custom-menu' );
+            wp_enqueue_style( 'erp-custom-styles' );
         }
     }
 }
