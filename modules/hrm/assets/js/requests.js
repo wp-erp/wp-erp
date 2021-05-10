@@ -608,16 +608,6 @@
                     }
                 },
 
-                showAlert: function(type, message, title = '') {            
-                    swal({
-                        title : title,
-                        text  : message,
-                        type  : type,
-                        timer : 2200,
-                        showConfirmButton : false,
-                    });
-                },
-
                 showRowActions: function(index) {
                     $( `#request-row-actions-${index}` ).toggleClass( 'show' );
                 },
@@ -646,6 +636,38 @@
                 filterTopNav: function(action, label) {
                     this.activeTopNav = action;
                     this.resetDropdown();
+                },
+
+                isFirstPage: function() {
+                    return this.currentPage == 1;
+                },
+        
+                isLastPage: function() {
+                    return this.currentPage == this.totalPage;
+                },
+        
+                goFirstPage: function() {
+                    this.currentPage     = 1;
+                    this.pageNumberInput = this.currentPage;
+                    
+                    this.getRequestList();
+                },
+        
+                goLastPage: function() {
+                    this.currentPage     = this.totalPage;
+                    this.pageNumberInput = this.currentPage;
+                    
+                    this.getRequestList();
+                },
+
+                showAlert: function(type, message, title = '') {            
+                    swal({
+                        title : title,
+                        text  : message,
+                        type  : type,
+                        timer : 2200,
+                        showConfirmButton : false,
+                    });
                 },
             },
 
