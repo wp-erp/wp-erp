@@ -2225,3 +2225,110 @@ class Ajax_Handler {
 
         $this->send_success( $event_data );
     }
+
+    /**
+     * Retrieves employee requests
+     * 
+     * @since 1.8.3
+     * 
+     * @return mixed
+     */
+    public function get_employee_requests() {
+        $this->verify_nonce( 'wp-erp-hr-nonce' );
+
+        if ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'erp_hr_manager' ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
+        $request_type = ! empty( $_REQUEST['type'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['type'] ) ) : '';
+
+        if ( empty( $request_type ) || ! array_key_exists( $request_type, erp_hr_get_employee_requests_types() ) ) {
+            $this->send_error( __( 'Invalid request type!', 'erp' ) );
+        }
+
+        if ( isset( $_REQUEST['date'] ) ) {
+            $date = $_REQUEST['date'];
+
+            array_walk( $date, function( &$value, $key ) {
+                $value = sanitize_text_field( wp_unslash( $value ) );
+            });
+
+            $args['date'] = $date;
+        }
+
+        $page_no          = ! empty( $_REQUEST['page'] )     ? intval( wp_unslash( $_REQUEST['page'] ) )                  : 1;
+        $args['status']   = ! empty( $_REQUEST['status'] )   ? sanitize_text_field( wp_unslash( $_REQUEST['status'] ) )   : '';
+        $args['order_by'] = ! empty( $_REQUEST['order_by'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['order_by'] ) ) : '';
+        $args['order']    = ! empty( $_REQUEST['order'] )    ? sanitize_text_field( wp_unslash( $_REQUEST['order'] ) )    : '';
+        $args['user_id']  = ! empty( $_REQUEST['user_id'] )  ? intval( wp_unslash( $_REQUEST['user_id'] ) )               : 0;
+        $args['number']   = ! empty( $_REQUEST['per_page'] ) ? intval( wp_unslash( $_REQUEST['per_page'] ) )              : 20;
+        $args['offset']   = ( $page_no - 1 ) * $args['number'];
+
+        switch ( $request_type ) {
+            case 'leave':
+                if ( ! empty( $args['date'] ) && ! empty( $args['date']['start'] ) && ! empty( $args['date']['end'] ) ) {
+                    $args['start_date'] = $args['date']['start'];
+                    $args['end_date']   = $args['date']['end'];
+
+                    unset( $args['date'] );
+                }
+
+                $results     = erp_hr_get_leave_requests( $args );
+                $date_format = erp_get_date_format( 'Y-m-d' );
+
+                if ( is_wp_error( $results ) ) {
+                    $this->send_error( __( 'Something went wrong!', 'erp' ) );
+                }
+
+                $requests = [];
+                $data     = [];
+
+                foreach ( $results['data'] as $result ) {
+                    $result = (array) $result;
+
+                    $data[] = [
+                        'id'         => $result['id'],
+                        'employee'   => [
+                            'id'     => $result['user_id'],
+                            'name'   => $result['name'],
+                            'url'    => add_query_arg(
+                                [ 'id' => $result['user_id'] ],
+                                admin_url( 'admin.php?page=erp-hr&section=people&sub-section=employee&action=view' )
+                            )
+                        ],
+                        'status'     => [
+                            'id'     => $result['status'],
+                            'title'  => $result['status'] == 1 ? __( 'Approved', 'erp' ) : (
+                                        $result['status'] == 2 ? __( 'Pending', 'erp' )  : (
+                                        $result['status'] == 3 ? __( 'Rejected', 'erp' ) : ''
+                                    ) )
+                        ],
+                        'duration'   => (int) $result['days'],
+                        'type'       => [
+                            'id'     => 'leave',
+                            'title'  => __( 'Leave', 'erp' )
+                        ],
+                        'reason'     => [
+                            'id'     => $result['reason'],
+                            'title'  => $result['reason']
+                        ],
+                        'start_date' => gmdate( $date_format, $result['start_date'] ),
+                        'end_date'   => gmdate( $date_format, $result['end_date'] )
+                    ];
+                }
+
+                $requests = [
+                    'data'        => ! empty( $data ) ? $data : [],
+                    'total_items' => ! empty( $results['total'] ) ? $results['total'] : 0
+                ];
+
+                break;
+        }
+
+        if ( is_wp_error( $requests ) ) {
+            $this->send_error( __( 'Something went wrong!', 'erp' ) );
+        }
+
+        $this->send_success( $requests );
+    }
+}
