@@ -244,6 +244,33 @@
             });
         },
 
+        showRequestNotification: function() {
+            var selector = ".erp-custom-menu-container .erp-nav .requests a",
+                child    = "span.erp-notification",
+                pending  = 0;
+
+            wp.ajax.send({
+                data: {
+                    action: 'erp_hr_get_total_pending_requests'
+                },
+                success: function(response) {
+                    pending = response;
+                },
+                error: function(error) {
+                    pending = 0;
+                }
+            })
+            .then( function() {
+                if ( pending > 0 ) {
+                    if ( ! $( selector ).find( child ).length ) {
+                        $( selector ).append( ` <span class="erp-notification">${pending}</span>` );
+                    } else {
+                        $( `${selector} ${child}` ).html( pending );
+                    }
+                }
+            });
+        },
+
         dashboard : {
             markAnnouncementRead: function(e) {
                 e.preventDefault();
