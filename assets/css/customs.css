@@ -591,6 +591,27 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
     }
 }
 
+.erp-table-wrapper .erp-ajax-loader-bg {
+    width: 100%;
+    height: 100%;
+    background: #fafafa;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    opacity: 0.8;
+}
+
+.erp-table-wrapper .erp-ajax-loader {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    background: url('../images/spinner-2x.gif') center center no-repeat;
+    z-index: 99;
+    background-size: 30px;
+    top: 38%;
+    left: 50%;
+}
+
 .erp-notification {
     display: inline-block;
     vertical-align: text-top;
