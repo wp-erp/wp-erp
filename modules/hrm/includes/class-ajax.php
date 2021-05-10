@@ -2354,4 +2354,45 @@ class Ajax_Handler {
 
         $this->send_success( $pending );
     }
+
+    /**
+     * Processes bulk action on employee requests
+     * 
+     * @since 1.8.3
+     * 
+     * @return mixed
+     */
+    public function employee_requests_bulk_action() {
+        $this->verify_nonce( 'wp-erp-hr-nonce' );
+
+        if ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'erp_hr_manager' ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
+        $request_type = ! empty( $_REQUEST['req_type'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['req_type'] ) ) : '';
+
+        if ( empty( $request_type ) || ! array_key_exists( $request_type, erp_hr_get_employee_requests_types() ) ) {
+            $this->send_error( __( 'Invalid request type!', 'erp' ) );
+        }
+
+        $req_ids = [];
+
+        if ( ! empty( $_REQUEST['req_id'] ) ) {
+            $req_ids = $_REQUEST['req_id'];
+
+            array_walk( $req_ids, function( &$id, $index ) {
+                $id = intval( wp_unslash( $id) );
+            } );
+        }
+
+        $action = ! empty( $_REQUEST['action_type'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['action_type'] ) ) : '';
+        
+        $result = apply_filters( "erp_hr_employee_{$request_type}_request_bulk_action", $req_ids, $action );
+
+        if ( is_wp_error( $result ) ) {
+            $this->send_error( __( 'Something went wrong!', 'erp' ) );
+        }
+
+        $this->send_success( sprintf( __( '%1$s items have been %2$s susccesfully', 'erp' ), count( $result ), $action ) );
+    }
 }
