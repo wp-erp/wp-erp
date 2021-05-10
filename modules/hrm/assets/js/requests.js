@@ -147,6 +147,112 @@
                 this.init();
                 this.getRequestList();
             },
+
+            methods: {
+                getRequestList: function() {
+                    var self        = this;
+                    self.ajaxloader = true;
+                    
+                    wp.ajax.send({
+                        data : {
+                            type     : self.activeTopNav,
+                            user_id  : self.employee,
+                            per_page : self.perPage,
+                            page     : self.currentPage,
+                            date     : self.date,
+                            order_by : self.orderBy,
+                            order    : self.order,
+                            status   : self.status,
+                            action   : "erp_hr_employee_get_requests",
+                            _wpnonce : self.nonce
+                        },
+                        success: function(res) {
+                            self.requests = res.data;
+
+                            if (res.data.length) {
+                                self.totalItems   = res.total_items;
+                                self.currentItems = res.data.length;
+                                self.topNavFilter.data[ self.activeTopNav ].count = res.data.length;
+                            } else {
+                                self.totalItems      = 0;
+                                self.currentPage     = 1;
+                                self.pageNumberInput = 1;
+                                self.currentItems    = 0;
+                                self.topNavFilter.data[ self.activeTopNav ].count = 0;
+                            }
+
+                            self.requests.forEach( function(request) {
+                                switch (self.activeTopNav) {
+                                    case 'resigned':
+                                    case 'remote_work':
+                                        if (request.status.id == 'pending') {
+                                            request.actions = [
+                                                {
+                                                    id    : 'view',
+                                                    text  : __( 'View', 'erp' ),
+                                                    class : 'dashicons dashicons-visibility view'
+                                                },
+                                                {
+                                                    id    : 'approved',
+                                                    text  : __( 'Approve', 'erp' ),
+                                                    class : 'dashicons dashicons-yes-alt accept'
+                                                },
+                                                {
+                                                    id    : 'rejected',
+                                                    text  : __( 'Reject', 'erp' ),
+                                                    class : 'dashicons dashicons-warning reject',
+                                                },
+                                            ];
+                                        } else {
+                                            request.actions = [{
+                                                id    : 'view',
+                                                text  : __( 'View', 'erp' ),
+                                                class : 'dashicons dashicons-visibility view',
+                                            }];
+
+                                            if ( self.activeTopNav == 'resigned' ) {
+                                                request.actions.push({
+                                                    id    : 'deleted',
+                                                    text  : __( 'Delete', 'erp' ),
+                                                    class : 'dashicons dashicons-trash delete',
+                                                });
+                                            }
+                                        }
+
+                                        break;
+
+                                    default :
+                                        request.actions = [
+                                            {
+                                                id    : 'view',
+                                                text  : __( 'View', 'erp' ),
+                                                class : 'dashicons dashicons-visibility view'
+                                            },
+                                        ];
+                                }
+
+                                if ( request.duration ) {
+                                    request.duration = {
+                                        key   : parseInt( request.duration ),
+                                        value : parseInt( request.duration ) <= 1
+                                                ? request.duration + __( ' day', 'erp' )
+                                                : request.duration + __( ' days', 'erp' ),
+                                    };
+                                }
+                            });
+
+                            self.isLoaded   = true;
+                            self.ajaxloader = false;
+                        },
+                        error: function(error) {
+                            swal('', error, 'error');
+                            self.requests   = {};
+                            self.isLoaded   = true;
+                            self.ajaxloader = false;
+                        }
+                    });
+                },
+            }
         });
 
     }
