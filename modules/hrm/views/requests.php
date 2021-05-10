@@ -20,6 +20,17 @@
     #erp-hr-requests .req-status.status-3 {
         background-color: rgb(218, 67, 67);
     }
+
+    #erp-hr-filter-date {
+        margin: 8px 0 0 2px;
+        min-height: 27px;
+        height: 27px;
+        width: 98%;
+        border-radius: 4px;
+        border-color: #F0F0F0;
+        font-weight: 200;
+        font-size: inherit;
+    }
 </style>
 
 <div class="wrap erp-hr-requests erp-hr-request-listing" id="erp-hr-requests" v-cloak>
