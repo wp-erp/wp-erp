@@ -444,6 +444,126 @@
                         }
                     });
                 },
+
+                onActionClick: function(id, action, status, modal) {
+                    var self       = this,
+                        btnText    = 'Yes',
+                        title      = '',
+                        btnColor   = '#22b527',
+                        ajaxAction = '';
+
+                    if ( action == 'view' ) {
+                        if ( self.activeTopNav == 'resigned' || self.activeTopNav == 'remote_work' ) {
+                            if ( self.activeTopNav == 'resigned' ) {
+                                ajaxAction = 'erp_hr_employee_get_resign_request';
+                                title      = __( 'Resignation', 'erp' );
+                            } else {
+                                ajaxAction = 'erp_hr_employee_get_remote_work_request';
+                                title      = __( 'Remote Work Request', 'erp' );
+                            }
+
+                            wp.ajax.send({
+                                data : {
+                                    req_id   : id,
+                                    action   : ajaxAction,
+                                    _wpnonce : self.nonce
+                                },
+                                success: function(res) {
+                                    res.showBtn = false;
+
+                                    if ( res.status.id == 'pending' ) {
+                                        res.showBtn = true;
+                                    }
+
+                                    $.erpPopup({
+                                        title: __( 'Resignation', 'erp' ),
+                                        id: 'erp-hr-request-single',
+                                        content: '',
+                                        extraClass: 'smaller',
+                    
+                                        onReady: function(modal) {
+                                            var html = wp.template( 'erp-employee-resquest' )(res);
+                                            
+                                            $( "#erp-hr-request-single .close" ).html( '<span class="dashicons dashicons-no-alt"></span>' );
+                                            $( "#erp-hr-request-single .close" ).attr( 'id', 'close-modal' );
+                                            $( "#erp-hr-request-single header" ).hide();
+                                            $( "#erp-hr-request-single footer" ).hide();
+                                            
+                                            $( '.content', this ).html( html );
+
+                                            $( '#erp-req-approve' ).click( function(e) {
+                                                e.preventDefault();
+                                                self.onActionClick(res.id, 'approved', res.status.id, modal);
+                                            });
+
+                                            $( '#erp-req-reject' ).click( function(e) {
+                                                e.preventDefault();
+                                                self.onActionClick(res.id, 'rejected', res.status.id, modal);
+                                            });
+                                        }
+                                    });
+                                },
+                                error: function(error) {
+                                    swal('', error, 'error');
+                                    self.isLoaded = false;
+                                }
+                            });
+
+                        } else {
+                            window.location.href = this.redirectUrl( id, status );
+                        }
+
+                        return;
+                    }
+                    
+                    if ( action == 'approved' ) {
+                        title    = __( 'Approve this request?', 'erp' );
+                        btnText  = __( 'Yes, Approve', 'erp' );
+                        btnColor = '#22b527';
+                    } else if ( action == 'rejected' ) {
+                        title    = __( 'Reject this request?', 'erp' );
+                        btnText  = __( 'Yes, Reject', 'erp' );
+                        btnColor = '#ff8670';
+                    } else if ( action == 'deleted' ) {
+                        title    = __( 'Delete this request?', 'erp' );
+                        btnText  = __( 'Yes, Delete', 'erp' );
+                        btnColor = '#fa4646';
+                    }
+
+                    swal({
+                        title              : title,
+                        type               : 'warning',
+                        showCancelButton   : true,
+                        cancelButtonText   : __( 'Cancel', 'erp' ),
+                        confirmButtonColor : btnColor,
+                        confirmButtonText  : btnText,
+                        closeOnConfirm     : false
+                    },
+                    function() {
+                        wp.ajax.send({
+                            data : {
+                                req_id      : id,
+                                req_type    : self.activeTopNav,
+                                action_type : action,
+                                action      : 'erp_hr_employee_requests_bulk_action',
+                                _wpnonce    : self.nonce
+                            },
+                            success: function(res) {
+                                self.showAlert('success', res);
+                                self.getRequestList();
+                                self.updateNotification();
+
+                                if ( modal ) {
+                                    modal.closeModal();
+                                }
+                            },
+                            error: function(error) {
+                                swal('', error, 'error');
+                                self.isLoaded = false;
+                            }
+                        });
+                    });
+                },
             },
 
             watch: {
