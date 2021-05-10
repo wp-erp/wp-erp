@@ -31,6 +31,11 @@
         font-weight: 200;
         font-size: inherit;
     }
+
+    #erp-hr-requests .select2-selection  {
+        border-color: #F0F0F0 !important;
+        font-weight: 200 !important;
+    }
 </style>
 
 <div class="wrap erp-hr-requests erp-hr-request-listing" id="erp-hr-requests" v-cloak>
