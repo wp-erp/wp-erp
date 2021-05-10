@@ -43,6 +43,7 @@ class Employee_List_Table extends \WP_List_Table {
 
         <div class="wperp-filter-dropdown" style="margin: -46px 0 0 0;">
             <a class="wperp-btn btn--default"><span class="dashicons dashicons-filter"></span>Filters<span class="dashicons dashicons-arrow-down-alt2"></span></a>
+            
             <div class="erp-dropdown-filter-content" id="erp-dropdown-content">
                 <div class="wperp-filter-panel wperp-filter-panel-default">
                     <h3><?php esc_html_e('Filter', 'erp') ?></h3>
@@ -87,10 +88,11 @@ class Employee_List_Table extends \WP_List_Table {
                             ?>
                         </select>
                     </div>
+
                     <div class="wperp-filter-panel-footer">
-                        <input type="submit" class="wperp-btn btn--cancel btn--filter" style="float: left" value="<?php esc_html_e( 'Cancel', 'erp' ); ?>" name="hide_filter">
-                        <input type="reset" class="wperp-btn btn--cancel btn--filter btn--reset" value="<?php esc_html_e( 'Reset', 'erp' ); ?>" name="reset_filter">
-                        <?php submit_button( __( 'Apply', 'erp' ), 'submit', 'filter_employee', false, [ 'id' => 'filter', 'class' => 'wperp-btn btn--primary', 'style' => 'background-color: #1a9ed4; color: #fff; border: 1px solid transparent' ] ); ?>
+                        <input type="submit" class="wperp-btn btn--cancel btn--filter" value="<?php esc_html_e( 'Cancel', 'erp' ); ?>" name="hide_filter">
+                        <input type="submit" class="wperp-btn btn--reset btn--filter" value="<?php esc_html_e( 'Reset', 'erp' ); ?>" name="reset_filter">
+                        <input type="submit" name="filter_employee" id="filter" class="wperp-btn btn--primary" value="<?php esc_html_e( 'Apply', 'erp' ) ?>">
                     </div>
                 </div>
             </div>
