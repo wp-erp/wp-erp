@@ -236,6 +236,9 @@ class Human_Resource {
                     wp_enqueue_style( 'erp-flotchart-valuelabel-css' );
 
                 } else if ( 'requests' === $sub_section ) {
+                    
+                    ?><script>window.erpLocale = JSON.parse('<?php echo wp_kses_post( wp_slash( wp_json_encode( apply_filters( 'erp_localized_data', [] ) ) ) ); ?>');</script><?php
+
                     wp_enqueue_style( 'erp-sweetalert' );
                     wp_enqueue_script( 'erp-sweetalert' );
                     wp_enqueue_style( 'erp-daterangepicker' );
