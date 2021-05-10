@@ -40,6 +40,13 @@
                                     <span class="req-status status-{{ request.status.id }}">{{ request.status.title }}</span>
                                 </td>
                             </tr>
+
+                            <tr v-if="!requests.length || !isLoaded">
+                                <td :colspan="columnCount">
+                                    <span v-if="!isLoaded"><?php _e( 'Loading', 'erp' ); ?>...</span>
+                                    <span v-else><?php _e( 'No requests found.', 'erp' ); ?></span>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
