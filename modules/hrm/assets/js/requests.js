@@ -213,6 +213,22 @@
                     
                     return headers;
                 },
+
+                columnCount: function() {
+                    return this.tableHeaders.length;
+                },
+
+                totalPage: function() {
+                    return Math.ceil(this.totalItems / this.perPage);
+                },
+
+                paginationClass: function() {
+                    return this.perPage >= this.totalItems ? 'one-page' : '';
+                },
+
+                items: function() {
+                    return this.currentItems;
+                },
             },
 
             methods: {
