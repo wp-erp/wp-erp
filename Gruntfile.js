@@ -44,7 +44,8 @@ module.exports = function(grunt) {
                         '<%= dirs.js %>/upload.min.js'
                     ],
                     '<%= dirs.hrmJS %>/hrm.min.js': ['<%= dirs.hrmJS %>/hrm.js'],
-                    '<%= dirs.hrmJS %>/leave.min.js': ['<%= dirs.hrmJS %>/leave.js']
+                    '<%= dirs.hrmJS %>/leave.min.js': ['<%= dirs.hrmJS %>/leave.js'],
+                    '<%= dirs.hrmJS %>/requests.min.js': ['<%= dirs.hrmJS %>/requests.js']
                 }
             }
         },
