@@ -2323,6 +2323,9 @@ class Ajax_Handler {
                 ];
 
                 break;
+
+            default:
+                $requests = apply_filters( "erp_hr_get_employee_{$request_type}_requests", $args, $request_type );
         }
 
         if ( is_wp_error( $requests ) ) {
