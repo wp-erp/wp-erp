@@ -591,6 +591,24 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
     }
 }
 
+.erp-notification {
+    display: inline-block;
+    vertical-align: text-top;
+    box-sizing: border-box;
+    margin: 0 0 -1px 2px;
+    padding: 0 5px;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 10px;
+    background-color: #ca4b4e;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.6;
+    text-align: center;
+    z-index: 26;
+}
+
 .cen-align {
     text-align: center !important;
     vertical-align: middle !important;
