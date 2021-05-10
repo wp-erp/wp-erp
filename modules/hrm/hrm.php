@@ -245,7 +245,7 @@ class Human_Resource {
                     wp_enqueue_script( 'erp-daterangepicker' );
                     wp_enqueue_script( 'erp-hr-i18n', WPERP_ASSETS . '/js/i18n.js', [], gmdate( 'Ymd' ), true );
                     wp_enqueue_script( 'erp-vuejs', false, [ 'jquery', 'erp-script' ], gmdate( 'Ymd' ), true );
-                    wp_enqueue_script( 'erp-hr-requests', WPERP_HRM_ASSETS . "/js/requests{$suffix}.js", [ 'erp-script', 'erp-vuejs', 'jquery', 'erp-hr-i18n' ], gmdate( 'Ymd' ), true );
+                    wp_enqueue_script( 'erp-hr-requests', WPERP_HRM_ASSETS . "/js/requests.js", [ 'erp-script', 'erp-vuejs', 'jquery', 'erp-hr-i18n' ], gmdate( 'Ymd' ), true );
                 }
 
                 break;
