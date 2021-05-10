@@ -87,6 +87,12 @@
                                 </td>
                             </tr>
                         </tbody>
+
+                        <tfoot>
+                            <tr>
+                                <td v-if="!checkboxItems.length" v-for="header in tableHeaders" :class="header.class">{{ header.title }}</td>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </form>
