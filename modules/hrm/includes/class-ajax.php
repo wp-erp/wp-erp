@@ -2335,4 +2335,22 @@ class Ajax_Handler {
 
         $this->send_success( $requests );
     }
+
+    /**
+     * Retrieves total pending requests
+     * 
+     * @since 1.8.3
+     *
+     * @return int
+     */
+    public function get_total_pending_requests() {
+        $requests = erp_hr_get_employee_pending_requests_count( 'pending' );
+        $pending  = 0;
+
+        foreach ( $requests as $type => $count ) {
+            $pending += (int) $count;
+        }
+
+        $this->send_success( $pending );
+    }
 }
