@@ -194,13 +194,7 @@ class Admin_Menu {
         // check permission/capability
         $permission = $menu[ $section ]['capability'];
 
-        if ( ! current_user_can( $permission ) ) {
-            $error_message  = '<h2 style="text-align: center; margin-top:40px">';
-            $error_message .= esc_html__( 'Sorry! You are not allowed to access this page.', 'erp' );
-            $error_message .= '</h2>';
-
-            wp_die( wp_kses_post( $error_message ) );
-        }
+        erp_verify_page_access_permission( $permission );
 
         $callback = $menu[ $section ]['callback'];
 
@@ -331,6 +325,8 @@ class Admin_Menu {
      * @return void
      */
     public function department_page() {
+        erp_verify_page_access_permission( 'erp_manage_department' );
+
         $action = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : 'list';
         $id     = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
 
@@ -357,6 +353,8 @@ class Admin_Menu {
      * @return void
      */
     public function designation_page() {
+        erp_verify_page_access_permission( 'erp_manage_designation' );
+
         include WPERP_HRM_VIEWS . '/designation.php';
     }
 
