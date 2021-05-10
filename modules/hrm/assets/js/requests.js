@@ -154,6 +154,7 @@
                     
                     this.initDateRangePicker();
                     this.select2Action('erp-hrm-select2');
+                    this.initExtraFeatures();
                 },
 
                 getRequestList: function() {
@@ -297,6 +298,16 @@
                 select2Action: function(element) {
                     $('.'+element).select2({
                         width: 'element',
+                    });
+                },
+
+                initExtraFeatures: function() {
+                    $( document ).click( function(e) {
+                        Array.prototype.forEach.call( $( '.erp-row-actions-btn' ), function(row, index) {
+                            if ( typeof row !== 'undefined' && ! row.contains( e.target ) ) {
+                                $( '.dropdown-content' )[index].classList.remove('show');
+                            }
+                        });
                     });
                 },
             }
