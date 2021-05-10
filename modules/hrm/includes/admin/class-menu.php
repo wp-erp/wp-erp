@@ -232,6 +232,7 @@ class Admin_Menu {
      * Handles the people page
      *
      * @since 1.8.0
+     * @since 1.8.5 Added requests page in the people menu items
      *
      * @return void
      */
@@ -322,9 +323,9 @@ class Admin_Menu {
     }
 
     /**
-     * Requests page template
+     * Renders requests page template
      * 
-     * @since 1.8.3
+     * @since 1.8.5
      *
      * @return void
      */
