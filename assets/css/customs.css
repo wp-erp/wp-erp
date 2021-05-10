@@ -295,6 +295,7 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
 .erp-dropdown-filter-content .wperp-filter-panel h3 {
     padding: 17px 0 0 20px !important;
     margin: 0 !important;
+    color: #1a9ed4 !important;
 }
 
 .erp-dropdown-filter-content .wperp-filter-panel .wperp-filter-panel-body select {
@@ -322,10 +323,7 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
 .erp-dropdown-filter-content .wperp-filter-panel .wperp-filter-panel-footer {
     text-align: right;
     padding: 2px 15px 0 0;
-}
-
-.erp-dropdown-filter-content .wperp-filter-panel .wperp-filter-panel-footer .wperp-btn {
-    margin-left: 10px;
+    margin-bottom: 15px;
 }
 
 .wperp-filter-dropdown .wperp-btn {
@@ -338,7 +336,7 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
     vertical-align: middle;
     user-select: none;
     border: 1px solid transparent;
-    padding: 2px 3px;
+    padding: 4px 5px;
     font-size: 13px;
     line-height: 1.5;
     border-radius: 3px;
@@ -366,16 +364,24 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
 
 .wperp-filter-dropdown .wperp-btn.btn--cancel {
     background-color: #fff;
-    color: #000;
+    color: rgb(114, 129, 145) !important;
     border: 1px solid #e2e2e2;
     border-radius: 3px;
-    padding: 5px !important;
+    float: left !important;
+    margin-left: 17px;
 }
 
 .wperp-filter-dropdown .wperp-btn.btn--primary {
     background-color: #1a9ed4;
     color: #fff!important;
-    padding: 5px;
+}
+
+.wperp-filter-dropdown .wperp-btn.btn--reset {
+    color: #3c9fd4 !important;
+    background-color: #fff;
+    border: 1px solid #e2e2e2;
+    border-radius: 3px;
+    float: left !important;
 }
 
 .wperp-filter-dropdown .wperp-btn:hover {
@@ -384,12 +390,17 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
 }
 
 .wperp-filter-dropdown .wperp-btn.btn--cancel:hover {
-    background-color: #e9e9e9 !important;
-    color: #000 !important;
+    background-color: #eeeeee !important;
+    color: rgb(88, 88, 88) !important;
 }
 
 .wperp-filter-dropdown .wperp-btn.btn--primary:hover {
     background-color: #0d96cc !important;
+}
+
+.wperp-filter-dropdown .wperp-btn.btn--reset:hover {
+    color: #135e96 !important;
+    background-color: #eeeeee !important;
 }
 
 .wperp-filter-dropdown {
@@ -553,9 +564,9 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
 }
   
 .show {
-    display: block;
-    transform: translate(0 0);
-    opacity: 1;
+    display: block !important;
+    transform: translate(0 0) !important;
+    opacity: 1 !important;
 }
 
 .tablenav .bulkactions {
