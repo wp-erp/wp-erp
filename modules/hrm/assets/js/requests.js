@@ -625,6 +625,23 @@
                 hasBulkAction: function() {
                     return this.bulkactions.length > 0;
                 },
+
+                hasTopNavFilter: function() {
+                    return this.topNavFilter.data.length > 0;
+                },
+        
+                isTopNavFilterLastItem: function(currentKey) {
+                    var keys = Object.keys( this.topNavFilter.data )
+        
+                    if ( keys[keys.length-1] == currentKey ) {
+                        return true;
+                    }
+                    return false;
+                },
+        
+                isCurrentTopNavFilter: function(key) {
+                    return this.activeTopNav == key;
+                },
             },
 
             watch: {
