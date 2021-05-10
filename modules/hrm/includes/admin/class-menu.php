@@ -322,6 +322,23 @@ class Admin_Menu {
     }
 
     /**
+     * Requests page template
+     * 
+     * @since 1.8.3
+     *
+     * @return void
+     */
+    public function requests_page() {
+        erp_verify_page_access_permission( 'erp_hr_manager' );
+
+        $template = apply_filters( 'erp_hr_requests_templates', WPERP_HRM_VIEWS . '/requests.php' );
+
+        if ( file_exists( $template ) ) {
+            include $template;
+        }
+    }
+
+    /**
      * Handles the dashboard page
      *
      * @return void
