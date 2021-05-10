@@ -90,6 +90,23 @@
 
                         <tfoot>
                             <tr>
+                                <td v-if="! hideCb" id="cb" class="manage-column column-cb check-column">
+                                    <label class="screen-reader-text" for="cb-select-all-2"><?php _e( 'Select All', 'erp' ); ?></label>
+                                    
+                                    <input id="cb-select-all-2" v-model="checkAllCheckbox" @change="triggerAllCheckBox()" type="checkbox">
+                                </td>
+
+                                <td class="actions bulkactions" v-if="hasBulkAction() && checkboxItems.length" :colspan="columnCount">
+                                    <label for="bulk-action-selector-bottom" class="screen-reader-text"><?php _e( 'Select bulk action', 'erp' ); ?></label>
+                                    
+                                    <select name="action" id="bulk-action-selector-bottom" v-model="bulkaction2">
+                                        <option value="-1"><?php _e( 'Bulk Actions', 'erp' ); ?></option>
+                                        <option v-for="actions in bulkactions" value="{{ actions.id }}">{{ actions.text }}</option>
+                                    </select>
+                                    
+                                    <input type="submit" id="doaction" @click.prevent="handleBulkAction(bulkaction2)" class="button action" value="<?php esc_attr_e( 'Apply', 'erp' ); ?>">
+                                </td>
+                                
                                 <td v-if="!checkboxItems.length" v-for="header in tableHeaders" :class="header.class">{{ header.title }}</td>
                             </tr>
                         </tfoot>
