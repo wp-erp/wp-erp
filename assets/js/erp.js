@@ -828,9 +828,11 @@ jQuery.fn.serializeObject = function() {
     window.addEventListener( 'click', function(e) {
         var dropdownArea             = document.querySelectorAll( '.wperp-filter-dropdown' )[0];
         var select2Container         = document.querySelector( '.select2-container--open' );
+        var dateRangePicker          = document.querySelectorAll( '.daterangepicker' )[0];
         var targetNotContainDropdown = typeof dropdownArea !== 'undefined' && ! dropdownArea.contains( e.target );
+        var clickOnDrPicker          = typeof dateRangePicker !== 'undefined' && dateRangePicker.contains( e.target );
 
-        if ( targetNotContainDropdown && select2Container === null ){
+        if ( targetNotContainDropdown && select2Container === null && ! clickOnDrPicker ){
             document.getElementById( 'erp-dropdown-content' ).classList.remove( 'show' );
         }
     });
