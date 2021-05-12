@@ -597,6 +597,44 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
     }
 }
 
+.erp-btn-group {
+    display: inline-flex;
+    float: right;
+    margin-right: 200px;
+}
+
+.erp-btn-group button {
+    padding: 5px 15px;
+    border: 0.3px solid rgb(226, 226, 226);
+    background-color: #fff;
+    color: rgba(0,0,0,0.6);
+    font-size: 14px;
+    font-weight: 400;
+    text-decoration: none;
+    line-height: inherit;
+    cursor: pointer;
+}
+
+.erp-btn-group:after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+.erp-btn-group button:last-child {
+    border-top-right-radius: 3.5px;
+    border-bottom-right-radius: 3.5px;
+}
+
+.erp-btn-group button:first-child {
+    border-top-left-radius: 3.5px;
+    border-bottom-left-radius: 3.5px;
+}
+
+.erp-btn-group button:not(:last-child) {
+    border-right: none;
+}
+
 .erp-row-actions-btn:hover {
     color: rgb(64, 174, 194);
 }
