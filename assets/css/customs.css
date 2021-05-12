@@ -213,7 +213,7 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
 .erp-list-table-search {
     position: absolute !important;
     right: 0.9rem !important;
-    top: 4.2rem !important;
+    top: 4.28rem !important;
 }
 
 @media screen and (max-width: 782px) and (min-width: 601px) {
