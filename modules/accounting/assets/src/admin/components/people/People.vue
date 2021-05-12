@@ -6,6 +6,11 @@
                 <a href="" id="erp-customer-new" @click.prevent="showModal = true">{{ __('Add New', 'erp') }} {{ buttonTitle }}</a>
             </h2>
 
+            <div class="erp-btn-group">
+                <button>{{ __( 'Import', 'erp' ) }}</button>
+                <button>{{ __( 'Export', 'erp' ) }}</button>
+            </div>
+
             <!-- top search bar -->
             <people-search v-model="search" />
         </div>
