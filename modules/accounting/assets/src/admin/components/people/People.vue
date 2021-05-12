@@ -257,7 +257,7 @@ export default {
 
                 .people-search {
                     .input-with-addon {
-                        margin: 0 !important;
+                        margin-top: 10px !important;
                     }
 
                     form {
@@ -270,7 +270,7 @@ export default {
             .add-new-people {
                 align-items: center;
                 display: flex;
-                width: 50%;
+                width: 65%;
                 margin: 0;
                 padding: 0;
                 a {
