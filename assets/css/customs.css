@@ -463,7 +463,7 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
     }
 }
 
-#erp-employee-search-search-input,
+/* #erp-employee-search-search-input,
 #erp-employee-search-search-input + #search-submit {
     position: relative;
     right: 0;
@@ -475,7 +475,7 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
     #erp-employee-search-search-input + #search-submit {
         top: -1rem;
     }
-}
+} */
 
 #erp-dept-search-search-input,
 #erp-dept-search-search-input + #search-submit {
