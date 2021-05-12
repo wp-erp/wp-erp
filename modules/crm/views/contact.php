@@ -33,6 +33,13 @@
         <?php } ?>
 
         <a href="#" @click.prevent="addSearchSegment()" id="erp-contact-search-segmen" class="erp-search-segment add-new-h2">{{{ segmentBtnText }}}</a>
+
+        <?php if ( current_user_can( 'erp_crm_add_contact' ) ) : ?>
+            <div class="erp-btn-group">
+                <button><?php esc_html_e( 'Import', 'erp' ); ?></button>
+                <button><?php esc_html_e( 'Export', 'erp' ); ?></button>
+            </div>
+        <?php endif; ?>
     </h2>
 
     <?php do_action( 'erp_crm_contact_menu', 'contacts' ); ?>
