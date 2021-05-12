@@ -466,16 +466,19 @@
                         btnText    = 'Yes',
                         title      = '',
                         btnColor   = '#22b527',
-                        ajaxAction = '';
+                        ajaxAction = '',
+                        modalClass = '';
 
                     if ( action == 'view' ) {
                         if ( self.activeTopNav == 'resigned' || self.activeTopNav == 'remote_work' ) {
                             if ( self.activeTopNav == 'resigned' ) {
                                 ajaxAction = 'erp_hr_employee_get_resign_request';
                                 title      = __( 'Resignation', 'erp' );
+                                modalClass = 'resign';
                             } else {
                                 ajaxAction = 'erp_hr_employee_get_remote_work_request';
                                 title      = __( 'Remote Work Request', 'erp' );
+                                modalClass = 'remote-work';
                             }
 
                             wp.ajax.send({
@@ -504,6 +507,7 @@
                                             $( "#erp-hr-request-single .close" ).attr( 'id', 'close-modal' );
                                             $( "#erp-hr-request-single header" ).hide();
                                             $( "#erp-hr-request-single footer" ).hide();
+                                            $( "#erp-hr-request-single" ).addClass( `${res.status.id} ${modalClass}` );
                                             
                                             $( '.content', this ).html( html );
 
