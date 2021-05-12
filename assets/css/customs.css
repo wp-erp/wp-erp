@@ -231,6 +231,12 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
     border-radius: 3.5px;
 }
 
+.erp-list-table-search > input[name="s"]::placeholder {
+    color: rgba(0,0,0,0.6) !important;
+    font-size: 14px !important;
+    font-weight: 400 !important;
+}
+
 @media screen and (max-width: 782px) {
     .erp-list-table-search > input[name="s"] {
         width: 120px !important;
