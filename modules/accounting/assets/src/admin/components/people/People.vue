@@ -337,4 +337,41 @@ export default {
             padding: 20px !important;
         }
     }
+
+    .erp-btn-group {
+        display: inline-flex;
+        float: right;
+
+        &:after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+
+        button {
+            padding: 5px 15px;
+            border: 0.3px solid rgb(226, 226, 226);
+            background-color: #fff;
+            color: rgba(0,0,0,0.6);
+            font-size: 12px;
+            font-weight: 400;
+            text-decoration: none;
+            line-height: inherit;
+            cursor: pointer;
+
+            &:last-child {
+                border-top-right-radius: 3.5px;
+                border-bottom-right-radius: 3.5px;
+            }
+
+            &:first-child {
+                border-top-left-radius: 3.5px;
+                border-bottom-left-radius: 3.5px;
+            }
+
+            :not(:last-child) {
+                border-right: none;
+            }
+        }
+    }
 </style>
