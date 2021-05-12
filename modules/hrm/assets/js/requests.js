@@ -494,6 +494,12 @@
                                         res.showBtn = true;
                                     }
 
+                                    if ( res.duration ) {
+                                        res.duration = parseInt( res.duration ) > 1
+                                                     ? res.duration + __( ' days', 'erp' )
+                                                     : res.duration + __( ' day', 'erp' );
+                                    }
+
                                     $.erpPopup({
                                         title: __( 'Resignation', 'erp' ),
                                         id: 'erp-hr-request-single',
