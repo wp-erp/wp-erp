@@ -20,11 +20,19 @@
 
     <h2>
         <?php esc_attr_e( 'Contacts', 'erp' ); ?>
+
         <?php if ( current_user_can( 'erp_crm_add_contact' ) ) { ?>
             <a href="#" @click.prevent="addContact( 'company', '<?php esc_attr_e( 'Add New Company', 'erp' ); ?>' )" id="erp-company-new" class="erp-contact-new add-new-h2" data-type="company" title="<?php esc_attr_e( 'Add New Company', 'erp' ); ?>"><?php esc_attr_e( 'Add New Company', 'erp' ); ?></a>
         <?php } ?>
 
         <a href="#" @click.prevent="addSearchSegment()" id="erp-contact-search-segmen" class="erp-search-segment add-new-h2" v-text="( showHideSegment ) ? '<?php esc_attr_e( 'Hide Search Segment', 'erp' ); ?>' : '<?php esc_attr_e( 'Add Search Segment', 'erp' ); ?>'"></a>
+
+        <?php if ( current_user_can( 'erp_crm_add_contact' ) ) : ?>
+            <div class="erp-btn-group">
+                <button><?php esc_html_e( 'Import', 'erp' ); ?></button>
+                <button><?php esc_html_e( 'Export', 'erp' ); ?></button>
+            </div>
+        <?php endif; ?>
     </h2>
 
     <?php do_action( 'erp_crm_contact_menu', 'companies' ); ?>
