@@ -84,8 +84,9 @@ class Leave_Policies_List_Table extends \WP_List_Table {
                             ''      => esc_html__( 'Employee Types', 'erp' ),
                             '-1'    => esc_html__( 'All', 'erp' ),
                         ] + erp_hr_get_employee_types();
-        $employee_type = isset( $_GET['filter_employee_type'] ) ? sanitize_text_field( wp_unslash( $_GET['filter_employee_type'] ) ) : ''; ?>
-        <div class="alignleft actions">
+        $employee_type = isset( $_GET['filter_employee_type'] ) ? sanitize_text_field( wp_unslash( $_GET['filter_employee_type'] ) ) : '';
+        
+        ?><div class="alignleft actions">
 
             <label class="screen-reader-text" for="filter_year"><?php esc_html_e( 'Filter by year', 'erp' ); ?></label>
             <input type="hidden" name="status" value="<?php echo esc_html( $this->page_status ); ?>">
@@ -102,9 +103,9 @@ class Leave_Policies_List_Table extends \WP_List_Table {
                 } ?>
             </select>
 
-            <?php
-            submit_button( __( 'Filter' ), 'button', 'filter_by_year', false );
-        echo '</div>';
+            <?php submit_button( __( 'Filter', 'erp' ), 'button', 'filter_by_year', false ); ?>
+        
+        </div><?php
     }
 
     /**
