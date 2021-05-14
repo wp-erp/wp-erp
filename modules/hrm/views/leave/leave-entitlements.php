@@ -154,7 +154,7 @@ $active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['ta
                         'label'    => __( 'Leave Policy', 'erp' ),
                         'name'     => 'leave_policy',
                         'type'     => 'select',
-                        'class'    => 'leave-policy-input leave_policy_dropdown leave_policy',
+                        'class'    => 'leave-policy-input erp-select2 leave_policy_dropdown leave_policy',
                         'required' => true,
                         'options'  => [ 0 => __( '- Select -', 'erp' ) ],
                         'help'     => $policy_help_text,
