@@ -258,7 +258,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Request
      */
     public function create_vendor( $request ) {
-        if ( erp_acct_check_people_exists( $request['email'] ) ) {
+        if ( erp_acct_exist_people( $request['email'] ) ) {
             return new WP_Error( 'rest_customer_invalid_id', __( 'Email already exists!' ), [ 'status' => 400 ] );
         }
 
