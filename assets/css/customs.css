@@ -673,8 +673,31 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
 
 .erp-btn-group {
     display: inline-flex;
-    float: right;
-    margin-right: 200px;
+    /* float: right; */
+    /* margin-right: 200px; */
+    position: absolute;
+    right: 15rem;
+}
+
+@media screen and (max-width: 782px) and (min-width: 404px) {
+    .erp-btn-group {
+        position: relative;
+        top: 2.88rem;
+        right: 0;
+    }
+}
+
+@media screen and (max-width: 403px) and (min-width: 324px) {
+    .erp-btn-group {
+        position: unset;
+    }
+}
+
+@media  screen and (max-width: 323px) {
+    .erp-btn-group {
+        padding: 10px 0 !important;
+        right: unset !important;
+    }
 }
 
 .erp-btn-group button {
