@@ -214,6 +214,8 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
     position: absolute !important;
     right: 0.9rem !important;
     top: 4.28rem !important;
+    /* position: relative !important;
+    top: -1.784rem !important; */
 }
 
 @media screen and (max-width: 782px) and (min-width: 601px) {
@@ -289,6 +291,78 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
         top: 0 !important;
         margin-bottom: -3.41rem !important;
         width: min-content !important;
+    }
+}
+
+.erp-hr-employee-search {
+    position: relative !important;
+    top: -1.8rem !important;
+}
+
+.erp-hr-employee-search > input[name="s"] {
+    border: 0.3px solid rgb(226, 226, 226);
+    border-radius: 3.5px;
+    margin: 0 !important;
+}
+
+@media screen and (max-width: 782px) {
+    .erp-hr-employee-search {
+        position: relative !important;
+        top: 2.9rem !important;
+        padding: 1.4rem !important;
+        margin-top: 19px !important;
+        width: 90% !important;
+    }
+
+    .erp-hr-employee-search > input[name="s"] {
+        height: 30px;
+        min-height: 30px;
+        border: 0.3px solid rgb(226, 226, 226);
+        padding: 0 0 0 5px;
+        font-size: 13px;
+    }
+}
+
+@media screen and (max-width: 782px) and (min-width: 708px) {
+    .erp-hr-employee-search {
+        right: 0.15rem !important;
+    }
+}
+
+@media screen and (max-width: 707px) and (min-width: 702px) {
+    .erp-hr-employee-search {
+        padding-left: 1.15rem !important;
+    }
+}
+
+@media screen and (max-width: 701px) and (min-width: 696px) {
+    .erp-hr-employee-search {
+        padding: 1.15rem !important;
+    }
+}
+
+@media screen and (max-width: 695px) and (min-width: 404px) {
+    .erp-hr-employee-search {
+        top: 0 !important;
+        margin-top: 9px !important;
+        padding: 0 3.2rem 0 0 !important;
+    }
+}
+
+@media screen and (max-width: 403px) and (min-width: 324px) {
+    .erp-hr-employee-search {
+        top: 1px !important;
+        padding: 0 !important;
+        right: 0 !important;
+    }
+}
+
+@media screen and (max-width: 323px) {
+    .erp-hr-employee-search {
+        padding: 10px 0 !important;
+        right: 0 !important;
+        top: 1.1rem !important;
+        width: 97.5% !important;
     }
 }
 
