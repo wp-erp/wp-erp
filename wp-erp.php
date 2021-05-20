@@ -5,7 +5,7 @@
  * Plugin URI: https://wperp.com
  * Author: weDevs
  * Author URI: https://wedevs.com
- * Version: 1.8.0
+ * Version: 1.8.4
  * License: GPL2
  * Text Domain: erp
  * Domain Path: /i18n/languages/
@@ -52,7 +52,7 @@ final class WeDevs_ERP {
      *
      * @var string
      */
-    public $version = '1.8.0';
+    public $version = '1.8.4';
 
     /**
      * Minimum PHP version required
@@ -228,6 +228,7 @@ final class WeDevs_ERP {
         require_once WPERP_INCLUDES . '/functions-people.php';
         require_once WPERP_INCLUDES . '/api/class-api-registrar.php';
         require_once WPERP_INCLUDES . '/class-i18n.php';
+        require_once WPERP_INCLUDES . '/functions-cache-helper.php';
 
         if ( is_admin() ) {
             require_once WPERP_INCLUDES . '/admin/functions.php';

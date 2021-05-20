@@ -1469,7 +1469,8 @@
   margin-bottom: 10px;
   font-style: italic;
 }
-.erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .timeline-item > .timeline-body .timeline-email-attachments {
+.erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .timeline-item > .timeline-body .timeline-email-attachments,
+.erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .timeline-item > .timeline-body .timeline-activity-attachments {
   padding: 0px 0px 10px;
   border-top: 1px solid #eee;
   margin: 20px 0px;
@@ -1796,6 +1797,9 @@ table.widefat.cfi-table {
 }
 .cfi-contact-group {
   margin-left: 10px;
+}
+.trix-button-group--file-tools {
+  display: none !important;
 }
 span.red {
   color: #CF0202;
@@ -4403,6 +4407,16 @@ div.erp-nav-container.--show-secondary .-secondary {
     margin-top: 15px;
     text-align: center;
   }
+}
+.erp-select2-add {
+  padding: 10px;
+  border-top: 1px solid #ddd;
+}
+.erp-select2-add a {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: bold;
+  text-decoration: none;
 }
 /* WP data table conflict resolve ----------- */
 .wpdt-c #adminmenuback {

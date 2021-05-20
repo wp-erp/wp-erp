@@ -9,8 +9,114 @@
 
 var $ = jQuery; // To resolve undefined jQuery
 
+$(document).on( "trix-file-accept", function(e) {
+    e.preventDefault();
+});
+
+var mixin = {
+    data: function() {
+        return {
+            tooltip: erpCrmApp.remove,
+        }
+    },
+
+    methods: {
+        resetData: function() {
+            $( "#crm-attachments" ).hide();
+            vm.feedData.attachments = [];
+        },
+
+        addAttachments: function(feed) {
+            var el           = feed ? $( `#crm-attachments-${feed.id}` ) : $( '#crm-attachments' ),
+                input        = feed ? $( `#activity-attachment-${feed.id}` ) : $( '#activity-attachment' );
+
+            this.uploadFile( input, el );
+        },
+
+        updateAttachments: function(feedId, file, index, remove) {
+            if (!vm.removeAtchFlag) {
+                vm.removeAtchFlag = [];
+            }
+
+            if (!vm.feedData.old_attachments.includes(file) && !remove) {
+                vm.feedData.old_attachments.push(file);
+                vm.removeAtchFlag[index] = true;
+
+                $( `#btn-activity-atch-${feedId}-${index}` ).removeClass( 'add-atch dashicons-plus-alt' ).addClass( 'remove-atch dashicons-dismiss' );
+                $( `#activity-atch-name-${feedId}-${index}` ).css( 'color', '#2271b1' );
+                this.tooltip = erpCrmApp.remove;
+            }
+
+            if (vm.feedData.old_attachments.includes(file) && remove) {
+                vm.feedData.old_attachments.splice(vm.feedData.old_attachments.indexOf(file), 1);
+                vm.removeAtchFlag[index] = false;
+
+                $( `#btn-activity-atch-${feedId}-${index}` ).removeClass( 'remove-atch dashicons-dismiss' ).addClass( 'add-atch dashicons-plus-alt' );
+                $( `#activity-atch-name-${feedId}-${index}`).css( 'color', '#bdbdbd' );
+                this.tooltip = erpCrmApp.reattach;
+            }
+        },
+
+        removeAttch: function(index) {
+            return vm.removeAtchFlag[index];
+        },
+
+        uploadFile: function( input, el ) {
+            var formData   = new FormData();
+            vm.progressbar = true;
+
+            formData.append( 'action', 'erp_crm_activity_attachment' );
+            el.css( 'display', 'block' );
+            
+            $.each( input, function( index, object ) {
+                $.each( object.files, function( i, file ) {
+                    formData.append( 'files[]', file );
+                    $( `#${el.attr('id')}` ).find( '#crm-atch-output' ).append( `<p> ${i+1}. ${file.name}</p>` );
+                } );
+            } );
+
+            jQuery.ajax({
+                url: wpCRMvue.ajaxurl,
+                data:formData,
+                cache: false,
+                processData: false,
+                contentType: false,
+                type: 'POST',
+                success: function( response ) {
+                    if ( response.success ) {
+                        vm.feedData.attachments = response.data.url;
+                        vm.files = response.data.files;
+                    }
+                },
+
+                xhr: function(){
+                    //upload Progress
+                    var xhr = $.ajaxSettings.xhr();
+                    if (xhr.upload) {
+                        xhr.upload.addEventListener('progress', function(event) {
+                            var percent = 0;
+                            var position = event.loaded || event.position;
+                            var total = event.total;
+                            if (event.lengthComputable) {
+                                percent = Math.ceil(position / total * 100);
+                            }
+                            //update progressbar
+                            $( '.progress-bar' ).css( 'width', + percent +'%' );
+                            $( '.status' ).text(percent +'%');
+                        }, true);
+                    }
+
+                    return xhr;
+                },
+            });
+        }
+    },
+};
+
 Vue.component( 'new-note', {
     props: ['feed'],
+
+    mixins: [mixin],
 
     template: '#erp-crm-new-note-template',
 
@@ -19,8 +125,13 @@ Vue.component( 'new-note', {
             feedData: {
                 message: ''
             },
-            isValid: false
+            isValid: false,
+            removeAtchFlag: [],
         }
+    },
+
+    created: function() {
+        this.feedData.old_attachments = [];
     },
 
     methods: {
@@ -31,7 +142,7 @@ Vue.component( 'new-note', {
         cancelUpdateFeed: function() {
             this.$parent.$data.isEditable = false;
             this.$parent.$data.editfeedData = {};
-        }
+        },
     },
 
     computed: {
@@ -50,7 +161,7 @@ Vue.component( 'new-note', {
             return Object.keys( validation ).every(function(key){
                 return validation[key]
             });
-        }
+        },
     },
 
     watch: {
@@ -85,6 +196,8 @@ Vue.component( 'new-note', {
 Vue.component( 'log-activity', {
     props: ['feed'],
 
+    mixins: [mixin],
+
     template: '#erp-crm-log-activity-template',
 
     data: function() {
@@ -95,11 +208,16 @@ Vue.component( 'log-activity', {
                 email_subject: '',
                 inviteContact: [],
                 dt: '',
-                tp: ''
+                tp: '',
+                removeAtchFlag: [],
             },
 
             isValid: false
         }
+    },
+
+    created: function() {
+        this.feedData.old_attachments = [];
     },
 
     methods: {
@@ -110,7 +228,7 @@ Vue.component( 'log-activity', {
         cancelUpdateFeed: function() {
             this.$parent.$data.isEditable = false;
             this.$parent.$data.editfeedData = {};
-        }
+        },
     },
 
     compiled: function() {
@@ -193,6 +311,8 @@ Vue.component( 'tasks-note', {
 
     template: '#erp-crm-tasks-note-template',
 
+    mixins: [mixin],
+
     data: function() {
         return {
             feedData: {
@@ -200,11 +320,16 @@ Vue.component( 'tasks-note', {
                 message: '',
                 inviteContact: [],
                 dt: '',
-                tp: ''
+                tp: '',
+                removeAtchFlag: [],
             },
 
             isValid: false
         }
+    },
+
+    created: function() {
+        this.feedData.old_attachments = [];
     },
 
     methods: {
@@ -215,7 +340,7 @@ Vue.component( 'tasks-note', {
         cancelUpdateFeed: function() {
             this.$parent.$data.isEditable = false;
             this.$parent.$data.editfeedData = {};
-        }
+        },
     },
 
     events: {
@@ -292,6 +417,8 @@ Vue.component( 'tasks-note', {
 Vue.component( 'email-note', {
     props: ['feed'],
 
+    mixins: [mixin],
+
     template: '#erp-crm-email-note-template',
 
     data: function() {
@@ -346,56 +473,6 @@ Vue.component( 'email-note', {
                 }
             });
         },
-
-        fileUpload: function() {
-            var formData = new FormData();
-            var field    = $( '#email-attachment' );
-            var self     = ( this );
-            this.progressbar = true;
-
-            formData.append( 'action', 'email_attachment' );
-            $( '.crm-attachments' ).css( 'display', 'block' );
-            $.each( field, function( index, object ) {
-                $.each( object.files, function( i, file ) {
-                    formData.append( 'files[]', file );
-                } );
-            } );
-
-            jQuery.ajax({
-                url: wpCRMvue.ajaxurl,
-                data:formData,
-                cache: false,
-                processData: false,
-                contentType: false,
-                type: 'POST',
-                success: function( response ) {
-                    if ( response.success ) {
-                        self.feedData.attachments = response.data.url;
-                        self.files = response.data.files;
-                    }
-                },
-
-                xhr: function(){
-                    //upload Progress
-                    var xhr = $.ajaxSettings.xhr();
-                    if (xhr.upload) {
-                        xhr.upload.addEventListener('progress', function(event) {
-                            var percent = 0;
-                            var position = event.loaded || event.position;
-                            var total = event.total;
-                            if (event.lengthComputable) {
-                                percent = Math.ceil(position / total * 100);
-                            }
-                            //update progressbar
-                            $( '.progress-bar' ).css( 'width', + percent +'%' );
-                            $( '.status' ).text(percent +'%');
-                        }, true);
-                    }
-
-                    return xhr;
-                },
-            });
-        }
     },
 
     computed: {
@@ -462,7 +539,10 @@ Vue.component( 'email-note', {
  */
 Vue.component( 'schedule-note', {
     props: ['feed'],
+
     template: '#erp-crm-schedule-note-template',
+
+    mixins: [mixin],
 
     data: function() {
         return {
@@ -479,11 +559,16 @@ Vue.component( 'schedule-note', {
                 tpStart                     : '',
                 dtEnd                       : '',
                 tpEnd                       : '',
-                inviteContact               : []
+                inviteContact               : [],
+                removeAtchFlag              : [],
             },
 
             isValid: false
         }
+    },
+
+    created: function() {
+        this.feedData.old_attachments = [];
     },
 
     compiled: function() {
@@ -519,7 +604,7 @@ Vue.component( 'schedule-note', {
         cancelUpdateFeed: function() {
             this.$parent.$data.isEditable   = false;
             this.$parent.$data.editfeedData = {};
-        }
+        },
     },
 
     computed: {
@@ -625,7 +710,7 @@ var vm = new Vue({
     events: {
         'bindFeedData': function (feedData) {
             this.feedData = feedData;
-        }
+        },
     },
 
     watch: {
@@ -637,7 +722,7 @@ var vm = new Vue({
         },
 
         fileUpload: function() {
-            console.log('Hello');
+            console.log('Uploading...');
         }
     },
 
@@ -779,6 +864,7 @@ var vm = new Vue({
                 self.feedData.end_time       = self.feedData.tpEnd;
                 self.feedData.invite_contact = self.feedData.inviteContact;
             };
+            
             jQuery.post( wpCRMvue.ajaxurl, self.feedData, function( resp ) {
                 if ( ! resp.success ) {
                     alert( resp.data );

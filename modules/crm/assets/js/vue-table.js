@@ -1,4 +1,4 @@
-vt = Vue.component('vtable', {
+Vue.component('vtable', {
     template:
         '<div class="content-header-section">'
         +'<form method="get">'
@@ -9,7 +9,7 @@ vt = Vue.component('vtable', {
             +'<template v-if="hasExtraBulkAction()">'
                 +'<div class="wperp-filter-dropdown">'
                     +'<a @click.prevent="toggleDropdown()" class="wperp-btn btn--default"><span class="dashicons dashicons-filter"></span>Filters<span class="dashicons dashicons-arrow-down-alt2"></span></a>'
-                    +'<div class="erp-dropdown-filter-content" id="erp-dropdown-content">'
+                    +'<div class="erp-dropdown-filter-content" id="erp-dropdown-content" id="filterArea">'
                         +'<div class="wperp-filter-panel wperp-filter-panel-default">'
                             +'<h3>Filter</h3>'
                             +'<div class="wperp-filter-panel-body">'
@@ -29,7 +29,8 @@ vt = Vue.component('vtable', {
                                 +'</template>'
                             +'</div>'
                             +'<div class="wperp-filter-panel-footer">'
-                                +'<input type="submit" class="wperp-btn btn--cancel" value="Cancel" @click.prevent="toggleDropdown()">'
+                                +'<input type="submit" class="wperp-btn btn--cancel btn--filter" style="float: left" value="Cancel" @click.prevent="toggleDropdown()">'
+                                +'<input type="reset" class="wperp-btn btn--cancel btn--filter btn--reset" value="Reset" @click.prevent="resetDropdown()">'
                                 +'<input type="submit" class="wperp-btn btn--primary" id="filter" @click.prevent="handleExtraBulkAction()" :value="filterText">'
                             +'</div>'
                         +'</div>'
@@ -814,7 +815,7 @@ vt = Vue.component('vtable', {
             }
         },
 
-        fetchData: function() {
+        fetchData: function(reset = false) {
             var self = this,
                 queryObj = {},
                 postData = '',
@@ -841,6 +842,10 @@ vt = Vue.component('vtable', {
                 }
             } else {
                 var advanceFilter = ( self.additionalUrlString['advanceFilter'] ) ? '&' + self.additionalUrlString['advanceFilter'] : '';
+            }
+
+            if( reset ) {
+                advanceFilter = '';
             }
 
             self.setQueryParmsIntoUrl( advanceFilter );
@@ -878,6 +883,21 @@ vt = Vue.component('vtable', {
 
             var filterArgs = advanceFilter ? '&erpadvancefilter=' + encodeURIComponent( advanceFilter.indexOf('&') == 0 ? advanceFilter.substring(1) : advanceFilter ) : '' ;
             var postData = postData + '&' + pagination.join('&') + filterArgs;
+
+            if( reset ) {
+                var afterPostData   = postData.split('&sub-section=contacts')[1];
+                var removableString = '';
+
+                if( typeof afterPostData === 'undefined' ) {
+                    afterPostData = postData.split('&sub-section=companies')[1];
+                } else {
+                    removableString = afterPostData.split('&type=contact')[0];
+                }
+
+                postData       = postData.replace(removableString,'');
+                var historyURL = window.location.pathname +'?page = erp-crm&'+postData
+                window.history.pushState( null, null, historyURL );
+            }
 
             this.ajax = jQuery.post( wpVueTable.ajaxurl, postData, function( resp ) {
                 self.ajaxloader = false;
@@ -979,6 +999,20 @@ vt = Vue.component('vtable', {
         toggleDropdown: function() {
             document.getElementById("erp-dropdown-content").classList.toggle("show");
         },
+
+        resetDropdown: function() {
+
+            var reset_fields = [ 'erp-select-user-for-assign-contact', 'erp-select-contact-company', 'erp-select-save-advance-filter' ];
+
+            // Empty select2 fields
+            reset_fields.map(item => {
+                jQuery( '#' + item ).val(null).trigger( 'change' );
+            })
+
+            // Reload and toggle filter dropdown
+            this.fetchData( true );
+            this.toggleDropdown();
+        },
     },
 
     events: {
@@ -1017,7 +1051,13 @@ vt = Vue.component('vtable', {
 
         this.fetchData();
         this.pageNumberInput = this.currentPage;
+    },
+
+    created: function () {
+        // remove filterContactCompany key from extraBulkAction when vue table not for contact
+        if( this.rowCheckboxName !== 'customer_id' ) {
+            delete this.extraBulkAction.filterContactCompany;
+        }
     }
 
 });
-

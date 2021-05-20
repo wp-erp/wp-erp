@@ -29,8 +29,9 @@ class Promotion {
         }
         
         $current_time      = erp_current_datetime()->setTimezone ( new \DateTimeZone( 'America/New_York' ) );
-        $promotion_start   = $current_time->setDate( 2021, 03, 15 )->setTime( 9, 0, 0 );
-        $promotion_end     = $promotion_start->modify( '+7 days' )->setTime( 23, 59, 59 );
+        $promotion_start   = $current_time->setDate( 2021, 05, 11 )->setTime( 9, 0, 0 );
+        // $promotion_end     = $promotion_start->modify( '+7 days' )->setTime( 23, 59, 59 );
+        $promotion_end     = $current_time->setDate( 2021, 05, 24 )->setTime( 23, 59, 59 );
         
         // 2021-03-15 09:00:00 EST - 2021-03-22 23:59:59 EST
         if ( $current_time > $promotion_end || $current_time < $promotion_start ) {
@@ -38,8 +39,8 @@ class Promotion {
         }
 
         if ( $current_time >= $promotion_start && $current_time <= $promotion_end ) {
-            $msg            = 'It\'s Our Birthday! Enjoy Up To  45% OFF  on WP ERP Pro.';
-            $option_name    = 'erp_wedevs_birthday_2021';
+            $msg            = '<strong>Eid Mubarak!</strong></br>Stay Safe & Spread Happiness.</br>Enjoy up to <strong>45% OFF</strong> on <strong>WP ERP Pro</strong>.';
+            $option_name    = 'erp_eid_offer_2021';
             $this->generate_notice( $msg, $option_name );
             return;
         }
@@ -60,8 +61,8 @@ class Promotion {
             return;
         }
 
-        $offer_msg = '<p><strong class="highlight-text">' . $msg . '</strong>' . 
-                ' <a target="_blank" href="https://wperp.com/pricing/?nocache&utm_medium=text&utm_source=wordpress-erp-holidays">Get Now</a>
+        $offer_msg = '<p class="highlight-text">' . $msg . 
+                ' <a target="_blank" href="https://wperp.com/pricing/?nocache&utm_medium=text&utm_source=wordpress-erp-eidoffer2021">Get Now</a>
             </p>';
         ?>
         <div class="notice is-dismissible erp-promotional-offer-notice" id="erp-promotional-offer-notice">
@@ -82,23 +83,32 @@ class Promotion {
 
         <style>
             .erp-promotional-offer-notice {
-                background: linear-gradient(45deg, #c03e3e, #fc9084);
-                color: rgb(255, 255, 222);
-                border-left: 6px solid rgb(252, 252, 198);
+                background: linear-gradient(30deg, #f2f2f2, lightseagreen);
+                color: rgba(22, 134, 129, 1.1);
+                border-left: 5px solid lightseagreen;
             }
 
             .erp-promotional-offer-notice p {
-                font-size: 25px;
+                font-size: 16px;
+                font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
             }
             
             .erp-promotional-offer-notice a {
-                color: rgb(250, 250, 208);
-                border: 0.5px solid rgb(252, 252, 199);
-                border-radius: 4px;
-                padding: 3px;
+                color: lightcyan;
+                border: 0.5px solid lightseagreen;
+                border-radius: 3px;
+                padding: 2px 5px 1px 5px;
                 text-decoration: none;
-                font-size: 25px;
-                font-weight: 200;
+                font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+                font-size: 16px;
+                font-weight: 300;
+                background: lightseagreen;
+            }
+
+            .erp-promotional-offer-notice a:hover {
+                color: white;
+                border: 0.5px solid rgba(44, 187, 180, 0.897);
+                background: rgba(44, 187, 180, 0.897);
             }
         </style>
         <?php

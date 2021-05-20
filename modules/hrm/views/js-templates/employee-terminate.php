@@ -3,11 +3,12 @@
 <div class="terminate-form-wrap">
     <div class="row">
         <?php erp_html_form_input( [
-            'label'    => __( 'Termination Date', 'erp' ),
-            'name'     => 'terminate_date',
-            'value'    => '{{data.terminate_date}}',
-            'required' => true,
-            'class'    => 'erp-date-field',
+            'label'       => __( 'Termination Date', 'erp' ),
+            'name'        => 'terminate_date',
+            'value'       => '{{data.terminate_date}}',
+            'required'    => true,
+            'custom_attr' => [ 'autocomplete' => 'off' ],
+            'class'       => 'erp-date-field',
         ] ); ?>
     </div>
 

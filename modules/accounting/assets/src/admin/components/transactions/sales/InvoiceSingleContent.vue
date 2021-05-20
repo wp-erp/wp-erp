@@ -145,7 +145,7 @@ export default {
             if ( !this.invoice.amount ) {
                 return '00.00';
             }
-            
+
             return parseFloat(this.invoice.amount) + parseFloat(this.invoice.tax) - parseFloat(this.invoice.discount);
         }
     },
@@ -156,11 +156,11 @@ export default {
     methods: {
         getInvoiceType() {
             if (this.invoice !== null && this.invoice.estimate === '1') {
-                return 'Estimate';
+                return __('Estimate', 'erp');
             } else if ( this.invoice.sales_voucher_id ) {
-                return 'Sales Return Invoice';
+                return __('Sales Return Invoice', 'erp');
             } else {
-                return 'Invoice';
+                return __('Invoice', 'erp');
             }
         },
     }

@@ -105,6 +105,26 @@ $notification_types = erp_crm_activity_schedule_notification_type();
         <div class="clearfix"></div>
     </div>
 
+    <div class="crm-attachments" id="{{feed ? 'crm-attachments-' + feed.id : 'crm-attachments'}}">
+       <div id="progress-wrp"><div class="progress-bar"></div ><div class="status">0%</div></div>
+       <div id="crm-atch-output"></div>
+    </div>
+
+    <div class="timeline-body" v-if="feed">
+        <div class="timeline-activity-attachments">
+            <?php esc_attr_e( 'Attachments : ', 'erp' ); ?>
+            <ul v-if="(feed.extra.attachments && feed.extra.attachments.length > 0)">
+                <li v-for="file in feed.extra.attachments">
+                    <a id="activity-atch-name-{{{feed.id}}}-{{{$index}}}" target="_blank" href="{{{file.url}}}">{{{file.name}}}{{{updateAttachments(feed.id, file, $index, false)}}}</a>
+                    <span id="btn-activity-atch-{{{feed.id}}}-{{{$index}}}" v-on:click.prevent="updateAttachments(feed.id, file, $index, removeAttch($index))" class="btn-activity-atch remove-atch dashicons dashicons-dismiss"></span>
+                    <span class="crm-tooltips">{{tooltip}}</span>
+                </li>
+            </ul>
+            <input type="file" name="attachments[]" class="crm-activity-attachment" id="activity-attachment-{{feed.id}}" v-on:change="addAttachments(feed)" multiple>
+            <label for="activity-attachment-{{feed.id}}" class="attachments-label" title="Add File"><?php _e( '+ Add File', 'erp' ); ?></label>
+        </div>
+    </div>
+
     <div class="submit-action">
         <input type="hidden"  v-model="feedData.created_by" name="created_by" value="<?php echo esc_attr( get_current_user_id() ); ?>">
         <input type="hidden" name="user_id" v-model="feedData.user_id" value="<?php echo esc_attr( $customer_id ); ?>" >
@@ -112,6 +132,10 @@ $notification_types = erp_crm_activity_schedule_notification_type();
         <input type="hidden" name="type" v-model="feedData.type" value="schedule">
         <input type="submit" v-if="!feed" :disabled = "!isValid" class="button button-primary" name="create_schedule" value="<?php esc_attr_e( 'Create Schedule', 'erp' ); ?>">
         <input type="submit" v-if="feed" :disabled = "!isValid" class="button button-primary" name="edit_schedule" value="<?php esc_attr_e( 'Update Schedule', 'erp' ); ?>">
+        <input v-if="!feed" type="file" name="attachments[]" class="crm-activity-attachment" id="activity-attachment" v-on:change="addAttachments()" multiple>
+        <label v-if="!feed" for="activity-attachment" class="attachments-label" title="Attach File">
+            <span class="btn-activity-atch dashicons dashicons-paperclip"></span><?php _e( 'Attach File', 'erp' ); ?>
+        </label>
         <input type="reset" v-if="!feed" class="button button-default" @click="feedData.allow_notification = false" value="<?php esc_attr_e( 'Discard', 'erp' ); ?>">
         <button class="button" v-if="feed" @click.prevent="cancelUpdateFeed"><?php esc_attr_e( 'Cancel', 'erp' ); ?></button>
     </div>

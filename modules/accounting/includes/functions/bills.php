@@ -233,6 +233,8 @@ function erp_acct_insert_bill( $data ) {
 
     do_action( 'erp_acct_new_transaction_bill', $voucher_no, $bill );
 
+    erp_acct_purge_cache( [ 'list' => 'sales_transaction,purchase_transaction,expense_transaction' ] );
+
     return $bill;
 }
 
@@ -362,6 +364,8 @@ function erp_acct_update_bill( $data, $bill_id ) {
         return new WP_error( 'bill-exception', $e->getMessage() );
     }
 
+    erp_acct_purge_cache( [ 'list' => 'sales_transaction,purchase_transaction,expense_transaction' ] );
+
     return erp_acct_get_bill( $new_bill['voucher_no'] );
 }
 
@@ -426,6 +430,8 @@ function erp_acct_update_draft_bill( $data, $bill_id ) {
             ]
         );
     }
+
+    erp_acct_purge_cache( [ 'list' => 'sales_transaction,purchase_transaction,expense_transaction' ] );
 }
 
 /**
@@ -452,6 +458,8 @@ function erp_acct_void_bill( $id ) {
 
     $wpdb->delete( $wpdb->prefix . 'erp_acct_ledger_details', [ 'trn_no' => $id ] );
     $wpdb->delete( $wpdb->prefix . 'erp_acct_bill_account_details', [ 'bill_no' => $id ] );
+
+    erp_acct_purge_cache( [ 'list' => 'sales_transaction,purchase_transaction,expense_transaction' ] );
 }
 
 /**

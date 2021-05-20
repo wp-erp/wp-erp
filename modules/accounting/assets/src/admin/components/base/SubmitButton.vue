@@ -9,7 +9,7 @@ export default {
     props: {
         text: {
             type: String,
-            default: 'Submit'
+            default: __('Submit', 'erp')
         },
 
         working: {

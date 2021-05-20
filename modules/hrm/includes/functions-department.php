@@ -49,6 +49,8 @@ function erp_hr_create_department( $args = [] ) {
         return $dept_id;
     }
 
+    erp_hrm_purge_cache( [ 'list' => 'department', 'department_id' => $dept_id ] );
+
     return false;
 }
 
@@ -70,46 +72,45 @@ function erp_hr_get_departments( $args = [] ) {
 
     $args  = wp_parse_args( $args, $defaults );
 
-    $cache_key = 'erp-get-departments';
-    $results   = wp_cache_get( $cache_key, 'erp' );
+    $last_changed  = erp_cache_get_last_changed( 'hrm', 'department' );
+    $cache_key     = 'erp-get-departments-' . md5( serialize( $args ) ) . " : $last_changed";
+    // $departments   = wp_cache_get( $cache_key, 'erp' );
 
-    $department = new \WeDevs\ERP\HRM\Models\Department();
+    // if ( false === $departments ) {
+        $department = new \WeDevs\ERP\HRM\Models\Department();
 
-    if ( !empty( $args['s'] ) ) {
-        if ( isset( $_GET['s'] ) ) {
-            $s = sanitize_text_field( wp_unslash( $_GET['s'] ) );
+        if ( !empty( $args['s'] ) ) {
+            if ( isset( $_GET['s'] ) ) {
+                $s = sanitize_text_field( wp_unslash( $_GET['s'] ) );
+            } else {
+                $s = sanitize_text_field( wp_unslash( $args['s'] ) );
+            }
+
+            $results = $department
+                ->where( 'title', 'LIKE', '%' . $s . '%' )
+                ->get()
+                ->toArray();
         } else {
-            $s = sanitize_text_field( wp_unslash( $args['s'] ) );
+            $results = $department->get()->toArray();
         }
 
-        $results = $department
-            ->where( 'title', 'LIKE', '%' . $s . '%' )
-            ->get()
-            ->toArray();
         $results = erp_array_to_object( $results );
-    }
+        $results = erp_parent_sort( $results );
 
-    if ( false === $results ) {
-        $results = $department
-            ->get()
-            ->toArray();
+        $departments = [];
 
-        $results = erp_array_to_object( $results );
-        wp_cache_set( $cache_key, $results, 'erp' );
-    }
-
-    $results     = erp_parent_sort( $results );
-    $departments = [];
-
-    if ( $results ) {
-        foreach ( $results as $key => $row ) {
-            if ( true === $args['no_object'] ) {
-                $departments[] = $row;
-            } else {
-                $departments[] = new WeDevs\ERP\HRM\Department( intval( $row->id ) );
+        if ( $results ) {
+            foreach ( $results as $key => $row ) {
+                if ( true === $args['no_object'] ) {
+                    $departments[] = $row;
+                } else {
+                    $departments[] = new WeDevs\ERP\HRM\Department( intval( $row->id ) );
+                }
             }
         }
-    }
+
+        wp_cache_set( $cache_key, $departments, 'erp' );
+    // }
 
     return $departments;
 }
@@ -174,6 +175,8 @@ function erp_hr_delete_department( $department_id ) {
     }
 
     $resp = \WeDevs\ERP\HRM\Models\Department::find( $department_id )->delete();
+
+    erp_hrm_purge_cache( [ 'list' => 'department', 'department_id' => $department_id ] );
 
     return $resp;
 }
