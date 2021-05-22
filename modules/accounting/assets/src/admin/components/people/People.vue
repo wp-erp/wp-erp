@@ -245,33 +245,6 @@ export default {
             display: flex;
             align-items: center;
 
-            // @media (max-width: 767px) {
-            //     flex-direction: column;
-
-            //     .add-new-people, .people-search {
-            //         width: 100% !important;
-
-            //         h4 {
-            //             display: none;
-            //         }
-            //     }
-
-            //     .people-search {
-            //         margin: 20px 0;
-            //     }
-
-            //     .people-search {
-            //         .input-with-addon {
-            //             margin-top: 10px !important;
-            //         }
-
-            //         form {
-            //             width: 100%;
-            //             justify-content: space-between;
-            //         }
-            //     }
-            // }
-
             .add-new-people {
                 align-items: center;
                 display: flex;
