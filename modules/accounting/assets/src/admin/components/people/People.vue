@@ -245,32 +245,32 @@ export default {
             display: flex;
             align-items: center;
 
-            @media (max-width: 767px) {
-                flex-direction: column;
+            // @media (max-width: 767px) {
+            //     flex-direction: column;
 
-                .add-new-people, .people-search {
-                    width: 100% !important;
+            //     .add-new-people, .people-search {
+            //         width: 100% !important;
 
-                    h4 {
-                        display: none;
-                    }
-                }
+            //         h4 {
+            //             display: none;
+            //         }
+            //     }
 
-                .people-search {
-                    margin: 20px 0;
-                }
+            //     .people-search {
+            //         margin: 20px 0;
+            //     }
 
-                .people-search {
-                    .input-with-addon {
-                        margin-top: 10px !important;
-                    }
+            //     .people-search {
+            //         .input-with-addon {
+            //             margin-top: 10px !important;
+            //         }
 
-                    form {
-                        width: 100%;
-                        justify-content: space-between;
-                    }
-                }
-            }
+            //         form {
+            //             width: 100%;
+            //             justify-content: space-between;
+            //         }
+            //     }
+            // }
 
             .add-new-people {
                 align-items: center;
@@ -278,6 +278,7 @@ export default {
                 width: 65%;
                 margin: 0;
                 padding: 0;
+
                 a {
                     background: #1a9ed4;
                     border-radius: 3px;
@@ -289,6 +290,30 @@ export default {
                     text-align: center;
                     text-decoration: none;
                     width: 150px;
+
+                    @media (max-width: 782px) and (min-width: 768px) {
+                        margin-right: 18rem;
+                        margin-bottom: 3px;
+                        max-width: 120px;
+                    }
+
+                    @media (max-width: 767px) and (min-width: 707px) {
+                        margin-right: 16rem;
+                        margin-bottom: 3px;
+                        max-width: 110px;
+                    }
+
+                    @media (max-width: 706px) and (min-width: 651px) {
+                        margin-right: 14rem;
+                        margin-bottom: 3px;
+                        max-width: 105px;
+                    }
+
+                    @media (max-width: 650px) {
+                        margin-right: 8rem;
+                        margin-bottom: 3px;
+                        max-width: 105px;
+                    }
                 }
             }
         }
@@ -343,14 +368,40 @@ export default {
         }
     }
 
+    .search-btn {
+        @media (max-width: 650px) {
+            display: none;
+        }
+    }
+
+    .people-search {
+        @media (max-width: 479px) {
+            margin-top: 20px;
+        }
+    }
+
     .erp-btn-group {
         display: inline-flex;
-        float: right;
+        position: absolute;
+        right: 20rem;
 
         &:after {
             content: "";
             clear: both;
             display: table;
+        }
+
+        @media (max-width: 782px) {
+            right: 17rem;
+        }
+
+        @media (max-width: 650px) {
+            right: 8.5rem;
+            margin-top: 2px;
+        }
+
+        @media (max-width: 479px) {
+            margin-top: 22px;
         }
 
         button {
@@ -363,6 +414,10 @@ export default {
             text-decoration: none;
             line-height: inherit;
             cursor: pointer;
+
+            @media (max-width: 479px) {
+                padding: 5px;
+            }
 
             &:last-child {
                 border-top-right-radius: 3.5px;
