@@ -37,7 +37,7 @@ export default {
 <style lang="less" scoped>
 .people-search {
     display: flex;
-    position: fixed;
+    position: absolute;
     width: 25%;
     align-items: center;
     justify-content: flex-end;
@@ -51,9 +51,19 @@ export default {
         margin: 0;
     }
 
+    @media (max-width: 782px) {
+        right: 0.8rem;
+    }
+
     .input-with-addon {
         position: relative;
-        margin-top: 12px;
+        margin-top: 13px;
+
+        @media (max-width: 782px) {
+            margin-top: 14px;
+            height: 29.8px;
+            max-height: 29.8px;
+        }
 
         input {
             width: 180px;
@@ -65,6 +75,15 @@ export default {
                 color: rgba(0,0,0,0.6) !important;
                 font-size: 12px !important;
                 font-weight: 400 !important;
+            }
+
+            @media (max-width: 782px) {
+                height: 30px;
+                min-height: 30px;
+            }
+
+             @media (max-width: 650px) {     
+                width: 120px;
             }
         }
 
@@ -79,6 +98,10 @@ export default {
 
     .search-btn {
         margin-top: 12px !important;
+
+        @media (max-width: 650px) {
+            display: none;
+        }
     }
 }
 </style>
