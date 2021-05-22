@@ -212,10 +212,8 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
 
 .erp-list-table-search {
     position: absolute !important;
-    right: 0.9rem !important;
+    right: 0.95rem !important;
     top: 4.28rem !important;
-    /* position: relative !important;
-    top: -1.784rem !important; */
 }
 
 @media screen and (max-width: 782px) and (min-width: 601px) {
@@ -685,11 +683,19 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
         top: 2.88rem;
         right: 0;
     }
+
+    #crm-import-export {
+        top: 0.3rem !important;
+    }
 }
 
 @media screen and (max-width: 403px) and (min-width: 324px) {
     .erp-btn-group {
         position: unset;
+    }
+
+    #crm-import-export {
+        margin-top: 8px !important;
     }
 }
 
@@ -697,6 +703,24 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
     .erp-btn-group {
         padding: 10px 0 !important;
         right: unset !important;
+    }
+
+    #crm-import-export {
+        position: unset;
+    }
+}
+
+@media screen and (max-width: 1135px) and (min-width: 783px) {
+    #crm-import-export {
+        right: 8.5rem !important;
+    }
+
+    #crm-import-export button {
+        padding: 5px 4px !important;
+    }
+
+    #erp-vtable-seach input {
+        width: 115px !important;
     }
 }
 
@@ -710,6 +734,11 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
     text-decoration: none;
     line-height: inherit;
     cursor: pointer;
+}
+
+.erp-btn-group button:hover {
+    background-color: #1A9ED4;
+    color: #fff;
 }
 
 .erp-btn-group:after {
