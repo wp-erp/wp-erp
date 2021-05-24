@@ -28,9 +28,9 @@
         <a href="#" @click.prevent="addSearchSegment()" id="erp-contact-search-segmen" class="erp-search-segment add-new-h2" v-text="( showHideSegment ) ? '<?php esc_attr_e( 'Hide Search Segment', 'erp' ); ?>' : '<?php esc_attr_e( 'Add Search Segment', 'erp' ); ?>'"></a>
 
         <?php if ( current_user_can( 'erp_crm_add_contact' ) ) : ?>
-            <div class="erp-btn-group">
-                <button><?php esc_html_e( 'Import', 'erp' ); ?></button>
-                <button><?php esc_html_e( 'Export', 'erp' ); ?></button>
+            <div class="erp-btn-group" id="crm-import-export">
+                <button @click.prevent="importCsv( 'company' )"><?php esc_html_e( 'Import', 'erp' ); ?></button>
+                <button @click.prevent="exportCsv( 'company' )"><?php esc_html_e( 'Export', 'erp' ); ?></button>
             </div>
         <?php endif; ?>
     </h2>
