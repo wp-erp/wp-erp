@@ -4,7 +4,7 @@ $nonce          = 'erp-import-export-sample-nonce';
 $csv_sample_url = wp_nonce_url( $page, $nonce );
 ?>
 
-<div class="notice is-dismissible" id="erp-employee-csv-import-error" style="display: none;"></div>
+<div class="notice notice-error erp-error-notice" id="erp-employee-csv-import-error" style="display: none;"></div>
 
 <table class="form-table">
     <tbody>
