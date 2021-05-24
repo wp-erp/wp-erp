@@ -103,3 +103,6 @@
         </tr>
     </tbody>
 </table>
+
+<input type="hidden" name="action" value="erp_import_users_as_contacts">
+<?php wp_nonce_field( 'erp-import-export-nonce' ); ?>
