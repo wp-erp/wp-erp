@@ -1646,287 +1646,68 @@ function erp_process_csv_export() {
     if ( isset( $_POST['erp_export_csv'] ) ) {
         define( 'ERP_IMPORT_EXPORT', true );
 
-    $departments  = $is_hrm_activated ? erp_hr_get_departments_dropdown_raw() : [];
-    $designations = $is_hrm_activated ? erp_hr_get_designation_dropdown_raw() : [];
-
-    $field_builder_contact_options = get_option( 'erp-contact-fields' );
-    $field_builder_contacts_fields = [];
-
-    if ( ! empty( $field_builder_contact_options ) ) {
-        foreach ( $field_builder_contact_options as $field ) {
-            $field_builder_contacts_fields[] = $field['name'];
-        }
-    }
-
-    $field_builder_company_options  = get_option( 'erp-company-fields' );
-    $field_builder_companies_fields = [];
-
-    if ( ! empty( $field_builder_company_options ) ) {
-        foreach ( $field_builder_company_options as $field ) {
-            $field_builder_companies_fields[] = $field['name'];
-        }
-    }
-
-    $field_builder_employee_options = get_option( 'erp-employee-fields' );
-    $field_builder_employees_fields = [];
-
-    if ( ! empty( $field_builder_employee_options ) ) {
-        foreach ( $field_builder_employee_options as $field ) {
-            $field_builder_employees_fields[] = $field['name'];
-        }
-    }
-
-    $field_builder_vendor_options = get_option( 'erp-vendor-fields' );
-    $field_builder_vendors_fields = [];
-
-    if ( ! empty( $field_builder_vendor_options ) ) {
-        foreach ( $field_builder_vendor_options as $field ) {
-            $field_builder_vendors_fields[] = $field['name'];
-        }
-    }
-
-    if ( isset( $_POST['erp_import_csv'] ) ) {
-        define( 'ERP_IS_IMPORTING', true );
-
-        $fields = ! empty( $_POST['fields'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['fields'] ) ) : [];
-        $type   = isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
-
-        if ( empty( $type ) ) {
-            return;
-        }
-
-        $csv_file = isset( $_FILES['csv_file'] ) ? $_FILES['csv_file'] : []; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-
-        $data = [ 'type' => $type, 'fields' => $fields, 'file' => $csv_file ];
-
-        do_action( 'erp_tool_import_csv_action', $data );
-
-        if ( ! in_array( $type, [ 'contact', 'company', 'employee', 'vendor' ], true ) ) {
-            return;
-        }
-
-        $employee_fields = [
-            'work'     => [
-                'designation',
-                'department',
-                'location',
-                'hiring_source',
-                'hiring_date',
-                'date_of_birth',
-                'reporting_to',
-                'pay_rate',
-                'pay_type',
-                'type',
-                'status',
-            ],
-            'personal' => [
-                'photo_id',
-                'user_id',
-                'first_name',
-                'middle_name',
-                'last_name',
-                'other_email',
-                'phone',
-                'work_phone',
-                'mobile',
-                'address',
-                'gender',
-                'marital_status',
-                'nationality',
-                'driving_license',
-                'hobbies',
-                'user_url',
-                'description',
-                'street_1',
-                'street_2',
-                'city',
-                'country',
-                'state',
-                'postal_code',
-            ],
-        ];
-
-        //require_once WPERP_INCLUDES . '/lib/parsecsv.lib.php';
-
-        $csv = new ParseCsv\Csv();
-        $csv->encoding( null, 'UTF-8' );
-        $csv->parse( $csv_file['tmp_name'] );
-
-        if ( empty( $csv->data ) ) {
-            wp_redirect( admin_url( 'admin.php?page=erp-tools&tab=import' ) );
-            exit;
-        }
-
-        $csv_data = [];
-
-        $csv_data[] = array_keys( $csv->data[0] );
-
-        foreach ( $csv->data as $data_item ) {
-            $csv_data[] = array_values( $data_item );
-        }
-
-        if ( ! empty( $csv_data ) ) {
-            $count = 0;
-
-            do_action( 'validate_csv_data', $csv_data, $fields, $type );
-
-            foreach ( $csv_data as $line ) {
-                if ( empty( $line ) ) {
-                    continue;
-                }
-
-                $line_data = [];
-
-                if ( is_array( $fields ) && ! empty( $fields ) ) {
-                    foreach ( $fields as $key => $value ) {
-                        if ( ! empty( $line[ $value ] ) && is_numeric( $value ) ) {
-                            if ( $type === 'employee' ) {
-                                if ( in_array( $key, $employee_fields['work'], true ) ) {
-                                    if ( $key === 'designation' ) {
-                                        $line_data['work'][ $key ] = array_search( $line[ $value ], $designations, true );
-                                    } elseif ( $key === 'department' ) {
-                                        $line_data['work'][ $key ] = array_search( $line[ $value ], $departments, true );
-                                    } else {
-                                        $line_data['work'][ $key ] = $line[ $value ];
-                                    }
-                                } elseif ( in_array( $key, $employee_fields['personal'], true ) ) {
-                                    $line_data['personal'][ $key ] = $line[ $value ];
-                                } else {
-                                    $line_data[ $key ] = $line[ $value ];
-                                }
-                            } else {
-                                $line_data[ $key ]   = isset( $line[ $value ] ) ? $line[ $value ] : '';
-                                $line_data['type'] = $type;
-                            }
-                        }
-                    }
-                }
-
-                if ( $type === 'employee' && $is_hrm_activated ) {
-                    if ( ! isset( $line_data['work']['status'] ) ) {
-                        $line_data['work']['status'] = 'active';
-                    }
-
-                    $item_insert_id = erp_hr_employee_create( $line_data );
-
-                    if ( is_wp_error( $item_insert_id ) || is_string( $item_insert_id ) ) {
-                        continue;
-                    }
-                }
-
-                if ( $type === 'vendor' && $is_acc_activated ) {
-                    $item_insert_id = erp_insert_people( $line_data );
-
-                    if ( is_wp_error( $item_insert_id ) ) {
-                        continue;
-                    }
-                }
-
-                if ( ( $type === 'contact' || $type === 'company' ) && $is_crm_activated ) {
-                    $contact_owner              = isset( $_POST['contact_owner'] ) ? absint( $_POST['contact_owner'] ) : erp_crm_get_default_contact_owner();
-                    $line_data['contact_owner'] = $contact_owner;
-                    $people                     = erp_insert_people( $line_data, true );
-
-                    if ( is_wp_error( $people ) ) {
-                        continue;
-                    } else {
-                        $contact       = new \WeDevs\ERP\CRM\Contact( absint( $people->id ), 'contact' );
-                        $life_stage    = isset( $_POST['life_stage'] ) ? sanitize_key( $_POST['life_stage'] ) : '';
-
-                        if ( ! $people->exists ) {
-                            $contact->update_life_stage( $life_stage );
-                        } else {
-                            if ( ! $contact->get_life_stage() ) {
-                                $contact->update_life_stage( $life_stage );
-                            }
-                        }
-
-                        if ( ! empty( $_POST['contact_group'] ) ) {
-                            $contact_group = absint( $_POST['contact_group'] );
-
-                            $existing_data = \WeDevs\ERP\CRM\Models\ContactSubscriber::where( [
-                                'group_id' => $contact_group,
-                                'user_id'  => $people->id,
-                            ] )->first();
-
-                            if ( empty( $existing_data ) ) {
-                                $hash = sha1( microtime() . 'erp-subscription-form' . $contact_group . $people->id );
-
-                                erp_crm_create_new_contact_subscriber( [
-                                    'group_id'       => $contact_group,
-                                    'user_id'        => $people->id,
-                                    'status'         => 'subscribe',
-                                    'subscribe_at'   => current_time( 'mysql' ),
-                                    'unsubscribe_at' => null,
-                                    'hash'           => $hash,
-                                ] );
-                            }
-                        }
-
-                        if ( ! empty( $field_builder_contacts_fields ) ) {
-                            foreach ( $field_builder_contacts_fields as $field ) {
-                                if ( isset( $line_data[ $field ] ) ) {
-                                    erp_people_update_meta( $people->id, $field, $line_data[ $field ] );
-                                }
-                            }
-                        }
-                    }
-                }
-
-                ++ $count;
-            }
-        }
-
-        wp_redirect( admin_url( "admin.php?page=erp-tools&tab=import&imported=$count" ) );
-        exit;
-    }
-
-    if ( isset( $_POST['erp_export_csv'] ) ) {
         if ( ! empty( $_POST['type'] ) && ! empty( $_POST['fields'] ) ) {
-            $type   = isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
-            $fields = array_map( 'sanitize_text_field', wp_unslash( $_POST['fields'] ) );
+            $custom_fields  = [];
+            $custom_options = [];
+            $items          = [];
+            $csv_items      = [];
+            $is_employee    = false;
+            $type           = sanitize_text_field( wp_unslash( $_POST['type'] ) );
+            $fields         = array_map( 'sanitize_text_field', wp_unslash( $_POST['fields'] ) );
 
-            if ( $type === 'employee' && $is_hrm_activated ) {
-                $args = [
-                    'number' => - 1,
-                ];
+            switch ( $type ) {
+                case 'employee':
+                    $custom_options = get_option( 'erp-employee-fields' );
+                    $items          = erp_hr_get_employees( [ 'number' => - 1 ] );
+                    $is_employee    = true;
+                    break;
 
-                $items = erp_hr_get_employees( $args );
+                case 'contact':
+                    $custom_options = get_option( 'erp-contact-fields' );
+                    break;
+
+                case 'company':
+                    $custom_options = get_option( 'erp-company-fields' );
+                    break;
+
+                case 'customer':
+                    $custom_options = get_option( 'erp-customer-fields' );
+                    break;
+
+                case 'vendor':
+                    $custom_options = get_option( 'erp-vendor-fields' );
+                    break;
             }
 
-            if (
-                ( ( $type === 'contact' || $type === 'company' ) && $is_crm_activated )
-                ||
-                ( $type === 'vendor' && $is_acc_activated )
-            ) {
-                $args        = [
-                    'type'  => $type,
-                    'count' => true,
-                ];
-                $total_items = erp_get_peoples( $args );
+            if ( ! empty( $custom_options ) ) {
+                foreach ( $custom_options as $field ) {
+                    $custom_fields[] = $field['name'];
+                }
+            }
 
-                $args  = [
+            if ( ! $is_employee ) {
+                $items = erp_get_peoples( [
                     'type'   => $type,
                     'offset' => 0,
                     'number' => - 1,
-                ];
-                $items = erp_get_peoples( $args );
+                ] );
             }
 
-            //@todo do_action()
-            $csv_items = [];
-
-            $x = 0;
-
-            foreach ( $items as $item ) {
+            foreach ( $items as $index => $item ) {
                 if ( empty( $fields ) ) {
                     continue;
                 }
 
                 foreach ( $fields as $field ) {
-                    if ( $type === 'employee' ) {
-                        if ( in_array( $field, $field_builder_employees_fields, true ) ) {
-                            $csv_items[ $x ][ $field ] = get_user_meta( $item->id, $field, true );
+                    if ( ! $is_employee ) {
+                        if ( in_array( $field, $custom_fields, true ) ) {
+                            $csv_items[ $index ][ $field ] = erp_people_get_meta( $item->id, $field, true );
+                        } else {
+                            $csv_items[ $index ][ $field ] = $item->{$field};
+                        }
+                    } else {
+                        if ( in_array( $field, $custom_fields, true ) ) {
+                            $csv_items[ $index ][ $field ] = get_user_meta( $item->id, $field, true );
                         } else {
                             switch ( $field ) {
                                 case 'department':
