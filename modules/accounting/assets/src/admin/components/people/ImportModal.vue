@@ -115,6 +115,26 @@ export default {
             window.location.href = this.sampleUrl;
         },
 
+        importCsv() {
+            var self = this,
+                data = new FormData( jQuery( 'form#import_form' ).get(0) );
+
+            wp.ajax.send({
+                data: data,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    this.$root.$emit('peopleUpdate');
+                    self.$store.dispatch('spinner/setSpinner', false);
+                    self.showAlert('success', response);
+                },
+                error: function(error) {
+                    self.showError = true;
+                    self.error     = error;
+                }
+            });
+        },
+
         processFields() {
             var required  = '',
                 reqSpan   = '',
