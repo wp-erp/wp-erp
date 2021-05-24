@@ -382,15 +382,11 @@ export default {
 
         @media (max-width: 782px) {
             right: 17rem;
+            margin-top: 23px;
         }
 
         @media (max-width: 650px) {
             right: 8.5rem;
-            margin-top: 2px;
-        }
-
-        @media (max-width: 479px) {
-            margin-top: 22px;
         }
 
         button {
