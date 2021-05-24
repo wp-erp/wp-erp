@@ -289,19 +289,16 @@ export default {
                     @media (max-width: 767px) and (min-width: 707px) {
                         margin-right: 16rem;
                         margin-bottom: 3px;
-                        max-width: 110px;
                     }
 
                     @media (max-width: 706px) and (min-width: 651px) {
                         margin-right: 14rem;
                         margin-bottom: 3px;
-                        max-width: 105px;
                     }
 
                     @media (max-width: 650px) {
-                        margin-right: 8rem;
+                        margin-right: 12rem;
                         margin-bottom: 3px;
-                        max-width: 105px;
                     }
                 }
             }
