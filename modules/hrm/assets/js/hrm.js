@@ -114,6 +114,8 @@
                 $( 'input[name=filter_employee]' ).click();
             });
 
+            $( 'button#erp-hr-employee-import-csv' ).on( 'click', this.employee.importCsv );
+
             this.showRequestNotification();
             this.initTipTip();
         },
@@ -739,6 +741,81 @@
                 html += '<a href="#" id="erp-set-emp-photo" class="button-primary"><i class="fa fa-cloud-upload"></i>' + wpErpHr.emp_upload_photo + '</a>';
 
                 $( '.photo-container', '.erp-employee-form' ).html( html );
+            },
+
+            /**
+             * Import employee from CSV
+             * 
+             * @param {event} e
+             */
+            importCsv: function(e) {
+                if ( typeof e !== 'undefined' ) {
+                    e.preventDefault();
+                }
+
+                var self = $(this);
+
+                $.erpPopup({
+                    title: self.data('title'),
+                    button: self.data('btn'),
+                    id: 'erp-employee-import',
+                    content: wperp.template('erp-employee-import-csv')({}),
+                    extraClass: 'medium',
+                    
+                    onReady: function() {
+                        var modal  = this,
+                            form   = '#erp-employee-import form.erp-modal-form';
+
+                        $( '#erp-employee-csv-import-error' ).hide();
+                        $( '#erp-employee-csv-import-error' ).html('');
+
+                        $( form ).attr( 'enctype', 'multipart/form-data' );
+                        $( form ).attr( 'id', 'import_form' );
+                        
+                        $( 'button#erp-employee-sample-csv' ).on( 'click', function(e) {
+                            e.preventDefault();
+                            var csvUrl = $(this).data('url');
+                            window.location.href = csvUrl;
+                        });
+
+                        $('form#import_form #csv_file').on('change', function (e) {
+                            e.preventDefault();
+            
+                            if (!this) {
+                                return;
+                            }
+
+                            WeDevs_ERP_HR.employee.processCsvImporter(this);
+                        });
+                    },
+
+                    onSubmit: function(modal) {
+                        $( 'button[type=submit]', '.erp-modal' ).attr( 'disabled', 'disabled' );
+                        $( '#erp-employee-csv-import-error' ).hide();
+                        $( '#erp-employee-csv-import-error' ).html('');
+
+                        var data = new FormData(this.get(0));
+                                
+                        wp.ajax.send({
+                            data: data,
+                            processData: false,
+                            contentType: false,
+                            success: function(response) {
+                                modal.enableButton();
+                                modal.closeModal();
+                                WeDevs_ERP_HR.employee.reload();
+                                swal('', response, 'success');
+                            },
+                            error: function(error) {
+                                modal.enableButton();
+                                $('.erp-modal-backdrop, .erp-modal' ).find( '.erp-loader' ).addClass( 'erp-hide' );
+                                // swal('', error, 'error');
+                                $( '#erp-employee-csv-import-error' ).show();
+                                $( '#erp-employee-csv-import-error' ).html(error);
+                            }
+                        });
+                    }
+                });
             },
 
             /**
