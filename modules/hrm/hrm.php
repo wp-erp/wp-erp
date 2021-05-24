@@ -160,6 +160,7 @@ class Human_Resource {
 
         $localize_script = apply_filters( 'erp_hr_localize_script', [
             'nonce'                  => wp_create_nonce( 'wp-erp-hr-nonce' ),
+            'erp_fields'             => erp_get_import_export_fields(),
             'popup'                  => [
                 'dept_title'            => __( 'New Department', 'erp' ),
                 'dept_submit'           => __( 'Create Department', 'erp' ),
