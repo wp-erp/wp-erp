@@ -1893,6 +1893,50 @@
                     });
                 },
 
+                exportCsv: function(type) {
+                    var self  = $(this),
+                        label = type == 'contact'
+                              ? __( 'Select contact fields to export', 'erp' )
+                              : __( 'Select company fields to export', 'erp' );
+
+                    $.erpPopup({
+                        title: wpErpCrm.export_title,
+                        button: wpErpCrm.export,
+                        id: 'erp-customer-export',
+                        content: wperp.template('erp-crm-export-customer')({ type: type, label: label }),
+                        extraClass: '',
+                        
+                        onReady: function() {
+                            var modal  = this,
+                                form   = '#erp-customer-export form.erp-modal-form',
+                                fields = wpErpCrm.erp_fields[type] ? wpErpCrm.erp_fields[type].fields : [],
+                                html   = '';
+
+                            $( form ).attr( 'id', 'export_form' );
+                                    
+                            for (var i = 0; i < fields.length; i++) {
+                                html += '<div class="col-1.5"><label><input type="checkbox" name="fields[]" value="' + fields[i] + '"> ' + contact.strTitleCase(fields[i]) + '</label></div>';
+                            }
+                    
+                            if (html) {
+                                $('form#export_form #fields').html(html);
+                            }
+
+                            $("#export_form #selecctall").change(function (e) {
+                                e.preventDefault();
+                
+                                $("#export_form #fields input[type=checkbox]").prop('checked', $(this).prop("checked"));
+                            });
+                        },
+
+                        onSubmit: function(modal) {
+                            this.unbind('submit');
+                            this.get(0).submit();
+                            modal.closeModal();
+                        }
+                    });
+                },
+
                 processCsvImporter: function(fileSelector, type) {
                     $('#erp-csv-fields-container').show();
     
