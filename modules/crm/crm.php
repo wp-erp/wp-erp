@@ -250,6 +250,12 @@ class Customer_Relationship {
     
                             $customer                             = new Contact( null, 'contact' );
                             $localize_script['customer_empty']    = $customer->to_array();
+                            $localize_script['erp_fields']        = erp_get_import_export_fields();
+                            $localize_script['import']            = __( 'Import', 'erp' );
+                            $localize_script['export']            = __( 'Export', 'erp' );
+                            $localize_script['import_title']      = __( 'Import Contacts', 'erp' );
+                            $localize_script['export_title']      = __( 'Export Contacts', 'erp' );
+                            $localize_script['import_users']      = __( 'Import Users As Contacts', 'erp' );
                             $localize_script['statuses']          = erp_crm_customer_get_status_count( 'contact' );
                             $localize_script['contact_type']      = 'contact';
                             $localize_script['life_stages']       = erp_crm_get_life_stages_dropdown_raw();
@@ -268,6 +274,11 @@ class Customer_Relationship {
     
                             $customer                             = new Contact( null, 'company' );
                             $localize_script['customer_empty']    = $customer->to_array();
+                            $localize_script['erp_fields']        = erp_get_import_export_fields();
+                            $localize_script['import']            = __( 'Import', 'erp' );
+                            $localize_script['export']            = __( 'Export', 'erp' );
+                            $localize_script['import_title']      = __( 'Import Companies', 'erp' );
+                            $localize_script['export_title']      = __( 'Export Companies', 'erp' );
                             $localize_script['statuses']          = erp_crm_customer_get_status_count( 'company' );
                             $localize_script['contact_type']      = 'company';
                             $localize_script['life_stages']       = erp_crm_get_life_stages_dropdown_raw();
