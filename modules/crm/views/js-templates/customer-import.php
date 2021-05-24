@@ -16,6 +16,10 @@
         $type  = 'companies' === $sub_section ? 'company' : ( 'contacts' === $sub_section ? 'contact' : '' );
     }
 
+    $page          .= "&type={$type}";
+    $nonce          = 'erp-import-export-sample-nonce';
+    $csv_sample_url = wp_nonce_url( $page, $nonce );
+
     foreach ( $crm_users as $user ) {
         $users[ $user->ID ] = $user->display_name . ' &lt;' . $user->user_email . '&gt;';
     }
@@ -48,6 +52,7 @@
                 <p id="download_sample_wrap">                    
                     <button class="button button-primary"
                         id="erp-crm-sample-csv"
+                        data-url="<?php echo esc_url( $csv_sample_url ); ?>">
                         <?php esc_html_e( 'Download Sample CSV', 'erp' ); ?>
                     </button>
                 </p>
@@ -117,3 +122,7 @@
 
     <tbody id="erp-csv-fields-container" style="display: none;"></tbody>
 </table>
+
+<input type="hidden" name="type" value="{{ data.type }}">
+<input type="hidden" name="action" value="erp_import_csv">
+<?php wp_nonce_field( 'erp-import-export-nonce' ); ?>
