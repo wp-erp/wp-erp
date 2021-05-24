@@ -1464,29 +1464,6 @@ function erp_process_csv_export() {
 }
 
 /**
- * Display importer tool notice.
- *
- * @return void
- */
-function erp_importer_notices() {
-    if ( ! isset( $_REQUEST['page'] ) || $_REQUEST['page'] !== 'erp-tools' || ! isset( $_REQUEST['tab'] ) || $_REQUEST['tab'] !== 'import' ) {
-        return;
-    }
-
-    if ( isset( $_REQUEST['imported'] ) ) {
-        if ( intval( $_REQUEST['imported'] ) === 0 ) {
-            $message = __( 'Nothing to import or items are already exists.', 'erp' );
-            echo "<div class='notice error'><p>" . esc_html( $message ) . '</p></div>';
-        } else {
-            $message = sprintf( __( '%s items successfully imported.', 'erp' ),
-                number_format_i18n( sanitize_text_field( wp_unslash( $_REQUEST['imported'] ) ) )
-            );
-            echo "<div class='notice updated'><p>" . esc_html( $message ) . '</p></div>';
-        }
-    }
-}
-
-/**
  * Merge user defined arguments into defaults array.
  *
  * This function is similiar to wordpress wp_parse_args().
