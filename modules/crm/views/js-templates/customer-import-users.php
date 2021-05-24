@@ -104,5 +104,20 @@
     </tbody>
 </table>
 
+<br />
+
+<div id="import-status-indicator" class="erp-progress-status-indicator" style="display: none;">
+    <div class="status">
+        <span id="progress-total">100%</span>
+    </div>
+    <div class="progress">
+        <progress id="progressbar-total" max="100" value="0"></progress>
+    </div>
+    <div class="status">
+        <span id="completed-total"></span>
+        <span id="failed-total"></span>
+    </div>
+</div>
+
 <input type="hidden" name="action" value="erp_import_users_as_contacts">
 <?php wp_nonce_field( 'erp-import-export-nonce' ); ?>
