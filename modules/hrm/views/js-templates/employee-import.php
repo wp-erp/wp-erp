@@ -1,3 +1,9 @@
+<?php
+$page           = '?page=erp-hr&section=people&sub-section=employee&action=download_sample&type=employee';
+$nonce          = 'erp-import-export-sample-nonce';
+$csv_sample_url = wp_nonce_url( $page, $nonce );
+?>
+
 <table class="form-table">
     <tbody>
         <tr>
