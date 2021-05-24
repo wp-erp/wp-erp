@@ -363,6 +363,7 @@ class Customer_Relationship {
                         erp_get_js_template( WPERP_CRM_JS_TMPL . '/new-customer.php', 'erp-crm-new-contact' );
                         erp_get_js_template( WPERP_CRM_JS_TMPL . '/customer-import.php', 'erp-crm-import-customer' );
                         erp_get_js_template( WPERP_CRM_JS_TMPL . '/customer-export.php', 'erp-crm-export-customer' );
+                        erp_get_js_template( WPERP_CRM_JS_TMPL . '/customer-import-users.php', 'erp-crm-import-users' );
                         erp_get_js_template( WPERP_CRM_JS_TMPL . '/make-wp-user.php', 'erp-make-wp-user' );
                         erp_get_js_template( WPERP_CRM_JS_TMPL . '/new-bulk-contact-group.php', 'erp-crm-new-bulk-contact-group' );
                         erp_get_vue_component_template( WPERP_CRM_JS_TMPL . '/save-search-fields.php', 'erp-crm-save-search-item' );
