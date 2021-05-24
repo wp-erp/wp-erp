@@ -1823,6 +1823,76 @@
                     this.showHideSegment = !this.showHideSegment;
                 },
 
+                importCsv: function(type) {
+                    var self = this;
+
+                    $.erpPopup({
+                        title: wpErpCrm.import_title,
+                        button: wpErpCrm.import,
+                        id: 'erp-customer-import',
+                        content: wperp.template('erp-crm-import-customer')({ type: type }),
+                        extraClass: 'medium',
+                        onReady: function() {
+                            var modal  = this,
+                                form   = '#erp-customer-import form.erp-modal-form';
+
+                            $( '#erp-crm-csv-import-error' ).hide();
+                            $( '#erp-crm-csv-import-error' ).html('');
+
+                            $( form ).attr( 'enctype', 'multipart/form-data' );
+                            $( form ).attr( 'id', 'import_form' );
+                            
+                            $( 'button#erp-crm-sample-csv' ).on( 'click', function(e) {
+                                e.preventDefault();
+                                var csvUrl = $(this).data('url');
+                                window.location.href = csvUrl;
+                            });
+
+                            $( 'form#import_form #csv_file' ).on('change', function (e) {
+                                e.preventDefault();
+                
+                                if (!this) {
+                                    return;
+                                }
+
+                                self.processCsvImporter(this, type);
+                            });
+                        },
+                        onSubmit: function(modal) {
+                            modal.disableButton();
+                            $( '#erp-crm-csv-import-error' ).hide();
+
+                            var data = new FormData(this.get(0));
+                                    
+                            wp.ajax.send({
+                                data: data,
+                                processData: false,
+                                contentType: false,
+                                success: function(response) {
+                                    modal.enableButton();
+                                    modal.closeModal();
+                                    contact.$broadcast('vtable:reload');
+
+                                    swal({
+                                        title: '',
+                                        text: response,
+                                        type: 'success',
+                                        timer: 2500,
+                                        showConfirmButton: false
+                                    });
+                                },
+                                error: function(error) {
+                                    modal.enableButton();
+                                    $('.erp-modal-backdrop, .erp-modal' ).find( '.erp-loader' ).addClass( 'erp-hide' );
+                                    // swal('', error, 'error');
+                                    $( '#erp-crm-csv-import-error' ).show();
+                                    $( '#erp-crm-csv-import-error' ).html(error);
+                                }
+                            });
+                        }
+                    });
+                },
+
                 processCsvImporter: function(fileSelector, type) {
                     $('#erp-csv-fields-container').show();
     
