@@ -1604,28 +1604,23 @@ function erp_import_export_javascript() {
 }
 
 /**
- * Process or handle import/export submit.
+ * Process or handle csv file for export
  *
- * @since 1.0.0
- * @since 1.1.15 Declare `field_builder_contacts_fields` with empty an array
- * @since 1.1.18 Handle exporting when no field is given.
- *               Introduce `ERP_IS_IMPORTING` while importing data
- * @since 1.1.19 Import partial people data in case of existing people
+ * @since 1.8.5
  *
  * @return void
  */
-function erp_process_import_export() {
+function erp_process_csv_export() {
     if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'erp-import-export-nonce' ) ) {
-        return;
+        return new \WP_Error( 'no-permission', __( 'Nonce verification failed!', 'erp' ) );
     }
 
     if ( ! current_user_can( 'administrator' ) ) {
         return new \WP_Error( 'no-permission', __( 'Sorry ! You do not have permission to access this page', 'erp' ) );
     }
 
-    $is_crm_activated = erp_is_module_active( 'crm' );
-    $is_hrm_activated = erp_is_module_active( 'hrm' );
-    $is_acc_activated = erp_is_module_active( 'accounting' );
+    if ( isset( $_POST['erp_export_csv'] ) ) {
+        define( 'ERP_IMPORT_EXPORT', true );
 
     $departments  = $is_hrm_activated ? erp_hr_get_departments_dropdown_raw() : [];
     $designations = $is_hrm_activated ? erp_hr_get_designation_dropdown_raw() : [];
@@ -1911,54 +1906,25 @@ function erp_process_import_export() {
                         } else {
                             switch ( $field ) {
                                 case 'department':
-                                    $csv_items[ $x ][ $field ] = $item->get_department_title();
+                                    $csv_items[ $index ][ $field ] = $item->get_department_title();
                                     break;
 
                                 case 'designation':
-                                    $csv_items[ $x ][ $field ] = $item->get_job_title();
+                                    $csv_items[ $index ][ $field ] = $item->get_job_title();
                                     break;
 
                                 default:
-                                    $csv_items[ $x ][ $field ] = $item->{$field};
+                                    $csv_items[ $index ][ $field ] = $item->{$field};
                                     break;
-                            }
-                        }
-                    } else {
-                        if ( $type === 'contact' ) {
-                            if ( in_array( $field, $field_builder_contacts_fields, true ) ) {
-                                $csv_items[ $x ][ $field ] = erp_people_get_meta( $item->id, $field, true );
-                            } else {
-                                $csv_items[ $x ][ $field ] = $item->{$field};
-                            }
-                        }
-
-                        if ( $type === 'company' ) {
-                            if ( in_array( $field, $field_builder_companies_fields, true ) ) {
-                                $csv_items[ $x ][ $field ] = erp_people_get_meta( $item->id, $field, true );
-                            } else {
-                                $csv_items[ $x ][ $field ] = $item->{$field};
-                            }
-                        }
-
-                        if ( $type === 'vendor' ) {
-                            if ( in_array( $field, $field_builder_vendors_fields, true ) ) {
-                                $csv_items[ $x ][ $field ] = erp_people_get_meta( $item->id, $field, true );
-                            } else {
-                                $csv_items[ $x ][ $field ] = $item->{$field};
                             }
                         }
                     }
                 }
-
-                $x ++;
             }
 
             $file_name = 'export_' . gmdate( 'd_m_Y' ) . '.csv';
 
             erp_make_csv_file( $csv_items, $file_name );
-        } else {
-            wp_redirect( admin_url( 'admin.php?page=erp-tools&tab=export' ) );
-            exit();
         }
     }
 }
@@ -2568,18 +2534,18 @@ function erp_make_csv_file( $items, $file_name, $field_data = true ) {
  *
  * @param void
  */
-function erp_import_export_download_sample_action() {
-    $type = isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
+function erp_import_export_download_sample() {
+    $type = isset( $_REQUEST['type'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['type'] ) ) : '';
 
-    if ( ! isset( $_GET['action'] ) || $_GET['action'] !== 'download_sample' ) {
+    if ( ! isset( $_REQUEST['action'] ) || $_REQUEST['action'] !== 'download_sample' ) {
         return;
     }
 
-    if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_GET['_wpnonce'] ), 'erp-emport-export-sample-nonce' ) ) {
+    if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'erp-import-export-sample-nonce' ) ) {
         return;
     }
 
-    if ( ! isset( $type ) ) {
+    if ( empty( $type ) ) {
         return;
     }
 
@@ -2590,7 +2556,7 @@ function erp_import_export_download_sample_action() {
         $keys      = $fields[ $type ]['fields'];
         $keys      = array_flip( $keys );
         $file_name = "sample_csv_{$type}.csv";
-
+        
         erp_make_csv_file( [ $keys ], $file_name, false );
     }
 
