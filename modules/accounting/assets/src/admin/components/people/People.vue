@@ -7,8 +7,8 @@
             </h2>
 
             <div class="erp-btn-group">
-                <button>{{ __( 'Import', 'erp' ) }}</button>
-                <button>{{ __( 'Export', 'erp' ) }}</button>
+                <button @click.prevent="showImportModal = true">{{ __( 'Import', 'erp' ) }}</button>
+                <button @click.prevent="showExportModal = true">{{ __( 'Export', 'erp' ) }}</button>
             </div>
 
             <!-- top search bar -->
@@ -16,6 +16,10 @@
         </div>
 
         <people-modal v-if="showModal" :people.sync="people" :title="buttonTitle" @close="showModal = false" />
+
+        <import-modal v-if="showImportModal" :title="importTitle" :type="url" @close="showImportModal = false" />
+
+        <export-modal v-if="showExportModal" :title="exportTitle" :type="url" @close="showExportModal = false" />
 
         <list-table
             tableClass="wperp-table people-table table-striped table-dark "
@@ -50,6 +54,8 @@ import HTTP from 'admin/http';
 import PeopleSearch from 'admin/components/people/PeopleSearch.vue';
 import ListTable from 'admin/components/list-table/ListTable.vue';
 import PeopleModal from 'admin/components/people/PeopleModal.vue';
+import ImportModal from 'admin/components/people/ImportModal.vue';
+import ExportModal from 'admin/components/people/ExportModal.vue';
 
 export default {
     name: 'People',
@@ -57,7 +63,9 @@ export default {
     components: {
         PeopleSearch,
         ListTable,
-        PeopleModal
+        PeopleModal,
+        ImportModal,
+        ExportModal,
     },
 
     data() {
@@ -90,7 +98,11 @@ export default {
             ],
             search: '',
             showModal             : false,
+            showImportModal       : false,
+            showExportModal       : false,
             buttonTitle           : '',
+            importTitle           : '',
+            exportTitle           : '',
             pageTitle             : '',
             url                   : '',
             singleUrl             : '',
@@ -102,8 +114,10 @@ export default {
         this.$store.dispatch('spinner/setSpinner', true);
 
         this.$on('modal-close', () => {
-            this.showModal = false;
-            this.people = null;
+            this.showModal       = false;
+            this.showImportModal = false;
+            this.showExportModal = false;
+            this.people          = null;
         });
 
         this.$root.$on('peopleUpdate', () => {
@@ -112,6 +126,8 @@ export default {
         });
 
         this.buttonTitle = (this.$route.name.toLowerCase() === 'customers') ? __('Customer', 'erp') : __('Vendor', 'erp');
+        this.importTitle = (this.$route.name.toLowerCase() === 'customers') ? __('Import Customers', 'erp') : __('Import Vendors', 'erp');
+        this.exportTitle = (this.$route.name.toLowerCase() === 'customers') ? __('Export Customers', 'erp') : __('Export Vendors', 'erp');
         this.pageTitle   = (this.$route.name.toLowerCase() === 'customers') ? __('Customers', 'erp') : __('Vendors', 'erp');
         this.url         = this.$route.name.toLowerCase();
         this.singleUrl   = (this.url === 'customers') ? 'CustomerDetails' : 'VendorDetails';
@@ -404,6 +420,11 @@ export default {
 
             :not(:last-child) {
                 border-right: none;
+            }
+
+            &:hover {
+                background-color: #1A9ED4;
+                color: #fff;
             }
         }
     }
