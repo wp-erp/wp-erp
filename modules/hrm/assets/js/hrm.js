@@ -742,21 +742,20 @@
             },
 
             /**
-             * Processes CSV importer
+             * Processes csv importer
              * 
-             * @param {string} fileSelector 
+             * @param {String} fileSelector 
              */
             processCsvImporter: function(fileSelector) {
                 $('#erp-csv-fields-container').show();
 
-                var fieldsHtml = '';
-                var type = 'employee';
+                var fieldsHtml     = '',
+                    type           = 'employee',
+                    required       = '',
+                    reqSpan        = '',
+                    fields         = wpErpHr.erp_fields[type] ? wpErpHr.erp_fields[type].fields : [],
+                    requiredFields = wpErpHr.erp_fields[type] ? wpErpHr.erp_fields[type].required_fields : [];
 
-                var fields = wpErpHr.erp_fields[type] ? wpErpHr.erp_fields[type].fields : [];
-                var requiredFields = wpErpHr.erp_fields[type] ? wpErpHr.erp_fields[type].required_fields : [];
-
-                var required = '';
-                var reqSpan  = '';
                 for (var i = 0; i < fields.length; i++) {
 
                     if (requiredFields.indexOf(fields[i]) !== -1) {
@@ -782,6 +781,12 @@
                 WeDevs_ERP_HR.employee.mapCsvFields(fileSelector, '.csv_fields');
             },
 
+            /**
+             * Maps csv fields as required
+             * 
+             * @param {String} fileSelector 
+             * @param {String} fieldSelector 
+             */
             mapCsvFields: function(fileSelector, fieldSelector) {
                 var file      = fileSelector.files[0],
                     reader    = new FileReader(),
@@ -827,6 +832,12 @@
                 };
             },
 
+            /**
+             * Converts slug into title
+             * 
+             * @param {String} string 
+             * @returns String
+             */
             strTitleCase: function(string) {
                 var str = string.replace(/_/g, ' ');
 
