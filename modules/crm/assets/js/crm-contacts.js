@@ -1823,6 +1823,92 @@
                     this.showHideSegment = !this.showHideSegment;
                 },
 
+                importUsers: function() {
+                    var self = this;
+
+                    $.erpPopup({
+                        title: wpErpCrm.import_users,
+                        button: wpErpCrm.import,
+                        id: 'erp-customer-import-users',
+                        content: wperp.template('erp-crm-import-users')({ type: type }),
+                        extraClass: 'medium',
+                        onReady: function() {
+                            var modal  = this,
+                                form   = '#erp-customer-import-users form.erp-modal-form';
+
+                            $( form ).attr( 'enctype', 'multipart/form-data' );
+                            $( form ).attr( 'id', 'users_import_form' );
+
+                            $('.erp-select2').select2();
+                        },
+                        onSubmit: function(modal) {
+                            modal.disableButton();
+
+                            var data       = this.serialize(),
+                                totalItems = 0,
+                                left       = 0,
+                                imported   = 0,
+                                exists     = 0,
+                                percent    = 0,
+                                type       = 'success',
+                                message    = '',
+                                statusDiv  = $("div#import-status-indicator");
+
+                            statusDiv.show();
+
+                            wp.ajax.send({
+                                data: data,
+                                success: function(response) {
+                                    totalItems = response.total_items;
+                                    left       = response.left;
+                                    exists     = response.exists;
+                                    imported   = totalItems - left;
+                                    done       = imported - exists;
+
+                                    if (imported > 0 || totalItems > 0) {
+                                        percent = Math.floor((100 / totalItems) * (imported));
+
+                                        type = 'success';
+                                        message = __('Successfully imported all users!', 'erp');
+                                    } else {
+                                        type = 'error';
+                                        message = __('No users found to import!', 'erp');
+                                    }
+
+                                    statusDiv.find('#progress-total').html(percent + '%');
+                                    statusDiv.find('#progressbar-total').val(percent);
+                                    statusDiv.find('#completed-total').html( __('Imported ', 'erp') + done + __(' out of ', 'erp') + totalItems);
+                                    
+                                    if (exists > 0) {
+                                        statusDiv.find('#failed-total').html(__('Already Exist ', 'erp') + exists);
+                                    }
+
+                                    if (left > 0) {
+                                        return form.submit();
+                                    } else {
+                                        modal.enableButton();
+                                        modal.closeModal();
+                                        contact.$broadcast('vtable:reload');
+
+                                        swal({
+                                            title: '',
+                                            text: message,
+                                            type: type,
+                                            timer: 2200,
+                                            showConfirmButton: false
+                                        });
+                                    }
+                                },
+                                error: function(error) {
+                                    modal.enableButton();
+                                    $('.erp-modal-backdrop, .erp-modal' ).find( '.erp-loader' ).addClass( 'erp-hide' );
+                                    swal('', error, 'error');
+                                }
+                            });
+                        }
+                    });
+                },
+
                 importCsv: function(type) {
                     var self = this;
 
