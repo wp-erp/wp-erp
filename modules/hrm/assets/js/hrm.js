@@ -82,10 +82,10 @@
             $( 'body' ).on( 'click', 'a.erp-remove-photo', this.employee.removePhoto );
 
             // Trigger
-            $('body').on( 'erp-hr-after-new-dept', this.department.afterNew );
-            $('body').on( 'erp-hr-after-new-desig', this.designation.afterNew );
+            $( 'body' ).on( 'erp-hr-after-new-dept', this.department.afterNew );
+            $( 'body' ).on( 'erp-hr-after-new-desig', this.designation.afterNew );
 
-            $('body').on( 'change', '.wp-list-table', function(e) {
+            $( 'body' ).on( 'change', '.wp-list-table', function(e) {
                 var selector = $('.wp-list-table tbody tr th input[type="checkbox"]');
 
                 if ( selector.is(':checked') ) {
@@ -101,12 +101,12 @@
 
             $('body').on( 'click', '.wperp-filter-dropdown a', this.employee.toggleFilterDropdown );
 
-            $('body').on( 'click', 'input[name="hide_filter"]', function(e) {
+            $( 'body' ).on( 'click', 'input[name="hide_filter"]', function(e) {
                 e.preventDefault();
                 self.employee.toggleFilterDropdown();
             });
 
-            $('body').on( 'click', 'input[name="reset_filter"]', function(e) {
+            $( 'body' ).on( 'click', 'input[name="reset_filter"]', function(e) {
                 e.preventDefault();
                 $( '#filter_designation option:selected' ).prop( 'selected', false );
                 $( '#filter_department option:selected' ).prop( 'selected', false );
@@ -739,6 +739,100 @@
                 html += '<a href="#" id="erp-set-emp-photo" class="button-primary"><i class="fa fa-cloud-upload"></i>' + wpErpHr.emp_upload_photo + '</a>';
 
                 $( '.photo-container', '.erp-employee-form' ).html( html );
+            },
+
+            /**
+             * Processes CSV importer
+             * 
+             * @param {string} fileSelector 
+             */
+            processCsvImporter: function(fileSelector) {
+                $('#erp-csv-fields-container').show();
+
+                var fieldsHtml = '';
+                var type = 'employee';
+
+                var fields = wpErpHr.erp_fields[type] ? wpErpHr.erp_fields[type].fields : [];
+                var requiredFields = wpErpHr.erp_fields[type] ? wpErpHr.erp_fields[type].required_fields : [];
+
+                var required = '';
+                var reqSpan  = '';
+                for (var i = 0; i < fields.length; i++) {
+
+                    if (requiredFields.indexOf(fields[i]) !== -1) {
+                        required = 'required';
+                        reqSpan  = ' <span class="required">*</span>';
+                    } else {
+                        required = '';
+                        reqSpan  = '';
+                    }
+
+                    fieldsHtml += '<tr>'
+                                    + '<th>'
+                                        + '<label for="fields[' + fields[i] + ']" class="csv_field_labels">' + WeDevs_ERP_HR.employee.strTitleCase(fields[i]) + reqSpan + '</label>'
+                                    + '</th>'
+                                    + '<td>'
+                                        + '<select name="fields[' + fields[i] + ']" class="csv_fields" ' + required + '></select>'
+                                    + '</td>'
+                                + '</tr>';
+                }
+
+                $('#erp-csv-fields-container').html(fieldsHtml);
+
+                WeDevs_ERP_HR.employee.mapCsvFields(fileSelector, '.csv_fields');
+            },
+
+            mapCsvFields: function(fileSelector, fieldSelector) {
+                var file      = fileSelector.files[0],
+                    reader    = new FileReader(),
+                    first5000 = file.slice(0, 5000);
+                
+                    reader.readAsText(first5000);
+
+                reader.onload = function (e) {
+                    var csv             = reader.result,
+                        lines           = csv.split('\n'),
+                        columnNamesLine = lines[0],
+                        columnNames     = columnNamesLine.split(','),
+                        html            = '';
+
+                    html += '<option value="">&mdash; Select Field &mdash;</option>';
+                    
+                    columnNames.forEach(function (item, index) {
+                        item = item.replace(/"/g, "");
+
+                        html += '<option value="' + index + '">' + item + '</option>';
+                    });
+
+                    if (html) {
+                        $(fieldSelector).html(html);
+
+                        $(fieldSelector).each(function () {
+                            var fieldLabel = $(this).parent().parent().find('label').text(),
+                                options    = $(this).find('option');
+
+                            var targetOption = $(options).filter(function () {
+                                var optionText = $(this).html(),
+                                    regEx      = new RegExp(fieldLabel, 'i');
+
+                                return regEx.test(optionText);
+                            });
+
+                            if (targetOption) {
+                                $(options).removeAttr("selected");
+                                $(this).val($(targetOption).val());
+                            }
+                        });
+                    }
+                };
+            },
+
+            strTitleCase: function(string) {
+                var str = string.replace(/_/g, ' ');
+
+                return str.toLowerCase().split(' ').map(function (word) {
+                    return (word.charAt(0).toUpperCase() + word.slice(1));
+                }).join(' ');
             },
 
             /**
