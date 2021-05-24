@@ -115,6 +115,7 @@
             });
 
             $( 'button#erp-hr-employee-import-csv' ).on( 'click', this.employee.importCsv );
+            $( 'button#erp-hr-employee-export-csv' ).on( 'click', this.employee.exportCsv );
 
             this.showRequestNotification();
             this.initTipTip();
@@ -814,6 +815,57 @@
                                 $( '#erp-employee-csv-import-error' ).html(error);
                             }
                         });
+                    }
+                });
+            },
+
+            /**
+             * Export employee into CSV
+             * 
+             * @param {event} e
+             */
+            exportCsv: function(e) {
+                if ( typeof e !== 'undefined' ) {
+                    e.preventDefault();
+                }
+
+                var self = $(this);
+
+                $.erpPopup({
+                    title: self.data('title'),
+                    button: self.data('btn'),
+                    id: 'erp-employee-export',
+                    content: wperp.template('erp-employee-export-csv')({}),
+                    extraClass: '',
+                    
+                    onReady: function() {
+                        var modal  = this,
+                            form   = '#erp-employee-export form.erp-modal-form',
+                            type   = 'employee',
+                            fields = wpErpHr.erp_fields[type] ? wpErpHr.erp_fields[type].fields : [],
+                            html   = '';
+
+                        $( form ).attr( 'id', 'export_form' );
+                                
+                        for (var i = 0; i < fields.length; i++) {
+                            html += '<div class="col-1"><label><input type="checkbox" name="fields[]" value="' + fields[i] + '"> ' + WeDevs_ERP_HR.employee.strTitleCase(fields[i]) + '</label></div>';
+                        }
+                
+                        if (html) {
+                            $('form#export_form #fields').html(html);
+                        }
+
+                        $("#export_form #selecctall").change(function (e) {
+                            e.preventDefault();
+            
+                            $("#export_form #fields input[type=checkbox]").prop('checked', $(this).prop("checked"));
+                        });
+                    },
+
+                    onSubmit: function(modal) {
+                        this.unbind('submit');
+                        this.get(0).submit();
+                        modal.closeModal();
                     }
                 });
             },
