@@ -1327,6 +1327,30 @@ function erp_get_import_export_fields() {
                 'postal_code',
             ],
         ],
+        'customer' => [
+            'required_fields' => [
+                'first_name',
+                'last_name',
+                'email',
+            ],
+            'fields'          => [
+                'first_name',
+                'last_name',
+                'email',
+                'phone',
+                'company',
+                'mobile',
+                'fax',
+                'website',
+                'notes',
+                'street_1',
+                'street_2',
+                'city',
+                'country',
+                'state',
+                'postal_code',
+            ],
+        ],
     ];
 
     return apply_filters( 'erp_import_export_csv_fields', $erp_fields );
