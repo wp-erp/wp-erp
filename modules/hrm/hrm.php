@@ -327,6 +327,8 @@ class Human_Resource {
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/new-dept.php', 'erp-new-dept' );
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/new-designation.php', 'erp-new-desig' );
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/employee-terminate.php', 'erp-employment-terminate' );
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/employee-import.php', 'erp-employee-import-csv' );
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/employee-export.php', 'erp-employee-export-csv' );
                 break;
 
             case 'leave':
