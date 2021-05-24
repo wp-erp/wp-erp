@@ -53,11 +53,12 @@ export default {
 
     @media (max-width: 782px) {
         right: 0.8rem;
+        margin-top: 9px;
     }
 
     .input-with-addon {
         position: relative;
-        margin-top: 13px;
+        margin-top: 2px;
 
         @media (max-width: 782px) {
             margin-top: 14px;
@@ -97,7 +98,11 @@ export default {
     }
 
     .search-btn {
-        margin-top: 12px !important;
+        margin-top: 2px !important;
+
+        @media (max-width: 782px) {
+            margin-top: 14px!important;
+        }
 
         @media (max-width: 650px) {
             display: none;
