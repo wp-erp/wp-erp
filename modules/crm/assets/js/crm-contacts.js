@@ -1821,7 +1821,67 @@
 
                 addSearchSegment: function() {
                     this.showHideSegment = !this.showHideSegment;
-                }
+                },
+    
+                mapCsvFields: function(fileSelector, fieldSelector) {
+                    var file = fileSelector.files[0];
+    
+                    var reader = new FileReader();
+    
+                    var first5000 = file.slice(0, 5000);
+                    reader.readAsText(first5000);
+    
+                    reader.onload = function (e) {
+                        var csv = reader.result,
+                            // Split the input into lines
+                            lines = csv.split('\n'),
+                            // Extract column names from the first line
+                            columnNamesLine = lines[0],
+                            columnNames = columnNamesLine.split(',');
+    
+                        var html = '';
+    
+                        html += '<option value="">&mdash; Select Field &mdash;</option>';
+                        columnNames.forEach(function (item, index) {
+                            item = item.replace(/"/g, "");
+    
+                            html += '<option value="' + index + '">' + item + '</option>';
+                        });
+    
+                        if (html) {
+                            $(fieldSelector).html(html);
+    
+                            var field, field_label;
+                            
+                            $(fieldSelector).each(function () {
+                                field_label = $(this).parent().parent().find('label').text();
+    
+                                var options = $(this).find('option');
+                                
+                                var targetOption = $(options).filter(function () {
+                                    var option_text = $(this).html();
+    
+                                    var re = new RegExp(field_label, 'i');
+    
+                                    return re.test(option_text);
+                                });
+    
+                                if (targetOption) {
+                                    $(options).removeAttr("selected");
+                                    $(this).val($(targetOption).val());
+                                }
+                            });
+                        }
+                    };
+                },
+    
+                strTitleCase: function(string) {
+                    var str = string.replace(/_/g, ' ');
+    
+                    return str.toLowerCase().split(' ').map(function (word) {
+                        return (word.charAt(0).toUpperCase() + word.slice(1));
+                    }).join(' ');
+                },
             },
 
             ready: function() {
