@@ -11,11 +11,11 @@
                             </span>
                         </div>
 
-                        <div v-if="showError" v-html="error" class="notice is-dismissible" id="erp-csv-import-error"></div>
-
                         <!-- end modal body title -->
                         <form action="" method="post" class="modal-form edit-customer-modal" id="import_form" @submit.prevent="importCsv">
                             <div class="wperp-modal-body">
+                                <div v-if="showError" v-html="error" class="notice notice-error erp-error-notice" id="erp-csv-import-error"></div>
+                                
                                 <table class="form-table">
                                     <tbody>
                                         <tr>
@@ -128,9 +128,15 @@ export default {
     .errors {
         margin: 0 20px;
         color: #f44336;
+        
         li {
             background: #f3f3f3;
             padding: 2px 10px;
         }
+    }
+
+    #erp-csv-import-error {
+        font-size: 16px !important;
+        padding: 5px !important;
     }
 </style>
