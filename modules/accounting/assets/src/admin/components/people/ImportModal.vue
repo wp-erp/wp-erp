@@ -115,6 +115,40 @@ export default {
             window.location.href = this.sampleUrl;
         },
 
+        processFields() {
+            var required  = '',
+                reqSpan   = '',
+                fields    = [],
+                reqFields = [];
+
+            if (this.peopleFields[this.peopleType]) {
+                fields    = this.peopleFields[this.peopleType].fields;
+                reqFields = this.peopleFields[this.peopleType].required_fields;
+            }
+
+            for (var i = 0; i < fields.length; i++) {
+                required = '';
+                reqSpan  = '';
+
+                if (reqFields.indexOf(fields[i]) !== -1) {
+                    required = 'required';
+                    reqSpan = ' <span class="required">*</span>';
+                }
+
+                this.fieldsHtml += `<tr>
+                                        <th>
+                                            <label for="fields[${fields[i]}]" class="csv_field_labels">${this.strTitleCase(fields[i])}${reqSpan}</label>
+                                        </th>
+                                        <td>
+                                            <select name="fields[${fields[i]}]" class="csv_fields" ${required}>
+                                            </select>
+                                        </td>
+                                    </tr>`;
+            }
+
+            this.mapCsvFields(document.getElementById('csv_file'), '.csv_fields');
+        },
+
         mapCsvFields(fileSelector, fieldSelector) {
             var file      = fileSelector.files[0],
                 reader    = new FileReader(),
@@ -158,6 +192,14 @@ export default {
                     });
                 }
             };
+        },
+
+        strTitleCase(string) {
+            var str = string.replace(/_/g, ' ');
+
+            return str.toLowerCase().split(' ').map(function (word) {
+                return (word.charAt(0).toUpperCase() + word.slice(1));
+            }).join(' ');
         },
     },
 };
