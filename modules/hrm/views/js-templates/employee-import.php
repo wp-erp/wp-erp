@@ -4,6 +4,8 @@ $nonce          = 'erp-import-export-sample-nonce';
 $csv_sample_url = wp_nonce_url( $page, $nonce );
 ?>
 
+<div class="notice is-dismissible" id="erp-employee-csv-import-error" style="display: none;"></div>
+
 <table class="form-table">
     <tbody>
         <tr>
@@ -31,3 +33,7 @@ $csv_sample_url = wp_nonce_url( $page, $nonce );
 
     <tbody id="erp-csv-fields-container" style="display: none;"></tbody>
 </table>
+
+<input type="hidden" name="type" value="employee">
+<input type="hidden" name="action" value="erp_import_csv">
+<?php wp_nonce_field( 'erp-import-export-nonce' ); ?>
