@@ -114,6 +114,51 @@ export default {
         downloadSample() {
             window.location.href = this.sampleUrl;
         },
+
+        mapCsvFields(fileSelector, fieldSelector) {
+            var file      = fileSelector.files[0],
+                reader    = new FileReader(),
+                first5000 = file.slice(0, 5000),
+                self      = this;
+            
+            reader.readAsText(first5000);
+
+            reader.onload = function (e) {
+                var csv             = reader.result,
+                    lines           = csv.split('\n'),
+                    columnNamesLine = lines[0],
+                    columnNames     = columnNamesLine.split(','),
+                    html            = '';
+
+                html += '<option value="">&mdash; Select Field &mdash;</option>';
+                
+                columnNames.forEach(function (item, index) {
+                    item = item.replace(/"/g, "");
+
+                    html += `<option value="${index}">${item}</option>`;
+                });
+
+                if (html) {
+                    jQuery(fieldSelector).html(html);
+
+                    jQuery(fieldSelector).each(function () {
+                        var fieldLabel   = jQuery(this).parent().parent().find('label').text(),
+                            options      = jQuery(this).find('option'),
+                            targetOption = jQuery(options).filter(function () {
+                                var optionText = jQuery(this).html(),
+                                    regEx      = new RegExp(fieldLabel, 'i');
+
+                                return regEx.test(optionText);
+                            });
+
+                        if (targetOption) {
+                            jQuery(options).removeAttr("selected");
+                            jQuery(this).val(jQuery(targetOption).val());
+                        }
+                    });
+                }
+            };
+        },
     },
 };
 </script>
