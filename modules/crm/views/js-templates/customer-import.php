@@ -33,7 +33,7 @@
     }
 ?>
 
-<div class="notice is-dismissible" id="erp-crm-csv-import-error" style="display: none;"></div>
+<div class="notice notice-error erp-error-notice" id="erp-crm-csv-import-error" style="display: none;"></div>
 
 <table class="form-table">
     <tbody>
