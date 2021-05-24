@@ -18,33 +18,9 @@ class Validate_Data {
      *
      * @return void
      */
-
     public function __construct() {
         $this->filter( 'erp_validate_csv_data', 'validate_csv_data', 10, 3 );
         $this->filter( 'validate_field', 'validate_custom_field', 10, 3 );
-    }
-
-    /**
-     * Pre validate csv data
-     *
-     * @since 1.6.5
-     *
-     * @return void
-     */
-    public function pre_validate_csv_data( $data ) {
-        $errors = new ERP_Errors( 'import_csv_data' );
-        // Check if current user has permission
-        if ( ! current_user_can( 'administrator' ) ) {
-            $errors->add( new \WP_Error( 'no-permission', __( 'Sorry ! You do not have permission to access this page', 'erp' ) ) );
-        }
-
-        $files = wp_check_filetype_and_ext( $data['file']['tmp_name'], $data['file']['name'] );
-
-        // Check if current user has permission
-        if ( 'csv' !== $files['ext'] && 'text/csv' !== $files['type'] ) {
-            $errors->add( new \WP_Error( 'no-permission', __( 'Sorry ! You have to provide valid csv file', 'erp' ) ) );
-        }
-        $this->through_error_if_found( $errors );
     }
 
     /**
@@ -128,6 +104,7 @@ class Validate_Data {
                 }
             }
         }
+
         return $error_list;
     }
 
