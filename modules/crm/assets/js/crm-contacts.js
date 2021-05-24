@@ -1822,26 +1822,59 @@
                 addSearchSegment: function() {
                     this.showHideSegment = !this.showHideSegment;
                 },
+
+                processCsvImporter: function(fileSelector, type) {
+                    $('#erp-csv-fields-container').show();
+    
+                    var fieldsHtml     = '',
+                        required       = '',
+                        reqSpan        = '',
+                        fields         = wpErpCrm.erp_fields[type] ? wpErpCrm.erp_fields[type].fields : [],
+                        requiredFields = wpErpCrm.erp_fields[type] ? wpErpCrm.erp_fields[type].required_fields : [];
+    
+                    for (var i = 0; i < fields.length; i++) {
+    
+                        if (requiredFields.indexOf(fields[i]) !== -1) {
+                            required = 'required';
+                            reqSpan  = ' <span class="required">*</span>';
+                        } else {
+                            required = '';
+                            reqSpan  = '';
+                        }
+    
+                        fieldsHtml += `
+                            <tr>
+                                <th>
+                                    <label for="fields[` + fields[i] + `]" class="csv_field_labels">` + this.strTitleCase(fields[i]) + reqSpan + `</label>
+                                </th>
+                                <td>
+                                    <select name="fields[` + fields[i] + `]" class="csv_fields" ` + required + `>
+                                    </select>
+                                </td>
+                            </tr>`;
+                    }
+    
+                    $('#erp-csv-fields-container').html(fieldsHtml);
+    
+                    this.mapCsvFields(fileSelector, '.csv_fields');
+                },
     
                 mapCsvFields: function(fileSelector, fieldSelector) {
-                    var file = fileSelector.files[0];
-    
-                    var reader = new FileReader();
-    
-                    var first5000 = file.slice(0, 5000);
+                    var file      = fileSelector.files[0],
+                        reader    = new FileReader(),
+                        first5000 = file.slice(0, 5000);
+                    
                     reader.readAsText(first5000);
     
                     reader.onload = function (e) {
-                        var csv = reader.result,
-                            // Split the input into lines
-                            lines = csv.split('\n'),
-                            // Extract column names from the first line
+                        var csv             = reader.result,
+                            lines           = csv.split('\n'),
                             columnNamesLine = lines[0],
-                            columnNames = columnNamesLine.split(',');
-    
-                        var html = '';
+                            columnNames     = columnNamesLine.split(','),
+                            html            = '';
     
                         html += '<option value="">&mdash; Select Field &mdash;</option>';
+                        
                         columnNames.forEach(function (item, index) {
                             item = item.replace(/"/g, "");
     
@@ -1849,21 +1882,20 @@
                         });
     
                         if (html) {
+                            var fieldLabel;
+                            
                             $(fieldSelector).html(html);
-    
-                            var field, field_label;
                             
                             $(fieldSelector).each(function () {
-                                field_label = $(this).parent().parent().find('label').text();
-    
                                 var options = $(this).find('option');
+
+                                fieldLabel  = $(this).parent().parent().find('label').text();
                                 
                                 var targetOption = $(options).filter(function () {
-                                    var option_text = $(this).html();
+                                    var option_text = $(this).html(),
+                                        regEx       = new RegExp(fieldLabel, 'i');
     
-                                    var re = new RegExp(field_label, 'i');
-    
-                                    return re.test(option_text);
+                                    return regEx.test(option_text);
                                 });
     
                                 if (targetOption) {
