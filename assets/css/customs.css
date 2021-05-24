@@ -886,6 +886,11 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
     z-index: 26;
 }
 
+.erp-error-notice {
+    font-size: 16px !important;
+    padding: 5px !important;
+}
+
 .cen-align {
     text-align: center !important;
     vertical-align: middle !important;
