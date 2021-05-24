@@ -34,6 +34,25 @@ class Ajax {
         $this->action( 'wp_ajax_erp-dismiss-promotional-offer-notice', 'dismiss_promotional_offer' );
         $this->action( 'wp_ajax_erp-toggle-module', 'toggle_module' );
         $this->action( 'wp_ajax_erp_import_csv', 'import_csv' );
+        $this->action( 'wp_ajax_erp_acct_get_sample_csv_url', 'generate_csv_url' );
+    }
+
+    /**
+     * Generates url for accounting people
+     * 
+     * @since 1.8.5
+     *
+     * @return mixed
+     */
+    public function generate_csv_url() {
+        $type  = ! empty( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
+        $path  = ! empty( $_POST['path'] ) ? sanitize_text_field( wp_unslash( $_POST['path'] ) ) : '';
+        $type  = 'customers' === $type ? 'customer' : 'vendor';
+        $nonce = wp_create_nonce( 'erp-import-export-sample-nonce' );
+        $page  = "?page=erp-accounting&action=download_sample&type={$type}&_wpnonce={$nonce}#{$path}";
+        $url   = admin_url( "admin.php{$page}" );
+
+        wp_send_json_success( $url );
     }
 
     /**
