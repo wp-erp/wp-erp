@@ -29,6 +29,8 @@
     }
 ?>
 
+<div class="notice is-dismissible" id="erp-crm-csv-import-error" style="display: none;"></div>
+
 <table class="form-table">
     <tbody>
         <tr>
