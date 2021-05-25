@@ -71,24 +71,27 @@ function erp_acct_get_tax_rate( $tax_no ) {
 
     $sql = "SELECT
 
-    tax.id,
-    tax.tax_rate_name,
-    tax.tax_number,
-    tax.default,
-    tax.created_at,
-    tax.created_by,
-    tax.updated_at,
-    tax.updated_by,
+                tax.id,
+                tax.tax_rate_name,
+                tax.tax_number,
+                tax.default,
+                tax.created_at,
+                tax.created_by,
+                tax.updated_at,
+                tax.updated_by,
 
-    tax_item.tax_id,
-    tax_item.component_name,
-    tax_item.agency_id,
-    tax_item.tax_cat_id
+                tax_item.tax_id,
+                tax_item.component_name,
+                tax_item.agency_id,
+                tax_item.tax_cat_id
 
-    FROM {$wpdb->prefix}erp_acct_taxes AS tax
-    LEFT JOIN {$wpdb->prefix}erp_acct_tax_cat_agency AS tax_item ON tax.id = tax_item.tax_id
+            FROM {$wpdb->prefix}erp_acct_taxes AS tax
+            LEFT JOIN {$wpdb->prefix}erp_acct_tax_cat_agency AS tax_item ON tax.id = tax_item.tax_id
 
-    WHERE tax.id = {$tax_no} LIMIT 1";
+            WHERE tax.id = {$tax_no} LIMIT 1";
+
+    $wpdb->query( "SET SQL_BIG_SELECTS=1" );
+    $wpdb->query( "SET SESSION SQL_MODE=''" );
 
     $row = $wpdb->get_row( $sql, ARRAY_A );
 
