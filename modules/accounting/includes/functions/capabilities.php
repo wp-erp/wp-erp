@@ -31,6 +31,23 @@ if ( ! function_exists( 'erp_ac_get_manager_role' ) ) {
     }
 
     /**
+     * Check is current user is accounting manager
+     *
+     * @since 1.8.5
+     *
+     * @return bool
+     */
+    function erp_ac_is_current_user_manager() {
+        $current_user_role = erp_ac_get_user_role( get_current_user_id() );
+
+        if ( erp_ac_get_manager_role() != $current_user_role ) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Return a user's HR role
      *
      * @param int $user_id
