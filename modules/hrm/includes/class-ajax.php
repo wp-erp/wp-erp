@@ -2390,9 +2390,17 @@ class Ajax_Handler {
         $result = apply_filters( "erp_hr_employee_{$request_type}_request_bulk_action", $req_ids, $action );
 
         if ( is_wp_error( $result ) ) {
-            $this->send_error( __( 'Something went wrong!', 'erp' ) );
+            $this->send_error( __( 'Something went wrong! Try again later.', 'erp' ) );
         }
 
-        $this->send_success( sprintf( __( '%1$s items have been %2$s susccesfully', 'erp' ), count( $result ), $action ) );
+        if ( 0 === count( $result ) && 'deleted' !== $action ) {
+            $this->send_error( __( sprintf( 'No pending item found. Selected item(s) are already approved/rejected.', $operation ), 'erp' ) );
+        }
+
+        if ( 1 === count( $result ) ) {
+            $this->send_success( sprintf( __( '1 pending item has been %s susccesfully', 'erp' ), $action ) );
+        }
+
+        $this->send_success( sprintf( __( '%1$s pending items have been %2$s susccesfully', 'erp' ), count( $result ), $action ) );
     }
 }
