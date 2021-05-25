@@ -2398,9 +2398,9 @@ class Ajax_Handler {
         }
 
         if ( 1 === count( $result ) ) {
-            $this->send_success( sprintf( __( '1 pending item has been %s susccesfully', 'erp' ), $action ) );
+            $this->send_success( sprintf( __( '1 pending item has been %s successfully', 'erp' ), $action ) );
         }
 
-        $this->send_success( sprintf( __( '%1$s pending items have been %2$s susccesfully', 'erp' ), count( $result ), $action ) );
+        $this->send_success( sprintf( __( '%1$s pending items have been %2$s successfully', 'erp' ), count( $result ), $action ) );
     }
 }
