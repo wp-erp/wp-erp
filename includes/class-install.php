@@ -746,7 +746,7 @@ Account Manager
                 `school` varchar(100) DEFAULT NULL,
                 `degree` varchar(100) DEFAULT NULL,
                 `field` varchar(100) DEFAULT NULL,
-                `result` JSON DEFAULT NULL,
+                `result` varchar(50) DEFAULT NULL,
                 `result_type` enum('grade', 'percentage') DEFAULT NULL,
                 `finished` int(4) unsigned DEFAULT NULL,
                 `notes` text,
