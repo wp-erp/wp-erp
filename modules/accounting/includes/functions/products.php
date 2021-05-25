@@ -63,6 +63,9 @@ function erp_acct_get_all_products( $args = [] ) {
             LEFT JOIN {$wpdb->prefix}erp_acct_product_types AS product_type ON product.product_type_id = product_type.id
             WHERE product.product_type_id<>3 ORDER BY product.{$args['orderby']} {$args['order']} {$limit}";
 
+        $wpdb->query( "SET SQL_BIG_SELECTS=1" );
+        $wpdb->query( "SET SESSION SQL_MODE=''" );
+
         if ( $args['count'] ) {
             $products_count = $wpdb->get_var( $sql );
 
@@ -90,6 +93,9 @@ function erp_acct_get_all_products( $args = [] ) {
  */
 function erp_acct_get_product( $product_id ) {
     global $wpdb;
+
+    $wpdb->query( "SET SQL_BIG_SELECTS=1" );
+    $wpdb->query( "SET SESSION SQL_MODE=''" );
 
     $row = $wpdb->get_row(
         "SELECT
