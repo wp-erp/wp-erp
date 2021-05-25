@@ -73,21 +73,21 @@ function erp_acct_get_sales_transactions( $args = [] ) {
             $sql .= ' COUNT( DISTINCT voucher.id ) AS total_number';
         } else {
             $sql .= ' voucher.id,
-                voucher.type,
-                voucher.editable,
-                invoice.customer_id AS inv_cus_id,
-                invoice.customer_name AS inv_cus_name,
-                invoice_receipt.customer_name AS pay_cus_name,
-                invoice.trn_date AS invoice_trn_date,
-                invoice_receipt.trn_date AS payment_trn_date,
-                invoice_receipt.ref,
-                invoice.due_date,
-                invoice.estimate,
-                (invoice.amount + invoice.tax) - invoice.discount AS sales_amount,
-                SUM(invoice_account_detail.debit - invoice_account_detail.credit) AS due,
-                invoice_receipt.amount AS payment_amount,
-                invoice.status as inv_status,
-                invoice_receipt.status as pay_status';
+                    voucher.type,
+                    voucher.editable,
+                    invoice.customer_id AS inv_cus_id,
+                    invoice.customer_name AS inv_cus_name,
+                    invoice_receipt.customer_name AS pay_cus_name,
+                    invoice.trn_date AS invoice_trn_date,
+                    invoice_receipt.trn_date AS payment_trn_date,
+                    invoice_receipt.ref,
+                    invoice.due_date,
+                    invoice.estimate,
+                    (invoice.amount + invoice.tax) - invoice.discount AS sales_amount,
+                    SUM(invoice_account_detail.debit - invoice_account_detail.credit) AS due,
+                    invoice_receipt.amount AS payment_amount,
+                    invoice.status as inv_status,
+                    invoice_receipt.status as pay_status';
         }
 
         $sql .= " FROM {$wpdb->prefix}erp_acct_voucher_no AS voucher
@@ -95,6 +95,9 @@ function erp_acct_get_sales_transactions( $args = [] ) {
             LEFT JOIN {$wpdb->prefix}erp_acct_invoice_receipts AS invoice_receipt ON invoice_receipt.voucher_no = voucher.id
             LEFT JOIN {$wpdb->prefix}erp_acct_invoice_account_details AS invoice_account_detail ON invoice_account_detail.invoice_no = invoice.voucher_no
             {$where} GROUP BY voucher.id ORDER BY voucher.id {$args['order']} {$limit}";
+
+        $wpdb->query( "SET SQL_BIG_SELECTS=1" );
+        $wpdb->query( "SET SESSION SQL_MODE=''" );
 
         if ( $args['count'] ) {
             $wpdb->get_results( $sql );
@@ -670,6 +673,9 @@ function erp_acct_get_expense_transactions( $args = [] ) {
             GROUP BY voucher.id
             ORDER BY voucher.id {$args['order']} {$limit}";
 
+        $wpdb->query( "SET SQL_BIG_SELECTS=1" );
+        $wpdb->query( "SET SESSION SQL_MODE=''" );
+
         if ( $args['count'] ) {
             $wpdb->get_results( $sql );
 
@@ -781,6 +787,9 @@ function erp_acct_get_purchase_transactions( $args = [] ) {
             LEFT JOIN {$wpdb->prefix}erp_acct_pay_purchase AS pay_purchase ON pay_purchase.voucher_no = voucher.id
             LEFT JOIN {$wpdb->prefix}erp_acct_purchase_account_details AS purchase_acct_details ON purchase_acct_details.purchase_no = purchase.voucher_no
             {$where} GROUP BY voucher.id ORDER BY voucher.id {$args['order']} {$limit}";
+
+        $wpdb->query( "SET SQL_BIG_SELECTS=1" );
+        $wpdb->query( "SET SESSION SQL_MODE=''" );
 
         if ( $args['count'] ) {
             $wpdb->get_results( $sql );
