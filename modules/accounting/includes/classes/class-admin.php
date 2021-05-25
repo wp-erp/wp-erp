@@ -486,7 +486,7 @@ class Admin {
      * @return void
      */
     public function permission_management_field( $employee ) {
-        if ( ! erp_acct_is_hr_current_user_manager() ) {
+        if ( ! erp_ac_is_current_user_manager() ) {
             return;
         }
 
