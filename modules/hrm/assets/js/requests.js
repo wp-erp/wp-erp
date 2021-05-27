@@ -385,12 +385,20 @@
                 },
 
                 initExtraFeatures: function() {
+                    var self = this;
+
                     $( document ).click( function(e) {
                         Array.prototype.forEach.call( $( '.erp-row-actions-btn' ), function(row, index) {
                             if ( typeof row !== 'undefined' && ! row.contains( e.target ) ) {
                                 $( '.dropdown-content' )[index].classList.remove('show');
                             }
                         });
+                    });
+
+                    $( '#erp-hr-filter-date' ).on( 'change', function(e) {
+                        if ( $(this).val() == '' ) {
+                            self.date = {};
+                        }
                     });
                 },
 
