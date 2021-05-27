@@ -69,7 +69,7 @@
                                 </option>
                             </select>
 
-                            <input type="text"
+                            <input type="search"
                                 name="filter_date"
                                 id="erp-hr-filter-date"
                                 placeholder="<?php esc_attr_e( 'Date range', 'erp' ); ?>">
