@@ -20,17 +20,40 @@ class Ajax_Handler {
      * @return void
      */
     public function __construct () {
-        $this->init_actions();
+        add_action( 'admin_init', [ $this, 'init_actions' ] );
     }
 
+    /**
+     * Init all actions
+     *
+     * @since 1.8.4
+     *
+     * @return void
+     */
     public function init_actions () {
-        // $this->action( 'wp_ajax_erp_settings_save', 'erp_settings_save' );
-        add_action( 'wp_ajax_erp-settings-save', [ $this, 'erp_settings_save' ] );
-        // var_dump('break it 2');
+        $this->action( 'wp_ajax_erp-settings-save', 'erp_settings_save' );
     }
 
+    /**
+     * Save Settings Data
+     *
+     * @since 1.8.4
+     *
+     * @return void
+     */
     public function erp_settings_save() {
-        // Do save functionality
-        wp_send_json_success();
+        try {
+            $posted = array_map( 'strip_tags_deep', $_POST );
+            $settings_page = new ERP_Settings_Page();
+            $settings_page->save();
+
+            $this->send_success($posted);
+        } catch (\Exception $e) {
+            $this->send_error($e->getMessage());
+        }
     }
+}
+
+function erp_save_settings_data () {
+    wp_send_json_success();
 }
