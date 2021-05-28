@@ -1,11 +1,11 @@
 <template>
     <div>
-        <h2 class="section-title">General</h2>
+        <h2 class="section-title">{{ __("General", "erp") }}</h2>
 
         <div class="settings-box">
-            <h3 class="sub-section-title">General Options</h3>
+            <h3 class="sub-section-title">{{ __("General Options", "erp") }}</h3>
 
-             <form action="" class="wperp-form" method="post" @submit.prevent="submitGeneralForm">
+             <form action="" class="wperp-form" method="post" @submit.prevent="submitGeneralForm" autocomplete="off">
                 <div class="wperp-form-group">
                     <div>
                         <label>
@@ -107,7 +107,7 @@ import DatePicker from 'settings/components/base/DatePicker.vue';
 import Tooltip from 'settings/components/base/Tooltip.vue';
 import SubmitButton from 'settings/components/base/SubmitButton.vue';
 import MultiSelect from 'settings/components/select/MultiSelect.vue';
-import HTTP from 'settings/http';
+import { generateFormDataFromObject } from 'settings/utils/FormDataHandler';
 
 var $ = jQuery;
 
@@ -153,41 +153,29 @@ export default {
                 erp_country: this.general_fields.erp_country ? this.general_fields.erp_country.id : null,
                 role_based_login_redirection: this.general_fields.role_based_login_redirection,
                 erp_debug_mode: this.general_fields.erp_debug_mode,
-                _wpnonce: erp_settings_var.nonce
+                _wpnonce: erp_settings_var.nonce,
+                action: erp_settings_var.action
             });
 
-            var formData = new FormData();
-            formData.append('gen_com_start', requestData.gen_com_start);
-            formData.append('gen_financial_month', requestData.gen_financial_month);
-            formData.append('date_format', requestData.date_format);
-            formData.append('erp_currency', requestData.erp_currency);
-            formData.append('erp_country', requestData.erp_country);
-            formData.append('role_based_login_redirection', requestData.role_based_login_redirection);
-            formData.append('erp_debug_mode', requestData.erp_debug_mode);
-            formData.append('_wpnonce', requestData._wpnonce);
-            formData.append('action', erp_settings_var.action);
+            const postData = generateFormDataFromObject( requestData );
+            const that     = this;
 
             $.ajax({
                 url: erp_settings_var.ajax_url,
                 type: 'POST',
-                data: formData,
+                data: postData,
                 processData: false,
                 contentType: false,
                 success: function (response) {
-                    console.log(`response data`, response);
+                    that.$store.dispatch('spinner/setSpinner', false);
 
                     if (response.success) {
-                        // Success
-                        // console.log('Success response:', response);
-                        alert('success');
+                        that.showAlert('success', response.data.message);
                     } else {
-                        // Errors
-                        // console.log('Error response:', response);
-                        alert('error');
+                        that.showAlert('error', __('Something went wrong !', 'erp'));
                     }
                 }
             });
-            this.$store.dispatch('spinner/setSpinner', false);
         }
     },
 

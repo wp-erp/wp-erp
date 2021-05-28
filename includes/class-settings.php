@@ -35,9 +35,6 @@ class Settings {
         wp_enqueue_script( 'wp-color-picker' );
         wp_enqueue_script( 'erp-admin-settings' );
 
-        // Handle Ajax works for settings
-        new Ajax_Handler();
-
         // Add Menus
         $this->addMenus();
 
