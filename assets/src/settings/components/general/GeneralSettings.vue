@@ -54,12 +54,6 @@
 
                 <div class="wperp-form-group">
                     <label>{{ inputItems[5].title }}</label>
-                    <!-- <select v-model="general_fields.erp_country" class="wperp-form-field">
-                        <option :key="index"
-                            v-for="(item, key, index ) in inputItems[5].options"
-                            :value="key">{{item}}
-                        </option>
-                    </select> -->
                     <multi-select
                         v-model="general_fields.erp_country"
                         :options="countriesOptions"
@@ -127,7 +121,7 @@ export default {
                 gen_com_start: '',
                 gen_financial_month: '',
                 date_format: '',
-                erp_currency: '1',
+                erp_currency: '',
                 erp_country: '',
                 role_based_login_redirection: '0',
                 erp_debug_mode: '0'
@@ -137,7 +131,7 @@ export default {
     },
 
     created() {
-        this.$store.dispatch('spinner/setSpinner', false);
+        this.getSettingsGeneralData();
     },
 
     methods: {
@@ -176,7 +170,34 @@ export default {
                     }
                 }
             });
-        }
+        },
+
+        getSettingsGeneralData() {
+            this.$store.dispatch('spinner/setSpinner', true);
+
+            let requestData = window.settings.hooks.applyFilters('requestData', {
+                _wpnonce: erp_settings_var.nonce,
+                action: 'erp-settings-get-data'
+            });
+
+            const postData = generateFormDataFromObject( requestData );
+            const that     = this;
+
+            $.ajax({
+                url: erp_settings_var.ajax_url,
+                type: 'POST',
+                data: postData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    that.$store.dispatch('spinner/setSpinner', false);
+
+                    if (response.success) {
+                        that.general_fields = response.data;
+                    }
+                }
+            });
+        },
     },
 
     computed: {
@@ -186,29 +207,40 @@ export default {
             var data       = [];
 
             keys.forEach((key) => {
-                data.push({
+                const currency = {
                     id  : key,
                     name: currencies[key]
-                });
-            });
+                }
 
+                data.push(currency);
+
+                if( key === this.general_fields.erp_currency ) {
+                    this.general_fields.erp_currency = currency;
+                }
+            });
             return data;
         },
 
         countriesOptions : function () {
             var countries = this.inputItems[5].options;
-            var keys       = Object.keys(countries);
-            var data       = [];
+            var keys      = Object.keys(countries);
+            var data      = [];
 
             keys.forEach((key) => {
-                data.push({
+                const country = {
                     id  : key,
                     name: countries[key]
-                });
+                };
+
+                data.push(country);
+
+                if( key === this.general_fields.erp_country ) {
+                    this.general_fields.erp_country = country;
+                }
             });
 
             return data;
         }
-  }
-};
+    }
+}
 </script>

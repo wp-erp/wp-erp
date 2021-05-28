@@ -779,4 +779,19 @@ class ERP_Settings_Page {
 
         return $option_value;
     }
+
+    /**
+     * Get settings options from the settings API.
+     *
+     * @param string $option_name
+     * @param array  $options
+     *
+     * @since 1.8.6
+     *
+     * @return array|object options
+     */
+    public function get_settings_options( $option_name, $default = [] ) {
+        return get_option( $option_name, $default );
+    }
+
 }
