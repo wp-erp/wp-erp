@@ -23,7 +23,6 @@
 
     .module_item_col {
         padding: 0 10px;
-        max-width: 381px;
         flex-basis: 33.33%;
     }
 
