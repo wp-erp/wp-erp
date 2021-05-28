@@ -1,10 +1,10 @@
 <template>
   <div class="settings-navbar">
-    <h2>Settings</h2>
+    <h2>{{ __("Settings", "erp") }}</h2>
     <ul class="settings-menu">
 
       <li>
-        <router-link tag="li" :to="'/general'" class="active">
+        <router-link tag="li" :to="'/general'">
           <a href="#">
             <i class="flaticon-settings-work-tool icon-general"></i>
             <span class="menu-name">{{ __("General", "erp") }}</span>

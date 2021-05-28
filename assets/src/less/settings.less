@@ -48,6 +48,11 @@
                 font-weight: bold;
             }
 
+            .sub-section-description {
+                margin-top: -40px;
+                margin-bottom: 30px;
+            }
+
             .settings-box {
                 padding: 10px;
                 background: #ffffff;
@@ -66,7 +71,9 @@
 
             .settings-menu {
                 li {
-                    &.active {
+
+                    &.active,
+                    .router-link-active {
                         background: #f0f0f1;
                         margin-left: -10px;
                         padding-left: 10px;
@@ -122,6 +129,34 @@
                 }
             }
         }
+
+        .settings-submenu-navbar {
+            margin-top: 40px;
+
+            .settings-sub-menu {
+                list-style: none;
+
+                li {
+                    display: inline-block;
+                    padding: 0px 20px 0px 0px;
+
+                    a {
+                        font-size: 14px;
+                        color: #27313A;
+                        font-weight: 400;
+                    }
+
+                    &.active {
+                        a {
+                            padding-bottom: 7px;
+                            border-bottom: 2px solid #1A9ED4;
+                        }
+                    }
+
+                }
+            }
+
+        }
     }
 
     .erp-settings-tooltip {
@@ -156,13 +191,16 @@
         padding-right: 18px;
         top: 6px;
     }
+
     .multiselect__tags input {
         border: none;
         font-size: 14px;
     }
+
     .multiselect {
         min-height: 26px;
     }
+
     .multiselect__tags {
         min-height: 26px;
         padding: 5px 37px 0 8px;
