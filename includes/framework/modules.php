@@ -318,7 +318,7 @@ class Modules {
                 'advanced_leave' => [
                     'name'          => __('Advanced Leave Management', 'erp'),
                     'description'   => __('Advanced Leave Management for WP ERP.', 'erp'),
-                    'thumbnail'     => $thumbnail_dir . '/advance-leave-management.svg',
+                    'thumbnail'     => $thumbnail_dir . '/advance-leave-management.png',
                     'is_pro'        => true,
                     'is_hrm'        => true,
                     'is_crm'        => false,
@@ -331,7 +331,7 @@ class Modules {
                 'awesome_support' => [
                     'name'          => __('Awesome Support', 'erp'),
                     'description'   => __('WP ERP and Awesome Support integration.', 'erp'),
-                    'thumbnail'     => $thumbnail_dir . '/awesome-support.svg',
+                    'thumbnail'     => $thumbnail_dir . '/awesome-support.png',
                     'is_pro'        => true,
                     'is_hrm'        => false,
                     'is_crm'        => true,
@@ -344,7 +344,7 @@ class Modules {
                 'gravity_forms' => [
                     'name'          => __('Gravity Forms Integration', 'erp'),
                     'description'   => __('Gravity Forms integration for WP ERP.', 'erp'),
-                    'thumbnail'     => $thumbnail_dir . '/gravity-forms.svg',
+                    'thumbnail'     => $thumbnail_dir . '/gravity-forms.png',
                     'is_pro'        => true,
                     'is_hrm'        => false,
                     'is_crm'        => true,
@@ -357,7 +357,7 @@ class Modules {
                 'help_scout' => [
                     'name'          => __('HelpScout Integration', 'erp'),
                     'description'   => __('HelpScout integration for WP ERP.', 'erp'),
-                    'thumbnail'     => $thumbnail_dir . '/help-scout.svg',
+                    'thumbnail'     => $thumbnail_dir . '/help-scout.png',
                     'is_pro'        => true,
                     'is_hrm'        => false,
                     'is_crm'        => true,
@@ -370,7 +370,7 @@ class Modules {
                 'hr_frontend' => [
                     'name'          => __('HR Frontend', 'erp'),
                     'description'   => __('Provides a brand new dashboard experience for WordPress ERP.', 'erp'),
-                    'thumbnail'     => $thumbnail_dir . '/hr-frontend.svg',
+                    'thumbnail'     => $thumbnail_dir . '/hr-frontend.png',
                     'is_pro'        => true,
                     'is_hrm'        => true,
                     'is_crm'        => false,
@@ -383,7 +383,7 @@ class Modules {
                 'hubspot' => [
                     'name'          => __('HubSpot Contacts Sync', 'erp'),
                     'description'   => __('Sync your CRM contacts with HubSpot.', 'erp'),
-                    'thumbnail'     => $thumbnail_dir . '/hubspot.svg',
+                    'thumbnail'     => $thumbnail_dir . '/hubspot.png',
                     'is_pro'        => true,
                     'is_hrm'        => false,
                     'is_crm'        => true,
@@ -396,7 +396,7 @@ class Modules {
                 'mailchimp' => [
                     'name'          => __('Mailchimp Contacts Sync', 'erp'),
                     'description'   => __('Sync your CRM contacts with mailchimp.', 'erp'),
-                    'thumbnail'     => $thumbnail_dir . '/mailchimp-contacts-sync.svg',
+                    'thumbnail'     => $thumbnail_dir . '/mailchimp.png',
                     'is_pro'        => true,
                     'is_hrm'        => false,
                     'is_crm'        => true,
@@ -409,7 +409,7 @@ class Modules {
                 'salesforce' => [
                     'name'          => __('Salesforce Contacts Sync', 'erp'),
                     'description'   => __('Sync your CRM contacts with salesforce.', 'erp'),
-                    'thumbnail'     => $thumbnail_dir . '/salesforce-contacts-sync.svg',
+                    'thumbnail'     => $thumbnail_dir . '/salesforce.png',
                     'is_pro'        => true,
                     'is_hrm'        => false,
                     'is_crm'        => true,
@@ -422,7 +422,7 @@ class Modules {
                 'zendesk' => [
                     'name'          => __('Zendesk', 'erp'),
                     'description'   => __('Zendesk integration for WP ERP.', 'erp'),
-                    'thumbnail'     => $thumbnail_dir . '/zendesk.svg',
+                    'thumbnail'     => $thumbnail_dir . '/zendesk.png',
                     'is_pro'        => true,
                     'is_hrm'        => false,
                     'is_crm'        => true,
@@ -435,7 +435,7 @@ class Modules {
                 'asset_management' => [
                     'name'          => __('Asset Manager', 'erp'),
                     'description'   => __('Manage assets, allocate to employees and keep track.', 'erp'),
-                    'thumbnail'     => $thumbnail_dir . '/asset-management.svg',
+                    'thumbnail'     => $thumbnail_dir . '/asset-management.png',
                     'is_pro'        => false,
                     'is_hrm'        => true,
                     'is_crm'        => false,
@@ -448,7 +448,7 @@ class Modules {
                 'attendance' => [
                     'name'          => __('Attendance', 'erp'),
                     'description'   => __('Employee Attendance Add-On for WP ERP.', 'erp'),
-                    'thumbnail'     => $thumbnail_dir . '/attendance.svg',
+                    'thumbnail'     => $thumbnail_dir . '/attendance.png',
                     'is_pro'        => false,
                     'is_hrm'        => true,
                     'is_crm'        => false,
@@ -461,7 +461,7 @@ class Modules {
                 'custom_field_builder' => [
                     'name'          => __('Custom Field Builder', 'erp'),
                     'description'   => __('Adds extra custom fields to employee, contacts, companies and other people types.', 'erp'),
-                    'thumbnail'     => $thumbnail_dir . '/custom-field-builder.svg',
+                    'thumbnail'     => $thumbnail_dir . '/custom-field-builder.png',
                     'is_pro'        => false,
                     'is_hrm'        => true,
                     'is_crm'        => false,
@@ -474,7 +474,7 @@ class Modules {
                 'document_manager' => [
                     'name'          => __('Document Manager', 'erp'),
                     'description'   => __('Manage your employee and company documents.', 'erp'),
-                    'thumbnail'     => $thumbnail_dir . '/document-manager.svg',
+                    'thumbnail'     => $thumbnail_dir . '/document-manager.png',
                     'is_pro'        => false,
                     'is_hrm'        => true,
                     'is_crm'        => false,
@@ -487,7 +487,7 @@ class Modules {
                 'hr_training' => [
                     'name'          => __('HR Training', 'erp'),
                     'description'   => __('Employee Training Add-On for WP-ERP.', 'erp'),
-                    'thumbnail'     => $thumbnail_dir . '/hr-training.svg',
+                    'thumbnail'     => $thumbnail_dir . '/hr-training.png',
                     'is_pro'        => false,
                     'is_hrm'        => true,
                     'is_crm'        => false,
@@ -500,7 +500,7 @@ class Modules {
                 'payroll' => [
                     'name'          => __('Payroll', 'erp'),
                     'description'   => __('Manage your employee payroll.', 'erp'),
-                    'thumbnail'     => $thumbnail_dir . '/payroll.svg',
+                    'thumbnail'     => $thumbnail_dir . '/payroll.png',
                     'is_pro'        => false,
                     'is_hrm'        => true,
                     'is_crm'        => false,
@@ -513,7 +513,7 @@ class Modules {
                 'recruitment' => [
                     'name'          => __('Recruitment', 'erp'),
                     'description'   => __('Recruitment solution for WP-ERP. Create job posting and hire employee for your company.', 'erp'),
-                    'thumbnail'     => $thumbnail_dir . '/recruitment.svg',
+                    'thumbnail'     => $thumbnail_dir . '/recruitment.png',
                     'is_pro'        => false,
                     'is_hrm'        => true,
                     'is_crm'        => false,
@@ -526,7 +526,7 @@ class Modules {
                 'reimbursement' => [
                     'name'          => __('Reimbursement', 'erp'),
                     'description'   => __('Reimbursement addon for WP ERP - Accounting module.', 'erp'),
-                    'thumbnail'     => $thumbnail_dir . '/reimbursement.svg',
+                    'thumbnail'     => $thumbnail_dir . '/reimbursement.png',
                     'is_pro'        => false,
                     'is_hrm'        => true,
                     'is_crm'        => false,
@@ -539,7 +539,7 @@ class Modules {
                 'sms_notification' => [
                     'name'          => __('SMS Notification', 'erp'),
                     'description'   => __('Send SMS notifications to employees and CRM contacts.', 'erp'),
-                    'thumbnail'     => $thumbnail_dir . '/sms-notification.svg',
+                    'thumbnail'     => $thumbnail_dir . '/sms-notification.png',
                     'is_pro'        => false,
                     'is_hrm'        => true,
                     'is_crm'        => false,
@@ -552,7 +552,7 @@ class Modules {
                 'workflow' => [
                     'name'          => __('Workflow', 'erp'),
                     'description'   => __('Workflow Automation System.', 'erp'),
-                    'thumbnail'     => $thumbnail_dir . '/workflow.svg',
+                    'thumbnail'     => $thumbnail_dir . '/workflow.png',
                     'is_pro'        => false,
                     'is_hrm'        => true,
                     'is_crm'        => false,
@@ -565,7 +565,7 @@ class Modules {
                 'deals' => [
                     'name'          => __('Deals', 'erp'),
                     'description'   => __('Deal Management add-on for WP ERP - CRM Module.', 'erp'),
-                    'thumbnail'     => $thumbnail_dir . '/deals.svg',
+                    'thumbnail'     => $thumbnail_dir . '/deals.png',
                     'is_pro'        => false,
                     'is_hrm'        => false,
                     'is_crm'        => true,
@@ -578,7 +578,7 @@ class Modules {
                 'inventory' => [
                     'name'          => __('Inventory', 'erp'),
                     'description'   => __('Manage and display your products purchase, order and stock.', 'erp'),
-                    'thumbnail'     => $thumbnail_dir . '/inventory.svg',
+                    'thumbnail'     => $thumbnail_dir . '/inventory.png',
                     'is_pro'        => false,
                     'is_hrm'        => false,
                     'is_crm'        => false,
@@ -591,7 +591,7 @@ class Modules {
                 'payment_gateway' => [
                     'name'          => __('Payment Gateway', 'erp'),
                     'description'   => __('Manage all payment gateways for ERP Accounting module.', 'erp'),
-                    'thumbnail'     => $thumbnail_dir . '/payment-gateway.svg',
+                    'thumbnail'     => $thumbnail_dir . '/payment-gateway.png',
                     'is_pro'        => false,
                     'is_hrm'        => false,
                     'is_crm'        => false,
@@ -604,7 +604,7 @@ class Modules {
                 'woocommerce' => [
                     'name'          => __('WooCommerce', 'erp'),
                     'description'   => __('WooCommerce integration with CRM and Accounting modules in ERP.', 'erp'),
-                    'thumbnail'     => $thumbnail_dir . '/woocommerce.svg',
+                    'thumbnail'     => $thumbnail_dir . '/woocommerce.png',
                     'is_pro'        => false,
                     'is_hrm'        => false,
                     'is_crm'        => false,
