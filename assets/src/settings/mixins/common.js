@@ -1,5 +1,3 @@
-import accounting from 'accounting';
-
 const dateFormat = erp_settings_var.date_format;
 
 export default {
