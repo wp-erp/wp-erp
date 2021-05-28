@@ -396,7 +396,7 @@ class Modules {
                 'mailchimp' => [
                     'name'          => __('Mailchimp Contacts Sync', 'erp'),
                     'description'   => __('Sync your CRM contacts with mailchimp.', 'erp'),
-                    'thumbnail'     => $thumbnail_dir . '/mailchimp.png',
+                    'thumbnail'     => $thumbnail_dir . '/mailchimp-contacts-sync.png',
                     'is_pro'        => true,
                     'is_hrm'        => false,
                     'is_crm'        => true,
@@ -409,7 +409,7 @@ class Modules {
                 'salesforce' => [
                     'name'          => __('Salesforce Contacts Sync', 'erp'),
                     'description'   => __('Sync your CRM contacts with salesforce.', 'erp'),
-                    'thumbnail'     => $thumbnail_dir . '/salesforce.png',
+                    'thumbnail'     => $thumbnail_dir . '/salesforce-contacts-sync.png',
                     'is_pro'        => true,
                     'is_hrm'        => false,
                     'is_crm'        => true,
