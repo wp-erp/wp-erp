@@ -541,16 +541,37 @@ function erp_hr_holiday_reminder_to_employees() {
  *
  * @return void
  */
-function erp_hr_get_people_menu_html( $selected = 'employee' ) {
+function erp_hr_get_people_menu_html( $selected = '' ) {
     $dropdown = [
-        'employee'     => [ 'title' => esc_html__( 'Employees', 'erp' ), 'cap' => 'erp_list_employee' ],
-        'requests'     => [ 'title' => esc_html__( 'Requests', 'erp' ), 'cap' => 'erp_hr_manager' ],
-        'department'   => [ 'title' => esc_html__( 'Departments', 'erp' ), 'cap' => 'erp_manage_department' ],
-        'designation'  => [ 'title' => esc_html__( 'Designations', 'erp' ), 'cap' => 'erp_manage_designation' ],
-        'announcement' => [ 'title' => esc_html__( 'Announcements', 'erp' ), 'cap' => 'erp_manage_announcement' ],
+        'employee'     => [
+            'title' => esc_html__( 'Employees', 'erp' ),
+            'cap'   => 'erp_list_employee'
+        ],
+        'requests'     => [
+            'title' => esc_html__( 'Requests', 'erp' ),
+            'cap'   => 'erp_hr_manager'
+        ],
+        'department'   => [
+            'title' => esc_html__( 'Departments', 'erp' ),
+            'cap'   => 'erp_manage_department'
+        ],
+        'designation'  => [
+            'title' => esc_html__( 'Designations', 'erp' ),
+            'cap'   => 'erp_manage_designation'
+        ],
+        'announcement' => [
+            'title' => esc_html__( 'Announcements', 'erp' ),
+            'cap'   => 'erp_manage_announcement'
+        ],
     ];
 
     $dropdown = apply_filters( 'erp_hr_people_menu_items', $dropdown );
+
+    if ( empty( $selected ) ) {
+        $selected = ! empty( $_GET['sub-section'] )
+                    ? sanitize_text_field( wp_unslash( $_GET['sub-section'] ) )
+                    : 'employee';
+    }
 
     ob_start();
     ?>
