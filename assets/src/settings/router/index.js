@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import GeneralSettings from 'settings/components/general/GeneralSettings.vue';
+import HRWorkDays from 'settings/components/hr-workdays/HRWorkDays.vue';
 
 Vue.use(Router);
 
@@ -12,11 +13,31 @@ export default new Router({
             component: GeneralSettings,
             children: [
                 {
-                    path: '/general',
+                    path: 'general',
                     name: 'GeneralSettings',
-                    component: GeneralSettings,
-                    // alias: '/'
+                    component: GeneralSettings
                 }
+            ]
+        },
+        {
+            path: '/hr',
+            component: HRWorkDays,
+            children: [
+                {
+                    path: 'workdays',
+                    name: 'HRWorkDays',
+                    component: HRWorkDays
+                },
+                {
+                    path: 'leave',
+                    name: 'HRWorkDays',
+                    component: HRWorkDays
+                },
+                {
+                    path: 'leave-years',
+                    name: 'HRWorkDays',
+                    component: HRWorkDays
+                },
             ]
         }
     ])

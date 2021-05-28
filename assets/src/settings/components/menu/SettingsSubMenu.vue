@@ -24,6 +24,30 @@
           </a>
         </router-link>
       </li>
+
+      <li>
+        <router-link tag="li" :to="'/hr/miscellaneous'" >
+          <a href="#">
+            <span class="menu-name">{{ __("Miscellaneous", "erp") }}</span>
+          </a>
+        </router-link>
+      </li>
+
+      <li>
+        <router-link tag="li" :to="'/hr/hr-frontend'" >
+          <a href="#">
+            <span class="menu-name">{{ __("HR Frontend", "erp") }}</span>
+          </a>
+        </router-link>
+
+      <li>
+        <router-link tag="li" :to="'/hr/recruitment'" >
+          <a href="#">
+            <span class="menu-name">{{ __("Recruitment", "erp") }}</span>
+          </a>
+        </router-link>
+      </li>
+
     </ul>
   </div>
 </template>
