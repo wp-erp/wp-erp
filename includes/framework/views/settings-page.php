@@ -4,7 +4,7 @@
 
 	<form method="post" id="mainform" action="" enctype="multipart/form-data">
 
-	    <?php WeDevs\ERP\Framework\ERP_Admin_Settings::output(); ?>
+	    <!-- <?php WeDevs\ERP\Framework\ERP_Admin_Settings::output(); ?> -->
 
 	    <?php
         global $current_class;
@@ -17,12 +17,12 @@
 	    <?php
         if ( $submit_btn_status ) {
             ?>
-	    	<p class="submit">
+	    	<!-- <p class="submit">
 				<input name="save" class="button-primary" type="submit" value="<?php esc_attr_e( 'Save changes', 'erp' ); ?>" />
 		    	<input type="hidden" name="subtab" id="last_tab" />
 
 		    	<?php wp_nonce_field( 'erp-settings-nonce' ); ?>
-		    </p>
+		    </p> -->
 	    <?php
         } ?>
 

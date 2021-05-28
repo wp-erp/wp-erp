@@ -146,9 +146,7 @@ class ERP_Settings_Page {
                     }
                 } else {
                     update_option( $this->get_option_id(), $update_options );
-                } ?>
-                	<div id="message" class="updated notice is-dismissible"><p><strong><?php esc_html_e( 'Settings saved.' ); ?></strong></p></div>
-                <?php
+                }
             }
 
             do_action( 'erp_after_save_settings' );
