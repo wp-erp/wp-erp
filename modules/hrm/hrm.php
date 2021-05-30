@@ -126,9 +126,9 @@ class Human_Resource {
      * @param array
      */
     public function add_settings_page( $settings = [] ) {
-        $settings[] = include __DIR__ . '/includes/class-settings.php';
+        // $settings[] = include __DIR__ . '/includes/class-settings.php';
 
-        return $settings;
+        // return $settings;
     }
 
     /**

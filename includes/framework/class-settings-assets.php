@@ -39,6 +39,11 @@ class Settings_Assets {
         return $settings_general->get_settings();
     }
 
+    public function get_settings_hr_data () {
+        $settings_hr = new \WeDevs\ERP\HRM\Settings();
+        return $settings_hr->get_section_fields( '', true );
+    }
+
     /**
      * Register scripts
      *
@@ -109,6 +114,7 @@ class Settings_Assets {
             'current_date'          => erp_current_datetime()->format( 'Y-m-d' ),
             'date_format'           => erp_get_date_format(),
             'settings_general_data' => $this->get_settings_general_data(),
+            'settings_hr_data'      => $this->get_settings_hr_data(),
             'ajax_url'              => admin_url( 'admin-ajax.php' ),
             'nonce'                 => wp_create_nonce( 'erp-settings-nonce' ),
             'action'                => 'erp-settings-save',
