@@ -150,7 +150,8 @@
                         font-weight: 400;
                     }
 
-                    &.active {
+                    &.active,
+                    .router-link-active  {
                         a {
                             padding-bottom: 7px;
                             border-bottom: 2px solid #1A9ED4;
@@ -189,6 +190,11 @@
         }
     }
 
+    .erp-form-input-hint {
+        font-size: 13px;
+        margin-top: 6px;
+    }
+
     .multiselect-custom-arrow {
         position: absolute;
         right: 0;
@@ -210,5 +216,10 @@
         padding: 5px 37px 0 8px;
         border-radius: 3px;
         border: 2px solid #eff2f7;
+    }
+
+    .form-check-label-light {
+        font-weight: normal;
+        margin-left: 39px;
     }
 }
