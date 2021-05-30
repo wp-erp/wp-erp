@@ -10,7 +10,6 @@
 
         <form action="" class="wperp-form" method="post" @submit.prevent="submitHRWorkDaysForm">
 
-
             <div class="wperp-form-group">
                 <label>
                     {{ inputItems[1].title }}
@@ -129,10 +128,6 @@ export default {
   components: {
       SettingsSubMenu,
       SubmitButton
-  },
-
-  created() {
-
   },
 
   methods: {
