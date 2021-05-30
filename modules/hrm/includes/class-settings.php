@@ -40,9 +40,12 @@ class Settings extends ERP_Settings_Page {
     /**
      * Get sections fields
      *
+     * @param string|bool $section
+     * @param bool        $all_data Get all data or only single section data
+     *
      * @return array
      */
-    public function get_section_fields( $section = '' ) {
+    public function get_section_fields( $section = '', $all_data = false ) {
         $options = [
             '8' => __( 'Full Day', 'erp' ),
             '4' => __( 'Half Day', 'erp' ),
@@ -136,6 +139,10 @@ class Settings extends ERP_Settings_Page {
             'id'    => 'hrm_miscellaneous',
         ];
         $fields = apply_filters( 'erp_settings_hr_section_fields', $fields, $section );
+
+        if ( $all_data ) {
+            return $fields;
+        }
 
         $section = $section === false ? $fields['workdays'] : $fields[$section];
 
