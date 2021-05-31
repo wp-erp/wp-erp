@@ -627,29 +627,33 @@ class Ajax {
 
         define( 'ERP_IS_IMPORTING', true );
 
-        $limit = 50; // Limit to import per request
-
+        $limit   = 50; // Limit to import per request
         $attempt = get_option( 'erp_users_to_contacts_import_attempt', 1 );
+        
         update_option( 'erp_users_to_contacts_import_attempt', $attempt + 1 );
-        $offset = ( $attempt - 1 ) * $limit;
+        
+        $offset        = ( $attempt - 1 ) * $limit;
 
-        $user_role     = isset( $_REQUEST['user_role'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['user_role'] ) ) : '';
+        $user_role     = isset( $_REQUEST['user_role'] )     ? sanitize_text_field( wp_unslash( $_REQUEST['user_role'] ) )     : '';
         $contact_owner = isset( $_REQUEST['contact_owner'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['contact_owner'] ) ) : '';
-        $life_stage    = isset( $_REQUEST['life_stage'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['life_stage'] ) ) : '';
+        $life_stage    = isset( $_REQUEST['life_stage'] )    ? sanitize_text_field( wp_unslash( $_REQUEST['life_stage'] ) )    : '';
         $contact_group = isset( $_REQUEST['contact_group'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['contact_group'] ) ) : '';
 
+        $query_args = [
+            'number'   => $limit,
+            'offset'   => $offset
+        ];
+
         if ( ! empty( $user_role ) ) {
-            $user_query  = new \WP_User_Query( ['role__in' => $user_role, 'number' => $limit, 'offset' => $offset] );
-            $users       = $user_query->get_results();
-            $total_items = $user_query->get_total();
-        } else {
-            $user_query  = new \WP_User_Query( ['number' => $limit, 'offset' => $offset] );
-            $users       = $user_query->get_results();
-            $total_items = $user_query->get_total();
+            $query_args['role__in'] = $user_role;
         }
 
-        $user_ids = [];
-        $user_ids = wp_list_pluck( $users, 'ID' );
+        $user_query  = new \WP_User_Query( $query_args );
+        $users       = $user_query->get_results();
+        $total_items = $user_query->get_total();
+
+        $user_ids    = [];
+        $user_ids    = wp_list_pluck( $users, 'ID' );
 
         foreach ( $user_ids as $user_id ) {
             $wp_user     = get_user_by( 'id', $user_id );
