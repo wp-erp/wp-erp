@@ -470,8 +470,8 @@ function erp_insert_people( $args = [], $return_object = false ) {
     $args           = wp_parse_args( $args, $defaults );
     $errors         = [];
     $unchanged_data = [];
+    $people_type    = $args['type'];
 
-    $people_type = $args['type'];
     unset( $args['type'], $args['created'] );
 
     //sensitization
@@ -679,8 +679,10 @@ function erp_insert_people( $args = [], $return_object = false ) {
         $people->update( $main_fields );
     }
 
-    if ( ! empty( $type_obj ) && ! $people->hasType( $type_obj ) && empty( $is_existing_people ) ) {
-        $people->assignType( $type_obj );
+    if ( ! empty( $people_type ) && ! $people->hasType( $people_type ) ) {
+        if ( empty( $is_existing_people ) || ( $people->hasType( 'employee' ) && 'contact' === $people_type ) ) {
+            $people->assignType( $type_obj );
+        }
     }
 
     //unset created_by from meta
