@@ -374,7 +374,7 @@ export default {
     .erp-btn-group {
         display: inline-flex;
         position: absolute;
-        right: 20rem;
+        right: 17.5rem;
 
         &:after {
             content: "";

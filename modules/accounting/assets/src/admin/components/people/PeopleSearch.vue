@@ -58,7 +58,6 @@ export default {
 
     .input-with-addon {
         position: relative;
-        margin-top: 2px;
 
         @media (max-width: 782px) {
             margin-top: 14px;
@@ -98,8 +97,6 @@ export default {
     }
 
     .search-btn {
-        margin-top: 2px !important;
-
         @media (max-width: 782px) {
             margin-top: 14px!important;
         }
