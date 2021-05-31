@@ -622,6 +622,10 @@
                             } else {
                                 $( `${selector} ${child}` ).html( pending );
                             }
+                        } else {
+                            if ( $( selector ).find( child ).length ) {
+                                $( `${selector} ${child}` ).remove();
+                            }
                         }
                     });
                 },
