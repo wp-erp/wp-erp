@@ -123,7 +123,6 @@ export default {
             processData: false,
             contentType: false,
             success: function (response) {
-                console.log('response: ', response.data);
                 that.$store.dispatch('spinner/setSpinner', false);
 
                 if (response.success) {
