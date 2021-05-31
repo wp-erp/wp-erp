@@ -671,10 +671,8 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
 
 .erp-btn-group {
     display: inline-flex;
-    /* float: right; */
-    /* margin-right: 200px; */
     position: absolute;
-    right: 15rem;
+    right: 12.5rem;
 }
 
 @media screen and (max-width: 782px) and (min-width: 404px) {
@@ -889,6 +887,7 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
 .erp-error-notice {
     font-size: 16px !important;
     padding: 5px !important;
+    margin: 0 !important;
 }
 
 .cen-align {
