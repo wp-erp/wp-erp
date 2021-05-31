@@ -33,6 +33,7 @@ class Validate_Data {
     public function validate_csv_data( $csv_data, $fields, $type ) {
         $errors         = [];
         $processed_data = $this->filter_validate_csv_data( $csv_data, $fields, $type );
+        $total_rows     = count( $processed_data );
 
         if ( ! empty( $processed_data ) ) {
             foreach ( $processed_data as $pdata_key => $pdata_val ) {
@@ -45,6 +46,8 @@ class Validate_Data {
                         $errors[] = __( sprintf( "%s", $err ), 'erp' );
                     }
                 }
+
+                $errors[] = '<hr>';
             }
         }
 
