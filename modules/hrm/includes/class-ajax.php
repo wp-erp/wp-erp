@@ -2401,10 +2401,12 @@ class Ajax_Handler {
             $this->send_error( __( sprintf( 'No pending item found. Selected item(s) are already approved/rejected.', $operation ), 'erp' ) );
         }
 
+        $item_status = 'deleted' !== $action ? 'pending ' : '';
+
         if ( 1 === count( $result ) ) {
-            $this->send_success( sprintf( __( '1 pending item has been %s successfully', 'erp' ), $action ) );
+            $this->send_success( sprintf( __( '1 %1$sitem has been %2$s successfully', 'erp' ), $item_status, $action ) );
         }
 
-        $this->send_success( sprintf( __( '%1$s pending items have been %2$s successfully', 'erp' ), count( $result ), $action ) );
+        $this->send_success( sprintf( __( '%1$s %2$sitems have been %3$s successfully', 'erp' ), count( $result ), $item_status, $action ) );
     }
 }
