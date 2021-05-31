@@ -106,6 +106,9 @@
 <script>
 import SettingsSubMenu from 'settings/components/menu/SettingsSubMenu.vue';
 import SubmitButton from 'settings/components/base/SubmitButton.vue';
+import { generateFormDataFromObject } from 'settings/utils/FormDataHandler';
+
+var $ = jQuery;
 
 export default {
   name: "HRWorkDays",
@@ -130,13 +133,72 @@ export default {
       SubmitButton
   },
 
+  created() {
+    this.getSettingsWorkDaysData();
+  },
+
   methods: {
       submitHRWorkDaysForm() {
         this.$store.dispatch('spinner/setSpinner', true);
 
-        this.showAlert('success', 'Workdays saved successfully !');
+        let requestData = window.settings.hooks.applyFilters('requestData', {
+            mon: this.fields.mon,
+            tue: this.fields.tue,
+            wed: this.fields.wed,
+            thu: this.fields.thu,
+            fri: this.fields.fri,
+            sat: this.fields.sat,
+            sun: this.fields.sun,
+            _wpnonce: erp_settings_var.nonce,
+            action: 'erp-settings-workdays-save'
+        });
 
-        this.$store.dispatch('spinner/setSpinner', false);
+        const postData = generateFormDataFromObject( requestData );
+        const that     = this;
+
+        $.ajax({
+            url: erp_settings_var.ajax_url,
+            type: 'POST',
+            data: postData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                that.$store.dispatch('spinner/setSpinner', false);
+
+                if (response.success) {
+                    that.showAlert('success', response.data.message);
+                } else {
+                    that.showAlert('error', __('Something went wrong !', 'erp'));
+                }
+            }
+        });
+      },
+
+      getSettingsWorkDaysData() {
+        this.$store.dispatch('spinner/setSpinner', true);
+
+        let requestData = window.settings.hooks.applyFilters('requestData', {
+            _wpnonce: erp_settings_var.nonce,
+            action: 'erp-settings-workdays-get-data'
+        });
+
+        const postData = generateFormDataFromObject( requestData );
+        const that     = this;
+
+        $.ajax({
+            url: erp_settings_var.ajax_url,
+            type: 'POST',
+            data: postData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                that.$store.dispatch('spinner/setSpinner', false);
+
+                if (response.success) {
+                    that.fields = response.data;
+                }
+            }
+        });
       }
   },
 

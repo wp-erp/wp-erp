@@ -2,7 +2,7 @@
   <div class="settings-submenu-navbar">
     <ul class="settings-sub-menu">
       <li>
-        <router-link tag="li" :to="'/hr/workdays'">
+        <router-link tag="li" :to="'/hr/workdays'" :class="(this.$route.name === 'HRWorkDays') ? 'router-link-active' : ''">
           <a href="#">
             <span class="menu-name">{{ __("Workdays", "erp") }}</span>
           </a>
