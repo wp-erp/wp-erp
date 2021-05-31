@@ -125,6 +125,11 @@ export default {
             this.fetchItems();
         });
 
+        this.$root.$on('imported-people', () => {
+            this.showImportModal = false;
+            this.fetchItems();
+        });
+
         this.buttonTitle = (this.$route.name.toLowerCase() === 'customers') ? __('Customer', 'erp') : __('Vendor', 'erp');
         this.importTitle = (this.$route.name.toLowerCase() === 'customers') ? __('Import Customers', 'erp') : __('Import Vendors', 'erp');
         this.exportTitle = (this.$route.name.toLowerCase() === 'customers') ? __('Export Customers', 'erp') : __('Export Vendors', 'erp');
