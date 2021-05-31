@@ -124,13 +124,17 @@ export default {
                 processData: false,
                 contentType: false,
                 success: function(response) {
-                    this.$root.$emit('peopleUpdate');
+                    self.$root.$emit('imported-people');
                     self.$store.dispatch('spinner/setSpinner', false);
                     self.showAlert('success', response);
                 },
                 error: function(error) {
                     self.showError = true;
                     self.error     = error;
+                    
+                    jQuery("#wperp-import-customer-modal").animate({
+                        scrollTop: jQuery(".wperp-modal-body").offset().top
+                    }, 2000);
                 }
             });
         },
