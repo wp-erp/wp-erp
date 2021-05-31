@@ -340,8 +340,8 @@ class Validate_Data {
 
         $result = $wpdb->get_var(
             $wpdb->prepare(
-                'SELECT COUNT(*) FROM %s WHERE %s=%s',
-                $wpdb->prefix . 'erp_peoples', $column, $value
+                "SELECT COUNT(*) FROM {$wpdb->prefix}erp_peoples WHERE $column = %s",
+                [ $value ]
             )
         );
 
