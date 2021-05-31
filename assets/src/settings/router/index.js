@@ -23,7 +23,7 @@ export default new Router({
                     path: 'general',
                     name: 'GeneralSettings',
                     component: GeneralSettings,
-                    alias: '/general'
+                    alias: '/'
                 }
             ]
         },

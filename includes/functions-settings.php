@@ -55,11 +55,19 @@ function erp_settings_save_workdays ( $posted = [] ) {
     }
 }
 
+/**
+ * Update settings for checkbox options
+ *
+ * @param array $options
+ * @param array $posted data
+ *
+ * @return void
+ */
 function erp_settings_update_checkbox_options ( $options = [], $posted = [] ) {
     foreach ( $options as $option ) {
         $value = isset( $posted[ $option ] ) ? sanitize_text_field( wp_unslash( $posted[ $option ] ) ) : '';
 
-        if( $value ) {
+        if ( ! empty ( $value ) && $value === true ) {
             $value = 'yes';
         } else {
             $value = 'no';
@@ -68,22 +76,45 @@ function erp_settings_update_checkbox_options ( $options = [], $posted = [] ) {
     }
 }
 
+/**
+ * Get Settings leave options
+ *
+ * @since 1.8.6
+ *
+ * @todo get data using hook from erp-pro
+ *
+ * @return array $options
+ */
 function erp_settings_leave_options () {
     $options = [ 'enable_extra_leave', 'erp_pro_accrual_leave', 'erp_pro_carry_encash_leave', 'erp_pro_half_leave', 'erp_pro_multilevel_approval', 'erp_pro_seg_leave', 'erp_pro_sandwich_leave' ];
     return $options;
 }
 
+/**
+ * Get Settings Leave Data
+ *
+ * @since 1.8.6
+ *
+ * @return array $data
+ */
 function erp_settings_get_leaves () {
     $data = [];
 
     foreach ( erp_settings_leave_options() as $option ) {
-        $option = get_option( $option,  'no' );
-        $data[ $option ] = ( $option === '1' || $option === true || $option === 'yes' ) ? true : false;
+        $option_value    = get_option( $option,  'no' );
+        $data[ $option ] = ( $option_value === '1' || $option_value === true || $option_value === 'yes' ) ? true : false;
     }
 
     return $data;
 }
 
+/**
+ * Save Settings Leave Data
+ *
+ * @since 1.8.6
+ *
+ * @return void
+ */
 function erp_settings_save_leaves ( $posted = [] ) {
     erp_settings_update_checkbox_options( erp_settings_leave_options(), $posted );
 }
