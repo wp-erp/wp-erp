@@ -59,15 +59,10 @@ export default {
 
   data(){
         return {
-            fields: {
-                name: '',
-                start_date: '',
-                end_date: ''
-            },
             years_data: [
                 {
                     fy_name: '',
-                    fy_description: 'Year for leave',
+                    description: 'Year for leave',
                     start_date: '',
                     end_date: ''
                 }
@@ -120,7 +115,7 @@ export default {
       addNewYear() {
           this.years_data.push({
             fy_name: '',
-            fy_description: 'Year for leave',
+            description: 'Year for leave',
             start_date: '',
             end_date: '',
             id: null

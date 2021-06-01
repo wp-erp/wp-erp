@@ -216,8 +216,10 @@ function erp_settings_save_leave_years ( $post_data = [] ) {
 
         // If found ID, then update else create
         if ( ! empty( $data['id'] ) ) {
+            $data['updated_by'] = get_current_user_id();
             Financial_Year::where( 'id', $data['id'] )->update( $data );
         } else {
+            $data['created_by'] = get_current_user_id();
             Financial_Year::create( $data );
         }
     }
