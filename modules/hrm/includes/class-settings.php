@@ -17,6 +17,7 @@ class Settings extends ERP_Settings_Page {
         $this->label         = __( 'HR', 'erp' );
         $this->single_option = true;
         $this->sections      = $this->get_sections();
+        $this->icon          = WPERP_ASSETS . '/images/wperp-settings/hr.png';
 
         add_action( 'erp_admin_field_hr_financial_years', [ $this, 'get_hr_financial_years' ] );
     }

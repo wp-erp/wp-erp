@@ -11,6 +11,7 @@ class ERP_Settings_General extends ERP_Settings_Page {
     public function __construct() {
         $this->id    = 'general';
         $this->label = __( 'General', 'erp' );
+        $this->icon = WPERP_ASSETS . '/images/wperp-settings/general.png';
     }
 
     /**

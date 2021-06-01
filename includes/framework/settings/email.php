@@ -10,6 +10,7 @@ class ERP_Email_Settings extends ERP_Settings_Page {
         $this->id       = 'erp-email';
         $this->label    = __( 'Emails', 'erp' );
         $this->sections = $this->get_sections();
+        $this->icon     = WPERP_ASSETS . '/images/wperp-settings/email.png';
 
         add_action( 'erp_admin_field_notification_emails', [ $this, 'notification_emails' ] );
         add_action( 'erp_admin_field_smtp_test_connection', [ $this, 'smtp_test_connection' ] );

@@ -12,28 +12,35 @@ class ERP_Settings_Page {
      *
      * @var string
      */
-    protected $id = '';
+    public $id = '';
 
     /**
      * Page label
      *
      * @var string
      */
-    protected $label = '';
+    public $label = '';
 
     /**
      * Single options update or multiple
      *
      * @var bool
      */
-    protected $single_option = false;
+    public $single_option = false;
 
     /**
      * Section fields
      *
      * @var array
      */
-    protected $section_fields = [];
+    public $section_fields = [];
+
+    /**
+     * Icon For Section
+     *
+     * @var array
+     */
+    public $icon = "";
 
     /**
      * Get id

@@ -13,6 +13,7 @@ class ERP_Integration_Settings extends ERP_Settings_Page {
     public function __construct() {
         $this->id    = 'erp-integration';
         $this->label = __( 'Integrations', 'erp' );
+        $this->icon      = WPERP_ASSETS . '/images/wperp-settings/integration.png';
 
         add_action( 'erp_admin_field_integrations', [ $this, 'integrations' ] );
     }

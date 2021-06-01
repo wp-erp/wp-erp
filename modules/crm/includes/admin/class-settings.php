@@ -16,6 +16,7 @@ class CRM_Settings extends ERP_Settings_Page {
         $this->id       = 'erp-crm';
         $this->label    = __( 'CRM', 'erp' );
         $this->sections = $this->get_sections();
+        $this->icon     = WPERP_ASSETS . '/images/wperp-settings/crm.png';
 
         add_action( 'erp_admin_field_listing_save_templates', [ $this, 'listing_save_templates' ] );
         add_action( 'erp_admin_field_render_email_providers', [ $this, 'render_email_providers' ] );
