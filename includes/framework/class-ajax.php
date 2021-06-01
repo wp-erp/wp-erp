@@ -58,7 +58,7 @@ class Ajax_Handler {
                 $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
             }
 
-            $settings = new ERP_Settings_General();
+            $settings = (new ERP_Settings_General());
             $settings->save();
 
             $this->send_success([

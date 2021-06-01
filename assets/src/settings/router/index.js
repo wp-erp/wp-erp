@@ -28,7 +28,7 @@ export default new Router({
             ]
         },
         {
-            path: '/hr',
+            path: '/erp-hr',
             name: 'HR',
             component: {
                 render(c) {
@@ -40,7 +40,7 @@ export default new Router({
                     path: 'workdays',
                     name: 'HRWorkDays',
                     component: HRWorkDays,
-                    alias: '/hr'
+                    alias: '/erp-hr'
                 },
                 {
                     path: 'leave',

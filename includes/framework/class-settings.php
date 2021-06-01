@@ -36,20 +36,20 @@ class ERP_Admin_Settings {
 
             $settings   = apply_filters( 'erp_settings_pages', $settings );
 
-            $settings[] = include __DIR__ . '/settings/email.php';
+            // $settings[] = include __DIR__ . '/settings/email.php';
 
-            // Display integrations tab only if any integration exist.
-            $integrations = wperp()->integration->get_integrations();
+            // // Display integrations tab only if any integration exist.
+            // $integrations = wperp()->integration->get_integrations();
 
-            if ( ! empty( $integrations ) ) {
-                $settings[] = include __DIR__ . '/settings/integration.php';
-            }
+            // if ( ! empty( $integrations ) ) {
+            //     $settings[] = include __DIR__ . '/settings/integration.php';
+            // }
 
-            $licenses = erp_addon_licenses();
+            // $licenses = erp_addon_licenses();
 
-            if ( $licenses ) {
-                $settings[] = include __DIR__ . '/settings/license.php';
-            }
+            // if ( $licenses ) {
+            //     $settings[] = include __DIR__ . '/settings/license.php';
+            // }
 
             self::$settings = $settings;
         }

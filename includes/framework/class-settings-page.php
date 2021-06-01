@@ -260,7 +260,7 @@ class ERP_Settings_Page {
      *
      * @return array
      */
-    public function get_section_fields( $section = false ) {
+    public function get_section_fields( $section = false, $all_data = false ) {
         return [];
     }
 

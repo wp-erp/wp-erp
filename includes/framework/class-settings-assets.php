@@ -35,12 +35,12 @@ class Settings_Assets {
     }
 
     public function get_settings_general_data () {
-        $settings_general = new ERP_Settings_General();
+        $settings_general = (new ERP_Settings_General());
         return $settings_general->get_settings();
     }
 
     public function get_settings_hr_data () {
-        $settings_hr = new \WeDevs\ERP\HRM\Settings();
+        $settings_hr = (new \WeDevs\ERP\HRM\Settings());
         return $settings_hr->get_section_fields( '', true );
     }
 
@@ -66,41 +66,18 @@ class Settings_Assets {
             wp_register_script( $handle, $script['src'], $deps, $version, $in_footer );
         }
 
-        $menus = '';
+        $menus = $this->get_settings_menus();
 
-        if ( is_admin() ) {
-            $component = 'settings';
-            $menu      = erp_menu();
-            $menus     = $menu[ $component ];
+        $general_fields = array_search('general', array_column( $menus, 'id' ) ) !== false ? $menus[ array_search('general', array_column( $menus, 'id' ) ) ]['fields'] : null;
+        $hr_fields      = array_search('erp-hr', array_column( $menus, 'id' ) ) !== false ? $menus[ array_search('erp-hr', array_column( $menus, 'id' ) ) ]['fields'] : null;
 
-            //check items for capabilities
-            $items = array_filter(
-                $menus,
-                function ( $item ) {
-                    if ( ! isset( $item['capability'] ) ) {
-                        return false;
-                    }
-
-                    return current_user_can( $item['capability'] );
-                }
-            );
-
-            //sort items for position
-            uasort(
-                $menus,
-                function ( $a, $b ) {
-                    return $a['position'] > $b['position'];
-                }
-            );
-
-            ?>
+        if ( is_admin() ) { ?>
             <script>
                 window.erpSettings = JSON.parse('<?php echo wp_kses_post( wp_slash(
                     json_encode( apply_filters( 'erp_localized_data', [] ) )
                 ) ); ?>');
             </script>
-            <?php
-        }
+            <?php }
 
         wp_localize_script( 'erp-settings-bootstrap', 'erp_settings_var', [
             'user_id'               => $u_id,
@@ -113,8 +90,8 @@ class Settings_Assets {
             'erp_debug_mode'        => erp_get_option( 'erp_debug_mode', 'erp_settings_general', 0 ),
             'current_date'          => erp_current_datetime()->format( 'Y-m-d' ),
             'date_format'           => erp_get_date_format(),
-            'settings_general_data' => $this->get_settings_general_data(),
-            'settings_hr_data'      => $this->get_settings_hr_data(),
+            'settings_general_data' => $general_fields,
+            'settings_hr_data'      => $hr_fields,
             'ajax_url'              => admin_url( 'admin-ajax.php' ),
             'nonce'                 => wp_create_nonce( 'erp-settings-nonce' ),
             'action'                => 'erp-settings-save',
@@ -125,6 +102,45 @@ class Settings_Assets {
                 'field'   => wp_nonce_field( 'erp-settings-nonce' )
             ],
         ] );
+    }
+
+    /**
+     * Get settings menus/pages
+     */
+    public function get_settings_menus ( ) {
+        $settings[] = include __DIR__ . '/settings/general.php';
+
+        $settings   = apply_filters( 'erp_settings_pages', $settings );
+
+        $settings[] = include __DIR__ . '/settings/email.php';
+
+        // Display integrations tab only if any integration exist.
+        $integrations = wperp()->integration->get_integrations();
+
+        if ( ! empty( $integrations ) ) {
+            $settings[] = include __DIR__ . '/settings/integration.php';
+        }
+
+        $licenses = erp_addon_licenses();
+
+        if ( $licenses ) {
+            $settings[] = include __DIR__ . '/settings/license.php';
+        }
+
+        $settings_data = [];
+
+        foreach ( $settings as $setting ) {
+            $settings_data[] = [
+                'id'       => $setting->id,
+                'slug'     => '/' . $setting->id,
+                'sections' => $setting->sections,
+                'icon'     => $setting->icon,
+                'label'    => $setting->label,
+                'fields'   => $setting->get_section_fields( '', true )
+            ];
+        }
+
+        return $settings_data;
     }
 
     /**
