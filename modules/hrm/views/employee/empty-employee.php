@@ -100,10 +100,17 @@
          alt="Employee List">
 
     <div class="tmpl-buttons">
-        <a href="#" onclick="jQuery('#erp-employee-new').click()"
-           class="button button-primary"><?php esc_html_e( 'Add your first employee!', 'erp' ); ?></a>
-        <a href="<?php echo esc_url( admin_url( 'admin.php?page=erp-tools&tab=import' ) ); ?>"
-           class="button"><?php esc_html_e( 'Import employee from CSV', 'erp' ); ?></a>
+        <a href="#"
+            onclick="jQuery('#erp-employee-new').click()"
+            class="button button-primary">
+            <?php esc_html_e( 'Add your first employee!', 'erp' ); ?>
+        </a>
+
+        <a href="#"
+            onclick="jQuery('#erp-hr-employee-import-csv').click()"
+            class="button">
+            <?php esc_html_e( 'Import employee from CSV', 'erp' ); ?>
+        </a>
     </div>
 
     <h2 class="feature-headline"><?php esc_html_e( 'What You Can Do With A Complete HR Solution', 'erp' ); ?></h2>

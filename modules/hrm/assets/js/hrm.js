@@ -114,8 +114,8 @@
                 $( 'input[name=filter_employee]' ).click();
             });
 
-            $( 'button#erp-hr-employee-import-csv' ).on( 'click', this.employee.importCsv );
-            $( 'button#erp-hr-employee-export-csv' ).on( 'click', this.employee.exportCsv );
+            $( '#erp-hr-employee-import-csv' ).on( 'click', this.employee.importCsv );
+            $( '#erp-hr-employee-export-csv' ).on( 'click', this.employee.exportCsv );
 
             this.showRequestNotification();
             this.initTipTip();
