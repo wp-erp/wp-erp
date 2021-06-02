@@ -168,7 +168,7 @@ function erp_hr_get_employees( $args = [] ) {
             }
         }
 
-        $results = $users;
+        $results = ! empty( $users ) ? $users : [];
         wp_cache_set( $cache_key, $results, 'erp', HOUR_IN_SECONDS );
     }
 
