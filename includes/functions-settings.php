@@ -42,44 +42,6 @@ function erp_settings_get_workdays () {
 }
 
 /**
- * Save Workdays Settings
- *
- * @since 1.8.6
- *
- * @param array $posted
- *
- * @return void
- */
-function erp_settings_save_workdays ( $posted = [] ) {
-    foreach ( erp_settings_get_days() as $option ) {
-        $value = isset( $posted[ $option ] ) ? sanitize_text_field( wp_unslash( $posted[ $option ] ) ) : '';
-        update_option( $option, $value );
-    }
-}
-
-/**
- * Update settings for checkbox options
- *
- * @param array $options
- * @param array $posted data
- *
- * @return void
- */
-function erp_settings_update_checkbox_options ( $options = [], $posted = [] ) {
-    foreach ( $options as $option ) {
-        $value = isset( $posted[ $option ] ) ? sanitize_text_field( wp_unslash( $posted[ $option ] ) ) : '';
-
-        if ( ! empty ( $value ) && ( $value === true || $value === 1 || $value === 'true' ) ) {
-            $value = 'yes';
-        } else {
-            $value = 'no';
-        }
-
-        update_option( $option, $value );
-    }
-}
-
-/**
  * Get Settings leave options
  *
  * @since 1.8.6
@@ -112,31 +74,6 @@ function erp_settings_get_leaves () {
 }
 
 /**
- * Save Settings Leave Data
- *
- * @since 1.8.6
- *
- * @return void
- */
-function erp_settings_save_leaves ( $posted = [] ) {
-    erp_settings_update_checkbox_options( erp_settings_leave_options(), $posted );
-}
-
-/**
- * Get Settings miscellaneous options
- *
- * @since 1.8.6
- *
- * @todo get data using hook from erp-pro
- *
- * @return array $options
- */
-function erp_settings_miscellaneous_options () {
-    $options = [ 'erp_hrm_remove_wp_user' ];
-    return $options;
-}
-
-/**
  * Get Settings Miscellaneous Data
  *
  * @since 1.8.6
@@ -144,25 +81,9 @@ function erp_settings_miscellaneous_options () {
  * @return array $data
  */
 function erp_settings_get_miscellaneous () {
-    $data = [];
-
-    foreach ( erp_settings_miscellaneous_options() as $option ) {
-        $option_value    = get_option( $option,  'no' );
-        $data[ $option ] = ( $option_value === '1' || $option_value === true || $option_value === 'yes' ) ? true : false;
-    }
+    $data['erp_hrm_remove_wp_user'] = ( get_option( 'erp_hrm_remove_wp_user',  'no' ) === 'yes' ) ? true : false;
 
     return $data;
-}
-
-/**
- * Save Settings Miscellaneous Data
- *
- * @since 1.8.6
- *
- * @return void
- */
-function erp_settings_save_miscellaneous ( $posted = [] ) {
-    erp_settings_update_checkbox_options( erp_settings_miscellaneous_options(), $posted );
 }
 
 /**
