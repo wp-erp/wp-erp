@@ -5,93 +5,93 @@
     <settings-sub-menu></settings-sub-menu>
 
     <div class="settings-box">
-        <h3 class="sub-section-title">{{ __('Grace Time', 'erp') }}</h3>
+        <h3 class="sub-section-title">{{ inputItems[0].title }}</h3>
 
-        <form action="" class="wperp-form" method="post" @submit.prevent="submitHRFrontendForm">
+        <form action="" class="wperp-form" method="post" @submit.prevent="submitHRAttendanceForm">
 
             <div class="wperp-form-group">
-                 <label> {{ __( 'Grace Before Checkin', 'erp-pro' ) }}</label>
-                 <input v-model="fields.grace_before_checkin" class="wperp-form-field" />
-                 <p class="erp-form-input-hint">{{ __( '(in minute) this time will not counted as overtime', 'erp-pro' ) }}</p>
+                <label> {{ inputItems[1].title }}</label>
+                <input v-model="fields[inputItems[1].id]" class="wperp-form-field" />
+                <p class="erp-form-input-hint">{{ inputItems[1].desc }}</p>
             </div>
 
             <div class="wperp-form-group">
-                 <label> {{ __( 'Grace After Checkin', 'erp-pro' ) }}</label>
-                 <input v-model="fields.grace_after_checkin" class="wperp-form-field" />
-                 <p class="erp-form-input-hint">{{ __( '(in minute) this time will not counted as late', 'erp-pro' ) }}</p>
+                <label> {{ inputItems[2].title }}</label>
+                <input v-model="fields[inputItems[2].id]" class="wperp-form-field" />
+                <p class="erp-form-input-hint">{{ inputItems[2].desc }}</p>
             </div>
 
             <div class="wperp-form-group">
-                 <label> {{ __( 'Threshhold between checkout & checkin', 'erp-pro' ) }}</label>
-                 <input v-model="fields.erp_att_diff_threshhold" class="wperp-form-field" />
-                 <p class="erp-form-input-hint">{{ __( '(in second) this time will prevent quick checkin after making a checkout', 'erp-pro' ) }}</p>
+                <label> {{ inputItems[3].title }}</label>
+                <input v-model="fields[inputItems[3].id]" class="wperp-form-field" />
+                <p class="erp-form-input-hint">{{ inputItems[3].desc }}</p>
             </div>
 
             <div class="wperp-form-group">
-                 <label> {{ __( 'Grace Before Checkout', 'erp-pro' ) }}</label>
-                 <input v-model="fields.grace_before_checkout" class="wperp-form-field" />
-                 <p class="erp-form-input-hint">{{ __( '(in minute) this time will not counted as early left', 'erp-pro' ) }}</p>
+                <label> {{ inputItems[4].title }}</label>
+                <input v-model="fields[inputItems[4].id]" class="wperp-form-field" />
+                <p class="erp-form-input-hint">{{ inputItems[4].desc }}</p>
             </div>
 
             <div class="wperp-form-group">
-                 <label> {{ __( 'Grace After Checkout', 'erp-pro' ) }}</label>
-                 <input v-model="fields.grace_after_checkout" class="wperp-form-field" />
-                 <p class="erp-form-input-hint">{{ __( '(in minute) this time will not counted as overtime', 'erp-pro' ) }}</p>
+                <label> {{ inputItems[5].title }}</label>
+                <input v-model="fields[inputItems[5].id]" class="wperp-form-field" />
+                <p class="erp-form-input-hint">{{ inputItems[5].desc }}</p>
             </div>
 
             <div class="wperp-form-group">
-                <label>{{ __( 'Self Attendance', 'erp-pro' ) }}</label>
+                <label>{{ inputItems[6].title }}</label>
                 <div class="form-check">
                     <label class="form-check-label">
-                        <input v-model="fields.enable_self_att" type="checkbox" class="form-check-input" >
+                        <input v-model="fields[inputItems[6].id]" type="checkbox" class="form-check-input" >
                         <span class="form-check-sign">
                             <span class="check"></span>
                         </span>
                         <span class="form-check-label-light">
-                            {{ __( 'Enable self attendance service for employees?', 'erp-pro' ) }}
+                            {{ inputItems[6].desc }}
                         </span>
                     </label>
                 </div>
             </div>
 
             <div class="wperp-form-group">
-                <label>{{ __( 'IP Restriction', 'erp-pro' ) }}</label>
+                <label>{{ inputItems[7].title }}</label>
                 <div class="form-check">
                     <label class="form-check-label">
-                        <input v-model="fields.erp_at_enable_ip_restriction" type="checkbox" class="form-check-input" >
+                        <input v-model="fields[inputItems[7].id]" type="checkbox" class="form-check-input" >
                         <span class="form-check-sign">
                             <span class="check"></span>
                         </span>
                         <span class="form-check-label-light">
-                            {{ __( 'Enable IP restriction for checkin/checkout', 'erp-pro' ) }}
+                            {{ inputItems[7].desc }}
                         </span>
                     </label>
                 </div>
             </div>
 
             <div class="wperp-form-group">
-                 <label> {{ __( 'Grace After Checkout', 'erp-pro' ) }}</label>
-                 <textarea cols="45" rows="4" v-model="fields.erp_at_whitelisted_ips" class="wperp-form-field" />
-                 <p class="erp-form-input-hint">{{ __( 'Employees from this IP addresss will be able to self check-in. Put one IP in each line', 'erp-pro' ) }}</p>
+                <label> {{ inputItems[8].title }}</label>
+                 <textarea cols="45" rows="4" v-model="fields[inputItems[8].id]" class="wperp-form-field" />
+                 <p class="erp-form-input-hint">{{ inputItems[8].desc }}</p>
             </div>
 
             <div class="wperp-form-group">
-                <label>{{ __( 'Attendance Reminder', 'erp-pro' ) }}</label>
+                <label>{{ inputItems[9].title }}</label>
                 <div class="form-check">
                     <label class="form-check-label">
-                        <input v-model="fields.attendance_reminder" type="checkbox" class="form-check-input" >
+                        <input v-model="fields[inputItems[9].id]" type="checkbox" class="form-check-input" >
                         <span class="form-check-sign">
                             <span class="check"></span>
                         </span>
                         <span class="form-check-label-light">
-                            {{ __( 'Send email notification to remind Checking-in', 'erp-pro' ) }}
+                            {{ inputItems[9].desc }}
                         </span>
                     </label>
                 </div>
             </div>
 
             <div class="wperp-form-group">
-                <submit-button text="Save Changes" />
+                <submit-button :text="__('Save Changes', 'erp')" />
             </div>
 
         </form>
@@ -102,6 +102,9 @@
 <script>
 import SettingsSubMenu from 'settings/components/menu/SettingsSubMenu.vue';
 import SubmitButton from 'settings/components/base/SubmitButton.vue';
+import { generateFormDataFromObject } from 'settings/utils/FormDataHandler';
+
+var $ = jQuery;
 
 export default {
   name: "HRAttendance",
@@ -109,17 +112,17 @@ export default {
   data(){
         return {
             fields: {
-                grace_before_checkin: 15,
-                grace_after_checkin: 15,
-                erp_att_diff_threshhold: 60,
-                grace_before_checkout: 15,
-                grace_after_checkout: 15,
+                grace_before_checkin: '',
+                grace_after_checkin: '',
+                erp_att_diff_threshhold: '',
+                grace_before_checkout: '',
+                grace_after_checkout: '',
                 enable_self_att: false,
                 erp_at_enable_ip_restriction: false,
                 erp_at_whitelisted_ips: '',
-                attendance_reminder: true
+                attendance_reminder: false
             },
-            inputItems: erp_settings_var.settings_hr_data
+            inputItems: erp_settings_var.settings_hr_data['attendance']
         }
   },
 
@@ -128,15 +131,76 @@ export default {
       SubmitButton
   },
 
+  created () {
+      this.getSettingsAttendanceData();
+  },
+
   methods: {
-      submitHRFrontendForm() {
+      submitHRAttendanceForm() {
+        this.$store.dispatch('spinner/setSpinner', true);
+        let requestDataPost = {};
+
+        this.inputItems.forEach((item) => {
+            requestDataPost[item.id] = this.fields[item.id];
+        });
+
+        let requestData = {
+            ...requestDataPost,
+            postData: this.inputItems,
+            _wpnonce: erp_settings_var.nonce,
+            action: 'erp-att-save-settings-data'
+        }
+
+        requestData = window.settings.hooks.applyFilters('requestData', requestData);
+
+        const postData = generateFormDataFromObject( requestData );
+        const that     = this;
+
+        $.ajax({
+            url: erp_settings_var.ajax_url,
+            type: 'POST',
+            data: postData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                that.$store.dispatch('spinner/setSpinner', false);
+
+                if (response.success) {
+                    that.showAlert('success', response.data.message);
+                } else {
+                    that.showAlert('error', __('Something went wrong !', 'erp'));
+                }
+            }
+        });
+      },
+
+      getSettingsAttendanceData() {
         this.$store.dispatch('spinner/setSpinner', true);
 
-        this.showAlert('success', 'HR Frontend saved successfully !');
+        let requestData = window.settings.hooks.applyFilters('requestData', {
+            _wpnonce: erp_settings_var.nonce,
+            action: 'erp-att-get-settings-data'
+        });
 
-        this.$store.dispatch('spinner/setSpinner', false);
+        const postData = generateFormDataFromObject( requestData );
+        const that     = this;
+
+        $.ajax({
+            url: erp_settings_var.ajax_url,
+            type: 'POST',
+            data: postData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                that.$store.dispatch('spinner/setSpinner', false);
+
+                if (response.success) {
+                    that.fields = response.data;
+                }
+            }
+        });
       }
-  },
+  }
 
 };
 </script>
