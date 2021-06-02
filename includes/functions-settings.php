@@ -69,11 +69,12 @@ function erp_settings_update_checkbox_options ( $options = [], $posted = [] ) {
     foreach ( $options as $option ) {
         $value = isset( $posted[ $option ] ) ? sanitize_text_field( wp_unslash( $posted[ $option ] ) ) : '';
 
-        if ( ! empty ( $value ) && $value == true ) {
+        if ( ! empty ( $value ) && ( $value === true || $value === 1 || $value === 'true' ) ) {
             $value = 'yes';
         } else {
             $value = 'no';
         }
+
         update_option( $option, $value );
     }
 }
