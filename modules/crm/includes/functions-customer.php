@@ -3366,7 +3366,7 @@ function erp_handle_user_bulk_actions() {
 
             if ( ! empty( $contacts ) ) {
                 $contact_ids = wp_list_pluck( $contacts, 'user_id' );
-                $user_ids    = array_diff( $user_ids, $contact_ids );
+                // $user_ids    = array_diff( $user_ids, $contact_ids );
             }
 
             foreach ( $user_ids as $user_id ) {
