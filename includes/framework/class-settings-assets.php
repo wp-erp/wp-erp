@@ -34,16 +34,6 @@ class Settings_Assets {
         wp_enqueue_script( 'erp-settings' );
     }
 
-    public function get_settings_general_data () {
-        $settings_general = (new ERP_Settings_General());
-        return $settings_general->get_settings();
-    }
-
-    public function get_settings_hr_data () {
-        $settings_hr = (new \WeDevs\ERP\HRM\Settings());
-        return $settings_hr->get_section_fields( '', true );
-    }
-
     /**
      * Register scripts
      *
@@ -68,8 +58,10 @@ class Settings_Assets {
 
         $menus = $this->get_settings_menus();
 
-        $general_fields = array_search('general', array_column( $menus, 'id' ) ) !== false ? $menus[ array_search('general', array_column( $menus, 'id' ) ) ]['fields'] : null;
-        $hr_fields      = array_search('erp-hr', array_column( $menus, 'id' ) ) !== false ? $menus[ array_search('erp-hr', array_column( $menus, 'id' ) ) ]['fields'] : null;
+        $general_fields = array_search('general', array_column( $menus, 'id' ) ) !== false ? $menus[ array_search('general', array_column( $menus, 'id' ) ) ]['fields'] : [];
+        $hr_fields      = array_search('erp-hr', array_column( $menus, 'id' ) ) !== false ? $menus[ array_search('erp-hr', array_column( $menus, 'id' ) ) ]['fields'] : [];
+        $crm_fields     = array_search('erp-crm', array_column( $menus, 'id' ) ) !== false ? $menus[ array_search('erp-crm', array_column( $menus, 'id' ) ) ]['fields'] : [];
+        $act_fields     = array_search('erp-ac', array_column( $menus, 'id' ) ) !== false ? $menus[ array_search('erp-ac', array_column( $menus, 'id' ) ) ]['fields'] : [];
 
         if ( is_admin() ) { ?>
             <script>
@@ -92,6 +84,8 @@ class Settings_Assets {
             'date_format'           => erp_get_date_format(),
             'settings_general_data' => $general_fields,
             'settings_hr_data'      => $hr_fields,
+            'settings_crm_data'     => $crm_fields,
+            'settings_act_data'     => $act_fields,
             'ajax_url'              => admin_url( 'admin-ajax.php' ),
             'nonce'                 => wp_create_nonce( 'erp-settings-nonce' ),
             'action'                => 'erp-settings-save',

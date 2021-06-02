@@ -94,6 +94,10 @@ class ERP_Settings_General extends ERP_Settings_Page {
 
         return apply_filters( 'erp_settings_general', $fields );
     }
+
+    public function get_section_fields( $section = false ) {
+        return $this->get_settings();
+    }
 }
 
 return new ERP_Settings_General();
