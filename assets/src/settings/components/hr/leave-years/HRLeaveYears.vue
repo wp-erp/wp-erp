@@ -38,7 +38,7 @@
             </div>
 
             <div class="wperp-form-group">
-                <submit-button :text="__('Save Changes', 'erp')" />
+                <submit-button :text="__( 'Save Changes', 'erp' )" />
             </div>
 
         </form>

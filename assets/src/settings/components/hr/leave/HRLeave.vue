@@ -27,7 +27,7 @@
             </div>
 
             <div class="wperp-form-group">
-                <submit-button text="Save Changes" />
+                <submit-button :text="__( 'Save Changes', 'erp' )" />
             </div>
         </form>
     </div>
@@ -73,15 +73,20 @@ export default {
         this.$store.dispatch('spinner/setSpinner', true);
         let requestDataPost = {};
 
-        this.inputItems.forEach((item) => {
-            if(item.type === 'checkbox') {
-                requestDataPost[item.id] = typeof item.value === 'undefined' ? false : item.value
+        this.inputItems.forEach(item => {
+            requestDataPost[item.id] = item.value;
+
+            if ( requestDataPost[item.id] === false ) {
+                requestDataPost[item.id] = null;
             }
         });
 
         let requestData = {
-            ...requestDataPost, _wpnonce: erp_settings_var.nonce,
-            action: 'erp-settings-leave-save'
+            ...requestDataPost,
+            _wpnonce: erp_settings_var.nonce,
+            action: 'erp-settings-save',
+            module: 'hrm',
+            section: 'leave'
         }
 
         requestData = window.settings.hooks.applyFilters('requestData', requestData);

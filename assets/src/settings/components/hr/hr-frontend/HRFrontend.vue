@@ -5,45 +5,45 @@
     <settings-sub-menu></settings-sub-menu>
 
     <div class="settings-box">
-        <h3 class="sub-section-title">{{ __('HR Frontend', 'erp') }}</h3>
-        <p class="sub-section-description">{{ __('HRM frontend settings.', 'erp') }}</p>
+        <h3 class="sub-section-title">{{ inputItems[0].title }}</h3>
+        <p class="sub-section-description">{{ inputItems[0].desc }}</p>
 
         <form action="" class="wperp-form" method="post" @submit.prevent="submitHRFrontendForm">
 
             <div class="wperp-form-group">
-                 <label> {{ __("HR Dashbord Slug", 'erp') }}</label>
-                 <input v-model="fields.hr_frontend_slug" class="wperp-form-field" />
-                 <p class="erp-form-input-hint">{{ __('Your custom slug', 'erp') }}</p>
+                 <label> {{ inputItems[1].title }}</label>
+                 <input v-model="fields[inputItems[1].id]" class="wperp-form-field" />
+                 <p class="erp-form-input-hint">{{ inputItems[1].desc  }}</p>
             </div>
 
             <div class="wperp-form-group">
-                 <label> {{ __("HR Dashbord Title", 'erp') }}</label>
-                 <input v-model="fields.hr_frontend_title" class="wperp-form-field" />
-                 <p class="erp-form-input-hint">{{ __('Your custom title', 'erp') }}</p>
+                 <label> {{ inputItems[2].title }}</label>
+                 <input v-model="fields[inputItems[2].id]" class="wperp-form-field" />
+                 <p class="erp-form-input-hint">{{ inputItems[2].desc  }}</p>
             </div>
 
             <div class="wperp-form-group">
-                 <label> {{ __("HR Frontend Logo", 'erp') }}</label>
+                 <label> {{ inputItems[3].title }}</label>
                  <input type="file" class="wperp-form-field" />
             </div>
 
             <div class="wperp-form-group">
-                <label>{{ __('Redirect to frontend', 'erp') }}</label>
+                <label>{{ inputItems[4].title }}</label>
                 <div class="form-check">
                     <label class="form-check-label">
-                        <input v-model="fields.hr_frontend_redirect" type="checkbox" class="form-check-input" >
+                        <input v-model="fields[inputItems[4].id]" type="checkbox" class="form-check-input" >
                         <span class="form-check-sign">
                             <span class="check"></span>
                         </span>
                         <span class="form-check-label-light">
-                            {{ __('Check if you want to redirect to frontend', 'erp') }}
+                            {{ inputItems[4].desc }}
                         </span>
                     </label>
                 </div>
             </div>
 
             <div class="wperp-form-group">
-                <submit-button text="Save Changes" />
+                <submit-button :text="__( 'Save Changes', 'erp' )" />
             </div>
 
         </form>
@@ -66,7 +66,7 @@ export default {
                 hr_frontend_logo: '',
                 hr_frontend_redirect: false
             },
-            inputItems: erp_settings_var.settings_hr_data
+            inputItems: erp_settings_var.settings_hr_data['hr_frontend']
         }
   },
 

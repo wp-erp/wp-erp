@@ -26,7 +26,7 @@
             </div>
 
             <div class="wperp-form-group">
-                <submit-button text="Save Changes" />
+                <submit-button :text="__( 'Save Changes', 'erp' )" />
             </div>
 
         </form>
@@ -67,9 +67,11 @@ export default {
         this.$store.dispatch('spinner/setSpinner', true);
 
         let requestData = window.settings.hooks.applyFilters('requestData', {
-            erp_hrm_remove_wp_user: this.fields.erp_hrm_remove_wp_user,
+            erp_hrm_remove_wp_user: ! this.fields.erp_hrm_remove_wp_user ? null : true,
             _wpnonce: erp_settings_var.nonce,
-            action: 'erp-settings-miscellaneous-save'
+            action: 'erp-settings-save',
+            module: 'hrm',
+            section: 'miscellaneous'
         });
 
         const postData = generateFormDataFromObject( requestData );

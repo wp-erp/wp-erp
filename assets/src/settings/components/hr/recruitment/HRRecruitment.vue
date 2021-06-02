@@ -17,7 +17,7 @@
             </div>
 
             <div class="wperp-form-group">
-                <submit-button :text="__('Save Changes', 'erp')" />
+                <submit-button :text="__( 'Save Changes', 'erp' )" />
             </div>
 
         </form>
@@ -64,7 +64,9 @@ export default {
         let requestData = window.settings.hooks.applyFilters('requestData', {
             recruitment_api_url: this.fields.recruitment_api_url,
             _wpnonce: erp_settings_var.nonce,
-            action: 'erp-rec-save-settings'
+            action: 'erp-settings-save',
+            module: 'hrm',
+            section: 'recruitment'
         });
 
         const postData = generateFormDataFromObject( requestData );

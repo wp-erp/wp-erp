@@ -91,7 +91,7 @@
             </div>
 
             <div class="wperp-form-group">
-                <submit-button :text="__('Save Changes', 'erp')" />
+                <submit-button :text="__( 'Save Changes', 'erp' )" />
             </div>
 
         </form>
@@ -142,13 +142,17 @@ export default {
 
         this.inputItems.forEach((item) => {
             requestDataPost[item.id] = this.fields[item.id];
+            if ( requestDataPost[item.id] === false ) {
+                requestDataPost[item.id] = null;
+            }
         });
 
         let requestData = {
             ...requestDataPost,
-            postData: this.inputItems,
             _wpnonce: erp_settings_var.nonce,
-            action: 'erp-att-save-settings-data'
+            action: 'erp-settings-save',
+            module: 'hrm',
+            section: 'attendance'
         }
 
         requestData = window.settings.hooks.applyFilters('requestData', requestData);

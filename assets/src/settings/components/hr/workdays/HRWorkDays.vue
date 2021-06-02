@@ -95,7 +95,7 @@
             </div>
 
             <div class="wperp-form-group">
-                <submit-button text="Save Changes" />
+                <submit-button :text="__( 'Save Changes', 'erp' )" />
             </div>
 
         </form>
@@ -141,17 +141,21 @@ export default {
       submitHRWorkDaysForm() {
         this.$store.dispatch('spinner/setSpinner', true);
 
-        let requestData = window.settings.hooks.applyFilters('requestData', {
-            mon: this.fields.mon,
-            tue: this.fields.tue,
-            wed: this.fields.wed,
-            thu: this.fields.thu,
-            fri: this.fields.fri,
-            sat: this.fields.sat,
-            sun: this.fields.sun,
-            _wpnonce: erp_settings_var.nonce,
-            action: 'erp-settings-workdays-save'
+        let requestDataPost = {};
+
+        this.inputItems.forEach(item => {
+            requestDataPost[item.id] = this.fields[item.id];
         });
+
+        let requestData = {
+            ...requestDataPost,
+            _wpnonce: erp_settings_var.nonce,
+            action: 'erp-settings-save',
+            module: 'hrm',
+            section: 'workdays'
+        }
+
+        requestData = window.settings.hooks.applyFilters('requestData', requestData);
 
         const postData = generateFormDataFromObject( requestData );
         const that     = this;
