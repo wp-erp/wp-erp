@@ -172,7 +172,7 @@ class ERP_Settings_Page {
             // Standard types
             case 'checkbox':
 
-                if ( isset( $_POST[ $value['id'] ] ) ) {
+                if ( ! empty ( $_POST[ $value['id'] ] ) ) {
                     $option_value = 'yes';
                 } else {
                     $option_value = 'no';
