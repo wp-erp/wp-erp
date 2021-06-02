@@ -127,7 +127,7 @@ class Settings_Assets {
             $settings_data[] = [
                 'id'       => $setting->id,
                 'slug'     => '/' . $setting->id,
-                'sections' => $setting->sections,
+                'sections' => $setting->get_sections(),
                 'icon'     => $setting->icon,
                 'label'    => $setting->label,
                 'fields'   => $setting->get_section_fields( '', true )

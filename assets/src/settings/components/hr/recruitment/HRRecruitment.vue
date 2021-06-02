@@ -5,19 +5,19 @@
     <settings-sub-menu></settings-sub-menu>
 
     <div class="settings-box">
-        <h3 class="sub-section-title">{{ __('Recruitment', 'erp') }}</h3>
-        <p class="sub-section-description">{{ __('HRM Recruitment settings.', 'erp') }}</p>
+        <h3 class="sub-section-title">{{ inputItems[0].title }}</h3>
+        <p class="sub-section-description">{{ inputItems[0].desc }}</p>
 
         <form action="" class="wperp-form" method="post" @submit.prevent="submitHRRecruitmentForm">
 
             <div class="wperp-form-group">
-                 <label> {{ __("Global Api", 'erp') }}</label>
-                 <input v-model="fields.recruitment_api_url" class="wperp-form-field" />
-                 <p class="erp-form-input-hint">{{ __('Third party API', 'erp') }}</p>
+                 <label> {{ inputItems[1].title }}</label>
+                 <input v-model="fields[inputItems[1].id]" class="wperp-form-field" />
+                 <p class="erp-form-input-hint">{{ inputItems[1].desc }}</p>
             </div>
 
             <div class="wperp-form-group">
-                <submit-button text="Save Changes" />
+                <submit-button :text="__('Save Changes', 'erp')" />
             </div>
 
         </form>
@@ -28,6 +28,9 @@
 <script>
 import SettingsSubMenu from 'settings/components/menu/SettingsSubMenu.vue';
 import SubmitButton from 'settings/components/base/SubmitButton.vue';
+import { generateFormDataFromObject } from 'settings/utils/FormDataHandler';
+
+var $ = jQuery;
 
 export default {
   name: "HRRecruitment",
@@ -37,8 +40,16 @@ export default {
             fields: {
                 recruitment_api_url: '',
             },
-            inputItems: erp_settings_var.settings_hr_data
+            inputItems: erp_settings_var.settings_hr_data['recruitment']
         }
+  },
+
+  mounted() {
+      this.fields.recruitment_api_url = this.inputItems[1].default
+  },
+
+  created() {
+    this.getSettingsRecruitmentData();
   },
 
   components: {
@@ -50,9 +61,58 @@ export default {
       submitHRRecruitmentForm() {
         this.$store.dispatch('spinner/setSpinner', true);
 
-        this.showAlert('success', 'Recruitment settings saved successfully !');
+        let requestData = window.settings.hooks.applyFilters('requestData', {
+            recruitment_api_url: this.fields.recruitment_api_url,
+            _wpnonce: erp_settings_var.nonce,
+            action: 'erp-rec-save-settings'
+        });
 
-        this.$store.dispatch('spinner/setSpinner', false);
+        const postData = generateFormDataFromObject( requestData );
+        const that     = this;
+
+        $.ajax({
+            url: erp_settings_var.ajax_url,
+            type: 'POST',
+            data: postData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                that.$store.dispatch('spinner/setSpinner', false);
+
+                if (response.success) {
+                    that.showAlert('success', response.data.message);
+                } else {
+                    that.showAlert('error', __('Something went wrong !', 'erp'));
+                }
+            }
+        });
+      },
+
+      getSettingsRecruitmentData() {
+          this.$store.dispatch('spinner/setSpinner', true);
+
+        let requestData = window.settings.hooks.applyFilters('requestData', {
+            _wpnonce: erp_settings_var.nonce,
+            action: 'erp-rec-get-settings'
+        });
+
+        const postData = generateFormDataFromObject( requestData );
+        const that     = this;
+
+        $.ajax({
+            url: erp_settings_var.ajax_url,
+            type: 'POST',
+            data: postData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                that.$store.dispatch('spinner/setSpinner', false);
+
+                if (response.success) {
+                    that.fields = response.data;
+                }
+            }
+        });
       }
   },
 

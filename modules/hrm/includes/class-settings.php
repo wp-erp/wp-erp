@@ -141,6 +141,12 @@ class Settings extends ERP_Settings_Page {
         ];
         $fields = apply_filters( 'erp_settings_hr_section_fields', $fields, $section );
 
+        foreach ( $this->get_sections() as $section => $name ) {
+            if ( empty( $fields[ $section ] ) ) {
+                $fields = apply_filters( 'erp_settings_hr_section_fields', $fields, $section );
+            }
+        }
+
         if ( $all_data ) {
             return $fields;
         }

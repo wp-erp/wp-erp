@@ -251,6 +251,13 @@ class Ajax_Handler {
         }
     }
 
+    /**
+     * Save Settings for HR Financial Years
+     *
+     * @since 1.8.6
+     *
+     * @return void
+     */
     public function erp_settings_save_hr_financial_years() {
         try {
 
