@@ -83,8 +83,7 @@ function erp_acct_get_purchase( $purchase_no ) {
         $purchase_no
     );
 
-    $wpdb->query( "SET SQL_BIG_SELECTS=1" );
-    $wpdb->query( "SET SESSION SQL_MODE=''" );
+    erp_disable_mysql_strict_mode();
 
     $row                = $wpdb->get_row( $sql, ARRAY_A );
     $row['line_items']  = erp_acct_format_purchase_line_items( $purchase_no );
@@ -125,6 +124,8 @@ function erp_acct_format_purchase_line_items( $voucher_no ) {
         WHERE purchase.voucher_no = %d",
         $voucher_no
     );
+
+    erp_disable_mysql_strict_mode();
 
     $results = $wpdb->get_results( $sql, ARRAY_A );
 
@@ -836,8 +837,7 @@ function erp_acct_get_due_purchases_by_vendor( $args ) {
         $args['order']
     );
 
-    $wpdb->query( "SET SQL_BIG_SELECTS=1" );
-    $wpdb->query( "SET SESSION SQL_MODE=''" );
+    erp_disable_mysql_strict_mode();
 
     if ( $args['count'] ) {
         return $wpdb->get_var( $query );
