@@ -952,3 +952,17 @@ function erp_is_people_trashed( $id ) {
 
     return false;
 }
+
+/**
+ * Disables mysql strict mode
+ * 
+ * @since 1.8.5
+ *
+ * @return void
+ */
+function erp_disable_mysql_strict_mode() {
+    global $wpdb;
+
+    $wpdb->query( "SET SESSION SQL_MODE=''" );
+    $wpdb->query( "SET SQL_BIG_SELECTS=1" );
+}
