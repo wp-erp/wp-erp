@@ -35,8 +35,7 @@ function erp_acct_get_expenses( $args = [] ) {
     $sql .= $args['count'] ? ' COUNT( id ) as total_number ' : ' * ';
     $sql .= "FROM {$wpdb->prefix}erp_acct_expenses WHERE `trn_by_ledger_id` IS NOT NULL ORDER BY {$args['orderby']} {$args['order']} {$limit}";
 
-    $wpdb->query( "SET SQL_BIG_SELECTS=1" );
-    $wpdb->query( "SET SESSION SQL_MODE=''" );
+    erp_disable_mysql_strict_mode();
     
     if ( $args['count'] ) {
         return $wpdb->get_var( $sql );
@@ -81,8 +80,7 @@ function erp_acct_get_expense( $expense_no ) {
 
             FROM {$wpdb->prefix}erp_acct_expenses AS expense WHERE expense.voucher_no = {$expense_no}";
 
-    $wpdb->query( "SET SQL_BIG_SELECTS=1" );
-    $wpdb->query( "SET SESSION SQL_MODE=''" );
+    erp_disable_mysql_strict_mode();
 
     $row = $wpdb->get_row( $sql, ARRAY_A );
 
@@ -137,8 +135,7 @@ function erp_acct_get_check( $expense_no ) {
 
     WHERE expense.voucher_no = {$expense_no} AND expense.trn_by = 3";
 
-    $wpdb->query( "SET SQL_BIG_SELECTS=1" );
-    $wpdb->query( "SET SESSION SQL_MODE=''" );
+    erp_disable_mysql_strict_mode();
 
     $row = $wpdb->get_row( $sql, ARRAY_A );
 
@@ -785,8 +782,7 @@ function erp_acct_get_check_data_of_expense( $expense_no ) {
 
             WHERE cheque.trn_no = {$expense_no}";
 
-    $wpdb->query( "SET SQL_BIG_SELECTS=1" );
-    $wpdb->query( "SET SESSION SQL_MODE=''" );
+    erp_disable_mysql_strict_mode();
 
     $row = $wpdb->get_row( $sql, ARRAY_A );
 

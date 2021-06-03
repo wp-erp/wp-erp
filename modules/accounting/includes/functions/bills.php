@@ -79,8 +79,7 @@ function erp_acct_get_bill( $bill_no ) {
         $bill_no
     );
 
-    $wpdb->query( "SET SQL_BIG_SELECTS=1" );
-    $wpdb->query( "SET SESSION SQL_MODE=''" );
+    erp_disable_mysql_strict_mode();
 
     $row = $wpdb->get_row( $sql, ARRAY_A );
 
@@ -115,6 +114,8 @@ function erp_acct_format_bill_line_items( $voucher_no ) {
         WHERE bill.voucher_no = %d",
         $voucher_no
     );
+
+    erp_disable_mysql_strict_mode();
 
     return $wpdb->get_results( $sql, ARRAY_A );
 }
