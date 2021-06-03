@@ -82,8 +82,7 @@ function erp_acct_get_payment( $invoice_no ) {
 
             WHERE pay_inv.voucher_no = {$invoice_no}";
 
-    $wpdb->query( "SET SQL_BIG_SELECTS=1" );
-    $wpdb->query( "SET SESSION SQL_MODE=''" );
+    erp_disable_mysql_strict_mode();
 
     $row = $wpdb->get_row( $sql, ARRAY_A );
 
