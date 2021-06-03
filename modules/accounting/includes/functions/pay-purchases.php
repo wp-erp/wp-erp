@@ -52,7 +52,7 @@ function erp_acct_get_pay_purchases( $args = [] ) {
 function erp_acct_get_pay_purchase( $purchase_no ) {
     global $wpdb;
 
-    $wpdb->query( "SET SQL_BIG_SELECTS=1" );
+    erp_disable_mysql_strict_mode();
 
     $row = $wpdb->get_row(
         $wpdb->prepare(
