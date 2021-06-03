@@ -94,7 +94,7 @@ function erp_acct_add_employee_as_people( $data, $update = false ) {
 /**
  * Inserts accounting people
  * 
- * @since 1.8.4
+ * @since 1.8.5
  *
  * @param array $args
  * 
@@ -388,7 +388,7 @@ function erp_acct_get_people_type_by_type_id( $type_id ) {
 /**
  * Get people type name by type id
  * 
- * @since 1.8.3
+ * @since 1.8.5
  *
  * @param $type_name
  *

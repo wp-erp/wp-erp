@@ -79,7 +79,6 @@ class Ajax {
 
         $files = wp_check_filetype_and_ext( $csv_file['tmp_name'], $csv_file['name'] );
 
-        // Check if current user has permission
         if ( 'csv' !== $files['ext'] && 'text/csv' !== $files['type'] ) {
             $this->send_error( __( 'The file is not a valid CSV file! Please provide a valid one.', 'erp' ) );
         }
