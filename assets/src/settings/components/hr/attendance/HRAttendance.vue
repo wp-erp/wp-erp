@@ -1,107 +1,91 @@
 
 <template>
-  <div>
-    <h2 class="section-title">{{ __("HR Management", "erp") }}</h2>
-    <settings-sub-menu></settings-sub-menu>
+    <base-layout section_id="erp-hr" sub_section_id="attendance" :onFormSubmit="submitHRAttendanceForm">
+        <div class="wperp-form-group">
+            <label> {{ inputItems[1].title }}</label>
+            <input v-model="fields[inputItems[1].id]" class="wperp-form-field" />
+            <p class="erp-form-input-hint">{{ inputItems[1].desc }}</p>
+        </div>
 
-    <div class="settings-box">
-        <h3 class="sub-section-title">{{ inputItems[0].title }}</h3>
+        <div class="wperp-form-group">
+            <label> {{ inputItems[2].title }}</label>
+            <input v-model="fields[inputItems[2].id]" class="wperp-form-field" />
+            <p class="erp-form-input-hint">{{ inputItems[2].desc }}</p>
+        </div>
 
-        <form action="" class="wperp-form" method="post" @submit.prevent="submitHRAttendanceForm">
+        <div class="wperp-form-group">
+            <label> {{ inputItems[3].title }}</label>
+            <input v-model="fields[inputItems[3].id]" class="wperp-form-field" />
+            <p class="erp-form-input-hint">{{ inputItems[3].desc }}</p>
+        </div>
 
-            <div class="wperp-form-group">
-                <label> {{ inputItems[1].title }}</label>
-                <input v-model="fields[inputItems[1].id]" class="wperp-form-field" />
-                <p class="erp-form-input-hint">{{ inputItems[1].desc }}</p>
+        <div class="wperp-form-group">
+            <label> {{ inputItems[4].title }}</label>
+            <input v-model="fields[inputItems[4].id]" class="wperp-form-field" />
+            <p class="erp-form-input-hint">{{ inputItems[4].desc }}</p>
+        </div>
+
+        <div class="wperp-form-group">
+            <label> {{ inputItems[5].title }}</label>
+            <input v-model="fields[inputItems[5].id]" class="wperp-form-field" />
+            <p class="erp-form-input-hint">{{ inputItems[5].desc }}</p>
+        </div>
+
+        <div class="wperp-form-group">
+            <label>{{ inputItems[6].title }}</label>
+            <div class="form-check">
+                <label class="form-check-label">
+                    <input v-model="fields[inputItems[6].id]" type="checkbox" class="form-check-input" >
+                    <span class="form-check-sign">
+                        <span class="check"></span>
+                    </span>
+                    <span class="form-check-label-light">
+                        {{ inputItems[6].desc }}
+                    </span>
+                </label>
             </div>
+        </div>
 
-            <div class="wperp-form-group">
-                <label> {{ inputItems[2].title }}</label>
-                <input v-model="fields[inputItems[2].id]" class="wperp-form-field" />
-                <p class="erp-form-input-hint">{{ inputItems[2].desc }}</p>
+        <div class="wperp-form-group">
+            <label>{{ inputItems[7].title }}</label>
+            <div class="form-check">
+                <label class="form-check-label">
+                    <input v-model="fields[inputItems[7].id]" type="checkbox" class="form-check-input" >
+                    <span class="form-check-sign">
+                        <span class="check"></span>
+                    </span>
+                    <span class="form-check-label-light">
+                        {{ inputItems[7].desc }}
+                    </span>
+                </label>
             </div>
+        </div>
 
-            <div class="wperp-form-group">
-                <label> {{ inputItems[3].title }}</label>
-                <input v-model="fields[inputItems[3].id]" class="wperp-form-field" />
-                <p class="erp-form-input-hint">{{ inputItems[3].desc }}</p>
+        <div class="wperp-form-group">
+            <label> {{ inputItems[8].title }}</label>
+            <textarea cols="45" rows="4" v-model="fields[inputItems[8].id]" class="wperp-form-field" />
+            <p class="erp-form-input-hint">{{ inputItems[8].desc }}</p>
+        </div>
+
+        <div class="wperp-form-group">
+            <label>{{ inputItems[9].title }}</label>
+            <div class="form-check">
+                <label class="form-check-label">
+                    <input v-model="fields[inputItems[9].id]" type="checkbox" class="form-check-input" >
+                    <span class="form-check-sign">
+                        <span class="check"></span>
+                    </span>
+                    <span class="form-check-label-light">
+                        {{ inputItems[9].desc }}
+                    </span>
+                </label>
             </div>
-
-            <div class="wperp-form-group">
-                <label> {{ inputItems[4].title }}</label>
-                <input v-model="fields[inputItems[4].id]" class="wperp-form-field" />
-                <p class="erp-form-input-hint">{{ inputItems[4].desc }}</p>
-            </div>
-
-            <div class="wperp-form-group">
-                <label> {{ inputItems[5].title }}</label>
-                <input v-model="fields[inputItems[5].id]" class="wperp-form-field" />
-                <p class="erp-form-input-hint">{{ inputItems[5].desc }}</p>
-            </div>
-
-            <div class="wperp-form-group">
-                <label>{{ inputItems[6].title }}</label>
-                <div class="form-check">
-                    <label class="form-check-label">
-                        <input v-model="fields[inputItems[6].id]" type="checkbox" class="form-check-input" >
-                        <span class="form-check-sign">
-                            <span class="check"></span>
-                        </span>
-                        <span class="form-check-label-light">
-                            {{ inputItems[6].desc }}
-                        </span>
-                    </label>
-                </div>
-            </div>
-
-            <div class="wperp-form-group">
-                <label>{{ inputItems[7].title }}</label>
-                <div class="form-check">
-                    <label class="form-check-label">
-                        <input v-model="fields[inputItems[7].id]" type="checkbox" class="form-check-input" >
-                        <span class="form-check-sign">
-                            <span class="check"></span>
-                        </span>
-                        <span class="form-check-label-light">
-                            {{ inputItems[7].desc }}
-                        </span>
-                    </label>
-                </div>
-            </div>
-
-            <div class="wperp-form-group">
-                <label> {{ inputItems[8].title }}</label>
-                 <textarea cols="45" rows="4" v-model="fields[inputItems[8].id]" class="wperp-form-field" />
-                 <p class="erp-form-input-hint">{{ inputItems[8].desc }}</p>
-            </div>
-
-            <div class="wperp-form-group">
-                <label>{{ inputItems[9].title }}</label>
-                <div class="form-check">
-                    <label class="form-check-label">
-                        <input v-model="fields[inputItems[9].id]" type="checkbox" class="form-check-input" >
-                        <span class="form-check-sign">
-                            <span class="check"></span>
-                        </span>
-                        <span class="form-check-label-light">
-                            {{ inputItems[9].desc }}
-                        </span>
-                    </label>
-                </div>
-            </div>
-
-            <div class="wperp-form-group">
-                <submit-button :text="__( 'Save Changes', 'erp' )" />
-            </div>
-
-        </form>
-    </div>
-  </div>
+        </div>
+    </base-layout>
 </template>
 
 <script>
-import SettingsSubMenu from 'settings/components/menu/SettingsSubMenu.vue';
-import SubmitButton from 'settings/components/base/SubmitButton.vue';
+import BaseLayout from 'settings/components/layouts/BaseLayout.vue';
 import { generateFormDataFromObject } from 'settings/utils/FormDataHandler';
 
 var $ = jQuery;
@@ -127,8 +111,7 @@ export default {
   },
 
   components: {
-      SettingsSubMenu,
-      SubmitButton
+      BaseLayout
   },
 
   created () {

@@ -1,26 +1,11 @@
 
 <template>
-  <div>
-    <h2 class="section-title">{{ __("HR Management", "erp") }}</h2>
-    <settings-sub-menu></settings-sub-menu>
-
-    <div class="settings-box">
-        <h3 class="sub-section-title">{{ __('Payroll', 'erp') }}</h3>
-
-        <form action="" class="wperp-form" method="post" @submit.prevent="submitHRFrontendForm">
-
-            <div class="wperp-form-group">
-                <submit-button text="Save Changes" />
-            </div>
-
-        </form>
-    </div>
-  </div>
+      <base-layout section_id="erp-hr" sub_section_id="payroll" :onFormSubmit="submitHRPayrollForm">
+      </base-layout>
 </template>
 
 <script>
-import SettingsSubMenu from 'settings/components/menu/SettingsSubMenu.vue';
-import SubmitButton from 'settings/components/base/SubmitButton.vue';
+import BaseLayout from 'settings/components/layouts/BaseLayout.vue';
 
 export default {
   name: "HRPayroll",
@@ -35,15 +20,14 @@ export default {
   },
 
   components: {
-      SettingsSubMenu,
-      SubmitButton
+      BaseLayout
   },
 
   methods: {
-      submitHRFrontendForm() {
+      submitHRPayrollForm() {
         this.$store.dispatch('spinner/setSpinner', true);
 
-        this.showAlert('success', 'HR Frontend saved successfully !');
+        this.showAlert('success', 'HR Payroll saved successfully !');
 
         this.$store.dispatch('spinner/setSpinner', false);
       }

@@ -48,7 +48,7 @@ export default new Router({
                     component: HRLeave
                 },
                 {
-                    path: 'leave-years',
+                    path: 'financial',
                     name: 'HRLeaveYears',
                     component: HRLeaveYears
                 },
@@ -58,7 +58,7 @@ export default new Router({
                     component: HRMiscellaneous
                 },
                 {
-                    path: 'hr-frontend',
+                    path: 'hr_frontend',
                     name: 'HRFrontend',
                     component: HRFrontend
                 },

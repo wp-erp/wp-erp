@@ -1,42 +1,27 @@
 
 <template>
-  <div>
-    <h2 class="section-title">{{ __("HR Management", "erp") }}</h2>
-    <settings-sub-menu></settings-sub-menu>
-
-    <div class="settings-box">
-        <h3 class="sub-section-title">{{ inputItems[0].title }}</h3>
-        <p class="sub-section-description">{{ inputItems[0].desc }}</p>
-
-        <form action="" class="wperp-form" method="post" @submit.prevent="submitHRLeaveForm">
-            <div class="wperp-form-group" v-for="(item, index) in inputItems" :key="index">
-                <div v-if="(index > 0) && item.type === 'checkbox'">
-                    <label>{{ item.title }}</label>
-                    <div class="form-check">
-                        <label class="form-check-label">
-                            <input v-model="item.value" type="checkbox" class="form-check-input" :name="item.id">
-                            <span class="form-check-sign">
-                                <span class="check"></span>
-                            </span>
-                            <span class="form-check-label-light">
-                                {{ item.desc }}
-                            </span>
-                        </label>
-                    </div>
+    <base-layout section_id="erp-hr" sub_section_id="leave" :onFormSubmit="submitHRLeaveForm">
+        <div class="wperp-form-group" v-for="(item, index) in inputItems" :key="index">
+            <div v-if="(index > 0) && item.type === 'checkbox'">
+                <label>{{ item.title }}</label>
+                <div class="form-check">
+                    <label class="form-check-label">
+                        <input v-model="item.value" type="checkbox" class="form-check-input" :name="item.id">
+                        <span class="form-check-sign">
+                            <span class="check"></span>
+                        </span>
+                        <span class="form-check-label-light">
+                            {{ item.desc }}
+                        </span>
+                    </label>
                 </div>
             </div>
-
-            <div class="wperp-form-group">
-                <submit-button :text="__( 'Save Changes', 'erp' )" />
-            </div>
-        </form>
-    </div>
-  </div>
+        </div>
+    </base-layout>
 </template>
 
 <script>
-import SettingsSubMenu from 'settings/components/menu/SettingsSubMenu.vue';
-import SubmitButton from 'settings/components/base/SubmitButton.vue';
+import BaseLayout from 'settings/components/layouts/BaseLayout.vue';
 import { generateFormDataFromObject } from 'settings/utils/FormDataHandler';
 
 var $ = jQuery;
@@ -60,8 +45,7 @@ export default {
   },
 
   components: {
-      SettingsSubMenu,
-      SubmitButton
+      BaseLayout
   },
 
   created () {

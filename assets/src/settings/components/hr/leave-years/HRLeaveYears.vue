@@ -1,55 +1,40 @@
 
 <template>
-  <div>
-    <h2 class="section-title">{{ __("HR Management", "erp") }}</h2>
-    <settings-sub-menu></settings-sub-menu>
-
-    <div class="settings-box">
-        <h3 class="sub-section-title">{{ __("Leave Years", "erp") }}</h3>
-
-        <form action="" class="wperp-form" method="post" @submit.prevent="submitHRLeaveYearsForm">
-            <div class="wperp-row">
-                <div class="wperp-form-group wperp-col-sm-4 wperp-col-xs-12 margin-bottom-10">
-                    <label> {{ __("Name", 'erp') }}</label>
-                </div>
-                <div class="wperp-form-group wperp-col-sm-4 wperp-col-xs-12 margin-bottom-10">
-                    <label> {{ __("Start Date", 'erp') }}</label>
-                </div>
-                <div class="wperp-form-group wperp-col-sm-4 wperp-col-xs-12 margin-bottom-10">
-                    <label> {{ __("End Date", 'erp') }}</label>
-                </div>
-            </div>
-
-            <div class="wperp-row" v-for="(year, index) in years_data" :key="index">
-                <div class="wperp-form-group wperp-col-sm-4 wperp-col-xs-12 margin-bottom-10">
-                    <input v-model="year.fy_name" class="wperp-form-field" />
-                </div>
-                <div class="wperp-form-group wperp-col-sm-4 wperp-col-xs-12 margin-bottom-10">
-                    <date-picker class="wperp-form-field" :placeholder="__( 'Start date', 'erp' )" v-model="year.start_date" />
-                </div>
-                <div class="wperp-form-group wperp-col-sm-4 wperp-col-xs-12 margin-bottom-10">
-                    <date-picker class="wperp-form-field" :placeholder="__( 'End date', 'erp' )" v-model="year.end_date" />
-                    <span v-if="(year.id === null || year.id === '' )" class="settings-btn-cancel" @click="deleteYear(index)">x</span>
-                </div>
-            </div>
-
-            <div class="wperp-form-group">
-                <button class="wperp-btn wperp-btn-default" type="button" @click="addNewYear">+ Add New</button>
-            </div>
-
-            <div class="wperp-form-group">
-                <submit-button :text="__( 'Save Changes', 'erp' )" />
-            </div>
-
-        </form>
+  <base-layout section_id="erp-hr" sub_section_id="financial" :onFormSubmit="submitHRLeaveYearsForm">
+    <div class="wperp-row">
+        <div class="wperp-form-group wperp-col-sm-4 wperp-col-xs-12 margin-bottom-10">
+            <label> {{ __("Name", 'erp') }}</label>
+        </div>
+        <div class="wperp-form-group wperp-col-sm-4 wperp-col-xs-12 margin-bottom-10">
+            <label> {{ __("Start Date", 'erp') }}</label>
+        </div>
+        <div class="wperp-form-group wperp-col-sm-4 wperp-col-xs-12 margin-bottom-10">
+            <label> {{ __("End Date", 'erp') }}</label>
+        </div>
     </div>
-  </div>
+
+    <div class="wperp-row" v-for="(year, index) in years_data" :key="index">
+        <div class="wperp-form-group wperp-col-sm-4 wperp-col-xs-12 margin-bottom-10">
+            <input v-model="year.fy_name" class="wperp-form-field" />
+        </div>
+        <div class="wperp-form-group wperp-col-sm-4 wperp-col-xs-12 margin-bottom-10">
+            <date-picker class="wperp-form-field" :placeholder="__( 'Start date', 'erp' )" v-model="year.start_date" />
+        </div>
+        <div class="wperp-form-group wperp-col-sm-4 wperp-col-xs-12 margin-bottom-10">
+            <date-picker class="wperp-form-field" :placeholder="__( 'End date', 'erp' )" v-model="year.end_date" />
+            <span v-if="(year.id === null || year.id === '' )" class="settings-btn-cancel" @click="deleteYear(index)">x</span>
+        </div>
+    </div>
+
+    <div class="wperp-form-group">
+        <button class="wperp-btn wperp-btn-default" type="button" @click="addNewYear">+ Add New</button>
+    </div>
+  </base-layout>
 </template>
 
 <script>
+import BaseLayout from 'settings/components/layouts/BaseLayout.vue';
 import DatePicker from 'settings/components/base/DatePicker.vue';
-import SettingsSubMenu from 'settings/components/menu/SettingsSubMenu.vue';
-import SubmitButton from 'settings/components/base/SubmitButton.vue';
 import { generateFormDataFromObject } from 'settings/utils/FormDataHandler';
 
 var $ = jQuery;
@@ -71,8 +56,7 @@ export default {
   },
 
   components: {
-      SettingsSubMenu,
-      SubmitButton,
+      BaseLayout,
       DatePicker
   },
 

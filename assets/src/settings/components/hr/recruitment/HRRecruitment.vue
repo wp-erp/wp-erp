@@ -1,33 +1,16 @@
 
 <template>
-  <div>
-    <h2 class="section-title">{{ __("HR Management", "erp") }}</h2>
-    <settings-sub-menu></settings-sub-menu>
-
-    <div class="settings-box">
-        <h3 class="sub-section-title">{{ inputItems[0].title }}</h3>
-        <p class="sub-section-description">{{ inputItems[0].desc }}</p>
-
-        <form action="" class="wperp-form" method="post" @submit.prevent="submitHRRecruitmentForm">
-
-            <div class="wperp-form-group">
-                 <label> {{ inputItems[1].title }}</label>
-                 <input v-model="fields[inputItems[1].id]" class="wperp-form-field" />
-                 <p class="erp-form-input-hint">{{ inputItems[1].desc }}</p>
-            </div>
-
-            <div class="wperp-form-group">
-                <submit-button :text="__( 'Save Changes', 'erp' )" />
-            </div>
-
-        </form>
-    </div>
-  </div>
+    <base-layout section_id="erp-hr" sub_section_id="recruitment" :onFormSubmit="submitHRRecruitmentForm">
+        <div class="wperp-form-group">
+            <label> {{ inputItems[1].title }}</label>
+            <input v-model="fields[inputItems[1].id]" class="wperp-form-field" />
+            <p class="erp-form-input-hint">{{ inputItems[1].desc }}</p>
+        </div>
+    </base-layout>
 </template>
 
 <script>
-import SettingsSubMenu from 'settings/components/menu/SettingsSubMenu.vue';
-import SubmitButton from 'settings/components/base/SubmitButton.vue';
+import BaseLayout from 'settings/components/layouts/BaseLayout.vue';
 import { generateFormDataFromObject } from 'settings/utils/FormDataHandler';
 
 var $ = jQuery;
@@ -53,8 +36,7 @@ export default {
   },
 
   components: {
-      SettingsSubMenu,
-      SubmitButton
+      BaseLayout
   },
 
   methods: {
