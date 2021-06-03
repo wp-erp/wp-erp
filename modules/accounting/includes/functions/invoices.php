@@ -45,8 +45,7 @@ function erp_acct_get_all_invoices( $args = [] ) {
     $sql .= " FROM {$wpdb->prefix}erp_acct_invoices AS invoice LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail";
     $sql .= " ON invoice.voucher_no = ledger_detail.trn_no {$where} GROUP BY invoice.voucher_no ORDER BY invoice.{$args['orderby']} {$args['order']} {$limit}";
 
-    $wpdb->query( "SET SQL_BIG_SELECTS=1" );
-    $wpdb->query( "SET SESSION SQL_MODE=''" );
+    erp_disable_mysql_strict_mode();
 
     if ( $args['count'] ) {
         return $wpdb->get_var( $sql );
@@ -99,8 +98,7 @@ function erp_acct_get_invoice( $invoice_no ) {
         $invoice_no
     );
 
-    $wpdb->query( "SET SQL_BIG_SELECTS=1" );
-    $wpdb->query( "SET SESSION SQL_MODE=''" );
+    erp_disable_mysql_strict_mode();
 
     $row = $wpdb->get_row( $sql, ARRAY_A );
 
