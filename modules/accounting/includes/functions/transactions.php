@@ -96,8 +96,7 @@ function erp_acct_get_sales_transactions( $args = [] ) {
             LEFT JOIN {$wpdb->prefix}erp_acct_invoice_account_details AS invoice_account_detail ON invoice_account_detail.invoice_no = invoice.voucher_no
             {$where} GROUP BY voucher.id ORDER BY voucher.id {$args['order']} {$limit}";
 
-        $wpdb->query( "SET SQL_BIG_SELECTS=1" );
-        $wpdb->query( "SET SESSION SQL_MODE=''" );
+        erp_disable_mysql_strict_mode();
 
         if ( $args['count'] ) {
             $wpdb->get_results( $sql );
@@ -673,8 +672,7 @@ function erp_acct_get_expense_transactions( $args = [] ) {
             GROUP BY voucher.id
             ORDER BY voucher.id {$args['order']} {$limit}";
 
-        $wpdb->query( "SET SQL_BIG_SELECTS=1" );
-        $wpdb->query( "SET SESSION SQL_MODE=''" );
+        erp_disable_mysql_strict_mode();
 
         if ( $args['count'] ) {
             $wpdb->get_results( $sql );
@@ -788,8 +786,7 @@ function erp_acct_get_purchase_transactions( $args = [] ) {
             LEFT JOIN {$wpdb->prefix}erp_acct_purchase_account_details AS purchase_acct_details ON purchase_acct_details.purchase_no = purchase.voucher_no
             {$where} GROUP BY voucher.id ORDER BY voucher.id {$args['order']} {$limit}";
 
-        $wpdb->query( "SET SQL_BIG_SELECTS=1" );
-        $wpdb->query( "SET SESSION SQL_MODE=''" );
+        erp_disable_mysql_strict_mode();
 
         if ( $args['count'] ) {
             $wpdb->get_results( $sql );
