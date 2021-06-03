@@ -90,8 +90,7 @@ function erp_acct_get_tax_rate( $tax_no ) {
 
             WHERE tax.id = {$tax_no} LIMIT 1";
 
-    $wpdb->query( "SET SQL_BIG_SELECTS=1" );
-    $wpdb->query( "SET SESSION SQL_MODE=''" );
+    erp_disable_mysql_strict_mode();
 
     $row = $wpdb->get_row( $sql, ARRAY_A );
 
