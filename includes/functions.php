@@ -3438,3 +3438,17 @@ function erp_verify_page_access_permission( $cap ) {
         wp_die( wp_kses_post( $error_message ) );
     }
 }
+
+/**
+ * Disables mysql strict mode
+ * 
+ * @since 1.8.5
+ *
+ * @return void
+ */
+function erp_disable_mysql_strict_mode() {
+    global $wpdb;
+
+    $wpdb->query( "SET SESSION SQL_MODE=''" );
+    $wpdb->query( "SET SQL_BIG_SELECTS=1" );
+}
