@@ -67,7 +67,7 @@ class CRM_Settings extends ERP_Settings_Page {
      *
      * @return array
      */
-    public function get_section_fields( $section = '' ) {
+    public function get_section_fields( $section = '', $all_data = false ) {
         $fields['contacts'][] = [
             'title' => __( 'Contact Settings', 'erp' ),
             'type'  => 'title',
@@ -259,6 +259,16 @@ class CRM_Settings extends ERP_Settings_Page {
         $fields['email_connect'] = $this->get_email_connect_fields();
 
         $fields = apply_filters( 'erp_settings_crm_section_fields', $fields, $section );
+
+        foreach ( $this->get_sections() as $sec => $name ) {
+            if ( empty( $fields[ $sec ] ) ) {
+                $fields = apply_filters( 'erp_settings_crm_section_fields', $fields, $sec );
+            }
+        }
+
+        if ( $all_data ) {
+            return $fields;
+        }
 
         $section = $section === false ? $fields['contacts'] : $fields[$section];
 

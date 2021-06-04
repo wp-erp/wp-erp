@@ -39,6 +39,8 @@
 import BaseLayout from 'settings/components/layouts/BaseLayout.vue';
 import { generateFormDataFromObject } from 'settings/utils/FormDataHandler';
 
+var $ = jQuery;
+
 export default {
   name: "HRFrontend",
 
@@ -58,14 +60,53 @@ export default {
       BaseLayout
   },
 
+  created() {
+    //   console.log('inputItems', this.inputItems);
+  },
+
   methods: {
       submitHRFrontendForm() {
         this.$store.dispatch('spinner/setSpinner', true);
+        let requestDataPost = {};
 
-        this.showAlert('success', 'HR Frontend saved successfully !');
+        this.inputItems.forEach(item => {
+            requestDataPost[item.id] = this.fields[item.id];
 
-        this.$store.dispatch('spinner/setSpinner', false);
-      }
+            if ( requestDataPost[item.id] === false ) {
+                requestDataPost[item.id] = null;
+            }
+        });
+
+        let requestData = {
+            ...requestDataPost,
+            _wpnonce: erp_settings_var.nonce,
+            action: 'erp-settings-save',
+            module: 'hrm',
+            section: 'hr_frontend'
+        }
+
+        requestData = window.settings.hooks.applyFilters('requestData', requestData);
+
+        const postData = generateFormDataFromObject( requestData );
+        const that     = this;
+
+        $.ajax({
+            url: erp_settings_var.ajax_url,
+            type: 'POST',
+            data: postData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                that.$store.dispatch('spinner/setSpinner', false);
+
+                if (response.success) {
+                    that.showAlert('success', response.data.message);
+                } else {
+                    that.showAlert('error', __('Something went wrong !', 'erp'));
+                }
+            }
+        });
+      },
   },
 
 };

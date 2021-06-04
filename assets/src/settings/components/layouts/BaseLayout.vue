@@ -42,7 +42,20 @@ export default {
       }
   },
 
-  props: [ 'section_id', 'sub_section_id', 'onFormSubmit' ],
+  props: {
+        section_id: {
+            type: String,
+            required: true
+        },
+        sub_section_id: {
+            type: String,
+            required: true
+        },
+        onFormSubmit: {
+            type: Function,
+            required: true
+        },
+  },
 
   created() {
       // process the menus and get the sections data
