@@ -33,7 +33,6 @@ class Ajax_Handler {
     public function init_actions () {
         $this->action( 'wp_ajax_erp-settings-save', 'erp_settings_save' );
         $this->action( 'wp_ajax_erp-settings-get-data', 'erp_settings_get_general' );
-        $this->action( 'wp_ajax_erp-settings-save-data', 'erp_settings_save' );
     }
 
     /**
@@ -44,62 +43,40 @@ class Ajax_Handler {
      * @return void
      */
     public function erp_settings_save() {
-        try {
+        $this->verify_nonce( 'erp-settings-nonce' );
 
-            if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-settings-nonce' ) ) {
-                $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
-            }
+        $has_not_permission = ! current_user_can( 'manage_options' );
+        $module             = sanitize_text_field( wp_unslash( $_POST['module'] ) );
+        $section            = sanitize_text_field( wp_unslash( $_POST['section'] ) );
 
-            $module  = sanitize_text_field( wp_unslash( $_POST['module'] ) );
-            $section = sanitize_text_field( wp_unslash( $_POST['section'] ) );
+        switch ( $module ) {
+            case 'general':
+                $settings           = ( new \WeDevs\ERP\Framework\Settings\ERP_Settings_General() );
+                break;
 
-            switch ( $module ) {
-                case 'general':
-                    $settings = ( new \WeDevs\ERP\Framework\Settings\ERP_Settings_General() );
-                    break;
+            case 'hrm':
+                $settings           = ( new \WeDevs\ERP\HRM\Settings() );
+                $has_not_permission = $has_not_permission && ! current_user_can( 'erp_hr_manager' );
+                break;
 
-                case 'hrm':
-                    $settings = ( new \WeDevs\ERP\HRM\Settings() );
-                    break;
-
-                default:
-                    $settings = ( new \WeDevs\ERP\Framework\ERP_Settings_Page() );
-                    break;
-            }
-
-            $settings->save( $section );
-
-            $this->send_success([
-                'message' => __( 'Settings saved successfully !', 'erp' )
-            ]);
-        } catch ( \Exception $e ) {
-            $this->send_error( $e->getMessage() );
+            default:
+                $settings = ( new \WeDevs\ERP\Framework\ERP_Settings_Page() );
+                break;
         }
-    }
 
-    /**
-     * Save Settings Data For General Tab
-     *
-     * @since 1.8.6
-     *
-     * @return void
-     */
-    public function erp_settings_save_general() {
-        try {
-
-            if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-settings-nonce' ) ) {
-                $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
-            }
-
-            $settings = ( new \WeDevs\ERP\Framework\Settings\ERP_Settings_General() );
-            $settings->save();
-
-            $this->send_success([
-                'message' => __( 'Settings saved successfully !', 'erp' )
-            ]);
-        } catch ( \Exception $e ) {
-            $this->send_error( $e->getMessage() );
+        if ( $has_not_permission ) {
+            $this->send_error( ['type' => 'error_permission'] );
         }
+
+        $result = $settings->save( $section );
+
+        if ( is_wp_error( $result ) ) {
+            $this->send_error( erp_get_message( ['type' => 'error_process'] ) );
+        }
+
+        $this->send_success( [
+            'message' => erp_get_message( [ 'type' => 'save_success', 'additional' => 'Settings' ] )
+        ] );
     }
 
     /**
@@ -110,17 +87,18 @@ class Ajax_Handler {
      * @return void
      */
     public function erp_settings_get_general() {
-        try {
+        $this->verify_nonce( 'erp-settings-nonce' );
 
-            if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-settings-nonce' ) ) {
-                $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
-            }
-
-            $data = erp_settings_get_general();
-
-            $this->send_success( $data );
-        } catch (\Exception $e) {
-            $this->send_error( $e->getMessage() );
+        if ( ! current_user_can( 'manage_options' ) ) {
+            $this->send_error( erp_get_message( ['type' => 'error_permission'] ) );
         }
+
+        $data = erp_settings_get_general();
+
+        if ( is_wp_error( $data ) ) {
+            $this->send_error( erp_get_message( ['type' => 'error_process'] ) );
+        }
+
+        $this->send_success( $data );
     }
 }
