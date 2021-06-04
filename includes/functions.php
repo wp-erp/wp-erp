@@ -3910,9 +3910,9 @@ function erp_get_array_diff( $new_data, $old_data, $is_seriazie = false ) {
  * Discards all non-numeric charecters from a given string
  *
  * @since 1.8.2
- * 
+ *
  * @param string $str
- * 
+ *
  * @return string
  */
 function erp_discard_non_numeric_chars( $str ) {
@@ -3921,12 +3921,12 @@ function erp_discard_non_numeric_chars( $str ) {
 
 /**
  * Sanitizes phone number to discard unwanted charecters
- * 
+ *
  * @since 1.8.2
  *
  * @param string $phone_no
  * @param boolean $allow_plus
- * 
+ *
  * @return string
  */
 function erp_sanitize_phone_number( $phone_no, $allow_plus = false ) {
@@ -3941,4 +3941,67 @@ function erp_sanitize_phone_number( $phone_no, $allow_plus = false ) {
     }
 
     return $result;
+}
+
+/**
+ * Get Standarized message for erp
+ *
+ * @since 1.8.6
+ *
+ * @param array $args
+ *
+ * @return string
+ */
+function erp_get_message( $args = [] ) {
+
+    $defaults = [
+        'type'         => '',
+        'message'      => '',
+        'additional'   => null,
+        'append_first' => true
+    ];
+
+    $args = wp_parse_args( $args, $defaults );
+
+    switch ( $args['type'] ) {
+
+        case 'error_nonce':
+            $args['message'] = 'Nonce verification failed!';
+            break;
+
+        case 'error_permission':
+            $args['message'] = 'You do not have sufficient permissions to do this action';
+            break;
+
+        case 'error_process':
+            $args['message'] = 'Could not process the request. Try again later!';
+            break;
+
+        case 'save_success':
+            $args['message'] = 'Saved Successfully!';
+            break;
+
+        case 'update_success':
+            $args['message'] = 'Updated Successfully!';
+            break;
+
+        case 'insert_success':
+            $args['message'] = 'Created Successfully!';
+            break;
+
+        default:
+            break;
+    }
+
+    if ( ! empty( $args['additional'] ) ) {
+        if ( $args['append_first'] ) {
+            $args['message'] = $args['additional'] . ' ' . $args['message'];
+        } else {
+            $args['message'] .= ' ' . $args['additional'];
+        }
+    }
+
+    $args['message'] = __( $args['message'], 'erp' );
+
+    return $args['message'];
 }
