@@ -41,6 +41,14 @@
                     </label>
                 </div>
             </div>
+
+            <div class="wperp-form-group" v-if="input.type === 'text' || input.type === 'textarea'">
+                <label> {{ input.title }}</label>
+                <input v-if="input.type === 'text'" v-model="fields[index]['value']" class="wperp-form-field" />
+                <textarea v-if="input.type === 'textarea'" cols="45" rows="4" v-model="fields[index]['value']" class="wperp-form-field" />
+                <p class="erp-form-input-hint" v-if="input.desc.length > 0">{{ input.desc }}</p>
+            </div>
+
         </div>
 
         <div class="wperp-form-group">
