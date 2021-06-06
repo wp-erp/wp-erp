@@ -14,6 +14,41 @@ function erp_settings_get_general () {
 }
 
 /**
+ * Get Options For Settings
+ *
+ * @since 1.8.6
+ *
+ * @param array $options - Setting options
+ *
+ * @return array $data settings data
+ */
+function erp_settings_get_data ( $options = [] ) {
+
+    $data = [];
+
+    foreach ( $options as $option ) {
+        if ( ! empty ( $option['id'] ) ) {
+            $option_value = get_option( $option['id'] );
+
+            switch ($option['type']) {
+                case 'checkbox':
+                    $option_value = $option_value === 'yes' ? true : false;
+                    break;
+
+                default:
+                    break;
+            }
+
+            $option['value'] = $option_value;
+
+            array_push( $data, $option );
+        }
+    }
+
+    return $data;
+}
+
+/**
  * Get Days
  *
  * @since 1.8.6

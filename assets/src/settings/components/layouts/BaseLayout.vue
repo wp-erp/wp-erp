@@ -1,78 +1,92 @@
 <template>
     <div>
         <h2 class="section-title">{{ sectionTitle }}</h2>
-        <settings-sub-menu :menus="subMenus" :parent_id="section_id"></settings-sub-menu>
+        <settings-sub-menu :menus="subMenus" :parent_id="section_id" />
 
         <div class="settings-box">
-            <h3 class="sub-section-title" v-if="subSectionTitle">{{ subSectionTitle }}</h3>
+            <h3 class="sub-section-title" v-if="subSectionTitle">
+                {{ subSectionTitle }}
+            </h3>
             <p class="sub-section-description" v-if="subSectionDescription">
                 {{ subSectionDescription }}
             </p>
 
-            <form action="" class="wperp-form" method="post" @submit.prevent="onFormSubmit">
-                <slot></slot>
+            <slot v-if="!enable_content"></slot>
 
-                <div class="wperp-form-group">
-                    <submit-button :text="__( 'Save Changes', 'erp' )" />
-                </div>
-            </form>
+            <base-content-layout
+                v-if="enable_content"
+                :section_id="section_id"
+                :sub_section_id="sub_section_id"
+                :inputs="inputFields"
+            />
         </div>
-
     </div>
 </template>
 
 <script>
-import SettingsSubMenu from 'settings/components/menu/SettingsSubMenu.vue';
-import SubmitButton from 'settings/components/base/SubmitButton.vue';
+import SettingsSubMenu from "settings/components/menu/SettingsSubMenu.vue";
+import BaseContentLayout from "settings/components/layouts/BaseContentLayout.vue";
 
 export default {
-  name: "BaseLayout",
+    name: "BaseLayout",
 
-  components: {
-      SettingsSubMenu,
-      SubmitButton
-  },
+    components: {
+        SettingsSubMenu,
+        BaseContentLayout,
+    },
 
-  data() {
-      return {
-          sectionTitle: '',
-          subSectionTitle: '',
-          subSectionDescription: '',
-          subMenus: []
-      }
-  },
+    data() {
+        return {
+            sectionTitle: "",
+            subSectionTitle: "",
+            subSectionDescription: "",
+            subMenus: [],
+            allFields: [],
+            inputFields: [],
+        };
+    },
 
-  props: {
+    props: {
         section_id: {
             type: String,
-            required: true
+            required: true,
         },
         sub_section_id: {
             type: String,
-            required: true
+            required: true,
         },
-        onFormSubmit: {
-            type: Function,
-            required: true
-        },
-  },
+        enable_content: {
+            type: Boolean,
+        }
+    },
 
-  created() {
-      // process the menus and get the sections data
-      const menus      = erp_settings_var.erp_settings_menus;
-      const parentMenu = menus.find( menu => menu.id === this.section_id );
+    created() {
+        // process the menus and get the sections data
+        const menus = erp_settings_var.erp_settings_menus;
+        const parentMenu = menus.find((menu) => menu.id === this.section_id);
 
-      this.sectionTitle = parentMenu.label + ' Management';
-      this.subMenus     = parentMenu.sections;
+        this.sectionTitle = parentMenu.label + " Management";
+        this.subMenus = parentMenu.sections;
 
-      const fields = parentMenu.fields[this.sub_section_id];
+        const fields = parentMenu.fields[this.sub_section_id];
+        this.allFields = fields;
 
-      if ( fields.length > 0 ) {
-        this.subSectionTitle       = fields[0].title;
-        this.subSectionDescription = fields[0].desc;
-      }
+        if (fields.length > 0) {
+            this.subSectionTitle = fields[0].title;
+            this.subSectionDescription = fields[0].desc;
 
-  }
-}
+            // Process the fields and get the real input fields
+            let inputFields = [];
 
+            fields.forEach((field) => {
+                if (field.type !== "title" && field.type !== "sectionend") {
+                    field.value = null;
+                    inputFields.push(field);
+                }
+            });
+
+            this.inputFields = inputFields;
+        }
+    },
+};
 </script>

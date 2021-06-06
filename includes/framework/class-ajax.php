@@ -32,7 +32,8 @@ class Ajax_Handler {
      */
     public function init_actions () {
         $this->action( 'wp_ajax_erp-settings-save', 'erp_settings_save' );
-        $this->action( 'wp_ajax_erp-settings-get-data', 'erp_settings_get_general' );
+        $this->action( 'wp_ajax_erp-settings-get-general-data', 'erp_settings_get_general' );
+        $this->action( 'wp_ajax_erp-settings-get-data', 'erp_settings_get_data' );
     }
 
     /**
@@ -54,7 +55,7 @@ class Ajax_Handler {
                 $settings           = ( new \WeDevs\ERP\Framework\Settings\ERP_Settings_General() );
                 break;
 
-            case 'hrm':
+            case 'erp-hr':
                 $settings           = ( new \WeDevs\ERP\HRM\Settings() );
                 $has_not_permission = $has_not_permission && ! current_user_can( 'erp_hr_manager' );
                 break;
@@ -94,6 +95,29 @@ class Ajax_Handler {
         }
 
         $data = erp_settings_get_general();
+
+        if ( is_wp_error( $data ) ) {
+            $this->send_error( erp_get_message( ['type' => 'error_process'] ) );
+        }
+
+        $this->send_success( $data );
+    }
+
+    /**
+     * Get Settings Data For Common Sections
+     *
+     * @since 1.8.6
+     *
+     * @return void
+     */
+    public function erp_settings_get_data() {
+        $this->verify_nonce( 'erp-settings-nonce' );
+
+        if ( ! current_user_can( 'manage_options' ) ) {
+            $this->send_error( erp_get_message( ['type' => 'error_permission'] ) );
+        }
+
+        $data = erp_settings_get_data( $_POST );
 
         if ( is_wp_error( $data ) ) {
             $this->send_error( erp_get_message( ['type' => 'error_process'] ) );

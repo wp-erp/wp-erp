@@ -163,7 +163,7 @@ export default {
 
             let requestData = window.settings.hooks.applyFilters('requestData', {
                 _wpnonce: erp_settings_var.nonce,
-                action: 'erp-settings-get-data'
+                action: 'erp-settings-get-general-data'
             });
 
             const postData = generateFormDataFromObject( requestData );

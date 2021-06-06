@@ -1,135 +1,19 @@
-
 <template>
-    <base-layout section_id="erp-hr" sub_section_id="leave" :onFormSubmit="submitHRLeaveForm">
-        <div class="wperp-form-group" v-for="(item, index) in inputItems" :key="index">
-            <div v-if="(index > 0) && item.type === 'checkbox'">
-                <label>{{ item.title }}</label>
-                <div class="form-check">
-                    <label class="form-check-label">
-                        <input v-model="item.value" type="checkbox" class="form-check-input" :name="item.id">
-                        <span class="form-check-sign">
-                            <span class="check"></span>
-                        </span>
-                        <span class="form-check-label-light">
-                            {{ item.desc }}
-                        </span>
-                    </label>
-                </div>
-            </div>
-        </div>
-    </base-layout>
+    <base-layout
+        section_id="erp-hr"
+        sub_section_id="leave"
+        :enable_content="true"
+    />
 </template>
 
 <script>
-import BaseLayout from 'settings/components/layouts/BaseLayout.vue';
-import { generateFormDataFromObject } from 'settings/utils/FormDataHandler';
-
-var $ = jQuery;
+import BaseLayout from "settings/components/layouts/BaseLayout.vue";
 
 export default {
-  name: "HRLeave",
+    name: "HRLeave",
 
-  data(){
-        return {
-            fields: {
-                enable_extra_leave: false,
-                erp_pro_accrual_leave: false,
-                erp_pro_carry_encash_leave: false,
-                erp_pro_half_leave: false,
-                erp_pro_multilevel_approval: false,
-                erp_pro_seg_leave: false,
-                erp_pro_sandwich_leave: false
-            },
-            inputItems: erp_settings_var.settings_hr_data['leave']
-        }
-  },
-
-  components: {
-      BaseLayout
-  },
-
-  created () {
-      this.getSettingsLeavesData();
-  },
-
-  methods: {
-      submitHRLeaveForm() {
-        this.$store.dispatch('spinner/setSpinner', true);
-        let requestDataPost = {};
-
-        this.inputItems.forEach(item => {
-            requestDataPost[item.id] = item.value;
-
-            if ( requestDataPost[item.id] === false ) {
-                requestDataPost[item.id] = null;
-            }
-        });
-
-        let requestData = {
-            ...requestDataPost,
-            _wpnonce: erp_settings_var.nonce,
-            action: 'erp-settings-save',
-            module: 'hrm',
-            section: 'leave'
-        }
-
-        requestData = window.settings.hooks.applyFilters('requestData', requestData);
-
-        const postData = generateFormDataFromObject( requestData );
-        const that     = this;
-
-        $.ajax({
-            url: erp_settings_var.ajax_url,
-            type: 'POST',
-            data: postData,
-            processData: false,
-            contentType: false,
-            success: function (response) {
-                that.$store.dispatch('spinner/setSpinner', false);
-
-                if (response.success) {
-                    that.showAlert('success', response.data.message);
-                } else {
-                    that.showAlert('error', __('Something went wrong !', 'erp'));
-                }
-            }
-        });
-      },
-
-      getSettingsLeavesData() {
-        this.$store.dispatch('spinner/setSpinner', true);
-
-        let requestData = window.settings.hooks.applyFilters('requestData', {
-            _wpnonce: erp_settings_var.nonce,
-            action: 'erp-settings-leave-get-data'
-        });
-
-        const postData = generateFormDataFromObject( requestData );
-        const that     = this;
-
-        $.ajax({
-            url: erp_settings_var.ajax_url,
-            type: 'POST',
-            data: postData,
-            processData: false,
-            contentType: false,
-            success: function (response) {
-                that.$store.dispatch('spinner/setSpinner', false);
-
-                if (response.success) {
-                    let updatedItems = [];
-                    that.inputItems.forEach((item)=> {
-                        if(item.type === 'checkbox') {
-                            item.value = response.data[item.id]
-                            updatedItems.push(item);
-                        }
-                    });
-                    that.inputItems = updatedItems;
-                }
-            }
-        });
-      }
-  },
-
+    components: {
+        BaseLayout,
+    },
 };
 </script>
