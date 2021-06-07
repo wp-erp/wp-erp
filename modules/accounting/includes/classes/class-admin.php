@@ -336,9 +336,11 @@ class Admin {
      */
     public function enqueue_scripts() {
         // load styles
+        wp_enqueue_style( 'erp-sweetalert' );
         wp_enqueue_style( 'accounting-admin' );
 
         // load hook
+        wp_enqueue_script( 'erp-sweetalert' );
         wp_enqueue_script( 'accounting-bootstrap' );
 
         // JS do action
