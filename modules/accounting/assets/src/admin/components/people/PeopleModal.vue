@@ -253,7 +253,10 @@ export default {
                                 },
                                 function(input) {
                                     self.emailExists = false;
-                                    self.addPeople(peopleFields);
+
+                                    if (false !== input) {
+                                        self.addPeople(peopleFields);
+                                    }
                                 });
                             } else {
                                 self.error_message.push(__('Email already exists as customer/vendor', 'erp'));
