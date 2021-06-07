@@ -38,7 +38,7 @@ export default {
 .people-search {
     display: flex;
     position: absolute;
-    width: 25%;
+    width: 20%;
     align-items: center;
     justify-content: flex-end;
     right: 1.25rem;
