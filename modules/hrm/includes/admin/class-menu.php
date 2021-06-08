@@ -194,13 +194,7 @@ class Admin_Menu {
         // check permission/capability
         $permission = $menu[ $section ]['capability'];
 
-        if ( ! current_user_can( $permission ) ) {
-            $error_message  = '<h2 style="text-align: center; margin-top:40px">';
-            $error_message .= esc_html__( 'Sorry! You are not allowed to access this page.', 'erp' );
-            $error_message .= '</h2>';
-
-            wp_die( wp_kses_post( $error_message ) );
-        }
+        erp_verify_page_access_permission( $permission );
 
         $callback = $menu[ $section ]['callback'];
 
@@ -238,6 +232,7 @@ class Admin_Menu {
      * Handles the people page
      *
      * @since 1.8.0
+     * @since 1.8.5 Added requests page in the people menu items
      *
      * @return void
      */
@@ -246,6 +241,8 @@ class Admin_Menu {
 
         if ( 'employee' === $subsection ) {
             $this->employee_page();
+        } elseif ( 'requests' === $subsection ) {
+            $this->requests_page();
         } elseif ( 'department' === $subsection ) {
             $this->department_page();
         } elseif ( 'designation' === $subsection ) {
@@ -326,11 +323,30 @@ class Admin_Menu {
     }
 
     /**
+     * Renders requests page template
+     * 
+     * @since 1.8.5
+     *
+     * @return void
+     */
+    public function requests_page() {
+        erp_verify_page_access_permission( 'erp_hr_manager' );
+
+        $template = apply_filters( 'erp_hr_requests_templates', WPERP_HRM_VIEWS . '/requests.php' );
+
+        if ( file_exists( $template ) ) {
+            include $template;
+        }
+    }
+
+    /**
      * Handles the dashboard page
      *
      * @return void
      */
     public function department_page() {
+        erp_verify_page_access_permission( 'erp_manage_department' );
+
         $action = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : 'list';
         $id     = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
 
@@ -357,6 +373,8 @@ class Admin_Menu {
      * @return void
      */
     public function designation_page() {
+        erp_verify_page_access_permission( 'erp_manage_designation' );
+
         include WPERP_HRM_VIEWS . '/designation.php';
     }
 

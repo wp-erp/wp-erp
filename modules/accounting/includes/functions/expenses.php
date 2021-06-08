@@ -35,6 +35,8 @@ function erp_acct_get_expenses( $args = [] ) {
     $sql .= $args['count'] ? ' COUNT( id ) as total_number ' : ' * ';
     $sql .= "FROM {$wpdb->prefix}erp_acct_expenses WHERE `trn_by_ledger_id` IS NOT NULL ORDER BY {$args['orderby']} {$args['order']} {$limit}";
 
+    erp_disable_mysql_strict_mode();
+    
     if ( $args['count'] ) {
         return $wpdb->get_var( $sql );
     }
@@ -55,28 +57,30 @@ function erp_acct_get_expense( $expense_no ) {
     global $wpdb;
 
     $sql = "SELECT
+            
+                expense.id,
+                expense.voucher_no,
+                expense.people_id,
+                expense.people_name,
+                expense.address,
+                expense.trn_date,
+                expense.amount,
+                expense.ref,
+                expense.check_no,
+                expense.particulars,
+                expense.status,
+                expense.trn_by_ledger_id,
+                expense.trn_by,
+                expense.transaction_charge,
+                expense.attachments,
+                expense.created_at,
+                expense.created_by,
+                expense.updated_at,
+                expense.updated_by
 
-    expense.id,
-    expense.voucher_no,
-    expense.people_id,
-    expense.people_name,
-    expense.address,
-    expense.trn_date,
-    expense.amount,
-    expense.ref,
-    expense.check_no,
-    expense.particulars,
-    expense.status,
-    expense.trn_by_ledger_id,
-    expense.trn_by,
-    expense.transaction_charge,
-    expense.attachments,
-    expense.created_at,
-    expense.created_by,
-    expense.updated_at,
-    expense.updated_by
+            FROM {$wpdb->prefix}erp_acct_expenses AS expense WHERE expense.voucher_no = {$expense_no}";
 
-    FROM {$wpdb->prefix}erp_acct_expenses AS expense WHERE expense.voucher_no = {$expense_no}";
+    erp_disable_mysql_strict_mode();
 
     $row = $wpdb->get_row( $sql, ARRAY_A );
 
@@ -130,6 +134,8 @@ function erp_acct_get_check( $expense_no ) {
     LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledg_detail ON expense.voucher_no = ledg_detail.trn_no
 
     WHERE expense.voucher_no = {$expense_no} AND expense.trn_by = 3";
+
+    erp_disable_mysql_strict_mode();
 
     $row = $wpdb->get_row( $sql, ARRAY_A );
 
@@ -760,21 +766,23 @@ function erp_acct_get_check_data_of_expense( $expense_no ) {
     global $wpdb;
 
     $sql = "SELECT
-    cheque.bank,
-    cheque.check_no,
-    cheque.trn_no,
-    cheque.name,
-    cheque.pay_to,
-    cheque.bank,
-    cheque.amount,
+                cheque.bank,
+                cheque.check_no,
+                cheque.trn_no,
+                cheque.name,
+                cheque.pay_to,
+                cheque.bank,
+                cheque.amount,
 
-    ledg_detail.debit,
-    ledg_detail.credit
+                ledg_detail.debit,
+                ledg_detail.credit
 
-    FROM {$wpdb->prefix}erp_acct_expense_checks AS cheque
-    LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledg_detail ON cheque.trn_no = ledg_detail.trn_no
+            FROM {$wpdb->prefix}erp_acct_expense_checks AS cheque
+            LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledg_detail ON cheque.trn_no = ledg_detail.trn_no
 
-    WHERE cheque.trn_no = {$expense_no}";
+            WHERE cheque.trn_no = {$expense_no}";
+
+    erp_disable_mysql_strict_mode();
 
     $row = $wpdb->get_row( $sql, ARRAY_A );
 
