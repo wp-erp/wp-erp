@@ -11,6 +11,7 @@ import { clickOutside } from './directive/directives';
 import HTTP from './http';
 import Dropdown from 'settings/components/base/Dropdown.vue';
 import Datepicker from 'settings/components/base/Datepicker.vue';
+import VueDropify from 'vue-dropify';
 
 // global for settings var
 window.settings = {
@@ -29,6 +30,7 @@ window.settings.libs['Swal']           = Swal;
 window.settings.libs['clickOutside']   = clickOutside;
 window.settings.libs['Datepicker']     = Datepicker;
 window.settings.libs['Dropdown']       = Dropdown;
+window.settings.libs['VueDropify']     = VueDropify;
 
 // get lib reference from window
 window.settings_get_lib = function(lib) {
