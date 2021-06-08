@@ -1,7 +1,12 @@
 <template>
     <div>
         <h2 class="section-title">{{ sectionTitle }}</h2>
-        <settings-sub-menu :menus="subMenus" :parent_id="section_id" />
+        <template v-if="Object.keys(subMenus).length > 0">
+            <settings-sub-menu
+                :menus="subMenus"
+                :parent_id="section_id"
+            />
+        </template>
 
         <div class="settings-box">
             <h3 class="sub-section-title" v-if="subSectionTitle">
@@ -18,6 +23,7 @@
                 :section_id="section_id"
                 :sub_section_id="sub_section_id"
                 :inputs="inputFields"
+                :single_option="single_option"
             />
         </div>
     </div>
@@ -37,49 +43,58 @@ export default {
 
     data() {
         return {
-            sectionTitle: "",
-            subSectionTitle: "",
+            sectionTitle         : "",
+            subSectionTitle      : "",
             subSectionDescription: "",
-            subMenus: [],
-            allFields: [],
-            inputFields: [],
+            subMenus             : [],
+            allFields            : [],
+            inputFields          : [],
+            single_option        : true
         };
     },
 
     props: {
         section_id: {
-            type: String,
+            type    : String,
             required: true,
         },
         sub_section_id: {
-            type: String,
+            type    : String,
             required: true,
         },
         enable_content: {
-            type: Boolean,
+            type    : Boolean,
         }
     },
 
-    created() {
+    created () {
         // process the menus and get the sections data
-        const menus = erp_settings_var.erp_settings_menus;
-        const parentMenu = menus.find((menu) => menu.id === this.section_id);
+        const menus       = erp_settings_var.erp_settings_menus;
+        const parentMenu  = menus.find((menu) => menu.id === this.section_id);
 
         this.sectionTitle = parentMenu.label + " Management";
-        this.subMenus = parentMenu.sections;
+        this.subMenus     = parentMenu.sections;
+        let fields        = [];
 
-        const fields = parentMenu.fields[this.sub_section_id];
+        this.single_option = parentMenu.single_option;
+
+        if ( parentMenu.single_option ) {
+            fields = parentMenu.fields[ this.sub_section_id ];
+        } else {
+            fields = parentMenu.fields;
+        }
+
         this.allFields = fields;
 
-        if (fields.length > 0) {
-            this.subSectionTitle = fields[0].title;
+        if ( typeof fields !== 'undefined' && fields.length > 0 ) {
+            this.subSectionTitle       = fields[0].title;
             this.subSectionDescription = fields[0].desc;
 
             // Process the fields and get the real input fields
             let inputFields = [];
 
-            fields.forEach((field) => {
-                if (field.type !== "title" && field.type !== "sectionend") {
+            fields.forEach( field => {
+                if ( field.type !== "title" && field.type !== "sectionend" ) {
                     field.value = null;
                     inputFields.push(field);
                 }
@@ -87,6 +102,6 @@ export default {
 
             this.inputFields = inputFields;
         }
-    },
+    }
 };
 </script>

@@ -26,14 +26,27 @@ function erp_settings_get_data ( $options = [] ) {
 
     $data = [];
 
+    $single_option      = true;
+    $single_option_data = [];
+
+    if ( ! empty ( $options['single_option'] ) ) {
+        $single_option_id   = 'erp_settings_' . $options['single_option'];
+        $single_option      = false;
+        $single_option_data = get_option( $single_option_id );
+    }
+
     foreach ( $options as $option ) {
         if ( ! empty ( $option['id'] ) ) {
-            $option_value = get_option( $option['id'] );
+            $option_value = $single_option ? get_option( $option['id'] ) : $single_option_data[ $option['id'] ];
 
             switch ($option['type']) {
                 case 'checkbox':
                     $option_value = $option_value === 'yes' ? true : false;
                     break;
+
+                case 'image':
+                    $option_value = (int) $option_value;
+                    $option_value = $option_value ? wp_get_attachment_url( $option_value ) : '';
 
                 default:
                     break;

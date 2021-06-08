@@ -125,12 +125,13 @@ class Settings_Assets {
 
         foreach ( $settings as $setting ) {
             $settings_data[] = [
-                'id'       => $setting->id,
-                'slug'     => '/' . $setting->id,
-                'sections' => $setting->get_sections(),
-                'icon'     => $setting->icon,
-                'label'    => $setting->label,
-                'fields'   => $setting->get_section_fields( '', true )
+                'id'               => $setting->id,
+                'slug'             => '/' . $setting->id,
+                'sections'         => $setting->get_sections(),
+                'icon'             => $setting->icon,
+                'label'            => $setting->label,
+                'single_option'    => $setting->single_option,
+                'fields'           => $setting->get_section_fields( '', true )
             ];
         }
 
