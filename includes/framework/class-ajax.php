@@ -81,29 +81,6 @@ class Ajax_Handler {
     }
 
     /**
-     * Get Settings Data For General Tab
-     *
-     * @since 1.8.6
-     *
-     * @return void
-     */
-    public function erp_settings_get_general() {
-        $this->verify_nonce( 'erp-settings-nonce' );
-
-        if ( ! current_user_can( 'manage_options' ) ) {
-            $this->send_error( erp_get_message( ['type' => 'error_permission'] ) );
-        }
-
-        $data = erp_settings_get_general();
-
-        if ( is_wp_error( $data ) ) {
-            $this->send_error( erp_get_message( ['type' => 'error_process'] ) );
-        }
-
-        $this->send_success( $data );
-    }
-
-    /**
      * Get Settings Data For Common Sections
      *
      * @since 1.8.6

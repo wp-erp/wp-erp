@@ -4,13 +4,19 @@
         class="wperp-form"
         method="post"
         @submit.prevent="onFormSubmit"
+        enctype="multipart/form-data"
     >
         <div v-for="(input, index) in fields" :key="index">
-            <div class="wperp-form-group" v-if="input.type === 'select'">
-                <label>{{ input.title }}</label>
+            <div class="wperp-form-group">
+                <label>
+                    {{ input.title }}
+                    <tooltip :text="input.desc" v-if="input.tooltip"/>
+                </label>
+
                 <select
                     v-model="fields[index]['value']"
-                    class="wperp-form-field"
+                    class="wperp-form-field erp-select2"
+                    v-if="input.type === 'select'"
                 >
                     <option
                         v-for="(item, key, indexOption) in input.options"
@@ -20,11 +26,8 @@
                         {{ item }}
                     </option>
                 </select>
-            </div>
 
-            <div class="wperp-form-group" v-if="input.type === 'checkbox'">
-                <label>{{ input.title }}</label>
-                <div class="form-check">
+                <div class="form-check" v-if="input.type === 'checkbox'">
                     <label class="form-check-label">
                         <input
                             v-model="fields[index]['value']"
@@ -40,15 +43,41 @@
                         </span>
                     </label>
                 </div>
-            </div>
 
-            <div class="wperp-form-group" v-if="input.type === 'text' || input.type === 'textarea'">
-                <label> {{ input.title }}</label>
-                <input v-if="input.type === 'text'" v-model="fields[index]['value']" class="wperp-form-field" />
-                <textarea v-if="input.type === 'textarea'" cols="45" rows="4" v-model="fields[index]['value']" class="wperp-form-field" />
-                <p class="erp-form-input-hint" v-if="input.desc.length > 0">{{ input.desc }}</p>
-            </div>
+                <div v-if="input.type === 'text' || input.type === 'textarea'">
+                    <input
+                        v-if="input.type === 'text' && input.class !== 'erp-date-field'"
+                        v-model="fields[index]['value']"
+                        class="wperp-form-field"
+                    />
 
+                    <date-picker v-if="input.type === 'text' && input.class === 'erp-date-field'"
+                        class="wperp-form-field"
+                        :placeholder="__( 'Select date', 'erp' )"
+                        v-model="fields[index]['value']"
+                    />
+
+                    <textarea
+                        v-if="input.type === 'textarea'"
+                        cols="45"
+                        rows="4"
+                        v-model="fields[index]['value']"
+                        class="wperp-form-field"
+                    />
+
+                    <p class="erp-form-input-hint" v-if="input.desc.length > 0 && ! input.tooltip">
+                        {{ input.desc }}
+                    </p>
+                </div>
+
+                <div v-if="input.type === 'image'">
+                    <image-picker
+                        v-model="fields[index]['value']"
+                        @changeImage="(value) => changeImage(value, index)"
+                        :value="fields[index]['value']"
+                    />
+                </div>
+            </div>
         </div>
 
         <div class="wperp-form-group">
@@ -58,15 +87,22 @@
 </template>
 
 <script>
+import DatePicker from 'settings/components/base/DatePicker.vue';
 import SubmitButton from "settings/components/base/SubmitButton.vue";
+import ImagePicker from "settings/components/base/ImagePicker.vue";
+import Tooltip from 'settings/components/base/Tooltip.vue';
 import { generateFormDataFromObject } from "settings/utils/FormDataHandler";
+
 var $ = jQuery;
 
 export default {
     name: "BaseContentLayout",
 
     components: {
-        SubmitButton
+        SubmitButton,
+        ImagePicker,
+        Tooltip,
+        DatePicker
     },
 
     data() {
@@ -88,6 +124,10 @@ export default {
             type: String,
             required: true,
         },
+        single_option: {
+            type: Boolean,
+            required: true,
+        }
     },
 
     created() {
@@ -104,20 +144,21 @@ export default {
                 "requestData",
                 {
                     ...self.inputs,
-                    _wpnonce: erp_settings_var.nonce,
-                    action: "erp-settings-get-data",
+                    single_option : ! self.single_option ? self.section_id : null,
+                    _wpnonce      : erp_settings_var.nonce,
+                    action        : "erp-settings-get-data",
                 }
             );
 
             const postData = generateFormDataFromObject(requestData);
 
             $.ajax({
-                url: erp_settings_var.ajax_url,
-                type: "POST",
-                data: postData,
+                url        : erp_settings_var.ajax_url,
+                type       : "POST",
+                data       : postData,
                 processData: false,
                 contentType: false,
-                success: function (response) {
+                success    : function (response) {
                     self.$store.dispatch("spinner/setSpinner", false);
 
                     if (response.success) {
@@ -136,7 +177,10 @@ export default {
             self.fields.forEach((item) => {
                 requestDataPost[item.id] = item.value;
 
-                if (item.value === false || item.value === 'no' || item.value === "") {
+                if (
+                    item.value === false ||
+                    item.value === "no"
+                ) {
                     requestDataPost[item.id] = null;
                 }
             });
@@ -144,9 +188,9 @@ export default {
             let requestData = {
                 ...requestDataPost,
                 _wpnonce: erp_settings_var.nonce,
-                action: "erp-settings-save",
-                module: self.section_id,
-                section: self.sub_section_id,
+                action  : "erp-settings-save",
+                module  : self.section_id,
+                section : self.sub_section_id,
             };
 
             requestData = window.settings.hooks.applyFilters(
@@ -157,9 +201,9 @@ export default {
             const postData = generateFormDataFromObject(requestData);
 
             $.ajax({
-                url: erp_settings_var.ajax_url,
-                type: "POST",
-                data: postData,
+                url        : erp_settings_var.ajax_url,
+                type       : "POST",
+                data       : postData,
                 processData: false,
                 contentType: false,
                 success: function (response) {
@@ -172,7 +216,12 @@ export default {
                     }
                 },
             });
-        }
+
+        },
+
+        changeImage(value, index) {
+            this.fields[index]["value"] = value;
+        },
     },
 };
 </script>
