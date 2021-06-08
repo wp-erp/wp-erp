@@ -52,23 +52,25 @@ function erp_acct_get_pay_purchases( $args = [] ) {
 function erp_acct_get_pay_purchase( $purchase_no ) {
     global $wpdb;
 
+    erp_disable_mysql_strict_mode();
+
     $row = $wpdb->get_row(
         $wpdb->prepare(
             "SELECT
-            pay_purchase.id,
-            pay_purchase.voucher_no,
-            pay_purchase.vendor_id,
-            pay_purchase.vendor_name,
-            pay_purchase.trn_date,
-            pay_purchase.amount,
-            pay_purchase.transaction_charge,
-            pay_purchase.ref,
-            pay_purchase.trn_by,
-            pay_purchase.status,
-            pay_purchase.particulars,
-            pay_purchase.created_at,
-            pay_purchase.attachments,
-            pay_purchase.trn_by_ledger_id
+                pay_purchase.id,
+                pay_purchase.voucher_no,
+                pay_purchase.vendor_id,
+                pay_purchase.vendor_name,
+                pay_purchase.trn_date,
+                pay_purchase.amount,
+                pay_purchase.transaction_charge,
+                pay_purchase.ref,
+                pay_purchase.trn_by,
+                pay_purchase.status,
+                pay_purchase.particulars,
+                pay_purchase.created_at,
+                pay_purchase.attachments,
+                pay_purchase.trn_by_ledger_id
             FROM {$wpdb->prefix}erp_acct_pay_purchase AS pay_purchase
             WHERE pay_purchase.voucher_no = %d",
             $purchase_no

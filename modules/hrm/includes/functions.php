@@ -268,7 +268,7 @@ function erp_hr_can_apply_sandwich_rules_between_dates( $start_date, $end_date, 
  * Sort parents before children
  *
  * @since 1.0
- * @since 1.8.4 Fixed when there is no parent = 0
+ * @since 1.8.5 Fixed sorting when there is no parentless item
  *
  * @param array $objects input objects with attributes 'id' and 'parent'
  * @param array $result  (optional, reference) internal
@@ -278,6 +278,14 @@ function erp_hr_can_apply_sandwich_rules_between_dates( $start_date, $end_date, 
  * @return array output
  */
 function erp_parent_sort( array $objects, array &$result = [], $parent = 0, $depth = 0 ) {
+    $parents = [];
+
+    foreach ( $objects as $object ) {
+        $parents[] = intval( $object->parent );
+    }
+
+    $parent = ! empty( $parents ) ? min( $parents ) : 0;
+    
     foreach ( $objects as $key => $object ) {
         if ( $object->parent == $parent ) {
             $object->depth = $depth;
@@ -535,20 +543,43 @@ function erp_hr_holiday_reminder_to_employees() {
  * Retrieves html for hr people menu
  *
  * @since 1.8.0
+ * @since 1.8.5 Added `Requests` as new menu item
  *
  * @param string $selected
  *
  * @return void
  */
-function erp_hr_get_people_menu_html( $selected = 'employee' ) {
+function erp_hr_get_people_menu_html( $selected = '' ) {
     $dropdown = [
-        'employee'     => [ 'title' => esc_html__( 'Employees', 'erp' ), 'cap' => 'erp_list_employee' ],
-        'department'   => [ 'title' => esc_html__( 'Departments', 'erp' ), 'cap' => 'erp_manage_department' ],
-        'designation'  => [ 'title' => esc_html__( 'Designations', 'erp' ), 'cap' => 'erp_manage_designation' ],
-        'announcement' => [ 'title' => esc_html__( 'Announcements', 'erp' ), 'cap' => 'erp_manage_announcement' ],
+        'employee'     => [
+            'title' => esc_html__( 'Employees', 'erp' ),
+            'cap'   => 'erp_list_employee'
+        ],
+        'requests'     => [
+            'title' => esc_html__( 'Requests', 'erp' ),
+            'cap'   => 'erp_hr_manager'
+        ],
+        'department'   => [
+            'title' => esc_html__( 'Departments', 'erp' ),
+            'cap'   => 'erp_manage_department'
+        ],
+        'designation'  => [
+            'title' => esc_html__( 'Designations', 'erp' ),
+            'cap'   => 'erp_manage_designation'
+        ],
+        'announcement' => [
+            'title' => esc_html__( 'Announcements', 'erp' ),
+            'cap'   => 'erp_manage_announcement'
+        ],
     ];
 
     $dropdown = apply_filters( 'erp_hr_people_menu_items', $dropdown );
+
+    if ( empty( $selected ) ) {
+        $selected = ! empty( $_GET['sub-section'] )
+                    ? sanitize_text_field( wp_unslash( $_GET['sub-section'] ) )
+                    : 'employee';
+    }
 
     ob_start();
     ?>
@@ -557,9 +588,9 @@ function erp_hr_get_people_menu_html( $selected = 'employee' ) {
         <ul class="erp-nav">
             <?php foreach ( $dropdown as $key => $value ) : ?>
                 <?php if ( 'announcement' === $key && current_user_can( $value['cap'] ) ) : ?>
-                    <li class="<?php echo $key === $selected ? 'active' : ''; ?>"><a href="<?php echo admin_url( 'edit.php?post_type=erp_hr_announcement' ); ?>" class="" data-key="<?php echo $key; ?>"><?php echo $value['title']; ?></a></li>
+                    <li class="<?php echo $key === $selected ? $key . ' active' : $key; ?>"><a href="<?php echo admin_url( 'edit.php?post_type=erp_hr_announcement' ); ?>" class="" data-key="<?php echo $key; ?>"><?php echo $value['title']; ?></a></li>
                 <?php elseif ( current_user_can( $value['cap'] ) ) : ?>
-                    <li class="<?php echo $key === $selected ? 'active' : ''; ?>"><a href="<?php echo add_query_arg( array( 'sub-section' => $key ), admin_url( 'admin.php?page=erp-hr&section=people' ) ); ?>" class="" data-key="<?php echo $key; ?>"><?php echo $value['title']; ?></a></li>
+                    <li class="<?php echo $key === $selected ? $key . ' active' : $key; ?>"><a href="<?php echo add_query_arg( array( 'sub-section' => $key ), admin_url( 'admin.php?page=erp-hr&section=people' ) ); ?>" class="" data-key="<?php echo $key; ?>"><?php echo $value['title']; ?></a></li>
                 <?php endif; ?>
             <?php endforeach; ?>
         </ul>
@@ -567,4 +598,39 @@ function erp_hr_get_people_menu_html( $selected = 'employee' ) {
 
     <?php
     echo ob_get_clean();
+}
+
+/**
+ * Retrieves all employee request types
+ * 
+ * @since 1.8.5
+ *
+ * @return array
+ */
+function erp_hr_get_employee_requests_types() {
+    $results  = erp_hr_get_leave_requests();
+
+    $types    = [
+        'leave' => [
+            'count'   => $results['total'],
+            'label'   => __( 'Leave', 'erp' ),
+        ]
+    ];
+
+    return apply_filters( 'erp_hr_employee_request_types', $types );
+}
+
+/**
+ * Retrieves all pending requests counts
+ * 
+ * @since 1.8.5
+ * 
+ * @return array
+ */
+function erp_hr_get_employee_pending_requests_count() {
+    $leave_requests    = erp_hr_get_leave_requests( [ 'number' => -1, 'status' => 2 ] );
+
+    $requests['leave'] = $leave_requests['total'];
+
+    return apply_filters( 'erp_hr_employee_pending_request_count', $requests );
 }

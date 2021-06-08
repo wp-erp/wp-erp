@@ -1068,7 +1068,7 @@ class Form_Handler {
         $id                  = ! empty( $_POST['policy-id'] ) ? absint( wp_unslash( $_POST['policy-id'] ) ) : 0;
         $leave_id            = ! empty( $_POST['leave-id'] ) ? absint( wp_unslash( $_POST['leave-id'] ) ) : 0;
         $days                = ! empty( $_POST['days'] ) ? absint( wp_unslash( $_POST['days'] ) ) : 0;
-        $f_year              = ! empty( $_POST['f-year'] ) ? absint( wp_unslash( $_POST['f-year'] ) ) : date( 'Y' );
+        $f_year              = ! empty( $_POST['f-year'] ) ? absint( wp_unslash( $_POST['f-year'] ) ) : 0;
         $desc                = ! empty( $_POST['description'] ) ? sanitize_text_field( wp_unslash( $_POST['description'] ) ) : '';
         $employee_type       = ! empty( $_POST['employee_type'] ) ? sanitize_text_field( wp_unslash( $_POST['employee_type'] ) ) : '-1';
         $dept_id             = ! empty( $_POST['department'] ) ? sanitize_text_field( wp_unslash( $_POST['department'] ) ) : '-1';
@@ -1094,7 +1094,7 @@ class Form_Handler {
             $errors->add( __( 'Color field should not be left empty', 'erp' ) );
         }
 
-        if ( empty( $f_year ) ) {
+        if ( ! $id && empty( $f_year ) ) {
             $errors->add( __( 'Year field should not be left empty', 'erp' ) );
         }
 

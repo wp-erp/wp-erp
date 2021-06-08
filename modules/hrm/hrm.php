@@ -160,6 +160,7 @@ class Human_Resource {
 
         $localize_script = apply_filters( 'erp_hr_localize_script', [
             'nonce'                  => wp_create_nonce( 'wp-erp-hr-nonce' ),
+            'erp_fields'             => erp_get_import_export_fields(),
             'popup'                  => [
                 'dept_title'            => __( 'New Department', 'erp' ),
                 'dept_submit'           => __( 'Create Department', 'erp' ),
@@ -221,7 +222,7 @@ class Human_Resource {
 
         switch ( $section ) {
             case 'people':
-                if ( $sub_section === 'employee' ) {
+                if ( 'employee' === $sub_section ) {
                     wp_enqueue_script( 'post' );
                     $employee                          = new Employee();
                     $localize_script['employee_empty'] = $employee->to_array();
@@ -234,8 +235,18 @@ class Human_Resource {
                     wp_enqueue_script( 'erp-flotchart-axislables' );
                     wp_enqueue_script( 'erp-flotchart-valuelabel' );
                     wp_enqueue_style( 'erp-flotchart-valuelabel-css' );
+
+                } else if ( 'requests' === $sub_section ) {
+                    
+                    ?><script>window.erpLocale = JSON.parse('<?php echo wp_kses_post( wp_slash( wp_json_encode( apply_filters( 'erp_localized_data', [] ) ) ) ); ?>');</script><?php
+
                     wp_enqueue_style( 'erp-sweetalert' );
                     wp_enqueue_script( 'erp-sweetalert' );
+                    wp_enqueue_style( 'erp-daterangepicker' );
+                    wp_enqueue_script( 'erp-daterangepicker' );
+                    wp_enqueue_script( 'erp-hr-i18n', WPERP_ASSETS . '/js/i18n.js', [], gmdate( 'Ymd' ), true );
+                    wp_enqueue_script( 'erp-vuejs', false, [ 'jquery', 'erp-script' ], gmdate( 'Ymd' ), true );
+                    wp_enqueue_script( 'erp-hr-requests', WPERP_HRM_ASSETS . "/js/requests.js", [ 'erp-script', 'erp-vuejs', 'jquery', 'erp-hr-i18n' ], gmdate( 'Ymd' ), true );
                 }
 
                 break;
@@ -265,6 +276,16 @@ class Human_Resource {
         // if its an employee page
 
         wp_localize_script( 'wp-erp-hr', 'wpErpHr', $localize_script );
+
+        wp_localize_script( 'erp-hr-requests', 'erpHrReq', [
+            'nonce'          => wp_create_nonce( 'wp-erp-hr-nonce' ),
+            'ajaxurl'        => admin_url( 'admin-ajax.php' ),
+            'adminurl'       => admin_url( 'admin.php' ),
+            'request_types'  => erp_hr_get_employee_requests_types(),
+            'employees'      => erp_hr_get_employees_dropdown_raw(),
+            'filterEmployee' => __( 'Employee', 'erp' ),
+            'clear'          => __( 'Clear', 'erp' )
+        ] );
 
         wp_enqueue_style( 'wp-color-picker' );
         wp_enqueue_style( 'erp-select2' );
@@ -307,6 +328,8 @@ class Human_Resource {
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/new-dept.php', 'erp-new-dept' );
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/new-designation.php', 'erp-new-desig' );
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/employee-terminate.php', 'erp-employment-terminate' );
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/employee-import.php', 'erp-employee-import-csv' );
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/employee-export.php', 'erp-employee-export-csv' );
                 break;
 
             case 'leave':

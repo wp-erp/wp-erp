@@ -33,11 +33,6 @@
         'general' => esc_html__( 'General', 'erp' ),
     ];
 
-    if ( $is_crm_activated || $is_hrm_activated || $is_acc_activated ) {
-        $tabs['import'] = esc_html__( 'Import', 'erp' );
-        $tabs['export'] = esc_html__( 'Export', 'erp' );
-    }
-
     $tabs['misc']   = esc_html__( 'Misc.', 'erp' );
     $tabs['status'] = esc_html__( 'Status', 'erp' );
     $tabs['log']    = esc_html__( 'Audit Log', 'erp' );
@@ -55,12 +50,8 @@
 
         <?php
         switch ( $current_tab ) {
-            case 'import':
-                include __DIR__ . '/tools/import.php';
-                break;
-
-            case 'export':
-                include __DIR__ . '/tools/export.php';
+            case 'general':
+                include __DIR__ . '/tools/general.php';
                 break;
 
             case 'misc':
@@ -73,10 +64,6 @@
 
             case 'log':
                 include_once __DIR__ . '/log.php';
-                break;
-
-            case 'general':
-                include __DIR__ . '/tools/general.php';
                 break;
 
             default:

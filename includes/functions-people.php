@@ -470,8 +470,8 @@ function erp_insert_people( $args = [], $return_object = false ) {
     $args           = wp_parse_args( $args, $defaults );
     $errors         = [];
     $unchanged_data = [];
+    $people_type    = $args['type'];
 
-    $people_type = $args['type'];
     unset( $args['type'], $args['created'] );
 
     //sensitization
@@ -652,9 +652,11 @@ function erp_insert_people( $args = [], $return_object = false ) {
 
             wp_cache_delete( 'erp_people_id_user_' . $user->ID, 'erp' );
 
-            foreach ( $args as $key => $value ) {
-                if ( ! update_user_meta( $user_id, $key, $value ) ) {
-                    $unchanged_data[ $key ] = $value;
+            if ( 'employee' !== $people_type ) {
+                foreach ( $args as $key => $value ) {
+                    if ( ! update_user_meta( $user_id, $key, $value ) ) {
+                        $unchanged_data[ $key ] = $value;
+                    }
                 }
             }
         }
@@ -679,8 +681,10 @@ function erp_insert_people( $args = [], $return_object = false ) {
         $people->update( $main_fields );
     }
 
-    if ( ! empty( $type_obj ) && ! $people->hasType( $type_obj ) && empty( $is_existing_people ) ) {
-        $people->assignType( $type_obj );
+    if ( ! empty( $people_type ) && ! $people->hasType( $people_type ) ) {
+        if ( empty( $is_existing_people ) || ( $people->hasType( 'employee' ) && 'contact' === $people_type ) ) {
+            $people->assignType( $type_obj );
+        }
     }
 
     //unset created_by from meta
