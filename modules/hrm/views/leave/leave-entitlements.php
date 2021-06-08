@@ -72,12 +72,13 @@ $active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['ta
                     erp_html_form_input( [
                         'label'    => __( 'Employee Type', 'erp' ),
                         'name'     => 'employee_type',
-                        'value'    => 'permanent',
+                        'value'    => '',
                         'class'    => 'leave-policy-input erp-select2 employee_type change_policy',
                         'type'     => 'select',
                         'options'  => [
-                                '-1' => esc_html__( 'All Types', 'erp' ),
-                            ] + erp_hr_get_employee_types(),
+                            ''   => esc_html__( '- Select -', 'erp' ),
+                            '-1' => esc_html__( 'All', 'erp' ),
+                        ] + erp_hr_get_employee_types(),
                     ] );
                     ?>
                 </div>
@@ -87,8 +88,11 @@ $active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['ta
                         'label'    => __( 'Department', 'erp' ),
                         'name'     => 'department_id',
                         'type'     => 'select',
+                        'value'    => '',
                         'class'    => 'leave-policy-input erp-select2 department_id change_policy',
-                        'options'  => erp_hr_get_departments_dropdown_raw( __( 'All Departments', 'erp' ) ),
+                        'options'  => [
+                            '' => esc_html__( '- Select -', 'erp' )
+                        ] + erp_hr_get_departments_dropdown_raw( __( 'All', 'erp' ) ),
                     ] ); ?>
                 </div>
 
@@ -96,11 +100,13 @@ $active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['ta
                     <?php erp_html_form_input( [
                         'label'       => esc_html__( 'Designation', 'erp' ),
                         'name'        => 'designation_id',
-                        'value'       => '-1',
+                        'value'       => '',
                         'class'       => 'leave-policy-input erp-select2 designation_id change_policy',
                         'custom_attr' => [ 'data-id' => 'erp-new-designation' ],
                         'type'        => 'select',
-                        'options'     => erp_hr_get_designation_dropdown_raw( esc_html__( 'All Designations', 'erp' ) ),
+                        'options'     => [
+                            '' => esc_html__( '- Select -', 'erp' )
+                        ] + erp_hr_get_designation_dropdown_raw( esc_html__( 'All', 'erp' ) ),
                     ] ); ?>
                 </div>
 
@@ -108,9 +114,12 @@ $active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['ta
                     <?php erp_html_form_input( [
                         'label'    => __( 'Location', 'erp' ),
                         'name'     => 'location_id',
+                        'value'    => '',
                         'type'     => 'select',
                         'class'    => 'leave-policy-input erp-select2 location_id change_policy',
-                        'options'  => erp_company_get_location_dropdown_raw( esc_html__( 'All Locations', 'erp' ) ),
+                        'options'  => [
+                            '' => esc_html__( '- Select -', 'erp' )
+                        ] + erp_company_get_location_dropdown_raw( esc_html__( 'All', 'erp' ) ),
                     ] ); ?>
                 </div>
 
@@ -118,10 +127,12 @@ $active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['ta
                     <?php erp_html_form_input( [
                         'label'   => esc_html__( 'Gender', 'erp' ),
                         'name'    => 'gender',
-                        'value'   => '-1',
+                        'value'   => '',
                         'class'   => 'leave-policy-input erp-select2 gender change_policy',
                         'type'    => 'select',
-                        'options' => erp_hr_get_genders( esc_html__( 'All', 'erp' ) ),
+                        'options' => [
+                            '' => esc_html__( '- Select -', 'erp' )
+                        ] + erp_hr_get_genders( esc_html__( 'All', 'erp' ) ),
                     ] ); ?>
                 </div>
 
@@ -129,10 +140,12 @@ $active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['ta
                     <?php erp_html_form_input( [
                         'label'   => esc_html__( 'Marital Status', 'erp' ),
                         'name'    => 'marital',
-                        'value'   => '-1',
+                        'value'   => '',
                         'class'   => 'leave-policy-input erp-select2 marital change_policy',
                         'type'    => 'select',
-                        'options' => erp_hr_get_marital_statuses( esc_html__( 'All', 'erp' ) ),
+                        'options' => [
+                            '' => esc_html__( '- Select -', 'erp' )
+                        ] + erp_hr_get_marital_statuses( esc_html__( 'All', 'erp' ) ),
                     ] ); ?>
                 </div>
 
@@ -141,7 +154,7 @@ $active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['ta
                         'label'    => __( 'Leave Policy', 'erp' ),
                         'name'     => 'leave_policy',
                         'type'     => 'select',
-                        'class'    => 'leave-policy-input leave_policy_dropdown leave_policy',
+                        'class'    => 'leave-policy-input erp-select2 leave_policy_dropdown leave_policy',
                         'required' => true,
                         'options'  => [ 0 => __( '- Select -', 'erp' ) ],
                         'help'     => $policy_help_text,

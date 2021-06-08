@@ -97,7 +97,8 @@
                                                 <multi-select
                                                 v-model="peopleFields.country"
                                                 :options="countries"
-                                                :multiple="false" @input="getState( peopleFields.country )" />
+                                                :multiple="false"
+                                                @input="getState( peopleFields.country )" />
                                             </div>
                                         </div>
                                         <div class="wperp-col-sm-6 wperp-col-xs-12 wperp-form-group">
@@ -227,8 +228,55 @@ export default {
                 return false;
             }
 
-            this.$store.dispatch('spinner/setSpinner', true);
+            var self = this;
 
+            if (this.peopleFields.email) {
+                if (!this.people) {
+                    HTTP.get('/people/check-email', {
+                        params: {
+                            email: this.peopleFields.email
+                        }
+                    }).then((res) => {
+                        self.emailExists = res.data;
+
+                        if (res.data) {
+                            if (res.data == 'contact' || res.data == 'company') {
+                                swal({
+                                    title : '',
+                                    text : __('This email already exists in CRM! Do you want to import and update the contact?', 'erp'),
+                                    type : 'info',
+                                    showCancelButton : true,
+                                    cancelButtonText : __('Cancel', 'erp'),
+                                    cancelButtonColor : '#bababa',
+                                    confirmButtonText : __('Import & Update', 'erp'),
+                                    confirmButtonColor : '#58badb',
+                                },
+                                function(input) {
+                                    self.emailExists = false;
+
+                                    if (false !== input) {
+                                        self.addPeople(peopleFields);
+                                    }
+                                });
+                            } else {
+                                self.error_message.push(__('Email already exists as customer/vendor', 'erp'));
+                                self.emailExists = false;
+                                
+                                return false;
+                            }
+                        } else {
+                            self.addPeople(peopleFields);
+                        }
+                    });
+                } else {
+                    self.addPeople(peopleFields);
+                }
+            }
+        },
+
+        addPeople(peopleFields) {
+            this.$store.dispatch('spinner/setSpinner', true);
+    
             var type = '';
             var url = '';
 
@@ -254,13 +302,6 @@ export default {
             this.error_message = window.acct.hooks.applyFilters('acctPeopleFieldsError', []);
 
             if (this.error_message.length) {
-                return false;
-            }
-
-            if (this.emailExists) {
-                this.error_message.push(__('Email already exists as customer/vendor', 'erp'));
-                this.emailExists = false;
-
                 return false;
             }
 
@@ -358,7 +399,7 @@ export default {
                 this.peopleFields.street_1    = people.billing.street_1;
                 this.peopleFields.street_2    = people.billing.street_2;
                 this.peopleFields.city        = people.billing.city;
-                this.peopleFields.country     = people.billing.country ? !!this.selectedCountry(people.billing.country) : '';
+                this.peopleFields.country     = people.billing.country ? this.selectedCountry(people.billing.country) : '';
                 this.peopleFields.postal_code = people.billing.postal_code;
 
                 if (people.photo) {

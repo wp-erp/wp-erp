@@ -55,33 +55,35 @@ function erp_acct_get_purchase( $purchase_no ) {
     $sql = $wpdb->prepare(
         "SELECT
 
-    voucher.editable,
-    purchase.id,
-    purchase.voucher_no,
-    purchase.vendor_id,
-    purchase.trn_date,
-    purchase.due_date,
-    purchase.amount,
-    purchase.vendor_name,
-    purchase.ref,
-    purchase.status,
-    purchase.purchase_order,
-    purchase.attachments,
-    purchase.particulars,
-    purchase.created_at,
-    purchase.tax,
-    purchase.tax_zone_id,
+            voucher.editable,
+            purchase.id,
+            purchase.voucher_no,
+            purchase.vendor_id,
+            purchase.trn_date,
+            purchase.due_date,
+            purchase.amount,
+            purchase.vendor_name,
+            purchase.ref,
+            purchase.status,
+            purchase.purchase_order,
+            purchase.attachments,
+            purchase.particulars,
+            purchase.created_at,
+            purchase.tax,
+            purchase.tax_zone_id,
 
-    purchase_acc_detail.purchase_no,
-    purchase_acc_detail.debit,
-    purchase_acc_detail.credit
+            purchase_acc_detail.purchase_no,
+            purchase_acc_detail.debit,
+            purchase_acc_detail.credit
 
-    FROM {$wpdb->prefix}erp_acct_purchase AS purchase
-    LEFT JOIN {$wpdb->prefix}erp_acct_voucher_no as voucher ON purchase.voucher_no = voucher.id
-    LEFT JOIN {$wpdb->prefix}erp_acct_purchase_account_details AS purchase_acc_detail ON purchase.voucher_no = purchase_acc_detail.trn_no
-    WHERE purchase.voucher_no = %d",
+        FROM {$wpdb->prefix}erp_acct_purchase AS purchase
+        LEFT JOIN {$wpdb->prefix}erp_acct_voucher_no as voucher ON purchase.voucher_no = voucher.id
+        LEFT JOIN {$wpdb->prefix}erp_acct_purchase_account_details AS purchase_acc_detail ON purchase.voucher_no = purchase_acc_detail.trn_no
+        WHERE purchase.voucher_no = %d",
         $purchase_no
     );
+
+    erp_disable_mysql_strict_mode();
 
     $row                = $wpdb->get_row( $sql, ARRAY_A );
     $row['line_items']  = erp_acct_format_purchase_line_items( $purchase_no );
@@ -122,6 +124,8 @@ function erp_acct_format_purchase_line_items( $voucher_no ) {
         WHERE purchase.voucher_no = %d",
         $voucher_no
     );
+
+    erp_disable_mysql_strict_mode();
 
     $results = $wpdb->get_results( $sql, ARRAY_A );
 
@@ -832,6 +836,8 @@ function erp_acct_get_due_purchases_by_vendor( $args ) {
         $args['orderby'],
         $args['order']
     );
+
+    erp_disable_mysql_strict_mode();
 
     if ( $args['count'] ) {
         return $wpdb->get_var( $query );

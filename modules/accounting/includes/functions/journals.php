@@ -86,21 +86,23 @@ function erp_acct_get_journal( $journal_no ) {
 
     $sql = "SELECT
 
-    journal.id,
-    journal.voucher_no,
-    journal.trn_date,
-    journal.ref,
-    journal.voucher_amount,
-    journal.attachments,
-    journal.particulars,
-    journal.created_at,
-    journal.created_by,
-    journal.updated_at,
-    journal.updated_by
+                journal.id,
+                journal.voucher_no,
+                journal.trn_date,
+                journal.ref,
+                journal.voucher_amount,
+                journal.attachments,
+                journal.particulars,
+                journal.created_at,
+                journal.created_by,
+                journal.updated_at,
+                journal.updated_by
 
-    FROM {$wpdb->prefix}erp_acct_journals as journal
-    LEFT JOIN {$wpdb->prefix}erp_acct_journal_details as journal_detail ON journal.voucher_no = journal_detail.trn_no
-    WHERE journal.voucher_no = {$journal_no} LIMIT 1";
+            FROM {$wpdb->prefix}erp_acct_journals as journal
+            LEFT JOIN {$wpdb->prefix}erp_acct_journal_details as journal_detail ON journal.voucher_no = journal_detail.trn_no
+            WHERE journal.voucher_no = {$journal_no} LIMIT 1";
+
+    erp_disable_mysql_strict_mode();
 
     $row                = $wpdb->get_row( $sql, ARRAY_A );
     $rows               = $row;
@@ -335,17 +337,18 @@ function erp_acct_format_journal_data( $item, $journal_no ) {
     global $wpdb;
 
     $sql = "SELECT
-    journal.id,
+                journal.id,
+                journal_detail.trn_no,
+                journal_detail.ledger_id,
+                journal_detail.particulars,
+                journal_detail.debit,
+                journal_detail.credit
 
-    journal_detail.trn_no,
-    journal_detail.ledger_id,
-    journal_detail.particulars,
-    journal_detail.debit,
-    journal_detail.credit
+            FROM {$wpdb->prefix}erp_acct_journals as journal
+            LEFT JOIN {$wpdb->prefix}erp_acct_journal_details as journal_detail ON journal.voucher_no = journal_detail.trn_no
+            WHERE journal.voucher_no = {$journal_no}";
 
-    FROM {$wpdb->prefix}erp_acct_journals as journal
-    LEFT JOIN {$wpdb->prefix}erp_acct_journal_details as journal_detail ON journal.voucher_no = journal_detail.trn_no
-    WHERE journal.voucher_no = {$journal_no}";
+    erp_disable_mysql_strict_mode();
 
     $rows       = $wpdb->get_results( $sql, ARRAY_A );
     $line_items = [];

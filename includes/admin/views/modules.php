@@ -23,7 +23,6 @@
 
     .module_item_col {
         padding: 0 10px;
-        max-width: 381px;
         flex-basis: 33.33%;
     }
 
@@ -485,6 +484,51 @@
         }
     }
 
+    @media only screen and ( max-width: 1130px ) {
+        .nav_wrap {
+            flex-direction: column;
+        }
+
+        .nav_right {
+            flex-direction: column;
+        }
+
+        .nav_right ul {
+            margin-right: 0;
+        }
+
+        .search-box {
+            border: 0.5px solid #ededed;
+            border-radius: 3px;
+            margin: 5px 0;
+        }
+    }
+
+    @media only screen and ( max-width: 540px ) {
+        .nav_right {
+            display: none;
+        }
+
+        .search-box {
+            display: none;
+        }
+
+        .nav_left {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .nav_left ul {
+            display: contents;
+            position: relative;
+            padding: 0;
+        }
+
+        .nav_left ul li {
+            margin-top: 10px;
+        }
+    }
 </style>
 
 <?php $is_pro_active  = function_exists( 'wp_erp_pro' ) ? true : false; ?>

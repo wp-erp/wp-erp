@@ -45,16 +45,16 @@ function erp_acct_get_all_products( $args = [] ) {
             $sql .= ' COUNT( product.id ) as total_number';
         } else {
             $sql .= " product.id,
-                product.name,
-                product.product_type_id,
-                product.cost_price,
-                product.sale_price,
-                product.tax_cat_id,
-                people.id AS vendor,
-                CONCAT(people.first_name, ' ',  people.last_name) AS vendor_name,
-                cat.id AS category_id,
-                cat.name AS cat_name,
-                product_type.name AS product_type_name";
+                    product.name,
+                    product.product_type_id,
+                    product.cost_price,
+                    product.sale_price,
+                    product.tax_cat_id,
+                    people.id AS vendor,
+                    CONCAT(people.first_name, ' ',  people.last_name) AS vendor_name,
+                    cat.id AS category_id,
+                    cat.name AS cat_name,
+                    product_type.name AS product_type_name";
         }
 
         $sql .= " FROM {$wpdb->prefix}erp_acct_products AS product
@@ -62,6 +62,8 @@ function erp_acct_get_all_products( $args = [] ) {
             LEFT JOIN {$wpdb->prefix}erp_acct_product_categories AS cat ON product.category_id = cat.id
             LEFT JOIN {$wpdb->prefix}erp_acct_product_types AS product_type ON product.product_type_id = product_type.id
             WHERE product.product_type_id<>3 ORDER BY product.{$args['orderby']} {$args['order']} {$limit}";
+
+        erp_disable_mysql_strict_mode();
 
         if ( $args['count'] ) {
             $products_count = $wpdb->get_var( $sql );
@@ -91,22 +93,21 @@ function erp_acct_get_all_products( $args = [] ) {
 function erp_acct_get_product( $product_id ) {
     global $wpdb;
 
+    erp_disable_mysql_strict_mode();
+
     $row = $wpdb->get_row(
         "SELECT
-		product.id,
-		product.name,
-		product.product_type_id,
-		product.cost_price,
-		product.sale_price,
-		product.tax_cat_id,
-
-		people.id AS vendor,
-		CONCAT(people.first_name, ' ',  people.last_name) AS vendor_name,
-
-		cat.id AS category_id,
-		cat.name AS cat_name,
-
-		product_type.name AS product_type_name
+            product.id,
+            product.name,
+            product.product_type_id,
+            product.cost_price,
+            product.sale_price,
+            product.tax_cat_id,
+            people.id AS vendor,
+            CONCAT(people.first_name, ' ',  people.last_name) AS vendor_name,
+            cat.id AS category_id,
+            cat.name AS cat_name,
+            product_type.name AS product_type_name
 
 		FROM {$wpdb->prefix}erp_acct_products AS product
 		LEFT JOIN {$wpdb->prefix}erp_peoples AS people ON product.vendor = people.id

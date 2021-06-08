@@ -336,9 +336,11 @@ class Admin {
      */
     public function enqueue_scripts() {
         // load styles
+        wp_enqueue_style( 'erp-sweetalert' );
         wp_enqueue_style( 'accounting-admin' );
 
         // load hook
+        wp_enqueue_script( 'erp-sweetalert' );
         wp_enqueue_script( 'accounting-bootstrap' );
 
         // JS do action
@@ -486,7 +488,7 @@ class Admin {
      * @return void
      */
     public function permission_management_field( $employee ) {
-        if ( ! erp_acct_is_hr_current_user_manager() ) {
+        if ( ! erp_ac_is_current_user_manager() ) {
             return;
         }
 

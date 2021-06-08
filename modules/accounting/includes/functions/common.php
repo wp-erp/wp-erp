@@ -496,13 +496,16 @@ function erp_acct_check_voucher_edit_state( $id ) {
 }
 
 /**
- * Check if people exists (customer/vendor)
+ * Check if people exists in given types
+ * 
+ * @since 1.8.4
  *
  * @param string $email
+ * @param array $types
  *
  * @return bool
  */
-function erp_acct_check_people_exists( $email ) {
+function erp_acct_exist_people( $email, $types = [] ) {
     $people = erp_get_people_by( 'email', $email );
 
     // this $email belongs to nobody
@@ -510,8 +513,14 @@ function erp_acct_check_people_exists( $email ) {
         return false;
     }
 
-    if ( in_array( 'customer', $people->types, true ) || in_array( 'vendor', $people->types, true ) ) {
-        return true;
+    if ( empty( $types ) ) {
+        $types = [ 'customer', 'vendor' ];
+    }
+
+    foreach ( $types as $type ) {
+        if ( in_array( $type, $people->types, true ) ) {
+            return $type;
+        }
     }
 
     return false;
