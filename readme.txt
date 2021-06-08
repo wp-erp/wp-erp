@@ -3,9 +3,9 @@ Contributors: tareq1988, nizamuddinbabu, wedevs
 Donate Link: https://tareq.co/donate
 Tags: business manager, erp, accounting, crm, hr, project manager, small business, SME, contact, contacts, Customer Relationship Management, employee, leave management, hr, human resource management, job, jobs, job listing, lead management, opportunity, schedule, task, lead, holiday, company
 Requires at least: 4.4
-Tested up to: 5.7.1
+Tested up to: 5.7.2
 Requires PHP: 5.6
-Stable tag: 1.8.4
+Stable tag: 1.8.5
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -279,6 +279,37 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+
+= v1.8.5 -> June 08, 2021 =
+--------------------------
+
+- [new] While adding people in Accounting with an email that exists in CRM, the people can be updated and imported from CRM directly at that moment
+- [new] New Request submenu under HRM People
+- [new] Real-time bubble to show pending request count in Requests
+- [new] Import csv options in Employee, Contact, Company, Vendor, and Customer list table page individually
+- [new] Export csv options in Employee, Contact, Company, Vendor, and Customer list table page individually
+- [new] Import users as contacts option in Contact list table page
+- [update] Styles upgrade for filter dropdown
+- [update] Optimized some library scripts and stylesheets
+- [update] Removed import/export tabs from Tools
+- [update] Some backend optimization in Accounting
+- [update] Filtering use case of dropdown has been improved in leave entitlement form
+- [update] Responsive design in modules and extension page
+- [update] Optimized extension icons to make the page more smooth and lightweight
+- [update] Filter dropdown buttons design upgrade
+- [fix] Employee address was unable to update
+- [fix] Adding new customer/vendor with an email that exist in CRM was showing error
+- [fix] All transaction payment chart was not showing amounts correctly
+- [fix] Some incompatible API response issues on products and customers in accounting
+- [fix] Country and state was getting reset each time a customer is updated in accounting
+- [fix] Customer and vendor address was not showing correctly on frontend
+- [fix] Outside click event for transaction filter was generating error
+- [fix] Department dropdown was not showing all departments in some cases
+- [fix] JSON datatype issue in employee education table
+- [fix] Error regarding gmail api connection with CRM when google auth api returns error
+- [fix] Accounting manager permission checkbox option was not showing in employee permissions tab
+- [fix] Leave policy list page was showing empty after updating a policy
+- [fix] Some undefined index notice issues all over the plugin
 
 = v1.8.4 -> May 07, 2021 =
 --------------------------
