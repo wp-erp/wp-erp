@@ -652,9 +652,11 @@ function erp_insert_people( $args = [], $return_object = false ) {
 
             wp_cache_delete( 'erp_people_id_user_' . $user->ID, 'erp' );
 
-            foreach ( $args as $key => $value ) {
-                if ( ! update_user_meta( $user_id, $key, $value ) ) {
-                    $unchanged_data[ $key ] = $value;
+            if ( 'employee' !== $people_type ) {
+                foreach ( $args as $key => $value ) {
+                    if ( ! update_user_meta( $user_id, $key, $value ) ) {
+                        $unchanged_data[ $key ] = $value;
+                    }
                 }
             }
         }
