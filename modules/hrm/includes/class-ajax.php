@@ -117,6 +117,11 @@ class Ajax_Handler {
 
         // Get leave & holiday data for hr dashboard calender
         $this->action( 'wp_ajax_erp-hr-get-leave-by-date', 'get_leave_holiday_by_date' );
+        
+        // AJAX hooks for employee requests
+        $this->action( 'wp_ajax_erp_hr_employee_get_requests', 'get_employee_requests' );
+        $this->action( 'wp_ajax_erp_hr_get_total_pending_requests', 'get_total_pending_requests' );
+        $this->action( 'wp_ajax_erp_hr_employee_requests_bulk_action', 'employee_requests_bulk_action' );
     }
 
     /**
@@ -1546,33 +1551,37 @@ class Ajax_Handler {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
-        $employee_id = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
+        $employee_id  = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
 
         // Check permission
         if ( ! current_user_can( 'erp_edit_employee', $employee_id ) ) {
             $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
-        $edu_id      = isset( $_POST['edu_id'] ) ? intval( $_POST['edu_id'] ) : 0;
-        $school      = isset( $_POST['school'] ) ? sanitize_text_field( wp_unslash( $_POST['school'] ) ) : '';
-        $degree      = isset( $_POST['degree'] ) ? sanitize_text_field( wp_unslash( $_POST['degree'] ) ) : '';
-        $field       = isset( $_POST['field'] ) ? sanitize_text_field( wp_unslash( $_POST['field'] ) ) : '';
-        $result_type = isset( $_POST['result_type'] ) ? sanitize_text_field( wp_unslash( $_POST['result_type'] ) ) : null;
-        $finished    = isset( $_POST['finished'] ) ? intval( $_POST['finished'] ) : '';
-        $notes       = isset( $_POST['notes'] ) ? sanitize_text_field( wp_unslash( $_POST['notes'] ) ) : '';
-        $interest    = isset( $_POST['interest'] ) ? sanitize_text_field( wp_unslash( $_POST['interest'] ) ) : '';
-        $exp_date    = isset( $_POST['expiration_date'] ) ? sanitize_text_field( wp_unslash( $_POST['expiration_date'] ) ) : '';
-
+        $edu_id       = isset( $_POST['edu_id'] ) ? intval( $_POST['edu_id'] ) : 0;
+        $school       = isset( $_POST['school'] ) ? sanitize_text_field( wp_unslash( $_POST['school'] ) ) : '';
+        $degree       = isset( $_POST['degree'] ) ? sanitize_text_field( wp_unslash( $_POST['degree'] ) ) : '';
+        $field        = isset( $_POST['field'] ) ? sanitize_text_field( wp_unslash( $_POST['field'] ) ) : '';
+        $result_type  = isset( $_POST['result_type'] ) ? sanitize_text_field( wp_unslash( $_POST['result_type'] ) ) : null;
+        $finished     = isset( $_POST['finished'] ) ? intval( $_POST['finished'] ) : '';
+        $notes        = isset( $_POST['notes'] ) ? sanitize_text_field( wp_unslash( $_POST['notes'] ) ) : '';
+        $interest     = isset( $_POST['interest'] ) ? sanitize_text_field( wp_unslash( $_POST['interest'] ) ) : '';
+        $exp_date     = isset( $_POST['expiration_date'] ) ? sanitize_text_field( wp_unslash( $_POST['expiration_date'] ) ) : '';
         $result_gpa   = isset( $_POST['gpa'] ) ? sanitize_text_field( wp_unslash( $_POST['gpa'] ) ) : NULL;
         $result_scale = isset( $_POST['scale'] ) ? sanitize_text_field( wp_unslash( $_POST['scale'] ) ) : NULL;
-        $result       = json_encode( [ 'gpa' => $result_gpa, 'scale' => $result_scale ] );
+        
+        $result       = [ 'gpa' => $result_gpa ];
 
-        $fields = [
+        if ( 'grade' === $result_type ) {
+            $result['scale'] = $result_scale;
+        }
+
+        $fields       = [
             'id'              => $edu_id,
             'school'          => $school,
             'degree'          => $degree,
             'field'           => $field,
-            'result'          => $result,
+            'result'          => json_encode( $result ),
             'result_type'     => $result_type,
             'finished'        => $finished,
             'notes'           => $notes,
@@ -1580,7 +1589,7 @@ class Ajax_Handler {
             'expiration_date' => $exp_date,
         ];
 
-        $employee = new Employee( $employee_id );
+        $employee     = new Employee( $employee_id );
 
         if ( ! $employee->is_employee() ) {
             $this->send_error( __( 'You have to be an employee to do this action', 'erp' ) );
@@ -2221,5 +2230,183 @@ class Ajax_Handler {
         $event_data = array_merge( $events, $holiday_events );
 
         $this->send_success( $event_data );
+    }
+
+    /**
+     * Retrieves employee requests
+     * 
+     * @since 1.8.5
+     * 
+     * @return mixed
+     */
+    public function get_employee_requests() {
+        $this->verify_nonce( 'wp-erp-hr-nonce' );
+
+        if ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'erp_hr_manager' ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
+        $request_type = ! empty( $_REQUEST['type'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['type'] ) ) : '';
+
+        if ( empty( $request_type ) || ! array_key_exists( $request_type, erp_hr_get_employee_requests_types() ) ) {
+            $this->send_error( __( 'Invalid request type!', 'erp' ) );
+        }
+
+        if ( isset( $_REQUEST['date'] ) ) {
+            $date = $_REQUEST['date'];
+
+            array_walk( $date, function( &$value, $key ) {
+                $value = sanitize_text_field( wp_unslash( $value ) );
+            });
+
+            $args['date'] = $date;
+        }
+
+        $page_no          = ! empty( $_REQUEST['page'] )     ? intval( wp_unslash( $_REQUEST['page'] ) )                  : 1;
+        $args['status']   = ! empty( $_REQUEST['status'] )   ? sanitize_text_field( wp_unslash( $_REQUEST['status'] ) )   : '';
+        $args['order_by'] = ! empty( $_REQUEST['order_by'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['order_by'] ) ) : '';
+        $args['order']    = ! empty( $_REQUEST['order'] )    ? sanitize_text_field( wp_unslash( $_REQUEST['order'] ) )    : '';
+        $args['user_id']  = ! empty( $_REQUEST['user_id'] )  ? intval( wp_unslash( $_REQUEST['user_id'] ) )               : 0;
+        $args['number']   = ! empty( $_REQUEST['per_page'] ) ? intval( wp_unslash( $_REQUEST['per_page'] ) )              : 20;
+        $args['offset']   = ( $page_no - 1 ) * $args['number'];
+
+        switch ( $request_type ) {
+            case 'leave':
+                if ( ! empty( $args['date'] ) && ! empty( $args['date']['start'] ) && ! empty( $args['date']['end'] ) ) {
+                    $args['start_date'] = $args['date']['start'];
+                    $args['end_date']   = $args['date']['end'];
+
+                    unset( $args['date'] );
+                }
+
+                $results     = erp_hr_get_leave_requests( $args );
+                $date_format = erp_get_date_format( 'Y-m-d' );
+
+                if ( is_wp_error( $results ) ) {
+                    $this->send_error( __( 'Something went wrong!', 'erp' ) );
+                }
+
+                $requests = [];
+                $data     = [];
+
+                foreach ( $results['data'] as $result ) {
+                    $result = (array) $result;
+
+                    $data[] = [
+                        'id'         => $result['id'],
+                        'employee'   => [
+                            'id'     => $result['user_id'],
+                            'name'   => $result['name'],
+                            'url'    => add_query_arg(
+                                [ 'id' => $result['user_id'] ],
+                                admin_url( 'admin.php?page=erp-hr&section=people&sub-section=employee&action=view' )
+                            )
+                        ],
+                        'status'     => [
+                            'id'     => $result['status'],
+                            'title'  => $result['status'] == 1 ? __( 'Approved', 'erp' ) : (
+                                        $result['status'] == 2 ? __( 'Pending', 'erp' )  : (
+                                        $result['status'] == 3 ? __( 'Rejected', 'erp' ) : ''
+                                    ) )
+                        ],
+                        'duration'   => (int) $result['days'],
+                        'type'       => [
+                            'id'     => 'leave',
+                            'title'  => __( 'Leave', 'erp' )
+                        ],
+                        'reason'     => [
+                            'id'     => $result['reason'],
+                            'title'  => $result['reason']
+                        ],
+                        'start_date' => gmdate( $date_format, $result['start_date'] ),
+                        'end_date'   => gmdate( $date_format, $result['end_date'] )
+                    ];
+                }
+
+                $requests = [
+                    'data'        => ! empty( $data ) ? $data : [],
+                    'total_items' => ! empty( $results['total'] ) ? $results['total'] : 0
+                ];
+
+                break;
+
+            default:
+                $requests = apply_filters( "erp_hr_get_employee_{$request_type}_requests", $args, $request_type );
+        }
+
+        if ( is_wp_error( $requests ) ) {
+            $this->send_error( __( 'Something went wrong!', 'erp' ) );
+        }
+
+        $this->send_success( $requests );
+    }
+
+    /**
+     * Retrieves total pending requests
+     * 
+     * @since 1.8.5
+     *
+     * @return int
+     */
+    public function get_total_pending_requests() {
+        $requests = erp_hr_get_employee_pending_requests_count();
+        $pending  = 0;
+
+        foreach ( $requests as $type => $count ) {
+            $pending += (int) $count;
+        }
+
+        $this->send_success( $pending );
+    }
+
+    /**
+     * Processes bulk action on employee requests
+     * 
+     * @since 1.8.5
+     * 
+     * @return mixed
+     */
+    public function employee_requests_bulk_action() {
+        $this->verify_nonce( 'wp-erp-hr-nonce' );
+
+        if ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'erp_hr_manager' ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
+        $request_type = ! empty( $_REQUEST['req_type'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['req_type'] ) ) : '';
+
+        if ( empty( $request_type ) || ! array_key_exists( $request_type, erp_hr_get_employee_requests_types() ) ) {
+            $this->send_error( __( 'Invalid request type!', 'erp' ) );
+        }
+
+        $req_ids = [];
+
+        if ( ! empty( $_REQUEST['req_id'] ) ) {
+            $req_ids = $_REQUEST['req_id'];
+
+            array_walk( $req_ids, function( &$id, $index ) {
+                $id = intval( wp_unslash( $id) );
+            } );
+        }
+
+        $action = ! empty( $_REQUEST['action_type'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['action_type'] ) ) : '';
+        
+        $result = apply_filters( "erp_hr_employee_{$request_type}_request_bulk_action", $req_ids, $action );
+
+        if ( is_wp_error( $result ) ) {
+            $this->send_error( __( 'Something went wrong! Try again later.', 'erp' ) );
+        }
+
+        if ( 0 === count( $result ) && 'deleted' !== $action ) {
+            $this->send_error( __( sprintf( 'No pending item found. Selected item(s) are already approved/rejected.', $operation ), 'erp' ) );
+        }
+
+        $item_status = 'deleted' !== $action ? 'pending ' : '';
+
+        if ( 1 === count( $result ) ) {
+            $this->send_success( sprintf( __( '1 %1$sitem has been %2$s successfully', 'erp' ), $item_status, $action ) );
+        }
+
+        $this->send_success( sprintf( __( '%1$s %2$sitems have been %3$s successfully', 'erp' ), count( $result ), $item_status, $action ) );
     }
 }

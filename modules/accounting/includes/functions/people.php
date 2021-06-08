@@ -92,6 +92,47 @@ function erp_acct_add_employee_as_people( $data, $update = false ) {
 }
 
 /**
+ * Inserts accounting people
+ * 
+ * @since 1.8.5
+ *
+ * @param array $args
+ * 
+ * @return mixed
+ */
+function erp_acct_insert_people( $args ) {
+    $people = erp_get_people_by( 'email', $args['email'] );
+
+    // this $email belongs to nobody
+    if ( ! $people ) {
+        return erp_insert_people( $args );
+    }
+        
+    foreach ( $args as $key => $value ) {
+        if ( empty( $args[ $key ] ) ) {
+            unset( $args[ $key ] );
+        }
+    }
+
+    $args = wp_parse_args( $args, (array) $people );
+    $id   = erp_insert_people( $args );
+
+    if ( ! is_wp_error( $id ) ) {
+        global $wpdb;
+
+        $type_id = erp_acct_get_people_type_id_by_name( $args['type'] );
+        
+        $wpdb->insert(
+            "{$wpdb->prefix}erp_people_type_relations",
+            [ 'people_id' => $id, 'people_types_id' => $type_id ],
+            [ '%d', '%d' ]
+        );
+    }
+
+    return $id;
+}
+
+/**
  * Get transaction by date
  *
  * @param int   $people_id
@@ -342,6 +383,30 @@ function erp_acct_get_people_type_by_type_id( $type_id ) {
     $row = $wpdb->get_row( $wpdb->prepare( "SELECT name FROM {$wpdb->prefix}erp_people_types WHERE id = %d LIMIT 1", $type_id ) );
 
     return $row->name;
+}
+
+/**
+ * Get people type name by type id
+ * 
+ * @since 1.8.5
+ *
+ * @param $type_name
+ *
+ * @return int|string
+ */
+function erp_acct_get_people_type_id_by_name( $type_name ) {
+    global $wpdb;
+
+    $row = $wpdb->get_row(
+        $wpdb->prepare(
+            "SELECT id
+            FROM {$wpdb->prefix}erp_people_types
+            WHERE name = %s LIMIT 1",
+            $type_name
+        )
+    );
+
+    return $row->id;
 }
 
 /**

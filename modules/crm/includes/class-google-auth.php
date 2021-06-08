@@ -61,7 +61,12 @@ class Google_Auth {
 
         $token = get_option( 'erp_google_access_token' );
 
-        if ( !empty( $token ) ) {
+        if ( array_key_exists( 'error', (array) $token ) ) {
+            $token = [];
+            update_option( 'erp_google_access_token', $token );
+        }
+
+        if ( ! empty( $token ) ) {
             $client->setAccessToken( $token );
         }
 

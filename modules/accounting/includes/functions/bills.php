@@ -57,27 +57,29 @@ function erp_acct_get_bill( $bill_no ) {
     $sql = $wpdb->prepare(
         "SELECT
 
-    voucher.editable,
-    bill.id,
-    bill.voucher_no,
-    bill.vendor_id,
-    bill.vendor_name,
-    bill.address AS billing_address,
-    bill.trn_date,
-    bill.due_date,
-    bill.amount,
-    bill.ref,
-    bill.particulars,
-    bill.status,
-    bill.created_at,
-    bill.attachments
+            voucher.editable,
+            bill.id,
+            bill.voucher_no,
+            bill.vendor_id,
+            bill.vendor_name,
+            bill.address AS billing_address,
+            bill.trn_date,
+            bill.due_date,
+            bill.amount,
+            bill.ref,
+            bill.particulars,
+            bill.status,
+            bill.created_at,
+            bill.attachments
 
-    FROM {$wpdb->prefix}erp_acct_bills AS bill
-    LEFT JOIN {$wpdb->prefix}erp_acct_voucher_no as voucher ON bill.voucher_no = voucher.id
-    LEFT JOIN {$wpdb->prefix}erp_acct_bill_account_details AS b_ac_detail ON bill.voucher_no = b_ac_detail.trn_no
-    WHERE bill.voucher_no = %d",
+        FROM {$wpdb->prefix}erp_acct_bills AS bill
+        LEFT JOIN {$wpdb->prefix}erp_acct_voucher_no as voucher ON bill.voucher_no = voucher.id
+        LEFT JOIN {$wpdb->prefix}erp_acct_bill_account_details AS b_ac_detail ON bill.voucher_no = b_ac_detail.trn_no
+        WHERE bill.voucher_no = %d",
         $bill_no
     );
+
+    erp_disable_mysql_strict_mode();
 
     $row = $wpdb->get_row( $sql, ARRAY_A );
 
@@ -98,13 +100,13 @@ function erp_acct_format_bill_line_items( $voucher_no ) {
 
     $sql = $wpdb->prepare(
         "SELECT
-        b_detail.id,
-        b_detail.trn_no,
-        b_detail.ledger_id,
-        b_detail.particulars,
-        b_detail.amount,
+            b_detail.id,
+            b_detail.trn_no,
+            b_detail.ledger_id,
+            b_detail.particulars,
+            b_detail.amount,
 
-        ledger.name AS ledger_name
+            ledger.name AS ledger_name
 
         FROM {$wpdb->prefix}erp_acct_bills AS bill
         LEFT JOIN {$wpdb->prefix}erp_acct_bill_details AS b_detail ON bill.voucher_no = b_detail.trn_no
@@ -112,6 +114,8 @@ function erp_acct_format_bill_line_items( $voucher_no ) {
         WHERE bill.voucher_no = %d",
         $voucher_no
     );
+
+    erp_disable_mysql_strict_mode();
 
     return $wpdb->get_results( $sql, ARRAY_A );
 }
