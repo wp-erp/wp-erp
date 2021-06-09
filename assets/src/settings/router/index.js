@@ -7,6 +7,7 @@ import HRLeaveYears from 'settings/components/hr/leave-years/HRLeaveYears.vue';
 import HRMiscellaneous from 'settings/components/hr/miscellaneous/HRMiscellaneous.vue';
 import HRFrontend from 'settings/components/hr/hr-frontend/HRFrontend.vue';
 import HRRecruitment from 'settings/components/hr/recruitment/HRRecruitment.vue';
+import HRRemoteWork from 'settings/components/hr/remote-work/HRRemoteWork.vue';
 import HrPayment from 'settings/components/hr/payroll/HrPayment.vue';
 import HrPayItem from 'settings/components/hr/payroll/HrPayItem.vue';
 import HRAttendance from 'settings/components/hr/attendance/HRAttendance.vue';
@@ -67,6 +68,11 @@ export default new Router({
                     path: 'recruitment',
                     name: 'HRRecruitment',
                     component: HRRecruitment
+                },
+                {
+                    path: 'remote_work',
+                    name: 'HRRemoteWork',
+                    component: HRRemoteWork
                 },
                 {
                     path: 'payroll',
