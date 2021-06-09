@@ -2,6 +2,9 @@
 
 namespace WeDevs\ERP;
 
+use WeDevs\ERP\Framework\Ajax_Handler;
+use WeDevs\ERP\Framework\Settings_Assets;
+
 /**
  * Administration Settings menu
  */
@@ -31,5 +34,8 @@ class Settings {
         wp_enqueue_script( 'erp-tiptip' );
         wp_enqueue_script( 'wp-color-picker' );
         wp_enqueue_script( 'erp-admin-settings' );
+
+        // Add/Register scripts for SPA
+        new Settings_Assets();
     }
 }
