@@ -226,6 +226,7 @@ final class WeDevs_ERP {
         require_once WPERP_INCLUDES . '/functions-html.php';
         require_once WPERP_INCLUDES . '/functions-company.php';
         require_once WPERP_INCLUDES . '/functions-people.php';
+        require_once WPERP_INCLUDES . '/functions-settings.php';
         require_once WPERP_INCLUDES . '/api/class-api-registrar.php';
         require_once WPERP_INCLUDES . '/class-i18n.php';
         require_once WPERP_INCLUDES . '/functions-cache-helper.php';
@@ -278,6 +279,7 @@ final class WeDevs_ERP {
         new \WeDevs\ERP\AddonTask();
         new \WeDevs\ERP\ERP_i18n();
         new \WeDevs\ERP\Validate_Data();
+        new \WeDevs\ERP\Framework\Ajax_Handler();
 
         // Appsero Tracker
         \WeDevs\ERP\Tracker::get_instance()->init();
