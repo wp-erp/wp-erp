@@ -13,6 +13,7 @@ class Settings extends ERP_Settings_Page {
         $this->label         = __( 'Accounting', 'erp' );
         $this->single_option = true;
         $this->sections      = $this->get_sections();
+        $this->icon          = WPERP_ASSETS . '/images/wperp-settings/accounting.png';
 
         add_action( 'erp_admin_field_acct_opening_balance', [ $this, 'acct_opening_balance' ] );
     }
