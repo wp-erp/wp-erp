@@ -59,6 +59,11 @@ class Ajax_Handler {
                 $has_not_permission = $has_not_permission && ! current_user_can( 'erp_hr_manager' );
                 break;
 
+            case 'erp-ac':
+                $settings           = ( new \WeDevs\ERP\Accounting\Includes\Classes\Settings() );
+                $has_not_permission = $has_not_permission;
+                break;
+
             default:
                 $settings = ( new \WeDevs\ERP\Framework\ERP_Settings_Page() );
                 break;
