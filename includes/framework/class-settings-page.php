@@ -102,6 +102,11 @@ class ERP_Settings_Page {
                 $options = $this->get_settings();
             }
 
+            // Modify options for some sections
+            if ( $section === 'payroll' ) {
+                $options = $options['payment'];
+            }
+
             // Options to update will be stored here
             $update_options = [];
 

@@ -7,7 +7,8 @@ import HRLeaveYears from 'settings/components/hr/leave-years/HRLeaveYears.vue';
 import HRMiscellaneous from 'settings/components/hr/miscellaneous/HRMiscellaneous.vue';
 import HRFrontend from 'settings/components/hr/hr-frontend/HRFrontend.vue';
 import HRRecruitment from 'settings/components/hr/recruitment/HRRecruitment.vue';
-import HRPayroll from 'settings/components/hr/payroll/HRPayroll.vue';
+import HrPayment from 'settings/components/hr/payroll/HrPayment.vue';
+import HrPayItem from 'settings/components/hr/payroll/HrPayItem.vue';
 import HRAttendance from 'settings/components/hr/attendance/HRAttendance.vue';
 
 Vue.use(Router);
@@ -69,8 +70,26 @@ export default new Router({
                 },
                 {
                     path: 'payroll',
-                    name: 'HRPayroll',
-                    component: HRPayroll
+                    name: 'HrPayroll',
+                    component: {
+                        render(c) {
+                            return c('router-view');
+                        }
+                    },
+                    children: [
+                        {
+                            path: 'payment',
+                            name: 'HrPayment',
+                            component: HrPayment,
+                            alias: '/'
+                        },
+                        {
+                            path: 'payitem',
+                            name: 'HrPayItem',
+                            component: HrPayItem,
+                            alias: 'payitem'
+                        },
+                    ]
                 },
                 {
                     path: 'attendance',

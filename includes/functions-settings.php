@@ -23,9 +23,7 @@ function erp_settings_get_general () {
  * @return array $data settings data
  */
 function erp_settings_get_data ( $options = [] ) {
-
-    $data = [];
-
+    $data               = [];
     $single_option      = true;
     $single_option_data = [];
 
@@ -38,6 +36,8 @@ function erp_settings_get_data ( $options = [] ) {
     foreach ( $options as $option ) {
         if ( ! empty ( $option['id'] ) ) {
             $option_value = $single_option ? get_option( $option['id'] ) : $single_option_data[ $option['id'] ];
+
+            // var_dump( $option['id'] .' -->> ' .$option_value );
 
             switch ($option['type']) {
                 case 'checkbox':

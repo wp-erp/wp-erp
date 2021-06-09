@@ -64,6 +64,7 @@ export default {
         },
         enable_content: {
             type    : Boolean,
+            required: false
         }
     },
 

@@ -65,6 +65,40 @@
                 margin: 30px 0px 0px 0px;
                 padding: 30px;
                 border: 1px solid #DFE2E7;
+
+                .sub-sub-menu {
+                    margin-top: -15px;
+
+                    li {
+                        display: inline-block;
+
+                        a {
+                            border: 1px solid #E2E2E2;
+                            padding: 10px;
+                            color: #72777C;
+                            border-radius: 3px;
+                            background: #ECECEC;
+
+                            &.router-link-active {
+                                background: transparent !important;
+                            }
+                        }
+
+                        &:first-child a {
+                            border-radius: 3px 0px 0px 3px;
+                        }
+
+                        &:last-child a {
+                            border-radius: 0px 3px 3px 0px;
+                        }
+                    }
+                }
+
+                .sub-sub-title {
+                    font-weight: 700;
+                    font-size: 14px;
+                    margin: 40px 0px 30px 0px;
+                }
             }
         }
 
@@ -149,7 +183,7 @@
 
                 li {
                     display: inline-block;
-                    padding: 0px 20px 0px 0px;
+                    padding: 0px 25px 0px 0px;
 
                     a {
                         font-size: 14px;

@@ -58,6 +58,8 @@ class Settings_Assets {
 
         $menus = $this->get_settings_menus();
 
+        // dd( $menus );
+
         $general_fields = array_search('general', array_column( $menus, 'id' ) ) !== false ? $menus[ array_search('general', array_column( $menus, 'id' ) ) ]['fields'] : [];
         $hr_fields      = array_search('erp-hr', array_column( $menus, 'id' ) ) !== false ? $menus[ array_search('erp-hr', array_column( $menus, 'id' ) ) ]['fields'] : [];
         $crm_fields     = array_search('erp-crm', array_column( $menus, 'id' ) ) !== false ? $menus[ array_search('erp-crm', array_column( $menus, 'id' ) ) ]['fields'] : [];

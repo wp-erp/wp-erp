@@ -1,11 +1,10 @@
 <template>
-    <form
-        action=""
-        class="wperp-form"
-        method="post"
-        @submit.prevent="onFormSubmit"
-        enctype="multipart/form-data"
-    >
+    <form action="" class="wperp-form" method="post" @submit.prevent="onFormSubmit" enctype="multipart/form-data">
+
+        <h3 class="sub-sub-title" v-if="typeof sub_sub_section_title !== 'undefined' && sub_sub_section_title.length > 0">
+            {{ sub_sub_section_title }}
+        </h3>
+
         <div v-for="(input, index) in fields" :key="index">
             <div class="wperp-form-group">
                 <label>
@@ -17,6 +16,7 @@
                     v-model="fields[index]['value']"
                     class="wperp-form-field erp-select2"
                     v-if="input.type === 'select'"
+                    :id="fields[index]['id']"
                 >
                     <option
                         v-for="(item, key, indexOption) in input.options"
@@ -49,12 +49,14 @@
                         v-if="input.type === 'text' && input.class !== 'erp-date-field'"
                         v-model="fields[index]['value']"
                         class="wperp-form-field"
+                        :id="fields[index]['id']"
                     />
 
                     <date-picker v-if="input.type === 'text' && input.class === 'erp-date-field'"
                         class="wperp-form-field"
                         :placeholder="__( 'Select date', 'erp' )"
                         v-model="fields[index]['value']"
+                        :id="fields[index]['id']"
                     />
 
                     <textarea
@@ -63,6 +65,7 @@
                         rows="4"
                         v-model="fields[index]['value']"
                         class="wperp-form-field"
+                        :id="fields[index]['id']"
                     />
 
                     <p class="erp-form-input-hint" v-if="input.desc.length > 0 && ! input.tooltip">
@@ -75,6 +78,7 @@
                         v-model="fields[index]['value']"
                         @changeImage="(value) => changeImage(value, index)"
                         :value="fields[index]['value']"
+                        :id="fields[index]['id']"
                     />
                 </div>
             </div>
@@ -127,6 +131,10 @@ export default {
         single_option: {
             type: Boolean,
             required: true,
+        },
+        sub_sub_section_title: {
+            type: String,
+            required: false
         }
     },
 
@@ -221,7 +229,7 @@ export default {
 
         changeImage(value, index) {
             this.fields[index]["value"] = value;
-        },
+        }
     },
 };
 </script>
