@@ -32,7 +32,6 @@ class Ajax_Handler {
      */
     public function init_actions () {
         $this->action( 'wp_ajax_erp-settings-save', 'erp_settings_save' );
-        $this->action( 'wp_ajax_erp-settings-get-general-data', 'erp_settings_get_general' );
         $this->action( 'wp_ajax_erp-settings-get-data', 'erp_settings_get_data' );
     }
 
@@ -66,7 +65,7 @@ class Ajax_Handler {
         }
 
         if ( $has_not_permission ) {
-            $this->send_error( ['type' => 'error_permission'] );
+            $this->send_error( erp_get_message ( ['type' => 'error_permission'] ) );
         }
 
         $result = $settings->save( $section );
