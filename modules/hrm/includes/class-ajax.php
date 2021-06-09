@@ -117,11 +117,19 @@ class Ajax_Handler {
 
         // Get leave & holiday data for hr dashboard calender
         $this->action( 'wp_ajax_erp-hr-get-leave-by-date', 'get_leave_holiday_by_date' );
-        
+      
+      
         // AJAX hooks for employee requests
         $this->action( 'wp_ajax_erp_hr_employee_get_requests', 'get_employee_requests' );
         $this->action( 'wp_ajax_erp_hr_get_total_pending_requests', 'get_total_pending_requests' );
         $this->action( 'wp_ajax_erp_hr_employee_requests_bulk_action', 'employee_requests_bulk_action' );
+
+        // Settings
+        $this->action( 'wp_ajax_erp-settings-workdays-get-data', 'erp_settings_get_workdays' );
+        $this->action( 'wp_ajax_erp-settings-leave-get-data', 'erp_settings_get_leaves' );
+        $this->action( 'wp_ajax_erp-settings-miscellaneous-get-data', 'erp_settings_get_miscellaneous' );
+        $this->action( 'wp_ajax_erp-settings-get-hr-financial-years', 'erp_settings_get_hr_financial_years' );
+        $this->action( 'wp_ajax_erp-settings-financial-years-save', 'erp_settings_save_hr_financial_years' );
     }
 
     /**
@@ -2409,4 +2417,120 @@ class Ajax_Handler {
 
         $this->send_success( sprintf( __( '%1$s %2$sitems have been %3$s successfully', 'erp' ), count( $result ), $item_status, $action ) );
     }
-}
+  
+    /**
+     * Get Settings Data For HR Workdays Section
+     *
+     * @since 1.8.6
+     *
+     * @return void
+     */
+    public function erp_settings_get_workdays() {
+        try {
+
+            if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-settings-nonce' ) ) {
+                $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+            }
+
+            $data = erp_settings_get_workdays();
+
+            $this->send_success( $data );
+        } catch (\Exception $e) {
+            $this->send_error( $e->getMessage() );
+        }
+    }
+
+    /**
+     * Get Settings Data For HR Workdays Section
+     *
+     * @since 1.8.6
+     *
+     * @return void
+     */
+    public function erp_settings_get_leaves() {
+        try {
+
+            if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-settings-nonce' ) ) {
+                $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+            }
+
+            $data = erp_settings_get_leaves();
+
+            $this->send_success( $data );
+        } catch (\Exception $e) {
+            $this->send_error( $e->getMessage() );
+        }
+    }
+
+    /**
+     * Get Settings Data For Miscellaneous
+     *
+     * @since 1.8.6
+     *
+     * @return void
+     */
+    public function erp_settings_get_miscellaneous() {
+        try {
+
+            if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-settings-nonce' ) ) {
+                $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+            }
+
+            $data = erp_settings_get_miscellaneous();
+
+            $this->send_success( $data );
+        } catch (\Exception $e) {
+            $this->send_error( $e->getMessage() );
+        }
+    }
+
+    /**
+     * Get Settings Data For HR Financial years
+     *
+     * @since 1.8.6
+     *
+     * @return void
+     */
+    public function erp_settings_get_hr_financial_years() {
+        try {
+
+            if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-settings-nonce' ) ) {
+                $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+            }
+
+            $years = erp_get_hr_financial_years();
+
+            $this->send_success( $years );
+        } catch (\Exception $e) {
+            $this->send_error( $e->getMessage() );
+        }
+    }
+
+    /**
+     * Save Settings for HR Financial Years
+     *
+     * @since 1.8.6
+     *
+     * @return void
+     */
+    public function erp_settings_save_hr_financial_years() {
+        try {
+          
+            if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-settings-nonce' ) ) {
+                $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+            }
+
+            $inserted = erp_settings_save_leave_years( $_POST['fyears'] );
+
+            if ( is_wp_error( $inserted ) ) {
+                $this->send_error( __( $inserted->get_error_message(), 'erp' ) );
+            }
+
+            $this->send_success( [
+                'data'    => $inserted,
+                'message' => __( 'Settings saved successfully !', 'erp' )
+            ] );
+        } catch (\Exception $e) {
+            $this->send_error( $e->getMessage() );
+        }
+    }

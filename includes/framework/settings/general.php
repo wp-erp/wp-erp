@@ -1,5 +1,7 @@
 <?php
 
+namespace WeDevs\ERP\Framework\Settings;
+
 use WeDevs\ERP\Framework\ERP_Settings_Page;
 
 /**
@@ -9,6 +11,7 @@ class ERP_Settings_General extends ERP_Settings_Page {
     public function __construct() {
         $this->id    = 'general';
         $this->label = __( 'General', 'erp' );
+        $this->icon = WPERP_ASSETS . '/images/wperp-settings/general.png';
     }
 
     /**
@@ -90,6 +93,10 @@ class ERP_Settings_General extends ERP_Settings_Page {
         ]; // End general settings
 
         return apply_filters( 'erp_settings_general', $fields );
+    }
+
+    public function get_section_fields( $section = false ) {
+        return $this->get_settings();
     }
 }
 

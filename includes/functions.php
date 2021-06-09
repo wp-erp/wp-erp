@@ -3420,7 +3420,6 @@ function erp_sanitize_phone_number( $phone_no, $allow_plus = false ) {
     return $result;
 }
 
-/**
  * Checks if a user has permission to view a page
  * 
  * @since 1.8.5
@@ -3451,4 +3450,66 @@ function erp_disable_mysql_strict_mode() {
 
     $wpdb->query( "SET SESSION SQL_MODE=''" );
     $wpdb->query( "SET SQL_BIG_SELECTS=1" );
+}
+
+ * Get Standarized message for erp
+ *
+ * @since 1.8.6
+ *
+ * @param array $args
+ *
+ * @return string
+ */
+function erp_get_message( $args = [] ) {
+
+    $defaults = [
+        'type'         => '',
+        'message'      => '',
+        'additional'   => null,
+        'append_first' => true
+    ];
+
+    $args = wp_parse_args( $args, $defaults );
+
+    switch ( $args['type'] ) {
+
+        case 'error_nonce':
+            $args['message'] = 'Nonce verification failed!';
+            break;
+
+        case 'error_permission':
+            $args['message'] = 'You do not have sufficient permissions to do this action';
+            break;
+
+        case 'error_process':
+            $args['message'] = 'Could not process the request. Try again later!';
+            break;
+
+        case 'save_success':
+            $args['message'] = 'Saved Successfully!';
+            break;
+
+        case 'update_success':
+            $args['message'] = 'Updated Successfully!';
+            break;
+
+        case 'insert_success':
+            $args['message'] = 'Created Successfully!';
+            break;
+
+        default:
+            break;
+    }
+
+    if ( ! empty( $args['additional'] ) ) {
+        if ( $args['append_first'] ) {
+            $args['message'] = $args['additional'] . ' ' . $args['message'];
+        } else {
+            $args['message'] .= ' ' . $args['additional'];
+        }
+    }
+
+    $args['message'] = __( $args['message'], 'erp' );
+
+    return $args['message'];
 }

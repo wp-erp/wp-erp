@@ -12,28 +12,35 @@ class ERP_Settings_Page {
      *
      * @var string
      */
-    protected $id = '';
+    public $id = '';
 
     /**
      * Page label
      *
      * @var string
      */
-    protected $label = '';
+    public $label = '';
 
     /**
      * Single options update or multiple
      *
      * @var bool
      */
-    protected $single_option = false;
+    public $single_option = false;
 
     /**
      * Section fields
      *
      * @var array
      */
-    protected $section_fields = [];
+    public $section_fields = [];
+
+    /**
+     * Icon For Section
+     *
+     * @var array
+     */
+    public $icon = "";
 
     /**
      * Get id
@@ -95,6 +102,11 @@ class ERP_Settings_Page {
                 $options = $this->get_settings();
             }
 
+            // Modify options for some sections
+            if ( $section === 'payroll' ) {
+                $options = $options['payment'];
+            }
+
             // Options to update will be stored here
             $update_options = [];
 
@@ -146,9 +158,7 @@ class ERP_Settings_Page {
                     }
                 } else {
                     update_option( $this->get_option_id(), $update_options );
-                } ?>
-                	<div id="message" class="updated notice is-dismissible"><p><strong><?php esc_html_e( 'Settings saved.' ); ?></strong></p></div>
-                <?php
+                }
             }
 
             do_action( 'erp_after_save_settings' );
@@ -167,7 +177,7 @@ class ERP_Settings_Page {
             // Standard types
             case 'checkbox':
 
-                if ( isset( $_POST[ $value['id'] ] ) ) {
+                if ( ! empty ( $_POST[ $value['id'] ] ) ) {
                     $option_value = 'yes';
                 } else {
                     $option_value = 'no';
@@ -203,7 +213,6 @@ class ERP_Settings_Page {
             case 'color':
             case 'password':
             case 'single_select_page':
-            case 'image':
             case 'radio':
             case 'hidden':
 
@@ -212,6 +221,45 @@ class ERP_Settings_Page {
                } else {
                    $option_value = '';
                }
+
+                break;
+
+            case 'image':
+                if ( isset( $_FILES[ $value['id'] ] ) ) {
+                    $file = $_FILES[ $value['id'] ];
+
+                    $upload = array(
+                        'name'     => $file['name'],
+                        'type'     => $file['type'],
+                        'tmp_name' => $file['tmp_name'],
+                        'error'    => $file['error'],
+                        'size'     => $file['size']
+                    );
+
+                    $uploaded_file = wp_handle_upload( $upload, array( 'test_form' => false ) );
+
+                    if ( isset( $uploaded_file['file'] ) ) {
+                        $file_loc  = $uploaded_file['file'];
+                        $file_name = $_FILES[ $value['id'] ]['name'];
+                        $file_type = wp_check_filetype( $file_name );
+
+                        $attachment = array(
+                            'post_mime_type' => $file_type['type'],
+                            'post_title'     => preg_replace( '/\.[^.]+$/', '', basename( $file_name ) ),
+                            'post_content'   => '',
+                            'post_status'    => 'erp_hr_rec'
+                        );
+
+                        $attach_id   = wp_insert_attachment( $attachment, $file_loc );
+                        $attach_data = wp_generate_attachment_metadata( $attach_id, $file_loc );
+
+                        wp_update_attachment_metadata( $attach_id, $attach_data );
+
+                        $option_value = $attach_id;
+                    }
+                } else {
+                    $option_value = '';
+                }
 
                 break;
 
@@ -781,4 +829,19 @@ class ERP_Settings_Page {
 
         return $option_value;
     }
+
+    /**
+     * Get settings options from the settings API.
+     *
+     * @param string $option_name
+     * @param array  $options
+     *
+     * @since 1.8.6
+     *
+     * @return array|object options
+     */
+    public function get_settings_options( $option_name, $default = [] ) {
+        return get_option( $option_name, $default );
+    }
+
 }
