@@ -7,7 +7,7 @@
 
         <div v-for="(input, index) in fields" :key="index">
             <div class="wperp-form-group">
-                <label>
+                <label :for="'erp-'+fields[index]['id']">
                     {{ input.title }}
                     <tooltip :text="input.desc" v-if="input.tooltip"/>
                 </label>
@@ -16,7 +16,7 @@
                     v-model="fields[index]['value']"
                     class="wperp-form-field erp-select2"
                     v-if="input.type === 'select'"
-                    :id="fields[index]['id']"
+                    :id="'erp-'+fields[index]['id']"
                 >
                     <option
                         v-for="(item, key, indexOption) in input.options"
@@ -33,7 +33,7 @@
                             v-model="fields[index]['value']"
                             type="checkbox"
                             class="form-check-input"
-                            :id="fields[index]['id']"
+                            :id="'erp-'+fields[index]['id']"
                         />
                         <span class="form-check-sign">
                             <span class="check"></span>
@@ -49,14 +49,14 @@
                         v-if="input.type === 'text' && input.class !== 'erp-date-field'"
                         v-model="fields[index]['value']"
                         class="wperp-form-field"
-                        :id="fields[index]['id']"
+                        :id="'erp-'+fields[index]['id']"
                     />
 
                     <date-picker v-if="input.type === 'text' && input.class === 'erp-date-field'"
                         class="wperp-form-field"
                         :placeholder="__( 'Select date', 'erp' )"
                         v-model="fields[index]['value']"
-                        :id="fields[index]['id']"
+                        :id="'erp-'+fields[index]['id']"
                     />
 
                     <textarea
@@ -65,7 +65,7 @@
                         rows="4"
                         v-model="fields[index]['value']"
                         class="wperp-form-field"
-                        :id="fields[index]['id']"
+                        :id="'erp-'+fields[index]['id']"
                     />
 
                     <p class="erp-form-input-hint" v-if="input.desc.length > 0 && ! input.tooltip">
@@ -78,7 +78,7 @@
                         v-model="fields[index]['value']"
                         @changeImage="(value) => changeImage(value, index)"
                         :value="fields[index]['value']"
-                        :id="fields[index]['id']"
+                        :id="'erp-'+fields[index]['id']"
                     />
                 </div>
             </div>
