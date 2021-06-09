@@ -124,10 +124,8 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp_hr_get_total_pending_requests', 'get_total_pending_requests' );
         $this->action( 'wp_ajax_erp_hr_employee_requests_bulk_action', 'employee_requests_bulk_action' );
 
-        // Settings
-        $this->action( 'wp_ajax_erp-settings-workdays-get-data', 'erp_settings_get_workdays' );
+        // AJAX hooks for Settings Actions
         $this->action( 'wp_ajax_erp-settings-leave-get-data', 'erp_settings_get_leaves' );
-        $this->action( 'wp_ajax_erp-settings-miscellaneous-get-data', 'erp_settings_get_miscellaneous' );
         $this->action( 'wp_ajax_erp-settings-get-hr-financial-years', 'erp_settings_get_hr_financial_years' );
         $this->action( 'wp_ajax_erp-settings-financial-years-save', 'erp_settings_save_hr_financial_years' );
     }
@@ -2425,28 +2423,6 @@ class Ajax_Handler {
      *
      * @return void
      */
-    public function erp_settings_get_workdays() {
-        try {
-
-            if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-settings-nonce' ) ) {
-                $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
-            }
-
-            $data = erp_settings_get_workdays();
-
-            $this->send_success( $data );
-        } catch (\Exception $e) {
-            $this->send_error( $e->getMessage() );
-        }
-    }
-
-    /**
-     * Get Settings Data For HR Workdays Section
-     *
-     * @since 1.8.6
-     *
-     * @return void
-     */
     public function erp_settings_get_leaves() {
         try {
 
@@ -2455,28 +2431,6 @@ class Ajax_Handler {
             }
 
             $data = erp_settings_get_leaves();
-
-            $this->send_success( $data );
-        } catch (\Exception $e) {
-            $this->send_error( $e->getMessage() );
-        }
-    }
-
-    /**
-     * Get Settings Data For Miscellaneous
-     *
-     * @since 1.8.6
-     *
-     * @return void
-     */
-    public function erp_settings_get_miscellaneous() {
-        try {
-
-            if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-settings-nonce' ) ) {
-                $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
-            }
-
-            $data = erp_settings_get_miscellaneous();
 
             $this->send_success( $data );
         } catch (\Exception $e) {
