@@ -6,11 +6,20 @@
                 <a href="" id="erp-customer-new" @click.prevent="showModal = true">{{ __('Add New', 'erp') }} {{ buttonTitle }}</a>
             </h2>
 
+            <div class="erp-btn-group">
+                <button @click.prevent="showImportModal = true">{{ __( 'Import', 'erp' ) }}</button>
+                <button @click.prevent="showExportModal = true">{{ __( 'Export', 'erp' ) }}</button>
+            </div>
+
             <!-- top search bar -->
             <people-search v-model="search" />
         </div>
 
         <people-modal v-if="showModal" :people.sync="people" :title="buttonTitle" @close="showModal = false" />
+
+        <import-modal v-if="showImportModal" :title="importTitle" :type="url" @close="showImportModal = false" />
+
+        <export-modal v-if="showExportModal" :title="exportTitle" :type="url" @close="showExportModal = false" />
 
         <list-table
             tableClass="wperp-table people-table table-striped table-dark "
@@ -45,6 +54,8 @@ import HTTP from 'admin/http';
 import PeopleSearch from 'admin/components/people/PeopleSearch.vue';
 import ListTable from 'admin/components/list-table/ListTable.vue';
 import PeopleModal from 'admin/components/people/PeopleModal.vue';
+import ImportModal from 'admin/components/people/ImportModal.vue';
+import ExportModal from 'admin/components/people/ExportModal.vue';
 
 export default {
     name: 'People',
@@ -52,7 +63,9 @@ export default {
     components: {
         PeopleSearch,
         ListTable,
-        PeopleModal
+        PeopleModal,
+        ImportModal,
+        ExportModal,
     },
 
     data() {
@@ -85,7 +98,11 @@ export default {
             ],
             search: '',
             showModal             : false,
+            showImportModal       : false,
+            showExportModal       : false,
             buttonTitle           : '',
+            importTitle           : '',
+            exportTitle           : '',
             pageTitle             : '',
             url                   : '',
             singleUrl             : '',
@@ -97,8 +114,10 @@ export default {
         this.$store.dispatch('spinner/setSpinner', true);
 
         this.$on('modal-close', () => {
-            this.showModal = false;
-            this.people = null;
+            this.showModal       = false;
+            this.showImportModal = false;
+            this.showExportModal = false;
+            this.people          = null;
         });
 
         this.$root.$on('peopleUpdate', () => {
@@ -106,7 +125,14 @@ export default {
             this.fetchItems();
         });
 
+        this.$root.$on('imported-people', () => {
+            this.showImportModal = false;
+            this.fetchItems();
+        });
+
         this.buttonTitle = (this.$route.name.toLowerCase() === 'customers') ? __('Customer', 'erp') : __('Vendor', 'erp');
+        this.importTitle = (this.$route.name.toLowerCase() === 'customers') ? __('Import Customers', 'erp') : __('Import Vendors', 'erp');
+        this.exportTitle = (this.$route.name.toLowerCase() === 'customers') ? __('Export Customers', 'erp') : __('Export Vendors', 'erp');
         this.pageTitle   = (this.$route.name.toLowerCase() === 'customers') ? __('Customers', 'erp') : __('Vendors', 'erp');
         this.url         = this.$route.name.toLowerCase();
         this.singleUrl   = (this.url === 'customers') ? 'CustomerDetails' : 'VendorDetails';
@@ -159,16 +185,18 @@ export default {
                 if (confirm(__('Are you sure to delete?', 'erp'))) {
                     this.$store.dispatch('spinner/setSpinner', true);
                     HTTP.delete(this.url + '/' + row.id).then(response => {
-                        if ( response.data.success ) {
-                            this.$delete(this.rows, index);
-
+                        if ( response.status !== 204 ) {
                             this.$store.dispatch('spinner/setSpinner', false);
-                            this.showAlert('success', __('Deleted !', 'erp'));
+                            this.showAlert('error', response.data.data[0].message);
+                            // or loop through the erros and show a list
+                            return;
                         }
 
+                        this.$delete(this.rows, index);
                         this.$store.dispatch('spinner/setSpinner', false);
-                        this.showAlert('error', response.data.data[0].message);
-                        // or loop through the erros and show a list
+                        this.showAlert('success', 'Deleted !');
+
+                        this.fetchItems();
                     }).catch(error => {
                         this.$store.dispatch('spinner/setSpinner', false);
                         throw error;
@@ -191,7 +219,7 @@ export default {
                 if (confirm(__('Are you sure to delete?', 'erp'))) {
                     this.$store.dispatch('spinner/setSpinner', true);
                     HTTP.delete(this.url + '/delete/' + items.join(',')).then(response => {
-                        if ( ! response.data.success ) {
+                        if ( response.status !== 204 ) {
                             this.$store.dispatch('spinner/setSpinner', false);
                             this.showAlert('error', response.data.data[0].message);
 
@@ -238,39 +266,13 @@ export default {
             display: flex;
             align-items: center;
 
-            @media (max-width: 767px) {
-                flex-direction: column;
-
-                .add-new-people, .people-search {
-                    width: 100% !important;
-
-                    h4 {
-                        display: none;
-                    }
-                }
-
-                .people-search {
-                    margin: 20px 0;
-                }
-
-                .people-search {
-                    .input-with-addon {
-                        margin: 0 !important;
-                    }
-
-                    form {
-                        width: 100%;
-                        justify-content: space-between;
-                    }
-                }
-            }
-
             .add-new-people {
                 align-items: center;
                 display: flex;
-                width: 50%;
+                width: 65%;
                 margin: 0;
                 padding: 0;
+
                 a {
                     background: #1a9ed4;
                     border-radius: 3px;
@@ -282,6 +284,27 @@ export default {
                     text-align: center;
                     text-decoration: none;
                     width: 150px;
+
+                    @media (max-width: 782px) and (min-width: 768px) {
+                        margin-right: 18rem;
+                        margin-bottom: 3px;
+                        max-width: 120px;
+                    }
+
+                    @media (max-width: 767px) and (min-width: 707px) {
+                        margin-right: 16rem;
+                        margin-bottom: 3px;
+                    }
+
+                    @media (max-width: 706px) and (min-width: 651px) {
+                        margin-right: 14rem;
+                        margin-bottom: 3px;
+                    }
+
+                    @media (max-width: 650px) {
+                        margin-right: 12rem;
+                        margin-bottom: 3px;
+                    }
                 }
             }
         }
@@ -333,6 +356,74 @@ export default {
         }
         .check-column {
             padding: 20px !important;
+        }
+    }
+
+    .search-btn {
+        @media (max-width: 650px) {
+            display: none;
+        }
+    }
+
+    .people-search {
+        @media (max-width: 479px) {
+            margin-top: 20px;
+        }
+    }
+
+    .erp-btn-group {
+        display: inline-flex;
+        position: absolute;
+        right: 17.5rem;
+
+        &:after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+
+        @media (max-width: 782px) {
+            right: 17rem;
+            margin-top: 23px;
+        }
+
+        @media (max-width: 650px) {
+            right: 8.5rem;
+        }
+
+        button {
+            padding: 5px 15px;
+            border: 0.3px solid rgb(226, 226, 226);
+            background-color: #fff;
+            color: rgba(0,0,0,0.6);
+            font-size: 12px;
+            font-weight: 400;
+            text-decoration: none;
+            line-height: inherit;
+            cursor: pointer;
+
+            @media (max-width: 479px) {
+                padding: 5px;
+            }
+
+            &:last-child {
+                border-top-right-radius: 3.5px;
+                border-bottom-right-radius: 3.5px;
+            }
+
+            &:first-child {
+                border-top-left-radius: 3.5px;
+                border-bottom-left-radius: 3.5px;
+            }
+
+            :not(:last-child) {
+                border-right: none;
+            }
+
+            &:hover {
+                background-color: #1A9ED4;
+                color: #fff;
+            }
         }
     }
 </style>

@@ -41,15 +41,17 @@ function erp_get_peoples( $args = [] ) {
         's'          => '',
         'no_object'  => false,
     ];
-    $args        = wp_parse_args( $args, $defaults );
 
-    $people_type = is_array( $args['type'] ) ? implode( '-', $args['type'] ) : $args['type'];
-    $cache_key   = 'erp-people-' . $people_type . '-' . md5( serialize( $args ) );
-    $items       = wp_cache_get( $cache_key, 'erp' );
-    $pep_tb      = $wpdb->prefix . 'erp_peoples';
-    $pepmeta_tb  = $wpdb->prefix . 'erp_peoplemeta';
-    $types_tb    = $wpdb->prefix . 'erp_people_types';
-    $type_rel_tb = $wpdb->prefix . 'erp_people_type_relations';
+    $args         = wp_parse_args( $args, $defaults );
+
+    $people_type  = is_array( $args['type'] ) ? implode( '-', $args['type'] )       : $args['type'];
+    $last_changed = erp_cache_get_last_changed( 'crm', 'people' );
+    $cache_key    = 'erp-people-' . $people_type . '-' . md5( serialize( $args ) ).": $last_changed";
+    $items        = wp_cache_get( $cache_key, 'erp' );
+    $pep_tb       = $wpdb->prefix . 'erp_peoples';
+    $pepmeta_tb   = $wpdb->prefix . 'erp_peoplemeta';
+    $types_tb     = $wpdb->prefix . 'erp_people_types';
+    $type_rel_tb  = $wpdb->prefix . 'erp_people_type_relations';
 
     if ( false === $items ) {
         extract( $args );
@@ -253,6 +255,8 @@ function erp_delete_people( $data = [] ) {
         // e.g.: erp_acct_delete_customer, erp_acct_delete_vendor
         do_action( "erp_acct_delete_{$data['type']}", $data );
     }
+
+    erp_crm_purge_cache( [ 'list' => 'people', 'type' => $data['type'] ] );
 }
 
 /**
@@ -298,6 +302,8 @@ function erp_restore_people( $data ) {
 
         do_action( 'erp_after_restoring_people', $people_id, $data );
     }
+
+    erp_crm_purge_cache( [ 'list' => 'people', 'type' => $data['type'] ] );
 }
 
 /**
@@ -464,8 +470,8 @@ function erp_insert_people( $args = [], $return_object = false ) {
     $args           = wp_parse_args( $args, $defaults );
     $errors         = [];
     $unchanged_data = [];
+    $people_type    = $args['type'];
 
-    $people_type = $args['type'];
     unset( $args['type'], $args['created'] );
 
     //sensitization
@@ -646,9 +652,11 @@ function erp_insert_people( $args = [], $return_object = false ) {
 
             wp_cache_delete( 'erp_people_id_user_' . $user->ID, 'erp' );
 
-            foreach ( $args as $key => $value ) {
-                if ( ! update_user_meta( $user_id, $key, $value ) ) {
-                    $unchanged_data[ $key ] = $value;
+            if ( 'employee' !== $people_type ) {
+                foreach ( $args as $key => $value ) {
+                    if ( ! update_user_meta( $user_id, $key, $value ) ) {
+                        $unchanged_data[ $key ] = $value;
+                    }
                 }
             }
         }
@@ -673,8 +681,10 @@ function erp_insert_people( $args = [], $return_object = false ) {
         $people->update( $main_fields );
     }
 
-    if ( ! empty( $type_obj ) && ! $people->hasType( $type_obj ) && empty( $is_existing_people ) ) {
-        $people->assignType( $type_obj );
+    if ( ! empty( $people_type ) && ! $people->hasType( $people_type ) ) {
+        if ( empty( $is_existing_people ) || ( $people->hasType( 'employee' ) && 'contact' === $people_type ) ) {
+            $people->assignType( $type_obj );
+        }
     }
 
     //unset created_by from meta
@@ -714,6 +724,19 @@ function erp_insert_people( $args = [], $return_object = false ) {
         $hash_id = sha1( microtime() . 'erp-unique-hash-id' . $people->email );
         $people->update( [ 'hash', $hash_id ] );
     }
+
+    erp_crm_purge_cache( [
+        'list'          => 'people',
+        'type'          => $people_type,
+        'erp-people-by' => [ (int) $people->id, $people->email, (int) $people->user_id ]
+    ] );
+
+    erp_acct_purge_cache( [
+        'group'         => 'erp',
+        'list'          => 'people',
+        'type'          => $people_type,
+        'erp-people-by' => [ (int) $people->id, $people->email, (int) $people->user_id ]
+    ] );
 
     return $return_object ? $people : $people->id;
 }
@@ -884,6 +907,8 @@ function erp_convert_to_people( $args = [] ) {
         $people_obj->assignType( $type_obj );
         $people_id = $people_obj->id;
     }
+
+    erp_crm_purge_cache( [ 'list' => 'people', 'type' => $type ] );
 
     return $people_id;
 }

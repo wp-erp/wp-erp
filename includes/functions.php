@@ -644,7 +644,7 @@ function erp_get_clickable( $type = 'email', $value = '' ) {
  * @return string
  */
 function erp_get_date_format( $format = false ) {
-    $format = $format ? $format : 'd-m-Y';
+    $format = $format ? $format : 'Y-m-d';
 
     return erp_get_option( 'date_format', 'erp_settings_general', $format );
 }
@@ -1327,397 +1327,22 @@ function erp_get_import_export_fields() {
                 'postal_code',
             ],
         ],
-    ];
-
-    return apply_filters( 'erp_import_export_csv_fields', $erp_fields );
-}
-
-/**
- * ERP Import/Export JavaScript enqueue.
- *
- * @since  1.0
- *
- * @return void
- */
-function erp_import_export_javascript() {
-    global $current_screen;
-    $hook = str_replace( sanitize_title( __( 'ERP Settings', 'erp' ) ), 'erp-settings', $current_screen->base );
-
-    if ( 'wp-erp_page_erp-tools' !== $current_screen->base ) {
-        return;
-    }
-
-    if ( ! isset( $_GET['tab'] ) || ! in_array( $_GET['tab'], [ 'import', 'export' ], true ) ) {
-        return;
-    }
-
-    $erp_fields = erp_get_import_export_fields(); ?>
-    <script type="text/javascript">
-        jQuery(document).ready(function ($) {
-
-            function erp_str_title_case(string) {
-                var str = string.replace(/_/g, ' ');
-
-                return str.toLowerCase().split(' ').map(function (word) {
-                    return (word.charAt(0).toUpperCase() + word.slice(1));
-                }).join(' ');
-            }
-
-            function erp_csv_field_mapper(file_selector, fields_selector) {
-                var file = file_selector.files[0];
-
-                var reader = new FileReader();
-
-                var first5000 = file.slice(0, 5000);
-                reader.readAsText(first5000);
-
-                reader.onload = function (e) {
-                    var csv = reader.result;
-                    // Split the input into lines
-                    lines = csv.split('\n'),
-                        // Extract column names from the first line
-                        columnNamesLine = lines[0];
-                    columnNames = columnNamesLine.split(',');
-
-                    var html = '';
-
-                    html += '<option value="">&mdash; Select Field &mdash;</option>';
-                    columnNames.forEach(function (item, index) {
-                        item = item.replace(/"/g, "");
-
-                        html += '<option value="' + index + '">' + item + '</option>';
-                    });
-
-                    if (html) {
-                        $(fields_selector).html(html);
-
-                        var field, field_label;
-                        $(fields_selector).each(function () {
-                            field_label = $(this).parent().parent().find('label').text();
-
-                            var options = $(this).find('option');
-                            var targetOption = $(options).filter(function () {
-                                var option_text = $(this).html();
-
-                                var re = new RegExp(field_label, 'i');
-
-                                return re.test(option_text);
-                            });
-
-                            if (targetOption) {
-                                $(options).removeAttr("selected");
-                                $(this).val($(targetOption).val());
-                            }
-                        });
-                    }
-                };
-            }
-
-            function erp_csv_importer_field_handler(file_selector) {
-                $('#fields_container').show();
-
-                var fields_html = '';
-
-                var type = $('form#import_form #type').val();
-
-                fields = erp_fields[type] ? erp_fields[type].fields : [];
-                required_fields = erp_fields[type] ? erp_fields[type].required_fields : [];
-
-                var required = '';
-                var red_span = '';
-                for (var i = 0; i < fields.length; i++) {
-
-                    if (required_fields.indexOf(fields[i]) !== -1) {
-                        required = 'required';
-                        red_span = ' <span class="required">*</span>';
-                    } else {
-                        required = '';
-                        red_span = '';
-                    }
-
-                    fields_html += `
-                        <tr>
-                            <th>
-                                <label for="fields[` + fields[i] + `]" class="csv_field_labels">` + erp_str_title_case(fields[i]) + red_span + `</label>
-                            </th>
-                            <td>
-                                <select name="fields[` + fields[i] + `]" class="csv_fields" ` + required + `>
-                                </select>
-                            </td>
-                        </tr>`;
-                }
-
-                $('#fields_container').html(fields_html);
-
-                erp_csv_field_mapper(file_selector, '.csv_fields');
-            }
-
-            var fields = [];
-            var required_fields = [];
-
-            var erp_fields = <?php echo wp_json_encode( $erp_fields ); ?>;
-
-            var type = $('form#export_form #type').val();
-
-            fields = erp_fields[type] ? erp_fields[type].fields : [];
-
-            var html = '<ul class="erp-list list-inline">';
-            for (var i = 0; i < fields.length; i++) {
-                html += '<li><label><input type="checkbox" name="fields[]" value="' + fields[i] + '"> ' + erp_str_title_case(fields[i]) + '</label></li>';
-            }
-
-            html += '<ul>';
-
-            if (html) {
-                $('#fields').html(html);
-            }
-
-            $('form#export_form #type').on('change', function (e) {
-                e.preventDefault();
-                $("#export_form #selecctall").prop('checked', false);
-                var type = $(this).val();
-                fields = erp_fields[type] ? erp_fields[type].fields : [];
-
-                html = '<ul class="erp-list list-inline">';
-                for (var i = 0; i < fields.length; i++) {
-                    html += '<li><label><input type="checkbox" name="fields[]" value="' + fields[i] + '"> ' + erp_str_title_case(fields[i]) + '</label></li>';
-                }
-
-                html += '<ul>';
-
-                if (html) {
-                    $('form#export_form #fields').html(html);
-                }
-            });
-
-            $('form#import_form #csv_file').on('change', function (e) {
-                e.preventDefault();
-
-                if (!this) {
-                    return;
-                }
-
-                erp_csv_importer_field_handler(this);
-            });
-
-            var exportType = $('form#import_form').find('#type').val();
-
-            if (exportType == 'employee' || exportType == 'vendor') {
-                $('form#import_form').find('#crm_contact_lifestage_owner_wrap').hide();
-            } else {
-                $('form#import_form').find('#crm_contact_lifestage_owner_wrap').show();
-            }
-
-            $('form#import_form #type').on('change', function (e) {
-                $('#fields_container').html('');
-                $('#fields_container').hide();
-
-                if ($(this).val() == 'employee' || $(this).val() == 'vendor') {
-                    $('form#import_form').find('#crm_contact_lifestage_owner_wrap').hide();
-                } else {
-                    $('form#import_form').find('#crm_contact_lifestage_owner_wrap').show();
-                }
-
-                var sample_csv_url = $('form#import_form').find('#download_sample_wrap input').val();
-                $('form#import_form').find('#download_sample_wrap a').attr('href', sample_csv_url + '&type=' + $(this).val());
-
-                if ($('form#import_form #csv_file').val() == "") {
-                    return;
-                } else {
-                    erp_csv_importer_field_handler($('form#import_form #csv_file').get(0));
-                }
-            });
-
-            $("#export_form #selecctall").change(function (e) {
-                e.preventDefault();
-
-                $("#export_form #fields input[type=checkbox]").prop('checked', $(this).prop("checked"));
-            });
-
-            $("#users_import_form").on('submit', function (e) {
-                e.preventDefault();
-                statusDiv = $("div#import-status-indicator");
-
-                statusDiv.show();
-
-                var form = $(this),
-                    submit = form.find('input[type=submit]');
-                submit.attr('disabled', 'disabled');
-
-                var data = {
-                    'action': 'erp_import_users_as_contacts',
-                    'user_role': $(this).find('select[name=user_role]').val(),
-                    'contact_owner': $(this).find('select[name=contact_owner]').val(),
-                    'life_stage': $(this).find('select[name=life_stage]').val(),
-                    'contact_group': $(this).find('select[name=contact_group]').val(),
-                    '_wpnonce': $(this).find('input[name=_wpnonce]').val()
-                };
-
-                var total_items = 0, left = 0, imported = 0, exists = 0, percent = 0, type = 'success', message = '';
-
-                $.post(ajaxurl, data, function (response) {
-                    if (response.success) {
-                        total_items = response.data.total_items;
-                        left = response.data.left;
-                        exists = response.data.exists;
-                        imported = total_items - left;
-                        done = imported - exists;
-
-                        if (imported > 0 || total_items > 0) {
-                            percent = Math.floor((100 / total_items) * (imported));
-
-                            type = 'success';
-                            message = 'Successfully imported all users!';
-                        } else {
-                            message = 'No users found to import!';
-                            type = 'error';
-                        }
-
-                        statusDiv.find('#progress-total').html(percent + '%');
-                        statusDiv.find('#progressbar-total').val(percent);
-                        statusDiv.find('#completed-total').html('Imported ' + done + ' out of ' + response.data.total_items);
-                        if (exists > 0) {
-                            statusDiv.find('#failed-total').html('Already Exist ' + exists);
-                        }
-
-                        if (response.data.left > 0) {
-                            form.submit();
-                            return;
-                        } else {
-                            submit.removeAttr('disabled');
-
-                            swal({
-                                title: '',
-                                text: message,
-                                type: type,
-                                confirmButtonText: 'OK',
-                                confirmButtonColor: '#008ec2'
-                            });
-                        }
-                    }
-                });
-            });
-
-        });
-    </script>
-    <?php
-}
-
-/**
- * Process or handle import/export submit.
- *
- * @since 1.0.0
- * @since 1.1.15 Declare `field_builder_contacts_fields` with empty an array
- * @since 1.1.18 Handle exporting when no field is given.
- *               Introduce `ERP_IS_IMPORTING` while importing data
- * @since 1.1.19 Import partial people data in case of existing people
- *
- * @return void
- */
-function erp_process_import_export() {
-    if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'erp-import-export-nonce' ) ) {
-        return;
-    }
-
-    if ( ! current_user_can( 'administrator' ) ) {
-        return new \WP_Error( 'no-permission', __( 'Sorry ! You do not have permission to access this page', 'erp' ) );
-    }
-
-    $is_crm_activated = erp_is_module_active( 'crm' );
-    $is_hrm_activated = erp_is_module_active( 'hrm' );
-    $is_acc_activated = erp_is_module_active( 'accounting' );
-
-    $departments  = $is_hrm_activated ? erp_hr_get_departments_dropdown_raw() : [];
-    $designations = $is_hrm_activated ? erp_hr_get_designation_dropdown_raw() : [];
-
-    $field_builder_contact_options = get_option( 'erp-contact-fields' );
-    $field_builder_contacts_fields = [];
-
-    if ( ! empty( $field_builder_contact_options ) ) {
-        foreach ( $field_builder_contact_options as $field ) {
-            $field_builder_contacts_fields[] = $field['name'];
-        }
-    }
-
-    $field_builder_company_options  = get_option( 'erp-company-fields' );
-    $field_builder_companies_fields = [];
-
-    if ( ! empty( $field_builder_company_options ) ) {
-        foreach ( $field_builder_company_options as $field ) {
-            $field_builder_companies_fields[] = $field['name'];
-        }
-    }
-
-    $field_builder_employee_options = get_option( 'erp-employee-fields' );
-    $field_builder_employees_fields = [];
-
-    if ( ! empty( $field_builder_employee_options ) ) {
-        foreach ( $field_builder_employee_options as $field ) {
-            $field_builder_employees_fields[] = $field['name'];
-        }
-    }
-
-    $field_builder_vendor_options = get_option( 'erp-vendor-fields' );
-    $field_builder_vendors_fields = [];
-
-    if ( ! empty( $field_builder_vendor_options ) ) {
-        foreach ( $field_builder_vendor_options as $field ) {
-            $field_builder_vendors_fields[] = $field['name'];
-        }
-    }
-
-    if ( isset( $_POST['erp_import_csv'] ) ) {
-        define( 'ERP_IS_IMPORTING', true );
-
-        $fields = ! empty( $_POST['fields'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['fields'] ) ) : [];
-        $type   = isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
-
-        if ( empty( $type ) ) {
-            return;
-        }
-
-        $csv_file = isset( $_FILES['csv_file'] ) ? $_FILES['csv_file'] : []; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-
-        $data = [ 'type' => $type, 'fields' => $fields, 'file' => $csv_file ];
-
-        do_action( 'erp_tool_import_csv_action', $data );
-
-        if ( ! in_array( $type, [ 'contact', 'company', 'employee', 'vendor' ], true ) ) {
-            return;
-        }
-
-        $employee_fields = [
-            'work'     => [
-                'designation',
-                'department',
-                'location',
-                'hiring_source',
-                'hiring_date',
-                'date_of_birth',
-                'reporting_to',
-                'pay_rate',
-                'pay_type',
-                'type',
-                'status',
-            ],
-            'personal' => [
-                'photo_id',
-                'user_id',
+        'customer' => [
+            'required_fields' => [
                 'first_name',
-                'middle_name',
                 'last_name',
-                'other_email',
+                'email',
+            ],
+            'fields'          => [
+                'first_name',
+                'last_name',
+                'email',
                 'phone',
-                'work_phone',
+                'company',
                 'mobile',
-                'address',
-                'gender',
-                'marital_status',
-                'nationality',
-                'driving_license',
-                'hobbies',
-                'user_url',
-                'description',
+                'fax',
+                'website',
+                'notes',
                 'street_1',
                 'street_2',
                 'city',
@@ -1725,263 +1350,115 @@ function erp_process_import_export() {
                 'state',
                 'postal_code',
             ],
-        ];
+        ],
+    ];
 
-        //require_once WPERP_INCLUDES . '/lib/parsecsv.lib.php';
+    return apply_filters( 'erp_import_export_csv_fields', $erp_fields );
+}
 
-        $csv = new ParseCsv\Csv();
-        $csv->encoding( null, 'UTF-8' );
-        $csv->parse( $csv_file['tmp_name'] );
+/**
+ * Process or handle csv file for export
+ *
+ * @since 1.8.5
+ *
+ * @return void
+ */
+function erp_process_csv_export() {
+    if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'erp-import-export-nonce' ) ) {
+        return new \WP_Error( 'no-permission', __( 'Nonce verification failed!', 'erp' ) );
+    }
 
-        if ( empty( $csv->data ) ) {
-            wp_redirect( admin_url( 'admin.php?page=erp-tools&tab=import' ) );
-            exit;
-        }
-
-        $csv_data = [];
-
-        $csv_data[] = array_keys( $csv->data[0] );
-
-        foreach ( $csv->data as $data_item ) {
-            $csv_data[] = array_values( $data_item );
-        }
-
-        if ( ! empty( $csv_data ) ) {
-            $count = 0;
-
-            do_action( 'validate_csv_data', $csv_data, $fields, $type );
-
-            foreach ( $csv_data as $line ) {
-                if ( empty( $line ) ) {
-                    continue;
-                }
-
-                $line_data = [];
-
-                if ( is_array( $fields ) && ! empty( $fields ) ) {
-                    foreach ( $fields as $key => $value ) {
-                        if ( ! empty( $line[ $value ] ) && is_numeric( $value ) ) {
-                            if ( $type === 'employee' ) {
-                                if ( in_array( $key, $employee_fields['work'], true ) ) {
-                                    if ( $key === 'designation' ) {
-                                        $line_data['work'][ $key ] = array_search( $line[ $value ], $designations, true );
-                                    } elseif ( $key === 'department' ) {
-                                        $line_data['work'][ $key ] = array_search( $line[ $value ], $departments, true );
-                                    } else {
-                                        $line_data['work'][ $key ] = $line[ $value ];
-                                    }
-                                } elseif ( in_array( $key, $employee_fields['personal'], true ) ) {
-                                    $line_data['personal'][ $key ] = $line[ $value ];
-                                } else {
-                                    $line_data[ $key ] = $line[ $value ];
-                                }
-                            } else {
-                                $line_data[ $key ]   = isset( $line[ $value ] ) ? $line[ $value ] : '';
-                                $line_data['type'] = $type;
-                            }
-                        }
-                    }
-                }
-
-                if ( $type === 'employee' && $is_hrm_activated ) {
-                    if ( ! isset( $line_data['work']['status'] ) ) {
-                        $line_data['work']['status'] = 'active';
-                    }
-
-                    $item_insert_id = erp_hr_employee_create( $line_data );
-
-                    if ( is_wp_error( $item_insert_id ) || is_string( $item_insert_id ) ) {
-                        continue;
-                    }
-                }
-
-                if ( $type === 'vendor' && $is_acc_activated ) {
-                    $item_insert_id = erp_insert_people( $line_data );
-
-                    if ( is_wp_error( $item_insert_id ) ) {
-                        continue;
-                    }
-                }
-
-                if ( ( $type === 'contact' || $type === 'company' ) && $is_crm_activated ) {
-                    $contact_owner              = isset( $_POST['contact_owner'] ) ? absint( $_POST['contact_owner'] ) : erp_crm_get_default_contact_owner();
-                    $line_data['contact_owner'] = $contact_owner;
-                    $people                     = erp_insert_people( $line_data, true );
-
-                    if ( is_wp_error( $people ) ) {
-                        continue;
-                    } else {
-                        $contact       = new \WeDevs\ERP\CRM\Contact( absint( $people->id ), 'contact' );
-                        $life_stage    = isset( $_POST['life_stage'] ) ? sanitize_key( $_POST['life_stage'] ) : '';
-
-                        if ( ! $people->exists ) {
-                            $contact->update_life_stage( $life_stage );
-                        } else {
-                            if ( ! $contact->get_life_stage() ) {
-                                $contact->update_life_stage( $life_stage );
-                            }
-                        }
-
-                        if ( ! empty( $_POST['contact_group'] ) ) {
-                            $contact_group = absint( $_POST['contact_group'] );
-
-                            $existing_data = \WeDevs\ERP\CRM\Models\ContactSubscriber::where( [
-                                'group_id' => $contact_group,
-                                'user_id'  => $people->id,
-                            ] )->first();
-
-                            if ( empty( $existing_data ) ) {
-                                $hash = sha1( microtime() . 'erp-subscription-form' . $contact_group . $people->id );
-
-                                erp_crm_create_new_contact_subscriber( [
-                                    'group_id'       => $contact_group,
-                                    'user_id'        => $people->id,
-                                    'status'         => 'subscribe',
-                                    'subscribe_at'   => current_time( 'mysql' ),
-                                    'unsubscribe_at' => null,
-                                    'hash'           => $hash,
-                                ] );
-                            }
-                        }
-
-                        if ( ! empty( $field_builder_contacts_fields ) ) {
-                            foreach ( $field_builder_contacts_fields as $field ) {
-                                if ( isset( $line_data[ $field ] ) ) {
-                                    erp_people_update_meta( $people->id, $field, $line_data[ $field ] );
-                                }
-                            }
-                        }
-                    }
-                }
-
-                ++ $count;
-            }
-        }
-
-        wp_redirect( admin_url( "admin.php?page=erp-tools&tab=import&imported=$count" ) );
-        exit;
+    if ( ! current_user_can( 'administrator' ) ) {
+        return new \WP_Error( 'no-permission', __( 'Sorry ! You do not have permission to access this page', 'erp' ) );
     }
 
     if ( isset( $_POST['erp_export_csv'] ) ) {
+        define( 'ERP_IMPORT_EXPORT', true );
+
         if ( ! empty( $_POST['type'] ) && ! empty( $_POST['fields'] ) ) {
-            $type   = isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
-            $fields = array_map( 'sanitize_text_field', wp_unslash( $_POST['fields'] ) );
+            $custom_fields  = [];
+            $custom_options = [];
+            $items          = [];
+            $csv_items      = [];
+            $is_employee    = false;
+            $type           = sanitize_text_field( wp_unslash( $_POST['type'] ) );
+            $fields         = array_map( 'sanitize_text_field', wp_unslash( $_POST['fields'] ) );
 
-            if ( $type === 'employee' && $is_hrm_activated ) {
-                $args = [
-                    'number' => - 1,
-                ];
+            switch ( $type ) {
+                case 'employee':
+                    $custom_options = get_option( 'erp-employee-fields' );
+                    $items          = erp_hr_get_employees( [ 'number' => - 1 ] );
+                    $is_employee    = true;
+                    break;
 
-                $items = erp_hr_get_employees( $args );
+                case 'contact':
+                    $custom_options = get_option( 'erp-contact-fields' );
+                    break;
+
+                case 'company':
+                    $custom_options = get_option( 'erp-company-fields' );
+                    break;
+
+                case 'customer':
+                    $custom_options = get_option( 'erp-customer-fields' );
+                    break;
+
+                case 'vendor':
+                    $custom_options = get_option( 'erp-vendor-fields' );
+                    break;
             }
 
-            if (
-                ( ( $type === 'contact' || $type === 'company' ) && $is_crm_activated )
-                ||
-                ( $type === 'vendor' && $is_acc_activated )
-            ) {
-                $args        = [
-                    'type'  => $type,
-                    'count' => true,
-                ];
-                $total_items = erp_get_peoples( $args );
+            if ( ! empty( $custom_options ) ) {
+                foreach ( $custom_options as $field ) {
+                    $custom_fields[] = $field['name'];
+                }
+            }
 
-                $args  = [
+            if ( ! $is_employee ) {
+                $items = erp_get_peoples( [
                     'type'   => $type,
                     'offset' => 0,
                     'number' => - 1,
-                ];
-                $items = erp_get_peoples( $args );
+                ] );
             }
 
-            //@todo do_action()
-            $csv_items = [];
-
-            $x = 0;
-
-            foreach ( $items as $item ) {
+            foreach ( $items as $index => $item ) {
                 if ( empty( $fields ) ) {
                     continue;
                 }
 
                 foreach ( $fields as $field ) {
-                    if ( $type === 'employee' ) {
-                        if ( in_array( $field, $field_builder_employees_fields, true ) ) {
-                            $csv_items[ $x ][ $field ] = get_user_meta( $item->id, $field, true );
+                    if ( ! $is_employee ) {
+                        if ( in_array( $field, $custom_fields, true ) ) {
+                            $csv_items[ $index ][ $field ] = erp_people_get_meta( $item->id, $field, true );
+                        } else {
+                            $csv_items[ $index ][ $field ] = $item->{$field};
+                        }
+                    } else {
+                        if ( in_array( $field, $custom_fields, true ) ) {
+                            $csv_items[ $index ][ $field ] = get_user_meta( $item->id, $field, true );
                         } else {
                             switch ( $field ) {
                                 case 'department':
-                                    $csv_items[ $x ][ $field ] = $item->get_department_title();
+                                    $csv_items[ $index ][ $field ] = $item->get_department_title();
                                     break;
 
                                 case 'designation':
-                                    $csv_items[ $x ][ $field ] = $item->get_job_title();
+                                    $csv_items[ $index ][ $field ] = $item->get_job_title();
                                     break;
 
                                 default:
-                                    $csv_items[ $x ][ $field ] = $item->{$field};
+                                    $csv_items[ $index ][ $field ] = $item->{$field};
                                     break;
-                            }
-                        }
-                    } else {
-                        if ( $type === 'contact' ) {
-                            if ( in_array( $field, $field_builder_contacts_fields, true ) ) {
-                                $csv_items[ $x ][ $field ] = erp_people_get_meta( $item->id, $field, true );
-                            } else {
-                                $csv_items[ $x ][ $field ] = $item->{$field};
-                            }
-                        }
-
-                        if ( $type === 'company' ) {
-                            if ( in_array( $field, $field_builder_companies_fields, true ) ) {
-                                $csv_items[ $x ][ $field ] = erp_people_get_meta( $item->id, $field, true );
-                            } else {
-                                $csv_items[ $x ][ $field ] = $item->{$field};
-                            }
-                        }
-
-                        if ( $type === 'vendor' ) {
-                            if ( in_array( $field, $field_builder_vendors_fields, true ) ) {
-                                $csv_items[ $x ][ $field ] = erp_people_get_meta( $item->id, $field, true );
-                            } else {
-                                $csv_items[ $x ][ $field ] = $item->{$field};
                             }
                         }
                     }
                 }
-
-                $x ++;
             }
 
             $file_name = 'export_' . gmdate( 'd_m_Y' ) . '.csv';
 
             erp_make_csv_file( $csv_items, $file_name );
-        } else {
-            wp_redirect( admin_url( 'admin.php?page=erp-tools&tab=export' ) );
-            exit();
-        }
-    }
-}
-
-/**
- * Display importer tool notice.
- *
- * @return void
- */
-function erp_importer_notices() {
-    if ( ! isset( $_REQUEST['page'] ) || $_REQUEST['page'] !== 'erp-tools' || ! isset( $_REQUEST['tab'] ) || $_REQUEST['tab'] !== 'import' ) {
-        return;
-    }
-
-    if ( isset( $_REQUEST['imported'] ) ) {
-        if ( intval( $_REQUEST['imported'] ) === 0 ) {
-            $message = __( 'Nothing to import or items are already exists.', 'erp' );
-            echo "<div class='notice error'><p>" . esc_html( $message ) . '</p></div>';
-        } else {
-            $message = sprintf( __( '%s items successfully imported.', 'erp' ),
-                number_format_i18n( sanitize_text_field( wp_unslash( $_REQUEST['imported'] ) ) )
-            );
-            echo "<div class='notice updated'><p>" . esc_html( $message ) . '</p></div>';
         }
     }
 }
@@ -2568,18 +2045,18 @@ function erp_make_csv_file( $items, $file_name, $field_data = true ) {
  *
  * @param void
  */
-function erp_import_export_download_sample_action() {
-    $type = isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
+function erp_import_export_download_sample() {
+    $type = isset( $_REQUEST['type'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['type'] ) ) : '';
 
-    if ( ! isset( $_GET['action'] ) || $_GET['action'] !== 'download_sample' ) {
+    if ( ! isset( $_REQUEST['action'] ) || $_REQUEST['action'] !== 'download_sample' ) {
         return;
     }
 
-    if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_GET['_wpnonce'] ), 'erp-emport-export-sample-nonce' ) ) {
+    if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'erp-import-export-sample-nonce' ) ) {
         return;
     }
 
-    if ( ! isset( $type ) ) {
+    if ( empty( $type ) ) {
         return;
     }
 
@@ -2590,7 +2067,7 @@ function erp_import_export_download_sample_action() {
         $keys      = $fields[ $type ]['fields'];
         $keys      = array_flip( $keys );
         $file_name = "sample_csv_{$type}.csv";
-
+        
         erp_make_csv_file( [ $keys ], $file_name, false );
     }
 
@@ -3943,7 +3420,38 @@ function erp_sanitize_phone_number( $phone_no, $allow_plus = false ) {
     return $result;
 }
 
+ * Checks if a user has permission to view a page
+ * 
+ * @since 1.8.5
+ *
+ * @param string $cap
+ * 
+ * @return void
+ */
+function erp_verify_page_access_permission( $cap ) {
+    if ( ! current_user_can( $cap ) ) {
+        $error_message  = '<h2 style="text-align: center; margin-top:40px">';
+        $error_message .= esc_html__( 'Sorry! You are not allowed to access this page.', 'erp' );
+        $error_message .= '</h2>';
+
+        wp_die( wp_kses_post( $error_message ) );
+    }
+}
+
 /**
+ * Disables mysql strict mode
+ * 
+ * @since 1.8.5
+ *
+ * @return void
+ */
+function erp_disable_mysql_strict_mode() {
+    global $wpdb;
+
+    $wpdb->query( "SET SESSION SQL_MODE=''" );
+    $wpdb->query( "SET SQL_BIG_SELECTS=1" );
+}
+
  * Get Standarized message for erp
  *
  * @since 1.8.6

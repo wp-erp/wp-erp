@@ -69,95 +69,97 @@ function erp_hr_get_employees( $args = [] ) {
     ];
 
     $args  = wp_parse_args( $args, $defaults );
-    $where = [];
 
-    $employee_tbl = $wpdb->prefix . 'erp_hr_employees';
-    $employees    = \WeDevs\ERP\HRM\Models\Employee::select( [ $employee_tbl . '.user_id', 'display_name' ] )
-        ->leftJoin( $wpdb->users, $employee_tbl . '.user_id', '=', $wpdb->users . '.ID' )
-        ->leftJoin( "{$wpdb->prefix}usermeta as gender", function ( $join ) use ( $employee_tbl ) {
-            $join->on( $employee_tbl . '.user_id', '=', 'gender.user_id' )->where( 'gender.meta_key', '=', 'gender' );
-        } )
-        ->leftJoin( "{$wpdb->prefix}usermeta as marital_status", function ( $join ) use ( $employee_tbl ) {
-            $join->on( $employee_tbl . '.user_id', '=', 'marital_status.user_id' )->where( 'marital_status.meta_key', '=', 'marital_status' );
-        } );
+    $last_changed  = erp_cache_get_last_changed( 'hrm', 'employee' );
+    $cache_key     = 'erp-get-employees-' . md5( serialize( $args ) ) . " : $last_changed";
+    $results       = wp_cache_get( $cache_key, 'erp' );
 
-    if ( isset( $args['designation'] ) && $args['designation'] != '-1' ) {
-        $employees = $employees->where( 'designation', $args['designation'] );
-    }
-
-    if ( isset( $args['department'] ) && $args['department'] != '-1' ) {
-        $employees = $employees->where( 'department', $args['department'] );
-    }
-
-    if ( isset( $args['location'] ) && $args['location'] != '-1' ) {
-        $employees = $employees->where( 'location', $args['location'] );
-    }
-
-    if ( isset( $args['type'] ) && $args['type'] != '-1' ) {
-        $employees = $employees->where( 'type', $args['type'] );
-    }
-
-    /******** Check gender & marital status start ***********/
-    if ( isset( $args['gender'] ) && $args['gender'] != '-1' ) {
-        $employees = $employees->where( 'gender.meta_value', $args['gender'] );
-    }
-
-    if ( isset( $args['marital_status'] ) && $args['marital_status'] != '-1' ) {
-        $employees = $employees->where( 'marital_status.meta_value', $args['marital_status'] );
-    }
-    /******** Check gender & marital status end ***********/
-
-    if ( isset( $args['status'] ) && ! empty( $args['status'] ) ) {
-        if ( $args['status'] == 'trash' ) {
-            $employees = $employees->onlyTrashed();
-        } else {
-            if ( $args['status'] != 'all' ) {
-                $employees = $employees->where( 'status', $args['status'] );
-            }
-        }
-    } else {
-        $employees = $employees->where( 'status', 'active' );
-    }
-
-    if ( isset( $args['s'] ) && ! empty( $args['s'] ) ) {
-        $arg_s     = $args['s'];
-        $employees = $employees->where( 'display_name', 'LIKE', "%$arg_s%" );
-    }
-
-    if ( 'employee_name' === $args['orderby'] ) {
-        $employees = $employees->leftJoin( $wpdb->usermeta . ' as umeta', function ( $join ) use ( $wpdb, $employee_tbl ) {
-            $join->on( $employee_tbl . '.user_id', '=', 'umeta.user_id' )
-                ->where( 'umeta.meta_key', '=', 'first_name' );
-        } );
-
-        $args['orderby'] = 'umeta.meta_value';
-    }
-
-    $cache_key = 'erp-get-employees-' . md5( serialize( $args ) );
-    $results   = wp_cache_get( $cache_key, 'erp' );
-    $users     = [];
-
-    // Check if want all data without any pagination
-    if ( $args['number'] != '-1' && ! $args['count'] ) {
-        $employees = $employees->skip( $args['offset'] )->take( $args['number'] );
-    }
-
-    // Check if args count true, then return total count customer according to above filter
-    if ( $args['count'] ) {
-        return $employees->count();
-    }
+    $cache_key_counts = 'erp-get-employees-count-' . md5( serialize( $args ) ) . " : $last_changed";
+    $results_counts   = wp_cache_get( $cache_key_counts, 'erp' );
 
     if ( false === $results ) {
+
+        $employee_tbl = $wpdb->prefix . 'erp_hr_employees';
+        $employees    = \WeDevs\ERP\HRM\Models\Employee::select( [ $employee_tbl . '.user_id', 'display_name' ] )
+            ->leftJoin( $wpdb->users, $employee_tbl . '.user_id', '=', $wpdb->users . '.ID' )
+            ->leftJoin( "{$wpdb->prefix}usermeta as gender", function ( $join ) use ( $employee_tbl ) {
+                $join->on( $employee_tbl . '.user_id', '=', 'gender.user_id' )->where( 'gender.meta_key', '=', 'gender' );
+            } )
+            ->leftJoin( "{$wpdb->prefix}usermeta as marital_status", function ( $join ) use ( $employee_tbl ) {
+                $join->on( $employee_tbl . '.user_id', '=', 'marital_status.user_id' )->where( 'marital_status.meta_key', '=', 'marital_status' );
+            } );
+
+        if ( isset( $args['designation'] ) && $args['designation'] != '-1' ) {
+            $employees = $employees->where( 'designation', $args['designation'] );
+        }
+
+        if ( isset( $args['department'] ) && $args['department'] != '-1' ) {
+            $employees = $employees->where( 'department', $args['department'] );
+        }
+
+        if ( isset( $args['location'] ) && $args['location'] != '-1' ) {
+            $employees = $employees->where( 'location', $args['location'] );
+        }
+
+        if ( isset( $args['type'] ) && $args['type'] != '-1' ) {
+            $employees = $employees->where( 'type', $args['type'] );
+        }
+
+        /******** Check gender & marital status start ***********/
+        if ( isset( $args['gender'] ) && $args['gender'] != '-1' ) {
+            $employees = $employees->where( 'gender.meta_value', $args['gender'] );
+        }
+
+        if ( isset( $args['marital_status'] ) && $args['marital_status'] != '-1' ) {
+            $employees = $employees->where( 'marital_status.meta_value', $args['marital_status'] );
+        }
+        /******** Check gender & marital status end ***********/
+
+        if ( isset( $args['status'] ) && ! empty( $args['status'] ) ) {
+            if ( $args['status'] == 'trash' ) {
+                $employees = $employees->onlyTrashed();
+            } else {
+                if ( $args['status'] != 'all' ) {
+                    $employees = $employees->where( 'status', $args['status'] );
+                }
+            }
+        } else {
+            $employees = $employees->where( 'status', 'active' );
+        }
+
+        if ( isset( $args['s'] ) && ! empty( $args['s'] ) ) {
+            $arg_s     = $args['s'];
+            $employees = $employees->where( 'display_name', 'LIKE', "%$arg_s%" );
+        }
+
+        if ( 'employee_name' === $args['orderby'] ) {
+            $employees = $employees->leftJoin( $wpdb->usermeta . ' as umeta', function ( $join ) use ( $wpdb, $employee_tbl ) {
+                $join->on( $employee_tbl . '.user_id', '=', 'umeta.user_id' )
+                    ->where( 'umeta.meta_key', '=', 'first_name' );
+            } );
+
+            $args['orderby'] = 'umeta.meta_value';
+        }
+
+        // Check if want all data without any pagination
+        if ( $args['number'] != '-1' && ! $args['count'] ) {
+            $employees = $employees->skip( $args['offset'] )->take( $args['number'] );
+        }
+
+        // Check if args count true, then return total count customer according to above filter
+        if ( $args['count'] ) {
+            $results_counts = $employees->count();
+
+            wp_cache_set( $cache_key_counts, $results_counts, 'erp', HOUR_IN_SECONDS );
+        }
+
         $results = $employees
             ->orderBy( $args['orderby'], $args['order'] )
             ->get()
             ->toArray();
 
         $results = erp_array_to_object( $results );
-        wp_cache_set( $cache_key, $results, 'erp', HOUR_IN_SECONDS );
-    }
 
-    if ( $results ) {
         foreach ( $results as $key => $row ) {
             if ( true === $args['no_object'] ) {
                 $users[] = $row;
@@ -165,9 +167,16 @@ function erp_hr_get_employees( $args = [] ) {
                 $users[] = new \WeDevs\ERP\HRM\Employee( intval( $row->user_id ) );
             }
         }
+
+        $results = ! empty( $users ) ? $users : [];
+        wp_cache_set( $cache_key, $results, 'erp', HOUR_IN_SECONDS );
     }
 
-    return $users;
+    if ( $args['count'] ) {
+        return $results_counts;
+    }
+
+    return $results;
 }
 
 /**
@@ -288,6 +297,8 @@ function erp_employee_restore( $employee_ids ) {
     if ( is_int( $employee_ids ) ) {
         \WeDevs\ERP\HRM\Models\Employee::withTrashed()->where( 'user_id', $employee_ids )->restore();
     }
+
+    erp_hrm_purge_cache( ['list' => 'employee'] );
 }
 
 /**
@@ -325,6 +336,8 @@ function erp_employee_delete( $employee_ids, $force = false ) {
     // seems like we got some
     foreach ( $employees as $employee_wp_user_id ) {
         do_action( 'erp_hr_delete_employee', $employee_wp_user_id, $force );
+
+        erp_hrm_purge_cache( ['list' => 'employee'] );
 
         if ( $force ) {
 
@@ -1104,4 +1117,28 @@ function get_employee_additional_fields( $fields, $id, $user ) {
     $fields['personal']['user_url'] = get_user_meta( $user_id, 'user_url' ) ? get_user_meta( $user_id, 'user_url' ) : '';
 
     return $fields;
+}
+
+/**
+ * Get Education Result Types
+ *
+ * @since 1.8.3
+ *
+ * @param string $selected value
+ *
+ * @return array all the types
+ */
+function erp_hr_get_education_result_type_options( $selected = null ) {
+    $types = [
+        'grade'      => __( 'Grade',  'erp' ),
+        'percentage' => __( 'Pecentage', 'erp' )
+    ];
+
+    $types = apply_filters( 'erp_hr_education_result_type_option', $types );
+
+    if ( $selected ) {
+        return ( isset( $types[ $selected ] ) ) ? $types[ $selected ] : '';
+    }
+
+    return $types;
 }

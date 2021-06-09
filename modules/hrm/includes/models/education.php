@@ -10,5 +10,5 @@ use WeDevs\ERP\Framework\Model;
 class Education extends Model {
     protected $table = 'erp_hr_education';
 
-    protected $fillable = [ 'employee_id', 'school', 'degree', 'field', 'finished', 'notes', 'interest' ];
+    protected $fillable = [ 'employee_id', 'school', 'degree', 'field', 'result', 'result_type', 'finished', 'notes', 'interest' ];
 }

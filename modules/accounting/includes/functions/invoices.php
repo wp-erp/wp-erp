@@ -45,6 +45,8 @@ function erp_acct_get_all_invoices( $args = [] ) {
     $sql .= " FROM {$wpdb->prefix}erp_acct_invoices AS invoice LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail";
     $sql .= " ON invoice.voucher_no = ledger_detail.trn_no {$where} GROUP BY invoice.voucher_no ORDER BY invoice.{$args['orderby']} {$args['order']} {$limit}";
 
+    erp_disable_mysql_strict_mode();
+
     if ( $args['count'] ) {
         return $wpdb->get_var( $sql );
     }
@@ -63,38 +65,40 @@ function erp_acct_get_invoice( $invoice_no ) {
     global $wpdb;
 
     $sql = $wpdb->prepare(
-        "Select
+        "SELECT
 
-    voucher.editable,
-    voucher.currency,
+            voucher.editable,
+            voucher.currency,
 
-    invoice.id,
-    invoice.voucher_no,
-    invoice.customer_id,
-    invoice.customer_name,
-    invoice.trn_date,
-    invoice.due_date,
-    invoice.billing_address,
-    invoice.amount,
-    invoice.discount,
-    invoice.discount_type,
-    invoice.tax,
-    invoice.tax_zone_id,
-    invoice.estimate,
-    invoice.attachments,
-    invoice.status,
-    invoice.particulars,
-    invoice.created_at,
+            invoice.id,
+            invoice.voucher_no,
+            invoice.customer_id,
+            invoice.customer_name,
+            invoice.trn_date,
+            invoice.due_date,
+            invoice.billing_address,
+            invoice.amount,
+            invoice.discount,
+            invoice.discount_type,
+            invoice.tax,
+            invoice.tax_zone_id,
+            invoice.estimate,
+            invoice.attachments,
+            invoice.status,
+            invoice.particulars,
+            invoice.created_at,
 
-    inv_acc_detail.debit,
-    inv_acc_detail.credit
+            inv_acc_detail.debit,
+            inv_acc_detail.credit
 
-    FROM {$wpdb->prefix}erp_acct_invoices as invoice
-    LEFT JOIN {$wpdb->prefix}erp_acct_voucher_no as voucher ON invoice.voucher_no = voucher.id
-    LEFT JOIN {$wpdb->prefix}erp_acct_invoice_account_details as inv_acc_detail ON invoice.voucher_no = inv_acc_detail.trn_no
-    WHERE invoice.voucher_no = %d",
+        FROM {$wpdb->prefix}erp_acct_invoices as invoice
+        LEFT JOIN {$wpdb->prefix}erp_acct_voucher_no as voucher ON invoice.voucher_no = voucher.id
+        LEFT JOIN {$wpdb->prefix}erp_acct_invoice_account_details as inv_acc_detail ON invoice.voucher_no = inv_acc_detail.trn_no
+        WHERE invoice.voucher_no = %d",
         $invoice_no
     );
+
+    erp_disable_mysql_strict_mode();
 
     $row = $wpdb->get_row( $sql, ARRAY_A );
 
@@ -354,13 +358,13 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no, $c
         foreach ( $tax_agency_details as $agency_id => $tax_agency_detail ) {
             $debit = 0;
             $credit = 0;
-            
+
             if ( $contra ) {
                 $debit = $tax_agency_detail;
             } else {
                 $credit = $tax_agency_detail;
             }
-            
+
             $wpdb->insert(
                 $wpdb->prefix . 'erp_acct_tax_agency_details',
                 [
@@ -751,6 +755,8 @@ function erp_acct_void_invoice( $invoice_no ) {
     }
 
     $wpdb->delete( $wpdb->prefix . 'erp_acct_tax_agency_details', [ 'trn_no' => $invoice_no ] );
+
+    erp_acct_purge_cache( ['list' => 'sales_transaction'] );
 }
 
 /**
@@ -838,6 +844,8 @@ function erp_acct_insert_invoice_data_into_ledger( $invoice_data, $voucher_no = 
             'updated_by'  => $user_id,
         ]
     );
+
+    erp_acct_purge_cache( ['list' => 'sales_transaction'] );
 }
 
 /**
@@ -879,6 +887,8 @@ function erp_acct_update_invoice_data_in_ledger( $invoice_data, $invoice_no ) {
             'trn_no' => $invoice_no,
         ]
     );
+
+    erp_acct_purge_cache( ['list' => 'sales_transaction'] );
 }
 
 /**
@@ -1066,11 +1076,11 @@ function erp_acct_get_invoice_due( $invoice_no ) {
 
 /**
  * Retrieves tax zone of an invoice
- * 
+ *
  * @since 1.8.0
  *
  * @param [type] $invoice_no
- * 
+ *
  * @return int|string
  */
 function erp_acct_get_invoice_tax_zone( $invoice_no ) {

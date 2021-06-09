@@ -108,8 +108,10 @@ class Contacts_Groups_Controller extends REST_Controller {
      */
     public function get_groups( $request ) {
         $args = [
-            'number' => $request['per_page'],
-            'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
+            'number'  => $request['per_page'],
+            'offset'  => ( $request['per_page'] * ( $request['page'] - 1 ) ),
+            'orderby' => $request['orderby'],
+            'order'   => $request['order']
         ];
 
         $items       = erp_crm_get_contact_groups( $args );

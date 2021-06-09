@@ -2881,8 +2881,12 @@ table.erp-settings-table tr:nth-child(odd) td {
 .erp table.form-table td {
   padding: 6px 10px;
 }
-.erp .erp-hr-new-leave-request-wrap {
-  margin: 20px 0px;
+.erp .leave-calendar-actions-wrap {
+  margin-bottom: 20px;
+  display: flex;
+}
+.erp .leave-calendar-actions-wrap div {
+  padding: 0 3px;
 }
 ul.erp-list {
   width: 100%;
@@ -4407,6 +4411,16 @@ div.erp-nav-container.--show-secondary .-secondary {
     margin-top: 15px;
     text-align: center;
   }
+}
+.erp-select2-add {
+  padding: 10px;
+  border-top: 1px solid #ddd;
+}
+.erp-select2-add a {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: bold;
+  text-decoration: none;
 }
 /* WP data table conflict resolve ----------- */
 .wpdt-c #adminmenuback {

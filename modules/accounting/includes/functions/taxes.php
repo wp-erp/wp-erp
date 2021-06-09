@@ -23,21 +23,40 @@ function erp_acct_get_all_tax_rates( $args = [] ) {
 
     $args = wp_parse_args( $args, $defaults );
 
-    $limit = '';
+    $last_changed = erp_cache_get_last_changed( 'accounting', 'tax_rates', 'erp-accounting' );
+    $cache_key    = 'erp-get-tax-rates-' . md5( serialize( $args ) ) . ": $last_changed";
+    $tax_rates    = wp_cache_get( $cache_key, 'erp-accounting' );
 
-    if ( -1 !== $args['number'] ) {
-        $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+    $cache_key_count = 'erp-get-tax-rates-count-' . md5( serialize( $args ) ) . " : $last_changed";
+    $tax_rates_count  = wp_cache_get( $cache_key_count, 'erp-accounting' );
+
+    if ( false === $tax_rates ) {
+        $limit = '';
+
+        if ( -1 !== $args['number'] ) {
+            $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+        }
+
+        $sql  = 'SELECT';
+        $sql .= $args['count'] ? ' COUNT( DISTINCT tax.id ) as total_number ' : ' DISTINCT tax.id, tax.tax_rate_name, tax.tax_number, tax.default ';
+        $sql .= "FROM {$wpdb->prefix}erp_acct_taxes AS tax INNER JOIN {$wpdb->prefix}erp_acct_tax_cat_agency as cat_agency on tax.id = cat_agency.tax_id ORDER BY {$args['orderby']} {$args['order']} {$limit}";
+
+        if ( $args['count'] ) {
+            $tax_rates_count = $wpdb->get_var( $sql );
+
+            wp_cache_set( $cache_key_count, $tax_rates_count, 'erp-accounting' );
+        } else {
+            $tax_rates = $wpdb->get_results( $sql, ARRAY_A );
+
+            wp_cache_set( $cache_key, $tax_rates, 'erp-accounting' );
+        }
     }
-
-    $sql  = 'SELECT';
-    $sql .= $args['count'] ? ' COUNT( DISTINCT tax.id ) as total_number ' : ' DISTINCT tax.id, tax.tax_rate_name, tax.tax_number, tax.default ';
-    $sql .= "FROM {$wpdb->prefix}erp_acct_taxes AS tax INNER JOIN {$wpdb->prefix}erp_acct_tax_cat_agency as cat_agency on tax.id = cat_agency.tax_id ORDER BY {$args['orderby']} {$args['order']} {$limit}";
 
     if ( $args['count'] ) {
-        return $wpdb->get_var( $sql );
+        return $tax_rates_count;
     }
 
-    return $wpdb->get_results( $sql, ARRAY_A );
+    return $tax_rates;
 }
 
 /**
@@ -52,24 +71,26 @@ function erp_acct_get_tax_rate( $tax_no ) {
 
     $sql = "SELECT
 
-    tax.id,
-    tax.tax_rate_name,
-    tax.tax_number,
-    tax.default,
-    tax.created_at,
-    tax.created_by,
-    tax.updated_at,
-    tax.updated_by,
+                tax.id,
+                tax.tax_rate_name,
+                tax.tax_number,
+                tax.default,
+                tax.created_at,
+                tax.created_by,
+                tax.updated_at,
+                tax.updated_by,
 
-    tax_item.tax_id,
-    tax_item.component_name,
-    tax_item.agency_id,
-    tax_item.tax_cat_id
+                tax_item.tax_id,
+                tax_item.component_name,
+                tax_item.agency_id,
+                tax_item.tax_cat_id
 
-    FROM {$wpdb->prefix}erp_acct_taxes AS tax
-    LEFT JOIN {$wpdb->prefix}erp_acct_tax_cat_agency AS tax_item ON tax.id = tax_item.tax_id
+            FROM {$wpdb->prefix}erp_acct_taxes AS tax
+            LEFT JOIN {$wpdb->prefix}erp_acct_tax_cat_agency AS tax_item ON tax.id = tax_item.tax_id
 
-    WHERE tax.id = {$tax_no} LIMIT 1";
+            WHERE tax.id = {$tax_no} LIMIT 1";
+
+    erp_disable_mysql_strict_mode();
 
     $row = $wpdb->get_row( $sql, ARRAY_A );
 
@@ -122,6 +143,8 @@ function erp_acct_insert_tax_rate( $data ) {
             ]
         );
     }
+
+    erp_acct_purge_cache( ['list' => 'tax_rates'] );
 
     return $tax_id;
 }
@@ -183,6 +206,8 @@ function erp_acct_update_tax_rate( $data, $id ) {
         );
     }
 
+    erp_acct_purge_cache( ['list' => 'tax_rates'] );
+
     return $id;
 }
 
@@ -219,6 +244,8 @@ function erp_acct_quick_edit_tax_rate( $data, $id ) {
         ]
     );
 
+    erp_acct_purge_cache( ['list' => 'tax_rates'] );
+
     return $id;
 }
 
@@ -252,6 +279,8 @@ function erp_acct_add_tax_rate_line( $data ) {
             'updated_by'     => $tax_data['updated_by'],
         ]
     );
+
+    erp_acct_purge_cache( ['list' => 'tax_rates'] );
 
     return $tax_data['tax_id'];
 }
@@ -289,6 +318,8 @@ function erp_acct_edit_tax_rate_line( $data ) {
         ]
     );
 
+    erp_acct_purge_cache( ['list' => 'tax_rates'] );
+
     return $tax_data['db_id'];
 }
 
@@ -304,6 +335,8 @@ function erp_acct_delete_tax_rate_line( $line_no ) {
 
     $wpdb->delete( $wpdb->prefix . 'erp_acct_tax_cat_agency', [ 'id' => $line_no ] );
 
+    erp_acct_purge_cache( ['list' => 'tax_rates'] );
+
     return $line_no;
 }
 
@@ -318,6 +351,8 @@ function erp_acct_delete_tax_rate( $tax_no ) {
     global $wpdb;
 
     $wpdb->delete( $wpdb->prefix . 'erp_acct_taxes', [ 'id' => $tax_no ] );
+
+    erp_acct_purge_cache( ['list' => 'tax_rates'] );
 
     return $tax_no;
 }
@@ -341,21 +376,41 @@ function erp_acct_get_tax_pay_records( $args = [] ) {
 
     $args = wp_parse_args( $args, $defaults );
 
-    $limit = '';
+    $last_changed = erp_cache_get_last_changed( 'accounting', 'tax_pay', 'erp-accounting' );
+    $cache_key    = 'erp-get-tax-pay-' . md5( serialize( $args ) ) . ": $last_changed";
+    $tax_pay      = wp_cache_get( $cache_key, 'erp-accounting' );
 
-    if ( -1 !== $args['number'] ) {
-        $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+    $cache_key_count = 'erp-get-tax-pay-count-' . md5( serialize( $args ) ) . " : $last_changed";
+    $tax_pay_count   = wp_cache_get( $cache_key_count, 'erp-accounting' );
+
+    if ( false === $tax_pay ) {
+
+        $limit = '';
+
+        if ( -1 !== $args['number'] ) {
+            $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+        }
+
+        $sql  = 'SELECT';
+        $sql .= $args['count'] ? ' COUNT( id ) as total_number ' : ' * ';
+        $sql .= "FROM {$wpdb->prefix}erp_acct_tax_pay ORDER BY {$args['orderby']} {$args['order']} {$limit}";
+
+        if ( $args['count'] ) {
+            $tax_pay_count = $wpdb->get_var( $sql );
+
+            wp_cache_set( $cache_key_count, $tax_pay_count, 'erp-accounting' );
+        } else {
+            $tax_pay = $wpdb->get_results( $sql, ARRAY_A );
+
+            wp_cache_set( $cache_key, $tax_pay, 'erp-accounting' );
+        }
     }
-
-    $sql  = 'SELECT';
-    $sql .= $args['count'] ? ' COUNT( id ) as total_number ' : ' * ';
-    $sql .= "FROM {$wpdb->prefix}erp_acct_tax_pay ORDER BY {$args['orderby']} {$args['order']} {$limit}";
 
     if ( $args['count'] ) {
-        return $wpdb->get_var( $sql );
+        return $tax_pay_count;
     }
 
-    return $wpdb->get_results( $sql, ARRAY_A );
+    return $tax_pay;
 }
 
 /**
@@ -469,6 +524,8 @@ function erp_acct_pay_tax( $data ) {
 
     $tax_pay = erp_acct_get_tax_pay_record( $voucher_no );
 
+    erp_acct_purge_cache( ['list' => 'tax_pay'] );
+
     return $tax_pay;
 }
 
@@ -506,6 +563,8 @@ function erp_acct_insert_tax_pay_data_into_ledger( $tax_data ) {
             'updated_by'  => $tax_data['updated_by'],
         ]
     );
+
+    erp_acct_purge_cache( ['list' => 'tax_pay'] );
 }
 
 /**

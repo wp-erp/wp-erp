@@ -3,9 +3,9 @@ Contributors: tareq1988, nizamuddinbabu, wedevs
 Donate Link: https://tareq.co/donate
 Tags: business manager, erp, accounting, crm, hr, project manager, small business, SME, contact, contacts, Customer Relationship Management, employee, leave management, hr, human resource management, job, jobs, job listing, lead management, opportunity, schedule, task, lead, holiday, company
 Requires at least: 4.4
-Tested up to: 5.7.1
+Tested up to: 5.7.2
 Requires PHP: 5.6
-Stable tag: 1.8.2
+Stable tag: 1.8.5
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -280,41 +280,100 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 == Changelog ==
 
+= v1.8.5 -> June 08, 2021 =
+--------------------------
+
+- [new] While adding people in Accounting with an email that exists in CRM, the people can be updated and imported from CRM directly at that moment
+- [new] New Request submenu under HRM People
+- [new] Real-time bubble to show pending request count in Requests
+- [new] Import csv options in Employee, Contact, Company, Vendor, and Customer list table page individually
+- [new] Export csv options in Employee, Contact, Company, Vendor, and Customer list table page individually
+- [new] Import users as contacts option in Contact list table page
+- [update] Styles upgrade for filter dropdown
+- [update] Optimized some library scripts and stylesheets
+- [update] Removed import/export tabs from Tools
+- [update] Some backend optimization in Accounting
+- [update] Filtering use case of dropdown has been improved in leave entitlement form
+- [update] Responsive design in modules and extension page
+- [update] Optimized extension icons to make the page more smooth and lightweight
+- [update] Filter dropdown buttons design upgrade
+- [fix] Employee address was unable to update
+- [fix] Adding new customer/vendor with an email that exist in CRM was showing error
+- [fix] All transaction payment chart was not showing amounts correctly
+- [fix] Some incompatible API response issues on products and customers in accounting
+- [fix] Country and state was getting reset each time a customer is updated in accounting
+- [fix] Customer and vendor address was not showing correctly on frontend
+- [fix] Outside click event for transaction filter was generating error
+- [fix] Department dropdown was not showing all departments in some cases
+- [fix] JSON datatype issue in employee education table
+- [fix] Error regarding gmail api connection with CRM when google auth api returns error
+- [fix] Accounting manager permission checkbox option was not showing in employee permissions tab
+- [fix] Leave policy list page was showing empty after updating a policy
+- [fix] Some undefined index notice issues all over the plugin
+
+= v1.8.4 -> May 07, 2021 =
+--------------------------
+
+- [notice] Limited time promotional offer on account of Eid
+- [update] Applied status change action when an employee gets trashed
+- [fix] Department listing issue when there is no root parent
+
+= v1.8.3 -> May 05, 2021 =
+--------------------------
+
+- [update] Caching process has been applied in the missing area to make performance faster and more smooth
+- [update] New create option for Department and Designation on Employee create/update form
+- [update] Some predefined department and designation for first time installation
+- [update] Detailed result feature in employee education
+- [update] A new design on modules and extension page
+- [update] Delete option has been disabled for current employee history
+- [fix] Employee history was not showing the current value correctly
+- [fix] Terminate option was showing for already terminated employees
+- [fix] Compensation history from past was updating the current value of employee
+- [fix] Caching issues all over the plugin
+- [fix] Contact group order by column
+- [fix] DB table prefix issue in leave
+- [fix] Delete product details was not deleting from detail table
+- [fix] Some list parsing, ordering, counting and filtering
+- [fix] Leave policy filtering by name was not working
+- [fix] Reactivity on updating and deleting holidays
+- [fix] Delete, bulk delete was not working properly on contact, company in CRM
+
 = v1.8.2 -> April 15, 2021 =
 --------------------------
 
-[new] Attachments feature for note, email, log activity, schedule, and tasks inside CRM contact/company
-[update] Actions on tax payments have been temporarily disabled
-[update] User limit check has been applied on updating status and restoring trashed employee
-[update] Sanitization on all phone number input has been applied to filter numeric values and an optional '+' at the beginning
-[update] Current user will be auto assigned while creating schedule from my schedule section
-[update] Autocomplete has been disabled for many datepicker and other input fields to make usability better
-[update] All filter menu usability has been updated including reset option and outside click event
-[update] Translation has been applied in all missing translatable string in all over the accounting module
-[fix] Inconsistent schedule data in my schedule section
-[fix] User was not being assigned to while creating backdated schedule
-[fix] Additional fields in employee were not updating
-[fix] Some checkbox, radio, and dropdown input validations were not working properly
-[fix] Issues on loading some components
-[fix] Existing employees were unable to update upon reaching user limit
-[fix] Direct termination was not updating employee history
-[fix] Some minor undefined index notices on various actions
-[fix] Transaction count filter with pagination was not working correctly
-[fix] Datepicker empty selection issue in accounting transactions
-[fix] Date filtering was not working for expense transaction
-[fix] Inconsistent default end date on ledger reports filters
-[fix] Dynamic voucher pages were not loading in accounting transactions
-[fix] Tax rates were unable to update
-[fix] Design of tax rate edit form was broken
+- [new] Attachments feature for note, email, log activity, schedule, and tasks inside CRM contact/company
+- [update] Actions on tax payments have been temporarily disabled
+- [update] User limit check has been applied on updating status and restoring trashed employee
+- [update] Sanitization on all phone number input has been applied to filter numeric values and an optional '+' at the beginning
+- [update] Current user will be auto assigned while creating schedule from my schedule section
+- [update] Autocomplete has been disabled for many datepicker and other input fields to make usability better
+- [update] All filter menu usability has been updated including reset option and outside click event
+- [update] Translation has been applied in all missing translatable string in all over the accounting module
+- [fix] Inconsistent schedule data in my schedule section
+- [fix] User was not being assigned to while creating backdated schedule
+- [fix] Additional fields in employee were not updating
+- [fix] Some checkbox, radio, and dropdown input validations were not working properly
+- [fix] Issues on loading some components
+- [fix] Existing employees were unable to update upon reaching user limit
+- [fix] Direct termination was not updating employee history
+- [fix] Some minor undefined index notices on various actions
+- [fix] Transaction count filter with pagination was not working correctly
+- [fix] Datepicker empty selection issue in accounting transactions
+- [fix] Date filtering was not working for expense transaction
+- [fix] Inconsistent default end date on ledger reports filters
+- [fix] Dynamic voucher pages were not loading in accounting transactions
+- [fix] Tax rates were unable to update
+- [fix] Design of tax rate edit form was broken
 
 = v1.8.1 -> March 17, 2021 =
 --------------------------
 
-[fix] Fixed fatal error while updating data
-[fix] Fixed incompatibility on contact form integration settings
-[fix] Fixed data was not loading in my schedule tab
-[fix] Fixed design conflict of setup wizard
-[update] Updated some designs
+- [fix] Fixed fatal error while updating data
+- [fix] Fixed incompatibility on contact form integration settings
+- [fix] Fixed data was not loading in my schedule tab
+- [fix] Fixed design conflict of setup wizard
+- [update] Updated some designs
 
 = v1.8.0 -> March 15, 2021 =
 --------------------------

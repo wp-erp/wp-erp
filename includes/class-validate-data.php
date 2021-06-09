@@ -18,34 +18,9 @@ class Validate_Data {
      *
      * @return void
      */
-
     public function __construct() {
-        $this->action( 'erp_tool_import_csv_action', 'pre_validate_csv_data' );
-        $this->action( 'validate_csv_data', 'validate_csv_data', 10, 3 );
+        $this->filter( 'erp_validate_csv_data', 'validate_csv_data', 10, 3 );
         $this->filter( 'validate_field', 'validate_custom_field', 10, 3 );
-    }
-
-    /**
-     * Pre validate csv data
-     *
-     * @since 1.6.5
-     *
-     * @return void
-     */
-    public function pre_validate_csv_data( $data ) {
-        $errors = new ERP_Errors( 'import_csv_data' );
-        // Check if current user has permission
-        if ( ! current_user_can( 'administrator' ) ) {
-            $errors->add( new \WP_Error( 'no-permission', __( 'Sorry ! You do not have permission to access this page', 'erp' ) ) );
-        }
-
-        $files = wp_check_filetype_and_ext( $data['file']['tmp_name'], $data['file']['name'] );
-
-        // Check if current user has permission
-        if ( 'csv' !== $files['ext'] && 'text/csv' !== $files['type'] ) {
-            $errors->add( new \WP_Error( 'no-permission', __( 'Sorry ! You have to provide valid csv file', 'erp' ) ) );
-        }
-        $this->through_error_if_found( $errors );
     }
 
     /**
@@ -53,52 +28,30 @@ class Validate_Data {
      *
      * @since 1.6.5
      *
-     * @return void
+     * @return array
      */
     public function validate_csv_data( $csv_data, $fields, $type ) {
-        $prodessed_data = $this->filter_validate_csv_data( $csv_data, $fields, $type );
+        $errors         = [];
+        $processed_data = $this->filter_validate_csv_data( $csv_data, $fields, $type );
+        $total_rows     = count( $processed_data );
 
-        $this->process_errors( $prodessed_data );
-    }
-
-    /**
-     * Process errors
-     *
-     * @since 1.6.5
-     *
-     * @return void
-     */
-    public function process_errors( $prodessed_data ) {
-        $errors = new ERP_Errors( 'import_csv_data' );
-
-        if ( ! empty( $prodessed_data ) ) {
-            foreach ( $prodessed_data as $pdata_key => $pdata_val ) {
+        if ( ! empty( $processed_data ) ) {
+            foreach ( $processed_data as $pdata_key => $pdata_val ) {
                 $pdata_key_arr = explode( '_', $pdata_key );
-                $errors->add( new WP_Error( 'csv_error_' . $pdata_key, __( '<strong>Error #ROW ' . ( $pdata_key_arr[1] + 1 ) . '</strong>', 'erp' ) ) );
+
+                $errors[] = '<strong>' . __( sprintf( "Error at #ROW %d", $pdata_key_arr[1] + 1 ), 'erp' ) . '</strong>';
+                
                 foreach ( $pdata_val as $pdval ) {
                     foreach ( $pdval['errors'] as $err ) {
-                        $errors->add( new WP_Error( 'csv_error_' . $pdval['field_name'], __( $err, 'erp' ) ) );
+                        $errors[] = __( sprintf( "%s", $err ), 'erp' );
                     }
                 }
-            }
-            $this->through_error_if_found( $errors );
-        }
-    }
 
-    /**
-     * Through errors if found & redirect
-     *
-     * @since 1.6.5
-     *
-     * @return void
-     */
-    public function through_error_if_found( $errors ) {
-        if ( $errors->has_error() ) {
-            $errors->save();
-            $redirect_to = add_query_arg( array( 'error' => $errors->get_key() ), admin_url( 'admin.php?page=erp-tools&tab=import' ) );
-            wp_safe_redirect( $redirect_to );
-            exit;
+                $errors[] = '<hr>';
+            }
         }
+
+        return $errors;
     }
 
     /**
@@ -154,6 +107,7 @@ class Validate_Data {
                 }
             }
         }
+
         return $error_list;
     }
 
@@ -389,8 +343,8 @@ class Validate_Data {
 
         $result = $wpdb->get_var(
             $wpdb->prepare(
-                'SELECT COUNT(*) FROM %s WHERE %s=%s',
-                $wpdb->prefix . 'erp_peoples', $column, $value
+                "SELECT COUNT(*) FROM {$wpdb->prefix}erp_peoples WHERE $column = %s",
+                [ $value ]
             )
         );
 
@@ -411,8 +365,8 @@ class Validate_Data {
 
         $result = $wpdb->get_var(
             $wpdb->prepare(
-                'SELECT COUNT(*) FROM %s as emp LEFT JOIN %s as users ON emp.user_id=users.id WHERE %s=%s',
-                $wpdb->prefix . 'erp_hr_employees', $wpdb->prefix . 'users', $column, $value
+                "SELECT COUNT(*) FROM {$wpdb->prefix}erp_hr_employees as emp LEFT JOIN {$wpdb->prefix}users as users ON emp.user_id = users.ID WHERE $column = %s",
+                $value
             )
         );
 

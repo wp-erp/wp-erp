@@ -258,13 +258,12 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Request
      */
     public function create_customer( $request ) {
-        if ( erp_acct_check_people_exists( $request['email'] ) ) {
+        if ( erp_acct_exist_people( $request['email'] ) ) {
             return new WP_Error( 'rest_customer_invalid_id', __( 'Email already exists!' ), [ 'status' => 400 ] );
         }
 
         $item = $this->prepare_item_for_database( $request );
-
-        $id = erp_insert_people( $item );
+        $id   = erp_acct_insert_people( $item );
 
         $customer       = (array) erp_get_people( $id );
         $customer['id'] = $id;
@@ -299,7 +298,7 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $item = $this->prepare_item_for_database( $request );
 
-        $id = erp_insert_people( $item );
+        $id = erp_acct_insert_people( $item );
 
         $customer       = (array) erp_get_people( $id );
         $customer['id'] = $id;
@@ -342,6 +341,8 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $customer = (array) erp_get_people( $id );
 
+        erp_acct_purge_cache( [ 'group' => 'erp', 'list' => 'people', 'type' => $data['type'] ] );
+
         erp_delete_people( $data );
 
         $this->add_log( $customer, 'delete' );
@@ -376,6 +377,8 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
 
             $customers[] = (array) erp_get_people( (int) $id );
         }
+
+        erp_acct_purge_cache( [ 'group' => 'erp', 'list' => 'people', 'type' => $data['type'] ] );
 
         erp_delete_people( $data );
 
@@ -592,19 +595,21 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
             'notes'      => $item->notes,
             'other'      => $item->other,
             'company'    => $item->company,
-            'photo_id'   => !empty( $item->photo_id ) ? $item->photo_id : null,
-            'photo'      => !empty( $item->photo ) ? $item->photo : null,
+            'photo_id'   => ! empty( $item->photo_id ) ? $item->photo_id : null,
+            'photo'      => ! empty( $item->photo ) ? $item->photo : null,
             'billing'    => [
-                'first_name'  => $item->first_name,
-                'last_name'   => $item->last_name,
-                'street_1'    => $item->street_1,
-                'street_2'    => $item->street_2,
-                'city'        => $item->city,
-                'state'       => $item->state,
-                'postal_code' => $item->postal_code,
-                'country'     => $item->country,
-                'email'       => $item->email,
-                'phone'       => $item->phone,
+                'first_name'   => $item->first_name,
+                'last_name'    => $item->last_name,
+                'street_1'     => $item->street_1,
+                'street_2'     => $item->street_2,
+                'city'         => $item->city,
+                'state'        => $item->state,
+                'state_name'   => ! empty( $item->state ) && ! empty( $item->country ) ? erp_get_state_name( $item->country, $item->state ) : '',
+                'postal_code'  => $item->postal_code,
+                'country'      => $item->country,
+                'country_name' => ! empty( $item->country ) ? erp_get_country_name( $item->country ) : '',
+                'email'        => $item->email,
+                'phone'        => $item->phone,
             ],
         ];
 

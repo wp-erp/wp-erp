@@ -357,11 +357,15 @@ function erp_hr_dashboard_widget_leave_calendar() {
         }
     </style>
 
-    <?php if ( erp_hr_get_assign_policy_from_entitlement( $user_id ) ) { ?>
-        <div class="erp-hr-new-leave-request-wrap">
-            <a href="#" class="button button-primary" id="erp-hr-new-leave-req"><?php esc_html_e( 'Take a Leave', 'erp' ); ?></a>
-        </div>
-    <?php } ?>
+    <div class="leave-calendar-actions-wrap">
+        <?php if ( erp_hr_get_assign_policy_from_entitlement( $user_id ) ) { ?>
+            <div class="erp-hr-new-leave-request-wrap">
+                <a href="#" class="button button-primary" id="erp-hr-new-leave-req"><?php esc_html_e( 'Take a Leave', 'erp' ); ?></a>
+            </div>
+        <?php } ?>
+
+        <?php do_action( 'erp_hr_leave_calendar_actions' ); ?>
+    </div>
 
     <div id="erp-hr-calendar"></div>
 

@@ -717,8 +717,13 @@ class Hr_Log {
 
         $new_policy = \WeDevs\ERP\HRM\Models\Leave_Policy::find( $policy_id )->toArray();
 
-        $old_policy['effective_date'] = erp_format_date( $old_policy['effective_date'], 'Y-m-d' );
-        $new_policy['effective_date'] = erp_format_date( $new_policy['effective_date'], 'Y-m-d' );
+        $old_policy['effective_date'] = ! empty( $old_policy['effective_date'] )
+                                        ? erp_format_date( $old_policy['effective_date'], 'Y-m-d' )
+                                        : erp_current_datetime()->format( 'Y-m-d' );
+
+        $new_policy['effective_date'] = ! empty( $new_policy['effective_date'] )
+                                        ? erp_format_date( $new_policy['effective_date'], 'Y-m-d' )
+                                        : erp_current_datetime()->format( 'Y-m-d' );
 
         if ( isset( $new_policy['activate'] ) && $new_policy['activate'] == 1 ) {
             unset( $new_policy['execute_day'], $old_policy['execute_day'] );

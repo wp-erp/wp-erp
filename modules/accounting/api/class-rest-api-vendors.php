@@ -258,13 +258,13 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Request
      */
     public function create_vendor( $request ) {
-        if ( erp_acct_check_people_exists( $request['email'] ) ) {
+        if ( erp_acct_exist_people( $request['email'] ) ) {
             return new WP_Error( 'rest_customer_invalid_id', __( 'Email already exists!' ), [ 'status' => 400 ] );
         }
 
         $item = $this->prepare_item_for_database( $request );
 
-        $id = erp_insert_people( $item );
+        $id   = erp_acct_insert_people( $item );
 
         $vendor       = (array) erp_get_people( $id );
         $vendor['id'] = $id;
@@ -301,7 +301,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $item = $this->prepare_item_for_database( $request );
 
-        $id = erp_insert_people( $item );
+        $id   = erp_acct_insert_people( $item );
 
         $vendor       = (array) erp_get_people( $id );
         $vendor['id'] = $id;
@@ -345,6 +345,8 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $vendor = (array) erp_get_people( (int) $id );
 
+        erp_acct_purge_cache( [ 'group' => 'erp', 'list' => 'people', 'type' => $data['type'] ] );
+
         erp_delete_people( $data );
 
         $this->add_log( $vendor, 'delete' );
@@ -379,6 +381,8 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
 
             $vendors[] = (array) erp_get_people( (int) $id );
         }
+
+        erp_acct_purge_cache( [ 'group' => 'erp', 'list' => 'people', 'type' => $data['type'] ] );
 
         erp_delete_people( $data );
 
