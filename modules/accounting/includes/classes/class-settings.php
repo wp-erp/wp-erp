@@ -82,7 +82,7 @@ class Settings extends ERP_Settings_Page {
 
         $fields['currency_option'] = [
             [
-                'title' => '',
+                'title' => __( 'Currency Settings', 'erp' ),
                 'type'  => 'title',
                 'desc'  => '',
                 'id'    => 'general_options',

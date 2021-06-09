@@ -28,7 +28,7 @@
                         </option>
                     </select>
 
-                    <p class="erp-form-input-hint" v-if="input.desc.length > 0 && ! input.tooltip">
+                    <p class="erp-form-input-hint" v-if="input.desc && input.desc.length > 0 && ! input.tooltip">
                         {{ input.desc }}
                     </p>
                 </template>
@@ -75,7 +75,7 @@
                         :id="'erp-'+fields[index]['id']"
                     />
 
-                    <p class="erp-form-input-hint" v-if="input.desc.length > 0 && ! input.tooltip">
+                    <p class="erp-form-input-hint" v-if="input.desc && input.desc.length > 0 && ! input.tooltip">
                         {{ input.desc }}
                     </p>
                 </div>
