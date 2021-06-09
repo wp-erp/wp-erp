@@ -1,6 +1,8 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import GeneralSettings from 'settings/components/general/GeneralSettings.vue';
+
+// HRM Components
 import HRWorkDays from 'settings/components/hr/workdays/HRWorkDays.vue';
 import HRLeave from 'settings/components/hr/leave/HRLeave.vue';
 import HRLeaveYears from 'settings/components/hr/leave-years/HRLeaveYears.vue';
@@ -11,6 +13,10 @@ import HRRemoteWork from 'settings/components/hr/remote-work/HRRemoteWork.vue';
 import HrPayment from 'settings/components/hr/payroll/HrPayment.vue';
 import HrPayItem from 'settings/components/hr/payroll/HrPayItem.vue';
 import HRAttendance from 'settings/components/hr/attendance/HRAttendance.vue';
+
+// AC Components
+import AcCustomer from 'settings/components/act/customer/AcCustomer.vue';
+import AcCurrency from 'settings/components/act/currency/AcCurrency.vue';
 
 Vue.use(Router);
 
@@ -29,6 +35,7 @@ export default new Router({
                 }
             ]
         },
+
         {
             path: '/erp-hr',
             name: 'HR',
@@ -102,6 +109,30 @@ export default new Router({
                     name: 'HRAttendance',
                     component: HRAttendance
                 },
+            ]
+        },
+
+        {
+            path: '/erp-ac',
+            name: 'Ac',
+            component: {
+                render(c) {
+                    return c('router-view');
+                }
+            },
+            children: [
+                {
+                    path: 'customers',
+                    name: 'AcCustomer',
+                    component: AcCustomer,
+                    alias: '/erp-ac'
+                },
+                {
+                    path: 'currency_option',
+                    name: 'AcCurrency',
+                    component: AcCurrency
+                },
+
             ]
         }
     ])
