@@ -2067,7 +2067,7 @@ function erp_import_export_download_sample() {
         $keys      = $fields[ $type ]['fields'];
         $keys      = array_flip( $keys );
         $file_name = "sample_csv_{$type}.csv";
-        
+
         erp_make_csv_file( [ $keys ], $file_name, false );
     }
 
@@ -3420,12 +3420,13 @@ function erp_sanitize_phone_number( $phone_no, $allow_plus = false ) {
     return $result;
 }
 
+/**
  * Checks if a user has permission to view a page
- * 
+ *
  * @since 1.8.5
  *
  * @param string $cap
- * 
+ *
  * @return void
  */
 function erp_verify_page_access_permission( $cap ) {
@@ -3440,7 +3441,7 @@ function erp_verify_page_access_permission( $cap ) {
 
 /**
  * Disables mysql strict mode
- * 
+ *
  * @since 1.8.5
  *
  * @return void
@@ -3452,6 +3453,7 @@ function erp_disable_mysql_strict_mode() {
     $wpdb->query( "SET SQL_BIG_SELECTS=1" );
 }
 
+/**
  * Get Standarized message for erp
  *
  * @since 1.8.6
