@@ -31,7 +31,7 @@
                 <template slot="dropdown">
                     <ul role="menu">
                         <template v-for="(menu, key, index) in menus">
-                            <li v-if="index > dropdownMenuStartPos" :key="index" class="dropdown-list-item">
+                            <li v-if="index >= dropdownMenuStartPos" :key="index" class="dropdown-list-item">
                                 <router-link :to="'/' + parent_id + '/' + key">
                                     <span class="menu-name">{{ menu }}</span>
                                 </router-link>
