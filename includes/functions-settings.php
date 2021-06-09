@@ -3,17 +3,6 @@
 use \WeDevs\ERP\HRM\Models\Financial_Year;
 
 /**
- * Get General Options Settings Data
- *
- * @since 1.8.6
- *
- * @return array general settings data
- */
-function erp_settings_get_general () {
-    return get_option( 'erp_settings_general', [] );
-}
-
-/**
  * Get Options For Settings
  *
  * @since 1.8.6
@@ -37,8 +26,6 @@ function erp_settings_get_data ( $options = [] ) {
         if ( ! empty ( $option['id'] ) ) {
             $option_value = $single_option ? get_option( $option['id'] ) : $single_option_data[ $option['id'] ];
 
-            // var_dump( $option['id'] .' -->> ' .$option_value );
-
             switch ($option['type']) {
                 case 'checkbox':
                     $option_value = $option_value === 'yes' ? true : false;
@@ -57,79 +44,6 @@ function erp_settings_get_data ( $options = [] ) {
             array_push( $data, $option );
         }
     }
-
-    return $data;
-}
-
-/**
- * Get Days
- *
- * @since 1.8.6
- *
- * @return array days
- */
-function erp_settings_get_days () {
-    return [ 'mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun' ];
-}
-
-/**
- * Get Workdays Settings Data
- *
- * @since 1.8.6
- *
- * @return array workdays settings data
- */
-function erp_settings_get_workdays () {
-    $data = [];
-
-    foreach ( erp_settings_get_days() as $day ) {
-        $data[ $day ] = get_option( $day );
-    }
-
-    return $data;
-}
-
-/**
- * Get Settings leave options
- *
- * @since 1.8.6
- *
- * @todo get data using hook from erp-pro
- *
- * @return array $options
- */
-function erp_settings_leave_options () {
-    $options = [ 'enable_extra_leave', 'erp_pro_accrual_leave', 'erp_pro_carry_encash_leave', 'erp_pro_half_leave', 'erp_pro_multilevel_approval', 'erp_pro_seg_leave', 'erp_pro_sandwich_leave' ];
-    return $options;
-}
-
-/**
- * Get Settings Leave Data
- *
- * @since 1.8.6
- *
- * @return array $data
- */
-function erp_settings_get_leaves () {
-    $data = [];
-
-    foreach ( erp_settings_leave_options() as $option ) {
-        $option_value    = get_option( $option,  'no' );
-        $data[ $option ] = ( $option_value === '1' || $option_value === true || $option_value === 'yes' ) ? true : false;
-    }
-
-    return $data;
-}
-
-/**
- * Get Settings Miscellaneous Data
- *
- * @since 1.8.6
- *
- * @return array $data
- */
-function erp_settings_get_miscellaneous () {
-    $data['erp_hrm_remove_wp_user'] = ( get_option( 'erp_hrm_remove_wp_user',  'no' ) === 'yes' ) ? true : false;
 
     return $data;
 }
