@@ -38,11 +38,16 @@ class Settings extends ERP_Settings_Page {
      *
      * @return array
      */
-    public function get_section_fields( $section = '' ) {
+    public function get_section_fields( $section = '', $all_data = false ) {
         $symbol = erp_acct_get_currency_symbol();
 
         $fields['customers'] = [
-            [ 'title' => __( '', 'erp' ), 'type' => 'title', 'desc' => '', 'id' => 'general_options' ],
+            // [
+            //     'title' => __( '', 'erp' ),
+            //     'type' => 'title',
+            //     'desc' => '',
+            //     'id' => 'general_options'
+            // ],
 
             [
                 'title' => __( 'Customer Settings', 'erp' ),
@@ -150,6 +155,16 @@ class Settings extends ERP_Settings_Page {
             }
         } else {
             $section = $fields['checkout'];
+        }
+
+        foreach ( $this->get_sections() as $sec => $name ) {
+            if ( empty( $fields[ $sec ] ) ) {
+                $fields = apply_filters( 'erp_ac_settings_section_fields_', $fields, $sec );
+            }
+        }
+
+        if ( $all_data ) {
+            return $fields;
         }
 
         return apply_filters( 'erp_ac_settings_section_fields_' . $this->id, $section );

@@ -12,20 +12,27 @@
                     <tooltip :text="input.desc" v-if="input.tooltip"/>
                 </label>
 
-                <select
-                    v-model="fields[index]['value']"
-                    class="wperp-form-field erp-select2"
-                    v-if="input.type === 'select'"
-                    :id="'erp-'+fields[index]['id']"
-                >
-                    <option
-                        v-for="(item, key, indexOption) in input.options"
-                        :value="key"
-                        :key="indexOption"
+                <template v-if="input.type === 'select'">
+                    <select
+                        v-model="fields[index]['value']"
+                        class="wperp-form-field erp-select2"
+                        :id="'erp-'+fields[index]['id']"
                     >
-                        {{ item }}
-                    </option>
-                </select>
+                        <option
+                            v-for="(item, key, indexOption) in input.options"
+                            :value="key"
+                            :key="indexOption"
+                            :selected="input.default == key ? 'selected' : ''"
+                        >
+                            {{ item }}
+                        </option>
+                    </select>
+
+                    <p class="erp-form-input-hint" v-if="input.desc.length > 0 && ! input.tooltip">
+                        {{ input.desc }}
+                    </p>
+                </template>
+
 
                 <div class="form-check" v-if="input.type === 'checkbox'">
                     <label class="form-check-label">

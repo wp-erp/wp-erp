@@ -60,11 +60,6 @@ class Settings_Assets {
 
         // dd( $menus );
 
-        $general_fields = array_search('general', array_column( $menus, 'id' ) ) !== false ? $menus[ array_search('general', array_column( $menus, 'id' ) ) ]['fields'] : [];
-        $hr_fields      = array_search('erp-hr', array_column( $menus, 'id' ) ) !== false ? $menus[ array_search('erp-hr', array_column( $menus, 'id' ) ) ]['fields'] : [];
-        $crm_fields     = array_search('erp-crm', array_column( $menus, 'id' ) ) !== false ? $menus[ array_search('erp-crm', array_column( $menus, 'id' ) ) ]['fields'] : [];
-        $act_fields     = array_search('erp-ac', array_column( $menus, 'id' ) ) !== false ? $menus[ array_search('erp-ac', array_column( $menus, 'id' ) ) ]['fields'] : [];
-
         if ( is_admin() ) { ?>
             <script>
                 window.erpSettings = JSON.parse('<?php echo wp_kses_post( wp_slash(
@@ -84,10 +79,6 @@ class Settings_Assets {
             'erp_debug_mode'        => erp_get_option( 'erp_debug_mode', 'erp_settings_general', 0 ),
             'current_date'          => erp_current_datetime()->format( 'Y-m-d' ),
             'date_format'           => erp_get_date_format(),
-            'settings_general_data' => $general_fields,
-            'settings_hr_data'      => $hr_fields,
-            'settings_crm_data'     => $crm_fields,
-            'settings_act_data'     => $act_fields,
             'ajax_url'              => admin_url( 'admin-ajax.php' ),
             'nonce'                 => wp_create_nonce( 'erp-settings-nonce' ),
             'action'                => 'erp-settings-save',
