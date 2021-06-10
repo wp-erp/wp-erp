@@ -66,7 +66,7 @@ class Settings extends ERP_Settings_Page {
             ],
 
             [
-                'title'   => __( 'Import User\'s From', 'erp' ),
+                'title'   => __( 'Import User&apos;s From', 'erp' ),
                 'id'      => 'crm_user_type',
                 'type'    => 'multicheck',
                 'desc'    => __( 'Selected user type are considered to auto import.', 'erp' ),
