@@ -7,7 +7,7 @@
                         tag="li"
                         :to="'/' + parent_id + '/' + key"
                         :class="
-                            $route.name === 'HRWorkDays' && index === 0
+                            ($route.name === 'HRWorkDays' || $route.name === 'AcCustomer') && index === 0
                                 ? 'router-link-active'
                                 : ''
                         "
@@ -19,7 +19,7 @@
                 </li>
             </template>
 
-            <dropdown v-if="dropdownMenuStartPos > 0">
+            <dropdown v-if="dropdownMenuStartPos > 0 && Object.keys(menus).length > 5">
                 <template slot="button">
                     <a href="#" class="">
                         {{ __("More", "erp") }}
