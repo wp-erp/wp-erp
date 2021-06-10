@@ -52,8 +52,8 @@ exports.config = {
           admin: {
             login: (I) => {
               I.amOnPage('/login');
-              I.fillField('Username', 'mehedi');
-              I.fillField('Password', secret('hoe)6ULjBvW8*C2P#T'));
+              I.fillField('Username', 'Username');
+              I.fillField('Password', secret('Password'));
               I.checkOption('Remember Me');
 	            I.click('Log In');
             },

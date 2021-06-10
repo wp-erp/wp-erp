@@ -3,22 +3,8 @@ var Factory= require('rosie');
 var faker =require('faker');
 module.exports = function() {
 return actor({
-loginAsAdmin: function() {
- this.amOnPage('https://erpqa.ajaira.website/wp-admin')
- this.fillField('Username or Email Address','mehedi')
- this.fillField('Password','hoe)6ULjBvW8*C2P#T')
- this.checkOption('Remember Me')
- this.click('Log In')
- this.see('WP ERP')
-},
-loginAsEmployee: function() {
-  this.amOnPage('https://erpqa.ajaira.website/wp-admin')
-  this.fillField('Username or Email Address','rinkychowdhury@wedevs.com')
-  this.fillField('Password','rinkychowdhury')
-  this.checkOption('Remember Me')
-  this.click('Log In')
-  this.see('Profile')
- },
+
+
  checkError: function () {
   this.dontSee('Warning');
   this.dontSee('Fatal error');
