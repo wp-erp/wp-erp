@@ -1,9 +1,12 @@
 const helper = require('../../pages/helper');
 
-Feature('Employee');
+const helpers = require('../../pages/helpers');
 
-Scenario('@Employee deleteEmployee',({ I }) => {  
+Feature('Employee');
+Scenario('@Employee deleteEmployee', ({
+    I
+}) => {
     I.loginAsAdmin();
     helper.deleteEmployee();
-
+    helpers.deleteEmployee();
 });

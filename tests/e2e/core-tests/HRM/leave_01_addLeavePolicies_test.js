@@ -7,7 +7,7 @@ Scenario('@Leave addLeavePolicy',({ I }) => {
         I.moveCursorTo('//*[@id="wpbody-content"]/div[2]/ul/li[3]');
         I.click('Policies');
         I.click('#erp-leave-name-new');
-        I.fillField('Leave Type','Pahela Baishakh');
+        I.fillField('Leave Type','Sick Leave');
         I.fillField('Description','For All departments');
         I.click('Save');
         I.click('Back To Leave Policies');
