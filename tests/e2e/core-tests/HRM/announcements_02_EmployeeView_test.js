@@ -1,5 +1,4 @@
 Feature('Announcement');
-
 Scenario('@Announcement Viewing Announcements as a Employee', ({
     I
 }) => {

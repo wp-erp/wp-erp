@@ -14,3 +14,4 @@ package-lock.json
 .env
 phpcs-report.txt
  tests/e2e/node_modules
+ tests/e2e/codecept.conf.js

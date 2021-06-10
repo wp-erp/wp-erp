@@ -1,8 +1,6 @@
 const helpers = require('../../pages/helpers');
 Feature('Designation');
-Scenario('addDepartment', ({
-    I
-}) => {
-    I.loginAsAdmin();
+Scenario('addDepartment', ({ I, loginAs}) => {
+    loginAs('admin');
     helpers.addDesignation();
 });
