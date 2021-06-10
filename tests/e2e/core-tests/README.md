@@ -27,6 +27,14 @@ npm install
 
 ## Step 3
 
+## Configuration
+ 
+Run The following command:
+
+
+
+## Step 4
+
 ## Running Test
  
 Run The following command:
@@ -36,4 +44,6 @@ Run The following command:
 Run Test Suit:
 
 `npx codeceptjs run --grep @Leave`  // Run multiple test cases at a time by using --grep function
+
+
    
