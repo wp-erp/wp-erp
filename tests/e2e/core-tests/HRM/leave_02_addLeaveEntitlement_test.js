@@ -7,14 +7,14 @@ Scenario('@Leave addLeaveEntitlement',({ I }) => {
         I.moveCursorTo('//*[@id="wpbody-content"]/div[2]/ul/li[3]');
         I.click('Leave Entitlements');
         I.click('#erp-new-leave-request');
-        I.click('#leave_policy');
-        I.click('//*[@id="leave_policy"]/option[2]');
         I.scrollPageToBottom();
+        I.click('//*[@id="select2-leave_policy-container"]');
+        I.type('Sick');
+        I.pressKey('Enter') 
         I.checkOption('#assignment_to');
         I.wait(2);
         I.scrollPageToTop();
         I.moveCursorTo('//*[@id="wpbody-content"]/div[2]/ul/li[6]');
         I.click('Back to Entitlement list');
         I.see('Leave Entitlements');
-
 });
