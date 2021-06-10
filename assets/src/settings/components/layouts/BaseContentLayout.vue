@@ -1,15 +1,15 @@
 <template>
     <form action="" class="wperp-form" method="post" @submit.prevent="onFormSubmit" enctype="multipart/form-data">
 
-        <h3 class="sub-sub-title" v-if="typeof sub_sub_section_title !== 'undefined' && sub_sub_section_title.length > 0">
-            {{ sub_sub_section_title }}
-        </h3>
+        <h3 class="sub-sub-title" v-html="sub_sub_section_title" v-if="typeof sub_sub_section_title !== 'undefined' && sub_sub_section_title.length > 0"></h3>
 
         <div v-for="(input, index) in fields" :key="index">
             <div class="wperp-form-group">
-                <label :for="'erp-'+fields[index]['id']">
+
+                <label :for="'erp-'+fields[index]['id']" v-if="! input.tooltip" v-html="input.title"></label>
+                <label :for="'erp-'+fields[index]['id']" v-else>
                     {{ input.title }}
-                    <tooltip :text="input.desc" v-if="input.tooltip"/>
+                    <tooltip :text="input.desc" v-if="input.tooltip" />
                 </label>
 
                 <template v-if="input.type === 'select'">
@@ -49,6 +49,27 @@
                             {{ input.desc }}
                         </span>
                     </label>
+                </div>
+
+                <div class="form-check" v-if="input.type === 'multicheck'">
+                    <label class="form-check-label" v-for="(checkOption, checkKey, index2) in input.options" :key="index2">
+                        <input
+                            v-model="fields[index]['value'][checkKey]"
+                            type="checkbox"
+                            class="form-check-input"
+                            :id="'erp-'+fields[index]['id'][checkKey]"
+                        />
+                        <span class="form-check-sign">
+                            <span class="check"></span>
+                        </span>
+                        <span class="form-check-label-light">
+                            {{ checkOption }}
+                        </span>
+                    </label>
+
+                    <p class="erp-form-input-hint" v-if="input.desc && input.desc.length > 0 && ! input.tooltip">
+                        {{ input.desc }}
+                    </p>
                 </div>
 
                 <div v-if="input.type === 'text' || input.type === 'textarea'">
@@ -152,11 +173,9 @@ export default {
     methods: {
         getSettingsData() {
             const self = this;
-
             self.$store.dispatch("spinner/setSpinner", true);
 
-            let requestData = window.settings.hooks.applyFilters(
-                "requestData",
+            let requestData = window.settings.hooks.applyFilters( "requestData",
                 {
                     ...self.inputs,
                     single_option : ! self.single_option ? self.section_id : null,
@@ -165,7 +184,7 @@ export default {
                 }
             );
 
-            const postData = generateFormDataFromObject(requestData);
+            const postData = generateFormDataFromObject( requestData );
 
             $.ajax({
                 url        : erp_settings_var.ajax_url,
@@ -173,11 +192,31 @@ export default {
                 data       : postData,
                 processData: false,
                 contentType: false,
-                success    : function (response) {
+                success    : function ( response ) {
                     self.$store.dispatch("spinner/setSpinner", false);
 
-                    if (response.success) {
+                    if ( response.success ) {
                         self.fields = response.data;
+
+                        // Process returned data to show for vue
+                        response.data.forEach(( item, index ) => {
+                            if ( item.type === 'multicheck' ) {
+                                let initialCheckedData = [];
+
+                                // First assign to false or uncheck if nothing found from response
+                                Object.keys( item.options ).forEach( optionKey => {
+                                    initialCheckedData[ optionKey ] = false;
+                                } );
+
+                                if ( item.value !== null && item.value !== false ) {
+                                    Object.keys( item.options ).forEach( optionKey => {
+                                        initialCheckedData[optionKey] = typeof item.value[ optionKey ] !== 'undefined' ? true : false;
+                                    } );
+                                }
+
+                                self.fields[ index ]['value'] = initialCheckedData;
+                            }
+                        } );
                     }
                 },
             });
@@ -189,16 +228,22 @@ export default {
 
             let requestDataPost = {};
 
-            self.fields.forEach((item) => {
-                requestDataPost[item.id] = item.value;
+            // Process fields and send to post data
+            self.fields.forEach( item => {
+                requestDataPost[ item.id ] = item.value;
+                let initialCheckedData     = [];
 
-                if (
-                    item.value === false ||
-                    item.value === "no"
-                ) {
-                    requestDataPost[item.id] = null;
+                if ( item.type === 'multicheck' ) {
+                    Object.keys( item.options ).forEach( optionKey => {
+                        if ( item.value[ optionKey ] !== false )  initialCheckedData[ optionKey ] = optionKey;
+                    });
+                    requestDataPost[ item.id ] = initialCheckedData;
                 }
-            });
+
+                if ( item.type === 'checkbox' && ( item.value === false || item.value === 'no' ) ) {
+                    requestDataPost[ item.id ] = null;
+                }
+            } );
 
             let requestData = {
                 ...requestDataPost,
@@ -208,11 +253,7 @@ export default {
                 section : self.sub_section_id,
             };
 
-            requestData = window.settings.hooks.applyFilters(
-                "requestData",
-                requestData
-            );
-
+            requestData    = window.settings.hooks.applyFilters( "requestData", requestData );
             const postData = generateFormDataFromObject(requestData);
 
             $.ajax({
@@ -234,8 +275,8 @@ export default {
 
         },
 
-        changeImage(value, index) {
-            this.fields[index]["value"] = value;
+        changeImage( value, index ) {
+            this.fields[ index ]['value'] = value;
         }
     },
 };
