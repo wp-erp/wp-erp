@@ -1,7 +1,5 @@
 <template>
-    <ac-payment
-        sub_sub_section="general"
-    />
+    <ac-payment sub_sub_section="general" />
 </template>
 
 <script>
