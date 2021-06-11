@@ -17,6 +17,9 @@ import HRAttendance from 'settings/components/hr/attendance/HRAttendance.vue';
 // AC Components
 import AcCustomer from 'settings/components/act/customer/AcCustomer.vue';
 import AcCurrency from 'settings/components/act/currency/AcCurrency.vue';
+import AcPaymentGeneral from 'settings/components/act/payment/AcPaymentGeneral.vue';
+import AcPaymentPaypal from 'settings/components/act/payment/AcPaymentPaypal.vue';
+import AcPaymentStripe from 'settings/components/act/payment/AcPaymentStripe.vue';
 
 Vue.use(Router);
 
@@ -132,7 +135,33 @@ export default new Router({
                     name: 'AcCurrency',
                     component: AcCurrency
                 },
-
+                {
+                    path: 'payment',
+                    name: 'AcPayment',
+                    component: {
+                        render(c) {
+                            return c('router-view');
+                        }
+                    },
+                    children: [
+                        {
+                            path: 'general',
+                            name: 'AcPaymentGeneral',
+                            component: AcPaymentGeneral,
+                            alias: '/'
+                        },
+                        {
+                            path: 'paypal',
+                            name: 'AcPaymentPaypal',
+                            component: AcPaymentPaypal
+                        },
+                        {
+                            path: 'stripe',
+                            name: 'AcPaymentStripe',
+                            component: AcPaymentStripe
+                        },
+                    ]
+                },
             ]
         }
     ])
