@@ -131,35 +131,29 @@ export default {
         },
 
         onFormSubmit() {
-            const self = this;
-            self.$store.dispatch("spinner/setSpinner", true);
-
+            const self          = this;
             let requestDataPost = {};
 
-            self.options.forEach(item => {
+            self.$store.dispatch("spinner/setSpinner", true);
+
+            self.options.forEach( item => {
                 requestDataPost[item.id] = item.value;
 
-                if (
-                    item.value === false ||
-                    item.value === "no"
-                ) {
+                if ( item.value === false || item.value === "no" ) {
                     requestDataPost[item.id] = null;
                 }
-            });
+            } );
 
             let requestData = {
                 ...requestDataPost,
-                _wpnonce: erp_settings_var.nonce,
-                action  : "erp-settings-save",
-                module  : self.section_id,
-                section : self.sub_section_id,
+                _wpnonce       : erp_settings_var.nonce,
+                action         : "erp-settings-save",
+                module         : self.section_id,
+                section        : self.sub_section_id,
+                sub_sub_section: 'payment'
             };
 
-            requestData = window.settings.hooks.applyFilters(
-                "requestData",
-                requestData
-            );
-
+            requestData    = window.settings.hooks.applyFilters( "requestData", requestData );
             const postData = generateFormDataFromObject(requestData);
 
             $.ajax({
@@ -178,8 +172,7 @@ export default {
                     }
                 },
             });
-
-        },
+        }
     },
 };
 </script>
