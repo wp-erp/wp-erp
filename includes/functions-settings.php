@@ -26,7 +26,12 @@ function erp_settings_get_data ( $options = [] ) {
         if ( ! empty ( $option['id'] ) ) {
             $option_value = $single_option ? get_option( $option['id'] ) : $single_option_data[ $option['id'] ];
 
-            switch ($option['type']) {
+            if ( empty ( $option_value ) ) {
+                $option_value = ! empty ( $option['default'] ) ? $option['default'] : '';
+            }
+
+            // Process option value for different type input
+            switch ( $option['type'] ) {
                 case 'checkbox':
                     $option_value = $option_value === 'yes' ? true : false;
                     break;
