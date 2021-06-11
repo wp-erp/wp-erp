@@ -1,8 +1,5 @@
 <template>
-    <ac-payment
-        :single_option="true"
-        sub_sub_section="stripe"
-    />
+    <ac-payment sub_sub_section="stripe" />
 </template>
 
 <script>
