@@ -8,9 +8,8 @@ exports.config = {
   tests: 'core-tests/**/*_test.js',
   output: './output',
   helpers: {
-    WebDriver: {
-      url: 'https://erpqa.ajaira.website',
-      // url: 'http://localhost:10018',
+    WebDriver: { 
+     url: 'http://localhost:10018',
       browser: 'chrome',
       windowSize: "maximize",
       // smartWait: 5000,
@@ -52,8 +51,8 @@ exports.config = {
           admin: {
             login: (I) => {
               I.amOnPage('/login');
-              I.fillField('Username', 'Username');
-              I.fillField('Password', secret('Password'));
+              I.fillField('Username', 'YourUsername');
+              I.fillField('Password', secret('YourPassword'));
               I.checkOption('Remember Me');
 	            I.click('Log In');
             },
