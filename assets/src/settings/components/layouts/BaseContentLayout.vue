@@ -9,7 +9,7 @@
                 <label :for="'erp-'+fields[index]['id']" v-if="! input.tooltip" v-html="input.title"></label>
                 <label :for="'erp-'+fields[index]['id']" v-else>
                     {{ input.title }}
-                    <tooltip :text="input.desc" v-if="input.tooltip" />
+                    <tooltip :text="input.desc" v-if="input.tooltip && input.desc" />
                 </label>
 
                 <template v-if="input.type === 'select'">
@@ -145,7 +145,7 @@ export default {
 
     props: {
         inputs: {
-            type: Array,
+            type: Array|Object,
             required: true,
         },
         section_id: {
@@ -161,6 +161,10 @@ export default {
             required: true,
         },
         sub_sub_section_title: {
+            type: String,
+            required: false
+        },
+        sub_sub_section_id: {
             type: String,
             required: false
         }
@@ -244,6 +248,10 @@ export default {
                     requestDataPost[ item.id ] = null;
                 }
             } );
+
+            if ( typeof self.sub_sub_section_id !== 'undefined' && self.sub_sub_section_id !== '' ) {
+                requestDataPost['sub_sub_section'] = self.sub_sub_section_id;
+            }
 
             let requestData = {
                 ...requestDataPost,
