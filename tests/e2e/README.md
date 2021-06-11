@@ -4,16 +4,20 @@
 ### JAVA Installation
 ```
 Go: https://java.com/en/download/
-Click 'Agree and Start Free download'
-
+```
+```
+Click 'Agree and Start Free download' and install java globally
 ```
 ## Step 2
-### Server Configuration
+### Selenium Server Configuration
 
 ```
-Selenium server installation:
 npm install selenium-standalone@latest -g
+```
+```
 selenium-standalone install
+```
+```
 selenium-standalone start
 ```
 
@@ -38,16 +42,22 @@ composer dumpautoload -o
 ## Step 4
 ## Configuration
  
-Open that testing folder on visual studio code or your favourite Code Editor!
+Open that test folder on visual studio code or your favourite Code Editor!
 
 ```
-Open ``example.codecept.conf.js``
-
-Give your test Url at line ``12`` [Must be a complete url eg:https://rinky.test]
+Open example.codecept.conf.js file under wp-erp>tests>e2e
+```
+```
+Give your test Url at line `12` [Must be a complete url eg:https://rinky.test]
+```
+```
 Give your test site Username at line `54` [YourUsername]
+```
+```
 Give your test site Password at line `55` [YourPassword]
-
-Then rename ``example.codecept.conf.js`` file as ``codecept.conf.js``
+```
+```
+Then rename example.codecept.conf.js file as codecept.conf.js
 ```
 ```
 cd tests/e2e
@@ -65,16 +75,13 @@ npm install
 
 Here you go !
 
-For HRM module:
-Run The following command:
+For HRM module run the following command:
 `npx codeceptjs run tests/e2e/HRM/employee_01_addEmployee_test.js` [Copy any scenario you want to test under HRM module]
 
-For CRM module:
-Run The following command:
+For CRM module run the following command:
 `npx codeceptjs run core-tests/CRM/contact_01_CreateContact_test.js` [Copy any scenario you want to test under CRM module]
 
-For Accounting module:
-Run The following command:
+For Accounting module run the following command:
 `npx codeceptjs run core-tests/Accounting/Customer_01_addCustomer_test.js` [Copy any scenario you want to test under Accounting module]
 
 Run Test Suit:
