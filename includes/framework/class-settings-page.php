@@ -102,9 +102,11 @@ class ERP_Settings_Page {
                 $options = $this->get_settings();
             }
 
-            // Modify options for some sections
-            if ( $section === 'payroll' ) {
-                $options = $options['payment'];
+            // Modify options data for some sub sections
+            $sub_sub_section = isset( $_POST['sub_sub_section' ] ) ? sanitize_text_field( wp_unslash( $_POST['sub_sub_section' ] ) ) : null;
+
+            if ( ! empty ( $sub_sub_section ) ) {
+                $options = $options[ $sub_sub_section ];
             }
 
             // Options to update will be stored here
