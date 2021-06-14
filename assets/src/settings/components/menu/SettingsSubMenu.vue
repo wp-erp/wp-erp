@@ -3,29 +3,15 @@
         <ul class="settings-sub-menu">
             <template v-for="(menu, key, index) in menus">
                 <li :key="key" v-if="index < dropdownMenuStartPos">
-                    <router-link
-                        tag="li"
-                        :to="'/' + parent_id + '/' + key"
-                        :class="
-                            ($route.name === 'HRWorkDays' || $route.name === 'AcCustomer') && index === 0
-                                ? 'router-link-active'
-                                : ''
-                        "
-                    >
-                        <a href="#">
-                            <span class="menu-name">{{ menu }}</span>
-                        </a>
+                    <router-link tag="li" :to="'/' + parent_id + '/' + key" :class="activeRouteClass(index)">
+                        <a href="#"><span class="menu-name">{{ menu }}</span></a>
                     </router-link>
                 </li>
             </template>
 
             <dropdown v-if="dropdownMenuStartPos > 0 && Object.keys(menus).length > 5">
                 <template slot="button">
-                    <a href="#" class="">
-                        {{ __("More", "erp") }}
-                        &nbsp;
-                        <i class="fa fa-chevron-down"></i>
-                    </a>
+                    <a href="#"> {{ __("More", "erp") }} &nbsp; <i class="fa fa-chevron-down"></i></a>
                 </template>
 
                 <template slot="dropdown">
@@ -57,7 +43,8 @@ export default {
             required: true
         },
         menus: {
-            type    : Object
+            type    : Object,
+            required: false
         }
     },
 
@@ -78,5 +65,30 @@ export default {
     components: {
         Dropdown,
     },
+
+    methods: {
+        activeRouteClass( index ) {
+            const currentRouteName = this.$route.name;
+            let routeClassName     = '';
+
+            switch ( currentRouteName ) {
+
+                case 'HRWorkDays' :
+                case 'AcCustomer' :
+                case 'CrmContacts':
+                    routeClassName = 'router-link-active';
+                    break;
+
+                default:
+                    break;
+            }
+
+            if ( routeClassName.length === 0 || index !== 0 ) {
+                routeClassName = '';
+            }
+
+            return routeClassName;
+        }
+    }
 };
 </script>
