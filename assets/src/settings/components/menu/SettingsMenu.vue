@@ -4,11 +4,7 @@
     <ul class="settings-menu">
 
       <li v-for="(menu, index) in menus" :key="index">
-        <router-link
-            tag="li"
-            :to="menu.slug"
-            :class="($route.name === 'GeneralSettings' && index === 0) ? 'router-link-active' : ''"
-        >
+        <router-link tag="li" :to="menu.slug" :class="($route.name === 'GeneralSettings' && index === 0) ? 'router-link-active' : ''">
           <a href="#">
             <img :src="menu.icon" alt="" />
             <span class="menu-name">{{ menu.label }}</span>

@@ -82,7 +82,11 @@ export default {
         if ( parentMenu.single_option ) {
             fields = parentMenu.fields[ this.sub_section_id ];
         } else {
-            fields = parentMenu.fields;
+            if ( this.section_id !== this.sub_section_id ) {
+                fields = parentMenu.fields[ this.sub_section_id ];
+            } else {
+                fields = parentMenu.fields;
+            }
         }
 
         this.allFields = fields;
