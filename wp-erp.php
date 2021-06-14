@@ -226,7 +226,6 @@ final class WeDevs_ERP {
         require_once WPERP_INCLUDES . '/functions-html.php';
         require_once WPERP_INCLUDES . '/functions-company.php';
         require_once WPERP_INCLUDES . '/functions-people.php';
-        require_once WPERP_INCLUDES . '/functions-settings.php';
         require_once WPERP_INCLUDES . '/api/class-api-registrar.php';
         require_once WPERP_INCLUDES . '/class-i18n.php';
         require_once WPERP_INCLUDES . '/functions-cache-helper.php';
