@@ -3,7 +3,7 @@
         :section_id="section_id"
         :sub_section_id="sub_section_id"
         :enable_content="false"
-        :single_option="single_option"
+        :single_option="true"
     >
         <h3 class="sub-section-title" v-if="subSectionTitle">{{ subSectionTitle }}</h3>
 
