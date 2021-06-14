@@ -24,6 +24,7 @@ import AcFinancialYears from 'settings/components/act/financial-year/AcFinancial
 
 // CRM Components
 import CrmContacts from 'settings/components/crm/contacts/CrmContacts.vue';
+import CrmSubscription from 'settings/components/crm/subscription/CrmSubscription.vue';
 
 Vue.use(Router);
 
@@ -188,6 +189,11 @@ export default new Router({
                     name: 'CrmContacts',
                     component: CrmContacts,
                     alias: '/erp-crm'
+                },
+                {
+                    path: 'subscription',
+                    name: 'CrmSubscription',
+                    component: CrmSubscription
                 },
             ]
         }
