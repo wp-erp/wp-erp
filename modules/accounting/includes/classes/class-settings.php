@@ -14,8 +14,6 @@ class Settings extends ERP_Settings_Page {
         $this->single_option = true;
         $this->sections      = $this->get_sections();
         $this->icon          = WPERP_ASSETS . '/images/wperp-settings/accounting.png';
-
-        add_action( 'erp_admin_field_acct_opening_balance', [ $this, 'acct_opening_balance' ] );
     }
 
     /**
@@ -199,17 +197,6 @@ class Settings extends ERP_Settings_Page {
         ]; // End general settings
 
         return apply_filters( 'erp_ac_settings_general', $fields );
-    }
-
-    /**
-     * Render Financial Years settings page
-     */
-    public function acct_opening_balance() {
-        global $wpdb;
-
-        $rows = $wpdb->get_results( "SELECT id, name, start_date, end_date FROM {$wpdb->prefix}erp_acct_financial_years", ARRAY_A );
-
-        require_once ERP_ACCOUNTING_VIEWS . '/settings/opening-balance.php';
     }
 }
 
