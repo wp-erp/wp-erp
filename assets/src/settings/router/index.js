@@ -22,6 +22,9 @@ import AcPaymentPaypal from 'settings/components/act/payment/AcPaymentPaypal.vue
 import AcPaymentStripe from 'settings/components/act/payment/AcPaymentStripe.vue';
 import AcFinancialYears from 'settings/components/act/financial-year/AcFinancialYears.vue';
 
+// CRM Components
+import CrmContacts from 'settings/components/crm/contacts/CrmContacts.vue';
+
 Vue.use(Router);
 
 export default new Router({
@@ -167,6 +170,24 @@ export default new Router({
                             component: AcPaymentStripe
                         },
                     ]
+                },
+            ]
+        },
+
+        {
+            path: '/erp-crm',
+            name: 'Crm',
+            component: {
+                render(c) {
+                    return c('router-view');
+                }
+            },
+            children: [
+                {
+                    path: 'contacts',
+                    name: 'CrmContacts',
+                    component: CrmContacts,
+                    alias: '/erp-crm'
                 },
             ]
         }
