@@ -2,19 +2,12 @@
     <div>
         <h2 class="section-title">{{ sectionTitle }}</h2>
         <template v-if="Object.keys(subMenus).length > 0">
-            <settings-sub-menu
-                :menus="subMenus"
-                :parent_id="section_id"
-            />
+            <settings-sub-menu :menus="subMenus" :parent_id="section_id" />
         </template>
 
         <div class="settings-box">
-            <h3 class="sub-section-title" v-if="subSectionTitle">
-                {{ subSectionTitle }}
-            </h3>
-            <p class="sub-section-description" v-if="subSectionDescription">
-                {{ subSectionDescription }}
-            </p>
+            <h3 class="sub-section-title" v-if="subSectionTitle">{{ subSectionTitle }}</h3>
+            <p class="sub-section-description" v-if="subSectionDescription">{{ subSectionDescription }}</p>
 
             <slot v-if="!enable_content"></slot>
 
