@@ -6,99 +6,46 @@
         <div v-for="(input, index) in fields" :key="index">
             <div class="wperp-form-group">
 
-                <label :for="'erp-'+fields[index]['id']" v-if="! input.tooltip" v-html="input.title"></label>
-                <label :for="'erp-'+fields[index]['id']" v-else>
-                    {{ input.title }}
+                <label :for="'erp-'+fields[index]['id']">
+                    <span v-html="input.title"></span>
                     <tooltip :text="input.desc" v-if="input.tooltip && input.desc" />
                 </label>
 
                 <template v-if="input.type === 'select'">
-                    <select
-                        v-model="fields[index]['value']"
-                        class="wperp-form-field erp-select2"
-                        :id="'erp-'+fields[index]['id']"
-                    >
-                        <option
-                            v-for="(item, key, indexOption) in input.options"
-                            :value="key"
-                            :key="indexOption"
-                            :selected="input.default == key ? 'selected' : ''"
-                        >
+                    <select v-model="fields[index]['value']" class="wperp-form-field erp-select2" :id="'erp-'+fields[index]['id']">
+                        <option v-for="(item, key, indexOption) in input.options" :value="key" :key="indexOption" :selected="input.default == key ? 'selected' : ''">
                             {{ item }}
                         </option>
                     </select>
 
-                    <p class="erp-form-input-hint" v-if="input.desc && input.desc.length > 0 && ! input.tooltip">
-                        {{ input.desc }}
-                    </p>
+                    <input-desc :input="input" />
                 </template>
 
 
                 <div class="form-check" v-if="input.type === 'checkbox'">
                     <label class="form-check-label">
-                        <input
-                            v-model="fields[index]['value']"
-                            type="checkbox"
-                            class="form-check-input"
-                            :id="'erp-'+fields[index]['id']"
-                        />
-                        <span class="form-check-sign">
-                            <span class="check"></span>
-                        </span>
-                        <span class="form-check-label-light">
-                            {{ input.desc }}
-                        </span>
+                        <input v-model="fields[index]['value']" type="checkbox" class="form-check-input" :id="'erp-'+fields[index]['id']" />
+                        <span class="form-check-sign"> <span class="check"></span> </span>
+                        <span class="form-check-label-light"> {{ input.desc }} </span>
                     </label>
                 </div>
 
                 <div class="form-check" v-if="input.type === 'multicheck'">
                     <label class="form-check-label" v-for="(checkOption, checkKey, index2) in input.options" :key="index2">
-                        <input
-                            v-model="fields[index]['value'][checkKey]"
-                            type="checkbox"
-                            class="form-check-input"
-                            :id="'erp-'+fields[index]['id'][checkKey]"
-                        />
-                        <span class="form-check-sign">
-                            <span class="check"></span>
-                        </span>
-                        <span class="form-check-label-light">
-                            {{ checkOption }}
-                        </span>
+                        <input v-model="fields[index]['value'][checkKey]" type="checkbox" class="form-check-input" :id="'erp-'+fields[index]['id'][checkKey]" />
+                        <span class="form-check-sign"> <span class="check"></span> </span>
+                        <span class="form-check-label-light"> {{ checkOption }} </span>
                     </label>
 
-                    <p class="erp-form-input-hint" v-if="input.desc && input.desc.length > 0 && ! input.tooltip">
-                        {{ input.desc }}
-                    </p>
+                    <input-desc :input="input" />
                 </div>
 
                 <div v-if="input.type === 'text' || input.type === 'textarea'">
-                    <input
-                        v-if="input.type === 'text' && input.class !== 'erp-date-field'"
-                        v-model="fields[index]['value']"
-                        class="wperp-form-field"
-                        :id="'erp-'+fields[index]['id']"
-                    />
+                    <input v-if="input.type === 'text' && input.class !== 'erp-date-field'" v-model="fields[index]['value']" class="wperp-form-field" :id="'erp-'+fields[index]['id']" />
+                    <date-picker v-if="input.type === 'text' && input.class === 'erp-date-field'" class="wperp-form-field" :placeholder="__( 'Select date', 'erp' )" v-model="fields[index]['value']" :id="'erp-'+fields[index]['id']" />
+                    <textarea v-if="input.type === 'textarea'" cols="45" rows="4" v-model="fields[index]['value']" class="wperp-form-field" :id="'erp-'+fields[index]['id']" />
 
-                    <date-picker v-if="input.type === 'text' && input.class === 'erp-date-field'"
-                        class="wperp-form-field"
-                        :placeholder="__( 'Select date', 'erp' )"
-                        v-model="fields[index]['value']"
-                        :id="'erp-'+fields[index]['id']"
-                    />
-
-                    <textarea
-                        v-if="input.type === 'textarea'"
-                        cols="45"
-                        rows="4"
-                        v-model="fields[index]['value']"
-                        class="wperp-form-field"
-                        :id="'erp-'+fields[index]['id']"
-                    />
-
-                    <p class="erp-form-input-hint" v-if="input.desc && input.desc.length > 0 && ! input.tooltip">
-                        {{ input.desc }}
-                    </p>
+                    <input-desc :input="input" />
                 </div>
 
                 <div v-if="input.type === 'image'">
@@ -123,6 +70,7 @@ import DatePicker from 'settings/components/base/DatePicker.vue';
 import SubmitButton from "settings/components/base/SubmitButton.vue";
 import ImagePicker from "settings/components/base/ImagePicker.vue";
 import Tooltip from 'settings/components/base/Tooltip.vue';
+import InputDesc from 'settings/components/layouts/partials/InputDesc.vue';
 import { generateFormDataFromObject } from "settings/utils/FormDataHandler";
 
 var $ = jQuery;
@@ -134,6 +82,7 @@ export default {
         SubmitButton,
         ImagePicker,
         Tooltip,
+        InputDesc,
         DatePicker
     },
 
@@ -145,27 +94,27 @@ export default {
 
     props: {
         inputs: {
-            type: Array|Object,
+            type    : Array|Object,
             required: true,
         },
         section_id: {
-            type: String,
+            type    : String,
             required: true,
         },
         sub_section_id: {
-            type: String,
+            type    : String,
             required: true,
         },
         single_option: {
-            type: Boolean,
+            type    : Boolean,
             required: true,
         },
         sub_sub_section_title: {
-            type: String,
+            type    : String,
             required: false
         },
         sub_sub_section_id: {
-            type: String,
+            type    : String,
             required: false
         }
     },
@@ -175,6 +124,10 @@ export default {
     },
 
     methods: {
+
+        /**
+         * Get Settings Data
+         */
         getSettingsData() {
             const self = this;
             self.$store.dispatch("spinner/setSpinner", true);
@@ -182,9 +135,10 @@ export default {
             let requestData = window.settings.hooks.applyFilters( "requestData",
                 {
                     ...self.inputs,
-                    single_option : ! self.single_option ? self.section_id : null,
+                    single_option : ! self.single_option ? self.section_id: null,
+                    sub_section_id: self.sub_section_id,
                     _wpnonce      : erp_settings_var.nonce,
-                    action        : "erp-settings-get-data",
+                    action        : 'erp-settings-get-data'
                 }
             );
 
@@ -226,6 +180,9 @@ export default {
             });
         },
 
+        /**
+         * Submit forma data
+         */
         onFormSubmit() {
             const self = this;
             self.$store.dispatch("spinner/setSpinner", true);
@@ -283,6 +240,9 @@ export default {
 
         },
 
+        /**
+         * Change Image Type Inputs
+         */
         changeImage( value, index ) {
             this.fields[ index ]['value'] = value;
         }
