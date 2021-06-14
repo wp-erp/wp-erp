@@ -20,6 +20,7 @@ import AcCurrency from 'settings/components/act/currency/AcCurrency.vue';
 import AcPaymentGeneral from 'settings/components/act/payment/AcPaymentGeneral.vue';
 import AcPaymentPaypal from 'settings/components/act/payment/AcPaymentPaypal.vue';
 import AcPaymentStripe from 'settings/components/act/payment/AcPaymentStripe.vue';
+import AcFinancialYears from 'settings/components/act/financial-year/AcFinancialYears.vue';
 
 Vue.use(Router);
 
@@ -134,6 +135,11 @@ export default new Router({
                     path: 'currency_option',
                     name: 'AcCurrency',
                     component: AcCurrency
+                },
+                {
+                    path: 'opening_balance',
+                    name: 'AcFinancialYears',
+                    component: AcFinancialYears
                 },
                 {
                     path: 'payment',
