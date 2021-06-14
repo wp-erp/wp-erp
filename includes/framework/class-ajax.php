@@ -61,7 +61,7 @@ class Ajax_Handler {
 
             case 'erp-ac':
                 $settings           = ( new \WeDevs\ERP\Accounting\Includes\Classes\Settings() );
-                $has_not_permission = $has_not_permission;
+                $has_not_permission = $has_not_permission && ! current_user_can( 'erp_ac_manager' );
                 break;
 
             default:
@@ -98,12 +98,64 @@ class Ajax_Handler {
             $this->send_error( erp_get_message( ['type' => 'error_permission'] ) );
         }
 
-        $data = erp_settings_get_data( $_POST );
+        $data = $this->process_settings_data( $_POST );
 
         if ( is_wp_error( $data ) ) {
             $this->send_error( erp_get_message( ['type' => 'error_process'] ) );
         }
 
         $this->send_success( $data );
+    }
+
+
+    /**
+     * Get Options For Settings
+     *
+     * @since 1.8.6
+     *
+     * @param array $options - Setting options
+     *
+     * @return array $data settings data
+     */
+    function process_settings_data ( $options = [] ) {
+        $data               = [];
+        $single_option      = true;
+        $single_option_data = [];
+
+        if ( ! empty ( $options['single_option'] ) ) {
+            $single_option_id   = 'erp_settings_' . $options['single_option'];
+            $single_option      = false;
+            $single_option_data = get_option( $single_option_id );
+        }
+
+        foreach ( $options as $option ) {
+            if ( ! empty ( $option['id'] ) ) {
+                $option_value = $single_option ? get_option( $option['id'] ) : $single_option_data[ $option['id'] ];
+
+                if ( empty ( $option_value ) ) {
+                    $option_value = ! empty ( $option['default'] ) ? $option['default'] : '';
+                }
+
+                // Process option value for different type input
+                switch ( $option['type'] ) {
+                    case 'checkbox':
+                        $option_value = $option_value === 'yes' ? true : false;
+                        break;
+
+                    case 'image':
+                        $option_value = (int) $option_value;
+                        $option_value = $option_value ? wp_get_attachment_url( $option_value ) : '';
+
+                    default:
+                        break;
+                }
+
+                $option['value'] = $option_value;
+
+                array_push( $data, $option );
+            }
+        }
+
+        return $data;
     }
 }

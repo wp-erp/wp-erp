@@ -18,8 +18,6 @@ class Settings extends ERP_Settings_Page {
         $this->single_option = true;
         $this->sections      = $this->get_sections();
         $this->icon          = WPERP_ASSETS . '/images/wperp-settings/hr.png';
-
-        add_action( 'erp_admin_field_hr_financial_years', [ $this, 'get_hr_financial_years' ] );
     }
 
     /**
@@ -154,14 +152,6 @@ class Settings extends ERP_Settings_Page {
         $section = $section === false ? $fields['workdays'] : $fields[$section];
 
         return $section;
-    }
-
-    public function get_hr_financial_years() {
-        global $wpdb;
-
-        $f_years = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}erp_hr_financial_years", ARRAY_A );
-
-        require_once WPERP_HRM_VIEWS . '/settings/fyear.php';
     }
 }
 
