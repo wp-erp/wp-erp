@@ -1,5 +1,5 @@
 <template>
-    <p class="erp-form-input-hint" v-if="isEnableDescription(input)">{{ input.desc }}</p>
+    <p class="erp-form-input-hint" v-if="isEnableDescription(input)" v-html="input.desc"></p>
 </template>
 
 <script>

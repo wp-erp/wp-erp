@@ -8,14 +8,12 @@
 
                 <label :for="'erp-'+fields[index]['id']">
                     <span v-html="input.title"></span>
-                    <tooltip :text="input.desc" v-if="input.tooltip && input.desc" />
+                    <tooltip :input="input"  />
                 </label>
 
                 <template v-if="input.type === 'select'">
                     <select v-model="fields[index]['value']" class="wperp-form-field erp-select2" :id="'erp-'+fields[index]['id']">
-                        <option v-for="(item, key, indexOption) in input.options" :value="key" :key="indexOption" :selected="input.default == key ? 'selected' : ''">
-                            {{ item }}
-                        </option>
+                        <option v-for="(item, key, indexOption) in input.options" :value="key" :key="indexOption" :selected="input.default == key ? 'selected' : ''" v-html="item"></option>
                     </select>
 
                     <input-desc :input="input" />
@@ -26,15 +24,17 @@
                     <label class="form-check-label">
                         <input v-model="fields[index]['value']" type="checkbox" class="form-check-input" :id="'erp-'+fields[index]['id']" />
                         <span class="form-check-sign"> <span class="check"></span> </span>
-                        <span class="form-check-label-light"> {{ input.desc }} </span>
+                        <span class="form-check-label-light" v-html="input.desc"></span>
                     </label>
+
+                    <input-desc :input="input" />
                 </div>
 
                 <div class="form-check" v-if="input.type === 'multicheck'">
                     <label class="form-check-label" v-for="(checkOption, checkKey, index2) in input.options" :key="index2">
                         <input v-model="fields[index]['value'][checkKey]" type="checkbox" class="form-check-input" :id="'erp-'+fields[index]['id'][checkKey]" />
                         <span class="form-check-sign"> <span class="check"></span> </span>
-                        <span class="form-check-label-light"> {{ checkOption }} </span>
+                        <span class="form-check-label-light" v-html="checkOption"></span>
                     </label>
 
                     <input-desc :input="input" />
