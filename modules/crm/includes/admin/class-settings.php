@@ -151,15 +151,16 @@ class CRM_Settings extends ERP_Settings_Page {
         ];
 
         $fields['subscription'][] = [
-            'title'   => __( 'Enable signup confirmation', 'erp' ),
-            'id'      => 'is_enabled',
-            'type'    => 'checkbox',
-            'desc'    => __( 'Yes', 'erp' ),
-            'options' => [
-                'yes' => __( 'Yes', 'erp' ),
+            'title'        => __( 'Enable signup confirmation', 'erp' ),
+            'id'           => 'is_enabled',
+            'type'         => 'checkbox',
+            'desc'         => __( 'Yes', 'erp' ),
+            'options'      => [
+                'yes'      => __( 'Yes', 'erp' ),
             ],
-            'default' => 'yes',
-            'tooltip' => __( 'If you enable this option, your subscribers will first receive a confirmation email after they subscribe. Once they confirm their subscription (via this email), they will be marked as \'subscribed\'.', 'erp' ),
+            'default'      => 'yes',
+            'tooltip'      => true,
+            'tooltip_text' => __( 'If you enable this option, your subscribers will first receive a confirmation email after they subscribe. Once they confirm their subscription (via this email), they will be marked as &apos;subscribed&apos;.', 'erp' )
         ];
 
         $fields['subscription'][] = [
@@ -181,7 +182,7 @@ class CRM_Settings extends ERP_Settings_Page {
                 'rows' => 12,
                 'cols' => 90,
             ],
-            'desc'    => sprintf( __( "Don't forget to include: <code>[activation_link]Confirm your subscription.[/activation_link]</code>. <br><br>Optional: <code>[contact_groups_to_confirm]</code>.", 'erp' ) ),
+            'desc'    => sprintf( __( "Don&apos;t forget to include: <code>[activation_link]Confirm your subscription.[/activation_link]</code>. <br><br>Optional: <code>[contact_groups_to_confirm]</code>.", 'erp' ) ),
         ];
 
         $wp_pages = get_pages();
