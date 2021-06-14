@@ -1,10 +1,9 @@
+const helpers = require('../../pages/helpers');
 Feature('Leave');
 
-Scenario('@Leave addLeaveEntitlement',({ I }) => {
-    I.loginAsAdmin();
-        I.click('WP ERP');
-        I.click('HR');
-        I.moveCursorTo('//*[@id="wpbody-content"]/div[2]/ul/li[3]');
+Scenario('@Leave addLeaveEntitlement',({ I, loginAs}) => {
+    loginAs('admin');
+        helpers.leave();
         I.click('Leave Entitlements');
         I.click('#erp-new-leave-request');
         I.scrollPageToBottom();

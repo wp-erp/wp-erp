@@ -1,10 +1,9 @@
+const helpers = require('../../pages/helpers');
 Feature('Leave');
 
-Scenario('@Leave addLeavePolicy',({ I }) => {
-    I.loginAsAdmin();
-        I.click('WP ERP');
-        I.click('HR');
-        I.moveCursorTo('//*[@id="wpbody-content"]/div[2]/ul/li[3]');
+Scenario('@Leave addLeavePolicy',({ I, loginAs}) => {
+    loginAs('admin');
+        helpers.leave();
         I.click('Policies');
         I.click('#erp-leave-name-new');
         I.fillField('Leave Type','Sick Leave');
@@ -19,6 +18,5 @@ Scenario('@Leave addLeavePolicy',({ I }) => {
         I.checkOption('Apply for existing employees');
         I.click('Save');
         I.see('Leave Policies');
-
-
+        
 });

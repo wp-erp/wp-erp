@@ -1,7 +1,8 @@
+const helpers = require('../../pages/helpers');
 Feature('Leave');
 
-Scenario('@Leave requestForLeaveEmployee',({ I }) => {
-    I.loginAsEmployee();
+Scenario('@Leave requestForLeaveEmployee',({ I, loginAs}) => {
+    loginAs('employee');
         I.click('WP ERP');
         I.click('HR');
         I.click('Take a Leave');

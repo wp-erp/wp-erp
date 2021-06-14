@@ -1,13 +1,10 @@
+const helpers = require('../../pages/helpers');
 Feature('Payroll');
 
-Scenario('@Payroll addPayrollCalendar', ({
-    I
-}) => {
-    I.loginAsAdmin();
-    I.click('WP ERP');
-    I.click('HR');
-    I.moveCursorTo('//*[@id="wpbody-content"]/div[3]/ul/li[3]/a');
-    I.click('Pay Calendar');
+Scenario('@Payroll addPayrollCalendar',({ I, loginAs}) => {
+    loginAs('admin');
+    helpers.proActivate();
+    helpers.payroll();
     I.click('Add New Pay Calendar');
     I.fillField("//input[@type='text']", "Updated automation");
     I.click('//*[@id="dashboard-widgets-wrap"]/div/div[1]/div/div[2]/select');
@@ -20,4 +17,4 @@ Scenario('@Payroll addPayrollCalendar', ({
     I.wait(3);
     I.click('Confirm');
 
-});s
+});

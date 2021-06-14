@@ -1,10 +1,9 @@
+const helpers = require('../../pages/helpers');
 Feature('Leave');
 
-Scenario('@Leave requestForLeaveAdmin',({ I }) => {
-    I.loginAsAdmin();
-        I.click('WP ERP');
-        I.click('HR');
-        I.moveCursorTo('//*[@id="wpbody-content"]/div[2]/ul/li[3]');
+Scenario('@Leave requestForLeaveAdmin',({ I, loginAs}) => {
+    loginAs('admin');
+        helpers.leave();
         I.click('Requests');
         I.click('New Request');
         I.click('- Select Employee -');

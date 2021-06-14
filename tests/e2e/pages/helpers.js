@@ -2,7 +2,7 @@ var Factory = require('rosie').Factory;
 var faker = require('faker');
 var moment = require('moment');
 const {
-    helper
+ helper
 } = require("codeceptjs");
 const {
     helpers
@@ -13,6 +13,11 @@ const {
 
 module.exports = {
 //HRM Module
+    proActivate(){
+        I.click('.menu-icon-plugins > .wp-menu-name');
+        I.click('#activate-wp-erp-pro');
+    },
+
     addEmployee() {
         I.amOnPage('/wp-admin/admin.php?page=erp-hr&section=people');
         I.click('//*[@id="erp-employee-new"]');
@@ -75,6 +80,15 @@ module.exports = {
         I.wait(3);
         I.forceClick('Publish');
     },
+    leave() {
+        I.amOnPage('wp-admin/admin.php?page=erp-hr');
+        I.moveCursorTo('//*[@id="wpbody-content"]/div[2]/ul/li[3]');       
+    },
+    payroll() {
+        I.amOnPage('wp-admin/admin.php?page=erp-hr');
+        I.moveCursorTo('//*[@id="wpbody-content"]/div[3]/ul/li[3]/a');
+        I.click('Pay Calendar');
+    },
     
 //CRM module
     addNewCompany() {
@@ -90,4 +104,5 @@ module.exports = {
         I.click('//span[2]/ul/li[2]');
         I.click('//button[contains(text(),"Add New")]');
     },
+
 }

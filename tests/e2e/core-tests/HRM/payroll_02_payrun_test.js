@@ -1,13 +1,9 @@
+const helpers = require('../../pages/helpers');
 Feature('Payroll');
 
-Scenario('@Payroll payrun', ({
-    I
-}) => {
-    I.loginAsAdmin();
-    I.click('WP ERP');
-    I.click('HR');
-    I.moveCursorTo('//*[@id="wpbody-content"]/div[3]/ul/li[3]/a');
-    I.click('Pay Calendar');
+Scenario('@Payroll payrun', ({ I, loginAs}) => {
+    loginAs('admin');
+    helpers.payroll();
     I.click('//*[@id="dashboard-widgets-wrap"]/div/div[2]/div[2]/span[2]');
     I.wait('2');
     I.fillField("//div[@id='pay-run-wrapper-employees']/div/div/input", "2021-06-01")
@@ -36,6 +32,5 @@ Scenario('@Payroll payrun', ({
     I.wait('3');
     I.click('Confirm');
     I.see('Pay Run List');
-
 
 });
