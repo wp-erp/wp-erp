@@ -45,3 +45,10 @@ if (settingsContainer !== null) {
         render: h => h(App)
     });
 }
+
+var $ = jQuery;
+
+$(".erp-select2").change(function () {
+    const val = $(this).find("option:selected").val();
+    self.selected = val;
+});
