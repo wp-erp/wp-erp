@@ -88,7 +88,7 @@ class CRM_Settings extends ERP_Settings_Page {
         $roles = $wp_roles->get_names();
 
         $fields['contacts'][] = [
-            'title'   => __( 'User\'s Roles', 'erp' ),
+            'title'   => __( 'User&apos;s Roles', 'erp' ),
             'id'      => 'user_roles',
             'type'    => 'multicheck',
             'desc'    => __( 'Selected user roles are considered to auto import.', 'erp' ),

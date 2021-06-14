@@ -64,6 +64,11 @@ class Ajax_Handler {
                 $has_not_permission = $has_not_permission && ! current_user_can( 'erp_ac_manager' );
                 break;
 
+            case 'erp-crm':
+                $settings           = ( new \WeDevs\ERP\CRM\CRM_Settings() );
+                $has_not_permission = $has_not_permission && ! current_user_can( 'erp_crm_manager' );
+                break;
+
             default:
                 $settings = ( new \WeDevs\ERP\Framework\ERP_Settings_Page() );
                 break;
@@ -119,20 +124,25 @@ class Ajax_Handler {
      */
     function process_settings_data ( $options = [] ) {
         $data               = [];
-        $single_option      = true;
         $single_option_data = [];
 
         if ( ! empty ( $options['single_option'] ) ) {
             $single_option_id   = 'erp_settings_' . $options['single_option'];
-            $single_option      = false;
-            $single_option_data = get_option( $single_option_id );
+
+            // If sub_section_id provided, then append it to single_option_id to get data from database
+            // Modify it, since In database, it's stored like `erp_settings_{section}_{sub_section_id}`
+            if ( ! empty ( $options['sub_section_id'] ) && $options['single_option'] !== $options['sub_section_id']) {
+                $single_option_id .= '_' . $options['sub_section_id'];
+            }
+
+            $single_option_data = ( array ) get_option( $single_option_id );
         }
 
         foreach ( $options as $option ) {
             if ( ! empty ( $option['id'] ) ) {
-                $option_value = $single_option ? get_option( $option['id'] ) : $single_option_data[ $option['id'] ];
+                $option_value = count ( $single_option_data ) === 0 ? get_option( $option['id'] ) : $single_option_data[ $option['id'] ];
 
-                if ( empty ( $option_value ) ) {
+                if ( empty ( $option_value ) && $option['type'] !== 'select' ) {
                     $option_value = ! empty ( $option['default'] ) ? $option['default'] : '';
                 }
 
