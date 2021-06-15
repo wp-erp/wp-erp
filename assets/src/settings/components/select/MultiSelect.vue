@@ -1,7 +1,7 @@
 <template>
   <multiselect
     :value="value"
-    :options="options"
+    :options="getOptions(options)"
     :multiple="multiple"
     :close-on-select="!multiple"
     :loading="isLoading"
@@ -12,29 +12,27 @@
     @open="onDropdownOpen"
     @remove="onRemove"
     @select="onSelect"
-    @search-change="asyncFind">
+    @search-change="asyncFind"
+    >
 
-    <span slot="noResult">{{ __('Oops! No elements found.', 'erp') }}</span>
+    <span slot="noResult">{{ __('Oops! No item found.', 'erp') }}</span>
 
     <span class="multiselect-custom-arrow" slot="caret">
-        <svg width="12px" height="7px" viewBox="0 0 12 7" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-            <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linejoin="round">
-                <g transform="translate(-1127.000000, -589.000000)" stroke="#C1CFD5" stroke-width="1.5">
-                    <g id="Group-16-Copy-18" transform="translate(485.000000, 544.000000)">
-                        <g id="Group-3-Copy-8" transform="translate(0.000000, 29.000000)">
-                            <polyline id="Path" points="643 17 647.905824 21.905824 652.811648 17"></polyline>
-                        </g>
-                    </g>
-                </g>
-            </g>
-        </svg>
+        <img :src="icon" alt="" />
     </span>
+
+    <template slot="singleLabel" slot-scope="{ option }">
+        <span v-html="option.name"></span>
+    </template>
+
+    <template slot="option" slot-scope="{ option }">
+        <span v-html="option.name"></span>
+    </template>
 
   </multiselect>
 </template>
 
 <script>
-/* eslint func-names: ["error", "never"] */
 import Multiselect from 'vue-multiselect';
 import debounce from 'settings/components/select/debounce';
 import 'vue-multiselect/dist/vue-multiselect.min.css';
@@ -48,36 +46,37 @@ export default {
 
     props: {
         value: {
-            type: null,
+            type    : null,
             required: true
         },
 
         options: {
-            type: Array,
+            type   : Array|Object,
             default: () => []
         },
 
         multiple: {
-            type: Boolean,
+            type   : Boolean,
             default: false
         },
 
         disabled: {
-            type: Boolean,
+            type   : Boolean,
             default: false
         },
 
         placeholder: {
-            type: String,
+            type   : String,
             default: __('Please search', 'erp')
         }
     },
 
     data() {
         return {
-            noResult: false,
+            noResult : false,
             isLoading: false,
-            results: []
+            results  : [],
+            icon     : erp_settings_var.erp_assets + '/images/wperp-settings/select-arrow.png',
         };
     },
 
@@ -89,26 +88,46 @@ export default {
     },
 
     methods: {
-        onSelect(selected) {
+        onSelect( selected ) {
             if (this.multiple) {
-                this.results.push(selected);
+                this.results.push( selected );
                 this.$emit('input', this.results);
             } else {
                 this.$emit('input', selected);
             }
         },
 
-        onRemove(removed) {
-            this.results = this.results.filter(element => element.id !== removed.id);
+        /**
+         * Process options data with object
+         */
+        getOptions( options ) {
+            let keys = Object.keys(options);
+            let data = [];
+
+            keys.forEach( key => {
+
+                const singleData = {
+                    id  : key !== null ? key.toString() : '',
+                    name: options[ key ]
+                }
+
+                data.push( singleData );
+            } );
+
+            return data;
+        },
+
+        onRemove( removed ) {
+            this.results = this.results.filter( element => element.id !== removed.id );
 
             this.$emit('input', this.results);
         },
 
-        onDropdownOpen(id) {
+        onDropdownOpen( id ) {
             this.$root.$emit('dropdown-open');
         },
 
-        asyncFind: debounce(function(query) {
+        asyncFind: debounce( function( query ) {
             // this.isLoading = true;
             this.$root.$emit('options-query', query);
         }, 1)
