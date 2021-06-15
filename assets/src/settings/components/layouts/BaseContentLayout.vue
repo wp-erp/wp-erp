@@ -12,10 +12,7 @@
                 </label>
 
                 <template v-if="input.type === 'select'">
-                    <select v-model="fields[index]['value']" class="wperp-form-field erp-select2" :id="'erp-'+fields[index]['id']">
-                        <option v-for="(item, key, indexOption) in input.options" :value="key" :key="indexOption" :selected="input.default == key ? 'selected' : ''" v-html="item"></option>
-                    </select>
-
+                    <multi-select v-model="fields[index]['value']" :options="input.options" :id="'erp-'+fields[index]['id']" :placeholder="'Please select ' + fields[index]['title']" />
                     <input-desc :input="input" />
                 </template>
 
@@ -70,6 +67,7 @@ import DatePicker from 'settings/components/base/DatePicker.vue';
 import SubmitButton from "settings/components/base/SubmitButton.vue";
 import ImagePicker from "settings/components/base/ImagePicker.vue";
 import Tooltip from 'settings/components/base/Tooltip.vue';
+import MultiSelect from 'settings/components/select/MultiSelect.vue';
 import InputDesc from 'settings/components/layouts/partials/InputDesc.vue';
 import { generateFormDataFromObject } from "settings/utils/FormDataHandler";
 
@@ -83,7 +81,8 @@ export default {
         ImagePicker,
         Tooltip,
         InputDesc,
-        DatePicker
+        DatePicker,
+        MultiSelect
     },
 
     data() {
@@ -158,7 +157,7 @@ export default {
 
                         // Process returned data to show for vue
                         response.data.forEach(( item, index ) => {
-                            if ( item.type === 'multicheck' ) {
+                            if ( 'multicheck' === item.type ) {
                                 let initialCheckedData = [];
 
                                 // First assign to false or uncheck if nothing found from response
@@ -173,6 +172,15 @@ export default {
                                 }
 
                                 self.fields[ index ]['value'] = initialCheckedData;
+                            } else if ( 'select' === item.type ) {
+                                Object.keys( item.options ).forEach( optionKey  => {
+                                    if ( optionKey === item.value ) {
+                                        self.fields[ index ]['value'] = {
+                                            id  : optionKey,
+                                            name: item.options[ optionKey ]
+                                        }
+                                    }
+                                });
                             }
                         } );
                     }
@@ -181,7 +189,7 @@ export default {
         },
 
         /**
-         * Submit forma data
+         * Submit settings global form data
          */
         onFormSubmit() {
             const self = this;
@@ -204,6 +212,11 @@ export default {
                 if ( item.type === 'checkbox' && ( item.value === false || item.value === 'no' ) ) {
                     requestDataPost[ item.id ] = null;
                 }
+
+                if ( item.type === 'select' && ( item.value !== "" || item.value !== null ) ) {
+                    requestDataPost[ item.id ] = item.value.id;
+                }
+
             } );
 
             if ( typeof self.sub_sub_section_id !== 'undefined' && self.sub_sub_section_id !== '' ) {
