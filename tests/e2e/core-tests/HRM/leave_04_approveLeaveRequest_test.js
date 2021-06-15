@@ -3,6 +3,7 @@ Feature('Leave');
 
 Scenario('@Leave approveLeaveRequest',({ I, loginAs}) => {
     loginAs('admin');
+        helpers.hrmDashboard();
         helpers.leave();
         I.click('Requests');
         I.moveCursorTo('//*[@id="the-list"]/tr[1]/td[1]');

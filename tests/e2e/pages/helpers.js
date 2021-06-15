@@ -13,13 +13,20 @@ const {
 
 module.exports = {
 //HRM Module
+    hrmDashboard(){
+        I.amOnPage('wp-admin/admin.php?page=erp-hr');
+    },
+
+    peoplePage(){
+        I.amOnPage('/wp-admin/admin.php?page=erp-hr&section=people');
+    },
+
     proActivate(){
         I.click('.menu-icon-plugins > .wp-menu-name');
         I.click('#activate-wp-erp-pro');
     },
 
     addEmployee() {
-        I.amOnPage('/wp-admin/admin.php?page=erp-hr&section=people');
         I.click('//*[@id="erp-employee-new"]');
         I.fillField('First Name', faker.name.firstName());
         I.fillField('Middle Name', faker.name.middleName());
@@ -37,7 +44,6 @@ module.exports = {
     },
 
     deleteEmployee() {
-        I.amOnPage('wp-admin/admin.php?page=erp-hr&section=people');
         I.click('//*[@id="wpbody-content"]/div[2]/ul/li[2]');
         I.moveCursorTo('//*[@id="the-list"]/tr[1]/td[1]');
         I.doubleClick('Delete');
@@ -81,7 +87,6 @@ module.exports = {
         I.forceClick('Publish');
     },
     leave() {
-        I.amOnPage('wp-admin/admin.php?page=erp-hr');
         I.moveCursorTo('//*[@id="wpbody-content"]/div[2]/ul/li[3]');       
     },
     payroll() {
@@ -91,8 +96,33 @@ module.exports = {
     },
     
 //CRM module
-    addNewCompany() {
+    crmDashboard(){
+        I.amOnPage('wp-admin/admin.php?page=erp-crm');
+    },
+
+    contactPage(){
         I.amOnPage('/wp-admin/admin.php?page=erp-crm&section=contact');
+    },
+
+    dealsPage(){
+        I.amOnPage('wp-admin/admin.php?page=erp-crm&section=deals&sub-section=all-deals');
+        I.click('All Deals');
+    },
+    addNewContact(){       
+        I.click('#erp-customer-new');
+        I.fillField('#first_name', faker.name.firstName());
+        I.fillField('#last_name', faker.name.lastName());
+        I.fillField('#erp-crm-new-contact-email', faker.internet.email());
+        I.fillField('contact[main][phone]', faker.phone.phoneNumber());
+        I.click('#select2-contactmetalife_stage-container');
+        I.click('//span[2]/ul/li[2]');
+        I.click('//span[@id="select2-erp-crm-contact-owner-id-container"]');
+        I.click('//span[2]/ul/li[2]');
+        I.click('//button[contains(text(),"Add New")]');
+        I.waitForElement('#wp-erp', 30);
+    },
+
+    addNewCompany() {
         I.click('Companies');
         I.click('#erp-company-new');
         I.fillField('#company', faker.company.companyName());
@@ -104,5 +134,14 @@ module.exports = {
         I.click('//span[2]/ul/li[2]');
         I.click('//button[contains(text(),"Add New")]');
     },
+
+    addNewContactGroup(){
+        I.click('Contact Groups');
+        I.click('#erp-new-contact-group');
+        I.fillField('#erp-crm-contact-group-name', 'Basic');
+        I.fillField('#erp-crm-contact-group-description', 'Hers is the contact group description');
+        I.click('//button[contains(text(),"Add New")]');
+    },
+
 
 }

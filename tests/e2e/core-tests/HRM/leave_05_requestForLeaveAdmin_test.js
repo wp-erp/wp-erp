@@ -3,6 +3,7 @@ Feature('Leave');
 
 Scenario('@Leave requestForLeaveAdmin',({ I, loginAs}) => {
     loginAs('admin');
+        helpers.hrmDashboard();
         helpers.leave();
         I.click('Requests');
         I.click('New Request');

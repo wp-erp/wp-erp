@@ -3,6 +3,7 @@ Feature('Leave');
 
 Scenario('@Leave addLeaveEntitlement',({ I, loginAs}) => {
     loginAs('admin');
+        helpers.hrmDashboard();
         helpers.leave();
         I.click('Leave Entitlements');
         I.click('#erp-new-leave-request');

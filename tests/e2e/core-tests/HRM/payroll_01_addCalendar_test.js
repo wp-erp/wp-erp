@@ -4,6 +4,7 @@ Feature('Payroll');
 Scenario('@Payroll addPayrollCalendar',({ I, loginAs}) => {
     loginAs('admin');
     helpers.proActivate();
+    helpers.hrmDashboard();
     helpers.payroll();
     I.click('Add New Pay Calendar');
     I.fillField("//input[@type='text']", "Updated automation");
