@@ -197,7 +197,9 @@ class ERP_Email_Settings extends ERP_Settings_Page {
 
         $fields = apply_filters( 'erp_settings_email_section_fields', $fields, $section );
 
-        $section = $section === false ? $fields['general'] : $fields[$section];
+        if ( ! empty ( $section ) ) {
+            $section = $section === false ? $fields['general'] : $fields[ $section ];
+        }
 
         return $section;
     }
