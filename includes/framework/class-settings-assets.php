@@ -2,16 +2,28 @@
 
 namespace WeDevs\ERP\Framework;
 
-use WeDevs\ERP\Framework\Settings\ERP_Settings_General;
-
 /**
  * Scripts and Styles Class
  */
 class Settings_Assets {
 
     public function __construct() {
+
+        // Prevent duplicate loading
+        if ( did_action( 'erp_settings_loaded' ) ) {
+            return;
+        }
+
+        // Register & Enquee Assets
         $this->register_assets();
         $this->enquee_assets();
+
+        /**
+        * Trigger after settings loaded
+        *
+        * @since 1.8.6
+        */
+       do_action( 'erp_settings_loaded' );
     }
 
     /**
@@ -42,8 +54,7 @@ class Settings_Assets {
      * @return void
      */
     private function register_scripts( $scripts ) {
-        global $current_user;
-        $u_id           = $current_user->ID;
+        $u_id           = get_current_user_id();
         $site_url       = site_url();
         $logout_url     = esc_url( wp_logout_url() );
         $settings_url   = admin_url( 'admin.php' ) . '?page=erp-settings#/';
@@ -59,14 +70,6 @@ class Settings_Assets {
         $menus = $this->get_settings_menus();
 
         // dd( $menus );
-
-        if ( is_admin() ) { ?>
-            <script>
-                window.erpSettings = JSON.parse('<?php echo wp_kses_post( wp_slash(
-                    json_encode( apply_filters( 'erp_localized_data', [] ) )
-                ) ); ?>');
-            </script>
-            <?php }
 
         wp_localize_script( 'erp-settings-bootstrap', 'erp_settings_var', [
             'user_id'               => $u_id,
