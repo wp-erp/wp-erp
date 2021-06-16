@@ -37,18 +37,11 @@ import {getRequest, postRequest} from './request';
 
 const settingsContainer = document.getElementById('erp-settings');
 
-if (settingsContainer !== null) {
-    window.erp_settings_vue_instance = new Vue({
+if ( settingsContainer !== null ) {
+    window.erp_settings_vue_instance = new Vue( {
         el: '#erp-settings',
         router,
         store,
         render: h => h(App)
-    });
+    } );
 }
-
-var $ = jQuery;
-
-$(".erp-select2").change(function () {
-    const val = $(this).find("option:selected").val();
-    self.selected = val;
-});
