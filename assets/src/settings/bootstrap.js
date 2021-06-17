@@ -8,12 +8,14 @@ import { createHooks } from '@wordpress/hooks';
 import commonMixins from './mixins/common';
 import i18nMixin from './mixins/i18n';
 import { clickOutside } from './directive/directives';
+import { generateFormDataFromObject } from "settings/utils/FormDataHandler"
 import HTTP from './http';
 import Dropdown from 'settings/components/base/Dropdown.vue';
 import Datepicker from 'settings/components/base/Datepicker.vue';
 import MultiSelect from 'settings/components/select/MultiSelect.vue';
 import SubmitButton from 'settings/components/base/SubmitButton.vue';
 import BaseLayout from 'settings/components/layouts/BaseLayout.vue';
+import Modal from 'settings/components/base/Modal.vue';
 import BaseContentLayout from 'settings/components/layouts/BaseContentLayout.vue';
 import VueDropify from 'vue-dropify';
 
@@ -23,22 +25,24 @@ window.settings = {
 };
 
 // assign libs to window for global use
-window.settings.libs['Vue']               = Vue;
-window.settings.libs['VueSweetalert2']    = VueSweetalert2;
-window.settings.libs['Loading']           = Loading;
-window.settings.libs['commonMixins']      = commonMixins;
-window.settings.libs['i18nMixin']         = i18nMixin;
-window.settings.libs['HTTP']              = HTTP;
-window.settings.libs['Vuelidate']         = Vuelidate;
-window.settings.libs['Swal']              = Swal;
-window.settings.libs['clickOutside']      = clickOutside;
-window.settings.libs['Datepicker']        = Datepicker;
-window.settings.libs['Dropdown']          = Dropdown;
-window.settings.libs['VueDropify']        = VueDropify;
-window.settings.libs['SubmitButton']      = SubmitButton;
-window.settings.libs['BaseContentLayout'] =  BaseContentLayout;
-window.settings.libs['BaseLayout']        =  BaseLayout;
-window.settings.libs['MultiSelect']       =  MultiSelect;
+window.settings.libs['Vue']                        = Vue;
+window.settings.libs['VueSweetalert2']             = VueSweetalert2;
+window.settings.libs['Loading']                    = Loading;
+window.settings.libs['commonMixins']               = commonMixins;
+window.settings.libs['i18nMixin']                  = i18nMixin;
+window.settings.libs['HTTP']                       = HTTP;
+window.settings.libs['Vuelidate']                  = Vuelidate;
+window.settings.libs['Swal']                       = Swal;
+window.settings.libs['clickOutside']               = clickOutside;
+window.settings.libs['generateFormDataFromObject'] = generateFormDataFromObject;
+window.settings.libs['Datepicker']                 = Datepicker;
+window.settings.libs['Dropdown']                   = Dropdown;
+window.settings.libs['VueDropify']                 = VueDropify;
+window.settings.libs['SubmitButton']               = SubmitButton;
+window.settings.libs['BaseContentLayout']          = BaseContentLayout;
+window.settings.libs['BaseLayout']                 = BaseLayout;
+window.settings.libs['MultiSelect']                = MultiSelect;
+window.settings.libs['Modal']                      = Modal;
 
 // get lib reference from window
 window.settings_get_lib = function(lib) {
