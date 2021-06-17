@@ -7,11 +7,6 @@ import HRWorkDays from 'settings/components/hr/workdays/HRWorkDays.vue';
 import HRLeave from 'settings/components/hr/leave/HRLeave.vue';
 import HRLeaveYears from 'settings/components/hr/leave-years/HRLeaveYears.vue';
 import HRMiscellaneous from 'settings/components/hr/miscellaneous/HRMiscellaneous.vue';
-import HRFrontend from 'settings/components/hr/hr-frontend/HRFrontend.vue';
-import HRRecruitment from 'settings/components/hr/recruitment/HRRecruitment.vue';
-import HrPayment from 'settings/components/hr/payroll/HrPayment.vue';
-import HrPayItem from 'settings/components/hr/payroll/HrPayItem.vue';
-import HRAttendance from 'settings/components/hr/attendance/HRAttendance.vue';
 
 // AC Components
 import AcCustomer from 'settings/components/act/customer/AcCustomer.vue';
@@ -72,45 +67,7 @@ export default new Router({
                     path: 'miscellaneous',
                     name: 'HRMiscellaneous',
                     component: HRMiscellaneous
-                },
-                {
-                    path: 'hr_frontend',
-                    name: 'HRFrontend',
-                    component: HRFrontend
-                },
-                {
-                    path: 'recruitment',
-                    name: 'HRRecruitment',
-                    component: HRRecruitment
-                },
-                {
-                    path: 'payroll',
-                    name: 'HrPayroll',
-                    component: {
-                        render(c) {
-                            return c('router-view');
-                        }
-                    },
-                    children: [
-                        {
-                            path: 'payment',
-                            name: 'HrPayment',
-                            component: HrPayment,
-                            alias: '/'
-                        },
-                        {
-                            path: 'payitem',
-                            name: 'HrPayItem',
-                            component: HrPayItem,
-                            alias: 'payitem'
-                        },
-                    ]
-                },
-                {
-                    path: 'attendance',
-                    name: 'HRAttendance',
-                    component: HRAttendance
-                },
+                }
             ]
         },
 
