@@ -11,9 +11,6 @@ import HRMiscellaneous from 'settings/components/hr/miscellaneous/HRMiscellaneou
 // AC Components
 import AcCustomer from 'settings/components/act/customer/AcCustomer.vue';
 import AcCurrency from 'settings/components/act/currency/AcCurrency.vue';
-import AcPaymentGeneral from 'settings/components/act/payment/AcPaymentGeneral.vue';
-import AcPaymentPaypal from 'settings/components/act/payment/AcPaymentPaypal.vue';
-import AcPaymentStripe from 'settings/components/act/payment/AcPaymentStripe.vue';
 import AcFinancialYears from 'settings/components/act/financial-year/AcFinancialYears.vue';
 
 // CRM Components
@@ -26,21 +23,21 @@ export default new Router({
     linkActiveClass: 'router-link-active',
     routes: settings.hooks.applyFilters('erp_settings_admin_routes', [
         {
-            path: '/',
+            path     : '/',
             component: GeneralSettings,
-            children: [
+            children : [
                 {
-                    path: 'general',
-                    name: 'GeneralSettings',
+                    path     : 'general',
+                    name     : 'GeneralSettings',
                     component: GeneralSettings,
-                    alias: '/'
+                    alias    : '/'
                 }
             ]
         },
 
         {
-            path: '/erp-hr',
-            name: 'HR',
+            path     : '/erp-hr',
+            name     : 'HR',
             component: {
                 render(c) {
                     return c('router-view');
@@ -48,32 +45,32 @@ export default new Router({
             },
             children: [
                 {
-                    path: 'workdays',
-                    name: 'HRWorkDays',
+                    path     : 'workdays',
+                    name     : 'HRWorkDays',
                     component: HRWorkDays,
-                    alias: '/erp-hr'
+                    alias    : '/erp-hr'
                 },
                 {
-                    path: 'leave',
-                    name: 'HRLeave',
+                    path     : 'leave',
+                    name     : 'HRLeave',
                     component: HRLeave
                 },
                 {
-                    path: 'financial',
-                    name: 'HRLeaveYears',
+                    path     : 'financial',
+                    name     : 'HRLeaveYears',
                     component: HRLeaveYears
                 },
                 {
-                    path: 'miscellaneous',
-                    name: 'HRMiscellaneous',
+                    path     : 'miscellaneous',
+                    name     : 'HRMiscellaneous',
                     component: HRMiscellaneous
                 }
             ]
         },
 
         {
-            path: '/erp-ac',
-            name: 'Ac',
+            path     : '/erp-ac',
+            name     : 'Ac',
             component: {
                 render(c) {
                     return c('router-view');
@@ -81,54 +78,27 @@ export default new Router({
             },
             children: [
                 {
-                    path: 'customers',
-                    name: 'AcCustomer',
+                    path     : 'customers',
+                    name     : 'AcCustomer',
                     component: AcCustomer,
-                    alias: '/erp-ac'
+                    alias    : '/erp-ac'
                 },
                 {
-                    path: 'currency_option',
-                    name: 'AcCurrency',
+                    path     : 'currency_option',
+                    name     : 'AcCurrency',
                     component: AcCurrency
                 },
                 {
-                    path: 'opening_balance',
-                    name: 'AcFinancialYears',
+                    path     : 'opening_balance',
+                    name     : 'AcFinancialYears',
                     component: AcFinancialYears
-                },
-                {
-                    path: 'payment',
-                    name: 'AcPayment',
-                    component: {
-                        render(c) {
-                            return c('router-view');
-                        }
-                    },
-                    children: [
-                        {
-                            path: 'general',
-                            name: 'AcPaymentGeneral',
-                            component: AcPaymentGeneral,
-                            alias: '/'
-                        },
-                        {
-                            path: 'paypal',
-                            name: 'AcPaymentPaypal',
-                            component: AcPaymentPaypal
-                        },
-                        {
-                            path: 'stripe',
-                            name: 'AcPaymentStripe',
-                            component: AcPaymentStripe
-                        },
-                    ]
-                },
+                }
             ]
         },
 
         {
-            path: '/erp-crm',
-            name: 'Crm',
+            path     : '/erp-crm',
+            name     : 'Crm',
             component: {
                 render(c) {
                     return c('router-view');
@@ -136,14 +106,14 @@ export default new Router({
             },
             children: [
                 {
-                    path: 'contacts',
-                    name: 'CrmContacts',
+                    path     : 'contacts',
+                    name     : 'CrmContacts',
                     component: CrmContacts,
-                    alias: '/erp-crm'
+                    alias    : '/erp-crm'
                 },
                 {
-                    path: 'subscription',
-                    name: 'CrmSubscription',
+                    path     : 'subscription',
+                    name     : 'CrmSubscription',
                     component: CrmSubscription
                 },
             ]
