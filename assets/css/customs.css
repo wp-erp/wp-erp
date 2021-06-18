@@ -845,7 +845,7 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
     position: relative;
 }
 
-.erp-table-wrapper .erp-ajax-loader-bg {
+.erp-ajax-loader-bg {
     width: 100%;
     height: 100%;
     background: #fafafa;
@@ -855,7 +855,7 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
     opacity: 0.8;
 }
 
-.erp-table-wrapper .erp-ajax-loader {
+.erp-ajax-loader {
     position: absolute;
     width: 30px;
     height: 30px;
