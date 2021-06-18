@@ -18,6 +18,7 @@ import BaseLayout from 'settings/components/layouts/BaseLayout.vue';
 import Modal from 'settings/components/base/Modal.vue';
 import BaseContentLayout from 'settings/components/layouts/BaseContentLayout.vue';
 import VueDropify from 'vue-dropify';
+import draggable from 'vuedraggable'
 
 // global for settings var
 window.settings = {
@@ -43,6 +44,7 @@ window.settings.libs['BaseContentLayout']          = BaseContentLayout;
 window.settings.libs['BaseLayout']                 = BaseLayout;
 window.settings.libs['MultiSelect']                = MultiSelect;
 window.settings.libs['Modal']                      = Modal;
+window.settings.libs['Draggable']                  = draggable;
 
 // get lib reference from window
 window.settings_get_lib = function(lib) {
