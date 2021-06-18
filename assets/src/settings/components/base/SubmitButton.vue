@@ -1,5 +1,7 @@
 <template>
-    <button type="submit" class="wperp-btn btn--primary settings-button" :class="{'working': working}">{{ text }}</button>
+    <button type="submit" :class="fullClass">
+        {{ text }}
+    </button>
 </template>
 
 <script>
@@ -13,10 +15,22 @@ export default {
         },
 
         working: {
-            type: Boolean,
+            type   : Boolean,
             default: false
+        },
+
+        customClass: {
+            type    : String,
+            required: false,
+            default : ''
         }
-    }
+    },
+
+    computed: {
+        fullClass: function () {
+            return 'wperp-btn btn--primary settings-button ' + this.customClass;
+        }
+    },
 };
 </script>
 
