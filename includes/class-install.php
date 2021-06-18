@@ -890,25 +890,26 @@ Account Manager
                 KEY `company_id` (`company_id`)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_crm_customer_activities` (
-                `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+            "CREATE TABLE {$wpdb->prefix}erp_crm_customer_activities (
+                id int(11) unsigned NOT NULL AUTO_INCREMENT,
                 `user_id` int(11) DEFAULT NULL,
                 `type` varchar(255) DEFAULT NULL,
                 `message` longtext,
-                `email_subject` text,
-                `log_type` varchar(255) DEFAULT NULL,
+                email_subject text,
+                log_type varchar(255) DEFAULT NULL,
                 `start_date` datetime DEFAULT NULL,
-                `end_date` datetime DEFAULT NULL,
-                `created_by` int(11) DEFAULT NULL,
-                `extra` longtext,
-                `sent_notification` tinyint(4) DEFAULT '0',
-                `created_at` datetime DEFAULT NULL,
-                `updated_at` datetime DEFAULT NULL,
-                PRIMARY KEY (`id`),
+                end_date datetime DEFAULT NULL,
+                created_by int(11) DEFAULT NULL,
+                extra longtext,
+                sent_notification tinyint(4) DEFAULT '0',
+                done_at datetime DEFAULT NULL,
+                created_at datetime DEFAULT NULL,
+                updated_at datetime DEFAULT NULL,
+                PRIMARY KEY  (id),
                 KEY `user_id` (`user_id`),
                 KEY `type` (`type`),
-                KEY `log_type` (`log_type`),
-                KEY `created_by` (`created_by`)
+                KEY log_type (log_type),
+                KEY created_by (created_by)
             ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_crm_activities_task` (
