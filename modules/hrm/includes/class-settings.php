@@ -2,12 +2,12 @@
 
 namespace WeDevs\ERP\HRM;
 
-use WeDevs\ERP\Framework\ERP_Settings_Page;
+use WeDevs\ERP\Settings\Page_View as Settings_Page;
 
 /**
  * Settings class
  */
-class Settings extends ERP_Settings_Page {
+class Settings extends Settings_Page {
 
     /**
      * [__construct description]
