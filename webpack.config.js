@@ -14,6 +14,9 @@ var entryPoints = {};
 var rootEntryPoints = {
     // 'vue-pro-admin': './src/admin/main.js',
     // style: './less/style.less',
+    'erp-settings-bootstrap' : './includes/settings/assets/src/bootstrap.js',
+    'erp-settings' : './includes/settings/assets/src/main.js',
+    'erp-settings' : './includes/settings/assets/less/settings.less',
 };
 
 var moduleEntryPoints = {
@@ -41,11 +44,6 @@ Object.keys(moduleEntryPoints).forEach(function(erpModule) {
         entryPoints[`../../${modulePath}/assets/js/${moduleOutput}`] = `./${modulePath}/${moduleEntryPoints[erpModule][moduleOutput]}`;
     });
 });
-
-// Settings config
-entryPoints[`../../assets/src/js/erp-settings-bootstrap`] = `./assets/src/settings/bootstrap.js`;
-entryPoints[`../../assets/src/js/erp-settings`] = `./assets/src/settings/main.js`;
-entryPoints[`../../assets/src/css/erp-settings`] = `./assets/src/less/settings.less`;
 
 // Enviroment flag
 var plugins = [];
