@@ -2,12 +2,12 @@
 
 namespace WeDevs\ERP;
 
-use WeDevs\ERP\Framework\ERP_Settings_Page;
+use WeDevs\ERP\Settings\Page_View as Settings_Page;
 
 /**
  * Integration Class
  */
-class Integration extends ERP_Settings_Page {
+class Integration extends Settings_Page {
 
     /**
      * Integration instances.
