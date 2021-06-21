@@ -83,6 +83,7 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-crm-get-single-schedule-details', 'get_single_schedule_details' );
 
         // Save Replies in Settings page
+        $this->action( 'wp_ajax_erp-crm-get-save-replies', 'get_template_save_replies' );
         $this->action( 'wp_ajax_erp-crm-save-replies', 'save_template_save_replies' );
         $this->action( 'wp_ajax_erp-crm-edit-save-replies', 'edit_save_replies' );
         $this->action( 'wp_ajax_erp-crm-delete-save-replies', 'delete_save_replies' );
@@ -1711,6 +1712,27 @@ class Ajax_Handler {
         }
 
         $this->send_success( $result );
+    }
+
+    /**
+     * Get saved template replies list
+     *
+     * @return json|object
+     */
+    public function get_template_save_replies() {
+        $this->verify_nonce( 'erp-settings-nonce' );
+
+        if ( ! current_user_can( 'manage_options' ) ) {
+            $this->send_error( erp_get_message( ['type' => 'error_permission'] ) );
+        }
+
+        $data = erp_crm_get_save_replies();
+
+        if ( is_wp_error( $data ) ) {
+            $this->send_error( erp_get_message( ['type' => 'error_process'] ) );
+        }
+
+        $this->send_success( $data );
     }
 
     /**
