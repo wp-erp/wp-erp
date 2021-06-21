@@ -278,7 +278,7 @@ final class WeDevs_ERP {
         new \WeDevs\ERP\AddonTask();
         new \WeDevs\ERP\ERP_i18n();
         new \WeDevs\ERP\Validate_Data();
-        new \WeDevs\ERP\Framework\Ajax_Handler();
+        new \WeDevs\ERP\Settings\Ajax();
 
         // Appsero Tracker
         \WeDevs\ERP\Tracker::get_instance()->init();
