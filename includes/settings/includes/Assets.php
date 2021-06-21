@@ -156,20 +156,20 @@ class Assets {
      */
     public function get_scripts() {
         $scripts = [
-            'settings-vendor'    => [
+            'settings-vendor' => [
                 'src'       => WPERP_ASSETS . '/js/vendor.js',
                 'version'   => filemtime( WPERP_PATH . '/assets/js/vendor.js' ),
                 'in_footer' => true,
             ],
 
-            'erp-settings-bootstrap'     => [
+            'erp-settings-bootstrap' => [
                 'src'       => WPERP_ASSETS . '/js/erp-settings-bootstrap.js',
                 'deps'      => [ 'jquery', 'settings-vendor' ],
                 'version'   => filemtime( WPERP_PATH . '/assets/js/erp-settings-bootstrap.js' ),
                 'in_footer' => true,
             ],
 
-            'erp-settings'     => [
+            'erp-settings' => [
                 'src'       => WPERP_ASSETS . '/js/erp-settings.js',
                 'deps'      => [ 'jquery', 'erp-settings-bootstrap' ],
                 'version'   => filemtime( WPERP_PATH . '/assets/js/erp-settings.js' ),
