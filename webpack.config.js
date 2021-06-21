@@ -14,10 +14,12 @@ var entryPoints = {};
 var rootEntryPoints = {
     // 'vue-pro-admin': './src/admin/main.js',
     // style: './less/style.less',
-    'erp-settings-bootstrap' : './includes/settings/assets/src/bootstrap.js',
-    'erp-settings' : './includes/settings/assets/src/main.js',
-    'erp-settings' : './includes/settings/assets/less/settings.less',
 };
+
+// @todo: Organize these settings asset compiling
+entryPoints[`../../assets/js/erp-settings-bootstrap`] = `./includes/settings/assets/src/bootstrap.js`;
+entryPoints[`../../assets/js/erp-settings`] = `./includes/settings/assets/src/main.js`;
+entryPoints[`../../assets/css/erp-settings`] = `./includes/settings/assets/less/settings.less`;
 
 var moduleEntryPoints = {
     hr: {},
