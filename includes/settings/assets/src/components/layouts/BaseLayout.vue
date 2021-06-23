@@ -9,9 +9,7 @@
             <h3 class="sub-section-title" v-if="subSectionTitle">
                 <slot name="subSectionTitle">{{ subSectionTitle }}</slot>
             </h3>
-            <p class="sub-section-description" v-if="subSectionDescription">
-                {{ subSectionDescription }}
-            </p>
+            <p class="sub-section-description" v-if="subSectionDescription" v-html="subSectionDescription"></p>
 
             <slot v-if="!enable_content"></slot>
 
@@ -19,9 +17,16 @@
                 v-if="enable_content"
                 :section_id="section_id"
                 :sub_section_id="sub_section_id"
+                :sub_sub_section_id="sub_sub_section_id"
                 :inputs="inputFields"
                 :single_option="single_option"
-            />
+            >
+                <!-- Extended-data slot which will be append before Save changes button -->
+                <div slot="extended-data">
+                    <slot name="extended-data"></slot>
+                </div>
+            </base-content-layout>
+
         </div>
     </div>
 </template>
@@ -59,6 +64,10 @@ export default {
             type    : String,
             required: true,
         },
+        sub_sub_section_id: {
+            type    : String,
+            required: false
+        },
         enable_content: {
             type    : Boolean,
             required: false
@@ -76,13 +85,25 @@ export default {
 
         this.single_option = parentMenu.single_option;
 
-        if ( parentMenu.single_option ) {
-            fields = parentMenu.fields[ this.sub_section_id ];
+        // Check if second level sub_section_id is provided, like email_connect > gmail
+        if ( typeof this.sub_sub_section_id !== 'undefined' && this.sub_sub_section_id.length > 0 ) {
+            const subSectionFields = parentMenu.fields[ this.sub_section_id ];
+
+            subSectionFields.map( subSectionField => {
+                if ( subSectionField.type === 'sub_sections' ) {
+                    fields = subSectionField.sub_sections[this.sub_sub_section_id].fields;
+                }
+            } );
+
         } else {
-            if ( this.section_id !== this.sub_section_id ) {
+            if ( parentMenu.single_option ) {
                 fields = parentMenu.fields[ this.sub_section_id ];
             } else {
-                fields = parentMenu.fields;
+                if ( this.section_id !== this.sub_section_id ) {
+                    fields = parentMenu.fields[ this.sub_section_id ];
+                } else {
+                    fields = parentMenu.fields;
+                }
             }
         }
 
