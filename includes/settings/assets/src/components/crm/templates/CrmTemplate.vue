@@ -25,12 +25,66 @@
                     <td>{{ template.name }}</td>
                     <td>{{ template.subject }}</td>
                     <td>
-                        <span @click="popupTemplate(template, true)" class="action"><i class="fa fa-pencil"></i></span>
-                        <span @click="deleteTemplate(template.id)" class="action"><i class="fa fa-trash"></i></span>
+                        <span @click="popupModal(template, 'edit')" class="action"><i class="fa fa-pencil"></i></span>
+                        <span @click="popupDeleteModal(template)" class="action"><i class="fa fa-trash"></i></span>
                     </td>
                 </tr>
             </tbody>
         </table>
+
+         <modal
+            v-show="isVisibleModal"
+            :title="modalMode === 'create' ? __('Add new Template', 'erp') : __('Edit', 'erp')"
+            @close="popupModal({}, modalMode)"
+            :header="true"
+            :footer="true"
+            :hasForm="true"
+        >
+            <template v-slot:body>
+                <form class="wperp-form" method="post" @submit.prevent="onFormSubmit">
+                    <div class="wperp-form-group">
+                        <label>{{ __('Name', 'erp') }} <span class="required">*</span></label>
+                        <input v-model="singleTemplate.name" class="wperp-form-field" required />
+                    </div>
+
+                    <div class="wperp-form-group">
+                        <label>{{ __('Subject', 'erp') }}</label>
+                        <input v-model="singleTemplate.subject" class="wperp-form-field" />
+                    </div>
+
+                    <div style="margin-bottom: 60px;">
+                        <div class="wperp-form-group" style="clear: both; position: absolute; right: 18px;">
+                            <label>{{ __('Short Codes', 'erp') }}</label>
+                            <select
+                                v-model="singleTemplate.shortCode" class="wperp-form-field"
+                                @change="appendShortCode"
+                            >
+                                <option v-for="(shortCode, key, index) in shortCodes" :key="index">
+                                    {{ key }}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="wperp-form-group">
+                        <label>{{ __('Body', 'erp') }}</label>
+                        <VueTrix v-model="singleTemplate.template" placeholder="Enter content" localStorage/>
+                    </div>
+
+                </form>
+            </template>
+
+            <template v-slot:footer>
+                <span @click="popupModal({}, modalMode)">
+                    <submit-button :text="__('Cancel', 'erp')" customClass="wperp-btn-cancel"/>
+                </span>
+
+                <span @click="onFormSubmit">
+                    <submit-button :text="modalMode === 'create' ? __('Add New', 'erp') : __('Save', 'erp') " />
+                </span>
+            </template>
+        </modal>
+
 
     </base-layout>
 </template>
@@ -38,7 +92,10 @@
 <script>
 import BaseLayout from "../../layouts/BaseLayout.vue";
 import SubmitButton from "../../base/SubmitButton.vue";
+import Modal from '../../base/Modal.vue';
+import VueTrix from "vue-trix";
 import { generateFormDataFromObject } from "../../../utils/FormDataHandler";
+
 var $ = jQuery;
 
 export default {
@@ -46,12 +103,18 @@ export default {
 
     components: {
         BaseLayout,
-        SubmitButton
+        SubmitButton,
+        Modal,
+        VueTrix
     },
 
     data() {
         return {
-            templates: []
+            templates     : [],
+            isVisibleModal: false,
+            singleTemplate: {},
+            shortCodes    : [],
+            modalMode     : 'create' // 'create' or 'edit'
         }
     },
 
@@ -66,6 +129,7 @@ export default {
          */
         getTemplatesData() {
             const self = this;
+            self.$store.dispatch("spinner/setSpinner", true);
 
             let requestData = window.settings.hooks.applyFilters(
                 "requestData",
@@ -87,27 +151,122 @@ export default {
                     self.$store.dispatch("spinner/setSpinner", false);
 
                     if (response.success) {
-                        self.templates = response.data;
+                        self.templates  = response.data.replies;
+                        self.shortCodes = response.data.short_codes;
                     }
                 },
             });
         },
 
         /**
-         * Popup template modal for create & edit
+         * Template Saving for create and edit
          */
-        popupTemplate( template, isEdit = false) {
+        onFormSubmit() {
+            const self     = this;
+            const isUpdate = self.modalMode === 'edit' ? true : false;
+            self.$store.dispatch("spinner/setSpinner", true);
 
+            let requestData = {
+                ...self.singleTemplate,
+                id       : self.modalMode === 'edit' ? self.singleTemplate.id : 0,
+                action   : ! isUpdate ? 'erp-crm-save-replies' : 'erp-crm-edit-save-replies',
+                _wpnonce : wpErpCrm.nonce
+            };
+
+            requestData    = window.settings.hooks.applyFilters( "requestData", requestData );
+            const postData = generateFormDataFromObject(requestData);
+
+            $.ajax({
+                url        : erp_settings_var.ajax_url,
+                type       : "POST",
+                data       : postData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    self.$store.dispatch("spinner/setSpinner", false);
+
+                    if (response.success) {
+                        if ( isUpdate ) {
+                            self.singleTemplate = {};
+                            self.popupModal({}, 'edit');
+                        } else {
+                            self.popupModal({}, 'create');
+                        }
+
+                        self.showAlert("success", response.data.message);
+                        self.getTemplatesData();
+                    } else {
+                        self.showAlert("error", response.data);
+                    }
+                }
+            });
         },
 
         /**
-         * Delete Template
+         * Popup template modal for create & edit
          */
-        deleteTemplate( templateId ) {
+        popupModal( template, modalMode ) {
+            if ( this.isVisibleModal ) {
+                this.isVisibleModal = false;
+            } else {
+                this.isVisibleModal = true;
+            }
 
+            this.singleTemplate = modalMode === 'create' ? {} : template;
+            this.modalMode      = modalMode;
         },
-    },
 
+        /**
+         * Popup Delete modal and
+         * On confirmation of deletion, delete
+         */
+        popupDeleteModal( template ) {
+            const self = this;
 
+            swal({
+                title             : __('Delete', 'erp'),
+                text              : __('Are you sure to delete this ?', 'erp'),
+                type              : "warning",
+                showCancelButton  : true,
+                cancelButtonText  : __('Cancel', 'erp'),
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText  : __('Delete', 'erp'),
+                closeOnConfirm    : false
+            },
+            function() {
+                $.ajax({
+                    type    : "POST",
+                    url     : erp_settings_var.ajax_url,
+                    dataType: 'json',
+                    data    : {
+                        id      : template.id,
+                        _wpnonce: wpErpCrm.nonce,
+                        action  : 'erp-crm-delete-save-replies'
+                    },
+                } )
+                .fail( function( xhr ) {
+                    self.showAlert('error', xhr);
+                } )
+                .done( function( response ) {
+                    swal.close();
+
+                    if ( response.success ) {
+                        self.showAlert('success', response.data.message);
+                        self.getTemplatesData();
+                    } else {
+                        self.showAlert('error', response.data);
+                    }
+                });
+            });
+        },
+
+        /**
+         * Append short code in template body description box
+         */
+        appendShortCode() {
+            const templateText           = typeof this.singleTemplate.template === 'undefined' ? '': this.singleTemplate.template;
+            this.singleTemplate.template = templateText + this.singleTemplate.shortCode;
+        }
+    }
 };
 </script>

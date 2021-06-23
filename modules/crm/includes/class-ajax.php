@@ -1615,7 +1615,7 @@ class Ajax_Handler {
      * @return json
      */
     public function save_template_save_replies() {
-        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'wp-erp-crm-save-replies' ) ) {
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'wp-erp-crm-nonce' ) ) {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
@@ -1623,7 +1623,6 @@ class Ajax_Handler {
             'id'       => isset( $_POST['id'] ) ? sanitize_text_field( wp_unslash( $_POST['id'] ) ) : 0,
             'name'     => isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '',
             'subject'  => isset( $_POST['subject'] ) ? sanitize_text_field( wp_unslash( $_POST['subject'] ) ) : '',
-            /*'template' => isset( $_POST['template'] ) ? $_POST['template'] : ''*/
             'template' => isset( $_POST['template'] ) ? wp_kses_post( wp_unslash( $_POST['template'] ) ) : '',
         ];
 
@@ -1633,7 +1632,10 @@ class Ajax_Handler {
             $this->send_error( $results->get_error_message() );
         }
 
-        $this->send_success( stripslashes_deep( $results ) );
+        $this->send_success( [
+            'message' => erp_get_message( ['type' => 'save_success', 'additional' => __( 'Templates', 'erp' )] ),
+            'data'    => stripslashes_deep( $results )
+        ] );
     }
 
     /**
@@ -1648,7 +1650,7 @@ class Ajax_Handler {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
-        $query_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
+        $query_id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
 
         if ( ! $query_id ) {
             $this->send_error( __( 'Somthing wrong, Please try later', 'erp' ) );
@@ -1657,7 +1659,14 @@ class Ajax_Handler {
         $result = erp_crm_get_save_replies_by_id( $query_id );
 
         if ( $result ) {
-            $this->send_success( stripslashes_deep( $result ) );
+            $updated = $this->save_template_save_replies();
+
+            if ( $updated ) {
+                $this->send_success( [
+                    'message' => erp_get_message( ['type' => 'update_success', 'additional' => __( 'Templates', 'erp' ) ] ),
+                    'data'    => stripslashes_deep( $result )
+                ] );
+            }
         }
 
         $this->send_error( __( 'No results found', 'erp' ) );
@@ -1687,7 +1696,9 @@ class Ajax_Handler {
             $this->send_error( $resp->get_error_message() );
         }
 
-        $this->send_success( __( 'Save reply item delete successfully', 'erp' ) );
+        $this->send_success( [
+            'message' => erp_get_message( ['type' => 'delete_success', 'additional' => __( 'Templates', 'erp' ) ] ),
+        ] );
     }
 
     /**
@@ -1726,7 +1737,13 @@ class Ajax_Handler {
             $this->send_error( erp_get_message( ['type' => 'error_permission'] ) );
         }
 
-        $data = erp_crm_get_save_replies();
+        $short_codes = erp_crm_get_save_replies_shortcodes();
+        $replies     = erp_crm_get_save_replies();
+
+        $data = [
+            'replies'     => $replies,
+            'short_codes' => $short_codes,
+        ];
 
         if ( is_wp_error( $data ) ) {
             $this->send_error( erp_get_message( ['type' => 'error_process'] ) );
