@@ -354,7 +354,7 @@
         padding: 0;
         text-align: center;
         opacity: 0;
-        z-index: 99999;
+        z-index: 1000;
         left: -9999px;
         transition: none !important;
 
@@ -501,8 +501,16 @@
 
     /** Modal Start **/
 
+    .wperp-modal {
+        z-index: 999 !important;
+    }
+
     .wperp-modal-header {
         border-bottom: 1px solid #e9e9f7 !important;
+        h4, h5, h3 {
+            font-weight: 500 !important;
+            font-size: 16px !important;
+        }
     }
 
     .wperp-modal-footer {
@@ -518,7 +526,7 @@
         min-height: 360px;
         background: #000;
         opacity: .7;
-        z-index: 99900;
+        z-index: 999;
     }
 
     .modal {
@@ -642,6 +650,12 @@
         }
     }
     /** Table End **/
+
+    /** Trix Editor **/
+    .trix-content * {
+        color: #16191c;
+    }
+    /** Trix Editor **/
 }
 
 @import "responsive.less";
