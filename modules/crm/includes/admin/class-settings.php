@@ -18,7 +18,6 @@ class CRM_Settings extends Settings_Page {
         $this->sections = $this->get_sections();
         $this->icon     = WPERP_ASSETS . '/images/wperp-settings/crm.png';
 
-        add_action( 'erp_admin_field_listing_save_templates', [ $this, 'listing_save_templates' ] );
         add_action( 'erp_admin_field_render_email_providers', [ $this, 'render_email_providers' ] );
 
         add_action( 'erp_admin_field_imap_status', [ $this, 'imap_status' ] );
@@ -132,17 +131,6 @@ class CRM_Settings extends Settings_Page {
             'desc'  => __( '', 'erp' ),
             'id'    => 'general_options',
         ];
-
-        $fields['templates'][] = [
-            'type' => 'listing_save_templates',
-        ];
-
-        $fields['templates'][] = [
-            'type' => 'sectionend',
-            'id'   => 'script_styling_options',
-        ];
-
-        $fields['templates']['submit_button'] = false;
 
         $fields['subscription'][] = [
             'title' => __( 'Contact Group subscription settings', 'erp' ),
@@ -302,7 +290,8 @@ class CRM_Settings extends Settings_Page {
         ];
 
         $fields[] = [
-            'type' => 'render_email_providers',
+            'type'         => 'sub_sections',
+            'sub_sections' => $this->get_email_prodivers(),
         ];
 
         $fields[] = [
@@ -318,11 +307,11 @@ class CRM_Settings extends Settings_Page {
      *
      * @since 1.3.14
      *
+     * @param string $sub_section
+     *
      * @return array fields
      */
-    public function get_sub_section_fields() {
-        $sub_section = isset( $_GET['sub_section'] ) ? sanitize_text_field( wp_unslash( $_GET['sub_section'] ) ) : '';
-
+    public function get_sub_section_fields( $sub_section ) {
         switch ( $sub_section ) {
             case 'gmail':
                 return $this->get_gmail_api_settings_fields();
@@ -375,7 +364,12 @@ class CRM_Settings extends Settings_Page {
         ];
 
         $fields[] = [
-            'type' => 'gmail_redirect_url',
+            'title'    => __( 'Redirect URL to use', 'erp' ),
+            'id'       => 'redirect_url',
+            'type'     => 'text',
+            'desc'     => __( 'Copy and Use this url when oAuth consent asks for Authorized Redirect URL', 'erp' ),
+            'default'  => esc_url_raw( wperp()->google_auth->get_redirect_url() ),
+            'disabled' => true
         ];
 
         if ( wperp()->google_auth->has_credentials() ) {
@@ -405,7 +399,7 @@ class CRM_Settings extends Settings_Page {
      * @return array
      */
     protected function get_imap_settings_fields() {
-        if ( !extension_loaded( 'imap' ) || !function_exists( 'imap_open' ) ) {
+        if ( ! extension_loaded( 'imap' ) || ! function_exists( 'imap_open' ) ) {
             $fields[] = [
                 'title' => __( 'IMAP/POP3 Options', 'erp' ),
                 'type'  => 'title',
@@ -597,7 +591,7 @@ class CRM_Settings extends Settings_Page {
         <?php
     }
 
-    public function render_email_providers() {
+    public function get_email_prodivers() {
         $providers = [];
 
         $providers['gmail'] = [
@@ -605,6 +599,7 @@ class CRM_Settings extends Settings_Page {
             'description'  => __( 'Connect your Gmail or Gsuite account', 'erp' ),
             'enabled'      => wperp()->google_auth->is_active(),
             'actions'      => '',
+            'fields'       => $this->get_sub_section_fields( 'gmail' )
         ];
 
         $providers['imap']  = [
@@ -612,7 +607,14 @@ class CRM_Settings extends Settings_Page {
             'description'  => __( 'Connect to Custom IMAP server', 'erp' ),
             'enabled'      => erp_is_imap_active(),
             'actions'      => '',
+            'fields'       => $this->get_sub_section_fields( 'imap' )
         ];
+
+        return $providers;
+    }
+
+    public function render_email_providers() {
+        $providers = $this->get_email_prodivers();
 
         $settings_url = admin_url( 'admin.php?page=erp-settings&tab=erp-crm&section=email_connect&sub_section=' ); ?>
         <tr valign="top">
@@ -684,117 +686,6 @@ class CRM_Settings extends Settings_Page {
         <?php
     }
 
-    public function listing_save_templates() {
-        $save_replies = erp_crm_get_save_replies(); ?>
-    <style type="text/css">
-        td.erp-crm-templates-wrapper {
-            padding: 0 15px 10px 0;;
-        }
-        table.erp-crm-templates-table th {
-            padding: 9px 7px!important;
-            vertical-align: middle;
-        }
-
-        table.erp-crm-templates-table td {
-            padding: 7px;
-            line-height: 2em;
-            vertical-align: middle;
-        }
-
-        table.erp-crm-templates-table th.erp-templates-settings-table-name,
-        table.erp-crm-templates-table td.erp-templates-settings-table-name {
-            padding-left: 15px !important;
-        }
-
-        table.erp-crm-templates-table td.erp-templates-settings-table-name a {
-            font-weight: 700;
-        }
-
-        table.erp-crm-templates-table td.erp-templates-settings-table-actions{
-            text-align: center;
-        }
-        table.erp-crm-templates-table td.erp-templates-settings-table-actions a{
-            margin-right: 8px;
-        }
-
-        table.erp-crm-templates-table tr:nth-child(odd) td {
-            background: #f9f9f9;
-        }
-
-        #erp-crm-add-save-replies {
-            margin-right: 15px;
-            margin-bottom: 10px;
-        }
-    </style>
-    <a href="#" class="erp-crm-add-save-replies button alignright" id="erp-crm-add-save-replies" title="<?php esc_attr_e( 'Add new Template', 'erp' ); ?>"><?php esc_attr_e( 'Add Templates', 'erp' ); ?></a>
-    <tr valign="top">
-        <td class="erp-crm-templates-wrapper" colspan="2">
-            <table class="erp-crm-templates-table widefat" cellspacing="0">
-                <thead>
-                    <tr>
-                        <?php
-                            $columns = apply_filters( 'erp_email_setting_columns', [
-                                'name'        => __( 'Template Name', 'erp' ),
-                                'subject'     => __( 'Subject', 'erp' ),
-                                'actions'     => '',
-                            ] );
-
-        foreach ( $columns as $key => $column ) {
-            echo '<th class="erp-templates-settings-table-' . esc_attr( $key ) . '">' . esc_html( $column ) . '</th>';
-        } ?>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    <?php
-                    if ( $save_replies ) {
-                        foreach ( $save_replies as $replies_key => $save_reply ) {
-                            echo '<tr>';
-
-                            foreach ( $columns as $key => $column ) {
-                                switch ( $key ) {
-                                    case 'name':
-                                        echo '<td class="erp-templates-settings-table-' . esc_attr( $key ) . '">
-                                            <a href="#">' . esc_attr( $save_reply->name ) . '</a>
-                                        </td>';
-                                        break;
-
-                                    case 'subject':
-                                        $subject = ( isset( $save_reply->subject ) && ! empty( $save_reply->subject ) ) ? esc_attr( $save_reply->subject ) : '----';
-                                        echo '<td class="erp-templates-settings-table-' . esc_attr( $key ) . '">
-                                            <span class="help">' . esc_attr( $subject ) . '</span>
-                                        </td>';
-                                        break;
-
-                                    case 'actions':
-                                        echo '<td class="erp-templates-settings-table-' . esc_attr( $key ) . '">
-                                            <a class="erp-crm-save-replies-edit erp-tips" title="' . esc_html__( 'Edit', 'erp' ) . '" href="#" data-id="' . esc_attr( $save_reply->id ) . '"><i class="fa fa-pencil-square-o"></i></a>
-                                            <a class="erp-crm-delete-save-replies erp-tips" title="' . esc_html__( 'Delete', 'erp' ) . '" href="#" data-id="' . esc_attr( $save_reply->id ) . '"><i class="fa fa-trash-o"></i></a>
-                                        </td>';
-                                        break;
-
-                                    default:
-                                        if ( empty( $email ) ) {
-                                            // why?
-                                            $email = '';
-                                        }
-
-                                        do_action( 'erp_templates_setting_column_' . $key, $email );
-                                    break;
-                                }
-                            }
-                            echo '</tr>';
-                        }
-                    } else {
-                        echo '<tr><td colspan="3">' . esc_html__( 'No templates found', 'erp' ) . '</td></tr>';
-                    } ?>
-                </tbody>
-            </table>
-        </td>
-    </tr>
-    <?php
-    }
-
     /**
      * Disable other provider if one is enabled
      *
@@ -822,41 +713,6 @@ class CRM_Settings extends Settings_Page {
     }
 
     /**
-     * Override Output of settings fields for sub sections.
-     *
-     * @since 1.3.14
-     */
-    public function output( $section = false ) {
-        if ( !isset( $_GET['sub_section'] ) ) {
-            parent::output( $section );
-
-            return;
-        }
-        $current_section = isset( $_GET['sub_section'] ) ? sanitize_key( $_GET['sub_section'] ) : false;
-
-        if ( $current_section ) {
-            $this->render_sub_section( $this->get_sub_section_fields() );
-        } else {
-            parent::output();
-        }
-    }
-
-    /**
-     * Render fields for sub sections
-     *
-     * @since 1.3.14
-     *
-     * @param $fields
-     */
-    public function render_sub_section( $fields ) {
-        ?>
-        <table class="form-table">
-            <?php $this->output_fields( $fields ); ?>
-        </table>
-        <?php
-    }
-
-    /**
      * Override parent save to save sub section fields
      *
      * @since 1.3.14
@@ -865,34 +721,35 @@ class CRM_Settings extends Settings_Page {
      */
     public function save( $section = false ) {
         if ( isset( $_POST['_wpnonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_POST['_wpnonce'] ) ), 'erp-settings-nonce' ) ) {
-            if ( !isset( $_GET['sub_section'] ) ) {
+            if ( ! isset( $_POST['sub_sub_section'] ) ) {
                 parent::save( $section );
 
                 return;
             }
 
-            $current_section = isset( $_GET['sub_section'] ) ? sanitize_key( wp_unslash( $_GET['sub_section'] ) ) : false;
-            // saving individual email settings
-            if ( $current_section ) {
-                $settings       = $this->get_sub_section_fields();
+            $sub_section = isset( $_POST['sub_sub_section'] ) ? sanitize_key( wp_unslash( $_POST['sub_sub_section'] ) ) : false;
+
+            // Saving individual email settings
+            if ( $sub_section ) {
+                $settings       = $this->get_sub_section_fields( $sub_section );
                 $update_options = get_option(  $this->get_option_id(), [] );
 
                 if ( $settings ) {
                     foreach ( $settings as $field ) {
-                        if ( !isset( $field['id'] ) || !isset( $_POST[$field['id']] ) ) {
+                        if ( ! isset( $field['id'] ) || ! isset( $_POST[ $field['id'] ] ) ) {
                             continue;
                         }
 
                         $option_value = $this->parse_option_value( $field );
 
-                        if ( !is_null( $option_value ) ) {
+                        if ( ! is_null( $option_value ) ) {
                             $update_options[$field['id']] = $option_value;
                         }
                     }
                 }
                 update_option( $this->get_option_id(), $update_options );
 
-                do_action( 'erp_settings_crm_updated_sub_section', $current_section, $update_options );
+                do_action( 'erp_settings_crm_updated_sub_section', $sub_section, $update_options );
             } else {
                 parent::save();
             }
