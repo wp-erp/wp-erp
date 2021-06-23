@@ -3,7 +3,7 @@
         <ul class="settings-sub-menu">
             <template v-for="(menu, key, index) in menus">
                 <li :key="key" v-if="index < dropdownMenuStartPos">
-                    <router-link tag="li" :to="'/' + parent_id + '/' + key" :class="activeRouteClass(index)">
+                    <router-link tag="li" :to="`${parent_id}/${key}`" :class="activeRouteClass(index)">
                         <a href="#"><span class="menu-name">{{ menu }}</span></a>
                     </router-link>
                 </li>
@@ -18,7 +18,7 @@
                     <ul role="menu">
                         <template v-for="(menu, key, index) in menus">
                             <li v-if="index >= dropdownMenuStartPos" :key="index" class="dropdown-list-item">
-                                <router-link :to="'/' + parent_id + '/' + key">
+                                <router-link :to="`${parent_id}/${key}`">
                                     <span class="menu-name">{{ menu }}</span>
                                 </router-link>
                             </li>

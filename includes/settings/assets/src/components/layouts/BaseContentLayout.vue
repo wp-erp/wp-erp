@@ -16,7 +16,6 @@
                     <input-desc :input="input" />
                 </template>
 
-
                 <div class="form-check" v-if="input.type === 'checkbox'">
                     <label class="form-check-label">
                         <input v-model="fields[index]['value']" type="checkbox" class="form-check-input" :id="'erp-'+fields[index]['id']" />
@@ -38,9 +37,9 @@
                 </div>
 
                 <div v-if="input.type === 'text' || input.type === 'textarea'">
-                    <input v-if="input.type === 'text' && input.class !== 'erp-date-field'" v-model="fields[index]['value']" class="wperp-form-field" :id="'erp-'+fields[index]['id']" />
+                    <input v-if="input.type === 'text' && input.class !== 'erp-date-field'" v-model="fields[index]['value']" class="wperp-form-field" :id="'erp-'+fields[index]['id']" :disabled="fields[index]['disabled'] ? true : false" />
                     <date-picker v-if="input.type === 'text' && input.class === 'erp-date-field'" class="wperp-form-field" :placeholder="__( 'Select date', 'erp' )" v-model="fields[index]['value']" :id="'erp-'+fields[index]['id']" />
-                    <textarea v-if="input.type === 'textarea'" cols="45" rows="4" v-model="fields[index]['value']" class="wperp-form-field" :id="'erp-'+fields[index]['id']" />
+                    <textarea v-if="input.type === 'textarea'" cols="45" rows="4" v-model="fields[index]['value']" class="wperp-form-field" :id="'erp-'+fields[index]['id']" :disabled="fields[index]['disabled'] ? true : false" />
 
                     <input-desc :input="input" />
                 </div>
@@ -55,6 +54,8 @@
                 </div>
             </div>
         </div>
+
+        <slot name="extended-data"></slot>
 
         <div class="wperp-form-group">
             <submit-button :text="__('Save Changes', 'erp')" />
