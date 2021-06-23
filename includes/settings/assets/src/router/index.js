@@ -17,6 +17,9 @@ import AcFinancialYears from '../components/act/financial-year/AcFinancialYears.
 import CrmContacts from '../components/crm/contacts/CrmContacts.vue';
 import CrmSubscription from '../components/crm/subscription/CrmSubscription.vue';
 import CrmTemplate from '../components/crm/templates/CrmTemplate.vue';
+import CrmEmailConnect from '../components/crm/email/CrmEmailConnect.vue';
+import CrmEmailConnectGmail from '../components/crm/email/CrmEmailConnectGmail.vue';
+import CrmEmailConnectImap from '../components/crm/email/CrmEmailConnectImap.vue';
 
 Vue.use(Router);
 
@@ -122,6 +125,21 @@ export default new Router({
                     name     : 'CrmTemplate',
                     component: CrmTemplate
                 },
+                {
+                    path     : 'email_connect',
+                    name     : 'CrmEmailConnect',
+                    component: CrmEmailConnect
+                },
+                {
+                    path     : 'email_connect/gmail',
+                    name     : 'CrmEmailConnectGmail',
+                    component: CrmEmailConnectGmail
+                },
+                {
+                    path     : 'email_connect/imap',
+                    name     : 'CrmEmailConnectImap',
+                    component: CrmEmailConnectImap
+                }
             ]
         }
     ])
