@@ -19,6 +19,7 @@ import Modal from './components/base/Modal.vue';
 import BaseContentLayout from './components/layouts/BaseContentLayout.vue';
 import VueDropify from 'vue-dropify';
 import draggable from 'vuedraggable'
+import VueTrix from "vue-trix";
 
 // global for settings var
 window.settings = {
@@ -45,6 +46,7 @@ window.settings.libs['BaseLayout']                 = BaseLayout;
 window.settings.libs['MultiSelect']                = MultiSelect;
 window.settings.libs['Modal']                      = Modal;
 window.settings.libs['Draggable']                  = draggable;
+window.settings.libs['VueTrix']                    = VueTrix;
 
 // get lib reference from window
 window.settings_get_lib = function(lib) {
