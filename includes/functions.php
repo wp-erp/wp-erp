@@ -3499,6 +3499,10 @@ function erp_get_message( $args = [] ) {
             $args['message'] = 'Created Successfully!';
             break;
 
+        case 'delete_success':
+            $args['message'] = 'Deleted Successfully!';
+            break;
+
         default:
             break;
     }
