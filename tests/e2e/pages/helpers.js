@@ -105,7 +105,7 @@ module.exports = {
     },
 
     dealsPage(){
-        I.amOnPage('wp-admin/admin.php?page=erp-crm&section=deals&sub-section=all-deals');
+        I.moveCursorTo('//*[@id="wpbody-content"]/div[2]/ul/li[3]/a');
         I.click('All Deals');
     },
     addNewContact(){       
@@ -142,6 +142,7 @@ module.exports = {
         I.fillField('#erp-crm-contact-group-description', 'Hers is the contact group description');
         I.click('//button[contains(text(),"Add New")]');
     },
+
 
 
 }

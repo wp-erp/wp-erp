@@ -1,5 +1,4 @@
 Feature('HRM Module Activate & Deactive');
-
 Scenario('@module Activating & Deactivating HRM Modules with Extention',({ I, loginAs}) => {
     loginAs('admin');
         I.click('WP ERP');
@@ -21,6 +20,5 @@ Scenario('@module Activating & Deactivating HRM Modules with Extention',({ I, lo
         I.checkOption('Select All');
         I.click('Deactivate');
         I.click('#close_table_nav_btn');
-
 });
 

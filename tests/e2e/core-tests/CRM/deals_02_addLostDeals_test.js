@@ -1,12 +1,10 @@
+const helpers = require('../../pages/helpers');
 Feature('Deals');
-
-Scenario('@Deals Add Lost Deals',({ I }) => {
-I.loginAsAdmin();
-    I.click('WP ERP');
+Scenario('@Deals Add Lost Deals',({ I, loginAs }) => {
+    loginAs('admin');
+    helpers.crmDashboard();
+    helpers.dealsPage();
     /*   Adding Lost Deals   */
-    I.click('CRM');
-    I.moveCursorTo('//*[@id="wpbody-content"]/div[2]/ul/li[3]/a');
-    I.click('All Deals');
     I.wait(2);
     I.click('Open deals');
     I.wait(2);
@@ -30,5 +28,4 @@ I.loginAsAdmin();
     I.click('Save');
     I.wait(4);
     I.click('OK');
-
 });

@@ -1,7 +1,6 @@
 Feature('CRM Module Activate & Deactive');
-
-Scenario('@module Activating & Deactivating CRM Modules with Extention',({ I }) => {
-    I.loginAsAdmin();
+Scenario('@module Activating & Deactivating CRM Modules with Extention',({ I, loginAs}) => {
+    loginAs('admin');
         I.click('WP ERP');
         I.click('Modules');
         /*   Activate    */
@@ -21,6 +20,5 @@ Scenario('@module Activating & Deactivating CRM Modules with Extention',({ I }) 
         I.checkOption('Select All');
         I.click('Deactivate');
         I.click('#close_table_nav_btn');
-
 });
 
