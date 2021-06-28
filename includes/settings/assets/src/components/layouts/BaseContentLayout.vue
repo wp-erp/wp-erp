@@ -16,12 +16,36 @@
                     <input-desc :input="input" />
                 </template>
 
+                <template v-if="input.type === 'label'">
+                    <div v-html="input.value" :id="'erp-'+fields[index]['id']" ></div>
+                    <input-desc :input="input" />
+                </template>
+
+                <template v-if="input.type === 'hidden'">
+                    <input type="hidden" :value="fields[index]['value']" :id="'erp-'+fields[index]['id']" />
+                </template>
+
                 <div class="form-check" v-if="input.type === 'checkbox'">
                     <label class="form-check-label">
                         <input v-model="fields[index]['value']" type="checkbox" class="form-check-input" :id="'erp-'+fields[index]['id']" />
                         <span class="form-check-sign"> <span class="check"></span> </span>
                         <span class="form-check-label-light" v-html="input.desc"></span>
                     </label>
+
+                    <input-desc :input="input" />
+                </div>
+
+                <div class="form-check" v-if="input.type === 'radio'">
+                    <div class="form-radio-label">
+                        <template v-for="(key, index2) in Object.keys(input.options)" >
+                            <label :key="index2">
+                                <input type="radio" class="form-radio-input" :id="'erp-'+fields[index]['id']" :checked="key === fields[index]['value']" @click="changeRadioInput(index, key)" />
+                                <span class="form-radio-label-light" v-html="input.options[key]"></span>
+                            </label>
+                        </template>
+
+                        <span class="form-radio-label-light" v-html="input.desc"></span>
+                    </div>
 
                     <input-desc :input="input" />
                 </div>
@@ -36,8 +60,9 @@
                     <input-desc :input="input" />
                 </div>
 
-                <div v-if="input.type === 'text' || input.type === 'textarea'">
+                <div v-if="input.type === 'text' || input.type === 'textarea' || input.type === 'password'">
                     <input v-if="input.type === 'text' && input.class !== 'erp-date-field'" v-model="fields[index]['value']" class="wperp-form-field" :id="'erp-'+fields[index]['id']" :disabled="fields[index]['disabled'] ? true : false" />
+                    <input type="password" v-if="input.type === 'password' && input.class !== 'erp-date-field'" v-model="fields[index]['value']" class="wperp-form-field" :id="'erp-'+fields[index]['id']" :disabled="fields[index]['disabled'] ? true : false" />
                     <date-picker v-if="input.type === 'text' && input.class === 'erp-date-field'" class="wperp-form-field" :placeholder="__( 'Select date', 'erp' )" v-model="fields[index]['value']" :id="'erp-'+fields[index]['id']" />
                     <textarea v-if="input.type === 'textarea'" cols="45" rows="4" v-model="fields[index]['value']" class="wperp-form-field" :id="'erp-'+fields[index]['id']" :disabled="fields[index]['disabled'] ? true : false" />
 
@@ -260,6 +285,13 @@ export default {
          */
         changeImage( value, index ) {
             this.fields[ index ]['value'] = value;
+        },
+
+        /**
+         * Change Radio Type Inputs
+         */
+        changeRadioInput( index, key ) {
+            this.fields[index]['value'] = key;
         }
     },
 };
