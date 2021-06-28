@@ -8,7 +8,7 @@
     :placeholder="placeholder"
     :disabled="disabled"
     label="name"
-    track-by="id"
+    :track-by="id"
     @open="onDropdownOpen"
     @remove="onRemove"
     @select="onSelect"
@@ -68,6 +68,12 @@ export default {
         placeholder: {
             type   : String,
             default: __('Please search', 'erp')
+        },
+
+        id: {
+            type    : String,
+            required: false,
+            default : 'id'
         }
     },
 
