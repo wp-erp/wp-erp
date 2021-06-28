@@ -5,12 +5,12 @@ namespace WeDevs\ERP\CRM;
 use WeDevs\ERP\Settings\Page_View as Settings_Page;
 
 /**
- * Settings class
+ * CRM Settings class
  */
 class CRM_Settings extends Settings_Page {
 
     /**
-     * [__construct description]
+     * Init CRM_Settings initial data
      */
     public function __construct() {
         $this->id       = 'erp-crm';
@@ -18,23 +18,19 @@ class CRM_Settings extends Settings_Page {
         $this->sections = $this->get_sections();
         $this->icon     = WPERP_ASSETS . '/images/wperp-settings/crm.png';
 
-        add_action( 'erp_admin_field_render_email_providers', [ $this, 'render_email_providers' ] );
-
-        add_action( 'erp_admin_field_imap_status', [ $this, 'imap_status' ] );
-        add_action( 'erp_admin_field_imap_test_connection', [ $this, 'imap_test_connection' ] );
-
-        add_action( 'erp_admin_field_gmail_api_settings', [ $this, 'gmail_api_settings' ] );
-        add_action( 'erp_admin_field_gmail_redirect_url', [ $this, 'render_gmail_redirect_url' ] );
-        add_action( 'erp_admin_field_gmail_api_connected', [ $this, 'render_gmail_api_connected' ] );
-
         add_action( 'erp_update_option', [ $this, 'cron_schedule' ] );
     }
 
-    public function get_option_id() {
-        $current_section = isset( $_GET['sub_section'] ) ? sanitize_key( $_GET['sub_section'] ) : false;
-
-        if ( $current_section ) {
-            return parent::get_option_id() . '_' . $current_section;
+    /**
+     * Get Option ID for CRM settings
+     *
+     * @param string $sub_sub_section
+     *
+     * @return string $option_id
+     */
+    public function get_option_id( $sub_sub_section = '' ) {
+        if ( ! empty ( $sub_sub_section ) ) {
+            return parent::get_option_id() . '_' . $sub_sub_section;
         }
 
         return parent::get_option_id();
@@ -372,19 +368,6 @@ class CRM_Settings extends Settings_Page {
             'disabled' => true
         ];
 
-        if ( wperp()->google_auth->has_credentials() ) {
-            $fields[] = [
-                'type' => 'gmail_api_settings',
-            ];
-
-            $fields[] = [
-                'type' => 'sectionend',
-                'id'   => 'script_styling_options',
-            ];
-
-            return $fields;
-        }
-
         $fields[] = [
             'type' => 'sectionend',
             'id'   => 'script_styling_options',
@@ -420,7 +403,16 @@ class CRM_Settings extends Settings_Page {
         ];
 
         $fields[] = [
-            'type' => 'imap_status',
+            'title'   => __( 'Status', 'erp' ),
+            'id'      => 'imap_status_label',
+            'type'    => 'label',
+            'default' => $this->imap_status( false )
+        ];
+
+        $fields[] = [
+            'id'      => 'imap_status',
+            'type'    => 'hidden',
+            'default' => $this->imap_status( true )
         ];
 
         $fields[] = [
@@ -484,16 +476,6 @@ class CRM_Settings extends Settings_Page {
         ];
 
         $fields[] = [
-            'type' => 'imap_test_connection',
-        ];
-
-        $fields[] = [
-            'id'      => 'imap_status',
-            'type'    => 'hidden',
-            'default' => 0,
-        ];
-
-        $fields[] = [
             'type' => 'sectionend',
             'id'   => 'script_styling_options',
         ];
@@ -502,95 +484,33 @@ class CRM_Settings extends Settings_Page {
     }
 
     /**
-     * Display imap test connection button.
+     * Imap connection status.
      *
-     * @return void
+     * @param string $is_label default false
+     *
+     * @return string|int imap_connection as input label
      */
-    public function imap_test_connection() {
-        ?>
-        <tr valign="top">
-            <th scope="row" class="titledesc">
-                &nbsp;
-            </th>
-            <td class="forminp forminp-text">
-                <a id="imap-test-connection"
-                   class="button-secondary"><?php esc_attr_e( 'Test Connection', 'erp' ); ?></a>
-                <span class="erp-loader" style="display: none;"></span>
-                <p class="description"><?php esc_attr_e( 'Click on the above button before saving the settings.', 'erp' ); ?></p>
-            </td>
-        </tr>
-        <?php
+    public function imap_status( $is_label = false ) {
+        $options     = get_option( 'erp_settings_erp-crm_email_connect_imap', [] );
+        $imap_status = (bool) isset( $options['imap_status'] ) ? $options['imap_status'] : 0;
+
+        if ( $is_label ) {
+            return $imap_status;
+        } else {
+            $status    = esc_attr( ( $imap_status ) ? 'yes green' : 'no red' );
+            $connected = esc_attr( ( $imap_status ) ? __( 'Connected', 'erp' ) : __( 'Not Connected', 'erp' ) );
+
+            return sprintf("<span class='dashicons dashicons-%s'>%s</span>", $status, $connected);
+        }
     }
 
     /**
-     * Imap connection status.
+     * Get Email Providers List
      *
-     * @return void
+     * @since 1.8.7
+     *
+     * @return array $providers
      */
-    public function imap_status() {
-        $options     = get_option( 'erp_settings_erp-crm_email_connect_imap', [] );
-        $imap_status = (bool) isset( $options['imap_status'] ) ? $options['imap_status'] : 0; ?>
-        <tr valign="top">
-            <th scope="row" class="titledesc">
-                <?php esc_attr_e( 'Status', 'erp' ); ?>
-            </th>
-            <td class="forminp forminp-text">
-                <?php
-                $status    = ( $imap_status ) ? 'yes green' : 'no red';
-        $connected         = ( $imap_status ) ? __( 'Connected', 'erp' ) : __( 'Not Connected', 'erp' ); ?>
-                <span class="dashicons dashicons-<?php echo esc_attr( $status ); ?>"></span><?php echo esc_attr( $connected ); ?>
-            </td>
-        </tr>
-        <?php
-    }
-
-    public function gmail_api_settings() {
-        $url = wperp()->google_auth->get_client()->createAuthUrl(); ?>
-        <tr valign="top">
-            <td class="forminp forminp-text">
-                <a target="_blank" class="button-primary" href="<?php echo esc_url_raw( $url ); ?>"><?php esc_attr_e( 'Click to Authorize your gmail account', 'erp' ); ?> </a>
-            </td>
-        </tr>
-        <?php
-    }
-
-    public function render_gmail_redirect_url() {
-        $url = wperp()->google_auth->get_redirect_url(); ?>
-        <tr valign="top">
-            <th scope="row" class="titledesc">
-                <label for="redirect_url"><?php esc_attr_e( 'Redirect URL to use', 'erp' ); ?></label>
-            </th>
-            <td class="forminp forminp-text">
-                <input name="redirect_url" id="redirect_url" type="text" disabled value="<?php echo esc_url_raw( $url ); ?>"
-                       class="regular-text">
-                <p class="description"><?php esc_attr_e( 'Copy and Use this url when oAuth consent asks for Authorized Redirect URL', 'erp' ); ?></p>
-            </td>
-        </tr>
-
-        <?php
-    }
-
-    public function render_gmail_api_connected() {
-        $connected_email = wperp()->google_auth->is_connected();
-        $url             = wperp()->google_auth->get_disconnect_url(); ?>
-        <tr valign="top">
-            <th scope="row" class="titledesc">
-                <?php esc_attr_e( 'Connected', 'erp' ); ?>
-            </th>
-            <td class="forminp forminp-text">
-                <p><b><?php echo wp_kses_post( $connected_email ); ?></b></p>
-            </td>
-        </tr>
-        <tr valign="top">
-            <th scope="row" class="titledesc">
-            </th>
-            <td class="forminp forminp-text">
-                <a style="background: #dc3232; color:#fff" class="button-secondary" href="<?php echo esc_url_raw( $url ); ?>"> <?php esc_attr_e( 'Disconnect', 'erp' ); ?> </a>
-            </td>
-        </tr>
-        <?php
-    }
-
     public function get_email_prodivers() {
         $providers = [];
 
@@ -611,79 +531,6 @@ class CRM_Settings extends Settings_Page {
         ];
 
         return $providers;
-    }
-
-    public function render_email_providers() {
-        $providers = $this->get_email_prodivers();
-
-        $settings_url = admin_url( 'admin.php?page=erp-settings&tab=erp-crm&section=email_connect&sub_section=' ); ?>
-        <tr valign="top">
-            <td class="erp-settings-table-wrapper" colspan="2">
-                <table class="erp-settings-table widefat" cellspacing="0">
-                    <thead>
-                    <tr>
-                        <?php
-                        $columns = [
-                            'name'        => __( 'Provider', 'erp' ),
-                            'description' => __( 'Description', 'erp' ),
-                            'status'      => __( 'Status', 'erp' ),
-                            'actions'     => '',
-                        ];
-
-        foreach ( $columns as $key => $item ) {
-            echo '<th class="erp-settings-table-' . esc_attr( $key ) . '">' . esc_html( $item ) . '</th>';
-        } ?>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?php
-                    foreach ( $providers as $slug => $provider ) {
-                        echo '<tr>';
-
-                        foreach ( $provider as $key => $item ) {
-                            switch ( $key ) {
-                                case 'name':
-                                    echo '<td class="erp-settings-table-' . esc_attr( $key ) . '">
-                                        <a href="' . esc_url_raw( $settings_url ) . esc_attr( strtolower( $slug ) ) . '">' . esc_attr( $item ) . '</a>
-                                    </td>';
-                                    break;
-
-                                case 'description':
-                                    echo '<td class="erp-settings-table-' . esc_attr( $key ) . '">
-                                        <span class="help">' . esc_attr( $item ) . '</span>
-                                    </td>';
-                                    break;
-
-                                case 'enabled':
-                                    $status    = __( 'Disabled', 'erp' );
-                                    $btn_class = 'email-status';
-
-                                    if ( $item ) {
-                                        $status = __( 'Enabled', 'erp' );
-                                        $btn_class .= ' enabled';
-                                    }
-                                    echo '<td class="erp-settings-table-' . esc_attr( $key ) . '">
-                                        <span class="help">' . esc_attr( $status ) . '</span>
-                                    </td>';
-                                    break;
-
-                                case 'actions':
-                                    echo '<td class="erp-settings-table-' . esc_attr( $key ) . '">
-                                        <a class="button alignright" href="' . esc_url_raw( $settings_url ) . esc_attr( strtolower( $slug ) ) . '">' . esc_html__( 'Settings', 'erp' ) . '</a>
-                                    </td>';
-                                    break;
-
-                                default:
-
-                                    break;
-                            }
-                        }
-                    } ?>
-                    </tbody>
-                </table>
-            </td>
-        </tr>
-        <?php
     }
 
     /**
@@ -732,7 +579,7 @@ class CRM_Settings extends Settings_Page {
             // Saving individual email settings
             if ( $sub_section ) {
                 $settings       = $this->get_sub_section_fields( $sub_section );
-                $update_options = get_option(  $this->get_option_id(), [] );
+                $update_options = get_option(  $this->get_option_id( $sub_section ), [] );
 
                 if ( $settings ) {
                     foreach ( $settings as $field ) {
@@ -747,7 +594,7 @@ class CRM_Settings extends Settings_Page {
                         }
                     }
                 }
-                update_option( $this->get_option_id(), $update_options );
+                update_option( $this->get_option_id( $sub_section ), $update_options );
 
                 do_action( 'erp_settings_crm_updated_sub_section', $sub_section, $update_options );
             } else {
