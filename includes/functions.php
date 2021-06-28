@@ -1856,45 +1856,6 @@ function erp_email_settings_javascript() {
             });
         });
 
-        jQuery(document).ready(function ($) {
-            $("a#imap-test-connection").click(function (e) {
-                e.preventDefault();
-                $("a#imap-test-connection").attr('disabled', 'disabled');
-                $("a#imap-test-connection").parent().find('.erp-loader').show();
-
-                var data = {
-                    'action': 'erp_imap_test_connection',
-                    'mail_server': $('input[name=mail_server]').val(),
-                    'username': $('input[name=username]').val(),
-                    'password': $('input[name=password]').val(),
-                    'protocol': $('select[name=protocol]').val(),
-                    'port': $('input[name=port]').val(),
-                    'authentication': $('select[name=authentication]').val(),
-                    '_wpnonce': '<?php echo esc_html( wp_create_nonce( 'erp-imap-test-connection-nonce' ) ); ?>'
-                };
-
-                $.post(ajaxurl, data, function (response) {
-                    $("a#imap-test-connection").removeAttr('disabled');
-                    $("a#imap-test-connection").parent().find('.erp-loader').hide();
-
-                    var type = response.success ? 'success' : 'error';
-
-                    if (response.data) {
-                        var status = response.success ? 1 : 0;
-                        $('#imap_status').val(status);
-
-                        swal({
-                            title: '',
-                            text: response.data,
-                            type: type,
-                            confirmButtonText: 'OK',
-                            confirmButtonColor: '#008ec2'
-                        });
-                    }
-                });
-            });
-        });
-
         jQuery('.email_tab_view li').click(function(){
 
             var elm = jQuery( this );
@@ -1907,44 +1868,6 @@ function erp_email_settings_javascript() {
 
         });
     </script>
-    <?php
-}
-
-/**
- * Email Setting CSS.
- *
- * @return void
- */
-function email_setting_css() {
-    ?>
-    <style>
-
-        #bt_others {
-            display: none;
-        }
-
-        tr.tag_crm, tr.tag_accounting, tr.tag_others {
-            display: none;
-        }
-        ul.email_tab_view {
-            display:table;
-            border-spacing:7px;
-            margin-left:-7px;
-            margin-bottom: -7px;
-        }
-
-        ul.email_tab_view li {
-            display: table-cell;
-            border:1px solid #ccd0d4;
-            padding:5px 10px;
-            background-color: #e5e5e5;
-            cursor: pointer;
-        }
-
-        .bt_active, ul.email_tab_view li:hover {
-            background-color : white !important;
-        }
-    </style>
     <?php
 }
 
