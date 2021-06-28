@@ -195,6 +195,7 @@
         max-width: 283px;
         text-align: center;
         padding: 40px 0;
+        margin-bottom: 15px;
     }
 
     .erp_pro_addons_wrapper .box_item .image{
@@ -209,6 +210,7 @@
         line-height: 28px;
         font-weight: 700;
         margin-bottom: 17px;
+        padding: 0 20px;
     }
     .erp_pro_addons_wrapper .box_item p {
         font-size: 13px;
@@ -218,6 +220,7 @@
         line-height: 22px;
         font-weight: 400;
         margin-bottom: 0;
+        padding: 0 20px;
     }
     /*=======================
     End Box Stle
