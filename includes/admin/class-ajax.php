@@ -28,6 +28,7 @@ class Ajax {
         $this->action( 'wp_ajax_erp_people_exists', 'check_people' );
         $this->action( 'wp_ajax_erp_smtp_test_connection', 'smtp_test_connection' );
         $this->action( 'wp_ajax_erp_imap_test_connection', 'imap_test_connection' );
+        $this->action( 'wp_ajax_erp_check_gmail_connection_established', 'check_gmail_connection_established' );
         $this->action( 'wp_ajax_erp_import_users_as_contacts', 'import_users_as_contacts' );
         $this->action( 'wp_ajax_erp-api-key', 'new_api_key' );
         $this->action( 'wp_ajax_erp-api-delete-key', 'delete_api_key' );
@@ -39,7 +40,7 @@ class Ajax {
 
     /**
      * Generates url for accounting people
-     * 
+     *
      * @since 1.8.5
      *
      * @return mixed
@@ -57,14 +58,14 @@ class Ajax {
 
     /**
      * Imports CSV file in ERP
-     * 
+     *
      * @since 1.8.5
      *
      * @return mixed
      */
     public function import_csv() {
         $this->verify_nonce( 'erp-import-export-nonce' );
-    
+
         if ( ! current_user_can( 'administrator' ) ) {
             $this->send_error( __( 'Sorry ! You do not have permission to access this page', 'erp' ) );
         }
@@ -219,7 +220,7 @@ class Ajax {
                     if ( is_wp_error( $people ) ) {
                         continue;
                     }
-                    
+
                     $contact       = new \WeDevs\ERP\CRM\Contact( absint( $people->id ), 'contact' );
                     $life_stage    = isset( $_POST['life_stage'] ) ? sanitize_key( $_POST['life_stage'] ) : '';
 
@@ -573,7 +574,7 @@ class Ajax {
      * @return void
      */
     public function imap_test_connection() {
-        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-imap-test-connection-nonce' ) ) {
+        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-settings-nonce' ) ) {
             return;
         }
 
@@ -611,6 +612,38 @@ class Ajax {
     }
 
     /**
+     * Check if GMAIL/G-Suit connection is established based on connection-data
+     *
+     * @return void
+     */
+    public function check_gmail_connection_established() {
+        $this->verify_nonce( 'erp-settings-nonce' );
+
+        if ( ! current_user_can( 'manage_options' ) ) {
+            $this->send_error( erp_get_message( ['type' => 'error_permission'] ) );
+        }
+
+        if ( wperp()->google_auth->has_credentials() ) {
+            $url = wperp()->google_auth->get_client()->createAuthUrl();
+
+            if ( is_wp_error( $url ) ) {
+                $this->send_error( erp_get_message( ['type' => 'error_process'] ) );
+            }
+
+            $data = [
+                'link'           => $url,
+                'status'         => true,
+                'is_connected'   => (boolean) wperp()->google_auth->is_connected(),
+                'disconnect_url' => wperp()->google_auth->get_disconnect_url()
+            ];
+
+            $this->send_success( $data );
+        }
+
+        $this->send_error( __('No credential set yet !', 'erp') );
+    }
+
+    /**
      * Import users as crm contacts.
      *
      * @since 1.1.2
@@ -628,9 +661,9 @@ class Ajax {
 
         $limit   = 50; // Limit to import per request
         $attempt = get_option( 'erp_users_to_contacts_import_attempt', 1 );
-        
+
         update_option( 'erp_users_to_contacts_import_attempt', $attempt + 1 );
-        
+
         $offset        = ( $attempt - 1 ) * $limit;
 
         $user_role     = isset( $_REQUEST['user_role'] )     ? sanitize_text_field( wp_unslash( $_REQUEST['user_role'] ) )     : '';
