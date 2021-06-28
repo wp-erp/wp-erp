@@ -15,7 +15,6 @@ class Email extends Page_View {
         add_action( 'erp_admin_field_notification_emails', [ $this, 'notification_emails' ] );
         add_action( 'erp_admin_field_smtp_test_connection', [ $this, 'smtp_test_connection' ] );
         add_action( 'admin_footer', 'erp_email_settings_javascript' );
-        add_action( 'admin_footer', 'email_setting_css' );
     }
 
     /**
