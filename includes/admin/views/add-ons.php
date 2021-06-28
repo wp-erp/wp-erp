@@ -773,6 +773,34 @@ if ( false === $add_ons || empty( $add_ons ) ) {
                     <h3><?php _e( 'Task Management<br>in CRM', 'erp' ); ?></h3>
                     <p><?php _e( 'The feature lets you manage <br>tasks, collaborate among teams <br>and be super productive', 'erp' ); ?></p>
                 </div>
+                <div class="box_item">
+                    <div class="image">
+                        <img src="<?php echo esc_url( WPERP_ASSETS . '/images/wperp-addons/sale-purchase-return.svg' ); ?>" alt="">
+                    </div>
+                    <h3><?php _e( 'Sale and Purchase Returns', 'erp' ); ?></h3>
+                    <p><?php _e( 'Creating sales & purchase returns<br>for your accounts is easier than ever<br>with WP ERP Accounting', 'erp' ); ?></p>
+                </div>
+                <div class="box_item">
+                    <div class="image">
+                        <img src="<?php echo esc_url( WPERP_ASSETS . '/images/wperp-addons/work-from-home.svg' ); ?>" alt="">
+                    </div>
+                    <h3><?php _e( 'Work from Home', 'erp' ); ?></h3>
+                    <p><?php _e( 'Digitize the process for requesting<br>work from home privileges as well as<br>the approval process', 'erp' ); ?></p>
+                </div>
+                <div class="box_item">
+                    <div class="image">
+                        <img src="<?php echo esc_url( WPERP_ASSETS . '/images/wperp-addons/employee-resignation.svg' ); ?>" alt="">
+                    </div>
+                    <h3><?php _e( 'Employee Resignation', 'erp' ); ?></h3>
+                    <p><?php _e( 'Automate and simplify employee<br>resignation process using this feature<br>of WP ERP HR', 'erp' ); ?></p>
+                </div>
+                <div class="box_item">
+                    <div class="image">
+                        <img src="<?php echo esc_url( WPERP_ASSETS . '/images/wperp-addons/company-org-chart.svg' ); ?>" alt="">
+                    </div>
+                    <h3><?php _e( 'Company Org Chart', 'erp' ); ?></h3>
+                    <p><?php _e( 'Have your organizational structure<br>and define the flow of employees\'<br>work with this feature', 'erp' ); ?></p>
+                </div>
             </div>
         </div>
         <!-- end exclusive feature section -->
