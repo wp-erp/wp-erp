@@ -195,6 +195,7 @@
         max-width: 283px;
         text-align: center;
         padding: 40px 0;
+        margin-bottom: 15px;
     }
 
     .erp_pro_addons_wrapper .box_item .image{
@@ -209,6 +210,7 @@
         line-height: 28px;
         font-weight: 700;
         margin-bottom: 17px;
+        padding: 0 20px;
     }
     .erp_pro_addons_wrapper .box_item p {
         font-size: 13px;
@@ -218,6 +220,7 @@
         line-height: 22px;
         font-weight: 400;
         margin-bottom: 0;
+        padding: 0 20px;
     }
     /*=======================
     End Box Stle
@@ -651,10 +654,10 @@ if ( false === $add_ons || empty( $add_ons ) ) {
             </div>
             <div class="details">
                 <a href="https://wperp.com/pro/" target="_blank" class="btn pro-btn">WP ERP Pro</a>
-                <h1>The Ultimate Company<br>& Business Management<br>Solution</h1>
+                <h1><?php _e( 'The Ultimate Company<br>& Business Management<br>Solution', 'erp' ); ?></h1>
                 <div class="button-wrap">
-                    <a target="_blank" href="https://wperp.com/pricing/" class="btn get-started-btn">Get Started Now <img src="<?php echo esc_url( WPERP_ASSETS . '/images/wperp-addons/arrow-right.svg' ); ?>" alt=""></a>
-                    <a target="_blank" href="https://wperp.com/demo/" class="btn try-demo-btn">Try Demo</a>
+                    <a target="_blank" href="https://wperp.com/pricing/" class="btn get-started-btn"><?php _e( 'Get Started Now', 'erp' ); ?> <img src="<?php echo esc_url( WPERP_ASSETS . '/images/wperp-addons/arrow-right.svg' ); ?>" alt=""></a>
+                    <a target="_blank" href="https://wperp.com/demo/" class="btn try-demo-btn"><?php _e( 'Try Demo', 'erp' ); ?></a>
                 </div>
             </div>
         </div>
@@ -662,8 +665,8 @@ if ( false === $add_ons || empty( $add_ons ) ) {
         <!-- why erp pro -->
         <div class="why__erp__pro_section">
             <div class="section_head">
-                <h2>Why WP ERP <span>Pro</span></h2>
-                <p>Automate & manage your growing business even better <br>using WP ERP Pro</p>
+                <h2><?php _e( 'Why WP ERP', 'erp' ); ?> <span><?php _e( 'Pro', 'erp' ); ?></span></h2>
+                <p><?php _e( 'Automate & manage your growing business even better <br>using WP ERP Pro', 'erp' ); ?></p>
             </div>
             <div class="why__erppro_wrap">
                 <div class="box_item">
@@ -671,8 +674,8 @@ if ( false === $add_ons || empty( $add_ons ) ) {
                         <img src="<?php echo esc_url( WPERP_ASSETS . '/images/wperp-addons/gain-access.svg' ); ?>" alt="">
                     </div>
                     <div class="desc">
-                        <h3>Gain access to nine powerful<br>extensions with a single purchase </h3>
-                        <p>Use these premium extensions to<br>supercharge your business</p>
+                        <h3><?php _e( 'Gain access to nine powerful<br>extensions with a single purchase', 'erp' ); ?> </h3>
+                        <p><?php _e( 'Use these premium extensions to<br>supercharge your business', 'erp' ); ?></p>
                     </div>
                 </div>
                 <div class="box_item">
@@ -680,8 +683,8 @@ if ( false === $add_ons || empty( $add_ons ) ) {
                         <img src="<?php echo esc_url( WPERP_ASSETS . '/images/wperp-addons/individual-extension.svg' ); ?>" alt="">
                     </div>
                     <div class="desc">
-                        <h3>Add other individual extensions<br>which suit your business</h3>
-                        <p>Only add those extensions which you <br>need & save your money</p>
+                        <h3><?php _e( 'Add other individual extensions<br>which suit your business', 'erp' ); ?></h3>
+                        <p><?php _e( 'Only add those extensions which you <br>need & save your money', 'erp' ); ?></p>
                     </div>
                 </div>
                 <div class="box_item">
@@ -689,8 +692,8 @@ if ( false === $add_ons || empty( $add_ons ) ) {
                         <img src="<?php echo esc_url( WPERP_ASSETS . '/images/wperp-addons/support-system.svg' ); ?>" alt="">
                     </div>
                     <div class="desc">
-                        <h3>Priority support <br>system</h3>
-                        <p>Connecting you to our highly-qualified <br>support team 24/7/365</p>
+                        <h3><?php _e( 'Priority support <br>system', 'erp' ); ?></h3>
+                        <p><?php _e( 'Connecting you to our highly-qualified <br>support team 24/7/365', 'erp' ); ?></p>
                     </div>
                 </div>
                 <div class="box_item">
@@ -698,8 +701,8 @@ if ( false === $add_ons || empty( $add_ons ) ) {
                         <img src="<?php echo esc_url( WPERP_ASSETS . '/images/wperp-addons/save-money.svg' ); ?>" alt="">
                     </div>
                     <div class="desc">
-                        <h3>Save money <br>User-based Pricing</h3>
-                        <p>You are billed for each user added to <br>your user workspace.</p>
+                        <h3><?php _e( 'Save money <br>User-based Pricing', 'erp' ); ?></h3>
+                        <p><?php _e( 'You are billed for each user added to <br>your user workspace.', 'erp' ); ?></p>
                     </div>
                 </div>
             </div>
@@ -709,8 +712,8 @@ if ( false === $add_ons || empty( $add_ons ) ) {
         <!-- start what will get section -->
         <div class="what_wil_get_section">
             <div class="section_head">
-                <h2>What you will get</h2>
-                <p>Take your business to the next level with 9 accessible premium <br> extensions  & different features</p>
+                <h2><?php _e( 'What you will get', 'erp' ); ?></h2>
+                <p><?php _e( 'Take your business to the next level with 9 accessible premium <br> extensions  & different features', 'erp' ); ?></p>
             </div>
 
             <div class="perful_extension_wrap">
@@ -719,7 +722,7 @@ if ( false === $add_ons || empty( $add_ons ) ) {
                     return $addon->is_pro ? $addon : false;
                 } );
                 ?>
-                <h4><?php echo count( $pro_extension ); ?> Powerful Extensions</h4>
+                <h4><?php _e( sprintf( '%s Powerful Extensions', count( $pro_extension ) ), 'erp' ); ?></h4>
                 <div class="perful_extension">
                     <!--start extension-->
                     <?php
@@ -746,29 +749,57 @@ if ( false === $add_ons || empty( $add_ons ) ) {
         <!-- start exclusive feature section -->
         <div class="exclusive_feature_section">
             <div class="section_head">
-                <h2>Exclusive Features</h2>
+                <h2><?php _e( 'Exclusive Features', 'erp' ); ?></h2>
             </div>
             <div class="exclusive_feature_wrap">
                 <div class="box_item">
                     <div class="image">
-                        <img src="<?php echo esc_url( WPERP_ASSETS . '/images/wperp-addons/email-digest.svg' ); ?>" alt="">
+                        <img src="<?php echo esc_url( WPERP_ASSETS . '/images/wperp-addons/hr-digest-email.svg' ); ?>" alt="">
                     </div>
-                    <h3>HR Email Digest <br>weekly/Monthly</h3>
-                    <p>Keep up to date with the latest in <br>HR news and trends with this <br> exclusive feature</p>
+                    <h3><?php _e( 'HR Email Digest<br>weekly/Monthly', 'erp' ); ?></h3>
+                    <p><?php _e( 'Keep up to date with the latest in <br>HR news and trends with this <br> exclusive feature', 'erp' ); ?></p>
                 </div>
                 <div class="box_item">
                     <div class="image">
-                        <img src="<?php echo esc_url( WPERP_ASSETS . '/images/wperp-addons/crm-customizable.svg' ); ?>" alt="">
+                        <img src="<?php echo esc_url( WPERP_ASSETS . '/images/wperp-addons/crm-life-stage.svg' ); ?>" alt="">
                     </div>
-                    <h3>CRM Customizable<br>Life Stages</h3>
-                    <p>Try this feature now to customize <br>Customer life stages & prioritize <br>your work with them</p>
+                    <h3><?php _e( 'CRM Customizable<br>Life Stages', 'erp' ); ?></h3>
+                    <p><?php _e( 'Try this feature now to customize <br>Customer life stages & prioritize <br>your work with them', 'erp' ); ?></p>
                 </div>
                 <div class="box_item">
                     <div class="image">
-                        <img src="<?php echo esc_url( WPERP_ASSETS . '/images/wperp-addons/task-management.svg' ); ?>" alt="">
+                        <img src="<?php echo esc_url( WPERP_ASSETS . '/images/wperp-addons/crm-task-management.svg' ); ?>" alt="">
                     </div>
-                    <h3>Task Management <br>in CRM</h3>
-                    <p>The feature lets you manage <br>tasks, collaborate among teams <br>and be super productive</p>
+                    <h3><?php _e( 'Task Management<br>in CRM', 'erp' ); ?></h3>
+                    <p><?php _e( 'The feature lets you manage <br>tasks, collaborate among teams <br>and be super productive', 'erp' ); ?></p>
+                </div>
+                <div class="box_item">
+                    <div class="image">
+                        <img src="<?php echo esc_url( WPERP_ASSETS . '/images/wperp-addons/sale-purchase-return.svg' ); ?>" alt="">
+                    </div>
+                    <h3><?php _e( 'Sale and Purchase Returns', 'erp' ); ?></h3>
+                    <p><?php _e( 'Creating sales & purchase returns<br>for your accounts is easier than ever<br>with WP ERP Accounting', 'erp' ); ?></p>
+                </div>
+                <div class="box_item">
+                    <div class="image">
+                        <img src="<?php echo esc_url( WPERP_ASSETS . '/images/wperp-addons/work-from-home.svg' ); ?>" alt="">
+                    </div>
+                    <h3><?php _e( 'Work from Home', 'erp' ); ?></h3>
+                    <p><?php _e( 'Digitize the process for requesting<br>work from home privileges as well as<br>the approval process', 'erp' ); ?></p>
+                </div>
+                <div class="box_item">
+                    <div class="image">
+                        <img src="<?php echo esc_url( WPERP_ASSETS . '/images/wperp-addons/employee-resignation.svg' ); ?>" alt="">
+                    </div>
+                    <h3><?php _e( 'Employee Resignation', 'erp' ); ?></h3>
+                    <p><?php _e( 'Automate and simplify employee<br>resignation process using this feature<br>of WP ERP HR', 'erp' ); ?></p>
+                </div>
+                <div class="box_item">
+                    <div class="image">
+                        <img src="<?php echo esc_url( WPERP_ASSETS . '/images/wperp-addons/company-org-chart.svg' ); ?>" alt="">
+                    </div>
+                    <h3><?php _e( 'Company Org Chart', 'erp' ); ?></h3>
+                    <p><?php _e( 'Have your organizational structure<br>and define the flow of employees\'<br>work with this feature', 'erp' ); ?></p>
                 </div>
             </div>
         </div>
@@ -777,23 +808,23 @@ if ( false === $add_ons || empty( $add_ons ) ) {
         <!-- start premium extension section -->
         <div class="premium_extension_section">
             <div class="section_head">
-                <h2>Choose other premium extensions</h2>
-                <p>Build a modern, convenient and reliable business<br>management system for your company</p>
+                <h2><?php _e( 'Choose other premium extensions', 'erp' ); ?></h2>
+                <p><?php _e( 'Build a modern, convenient and reliable business<br>management system for your company', 'erp' ); ?></p>
             </div>
             <div class="filter_wrapper">
                 <div class="filter_tab_item">
                     <ul id="filters" class="button_group">
                         <li>
-                            <a href="#" class="active" data-target="all">All</a>
+                            <a href="#" class="active" data-target="all"><?php _e( 'All', 'erp' ); ?></a>
                         </li>
                         <li>
-                            <a href="#" data-target="hrm">Hrm</a>
+                            <a href="#" data-target="hrm"><?php _e( 'HRM', 'erp' ); ?></a>
                         </li>
                         <li>
-                            <a href="#" data-target="accounting">Accounting</a>
+                            <a href="#" data-target="accounting"><?php _e( 'Accounting', 'erp' ); ?></a>
                         </li>
                         <li>
-                            <a href="#" data-target="crm">Crm</a>
+                            <a href="#" data-target="crm"><?php _e( 'CRM', 'erp' ); ?></a>
                         </li>
                     </ul>
                 </div>
@@ -840,9 +871,9 @@ if ( false === $add_ons || empty( $add_ons ) ) {
         <!-- start say hello section -->
         <div class="say_hello_section">
             <div class="say_hello_inner_section">
-                <h3>Say Hello to WP ERP <span>Pro</span></h3>
-                <p>And goodbye to papers, spreadsheets, wasted time,<br> uncertainty, frustration - run business smoothly.</p>
-                <a target="_blank" href="https://wperp.com/pro/">Get Started Now <img src="<?php echo esc_url( WPERP_ASSETS . '/images/wperp-addons/arrow-right.svg' ); ?>" alt=""></a>
+                <h3><?php _e( 'Say Hello to WP ERP', 'erp' ); ?> <span><?php _e( 'Pro', 'erp' ); ?></span></h3>
+                <p><?php _e( 'And goodbye to papers, spreadsheets, wasted time,<br> uncertainty, frustration - run business smoothly.', 'erp' ); ?></p>
+                <a target="_blank" href="https://wperp.com/pro/"><?php _e( 'Get Started Now', 'erp' ); ?> <img src="<?php echo esc_url( WPERP_ASSETS . '/images/wperp-addons/arrow-right.svg' ); ?>" alt=""></a>
             </div>
         </div>
         <!-- end say hello section -->

@@ -237,16 +237,27 @@ class Admin_Menu {
      * @return void
      */
     public function people_page() {
-        $subsection = isset( $_GET['sub-section'] ) ? sanitize_text_field( wp_unslash( $_GET['sub-section'] ) ) : 'employee';
+        $sub_section = isset( $_GET['sub-section'] ) ? sanitize_text_field( wp_unslash( $_GET['sub-section'] ) ) : 'employee';
 
-        if ( 'employee' === $subsection ) {
-            $this->employee_page();
-        } elseif ( 'requests' === $subsection ) {
-            $this->requests_page();
-        } elseif ( 'department' === $subsection ) {
-            $this->department_page();
-        } elseif ( 'designation' === $subsection ) {
-            $this->designation_page();
+        switch ( $sub_section ) {
+            case 'employee':
+                $this->employee_page();
+                break;
+
+            case 'requests':
+                $this->requests_page();
+                break;
+            
+            case 'department':
+                $this->department_page();
+                break;
+
+            case 'designation':
+                $this->designation_page();
+                break;
+
+            default:
+                do_action( "erp_hr_{$sub_section}_page" );
         }
     }
 

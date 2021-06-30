@@ -5,7 +5,7 @@ Tags: business manager, erp, accounting, crm, hr, project manager, small busines
 Requires at least: 4.4
 Tested up to: 5.7.2
 Requires PHP: 5.6
-Stable tag: 1.8.5
+Stable tag: 1.8.6
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -209,35 +209,27 @@ If you are unable to use any of the methods due to internet connectivity and fil
 == Screenshots ==
 
 1. Plugin on-boarding
-2. HR Dashboard
-3. Employee Listing
-4. Creating a new employee
-5. Employee details page.
-6. Employee profile job tab, keep track of every salary increment, status changes and department/location changes.
-7. See the leave history and balances.
-8. Analyse employee performance by rating in various metrics
-9. Manage permissions and who can do what.
-10. Departments management
-11. Designation management
-12. View detailed reports on your HR
-13. Leave policies for your company
-14. Manage leave requests from your employees.
-15. CRM dashboard
-16. Contacts list
-17. Contact details page, log calls, meetings, tasks and schedule everything from a single page.
-18. Search your contacts with an advanced search area, everything and save those searches.
-19. Filter contacts with saved searches.
-20. All the activities across your contacts and companies in a single page and filterable.
-21. Schedules page, see whom to call, have a meeting and manage them.
-22. Manage your company details, add locations if you have multiple branches/locations.
-23. We log everything whats happening across the system and log everything for easy audit logging.
-24. Accounting Dashboard
-25. Sales transactions list
-26. Expense transactions list
-27. Creating new invoice (sales)
-28. Creating a basic journal entry.
-29. Bank Accounts
-30. Chart of accounts listing
+2. Dashboard Overview- Your business overview is here
+3. Available modules and extensions that can make your growth with ease
+4. Your Company Details is here
+5. HR Dashboard- Overviewing all over your Human Resource Management
+6. Overall Company Employee list
+7. Just a single form to create/board an Employee
+8. Here is how an Employee profile looks like and to manage
+9. HR Report
+10. CRM Dashboard- Reflects your overall CRM status
+11. CRM Contact list
+12. CRM Company List
+13. CRM Contact Profile- where you can manage and interact with the contact/lead
+14. Contacts that subscribed to your list
+15. Accounting Dashboard- Your overall sales, income, expenses status
+16. Product and services- that you sell or your business is about to
+17. Sales Transections
+18. Journal Entry
+19. A complete VAT-TAX management
+20. Trial Balance
+21. Accounting Reports
+22. Audit Log- Reflects the overall operations of your business
 
 == Frequently Asked Questions ==
 
@@ -279,6 +271,12 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+
+= v1.8.6 -> June 30, 2021 =
+--------------------------
+
+- [update] Included all new features' info in the ERP Pro add-ons page
+- [update] Optimized some backend technicalities
 
 = v1.8.5 -> June 08, 2021 =
 --------------------------
