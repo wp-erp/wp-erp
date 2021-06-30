@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP ERP 1.8.5\n"
+"Project-Id-Version: WP ERP 1.8.6\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-erp\n"
-"POT-Creation-Date: 2021-06-08 10:28:15+00:00\n"
+"POT-Creation-Date: 2021-06-30 08:30:44+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2220,7 +2220,8 @@ msgstr ""
 msgid "Bills to pay"
 msgstr ""
 
-#: build/i18n/languages/erp.php:114 build/includes/admin/views/modules.php:581
+#: build/i18n/languages/erp.php:114 build/includes/admin/views/add-ons.php:824
+#: build/includes/admin/views/modules.php:581
 #: build/includes/admin/views/modules.php:631
 #: build/includes/framework/modules.php:65
 #: build/includes/framework/settings/email.php:98
@@ -2228,8 +2229,9 @@ msgstr ""
 #: build/modules/accounting/includes/classes/class-admin.php:37
 #: build/modules/accounting/includes/classes/class-settings.php:13
 #: build/modules/accounting/includes/views/dashboard/dashboard.php:2
-#: includes/admin/views/modules.php:581 includes/admin/views/modules.php:631
-#: includes/framework/modules.php:65 includes/framework/settings/email.php:98
+#: includes/admin/views/add-ons.php:824 includes/admin/views/modules.php:581
+#: includes/admin/views/modules.php:631 includes/framework/modules.php:65
+#: includes/framework/settings/email.php:98
 #: includes/framework/views/status-report.php:113
 #: modules/accounting/assets/src/admin/components/dashboard/DashBoard.vue:113
 #: modules/accounting/assets/src/admin/components/menu/AccountingMenu.vue:47
@@ -4357,7 +4359,8 @@ msgstr ""
 msgid "Select Account"
 msgstr ""
 
-#: build/i18n/languages/erp.php:367 build/includes/admin/views/modules.php:600
+#: build/i18n/languages/erp.php:367 build/includes/admin/views/add-ons.php:818
+#: build/includes/admin/views/modules.php:600
 #: build/includes/admin/views/modules.php:606
 #: build/includes/admin/views/modules.php:642
 #: build/modules/crm/includes/functions-customer.php:320
@@ -4386,8 +4389,8 @@ msgstr ""
 #: build/modules/hrm/views/leave/new-policy.php:111
 #: build/modules/hrm/views/leave/new-policy.php:246
 #: build/modules/hrm/views/leave/new-policy.php:258
-#: includes/admin/views/modules.php:600 includes/admin/views/modules.php:606
-#: includes/admin/views/modules.php:642
+#: includes/admin/views/add-ons.php:818 includes/admin/views/modules.php:600
+#: includes/admin/views/modules.php:606 includes/admin/views/modules.php:642
 #: modules/accounting/assets/src/admin/components/select/SimpleSelect.vue:4
 #: modules/crm/includes/functions-customer.php:320
 #: modules/crm/views/activities.php:27
@@ -21067,8 +21070,8 @@ msgid "Modules"
 msgstr ""
 
 #: build/includes/admin/class-menu.php:130
-#: build/includes/admin/views/add-ons.php:645 includes/admin/class-menu.php:130
-#: includes/admin/views/add-ons.php:645
+#: build/includes/admin/views/add-ons.php:648 includes/admin/class-menu.php:130
+#: includes/admin/views/add-ons.php:648
 msgid "WP ERP Pro"
 msgstr ""
 
@@ -21510,9 +21513,235 @@ msgstr ""
 msgid "Role"
 msgstr ""
 
-#: build/includes/admin/views/add-ons.php:645
-#: includes/admin/views/add-ons.php:645
+#: build/includes/admin/views/add-ons.php:648
+#: includes/admin/views/add-ons.php:648
 msgid "View All Extensions"
+msgstr ""
+
+#: build/includes/admin/views/add-ons.php:657
+#: includes/admin/views/add-ons.php:657
+msgid "The Ultimate Company<br>& Business Management<br>Solution"
+msgstr ""
+
+#: build/includes/admin/views/add-ons.php:659
+#: build/includes/admin/views/add-ons.php:876
+#: includes/admin/views/add-ons.php:659 includes/admin/views/add-ons.php:876
+msgid "Get Started Now"
+msgstr ""
+
+#: build/includes/admin/views/add-ons.php:660
+#: includes/admin/views/add-ons.php:660
+msgid "Try Demo"
+msgstr ""
+
+#: build/includes/admin/views/add-ons.php:668
+#: includes/admin/views/add-ons.php:668
+msgid "Why WP ERP"
+msgstr ""
+
+#: build/includes/admin/views/add-ons.php:668
+#: build/includes/admin/views/add-ons.php:874
+#: includes/admin/views/add-ons.php:668 includes/admin/views/add-ons.php:874
+msgid "Pro"
+msgstr ""
+
+#: build/includes/admin/views/add-ons.php:669
+#: includes/admin/views/add-ons.php:669
+msgid "Automate & manage your growing business even better <br>using WP ERP Pro"
+msgstr ""
+
+#: build/includes/admin/views/add-ons.php:677
+#: includes/admin/views/add-ons.php:677
+msgid "Gain access to nine powerful<br>extensions with a single purchase"
+msgstr ""
+
+#: build/includes/admin/views/add-ons.php:678
+#: includes/admin/views/add-ons.php:678
+msgid "Use these premium extensions to<br>supercharge your business"
+msgstr ""
+
+#: build/includes/admin/views/add-ons.php:686
+#: includes/admin/views/add-ons.php:686
+msgid "Add other individual extensions<br>which suit your business"
+msgstr ""
+
+#: build/includes/admin/views/add-ons.php:687
+#: includes/admin/views/add-ons.php:687
+msgid "Only add those extensions which you <br>need & save your money"
+msgstr ""
+
+#: build/includes/admin/views/add-ons.php:695
+#: includes/admin/views/add-ons.php:695
+msgid "Priority support <br>system"
+msgstr ""
+
+#: build/includes/admin/views/add-ons.php:696
+#: includes/admin/views/add-ons.php:696
+msgid "Connecting you to our highly-qualified <br>support team 24/7/365"
+msgstr ""
+
+#: build/includes/admin/views/add-ons.php:704
+#: includes/admin/views/add-ons.php:704
+msgid "Save money <br>User-based Pricing"
+msgstr ""
+
+#: build/includes/admin/views/add-ons.php:705
+#: includes/admin/views/add-ons.php:705
+msgid "You are billed for each user added to <br>your user workspace."
+msgstr ""
+
+#: build/includes/admin/views/add-ons.php:715
+#: includes/admin/views/add-ons.php:715
+msgid "What you will get"
+msgstr ""
+
+#: build/includes/admin/views/add-ons.php:716
+#: includes/admin/views/add-ons.php:716
+msgid ""
+"Take your business to the next level with 9 accessible premium <br> "
+"extensions  & different features"
+msgstr ""
+
+#: build/includes/admin/views/add-ons.php:752
+#: includes/admin/views/add-ons.php:752
+msgid "Exclusive Features"
+msgstr ""
+
+#: build/includes/admin/views/add-ons.php:759
+#: includes/admin/views/add-ons.php:759
+msgid "HR Email Digest<br>weekly/Monthly"
+msgstr ""
+
+#: build/includes/admin/views/add-ons.php:760
+#: includes/admin/views/add-ons.php:760
+msgid ""
+"Keep up to date with the latest in <br>HR news and trends with this <br> "
+"exclusive feature"
+msgstr ""
+
+#: build/includes/admin/views/add-ons.php:766
+#: includes/admin/views/add-ons.php:766
+msgid "CRM Customizable<br>Life Stages"
+msgstr ""
+
+#: build/includes/admin/views/add-ons.php:767
+#: includes/admin/views/add-ons.php:767
+msgid ""
+"Try this feature now to customize <br>Customer life stages & prioritize "
+"<br>your work with them"
+msgstr ""
+
+#: build/includes/admin/views/add-ons.php:773
+#: includes/admin/views/add-ons.php:773
+msgid "Task Management<br>in CRM"
+msgstr ""
+
+#: build/includes/admin/views/add-ons.php:774
+#: includes/admin/views/add-ons.php:774
+msgid ""
+"The feature lets you manage <br>tasks, collaborate among teams <br>and be "
+"super productive"
+msgstr ""
+
+#: build/includes/admin/views/add-ons.php:780
+#: includes/admin/views/add-ons.php:780
+msgid "Sale and Purchase Returns"
+msgstr ""
+
+#: build/includes/admin/views/add-ons.php:781
+#: includes/admin/views/add-ons.php:781
+msgid ""
+"Creating sales & purchase returns<br>for your accounts is easier than "
+"ever<br>with WP ERP Accounting"
+msgstr ""
+
+#: build/includes/admin/views/add-ons.php:787
+#: includes/admin/views/add-ons.php:787
+msgid "Work from Home"
+msgstr ""
+
+#: build/includes/admin/views/add-ons.php:788
+#: includes/admin/views/add-ons.php:788
+msgid ""
+"Digitize the process for requesting<br>work from home privileges as well "
+"as<br>the approval process"
+msgstr ""
+
+#: build/includes/admin/views/add-ons.php:794
+#: includes/admin/views/add-ons.php:794
+msgid "Employee Resignation"
+msgstr ""
+
+#: build/includes/admin/views/add-ons.php:795
+#: includes/admin/views/add-ons.php:795
+msgid ""
+"Automate and simplify employee<br>resignation process using this "
+"feature<br>of WP ERP HR"
+msgstr ""
+
+#: build/includes/admin/views/add-ons.php:801
+#: includes/admin/views/add-ons.php:801
+msgid "Company Org Chart"
+msgstr ""
+
+#: build/includes/admin/views/add-ons.php:802
+#: includes/admin/views/add-ons.php:802
+msgid ""
+"Have your organizational structure<br>and define the flow of "
+"employees'<br>work with this feature"
+msgstr ""
+
+#: build/includes/admin/views/add-ons.php:811
+#: includes/admin/views/add-ons.php:811
+msgid "Choose other premium extensions"
+msgstr ""
+
+#: build/includes/admin/views/add-ons.php:812
+#: includes/admin/views/add-ons.php:812
+msgid ""
+"Build a modern, convenient and reliable business<br>management system for "
+"your company"
+msgstr ""
+
+#: build/includes/admin/views/add-ons.php:821
+#: build/includes/admin/views/modules.php:619
+#: build/includes/framework/settings/email.php:98
+#: includes/admin/views/add-ons.php:821 includes/admin/views/modules.php:619
+#: includes/framework/settings/email.php:98
+msgid "HRM"
+msgstr ""
+
+#: build/includes/admin/views/add-ons.php:827
+#: build/includes/admin/views/modules.php:625
+#: build/includes/framework/settings/email.php:98
+#: build/includes/framework/views/status-report.php:83
+#: build/modules/crm/crm.php:353 build/modules/crm/crm.php:472
+#: build/modules/crm/crm.php:485
+#: build/modules/crm/includes/admin/class-menu.php:32
+#: build/modules/crm/includes/admin/class-settings.php:17
+#: build/modules/crm/includes/class-form-handler.php:23
+#: build/modules/crm/views/dashboard-badge.php:7
+#: includes/admin/views/add-ons.php:827 includes/admin/views/modules.php:625
+#: includes/framework/settings/email.php:98
+#: includes/framework/views/status-report.php:83 modules/crm/crm.php:353
+#: modules/crm/crm.php:472 modules/crm/crm.php:485
+#: modules/crm/includes/admin/class-menu.php:32
+#: modules/crm/includes/admin/class-settings.php:17
+#: modules/crm/includes/class-form-handler.php:23
+#: modules/crm/views/dashboard-badge.php:7
+msgid "CRM"
+msgstr ""
+
+#: build/includes/admin/views/add-ons.php:874
+#: includes/admin/views/add-ons.php:874
+msgid "Say Hello to WP ERP"
+msgstr ""
+
+#: build/includes/admin/views/add-ons.php:875
+#: includes/admin/views/add-ons.php:875
+msgid ""
+"And goodbye to papers, spreadsheets, wasted time,<br> uncertainty, "
+"frustration - run business smoothly."
 msgstr ""
 
 #: build/includes/admin/views/address.php:4 includes/admin/views/address.php:4
@@ -21787,11 +22016,11 @@ msgid "Modules & Extensions"
 msgstr ""
 
 #: build/includes/admin/views/modules.php:549
-#: build/includes/class-install.php:2111 build/includes/class-scripts.php:164
+#: build/includes/class-install.php:2112 build/includes/class-scripts.php:164
 #: build/includes/framework/modules.php:51
 #: build/includes/framework/views/status-report.php:48
 #: build/modules/hrm/hrm.php:304 build/modules/hrm/views/dashboard.php:2
-#: includes/admin/views/modules.php:549 includes/class-install.php:2111
+#: includes/admin/views/modules.php:549 includes/class-install.php:2112
 #: includes/class-scripts.php:164 includes/framework/modules.php:51
 #: includes/framework/views/status-report.php:48 modules/hrm/hrm.php:304
 #: modules/hrm/views/dashboard.php:2
@@ -21805,9 +22034,9 @@ msgid "Human Resource Management"
 msgstr ""
 
 #: build/includes/admin/views/modules.php:565
-#: build/includes/class-install.php:2119
+#: build/includes/class-install.php:2120
 #: build/includes/framework/modules.php:58 includes/admin/views/modules.php:565
-#: includes/class-install.php:2119 includes/framework/modules.php:58
+#: includes/class-install.php:2120 includes/framework/modules.php:58
 msgid "CR Management"
 msgstr ""
 
@@ -21817,9 +22046,9 @@ msgid "Cusomer Relationship Management"
 msgstr ""
 
 #: build/includes/admin/views/modules.php:583
-#: build/includes/class-install.php:2127 build/includes/class-install.php:2129
+#: build/includes/class-install.php:2128 build/includes/class-install.php:2130
 #: build/includes/framework/modules.php:67 includes/admin/views/modules.php:583
-#: includes/class-install.php:2127 includes/class-install.php:2129
+#: includes/class-install.php:2128 includes/class-install.php:2130
 #: includes/framework/modules.php:67
 msgid "Accounting Management"
 msgstr ""
@@ -21827,33 +22056,6 @@ msgstr ""
 #: build/includes/admin/views/modules.php:612
 #: includes/admin/views/modules.php:612
 msgid "Purchased"
-msgstr ""
-
-#: build/includes/admin/views/modules.php:619
-#: build/includes/framework/settings/email.php:98
-#: includes/admin/views/modules.php:619
-#: includes/framework/settings/email.php:98
-msgid "HRM"
-msgstr ""
-
-#: build/includes/admin/views/modules.php:625
-#: build/includes/framework/settings/email.php:98
-#: build/includes/framework/views/status-report.php:83
-#: build/modules/crm/crm.php:353 build/modules/crm/crm.php:472
-#: build/modules/crm/crm.php:485
-#: build/modules/crm/includes/admin/class-menu.php:32
-#: build/modules/crm/includes/admin/class-settings.php:17
-#: build/modules/crm/includes/class-form-handler.php:23
-#: build/modules/crm/views/dashboard-badge.php:7
-#: includes/admin/views/modules.php:625
-#: includes/framework/settings/email.php:98
-#: includes/framework/views/status-report.php:83 modules/crm/crm.php:353
-#: modules/crm/crm.php:472 modules/crm/crm.php:485
-#: modules/crm/includes/admin/class-menu.php:32
-#: modules/crm/includes/admin/class-settings.php:17
-#: modules/crm/includes/class-form-handler.php:23
-#: modules/crm/views/dashboard-badge.php:7
-msgid "CRM"
 msgstr ""
 
 #: build/includes/admin/views/modules.php:648
@@ -22710,27 +22912,27 @@ msgstr ""
 msgid "Something went wrong! Please check your input."
 msgstr ""
 
-#: build/includes/class-install.php:1696
-#: build/includes/updates/update-1.1.17.php:21 includes/class-install.php:1696
+#: build/includes/class-install.php:1697
+#: build/includes/updates/update-1.1.17.php:21 includes/class-install.php:1697
 #: includes/updates/update-1.1.17.php:21
 msgid "ERP Subscription"
 msgstr ""
 
-#: build/includes/class-install.php:1708
+#: build/includes/class-install.php:1709
 #: build/includes/updates/update-1.1.17.php:33
 #: build/modules/crm/includes/admin/class-settings.php:168
 #: build/modules/crm/includes/class-subscription.php:450
-#: includes/class-install.php:1708 includes/updates/update-1.1.17.php:33
+#: includes/class-install.php:1709 includes/updates/update-1.1.17.php:33
 #: modules/crm/includes/admin/class-settings.php:168
 #: modules/crm/includes/class-subscription.php:450
 msgid "Confirm your subscription to %s"
 msgstr ""
 
-#: build/includes/class-install.php:1710
+#: build/includes/class-install.php:1711
 #: build/includes/updates/update-1.1.17.php:35
 #: build/modules/crm/includes/admin/class-settings.php:176
 #: build/modules/crm/includes/class-subscription.php:452
-#: includes/class-install.php:1710 includes/updates/update-1.1.17.php:35
+#: includes/class-install.php:1711 includes/updates/update-1.1.17.php:35
 #: modules/crm/includes/admin/class-settings.php:176
 #: modules/crm/includes/class-subscription.php:452
 msgid ""
@@ -22747,52 +22949,52 @@ msgid ""
 "%s"
 msgstr ""
 
-#: build/includes/class-install.php:1714
+#: build/includes/class-install.php:1715
 #: build/includes/updates/update-1.1.17.php:39
 #: build/modules/crm/includes/admin/class-settings.php:201
 #: build/modules/crm/includes/class-subscription.php:678
-#: includes/class-install.php:1714 includes/updates/update-1.1.17.php:39
+#: includes/class-install.php:1715 includes/updates/update-1.1.17.php:39
 #: modules/crm/includes/admin/class-settings.php:201
 #: modules/crm/includes/class-subscription.php:678
 msgid "You are now subscribed!"
 msgstr ""
 
-#: build/includes/class-install.php:1715
+#: build/includes/class-install.php:1716
 #: build/includes/updates/update-1.1.17.php:40
 #: build/modules/crm/includes/admin/class-settings.php:208
 #: build/modules/crm/includes/class-subscription.php:713
-#: includes/class-install.php:1715 includes/updates/update-1.1.17.php:40
+#: includes/class-install.php:1716 includes/updates/update-1.1.17.php:40
 #: modules/crm/includes/admin/class-settings.php:208
 #: modules/crm/includes/class-subscription.php:713
 msgid "We've added you to our email list. You'll hear from us shortly."
 msgstr ""
 
-#: build/includes/class-install.php:1716
+#: build/includes/class-install.php:1717
 #: build/includes/updates/update-1.1.17.php:41
 #: build/modules/crm/includes/admin/class-settings.php:220
 #: build/modules/crm/includes/class-subscription.php:687
-#: includes/class-install.php:1716 includes/updates/update-1.1.17.php:41
+#: includes/class-install.php:1717 includes/updates/update-1.1.17.php:41
 #: modules/crm/includes/admin/class-settings.php:220
 #: modules/crm/includes/class-subscription.php:687
 msgid "You are now unsubscribed"
 msgstr ""
 
-#: build/includes/class-install.php:1717
+#: build/includes/class-install.php:1718
 #: build/includes/updates/update-1.1.17.php:42
 #: build/modules/crm/includes/admin/class-settings.php:227
 #: build/modules/crm/includes/class-subscription.php:730
-#: includes/class-install.php:1717 includes/updates/update-1.1.17.php:42
+#: includes/class-install.php:1718 includes/updates/update-1.1.17.php:42
 #: modules/crm/includes/admin/class-settings.php:227
 #: modules/crm/includes/class-subscription.php:730
 msgid "You are successfully unsubscribed from list(s):"
 msgstr ""
 
-#: build/includes/class-install.php:2113 includes/class-install.php:2113
+#: build/includes/class-install.php:2114 includes/class-install.php:2114
 msgid "Human Resource Mnanagement"
 msgstr ""
 
-#: build/includes/class-install.php:2121
-#: build/includes/framework/modules.php:60 includes/class-install.php:2121
+#: build/includes/class-install.php:2122
+#: build/includes/framework/modules.php:60 includes/class-install.php:2122
 #: includes/framework/modules.php:60
 msgid "Customer Relationship Management"
 msgstr ""
@@ -30968,10 +31170,10 @@ msgstr ""
 msgid "Calendar"
 msgstr ""
 
-#: build/modules/hrm/includes/admin/class-menu.php:267
-#: build/modules/hrm/includes/admin/class-menu.php:301
-#: modules/hrm/includes/admin/class-menu.php:267
-#: modules/hrm/includes/admin/class-menu.php:301
+#: build/modules/hrm/includes/admin/class-menu.php:278
+#: build/modules/hrm/includes/admin/class-menu.php:312
+#: modules/hrm/includes/admin/class-menu.php:278
+#: modules/hrm/includes/admin/class-menu.php:312
 msgid "Employee not found!"
 msgstr ""
 
