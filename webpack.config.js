@@ -118,6 +118,7 @@ var mainConfig = {
             '@': path.resolve('./assets/src/'),
             frontend: path.resolve('./assets/src/frontend/'),
             // 'admin': path.resolve('./assets/src/admin/'),
+            settings: path.resolve('./includes/settings/assets/src/'),
             admin: path.resolve('./modules/accounting/assets/src/admin/')
         },
         modules: [
@@ -160,7 +161,7 @@ var mainConfig = {
                 use: ['style-loader', 'css-loader']
             },
             {
-                test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
+                test: /\.(woff(2)?|ttf|eot|svg|gif|png)(\?v=\d+\.\d+\.\d+)?$/,
                 use: [{
                     loader: 'url-loader',
                     options: {
