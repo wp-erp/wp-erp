@@ -38,9 +38,16 @@ class Page_View {
     /**
      * Icon For Section
      *
-     * @var array
+     * @var string
      */
     public $icon = "";
+
+    /**
+     * Extra variables
+     *
+     * @return array
+     */
+    public $extra = [];
 
     /**
      * Get id
