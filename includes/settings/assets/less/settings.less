@@ -1,4 +1,5 @@
 @import "master.less";
+@spinner: "../../../../assets/images/spinner-2x.gif";
 
 #erp-settings {
     .settings-area {
@@ -78,6 +79,7 @@
                             color: #72777C;
                             background: #ECECEC;
                             border-radius: 0px;
+                            cursor: pointer;
 
                             &.router-link-active {
                                 background: transparent !important;
@@ -637,6 +639,12 @@
         }
     }
 
+    #erp-wc-notice {
+        .settings-box {
+            min-width: 542px !important;
+        }
+    }
+
     /** Modal End **/
 
     /** Table Start **/
@@ -656,6 +664,98 @@
         color: #16191c;
     }
     /** Trix Editor **/
+
+    .erp-wc-data-sync {
+        .regen-sync-response {
+            span {
+                color: #8a6d3b;
+                background-color: #fcf8e3;
+                border-color: #faebcc;
+                padding: 15px;
+                margin: 10px 0;
+                border: 1px solid transparent;
+                border-radius: 4px;
+                display: block;
+            }
+        }
+
+        .regen-sync-loader {
+            background: url("@{spinner}") no-repeat;
+            width: 28px;
+            height: 28px;
+            display: inline-block;
+            background-size: cover;
+            margin-bottom: -10px;
+        }
+
+        .description {
+            margin: 30px 0;
+        }
+
+        #regen-sync-form {
+            margin-top: 30px;
+        }
+
+        .row {
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+
+            label {
+                width: 220px;
+                display: inline-block;
+                font-weight: bold;
+            }
+        }
+
+        #progress-bar {
+            background-color: #EEE;
+            border-radius: 13px; /* (height of inner div) / 2 + padding */
+            padding: 3px;
+            margin-bottom : 20px;
+        }
+
+        #sync-progress {
+            background-color: #00A0D2;
+            width: 0%; /* Adjust with JavaScript */
+            height: 20px;
+            border-radius: 10px;
+            text-align: center;
+            color:#FFF;
+        }
+
+        .regen-sync-table {
+            margin-top: 12px !important;
+        }
+    }
+
+    #erp-wc-sync {
+        .wc-sync-logo {
+            position: relative;
+            margin-top: 8%;
+            margin-bottom: 4%;
+    
+            img#wc-sync-bg {
+                position: absolute;
+                margin: 0 39.5%;
+            }
+    
+            img#wc-sync {
+                margin: 1% 40% 0 43%;
+            }
+        }
+
+        .wc-sync-notice {
+            h4, p {
+                text-align: center;
+            } 
+        }
+
+        #erp-wc-sync-notice-btn {
+            margin: 0 43% !important;
+        }
+    }
 }
 
 @import "responsive.less";
