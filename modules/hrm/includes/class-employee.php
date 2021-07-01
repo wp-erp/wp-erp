@@ -1559,6 +1559,7 @@ class Employee {
         }
 
         $histories = $histories->orderBy( 'date', 'desc' )
+                            ->orderBy( 'id', 'desc' )
                             ->skip( $offset )
                             ->take( $limit )
                             ->get();
@@ -1777,7 +1778,7 @@ class Employee {
             'type'     => $args['pay_rate'],
             'comment'  => $args['comment'],
             'data'     => $args['reason'],
-            'date'     => $args['date'],
+            'date'     => erp_current_datetime()->modify( $args['date'] )->format( 'Y-m-d H:i:s' ),
         ] );
 
         return [
@@ -1839,7 +1840,7 @@ class Employee {
         }
 
         $history = $this->get_erp_user()->histories()->updateOrCreate( [ 'id' => $args['id'] ], [
-            'date'     => $args['date'],
+            'date'     => erp_current_datetime()->modify( $args['date'] )->format( 'Y-m-d H:i:s' ),
             'data'     => $args['reporting_to'],
             'category' => $this->get_department( 'view' ),
             'type'     => $this->get_location( 'view' ),
