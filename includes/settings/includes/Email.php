@@ -6,7 +6,11 @@ namespace WeDevs\ERP\Settings;
  * Email settings class
  */
 class Email extends Page_View {
-    public function __construct() {
+    
+    /**
+     * Class constructor
+     */
+    function __construct() {
         $this->id       = 'erp-email';
         $this->label    = __( 'Emails', 'erp' );
         $this->sections = $this->get_sections();
@@ -23,12 +27,11 @@ class Email extends Page_View {
      * @return array
      */
     public function get_sections() {
-        $sections = [
-            'general'   => __( 'General', 'erp' ),
-            'smtp'      => __( 'SMTP', 'erp' ),
-        ];
-
-        return apply_filters( 'erp_settings_email_sections', $sections );
+        return apply_filters( 'erp_settings_email_sections', [
+            'general'      => __( 'General', 'erp' ),
+            'smtp'         => __( 'SMTP', 'erp' ),
+            'notification' => __( 'Notifications & Templates', 'erp' )
+        ] );
     }
 
     /**
@@ -44,7 +47,7 @@ class Email extends Page_View {
         ];
 
         $fields['general'][] = [
-            'title'   => __( '"From" Name', 'erp' ),
+            'title'   => __( 'Sender Name', 'erp' ),
             'id'      => 'from_name',
             'type'    => 'text',
             'default' => get_bloginfo( 'name' ),
@@ -53,7 +56,7 @@ class Email extends Page_View {
         ];
 
         $fields['general'][] = [
-            'title'   => __( '"From" Address', 'erp' ),
+            'title'   => __( 'Sender Address', 'erp' ),
             'id'      => 'from_email',
             'type'    => 'text',
             'default' => get_option( 'admin_email' ),
@@ -168,7 +171,7 @@ class Email extends Page_View {
         ];
 
         $fields['smtp'][] = [
-            'title'   => __( 'Debug', 'erp' ),
+            'title'   => __( 'Enable Debugging', 'erp' ),
             'id'      => 'debug',
             'type'    => 'radio',
             'options' => [ 'yes' => 'Yes', 'no' => 'No' ],
@@ -176,7 +179,13 @@ class Email extends Page_View {
         ];
 
         $fields['smtp'][] = [
-            'type' => 'smtp_test_connection',
+            'title'       => __( 'Testing', 'erp' ),
+            'id'          => 'test_email',
+            'type'        => 'text',
+            'value'       => get_option( 'admin_email' ),
+            'placeholder' => get_option( 'admin_email' ),
+            'tooltip'     => true,
+            'desc'        => __( 'Test if the SMTP connection is correctly established', 'erp' ),
         ];
 
         $fields['smtp'][] = [
@@ -185,26 +194,29 @@ class Email extends Page_View {
         ];
         // End SMTP settings
 
-//        $fields['imap'] = $this->get_imap_settings_fields();
-        // End IMAP settings
+        // Notification & Templates settings
+        $fields['notification'][] = [
+            'title' => __( 'Notification & Template Settings', 'erp' ),
+            'type'  => 'title',
+            'desc'  => __( 'Email notifications and templates management for ERP', 'erp' ),
+        ];
 
-//        $fields['gmail_api'] = $this->get_gmail_api_settings_fields();
-//        $fields['gmail_api'][] = [
-//            'type' => 'sectionend',
-//            'id'   => 'script_styling_options'
-//        ];
+        $fields['notification']['sub_sections'] = [
+            'hrm'  => __( 'HRM', 'erp' ),
+            'crm'  => __( 'CRM', 'erp' ),
+            'acct' => __( 'Accounting', 'erp' ),
+        ];
+        // End of Notification & Templates settings
 
         $fields = apply_filters( 'erp_settings_email_section_fields', $fields, $section );
 
-        if ( ! empty ( $section ) ) {
-            $section = $section === false ? $fields['general'] : $fields[ $section ];
-        }
-
-        return $section;
+        return $fields;
     }
 
     public function notification_emails() {
-        $email_templates = wperp()->emailer->get_emails(); ?>
+        $email_templates = wperp()->emailer->get_emails();
+
+        //ob_start(); ?>
         <tr valign="top">
             <td class="erp-settings-table-wrapper" colspan="2">
                 <table class="erp-settings-table widefat" cellspacing="0">
@@ -279,31 +291,7 @@ class Email extends Page_View {
                 </table>
             </td>
         </tr>
-        <?php
-    }
-
-    /**
-     * Display imap test connection button.
-     *
-     * @return void
-     */
-    public function smtp_test_connection() {
-        ?>
-        <tr valign="top">
-            <th scope="row" class="titledesc">
-                &nbsp;
-            </th>
-            <td class="forminp forminp-text">
-                <input type="email" id="smtp_test_email_address" class="regular-text"
-                       value="<?php echo esc_attr( get_option( 'admin_email' ) ); ?>"/><br>
-                <p class="description"><?php esc_html_e( 'An email address to test the connection.', 'erp' ); ?></p>
-                <a id="smtp-test-connection"
-                   class="button-secondary"><?php esc_attr_e( 'Send Test Email', 'erp' ); ?></a>
-                <span class="erp-loader" style="display: none;"></span>
-                <p class="description"><?php esc_html_e( 'Click on the above button before saving the settings.', 'erp' ); ?></p>
-            </td>
-        </tr>
-        <?php
+        <?php //return ob_get_clean();
     }
 
     /**
@@ -459,48 +447,83 @@ class Email extends Page_View {
     }
 
     public function save( $section = false ) {
-        if ( isset( $_POST['_wpnonce'] ) && wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-settings-nonce' ) ) {
-            if ( !isset( $_GET['sub_section'] ) ) {
-                parent::save( $section );
+        global $current_class;
 
-                return;
+        if ( isset( $_POST['_wpnonce'] ) && wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-settings-nonce' ) ) {
+            $from_sections = false;
+
+            if ( isset( $this->sections ) && is_array( $this->sections ) && count( $this->sections ) ) {
+                $options       = $this->get_section_fields( $section );
+                $options       = $options[ $section ];
+                $from_sections = true;
+            } else {
+                $options = $this->get_settings();
             }
 
-            $current_section = isset( $_GET['sub_section'] ) ? sanitize_key( $_GET['sub_section'] ) : false;
+            // Modify options data for some sub sections
+            $sub_section = isset( $_POST['sub_section' ] ) ? sanitize_text_field( wp_unslash( $_POST['sub_section' ] ) ) : null;
 
-            // saving individual email settings
-            if ( $current_section ) {
-                $email_templates = wperp()->emailer->get_emails();
+            if ( ! empty ( $sub_sub_section ) ) {
+                $options = $options[ $sub_sub_section ];
+            }
 
-                foreach ( $email_templates as $email_key => $email ) {
-                    if ( strtolower( $email_key ) == $current_section ) {
-                        $settings       = $email->get_form_fields();
-                        $update_options = [];
+            // Options to update will be stored here
+            $update_options = [];
 
-                        if ( $settings ) {
-                            foreach ( $settings as $field ) {
-                                if ( !isset( $field['id'] ) || !isset( $_POST[$field['id']] ) ) {
-                                    continue;
-                                }
+            // Loop options and get values to save
+            foreach ( $options as $value ) {
+                if ( ! isset( $value['id'] ) ) {
+                    continue;
+                }
 
-                                $option_value = $this->parse_option_value( $field );
+                $option_value = $this->parse_option_value( $value );
 
-                                if ( !is_null( $option_value ) ) {
-                                    $update_options[$field['id']] = $option_value;
-                                }
-                            }
+                if ( ! is_null( $option_value ) ) {
+                    // Check if option is an array
+                    if ( strstr( $value['id'], '[' ) ) {
+                        parse_str( $value['id'], $option_array );
+
+                        // Option name is first key
+                        $option_name = current( array_keys( $option_array ) );
+
+                        // Get old option value
+                        if ( ! isset( $update_options[ $option_name ] ) ) {
+                            $update_options[ $option_name ] = get_option( $option_name, [] );
                         }
 
-                        update_option( $email->get_option_id(), $update_options );
+                        if ( ! is_array( $update_options[ $option_name ] ) ) {
+                            $update_options[ $option_name ] = [];
+                        }
 
-                        break;
+                        // Set keys and value
+                        $key = key( $option_array[ $option_name ] );
+
+                        $update_options[ $option_name ][ $key ] = $option_value;
+
+                    // Single value
+                    } else {
+                        $update_options[ $value['id'] ] = $option_value;
                     }
                 }
-            } else {
-                parent::save();
+
+                // Custom handling
+                do_action( 'erp_update_option', $value );
             }
+
+            // finally, update the option
+            if ( $update_options ) {
+                if ( $this->single_option ) {
+                    foreach ( $update_options as $name => $value ) {
+                        update_option( $name, $value );
+                    }
+                } else {
+                    update_option( $this->get_option_id(), $update_options );
+                }
+            }
+
+            do_action( 'erp_after_save_settings' );
         }
     }
 }
 
-return new Email();
+// return new Email();
