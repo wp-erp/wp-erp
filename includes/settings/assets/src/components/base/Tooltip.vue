@@ -1,5 +1,5 @@
 <template>
-    <span class="erp-settings-tooltip" v-if="input.tooltip && input.desc">
+    <span class="erp-settings-tooltip" v-if="input.tooltip">
         <svg width="13px" height="13px" viewBox="0 0 13 13" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
             <g id="Tooltip" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                 <g transform="translate(-639.000000, -350.000000)" fill="#CECFD3" fill-rule="nonzero">
@@ -30,7 +30,7 @@
                 if ( this.input.tooltip ) {
                     if ( typeof this.input.tooltip_text !== 'undefined' && this.input.tooltip_text !== '' ) {
                         toolTipText = this.input.tooltip_text;
-                    } else {
+                    } else if ( typeof this.input.desc !== 'undefined' && this.input.desc !== '' ) {
                         toolTipText = this.input.desc;
                     }
                 }
