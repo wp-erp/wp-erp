@@ -155,9 +155,23 @@
                                 <?php echo ( ! empty( $compensation['comment'] ) ) ? wp_kses_post( $compensation['comment'] ) : '--'; ?>
                             </td>
                             <td class="action">
-                                <?php if ( current_user_can( 'erp_manage_jobinfo', $employee->get_user_id() )&& ( 0 !== $num ) ) { ?>
-                                    <a href="#" class="remove" data-id="<?php echo esc_html( $compensation['id'] ); ?>"><span class="dashicons dashicons-trash"></span></a>
-                                <?php } ?>
+                                <?php if ( current_user_can( 'erp_manage_jobinfo', $employee->get_user_id() ) ) : ?>
+                                    <?php if ( 0 !== $num ) : ?>
+                                        <a href="#"
+                                            class="remove"
+                                            data-id="<?php echo esc_html( $compensation['id'] ); ?>">
+                                            <span class="dashicons dashicons-trash"></span>
+                                        </a>
+                                    <?php else : ?>
+                                        <a href="#"
+                                            class="edit"
+                                            data-id="<?php echo esc_attr( $compensation['id'] ); ?>"
+                                            data-title="<?php esc_html_e( 'Compensation History', 'erp' ); ?>"
+                                            data-template="erp-employment-compensation-history">
+                                            <span class="dashicons dashicons-edit-large"></span>
+                                        </a>
+                                    <?php endif; ?>
+                                <?php endif; ?>
                             </td>
                         </tr>
                         <?php
@@ -228,9 +242,23 @@
                     ?>
                     </td>
                     <td class="action">
-                        <?php if ( current_user_can( 'erp_manage_jobinfo', $employee->get_user_id() )&& ( 0 !== $num ) ) { ?>
-                            <a href="#" class="remove" data-id="<?php echo esc_html( $row['id'] ); ?>"><span class="dashicons dashicons-trash"></span></a>
-                        <?php } ?>
+                        <?php if ( current_user_can( 'erp_manage_jobinfo', $employee->get_user_id() ) ) : ?>
+                            <?php if ( 0 !== $num ) : ?>
+                                <a href="#"
+                                    class="remove"
+                                    data-id="<?php echo esc_html( $row['id'] ); ?>">
+                                    <span class="dashicons dashicons-trash"></span>
+                                </a>
+                            <?php else : ?>
+                                <a href="#"
+                                    class="edit"
+                                    data-id="<?php echo esc_attr( $row['id'] ); ?>"
+                                    data-title="<?php esc_html_e( 'Job Info History', 'erp' ); ?>"
+                                    data-template="erp-employment-job-info-history">
+                                    <span class="dashicons dashicons-edit-large"></span>
+                                </a>
+                            <?php endif; ?>
+                        <?php endif; ?>
                     </td>
                 </tr>
                 <?php
