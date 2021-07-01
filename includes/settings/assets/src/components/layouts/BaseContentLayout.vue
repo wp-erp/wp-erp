@@ -8,7 +8,7 @@
 
                 <label :for="'erp-'+fields[index]['id']">
                     <span v-html="input.title"></span>
-                    <tooltip :input="input"  />
+                    <tooltip v-if="input" :input="input"  />
                 </label>
 
                 <template v-if="input.type === 'select'">
@@ -35,17 +35,18 @@
                     <input-desc :input="input" />
                 </div>
 
-                <div class="form-check" v-if="input.type === 'radio'">
-                    <div class="form-radio-label">
-                        <template v-for="(key, index2) in Object.keys(input.options)" >
-                            <label :key="index2">
-                                <input type="radio" class="form-radio-input" :id="'erp-'+fields[index]['id']" :checked="key === fields[index]['value']" @click="changeRadioInput(index, key)" />
-                                <span class="form-radio-label-light" v-html="input.options[key]"></span>
-                            </label>
-                        </template>
+                <div v-if="input.type === 'radio'">
+                    <radio-switch
+                        :value="fields[index]['value']"
+                        @click.native="toggleSwitch(index)"
+                        :id="'erp-'+fields[index]['id']"
+                    ></radio-switch>
 
-                        <span class="form-radio-label-light" v-html="input.desc"></span>
-                    </div>
+                    <input-desc :input="input" />
+                </div>
+
+                <div v-if="input.type === 'password'">
+                    <input v-model="fields[index]['value']" type="password" :id="'erp-'+fields[index]['id']" class="wperp-form-field" />
 
                     <input-desc :input="input" />
                 </div>
@@ -61,10 +62,34 @@
                 </div>
 
                 <div v-if="input.type === 'text' || input.type === 'textarea' || input.type === 'password'">
-                    <input v-if="input.type === 'text' && input.class !== 'erp-date-field'" v-model="fields[index]['value']" class="wperp-form-field" :id="'erp-'+fields[index]['id']" :disabled="fields[index]['disabled'] ? true : false" />
-                    <input type="password" v-if="input.type === 'password' && input.class !== 'erp-date-field'" v-model="fields[index]['value']" class="wperp-form-field" :id="'erp-'+fields[index]['id']" :disabled="fields[index]['disabled'] ? true : false" />
-                    <date-picker v-if="input.type === 'text' && input.class === 'erp-date-field'" class="wperp-form-field" :placeholder="__( 'Select date', 'erp' )" v-model="fields[index]['value']" :id="'erp-'+fields[index]['id']" />
-                    <textarea v-if="input.type === 'textarea'" cols="45" rows="4" v-model="fields[index]['value']" class="wperp-form-field" :id="'erp-'+fields[index]['id']" :disabled="fields[index]['disabled'] ? true : false" />
+                    <input v-if="input.type === 'text' && input.class !== 'erp-date-field'"
+                        v-model="fields[index]['value']"
+                        class="wperp-form-field"
+                        :placeholder="fields[index]['placeholder'] ? fields[index]['placeholder'] : ''" 
+                        :id="'erp-'+fields[index]['id']"
+                        :disabled="fields[index]['disabled'] ? true : false" />
+                    
+                    <date-picker
+                        v-if="input.type === 'text' && input.class === 'erp-date-field'" 
+                        v-model="fields[index]['value']"
+                        class="wperp-form-field"
+                        :placeholder="__( 'Select date', 'erp' )"
+                        :id="'erp-'+fields[index]['id']" />
+                    
+                    <textarea
+                        v-if="input.type === 'textarea'"
+                        cols="45" rows="4"
+                        v-model="fields[index]['value']"
+                        class="wperp-form-field"
+                        :id="'erp-'+fields[index]['id']"
+                        :disabled="fields[index]['disabled'] ? true : false" />
+                    
+                    <input v-if="input.type === 'password'"
+                        v-model="fields[index]['value']"
+                        type="password"
+                        class="wperp-form-field"
+                        :id="'erp-'+fields[index]['id']"
+                        :disabled="fields[index]['disabled'] ? true : false" />
 
                     <input-desc :input="input" />
                 </div>
@@ -77,8 +102,11 @@
                         :id="'erp-'+fields[index]['id']"
                     />
                 </div>
+
             </div>
         </div>
+        
+        <slot name="extra-content"></slot>
 
         <slot name="extended-data"></slot>
 
@@ -96,6 +124,7 @@ import ImagePicker from "../base/ImagePicker.vue";
 import Tooltip from '../base/Tooltip.vue';
 import MultiSelect from '../select/MultiSelect.vue';
 import InputDesc from '../layouts/partials/InputDesc.vue';
+import RadioSwitch from './partials/Switch.vue';
 import { generateFormDataFromObject } from "../../utils/FormDataHandler";
 
 var $ = jQuery;
@@ -108,6 +137,7 @@ export default {
         ImagePicker,
         Tooltip,
         InputDesc,
+        RadioSwitch,
         DatePicker,
         MultiSelect
     },
@@ -115,6 +145,7 @@ export default {
     data() {
         return {
             fields: [],
+            optionsMutable: this.options,
         };
     },
 
@@ -142,6 +173,16 @@ export default {
         sub_sub_section_id: {
             type    : String,
             required: false
+        },
+        options: {
+            type: Object,
+            required: false,
+            default: () => (
+                {
+                    action: '',
+                    recurrent: false,
+                }
+            )
         }
     },
 
@@ -253,7 +294,7 @@ export default {
             let requestData = {
                 ...requestDataPost,
                 _wpnonce: erp_settings_var.nonce,
-                action  : "erp-settings-save",
+                action  : ! self.optionsMutable.action ? "erp-settings-save" : self.optionsMutable.action,
                 module  : self.section_id,
                 section : self.sub_section_id,
             };
@@ -278,6 +319,12 @@ export default {
                 },
             });
 
+            if (! self.optionsMutable.recurrent) {
+                self.optionsMutable = {
+                    action: '',
+                    recurrent: false,
+                };
+            }
         },
 
         /**
@@ -288,11 +335,18 @@ export default {
         },
 
         /**
+         * Toggle switch
+         */
+        toggleSwitch( index ) {
+            this.fields[index]['value'] = this.fields[index]['value'] == 'yes' ? 'no' : 'yes';
+        },
+
+        /**
          * Change Radio Type Inputs
          */
         changeRadioInput( index, key ) {
             this.fields[index]['value'] = key;
-        }
+        },
     },
 };
 </script>
