@@ -15,7 +15,9 @@ import Datepicker from './components/base/Datepicker.vue';
 import MultiSelect from './components/select/MultiSelect.vue';
 import SubmitButton from './components/base/SubmitButton.vue';
 import BaseLayout from './components/layouts/BaseLayout.vue';
+import RadioSwitch from './components/layouts/partials/Switch.vue';
 import Modal from './components/base/Modal.vue';
+import Tooltip from './components/base/Tooltip.vue';
 import BaseContentLayout from './components/layouts/BaseContentLayout.vue';
 import VueDropify from 'vue-dropify';
 import draggable from 'vuedraggable'
@@ -47,6 +49,8 @@ window.settings.libs['MultiSelect']                = MultiSelect;
 window.settings.libs['Modal']                      = Modal;
 window.settings.libs['Draggable']                  = draggable;
 window.settings.libs['VueTrix']                    = VueTrix;
+window.settings.libs['RadioSwitch']                = RadioSwitch;
+window.settings.libs['Tooltip']                    = Tooltip;
 
 // get lib reference from window
 window.settings_get_lib = function(lib) {
