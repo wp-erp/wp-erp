@@ -4157,7 +4157,7 @@ function erp_crm_get_contacts_menu_html( $selected = 'contacts' ) {
         <ul class="erp-nav">
             <?php foreach ( $dropdown as $key => $value ) : ?>
                 <?php if ( 'crm_life_stages' === $key && current_user_can( $value['caps'] ) ) : ?>
-                <li><a href="<?php echo add_query_arg( array( 'section' => $key ), admin_url( 'admin.php?page=erp-settings&tab=erp-crm' ) ); ?>" class="" data-key="<?php echo $key; ?>"><?php echo $value['title']; ?></a></li>
+                <li><a href="<?php echo admin_url( 'admin.php?page=erp-settings#/erp-crm/crm_life_stages' ); ?>" class="" data-key="<?php echo $key; ?>"><?php echo $value['title']; ?></a></li>
                 <?php elseif ( current_user_can( $value['caps'] ) ) : ?>
                 <li class="<?php echo $key === $selected ? 'active' : ''; ?>"><a href="<?php echo add_query_arg( array( 'sub-section' => $key ), admin_url( 'admin.php?page=erp-crm&section=contact' ) ); ?>" class="" data-key="<?php echo $key; ?>"><?php echo $value['title']; ?></a></li>
                 <?php endif; ?>
