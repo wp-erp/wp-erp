@@ -171,4 +171,79 @@ class Helpers {
         </div>
         <?php
     }
+
+    /**
+     * Get Options For Settings
+     *
+     * @since 1.8.7
+     *
+     * @param array $options - Setting options
+     *
+     * @return array $data settings data
+     */
+    public static function process_settings_data ( $options = [] ) {
+        $data               = [];
+        $single_option_data = [];
+
+        if ( ! empty ( $options['single_option'] ) ) {
+            $single_option_id   = 'erp_settings_' . $options['single_option'];
+
+            // If sub_section_id provided, then append it to single_option_id to get data from database
+            // Modify it, since In database, it's stored like `erp_settings_{section}_{sub_section_id}`
+            if ( ! empty ( $options['sub_section_id'] ) && $options['single_option'] !== $options['sub_section_id']) {
+                $single_option_id .= '_' . $options['sub_section_id'];
+            }
+
+            $single_option_data = ( array ) get_option( $single_option_id );
+        }
+
+        foreach ( $options as $option ) {
+            if ( ! empty ( $option['id'] ) ) {
+                $option_value = count ( $single_option_data ) === 0 ? get_option( $option['id'] ) : $single_option_data[ $option['id'] ];
+
+                if ( empty ( $option_value ) && $option['type'] !== 'select' ) {
+                    $option_value = ! empty ( $option['default'] ) ? $option['default'] : '';
+                }
+
+                // Process option value for different type input
+                switch ( $option['type'] ) {
+                    case 'checkbox':
+                        $option_value = $option_value === 'yes' ? true : false;
+                        break;
+
+                    case 'image':
+                        $option_value = (int) $option_value;
+                        $option_value = $option_value ? wp_get_attachment_url( $option_value ) : '';
+
+                    default:
+                        break;
+                }
+
+                $option['value'] = $option_value;
+
+                array_push( $data, $option );
+            }
+        }
+
+        return $data;
+    }
+
+    /**
+     * Retrieves email templates that cannot be disabled
+     * 
+     * @since 1.8.7
+     *
+     * @return array
+     */
+    public static function get_fixedly_enabled_email_templates() {
+        return apply_filters( 'email_settings_enable_filter', [
+            'erp_email_settings_new-leave-request',
+            'erp_email_settings_approved-leave-request',
+            'erp_email_settings_rejected-leave-request',
+            'erp_email_settings_employee-asset-request',
+            'erp_email_settings_employee-asset-approve',
+            'erp_email_settings_employee-asset-reject',
+            'erp_email_settings_employee-asset-overdue',
+        ] );
+    }
 }
