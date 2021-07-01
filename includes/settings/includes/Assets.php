@@ -39,6 +39,7 @@ class Assets {
     public function enquee_assets() {
         // Load styles
         wp_enqueue_style( 'erp-settings' );
+        wp_enqueue_style( 'erp-settings-bootstrap' );
 
         // Load scripts
         wp_enqueue_script( 'settings-vendor' );
@@ -69,11 +70,11 @@ class Assets {
 
         $menus = $this->get_settings_menus();
 
-        // dd( $menus );
-
         wp_localize_script( 'erp-settings-bootstrap', 'erp_settings_var', [
             'user_id'               => $u_id,
             'site_url'              => $site_url,
+            'admin_url'             => admin_url( 'admin.php' ),
+            'erp_pro_link'          => 'https://wperp.com/pricing/?nocache&utm_medium=modules&utm_source=erp-settings-page',
             'logout_url'            => $logout_url,
             'settings_assets'       => WPERP_ASSETS,
             'erp_assets'            => WPERP_ASSETS,
@@ -98,22 +99,51 @@ class Assets {
      * Get settings menus/pages
      */
     public function get_settings_menus ( ) {
-        $settings[] = include __DIR__ . '/General.php';
+        $settings[] = new General();
 
         $settings   = apply_filters( 'erp_settings_pages', $settings );
 
-        $settings[] = include __DIR__ . '/Email.php';
+        $pro_activated = false;
+        $wc_purchased  = false;
+        $wc_activated  = false;
 
-        // Display integrations tab only if any integration exist.
-        $integrations = wperp()->integration->get_integrations();
+        if ( class_exists( 'WP_ERP_Pro' ) ) {
+            $pro_activated = true;
+            $purchased_ext = wp_erp_pro()->update->get_licensed_extensions();
 
-        if ( ! empty( $integrations ) ) {
+            if ( in_array( 'accounting/woocommerce', $purchased_ext  ) ) {
+                $wc_purchased = true;
+                $active_ext   = wp_erp_pro()->module->get_active_modules();
+
+                if ( in_array( 'woocommerce', $active_ext  ) ) {
+                    $wc_activated = true;
+                }
+            }
+        }
+
+        $wc_settings = new Woocommerce();
+        
+        $wc_settings->extra['pro_activated'] = $pro_activated;
+        $wc_settings->extra['wc_purchased']  = $wc_purchased;
+        $wc_settings->extra['wc_activated']  = $wc_activated;
+
+        if ( ! $pro_activated || ! $wc_purchased || ! $wc_activated ) {
+            if ( $pro_activated && ! $wc_purchased ) {
+                $wc_settings->extra['notice'] = $this->get_wc_purchase_notice();
+            } else if ( $pro_activated && $wc_purchased && ! $wc_activated ) {
+                $wc_settings->extra['notice'] = $this->get_wc_activation_notice();
+            }
+
+            $settings[] = $wc_settings;
+        }
+        
+        $settings[] = new Email();
+
+        if ( ! empty( wperp()->integration->get_integrations() ) ) {
             $settings[] = include __DIR__ . '/Integration.php';
         }
 
-        $licenses = erp_addon_licenses();
-
-        if ( $licenses ) {
+        if ( erp_addon_licenses() ) {
             $settings[] = include __DIR__ . '/License.php';
         }
 
@@ -121,17 +151,30 @@ class Assets {
 
         foreach ( $settings as $setting ) {
             $settings_data[] = [
-                'id'               => $setting->id,
-                'slug'             => '/' . $setting->id,
-                'sections'         => $setting->get_sections(),
-                'icon'             => $setting->icon,
-                'label'            => $setting->label,
-                'single_option'    => $setting->single_option,
-                'fields'           => $setting->get_section_fields( '', true )
+                'id'            => $setting->id,
+                'slug'          => '/' . $setting->id,
+                'sections'      => $setting->get_sections(),
+                'icon'          => $setting->icon,
+                'label'         => $setting->label,
+                'single_option' => $setting->single_option,
+                'extra'         => $setting->extra,
+                'fields'        => $setting->get_section_fields( '', true )
             ];
         }
 
         return $settings_data;
+    }
+
+    public function get_wc_purchase_notice() {
+        $wc_url = trailingslashit( wp_erp_pro()->update->get_base_url() ) . 'pricing?utm_source=wp-admin&utm_medium=link&utm_campaign=erp-settings-page';
+        
+        return __( "We're Sorry, You Haven't Purchased Our WooCommerce Extension. Please Purchase<br><a target='_blank' href='{$wc_url}'>WP ERP WooCommerce Extension</a> to Unlock This feature.", "erp" );
+    }
+
+    public function get_wc_activation_notice() {
+        $modules_page_url = admin_url( 'admin.php?page=erp-extensions' );
+
+        return __( "You're Just One Step Away from This Feature.<br>Please Activate <strong>WooCommerce</strong> Extension<br></a> from <a href='{$modules_page_url}'>Modules</a> to Unlock This feature.", "erp" );
     }
 
     /**
@@ -187,9 +230,14 @@ class Assets {
      */
     public function get_styles() {
         $styles = [
-            'erp-settings'    => [
+            'erp-settings'           => [
                 'src' => WPERP_ASSETS . '/css/erp-settings.css',
-            ]
+            ],
+
+            'erp-settings-bootstrap' => [
+                'src'       => WPERP_ASSETS . '/css/erp-settings-bootstrap.css',
+                'version'   => filemtime( WPERP_PATH . '/assets/js/erp-settings-bootstrap.js' ),
+            ],
         ];
 
         return $styles;
