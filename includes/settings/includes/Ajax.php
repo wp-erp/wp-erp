@@ -6,7 +6,7 @@ use WeDevs\ERP\Framework\Traits\Ajax as Trait_Ajax;
 use WeDevs\ERP\Framework\Traits\Hooker;
 
 /**
- * Ajax handler
+ * Ajax handler class
  */
 class Ajax {
 
@@ -16,19 +16,27 @@ class Ajax {
     /**
      * Bind all the ajax event for Framework
      *
-     * @since 1.8.6
+     * @since 1.8.7
      *
      * @return void
      */
     public function __construct () {
+        // Common settings
         $this->action( 'wp_ajax_erp-settings-save', 'erp_settings_save' );
         $this->action( 'wp_ajax_erp-settings-get-data', 'erp_settings_get_data' );
+        
+        // Email templates settings
+        $this->action( 'wp_ajax_erp_get_email_templates', 'get_email_templates' );
+        $this->action( 'wp_ajax_erp_get_single_email_template', 'get_single_email_template' );
+        $this->action( 'wp_ajax_erp_update_email_status', 'update_email_status' );
+        $this->action( 'wp_ajax_erp_update_email_template', 'update_email_template' );
+        $this->action( 'wp_ajax_erp_smtp_test_connection', 'smtp_test_connection' );
     }
 
     /**
-     * Save Settings Data For HRM's sections
+     * Save Settings Data
      *
-     * @since 1.8.6
+     * @since 1.8.7
      *
      * @return void
      */
@@ -59,8 +67,12 @@ class Ajax {
                 $has_not_permission = $has_not_permission && ! current_user_can( 'erp_crm_manager' );
                 break;
 
+            case 'erp-email':
+                $settings           = new Email();
+                break;
+
             default:
-                $settings           = ( new Page_View() );
+                $settings           = apply_filters( "erp_settings_save_{$module}_section", $module );
                 break;
         }
 
@@ -82,7 +94,7 @@ class Ajax {
     /**
      * Get Settings Data For Common Sections
      *
-     * @since 1.8.6
+     * @since 1.8.7
      *
      * @return void
      */
@@ -93,7 +105,7 @@ class Ajax {
             $this->send_error( erp_get_message( ['type' => 'error_permission'] ) );
         }
 
-        $data = $this->process_settings_data( $_POST );
+        $data = Helpers::process_settings_data( $_POST );
 
         if ( is_wp_error( $data ) ) {
             $this->send_error( erp_get_message( ['type' => 'error_process'] ) );
@@ -104,58 +116,287 @@ class Ajax {
 
 
     /**
-     * Get Options For Settings
+     * Retrieves all email templates
+     * 
+     * @since 1.8.7
      *
-     * @since 1.8.6
-     *
-     * @param array $options - Setting options
-     *
-     * @return array $data settings data
+     * @return mixed
      */
-    function process_settings_data ( $options = [] ) {
-        $data               = [];
-        $single_option_data = [];
+    public function get_email_templates() {
+        $this->verify_nonce( 'erp-settings-nonce' );
 
-        if ( ! empty ( $options['single_option'] ) ) {
-            $single_option_id   = 'erp_settings_' . $options['single_option'];
-
-            // If sub_section_id provided, then append it to single_option_id to get data from database
-            // Modify it, since In database, it's stored like `erp_settings_{section}_{sub_section_id}`
-            if ( ! empty ( $options['sub_section_id'] ) && $options['single_option'] !== $options['sub_section_id']) {
-                $single_option_id .= '_' . $options['sub_section_id'];
-            }
-
-            $single_option_data = ( array ) get_option( $single_option_id );
+        if ( ! current_user_can( 'manage_options' ) ) {
+            $this->send_error( erp_get_message( ['type' => 'error_permission'] ) );
         }
 
-        foreach ( $options as $option ) {
-            if ( ! empty ( $option['id'] ) ) {
-                $option_value = count ( $single_option_data ) === 0 ? get_option( $option['id'] ) : $single_option_data[ $option['id'] ];
+        $email_templates     = wperp()->emailer->get_emails();
+        $emails              = [];
+        
+        $can_not_be_disabled = Helpers::get_fixedly_enabled_email_templates();
 
-                if ( empty ( $option_value ) && $option['type'] !== 'select' ) {
-                    $option_value = ! empty ( $option['default'] ) ? $option['default'] : '';
-                }
+        foreach ( $email_templates as $key => $email ) {
+            $email_option    = $email->get_option_id();
+            $option_value    = get_option( $email_option );
+            $disable_allowed = true;
+            $is_enabled      = 'no';
 
-                // Process option value for different type input
-                switch ( $option['type'] ) {
-                    case 'checkbox':
-                        $option_value = $option_value === 'yes' ? true : false;
-                        break;
+            if ( in_array( $email_option, $can_not_be_disabled ) ) {
+                $disable_allowed = false;
+            }
 
-                    case 'image':
-                        $option_value = (int) $option_value;
-                        $option_value = $option_value ? wp_get_attachment_url( $option_value ) : '';
+            if ( isset( $option_value['is_enable'] ) ) {
+                $is_enabled = 'yes';
+            }
 
-                    default:
-                        break;
-                }
+            $email_data = [
+                'id'              => $key,
+                'option_id'       => $email_option,   
+                'name'            => esc_html( $email->get_title() ),
+                'description'     => esc_html( $email->get_description() ),
+                'is_enabled'      => $is_enabled,
+                'disable_allowed' => $disable_allowed
+            ];
 
-                $option['value'] = $option_value;
-
-                array_push( $data, $option );
+            if (
+                false !== strpos( get_class( $email ), 'HRM' ) ||
+                false !== strpos( get_class( $email ), 'ERP_Document' ) ||
+                false !== strpos( get_class( $email ), 'ERP_Recruitment' ) ||
+                false !== strpos( get_class( $email ), 'Training' )
+            ) {
+                $emails['hrm'][] = $email_data;
+            } else if ( false !== strpos( get_class( $email ), 'CRM' ) ) {
+                $emails['crm'][] = $email_data;
+            } else if ( false !== strpos( get_class( $email ), 'Accounting' ) ) {
+                $emails['acct'][] = $email_data;
             }
         }
 
-        return $data;
+        $this->send_success( $emails );
+    }
+
+    /**
+     * Retrieves a single email template
+     * 
+     * @since 1.8.7
+     *
+     * @return mixed
+     */
+    public function get_single_email_template() {
+        $this->verify_nonce( 'erp-settings-nonce' );
+
+        if ( ! current_user_can( 'manage_options' ) ) {
+            $this->send_error( erp_get_message( ['type' => 'error_permission'] ) );
+        }
+
+        $can_not_be_disabled = Helpers::get_fixedly_enabled_email_templates();
+
+        $template                      = ! empty( $_REQUEST['template'] ) ? sanitize_text_field( $_REQUEST['template'] ) : '';
+        $email                         = wperp()->emailer->get_email( $template );
+        $option_id                     = $email->get_option_id();
+        $email_data                    = get_option( $option_id );
+        $email_data['id']              = $option_id;
+        $email_data['tags']            = [];
+        $email_data['disable_allowed'] = true;
+
+        if ( in_array( $option_id, $can_not_be_disabled ) ) {
+            $email_data['disable_allowed'] = false;
+        }
+
+        if ( empty( $email_data['is_enable'] ) ) {
+            $email_data['is_enable'] = 'no';
+        }
+        
+        foreach( $email->find as $key => $find ) {
+            $email_data['tags'][] = $find;
+        }
+
+        $this->send_success( $email_data );
+    }
+
+    /**
+     * Updates email template
+     * 
+     * @since 1.8.7
+     *
+     * @return mixed
+     */
+    public function update_email_template() {
+        $this->verify_nonce( 'erp-settings-nonce' );
+
+        if ( ! current_user_can( 'manage_options' ) ) {
+            $this->send_error( erp_get_message( ['type' => 'error_permission'] ) );
+        }
+
+        $email_id   = ! empty( $_REQUEST['id'] )        ? sanitize_text_field( wp_unslash( $_REQUEST['id'] ) )        : '';
+        $is_enabled = ! empty( $_REQUEST['is_enable'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['is_enable'] ) ) : '';
+
+        if ( empty( $email_id ) ) {
+            $this->send_error( __( 'Invalid email template ID', 'erp' ) );
+        }
+
+        $option_data = [
+            'subject' => ! empty( $_REQUEST['subject'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['subject'] ) )  : '',
+            'heading' => ! empty( $_REQUEST['heading'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['heading'] ) )  : '',
+            'body'    => ! empty( $_REQUEST['body'] )    ? wp_unslash( $_REQUEST['body'] )                            : '',
+        ];
+
+        if ( 'yes' === $is_enabled ) {
+            $option_data['is_enable'] = 'yes';
+        }
+
+        $updated = update_option( $email_id, $option_data );
+
+        if ( ! $updated ) {
+            $this->send_error( __( 'Something went wrong!', 'erp' ) );
+        }
+
+        $this->send_success( __( 'Template updated successfully', 'erp' ) );
+    }
+
+    /**
+     * Updates email status (enable/disable)
+     * 
+     * @since 1.8.7
+     *
+     * @return mixed
+     */
+    public function update_email_status() {
+        $this->verify_nonce( 'erp-settings-nonce' );
+
+        if ( ! current_user_can( 'manage_options' ) ) {
+            $this->send_error( erp_get_message( ['type' => 'error_permission'] ) );
+        }
+
+        $option_id    = ! empty( $_REQUEST['option_id'] ) ? sanitize_text_field( $_REQUEST['option_id'] ) : '';
+        $option_value = ! empty( $_REQUEST['option_value'] ) ? sanitize_text_field( $_REQUEST['option_value'] ) : '';
+
+        if ( ! empty( $option_id ) ) {
+            $email_option = get_option( $option_id );
+
+            if ( 'yes' === $option_value ) {
+                $email_option['is_enable'] = 'yes';
+            } else {
+                unset( $email_option['is_enable'] );
+            }
+
+            update_option( $option_id, $email_option );
+        }
+
+        $this->send_success();
+    }
+
+    /**
+     * Test connection using SMTP credentials
+     * 
+     * @since 1.8.7
+     *
+     * @return mixed
+     */
+    public function smtp_test_connection() {
+        $this->verify_nonce( 'erp-settings-nonce' );
+
+        if ( ! current_user_can( 'manage_options' ) ) {
+            $this->send_error( erp_get_message( ['type' => 'error_permission'] ) );
+        }
+
+        if ( empty( $_REQUEST['mail_server'] ) ) {
+            $this->send_error( esc_html__( 'No host address provided', 'erp' ) );
+        } else {
+            $mail_server = sanitize_text_field( wp_unslash( $_REQUEST['mail_server'] ) );
+        }
+
+        if ( empty( $_REQUEST['port'] ) ) {
+            $this->send_error( esc_html__( 'No port address provided', 'erp' ) );
+        } else {
+            $port = sanitize_text_field( wp_unslash( $_REQUEST['port'] ) );
+        }
+
+        if ( ! empty( $_REQUEST['authentication'] ) ) {
+            $authentication = sanitize_text_field( wp_unslash( $_REQUEST['authentication'] ) );
+
+            if ( empty( $_REQUEST['username'] ) ) {
+                $this->send_error( esc_html__( 'No email address provided', 'erp' ) );
+            } else {
+                $username = sanitize_text_field( wp_unslash( $_REQUEST['username'] ) );
+            }
+
+            if ( empty( $_REQUEST['password'] ) ) {
+                $this->send_error( esc_html__( 'No email password provided', 'erp' ) );
+            } else {
+                $password = sanitize_text_field( wp_unslash( $_REQUEST['password'] ) );
+            }
+        }
+
+        if ( empty( $_REQUEST['test_email'] ) ) {
+            $to = get_option( 'admin_email' );
+        } else {
+            $to = sanitize_text_field( wp_unslash( $_REQUEST['test_email'] ) );
+        }
+
+        global $phpmailer, $wp_version;
+
+        // (Re)create it, if it's gone missing.
+        if ( version_compare( $wp_version, '5.5' ) >= 0 ) {
+            if ( ! ( $phpmailer instanceof \PHPMailer\PHPMailer\PHPMailer ) ) {
+                require_once ABSPATH . WPINC . '/PHPMailer/PHPMailer.php';
+                require_once ABSPATH . WPINC . '/PHPMailer/SMTP.php';
+                require_once ABSPATH . WPINC . '/PHPMailer/Exception.php';
+                $phpmailer = new \PHPMailer\PHPMailer\PHPMailer( true );
+            }
+        } else {
+            if ( ! ( $phpmailer instanceof PHPMailer ) ) {
+                require_once ABSPATH . WPINC . '/class-phpmailer.php';
+                require_once ABSPATH . WPINC . '/class-smtp.php';
+                $phpmailer = new \PHPMailer( true );
+            }
+        }
+
+        $subject = esc_html__( 'ERP SMTP Test Mail', 'erp' );
+        $message = esc_html__( 'This is a test email by WP ERP.', 'erp' );
+
+        $erp_email_settings = get_option( 'erp_settings_erp-email_general', [] );
+
+        if ( ! isset( $erp_email_settings['from_email'] ) ) {
+            $from_email = get_option( 'admin_email' );
+        } else {
+            $from_email = $erp_email_settings['from_email'];
+        }
+
+        if ( ! isset( $erp_email_settings['from_name'] ) ) {
+            global $current_user;
+
+            $from_name = $current_user->display_name;
+        } else {
+            $from_name = $erp_email_settings['from_name'];
+        }
+
+        $content_type = 'text/html';
+
+        $phpmailer->AddAddress( $to );
+        $phpmailer->From       = $from_email;
+        $phpmailer->FromName   = $from_name;
+        $phpmailer->Sender     = $phpmailer->From;
+        $phpmailer->Subject    = $subject;
+        $phpmailer->Body       = $message;
+        $phpmailer->Mailer     = 'smtp';
+        $phpmailer->Host       = $mail_server;
+        $phpmailer->SMTPSecure = $authentication;
+        $phpmailer->Port       = $port;
+
+        if ( ! empty( $_REQUEST['authentication'] ) ) {
+            $phpmailer->SMTPAuth   = true;
+            $phpmailer->Username   = $username;
+            $phpmailer->Password   = $password;
+        }
+
+        $phpmailer->isHTML( true );
+
+        try {
+            $result = $phpmailer->Send();
+
+            $this->send_success( [ 'message' => esc_html__( 'Test email has been sent successfully to ', 'erp' ) . $to ] );
+        } catch ( \Exception $e ) {
+            $this->send_error( $e->getMessage() );
+        }
     }
 }
