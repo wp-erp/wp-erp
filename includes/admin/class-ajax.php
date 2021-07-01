@@ -26,7 +26,6 @@ class Ajax {
         $this->action( 'wp_ajax_erp_file_upload', 'file_uploader' );
         $this->action( 'wp_ajax_erp_file_del', 'file_delete' );
         $this->action( 'wp_ajax_erp_people_exists', 'check_people' );
-        $this->action( 'wp_ajax_erp_smtp_test_connection', 'smtp_test_connection' );
         $this->action( 'wp_ajax_erp_imap_test_connection', 'imap_test_connection' );
         $this->action( 'wp_ajax_erp_check_gmail_connection_established', 'check_gmail_connection_established' );
         $this->action( 'wp_ajax_erp_import_users_as_contacts', 'import_users_as_contacts' );
@@ -460,112 +459,6 @@ class Ajax {
 
         // seems like we found one
         $this->send_success( $people );
-    }
-
-    /**
-     * Test the SMTP connection.
-     *
-     * @return void
-     */
-    public function smtp_test_connection() {
-        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-smtp-test-connection-nonce' ) ) {
-            return;
-        }
-
-        if ( empty( $_REQUEST['mail_server'] ) ) {
-            $this->send_error( esc_html__( 'No host address provided', 'erp' ) );
-        }
-
-        if ( empty( $_REQUEST['port'] ) ) {
-            $this->send_error( esc_html__( 'No port address provided', 'erp' ) );
-        }
-
-        if ( ! empty( $_REQUEST['authentication'] ) ) {
-            if ( empty( $_REQUEST['username'] ) ) {
-                $this->send_error( esc_html__( 'No email address provided', 'erp' ) );
-            }
-
-            if ( empty( $_REQUEST['password'] ) ) {
-                $this->send_error( esc_html__( 'No email password provided', 'erp' ) );
-            }
-        }
-
-        if ( empty( $_REQUEST['to'] ) ) {
-            $this->send_error( esc_html__( 'No testing email address provided', 'erp' ) );
-        }
-
-        $mail_server    = isset( $_REQUEST['mail_server'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['mail_server'] ) ) : '';
-        $port           = isset( $_REQUEST['port'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['port'] ) ) : 465;
-        $authentication = isset( $_REQUEST['authentication'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['authentication'] ) ) : 'smtp';
-        $username       = isset( $_REQUEST['username'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['username'] ) ) : '';
-        $password       = isset( $_REQUEST['password'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['password'] ) ) : '';
-
-        global $phpmailer, $wp_version;
-
-        // (Re)create it, if it's gone missing.
-        if ( version_compare( $wp_version, '5.5' ) >= 0 ) {
-            if ( ! ( $phpmailer instanceof \PHPMailer\PHPMailer\PHPMailer ) ) {
-                require_once ABSPATH . WPINC . '/PHPMailer/PHPMailer.php';
-                require_once ABSPATH . WPINC . '/PHPMailer/SMTP.php';
-                require_once ABSPATH . WPINC . '/PHPMailer/Exception.php';
-                $phpmailer = new \PHPMailer\PHPMailer\PHPMailer( true );
-            }
-        } else {
-            if ( ! ( $phpmailer instanceof PHPMailer ) ) {
-                require_once ABSPATH . WPINC . '/class-phpmailer.php';
-                require_once ABSPATH . WPINC . '/class-smtp.php';
-                $phpmailer = new \PHPMailer( true );
-            }
-        }
-
-        $to      = isset( $_REQUEST['to'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['to'] ) ) : '';
-        $subject = esc_html__( 'ERP SMTP Test Mail', 'erp' );
-        $message = esc_html__( 'This is a test email by WP ERP.', 'erp' );
-
-        $erp_email_settings = get_option( 'erp_settings_erp-email_general', [] );
-
-        if ( ! isset( $erp_email_settings['from_email'] ) ) {
-            $from_email = get_option( 'admin_email' );
-        } else {
-            $from_email = $erp_email_settings['from_email'];
-        }
-
-        if ( ! isset( $erp_email_settings['from_name'] ) ) {
-            global $current_user;
-
-            $from_name = $current_user->display_name;
-        } else {
-            $from_name = $erp_email_settings['from_name'];
-        }
-
-        $content_type = 'text/html';
-
-        $phpmailer->AddAddress( $to );
-        $phpmailer->From       = $from_email;
-        $phpmailer->FromName   = $from_name;
-        $phpmailer->Sender     = $phpmailer->From;
-        $phpmailer->Subject    = $subject;
-        $phpmailer->Body       = $message;
-        $phpmailer->Mailer     = 'smtp';
-        $phpmailer->Host       = $mail_server;
-        $phpmailer->SMTPSecure = $authentication;
-        $phpmailer->Port       = $port;
-
-        if ( ! empty( $_REQUEST['authentication'] ) ) {
-            $phpmailer->SMTPAuth   = true;
-            $phpmailer->Username   = $username;
-            $phpmailer->Password   = $password;
-        }
-
-        $phpmailer->isHTML( true );
-
-        try {
-            $result = $phpmailer->Send();
-
-            $this->send_success( esc_html__( 'Test email has been sent.', 'erp' ) );
-        } catch ( \Exception $e ) {
-            $this->send_error( $e->getMessage() );
-        }
     }
 
     /**
