@@ -65,17 +65,17 @@
                     <input v-if="input.type === 'text' && input.class !== 'erp-date-field'"
                         v-model="fields[index]['value']"
                         class="wperp-form-field"
-                        :placeholder="fields[index]['placeholder'] ? fields[index]['placeholder'] : ''" 
+                        :placeholder="fields[index]['placeholder'] ? fields[index]['placeholder'] : ''"
                         :id="'erp-'+fields[index]['id']"
                         :disabled="fields[index]['disabled'] ? true : false" />
-                    
+
                     <date-picker
-                        v-if="input.type === 'text' && input.class === 'erp-date-field'" 
+                        v-if="input.type === 'text' && input.class === 'erp-date-field'"
                         v-model="fields[index]['value']"
                         class="wperp-form-field"
                         :placeholder="__( 'Select date', 'erp' )"
                         :id="'erp-'+fields[index]['id']" />
-                    
+
                     <textarea
                         v-if="input.type === 'textarea'"
                         cols="45" rows="4"
@@ -83,7 +83,7 @@
                         class="wperp-form-field"
                         :id="'erp-'+fields[index]['id']"
                         :disabled="fields[index]['disabled'] ? true : false" />
-                    
+
                     <input v-if="input.type === 'password'"
                         v-model="fields[index]['value']"
                         type="password"
@@ -105,7 +105,7 @@
 
             </div>
         </div>
-        
+
         <slot name="extra-content"></slot>
 
         <slot name="extended-data"></slot>
@@ -267,24 +267,25 @@ export default {
 
             // Process fields and send to post data
             self.fields.forEach( item => {
-                requestDataPost[ item.id ] = item.value;
-                let initialCheckedData     = [];
+                if ( item !== null && typeof item.id !== 'undefined' ) {
+                    requestDataPost[ item.id ] = item.value;
+                    let initialCheckedData     = [];
 
-                if ( item.type === 'multicheck' ) {
-                    Object.keys( item.options ).forEach( optionKey => {
-                        if ( item.value[ optionKey ] !== false )  initialCheckedData[ optionKey ] = optionKey;
-                    });
-                    requestDataPost[ item.id ] = initialCheckedData;
+                    if ( item.type === 'multicheck' ) {
+                        Object.keys( item.options ).forEach( optionKey => {
+                            if ( item.value[ optionKey ] !== false )  initialCheckedData[ optionKey ] = optionKey;
+                        });
+                        requestDataPost[ item.id ] = initialCheckedData;
+                    }
+
+                    if ( item.type === 'checkbox' && ( item.value === false || item.value === 'no' ) ) {
+                        requestDataPost[ item.id ] = null;
+                    }
+
+                    if ( item.type === 'select' && ( item.value !== "" || item.value !== null ) ) {
+                        requestDataPost[ item.id ] = item.value.id;
+                    }
                 }
-
-                if ( item.type === 'checkbox' && ( item.value === false || item.value === 'no' ) ) {
-                    requestDataPost[ item.id ] = null;
-                }
-
-                if ( item.type === 'select' && ( item.value !== "" || item.value !== null ) ) {
-                    requestDataPost[ item.id ] = item.value.id;
-                }
-
             } );
 
             if ( typeof self.sub_sub_section_id !== 'undefined' && self.sub_sub_section_id !== '' ) {
