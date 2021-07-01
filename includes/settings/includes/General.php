@@ -101,5 +101,3 @@ class General extends Page_View {
         return $this->get_settings();
     }
 }
-
-return new General();
