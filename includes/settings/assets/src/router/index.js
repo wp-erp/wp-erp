@@ -8,7 +8,7 @@ import HRLeave from '../components/hr/leave/HRLeave.vue';
 import HRLeaveYears from '../components/hr/leave-years/HRLeaveYears.vue';
 import HRMiscellaneous from '../components/hr/miscellaneous/HRMiscellaneous.vue';
 
-// AC Components
+// Accounting Components
 import AcCustomer from '../components/act/customer/AcCustomer.vue';
 import AcCurrency from '../components/act/currency/AcCurrency.vue';
 import AcFinancialYears from '../components/act/financial-year/AcFinancialYears.vue';
@@ -20,6 +20,14 @@ import CrmTemplate from '../components/crm/templates/CrmTemplate.vue';
 import CrmEmailConnect from '../components/crm/email/CrmEmailConnect.vue';
 import CrmEmailConnectGmail from '../components/crm/email/CrmEmailConnectGmail.vue';
 import CrmEmailConnectImap from '../components/crm/email/CrmEmailConnectImap.vue';
+
+// WooCommerce Components
+import WooCommerce from '../components/woocommerce/WooCommerce.vue';
+
+//Email Components
+import GeneralEmail from '../components/email/general/GeneralEmail.vue';
+import SMTPEmail from '../components/email/smtp/SMTPEmail.vue';
+import EmailNotification from '../components/email/notifications/EmailNotification.vue';
 
 Vue.use(Router);
 
@@ -141,6 +149,39 @@ export default new Router({
                     component: CrmEmailConnectImap
                 }
             ]
-        }
+        },
+
+        {
+            path      : '/erp-woocommerce',
+            name      : 'WooCommerce',
+            component : WooCommerce
+        },
+
+        {
+            path     : '/erp-email',
+            component: {
+                render(c) {
+                    return c('router-view');
+                }
+            },
+            children: [
+                {
+                    path     : 'general',
+                    name     : 'GeneralEmail',
+                    component: GeneralEmail,
+                    alias    : '/erp-email'
+                },
+                {
+                    path     : 'smtp',
+                    name     : 'SMTPEmail',
+                    component: SMTPEmail
+                },
+                {
+                    path     : 'notification',
+                    name     : 'EmailNotification',
+                    component: EmailNotification,
+                },
+            ]
+        },
     ])
 });
