@@ -1076,12 +1076,13 @@ class Ajax_Handler {
         }
 
         $old_data = $employee->get_data();
+
         $created  = $employee->update_job_info( [
             'date'         => ( isset( $_POST['date'] ) ) ? sanitize_text_field( wp_unslash( $_POST['date'] ) ) : '',
-            'designation'  => ( isset( $_POST['designation'] ) ) ? sanitize_text_field( wp_unslash( $_POST['designation'] ) ) : '',
-            'department'   => ( isset( $_POST['department'] ) ) ? sanitize_text_field( wp_unslash( $_POST['department'] ) ) : '',
-            'reporting_to' => ( isset( $_POST['reporting_to'] ) ) ? sanitize_text_field( wp_unslash( $_POST['reporting_to'] ) ) : '',
-            'location'     => ( isset( $_POST['location'] ) ) ? sanitize_text_field( wp_unslash( $_POST['location'] ) ) : '',
+            'designation'  => ( isset( $_POST['designation'] ) ) ? intval( wp_unslash( $_POST['designation'] ) ) : '',
+            'department'   => ( isset( $_POST['department'] ) ) ? intval( wp_unslash( $_POST['department'] ) ) : '',
+            'reporting_to' => ( isset( $_POST['reporting_to'] ) ) ? intval( wp_unslash( $_POST['reporting_to'] ) ) : '',
+            'location'     => ( isset( $_POST['location'] ) ) ? intval( wp_unslash( $_POST['location'] ) ) : '',
         ] );
 
         if ( is_wp_error( $created ) ) {
