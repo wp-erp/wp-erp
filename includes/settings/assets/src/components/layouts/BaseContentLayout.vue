@@ -112,6 +112,7 @@
 
         <div class="wperp-form-group">
             <submit-button :text="__('Save Changes', 'erp')" />
+            <div class="clearfix"></div>
         </div>
     </form>
 </template>
