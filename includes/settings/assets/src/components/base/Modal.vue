@@ -1,6 +1,6 @@
 <template>
     <div :class="['wperp-modal', 'wperp-modal-open', hasForm ? 'wperp-has-form' : ''] ">
-        <div class="wperp-modal-dialog">
+        <div :class="modalContentClass">
             <div class="wperp-modal-content">
                 <div class="wperp-modal-header">
                     <slot v-if="header" name="header">
@@ -26,28 +26,40 @@ export default {
 
     props: {
         header: {
-            type: Boolean,
+            type    : Boolean,
             required: false,
-            default: false
+            default : false
         },
 
         footer: {
-            type: Boolean,
+            type    : Boolean,
             required: false,
-            default: false
+            default : false
         },
 
         title: {
-            type: String,
+            type    : String,
             required: false,
-            default: ''
+            default : ''
         },
 
         hasForm: {
-            type: Boolean,
+            type    : Boolean,
             required: false,
-            default: false
+            default : false
+        },
+
+        size: {
+            type    : String,
+            required: false,
+            default : 'md'
         }
-    }
+    },
+
+    computed: {
+        modalContentClass : function() {
+            return `wperp-modal-dialog wperp-modal-dialog-${this.size}`;
+        }
+    },
 };
 </script>
