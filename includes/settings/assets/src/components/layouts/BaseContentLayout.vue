@@ -284,7 +284,7 @@ export default {
                     }
 
                     if ( item.type === 'select' && ( item.value !== "" || item.value !== null ) ) {
-                        requestDataPost[ item.id ] = item.value.id;
+                        requestDataPost[ item.id ] =  item.value ? item.value.id : '';
                     }
                 }
             } );
