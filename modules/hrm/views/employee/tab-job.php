@@ -91,9 +91,23 @@
                             <?php echo ( ! empty( $employment_history['comments'] ) ) ? wp_kses_post( $employment_history['comments'] ) : '--'; ?>
                         </td>
                         <td class="action">
-                            <?php if ( current_user_can( 'erp_manage_jobinfo', $employee->get_user_id() ) && ( 0 !== $num ) ) { ?>
-                                <a href="#" class="remove" data-id="<?php echo esc_html( $employment_history['id'] ); ?>"><span class="dashicons dashicons-trash"></span></a>
-                            <?php } ?>
+                            <?php if ( current_user_can( 'erp_manage_jobinfo', $employee->get_user_id() ) ) : ?>
+                                <?php if ( 0 !== $num ) : ?>
+                                    <a href="#"
+                                        class="remove"
+                                        data-id="<?php echo esc_html( $employment_history['id'] ); ?>">
+                                        <span class="dashicons dashicons-trash"></span>
+                                    </a>
+                                <?php else : ?>
+                                    <a href="#"
+                                        class="edit"
+                                        data-id="<?php echo esc_attr( $employment_history['id'] ); ?>"
+                                        data-title="<?php esc_html_e( 'Employment Type History', 'erp' ); ?>"
+                                        data-template="erp-employment-type-history">
+                                        <span class="dashicons dashicons-edit-large"></span>
+                                    </a>
+                                <?php endif; ?>
+                            <?php endif; ?>
                         </td>
                     </tr>
                     <?php
