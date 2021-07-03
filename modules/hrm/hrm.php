@@ -330,6 +330,9 @@ class Human_Resource {
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/employee-terminate.php', 'erp-employment-terminate' );
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/employee-import.php', 'erp-employee-import-csv' );
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/employee-export.php', 'erp-employee-export-csv' );
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/compensation-history-edit.php', 'erp-employment-compensation-history' );
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/job-info-history-edit.php', 'erp-employment-job-info-history' );
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/jemployment-type-history-edit.php', 'erp-employment-type-history' );
                 break;
 
             case 'leave':
@@ -381,6 +384,9 @@ class Human_Resource {
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/new-dept.php', 'erp-new-dept' );
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/new-designation.php', 'erp-new-desig' );
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/employee-terminate.php', 'erp-employment-terminate' );
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/compensation-history-edit.php', 'erp-employment-compensation-history' );
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/job-info-history-edit.php', 'erp-employment-job-info-history' );
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/employment-type-history-edit.php', 'erp-employment-type-history' );
                 break;
         }
     }
