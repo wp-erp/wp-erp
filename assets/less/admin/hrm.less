@@ -109,9 +109,19 @@ span.green {
     table.widefat {
         margin-bottom: 20px;
 
-        a.remove,a.performance-remove {
+        a.remove,
+        a.performance-remove,
+        a.edit {
             visibility: hidden;
             color: #999;
+        }
+
+        a.remove:hover {
+            color: #dd3d36;
+        }
+
+        a.edit:hover {
+            color: rgb(50, 96, 126);
         }
 
         td.action, th.action {
@@ -119,7 +129,9 @@ span.green {
         }
 
         tr:hover {
-            a.remove, a.performance-remove {
+            a.remove,
+            a.performance-remove,
+            a.edit {
                 visibility: visible;
             }
         }
