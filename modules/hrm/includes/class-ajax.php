@@ -57,7 +57,6 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-hr-emp-activate', 'employee_termination_reactive' );
         $this->action( 'wp_ajax_erp-hr-convert-wp-to-employee', 'employee_create_from_wp_user' );
         $this->action( 'wp_ajax_erp_hr_check_user_exist', 'check_user' );
-        $this->action( 'wp_ajax_erp_hr_employee_get_job_history', 'get_job_history' );
 
         // Dashaboard
         $this->action( 'wp_ajax_erp_hr_announcement_mark_read', 'mark_read_announcement' );
@@ -1008,32 +1007,6 @@ class Ajax_Handler {
         do_action( 'erp_hr_employee_update', $user_id, $old_data );
 
         $this->send_success();
-    }
-
-    /**
-     * Retrives employee job history
-     * 
-     * @since 1.8.7
-     *
-     * @return mixed
-     */
-    public function get_job_history() {
-        $this->verify_nonce( 'wp-erp-hr-nonce' );
-
-        global $wpdb;
-
-        $history_id = ! empty( $_REQUEST['history_id'] ) ? intval( wp_unslash( $_REQUEST['history_id'] ) ) : '';
-
-        $history    = $wpdb->get_row(
-            $wpdb->prepare(
-                "SELECT * FROM {$wpdb->prefix}erp_hr_employee_history WHERE id = %d",
-                [ $history_id ]
-            )
-        );
-
-        $history->date = erp_current_datetime()->modify( $history->date )->format( 'Y-m-d' );
-
-        $this->send_success( $history );
     }
 
     /**
