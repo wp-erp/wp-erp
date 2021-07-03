@@ -57,6 +57,8 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-hr-emp-activate', 'employee_termination_reactive' );
         $this->action( 'wp_ajax_erp-hr-convert-wp-to-employee', 'employee_create_from_wp_user' );
         $this->action( 'wp_ajax_erp_hr_check_user_exist', 'check_user' );
+        $this->action( 'wp_ajax_erp_hr_employee_get_job_history', 'get_job_history' );
+        $this->action( 'wp_ajax_erp_hr_emp_update_job_history', 'update_job_history' );
 
         // Dashaboard
         $this->action( 'wp_ajax_erp_hr_announcement_mark_read', 'mark_read_announcement' );
@@ -1018,6 +1020,113 @@ class Ajax_Handler {
     }
 
     /**
+     * Retrives employee job history
+     * 
+     * @since 1.8.7
+     *
+     * @return mixed
+     */
+    public function get_job_history() {
+        $this->verify_nonce( 'wp-erp-hr-nonce' );
+
+        global $wpdb;
+
+        $history_id = ! empty( $_REQUEST['history_id'] ) ? intval( wp_unslash( $_REQUEST['history_id'] ) ) : '';
+
+        $history    = $wpdb->get_row(
+            $wpdb->prepare(
+                "SELECT * FROM {$wpdb->prefix}erp_hr_employee_history WHERE id = %d",
+                [ $history_id ]
+            )
+        );
+
+        $history->date = erp_current_datetime()->modify( $history->date )->format( 'Y-m-d' );
+
+        $this->send_success( $history );
+    }
+
+    /**
+     * Updates employee job history
+     * 
+     * @since 1.8.7
+     *
+     * @return mixed
+     */
+    public function update_job_history() {
+        $this->verify_nonce( 'wp-erp-hr-nonce' );
+
+        $user_id = ! empty( $_REQUEST['user_id'] ) ? intval( wp_unslash( $_REQUEST['user_id'] ) ) : 0;
+
+        if ( empty( $user_id ) ) {
+            $this->send_error( __( 'No employee found!', 'erp' ) );
+        }
+
+        if ( ! current_user_can( 'erp_manage_jobinfo', $user_id ) ) {
+            $this->send_error( __( 'You do not have sufficient permission to do this action', 'erp' ) );
+        }
+
+        $history_id = ! empty( $_REQUEST['history_id'] ) ? intval( wp_unslash( $_REQUEST['history_id'] ) )           : null;
+        $module     = ! empty( $_REQUEST['module'] )     ? sanitize_text_field( wp_unslash( $_REQUEST['module'] ) )  : '';
+        $date       = ! empty( $_REQUEST['date'] )       ? sanitize_text_field( wp_unslash( $_REQUEST['date'] ) )    : '';
+        $data       = ! empty( $_REQUEST['data'] )       ? sanitize_text_field( wp_unslash( $_REQUEST['data'] ) )    : '';
+        $type       = ! empty( $_REQUEST['type'] )       ? sanitize_text_field( wp_unslash( $_REQUEST['type'] ) )    : '';
+        $category   = ! empty( $_REQUEST['category'] )     ? sanitize_text_field( wp_unslash( $_REQUEST['category'] ) )  : '';
+        $comment    = ! empty( $_REQUEST['comment'] )    ? sanitize_text_field( wp_unslash( $_REQUEST['comment'] ) ) : '';
+
+        if ( empty( $history_id ) ) {
+            $this->send_error( __( 'No valid history found!', 'erp' ) );
+        }
+
+        $employee   = new Employee( $user_id );
+
+        switch ( $module ) {
+            case 'compensation':
+                $updated = $employee->update_compensation( [
+                    'id'       => $history_id,
+                    'date'     => $date,
+                    'pay_rate' => $type,
+                    'pay_type' => $category,
+                    'reason'   => $data,
+                    'comment'  => $comment
+                ] );
+                
+                break;
+
+            case 'job':
+                $updated = $employee->update_job_info( [
+                    'id'           => $history_id,
+                    'date'         => $date,
+                    'designation'  => $comment,
+                    'department'   => $category,
+                    'reporting_to' => $data,
+                    'location'     => $type
+                ] );
+                
+                break;
+
+            case 'employment':
+                $updated = $employee->update_employment_status( [
+                    'id'      => $history_id,
+                    'date'    => $date,
+                    'module'  => $module,
+                    'type'    => $type,
+                    'comment' => $comment,
+                ] );
+                
+                break;
+
+            default:
+                $this->send_error( __( 'No valid history module found!', 'erp' ) );
+        }
+
+        if ( is_wp_error( $updated ) ) {
+            $this->send_error( $updated->get_error_message() );
+        }
+
+        $this->send_success( __( 'History updated successfully', 'erp' ) );
+    }
+
+    /**
      * Remove an history
      *
      * @return void
@@ -1076,12 +1185,13 @@ class Ajax_Handler {
         }
 
         $old_data = $employee->get_data();
+
         $created  = $employee->update_job_info( [
             'date'         => ( isset( $_POST['date'] ) ) ? sanitize_text_field( wp_unslash( $_POST['date'] ) ) : '',
-            'designation'  => ( isset( $_POST['designation'] ) ) ? sanitize_text_field( wp_unslash( $_POST['designation'] ) ) : '',
-            'department'   => ( isset( $_POST['department'] ) ) ? sanitize_text_field( wp_unslash( $_POST['department'] ) ) : '',
-            'reporting_to' => ( isset( $_POST['reporting_to'] ) ) ? sanitize_text_field( wp_unslash( $_POST['reporting_to'] ) ) : '',
-            'location'     => ( isset( $_POST['location'] ) ) ? sanitize_text_field( wp_unslash( $_POST['location'] ) ) : '',
+            'designation'  => ( isset( $_POST['designation'] ) ) ? intval( wp_unslash( $_POST['designation'] ) ) : '',
+            'department'   => ( isset( $_POST['department'] ) ) ? intval( wp_unslash( $_POST['department'] ) ) : '',
+            'reporting_to' => ( isset( $_POST['reporting_to'] ) ) ? intval( wp_unslash( $_POST['reporting_to'] ) ) : '',
+            'location'     => ( isset( $_POST['location'] ) ) ? intval( wp_unslash( $_POST['location'] ) ) : '',
         ] );
 
         if ( is_wp_error( $created ) ) {
