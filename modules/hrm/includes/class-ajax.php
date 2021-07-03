@@ -1068,7 +1068,6 @@ class Ajax_Handler {
         }
 
         $old_data = $employee->get_data();
-
         $created  = $employee->update_job_info( [
             'date'         => ( isset( $_POST['date'] ) ) ? sanitize_text_field( wp_unslash( $_POST['date'] ) ) : '',
             'designation'  => ( isset( $_POST['designation'] ) ) ? sanitize_text_field( wp_unslash( $_POST['designation'] ) ) : '',
