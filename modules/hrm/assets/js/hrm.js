@@ -42,6 +42,7 @@
             $( '.erp-hr-employees' ).on( 'click', 'a#erp-empl-compensation', this.employee.updateJobStatus );
             $( '.erp-hr-employees' ).on( 'click', 'a#erp-empl-jobinfo', this.employee.updateJobStatus );
             $( '.erp-hr-employees' ).on( 'click', 'td.action a.remove', this.employee.removeHistory );
+            $( '.erp-hr-employees' ).on( 'click', 'td.action a.edit', this.employee.editHistory );
             $( '.erp-hr-employees' ).on( 'click', 'a#erp-employee-print', this.employee.printData );
             $( 'body' ).on( 'focusout', 'input#erp-hr-user-email', this.employee.checkUserEmail );
             $( 'body' ).on( 'click', 'a#erp-hr-create-wp-user-to-employee', this.employee.makeUserEmployee );
@@ -1484,6 +1485,71 @@
                         }
                     });
                 }
+            },
+
+            editHistory: function(e) {
+                if ( typeof e !== 'undefined' ) {
+                    e.preventDefault();
+                }
+
+                var self     = $(this),
+                    id       = self.data('id'),
+                    title    = self.data('title'),
+                    template = self.data('template');
+
+                wp.ajax.send({
+                    data: {
+                        history_id: id,
+                        action: 'erp_hr_employee_get_job_history',
+                        _wpnonce: wpErpHr.nonce
+                    },
+                    success: function(response) {
+                        $.erpPopup({
+                            title: title,
+                            button: wpErpHr.popup.update_status,
+                            id: 'erp-hr-update-job-history',
+                            content: '',
+                            extraClass: 'smaller',
+                            onReady: function() {
+                                $( '.content', this ).html( wp.template(template)(response) );
+                                WeDevs_ERP_HR.initDateField();
+
+                                $( '.row[data-selected]', this ).each(function() {
+                                    var self = $(this),
+                                        selected = self.data('selected');
+        
+                                    if ( selected !== '' ) {
+                                        self.find( 'select' ).val( selected );
+                                    }
+                                });
+
+                                WeDevs_ERP_HR.employee.select2Action('erp-hrm-select2');
+                            },
+                            onSubmit: function(modal) {
+                                wp.ajax.send( {
+                                    data: this.serializeObject(),
+                                    success: function(response) {
+                                        WeDevs_ERP_HR.reloadPage();
+                                        modal.enableButton();
+                                        modal.closeModal();
+                                        
+                                        swal({
+                                            title: '',
+                                            text: response,
+                                            type: 'success',
+                                            timer: 2200,
+                                            showConfirmButton: false
+                                        });
+                                    },
+                                    error: function(error) {
+                                        modal.enableButton();
+                                        swal('', error , 'error');
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
             },
 
             printData: function(e) {
