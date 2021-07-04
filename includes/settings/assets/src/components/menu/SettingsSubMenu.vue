@@ -76,6 +76,9 @@ export default {
                 case 'HRWorkDays' :
                 case 'AcCustomer' :
                 case 'CrmContacts':
+                case 'GeneralEmail':
+                case 'WCSynchronization':
+                case 'WCOrderSync':
                     routeClassName = 'router-link-active';
                     break;
 
