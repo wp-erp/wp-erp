@@ -132,6 +132,8 @@ class Assets {
                 $wc_settings->extra['notice'] = $this->get_wc_purchase_notice();
             } else if ( $pro_activated && $wc_purchased && ! $wc_activated ) {
                 $wc_settings->extra['notice'] = $this->get_wc_activation_notice();
+            } else if ( ! $pro_activated ) {
+                $wc_settings->extra['pro_label'] = true;
             }
 
             $settings[] = $wc_settings;
