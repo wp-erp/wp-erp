@@ -7,7 +7,7 @@
         <div>
             <ul class="sub-sub-menu">
                 <li v-for="(menu, key, index) in options.sub_sections" :key="key">
-                    <a :class="key === subMenu? 'router-link-active': ''" @click="setSubMenu(key)">
+                    <a :class="key === module? 'router-link-active': ''" @click="setModule(key)">
                         <span class="menu-name">{{ menu }}</span>
                     </a>
                 </li>
@@ -16,13 +16,11 @@
             <table class="erp-settings-table widefat">
                 <thead>
                     <tr>
-                        <th>{{ __('Template Name', 'erp') }}</th>
-                        <th>{{ __('Description', 'erp') }}</th>
-                        <th>{{ __('Disable/Enable', 'erp') }}</th>
-                        <th></th>
+                        <th v-for="(column, index) in columns" :key="index">{{ column }}</th>
                     </tr>
                 </thead>
-                <tbody v-if="emails">
+
+                <tbody v-if="Object.keys(emails).length">
                     <tr valign="top" v-for="(email, index) in emails" :key="index">
                         <td>{{ email.name }}</td>
                         <td>{{ email.description }}</td>
@@ -44,6 +42,12 @@
                         </td>
                     </tr>
                 </tbody>
+                
+                <tbody v-else>
+                    <tr :col-span="numColumns">
+                        <th>{{ __('No templates found.', 'erp') }}</th>
+                    </tr>
+                </tbody>
             </table>
         </div>
 
@@ -60,7 +64,7 @@
                 <p>{{ singleTemplate.description }}</p>
                 <form class="wperp-form" method="post" @submit.prevent="onSubmit">
                     <div class="wperp-form-group" v-if="singleTemplate.disable_allowed">
-                        <label>{{ __('Enable/Disable', 'erp') }}</label>
+                        <label>{{ __('Disable/Enable', 'erp') }}</label>
                         <radio-switch
                             v-model="singleTemplate.is_enable"
                             :id="singleTemplate.id"
@@ -80,7 +84,7 @@
 
                     <div class="wperp-form-group">
                         <label>{{ __('Body', 'erp') }}</label>
-                        <VueTrix v-model="singleTemplate.body" placeholder="Enter content" localStorage/>
+                        <vue-trix v-model="singleTemplate.body" placeholder="Enter content"/>
                     </div>
 
                     <div class="wperp-form-group" v-if="shortCodes.length">
@@ -94,18 +98,20 @@
                             />
                         </label>
 
-                        <div>{{ arrayToString(shortCodes, ', ') }}</div>
+                        <div class="email-template-tags"><span v-for="(tag, key) in shortCodes" :key="key">{{ tag }}</span></div>
                     </div>
                 </form>
             </template>
 
+            <div v-else class="regen-sync-loader"></div>
+
             <template v-slot:footer>
-                <span @click="toggleModal">
-                    <submit-button :text="__('Cancel', 'erp')" customClass="wperp-btn-cancel"/>
+                <span @click="onSubmit">
+                    <submit-button :text="__('Save', 'erp')" customClass="pull-right"/>
                 </span>
 
-                <span @click="onSubmit">
-                    <submit-button :text="__('Save', 'erp')" />
+                <span @click="toggleModal">
+                    <submit-button :text="__('Cancel', 'erp')" customClass="wperp-btn-cancel pull-right" style="margin-right: 7px;"/>
                 </span>
             </template>
         </modal>
@@ -140,11 +146,17 @@ export default {
             subSectionTitle : "",
             options         : [],
             content         : '',
-            emailTemplates  : [],
+            emailTemplates  : {},
             singleTemplate  : [],
             shortCodes      : [],
-            subMenu         : 'hrm',
+            module          : 'hrm',
             showModal       : false,
+            columns         : [ 
+                __('Template Name', 'erp'),
+                __('Description', 'erp'),
+                __('Disable/Enable', 'erp'),
+                ''
+            ],
         }
     },
 
@@ -160,7 +172,13 @@ export default {
 
     computed: {
         emails() {
-            return this.emailTemplates ? this.emailTemplates[ this.subMenu ] : [];
+            return Object.keys(this.emailTemplates).length
+                && this.emailTemplates[ this.module ] !== undefined
+                ? this.emailTemplates[ this.module ] : [];
+        },
+
+        numColumns() {
+            return columns.length;
         }
     },
 
@@ -200,7 +218,7 @@ export default {
                     _wpnonce     : erp_settings_var.nonce,
                 },
                 success: function(response) {
-                    self.$set(self.emailTemplates[self.subMenu][index], 'is_enabled', status);
+                    self.$set(self.emailTemplates[self.module][index], 'is_enabled', status);
                     self.$store.dispatch("spinner/setSpinner", false);
                 },
                 error: function(error) {
@@ -275,13 +293,21 @@ export default {
             this.$set(this.singleTemplate, 'is_enable', newValue);
         },
 
-        setSubMenu(value) {
-            this.subMenu = value;
+        setModule(value) {
+            this.$store.dispatch("spinner/setSpinner", true);
+            
+            setTimeout(() => {
+                this.module = value;
+                this.$store.dispatch("spinner/setSpinner", false);
+            }, 150);
         },
-
-        arrayToString(arr, separator) {
-            return arr.join(separator);
-        }
     }
 };
 </script>
+
+<style scoped>
+    .sub-sub-menu {
+        margin-top: 0;
+        margin-bottom: 30px;
+    }
+</style>
