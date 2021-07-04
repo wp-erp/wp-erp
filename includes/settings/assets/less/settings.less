@@ -172,6 +172,15 @@
                             }
                         }
 
+                        .pro-label {
+                            color: #fff;
+                            background-color: #FE721D;
+                            font-size: 10px;
+                            font-weight: 500;
+                            padding: 1px 4px;
+                            border-radius: 3px;
+                            margin-left: 7px;
+                        }
                     }
                 }
             }
@@ -185,12 +194,13 @@
 
                 li {
                     display: inline-block;
-                    padding: 0px 25px 0px 0px;
+                    padding: 0px 15px 0px 0px;
 
                     a {
                         font-size: 14px;
                         color: #27313A;
                         font-weight: 400;
+                        padding: 0 5px;
                     }
 
                     &.active,
@@ -200,7 +210,6 @@
                             border-bottom: 2px solid #1A9ED4;
                         }
                     }
-
                 }
 
                 .dropdown-list-item {
@@ -294,6 +303,10 @@
     .wperp-btn-cancel {
         background: #d7d7d7;
         color: #333!important;
+
+        &:hover {
+            background: #e7e7e7;
+        }
     }
 
     .settings-btn-cancel {
@@ -670,6 +683,17 @@
     }
     /** Trix Editor **/
 
+    .email-template-tags {
+        span {
+            margin: 3px;
+            padding: 3px 5px;
+            border-radius: 4px;
+            font-weight: 400;
+            color: rgba(0, 0, 0, 0.7);
+            background-color: rgba(236, 236, 236, 0.911);
+        }
+    }
+
     .erp-wc-data-sync {
         .regen-sync-response {
             span {
@@ -738,16 +762,12 @@
     #erp-wc-sync {
         .wc-sync-logo {
             position: relative;
-            margin-top: 8%;
-            margin-bottom: 4%;
+            margin-top: 4.4rem;
+            text-align: center;
 
             img#wc-sync-bg {
-                position: absolute;
-                margin: 0 39.5%;
-            }
-
-            img#wc-sync {
-                margin: 1% 40% 0 43%;
+                margin-bottom: -3rem;
+                width: 200px;
             }
         }
 
@@ -757,8 +777,12 @@
             }
         }
 
-        #erp-wc-sync-notice-btn {
-            margin: 0 43% !important;
+        .erp-wc-sync-notice-btn {
+            text-align: center;
+        }
+
+        .settings-box {
+            min-height: 520px !important;
         }
     }
 }
