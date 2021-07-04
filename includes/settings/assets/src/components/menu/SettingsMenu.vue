@@ -8,6 +8,7 @@
           <a href="#">
             <img :src="menu.icon" alt="" />
             <span class="menu-name">{{ menu.label }}</span>
+            <span v-if="menu.extra.pro_label !== undefined && menu.extra.pro_label" class="pro-label">PRO</span>
           </a>
         </router-link>
       </li>
@@ -24,6 +25,6 @@ export default {
     return {
       menus: erp_settings_var.erp_settings_menus
     }
-  }
+  },
 };
 </script>
