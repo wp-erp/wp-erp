@@ -5,9 +5,7 @@
             sub_section_id="erp-woocommerce"
         >   
             <div class="wc-sync-logo">
-                <img :src="backgroundOval" id="wc-sync-bg">
-
-                <img :src="wooIntegration" id="wc-sync">
+                <img :src="wooSyncLogo" id="wc-sync-bg">
             </div>
             
             <div class="wc-sync-notice">
@@ -15,7 +13,7 @@
                 <p v-html="notice"></p>
             </div>
 
-            <div class="wperp-form-group">
+            <div class="wperp-form-group erp-wc-sync-notice-btn">
                 <a class="wperp-btn btn--primary" :href="btnLink" target="_blank" id="erp-wc-sync-notice-btn">
                     {{ btnText }}
                 </a>
@@ -64,12 +62,8 @@ export default {
 ;    },
 
     computed: {
-        wooIntegration() {
+        wooSyncLogo() {
             return `${this.assetSource}/images/wperp-settings/wc-sync.png`;
-        },
-
-        backgroundOval() {
-            return `${this.assetSource}/images/wperp-settings/oval.png`;
         },
 
         btnLink() {
