@@ -159,6 +159,7 @@ export default new Router({
 
         {
             path     : '/erp-email',
+            name     : 'Email',
             component: {
                 render(c) {
                     return c('router-view');
