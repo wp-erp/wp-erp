@@ -45,7 +45,15 @@ export default {
         cursor: pointer;
         position: relative;
         outline: 0;
-        float: right;
+        float: left;
+        
+        &.pull-left {
+            float: left;
+        }
+        
+        &.pull-right {
+            float: right;
+        }
 
         &.disabled {
             background: #B3E5FC;
