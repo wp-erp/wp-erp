@@ -3438,7 +3438,5 @@ function erp_get_message( $args = [] ) {
         }
     }
 
-    $args['message'] = __( $args['message'], 'erp' );
-
-    return $args['message'];
+    return sprintf( __( '%s', 'erp' ), $args['message'] );
 }
