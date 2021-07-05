@@ -77,6 +77,7 @@ export default {
     },
 
     created() {
+        this.$store.dispatch("spinner/setSpinner", true);
         this.getFinancialYearsData();
     },
 
@@ -107,8 +108,8 @@ export default {
                     self.$store.dispatch("spinner/setSpinner", false);
 
                     if (response.success) {
-                        self.showAlert("success", response.data.message);
                         self.getFinancialYearsData();
+                        self.showAlert("success", response.data.message);
                     } else {
                         self.showAlert("error", response.data);
                     }
@@ -131,8 +132,6 @@ export default {
 
         getFinancialYearsData() {
             const self = this;
-
-            self.$store.dispatch("spinner/setSpinner", true);
 
             let requestData = window.settings.hooks.applyFilters(
                 "requestData",
