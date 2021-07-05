@@ -4,13 +4,13 @@
         sub_section_id="templates"
         :enable_content="false"
         :single_option="false"
+        :enableSubSectionTitle="false"
     >
-        <template v-slot:subSectionTitle>
-            {{ __('Saved Replies', 'erp') }}
-            <button type="button" class="wperp-btn btn--primary settings-button" @click="popupModal({}, 'create')">
-                <i class="fa fa-plus"></i> {{ __('Add New', 'erp') }}
-            </button>
-        </template>
+        <h3 class="sub-section-title pull-left">{{ __('Saved Replies', 'erp') }}</h3>
+        <button type="button" class="wperp-btn btn--primary settings-button header-right-button" @click="popupModal({}, 'create')">
+            <i class="fa fa-plus"></i> {{ __('Add New', 'erp') }}
+        </button>
+        <div class="clearfix"></div>
 
         <table class="erp-settings-table widefat">
             <thead>
@@ -75,12 +75,12 @@
             </template>
 
             <template v-slot:footer>
-                <span @click="popupModal({}, modalMode)">
-                    <submit-button :text="__('Cancel', 'erp')" customClass="wperp-btn-cancel"/>
+                <span @click="onFormSubmit">
+                    <submit-button :text="modalMode === 'create' ? __('Add New', 'erp') : __('Save', 'erp') " customClass="pull-right" />
                 </span>
 
-                <span @click="onFormSubmit">
-                    <submit-button :text="modalMode === 'create' ? __('Add New', 'erp') : __('Save', 'erp') " />
+                <span @click="popupModal({}, modalMode)">
+                    <submit-button :text="__('Cancel', 'erp')" customClass="wperp-btn-cancel pull-right" style="margin-right: 10px" />
                 </span>
             </template>
         </modal>
