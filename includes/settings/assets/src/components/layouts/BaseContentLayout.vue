@@ -45,12 +45,6 @@
                     <input-desc :input="input" />
                 </div>
 
-                <div v-if="input.type === 'password'">
-                    <input v-model="fields[index]['value']" type="password" :id="'erp-'+fields[index]['id']" class="wperp-form-field" />
-
-                    <input-desc :input="input" />
-                </div>
-
                 <div class="form-check" v-if="input.type === 'multicheck'">
                     <label class="form-check-label" v-for="(checkOption, checkKey, index2) in input.options" :key="index2">
                         <input v-model="fields[index]['value'][checkKey]" type="checkbox" class="form-check-input" :id="'erp-'+fields[index]['id'][checkKey]" />
