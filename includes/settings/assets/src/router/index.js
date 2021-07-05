@@ -15,6 +15,7 @@ import AcFinancialYears from '../components/act/financial-year/AcFinancialYears.
 
 // CRM Components
 import CrmContacts from '../components/crm/contacts/CrmContacts.vue';
+import CrmContactForm from '../components/crm/contact-forms/CrmContactForm.vue';
 import CrmSubscription from '../components/crm/subscription/CrmSubscription.vue';
 import CrmTemplate from '../components/crm/templates/CrmTemplate.vue';
 import CrmEmailConnect from '../components/crm/email/CrmEmailConnect.vue';
@@ -122,6 +123,26 @@ export default new Router({
                     name     : 'CrmContacts',
                     component: CrmContacts,
                     alias    : '/erp-crm'
+                },
+                {
+                    path     : 'contact_forms',
+                    name     : 'CrmContactFormLayout',
+                    component: {
+                        render(c) {
+                            return c('router-view');
+                        }
+                    },
+                    children: [
+                        {
+                            path     : '',
+                            component: CrmContactForm,
+                        },
+                        {
+                            path     : ':id', // All forms will be added automatically if added on backend.
+                            name     : 'CrmContactForm',
+                            component: CrmContactForm,
+                        },
+                    ]
                 },
                 {
                     path     : 'subscription',
