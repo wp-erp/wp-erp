@@ -198,8 +198,8 @@ export default {
                     self.$store.dispatch("spinner/setSpinner", false);
                 },
                 error: function(error) {
-                    self.showAlert("error", error);
                     self.$store.dispatch("spinner/setSpinner", false);
+                    self.showAlert("error", error);
                 }
             });
         },
@@ -222,8 +222,8 @@ export default {
                     self.$store.dispatch("spinner/setSpinner", false);
                 },
                 error: function(error) {
-                    self.showAlert("error", error);
                     self.$store.dispatch("spinner/setSpinner", false);
+                    self.showAlert("error", error);
                 }
             });
         },
@@ -245,8 +245,8 @@ export default {
                     self.$store.dispatch("spinner/setSpinner", false);
                 },
                 error: function(error) {
-                    self.showAlert("error", error);
                     self.$store.dispatch("spinner/setSpinner", false);
+                    self.showAlert("error", error);
                 }
             });
         },
@@ -273,8 +273,8 @@ export default {
                 success : function(response) {
                     self.$store.dispatch("spinner/setSpinner", false);
                     self.showModal = false;
-                    self.getEmailTemplates();
                     self.showAlert("success", response);
+                    self.getEmailTemplates();
                 },
                 error   : function(error) {
                     self.$store.dispatch("spinner/setSpinner", false);
