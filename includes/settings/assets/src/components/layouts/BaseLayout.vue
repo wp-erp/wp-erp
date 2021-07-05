@@ -9,7 +9,7 @@
             <h3 class="sub-section-title" v-if="subSectionTitle && enableSubSectionTitle">
                 <slot name="subSectionTitle">{{ subSectionTitle }}</slot>
             </h3>
-            <p class="sub-section-description" v-if="subSectionDescription" v-html="subSectionDescription"></p>
+            <p class="sub-section-description" v-if="subSectionDescription && enableSubSectionTitle" v-html="subSectionDescription"></p>
 
             <slot v-if="!enable_content"></slot>
 
