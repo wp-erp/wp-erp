@@ -125,7 +125,6 @@ import SubmitButton from "../../base/SubmitButton.vue";
 import Modal from '../../base/Modal.vue';
 import VueTrix from "vue-trix";
 import Tooltip from '../../base/Tooltip.vue';
-import { generateFormDataFromObject } from "../../../utils/FormDataHandler";
 
 export default {
     name: "EmailNotification",
@@ -198,8 +197,8 @@ export default {
                     self.$store.dispatch("spinner/setSpinner", false);
                 },
                 error: function(error) {
-                    self.showAlert("error", error);
                     self.$store.dispatch("spinner/setSpinner", false);
+                    self.showAlert("error", error);
                 }
             });
         },
@@ -222,8 +221,8 @@ export default {
                     self.$store.dispatch("spinner/setSpinner", false);
                 },
                 error: function(error) {
-                    self.showAlert("error", error);
                     self.$store.dispatch("spinner/setSpinner", false);
+                    self.showAlert("error", error);
                 }
             });
         },
@@ -245,8 +244,8 @@ export default {
                     self.$store.dispatch("spinner/setSpinner", false);
                 },
                 error: function(error) {
-                    self.showAlert("error", error);
                     self.$store.dispatch("spinner/setSpinner", false);
+                    self.showAlert("error", error);
                 }
             });
         },
@@ -266,20 +265,18 @@ export default {
                 _wpnonce  : erp_settings_var.nonce,
             };
 
-            requestData    = window.settings.hooks.applyFilters( "requestData", requestData );
-            const postData = generateFormDataFromObject(requestData);
+            requestData = window.settings.hooks.applyFilters( "requestData", requestData );
 
             wp.ajax.send({
                 data    : requestData,
                 success : function(response) {
                     self.$store.dispatch("spinner/setSpinner", false);
                     self.showModal = false;
-                    self.getEmailTemplates();
                     self.showAlert("success", response);
                 },
                 error   : function(error) {
                     self.$store.dispatch("spinner/setSpinner", false);
-                    self.showAlert("error", response.data);
+                    self.showAlert("error", error);
                 }
             });
         },

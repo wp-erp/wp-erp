@@ -2,6 +2,7 @@
 
 namespace WeDevs\ERP\Settings;
 
+use Error;
 use WeDevs\ERP\Framework\Traits\Ajax as Trait_Ajax;
 use WeDevs\ERP\Framework\Traits\Hooker;
 
@@ -126,7 +127,7 @@ class Ajax {
         $this->verify_nonce( 'erp-settings-nonce' );
 
         if ( ! current_user_can( 'manage_options' ) ) {
-            $this->send_error( erp_get_message( ['type' => 'error_permission'] ) );
+            $this->send_error( _( 'You do not have sufficient permission to do this action', 'erp' ) );
         }
 
         $email_templates     = wperp()->emailer->get_emails();
@@ -185,7 +186,7 @@ class Ajax {
         $this->verify_nonce( 'erp-settings-nonce' );
 
         if ( ! current_user_can( 'manage_options' ) ) {
-            $this->send_error( erp_get_message( ['type' => 'error_permission'] ) );
+            $this->send_error( _( 'You do not have sufficient permission to do this action', 'erp' ) );
         }
 
         $can_not_be_disabled = Helpers::get_fixedly_enabled_email_templates();
@@ -226,7 +227,7 @@ class Ajax {
         $this->verify_nonce( 'erp-settings-nonce' );
 
         if ( ! current_user_can( 'manage_options' ) ) {
-            $this->send_error( erp_get_message( ['type' => 'error_permission'] ) );
+            $this->send_error( _( 'You do not have sufficient permission to do this action', 'erp' ) );
         }
 
         $email_id   = ! empty( $_REQUEST['id'] )        ? sanitize_text_field( wp_unslash( $_REQUEST['id'] ) )        : '';
@@ -239,18 +240,14 @@ class Ajax {
         $option_data = [
             'subject' => ! empty( $_REQUEST['subject'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['subject'] ) )  : '',
             'heading' => ! empty( $_REQUEST['heading'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['heading'] ) )  : '',
-            'body'    => ! empty( $_REQUEST['body'] )    ? wp_unslash( $_REQUEST['body'] )                            : '',
+            'body'    => ! empty( $_REQUEST['body'] )    ? wp_kses_post( wp_unslash( $_REQUEST['body'] ) )            : '',
         ];
 
         if ( 'yes' === $is_enabled ) {
             $option_data['is_enable'] = 'yes';
         }
 
-        $updated = update_option( $email_id, $option_data );
-
-        if ( ! $updated ) {
-            $this->send_error( __( 'Something went wrong!', 'erp' ) );
-        }
+        update_option( $email_id, $option_data );
 
         $this->send_success( __( 'Template updated successfully', 'erp' ) );
     }
@@ -266,7 +263,7 @@ class Ajax {
         $this->verify_nonce( 'erp-settings-nonce' );
 
         if ( ! current_user_can( 'manage_options' ) ) {
-            $this->send_error( erp_get_message( ['type' => 'error_permission'] ) );
+            $this->send_error( _( 'You do not have sufficient permission to do this action', 'erp' ) );
         }
 
         $option_id    = ! empty( $_REQUEST['option_id'] ) ? sanitize_text_field( $_REQUEST['option_id'] ) : '';
@@ -302,13 +299,13 @@ class Ajax {
         }
 
         if ( empty( $_REQUEST['mail_server'] ) ) {
-            $this->send_error( esc_html__( 'No host address provided', 'erp' ) );
+            $this->send_error( [ 'message' => esc_html__( 'No host address provided', 'erp' ) ] );
         } else {
             $mail_server = sanitize_text_field( wp_unslash( $_REQUEST['mail_server'] ) );
         }
 
         if ( empty( $_REQUEST['port'] ) ) {
-            $this->send_error( esc_html__( 'No port address provided', 'erp' ) );
+            $this->send_error( [ 'message' => esc_html__( 'No port address provided', 'erp' ) ] );
         } else {
             $port = sanitize_text_field( wp_unslash( $_REQUEST['port'] ) );
         }
@@ -317,13 +314,13 @@ class Ajax {
             $authentication = sanitize_text_field( wp_unslash( $_REQUEST['authentication'] ) );
 
             if ( empty( $_REQUEST['username'] ) ) {
-                $this->send_error( esc_html__( 'No email address provided', 'erp' ) );
+                $this->send_error( [ 'message' => esc_html__( 'No email address provided', 'erp' ) ] );
             } else {
                 $username = sanitize_text_field( wp_unslash( $_REQUEST['username'] ) );
             }
 
             if ( empty( $_REQUEST['password'] ) ) {
-                $this->send_error( esc_html__( 'No email password provided', 'erp' ) );
+                $this->send_error( [ 'message' => esc_html__( 'No email password provided', 'erp' ) ] );
             } else {
                 $password = sanitize_text_field( wp_unslash( $_REQUEST['password'] ) );
             }
