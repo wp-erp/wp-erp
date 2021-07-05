@@ -6,7 +6,7 @@
         </template>
 
         <div class="settings-box">
-            <h3 class="sub-section-title" v-if="subSectionTitle">
+            <h3 class="sub-section-title" v-if="subSectionTitle && enableSubSectionTitle">
                 <slot name="subSectionTitle">{{ subSectionTitle }}</slot>
             </h3>
             <p class="sub-section-description" v-if="subSectionDescription" v-html="subSectionDescription"></p>
@@ -80,11 +80,16 @@ export default {
         extra_content: {
             type    : Boolean,
             required: false,
-            default: false,
+            default : false,
         },
         options: {
-            type: Object,
+            type    : Object,
             required: false,
+        },
+        enableSubSectionTitle: {
+            type    : Boolean,
+            required: false,
+            default : true
         }
     },
 
