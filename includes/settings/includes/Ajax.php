@@ -2,6 +2,7 @@
 
 namespace WeDevs\ERP\Settings;
 
+use Error;
 use WeDevs\ERP\Framework\Traits\Ajax as Trait_Ajax;
 use WeDevs\ERP\Framework\Traits\Hooker;
 
@@ -239,18 +240,14 @@ class Ajax {
         $option_data = [
             'subject' => ! empty( $_REQUEST['subject'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['subject'] ) )  : '',
             'heading' => ! empty( $_REQUEST['heading'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['heading'] ) )  : '',
-            'body'    => ! empty( $_REQUEST['body'] )    ? wp_unslash( $_REQUEST['body'] )                            : '',
+            'body'    => ! empty( $_REQUEST['body'] )    ? wp_kses_post( wp_unslash( $_REQUEST['body'] ) )            : '',
         ];
 
         if ( 'yes' === $is_enabled ) {
             $option_data['is_enable'] = 'yes';
         }
 
-        $updated = update_option( $email_id, $option_data );
-
-        if ( ! $updated ) {
-            $this->send_error( __( 'Something went wrong!', 'erp' ) );
-        }
+        update_option( $email_id, $option_data );
 
         $this->send_success( __( 'Template updated successfully', 'erp' ) );
     }
