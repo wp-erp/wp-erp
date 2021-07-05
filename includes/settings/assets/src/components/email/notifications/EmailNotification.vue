@@ -266,8 +266,7 @@ export default {
                 _wpnonce  : erp_settings_var.nonce,
             };
 
-            requestData    = window.settings.hooks.applyFilters( "requestData", requestData );
-            const postData = generateFormDataFromObject(requestData);
+            requestData = window.settings.hooks.applyFilters( "requestData", requestData );
 
             wp.ajax.send({
                 data    : requestData,
@@ -279,7 +278,7 @@ export default {
                 },
                 error   : function(error) {
                     self.$store.dispatch("spinner/setSpinner", false);
-                    self.showAlert("error", response.data);
+                    self.showAlert("error", error);
                 }
             });
         },
