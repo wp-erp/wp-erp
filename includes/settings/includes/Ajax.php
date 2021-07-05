@@ -210,6 +210,8 @@ class Ajax {
             $email_data['tags'][] = $find;
         }
 
+        $email_data['body'] = str_replace( "\n", '<br>', $email_data['body'] );
+
         $this->send_success( $email_data );
     }
 
