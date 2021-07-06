@@ -119,6 +119,7 @@ export default {
     },
 
     created() {
+        this.$store.dispatch("spinner/setSpinner", true);
         this.getTemplatesData();
     },
 
@@ -129,7 +130,6 @@ export default {
          */
         getTemplatesData() {
             const self = this;
-            self.$store.dispatch("spinner/setSpinner", true);
 
             let requestData = window.settings.hooks.applyFilters(
                 "requestData",
@@ -193,8 +193,8 @@ export default {
                             self.popupModal({}, 'create');
                         }
 
-                        self.showAlert("success", response.data.message);
                         self.getTemplatesData();
+                        self.showAlert("success", response.data.message);
                     } else {
                         self.showAlert("error", response.data);
                     }
