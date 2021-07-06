@@ -30,7 +30,7 @@
                 }
 
                 .input-searchbar {
-                    width: 176px;
+                    width: 220px;
                     border-radius: 0px;
                     border: 1px solid #E2E2E2;
                     height: 29px;
@@ -793,6 +793,48 @@
 
         .settings-box {
             min-height: 520px !important;
+        }
+    }
+
+    /** Search Bar Global CSS **/
+    .search-suggestion-area {
+        background-color: white;
+        position: absolute;
+        margin-top: 30px;
+        width: 220px;
+        overflow-y: auto;
+        max-height: 200px;
+        height: auto;
+        min-height: 67px;
+        box-shadow: var(--tw-ring-offset-shadow,0 0 transparent),var(--tw-ring-shadow,0 0 transparent),var(--tw-shadow)!important;
+        z-index: 20000;
+
+        .single-suggestion-item {
+            border-bottom: 1px solid whitesmoke !important;
+
+            &:hover {
+                background: #f7faff;
+            }
+
+            a {
+                padding: 10px;
+                display: block;
+            }
+
+            h4 {
+                font-size: 14px;
+            }
+
+            p {
+                font-size: 11px;
+                margin-bottom: 0px;
+            }
+
+            .text-danger {
+                padding: 18px;
+                color: #d63638;
+                font-size: 11px!important;
+            }
         }
     }
 }
