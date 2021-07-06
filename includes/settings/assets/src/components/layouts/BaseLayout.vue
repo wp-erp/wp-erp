@@ -147,30 +147,6 @@ export default {
                 this.inputFields = inputFields;
             }
         }
-    },
-
-    methods: {
-
-        /**
-         * Get Section title after label modification
-         */
-        getSectionTitle( parentMenu ) {
-            let label = parentMenu.label;
-
-            switch ( parentMenu.id ) {
-                case 'erp-crm':
-                case 'erp-hr':
-                case 'erp-ac' :
-                    label += ' Management';
-                    break;
-
-                default:
-                    break;
-            }
-
-            return label;
-        }
-    },
-
+    }
 };
 </script>

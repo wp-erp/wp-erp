@@ -71,5 +71,51 @@ export default {
                     return date.toDateString().replace(/^\S+\s/, '');
             }
         },
+
+        /**
+         * Check if item is array or not
+         *
+         * @param object|array item
+         *
+         * @return boolean
+         */
+        isArray( item ) {
+            return ( !!item ) && ( item.constructor === Array );
+        },
+
+        /**
+         * Check if item is object or not
+         *
+         * @param object|array item
+         *
+         * @return boolean
+         */
+        isObject( item ) {
+            return ( !!item ) && ( item.constructor === Object );
+        },
+
+        /**
+        * Get Section title after label modification
+        *
+        * @param object menu item
+        *
+        * @reurn string section formatted title
+        */
+        getSectionTitle( menu ) {
+            let label = menu.label;
+
+            switch ( menu.id ) {
+                case 'erp-crm':
+                case 'erp-hr':
+                case 'erp-ac':
+                    label += ' Management';
+                    break;
+
+                default:
+                    break;
+            }
+
+        return label;
+      }
     }
 };
