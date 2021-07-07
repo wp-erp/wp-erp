@@ -1,5 +1,5 @@
 <template>
-    <input type="text" :value="value" autocomplete="off">
+    <input type="text" :value="value" autocomplete="off" @input="changeDateInput" />
 </template>
 
 <script>
@@ -16,13 +16,21 @@
                 changeMonth: true,
                 numberOfMonths: 1,
                 yearRange: "-100:+5",
+
                 onClose: function( selectedDate ) {
                     jQuery( '.' + self.dependency ).datepicker( 'option', limit_date, selectedDate );
                 },
+
                 onSelect: function( dateText ) {
-                   self.$emit('input', dateText);
+                    self.$emit('input', dateText);
                 }
             });
+        },
+
+        methods: {
+            changeDateInput( e ) {
+                this.$emit('input', e.target.value);
+            }
         },
     };
 </script>
