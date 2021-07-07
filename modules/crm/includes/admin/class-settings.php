@@ -263,10 +263,14 @@ class CRM_Settings extends Settings_Page {
     public function get_email_connect_fields() {
         $schedules = wp_get_schedules();
 
+        $cron_intervals = []; // Filter cron intervals time to get unique cron data
         $cron_schedules = [];
 
         foreach ( $schedules as $key => $value ) {
-            $cron_schedules[$key] = $value['display'];
+            if ( ! in_array( $value['interval'], $cron_intervals ) ) {
+                array_push( $cron_intervals, $value['interval'] );
+                $cron_schedules[$key] = $value['display'];
+            }
         }
 
         $fields[] = [
