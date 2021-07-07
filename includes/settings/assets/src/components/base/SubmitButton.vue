@@ -46,11 +46,11 @@ export default {
         position: relative;
         outline: 0;
         float: left;
-        
+
         &.pull-left {
             float: left;
         }
-        
+
         &.pull-right {
             float: right;
         }
@@ -58,10 +58,6 @@ export default {
         &.disabled {
             background: #B3E5FC;
             cursor: default;
-        }
-
-        &:hover :not(.disabled) {
-            background: #039BE5;
         }
 
         &:not(.disabled) {
