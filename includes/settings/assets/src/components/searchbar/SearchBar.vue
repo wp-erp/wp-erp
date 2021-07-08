@@ -123,14 +123,17 @@ export default {
 		 * @return void
 		 */
 		searchText: function () {
-			let regex = new RegExp(this.searchText, "i");
+            const searchText = this.searchText !== null ? String( this.searchText ).toLowerCase() : ''
+			const regex      = new RegExp(searchText, "i");
 
-            const searchedItems = this.allItems.filter( item => {
-				const fullMatchedString = `${item.label} ${item.parentLabel} ${item.desc}`;
+            this.searchedItems = this.allItems.filter( item => {
+                const label             = ( typeof item.label !== 'undefined' && item.label !== null ) ? String( item.label ).toLowerCase() : '';
+                const parentLabel       = ( typeof item.parentLabel !== 'undefined' && item.parentLabel !== null ) ? String( item.parentLabel ).toLowerCase() : '';
+                const desc              = ( typeof item.desc !== 'undefined' && item.desc !== null ) ? String( item.desc ).toLowerCase() : '';
+
+                const fullMatchedString = `${label} ${parentLabel} ${desc}`;
 				return regex.test(fullMatchedString);
 			});
-
-			this.searchedItems = searchedItems;
 		},
 
         /**
