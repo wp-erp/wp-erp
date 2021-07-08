@@ -280,22 +280,33 @@ function erp_hr_count_trashed_employees() {
  * @since 0.1
  *
  * @param array|int $employee_ids
+ * @param boolean $restore_role_only, Restore the roles only when employee is trashed
  *
  * @return void
  */
-function erp_employee_restore( $employee_ids ) {
+function erp_employee_restore( $employee_ids, $restore_role_only = false ) {
     if ( empty( $employee_ids ) ) {
         return;
     }
 
-    if ( is_array( $employee_ids ) ) {
-        foreach ( $employee_ids as $key => $user_id ) {
-            \WeDevs\ERP\HRM\Models\Employee::withTrashed()->where( 'user_id', $user_id )->restore();
-        }
-    }
+    $employee_ids = is_array( $employee_ids ) ? $employee_ids : [ ( int ) $employee_ids ];
 
-    if ( is_int( $employee_ids ) ) {
-        \WeDevs\ERP\HRM\Models\Employee::withTrashed()->where( 'user_id', $employee_ids )->restore();
+    foreach ( $employee_ids as $user_id ) {
+        \WeDevs\ERP\HRM\Models\Employee::withTrashed()->where( 'user_id', $user_id )->restore();
+
+        if ( $restore_role_only ) {
+            $wp_user = get_userdata( $user_id );
+
+            if ( ! empty( $wp_user ) ) {
+                $role = get_user_meta( $user_id, 'erp_last_removed_role', true );
+
+                if ( ! empty( $role ) ) {
+                    $wp_user->add_role( $role );
+                }
+
+                delete_user_meta( $user_id, 'erp_last_removed_role' );
+            }
+        }
     }
 
     erp_hrm_purge_cache( ['list' => 'employee'] );
@@ -339,6 +350,8 @@ function erp_employee_delete( $employee_ids, $force = false ) {
 
         erp_hrm_purge_cache( ['list' => 'employee'] );
 
+        $wp_user = get_userdata( $employee_wp_user_id );
+
         if ( $force ) {
 
             // find leave entitlements and leave requests and delete them as well
@@ -360,7 +373,6 @@ function erp_employee_delete( $employee_ids, $force = false ) {
             \WeDevs\ERP\HRM\Models\Announcement::where( 'user_id', '=', $employee_wp_user_id )->delete();
 
             \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $employee_wp_user_id )->withTrashed()->forceDelete();
-            $wp_user = get_userdata( $employee_wp_user_id );
             $wp_user->remove_role( erp_hr_get_manager_role() );
             $wp_user->remove_role( erp_hr_get_employee_role() );
 
@@ -373,6 +385,16 @@ function erp_employee_delete( $employee_ids, $force = false ) {
             }
         } else {
             \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $employee_wp_user_id )->delete();
+
+            $current_role = erp_hr_get_user_role( $employee_wp_user_id );
+
+            if ( ! empty ( $current_role ) ) {
+                $wp_user->remove_role( $current_role );
+
+                add_user_meta( $employee_wp_user_id, 'erp_last_removed_role', $current_role );
+                $user_default_role = get_option( 'default_role', 'subscriber' );
+                $wp_user->add_role( $user_default_role );
+            }
         }
 
         do_action( 'erp_hr_after_delete_employee', $employee_wp_user_id, $force );
