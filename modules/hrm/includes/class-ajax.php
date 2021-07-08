@@ -903,6 +903,9 @@ class Ajax_Handler {
 
         if ( in_array( 'employee', $user->roles, true ) ) {
             erp_employee_restore( $employee_id );
+        } else {
+            // Restore the roles only when employee is in tashed
+            erp_employee_restore( $employee_id, true );
         }
 
         $this->send_success( __( 'Employee has been restore successfully', 'erp' ) );
