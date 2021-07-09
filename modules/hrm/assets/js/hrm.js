@@ -1377,6 +1377,8 @@
                             content: '',
                             extraClass: 'smaller',
                             onReady: function() {
+                                response.date = wpErpHr.currentDate;
+
                                 var html = wp.template( self.data('template') )(response);
                                 $( '.content', this ).html( html );
 
@@ -1408,7 +1410,7 @@
                                             content: '',
                                             extraClass: 'smaller',
                                             onReady: function() {
-                                                var html = wp.template( 'erp-employment-terminate' )({});
+                                                var html = wp.template( 'erp-employment-terminate' )(data);
                                                 $( '.content', this ).html( html );
                                                 WeDevs_ERP_HR.initDateField();
                                             },
@@ -1416,7 +1418,8 @@
                                                 wp.ajax.send( {
                                                     data: this.serializeObject(),
                                                     success: function() {
-                                                        WeDevs_ERP_HR.ajaxReq(data, modal);
+                                                        WeDevs_ERP_HR.reloadPage();
+                                                        modal.closeModal();
                                                     },
                                                     error: function(error) {
                                                         modal.enableButton();
@@ -1434,7 +1437,7 @@
                                             content: '',
                                             extraClass: 'smaller',
                                             onReady: function() {
-                                                var html = wp.template('erp-employment-type')(window.wpErpCurrentEmployee);
+                                                var html = wp.template('erp-employment-type')(data);
                                                 $( '.content', this ).html( html );
                                                 WeDevs_ERP_HR.initDateField();
                                             },
@@ -1455,7 +1458,7 @@
                                         WeDevs_ERP_HR.ajaxReq(data, modal);
                                     }
                                 } else if ( data.type ) {
-                                    if(type == data.type) {
+                                    if (type == data.type) {
                                         modal.closeModal();
                                         swal('', wpErpHr.popup.already_selected, 'error' );
                                     } else {
@@ -1857,13 +1860,10 @@
                     e.preventDefault();
                 }
 
-                var self = $(this);
+                var self           = $(this),
+                    terminateData  = self.data('data') ? self.data('data') : window.wpErpCurrentEmployee;
 
-                if ( self.data('data') ) {
-                    var terminateData = self.data('data');
-                } else {
-                    var terminateData = window.wpErpCurrentEmployee;
-                }
+                terminateData.date = wpErpHr.currentDate;
 
                 $.erpPopup({
                     title: self.data('title'),
