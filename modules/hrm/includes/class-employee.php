@@ -1730,9 +1730,13 @@ class Employee {
             }
 
             if ( ! empty( $args['category'] ) ) {
-                $this->erp_user->update( [
-                    'status' => $args['category'],
-                ] );
+                $update_data = [ 'status' => $args['category'] ];
+
+                if ( 'terminated' === $args['category'] ) {
+                    $update_data['termination_date'] = $args['date'];
+                }
+                
+                $this->erp_user->update( $update_data );
 
                 do_action( 'erp_hr_employee_after_update_status', $this->erp_user->user_id, $args['category'], $args['date'] );
             }
@@ -2489,11 +2493,6 @@ class Employee {
             return new WP_Error( 'no-eligible-for-rehire', 'Eligible for rehire field is required' );
         }
 
-        $this->erp_user->update( [
-            'status'           => 'terminated',
-            'termination_date' => $args['terminate_date'],
-        ] );
-
         $comments = sprintf( '%s: %s; %s: %s; %s: %s',
             __( 'Termination Type', 'erp' ),
             erp_hr_get_terminate_type( $args['termination_type'] ),
@@ -2511,7 +2510,8 @@ class Employee {
         }
 
         if ( ! isset( $args['date'] ) ) {
-            $args['date'] = $args['terminate_date'];
+            $args['date']           = $args['terminate_date'];
+            $args['terminate_date'] = $args['terminate_date'];
         }
 
         if ( ! isset( $args['comments'] ) ) {
