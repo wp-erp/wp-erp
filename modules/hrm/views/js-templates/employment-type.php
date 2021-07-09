@@ -4,7 +4,7 @@
         erp_html_form_input( [
             'label'       => __( 'Date', 'erp' ),
             'name'        => 'date',
-            'value'       => erp_current_datetime()->format('Y-m-d'),
+            'value'       => '{{ data.date }}',
             'required'    => true,
             'custom_attr' => [ 'autocomplete' => 'off' ],
             'class'       => 'erp-date-field',
@@ -12,12 +12,12 @@
         ?>
     </div>
 
-    <div class="row" data-selected="{{ data.work.type }}">
+    <div class="row" data-selected="{{ data.work && data.work.type ? data.work.type : '' }}">
         <?php
         erp_html_form_input( [
             'label'       => __( 'Employment Type', 'erp' ),
             'name'        => 'type',
-            'value'       => '{{ data.work.type }}',
+            'value'       => '{{ data.work && data.work.type ? data.work.type : "" }}',
             'type'        => 'select',
             'class'       => 'erp-hrm-select2',
             'options'     => [ 0 => __( '- Select -', 'erp' ) ] + erp_hr_get_employee_types(),
