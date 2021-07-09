@@ -2067,7 +2067,7 @@ function erp_import_export_download_sample() {
         $keys      = $fields[ $type ]['fields'];
         $keys      = array_flip( $keys );
         $file_name = "sample_csv_{$type}.csv";
-        
+
         erp_make_csv_file( [ $keys ], $file_name, false );
     }
 
@@ -3422,11 +3422,11 @@ function erp_sanitize_phone_number( $phone_no, $allow_plus = false ) {
 
 /**
  * Checks if a user has permission to view a page
- * 
+ *
  * @since 1.8.5
  *
  * @param string $cap
- * 
+ *
  * @return void
  */
 function erp_verify_page_access_permission( $cap ) {
@@ -3441,7 +3441,7 @@ function erp_verify_page_access_permission( $cap ) {
 
 /**
  * Disables mysql strict mode
- * 
+ *
  * @since 1.8.5
  *
  * @return void
@@ -3451,4 +3451,100 @@ function erp_disable_mysql_strict_mode() {
 
     $wpdb->query( "SET SESSION SQL_MODE=''" );
     $wpdb->query( "SET SQL_BIG_SELECTS=1" );
+}
+
+/**
+ * Reset ERP Data
+ *
+ * Remove Whole ERP Tables, Roles, Options
+ * Deactivate and Activate Wp ERP & ERP-Pro
+ *
+ * @since 1.8.8
+ *
+ * @return boolean|object true|WP_Error
+ */
+function erp_reset_data() {
+    global $wpdb;
+
+    try {
+        $wpdb->query('START TRANSACTION');
+
+        $options = [
+            'wp_erp_version', 'wp_erp_db_version', 'erp_modules',
+            'erp_email_settings_employee-welcome', 'erp_email_settings_new-leave-request',
+            'erp_email_settings_approved-leave-request', 'erp_email_settings_rejected-leave-request',
+            'erp_email_settings_new-task-assigned', 'erp_setup_wizard_ran', 'erp_settings_general',
+            'erp_settings_accounting', 'erp_settings_erp-hr_workdays', 'wp_erp_activation_dismiss',
+            '_erp_admin_menu', '_erp_adminbar_menu', 'erp_settings_erp-email_general', 'erp_settings_erp-email_smtp',
+            '_erp_company', 'erp_settings_erp-crm_subscription', 'erp_acct_new_ledgers',
+            'erp_email_settings_new-contact-assigned', 'erp_email_settings_hiring-anniversary-wish',
+            'wp_erp_install_date', 'widget_erp-subscription-from-widget', 'erp_tracking_notice'
+        ];
+
+        $roles = [
+            'erp_hr_manager', 'employee',
+            'erp_crm_manager', 'erp_crm_agent',
+            'erp_ac_manager', 'erp_ac_agency'
+        ];
+
+        $tables = $wpdb->get_results(
+            "SELECT TABLE_NAME FROM information_schema.TABLES
+            WHERE TABLE_SCHEMA = '{$wpdb->dbname}'
+            AND TABLE_NAME LIKE '%_erp_%'
+            AND TABLE_NAME NOT LIKE '%_erp_audit_log%'"
+        );
+
+        $table_names = [];
+        foreach ( $tables as $table ) {
+            $table_name    = $table->TABLE_NAME;
+            $table_names[] = $table_name;
+            $wpdb->query( 'TRUNCATE TABLE ' . $table_name );
+        }
+
+        $log_data = [
+            'component'     => '',
+            'sub_component' => 'Reset',
+            'changetype'    => 'delete',
+            'created_by'    => get_current_user_id(),
+            'old_value'     => base64_encode( maybe_serialize( $tables ) ),
+            'new_value'     => base64_encode( maybe_serialize( [ $wpdb->prefix . 'erp_audit_log' ] ) ),
+            'message'       => __('ERP data reset completed', 'erp')
+        ];
+
+        erp_log()->insert_log( $log_data );
+
+        foreach ( $roles as $role ) {
+            remove_role( $role );
+        }
+
+        foreach ( $options as $option ) {
+            delete_option( $option );
+        }
+
+        // Clear some other scheduled events registered as cron jobs
+        wp_clear_scheduled_hook( 'erp_per_minute_scheduled_events' );
+        wp_clear_scheduled_hook( 'erp_daily_scheduled_events' );
+        wp_clear_scheduled_hook( 'erp_weekly_scheduled_events' );
+
+        // Deactivate & activate wp-erp
+        $plugin_wp_erp = plugin_basename( 'erp/wp-erp.php' );
+        deactivate_plugins( $plugin_wp_erp );
+
+        // Activate and add deafult modules
+        activate_plugin( $plugin_wp_erp );
+        $all_modules = wperp()->modules->get_modules();
+        update_option( 'erp_modules', $all_modules );
+
+        // If ERP Pro is installed & activated, do the same for this
+        $plugin_erp_pro = plugin_basename( 'erp-pro/erp-pro.php' );
+        if ( is_plugin_active( $plugin_erp_pro ) ) {
+            deactivate_plugins( $plugin_erp_pro );
+            activate_plugin( $plugin_erp_pro );
+        }
+
+        return true;
+    } catch (\Exception $e) {
+        $wpdb->query('ROLLBACK');
+        return new WP_Error( 'error', __( 'Something went wrong when resetting. Please try again.', 'erp' ) );
+    }
 }

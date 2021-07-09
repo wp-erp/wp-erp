@@ -35,11 +35,12 @@ class Ajax {
         $this->action( 'wp_ajax_erp-toggle-module', 'toggle_module' );
         $this->action( 'wp_ajax_erp_import_csv', 'import_csv' );
         $this->action( 'wp_ajax_erp_acct_get_sample_csv_url', 'generate_csv_url' );
+        $this->action( 'wp_ajax_erp_reset_data', 'erp_reset_data' );
     }
 
     /**
      * Generates url for accounting people
-     * 
+     *
      * @since 1.8.5
      *
      * @return mixed
@@ -57,14 +58,14 @@ class Ajax {
 
     /**
      * Imports CSV file in ERP
-     * 
+     *
      * @since 1.8.5
      *
      * @return mixed
      */
     public function import_csv() {
         $this->verify_nonce( 'erp-import-export-nonce' );
-    
+
         if ( ! current_user_can( 'administrator' ) ) {
             $this->send_error( __( 'Sorry ! You do not have permission to access this page', 'erp' ) );
         }
@@ -219,7 +220,7 @@ class Ajax {
                     if ( is_wp_error( $people ) ) {
                         continue;
                     }
-                    
+
                     $contact       = new \WeDevs\ERP\CRM\Contact( absint( $people->id ), 'contact' );
                     $life_stage    = isset( $_POST['life_stage'] ) ? sanitize_key( $_POST['life_stage'] ) : '';
 
@@ -628,9 +629,9 @@ class Ajax {
 
         $limit   = 50; // Limit to import per request
         $attempt = get_option( 'erp_users_to_contacts_import_attempt', 1 );
-        
+
         update_option( 'erp_users_to_contacts_import_attempt', $attempt + 1 );
-        
+
         $offset        = ( $attempt - 1 ) * $limit;
 
         $user_role     = isset( $_REQUEST['user_role'] )     ? sanitize_text_field( wp_unslash( $_REQUEST['user_role'] ) )     : '';
@@ -858,6 +859,41 @@ class Ajax {
             $this->send_error( __( 'Invalid input.', 'erp') );
         }
 
+    }
+
+    /**
+     * Reset WP ERP Data
+     *
+     * @since 1.8.8
+     *
+     * @return void
+     */
+    public function erp_reset_data() {
+
+        $this->verify_nonce( 'erp-reset-nonce' );
+
+        if ( current_user_can( 'manage_options' ) === false ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
+        $reset_text = sanitize_text_field( wp_unslash( $_POST['erp_reset_confirmation'] ) );
+
+        if ( $reset_text === 'Reset' ) {
+            $resetted = erp_reset_data();
+
+            if ( is_wp_error( $resetted ) ) {
+                $this->send_error( esc_html__( 'Sorry, Something went wrong. Please try again !', 'erp' ) );
+            }
+
+            $page =  'erp'; // @todo Can change to `erp-setup`
+
+            $this->send_success( [
+                'message'        => esc_html__( 'Resetted WP ERP successfully. You will be redirected soon. Please Setup WP ERP again or Skip to continue.', 'erp' ),
+                'redirected_url' => admin_url( "admin.php?page=$page" )
+            ] );
+        } else {
+            $this->send_error( esc_html__( 'Invalid confirmation text. Please give valid confirmation text.', 'erp' ) );
+        }
     }
 }
 
