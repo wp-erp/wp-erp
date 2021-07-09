@@ -218,6 +218,7 @@ class Human_Resource {
                 'section'       => 'leave',
                 'sub-section'   => 'leave-entitlements&tab=assignment',
             ], admin_url( 'admin.php' ) ), __( 'Create Entitlement', 'erp' ), __( 'Create Entitlement', 'erp' ) ),
+            'currentDate'    => erp_current_datetime()->format( 'Y-m-d' ),
         ] );
 
         switch ( $section ) {
