@@ -1106,11 +1106,11 @@ class Ajax_Handler {
 
             case 'employment':
                 $updated = $employee->update_employment_status( [
-                    'id'      => $history_id,
-                    'date'    => $date,
-                    'module'  => $module,
-                    'type'    => $type,
-                    'comment' => $comment,
+                    'id'       => $history_id,
+                    'date'     => $date,
+                    'module'   => $module,
+                    'type'     => $type,
+                    'comments' => $comment,
                 ] );
                 
                 break;
