@@ -1,0 +1,49 @@
+<?php
+
+namespace WeDevs\ERP;
+
+/**
+ * ERP Danger Zone Class
+ * Reset all data of WPErp and make a fresh installation
+ *
+ * @since 1.8.7
+ */
+class DangerZone {
+
+    /**
+     * Kick-in the class
+     */
+    public function __construct() {
+        $this->get_scripts();
+        $this->get_views();
+    }
+
+    /**
+     * Get Danger zone scripts scripts
+     *
+     * @since 1.8.7
+     *
+     * @return void
+     */
+    public function get_scripts() {
+        wp_localize_script( 'erp-script', 'wpErpDangerZone', [
+            'resetErp'                   => __( 'Reset WP ERP?', 'erp' ),
+            'areYouSureReset'            => __( 'Are you sure you want to reset WP ERP?', 'erp' ),
+            'yesResetIt'                 => __( 'Yes, Reset Now it', 'erp' ),
+            'confirmResetBeforeContinue' => __('Please confirm the Reset input before continue.', 'erp'),
+            'somethingWrong'             => __('Something went wrong, Please try again !', 'erp'),
+            'trashIcon'                  => WPERP_ASSETS . '/images/trash-circle.png',
+        ] );
+    }
+
+    /**
+     * Get Views
+     *
+     * @since 1.8.7
+     *
+     * @return void
+     */
+    public function get_views() {
+        include __DIR__ . '/admin/views/tools/danger-zone.php';
+    }
+}
