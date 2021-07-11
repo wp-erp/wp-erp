@@ -5,7 +5,7 @@ namespace WeDevs\ERP\Settings;
 /**
  * General class
  */
-class General extends Page_View {
+class General extends Template {
     
     /**
      * Class constructor
