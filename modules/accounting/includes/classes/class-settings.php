@@ -2,12 +2,12 @@
 
 namespace WeDevs\ERP\Accounting\Includes\Classes;
 
-use WeDevs\ERP\Settings\Page_View as Settings_Page;
+use WeDevs\ERP\Settings\Template;
 
 /**
  * General class
  */
-class Settings extends Settings_Page {
+class Settings extends Template {
     public function __construct() {
         $this->id            = 'erp-ac';
         $this->label         = __( 'Accounting', 'erp' );
