@@ -14,6 +14,13 @@
 
                         <form action="" enctype="multipart/form-data" method="post" class="modal-form edit-customer-modal" id="import_form" @submit.prevent="importCsv">
                             <div class="wperp-modal-body" id="erp-import-modal-body">
+                                <div v-if="showError" class="notice notice-error erp-error-notice" id="erp-csv-import-error">
+                                    <ul class="erp-list" v-if="isObject(errors)">
+                                        <li v-for="(error, index) in errors" :key="index" v-html="error"></li>
+                                    </ul>
+                                    <span v-else>{{ errors }}</span>
+                                </div>
+                                
                                 <table class="form-table">
                                     <tbody>
                                         <tr>
