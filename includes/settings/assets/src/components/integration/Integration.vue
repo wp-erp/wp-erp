@@ -169,6 +169,10 @@ export default {
             return this.singleItem.id === 'erp-dm';
         },
 
+        hideSubmit() {
+            return this.singleItem.id === 'salesforce-integration';
+        },
+
         formFields() {
             return this.selectedField
                 && this.singleItem.form_fields[ this.selectedField.id ] !== undefined
