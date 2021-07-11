@@ -25,10 +25,13 @@ import CrmEmailConnectImap from '../components/crm/email/CrmEmailConnectImap.vue
 // WooCommerce Components
 import WooCommerce from '../components/woocommerce/WooCommerce.vue';
 
-//Email Components
+// Email Components
 import GeneralEmail from '../components/email/general/GeneralEmail.vue';
 import SMTPEmail from '../components/email/smtp/SMTPEmail.vue';
 import EmailNotification from '../components/email/notifications/EmailNotification.vue';
+
+// Integration Components
+import Integration from '../components/integration/Integration.vue';
 
 Vue.use(Router);
 
@@ -204,6 +207,12 @@ export default new Router({
                     component: EmailNotification,
                 },
             ]
+        },
+
+        {
+            path     : '/erp-integration',
+            name     : 'Integration',
+            component: Integration,
         },
     ])
 });
