@@ -217,3 +217,66 @@ export default {
         };
     },
 }
+</script>
+
+<style lang="less" scoped>
+    .modal-close {
+        .flaticon-close {
+            font-size: inherit;
+            line-height: 1.8;
+        }
+    }
+
+    .errors {
+        margin: 0 20px;
+        color: #f44336;
+        
+        li {
+            background: #f3f3f3;
+            padding: 2px 10px;
+        }
+    }
+
+    select {
+        width: -webkit-fill-available !important;
+    }
+
+    #erp-csv-import-error {
+        font-size: 16px !important;
+        padding: 5px !important;
+    }
+
+    .erp-loader {
+        height: 30px;
+        width: 30px;
+        background-size: 30px;
+    }
+
+    .import-processing {
+        background-color: rgba(255, 255, 146, 0.911);
+        padding: 7px;
+        margin: 5px 0;
+        border-radius: 4px;
+        position: fixed;
+        max-width: 656px;
+        width: 80%;
+
+        .loading-text {
+            margin-left: 50px;
+            font-size: 28px;
+            font-weight: 200;
+            line-height: 1.1;
+        }
+    }
+
+    #update_existing {
+        border: 0.5px solid rgb(219, 219, 219) !important;
+        height: 20px !important;
+        width: 20px !important;
+
+        &::before {
+            height: 2rem !important;
+            width: 1.55rem !important;
+        }
+    }
+</style>
