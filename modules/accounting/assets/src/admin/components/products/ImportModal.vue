@@ -20,6 +20,11 @@
                                     </ul>
                                     <span v-else>{{ errors }}</span>
                                 </div>
+
+                                <div :class="processingClass" id="erp-import-processing">
+                                    <span v-if="isWorking" class="erp-loader"></span>
+                                    <span v-if="isWorking" class="loading-text">{{ workingText }}...</span>
+                                </div>
                                 
                                 <table class="form-table">
                                     <tbody>
