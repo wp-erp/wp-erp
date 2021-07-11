@@ -216,7 +216,150 @@ export default {
             processingClass    : ''
         };
     },
-}
+
+    methods: {
+        importCsv() {
+            this.errors    = '';
+            this.showError = false;
+            let formData   = new FormData();
+
+            if ( ! this.defaultProductCat.id ) {
+                return this.showAlert('error', __('Please select a default product category', 'erp') );
+            }
+
+            if ( ! this.defaultProductType.id ) {
+                return this.showAlert('error', __('Please select a default product type', 'erp') );
+            }
+            
+            this.manageProgressStatus( __('Validating data', 'erp') );
+
+            formData.append( 'csv_file', this.csvFile );
+            formData.append( 'type', this.type );
+            formData.append( 'category_id', this.defaultProductCat.id );
+            formData.append( 'product_type_id', this.defaultProductType.id );
+            formData.append( 'tax_cat_id', this.defaultTaxCat.id );
+            formData.append( 'vendor', this.defaultVendor.id );
+            formData.append( 'update_existing', this.updateExisting ? 1 : 0 );
+
+            Object.keys( this.mappedValues ).forEach(key => {
+                formData.append( `fields[${key}]`, this.mappedValues[key].id );
+            })
+
+            HTTP.post(
+                'products/csv/validate',
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data;' + 'boundary=' + Math.random().toString().substr(2)
+                    }
+                }
+            ).then(response => {
+                this.manageProgressStatus( __('Importing data', 'erp') );
+                
+                HTTP.post(
+                    'products/csv/import',
+                    {
+                        items  : response.data.data,
+                        total  : response.data.total,
+                        update : response.data.update,
+                    }
+                ).then(response => {
+                    this.$root.$emit('imported-products');
+                    this.$store.dispatch('spinner/setSpinner', false);
+                    this.showAlert('success', __(`${response.data} products have been imported successfully`, 'erp') );
+
+                    this.manageProgressStatus();
+                }).catch(error => {  
+                    this.manageProgressStatus();
+                    this.showImportError( error.response.data.message );
+                });
+            }).catch(error => {  
+                this.manageProgressStatus();
+                this.showImportError( error.response.data.message );
+            });
+        },
+
+        processFile(event) {
+            this.errors    = '';
+            this.showError = false;
+            this.csvFile   = event.target.files[0];
+            let reader     = new FileReader();
+
+            reader.readAsText(this.csvFile.slice(0, 5000));
+
+            reader.onload = (e) => {
+                let csv             = reader.result;
+                let lines           = csv.split('\n');
+                let columnNamesLine = lines[0];
+                let columnNames     = columnNamesLine.split(',');
+
+                columnNames.forEach((name, index) => {
+                    this.fieldOptions[index] = {
+                        id: index,
+                        name: name.replace(/"/g, ""),
+                    };
+                });
+
+                this.showFieldMapping = true;
+            }
+        },
+
+        mapFields() {
+            let erpFields = erp_acct_var.erp_fields;
+        
+            if ( erpFields[this.type] !== undefined ) {
+                this.fields    = erpFields[this.type].fields;
+                this.reqFields = erpFields[this.type].required_fields;
+
+                this.fields.forEach((field, index) => {
+                    this.mappedValues[field] = {
+                        id: index,
+                        name: this.strTitleCase(field),
+                    }
+                });
+            }
+        },
+
+        strTitleCase(string) {
+            var str = string.replace(/_/g, ' ');
+
+            return str.toLowerCase().split(' ').map(function (word) {
+                return (word.charAt(0).toUpperCase() + word.slice(1));
+            }).join(' ');
+        },
+
+        isRequired(field) {
+            return this.reqFields.includes(field);
+        },
+
+        generateCsvUrl() {
+            this.sampleUrl = `${erp_acct_var.admin_url}?page=erp-accounting&action=download_sample&type=product&_wpnonce=${erp_acct_var.export_import_nonce}#${this.$route.path}`;
+        },
+
+        downloadSample() {
+            window.location.href = this.sampleUrl;
+        },
+
+        showImportError(error) {
+            this.errors    = error;
+            this.showError = true;
+            
+            document.getElementById('erp-import-modal-body').scrollIntoView({ behavior: "smooth" });
+        },
+
+        manageProgressStatus(text) {
+            document.getElementById('erp-import-processing').scrollIntoView();
+            
+            this.processingClass = text ? 'import-processing' : '';
+            this.isWorking       = text ? true : false;
+            this.workingText     = text;
+        },
+
+        isObject(item) {
+            return typeof item === 'object' || typeof item === 'array';
+        },
+    },
+};
 </script>
 
 <style lang="less" scoped>
