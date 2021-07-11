@@ -5,7 +5,7 @@ namespace WeDevs\ERP\Settings;
 /**
  * WooCommerce settings class
  */
-class Woocommerce extends Page_View {
+class Woocommerce extends Template {
     
     /**
      * Constructor function
