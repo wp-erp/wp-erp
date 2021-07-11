@@ -5,7 +5,7 @@ namespace WeDevs\ERP\Settings;
 /**
  * Integration class
  */
-class License extends Page_View {
+class License extends Template {
 
     /**
      * Class constructor
