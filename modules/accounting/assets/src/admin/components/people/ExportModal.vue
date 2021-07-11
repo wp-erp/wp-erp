@@ -31,7 +31,10 @@
 
                                     <div class="row" id="fields">
                                         <div v-for="(field, key) in peopleFields" :key="key" class="col-2">
-                                            <label><input type="checkbox" name="fields[]" :value="field">{{ strTitleCase(field) }}</label>
+                                            <label>
+                                                <input type="checkbox" name="fields[]" :value="field" :checked="selectAll">
+                                                {{ strTitleCase(field) }}
+                                            </label>
                                         </div>
                                     </div>
                                     
@@ -84,6 +87,7 @@ export default {
             nonce: '',
             description: '',
             peopleType: '',
+            selectAll: false,
         };
     },
 
@@ -97,8 +101,8 @@ export default {
     },
 
     methods: {
-        selectFields(e) {
-            jQuery("#export_form #fields input[type=checkbox]").prop('checked', jQuery(e.target).prop("checked"));
+        selectFields() {
+            this.selectAll = ! this.selectAll;
         },
 
         strTitleCase(string) {
