@@ -4,7 +4,7 @@
         :sub_section_id="subSection"
         :enable_content="false"
     >
-        <div>
+        <div id="erp-email-templates">
             <ul class="sub-sub-menu">
                 <li v-for="(menu, key, index) in options.sub_sections" :key="key">
                     <a :class="key === module? 'router-link-active': ''" @click="setModule(key)">
@@ -13,7 +13,7 @@
                 </li>
             </ul>
 
-            <table class="erp-settings-table widefat">
+            <table class="erp-settings-table widefat email-template-table">
                 <thead>
                     <tr>
                         <th v-for="(column, index) in columns" :key="index">{{ column }}</th>
@@ -22,7 +22,13 @@
 
                 <tbody v-if="Object.keys(emails).length">
                     <tr valign="top" v-for="(email, index) in emails" :key="index">
-                        <td>{{ email.name }}</td>
+                        <td>
+                            <span
+                                class="template-name"
+                                @click="configureTemplate(email)">
+                                {{ email.name }}
+                            </span>
+                        </td>
                         <td>{{ email.description }}</td>
                         <td>
                             <radio-switch
@@ -34,8 +40,8 @@
                         </td>
                         <td>
                             <button
-                                class="wperp-btn btn-secondary"
-                                @click="configureTemplate(email.id)"
+                                class="wperp-btn btn--primary"
+                                @click="configureTemplate(email)"
                                 :id="email.option_id">
                                 {{ __('Configure', 'erp') }}
                             </button>
@@ -57,8 +63,7 @@
             @close="toggleModal"
             :header="true"
             :footer="true"
-            :hasForm="true"
-        >
+            :hasForm="true">
             <template v-slot:body v-if="singleTemplate">
                 <h4>{{ singleTemplate.title }}</h4>
                 <p>{{ singleTemplate.description }}</p>
@@ -234,13 +239,16 @@ export default {
 
             wp.ajax.send({
                 data : {
-                    template : template,
+                    template : template.id,
                     action   : "erp_get_single_email_template",
                     _wpnonce : erp_settings_var.nonce,
                 },
                 success: function(response) {
-                    self.singleTemplate = response;
-                    self.shortCodes     = response.tags;
+                    self.singleTemplate             = response;
+                    self.singleTemplate.title       = template.name;
+                    self.singleTemplate.description = template.description;
+                    self.shortCodes                 = response.tags;
+                    
                     self.$store.dispatch("spinner/setSpinner", false);
                 },
                 error: function(error) {
