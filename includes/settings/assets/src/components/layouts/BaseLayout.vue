@@ -20,12 +20,8 @@
                 :sub_sub_section_id="sub_sub_section_id"
                 :inputs="inputFields"
                 :single_option="single_option"
-                :options="options"
-            >
-                <template v-slot:extra-content v-if="extra_content">
-                    <slot></slot>
-                </template>
-
+                :options="options">
+                
                 <!-- Extended-data slot which will be append before Save changes button -->
                 <div slot="extended-data">
                     <slot name="extended-data"></slot>
@@ -77,11 +73,6 @@ export default {
             type    : Boolean,
             required: false
         },
-        extra_content: {
-            type    : Boolean,
-            required: false,
-            default : false,
-        },
         options: {
             type    : Object,
             required: false,
@@ -90,7 +81,7 @@ export default {
             type    : Boolean,
             required: false,
             default : true
-        }
+        },
     },
 
     created () {
