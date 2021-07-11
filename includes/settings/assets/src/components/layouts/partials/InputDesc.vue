@@ -1,5 +1,5 @@
 <template>
-    <p class="erp-form-input-hint" v-if="isEnableDescription(input)" v-html="input.desc"></p>
+    <p class="erp-form-input-hint" v-if="isEnableDescription(input)" v-html="desc"></p>
 </template>
 
 <script>
@@ -10,6 +10,12 @@ export default {
         input: {
             type    : Object,
             required: true
+        }
+    },
+
+    computed: {
+        desc() {
+            return this.input.desc.replace(/\\"/g, '"');
         }
     },
 
