@@ -152,6 +152,14 @@ export default {
         this.integrations = section.extra.integrations;
     },
 
+    watch: {
+        selectedField(newVal) {
+            if (newVal.id) {
+                this.forceUpdateBody();
+            }
+        },
+    },
+
     computed: {
         numColumns() {
             return this.columns.length;
@@ -173,6 +181,13 @@ export default {
         configure(item, key) {
             this.singleItem = item;
             this.subSection = key;
+            
+            if (key === 'sms') {
+                this.selectedField.id   = item.extra.selected_gateway;
+                this.selectedField.name = item.sections[this.selectedField.id];
+                this.fieldOptions       = item.sections;
+            }
+
             this.showModal  = true;
         },
 
