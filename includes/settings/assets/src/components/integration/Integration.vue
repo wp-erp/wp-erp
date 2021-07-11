@@ -157,6 +157,10 @@ export default {
             return this.columns.length;
         },
 
+        extraContent() {
+            return this.singleItem.id === 'erp-dm';
+        },
+
         formFields() {
             return this.selectedField
                 && this.singleItem.form_fields[ this.selectedField.id ] !== undefined
@@ -169,7 +173,6 @@ export default {
         configure(item, key) {
             this.singleItem = item;
             this.subSection = key;
-
             this.showModal  = true;
         },
 
@@ -180,6 +183,19 @@ export default {
         onSubmit() {
             this.$refs.base.onFormSubmit();
         },
+
+        forceUpdateBody() {
+            this.componentKey += 1;
+        },
+
+        onSelect(selected) {
+            this.selectedField = selected;
+        },
+
+        testConnection() {
+            this.options.action    = 'wp-erp-sync-employees-dropbox';
+            this.options.recurrent = false;
+        }
     }
 }
 </script>
