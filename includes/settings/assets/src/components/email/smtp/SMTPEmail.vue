@@ -3,16 +3,16 @@
         section_id="erp-email"
         sub_section_id="smtp"
         :enable_content="true"
-        :extra_content="true"
-        :options="options"
-    >
-        <template>
-            <div class="wperp-form-group">
-                <label for="smtp-test-connection"></label>
-                
-                <button id="smtp-test-connection" class="wperp-btn btn--secondary" @click="testConnection">{{ __('Send Test Email', 'erp') }}</button>
-            </div>
-        </template>
+        :options="options">
+        <div slot="extended-data">
+            <slot name="extended-data">
+                <div class="wperp-form-group">
+                    <label for="smtp-test-connection"></label>
+                    
+                    <button id="smtp-test-connection" class="wperp-btn btn--secondary" @click="testConnection">{{ __('Send Test Email', 'erp') }}</button>
+                </div>
+            </slot>
+        </div>
     </base-layout>
 </template>
 
