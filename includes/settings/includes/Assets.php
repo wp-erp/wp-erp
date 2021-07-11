@@ -142,7 +142,7 @@ class Assets {
         $settings[] = new Email();
 
         if ( ! empty( wperp()->integration->get_integrations() ) ) {
-            $settings[] = include __DIR__ . '/Integration.php';
+            $settings[] = new Integration();
         }
 
         if ( erp_addon_licenses() ) {
