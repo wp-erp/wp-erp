@@ -1351,6 +1351,24 @@ function erp_get_import_export_fields() {
                 'postal_code',
             ],
         ],
+        'product' => [
+            'required_fields' => [
+                'name',
+                'product_type_id',
+                'category_id',
+                'sale_price',
+                'vendor',
+            ],
+            'fields'          => [
+                'name',
+                'product_type_id',
+                'category_id',
+                'cost_price',
+                'sale_price',
+                'vendor',
+                'tax_cat_id',
+            ],
+        ],
     ];
 
     return apply_filters( 'erp_import_export_csv_fields', $erp_fields );
@@ -1381,6 +1399,7 @@ function erp_process_csv_export() {
             $items          = [];
             $csv_items      = [];
             $is_employee    = false;
+            $is_people      = false;
             $type           = sanitize_text_field( wp_unslash( $_POST['type'] ) );
             $fields         = array_map( 'sanitize_text_field', wp_unslash( $_POST['fields'] ) );
 
@@ -1392,20 +1411,30 @@ function erp_process_csv_export() {
                     break;
 
                 case 'contact':
+                    $is_people      = true;
                     $custom_options = get_option( 'erp-contact-fields' );
                     break;
 
                 case 'company':
+                    $is_people      = true;
                     $custom_options = get_option( 'erp-company-fields' );
                     break;
 
                 case 'customer':
+                    $is_people      = true;
                     $custom_options = get_option( 'erp-customer-fields' );
                     break;
 
                 case 'vendor':
+                    $is_people      = true;
                     $custom_options = get_option( 'erp-vendor-fields' );
                     break;
+
+                case 'product':
+                    $items = erp_acct_get_all_products( [ 'number' => - 1 ] );
+                    break;
+
+                default:
             }
 
             if ( ! empty( $custom_options ) ) {
@@ -1414,7 +1443,7 @@ function erp_process_csv_export() {
                 }
             }
 
-            if ( ! $is_employee ) {
+            if ( $is_people ) {
                 $items = erp_get_peoples( [
                     'type'   => $type,
                     'offset' => 0,
@@ -1422,19 +1451,17 @@ function erp_process_csv_export() {
                 ] );
             }
 
+            error_log( print_r($items,true));
+
             foreach ( $items as $index => $item ) {
                 if ( empty( $fields ) ) {
                     continue;
                 }
 
+                $item = (object) $item;
+
                 foreach ( $fields as $field ) {
-                    if ( ! $is_employee ) {
-                        if ( in_array( $field, $custom_fields, true ) ) {
-                            $csv_items[ $index ][ $field ] = erp_people_get_meta( $item->id, $field, true );
-                        } else {
-                            $csv_items[ $index ][ $field ] = $item->{$field};
-                        }
-                    } else {
+                    if ( $is_employee ) {
                         if ( in_array( $field, $custom_fields, true ) ) {
                             $csv_items[ $index ][ $field ] = get_user_meta( $item->id, $field, true );
                         } else {
@@ -1452,11 +1479,19 @@ function erp_process_csv_export() {
                                     break;
                             }
                         }
+                    } else if ( $is_people ) {
+                        if ( in_array( $field, $custom_fields, true ) ) {
+                            $csv_items[ $index ][ $field ] = erp_people_get_meta( $item->id, $field, true );
+                        } else {
+                            $csv_items[ $index ][ $field ] = $item->{$field};
+                        }
+                    } else {
+                        $csv_items[ $index ][ $field ] = $item->{$field};
                     }
                 }
             }
 
-            $file_name = 'export_' . gmdate( 'd_m_Y' ) . '.csv';
+            $file_name = 'export_' . $type . '_' . gmdate( 'd_m_Y' ) . '.csv';
 
             erp_make_csv_file( $csv_items, $file_name );
         }
@@ -1975,7 +2010,7 @@ function erp_import_export_download_sample() {
         return;
     }
 
-    if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'erp-import-export-sample-nonce' ) ) {
+    if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'erp-import-export-nonce' ) ) {
         return;
     }
 
