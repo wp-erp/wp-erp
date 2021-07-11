@@ -2,7 +2,7 @@
 
 namespace WeDevs\ERP;
 
-use WeDevs\ERP\Settings\Page_View as Settings_Page;
+use WeDevs\ERP\Settings\Template as Settings_Page;
 
 /**
  * Integration Class
