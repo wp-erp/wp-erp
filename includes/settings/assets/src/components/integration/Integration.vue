@@ -41,6 +41,67 @@
                 </tbody>
             </table>
 
+            <modal
+                v-if="showModal"
+                :title="singleItem.title + __(' Integration', 'erp')"
+                @close="toggleModal"
+                :header="true"
+                :footer="true"
+                :hasForm="true">
+
+                <template v-slot:body>
+                    <div class="wperp-form-group" v-if="singleItem.id === 'erp-sms'">
+                        <label for="erp-sms-selected-gateway">{{ __( 'Active Gateway', 'erp' ) }}</label>
+                        
+                        <multi-select
+                            v-model="selectedField"
+                            :options="fieldOptions"
+                            :multiple="false"
+                            @select="onSelect"
+                            id="erp-sms-selected-gateway"/>
+                    </div>
+
+                    <base-content-layout
+                        ref="base"
+                        :key="componentKey"
+                        :section_id="section"
+                        :sub_section_id="subSection"
+                        :sub_sub_section_id="singleItem.id"
+                        :inputs="formFields"
+                        :single_option="singleItem.single_option"
+                        :hide_submit="true"
+                        :options="options">
+
+                        <div slot="extended-data" v-if="extraContent">
+                            <slot name="extended-data">
+                                <div class="wperp-form-group" v-if="singleItem.id === 'erp-dm'">
+                                    <label for="dropbox-connection-test"></label>
+                                    <button id="dropbox-connection-test"
+                                        class="wperp-btn btn--secondary"
+                                        @click="testConnection">
+                                        {{ __('Test Dropbox Connection', 'erp') }}
+                                    </button>
+                                </div>
+                            </slot>
+                        </div>
+                    </base-content-layout>
+                </template>
+
+                <template v-slot:footer>
+                    <span @click="onSubmit" v-if="! hideSubmit">
+                        <submit-button
+                            :text="__('Save', 'erp')"
+                            customClass="pull-right" />
+                    </span>
+
+                    <span @click="toggleModal">
+                        <submit-button
+                            :text="__('Cancel', 'erp')"
+                            customClass="wperp-btn-cancel pull-right"
+                            style="margin-right: 7px;" />
+                    </span>
+                </template>
+            </modal>
         </base-layout>
     </div>
 </template>
@@ -56,7 +117,11 @@ export default {
     name: 'Integration',
 
     components: {
+        Modal,
         BaseLayout,
+        MultiSelect,
+        SubmitButton,
+        BaseContentLayout,
     },
 
     data() {
@@ -104,7 +169,16 @@ export default {
         configure(item, key) {
             this.singleItem = item;
             this.subSection = key;
+
             this.showModal  = true;
+        },
+
+        toggleModal() {
+            this.showModal = false;
+        },
+
+        onSubmit() {
+            this.$refs.base.onFormSubmit();
         },
     }
 }
