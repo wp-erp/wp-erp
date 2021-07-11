@@ -578,3 +578,46 @@ function erp_acct_validate_csv_data( $data ) {
         'total'  => $count
     ];
 }
+
+/**
+ * Imports products from csv
+ * 
+ * @since 1.8.7
+ *
+ * @param array $data
+ * 
+ * @return int|WP_Error
+ */
+function erp_acct_import_products( $data ) {
+    global $wpdb;
+
+    if ( ! empty( $data['items'] ) ) {
+        $inserted = $wpdb->query(
+            "INSERT INTO {$wpdb->prefix}erp_acct_products
+            (name, product_type_id, category_id, cost_price, sale_price, vendor, tax_cat_id, created_by, created_at)
+            VALUES {$data['items']}"
+        );
+
+        if ( is_wp_error( $inserted ) ) {
+            return new WP_Error( 'import-db-error', __( 'Something went wrong', 'erp' ) );
+        }
+    }
+
+    if ( ! empty( $data['update'] ) ) {
+        $curr_date = erp_current_datetime()->format( 'Y-m-d' );
+        $user      = get_current_user_id();
+
+        foreach ( $data['update'] as $id => $field_data ) {
+            $field_data['updated_at'] = $curr_date;
+            $field_data['updated_by'] = $user;
+
+            $wpdb->update( "{$wpdb->prefix}erp_acct_products", $field_data, [ 'id' => $id ] );
+        }
+    }
+
+    if ( 0 >= (int) $data['total'] ) {
+        return new WP_Error( 'import-error', __( 'No data imported', 'erp' ) );
+    }
+
+    return $data['total'];
+}
