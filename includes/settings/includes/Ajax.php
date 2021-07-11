@@ -73,6 +73,10 @@ class Ajax {
                 $settings           = new Email();
                 break;
 
+            case 'erp-integration':
+                $settings           = new Integration();
+                break;
+
             default:
                 $settings           = apply_filters( "erp_settings_save_{$module}_section", $module, $section, $sub_section );
         }
