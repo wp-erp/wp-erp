@@ -18,7 +18,7 @@ class Settings {
     }
 
     public function includes() {
-        require_once __DIR__ . '/includes/Page_View.php';
+        require_once __DIR__ . '/includes/Template.php';
         require_once __DIR__ . '/includes/Helpers.php';
         include_once __DIR__ . '/views/settings.php';
     }
