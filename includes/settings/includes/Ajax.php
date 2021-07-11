@@ -45,8 +45,9 @@ class Ajax {
         $this->verify_nonce( 'erp-settings-nonce' );
 
         $has_not_permission = ! current_user_can( 'manage_options' );
-        $module             = sanitize_text_field( wp_unslash( $_POST['module'] ) );
-        $section            = sanitize_text_field( wp_unslash( $_POST['section'] ) );
+        $module             = ! empty( $_REQUEST['module'] )          ? sanitize_text_field( wp_unslash( $_REQUEST['module'] ) )          : '';
+        $section            = ! empty( $_REQUEST['section'] )         ? sanitize_text_field( wp_unslash( $_REQUEST['section'] ) )         : '';
+        $sub_section        = ! empty( $_REQUEST['sub_sub_section'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['sub_sub_section'] ) ) : '';
 
         switch ( $module ) {
             case 'general':
@@ -73,8 +74,7 @@ class Ajax {
                 break;
 
             default:
-                $settings           = apply_filters( "erp_settings_save_{$module}_section", $module );
-                break;
+                $settings           = apply_filters( "erp_settings_save_{$module}_section", $module, $section, $sub_section );
         }
 
         if ( $has_not_permission ) {
@@ -84,7 +84,7 @@ class Ajax {
         $result = $settings->save( $section );
 
         if ( is_wp_error( $result ) ) {
-            $this->send_error( erp_get_message( ['type' => 'error_process'] ) );
+            $this->send_error( $result->get_error_message() );
         }
 
         $this->send_success( [
