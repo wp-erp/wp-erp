@@ -5,7 +5,7 @@ namespace WeDevs\ERP\Settings;
 /**
  * Email settings class
  */
-class Email extends Page_View {
+class Email extends Template {
     
     /**
      * Class constructor
