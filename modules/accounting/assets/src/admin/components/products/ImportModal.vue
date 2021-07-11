@@ -217,6 +217,15 @@ export default {
         };
     },
 
+    created() {
+        this.mapFields()
+        this.getVendors();
+        this.getCategories();
+        this.getTaxCategories();
+        this.getProductTypes();
+        this.generateCsvUrl();
+    },
+
     methods: {
         importCsv() {
             this.errors    = '';
@@ -318,6 +327,36 @@ export default {
                     }
                 });
             }
+        },
+
+        getVendors() {
+            HTTP.get('vendors').then(response => {
+                if (response.data) {
+                    for (const i in response.data) {
+                        var vendor = response.data[i];
+                        var object = { id: vendor.id, name: vendor.first_name + ' ' + vendor.last_name };
+                        this.vendors.push(object);
+                    }
+                }
+            });
+        },
+
+        getCategories() {
+            HTTP.get('product-cats').then(response => {
+                this.productCategories = response.data;
+            });
+        },
+
+        getTaxCategories() {
+            HTTP.get('tax-cats').then(response => {
+                this.taxCategories = response.data;
+            });
+        },
+
+        getProductTypes() {
+            HTTP.get('products/types').then(response => {
+                this.productTypes = response.data;
+            });
         },
 
         strTitleCase(string) {
