@@ -3,6 +3,8 @@
 
         <h3 class="sub-sub-title" v-html="sub_sub_section_title" v-if="typeof sub_sub_section_title !== 'undefined' && sub_sub_section_title.length > 0"></h3>
 
+        <slot name="extended-data-before"></slot>
+
         <div v-for="(input, index) in fields" :key="index">
             <div class="wperp-form-group">
 
@@ -16,16 +18,20 @@
                     <input-desc :input="input" />
                 </template>
 
-                <template v-if="input.type === 'label'">
+                <template v-else-if="input.type === 'label'">
                     <div v-html="input.value" :id="'erp-'+fields[index]['id']" ></div>
                     <input-desc :input="input" />
                 </template>
 
-                <template v-if="input.type === 'hidden'">
+                <template v-else-if="input.type === 'hidden'">
                     <input type="hidden" :value="fields[index]['value']" :id="'erp-'+fields[index]['id']" />
                 </template>
 
-                <div class="form-check" v-if="input.type === 'checkbox'">
+                <template v-else-if="input.type === 'hidden-fixed'">
+                    <input type="hidden" :value="fields[index]['value']" :id="'erp-'+fields[index]['id']" />
+                </template>
+
+                <div class="form-check" v-else-if="input.type === 'checkbox'">
                     <label class="form-check-label">
                         <input v-model="fields[index]['value']" type="checkbox" class="form-check-input" :id="'erp-'+fields[index]['id']" />
                         <span class="form-check-sign"> <span class="check"></span> </span>
@@ -35,7 +41,7 @@
                     <input-desc :input="input" />
                 </div>
 
-                <div v-if="input.type === 'radio'">
+                <div v-else-if="input.type === 'radio'">
                     <radio-switch
                         :value="fields[index]['value']"
                         @click.native="toggleSwitch(index)"
@@ -45,7 +51,7 @@
                     <input-desc :input="input" />
                 </div>
 
-                <div class="form-check" v-if="input.type === 'multicheck'">
+                <div class="form-check" v-else-if="input.type === 'multicheck'">
                     <label class="form-check-label" v-for="(checkOption, checkKey, index2) in input.options" :key="index2">
                         <input v-model="fields[index]['value'][checkKey]" type="checkbox" class="form-check-input" :id="'erp-'+fields[index]['id'][checkKey]" />
                         <span class="form-check-sign"> <span class="check"></span> </span>
@@ -55,7 +61,7 @@
                     <input-desc :input="input" />
                 </div>
 
-                <div v-if="input.type === 'text' || input.type === 'textarea' || input.type === 'password'">
+                <div v-else-if="input.type === 'text' || input.type === 'textarea' || input.type === 'password' || input.type === 'email'">
                     <input v-if="input.type === 'text' && input.class !== 'erp-date-field'"
                         v-model="fields[index]['value']"
                         class="wperp-form-field"
@@ -64,23 +70,30 @@
                         :disabled="fields[index]['disabled'] ? true : false" />
 
                     <date-picker
-                        v-if="input.type === 'text' && input.class === 'erp-date-field'"
+                        v-else-if="input.type === 'text' && input.class === 'erp-date-field'"
                         v-model="fields[index]['value']"
                         class="wperp-form-field"
                         :placeholder="__( 'Select date', 'erp' )"
                         :id="'erp-'+fields[index]['id']" />
 
                     <textarea
-                        v-if="input.type === 'textarea'"
+                        v-else-if="input.type === 'textarea'"
                         cols="45" rows="4"
                         v-model="fields[index]['value']"
                         class="wperp-form-field"
                         :id="'erp-'+fields[index]['id']"
                         :disabled="fields[index]['disabled'] ? true : false" />
 
-                    <input v-if="input.type === 'password'"
+                    <input v-else-if="input.type === 'password'"
                         v-model="fields[index]['value']"
                         type="password"
+                        class="wperp-form-field"
+                        :id="'erp-'+fields[index]['id']"
+                        :disabled="fields[index]['disabled'] ? true : false" />
+
+                    <input v-else-if="input.type === 'email'"
+                        v-model="fields[index]['value']"
+                        type="email"
                         class="wperp-form-field"
                         :id="'erp-'+fields[index]['id']"
                         :disabled="fields[index]['disabled'] ? true : false" />
@@ -88,7 +101,7 @@
                     <input-desc :input="input" />
                 </div>
 
-                <div v-if="input.type === 'image'">
+                <div v-else-if="input.type === 'image'">
                     <image-picker
                         v-model="fields[index]['value']"
                         @changeImage="(value) => changeImage(value, index)"
@@ -97,14 +110,14 @@
                     />
                 </div>
 
+                <div v-else-if="input.type === 'html'" v-html="input.value"></div>
+
             </div>
         </div>
 
-        <slot name="extra-content"></slot>
-
         <slot name="extended-data"></slot>
 
-        <div class="wperp-form-group">
+        <div class="wperp-form-group" v-if="! hide_submit">
             <submit-button :text="__('Save Changes', 'erp')" />
             <div class="clearfix"></div>
         </div>
@@ -167,7 +180,13 @@ export default {
         },
         sub_sub_section_id: {
             type    : String,
-            required: false
+            required: false,
+            default : '',
+        },
+        hide_submit: {
+            type    : Boolean,
+            required: false,
+            default : false
         },
         options: {
             type: Object,
@@ -197,10 +216,12 @@ export default {
             let requestData = window.settings.hooks.applyFilters( "requestData",
                 {
                     ...self.inputs,
-                    single_option : ! self.single_option ? self.section_id: null,
-                    sub_section_id: self.sub_section_id,
-                    _wpnonce      : erp_settings_var.nonce,
-                    action        : 'erp-settings-get-data'
+                    single_option     : ! self.single_option ? self.section_id: null,
+                    section_id        : self.section_id,
+                    sub_section_id    : self.sub_section_id,
+                    sub_sub_section_id: self.sub_sub_section_id,
+                    _wpnonce          : erp_settings_var.nonce,
+                    action            : 'erp-settings-get-data'
                 }
             );
 
@@ -234,7 +255,7 @@ export default {
                                     } );
                                 }
 
-                                self.fields[ index ]['value'] = initialCheckedData;
+                                fields[ index ]['value'] = initialCheckedData;
                             } else if ( 'select' === item.type ) {
                                 Object.keys( item.options ).forEach( optionKey  => {
                                     if ( optionKey === item.value ) {
@@ -244,6 +265,10 @@ export default {
                                         }
                                     }
                                 });
+                            } else if ( 'hidden-fixed' === item.type ) {
+                                self.fields[ index ]['value'] = self.inputs.find(input => input.id === item.id)['value'];
+                            } else if ( 'html' === item.type ) {
+                                self.fields[ index ]['value'] = self.inputs.find(input => input.id === item.id)['value'];
                             }
                         } );
                     }
