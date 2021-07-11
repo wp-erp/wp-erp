@@ -112,6 +112,7 @@ class Assets {
             'erp_assets'          => WPERP_ASSETS,
             'erp_acct_menus'      => $menus,
             'erp_acct_url'        => $acct_url,
+            'admin_url'           => admin_url( 'admin.php' ),
             'decimal_separator'   => $erp_acct_dec_separator,
             'thousand_separator'  => $erp_acct_ths_separator,
             'currency_format'     => erp_acct_get_price_format(),
