@@ -1,10 +1,16 @@
 <template>
     <div class="wperp-products">
+        <div class="products-header">
+            <h2 class="add-new-product">
+                <span>{{ __('Products', 'erp') }}</span>
+                <a href="" id="erp-product-new" @click.prevent="showModal = true">{{ __('Add New', 'erp') }}</a>
+            </h2>
+
+            <!-- top search bar -->
+            <product-search v-model="search" />
+        </div>
+
         <product-modal v-if="showModal" :product.sync="product"></product-modal>
-        <h2 class="add-new-product">
-            <span>{{ __('Products', 'erp') }}</span>
-            <a href="" id="erp-product-new" @click.prevent="showModal = true">{{ __('Add New Product', 'erp') }}</a>
-        </h2>
 
         <list-table
             tableClass="wperp-table table-striped table-dark widefat table2 product-list"
@@ -30,21 +36,22 @@
 
 <script>
 import HTTP from 'admin/http';
-import ListTable from 'admin/components/list-table/ListTable.vue';
-import ProductModal from 'admin/components/products/ProductModal.vue';
+import ListTable from '../list-table/ListTable.vue';
+import ProductModal from './ProductModal.vue';
 
 export default {
     name: 'Products',
 
     components: {
         ListTable,
-        ProductModal
+        ProductModal,
     },
 
     data() {
         return {
             products : [],
             product  : null,
+            search   : '',
             showModal: false,
             columns  : {
                 name: {
@@ -84,16 +91,36 @@ export default {
                 totalPages : 0,
                 perPage    : 20,
                 currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
-            }
+            },
         };
     },
+
+    created() {
+        this.$store.dispatch('spinner/setSpinner', true);
+        this.getProducts();
+
+        this.$on('close', function() {
+            this.showModal       = false;
+        });
+    },
+
+    watch: {
+        search(newVal, oldVal) {
+            this.$store.dispatch('spinner/setSpinner', true);
+            this.getProducts();
+        }
+    },
+
     methods: {
         getProducts() {
             this.products = [];
             HTTP.get('/products', {
                 params: {
                     per_page: this.paginationData.perPage,
-                    page: this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page
+                    page    : this.$route.params.page === undefined
+                            ? this.paginationData.currentPage
+                            : this.$route.params.page,
+                    s       : this.search
                 }
             }).then(response => {
                 this.products = response.data;
@@ -164,39 +191,58 @@ export default {
         }
 
     },
-    created() {
-        this.$store.dispatch('spinner/setSpinner', true);
-        this.getProducts();
-
-        this.$on('close', function() {
-            this.showModal = false;
-            this.product = null;
-        });
-    }
 };
 </script>
 
 <style lang="less">
     .wperp-products {
-        .add-new-product {
-            margin-top:15px;
-            align-items: center;
+        .products-header {
             display: flex;
-            span {
-                font-size: 18px;
-                font-weight: bold;
-            }
-            a {
-                background: #1a9ed4;
-                border-radius: 3px;
-                color: #fff;
-                font-size: 12px;
-                height: 29px;
-                line-height: 29px;
-                margin-left: 13px;
-                text-align: center;
-                text-decoration: none;
-                width: 135px;
+            align-items: center;
+
+            .add-new-product {
+                margin-top: 15px;
+                align-items: center;
+                display: flex;
+
+                span {
+                    font-size: 18px;
+                    font-weight: bold;
+                }
+
+                a {
+                    background: #1a9ed4;
+                    border-radius: 3px;
+                    color: #fff;
+                    font-size: 12px;
+                    height: 29px;
+                    line-height: 29px;
+                    margin-left: 13px;
+                    text-align: center;
+                    text-decoration: none;
+                    width: 80px !important;
+
+                    @media (max-width: 782px) and (min-width: 768px) {
+                        margin-right: 18rem;
+                        margin-bottom: 3px;
+                        max-width: 120px;
+                    }
+
+                    @media (max-width: 767px) and (min-width: 707px) {
+                        margin-right: 16rem;
+                        margin-bottom: 3px;
+                    }
+
+                    @media (max-width: 706px) and (min-width: 651px) {
+                        margin-right: 14rem;
+                        margin-bottom: 3px;
+                    }
+
+                    @media (max-width: 650px) {
+                        margin-right: 12rem;
+                        margin-bottom: 3px;
+                    }
+                }
             }
         }
 
@@ -208,6 +254,18 @@ export default {
             .col--actions {
                 float: left !important;
             }
+        }
+    }
+
+    .search-btn {
+        @media (max-width: 650px) {
+            display: none;
+        }
+    }
+
+    .people-search {
+        @media (max-width: 479px) {
+            margin-top: 20px;
         }
     }
 </style>
