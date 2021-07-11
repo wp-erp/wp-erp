@@ -402,3 +402,179 @@ function erp_acct_get_vendor_products( $args = [] ) {
 
     return $products_vendor;
 }
+
+/**
+ * Validates csv data for importing
+ * 
+ * @since 1.8.7
+ *
+ * @param array $data
+ * 
+ * @return array|WP_Error
+ */
+function erp_acct_validate_csv_data( $data ) {
+    $files = wp_check_filetype_and_ext( $data['csv_file']['tmp_name'], $data['csv_file']['name'] );
+
+    if ( 'csv' !== $files['ext'] && 'text/csv' !== $files['type'] ) {
+        return new WP_Error( 'invalid-file-type', __( 'The file is not a valid CSV file! Please provide a valid one.', 'erp' ) );
+    }
+
+    $csv = new \ParseCsv\Csv();
+    $csv->encoding( null, 'UTF-8' );
+    $csv->parse( $data['csv_file']['tmp_name'] );
+
+    if ( empty( $csv->data ) ) {
+        return new WP_Error( 'no-data', __( 'No data found to import!', 'erp' ) );
+    }
+
+    $csv_data   = [];
+    $csv_data[] = array_keys( $csv->data[0] );
+
+    foreach ( $csv->data as $data_item ) {
+        $csv_data[] = array_values( $data_item );
+    }
+
+    if ( empty( $csv_data ) ) {
+        return new WP_Error( 'no-data', __( 'No data found to import!', 'erp' ), [ 'status' => 400 ] );
+    }
+
+    $count           = 0;
+    $errors          = [];
+    $product_data    = [];
+    $to_be_updated   = [];
+    $processed_data  = '';
+    $temp_type       = $data['type'];
+    $update_existing = (int) $data['update_existing'] ? true : false;
+    $curr_date       = erp_current_datetime()->format( 'Y-m-d' );
+    $user            = get_current_user_id();
+
+    if ( $update_existing ) {
+        $temp_type = 'product_non_unique';
+    }
+
+    $errors = apply_filters( 'erp_validate_csv_data', $csv_data, $data['fields'], $temp_type );
+
+    if ( ! empty( $errors ) ) {
+        return new WP_Error( 'import-error', $errors );
+    }
+
+    unset( $csv_data[0] );
+
+    foreach ( $csv_data as $index => $line ) {
+        if ( empty( $line ) ) {
+            continue;
+        }
+
+        if ( is_array( $data['fields'] ) && ! empty( $data['fields'] ) ) {
+            $product_data[ $index ] = '';
+            $product_exists_id      = '';
+            $product_checked        = false;
+
+            global $wpdb;
+
+            foreach ( $data['fields'] as $key => $value ) {
+
+                switch ( $key ) {
+                    
+                    case 'category_id':
+                        
+                        if ( ! empty( $line[ $value ] ) ) {
+                            $valid_value = $wpdb->get_var(
+                                "SELECT id
+                                FROM {$wpdb->prefix}erp_acct_product_categories
+                                WHERE id = {$line[ $value ]}"
+                            );
+                        }
+
+                        break;
+                    
+                    case 'product_type_id':
+
+                        if ( ! empty( $line[ $value ] ) ) {
+                            $valid_value = $wpdb->get_var(
+                                "SELECT id
+                                FROM {$wpdb->prefix}erp_acct_product_types
+                                WHERE id = {$line[ $value ]}"
+                            );
+                        }
+
+                        break;
+
+                    case 'tax_cat_id':
+
+                        if ( ! empty( $line[ $value ] ) ) {
+                            $valid_value = $wpdb->get_var(
+                                "SELECT id
+                                FROM {$wpdb->prefix}erp_acct_tax_categories
+                                WHERE id = {$line[ $value ]}"
+                            );
+                        }
+
+                        break;
+
+                    case 'vendor':
+
+                        if ( ! empty( $line[ $value ] ) ) {
+                            $valid_value = $wpdb->get_var(
+                                "SELECT people.id
+                                FROM {$wpdb->prefix}erp_peoples AS people
+                                LEFT JOIN {$wpdb->prefix}erp_people_type_relations AS rel
+                                ON people.id = rel.people_id
+                                WHERE people.id = {$line[ $value ]}
+                                AND rel.people_types_id = 4"
+                            );
+                        }
+
+                        break;
+
+                    default:
+                        $valid_value = true;
+                }
+
+                $value = ! empty( $line[ $value ] ) &&
+                         ! empty( $valid_value )
+                         ? $line[ $value ]
+                         : (
+                            ! empty( $data[ $key ] )
+                            ? $data[ $key ]
+                            : ''
+                         );
+
+                if ( $update_existing && ! $product_checked && 'name' === $key ) {
+                    $product_exists_id =  $wpdb->get_var(
+                        $wpdb->prepare(
+                            "SELECT id FROM {$wpdb->prefix}erp_acct_products where name = %s",
+                            $value
+                        )
+                    ); 
+                    
+                    $product_checked = true;
+                }
+
+                if ( empty( $product_exists_id ) ) {
+                    $product_data[ $index ] .= "'{$value}',";
+                } else {
+                    $to_be_updated[ $product_exists_id ][ $key ] = $value;
+                }
+            }
+
+            if ( empty( $product_exists_id ) ) {
+                $product_data[ $index ] .= "'{$user}','{$curr_date}'";
+            } else {
+                unset( $product_data[ $index ] );
+            }
+
+            ++ $count;
+        }
+    }
+
+    if ( ! empty( $product_data ) ) {        
+        $processed_data = '(' . implode( '),(', $product_data ) . ')';
+    }
+
+    return [
+        'data'   => $processed_data,
+        'update' => $to_be_updated,
+        'total'  => $count
+    ];
+}
