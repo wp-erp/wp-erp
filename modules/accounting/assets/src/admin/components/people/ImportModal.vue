@@ -11,10 +11,15 @@
                             </span>
                         </div>
 
-                        <!-- end modal body title -->
                         <form action="" method="post" class="modal-form edit-customer-modal" id="import_form" @submit.prevent="importCsv">
                             <div class="wperp-modal-body">
-                                <div v-if="showError" v-html="error" class="notice notice-error erp-error-notice" id="erp-csv-import-error"></div>
+                                <div v-if="showError" class="notice notice-error erp-error-notice" id="erp-csv-import-error">
+                                    <ul class="erp-list" v-if="isObject(errors)">
+                                        <li v-for="(error, index) in errors" :key="index" v-html="error"></li>
+                                    </ul>
+                                    
+                                    <span v-else>{{ errors }}</span>
+                                </div>
                                 
                                 <table class="form-table">
                                     <tbody>
@@ -224,6 +229,10 @@ export default {
             return str.toLowerCase().split(' ').map(function (word) {
                 return (word.charAt(0).toUpperCase() + word.slice(1));
             }).join(' ');
+        },
+
+        isObject(item) {
+            return typeof item === 'object' || typeof item === 'array';
         },
     },
 };
