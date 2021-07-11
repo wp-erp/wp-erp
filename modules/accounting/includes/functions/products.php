@@ -61,7 +61,13 @@ function erp_acct_get_all_products( $args = [] ) {
             LEFT JOIN {$wpdb->prefix}erp_peoples AS people ON product.vendor = people.id
             LEFT JOIN {$wpdb->prefix}erp_acct_product_categories AS cat ON product.category_id = cat.id
             LEFT JOIN {$wpdb->prefix}erp_acct_product_types AS product_type ON product.product_type_id = product_type.id
-            WHERE product.product_type_id<>3 ORDER BY product.{$args['orderby']} {$args['order']} {$limit}";
+            WHERE product.product_type_id<>3";
+
+        if ( ! empty( $args['s'] ) ) {
+            $sql .= " AND product.name LIKE '%{$args['s']}%'";
+        }
+
+        $sql .= " ORDER BY product.{$args['orderby']} {$args['order']} {$limit}";
 
         erp_disable_mysql_strict_mode();
 
