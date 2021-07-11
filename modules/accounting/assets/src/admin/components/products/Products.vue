@@ -6,11 +6,20 @@
                 <a href="" id="erp-product-new" @click.prevent="showModal = true">{{ __('Add New', 'erp') }}</a>
             </h2>
 
+            <div class="erp-btn-group">
+                <button @click.prevent="showImportModal = true">{{ __( 'Import', 'erp' ) }}</button>
+                <button @click.prevent="showExportModal = true">{{ __( 'Export', 'erp' ) }}</button>
+            </div>
+
             <!-- top search bar -->
             <product-search v-model="search" />
         </div>
 
         <product-modal v-if="showModal" :product.sync="product"></product-modal>
+
+        <export-modal v-if="showExportModal"></export-modal>
+        
+        <import-modal v-if="showImportModal"></import-modal>
 
         <list-table
             tableClass="wperp-table table-striped table-dark widefat table2 product-list"
@@ -38,6 +47,9 @@
 import HTTP from 'admin/http';
 import ListTable from '../list-table/ListTable.vue';
 import ProductModal from './ProductModal.vue';
+import ProductSearch from './Search.vue'
+import ExportModal from './ExportModal.vue';
+import ImportModal from './ImportModal.vue';
 
 export default {
     name: 'Products',
@@ -45,6 +57,9 @@ export default {
     components: {
         ListTable,
         ProductModal,
+        ExportModal,
+        ImportModal,
+        ProductSearch,
     },
 
     data() {
@@ -92,6 +107,8 @@ export default {
                 perPage    : 20,
                 currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
             },
+            showExportModal: false,
+            showImportModal: false,
         };
     },
 
@@ -101,6 +118,14 @@ export default {
 
         this.$on('close', function() {
             this.showModal       = false;
+            this.showImportModal = false;
+            this.showExportModal = false;
+            this.product         = null;
+        });
+
+        this.$root.$on('imported-products', () => {
+            this.showImportModal = false;
+            this.getProducts();
         });
     },
 
