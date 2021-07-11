@@ -130,6 +130,7 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
         $args = [
             'number' => ! empty( $request['number'] ) ? (int) $request['number'] : 20,
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
+            's'      => ! empty( $request['s'] ) ? $request['s'] : ''
         ];
 
         $formatted_items   = [];
