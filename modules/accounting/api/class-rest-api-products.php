@@ -133,6 +133,22 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'schema' => [ $this, 'get_public_item_schema' ],
             ]
         );
+
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/csv/import',
+            [
+                [
+                    'methods'             => WP_REST_Server::CREATABLE,
+                    'callback'            => [ $this, 'import_products' ],
+                    'args'                => $this->get_collection_params(),
+                    'permission_callback' => function ( $request ) {
+                        return current_user_can( 'erp_ac_manager' );
+                    },
+                ],
+                'schema' => [ $this, 'get_public_item_schema' ],
+            ]
+        );
     }
 
     /**
@@ -314,6 +330,32 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $response = rest_ensure_response( $data );
         $response->set_status( 200 );
+
+        return $response;
+    }
+    
+    /**
+     * Import products from csv
+     *
+     * @param WP_REST_Request $request
+     * 
+     * @return WP_Error|WP_REST_Response
+     */
+    public function import_products( $request ) {
+        $args = [
+            'items'  => ! empty( $request['items'] )  ? $request['items']   : '',
+            'update' => ! empty( $request['update'] ) ? $request['update']  : '',
+            'total'  => ! empty( $request['total'] )  ? $request['total']   : '',
+        ];
+
+        $imported = erp_acct_import_products( $args );
+
+        if ( is_wp_error( $imported ) ) {
+            return $imported;
+        }
+
+        $response = rest_ensure_response( $imported );
+        $response->set_status( 201 );
 
         return $response;
     }
