@@ -186,12 +186,20 @@ class Helpers {
         $single_option_data = [];
 
         if ( ! empty ( $options['single_option'] ) ) {
-            $single_option_id   = 'erp_settings_' . $options['single_option'];
+            if ( 'erp-integration' !== $options['section_id'] ) {
+                $single_option_id = "erp_settings_{$options['single_option']}";
 
-            // If sub_section_id provided, then append it to single_option_id to get data from database
-            // Modify it, since In database, it's stored like `erp_settings_{section}_{sub_section_id}`
-            if ( ! empty ( $options['sub_section_id'] ) && $options['single_option'] !== $options['sub_section_id']) {
-                $single_option_id .= '_' . $options['sub_section_id'];
+                // If sub_section_id provided, then append it to single_option_id to get data from database
+                // Modify it, since In database, it's stored like `erp_settings_{section}_{sub_section_id}`
+                if ( ! empty ( $options['sub_section_id'] ) && $options['single_option'] !== $options['sub_section_id'] ) {
+                    $single_option_id .= "_{$options['sub_section_id']}";
+                }
+            } else {
+                $single_option_id = 'erp_integration_settings';
+
+                if ( ! empty ( $options['sub_sub_section_id'] ) ) {
+                    $single_option_id .= "_{$options['sub_sub_section_id']}";
+                }
             }
 
             $single_option_data = ( array ) get_option( $single_option_id );
@@ -199,7 +207,10 @@ class Helpers {
 
         foreach ( $options as $option ) {
             if ( ! empty ( $option['id'] ) ) {
-                $option_value = count ( $single_option_data ) === 0 ? get_option( $option['id'] ) : $single_option_data[ $option['id'] ];
+                $option_value = count ( $single_option_data ) === 0
+                              ? get_option( $option['id'] )
+                              : ( ! empty( $single_option_data[ $option['id'] ] )
+                              ? $single_option_data[ $option['id'] ] : '' );
 
                 if ( empty ( $option_value ) && $option['type'] !== 'select' ) {
                     $option_value = ! empty ( $option['default'] ) ? $option['default'] : '';
