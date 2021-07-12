@@ -17,7 +17,7 @@
     }
 
     $page          .= "&type={$type}";
-    $nonce          = 'erp-import-export-sample-nonce';
+    $nonce          = 'erp-import-export-nonce';
     $csv_sample_url = wp_nonce_url( $page, $nonce );
 
     foreach ( $crm_users as $user ) {

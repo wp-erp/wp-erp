@@ -1,13 +1,13 @@
 <template>
-    <div id="people-modal">
+    <div id="wperp-product-export-modal">
         <div class="wperp-container">
             <div id="wperp-import-customer-modal" class="wperp-modal has-form wperp-modal-open" role="dialog">
                 <div class="wperp-modal-dialog">
                     <div class="wperp-modal-content">
                         <div class="wperp-modal-header">
-                            <h3>{{ title }}</h3>
+                            <h3>{{ __('Export Products', 'erp') }}</h3>
                             <span class="modal-close">
-                                <i class="flaticon-close" @click="$parent.$emit('modal-close')"></i>
+                                <i class="flaticon-close" @click="$parent.$emit('close')"></i>
                             </span>
                         </div>
 
@@ -17,7 +17,10 @@
                                     <div class="row">
                                         <div class="col-3">
                                             <label for="fields">
-                                                <h3>{{ description }}<span class="required"> *</span></h3>
+                                                <h3>
+                                                    {{ __('Select product fields to export', 'erp') }}
+                                                    <span class="required"> *</span>
+                                                </h3>
                                             </label>
                                         </div>
 
@@ -30,7 +33,7 @@
                                     </div>
 
                                     <div class="row" id="fields">
-                                        <div v-for="(field, key) in peopleFields" :key="key" class="col-2">
+                                        <div v-for="(field, key) in productsFields" :key="key" class="col-2">
                                             <label>
                                                 <input type="checkbox" name="fields[]" :value="field" :checked="selectAll">
                                                 {{ strTitleCase(field) }}
@@ -45,7 +48,7 @@
                                     </div>
                                 </div>
 
-                                <input type="hidden" name="type" :value="peopleType">
+                                <input type="hidden" name="type" :value="exportType">
                                 <input type="hidden" name="erp_export_csv" value="1">
                                 <input type="hidden" name="_wpnonce" :value="nonce">
 
@@ -53,7 +56,7 @@
 
                             <div class="wperp-modal-footer pt-0">
                                 <div class="buttons-wrapper text-right">
-                                    <button class="wperp-btn btn--default modal-close" @click="$parent.$emit('modal-close')" type="reset">{{ __('Cancel', 'erp') }}</button>
+                                    <button class="wperp-btn btn--default modal-close" @click="$parent.$emit('close')" type="reset">{{ __('Cancel', 'erp') }}</button>
                                     <button class="wperp-btn btn--primary" type="submit">{{ __('Export', 'erp') }}</button>
                                 </div>
                             </div>
@@ -70,34 +73,19 @@
 export default {
     name: 'ExportModal',
 
-    props: {
-        type: {
-            type: String
-        },
-        title: {
-            required: true
-        },
-    },
-
     data() {
         return {
-            sampleUrl: '',
-            peopleFields: [],
-            fieldsHtml: '',
+            productsFields: [],
             nonce: '',
             description: '',
-            peopleType: '',
+            exportType: 'product',
             selectAll: false,
         };
     },
 
     created() {
-        this.peopleType   = 'customers' == this.type ? 'customer' : 'vendor';
-        this.peopleFields = erp_acct_var.erp_fields ? erp_acct_var.erp_fields[this.peopleType].fields : [];
-        this.nonce        = erp_acct_var.export_import_nonce;
-        this.description  = 'customer' === this.peopleType
-                          ? __('Select customer fields to export', 'erp')
-                          : __('Select vendor fields to export', 'erp');
+        this.productsFields = erp_acct_var.erp_fields ? erp_acct_var.erp_fields[this.exportType].fields : [];
+        this.nonce          = erp_acct_var.export_import_nonce;
     },
 
     methods: {
@@ -108,7 +96,7 @@ export default {
         strTitleCase(string) {
             var str = string.toString().replace(/_/g, ' ');
 
-            return str.toLowerCase().split(' ').map(function (word) {
+            return str.toLowerCase().split(' ').map(word => {
                 return (word.charAt(0).toUpperCase() + word.slice(1));
             }).join(' ');
         },

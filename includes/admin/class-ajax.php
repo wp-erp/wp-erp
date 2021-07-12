@@ -47,10 +47,19 @@ class Ajax {
     public function generate_csv_url() {
         $type  = ! empty( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
         $path  = ! empty( $_POST['path'] ) ? sanitize_text_field( wp_unslash( $_POST['path'] ) ) : '';
-        $type  = 'customers' === $type ? 'customer' : 'vendor';
-        $nonce = wp_create_nonce( 'erp-import-export-sample-nonce' );
+        $nonce = wp_create_nonce( 'erp-import-export-nonce' );
         $page  = "?page=erp-accounting&action=download_sample&type={$type}&_wpnonce={$nonce}#{$path}";
         $url   = admin_url( "admin.php{$page}" );
+
+        switch ( $type ) {
+            case 'customers':
+                $type = 'customer';
+                break;
+
+            case 'vendors':
+                $type = 'vendor';
+                break;
+        }
 
         wp_send_json_success( $url );
     }
@@ -106,7 +115,7 @@ class Ajax {
             $errors = apply_filters( 'erp_validate_csv_data', $csv_data, $fields, $type );
 
             if ( ! empty( $errors ) ) {
-                $error_html = '<ul class="erp-list list-inline">';
+                $error_html = '<ul class="erp-list">';
 
                 foreach ( $errors as $error ) {
                     $error_html .= "<li>{$error}</li>";
