@@ -117,11 +117,16 @@ class Ajax_Handler {
 
         // Get leave & holiday data for hr dashboard calender
         $this->action( 'wp_ajax_erp-hr-get-leave-by-date', 'get_leave_holiday_by_date' );
-        
+
+
         // AJAX hooks for employee requests
         $this->action( 'wp_ajax_erp_hr_employee_get_requests', 'get_employee_requests' );
         $this->action( 'wp_ajax_erp_hr_get_total_pending_requests', 'get_total_pending_requests' );
         $this->action( 'wp_ajax_erp_hr_employee_requests_bulk_action', 'employee_requests_bulk_action' );
+
+        // AJAX hooks for Settings Actions
+        $this->action( 'wp_ajax_erp-settings-get-hr-financial-years', 'erp_settings_get_hr_financial_years' );
+        $this->action( 'wp_ajax_erp-settings-financial-years-save', 'erp_settings_save_hr_financial_years' );
     }
 
     /**
@@ -898,6 +903,9 @@ class Ajax_Handler {
 
         if ( in_array( 'employee', $user->roles, true ) ) {
             erp_employee_restore( $employee_id );
+        } else {
+            // Restore the roles only when employee is in tashed
+            erp_employee_restore( $employee_id, true );
         }
 
         $this->send_success( __( 'Employee has been restore successfully', 'erp' ) );
@@ -1569,7 +1577,7 @@ class Ajax_Handler {
         $exp_date     = isset( $_POST['expiration_date'] ) ? sanitize_text_field( wp_unslash( $_POST['expiration_date'] ) ) : '';
         $result_gpa   = isset( $_POST['gpa'] ) ? sanitize_text_field( wp_unslash( $_POST['gpa'] ) ) : NULL;
         $result_scale = isset( $_POST['scale'] ) ? sanitize_text_field( wp_unslash( $_POST['scale'] ) ) : NULL;
-        
+
         $result       = [ 'gpa' => $result_gpa ];
 
         if ( 'grade' === $result_type ) {
@@ -2234,9 +2242,9 @@ class Ajax_Handler {
 
     /**
      * Retrieves employee requests
-     * 
+     *
      * @since 1.8.5
-     * 
+     *
      * @return mixed
      */
     public function get_employee_requests() {
@@ -2343,7 +2351,7 @@ class Ajax_Handler {
 
     /**
      * Retrieves total pending requests
-     * 
+     *
      * @since 1.8.5
      *
      * @return int
@@ -2361,9 +2369,9 @@ class Ajax_Handler {
 
     /**
      * Processes bulk action on employee requests
-     * 
+     *
      * @since 1.8.5
-     * 
+     *
      * @return mixed
      */
     public function employee_requests_bulk_action() {
@@ -2390,7 +2398,7 @@ class Ajax_Handler {
         }
 
         $action = ! empty( $_REQUEST['action_type'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['action_type'] ) ) : '';
-        
+
         $result = apply_filters( "erp_hr_employee_{$request_type}_request_bulk_action", $req_ids, $action );
 
         if ( is_wp_error( $result ) ) {
@@ -2408,5 +2416,50 @@ class Ajax_Handler {
         }
 
         $this->send_success( sprintf( __( '%1$s %2$sitems have been %3$s successfully', 'erp' ), count( $result ), $item_status, $action ) );
+    }
+
+    /**
+     * Get Settings Data For HR Financial years
+     *
+     * @since 1.8.6
+     *
+     * @return void
+     */
+    public function erp_settings_get_hr_financial_years() {
+        $this->verify_nonce( 'erp-settings-nonce' );
+
+        if ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'erp_hr_manager' ) ) {
+            $this->send_error( erp_get_message ( ['type' => 'error_permission'] ) );
+        }
+
+        $years = erp_get_hr_financial_years();
+
+        $this->send_success( $years );
+    }
+
+    /**
+     * Save Settings for HR Financial Years
+     *
+     * @since 1.8.6
+     *
+     * @return void
+     */
+    public function erp_settings_save_hr_financial_years() {
+        $this->verify_nonce( 'erp-settings-nonce' );
+
+        if ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'erp_hr_manager' ) ) {
+            $this->send_error( erp_get_message ( ['type' => 'error_permission'] ) );
+        }
+
+        $inserted = erp_settings_save_leave_years( $_POST['fyears'] );
+
+        if ( is_wp_error( $inserted ) ) {
+            $this->send_error( __( $inserted->get_error_message(), 'erp' ) );
+        }
+
+        $this->send_success( [
+            'data'    => $inserted,
+            'message' => __( 'Settings saved successfully !', 'erp' )
+        ] );
     }
 }

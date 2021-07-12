@@ -1,0 +1,120 @@
+/*
+ * Component: Panel;
+ */
+@panel-padding: 20px;
+@panel-border-radius: 3px;
+@panel-border-color: #e2e2e2;
+@panel-margin-bottom: 20px;
+@panel-bg: #fff;
+@panel-header-bg: #F9F9F9;
+@panel-body-bg: @panel-bg;
+@panel-footer-bg: @panel-header-bg;
+
+.@{theme-prefix}-panel-group {
+	margin-bottom: @panel-margin-bottom;
+}
+.@{theme-prefix}-panel {
+	margin-bottom: @panel-margin-bottom;
+	border-radius: @panel-border-radius;
+	background: @panel-body-bg;
+	// padding-bottom: @panel-padding;
+	border: 1px solid @panel-border-color;
+	.@{theme-prefix}-table {
+		margin-bottom: 0;
+		tbody {
+			// @include box-shadow(none);
+		}
+	}
+	&.@{theme-prefix}-panel-orders {
+		.@{theme-prefix}-table{
+			th, td {
+				&:first-child{
+					padding-left: 0 !important;
+				}
+				&:last-child{
+					padding-right: 0 !important;
+				}
+			}
+		}
+	}
+	+ .@{theme-prefix}-panel {
+		margin-top: 5px;
+	}
+	.@{theme-prefix}-panel-heading {
+		border-bottom: 1px solid @panel-border-color;
+		border-radius: 3px 3px 0 0;
+		color: #000;
+		padding: 12px 20px;
+		background: @panel-header-bg;
+		font-size: 14px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		.panel-badge {
+			&.panel-badge-circle {
+				width: 18px;
+				height: 18px;
+				border-radius: 50%;
+				font-size: 18px;
+				line-height: 1;
+			}
+
+			&.panel-badge-primary {
+				background-image: -webkit-linear-gradient(125deg,#6EACFF 10%,#907CFF 100%);
+			}
+			&.panel-badge-info {
+				background-image: -webkit-linear-gradient(125deg,#FF8359 10%,#FFCF08 100%);
+			}
+			&.panel-badge-secondary {
+				background-image: -webkit-linear-gradient(125deg,#08D0FF 10%,#10F8B1 100%);
+			}
+		}
+
+		h1, h2, h3, h4, h5, h6 {
+			margin-bottom: 0;
+		}
+	}
+
+	.@{theme-prefix}-panel-body {
+		padding: @panel-padding;
+		&.@{theme-prefix}-no-padding {
+			padding: 0;
+		}
+	}
+	.@{theme-prefix}-panel-footer {
+		//border-top: 0;
+		border-radius: 0 0 3px 3px;
+		padding: @panel-padding;
+		border-top: 1px solid @panel-border-color;
+	}
+}
+
+.@{theme-prefix}-modal {
+	.@{theme-prefix}-form-horizontal {
+		.@{theme-prefix}-panel-heading {
+			justify-content: flex-start !important;
+			.panel-badge {
+				margin-right: 13px;
+			}
+		}
+	}
+}
+
+.@{theme-prefix}-dashboard {
+	.@{theme-prefix}-panel-heading,
+	.@{theme-prefix}-panel-body,
+	.@{theme-prefix}-panel-footer{
+		padding: 20px 30px ;
+	}
+	.@{theme-prefix}-chart-block {
+		margin-right: -10px;
+	}
+}
+
+.@{theme-prefix}-filter-panel {
+	.@{theme-prefix}-panel-footer {
+		padding: 0;
+		border: 0;
+	}
+}
+

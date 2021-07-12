@@ -119,7 +119,6 @@ class Customer_Relationship {
         $this->action( 'admin_footer', 'load_js_template', 10 );
 
         $this->action( 'admin_enqueue_scripts', 'load_settings_scripts' );
-        $this->action( 'admin_footer', 'load_settings_js_templates', 10 );
     }
 
     /**
@@ -243,11 +242,11 @@ class Customer_Relationship {
 
                 case 'contact':
                     $sub_section = isset( $_GET['sub-section'] ) ? sanitize_text_field( wp_unslash( $_GET['sub-section'] ) ) : 'contacts';
-    
+
                     switch ( $sub_section ) {
                         case 'contacts':
                             $this->load_contact_company_scripts( $suffix, $contact_actvity_localize );
-    
+
                             $customer                             = new Contact( null, 'contact' );
                             $localize_script['customer_empty']    = $customer->to_array();
                             $localize_script['erp_fields']        = erp_get_import_export_fields();
@@ -264,14 +263,14 @@ class Customer_Relationship {
                             $localize_script['isAdmin']           = current_user_can( 'manage_options' );
                             $localize_script['isCrmManager']      = current_user_can( 'erp_crm_manager' );
                             $localize_script['isAgent']           = current_user_can( 'erp_crm_agent' );
-    
+
                             $country = \WeDevs\ERP\Countries::instance();
                             wp_localize_script( 'erp-script', 'wpErpCountries', $country->load_country_states() );
                             break;
-    
+
                         case 'companies':
                             $this->load_contact_company_scripts( $suffix, $contact_actvity_localize );
-    
+
                             $customer                             = new Contact( null, 'company' );
                             $localize_script['customer_empty']    = $customer->to_array();
                             $localize_script['erp_fields']        = erp_get_import_export_fields();
@@ -287,30 +286,30 @@ class Customer_Relationship {
                             $localize_script['isAdmin']           = current_user_can( 'manage_options' );
                             $localize_script['isCrmManager']      = current_user_can( 'erp_crm_manager' );
                             $localize_script['isAgent']           = current_user_can( 'erp_crm_agent' );
-    
+
                             $country = \WeDevs\ERP\Countries::instance();
                             wp_localize_script( 'erp-script', 'wpErpCountries', $country->load_country_states() );
                             break;
-    
+
                         case 'activities':
                             wp_enqueue_script( 'underscore' );
                             wp_enqueue_script( 'erp-vuejs' );
                             wp_enqueue_style( 'erp-nprogress' );
                             wp_enqueue_script( 'erp-nprogress' );
                             wp_enqueue_script( 'wp-erp-crm-vue-component', WPERP_CRM_ASSETS . '/js/crm-components.js', apply_filters( 'crm_vue_customer_script', [ 'erp-nprogress', 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ] ), gmdate( 'Ymd' ), true );
-    
+
                             do_action( 'erp_crm_load_contact_vue_scripts' );
-    
+
                             wp_enqueue_script( 'wp-erp-crm-vue-customer', WPERP_CRM_ASSETS . "/js/crm-app$suffix.js", [ 'wp-erp-crm-vue-component', 'erp-nprogress', 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ], gmdate( 'Ymd' ), true );
                             wp_enqueue_script( 'post' );
-    
+
                             $contact_actvity_localize['isActivityPage'] = true;
                             wp_localize_script( 'wp-erp-crm-vue-component', 'wpCRMvue', $contact_actvity_localize );
                             break;
                     }
-    
+
                     break;
-    
+
                 case 'task':
                     wp_enqueue_style( 'erp-timepicker' );
                     wp_enqueue_script( 'erp-timepicker' );
@@ -318,14 +317,14 @@ class Customer_Relationship {
                     wp_enqueue_script( 'erp-trix-editor' );
                     wp_enqueue_style( 'erp-trix-editor' );
                     break;
-    
+
                 case 'reports':
                     if ( isset( $_GET['type'] ) && $_GET['type'] === 'growth-report' ) {
                         wp_enqueue_script( 'erp-momentjs' );
                         wp_enqueue_script( 'erp-crm-chart', WPERP_CRM_ASSETS . "/js/chart$suffix.min.js", [], gmdate( 'Ymd' ), true );
                         wp_enqueue_script( 'erp-crm-report', WPERP_CRM_ASSETS . "/js/report$suffix.js", [], gmdate( 'Ymd' ), true );
                     }
-                    break;    
+                    break;
         }
 
         wp_localize_script( 'erp-vue-table', 'wpVueTable', [
@@ -422,12 +421,6 @@ class Customer_Relationship {
                 // code...
                 break;
         }
-
-        if ( 'wp-erp_page_erp-settings' === $hook ) {
-            if ( isset( $_GET['tab'] ) && $_GET['tab'] === 'erp-crm' ) {
-                erp_get_js_template( WPERP_CRM_JS_TMPL . '/new-save-replies.php', 'erp-crm-new-save-replies' );
-            }
-        }
     }
 
     /**
@@ -454,12 +447,12 @@ class Customer_Relationship {
         }
 
         wp_localize_script( 'wp-erp-crm-vue-component', 'wpCRMvue', $contact_actvity_localize );
-        
+
         wp_localize_script( 'wp-erp-crm-vue-customer', 'erpCrmApp', [
             'reattach' => __( 'Reattach', 'erp' ),
             'remove'   => __( 'Remove', 'erp' ),
         ] );
-        
+
         wp_enqueue_script( 'post' );
     }
 
@@ -474,18 +467,6 @@ class Customer_Relationship {
         if ( 'wp-erp_page_erp-settings' === $hook && isset( $_GET['tab'] ) && $_GET['tab'] === 'erp-crm' ) {
             wp_enqueue_script( 'erp-trix-editor' );
             wp_enqueue_style( 'erp-trix-editor' );
-        }
-    }
-
-    /**
-     * Load template for settings page
-     */
-    public function load_settings_js_templates() {
-        global $current_screen;
-        $hook = str_replace( sanitize_title( __( 'CRM', 'erp' ) ), 'crm', $current_screen->base );
-
-        if ( 'wp-erp_page_erp-settings' === $hook && isset( $_GET['tab'] ) && $_GET['tab'] === 'erp-crm' ) {
-            erp_get_js_template( WPERP_CRM_JS_TMPL . '/new-save-replies.php', 'erp-crm-new-save-replies' );
         }
     }
 }

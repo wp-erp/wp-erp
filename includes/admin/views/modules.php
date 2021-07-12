@@ -564,7 +564,7 @@
                         </div>
                         <h3 class="title"><?php esc_html_e( 'CR Management', 'erp' );?></h3>
                         <div class="subtitle">
-                            <span><?php esc_html_e( 'Cusomer Relationship Management', 'erp' ); ?></span>
+                            <span><?php esc_html_e( 'Customer Relationship Management', 'erp' ); ?></span>
                             <label class="switch">
                                 <input class="module_action" type="checkbox" data-module-id="crm" <?php echo wperp()->modules->is_module_active('crm') ? 'checked="checked"' : ''; ?>>
                                 <span class="slider round"></span>

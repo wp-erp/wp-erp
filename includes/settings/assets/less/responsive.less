@@ -1,0 +1,75 @@
+#erp-settings {
+
+    /* Smartphones (portrait and landscape) ----------- */
+    @media only screen and (min-device-width : 320px) and (max-device-width : 768px) {
+        .settings-area {
+            display: flex;
+            margin: 0px 8px 0 -15px;
+
+            .settings-sidebar {
+                flex-basis: 5%;
+                width: 80px;
+                margin: 0px 5px 0px -20px;
+
+                .settings-navbar {
+                    h2 {
+                        display: none;
+                    }
+                }
+
+                .settings-menu {
+
+                    .menu-name {
+                        display: none;
+                    }
+
+                    li {
+                        a {
+                            padding: 18px 15px;
+                        }
+                    }
+                }
+            }
+
+            .settings-content {
+                flex-basis: 95%;
+                padding: 10px;
+
+                .section-title {
+                    font-size: 16px;
+                    margin-top: 20px;
+                }
+
+                .search-area {
+                    margin-top: 0px;
+                    
+                    .input-searchbar {
+                        width: 100%;
+                    }
+                }
+
+                .settings-box {
+                    margin: 0px;
+                    padding: 15px;
+                }
+            }
+
+            .settings-submenu-navbar {
+                margin-top: 20px;
+
+                .settings-sub-menu {
+                    li {
+                        padding: 0px 10px 2px 0px;
+                    }
+                }
+            }
+        }
+
+    }
+
+    /* Desktops and laptops ----------- */
+    @media only screen and (min-width : 1224px) {}
+
+    /* Large screens ----------- */
+    @media only screen and (min-width : 1824px) {}
+}

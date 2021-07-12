@@ -1,0 +1,201 @@
+// stylelint-disable selector-no-qualifying-type
+
+//
+// Base styles
+//
+
+.@{theme-prefix}-btn {
+    //display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: @btn-font-weight;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    user-select: none;
+    border: @btn-border-width solid transparent;
+    .button-size(@btn-padding-y, @btn-padding-x, 12px, @btn-line-height, @btn-border-radius);
+    .transition(@btn-transition);
+
+    // Share hover and focus styles
+    .hover-focus {
+        text-decoration: none;
+    }
+
+    // [class*="flaticon"] {
+    //     color: #7d8294;
+    //     color: inherit;
+    // }
+
+    &:focus,
+    &.focus {
+        outline: 0;
+        box-shadow: @btn-focus-box-shadow;
+    }
+
+    // Disabled comes first so active can properly restyle
+    &.disabled,
+    &:disabled {
+        opacity: @btn-disabled-opacity;
+        .box-shadow(none);
+    }
+
+    // Opinionated: add "hand" cursor to non-disabled .btn elements
+    &:not(:disabled):not(.disabled) {
+        cursor: pointer;
+    }
+
+    &:not(:disabled):not(.disabled):active,
+    &:not(:disabled):not(.disabled).active {
+        .box-shadow(@btn-active-box-shadow);
+
+        &:focus {
+            .box-shadow(@btn-focus-box-shadow, @btn-active-box-shadow);
+        }
+    }
+
+    //
+    // Button Color
+    //
+    &.btn--primary {
+        background-color: @theme-color;
+        color: @white !important;
+        &:hover {
+            background-color: fade(@theme-color, 80%);
+        }
+    }
+
+    &.btn--default {
+        background-color: #fff;
+        color: #000;
+        border: 1px solid #E2E2E2;
+        border-radius: 3px;
+        &:hover {
+            background-color: #f2f2f2;
+        }
+    }
+
+    &.btn--outline{
+        border-color: inherit;
+        background-color: transparent;
+
+        &.btn--primary {
+            color: @theme-color;
+        }
+    }
+
+    //
+    // Button Sizes
+    //
+    &.btn--lg {
+        .button-size(@btn-padding-y-lg, @btn-padding-x-lg, @font-size-lg, @btn-line-height-lg, @btn-border-radius-lg);
+    }
+
+    &.btn--sm {
+        .button-size(@btn-padding-y-sm, @btn-padding-x-sm, @font-size-sm, @btn-line-height-sm, @btn-border-radius-sm);
+    }
+
+    //
+    // Button icon
+    //
+
+
+    i {
+        align-items: center;
+        display: inline-flex;
+        justify-content: center;
+        height: 1rem;
+        width: 1rem;
+
+        &:first-child:not(:last-child) {
+            margin-right: 5px;
+        }
+
+        &:last-child:not(:first-child) {
+            margin-left: 5px;
+        }
+
+        &:before {
+            font-size: 10px;
+        }
+    }
+}
+
+// Future-proof disabling of clicks on `<a>` elements
+a.btn.disabled,
+fieldset:disabled a.btn {
+    pointer-events: none;
+}
+
+//
+// Link buttons
+//
+
+// Make a button look and behave like a link
+.btn-link {
+    font-weight: @font-weight-normal;
+    color: @link-color;
+    background-color: transparent;
+
+    .hover {
+        color: @link-hover-color;
+        text-decoration: @link-hover-decoration;
+        background-color: transparent;
+        border-color: transparent;
+    }
+
+    &:focus,
+    &.focus {
+        text-decoration: @link-hover-decoration;
+        border-color: transparent;
+        box-shadow: none;
+    }
+
+    &:disabled,
+    &.disabled {
+        color: @btn-link-disabled-color;
+        pointer-events: none;
+    }
+
+    // No need for an active state here
+}
+
+
+//
+// Block button
+//
+
+.btn-block {
+    display: block;
+    width: 100%;
+
+    // Vertically space out multiple block buttons
+    + .btn-block {
+        margin-top: @btn-block-spacing-y;
+    }
+}
+
+// Specificity overrides
+input[type="submit"],
+input[type="reset"],
+input[type="button"] {
+    &.btn-block {
+        width: 100%;
+    }
+}
+
+/*.buttons-wrapper {
+    .wperp-btn:not(:last-child) {
+        margin-right: 15px;
+    }
+}*/
+
+.buttons-wrapper {
+    .wperp-btn {
+        margin-left: 15px;
+    }
+    .wperp-btn.ml-0 {
+        margin-left: 0 !important;
+    }
+}
