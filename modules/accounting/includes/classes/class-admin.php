@@ -7,6 +7,7 @@ namespace WeDevs\ERP\Accounting\Includes\Classes;
  */
 class Admin {
     public function __construct() {
+        add_action( 'admin_init', [ $this, 'init_classes' ] );
         add_action( 'admin_menu', [ $this, 'admin_menu' ] );
         add_action( 'admin_bar_menu', [ $this, 'add_admin_bar_menu' ] );
         add_action( 'admin_init', [ $this, 'init_hooks' ], 5 );
@@ -240,7 +241,7 @@ class Admin {
                 ]
             );
         }
-        
+
         erp_add_menu(
             'accounting',
             [
@@ -327,6 +328,20 @@ class Admin {
      */
     public function init_hooks() {
         add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
+    }
+
+    /**
+     * Init Classes
+     *
+     * @return void
+     */
+    public function init_classes() {
+        // Initialization of Accounting Tutorial Class if tutorial mode is enabled
+        $tutorial_tab = ! empty( $_GET['tutorial'] ) ? true : false;
+
+        if ( $tutorial_tab ) {
+            new \WeDevs\ERP\Accounting\Includes\Classes\AccountingTutorial();
+        }
     }
 
     /**
