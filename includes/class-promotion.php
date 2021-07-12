@@ -29,9 +29,9 @@ class Promotion {
         }
         
         $current_time      = erp_current_datetime()->setTimezone ( new \DateTimeZone( 'America/New_York' ) );
-        $promotion_start   = $current_time->setDate( 2021, 05, 11 )->setTime( 9, 0, 0 );
+        $promotion_start   = $current_time->setDate( 2021, 07, 16 )->setTime( 9, 0, 0 );
         // $promotion_end     = $promotion_start->modify( '+7 days' )->setTime( 23, 59, 59 );
-        $promotion_end     = $current_time->setDate( 2021, 05, 24 )->setTime( 23, 59, 59 );
+        $promotion_end     = $current_time->setDate( 2021, 07, 26 )->setTime( 23, 59, 59 );
         
         // 2021-03-15 09:00:00 EST - 2021-03-22 23:59:59 EST
         if ( $current_time > $promotion_end || $current_time < $promotion_start ) {
@@ -39,8 +39,9 @@ class Promotion {
         }
 
         if ( $current_time >= $promotion_start && $current_time <= $promotion_end ) {
-            $msg            = '<strong>Eid Mubarak!</strong></br>Stay Safe & Spread Happiness.</br>Enjoy up to <strong>45% OFF</strong> on <strong>WP ERP Pro</strong>.';
-            $option_name    = 'erp_eid_offer_2021';
+            $msg            = '<strong>Summer Sale!</strong></br>Chill out with <strong>weDevs</strong>.</br>Enjoy up to <strong>35% OFF</strong> on <strong>WP ERP Pro</strong>.';
+            $option_name    = 'erp_summer_sale_offer_2021';
+            
             $this->generate_notice( $msg, $option_name );
             return;
         }
@@ -62,7 +63,7 @@ class Promotion {
         }
 
         $offer_msg = '<p class="highlight-text">' . $msg . 
-                ' <a target="_blank" href="https://wperp.com/pricing/?nocache&utm_medium=text&utm_source=wordpress-erp-eidoffer2021">Get Now</a>
+                ' <a target="_blank" href="https://wperp.com/pricing/?nocache&utm_medium=text&utm_source=wordpress-erp-summer-sale2021">Get Now</a>
             </p>';
         ?>
         <div class="notice is-dismissible erp-promotional-offer-notice" id="erp-promotional-offer-notice">
