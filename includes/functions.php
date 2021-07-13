@@ -3494,6 +3494,12 @@ function erp_reset_data() {
             AND TABLE_NAME NOT LIKE '%_erp_audit_log%'"
         );
 
+        // Delete users table data related to the employees/people
+        $users = $wpdb->get_results( "SELECT user_id FROM {$wpdb->prefix}erp_peoples WHERE user_id <> 0" );
+        foreach ( $users as $user ) {
+            wp_delete_user( $user->user_id );
+        }
+
         $table_names = [];
         foreach ( $tables as $table ) {
             $table_name    = $table->TABLE_NAME;
