@@ -3490,8 +3490,8 @@ function erp_reset_data() {
         $tables = $wpdb->get_results(
             "SELECT TABLE_NAME FROM information_schema.TABLES
             WHERE TABLE_SCHEMA = '{$wpdb->dbname}'
-            AND TABLE_NAME LIKE '%_erp_%'
-            AND TABLE_NAME NOT LIKE '%_erp_audit_log%'"
+            AND TABLE_NAME LIKE '{$wpdb->prefix}erp\_%'
+            AND TABLE_NAME NOT LIKE '{$wpdb->prefix}erp\_audit\_log'"
         );
 
         // Delete users table data related to the employees/people
@@ -3533,7 +3533,7 @@ function erp_reset_data() {
         wp_clear_scheduled_hook( 'erp_weekly_scheduled_events' );
 
         // Deactivate & activate wp-erp
-        $plugin_wp_erp = plugin_basename( 'erp/wp-erp.php' );
+        $plugin_wp_erp = end( explode( '/', WPERP_URL ) ) . '/wp-erp.php';
         deactivate_plugins( $plugin_wp_erp );
 
         // Activate and add deafult modules
@@ -3542,10 +3542,13 @@ function erp_reset_data() {
         update_option( 'erp_modules', $all_modules );
 
         // If ERP Pro is installed & activated, do the same for this
-        $plugin_erp_pro = plugin_basename( 'erp-pro/erp-pro.php' );
-        if ( is_plugin_active( $plugin_erp_pro ) ) {
-            deactivate_plugins( $plugin_erp_pro );
-            activate_plugin( $plugin_erp_pro );
+        if ( function_exists( 'wp_erp_pro' ) ) {
+            $plugin_erp_pro = end( explode( '/', ERP_PRO_DIR ) ) . '/erp-pro.php';
+
+            if ( is_plugin_active( $plugin_erp_pro ) ) {
+                deactivate_plugins( $plugin_erp_pro );
+                activate_plugin( $plugin_erp_pro );
+            }
         }
 
         return true;

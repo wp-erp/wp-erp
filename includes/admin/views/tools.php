@@ -36,10 +36,7 @@
     $tabs['misc']        = esc_html__( 'Misc.', 'erp' );
     $tabs['status']      = esc_html__( 'Status', 'erp' );
     $tabs['log']         = esc_html__( 'Audit Log', 'erp' );
-
-    if ( current_user_can( 'manage_options' ) ) {
-        $tabs['danger-zone'] = esc_html__( 'Danger Zone', 'erp' );
-    }
+    $tabs['danger-zone'] = esc_html__( 'Danger Zone', 'erp' );
 
 
     $tabs = apply_filters( 'erp_tools_tabs', $tabs );
@@ -72,7 +69,7 @@
                 break;
 
             case 'danger-zone':
-                new \WeDevs\ERP\DangerZone();
+                new \WeDevs\ERP\Danger_Zone();
                 break;
 
             default:

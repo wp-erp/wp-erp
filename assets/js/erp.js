@@ -728,7 +728,7 @@ window.wperp = window.wperp || {};
                 confirmationElement.addClass('tools-success-input');
             } else {
                 confirmationElement.removeClass('tools-success-input');
-                $(".tools-error-message").html('Please confirm the Reset input before continue.');
+                $(".tools-error-message").html( wpErpDangerZone.confirmResetBeforeContinue );
                 confirmationElement.addClass('tools-error-input');
             }
         }

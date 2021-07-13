@@ -4,11 +4,12 @@ namespace WeDevs\ERP;
 
 /**
  * ERP Danger Zone Class
- * Reset all data of WPErp and make a fresh installation
+ * 
+ * Reset all data of WP ERP and make a fresh installation
  *
  * @since 1.8.7
  */
-class DangerZone {
+class Danger_Zone {
 
     /**
      * Kick-in the class
@@ -19,7 +20,7 @@ class DangerZone {
     }
 
     /**
-     * Get Danger zone scripts scripts
+     * Get Danger zone scripts
      *
      * @since 1.8.7
      *
@@ -30,8 +31,8 @@ class DangerZone {
             'resetErp'                   => __( 'Reset WP ERP?', 'erp' ),
             'areYouSureReset'            => __( 'Are you sure you want to reset WP ERP?', 'erp' ),
             'yesResetIt'                 => __( 'Yes, Reset Now it', 'erp' ),
-            'confirmResetBeforeContinue' => __('Please confirm the Reset input before continue.', 'erp'),
-            'somethingWrong'             => __('Something went wrong, Please try again !', 'erp'),
+            'confirmResetBeforeContinue' => __( 'Please confirm the "Reset" text to reset WP ERP', 'erp' ),
+            'somethingWrong'             => __( 'Something went wrong, Please try again !', 'erp' ),
             'trashIcon'                  => WPERP_ASSETS . '/images/trash-circle.png',
         ] );
     }

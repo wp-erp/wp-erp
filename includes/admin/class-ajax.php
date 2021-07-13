@@ -885,7 +885,7 @@ class Ajax {
                 $this->send_error( esc_html__( 'Sorry, Something went wrong. Please try again !', 'erp' ) );
             }
 
-            $page =  'erp'; // @todo Can change to `erp-setup`
+            $page =  'erp-setup'; // Valid Option: erp or erp-setup
 
             $this->send_success( [
                 'message'        => esc_html__( 'Resetted WP ERP successfully. You will be redirected soon. Please Setup WP ERP again or Skip to continue.', 'erp' ),
