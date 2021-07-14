@@ -61,15 +61,15 @@ class Accounting_Tutorial {
 	 */
 	public function setup_pointers_for_screen() {
 		if ( ! $screen = get_current_screen() ) {
-			return;
+            return;
 		}
 
 		if ( 'wp-erp_page_erp-accounting' === $screen->id ) {
 			$tab = ! empty( $_GET['tab'] ) ? $_GET['tab'] : 'dashboard';
 
             wp_enqueue_style( 'wp-pointer' );
-		    wp_enqueue_script( 'wp-pointer' );
-
+            wp_enqueue_script( 'wp-pointer' );
+            
             $this->get_tutorial_pointer( $tab );
 		}
 	}
@@ -266,8 +266,7 @@ class Accounting_Tutorial {
 	public function enqueue_pointers( $pointers ) {
 		$pointers = rawurlencode( wp_json_encode( $pointers ) );
 
-		erp_enqueue_js(
-            "jQuery( function( $ ) {
+		erp_enqueue_js("jQuery( function( $ ) {
 				var erp_pointers = JSON.parse( decodeURIComponent( '{$pointers}' ) );
 				setTimeout( init_erp_pointers, 800 );
 
