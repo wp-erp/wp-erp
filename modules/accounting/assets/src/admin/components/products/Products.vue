@@ -15,11 +15,11 @@
             <product-search v-model="search" />
         </div>
 
-        <product-modal v-if="showModal" :product.sync="product"></product-modal>
+        <product-modal v-if="showModal" :product.sync="product" />
 
-        <export-modal v-if="showExportModal"></export-modal>
+        <export-modal v-if="showExportModal" />
         
-        <import-modal v-if="showImportModal"></import-modal>
+        <import-modal v-if="showImportModal" />
 
         <list-table
             tableClass="wperp-table table-striped table-dark widefat table2 product-list"
