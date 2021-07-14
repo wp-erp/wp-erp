@@ -48,7 +48,7 @@
                         </td>
                     </tr>
                 </tbody>
-                
+
                 <tbody v-else>
                     <tr :col-span="numColumns">
                         <th>{{ __('No templates found.', 'erp') }}</th>
@@ -98,7 +98,7 @@
                             <tooltip
                                 :input="{
                                     tooltip: true,
-                                    tooltip_text: __('You may use these template tags inside subject, heading, body and those will be replaced by original values', 'erp') 
+                                    tooltip_text: __('You may use these template tags inside subject, heading, body and those will be replaced by original values', 'erp')
                                 }"
                             />
                         </label>
@@ -155,10 +155,10 @@ export default {
             shortCodes      : [],
             module          : 'hrm',
             showModal       : false,
-            columns         : [ 
+            columns         : [
                 __('Template Name', 'erp'),
                 __('Description', 'erp'),
-                __('Disable/Enable', 'erp'),
+                __('Disable / Enable', 'erp'),
                 ''
             ],
         }
@@ -189,7 +189,7 @@ export default {
     methods: {
         getEmailTemplates() {
             var self = this;
-            
+
             self.$store.dispatch("spinner/setSpinner", true);
 
             wp.ajax.send({
@@ -211,7 +211,7 @@ export default {
         toggleStatus(email, index) {
             var self   = this,
                 status = email.is_enabled === 'yes' ? 'no' : 'yes';
-            
+
             self.$store.dispatch("spinner/setSpinner", true);
 
             wp.ajax.send({
@@ -248,7 +248,7 @@ export default {
                     self.singleTemplate.title       = template.name;
                     self.singleTemplate.description = template.description;
                     self.shortCodes                 = response.tags;
-                    
+
                     self.$store.dispatch("spinner/setSpinner", false);
                 },
                 error: function(error) {
@@ -300,7 +300,7 @@ export default {
 
         setModule(value) {
             this.$store.dispatch("spinner/setSpinner", true);
-            
+
             setTimeout(() => {
                 this.module = value;
                 this.$store.dispatch("spinner/setSpinner", false);
