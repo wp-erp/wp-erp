@@ -35,7 +35,7 @@
                                 v-if="email.disable_allowed"
                                 :value="email.is_enabled"
                                 :id="email.id"
-                                @click.native="toggleStatus(email, index)"
+                                @toggle="toggleStatus(email, index)"
                             ></radio-switch>
                         </td>
                         <td>
@@ -73,7 +73,7 @@
                         <radio-switch
                             v-model="singleTemplate.is_enable"
                             :id="singleTemplate.id"
-                            @click.native="switchValue"
+                            @toggle="switchValue"
                         ></radio-switch>
                     </div>
 
