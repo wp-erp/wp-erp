@@ -1,7 +1,7 @@
 <template>
     <div class="field">
         <input type="checkbox" name="switchRounded" :class="switchType" :checked="checked" />
-        <label for="switchRounded">{{ label }}</label>
+        <label for="switchRounded" @click="toggle">{{ label }}</label>
     </div>
 </template>
 
@@ -35,6 +35,12 @@ export default {
             }
 
             return '';
+        }
+    },
+
+    methods: {
+        toggle() {
+            this.$emit('toggle');
         }
     },
 }
