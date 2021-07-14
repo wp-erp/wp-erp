@@ -131,7 +131,6 @@ export default {
 
     watch: {
         search(newVal, oldVal) {
-            this.$store.dispatch('spinner/setSpinner', true);
             this.getProducts();
         }
     },
@@ -139,6 +138,9 @@ export default {
     methods: {
         getProducts() {
             this.products = [];
+
+            this.$store.dispatch('spinner/setSpinner', true);
+
             HTTP.get('/products', {
                 params: {
                     per_page: this.paginationData.perPage,
