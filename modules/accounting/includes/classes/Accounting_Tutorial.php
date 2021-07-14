@@ -115,7 +115,7 @@ class Accounting_Tutorial {
                         'next_trigger' => [],
                         'options'      => [
                             'content'  => '<h3>' . esc_html__( 'Add Customers', 'erp' ) . '</h3>' .
-                                            '<p>' . esc_html__( 'Create your customers profile before creating an invoice for them. You can also et the customer list here from the CRM directly if you have enabled sync from the Settings.', 'erp' ) . '</p>',
+                                            '<p>' . esc_html__( 'Create your customers profile before creating an invoice for them. You can also set the customer list here from the CRM directly if you have enabled sync from the Settings.', 'erp' ) . '</p>',
                             'position' => [ 'edge'  => 'top', 'align' => 'left' ]
                         ],
                     ]
