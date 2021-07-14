@@ -367,6 +367,15 @@ class Admin {
             ) ); ?>');
         </script>
         <?php
+        
+        /**
+         * Action hook to enqueue supporting 
+         * script for data localization
+         * 
+         * @since 1.9.0
+         */
+        do_action( 'erp_acct_locale_script' );
+
         echo '<div class="wrap"><div id="erp-accounting"></div></div>';
 
         $component = 'accounting';
