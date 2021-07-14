@@ -89,9 +89,9 @@ export default {
 
         span {
             position: absolute;
-            right: 5px;
-            top: 10px;
-            font-size: 10px;
+            right: 7px;
+            top: 4px;
+            font-size: 15px;
             cursor: pointer;
         }
     }
