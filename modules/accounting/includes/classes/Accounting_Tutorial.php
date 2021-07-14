@@ -7,13 +7,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * AccountingTutorial Class
+ * Accounting_Tutorial Class
  *
  * Make a Quick tour tutorial to demonstrate accounting module
  *
  * @since 1.8.7
  */
-class AccountingTutorial {
+class Accounting_Tutorial {
 
     /**
      * Default URL for accounting module tutorial
@@ -35,8 +35,8 @@ class AccountingTutorial {
      */
 	public function __construct() {
         $this->init_default_setup();
-
-		add_action( 'admin_enqueue_scripts', array( $this, 'setup_pointers_for_screen' ) );
+        
+        add_action( 'admin_enqueue_scripts', [ $this, 'setup_pointers_for_screen' ] );
 	}
 
     /**
@@ -66,6 +66,9 @@ class AccountingTutorial {
 
 		if ( 'wp-erp_page_erp-accounting' === $screen->id ) {
 			$tab = ! empty( $_GET['tab'] ) ? $_GET['tab'] : 'dashboard';
+
+            wp_enqueue_style( 'wp-pointer' );
+		    wp_enqueue_script( 'wp-pointer' );
 
             $this->get_tutorial_pointer( $tab );
 		}
@@ -263,13 +266,9 @@ class AccountingTutorial {
 	public function enqueue_pointers( $pointers ) {
 		$pointers = rawurlencode( wp_json_encode( $pointers ) );
 
-		wp_enqueue_style( 'wp-pointer' );
-		wp_enqueue_script( 'wp-pointer' );
-
-		wc_enqueue_js(
-			"jQuery( function( $ ) {
+		erp_enqueue_js(
+            "jQuery( function( $ ) {
 				var erp_pointers = JSON.parse( decodeURIComponent( '{$pointers}' ) );
-
 				setTimeout( init_erp_pointers, 800 );
 
 				function init_erp_pointers() {
@@ -301,34 +300,28 @@ class AccountingTutorial {
 								button2 = $( '<a class=\"button button-primary\" href=\"#\">' + next + '</a>' ),
 								wrapper = $( '<div class=\"erp-pointer-buttons\" />' ),
 								nextUrl = '';
-
 							if ( pointer.hasOwnProperty( 'last_step' ) && pointer.last_step ) {
 								next    = '" . esc_js( __( 'Complete & Close Tutorial', 'erp' ) ) . "';
 							}
-
 							if ( pointer.hasOwnProperty( 'next_url' ) && pointer.next_url.length ) {
 								nextUrl = pointer.next_url;
 								button2 = $( '<a class=\"button button-primary\" href=\"' + pointer.next_url + '\">' + next + '</a>' );
 							}
-
 							button2.bind( 'click.pointer', function(e) {
 								e.preventDefault();
 								t.element.pointer('close');
 							});
-
 							wrapper.append( button );
-
 							if ( pointer.next.length || nextUrl.length ) {
 								wrapper.append( button2 );
 							}
-
 							return wrapper;
 						},
 					} );
 
 					var this_pointer = $( pointer.target ).pointer( options );
 					this_pointer.pointer( 'open' );
-
+                    
 					if ( pointer.next_trigger ) {
 						$( pointer.next_trigger.target ).on( pointer.next_trigger.event, function() {
 							setTimeout( function() { this_pointer.pointer( 'close' ); }, 400 );
@@ -336,8 +329,8 @@ class AccountingTutorial {
 					}
 				}
 			});"
-		);
+        );
 	}
 }
 
-new AccountingTutorial();
+new Accounting_Tutorial();
