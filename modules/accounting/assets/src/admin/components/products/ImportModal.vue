@@ -442,6 +442,7 @@ export default {
         position: fixed;
         max-width: 656px;
         width: 80%;
+        z-index: 1000;
 
         .loading-text {
             margin-left: 50px;
