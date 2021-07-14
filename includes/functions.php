@@ -3452,3 +3452,52 @@ function erp_disable_mysql_strict_mode() {
     $wpdb->query( "SET SESSION SQL_MODE=''" );
     $wpdb->query( "SET SQL_BIG_SELECTS=1" );
 }
+
+/**
+ * Queue some JavaScript code to be output in the footer.
+ *
+ * @since 1.8.7
+ * 
+ * @param string $code Code.
+ * 
+ * @return void
+ */
+function erp_enqueue_js( $code ) {
+	global $erp_queued_js;
+
+	if ( empty( $erp_queued_js ) ) {
+		$erp_queued_js = '';
+	}
+
+	$erp_queued_js .= "\n" . $code . "\n";
+}
+
+/**
+ * Output any queued javascript code in the footer.
+ * 
+ * @since 1.8.7
+ * 
+ * @return void Print JS Code
+ */
+function erp_print_js() {
+	global $erp_queued_js;
+
+	if ( ! empty( $erp_queued_js ) ) {
+
+        // Sanitization JS script if anythings invalid
+		$erp_queued_js = wp_check_invalid_utf8( $erp_queued_js );
+		$erp_queued_js = preg_replace( '/&#(x)?0*(?(1)27|39);?/i', "'", $erp_queued_js );
+		$erp_queued_js = str_replace( "\r", '', $erp_queued_js );
+
+		$js = "<!-- ERP JavaScript -->\n<script type=\"text/javascript\">\njQuery(function($) { $erp_queued_js });\n</script>\n";
+
+		/**
+		 * Queued JS Filter.
+		 *
+		 * @param string $js JavaScript code.
+		 */
+		echo apply_filters( 'erp_queued_js', $js );
+
+		unset( $erp_queued_js );
+	}
+}

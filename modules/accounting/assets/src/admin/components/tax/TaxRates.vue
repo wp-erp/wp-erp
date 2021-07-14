@@ -4,7 +4,7 @@
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
                     <h2 class="content-header__title">{{ __('Tax Rates', 'erp') }}</h2>
-                    <a class="wperp-btn btn--primary" @click.prevent="newTaxRate">
+                    <a class="wperp-btn btn--primary" @click.prevent="newTaxRate" id="add-tax-rate">
                         <span>{{ __('Add Tax Rate', 'erp') }}</span>
                     </a>
                 </div>
