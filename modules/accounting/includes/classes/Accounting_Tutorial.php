@@ -115,7 +115,7 @@ class Accounting_Tutorial {
                         'next_trigger' => [],
                         'options'      => [
                             'content'  => '<h3>' . esc_html__( 'Add Customers', 'erp' ) . '</h3>' .
-                                            '<p>' . esc_html__( 'Create your customers profile before creating an invoice for them. You can also set the customer list here from the CRM directly if you have enabled sync from the Settings.', 'erp' ) . '</p>',
+                                            '<p>' . esc_html__( 'Create your customers profile before creating an invoice for them. You can also get the customer list here from the CRM directly if you have enabled sync from the Settings.', 'erp' ) . '</p>',
                             'position' => [ 'edge'  => 'top', 'align' => 'left' ]
                         ],
                     ]
@@ -290,7 +290,7 @@ class Accounting_Tutorial {
 							}
 						},
 						open: function( e, t ) {
-							t.pointer.get(0).scrollIntoView( { behavior: 'smooth' } );
+							t.pointer.get(0).scrollIntoView( { behavior: 'smooth', marginTop: 50 } );
 						},
 						buttons: function( event, t ) {
 							var close   = '" . esc_js( __( 'Dismiss', 'erp' ) ) . "',
