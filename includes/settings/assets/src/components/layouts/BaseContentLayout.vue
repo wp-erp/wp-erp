@@ -44,7 +44,7 @@
                 <div v-else-if="input.type === 'radio'">
                     <radio-switch
                         :value="fields[index]['value']"
-                        @click.native="toggleSwitch(index)"
+                        @toggle="toggleSwitch(index)"
                         :id="'erp-'+fields[index]['id']"
                     ></radio-switch>
 
