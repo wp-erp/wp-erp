@@ -1,10 +1,10 @@
 #erp-settings {
 
     /* Smartphones (portrait and landscape) ----------- */
-    @media only screen and (min-device-width : 320px) and (max-device-width : 768px) {
+    @media only screen and (min-width : 120px) and (max-width : 768px) {
         .settings-area {
             display: flex;
-            margin: 0px 8px 0 -15px;
+            // margin: 0px 8px 0 -15px;
 
             .settings-sidebar {
                 flex-basis: 5%;
@@ -65,6 +65,41 @@
             }
         }
 
+        .erp-settings-tooltip {
+            .tooltiptext {
+                min-width: 250px;
+            }
+        }
+
+        .settings-btn-cancel {
+            margin-left: -1px;
+            padding: 0px 2px 0 6px;
+            width: 16px;
+            font-size: 10px;
+            height: 16px;
+            border-radius: 8px;
+            margin-top: 10px;
+            background: #f5f5f5;
+        }
+
+        .vue-dropify__message p {
+            margin: 2% 24%!important;
+        }
+
+        .sub-sub-menu li {
+            margin: 12px 0px;
+        }
+
+        .multiselect__content-wrapper {
+            max-width: 240px;
+            word-wrap: break-word;
+            white-space: nowrap;
+            font-size: 12px;
+        }
+
+        .button.button-small .dashicons {
+            margin-top: 8px !important;
+        }
     }
 
     /* Desktops and laptops ----------- */
