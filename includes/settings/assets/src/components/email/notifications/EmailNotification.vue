@@ -182,7 +182,7 @@ export default {
         },
 
         numColumns() {
-            return columns.length;
+            return this.columns.length;
         }
     },
 
