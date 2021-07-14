@@ -86,7 +86,7 @@
             </div>
 
             <div class="wperp-form-group mt-10">
-                <button type="button" class="button pull-left" v-on:click="reset_mapping">
+                <button type="button" class="wperp-btn btn--default settings-button-reset pull-left" v-on:click="reset_mapping">
                     {{ __( 'Reset', 'erp' ) }}
                 </button>
 
