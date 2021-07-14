@@ -30,7 +30,7 @@ class Danger_Zone {
         wp_localize_script( 'erp-script', 'wpErpDangerZone', [
             'resetErp'                   => __( 'Reset WP ERP?', 'erp' ),
             'areYouSureReset'            => __( 'Are you sure you want to reset WP ERP?', 'erp' ),
-            'yesResetIt'                 => __( 'Yes, Reset Now it', 'erp' ),
+            'yesResetIt'                 => __( 'Yes, Reset Now', 'erp' ),
             'confirmResetBeforeContinue' => __( 'Please confirm the "Reset" text to reset WP ERP', 'erp' ),
             'somethingWrong'             => __( 'Something went wrong, Please try again !', 'erp' ),
             'trashIcon'                  => WPERP_ASSETS . '/images/trash-circle.png',
