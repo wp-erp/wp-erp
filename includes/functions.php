@@ -3467,6 +3467,9 @@ function erp_reset_data() {
     global $wpdb;
 
     try {
+
+        @ini_set( 'max_execution_time', '0' );
+
         $wpdb->query('START TRANSACTION');
 
         $options = [
@@ -3505,6 +3508,12 @@ function erp_reset_data() {
             $table_name    = $table->TABLE_NAME;
             $table_names[] = $table_name;
             $wpdb->query( 'TRUNCATE TABLE ' . $table_name );
+        }
+
+        // Delete all posts data related to WP ERP
+        $erp_posts = get_posts( [ 'post_type' => [ 'erp_hr_announcement', 'erp_hr_training', 'erp_hr_questionnaire', 'erp_hr_recruitment', 'erp_inv_product' ] ] );
+        foreach ( $erp_posts as $post ) {
+            wp_delete_post( $post->ID, true );
         }
 
         $log_data = [
