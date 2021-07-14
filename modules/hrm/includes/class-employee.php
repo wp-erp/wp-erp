@@ -1710,8 +1710,11 @@ class Employee {
              * it cannot be used for the current history
              * and so we will abandon the process.
              */
-            if ( (int) $future_history->count() > 0 ) {
-                return new WP_Error( 'invalid-date', __( 'This date cannot be used for the current history. An old history already exists after this date.' ) );
+            if ( $future_history->count() > 0 ) {
+                return new WP_Error(
+                    'invalid-date',
+                    __( 'This date cannot be used for the current history. An old history already exists after this date.', 'erp' )
+                );
             }
         }
 
@@ -1721,7 +1724,7 @@ class Employee {
          * and so we will update the executive values
          * of employee profile.
          */
-        if ( (int) $future_history->count() === 0 ) {
+        if ( $future_history->count() === 0 ) {
 
             if ( ! empty( $args['type'] ) ) {
                 $this->erp_user->update( [
@@ -1824,8 +1827,11 @@ class Employee {
              * it cannot be used for the current history
              * and so we will abandon the process.
              */
-            if ( (int) $future_history->count() > 0 ) {
-                return new WP_Error( 'invalid-date', __( 'This date cannot be used for the current history. An old history already exists after this date.' ) );
+            if ( $future_history->count() > 0 ) {
+                return new WP_Error(
+                    'invalid-date',
+                    __( 'This date cannot be used for the current history. An old history already exists after this date.', 'erp' )
+                );
             }
         }
 
@@ -1835,7 +1841,7 @@ class Employee {
          * and so we will update the executive values
          * of employee profile.
          */
-        if ( (int) $future_history->count() === 0 ) {
+        if ( $future_history->count() === 0 ) {
             $this->erp_user->update( [
                 'pay_rate' => floatval( $args['pay_rate'] ),
                 'pay_type' => $args['pay_type'],
@@ -1923,8 +1929,11 @@ class Employee {
              * it cannot be used for the current history
              * and so we will abandon the process.
              */
-            if ( (int) $future_history->count() > 0 ) {
-                return new WP_Error( 'invalid-date', __( 'This date cannot be used for the current history. An old history already exists after this date.' ) );
+            if ( $future_history->count() > 0 ) {
+                return new WP_Error(
+                    'invalid-date',
+                    __( 'This date cannot be used for the current history. An old history already exists after this date.', 'erp' )
+                );
             }
         }
 
@@ -1934,7 +1943,7 @@ class Employee {
          * and so we will update the executive values
          * of employee profile.
          */
-        if ( (int) $future_history->count() === 0 ) {
+        if ( $future_history->count() === 0 ) {
             $this->erp_user->update( [
                 'designation'  => $args['designation'],
                 'department'   => $args['department'],
