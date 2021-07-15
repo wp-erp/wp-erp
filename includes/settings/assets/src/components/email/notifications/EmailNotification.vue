@@ -200,20 +200,22 @@ export default {
 
             self.$store.dispatch("spinner/setSpinner", true);
 
-            wp.ajax.send({
-                data : {
-                    action   : "erp_get_email_templates",
-                    _wpnonce : erp_settings_var.nonce,
-                },
-                success: function(response) {
-                    self.emailTemplates = response;
-                    self.$store.dispatch("spinner/setSpinner", false);
-                },
-                error: function(error) {
-                    self.$store.dispatch("spinner/setSpinner", false);
-                    self.showAlert("error", error);
-                }
-            });
+            setTimeout(() => {
+                wp.ajax.send({
+                    data : {
+                        action   : "erp_get_email_templates",
+                        _wpnonce : erp_settings_var.nonce,
+                    },
+                    success: function(response) {
+                        self.emailTemplates = response;
+                        self.$store.dispatch("spinner/setSpinner", false);
+                    },
+                    error: function(error) {
+                        self.$store.dispatch("spinner/setSpinner", false);
+                        self.showAlert("error", error);
+                    }
+                });
+            }, 200);
         },
 
         toggleStatus(email, index) {
@@ -243,7 +245,7 @@ export default {
         configureTemplate(template) {
             var self = this;
 
-            self.showModal = true;
+            self.$store.dispatch("spinner/setSpinner", true);
 
             wp.ajax.send({
                 data : {
@@ -256,6 +258,7 @@ export default {
                     self.singleTemplate.title       = template.name;
                     self.singleTemplate.description = template.description;
                     self.shortCodes                 = response.tags;
+                    self.showModal                  = true;
 
                     self.$store.dispatch("spinner/setSpinner", false);
                 },
