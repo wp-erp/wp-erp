@@ -155,7 +155,7 @@ Vue.component('vtable', {
                                         + '</template>'
                                     + '</template>'
                                 +'</tr>'
-                                +'<tr v-if="( tableData.length < 1 ) || !isLoaded">'
+                                +'<tr class="no-items" v-if="( tableData.length < 1 ) || !isLoaded">'
                                     +'<td :colspan="columnCount"><span v-if="!isLoaded">{{ loadingText }}</span><span v-else>{{ noResultText }}</span></td>'
                                 +'</tr>'
                             +'</tbody>'
