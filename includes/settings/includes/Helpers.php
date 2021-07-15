@@ -196,10 +196,10 @@ class Helpers {
                 }
             } else {
                 $single_option_id = 'erp_integration_settings';
+            }
 
-                if ( ! empty ( $options['sub_sub_section_id'] ) ) {
-                    $single_option_id .= "_{$options['sub_sub_section_id']}";
-                }
+            if ( ! empty ( $options['sub_sub_section_id'] ) ) {
+                $single_option_id .= "_{$options['sub_sub_section_id']}";
             }
 
             $single_option_data = ( array ) get_option( $single_option_id );
@@ -241,7 +241,7 @@ class Helpers {
 
     /**
      * Retrieves email templates that cannot be disabled
-     * 
+     *
      * @since 1.9.0
      *
      * @return array
