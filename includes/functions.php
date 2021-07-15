@@ -1451,6 +1451,8 @@ function erp_process_csv_export() {
                 ] );
             }
 
+            error_log( print_r($items,true));
+
             foreach ( $items as $index => $item ) {
                 if ( empty( $fields ) ) {
                     continue;
@@ -1889,45 +1891,6 @@ function erp_email_settings_javascript() {
             });
         });
 
-        jQuery(document).ready(function ($) {
-            $("a#imap-test-connection").click(function (e) {
-                e.preventDefault();
-                $("a#imap-test-connection").attr('disabled', 'disabled');
-                $("a#imap-test-connection").parent().find('.erp-loader').show();
-
-                var data = {
-                    'action': 'erp_imap_test_connection',
-                    'mail_server': $('input[name=mail_server]').val(),
-                    'username': $('input[name=username]').val(),
-                    'password': $('input[name=password]').val(),
-                    'protocol': $('select[name=protocol]').val(),
-                    'port': $('input[name=port]').val(),
-                    'authentication': $('select[name=authentication]').val(),
-                    '_wpnonce': '<?php echo esc_html( wp_create_nonce( 'erp-imap-test-connection-nonce' ) ); ?>'
-                };
-
-                $.post(ajaxurl, data, function (response) {
-                    $("a#imap-test-connection").removeAttr('disabled');
-                    $("a#imap-test-connection").parent().find('.erp-loader').hide();
-
-                    var type = response.success ? 'success' : 'error';
-
-                    if (response.data) {
-                        var status = response.success ? 1 : 0;
-                        $('#imap_status').val(status);
-
-                        swal({
-                            title: '',
-                            text: response.data,
-                            type: type,
-                            confirmButtonText: 'OK',
-                            confirmButtonColor: '#008ec2'
-                        });
-                    }
-                });
-            });
-        });
-
         jQuery('.email_tab_view li').click(function(){
 
             var elm = jQuery( this );
@@ -1940,44 +1903,6 @@ function erp_email_settings_javascript() {
 
         });
     </script>
-    <?php
-}
-
-/**
- * Email Setting CSS.
- *
- * @return void
- */
-function email_setting_css() {
-    ?>
-    <style>
-
-        #bt_others {
-            display: none;
-        }
-
-        tr.tag_crm, tr.tag_accounting, tr.tag_others {
-            display: none;
-        }
-        ul.email_tab_view {
-            display:table;
-            border-spacing:7px;
-            margin-left:-7px;
-            margin-bottom: -7px;
-        }
-
-        ul.email_tab_view li {
-            display: table-cell;
-            border:1px solid #ccd0d4;
-            padding:5px 10px;
-            background-color: #e5e5e5;
-            cursor: pointer;
-        }
-
-        .bt_active, ul.email_tab_view li:hover {
-            background-color : white !important;
-        }
-    </style>
     <?php
 }
 
@@ -2100,7 +2025,7 @@ function erp_import_export_download_sample() {
         $keys      = $fields[ $type ]['fields'];
         $keys      = array_flip( $keys );
         $file_name = "sample_csv_{$type}.csv";
-        
+
         erp_make_csv_file( [ $keys ], $file_name, false );
     }
 
@@ -3455,11 +3380,11 @@ function erp_sanitize_phone_number( $phone_no, $allow_plus = false ) {
 
 /**
  * Checks if a user has permission to view a page
- * 
+ *
  * @since 1.8.5
  *
  * @param string $cap
- * 
+ *
  * @return void
  */
 function erp_verify_page_access_permission( $cap ) {
@@ -3474,7 +3399,7 @@ function erp_verify_page_access_permission( $cap ) {
 
 /**
  * Disables mysql strict mode
- * 
+ *
  * @since 1.8.5
  *
  * @return void
@@ -3484,4 +3409,183 @@ function erp_disable_mysql_strict_mode() {
 
     $wpdb->query( "SET SESSION SQL_MODE=''" );
     $wpdb->query( "SET SQL_BIG_SELECTS=1" );
+}
+
+/**
+ * Reset ERP Data
+ *
+ * Remove Whole ERP Tables, Roles, Options
+ * Deactivate and Activate Wp ERP & ERP-Pro
+ *
+ * @since 1.8.8
+ *
+ * @return boolean|object true|WP_Error
+ */
+function erp_reset_data() {
+    global $wpdb;
+
+    try {
+
+        @ini_set( 'max_execution_time', '0' );
+
+        $wpdb->query('START TRANSACTION');
+
+        $options = [
+            'wp_erp_version', 'wp_erp_db_version', 'erp_modules',
+            'erp_email_settings_employee-welcome', 'erp_email_settings_new-leave-request',
+            'erp_email_settings_approved-leave-request', 'erp_email_settings_rejected-leave-request',
+            'erp_email_settings_new-task-assigned', 'erp_setup_wizard_ran', 'erp_settings_general',
+            'erp_settings_accounting', 'erp_settings_erp-hr_workdays', 'wp_erp_activation_dismiss',
+            '_erp_admin_menu', '_erp_adminbar_menu', 'erp_settings_erp-email_general', 'erp_settings_erp-email_smtp',
+            '_erp_company', 'erp_settings_erp-crm_subscription', 'erp_acct_new_ledgers',
+            'erp_email_settings_new-contact-assigned', 'erp_email_settings_hiring-anniversary-wish',
+            'wp_erp_install_date', 'widget_erp-subscription-from-widget', 'erp_tracking_notice'
+        ];
+
+        $roles = [
+            'erp_hr_manager', 'employee',
+            'erp_crm_manager', 'erp_crm_agent',
+            'erp_ac_manager', 'erp_ac_agency'
+        ];
+
+        $tables = $wpdb->get_results(
+            "SELECT TABLE_NAME FROM information_schema.TABLES
+            WHERE TABLE_SCHEMA = '{$wpdb->dbname}'
+            AND TABLE_NAME LIKE '{$wpdb->prefix}erp\_%'
+            AND TABLE_NAME NOT LIKE '{$wpdb->prefix}erp\_audit\_log'"
+        );
+
+        // Delete users table data related to the employees/people
+        $users = $wpdb->get_results( "SELECT user_id FROM {$wpdb->prefix}erp_peoples WHERE user_id <> 0" );
+        foreach ( $users as $user ) {
+            wp_delete_user( $user->user_id );
+        }
+
+        $table_names = [];
+        foreach ( $tables as $table ) {
+            $table_name    = $table->TABLE_NAME;
+            $table_names[] = $table_name;
+            $wpdb->query( 'TRUNCATE TABLE ' . $table_name );
+        }
+
+        // Delete all posts data related to WP ERP
+        $erp_posts = get_posts( [ 'post_type' => [ 'erp_hr_announcement', 'erp_hr_training', 'erp_hr_questionnaire', 'erp_hr_recruitment', 'erp_inv_product' ] ] );
+        foreach ( $erp_posts as $post ) {
+            wp_delete_post( $post->ID, true );
+        }
+
+        $log_data = [
+            'component'     => '',
+            'sub_component' => 'Reset',
+            'changetype'    => 'delete',
+            'created_by'    => get_current_user_id(),
+            'old_value'     => base64_encode( maybe_serialize( $tables ) ),
+            'new_value'     => base64_encode( maybe_serialize( [ $wpdb->prefix . 'erp_audit_log' ] ) ),
+            'message'       => __('ERP data reset completed', 'erp')
+        ];
+
+        erp_log()->insert_log( $log_data );
+
+        foreach ( $roles as $role ) {
+            remove_role( $role );
+        }
+
+        foreach ( $options as $option ) {
+            delete_option( $option );
+        }
+
+        // Clear some other scheduled events registered as cron jobs
+        wp_clear_scheduled_hook( 'erp_per_minute_scheduled_events' );
+        wp_clear_scheduled_hook( 'erp_daily_scheduled_events' );
+        wp_clear_scheduled_hook( 'erp_weekly_scheduled_events' );
+
+        // Deactivate & activate wp-erp
+        $plugin_wp_erp = end( explode( '/', WPERP_URL ) ) . '/wp-erp.php';
+        deactivate_plugins( $plugin_wp_erp );
+
+        // Activate and add deafult modules
+        activate_plugin( $plugin_wp_erp );
+        $all_modules = wperp()->modules->get_modules();
+        update_option( 'erp_modules', $all_modules );
+
+        // If ERP Pro is installed & activated, do the same for this
+        if ( function_exists( 'wp_erp_pro' ) ) {
+            $plugin_erp_pro = end( explode( '/', ERP_PRO_DIR ) ) . '/erp-pro.php';
+
+            if ( is_plugin_active( $plugin_erp_pro ) ) {
+                deactivate_plugins( $plugin_erp_pro );
+                activate_plugin( $plugin_erp_pro );
+            }
+        }
+
+        return true;
+    } catch (\Exception $e) {
+        $wpdb->query('ROLLBACK');
+        return new WP_Error( 'error', __( 'Something went wrong when resetting. Please try again.', 'erp' ) );
+    }
+}
+
+/**
+ * Get Standarized message for erp
+ *
+ * @since 1.8.6
+ *
+ * @param array $args
+ *
+ * @return string
+ */
+function erp_get_message( $args = [] ) {
+
+    $defaults = [
+        'type'         => '',
+        'message'      => '',
+        'additional'   => null,
+        'append_first' => true
+    ];
+
+    $args = wp_parse_args( $args, $defaults );
+
+    switch ( $args['type'] ) {
+
+        case 'error_nonce':
+            $args['message'] = 'Nonce verification failed!';
+            break;
+
+        case 'error_permission':
+            $args['message'] = 'You do not have sufficient permissions to do this action';
+            break;
+
+        case 'error_process':
+            $args['message'] = 'Could not process the request. Try again later!';
+            break;
+
+        case 'save_success':
+            $args['message'] = 'Saved Successfully!';
+            break;
+
+        case 'update_success':
+            $args['message'] = 'Updated Successfully!';
+            break;
+
+        case 'insert_success':
+            $args['message'] = 'Created Successfully!';
+            break;
+
+        case 'delete_success':
+            $args['message'] = 'Deleted Successfully!';
+            break;
+
+        default:
+            break;
+    }
+
+    if ( ! empty( $args['additional'] ) ) {
+        if ( $args['append_first'] ) {
+            $args['message'] = $args['additional'] . ' ' . $args['message'];
+        } else {
+            $args['message'] .= ' ' . $args['additional'];
+        }
+    }
+
+    return sprintf( __( '%s', 'erp' ), $args['message'] );
 }

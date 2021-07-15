@@ -26,8 +26,8 @@ class Ajax {
         $this->action( 'wp_ajax_erp_file_upload', 'file_uploader' );
         $this->action( 'wp_ajax_erp_file_del', 'file_delete' );
         $this->action( 'wp_ajax_erp_people_exists', 'check_people' );
-        $this->action( 'wp_ajax_erp_smtp_test_connection', 'smtp_test_connection' );
         $this->action( 'wp_ajax_erp_imap_test_connection', 'imap_test_connection' );
+        $this->action( 'wp_ajax_erp_check_gmail_connection_established', 'check_gmail_connection_established' );
         $this->action( 'wp_ajax_erp_import_users_as_contacts', 'import_users_as_contacts' );
         $this->action( 'wp_ajax_erp-api-key', 'new_api_key' );
         $this->action( 'wp_ajax_erp-api-delete-key', 'delete_api_key' );
@@ -35,11 +35,12 @@ class Ajax {
         $this->action( 'wp_ajax_erp-toggle-module', 'toggle_module' );
         $this->action( 'wp_ajax_erp_import_csv', 'import_csv' );
         $this->action( 'wp_ajax_erp_acct_get_sample_csv_url', 'generate_csv_url' );
+        $this->action( 'wp_ajax_erp_reset_data', 'erp_reset_data' );
     }
 
     /**
      * Generates url for accounting people
-     * 
+     *
      * @since 1.8.5
      *
      * @return mixed
@@ -66,14 +67,14 @@ class Ajax {
 
     /**
      * Imports CSV file in ERP
-     * 
+     *
      * @since 1.8.5
      *
      * @return mixed
      */
     public function import_csv() {
         $this->verify_nonce( 'erp-import-export-nonce' );
-    
+
         if ( ! current_user_can( 'administrator' ) ) {
             $this->send_error( __( 'Sorry ! You do not have permission to access this page', 'erp' ) );
         }
@@ -228,7 +229,7 @@ class Ajax {
                     if ( is_wp_error( $people ) ) {
                         continue;
                     }
-                    
+
                     $contact       = new \WeDevs\ERP\CRM\Contact( absint( $people->id ), 'contact' );
                     $life_stage    = isset( $_POST['life_stage'] ) ? sanitize_key( $_POST['life_stage'] ) : '';
 
@@ -471,118 +472,12 @@ class Ajax {
     }
 
     /**
-     * Test the SMTP connection.
-     *
-     * @return void
-     */
-    public function smtp_test_connection() {
-        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-smtp-test-connection-nonce' ) ) {
-            return;
-        }
-
-        if ( empty( $_REQUEST['mail_server'] ) ) {
-            $this->send_error( esc_html__( 'No host address provided', 'erp' ) );
-        }
-
-        if ( empty( $_REQUEST['port'] ) ) {
-            $this->send_error( esc_html__( 'No port address provided', 'erp' ) );
-        }
-
-        if ( ! empty( $_REQUEST['authentication'] ) ) {
-            if ( empty( $_REQUEST['username'] ) ) {
-                $this->send_error( esc_html__( 'No email address provided', 'erp' ) );
-            }
-
-            if ( empty( $_REQUEST['password'] ) ) {
-                $this->send_error( esc_html__( 'No email password provided', 'erp' ) );
-            }
-        }
-
-        if ( empty( $_REQUEST['to'] ) ) {
-            $this->send_error( esc_html__( 'No testing email address provided', 'erp' ) );
-        }
-
-        $mail_server    = isset( $_REQUEST['mail_server'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['mail_server'] ) ) : '';
-        $port           = isset( $_REQUEST['port'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['port'] ) ) : 465;
-        $authentication = isset( $_REQUEST['authentication'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['authentication'] ) ) : 'smtp';
-        $username       = isset( $_REQUEST['username'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['username'] ) ) : '';
-        $password       = isset( $_REQUEST['password'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['password'] ) ) : '';
-
-        global $phpmailer, $wp_version;
-
-        // (Re)create it, if it's gone missing.
-        if ( version_compare( $wp_version, '5.5' ) >= 0 ) {
-            if ( ! ( $phpmailer instanceof \PHPMailer\PHPMailer\PHPMailer ) ) {
-                require_once ABSPATH . WPINC . '/PHPMailer/PHPMailer.php';
-                require_once ABSPATH . WPINC . '/PHPMailer/SMTP.php';
-                require_once ABSPATH . WPINC . '/PHPMailer/Exception.php';
-                $phpmailer = new \PHPMailer\PHPMailer\PHPMailer( true );
-            }
-        } else {
-            if ( ! ( $phpmailer instanceof PHPMailer ) ) {
-                require_once ABSPATH . WPINC . '/class-phpmailer.php';
-                require_once ABSPATH . WPINC . '/class-smtp.php';
-                $phpmailer = new \PHPMailer( true );
-            }
-        }
-
-        $to      = isset( $_REQUEST['to'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['to'] ) ) : '';
-        $subject = esc_html__( 'ERP SMTP Test Mail', 'erp' );
-        $message = esc_html__( 'This is a test email by WP ERP.', 'erp' );
-
-        $erp_email_settings = get_option( 'erp_settings_erp-email_general', [] );
-
-        if ( ! isset( $erp_email_settings['from_email'] ) ) {
-            $from_email = get_option( 'admin_email' );
-        } else {
-            $from_email = $erp_email_settings['from_email'];
-        }
-
-        if ( ! isset( $erp_email_settings['from_name'] ) ) {
-            global $current_user;
-
-            $from_name = $current_user->display_name;
-        } else {
-            $from_name = $erp_email_settings['from_name'];
-        }
-
-        $content_type = 'text/html';
-
-        $phpmailer->AddAddress( $to );
-        $phpmailer->From       = $from_email;
-        $phpmailer->FromName   = $from_name;
-        $phpmailer->Sender     = $phpmailer->From;
-        $phpmailer->Subject    = $subject;
-        $phpmailer->Body       = $message;
-        $phpmailer->Mailer     = 'smtp';
-        $phpmailer->Host       = $mail_server;
-        $phpmailer->SMTPSecure = $authentication;
-        $phpmailer->Port       = $port;
-
-        if ( ! empty( $_REQUEST['authentication'] ) ) {
-            $phpmailer->SMTPAuth   = true;
-            $phpmailer->Username   = $username;
-            $phpmailer->Password   = $password;
-        }
-
-        $phpmailer->isHTML( true );
-
-        try {
-            $result = $phpmailer->Send();
-
-            $this->send_success( esc_html__( 'Test email has been sent.', 'erp' ) );
-        } catch ( \Exception $e ) {
-            $this->send_error( $e->getMessage() );
-        }
-    }
-
-    /**
      * Test the Imap connection.
      *
      * @return void
      */
     public function imap_test_connection() {
-        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-imap-test-connection-nonce' ) ) {
+        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-settings-nonce' ) ) {
             return;
         }
 
@@ -620,6 +515,38 @@ class Ajax {
     }
 
     /**
+     * Check if GMAIL/G-Suit connection is established based on connection-data
+     *
+     * @return void
+     */
+    public function check_gmail_connection_established() {
+        $this->verify_nonce( 'erp-settings-nonce' );
+
+        if ( ! current_user_can( 'manage_options' ) ) {
+            $this->send_error( erp_get_message( ['type' => 'error_permission'] ) );
+        }
+
+        if ( wperp()->google_auth->has_credentials() ) {
+            $url = wperp()->google_auth->get_client()->createAuthUrl();
+
+            if ( is_wp_error( $url ) ) {
+                $this->send_error( erp_get_message( ['type' => 'error_process'] ) );
+            }
+
+            $data = [
+                'link'           => $url,
+                'status'         => true,
+                'is_connected'   => (boolean) wperp()->google_auth->is_connected(),
+                'disconnect_url' => wperp()->google_auth->get_disconnect_url()
+            ];
+
+            $this->send_success( $data );
+        }
+
+        $this->send_error( __('No credential set yet !', 'erp') );
+    }
+
+    /**
      * Import users as crm contacts.
      *
      * @since 1.1.2
@@ -637,9 +564,9 @@ class Ajax {
 
         $limit   = 50; // Limit to import per request
         $attempt = get_option( 'erp_users_to_contacts_import_attempt', 1 );
-        
+
         update_option( 'erp_users_to_contacts_import_attempt', $attempt + 1 );
-        
+
         $offset        = ( $attempt - 1 ) * $limit;
 
         $user_role     = isset( $_REQUEST['user_role'] )     ? sanitize_text_field( wp_unslash( $_REQUEST['user_role'] ) )     : '';
@@ -867,6 +794,41 @@ class Ajax {
             $this->send_error( __( 'Invalid input.', 'erp') );
         }
 
+    }
+
+    /**
+     * Reset WP ERP Data
+     *
+     * @since 1.8.8
+     *
+     * @return void
+     */
+    public function erp_reset_data() {
+
+        $this->verify_nonce( 'erp-reset-nonce' );
+
+        if ( current_user_can( 'manage_options' ) === false ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
+        $reset_text = sanitize_text_field( wp_unslash( $_POST['erp_reset_confirmation'] ) );
+
+        if ( $reset_text === 'Reset' ) {
+            $resetted = erp_reset_data();
+
+            if ( is_wp_error( $resetted ) ) {
+                $this->send_error( esc_html__( 'Sorry, Something went wrong. Please try again !', 'erp' ) );
+            }
+
+            $page =  'erp-setup'; // Valid Option: erp or erp-setup
+
+            $this->send_success( [
+                'message'        => esc_html__( 'Resetted WP ERP successfully. You will be redirected soon. Please Setup WP ERP again or Skip to continue.', 'erp' ),
+                'redirected_url' => admin_url( "admin.php?page=$page" )
+            ] );
+        } else {
+            $this->send_error( esc_html__( 'Invalid confirmation text. Please give valid confirmation text.', 'erp' ) );
+        }
     }
 }
 
