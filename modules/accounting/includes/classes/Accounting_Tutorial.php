@@ -35,7 +35,7 @@ class Accounting_Tutorial {
      */
 	public function __construct() {
         $this->init_default_setup();
-        
+
         add_action( 'admin_enqueue_scripts', [ $this, 'setup_pointers_for_screen' ] );
 	}
 
@@ -69,7 +69,7 @@ class Accounting_Tutorial {
 
             wp_enqueue_style( 'wp-pointer' );
             wp_enqueue_script( 'wp-pointer' );
-            
+
             $this->get_tutorial_pointer( $tab );
 		}
 	}
@@ -320,7 +320,7 @@ class Accounting_Tutorial {
 
 					var this_pointer = $( pointer.target ).pointer( options );
 					this_pointer.pointer( 'open' );
-                    
+
 					if ( pointer.next_trigger ) {
 						$( pointer.next_trigger.target ).on( pointer.next_trigger.event, function() {
 							setTimeout( function() { this_pointer.pointer( 'close' ); }, 400 );
