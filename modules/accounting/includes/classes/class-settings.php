@@ -2,19 +2,18 @@
 
 namespace WeDevs\ERP\Accounting\Includes\Classes;
 
-use WeDevs\ERP\Framework\ERP_Settings_Page;
+use WeDevs\ERP\Settings\Template;
 
 /**
  * General class
  */
-class Settings extends ERP_Settings_Page {
+class Settings extends Template {
     public function __construct() {
         $this->id            = 'erp-ac';
         $this->label         = __( 'Accounting', 'erp' );
         $this->single_option = true;
         $this->sections      = $this->get_sections();
-
-        add_action( 'erp_admin_field_acct_opening_balance', [ $this, 'acct_opening_balance' ] );
+        $this->icon          = WPERP_ASSETS . '/images/wperp-settings/accounting.png';
     }
 
     /**
@@ -37,11 +36,16 @@ class Settings extends ERP_Settings_Page {
      *
      * @return array
      */
-    public function get_section_fields( $section = '' ) {
+    public function get_section_fields( $section = '', $all_data = false ) {
         $symbol = erp_acct_get_currency_symbol();
 
         $fields['customers'] = [
-            [ 'title' => __( '', 'erp' ), 'type' => 'title', 'desc' => '', 'id' => 'general_options' ],
+            // [
+            //     'title' => __( '', 'erp' ),
+            //     'type' => 'title',
+            //     'desc' => '',
+            //     'id' => 'general_options'
+            // ],
 
             [
                 'title' => __( 'Customer Settings', 'erp' ),
@@ -60,7 +64,7 @@ class Settings extends ERP_Settings_Page {
             ],
 
             [
-                'title'   => __( 'Import User\'s From', 'erp' ),
+                'title'   => __( 'Import User&apos;s From', 'erp' ),
                 'id'      => 'crm_user_type',
                 'type'    => 'multicheck',
                 'desc'    => __( 'Selected user type are considered to auto import.', 'erp' ),
@@ -76,7 +80,7 @@ class Settings extends ERP_Settings_Page {
 
         $fields['currency_option'] = [
             [
-                'title' => '',
+                'title' => __( 'Currency Settings', 'erp' ),
                 'type'  => 'title',
                 'desc'  => '',
                 'id'    => 'general_options',
@@ -151,6 +155,16 @@ class Settings extends ERP_Settings_Page {
             $section = $fields['checkout'];
         }
 
+        foreach ( $this->get_sections() as $sec => $name ) {
+            if ( empty( $fields[ $sec ] ) ) {
+                $fields = apply_filters( 'erp_ac_settings_section_fields_', $fields, $sec );
+            }
+        }
+
+        if ( $all_data ) {
+            return $fields;
+        }
+
         return apply_filters( 'erp_ac_settings_section_fields_' . $this->id, $section );
     }
 
@@ -183,17 +197,6 @@ class Settings extends ERP_Settings_Page {
         ]; // End general settings
 
         return apply_filters( 'erp_ac_settings_general', $fields );
-    }
-
-    /**
-     * Render Financial Years settings page
-     */
-    public function acct_opening_balance() {
-        global $wpdb;
-
-        $rows = $wpdb->get_results( "SELECT id, name, start_date, end_date FROM {$wpdb->prefix}erp_acct_financial_years", ARRAY_A );
-
-        require_once ERP_ACCOUNTING_VIEWS . '/settings/opening-balance.php';
     }
 }
 

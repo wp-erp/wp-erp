@@ -135,6 +135,12 @@ class Employee_List_Table extends \WP_List_Table {
             case 'status':
                 return $this->get_employee_status_styled_text( $employee->status );
 
+            case 'updated_at':
+                return $this->get_employee_status_update_date( $employee->get_user_id() );
+
+            case 'deleted_at':
+                return erp_format_date( $employee->get_erp_user()->deleted_at );
+
             default:
                 return isset( $employee->$column_name ) ? $employee->$column_name : '';
         }
@@ -178,9 +184,35 @@ class Employee_List_Table extends \WP_List_Table {
             'designation'  => __( 'Designation', 'erp' ),
             'department'   => __( 'Department', 'erp' ),
             'type'         => __( 'Employment Type', 'erp' ),
-            'date_of_hire' => __( 'Hire Date', 'erp' ),
-            'status'       => __( 'Status', 'erp' ),
+            'date_of_hire' => __( 'Hire Date', 'erp' )
         ];
+
+        $status = ! empty( $_REQUEST['status'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['status'] ) ) : '';
+
+        switch ( $status ) {
+            case 'inactive':
+                $columns['updated_at'] = __( 'Inactive From', 'erp' );
+                break;
+
+            case 'terminated':
+                $columns['updated_at'] = __( 'Terminated At', 'erp' );
+                break;
+
+            case 'deceased':
+                $columns['updated_at'] = __( 'Deceased From', 'erp' );
+                break;
+
+            case 'resigned':
+                $columns['updated_at'] = __( 'Resigned At', 'erp' );
+                break;
+            
+            case 'trash':
+                $columns['deleted_at'] = __( 'Trashed At', 'erp' );
+                break;
+
+            default:
+                $columns['status'] = __( 'Status', 'erp' );
+        }
 
         return apply_filters( 'erp_hr_employee_table_cols', $columns );
     }
@@ -291,6 +323,36 @@ class Employee_List_Table extends \WP_List_Table {
         }
 
         return $status;
+    }
+
+    /**
+     * Retrieves the date when an employee's status was updated
+     * 
+     * @since 1.9.0
+     * 
+     * @param string|int $emp_id
+     *
+     * @return string
+     */
+    private function get_employee_status_update_date( $emp_id ) {
+        global $wpdb;
+
+        $status = ! empty( $_REQUEST['status'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['status'] ) ) : '';
+
+        $date = $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT `date`
+                FROM {$wpdb->prefix}erp_hr_employee_history
+                WHERE `user_id` = %d
+                AND module = 'employee'
+                AND category = %s
+                ORDER BY `date` DESC
+                LIMIT 1",
+                [ $emp_id, $status ]
+            )
+        );
+
+        return ! empty( $date ) ? erp_format_date( $date ) : '--';
     }
 
     /**

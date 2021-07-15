@@ -39,7 +39,7 @@ foreach ( Financial_Year::all() as $f_year ) {
 
 $leave_help_text = esc_html__( 'Select A Leave Type', 'erp' ) . ' ' . esc_attr__( 'Or', 'erp' ) . ' ' . sprintf( '<a href="?page=erp-hr&section=leave&sub-section=policies&type=policy-name">%s</a>', __( 'Add New', 'erp' ) );
 
-$f_year_help_text = __( 'Select Year', 'erp' ) . ' ' . esc_attr__( 'Or', 'erp' ) . ' ' . sprintf( '<a href="?page=erp-settings&tab=erp-hr&section=financial">%s</a>', __( 'Add New', 'erp' ) );
+$f_year_help_text = __( 'Select Year', 'erp' ) . ' ' . esc_attr__( 'Or', 'erp' ) . ' ' . sprintf( '<a href="?page=erp-settings#/erp-hr/financial">%s</a>', __( 'Add New', 'erp' ) );
 
 // get error data
 $errors         = new ERP_Errors( 'policy_create_error' );

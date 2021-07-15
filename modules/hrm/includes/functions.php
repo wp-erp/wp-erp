@@ -285,7 +285,7 @@ function erp_parent_sort( array $objects, array &$result = [], $parent = 0, $dep
     }
 
     $parent = ! empty( $parents ) ? min( $parents ) : 0;
-    
+
     foreach ( $objects as $key => $object ) {
         if ( $object->parent == $parent ) {
             $object->depth = $depth;
@@ -602,7 +602,7 @@ function erp_hr_get_people_menu_html( $selected = '' ) {
 
 /**
  * Retrieves all employee request types
- * 
+ *
  * @since 1.8.5
  *
  * @return array
@@ -622,9 +622,9 @@ function erp_hr_get_employee_requests_types() {
 
 /**
  * Retrieves all pending requests counts
- * 
+ *
  * @since 1.8.5
- * 
+ *
  * @return array
  */
 function erp_hr_get_employee_pending_requests_count() {
@@ -633,4 +633,80 @@ function erp_hr_get_employee_pending_requests_count() {
     $requests['leave'] = $leave_requests['total'];
 
     return apply_filters( 'erp_hr_employee_pending_request_count', $requests );
+}
+
+
+/**
+ * Get ERP Financial Years
+ *
+ * @since 1.8.6
+ *
+ * @return array $f_years
+ */
+function erp_get_hr_financial_years() {
+    global $wpdb;
+
+    $f_years = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}erp_hr_financial_years", ARRAY_A );
+
+    return $f_years;
+}
+
+/**
+ * ERP Settings save leave years
+ *
+ * @since 1.8.6
+ *
+ * @param array $post_data
+ *
+ * @return object|boolean WP_Error or true
+ */
+function erp_settings_save_leave_years ( $post_data = [] ) {
+
+    $year_names = [];
+
+    // Error handles
+    foreach ( $post_data as $key => $data ) {
+        if ( empty( $data['fy_name'] ) ) {
+            return new WP_Error( 'errors', __( 'Please give a financial year name on row #' . ( $key + 1 ), 'erp' ) );
+        }
+        if ( empty( $data['start_date'] ) ) {
+            return new WP_Error( 'errors', __( 'Please give a financial year start date on row #' . ( $key + 1 ), 'erp' ) );
+        }
+        if ( empty( $data['end_date'] ) ) {
+            return new WP_Error( 'errors', __( 'Please give a financial year end date on row #' . ( $key + 1 ), 'erp' ) );
+        }
+        if ( ( strtotime( $data['end_date'] ) < strtotime( $data['start_date'] ) ) || strtotime( $data['end_date'] ) === strtotime( $data['start_date'] ) ) {
+            return new WP_Error( 'errors', __( 'End date must be greater than the start date on row #' . ( $key + 1 ), "erp" ) );
+        }
+
+        if ( in_array( $data['fy_name'], $year_names ) ) {
+            return new WP_Error( 'errors', __( 'Duplicate financial year name ' . $data['fy_name'] . ' on row #' . ( $key + 1 ), 'erp' ) );
+        } else {
+            array_push( $year_names, $data['fy_name'] );
+        }
+    }
+
+    global $wpdb;
+
+    // Empty HR leave years data
+    $wpdb->query( 'TRUNCATE TABLE ' . $wpdb->prefix . 'erp_hr_financial_years' );
+
+    // Insert leave years
+    foreach ( $post_data as $data ) {
+
+        $data['fy_name']     = sanitize_text_field( wp_unslash( $data['fy_name'] ) );
+        $data['start_date']  = strtotime( sanitize_text_field( wp_unslash( $data['start_date'] ) ) );
+        $data['end_date']    = strtotime( sanitize_text_field( wp_unslash( $data['end_date'] ) ) );
+        $data['description'] = sanitize_text_field( wp_unslash( $data['description'] ) );
+        $data['created_by']  = get_current_user_id();
+        $data['created_at']  = date( 'Y-m-d' );
+
+        $wpdb->insert(
+            $wpdb->prefix . 'erp_hr_financial_years',
+            $data,
+            ['%s', '%s', '%s', '%s', '%d', '%s']
+        );
+    }
+
+    return true;
 }

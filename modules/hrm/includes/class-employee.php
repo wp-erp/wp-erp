@@ -1559,6 +1559,7 @@ class Employee {
         }
 
         $histories = $histories->orderBy( 'date', 'desc' )
+                            ->orderBy( 'id', 'desc' )
                             ->skip( $offset )
                             ->take( $limit )
                             ->get();
@@ -1682,12 +1683,48 @@ class Employee {
 
         $args['date'] = erp_current_datetime()->modify( $args['date'] )->format( 'Y-m-d H:i:s' );
 
+        /**
+         * We need to check if any history exists in the future date.
+         * If exists, we will consider it as an old history and so it
+         * will not affect the executive values of the employee.
+         */
         $future_history = $this->erp_user->histories()
                                         ->where( 'module', $args['module'] )
-                                        ->where( 'date', '>', $args['date'] )
-                                        ->count();
+                                        ->where( 'date', '>', $args['date'] );
 
-        if ( (int) $future_history === 0 ) {
+        if ( ! empty( $args['id'] ) ) {
+
+            /**
+             * If we've reached at this block, that means
+             * we're editing a history. So we need to make sure
+             * the validation process, while making comparison,
+             * excludes the history which is being edited.
+             */
+            $future_history = $future_history->where( 'id', '!=', $args['id'] );
+
+            /**
+             * As we can only edit the current history,
+             * we need to make sure the given date is
+             * eligibe for the current history.
+             * If any old history exists after this date,
+             * it cannot be used for the current history
+             * and so we will abandon the process.
+             */
+            if ( $future_history->count() > 0 ) {
+                return new WP_Error(
+                    'invalid-date',
+                    __( 'This date cannot be used for the current history. An old history already exists after this date.', 'erp' )
+                );
+            }
+        }
+
+        /**
+         * If no history in the future date is found,
+         * we can consider it as the current history
+         * and so we will update the executive values
+         * of employee profile.
+         */
+        if ( $future_history->count() === 0 ) {
 
             if ( ! empty( $args['type'] ) ) {
                 $this->erp_user->update( [
@@ -1696,9 +1733,13 @@ class Employee {
             }
 
             if ( ! empty( $args['category'] ) ) {
-                $this->erp_user->update( [
-                    'status' => $args['category'],
-                ] );
+                $update_data = [ 'status' => $args['category'] ];
+
+                if ( 'terminated' === $args['category'] ) {
+                    $update_data['termination_date'] = $args['date'];
+                }
+                
+                $this->erp_user->update( $update_data );
 
                 do_action( 'erp_hr_employee_after_update_status', $this->erp_user->user_id, $args['category'], $args['date'] );
             }
@@ -1759,12 +1800,48 @@ class Employee {
 
         do_action( 'erp_hr_employee_compensation_create', $this->get_user_id() );
 
+        /**
+         * We need to check if any history exists in the future date.
+         * If exists, we will consider it as an old history and so it
+         * will not affect the executive values of the employee.
+         */
         $future_history = $this->erp_user->histories()
                                         ->where( 'module', 'compensation' )
-                                        ->where( 'date', '>', $args['date'] )
-                                        ->count();
+                                        ->where( 'date', '>', $args['date'] );
 
-        if ( (int) $future_history === 0 ) {
+        if ( ! empty( $args['id'] ) ) {
+
+            /**
+             * If we've reached at this block, that means
+             * we're editing a history. So we need to make sure
+             * the validation process, while making comparison,
+             * excludes the history which is being edited.
+             */
+            $future_history = $future_history->where( 'id', '!=', $args['id'] );
+
+            /**
+             * As we can only edit the current history,
+             * we need to make sure the given date is
+             * eligibe for the current history.
+             * If any old history exists after this date,
+             * it cannot be used for the current history
+             * and so we will abandon the process.
+             */
+            if ( $future_history->count() > 0 ) {
+                return new WP_Error(
+                    'invalid-date',
+                    __( 'This date cannot be used for the current history. An old history already exists after this date.', 'erp' )
+                );
+            }
+        }
+
+        /**
+         * If no history in the future date is found,
+         * we can consider it as the current history
+         * and so we will update the executive values
+         * of employee profile.
+         */
+        if ( $future_history->count() === 0 ) {
             $this->erp_user->update( [
                 'pay_rate' => floatval( $args['pay_rate'] ),
                 'pay_type' => $args['pay_type'],
@@ -1777,7 +1854,7 @@ class Employee {
             'type'     => $args['pay_rate'],
             'comment'  => $args['comment'],
             'data'     => $args['reason'],
-            'date'     => $args['date'],
+            'date'     => erp_current_datetime()->modify( $args['date'] )->format( 'Y-m-d H:i:s' ),
         ] );
 
         return [
@@ -1810,26 +1887,63 @@ class Employee {
         ];
 
         $args = wp_parse_args( $args, $default );
-        // if ( empty( $args['designation'] ) || ! is_numeric( $args['designation'] ) ) {
-        //     return new \WP_Error( 'invalid-designation-id', __( 'Invalid Designation Type', 'erp' ) );
-        // }
+        
+        if ( empty( $args['designation'] ) || ! array_key_exists( $args['designation'], erp_hr_get_designation_dropdown_raw() ) ) {
+            return new \WP_Error( 'invalid-designation-id', __( 'Invalid Designation Type', 'erp' ) );
+        }
 
-        // if ( empty( $args['department'] ) || ! is_numeric( $args['department'] ) ) {
-        //     return new \WP_Error( 'invalid-department-id', __( 'Invalid Department Type', 'erp' ) );
-        // }
+        if ( empty( $args['department'] ) || ! array_key_exists( $args['department'], erp_hr_get_departments_dropdown_raw() ) ) {
+            return new \WP_Error( 'invalid-department-id', __( 'Invalid Department Type', 'erp' ) );
+        }
 
-        // if ( empty( $args['reporting_to'] ) || ! is_numeric( $args['reporting_to'] ) ) {
-        //     return new \WP_Error( 'invalid-reporting-to-user', __( 'Invalid Reporting To User', 'erp' ) );
-        // }
+        if ( empty( $args['reporting_to'] ) ) {
+            return new \WP_Error( 'invalid-reporting-to-user', __( 'Invalid Reporting To User', 'erp' ) );
+        }
 
         do_action( 'erp_hr_employee_job_info_create', $this->get_user_id() );
 
+        /**
+         * We need to check if any history exists in the future date.
+         * If exists, we will consider it as an old history and so it
+         * will not affect the executive values of the employee.
+         */
         $future_history = $this->erp_user->histories()
                                         ->where( 'module', 'job' )
-                                        ->where( 'date', '>', $args['date'] )
-                                        ->count();
+                                        ->where( 'date', '>', $args['date'] );
 
-        if ( (int) $future_history === 0 ) {
+        if ( ! empty( $args['id'] ) ) {
+
+            /**
+             * If we've reached at this block, that means
+             * we're editing a history. So we need to make sure
+             * the validation process, while making comparison,
+             * excludes the history which is being edited.
+             */
+            $future_history = $future_history->where( 'id', '!=', $args['id'] );
+
+            /**
+             * As we can only edit the current history,
+             * we need to make sure the given date is
+             * eligibe for the current history.
+             * If any old history exists after this date,
+             * it cannot be used for the current history
+             * and so we will abandon the process.
+             */
+            if ( $future_history->count() > 0 ) {
+                return new WP_Error(
+                    'invalid-date',
+                    __( 'This date cannot be used for the current history. An old history already exists after this date.', 'erp' )
+                );
+            }
+        }
+
+        /**
+         * If no history in the future date is found,
+         * we can consider it as the current history
+         * and so we will update the executive values
+         * of employee profile.
+         */
+        if ( $future_history->count() === 0 ) {
             $this->erp_user->update( [
                 'designation'  => $args['designation'],
                 'department'   => $args['department'],
@@ -1839,11 +1953,11 @@ class Employee {
         }
 
         $history = $this->get_erp_user()->histories()->updateOrCreate( [ 'id' => $args['id'] ], [
-            'date'     => $args['date'],
+            'date'     => erp_current_datetime()->modify( $args['date'] )->format( 'Y-m-d H:i:s' ),
             'data'     => $args['reporting_to'],
-            'category' => $this->get_department( 'view' ),
-            'type'     => $this->get_location( 'view' ),
-            'comment'  => $this->get_designation( 'view' ),
+            'category' => $args['department'],
+            'type'     => $args['location'],
+            'comment'  => $args['designation'],
             'module'   => 'job',
         ] );
 
@@ -2388,11 +2502,6 @@ class Employee {
             return new WP_Error( 'no-eligible-for-rehire', 'Eligible for rehire field is required' );
         }
 
-        $this->erp_user->update( [
-            'status'           => 'terminated',
-            'termination_date' => $args['terminate_date'],
-        ] );
-
         $comments = sprintf( '%s: %s; %s: %s; %s: %s',
             __( 'Termination Type', 'erp' ),
             erp_hr_get_terminate_type( $args['termination_type'] ),
@@ -2410,7 +2519,8 @@ class Employee {
         }
 
         if ( ! isset( $args['date'] ) ) {
-            $args['date'] = $args['terminate_date'];
+            $args['date']           = $args['terminate_date'];
+            $args['terminate_date'] = $args['terminate_date'];
         }
 
         if ( ! isset( $args['comments'] ) ) {

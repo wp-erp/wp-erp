@@ -5,7 +5,7 @@
  * Plugin URI: https://wperp.com
  * Author: weDevs
  * Author URI: https://wedevs.com
- * Version: 1.8.6
+ * Version: 1.9.0
  * License: GPL2
  * Text Domain: erp
  * Domain Path: /i18n/languages/
@@ -52,7 +52,7 @@ final class WeDevs_ERP {
      *
      * @var string
      */
-    public $version = '1.8.6';
+    public $version = '1.9.0';
 
     /**
      * Minimum PHP version required
@@ -278,6 +278,7 @@ final class WeDevs_ERP {
         new \WeDevs\ERP\AddonTask();
         new \WeDevs\ERP\ERP_i18n();
         new \WeDevs\ERP\Validate_Data();
+        new \WeDevs\ERP\Settings\Ajax();
 
         // Appsero Tracker
         \WeDevs\ERP\Tracker::get_instance()->init();
@@ -309,6 +310,9 @@ final class WeDevs_ERP {
 
         // Add plugin action links
         add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), [ $this, 'plugin_action_links' ] );
+
+        // Enqueue footer queued js scripts
+        add_action( 'admin_footer', 'erp_print_js', 25 );
 
         // Admin footer text
         add_filter( 'admin_footer_text', [ $this, 'admin_footer_text' ], 10, 1 );

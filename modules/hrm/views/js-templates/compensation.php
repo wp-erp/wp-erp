@@ -1,11 +1,14 @@
 <div class="compensation-form-wrap">
     <div class="row">
         <?php erp_html_form_input( [
-            'label'    => __( 'Date', 'erp' ),
-            'name'     => 'date',
-            'value'    => date( 'Y-m-d', current_time( 'timestamp' ) ),
-            'required' => true,
-            'class'    => 'erp-date-field',
+            'label'       => __( 'Date', 'erp' ),
+            'name'        => 'date',
+            'value'       => date( 'Y-m-d', current_time( 'timestamp' ) ),
+            'required'    => true,
+            'class'       => 'erp-date-field',
+            'custom_attr' => [
+                'autocomplete' => 'off',
+            ],
         ] ); ?>
     </div>
 
@@ -18,13 +21,15 @@
         ] ); ?>
     </div>
 
-    <div class="row">
+    <div class="row" data-selected="{{ data.work.pay_type }}">
         <?php erp_html_form_input( [
-            'label'   => __( 'Pay Type', 'erp' ),
-            'name'    => 'pay_type',
-            'value'   => '',
-            'type'    => 'select',
-            'options' => [ 0 => __( '- Select -', 'erp' ) ] + erp_hr_get_pay_type(),
+            'label'    => __( 'Pay Type', 'erp' ),
+            'name'     => 'pay_type',
+            'value'    => '{{ data.work.pay_type }}',
+            'type'     => 'select',
+            'required' => true,
+            'class'    => 'erp-hrm-select2',
+            'options'  => [ 0 => __( '- Select -', 'erp' ) ] + erp_hr_get_pay_type(),
         ] ); ?>
     </div>
 
@@ -34,6 +39,7 @@
             'name'    => 'change-reason',
             'value'   => '',
             'type'    => 'select',
+            'class'   => 'erp-hrm-select2',
             'options' => [ 0 => __( '- Select -', 'erp' ) ] + erp_hr_get_pay_change_reasons(),
         ] ); ?>
     </div>

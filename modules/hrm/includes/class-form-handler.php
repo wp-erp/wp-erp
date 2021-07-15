@@ -1244,7 +1244,7 @@ class Form_Handler {
         $ends   = isset( $_POST['fyear-end'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['fyear-end'] ) ) : [];
 
         $current_user_id = get_current_user_id();
-        $url             = admin_url( 'admin.php?page=erp-settings&tab=erp-hr&section=financial' );
+        $url             = admin_url( 'admin.php?page=erp-settings#/erp-hr/financial' );
 
         $errors = new ERP_Errors( 'leave_financial_years_create' );
 

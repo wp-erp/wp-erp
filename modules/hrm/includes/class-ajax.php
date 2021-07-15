@@ -57,6 +57,8 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-hr-emp-activate', 'employee_termination_reactive' );
         $this->action( 'wp_ajax_erp-hr-convert-wp-to-employee', 'employee_create_from_wp_user' );
         $this->action( 'wp_ajax_erp_hr_check_user_exist', 'check_user' );
+        $this->action( 'wp_ajax_erp_hr_employee_get_job_history', 'get_job_history' );
+        $this->action( 'wp_ajax_erp_hr_emp_update_job_history', 'update_job_history' );
 
         // Dashaboard
         $this->action( 'wp_ajax_erp_hr_announcement_mark_read', 'mark_read_announcement' );
@@ -117,11 +119,16 @@ class Ajax_Handler {
 
         // Get leave & holiday data for hr dashboard calender
         $this->action( 'wp_ajax_erp-hr-get-leave-by-date', 'get_leave_holiday_by_date' );
-        
+
+
         // AJAX hooks for employee requests
         $this->action( 'wp_ajax_erp_hr_employee_get_requests', 'get_employee_requests' );
         $this->action( 'wp_ajax_erp_hr_get_total_pending_requests', 'get_total_pending_requests' );
         $this->action( 'wp_ajax_erp_hr_employee_requests_bulk_action', 'employee_requests_bulk_action' );
+
+        // AJAX hooks for Settings Actions
+        $this->action( 'wp_ajax_erp-settings-get-hr-financial-years', 'erp_settings_get_hr_financial_years' );
+        $this->action( 'wp_ajax_erp-settings-financial-years-save', 'erp_settings_save_hr_financial_years' );
     }
 
     /**
@@ -898,6 +905,9 @@ class Ajax_Handler {
 
         if ( in_array( 'employee', $user->roles, true ) ) {
             erp_employee_restore( $employee_id );
+        } else {
+            // Restore the roles only when employee is in tashed
+            erp_employee_restore( $employee_id, true );
         }
 
         $this->send_success( __( 'Employee has been restore successfully', 'erp' ) );
@@ -1010,6 +1020,113 @@ class Ajax_Handler {
     }
 
     /**
+     * Retrives employee job history
+     * 
+     * @since 1.9.0
+     *
+     * @return mixed
+     */
+    public function get_job_history() {
+        $this->verify_nonce( 'wp-erp-hr-nonce' );
+
+        global $wpdb;
+
+        $history_id = ! empty( $_REQUEST['history_id'] ) ? intval( wp_unslash( $_REQUEST['history_id'] ) ) : '';
+
+        $history    = $wpdb->get_row(
+            $wpdb->prepare(
+                "SELECT * FROM {$wpdb->prefix}erp_hr_employee_history WHERE id = %d",
+                [ $history_id ]
+            )
+        );
+
+        $history->date = erp_current_datetime()->modify( $history->date )->format( 'Y-m-d' );
+
+        $this->send_success( $history );
+    }
+
+    /**
+     * Updates employee job history
+     * 
+     * @since 1.9.0
+     *
+     * @return mixed
+     */
+    public function update_job_history() {
+        $this->verify_nonce( 'wp-erp-hr-nonce' );
+
+        $user_id = ! empty( $_REQUEST['user_id'] ) ? intval( wp_unslash( $_REQUEST['user_id'] ) ) : 0;
+
+        if ( empty( $user_id ) ) {
+            $this->send_error( __( 'No employee found!', 'erp' ) );
+        }
+
+        if ( ! current_user_can( 'erp_manage_jobinfo', $user_id ) ) {
+            $this->send_error( __( 'You do not have sufficient permission to do this action', 'erp' ) );
+        }
+
+        $history_id = ! empty( $_REQUEST['history_id'] ) ? intval( wp_unslash( $_REQUEST['history_id'] ) )           : null;
+        $module     = ! empty( $_REQUEST['module'] )     ? sanitize_text_field( wp_unslash( $_REQUEST['module'] ) )  : '';
+        $date       = ! empty( $_REQUEST['date'] )       ? sanitize_text_field( wp_unslash( $_REQUEST['date'] ) )    : '';
+        $data       = ! empty( $_REQUEST['data'] )       ? sanitize_text_field( wp_unslash( $_REQUEST['data'] ) )    : '';
+        $type       = ! empty( $_REQUEST['type'] )       ? sanitize_text_field( wp_unslash( $_REQUEST['type'] ) )    : '';
+        $category   = ! empty( $_REQUEST['category'] )     ? sanitize_text_field( wp_unslash( $_REQUEST['category'] ) )  : '';
+        $comment    = ! empty( $_REQUEST['comment'] )    ? sanitize_text_field( wp_unslash( $_REQUEST['comment'] ) ) : '';
+
+        if ( empty( $history_id ) ) {
+            $this->send_error( __( 'No valid history found!', 'erp' ) );
+        }
+
+        $employee   = new Employee( $user_id );
+
+        switch ( $module ) {
+            case 'compensation':
+                $updated = $employee->update_compensation( [
+                    'id'       => $history_id,
+                    'date'     => $date,
+                    'pay_rate' => $type,
+                    'pay_type' => $category,
+                    'reason'   => $data,
+                    'comment'  => $comment
+                ] );
+                
+                break;
+
+            case 'job':
+                $updated = $employee->update_job_info( [
+                    'id'           => $history_id,
+                    'date'         => $date,
+                    'designation'  => $comment,
+                    'department'   => $category,
+                    'reporting_to' => $data,
+                    'location'     => $type
+                ] );
+                
+                break;
+
+            case 'employment':
+                $updated = $employee->update_employment_status( [
+                    'id'       => $history_id,
+                    'date'     => $date,
+                    'module'   => $module,
+                    'type'     => $type,
+                    'comments' => $comment,
+                ] );
+                
+                break;
+
+            default:
+                $this->send_error( __( 'No valid history module found!', 'erp' ) );
+        }
+
+        if ( is_wp_error( $updated ) ) {
+            $this->send_error( $updated->get_error_message() );
+        }
+
+        $this->send_success( __( 'History updated successfully', 'erp' ) );
+    }
+
+    /**
      * Remove an history
      *
      * @return void
@@ -1068,12 +1185,13 @@ class Ajax_Handler {
         }
 
         $old_data = $employee->get_data();
+
         $created  = $employee->update_job_info( [
             'date'         => ( isset( $_POST['date'] ) ) ? sanitize_text_field( wp_unslash( $_POST['date'] ) ) : '',
-            'designation'  => ( isset( $_POST['designation'] ) ) ? sanitize_text_field( wp_unslash( $_POST['designation'] ) ) : '',
-            'department'   => ( isset( $_POST['department'] ) ) ? sanitize_text_field( wp_unslash( $_POST['department'] ) ) : '',
-            'reporting_to' => ( isset( $_POST['reporting_to'] ) ) ? sanitize_text_field( wp_unslash( $_POST['reporting_to'] ) ) : '',
-            'location'     => ( isset( $_POST['location'] ) ) ? sanitize_text_field( wp_unslash( $_POST['location'] ) ) : '',
+            'designation'  => ( isset( $_POST['designation'] ) ) ? intval( wp_unslash( $_POST['designation'] ) ) : '',
+            'department'   => ( isset( $_POST['department'] ) ) ? intval( wp_unslash( $_POST['department'] ) ) : '',
+            'reporting_to' => ( isset( $_POST['reporting_to'] ) ) ? intval( wp_unslash( $_POST['reporting_to'] ) ) : '',
+            'location'     => ( isset( $_POST['location'] ) ) ? intval( wp_unslash( $_POST['location'] ) ) : '',
         ] );
 
         if ( is_wp_error( $created ) ) {
@@ -1569,7 +1687,7 @@ class Ajax_Handler {
         $exp_date     = isset( $_POST['expiration_date'] ) ? sanitize_text_field( wp_unslash( $_POST['expiration_date'] ) ) : '';
         $result_gpa   = isset( $_POST['gpa'] ) ? sanitize_text_field( wp_unslash( $_POST['gpa'] ) ) : NULL;
         $result_scale = isset( $_POST['scale'] ) ? sanitize_text_field( wp_unslash( $_POST['scale'] ) ) : NULL;
-        
+
         $result       = [ 'gpa' => $result_gpa ];
 
         if ( 'grade' === $result_type ) {
@@ -2234,9 +2352,9 @@ class Ajax_Handler {
 
     /**
      * Retrieves employee requests
-     * 
+     *
      * @since 1.8.5
-     * 
+     *
      * @return mixed
      */
     public function get_employee_requests() {
@@ -2343,7 +2461,7 @@ class Ajax_Handler {
 
     /**
      * Retrieves total pending requests
-     * 
+     *
      * @since 1.8.5
      *
      * @return int
@@ -2361,9 +2479,9 @@ class Ajax_Handler {
 
     /**
      * Processes bulk action on employee requests
-     * 
+     *
      * @since 1.8.5
-     * 
+     *
      * @return mixed
      */
     public function employee_requests_bulk_action() {
@@ -2390,7 +2508,7 @@ class Ajax_Handler {
         }
 
         $action = ! empty( $_REQUEST['action_type'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['action_type'] ) ) : '';
-        
+
         $result = apply_filters( "erp_hr_employee_{$request_type}_request_bulk_action", $req_ids, $action );
 
         if ( is_wp_error( $result ) ) {
@@ -2408,5 +2526,50 @@ class Ajax_Handler {
         }
 
         $this->send_success( sprintf( __( '%1$s %2$sitems have been %3$s successfully', 'erp' ), count( $result ), $item_status, $action ) );
+    }
+
+    /**
+     * Get Settings Data For HR Financial years
+     *
+     * @since 1.8.6
+     *
+     * @return void
+     */
+    public function erp_settings_get_hr_financial_years() {
+        $this->verify_nonce( 'erp-settings-nonce' );
+
+        if ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'erp_hr_manager' ) ) {
+            $this->send_error( erp_get_message ( ['type' => 'error_permission'] ) );
+        }
+
+        $years = erp_get_hr_financial_years();
+
+        $this->send_success( $years );
+    }
+
+    /**
+     * Save Settings for HR Financial Years
+     *
+     * @since 1.8.6
+     *
+     * @return void
+     */
+    public function erp_settings_save_hr_financial_years() {
+        $this->verify_nonce( 'erp-settings-nonce' );
+
+        if ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'erp_hr_manager' ) ) {
+            $this->send_error( erp_get_message ( ['type' => 'error_permission'] ) );
+        }
+
+        $inserted = erp_settings_save_leave_years( $_POST['fyears'] );
+
+        if ( is_wp_error( $inserted ) ) {
+            $this->send_error( __( $inserted->get_error_message(), 'erp' ) );
+        }
+
+        $this->send_success( [
+            'data'    => $inserted,
+            'message' => __( 'Settings saved successfully !', 'erp' )
+        ] );
     }
 }
