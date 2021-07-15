@@ -5,7 +5,7 @@ Tags: business manager, erp, accounting, crm, hr, project manager, small busines
 Requires at least: 4.4
 Tested up to: 5.7.2
 Requires PHP: 5.6
-Stable tag: 1.8.6
+Stable tag: 1.9.0
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -271,6 +271,25 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+
+= v1.9.0 -> July 15, 2021 =
+--------------------------
+
+- [notice] Limited time summer sale promotional offer
+- [new] A new tab titled ‘Danger Zone’ inside Tools
+- [new] WP ERP database can be reset and installed newly from Danger Zone
+- [new] Accounting Quick tour to demonstrate accounting module at a glance
+- [new] Import from CSV option for products in Accounting
+- [new] Export to CSV option for products in Accounting
+- [update] A brand new look all over the settings. The usability will be smoother and more comfortable with this new UI/UX
+- [update] Search option in products list table page
+- [update] Current history of employment type, compensation, and job info will be able to be edited
+- [update] In the employee list table, instead of 'Status' a new column will show the status update date for non active status filters
+- [update] Some optimization to make the performance better
+- [fix] Existing data were not parsing properly while updating job related information of employees
+- [fix] Current job history in the employee section was not showing properly in some cases
+- [fix] Mobile responsive issue in Contacts list table
+- [fix] Mobile responsive issue in Company list table
 
 = v1.8.6 -> June 30, 2021 =
 --------------------------
