@@ -1,34 +1,25 @@
-<?php
-$id = isset( $_GET['id'] ) ? absint( wp_unslash( $_GET['id'] ) ) : 0;
-$value = '';
-
-if ( $id ) {
-    $employee = new \WeDevs\ERP\HRM\Employee( $id );
-    $value = $employee->get_type();
-}
-?>
-
 <div class="type-form-wrap">
     <div class="row">
         <?php
         erp_html_form_input( [
-            'label'    => __( 'Date', 'erp' ),
-            'name'     => 'date',
-            'value'    => erp_current_datetime()->format('Y-m-d'),
-            'required' => true,
-            'class'    => 'erp-date-field',
+            'label'       => __( 'Date', 'erp' ),
+            'name'        => 'date',
+            'value'       => '{{ data.date }}',
+            'required'    => true,
+            'custom_attr' => [ 'autocomplete' => 'off' ],
+            'class'       => 'erp-date-field',
         ] );
         ?>
     </div>
 
-    <div class="row">
+    <div class="row" data-selected="{{ data.work && data.work.type ? data.work.type : '' }}">
         <?php
         erp_html_form_input( [
             'label'       => __( 'Employment Type', 'erp' ),
             'name'        => 'type',
-            'value'       => $value,
+            'value'       => '{{ data.work && data.work.type ? data.work.type : "" }}',
             'type'        => 'select',
-            'custom_attr' => [ 'data-selected' => $value ],
+            'class'       => 'erp-hrm-select2',
             'options'     => [ 0 => __( '- Select -', 'erp' ) ] + erp_hr_get_employee_types(),
         ] );
         ?>

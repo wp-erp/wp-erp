@@ -42,6 +42,7 @@
             $( '.erp-hr-employees' ).on( 'click', 'a#erp-empl-compensation', this.employee.updateJobStatus );
             $( '.erp-hr-employees' ).on( 'click', 'a#erp-empl-jobinfo', this.employee.updateJobStatus );
             $( '.erp-hr-employees' ).on( 'click', 'td.action a.remove', this.employee.removeHistory );
+            $( '.erp-hr-employees' ).on( 'click', 'td.action a.edit', this.employee.editHistory );
             $( '.erp-hr-employees' ).on( 'click', 'a#erp-employee-print', this.employee.printData );
             $( 'body' ).on( 'focusout', 'input#erp-hr-user-email', this.employee.checkUserEmail );
             $( 'body' ).on( 'click', 'a#erp-hr-create-wp-user-to-employee', this.employee.makeUserEmployee );
@@ -1367,93 +1368,107 @@
                     },
                     success: function(response) {
                         status = response.work.status;
-                        type = response.work.type;
-                    }
-                });
+                        type   = response.work.type;
 
-                $.erpPopup({
-                    title: self.data('title'),
-                    button: wpErpHr.popup.update_status,
-                    id: 'erp-hr-update-job-status',
-                    content: '',
-                    extraClass: 'smaller',
-                    onReady: function() {
-                        var html = wp.template( self.data('template') )(window.wpErpCurrentEmployee);
-                        $( '.content', this ).html( html );
-                        WeDevs_ERP_HR.initDateField();
-                    },
-                    onSubmit: function(modal) {
-                        var data = this.serializeObject();
+                        $.erpPopup({
+                            title: self.data('title'),
+                            button: wpErpHr.popup.update_status,
+                            id: 'erp-hr-update-job-status',
+                            content: '',
+                            extraClass: 'smaller',
+                            onReady: function() {
+                                response.date = wpErpHr.currentDate;
 
-                        if(data.status) {
-                            if(status == data.status) {
-                                modal.closeModal();
-                                swal('', wpErpHr.popup.already_selected, 'error' );
-                            } else if(data.status == 'terminated') {
-                                modal.closeModal();
-                                $.erpPopup({
-                                    title: self.data('title'),
-                                    button: wpErpHr.popup.terminate,
-                                    id: 'erp-hr-employee-terminate',
-                                    content: '',
-                                    extraClass: 'smaller',
-                                    onReady: function() {
-                                        var html = wp.template( 'erp-employment-terminate' )({});
-                                        $( '.content', this ).html( html );
-                                        WeDevs_ERP_HR.initDateField();
-                                    },
-                                    onSubmit: function(modal) {
-                                        wp.ajax.send( {
-                                            data: this.serializeObject(),
-                                            success: function() {
-                                                WeDevs_ERP_HR.ajaxReq(data, modal);
-                                            },
-                                            error: function(error) {
-                                                modal.enableButton();
-                                                modal.showError( error );
-                                            }
-                                        });
+                                var html = wp.template( self.data('template') )(response);
+                                $( '.content', this ).html( html );
+
+                                $( '.row[data-selected]', this ).each(function() {
+                                    var self = $(this),
+                                        selected = self.data('selected');
+        
+                                    if ( selected !== '' ) {
+                                        self.find( 'select' ).val( selected );
                                     }
                                 });
-                            } else if (data.status == 'active') {
-                                modal.closeModal();
-                                $.erpPopup({
-                                    title: wpErpHr.popup.employment_type,
-                                    button: wpErpHr.popup.update_status,
-                                    id: 'erp-hr-update-job-status',
-                                    content: '',
-                                    extraClass: 'smaller',
-                                    onReady: function() {
-                                        var html = wp.template('erp-employment-type')(window.wpErpCurrentEmployee);
-                                        $( '.content', this ).html( html );
-                                        WeDevs_ERP_HR.initDateField();
-                                    },
-                                    onSubmit: function(modal) {
-                                        wp.ajax.send( {
-                                            data: this.serializeObject(),
-                                            success: function() {
-                                                WeDevs_ERP_HR.ajaxReq(data, modal);
+
+                                WeDevs_ERP_HR.employee.select2Action('erp-hrm-select2');
+                                WeDevs_ERP_HR.initDateField();
+                            },
+                            onSubmit: function(modal) {
+                                var data = this.serializeObject();
+        
+                                if(data.status) {
+                                    if(status == data.status) {
+                                        modal.closeModal();
+                                        swal('', wpErpHr.popup.already_selected, 'error' );
+                                    } else if(data.status == 'terminated') {
+                                        modal.closeModal();
+                                        $.erpPopup({
+                                            title: self.data('title'),
+                                            button: wpErpHr.popup.terminate,
+                                            id: 'erp-hr-employee-terminate',
+                                            content: '',
+                                            extraClass: 'smaller',
+                                            onReady: function() {
+                                                var html = wp.template( 'erp-employment-terminate' )(data);
+                                                $( '.content', this ).html( html );
+                                                WeDevs_ERP_HR.initDateField();
                                             },
-                                            error: function(error) {
-                                                modal.enableButton();
-                                                modal.showError( error );
+                                            onSubmit: function(modal) {
+                                                wp.ajax.send( {
+                                                    data: this.serializeObject(),
+                                                    success: function() {
+                                                        WeDevs_ERP_HR.reloadPage();
+                                                        modal.closeModal();
+                                                    },
+                                                    error: function(error) {
+                                                        modal.enableButton();
+                                                        modal.showError( error );
+                                                    }
+                                                });
                                             }
                                         });
+                                    } else if (data.status == 'active') {
+                                        modal.closeModal();
+                                        $.erpPopup({
+                                            title: wpErpHr.popup.employment_type,
+                                            button: wpErpHr.popup.update_status,
+                                            id: 'erp-hr-update-job-status',
+                                            content: '',
+                                            extraClass: 'smaller',
+                                            onReady: function() {
+                                                var html = wp.template('erp-employment-type')(data);
+                                                $( '.content', this ).html( html );
+                                                WeDevs_ERP_HR.initDateField();
+                                            },
+                                            onSubmit: function(modal) {
+                                                wp.ajax.send( {
+                                                    data: this.serializeObject(),
+                                                    success: function() {
+                                                        WeDevs_ERP_HR.ajaxReq(data, modal);
+                                                    },
+                                                    error: function(error) {
+                                                        modal.enableButton();
+                                                        modal.showError( error );
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    } else {
+                                        WeDevs_ERP_HR.ajaxReq(data, modal);
                                     }
-                                });
-                            } else {
-                                WeDevs_ERP_HR.ajaxReq(data, modal);
+                                } else if ( data.type ) {
+                                    if (type == data.type) {
+                                        modal.closeModal();
+                                        swal('', wpErpHr.popup.already_selected, 'error' );
+                                    } else {
+                                        WeDevs_ERP_HR.ajaxReq(data, modal);
+                                    }
+                                } else {
+                                    WeDevs_ERP_HR.ajaxReq(data, modal);
+                                }
                             }
-                        } else if ( data.type ) {
-                            if(type == data.type) {
-                                modal.closeModal();
-                                swal('', wpErpHr.popup.already_selected, 'error' );
-                            } else {
-                                WeDevs_ERP_HR.ajaxReq(data, modal);
-                            }
-                        } else {
-                            WeDevs_ERP_HR.ajaxReq(data, modal);
-                        }
+                        });
                     }
                 });
             },
@@ -1473,6 +1488,71 @@
                         }
                     });
                 }
+            },
+
+            editHistory: function(e) {
+                if ( typeof e !== 'undefined' ) {
+                    e.preventDefault();
+                }
+
+                var self     = $(this),
+                    id       = self.data('id'),
+                    title    = self.data('title'),
+                    template = self.data('template');
+
+                wp.ajax.send({
+                    data: {
+                        history_id: id,
+                        action: 'erp_hr_employee_get_job_history',
+                        _wpnonce: wpErpHr.nonce
+                    },
+                    success: function(response) {
+                        $.erpPopup({
+                            title: title,
+                            button: wpErpHr.popup.update_status,
+                            id: 'erp-hr-update-job-history',
+                            content: '',
+                            extraClass: 'smaller',
+                            onReady: function() {
+                                $( '.content', this ).html( wp.template(template)(response) );
+                                WeDevs_ERP_HR.initDateField();
+
+                                $( '.row[data-selected]', this ).each(function() {
+                                    var self = $(this),
+                                        selected = self.data('selected');
+        
+                                    if ( selected !== '' ) {
+                                        self.find( 'select' ).val( selected );
+                                    }
+                                });
+
+                                WeDevs_ERP_HR.employee.select2Action('erp-hrm-select2');
+                            },
+                            onSubmit: function(modal) {
+                                wp.ajax.send( {
+                                    data: this.serializeObject(),
+                                    success: function(response) {
+                                        WeDevs_ERP_HR.reloadPage();
+                                        modal.enableButton();
+                                        modal.closeModal();
+                                        
+                                        swal({
+                                            title: '',
+                                            text: response,
+                                            type: 'success',
+                                            timer: 2200,
+                                            showConfirmButton: false
+                                        });
+                                    },
+                                    error: function(error) {
+                                        modal.enableButton();
+                                        swal('', error , 'error');
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
             },
 
             printData: function(e) {
@@ -1780,13 +1860,10 @@
                     e.preventDefault();
                 }
 
-                var self = $(this);
+                var self           = $(this),
+                    terminateData  = self.data('data') ? self.data('data') : window.wpErpCurrentEmployee;
 
-                if ( self.data('data') ) {
-                    var terminateData = self.data('data');
-                } else {
-                    var terminateData = window.wpErpCurrentEmployee;
-                }
+                terminateData.date = wpErpHr.currentDate;
 
                 $.erpPopup({
                     title: self.data('title'),

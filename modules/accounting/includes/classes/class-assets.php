@@ -114,6 +114,7 @@ class Assets {
             'erp_acct_menus'      => $menus,
             'erp_acct_url'        => $acct_url,
             'erp_acct_tut_url'    => $acct_tutorial_url,
+            'admin_url'           => admin_url( 'admin.php' ),
             'decimal_separator'   => $erp_acct_dec_separator,
             'thousand_separator'  => $erp_acct_ths_separator,
             'currency_format'     => erp_acct_get_price_format(),
@@ -213,17 +214,5 @@ class Assets {
         ];
 
         return $styles;
-    }
-
-
-    /**
-     * Undocumented function
-     *
-     * @since 1.7.5
-     *
-     * @return void
-     */
-    public function includes() {
-
     }
 }
