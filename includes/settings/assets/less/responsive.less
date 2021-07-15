@@ -2,6 +2,10 @@
 
     /* Smartphones (portrait and landscape) ----------- */
     @media only screen and (min-width : 120px) and (max-width : 768px) {
+        .hide-sm {
+            display: none !important;
+        }
+
         .settings-area {
             display: flex;
             // margin: 0px 8px 0 -15px;
@@ -34,6 +38,7 @@
             .settings-content {
                 flex-basis: 95%;
                 padding: 10px;
+                overflow: hidden;
 
                 .section-title {
                     font-size: 16px;
@@ -62,6 +67,15 @@
                         padding: 0px 10px 2px 0px;
                     }
                 }
+            }
+
+            .erp-settings-table td a.button,
+            .erp-settings-table td button.button {
+                border: none !important;
+                padding: 0px !important;
+                margin: 0px !important;
+                background: transparent !important;
+                color: #1a9ed4 !important;
             }
         }
 

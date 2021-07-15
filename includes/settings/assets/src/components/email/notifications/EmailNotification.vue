@@ -16,7 +16,7 @@
             <table class="erp-settings-table widefat email-template-table">
                 <thead>
                     <tr>
-                        <th v-for="(column, index) in columns" :key="index">{{ column }}</th>
+                        <th v-for="(column, index) in columns" :key="index" :class="column.class">{{ column.name }}</th>
                     </tr>
                 </thead>
 
@@ -29,7 +29,7 @@
                                 {{ email.name }}
                             </span>
                         </td>
-                        <td>{{ email.description }}</td>
+                        <td class="hide-sm">{{ email.description }}</td>
                         <td>
                             <radio-switch
                                 v-if="email.disable_allowed"
@@ -40,7 +40,7 @@
                         </td>
                         <td>
                             <button
-                                class="wperp-btn btn--primary"
+                                class="wperp-btn btn--primary button"
                                 @click="configureTemplate(email)"
                                 :id="email.option_id">
                                 {{ __('Configure', 'erp') }}
@@ -156,10 +156,18 @@ export default {
             module          : 'hrm',
             showModal       : false,
             columns         : [
-                __('Template Name', 'erp'),
-                __('Description', 'erp'),
-                __('Disable / Enable', 'erp'),
-                ''
+                {
+                    name: __('Template Name', 'erp'),
+                    class: ''
+                },
+                {
+                    name: __('Description', 'erp'),
+                    class: 'hide-sm'
+                },
+                {
+                    name: __('Disable / Enable', 'erp'),
+                    class: ''
+                }
             ],
         }
     },
