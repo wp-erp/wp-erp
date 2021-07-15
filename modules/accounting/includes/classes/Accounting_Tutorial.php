@@ -18,17 +18,17 @@ class Accounting_Tutorial {
     /**
      * Default URL for accounting module tutorial
      */
-    public String $default_url;
+    public $default_url;
 
     /**
      * Processed tutorial mode URL for accounting module tutorial
      */
-    public String $base_url;
+    public $base_url;
 
     /**
      * Admin URL of default URL
      */
-    public String $default_admin_url;
+    public $default_admin_url;
 
     /**
      * Constructor
