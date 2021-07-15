@@ -10,7 +10,7 @@
                 <thead>
                     <tr>
                         <th>{{ __('Provider', 'erp') }}</th>
-                        <th>{{ __('Description', 'erp') }}</th>
+                        <th class="hide-sm">{{ __('Description', 'erp') }}</th>
                         <th>{{ __('Status', 'erp') }}</th>
                         <th>{{ __('Action', 'erp') }}</th>
                     </tr>
@@ -18,7 +18,7 @@
                 <tbody>
                     <tr valign="top" v-for="(provider, key, index) in providers" :key="index">
                         <td>{{ provider.name }}</td>
-                        <td>{{ provider.description }}</td>
+                        <td class="hide-sm">{{ provider.description }}</td>
                         <td>{{ provider.enabled ? __('Enabled', 'erp') : __('Disabled', 'erp') }}</td>
                         <td>
                             <router-link :to="`/${section_id}/${sub_section_id}/${key}`" class="button">
