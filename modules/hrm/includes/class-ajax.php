@@ -1022,7 +1022,7 @@ class Ajax_Handler {
     /**
      * Retrives employee job history
      * 
-     * @since 1.8.7
+     * @since 1.9.0
      *
      * @return mixed
      */
@@ -1048,7 +1048,7 @@ class Ajax_Handler {
     /**
      * Updates employee job history
      * 
-     * @since 1.8.7
+     * @since 1.9.0
      *
      * @return mixed
      */

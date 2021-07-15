@@ -3414,7 +3414,7 @@ function erp_disable_mysql_strict_mode() {
 /**
  * Queue some JavaScript code to be output in the footer.
  *
- * @since 1.8.7
+ * @since 1.9.0
  * 
  * @param string $code Code.
  * 
@@ -3433,7 +3433,7 @@ function erp_enqueue_js( $code ) {
 /**
  * Output any queued javascript code in the footer.
  * 
- * @since 1.8.7
+ * @since 1.9.0
  * 
  * @return void Print JS Code
  */

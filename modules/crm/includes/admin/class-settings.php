@@ -511,7 +511,7 @@ class CRM_Settings extends Template {
     /**
      * Get Email Providers List
      *
-     * @since 1.8.7
+     * @since 1.9.0
      *
      * @return array $providers
      */
