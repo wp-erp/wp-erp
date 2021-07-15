@@ -47,7 +47,7 @@ class ERP_Settings_Contact_Forms {
     /**
      * Get contact form settings
      *
-     * @since 1.8.7
+     * @since 1.9.0
      *
      * @return array $crm_contact_forms_settings
      */
@@ -151,7 +151,7 @@ class ERP_Settings_Contact_Forms {
     /**
      * Get sub sections based on active plugin lists
      *
-     * @since 1.8.7
+     * @since 1.9.0
      *
      * @return array $sub_sections
      */

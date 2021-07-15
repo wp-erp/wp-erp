@@ -2,12 +2,13 @@
 
 namespace WeDevs\ERP\Settings;
 
-use Error;
 use WeDevs\ERP\Framework\Traits\Ajax as Trait_Ajax;
 use WeDevs\ERP\Framework\Traits\Hooker;
 
 /**
  * Ajax handler class
+ * 
+ * @since 1.9.0
  */
 class Ajax {
 
@@ -17,7 +18,7 @@ class Ajax {
     /**
      * Bind all the ajax event for Framework
      *
-     * @since 1.8.7
+     * @since 1.9.0
      *
      * @return void
      */
@@ -37,7 +38,7 @@ class Ajax {
     /**
      * Save Settings Data
      *
-     * @since 1.8.7
+     * @since 1.9.0
      *
      * @return void
      */
@@ -99,7 +100,7 @@ class Ajax {
     /**
      * Get Settings Data For Common Sections
      *
-     * @since 1.8.7
+     * @since 1.9.0
      *
      * @return void
      */
@@ -123,7 +124,7 @@ class Ajax {
     /**
      * Retrieves all email templates
      * 
-     * @since 1.8.7
+     * @since 1.9.0
      *
      * @return mixed
      */
@@ -182,7 +183,7 @@ class Ajax {
     /**
      * Retrieves a single email template
      * 
-     * @since 1.8.7
+     * @since 1.9.0
      *
      * @return mixed
      */
@@ -223,7 +224,7 @@ class Ajax {
     /**
      * Updates email template
      * 
-     * @since 1.8.7
+     * @since 1.9.0
      *
      * @return mixed
      */
@@ -259,7 +260,7 @@ class Ajax {
     /**
      * Updates email status (enable/disable)
      * 
-     * @since 1.8.7
+     * @since 1.9.0
      *
      * @return mixed
      */
@@ -291,7 +292,7 @@ class Ajax {
     /**
      * Test connection using SMTP credentials
      * 
-     * @since 1.8.7
+     * @since 1.9.0
      *
      * @return mixed
      */

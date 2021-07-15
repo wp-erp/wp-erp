@@ -469,7 +469,7 @@ class Validate_Data {
     /**
      * Check product specific field is unique or not
      *
-     * @since 1.8.7
+     * @since 1.9.0
      *
      * @return string
      */
