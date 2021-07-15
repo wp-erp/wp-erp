@@ -2,6 +2,8 @@
 
 namespace WeDevs\ERP\Accounting\Includes\Classes;
 
+use WeDevs\ERP\Accounting\Ajax_Handler;
+
 /**
  * Admin Pages Handler
  */
@@ -11,7 +13,6 @@ class Admin {
         add_action( 'admin_bar_menu', [ $this, 'add_admin_bar_menu' ] );
         add_action( 'admin_init', [ $this, 'init_hooks' ], 5 );
         add_action( 'erp_hr_employee_new', [ $this, 'make_people_from_employee' ], 10, 2 );
-        add_action( 'admin_init', [ $this, 'save_accounting_settings' ] );
         add_action( 'erp_hr_permission_management', [ $this, 'permission_management_field' ] );
         add_action( 'erp_hr_after_employee_permission_set', [ $this, 'permission_set' ], 10, 2 );
     }
@@ -240,7 +241,7 @@ class Admin {
                 ]
             );
         }
-        
+
         erp_add_menu(
             'accounting',
             [
@@ -327,6 +328,9 @@ class Admin {
      */
     public function init_hooks() {
         add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
+
+        // Ajax hooks
+        new Ajax_Handler();
     }
 
     /**
@@ -363,6 +367,15 @@ class Admin {
             ) ); ?>');
         </script>
         <?php
+        
+        /**
+         * Action hook to enqueue supporting 
+         * script for data localization
+         * 
+         * @since 1.9.0
+         */
+        do_action( 'erp_acct_locale_script' );
+
         echo '<div class="wrap"><div id="erp-accounting"></div></div>';
 
         $component = 'accounting';
@@ -409,74 +422,6 @@ class Admin {
         return $people_id;
     }
 
-    /**
-     * Save Financial Year settings
-     *
-     * @param int   $id
-     * @param array $data
-     *
-     * @return bool
-     */
-    public function save_accounting_settings() {
-        if ( $_SERVER['REQUEST_METHOD'] !== 'POST' || ! isset( $_POST['erp-ac-ob-fyears-add'] ) ) {
-            return;
-        }
-
-        global $wpdb;
-
-        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-settings-nonce' ) ) {
-            die( 'Nonce failed.' );
-        }
-
-        $fin_years = [];
-
-        if (
-            empty( $_POST['ob_names'] )
-            || empty( $_POST['ob_starts'] )
-            || empty( $_POST['ob_ends'] )
-        ) {
-            return;
-        }
-
-        $ob_names   = array_map( 'sanitize_text_field', wp_unslash( $_POST['ob_names'] ) );
-        $ob_starts  = array_map( 'sanitize_text_field', wp_unslash( $_POST['ob_starts'] ) );
-        $ob_ends    = array_map( 'sanitize_text_field', wp_unslash( $_POST['ob_ends'] ) );
-        $created_by = get_current_user_id();
-
-        if ( ! empty( $ob_names ) ) {
-            for ( $i = 0; $i < count( $ob_names ); $i++ ) {
-                $fin_years['ob_names'][] = $ob_names[ $i ];
-            }
-        }
-
-        if ( ! empty( $ob_starts ) ) {
-            for ( $i = 0; $i < count( $ob_starts ); $i++ ) {
-                $fin_years['ob_starts'][] = $ob_starts[ $i ];
-            }
-        }
-
-        if ( ! empty( $ob_ends ) ) {
-            for ( $i = 0; $i < count( $ob_ends ); $i++ ) {
-                $fin_years['ob_ends'][] = $ob_ends[ $i ];
-            }
-        }
-
-        $wpdb->query( 'TRUNCATE TABLE ' . $wpdb->prefix . 'erp_acct_financial_years' );
-
-        for ( $i = 0; $i < count( $ob_names ); $i++ ) {
-            $wpdb->insert(
-                $wpdb->prefix . 'erp_acct_financial_years',
-                [
-                    'name'       => $fin_years['ob_names'][ $i ],
-                    'start_date' => $fin_years['ob_starts'][ $i ],
-                    'end_date'   => $fin_years['ob_ends'][ $i ],
-                    'created_at' => date( 'Y-m-d' ),
-                    'created_by' => $created_by,
-                ],
-                ['%s', '%s', '%s', '%s', '%d']
-            );
-        }
-    }
 
     /**
      * Check accounting permission for users

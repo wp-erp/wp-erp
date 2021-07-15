@@ -1351,6 +1351,24 @@ function erp_get_import_export_fields() {
                 'postal_code',
             ],
         ],
+        'product' => [
+            'required_fields' => [
+                'name',
+                'product_type_id',
+                'category_id',
+                'sale_price',
+                'vendor',
+            ],
+            'fields'          => [
+                'name',
+                'product_type_id',
+                'category_id',
+                'cost_price',
+                'sale_price',
+                'vendor',
+                'tax_cat_id',
+            ],
+        ],
     ];
 
     return apply_filters( 'erp_import_export_csv_fields', $erp_fields );
@@ -1381,6 +1399,7 @@ function erp_process_csv_export() {
             $items          = [];
             $csv_items      = [];
             $is_employee    = false;
+            $is_people      = false;
             $type           = sanitize_text_field( wp_unslash( $_POST['type'] ) );
             $fields         = array_map( 'sanitize_text_field', wp_unslash( $_POST['fields'] ) );
 
@@ -1392,20 +1411,30 @@ function erp_process_csv_export() {
                     break;
 
                 case 'contact':
+                    $is_people      = true;
                     $custom_options = get_option( 'erp-contact-fields' );
                     break;
 
                 case 'company':
+                    $is_people      = true;
                     $custom_options = get_option( 'erp-company-fields' );
                     break;
 
                 case 'customer':
+                    $is_people      = true;
                     $custom_options = get_option( 'erp-customer-fields' );
                     break;
 
                 case 'vendor':
+                    $is_people      = true;
                     $custom_options = get_option( 'erp-vendor-fields' );
                     break;
+
+                case 'product':
+                    $items = erp_acct_get_all_products( [ 'number' => - 1 ] );
+                    break;
+
+                default:
             }
 
             if ( ! empty( $custom_options ) ) {
@@ -1414,7 +1443,7 @@ function erp_process_csv_export() {
                 }
             }
 
-            if ( ! $is_employee ) {
+            if ( $is_people ) {
                 $items = erp_get_peoples( [
                     'type'   => $type,
                     'offset' => 0,
@@ -1422,19 +1451,17 @@ function erp_process_csv_export() {
                 ] );
             }
 
+            error_log( print_r($items,true));
+
             foreach ( $items as $index => $item ) {
                 if ( empty( $fields ) ) {
                     continue;
                 }
 
+                $item = (object) $item;
+
                 foreach ( $fields as $field ) {
-                    if ( ! $is_employee ) {
-                        if ( in_array( $field, $custom_fields, true ) ) {
-                            $csv_items[ $index ][ $field ] = erp_people_get_meta( $item->id, $field, true );
-                        } else {
-                            $csv_items[ $index ][ $field ] = $item->{$field};
-                        }
-                    } else {
+                    if ( $is_employee ) {
                         if ( in_array( $field, $custom_fields, true ) ) {
                             $csv_items[ $index ][ $field ] = get_user_meta( $item->id, $field, true );
                         } else {
@@ -1452,11 +1479,19 @@ function erp_process_csv_export() {
                                     break;
                             }
                         }
+                    } else if ( $is_people ) {
+                        if ( in_array( $field, $custom_fields, true ) ) {
+                            $csv_items[ $index ][ $field ] = erp_people_get_meta( $item->id, $field, true );
+                        } else {
+                            $csv_items[ $index ][ $field ] = $item->{$field};
+                        }
+                    } else {
+                        $csv_items[ $index ][ $field ] = $item->{$field};
                     }
                 }
             }
 
-            $file_name = 'export_' . gmdate( 'd_m_Y' ) . '.csv';
+            $file_name = 'export_' . $type . '_' . gmdate( 'd_m_Y' ) . '.csv';
 
             erp_make_csv_file( $csv_items, $file_name );
         }
@@ -1856,45 +1891,6 @@ function erp_email_settings_javascript() {
             });
         });
 
-        jQuery(document).ready(function ($) {
-            $("a#imap-test-connection").click(function (e) {
-                e.preventDefault();
-                $("a#imap-test-connection").attr('disabled', 'disabled');
-                $("a#imap-test-connection").parent().find('.erp-loader').show();
-
-                var data = {
-                    'action': 'erp_imap_test_connection',
-                    'mail_server': $('input[name=mail_server]').val(),
-                    'username': $('input[name=username]').val(),
-                    'password': $('input[name=password]').val(),
-                    'protocol': $('select[name=protocol]').val(),
-                    'port': $('input[name=port]').val(),
-                    'authentication': $('select[name=authentication]').val(),
-                    '_wpnonce': '<?php echo esc_html( wp_create_nonce( 'erp-imap-test-connection-nonce' ) ); ?>'
-                };
-
-                $.post(ajaxurl, data, function (response) {
-                    $("a#imap-test-connection").removeAttr('disabled');
-                    $("a#imap-test-connection").parent().find('.erp-loader').hide();
-
-                    var type = response.success ? 'success' : 'error';
-
-                    if (response.data) {
-                        var status = response.success ? 1 : 0;
-                        $('#imap_status').val(status);
-
-                        swal({
-                            title: '',
-                            text: response.data,
-                            type: type,
-                            confirmButtonText: 'OK',
-                            confirmButtonColor: '#008ec2'
-                        });
-                    }
-                });
-            });
-        });
-
         jQuery('.email_tab_view li').click(function(){
 
             var elm = jQuery( this );
@@ -1907,44 +1903,6 @@ function erp_email_settings_javascript() {
 
         });
     </script>
-    <?php
-}
-
-/**
- * Email Setting CSS.
- *
- * @return void
- */
-function email_setting_css() {
-    ?>
-    <style>
-
-        #bt_others {
-            display: none;
-        }
-
-        tr.tag_crm, tr.tag_accounting, tr.tag_others {
-            display: none;
-        }
-        ul.email_tab_view {
-            display:table;
-            border-spacing:7px;
-            margin-left:-7px;
-            margin-bottom: -7px;
-        }
-
-        ul.email_tab_view li {
-            display: table-cell;
-            border:1px solid #ccd0d4;
-            padding:5px 10px;
-            background-color: #e5e5e5;
-            cursor: pointer;
-        }
-
-        .bt_active, ul.email_tab_view li:hover {
-            background-color : white !important;
-        }
-    </style>
     <?php
 }
 
@@ -2052,7 +2010,7 @@ function erp_import_export_download_sample() {
         return;
     }
 
-    if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'erp-import-export-sample-nonce' ) ) {
+    if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'erp-import-export-nonce' ) ) {
         return;
     }
 
@@ -3565,4 +3523,69 @@ function erp_reset_data() {
         $wpdb->query('ROLLBACK');
         return new WP_Error( 'error', __( 'Something went wrong when resetting. Please try again.', 'erp' ) );
     }
+}
+
+/**
+ * Get Standarized message for erp
+ *
+ * @since 1.8.6
+ *
+ * @param array $args
+ *
+ * @return string
+ */
+function erp_get_message( $args = [] ) {
+
+    $defaults = [
+        'type'         => '',
+        'message'      => '',
+        'additional'   => null,
+        'append_first' => true
+    ];
+
+    $args = wp_parse_args( $args, $defaults );
+
+    switch ( $args['type'] ) {
+
+        case 'error_nonce':
+            $args['message'] = 'Nonce verification failed!';
+            break;
+
+        case 'error_permission':
+            $args['message'] = 'You do not have sufficient permissions to do this action';
+            break;
+
+        case 'error_process':
+            $args['message'] = 'Could not process the request. Try again later!';
+            break;
+
+        case 'save_success':
+            $args['message'] = 'Saved Successfully!';
+            break;
+
+        case 'update_success':
+            $args['message'] = 'Updated Successfully!';
+            break;
+
+        case 'insert_success':
+            $args['message'] = 'Created Successfully!';
+            break;
+
+        case 'delete_success':
+            $args['message'] = 'Deleted Successfully!';
+            break;
+
+        default:
+            break;
+    }
+
+    if ( ! empty( $args['additional'] ) ) {
+        if ( $args['append_first'] ) {
+            $args['message'] = $args['additional'] . ' ' . $args['message'];
+        } else {
+            $args['message'] .= ' ' . $args['additional'];
+        }
+    }
+
+    return sprintf( __( '%s', 'erp' ), $args['message'] );
 }

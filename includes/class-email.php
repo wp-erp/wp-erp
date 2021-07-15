@@ -2,12 +2,12 @@
 
 namespace WeDevs\ERP;
 
-use WeDevs\ERP\Framework\ERP_Settings_Page;
+use WeDevs\ERP\Settings\Template as Settings_Page;
 
 /**
  * Email Class
  */
-class Email extends ERP_Settings_Page {
+class Email extends Settings_Page {
 
     /**
      * Email method ID.
