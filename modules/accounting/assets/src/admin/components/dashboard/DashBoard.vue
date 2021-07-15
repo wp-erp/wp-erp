@@ -6,6 +6,10 @@
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
                     <h2 class="content-header__title">{{ __('Dashboard', 'erp') }}</h2>
+                    <a class="wperp-btn btn--primary" :href="tutorialUrl" id="btn-tutorial-start">
+                        <span class="dashicons dashicons-controls-play"></span>
+                        {{ __(' Start Tutorial', 'erp') }}
+                    </a>
                 </div>
             </div>
         </div>
@@ -112,7 +116,8 @@ export default {
             closable      : true,
             msg           : __('Accounting', 'erp'),
             to_receive    : [],
-            to_pay        : []
+            to_pay        : [],
+            tutorialUrl   : erp_acct_var.erp_acct_tut_url
         };
     },
 

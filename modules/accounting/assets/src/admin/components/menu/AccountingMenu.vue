@@ -15,7 +15,7 @@
         </div>
         <ul :class="primaryNav">
             <template v-for="(menu, index) in menuItems">
-                <li :key="index" v-if="menu.hasOwnProperty('submenu')" :class="dropdownNav">
+                <li :key="index" v-if="menu.hasOwnProperty('submenu')" :class="dropdownNav" :id="`erp-act-menu-${menu.slug}`">
                     <router-link :to="'/' + menu.slug">{{ menu.title }}</router-link>
 
                     <ul :class="dropDownClass">
