@@ -26,7 +26,7 @@
             $f_year_help_text = '';
 
             if ( current_user_can( 'erp_leave_create_request' ) ) {
-                $f_year_help_text .= ' ' . sprintf( '<a href="?page=erp-settings&tab=erp-hr&section=financial">%s</a>', __( 'Add New', 'erp' ) );
+                $f_year_help_text .= ' ' . sprintf( '<a href="?page=erp-settings#/erp-hr/financial">%s</a>', __( 'Add New', 'erp' ) );
             }
             ?>
 

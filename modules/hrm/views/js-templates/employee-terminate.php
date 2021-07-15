@@ -5,7 +5,7 @@
         <?php erp_html_form_input( [
             'label'       => __( 'Termination Date', 'erp' ),
             'name'        => 'terminate_date',
-            'value'       => '{{data.terminate_date}}',
+            'value'       => '{{ data.date }}',
             'required'    => true,
             'custom_attr' => [ 'autocomplete' => 'off' ],
             'class'       => 'erp-date-field',
