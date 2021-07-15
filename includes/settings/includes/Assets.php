@@ -167,12 +167,26 @@ class Assets {
         return $settings_data;
     }
 
+    /**
+     * Generates notice when WooCommerce extension is not purchased
+     * 
+     * @since 1.9.0
+     *
+     * @return string
+     */
     public function get_wc_purchase_notice() {
         $wc_url = trailingslashit( wp_erp_pro()->update->get_base_url() ) . 'pricing?utm_source=wp-admin&utm_medium=link&utm_campaign=erp-settings-page';
         
         return __( "We're Sorry, You Haven't Purchased Our WooCommerce Extension. Please Purchase<br><a target='_blank' href='{$wc_url}'>WP ERP WooCommerce Extension</a> to Unlock This feature.", "erp" );
     }
 
+    /**
+     * Generates notice when WooCommerce extension is not enabled
+     * 
+     * @since 1.9.0
+     *
+     * @return string
+     */
     public function get_wc_activation_notice() {
         $modules_page_url = admin_url( 'admin.php?page=erp-extensions' );
 
