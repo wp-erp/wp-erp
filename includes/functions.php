@@ -1451,8 +1451,6 @@ function erp_process_csv_export() {
                 ] );
             }
 
-            error_log( print_r($items,true));
-
             foreach ( $items as $index => $item ) {
                 if ( empty( $fields ) ) {
                     continue;
