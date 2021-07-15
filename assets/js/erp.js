@@ -286,6 +286,10 @@ window.wperp = window.wperp || {};
             // Validates custom required checkboxes
             $( "body" ).on( "change", "span.checkbox input[required]", this.validateCheckbox );
 
+            // Danger Zone Input & Confirmation Modal
+            $( '.erp-danger-zone' ).on( 'input', '#erp_reset_confirmation', this.onChangeDangerZoneInput );
+            $( '.erp-danger-zone' ).on( 'click', 'button.tools-btn-submit', this.viewDangerZoneConfirmation );
+
             this.initFields();
         },
 
@@ -636,6 +640,99 @@ window.wperp = window.wperp || {};
                 }
             }
         },
+
+        /**
+         * Danger Zone Confirmation Popup
+         *
+         * @param object event
+        */
+        viewDangerZoneConfirmation: function( e ) {
+            e.preventDefault();
+
+            var confirmationElement   = $("#erp_reset_confirmation"),
+                toolsSubmitButton     = $('.tools-btn-submit'),
+                toolsLoadingButton    = $('.tools-btn-loading'),
+                toolsErrorMessage     = $(".tools-error-message"),
+                resetConfirmationText = confirmationElement.val(),
+                isValidConfirmation   = ( typeof resetConfirmationText !== 'undefined' ) && ( String( resetConfirmationText ).length !== 0 ) && ( resetConfirmationText === 'Reset' );
+
+            if ( ! isValidConfirmation ) {
+                toolsErrorMessage.html( wpErpDangerZone.confirmResetBeforeContinue );
+                confirmationElement.addClass('tools-error-input');
+            } else {
+                toolsErrorMessage.html('');
+                confirmationElement.removeClass('tools-error-input');
+
+                swal({
+                    title             : wpErpDangerZone.resetErp,
+                    text              : wpErpDangerZone.areYouSureReset,
+                    showCancelButton  : true,
+                    confirmButtonText : wpErpDangerZone.yesResetIt,
+                    confirmButtonColor: "#FF4848",
+                    imageUrl          : wpErpDangerZone.trashIcon
+                },
+                function() {
+                    toolsSubmitButton.addClass('tools-submit-hidden');
+                    toolsLoadingButton.removeClass('tools-submit-hidden');
+
+                    $.ajax({
+                        type    : "POST",
+                        url     : ajaxurl,
+                        dataType: 'json',
+                        data    : $("#danger-zone-form").serialize()
+                    })
+                    .fail(function(xhr) {
+                        swal('', wpErpDangerZone.somethingWrong, 'error');
+                        toolsSubmitButton.removeClass('tools-submit-hidden');
+                        toolsLoadingButton.addClass('tools-submit-hidden');
+                    })
+                    .done(function(response) {
+                        if(response.success) {
+                            toolsSubmitButton.removeClass('tools-submit-hidden');
+                            toolsLoadingButton.addClass('tools-submit-hidden');
+
+                            swal({
+                                title: '',
+                                text : response.data.message,
+                                time : 3000,
+                                type : 'success',
+                                showConfirmButton: false,
+                            });
+
+                            setTimeout(function() {
+                                window.location.href = response.data.redirected_url;
+                            }, 1000);
+                        } else {
+                            toolsSubmitButton.removeClass('tools-submit-hidden');
+                            toolsLoadingButton.addClass('tools-submit-hidden');
+                            swal('', response.data, 'error');
+                        }
+                    });
+                });
+            }
+        },
+
+        /**
+         * On change danger zone input
+         *
+         * @param object event
+         */
+        onChangeDangerZoneInput: function( e ) {
+            var confirmationElement   = $("#erp_reset_confirmation"),
+                resetConfirmationText = confirmationElement.val(),
+                isValidConfirmation   = ( typeof resetConfirmationText !== 'undefined' ) && ( String( resetConfirmationText ).length !== 0 ) && ( resetConfirmationText === 'Reset' );
+
+            if ( isValidConfirmation ) {
+                $(".tools-error-message").html('');
+                confirmationElement.removeClass('tools-error-input');
+                confirmationElement.addClass('tools-success-input');
+            } else {
+                confirmationElement.removeClass('tools-success-input');
+                $(".tools-error-message").html( wpErpDangerZone.confirmResetBeforeContinue );
+                confirmationElement.addClass('tools-error-input');
+            }
+        }
+
     };
 
     $(function() {

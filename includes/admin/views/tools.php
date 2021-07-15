@@ -33,14 +33,16 @@
         'general' => esc_html__( 'General', 'erp' ),
     ];
 
-    $tabs['misc']   = esc_html__( 'Misc.', 'erp' );
-    $tabs['status'] = esc_html__( 'Status', 'erp' );
-    $tabs['log']    = esc_html__( 'Audit Log', 'erp' );
+    $tabs['misc']        = esc_html__( 'Misc.', 'erp' );
+    $tabs['status']      = esc_html__( 'Status', 'erp' );
+    $tabs['log']         = esc_html__( 'Audit Log', 'erp' );
+    $tabs['danger-zone'] = esc_html__( 'Danger Zone', 'erp' );
+
 
     $tabs = apply_filters( 'erp_tools_tabs', $tabs );
     ?>
 
-    <h2 class="nav-tab-wrapper erp-nav-tab-wrapper">
+    <h2 class="nav-tab-wrapper erp-nav-tab-wrapper erp-tools-navbar">
         <?php foreach ( $tabs as $tab_key => $tab_label ) { ?>
             <a class="nav-tab <?php echo esc_attr( ( $current_tab === $tab_key ) ? 'nav-tab-active' : '' ); ?>" href="<?php echo esc_url( admin_url( 'admin.php?page=erp-tools&tab=' ) ) . esc_html( $tab_key ); ?>"><?php echo esc_html( $tab_label ); ?></a>
         <?php } ?>
@@ -64,6 +66,10 @@
 
             case 'log':
                 include_once __DIR__ . '/log.php';
+                break;
+
+            case 'danger-zone':
+                new \WeDevs\ERP\Danger_Zone();
                 break;
 
             default:
