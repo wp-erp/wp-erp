@@ -311,6 +311,9 @@ final class WeDevs_ERP {
         // Add plugin action links
         add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), [ $this, 'plugin_action_links' ] );
 
+        // Enqueue footer queued js scripts
+        add_action( 'admin_footer', 'erp_print_js', 25 );
+
         // Admin footer text
         add_filter( 'admin_footer_text', [ $this, 'admin_footer_text' ], 10, 1 );
     }
