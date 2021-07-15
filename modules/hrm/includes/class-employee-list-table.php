@@ -328,7 +328,7 @@ class Employee_List_Table extends \WP_List_Table {
     /**
      * Retrieves the date when an employee's status was updated
      * 
-     * @since 1.8.7
+     * @since 1.9.0
      * 
      * @param string|int $emp_id
      *

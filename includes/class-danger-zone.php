@@ -7,7 +7,7 @@ namespace WeDevs\ERP;
  * 
  * Reset all data of WP ERP and make a fresh installation
  *
- * @since 1.8.7
+ * @since 1.9.0
  */
 class Danger_Zone {
 
@@ -22,7 +22,7 @@ class Danger_Zone {
     /**
      * Get Danger zone scripts
      *
-     * @since 1.8.7
+     * @since 1.9.0
      *
      * @return void
      */
@@ -40,7 +40,7 @@ class Danger_Zone {
     /**
      * Get Views
      *
-     * @since 1.8.7
+     * @since 1.9.0
      *
      * @return void
      */

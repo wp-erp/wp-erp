@@ -175,7 +175,7 @@ class Helpers {
     /**
      * Get Options For Settings
      *
-     * @since 1.8.7
+     * @since 1.9.0
      *
      * @param array $options - Setting options
      *
@@ -242,7 +242,7 @@ class Helpers {
     /**
      * Retrieves email templates that cannot be disabled
      * 
-     * @since 1.8.7
+     * @since 1.9.0
      *
      * @return array
      */

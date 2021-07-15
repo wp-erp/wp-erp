@@ -406,7 +406,7 @@ function erp_acct_get_vendor_products( $args = [] ) {
 /**
  * Validates csv data for importing
  * 
- * @since 1.8.7
+ * @since 1.9.0
  *
  * @param array $data
  * 
@@ -582,7 +582,7 @@ function erp_acct_validate_csv_data( $data ) {
 /**
  * Imports products from csv
  * 
- * @since 1.8.7
+ * @since 1.9.0
  *
  * @param array $data
  * 

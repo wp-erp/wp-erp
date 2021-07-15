@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * Make a Quick tour tutorial to demonstrate accounting module
  *
- * @since 1.8.7
+ * @since 1.9.0
  */
 class Accounting_Tutorial {
 
@@ -42,7 +42,7 @@ class Accounting_Tutorial {
     /**
 	 * Initializaiton of URL's
      *
-     * @since 1.8.7
+     * @since 1.9.0
      *
      * @return void
 	 */
@@ -55,7 +55,7 @@ class Accounting_Tutorial {
 	/**
 	 * Setup pointers for screen.
      *
-     * @since 1.8.7
+     * @since 1.9.0
      *
      * @return void
 	 */
@@ -79,7 +79,7 @@ class Accounting_Tutorial {
      *
      * Get any single tabs tutorial pointer and enqueue it using wp_pointer
      *
-     * @since 1.8.7
+     * @since 1.9.0
      *
      * @param string $tab Tabs will be used as like a single page. eg; dashboard, customer
      *
@@ -257,7 +257,7 @@ class Accounting_Tutorial {
 	/**
 	 * Enqueue pointers and add script to that page.
      *
-	 * @since 1.8.7
+	 * @since 1.9.0
      *
 	 * @param array $pointers
      *
