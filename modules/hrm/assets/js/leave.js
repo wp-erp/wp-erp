@@ -60,6 +60,9 @@
             // trigger get employees
             $( '.leave-entitlement-form' ).on( 'change', '#leave_policy', self, this.entitlement.getFilteredEmployee );
 
+            // trigger on deleting leave type
+            $( '.erp-hr-leave-type-delete' ).on( 'click', this.leaveType.remove );
+
             this.initDateField();
         },
 
@@ -808,6 +811,48 @@
             },
         },
 
+        leaveType: {
+            remove: function ( e ) {
+                e.preventDefault();
+
+                var self = $( this );
+
+                swal({
+                    title              : wpErpHr.delConfirmLeaveType,
+                    type               : 'warning',
+                    showCancelButton   : true,
+                    cancelButtonText   : wpErpHr.cancel,
+                    confirmButtonColor : '#fa6e5c',
+                    confirmButtonText  : wpErpHr.confirmDelete,
+                    closeOnConfirm     : false
+                },
+                function() {
+                    wp.ajax.send('erp-hr-leave-type-delete', {
+                        data: {
+                            '_wpnonce': wpErpHr.nonce,
+                            id: self.data( 'id' )
+                        },
+                        success: function ( response ) {
+                            self.closest( 'tr' ).fadeOut( 'fast', function () {
+                                $( this ).remove();
+                            } );
+
+                            swal({
+                                title: '',
+                                text: response,
+                                type: 'success',
+                                timer: 2200,
+                                showConfirmButton: false
+                            });                            
+                        },
+                        error: function ( error ) {
+                            swal( '', error, 'error' );
+                        }
+                    });
+                });
+            }
+        },
+
         importICalInit: function ( e ) {
             e.preventDefault();
             $( 'body #erp-ical-input' ).trigger( 'click' );
@@ -875,6 +920,7 @@
             }
             Leave.initDateField();
         },
+
         checkDateRange: function() {
             var new_date = new Date( this.value );
             var year = new_date.getFullYear();
