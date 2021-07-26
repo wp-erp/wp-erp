@@ -59,11 +59,15 @@ class New_Task_Assigned extends Email {
             $employee = new \WeDevs\ERP\HRM\Employee( intval( $id ) );
 
             $this->recipient    = $employee->user_email;
+            $task_view_url      = admin_url("admin.php?page=erp-crm&section=task&sub-section=tasks");
+            $task_description   = $activity->message . "<br><a style='background: #1A9ED4;color: #fff;padding: 6px 10px;margin: 0;border-radius: 3px;display: inline-block;text-decoration: none;' href='$task_view_url' target='_blank'> ". __( 'View Tasks', 'erp' ) ." </a><br><br>";
+
             $this->replace      = [
-                'employee_name' => $employee->get_full_name(),
-                'task_title'    => $extra->task_title,
-                'due_date'      => erp_format_date( $activity->start_date ),
-                'created_by'    => $current_user->display_name,
+                'employee_name'    => $employee->get_full_name(),
+                'task_title'       => $extra->task_title,
+                'task_description' => $task_description,
+                'due_date'         => erp_format_date( $activity->start_date ),
+                'created_by'       => $current_user->display_name,
             ];
 
             if ( $employee ) {
