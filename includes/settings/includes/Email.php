@@ -6,7 +6,7 @@ namespace WeDevs\ERP\Settings;
  * Email settings class
  */
 class Email extends Template {
-    
+
     /**
      * Class constructor
      */
@@ -30,6 +30,7 @@ class Email extends Template {
         return apply_filters( 'erp_settings_email_sections', [
             'general'      => __( 'General', 'erp' ),
             'smtp'         => __( 'SMTP', 'erp' ),
+            'templates'    => __( 'Email Templates', 'erp' ),
             'notification' => __( 'Notifications & Templates', 'erp' )
         ] );
     }
@@ -193,6 +194,15 @@ class Email extends Template {
             'id'   => 'script_styling_options',
         ];
         // End SMTP settings
+
+        // Email Templates
+        $fields['templates'][] = [
+            'title' => __( 'Saved Replies', 'erp' ),
+            'type'  => 'title',
+            'desc'  => __( '', 'erp' ),
+            'id'    => 'general_options',
+        ];
+        // End of Email Templates
 
         // Notification & Templates settings
         $fields['notification'][] = [

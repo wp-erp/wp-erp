@@ -17,7 +17,6 @@ import AcFinancialYears from '../components/act/financial-year/AcFinancialYears.
 import CrmContacts from '../components/crm/contacts/CrmContacts.vue';
 import CrmContactForm from '../components/crm/contact-forms/CrmContactForm.vue';
 import CrmSubscription from '../components/crm/subscription/CrmSubscription.vue';
-import CrmTemplate from '../components/crm/templates/CrmTemplate.vue';
 import CrmEmailConnect from '../components/crm/email/CrmEmailConnect.vue';
 import CrmEmailConnectGmail from '../components/crm/email/CrmEmailConnectGmail.vue';
 import CrmEmailConnectImap from '../components/crm/email/CrmEmailConnectImap.vue';
@@ -28,6 +27,7 @@ import WooCommerce from '../components/woocommerce/WooCommerce.vue';
 // Email Components
 import GeneralEmail from '../components/email/general/GeneralEmail.vue';
 import SMTPEmail from '../components/email/smtp/SMTPEmail.vue';
+import EmailTemplate from '../components/email/templates/EmailTemplate.vue';
 import EmailNotification from '../components/email/notifications/EmailNotification.vue';
 
 // Integration Components
@@ -153,11 +153,6 @@ export default new Router({
                     component: CrmSubscription
                 },
                 {
-                    path     : 'templates',
-                    name     : 'CrmTemplate',
-                    component: CrmTemplate
-                },
-                {
                     path     : 'email_connect',
                     name     : 'CrmEmailConnect',
                     component: CrmEmailConnect
@@ -200,6 +195,11 @@ export default new Router({
                     path     : 'smtp',
                     name     : 'SMTPEmail',
                     component: SMTPEmail
+                },
+                {
+                    path     : 'templates',
+                    name     : 'EmailTemplate',
+                    component: EmailTemplate
                 },
                 {
                     path     : 'notification',
