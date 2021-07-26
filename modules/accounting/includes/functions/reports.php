@@ -267,6 +267,57 @@ function erp_acct_get_sales_tax_report( $agency_id, $start_date, $end_date ) {
 }
 
 /**
+ * Generates filter wise sales tax report
+ * 
+ * @since 1.9.1
+ *
+ * @param array $args
+ * 
+ * @return array
+ */
+function erp_acct_get_filtered_sales_tax_report( $args ) {
+    global $wpdb;
+
+    if ( empty( $args['start_date'] ) || empty( $args['end_date'] ) ) {
+        return [];
+    }
+
+    $sql['from']  = "{$wpdb->prefix}erp_acct_invoices AS inv";
+    $sql['where'] = "inv.trn_date BETWEEN '%s' AND '%s'";
+    $sql['extra'] = '';
+    $values       = [ $args['start_date'], $args['end_date'] ];
+
+    if ( ! empty( $args['customer_id'] ) ) {
+
+        $sql['select'] = 'inv.trn_date, inv.voucher_no, inv.tax AS tax_amount, inv.customer_id, inv.customer_name';
+        $sql['where'] .= " AND inv.tax > 0 AND inv.customer_id = %d";
+        $values[]      = $args['customer_id'];
+
+    } else if ( ! empty( $args['category_id'] ) ) {
+
+        $sql['select'] = 'inv.trn_date, details.trn_no AS voucher_no, sum(details.tax) AS tax_amount, details.tax_cat_id';
+        $sql['from']  .= " RIGHT JOIN {$wpdb->prefix}erp_acct_invoice_details AS details ON inv.voucher_no = details.trn_no";
+        $sql['where'] .= " AND details.tax > 0 AND details.tax_cat_id = %d";
+        $sql['extra'] .= "GROUP BY details.trn_no";
+        $values[]      = $args['category_id'];
+
+    } else {
+
+        $sql['select'] = 'inv.trn_date, inv.voucher_no, inv.tax AS tax_amount';
+        $sql['where'] .= " AND inv.tax > 0";
+
+    }
+
+    return $wpdb->get_results(
+        $wpdb->prepare(
+            "SELECT {$sql['select']} FROM {$sql['from']} WHERE {$sql['where']} {$sql['extra']}",
+            $values
+        ),
+        ARRAY_A
+    );
+}
+
+/**
  * ===================================================
  * Income Statement
  * ===================================================
