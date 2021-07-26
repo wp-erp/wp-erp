@@ -96,7 +96,7 @@
 
         <trans-particulars :particulars="invoice.particulars" />
 
-        <div class="invoice-attachments d-print-none">
+        <div class="invoice-attachments d-print-none" v-if="invoice.attachments && invoice.attachments.length">
             <h4>{{ __('Attachments', 'erp') }}</h4>
             <a class="attachment-item" :href="attachment"
                 :key="index"
