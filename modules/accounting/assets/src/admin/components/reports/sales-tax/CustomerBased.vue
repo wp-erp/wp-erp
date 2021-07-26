@@ -83,3 +83,111 @@
     </div>
 </template>
 
+<script>
+    import HTTP         from 'admin/http';
+    import ListTable    from '../../list-table/ListTable.vue';
+    import Datepicker   from '../../base/Datepicker.vue';
+    import MultiSelect  from '../../select/MultiSelect.vue';
+    import { mapState } from 'vuex';
+
+    export default {
+        name: 'SalesTaxReportCustomerBased',
+        
+        components: {
+            ListTable,
+            Datepicker,
+            MultiSelect
+        },
+        
+        data() {
+            return {
+                startDate : null,
+                endDate   : null,
+                customer  : null,
+                taxes     : [],
+                symbol    : erp_acct_var.symbol,
+                columns   : {
+                    voucher_no : {
+                        label  : __( 'Voucher No', 'erp' )
+                    },
+                    trn_date   : {
+                        label  : __( 'Transaction Date', 'erp' )
+                    },
+                    tax_amount : {
+                        label  : __( 'Tax Amount', 'erp' )
+                    },
+                },
+            };
+        },
+
+        computed: {
+            ...mapState({
+                customers: state => state.sales.customers,
+            }),
+
+            totalTax() {
+                let total = 0;
+                
+                this.taxes.forEach(item => {
+                    total += parseFloat( item.tax_amount )
+                });
+                
+                return total;
+            }
+        },
+
+        watch: {
+            customer() {
+                this.taxes = [];
+            }
+        },
+
+        created() {
+            this.$nextTick(() => {
+                const dateObj  = new Date();
+                const month    = ( '0' + ( dateObj.getMonth() + 1 ) ).slice( -2 );
+                const year     = dateObj.getFullYear();
+                
+                this.startDate = `${year}-${month}-01`;
+                this.endDate   = erp_acct_var.current_date;
+
+                if ( ! this.customers.length ) {
+                    this.$store.dispatch('sales/fillCustomers', []);
+                }
+
+                if ( this.customers[0] !== undefined ) {
+                    this.customer = this.customers[0];
+                }
+
+                this.getReport();
+            });
+        },
+
+        methods: {
+            getReport() {
+                if ( ! this.customer ) {
+                    return;
+                }
+                
+                this.$store.dispatch('spinner/setSpinner', true);
+                
+                HTTP.get('/reports/sales-tax', {
+                    params: {
+                        customer_id : this.customer.id,
+                        start_date  : this.startDate,
+                        end_date    : this.endDate
+                    }
+                }).then(response => {
+                    this.taxes = response.data;
+                    this.$store.dispatch('spinner/setSpinner', false);
+                }).catch(e => {
+                    this.$store.dispatch('spinner/setSpinner', false);
+                });
+            },
+
+            printPopup() {
+                window.print();
+            }
+        }
+    };
+</script>
