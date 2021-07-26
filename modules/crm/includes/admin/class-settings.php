@@ -45,7 +45,6 @@ class CRM_Settings extends Template {
         $sections = [
             'contacts'      => __( 'Contacts', 'erp' ),
             'contact_forms' => __( 'Contact Forms', 'erp' ),
-            'templates'     => __( 'Templates', 'erp' ),
             'subscription'  => __( 'Subscription', 'erp' ),
             'email_connect' => __( 'Email Connectivity', 'erp' ),
         ];
@@ -119,13 +118,6 @@ class CRM_Settings extends Template {
         $fields['contacts'][] = [
             'type' => 'sectionend',
             'id'   => 'script_styling_options',
-        ];
-
-        $fields['templates'][] = [
-            'title' => __( 'Saved Replies', 'erp' ),
-            'type'  => 'title',
-            'desc'  => __( '', 'erp' ),
-            'id'    => 'general_options',
         ];
 
         $fields['subscription'][] = [
