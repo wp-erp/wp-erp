@@ -1,6 +1,6 @@
 <?php
 
-namespace WeDevs\ERP;
+namespace WeDevs\ERP\Settings;
 
 use WeDevs\ERP\Settings\Assets;
 
@@ -18,8 +18,6 @@ class Settings {
     }
 
     public function includes() {
-        require_once __DIR__ . '/includes/Template.php';
-        require_once __DIR__ . '/includes/Helpers.php';
         include_once __DIR__ . '/views/settings.php';
     }
 
