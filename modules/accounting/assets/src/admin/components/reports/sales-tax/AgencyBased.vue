@@ -93,3 +93,122 @@
         </list-table>
     </div>
 </template>
+
+<script>
+    import HTTP        from 'admin/http';
+    import ListTable   from '../../list-table/ListTable.vue';
+    import Datepicker  from '../../base/Datepicker.vue';
+    import MultiSelect from '../../select/MultiSelect.vue';
+    
+    export default {
+        name : 'SalesTaxReportCategoryBased',
+        
+        components : {
+            ListTable,
+            Datepicker,
+            MultiSelect
+        },
+
+        data() {
+            return {
+                startDate       : null,
+                endDate         : null,
+                selectedAgency  : null,
+                taxAgencies     : [],
+                openingBalance  : 0,
+                rows            : [],
+                totalDebit      : 0,
+                totalCredit     : 0,
+                symbol          : erp_acct_var.symbol,
+                columns         : {
+                    trn_no      : {
+                        label   : __( 'Voucher No', 'erp' )
+                    },
+                    trn_date    : {
+                        label   : __( 'Transaction Date', 'erp' )
+                    },
+                    particulars : {
+                        label   : __( 'Particulars', 'erp' )
+                    },
+                    debit       : {
+                        label   : __( 'Debit', 'erp' )
+                    },
+                    credit      : {
+                        label   : __( 'Credit', 'erp' )
+                    },
+                    balance     : {
+                        label   : __( 'Balance', 'erp' )
+                    }
+                },
+            };
+        },
+
+        watch: {
+            selectedAgency() {
+                this.rows = [];
+            }
+        },
+
+        created() {
+            this.$nextTick(() => {
+                const dateObj  = new Date();
+                const month    = ('0' + (dateObj.getMonth() + 1)).slice(-2);
+                const year     = dateObj.getFullYear();
+                
+                this.startDate = `${year}-${month}-01`;
+                this.endDate   = erp_acct_var.current_date;
+
+                this.fetchData();
+            });
+        },
+
+        methods: {
+            fetchData() {
+                this.$store.dispatch('spinner/setSpinner', true);
+
+                HTTP.get('/tax-agencies').then(res => {
+                    this.taxAgencies    = res.data;
+                }).then(() => {
+                    if ( this.taxAgencies && this.taxAgencies[0] !== undefined ) {
+                        this.selectedAgency = this.taxAgencies[0];
+                        this.getReport();
+                    }
+                });
+            },
+
+            getReport() {   
+                if ( ! this.selectedAgency ) {
+                    return this.$store.dispatch('spinner/setSpinner', false);
+                }
+             
+                this.$store.dispatch('spinner/setSpinner', true);
+                this.rows = [];
+                
+                HTTP.get('/reports/sales-tax', {
+                    params: {
+                        agency_id  : this.selectedAgency.id,
+                        start_date : this.startDate,
+                        end_date   : this.endDate
+                    }
+                }).then(response => {
+                    this.rows        = response.data.details;
+                    this.totalDebit  = response.data.extra.total_debit;
+                    this.totalCredit = response.data.extra.total_credit;
+                    
+                    this.rows.forEach(item => {
+                        item.trn_date   = this.formatDate(item.trn_date);
+                        item.created_at = this.formatDate(item.created_at);
+                    });
+
+                    this.$store.dispatch('spinner/setSpinner', false);
+                }).catch(error => {
+                    this.$store.dispatch('spinner/setSpinner', false);
+                });
+            },
+
+            printPopup() {
+                window.print();
+            }
+        }
+    };
+</script>
