@@ -17,9 +17,9 @@ var rootEntryPoints = {
 };
 
 // @todo: Organize these settings asset compiling
-entryPoints[`../../assets/js/erp-settings-bootstrap`] = `./includes/settings/assets/src/bootstrap.js`;
-entryPoints[`../../assets/js/erp-settings`] = `./includes/settings/assets/src/main.js`;
-entryPoints[`../../assets/css/erp-settings`] = `./includes/settings/assets/less/settings.less`;
+entryPoints[`../../assets/js/erp-settings-bootstrap`] = `./includes/Settings/assets/src/bootstrap.js`;
+entryPoints[`../../assets/js/erp-settings`] = `./includes/Settings/assets/src/main.js`;
+entryPoints[`../../assets/css/erp-settings`] = `./includes/Settings/assets/less/settings.less`;
 
 var moduleEntryPoints = {
     hr: {},
@@ -118,7 +118,7 @@ var mainConfig = {
             '@': path.resolve('./assets/src/'),
             frontend: path.resolve('./assets/src/frontend/'),
             // 'admin': path.resolve('./assets/src/admin/'),
-            settings: path.resolve('./includes/settings/assets/src/'),
+            settings: path.resolve('./includes/Settings/assets/src/'),
             admin: path.resolve('./modules/accounting/assets/src/admin/')
         },
         modules: [
