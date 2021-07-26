@@ -107,7 +107,7 @@ class Leave_Policy_Name_List_Table extends WP_List_Table {
         $delete_url         = add_query_arg( $params, admin_url( 'admin.php' ) );
 
         $actions['edit']   = sprintf( '<a href="%s" data-id="%d">%s</a>', $edit_url, $item->id, esc_html__( 'Edit', 'erp' ) );
-        $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d">%s</a>', $delete_url, $item->id, esc_html__( 'Delete', 'erp' ) );
+        $actions['delete'] = sprintf( '<a href="%s" class="submitdelete erp-hr-leave-type-delete" data-id="%d">%s</a>', $delete_url, $item->id, esc_html__( 'Delete', 'erp' ) );
 
         return sprintf( '<strong>%s</strong> %2$s', $item->name, $this->row_actions( $actions ) );
     }
