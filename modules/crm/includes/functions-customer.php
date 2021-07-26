@@ -3264,9 +3264,9 @@ function erp_crm_render_save_replies( $template_id, $contact_id ) {
         return new WP_Error( 'no-template', __( 'No template found', 'erp' ) );
     }
 
-    if ( empty( $contact_id ) ) {
-        return new WP_Error( 'no-contact', __( 'No contact found', 'erp' ) );
-    }
+    // if ( empty( $contact_id ) ) {
+    //     return new WP_Error( 'no-contact', __( 'No contact found', 'erp' ) );
+    // }
 
     $contacts       = new \WeDevs\ERP\CRM\Contact( $contact_id );
     $templates      = (object) erp_crm_get_save_replies_by_id( $template_id );
