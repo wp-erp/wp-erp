@@ -307,6 +307,7 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no, $c
                 'unit_price'     => $item['unit_price'],
                 'discount'       => $item['discount'],
                 'tax'            => $item['tax'],
+                'tax_cat_id'     => ! empty( $item['tax_cat_id'] ) ? $item['tax_cat_id'] : null,
                 'item_total'     => $sub_total,
                 'ecommerce_type' => ! empty( $item['ecommerce_type'] ) ? $item['ecommerce_type'] : null,
                 'created_at'     => $invoice_data['created_at'],
@@ -324,7 +325,7 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no, $c
             $tax_rate_agency = ! empty( $item['tax_rate_agency'] ) ? $item['tax_rate_agency'] : null;
         } else {
             // calculate tax for every related agency
-            $tax_rate_agency = get_tax_rate_with_agency( $invoice_data['tax_rate_id'], $item['tax_cat_id'] );
+            $tax_rate_agency = erp_acct_get_tax_rate_with_agency( $invoice_data['tax_rate_id'], $item['tax_cat_id'] );
         }
 
         if ( ! empty( $tax_rate_agency ) ) {
@@ -757,22 +758,6 @@ function erp_acct_void_invoice( $invoice_no ) {
     $wpdb->delete( $wpdb->prefix . 'erp_acct_tax_agency_details', [ 'trn_no' => $invoice_no ] );
 
     erp_acct_purge_cache( ['list' => 'sales_transaction'] );
-}
-
-/**
- * Tax category with agency
- */
-function get_tax_rate_with_agency( $tax_id, $tax_cat_id ) {
-    global $wpdb;
-
-    return $wpdb->get_results(
-        $wpdb->prepare(
-            "SELECT agency_id, tax_rate FROM {$wpdb->prefix}erp_acct_tax_cat_agency where tax_id = %d and tax_cat_id = %d",
-            absint( $tax_id ),
-            absint( $tax_cat_id )
-        ),
-        ARRAY_A
-    );
 }
 
 /**
