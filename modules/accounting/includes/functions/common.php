@@ -394,6 +394,30 @@ function erp_acct_get_check_trn_type_by_id( $trn_type_id ) {
 }
 
 /**
+ * Retrieves tax category with agency
+ * 
+ * @since 1.9.1
+ * 
+ * @param int $tax_id
+ * @param int $tax_cat_id
+ * 
+ * @return array
+ */
+function erp_acct_get_tax_rate_with_agency( $tax_id, $tax_cat_id ) {
+    global $wpdb;
+
+    return $wpdb->get_results(
+        $wpdb->prepare(
+            "SELECT agency_id, tax_rate
+            FROM {$wpdb->prefix}erp_acct_tax_cat_agency
+            where tax_id = %d and tax_cat_id = %d",
+            [ $tax_id, $tax_cat_id ]
+        ),
+        ARRAY_A
+    );
+}
+
+/**
  * Get Accounting Quick Access Menus
  *
  * @return array
