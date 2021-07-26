@@ -2905,12 +2905,12 @@ function erp_hr_remove_leave_policy_name( $id ) {
     $has_policy = Leave_Policy::where( 'leave_id', $id )->first();
 
     if ( $has_policy ) {
-        return new WP_Error( 'has_policy', __( 'Can not remove, connected with policy', 'erp' ) );
+        return new WP_Error( 'has_policy', __( 'This leave type cannot be deleted as it is associated with a leave policy', 'erp' ) );
     }
 
     $leave = Leave::find( $id );
 
-    erp_hrm_purge_cache( ['list' => 'leave_policy_name' ] );
+    erp_hrm_purge_cache( [ 'list' => 'leave_policy_name' ] );
 
     $leave->delete();
 }
