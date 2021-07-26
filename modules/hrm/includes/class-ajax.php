@@ -92,6 +92,9 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-hr-leave-policies-availablity', 'leave_available_days' );
         $this->action( 'wp_ajax_erp-hr-leave-req-new', 'leave_request' );
 
+        // leave type
+        $this->action( 'wp_ajax_erp-hr-leave-type-delete', 'leave_type_delete' );
+
         //leave holiday
         $this->action( 'wp_ajax_erp_hr_holiday_create', 'holiday_create' );
         $this->action( 'wp_ajax_erp-hr-get-holiday', 'get_holiday' );
@@ -2572,5 +2575,34 @@ class Ajax_Handler {
             'data'    => $inserted,
             'message' => __( 'Settings saved successfully !', 'erp' )
         ] );
+    }
+
+    /**
+     * Delete a leave type
+     *
+     * @since 1.9.1
+     *
+     * @return void
+     */
+    public function leave_type_delete() {
+        $this->verify_nonce( 'wp-erp-hr-nonce' );
+
+        if ( ! current_user_can( 'erp_leave_manage' ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
+        $id = ! empty( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0;
+
+        if ( empty( $id ) ) {
+            $this->send_error( __( 'No valid leave type found!', 'erp' ) );
+        }
+
+        $result = erp_hr_remove_leave_policy_name( $id );
+        
+        if ( is_wp_error( $result ) ) {
+            $this->send_error( $result->get_error_message() );
+        }
+
+        $this->send_success( __( 'Leave Type has been deleted', 'erp' ) );
     }
 }
