@@ -77,3 +77,107 @@
     </div>
 </template>
 
+<script>
+    import HTTP        from 'admin/http';
+    import ListTable   from '../../list-table/ListTable.vue';
+    import Datepicker  from '../../base/Datepicker.vue';
+    import MultiSelect from '../../select/MultiSelect.vue';
+
+    export default {
+        name: 'SalesTaxReportCategoryBased',
+        
+        components: {
+            ListTable,
+            Datepicker,
+            MultiSelect
+        },
+        
+        data() {
+            return {
+                startDate      : null,
+                endDate        : null,
+                taxCategory    : null,
+                taxCategories  : [],
+                taxes          : [],
+                columns        : {
+                    voucher_no : { label : __( 'Voucher No', 'erp' ) },
+                    trn_date   : { label : __( 'Transaction Date', 'erp' ) },
+                    tax_amount : { label : __( 'Tax Amount', 'erp' ) },
+                },
+                symbol         : erp_acct_var.symbol
+            };
+        },
+        
+        created() {
+            this.$nextTick(() => {
+                const dateObj  = new Date();
+                const month    = ( '0' + ( dateObj.getMonth() + 1 ) ).slice( -2 );
+                const year     = dateObj.getFullYear();
+                
+                this.startDate = `${year}-${month}-01`;
+                this.endDate   = erp_acct_var.current_date;
+
+                this.fetchData();
+            });
+        },
+        
+        computed: {
+            totalTax() {
+                let total = 0;
+                
+                this.taxes.forEach(item => {
+                    total += parseFloat( item.tax_amount );
+                });
+                
+                return total;
+            }
+        },
+
+        watch: {
+            taxCategory() {
+                this.taxes = [];
+            }
+        },
+        
+        methods: {
+            fetchData() {
+                this.$store.dispatch('spinner/setSpinner', true);
+
+                HTTP.get('/tax-cats').then(res => {
+                    this.taxCategories = res.data;
+                }).then(() => {
+                    if ( this.taxCategories && this.taxCategories[0] !== undefined ) {
+                        this.taxCategory = this.taxCategories[0];
+                        this.getReport();
+                    }
+                });
+            },
+
+            getReport() {
+                if ( ! this.taxCategory ) {
+                    return this.$store.dispatch('spinner/setSpinner', false);
+                }
+
+                this.$store.dispatch('spinner/setSpinner', true);
+                this.rows = [];
+                
+                HTTP.get('/reports/sales-tax', {
+                    params: {
+                        category_id : this.taxCategory.id,
+                        start_date  : this.startDate,
+                        end_date    : this.endDate
+                    }
+                }).then(response => {
+                    this.taxes = response.data;
+                    this.$store.dispatch('spinner/setSpinner', false);
+                }).catch(e => {
+                    this.$store.dispatch('spinner/setSpinner', false);
+                });
+            },
+
+            printPopup() {
+                window.print();
+            }
+        }
+    };
+</script>
