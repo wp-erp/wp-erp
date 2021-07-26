@@ -224,7 +224,7 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Request
      */
     public function create_inventory_product( $request ) {
-        $item = $this->prepare_item_for_database( $request );
+        $item  = $this->prepare_item_for_database( $request );
 
         $id    = erp_acct_insert_product( $item );
 
@@ -418,7 +418,7 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
         }
 
         if ( isset( $request['tax_cat_id'] ) ) {
-            $prepared_item['tax_cat_id'] = $request['tax_cat_id'];
+            $prepared_item['tax_cat_id'] = $request['tax_cat_id']['id'];
         }
 
         if ( isset( $request['vendor'] ) ) {
