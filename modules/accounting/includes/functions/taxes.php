@@ -660,6 +660,8 @@ function erp_acct_get_formatted_tax_line_data( $data ) {
 function erp_acct_tax_summary() {
     global $wpdb;
 
+    erp_disable_mysql_strict_mode();
+
     return $wpdb->get_results(
         "SELECT
         tax.id AS tax_rate_id,
