@@ -64,3 +64,84 @@
         </list-table>
     </div>
 </template>
+
+<script>
+    import HTTP        from 'admin/http';
+    import ListTable   from '../../list-table/ListTable.vue';
+    import Datepicker  from '../../base/Datepicker.vue';
+
+    export default {
+        name: 'SalesTaxReportTransactionBased',
+        
+        components: {
+            ListTable,
+            Datepicker,
+        },
+        
+        data() {
+            return {
+                startDate : null,
+                endDate   : null,
+                taxes     : [],
+                columns   : {
+                    trn_no     : {
+                        label  : __( 'Voucher No', 'erp' )
+                    },
+                    trn_date   : {
+                        label  : __( 'Trnasaction Date', 'erp' )
+                    },
+                    tax_amount : {
+                        label  : __( 'Tax Amount', 'erp' )
+                    }
+                },
+            };
+        },
+
+        computed: {
+            totalTax() {
+                let total = 0;
+                
+                this.taxes.forEach(item => {
+                    total += parseFloat( item.tax_amount );
+                });
+                
+                return total;
+            }
+        },
+
+        created() {
+            this.$nextTick(() => {
+                const dateObj  = new Date();
+                const month    = ('0' + (dateObj.getMonth() + 1)).slice(-2);
+                const year     = dateObj.getFullYear();
+                
+                this.startDate = `${year}-${month}-01`;
+                this.endDate   = erp_acct_var.current_date;
+
+                this.getReport();
+            });
+        },
+
+        methods: {
+            getReport() {
+                this.$store.dispatch('spinner/setSpinner', true);
+                
+                HTTP.get('/reports/sales-tax', {
+                    params: {
+                        start_date : this.startDate,
+                        end_date   : this.endDate
+                    }
+                }).then(response => {
+                    this.taxes = response.data;
+                    this.$store.dispatch('spinner/setSpinner', false);
+                }).catch(e => {
+                    this.$store.dispatch('spinner/setSpinner', false);
+                });
+            },
+
+            printPopup() {
+                window.print();
+            }
+        }
+    };
+</script>
