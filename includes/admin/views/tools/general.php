@@ -52,6 +52,8 @@
                 <li><label><input type="checkbox" name="admin_menu[]" value="updates" <?php checked( in_array( 'updates', $adminbar_menus ), true ); ?>><?php esc_html_e( 'Updates', 'erp' ); ?></label></li>
                 <li><label><input type="checkbox" name="admin_menu[]" value="comments" <?php checked( in_array( 'comments', $adminbar_menus ), true ); ?>><?php esc_html_e( 'Comments', 'erp' ); ?></label></li>
                 <li><label><input type="checkbox" name="admin_menu[]" value="new-content" <?php checked( in_array( 'new-content', $adminbar_menus ), true ); ?>><?php esc_html_e( 'New Posts', 'erp' ); ?></label></li>
+                <li><label><input type="checkbox" name="admin_menu[]" value="wp-erp-acct" <?php checked( in_array( 'wp-erp-acct', $adminbar_menus ), true ); ?>><?php esc_html_e( 'New Transaction', 'erp' ); ?></label></li>
+                <li><label><input type="checkbox" name="admin_menu[]" value="wp-erp" <?php checked( in_array( 'wp-erp', $adminbar_menus ), true ); ?>><?php esc_html_e( 'WP ERP', 'erp' ); ?></label></li>
             </ul>
 
             <?php wp_nonce_field( 'erp-remove-menu-nonce' ); ?>
