@@ -818,7 +818,8 @@
                 var self = $( this );
 
                 swal({
-                    title              : wpErpHr.delConfirmLeaveType,
+                    title              : '',
+                    text               : wpErpHr.delConfirmLeaveType,
                     type               : 'warning',
                     showCancelButton   : true,
                     cancelButtonText   : wpErpHr.cancel,
