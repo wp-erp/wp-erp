@@ -26,7 +26,8 @@ import WooCommerce from '../components/woocommerce/WooCommerce.vue';
 
 // Email Components
 import GeneralEmail from '../components/email/general/GeneralEmail.vue';
-import SMTPEmail from '../components/email/smtp/SMTPEmail.vue';
+import EmailConnect from '../components/email/email-connect/EmailConnect.vue';
+import SmtpEmail from '../components/email/email-connect/SmtpEmail.vue';
 import EmailTemplate from '../components/email/templates/EmailTemplate.vue';
 import EmailNotification from '../components/email/notifications/EmailNotification.vue';
 
@@ -192,9 +193,14 @@ export default new Router({
                     alias    : '/erp-email'
                 },
                 {
+                    path     : 'email_connect',
+                    name     : 'EmailConnect',
+                    component: EmailConnect
+                },
+                {
                     path     : 'smtp',
-                    name     : 'SMTPEmail',
-                    component: SMTPEmail
+                    name     : 'SmtpEmail',
+                    component: SmtpEmail
                 },
                 {
                     path     : 'templates',
