@@ -28,10 +28,11 @@ class Email extends Template {
      */
     public function get_sections() {
         return apply_filters( 'erp_settings_email_sections', [
-            'general'      => __( 'General', 'erp' ),
-            'smtp'         => __( 'SMTP', 'erp' ),
-            'templates'    => __( 'Email Templates', 'erp' ),
-            'notification' => __( 'Notifications & Templates', 'erp' )
+            'general'       => __( 'General', 'erp' ),
+            'email_connect' => __( 'Email Connect', 'erp' ),
+            'smtp'          => __( 'SMTP', 'erp' ),
+            'templates'     => __( 'Email Templates', 'erp' ),
+            'notification'  => __( 'Notifications & Templates', 'erp' )
         ] );
     }
 
@@ -115,10 +116,20 @@ class Email extends Template {
         ];
         // End general settings
 
-        $fields['smtp'][] = [
-            'title' => __( 'SMTP Options', 'erp' ),
+        // Email Connect Settings
+
+        $fields['email_connect'][] = [
+            'title' => __( 'Email Connect', 'erp' ),
             'type'  => 'title',
-            'desc'  => __( 'Email outgoing settings for ERP.', 'erp' ),
+            'desc'  => '',
+        ];
+
+        $fields['smtp'][] = [
+            'title'        => __( 'SMTP Options', 'erp' ),
+            'type'         => 'title',
+            'desc'         => __( 'Email outgoing settings for ERP.', 'erp' ),
+            'icon_enable'  => WPERP_ASSETS . '/images/wperp-settings/email-smtp-enable.png',
+            'icon_disable' => WPERP_ASSETS . '/images/wperp-settings/email-smtp-disable.png',
         ];
 
         $fields['smtp'][] = [
