@@ -143,6 +143,41 @@ module.exports = {
         I.click('//button[contains(text(),"Add New")]');
     },
 
+//Accounting module 
+    accDashboard(){
+        I.amOnPage('/wp-admin/admin.php?page=erp-accounting#/');
+        I.wait(5);
+    },
 
+    previewTransactions(){
+        I.moveCursorTo('//div[2]/div/div[2]/div/div/ul/li[3]/a');
+    },
+
+    previewSettings(){
+        I.moveCursorTo('//*[@id="erp-accounting"]/div[1]/ul/li[5]/a');
+    },
+
+    Expense(){
+        I.click('Expenses');
+        I.wait(5);
+        I.click('//*[@id="erp-accounting"]/div[2]/div[1]/div/div/div/div');
+    },
+
+    previewUsers() {
+        I.moveCursorTo('//div[2]/div/div[2]/div/div/ul/li[2]/a');
+      },
+
+    addCustomer(){
+        I.click('Customers');
+        I.wait(4);
+        I.click('Add New Customer');
+        I.fillField('#first_name', faker.name.firstName());
+        I.fillField('#last_name', faker.name.lastName());
+        I.fillField('#email', faker.internet.email());
+        I.fillField('#phone', faker.phone.phoneNumber());
+        I.fillField('#company', faker.company.companyName());
+        I.click('//*[@id="wperp-add-customer-modal"]/div/div/form/div[2]/div/button[2]');
+        I.waitForElement('.app-customers');
+      },
 
 }

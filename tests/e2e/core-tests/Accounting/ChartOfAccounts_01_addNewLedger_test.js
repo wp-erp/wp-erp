@@ -1,10 +1,10 @@
+const helpers = require('../../pages/helpers');
 Feature('Chart of accounts');
 
-Scenario('Add new ledger',({ I }) => {
-	I.loginAsAdmin();
-		I.click('WP ERP');
-		I.click('Accounting');
-		I.moveCursorTo('//*[@id="erp-accounting"]/div[1]/ul/li[5]/a');
+Scenario('Add new ledger',({ I, loginAs }) => {
+    loginAs('admin');
+		helpers.accDashboard();
+		helpers.previewSettings();
     	I.click('Chart of Accounts');
     	I.wait(2);
     	I.click({css : '.wperp-btn'});
