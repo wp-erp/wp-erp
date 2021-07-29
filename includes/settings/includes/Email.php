@@ -208,6 +208,9 @@ class Email extends Template {
         ];
         // End SMTP settings
 
+        // Mailgun Email Settings Options
+        $fields['mailgun']  = $this->get_mailgun_settings_fields();
+
         // IMAP Email Settings Options
         $fields['imap']  = $this->get_imap_settings_fields();
 
@@ -630,6 +633,70 @@ class Email extends Template {
             'desc'     => __( 'Copy and Use this url when oAuth consent asks for Authorized Redirect URL', 'erp' ),
             'default'  => esc_url_raw( wperp()->google_auth->get_redirect_url() ),
             'disabled' => true
+        ];
+
+        $fields[] = [
+            'type' => 'sectionend',
+            'id'   => 'script_styling_options',
+        ];
+
+        return $fields;
+    }
+
+    /**
+     * Get all fields for Mailgun API sub section
+     *
+     * @since 1.9.1
+     *
+     * @return array
+     */
+    public function get_mailgun_settings_fields() {
+        $fields[] = [
+            'title' => __( 'Mailgun', 'erp' ),
+            'type'  => 'title',
+            'desc'  => ''
+        ];
+
+        $fields[] = [
+            'title'   => __( 'Enable Mailgun', 'erp' ),
+            'id'      => 'enable_mailgun',
+            'type'    => 'radio',
+            'options' => [ 'yes' => 'Yes', 'no' => 'No' ],
+            'default' => 'no'
+        ];
+
+        $fields[] = [
+            'title' => __( 'Private API Key', 'erp' ),
+            'id'    => 'private_api_key',
+            'type'  => 'password',
+            'desc'  => __( 'Get private API key from your Mailgun account <a href="https://app.mailgun.com/app/account/security/api_keys" target="_blank">Mailgun account</a>', 'erp' ),
+        ];
+
+        $fields[] = [
+            'title' => __( 'Domain', 'erp' ),
+            'id'    => 'domain',
+            'type'  => 'text',
+            'desc'  => __( 'Get sending domain from your Mailgun account <a href="https://app.mailgun.com/app/sending/domains" target="_blank">Mailgun account</a>', 'erp' ),
+        ];
+
+        $fields[] = [
+            'title'    => __( 'Region', 'erp' ),
+            'id'       => 'region',
+            'type'     => 'select',
+            'desc'     => __( 'Mailgun API Region', 'erp' ),
+            'options'  => [
+                'api.mailgun.net'    => __( 'United States (US)', 'erp' ),
+                'api.eu.mailgun.net' => __( 'Europe (EU)', 'erp' )
+            ],
+            'default'  => 'api.mailgun.net'
+        ];
+
+        $fields[] = [
+            'title'   => __( 'Limit', 'erp' ),
+            'id'      => 'limit',
+            'type'    => 'text',
+            'desc'    => __( 'Hourly sending limit, That&apos;s 1 email per 1 second(s)', 'erp' ),
+            'default' => 3600
         ];
 
         $fields[] = [
