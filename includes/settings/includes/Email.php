@@ -30,7 +30,6 @@ class Email extends Template {
         return apply_filters( 'erp_settings_email_sections', [
             'general'       => __( 'General', 'erp' ),
             'email_connect' => __( 'Email Connect', 'erp' ),
-            'smtp'          => __( 'SMTP', 'erp' ),
             'templates'     => __( 'Email Templates', 'erp' ),
             'notification'  => __( 'Notifications & Templates', 'erp' )
         ] );
@@ -124,12 +123,14 @@ class Email extends Template {
             'desc'  => '',
         ];
 
+        $fields['email_connect']['providers'] = $this->get_email_prodivers();
+        $fields['email_connect']['cron_schedules'] = $this->get_incoming_email_schedule_field();
+        // End Email Connect Settings
+
         $fields['smtp'][] = [
             'title'        => __( 'SMTP Options', 'erp' ),
             'type'         => 'title',
-            'desc'         => __( 'Email outgoing settings for ERP.', 'erp' ),
-            'icon_enable'  => WPERP_ASSETS . '/images/wperp-settings/email-smtp-enable.png',
-            'icon_disable' => WPERP_ASSETS . '/images/wperp-settings/email-smtp-disable.png',
+            'desc'         => __( 'Email outgoing settings for ERP.', 'erp' )
         ];
 
         $fields['smtp'][] = [
@@ -206,6 +207,7 @@ class Email extends Template {
         ];
         // End SMTP settings
 
+
         // Email Templates
         $fields['templates'][] = [
             'title' => __( 'Saved Replies', 'erp' ),
@@ -232,6 +234,93 @@ class Email extends Template {
         $fields = apply_filters( 'erp_settings_email_section_fields', $fields, $section );
 
         return $fields;
+    }
+
+    /**
+     * Get Incoming Email schedule field
+     *
+     * @since 1.9.1
+     *
+     * @return array Schedule input fields
+     */
+    public function get_incoming_email_schedule_field() {
+        $schedules = wp_get_schedules();
+
+        $cron_intervals = []; // Filter cron intervals time to get unique cron data
+        $cron_schedules = [];
+
+        foreach ( $schedules as $key => $value ) {
+            if ( ! in_array( $value['interval'], $cron_intervals ) ) {
+                array_push( $cron_intervals, $value['interval'] );
+                $cron_schedules[$key] = $value['display'];
+            }
+        }
+
+        return [
+            'title'   => __( 'Check Emails ', 'erp' ),
+            'id'      => 'schedule',
+            'type'    => 'select',
+            'desc'    => __( 'Interval time to run cron for checking inbound emails.', 'erp' ),
+            'options' => $cron_schedules,
+            'default' => 'hourly',
+        ];
+    }
+
+    /**
+     * Get Email Providers of incoming and outgoing emails
+     *
+     * @since 1.9.1
+     *
+     * @return array email providers list
+     */
+    public function get_email_prodivers() {
+        $providers = [];
+
+        $providers['smtp'] = [
+            'type'         => 'outgoing',
+            'name'         => __( 'SMTP', 'erp' ),
+            'description'  => __( 'Email outgoing settings for ERP.', 'erp' ),
+            'enabled'      => erp_is_smtp_enabled(),
+            'is_active'    => erp_is_smtp_enabled(),
+            'actions'      => '',
+            'icon_enable'  => WPERP_ASSETS . '/images/wperp-settings/email-smtp-enable.png',
+            'icon_disable' => WPERP_ASSETS . '/images/wperp-settings/email-smtp-disable.png',
+        ];
+
+        $providers['mailgun'] = [
+            'type'         => 'outgoing',
+            'name'         => __( 'Mailgun', 'erp' ),
+            'description'  => '',
+            'enabled'      => erp_is_mailgun_enabled(),
+            'is_active'    => erp_is_mailgun_enabled(),
+            'actions'      => '',
+            'icon_enable'  => WPERP_ASSETS . '/images/wperp-settings/email-mailgun-enable.png',
+            'icon_disable' => WPERP_ASSETS . '/images/wperp-settings/email-mailgun-disable.png',
+        ];
+
+        $providers['gmail'] = [
+            'type'         => 'incoming',
+            'name'         => __( 'Google Connect', 'erp' ),
+            'description'  => __( 'Connect your Gmail or Gsuite account', 'erp' ),
+            'enabled'      => wperp()->google_auth->is_active(),
+            'is_active'    => wperp()->google_auth->is_active(),
+            'actions'      => '',
+            'icon_enable'  => WPERP_ASSETS . '/images/wperp-settings/email-google-enable.png',
+            'icon_disable' => WPERP_ASSETS . '/images/wperp-settings/email-google-disable.png',
+        ];
+
+        $providers['imap']  = [
+            'type'         => 'incoming',
+            'name'         => __( 'IMAP Connection', 'erp' ),
+            'description'  => __( 'Connect to Custom IMAP server', 'erp' ),
+            'enabled'      => erp_is_imap_active(),
+            'is_active'    => erp_is_imap_active(),
+            'actions'      => '',
+            'icon_enable'  => WPERP_ASSETS . '/images/wperp-settings/email-imap-enable.png',
+            'icon_disable' => WPERP_ASSETS . '/images/wperp-settings/email-imap-disable.png',
+        ];
+
+        return $providers;
     }
 
     public function notification_emails() {

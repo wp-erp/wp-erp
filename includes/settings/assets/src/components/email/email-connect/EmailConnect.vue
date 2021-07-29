@@ -61,63 +61,37 @@ export default {
 
     methods: {
         getMailConnections() {
-            const mailConnections = [
-                {
-                    type       : 'outgoing',
-                    enableIcon : `${erp_settings_var.erp_assets}/images/wperp-settings/email-smtp-enable.png`,
-                    disableIcon: `${erp_settings_var.erp_assets}/images/wperp-settings/email-smtp-disable.png`,
-                    name       : __( 'SMTP', 'erp' ),
-                    slug       : 'smtp',
-                    isActive   : true
-                },
-                {
-                    type       : 'outgoing',
-                    enableIcon : `${erp_settings_var.erp_assets}/images/wperp-settings/email-mailgun-enable.png`,
-                    disableIcon: `${erp_settings_var.erp_assets}/images/wperp-settings/email-mailgun-disable.png`,
-                    name       : __( 'Mailgun', 'erp' ),
-                    slug       : 'mailgun',
-                    isActive   : false
-                },
-                {
-                    type       : 'incoming',
-                    enableIcon : `${erp_settings_var.erp_assets}/images/wperp-settings/email-imap-enable.png`,
-                    disableIcon: `${erp_settings_var.erp_assets}/images/wperp-settings/email-imap-disable.png`,
-                    name       : __( 'IMAP', 'erp' ),
-                    slug       : 'imap',
-                    isActive   : true
-                },
-                {
-                    type       : 'incoming',
-                    enableIcon : `${erp_settings_var.erp_assets}/images/wperp-settings/email-google-enable.png`,
-                    disableIcon: `${erp_settings_var.erp_assets}/images/wperp-settings/email-google-disable.png`,
-                    name       : __( 'Google Connect', 'erp' ),
-                    slug       : 'google',
-                    isActive   : false
-                }
-            ];
+            const menusData = erp_settings_var.erp_settings_menus
+            const emailData = menusData.filter(menu => menu.id === 'erp-email');
+            const providers = typeof emailData[0] !== 'undefined' ? emailData[0].fields.email_connect.providers : [];
+
+            const mailConnections = [];
+            Object.keys(providers).forEach(key => {
+                const connection = providers[key];
+                mailConnections.push({
+                    type       : connection.type,
+                    enableIcon : connection.icon_enable,
+                    disableIcon: connection.icon_disable,
+                    name       : connection.name,
+                    slug       : key,
+                    isActive   : connection.is_active,
+                    isEnabled   : connection.enabled
+                })
+            });
+
             this.mailConnections = mailConnections;
         },
 
         toggleActiveConnection(activeConnection, type) {
-            if(type === 'outgoing') {
-                this.activeOutgoingEmail = activeConnection.slug;
-
-                this.mailConnections.filter(connection => {
+            this.mailConnections.filter(connection => {
+                if (connection.type === type){
                     connection.isActive = false;
-                    if(activeConnection.slug === connection.slug) {
-                        connection.isActive = true;
-                    }
-                })
-            } else {
-                this.activeIncomingEmail = activeConnection.slug;
+                }
 
-                this.mailConnections.filter(connection => {
-                    connection.isActive = false;
-                    if(activeConnection.slug === connection.slug) {
-                        connection.isActive = true;
-                    }
-                })
-            }
+                if (activeConnection.slug === connection.slug) {
+                    connection.isActive = true;
+                }
+            });
         }
     },
 
