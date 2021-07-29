@@ -1942,6 +1942,23 @@ function erp_is_smtp_enabled() {
 }
 
 /**
+ * Check if the ERP Email Mailgun settings is enabled or not
+ *
+ * @since 1.9.1
+ *
+ * @return bool
+ */
+function erp_is_mailgun_enabled() {
+    $erp_email_mailgun_settings = get_option( 'erp_settings_erp-email_mailgun', [] );
+
+    if ( isset( $erp_email_mailgun_settings['enable_mailgun'] ) && filter_var( $erp_email_mailgun_settings['enable_mailgun'], FILTER_VALIDATE_BOOLEAN ) ) {
+        return true;
+    }
+
+    return false;
+}
+
+/**
  * Determine if the module is active or not.
  *
  * @return bool
@@ -3415,9 +3432,9 @@ function erp_disable_mysql_strict_mode() {
  * Queue some JavaScript code to be output in the footer.
  *
  * @since 1.9.0
- * 
+ *
  * @param string $code Code.
- * 
+ *
  * @return void
  */
 function erp_enqueue_js( $code ) {
@@ -3432,9 +3449,9 @@ function erp_enqueue_js( $code ) {
 
 /**
  * Output any queued javascript code in the footer.
- * 
+ *
  * @since 1.9.0
- * 
+ *
  * @return void Print JS Code
  */
 function erp_print_js() {
