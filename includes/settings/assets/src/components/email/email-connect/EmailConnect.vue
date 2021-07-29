@@ -17,6 +17,7 @@
                     </div>
                 </div>
                 <div v-if="activeOutgoingEmail === 'smtp'"><smtp-email /></div>
+                <div v-if="activeOutgoingEmail === 'mailgun'"><mailgun-email /></div>
             </div>
             <div class="email-card email-connect-incoming">
                 <h4>{{ __( 'Incoming Email Setting', 'erp' ) }}</h4>
@@ -28,6 +29,8 @@
                         <p>{{ connection.name }}</p>
                     </div>
                 </div>
+                <div v-if="activeIncomingEmail === 'imap'"><imap-email /></div>
+                <div v-if="activeIncomingEmail === 'gmail'"><google-email /></div>
             </div>
         </div>
     </base-layout>
@@ -36,7 +39,12 @@
 <script>
 import BaseLayout from "../../layouts/BaseLayout.vue";
 import BaseContentLayout from "../../layouts/BaseContentLayout.vue";
+
+// Email components
 import SmtpEmail from "./SmtpEmail.vue";
+import GoogleEmail from "./GoogleEmail.vue";
+import ImapEmail from "./ImapEmail.vue";
+import MailgunEmail from "./MailgunEmail.vue";
 
 export default {
     name: 'EmailCConnect',
@@ -44,14 +52,15 @@ export default {
     components: {
         BaseLayout,
         BaseContentLayout,
-        SmtpEmail
+        SmtpEmail,
+        ImapEmail,
+        GoogleEmail,
+        MailgunEmail
     },
 
     data() {
         return {
-            mailConnections    : [],
-            activeOutgoingEmail: 'smtp',
-            activeIncomingEmail: 'imap',
+            mailConnections : [],
         }
     },
 
@@ -102,6 +111,24 @@ export default {
 
         incomingConnections: function() {
             return this.mailConnections.filter( mail => mail.type === 'incoming' );
+        },
+
+        activeOutgoingEmail: function() {
+            const activeOutgoingMails = this.outgoingConnections.filter( mail => (mail.isActive === true && mail.type === 'outgoing'));
+            if (activeOutgoingMails.length > 0) {
+                return activeOutgoingMails[0].slug;
+            } else {
+                return 'smtp';
+            }
+        },
+
+        activeIncomingEmail: function() {
+            const activeIncomingMails = this.incomingConnections.filter( mail => (mail.isActive === true && mail.type === 'incoming'));
+            if (activeIncomingMails.length > 0) {
+                return activeIncomingMails[0].slug;
+            } else {
+                return 'imap';
+            }
         }
     }
 }
