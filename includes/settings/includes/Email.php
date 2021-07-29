@@ -11,10 +11,11 @@ class Email extends Template {
      * Class constructor
      */
     function __construct() {
-        $this->id       = 'erp-email';
-        $this->label    = __( 'Emails', 'erp' );
-        $this->sections = $this->get_sections();
-        $this->icon     = WPERP_ASSETS . '/images/wperp-settings/email.png';
+        $this->id            = 'erp-email';
+        $this->label         = __( 'Emails', 'erp' );
+        $this->sections      = $this->get_sections();
+        $this->icon          = WPERP_ASSETS . '/images/wperp-settings/email.png';
+        $this->single_option = false;
 
         add_action( 'erp_admin_field_notification_emails', [ $this, 'notification_emails' ] );
         add_action( 'erp_admin_field_smtp_test_connection', [ $this, 'smtp_test_connection' ] );
@@ -207,6 +208,11 @@ class Email extends Template {
         ];
         // End SMTP settings
 
+        // IMAP Email Settings Options
+        $fields['imap']  = $this->get_imap_settings_fields();
+
+        // Gmail Email Settings Options
+        $fields['gmail'] = $this->get_gmail_api_settings_fields();
 
         // Email Templates
         $fields['templates'][] = [
@@ -298,17 +304,6 @@ class Email extends Template {
             'icon_disable' => WPERP_ASSETS . '/images/wperp-settings/email-mailgun-disable.png',
         ];
 
-        $providers['gmail'] = [
-            'type'         => 'incoming',
-            'name'         => __( 'Google Connect', 'erp' ),
-            'description'  => __( 'Connect your Gmail or Gsuite account', 'erp' ),
-            'enabled'      => wperp()->google_auth->is_active(),
-            'is_active'    => wperp()->google_auth->is_active(),
-            'actions'      => '',
-            'icon_enable'  => WPERP_ASSETS . '/images/wperp-settings/email-google-enable.png',
-            'icon_disable' => WPERP_ASSETS . '/images/wperp-settings/email-google-disable.png',
-        ];
-
         $providers['imap']  = [
             'type'         => 'incoming',
             'name'         => __( 'IMAP Connection', 'erp' ),
@@ -320,7 +315,65 @@ class Email extends Template {
             'icon_disable' => WPERP_ASSETS . '/images/wperp-settings/email-imap-disable.png',
         ];
 
+        $providers['gmail'] = [
+            'type'         => 'incoming',
+            'name'         => __( 'Google Connect', 'erp' ),
+            'description'  => __( 'Connect your Gmail or Gsuite account', 'erp' ),
+            'enabled'      => wperp()->google_auth->is_active(),
+            'is_active'    => wperp()->google_auth->is_active(),
+            'actions'      => '',
+            'icon_enable'  => WPERP_ASSETS . '/images/wperp-settings/email-google-enable.png',
+            'icon_disable' => WPERP_ASSETS . '/images/wperp-settings/email-google-disable.png',
+        ];
+
         return $providers;
+    }
+
+    /**
+     * Disable other provider if one is enabled
+     *
+     * @param $section
+     * @param $options
+     */
+    public function toggle_providers( $section, $options ) {
+        switch ( $section ) {
+            case 'gmail':
+                if ( wperp()->google_auth->is_active() ) {
+                    $option                = get_option( 'erp_settings_erp-crm_email_connect_imap', [] );
+                    $option['enable_imap'] = 'no';
+                    update_option( 'erp_settings_erp-crm_email_connect_imap', $option );
+                }
+                break;
+
+            case 'imap':
+                if ( isset( $options['enable_imap'] ) && $options['enable_imap'] == 'yes' ) {
+                    wperp()->google_auth->clear_account_data();
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * Imap connection status.
+     *
+     * @param string $is_label default false
+     *
+     * @return string|int imap_connection as input label
+     */
+    public function imap_status( $is_label = false ) {
+        $options     = get_option( 'erp_settings_erp-crm_email_connect_imap', [] );
+        $imap_status = (bool) isset( $options['imap_status'] ) ? $options['imap_status'] : 0;
+
+        if ( $is_label ) {
+            return $imap_status;
+        } else {
+            $status    = esc_attr( ( $imap_status ) ? 'yes green' : 'no red' );
+            $connected = esc_attr( ( $imap_status ) ? __( 'Connected', 'erp' ) : __( 'Not Connected', 'erp' ) );
+
+            return sprintf("<span class='dashicons dashicons-%s'>%s</span>", $status, $connected);
+        }
     }
 
     public function notification_emails() {
@@ -530,6 +583,64 @@ class Email extends Template {
     }
 
     /**
+     * Get all fields for GMAIL API sub section
+     *
+     * @since 1.3.14
+     *
+     * @return array
+     */
+    public function get_gmail_api_settings_fields() {
+        $fields[] = [
+            'title' => __( 'Gmail / G suite Authentication', 'erp' ),
+            'type'  => 'title',
+            'desc'  => __( '<a target="_blank" href="https://console.developers.google.com/flows/enableapi?apiid=gmail&pli=1">Create a Google App</a> and authorize your account to Send and Recieve emails using Gmail. Follow instructions from this <a target="_blank" href="https://wperp.com/docs/crm/tutorials/how-to-configure-gmail-api-connection-in-the-crm-settings/?utm_source=Free+Plugin&utm_medium=CTA&utm_content=Backend&utm_campaign=Docs">Documentation</a> to get started', 'erp' ),
+        ];
+
+        if ( wperp()->google_auth->is_connected() ) {
+            $fields[] = [
+                'type' => 'gmail_api_connected',
+            ];
+
+            $fields[] = [
+                'type' => 'sectionend',
+                'id'   => 'script_styling_options',
+            ];
+
+            return $fields;
+        }
+
+        $fields[] = [
+            'title' => __( 'Client ID', 'erp' ),
+            'id'    => 'client_id',
+            'type'  => 'text',
+            'desc'  => __( 'Your APP Client ID', 'erp' ),
+        ];
+
+        $fields[] = [
+            'title' => __( 'Client Secret', 'erp' ),
+            'id'    => 'client_secret',
+            'type'  => 'text',
+            'desc'  => __( 'Your APP Client Secret', 'erp' ),
+        ];
+
+        $fields[] = [
+            'title'    => __( 'Redirect URL to use', 'erp' ),
+            'id'       => 'redirect_url',
+            'type'     => 'text',
+            'desc'     => __( 'Copy and Use this url when oAuth consent asks for Authorized Redirect URL', 'erp' ),
+            'default'  => esc_url_raw( wperp()->google_auth->get_redirect_url() ),
+            'disabled' => true
+        ];
+
+        $fields[] = [
+            'type' => 'sectionend',
+            'id'   => 'script_styling_options',
+        ];
+
+        return $fields;
+    }
+
+    /**
      * Output the settings.
      */
     public function output( $section = false ) {
@@ -627,7 +738,8 @@ class Email extends Template {
                         update_option( $name, $value );
                     }
                 } else {
-                    update_option( $this->get_option_id(), $update_options );
+                    $option_id = 'erp_settings_' . $this->id . '_' . $_POST['section'];
+                    update_option( $option_id, $update_options );
                 }
             }
 
