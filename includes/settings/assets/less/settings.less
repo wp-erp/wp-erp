@@ -927,7 +927,7 @@
                         border-radius: 3px;
 
                         img {
-                            height: 40px;
+                            height: 32px;
                         }
 
                         p {
@@ -962,14 +962,23 @@
                     }
                 }
 
-                .test-connection-outgoing {
-                    background: #ab82ff;
-                    background: linear-gradient(175deg,#ab82ff,#d3c1ff);
-                    padding: 20px;
+                .test-connection {
                     text-align: center;
                     margin-top: 50px;
                     border-radius: 3px;
                     color: #ffffff;
+
+                    .connection-outgoing {
+                        padding: 20px;
+                        background: #ab82ff;
+                        background: linear-gradient(175deg,#ab82ff,#d3c1ff);
+                    }
+
+                    .connection-incoming {
+                        padding: 20px;
+                        background: #6F88FC;
+                        background: linear-gradient(600deg,#6f88fc,#6f88fc,#c1e3ff);
+                    }
 
                     label {
                         font-size: 18px;
