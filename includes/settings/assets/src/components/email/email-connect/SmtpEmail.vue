@@ -9,16 +9,17 @@
         :options="options">
         <div slot="extended-data">
             <slot name="extended-data">
-                <div class="wperp-form-group test-connection-outgoing">
-
-                    <label for="smtp_test_email_address">{{ __( 'Test Mail', 'erp' ) }}</label>
-                    <p>{{ __( 'An Email Address to Test the Connection', 'erp' ) }}</p>
-                    <input
-                        class="wperp-form-field"
-                        :placeholder="__( 'Email here', 'erp' )"
-                        id="smtp_test_email_address"
-                    />
-                    <button id="smtp-test-connection" class="wperp-btn btn--secondary btn-test-connection" @click="testConnection">{{ __('Send Test Email', 'erp') }}</button>
+                <div class="wperp-form-group test-connection">
+                    <div class="connection-outgoing">
+                        <label for="smtp_test_email_address">{{ __( 'Test Mail', 'erp' ) }}</label>
+                        <p>{{ __( 'An Email Address to Test the Connection', 'erp' ) }}</p>
+                        <input
+                            class="wperp-form-field"
+                            :placeholder="__( 'Email here', 'erp' )"
+                            id="smtp_test_email_address"
+                        />
+                        <button id="smtp-test-connection" class="wperp-btn btn--secondary btn-test-connection" @click="testConnection">{{ __('Send Test Email', 'erp') }}</button>
+                    </div>
                 </div>
             </slot>
         </div>
