@@ -163,6 +163,20 @@ module.exports = {
         I.click('//*[@id="erp-accounting"]/div[2]/div[1]/div/div/div/div');
     },
 
+    Journal(){
+        I.click('Journals');
+        I.wait(5);
+        I.click('.erp-journal-new');
+        I.click('//td[2]/div/div/div[2]');
+        I.wait(5);
+        I.click('//li[6]/span/span');
+        I.fillField('//td[4]/input', '20000');
+        I.click('//tr[2]/td[2]/div/div/div[2]');
+        I.click('//tr[2]/td[2]/div/div/div[3]/ul/li[2]/span/span');
+        I.fillField('//tr[2]/td[5]/input', '20000');
+        I.click('Save');
+    },
+
     previewUsers() {
         I.moveCursorTo('//div[2]/div/div[2]/div/div/ul/li[2]/a');
       },
@@ -179,5 +193,28 @@ module.exports = {
         I.click('//*[@id="wperp-add-customer-modal"]/div/div/form/div[2]/div/button[2]');
         I.waitForElement('.app-customers');
       },
+
+      previewProducts() {
+        I.moveCursorTo('//*[@id="erp-accounting"]/div[1]/ul/li[4]/a');
+         
+      },
+
+      addProducts(){
+        I.click('Products & Services');
+        I.wait(3);
+        I.click('#erp-product-new');
+        I.wait(3);
+        I.fillField('//*[@id="wperp-product-modal"]/div/div/div/div/div[2]/form/div[1]/div[2]/input', faker.commerce.productName());
+        I.click('//*[@id="wperp-product-modal"]/div/div/div/div/div[2]/form/div[2]/div[2]/div[1]/div[2]/div/div/div[2]/span');
+        I.click('//*[@id="wperp-product-modal"]/div/div/div/div/div[2]/form/div[2]/div[2]/div[1]/div[2]/div/div/div[3]/ul/li[1]/span/span');
+        I.fillField('#cost-price', '350');
+        I.fillField('#sale-price', '400');
+        I.pressKey('Tab');
+        I.checkOption('form input[value=self]');
+        I.click('Save');  
+        I.waitForElement('.wperp-products');
+      },
+
+
 
 }

@@ -9,12 +9,12 @@ return actor({
   this.dontSee('Notice:');
 },
 
-previewProducts: function () {
-  this.amOnPage('/wp-admin/admin.php?page=erp');
-  this.amOnPage('/wp-admin/admin.php?page=erp-accounting#/');
-  this.wait(5);
-  this.moveCursorTo('//div[2]/div/div[2]/div/div/ul/li[6]/a');   
-},
+// previewProducts: function () {
+//   this.amOnPage('/wp-admin/admin.php?page=erp');
+//   this.amOnPage('/wp-admin/admin.php?page=erp-accounting#/');
+//   this.wait(5);
+//   this.moveCursorTo('//div[2]/div/div[2]/div/div/ul/li[6]/a');   
+// },
 
 
 
