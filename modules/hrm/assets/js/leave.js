@@ -60,8 +60,8 @@
             // trigger get employees
             $( '.leave-entitlement-form' ).on( 'change', '#leave_policy', self, this.entitlement.getFilteredEmployee );
 
-            // trigger on deleting leave type
-            $( '.erp-hr-leave-type-delete' ).on( 'click', this.leaveType.remove );
+            //initialize edit and delete actions of leave type
+            this.leaveType.initActions();
 
             this.initDateField();
         },
@@ -812,19 +812,115 @@
         },
 
         leaveType: {
-            remove: function ( e ) {
+            initActions: function() {
+                // trigger on create new leave type
+                $( '#erp-hr-leave-type-create' ).on( 'submit', Leave.leaveType.create );
+
+                // trigger on deleting leave type
+                $( '.erp-hr-leave-type-delete' ).on( 'click', Leave.leaveType.remove );
+
+                // tigger on edit leave type
+                $( '.erp-hr-leave-type-edit' ).on ( 'click', Leave.leaveType.edit );
+            },
+
+            reloadTable: function() {
+                $( '#col-right' ).load( window.location.href + ' #col-right .list-table-wrap', function() {
+                    Leave.leaveType.initActions(); // this is necessary because the DOM elements getting replaced by new elements
+                });
+            },
+
+            resetForm: function() {
+                var $form = $( '#erp-hr-leave-type-create' )[0];
+
+                $form.name.value              = '';
+                $form.description.value       = '';
+                $form['policy-name-id'].value = '0';
+                $form.submit.value             = 'Save';
+            },
+
+            create: function( e ) {
                 e.preventDefault();
 
+                var form        = e.target,
+                    id          = form['policy-name-id'].value,
+                    name        = form.name.value,
+                    description = form.description.value,
+                    data        = {
+                    id          : id,
+                    name        : name,
+                    description : description,
+                    _wpnonce    : wpErpHr.nonce,
+                };
+
+                $( '.erp-loader' ).css( 'display', 'block' );
+                $( '#submit' ).toggleClass( 'hidden' );
+                
+                wp.ajax.send( 'erp-hr-leave-type-create', {
+                    data: data,
+                    success: function ( response ) {
+                        Leave.leaveType.reloadTable();
+                        Leave.leaveType.resetForm();
+
+                        $( '.erp-loader' ).css( 'display', 'none' );
+                        $( '#submit' ).toggleClass( 'hidden' );
+
+                        swal({
+                            title: '',
+                            text: response,
+                            type: 'success',
+                            timer: 2200,
+                            showConfirmButton: false
+                        });
+                    },
+                    error: function ( error ) {
+                        $( '.erp-loader' ).css( 'display', 'none' );
+                        $( '#submit' ).toggleClass( 'hidden' );
+
+                        swal( '', error, 'error' );
+                    }
+                });
+            },
+
+            edit: function( e ) {
+                e.preventDefault();
+
+                var self = $( this ),
+                    id   = self.data( 'id' );
+
+                wp.ajax.send( 'erp-hr-get-leave-type', {
+                    data: {
+                        id       : id,
+                        _wpnonce : wpErpHr.nonce,
+                    },
+                    success: function( response ) { // response is a leave type
+                        var form = $( '#erp-hr-leave-type-create' )[0];
+                        if ( form === undefined ) return;
+
+                        form['policy-name-id'].value = id;
+                        form.name.value              = response.name;
+                        form.description.value       = response.description;
+                        form.submit.value            = 'Update';
+                    },
+                    error: function ( error ) {
+                        swal( '', error, 'error' );
+                    }
+                });
+            },
+
+            remove: function ( e ) {
+                e.preventDefault();
+                Leave.leaveType.resetForm(); // Necessary in case the form is in edit mode before deleting
+                
                 var self = $( this );
 
                 swal({
                     title              : '',
-                    text               : wpErpHr.delConfirmLeaveType,
+                    text               : wpErpHr.leave_type_delete,
                     type               : 'warning',
                     showCancelButton   : true,
                     cancelButtonText   : wpErpHr.cancel,
                     confirmButtonColor : '#fa6e5c',
-                    confirmButtonText  : wpErpHr.confirmDelete,
+                    confirmButtonText  : wpErpHr.confirm_delete,
                     closeOnConfirm     : false
                 },
                 function() {
