@@ -94,6 +94,7 @@ class Ajax_Handler {
 
         // leave type
         $this->action( 'wp_ajax_erp-hr-leave-type-delete', 'leave_type_delete' );
+        $this->action( 'wp_ajax_erp-hr-get-leave-type', 'get_leave_type' );
 
         //leave holiday
         $this->action( 'wp_ajax_erp_hr_holiday_create', 'holiday_create' );
@@ -2603,5 +2604,29 @@ class Ajax_Handler {
         }
 
         $this->send_success( __( 'Leave Type has been deleted', 'erp' ) );
+    }
+
+    /**
+     * Get a leave type by id
+     *
+     * @since 1.9.1
+     *
+     * @return void
+     */
+    public function get_leave_type() {
+        $this->verify_nonce( 'wp-erp-hr-nonce' );
+
+        if ( ! current_user_can( 'erp_leave_manage' ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
+        $id         = ! empty( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0;
+        $leave_type = \WeDevs\ERP\HRM\Models\Leave::find( $id );
+
+        if ( empty( $leave_type ) ) {
+            $this->send_error( __( 'No valid leave type found!', 'erp' ) );
+        }
+
+        $this->send_success( $leave_type );
     }
 }
