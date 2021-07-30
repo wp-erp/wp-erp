@@ -2861,7 +2861,7 @@ function erp_hr_insert_leave_policy_name( $args = [] ) {
 
     $args = wp_parse_args( $args, $defaults );
 
-    erp_hrm_purge_cache( ['list' => 'leave_policy_name' ] );
+    erp_hrm_purge_cache( [ 'list' => 'leave_policy_name' ] );
 
     /*
      * Update
@@ -2875,7 +2875,13 @@ function erp_hr_insert_leave_policy_name( $args = [] ) {
             return new WP_Error( 'exists', esc_html__( 'Name already exists', 'erp' ) );
         }
 
-        $leave = Leave::find( $args['id'] )->update( $args );
+        $leave = Leave::find( $args['id'] );
+
+        if ( ! $leave ) {
+            return new WP_Error( 'not_exists', __( 'Leave Type doesn\'t exists.', 'erp' ) );
+        }
+
+        $leave->update( $args );
 
         return $leave->id;
     }
