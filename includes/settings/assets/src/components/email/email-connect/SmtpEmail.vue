@@ -17,6 +17,7 @@
                             class="wperp-form-field"
                             :placeholder="__( 'Email here', 'erp' )"
                             id="smtp_test_email_address"
+                            v-model="smtpTestEmail"
                         />
                         <button id="smtp-test-connection" class="wperp-btn btn--secondary btn-test-connection" @click="testConnection">{{ __('Send Test Email', 'erp') }}</button>
                     </div>
@@ -39,14 +40,24 @@ export default {
     data() {
         return {
             smtpTestEmail: '',
-            options: {},
+            options      : {
+                action   : '',
+                recurrent: false,
+                fields   : []
+            }
         }
     },
 
     methods: {
         testConnection() {
-            this.options.action    = 'erp_smtp_test_connection';
-            this.options.recurrent = false;
+            this.options.action = 'erp_smtp_test_connection';
+
+            this.options.fields.push(
+                {
+                    'key'   : 'test_email',
+                    'value' : this.smtpTestEmail
+                }
+            );
         }
     }
 }
