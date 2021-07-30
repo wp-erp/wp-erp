@@ -2921,6 +2921,26 @@ function erp_hr_remove_leave_policy_name( $id ) {
     $leave->delete();
 }
 
+
+/**
+ * Get leave entitlements count associated with a leave policy
+ *
+ * @since 1.9.1
+ *
+ * @param int $leave_policy_id
+ *
+ * @return int|WP_Error
+ */
+function erp_hr_get_entitlemnt_of_leave_policy( $leave_policy_id ) {
+    $leave_policy = Leave_Policy::find( $leave_policy_id );
+
+    if ( ! $leave_policy ) {
+        return new WP_Error( 'invalid-policy', __( 'No valid leave policy found', 'erp' ) );
+    }
+
+    return count( $leave_policy->entitlements );
+}
+
 /**
  * Build and return new policy create URL
  *

@@ -206,9 +206,11 @@ class Leave_Policies_List_Table extends \WP_List_Table {
         $delete_url        = '';
         $actions['edit']   = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $edit_url, $leave_policy->id, esc_html__( 'Edit this item', 'erp' ), esc_html__( 'Edit', 'erp' ) );
 
-        $actions['copy'] = sprintf( '<a href="%s" class="submitcopy" data-id="%d" title="%s">%s</a>', $copy_url, $leave_policy->id, esc_html__( 'Copy this item', 'erp' ), esc_html__( 'Copy', 'erp' ) );
+        $actions['copy']   = sprintf( '<a href="%s" class="submitcopy" data-id="%d" title="%s">%s</a>', $copy_url, $leave_policy->id, esc_html__( 'Copy this item', 'erp' ), esc_html__( 'Copy', 'erp' ) );
 
-        if ( erp_get_option( 'erp_debug_mode', 'erp_settings_general', 0 ) ) {
+        $entitlement_count = erp_hr_get_entitlemnt_of_leave_policy( $leave_policy->id );
+
+        if ( erp_get_option( 'erp_debug_mode', 'erp_settings_general', 0 ) || 0 === $entitlement_count ) {
             $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" title="%s">%s</a>', $delete_url, $leave_policy->id, esc_html__( 'Delete this item', 'erp' ), esc_html__( 'Delete', 'erp' ) );
         }
 
