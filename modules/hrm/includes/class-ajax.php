@@ -94,6 +94,7 @@ class Ajax_Handler {
 
         // leave type
         $this->action( 'wp_ajax_erp-hr-leave-type-delete', 'leave_type_delete' );
+        $this->action( 'wp_ajax_erp-hr-leave-type-create', 'leave_type_create_or_update' );
         $this->action( 'wp_ajax_erp-hr-get-leave-type', 'get_leave_type' );
 
         //leave holiday
@@ -2605,6 +2606,49 @@ class Ajax_Handler {
         }
 
         $this->send_success( __( 'Leave Type has been deleted', 'erp' ) );
+    }
+
+    /**
+     * Create or update a new leave type
+     *
+     * @since 1.9.1
+     *
+     * @return void
+     */
+    public function leave_type_create_or_update() {
+        $this->verify_nonce( 'wp-erp-hr-nonce' );
+
+        if ( ! current_user_can( 'erp_leave_manage' ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+        $id          = ! empty( $_POST['id'] )          ? absint( wp_unslash( $_POST['id'] ) )                             : 0;
+        $name        = ! empty( $_POST['name'] )        ? sanitize_text_field( wp_unslash( $_POST[ 'name' ] ) )            : '';
+        $description = ! empty( $_POST['description'] ) ? sanitize_textarea_field( wp_unslash( $_POST[ 'description' ] ) ) : '';
+
+        if ( empty( $name ) ) {
+            $this->send_error( __( 'Name field should not be left empty', 'erp' ) );
+        }
+
+        $args = [
+            'name'          => $name,
+            'description'   => $description
+        ];
+
+        if ( $id ) {
+            $args['id'] = $id;
+        }
+
+        $leave_type = erp_hr_insert_leave_policy_name( $args );
+
+        if ( is_wp_error( $leave_type ) ) {
+            $this->send_error( $leave_type->get_error_message() );
+        }
+
+        if ( $id ) {
+            $this->send_success( __( 'Leave Type has been updated', 'erp' ) );
+        } else {
+            $this->send_success( __( 'Leave Type has been created', 'erp' ) );
+        }
     }
 
     /**
