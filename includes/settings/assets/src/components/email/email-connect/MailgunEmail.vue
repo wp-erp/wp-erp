@@ -11,12 +11,14 @@
             <slot name="extended-data">
                 <div class="wperp-form-group test-connection">
                     <div class="connection-outgoing">
-                        <label for="mailgun_test_email_address">{{ __( 'Test Mail', 'erp' ) }}</label>
+                        <label for="erp_mailgun_test_email">{{ __( 'Test Mail', 'erp' ) }}</label>
                         <p>{{ __( 'An Email Address to Test the Connection', 'erp' ) }}</p>
                         <input
                             class="wperp-form-field"
                             :placeholder="__( 'Email here', 'erp' )"
-                            id="mailgun_test_email_address"
+                            id="erp_mailgun_test_email"
+                            type="email"
+                            v-model="erp_mailgun_test_email"
                         />
                         <button id="mailgun-test-connection" class="wperp-btn btn--secondary btn-test-connection" @click="testConnection">{{ __('Send Test Email', 'erp') }}</button>
                     </div>
@@ -38,15 +40,25 @@ export default {
 
     data() {
         return {
-            mailgunTestEmail: '',
-            options: {},
+            erp_mailgun_test_email: '',
+            options               : {
+                action   : '',
+                recurrent: false,
+                fields   : []
+            }
         }
     },
 
     methods: {
         testConnection() {
-            this.options.action    = 'erp_mailgun_test_connection';
-            this.options.recurrent = false;
+            this.options.action = 'erp_mailgun_test_connection';
+            
+            this.options.fields.push(
+                {
+                    'key'   : 'erp_mailgun_test_email',
+                    'value' : this.erp_mailgun_test_email
+                }
+            );
         }
     }
 }
