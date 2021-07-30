@@ -219,9 +219,9 @@ class Human_Resource {
                 'sub-section'   => 'leave-entitlements&tab=assignment',
             ], admin_url( 'admin.php' ) ), __( 'Create Entitlement', 'erp' ), __( 'Create Entitlement', 'erp' ) ),
             'currentDate'            => erp_current_datetime()->format( 'Y-m-d' ),
-            'delConfirmLeaveType'    => __( 'Are you sure to delete this leave type?', 'erp' ),
+            'leave_type_delete'      => __( 'Are you sure to delete this leave type?', 'erp' ),
             'cancel'                 => __( 'Cancel', 'erp' ),
-            'confirmDelete'          => __( 'Yes, Delete', 'erp' ),
+            'confirm_delete'         => __( 'Yes, Delete', 'erp' ),
         ] );
 
         switch ( $section ) {
