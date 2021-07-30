@@ -4,7 +4,7 @@ namespace WeDevs\ERP\Settings;
 
 use WeDevs\ERP\Framework\Traits\Ajax as Trait_Ajax;
 use WeDevs\ERP\Framework\Traits\Hooker;
-use Mailgun\Mailgun;
+use WeDevs\ERP\Email_Mailgun;
 
 /**
  * Ajax handler class
@@ -455,17 +455,25 @@ class Ajax {
             $from_email = $erp_email_settings['from_email'];
         }
 
-        try {
-            $mailgun = Mailgun::create( $private_api_key, "https://$region" ); // Create an instance for EU/Normal server
+        if ( ! isset( $erp_email_settings['from_name'] ) ) {
+            global $current_user;
 
-            $params = [
-                'from'    => $from_email,
-                'to'      => $to_email,
-                'subject' => $subject,
-                'text'    => $message
+            $from_name = $current_user->display_name;
+        } else {
+            $from_name = $erp_email_settings['from_name'];
+        }
+
+        try {
+            $mailgun = new Email_Mailgun( $private_api_key, $region, $domain );
+
+            $data = [
+                'subject'      => $subject,
+                'from_address' => ['email' => $from_email, 'name' => $from_name],
+                'to_address'   => ['email' => $to_email, 'name' => ''],
+                'message'      => $message
             ];
 
-            $mailgun->messages()->send( $domain, $params );
+            $mailgun->send_email( $data );
 
             $this->send_success( [ 'message' => esc_html__( 'Test email has been sent successfully to ', 'erp' ) . $to_email ] );
         } catch ( \Exception $e ) {
