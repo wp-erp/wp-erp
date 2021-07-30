@@ -193,16 +193,6 @@ class Email extends Template {
         ];
 
         $fields['smtp'][] = [
-            'title'       => __( 'Testing', 'erp' ),
-            'id'          => 'test_email',
-            'type'        => 'text',
-            'value'       => get_option( 'admin_email' ),
-            'placeholder' => get_option( 'admin_email' ),
-            'tooltip'     => true,
-            'desc'        => __( 'Test if the SMTP connection is correctly established', 'erp' ),
-        ];
-
-        $fields['smtp'][] = [
             'type' => 'sectionend',
             'id'   => 'script_styling_options',
         ];
