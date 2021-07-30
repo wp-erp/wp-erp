@@ -18,7 +18,7 @@ if ( $id ) {
             </a>
         </h2>
         <div id="col-left" class="form-wrap">
-            <form action="<?php echo esc_url( erp_hr_new_policy_name_url( $id ) ); ?>" method="POST">
+            <form method="POST" id='erp-hr-leave-type-create'>
 
                 <!-- show error message -->
                 <?php global $policy_name_create_error;
@@ -61,6 +61,7 @@ if ( $id ) {
                 <input type="hidden" name="erp-action" value="hr-leave-policy-name-create">
                 <input type="hidden" name="policy-name-id" value="<?php echo esc_attr( $id ); ?>">
 
+                <p class='erp-loader' style="display: none;"/>
                 <?php submit_button( $submit_button ); ?>
             </form>
         </div>
