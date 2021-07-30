@@ -9,8 +9,8 @@
             <div class="email-card email-connect-outgoing">
                 <h4>{{ __( 'Outgoing Email Setting', 'erp' ) }}</h4>
                 <div class="email-icons">
-                    <div class="email-icon" v-for="connection in outgoingConnections" :key="connection.slug">
-                        <img :src="connection.isActive ? connection.enableIcon :  connection.disableIcon" alt="" />
+                    <div class="email-icon pointer" v-for="connection in outgoingConnections" :key="connection.slug" @click="toggleActiveConnection(connection, 'outgoing')">
+                        <img :src="connection.isActive ? connection.enableIcon : connection.disableIcon" alt="" />
                         <span class="checkbox-icon checkbox-active" v-if="connection.isActive"><i class="fa fa-check-circle"></i></span>
                         <span class="checkbox-icon checkbox-inactive" v-else @click="toggleActiveConnection(connection, 'outgoing')"></span>
                         <p>{{ connection.name }}</p>
@@ -22,8 +22,8 @@
             <div class="email-card email-connect-incoming">
                 <h4>{{ __( 'Incoming Email Setting', 'erp' ) }}</h4>
                 <div class="email-icons">
-                    <div class="email-icon" v-for="connection in incomingConnections" :key="connection.slug">
-                        <img :src="connection.isActive ? connection.enableIcon :  connection.disableIcon" alt="" />
+                    <div class="email-icon pointer" v-for="connection in incomingConnections" :key="connection.slug" @click="toggleActiveConnection(connection, 'incoming')">
+                        <img :src="connection.isActive ? connection.enableIcon : connection.disableIcon" alt="" />
                         <span class="checkbox-icon checkbox-active" v-if="connection.isActive"><i class="fa fa-check-circle"></i></span>
                         <span class="checkbox-icon checkbox-inactive" v-else @click="toggleActiveConnection(connection, 'incoming')"></span>
                         <p>{{ connection.name }}</p>
