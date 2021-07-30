@@ -172,7 +172,7 @@ class Google_Auth {
     }
 
     public function get_settings_url() {
-        $settings_url = admin_url( 'admin.php?page=erp-settings#/erp-crm/email_connect/gmail' );
+        $settings_url = admin_url( 'admin.php?page=erp-settings#/erp-email/email_connect' );
 
         return $settings_url;
     }
