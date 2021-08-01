@@ -94,6 +94,7 @@ class Ajax_Handler {
 
         // leave type
         $this->action( 'wp_ajax_erp-hr-leave-type-delete', 'leave_type_delete' );
+        $this->action( 'wp_ajax_erp-hr-leave-type-bulk-delete', 'leave_type_bulk_delete' );
         $this->action( 'wp_ajax_erp-hr-leave-type-create', 'leave_type_create_or_update' );
         $this->action( 'wp_ajax_erp-hr-get-leave-type', 'get_leave_type' );
 
@@ -2606,6 +2607,41 @@ class Ajax_Handler {
         }
 
         $this->send_success( __( 'Leave Type has been deleted', 'erp' ) );
+    }
+
+    /**
+     * Bulk Delete leave types
+     *
+     * @since 1.9.1
+     *
+     * @return void
+     */
+    public function leave_type_bulk_delete() {
+        $this->verify_nonce( 'wp-erp-hr-nonce' );
+
+        if ( ! current_user_can( 'erp_leave_manage' ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
+        $ids = [];
+        if ( ! empty( $_POST['ids'] ) ) {
+            $posted_ids = $_POST['ids'];
+            foreach ( $posted_ids as $id ) {
+                $ids[] = absint( wp_unslash( $id ) );
+            }
+        }
+
+        if ( empty( $ids ) ) {
+            $this->send_error( __( 'No valid leave type found!', 'erp' ) );
+        }
+
+        $result = erp_hr_bulk_remove_leave_policy_name( $ids );
+
+        if ( $result === 0 ) {
+            $this->send_error( __( 'No items were deleted as they are associated with policy', 'erp' ) );
+        } else {
+            $this->send_success( $result . __( ' items deleted successfully', 'erp' ) );
+        }
     }
 
     /**
