@@ -61,8 +61,8 @@ if ( $id ) {
                 <input type="hidden" name="erp-action" value="hr-leave-policy-name-create">
                 <input type="hidden" name="policy-name-id" value="<?php echo esc_attr( $id ); ?>">
 
-                <p class='erp-loader' style="display: none;"/>
                 <?php submit_button( $submit_button ); ?>
+                <span class='erp-loader' style="display: none;"></span>
             </form>
         </div>
 
@@ -70,7 +70,7 @@ if ( $id ) {
             <div class="list-table-wrap">
                 <div class="list-table-inner">
 
-                    <form method="post">
+                    <form method="post" id='erp-hr-leave-type-table-form'>
                         <!-- <input type="hidden" name="page" value="erp-hr">
                         <input type="hidden" name="section" value="leave">
                         <input type="hidden" name="sub-section" value="policies"> -->
