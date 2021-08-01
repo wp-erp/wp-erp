@@ -6,7 +6,7 @@
 
         var requests = new Vue({
             el: "#erp-hr-requests",
-            
+
             data: {
                 requests         : [],
                 employee         : 0,
@@ -36,7 +36,7 @@
                     data    : erpHrReq.request_types,
                     default : '',
                     field   : 'type',
-                }, 
+                },
                 bulkActionMap    : [
                     {
                         id   : 'approved',
@@ -51,79 +51,79 @@
                     resigned    : [
                         {
                             title : __( 'Reason', 'erp' ),
-                            class : ''
+                            class : 'column-heading-small'
                         },
                         {
                             title : __( 'Resign Date', 'erp' ),
-                            class : ''
+                            class : 'column-heading-small column-heading-mid'
                         },
                         {
                             title : __( 'Request Date', 'erp' ),
-                            class : ''
+                            class : 'column-heading-small column-heading-mid'
                         },
                     ],
                     leave       : [
                         {
                             title : __( 'Reason', 'erp' ),
-                            class : ''
+                            class : 'column-heading-small'
                         },
                         {
                             title : __( 'Start Date', 'erp' ),
-                            class : ''
+                            class : 'column-heading-small column-heading-mid'
                         },
                         {
                             title : __( 'End Date', 'erp' ),
-                            class : ''
+                            class : 'column-heading-small column-heading-mid'
                         },
                         {
                             title : __( 'Duration', 'erp' ),
-                            class : 'text-center'
+                            class : 'text-center column-heading-small column-heading-mid'
                         },
                     ],
                     remote_work : [
                         {
                             title : __( 'Reason', 'erp' ),
-                            class : ''
+                            class : 'column-heading-small'
                         },
                         {
                             title : __( 'Start Date', 'erp' ),
-                            class : ''
+                            class : 'column-heading-small column-heading-mid'
                         },
                         {
                             title : __( 'End Date', 'erp' ),
-                            class : ''
+                            class : 'column-heading-small column-heading-mid'
                         },
                         {
                             title : __( 'Duration', 'erp' ),
-                            class : 'text-center'
+                            class : 'text-center column-heading-small column-heading-mid'
                         },
                     ],
                     asset       : [
                         {
                             title : __( 'Item', 'erp' ),
-                            class : ''
+                            class : 'column-heading-small column-heading-mid'
                         },
                         {
                             title : __( 'Category', 'erp' ),
-                            class : ''
+                            class : 'column-heading-small column-heading-mid'
                         },
                         {
                             title : __( 'Request Date', 'erp' ),
-                            class : ''
+                            class : 'column-heading-small column-heading-mid'
                         },
                     ],
                     reimburse   : [
                         {
                             title : __( 'Amount', 'erp' ),
-                            class : ''
+                            class : 'column-heading-small column-heading-mid'
                         },
                         {
                             title : __( 'Transaction Date', 'erp' ),
-                            class : ''
+                            class : 'column-heading-small column-heading-mid'
                         },
                         {
                             title : __( 'Request Date', 'erp' ),
-                            class : ''
+                            class : 'column-heading-small column-heading-mid'
                         },
                     ],
                     common      : [
@@ -133,11 +133,11 @@
                         },
                         {
                             title : __( 'Status', 'erp' ),
-                            class : 'text-center'
+                            class : 'text-center column-heading-small'
                         },
                         {
                             title : __( 'Actions', 'erp' ),
-                            class : 'text-center'
+                            class : 'text-center column-heading-small'
                         },
                     ]
                 },
@@ -150,7 +150,7 @@
 
             ready: function() {
                 var self = this;
-        
+
                 $('select#erp-hr-filter-employee').on('change', function(e) {
                     self.employee = $(this).val();
                 });
@@ -207,10 +207,10 @@
 
                 tableHeaders: function() {
                     let headers = [];
-                    
+
                     headers.push( ...this.tableHeaderMap.common );
                     headers.splice( 1, 0, ...this.tableHeaderMap[this.activeTopNav] );
-                    
+
                     return headers;
                 },
 
@@ -234,7 +234,7 @@
             methods: {
                 init: function() {
                     this.allEmployees[0] = erpHrReq.filterEmployee;
-                    
+
                     this.initDateRangePicker();
                     this.select2Action('erp-hrm-select2');
                     this.initExtraFeatures();
@@ -243,7 +243,7 @@
                 getRequestList: function() {
                     var self        = this;
                     self.ajaxloader = true;
-                    
+
                     wp.ajax.send({
                         data : {
                             type     : self.activeTopNav,
@@ -405,7 +405,7 @@
                 toggleDropdown: function() {
                     $("#erp-dropdown-content").toggleClass("show");
                 },
-        
+
                 resetDropdown: function() {
                     var self      = this;
                     self.employee = 0;
@@ -417,7 +417,7 @@
                     $('#select2-erp-hr-filter-status-container').attr('title', self.statusFilter[self.status]);
                     $('#select2-erp-hr-filter-status-container').html(self.statusFilter[self.status]);
                     $("#erp-hr-filter-date").val('');
-                    
+
                     self.resetData();
                     self.getRequestList();
                     self.toggleDropdown();
@@ -437,11 +437,11 @@
                 triggerAllCheckBox: function(){
                     if ( this.checkAllCheckbox ) {
                         this.checkboxItems = [];
-        
+
                         for( let key in this.requests ) {
                             this.checkboxItems.push( this.requests[key].id );
                         }
-        
+
                     } else {
                         this.checkboxItems = [];
                     }
@@ -513,16 +513,16 @@
                                         id: 'erp-hr-request-single',
                                         content: '',
                                         extraClass: 'smaller',
-                    
+
                                         onReady: function(modal) {
                                             var html = wp.template( 'erp-employee-resquest' )(res);
-                                            
+
                                             $( "#erp-hr-request-single .close" ).html( '<span class="dashicons dashicons-no-alt"></span>' );
                                             $( "#erp-hr-request-single .close" ).attr( 'id', 'close-modal' );
                                             $( "#erp-hr-request-single header" ).hide();
                                             $( "#erp-hr-request-single footer" ).hide();
                                             $( "#erp-hr-request-single" ).addClass( `${res.status.id} ${modalClass}` );
-                                            
+
                                             $( '.content', this ).html( html );
 
                                             $( '#erp-req-approve' ).click( function(e) {
@@ -549,7 +549,7 @@
 
                         return;
                     }
-                    
+
                     if ( action == 'approved' ) {
                         title    = __( 'Approve this request?', 'erp' );
                         btnText  = __( 'Yes, Approve', 'erp' );
@@ -649,7 +649,7 @@
                 showRowActions: function(index) {
                     $( `#request-row-actions-${index}` ).toggleClass( 'show' );
                 },
-        
+
                 hasBulkAction: function() {
                     return this.bulkactions.length > 0;
                 },
@@ -657,16 +657,16 @@
                 hasTopNavFilter: function() {
                     return this.topNavFilter.data.length > 0;
                 },
-        
+
                 isTopNavFilterLastItem: function(currentKey) {
                     var keys = Object.keys( this.topNavFilter.data )
-        
+
                     if ( keys[keys.length-1] == currentKey ) {
                         return true;
                     }
                     return false;
                 },
-        
+
                 isCurrentTopNavFilter: function(key) {
                     return this.activeTopNav == key;
                 },
@@ -679,22 +679,22 @@
                 isFirstPage: function() {
                     return this.currentPage == 1;
                 },
-        
+
                 isLastPage: function() {
                     return this.currentPage == this.totalPage;
                 },
-        
+
                 goFirstPage: function() {
                     this.currentPage     = 1;
                     this.pageNumberInput = this.currentPage;
-                    
+
                     this.getRequestList();
                 },
-        
+
                 goLastPage: function() {
                     this.currentPage     = this.totalPage;
                     this.pageNumberInput = this.currentPage;
-                    
+
                     this.getRequestList();
                 },
 
@@ -708,21 +708,30 @@
                             this.currentPage = direction > this.totalPage ? this.totalPage : ( direction < 1 ? 1 : direction );
                         }
                     }
-        
+
                     this.pageNumberInput = this.currentPage;
-        
+
                     this.getRequestList();
-        
+
                     return false;
                 },
 
-                showAlert: function(type, message, title = '') {            
+                showAlert: function(type, message, title = '') {
                     swal({
                         title : title,
                         text  : message,
                         type  : type,
                         timer : 2200,
                         showConfirmButton : false,
+                    });
+                },
+
+                toggleMoreInfo: function(e) {
+                    var $row = $(e.target).closest('tr');                    
+                    $row.toggleClass('expanded');
+
+                    $row.find('td').each( function() {
+                        $(this).toggleClass( 'decor-additional-info hide-additional-info' );
                     });
                 },
             },
