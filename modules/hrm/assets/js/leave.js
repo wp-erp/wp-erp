@@ -373,7 +373,17 @@
 
                 var self = $(this);
 
-                if ( confirm( wpErpHr.delConfirmPolicy ) ) {
+                swal({
+                    title              : '',
+                    text               : wpErpHr.delConfirmPolicy,
+                    type               : 'warning',
+                    showCancelButton   : true,
+                    cancelButtonText   : wpErpHr.cancel,
+                    confirmButtonColor : '#fa6e5c',
+                    confirmButtonText  : wpErpHr.confirm_delete,
+                    closeOnConfirm     : false
+                },
+                function() {
                     wp.ajax.send( 'erp-hr-leave-policy-delete', {
                         data: {
                             '_wpnonce': wpErpHr.nonce,
@@ -388,7 +398,7 @@
                             alert( response );
                         }
                     });
-                }
+                });
             },
         },
 
