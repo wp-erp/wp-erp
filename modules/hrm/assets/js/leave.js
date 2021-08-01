@@ -63,6 +63,9 @@
             //initialize edit and delete actions of leave type
             this.leaveType.initActions();
 
+            // trigger on create new leave type
+            $( '#erp-hr-leave-type-create' ).on( 'submit', Leave.leaveType.create );
+
             this.initDateField();
         },
 
@@ -813,14 +816,14 @@
 
         leaveType: {
             initActions: function() {
-                // trigger on create new leave type
-                $( '#erp-hr-leave-type-create' ).on( 'submit', Leave.leaveType.create );
-
                 // trigger on deleting leave type
                 $( '.erp-hr-leave-type-delete' ).on( 'click', Leave.leaveType.remove );
 
                 // tigger on edit leave type
                 $( '.erp-hr-leave-type-edit' ).on ( 'click', Leave.leaveType.edit );
+
+                // trigger on bulk action
+                $( '#erp-hr-leave-type-table-form' ).on( 'submit', Leave.leaveType.bulkAction );
             },
 
             reloadTable: function() {
@@ -834,8 +837,8 @@
 
                 $form.name.value              = '';
                 $form.description.value       = '';
-                $form['policy-name-id'].value = '0';
-                $form.submit.value             = 'Save';
+                $form['policy-name-id'].value = 0;
+                $form.submit.value            = 'Save';
             },
 
             create: function( e ) {
@@ -853,16 +856,11 @@
                 };
 
                 $( '.erp-loader' ).css( 'display', 'block' );
-                $( '#submit' ).toggleClass( 'hidden' );
                 
                 wp.ajax.send( 'erp-hr-leave-type-create', {
                     data: data,
                     success: function ( response ) {
-                        Leave.leaveType.reloadTable();
-                        Leave.leaveType.resetForm();
-
                         $( '.erp-loader' ).css( 'display', 'none' );
-                        $( '#submit' ).toggleClass( 'hidden' );
 
                         swal({
                             title: '',
@@ -871,10 +869,12 @@
                             timer: 2200,
                             showConfirmButton: false
                         });
+
+                        Leave.leaveType.reloadTable();
+                        Leave.leaveType.resetForm();
                     },
                     error: function ( error ) {
                         $( '.erp-loader' ).css( 'display', 'none' );
-                        $( '#submit' ).toggleClass( 'hidden' );
 
                         swal( '', error, 'error' );
                     }
@@ -941,6 +941,62 @@
                                 timer: 2200,
                                 showConfirmButton: false
                             });                            
+                        },
+                        error: function ( error ) {
+                            swal( '', error, 'error' );
+                        }
+                    });
+                });
+            },
+
+            bulkAction: function ( e ) {
+                e.preventDefault();
+
+                var form = e.target;
+
+                if ( form.action.value !== 'delete' && form.action2.value !== 'delete' ) {
+                    return;
+                }
+
+                var cbs = form['ids[]'];
+                var ids = [];
+                
+                for ( var i = 0; i < cbs.length; i++ ) {
+                    if ( cbs[i].checked ) {
+                        ids.push( cbs[i].value );
+                    }
+                }
+
+                if ( ids.length === 0 ) {
+                    return;
+                }
+
+                swal({
+                    title              : '',
+                    text               : wpErpHr.leave_type_bulk_delete,
+                    type               : 'warning',
+                    showCancelButton   : true,
+                    cancelButtonText   : wpErpHr.cancel,
+                    confirmButtonColor : '#fa6e5c',
+                    confirmButtonText  : wpErpHr.confirmDelete,
+                    closeOnConfirm     : false
+                },
+                function() {
+                    wp.ajax.send( 'erp-hr-leave-type-bulk-delete', {
+                        data: {
+                            '_wpnonce': wpErpHr.nonce,
+                            ids: ids
+                        },
+                        success: function ( response ) {
+                            Leave.leaveType.reloadTable();
+                            
+                            swal({
+                                title: '',
+                                text: response,
+                                type: 'success',
+                                timer: 2200,
+                                showConfirmButton: false
+                            });
                         },
                         error: function ( error ) {
                             swal( '', error, 'error' );
