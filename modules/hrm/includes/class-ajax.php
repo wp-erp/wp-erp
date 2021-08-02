@@ -2623,8 +2623,10 @@ class Ajax_Handler {
         }
 
         $ids = [];
+        
         if ( ! empty( $_POST['ids'] ) ) {
             $posted_ids = $_POST['ids'];
+            
             foreach ( $posted_ids as $id ) {
                 $ids[] = absint( wp_unslash( $id ) );
             }
@@ -2634,12 +2636,18 @@ class Ajax_Handler {
             $this->send_error( __( 'No valid leave type found!', 'erp' ) );
         }
 
-        $result = erp_hr_bulk_remove_leave_policy_name( $ids );
+        $deleted = 0;
+        
+        foreach ( $ids as $id ) {
+            if ( ! is_wp_error( erp_hr_remove_leave_policy_name( $id ) ) ) {
+                $deleted++;
+            }
+        }
 
-        if ( $result === 0 ) {
+        if ( $deleted === 0 ) {
             $this->send_error( __( 'No items were deleted as they are associated with policy', 'erp' ) );
         } else {
-            $this->send_success( $result . __( ' items deleted successfully', 'erp' ) );
+            $this->send_success( sprintf( __( '%s items deleted successfully', 'erp' ), $deleted ) );
         }
     }
 
