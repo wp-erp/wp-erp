@@ -187,7 +187,7 @@
 
                         <tbody id="the-list">
                             <tr v-if="requests" v-for="request in requests">
-                                <th v-if="!hideCb" scope="row" class="check-column vertical-middle">
+                                <th v-if="!hideCb" scope="row" class="check-column vertical-middle" id="erp-hr-req-cb">
                                     <input class="vertical-super"
                                         type="checkbox"
                                         v-model="checkboxItems"
@@ -195,7 +195,7 @@
                                         :value="request.id">
                                 </th>
 
-                                <td class="vertical-middle block-td left-margin-employee-small" style="position: relative;">
+                                <td class="vertical-middle block-td left-margin-employee-small employee-header" style="position: relative;">
                                     <a :href="request.employee.url" target="_blank">{{ request.employee.name }}</a>
                                     <button @click='toggleMoreInfo' type="button" class="toggle-row-btn">
                                         <span class="screen-reader-text">
