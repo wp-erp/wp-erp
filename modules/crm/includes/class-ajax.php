@@ -1232,7 +1232,7 @@ class Ajax_Handler {
                 $reply_to_name      = erp_crm_get_email_from_name();
 
                 if ( $erp_is_imap_active ) {
-                    $imap_options = get_option( 'erp_settings_erp-crm_email_connect_imap', [] );
+                    $imap_options = get_option( 'erp_settings_erp-email_imap', [] );
                     $reply_to     = $imap_options['username'];
                 } else {
                     $reply_to = erp_crm_get_email_from_address();
