@@ -10,8 +10,8 @@
                 <h4>{{ __( 'Outgoing Email Setting', 'erp' ) }}</h4>
                 <div class="email-icons">
                     <div class="email-icon pointer" v-for="connection in outgoingConnections" :key="connection.slug" @click="toggleActiveConnection(connection, 'outgoing')">
-                        <img :src="connection.isActive ? connection.enableIcon : connection.disableIcon" alt="" />
-                        <span class="checkbox-icon checkbox-active" v-if="connection.isActive"><i class="fa fa-check-circle"></i></span>
+                        <img :src="connection.isEnabled ? connection.enableIcon : connection.disableIcon" alt="" />
+                        <span class="checkbox-icon checkbox-active" v-if="connection.isEnabled"><i class="fa fa-check-circle"></i></span>
                         <span class="checkbox-icon checkbox-inactive" v-else @click="toggleActiveConnection(connection, 'outgoing')"></span>
                         <p>{{ connection.name }}</p>
                     </div>
@@ -23,8 +23,8 @@
                 <h4>{{ __( 'Incoming Email Setting', 'erp' ) }}</h4>
                 <div class="email-icons">
                     <div class="email-icon pointer" v-for="connection in incomingConnections" :key="connection.slug" @click="toggleActiveConnection(connection, 'incoming')">
-                        <img :src="connection.isActive ? connection.enableIcon : connection.disableIcon" alt="" />
-                        <span class="checkbox-icon checkbox-active" v-if="connection.isActive"><i class="fa fa-check-circle"></i></span>
+                        <img :src="connection.isEnabled ? connection.enableIcon : connection.disableIcon" alt="" />
+                        <span class="checkbox-icon checkbox-active" v-if="connection.isEnabled"><i class="fa fa-check-circle"></i></span>
                         <span class="checkbox-icon checkbox-inactive" v-else @click="toggleActiveConnection(connection, 'incoming')"></span>
                         <p>{{ connection.name }}</p>
                     </div>
@@ -45,6 +45,10 @@ import SmtpEmail from "./SmtpEmail.vue";
 import GoogleEmail from "./GoogleEmail.vue";
 import ImapEmail from "./ImapEmail.vue";
 import MailgunEmail from "./MailgunEmail.vue";
+import { generateFormDataFromObject } from "../../../utils/FormDataHandler";
+
+import { mapState } from 'vuex';
+var $ = jQuery;
 
 export default {
     name: 'EmailCConnect',
@@ -70,25 +74,45 @@ export default {
 
     methods: {
         getMailConnections() {
-            const menusData = erp_settings_var.erp_settings_menus
-            const emailData = menusData.filter(menu => menu.id === 'erp-email');
-            const providers = typeof emailData[0] !== 'undefined' ? emailData[0].fields.email_connect.providers : [];
+            const self = this;
+            let requestData = window.settings.hooks.applyFilters( "requestData",
+                {
+                    _wpnonce: erp_settings_var.nonce,
+                    action  : 'erp_settings_get_email_providers'
+                }
+            );
 
-            const mailConnections = [];
-            Object.keys(providers).forEach(key => {
-                const connection = providers[key];
-                mailConnections.push({
-                    type       : connection.type,
-                    enableIcon : connection.icon_enable,
-                    disableIcon: connection.icon_disable,
-                    name       : connection.name,
-                    slug       : key,
-                    isActive   : connection.is_active,
-                    isEnabled   : connection.enabled
-                })
+            const postData = generateFormDataFromObject( requestData );
+            let providers  = [];
+
+            $.ajax({
+                url        : erp_settings_var.ajax_url,
+                type       : "POST",
+                data       : postData,
+                processData: false,
+                contentType: false,
+                success    : function ( response ) {
+                    if ( response.success ) {
+                        providers = response.data;
+
+                        const mailConnections = [];
+                        Object.keys(providers).forEach(key => {
+                            const connection = providers[key];
+                            mailConnections.push({
+                                type       : connection.type,
+                                enableIcon : connection.icon_enable,
+                                disableIcon: connection.icon_disable,
+                                name       : connection.name,
+                                slug       : key,
+                                isActive   : connection.is_active,
+                                isEnabled  : connection.enabled
+                            })
+                        });
+
+                        self.mailConnections = mailConnections;
+                    }
+                }
             });
-
-            this.mailConnections = mailConnections;
         },
 
         toggleActiveConnection(activeConnection, type) {
@@ -124,12 +148,26 @@ export default {
 
         activeIncomingEmail: function() {
             const activeIncomingMails = this.incomingConnections.filter( mail => (mail.isActive === true && mail.type === 'incoming'));
-            if (activeIncomingMails.length > 0) {
+            if ( activeIncomingMails.length > 0 ) {
                 return activeIncomingMails[0].slug;
             } else {
                 return 'imap';
             }
+        },
+        
+        ...mapState({
+            formDatas( state ) {
+                return state.formdata.data;
+            }
+        })
+    },
+
+    watch: {
+        formDatas: function(formData) {
+            if ( typeof formData !== 'undefined' && formData !== null ) {
+                this.getMailConnections();
+            }
         }
-    }
+    },
 }
 </script>
