@@ -130,3 +130,77 @@ function erp_hr_send_announcement_email( $employee_ids, $post_id ) {
 
     $announcement_email->trigger( $employee_ids, $post_id );
 }
+
+/**
+ * Get all the announcements
+ *
+ * @since 1.9.1
+ *
+ * @param int query arguments
+ *
+ * @return array list of announcements
+ */
+function erp_hr_get_announcements( $args = [] ) {
+    $defaults = [
+        'number'     => 20,
+        'offset'     => 0,
+        'orderby'    => 'post_date',
+        'order'      => 'DESC',
+        'post_type'  => 'erp_hr_announcement',
+    ];
+
+    $args = wp_parse_args( $args, $defaults );
+
+    $last_changed  = erp_cache_get_last_changed( 'hrm', 'announcement' );
+    $cache_key     = 'erp-get-announcements-' . md5( serialize( $args ) ) . " : $last_changed";
+    $announcements  = false;// wp_cache_get( $cache_key, 'erp' );
+
+    if ( false === $announcements ) {
+        $announcements = get_posts( $args );
+
+        wp_cache_set( $cache_key, $announcements, 'erp' );
+    }
+
+    return $announcements;
+}
+
+/**
+ * Get the count of the announcements
+ *
+ * @since 1.9.1
+ *
+ * @param int query arguments
+ *
+ * @return int count of announcements
+ */
+function erp_hr_get_announcements_count( $args = [] ) {
+    $defaults = [
+        'number'     => -1,
+        'offset'     => 0,
+        'orderby'    => 'post_date',
+        'order'      => 'DESC',
+        'post_type'  => 'erp_hr_announcement',
+    ];
+
+    if ( ! empty( $args['number'] ) ) {
+        unset( $args['number'] );
+    }
+
+    if ( ! empty( $args['offset'] ) ) {
+        unset( $args['offset'] );
+    }
+
+    $args = wp_parse_args( $args, $defaults );
+
+    $last_changed  = erp_cache_get_last_changed( 'hrm', 'announcement' );
+    $cache_key     = 'erp-get-announcements-count-' . md5( serialize( $args ) ) . " : $last_changed";
+    $announcements_count = false;// wp_cache_get( $cache_key, 'erp' );
+
+    if ( false === $announcements_count ) {
+        $announcements_count = count( get_posts( $args ) );
+
+        wp_cache_set( $cache_key, $announcements_count, 'erp' );
+    }
+
+    return $announcements_count;
+}
