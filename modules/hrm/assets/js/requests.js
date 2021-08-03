@@ -400,6 +400,13 @@
                             self.date = {};
                         }
                     });
+
+                    if ( screen.width <= 601 ) {
+                        $( '#erp-hr-req-cb' ).removeClass( 'vertical-middle' );
+                    } else {
+                        $( '#erp-hr-req-cb' ).addClass( 'vertical-middle' );
+                    }
+
                 },
 
                 toggleDropdown: function() {
