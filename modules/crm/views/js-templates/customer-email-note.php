@@ -4,7 +4,7 @@ $customer_id  = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
 $customer     = new \WeDevs\ERP\CRM\Contact( $customer_id );
 $save_replies = erp_crm_get_save_replies();
 $block        = !erp_crm_sync_is_active() ? 'crm-blocked' : '';
-$settings_url = admin_url( 'admin.php?page=erp-settings#/erp-crm/email_connect/gmail' );
+$settings_url = admin_url( 'admin.php?page=erp-settings#/erp-email/email_connect' );
 ?>
 <div id="email" class="<?php echo esc_html( $block ); ?>">
 

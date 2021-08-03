@@ -3499,7 +3499,7 @@ function erp_crm_check_new_inbound_emails() {
         return;
     }
 
-    $imap_options = get_option( 'erp_settings_erp-crm_email_connect_imap', [] );
+    $imap_options = get_option( 'erp_settings_erp-email_imap', [] );
 
     $mail_server    = $imap_options['mail_server'];
     $username       = $imap_options['username'];

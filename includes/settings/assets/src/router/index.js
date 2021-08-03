@@ -17,9 +17,6 @@ import AcFinancialYears from '../components/act/financial-year/AcFinancialYears.
 import CrmContacts from '../components/crm/contacts/CrmContacts.vue';
 import CrmContactForm from '../components/crm/contact-forms/CrmContactForm.vue';
 import CrmSubscription from '../components/crm/subscription/CrmSubscription.vue';
-import CrmEmailConnect from '../components/crm/email/CrmEmailConnect.vue';
-import CrmEmailConnectGmail from '../components/crm/email/CrmEmailConnectGmail.vue';
-import CrmEmailConnectImap from '../components/crm/email/CrmEmailConnectImap.vue';
 
 // WooCommerce Components
 import WooCommerce from '../components/woocommerce/WooCommerce.vue';
@@ -152,21 +149,6 @@ export default new Router({
                     path     : 'subscription',
                     name     : 'CrmSubscription',
                     component: CrmSubscription
-                },
-                {
-                    path     : 'email_connect',
-                    name     : 'CrmEmailConnect',
-                    component: CrmEmailConnect
-                },
-                {
-                    path     : 'email_connect/gmail',
-                    name     : 'CrmEmailConnectGmail',
-                    component: CrmEmailConnectGmail
-                },
-                {
-                    path     : 'email_connect/imap',
-                    name     : 'CrmEmailConnectImap',
-                    component: CrmEmailConnectImap
                 }
             ]
         },
