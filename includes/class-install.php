@@ -1611,6 +1611,19 @@ Account Manager
                 PRIMARY KEY (`id`)
             ) $charset_collate;",
 
+            "CREATE TABLE {$wpdb->prefix}erp_acct_synced_taxes (
+                id int NOT NULL AUTO_INCREMENT,
+                system_id bigint NOT NULL,
+                sync_id bigint NOT NULL,
+                sync_type varchar(100),
+                sync_source varchar(100),
+                PRIMARY KEY  (id),
+                KEY system_id (system_id),
+                KEY sync_id (sync_id),
+                KEY sync_type (sync_type),
+                KEY sync_source (sync_source)
+            ) $charset_collate;",
+
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_payment_methods` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
                 `name` varchar(255) DEFAULT NULL,
