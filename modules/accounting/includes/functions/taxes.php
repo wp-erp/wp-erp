@@ -684,3 +684,27 @@ function erp_acct_get_default_tax_rate_name_id() {
 
     return $wpdb->get_var( "SELECT id FROM {$wpdb->prefix}erp_acct_taxes WHERE `default` = 1" );
 }
+
+/**
+ * Inserts synced tax data
+ * 
+ * @since 1.9.1
+ *
+ * @return void
+ */
+function erp_acct_insert_synced_tax( $system_id, $sync_id, $sync_type, $sync_source ) {
+    global $wpdb;
+
+    $inserted = $wpdb->insert(
+        "{$wpdb->prefix}erp_acct_synced_taxes",
+        [
+            'system_id' => $system_id,
+            'sync_id' => $sync_id,
+            'sync_type' => $sync_type,
+            'sync_source' => $sync_source
+        ],
+        [ '%d', '%d', '%s', '%s' ]
+    );
+
+    return $inserted;
+}
