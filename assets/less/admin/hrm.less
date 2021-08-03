@@ -604,6 +604,14 @@ table.leaves {
         }
     }
 
+    .employee-header {
+        font-weight: 600;
+
+        @media (max-width: @small-width) {
+            line-height: 2.5em !important;
+        }
+    }
+
     .block-td {
         @media (max-width: @small-width) {
             display: block;
@@ -685,6 +693,10 @@ table.leaves {
     .hide-additional-info {
         @media (max-width: @small-width){
             display: none;
+
+            &.employee-header {
+                display: block !important;
+            }
         }
     }
 
