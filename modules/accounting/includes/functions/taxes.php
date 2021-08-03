@@ -708,3 +708,31 @@ function erp_acct_insert_synced_tax( $system_id, $sync_id, $sync_type, $sync_sou
 
     return $inserted;
 }
+
+/**
+ * Retrieves system id of synced tax data
+ * 
+ * @since 1.9.1
+ *
+ * @param int|string $sync_id
+ * @param string $sync_type
+ * @param string $sync_source
+ * 
+ * @return int|null
+ */
+function erp_acct_get_synced_tax_system_id( $sync_id, $sync_type, $sync_source ) {
+    global $wpdb;
+
+    $system_id = $wpdb->get_var(
+        $wpdb->prepare(
+            "SELECT system_id
+            FROM {$wpdb->prefix}erp_acct_synced_taxes
+            WHERE sync_id = %d
+            AND sync_type = %s
+            AND sync_source = %s",
+            [ $sync_id, $sync_type, $sync_source ]
+        )
+    );
+
+    return ! is_wp_error( $system_id ) ? (int) $system_id : null;
+}
