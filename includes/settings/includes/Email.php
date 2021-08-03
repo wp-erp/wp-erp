@@ -332,9 +332,9 @@ class Email extends Template {
         switch ( $section ) {
             case 'gmail':
                 if ( wperp()->google_auth->is_active() ) {
-                    $option                = get_option( 'erp_settings_erp-crm_email_connect_imap', [] );
+                    $option                = get_option( 'erp_settings_erp-email_imap', [] );
                     $option['enable_imap'] = 'no';
-                    update_option( 'erp_settings_erp-crm_email_connect_imap', $option );
+                    update_option( 'erp_settings_erp-email_imap', $option );
                 }
                 break;
 
@@ -343,6 +343,23 @@ class Email extends Template {
                     wperp()->google_auth->clear_account_data();
                 }
                 break;
+
+            case 'smtp':
+                if ( isset( $options['enable_smtp'] ) && $options['enable_smtp'] == 'yes' ) {
+                    $option                = get_option( 'erp_settings_erp-email_mailgun', [] );
+                    $option['enable_mailgun'] = 'no';
+                    update_option( 'erp_settings_erp-email_mailgun', $option );
+                }
+                break;
+
+            case 'mailgun':
+                if ( isset( $options['enable_mailgun'] ) && $options['enable_mailgun'] == 'yes' ) {
+                    $option                = get_option( 'erp_settings_erp-email_smtp', [] );
+                    $option['enable_smtp'] = 'no';
+                    update_option( 'erp_settings_erp-email_smtp', $option );
+                }
+                break;
+
             default:
                 break;
         }
@@ -796,6 +813,10 @@ class Email extends Template {
                     }
                 } else {
                     $option_id = 'erp_settings_' . $this->id . '_' . $_POST['section'];
+
+                    // If it's incoming/outgoing email, then toggle email providers
+                    $this->toggle_providers( $_POST['section'], $_POST );
+
                     update_option( $option_id, $update_options );
                 }
             }
