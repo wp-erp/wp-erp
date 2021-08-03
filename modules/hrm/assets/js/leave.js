@@ -381,7 +381,7 @@
                     cancelButtonText   : wpErpHr.cancel,
                     confirmButtonColor : '#fa6e5c',
                     confirmButtonText  : wpErpHr.confirm_delete,
-                    closeOnConfirm     : false
+                    closeOnConfirm     : true
                 },
                 function() {
                     wp.ajax.send( 'erp-hr-leave-policy-delete', {
@@ -389,13 +389,21 @@
                             '_wpnonce': wpErpHr.nonce,
                             id: self.data( 'id' )
                         },
-                        success: function() {
+                        success: function(response) {
+                            swal({
+                                title: '',
+                                text: response,
+                                type: 'success',
+                                timer: 2200,
+                                showConfirmButton: false
+                            });
+
                             self.closest('tr').fadeOut( 'fast', function() {
                                 $(this).remove();
                             });
                         },
                         error: function(response) {
-                            alert( response );
+                            swal('', response, 'error');
                         }
                     });
                 });
