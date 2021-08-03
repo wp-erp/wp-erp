@@ -9,7 +9,7 @@ use Mailgun\Message\MessageBuilder;
 /**
  * Mailgun Email Class
  *
- * Send Outgoing Emai for WP ERP
+ * Send Outgoing Email for WP ERP
  *
  * @since 1.9.1
  */
@@ -176,13 +176,137 @@ class Email_Mailgun {
      *
      * @since 1.9.1
      *
-     * @param array $header address_array example; `[ 'key' => 'Custom-ID', 'name' => '123456' ]`
+     * @param array $headers custom_headers example; `[[ 'Custom-ID' => '123456' ]]`
      *
      * @return void
      */
-    public function set_custom_headers( $header = [] ) {
-        if ( ! empty( $header['key'] ) && ! empty( $header['value'] ) ) {
-            $this->builder->addCustomHeader( $header['key'], $header['value'] );
+    public function set_custom_headers( $headers = [] ) {
+        if ( ! empty( $headers ) ) {
+            foreach ( $headers as $key => $value ) {
+                if ( ! empty( $key ) && ! empty( $value ) ) {
+                    $this->builder->addCustomHeader( $key, $value );
+                }
+            }
+        }
+    }
+
+    /**
+     * Set Email Headers
+     *
+     * Set headers if there is any, Example: cc, bcc, to, reply-to etc.
+     *
+     * @since 1.9.1
+     *
+     * @param array $headers Email headers
+     *
+     * @return void
+     */
+    public function set_headers( $headers = [] ) {
+        $cc       = [];
+        $bcc      = [];
+        $reply_to = [];
+
+        if ( empty( $headers ) ) {
+            $headers = [];
+        } else {
+            if ( ! is_array( $headers ) ) {
+                // Explode the headers out, so this function can take both
+                // string headers and an array of headers.
+                $temp_headers = explode( "\n", str_replace( "\r\n", "\n", $headers ) );
+            } else {
+                $temp_headers = $headers;
+            }
+
+            $headers = [];
+
+            // If it's actually got contents
+            if ( ! empty( $temp_headers ) ) {
+                // Iterate through the raw headers
+                foreach ( (array) $temp_headers as $header ) {
+                    if ( strpos( $header, ':' ) === false ) {
+                        if ( false !== stripos( $header, 'boundary=' ) ) {
+                            $parts    = preg_split( '/boundary=/i', trim( $header ) );
+                            $boundary = trim( str_replace( [ "'", '"' ], '', $parts[1] ) );
+                        }
+                        continue;
+                    }
+
+                    // Explode them out
+                    list( $name, $content ) = explode( ':', trim( $header ), 2 );
+
+                    // Cleanup crew
+                    $name    = trim( $name );
+                    $content = trim( $content );
+
+                    switch ( strtolower( $name ) ) {
+                        // Mainly for legacy -- process a From: header if it's there
+                        case 'from':
+                            $bracket_pos = strpos( $content, '<' );
+
+                            if ( $bracket_pos !== false ) {
+                                // Text before the bracketed email is the "From" name.
+                                if ( $bracket_pos > 0 ) {
+                                    $from_name = substr( $content, 0, $bracket_pos - 1 );
+                                    $from_name = str_replace( '"', '', $from_name );
+                                    $from_name = trim( $from_name );
+                                }
+
+                                $from_email = substr( $content, $bracket_pos + 1 );
+                                $from_email = str_replace( '>', '', $from_email );
+                                $from_email = trim( $from_email );
+
+                            // Avoid setting an empty $from_email.
+                            } elseif ( '' !== trim( $content ) ) {
+                                $from_email = trim( $content );
+                                $from_name = '';
+                            }
+
+                            if ( ! empty( $from_email ) ) {
+                                $this->set_from_address( [ 'email' => $from_email, 'name' => $from_name ] );
+                            }
+                            break;
+
+                        case 'content-type':
+                            if ( strpos( $content, ';' ) !== false ) {
+                                list( $type, $charset_content ) = explode( ';', $content );
+                                $content_type                   = trim( $type );
+
+                                if ( false !== stripos( $charset_content, 'charset=' ) ) {
+                                    $charset = trim( str_replace( [ 'charset=', '"' ], '', $charset_content ) );
+                                } elseif ( false !== stripos( $charset_content, 'boundary=' ) ) {
+                                    $boundary = trim( str_replace( [ 'BOUNDARY=', 'boundary=', '"' ], '', $charset_content ) );
+                                    $charset  = '';
+                                }
+
+                                // Avoid setting an empty $content_type.
+                            } elseif ( '' !== trim( $content ) ) {
+                                $content_type = trim( $content );
+                            }
+                            break;
+
+                        case 'cc':
+                            $cc = array_merge( (array) $cc, explode( ',', $content ) );
+                            $this->set_cc_address( [ 'email' => $cc ] );
+                            break;
+
+                        case 'bcc':
+                            $bcc = array_merge( (array) $bcc, explode( ',', $content ) );
+                            $this->builder->addRecipient('bcc', $bcc);
+                            break;
+
+                        case 'reply-to':
+                            $reply_to = array_merge( (array) $reply_to, explode( ',', $content ) );
+                            $this->builder->addRecipient('h:reply-to', $reply_to);
+                            break;
+
+                        default:
+                            // Add it to our grand headers array
+                            $headers[ trim( $name ) ] = trim( $content );
+                            $this->builder->addRecipient($name, trim( $content ));
+                            break;
+                    }
+                }
+            }
         }
     }
 
@@ -191,13 +315,15 @@ class Email_Mailgun {
      *
      * @since 1.9.1
      *
-     * @param string attachment file
+     * @param array attachments
      *
      * @return void
      */
-    public function set_attachment( $attachment ) {
-        if ( ! empty( $attachment ) ) {
-            $this->builder->addAttachment( $attachment );
+    public function set_attachment( $attachments = [] ) {
+        if ( ! empty( $attachments ) ) {
+            foreach ( $attachments as $attachment ) {
+                $this->builder->addAttachment( $attachment );
+            }
         }
     }
 
@@ -220,6 +346,7 @@ class Email_Mailgun {
             'from_address'    => ['email' => '', 'name'  => ''],
             'to_address'      => ['email' => '', 'name'  => ''],
             'cc_address'      => ['email' => '', 'name'  => ''],
+            'headers'         => [],
             'customer_header' => ['key'   => '', 'value' => ''],
             'attachment'      => '',
             'message'         => ''
@@ -231,6 +358,7 @@ class Email_Mailgun {
         $this->set_from_address( $data['from_address'] );
         $this->set_to_address( $data['to_address'] );
         $this->set_cc_address( $data['cc_address'] );
+        $this->set_headers( $data['headers'] );
         $this->set_custom_headers( $data['customer_header'] );
         $this->set_attachment( $data['attachment'] );
         $this->set_message( $data['message'] );
