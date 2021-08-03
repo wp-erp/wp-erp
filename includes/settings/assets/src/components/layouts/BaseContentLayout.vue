@@ -134,7 +134,6 @@ import MultiSelect from '../select/MultiSelect.vue';
 import InputDesc from '../layouts/partials/InputDesc.vue';
 import RadioSwitch from './partials/Switch.vue';
 import { generateFormDataFromObject } from "../../utils/FormDataHandler";
-
 var $ = jQuery;
 
 export default {
@@ -341,6 +340,7 @@ export default {
 
                     if (response.success) {
                         self.showAlert("success", response.data.message);
+                        self.$store.dispatch("formdata/setFormData", requestData);
                     } else {
                         self.showAlert("error", response.data);
                     }
