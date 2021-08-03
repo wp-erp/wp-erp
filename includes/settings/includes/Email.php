@@ -275,12 +275,17 @@ class Email extends Template {
     public function get_email_prodivers() {
         $providers = [];
 
+        $erp_is_enable_smtp    = erp_is_smtp_enabled();
+        $erp_is_enable_mailgun = erp_is_mailgun_enabled();
+        $erp_is_enable_imap    = erp_is_imap_active();
+        $erp_is_enable_gmail   = wperp()->google_auth->is_active();
+
         $providers['smtp'] = [
             'type'         => 'outgoing',
             'name'         => __( 'SMTP', 'erp' ),
             'description'  => __( 'Email outgoing settings for ERP.', 'erp' ),
-            'enabled'      => erp_is_smtp_enabled(),
-            'is_active'    => erp_is_smtp_enabled(),
+            'enabled'      => $erp_is_enable_smtp,
+            'is_active'    => $erp_is_enable_smtp,
             'actions'      => '',
             'icon_enable'  => WPERP_ASSETS . '/images/wperp-settings/email-smtp-enable.png',
             'icon_disable' => WPERP_ASSETS . '/images/wperp-settings/email-smtp-disable.png',
@@ -290,8 +295,8 @@ class Email extends Template {
             'type'         => 'outgoing',
             'name'         => __( 'Mailgun', 'erp' ),
             'description'  => '',
-            'enabled'      => erp_is_mailgun_enabled(),
-            'is_active'    => erp_is_mailgun_enabled(),
+            'enabled'      => $erp_is_enable_mailgun,
+            'is_active'    => $erp_is_enable_mailgun,
             'actions'      => '',
             'icon_enable'  => WPERP_ASSETS . '/images/wperp-settings/email-mailgun-enable.png',
             'icon_disable' => WPERP_ASSETS . '/images/wperp-settings/email-mailgun-disable.png',
@@ -301,8 +306,8 @@ class Email extends Template {
             'type'         => 'incoming',
             'name'         => __( 'IMAP Connection', 'erp' ),
             'description'  => __( 'Connect to Custom IMAP server', 'erp' ),
-            'enabled'      => erp_is_imap_active(),
-            'is_active'    => erp_is_imap_active(),
+            'enabled'      => $erp_is_enable_imap,
+            'is_active'    => $erp_is_enable_imap,
             'actions'      => '',
             'icon_enable'  => WPERP_ASSETS . '/images/wperp-settings/email-imap-enable.png',
             'icon_disable' => WPERP_ASSETS . '/images/wperp-settings/email-imap-disable.png',
@@ -312,8 +317,8 @@ class Email extends Template {
             'type'         => 'incoming',
             'name'         => __( 'Google Connect', 'erp' ),
             'description'  => __( 'Connect your Gmail or Gsuite account', 'erp' ),
-            'enabled'      => wperp()->google_auth->is_active(),
-            'is_active'    => wperp()->google_auth->is_active(),
+            'enabled'      => $erp_is_enable_gmail,
+            'is_active'    => $erp_is_enable_gmail,
             'actions'      => '',
             'icon_enable'  => WPERP_ASSETS . '/images/wperp-settings/email-google-enable.png',
             'icon_disable' => WPERP_ASSETS . '/images/wperp-settings/email-google-disable.png',
@@ -373,7 +378,7 @@ class Email extends Template {
      * @return string|int imap_connection as input label
      */
     public function imap_status( $is_label = false ) {
-        $options     = get_option( 'erp_settings_erp-crm_email_connect_imap', [] );
+        $options     = get_option( 'erp_settings_erp-email_imap', [] );
         $imap_status = (bool) isset( $options['imap_status'] ) ? $options['imap_status'] : 0;
 
         if ( $is_label ) {
