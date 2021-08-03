@@ -35,6 +35,7 @@ class Ajax {
         $this->action( 'wp_ajax_erp_update_email_template', 'update_email_template' );
         $this->action( 'wp_ajax_erp_smtp_test_connection', 'smtp_test_connection' );
         $this->action( 'wp_ajax_erp_mailgun_test_connection', 'mailgun_test_connection' );
+        $this->action( 'wp_ajax_erp_settings_get_email_providers', 'get_email_providers' );
     }
 
     /**
@@ -479,5 +480,25 @@ class Ajax {
         } catch ( \Exception $e ) {
             $this->send_error( $e->getMessage() );
         }
+    }
+
+    /**
+     * Get All Email providers list
+     *
+     * @since 1.9.1
+     *
+     * @return mixed
+     */
+    public function get_email_providers() {
+        $this->verify_nonce( 'erp-settings-nonce' );
+
+        if ( ! current_user_can( 'manage_options' ) ) {
+            $this->send_error( erp_get_message( ['type' => 'error_permission'] ) );
+        }
+
+        $email_settings  = ( new \WeDevs\ERP\Settings\Email() );
+        $email_providers = $email_settings->get_email_prodivers();
+
+        $this->send_success( $email_providers );
     }
 }
