@@ -425,7 +425,44 @@ class Ajax {
             $extensions = map_deep( wp_unslash( $_REQUEST['extensions'] ), 'sanitize_text_field' );
 
             foreach ( $extensions as $ext ) {
-                update_option( $ext['id'], $ext['license'] );
+                $old_key = get_option( $ext['id'] );
+
+                if ( $old_key != $ext['license'] ) {
+                    update_option( $ext['id'], $ext['license'] );
+                }
+
+                $status = erp_get_license_status( $ext );
+
+                if ( is_object( $status ) && 'valid' === $status->license ) {
+                    continue;
+                }
+
+                $license_key = get_option( $ext['id'] );
+
+                if ( ! empty( $license_key ) ) {
+                    $api_params = [
+                        'edd_action'=> 'activate_license',
+                        'license'   => $license_key,
+                        'item_name' => urlencode( $ext['name'] ),
+                        'url'       => home_url(),
+                    ];
+            
+                    $response = wp_remote_post( 'https://wperp.com/', [
+                        'timeout'   => 15,
+                        'sslverify' => false,
+                        'body'      => $api_params,
+                    ] );
+            
+                    if ( is_wp_error( $response ) ) {
+                        return false;
+                    }
+            
+                    $license_data = json_decode( wp_remote_retrieve_body( $response ) );
+
+                    if ( $license_data ) {
+                        update_option( "{$ext['id']}_status}", $license_data );
+                    }
+                }
             }
         }
 
