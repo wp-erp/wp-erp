@@ -33,6 +33,9 @@ class Ajax {
         $this->action( 'wp_ajax_erp_update_email_status', 'update_email_status' );
         $this->action( 'wp_ajax_erp_update_email_template', 'update_email_template' );
         $this->action( 'wp_ajax_erp_smtp_test_connection', 'smtp_test_connection' );
+
+        // License settings
+        $this->action( 'wp_ajax_erp_settings_save_licenses', 'save_licenses' );
     }
 
     /**
@@ -402,5 +405,30 @@ class Ajax {
         } catch ( \Exception $e ) {
             $this->send_error( $e->getMessage() );
         }
+    }
+
+    /**
+     * Saves addon license data
+     * 
+     * @since 1.9.1
+     *
+     * @return mixed
+     */
+    public function save_licenses() {
+        $this->verify_nonce( 'erp-settings-nonce' );
+
+        if ( ! current_user_can( 'manage_options' ) ) {
+            $this->send_error( erp_get_message( [ 'type' => 'error_permission' ] ) );
+        }
+
+        if ( ! empty( $_REQUEST['extensions'] ) ) {
+            $extensions = map_deep( wp_unslash( $_REQUEST['extensions'] ), 'sanitize_text_field' );
+
+            foreach ( $extensions as $ext ) {
+                update_option( $ext['id'], $ext['license'] );
+            }
+        }
+
+        $this->send_success( __( 'Licenses saved succesfully', 'erp' ) );
     }
 }
