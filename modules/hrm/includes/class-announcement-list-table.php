@@ -278,7 +278,7 @@ class Announcement_List_Table extends WP_List_Table {
      */
     public function get_views() {
         $status_links   = [];
-        $base_link      = admin_url( 'admin.php?page=erp-hr&section=people&sub-section=&sub-section=announcement' );
+        $base_link      = admin_url( 'admin.php?page=erp-hr&section=people&sub-section=announcement' );
 
         $status = 'publish';
         if ( ! empty( $_GET['status'] ) ) {
