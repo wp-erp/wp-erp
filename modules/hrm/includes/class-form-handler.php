@@ -71,15 +71,19 @@ class Form_Handler {
                     case 'employee':
                         $this->employee_bulk_action();
                         break;
-        
+
                     case 'department':
                         $this->department_bulk_action();
                         break;
-        
+
                     case 'designation':
                         $this->designation_bulk_action();
                         break;
-                    
+
+                    case 'announcement':
+                        $this->announcement_bulk_action();
+                        break;
+
                     default:
                         return;
                 }
@@ -562,6 +566,54 @@ class Form_Handler {
 
                     if ( in_array( false, $resp ) ) {
                         $redirect = add_query_arg( [ 'department_delete' => 'item_deleted' ], $redirect );
+                    }
+
+                    wp_redirect( $redirect );
+                    exit();
+            }
+        }
+    }
+
+    /**
+     * Announcement handle bulk action
+     *
+     * @since 1.9.1
+     *
+     * @return void [redirection]
+     */
+    public function announcement_bulk_action() {
+        // Check nonce validation
+        if ( ! $this->verify_current_page_screen( 'erp-hr', 'bulk-announcements' ) ) {
+            return;
+        }
+
+        // Check permission if not hr manager then go out from here
+        if ( ! current_user_can( erp_hr_get_manager_role() ) ) {
+            wp_die( esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
+        $announcement_table = new \WeDevs\ERP\HRM\Announcement_List_Table();
+        $action         = $announcement_table->current_action();
+
+        if ( $action ) {
+            $req_uri_bulk = ( isset( $_SERVER['REQUEST_URI'] ) ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+            $redirect     = remove_query_arg( [
+                '_wp_http_referer',
+                '_wpnonce',
+                'action',
+                'action2',
+            ], $req_uri_bulk );
+            $resp     = [];
+
+            switch ( $action ) {
+                case 'delete_announcement':
+                    if ( ! empty( $_GET['announcement_ids'] ) ) {
+                        $announcement_ids = array_map( 'sanitize_text_field', wp_unslash( $_GET['announcement_ids'] ) );
+                        $resp = erp_hr_trash_announcements( $announcement_ids );
+                    }
+
+                    if ( in_array( false, $resp ) ) {
+                        $redirect = add_query_arg( [ 'announcement_delete' => 'item_deleted' ], $redirect );
                     }
 
                     wp_redirect( $redirect );
