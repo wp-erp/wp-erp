@@ -10,6 +10,8 @@ use function PHPSTORM_META\type;
  *  List table class
  */
 class Announcement_List_Table extends WP_List_Table {
+    private $counts = [];
+
     public function __construct() {
         parent::__construct( [
             'singuler'  => 'announcement',
@@ -240,11 +242,39 @@ class Announcement_List_Table extends WP_List_Table {
             ];
         }
 
+        if ( ! empty( $_GET['status'] ) ) {
+            $args['post_status'] = sanitize_text_field( wp_unslash( $_GET['status'] ) );
+        }
+
         $this->items = erp_hr_get_announcements( $args );
 
         $this->set_pagination_args( [
             'total_items' => erp_hr_get_announcements_count( $args ),
             'per_page'    => $per_page,
         ] );
+
+        $args['post_status'] = 'publish';
+        $all_count           = erp_hr_get_announcements_count( $args ); // get published announcements
+        $args['post_status'] = 'trash';
+        $trashed_count       = erp_hr_get_announcements_count( $args ); // get trashed announcements
+        $this->counts        = [
+            'all'   => $all_count,
+            'trash' => $trashed_count,
+        ];
+    }
+
+    /**
+     * Set the views
+     *
+     * @return array
+     */
+    public function get_views() {
+        $status_links   = [];
+        $base_link      = admin_url( 'admin.php?page=erp-hr&section=people&sub-section=&sub-section=announcement' );
+
+        $status_links['all']   = sprintf( '<a href="%s" class="status-all">%s <span class="count">(%s)</span></a>', $base_link, __( 'Publish', 'erp' ), $this->counts['all'] );
+        $status_links['trash'] = sprintf( '<a href="%s" class="status-trash">%s <span class="count">(%s)</span></a>', add_query_arg( [ 'status' => 'trash' ], $base_link ), __( 'Trash', 'erp' ), $this->counts['trash'] );
+
+        return $status_links;
     }
 }
