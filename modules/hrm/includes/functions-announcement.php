@@ -198,12 +198,60 @@ function erp_hr_get_announcements_count( $args = [] ) {
  *
  * @return array
  */
-function erp_hr_trash_announcements( $announcement_ids ) {
+function erp_hr_trash_announcements( $announcement_ids, $delete = false ) {
     $success = [];
     foreach ( $announcement_ids as $id ) {
-        if ( ! wp_trash_post( $id ) ) {
-            $success[] = false;
+        if ( $delete ) {
+            if ( ! wp_delete_post( $id ) ) {
+                $success[] = false;
+            }
+        }
+        else {
+            if ( ! wp_trash_post( $id ) ) {
+                $success[] = false;
+            }
         }
     }
     return $success;
+}
+
+/**
+ * Get the count of the announcements by their status
+ *
+ * @since 1.9.1
+ *
+ * @param int query arguments
+ *
+ * @return array count of announcement statuses
+ */
+function erp_hr_get_status_counts( $args ) {
+    $defaults = [
+        'numberposts'     => -1,
+        'offset'          => 0,
+        'post_type'       => 'erp_hr_announcement',
+    ];
+
+    if ( ! empty( $args['numberposts'] ) ) {
+        unset( $args['numberposts'] );
+    }
+
+    if ( ! empty( $args['offset'] ) ) {
+        unset( $args['offset'] );
+    }
+
+    if ( ! empty( $args['date_query'] ) ) {
+        unset( $args['date_query'] );
+    }
+
+    $args = wp_parse_args( $args, $defaults );
+
+    $counts = [];
+    $statuses = [ 'publish', 'draft', 'trash' ];
+
+    foreach ( $statuses as $status ) {
+        $args['post_status'] = $status;
+        $counts[ $status ]     = erp_hr_get_announcements_count( $args );
+    }
+
+    return $counts;
 }
