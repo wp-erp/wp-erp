@@ -1,8 +1,17 @@
 <?php do_action( 'erp-hr-employee-single-top', $employee ); ?>
 
 <div class="postbox leads-actions">
-    <div class="handlediv" title="<?php esc_html_e( 'Click to toggle', 'erp' ); ?>"><br></div>
-    <h3 class="hndle"><span><?php esc_html_e( 'Basic Info', 'erp' ); ?></span></h3>
+    <div class="postbox-header">
+        <h3 class="hndle"><?php esc_html_e( 'Basic Info', 'erp' ); ?></h3>
+
+        <div class="handle-actions hide-if-no-js">
+            <button type="button" class="handlediv" aria-expanded="true">
+                <span class="screen-reader-text"><?php _e( 'Click to toggle', 'erp' ); ?></span>
+                <span class="toggle-indicator" aria-hidden="true"></span>
+            </button>
+        </div>
+    </div>
+    
     <div class="inside">
         <ul class="erp-list two-col separated">
             <li><?php erp_print_key_value( __( 'First Name', 'erp' ), $employee->first_name ); ?></li>
@@ -17,8 +26,22 @@
 <?php if ( current_user_can( 'erp_edit_employee' ) || get_current_user_id() == $employee->user_id ) { ?>
 
     <div class="postbox leads-actions">
-        <div class="handlediv" title="<?php esc_html_e( 'Click to toggle', 'erp' ); ?>"><br></div>
-        <h3 class="hndle"><span><?php esc_html_e( 'Work', 'erp' ); ?></span><?php echo erp_help_tip( esc_html__( 'To update work information of this employee, go to Job > Job Information > Update Job Information.', 'erp' ) ); ?></h3>
+        <div class="postbox-header">
+            <div class="">
+                <h3 class="hndle">
+                    <span><?php esc_html_e( 'Work', 'erp' ); ?></span>
+                    <?php echo erp_help_tip( esc_html__( 'To update work information of this employee, go to Job > Job Information > Update Job Information.', 'erp' ) ); ?>
+                </h3>
+            </div>
+
+            <div class="handle-actions hide-if-no-js">
+                <button type="button" class="handlediv" aria-expanded="true">
+                    <span class="screen-reader-text"><?php _e( 'Click to toggle', 'erp' ); ?></span>
+                    <span class="toggle-indicator" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>
+        
         <div class="inside">
             <ul class="erp-list two-col separated">
                 <li><?php erp_print_key_value( __( 'Department', 'erp' ), $employee->get_department( 'view' ) ); ?></li>
@@ -52,8 +75,17 @@
     </div><!-- .postbox -->
 
     <div class="postbox leads-actions">
-        <div class="handlediv" title="<?php esc_html_e( 'Click to toggle', 'erp' ); ?>"><br></div>
-        <h3 class="hndle"><span><?php esc_html_e( 'Personal Details', 'erp' ); ?></span></h3>
+        <div class="postbox-header">
+            <h3 class="hndle"><?php esc_html_e( 'Personal Details', 'erp' ); ?></h3>
+
+            <div class="handle-actions hide-if-no-js">
+                <button type="button" class="handlediv" aria-expanded="true">
+                    <span class="screen-reader-text"><?php _e( 'Click to toggle', 'erp' ); ?></span>
+                    <span class="toggle-indicator" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>
+        
         <div class="inside">
             <ul class="erp-list two-col separated">
                 <li><?php erp_print_key_value( __( 'Blood Group', 'erp' ), $employee->get_bloog_group() ); ?></li>
@@ -84,8 +116,17 @@
     <?php do_action( 'erp-hr-employee-single-after-personal', $employee ); ?>
 
     <div class="postbox leads-actions erp-work-experience-wrap">
-        <div class="handlediv" title="<?php esc_html_e( 'Click to toggle', 'erp' ); ?>"><br></div>
-        <h3 class="hndle"><span><?php esc_html_e( 'Work Experience', 'erp' ); ?></span></h3>
+        <div class="postbox-header">
+            <h3 class="hndle"><?php esc_html_e( 'Work Experience', 'erp' ); ?></h3>
+
+            <div class="handle-actions hide-if-no-js">
+                <button type="button" class="handlediv" aria-expanded="true">
+                    <span class="screen-reader-text"><?php _e( 'Click to toggle', 'erp' ); ?></span>
+                    <span class="toggle-indicator" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>
+        
         <div class="inside">
 
             <?php
@@ -139,8 +180,17 @@
     </div><!-- .postbox -->
 
     <div class="postbox leads-actions">
-        <div class="handlediv" title="<?php esc_html_e( 'Click to toggle', 'erp' ); ?>"><br></div>
-        <h3 class="hndle"><span><?php esc_html_e( 'Education', 'erp' ); ?></span></h3>
+        <div class="postbox-header">
+            <h3 class="hndle"><?php esc_html_e( 'Education', 'erp' ); ?></h3>
+
+            <div class="handle-actions hide-if-no-js">
+                <button type="button" class="handlediv" aria-expanded="true">
+                    <span class="screen-reader-text"><?php _e( 'Click to toggle', 'erp' ); ?></span>
+                    <span class="toggle-indicator" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>
+
         <div class="inside">
             <?php
             $educations = $employee->get_educations();
@@ -215,8 +265,17 @@
     </div><!-- .postbox -->
 
     <div class="postbox leads-actions">
-        <div class="handlediv" title="<?php esc_html_e( 'Click to toggle', 'erp' ); ?>"><br></div>
-        <h3 class="hndle"><span><?php esc_html_e( 'Dependents', 'erp' ); ?></span></h3>
+        <div class="postbox-header">
+            <h3 class="hndle"><?php esc_html_e( 'Dependents', 'erp' ); ?></h3>
+
+            <div class="handle-actions hide-if-no-js">
+                <button type="button" class="handlediv" aria-expanded="true">
+                    <span class="screen-reader-text"><?php _e( 'Click to toggle', 'erp' ); ?></span>
+                    <span class="toggle-indicator" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>
+
         <div class="inside">
 
             <?php
@@ -269,8 +328,17 @@
     <?php if ( $employee->get_status() == 'Terminated' ) { ?>
 
         <div class="postbox leads-actions">
-            <div class="handlediv" title="<?php esc_html_e( 'Click to toggle', 'erp' ); ?>"><br></div>
-            <h3 class="hndle"><span><?php esc_html_e( 'Termination', 'erp' ); ?></span></h3>
+            <div class="postbox-header">
+                <h3 class="hndle"><?php esc_html_e( 'Termination', 'erp' ); ?></h3>
+
+                <div class="handle-actions hide-if-no-js">
+                    <button type="button" class="handlediv" aria-expanded="true">
+                        <span class="screen-reader-text"><?php _e( 'Click to toggle', 'erp' ); ?></span>
+                        <span class="toggle-indicator" aria-hidden="true"></span>
+                    </button>
+                </div>
+            </div>
+
             <div class="inside">
 
                 <?php $termination_data = get_user_meta( $employee->get_user_id(), '_erp_hr_termination', true ); ?>
