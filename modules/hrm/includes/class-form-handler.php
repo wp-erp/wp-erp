@@ -630,6 +630,18 @@ class Form_Handler {
 
                     wp_redirect( $redirect );
                     exit();
+                case 'restore_announcements':
+                    if ( ! empty( $_GET['announcement_ids'] ) ) {
+                        $announcement_ids = array_map( 'sanitize_text_field', wp_unslash( $_GET['announcement_ids'] ) );
+                        $resp             = erp_hr_restore_announcements( $announcement_ids );
+                    }
+
+                    if ( in_array( false, $resp ) ) {
+                        $redirect = add_query_arg( [ 'announcement_restore' => 'item_restored' ], $redirect );
+                    }
+
+                    wp_redirect( $redirect );
+                    exit();
             }
         }
     }
