@@ -325,7 +325,7 @@
         </div>
     </div><!-- .postbox -->
 
-    <?php if ( $employee->get_status() == 'Terminated' ) { ?>
+    <?php if ( $employee->get_status() == 'terminated' ) { ?>
 
         <div class="postbox leads-actions">
             <div class="postbox-header">
