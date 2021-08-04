@@ -103,13 +103,21 @@ class Announcement_List_Table extends WP_List_Table {
         ];
 
         $params['action'] = 'edit';
-        $edit_url         = add_query_arg( $params, admin_url( 'post.php' ) );
+        $edit_text        = esc_html__( 'Edit', 'erp' );
+        $edit_title       = esc_html__( 'Edit this item', 'erp' );
+        if ( ! empty( $_GET['status'] ) && wp_unslash( $_GET['status'] ) === 'trash' ) {
+            $params['action']   = 'untrash';
+            $params['_wpnonce'] = wp_create_nonce( 'untrash-post_' . $item->ID );
+            $edit_text          = esc_html__( 'Restore', 'erp' );
+            $edit_title         = esc_html__( 'Restore this item', 'erp' );
+        }
+        $edit_url = add_query_arg( $params, admin_url( 'post.php' ) );
 
-        $params['action']   = 'trash';
-        $params['_wpnonce'] = wp_create_nonce( 'trash-post_' . $item->ID );
+        $params['action']   = ( ! empty( $_GET['status'] ) && wp_unslash( $_GET['status'] ) === 'trash' ) ? 'delete' : 'trash';
+        $params['_wpnonce'] = wp_create_nonce( $params['action'] . '-post_' . $item->ID );
         $delete_url         = add_query_arg( $params, admin_url( 'post.php' ) );
 
-        $actions['edit']   = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $edit_url, $item->id, esc_html__( 'Edit this item', 'erp' ), esc_html__( 'Edit', 'erp' ) );
+        $actions['edit']   = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $edit_url, $item->id, $edit_title, $edit_text );
         $actions['delete'] = sprintf( '<a href="%s" class="submitcopy" data-id="%d" title="%s">%s</a>', $delete_url, $item->id, esc_html__( 'Delete this item', 'erp' ), esc_html__( 'Delete', 'erp' ) );
 
         return sprintf( '<strong>%s</strong> %s', esc_html( $item->post_title ), $this->row_actions( $actions ) );
@@ -164,7 +172,10 @@ class Announcement_List_Table extends WP_List_Table {
         $actions = [
             'delete_announcement'   => __( 'Move to trash', 'erp' ),
         ];
-
+        if ( ! empty( $_GET['status'] ) && wp_unslash( $_GET['status'] ) === 'trash' ) {
+            unset( $actions['delete_announcement'] );
+            $actions['delete_announcement_p'] = __( 'Delete Parmanently', 'erp' );
+        }
         return $actions;
     }
 
@@ -184,6 +195,7 @@ class Announcement_List_Table extends WP_List_Table {
 
         $ann_start_date = ( ! empty( $_GET['ann_start_date'] ) ) ? sanitize_text_field( wp_unslash( $_GET['ann_start_date'] ) ) : '';
         $ann_end_date   = ( ! empty( $_GET['ann_end_date'] ) ) ? sanitize_text_field( wp_unslash( $_GET['ann_end_date'] ) ) : '';
+        $status   = ( ! empty( $_GET['status'] ) ) ? sanitize_text_field( wp_unslash( $_GET['status'] ) ) : '';
         ?>
         <div class="wperp-filter-dropdown" style="margin: -46px 0 0 0;">
             <a class="wperp-btn btn--default"><span class="dashicons dashicons-filter"></span>Filters<span class="dashicons dashicons-arrow-down-alt2"></span></a>
@@ -193,10 +205,11 @@ class Announcement_List_Table extends WP_List_Table {
                     <h3><?php esc_html_e( 'Filter', 'erp' ); ?></h3>
                     <div class="wperp-filter-panel-body">
                         <label for="ann_start_date"><?php esc_html_e( 'Start Date', 'erp' ); ?></label>
-                        <input autocomplete="off" style="border-radius: 3px; width: 100%; border: 1px black solid;" class="erp-date-field" name="ann_start_date" id="ann_start_date" value="<?php echo $ann_start_date ?>"/>
+                        <input autocomplete="off" style="border-radius: 3px; width: 100%; border: 1px black solid;" class="erp-date-field" name="ann_start_date" id="ann_start_date" value="<?php echo $ann_start_date; ?>"/>
 
                         <label for="ann_end_date"><?php esc_html_e( 'End Date', 'erp' ); ?></label>
-                        <input autocomplete="off" style="border-radius: 3px; width: 100%; border: 1px black solid;" class="erp-date-field" name="ann_end_date" id="ann_end_date" value="<?php echo $ann_start_date ?>"/>
+                        <input autocomplete="off" style="border-radius: 3px; width: 100%; border: 1px black solid;" class="erp-date-field" name="ann_end_date" id="ann_end_date" value="<?php echo $ann_end_date; ?>"/>
+                        <input hidden name="status" value="<?php echo $status; ?>"/>
                     </div>
 
                     <div class="wperp-filter-panel-footer">
@@ -253,18 +266,13 @@ class Announcement_List_Table extends WP_List_Table {
             'per_page'    => $per_page,
         ] );
 
-        $args['post_status'] = 'publish';
-        $all_count           = erp_hr_get_announcements_count( $args ); // get published announcements
-        $args['post_status'] = 'trash';
-        $trashed_count       = erp_hr_get_announcements_count( $args ); // get trashed announcements
-        $this->counts        = [
-            'all'   => $all_count,
-            'trash' => $trashed_count,
-        ];
+        $this->counts = erp_hr_get_status_counts( $args );
     }
 
     /**
      * Set the views
+     *
+     * @since 1.9.1
      *
      * @return array
      */
@@ -272,8 +280,13 @@ class Announcement_List_Table extends WP_List_Table {
         $status_links   = [];
         $base_link      = admin_url( 'admin.php?page=erp-hr&section=people&sub-section=&sub-section=announcement' );
 
-        $status_links['all']   = sprintf( '<a href="%s" class="status-all">%s <span class="count">(%s)</span></a>', $base_link, __( 'Publish', 'erp' ), $this->counts['all'] );
-        $status_links['trash'] = sprintf( '<a href="%s" class="status-trash">%s <span class="count">(%s)</span></a>', add_query_arg( [ 'status' => 'trash' ], $base_link ), __( 'Trash', 'erp' ), $this->counts['trash'] );
+        $status = 'publish';
+        if ( ! empty( $_GET['status'] ) ) {
+            $status = sanitize_text_field( wp_unslash( $_GET['status'] ) );
+        }
+        $status_links['publish'] = sprintf( '<a href="%s" class="status-publish %s">%s <span class="count">(%s)</span></a>', $base_link, $status === 'publish' ? 'current' : '', __( 'Publish', 'erp' ), $this->counts['publish'] );
+        $status_links['draft']   = sprintf( '<a href="%s" class="status-draft %s">%s <span class="count">(%s)</span></a>', add_query_arg( [ 'status' => 'draft' ], $base_link ), $status === 'draft' ? 'current' : '', __( 'Draft', 'erp' ), $this->counts['draft'] );
+        $status_links['trash']   = sprintf( '<a href="%s" class="status-trash %s">%s <span class="count">(%s)</span></a>', add_query_arg( [ 'status' => 'trash' ], $base_link ), $status === 'trash' ? 'current' : '', __( 'Trash', 'erp' ), $this->counts['trash'] );
 
         return $status_links;
     }
