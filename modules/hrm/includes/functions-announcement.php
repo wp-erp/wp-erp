@@ -142,11 +142,11 @@ function erp_hr_send_announcement_email( $employee_ids, $post_id ) {
  */
 function erp_hr_get_announcements( $args = [] ) {
     $defaults = [
-        'number'     => 20,
-        'offset'     => 0,
-        'orderby'    => 'post_date',
-        'order'      => 'DESC',
-        'post_type'  => 'erp_hr_announcement',
+        'numberposts'     => 20,
+        'offset'          => 0,
+        'orderby'         => 'post_date',
+        'order'           => 'DESC',
+        'post_type'       => 'erp_hr_announcement',
     ];
 
     $args = wp_parse_args( $args, $defaults );
@@ -167,15 +167,15 @@ function erp_hr_get_announcements( $args = [] ) {
  */
 function erp_hr_get_announcements_count( $args = [] ) {
     $defaults = [
-        'number'     => -1,
-        'offset'     => 0,
-        'orderby'    => 'post_date',
-        'order'      => 'DESC',
-        'post_type'  => 'erp_hr_announcement',
+        'numberposts'     => -1,
+        'offset'          => 0,
+        'orderby'         => 'post_date',
+        'order'           => 'DESC',
+        'post_type'       => 'erp_hr_announcement',
     ];
 
-    if ( ! empty( $args['number'] ) ) {
-        unset( $args['number'] );
+    if ( ! empty( $args['numberposts'] ) ) {
+        unset( $args['numberposts'] );
     }
 
     if ( ! empty( $args['offset'] ) ) {
