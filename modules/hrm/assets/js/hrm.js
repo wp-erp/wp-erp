@@ -2018,7 +2018,7 @@
                 var end = $( '#ann_end_date' ).val();
 
                 if( ! start || ! end ) {
-                    swal( '', 'Invalid filter data', 'warning' );
+                    swal( '', wpErpHr.invalid_filter_data, 'warning' );
                     return;
                 }
 
@@ -2026,7 +2026,7 @@
                 end = new Date( end ).getTime();
 
                 if( start > end ) {
-                    swal( 'Invalid filter data', 'Start date must be earlier than End date', 'warning' );
+                    swal( wpErpHr.invalid_filter_data, wpErpHr.start_end_date, 'error' );
                     return;
                 }
 
