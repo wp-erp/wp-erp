@@ -47,6 +47,8 @@ class Announcement_List_Table extends WP_List_Table {
     /**
      * Default column values if no callback found
      *
+     * @since 1.9.1
+     *
      * @param object $item
      * @param string $column_name
      *
@@ -72,6 +74,8 @@ class Announcement_List_Table extends WP_List_Table {
     /**
      * Render checkbox column
      *
+     * @since 1.9.1
+     *
      * @param Object $item
      *
      * @return void
@@ -82,6 +86,8 @@ class Announcement_List_Table extends WP_List_Table {
 
     /**
      * Render the name column
+     *
+     * @since 1.9.1
      *
      * @param Object $item
      *
@@ -109,6 +115,8 @@ class Announcement_List_Table extends WP_List_Table {
 
     /**
      * Render Sent To Column
+     *
+     * @since 1.9.1
      *
      * @param Object $item
      *
@@ -143,6 +151,13 @@ class Announcement_List_Table extends WP_List_Table {
         return count( $sent_to ) === 0 ? 'None' : implode( ', ', $sent_to );
     }
 
+    /**
+     * Get bulk actions for the table
+     *
+     * @since 1.9.1
+     *
+     * @return void
+     */
     public function get_bulk_actions() {
         $actions = [
             'delete_announcement'   => __( 'Move to trash', 'erp' ),
@@ -152,7 +167,52 @@ class Announcement_List_Table extends WP_List_Table {
     }
 
     /**
+     * Extra filters for the list table
+     *
+     * @since 1.9.1
+     *
+     * @param string $which
+     *
+     * @return void
+     */
+    public function extra_tablenav( $which ) {
+        if ( $which != 'top' ) {
+            return;
+        }
+
+        $ann_start_date = ( ! empty( $_GET['ann_start_date'] ) ) ? sanitize_text_field( wp_unslash( $_GET['ann_start_date'] ) ) : '';
+        $ann_end_date   = ( ! empty( $_GET['ann_end_date'] ) ) ? sanitize_text_field( wp_unslash( $_GET['ann_end_date'] ) ) : '';
+        ?>
+        <div class="wperp-filter-dropdown" style="margin: -46px 0 0 0;">
+            <a class="wperp-btn btn--default"><span class="dashicons dashicons-filter"></span>Filters<span class="dashicons dashicons-arrow-down-alt2"></span></a>
+
+            <div class="erp-dropdown-filter-content" id="erp-dropdown-content">
+                <div class="wperp-filter-panel wperp-filter-panel-default">
+                    <h3><?php esc_html_e( 'Filter', 'erp' ); ?></h3>
+                    <div class="wperp-filter-panel-body">
+                        <label for="ann_start_date"><?php esc_html_e( 'Start Date', 'erp' ); ?></label>
+                        <input autocomplete="off" style="border-radius: 3px; width: 100%; border: 1px black solid;" class="erp-date-field" name="ann_start_date" id="ann_start_date" value="<?php echo $ann_start_date ?>"/>
+
+                        <label for="ann_end_date"><?php esc_html_e( 'End Date', 'erp' ); ?></label>
+                        <input autocomplete="off" style="border-radius: 3px; width: 100%; border: 1px black solid;" class="erp-date-field" name="ann_end_date" id="ann_end_date" value="<?php echo $ann_start_date ?>"/>
+                    </div>
+
+                    <div class="wperp-filter-panel-footer">
+                        <input type="submit" class="wperp-btn btn--cancel btn--filter" value="<?php esc_html_e( 'Cancel', 'erp' ); ?>" name="hide_filter">
+                        <input type="submit" class="wperp-btn btn--reset btn--filter" value="<?php esc_html_e( 'Reset', 'erp' ); ?>" name="reset_filter_ann">
+                        <input type="submit" name="filter_announcements" id="filter" class="wperp-btn btn--primary" value="<?php esc_html_e( 'Apply', 'erp' ); ?>">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <?php
+    }
+
+    /**
      * Prepare the class items
+     *
+     * @since 1.9.1
      *
      * @return void
      */
@@ -171,6 +231,14 @@ class Announcement_List_Table extends WP_List_Table {
             'offset'      => $offset,
             'numberposts' => $per_page,
         ];
+
+        if ( ! empty( $_GET['ann_start_date'] ) && ! empty( $_GET['ann_end_date'] ) ) {
+            $args['date_query'] = [
+                'after'     => sanitize_text_field( wp_unslash( $_GET['ann_start_date'] ) ),
+                'end'       => sanitize_text_field( wp_unslash( $_GET['ann_end_date'] ) ),
+                'inclusive' => true,
+            ];
+        }
 
         $this->items = erp_hr_get_announcements( $args );
 
