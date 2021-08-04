@@ -126,7 +126,7 @@
                 e.preventDefault();
                 $( '#ann_start_date' ).val( '' );
                 $( '#ann_end_date' ).val( '' );
-                $( 'input[name=filter_announcements]' ).click();
+                $( '#erp-announcement-table-wrap .list-table-inner form' ).submit();
             });
             $( 'body' ).on( 'click', 'input[name=filter_announcements]', this.announcement.validateFilterForm );
         },
