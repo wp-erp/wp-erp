@@ -740,14 +740,14 @@ function erp_crm_get_feed_activity( $args = [] ) {
             $value['extra'] = json_decode( base64_decode( $value['extra'] ), true );
 
             if ( ! empty( $value['extra']['invite_contact'] ) ) {
-                if ( isset( $postdata['assigned_to'] ) &&
+                if (
                     ! empty( $postdata['assigned_to'] ) &&
                     ! in_array( $postdata['assigned_to'], $value['extra']['invite_contact'] )
                 ) {
                     continue;
                 }
 
-                if ( isset( $postdata['created_by'] ) &&
+                if ( 
                     ! empty( $postdata['created_by'] ) &&
                     ! in_array( $postdata['created_by'], $value['extra']['invite_contact'] )
                 ) {
@@ -764,7 +764,7 @@ function erp_crm_get_feed_activity( $args = [] ) {
                 }
             } else {
                 if (
-                    ( isset( $postdata['assigned_to'] ) || isset( $postdata['created_by'] ) ) &&
+                    ( ! empty( $postdata['assigned_to'] ) || ! empty( $postdata['created_by'] ) ) &&
                     (int) $value['created_by']['ID'] !== get_current_user_id()
                 ) {
                     continue;
