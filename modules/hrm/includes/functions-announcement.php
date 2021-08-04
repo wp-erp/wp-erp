@@ -188,3 +188,22 @@ function erp_hr_get_announcements_count( $args = [] ) {
 
     return $announcements_count;
 }
+
+/**
+ * Trash announcements
+ *
+ * @since 1.9.1
+ *
+ * @param array $announcement_ids
+ *
+ * @return array
+ */
+function erp_hr_trash_announcements( $announcement_ids ) {
+    $success = [];
+    foreach ( $announcement_ids as $id ) {
+        if ( ! wp_trash_post( $id ) ) {
+            $success[] = false;
+        }
+    }
+    return $success;
+}
