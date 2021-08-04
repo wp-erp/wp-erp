@@ -151,15 +151,7 @@ function erp_hr_get_announcements( $args = [] ) {
 
     $args = wp_parse_args( $args, $defaults );
 
-    $last_changed  = erp_cache_get_last_changed( 'hrm', 'announcement' );
-    $cache_key     = 'erp-get-announcements-' . md5( serialize( $args ) ) . " : $last_changed";
-    $announcements  = false;// wp_cache_get( $cache_key, 'erp' );
-
-    if ( false === $announcements ) {
-        $announcements = get_posts( $args );
-
-        wp_cache_set( $cache_key, $announcements, 'erp' );
-    }
+    $announcements = get_posts( $args );
 
     return $announcements;
 }
@@ -192,15 +184,7 @@ function erp_hr_get_announcements_count( $args = [] ) {
 
     $args = wp_parse_args( $args, $defaults );
 
-    $last_changed  = erp_cache_get_last_changed( 'hrm', 'announcement' );
-    $cache_key     = 'erp-get-announcements-count-' . md5( serialize( $args ) ) . " : $last_changed";
-    $announcements_count = false;// wp_cache_get( $cache_key, 'erp' );
-
-    if ( false === $announcements_count ) {
-        $announcements_count = count( get_posts( $args ) );
-
-        wp_cache_set( $cache_key, $announcements_count, 'erp' );
-    }
+    $announcements_count = count( get_posts( $args ) );
 
     return $announcements_count;
 }
