@@ -119,7 +119,7 @@ class Google_Auth {
     }
 
     public function has_credentials() {
-        $options = get_option( 'erp_settings_erp-crm_email_connect_gmail', [] );
+        $options = get_option( 'erp_settings_erp-email_gmail', [] );
 
         if ( !isset( $options['client_id'] ) || empty( $options['client_id'] ) ) {
             return false;
