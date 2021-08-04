@@ -77,7 +77,7 @@ class Announcement_List_Table extends WP_List_Table {
      * @return void
      */
     public function column_cb( $item ) {
-        return sprintf( '<input type="checkbox" name="announce[]" value="%d" />', $item->ID );
+        return sprintf( '<input type="checkbox" name="announcement_ids[]" value="%d" />', $item->ID );
     }
 
     /**
@@ -143,13 +143,13 @@ class Announcement_List_Table extends WP_List_Table {
         return count( $sent_to ) === 0 ? 'None' : implode( ', ', $sent_to );
     }
 
-    /* public function get_bulk_actions() {
+    public function get_bulk_actions() {
         $actions = [
             'delete_announcement'   => __( 'Move to trash', 'erp' ),
         ];
 
         return $actions;
-    } */
+    }
 
     /**
      * Prepare the class items
