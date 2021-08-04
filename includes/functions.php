@@ -3549,6 +3549,7 @@ function erp_reset_data() {
             'erp_email_settings_new-task-assigned', 'erp_setup_wizard_ran', 'erp_settings_general',
             'erp_settings_accounting', 'erp_settings_erp-hr_workdays', 'wp_erp_activation_dismiss',
             '_erp_admin_menu', '_erp_adminbar_menu', 'erp_settings_erp-email_general', 'erp_settings_erp-email_smtp',
+            'erp_settings_erp-email_mailgun', 'erp_settings_erp-email_gmail', 'erp_settings_erp-email_imap',
             '_erp_company', 'erp_settings_erp-crm_subscription', 'erp_acct_new_ledgers',
             'erp_email_settings_new-contact-assigned', 'erp_email_settings_hiring-anniversary-wish',
             'wp_erp_install_date', 'widget_erp-subscription-from-widget', 'erp_tracking_notice'
