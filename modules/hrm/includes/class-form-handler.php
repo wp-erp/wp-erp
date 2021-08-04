@@ -618,6 +618,18 @@ class Form_Handler {
 
                     wp_redirect( $redirect );
                     exit();
+                case 'delete_announcement_p':
+                    if ( ! empty( $_GET['announcement_ids'] ) ) {
+                        $announcement_ids = array_map( 'sanitize_text_field', wp_unslash( $_GET['announcement_ids'] ) );
+                        $resp = erp_hr_trash_announcements( $announcement_ids, true );
+                    }
+
+                    if ( in_array( false, $resp ) ) {
+                        $redirect = add_query_arg( [ 'announcement_delete' => 'item_deleted' ], $redirect );
+                    }
+
+                    wp_redirect( $redirect );
+                    exit();
             }
         }
     }
