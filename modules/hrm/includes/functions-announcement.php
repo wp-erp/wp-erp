@@ -255,3 +255,22 @@ function erp_hr_get_announcements_status_counts( $args ) {
 
     return $counts;
 }
+
+/**
+ * Restore announcements from trash
+ *
+ * @since 1.9.1
+ *
+ * @param array $announcement_ids
+ *
+ * @return array
+ */
+function erp_hr_restore_announcements( $announcement_ids ) {
+    $success = [];
+    foreach ( $announcement_ids as $id ) {
+        if ( ! wp_untrash_post( $id ) ) {
+            $success[] = false;
+        }
+    }
+    return $success;
+}
