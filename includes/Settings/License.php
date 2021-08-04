@@ -13,16 +13,38 @@ class License extends Template {
     public function __construct() {
         $this->id    = 'erp-license';
         $this->label = __( 'Licenses', 'erp' );
+        $this->icon  = WPERP_ASSETS . '/images/wperp-settings/integration.png';
+
+        $this->extra = [
+            'extensions' => $this->get_licenses()
+        ];
 
         add_action( 'erp_admin_field_licenses', [ $this, 'integrations' ] );
     }
 
     /**
-     * Get settings array.
+     * Retrieves extension-wise license details
+     * 
+     * @since 1.9.1
+     *
+     * @return void
+     */
+    public function get_licenses() {
+        $extensions = erp_addon_licenses();
+
+        foreach ( $extensions as &$ext ) {
+            $ext['status'] = erp_get_license_status( $ext );
+        }
+    }
+
+    /**
+     * Get section fields
+     * 
+     * @since 1.9.1
      *
      * @return array
      */
-    public function get_settings() {
+    public function get_section_fields( $section = false ) {
         $fields = [
             [
                 'title' => __( 'License Manager', 'erp' ),
@@ -30,87 +52,9 @@ class License extends Template {
                 'type'  => 'title',
                 'id'    => 'integration_settings',
             ],
-
-            [ 'type' => 'licenses' ],
             [ 'type' => 'sectionend', 'id' => 'script_styling_options' ],
         ]; // End general settings
 
         return apply_filters( 'erp_integration_settings', $fields );
     }
-
-    /**
-     * Display integrations settings.
-     *
-     * @return void
-     */
-    public function integrations() {
-        $licenses = erp_addon_licenses(); ?>
-        <tr valign="top">
-            <td class="erp-settings-table-wrapper" colspan="2">
-                <table class="erp-settings-table widefat" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <?php
-                            $columns = apply_filters( 'erp_license_setting_columns', [
-                                'name'       => __( 'Extension', 'erp' ),
-                                'version'    => __( 'Version', 'erp' ),
-                                'license'    => __( 'License Key', 'erp' ),
-                            ] );
-
-                            foreach ( $columns as $key => $column ) {
-                                echo '<th class="erp-settings-table-' . esc_attr( $key ) . '">' . esc_html( $column ) . '</th>';
-                            } ?>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        foreach ( $licenses as $addon ) {
-                            echo '<tr>';
-
-                            foreach ( $columns as $key => $column ) {
-                                switch ( $key ) {
-                                    case 'name':
-                                        echo '<td class="erp-settings-table-' . esc_attr( $key ) . '">
-                                            <strong>' . esc_html( $addon['name'] ) . '</strong>
-                                        </td>';
-                                        break;
-
-                                    case 'version':
-                                        echo '<td class="erp-settings-table-' . esc_attr( $key ) . '">
-                                            ' . esc_html( $addon['version'] ) . '
-                                        </td>';
-                                        break;
-
-                                    case 'license':
-                                        echo '<td class="erp-settings-table-' . esc_attr( $key ) . '">
-                                            <input type="text" name="' . esc_attr( $addon['id'] ) . '" value="' . esc_attr( $addon['license'] ) . '" class="regular-text" />';
-                                        echo wp_kses_post( erp_get_license_status( $addon ) );
-                                        echo '</td>';
-                                        break;
-                                }
-                            }
-                        } ?>
-                    </tbody>
-                </table>
-            </td>
-        </tr>
-        <style>
-        table.erp-settings-table th.erp-settings-table-name, table.erp-settings-table td.erp-settings-table-name {
-            width: 35%;
-        }
-        </style>
-        <?php
-    }
-
-    /**
-     * Save the settings.
-     *
-     * @param bool $section (optional)
-     *
-     * @return void
-     */
-    public function save( $section = false ) {
-    }
 }
-
-return new License();
