@@ -4,6 +4,13 @@
         <a href="<?php echo admin_url( 'post-new.php?post_type=erp_hr_announcement' ); ?>" id="erp-new-announcement" data-single="1" class="add-new-h2"><?php esc_html_e( 'Add New', 'erp' ); ?></a>
     </h2>
 
+    <?php if ( ! empty( $_GET['announcement_delete'] ) ) { ?>
+        <div id="message" class="error notice is-dismissible below-h2">
+            <p><?php esc_html_e( 'Some announcements doesn\'t delete', 'erp' ); ?></p>
+            <button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span></button>
+        </div>
+    <?php } ?>
+
     <?php do_action( 'erp_hr_people_menu', 'announcement' ); ?>
 
     <div id="erp-announcement-table-wrap">
