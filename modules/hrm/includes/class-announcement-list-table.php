@@ -195,7 +195,7 @@ class Announcement_List_Table extends WP_List_Table {
 
         $ann_start_date = ( ! empty( $_GET['ann_start_date'] ) ) ? sanitize_text_field( wp_unslash( $_GET['ann_start_date'] ) ) : '';
         $ann_end_date   = ( ! empty( $_GET['ann_end_date'] ) ) ? sanitize_text_field( wp_unslash( $_GET['ann_end_date'] ) ) : '';
-        $status   = ( ! empty( $_GET['status'] ) ) ? sanitize_text_field( wp_unslash( $_GET['status'] ) ) : '';
+        $status         = ( ! empty( $_GET['status'] ) ) ? sanitize_text_field( wp_unslash( $_GET['status'] ) ) : '';
         ?>
         <div class="wperp-filter-dropdown" style="margin: -46px 0 0 0;">
             <a class="wperp-btn btn--default"><span class="dashicons dashicons-filter"></span>Filters<span class="dashicons dashicons-arrow-down-alt2"></span></a>
@@ -266,7 +266,7 @@ class Announcement_List_Table extends WP_List_Table {
             'per_page'    => $per_page,
         ] );
 
-        $this->counts = erp_hr_get_status_counts( $args );
+        $this->counts = erp_hr_get_announcements_status_counts( $args );
     }
 
     /**

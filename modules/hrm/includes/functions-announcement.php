@@ -224,7 +224,7 @@ function erp_hr_trash_announcements( $announcement_ids, $delete = false ) {
  *
  * @return array count of announcement statuses
  */
-function erp_hr_get_status_counts( $args ) {
+function erp_hr_get_announcements_status_counts( $args ) {
     $defaults = [
         'numberposts'     => -1,
         'offset'          => 0,
@@ -250,7 +250,7 @@ function erp_hr_get_status_counts( $args ) {
 
     foreach ( $statuses as $status ) {
         $args['post_status'] = $status;
-        $counts[ $status ]     = erp_hr_get_announcements_count( $args );
+        $counts[ $status ]   = erp_hr_get_announcements_count( $args );
     }
 
     return $counts;
