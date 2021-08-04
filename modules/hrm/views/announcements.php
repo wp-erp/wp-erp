@@ -11,6 +11,13 @@
         </div>
     <?php } ?>
 
+    <?php if ( ! empty( $_GET['announcement_restore'] ) ) { ?>
+        <div id="message" class="error notice is-dismissible below-h2">
+            <p><?php esc_html_e( 'Some announcements doesn\'t restore', 'erp' ); ?></p>
+            <button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span></button>
+        </div>
+    <?php } ?>
+
     <?php do_action( 'erp_hr_people_menu', 'announcement' ); ?>
 
     <div id="erp-announcement-table-wrap">
