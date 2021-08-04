@@ -12,7 +12,7 @@ class Integration extends Template {
      */
     public function __construct() {
         $this->id    = 'erp-integration';
-        $this->label = __( 'Integrations', 'erp' );
+        $this->label = __( 'Integration', 'erp' );
         $this->icon  = WPERP_ASSETS . '/images/wperp-settings/integration.png';
 
         $this->extra = [
@@ -23,49 +23,24 @@ class Integration extends Template {
     }
 
     /**
-     * Get settings array.
+     * Get section fields
+     * 
+     * @since 1.9.1
      *
      * @return array
      */
-    public function get_settings() {
+    public function get_section_fields( $section = false ) {
         $fields = [
             [
-                'title' => __( 'Integrations', 'erp' ),
+                'title' => __( 'Integration Management', 'erp' ),
                 'desc'  => __( 'Various integrations to WP ERP. Click <strong>Configure</strong> to manage the settings.', 'erp' ),
                 'type'  => 'title',
                 'id'    => 'integration_settings',
             ],
-
-            [ 'type' => 'integrations' ],
             [ 'type' => 'sectionend', 'id' => 'script_styling_options' ],
-        ]; // End general settings
+        ];
 
         return apply_filters( 'erp_integration_settings', $fields );
-    }
-
-    /**
-     * Output the settings.
-     *
-     * @param bool $section (optional)
-     *
-     * @return void
-     */
-    public function output( $section = false ) {
-        $current_section = isset( $_GET['section'] ) ? sanitize_key( $_GET['section'] ) : false;
-
-        // Define integrations that can be customised here
-        $integrations = wperp()->integration->get_integrations();
-
-        if ( $current_section ) {
-            foreach ( $integrations as $integration_key => $integration ) {
-                if ( strtolower( $integration_key ) == $current_section ) {
-                    $integration->admin_options();
-                    break;
-                }
-            }
-        } else {
-            parent::output();
-        }
     }
 
     /**
