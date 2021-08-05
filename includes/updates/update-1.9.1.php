@@ -10,9 +10,8 @@ function erp_acct_alter_invoice_details_table_1_9_1() {
 
     if ( ! in_array( 'tax_cat_id', $cols, true ) ) {
         $wpdb->query(
-            $wpdb->prepare(
-                "ALTER TABLE {$wpdb->prefix}erp_acct_invoice_details ADD `tax_cat_id` INT(11) DEFAULT NULL AFTER `tax`;"
-            )
+            "ALTER TABLE {$wpdb->prefix}erp_acct_invoice_details
+            ADD `tax_cat_id` INT(11) DEFAULT NULL AFTER `tax`;"
         );
     }
 }
@@ -27,9 +26,8 @@ function erp_acct_alter_purchase_details_table_1_9_1() {
 
     if ( ! in_array( 'tax_cat_id', $cols, true ) ) {
         $wpdb->query(
-            $wpdb->prepare(
-                "ALTER TABLE {$wpdb->prefix}erp_acct_purchase_details ADD `tax_cat_id` INT(11) DEFAULT NULL AFTER `amount`;"
-            )
+            "ALTER TABLE {$wpdb->prefix}erp_acct_purchase_details
+            ADD `tax_cat_id` INT(11) DEFAULT NULL AFTER `amount`;"
         );
     }
 }
@@ -60,6 +58,41 @@ function erp_acct_create_synced_taxes_table_1_9_1() {
     dbDelta( $schema );
 }
 
+/**
+ * Modify pay_rate column in employee table
+ */
+function erp_hr_alter_employees_table() {
+    global $wpdb;
+
+    $wpdb->query(
+        "ALTER TABLE {$wpdb->prefix}erp_hr_employees
+        MODIFY `pay_rate` DECIMAL(20,2) unsigned NOT NULL DEFAULT 0"
+    );
+}
+
+/**
+ * Migrates incinsistent employee data
+ */
+function erp_hr_migrate_employee_data() {
+    global $wpdb;
+    global $erp_hr_bg_process_1_9_1;
+
+    $employees = $wpdb->get_results(
+        "SELECT user_id AS id, pay_rate as pay
+        FROM {$wpdb->prefix}erp_hr_employees",
+        ARRAY_A
+    );
+
+    foreach ( $employees as $employee ) {
+        $erp_hr_bg_process_1_9_1->push_to_queue( $employee );
+    }
+
+    $erp_hr_bg_process_1_9_1->save()->dispatch();
+}
+
+erp_disable_mysql_strict_mode();
+erp_hr_alter_employees_table();
 erp_acct_alter_invoice_details_table_1_9_1();
 erp_acct_alter_purchase_details_table_1_9_1();
 erp_acct_create_synced_taxes_table_1_9_1();
+erp_hr_migrate_employee_data();
