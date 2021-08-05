@@ -2501,6 +2501,7 @@ class Ajax_Handler {
 
         if ( ! empty( $_REQUEST['req_id'] ) ) {
             $req_ids = $_REQUEST['req_id'];
+            $req_ids = (array) $req_ids;
 
             array_walk( $req_ids, function( &$id, $index ) {
                 $id = intval( wp_unslash( $id) );
@@ -2509,7 +2510,7 @@ class Ajax_Handler {
 
         $action = ! empty( $_REQUEST['action_type'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['action_type'] ) ) : '';
 
-        $result = apply_filters( "erp_hr_employee_{$request_type}_request_bulk_action", $req_ids, $action );
+        $result = (array) apply_filters( "erp_hr_employee_{$request_type}_request_bulk_action", $req_ids, $action );
 
         if ( is_wp_error( $result ) ) {
             $this->send_error( __( 'Something went wrong! Try again later.', 'erp' ) );
