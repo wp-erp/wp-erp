@@ -193,6 +193,7 @@ class Human_Resource {
                 'already_terminate'     => __( 'Sorry, this employee is already terminated', 'erp' ),
                 'already_active'        => __( 'Sorry, this employee is already active', 'erp' ),
                 'already_selected'      => __( 'The selected option is already active. Try different one.', 'erp' ),
+                'sent_to'               => __( 'Sent To Details', 'erp' ),
             ],
             'asset_url'              => WPERP_ASSETS,
             'emp_upload_photo'       => __( 'Upload Photo', 'erp' ),
@@ -390,6 +391,10 @@ class Human_Resource {
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/compensation-history-edit.php', 'erp-employment-compensation-history' );
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/job-info-history-edit.php', 'erp-employment-job-info-history' );
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/employment-type-history-edit.php', 'erp-employment-type-history' );
+                break;
+
+            case 'announcement':
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/announcement-more-sent-to.php', 'ann-more-sent-to' );
                 break;
         }
     }
