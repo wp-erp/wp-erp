@@ -177,7 +177,11 @@ function erp_acct_insert_purchase( $data ) {
         $voucher_no  = $wpdb->insert_id;
         $purchase_no = $voucher_no;
 
+        error_log( 'data:'. print_r( $data, true ) );
+
         $purchase_data = erp_acct_get_formatted_purchase_data( $data, $voucher_no );
+
+        error_log( 'p-data:'. print_r( $purchase_data, true ) );
 
         $wpdb->insert(
             $wpdb->prefix . 'erp_acct_purchase',
@@ -211,32 +215,34 @@ function erp_acct_insert_purchase( $data ) {
                 'product_id' => $item['product_id'],
                 'qty'        => $item['qty'],
                 'price'      => $item['unit_price'],
-                'tax'        => $item['tax_amount'],
-                'tax_cat_id' => ! empty( $item['tax_cat_id'] ) ? $item['tax_cat_id'] : null,
+                'tax'        => isset( $item['tax_amount'] ) ? $item['tax_amount'] : 0,
+                'tax_cat_id' => isset( $item['tax_cat_id'] ) ? $item['tax_cat_id'] : null,
                 'amount'     => $item['item_total'],
                 'created_at' => $purchase_data['created_at'],
                 'created_by' => $created_by,
                 'updated_at' => $purchase_data['updated_at'],
                 'updated_by' => $purchase_data['updated_by'],
             ] );
-        }
 
-        $details_id = $wpdb->insert_id;
+            $details_id = $wpdb->insert_id;
 
-        if ( isset( $purchase_data['tax_rate'] ) ) {
-            $tax_rate_agency = erp_acct_get_tax_rate_with_agency( $purchase_data['tax_rate']['id'], $item['tax_cat_id'] );
+            if ( isset( $purchase_data['tax_rate'] ) ) {
+                $tax_rate_agency = erp_acct_get_tax_rate_with_agency( $purchase_data['tax_rate']['id'], $item['tax_cat_id'] );
 
-            foreach ( $tax_rate_agency as $tra ) {
-                $wpdb->insert(
-                    $wpdb->prefix . 'erp_acct_purchase_details_tax',
-                    [
-                        'invoice_details_id' => $details_id,
-                        'agency_id'          => $tra['agency_id'],
-                        'tax_rate'           => $tra['tax_rate'],
-                        'updated_at'         => $purchase_data['updated_at'],
-                        'updated_by'         => $purchase_data['updated_by'],
-                    ]
-                );
+                foreach ( $tax_rate_agency as $tra ) {
+                    $wpdb->insert(
+                        $wpdb->prefix . 'erp_acct_purchase_details_tax',
+                        [
+                            'invoice_details_id' => $details_id,
+                            'agency_id'          => $tra['agency_id'],
+                            'tax_rate'           => $tra['tax_rate'],
+                            'created_at'         => $purchase_data['created_at'],
+                            'created_by'         => $created_by,
+                            'updated_at'         => $purchase_data['updated_at'],
+                            'updated_by'         => $purchase_data['updated_by'],
+                        ]
+                    );
+                }
             }
         }
 
