@@ -129,6 +129,7 @@
                 $( '#erp-announcement-table-wrap .list-table-inner form' ).submit();
             });
             $( 'body' ).on( 'click', 'input[name=filter_announcements]', this.announcement.validateFilterForm );
+            $( 'tbody#the-list tr td.sent_to span.expand-for-more-ann' ).click( this.announcement.sentToDetails );
         },
 
         initToggleCheckbox: function() {
@@ -2031,7 +2032,18 @@
                 }
 
                 $( '#erp-announcement-table-wrap .list-table-inner form' ).submit();
-            }
+            },
+            sentToDetails: function( e ) {
+                var self = $( e.target );
+                var content = self.data( 'more-content' );
+                $.erpPopup({
+                    title: wpErpHr.popup.sent_to,
+                    button: '',
+                    id: 'erp-hr-announcement-sent-to-details',
+                    content: wp.template( 'ann-more-sent-to' )( { all_send_to: content } ),
+                    extraClass: 'smaller',
+                });
+            },
         }
     };
 
