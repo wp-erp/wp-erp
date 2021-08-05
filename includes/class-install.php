@@ -470,7 +470,7 @@ Account Manager
                 `termination_date` date NOT NULL,
                 `date_of_birth` date NOT NULL,
                 `reporting_to` bigint(20) unsigned NOT NULL DEFAULT '0',
-                `pay_rate` int(11) unsigned NOT NULL DEFAULT '0',
+                `pay_rate` decimal(20,2) unsigned NOT NULL DEFAULT '0',
                 `pay_type` varchar(20) NOT NULL DEFAULT '',
                 `type` varchar(20) NOT NULL,
                 `status` varchar(10) NOT NULL DEFAULT '',
