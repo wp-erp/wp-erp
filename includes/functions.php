@@ -3294,7 +3294,7 @@ function erp_is_valid_employee_id( $emp_id ) {
  * @return bool
  */
 function erp_is_valid_currency_amount( $amount ) {
-    return preg_match( '/^[0-9](?:.[0-9]{4})?$/', $amount );
+    return preg_match( '/^[0-9]+(\.[0-9]{1,2})?$/', $amount );
 }
 
 /**
