@@ -1093,10 +1093,12 @@ class Employee {
     public function get_date_of_birth() {
         $date = null;
 
-        if ( isset( $this->erp_user->date_of_birth )
-             && is_valid_date( $this->erp_user->date_of_birth )
-             && ( $this->erp_user->date_of_birth != '0000-00-00' ) ) {
-            $date = erp_format_date( $this->erp_user->date_of_birth );
+        if (
+            isset( $this->erp_user->date_of_birth )
+            && is_valid_date( $this->erp_user->date_of_birth )
+            && ( $this->erp_user->date_of_birth != '0000-00-00' )
+        ) {
+            $date = erp_current_datetime()->modify( $this->erp_user->date_of_birth )->format( 'Y-m-d' );
         }
 
         return $date;
@@ -1288,7 +1290,9 @@ class Employee {
      * @return string
      */
     public function get_birthday() {
-        return $this->get_date_of_birth();
+        $birth_date = $this->get_date_of_birth();
+        
+        return erp_is_valid_date( $birth_date ) ? erp_format_date( $birth_date ) : $birth_date;
     }
 
     /**
