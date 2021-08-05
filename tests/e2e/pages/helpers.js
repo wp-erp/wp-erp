@@ -194,6 +194,19 @@ module.exports = {
         I.waitForElement('.app-customers');
       },
 
+      vendor(){
+        I.click('Vendors');
+        I.wait(5);
+        I.click('Add New Vendor');
+        I.fillField('#first_name', faker.name.firstName());
+        I.fillField('#last_name', faker.name.lastName());
+        I.fillField('#email', faker.internet.email());
+        I.fillField('#phone', faker.phone.phoneNumber());
+        I.fillField('#company', faker.company.companyName());
+        I.click('//div[@id="wperp-add-customer-modal"]/div/div/form/div[2]/div/button[2]');
+        I.waitForElement('.app-customers');
+      },
+
       previewProducts() {
         I.moveCursorTo('//*[@id="erp-accounting"]/div[1]/ul/li[4]/a');
          
@@ -308,5 +321,67 @@ module.exports = {
         I.click('//th/div/div[2]')
         I.click('//th/div/div[3]/ul/li/span')
         I.click('//tfoot/tr/td/div/div/div')
+      },
+
+      Tax(){
+        I.click('Tax Rates');
+      },
+      
+      addTaxRate(){
+        I.click('Add Tax Rate');
+        I.wait(3);
+        I.click('//*[@id="erp-accounting"]/div[2]/div[2]/div/form/div[1]/div[1]/div/div/div[2]');
+        I.click('//div[3]/ul/li/span/span');
+        I.fillField("(//input[@type='text'])[2]", 'Rinky_Automation');
+        I.click('//td[2]/div');
+        I.click('//td[2]/div/div[3]/ul/li/span');
+        I.click("//div[@id='erp-accounting']/div[2]/div[2]/div/form/div[2]/table/tbody/tr/td[3]/div");
+        I.click('//td[3]/div');
+        I.wait(3);
+        I.click('//td[3]/div/div[3]/ul/li[7]/span/span');  
+        I.click('//*[@id="erp-accounting"]/div[2]/div[2]/div/form/div[2]/table/tbody/tr/td[4]/input');
+        I.type('200');
+        I.click('Save');
+        I.wait(5);
+      },
+
+      addTaxZone(){
+        I.click('View Tax Zones');
+        I.click('Add Tax Zone');
+        I.fillField('//*[@id="wperp-tax-agency-modal"]/div/div/form/div[1]/div[1]/input', 'Noakhali');
+        I.fillField('//*[@id="wperp-tax-agency-modal"]/div/div/form/div[1]/div[2]/input','12345')
+        I.click('Save')
+      },
+
+      addTaxCategory(){
+        I.click('View Tax Categories');
+        I.click('Add Tax Category');
+        I.fillField('//input[@type="text"]', 'Standard');
+        I.fillField('//textarea', 'Listing basic tax category');
+        I.click('Save'); 
+      },
+
+      addTaxAgencies(){
+        I.click('View Tax Agencies');
+        I.click('Add Tax Agency');
+        I.fillField('//input[@type="text"]', 'Agency');
+        I.click('Save');
+      },
+
+      taxPayment(){
+        I.click('Tax Payments');
+        I.click('New Tax Payment');
+        I.click('//div[@class="wperp-col-sm-4 with-multiselect"]//span[@class="multiselect__single"]');
+        I.wait(2);
+        I.click('//div[3]/ul/li/span');
+        I.click('//span[@class="multiselect__placeholder"]');
+        I.wait(2);
+        I.click('//div[2]/div/div/div[3]/ul/li/span');
+        I.click('//div[4]//div[1]//div[1]//div[2]//span[1]');
+        I.wait(5);
+        I.click('//div[4]/div/div/div[3]/ul/li/span/span');
+        I.fillField('//input[@type="number"]', '120');
+        I.click('Save');
+        I.waitForElement('.app-customers', 30);
       },
 }
