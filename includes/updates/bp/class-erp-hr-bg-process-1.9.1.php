@@ -40,15 +40,13 @@ class ERP_HR_BG_PROCESS_1_9_1 extends \WP_Background_Process {
         $user_id  = $employee['id'];
         $pay_rate = $employee['pay'];
 
-        if ( ! empty( (int) $pay_rate ) && ! erp_is_valid_currency_amount( $pay_rate ) ) {
+        if ( ! erp_is_valid_currency_amount( $pay_rate ) ) {
             $pay     = preg_replace( '/[^0-9.]/', '', $pay_rate  );
             $pay_arr = explode( '.', $pay );
 
             if ( count( $pay_arr ) > 1 ) {
                 $pay = $pay_arr[0] . '.' . substr( $pay_arr[1], 0, 2 );
             }
-
-            error_log( 'pay:'. print_r( $pay, true ));
 
             $wpdb->update(
                 "{$wpdb->prefix}erp_hr_employees",
