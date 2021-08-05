@@ -158,7 +158,20 @@ class Announcement_List_Table extends WP_List_Table {
             }, $sent_to );
         }
 
-        return count( $sent_to ) === 0 ? 'None' : implode( ', ', $sent_to );
+        //prepare modal for large number of text data in a cell
+        $cell_content = count( $sent_to ) === 0 ? 'None' : implode( ', ', $sent_to );
+        $threshold_length = 65;
+        if ( strlen( $cell_content ) < $threshold_length ) {
+            return $cell_content;
+        } else {
+            $list_content = '<ul style="list-style: square;">'; //this list will be shown in the modal popup
+            foreach ( $sent_to as $sent ) {
+                $escaped = esc_html( $sent );
+                $list_content .= "<li>$escaped</li>";
+            }
+            $list_content .= '</ul>';
+            return substr( $cell_content, 0, $threshold_length ) . "<span style='cursor: pointer;' title='Show More' data-more-content='$list_content' class='expand-for-more-ann'> (more)</button>";
+        }
     }
 
     /**
