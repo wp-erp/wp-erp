@@ -215,6 +215,55 @@ module.exports = {
         I.waitForElement('.wperp-products');
       },
 
+      purchase(){
+        I.click('Purchases');
+        I.wait(5);
+        I.click('.wperp-selected-option');
+      },
 
+      createPurchase(){
+        I.click('//*[@id="erp-accounting"]/div[2]/div[1]/div/div/div/ul/li[1]/a');
+        I.click('//*[@id="erp-accounting"]/div[2]/form/div[1]/div/div/div[1]/div/div/div[2]')
+        I.click('//*[@id="erp-accounting"]/div[2]/form/div[1]//ul/li[1]')
+        I.click('//*[@id="erp-accounting"]//div/div/div[2]//div/input')
+        I.click('//*/div[2]/div/div/div/div[2]/div/div[3]/div/div/div[3]/div[3]//div[2]/div/div')
+        I.click('//*[@id="erp-accounting"]/div[2]/form//div[3]//input')
+        I.click('//*/div[3]//div[3]/div/div/div[4]/div[3]//div[2]/div/div')
+        I.click('//*/div[2]//table/tbody/tr[1]/th/div/div[2]')
+        I.click('//*/tr[1]/th/div//ul/li[1]/span') 
+        I.wait(2)
+        I.click('//*/table//div[1]/button')
+        
+      },
 
+      payPurchase(){
+        I.click('//*[@id="erp-accounting"]//div/div/ul/li[2]/a');
+        I.click('//*//div[1]/div/div/div[1]/div/div/div/span')
+        I.click('//*/div[1]/div/div/div[1]/div/div/div/ul/li[1]/span')
+        I.click('//*//form/div[1]/div/div/div/div/input')
+        I.click('//*/div[1]/div/div/div[3]/div/div/input')
+        I.click('//*/div[3]/div[4]/div/div[2]/div/div')
+        I.click('//*/div[1]/div/div/div[4]/div/div[2]/span')
+        I.click('//*/div[4]/div/div[3]/ul/li[1]/span')
+        I.click('//*/div[5]/div/div/div[2]/span')
+        I.click('//*/div[2]/form/div[1]/div/div/div[5]/div/div/div[3]/ul/li[1]/span')
+        I.scrollPageToBottom();
+        I.click('//*/div/div[1]/button');
+      },
+
+      createPurchaseOrder(){
+        I.click('Create Purchase Order');
+        I.click('//*//div[1]/div/div/div[1]/div/div/div/span')
+        I.click('//*/div[1]/div/div/div[1]/div/div/div/ul/li[1]/span')
+        I.click('//*/div[2]/div/div/input')
+        I.click('//*/div/div/div[2]/div/div/div/div[2]/div//div[3]/div[4]//div[2]')
+        I.click('//*/div[3]/div/div/input')
+        I.click('//*/div[1]/div/div/div[3]//div[2]/div/div[3]/div/div/div[4]/div[4]/div/div[2]/div/div')
+        I.click('//*/tbody/tr[1]/th/div/div[2]/span')
+        I.click('//*/tbody/tr[1]/th/div/div[3]/ul/li[1]/span')
+        I.scrollPageToBottom();
+        I.click('//*/tfoot/tr/td//div[1]/button');
+      },
+
+      
 }
