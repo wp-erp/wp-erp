@@ -203,7 +203,7 @@ class Validate_Data {
                 return $this->validate_field( 'Reporting to', $dt_value, $type, 'max:20|' );
 
             case 'pay_rate':
-                return $this->validate_field( 'Pay rate', $dt_value, $type, 'max:11|is_valid_amount:true' );
+                return $this->validate_field( 'Pay rate', $dt_value, $type, 'is_valid_amount:true' );
 
             case 'type':
                 return $this->validate_field( 'Type', $dt_value, $type, 'max:20|' );
@@ -395,7 +395,7 @@ class Validate_Data {
 
                         case 'is_valid_amount':
                             if ( $rule_value === 'true' && ! empty( $field_value ) && ! erp_is_valid_currency_amount( $field_value ) ) {
-                                $errors[] = __( "{$field_name} is not valid. It may contain digits and commas(,) and decimal point values only.", 'erp' );
+                                $errors[] = __( "{$field_name} is not valid. It may contain integer or float values only. For float values, maximum 2 digits after decimal point are allowed", 'erp' );
                             }
                             break;
 
