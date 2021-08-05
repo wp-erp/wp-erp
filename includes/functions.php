@@ -1465,19 +1465,7 @@ function erp_process_csv_export() {
                         if ( in_array( $field, $custom_fields, true ) ) {
                             $csv_items[ $index ][ $field ] = get_user_meta( $item->id, $field, true );
                         } else {
-                            switch ( $field ) {
-                                case 'department':
-                                    $csv_items[ $index ][ $field ] = $item->get_department_title();
-                                    break;
-
-                                case 'designation':
-                                    $csv_items[ $index ][ $field ] = $item->get_job_title();
-                                    break;
-
-                                default:
-                                    $csv_items[ $index ][ $field ] = $item->{$field};
-                                    break;
-                            }
+                            $csv_items[ $index ][ $field ] = $item->{$field};
                         }
                     } else if ( $is_people ) {
                         if ( in_array( $field, $custom_fields, true ) ) {
