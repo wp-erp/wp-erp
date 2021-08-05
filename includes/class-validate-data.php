@@ -236,13 +236,10 @@ class Validate_Data {
                 return $this->validate_field( 'Driving licence', $dt_value, $type, 'max:30|' );
 
             case 'hobbies':
-                return $this->validate_field( 'Hobbies', $dt_value, $type, 'max:200|' );
+                return $this->validate_field( 'Hobbies', $dt_value, $type, 'max:255|' );
 
             case 'user_url':
                 return $this->validate_field( 'User email', $dt_value, $type, 'max:600|' );
-
-            case 'description':
-                return $this->validate_field( 'Description', $dt_value, $type, 'max:200|' );
 
             case 'category_id':
                 return $this->validate_field( 'Category ID', $dt_value, $type, 'not_empty:true' );
