@@ -117,8 +117,8 @@ class Announcement_List_Table extends WP_List_Table {
         $params['_wpnonce'] = wp_create_nonce( $params['action'] . '-post_' . $item->ID );
         $delete_url         = add_query_arg( $params, admin_url( 'post.php' ) );
 
-        $actions['edit']   = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $edit_url, $item->id, $edit_title, $edit_text );
-        $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" title="%s">%s</a>', $delete_url, $item->id, esc_html__( 'Delete this item', 'erp' ), esc_html__( 'Delete', 'erp' ) );
+        $actions['edit']   = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $edit_url, $item->ID, $edit_title, $edit_text );
+        $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" title="%s">%s</a>', $delete_url, $item->ID, esc_html__( 'Delete this item', 'erp' ), esc_html__( 'Delete', 'erp' ) );
 
         return sprintf( '<strong>%s</strong> %s', esc_html( $item->post_title ), $this->row_actions( $actions ) );
     }
