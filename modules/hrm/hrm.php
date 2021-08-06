@@ -220,8 +220,8 @@ class Human_Resource {
                 'sub-section'   => 'leave-entitlements&tab=assignment',
             ], admin_url( 'admin.php' ) ), __( 'Create Entitlement', 'erp' ), __( 'Create Entitlement', 'erp' ) ),
             'currentDate'            => erp_current_datetime()->format( 'Y-m-d' ),
-            'invalid_filter_data'    => __( 'Invalid filter data' ),
-            'start_end_date'         => __ ( 'Start date must be earlier than End date' )
+            'invalid_filter_data'    => __( 'Invalid filter data', 'erp' ),
+            'start_end_date'         => __( 'Start date must be earlier than End date', 'erp' ),
         ] );
 
         switch ( $section ) {
