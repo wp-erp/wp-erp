@@ -105,12 +105,14 @@ class Announcement_List_Table extends WP_List_Table {
         $params['action'] = 'edit';
         $edit_text        = esc_html__( 'Edit', 'erp' );
         $edit_title       = esc_html__( 'Edit this item', 'erp' );
+
         if ( ! empty( $_GET['status'] ) && sanitize_text_field( wp_unslash( $_GET['status'] ) ) === 'trash' ) {
             $params['action']   = 'untrash';
             $params['_wpnonce'] = wp_create_nonce( 'untrash-post_' . $item->ID );
             $edit_text          = esc_html__( 'Restore', 'erp' );
             $edit_title         = esc_html__( 'Restore this item', 'erp' );
         }
+
         $edit_url = add_query_arg( $params, admin_url( 'post.php' ) );
 
         $params['action']   = ( ! empty( $_GET['status'] ) && sanitize_text_field( wp_unslash( $_GET['status'] ) ) === 'trash' ) ? 'delete' : 'trash';
@@ -135,25 +137,29 @@ class Announcement_List_Table extends WP_List_Table {
     public function column_sent_to( $item ) {
         $type = get_post_meta( $item->ID, '_announcement_type', true );
         $sent_to = [];
+
         if ( $type === 'by_department' ) {
             $sent_to = get_post_meta( $item->ID, '_announcement_department', true );
             $sent_to = array_map( function( $id ) {
-                if ( $d = \WeDevs\ERP\HRM\Models\Department::find( (int) $id ) ) {
-                    return $d->title;
+                $department = \WeDevs\ERP\HRM\Models\Department::find( (int) $id );
+                if ( $department ) {
+                    return $department->title;
                 }
             }, $sent_to );
         } elseif ( $type === 'by_designation' ) {
             $sent_to = get_post_meta( $item->ID, '_announcement_designation', true );
             $sent_to = array_map( function( $id ) {
-                if ( $d = \WeDevs\ERP\HRM\Models\Designation::find( (int) $id ) ) {
-                    return $d->title;
+                $designation = \WeDevs\ERP\HRM\Models\Designation::find( (int) $id );
+                if ( $designation ) {
+                    return $designation->title;
                 }
             }, $sent_to );
         } else {
             $sent_to = get_post_meta( $item->ID, '_announcement_selected_user', true );
             $sent_to = array_map( function( $id ) {
-                if ( $u = get_user_by( 'id', $id ) ) {
-                    return $u->display_name;
+                $user = get_user_by( 'id', $id );
+                if ( $user ) {
+                    return $user->display_name;
                 }
             }, $sent_to );
         }
@@ -161,6 +167,7 @@ class Announcement_List_Table extends WP_List_Table {
         //prepare modal for large number of text data in a cell
         $cell_content = count( $sent_to ) === 0 ? 'None' : implode( ', ', $sent_to );
         $threshold_length = 65;
+
         if ( strlen( $cell_content ) < $threshold_length ) {
             return $cell_content;
         } else {
@@ -170,6 +177,7 @@ class Announcement_List_Table extends WP_List_Table {
                 $list_content .= "<li>$escaped</li>";
             }
             $list_content .= '</ul>';
+
             return substr( $cell_content, 0, $threshold_length ) . "<span style='cursor: pointer;' title='Show More' data-more-content='$list_content' class='expand-for-more-ann'> (more)</button>";
         }
     }
@@ -185,11 +193,13 @@ class Announcement_List_Table extends WP_List_Table {
         $actions = [
             'delete_announcement'   => __( 'Move to trash', 'erp' ),
         ];
+
         if ( ! empty( $_GET['status'] ) && sanitize_text_field( wp_unslash( $_GET['status'] ) ) === 'trash' ) {
             unset( $actions['delete_announcement'] );
             $actions['delete_announcements_permanently'] = __( 'Delete Parmanently', 'erp' );
             $actions['restore_announcements']            = __( 'Restore Announcements', 'erp' );
         }
+
         return $actions;
     }
 
@@ -295,9 +305,11 @@ class Announcement_List_Table extends WP_List_Table {
         $base_link      = admin_url( 'admin.php?page=erp-hr&section=people&sub-section=announcement' );
 
         $status = 'publish';
+
         if ( ! empty( $_GET['status'] ) ) {
             $status = sanitize_text_field( wp_unslash( $_GET['status'] ) );
         }
+
         $status_links['publish'] = sprintf( '<a href="%s" class="status-publish %s">%s <span class="count">(%s)</span></a>', $base_link, $status === 'publish' ? 'current' : '', __( 'Publish', 'erp' ), $this->counts['publish'] );
         $status_links['draft']   = sprintf( '<a href="%s" class="status-draft %s">%s <span class="count">(%s)</span></a>', add_query_arg( [ 'status' => 'draft' ], $base_link ), $status === 'draft' ? 'current' : '', __( 'Draft', 'erp' ), $this->counts['draft'] );
         $status_links['trash']   = sprintf( '<a href="%s" class="status-trash %s">%s <span class="count">(%s)</span></a>', add_query_arg( [ 'status' => 'trash' ], $base_link ), $status === 'trash' ? 'current' : '', __( 'Trash', 'erp' ), $this->counts['trash'] );
