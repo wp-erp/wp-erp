@@ -187,8 +187,8 @@ class Announcement_List_Table extends WP_List_Table {
         ];
         if ( ! empty( $_GET['status'] ) && sanitize_text_field( wp_unslash( $_GET['status'] ) ) === 'trash' ) {
             unset( $actions['delete_announcement'] );
-            $actions['delete_announcement_p'] = __( 'Delete Parmanently', 'erp' );
-            $actions['restore_announcements']  = __( 'Restore Announcements', 'erp' );
+            $actions['delete_announcements_permanently'] = __( 'Delete Parmanently', 'erp' );
+            $actions['restore_announcements']            = __( 'Restore Announcements', 'erp' );
         }
         return $actions;
     }
