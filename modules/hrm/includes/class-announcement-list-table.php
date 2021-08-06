@@ -63,7 +63,7 @@ class Announcement_List_Table extends WP_List_Table {
 
             case 'type':
                 $type = ucfirst( get_post_meta( $item->ID, '_announcement_type', true ) );
-                return ( empty( $type ) ? 'Unknown' : $type );
+                return ( empty( $type ) ? '&mdash;' : esc_html( $type ) );
 
             case 'date':
                 return erp_format_date( $item->post_date );
