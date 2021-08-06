@@ -132,7 +132,7 @@ function erp_hr_send_announcement_email( $employee_ids, $post_id ) {
 }
 
 /**
- * Get all the announcements
+ * Get all the announcements having a status and in a date range
  *
  * @since 1.9.1
  *
@@ -157,7 +157,7 @@ function erp_hr_get_announcements( $args = [] ) {
 }
 
 /**
- * Get the count of the announcements
+ * Get the count of the announcements having a status and in a date range
  *
  * @since 1.9.1
  *
@@ -199,6 +199,7 @@ function erp_hr_get_announcements_count( $args = [] ) {
  */
 function erp_hr_trash_announcements( $announcement_ids, $delete = false ) {
     $success = [];
+
     foreach ( $announcement_ids as $id ) {
         if ( $delete ) {
             if ( ! wp_delete_post( $id ) ) {
@@ -222,9 +223,8 @@ function erp_hr_trash_announcements( $announcement_ids, $delete = false ) {
  * @return array count of announcement statuses
  */
 function erp_hr_get_announcements_status_counts() {
-    $count = wp_count_posts( 'erp_hr_announcement' );
-
-    $counts = [];
+    $count    = wp_count_posts( 'erp_hr_announcement' );
+    $counts   = [];
     $statuses = [ 'publish', 'draft', 'trash' ];
 
     foreach ( $statuses as $status ) {
@@ -245,6 +245,7 @@ function erp_hr_get_announcements_status_counts() {
  */
 function erp_hr_restore_announcements( $announcement_ids ) {
     $success = [];
+
     foreach ( $announcement_ids as $id ) {
         if ( ! wp_untrash_post( $id ) ) {
             $success[] = false;

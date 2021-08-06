@@ -122,7 +122,7 @@
             this.initTipTip();
 
             // Announcements
-            $( 'body' ).on( 'click', 'input[name="reset_filter_ann"]', function( e ){
+            $( 'body' ).on( 'click', 'input[name="reset_announcement_filter"]', function( e ){
                 e.preventDefault();
                 $( '#start_date' ).val( '' );
                 $( '#end_date' ).val( '' );
@@ -2016,7 +2016,7 @@
             validateFilterForm: function( e ) {
                 e.preventDefault();
                 var start = $( '#start_date' ).val();
-                var end = $( '#end_date' ).val();
+                var end   = $( '#end_date' ).val();
 
                 if( ! start || ! end ) {
                     swal( '', wpErpHr.invalid_filter_data, 'warning' );
@@ -2024,7 +2024,7 @@
                 }
 
                 start = new Date( start ).getTime();
-                end = new Date( end ).getTime();
+                end   = new Date( end ).getTime();
 
                 if( start > end ) {
                     swal( wpErpHr.invalid_filter_data, wpErpHr.start_end_date, 'error' );
@@ -2034,8 +2034,9 @@
                 $( '#erp-announcement-table-wrap .list-table-inner form' ).submit();
             },
             sentToDetails: function( e ) {
-                var self = $( e.target );
+                var self    = $( e.target );
                 var content = self.data( 'more-content' );
+                
                 $.erpPopup({
                     title: wpErpHr.popup.sent_to,
                     button: '',

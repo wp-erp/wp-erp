@@ -593,7 +593,7 @@ class Form_Handler {
         }
 
         $announcement_table = new \WeDevs\ERP\HRM\Announcement_List_Table();
-        $action         = $announcement_table->current_action();
+        $action             = $announcement_table->current_action();
 
         if ( $action ) {
             $req_uri_bulk = ( isset( $_SERVER['REQUEST_URI'] ) ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
@@ -618,6 +618,7 @@ class Form_Handler {
 
                     wp_redirect( $redirect );
                     exit();
+
                 case 'delete_announcements_permanently':
                     if ( ! empty( $_GET['announcement_ids'] ) ) {
                         $announcement_ids = array_map( 'sanitize_text_field', wp_unslash( $_GET['announcement_ids'] ) );
@@ -630,6 +631,7 @@ class Form_Handler {
 
                     wp_redirect( $redirect );
                     exit();
+
                 case 'restore_announcements':
                     if ( ! empty( $_GET['announcement_ids'] ) ) {
                         $announcement_ids = array_map( 'sanitize_text_field', wp_unslash( $_GET['announcement_ids'] ) );

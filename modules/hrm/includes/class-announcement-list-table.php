@@ -236,13 +236,12 @@ class Announcement_List_Table extends WP_List_Table {
 
                     <div class="wperp-filter-panel-footer">
                         <input type="submit" class="wperp-btn btn--cancel btn--filter" value="<?php esc_html_e( 'Cancel', 'erp' ); ?>" name="hide_filter">
-                        <input type="submit" class="wperp-btn btn--reset btn--filter" value="<?php esc_html_e( 'Reset', 'erp' ); ?>" name="reset_filter_ann">
+                        <input type="submit" class="wperp-btn btn--reset btn--filter" value="<?php esc_html_e( 'Reset', 'erp' ); ?>" name="reset_announcement_filter">
                         <input type="submit" name="filter_announcements" id="filter" class="wperp-btn btn--primary" value="<?php esc_html_e( 'Apply', 'erp' ); ?>">
                     </div>
                 </div>
             </div>
         </div>
-
         <?php
     }
 
@@ -258,7 +257,6 @@ class Announcement_List_Table extends WP_List_Table {
         $hidden                = [];
         $sortable              = [];
         $this->_column_headers = [ $columns, $hidden, $sortable ];
-
         $per_page              = 20;
         $current_page          = $this->get_pagenum();
         $offset                = ( $current_page - 1 ) * $per_page;
@@ -300,8 +298,7 @@ class Announcement_List_Table extends WP_List_Table {
     public function get_views() {
         $status_links   = [];
         $base_link      = admin_url( 'admin.php?page=erp-hr&section=people&sub-section=announcement' );
-
-        $status = 'publish';
+        $status         = 'publish';
 
         if ( ! empty( $_GET['status'] ) ) {
             $status = sanitize_text_field( wp_unslash( $_GET['status'] ) );
