@@ -2040,7 +2040,7 @@
                     title: wpErpHr.popup.sent_to,
                     button: '',
                     id: 'erp-hr-announcement-sent-to-details',
-                    content: wp.template( 'ann-more-sent-to' )( { all_send_to: content } ),
+                    content: _.template( '<% print( all_send_to ) %>' )( { all_send_to: content } ),
                     extraClass: 'smaller',
                 });
             },

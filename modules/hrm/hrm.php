@@ -392,10 +392,6 @@ class Human_Resource {
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/job-info-history-edit.php', 'erp-employment-job-info-history' );
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/employment-type-history-edit.php', 'erp-employment-type-history' );
                 break;
-
-            case 'announcement':
-                erp_get_js_template( WPERP_HRM_JS_TMPL . '/announcement-more-sent-to.php', 'ann-more-sent-to' );
-                break;
         }
     }
 
