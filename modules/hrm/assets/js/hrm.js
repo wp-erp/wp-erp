@@ -124,8 +124,8 @@
             // Announcements
             $( 'body' ).on( 'click', 'input[name="reset_filter_ann"]', function( e ){
                 e.preventDefault();
-                $( '#ann_start_date' ).val( '' );
-                $( '#ann_end_date' ).val( '' );
+                $( '#start_date' ).val( '' );
+                $( '#end_date' ).val( '' );
                 $( '#erp-announcement-table-wrap .list-table-inner form' ).submit();
             });
             $( 'body' ).on( 'click', 'input[name=filter_announcements]', this.announcement.validateFilterForm );
@@ -2015,8 +2015,8 @@
         announcement: {
             validateFilterForm: function( e ) {
                 e.preventDefault();
-                var start = $( '#ann_start_date' ).val();
-                var end = $( '#ann_end_date' ).val();
+                var start = $( '#start_date' ).val();
+                var end = $( '#end_date' ).val();
 
                 if( ! start || ! end ) {
                     swal( '', wpErpHr.invalid_filter_data, 'warning' );

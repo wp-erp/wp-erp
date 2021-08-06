@@ -217,9 +217,9 @@ class Announcement_List_Table extends WP_List_Table {
             return;
         }
 
-        $ann_start_date = ( ! empty( $_GET['ann_start_date'] ) ) ? sanitize_text_field( wp_unslash( $_GET['ann_start_date'] ) ) : '';
-        $ann_end_date   = ( ! empty( $_GET['ann_end_date'] ) ) ? sanitize_text_field( wp_unslash( $_GET['ann_end_date'] ) ) : '';
-        $status         = ( ! empty( $_GET['status'] ) ) ? sanitize_text_field( wp_unslash( $_GET['status'] ) ) : '';
+        $start_date = ( ! empty( $_GET['start_date'] ) ) ? sanitize_text_field( wp_unslash( $_GET['start_date'] ) ) : '';
+        $end_date   = ( ! empty( $_GET['end_date'] ) ) ? sanitize_text_field( wp_unslash( $_GET['end_date'] ) ) : '';
+        $status     = ( ! empty( $_GET['status'] ) ) ? sanitize_text_field( wp_unslash( $_GET['status'] ) ) : '';
         ?>
         <div class="wperp-filter-dropdown" style="margin: -46px 0 0 0;">
             <a class="wperp-btn btn--default"><span class="dashicons dashicons-filter"></span>Filters<span class="dashicons dashicons-arrow-down-alt2"></span></a>
@@ -228,11 +228,11 @@ class Announcement_List_Table extends WP_List_Table {
                 <div class="wperp-filter-panel wperp-filter-panel-default">
                     <h3><?php esc_html_e( 'Filter', 'erp' ); ?></h3>
                     <div class="wperp-filter-panel-body">
-                        <label for="ann_start_date"><?php esc_html_e( 'Start Date', 'erp' ); ?></label>
-                        <input autocomplete="off" style="border-radius: 3px; width: 100%; border: 1px black solid;" class="erp-date-field" name="ann_start_date" id="ann_start_date" value="<?php echo $ann_start_date; ?>"/>
+                        <label for="start_date"><?php esc_html_e( 'Start Date', 'erp' ); ?></label>
+                        <input autocomplete="off" style="border-radius: 3px; width: 100%; border: 1px black solid;" class="erp-date-field" name="start_date" id="start_date" value="<?php echo $start_date; ?>"/>
 
-                        <label for="ann_end_date"><?php esc_html_e( 'End Date', 'erp' ); ?></label>
-                        <input autocomplete="off" style="border-radius: 3px; width: 100%; border: 1px black solid;" class="erp-date-field" name="ann_end_date" id="ann_end_date" value="<?php echo $ann_end_date; ?>"/>
+                        <label for="end_date"><?php esc_html_e( 'End Date', 'erp' ); ?></label>
+                        <input autocomplete="off" style="border-radius: 3px; width: 100%; border: 1px black solid;" class="erp-date-field" name="end_date" id="end_date" value="<?php echo $end_date; ?>"/>
                         <input hidden name="status" value="<?php echo $status; ?>"/>
                     </div>
 
@@ -265,16 +265,15 @@ class Announcement_List_Table extends WP_List_Table {
         $current_page          = $this->get_pagenum();
         $offset                = ( $current_page - 1 ) * $per_page;
 
-        // only ncessary because we have sample data
         $args = [
             'offset'      => $offset,
             'numberposts' => $per_page,
         ];
 
-        if ( ! empty( $_GET['ann_start_date'] ) && ! empty( $_GET['ann_end_date'] ) ) {
+        if ( ! empty( $_GET['start_date'] ) && ! empty( $_GET['end_date'] ) ) {
             $args['date_query'] = [
-                'after'     => sanitize_text_field( wp_unslash( $_GET['ann_start_date'] ) ),
-                'end'       => sanitize_text_field( wp_unslash( $_GET['ann_end_date'] ) ),
+                'after'     => sanitize_text_field( wp_unslash( $_GET['start_date'] ) ),
+                'end'       => sanitize_text_field( wp_unslash( $_GET['end_date'] ) ),
                 'inclusive' => true,
             ];
         }
