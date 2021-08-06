@@ -6,15 +6,15 @@
 
     <?php if ( ! empty( $_GET['announcement_delete'] ) ) { ?>
         <div id="message" class="error notice is-dismissible below-h2">
-            <p><?php esc_html_e( 'Some announcements doesn\'t delete', 'erp' ); ?></p>
-            <button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span></button>
+            <p><?php esc_html_e( 'Some announcements could not be deleted', 'erp' ); ?></p>
+            <button type="button" class="notice-dismiss"><span class="screen-reader-text"> <?php esc_html_e( 'Dismiss this notice.', 'erp' ); ?> </span></button>
         </div>
     <?php } ?>
 
     <?php if ( ! empty( $_GET['announcement_restore'] ) ) { ?>
         <div id="message" class="error notice is-dismissible below-h2">
-            <p><?php esc_html_e( 'Some announcements doesn\'t restore', 'erp' ); ?></p>
-            <button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span></button>
+            <p><?php esc_html_e( 'Some announcements could not be restored', 'erp' ); ?></p>
+            <button type="button" class="notice-dismiss"><span class="screen-reader-text"> <?php esc_html_e( 'Dismiss this notice.', 'erp' ); ?> </span></button>
         </div>
     <?php } ?>
 
