@@ -4,8 +4,6 @@ namespace WeDevs\ERP\HRM;
 
 use WP_List_Table;
 
-use function PHPSTORM_META\type;
-
 /**
  *  List table class
  */
