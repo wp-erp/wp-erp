@@ -105,7 +105,7 @@ class Announcement_List_Table extends WP_List_Table {
         $params['action'] = 'edit';
         $edit_text        = esc_html__( 'Edit', 'erp' );
         $edit_title       = esc_html__( 'Edit this item', 'erp' );
-        if ( ! empty( $_GET['status'] ) && wp_unslash( $_GET['status'] ) === 'trash' ) {
+        if ( ! empty( $_GET['status'] ) && sanitize_text_field( wp_unslash( $_GET['status'] ) ) === 'trash' ) {
             $params['action']   = 'untrash';
             $params['_wpnonce'] = wp_create_nonce( 'untrash-post_' . $item->ID );
             $edit_text          = esc_html__( 'Restore', 'erp' );
@@ -113,7 +113,7 @@ class Announcement_List_Table extends WP_List_Table {
         }
         $edit_url = add_query_arg( $params, admin_url( 'post.php' ) );
 
-        $params['action']   = ( ! empty( $_GET['status'] ) && wp_unslash( $_GET['status'] ) === 'trash' ) ? 'delete' : 'trash';
+        $params['action']   = ( ! empty( $_GET['status'] ) && sanitize_text_field( wp_unslash( $_GET['status'] ) ) === 'trash' ) ? 'delete' : 'trash';
         $params['_wpnonce'] = wp_create_nonce( $params['action'] . '-post_' . $item->ID );
         $delete_url         = add_query_arg( $params, admin_url( 'post.php' ) );
 
@@ -185,7 +185,7 @@ class Announcement_List_Table extends WP_List_Table {
         $actions = [
             'delete_announcement'   => __( 'Move to trash', 'erp' ),
         ];
-        if ( ! empty( $_GET['status'] ) && wp_unslash( $_GET['status'] ) === 'trash' ) {
+        if ( ! empty( $_GET['status'] ) && sanitize_text_field( wp_unslash( $_GET['status'] ) ) === 'trash' ) {
             unset( $actions['delete_announcement'] );
             $actions['delete_announcement_p'] = __( 'Delete Parmanently', 'erp' );
             $actions['restore_announcements']  = __( 'Restore Announcements', 'erp' );
