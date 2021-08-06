@@ -273,7 +273,7 @@ class Announcement_List_Table extends WP_List_Table {
         if ( ! empty( $_GET['start_date'] ) && ! empty( $_GET['end_date'] ) ) {
             $args['date_query'] = [
                 'after'     => sanitize_text_field( wp_unslash( $_GET['start_date'] ) ),
-                'end'       => sanitize_text_field( wp_unslash( $_GET['end_date'] ) ),
+                'before'    => sanitize_text_field( wp_unslash( $_GET['end_date'] ) ),
                 'inclusive' => true,
             ];
         }

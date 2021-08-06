@@ -136,7 +136,7 @@ function erp_hr_send_announcement_email( $employee_ids, $post_id ) {
  *
  * @since 1.9.1
  *
- * @param int query arguments
+ * @param array query arguments
  *
  * @return array list of announcements
  */
@@ -161,7 +161,7 @@ function erp_hr_get_announcements( $args = [] ) {
  *
  * @since 1.9.1
  *
- * @param int query arguments
+ * @param array query arguments
  *
  * @return int count of announcements
  */
@@ -169,8 +169,6 @@ function erp_hr_get_announcements_count( $args = [] ) {
     $defaults = [
         'numberposts'     => -1,
         'offset'          => 0,
-        'orderby'         => 'post_date',
-        'order'           => 'DESC',
         'post_type'       => 'erp_hr_announcement',
     ];
 
@@ -195,6 +193,7 @@ function erp_hr_get_announcements_count( $args = [] ) {
  * @since 1.9.1
  *
  * @param array $announcement_ids
+ * @param bool $delete
  *
  * @return array
  */
@@ -205,13 +204,13 @@ function erp_hr_trash_announcements( $announcement_ids, $delete = false ) {
             if ( ! wp_delete_post( $id ) ) {
                 $success[] = false;
             }
-        }
-        else {
+        } else {
             if ( ! wp_trash_post( $id ) ) {
                 $success[] = false;
             }
         }
     }
+
     return $success;
 }
 
@@ -220,37 +219,16 @@ function erp_hr_trash_announcements( $announcement_ids, $delete = false ) {
  *
  * @since 1.9.1
  *
- * @param int query arguments
- *
  * @return array count of announcement statuses
  */
-function erp_hr_get_announcements_status_counts( $args ) {
-    $defaults = [
-        'numberposts'     => -1,
-        'offset'          => 0,
-        'post_type'       => 'erp_hr_announcement',
-    ];
-
-    if ( ! empty( $args['numberposts'] ) ) {
-        unset( $args['numberposts'] );
-    }
-
-    if ( ! empty( $args['offset'] ) ) {
-        unset( $args['offset'] );
-    }
-
-    if ( ! empty( $args['date_query'] ) ) {
-        unset( $args['date_query'] );
-    }
-
-    $args = wp_parse_args( $args, $defaults );
+function erp_hr_get_announcements_status_counts() {
+    $count = wp_count_posts( 'erp_hr_announcement' );
 
     $counts = [];
     $statuses = [ 'publish', 'draft', 'trash' ];
 
     foreach ( $statuses as $status ) {
-        $args['post_status'] = $status;
-        $counts[ $status ]   = erp_hr_get_announcements_count( $args );
+        $counts[ $status ] = $count->{$status};
     }
 
     return $counts;
@@ -272,5 +250,6 @@ function erp_hr_restore_announcements( $announcement_ids ) {
             $success[] = false;
         }
     }
+
     return $success;
 }
