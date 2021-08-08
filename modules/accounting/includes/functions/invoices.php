@@ -112,7 +112,7 @@ function erp_acct_get_invoice( $invoice_no ) {
         $row['line_items'][ $key ]['line_total'] = $total;
     }
 
-    $row['attachments'] = unserialize( $row['attachments'] );
+    $row['attachments'] = isset( $row['attachments'] ) ? maybe_unserialize( $row['attachments'] ) : null;
     $row['total_due']   = erp_acct_get_invoice_due( $invoice_no );
     $row['pdf_link']    = erp_acct_pdf_abs_path_to_url( $invoice_no );
 
@@ -1054,7 +1054,15 @@ function erp_acct_get_recievables_overview() {
 function erp_acct_get_invoice_due( $invoice_no ) {
     global $wpdb;
 
-    $result = $wpdb->get_row( $wpdb->prepare( "SELECT invoice_no, SUM( ia.debit - ia.credit) as due FROM {$wpdb->prefix}erp_acct_invoice_account_details as ia WHERE ia.invoice_no = %d GROUP BY ia.invoice_no", $invoice_no ), ARRAY_A );
+    $result = $wpdb->get_row(
+        $wpdb->prepare(
+            "SELECT ia.invoice_no, SUM( ia.debit - ia.credit) as due
+            FROM {$wpdb->prefix}erp_acct_invoice_account_details as ia
+            WHERE ia.invoice_no = %d
+            GROUP BY ia.invoice_no", $invoice_no
+        ),
+        ARRAY_A
+    );
 
     return $result['due'];
 }
