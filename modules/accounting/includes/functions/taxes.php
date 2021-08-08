@@ -689,22 +689,29 @@ function erp_acct_get_default_tax_rate_name_id() {
  * Inserts synced tax data
  * 
  * @since 1.9.1
+ * 
+ * @param array $args
  *
- * @return void
+ * @return int|string|\WP_Error
  */
-function erp_acct_insert_synced_tax( $system_id, $sync_id, $sync_type, $sync_source ) {
+function erp_acct_insert_synced_tax( $args = [] ) {
     global $wpdb;
 
-    $inserted = $wpdb->insert(
-        "{$wpdb->prefix}erp_acct_synced_taxes",
-        [
-            'system_id' => $system_id,
-            'sync_id' => $sync_id,
-            'sync_type' => $sync_type,
-            'sync_source' => $sync_source
-        ],
-        [ '%d', '%d', '%s', '%s' ]
-    );
+    $defaults = [
+        'system_id'   => null,
+        'sync_type'   => '',
+        'sync_source' => '',
+        'sync_id'     => null,
+        'sync_slug'   => '',
+    ];
+
+    $args = wp_parse_args( $args, $defaults );
+
+    if ( empty( $args['system_id'] ) || ( empty( $args['sync_slug'] ) && empty( $args['sync_id'] ) ) ) {
+        return new \WP_Error( 'inconsistent-data', __( 'Inconsistent data provided', 'erp-pro' ) );
+    }
+
+    $inserted = $wpdb->insert( "{$wpdb->prefix}erp_acct_synced_taxes", $args, [ '%d', '%s', '%s', '%d', '%s' ] );
 
     return $inserted;
 }
@@ -714,25 +721,34 @@ function erp_acct_insert_synced_tax( $system_id, $sync_id, $sync_type, $sync_sou
  * 
  * @since 1.9.1
  *
- * @param int|string $sync_id
  * @param string $sync_type
  * @param string $sync_source
+ * @param int|string $sync_id
+ * @param string $sync_slug
  * 
  * @return int|null
  */
-function erp_acct_get_synced_tax_system_id( $sync_id, $sync_type, $sync_source ) {
+function erp_acct_get_synced_tax_system_id( $sync_type, $sync_source, $sync_id = false, $sync_slug = false ) {
     global $wpdb;
 
-    $system_id = $wpdb->get_var(
-        $wpdb->prepare(
-            "SELECT system_id
+    $sql  = "SELECT system_id
             FROM {$wpdb->prefix}erp_acct_synced_taxes
-            WHERE sync_id = %d
-            AND sync_type = %s
-            AND sync_source = %s",
-            [ $sync_id, $sync_type, $sync_source ]
-        )
-    );
+            WHERE sync_type = %s
+            AND sync_source = %s";
+
+    $args = [ $sync_type, $sync_source ];
+
+    if ( false !== $sync_id ) {
+        $sql   .= " AND sync_id = %d";
+        $args[] = $sync_id;
+    }
+
+    if ( false !== $sync_slug ) {
+        $sql   .= " AND sync_slug = %s";
+        $args[] = $sync_slug;
+    }
+
+    $system_id = $wpdb->get_var( $wpdb->prepare( $sql, $args ) );
 
     return ! is_wp_error( $system_id ) ? (int) $system_id : null;
 }
