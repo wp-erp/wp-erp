@@ -701,8 +701,14 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $item['status']      = erp_acct_get_trn_status_by_id( $status );
         $item['status_code'] = $status;
-        $item['ref'] = $item['ref'] ? $item['ref'] : $item['pay_ref'];
-        $item['ref'] = $item['ref'] ? $item['ref'] : $item['exp_ref']; // for set expense reference no
+        
+        $item['ref']         = isset( $item['ref'] )
+                             ? $item['ref']
+                             : ( isset( $item['pay_ref'] )
+                             ? $item['pay_ref']
+                             : ( isset( $item['exp_ref'] )
+                             ? $item['exp_ref']
+                             : '' ) );
 
         $data = array_merge( $item, $additional_fields );
 
