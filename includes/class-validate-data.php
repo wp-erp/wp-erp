@@ -312,7 +312,7 @@ class Validate_Data {
                                 if ( false !== strpos( $field_value, 'E' ) ) {
                                     $errors[] = __( "The input ({$field_value}) for {$field_name} may be exponential. Please change your number in proper format.", 'erp' );
                                 } else {
-                                    $errors[] = __( "{$field_name} is not valid. Minimum 4 and maximum 18 digits are expected and it may contain space, dot(.), hyphen(-) only.", 'erp' );
+                                    $errors[] = __( "{$field_name} is not valid. Minimum 4 and maximum 18 digits are expected.", 'erp' );
                                 }
                             }
                             break;
@@ -395,7 +395,7 @@ class Validate_Data {
 
                         case 'is_valid_amount':
                             if ( $rule_value === 'true' && ! empty( $field_value ) && ! erp_is_valid_currency_amount( $field_value ) ) {
-                                $errors[] = __( "{$field_name} is not valid. It may contain integer or float values only. For float values, maximum 2 digits after decimal point are allowed", 'erp' );
+                                $errors[] = __( "{$field_name} is not valid. It may contain integer or decimal point values with maximum 2 digits after decimal point.", 'erp' );
                             }
                             break;
 
