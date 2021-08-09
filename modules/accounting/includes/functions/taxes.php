@@ -708,7 +708,7 @@ function erp_acct_insert_synced_tax( $args = [] ) {
     $args = wp_parse_args( $args, $defaults );
 
     if ( empty( $args['system_id'] ) || ( empty( $args['sync_slug'] ) && empty( $args['sync_id'] ) ) ) {
-        return new \WP_Error( 'inconsistent-data', __( 'Inconsistent data provided', 'erp-pro' ) );
+        return new \WP_Error( 'inconsistent-data', __( 'Inconsistent data provided', 'erp' ) );
     }
 
     $inserted = $wpdb->insert( "{$wpdb->prefix}erp_acct_synced_taxes", $args, [ '%d', '%s', '%s', '%d', '%s' ] );
