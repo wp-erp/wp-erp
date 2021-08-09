@@ -174,14 +174,9 @@ function erp_acct_insert_purchase( $data ) {
             ]
         );
 
-        $voucher_no  = $wpdb->insert_id;
-        $purchase_no = $voucher_no;
-
-        error_log( 'data:'. print_r( $data, true ) );
-
+        $voucher_no    = $wpdb->insert_id;
+        $purchase_no   = $voucher_no;
         $purchase_data = erp_acct_get_formatted_purchase_data( $data, $voucher_no );
-
-        error_log( 'p-data:'. print_r( $purchase_data, true ) );
 
         $wpdb->insert(
             $wpdb->prefix . 'erp_acct_purchase',
