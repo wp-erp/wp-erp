@@ -814,21 +814,23 @@ function erp_acct_insert_invoice_data_into_ledger( $invoice_data, $voucher_no = 
     );
 
     // insert discount in ledger_details
-    $wpdb->insert(
-        $wpdb->prefix . 'erp_acct_ledger_details',
-        [
-            'ledger_id'   => $sales_discount_ledger_id,
-            'trn_no'      => $trn_no,
-            'particulars' => $invoice_data['particulars'],
-            'debit'       => $discount_debit,
-            'credit'      => $discount_credit,
-            'trn_date'    => $invoice_data['trn_date'],
-            'created_at'  => $date,
-            'created_by'  => $user_id,
-            'updated_at'  => $date,
-            'updated_by'  => $user_id,
-        ]
-    );
+    if ( (float) $discount_debit > 0 || (float) $discount_credit > 0 ) {
+        $wpdb->insert(
+            $wpdb->prefix . 'erp_acct_ledger_details',
+            [
+                'ledger_id'   => $sales_discount_ledger_id,
+                'trn_no'      => $trn_no,
+                'particulars' => $invoice_data['particulars'],
+                'debit'       => $discount_debit,
+                'credit'      => $discount_credit,
+                'trn_date'    => $invoice_data['trn_date'],
+                'created_at'  => $date,
+                'created_by'  => $user_id,
+                'updated_at'  => $date,
+                'updated_by'  => $user_id,
+            ]
+        );
+    }
 
     erp_acct_purge_cache( ['list' => 'sales_transaction'] );
 }
