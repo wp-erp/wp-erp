@@ -118,8 +118,8 @@ class Announcement_List_Table extends WP_List_Table {
             $params['_wpnonce'] = wp_create_nonce( 'delete-post_' . $item->ID );
             $delete_url         = add_query_arg( $params, admin_url( 'post.php' ) );
 
-            $actions['untrash'] = sprintf( '<a href="%s" data-id=%d title="%s">%s</a>', $restore_url, $item->ID, esc_html__( 'Restore this item', 'erp' ), esc_html__( 'Restore', 'erp' ) );
-            $actions['delete']  = sprintf( '<a href="%s" data-id=%d title="%s">%s</a>', $delete_url, $item->ID, esc_html__( 'Delete this item permanently', 'erp' ), esc_html__( 'Delete Permanently', 'erp' ) );
+            $actions['untrash'] = sprintf( '<a href="%s" data-id=%d title="%s">%s</a>', $restore_url, $item->ID, esc_html__( 'Restore this announcement', 'erp' ), esc_html__( 'Restore', 'erp' ) );
+            $actions['delete']  = sprintf( '<a href="%s" data-id=%d title="%s">%s</a>', $delete_url, $item->ID, esc_html__( 'Delete this announcement permanently', 'erp' ), esc_html__( 'Delete Permanently', 'erp' ) );
         } else {
             $params['action'] = 'edit';
             $edit_url         = add_query_arg( $params, admin_url( 'post.php' ) );
@@ -128,8 +128,8 @@ class Announcement_List_Table extends WP_List_Table {
             $params['_wpnonce'] = wp_create_nonce( 'trash-post_' . $item->ID );
             $trash_url          = add_query_arg( $params, admin_url( 'post.php' ) );
 
-            $actions['edit']  = sprintf( '<a href="%s" data-id=%d title="%s">%s</a>', $edit_url, $item->ID, esc_html__( 'Edit this item', 'erp' ), esc_html__( 'Edit', 'erp' ) );
-            $actions['trash'] = sprintf( '<a href="%s" data-id=%d title="%s">%s</a>', $trash_url, $item->ID, esc_html__( 'Trash this item', 'erp' ), esc_html__( 'Trash', 'erp' ) );
+            $actions['edit']  = sprintf( '<a href="%s" data-id=%d title="%s">%s</a>', $edit_url, $item->ID, esc_html__( 'Edit this announcement', 'erp' ), esc_html__( 'Edit', 'erp' ) );
+            $actions['trash'] = sprintf( '<a href="%s" data-id=%d title="%s">%s</a>', $trash_url, $item->ID, esc_html__( 'Trash this announcement', 'erp' ), esc_html__( 'Trash', 'erp' ) );
         }
 
         return sprintf( '<strong>%s</strong> %s', esc_html( $item->post_title ), $this->row_actions( $actions ) );
