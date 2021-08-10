@@ -90,7 +90,7 @@ class Announcement_List_Table extends WP_List_Table {
      * @return void
      */
     public function column_cb( $item ) {
-        return sprintf( '<input type="checkbox" name="announcement_ids[]" value="%d" />', $item->ID );
+        return sprintf( '<input type="checkbox" name="id[]" value="%d" />', $item->ID );
     }
 
     /**

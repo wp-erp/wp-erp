@@ -607,8 +607,8 @@ class Form_Handler {
 
             switch ( $action ) {
                 case 'trash':
-                    if ( ! empty( $_GET['announcement_ids'] ) ) {
-                        $announcement_ids = array_map( 'sanitize_text_field', wp_unslash( $_GET['announcement_ids'] ) );
+                    if ( ! empty( $_GET['id'] ) ) {
+                        $announcement_ids = array_map( 'sanitize_text_field', wp_unslash( $_GET['id'] ) );
                         $fail_count       = erp_hr_trash_announcements( $announcement_ids );
                     }
 
@@ -623,8 +623,8 @@ class Form_Handler {
                     exit();
 
                 case 'delete_permanently':
-                    if ( ! empty( $_GET['announcement_ids'] ) ) {
-                        $announcement_ids = array_map( 'sanitize_text_field', wp_unslash( $_GET['announcement_ids'] ) );
+                    if ( ! empty( $_GET['id'] ) ) {
+                        $announcement_ids = array_map( 'sanitize_text_field', wp_unslash( $_GET['id'] ) );
                         $fail_count       = erp_hr_trash_announcements( $announcement_ids, true );
                     }
 
@@ -639,8 +639,8 @@ class Form_Handler {
                     exit();
 
                 case 'restore':
-                    if ( ! empty( $_GET['announcement_ids'] ) ) {
-                        $announcement_ids = array_map( 'sanitize_text_field', wp_unslash( $_GET['announcement_ids'] ) );
+                    if ( ! empty( $_GET['id'] ) ) {
+                        $announcement_ids = array_map( 'sanitize_text_field', wp_unslash( $_GET['id'] ) );
                         $fail_count       = erp_hr_restore_announcements( $announcement_ids );
                     }
 
