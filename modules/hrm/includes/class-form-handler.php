@@ -609,11 +609,11 @@ class Form_Handler {
                 case 'trash':
                     if ( ! empty( $_GET['announcement_ids'] ) ) {
                         $announcement_ids = array_map( 'sanitize_text_field', wp_unslash( $_GET['announcement_ids'] ) );
-                        $resp             = erp_hr_trash_announcements( $announcement_ids );
+                        $fail_count       = erp_hr_trash_announcements( $announcement_ids );
                     }
 
-                    if ( in_array( false, $resp ) ) {
-                        $redirect = add_query_arg( [ 'bulk-operation-failed' => 'failed_some_trash' ], $redirect );
+                    if ( $fail_count > 0 ) {
+                        $redirect = add_query_arg( [ 'bulk-operation-failed' => 'failed_some_trash', 'fail-count' => $fail_count ], $redirect );
                     }
 
                     wp_redirect( $redirect );
@@ -622,11 +622,11 @@ class Form_Handler {
                 case 'delete_permanently':
                     if ( ! empty( $_GET['announcement_ids'] ) ) {
                         $announcement_ids = array_map( 'sanitize_text_field', wp_unslash( $_GET['announcement_ids'] ) );
-                        $resp             = erp_hr_trash_announcements( $announcement_ids, true );
+                        $fail_count       = erp_hr_trash_announcements( $announcement_ids, true );
                     }
 
-                    if ( in_array( false, $resp ) ) {
-                        $redirect = add_query_arg( [ 'bulk-operation-failed' => 'failed_some_delation' ], $redirect );
+                    if ( $fail_count > 0 ) {
+                        $redirect = add_query_arg( [ 'bulk-operation-failed' => 'failed_some_delation', 'fail-count' => $fail_count ], $redirect );
                     }
 
                     wp_redirect( $redirect );
@@ -635,11 +635,11 @@ class Form_Handler {
                 case 'restore':
                     if ( ! empty( $_GET['announcement_ids'] ) ) {
                         $announcement_ids = array_map( 'sanitize_text_field', wp_unslash( $_GET['announcement_ids'] ) );
-                        $resp             = erp_hr_restore_announcements( $announcement_ids );
+                        $fail_count       = erp_hr_restore_announcements( $announcement_ids );
                     }
 
-                    if ( in_array( false, $resp ) ) {
-                        $redirect = add_query_arg( [ 'bulk-operation-failed' => 'failed_some_restoration' ], $redirect );
+                    if ( $fail_count > 0 ) {
+                        $redirect = add_query_arg( [ 'bulk-operation-failed' => 'failed_some_restoration', 'fail-count' => $fail_count ], $redirect );
                     }
 
                     wp_redirect( $redirect );
