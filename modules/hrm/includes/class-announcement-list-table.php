@@ -94,31 +94,36 @@ class Announcement_List_Table extends WP_List_Table {
      * @return void
      */
     public function column_title( $item ) {
+        $is_trash = ( ! empty( $_GET['status'] ) && sanitize_text_field( wp_unslash( $_GET['status'] ) ) === 'trash' );
+
         $actions = [];
 
         $params = [
             'post' => $item->ID,
         ];
 
-        $params['action'] = 'edit';
-        $edit_text        = esc_html__( 'Edit', 'erp' );
-        $edit_title       = esc_html__( 'Edit this item', 'erp' );
-
-        if ( ! empty( $_GET['status'] ) && sanitize_text_field( wp_unslash( $_GET['status'] ) ) === 'trash' ) {
+        if ( $is_trash ) {
             $params['action']   = 'untrash';
             $params['_wpnonce'] = wp_create_nonce( 'untrash-post_' . $item->ID );
-            $edit_text          = esc_html__( 'Restore', 'erp' );
-            $edit_title         = esc_html__( 'Restore this item', 'erp' );
+            $restore_url        = add_query_arg( $params, admin_url( 'post.php' ) );
+
+            $params['action']   = 'delete';
+            $params['_wpnonce'] = wp_create_nonce( 'delete-post_' . $item->ID );
+            $delete_url         = add_query_arg( $params, admin_url( 'post.php' ) );
+
+            $actions['untrash'] = sprintf( '<a href="%s" data-id=%d title="%s">%s</a>', $restore_url, $item->ID, esc_html__( 'Restore this item', 'erp' ), esc_html__( 'Restore', 'erp' ) );
+            $actions['delete']  = sprintf( '<a href="%s" data-id=%d title="%s">%s</a>', $delete_url, $item->ID, esc_html__( 'Delete this item permanently', 'erp' ), esc_html__( 'Delete Permanently', 'erp' ) );
+        } else {
+            $params['action'] = 'edit';
+            $edit_url         = add_query_arg( $params, admin_url( 'post.php' ) );
+
+            $params['action']   = 'trash';
+            $params['_wpnonce'] = wp_create_nonce( 'trash-post_' . $item->ID );
+            $trash_url          = add_query_arg( $params, admin_url( 'post.php' ) );
+
+            $actions['edit']  = sprintf( '<a href="%s" data-id=%d title="%s">%s</a>', $edit_url, $item->ID, esc_html__( 'Edit this item', 'erp' ), esc_html__( 'Edit', 'erp' ) );
+            $actions['trash'] = sprintf( '<a href="%s" data-id=%d title="%s">%s</a>', $trash_url, $item->ID, esc_html__( 'Trash this item', 'erp' ), esc_html__( 'Trash', 'erp' ) );
         }
-
-        $edit_url = add_query_arg( $params, admin_url( 'post.php' ) );
-
-        $params['action']   = ( ! empty( $_GET['status'] ) && sanitize_text_field( wp_unslash( $_GET['status'] ) ) === 'trash' ) ? 'delete' : 'trash';
-        $params['_wpnonce'] = wp_create_nonce( $params['action'] . '-post_' . $item->ID );
-        $delete_url         = add_query_arg( $params, admin_url( 'post.php' ) );
-
-        $actions['edit']   = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $edit_url, $item->ID, $edit_title, $edit_text );
-        $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" title="%s">%s</a>', $delete_url, $item->ID, esc_html__( 'Delete this item', 'erp' ), esc_html__( 'Delete', 'erp' ) );
 
         return sprintf( '<strong>%s</strong> %s', esc_html( $item->post_title ), $this->row_actions( $actions ) );
     }
