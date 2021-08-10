@@ -4,7 +4,7 @@ if ( ! empty( $_GET['bulk-operation-failed'] ) ) {
     $failed_reason = sanitize_text_field( wp_unslash( $_GET['bulk-operation-failed'] ) );
     $fail_count    = 0;
     if ( ! empty( $_GET['fail-count'] ) ) {
-        $fail_count = absint( sanitize_text_field( wp_unslash( $_GET['fail-count'] ) ) );
+        $fail_count = absint( wp_unslash( $_GET['fail-count'] ) );
     }
 
     switch ( $failed_reason ) {
