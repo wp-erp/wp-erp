@@ -478,10 +478,17 @@ class Email extends Template {
      * @return array
      */
     protected function get_imap_settings_fields() {
-        if ( !extension_loaded( 'imap' ) || !function_exists( 'imap_open' ) ) {
+        if ( ! extension_loaded( 'imap' ) || ! function_exists( 'imap_open' ) ) {
             $fields[] = [
                 'title' => __( 'IMAP/POP3 Options', 'erp' ),
                 'type'  => 'title',
+                'desc'  => ''
+            ];
+
+            $fields[] = [
+                'title' => '',
+                'id'    => 'label_imap',
+                'type'  => 'label',
                 'desc'  => sprintf(
                     '%s' . __( 'Your server does not have PHP IMAP extension loaded. To enable this feature, please contact your hosting provider and ask to enable PHP IMAP extension.', 'erp' ) . '%s',
                     '<section class="notice notice-warning"><p>',
@@ -608,7 +615,7 @@ class Email extends Template {
         $fields[] = [
             'title' => __( 'Gmail / G suite Authentication', 'erp' ),
             'type'  => 'title',
-            'desc'  => __( '<a target="_blank" href="https://console.developers.google.com/flows/enableapi?apiid=gmail&pli=1">Create a Google App</a> and authorize your account to Send and Recieve emails using Gmail. Follow instructions from this <a target="_blank" href="https://wperp.com/docs/crm/tutorials/how-to-configure-gmail-api-connection-in-the-crm-settings/?utm_source=Free+Plugin&utm_medium=CTA&utm_content=Backend&utm_campaign=Docs">Documentation</a> to get started', 'erp' ),
+            'desc'  => '',
         ];
 
         if ( wperp()->google_auth->is_connected() ) {
@@ -623,6 +630,13 @@ class Email extends Template {
 
             return $fields;
         }
+
+        $fields[] = [
+            'title' => '',
+            'id'    => 'label_gmail',
+            'type'  => 'label',
+            'desc'  => __( '<a target="_blank" href="https://console.developers.google.com/flows/enableapi?apiid=gmail&pli=1">Create a Google App</a> and authorize your account to Send and Recieve emails using Gmail. Follow instructions from this <a target="_blank" href="https://wperp.com/docs/crm/tutorials/how-to-configure-gmail-api-connection-in-the-crm-settings/?utm_source=Free+Plugin&utm_medium=CTA&utm_content=Backend&utm_campaign=Docs">Documentation</a> to get started', 'erp' ),
+        ];
 
         $fields[] = [
             'title' => __( 'Client ID', 'erp' ),
@@ -821,6 +835,11 @@ class Email extends Template {
 
                     // If it's incoming/outgoing email, then toggle email providers
                     $this->toggle_providers( $_POST['section'], $_POST );
+
+                    if ( 'imap' === $_POST['section'] ) {
+                        $imap_settings = get_option( 'erp_settings_erp-email_imap', [] );
+                        $update_options['imap_status'] = ! empty( $imap_settings['imap_status'] ) ? intval( $imap_settings['imap_status'] ) : 0;
+                    }
 
                     update_option( $option_id, $update_options );
                 }

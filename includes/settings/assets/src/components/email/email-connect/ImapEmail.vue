@@ -11,7 +11,7 @@
     <template slot="extended-data">
         <div class="test-connection">
             <div class="connection-incoming">
-                <label for="smtp_test_email_address">{{ __( 'Test Connection', 'erp' ) }}</label>
+                <label>{{ __( 'Test Connection', 'erp' ) }}</label>
                 <p>{{ __( 'Click on the Above Button Before Saving the Setting', 'erp' ) }}</p>
 
                 <button type="button" class="wperp-btn btn--secondary btn-test-connection" @click="testImapConnection" v-html="imapTestString"></button>
