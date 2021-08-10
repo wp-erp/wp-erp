@@ -596,14 +596,14 @@ class Form_Handler {
         $action             = $announcement_table->current_action();
 
         if ( $action ) {
-            $req_uri_bulk = ( isset( $_SERVER['REQUEST_URI'] ) ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+            $req_uri_bulk = ( ! empty( $_SERVER['REQUEST_URI'] ) ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
             $redirect     = remove_query_arg( [
                 '_wp_http_referer',
                 '_wpnonce',
                 'action',
                 'action2',
             ], $req_uri_bulk );
-            $resp     = [];
+            $fail_count   = 0;
 
             switch ( $action ) {
                 case 'trash':
@@ -613,7 +613,10 @@ class Form_Handler {
                     }
 
                     if ( $fail_count > 0 ) {
-                        $redirect = add_query_arg( [ 'bulk-operation-failed' => 'failed_some_trash', 'fail-count' => $fail_count ], $redirect );
+                        $redirect = add_query_arg( [
+                            'bulk-operation-failed' => 'failed_some_trash',
+                            'fail-count' => $fail_count,
+                        ], $redirect );
                     }
 
                     wp_redirect( $redirect );
@@ -626,7 +629,10 @@ class Form_Handler {
                     }
 
                     if ( $fail_count > 0 ) {
-                        $redirect = add_query_arg( [ 'bulk-operation-failed' => 'failed_some_delation', 'fail-count' => $fail_count ], $redirect );
+                        $redirect = add_query_arg( [
+                            'bulk-operation-failed' => 'failed_some_delation',
+                            'fail-count' => $fail_count,
+                        ], $redirect );
                     }
 
                     wp_redirect( $redirect );
@@ -639,7 +645,10 @@ class Form_Handler {
                     }
 
                     if ( $fail_count > 0 ) {
-                        $redirect = add_query_arg( [ 'bulk-operation-failed' => 'failed_some_restoration', 'fail-count' => $fail_count ], $redirect );
+                        $redirect = add_query_arg( [
+                            'bulk-operation-failed' => 'failed_some_restoration',
+                            'fail-count' => $fail_count,
+                        ], $redirect );
                     }
 
                     wp_redirect( $redirect );
