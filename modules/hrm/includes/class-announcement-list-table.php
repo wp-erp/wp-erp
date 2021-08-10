@@ -179,7 +179,7 @@ class Announcement_List_Table extends WP_List_Table {
 
         //prepare modal for large number of text data in a cell
         $cell_content     = count( $sent_to ) === 0 ? '&mdash;' : implode( ', ', $sent_to );
-        $cell_content     = $type === 'all_employee' ? 'All employees' : $cell_content;
+        $cell_content     = $type === 'all_employee' ? __( 'All employees', 'erp' ) : $cell_content;
         $threshold_length = 65;
 
         if ( strlen( $cell_content ) < $threshold_length ) {
