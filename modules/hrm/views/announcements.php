@@ -2,22 +2,29 @@
 $reason_text = '';
 if ( ! empty( $_GET['bulk-operation-failed'] ) ) {
     $failed_reason = sanitize_text_field( wp_unslash( $_GET['bulk-operation-failed'] ) );
+    $fail_count    = 0;
+    if ( ! empty( $_GET['fail-count'] ) ) {
+        $fail_count = absint( sanitize_text_field( wp_unslash( $_GET['fail-count'] ) ) );
+    }
 
     switch ( $failed_reason ) {
         case 'failed_some_trash':
-            $reason_text = esc_html__( 'Some announcements could not be trashed', 'erp' );
+            // translators: %s: the placeholder is the number of announcement that failed trash operation
+            $reason_text = sprintf( _n( '%s announcement could not be trashed', '%s announcements could not be trashed', $fail_count, 'erp' ), number_format_i18n( $fail_count ) );
             break;
 
         case 'failed_some_delation':
-            $reason_text = esc_html__( 'Some announcements could not be deleted', 'erp' );
+            // translators: %s: the placeholder is the number of announcement that failed delete operation
+            $reason_text = sprintf( _n( '%s announcement could not be deleted', '%s announcements could not be deleted', $fail_count, 'erp' ), number_format_i18n( $fail_count ) );
             break;
 
         case 'failed_some_restoration':
-            $reason_text = esc_html__( 'Some announcements could not be restored', 'erp' );
+            // translators: %s: the placeholder is the number of announcement that failed restore operation
+            $reason_text = sprintf( _n( '%s announcement could not be restored', '%s announcements could not be restored', $fail_count, 'erp' ), number_format_i18n( $fail_count ) );
             break;
 
         default:
-            $reason_text = esc_html__( 'Unknow error happened', 'erp' );
+            $reason_text = __( 'Unknow error happened', 'erp' );
     }
 }
 ?>
@@ -30,7 +37,7 @@ if ( ! empty( $_GET['bulk-operation-failed'] ) ) {
 
     <?php if ( ! empty( $reason_text ) ) { ?>
         <div id="message" class="error notice is-dismissible below-h2">
-            <p><?php echo $reason_text; ?></p>
+            <p><?php echo esc_html( $reason_text ); ?></p>
             <button type="button" class="notice-dismiss"><span class="screen-reader-text"> <?php esc_html_e( 'Dismiss this notice.', 'erp' ); ?> </span></button>
         </div>
     <?php } ?>
