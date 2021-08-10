@@ -613,7 +613,7 @@ class Form_Handler {
                     }
 
                     if ( in_array( false, $resp ) ) {
-                        $redirect = add_query_arg( [ 'announcement_delete' => 'item_deleted' ], $redirect );
+                        $redirect = add_query_arg( [ 'bulk-operation-failed' => 'failed_some_trash' ], $redirect );
                     }
 
                     wp_redirect( $redirect );
@@ -626,7 +626,7 @@ class Form_Handler {
                     }
 
                     if ( in_array( false, $resp ) ) {
-                        $redirect = add_query_arg( [ 'announcement_delete' => 'item_deleted' ], $redirect );
+                        $redirect = add_query_arg( [ 'bulk-operation-failed' => 'failed_some_delation' ], $redirect );
                     }
 
                     wp_redirect( $redirect );
@@ -639,7 +639,7 @@ class Form_Handler {
                     }
 
                     if ( in_array( false, $resp ) ) {
-                        $redirect = add_query_arg( [ 'announcement_restore' => 'item_restored' ], $redirect );
+                        $redirect = add_query_arg( [ 'bulk-operation-failed' => 'failed_some_restoration' ], $redirect );
                     }
 
                     wp_redirect( $redirect );
