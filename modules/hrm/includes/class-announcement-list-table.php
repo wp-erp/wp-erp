@@ -169,7 +169,7 @@ class Announcement_List_Table extends WP_List_Table {
         }
 
         //prepare modal for large number of text data in a cell
-        $cell_content     = count( $sent_to ) === 0 ? 'None' : implode( ', ', $sent_to );
+        $cell_content     = count( $sent_to ) === 0 ? '&mdash;' : implode( ', ', $sent_to );
         $threshold_length = 65;
 
         if ( strlen( $cell_content ) < $threshold_length ) {
@@ -184,7 +184,7 @@ class Announcement_List_Table extends WP_List_Table {
 
             $list_content .= '</ul>';
 
-            return substr( $cell_content, 0, $threshold_length ) . "<span style='cursor: pointer;' title='Show More' data-more-content='$list_content' class='expand-for-more-ann'> (more)</button>";
+            return substr( $cell_content, 0, $threshold_length ) . "<span style='cursor: pointer;' title='" . esc_attr__( 'Show More', 'erp' ) . "' data-more-content='$list_content' class='expand-for-more-ann'> (" . esc_html__( 'more', 'erp' ) . ')</button>';
         }
     }
 
@@ -224,22 +224,22 @@ class Announcement_List_Table extends WP_List_Table {
         }
 
         $start_date = ( ! empty( $_GET['start_date'] ) ) ? sanitize_text_field( wp_unslash( $_GET['start_date'] ) ) : '';
-        $end_date   = ( ! empty( $_GET['end_date'] ) )   ? sanitize_text_field( wp_unslash( $_GET['end_date'] ) )   : '';
-        $status     = ( ! empty( $_GET['status'] ) )     ? sanitize_text_field( wp_unslash( $_GET['status'] ) )     : '';
+        $end_date   = ( ! empty( $_GET['end_date'] ) ) ? sanitize_text_field( wp_unslash( $_GET['end_date'] ) ) : '';
+        $status     = ( ! empty( $_GET['status'] ) ) ? sanitize_text_field( wp_unslash( $_GET['status'] ) ) : '';
         ?>
         <div class="wperp-filter-dropdown" style="margin: -46px 0 0 0;">
-            <a class="wperp-btn btn--default"><span class="dashicons dashicons-filter"></span>Filters<span class="dashicons dashicons-arrow-down-alt2"></span></a>
+            <a class="wperp-btn btn--default"><span class="dashicons dashicons-filter"></span><?php esc_html_e( 'Filters', 'erp' ); ?><span class="dashicons dashicons-arrow-down-alt2"></span></a>
 
             <div class="erp-dropdown-filter-content" id="erp-dropdown-content">
                 <div class="wperp-filter-panel wperp-filter-panel-default">
                     <h3><?php esc_html_e( 'Filter', 'erp' ); ?></h3>
                     <div class="wperp-filter-panel-body">
                         <label for="start_date"><?php esc_html_e( 'Start Date', 'erp' ); ?></label>
-                        <input autocomplete="off" style="border-radius: 3px; width: 100%; border: 1px black solid;" class="erp-date-field" name="start_date" id="start_date" value="<?php echo $start_date; ?>"/>
+                        <input autocomplete="off" style="border-radius: 3px; width: 100%; border: 1px black solid;" class="erp-date-field" name="start_date" id="start_date" value="<?php echo esc_attr( $start_date ); ?>"/>
 
                         <label for="end_date"><?php esc_html_e( 'End Date', 'erp' ); ?></label>
-                        <input autocomplete="off" style="border-radius: 3px; width: 100%; border: 1px black solid;" class="erp-date-field" name="end_date" id="end_date" value="<?php echo $end_date; ?>"/>
-                        <input hidden name="status" value="<?php echo $status; ?>"/>
+                        <input autocomplete="off" style="border-radius: 3px; width: 100%; border: 1px black solid;" class="erp-date-field" name="end_date" id="end_date" value="<?php echo esc_attr( $end_date ); ?>"/>
+                        <input hidden name="status" value="<?php echo esc_attr( $status ); ?>"/>
                     </div>
 
                     <div class="wperp-filter-panel-footer">
