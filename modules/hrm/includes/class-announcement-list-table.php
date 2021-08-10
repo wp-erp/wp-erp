@@ -60,7 +60,16 @@ class Announcement_List_Table extends WP_List_Table {
                 return esc_html( $item->post_title );
 
             case 'type':
-                $type = ucfirst( get_post_meta( $item->ID, '_announcement_type', true ) );
+                $type = get_post_meta( $item->ID, '_announcement_type', true );
+
+                if ( starts_with( $type, 'by_' ) ) {
+                    $type = substr( $type, 3 );
+                } else {
+                    $type = implode( ' ', explode( '_', $type ) );
+                    $type .= empty( $type ) ? '' : 's';
+                }
+
+                $type = ucfirst( $type );
                 return ( empty( $type ) ? '&mdash;' : esc_html( $type ) );
 
             case 'date':
