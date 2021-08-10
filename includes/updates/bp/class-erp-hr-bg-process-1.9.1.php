@@ -41,12 +41,7 @@ class ERP_HR_BG_PROCESS_1_9_1 extends \WP_Background_Process {
         $pay_rate = $employee['pay'];
 
         if ( ! erp_is_valid_currency_amount( $pay_rate ) ) {
-            $pay     = preg_replace( '/[^0-9.]/', '', $pay_rate  );
-            $pay_arr = explode( '.', $pay );
-
-            if ( count( $pay_arr ) > 1 ) {
-                $pay = $pay_arr[0] . '.' . substr( $pay_arr[1], 0, 2 );
-            }
+            $pay = preg_replace( '/[^0-9.]/', '', $pay_rate  );
 
             $wpdb->update(
                 "{$wpdb->prefix}erp_hr_employees",
@@ -55,26 +50,22 @@ class ERP_HR_BG_PROCESS_1_9_1 extends \WP_Background_Process {
             );
         }
 
-        $phone      = get_user_meta( $user_id, 'phone', true );
-        $mobile     = get_user_meta( $user_id, 'mobile', true );
-        $work_phone = get_user_meta( $user_id, 'work_phone', true );
+        $user_meta = [
+            'phone'      => get_user_meta( $user_id, 'phone', true ),
+            'mobile'     => get_user_meta( $user_id, 'mobile', true ),
+            'work_phone' => get_user_meta( $user_id, 'work_phone', true )
+        ];
 
-        if ( ! empty( $phone ) && ! erp_is_valid_contact_no( $phone ) ) {
-            $phone = erp_sanitize_phone_number( $phone, true );
+        foreach ( $user_meta as $key => $value ) {
+            if ( ! empty( $value ) && ! erp_is_valid_contact_no( $value ) ) {
+                $value = erp_sanitize_phone_number( $value );
 
-            update_user_meta( $user_id, 'phone', $phone );
-        }
+                if ( strlen( $value ) > 18 ) {
+                    $value = substr( $value, 0, 18 );
+                }
 
-        if ( ! empty( $mobile ) && ! erp_is_valid_contact_no( $mobile ) ) {
-            $mobile = erp_sanitize_phone_number( $mobile, true );
-
-            update_user_meta( $user_id, 'mobile', $mobile );
-        }
-
-        if ( ! empty( $work_phone ) && ! erp_is_valid_contact_no( $work_phone ) ) {
-            $work_phone = erp_sanitize_phone_number( $work_phone, true );
-
-            update_user_meta( $user_id, 'work_phone', $work_phone );
+                update_user_meta( $user_id, $key, $value );
+            }
         }
 
         return false;
