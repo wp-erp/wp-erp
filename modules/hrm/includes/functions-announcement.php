@@ -188,7 +188,7 @@ function erp_hr_get_announcements_count( $args = [] ) {
 }
 
 /**
- * Trash announcements
+ * Trash/Delete announcements
  *
  * @since 1.9.1
  *
