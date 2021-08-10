@@ -9,7 +9,7 @@
             <div class="email-card email-connect-outgoing">
                 <h4>{{ __( 'Outgoing Email Setting', 'erp' ) }}</h4>
                 <div class="email-icons">
-                    <div class="email-icon pointer" v-for="connection in outgoingConnections" :key="connection.slug" @click="toggleActiveConnection(connection, 'outgoing')">
+                    <div v-for="connection in outgoingConnections" :class="`email-icon pointer ${connection.slug === activeOutgoingEmail ? 'active-email-icon' : ''}`" :key="connection.slug" @click="toggleActiveConnection(connection, 'outgoing')">
                         <img :src="connection.isEnabled ? connection.enableIcon : connection.disableIcon" alt="" />
                         <span class="checkbox-icon checkbox-active" v-if="connection.isEnabled"><i class="fa fa-check-circle"></i></span>
                         <span class="checkbox-icon checkbox-inactive" v-else @click="toggleActiveConnection(connection, 'outgoing')"></span>
@@ -17,12 +17,12 @@
                     </div>
                 </div>
                 <div v-if="activeOutgoingEmail === 'smtp'"><smtp-email /></div>
-                <div v-if="activeOutgoingEmail === 'mailgun'"><mailgun-email /></div>
+                <div v-else><mailgun-email /></div>
             </div>
             <div class="email-card email-connect-incoming">
                 <h4>{{ __( 'Incoming Email Setting', 'erp' ) }}</h4>
                 <div class="email-icons">
-                    <div class="email-icon pointer" v-for="connection in incomingConnections" :key="connection.slug" @click="toggleActiveConnection(connection, 'incoming')">
+                    <div :class="`email-icon pointer ${connection.slug === activeIncomingEmail ? 'active-email-icon' : ''}`" v-for="connection in incomingConnections" :key="connection.slug" @click="toggleActiveConnection(connection, 'incoming')">
                         <img :src="connection.isEnabled ? connection.enableIcon : connection.disableIcon" alt="" />
                         <span class="checkbox-icon checkbox-active" v-if="connection.isEnabled"><i class="fa fa-check-circle"></i></span>
                         <span class="checkbox-icon checkbox-inactive" v-else @click="toggleActiveConnection(connection, 'incoming')"></span>
@@ -30,7 +30,7 @@
                     </div>
                 </div>
                 <div v-if="activeIncomingEmail === 'imap'"><imap-email /></div>
-                <div v-if="activeIncomingEmail === 'gmail'"><google-email /></div>
+                <div v-else><google-email /></div>
             </div>
         </div>
     </base-layout>
@@ -138,7 +138,8 @@ export default {
         },
 
         activeOutgoingEmail: function() {
-            const activeOutgoingMails = this.outgoingConnections.filter( mail => (mail.isActive === true && mail.type === 'outgoing'));
+            const activeOutgoingMails = this.outgoingConnections.filter( mail => mail.isActive );
+
             if (activeOutgoingMails.length > 0) {
                 return activeOutgoingMails[0].slug;
             } else {
@@ -147,14 +148,15 @@ export default {
         },
 
         activeIncomingEmail: function() {
-            const activeIncomingMails = this.incomingConnections.filter( mail => (mail.isActive === true && mail.type === 'incoming'));
+            const activeIncomingMails = this.incomingConnections.filter( mail => mail.isActive );
+
             if ( activeIncomingMails.length > 0 ) {
                 return activeIncomingMails[0].slug;
             } else {
                 return 'imap';
             }
         },
-        
+
         ...mapState({
             formDatas( state ) {
                 return state.formdata.data;
