@@ -195,24 +195,17 @@ function erp_hr_get_announcements_count( $args = [] ) {
  * @param array $announcement_ids
  * @param bool $delete
  *
- * @return array
+ * @return int Returns number of announcements in $announcement_ids is deleted/trashed
+ *             successfully
  */
 function erp_hr_trash_announcements( $announcement_ids, $delete = false ) {
-    $success = [];
-
-    foreach ( $announcement_ids as $id ) {
+    return array_reduce( $announcement_ids, function( $count, $id ) use ( $delete ) {
         if ( $delete ) {
-            if ( ! wp_delete_post( $id ) ) {
-                $success[] = false;
-            }
+            return $count + ( empty( wp_delete_post( $id ) ) ? 1 : 0 );
         } else {
-            if ( ! wp_trash_post( $id ) ) {
-                $success[] = false;
-            }
+            return $count + ( empty( wp_trash_post( $id ) ) ? 1 : 0 );
         }
-    }
-
-    return $success;
+    }, 0 );
 }
 
 /**
@@ -241,16 +234,11 @@ function erp_hr_get_announcements_status_counts() {
  *
  * @param array $announcement_ids
  *
- * @return array
+ * @return int Returns number of announcements in $announcement_ids is restored
+ *             successfully.
  */
 function erp_hr_restore_announcements( $announcement_ids ) {
-    $success = [];
-
-    foreach ( $announcement_ids as $id ) {
-        if ( ! wp_untrash_post( $id ) ) {
-            $success[] = false;
-        }
-    }
-
-    return $success;
+    return array_reduce( $announcement_ids, function( $count, $id ) {
+        return $count + ( empty( wp_untrash_post( $id ) ) ? 1 : 0 );
+    }, 0 );
 }
