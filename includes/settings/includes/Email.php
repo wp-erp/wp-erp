@@ -351,7 +351,7 @@ class Email extends Template {
 
             case 'smtp':
                 if ( isset( $options['enable_smtp'] ) && $options['enable_smtp'] == 'yes' ) {
-                    $option                = get_option( 'erp_settings_erp-email_mailgun', [] );
+                    $option                   = get_option( 'erp_settings_erp-email_mailgun', [] );
                     $option['enable_mailgun'] = 'no';
                     update_option( 'erp_settings_erp-email_mailgun', $option );
                 }
@@ -688,7 +688,7 @@ class Email extends Template {
             'title' => __( 'Domain', 'erp' ),
             'id'    => 'domain',
             'type'  => 'text',
-            'desc'  => __( 'Get sending domain from your Mailgun account <a href="https://app.mailgun.com/app/sending/domains" target="_blank">Mailgun account</a>', 'erp' ),
+            'desc'  => __( 'Get sending domain from your Mailgun account <a href="https://app.mailgun.com/app/sending/domains" target="_blank">Mailgun account</a><br /><mark>Notice:</mark> In Sandbox domain with Free plan, only 5 Authorized Recipients are allowed. <a href="https://help.mailgun.com/hc/en-us/articles/217531258-Authorized-Recipients" target="_blank">Learn More</a>', 'erp' ),
         ];
 
         $fields[] = [
