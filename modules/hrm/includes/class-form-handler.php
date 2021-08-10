@@ -606,7 +606,7 @@ class Form_Handler {
             $resp     = [];
 
             switch ( $action ) {
-                case 'delete_announcement':
+                case 'trash':
                     if ( ! empty( $_GET['announcement_ids'] ) ) {
                         $announcement_ids = array_map( 'sanitize_text_field', wp_unslash( $_GET['announcement_ids'] ) );
                         $resp             = erp_hr_trash_announcements( $announcement_ids );
@@ -619,7 +619,7 @@ class Form_Handler {
                     wp_redirect( $redirect );
                     exit();
 
-                case 'delete_announcements_permanently':
+                case 'delete_permanently':
                     if ( ! empty( $_GET['announcement_ids'] ) ) {
                         $announcement_ids = array_map( 'sanitize_text_field', wp_unslash( $_GET['announcement_ids'] ) );
                         $resp             = erp_hr_trash_announcements( $announcement_ids, true );
@@ -632,7 +632,7 @@ class Form_Handler {
                     wp_redirect( $redirect );
                     exit();
 
-                case 'restore_announcements':
+                case 'restore':
                     if ( ! empty( $_GET['announcement_ids'] ) ) {
                         $announcement_ids = array_map( 'sanitize_text_field', wp_unslash( $_GET['announcement_ids'] ) );
                         $resp             = erp_hr_restore_announcements( $announcement_ids );
