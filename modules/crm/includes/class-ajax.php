@@ -1263,20 +1263,27 @@ class Ajax_Handler {
 
                 add_filter( 'erp_mail_from_name', 'erp_crm_get_email_from_name' );
 
-                $mail_attachments = wp_list_pluck( $attachments, 'path' );
+                $mail_attachments   = wp_list_pluck( $attachments, 'path' );
+                $mail_error_message = __( 'Can not send email, Please try again later', 'erp' );
 
                 if ( wperp()->google_auth->is_active() ) {
                     //send using gmail api
                     $sent = erp_mail_send_via_gmail( $contact->email, $postdata['email_subject'], $email_body, $headers, $mail_attachments, $custom_headers );
                 } else {
                     // Send email at contact
-                    $sent = erp_mail( $contact->email, $postdata['email_subject'], $email_body, $headers, $mail_attachments, $custom_headers );
+                    try {
+                        erp_mail( $contact->email, $postdata['email_subject'], $email_body, $headers, $mail_attachments, $custom_headers );
+                        $sent = true;
+                    } catch ( \Exception $e ) {
+                        $sent = false;
+                        $mail_error_message = $e->getMessage();
+                    }
                 }
 
                 do_action( 'erp_crm_save_customer_email_feed', $save_data, $postdata );
 
                 if ( ! $sent ) {
-                    $this->send_error( __( 'Can not send email, Please try later', 'erp' ) );
+                    $this->send_error( $mail_error_message );
                 }
 
                 if ( ! $data ) {
