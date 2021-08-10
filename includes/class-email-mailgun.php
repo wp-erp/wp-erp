@@ -107,7 +107,7 @@ class Email_Mailgun {
         if ( ! empty( $message ) ) {
             $message = sanitize_text_field( wp_unslash( $message ) );
 
-            $this->builder->setTextBody( $message );
+            $this->builder->setHtmlBody( $message );
         }
     }
 
@@ -116,7 +116,7 @@ class Email_Mailgun {
      *
      * @since 1.9.1
      *
-     * @param array $from address_array example; `[ 'email' => 'test@example.com', 'name' => 'Jhon Doe' ]`
+     * @param array $from address_array example; `[ 'email' => 'test@example.com', ['name' => 'Jhon Doe'] ]`
      *
      * @return void
      */
@@ -125,7 +125,7 @@ class Email_Mailgun {
             $this->builder->setFromAddress(
                 $from['email'],
                 [
-                    'first' => $from['name']
+                    'first' => ! empty ( $from['name'] ) ? $from['name'] : ''
                 ]
             );
         }
@@ -136,7 +136,7 @@ class Email_Mailgun {
      *
      * @since 1.9.1
      *
-     * @param array $to address_array example; `[ 'email' => 'test@example.com', 'name' => 'Jhon Doe' ]`
+     * @param array $to address_array example; `[ 'email' => 'test@example.com', ['name' => 'Jhon Doe'] ]`
      *
      * @return void
      */
@@ -145,7 +145,7 @@ class Email_Mailgun {
             $this->builder->addToRecipient(
                 $to['email'],
                 [
-                    'first' => $to['name']
+                    'first' => ! empty ( $to['name'] ) ? $to['name'] : ''
                 ]
             );
         }
@@ -156,7 +156,7 @@ class Email_Mailgun {
      *
      * @since 1.9.1
      *
-     * @param array $cc address_array example; `[ 'email' => 'test@example.com', 'name' => 'Jhon Doe' ]`
+     * @param array $cc address_array example; `[ 'email' => 'test@example.com', ['first' => 'Jhon Doe'] ]`
      *
      * @return void
      */
@@ -165,7 +165,47 @@ class Email_Mailgun {
             $this->builder->addCcRecipient(
                 $cc['email'],
                 [
-                    'first' => $cc['name']
+                    'first' => ! empty ( $cc['name'] ) ? $cc['name'] : ''
+                ]
+            );
+        }
+    }
+
+    /**
+     * Set Email BCC Address
+     *
+     * @since 1.9.1
+     *
+     * @param array $bcc address_array example; `[ 'email' => 'test@example.com', ['first' => 'Jhon Doe'] ]`
+     *
+     * @return void
+     */
+    public function set_bcc_address( $bcc = [] ) {
+        if ( ! empty( $bcc['email'] ) ) {
+            $this->builder->addCcRecipient(
+                $bcc['email'],
+                [
+                    'first' => ! empty ( $bcc['name'] ) ? $bcc['name'] : ''
+                ]
+            );
+        }
+    }
+
+    /**
+     * Set Email Reply To Address
+     *
+     * @since 1.9.1
+     *
+     * @param array $reply_to address_array example; `[ 'email' => 'test@example.com', ['first' => 'Jhon Doe'] ]`
+     *
+     * @return void
+     */
+    public function set_reply_to_address( $reply_to = [] ) {
+        if ( ! empty( $reply_to['email'] ) ) {
+            $this->builder->setReplyToAddress(
+                $reply_to['email'],
+                [
+                    'first' => ! empty ( $reply_to['name'] ) ? $reply_to['name'] : ''
                 ]
             );
         }
@@ -291,18 +331,17 @@ class Email_Mailgun {
 
                         case 'bcc':
                             $bcc = array_merge( (array) $bcc, explode( ',', $content ) );
-                            $this->builder->addRecipient('bcc', $bcc);
+                            $this->set_bcc_address( [ 'email' => $bcc ] );
                             break;
 
                         case 'reply-to':
                             $reply_to = array_merge( (array) $reply_to, explode( ',', $content ) );
-                            $this->builder->addRecipient('h:reply-to', $reply_to);
+                            $this->set_reply_to_address( [ 'email' => $reply_to ] );
                             break;
 
                         default:
-                            // Add it to our grand headers array
                             $headers[ trim( $name ) ] = trim( $content );
-                            $this->builder->addRecipient($name, trim( $content ));
+                            $this->set_to_address( trim( $content ) );
                             break;
                     }
                 }
