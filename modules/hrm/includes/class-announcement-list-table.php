@@ -12,9 +12,9 @@ class Announcement_List_Table extends WP_List_Table {
 
     public function __construct() {
         parent::__construct( [
-            'singuler'  => 'announcement',
-            'plural'    => 'announcements',
-            'ajax'      => true,
+            'singuler' => 'announcement',
+            'plural'   => 'announcements',
+            'ajax'     => true,
         ] );
     }
 
@@ -34,11 +34,11 @@ class Announcement_List_Table extends WP_List_Table {
      */
     public function get_columns() {
         $columns = [
-            'cb'        => '<input type="checkbox" />',
-            'title'     => __( 'Title', 'erp' ),
-            'type'      => __( 'Type', 'erp' ),
-            'sent_to'   => __( 'Sent to', 'erp' ),
-            'date'      => __( 'Date', 'erp' ),
+            'cb'      => '<input type="checkbox" />',
+            'title'   => __( 'Title', 'erp' ),
+            'type'    => __( 'Type', 'erp' ),
+            'sent_to' => __( 'Sent to', 'erp' ),
+            'date'    => __( 'Date', 'erp' ),
         ];
 
         return $columns;
@@ -95,10 +95,8 @@ class Announcement_List_Table extends WP_List_Table {
      */
     public function column_title( $item ) {
         $is_trash = ( ! empty( $_GET['status'] ) && sanitize_text_field( wp_unslash( $_GET['status'] ) ) === 'trash' );
-
-        $actions = [];
-
-        $params = [
+        $actions  = [];
+        $params   = [
             'post' => $item->ID,
         ];
 
@@ -138,13 +136,14 @@ class Announcement_List_Table extends WP_List_Table {
      * @return void
      */
     public function column_sent_to( $item ) {
-        $type = get_post_meta( $item->ID, '_announcement_type', true );
+        $type    = get_post_meta( $item->ID, '_announcement_type', true );
         $sent_to = [];
 
         if ( $type === 'by_department' ) {
             $sent_to = get_post_meta( $item->ID, '_announcement_department', true );
             $sent_to = array_map( function( $id ) {
                 $department = \WeDevs\ERP\HRM\Models\Department::find( (int) $id );
+
                 if ( $department ) {
                     return $department->title;
                 }
@@ -153,6 +152,7 @@ class Announcement_List_Table extends WP_List_Table {
             $sent_to = get_post_meta( $item->ID, '_announcement_designation', true );
             $sent_to = array_map( function( $id ) {
                 $designation = \WeDevs\ERP\HRM\Models\Designation::find( (int) $id );
+
                 if ( $designation ) {
                     return $designation->title;
                 }
@@ -161,6 +161,7 @@ class Announcement_List_Table extends WP_List_Table {
             $sent_to = get_post_meta( $item->ID, '_announcement_selected_user', true );
             $sent_to = array_map( function( $id ) {
                 $user = get_user_by( 'id', $id );
+
                 if ( $user ) {
                     return $user->display_name;
                 }
@@ -168,17 +169,19 @@ class Announcement_List_Table extends WP_List_Table {
         }
 
         //prepare modal for large number of text data in a cell
-        $cell_content = count( $sent_to ) === 0 ? 'None' : implode( ', ', $sent_to );
+        $cell_content     = count( $sent_to ) === 0 ? 'None' : implode( ', ', $sent_to );
         $threshold_length = 65;
 
         if ( strlen( $cell_content ) < $threshold_length ) {
             return $cell_content;
         } else {
             $list_content = '<ul style="list-style: square;">'; //this list will be shown in the modal popup
+
             foreach ( $sent_to as $sent ) {
                 $escaped = esc_html( $sent );
                 $list_content .= "<li>$escaped</li>";
             }
+
             $list_content .= '</ul>';
 
             return substr( $cell_content, 0, $threshold_length ) . "<span style='cursor: pointer;' title='Show More' data-more-content='$list_content' class='expand-for-more-ann'> (more)</button>";
@@ -194,7 +197,7 @@ class Announcement_List_Table extends WP_List_Table {
      */
     public function get_bulk_actions() {
         $actions = [
-            'delete_announcement'   => __( 'Move to trash', 'erp' ),
+            'delete_announcement' => __( 'Move to trash', 'erp' ),
         ];
 
         if ( ! empty( $_GET['status'] ) && sanitize_text_field( wp_unslash( $_GET['status'] ) ) === 'trash' ) {
@@ -221,8 +224,8 @@ class Announcement_List_Table extends WP_List_Table {
         }
 
         $start_date = ( ! empty( $_GET['start_date'] ) ) ? sanitize_text_field( wp_unslash( $_GET['start_date'] ) ) : '';
-        $end_date   = ( ! empty( $_GET['end_date'] ) ) ? sanitize_text_field( wp_unslash( $_GET['end_date'] ) ) : '';
-        $status     = ( ! empty( $_GET['status'] ) ) ? sanitize_text_field( wp_unslash( $_GET['status'] ) ) : '';
+        $end_date   = ( ! empty( $_GET['end_date'] ) )   ? sanitize_text_field( wp_unslash( $_GET['end_date'] ) )   : '';
+        $status     = ( ! empty( $_GET['status'] ) )     ? sanitize_text_field( wp_unslash( $_GET['status'] ) )     : '';
         ?>
         <div class="wperp-filter-dropdown" style="margin: -46px 0 0 0;">
             <a class="wperp-btn btn--default"><span class="dashicons dashicons-filter"></span>Filters<span class="dashicons dashicons-arrow-down-alt2"></span></a>
@@ -301,9 +304,9 @@ class Announcement_List_Table extends WP_List_Table {
      * @return array
      */
     public function get_views() {
-        $status_links   = [];
-        $base_link      = admin_url( 'admin.php?page=erp-hr&section=people&sub-section=announcement' );
-        $status         = 'publish';
+        $status_links = [];
+        $base_link    = admin_url( 'admin.php?page=erp-hr&section=people&sub-section=announcement' );
+        $status       = 'publish';
 
         if ( ! empty( $_GET['status'] ) ) {
             $status = sanitize_text_field( wp_unslash( $_GET['status'] ) );
