@@ -105,9 +105,9 @@ class Email_Mailgun {
      */
     public function set_message( $message ) {
         if ( ! empty( $message ) ) {
-            $message = sanitize_text_field( wp_unslash( $message ) );
+            $messageHTML = preg_replace("/\r\n|\r|\n/", '<br/>', $message);
 
-            $this->builder->setHtmlBody( $message );
+            $this->builder->setHtmlBody( $messageHTML );
         }
     }
 
