@@ -195,15 +195,15 @@ function erp_hr_get_announcements_count( $args = [] ) {
  * @param array $announcement_ids
  * @param bool $delete
  *
- * @return int Returns number of announcements in $announcement_ids is deleted/trashed
+ * @return int Returns number of announcements in $announcement_ids not deleted/trashed
  *             successfully
  */
 function erp_hr_trash_announcements( $announcement_ids, $delete = false ) {
-    return array_reduce( $announcement_ids, function( $count, $id ) use ( $delete ) {
+    return array_reduce( $announcement_ids, function( $fail_count, $id ) use ( $delete ) {
         if ( $delete ) {
-            return $count + ( empty( wp_delete_post( $id ) ) ? 1 : 0 );
+            return $fail_count + ( empty( wp_delete_post( $id ) ) ? 1 : 0 );
         } else {
-            return $count + ( empty( wp_trash_post( $id ) ) ? 1 : 0 );
+            return $fail_count + ( empty( wp_trash_post( $id ) ) ? 1 : 0 );
         }
     }, 0 );
 }
@@ -234,11 +234,11 @@ function erp_hr_get_announcements_status_counts() {
  *
  * @param array $announcement_ids
  *
- * @return int Returns number of announcements in $announcement_ids is restored
+ * @return int Returns number of announcements in $announcement_ids not restored
  *             successfully.
  */
 function erp_hr_restore_announcements( $announcement_ids ) {
-    return array_reduce( $announcement_ids, function( $count, $id ) {
-        return $count + ( empty( wp_untrash_post( $id ) ) ? 1 : 0 );
+    return array_reduce( $announcement_ids, function( $fail_count, $id ) {
+        return $fail_count + ( empty( wp_untrash_post( $id ) ) ? 1 : 0 );
     }, 0 );
 }
