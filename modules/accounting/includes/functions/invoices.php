@@ -868,6 +868,25 @@ function erp_acct_insert_invoice_data_into_ledger( $invoice_data, $voucher_no = 
         );
     }
 
+    // insert shipping tax in ledger_details
+    if ( (float) $shipment_tax_debit > 0 || (float) $shipment_tax_credit > 0 ) {
+        $wpdb->insert(
+            $wpdb->prefix . 'erp_acct_ledger_details',
+            [
+                'ledger_id'   => $sales_shipping_tax_ledger_id,
+                'trn_no'      => $trn_no,
+                'particulars' => $invoice_data['particulars'],
+                'debit'       => $shipment_tax_debit,
+                'credit'      => $shipment_tax_credit,
+                'trn_date'    => $invoice_data['trn_date'],
+                'created_at'  => $date,
+                'created_by'  => $user_id,
+                'updated_at'  => $date,
+                'updated_by'  => $user_id,
+            ]
+        );
+    }
+
     erp_acct_purge_cache( ['list' => 'sales_transaction'] );
 }
 
