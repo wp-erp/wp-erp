@@ -81,6 +81,7 @@ function erp_acct_get_invoice( $invoice_no ) {
             invoice.discount,
             invoice.discount_type,
             invoice.shipping,
+            invoice.shipping_tax,
             invoice.tax,
             invoice.tax_zone_id,
             invoice.estimate,
