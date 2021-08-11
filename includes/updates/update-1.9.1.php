@@ -1,12 +1,35 @@
 <?php
 
 /*
- * Add tax_cat_id column in `erp_acct_invoice_details` table
+ * Add shipping column in `erp_acct_invoices` table
+ */
+function erp_acct_alter_invoices_table_1_9_1() {
+    global $wpdb;
+
+    $cols = $wpdb->get_col( "DESC  {$wpdb->prefix}erp_acct_invoices" );
+
+    if ( ! in_array( 'shipping_tax', $cols, true ) ) {
+        $wpdb->query(
+            "ALTER TABLE {$wpdb->prefix}erp_acct_invoices
+            ADD `shipping_tax` decimal(20,2) DEFAULT 0 AFTER `discount_type`;"
+        );
+    }
+
+    if ( ! in_array( 'shipping', $cols, true ) ) {
+        $wpdb->query(
+            "ALTER TABLE {$wpdb->prefix}erp_acct_invoices
+            ADD `shipping` decimal(20,2) DEFAULT 0 AFTER `discount_type`;"
+        );
+    }
+}
+
+/*
+ * Add tax_cat_id and shipping columns in `erp_acct_invoice_details` table
  */
 function erp_acct_alter_invoice_details_table_1_9_1() {
     global $wpdb;
 
-    $cols  = $wpdb->get_col( "DESC  {$wpdb->prefix}erp_acct_invoice_details" );
+    $cols = $wpdb->get_col( "DESC  {$wpdb->prefix}erp_acct_invoice_details" );
 
     if ( ! in_array( 'tax_cat_id', $cols, true ) ) {
         $wpdb->query(
@@ -60,10 +83,11 @@ function erp_acct_create_synced_taxes_table_1_9_1() {
     dbDelta( $schema );
 }
 
+
 /**
  * Modify pay_rate column in employee table
  */
-function erp_hr_alter_employees_table() {
+function erp_hr_alter_employees_table_1_9_1() {
     global $wpdb;
 
     $wpdb->query(
@@ -75,7 +99,7 @@ function erp_hr_alter_employees_table() {
 /**
  * Migrates incinsistent employee data
  */
-function erp_hr_migrate_employee_data() {
+function erp_hr_migrate_employee_data_1_9_1() {
     global $wpdb;
     global $erp_hr_bg_process_1_9_1;
 
@@ -93,8 +117,10 @@ function erp_hr_migrate_employee_data() {
 }
 
 erp_disable_mysql_strict_mode();
-erp_hr_alter_employees_table();
+erp_hr_alter_employees_table_1_9_1();
+erp_acct_alter_invoices_table_1_9_1();
 erp_acct_alter_invoice_details_table_1_9_1();
 erp_acct_alter_purchase_details_table_1_9_1();
 erp_acct_create_synced_taxes_table_1_9_1();
-erp_hr_migrate_employee_data();
+erp_acct_dump_ledgers_table_data();
+erp_hr_migrate_employee_data_1_9_1();
