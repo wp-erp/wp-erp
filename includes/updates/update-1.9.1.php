@@ -83,6 +83,46 @@ function erp_acct_create_synced_taxes_table_1_9_1() {
     dbDelta( $schema );
 }
 
+/**
+ * Add necessary ledgers
+ */
+function erp_acct_dump_ledgers_table_data() {
+    global $wpdb;
+
+    $shipment_exists = $wpdb->get_var(
+        $wpdb->prepare(
+            "SELECT id FROM {$wpdb->prefix}erp_acct_ledgers WHERE slug = %s",
+            [ 'shipment' ]
+        )
+    );
+
+    if ( empty( $shipment_exists ) ) {
+        $wpdb->query(
+            $wpdb->prepare(
+                "INSERT INTO {$wpdb->prefix}erp_acct_ledgers ( `chart_id`, `name`, `slug`, `code`, `system`, `created_at` )
+                VALUES ( %d, %s, %s, %s, %d, %s )",
+                [ 4, 'Shipment', 'shipment', '1411', 1, gmdate( 'Y-m-d' ) ]
+            )
+        );
+    }
+
+    $shipment_tax_exists = $wpdb->get_var(
+        $wpdb->prepare(
+            "SELECT id FROM {$wpdb->prefix}erp_acct_ledgers WHERE slug = %s",
+            [ 'shipment_tax' ]
+        )
+    );
+
+    if ( empty( $shipment_tax_exists ) ) {
+        $wpdb->query(
+            $wpdb->prepare(
+                "INSERT INTO {$wpdb->prefix}erp_acct_ledgers ( `chart_id`, `name`, `slug`, `code`, `system`, `created_at` )
+                VALUES ( %d, %s, %s, %s, %d, %s )",
+                [ 2, 'Shipment Tax', 'shipment_tax', '221', 1, gmdate( 'Y-m-d' ) ]
+            )
+        );
+    }
+}
 
 /**
  * Modify pay_rate column in employee table
