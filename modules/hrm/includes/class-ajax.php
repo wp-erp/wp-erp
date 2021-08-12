@@ -866,15 +866,17 @@ class Ajax_Handler {
             $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
-        $employee_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
-        $hard        = isset( $_REQUEST['hard'] ) ? intval( $_REQUEST['hard'] ) : 0;
+        $employee_id = isset( $_REQUEST['id'] )   ? intval( wp_unslash( $_REQUEST['id'] ) )   : 0;
+        $hard        = isset( $_REQUEST['hard'] ) ? intval( wp_unslash( $_REQUEST['hard'] ) ) : 0;
         $user        = get_user_by( 'id', $employee_id );
 
         if ( ! $user ) {
             $this->send_error( __( 'No employee found', 'erp' ) );
         }
 
-        if ( in_array( 'employee', $user->roles, true ) ) {
+        $last_user_role = get_user_meta( $user->ID, 'erp_last_removed_role', true );
+
+        if ( in_array( 'employee', $user->roles, true ) || 'employee' == $last_user_role ) {
             $hard = apply_filters( 'erp_employee_delete_hard', $hard );
             erp_employee_delete( $employee_id, $hard );
         }
@@ -1027,7 +1029,7 @@ class Ajax_Handler {
 
     /**
      * Retrives employee job history
-     * 
+     *
      * @since 1.9.0
      *
      * @return mixed
@@ -1053,7 +1055,7 @@ class Ajax_Handler {
 
     /**
      * Updates employee job history
-     * 
+     *
      * @since 1.9.0
      *
      * @return mixed
@@ -1095,7 +1097,7 @@ class Ajax_Handler {
                     'reason'   => $data,
                     'comment'  => $comment
                 ] );
-                
+
                 break;
 
             case 'job':
@@ -1107,7 +1109,7 @@ class Ajax_Handler {
                     'reporting_to' => $data,
                     'location'     => $type
                 ] );
-                
+
                 break;
 
             case 'employment':
@@ -1118,7 +1120,7 @@ class Ajax_Handler {
                     'type'     => $type,
                     'comments' => $comment,
                 ] );
-                
+
                 break;
 
             default:
@@ -2600,7 +2602,7 @@ class Ajax_Handler {
         }
 
         $result = erp_hr_remove_leave_policy_name( $id );
-        
+
         if ( is_wp_error( $result ) ) {
             $this->send_error( $result->get_error_message() );
         }
@@ -2623,10 +2625,10 @@ class Ajax_Handler {
         }
 
         $ids = [];
-        
+
         if ( ! empty( $_POST['ids'] ) ) {
             $posted_ids = $_POST['ids'];
-            
+
             foreach ( $posted_ids as $id ) {
                 $ids[] = absint( wp_unslash( $id ) );
             }
@@ -2637,7 +2639,7 @@ class Ajax_Handler {
         }
 
         $deleted = 0;
-        
+
         foreach ( $ids as $id ) {
             if ( ! is_wp_error( erp_hr_remove_leave_policy_name( $id ) ) ) {
                 $deleted++;
