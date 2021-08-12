@@ -749,22 +749,20 @@ function erp_acct_get_trial_balance( $args ) {
     /*
      * Let's create some virtual ledgers
      */
-
-    $trialBalance = new \WeDevs\ERP\Accounting\Includes\Classes\FinalAccountsHelper($args);
-
+    $final_accounts    = new \WeDevs\ERP\Accounting\Includes\Classes\Final_Accounts( $args );
 
     $results['rows'][] = [
         'chart_id'   => '1',
         'name'       => 'Cash at Bank',
-        'balance'    =>  $trialBalance->totalCashAtBank,   //erp_acct_cash_at_bank( $args, 'balance' ),
-        'additional' =>  $trialBalance->cashAtBankBreakdowns,   //erp_acct_bank_balance( $args, 'balance' ),
+        'balance'    =>  $final_accounts->cash_at_bank,
+        'additional' =>  $final_accounts->cash_at_bank_breakdowns
     ];
 
     $results['rows'][] = [
         'chart_id'   => '2',
         'name'       => 'Bank Loan',
-        'balance'    => $trialBalance->totalLoanAtBank, //erp_acct_cash_at_bank( $args, 'loan' ),
-        'additional' => $trialBalance->loanAtBankBreakdowns, //erp_acct_bank_balance( $args, 'loan' ),
+        'balance'    => $final_accounts->loan_at_Bank,
+        'additional' => $final_accounts->loan_at_bank_breakdowns
     ];
 
     $results['rows'][] = [
