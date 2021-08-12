@@ -268,11 +268,11 @@ function erp_acct_get_sales_tax_report( $agency_id, $start_date, $end_date ) {
 
 /**
  * Generates filter wise sales tax report
- * 
+ *
  * @since 1.9.1
  *
  * @param array $args
- * 
+ *
  * @return array
  */
 function erp_acct_get_filtered_sales_tax_report( $args ) {
@@ -538,7 +538,7 @@ function erp_acct_get_balance_sheet( $args ) {
     $results['rows2'] = erp_acct_balance_sheet_calculate_with_opening_balance( $args['start_date'], $data2, $sql2, 2 );
     $results['rows3'] = erp_acct_balance_sheet_calculate_with_opening_balance( $args['start_date'], $data3, $sql3, 3 );
 
-    $final_accounts_helper = new \WeDevs\ERP\Accounting\Includes\Classes\FinalAccountsHelper($args);
+    $final_accounts   = new \WeDevs\ERP\Accounting\Includes\Classes\Final_Accounts( $args );
 
     $results['rows1'][] = [
         'name'    => 'Accounts Receivable',
@@ -553,8 +553,8 @@ function erp_acct_get_balance_sheet( $args ) {
 
     $results['rows1'][] = [
         'name'       => 'Cash at Bank',
-        'balance'    => $final_accounts_helper->totalCashAtBank,  //erp_acct_cash_at_bank( $args, 'balance' ),
-        'additional' => $final_accounts_helper->cashAtBankBreakdowns , //erp_acct_bank_balance( $args, 'balance' ),
+        'balance'    => $final_accounts->cash_at_bank,
+        'additional' => $final_accounts->cash_at_bank_breakdowns,
     ];
 
     $results['rows2'][] = [
@@ -564,8 +564,8 @@ function erp_acct_get_balance_sheet( $args ) {
 
     $results['rows2'][] = [
         'name'       => 'Bank Loan',
-        'balance'    => $final_accounts_helper->totalLoanAtBank, //erp_acct_cash_at_bank( $args, 'loan' ),
-        'additional' => $final_accounts_helper->loanAtBankBreakdowns, //erp_acct_bank_balance( $args, 'loan' ),
+        'balance'    => $final_accounts->loan_at_Bank,
+        'additional' => $final_accounts->loan_at_bank_breakdowns,
     ];
 
     $results['rows2'][] = [
