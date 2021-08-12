@@ -244,11 +244,14 @@ class Announcement_List_Table extends WP_List_Table {
                 <div class="wperp-filter-panel wperp-filter-panel-default">
                     <h3><?php esc_html_e( 'Filter', 'erp' ); ?></h3>
                     <div class="wperp-filter-panel-body">
-                        <label for="start_date"><?php esc_html_e( 'Start Date', 'erp' ); ?></label>
-                        <input autocomplete="off" style="border-radius: 3px; width: 100%; border: 1px black solid;" class="erp-date-field" name="start_date" id="start_date" value="<?php echo esc_attr( $start_date ); ?>"/>
+                        <label class="screen-reader-text" for="start_date"><?php esc_html_e( 'Start Date', 'erp' ); ?></label>
+                        <input autocomplete="off" class="erp-date-field" name="start_date" id="start_date" value="<?php echo esc_attr( $start_date ); ?>"
+                            placeholder="<?php esc_attr_e( 'Select Start Date', 'erp' ); ?>" />
 
-                        <label for="end_date"><?php esc_html_e( 'End Date', 'erp' ); ?></label>
-                        <input autocomplete="off" style="border-radius: 3px; width: 100%; border: 1px black solid;" class="erp-date-field" name="end_date" id="end_date" value="<?php echo esc_attr( $end_date ); ?>"/>
+                        <label class="screen-reader-text" for="end_date"><?php esc_html_e( 'End Date', 'erp' ); ?></label>
+                        <input autocomplete="off" class="erp-date-field" name="end_date" id="end_date" value="<?php echo esc_attr( $end_date ); ?>"
+                            placeholder="<?php esc_attr_e( 'Select End Date', 'erp' ); ?>" />
+
                         <input hidden name="status" value="<?php echo esc_attr( $status ); ?>"/>
                     </div>
 
