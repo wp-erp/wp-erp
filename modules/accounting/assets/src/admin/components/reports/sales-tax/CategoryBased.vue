@@ -2,7 +2,7 @@
     <div class="sales-tax-report">
         <h2 class="title-container">
             <span>{{ __( 'Sales Tax Report (Category Based)', 'erp' ) }}</span>
-            
+
             <router-link
                 class="wperp-btn btn--primary"
                 :to="{ name: 'SalesTaxReportOverview' }">
@@ -13,13 +13,13 @@
         <form @submit.prevent="getReport" class="query-options no-print">
             <div class="wperp-date-group">
                 <div class="with-multiselect">
-                    <multi-select v-model="taxCategory" :options="taxCategories"/>
+                    <multi-select v-model="taxCategory" :options="taxCategories" @input="getReport" />
                 </div>
 
                 <datepicker v-model="startDate" />
-                
+
                 <datepicker v-model="endDate" />
-                
+
                 <button class="wperp-btn btn--primary add-line-trigger" type="submit">
                     {{ __( 'Filter', 'erp' ) }}
                 </button>
@@ -36,12 +36,12 @@
                 <strong>{{ __( 'Category Name', 'erp' ) }}:</strong>
                 <em> {{ taxCategory.name }}</em>
             </li>
-            
+
             <li>
                 <strong>{{ __( 'Currency', 'erp' ) }}:</strong>
                 <em> {{ symbol }}</em>
             </li>
-            
+
             <li v-if="startDate && endDate">
                 <strong>{{ __('For the period of (Transaction date)', 'erp') }}:</strong>
                 <em> {{ formatDate( startDate ) }}</em> to <em>{{ formatDate( endDate ) }}</em>
@@ -53,7 +53,7 @@
             :columns="columns"
             :rows="taxes"
             :showCb="false">
-            
+
             <template slot="voucher_no" slot-scope="data">
                 <strong>
                     <router-link :to="{ name: 'SalesSingle', params: { id: data.row.voucher_no, type: 'invoice' } }">
@@ -61,11 +61,11 @@
                     </router-link>
                 </strong>
             </template>
-            
+
             <template slot="tax_amount" slot-scope="data">
                 {{ moneyFormat( parseFloat( data.row.tax_amount ) ) }}
             </template>
-            
+
             <template slot="tfoot">
                 <tr class="tfoot">
                     <td></td>
@@ -85,13 +85,13 @@
 
     export default {
         name: 'SalesTaxReportCategoryBased',
-        
+
         components: {
             ListTable,
             Datepicker,
             MultiSelect
         },
-        
+
         data() {
             return {
                 startDate      : null,
@@ -107,28 +107,28 @@
                 symbol         : erp_acct_var.symbol
             };
         },
-        
+
         created() {
             this.$nextTick(() => {
                 const dateObj  = new Date();
                 const month    = ( '0' + ( dateObj.getMonth() + 1 ) ).slice( -2 );
                 const year     = dateObj.getFullYear();
-                
+
                 this.startDate = `${year}-${month}-01`;
                 this.endDate   = erp_acct_var.current_date;
 
                 this.fetchData();
             });
         },
-        
+
         computed: {
             totalTax() {
                 let total = 0;
-                
+
                 this.taxes.forEach(item => {
                     total += parseFloat( item.tax_amount );
                 });
-                
+
                 return total;
             }
         },
@@ -138,7 +138,7 @@
                 this.taxes = [];
             }
         },
-        
+
         methods: {
             fetchData() {
                 this.$store.dispatch('spinner/setSpinner', true);
@@ -160,7 +160,7 @@
 
                 this.$store.dispatch('spinner/setSpinner', true);
                 this.rows = [];
-                
+
                 HTTP.get('/reports/sales-tax', {
                     params: {
                         category_id : this.taxCategory.id,
