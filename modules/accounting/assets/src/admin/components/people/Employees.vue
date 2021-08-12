@@ -8,6 +8,7 @@
         </h2>
 
         <list-table
+            tableClass="wperp-table table-striped table-dark"
             action-column="actions"
             :columns="columns"
             :rows="row_data"
@@ -120,9 +121,20 @@ export default {
 };
 </script>
 
-<style scoped>
-    .app-employees .erp-help-tip {
-        font-size: 1.1em;
-        bottom   : 0.2rem;
+<style lang="less">
+    .app-employees {
+        .erp-help-tip {
+            font-size: 1.1em;
+            bottom   : 0.2rem;
+        }
+
+        @media (min-width: 783px) {
+            .wperp-table tbody tr {
+                td:last-child,
+                tr:last-child {
+                    text-align: left !important;
+                }
+            }
+        }
     }
 </style>
