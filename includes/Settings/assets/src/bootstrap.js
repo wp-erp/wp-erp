@@ -11,7 +11,7 @@ import { clickOutside } from './directive/directives';
 import { generateFormDataFromObject } from "./utils/FormDataHandler"
 import HTTP from './http';
 import Dropdown from './components/base/Dropdown.vue';
-import Datepicker from './components/base/Datepicker.vue';
+import Datepicker from './components/base/DatePicker.vue';
 import MultiSelect from './components/select/MultiSelect.vue';
 import SubmitButton from './components/base/SubmitButton.vue';
 import BaseLayout from './components/layouts/BaseLayout.vue';
