@@ -130,3 +130,115 @@ function erp_hr_send_announcement_email( $employee_ids, $post_id ) {
 
     $announcement_email->trigger( $employee_ids, $post_id );
 }
+
+/**
+ * Get all the announcements having a status and in a date range
+ *
+ * @since 1.9.1
+ *
+ * @param array query arguments
+ *
+ * @return array list of announcements
+ */
+function erp_hr_get_announcements( $args = [] ) {
+    $defaults = [
+        'numberposts'     => 20,
+        'offset'          => 0,
+        'orderby'         => 'post_date',
+        'order'           => 'DESC',
+        'post_type'       => 'erp_hr_announcement',
+    ];
+
+    $args = wp_parse_args( $args, $defaults );
+
+    $announcements = get_posts( $args );
+
+    return $announcements;
+}
+
+/**
+ * Get the count of the announcements having a status and in a date range
+ *
+ * @since 1.9.1
+ *
+ * @param array query arguments
+ *
+ * @return int count of announcements
+ */
+function erp_hr_get_announcements_count( $args = [] ) {
+    $defaults = [
+        'numberposts'     => -1,
+        'offset'          => 0,
+        'post_type'       => 'erp_hr_announcement',
+    ];
+
+    if ( ! empty( $args['numberposts'] ) ) {
+        unset( $args['numberposts'] );
+    }
+
+    if ( ! empty( $args['offset'] ) ) {
+        unset( $args['offset'] );
+    }
+
+    $args = wp_parse_args( $args, $defaults );
+
+    $announcements_count = count( get_posts( $args ) );
+
+    return $announcements_count;
+}
+
+/**
+ * Trash/Delete announcements
+ *
+ * @since 1.9.1
+ *
+ * @param array $announcement_ids
+ * @param bool $delete
+ *
+ * @return int Returns number of announcements in $announcement_ids not deleted/trashed
+ *             successfully
+ */
+function erp_hr_trash_announcements( $announcement_ids, $delete = false ) {
+    return array_reduce( $announcement_ids, function( $fail_count, $id ) use ( $delete ) {
+        if ( $delete ) {
+            return $fail_count + ( empty( wp_delete_post( $id ) ) ? 1 : 0 );
+        } else {
+            return $fail_count + ( empty( wp_trash_post( $id ) ) ? 1 : 0 );
+        }
+    }, 0 );
+}
+
+/**
+ * Get the count of the announcements by their status
+ *
+ * @since 1.9.1
+ *
+ * @return array count of announcement statuses
+ */
+function erp_hr_get_announcements_status_counts() {
+    $count    = wp_count_posts( 'erp_hr_announcement' );
+    $counts   = [];
+    $statuses = [ 'publish', 'draft', 'trash' ];
+
+    foreach ( $statuses as $status ) {
+        $counts[ $status ] = $count->{$status};
+    }
+
+    return $counts;
+}
+
+/**
+ * Restore announcements from trash
+ *
+ * @since 1.9.1
+ *
+ * @param array $announcement_ids
+ *
+ * @return int Returns number of announcements in $announcement_ids not restored
+ *             successfully.
+ */
+function erp_hr_restore_announcements( $announcement_ids ) {
+    return array_reduce( $announcement_ids, function( $fail_count, $id ) {
+        return $fail_count + ( empty( wp_untrash_post( $id ) ) ? 1 : 0 );
+    }, 0 );
+}
