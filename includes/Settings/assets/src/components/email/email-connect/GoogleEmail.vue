@@ -1,19 +1,20 @@
 <template>
     <base-layout
-        section_id="erp-crm"
-        sub_section_id="email_connect"
-        sub_sub_section_id="gmail"
+        section_id="erp-email"
+        sub_section_id="gmail"
         :enable_content="true"
-        :single_option="false"
+        :enableSubSectionTitle="false"
+        :disableMenu="true"
+        :disableSectionTitle="true"
     >
         <template slot="extended-data">
             <div v-if="gmailConnected !== null && gmailConnected.status" style="margin-bottom: 30px">
                 <a class="button" :href="gmailConnected.link" target="_blank">
-                    {{ __('Click to Authorize your gmail account', 'erp') }}
+                    {{ __( 'Click to Authorize your gmail account', 'erp' ) }}
                 </a>
 
                 <a class="button" :href="gmailConnected.disconnect_url" target="_blank" style="margin-left: 20px" v-if="gmailConnected.is_connected">
-                    {{ __('Disconnect', 'erp') }}
+                    {{ __( 'Disconnect', 'erp' ) }}
                 </a>
             </div>
         </template>
@@ -27,7 +28,7 @@ import { generateFormDataFromObject } from "../../../utils/FormDataHandler";
 var $ = jQuery;
 
 export default {
-    name: "CrmEmailConnectGmail",
+    name: "GoogleEmail",
 
     components: {
         BaseLayout
