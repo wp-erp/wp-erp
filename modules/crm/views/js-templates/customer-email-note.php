@@ -3,7 +3,7 @@ global $current_user;
 $customer_id  = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
 $customer     = new \WeDevs\ERP\CRM\Contact( $customer_id );
 $save_replies = erp_crm_get_save_replies();
-$block        = !erp_crm_sync_is_active() ? 'crm-blocked' : '';
+$block        = ! erp_crm_sync_is_active() ? 'crm-blocked' : '';
 $settings_url = admin_url( 'admin.php?page=erp-settings#/erp-email/email_connect' );
 ?>
 <div id="email" class="<?php echo esc_html( $block ); ?>">
@@ -15,7 +15,7 @@ $settings_url = admin_url( 'admin.php?page=erp-settings#/erp-email/email_connect
     <p class="email-templates">
         <select name="select_templates" id="erp-crm-activity-insert-templates" v-model="emailTemplates" v-selecttwo="emailTemplates" class="select2" v-on:change="insertSaveReplies()" style="width: 100%" data-placeholder="Select a template...">
             <option value=""><?php esc_attr_e( 'Select a template', 'erp' ); ?></option>
-            <?php foreach ( $save_replies as $key => $save_reply ) : ?>
+            <?php foreach ( $save_replies as $save_reply ) : ?>
                 <option value="<?php echo esc_attr( $save_reply->id ); ?>"><?php echo esc_attr( $save_reply->name ); ?></option>
             <?php endforeach; ?>
         </select>
