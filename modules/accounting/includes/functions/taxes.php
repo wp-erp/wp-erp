@@ -171,8 +171,6 @@ function erp_acct_update_tax_rate( $data, $id ) {
             'tax_rate_id' => $tax_data['tax_rate_id'],
             'tax_number'  => $tax_data['tax_number'],
             'default'     => $tax_data['default'],
-            'created_at'  => $tax_data['created_at'],
-            'created_by'  => $tax_data['created_by'],
             'updated_at'  => $tax_data['updated_at'],
             'updated_by'  => $tax_data['updated_by'],
         ],
@@ -195,8 +193,6 @@ function erp_acct_update_tax_rate( $data, $id ) {
                 'tax_cat_id'     => $item['tax_cat_id'],
                 'agency_id'      => $item['agency_id'],
                 'tax_rate'       => $item['tax_rate'],
-                'created_at'     => $tax_data['created_at'],
-                'created_by'     => $tax_data['created_by'],
                 'updated_at'     => $tax_data['updated_at'],
                 'updated_by'     => $tax_data['updated_by'],
             ],
@@ -308,8 +304,6 @@ function erp_acct_edit_tax_rate_line( $data ) {
             'tax_cat_id'     => $tax_data['tax_cat_id'],
             'agency_id'      => $tax_data['agency_id'],
             'tax_rate'       => $tax_data['tax_rate'],
-            'created_at'     => $tax_data['created_at'],
-            'created_by'     => $tax_data['created_by'],
             'updated_at'     => $tax_data['updated_at'],
             'updated_by'     => $tax_data['updated_by'],
         ],
@@ -687,9 +681,9 @@ function erp_acct_get_default_tax_rate_name_id() {
 
 /**
  * Inserts synced tax data
- * 
+ *
  * @since 1.9.1
- * 
+ *
  * @param array $args
  *
  * @return int|string|\WP_Error
@@ -718,14 +712,14 @@ function erp_acct_insert_synced_tax( $args = [] ) {
 
 /**
  * Retrieves system id of synced tax data
- * 
+ *
  * @since 1.9.1
  *
  * @param string $sync_type
  * @param string $sync_source
  * @param int|string $sync_id
  * @param string $sync_slug
- * 
+ *
  * @return int|null
  */
 function erp_acct_get_synced_tax_system_id( $sync_type, $sync_source, $sync_id = false, $sync_slug = false ) {
