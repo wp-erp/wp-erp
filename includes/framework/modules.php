@@ -291,14 +291,19 @@ class Modules {
         }
 
         $active_modules = $this->get_active_modules();
+        $deactived      = [];
 
         foreach ( $active_modules as $module_name => $active_module ) {
             if ( in_array( $module_name, $modules ) ) {
                 unset( $active_modules[ $module_name ] );
+                $deactived[] = $module_name;
             }
         }
 
         update_option( 'erp_modules', $active_modules );
+
+        // action to do additional tasks when module deactivated
+        do_action( 'erp_module_after_deactivated', $module_name );
 
         return true;
     }

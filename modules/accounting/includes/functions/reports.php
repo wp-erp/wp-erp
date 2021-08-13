@@ -267,6 +267,57 @@ function erp_acct_get_sales_tax_report( $agency_id, $start_date, $end_date ) {
 }
 
 /**
+ * Generates filter wise sales tax report
+ *
+ * @since 1.9.1
+ *
+ * @param array $args
+ *
+ * @return array
+ */
+function erp_acct_get_filtered_sales_tax_report( $args ) {
+    global $wpdb;
+
+    if ( empty( $args['start_date'] ) || empty( $args['end_date'] ) ) {
+        return [];
+    }
+
+    $sql['from']  = "{$wpdb->prefix}erp_acct_invoices AS inv";
+    $sql['where'] = "inv.trn_date BETWEEN '%s' AND '%s'";
+    $sql['extra'] = '';
+    $values       = [ $args['start_date'], $args['end_date'] ];
+
+    if ( ! empty( $args['customer_id'] ) ) {
+
+        $sql['select'] = 'inv.trn_date, inv.voucher_no, inv.tax AS tax_amount, inv.customer_id, inv.customer_name';
+        $sql['where'] .= " AND inv.tax > 0 AND inv.customer_id = %d";
+        $values[]      = $args['customer_id'];
+
+    } else if ( ! empty( $args['category_id'] ) ) {
+
+        $sql['select'] = 'inv.trn_date, details.trn_no AS voucher_no, sum(details.tax) AS tax_amount, details.tax_cat_id';
+        $sql['from']  .= " RIGHT JOIN {$wpdb->prefix}erp_acct_invoice_details AS details ON inv.voucher_no = details.trn_no";
+        $sql['where'] .= " AND details.tax > 0 AND details.tax_cat_id = %d";
+        $sql['extra'] .= "GROUP BY details.trn_no";
+        $values[]      = $args['category_id'];
+
+    } else {
+
+        $sql['select'] = 'inv.trn_date, inv.voucher_no, inv.tax AS tax_amount';
+        $sql['where'] .= " AND inv.tax > 0";
+
+    }
+
+    return $wpdb->get_results(
+        $wpdb->prepare(
+            "SELECT {$sql['select']} FROM {$sql['from']} WHERE {$sql['where']} {$sql['extra']}",
+            $values
+        ),
+        ARRAY_A
+    );
+}
+
+/**
  * ===================================================
  * Income Statement
  * ===================================================
@@ -487,7 +538,7 @@ function erp_acct_get_balance_sheet( $args ) {
     $results['rows2'] = erp_acct_balance_sheet_calculate_with_opening_balance( $args['start_date'], $data2, $sql2, 2 );
     $results['rows3'] = erp_acct_balance_sheet_calculate_with_opening_balance( $args['start_date'], $data3, $sql3, 3 );
 
-    $final_accounts_helper = new \WeDevs\ERP\Accounting\Includes\Classes\FinalAccountsHelper($args);
+    $final_accounts   = new \WeDevs\ERP\Accounting\Includes\Classes\Final_Accounts( $args );
 
     $results['rows1'][] = [
         'name'    => 'Accounts Receivable',
@@ -502,8 +553,8 @@ function erp_acct_get_balance_sheet( $args ) {
 
     $results['rows1'][] = [
         'name'       => 'Cash at Bank',
-        'balance'    => $final_accounts_helper->totalCashAtBank,  //erp_acct_cash_at_bank( $args, 'balance' ),
-        'additional' => $final_accounts_helper->cashAtBankBreakdowns , //erp_acct_bank_balance( $args, 'balance' ),
+        'balance'    => $final_accounts->cash_at_bank,
+        'additional' => $final_accounts->cash_at_bank_breakdowns,
     ];
 
     $results['rows2'][] = [
@@ -513,8 +564,8 @@ function erp_acct_get_balance_sheet( $args ) {
 
     $results['rows2'][] = [
         'name'       => 'Bank Loan',
-        'balance'    => $final_accounts_helper->totalLoanAtBank, //erp_acct_cash_at_bank( $args, 'loan' ),
-        'additional' => $final_accounts_helper->loanAtBankBreakdowns, //erp_acct_bank_balance( $args, 'loan' ),
+        'balance'    => $final_accounts->loan_at_Bank,
+        'additional' => $final_accounts->loan_at_bank_breakdowns,
     ];
 
     $results['rows2'][] = [

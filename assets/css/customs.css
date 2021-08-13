@@ -4,7 +4,7 @@ div.erp-custom-menu-container {
     position: relative;
     margin: 21px -20px 10px 0;
 }
-  
+
 div.erp-custom-menu-container ul {
     padding: 0;
     margin: 0;
@@ -65,7 +65,7 @@ div.erp-custom-menu-container li.dropdown-nav i {
 div.erp-custom-menu-container li.active > a {
     color: #000000;
 }
-  
+
 div.erp-custom-menu-container li:hover > a {
     color: #000000;
 }
@@ -142,7 +142,7 @@ div.erp-custom-menu-container button {
 div.erp-custom-menu-container button:focus {
     outline: none;
 }
- 
+
 div.erp-custom-menu-container .-primary {
     display: flex;
 }
@@ -151,7 +151,7 @@ div.erp-custom-menu-container .-primary > li > a,
 div.erp-custom-menu-container .-primary > li > button {
     white-space: nowrap;
 }
-  
+
 div.erp-custom-menu-container .-primary .-more > button span {
     display: inline-block;
     transition: transform 0.2s;
@@ -159,7 +159,7 @@ div.erp-custom-menu-container .-primary .-more > button span {
     height: auto;
     font: 400 13px/1 dashicons;
 }
-  
+
 div.erp-custom-menu-container.--show-secondary .-primary .-more > button span {
     transform: rotate(180deg);
 }
@@ -376,11 +376,16 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
     color: #1a9ed4 !important;
 }
 
-.erp-dropdown-filter-content .wperp-filter-panel .wperp-filter-panel-body select {
+.erp-dropdown-filter-content .wperp-filter-panel .wperp-filter-panel-body select, .erp-dropdown-filter-content .wperp-filter-panel .wperp-filter-panel-body input {
     width: 180px !important;
     margin: 7px 5px !important;
     border: 0.5px solid rgb(231, 231, 231);
     font-weight: 300;
+}
+
+.erp-dropdown-filter-content .wperp-filter-panel .wperp-filter-panel-body input {
+    border-radius: 3px;
+    padding: 10px;
 }
 
 .erp-dropdown-filter-content .wperp-filter-panel .wperp-filter-panel-body .select2-container {
@@ -390,7 +395,7 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
 /* @media (max-width: 767px) {
     .erp-dropdown-filter-content .wperp-filter-panel .wperp-filter-panel-body {
         padding: 15px 10px;
-    }   
+    }
 } */
 
 .erp-dropdown-filter-content .wperp-filter-panel .wperp-filter-panel-body .form-fields {
@@ -589,14 +594,14 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
     left: inherit !important;
     right: 0 !important;
 }
-  
+
 .erp-dropdown-filter-content a {
     color: black;
     padding: 12px 16px;
     text-decoration: none;
     display: block;
 }
-  
+
 .erp-dropdown-filter-container a:hover {
     background-color: #ddd;
 }
@@ -640,7 +645,7 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
         right: inherit !important;
     }
 }
-  
+
 .show {
     display: block !important;
     transform: translate(0 0) !important;

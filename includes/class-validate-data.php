@@ -203,7 +203,7 @@ class Validate_Data {
                 return $this->validate_field( 'Reporting to', $dt_value, $type, 'max:20|' );
 
             case 'pay_rate':
-                return $this->validate_field( 'Pay rate', $dt_value, $type, 'max:11|is_valid_amount:true' );
+                return $this->validate_field( 'Pay rate', $dt_value, $type, 'is_valid_amount:true' );
 
             case 'type':
                 return $this->validate_field( 'Type', $dt_value, $type, 'max:20|' );
@@ -236,13 +236,10 @@ class Validate_Data {
                 return $this->validate_field( 'Driving licence', $dt_value, $type, 'max:30|' );
 
             case 'hobbies':
-                return $this->validate_field( 'Hobbies', $dt_value, $type, 'max:200|' );
+                return $this->validate_field( 'Hobbies', $dt_value, $type, 'max:255|' );
 
             case 'user_url':
                 return $this->validate_field( 'User email', $dt_value, $type, 'max:600|' );
-
-            case 'description':
-                return $this->validate_field( 'Description', $dt_value, $type, 'max:200|' );
 
             case 'category_id':
                 return $this->validate_field( 'Category ID', $dt_value, $type, 'not_empty:true' );
@@ -315,7 +312,7 @@ class Validate_Data {
                                 if ( false !== strpos( $field_value, 'E' ) ) {
                                     $errors[] = __( "The input ({$field_value}) for {$field_name} may be exponential. Please change your number in proper format.", 'erp' );
                                 } else {
-                                    $errors[] = __( "{$field_name} is not valid. Minimum 4 and maximum 18 digits are expected and it may contain space, dot(.), hyphen(-) only.", 'erp' );
+                                    $errors[] = __( "{$field_name} is not valid. Minimum 4 and maximum 18 digits are expected.", 'erp' );
                                 }
                             }
                             break;
@@ -398,7 +395,7 @@ class Validate_Data {
 
                         case 'is_valid_amount':
                             if ( $rule_value === 'true' && ! empty( $field_value ) && ! erp_is_valid_currency_amount( $field_value ) ) {
-                                $errors[] = __( "{$field_name} is not valid. It may contain digits and commas(,) and decimal point values only.", 'erp' );
+                                $errors[] = __( "{$field_name} is not valid. It may contain integer or decimal point values with maximum 2 digits after decimal point.", 'erp' );
                             }
                             break;
 

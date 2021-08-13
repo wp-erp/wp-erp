@@ -249,6 +249,9 @@ final class WeDevs_ERP {
 
         // Version 1.6.5 background files
         require_once WPERP_INCLUDES . '/updates/bp/class-erp-bg-process-1.6.5.php';
+        
+        // Version 1.9.1 background files
+        require_once WPERP_INCLUDES . '/updates/bp/class-erp-hr-bg-process-1.9.1.php';
 
         // Validates data
         require_once WPERP_INCLUDES . '/class-validate-data.php';
@@ -326,7 +329,7 @@ final class WeDevs_ERP {
      * @return array
      */
     public function plugin_action_links( $links ) {
-        $links[] = '<a href="' . admin_url( 'admin.php?page=erp-settings' ) . '">' . __( 'Settings', 'erp-deals' ) . '</a>';
+        $links[] = '<a href="' . admin_url( 'admin.php?page=erp-settings' ) . '">' . __( 'Settings', 'erp' ) . '</a>';
         $links[] = '<a target="_blank" href="https://wperp.com/documentation/?utm_source=Free+Plugin&utm_medium=CTA&utm_content=Backend&utm_campaign=Docs">' . __( 'Docs', 'erp' ) . '</a>';
 
         return $links;
