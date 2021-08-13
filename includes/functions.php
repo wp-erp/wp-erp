@@ -1607,7 +1607,7 @@ function erp_mail( $to, $subject, $message, $headers = '', $attachments = [], $c
         $debug_log    = ob_get_clean();
 
         if ( ! $is_mail_sent ) {
-            error_log( $debug_log );
+            error_log( print_r( $debug_log, true ) );
         }
 
         remove_action( 'phpmailer_init', $callback );

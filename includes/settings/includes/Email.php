@@ -211,7 +211,7 @@ class Email extends Template {
         $fields['templates'][] = [
             'title' => __( 'Saved Replies', 'erp' ),
             'type'  => 'title',
-            'desc'  => __( '', 'erp' ),
+            'desc'  => '',
             'id'    => 'general_options',
         ];
         // End of Email Templates
@@ -251,7 +251,7 @@ class Email extends Template {
         foreach ( $schedules as $key => $value ) {
             if ( ! in_array( $value['interval'], $cron_intervals ) ) {
                 array_push( $cron_intervals, $value['interval'] );
-                $cron_schedules[$key] = $value['display'];
+                $cron_schedules[ $key ] = $value['display'];
             }
         }
 
@@ -387,7 +387,7 @@ class Email extends Template {
             $status    = esc_attr( ( $imap_status ) ? 'yes green' : 'no red' );
             $connected = esc_attr( ( $imap_status ) ? __( 'Connected', 'erp' ) : __( 'Not Connected', 'erp' ) );
 
-            return sprintf("<span class='dashicons dashicons-%s'>%s</span>", $status, $connected);
+            return sprintf( "<span class='dashicons dashicons-%s'>%s</span>", $status, $connected );
         }
     }
 
@@ -831,12 +831,13 @@ class Email extends Template {
                         update_option( $name, $value );
                     }
                 } else {
-                    $option_id = 'erp_settings_' . $this->id . '_' . $_POST['section'];
+                    $section   = sanitize_text_field( wp_unslash( $_POST['section'] ) );
+                    $option_id = 'erp_settings_' . $this->id . '_' . $section;
 
                     // If it's incoming/outgoing email, then toggle email providers
-                    $this->toggle_providers( $_POST['section'], $_POST );
+                    $this->toggle_providers( $section, $_POST );
 
-                    if ( 'imap' === $_POST['section'] ) {
+                    if ( 'imap' === $section ) {
                         $imap_settings = get_option( 'erp_settings_erp-email_imap', [] );
                         $update_options['imap_status'] = ! empty( $imap_settings['imap_status'] ) ? intval( $imap_settings['imap_status'] ) : 0;
                     }

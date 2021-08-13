@@ -469,8 +469,8 @@ class Ajax {
 
             $data = [
                 'subject'      => $subject,
-                'from_address' => ['email' => $from_email, 'name' => $from_name],
-                'to_address'   => ['email' => $to_email, 'name' => ''],
+                'from_address' => [ 'email' => $from_email, 'name' => $from_name ],
+                'to_address'   => [ 'email' => $to_email, 'name' => '' ],
                 'message'      => $message
             ];
 
