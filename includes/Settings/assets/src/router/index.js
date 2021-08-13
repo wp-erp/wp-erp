@@ -33,6 +33,9 @@ import EmailNotification from '../components/email/notifications/EmailNotificati
 // Integration Components
 import Integration from '../components/integration/Integration.vue';
 
+// Old seperate extensions' license components
+import License from '../components/license/License.vue';
+
 Vue.use(Router);
 
 export default new Router({
@@ -213,6 +216,12 @@ export default new Router({
             path     : '/erp-integration',
             name     : 'Integration',
             component: Integration,
+        },
+
+        {
+            path     : '/erp-license',
+            name     : 'License',
+            component: License,
         },
     ])
 });

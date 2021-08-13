@@ -1,10 +1,11 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
-import sales from './modules/sales';
-import expense from './modules/expense';
+import Vue      from 'vue';
+import Vuex     from 'vuex';
+import sales    from './modules/sales';
+import expense  from './modules/expense';
 import purchase from './modules/purchase';
-import spinner from './modules/spinner';
-import combo from './modules/combo-btn';
+import spinner  from './modules/spinner';
+import combo    from './modules/combo-btn';
+import common   from './modules/common';
 
 Vue.use(Vuex);
 
@@ -16,7 +17,8 @@ const store = new Vuex.Store({
         expense,
         purchase,
         spinner,
-        combo
+        combo,
+        common,
     },
     strict: debug,
     plugins: []

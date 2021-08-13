@@ -2861,7 +2861,7 @@ function erp_hr_insert_leave_policy_name( $args = [] ) {
 
     $args = wp_parse_args( $args, $defaults );
 
-    erp_hrm_purge_cache( ['list' => 'leave_policy_name' ] );
+    erp_hrm_purge_cache( [ 'list' => 'leave_policy_name' ] );
 
     /*
      * Update
@@ -2875,7 +2875,13 @@ function erp_hr_insert_leave_policy_name( $args = [] ) {
             return new WP_Error( 'exists', esc_html__( 'Name already exists', 'erp' ) );
         }
 
-        $leave = Leave::find( $args['id'] )->update( $args );
+        $leave = Leave::find( $args['id'] );
+
+        if ( ! $leave ) {
+            return new WP_Error( 'not_exists', __( 'Leave Type doesn\'t exists.', 'erp' ) );
+        }
+
+        $leave->update( $args );
 
         return $leave->id;
     }
@@ -2905,14 +2911,34 @@ function erp_hr_remove_leave_policy_name( $id ) {
     $has_policy = Leave_Policy::where( 'leave_id', $id )->first();
 
     if ( $has_policy ) {
-        return new WP_Error( 'has_policy', __( 'Can not remove, connected with policy', 'erp' ) );
+        return new WP_Error( 'has_policy', __( 'This leave type cannot be deleted as it is associated with a leave policy', 'erp' ) );
     }
 
     $leave = Leave::find( $id );
 
-    erp_hrm_purge_cache( ['list' => 'leave_policy_name' ] );
+    erp_hrm_purge_cache( [ 'list' => 'leave_policy_name' ] );
 
     $leave->delete();
+}
+
+
+/**
+ * Get leave entitlements count associated with a leave policy
+ *
+ * @since 1.9.1
+ *
+ * @param int $leave_policy_id
+ *
+ * @return int|WP_Error
+ */
+function erp_hr_get_entitlemnt_of_leave_policy( $leave_policy_id ) {
+    $leave_policy = Leave_Policy::find( $leave_policy_id );
+
+    if ( ! $leave_policy ) {
+        return new WP_Error( 'invalid-policy', __( 'No valid leave policy found', 'erp' ) );
+    }
+
+    return count( $leave_policy->entitlements );
 }
 
 /**
@@ -2970,7 +2996,12 @@ function erp_hr_new_policy_name_url( $id = null ) {
  * @return array
  */
 function erp_hr_get_department_leads_id() {
-    return Department::select( 'lead' )->pluck( 'lead' )->toArray();
+    global $wpdb;
+
+    $results   = $wpdb->get_results( "SELECT `lead` FROM {$wpdb->prefix}erp_hr_depts", ARRAY_A );
+    $dep_leads = wp_list_pluck( $results, 'lead' );
+
+    return $dep_leads;
 }
 
 /**

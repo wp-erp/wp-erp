@@ -92,6 +92,12 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-hr-leave-policies-availablity', 'leave_available_days' );
         $this->action( 'wp_ajax_erp-hr-leave-req-new', 'leave_request' );
 
+        // leave type
+        $this->action( 'wp_ajax_erp-hr-leave-type-delete', 'leave_type_delete' );
+        $this->action( 'wp_ajax_erp-hr-leave-type-bulk-delete', 'leave_type_bulk_delete' );
+        $this->action( 'wp_ajax_erp-hr-leave-type-create', 'leave_type_create_or_update' );
+        $this->action( 'wp_ajax_erp-hr-get-leave-type', 'get_leave_type' );
+
         //leave holiday
         $this->action( 'wp_ajax_erp_hr_holiday_create', 'holiday_create' );
         $this->action( 'wp_ajax_erp-hr-get-holiday', 'get_holiday' );
@@ -860,15 +866,17 @@ class Ajax_Handler {
             $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
-        $employee_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
-        $hard        = isset( $_REQUEST['hard'] ) ? intval( $_REQUEST['hard'] ) : 0;
+        $employee_id = isset( $_REQUEST['id'] )   ? intval( wp_unslash( $_REQUEST['id'] ) )   : 0;
+        $hard        = isset( $_REQUEST['hard'] ) ? intval( wp_unslash( $_REQUEST['hard'] ) ) : 0;
         $user        = get_user_by( 'id', $employee_id );
 
         if ( ! $user ) {
             $this->send_error( __( 'No employee found', 'erp' ) );
         }
 
-        if ( in_array( 'employee', $user->roles, true ) ) {
+        $last_user_role = get_user_meta( $user->ID, 'erp_last_removed_role', true );
+
+        if ( in_array( 'employee', $user->roles, true ) || 'employee' == $last_user_role ) {
             $hard = apply_filters( 'erp_employee_delete_hard', $hard );
             erp_employee_delete( $employee_id, $hard );
         }
@@ -1021,7 +1029,7 @@ class Ajax_Handler {
 
     /**
      * Retrives employee job history
-     * 
+     *
      * @since 1.9.0
      *
      * @return mixed
@@ -1047,7 +1055,7 @@ class Ajax_Handler {
 
     /**
      * Updates employee job history
-     * 
+     *
      * @since 1.9.0
      *
      * @return mixed
@@ -1089,7 +1097,7 @@ class Ajax_Handler {
                     'reason'   => $data,
                     'comment'  => $comment
                 ] );
-                
+
                 break;
 
             case 'job':
@@ -1101,7 +1109,7 @@ class Ajax_Handler {
                     'reporting_to' => $data,
                     'location'     => $type
                 ] );
-                
+
                 break;
 
             case 'employment':
@@ -1112,7 +1120,7 @@ class Ajax_Handler {
                     'type'     => $type,
                     'comments' => $comment,
                 ] );
-                
+
                 break;
 
             default:
@@ -2501,6 +2509,7 @@ class Ajax_Handler {
 
         if ( ! empty( $_REQUEST['req_id'] ) ) {
             $req_ids = $_REQUEST['req_id'];
+            $req_ids = (array) $req_ids;
 
             array_walk( $req_ids, function( &$id, $index ) {
                 $id = intval( wp_unslash( $id) );
@@ -2509,7 +2518,7 @@ class Ajax_Handler {
 
         $action = ! empty( $_REQUEST['action_type'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['action_type'] ) ) : '';
 
-        $result = apply_filters( "erp_hr_employee_{$request_type}_request_bulk_action", $req_ids, $action );
+        $result = (array) apply_filters( "erp_hr_employee_{$request_type}_request_bulk_action", $req_ids, $action );
 
         if ( is_wp_error( $result ) ) {
             $this->send_error( __( 'Something went wrong! Try again later.', 'erp' ) );
@@ -2571,5 +2580,144 @@ class Ajax_Handler {
             'data'    => $inserted,
             'message' => __( 'Settings saved successfully !', 'erp' )
         ] );
+    }
+
+    /**
+     * Delete a leave type
+     *
+     * @since 1.9.1
+     *
+     * @return void
+     */
+    public function leave_type_delete() {
+        $this->verify_nonce( 'wp-erp-hr-nonce' );
+
+        if ( ! current_user_can( 'erp_leave_manage' ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
+        $id = ! empty( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0;
+
+        if ( empty( $id ) ) {
+            $this->send_error( __( 'No valid leave type found!', 'erp' ) );
+        }
+
+        $result = erp_hr_remove_leave_policy_name( $id );
+
+        if ( is_wp_error( $result ) ) {
+            $this->send_error( $result->get_error_message() );
+        }
+
+        $this->send_success( __( 'Leave Type has been deleted', 'erp' ) );
+    }
+
+    /**
+     * Bulk Delete leave types
+     *
+     * @since 1.9.1
+     *
+     * @return void
+     */
+    public function leave_type_bulk_delete() {
+        $this->verify_nonce( 'wp-erp-hr-nonce' );
+
+        if ( ! current_user_can( 'erp_leave_manage' ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
+        $ids = [];
+
+        if ( ! empty( $_POST['ids'] ) ) {
+            $posted_ids = $_POST['ids'];
+
+            foreach ( $posted_ids as $id ) {
+                $ids[] = absint( wp_unslash( $id ) );
+            }
+        }
+
+        if ( empty( $ids ) ) {
+            $this->send_error( __( 'No valid leave type found!', 'erp' ) );
+        }
+
+        $deleted = 0;
+
+        foreach ( $ids as $id ) {
+            if ( ! is_wp_error( erp_hr_remove_leave_policy_name( $id ) ) ) {
+                $deleted++;
+            }
+        }
+
+        if ( $deleted === 0 ) {
+            $this->send_error( __( 'No items were deleted as they are associated with policy', 'erp' ) );
+        } else {
+            $this->send_success( sprintf( __( '%s items deleted successfully', 'erp' ), $deleted ) );
+        }
+    }
+
+    /**
+     * Create or update a new leave type
+     *
+     * @since 1.9.1
+     *
+     * @return void
+     */
+    public function leave_type_create_or_update() {
+        $this->verify_nonce( 'wp-erp-hr-nonce' );
+
+        if ( ! current_user_can( 'erp_leave_manage' ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+        $id          = ! empty( $_POST['id'] )          ? absint( wp_unslash( $_POST['id'] ) )                             : 0;
+        $name        = ! empty( $_POST['name'] )        ? sanitize_text_field( wp_unslash( $_POST[ 'name' ] ) )            : '';
+        $description = ! empty( $_POST['description'] ) ? sanitize_textarea_field( wp_unslash( $_POST[ 'description' ] ) ) : '';
+
+        if ( empty( $name ) ) {
+            $this->send_error( __( 'Name field should not be left empty', 'erp' ) );
+        }
+
+        $args = [
+            'name'          => $name,
+            'description'   => $description
+        ];
+
+        if ( $id ) {
+            $args['id'] = $id;
+        }
+
+        $leave_type = erp_hr_insert_leave_policy_name( $args );
+
+        if ( is_wp_error( $leave_type ) ) {
+            $this->send_error( $leave_type->get_error_message() );
+        }
+
+        if ( $id ) {
+            $this->send_success( __( 'Leave Type has been updated', 'erp' ) );
+        } else {
+            $this->send_success( __( 'Leave Type has been created', 'erp' ) );
+        }
+    }
+
+    /**
+     * Get a leave type by id
+     *
+     * @since 1.9.1
+     *
+     * @return void
+     */
+    public function get_leave_type() {
+        $this->verify_nonce( 'wp-erp-hr-nonce' );
+
+        if ( ! current_user_can( 'erp_leave_manage' ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
+        $id         = ! empty( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0;
+        $leave_type = \WeDevs\ERP\HRM\Models\Leave::find( $id );
+
+        if ( empty( $leave_type ) ) {
+            $this->send_error( __( 'No valid leave type found!', 'erp' ) );
+        }
+
+        $this->send_success( $leave_type );
     }
 }

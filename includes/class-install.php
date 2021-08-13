@@ -470,7 +470,7 @@ Account Manager
                 `termination_date` date NOT NULL,
                 `date_of_birth` date NOT NULL,
                 `reporting_to` bigint(20) unsigned NOT NULL DEFAULT '0',
-                `pay_rate` int(11) unsigned NOT NULL DEFAULT '0',
+                `pay_rate` decimal(20,2) unsigned NOT NULL DEFAULT '0',
                 `pay_type` varchar(20) NOT NULL DEFAULT '',
                 `type` varchar(20) NOT NULL,
                 `status` varchar(10) NOT NULL DEFAULT '',
@@ -1062,21 +1062,23 @@ Account Manager
                 PRIMARY KEY (`id`)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_invoice_details` (
-                `id` int(11) NOT NULL AUTO_INCREMENT,
-                `trn_no` int(11) DEFAULT NULL,
-                `product_id` int(11) DEFAULT NULL,
-                `qty` int(11) DEFAULT NULL,
-                `unit_price` decimal(20,2) DEFAULT 0,
-                `discount` decimal(20,2) DEFAULT 0,
-                `tax` decimal(20,2) DEFAULT 0,
-                `item_total` decimal(20,2) DEFAULT 0,
-                `ecommerce_type` varchar(255) DEFAULT NULL,
-                `created_at` date DEFAULT NULL,
-                `created_by` varchar(50) DEFAULT NULL,
-                `updated_at` date DEFAULT NULL,
-                `updated_by` varchar(50) DEFAULT NULL,
-                PRIMARY KEY (`id`)
+            "CREATE TABLE {$wpdb->prefix}erp_acct_invoice_details (
+                id int(11) NOT NULL AUTO_INCREMENT,
+                trn_no int(11) DEFAULT NULL,
+                product_id int(11) DEFAULT NULL,
+                qty int(11) DEFAULT NULL,
+                unit_price decimal(20,2) DEFAULT 0,
+                discount decimal(20,2) DEFAULT 0,
+                shipping decimal(20,2) DEFAULT 0,
+                tax decimal(20,2) DEFAULT 0,
+                tax_cat_id int(11) DEFAULT NULL,
+                item_total decimal(20,2) DEFAULT 0,
+                ecommerce_type varchar(255) DEFAULT NULL,
+                created_at date DEFAULT NULL,
+                created_by varchar(50) DEFAULT NULL,
+                updated_at date DEFAULT NULL,
+                updated_by varchar(50) DEFAULT NULL,
+                PRIMARY KEY  (id)
             ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_invoice_receipts` (
@@ -1123,6 +1125,8 @@ Account Manager
                 `amount` decimal(20,2) DEFAULT 0,
                 `discount` decimal(20,2) DEFAULT 0,
                 `discount_type` varchar(255) DEFAULT NULL,
+                `shipping` decimal(20,2) DEFAULT 0,
+                `shipping_tax` decimal(20,2) DEFAULT 0,
                 `tax` decimal(20,2) DEFAULT 0,
                 `tax_zone_id` int(11) DEFAULT NULL,
                 `estimate` boolean DEFAULT NULL,
@@ -1329,16 +1333,17 @@ Account Manager
                 PRIMARY KEY  (`id`)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_pay_purchase_details` (
-                `id` int(11) NOT NULL AUTO_INCREMENT,
-                `voucher_no` int(11) DEFAULT NULL,
-                `purchase_no` int(11) DEFAULT NULL,
-                `amount` decimal(20,2) DEFAULT 0,
-                `created_at` date DEFAULT NULL,
-                `created_by` varchar(50) DEFAULT NULL,
-                `updated_at` date DEFAULT NULL,
-                `updated_by` varchar(50) DEFAULT NULL,
-                PRIMARY KEY  (`id`)
+            "CREATE TABLE {$wpdb->prefix}erp_acct_pay_purchase_details (
+                id int(11) NOT NULL AUTO_INCREMENT,
+                voucher_no int(11) DEFAULT NULL,
+                purchase_no int(11) DEFAULT NULL,
+                amount decimal(20,2) DEFAULT 0,
+                tax_cat_id int(11) DEFAULT NULL,
+                created_at date DEFAULT NULL,
+                created_by varchar(50) DEFAULT NULL,
+                updated_at date DEFAULT NULL,
+                updated_by varchar(50) DEFAULT NULL,
+                PRIMARY KEY  (id)
             ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_people_account_details` (
@@ -1607,6 +1612,21 @@ Account Manager
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
+            ) $charset_collate;",
+
+            "CREATE TABLE {$wpdb->prefix}erp_acct_synced_taxes (
+                id int NOT NULL AUTO_INCREMENT,
+                system_id bigint NOT NULL,
+                sync_id bigint DEFAULT NULL,
+                sync_slug varchar(100) DEFAULT NULL,
+                sync_type varchar(100) DEFAULT NULL,
+                sync_source varchar(100) DEFAULT NULL,
+                PRIMARY KEY  (id),
+                KEY system_id (system_id),
+                KEY sync_id (sync_id),
+                KEY sync_slug (sync_slug),
+                KEY sync_type (sync_type),
+                KEY sync_source (sync_source)
             ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_payment_methods` (

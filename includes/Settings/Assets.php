@@ -145,8 +145,8 @@ class Assets {
             $settings[] = new Integration();
         }
 
-        if ( erp_addon_licenses() ) {
-            $settings[] = include __DIR__ . '/License.php';
+        if ( ! empty( erp_addon_licenses() ) ) {
+            $settings[] = new License();
         }
 
         $settings_data = [];

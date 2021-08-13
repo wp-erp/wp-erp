@@ -33,6 +33,9 @@ class Ajax {
         $this->action( 'wp_ajax_erp_update_email_status', 'update_email_status' );
         $this->action( 'wp_ajax_erp_update_email_template', 'update_email_template' );
         $this->action( 'wp_ajax_erp_smtp_test_connection', 'smtp_test_connection' );
+
+        // License settings
+        $this->action( 'wp_ajax_erp_settings_save_licenses', 'save_licenses' );
     }
 
     /**
@@ -402,5 +405,67 @@ class Ajax {
         } catch ( \Exception $e ) {
             $this->send_error( $e->getMessage() );
         }
+    }
+
+    /**
+     * Saves addon license data
+     * 
+     * @since 1.9.1
+     *
+     * @return mixed
+     */
+    public function save_licenses() {
+        $this->verify_nonce( 'erp-settings-nonce' );
+
+        if ( ! current_user_can( 'manage_options' ) ) {
+            $this->send_error( erp_get_message( [ 'type' => 'error_permission' ] ) );
+        }
+
+        if ( ! empty( $_REQUEST['extensions'] ) ) {
+            $extensions = map_deep( wp_unslash( $_REQUEST['extensions'] ), 'sanitize_text_field' );
+
+            foreach ( $extensions as $ext ) {
+                $old_key = get_option( $ext['id'] );
+
+                if ( $old_key != $ext['license'] ) {
+                    update_option( $ext['id'], $ext['license'] );
+                }
+
+                $status = erp_get_license_status( $ext );
+
+                if ( is_object( $status ) && 'valid' === $status->license ) {
+                    continue;
+                }
+
+                $license_key = get_option( $ext['id'] );
+
+                if ( ! empty( $license_key ) ) {
+                    $api_params = [
+                        'edd_action'=> 'activate_license',
+                        'license'   => $license_key,
+                        'item_name' => urlencode( $ext['name'] ),
+                        'url'       => home_url(),
+                    ];
+            
+                    $response = wp_remote_post( 'https://wperp.com/', [
+                        'timeout'   => 15,
+                        'sslverify' => false,
+                        'body'      => $api_params,
+                    ] );
+            
+                    if ( is_wp_error( $response ) ) {
+                        return false;
+                    }
+            
+                    $license_data = json_decode( wp_remote_retrieve_body( $response ) );
+
+                    if ( $license_data ) {
+                        update_option( "{$ext['id']}_status}", $license_data );
+                    }
+                }
+            }
+        }
+
+        $this->send_success( __( 'Licenses saved succesfully', 'erp' ) );
     }
 }

@@ -222,6 +222,10 @@ class Human_Resource {
             'currentDate'            => erp_current_datetime()->format( 'Y-m-d' ),
             'invalid_filter_data'    => __( 'Invalid filter data', 'erp' ),
             'start_end_date'         => __( 'Start date must be earlier than End date', 'erp' ),
+            'leave_type_delete'      => __( 'Are you sure to delete this leave type?', 'erp' ),
+            'leave_type_bulk_delete' => __( 'Are you sure to delete these leave types?', 'erp' ),
+            'cancel'                 => __( 'Cancel', 'erp' ),
+            'confirm_delete'         => __( 'Yes, Delete', 'erp' ),
         ] );
 
         switch ( $section ) {
@@ -275,6 +279,10 @@ class Human_Resource {
                 wp_enqueue_script( 'erp-flotchart-valuelabel' );
                 wp_enqueue_style( 'erp-flotchart-valuelabel-css' );
                 break;
+
+            case 'leave':
+                wp_enqueue_style( 'erp-sweetalert' );
+                wp_enqueue_script( 'erp-sweetalert' );
         }
 
         // if its an employee page

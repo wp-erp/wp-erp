@@ -1465,19 +1465,7 @@ function erp_process_csv_export() {
                         if ( in_array( $field, $custom_fields, true ) ) {
                             $csv_items[ $index ][ $field ] = get_user_meta( $item->id, $field, true );
                         } else {
-                            switch ( $field ) {
-                                case 'department':
-                                    $csv_items[ $index ][ $field ] = $item->get_department_title();
-                                    break;
-
-                                case 'designation':
-                                    $csv_items[ $index ][ $field ] = $item->get_job_title();
-                                    break;
-
-                                default:
-                                    $csv_items[ $index ][ $field ] = $item->{$field};
-                                    break;
-                            }
+                            $csv_items[ $index ][ $field ] = $item->{$field};
                         }
                     } else if ( $is_people ) {
                         if ( in_array( $field, $custom_fields, true ) ) {
@@ -2948,7 +2936,7 @@ function filter_enabled_email( $email ) {
         return $email;
     }
     add_filter( 'erp_email_recipient_' . $email->id, function ( $recipient, $object ) {
-        return '';
+        return $recipient;
     }, 10, 2 );
 
     return $email;
@@ -3306,7 +3294,7 @@ function erp_is_valid_employee_id( $emp_id ) {
  * @return bool
  */
 function erp_is_valid_currency_amount( $amount ) {
-    return preg_match( '/^[0-9](?:,?[0-9])*(?:.[0-9]{4})?$/', $amount );
+    return preg_match( '/^[0-9]+(\.[0-9]{1,2})?$/', $amount );
 }
 
 /**
@@ -3415,9 +3403,9 @@ function erp_disable_mysql_strict_mode() {
  * Queue some JavaScript code to be output in the footer.
  *
  * @since 1.9.0
- * 
+ *
  * @param string $code Code.
- * 
+ *
  * @return void
  */
 function erp_enqueue_js( $code ) {
@@ -3432,9 +3420,9 @@ function erp_enqueue_js( $code ) {
 
 /**
  * Output any queued javascript code in the footer.
- * 
+ *
  * @since 1.9.0
- * 
+ *
  * @return void Print JS Code
  */
 function erp_print_js() {
@@ -3637,4 +3625,21 @@ function erp_get_message( $args = [] ) {
     }
 
     return sprintf( __( '%s', 'erp' ), $args['message'] );
+}
+
+/**
+ * Convert a serialized corrupted String to an array
+ *
+ * @since 1.9.1
+ *
+ * @param string $serialized_string
+ *
+ * @return array converted array data
+ */
+function erp_serialize_string_to_array( $serialized_string ) {
+    $data = preg_replace_callback ( '!s:(\d+):"(.*?)";!', function( $match ) {
+        return ( $match[1] == strlen( $match[2] ) ) ? $match[0] : 's:' . strlen( $match[2] ) . ':"' . $match[2] . '";';
+    }, $serialized_string );
+
+    return unserialize( $data );
 }

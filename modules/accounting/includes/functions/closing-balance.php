@@ -124,39 +124,29 @@ function erp_acct_clsbl_close_balance_sheet_now( $args ) {
         } // liability loop
     } // ledger loop
 
-    $chart_id_bank = 7;
-    $final_accounts_helper = new \WeDevs\ERP\Accounting\Includes\Classes\FinalAccountsHelper($args);
+    $chart_id_bank  = 7;
+    $final_accounts = new \WeDevs\ERP\Accounting\Includes\Classes\Final_Accounts( $args );
 
-    // get bank balance
-    //$bank_balance = erp_acct_bank_balance( $args, 'balance' );
-
-    if ( is_array( $final_accounts_helper->cashAtBankBreakdowns ) ) {
-        foreach ( $final_accounts_helper->cashAtBankBreakdowns  as $b_balance ) {
-            erp_acct_clsbl_insert_into_opening_balance(
-                $next_f_year_id,
-                $chart_id_bank,
-                $b_balance['ledger_id'],
-                'ledger',
-                $b_balance['balance'],
-                0.00
-            );
-        }
+    foreach ( $final_accounts->cash_at_bank_breakdowns as $cash_at_bank ) {
+        erp_acct_clsbl_insert_into_opening_balance(
+            $next_f_year_id,
+            $chart_id_bank,
+            $cash_at_bank['ledger_id'],
+            'ledger',
+            $cash_at_bank['balance'],
+            0.00
+        );
     }
 
-    // get bank loan
-    //$bank_loan = erp_acct_bank_balance( $args, 'loan' );
-
-    if ( is_array( $final_accounts_helper->loanAtBankBreakdowns ) ) {
-        foreach ( $final_accounts_helper->loanAtBankBreakdowns as $b_loan ) {
-            erp_acct_clsbl_insert_into_opening_balance(
-                $next_f_year_id,
-                $chart_id_bank,
-                $b_loan['ledger_id'],
-                'ledger',
-                0.00,
-                abs( $b_loan['balance'] )
-            );
-        }
+    foreach ( $final_accounts->loan_at_bank_breakdowns as $loan_at_bank ) {
+        erp_acct_clsbl_insert_into_opening_balance(
+            $next_f_year_id,
+            $chart_id_bank,
+            $loan_at_bank['ledger_id'],
+            'ledger',
+            0.00,
+            abs( $loan_at_bank['balance'] )
+        );
     }
 
     // get accounts receivable
