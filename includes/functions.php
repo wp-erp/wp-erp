@@ -2936,7 +2936,7 @@ function filter_enabled_email( $email ) {
         return $email;
     }
     add_filter( 'erp_email_recipient_' . $email->id, function ( $recipient, $object ) {
-        return '';
+        return $recipient;
     }, 10, 2 );
 
     return $email;
@@ -3403,9 +3403,9 @@ function erp_disable_mysql_strict_mode() {
  * Queue some JavaScript code to be output in the footer.
  *
  * @since 1.9.0
- * 
+ *
  * @param string $code Code.
- * 
+ *
  * @return void
  */
 function erp_enqueue_js( $code ) {
@@ -3420,9 +3420,9 @@ function erp_enqueue_js( $code ) {
 
 /**
  * Output any queued javascript code in the footer.
- * 
+ *
  * @since 1.9.0
- * 
+ *
  * @return void Print JS Code
  */
 function erp_print_js() {
