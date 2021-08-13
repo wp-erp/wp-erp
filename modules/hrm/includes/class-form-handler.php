@@ -70,15 +70,19 @@ class Form_Handler {
                     case 'employee':
                         $this->employee_bulk_action();
                         break;
-        
+
                     case 'department':
                         $this->department_bulk_action();
                         break;
-        
+
                     case 'designation':
                         $this->designation_bulk_action();
                         break;
-                    
+
+                    case 'announcement':
+                        $this->announcement_bulk_action();
+                        break;
+
                     default:
                         return;
                 }
@@ -528,6 +532,89 @@ class Form_Handler {
 
                     if ( in_array( false, $resp ) ) {
                         $redirect = add_query_arg( [ 'department_delete' => 'item_deleted' ], $redirect );
+                    }
+
+                    wp_redirect( $redirect );
+                    exit();
+            }
+        }
+    }
+
+    /**
+     * Announcement handle bulk action
+     *
+     * @since 1.9.1
+     *
+     * @return void [redirection]
+     */
+    public function announcement_bulk_action() {
+        // Check nonce validation
+        if ( ! $this->verify_current_page_screen( 'erp-hr', 'bulk-announcements' ) ) {
+            return;
+        }
+
+        // Check permission if not hr manager then go out from here
+        if ( ! current_user_can( 'erp_manage_announcement' ) ) {
+            wp_die( esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
+        $announcement_table = new \WeDevs\ERP\HRM\Announcement_List_Table();
+        $action             = $announcement_table->current_action();
+
+        if ( $action ) {
+            $req_uri_bulk = ( ! empty( $_SERVER['REQUEST_URI'] ) ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+            $redirect     = remove_query_arg( [
+                '_wp_http_referer',
+                '_wpnonce',
+                'action',
+                'action2',
+            ], $req_uri_bulk );
+            $fail_count   = 0;
+
+            switch ( $action ) {
+                case 'trash':
+                    if ( ! empty( $_GET['id'] ) ) {
+                        $announcement_ids = array_map( 'sanitize_text_field', wp_unslash( $_GET['id'] ) );
+                        $fail_count       = erp_hr_trash_announcements( $announcement_ids );
+                    }
+
+                    if ( $fail_count > 0 ) {
+                        $redirect = add_query_arg( [
+                            'bulk-operation-failed' => 'failed_some_trash',
+                            'fail-count'            => $fail_count,
+                        ], $redirect );
+                    }
+
+                    wp_redirect( $redirect );
+                    exit();
+
+                case 'delete_permanently':
+                    if ( ! empty( $_GET['id'] ) ) {
+                        $announcement_ids = array_map( 'sanitize_text_field', wp_unslash( $_GET['id'] ) );
+                        $fail_count       = erp_hr_trash_announcements( $announcement_ids, true );
+                    }
+
+                    if ( $fail_count > 0 ) {
+                        $redirect = add_query_arg( [
+                            'bulk-operation-failed' => 'failed_some_delation',
+                            'fail-count'            => $fail_count,
+                        ], $redirect );
+                    }
+
+                    wp_redirect( $redirect );
+                    exit();
+
+                case 'restore':
+                    if ( ! empty( $_GET['id'] ) ) {
+                        $announcement_ids = array_map( 'sanitize_text_field', wp_unslash( $_GET['id'] ) );
+                        $fail_count       = erp_hr_restore_announcements( $announcement_ids );
+                    }
+
+                    if ( $fail_count > 0 ) {
+                        $redirect = add_query_arg( [
+                            'bulk-operation-failed' => 'failed_some_restoration',
+                            'fail-count'            => $fail_count,
+                        ], $redirect );
                     }
 
                     wp_redirect( $redirect );

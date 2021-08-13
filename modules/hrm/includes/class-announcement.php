@@ -35,6 +35,7 @@ class Announcement {
         $this->action( 'init', 'post_types' );
         $this->action( 'do_meta_boxes', 'do_metaboxes' );
         $this->action( 'save_post', 'save_announcement_meta', 10, 2 );
+        $this->action( 'init', 'redirect_to_announcement_tab' );
 
         $this->filter( 'manage_edit-erp_hr_announcement_columns', 'add_type_columns' );
         $this->filter( 'manage_erp_hr_announcement_posts_custom_column', 'assign_type_edit_columns', 10, 2 );
@@ -43,6 +44,22 @@ class Announcement {
         // $this->filter( 'submenu_file', 'submenu_file', 999 );
 
         $this->action( 'admin_head', 'filter_admin_sidebar_menu_items' );
+    }
+
+    /**
+     * Redirect to announcement tab in people page after create/update of announcement
+     *
+     * @since 1.9.1
+     *
+     * @return void
+     */
+    public function redirect_to_announcement_tab() {
+        $request_uri = ! empty( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+
+        if ( strpos( $request_uri, 'edit.php?post_type=erp_hr_announcement' ) !== false ) {
+            wp_safe_redirect( admin_url( 'admin.php?page=erp-hr&section=people&sub-section=announcement' ) );
+            exit;
+        }
     }
 
     /**
