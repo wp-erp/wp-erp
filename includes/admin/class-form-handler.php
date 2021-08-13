@@ -185,7 +185,9 @@ class Form_Handler {
             update_option( '_erp_adminbar_menu', $bar_menu );
 
             // Refresh the `wp-erp` to see the impact instantly
-            wp_redirect( $_SERVER['HTTP_REFERER'] );
+            if ( wp_safe_redirect( $_SERVER['HTTP_REFERER'] ) ) {
+                exit;
+            }
         }
     }
 
