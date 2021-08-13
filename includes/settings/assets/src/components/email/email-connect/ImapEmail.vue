@@ -47,7 +47,7 @@ export default {
          */
         testImapConnection() {
             const self = this;
-            self.imapTestString = __( 'Testing Connection', 'erp' ) +' <i class="fa fa-spinner fa-spin"></i>';
+            self.imapTestString = __( 'Testing Connection', 'erp' ) + ' <i class="fa fa-spinner fa-spin"></i>';
 
             const data = {
                 'action'        : 'erp_imap_test_connection',
@@ -64,17 +64,15 @@ export default {
                 const type = response.success ? 'success' : 'error';
 
                 if ( response.data ) {
-                    const status = response.success ? 1 : 0;
+                    self.$emit( 'inputImapStatus', 'imap_status' )
 
-                    self.$emit('inputImapStatus', 'imap_status')
-
-                    self.imapTestString = __(' Test Connection', 'erp' );
+                    self.imapTestString = __( ' Test Connection', 'erp' );
 
                     swal({
                         title: '',
                         text: response.data,
                         type: type,
-                        confirmButtonText: __(' OK', 'erp' ),
+                        confirmButtonText: __( ' OK', 'erp' ),
                         confirmButtonColor: '#008ec2'
                     });
                 }

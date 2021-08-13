@@ -19,7 +19,7 @@
                             id="smtp_test_email_address"
                             v-model="smtpTestEmail"
                         />
-                        <button id="smtp-test-connection" class="wperp-btn btn--secondary btn-test-connection" @click="testConnection">{{ __('Send Test Email', 'erp') }}</button>
+                        <button id="smtp-test-connection" class="wperp-btn btn--secondary btn-test-connection" @click="testConnection">{{ __( 'Send Test Email', 'erp' ) }}</button>
                     </div>
                 </div>
             </slot>
