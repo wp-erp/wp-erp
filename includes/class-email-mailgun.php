@@ -86,9 +86,9 @@ class Email_Mailgun {
      *
      * @return void
      */
-    public function set_subject( $subject ) {
+    public function set_subject ( $subject ) {
         if ( ! empty( $subject ) ) {
-            $subject = sanitize_text_field( wp_unslash( $subject ) );
+            $subject = esc_html( $subject );
 
             $this->builder->setSubject( $subject );
         }
@@ -105,7 +105,7 @@ class Email_Mailgun {
      */
     public function set_message( $message ) {
         if ( ! empty( $message ) ) {
-            $messageHTML = preg_replace("/\r\n|\r|\n/", '<br/>', $message);
+            $messageHTML = preg_replace( "/\r\n|\r|\n/", '<br>', $message );
 
             $this->builder->setHtmlBody( $messageHTML );
         }
@@ -221,11 +221,9 @@ class Email_Mailgun {
      * @return void
      */
     public function set_custom_headers( $headers = [] ) {
-        if ( ! empty( $headers ) ) {
-            foreach ( $headers as $key => $value ) {
-                if ( ! empty( $key ) && ! empty( $value ) ) {
-                    $this->builder->addCustomHeader( $key, $value );
-                }
+        foreach ( (array) $headers as $key => $value ) {
+            if ( ! empty( $value ) ) {
+                $this->builder->addCustomHeader( $key, $value );
             }
         }
     }
@@ -259,91 +257,87 @@ class Email_Mailgun {
 
             $headers = [];
 
-            // If it's actually got contents
-            if ( ! empty( $temp_headers ) ) {
-                // Iterate through the raw headers
-                foreach ( (array) $temp_headers as $header ) {
-                    if ( strpos( $header, ':' ) === false ) {
-                        if ( false !== stripos( $header, 'boundary=' ) ) {
-                            $parts    = preg_split( '/boundary=/i', trim( $header ) );
-                            $boundary = trim( str_replace( [ "'", '"' ], '', $parts[1] ) );
+            foreach ( (array) $temp_headers as $header ) {
+                if ( strpos( $header, ':' ) === false ) {
+                    if ( false !== stripos( $header, 'boundary=' ) ) {
+                        $parts    = preg_split( '/boundary=/i', trim( $header ) );
+                        $boundary = trim( str_replace( [ "'", '"' ], '', $parts[1] ) );
+                    }
+                    continue;
+                }
+
+                // Explode them out
+                list( $name, $content ) = explode( ':', trim( $header ), 2 );
+
+                // Cleanup crew
+                $name    = trim( $name );
+                $content = trim( $content );
+
+                switch ( strtolower( $name ) ) {
+                    // Mainly for legacy -- process a From: header if it's there
+                    case 'from':
+                        $bracket_pos = strpos( $content, '<' );
+
+                        if ( $bracket_pos !== false ) {
+                            // Text before the bracketed email is the "From" name.
+                            if ( $bracket_pos > 0 ) {
+                                $from_name = substr( $content, 0, $bracket_pos - 1 );
+                                $from_name = str_replace( '"', '', $from_name );
+                                $from_name = trim( $from_name );
+                            }
+
+                            $from_email = substr( $content, $bracket_pos + 1 );
+                            $from_email = str_replace( '>', '', $from_email );
+                            $from_email = trim( $from_email );
+
+                        // Avoid setting an empty $from_email.
+                        } elseif ( '' !== trim( $content ) ) {
+                            $from_email = trim( $content );
+                            $from_name = '';
                         }
-                        continue;
-                    }
 
-                    // Explode them out
-                    list( $name, $content ) = explode( ':', trim( $header ), 2 );
+                        if ( ! empty( $from_email ) ) {
+                            $this->set_from_address( [ 'email' => $from_email, 'name' => $from_name ] );
+                        }
+                        break;
 
-                    // Cleanup crew
-                    $name    = trim( $name );
-                    $content = trim( $content );
+                    case 'content-type':
+                        if ( strpos( $content, ';' ) !== false ) {
+                            list( $type, $charset_content ) = explode( ';', $content );
+                            $content_type                   = trim( $type );
 
-                    switch ( strtolower( $name ) ) {
-                        // Mainly for legacy -- process a From: header if it's there
-                        case 'from':
-                            $bracket_pos = strpos( $content, '<' );
-
-                            if ( $bracket_pos !== false ) {
-                                // Text before the bracketed email is the "From" name.
-                                if ( $bracket_pos > 0 ) {
-                                    $from_name = substr( $content, 0, $bracket_pos - 1 );
-                                    $from_name = str_replace( '"', '', $from_name );
-                                    $from_name = trim( $from_name );
-                                }
-
-                                $from_email = substr( $content, $bracket_pos + 1 );
-                                $from_email = str_replace( '>', '', $from_email );
-                                $from_email = trim( $from_email );
-
-                            // Avoid setting an empty $from_email.
-                            } elseif ( '' !== trim( $content ) ) {
-                                $from_email = trim( $content );
-                                $from_name = '';
+                            if ( false !== stripos( $charset_content, 'charset=' ) ) {
+                                $charset = trim( str_replace( [ 'charset=', '"' ], '', $charset_content ) );
+                            } elseif ( false !== stripos( $charset_content, 'boundary=' ) ) {
+                                $boundary = trim( str_replace( [ 'BOUNDARY=', 'boundary=', '"' ], '', $charset_content ) );
+                                $charset  = '';
                             }
 
-                            if ( ! empty( $from_email ) ) {
-                                $this->set_from_address( [ 'email' => $from_email, 'name' => $from_name ] );
-                            }
-                            break;
+                            // Avoid setting an empty $content_type.
+                        } elseif ( '' !== trim( $content ) ) {
+                            $content_type = trim( $content );
+                        }
+                        break;
 
-                        case 'content-type':
-                            if ( strpos( $content, ';' ) !== false ) {
-                                list( $type, $charset_content ) = explode( ';', $content );
-                                $content_type                   = trim( $type );
+                    case 'cc':
+                        $cc = array_merge( (array) $cc, explode( ',', $content ) );
+                        $this->set_cc_address( [ 'email' => $cc ] );
+                        break;
 
-                                if ( false !== stripos( $charset_content, 'charset=' ) ) {
-                                    $charset = trim( str_replace( [ 'charset=', '"' ], '', $charset_content ) );
-                                } elseif ( false !== stripos( $charset_content, 'boundary=' ) ) {
-                                    $boundary = trim( str_replace( [ 'BOUNDARY=', 'boundary=', '"' ], '', $charset_content ) );
-                                    $charset  = '';
-                                }
+                    case 'bcc':
+                        $bcc = array_merge( (array) $bcc, explode( ',', $content ) );
+                        $this->set_bcc_address( [ 'email' => $bcc ] );
+                        break;
 
-                                // Avoid setting an empty $content_type.
-                            } elseif ( '' !== trim( $content ) ) {
-                                $content_type = trim( $content );
-                            }
-                            break;
+                    case 'reply-to':
+                        $reply_to = array_merge( (array) $reply_to, explode( ',', $content ) );
+                        $this->set_reply_to_address( [ 'email' => $reply_to ] );
+                        break;
 
-                        case 'cc':
-                            $cc = array_merge( (array) $cc, explode( ',', $content ) );
-                            $this->set_cc_address( [ 'email' => $cc ] );
-                            break;
-
-                        case 'bcc':
-                            $bcc = array_merge( (array) $bcc, explode( ',', $content ) );
-                            $this->set_bcc_address( [ 'email' => $bcc ] );
-                            break;
-
-                        case 'reply-to':
-                            $reply_to = array_merge( (array) $reply_to, explode( ',', $content ) );
-                            $this->set_reply_to_address( [ 'email' => $reply_to ] );
-                            break;
-
-                        default:
-                            $headers[ trim( $name ) ] = trim( $content );
-                            $this->set_to_address( trim( $content ) );
-                            break;
-                    }
+                    default:
+                        $headers[ trim( $name ) ] = trim( $content );
+                        $this->set_to_address( trim( $content ) );
+                        break;
                 }
             }
         }
@@ -359,10 +353,8 @@ class Email_Mailgun {
      * @return void
      */
     public function set_attachment( $attachments = [] ) {
-        if ( ! empty( $attachments ) ) {
-            foreach ( $attachments as $attachment ) {
-                $this->builder->addAttachment( $attachment );
-            }
+        foreach ( (array) $attachments as $attachment ) {
+            $this->builder->addAttachment( $attachment );
         }
     }
 
@@ -382,11 +374,11 @@ class Email_Mailgun {
     public function make_message( $args = [] ) {
         $default = [
             'subject'         => '',
-            'from_address'    => ['email' => '', 'name'  => ''],
-            'to_address'      => ['email' => '', 'name'  => ''],
-            'cc_address'      => ['email' => '', 'name'  => ''],
+            'from_address'    => [ 'email' => '', 'name'  => '' ],
+            'to_address'      => [ 'email' => '', 'name'  => '' ],
+            'cc_address'      => [ 'email' => '', 'name'  => '' ],
             'headers'         => [],
-            'customer_header' => ['key'   => '', 'value' => ''],
+            'customer_header' => [ 'key'   => '', 'value' => '' ],
             'attachment'      => '',
             'message'         => ''
         ];
