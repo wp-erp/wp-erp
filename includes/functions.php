@@ -3626,3 +3626,20 @@ function erp_get_message( $args = [] ) {
 
     return sprintf( __( '%s', 'erp' ), $args['message'] );
 }
+
+/**
+ * Convert a serialized corrupted String to an array
+ *
+ * @since 1.9.1
+ *
+ * @param string $serialized_string
+ *
+ * @return array converted array data
+ */
+function erp_serialize_string_to_array( $serialized_string ) {
+    $data = preg_replace_callback ( '!s:(\d+):"(.*?)";!', function( $match ) {
+        return ( $match[1] == strlen( $match[2] ) ) ? $match[0] : 's:' . strlen( $match[2] ) . ':"' . $match[2] . '";';
+    }, $serialized_string );
+
+    return unserialize( $data );
+}

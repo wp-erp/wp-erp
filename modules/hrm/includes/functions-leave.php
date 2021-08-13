@@ -2996,7 +2996,12 @@ function erp_hr_new_policy_name_url( $id = null ) {
  * @return array
  */
 function erp_hr_get_department_leads_id() {
-    return Department::select( 'lead' )->pluck( 'lead' )->toArray();
+    global $wpdb;
+
+    $results   = $wpdb->get_results( "SELECT `lead` FROM {$wpdb->prefix}erp_hr_depts", ARRAY_A );
+    $dep_leads = wp_list_pluck( $results, 'lead' );
+
+    return $dep_leads;
 }
 
 /**
