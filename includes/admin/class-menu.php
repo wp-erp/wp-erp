@@ -205,7 +205,8 @@ class Admin_Menu {
 
         foreach ( $menus as $item ) {
             $item = erp_serialize_string_to_array( $item );
-            if( ! empty( $item[2] ) ) {
+
+            if ( ! empty( $item[2] ) ) {
                 remove_menu_page( $item[2] );
             }
         }

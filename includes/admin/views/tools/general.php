@@ -22,12 +22,11 @@
             $inactive_menu_options = get_option( '_erp_admin_menu', [] );
             $inactive_menus        = [];
 
-            if ( is_array( $inactive_menu_options ) ) {
-                foreach( $inactive_menu_options as $inactive_menu ) {
-                    $single_menu = erp_serialize_string_to_array( $inactive_menu );
-                    if ( ! empty ( $single_menu[0] ) && ! empty ( $single_menu[2] ) && $single_menu[2] !== 'erp' ) {
-                        array_push( $inactive_menus, $single_menu );
-                    }
+            foreach ( (array) $inactive_menu_options as $inactive_menu ) {
+                $single_menu = erp_serialize_string_to_array( $inactive_menu );
+
+                if ( ! empty ( $single_menu[0] ) && ! empty ( $single_menu[2] ) && $single_menu[2] !== 'erp' ) {
+                    array_push( $inactive_menus, $single_menu );
                 }
             }
 
