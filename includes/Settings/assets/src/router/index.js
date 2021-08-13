@@ -17,17 +17,15 @@ import AcFinancialYears from '../components/act/financial-year/AcFinancialYears.
 import CrmContacts from '../components/crm/contacts/CrmContacts.vue';
 import CrmContactForm from '../components/crm/contact-forms/CrmContactForm.vue';
 import CrmSubscription from '../components/crm/subscription/CrmSubscription.vue';
-import CrmTemplate from '../components/crm/templates/CrmTemplate.vue';
-import CrmEmailConnect from '../components/crm/email/CrmEmailConnect.vue';
-import CrmEmailConnectGmail from '../components/crm/email/CrmEmailConnectGmail.vue';
-import CrmEmailConnectImap from '../components/crm/email/CrmEmailConnectImap.vue';
 
 // WooCommerce Components
 import WooCommerce from '../components/woocommerce/WooCommerce.vue';
 
 // Email Components
 import GeneralEmail from '../components/email/general/GeneralEmail.vue';
-import SMTPEmail from '../components/email/smtp/SMTPEmail.vue';
+import EmailConnect from '../components/email/email-connect/EmailConnect.vue';
+import SmtpEmail from '../components/email/email-connect/SmtpEmail.vue';
+import EmailTemplate from '../components/email/templates/EmailTemplate.vue';
 import EmailNotification from '../components/email/notifications/EmailNotification.vue';
 
 // Integration Components
@@ -154,26 +152,6 @@ export default new Router({
                     path     : 'subscription',
                     name     : 'CrmSubscription',
                     component: CrmSubscription
-                },
-                {
-                    path     : 'templates',
-                    name     : 'CrmTemplate',
-                    component: CrmTemplate
-                },
-                {
-                    path     : 'email_connect',
-                    name     : 'CrmEmailConnect',
-                    component: CrmEmailConnect
-                },
-                {
-                    path     : 'email_connect/gmail',
-                    name     : 'CrmEmailConnectGmail',
-                    component: CrmEmailConnectGmail
-                },
-                {
-                    path     : 'email_connect/imap',
-                    name     : 'CrmEmailConnectImap',
-                    component: CrmEmailConnectImap
                 }
             ]
         },
@@ -200,9 +178,19 @@ export default new Router({
                     alias    : '/erp-email'
                 },
                 {
+                    path     : 'email_connect',
+                    name     : 'EmailConnect',
+                    component: EmailConnect
+                },
+                {
                     path     : 'smtp',
-                    name     : 'SMTPEmail',
-                    component: SMTPEmail
+                    name     : 'SmtpEmail',
+                    component: SmtpEmail
+                },
+                {
+                    path     : 'templates',
+                    name     : 'EmailTemplate',
+                    component: EmailTemplate
                 },
                 {
                     path     : 'notification',

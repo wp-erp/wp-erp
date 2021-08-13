@@ -6,15 +6,16 @@ namespace WeDevs\ERP\Settings;
  * Email settings class
  */
 class Email extends Template {
-    
+
     /**
      * Class constructor
      */
     function __construct() {
-        $this->id       = 'erp-email';
-        $this->label    = __( 'Emails', 'erp' );
-        $this->sections = $this->get_sections();
-        $this->icon     = WPERP_ASSETS . '/images/wperp-settings/email.png';
+        $this->id            = 'erp-email';
+        $this->label         = __( 'Emails', 'erp' );
+        $this->sections      = $this->get_sections();
+        $this->icon          = WPERP_ASSETS . '/images/wperp-settings/email.png';
+        $this->single_option = false;
 
         add_action( 'erp_admin_field_notification_emails', [ $this, 'notification_emails' ] );
         add_action( 'erp_admin_field_smtp_test_connection', [ $this, 'smtp_test_connection' ] );
@@ -28,9 +29,10 @@ class Email extends Template {
      */
     public function get_sections() {
         return apply_filters( 'erp_settings_email_sections', [
-            'general'      => __( 'General', 'erp' ),
-            'smtp'         => __( 'SMTP', 'erp' ),
-            'notification' => __( 'Notifications & Templates', 'erp' )
+            'general'       => __( 'General', 'erp' ),
+            'email_connect' => __( 'Email Connect', 'erp' ),
+            'templates'     => __( 'Email Templates', 'erp' ),
+            'notification'  => __( 'Notifications & Templates', 'erp' )
         ] );
     }
 
@@ -114,10 +116,22 @@ class Email extends Template {
         ];
         // End general settings
 
-        $fields['smtp'][] = [
-            'title' => __( 'SMTP Options', 'erp' ),
+        // Email Connect Settings
+
+        $fields['email_connect'][] = [
+            'title' => __( 'Email Connect', 'erp' ),
             'type'  => 'title',
-            'desc'  => __( 'Email outgoing settings for ERP.', 'erp' ),
+            'desc'  => '',
+        ];
+
+        $fields['email_connect']['providers'] = $this->get_email_prodivers();
+        $fields['email_connect']['cron_schedules'] = $this->get_incoming_email_schedule_field();
+        // End Email Connect Settings
+
+        $fields['smtp'][] = [
+            'title'        => __( 'SMTP Options', 'erp' ),
+            'type'         => 'title',
+            'desc'         => __( 'Email outgoing settings for ERP.', 'erp' )
         ];
 
         $fields['smtp'][] = [
@@ -179,20 +193,28 @@ class Email extends Template {
         ];
 
         $fields['smtp'][] = [
-            'title'       => __( 'Testing', 'erp' ),
-            'id'          => 'test_email',
-            'type'        => 'text',
-            'value'       => get_option( 'admin_email' ),
-            'placeholder' => get_option( 'admin_email' ),
-            'tooltip'     => true,
-            'desc'        => __( 'Test if the SMTP connection is correctly established', 'erp' ),
-        ];
-
-        $fields['smtp'][] = [
             'type' => 'sectionend',
             'id'   => 'script_styling_options',
         ];
         // End SMTP settings
+
+        // Mailgun Email Settings Options
+        $fields['mailgun']  = $this->get_mailgun_settings_fields();
+
+        // IMAP Email Settings Options
+        $fields['imap']  = $this->get_imap_settings_fields();
+
+        // Gmail Email Settings Options
+        $fields['gmail'] = $this->get_gmail_api_settings_fields();
+
+        // Email Templates
+        $fields['templates'][] = [
+            'title' => __( 'Saved Replies', 'erp' ),
+            'type'  => 'title',
+            'desc'  => '',
+            'id'    => 'general_options',
+        ];
+        // End of Email Templates
 
         // Notification & Templates settings
         $fields['notification'][] = [
@@ -211,6 +233,162 @@ class Email extends Template {
         $fields = apply_filters( 'erp_settings_email_section_fields', $fields, $section );
 
         return $fields;
+    }
+
+    /**
+     * Get Incoming Email schedule field
+     *
+     * @since 1.9.1
+     *
+     * @return array Schedule input fields
+     */
+    public function get_incoming_email_schedule_field() {
+        $schedules = wp_get_schedules();
+
+        $cron_intervals = []; // Filter cron intervals time to get unique cron data
+        $cron_schedules = [];
+
+        foreach ( $schedules as $key => $value ) {
+            if ( ! in_array( $value['interval'], $cron_intervals ) ) {
+                array_push( $cron_intervals, $value['interval'] );
+                $cron_schedules[ $key ] = $value['display'];
+            }
+        }
+
+        return [
+            'title'   => __( 'Check Emails ', 'erp' ),
+            'id'      => 'schedule',
+            'type'    => 'select',
+            'desc'    => __( 'Interval time to run cron for checking inbound emails.', 'erp' ),
+            'options' => $cron_schedules,
+            'default' => 'hourly',
+        ];
+    }
+
+    /**
+     * Get Email Providers of incoming and outgoing emails
+     *
+     * @since 1.9.1
+     *
+     * @return array email providers list
+     */
+    public function get_email_prodivers() {
+        $providers = [];
+
+        $erp_is_enable_smtp    = erp_is_smtp_enabled();
+        $erp_is_enable_mailgun = erp_is_mailgun_enabled();
+        $erp_is_enable_imap    = erp_is_imap_active();
+        $erp_is_enable_gmail   = wperp()->google_auth->is_active();
+
+        $providers['smtp'] = [
+            'type'         => 'outgoing',
+            'name'         => __( 'SMTP', 'erp' ),
+            'description'  => __( 'Email outgoing settings for ERP.', 'erp' ),
+            'enabled'      => $erp_is_enable_smtp,
+            'is_active'    => $erp_is_enable_smtp,
+            'actions'      => '',
+            'icon_enable'  => WPERP_ASSETS . '/images/wperp-settings/email-smtp-enable.png',
+            'icon_disable' => WPERP_ASSETS . '/images/wperp-settings/email-smtp-disable.png',
+        ];
+
+        $providers['mailgun'] = [
+            'type'         => 'outgoing',
+            'name'         => __( 'Mailgun', 'erp' ),
+            'description'  => '',
+            'enabled'      => $erp_is_enable_mailgun,
+            'is_active'    => $erp_is_enable_mailgun,
+            'actions'      => '',
+            'icon_enable'  => WPERP_ASSETS . '/images/wperp-settings/email-mailgun-enable.png',
+            'icon_disable' => WPERP_ASSETS . '/images/wperp-settings/email-mailgun-disable.png',
+        ];
+
+        $providers['imap']  = [
+            'type'         => 'incoming',
+            'name'         => __( 'IMAP Connection', 'erp' ),
+            'description'  => __( 'Connect to Custom IMAP server', 'erp' ),
+            'enabled'      => $erp_is_enable_imap,
+            'is_active'    => $erp_is_enable_imap,
+            'actions'      => '',
+            'icon_enable'  => WPERP_ASSETS . '/images/wperp-settings/email-imap-enable.png',
+            'icon_disable' => WPERP_ASSETS . '/images/wperp-settings/email-imap-disable.png',
+        ];
+
+        $providers['gmail'] = [
+            'type'         => 'incoming',
+            'name'         => __( 'Google Connect', 'erp' ),
+            'description'  => __( 'Connect your Gmail or Gsuite account', 'erp' ),
+            'enabled'      => $erp_is_enable_gmail,
+            'is_active'    => $erp_is_enable_gmail,
+            'actions'      => '',
+            'icon_enable'  => WPERP_ASSETS . '/images/wperp-settings/email-google-enable.png',
+            'icon_disable' => WPERP_ASSETS . '/images/wperp-settings/email-google-disable.png',
+        ];
+
+        return $providers;
+    }
+
+    /**
+     * Disable other provider if one is enabled
+     *
+     * @param $section
+     * @param $options
+     */
+    public function toggle_providers( $section, $options ) {
+        switch ( $section ) {
+            case 'gmail':
+                if ( wperp()->google_auth->is_active() ) {
+                    $option                = get_option( 'erp_settings_erp-email_imap', [] );
+                    $option['enable_imap'] = 'no';
+                    update_option( 'erp_settings_erp-email_imap', $option );
+                }
+                break;
+
+            case 'imap':
+                if ( isset( $options['enable_imap'] ) && $options['enable_imap'] == 'yes' ) {
+                    wperp()->google_auth->clear_account_data();
+                }
+                break;
+
+            case 'smtp':
+                if ( isset( $options['enable_smtp'] ) && $options['enable_smtp'] == 'yes' ) {
+                    $option                   = get_option( 'erp_settings_erp-email_mailgun', [] );
+                    $option['enable_mailgun'] = 'no';
+                    update_option( 'erp_settings_erp-email_mailgun', $option );
+                }
+                break;
+
+            case 'mailgun':
+                if ( isset( $options['enable_mailgun'] ) && $options['enable_mailgun'] == 'yes' ) {
+                    $option                = get_option( 'erp_settings_erp-email_smtp', [] );
+                    $option['enable_smtp'] = 'no';
+                    update_option( 'erp_settings_erp-email_smtp', $option );
+                }
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    /**
+     * Imap connection status.
+     *
+     * @param string $is_label default false
+     *
+     * @return string|int imap_connection as input label
+     */
+    public function imap_status( $is_label = false ) {
+        $options     = get_option( 'erp_settings_erp-email_imap', [] );
+        $imap_status = (bool) isset( $options['imap_status'] ) ? $options['imap_status'] : 0;
+
+        if ( $is_label ) {
+            return $imap_status;
+        } else {
+            $status    = esc_attr( ( $imap_status ) ? 'yes green' : 'no red' );
+            $connected = esc_attr( ( $imap_status ) ? __( 'Connected', 'erp' ) : __( 'Not Connected', 'erp' ) );
+
+            return sprintf( "<span class='dashicons dashicons-%s'>%s</span>", $status, $connected );
+        }
     }
 
     public function notification_emails() {
@@ -300,10 +478,17 @@ class Email extends Template {
      * @return array
      */
     protected function get_imap_settings_fields() {
-        if ( !extension_loaded( 'imap' ) || !function_exists( 'imap_open' ) ) {
+        if ( ! extension_loaded( 'imap' ) || ! function_exists( 'imap_open' ) ) {
             $fields[] = [
                 'title' => __( 'IMAP/POP3 Options', 'erp' ),
                 'type'  => 'title',
+                'desc'  => ''
+            ];
+
+            $fields[] = [
+                'title' => '',
+                'id'    => 'label_imap',
+                'type'  => 'label',
                 'desc'  => sprintf(
                     '%s' . __( 'Your server does not have PHP IMAP extension loaded. To enable this feature, please contact your hosting provider and ask to enable PHP IMAP extension.', 'erp' ) . '%s',
                     '<section class="notice notice-warning"><p>',
@@ -420,6 +605,135 @@ class Email extends Template {
     }
 
     /**
+     * Get all fields for GMAIL API sub section
+     *
+     * @since 1.3.14
+     *
+     * @return array
+     */
+    public function get_gmail_api_settings_fields() {
+        $fields[] = [
+            'title' => __( 'Gmail / G suite Authentication', 'erp' ),
+            'type'  => 'title',
+            'desc'  => '',
+        ];
+
+        if ( wperp()->google_auth->is_connected() ) {
+            $fields[] = [
+                'type' => 'gmail_api_connected',
+            ];
+
+            $fields[] = [
+                'type' => 'sectionend',
+                'id'   => 'script_styling_options',
+            ];
+
+            return $fields;
+        }
+
+        $fields[] = [
+            'title' => '',
+            'id'    => 'label_gmail',
+            'type'  => 'label',
+            'desc'  => __( '<a target="_blank" href="https://console.developers.google.com/flows/enableapi?apiid=gmail&pli=1">Create a Google App</a> and authorize your account to Send and Recieve emails using Gmail. Follow instructions from this <a target="_blank" href="https://wperp.com/docs/crm/tutorials/how-to-configure-gmail-api-connection-in-the-crm-settings/?utm_source=Free+Plugin&utm_medium=CTA&utm_content=Backend&utm_campaign=Docs">Documentation</a> to get started', 'erp' ),
+        ];
+
+        $fields[] = [
+            'title' => __( 'Client ID', 'erp' ),
+            'id'    => 'client_id',
+            'type'  => 'text',
+            'desc'  => __( 'Your APP Client ID', 'erp' ),
+        ];
+
+        $fields[] = [
+            'title' => __( 'Client Secret', 'erp' ),
+            'id'    => 'client_secret',
+            'type'  => 'text',
+            'desc'  => __( 'Your APP Client Secret', 'erp' ),
+        ];
+
+        $fields[] = [
+            'title'    => __( 'Redirect URL to use', 'erp' ),
+            'id'       => 'redirect_url',
+            'type'     => 'text',
+            'desc'     => __( 'Copy and Use this url when oAuth consent asks for Authorized Redirect URL', 'erp' ),
+            'default'  => esc_url_raw( wperp()->google_auth->get_redirect_url() ),
+            'disabled' => true
+        ];
+
+        $fields[] = [
+            'type' => 'sectionend',
+            'id'   => 'script_styling_options',
+        ];
+
+        return $fields;
+    }
+
+    /**
+     * Get all fields for Mailgun API sub section
+     *
+     * @since 1.9.1
+     *
+     * @return array
+     */
+    public function get_mailgun_settings_fields() {
+        $fields[] = [
+            'title' => __( 'Mailgun', 'erp' ),
+            'type'  => 'title',
+            'desc'  => ''
+        ];
+
+        $fields[] = [
+            'title'   => __( 'Enable Mailgun', 'erp' ),
+            'id'      => 'enable_mailgun',
+            'type'    => 'radio',
+            'options' => [ 'yes' => 'Yes', 'no' => 'No' ],
+            'default' => 'no'
+        ];
+
+        $fields[] = [
+            'title' => __( 'Private API Key', 'erp' ),
+            'id'    => 'private_api_key',
+            'type'  => 'password',
+            'desc'  => __( 'Get private API key from your Mailgun account <a href="https://app.mailgun.com/app/account/security/api_keys" target="_blank">Mailgun account</a>', 'erp' ),
+        ];
+
+        $fields[] = [
+            'title' => __( 'Domain', 'erp' ),
+            'id'    => 'domain',
+            'type'  => 'text',
+            'desc'  => __( 'Get sending domain from your Mailgun account <a href="https://app.mailgun.com/app/sending/domains" target="_blank">Mailgun account</a><br /><mark>Notice:</mark> In Sandbox domain with Free plan, only 5 Authorized Recipients are allowed. <a href="https://help.mailgun.com/hc/en-us/articles/217531258-Authorized-Recipients" target="_blank">Learn More</a>', 'erp' ),
+        ];
+
+        $fields[] = [
+            'title'    => __( 'Region', 'erp' ),
+            'id'       => 'region',
+            'type'     => 'select',
+            'desc'     => __( 'Mailgun API Region', 'erp' ),
+            'options'  => [
+                'api.mailgun.net'    => __( 'United States (US)', 'erp' ),
+                'api.eu.mailgun.net' => __( 'Europe (EU)', 'erp' )
+            ],
+            'default'  => 'api.mailgun.net'
+        ];
+
+        $fields[] = [
+            'title'   => __( 'Limit', 'erp' ),
+            'id'      => 'limit',
+            'type'    => 'text',
+            'desc'    => __( 'Hourly sending limit, That&apos;s 1 email per 1 second(s)', 'erp' ),
+            'default' => 3600
+        ];
+
+        $fields[] = [
+            'type' => 'sectionend',
+            'id'   => 'script_styling_options',
+        ];
+
+        return $fields;
+    }
+
+    /**
      * Output the settings.
      */
     public function output( $section = false ) {
@@ -517,7 +831,18 @@ class Email extends Template {
                         update_option( $name, $value );
                     }
                 } else {
-                    update_option( $this->get_option_id(), $update_options );
+                    $section   = sanitize_text_field( wp_unslash( $_POST['section'] ) );
+                    $option_id = 'erp_settings_' . $this->id . '_' . $section;
+
+                    // If it's incoming/outgoing email, then toggle email providers
+                    $this->toggle_providers( $section, $_POST );
+
+                    if ( 'imap' === $section ) {
+                        $imap_settings = get_option( 'erp_settings_erp-email_imap', [] );
+                        $update_options['imap_status'] = ! empty( $imap_settings['imap_status'] ) ? intval( $imap_settings['imap_status'] ) : 0;
+                    }
+
+                    update_option( $option_id, $update_options );
                 }
             }
 

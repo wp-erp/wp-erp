@@ -2,8 +2,8 @@
     <div id="erp-integration">
         <base-layout
             :section_id="section"
-            :sub_section_id="section">   
-            
+            :sub_section_id="section">
+
             <table class="erp-settings-table widefat">
                 <thead>
                     <tr>
@@ -33,7 +33,7 @@
                         </td>
                     </tr>
                 </tbody>
-                
+
                 <tbody v-else>
                     <tr :col-span="numColumns">
                         <th>{{ __('No templates found.', 'erp') }}</th>
@@ -52,7 +52,7 @@
                 <template v-slot:body>
                     <div class="wperp-form-group" v-if="singleItem.id === 'erp-sms'">
                         <label for="erp-sms-selected-gateway">{{ __( 'Active Gateway', 'erp' ) }}</label>
-                        
+
                         <multi-select
                             v-model="selectedField"
                             :options="fieldOptions"
@@ -112,6 +112,7 @@ import BaseLayout from '../layouts/BaseLayout.vue';
 import SubmitButton from '../base/SubmitButton.vue';
 import MultiSelect from '../select/MultiSelect.vue';
 import BaseContentLayout from '../layouts/BaseContentLayout.vue';
+import { mapState } from 'vuex';
 
 export default {
     name: 'Integration',
@@ -133,13 +134,16 @@ export default {
             showModal     : false,
             subSubSection : '',
             componentKey  : 0,
-            options       : {},
+            options       : {
+                action   : '',
+                recurrent: false,
+            },
             fieldOptions  : {},
             selectedField : {
                 id   : '',
                 name : '',
             },
-            columns       : [ 
+            columns       : [
                 __('Integration', 'erp'),
                 __('Description', 'erp'),
                 ''
@@ -158,6 +162,12 @@ export default {
                 this.forceUpdateBody();
             }
         },
+
+        formDatas: function(formData) {
+            if ( typeof formData !== 'undefined' && formData !== null ) {
+                this.testConnection();
+            }
+        }
     },
 
     computed: {
@@ -178,14 +188,20 @@ export default {
                 && this.singleItem.form_fields[ this.selectedField.id ] !== undefined
                 ? this.singleItem.form_fields[ this.selectedField.id ]
                 : this.singleItem.form_fields;
-        }
+        },
+
+        ...mapState({
+            formDatas( state ) {
+                return state.formdata.data;
+            }
+        })
     },
 
     methods: {
         configure(item, key) {
             this.singleItem = item;
             this.subSection = key;
-            
+
             if (key === 'sms') {
                 this.selectedField.id   = item.extra.selected_gateway;
                 this.selectedField.name = item.sections[this.selectedField.id];
@@ -200,6 +216,7 @@ export default {
         },
 
         onSubmit() {
+            this.options.action = '';
             this.$refs.base.onFormSubmit();
         },
 
@@ -212,8 +229,9 @@ export default {
         },
 
         testConnection() {
-            this.options.action    = 'wp-erp-sync-employees-dropbox';
-            this.options.recurrent = false;
+            let options = Object.assign({}, options);
+            options.action = 'wp-erp-sync-employees-dropbox';
+            this.options = options;
         }
     }
 }

@@ -508,13 +508,12 @@ class Ajax {
             $imap = new \WeDevs\ERP\Imap( $mail_server, $port, $protocol, $username, $password, $authentication );
 
             if ( $imap->is_connected() ) {
-                $option = get_option( 'erp_settings_erp-crm_email_connect_imap', [] );
-                $option['enable_imap'] = 'yes';
+                $option = get_option( 'erp_settings_erp-email_imap', [] );
                 $option['imap_status'] = 1;
-                update_option( 'erp_settings_erp-crm_email_connect_imap', $option );
-            }
+                update_option( 'erp_settings_erp-email_imap', $option );
 
-            $this->send_success( esc_html__( 'Your IMAP connection is established.', 'erp' ) );
+                $this->send_success( esc_html__( 'Your IMAP connection is established.', 'erp' ) );
+            }
         } catch ( \Exception $e ) {
             $this->send_error( $e->getMessage() );
         }
