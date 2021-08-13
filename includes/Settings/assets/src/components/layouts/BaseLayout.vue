@@ -1,11 +1,11 @@
 <template>
     <div>
-        <h2 class="section-title">{{ sectionTitle }}</h2>
-        <template v-if="Object.keys(subMenus).length > 0">
+        <h2 class="section-title" v-if="!disableSectionTitle">{{ sectionTitle }}</h2>
+        <template v-if="Object.keys(subMenus).length > 0 && !disableMenu">
             <settings-sub-menu :menus="subMenus" :parent_id="section_id" />
         </template>
 
-        <div class="settings-box">
+        <div class="settings-box" :id="`erp-settings-box-${section_id}-${sub_section_id}`">
             <h3 class="sub-section-title" v-if="subSectionTitle && enableSubSectionTitle">
                 <slot name="subSectionTitle">{{ subSectionTitle }}</slot>
             </h3>
@@ -82,6 +82,16 @@ export default {
             required: false,
             default : true
         },
+        disableMenu: {
+            type    : Boolean,
+            required: false,
+            default : false
+        },
+        disableSectionTitle: {
+            type    : Boolean,
+            required: false,
+            default : false
+        }
     },
 
     created () {

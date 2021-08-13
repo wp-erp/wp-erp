@@ -134,7 +134,6 @@ import MultiSelect from '../select/MultiSelect.vue';
 import InputDesc from '../layouts/partials/InputDesc.vue';
 import RadioSwitch from './partials/Switch.vue';
 import { generateFormDataFromObject } from "../../utils/FormDataHandler";
-
 var $ = jQuery;
 
 export default {
@@ -193,8 +192,9 @@ export default {
             required: false,
             default: () => (
                 {
-                    action: '',
+                    action   : '',
                     recurrent: false,
+                    fields   : []
                 }
             )
         }
@@ -312,6 +312,12 @@ export default {
                 requestDataPost['sub_sub_section'] = self.sub_sub_section_id;
             }
 
+            if ( typeof self.optionsMutable.fields !== 'undefined' && Array.isArray( self.optionsMutable.fields ) ) {
+                self.optionsMutable.fields.forEach( field => {
+                    requestDataPost[ field.key ] = field.value;
+                } );
+            }
+
             let requestData = {
                 ...requestDataPost,
                 _wpnonce: erp_settings_var.nonce,
@@ -334,6 +340,7 @@ export default {
 
                     if (response.success) {
                         self.showAlert("success", response.data.message);
+                        self.$store.dispatch("formdata/setFormData", requestData);
                     } else {
                         self.showAlert("error", response.data);
                     }
@@ -342,8 +349,9 @@ export default {
 
             if (! self.optionsMutable.recurrent) {
                 self.optionsMutable = {
-                    action: '',
+                    action   : '',
                     recurrent: false,
+                    fields   : []
                 };
             }
         },
@@ -368,6 +376,15 @@ export default {
         changeRadioInput( index, key ) {
             this.fields[index]['value'] = key;
         },
+    },
+
+    watch: {
+        options: {
+            handler( newVal, oldValue) {
+                this.optionsMutable = newVal
+            },
+            deep: true
+        }
     },
 };
 </script>

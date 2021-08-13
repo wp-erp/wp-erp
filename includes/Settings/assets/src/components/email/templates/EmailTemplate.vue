@@ -1,6 +1,6 @@
 <template>
     <base-layout
-        section_id="erp-crm"
+        section_id="erp-email"
         sub_section_id="templates"
         :enable_content="false"
         :single_option="false"
@@ -99,7 +99,7 @@ import { generateFormDataFromObject } from "../../../utils/FormDataHandler";
 var $ = jQuery;
 
 export default {
-    name: "CrmTemplate",
+    name: "EmailTemplate",
 
     components: {
         BaseLayout,

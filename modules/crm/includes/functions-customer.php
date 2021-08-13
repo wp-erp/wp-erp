@@ -3264,9 +3264,9 @@ function erp_crm_render_save_replies( $template_id, $contact_id ) {
         return new WP_Error( 'no-template', __( 'No template found', 'erp' ) );
     }
 
-    if ( empty( $contact_id ) ) {
-        return new WP_Error( 'no-contact', __( 'No contact found', 'erp' ) );
-    }
+    // if ( empty( $contact_id ) ) {
+    //     return new WP_Error( 'no-contact', __( 'No contact found', 'erp' ) );
+    // }
 
     $contacts       = new \WeDevs\ERP\CRM\Contact( $contact_id );
     $templates      = (object) erp_crm_get_save_replies_by_id( $template_id );
@@ -3499,7 +3499,7 @@ function erp_crm_check_new_inbound_emails() {
         return;
     }
 
-    $imap_options = get_option( 'erp_settings_erp-crm_email_connect_imap', [] );
+    $imap_options = get_option( 'erp_settings_erp-email_imap', [] );
 
     $mail_server    = $imap_options['mail_server'];
     $username       = $imap_options['username'];

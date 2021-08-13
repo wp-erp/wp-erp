@@ -4,10 +4,11 @@ namespace WeDevs\ERP\Settings;
 
 use WeDevs\ERP\Framework\Traits\Ajax as Trait_Ajax;
 use WeDevs\ERP\Framework\Traits\Hooker;
+use WeDevs\ERP\Email_Mailgun;
 
 /**
  * Ajax handler class
- * 
+ *
  * @since 1.9.0
  */
 class Ajax {
@@ -26,13 +27,15 @@ class Ajax {
         // Common settings
         $this->action( 'wp_ajax_erp-settings-save', 'erp_settings_save' );
         $this->action( 'wp_ajax_erp-settings-get-data', 'erp_settings_get_data' );
-        
+
         // Email templates settings
         $this->action( 'wp_ajax_erp_get_email_templates', 'get_email_templates' );
         $this->action( 'wp_ajax_erp_get_single_email_template', 'get_single_email_template' );
         $this->action( 'wp_ajax_erp_update_email_status', 'update_email_status' );
         $this->action( 'wp_ajax_erp_update_email_template', 'update_email_template' );
         $this->action( 'wp_ajax_erp_smtp_test_connection', 'smtp_test_connection' );
+        $this->action( 'wp_ajax_erp_mailgun_test_connection', 'mailgun_test_connection' );
+        $this->action( 'wp_ajax_erp_settings_get_email_providers', 'get_email_providers' );
 
         // License settings
         $this->action( 'wp_ajax_erp_settings_save_licenses', 'save_licenses' );
@@ -126,7 +129,7 @@ class Ajax {
 
     /**
      * Retrieves all email templates
-     * 
+     *
      * @since 1.9.0
      *
      * @return mixed
@@ -140,7 +143,7 @@ class Ajax {
 
         $email_templates     = wperp()->emailer->get_emails();
         $emails              = [];
-        
+
         $can_not_be_disabled = Helpers::get_fixedly_enabled_email_templates();
 
         foreach ( $email_templates as $key => $email ) {
@@ -159,7 +162,7 @@ class Ajax {
 
             $email_data = [
                 'id'              => $key,
-                'option_id'       => $email_option,   
+                'option_id'       => $email_option,
                 'name'            => esc_html( $email->get_title() ),
                 'description'     => esc_html( $email->get_description() ),
                 'is_enabled'      => $is_enabled,
@@ -185,7 +188,7 @@ class Ajax {
 
     /**
      * Retrieves a single email template
-     * 
+     *
      * @since 1.9.0
      *
      * @return mixed
@@ -214,7 +217,7 @@ class Ajax {
         if ( empty( $email_data['is_enable'] ) ) {
             $email_data['is_enable'] = 'no';
         }
-        
+
         foreach( $email->find as $key => $find ) {
             $email_data['tags'][] = $find;
         }
@@ -226,7 +229,7 @@ class Ajax {
 
     /**
      * Updates email template
-     * 
+     *
      * @since 1.9.0
      *
      * @return mixed
@@ -262,7 +265,7 @@ class Ajax {
 
     /**
      * Updates email status (enable/disable)
-     * 
+     *
      * @since 1.9.0
      *
      * @return mixed
@@ -294,7 +297,7 @@ class Ajax {
 
     /**
      * Test connection using SMTP credentials
-     * 
+     *
      * @since 1.9.0
      *
      * @return mixed
@@ -408,8 +411,103 @@ class Ajax {
     }
 
     /**
+     * Test connection using Mailgun credentials
+     *
+     * @since 1.9.1
+     *
+     * @return mixed
+     */
+    public function mailgun_test_connection() {
+        $this->verify_nonce( 'erp-settings-nonce' );
+
+        if ( ! current_user_can( 'manage_options' ) ) {
+            $this->send_error( erp_get_message( ['type' => 'error_permission'] ) );
+        }
+
+        if ( empty( $_REQUEST['private_api_key'] ) ) {
+            $this->send_error( [ 'message' => esc_html__( 'No private API key provided', 'erp' ) ] );
+        } else {
+            $private_api_key = sanitize_text_field( wp_unslash( $_REQUEST['private_api_key'] ) );
+        }
+
+        if ( empty( $_REQUEST['domain'] ) ) {
+            $this->send_error( [ 'message' => esc_html__( 'No domain address provided', 'erp' ) ] );
+        } else {
+            $domain = sanitize_text_field( wp_unslash( $_REQUEST['domain'] ) );
+        }
+
+        if ( empty( $_REQUEST['region'] ) ) {
+            $this->send_error( [ 'message' => esc_html__( 'No region selected', 'erp' ) ] );
+        } else {
+            $region = sanitize_text_field( wp_unslash( $_REQUEST['region'] ) );
+        }
+
+        if ( empty( $_REQUEST['erp_mailgun_test_email'] ) ) {
+            $to_email = get_option( 'admin_email' );
+        } else {
+            $to_email = sanitize_text_field( wp_unslash( $_REQUEST['erp_mailgun_test_email'] ) );
+        }
+
+        $subject = esc_html__( 'ERP Mailgun Test Mail', 'erp' );
+        $message = esc_html__( 'This is a test email by WP ERP.', 'erp' );
+
+        $erp_email_settings = get_option( 'erp_settings_erp-email_general', [] );
+
+        if ( ! isset( $erp_email_settings['from_email'] ) ) {
+            $from_email = get_option( 'admin_email' );
+        } else {
+            $from_email = $erp_email_settings['from_email'];
+        }
+
+        if ( ! isset( $erp_email_settings['from_name'] ) ) {
+            global $current_user;
+
+            $from_name = $current_user->display_name;
+        } else {
+            $from_name = $erp_email_settings['from_name'];
+        }
+
+        try {
+            $mailgun = new Email_Mailgun( $private_api_key, $region, $domain );
+
+            $data = [
+                'subject'      => $subject,
+                'from_address' => [ 'email' => $from_email, 'name' => $from_name ],
+                'to_address'   => [ 'email' => $to_email, 'name' => '' ],
+                'message'      => $message
+            ];
+
+            $mailgun->send_email( $data );
+
+            $this->send_success( [ 'message' => esc_html__( 'Test email has been sent successfully to ', 'erp' ) . $to_email ] );
+        } catch ( \Exception $e ) {
+            $this->send_error( $e->getMessage() );
+        }
+    }
+
+    /**
+     * Get All Email providers list
+     *
+     * @since 1.9.1
+     *
+     * @return mixed
+     */
+    public function get_email_providers() {
+        $this->verify_nonce( 'erp-settings-nonce' );
+
+        if ( ! current_user_can( 'manage_options' ) ) {
+            $this->send_error( erp_get_message( ['type' => 'error_permission'] ) );
+        }
+
+        $email_settings  = ( new \WeDevs\ERP\Settings\Email() );
+        $email_providers = $email_settings->get_email_prodivers();
+
+        $this->send_success( $email_providers );
+    }
+
+    /**
      * Saves addon license data
-     * 
+     *
      * @since 1.9.1
      *
      * @return mixed
@@ -446,17 +544,17 @@ class Ajax {
                         'item_name' => urlencode( $ext['name'] ),
                         'url'       => home_url(),
                     ];
-            
+
                     $response = wp_remote_post( 'https://wperp.com/', [
                         'timeout'   => 15,
                         'sslverify' => false,
                         'body'      => $api_params,
                     ] );
-            
+
                     if ( is_wp_error( $response ) ) {
                         return false;
                     }
-            
+
                     $license_data = json_decode( wp_remote_retrieve_body( $response ) );
 
                     if ( $license_data ) {
