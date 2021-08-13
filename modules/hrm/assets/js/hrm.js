@@ -120,6 +120,16 @@
 
             this.showRequestNotification();
             this.initTipTip();
+
+            // Announcements
+            $( 'body' ).on( 'click', 'input[name="reset_announcement_filter"]', function( e ){
+                e.preventDefault();
+                $( '#start_date' ).val( '' );
+                $( '#end_date' ).val( '' );
+                $( '#erp-announcement-table-wrap .list-table-inner form' ).submit();
+            });
+            $( 'body' ).on( 'click', 'input[name=filter_announcements]', this.announcement.validateFilterForm );
+            $( 'tbody#the-list tr td.sent_to span.expand-for-more-ann' ).click( this.announcement.sentToDetails );
         },
 
         initToggleCheckbox: function() {
@@ -747,7 +757,7 @@
 
             /**
              * Import employee from CSV
-             * 
+             *
              * @param {event} e
              */
             importCsv: function(e) {
@@ -763,7 +773,7 @@
                     id: 'erp-employee-import',
                     content: wperp.template('erp-employee-import-csv')({}),
                     extraClass: 'medium',
-                    
+
                     onReady: function() {
                         var modal  = this,
                             form   = '#erp-employee-import form.erp-modal-form';
@@ -773,7 +783,7 @@
 
                         $( form ).attr( 'enctype', 'multipart/form-data' );
                         $( form ).attr( 'id', 'import_form' );
-                        
+
                         $( 'button#erp-employee-sample-csv' ).on( 'click', function(e) {
                             e.preventDefault();
                             var csvUrl = $(this).data('url');
@@ -782,7 +792,7 @@
 
                         $('form#import_form #csv_file').on('change', function (e) {
                             e.preventDefault();
-            
+
                             if (!this) {
                                 return;
                             }
@@ -797,7 +807,7 @@
                         $( '#erp-employee-csv-import-error' ).html('');
 
                         var data = new FormData(this.get(0));
-                                
+
                         wp.ajax.send({
                             data: data,
                             processData: false,
@@ -822,7 +832,7 @@
 
             /**
              * Export employee into CSV
-             * 
+             *
              * @param {event} e
              */
             exportCsv: function(e) {
@@ -838,7 +848,7 @@
                     id: 'erp-employee-export',
                     content: wperp.template('erp-employee-export-csv')({}),
                     extraClass: '',
-                    
+
                     onReady: function() {
                         var modal  = this,
                             form   = '#erp-employee-export form.erp-modal-form',
@@ -847,18 +857,18 @@
                             html   = '';
 
                         $( form ).attr( 'id', 'export_form' );
-                                
+
                         for (var i = 0; i < fields.length; i++) {
                             html += '<div class="col-1"><label><input type="checkbox" name="fields[]" value="' + fields[i] + '"> ' + WeDevs_ERP_HR.employee.strTitleCase(fields[i]) + '</label></div>';
                         }
-                
+
                         if (html) {
                             $('form#export_form #fields').html(html);
                         }
 
                         $("#export_form #selecctall").change(function (e) {
                             e.preventDefault();
-            
+
                             $("#export_form #fields input[type=checkbox]").prop('checked', $(this).prop("checked"));
                         });
                     },
@@ -873,8 +883,8 @@
 
             /**
              * Processes csv importer
-             * 
-             * @param {String} fileSelector 
+             *
+             * @param {String} fileSelector
              */
             processCsvImporter: function(fileSelector) {
                 $('#erp-csv-fields-container').show();
@@ -913,15 +923,15 @@
 
             /**
              * Maps csv fields as required
-             * 
-             * @param {String} fileSelector 
-             * @param {String} fieldSelector 
+             *
+             * @param {String} fileSelector
+             * @param {String} fieldSelector
              */
             mapCsvFields: function(fileSelector, fieldSelector) {
                 var file      = fileSelector.files[0],
                     reader    = new FileReader(),
                     first5000 = file.slice(0, 5000);
-                
+
                     reader.readAsText(first5000);
 
                 reader.onload = function (e) {
@@ -932,7 +942,7 @@
                         html            = '';
 
                     html += '<option value="">&mdash; Select Field &mdash;</option>';
-                    
+
                     columnNames.forEach(function (item, index) {
                         item = item.replace(/"/g, "");
 
@@ -964,8 +974,8 @@
 
             /**
              * Converts slug into title
-             * 
-             * @param {String} string 
+             *
+             * @param {String} string
              * @returns String
              */
             strTitleCase: function(string) {
@@ -1385,7 +1395,7 @@
                                 $( '.row[data-selected]', this ).each(function() {
                                     var self = $(this),
                                         selected = self.data('selected');
-        
+
                                     if ( selected !== '' ) {
                                         self.find( 'select' ).val( selected );
                                     }
@@ -1396,7 +1406,7 @@
                             },
                             onSubmit: function(modal) {
                                 var data = this.serializeObject();
-        
+
                                 if(data.status) {
                                     if(status == data.status) {
                                         modal.closeModal();
@@ -1520,7 +1530,7 @@
                                 $( '.row[data-selected]', this ).each(function() {
                                     var self = $(this),
                                         selected = self.data('selected');
-        
+
                                     if ( selected !== '' ) {
                                         self.find( 'select' ).val( selected );
                                     }
@@ -1535,7 +1545,7 @@
                                         WeDevs_ERP_HR.reloadPage();
                                         modal.enableButton();
                                         modal.closeModal();
-                                        
+
                                         swal({
                                             title: '',
                                             text: response,
@@ -2000,6 +2010,41 @@
                 }
             }
 
+        },
+
+        announcement: {
+            validateFilterForm: function( e ) {
+                e.preventDefault();
+                var start = $( '#start_date' ).val();
+                var end   = $( '#end_date' ).val();
+
+                if( ! start || ! end ) {
+                    swal( '', wpErpHr.invalid_filter_data, 'warning' );
+                    return;
+                }
+
+                start = new Date( start ).getTime();
+                end   = new Date( end ).getTime();
+
+                if( start > end ) {
+                    swal( wpErpHr.invalid_filter_data, wpErpHr.start_end_date, 'error' );
+                    return;
+                }
+
+                $( '#erp-announcement-table-wrap .list-table-inner form' ).submit();
+            },
+            sentToDetails: function( e ) {
+                var self    = $( e.target );
+                var content = self.data( 'more-content' );
+                
+                $.erpPopup({
+                    title: wpErpHr.popup.sent_to,
+                    button: '',
+                    id: 'erp-hr-announcement-sent-to-details',
+                    content: _.template( '<% print( all_send_to ) %>' )( { all_send_to: content } ),
+                    extraClass: 'smaller',
+                });
+            },
         }
     };
 

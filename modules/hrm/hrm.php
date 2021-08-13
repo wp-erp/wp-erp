@@ -193,6 +193,7 @@ class Human_Resource {
                 'already_terminate'     => __( 'Sorry, this employee is already terminated', 'erp' ),
                 'already_active'        => __( 'Sorry, this employee is already active', 'erp' ),
                 'already_selected'      => __( 'The selected option is already active. Try different one.', 'erp' ),
+                'sent_to'               => __( 'Sent To Details', 'erp' ),
             ],
             'asset_url'              => WPERP_ASSETS,
             'emp_upload_photo'       => __( 'Upload Photo', 'erp' ),
@@ -219,6 +220,8 @@ class Human_Resource {
                 'sub-section'   => 'leave-entitlements&tab=assignment',
             ], admin_url( 'admin.php' ) ), __( 'Create Entitlement', 'erp' ), __( 'Create Entitlement', 'erp' ) ),
             'currentDate'            => erp_current_datetime()->format( 'Y-m-d' ),
+            'invalid_filter_data'    => __( 'Invalid filter data', 'erp' ),
+            'start_end_date'         => __( 'Start date must be earlier than End date', 'erp' ),
             'leave_type_delete'      => __( 'Are you sure to delete this leave type?', 'erp' ),
             'leave_type_bulk_delete' => __( 'Are you sure to delete these leave types?', 'erp' ),
             'cancel'                 => __( 'Cancel', 'erp' ),
@@ -242,7 +245,7 @@ class Human_Resource {
                     wp_enqueue_style( 'erp-flotchart-valuelabel-css' );
 
                 } else if ( 'requests' === $sub_section ) {
-                    
+
                     ?><script>window.erpLocale = JSON.parse('<?php echo wp_kses_post( wp_slash( wp_json_encode( apply_filters( 'erp_localized_data', [] ) ) ) ); ?>');</script><?php
 
                     wp_enqueue_style( 'erp-sweetalert' );
