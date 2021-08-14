@@ -112,7 +112,7 @@ function erp_acct_get_tax_rate( $tax_no ) {
  *
  * @param $data
  *
- * @return int
+ * @return array
  */
 function erp_acct_insert_tax_rate( $data ) {
     global $wpdb;
@@ -122,13 +122,12 @@ function erp_acct_insert_tax_rate( $data ) {
     $data['created_by'] = $created_by;
 
     $tax_data = erp_acct_get_formatted_tax_data( $data );
+    $items    = $data['tax_components'];
+    $tax_id   = (int) $data['tax_rate_name'];
+    $inserted = [];
 
-    $items = $data['tax_components'];
-
-    $tax_id = (int) $data['tax_rate_name'];
-
-    foreach ( $items as $key => $item ) {
-        $wpdb->insert(
+    foreach ( $items as $item ) {
+        $insert_id = $wpdb->insert(
             $wpdb->prefix . 'erp_acct_tax_cat_agency',
             [
                 'tax_id'         => $tax_id,
@@ -142,11 +141,15 @@ function erp_acct_insert_tax_rate( $data ) {
                 'updated_by'     => $tax_data['updated_by'],
             ]
         );
+
+        if ( ! is_wp_error( $insert_id ) ) {
+            $inserted[] = $insert_id;
+        }
     }
 
-    erp_acct_purge_cache( ['list' => 'tax_rates'] );
+    erp_acct_purge_cache( [ 'list' => 'tax_rates' ] );
 
-    return $tax_id;
+    return $inserted;
 }
 
 /**
