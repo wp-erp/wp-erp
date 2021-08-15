@@ -127,7 +127,7 @@ function erp_acct_insert_tax_rate( $data ) {
     $inserted = [];
 
     foreach ( $items as $item ) {
-        $insert_id = $wpdb->insert(
+        $result = $wpdb->insert(
             $wpdb->prefix . 'erp_acct_tax_cat_agency',
             [
                 'tax_id'         => $tax_id,
@@ -142,8 +142,8 @@ function erp_acct_insert_tax_rate( $data ) {
             ]
         );
 
-        if ( ! is_wp_error( $insert_id ) ) {
-            $inserted[] = $insert_id;
+        if ( ! is_wp_error( $result ) ) {
+            $inserted[] = $wpdb->insert_id;
         }
     }
 
