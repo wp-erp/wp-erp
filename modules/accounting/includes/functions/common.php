@@ -396,7 +396,7 @@ function erp_acct_get_check_trn_type_by_id( $trn_type_id ) {
 /**
  * Retrieves tax category with agency
  *
- * @since 1.9.1
+ * @since 1.10.0
  *
  * @param int $tax_id
  * @param int $tax_cat_id
@@ -420,7 +420,7 @@ function erp_acct_get_tax_rate_with_agency( $tax_id, $tax_cat_id ) {
 /**
  * Retrieves agency wise tax rate for invoice items
  *
- * @since 1.9.1
+ * @since 1.10.0
  *
  * @param int|string $invoice_details_id
  *
