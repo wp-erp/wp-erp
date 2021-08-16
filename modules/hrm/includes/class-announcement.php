@@ -49,7 +49,7 @@ class Announcement {
     /**
      * Redirect to announcement tab in people page after create/update of announcement
      *
-     * @since 1.9.1
+     * @since 1.10.0
      *
      * @return void
      */
