@@ -229,6 +229,10 @@
                 items: function() {
                     return this.currentItems;
                 },
+
+                headerColSpan: function() {
+                    return screen.width <= 601 && ! this.requests.length ? this.columnCount : false;
+                },
             },
 
             methods: {
@@ -734,7 +738,7 @@
                 },
 
                 toggleMoreInfo: function(e) {
-                    var $row = $(e.target).closest('tr');                    
+                    var $row = $(e.target).closest('tr');
                     $row.toggleClass('expanded');
 
                     $row.find('td').each( function() {
