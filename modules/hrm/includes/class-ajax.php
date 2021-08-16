@@ -2585,7 +2585,7 @@ class Ajax_Handler {
     /**
      * Delete a leave type
      *
-     * @since 1.9.1
+     * @since 1.10.0
      *
      * @return void
      */
@@ -2614,7 +2614,7 @@ class Ajax_Handler {
     /**
      * Bulk Delete leave types
      *
-     * @since 1.9.1
+     * @since 1.10.0
      *
      * @return void
      */
@@ -2657,7 +2657,7 @@ class Ajax_Handler {
     /**
      * Create or update a new leave type
      *
-     * @since 1.9.1
+     * @since 1.10.0
      *
      * @return void
      */
@@ -2700,7 +2700,7 @@ class Ajax_Handler {
     /**
      * Get a leave type by id
      *
-     * @since 1.9.1
+     * @since 1.10.0
      *
      * @return void
      */
