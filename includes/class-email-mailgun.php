@@ -11,7 +11,7 @@ use Mailgun\Message\MessageBuilder;
  *
  * Send Outgoing Email for WP ERP
  *
- * @since 1.9.1
+ * @since 1.10.0
  */
 class Email_Mailgun {
 
@@ -68,7 +68,7 @@ class Email_Mailgun {
     /**
      * Init Mailgun Instance
      *
-     * @since 1.9.1
+     * @since 1.10.0
      *
      * @return void
      */
@@ -80,7 +80,7 @@ class Email_Mailgun {
     /**
      * Set Email Subject
      *
-     * @since 1.9.1
+     * @since 1.10.0
      *
      * @param string $subject
      *
@@ -97,7 +97,7 @@ class Email_Mailgun {
     /**
      * Set Email Message
      *
-     * @since 1.9.1
+     * @since 1.10.0
      *
      * @param string $message
      *
@@ -114,7 +114,7 @@ class Email_Mailgun {
     /**
      * Set Email From Address
      *
-     * @since 1.9.1
+     * @since 1.10.0
      *
      * @param array $from address_array example; `[ 'email' => 'test@example.com', ['name' => 'Jhon Doe'] ]`
      *
@@ -134,7 +134,7 @@ class Email_Mailgun {
     /**
      * Set Email To Address
      *
-     * @since 1.9.1
+     * @since 1.10.0
      *
      * @param array $to address_array example; `[ 'email' => 'test@example.com', ['name' => 'Jhon Doe'] ]`
      *
@@ -154,7 +154,7 @@ class Email_Mailgun {
     /**
      * Set Email CC Address
      *
-     * @since 1.9.1
+     * @since 1.10.0
      *
      * @param array $cc address_array example; `[ 'email' => 'test@example.com', ['first' => 'Jhon Doe'] ]`
      *
@@ -174,7 +174,7 @@ class Email_Mailgun {
     /**
      * Set Email BCC Address
      *
-     * @since 1.9.1
+     * @since 1.10.0
      *
      * @param array $bcc address_array example; `[ 'email' => 'test@example.com', ['first' => 'Jhon Doe'] ]`
      *
@@ -194,7 +194,7 @@ class Email_Mailgun {
     /**
      * Set Email Reply To Address
      *
-     * @since 1.9.1
+     * @since 1.10.0
      *
      * @param array $reply_to address_array example; `[ 'email' => 'test@example.com', ['first' => 'Jhon Doe'] ]`
      *
@@ -214,7 +214,7 @@ class Email_Mailgun {
     /**
      * Set Email Custom Headers
      *
-     * @since 1.9.1
+     * @since 1.10.0
      *
      * @param array $headers custom_headers example; `[[ 'Custom-ID' => '123456' ]]`
      *
@@ -233,7 +233,7 @@ class Email_Mailgun {
      *
      * Set headers if there is any, Example: cc, bcc, to, reply-to etc.
      *
-     * @since 1.9.1
+     * @since 1.10.0
      *
      * @param array $headers Email headers
      *
@@ -346,7 +346,7 @@ class Email_Mailgun {
     /**
      * Set Email Attachment
      *
-     * @since 1.9.1
+     * @since 1.10.0
      *
      * @param array attachments
      *
@@ -363,7 +363,7 @@ class Email_Mailgun {
      *
      * Build a mailgun message with the data
      *
-     * @since 1.9.1
+     * @since 1.10.0
      *
      * @param array $args
      *
@@ -398,7 +398,7 @@ class Email_Mailgun {
     /**
      * Send a Mailgun Message
      *
-     * @since 1.9.1
+     * @since 1.10.0
      *
      * @param array $data A complete dataset of the message
      *
