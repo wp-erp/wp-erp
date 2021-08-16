@@ -47,7 +47,7 @@ class Announcement_List_Table extends WP_List_Table {
     /**
      * Default column values if no callback found
      *
-     * @since 1.9.1
+     * @since 1.10.0
      *
      * @param object $item
      * @param string $column_name
@@ -83,7 +83,7 @@ class Announcement_List_Table extends WP_List_Table {
     /**
      * Render checkbox column
      *
-     * @since 1.9.1
+     * @since 1.10.0
      *
      * @param Object $item
      *
@@ -96,7 +96,7 @@ class Announcement_List_Table extends WP_List_Table {
     /**
      * Render the name column
      *
-     * @since 1.9.1
+     * @since 1.10.0
      *
      * @param Object $item
      *
@@ -138,7 +138,7 @@ class Announcement_List_Table extends WP_List_Table {
     /**
      * Render Sent To Column
      *
-     * @since 1.9.1
+     * @since 1.10.0
      *
      * @param Object $item
      *
@@ -201,7 +201,7 @@ class Announcement_List_Table extends WP_List_Table {
     /**
      * Get bulk actions for the table
      *
-     * @since 1.9.1
+     * @since 1.10.0
      *
      * @return void
      */
@@ -222,7 +222,7 @@ class Announcement_List_Table extends WP_List_Table {
     /**
      * Extra filters for the list table
      *
-     * @since 1.9.1
+     * @since 1.10.0
      *
      * @param string $which
      *
@@ -269,7 +269,7 @@ class Announcement_List_Table extends WP_List_Table {
     /**
      * Prepare the class items
      *
-     * @since 1.9.1
+     * @since 1.10.0
      *
      * @return void
      */
@@ -312,7 +312,7 @@ class Announcement_List_Table extends WP_List_Table {
     /**
      * Set the views
      *
-     * @since 1.9.1
+     * @since 1.10.0
      *
      * @return array
      */
