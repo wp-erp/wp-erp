@@ -150,8 +150,8 @@ export default {
 
             return parseFloat( this.invoice.amount )
                 + parseFloat( this.invoice.tax )
-                + parseFloat( this.invoice.shipping )
-                + parseFloat( this.invoice.shipping_tax )
+                + parseFloat( ! this.invoice.shipping ? 0 : this.invoice.shipping )
+                + parseFloat( ! this.invoice.shipping_tax ? 0 : this.invoice.shipping_tax )
                 - parseFloat( this.invoice.discount );
         }
     },
