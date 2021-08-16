@@ -24,8 +24,8 @@ class Integration extends Template {
 
     /**
      * Get section fields
-     * 
-     * @since 1.9.1
+     *
+     * @since 1.10.0
      *
      * @return array
      */

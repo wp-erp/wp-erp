@@ -413,7 +413,7 @@ class Ajax {
     /**
      * Test connection using Mailgun credentials
      *
-     * @since 1.9.1
+     * @since 1.10.0
      *
      * @return mixed
      */
@@ -488,7 +488,7 @@ class Ajax {
     /**
      * Get All Email providers list
      *
-     * @since 1.9.1
+     * @since 1.10.0
      *
      * @return mixed
      */
@@ -508,7 +508,7 @@ class Ajax {
     /**
      * Saves addon license data
      *
-     * @since 1.9.1
+     * @since 1.10.0
      *
      * @return mixed
      */

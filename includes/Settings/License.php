@@ -24,8 +24,8 @@ class License extends Template {
 
     /**
      * Retrieves extension-wise license details
-     * 
-     * @since 1.9.1
+     *
+     * @since 1.10.0
      *
      * @return void
      */
@@ -39,8 +39,8 @@ class License extends Template {
 
     /**
      * Get section fields
-     * 
-     * @since 1.9.1
+     *
+     * @since 1.10.0
      *
      * @return array
      */
