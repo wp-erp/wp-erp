@@ -1483,20 +1483,20 @@ Account Manager
                 PRIMARY KEY  (`id`)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_purchase_details` (
-                `id` int(11) NOT NULL AUTO_INCREMENT,
-                `trn_no` int(11) DEFAULT NULL,
-                `product_id` int(11) DEFAULT NULL,
-                `qty` int(11) DEFAULT NULL,
-                `price` decimal(20,2) DEFAULT 0,
-                `amount` decimal(20,2) DEFAULT 0,
-                `tax` decimal(20,2) DEFAULT NULL,
+            "CREATE TABLE {$wpdb->prefix}erp_acct_purchase_details (
+                id int(11) NOT NULL AUTO_INCREMENT,
+                trn_no int(11) DEFAULT NULL,
+                product_id int(11) DEFAULT NULL,
+                qty int(11) DEFAULT NULL,
+                price decimal(20,2) DEFAULT 0,
+                amount decimal(20,2) DEFAULT 0,
+                tax decimal(20,2) DEFAULT NULL,
                 tax_cat_id int(11) DEFAULT NULL,
-                `created_at` date DEFAULT NULL,
-                `created_by` varchar(50) DEFAULT NULL,
-                `updated_at` date DEFAULT NULL,
-                `updated_by` varchar(50) DEFAULT NULL,
-                PRIMARY KEY  (`id`)
+                created_at date DEFAULT NULL,
+                created_by varchar(50) DEFAULT NULL,
+                updated_at date DEFAULT NULL,
+                updated_by varchar(50) DEFAULT NULL,
+                PRIMARY KEY  (id)
             ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}erp_acct_purchase_details_tax (
