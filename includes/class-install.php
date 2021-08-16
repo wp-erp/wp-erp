@@ -1491,6 +1491,7 @@ Account Manager
                 `price` decimal(20,2) DEFAULT 0,
                 `amount` decimal(20,2) DEFAULT 0,
                 `tax` decimal(20,2) DEFAULT NULL,
+                tax_cat_id int(11) DEFAULT NULL,
                 `created_at` date DEFAULT NULL,
                 `created_by` varchar(50) DEFAULT NULL,
                 `updated_at` date DEFAULT NULL,
