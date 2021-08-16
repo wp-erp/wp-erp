@@ -29,7 +29,7 @@ function erp_acct_alter_invoices_table_1_9_1() {
 function erp_acct_alter_invoice_details_table_1_9_1() {
     global $wpdb;
 
-    $cols = $wpdb->get_col( "DESC  {$wpdb->prefix}erp_acct_invoice_details" );
+    $cols = $wpdb->get_col( "DESC {$wpdb->prefix}erp_acct_invoice_details" );
 
     if ( ! in_array( 'tax_cat_id', $cols, true ) ) {
         $wpdb->query(
@@ -45,7 +45,7 @@ function erp_acct_alter_invoice_details_table_1_9_1() {
 function erp_acct_alter_purchase_details_table_1_9_1() {
     global $wpdb;
 
-    $cols = $wpdb->get_col( "DESC  {$wpdb->prefix}erp_acct_purchase_details" );
+    $cols = $wpdb->get_col( "DESC {$wpdb->prefix}erp_acct_purchase_details" );
 
     if ( ! in_array( 'tax_cat_id', $cols, true ) ) {
         $wpdb->query(
