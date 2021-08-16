@@ -249,9 +249,9 @@ final class WeDevs_ERP {
 
         // Version 1.6.5 background files
         require_once WPERP_INCLUDES . '/updates/bp/class-erp-bg-process-1.6.5.php';
-        
-        // Version 1.9.1 background files
-        require_once WPERP_INCLUDES . '/updates/bp/class-erp-hr-bg-process-1.9.1.php';
+
+        // Version 1.10.0 background files
+        require_once WPERP_INCLUDES . '/updates/bp/class-erp-hr-bg-process-1.10.0.php';
 
         // Validates data
         require_once WPERP_INCLUDES . '/class-validate-data.php';
