@@ -134,7 +134,7 @@ function erp_hr_send_announcement_email( $employee_ids, $post_id ) {
 /**
  * Get all the announcements having a status and in a date range
  *
- * @since 1.9.1
+ * @since 1.10.0
  *
  * @param array query arguments
  *
@@ -159,7 +159,7 @@ function erp_hr_get_announcements( $args = [] ) {
 /**
  * Get the count of the announcements having a status and in a date range
  *
- * @since 1.9.1
+ * @since 1.10.0
  *
  * @param array query arguments
  *
@@ -190,7 +190,7 @@ function erp_hr_get_announcements_count( $args = [] ) {
 /**
  * Trash/Delete announcements
  *
- * @since 1.9.1
+ * @since 1.10.0
  *
  * @param array $announcement_ids
  * @param bool $delete
@@ -211,7 +211,7 @@ function erp_hr_trash_announcements( $announcement_ids, $delete = false ) {
 /**
  * Get the count of the announcements by their status
  *
- * @since 1.9.1
+ * @since 1.10.0
  *
  * @return array count of announcement statuses
  */
@@ -230,7 +230,7 @@ function erp_hr_get_announcements_status_counts() {
 /**
  * Restore announcements from trash
  *
- * @since 1.9.1
+ * @since 1.10.0
  *
  * @param array $announcement_ids
  *
