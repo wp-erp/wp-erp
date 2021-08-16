@@ -238,7 +238,7 @@ class Email extends Template {
     /**
      * Get Incoming Email schedule field
      *
-     * @since 1.9.1
+     * @since 1.10.0
      *
      * @return array Schedule input fields
      */
@@ -268,7 +268,7 @@ class Email extends Template {
     /**
      * Get Email Providers of incoming and outgoing emails
      *
-     * @since 1.9.1
+     * @since 1.10.0
      *
      * @return array email providers list
      */
@@ -672,7 +672,7 @@ class Email extends Template {
     /**
      * Get all fields for Mailgun API sub section
      *
-     * @since 1.9.1
+     * @since 1.10.0
      *
      * @return array
      */
