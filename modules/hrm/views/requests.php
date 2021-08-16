@@ -314,7 +314,7 @@
                                         value="<?php esc_attr_e( 'Apply', 'erp' ); ?>">
                                 </td>
 
-                                <td v-if="!checkboxItems.length" v-for="header in tableHeaders" :class="header.class">
+                                <td v-if="!checkboxItems.length" v-for="header in tableHeaders" :class="header.class" :colspan="headerColSpan">
                                     {{ header.title }}
                                 </td>
                             </tr>
