@@ -2925,7 +2925,7 @@ function erp_hr_remove_leave_policy_name( $id ) {
 /**
  * Get leave entitlements count associated with a leave policy
  *
- * @since 1.9.1
+ * @since 1.10.0
  *
  * @param int $leave_policy_id
  *

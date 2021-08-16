@@ -543,7 +543,7 @@ class Form_Handler {
     /**
      * Announcement handle bulk action
      *
-     * @since 1.9.1
+     * @since 1.10.0
      *
      * @return void [redirection]
      */
