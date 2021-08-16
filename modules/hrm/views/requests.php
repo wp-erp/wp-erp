@@ -179,7 +179,7 @@
                                         value="<?php esc_attr_e( 'Apply', 'erp' ); ?>">
                                 </td>
 
-                                <td v-if="!checkboxItems.length" v-for="header in tableHeaders" :class="header.class">
+                                <td v-if="!checkboxItems.length" v-for="header in tableHeaders" :class="header.class" :colspan="headerColSpan">
                                     {{ header.title }}
                                 </td>
                             </tr>
@@ -209,7 +209,7 @@
                                     {{ request.reason.title }}
                                 </td>
 
-                                <td v-if="request.item !== undefined" data-columnname="Item" 
+                                <td v-if="request.item !== undefined" data-columnname="Item"
                                     class="vertical-middle block-td  hide-additional-info hide-td">
                                     {{ request.item.name }}
                                 </td>
