@@ -1978,7 +1978,7 @@ function erp_is_smtp_enabled() {
 /**
  * Check if the ERP Email Mailgun settings is enabled or not
  *
- * @since 1.9.1
+ * @since 1.10.0
  *
  * @return bool
  */
@@ -3694,7 +3694,7 @@ function erp_get_message( $args = [] ) {
 /**
  * Convert a serialized corrupted String to an array
  *
- * @since 1.9.1
+ * @since 1.10.0
  *
  * @param string $serialized_string
  *
