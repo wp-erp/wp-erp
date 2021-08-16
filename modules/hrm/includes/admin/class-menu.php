@@ -396,7 +396,7 @@ class Admin_Menu {
     /**
      * Render the announcement page
      *
-     * @since 1.9.1
+     * @since 1.10.0
      *
      * @return void
      */
