@@ -4,7 +4,7 @@ namespace WeDevs\ERP\Accounting\Includes\Classes;
 /**
  * Helper class for final accounts
  *
- * @since 1.9.1
+ * @since 1.10.0
  */
 class Final_Accounts {
 
@@ -75,7 +75,7 @@ class Final_Accounts {
     /**
      * Generates financial year data
      *
-     * @since 1.9.1
+     * @since 1.10.0
      *
      * @return void
      */
@@ -86,7 +86,7 @@ class Final_Accounts {
     /**
      * Generates necessary bank data
      *
-     * @since 1.9.1
+     * @since 1.10.0
      *
      * @return void
      */
@@ -145,7 +145,7 @@ class Final_Accounts {
     /**
      * Retrieves previous balance
      *
-     * @since 1.9.1
+     * @since 1.10.0
      *
      * @param int|string $chart_id
      *
@@ -183,7 +183,7 @@ class Final_Accounts {
     /**
      * Retrieves opening balance of ledger
      *
-     * @since 1.9.1
+     * @since 1.10.0
      *
      * @param int|string $chart_id
      *
@@ -219,7 +219,7 @@ class Final_Accounts {
     /**
      * Retrieves balance from ledger_details of ledger
      *
-     * @since 1.9.1
+     * @since 1.10.0
      *
      * @param int|string $chart_id
      *

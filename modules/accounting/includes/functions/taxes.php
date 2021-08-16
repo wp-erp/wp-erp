@@ -685,7 +685,7 @@ function erp_acct_get_default_tax_rate_name_id() {
 /**
  * Inserts synced tax data
  *
- * @since 1.9.1
+ * @since 1.10.0
  *
  * @param array $args
  *
@@ -716,7 +716,7 @@ function erp_acct_insert_synced_tax( $args = [] ) {
 /**
  * Retrieves system id of synced tax data
  *
- * @since 1.9.1
+ * @since 1.10.0
  *
  * @param string $sync_type
  * @param string $sync_source

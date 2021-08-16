@@ -269,7 +269,7 @@ function erp_acct_get_sales_tax_report( $agency_id, $start_date, $end_date ) {
 /**
  * Generates filter wise sales tax report
  *
- * @since 1.9.1
+ * @since 1.10.0
  *
  * @param array $args
  *
