@@ -202,14 +202,14 @@ class Reports_Controller extends \WeDevs\ERP\API\REST_Controller {
 
     /**
      * Retrieves sales tax reports
-     * 
-     * @since 1.9.1
+     *
+     * @since 1.10.0
      *
      * @param $request
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_sales_tax_report( $request ) {        
+    public function get_sales_tax_report( $request ) {
         $args = [
             'start_date'  => ! empty( $request['start_date'] )  ? $request['start_date']  : null,
             'end_date'    => ! empty( $request['end_date'] )    ? $request['end_date']    : null,
