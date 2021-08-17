@@ -2448,6 +2448,141 @@ table.leaves td.column-status .status-4 {
 .new-leave-request-form #f_year {
   width: 162px;
 }
+/**
+* Requests
+*/
+#erp-hr-requests .req-status {
+  padding: 5px;
+  color: white;
+  border-radius: 2px;
+}
+#erp-hr-requests .req-status.status-1,
+#erp-hr-requests .req-status.status-7,
+#erp-hr-requests .req-status.status-approved {
+  background-color: #6ecc26;
+}
+#erp-hr-requests .req-status.status-2,
+#erp-hr-requests .req-status.status-pending {
+  background-color: #ffc111;
+}
+#erp-hr-requests .req-status.status-3,
+#erp-hr-requests .req-status.status-rejected {
+  background-color: #da4343;
+}
+#erp-hr-requests .employee-header {
+  font-weight: 600;
+}
+@media (max-width: 601px) {
+  #erp-hr-requests .employee-header {
+    line-height: 2.5em !important;
+  }
+}
+@media (max-width: 601px) {
+  #erp-hr-requests .block-td {
+    display: block;
+    margin-left: 32%;
+  }
+}
+@media (max-width: 601px) {
+  #erp-hr-requests .left-margin-employee-small {
+    margin-left: 0%;
+  }
+}
+@media (max-width: 767px) and (min-width: 601px) {
+  #erp-hr-requests .hide-td {
+    display: none;
+  }
+}
+@media (min-width: 601px) {
+  #erp-hr-requests .text-center-small {
+    text-align: center !important;
+  }
+}
+@media (max-width: 601px) {
+  #erp-hr-requests .column-heading-small {
+    display: none;
+  }
+}
+@media (max-width: 767px) {
+  #erp-hr-requests .column-heading-mid {
+    display: none;
+  }
+}
+#erp-hr-requests .toggle-row-btn {
+  display: none;
+}
+@media (max-width: 601px) {
+  #erp-hr-requests .toggle-row-btn {
+    position: absolute;
+    right: 8px;
+    top: 10px;
+    display: block;
+    padding: 0;
+    width: 40px;
+    height: 40px;
+    border: none;
+    outline: 0;
+    background: 0 0;
+  }
+}
+#erp-hr-requests .toggle-row-btn:before {
+  position: absolute;
+  top: -5px;
+  left: 10px;
+  border-radius: 50%;
+  display: block;
+  padding: 1px 2px 1px 0;
+  color: #3c434a;
+  content: "\f140";
+  font: normal 20px/1 dashicons;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+#erp-hr-requests .expanded .toggle-row-btn:before {
+  content: "\f142";
+}
+#erp-hr-requests .toggle-row-btn:hover {
+  cursor: pointer;
+}
+@media (max-width: 601px) {
+  #erp-hr-requests .hide-additional-info {
+    display: none;
+  }
+  #erp-hr-requests .hide-additional-info.employee-header {
+    display: block !important;
+  }
+}
+@media (max-width: 601px) {
+  #erp-hr-requests .decor-additional-info::before {
+    position: absolute;
+    right: 10px;
+    /* match padding of regular table cell */
+    display: block;
+    overflow: hidden;
+    width: 32%;
+    /* leave a little space for a gutter */
+    margin-left: -45%;
+    content: attr(data-columnname);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: #3c434a !important;
+  }
+}
+#erp-hr-requests .select2-selection {
+  border-color: #F0F0F0 !important;
+  font-weight: 200 !important;
+}
+#erp-hr-requests #erp-hr-filter-date {
+  margin: 8px 0 0 2px;
+  min-height: 27px;
+  height: 27px;
+  width: 98%;
+  border-radius: 4px;
+  border-color: #F0F0F0;
+  font-weight: 200;
+  font-size: inherit;
+}
 .caret {
   display: inline-block;
   width: 0;
