@@ -3,9 +3,9 @@ Contributors: tareq1988, nizamuddinbabu, wedevs
 Donate Link: https://tareq.co/donate
 Tags: business manager, erp, accounting, crm, hr, project manager, small business, SME, contact, contacts, Customer Relationship Management, employee, leave management, hr, human resource management, job, jobs, job listing, lead management, opportunity, schedule, task, lead, holiday, company
 Requires at least: 4.4
-Tested up to: 5.7.2
+Tested up to: 5.8
 Requires PHP: 5.6
-Stable tag: 1.9.0
+Stable tag: 1.10.0
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -271,6 +271,42 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+
+= v1.10.0 -> August 17, 2021 =
+--------------------------
+
+- [new] Agency wise sales tax report
+- [new] Transaction wise sales tax report
+- [new] Category wise sales tax report
+- [new] Customer wise sales tax report
+- [update] Employee list table design in Accounting people
+- [update] Deactivating a module will deactivate its associated extensions
+- [update] License page redesign in the settings for separate extension
+- [update] UX for leave type actions for better usability
+- [update] Meta postbox design of employee single page
+- [update] Task description and link in email while sending email notifications for new task
+- ​​[update] Redesign of email connectivity settings page
+- [update] Mailgun email service for outgoing email
+- [update] Email template settings has been moved from CRM to Email section globally
+- [update] Support for dynamic side menu list hiding option inside Tools
+- [update] Some more admin toolbar options to hide in Tools
+- [update] Announcements list table has been integrated under people menu of HR
+- [update] Announcements filtering based on date range
+- [fix] Termination widget was not showing in terminated employees’ single page
+- [fix] Tax category was not inserting properly while adding or updating products
+- [fix] Tax agency was not inserting properly while creating or updating purchase transaction
+- [fix] Some backend issues to avoid any transaction issues in Accounting
+- [fix] Audit log filtering dropdown was not working
+- [fix] Activities filtering was not working properly in CRM
+- [fix] Some validations were generating inconsistency for employees' old data export/import
+- [fix] Leave policy delete option was not working properly
+- [fix] Leave type bulk delete was not working
+- [fix] Mobile responsiveness for requests table in HRM
+- [fix] employee permanent delete was not working
+- [fix] SMTP test email was not working properly
+- [fix] IMap enable/disable option was not working properly
+- [fix] Some backend optimizations all over the plugin
+- [fix] Some texts were not translatable
 
 = v1.9.0 -> July 15, 2021 =
 --------------------------
