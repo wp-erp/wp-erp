@@ -521,7 +521,10 @@ class Employee {
             ] );
         }
 
+        $data['personal']['user_email'] = $user_email;
+
         $this->update_employee( array_merge( $data['work'], $data['personal'], $data['additional'] ) );
+
         do_action( 'erp_hr_employee_new', $this->id, $data );
 
         erp_hrm_purge_cache( [ 'list' => 'employee', 'employee_id' => $employee_id ] );
@@ -1291,15 +1294,15 @@ class Employee {
      */
     public function get_birthday() {
         $birth_date = $this->get_date_of_birth();
-        
+
         return erp_is_valid_date( $birth_date ) ? erp_format_date( $birth_date ) : $birth_date;
     }
 
     /**
      * Get employee's job id
-     * 
+     *
      * @since 1.8.5
-     * 
+     *
      * @return string
      */
     public function get_job_id() {
@@ -1742,7 +1745,7 @@ class Employee {
                 if ( 'terminated' === $args['category'] ) {
                     $update_data['termination_date'] = $args['date'];
                 }
-                
+
                 $this->erp_user->update( $update_data );
 
                 do_action( 'erp_hr_employee_after_update_status', $this->erp_user->user_id, $args['category'], $args['date'] );
@@ -1891,7 +1894,7 @@ class Employee {
         ];
 
         $args = wp_parse_args( $args, $default );
-        
+
         if ( empty( $args['designation'] ) || ! array_key_exists( $args['designation'], erp_hr_get_designation_dropdown_raw() ) ) {
             return new \WP_Error( 'invalid-designation-id', __( 'Invalid Designation Type', 'erp' ) );
         }
