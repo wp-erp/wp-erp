@@ -151,10 +151,9 @@ function erp_acct_insert_product( $data ) {
             OBJECT
         );
 
-       if ( $product_check ) {
-           throw new \Exception( $product_data['name'] . ' ' . __( "Product already exists!" , "erp") ) ;
-         }
-
+        if ( $product_check ) {
+           throw new \Exception( $product_data['name'] . ' ' . __( 'product already exists!', 'erp' ) ) ;
+        }
 
         $wpdb->insert(
             $wpdb->prefix . 'erp_acct_products',

@@ -247,13 +247,17 @@ class Admin_Menu {
             case 'requests':
                 $this->requests_page();
                 break;
-            
+
             case 'department':
                 $this->department_page();
                 break;
 
             case 'designation':
                 $this->designation_page();
+                break;
+
+            case 'announcement':
+                $this->announcement_page();
                 break;
 
             default:
@@ -335,7 +339,7 @@ class Admin_Menu {
 
     /**
      * Renders requests page template
-     * 
+     *
      * @since 1.8.5
      *
      * @return void
@@ -387,6 +391,19 @@ class Admin_Menu {
         erp_verify_page_access_permission( 'erp_manage_designation' );
 
         include WPERP_HRM_VIEWS . '/designation.php';
+    }
+
+    /**
+     * Render the announcement page
+     *
+     * @since 1.10.0
+     *
+     * @return void
+     */
+    public function announcement_page() {
+        erp_verify_page_access_permission( 'erp_manage_announcement' );
+
+        include WPERP_HRM_VIEWS . '/announcements.php';
     }
 
     /**

@@ -62,7 +62,7 @@ class Reports_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         register_rest_route(
             $this->namespace,
-            '/' . $this->rest_base . '/sales-tax-report',
+            '/' . $this->rest_base . '/sales-tax',
             [
                 [
                     'methods'             => WP_REST_Server::READABLE,
@@ -201,18 +201,28 @@ class Reports_Controller extends \WeDevs\ERP\API\REST_Controller {
     }
 
     /**
-     * Get sales tax report
+     * Retrieves sales tax reports
      *
-     * @param WP_REST_Request $request
+     * @since 1.10.0
+     *
+     * @param $request
      *
      * @return WP_Error|WP_REST_Response
      */
     public function get_sales_tax_report( $request ) {
-        $agency_id  = (int) $request['agency_id'];
-        $start_date = empty( $request['start_date'] ) ? null : $request['start_date'];
-        $end_date   = empty( $request['end_date'] ) ? null : $request['end_date'];
+        $args = [
+            'start_date'  => ! empty( $request['start_date'] )  ? $request['start_date']  : null,
+            'end_date'    => ! empty( $request['end_date'] )    ? $request['end_date']    : null,
+            'customer_id' => ! empty( $request['customer_id'] ) ? $request['customer_id'] : null,
+            'category_id' => ! empty( $request['category_id'] ) ? $request['category_id'] : null,
+            'agency_id'   => ! empty( $request['agency_id'] )   ? $request['agency_id']   : null,
+        ];
 
-        $data = erp_acct_get_sales_tax_report( $agency_id, $start_date, $end_date );
+        if ( ! empty( $args['agency_id'] ) ) {
+            $data = erp_acct_get_sales_tax_report( $args['agency_id'], $args['start_date'], $args['end_date'] );
+        } else {
+            $data = erp_acct_get_filtered_sales_tax_report( $args );
+        }
 
         $response = rest_ensure_response( $data );
 

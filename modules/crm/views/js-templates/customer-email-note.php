@@ -3,21 +3,21 @@ global $current_user;
 $customer_id  = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
 $customer     = new \WeDevs\ERP\CRM\Contact( $customer_id );
 $save_replies = erp_crm_get_save_replies();
-$block        = !erp_crm_sync_is_active() ? 'crm-blocked' : '';
-$settings_url = admin_url( 'admin.php?page=erp-settings#/erp-crm/email_connect/gmail' );
+$block        = ! erp_crm_sync_is_active() ? 'crm-blocked' : '';
+$settings_url = admin_url( 'admin.php?page=erp-settings#/erp-email/email_connect' );
 ?>
 <div id="email" class="<?php echo esc_html( $block ); ?>">
 
-    <?php if ( !erp_crm_sync_is_active() ) { ?>
-        <a class="button button-primary" style="z-index: 2;position: relative;top: 150px;left: 43%;" href="<?php echo esc_url_raw( $settings_url ); ?>"><?php esc_attr_e( 'Configure Settings', 'erp' ); ?></a>
-    <?php } ?>
+    <?php if ( ! erp_crm_sync_is_active() ) : ?>
+        <a class="button button-primary" style="z-index: 2;position: relative;top: 150px;left: 43%;" href="<?php echo esc_url_raw( $settings_url ); ?>"><?php esc_attr_e( 'Configure Incoming Email Settings', 'erp' ); ?></a>
+    <?php endif; ?>
 
     <p class="email-templates">
-        <select name="select_templates" id="erp-crm-activity-insert-templates" v-model="emailTemplates" v-selecttwo="emailTemplates" class="select2" v-on:change="insertSaveReplies()" style="width: 100%" data-placeholder="Select a templates...">
-            <option value=""><?php esc_attr_e( 'Select a templates', 'erp' ); ?></option>
-            <?php foreach ( $save_replies as $key => $save_reply ) { ?>
+        <select name="select_templates" id="erp-crm-activity-insert-templates" v-model="emailTemplates" v-selecttwo="emailTemplates" class="select2" v-on:change="insertSaveReplies()" style="width: 100%" data-placeholder="Select a template...">
+            <option value=""><?php esc_attr_e( 'Select a template', 'erp' ); ?></option>
+            <?php foreach ( $save_replies as $save_reply ) : ?>
                 <option value="<?php echo esc_attr( $save_reply->id ); ?>"><?php echo esc_attr( $save_reply->name ); ?></option>
-            <?php } ?>
+            <?php endforeach; ?>
         </select>
     </p>
 

@@ -290,6 +290,8 @@ window.wperp = window.wperp || {};
             $( '.erp-danger-zone' ).on( 'input', '#erp_reset_confirmation', this.onChangeDangerZoneInput );
             $( '.erp-danger-zone' ).on( 'click', 'button.tools-btn-submit', this.viewDangerZoneConfirmation );
 
+            $( '.wrap.erp #message button.notice-dismiss' ).on( 'click', this.dismissNoticeMessage );
+
             this.initFields();
         },
 
@@ -731,8 +733,15 @@ window.wperp = window.wperp || {};
                 $(".tools-error-message").html( wpErpDangerZone.confirmResetBeforeContinue );
                 confirmationElement.addClass('tools-error-input');
             }
-        }
+        },
 
+        /**
+         * Close notice message on click on 'x' button
+         */
+         dismissNoticeMessage: function( e ) {
+             e.preventDefault();
+             e.target.closest( 'div' ).remove();
+         }
     };
 
     $(function() {

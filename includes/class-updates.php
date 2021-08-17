@@ -56,6 +56,7 @@ class Updates {
         '1.8.1'   => 'updates/update-1.8.1.php',
         '1.8.3'   => 'updates/update-1.8.3.php',
         '1.8.5'   => 'updates/update-1.8.5.php',
+        '1.10.0'  => 'updates/update-1.10.0.php',
     ];
 
     /**
@@ -80,6 +81,7 @@ class Updates {
 
         $this->action( 'erp_update_1_5_0_process_memory_exceeded', 'memory_exceeded' );
         $this->action( 'erp_update_1_5_2_process_memory_exceeded', 'memory_exceeded' );
+        $this->action( 'erp_hr_bg_process_1_10_0_memory_exceeded', 'memory_exceeded' );
     }
 
     /**

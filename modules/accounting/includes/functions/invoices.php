@@ -80,6 +80,8 @@ function erp_acct_get_invoice( $invoice_no ) {
             invoice.amount,
             invoice.discount,
             invoice.discount_type,
+            invoice.shipping,
+            invoice.shipping_tax,
             invoice.tax,
             invoice.tax_zone_id,
             invoice.estimate,
@@ -112,7 +114,7 @@ function erp_acct_get_invoice( $invoice_no ) {
         $row['line_items'][ $key ]['line_total'] = $total;
     }
 
-    $row['attachments'] = unserialize( $row['attachments'] );
+    $row['attachments'] = isset( $row['attachments'] ) ? maybe_unserialize( $row['attachments'] ) : null;
     $row['total_due']   = erp_acct_get_invoice_due( $invoice_no );
     $row['pdf_link']    = erp_acct_pdf_abs_path_to_url( $invoice_no );
 
@@ -223,6 +225,8 @@ function erp_acct_insert_invoice( $data ) {
                 'amount'          => $invoice_data['amount'],
                 'discount'        => $invoice_data['discount'],
                 'discount_type'   => $invoice_data['discount_type'],
+                'shipping'        => $invoice_data['shipping'],
+                'shipping_tax'    => $invoice_data['shipping_tax'],
                 'tax'             => $invoice_data['tax'],
                 'tax_zone_id'     => $invoice_data['tax_rate_id'],
                 'estimate'        => $invoice_data['estimate'],
@@ -307,6 +311,7 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no, $c
                 'unit_price'     => $item['unit_price'],
                 'discount'       => $item['discount'],
                 'tax'            => $item['tax'],
+                'tax_cat_id'     => ! empty( $item['tax_cat_id'] ) ? $item['tax_cat_id'] : null,
                 'item_total'     => $sub_total,
                 'ecommerce_type' => ! empty( $item['ecommerce_type'] ) ? $item['ecommerce_type'] : null,
                 'created_at'     => $invoice_data['created_at'],
@@ -324,7 +329,7 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no, $c
             $tax_rate_agency = ! empty( $item['tax_rate_agency'] ) ? $item['tax_rate_agency'] : null;
         } else {
             // calculate tax for every related agency
-            $tax_rate_agency = get_tax_rate_with_agency( $invoice_data['tax_rate_id'], $item['tax_cat_id'] );
+            $tax_rate_agency = erp_acct_get_tax_rate_with_agency( $invoice_data['tax_rate_id'], $item['tax_cat_id'] );
         }
 
         if ( ! empty( $tax_rate_agency ) ) {
@@ -403,10 +408,10 @@ function erp_acct_insert_invoice_account_details( $invoice_data, $voucher_no, $c
     if ( $contra ) {
         $invoice_no = $invoice_data['voucher_no'];
         $debit      = 0;
-        $credit     = ( $invoice_data['amount'] - $invoice_data['discount'] ) + $invoice_data['tax'];
+        $credit     = ( $invoice_data['amount'] - $invoice_data['discount'] ) + $invoice_data['tax'] + $invoice_data['shipping'] + $invoice_data['shipping_tax'];
     } else {
         $invoice_no = $voucher_no;
-        $debit      = ( $invoice_data['amount'] - $invoice_data['discount'] ) + $invoice_data['tax'];
+        $debit      = ( $invoice_data['amount'] - $invoice_data['discount'] ) + $invoice_data['tax'] + $invoice_data['shipping'] + $invoice_data['shipping_tax'];
         $credit     = 0;
     }
 
@@ -575,6 +580,8 @@ function erp_acct_convert_estimate_to_invoice( $data, $invoice_no ) {
                 'amount'          => $invoice_data['amount'],
                 'discount'        => $invoice_data['discount'],
                 'discount_type'   => $invoice_data['discount_type'],
+                'shipping'        => $invoice_data['shipping'],
+                'shipping_tax'    => $invoice_data['shipping_tax'],
                 'tax'             => $invoice_data['tax'],
                 'estimate'        => false,
                 'attachments'     => $invoice_data['attachments'],
@@ -640,6 +647,8 @@ function erp_acct_update_draft_and_estimate( $data, $invoice_no ) {
         'amount'          => $invoice_data['amount'],
         'discount'        => $invoice_data['discount'],
         'discount_type'   => $invoice_data['discount_type'],
+        'shipping'        => $invoice_data['shipping'],
+        'shipping_tax'    => $invoice_data['shipping_tax'],
         'tax'             => $invoice_data['tax'],
         'estimate'        => $invoice_data['estimate'],
         'attachments'     => $invoice_data['attachments'],
@@ -689,6 +698,8 @@ function erp_acct_get_formatted_invoice_data( $data, $voucher_no ) {
     $invoice_data['amount']          = isset( $data['amount'] ) ? $data['amount'] : 0;
     $invoice_data['discount']        = isset( $data['discount'] ) ? $data['discount'] : 0;
     $invoice_data['discount_type']   = isset( $data['discount_type'] ) ? $data['discount_type'] : null;
+    $invoice_data['shipping']        = isset( $data['shipping'] ) ? $data['shipping'] : 0;
+    $invoice_data['shipping_tax']    = isset( $data['shipping_tax'] ) ? $data['shipping_tax'] : 0;
     $invoice_data['tax_rate_id']     = isset( $data['tax_rate_id'] ) ? $data['tax_rate_id'] : 0;
     $invoice_data['line_items']      = isset( $data['line_items'] ) ? $data['line_items'] : [];
     $invoice_data['trn_by']          = isset( $data['trn_by'] ) ? $data['trn_by'] : '';
@@ -760,22 +771,6 @@ function erp_acct_void_invoice( $invoice_no ) {
 }
 
 /**
- * Tax category with agency
- */
-function get_tax_rate_with_agency( $tax_id, $tax_cat_id ) {
-    global $wpdb;
-
-    return $wpdb->get_results(
-        $wpdb->prepare(
-            "SELECT agency_id, tax_rate FROM {$wpdb->prefix}erp_acct_tax_cat_agency where tax_id = %d and tax_cat_id = %d",
-            absint( $tax_id ),
-            absint( $tax_cat_id )
-        ),
-        ARRAY_A
-    );
-}
-
-/**
  * Insert invoice/s data into ledger
  *
  * @param array $invoice_data
@@ -790,25 +785,33 @@ function erp_acct_insert_invoice_data_into_ledger( $invoice_data, $voucher_no = 
 
     $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::get_instance();
 
-    $sales_ledger_id          = $ledger_map->get_ledger_id_by_slug( 'sales_revenue' );
-    $sales_discount_ledger_id = $ledger_map->get_ledger_id_by_slug( 'sales_discount' );
+    $sales_ledger_id              = $ledger_map->get_ledger_id_by_slug( 'sales_revenue' );
+    $sales_discount_ledger_id     = $ledger_map->get_ledger_id_by_slug( 'sales_discount' );
+    $sales_shipping_ledger_id     = $ledger_map->get_ledger_id_by_slug( 'shipment' );
+    $sales_shipping_tax_ledger_id = $ledger_map->get_ledger_id_by_slug( 'shipment_tax' );
 
     if ( $contra ) {
-        $trn_no = $voucher_no;
+        $sales_credit        = 0;
+        $discount_debit      = 0;
+        $shipment_credit     = 0;
+        $shipment_tax_credit = 0;
 
-        $discount_debit = 0;
-        $sales_credit   = 0;
-
-        $sales_debit     = $invoice_data['amount'];
-        $discount_credit = $invoice_data['discount'];
+        $trn_no              = $voucher_no;
+        $sales_debit         = $invoice_data['amount'];
+        $discount_credit     = $invoice_data['discount'];
+        $shipment_debit      = $invoice_data['shipping'];
+        $shipment_tax_debit  = $invoice_data['shipping_tax'];
     } else {
-        $trn_no = $invoice_data['voucher_no'];
+        $sales_debit         = 0;
+        $discount_credit     = 0;
+        $shipment_debit      = 0;
+        $shipment_tax_debit  = 0;
 
-        $sales_debit     = 0;
-        $discount_credit = 0;
-
-        $sales_credit   = $invoice_data['amount'];
-        $discount_debit = $invoice_data['discount'];
+        $trn_no              = $invoice_data['voucher_no'];
+        $sales_credit        = $invoice_data['amount'];
+        $discount_debit      = $invoice_data['discount'];
+        $shipment_credit     = $invoice_data['shipping'];
+        $shipment_tax_credit = $invoice_data['shipping_tax'];
     }
 
     // insert amount in ledger_details
@@ -829,21 +832,61 @@ function erp_acct_insert_invoice_data_into_ledger( $invoice_data, $voucher_no = 
     );
 
     // insert discount in ledger_details
-    $wpdb->insert(
-        $wpdb->prefix . 'erp_acct_ledger_details',
-        [
-            'ledger_id'   => $sales_discount_ledger_id,
-            'trn_no'      => $trn_no,
-            'particulars' => $invoice_data['particulars'],
-            'debit'       => $discount_debit,
-            'credit'      => $discount_credit,
-            'trn_date'    => $invoice_data['trn_date'],
-            'created_at'  => $date,
-            'created_by'  => $user_id,
-            'updated_at'  => $date,
-            'updated_by'  => $user_id,
-        ]
-    );
+    if ( (float) $discount_debit > 0 || (float) $discount_credit > 0 ) {
+        $wpdb->insert(
+            $wpdb->prefix . 'erp_acct_ledger_details',
+            [
+                'ledger_id'   => $sales_discount_ledger_id,
+                'trn_no'      => $trn_no,
+                'particulars' => $invoice_data['particulars'],
+                'debit'       => $discount_debit,
+                'credit'      => $discount_credit,
+                'trn_date'    => $invoice_data['trn_date'],
+                'created_at'  => $date,
+                'created_by'  => $user_id,
+                'updated_at'  => $date,
+                'updated_by'  => $user_id,
+            ]
+        );
+    }
+
+    // insert shipping in ledger_details
+    if ( (float) $shipment_debit > 0 || (float) $shipment_credit > 0 ) {
+        $wpdb->insert(
+            $wpdb->prefix . 'erp_acct_ledger_details',
+            [
+                'ledger_id'   => $sales_shipping_ledger_id,
+                'trn_no'      => $trn_no,
+                'particulars' => $invoice_data['particulars'],
+                'debit'       => $shipment_debit,
+                'credit'      => $shipment_credit,
+                'trn_date'    => $invoice_data['trn_date'],
+                'created_at'  => $date,
+                'created_by'  => $user_id,
+                'updated_at'  => $date,
+                'updated_by'  => $user_id,
+            ]
+        );
+    }
+
+    // insert shipping tax in ledger_details
+    if ( (float) $shipment_tax_debit > 0 || (float) $shipment_tax_credit > 0 ) {
+        $wpdb->insert(
+            $wpdb->prefix . 'erp_acct_ledger_details',
+            [
+                'ledger_id'   => $sales_shipping_tax_ledger_id,
+                'trn_no'      => $trn_no,
+                'particulars' => $invoice_data['particulars'],
+                'debit'       => $shipment_tax_debit,
+                'credit'      => $shipment_tax_credit,
+                'trn_date'    => $invoice_data['trn_date'],
+                'created_at'  => $date,
+                'created_by'  => $user_id,
+                'updated_at'  => $date,
+                'updated_by'  => $user_id,
+            ]
+        );
+    }
 
     erp_acct_purge_cache( ['list' => 'sales_transaction'] );
 }
@@ -1069,7 +1112,15 @@ function erp_acct_get_recievables_overview() {
 function erp_acct_get_invoice_due( $invoice_no ) {
     global $wpdb;
 
-    $result = $wpdb->get_row( $wpdb->prepare( "SELECT invoice_no, SUM( ia.debit - ia.credit) as due FROM {$wpdb->prefix}erp_acct_invoice_account_details as ia WHERE ia.invoice_no = %d GROUP BY ia.invoice_no", $invoice_no ), ARRAY_A );
+    $result = $wpdb->get_row(
+        $wpdb->prepare(
+            "SELECT ia.invoice_no, SUM( ia.debit - ia.credit) as due
+            FROM {$wpdb->prefix}erp_acct_invoice_account_details as ia
+            WHERE ia.invoice_no = %d
+            GROUP BY ia.invoice_no", $invoice_no
+        ),
+        ARRAY_A
+    );
 
     return $result['due'];
 }

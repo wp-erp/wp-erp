@@ -327,9 +327,9 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $tax_data['tax_rate'] = array_sum( $item_rates );
 
-        $tax_id = erp_acct_insert_tax_rate( $tax_data );
+        erp_acct_insert_tax_rate( $tax_data );
 
-        $tax_data['id'] = $tax_id;
+        $tax_data['id'] = $tax_data['tax_rate_name'];
 
         $this->add_log( $tax_data, 'add' );
 
