@@ -18,7 +18,7 @@ if ( $id ) {
             </a>
         </h2>
         <div id="col-left" class="form-wrap">
-            <form action="<?php echo esc_url( erp_hr_new_policy_name_url( $id ) ); ?>" method="POST">
+            <form method="POST" id='erp-hr-leave-type-create'>
 
                 <!-- show error message -->
                 <?php global $policy_name_create_error;
@@ -62,6 +62,7 @@ if ( $id ) {
                 <input type="hidden" name="policy-name-id" value="<?php echo esc_attr( $id ); ?>">
 
                 <?php submit_button( $submit_button ); ?>
+                <span class='erp-loader' style="display: none;"></span>
             </form>
         </div>
 
@@ -69,7 +70,7 @@ if ( $id ) {
             <div class="list-table-wrap">
                 <div class="list-table-inner">
 
-                    <form method="post">
+                    <form method="post" id='erp-hr-leave-type-table-form'>
                         <!-- <input type="hidden" name="page" value="erp-hr">
                         <input type="hidden" name="section" value="leave">
                         <input type="hidden" name="sub-section" value="policies"> -->

@@ -168,7 +168,7 @@ class Admin_Menu {
      * @return void
      */
     public function settings_page() {
-        new \WeDevs\ERP\Settings();
+        new \WeDevs\ERP\Settings\Settings();
     }
 
     /**
@@ -204,7 +204,11 @@ class Admin_Menu {
         }
 
         foreach ( $menus as $item ) {
-            remove_menu_page( $item );
+            $item = erp_serialize_string_to_array( $item );
+
+            if ( ! empty( $item[2] ) ) {
+                remove_menu_page( $item[2] );
+            }
         }
 
         remove_menu_page( 'edit-tags.php?taxonomy=link_category' );

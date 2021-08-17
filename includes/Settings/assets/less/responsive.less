@@ -1,0 +1,184 @@
+#erp-settings {
+
+    /* Smartphones (portrait and landscape) ----------- */
+    @media only screen and (min-width : 120px) and (max-width : 768px) {
+        .hide-sm {
+            display: none !important;
+        }
+
+        .settings-area {
+            display: flex;
+            // margin: 0px 8px 0 -15px;
+
+            .settings-sidebar {
+                flex-basis: 5%;
+                width: 80px;
+                margin: 0px 5px 0px -20px;
+
+                .settings-navbar {
+                    h2 {
+                        display: none;
+                    }
+                }
+
+                .settings-menu {
+
+                    .menu-name {
+                        display: none;
+                    }
+
+                    li {
+                        a {
+                            padding: 18px 15px;
+                        }
+                    }
+                }
+            }
+
+            .settings-content {
+                flex-basis: 95%;
+                padding: 10px;
+                overflow: hidden;
+
+                .section-title {
+                    font-size: 16px;
+                    margin-top: 20px;
+                }
+
+                .search-area {
+                    margin-top: 0px;
+
+                    .input-searchbar {
+                        width: 100%;
+                    }
+                }
+
+                .settings-box {
+                    margin: 0px;
+                    padding: 15px;
+                }
+            }
+
+            .settings-submenu-navbar {
+                margin-top: 20px;
+
+                .settings-sub-menu {
+                    li {
+                        padding: 0px 10px 2px 0px;
+                    }
+                }
+            }
+
+            .erp-settings-table td a.button,
+            .erp-settings-table td button.button {
+                border: none !important;
+                padding: 0px !important;
+                margin: 0px !important;
+                background: transparent !important;
+                color: #1a9ed4 !important;
+            }
+        }
+
+        .erp-settings-tooltip {
+            .tooltiptext {
+                min-width: 160px;
+                top: 30px;
+                left: -23px;
+                word-break: break-word !important;
+            }
+        }
+
+        .settings-btn-cancel {
+            margin-left: -1px;
+            padding: 0px 2px 0 6px;
+            width: 16px;
+            font-size: 10px;
+            height: 16px;
+            border-radius: 8px;
+            margin-top: 10px;
+            background: #f5f5f5;
+        }
+
+        .vue-dropify__message p {
+            margin: 2% 24%!important;
+        }
+
+        .sub-sub-menu li {
+            margin: 12px 0px;
+        }
+
+        .multiselect__content-wrapper {
+            max-width: 240px;
+            word-wrap: break-word;
+            white-space: nowrap;
+            font-size: 12px;
+        }
+
+        .button.button-small .dashicons {
+            margin-top: 8px !important;
+        }
+
+        .search-area svg {
+            margin: 14px 12px 0 0 !important;
+        }
+
+        // Email Connection Settings
+        #erp-settings-box-erp-email-email_connect {
+            .email-connect-area{
+                flex-direction: column;
+
+                .email-card {
+                    margin-bottom: 20px;
+                    background: #fff;
+                    flex-basis: 49%;
+                    margin-right: 0px;
+                    padding: 25px 0px 5px 16px;
+                    border: 1px solid #dfe2e7;
+                    border-radius: 2px;
+
+                    .email-icons .email-icon .checkbox-icon {
+                        margin-left: 6%;
+                    }
+                }
+            }
+        }
+    }
+
+    @media only screen and (min-width : 120px) and (max-width : 450px) {
+        #erp-settings-box-erp-email-email_connect {
+            .email-connect-area .email-card .email-icons .email-icon .checkbox-icon {
+                margin-left: 1%;
+            }
+        }
+    }
+
+    @media only screen and (min-width : 768px) and (max-width : 1024px) {
+        #erp-settings-box-erp-email-email_connect {
+            .email-connect-area{
+                flex-direction: column;
+
+                .email-card {
+                    margin-bottom: 20px;
+
+                    .email-icons .email-icon .checkbox-icon {
+                        margin-left: 6%;
+                    }
+                }
+            }
+        }
+    }
+
+    @media only screen and (min-width : 1024px) and (max-width : 1224px) {
+        #erp-settings-box-erp-email-email_connect {
+            .email-connect-area .email-card .email-icons .email-icon .checkbox-icon {
+                margin-left: 1%;
+            }
+        }
+    }
+
+    /* Desktops and laptops ----------- */
+    @media only screen and (min-width : 1224px) {}
+
+    /* Large screens ----------- */
+    @media only screen and (min-width : 1824px) {}
+}

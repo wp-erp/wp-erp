@@ -7,7 +7,6 @@ import EmployeeDetails from 'admin/components/people/EmployeeDetails.vue';
 import DashBoard from 'admin/components/dashboard/DashBoard.vue';
 import TrialBalance from 'admin/components/reports/TrialBalance.vue';
 import LedgerReport from 'admin/components/reports/LedgerReport.vue';
-import SalesTax from 'admin/components/reports/SalesTax.vue';
 import PeopleDetails from 'admin/components/people/PeopleDetails.vue';
 import InvoiceCreate from 'admin/components/invoice/InvoiceCreate.vue';
 import ChartOfAccounts from 'admin/components/chart-accounts/ChartOfAccounts.vue';
@@ -55,6 +54,11 @@ import BalanceSheet from 'admin/components/reports/BalanceSheet.vue';
 import DynamicTrnLoader from 'admin/components/transactions/DynamicTrnLoader.vue';
 import OpeningBalance from 'admin/components/opening-balance/OpeningBalance.vue';
 import HelpContent from 'admin/components/help/HelpContent.vue';
+import SalesTaxReportOverview from '../components/reports/sales-tax/Overview.vue';
+import SalesTaxReportAgencyBased from '../components/reports/sales-tax/AgencyBased.vue';
+import SalesTaxReportCategoryBased from '../components/reports/sales-tax/CategoryBased.vue';
+import SalesTaxReportTransactionBased from '../components/reports/sales-tax/TransactionBased.vue';
+import SalesTaxReportCustomerBased from '../components/reports/sales-tax/CustomerBased.vue';
 
 Vue.use(Router);
 
@@ -717,9 +721,39 @@ export default new Router({
                     ]
                 },
                 {
-                    path: 'sales-tax',
-                    name: 'SalesTax',
-                    component: SalesTax
+                    path: 'sales/tax',
+                    component: {
+                        render(c) {
+                            return c('router-view');
+                        }
+                    },
+                    children: [
+                        {
+                            path: '',
+                            name: 'SalesTaxReportOverview',
+                            component: SalesTaxReportOverview
+                        },
+                        {
+                            path: 'agency-based',
+                            name: 'SalesTaxReportAgencyBased',
+                            component: SalesTaxReportAgencyBased
+                        },
+                        {
+                            path: 'category-based',
+                            name: 'SalesTaxReportCategoryBased',
+                            component: SalesTaxReportCategoryBased
+                        },
+                        {
+                            path: 'transaction-based',
+                            name: 'SalesTaxReportTransactionBased',
+                            component: SalesTaxReportTransactionBased
+                        },
+                        {
+                            path: 'customer-based',
+                            name: 'SalesTaxReportCustomerBased',
+                            component: SalesTaxReportCustomerBased
+                        },
+                    ]
                 },
                 {
                     path: 'income-statement',
@@ -829,7 +863,17 @@ export default new Router({
                     component: HelpContent
                 }
             ]
+        },
+    ]),
+    mode: "hash",
+    scrollBehavior(to, from, savedPosition) {
+        if (savedPosition) {
+            return savedPosition;
+        } else {
+            return {
+                x: 0,
+                y: 0
+            };
         }
-    ]
-    )
+    }
 });

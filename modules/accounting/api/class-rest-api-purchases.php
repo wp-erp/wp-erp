@@ -250,7 +250,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         foreach ( $items as $key => $item ) {
             $item_total[ $key ]      = $item['item_total'];
-            $item_tax_total[ $key ]  = $item['tax_amount'];
+            $item_tax_total[ $key ]  = ! empty( $item['tax_amount'] ) ? $item['tax_amount'] : 0;
         }
 
         $purchase_data['tax']           = array_sum( $item_tax_total );

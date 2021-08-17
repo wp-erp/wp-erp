@@ -50,43 +50,41 @@ class Auditlog_List_Table extends \WP_List_Table {
             return;
         }
 
-        $modules          = erp_get_audit_log_modules();
-        $sections         = erp_get_audit_log_sub_component();
-        $selected_module  = ( isset( $_GET['filter_module'] ) ) ? sanitize_text_field( wp_unslash( $_GET['filter_module'] ) ) : '';
-        $selected_section = ( isset( $_GET['filter_section'] ) ) ? sanitize_text_field( wp_unslash( $_GET['filter_section'] ) ) : '';
-
-        $selected_duration = ( isset( $_GET['filter_duration'] ) ) ? sanitize_text_field( wp_unslash( $_GET['filter_duration'] ) ) : ''; ?>
-        <div class="alignleft actions">
-
+        $modules           = erp_get_audit_log_modules();
+        $sections          = erp_get_audit_log_sub_component();
+        $types             = $this->erp_log_get_filters();
+        
+        $selected_module   = ( isset( $_GET['filter_module'] ) )   ? sanitize_text_field( wp_unslash( $_GET['filter_module'] ) )   : '';
+        $selected_section  = ( isset( $_GET['filter_section'] ) )  ? sanitize_text_field( wp_unslash( $_GET['filter_section'] ) )  : '';
+        $selected_duration = ( isset( $_GET['filter_duration'] ) ) ? sanitize_text_field( wp_unslash( $_GET['filter_duration'] ) ) : '';
+        
+        ?><div class="alignleft actions">
             <label class="screen-reader-text" for="filter_module"><?php esc_html_e( 'Filter by Module', 'erp' ); ?></label>
             <select name="filter_module" id="filter_module">
                 <option value=""><?php esc_html_e( '&mdash; All Modules &mdash;', 'erp' ); ?></option>
-                <?php foreach ( $modules as $key => $module ) { ?>
+                <?php foreach ( $modules as $module ) : ?>
                     <option value="<?php echo esc_html( $module['component'] ); ?>" <?php selected( $selected_module, $module['component'] ); ?>><?php echo esc_html( $module['component'] ); ?></option>
-                <?php } ?>
+                <?php endforeach; ?>
             </select>
 
             <label class="screen-reader-text" for="filter_section"><?php esc_html_e( 'Filter by Section', 'erp' ); ?></label>
             <select name="filter_section" id="filter_section">
                 <option value=""><?php esc_html_e( '&mdash; All Sections &mdash;', 'erp' ); ?></option>
-                <?php foreach ( $sections as $key => $section ) { ?>
+                <?php foreach ( $sections as $section ) : ?>
                     <option value="<?php echo esc_attr( $section['sub_component'] ); ?>" <?php selected( $section['sub_component'], $selected_section ); ?>><?php echo esc_html( ucfirst( $section['sub_component'] ) ); ?></option>
-                <?php } ?>
+                <?php endforeach; ?>
             </select>
+            
             <label class="screen-reader-text" for="new_role"><?php esc_html_e( 'Filter by Duration', 'erp' ); ?></label>
             <select name="filter_duration" id="filter_duration">
                 <option value="-1"><?php esc_html_e( '&mdash; All Times &mdash;', 'erp' ); ?></option>
-                <?php
-                $types = $this->erp_log_get_filters();
-
-                foreach ( $types as $key => $title ) {
-                    echo wp_kses_post( sprintf( "<option value='%s'%s>%s</option>\n", $key, selected( $selected_duration, $key, false ), $title ) );
-                } ?>
+                <?php foreach ( $types as $key => $type ) : ?>
+                    <option value="<?php echo esc_attr( $key ); ?>" <?php selected( $selected_duration, $key, false ); ?>><?php echo esc_html( $type ); ?></option>
+                <?php endforeach; ?>
             </select>
 
-            <?php
-            submit_button( __( 'Filter', 'erp' ), 'button', 'filter_audit_log', false );
-        echo '</div>';
+            <?php submit_button( __( 'Filter', 'erp' ), 'button', 'filter_audit_log', false ); ?>
+        </div><?php
     }
 
     /**

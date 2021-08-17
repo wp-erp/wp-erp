@@ -1465,19 +1465,7 @@ function erp_process_csv_export() {
                         if ( in_array( $field, $custom_fields, true ) ) {
                             $csv_items[ $index ][ $field ] = get_user_meta( $item->id, $field, true );
                         } else {
-                            switch ( $field ) {
-                                case 'department':
-                                    $csv_items[ $index ][ $field ] = $item->get_department_title();
-                                    break;
-
-                                case 'designation':
-                                    $csv_items[ $index ][ $field ] = $item->get_job_title();
-                                    break;
-
-                                default:
-                                    $csv_items[ $index ][ $field ] = $item->{$field};
-                                    break;
-                            }
+                            $csv_items[ $index ][ $field ] = $item->{$field};
                         }
                     } else if ( $is_people ) {
                         if ( in_array( $field, $custom_fields, true ) ) {
@@ -1546,9 +1534,73 @@ function erp_mail( $to, $subject, $message, $headers = '', $attachments = [], $c
         return true;
     }
 
-    $callback = function ( $phpmailer ) use ( $custom_headers ) {
-        $erp_email_settings      = get_option( 'erp_settings_erp-email_general', [] );
-        $erp_email_smtp_settings = get_option( 'erp_settings_erp-email_smtp', [] );
+    $erp_email_settings = get_option( 'erp_settings_erp-email_general', [] );
+    $is_mail_sent       = false;
+
+    if ( erp_is_smtp_enabled() ) {
+        $callback = function ( $phpmailer ) use ( $custom_headers, $erp_email_settings ) {
+
+            $erp_email_smtp_settings = get_option( 'erp_settings_erp-email_smtp', [] );
+
+            if ( ! isset( $erp_email_settings['from_email'] ) ) {
+                $from_email = get_option( 'admin_email' );
+            } else {
+                $from_email = $erp_email_settings['from_email'];
+            }
+
+            if ( ! isset( $erp_email_settings['from_name'] ) ) {
+                $from_name = get_bloginfo( 'name' );
+            } else {
+                $from_name = $erp_email_settings['from_name'];
+            }
+
+            $content_type = 'text/html';
+
+            $phpmailer->From        = apply_filters( 'erp_mail_from', $from_email );
+            $phpmailer->FromName    = apply_filters( 'erp_mail_from_name', $from_name );
+            $phpmailer->ContentType = apply_filters( 'erp_mail_content_type', $content_type );
+
+            //Return-Path
+            $phpmailer->Sender = apply_filters( 'erp_mail_return_path', $phpmailer->From );
+
+            if ( ! empty( $custom_headers ) ) {
+                foreach ( $custom_headers as $key => $value ) {
+                    $phpmailer->addCustomHeader( $key, $value );
+                }
+            }
+
+            if ( isset( $erp_email_smtp_settings['debug'] ) && $erp_email_smtp_settings['debug'] === 'yes' ) {
+                $phpmailer->SMTPDebug = true;
+            }
+
+            if ( isset( $erp_email_smtp_settings['enable_smtp'] ) && $erp_email_smtp_settings['enable_smtp'] === 'yes' ) {
+                $phpmailer->Mailer = 'smtp'; //'smtp', 'mail', or 'sendmail'
+
+                $phpmailer->Host       = $erp_email_smtp_settings['mail_server'];
+                $phpmailer->SMTPSecure = ( $erp_email_smtp_settings['authentication'] !== '' ) ? $erp_email_smtp_settings['authentication'] : 'smtp';
+                $phpmailer->Port       = $erp_email_smtp_settings['port'];
+
+                if ( $erp_email_smtp_settings['authentication'] !== '' ) {
+                    $phpmailer->SMTPAuth = true;
+                    $phpmailer->Username = $erp_email_smtp_settings['username'];
+                    $phpmailer->Password = $erp_email_smtp_settings['password'];
+                }
+            }
+        };
+
+        add_action( 'phpmailer_init', $callback );
+
+        ob_start();
+        $is_mail_sent = wp_mail( $to, $subject, $message, $headers, $attachments );
+        $debug_log    = ob_get_clean();
+
+        if ( ! $is_mail_sent ) {
+            error_log( print_r( $debug_log, true ) );
+        }
+
+        remove_action( 'phpmailer_init', $callback );
+    } else if ( erp_is_mailgun_enabled() ) {
+        $erp_mailgun_settings = get_option( 'erp_settings_erp-email_mailgun', [] );
 
         if ( ! isset( $erp_email_settings['from_email'] ) ) {
             $from_email = get_option( 'admin_email' );
@@ -1564,49 +1616,31 @@ function erp_mail( $to, $subject, $message, $headers = '', $attachments = [], $c
 
         $content_type = 'text/html';
 
-        $phpmailer->From        = apply_filters( 'erp_mail_from', $from_email );
-        $phpmailer->FromName    = apply_filters( 'erp_mail_from_name', $from_name );
-        $phpmailer->ContentType = apply_filters( 'erp_mail_content_type', $content_type );
+        $from_email   = apply_filters( 'erp_mail_from', $from_email );
+        $from_name    = apply_filters( 'erp_mail_from_name', $from_name );
+        $content_type = apply_filters( 'erp_mail_content_type', $content_type );
 
-        //Return-Path
-        $phpmailer->Sender = apply_filters( 'erp_mail_return_path', $phpmailer->From );
+        $private_api_key = ! empty( $erp_mailgun_settings['private_api_key'] ) ? $erp_mailgun_settings['private_api_key'] : '';
+        $domain          = ! empty( $erp_mailgun_settings['domain'] ) ? $erp_mailgun_settings['domain'] : '';
+        $region          = ! empty( $erp_mailgun_settings['region'] ) ? $erp_mailgun_settings['region'] : '';
 
-        if ( ! empty( $custom_headers ) ) {
-            foreach ( $custom_headers as $key => $value ) {
-                $phpmailer->addCustomHeader( $key, $value );
-            }
+        if ( ! empty( $private_api_key ) && ! empty( $domain ) && ! empty( $region ) ) {
+            $mailgun = new \WeDevs\ERP\Email_Mailgun( $private_api_key, $region, $domain );
+
+            $data = [
+                'subject'         => $subject,
+                'from_address'    => ['email' => $from_email, 'name' => $from_name],
+                'to_address'      => ['email' => $to, 'name' => ''],
+                'cc_address'      => ['email' => '', 'name' => ''],
+                'headers'         => $headers,
+                'customer_header' => $custom_headers,
+                'attachment'      => $attachments,
+                'message'         => $message
+            ];
+
+            $mailgun->send_email( $data );
         }
-
-        if ( isset( $erp_email_smtp_settings['debug'] ) && $erp_email_smtp_settings['debug'] === 'yes' ) {
-            $phpmailer->SMTPDebug = true;
-        }
-
-        if ( isset( $erp_email_smtp_settings['enable_smtp'] ) && $erp_email_smtp_settings['enable_smtp'] === 'yes' ) {
-            $phpmailer->Mailer = 'smtp'; //'smtp', 'mail', or 'sendmail'
-
-            $phpmailer->Host       = $erp_email_smtp_settings['mail_server'];
-            $phpmailer->SMTPSecure = ( $erp_email_smtp_settings['authentication'] !== '' ) ? $erp_email_smtp_settings['authentication'] : 'smtp';
-            $phpmailer->Port       = $erp_email_smtp_settings['port'];
-
-            if ( $erp_email_smtp_settings['authentication'] !== '' ) {
-                $phpmailer->SMTPAuth = true;
-                $phpmailer->Username = $erp_email_smtp_settings['username'];
-                $phpmailer->Password = $erp_email_smtp_settings['password'];
-            }
-        }
-    };
-
-    add_action( 'phpmailer_init', $callback );
-
-    ob_start();
-    $is_mail_sent = wp_mail( $to, $subject, $message, $headers, $attachments );
-    $debug_log    = ob_get_clean();
-
-    if ( ! $is_mail_sent ) {
-        error_log( $debug_log );
     }
-
-    remove_action( 'phpmailer_init', $callback );
 
     return $is_mail_sent;
 }
@@ -1912,7 +1946,7 @@ function erp_email_settings_javascript() {
  * @return bool
  */
 function erp_is_imap_active() {
-    $options = get_option( 'erp_settings_erp-crm_email_connect_imap', [] );
+    $options = get_option( 'erp_settings_erp-email_imap', [] );
 
     $imap_status = (bool) isset( $options['imap_status'] ) ? $options['imap_status'] : 0;
     $enable_imap = ( isset( $options['enable_imap'] ) && $options['enable_imap'] === 'yes' ) ? true : false;
@@ -1935,6 +1969,23 @@ function erp_is_smtp_enabled() {
     $erp_email_smtp_settings = get_option( 'erp_settings_erp-email_smtp', [] );
 
     if ( isset( $erp_email_smtp_settings['enable_smtp'] ) && filter_var( $erp_email_smtp_settings['enable_smtp'], FILTER_VALIDATE_BOOLEAN ) ) {
+        return true;
+    }
+
+    return false;
+}
+
+/**
+ * Check if the ERP Email Mailgun settings is enabled or not
+ *
+ * @since 1.10.0
+ *
+ * @return bool
+ */
+function erp_is_mailgun_enabled() {
+    $erp_email_mailgun_settings = get_option( 'erp_settings_erp-email_mailgun', [] );
+
+    if ( isset( $erp_email_mailgun_settings['enable_mailgun'] ) && filter_var( $erp_email_mailgun_settings['enable_mailgun'], FILTER_VALIDATE_BOOLEAN ) ) {
         return true;
     }
 
@@ -2948,7 +2999,7 @@ function filter_enabled_email( $email ) {
         return $email;
     }
     add_filter( 'erp_email_recipient_' . $email->id, function ( $recipient, $object ) {
-        return '';
+        return $recipient;
     }, 10, 2 );
 
     return $email;
@@ -3306,7 +3357,7 @@ function erp_is_valid_employee_id( $emp_id ) {
  * @return bool
  */
 function erp_is_valid_currency_amount( $amount ) {
-    return preg_match( '/^[0-9](?:,?[0-9])*(?:.[0-9]{4})?$/', $amount );
+    return preg_match( '/^[0-9]+(\.[0-9]{1,2})?$/', $amount );
 }
 
 /**
@@ -3415,9 +3466,9 @@ function erp_disable_mysql_strict_mode() {
  * Queue some JavaScript code to be output in the footer.
  *
  * @since 1.9.0
- * 
+ *
  * @param string $code Code.
- * 
+ *
  * @return void
  */
 function erp_enqueue_js( $code ) {
@@ -3432,9 +3483,9 @@ function erp_enqueue_js( $code ) {
 
 /**
  * Output any queued javascript code in the footer.
- * 
+ *
  * @since 1.9.0
- * 
+ *
  * @return void Print JS Code
  */
 function erp_print_js() {
@@ -3486,6 +3537,7 @@ function erp_reset_data() {
             'erp_email_settings_new-task-assigned', 'erp_setup_wizard_ran', 'erp_settings_general',
             'erp_settings_accounting', 'erp_settings_erp-hr_workdays', 'wp_erp_activation_dismiss',
             '_erp_admin_menu', '_erp_adminbar_menu', 'erp_settings_erp-email_general', 'erp_settings_erp-email_smtp',
+            'erp_settings_erp-email_mailgun', 'erp_settings_erp-email_gmail', 'erp_settings_erp-email_imap',
             '_erp_company', 'erp_settings_erp-crm_subscription', 'erp_acct_new_ledgers',
             'erp_email_settings_new-contact-assigned', 'erp_email_settings_hiring-anniversary-wish',
             'wp_erp_install_date', 'widget_erp-subscription-from-widget', 'erp_tracking_notice'
@@ -3637,4 +3689,21 @@ function erp_get_message( $args = [] ) {
     }
 
     return sprintf( __( '%s', 'erp' ), $args['message'] );
+}
+
+/**
+ * Convert a serialized corrupted String to an array
+ *
+ * @since 1.10.0
+ *
+ * @param string $serialized_string
+ *
+ * @return array converted array data
+ */
+function erp_serialize_string_to_array( $serialized_string ) {
+    $data = preg_replace_callback ( '!s:(\d+):"(.*?)";!', function( $match ) {
+        return ( $match[1] == strlen( $match[2] ) ) ? $match[0] : 's:' . strlen( $match[2] ) . ':"' . $match[2] . '";';
+    }, $serialized_string );
+
+    return unserialize( $data );
 }

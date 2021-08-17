@@ -81,10 +81,12 @@
                         <tr>
                             <td class="wperp-invoice-amounts" colspan="7">
                                 <ul>
-                                    <li><span>{{ __('Subtotal', 'erp') }}:</span> {{ moneyFormat( invoice.amount ) }}</li>
-                                    <li><span>{{ __('Discount', 'erp') }}:</span> (-) {{ moneyFormat( invoice.discount ) }}</li>
-                                    <li><span>{{ __('Tax', 'erp') }}:</span> (+) {{ moneyFormat( invoice.tax ) }}</li>
-                                    <li><span>{{ __('Total', 'erp') }}:</span> {{ moneyFormat( total ) }}</li>
+                                    <li><span>{{ __( 'Subtotal', 'erp' ) }}:</span> {{ moneyFormat( invoice.amount ) }}</li>
+                                    <li><span>{{ __( 'Discount', 'erp' ) }}:</span> (-) {{ moneyFormat( invoice.discount ) }}</li>
+                                    <li><span>{{ __( 'Tax', 'erp' ) }}:</span> (+) {{ moneyFormat( invoice.tax ) }}</li>
+                                    <li v-if="parseFloat( this.invoice.shipping ) > 0"><span>{{ __( 'Shipping', 'erp' ) }}:</span> (+) {{ moneyFormat( invoice.shipping ) }}</li>
+                                    <li v-if="parseFloat( this.invoice.shipping_tax ) > 0"><span>{{ __( 'Shipping Tax', 'erp' ) }}:</span> (+) {{ moneyFormat( invoice.shipping_tax ) }}</li>
+                                    <li><span>{{ __( 'Total', 'erp' ) }}:</span> {{ moneyFormat( total ) }}</li>
                                 </ul>
                             </td>
                         </tr>
@@ -96,7 +98,7 @@
 
         <trans-particulars :particulars="invoice.particulars" />
 
-        <div class="invoice-attachments d-print-none">
+        <div class="invoice-attachments d-print-none" v-if="invoice.attachments && invoice.attachments.length">
             <h4>{{ __('Attachments', 'erp') }}</h4>
             <a class="attachment-item" :href="attachment"
                 :key="index"
@@ -142,11 +144,15 @@ export default {
 
     computed: {
         total () {
-            if ( !this.invoice.amount ) {
+            if ( ! this.invoice.amount ) {
                 return '00.00';
             }
 
-            return parseFloat(this.invoice.amount) + parseFloat(this.invoice.tax) - parseFloat(this.invoice.discount);
+            return parseFloat( this.invoice.amount )
+                + parseFloat( this.invoice.tax )
+                + parseFloat( ! this.invoice.shipping ? 0 : this.invoice.shipping )
+                + parseFloat( ! this.invoice.shipping_tax ? 0 : this.invoice.shipping_tax )
+                - parseFloat( this.invoice.discount );
         }
     },
 

@@ -1,5 +1,6 @@
 import './i18n';
 import Vue from 'vue';
+import Vuex from 'vuex';
 import Datepicker from 'admin/components/base/Datepicker.vue';
 import ListTable from 'admin/components/list-table/ListTable.vue';
 import Dropdown from 'admin/components/base/Dropdown.vue';
@@ -35,6 +36,7 @@ window.acct = {
 
 // assign libs to window for global use
 window.acct.libs['Vue']                 = Vue;
+window.acct.libs['Vuex']                = Vuex;
 window.acct.libs['Datepicker']          = Datepicker;
 window.acct.libs['ListTable']           = ListTable;
 window.acct.libs['Dropdown']            = Dropdown;

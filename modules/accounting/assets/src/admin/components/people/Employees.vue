@@ -1,10 +1,14 @@
 <template>
     <div class="app-employees">
         <h2 class="add-new-people">
-            <span>{{ __('Employees', 'erp') }}</span>
-            <span class="erp-help-tip .erp-tips" :title="__('The Employee list is coming from HR. You can not create an employee here. To create a new employee, go to HR > Employees.', 'erp')"></span>
+            <span>{{ __( 'Employees', 'erp' ) }}</span>
+
+            <span class="erp-help-tip .erp-tips"
+                :title="__( 'The Employee list is coming from HR. You can not create an employee here. To create a new employee, go to HR > People > Employees.', 'erp' )" />
         </h2>
+
         <list-table
+            tableClass="wperp-table table-striped table-dark"
             action-column="actions"
             :columns="columns"
             :rows="row_data"
@@ -117,9 +121,20 @@ export default {
 };
 </script>
 
-<style scoped>
-    .app-employees .erp-help-tip {
-        font-size: 1.1em;
-        bottom   : 0.2rem;
+<style lang="less">
+    .app-employees {
+        .erp-help-tip {
+            font-size: 1.1em;
+            bottom   : 0.2rem;
+        }
+
+        @media (min-width: 783px) {
+            .wperp-table tbody tr {
+                td:last-child,
+                tr:last-child {
+                    text-align: left !important;
+                }
+            }
+        }
     }
 </style>

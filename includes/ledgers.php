@@ -515,6 +515,14 @@ $old_ledgers = [
         'chart_id'    => 1,
         'name'        => 'Savings Account',
     ],
+    [
+        'code'        => '221',
+        'id'          => 63,
+        'system'      => 1,
+        'category_id' => 7,
+        'chart_id'    => 2,
+        'name'        => 'Shipment Tax',
+    ],
 ];
 
 $ledgers = [
@@ -686,14 +694,19 @@ $ledgers = [
             'system' => 1,
         ],
         [
+            'name'   => 'Shipment',
+            'code'   => 1411,
+            'system' => 1,
+        ],
+        [
             'name'   => 'Gain on Disposal of Plant Assets',
             'code'   => 1404,
             'system' => 1,
         ],
         [
-        'name'    => 'Asset Sales',
-        'code'    => 1405,
-        'system'  => 1,
+            'name'    => 'Asset Sales',
+            'code'    => 1405,
+            'system'  => 1,
         ],
         [
             'name'    => 'Sales Return Discount',

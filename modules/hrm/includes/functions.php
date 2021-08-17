@@ -587,9 +587,7 @@ function erp_hr_get_people_menu_html( $selected = '' ) {
     <div class="erp-custom-menu-container">
         <ul class="erp-nav">
             <?php foreach ( $dropdown as $key => $value ) : ?>
-                <?php if ( 'announcement' === $key && current_user_can( $value['cap'] ) ) : ?>
-                    <li class="<?php echo $key === $selected ? $key . ' active' : $key; ?>"><a href="<?php echo admin_url( 'edit.php?post_type=erp_hr_announcement' ); ?>" class="" data-key="<?php echo $key; ?>"><?php echo $value['title']; ?></a></li>
-                <?php elseif ( current_user_can( $value['cap'] ) ) : ?>
+                <?php if ( current_user_can( $value['cap'] ) ) : ?>
                     <li class="<?php echo $key === $selected ? $key . ' active' : $key; ?>"><a href="<?php echo add_query_arg( array( 'sub-section' => $key ), admin_url( 'admin.php?page=erp-hr&section=people' ) ); ?>" class="" data-key="<?php echo $key; ?>"><?php echo $value['title']; ?></a></li>
                 <?php endif; ?>
             <?php endforeach; ?>

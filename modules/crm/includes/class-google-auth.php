@@ -119,7 +119,7 @@ class Google_Auth {
     }
 
     public function has_credentials() {
-        $options = get_option( 'erp_settings_erp-crm_email_connect_gmail', [] );
+        $options = get_option( 'erp_settings_erp-email_gmail', [] );
 
         if ( !isset( $options['client_id'] ) || empty( $options['client_id'] ) ) {
             return false;
@@ -172,7 +172,7 @@ class Google_Auth {
     }
 
     public function get_settings_url() {
-        $settings_url = admin_url( 'admin.php?page=erp-settings#/erp-crm/email_connect/gmail' );
+        $settings_url = admin_url( 'admin.php?page=erp-settings#/erp-email/email_connect' );
 
         return $settings_url;
     }
