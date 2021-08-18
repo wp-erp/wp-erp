@@ -1,6 +1,6 @@
 const helpers = require('../../pages/helpers');
 Feature('Designation');
-Scenario('addDepartment', ({ I, loginAs}) => {
+Scenario('addDesignation', ({ I, loginAs}) => {
     loginAs('admin');
     helpers.hrmDashboard();
     helpers.peoplePage();

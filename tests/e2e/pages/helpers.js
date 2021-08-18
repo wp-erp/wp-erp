@@ -52,7 +52,6 @@ module.exports = {
 
     addDepartment() {
         I.amOnPage('wp-admin/admin.php?page=erp-hr&section=people&sub-section=department');
-        I.click('//*[@id="wpbody-content"]/div[2]/ul/li[2]');
         I.click('Departments');
         I.click('//*[@id="erp-new-dept"]');
         I.fillField('Department Title', 'Business');
@@ -66,7 +65,6 @@ module.exports = {
 
     addDesignation() {
         I.amOnPage('wp-admin/admin.php?page=erp-hr&section=people&sub-section=designation');
-        I.click('//*[@id="wpbody-content"]/div[2]/ul/li[2]');
         I.click('Designations');
         I.click('//*[@id="erp-new-designation"]');
         I.fillField('Designation Title', 'Product Designer');

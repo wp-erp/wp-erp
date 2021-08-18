@@ -27,10 +27,14 @@ selenium-standalone start
 Create a test folder and under this run :
 
 ```
-git clone https://github.com/Rink9/wp-erp.git
+git clone https://github.com/wp-erp/wp-erp.git
 ```
 ```
 cd wp-erp
+```
+```
+Switch branch 
+git checkout test/automation
 ```
 ```
 composer install
@@ -45,9 +49,10 @@ composer dumpautoload -o
 Open that test folder on visual studio code or your favourite Code Editor!
 
 ```
-Open example.codecept.conf.js file under wp-erp>tests>e2e
+Create a file named codecept.conf.js & copy code from example.codecept.conf.js
 ```
 ```
+In codecept.conf.js file 
 Give your test Url at line `12` [Must be a complete url eg:https://rinky.test]
 ```
 ```
