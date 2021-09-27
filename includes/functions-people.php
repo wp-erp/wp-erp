@@ -878,7 +878,7 @@ function erp_convert_to_people( $args = [] ) {
             'first_name'  => $wp_user->first_name,
             'last_name'   => $wp_user->last_name,
             'email'       => $wp_user->user_email,
-            'company'     => get_user_meta( $wp_user->ID, 'company', true ),
+            'company'     => 'contact' === $type ? get_user_meta( $wp_user->ID, 'company', true ) : $wp_user->first_name,
             'phone'       => get_user_meta( $wp_user->ID, 'phone', true ),
             'mobile'      => get_user_meta( $wp_user->ID, 'mobile', true ),
             'other'       => get_user_meta( $wp_user->ID, 'other', true ),
