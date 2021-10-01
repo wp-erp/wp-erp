@@ -17,10 +17,10 @@
                                     <ul class="erp-list" v-if="isObject(errors)">
                                         <li v-for="(error, index) in errors" :key="index" v-html="error"></li>
                                     </ul>
-                                    
-                                    <span v-else>{{ errors }}</span>
+
+                                    <span v-else v-html="errors"></span>
                                 </div>
-                                
+
                                 <table class="form-table">
                                     <tbody>
                                         <tr>
@@ -29,13 +29,13 @@
                                             </th>
                                             <td>
                                                 <input type="file" name="csv_file" id="csv_file" @change.prevent="processFields()" required />
-                                                
+
                                                 <p class="description">
                                                     {{ __('Upload a csv file.', 'erp') }}
                                                     <span class="erp-help-tip .erp-tips" :title="__('Make sure CSV meets the sample CSV format exactly.', 'erp')"></span>
                                                 </p>
-                                                
-                                                <p id="download_sample_wrap" v-if="sampleUrl">                    
+
+                                                <p id="download_sample_wrap" v-if="sampleUrl">
                                                     <button class="button button-primary"
                                                         id="erp-employee-sample-csv"
                                                         @click.prevent="downloadSample">
@@ -91,7 +91,7 @@ export default {
             peopleType: '',
             fieldsHtml: '',
             nonce: '',
-            error: '',
+            errors: '',
             showError: false,
         };
     },
@@ -135,11 +135,11 @@ export default {
                 },
                 error: function(error) {
                     self.showError = true;
-                    self.error     = error;
-                    
-                    jQuery("#wperp-import-customer-modal").animate({
-                        scrollTop: jQuery(".wperp-modal-body").offset().top
-                    }, 2000);
+                    self.errors     = error;
+
+                    jQuery("#import_form > div").animate({
+                        scrollTop: 0
+                    }, 'fast' );
                 }
             });
         },
@@ -183,7 +183,7 @@ export default {
                 reader    = new FileReader(),
                 first5000 = file.slice(0, 5000),
                 self      = this;
-            
+
             reader.readAsText(first5000);
 
             reader.onload = function (e) {
@@ -194,7 +194,7 @@ export default {
                     html            = '';
 
                 html += '<option value="">&mdash; Select Field &mdash;</option>';
-                
+
                 columnNames.forEach(function (item, index) {
                     item = item.replace(/"/g, "");
 
@@ -248,7 +248,7 @@ export default {
     .errors {
         margin: 0 20px;
         color: #f44336;
-        
+
         li {
             background: #f3f3f3;
             padding: 2px 10px;
