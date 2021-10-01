@@ -282,7 +282,7 @@ export default {
                     this.manageProgressStatus();
                     this.showImportError( error.response.data.message );
 
-                    jQuery("#import_form > div").animate({
+                    jQuery( "#import_form > div" ).animate({
                         scrollTop: 0
                     }, 'fast' );
                 });
@@ -290,7 +290,7 @@ export default {
                 this.manageProgressStatus();
                 this.showImportError( error.response.data.message );
 
-                jQuery("#import_form > div").animate({
+                jQuery( "#import_form > div" ).animate({
                     scrollTop: 0
                 }, 'fast' );
             });

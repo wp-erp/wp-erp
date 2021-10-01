@@ -1973,7 +1973,7 @@
                                     // swal('', error, 'error');
                                     $( '#erp-crm-csv-import-error' ).show();
                                     $( '#erp-crm-csv-import-error' ).html(error);
-                                    $( '#import_form > div' ).animate( { scrollTop: 0}, 'fast' );
+                                    $( '#import_form > div' ).animate( { scrollTop: 0 }, 'fast' );
                                 }
                             });
                         }
