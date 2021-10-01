@@ -137,7 +137,7 @@ export default {
                     self.showError = true;
                     self.errors     = error;
 
-                    jQuery("#import_form > div").animate({
+                    jQuery("#import_form > div").animate( {
                         scrollTop: 0
                     }, 'fast' );
                 }
