@@ -284,7 +284,9 @@ function erp_parent_sort( array $objects, array &$result = [], $parent = 0, $dep
         $parents[] = intval( $object->parent );
     }
 
-    $parent = ! empty( $parents ) ? min( $parents ) : 0;
+    if ( ! empty( $parents ) && min( $parents ) !== 0 ) {
+        return $objects;
+    }
 
     foreach ( $objects as $key => $object ) {
         if ( $object->parent == $parent ) {
