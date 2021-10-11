@@ -1076,7 +1076,7 @@ class Employee {
      */
     public function get_hiring_date() {
         if ( isset( $this->erp_user->hiring_date )
-             && is_valid_date( $this->erp_user->hiring_date )
+             && erp_is_valid_date( $this->erp_user->hiring_date )
              && $this->erp_user->hiring_date != '0000-00-00' ) {
             return $this->erp_user->hiring_date;
         }
@@ -1098,7 +1098,7 @@ class Employee {
 
         if (
             isset( $this->erp_user->date_of_birth )
-            && is_valid_date( $this->erp_user->date_of_birth )
+            && erp_is_valid_date( $this->erp_user->date_of_birth )
             && ( $this->erp_user->date_of_birth != '0000-00-00' )
         ) {
             $date = erp_current_datetime()->modify( $this->erp_user->date_of_birth )->format( 'Y-m-d' );
@@ -1435,7 +1435,7 @@ class Employee {
         }
 
         if ( isset( $args['dob'] ) && ! empty( $args['dob'] ) ) {
-            if ( ! is_valid_date( $args['dob'] ) ) {
+            if ( ! erp_is_valid_date( $args['dob'] ) ) {
                 return new WP_Error( 'invalid-required-params', __( 'Invalid date format', 'erp' ) );
             }
             $args['dob'] = gmdate( 'Y-m-d', strtotime( $args['dob'] ) );
@@ -1516,7 +1516,7 @@ class Employee {
             return new WP_Error( 'missing-required-params', __( 'Missing To Date', 'erp' ) );
         }
 
-        if ( ! is_valid_date( $args['from'] ) && $args['from'] ) {
+        if ( ! erp_is_valid_date( $args['from'] ) && $args['from'] ) {
             return new WP_Error( 'invalid-required-params', __( 'Invalid date format', 'erp' ) );
         }
 
@@ -2040,7 +2040,7 @@ class Employee {
             return new WP_Error( 'missing-required-params', __( 'Missing Date', 'erp' ) );
         }
 
-        if ( ! is_valid_date( $args['performance_date'] ) && $args['performance_date'] ) {
+        if ( ! erp_is_valid_date( $args['performance_date'] ) && $args['performance_date'] ) {
             return new WP_Error( 'invalid-required-params', __( 'Invalid date format', 'erp' ) );
         }
 
@@ -2065,7 +2065,7 @@ class Employee {
                 return new WP_Error( 'missing-required-params', __( 'Missing Date', 'erp' ) );
             }
 
-            if ( ! is_valid_date( $args['completion_date'] ) && $args['completion_date'] ) {
+            if ( ! erp_is_valid_date( $args['completion_date'] ) && $args['completion_date'] ) {
                 return new WP_Error( 'invalid-required-params', __( 'Invalid date format', 'erp' ) );
             }
 

@@ -50,7 +50,7 @@ function get_employee_breakdown_by_age( $employees ) {
     $_65_plus   = 0;
 
     foreach ( $employees as $employee ) {
-        if ( !is_valid_date( $employee->date_of_birth ) ) {
+        if ( ! erp_is_valid_date( $employee->date_of_birth ) ) {
             continue;
         }
 
@@ -315,7 +315,7 @@ function erp_hr_get_headcount( $date = '', $dept = '', $query_type = '' ) {
  *
  * @return bool
  */
-function is_valid_date( $str ) {
+function erp_hr_is_valid_date( $str ) {
     try {
         $dt = new DateTime( trim( $str ) );
     } catch ( Exception $e ) {
