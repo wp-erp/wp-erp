@@ -3067,7 +3067,7 @@ function erp_hr_get_financial_year_from_date( $date = null ) {
     }
 
     if ( ! is_numeric( $date ) ) {
-        if ( is_valid_date( $date ) ) {
+        if ( erp_is_valid_date( $date ) ) {
             $date = erp_current_datetime()->modify( $date )->setTime( 0, 0, 0 )->getTimestamp();
         } else {
             return null;
