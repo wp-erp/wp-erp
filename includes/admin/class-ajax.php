@@ -75,9 +75,19 @@ class Ajax {
     public function import_csv() {
         $this->verify_nonce( 'erp-import-export-nonce' );
 
-        if ( ! current_user_can( 'administrator' ) ) {
+        if ( ! is_user_logged_in() ) {
             $this->send_error( __( 'Sorry ! You do not have permission to access this page', 'erp' ) );
         }
+
+        $is_admin = current_user_can( 'administrator' );
+
+        $capability_for_type = [
+            'employee' => 'erp_create_employee',
+            'contact'  => 'erp_crm_add_contact',
+            'company'  => 'erp_crm_add_contact', //NB: no capability for company, using contact capability
+            'customer' => 'erp_ac_create_customer',
+            'vendor'   => 'erp_ac_create_vendor',
+        ];
 
         $fields   = ! empty( $_POST['fields'] )    ? array_map( 'sanitize_text_field', wp_unslash( $_POST['fields'] ) ) : [];
         $type     = ! empty( $_POST['type'] )      ? sanitize_text_field( wp_unslash( $_POST['type'] ) )                : '';
@@ -85,6 +95,10 @@ class Ajax {
 
         if ( ! in_array( $type, [ 'contact', 'company', 'employee', 'vendor', 'customer' ], true ) ) {
             $this->send_error( __( 'Unknown import type!', 'erp' ) );
+        }
+
+        if ( ! $is_admin && ! current_user_can( $capability_for_type[ $type ] ) ) {
+            $this->send_error( __( 'Sorry ! You do not have permission to access this page', 'erp' ) );
         }
 
         $files = wp_check_filetype_and_ext( $csv_file['tmp_name'], $csv_file['name'] );
