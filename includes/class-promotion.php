@@ -38,7 +38,7 @@ class Promotion {
         }
 
         if ( $current_time >= $promotion_start && $current_time <= $promotion_end ) {
-            $msg            = '<strong>Get Yourself a Spooky Delight!</strong></br>Enjoy up to <strong>40% OFF</strong> on <strong>WP ERP Pro</strong>.';
+            $msg            = '<strong>Get Yourself a Spooky Delight!</strong></br>Enjoy up to <strong>35% OFF</strong> on <strong>WP ERP Pro</strong>.';
             $option_name    = 'erp_halloween_offer_2021';
 
             $this->generate_notice( $msg, $option_name );
