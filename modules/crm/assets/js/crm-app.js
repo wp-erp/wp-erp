@@ -903,12 +903,7 @@ var vm = new Vue({
                         return false;
                     }
 
-                    if ( !vm.feeds ) {
-                        vm.feeds = [];
-                        vm.feeds[0] = resp.data;
-                    } else {
-                        vm.feeds.splice( 0, 0, resp.data );
-                    }
+                    vm.feeds.splice( 0, 0, resp.data );
 
                     if ( vm.feeds.length > vm.limit ) {
                         vm.feeds.$remove( vm.feeds[vm.feeds.length-1] );
