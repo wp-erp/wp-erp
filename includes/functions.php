@@ -3283,13 +3283,18 @@ function erp_is_valid_age( $age ) {
  * @return bool
  */
 function erp_is_valid_date( $date ) {
-    if ( count( explode( '-', $date ) ) === 3 ) {
-        $date_formatted = gmdate( 'Y-m-d', strtotime( $date ) );
-        $date_arr       = explode( '-', $date_formatted );
+    try {
+        $dt = new DateTime( trim( $date ) );
+    } catch ( Exception $e ) {
+        return false;
+    }
 
-        if ( checkdate( $date_arr[1], $date_arr[2], $date_arr[0] ) ) {
-            return true;
-        }
+    $month = $dt->format( 'm' );
+    $day   = $dt->format( 'd' );
+    $year  = $dt->format( 'Y' );
+
+    if ( checkdate( $month, $day, $year ) ) {
+        return true;
     }
 
     return false;
