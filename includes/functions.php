@@ -1386,9 +1386,20 @@ function erp_process_csv_export() {
         return new \WP_Error( 'no-permission', __( 'Nonce verification failed!', 'erp' ) );
     }
 
-    if ( ! current_user_can( 'administrator' ) ) {
+    if ( ! is_user_logged_in() ) {
         return new \WP_Error( 'no-permission', __( 'Sorry ! You do not have permission to access this page', 'erp' ) );
     }
+
+    $is_admin = current_user_can( 'administrator' );
+
+    $capability_for_type = [
+        'employee' => 'erp_list_employee',
+        'contact'  => 'erp_crm_list_contact',
+        'company'  => 'erp_crm_list_contact', //NB: no capability for company in CRM so using contact capability
+        'customer' => 'erp_ac_view_customer',
+        'vendor'   => 'erp_ac_view_vendor',
+        'product'  => 'erp_ac_manager',
+    ];
 
     if ( isset( $_POST['erp_export_csv'] ) ) {
         define( 'ERP_IMPORT_EXPORT', true );
@@ -1402,6 +1413,14 @@ function erp_process_csv_export() {
             $is_people      = false;
             $type           = sanitize_text_field( wp_unslash( $_POST['type'] ) );
             $fields         = array_map( 'sanitize_text_field', wp_unslash( $_POST['fields'] ) );
+
+            if ( ! in_array( $type, [ 'contact', 'company', 'employee', 'vendor', 'customer', 'product' ], true ) ) {
+                return new \WP_Error( 'no-permission', __( 'Unknown import type!', 'erp' ) );
+            }
+
+            if ( ! $is_admin && ! current_user_can( $capability_for_type[ $type ] ) ) {
+                return new \WP_Error( 'no-permission', __( 'Sorry ! You do not have permission to access this page', 'erp' ) );
+            }
 
             switch ( $type ) {
                 case 'employee':
