@@ -38,7 +38,7 @@
 
         <a href="#" @click.prevent="addSearchSegment()" id="erp-contact-search-segmen" class="erp-search-segment add-new-h2">{{{ segmentBtnText }}}</a>
 
-        <?php if ( current_user_can( 'erp_crm_add_contact' ) ) : ?>
+        <?php if ( current_user_can( 'erp_crm_manager' ) ) : ?>
             <div class="erp-btn-group" id="crm-import-export">
                 <button @click.prevent="importCsv( 'contact' )"><?php esc_html_e( 'Import', 'erp' ); ?></button>
                 <button @click.prevent="exportCsv( 'contact' )"><?php esc_html_e( 'Export', 'erp' ); ?></button>
