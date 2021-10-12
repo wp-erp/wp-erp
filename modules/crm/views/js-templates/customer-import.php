@@ -70,7 +70,7 @@
                     <?php
                     $current_user_id = get_current_user_id();
 
-                    if ( erp_crm_is_current_user_crm_agent() ) {
+                    if ( ! erp_crm_is_current_user_manager() && erp_crm_is_current_user_crm_agent() ) {
                         $users = [ $current_user_id => $users[ $current_user_id ] ];
                     }
 
