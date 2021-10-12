@@ -30,8 +30,10 @@
         <?php esc_attr_e( 'Contacts', 'erp' ); ?>
 
         <?php if ( current_user_can( 'erp_crm_add_contact' ) ) : ?>
-            <a href="#" @click.prevent="addContact( 'contact', '<?php esc_attr_e( 'Add New Contact', 'erp' ); ?>' )" id="erp-customer-new" class="erp-contact-new add-new-h2"><?php esc_attr_e( 'Add New Contact', 'erp' ); ?></a>
-            <a href="#" @click.prevent="importUsers()" id="erp-contact-import-users" class="erp-contact-import-users add-new-h2"><?php esc_attr_e( 'Import Users', 'erp' ); ?></a>
+            <a href="#" @click.prevent="addCo96ntact( 'contact', '<?php esc_attr_e( 'Add New Contact', 'erp' ); ?>' )" id="erp-customer-new" class="erp-contact-new add-new-h2"><?php esc_attr_e( 'Add New Contact', 'erp' ); ?></a>
+            <?php if ( erp_crm_is_current_user_manager() ) { ?>
+                <a href="#" @click.prevent="importUsers()" id="erp-contact-import-users" class="erp-contact-import-users add-new-h2"><?php esc_attr_e( 'Import Users', 'erp' ); ?></a>
+            <?php } ?>
         <?php endif; ?>
 
         <a href="#" @click.prevent="addSearchSegment()" id="erp-contact-search-segmen" class="erp-search-segment add-new-h2">{{{ segmentBtnText }}}</a>

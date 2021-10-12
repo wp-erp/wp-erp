@@ -566,6 +566,10 @@ class Ajax {
             return;
         }
 
+        if ( erp_crm_is_current_user_crm_agent() ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
         define( 'ERP_IS_IMPORTING', true );
 
         $limit   = 50; // Limit to import per request
