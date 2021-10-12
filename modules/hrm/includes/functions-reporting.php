@@ -50,7 +50,7 @@ function get_employee_breakdown_by_age( $employees ) {
     $_65_plus   = 0;
 
     foreach ( $employees as $employee ) {
-        if ( !is_valid_date( $employee->date_of_birth ) ) {
+        if ( ! erp_is_valid_date( $employee->date_of_birth ) ) {
             continue;
         }
 
@@ -308,27 +308,31 @@ function erp_hr_get_headcount( $date = '', $dept = '', $query_type = '' ) {
     return $count;
 }
 
-/**
- * Check if a string is valid date
- *
- * @since 0.1
- *
- * @return bool
- */
-function is_valid_date( $str ) {
-    try {
-        $dt = new DateTime( trim( $str ) );
-    } catch ( Exception $e ) {
-        return false;
-    }
+if ( ! function_exists( 'is_valid_date' ) ) :
+    /**
+     * Check if a string is valid date
+     *
+     * @since 0.1
+     *
+     * @deprecated 1.10.1
+     *
+     * @return bool
+     */
+    function is_valid_date( $str ) {
+        try {
+            $dt = new DateTime( trim( $str ) );
+        } catch ( Exception $e ) {
+            return false;
+        }
 
-    $month = $dt->format( 'm' );
-    $day   = $dt->format( 'd' );
-    $year  = $dt->format( 'Y' );
+        $month = $dt->format( 'm' );
+        $day   = $dt->format( 'd' );
+        $year  = $dt->format( 'Y' );
 
-    if ( checkdate( $month, $day, $year ) ) {
-        return true;
-    } else {
-        return false;
+        if ( checkdate( $month, $day, $year ) ) {
+            return true;
+        } else {
+            return false;
+        }
     }
-}
+endif;

@@ -25,7 +25,7 @@
                                     <span v-if="isWorking" class="erp-loader"></span>
                                     <span v-if="isWorking" class="loading-text">{{ workingText }}...</span>
                                 </div>
-                                
+
                                 <table class="form-table">
                                     <tbody>
                                         <tr>
@@ -34,13 +34,13 @@
                                             </th>
                                             <td>
                                                 <input type="file" name="csv_file" id="csv_file" @change="processFile" required />
-                                                
+
                                                 <p class="description">
                                                     {{ __('Upload a csv file.', 'erp') }}
                                                     <span class="erp-help-tip .erp-tips" :title="__('Make sure CSV meets the sample CSV format exactly.', 'erp')"></span>
                                                 </p>
-                                                
-                                                <p id="download_sample_wrap" v-if="sampleUrl">                    
+
+                                                <p id="download_sample_wrap" v-if="sampleUrl">
                                                     <button class="wperp-btn btn--primary"
                                                         id="erp-employee-sample-csv"
                                                         @click.prevent="downloadSample">
@@ -66,7 +66,7 @@
                                                 <label for="default_product_cat">
                                                     {{ __( 'Default Product Category', 'erp' ) }}
                                                     <span class="required"> *</span>
-                                                    <span 
+                                                    <span
                                                         class="erp-help-tip .erp-tips"
                                                         :title="__('If product category is null or not found, this default category will be assigned.', 'erp')">
                                                     </span>
@@ -239,7 +239,7 @@ export default {
             if ( ! this.defaultProductType.id ) {
                 return this.showAlert('error', __('Please select a default product type', 'erp') );
             }
-            
+
             this.manageProgressStatus( __('Validating data', 'erp') );
 
             formData.append( 'csv_file', this.csvFile );
@@ -264,7 +264,7 @@ export default {
                 }
             ).then(response => {
                 this.manageProgressStatus( __('Importing data', 'erp') );
-                
+
                 HTTP.post(
                     'products/csv/import',
                     {
@@ -278,13 +278,21 @@ export default {
                     this.showAlert('success', __(`${response.data} products have been imported successfully`, 'erp') );
 
                     this.manageProgressStatus();
-                }).catch(error => {  
+                }).catch(error => {
                     this.manageProgressStatus();
                     this.showImportError( error.response.data.message );
+
+                    jQuery( "#import_form > div" ).animate( {
+                        scrollTop: 0
+                    }, 'fast' );
                 });
-            }).catch(error => {  
+            }).catch(error => {
                 this.manageProgressStatus();
                 this.showImportError( error.response.data.message );
+
+                jQuery( "#import_form > div" ).animate( {
+                    scrollTop: 0
+                }, 'fast' );
             });
         },
 
@@ -315,7 +323,7 @@ export default {
 
         mapFields() {
             let erpFields = erp_acct_var.erp_fields;
-        
+
             if ( erpFields[this.type] !== undefined ) {
                 this.fields    = erpFields[this.type].fields;
                 this.reqFields = erpFields[this.type].required_fields;
@@ -382,13 +390,13 @@ export default {
         showImportError(error) {
             this.errors    = error;
             this.showError = true;
-            
+
             document.getElementById('erp-import-modal-body').scrollIntoView({ behavior: "smooth" });
         },
 
         manageProgressStatus(text) {
             document.getElementById('erp-import-processing').scrollIntoView();
-            
+
             this.processingClass = text ? 'import-processing' : '';
             this.isWorking       = text ? true : false;
             this.workingText     = text;
@@ -412,7 +420,7 @@ export default {
     .errors {
         margin: 0 20px;
         color: #f44336;
-        
+
         li {
             background: #f3f3f3;
             padding: 2px 10px;

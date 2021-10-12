@@ -31,12 +31,14 @@
 
         <?php if ( current_user_can( 'erp_crm_add_contact' ) ) : ?>
             <a href="#" @click.prevent="addContact( 'contact', '<?php esc_attr_e( 'Add New Contact', 'erp' ); ?>' )" id="erp-customer-new" class="erp-contact-new add-new-h2"><?php esc_attr_e( 'Add New Contact', 'erp' ); ?></a>
-            <a href="#" @click.prevent="importUsers()" id="erp-contact-import-users" class="erp-contact-import-users add-new-h2"><?php esc_attr_e( 'Import Users', 'erp' ); ?></a>
+            <?php if ( erp_crm_is_current_user_manager() ) { ?>
+                <a href="#" @click.prevent="importUsers()" id="erp-contact-import-users" class="erp-contact-import-users add-new-h2"><?php esc_attr_e( 'Import Users', 'erp' ); ?></a>
+            <?php } ?>
         <?php endif; ?>
 
         <a href="#" @click.prevent="addSearchSegment()" id="erp-contact-search-segmen" class="erp-search-segment add-new-h2">{{{ segmentBtnText }}}</a>
 
-        <?php if ( current_user_can( 'erp_crm_add_contact' ) ) : ?>
+        <?php if ( current_user_can( 'erp_crm_manager' ) ) : ?>
             <div class="erp-btn-group" id="crm-import-export">
                 <button @click.prevent="importCsv( 'contact' )"><?php esc_html_e( 'Import', 'erp' ); ?></button>
                 <button @click.prevent="exportCsv( 'contact' )"><?php esc_html_e( 'Export', 'erp' ); ?></button>

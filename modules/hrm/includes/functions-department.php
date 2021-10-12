@@ -79,7 +79,7 @@ function erp_hr_get_departments( $args = [] ) {
     if ( false === $departments ) {
         $department = new \WeDevs\ERP\HRM\Models\Department();
 
-        if ( !empty( $args['s'] ) ) {
+        if ( ! empty( $args['s'] ) ) {
             if ( isset( $_GET['s'] ) ) {
                 $s = sanitize_text_field( wp_unslash( $_GET['s'] ) );
             } else {
@@ -100,7 +100,7 @@ function erp_hr_get_departments( $args = [] ) {
         $departments = [];
 
         if ( $results ) {
-            foreach ( $results as $key => $row ) {
+            foreach ( $results as $row ) {
                 if ( true === $args['no_object'] ) {
                     $departments[] = $row;
                 } else {

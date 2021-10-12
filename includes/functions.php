@@ -1386,9 +1386,18 @@ function erp_process_csv_export() {
         return new \WP_Error( 'no-permission', __( 'Nonce verification failed!', 'erp' ) );
     }
 
-    if ( ! current_user_can( 'administrator' ) ) {
+    if ( ! is_user_logged_in() ) {
         return new \WP_Error( 'no-permission', __( 'Sorry ! You do not have permission to access this page', 'erp' ) );
     }
+
+    $allowed_caps = [
+        'employee' => 'erp_list_employee',
+        'contact'  => 'erp_crm_manager',
+        'company'  => 'erp_crm_manager',
+        'customer' => 'erp_ac_view_customer',
+        'vendor'   => 'erp_ac_view_vendor',
+        'product'  => 'erp_ac_manager',
+    ];
 
     if ( isset( $_POST['erp_export_csv'] ) ) {
         define( 'ERP_IMPORT_EXPORT', true );
@@ -1402,6 +1411,14 @@ function erp_process_csv_export() {
             $is_people      = false;
             $type           = sanitize_text_field( wp_unslash( $_POST['type'] ) );
             $fields         = array_map( 'sanitize_text_field', wp_unslash( $_POST['fields'] ) );
+
+            if ( ! in_array( $type, [ 'contact', 'company', 'employee', 'vendor', 'customer', 'product' ], true ) ) {
+                return new \WP_Error( 'no-permission', __( 'Unknown import type!', 'erp' ) );
+            }
+
+            if ( ! current_user_can( 'administrator' ) && ! current_user_can( $allowed_caps[ $type ] ) ) {
+                return new \WP_Error( 'no-permission', __( 'Sorry ! You do not have permission to access this page', 'erp' ) );
+            }
 
             switch ( $type ) {
                 case 'employee':
@@ -1450,8 +1467,6 @@ function erp_process_csv_export() {
                     'number' => - 1,
                 ] );
             }
-
-            error_log( print_r($items,true));
 
             foreach ( $items as $index => $item ) {
                 if ( empty( $fields ) ) {
@@ -3283,13 +3298,18 @@ function erp_is_valid_age( $age ) {
  * @return bool
  */
 function erp_is_valid_date( $date ) {
-    if ( count( explode( '-', $date ) ) === 3 ) {
-        $date_formatted = gmdate( 'Y-m-d', strtotime( $date ) );
-        $date_arr       = explode( '-', $date_formatted );
+    try {
+        $dt = new DateTime( trim( $date ) );
+    } catch ( Exception $e ) {
+        return false;
+    }
 
-        if ( checkdate( $date_arr[1], $date_arr[2], $date_arr[0] ) ) {
-            return true;
-        }
+    $month = $dt->format( 'm' );
+    $day   = $dt->format( 'd' );
+    $year  = $dt->format( 'Y' );
+
+    if ( checkdate( $month, $day, $year ) ) {
+        return true;
     }
 
     return false;

@@ -824,6 +824,7 @@
                                 // swal('', error, 'error');
                                 $( '#erp-employee-csv-import-error' ).show();
                                 $( '#erp-employee-csv-import-error' ).html(error);
+                                $( '#import_form > div' ).animate( { scrollTop: 0 }, "fast" );
                             }
                         });
                     }
@@ -2036,7 +2037,7 @@
             sentToDetails: function( e ) {
                 var self    = $( e.target );
                 var content = self.data( 'more-content' );
-                
+
                 $.erpPopup({
                     title: wpErpHr.popup.sent_to,
                     button: '',
