@@ -237,6 +237,11 @@ class Ajax {
                     $contact_owner              = ! empty( $_POST['contact_owner'] )
                                                   ? absint( wp_unslash( $_POST['contact_owner'] ) )
                                                   : erp_crm_get_default_contact_owner();
+
+                    if ( 'contact' === $type && erp_crm_is_current_user_crm_agent() && $contact_owner !== get_current_user_id() ) {
+                        $this->send_error( __( 'CRM Agents can\'t import contacts other than their own', 'erp' ) );
+                    }
+
                     $line_data['contact_owner'] = $contact_owner;
                     $people                     = erp_insert_people( $line_data, true );
 
