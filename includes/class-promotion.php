@@ -27,21 +27,20 @@ class Promotion {
         if ( ! current_user_can( 'manage_options' ) ) {
             return;
         }
-        
+
         $current_time      = erp_current_datetime()->setTimezone ( new \DateTimeZone( 'America/New_York' ) );
-        $promotion_start   = $current_time->setDate( 2021, 07, 16 )->setTime( 9, 0, 0 );
-        // $promotion_end     = $promotion_start->modify( '+7 days' )->setTime( 23, 59, 59 );
-        $promotion_end     = $current_time->setDate( 2021, 07, 26 )->setTime( 23, 59, 59 );
-        
+        $promotion_start   = $current_time->setDate( 2021, 10, 21 )->setTime( 9, 0, 0 );
+        $promotion_end     = $current_time->setDate( 2021, 10, 31 )->setTime( 9, 0, 0 );
+
         // 2021-03-15 09:00:00 EST - 2021-03-22 23:59:59 EST
         if ( $current_time > $promotion_end || $current_time < $promotion_start ) {
             return;
         }
 
         if ( $current_time >= $promotion_start && $current_time <= $promotion_end ) {
-            $msg            = '<strong>Summer Sale!</strong></br>Chill out with <strong>weDevs</strong>.</br>Enjoy up to <strong>35% OFF</strong> on <strong>WP ERP Pro</strong>.';
-            $option_name    = 'erp_summer_sale_offer_2021';
-            
+            $msg            = '<strong>Get Yourself a Spooky Delight!</strong></br>Enjoy up to <strong>35% OFF</strong> on <strong>WP ERP Pro</strong>.';
+            $option_name    = 'erp_halloween_offer_2021';
+
             $this->generate_notice( $msg, $option_name );
             return;
         }
@@ -62,9 +61,8 @@ class Promotion {
             return;
         }
 
-        $offer_msg = '<p class="highlight-text">' . $msg . 
-                ' <a target="_blank" href="https://wperp.com/pricing/?nocache&utm_medium=text&utm_source=wordpress-erp-summer-sale2021">Get Now</a>
-            </p>';
+        $offer_msg = '<p class="highlight-text">' . sprintf( __( '%s', 'erp' ), $msg ) .
+                '</p><p><a style="padding:5px 15px;" target="_blank" href="https://wperp.com/pricing/?nocache&utm_medium=text&utm_source=wordpress-erp-halloween20212021">' . __( 'Get Now', 'erp' ) . '</a></p>';
         ?>
         <div class="notice is-dismissible erp-promotional-offer-notice" id="erp-promotional-offer-notice">
             <?php echo wp_kses_post( $offer_msg ); ?>
@@ -93,7 +91,7 @@ class Promotion {
                 font-size: 16px;
                 font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
             }
-            
+
             .erp-promotional-offer-notice a {
                 color: lightcyan;
                 border: 0.5px solid lightseagreen;

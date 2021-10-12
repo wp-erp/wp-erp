@@ -521,7 +521,10 @@ class Employee {
             ] );
         }
 
+        $data['personal']['user_email'] = $user_email;
+
         $this->update_employee( array_merge( $data['work'], $data['personal'], $data['additional'] ) );
+
         do_action( 'erp_hr_employee_new', $this->id, $data );
 
         erp_hrm_purge_cache( [ 'list' => 'employee', 'employee_id' => $employee_id ] );
@@ -1073,7 +1076,7 @@ class Employee {
      */
     public function get_hiring_date() {
         if ( isset( $this->erp_user->hiring_date )
-             && is_valid_date( $this->erp_user->hiring_date )
+             && erp_is_valid_date( $this->erp_user->hiring_date )
              && $this->erp_user->hiring_date != '0000-00-00' ) {
             return $this->erp_user->hiring_date;
         }
@@ -1095,7 +1098,7 @@ class Employee {
 
         if (
             isset( $this->erp_user->date_of_birth )
-            && is_valid_date( $this->erp_user->date_of_birth )
+            && erp_is_valid_date( $this->erp_user->date_of_birth )
             && ( $this->erp_user->date_of_birth != '0000-00-00' )
         ) {
             $date = erp_current_datetime()->modify( $this->erp_user->date_of_birth )->format( 'Y-m-d' );
@@ -1291,15 +1294,15 @@ class Employee {
      */
     public function get_birthday() {
         $birth_date = $this->get_date_of_birth();
-        
+
         return erp_is_valid_date( $birth_date ) ? erp_format_date( $birth_date ) : $birth_date;
     }
 
     /**
      * Get employee's job id
-     * 
+     *
      * @since 1.8.5
-     * 
+     *
      * @return string
      */
     public function get_job_id() {
@@ -1432,7 +1435,7 @@ class Employee {
         }
 
         if ( isset( $args['dob'] ) && ! empty( $args['dob'] ) ) {
-            if ( ! is_valid_date( $args['dob'] ) ) {
+            if ( ! erp_is_valid_date( $args['dob'] ) ) {
                 return new WP_Error( 'invalid-required-params', __( 'Invalid date format', 'erp' ) );
             }
             $args['dob'] = gmdate( 'Y-m-d', strtotime( $args['dob'] ) );
@@ -1513,7 +1516,7 @@ class Employee {
             return new WP_Error( 'missing-required-params', __( 'Missing To Date', 'erp' ) );
         }
 
-        if ( ! is_valid_date( $args['from'] ) && $args['from'] ) {
+        if ( ! erp_is_valid_date( $args['from'] ) && $args['from'] ) {
             return new WP_Error( 'invalid-required-params', __( 'Invalid date format', 'erp' ) );
         }
 
@@ -1742,7 +1745,7 @@ class Employee {
                 if ( 'terminated' === $args['category'] ) {
                     $update_data['termination_date'] = $args['date'];
                 }
-                
+
                 $this->erp_user->update( $update_data );
 
                 do_action( 'erp_hr_employee_after_update_status', $this->erp_user->user_id, $args['category'], $args['date'] );
@@ -1891,7 +1894,7 @@ class Employee {
         ];
 
         $args = wp_parse_args( $args, $default );
-        
+
         if ( empty( $args['designation'] ) || ! array_key_exists( $args['designation'], erp_hr_get_designation_dropdown_raw() ) ) {
             return new \WP_Error( 'invalid-designation-id', __( 'Invalid Designation Type', 'erp' ) );
         }
@@ -2037,7 +2040,7 @@ class Employee {
             return new WP_Error( 'missing-required-params', __( 'Missing Date', 'erp' ) );
         }
 
-        if ( ! is_valid_date( $args['performance_date'] ) && $args['performance_date'] ) {
+        if ( ! erp_is_valid_date( $args['performance_date'] ) && $args['performance_date'] ) {
             return new WP_Error( 'invalid-required-params', __( 'Invalid date format', 'erp' ) );
         }
 
@@ -2062,7 +2065,7 @@ class Employee {
                 return new WP_Error( 'missing-required-params', __( 'Missing Date', 'erp' ) );
             }
 
-            if ( ! is_valid_date( $args['completion_date'] ) && $args['completion_date'] ) {
+            if ( ! erp_is_valid_date( $args['completion_date'] ) && $args['completion_date'] ) {
                 return new WP_Error( 'invalid-required-params', __( 'Invalid date format', 'erp' ) );
             }
 
