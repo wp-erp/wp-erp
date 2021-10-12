@@ -5,7 +5,7 @@
  * Plugin URI: https://wperp.com
  * Author: weDevs
  * Author URI: https://wedevs.com
- * Version: 1.10.0
+ * Version: 1.10.1
  * License: GPL2
  * Text Domain: erp
  * Domain Path: /i18n/languages/
@@ -52,7 +52,7 @@ final class WeDevs_ERP {
      *
      * @var string
      */
-    public $version = '1.10.0';
+    public $version = '1.10.1';
 
     /**
      * Minimum PHP version required
@@ -260,9 +260,6 @@ final class WeDevs_ERP {
         if ( defined( 'WP_CLI' ) && WP_CLI ) {
             include WPERP_INCLUDES . '/cli/commands.php';
         }
-
-        // temporary updater for lounge
-        require_once WPERP_INCLUDES . '/updates/temp-update.php';
     }
 
     /**
