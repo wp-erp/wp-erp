@@ -1390,12 +1390,10 @@ function erp_process_csv_export() {
         return new \WP_Error( 'no-permission', __( 'Sorry ! You do not have permission to access this page', 'erp' ) );
     }
 
-    $is_admin = current_user_can( 'administrator' );
-
-    $capability_for_type = [
+    $allowed_caps = [
         'employee' => 'erp_list_employee',
-        'contact'  => 'erp_crm_list_contact',
-        'company'  => 'erp_crm_list_contact', //NB: no capability for company in CRM so using contact capability
+        'contact'  => 'erp_crm_manager',
+        'company'  => 'erp_crm_manager',
         'customer' => 'erp_ac_view_customer',
         'vendor'   => 'erp_ac_view_vendor',
         'product'  => 'erp_ac_manager',
@@ -1418,7 +1416,7 @@ function erp_process_csv_export() {
                 return new \WP_Error( 'no-permission', __( 'Unknown import type!', 'erp' ) );
             }
 
-            if ( ! $is_admin && ! current_user_can( $capability_for_type[ $type ] ) ) {
+            if ( ! current_user_can( 'administrator' ) && ! current_user_can( $allowed_caps[ $type ] ) ) {
                 return new \WP_Error( 'no-permission', __( 'Sorry ! You do not have permission to access this page', 'erp' ) );
             }
 
@@ -1469,8 +1467,6 @@ function erp_process_csv_export() {
                     'number' => - 1,
                 ] );
             }
-
-            error_log( print_r($items,true));
 
             foreach ( $items as $index => $item ) {
                 if ( empty( $fields ) ) {
