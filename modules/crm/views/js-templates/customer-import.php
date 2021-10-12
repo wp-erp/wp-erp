@@ -49,7 +49,7 @@
                     echo erp_help_tip( esc_html__( 'Make sure CSV meets the sample CSV format exactly.', 'erp' ) );
                     ?>
                 </p>
-                <p id="download_sample_wrap">
+                <p id="download_sample_wrap">                    
                     <button class="button button-primary"
                         id="erp-crm-sample-csv"
                         data-url="<?php echo esc_url( $csv_sample_url ); ?>">
@@ -68,13 +68,8 @@
             <td>
                 <select name="contact_owner" id="contact_owner">
                     <?php
-                    $current_user_id = get_current_user_id();
-
-                    if ( ! erp_crm_is_current_user_manager() && erp_crm_is_current_user_crm_agent() ) {
-                        $users = [ $current_user_id => $users[ $current_user_id ] ];
-                    }
-
-                    echo wp_kses( erp_html_generate_dropdown( $users, $current_user_id ), [
+                    $current_user = get_current_user_id();
+                    echo wp_kses( erp_html_generate_dropdown( $users, $current_user ), [
                         'option' => [
                             'value'    => [],
                             'selected' => [],
