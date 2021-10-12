@@ -79,12 +79,10 @@ class Ajax {
             $this->send_error( __( 'Sorry ! You do not have permission to access this page', 'erp' ) );
         }
 
-        $is_admin = current_user_can( 'administrator' );
-
         $capability_for_type = [
             'employee' => 'erp_create_employee',
-            'contact'  => 'erp_crm_add_contact',
-            'company'  => 'erp_crm_add_contact', //NB: no capability for company, using contact capability
+            'contact'  => 'erp_crm_manager',
+            'company'  => 'erp_crm_manager',
             'customer' => 'erp_ac_create_customer',
             'vendor'   => 'erp_ac_create_vendor',
         ];
@@ -97,7 +95,7 @@ class Ajax {
             $this->send_error( __( 'Unknown import type!', 'erp' ) );
         }
 
-        if ( ! $is_admin && ! current_user_can( $capability_for_type[ $type ] ) ) {
+        if ( ! current_user_can( 'administrator' ) && ! current_user_can( $capability_for_type[ $type ] ) ) {
             $this->send_error( __( 'Sorry ! You do not have permission to access this page', 'erp' ) );
         }
 
