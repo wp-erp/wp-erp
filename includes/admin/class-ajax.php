@@ -237,6 +237,11 @@ class Ajax {
                     $contact_owner              = ! empty( $_POST['contact_owner'] )
                                                   ? absint( wp_unslash( $_POST['contact_owner'] ) )
                                                   : erp_crm_get_default_contact_owner();
+
+                    if ( 'contact' === $type && ( ! erp_crm_is_current_user_manager() ) && erp_crm_is_current_user_crm_agent() && $contact_owner !== get_current_user_id() ) {
+                        $this->send_error( __( 'You can only import your own contacts', 'erp' ) );
+                    }
+
                     $line_data['contact_owner'] = $contact_owner;
                     $people                     = erp_insert_people( $line_data, true );
 
@@ -577,6 +582,10 @@ class Ajax {
     public function import_users_as_contacts() {
         if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-import-export-nonce' ) ) {
             return;
+        }
+
+        if ( ! erp_crm_is_current_user_manager() && erp_crm_is_current_user_crm_agent() ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
         define( 'ERP_IS_IMPORTING', true );
