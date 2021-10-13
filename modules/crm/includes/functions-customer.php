@@ -291,8 +291,9 @@ function erp_crm_get_contact_dropdown( $label = [] ) {
 function erp_crm_customer_get_status_count( $type = null ) {
     global $wpdb;
 
-    $cache_key = 'erp-crm-customer-status-counts-' . $type;
-    $results   = wp_cache_get( $cache_key, 'erp' );
+    $cache_key  = 'erp-crm-customer-status-counts-' . $type;
+    $cache_key .= ( ! erp_crm_is_current_user_manager() && erp_crm_is_current_user_crm_agent() ) ? '-agent-id-' . get_current_user_id() : '';
+    $results    = wp_cache_get( $cache_key, 'erp' );
 
     if ( false === $results ) {
         $people_tbl = $wpdb->prefix . 'erp_peoples';
@@ -305,7 +306,7 @@ function erp_crm_customer_get_status_count( $type = null ) {
                     . " left join {$type_tbl} on {$rel_tbl}.people_types_id = {$type_tbl}.id"
                     . " WHERE {$type_tbl}.name = %s AND {$rel_tbl}.deleted_at IS NULL";
 
-        if ( current_user_can( 'erp_crm_agent' ) ) {
+        if ( ! current_user_can( 'erp_crm_manager' ) && current_user_can( 'erp_crm_agent' ) ) {
             $current_user_id = get_current_user_id();
             $sql .= " AND {$people_tbl}.contact_owner = {$current_user_id}";
         }
@@ -747,7 +748,7 @@ function erp_crm_get_feed_activity( $args = [] ) {
                     continue;
                 }
 
-                if ( 
+                if (
                     ! empty( $postdata['created_by'] ) &&
                     ! in_array( $postdata['created_by'], $value['extra']['invite_contact'] )
                 ) {
