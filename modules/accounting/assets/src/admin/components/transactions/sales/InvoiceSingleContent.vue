@@ -98,19 +98,23 @@
 
         <trans-particulars :particulars="invoice.particulars" />
 
-        <div class="invoice-attachments d-print-none" v-if="invoice.attachments && invoice.attachments.length">
+        <div class="invoice-attachments" v-if="invoice.attachments && invoice.attachments.length">
             <h4>{{ __('Attachments', 'erp') }}</h4>
-            <a class="attachment-item" :href="attachment"
+            <a class="attachment-item d-print-none" :href="attachment"
                 :key="index"
                 v-for="(attachment, index) in invoice.attachments" download>
-                <img :src="acct_var.acct_assets + '/images/file-thumb.png'">
-                <div class="attachment-meta">
+                <img :src="acct_var.acct_assets + '/images/file-thumb.png'" class="d-print-none" />
+                <div class="attachment-meta d-print-none">
                     <span>{{attachment.substring(attachment.lastIndexOf('/')+1) }}</span><br>
                     <!-- <span class="text-muted">file size</span> -->
                 </div>
             </a>
-        </div>
 
+            <!-- Print Attachment Links only in Print Media View -->
+            <a class="d-print-block" :href="attachment" target="_blank" v-for="(attachment, index) in invoice.attachments" :key="invoice.attachments.length + 1 + index">
+                {{ attachment }}
+            </a>
+        </div>
     </div>
 </template>
 
@@ -172,3 +176,28 @@ export default {
     }
 };
 </script>
+
+<style scoped lang="less">
+    .d-print-block {
+        display: none;
+    }
+
+    @media print{
+        .d-print-block {
+            display: block !important;
+        }
+
+        .invoice-attachments {
+            .attachment-item {
+                padding: 0px !important;
+                border: none !important;
+                box-shadow: none !important;
+                border-radius: 0px;
+                display: block !important;
+                align-items: left;
+                margin-bottom: 0px;
+                margin-right: 0px;
+            }
+        }
+    }
+</style>
