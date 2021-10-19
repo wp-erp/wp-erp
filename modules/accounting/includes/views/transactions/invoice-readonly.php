@@ -123,7 +123,17 @@ $transaction = erp_acct_get_transaction( $transaction_id );
             </div>
 
             <div class="invoice-extra">
+                <?php if ( ! empty( $transaction['attachments'] ) && count( $transaction['attachments'] ) > 0 ): ?>
+                    <h4><?php esc_html_e( 'Attachments', 'erp' ); ?></h4>
 
+                    <?php foreach ( $transaction['attachments'] as $attachment ): ?>
+                        <a target="_blank" href="<?php echo esc_attr( $attachment ); ?>">
+                            <?php echo esc_attr( $attachment ); ?>
+                        </a>
+                        <br>
+                    <?php endforeach; ?>
+
+                <?php endif; ?>
             </div>
         </div>
 
@@ -138,5 +148,3 @@ $transaction = erp_acct_get_transaction( $transaction_id );
 </body>
 
 </html>
-
-
