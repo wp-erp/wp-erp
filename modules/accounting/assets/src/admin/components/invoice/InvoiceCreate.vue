@@ -48,7 +48,7 @@
             <div class="wperp-table-responsive">
                 <!-- Start Invoice Items Table -->
                 <div class="table-container">
-                    <table class="wperp-table wperp-form-table">
+                    <table class="wperp-create-invoice-table wperp-form-table">
                         <thead>
                             <tr>
                                 <th scope="col" class="col--products">{{ __('Product/Service', 'erp') }}</th>
@@ -81,9 +81,12 @@
                                         <option value="discount-value">{{ __('Discount value', 'erp') }}</option>
                                     </select>
                                 </td>
-                                <td><input type="text" class="wperp-form-field" v-model="discount"
-                                    :placeholder="discountType">
-                                    <em v-show="'discount-percent' === discountType">%</em>
+                                <td>
+                                    <div style="display: flex; align-items: center">
+                                        <input type="text" class="wperp-form-field" v-model="discount"
+                                            :placeholder="discountType">
+                                        <em v-show="'discount-percent' === discountType">%</em>
+                                    </div>
                                 </td>
                                 <td></td>
                             </tr>
@@ -750,6 +753,89 @@ export default {
         .invoice-create .erp-help-tip {
             color    : #2f4f4f;
             font-size: 1.2em;
+        }
+    }
+
+    table.wperp-create-invoice-table {
+        border: 1px solid #e2e2e2;
+        border-collapse: inherit;
+        border-spacing: 0;
+
+        position: relative;
+        width: 100%;
+        margin-bottom: 1rem;
+        background-color: #fff;
+        border-radius: 3px;
+
+        thead {
+            tr {
+                height: 50px;
+                background: #1a9ed4;
+                box-shadow: 0 5px 12px 0 rgba(0,100,235,.06);
+                transform: translateY(-.1px);
+
+                td, th {
+                    color: #fff;
+                    font-weight: 400;
+                    padding: 15px 10px;
+                }
+            }
+        }
+
+        tbody {
+            tr {
+                th {
+                    padding: 10px 10px 10px 20px;
+                }
+                td {
+                    padding: 10px 10px 10px 10px;
+                }
+                td:last-child {
+                    padding: 10px 20px 10px 10px;
+                }
+            }
+            tr:first-child {
+                th:first-child {
+                    padding: 20px 10px 10px 20px !important;
+                }
+                th {
+                    padding: 20px 10px 10px 10px;
+                }
+                th:last-child {
+                    padding: 20px 20px 10px 10px;
+                }
+            }
+        }
+
+        @media (max-width: 782px) {
+            tbody {
+                tr {
+                    th {
+                        padding: 5px 5px 5px 10px;
+                    }
+                    td {
+                        padding: 5px 5px 5px 5px;
+                    }
+                    td:last-child {
+                        padding: 5px 10px 5px 5px;
+                    }
+                }
+                tr:first-child {
+                    th:first-child {
+                        padding: 10px 5px 5px 10px !important;
+                    }
+                    th {
+                        padding: 10px 5px 5px 5px;
+                    }
+                    th:last-child {
+                        padding: 10px 10px 5px 5px;
+                    }
+                }
+
+                input[type=number] {
+                    padding: 7px 7px;
+                }
+            }
         }
     }
 </style>
