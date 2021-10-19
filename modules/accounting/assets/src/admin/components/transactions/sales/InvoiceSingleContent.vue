@@ -58,7 +58,7 @@
             </div>
 
             <div class="wperp-invoice-table">
-                <table class="wperp-table wperp-form-table invoice-table">
+                <table class="wperp-single-sales-table wperp-form-table invoice-table">
                     <thead>
                         <tr>
                             <th>{{ __('Sl', 'erp') }}.</th>
@@ -69,7 +69,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr :key="index" v-for="(detail, index) in invoice.line_items">
+                        <tr :key="index" v-for="(detail, index) in invoice.line_items" data-columnname="asdfasdf">
                             <th>{{ index+1 }}</th>
                             <th>{{ detail.name }}</th>
                             <td>{{ detail.qty }}</td>
@@ -172,3 +172,57 @@ export default {
     }
 };
 </script>
+
+<style lang="less" scoped>
+    table.wperp-single-sales-table {
+        border: 1px solid #e2e2e2;
+        border-collapse: inherit;
+        border-spacing: 0;
+
+        position: relative;
+        width: 100%;
+        margin-bottom: 1rem;
+        background-color: #fff;
+        border-radius: 3px;
+
+        thead {
+            tr {
+                height: 50px;
+                background: #1a9ed4;
+                box-shadow: 0 5px 12px 0 rgba(0,100,235,.06);
+                transform: translateY(-.1px);
+
+                td, th {
+                    color: #fff;
+                    font-weight: 400;
+                    padding: 15px 10px;
+                }
+            }
+        }
+
+        tbody {
+            tr {
+                th {
+                    padding: 10px 10px 10px 20px;
+                }
+                td {
+                    padding: 10px 10px 10px 10px;
+                }
+                td:last-child {
+                    padding: 10px 20px 10px 10px;
+                }
+            }
+            tr:first-child {
+                th:first-child {
+                    padding: 20px 10px 10px 20px !important;
+                }
+                th {
+                    padding: 20px 10px 10px 10px;
+                }
+                th:last-child {
+                    padding: 20px 20px 10px 10px;
+                }
+            }
+        }
+    }
+</style>
