@@ -82,7 +82,8 @@ export default {
             showModal     : false,
             columns       : {
                 name   : {
-                    label: __('Category Name', 'erp')
+                    label: __('Category Name', 'erp'),
+                    isColPrimary: true
                 },
                 actions: {
                     label: __('Actions', 'erp')

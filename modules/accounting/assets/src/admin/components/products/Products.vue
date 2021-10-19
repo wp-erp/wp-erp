@@ -18,7 +18,7 @@
         <product-modal v-if="showModal" :product.sync="product" />
 
         <export-modal v-if="showExportModal" />
-        
+
         <import-modal v-if="showImportModal" />
 
         <list-table
@@ -70,7 +70,8 @@ export default {
             showModal: false,
             columns  : {
                 name: {
-                    label: __('Product Name', 'erp')
+                    label: __('Product Name', 'erp'),
+                    isColPrimary: true
                 },
                 sale_price: {
                     label: __('Sale Price', 'erp')

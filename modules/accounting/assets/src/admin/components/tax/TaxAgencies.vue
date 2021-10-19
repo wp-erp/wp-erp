@@ -59,7 +59,7 @@ export default {
             modalParams: null,
             columns: {
                 // 'tax_agency_id': {label: 'ID'},
-                tax_agency_name: { label: __('Agency Name', 'erp') },
+                tax_agency_name: { label: __('Agency Name', 'erp'), isColPrimary: true },
                 actions: { label: __('Actions', 'erp') }
             },
             rows: [],

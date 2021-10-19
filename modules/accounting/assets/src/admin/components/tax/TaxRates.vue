@@ -69,7 +69,7 @@ export default {
         return {
             modalParams: null,
             columns: {
-                tax_rate_name: { label:  __('Tax Zone Name', 'erp') },
+                tax_rate_name: { label:  __('Tax Zone Name', 'erp'), isColPrimary: true },
                 actions      : { label: __('Actions', 'erp') }
             },
             rows: [],

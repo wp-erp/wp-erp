@@ -58,7 +58,7 @@ export default {
             showModal: false,
             modalParams: null,
             columns: {
-                tax_cat_name: { label: __('Category Name', 'erp') },
+                tax_cat_name: { label: __('Category Name', 'erp'), isColPrimary: true },
                 tax_cat_desc: { label: __('Description', 'erp') },
                 actions     : { label: __('Actions', 'erp') }
             },

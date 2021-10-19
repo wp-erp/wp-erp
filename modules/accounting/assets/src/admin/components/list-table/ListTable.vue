@@ -134,7 +134,7 @@
                         :class="['column', key, (value.isColPrimary) ? 'column-primary' : '', (actionColumn === key && hasActions) ? 'col--actions': '', { 'selected': checkedItems.includes(row[index]) }]">
                         <slot :name="key" :row="row">
                             <template v-if="'actions' !== key">
-                                {{ row[key] }}
+                                {{ row[key] ? row[key] : '-' }}
                             </template>
                         </slot>
                         <button v-if="value.isColPrimary" type="button" class="wperp-toggle-row"
