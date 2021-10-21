@@ -69,7 +69,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr :key="index" v-for="(detail, index) in invoice.line_items" data-columnname="asdfasdf">
+                        <tr :key="index" v-for="(detail, index) in invoice.line_items">
                             <th>{{ index+1 }}</th>
                             <th>{{ detail.name }}</th>
                             <td>{{ detail.qty }}</td>
