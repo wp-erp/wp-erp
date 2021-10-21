@@ -98,6 +98,9 @@ export default {
             .row-actions {
                 text-align: right !important;
             }
+            .ac_to {
+                text-align: left !important;
+            }
         }
     }
 </style>
