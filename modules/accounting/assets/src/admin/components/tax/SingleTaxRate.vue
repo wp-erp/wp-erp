@@ -177,6 +177,9 @@ export default {
                 .col--actions {
                     float: left !important;
                 }
+                .row-actions {
+                    text-align: left !important;
+                }
             }
         }
     }

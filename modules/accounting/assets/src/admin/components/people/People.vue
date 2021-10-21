@@ -356,6 +356,7 @@ export default {
             }
             .row-actions {
                 padding-left: 20px !important;
+                text-align: left !important;
             }
         }
         .check-column {
