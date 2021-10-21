@@ -596,6 +596,16 @@ export default {
     }
 
     @media (max-width: 782px) {
+        ::-webkit-scrollbar {
+            width: 1px;
+            height: 1px;
+        }
+
+        ::-webkit-scrollbar-button {
+            width: 1px;
+            height: 1px;
+        }
+
         .horizontal-scroll-wrapper {
             width: 30px;
             height: 150px;
