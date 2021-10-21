@@ -348,10 +348,8 @@ export default {
                 }
             }
             @media (min-width: 783px) {
-                .product-list {
-                    .col--actions {
-                        float: left !important;
-                    }
+                .col--actions {
+                    float: left !important;
                 }
             }
             .row-actions {
