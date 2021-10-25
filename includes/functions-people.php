@@ -102,7 +102,7 @@ function erp_get_peoples( $args = [] ) {
             $sql['where'][] = "AND people.contact_owner='$contact_owner'";
         }
 
-        if ( false !== $args['crm_agent_id'] ) {
+        if ( ! erp_crm_is_current_user_manager() && erp_crm_is_current_user_crm_agent() ) {
             $current_user_id = get_current_user_id();
             $sql['where'][]  = "AND people.contact_owner='$current_user_id'";
         }
