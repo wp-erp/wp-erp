@@ -353,6 +353,7 @@ function erp_crm_customer_get_status_count( $type = null ) {
  */
 function erp_crm_count_trashed_customers( $type = null ) {
     $trashed = \WeDevs\ERP\Framework\Models\People::trashed( $type );
+
     if ( ! erp_crm_is_current_user_manager() && erp_crm_is_current_user_crm_agent() ) {
         return $trashed->where( 'contact_owner', '=', get_current_user_id() )->count();
     } else {
