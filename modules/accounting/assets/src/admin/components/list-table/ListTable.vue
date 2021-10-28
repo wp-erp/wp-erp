@@ -613,7 +613,7 @@ export default {
             overflow-y: auto;
             overflow-x: hidden;
             transform-origin: right top;
-            transform:rotate(-90deg) translateY(-30px);
+            transform: rotate(-90deg) translateY(-30px);
 
             > li {
                 margin-top: 20px;
