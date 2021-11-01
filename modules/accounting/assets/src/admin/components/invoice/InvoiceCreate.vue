@@ -82,10 +82,9 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <div style="display: flex; align-items: center">
-                                        <input type="text" class="wperp-form-field" v-model="discount"
-                                            :placeholder="discountType">
-                                        <em v-show="'discount-percent' === discountType">%</em>
+                                    <div class="discountType-box">
+                                        <input type="text" class="wperp-form-field" v-model="discount" :placeholder="discountType">
+                                        <em v-show="'discount-percent' === discountType"> %</em>
                                     </div>
                                 </td>
                                 <td></td>
@@ -668,6 +667,11 @@ export default {
 
         input {
             width: 130px !important;
+        }
+
+        .discountType-box {
+            display: flex;
+            align-items: center;
         }
     }
 
