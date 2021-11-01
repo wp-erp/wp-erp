@@ -131,7 +131,7 @@
                         </div>
                     </th>
                     <td v-for="(value, key) in columns" :key="key" :data-colname="ucFirst(key)"
-                        :class="['column', key, (value.isColPrimary) ? 'column-primary' : '', /*(actionColumn === key && hasActions) ? 'col--actions': ''*/, { 'selected': checkedItems.includes(row[index]) }]">
+                        :class="['column', key, (value.isColPrimary) ? 'column-primary' : '', { 'selected': checkedItems.includes(row[index]) }]">
                         <slot :name="key" :row="row">
                             <template v-if="'actions' !== key">
                                 {{ row[key] ? row[key] : '-' }}
