@@ -48,7 +48,7 @@
             <div class="wperp-table-responsive">
                 <!-- Start Invoice Items Table -->
                 <div class="table-container">
-                    <table class="wperp-create-invoice-table wperp-form-table">
+                    <table class="wperp-table wperp-form-table">
                         <thead>
                             <tr>
                                 <th scope="col" class="col--products">{{ __('Product/Service', 'erp') }}</th>
@@ -74,7 +74,7 @@
                                 </td>
                             </tr>
 
-                            <tr class="discount-rate-row">
+                            <tr class="discount-rate-row inline-edit-row">
                                 <td colspan="4" class="text-right with-multiselect">
                                     <select v-model="discountType">
                                         <option value="discount-percent">{{ __('Discount percent', 'erp') }}</option>
@@ -90,7 +90,7 @@
                                 <td></td>
                             </tr>
 
-                            <tr class="tax-rate-row">
+                            <tr class="tax-rate-row inline-edit-row">
                                 <td colspan="4" class="text-right with-multiselect">
                                     <multi-select v-model="taxRate"
                                         :options="taxRates"
@@ -101,20 +101,20 @@
                                 <td></td>
                             </tr>
 
-                            <tr class="total-amount-row">
+                            <tr class="total-amount-row inline-edit-row">
                                 <td colspan="4" class="text-right">
                                     <span>{{ __('Total Amount', 'erp') }} =</span>
                                 </td>
                                 <td><input type="text" class="wperp-form-field" :value="moneyFormat(finalTotalAmount)" readonly></td>
                                 <td></td>
                             </tr>
-                            <tr class="wperp-form-group">
+                            <tr class="wperp-form-group inline-edit-row">
                                 <td colspan="9" style="text-align: left;">
                                     <label>{{ __('Particulars', 'erp') }}</label>
                                     <textarea v-model="particulars" rows="4" maxlength="250" class="wperp-form-field display-flex" :placeholder="__('Particulars', 'erp')"></textarea>
                                 </td>
                             </tr>
-                            <tr>
+                            <tr class="inline-edit-row">
                                 <td>
                                     <div class="attachment-item" :key="index" v-for="(file, index) in attachments">
                                         <img :src="erp_acct_assets + '/images/file-thumb.png'">
@@ -126,7 +126,7 @@
                                     </div>
                                 </td>
                             </tr>
-                            <tr class="add-attachment-row">
+                            <tr class="add-attachment-row inline-edit-row">
                                 <td colspan="9" style="text-align: left;">
                                     <div class="attachment-container">
                                         <label class="col--attachement">{{ __('Attachment', 'erp') }}</label>
@@ -758,87 +758,33 @@ export default {
             color    : #2f4f4f;
             font-size: 1.2em;
         }
-    }
-
-    table.wperp-create-invoice-table {
-        border: 1px solid #e2e2e2;
-        border-collapse: inherit;
-        border-spacing: 0;
-
-        position: relative;
-        width: 100%;
-        margin-bottom: 1rem;
-        background-color: #fff;
-        border-radius: 3px;
-
-        thead {
-            tr {
-                height: 50px;
-                background: #1a9ed4;
-                box-shadow: 0 5px 12px 0 rgba(0,100,235,.06);
-                transform: translateY(-.1px);
-
-                td, th {
-                    color: #fff;
-                    font-weight: 400;
-                    padding: 15px 10px;
-                }
-            }
-        }
-
-        tbody {
-            tr {
-                th {
-                    padding: 10px 10px 10px 20px;
-                }
-                td {
-                    padding: 10px 10px 10px 10px;
-                }
-                td:last-child {
-                    padding: 10px 20px 10px 10px;
-                }
-            }
-            tr:first-child {
-                th:first-child {
-                    padding: 20px 10px 10px 20px !important;
-                }
-                th {
-                    padding: 20px 10px 10px 10px;
-                }
-                th:last-child {
-                    padding: 20px 20px 10px 10px;
-                }
-            }
-        }
 
         @media (max-width: 782px) {
-            tbody {
-                tr {
-                    th {
-                        padding: 5px 5px 5px 10px;
-                    }
-                    td {
-                        padding: 5px 5px 5px 5px;
-                    }
-                    td:last-child {
-                        padding: 5px 10px 5px 5px;
-                    }
+            .col--qty {
+                input {
+                    padding: 5px !important;
                 }
-                tr:first-child {
-                    th:first-child {
-                        padding: 10px 5px 5px 10px !important;
-                    }
-                    th {
-                        padding: 10px 5px 5px 5px;
-                    }
-                    th:last-child {
-                        padding: 10px 10px 5px 5px;
-                    }
-                }
+            }
 
-                input[type=number] {
-                    padding: 7px 7px;
+            .col--uni_price,
+            .col--amount,
+            .col--tax,
+            .col--actions {
+                display: table-cell !important;
+                width: 10%;
+
+                input {
+                    padding: 5px !important;
                 }
+            }
+
+            tr:not(.inline-edit-row):not(.no-items) td:not(.column-primary)::before {
+                display: none !important;
+            }
+
+            td {
+                padding-left: 5px !important;
+                padding-right: 5px !important;
             }
         }
     }
