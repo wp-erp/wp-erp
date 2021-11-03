@@ -1679,6 +1679,8 @@ class Employee {
         if ( empty( $args['category'] ) ) {
             if ( empty( $args['type'] ) || ! array_key_exists( $args['type'], $types ) ) {
                 return new WP_Error( 'invalid-employment-type', __( 'Invalid Employment Type', 'erp' ) );
+            } else {
+                $old_type = $this->erp_user->type;
             }
         } else {
             if ( ! array_key_exists( $args['category'], $statuses ) ) {
