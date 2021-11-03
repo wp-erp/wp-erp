@@ -3151,3 +3151,172 @@ function erp_hr_get_financial_year_from_date_range( $start_date, $end_date ) {
         )
     );
 }
+
+/**
+ * Automatic removal of old entitlements and assignment of new entitlements
+ * after employee type change
+ *
+ * @since 1.10.2
+ *
+ * @param object $erp_user instance of \WeDevs\ERP\HRM\Models\Employee
+ *
+ * @return void
+ */
+function erp_hr_manage_leave_policy_on_employee_type_change( $erp_user ) {
+    $user_previous_entitlements = erp_hr_leave_get_entitlements( [
+        'user_id' => $erp_user->user_id,
+    ] ) ['data'];
+
+    $f_year = erp_hr_get_financial_year_from_date();
+
+    if ( empty( $f_year ) ) {
+        return;
+    }
+
+    $policies = Leave_Policy::where( function( $query ) use( $erp_user ) {
+        $query->where( 'employee_type', $erp_user->type )
+              ->orWhere( 'employee_type', '-1' );
+    });
+
+    if ( $erp_user->department !== "0" ) {
+        $policies = $policies->where( function ( $query ) use( $erp_user ) {
+            $query->where( 'department_id', $erp_user->department )
+                  ->orWhere( 'department_id', '-1' );
+        });
+    }
+
+    if ( $erp_user->designation !== "0" ) {
+        $policies = $policies->where( function ( $query ) use( $erp_user ) {
+            $query->where( 'designation_id', $erp_user->designation )
+                  ->orWhere( 'designation_id', '-1' );
+        });
+    }
+
+    if ( $erp_user->location !== "0" ) {
+        $policies = $policies->where( function ( $query ) use( $erp_user ) {
+            $query->where( 'location_id', $erp_user->location )
+                  ->orWhere( 'location_id', '-1' );
+        });
+    }
+
+    // TODO check if this object has this property
+    if ( isset( $erp_user->gender ) && $erp_user->gender !== "0" ) {
+        $policies = $policies->where( function ( $query ) use( $erp_user ) {
+            $query->where( 'gender', $erp_user->gender )
+                  ->orWhere( 'gender', '-1' );
+        });
+    }
+
+    // TODO check if this object has this property
+    if ( isset( $erp_user->marital ) && $erp_user->marital !== "0" ) {
+        $policies = $policies->where( function ( $query ) use( $erp_user ) {
+            $query->where( 'marital', $erp_user->marital )
+                  ->orWhere( 'marital', '-1' );
+        });
+    }
+
+    $policies = $policies->where( function( $query ) use( $f_year ) {
+        $query->where( 'f_year', $f_year->id );
+    });
+
+    $policies = $policies->get();
+
+    foreach ( $policies as $policy ) {
+        $no_entitlements = count( $user_previous_entitlements );
+        $do_not_delete   = [];
+
+        for ( $i = 0; $i < $no_entitlements; $i++ ) {
+            if ( $user_previous_entitlements[ $i ]->leave_id === $policy->leave_id ) {
+                $do_not_delete[] = $i;
+            }
+        }
+
+        foreach ( $do_not_delete as $index ) {
+            unset( $user_previous_entitlements[ $index ] );
+        }
+    }
+
+    $last_entitlement_id = 0;
+
+    foreach ( $policies as $policy ) {
+
+        $data = [
+            'user_id'     => $erp_user->user_id,
+            'leave_id'    => $policy->leave_id,
+            'created_by'  => get_current_user_id(),
+            'trn_id'      => $policy->id,
+            'trn_type'    => 'leave_policies',
+            'day_in'      => $policy->days,
+            'day_out'     => 0,
+            'description' => $policy->description != '' ? $policy->description : 'Generated',
+            'f_year'      => $policy->f_year,
+        ];
+
+        $new_entitlement_id = erp_hr_leave_insert_entitlement( $data );
+
+        if ( is_wp_error( $new_entitlement_id ) ) {
+            //TODO
+        } elseif( ! empty( $user_previous_entitlements ) ) {
+            $last_entitlement_id = $new_entitlement_id;
+            $new_entitlement     = Leave_Entitlement::find( $new_entitlement_id );
+            $leave               = Leave::find( $new_entitlement->leave_id );
+            $old_entitlement     = Leave_Entitlement::find( array_shift( $user_previous_entitlements )->id );
+
+            if ( $old_entitlement->leave_requests ) {
+                // assign the old entitlement requests to the new one
+                foreach ( $old_entitlement->leave_requests as $request ) {
+                    if ( $request->approval_status ) {
+                        foreach ( $request->approval_status as $status ) {
+                            if ( $status->entitlements ) {
+                                foreach ( $status->entitlements as $entl ) {
+                                    $leave->entitlements()->save( $entl );
+                                }
+                            }
+                        }
+                    }
+
+                    $new_entitlement->leave_requests()->save( $request );
+                    $leave->requests()->save( $request );
+                }
+            }
+
+            $old_entitlement->delete();
+        }
+    }
+
+    // count( $user_previous_entitlements ) > count( $policies )
+    if ( ! empty( $user_previous_entitlements ) ) {
+        if ( $last_entitlement_id > 0 ) {
+            $new_entitlement = Leave_Entitlement::find( $last_entitlement_id );
+            $leave           = Leave::find( $new_entitlement->leave_id );
+
+            foreach ( $user_previous_entitlements as $old_entitlement_info ) {
+                $old_entitlement = Leave_Entitlement::find( $old_entitlement_info->id );
+
+                if ( $old_entitlement->leave_requests ) {
+                    // assign the old entitlement requests to the new one
+                    foreach ( $old_entitlement->leave_requests as $request ) {
+                        if ( $request->approval_status ) {
+                            foreach ( $request->approval_status as $status ) {
+                                if ( $status->entitlements ) {
+                                    foreach ( $status->entitlements as $entl ) {
+                                        $leave->entitlements()->save( $entl );
+                                    }
+                                }
+                            }
+                        }
+
+                        $new_entitlement->leave_requests()->save( $request );
+                        $leave->requests()->save( $request );
+                    }
+                }
+
+                $old_entitlement->delete();
+            }
+        } else {
+            // no policy matched, no old entitlement will be deleted or no new entitlement will be created
+        }
+    }
+
+    erp_hrm_purge_cache( ['list' => 'leave_entitlement'] );
+}
