@@ -1762,6 +1762,10 @@ class Employee {
             'date'     => $args['date'],
         ] );
 
+        if ( ! empty( $args['type'] ) && isset( $old_type ) && $old_type !== $args['type'] && get_option( 'enable_auto_leave_policy_assignment_on_type_change', 'no' ) === 'yes' ) {
+            erp_hr_manage_leave_policy_on_employee_type_change( $this->erp_user );
+        }
+
         erp_hrm_purge_cache( [ 'list' => 'employee', 'employee_id' => $args['id'] ] );
 
         return [
