@@ -3217,7 +3217,7 @@ function erp_hr_manage_leave_policy_on_employee_type_change( $erp_user ) {
 
     $policies = $policies->where( function( $query ) use( $f_year ) {
         $query->where( 'f_year', $f_year->id );
-    });
+    } );
 
     $policies = $policies->orderByDesc( 'days' )
                          ->get();
@@ -3259,7 +3259,7 @@ function erp_hr_manage_leave_policy_on_employee_type_change( $erp_user ) {
             'trn_type'    => 'leave_policies',
             'day_in'      => $policy->days,
             'day_out'     => 0,
-            'description' => $policy->description != '' ? $policy->description : 'Generated',
+            'description' => ! empty( $policy->description ) ? $policy->description : 'Generated',
             'f_year'      => $policy->f_year,
         ];
 
@@ -3267,7 +3267,7 @@ function erp_hr_manage_leave_policy_on_employee_type_change( $erp_user ) {
 
         if ( is_wp_error( $new_entitlement_id ) ) {
             //TODO
-        } elseif( ! empty( $user_previous_entitlements ) ) {
+        } elseif ( ! empty( $user_previous_entitlements ) ) {
             $last_entitlement_id = $new_entitlement_id;
             $new_entitlement     = Leave_Entitlement::find( $new_entitlement_id );
             $leave               = Leave::find( $new_entitlement->leave_id );
