@@ -3279,8 +3279,8 @@ function erp_hr_manage_leave_policy_on_employee_type_change( $erp_user ) {
                     if ( $request->approval_status ) {
                         foreach ( $request->approval_status as $status ) {
                             if ( $status->entitlements ) {
-                                foreach ( $status->entitlements as $entl ) {
-                                    $leave->entitlements()->save( $entl );
+                                foreach ( $status->entitlements as $approved_entitlement ) {
+                                    $leave->entitlements()->save( $approved_entitlement );
                                 }
                             }
                         }
