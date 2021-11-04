@@ -184,8 +184,13 @@ class Entitlement_List_Table extends \WP_List_Table {
 
             if ( $available > 0 ) {
                 $str = sprintf( '<span class="green tooltip" title="%s"> %s %s</span>', __( 'Available Leave', 'erp' ), erp_number_format_i18n( $available ), _n( 'day', 'days', $available + 1, 'erp' ) );
+                if ( $extra_leave > 0 ) {
+                    $str .= sprintf( '<span class="red tooltip" title="%s"> (%s %s %s)</span>', __( 'Extra Leave', 'erp' ), erp_number_format_i18n( $extra_leave ), _n( 'day', 'days', $extra_leave, 'erp' ), __( 'Extra Leave', 'erp' ) );
+                }
             } elseif ( $extra_leave > 0 ) {
                 $str = sprintf( '<span class="red tooltip" title="%s"> -%s %s</span>', __( 'Extra Leave', 'erp' ), erp_number_format_i18n( $extra_leave ), _n( 'day', 'days', $extra_leave, 'erp' ) );
+            } elseif ( $available < 0 ) {
+                $str = '<span class="yellow tooltip" title=""> &mdash; </span>';
             }
         }
 
