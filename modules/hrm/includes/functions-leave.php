@@ -3176,50 +3176,61 @@ function erp_hr_manage_leave_policy_on_employee_type_change( $erp_user ) {
     $policies = Leave_Policy::where( function( $query ) use( $erp_user ) {
         $query->where( 'employee_type', $erp_user->type )
               ->orWhere( 'employee_type', '-1' );
-    });
+    } );
 
-    if ( $erp_user->department !== "0" ) {
+    if ( $erp_user->department !== '0' ) {
         $policies = $policies->where( function ( $query ) use( $erp_user ) {
             $query->where( 'department_id', $erp_user->department )
                   ->orWhere( 'department_id', '-1' );
-        });
+        } );
     }
 
-    if ( $erp_user->designation !== "0" ) {
+    if ( $erp_user->designation !== '0' ) {
         $policies = $policies->where( function ( $query ) use( $erp_user ) {
             $query->where( 'designation_id', $erp_user->designation )
                   ->orWhere( 'designation_id', '-1' );
-        });
+        } );
     }
 
-    if ( $erp_user->location !== "0" ) {
+    if ( $erp_user->location !== '0' ) {
         $policies = $policies->where( function ( $query ) use( $erp_user ) {
             $query->where( 'location_id', $erp_user->location )
                   ->orWhere( 'location_id', '-1' );
-        });
+        } );
     }
 
     // TODO check if this object has this property
-    if ( isset( $erp_user->gender ) && $erp_user->gender !== "0" ) {
+    if ( isset( $erp_user->gender ) && $erp_user->gender !== '0' ) {
         $policies = $policies->where( function ( $query ) use( $erp_user ) {
             $query->where( 'gender', $erp_user->gender )
                   ->orWhere( 'gender', '-1' );
-        });
+        } );
     }
 
     // TODO check if this object has this property
-    if ( isset( $erp_user->marital ) && $erp_user->marital !== "0" ) {
+    if ( isset( $erp_user->marital ) && $erp_user->marital !== '0' ) {
         $policies = $policies->where( function ( $query ) use( $erp_user ) {
             $query->where( 'marital', $erp_user->marital )
                   ->orWhere( 'marital', '-1' );
-        });
+        } );
     }
 
     $policies = $policies->where( function( $query ) use( $f_year ) {
         $query->where( 'f_year', $f_year->id );
     });
 
-    $policies = $policies->get();
+    $policies = $policies->orderByDesc( 'days' )
+                         ->get();
+
+    usort( $user_previous_entitlements, function ( $a, $b ) {
+        if ( $a->day_in > $b->day_in ) {
+            return -1;
+        } elseif ( $a->day_in < $b->day_in ) {
+            return 1;
+        } else {
+            return 0;
+        }
+    } );
 
     foreach ( $policies as $policy ) {
         $no_entitlements = count( $user_previous_entitlements );
