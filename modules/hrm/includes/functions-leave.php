@@ -3364,6 +3364,10 @@ function transfer_requests_to_new_entitlements( $old_entitlement, $new_entitleme
             }
         }
 
+        if ( $request->unpaid ) {
+            $leave->unpaids()->save( $request->unpaid );
+        }
+
         $new_entitlement->leave_requests()->save( $request );
         $leave->requests()->save( $request );
     }
