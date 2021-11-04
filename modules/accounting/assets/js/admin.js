@@ -16300,7 +16300,7 @@ module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFs
       peopleType: '',
       fieldsHtml: '',
       nonce: '',
-      error: '',
+      errors: '',
       showError: false
     };
   },
@@ -16338,10 +16338,10 @@ module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFs
         },
         error: function error(_error) {
           self.showError = true;
-          self.error = _error;
-          jQuery("#wperp-import-customer-modal").animate({
-            scrollTop: jQuery(".wperp-modal-body").offset().top
-          }, 2000);
+          self.errors = _error;
+          jQuery("#import_form > div").animate({
+            scrollTop: 0
+          }, 'fast');
         }
       });
     },
@@ -17591,11 +17591,19 @@ module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFs
           _this.manageProgressStatus();
 
           _this.showImportError(error.response.data.message);
+
+          jQuery("#import_form > div").animate({
+            scrollTop: 0
+          }, 'fast');
         });
       }).catch(function (error) {
         _this.manageProgressStatus();
 
         _this.showImportError(error.response.data.message);
+
+        jQuery("#import_form > div").animate({
+          scrollTop: 0
+        }, 'fast');
       });
     },
     processFile: function processFile(event) {
@@ -38074,7 +38082,9 @@ var render = function() {
                                   }),
                                   0
                                 )
-                              : _c("span", [_vm._v(_vm._s(_vm.errors))])
+                              : _c("span", {
+                                  domProps: { innerHTML: _vm._s(_vm.errors) }
+                                })
                           ]
                         )
                       : _vm._e(),
