@@ -3222,15 +3222,17 @@ function erp_hr_manage_leave_policy_on_employee_type_change( $erp_user ) {
     $policies = $policies->orderByDesc( 'days' )
                          ->get();
 
-    usort( $user_previous_entitlements, function ( $a, $b ) {
-        if ( $a->day_in > $b->day_in ) {
-            return -1;
-        } elseif ( $a->day_in < $b->day_in ) {
-            return 1;
-        } else {
-            return 0;
+    usort( $user_previous_entitlements,
+        function ( $a, $b ) {
+            if ( $a->day_in > $b->day_in ) {
+                return -1;
+            } elseif ( $a->day_in < $b->day_in ) {
+                return 1;
+            } else {
+                return 0;
+            }
         }
-    } );
+    );
 
     foreach ( $policies as $policy ) {
         $no_entitlements = count( $user_previous_entitlements );
@@ -3247,10 +3249,9 @@ function erp_hr_manage_leave_policy_on_employee_type_change( $erp_user ) {
         }
     }
 
-    $last_entitlement_id = 0;
+    $last_entitlement_id = false;
 
     foreach ( $policies as $policy ) {
-
         $data = [
             'user_id'     => $erp_user->user_id,
             'leave_id'    => $policy->leave_id,
@@ -3266,68 +3267,73 @@ function erp_hr_manage_leave_policy_on_employee_type_change( $erp_user ) {
         $new_entitlement_id = erp_hr_leave_insert_entitlement( $data );
 
         if ( is_wp_error( $new_entitlement_id ) ) {
-            //TODO
+            //TODO handle can't create new entitlement
         } elseif ( ! empty( $user_previous_entitlements ) ) {
             $last_entitlement_id = $new_entitlement_id;
             $new_entitlement     = Leave_Entitlement::find( $new_entitlement_id );
             $leave               = Leave::find( $new_entitlement->leave_id );
             $old_entitlement     = Leave_Entitlement::find( array_shift( $user_previous_entitlements )->id );
 
-            if ( $old_entitlement->leave_requests ) {
-                // assign the old entitlement requests to the new one
-                foreach ( $old_entitlement->leave_requests as $request ) {
-                    if ( $request->approval_status ) {
-                        foreach ( $request->approval_status as $status ) {
-                            if ( $status->entitlements ) {
-                                foreach ( $status->entitlements as $approved_entitlement ) {
-                                    $leave->entitlements()->save( $approved_entitlement );
-                                }
-                            }
-                        }
-                    }
-
-                    $new_entitlement->leave_requests()->save( $request );
-                    $leave->requests()->save( $request );
-                }
-            }
+            transfer_requests_to_new_entitlements( $old_entitlement, $new_entitlement, $leave );
 
             $old_entitlement->delete();
         }
     }
 
-    // count( $user_previous_entitlements ) > count( $policies )
-    if ( ! empty( $user_previous_entitlements ) ) {
-        if ( $last_entitlement_id > 0 ) {
-            $new_entitlement = Leave_Entitlement::find( $last_entitlement_id );
-            $leave           = Leave::find( $new_entitlement->leave_id );
-
-            foreach ( $user_previous_entitlements as $old_entitlement_info ) {
-                $old_entitlement = Leave_Entitlement::find( $old_entitlement_info->id );
-
-                if ( $old_entitlement->leave_requests ) {
-                    // assign the old entitlement requests to the new one
-                    foreach ( $old_entitlement->leave_requests as $request ) {
-                        if ( $request->approval_status ) {
-                            foreach ( $request->approval_status as $status ) {
-                                if ( $status->entitlements ) {
-                                    foreach ( $status->entitlements as $approved_entitlement ) {
-                                        $leave->entitlements()->save( $approved_entitlement );
-                                    }
-                                }
-                            }
-                        }
-
-                        $new_entitlement->leave_requests()->save( $request );
-                        $leave->requests()->save( $request );
-                    }
-                }
-
-                $old_entitlement->delete();
-            }
-        } else {
-            // no policy matched, no old entitlement will be deleted or no new entitlement will be created
-        }
+    if ( empty( $user_previous_entitlements ) || $last_entitlement_id === false ) {
+        erp_hrm_purge_cache( [ 'list' => 'leave_entitlement' ] );
+        return;
     }
 
-    erp_hrm_purge_cache( ['list' => 'leave_entitlement'] );
+    // if count( $user_previous_entitlements ) > count( $policies )
+    $new_entitlement = Leave_Entitlement::find( $last_entitlement_id );
+    $leave           = Leave::find( $new_entitlement->leave_id );
+
+    foreach ( $user_previous_entitlements as $old_entitlement_info ) {
+        $old_entitlement = Leave_Entitlement::find( $old_entitlement_info->id );
+
+        transfer_requests_to_new_entitlements( $old_entitlement, $new_entitlement, $leave );
+
+        $old_entitlement->delete();
+    }
+    // if no policy matched, no old entitlement will be deleted or no new entitlement will be created
+
+    erp_hrm_purge_cache( [ 'list' => 'leave_entitlement' ] );
+}
+
+/**
+ * Assign requests of old entitlements to new entitlement
+ *
+ * @since 1.10.2
+ *
+ * @param  object $old_entitlement
+ * @param object $new_entitlement
+ * @param object $leave
+ */
+function transfer_requests_to_new_entitlements( $old_entitlement, $new_entitlement, $leave ) {
+    if ( ! $old_entitlement->leave_requests ) {
+        return;
+    }
+
+    // assign the old entitlement requests to the new one
+    foreach ( $old_entitlement->leave_requests as $request ) {
+        if ( ! $request->approval_status ) {
+            $new_entitlement->leave_requests()->save( $request );
+            $leave->requests()->save( $request );
+            continue;
+        }
+
+        foreach ( $request->approval_status as $status ) {
+            if ( ! $status->entitlements ) {
+                continue;
+            }
+
+            foreach ( $status->entitlements as $entitlement_after_processed_request ) {
+                $leave->entitlements()->save( $entitlement_after_processed_request );
+            }
+        }
+
+        $new_entitlement->leave_requests()->save( $request );
+        $leave->requests()->save( $request );
+    }
 }
