@@ -3173,56 +3173,10 @@ function erp_hr_manage_leave_policy_on_employee_type_change( $erp_user ) {
         return;
     }
 
-    $policies = Leave_Policy::where( function( $query ) use( $erp_user ) {
-        $query->where( 'employee_type', $erp_user->type )
-              ->orWhere( 'employee_type', '-1' );
-    } );
+    $policies = get_employee_matched_leave_policies( $erp_user, $f_year );
 
-    if ( $erp_user->department !== '0' ) {
-        $policies = $policies->where( function ( $query ) use( $erp_user ) {
-            $query->where( 'department_id', $erp_user->department )
-                  ->orWhere( 'department_id', '-1' );
-        } );
-    }
-
-    if ( $erp_user->designation !== '0' ) {
-        $policies = $policies->where( function ( $query ) use( $erp_user ) {
-            $query->where( 'designation_id', $erp_user->designation )
-                  ->orWhere( 'designation_id', '-1' );
-        } );
-    }
-
-    if ( $erp_user->location !== '0' ) {
-        $policies = $policies->where( function ( $query ) use( $erp_user ) {
-            $query->where( 'location_id', $erp_user->location )
-                  ->orWhere( 'location_id', '-1' );
-        } );
-    }
-
-    // TODO check if this object has this property
-    if ( isset( $erp_user->gender ) && $erp_user->gender !== '0' ) {
-        $policies = $policies->where( function ( $query ) use( $erp_user ) {
-            $query->where( 'gender', $erp_user->gender )
-                  ->orWhere( 'gender', '-1' );
-        } );
-    }
-
-    // TODO check if this object has this property
-    if ( isset( $erp_user->marital ) && $erp_user->marital !== '0' ) {
-        $policies = $policies->where( function ( $query ) use( $erp_user ) {
-            $query->where( 'marital', $erp_user->marital )
-                  ->orWhere( 'marital', '-1' );
-        } );
-    }
-
-    $policies = $policies->where( function( $query ) use( $f_year ) {
-        $query->where( 'f_year', $f_year->id );
-    } );
-
-    $policies = $policies->orderByDesc( 'days' )
-                         ->get();
-
-    usort( $user_previous_entitlements,
+    usort(
+        $user_previous_entitlements,
         function ( $a, $b ) {
             if ( $a->day_in > $b->day_in ) {
                 return -1;
@@ -3302,13 +3256,90 @@ function erp_hr_manage_leave_policy_on_employee_type_change( $erp_user ) {
 }
 
 /**
+ * Get applicable leave policies of the Employee
+ *
+ * @since 1.10.2
+ *
+ * @param object $erp_user instance of \WeDevs\ERP\HRM\Models\Employee
+ * @param object $f_year
+ *
+ * return object
+ */
+function get_employee_matched_leave_policies( $erp_user, $f_year ) {
+    $policies = Leave_Policy::where(
+        function ( $query ) use ( $erp_user ) {
+            $query->where( 'employee_type', $erp_user->type )
+                    ->orWhere( 'employee_type', '-1' );
+        }
+    );
+
+    if ( $erp_user->department !== '0' ) {
+        $policies = $policies->where(
+            function ( $query ) use ( $erp_user ) {
+                $query->where( 'department_id', $erp_user->department )
+                        ->orWhere( 'department_id', '-1' );
+            }
+        );
+    }
+
+    if ( $erp_user->designation !== '0' ) {
+        $policies = $policies->where(
+            function ( $query ) use ( $erp_user ) {
+                $query->where( 'designation_id', $erp_user->designation )
+                        ->orWhere( 'designation_id', '-1' );
+            }
+        );
+    }
+
+    if ( $erp_user->location !== '0' ) {
+        $policies = $policies->where(
+            function ( $query ) use ( $erp_user ) {
+                $query->where( 'location_id', $erp_user->location )
+                        ->orWhere( 'location_id', '-1' );
+            }
+        );
+    }
+
+    $employee = new \WeDevs\ERP\HRM\Employee( $erp_user->user_id );
+
+    if ( $employee->get_gender() ) {
+        $policies = $policies->where(
+            function ( $query ) use ( $employee ) {
+                $query->where( 'gender', $employee->get_gender() )
+                        ->orWhere( 'gender', '-1' );
+            }
+        );
+    }
+
+    if ( $employee->get_marital_status() ) {
+        $policies = $policies->where(
+            function ( $query ) use ( $employee ) {
+                $query->where( 'marital', $employee->get_marital_status() )
+                        ->orWhere( 'marital', '-1' );
+            }
+        );
+    }
+
+    $policies = $policies->where(
+        function ( $query ) use ( $f_year ) {
+            $query->where( 'f_year', $f_year->id );
+        }
+    );
+
+    return $policies->orderByDesc( 'days' )
+                        ->get();
+}
+
+/**
  * Assign requests of old entitlements to new entitlement
  *
  * @since 1.10.2
  *
- * @param  object $old_entitlement
+ * @param object $old_entitlement
  * @param object $new_entitlement
  * @param object $leave
+ *
+ * return void
  */
 function transfer_requests_to_new_entitlements( $old_entitlement, $new_entitlement, $leave ) {
     if ( ! $old_entitlement->leave_requests ) {
