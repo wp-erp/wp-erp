@@ -52,9 +52,9 @@
             <template slot="tfoot">
                 <tr class="tfoot">
                     <td colspan="3"></td>
-                    <td>{{ __('Total', 'erp') }} =</td>
-                    <td>{{ moneyFormat(totalDebit) }}</td>
-                    <td>{{ moneyFormat(totalCredit) }}</td>
+                    <td data-left-align>{{ __('Total', 'erp') }} =</td>
+                    <td data-colname="Debit">{{ moneyFormat(totalDebit) }}</td>
+                    <td data-colname="Credit">{{ moneyFormat(totalCredit) }}</td>
                     <td></td>
                 </tr>
             </template>
@@ -85,7 +85,7 @@ export default {
             ledgers       : [],
             openingBalance: 0,
             columns       : {
-                trn_date   : { label: __('Trns Date', 'erp') },
+                trn_date   : { label: __('Trns Date', 'erp'), isColPrimary: true },
                 created_at : { label: __('Created At', 'erp') },
                 trn_no     : { label: __('Trns No', 'erp') },
                 particulars: { label: __('Particulars', 'erp') },
@@ -150,7 +150,7 @@ export default {
         setDefault() {
             if (this.$route.params.id && !this.$route.params.ledgerName) {
                 // Normally refresh page
-                const ledger = this.ledgers.filter((ledger, index) => {
+                const ledger = this.ledgers.filter((ledger, _) => {
                     return parseInt(ledger.id) === parseInt(this.$route.params.id);
                 })[0];
 
@@ -188,7 +188,7 @@ export default {
                 });
 
                 this.$store.dispatch('spinner/setSpinner', false);
-            }).catch(e => {
+            }).catch(_ => {
                 this.$store.dispatch('spinner/setSpinner', false);
             });
         },
@@ -250,6 +250,26 @@ export default {
 
             tr:last-child td:last-child {
                 font-weight: bold;
+            }
+        }
+
+        @media screen {
+            @media( max-width: 782px ) {
+                tfoot {
+                    tr:not(.inline-edit-row):not(.no-items) td {
+                        padding: 10px 10px 10px 35%;
+                    }
+
+                    tr {
+                        td:first-child {
+                            display: none !important;
+                        }
+
+                        td[data-left-align] {
+                            padding-left: 10px !important;
+                        }
+                    }
+                }
             }
         }
     }
