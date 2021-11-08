@@ -93,7 +93,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr :key="index" v-for="(line, index) in purchase.line_items">
+                            <tr :key="index" v-for="(line, index) in purchase.line_items" class="inline-edit-row">
                                 <td>{{ index+1 }}</td>
                                 <td>{{ line.name }}</td>
                                 <td>{{ line.qty }}</td>
@@ -102,7 +102,7 @@
                             </tr>
                             </tbody>
                             <tfoot>
-                            <tr>
+                            <tr class="inline-edit-row">
                                 <td colspan="7">
                                     <ul>
                                         <li><span>{{ __('Subtotal', 'erp') }}:</span> {{ moneyFormat(total.basic) }}</li>
