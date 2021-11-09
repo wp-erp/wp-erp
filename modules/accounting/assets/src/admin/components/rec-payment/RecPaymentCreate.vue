@@ -120,7 +120,7 @@
                             </div>
                         </td>
                     </tr>
-                    <tr class="add-attachment-row  inline-edit-row">
+                    <tr class="add-attachment-row inline-edit-row">
                         <td colspan="9" style="text-align: left;">
                             <div class="attachment-container">
                                 <label class="col--attachement">{{ __('Attachment', 'erp') }}</label>
