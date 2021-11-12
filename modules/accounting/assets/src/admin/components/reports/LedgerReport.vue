@@ -183,8 +183,9 @@ export default {
                 this.totalCredit = response.data.extra.total_credit;
 
                 this.rows.forEach(item => {
-                    item.trn_date = this.formatDate(item.trn_date);
+                    item.trn_date   = this.formatDate(item.trn_date);
                     item.created_at = this.formatDate(item.created_at);
+                    item.id         = item.trn_no ? item.trn_no : parseInt( '' + Math.random() * 100000 );
                 });
 
                 this.$store.dispatch('spinner/setSpinner', false);
