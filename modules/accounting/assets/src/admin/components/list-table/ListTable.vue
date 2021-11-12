@@ -596,31 +596,33 @@ export default {
         }
     }
 
-    @media (max-width: 782px) {
-        ::-webkit-scrollbar {
-            width: 1px;
-            height: 1px;
-        }
+    @media screen and ( max-width: 782px ) {
+        .dropdown-popper {
+            ::-webkit-scrollbar {
+                width: 1px;
+                height: 1px;
+            }
 
-        ::-webkit-scrollbar-button {
-            width: 1px;
-            height: 1px;
-        }
+            ::-webkit-scrollbar-button {
+                width: 1px;
+                height: 1px;
+            }
 
-        .horizontal-scroll-wrapper {
-            width: 30px;
-            height: 150px;
-            overflow-y: auto;
-            overflow-x: hidden;
-            transform-origin: right top;
-            transform: rotate(-90deg) translateY(-30px);
-
-            > li {
-                margin-top: 20px;
+            .horizontal-scroll-wrapper {
                 width: 30px;
                 height: 150px;
-                transform: rotate(90deg);
+                overflow-y: auto;
+                overflow-x: hidden;
                 transform-origin: right top;
+                transform: rotate(-90deg) translateY(-30px);
+
+                > li {
+                    margin-top: 20px;
+                    width: 30px;
+                    height: 150px;
+                    transform: rotate(90deg);
+                    transform-origin: right top;
+                }
             }
         }
     }
