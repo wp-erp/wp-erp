@@ -131,8 +131,19 @@ class Form_Handler {
 
                 case 'delete':
 
-                    if ( isset( $_GET['suscriber_contact_id'] ) && !empty( $_GET['filter_contact_group'] ) ) {
-                        erp_crm_contact_subscriber_delete( sanitize_text_field( wp_unslash( $_GET['suscriber_contact_id'] ) ), sanitize_text_field( wp_unslash( $_GET['filter_contact_group'] ) ) );
+                    if ( isset( $_GET['suscriber_contact_id'] ) && ! empty( $_GET['filter_contact_group'] ) ) {
+                        $subscriber_contact_id = wp_unslash( $_GET['suscriber_contact_id'] );
+
+                        if ( is_array( $subscriber_contact_id ) ) {
+                            $subscriber_contact_id = array_map(
+                                'sanitize_text_field',
+                                $subscriber_contact_id
+                            );
+                        } else {
+                            $subscriber_contact_id = sanitize_text_field( $subscriber_contact_id );
+                        }
+
+                        erp_crm_contact_subscriber_delete( $subscriber_contact_id, sanitize_text_field( wp_unslash( $_GET['filter_contact_group'] ) ) );
                     }
 
                     wp_redirect( $redirect );
