@@ -98,7 +98,7 @@ class Form_Handler {
             return;
         }
 
-        if ( isset( $_GET['groupaction'] ) && $_GET['groupaction'] == 'view-subscriber' ) {
+        if ( isset( $_GET['groupaction'] ) && $_GET['groupaction'] === 'view-subscriber' ) {
             if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'bulk-contactsubscribers' ) ) {
                 return;
             }
