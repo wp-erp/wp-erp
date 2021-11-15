@@ -28,9 +28,13 @@ class Promotion {
             return;
         }
 
+        if ( ! isset( $_GET['page'] ) || 'erp' !== $_GET['page'] ) {
+            return;
+        }
+
         $current_time      = erp_current_datetime()->setTimezone ( new \DateTimeZone( 'America/New_York' ) );
-        $promotion_start   = $current_time->setDate( 2021, 10, 21 )->setTime( 9, 0, 0 );
-        $promotion_end     = $current_time->setDate( 2021, 10, 31 )->setTime( 9, 0, 0 );
+        $promotion_start   = $current_time->setDate( 2021, 11, 19 )->setTime( 9, 0, 0 );
+        $promotion_end     = $current_time->setDate( 2021, 11, 30 )->setTime( 23, 59, 59 );
 
         // 2021-03-15 09:00:00 EST - 2021-03-22 23:59:59 EST
         if ( $current_time > $promotion_end || $current_time < $promotion_start ) {
@@ -38,8 +42,8 @@ class Promotion {
         }
 
         if ( $current_time >= $promotion_start && $current_time <= $promotion_end ) {
-            $msg            = '<strong>Get Yourself a Spooky Delight!</strong></br>Enjoy up to <strong>35% OFF</strong> on <strong>WP ERP Pro</strong>.';
-            $option_name    = 'erp_halloween_offer_2021';
+            $msg            = 'Irresistible <strong>Black Friday</strong> & <strong>Cyber Monday</strong> Deals.</br>Enjoy up to <strong>45% OFF</strong> on <strong>WP ERP Pro</strong>.';
+            $option_name    = 'erp_black_friday_offer_2021';
 
             $this->generate_notice( $msg, $option_name );
             return;
@@ -62,7 +66,7 @@ class Promotion {
         }
 
         $offer_msg = '<p class="highlight-text">' . sprintf( __( '%s', 'erp' ), $msg ) .
-                '</p><p><a style="padding:5px 15px;" target="_blank" href="https://wperp.com/pricing/?nocache&utm_medium=text&utm_source=wordpress-erp-halloween20212021">' . __( 'Get Now', 'erp' ) . '</a></p>';
+                '</p><p><a style="padding:5px 15px;" target="_blank" href="https://wperp.com/pricing/?nocache&utm_medium=text&utm_source=wordpress-erp-bfcm2021">' . __( 'Get Now', 'erp' ) . '</a></p>';
         ?>
         <div class="notice is-dismissible erp-promotional-offer-notice" id="erp-promotional-offer-notice">
             <?php echo wp_kses_post( $offer_msg ); ?>
