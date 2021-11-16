@@ -39,20 +39,19 @@
                     {{ data.row.ref ? data.row.ref : '-' }}
                 </template>
                 <template slot="customer_name" slot-scope="data">
-                    {{ isPayment(data.row) ? data.row.pay_cus_name : data.row.inv_cus_name }}
+                    {{ data.row.inv_cus_name ? data.row.inv_cus_name : '-' }}
                 </template>
                 <template slot="trn_date" slot-scope="data">
-                    {{ isPayment(data.row) ? formatDate( data.row.payment_trn_date ) : formatDate( data.row.invoice_trn_date ) }}
+                    {{ data.row.invoice_trn_date ? formatDate( data.row.invoice_trn_date ) : '-' }}
                 </template>
                 <template slot="due_date" slot-scope="data">
-                    {{ isPayment(data.row) ? '-' : formatDate( data.row.due_date ) }}
+                    {{ isPayment(data.row) ? '-' : ( data.row.due_date ? formatDate( data.row.due_date ) : '-' ) }}
                 </template>
                 <template slot="due" slot-scope="data">
-                    <span :class="(parseFloat(data.row.due) < 0) ? 'cr-balance' : 'dr-balance'">{{ isPayment(data.row) ? '-' : formatAmount(data.row.due, true) }}</span>
+                    <span :class="(parseFloat(data.row.due) < 0) ? 'cr-balance' : 'dr-balance'">{{ isPayment(data.row) ? '-' : ( data.row.due ? formatAmount(data.row.due, true) : '-' ) }}</span>
                 </template>
                 <template slot="amount" slot-scope="data">
-                    {{ isPayment(data.row) ? formatAmount(data.row.payment_amount) : formatAmount(data.row.sales_amount)
-                    }}
+                    {{ isPayment(data.row) ? formatAmount(data.row.payment_amount) : formatAmount(data.row.sales_amount) }}
                 </template>
                 <template slot="status" slot-scope="data">
                     {{ data.row.status }}
@@ -86,7 +85,7 @@ export default {
     data() {
         return {
             columns       : {
-                trn_no       : { label: __('Voucher No.', 'erp') },
+                trn_no       : { label: __('Voucher No.', 'erp'), isColPrimary: true },
                 type         : { label: __('Type', 'erp') },
                 ref          : { label: __('Ref', 'erp') },
                 customer_name: { label: __('Customer', 'erp') },

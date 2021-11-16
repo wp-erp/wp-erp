@@ -101,7 +101,7 @@ export default {
     data() {
         return {
             columns: {
-                code       : { label: __('Code', 'erp') },
+                code       : { label: __('Code', 'erp'), isColPrimary: true },
                 ledger_name: { label: __('Name', 'erp') },
                 balance    : { label: __('Balance', 'erp') },
                 trn_count  : { label: __('Count', 'erp') },

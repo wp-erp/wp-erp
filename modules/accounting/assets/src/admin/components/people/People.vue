@@ -347,11 +347,14 @@ export default {
                     }
                 }
             }
-            .col--actions {
-                float: left !important;
+            @media (min-width: 783px) {
+                .col--actions {
+                    float: left !important;
+                }
             }
             .row-actions {
                 padding-left: 20px !important;
+                text-align: left !important;
             }
         }
         .check-column {
