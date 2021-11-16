@@ -260,9 +260,6 @@ final class WeDevs_ERP {
         if ( defined( 'WP_CLI' ) && WP_CLI ) {
             include WPERP_INCLUDES . '/cli/commands.php';
         }
-
-        // temporary updater for lounge
-        require_once WPERP_INCLUDES . '/updates/temp-update.php';
     }
 
     /**
