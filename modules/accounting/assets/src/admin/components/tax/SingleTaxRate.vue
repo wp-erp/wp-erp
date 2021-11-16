@@ -71,7 +71,7 @@ export default {
             addNewLine            : false,
             is_update             : false,
             columns               : {
-                component_name: { label: __('Component', 'erp') },
+                component_name: { label: __('Component', 'erp'), isColPrimary: true },
                 agency_name   : { label: __('Agency', 'erp') },
                 tax_cat_name  : { label: __('Tax Category', 'erp') },
                 tax_rate      : { label: __('Tax Rate', 'erp') },
@@ -172,8 +172,15 @@ export default {
         th.column.actions {
             float: left !important;
         }
-        .col--actions {
-            float: left !important;
+        @media (min-width: 783px) {
+            .product-list {
+                .col--actions {
+                    float: left !important;
+                }
+                .row-actions {
+                    text-align: left !important;
+                }
+            }
         }
     }
 </style>

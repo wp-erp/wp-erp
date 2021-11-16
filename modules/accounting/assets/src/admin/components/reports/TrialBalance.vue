@@ -35,7 +35,7 @@
             <tbody :key="key" v-for="(chart, key) in chrtAcct">
                 <tr v-if="rows[chart.id] && debugMode"><h1>{{ chart.label }}</h1></tr>
 
-                <tr :key="index" v-for="(row, index) in rows[chart.id]">
+                <tr :key="index" v-for="(row, index) in rows[chart.id]" class="inline-edit-row">
                     <td>
                         <details v-if="row.additional" open>
                             <summary>{{ row.name }}</summary>
@@ -53,7 +53,7 @@
                 </tr>
             </tbody>
             <tfoot>
-                <tr class="t-foot">
+                <tr class="t-foot inline-edit-row">
                     <td>{{ __('Total', 'erp') }}</td>
                     <td>{{ moneyFormat( totalDebit ) }}</td>
                     <td>{{ moneyFormat( Math.abs(totalCredit) ) }}</td>
@@ -277,6 +277,30 @@ export default {
                 justify-content: space-between;
                 max-width: 300px;
                 padding: 3px;
+            }
+        }
+
+        @media screen {
+            .inline-edit-row {
+                td {
+                    padding: 18px 10px;
+                }
+
+                td:first-child {
+                    padding-left: 20px;
+                }
+            }
+
+            @media ( max-width: 782px ) {
+                .inline-edit-row {
+                    td:first-child {
+                        border-right: 1px solid #eeeeee;
+                    }
+
+                    td:last-child {
+                        border-left: 1px solid #eeeeee;
+                    }
+                }
             }
         }
     }

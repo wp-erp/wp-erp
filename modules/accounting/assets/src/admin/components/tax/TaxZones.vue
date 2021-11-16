@@ -61,7 +61,7 @@ export default {
         return {
             modalParams: null,
             columns: {
-                tax_rate_name: { label: __('Tax Zone Name', 'erp') },
+                tax_rate_name: { label: __('Tax Zone Name', 'erp'), isColPrimary: true },
                 tax_number   : { label: __('Tax Number', 'erp') },
                 default      : { label: __('Default', 'erp') },
                 actions      : { label: __('Actions', 'erp') }
@@ -218,8 +218,13 @@ export default {
     }
 
     .app-tax-zones {
-        .col--actions {
-            text-align: left !important;
+        @media (min-width: 783px) {
+            .col--actions {
+                float: left !important;
+            }
+            .row-actions {
+                text-align: left !important;
+            }
         }
 
         .check-column {

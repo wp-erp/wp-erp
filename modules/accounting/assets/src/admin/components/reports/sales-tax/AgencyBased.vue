@@ -84,9 +84,9 @@
             <template slot="tfoot">
                 <tr class="tfoot">
                     <td colspan="3"></td>
-                    <td>{{ __( 'Total', 'erp' ) }} =</td>
-                    <td>{{ moneyFormat( totalDebit ) }}</td>
-                    <td>{{ moneyFormat( totalCredit ) }}</td>
+                    <td data-left-align>{{ __( 'Total', 'erp' ) }} =</td>
+                    <td data-colname="Debit">{{ moneyFormat( totalDebit ) }}</td>
+                    <td data-colname="Credit">{{ moneyFormat( totalCredit ) }}</td>
                     <td></td>
                 </tr>
             </template>
@@ -122,7 +122,8 @@
                 symbol          : erp_acct_var.symbol,
                 columns         : {
                     trn_no      : {
-                        label   : __( 'Voucher No', 'erp' )
+                        label       : __( 'Voucher No', 'erp' ),
+                        isColPrimary: true
                     },
                     trn_date    : {
                         label   : __( 'Transaction Date', 'erp' )
@@ -201,7 +202,7 @@
                     });
 
                     this.$store.dispatch('spinner/setSpinner', false);
-                }).catch(error => {
+                }).catch(_ => {
                     this.$store.dispatch('spinner/setSpinner', false);
                 });
             },
@@ -212,3 +213,27 @@
         }
     };
 </script>
+
+<style scoped lang="less">
+    .sales-tax-table {
+        @media screen {
+            @media( max-width: 782px ) {
+                tfoot {
+                    tr:not(.inline-edit-row):not(.no-items) td {
+                        padding: 10px 10px 10px 35%;
+                    }
+
+                    tr {
+                        td:first-child {
+                            display: none !important;
+                        }
+
+                        td[data-left-align] {
+                            padding-left: 10px !important;
+                        }
+                    }
+                }
+            }
+        }
+    }
+</style>

@@ -96,7 +96,7 @@ export default {
                 }
             ],
             columns: {
-                trn_date   : { label: __('Transaction Date', 'erp') },
+                trn_date   : { label: __('Transaction Date', 'erp'), isColPrimary: true },
                 created_at : { label: __('Created At', 'erp') },
                 voucher_no : { label: __('Voucher No', 'erp') },
                 particulars: { label: __('Particulars', 'erp') },

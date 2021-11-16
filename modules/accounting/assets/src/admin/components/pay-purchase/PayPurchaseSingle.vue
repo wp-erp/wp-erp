@@ -97,7 +97,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                                <tr :key="index" v-for="(line, index) in payPurchase.purchase_details">
+                                <tr :key="index" v-for="(line, index) in payPurchase.purchase_details" class="inline-edit-row">
                                     <td>{{ line.id }}</td>
                                     <td>{{ line.purchase_no }}</td>
                                     <td>{{ line.vendor_name }}</td>
@@ -105,7 +105,7 @@
                                 </tr>
                             </tbody>
                             <tfoot>
-                            <tr>
+                            <tr class="inline-edit-row">
                                 <td colspan="7">
                                     <ul>
                                         <li><span>{{ __('Total', 'erp') }}:</span> {{ type === "receive_pay_purchase" ? formatAmount(-1 * payPurchase.amount, true) : formatAmount(payPurchase.amount, true) }}</li>

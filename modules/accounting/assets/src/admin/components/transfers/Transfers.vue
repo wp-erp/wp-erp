@@ -51,7 +51,7 @@ export default {
             money_transfer: false,
             transfer_list : [],
             columns       : {
-                voucher: { label: __('Voucher No', 'erp') },
+                voucher: { label: __('Voucher No', 'erp'), isColPrimary: true },
                 ac_from: { label: __('Account From', 'erp') },
                 amount : { label: __('Amount', 'erp') },
                 ac_to  : { label: __('Account To', 'erp') }
@@ -88,12 +88,19 @@ export default {
             padding: 20px !important;
         }
 
-        .actions {
-            text-align: right;
-        }
-
-        .col--actions {
-            float: right !important;
+        @media (min-width: 783px) {
+            .actions {
+                text-align: right;
+            }
+            .col--actions {
+                float: right !important;
+            }
+            .row-actions {
+                text-align: right !important;
+            }
+            .ac_to {
+                text-align: left !important;
+            }
         }
     }
 </style>

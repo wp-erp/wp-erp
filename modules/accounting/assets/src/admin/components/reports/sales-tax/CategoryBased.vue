@@ -49,7 +49,7 @@
         </ul>
 
         <list-table
-            tableClass="wperp-table table-striped table-dark widefat sales-tax-table"
+            tableClass="wperp-table table-striped table-dark widefat sales-tax-table sales-tax-table-category"
             :columns="columns"
             :rows="taxes"
             :showCb="false">
@@ -170,7 +170,7 @@
                 }).then(response => {
                     this.taxes = response.data;
                     this.$store.dispatch('spinner/setSpinner', false);
-                }).catch(e => {
+                }).catch(_ => {
                     this.$store.dispatch('spinner/setSpinner', false);
                 });
             },
@@ -181,3 +181,23 @@
         }
     };
 </script>
+
+<style lang="less">
+    @media screen and ( max-width: 782px ) {
+        .sales-tax-table-category {
+            thead {
+                th {
+                    &.column.trn_date, &.column.tax_amount {
+                        display: none;
+                    }
+                }
+            }
+
+            tfoot tr.tfoot {
+                td:first-child {
+                    display: none !important;
+                }
+            }
+        }
+    }
+</style>

@@ -131,10 +131,10 @@
                         </div>
                     </th>
                     <td v-for="(value, key) in columns" :key="key" :data-colname="ucFirst(key)"
-                        :class="['column', key, (value.isColPrimary) ? 'column-primary' : '', (actionColumn === key && hasActions) ? 'col--actions': '', { 'selected': checkedItems.includes(row[index]) }]">
+                        :class="['column', key, (value.isColPrimary) ? 'column-primary' : '', { 'selected': checkedItems.includes(row[index]) }]">
                         <slot :name="key" :row="row">
                             <template v-if="'actions' !== key">
-                                {{ row[key] }}
+                                {{ row[key] ? row[key] : '-' }}
                             </template>
                         </slot>
                         <button v-if="value.isColPrimary" type="button" class="wperp-toggle-row"
@@ -148,7 +148,7 @@
                                         <a class="dropdown-trigger"><i class="flaticon-menu"></i></a>
                                     </template>
                                     <template slot="dropdown">
-                                        <ul slot="action-items" role="menu">
+                                        <ul slot="action-items" role="menu" class="horizontal-scroll-wrapper">
                                             <slot :row="row" name="action-list">
                                                 <li v-for="action in actions" :key="action.key" :class="action.key">
                                                     <a href="#" @click.prevent="actionClicked(action.key, row, i)"><i
@@ -484,6 +484,7 @@ export default {
 <style lang="less">
 
     .row-actions {
+        display: block !important;
         color: #D7DEE2;
         position: static;
 
@@ -592,6 +593,37 @@ export default {
         100% {
             -webkit-transform: rotate(360deg);
             transform: rotate(360deg);
+        }
+    }
+
+    @media screen and ( max-width: 782px ) {
+        .dropdown-popper {
+            ::-webkit-scrollbar {
+                width: 1px;
+                height: 1px;
+            }
+
+            ::-webkit-scrollbar-button {
+                width: 1px;
+                height: 1px;
+            }
+
+            .horizontal-scroll-wrapper {
+                width: 30px;
+                height: 150px;
+                overflow-y: auto;
+                overflow-x: hidden;
+                transform-origin: right top;
+                transform: rotate(-90deg) translateY(-30px);
+
+                > li {
+                    margin-top: 20px;
+                    width: 30px;
+                    height: 150px;
+                    transform: rotate(90deg);
+                    transform-origin: right top;
+                }
+            }
         }
     }
 

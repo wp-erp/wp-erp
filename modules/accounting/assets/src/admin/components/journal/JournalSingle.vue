@@ -52,7 +52,7 @@
                     <div class="wperp-invoice-table" v-if="null != journal">
                         <table class="wperp-table wperp-form-table invoice-table">
                             <thead>
-                            <tr>
+                            <tr class="inline-edit-row">
                                 <th>{{ __('Account', 'erp') }}</th>
                                 <th>{{ __('Particulars', 'erp') }}</th>
                                 <th>{{ __('Debit', 'erp') }}</th>
@@ -60,7 +60,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr :key="index" v-for="(line, index) in journal.line_items">
+                            <tr :key="index" v-for="(line, index) in journal.line_items" class="inline-edit-row">
                                 <td>{{ line.account}}</td>
                                 <td>{{ line.particulars }}</td>
                                 <td>{{ line.debit }}</td>
@@ -68,7 +68,7 @@
                             </tr>
                             </tbody>
                             <tfoot>
-                            <tr>
+                            <tr class="inline-edit-row">
                                 <td colspan="7">
                                     <ul>
                                         <li><span>{{ __('Balance', 'erp') }}:</span> {{ moneyFormat(journal.total) }}</li>

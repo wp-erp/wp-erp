@@ -53,7 +53,7 @@
                 <div class="table-container">
                     <table class="wperp-table wperp-form-table">
                         <thead>
-                        <tr>
+                        <tr class="inline-edit-row">
                             <td scope="col" class="col--product">{{ __('Product/Service', 'erp') }}</td>
                             <th scope="col">{{ __('Qty', 'erp') }}</th>
                             <th scope="col">{{ __('Unit Price', 'erp') }}</th>
@@ -63,8 +63,8 @@
                         </tr>
                         </thead>
                         <tbody>
-                            <tr  v-for="(line, index) in transactionLines" :key="index">
-                                <th scope="row" class="col--products with-multiselect column-primary product-select">
+                            <tr v-for="(line, index) in transactionLines" :key="index" class="inline-edit-row">
+                                <th scope="row" class="col--products with-multiselect product-select">
                                     <multi-select v-model="line.product" :options="products" @input="setLineData(line)" />
                                 </th>
                                 <td class="col--qty">
@@ -99,7 +99,7 @@
                                 </td>
                             </tr>
 
-                            <tr class="tax-rate-row">
+                            <tr class="tax-rate-row inline-edit-row">
                                 <td colspan="3" class="text-right with-multiselect">
                                     <multi-select v-model="taxRate"
                                                 :options="taxZones"
@@ -110,7 +110,7 @@
                                 <td></td>
                             </tr>
 
-                            <tr class="total-amount-row">
+                            <tr class="total-amount-row inline-edit-row">
                                 <td colspan="3" class="text-right">
                                     <span>{{ __('Total Amount', 'erp') }} = </span>
                                 </td>
@@ -118,13 +118,13 @@
                                 <td></td>
                             </tr>
 
-                            <tr class="wperp-form-group">
+                            <tr class="wperp-form-group inline-edit-row">
                                 <td colspan="9" style="text-align: left;">
                                     <label>{{ __('Particulars', 'erp') }}</label>
                                     <textarea v-model="particulars" rows="4" maxlength="250" class="wperp-form-field display-flex" :placeholder="__('Particulars', 'erp')"></textarea>
                                 </td>
                             </tr>
-                            <tr>
+                            <tr class="inline-edit-row">
                                 <td>
                                     <div class="attachment-item" :key="index" v-for="(file, index) in attachments">
                                         <img :src="erp_acct_assets + '/images/file-thumb.png'">
@@ -136,7 +136,7 @@
                                     </div>
                                 </td>
                             </tr>
-                            <tr class="add-attachment-row" >
+                            <tr class="add-attachment-row inline-edit-row" >
                                 <td colspan="9" style="text-align: left;">
                                     <div class="attachment-container">
                                         <label class="col--attachement">{{ __('Attachment', 'erp') }}</label>
@@ -146,7 +146,7 @@
                             </tr>
                         </tbody>
                         <tfoot>
-                            <tr>
+                            <tr class="inline-edit-row">
                                 <td v-if="orderToPurchase()" colspan="9" style="text-align: right;">
                                     <combo-button :options="[{ id: 'update', text: __('Save Conversion', 'erp') }]" />
                                 </td>
@@ -605,6 +605,10 @@
 
         .col--product {
             min-width: 500px;
+
+            @media screen and ( max-width: 782px ) {
+                min-width: 60%;
+            }
         }
 
         .col--qty {
