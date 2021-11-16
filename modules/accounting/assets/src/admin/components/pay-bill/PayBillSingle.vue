@@ -83,21 +83,21 @@
                     <div class="wperp-invoice-table" v-if="null != payBill">
                         <table class="wperp-table wperp-form-table invoice-table">
                             <thead>
-                            <tr>
+                            <tr class="inline-edit-row">
                                 <th>{{ __('Sl.', 'erp') }}</th>
                                 <th>{{ __('Bill No', 'erp') }}</th>
                                 <th>{{ __('Amount', 'erp') }}</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr :key="index" v-for="(line, index) in payBill.bill_details">
+                            <tr :key="index" v-for="(line, index) in payBill.bill_details" class="inline-edit-row">
                                 <td>{{ line.id }}</td>
                                 <td>{{ line.bill_no }}</td>
                                 <td>{{ moneyFormat(line.amount) }}</td>
                             </tr>
                             </tbody>
                             <tfoot>
-                            <tr>
+                            <tr class="inline-edit-row">
                                 <td colspan="7">
                                     <ul>
                                         <li><span>{{ __('Subtotal', 'erp') }}:</span> {{ moneyFormat(payBill.amount) }}</li>

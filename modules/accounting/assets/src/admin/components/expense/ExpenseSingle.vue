@@ -110,7 +110,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr :key="index" v-for="(line, index) in expense_data.bill_details">
+                            <tr :key="index" v-for="(line, index) in expense_data.bill_details" class="inline-edit-row">
                                 <td>{{ index+1 }}</td>
                                 <td>{{ line.ledger_name}}</td>
                                 <td>{{ line.particulars }}</td>
@@ -118,7 +118,7 @@
                             </tr>
                             </tbody>
                             <tfoot>
-                            <tr>
+                            <tr class="inline-edit-row">
                                 <td colspan="7">
                                     <ul>
                                         <li><span>{{ __('Subtotal', 'erp') }}:</span> {{ moneyFormat(expense_data.total) }}</li>

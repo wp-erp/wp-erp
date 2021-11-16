@@ -69,8 +69,8 @@
                 <div class="table-container">
                     <table class="wperp-table wperp-form-table">
                         <thead>
-                        <tr>
-                            <th scope="col" class="col--id column-primary">{{ __('SL No.', 'erp') }}</th>
+                        <tr class="inline-edit-row">
+                            <th scope="col" class="col--id">{{ __('SL No.', 'erp') }}</th>
                             <th scope="col">{{ __('Account', 'erp') }}</th>
                             <th scope="col">{{ __('Description', 'erp') }}</th>
                             <th scope="col">{{ __('Amount', 'erp') }}</th>
@@ -79,8 +79,8 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr :key="key" v-for="(line, key) in transactionLines">
-                            <td scope="row" class="col--id column-primary">{{key+1}}</td>
+                        <tr :key="key" v-for="(line, key) in transactionLines" class="inline-edit-row">
+                            <td scope="row" class="col--id">{{key+1}}</td>
                             <td class="col--account with-multiselect">
                                 <multi-select v-model="line.ledger_id" :options="ledgers" />
                             </td>
@@ -97,26 +97,26 @@
                                 <a @click.prevent="removeRow(key)" href="#"><i class="flaticon-trash"></i></a>
                             </td>
                         </tr>
-                        <tr class="add-new-line">
+                        <tr class="add-new-line inline-edit-row">
                             <td colspan="9" style="text-align: left;">
                                 <button @click.prevent="addLine" class="wperp-btn btn--primary add-line-trigger"><i class="flaticon-add-plus-button"></i>{{ __('Add Line', 'erp') }}</button>
                             </td>
                         </tr>
 
-                        <tr class="total-amount-row">
-                            <td class="text-right pr-0 hide-sm" colspan="4">{{ __('Total Amount', 'erp') }}</td>
+                        <tr class="total-amount-row inline-edit-row">
+                            <td class="text-right pr-0" colspan="4">{{ __('Total Amount', 'erp') }}</td>
                             <td class="text-right" :data-colname="__('Total Amount', 'erp')">
                                 <input type="text" class="text-right wperp-form-field" name="finalamount" :value="moneyFormat(finalTotalAmount)" readonly disabled></td>
                             <td class="text-right"></td>
                         </tr>
 
-                        <tr class="wperp-form-group">
+                        <tr class="wperp-form-group inline-edit-row">
                             <td colspan="9" style="text-align: left;">
                                 <label>{{ __('Particulars', 'erp') }}</label>
                                 <textarea v-model="particulars" rows="4" maxlength="250" class="wperp-form-field display-flex" :placeholder="__('Internal Information', 'erp')"></textarea>
                             </td>
                         </tr>
-                        <tr>
+                        <tr class="inline-edit-row">
                             <td>
                                 <div class="attachment-item" :key="index" v-for="(file, index) in attachments">
                                     <img :src="erp_acct_assets + '/images/file-thumb.png'">
@@ -128,7 +128,7 @@
                                 </div>
                             </td>
                         </tr>
-                        <tr class="add-attachment-row">
+                        <tr class="add-attachment-row inline-edit-row">
                             <td colspan="9" style="text-align: left;">
                                 <div class="attachment-container">
                                     <label class="col--attachement">{{ __('Attachment', 'erp') }}</label>
@@ -138,7 +138,7 @@
                         </tr>
                         </tbody>
                         <tfoot>
-                        <tr>
+                        <tr class="inline-edit-row">
                             <td colspan="9" style="text-align: right;">
                                 <combo-button v-if="draftToExpense()" :options="[{ id: 'update', text: __('Save Conversion', 'erp') }]" />
                                 <combo-button v-else-if="editMode" :options="updateButtons" />

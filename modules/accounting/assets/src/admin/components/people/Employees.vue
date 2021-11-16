@@ -49,7 +49,7 @@ export default {
                 }
             ],
             columns: {
-                employee: { label: __('Name', 'erp') },
+                employee: { label: __('Name', 'erp'), isColPrimary: true },
                 designation: { label: __('Designation', 'erp') },
                 department: { label: __('Department', 'erp') },
                 email: { label: __('Email', 'erp') },

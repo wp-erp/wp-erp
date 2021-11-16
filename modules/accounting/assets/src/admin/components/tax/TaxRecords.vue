@@ -61,7 +61,7 @@ export default {
             amount: 0,
             modalParams: null,
             columns: {
-                voucher_no: { label: __('Voucher No', 'erp') },
+                voucher_no: { label: __('Voucher No', 'erp'), isColPrimary: true },
                 agency_id : { label: __('Agency', 'erp') },
                 trn_date  : { label: __('Date', 'erp') },
                 // 'tax_period': {label: __('Tax Period', 'erp')},
@@ -206,8 +206,13 @@ export default {
 </script>
 <style lang="less">
     .tax-records-list {
-        .col--actions {
-            text-align: left !important;
+        @media (min-width: 783px) {
+            .col--actions {
+                float: left !important;
+            }
+            .row-actions {
+                text-align: left !important;
+            }
         }
     }
 </style>
