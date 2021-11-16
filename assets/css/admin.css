@@ -4991,4 +4991,14 @@ div.erp-nav-container.--show-secondary .-secondary {
   .erp-table td:last-child {
     border-bottom: 0;
   }
+  div.wperp-table-responsive div.table-container,
+  div.wperp-invoice-table {
+    width: 100% !important;
+    display: block !important;
+    overflow-x: auto !important;
+  }
+  div.wperp-table-responsive div.table-container > table,
+  div.wperp-invoice-table > table {
+    width: 782px !important;
+  }
 }
