@@ -100,7 +100,7 @@ class Settings extends Template {
             'title' => __( 'Auto Assign Leave Policy', 'erp' ),
             'type'  => 'checkbox',
             'id'    => 'enable_auto_leave_policy_assignment_on_type_change',
-            'desc'  => __( 'Employees will be assigned available leave policy automatically on Employee Type change', 'erp' ),
+            'desc'  => __( 'Employees will be assigned relevant leave policies automatically after updating their Employment type', 'erp' ),
         ];
 
         $fields = apply_filters( 'erp_settings_hr_leave_section_fields', $fields );
