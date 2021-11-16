@@ -33,7 +33,7 @@ class Promotion {
         }
 
         $current_time      = erp_current_datetime()->setTimezone ( new \DateTimeZone( 'America/New_York' ) );
-        $promotion_start   = $current_time->setDate( 2021, 11, 05 )->setTime( 9, 0, 0 );
+        $promotion_start   = $current_time->setDate( 2021, 11, 19 )->setTime( 9, 0, 0 );
         $promotion_end     = $current_time->setDate( 2021, 11, 30 )->setTime( 23, 59, 59 );
 
         // 2021-03-15 09:00:00 EST - 2021-03-22 23:59:59 EST
