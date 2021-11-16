@@ -122,7 +122,7 @@ class Form_Handler {
 
                 case 'contact_group_delete':
                     if ( isset( $_GET['contact_group'] ) && ! empty( $_GET['contact_group'] ) ) {
-                        $groups = array_map( 'sanitize_text_field', wp_unslash( $_GET['contact_group'] ) );
+                        $groups = array_map( 'intval', wp_unslash( $_GET['contact_group'] ) );
                         erp_crm_contact_group_delete( $groups );
                     }
 
@@ -132,11 +132,11 @@ class Form_Handler {
                 case 'delete':
                     if ( isset( $_GET['suscriber_contact_id'] ) && ! empty( $_GET['filter_contact_group'] ) ) {
                         $subscriber_contact_ids = array_map(
-                            'sanitize_text_field',
+                            'intval',
                             wp_unslash( $_GET['suscriber_contact_id'] )
                         );
 
-                        erp_crm_contact_subscriber_delete( $subscriber_contact_ids, sanitize_text_field( wp_unslash( $_GET['filter_contact_group'] ) ) );
+                        erp_crm_contact_subscriber_delete( $subscriber_contact_ids, intval( wp_unslash( $_GET['filter_contact_group'] ) ) );
                     }
 
                     wp_redirect( $redirect );
