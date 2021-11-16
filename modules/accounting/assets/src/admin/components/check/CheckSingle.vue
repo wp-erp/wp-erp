@@ -75,7 +75,7 @@
                     <div class="wperp-invoice-table" v-if="null != expense_data">
                         <table class="wperp-table wperp-form-table invoice-table">
                             <thead>
-                            <tr>
+                            <tr class="inline-edit-row">
                                 <th>{{ __('Sl', 'erp') }}</th>
                                 <th>{{ __('Account', 'erp') }}</th>
                                 <th>{{ __('Particulars', 'erp') }}</th>
@@ -83,7 +83,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr :key="index" v-for="(line, index) in expense_data.bill_details">
+                            <tr :key="index" v-for="(line, index) in expense_data.bill_details" class="inline-edit-row">
                                 <td>{{ index+1 }}</td>
                                 <td>{{ line.ledger_name}}</td>
                                 <td>{{ line.particulars }}</td>
@@ -91,7 +91,7 @@
                             </tr>
                             </tbody>
                             <tfoot>
-                            <tr>
+                            <tr class="inline-edit-row">
                                 <td colspan="7">
                                     <ul>
                                         <li><span>{{ __('Subtotal', 'erp') }}:</span> {{ moneyFormat(expense_data.total) }}</li>

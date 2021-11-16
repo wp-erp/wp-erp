@@ -59,7 +59,7 @@ export default {
     data() {
         return {
             columns       : {
-                trn_no     : { label: __('Voucher No.', 'erp') },
+                trn_no     : { label: __('Voucher No.', 'erp'), isColPrimary: true },
                 type       : { label: __('Type', 'erp') },
                 ref        : { label: __('Ref', 'erp') },
                 vendor_name: { label: __('People', 'erp') },

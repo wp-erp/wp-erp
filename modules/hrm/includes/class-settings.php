@@ -96,6 +96,12 @@ class Settings extends Template {
             'id'    => 'enable_extra_leave',
             'desc'  => __( 'Employees can apply for leave, even when there is no entitlement left.', 'erp' ),
         ];
+        $fields['leave'][] = [
+            'title' => __( 'Auto Assign Leave Policy', 'erp' ),
+            'type'  => 'checkbox',
+            'id'    => 'enable_auto_leave_policy_assignment_on_type_change',
+            'desc'  => __( 'Employees will be assigned relevant leave policies automatically after updating their Employment type', 'erp' ),
+        ];
 
         $fields = apply_filters( 'erp_settings_hr_leave_section_fields', $fields );
 

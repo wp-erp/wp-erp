@@ -26,21 +26,21 @@ $life_stages  = erp_crm_get_life_stages_dropdown_raw();
         <thead>
             <tr>
                 <th><?php esc_attr_e( 'Label', 'erp' ); ?></th>
-                <?php foreach ( $life_stages as $life_stage ) { ?>
-                    <th><?php esc_attr_e( $life_stage, 'erp' ); ?></th>
-                <?php } ?>
+                <?php foreach ( $life_stages as $life_stage ) : ?>
+                    <th><?php echo esc_html( $life_stage ); ?></th>
+                <?php endforeach; ?>
             </tr>
         </thead>
 
         <tbody>
-            <?php foreach ( $reports as $key => $report ) { ?>
+            <?php foreach ( $reports as $key => $report ) : ?>
                 <tr>
-                    <td><?php echo esc_html( $key ); ?></td>
-                    <?php foreach ( $life_stages as $slug => $title ) { ?>
-                        <td><?php echo array_key_exists( $slug, $report ) ? esc_attr( $report[ $slug ] ) : 0; ?></td>
-                    <?php } ?>
+                    <td><?php printf( esc_html__( '%s', 'erp' ), $key ); ?></td>
+                    <?php foreach ( $life_stages as $slug => $title ) : ?>
+                        <td><?php array_key_exists( $slug, $report ) ? printf( esc_html__( '%s', 'erp' ), $report[ $slug ] ) : esc_html_e( '0', 'erp' ); ?></td>
+                    <?php endforeach; ?>
                 </tr>
-            <?php } ?>
+            <?php endforeach; ?>
         </tbody>
     </table>
 

@@ -74,21 +74,23 @@
                                 </td>
                             </tr>
 
-                            <tr class="discount-rate-row">
+                            <tr class="discount-rate-row inline-edit-row">
                                 <td colspan="4" class="text-right with-multiselect">
                                     <select v-model="discountType">
                                         <option value="discount-percent">{{ __('Discount percent', 'erp') }}</option>
                                         <option value="discount-value">{{ __('Discount value', 'erp') }}</option>
                                     </select>
                                 </td>
-                                <td><input type="text" class="wperp-form-field" v-model="discount"
-                                    :placeholder="discountType">
-                                    <em v-show="'discount-percent' === discountType">%</em>
+                                <td>
+                                    <div class="discountType-box">
+                                        <input type="text" class="wperp-form-field" v-model="discount" :placeholder="discountType">
+                                        <em v-show="'discount-percent' === discountType"> %</em>
+                                    </div>
                                 </td>
                                 <td></td>
                             </tr>
 
-                            <tr class="tax-rate-row">
+                            <tr class="tax-rate-row inline-edit-row">
                                 <td colspan="4" class="text-right with-multiselect">
                                     <multi-select v-model="taxRate"
                                         :options="taxRates"
@@ -99,20 +101,20 @@
                                 <td></td>
                             </tr>
 
-                            <tr class="total-amount-row">
+                            <tr class="total-amount-row inline-edit-row">
                                 <td colspan="4" class="text-right">
                                     <span>{{ __('Total Amount', 'erp') }} =</span>
                                 </td>
                                 <td><input type="text" class="wperp-form-field" :value="moneyFormat(finalTotalAmount)" readonly></td>
                                 <td></td>
                             </tr>
-                            <tr class="wperp-form-group">
+                            <tr class="wperp-form-group inline-edit-row">
                                 <td colspan="9" style="text-align: left;">
                                     <label>{{ __('Particulars', 'erp') }}</label>
                                     <textarea v-model="particulars" rows="4" maxlength="250" class="wperp-form-field display-flex" :placeholder="__('Particulars', 'erp')"></textarea>
                                 </td>
                             </tr>
-                            <tr>
+                            <tr class="inline-edit-row">
                                 <td>
                                     <div class="attachment-item" :key="index" v-for="(file, index) in attachments">
                                         <img :src="erp_acct_assets + '/images/file-thumb.png'">
@@ -124,7 +126,7 @@
                                     </div>
                                 </td>
                             </tr>
-                            <tr class="add-attachment-row">
+                            <tr class="add-attachment-row inline-edit-row">
                                 <td colspan="9" style="text-align: left;">
                                     <div class="attachment-container">
                                         <label class="col--attachement">{{ __('Attachment', 'erp') }}</label>
@@ -666,6 +668,11 @@ export default {
         input {
             width: 130px !important;
         }
+
+        .discountType-box {
+            display: flex;
+            align-items: center;
+        }
     }
 
     .tax-rate-row {
@@ -750,6 +757,35 @@ export default {
         .invoice-create .erp-help-tip {
             color    : #2f4f4f;
             font-size: 1.2em;
+        }
+
+        @media (max-width: 782px) {
+            .col--qty {
+                input {
+                    padding: 5px !important;
+                }
+            }
+
+            .col--uni_price,
+            .col--amount,
+            .col--tax,
+            .col--actions {
+                display: table-cell !important;
+                width: 10%;
+
+                input {
+                    padding: 5px !important;
+                }
+            }
+
+            tr:not(.inline-edit-row):not(.no-items) td:not(.column-primary)::before {
+                display: none !important;
+            }
+
+            td {
+                padding-left: 5px !important;
+                padding-right: 5px !important;
+            }
         }
     }
 </style>

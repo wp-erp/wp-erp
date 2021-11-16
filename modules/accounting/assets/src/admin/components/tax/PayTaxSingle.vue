@@ -78,7 +78,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
+                            <tr class="inline-edit-row">
                                 <td>{{ tax_pay_data.voucher_no }}</td>
                                 <td>{{ tax_pay_data.ledger_id}}</td>
                                 <td>{{ tax_pay_data.voucher_type }}</td>
@@ -86,7 +86,7 @@
                             </tr>
                             </tbody>
                             <tfoot>
-                            <tr>
+                            <tr class="inline-edit-row">
                                 <td colspan="7">
                                     <ul>
                                         <li><span>{{ __('Total', 'erp') }}:</span> {{ moneyFormat(tax_pay_data.amount) }}</li>

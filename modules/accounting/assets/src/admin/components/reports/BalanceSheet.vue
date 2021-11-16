@@ -46,7 +46,7 @@
         <p><strong>{{ __('For the period of ( Transaction date )', 'erp') }}:</strong> <em>{{ start_date }}</em> {{ __('to', 'erp') }} <em>{{ end_date }}</em></p>
 
         <div class="wperp-panel-body">
-            <div class="wperp-row">
+            <div>
                 <div class="wperp-col-sm-12">
                     <list-table
                         tableClass="wperp-table table-striped table-dark widefat balance-sheet-asset report-table"
@@ -431,6 +431,20 @@ export default {
         }
     }
     .report-table {
+        &.balance-sheet-asset,
+        &.balance-sheet-liability,
+        &.balance-sheet-equity {
+            @media screen and ( max-width: 782px ) {
+                thead {
+                    th {
+                        &.column.balance {
+                            display: none;
+                        }
+                    }
+                }
+            }
+        }
+
         tbody {
             tr {
                 td {
