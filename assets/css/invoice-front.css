@@ -82,7 +82,12 @@ body {
 }
 
 .invoice-extra {
+    padding: 20px 40px 0 40px;
+}
 
+.invoice-extra a {
+    color: #336699;
+    text-decoration: none;
 }
 
 .logo {
