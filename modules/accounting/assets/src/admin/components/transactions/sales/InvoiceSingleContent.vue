@@ -72,13 +72,13 @@
                         <tr :key="index" v-for="(detail, index) in invoice.line_items">
                             <th>{{ index+1 }}</th>
                             <th>{{ detail.name }}</th>
-                            <td>{{ detail.qty }}</td>
-                            <td>{{ moneyFormat( detail.unit_price ) }}</td>
-                            <td>{{ moneyFormat( parseFloat(detail.unit_price) * parseFloat(detail.qty) ) }}</td>
+                            <td class="col--qty">{{ detail.qty }}</td>
+                            <td class="col--uni_price">{{ moneyFormat( detail.unit_price ) }}</td>
+                            <td class="col--amount">{{ moneyFormat( parseFloat(detail.unit_price) * parseFloat(detail.qty) ) }}</td>
                         </tr>
                     </tbody>
                     <tfoot>
-                        <tr>
+                        <tr class="inline-edit-row">
                             <td class="wperp-invoice-amounts" colspan="7">
                                 <ul>
                                     <li><span>{{ __( 'Subtotal', 'erp' ) }}:</span> {{ moneyFormat( invoice.amount ) }}</li>
@@ -177,7 +177,28 @@ export default {
 };
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
+    .wperp-invoice-table {
+        @media (max-width: 782px) {
+            .col--qty,
+            .col--uni_price,
+            .col--amount {
+                display: table-cell !important;
+                width: 10%;
+            }
+
+            tr:not(.inline-edit-row):not(.no-items) td:not(.column-primary)::before {
+                display: none !important;
+            }
+
+            .wperp-invoice-amounts {
+                li {
+                    padding-right: 0 !important;
+                }
+            }
+        }
+    }
+    
     .d-print-block {
         display: none;
     }

@@ -49,7 +49,7 @@
         </ul>
 
         <list-table
-            tableClass="wperp-table table-striped table-dark widefat sales-tax-table"
+            tableClass="wperp-table table-striped table-dark widefat sales-tax-table sales-tax-table-customer"
             :columns="columns"
             :rows="taxes"
             :showCb="false">
@@ -191,3 +191,23 @@
         }
     };
 </script>
+
+<style lang="less">
+@media screen and ( max-width: 782px ) {
+    .sales-tax-table-customer {
+        thead {
+            th {
+                &.column.trn_date, &.column.tax_amount {
+                    display: none;
+                }
+            }
+        }
+
+        tfoot tr.tfoot {
+            td:first-child {
+                display: none !important;
+            }
+        }
+    }
+}
+</style>

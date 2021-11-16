@@ -58,7 +58,7 @@ export default {
             showModal: false,
             modalParams: null,
             columns: {
-                tax_cat_name: { label: __('Category Name', 'erp') },
+                tax_cat_name: { label: __('Category Name', 'erp'), isColPrimary: true },
                 tax_cat_desc: { label: __('Description', 'erp') },
                 actions     : { label: __('Actions', 'erp') }
             },
@@ -223,12 +223,18 @@ export default {
             padding: 20px !important;
         }
 
-        .actions {
-            text-align: right;
-        }
+        @media (min-width: 783px) {
+            .actions {
+                text-align: right;
+            }
 
-        .col--actions {
-            float: right !important;
+            .col--actions {
+                float: left !important;
+            }
+
+            .row-actions {
+                text-align: right !important;
+            }
         }
     }
 </style>
