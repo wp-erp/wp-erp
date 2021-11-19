@@ -356,7 +356,7 @@ class Modules {
                     'is_hrm'        => false,
                     'is_crm'        => false,
                     'is_acc'        => true,
-                    'category'      => [ 'accounting' ],
+                    'category'      => [ 'crm', 'accounting' ],
                     'doc_id'        => 0,
                     'doc_link'      => 'https://wperp.com/docs/accounting-add-ons/woocommerce-integration/',
                     'module_link'   => 'https://wperp.com/downloads/woocommerce-crm/',
