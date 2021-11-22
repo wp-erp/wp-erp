@@ -90,8 +90,6 @@ Run:
 
 **`allure serve output`**
 
-Screenshots:
-![Allure_01.png](https://i.postimg.cc/D0Cvqc08/allure-report.png)
 ![Allure_02.png](https://i.postimg.cc/SxHF8xLL/graph.png)
 ## Scenario Dependencies
 
