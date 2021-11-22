@@ -4,7 +4,7 @@
 ### JAVA Installation 
 Install Java through [Download](https://java.com/en/download/)
 
-> Click  **Agree and Start Free download' and install java globally**
+> Click  **Agree and Start Free download and install java globally**
 ## Step 2
 ### Selenium Server Configuration
 Configure selenium server by following the steps!
@@ -85,10 +85,14 @@ npm install
 ## Generating Allure Report!
 
 Run:
+
 **`npx codeceptjs run --grep "\@HRM|\@CRM|\@Accounting" --plugins allure`**
 
 **`allure serve output`**
 
+Screenshots:
+![Allure_01.png](https://i.postimg.cc/D0Cvqc08/allure-report.png)
+![Allure_02.png](https://i.postimg.cc/SxHF8xLL/graph.png)
 ## Scenario Dependencies
 
 Some scenarios may require some prerequisite in order to validate Such as:
