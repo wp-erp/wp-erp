@@ -21,9 +21,27 @@ module.exports = {
         I.amOnPage('/wp-admin/admin.php?page=erp-hr&section=people');
     },
 
+    liteActivate(){
+      I.click('//*[@id="menu-plugins"]');
+      //I.click('.menu-icon-plugins > .wp-menu-name');
+      I.click('#activate-erp');
+    },
+
+    liteDeactivate(){
+      I.click('//*[@id="menu-plugins"]');
+      // I.click('.menu-icon-plugins > .wp-menu-name');
+      I.click('#deactivate-erp');
+      I.click('Submit & Deactivate');
+      I.wait(3);
+    },
+
     proActivate(){
-        I.click('.menu-icon-plugins > .wp-menu-name');
-        I.click('#activate-wp-erp-pro');
+      I.click('Plugins');
+      I.click('#activate-wp-erp-pro');
+    },
+
+    proDeactivate(){
+      I.click('#deactivate-wp-erp-pro');
     },
 
     addEmployee() {
@@ -44,9 +62,8 @@ module.exports = {
     },
 
     deleteEmployee() {
-        I.click('//*[@id="wpbody-content"]/div[2]/ul/li[2]');
         I.moveCursorTo('//*[@id="the-list"]/tr[1]/td[1]');
-        I.doubleClick('Delete');
+        I.click('Delete');
         I.acceptPopup();
     },
 
@@ -87,6 +104,52 @@ module.exports = {
     leave() {
         I.moveCursorTo('//*[@id="wpbody-content"]/div[2]/ul/li[3]');       
     },
+
+    sendLeaveRequestByAdmin(){
+      I.click('Requests');
+      I.click('New Request');
+      I.click('- Select Employee -');
+      I.click('/html/body/span/span/span[2]/ul/li[2]');
+      I.click('Leave Type');
+      I.click('//*[@id="erp-hr-leave-req-leave-policy"]/option[3]');
+      I.fillField('From', moment(faker.date.recent(30)).format("YYYY-MM-DD"));
+      I.fillField('To', moment(faker.date.soon(30)).format("YYYY-MM-DD"));
+      I.click('#leave_reason');
+      I.type('Sending Leave request for an employee for HR');
+      I.click('#submit');
+      I.wait(3);
+      
+    },
+
+
+    sendLeaveRequestByEmployee(){
+      I.amOnPage('/wp-admin/admin.php?page=erp-hr');
+      I.click('Take a Leave');
+      I.click('#erp-hr-leave-req-leave-policy');
+      I.click('//*[@id="erp-hr-leave-req-leave-policy"]/option[3]');
+      I.fillField('From', moment(faker.date.recent(60)).format("YYYY-MM-DD"));
+      I.fillField('To', moment(faker.date.recent(60)).format("YYYY-MM-DD"));
+      I.pressKey('Enter');
+      I.fillField('Reason','demo');
+      I.click('Send Leave Request');
+      I.wait(2);
+    },
+      leavePolicy(){
+        I.fillField('Leave Type','Sick Leave');
+        I.fillField('Description','For All departments');
+        I.click('Save');
+        I.refreshPage();
+        I.click('Back To Leave Policies'); 
+        I.click('#erp-leave-policy-new');
+        I.click('//*[@id="leave-id"]/option[2]');
+        I.fillField('Description','Testing automation');
+        I.fillField('Days','20');
+        I.checkOption('Entitle New Employees');
+        I.checkOption('Apply for existing employees');
+        I.click('Save');
+        I.see('Leave Policies');
+      },
+      
     payroll() {
         I.amOnPage('wp-admin/admin.php?page=erp-hr');
         I.moveCursorTo('//*[@id="wpbody-content"]/div[3]/ul/li[3]/a');
@@ -176,11 +239,13 @@ module.exports = {
     },
 
     previewUsers() {
-        I.moveCursorTo('//div[2]/div/div[2]/div/div/ul/li[2]/a');
+        I.moveCursorTo('//div/div/div[2]/div/div[1]/ul/li[2]/a');
+        // I.moveCursorTo('//*[@id="erp-act-menu-users"]/a');
+        //I.moveCursorTo('//div[2]/div/div[2]/div/div/ul/li[2]/a');
       },
 
     addCustomer(){
-        I.click('Customers');
+        I.click('//*[@id="erp-act-menu-users"]/ul/li[1]/a');
         I.wait(4);
         I.click('Add New Customer');
         I.fillField('#first_name', faker.name.firstName());
@@ -234,6 +299,7 @@ module.exports = {
 
       createPurchase(){
         I.click('//*[@id="erp-accounting"]/div[2]/div[1]/div/div/div/ul/li[1]/a');
+        I.click('//*[@id="erp-accounting"]//div/div/div/div[2]/span');
         I.click('//*[@id="erp-accounting"]/div[2]/form/div[1]/div/div/div[1]/div/div/div[2]');
         I.click('//*[@id="erp-accounting"]/div[2]/form/div[1]//ul/li[1]');
         I.click('//*[@id="erp-accounting"]//div/div/div[2]//div/input');
@@ -336,7 +402,7 @@ module.exports = {
         I.click("//div[@id='erp-accounting']/div[2]/div[2]/div/form/div[2]/table/tbody/tr/td[3]/div");
         I.click('//td[3]/div');
         I.wait(3);
-        I.click('//td[3]/div/div[3]/ul/li[7]/span/span');  
+        I.pressKey('Enter');  
         I.click('//*[@id="erp-accounting"]/div[2]/div[2]/div/form/div[2]/table/tbody/tr/td[4]/input');
         I.type('200');
         I.click('Save');

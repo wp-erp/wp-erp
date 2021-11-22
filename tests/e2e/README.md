@@ -32,8 +32,8 @@ git clone https://github.com/wp-erp/wp-erp.git
 ```
 cd wp-erp
 ```
-```
 Switch branch 
+```
 git checkout test/automation
 ```
 ```
@@ -48,28 +48,20 @@ composer dumpautoload -o
  
 Open that test folder on visual studio code or your favourite Code Editor!
 
-```
 Create a file named codecept.conf.js & copy code from example.codecept.conf.js
-```
-```
+
 In codecept.conf.js file 
 Give your test Url at line `12` [Must be a complete url eg:https://rinky.test]
-```
-```
 Give your test site Username at line `54` [YourUsername]
-```
-```
 Give your test site Password at line `55` [YourPassword]
-```
-```
 Then rename example.codecept.conf.js file as codecept.conf.js
-```
+
 ```
 cd tests/e2e
 ```
-```
+
 Your root will seem like : wp-erp/tests/e2e 
-```
+
 ```
 npm install
 ```
