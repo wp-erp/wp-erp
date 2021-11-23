@@ -6,6 +6,7 @@ Scenario('@Accounting Bank transfer money',({ I, loginAs }) => {
 		helpers.accDashboard();
 		helpers.previewSettings();
 		I.click('Bank Accounts')
+		I.wait('2');
     	I.click({ css : '.wperp-selected-option'});
     	I.click('Transfer Money');
     	I.wait(5);
@@ -17,4 +18,5 @@ Scenario('@Accounting Bank transfer money',({ I, loginAs }) => {
     	I.click('//div[2]/div/div/div[3]/ul/li/span');
     	I.fillField('#transfer_amount', '100');
     	I.click('//div[2]/button');
+
 });
