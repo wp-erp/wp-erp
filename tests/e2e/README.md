@@ -70,17 +70,17 @@ npm install
 
 **`Here you go !`**
 >**Run all the test cases in single command!**
->**`npx codeceptjs run --grep "\@HRM|\@CRM|\@Accounting" `**
+>**`npx codeceptjs run --grep "\@01_HRM|\@02_CRM|\@03_Accounting" `**
 
 
 >For **HRM** module run:
-**`npx codeceptjs run --grep @01_HRM`** 
+**`npx codeceptjs run --grep @HRM`** 
 
 > For **CRM** module run:
-**`npx codeceptjs run --grep @02_CRM`** 
+**`npx codeceptjs run --grep @CRM`** 
 
 >For **Accounting** module run:
-**`npx codeceptjs run --grep @03_Accounting`** 
+**`npx codeceptjs run --grep @Accounting`** 
 
 ## Generating Allure Report!
 
