@@ -71,7 +71,7 @@ module.exports = {
         I.amOnPage('wp-admin/admin.php?page=erp-hr&section=people&sub-section=department');
         I.click('Departments');
         I.click('//*[@id="erp-new-dept"]');
-        I.fillField('Department Title', faker.name.firstName());
+        I.fillField('Department Title', faker.name.jobTitle());
         I.fillField('Description', 'Content development');
         I.click('//*[@id="dept-lead"]');
         I.click('//*[@id="dept-lead"]/option[2]');
@@ -84,8 +84,8 @@ module.exports = {
         I.amOnPage('wp-admin/admin.php?page=erp-hr&section=people&sub-section=designation');
         I.click('Designations');
         I.click('//*[@id="erp-new-designation"]');
-        I.fillField('Designation Title', 'Product Designer');
-        I.fillField('Description', 'Software development');
+        I.fillField('Designation Title', faker.name.jobTitle());
+        I.fillField('Description', faker.name.jobType());
         I.click('Create Designation');
         I.see('Designations');
     },
