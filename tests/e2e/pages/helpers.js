@@ -71,7 +71,7 @@ module.exports = {
         I.amOnPage('wp-admin/admin.php?page=erp-hr&section=people&sub-section=department');
         I.click('Departments');
         I.click('//*[@id="erp-new-dept"]');
-        I.fillField('Department Title', 'Business');
+        I.fillField('Department Title', faker.name.firstName());
         I.fillField('Description', 'Content development');
         I.click('//*[@id="dept-lead"]');
         I.click('//*[@id="dept-lead"]/option[2]');
