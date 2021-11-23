@@ -10,7 +10,6 @@ Scenario('Add financial year', ({ I, loginAs}) => {
         I.click('//*[@id="erp-settings-box-erp-hr-financial"]/form/div[2]/div[1]/input')
         I.type('2021')
         I.click('//*[@id="erp-settings-box-erp-hr-financial"]/form/div[2]/div[2]')
-        I.type('2021.01.01')
         I.type('2021-01-01')
         I.click('//*[@id="erp-settings-box-erp-hr-financial"]/form/div[2]/div[3]')
         I.type('2021-12-31')
