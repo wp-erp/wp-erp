@@ -64,6 +64,7 @@ module.exports = {
     deleteEmployee() {
         I.moveCursorTo('//*[@id="the-list"]/tr[1]/td[1]');
         I.click('Delete');
+        I.wait(3);
         I.acceptPopup();
     },
 
