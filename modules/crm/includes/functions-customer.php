@@ -3482,8 +3482,6 @@ function erp_create_contact_from_created_user( $user_id ) {
     $data['life_stage']    = $life_stage;
     $contact_id            = erp_insert_people( $data );
 
-    do_action( 'erp_crm_contact_created', $contact_id, $data );
-
     return;
 }
 
