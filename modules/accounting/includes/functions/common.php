@@ -614,47 +614,27 @@ add_action( 'erp_people_created', 'erp_acct_customer_create_from_crm', 10, 3 );
  * @return mixed
  */
 function erp_acct_customer_create_from_crm( $customer_id, $data, $people_type ) {
-    if ( 'contact' !== $people_type || 'company' !== $people_type ) {
-        return;
-    }
 
-    $customer_auto_import = (int) erp_get_option( 'customer_auto_import', false, 0 );
-    $crm_user_type        = erp_get_option( 'crm_user_type', false, [] ); // Contact or Company
-    // Check whether the email already exists in Accounting
-    $check_exitance       = erp_acct_exist_people( $data['email'], [ 'customer', 'vendor' ] );
+    if ( 'contact' === $people_type || 'company' === $people_type ) {
 
-    if ( $check_exitance ) {
-           return;
-    }
+        $customer_auto_import = (int) erp_get_option( 'customer_auto_import', false, 0 );
+        $crm_user_type        = erp_get_option( 'crm_user_type', false, [] ); // Contact or Company
+        // Check whether the email already exists in Accounting
+        $check_exitance       = erp_acct_exist_people( $data['email'], [ 'customer', 'vendor' ] );
+        
+        if( ! $check_exitance &&  $customer_auto_import &&  count( $crm_user_type ) ) {
 
-    if ( ! $customer_auto_import ) {
-        return;
-    }
+            // No need to add wordpress `user id` again
+            // `user id` already added when contact is created
 
-    if ( ! count( $crm_user_type ) ) {
-        return;
-    }
+            $data['is_wp_user'] = false;
+            $data['wp_user_id'] = '';
+            $data['people_id'] = $customer_id;
+            $data['type']      = 'customer';
 
-    // No need to add wordpress `user id` again
-    // `user id` already added when contact is created
-    $data['is_wp_user'] = false;
-    $data['wp_user_id'] = '';
-
-    if ( ! isset( $data['company'] ) ) {
-        // the created crm user type is NOT a company
-        if ( ! in_array( 'contact', $crm_user_type ) ) {
-            return;
-        }
-    } else {
-        if ( ! in_array( 'company', $crm_user_type ) ) {
-            return;
-        }
-    }
-
-    $data['people_id'] = $customer_id;
-    $data['type']      = 'customer';
-
-    erp_convert_to_people( $data );
+            erp_convert_to_people( $data );
+         }
+    }    
 }
 
 /**
