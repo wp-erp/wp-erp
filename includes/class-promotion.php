@@ -42,7 +42,7 @@ class Promotion {
         }
 
         if ( $current_time >= $promotion_start && $current_time <= $promotion_end ) {
-            $msg            = 'Happy Holidays.<br>Let The Festivities Begin.<br>Enjoy Up To <strong>35% OFF</strong> on <strong>WP ERP Pro.</strong>';
+            $msg            = __( 'Happy Holidays.<br>Let The Festivities Begin.<br>Enjoy Up To <strong>35% OFF</strong> on <strong>WP ERP Pro.</strong>', 'erp' );
             $option_name    = 'erp_holidays_offer_2021';
 
             $this->generate_notice( $msg, $option_name );
@@ -57,20 +57,17 @@ class Promotion {
      *
      * @return void
      */
-    public function generate_notice( $msg, $option_name ) {
+    public function generate_notice( $message, $option_name ) {
         // check if it has already been dismissed
         $hide_notice = get_option( $option_name, 'no' );
 
         if ( 'hide' === $hide_notice ) {
             return;
         }
-
-        $offer_msg = '<p class="highlight-text">' . sprintf( __( '%s', 'erp' ), $msg ) .
-                '</p><p><a style="padding:5px 15px;" target="_blank" href="https://wperp.com/pricing/?nocache&utm_medium=text&utm_source=wordpress-erp-holidaysale2021">' . __( 'Get Now', 'erp' ) . '</a></p>';
         ?>
         <div class="notice is-dismissible erp-promotional-offer-notice" id="erp-promotional-offer-notice">
             <p class="highlight-text">
-                <?php printf( __( '%s', 'erp' ), $msg ); ?>
+                <?php echo wp_kses( $message, [ 'strong' => [], 'br' => [] ] ); ?>
                 <a target="_blank"
                     href="https://wperp.com/pricing/?nocache&utm_medium=text&utm_source=wordpress-erp-holidaysale2021"
                     style="padding:5px 15px;">
