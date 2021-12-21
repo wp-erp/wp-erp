@@ -43,7 +43,7 @@ class Employee_List_Table extends \WP_List_Table {
 
         <div class="wperp-filter-dropdown" style="margin: -46px 0 0 0;">
             <a class="wperp-btn btn--default"><span class="dashicons dashicons-filter"></span>Filters<span class="dashicons dashicons-arrow-down-alt2"></span></a>
-            
+
             <div class="erp-dropdown-filter-content" id="erp-dropdown-content">
                 <div class="wperp-filter-panel wperp-filter-panel-default">
                     <h3><?php esc_html_e('Filter', 'erp') ?></h3>
@@ -205,7 +205,7 @@ class Employee_List_Table extends \WP_List_Table {
             case 'resigned':
                 $columns['updated_at'] = __( 'Resigned At', 'erp' );
                 break;
-            
+
             case 'trash':
                 $columns['deleted_at'] = __( 'Trashed At', 'erp' );
                 break;
@@ -327,9 +327,9 @@ class Employee_List_Table extends \WP_List_Table {
 
     /**
      * Retrieves the date when an employee's status was updated
-     * 
+     *
      * @since 1.9.0
-     * 
+     *
      * @param string|int $emp_id
      *
      * @return string
@@ -477,7 +477,7 @@ class Employee_List_Table extends \WP_List_Table {
         $this->items  = erp_hr_get_employees( $args );
 
         $args['count'] = true;
-        $total_items   = erp_hr_get_employees( $args );
+        $total_items   = count( $this->items );
 
         $this->set_pagination_args( [
             'total_items' => $total_items,
