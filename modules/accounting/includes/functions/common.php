@@ -620,9 +620,9 @@ function erp_acct_customer_create_from_crm( $customer_id, $data, $people_type ) 
         $customer_auto_import = (int) erp_get_option( 'customer_auto_import', false, 0 );
         $crm_user_type        = erp_get_option( 'crm_user_type', false, [] ); // Contact or Company
         // Check whether the email already exists in Accounting
-        $check_exitance       = erp_acct_exist_people( $data['email'], [ 'customer', 'vendor' ] );
+        $exists_people        = erp_acct_exist_people( $data['email'], [ 'customer', 'vendor' ] );
         
-        if( ! $check_exitance &&  $customer_auto_import &&  count( $crm_user_type ) ) {
+        if( ! $exists_people &&  $customer_auto_import &&  count( $crm_user_type ) ) {
 
             // No need to add wordpress `user id` again
             // `user id` already added when contact is created
