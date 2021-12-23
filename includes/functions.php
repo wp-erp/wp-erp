@@ -882,7 +882,7 @@ function erp_months_dropdown( $title = false ) {
     }
 
     for ( $m = 1; $m <= 12; $m ++ ) {
-        $months[ $m ] = date( 'F', mktime( 0, 0, 0, $m, 1 ) );
+        $months[ $m ] = sprintf( __( '%s', 'erp' ), date( 'F', mktime( 0, 0, 0, $m, 1 ) ) );
     }
 
     return $months;
@@ -1390,8 +1390,6 @@ function erp_process_csv_export() {
         return new \WP_Error( 'no-permission', __( 'Sorry ! You do not have permission to access this page', 'erp' ) );
     }
 
-    $is_admin = current_user_can( 'administrator' );
-
     $capability_for_type = [
         'employee' => 'erp_list_employee',
         'contact'  => 'erp_crm_list_contact',
@@ -1418,7 +1416,7 @@ function erp_process_csv_export() {
                 return new \WP_Error( 'no-permission', __( 'Unknown import type!', 'erp' ) );
             }
 
-            if ( ! $is_admin && ! current_user_can( $capability_for_type[ $type ] ) ) {
+            if ( ! current_user_can( 'administrator' ) && ! current_user_can( $capability_for_type[ $type ] ) ) {
                 return new \WP_Error( 'no-permission', __( 'Sorry ! You do not have permission to access this page', 'erp' ) );
             }
 
@@ -1469,8 +1467,6 @@ function erp_process_csv_export() {
                     'number' => - 1,
                 ] );
             }
-
-            error_log( print_r($items,true));
 
             foreach ( $items as $index => $item ) {
                 if ( empty( $fields ) ) {

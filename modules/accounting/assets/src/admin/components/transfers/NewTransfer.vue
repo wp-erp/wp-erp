@@ -123,7 +123,7 @@ export default {
                 this.showAlert('success', __('Transfer Successful!', 'erp'));
                 this.fetchAccounts();
                 this.resetData();
-                this.$router.push('/transfers');
+                this.$router.push('/settings/banks/transfers');
             }).catch(err => {
                 const msg = err.response.data.message;
                 this.$store.dispatch('spinner/setSpinner', false);

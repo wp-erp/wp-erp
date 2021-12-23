@@ -10,7 +10,8 @@
 
             <form method="get">
                 <input type="hidden" name="page" value="erp-crm">
-                <input type="hidden" name="section" value="contact-groups">
+                <input type="hidden" name="section" value="contact">
+                <input type="hidden" name="sub-section" value="contact-groups">
                 <input type="hidden" name="groupaction" value="view-subscriber">
                 <?php
                 $customer_table = new \WeDevs\ERP\CRM\Contact_Subscriber_List_Table();

@@ -3,9 +3,9 @@ Contributors: tareq1988, nizamuddinbabu, wedevs
 Donate Link: https://tareq.co/donate
 Tags: business manager, erp, accounting, crm, hr, project manager, small business, SME, contact, contacts, Customer Relationship Management, employee, leave management, hr, human resource management, job, jobs, job listing, lead management, opportunity, schedule, task, lead, holiday, company
 Requires at least: 4.4
-Tested up to: 5.8
+Tested up to: 5.8.2
 Requires PHP: 5.6
-Stable tag: 1.10.0
+Stable tag: 1.10.2
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -271,6 +271,29 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+
+= v1.10.2 -> November 16, 2021 =
+--------------------------
+
+[new] Option to assign relevant leave policies to employees after employment type is changed
+[update] ERP addon page backend optimization
+[update] Attachment download links are included in single invoice view and in downloadable invoice
+[fix] CRM Growth report labels were not translatable
+[fix] Contact group subscriber bulk delete was not working
+[fix] Page responsive issues on whole Accounting module
+[fix] Action trigger and action dropdown issues on small screen
+[notice] Promotional offer notice regarding Black Friday and Cyber Monday
+
+= v1.10.1 -> October 12, 2021 =
+--------------------------
+
+- [notice] Promotional offer notice on account of Halloween
+- [update] Some dependency package version updated to maintain compatibility
+- [update] CRM Agent will not be able to import Users as CRM contacts
+- [update] CRM Agent will not be able to import contact/company from CSV
+- [update] CRM Agent will not be able to export contact/company to CSV
+- [fix] Note section in contact/company single page was not working while adding a note for the first time
+- [fix] Department parent sorting was generating some redundant data
 
 = v1.10.0 -> August 17, 2021 =
 --------------------------

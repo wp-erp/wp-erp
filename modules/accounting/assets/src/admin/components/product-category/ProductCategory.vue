@@ -82,7 +82,8 @@ export default {
             showModal     : false,
             columns       : {
                 name   : {
-                    label: __('Category Name', 'erp')
+                    label: __('Category Name', 'erp'),
+                    isColPrimary: true
                 },
                 actions: {
                     label: __('Actions', 'erp')
@@ -241,8 +242,14 @@ export default {
                 padding: 20px !important;
             }
 
-            .col--actions {
-                float: left !important;
+
+            @media (min-width: 783px) {
+                .col--actions {
+                    float: left !important;
+                }
+                .row-actions {
+                    text-align: left !important;
+                }
             }
         }
 

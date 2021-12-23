@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP ERP 1.10.0\n"
+"Project-Id-Version: WP ERP 1.10.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-erp\n"
-"POT-Creation-Date: 2021-08-16 14:37:38+00:00\n"
+"POT-Creation-Date: 2021-11-16 07:04:53+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -13,244 +13,40 @@ msgstr ""
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "X-Generator: wp-vue-i18n 1.1.4\n"
 
-#: assets/js/erp-settings-bootstrap.js:65
-msgid "p"
+#: modules/crm/views/reports/growth-report.php:40
+msgid "0"
 msgstr ""
 
-#: assets/js/erp-settings-bootstrap.js:92
-#: assets/js/erp-settings-bootstrap.js:646
-#: assets/js/erp-settings-bootstrap.js:745 assets/js/erp-settings.js:6354
-#: assets/js/erp-settings.js:6468 assets/js/erp-settings.js:6702
-#: assets/js/erp-settings.js:8259 assets/js/erp-settings.js:8812
-#: assets/js/erp-settings.js:10622 assets/js/erp-settings.js:10963
-#: modules/accounting/assets/js/bootstrap.js:298
-#: modules/accounting/assets/js/bootstrap.js:379
-#: modules/accounting/assets/js/bootstrap.js:1281
-#: modules/accounting/assets/js/bootstrap.js:1457
-#: modules/accounting/assets/js/bootstrap.js:2353
-#: modules/accounting/assets/js/bootstrap.js:2614
-#: modules/accounting/assets/js/bootstrap.js:2722
-#: modules/accounting/assets/js/bootstrap.js:2767
-#: modules/accounting/assets/js/bootstrap.js:2824
-#: modules/accounting/assets/js/bootstrap.js:3002
-#: modules/accounting/assets/js/bootstrap.js:3303
-#: modules/accounting/assets/js/bootstrap.js:3429
-#: modules/accounting/assets/js/bootstrap.js:3888
-#: modules/accounting/assets/js/bootstrap.js:3962
-#: modules/accounting/assets/js/bootstrap.js:4237
-#: modules/accounting/assets/js/bootstrap.js:4326
-#: modules/accounting/assets/js/bootstrap.js:16634
-#: modules/accounting/assets/js/frontend.js:114
-msgid "div"
+#: assets/js/erp-settings-bootstrap.js:1
+#: includes/settings/assets/src/components/base/Dropdown.vue:8
+#: modules/accounting/assets/src/admin/components/base/Dropdown.vue:8
+msgid "Dropdown"
 msgstr ""
 
-#: assets/js/erp-settings-bootstrap.js:127
-#: modules/accounting/assets/js/bootstrap.js:2469
-msgid "form"
+#: assets/js/erp-settings-bootstrap.js:1
+#: includes/settings/assets/src/components/select/MultiSelect.vue:18
+msgid "Oops! No item found."
 msgstr ""
 
-#: assets/js/erp-settings-bootstrap.js:613
-#: assets/js/erp-settings-bootstrap.js:621
-#: modules/accounting/assets/js/bootstrap.js:266
-#: modules/accounting/assets/js/bootstrap.js:1185
-msgid "span"
+#: assets/js/erp-settings-bootstrap.js:1
+#: includes/settings/assets/src/components/menu/SettingsSubMenu.vue:14
+msgid "More"
 msgstr ""
 
-#: assets/js/erp-settings-bootstrap.js:1667 assets/js/erp-settings.js:594
-#: includes/Settings/assets/src/components/select/MultiSelect.vue:70
-#: modules/accounting/assets/js/bootstrap.js:6258
-#: modules/accounting/assets/src/admin/components/select/MultiSelect.vue:57
-msgid "Please search"
+#: assets/js/erp-settings-bootstrap.js:1
+#: includes/framework/class-settings-page.php:498
+#: includes/settings/Template.php:494
+#: includes/settings/assets/src/components/base/ImagePicker.vue:7
+#: includes/settings/assets/src/components/base/ImagePicker.vue:16
+msgid "Upload Image"
 msgstr ""
 
-#: assets/js/erp-settings-bootstrap.js:1747 assets/js/erp-settings.js:673
-#: includes/Settings/assets/src/components/base/SubmitButton.vue:14
-#: modules/accounting/assets/src/admin/components/base/SubmitButton.vue:12
-#: modules/accounting/assets/src/admin/components/transactions/TransactionsFilter.vue:71
-msgid "Submit"
+#: assets/js/vendor.js:82
+msgid "Promise-chain cycle"
 msgstr ""
 
-#: assets/js/erp-settings.js:5004
-#: includes/Settings/assets/src/components/email/email-connect/ImapEmail.vue:69
-msgid " Test Connection"
-msgstr ""
-
-#: assets/js/erp-settings.js:5009
-#: includes/Settings/assets/src/components/email/email-connect/ImapEmail.vue:75
-msgid " OK"
-msgstr ""
-
-#: assets/js/erp-settings.js:5309 assets/js/erp-settings.js:5315
-#: includes/Settings/assets/src/components/email/templates/EmailTemplate.vue:227
-#: includes/Settings/assets/src/components/email/templates/EmailTemplate.vue:233
-#: modules/accounting/assets/src/admin/components/people/People.vue:97
-#: modules/accounting/assets/src/admin/components/people/PeopleTransaction.vue:109
-#: modules/accounting/assets/src/admin/components/product-category/ProductCategory.vue:93
-#: modules/accounting/assets/src/admin/components/tax/SingleTaxRate.vue:89
-#: modules/accounting/assets/src/admin/components/tax/TaxAgencies.vue:74
-#: modules/accounting/assets/src/admin/components/tax/TaxCategories.vue:74
-#: modules/accounting/assets/src/admin/components/tax/TaxRates.vue:84
-#: modules/accounting/assets/src/admin/components/tax/TaxZones.vue:78
-#: modules/crm/assets/js/crm-contacts.js:299
-#: modules/crm/assets/js/crm-contacts.js:1150
-#: modules/crm/includes/class-campaigns-list-table.php:89
-#: modules/crm/includes/class-campaigns-list-table.php:115
-#: modules/crm/includes/class-contact-group-list-table.php:122
-#: modules/crm/includes/class-contact-group-list-table.php:158
-#: modules/crm/includes/class-contact-subscriber-list-table.php:197
-#: modules/crm/includes/class-contact-subscriber-list-table.php:215
-#: modules/crm/includes/functions-localize.php:14
-#: modules/hrm/assets/js/requests.js:311
-#: modules/hrm/includes/class-department-list-table.php:217
-#: modules/hrm/includes/class-designation-list-table.php:83
-#: modules/hrm/includes/class-designation-list-table.php:108
-#: modules/hrm/includes/class-employee-list-table.php:231
-#: modules/hrm/includes/class-entitlements-list-table.php:222
-#: modules/hrm/includes/class-entitlements-list-table.php:262
-#: modules/hrm/includes/class-leave-policy-name-list-table.php:38
-#: modules/hrm/includes/class-leave-policy-name-list-table.php:110
-#: modules/hrm/includes/class-leave-request-list-table.php:286
-#: modules/hrm/includes/class-leave-request-list-table.php:313
-#: modules/hrm/includes/class-policy-list-table.php:212
-#: modules/hrm/includes/class-policy-list-table.php:259
-#: modules/hrm/includes/class-walker-department.php:43
-#: modules/hrm/views/employee/tab-notes-row.php:19
-#: modules/hrm/views/employee/tab-notes.php:48
-#: modules/hrm/views/js-templates/row-dept.php:11
-#: modules/hrm/views/js-templates/row-desig.php:11
-#: modules/hrm/views/js-templates/row-employee.php:12
-#: modules/hrm/views/leave/holiday.php:112
-#: modules/hrm/views/leave/holiday.php:153
-msgid "Delete"
-msgstr ""
-
-#: assets/js/erp-settings.js:5310
-#: includes/Settings/assets/src/components/email/templates/EmailTemplate.vue:228
-msgid "Are you sure to delete this ?"
-msgstr ""
-
-#: assets/js/erp-settings.js:5313
-#: includes/Settings/assets/src/components/email/notifications/EmailNotification.vue:119
-#: includes/Settings/assets/src/components/email/templates/EmailTemplate.vue:83
-#: includes/Settings/assets/src/components/email/templates/EmailTemplate.vue:231
-#: includes/Settings/assets/src/components/integration/Integration.vue:99
-#: modules/accounting/assets/js/bootstrap.js:5740
-#: modules/accounting/assets/src/admin/components/email/SendMail.vue:48
-#: modules/accounting/assets/src/admin/components/people/ExportModal.vue:56
-#: modules/accounting/assets/src/admin/components/people/ImportModal.vue:61
-#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:140
-#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:249
-#: modules/accounting/assets/src/admin/components/product-category/ProductCategory.vue:51
-#: modules/accounting/assets/src/admin/components/products/ExportModal.vue:59
-#: modules/accounting/assets/src/admin/components/products/ImportModal.vue:158
-#: modules/accounting/assets/src/admin/components/transactions/TransactionsFilter.vue:67
-#: modules/crm/assets/js/crm-contacts.js:735
-#: modules/crm/assets/js/vue-table.js:401
-#: modules/crm/views/company/single.php:154
-#: modules/crm/views/contact/single.php:160
-#: modules/crm/views/js-templates/customer-email-note.php:66
-#: modules/crm/views/js-templates/customer-log-activity.php:77
-#: modules/crm/views/js-templates/customer-newnote.php:42
-#: modules/crm/views/js-templates/customer-schedule-note.php:140
-#: modules/crm/views/js-templates/customer-tasks-note.php:68
-#: modules/hrm/assets/js/requests.js:582 modules/hrm/hrm.php:227
-#: modules/hrm/includes/class-announcement-list-table.php:259
-#: modules/hrm/includes/class-employee-list-table.php:93
-#: modules/hrm/views/requests.php:42
-msgid "Cancel"
-msgstr ""
-
-#: assets/js/erp-settings.js:5517
-#: includes/Settings/assets/src/components/email/notifications/EmailNotification.vue:160
-#: includes/Settings/assets/src/components/email/templates/EmailTemplate.vue:18
-msgid "Template Name"
-msgstr ""
-
-#: assets/js/erp-settings.js:5520 assets/js/erp-settings.js:5818
-#: includes/Settings/Email.php:406
-#: includes/Settings/assets/src/components/email/notifications/EmailNotification.vue:164
-#: includes/Settings/assets/src/components/integration/Integration.vue:148
-#: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:61
-#: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:61
-#: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:75
-#: modules/accounting/assets/src/admin/components/opening-balance/OpeningBalance.vue:277
-#: modules/accounting/assets/src/admin/components/tax/NewTaxCategory.vue:23
-#: modules/accounting/assets/src/admin/components/tax/TaxCategories.vue:62
-#: modules/crm/includes/class-subscription-widget.php:71
-#: modules/crm/views/js-templates/new-contact-group.php:16
-#: modules/hrm/includes/class-leave-policy-name-list-table.php:77
-#: modules/hrm/includes/class-policy-list-table.php:165
-#: modules/hrm/views/employee/tab-leave.php:126
-#: modules/hrm/views/js-templates/holiday.php:49
-#: modules/hrm/views/js-templates/new-dept.php:11
-#: modules/hrm/views/js-templates/new-designation.php:9
-#: modules/hrm/views/leave/holiday.php:95
-#: modules/hrm/views/leave/new-policy.php:120
-#: modules/hrm/views/leave/policy-name.php:49
-msgid "Description"
-msgstr ""
-
-#: assets/js/erp-settings.js:5523
-#: includes/Settings/assets/src/components/email/notifications/EmailNotification.vue:168
-msgid "Disable / Enable"
-msgstr ""
-
-#: assets/js/erp-settings.js:5818 includes/Settings/Integration.php:15
-#: includes/Settings/assets/src/components/integration/Integration.vue:147
-msgid "Integration"
-msgstr ""
-
-#: assets/js/erp-settings.js:5953
-#: includes/Settings/assets/src/components/license/License.vue:59
-msgid "Extension"
-msgstr ""
-
-#: assets/js/erp-settings.js:5953
-#: includes/Settings/assets/src/components/license/License.vue:60
-#: includes/framework/views/status-report.php:642
-msgid "Version"
-msgstr ""
-
-#: assets/js/erp-settings.js:5953
-#: includes/Settings/assets/src/components/license/License.vue:61
-msgid "License Key"
-msgstr ""
-
-#: assets/js/erp-settings.js:5953
-#: includes/Settings/assets/src/components/license/License.vue:62
-#: includes/admin/views/tools.php:37
-#: modules/accounting/assets/src/admin/components/transactions/TransactionsFilter.vue:33
-#: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:70
-#: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesStats.vue:17
-#: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:99
-#: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesStats.vue:17
-#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:97
-#: modules/accounting/assets/src/admin/components/transactions/sales/SalesStats.vue:17
-#: modules/crm/includes/class-contact-subscriber-list-table.php:173
-#: modules/hrm/assets/js/requests.js:135 modules/hrm/assets/js/requests.js:172
-#: modules/hrm/assets/js/requests.js:181 modules/hrm/assets/js/requests.js:190
-#: modules/hrm/includes/class-employee-list-table.php:214
-#: modules/hrm/includes/class-leave-request-list-table.php:95
-#: modules/hrm/views/employee/tab-leave.php:128
-#: modules/hrm/views/reporting/headcount.php:156
-msgid "Status"
-msgstr ""
-
-#: assets/js/erp-settings.js:7009 assets/js/erp-settings.js:7089
-#: assets/js/erp-settings.js:7169 assets/js/erp-settings.js:7249
-#: assets/js/erp-settings.js:7496 assets/js/erp-settings.js:7576
-#: assets/js/erp-settings.js:7656 assets/js/erp-settings.js:7736
-#: assets/js/erp-settings.js:7977 assets/js/erp-settings.js:8110
-#: assets/js/erp-settings.js:8731 assets/js/erp-settings.js:8941
-#: assets/js/erp-settings.js:9021 assets/js/erp-settings.js:9169
-#: assets/js/erp-settings.js:9301 assets/js/erp-settings.js:9415
-#: assets/js/erp-settings.js:9512 assets/js/erp-settings.js:9723
-#: assets/js/erp-settings.js:10146
-msgid "base-layout"
-msgstr ""
-
-#: assets/js/erp-settings.js:8625
-msgid "crm-contact-form-layout"
+#: assets/js/vendor.js:82
+msgid "Promise can't be resolved itself"
 msgstr ""
 
 #: i18n/countries.php:14
@@ -1177,7 +973,7 @@ msgstr ""
 msgid "United Kingdom (UK)"
 msgstr ""
 
-#: i18n/countries.php:245 includes/Settings/Email.php:714
+#: i18n/countries.php:245 includes/settings/Email.php:714
 msgid "United States (US)"
 msgstr ""
 
@@ -16115,982 +15911,77 @@ msgstr ""
 msgid "Midlands"
 msgstr ""
 
-#: includes/Settings/Ajax.php:141 includes/Settings/Ajax.php:200
-#: includes/Settings/Ajax.php:241 includes/Settings/Ajax.php:277
-#: modules/hrm/includes/class-ajax.php:1073
-msgid "You do not have sufficient permission to do this action"
-msgstr ""
-
-#: includes/Settings/Ajax.php:248
-msgid "Invalid email template ID"
-msgstr ""
-
-#: includes/Settings/Ajax.php:263
-msgid "Template updated successfully"
-msgstr ""
-
-#: includes/Settings/Ajax.php:313 includes/admin/class-ajax.php:485
-msgid "No host address provided"
-msgstr ""
-
-#: includes/Settings/Ajax.php:319 includes/admin/class-ajax.php:497
-msgid "No port address provided"
-msgstr ""
-
-#: includes/Settings/Ajax.php:328 includes/admin/class-ajax.php:446
-#: includes/admin/class-ajax.php:489 modules/hrm/includes/class-ajax.php:1376
-msgid "No email address provided"
-msgstr ""
-
-#: includes/Settings/Ajax.php:334 includes/admin/class-ajax.php:493
-msgid "No email password provided"
-msgstr ""
-
-#: includes/Settings/Ajax.php:364
-msgid "ERP SMTP Test Mail"
-msgstr ""
-
-#: includes/Settings/Ajax.php:365 includes/Settings/Ajax.php:452
-msgid "This is a test email by WP ERP."
-msgstr ""
-
-#: includes/Settings/Ajax.php:407 includes/Settings/Ajax.php:482
-msgid "Test email has been sent successfully to "
-msgstr ""
-
-#: includes/Settings/Ajax.php:428
-msgid "No private API key provided"
-msgstr ""
-
-#: includes/Settings/Ajax.php:434
-msgid "No domain address provided"
-msgstr ""
-
-#: includes/Settings/Ajax.php:440
-msgid "No region selected"
-msgstr ""
-
-#: includes/Settings/Ajax.php:451
-msgid "ERP Mailgun Test Mail"
-msgstr ""
-
-#: includes/Settings/Ajax.php:567
-msgid "Licenses saved succesfully"
-msgstr ""
-
-#: includes/Settings/Email.php:15
-msgid "Emails"
-msgstr ""
-
-#: includes/Settings/Email.php:32 includes/Settings/General.php:15
-#: includes/admin/views/tools.php:33
-#: modules/accounting/assets/src/admin/components/help/HelpContent.vue:43
-#: modules/crm/views/help.php:10 modules/hrm/views/help.php:10
-msgid "General"
-msgstr ""
-
-#: includes/Settings/Email.php:33 includes/Settings/Email.php:122
-msgid "Email Connect"
-msgstr ""
-
-#: includes/Settings/Email.php:34
-msgid "Email Templates"
-msgstr ""
-
-#: includes/Settings/Email.php:35
-msgid "Notifications & Templates"
-msgstr ""
-
-#: includes/Settings/Email.php:46
-msgid "Email Sender Options"
-msgstr ""
-
-#: includes/Settings/Email.php:48
-msgid ""
-"Email notification settings for ERP. Customize the look and feel of "
-"outgoing emails."
-msgstr ""
-
-#: includes/Settings/Email.php:52
-msgid "Sender Name"
-msgstr ""
-
-#: includes/Settings/Email.php:57
-msgid "The senders name appears on the outgoing emails"
-msgstr ""
-
-#: includes/Settings/Email.php:61
-msgid "Sender Address"
-msgstr ""
-
-#: includes/Settings/Email.php:66
-msgid "The senders email appears on the outgoing emails"
-msgstr ""
-
-#: includes/Settings/Email.php:70
-msgid "Header Image"
-msgstr ""
-
-#: includes/Settings/Email.php:73
-msgid "Upload a logo/banner and provide the URL here."
-msgstr ""
-
-#: includes/Settings/Email.php:81
-msgid "Footer Text"
-msgstr ""
-
-#: includes/Settings/Email.php:87
-msgid "The text apears on each emails footer area."
-msgstr ""
-
-#: includes/Settings/Email.php:96
-msgid "Notification Emails"
-msgstr ""
-
-#: includes/Settings/Email.php:97
-msgid ""
-"Email notifications sent from WP ERP are listed below. Click on an email to "
-"configure it."
-msgstr ""
-
-#: includes/Settings/Email.php:103 includes/Settings/Email.php:227
-#: includes/admin/views/add-ons.php:821 includes/admin/views/modules.php:619
-msgid "HRM"
-msgstr ""
-
-#: includes/Settings/Email.php:103 includes/Settings/Email.php:228
-#: includes/admin/views/add-ons.php:827 includes/admin/views/modules.php:625
-#: includes/framework/views/status-report.php:83 modules/crm/crm.php:352
-#: modules/crm/crm.php:465 modules/crm/includes/admin/class-menu.php:32
-#: modules/crm/includes/admin/class-settings.php:17
-#: modules/crm/includes/class-form-handler.php:23
-#: modules/crm/views/dashboard-badge.php:7
-msgid "CRM"
-msgstr ""
-
-#: includes/Settings/Email.php:103 includes/Settings/Email.php:229
-#: includes/admin/views/add-ons.php:824 includes/admin/views/modules.php:581
-#: includes/admin/views/modules.php:631 includes/framework/modules.php:65
-#: includes/framework/views/status-report.php:113
-#: modules/accounting/assets/src/admin/components/dashboard/DashBoard.vue:117
-#: modules/accounting/assets/src/admin/components/menu/AccountingMenu.vue:47
-#: modules/accounting/includes/classes/class-admin.php:39
-#: modules/accounting/includes/classes/class-settings.php:13
-#: modules/accounting/includes/views/dashboard/dashboard.php:2
-msgid "Accounting"
-msgstr ""
-
-#: includes/Settings/Email.php:103
-#: modules/crm/includes/functions-dashboard.php:63
-#: modules/crm/includes/functions-dashboard.php:157
-#: modules/crm/views/js-templates/new-customer.php:309
-msgid "Others"
-msgstr ""
-
-#: includes/Settings/Email.php:132
-msgid "SMTP Options"
-msgstr ""
-
-#: includes/Settings/Email.php:134 includes/Settings/Email.php:286
-msgid "Email outgoing settings for ERP."
-msgstr ""
-
-#: includes/Settings/Email.php:138
-#: includes/framework/views/status-report.php:183
-msgid "Enable SMTP"
-msgstr ""
-
-#: includes/Settings/Email.php:146 includes/Settings/Email.php:538
-msgid "Mail Server"
-msgstr ""
-
-#: includes/Settings/Email.php:152
-msgid "SMTP host address."
-msgstr ""
-
-#: includes/Settings/Email.php:156 includes/Settings/Email.php:574
-msgid "Port"
-msgstr ""
-
-#: includes/Settings/Email.php:159
-msgid "SSL: 465<br> TLS: 587"
-msgstr ""
-
-#: includes/Settings/Email.php:163 includes/Settings/Email.php:581
-msgid "Authentication"
-msgstr ""
-
-#: includes/Settings/Email.php:166 includes/Settings/Email.php:586
-msgid "Authentication type."
-msgstr ""
-
-#: includes/Settings/Email.php:167 includes/Settings/Email.php:584
-msgid "None"
-msgstr ""
-
-#: includes/Settings/Email.php:167 includes/Settings/Email.php:584
-msgid "SSL"
-msgstr ""
-
-#: includes/Settings/Email.php:167 includes/Settings/Email.php:584
-msgid "TLS"
-msgstr ""
-
-#: includes/Settings/Email.php:171 includes/Settings/Email.php:548
-msgid "Username"
-msgstr ""
-
-#: includes/Settings/Email.php:177 includes/Settings/Email.php:551
-msgid "Your email id."
-msgstr ""
-
-#: includes/Settings/Email.php:181 includes/Settings/Email.php:558
-msgid "Password"
-msgstr ""
-
-#: includes/Settings/Email.php:184 includes/Settings/Email.php:561
-msgid "Your email password."
-msgstr ""
-
-#: includes/Settings/Email.php:188
-msgid "Enable Debugging"
-msgstr ""
-
-#: includes/Settings/Email.php:212
-#: includes/Settings/assets/src/components/email/templates/EmailTemplate.vue:9
-msgid "Saved Replies"
-msgstr ""
-
-#: includes/Settings/Email.php:221
-msgid "Notification & Template Settings"
-msgstr ""
-
-#: includes/Settings/Email.php:223
-msgid "Email notifications and templates management for ERP"
-msgstr ""
-
-#: includes/Settings/Email.php:259
-msgid "Check Emails "
-msgstr ""
-
-#: includes/Settings/Email.php:262
-msgid "Interval time to run cron for checking inbound emails."
-msgstr ""
-
-#: includes/Settings/Email.php:285
-msgid "SMTP"
-msgstr ""
-
-#: includes/Settings/Email.php:296 includes/Settings/Email.php:681
-msgid "Mailgun"
-msgstr ""
-
-#: includes/Settings/Email.php:307
-msgid "IMAP Connection"
-msgstr ""
-
-#: includes/Settings/Email.php:308
-msgid "Connect to Custom IMAP server"
-msgstr ""
-
-#: includes/Settings/Email.php:318
-msgid "Google Connect"
-msgstr ""
-
-#: includes/Settings/Email.php:319
-msgid "Connect your Gmail or Gsuite account"
-msgstr ""
-
-#: includes/Settings/Email.php:388
-msgid "Connected"
-msgstr ""
-
-#: includes/Settings/Email.php:388
-msgid "Not Connected"
-msgstr ""
-
-#: includes/Settings/Email.php:405
-#: modules/accounting/assets/src/admin/components/people/Employees.vue:55
-#: modules/accounting/assets/src/admin/components/people/People.vue:84
-#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:43
-#: modules/crm/includes/class-contact-subscriber-list-table.php:170
-#: modules/crm/includes/class-subscription.php:165
-#: modules/crm/includes/functions-customer.php:532
-#: modules/crm/includes/functions-customer.php:1692
-#: modules/crm/includes/functions-customer.php:3020
-#: modules/crm/includes/functions-customer.php:3111
-#: modules/crm/views/js-templates/customer-add-schedules.php:91
-#: modules/crm/views/js-templates/new-customer.php:89
-#: modules/hrm/views/employee/tab-general.php:20
-#: modules/hrm/views/js-templates/new-employee.php:85
-msgid "Email"
-msgstr ""
-
-#: includes/Settings/Email.php:458
-#: includes/Settings/assets/src/components/email/notifications/EmailNotification.vue:46
-#: includes/Settings/assets/src/components/integration/Integration.vue:31
-msgid "Configure"
-msgstr ""
-
-#: includes/Settings/Email.php:483 includes/Settings/Email.php:503
-msgid "IMAP/POP3 Options"
-msgstr ""
-
-#: includes/Settings/Email.php:493
-msgid ""
-"Your server does not have PHP IMAP extension loaded. To enable this "
-"feature, please contact your hosting provider and ask to enable PHP IMAP "
-"extension."
-msgstr ""
-
-#: includes/Settings/Email.php:505
-msgid "Email incoming settings for ERP."
-msgstr ""
-
-#: includes/Settings/Email.php:513
-#: includes/framework/views/status-report.php:188
-msgid "Enable IMAP"
-msgstr ""
-
-#: includes/Settings/Email.php:529
-msgid "Cron Schedule"
-msgstr ""
-
-#: includes/Settings/Email.php:532
-msgid "Interval time to run cron."
-msgstr ""
-
-#: includes/Settings/Email.php:544
-msgid "IMAP/POP3 host address."
-msgstr ""
-
-#: includes/Settings/Email.php:565
-msgid "Protocol"
-msgstr ""
-
-#: includes/Settings/Email.php:568
-msgid "Protocol type."
-msgstr ""
-
-#: includes/Settings/Email.php:569
-msgid "IMAP"
-msgstr ""
-
-#: includes/Settings/Email.php:569
-msgid "POP3"
-msgstr ""
-
-#: includes/Settings/Email.php:577
-msgid "IMAP: 993<br> POP3: 995"
-msgstr ""
-
-#: includes/Settings/Email.php:616
-msgid "Gmail / G suite Authentication"
-msgstr ""
-
-#: includes/Settings/Email.php:638
-msgid ""
-"<a target=\"_blank\" "
-"href=\"https://console.developers.google.com/flows/enableapi?apiid=gmail&"
-"pli=1\">Create a Google App</a> and authorize your account to Send and "
-"Recieve emails using Gmail. Follow instructions from this <a "
-"target=\"_blank\" "
-"href=\"https://wperp.com/docs/crm/tutorials/how-to-configure-gmail-api-"
-"connection-in-the-crm-settings/?utm_source=Free+Plugin&utm_medium=CTA&utm_"
-"content=Backend&utm_campaign=Docs\">Documentation</a> to get started"
-msgstr ""
-
-#: includes/Settings/Email.php:642
-msgid "Client ID"
-msgstr ""
-
-#: includes/Settings/Email.php:645
-msgid "Your APP Client ID"
-msgstr ""
-
-#: includes/Settings/Email.php:649
-msgid "Client Secret"
-msgstr ""
-
-#: includes/Settings/Email.php:652
-msgid "Your APP Client Secret"
-msgstr ""
-
-#: includes/Settings/Email.php:656
-msgid "Redirect URL to use"
-msgstr ""
-
-#: includes/Settings/Email.php:659
-msgid "Copy and Use this url when oAuth consent asks for Authorized Redirect URL"
-msgstr ""
-
-#: includes/Settings/Email.php:687
-msgid "Enable Mailgun"
-msgstr ""
-
-#: includes/Settings/Email.php:695
-msgid "Private API Key"
-msgstr ""
-
-#: includes/Settings/Email.php:698
-msgid ""
-"Get private API key from your Mailgun account <a "
-"href=\"https://app.mailgun.com/app/account/security/api_keys\" "
-"target=\"_blank\">Mailgun account</a>"
-msgstr ""
-
-#: includes/Settings/Email.php:702
-msgid "Domain"
-msgstr ""
-
-#: includes/Settings/Email.php:705
-msgid ""
-"Get sending domain from your Mailgun account <a "
-"href=\"https://app.mailgun.com/app/sending/domains\" "
-"target=\"_blank\">Mailgun account</a><br /><mark>Notice:</mark> In Sandbox "
-"domain with Free plan, only 5 Authorized Recipients are allowed. <a "
-"href=\"https://help.mailgun.com/hc/en-us/articles/217531258-Authorized-"
-"Recipients\" target=\"_blank\">Learn More</a>"
-msgstr ""
-
-#: includes/Settings/Email.php:709
-msgid "Region"
-msgstr ""
-
-#: includes/Settings/Email.php:712
-msgid "Mailgun API Region"
-msgstr ""
-
-#: includes/Settings/Email.php:715
-msgid "Europe (EU)"
-msgstr ""
-
-#: includes/Settings/Email.php:721
-msgid "Limit"
-msgstr ""
-
-#: includes/Settings/Email.php:724
-msgid "Hourly sending limit, That&apos;s 1 email per 1 second(s)"
-msgstr ""
-
-#: includes/Settings/General.php:28
-msgid "General Options"
-msgstr ""
-
-#: includes/Settings/General.php:30 includes/admin/class-setup-wizard.php:266
-#: includes/framework/views/status-report.php:163
-msgid "Company Start Date"
-msgstr ""
-
-#: includes/Settings/General.php:33 includes/admin/class-setup-wizard.php:272
-#: includes/framework/views/status-report.php:164
-msgid "The date the company officially started."
-msgstr ""
-
-#: includes/Settings/General.php:38 includes/admin/class-setup-wizard.php:253
-msgid "Financial Year Starts"
-msgstr ""
-
-#: includes/Settings/General.php:42 includes/admin/class-setup-wizard.php:261
-#: includes/framework/views/status-report.php:169
-msgid "Financial and tax calculation starts from this month of every year."
-msgstr ""
-
-#: includes/Settings/General.php:46 includes/admin/class-setup-wizard.php:291
-#: includes/framework/views/status-report.php:178
-msgid "Date Format"
-msgstr ""
-
-#: includes/Settings/General.php:48 includes/admin/class-setup-wizard.php:286
-#: includes/admin/class-setup-wizard.php:304
-#: includes/framework/views/status-report.php:179
-msgid "Format of date to show accross the system."
-msgstr ""
-
-#: includes/Settings/General.php:61 includes/admin/class-setup-wizard.php:279
-#: includes/framework/views/status-report.php:193
-#: modules/accounting/assets/src/admin/components/reports/LedgerReport.vue:27
-#: modules/accounting/assets/src/admin/components/reports/sales-tax/AgencyBased.vue:42
-#: modules/accounting/assets/src/admin/components/reports/sales-tax/CategoryBased.vue:41
-#: modules/accounting/assets/src/admin/components/reports/sales-tax/CustomerBased.vue:41
-msgid "Currency"
-msgstr ""
-
-#: includes/Settings/General.php:69
-msgid "Default Country (HRM, CRM, AC)"
-msgstr ""
-
-#: includes/Settings/General.php:76
-msgid "Role Based Login Redirection"
-msgstr ""
-
-#: includes/Settings/General.php:79 includes/Settings/General.php:88
-#: modules/accounting/includes/classes/class-settings.php:62
-#: modules/crm/includes/admin/class-settings.php:76
-msgid "On"
-msgstr ""
-
-#: includes/Settings/General.php:79 includes/Settings/General.php:88
-#: modules/accounting/includes/classes/class-settings.php:62
-#: modules/crm/includes/admin/class-settings.php:76
-msgid "Off"
-msgstr ""
-
-#: includes/Settings/General.php:80
-msgid ""
-"User will be redirected to the related page regrading their role after "
-"login."
-msgstr ""
-
-#: includes/Settings/General.php:85
-msgid "Enable Debug Mode"
-msgstr ""
-
-#: includes/Settings/General.php:89
-msgid "Switching testing or production mode"
-msgstr ""
-
-#: includes/Settings/Integration.php:35
-msgid "Integration Management"
-msgstr ""
-
-#: includes/Settings/Integration.php:36
-msgid ""
-"Various integrations to WP ERP. Click <strong>Configure</strong> to manage "
-"the settings."
-msgstr ""
-
-#: includes/Settings/License.php:15
-msgid "Licenses"
-msgstr ""
-
-#: includes/Settings/License.php:50
-msgid "License Manager"
-msgstr ""
-
-#: includes/Settings/License.php:51
-msgid ""
-"Enter your extension license keys here to receive updates for purchased "
-"extensions. Visit <a href=\"%s\" target=\"_blank\">your account</a> page."
-msgstr ""
-
-#: includes/Settings/Template.php:490
-#: includes/framework/class-settings-page.php:494
-msgid "Delete this image?"
-msgstr ""
-
-#: includes/Settings/Template.php:494
-#: includes/Settings/assets/src/components/base/ImagePicker.vue:7
-#: includes/Settings/assets/src/components/base/ImagePicker.vue:16
-#: includes/framework/class-settings-page.php:498
-msgid "Upload Image"
-msgstr ""
-
-#: includes/Settings/Template.php:756
-#: includes/framework/class-settings-page.php:760
-msgid "Hard Crop?"
-msgstr ""
-
-#: includes/Settings/Template.php:783
-#: includes/framework/class-settings-page.php:787
-msgid "Select a page&hellip;"
-msgstr ""
-
-#: includes/Settings/Woocommerce.php:17 includes/framework/modules.php:350
-msgid "WooCommerce"
-msgstr ""
-
-#: includes/Settings/assets/src/components/act/financial-year/AcFinancialYears.vue:8
-#: includes/Settings/assets/src/components/email/templates/EmailTemplate.vue:46
-#: includes/Settings/assets/src/components/hr/leave-years/HRLeaveYears.vue:7
-#: includes/framework/views/status-report.php:637
-#: modules/accounting/assets/src/admin/components/chart-accounts/ChartOfAccounts.vue:105
-#: modules/accounting/assets/src/admin/components/people/Employees.vue:52
-#: modules/accounting/assets/src/admin/components/people/People.vue:82
-#: modules/crm/includes/class-contact-group-list-table.php:86
-#: modules/crm/includes/class-contact-subscriber-list-table.php:169
-#: modules/crm/views/company/single.php:89
-#: modules/crm/views/js-templates/new-contact-group.php:5
-#: modules/hrm/includes/class-employee.php:1424
-#: modules/hrm/views/employee/tab-general.php:289
-#: modules/hrm/views/js-templates/dependents.php:5
-#: modules/hrm/views/reporting/headcount.php:151
-msgid "Name"
-msgstr ""
-
-#: includes/Settings/assets/src/components/act/financial-year/AcFinancialYears.vue:12
-#: includes/Settings/assets/src/components/hr/leave-years/HRLeaveYears.vue:11
-#: modules/hrm/assets/js/requests.js:71 modules/hrm/assets/js/requests.js:89
-#: modules/hrm/includes/class-announcement-list-table.php:247
-#: modules/hrm/views/js-templates/holiday-import.php:21
-#: modules/hrm/views/js-templates/holiday.php:15
-#: modules/hrm/views/leave/holiday.php:92
-msgid "Start Date"
-msgstr ""
-
-#: includes/Settings/assets/src/components/act/financial-year/AcFinancialYears.vue:16
-#: includes/Settings/assets/src/components/hr/leave-years/HRLeaveYears.vue:15
-#: modules/hrm/assets/js/requests.js:75 modules/hrm/assets/js/requests.js:93
-#: modules/hrm/includes/class-announcement-list-table.php:251
-#: modules/hrm/views/js-templates/holiday-import.php:22
-#: modules/hrm/views/js-templates/holiday.php:38
-#: modules/hrm/views/leave/holiday.php:93
-msgid "End Date"
-msgstr ""
-
-#: includes/Settings/assets/src/components/act/financial-year/AcFinancialYears.vue:26
-#: includes/Settings/assets/src/components/hr/leave-years/HRLeaveYears.vue:25
-#: modules/hrm/includes/functions-dashboard-widgets.php:446
-msgid "Start date"
-msgstr ""
-
-#: includes/Settings/assets/src/components/act/financial-year/AcFinancialYears.vue:30
-#: includes/Settings/assets/src/components/hr/leave-years/HRLeaveYears.vue:29
-#: modules/hrm/includes/functions-dashboard-widgets.php:450
-msgid "End date"
-msgstr ""
-
-#: includes/Settings/assets/src/components/act/financial-year/AcFinancialYears.vue:42
-#: includes/Settings/assets/src/components/crm/contact-forms/CrmContactFormSingle.vue:94
-#: includes/Settings/assets/src/components/hr/leave-years/HRLeaveYears.vue:41
-#: includes/Settings/assets/src/components/layouts/BaseContentLayout.vue:121
-#: includes/Settings/assets/src/components/license/License.vue:34
-#: includes/admin/views/tools/general.php:59
-msgid "Save Changes"
-msgstr ""
-
-#: includes/Settings/assets/src/components/base/Dropdown.vue:8
-#: modules/accounting/assets/src/admin/components/base/Dropdown.vue:8
-msgid "Dropdown"
-msgstr ""
-
-#: includes/Settings/assets/src/components/base/ShowErrors.vue:4
-#: modules/accounting/assets/src/admin/components/base/ShowErrors.vue:4
-msgid "Please complete these fields"
-msgstr ""
-
-#: includes/Settings/assets/src/components/crm/contact-forms/CrmContactFormSingle.vue:9
-msgid "Form Field"
-msgstr ""
-
-#: includes/Settings/assets/src/components/crm/contact-forms/CrmContactFormSingle.vue:10
-msgid "CRM Contact Option\t"
-msgstr ""
-
-#: includes/Settings/assets/src/components/crm/contact-forms/CrmContactFormSingle.vue:90
-#: modules/accounting/assets/src/admin/components/transactions/TransactionsFilter.vue:69
-#: modules/crm/assets/js/vue-table.js:402
-#: modules/hrm/includes/class-announcement-list-table.php:260
-#: modules/hrm/includes/class-employee-list-table.php:94
-#: modules/hrm/views/requests.php:47
-msgid "Reset"
-msgstr ""
-
-#: includes/Settings/assets/src/components/email/email-connect/EmailConnect.vue:10
-msgid "Outgoing Email Setting"
-msgstr ""
-
-#: includes/Settings/assets/src/components/email/email-connect/EmailConnect.vue:23
-msgid "Incoming Email Setting"
-msgstr ""
-
-#: includes/Settings/assets/src/components/email/email-connect/GoogleEmail.vue:13
-msgid "Click to Authorize your gmail account"
-msgstr ""
-
-#: includes/Settings/assets/src/components/email/email-connect/GoogleEmail.vue:17
-msgid "Disconnect"
-msgstr ""
-
-#: includes/Settings/assets/src/components/email/email-connect/ImapEmail.vue:14
-#: includes/Settings/assets/src/components/email/email-connect/ImapEmail.vue:39
-msgid "Test Connection"
-msgstr ""
-
-#: includes/Settings/assets/src/components/email/email-connect/ImapEmail.vue:15
-msgid "Click on the Above Button Before Saving the Setting"
-msgstr ""
-
-#: includes/Settings/assets/src/components/email/email-connect/ImapEmail.vue:50
-msgid "Testing Connection"
-msgstr ""
-
-#: includes/Settings/assets/src/components/email/email-connect/MailgunEmail.vue:14
-#: includes/Settings/assets/src/components/email/email-connect/SmtpEmail.vue:14
-msgid "Test Mail"
-msgstr ""
-
-#: includes/Settings/assets/src/components/email/email-connect/MailgunEmail.vue:15
-#: includes/Settings/assets/src/components/email/email-connect/SmtpEmail.vue:15
-msgid "An Email Address to Test the Connection"
-msgstr ""
-
-#: includes/Settings/assets/src/components/email/email-connect/MailgunEmail.vue:18
-#: includes/Settings/assets/src/components/email/email-connect/SmtpEmail.vue:18
-msgid "Email here"
-msgstr ""
-
-#: includes/Settings/assets/src/components/email/email-connect/MailgunEmail.vue:23
-#: includes/Settings/assets/src/components/email/email-connect/SmtpEmail.vue:22
-#: includes/admin/views/tools/misc.php:3
-msgid "Send Test Email"
-msgstr ""
-
-#: includes/Settings/assets/src/components/email/notifications/EmailNotification.vue:54
-#: includes/Settings/assets/src/components/integration/Integration.vue:39
-msgid "No templates found."
-msgstr ""
-
-#: includes/Settings/assets/src/components/email/notifications/EmailNotification.vue:62
-msgid "Configure Template"
-msgstr ""
-
-#: includes/Settings/assets/src/components/email/notifications/EmailNotification.vue:72
-msgid "Disable/Enable"
-msgstr ""
-
-#: includes/Settings/assets/src/components/email/notifications/EmailNotification.vue:81
-#: includes/Settings/assets/src/components/email/templates/EmailTemplate.vue:19
-#: includes/Settings/assets/src/components/email/templates/EmailTemplate.vue:51
-#: includes/class-email.php:470
-#: modules/accounting/assets/src/admin/components/email/SendMail.vue:18
-#: modules/crm/includes/functions-localize.php:20
-#: modules/crm/views/js-templates/customer-add-schedules.php:137
-#: modules/crm/views/js-templates/customer-email-note.php:39
-#: modules/crm/views/js-templates/customer-log-activity.php:20
-#: modules/crm/views/js-templates/single-schedule-details.php:73
-#: modules/hrm/includes/emails/class-email-new-leave-request.php:125
-msgid "Subject"
-msgstr ""
-
-#: includes/Settings/assets/src/components/email/notifications/EmailNotification.vue:86
-msgid "Heading"
-msgstr ""
-
-#: includes/Settings/assets/src/components/email/notifications/EmailNotification.vue:91
-#: includes/Settings/assets/src/components/email/templates/EmailTemplate.vue:70
-msgid "Body"
-msgstr ""
-
-#: includes/Settings/assets/src/components/email/notifications/EmailNotification.vue:97
-#: includes/class-email.php:514
-#: modules/hrm/includes/emails/class-email-new-leave-request.php:169
-msgid "Template Tags"
-msgstr ""
-
-#: includes/Settings/assets/src/components/email/notifications/EmailNotification.vue:115
-#: includes/Settings/assets/src/components/integration/Integration.vue:93
-#: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:180
-#: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:185
-#: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:208
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:198
-#: modules/accounting/assets/src/admin/components/journal/JournalCreate.vue:111
-#: modules/accounting/assets/src/admin/components/opening-balance/OpeningBalance.vue:284
-#: modules/accounting/assets/src/admin/components/pay-bill/PayBillCreate.vue:167
-#: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:183
-#: modules/accounting/assets/src/admin/components/product-category/ProductCategory.vue:24
-#: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:197
-#: modules/accounting/assets/src/admin/components/rec-payment/RecPaymentCreate.vue:196
-#: modules/accounting/assets/src/admin/components/tax/NewTaxAgency.vue:28
-#: modules/accounting/assets/src/admin/components/tax/NewTaxCategory.vue:33
-#: modules/accounting/assets/src/admin/components/tax/NewTaxRate.vue:95
-#: modules/accounting/assets/src/admin/components/tax/NewTaxZone.vue:38
-#: modules/accounting/assets/src/admin/components/tax/RecordPayTax.vue:68
-#: modules/accounting/assets/src/admin/components/tax/TaxRateLineAdd.vue:37
-#: modules/crm/assets/js/crm-contacts.js:734 modules/crm/crm.php:189
-msgid "Save"
-msgstr ""
-
-#: includes/Settings/assets/src/components/email/templates/EmailTemplate.vue:11
-#: includes/Settings/assets/src/components/hr/leave-years/HRLeaveYears.vue:36
-#: includes/admin/class-setup-wizard.php:663
-#: includes/admin/class-setup-wizard.php:745
-#: modules/accounting/assets/src/admin/components/chart-accounts/ChartOfAccounts.vue:9
-#: modules/accounting/assets/src/admin/components/people/People.vue:6
-#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:141
-#: modules/accounting/assets/src/admin/components/products/Products.vue:6
-#: modules/crm/crm.php:187 modules/hrm/views/announcements.php:35
-#: modules/hrm/views/departments.php:5 modules/hrm/views/designation.php:4
-#: modules/hrm/views/employee/single.php:10 modules/hrm/views/employee.php:12
-#: modules/hrm/views/leave/holiday.php:252
-#: modules/hrm/views/leave/leave-entitlements.php:16
-#: modules/hrm/views/leave/leave-entitlements.php:48
-#: modules/hrm/views/leave/leave-entitlements.php:49
-#: modules/hrm/views/leave/leave-policies.php:4
-#: modules/hrm/views/leave/new-policy.php:40
-#: modules/hrm/views/leave/new-policy.php:42
-#: modules/hrm/views/leave/new-request.php:29
-msgid "Add New"
-msgstr ""
-
-#: includes/Settings/assets/src/components/email/templates/EmailTemplate.vue:20
-#: includes/functions.php:2948
-msgid "Enable/Disable"
-msgstr ""
-
-#: includes/Settings/assets/src/components/email/templates/EmailTemplate.vue:37
-msgid "Add new Template"
-msgstr ""
-
-#: includes/Settings/assets/src/components/email/templates/EmailTemplate.vue:37
-#: includes/admin/views/company.php:17
-#: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:8
-#: modules/accounting/assets/src/admin/components/chart-accounts/ChartOfAccounts.vue:111
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:9
-#: modules/accounting/assets/src/admin/components/people/People.vue:96
-#: modules/accounting/assets/src/admin/components/people/PeopleTransaction.vue:108
-#: modules/accounting/assets/src/admin/components/product-category/ProductCategory.vue:92
-#: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:9
-#: modules/accounting/assets/src/admin/components/tax/NewTaxAgency.vue:7
-#: modules/accounting/assets/src/admin/components/tax/NewTaxCategory.vue:7
-#: modules/accounting/assets/src/admin/components/tax/NewTaxZone.vue:7
-#: modules/accounting/assets/src/admin/components/tax/SingleTaxRate.vue:88
-#: modules/accounting/assets/src/admin/components/tax/TaxAgencies.vue:73
-#: modules/accounting/assets/src/admin/components/tax/TaxCategories.vue:73
-#: modules/accounting/assets/src/admin/components/tax/TaxRates.vue:83
-#: modules/accounting/assets/src/admin/components/tax/TaxZones.vue:77
-#: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:282
-#: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:335
-#: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:178
-#: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:197
-#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:174
-#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:192
-#: modules/crm/assets/js/crm-contacts.js:1136
-#: modules/crm/includes/class-campaigns-list-table.php:88
-#: modules/crm/includes/class-contact-group-list-table.php:116
-#: modules/crm/includes/class-contact-subscriber-list-table.php:196
-#: modules/crm/includes/functions-localize.php:13
-#: modules/hrm/includes/class-announcement-list-table.php:131
-#: modules/hrm/includes/class-announcement.php:177
-#: modules/hrm/includes/class-department-list-table.php:216
-#: modules/hrm/includes/class-designation-list-table.php:82
-#: modules/hrm/includes/class-employee-list-table.php:235
-#: modules/hrm/includes/class-leave-policy-name-list-table.php:109
-#: modules/hrm/includes/class-policy-list-table.php:207
-#: modules/hrm/includes/class-walker-department.php:42
-#: modules/hrm/views/employee/single.php:82
-#: modules/hrm/views/js-templates/row-dept.php:10
-#: modules/hrm/views/js-templates/row-desig.php:10
-#: modules/hrm/views/js-templates/row-employee.php:11
-#: modules/hrm/views/leave/holiday.php:111
-msgid "Edit"
-msgstr ""
-
-#: includes/Settings/assets/src/components/email/templates/EmailTemplate.vue:57
-msgid "Short Codes"
-msgstr ""
-
-#: includes/Settings/assets/src/components/integration/Integration.vue:46
-msgid " Integration"
-msgstr ""
-
-#: includes/Settings/assets/src/components/integration/Integration.vue:54
-msgid "Active Gateway"
-msgstr ""
-
-#: includes/Settings/assets/src/components/integration/Integration.vue:82
-msgid "Test Dropbox Connection"
-msgstr ""
-
-#: includes/Settings/assets/src/components/layouts/BaseContentLayout.vue:76
-msgid "Select date"
-msgstr ""
-
-#: includes/Settings/assets/src/components/license/License.vue:28
-msgid "No extensions found."
-msgstr ""
-
-#: includes/Settings/assets/src/components/menu/SettingsMenu.vue:3
-#: includes/admin/class-menu.php:131 includes/admin/class-menu.php:133
-#: modules/accounting/includes/classes/class-admin.php:157 wp-erp.php:332
-msgid "Settings"
-msgstr ""
-
-#: includes/Settings/assets/src/components/menu/SettingsSubMenu.vue:14
-msgid "More"
-msgstr ""
-
-#: includes/Settings/assets/src/components/searchbar/SearchBar.vue:30
-msgid "Sorry ! Nothings found for your query. Please try again !"
-msgstr ""
-
-#: includes/Settings/assets/src/components/select/MultiSelect.vue:18
-msgid "Oops! No item found."
-msgstr ""
-
-#: includes/Settings/assets/src/components/woocommerce/WooCommerce.vue:12
-msgid "Connect with WooCommerce"
-msgstr ""
-
-#: includes/Settings/assets/src/components/woocommerce/WooCommerce.vue:83
-msgid "Get WooCommerce Extension"
-msgstr ""
-
-#: includes/Settings/assets/src/components/woocommerce/WooCommerce.vue:85
-msgid "Activate WooCommerce"
-msgstr ""
-
-#: includes/Settings/assets/src/components/woocommerce/WooCommerce.vue:89
-msgid "Get WP ERP Pro"
-msgstr ""
-
-#: includes/admin/class-ajax.php:79 includes/functions.php:1390
+#: includes/admin/class-ajax.php:79 includes/admin/class-ajax.php:99
+#: includes/functions.php:1390 includes/functions.php:1420
 msgid "Sorry ! You do not have permission to access this page"
 msgstr ""
 
-#: includes/admin/class-ajax.php:87
+#: includes/admin/class-ajax.php:95 includes/functions.php:1416
 msgid "Unknown import type!"
 msgstr ""
 
-#: includes/admin/class-ajax.php:93
+#: includes/admin/class-ajax.php:105
 #: modules/accounting/includes/functions/products.php:418
 msgid "The file is not a valid CSV file! Please provide a valid one."
 msgstr ""
 
-#: includes/admin/class-ajax.php:101
+#: includes/admin/class-ajax.php:113
 #: modules/accounting/includes/functions/products.php:426
 #: modules/accounting/includes/functions/products.php:437
 msgid "No data found to import!"
 msgstr ""
 
-#: includes/admin/class-ajax.php:270
+#: includes/admin/class-ajax.php:240
+msgid "You can only import your own contacts"
+msgstr ""
+
+#: includes/admin/class-ajax.php:287
 msgid "Something went wrong or items already exist"
 msgstr ""
 
-#: includes/admin/class-ajax.php:400 includes/admin/class-ajax.php:408
+#: includes/admin/class-ajax.php:417 includes/admin/class-ajax.php:425
 msgid "Field/Items"
 msgstr ""
 
-#: includes/admin/class-ajax.php:401 includes/admin/class-ajax.php:409
+#: includes/admin/class-ajax.php:418 includes/admin/class-ajax.php:426
 msgid "Old Value"
 msgstr ""
 
-#: includes/admin/class-ajax.php:402 includes/admin/class-ajax.php:410
+#: includes/admin/class-ajax.php:419 includes/admin/class-ajax.php:427
 msgid "New Value"
 msgstr ""
 
-#: includes/admin/class-ajax.php:430
+#: includes/admin/class-ajax.php:447
 msgid "Log changes"
 msgstr ""
 
-#: includes/admin/class-ajax.php:515
+#: includes/admin/class-ajax.php:463 includes/admin/class-ajax.php:506
+#: includes/settings/Ajax.php:328 modules/hrm/includes/class-ajax.php:1376
+msgid "No email address provided"
+msgstr ""
+
+#: includes/admin/class-ajax.php:502 includes/settings/Ajax.php:313
+msgid "No host address provided"
+msgstr ""
+
+#: includes/admin/class-ajax.php:510 includes/settings/Ajax.php:334
+msgid "No email password provided"
+msgstr ""
+
+#: includes/admin/class-ajax.php:514 includes/settings/Ajax.php:319
+msgid "No port address provided"
+msgstr ""
+
+#: includes/admin/class-ajax.php:532
 msgid "Your IMAP connection is established."
 msgstr ""
 
-#: includes/admin/class-ajax.php:551
+#: includes/admin/class-ajax.php:568
 msgid "No credential set yet !"
 msgstr ""
 
-#: includes/admin/class-ajax.php:740 includes/class-promotion.php:127
-msgid "Invalid nonce"
-msgstr ""
-
-#: includes/admin/class-ajax.php:744 includes/class-promotion.php:131
-msgid "You have no permission to do that"
-msgstr ""
-
-#: includes/admin/class-ajax.php:767 includes/admin/class-ajax.php:816
-#: modules/crm/includes/class-ajax.php:854
+#: includes/admin/class-ajax.php:586 includes/admin/class-ajax.php:788
+#: includes/admin/class-ajax.php:837 modules/crm/includes/class-ajax.php:854
 #: modules/crm/includes/class-ajax.php:912
 #: modules/crm/includes/class-ajax.php:1170
 #: modules/crm/includes/class-ajax.php:1399
@@ -17158,25 +16049,33 @@ msgstr ""
 msgid "You do not have sufficient permissions to do this action"
 msgstr ""
 
-#: includes/admin/class-ajax.php:796
+#: includes/admin/class-ajax.php:761 includes/class-promotion.php:129
+msgid "Invalid nonce"
+msgstr ""
+
+#: includes/admin/class-ajax.php:765 includes/class-promotion.php:133
+msgid "You have no permission to do that"
+msgstr ""
+
+#: includes/admin/class-ajax.php:817
 msgid "Redirecting..."
 msgstr ""
 
-#: includes/admin/class-ajax.php:799
+#: includes/admin/class-ajax.php:820
 msgid "Invalid input."
 msgstr ""
 
-#: includes/admin/class-ajax.php:825
+#: includes/admin/class-ajax.php:846
 msgid "Sorry, Something went wrong. Please try again !"
 msgstr ""
 
-#: includes/admin/class-ajax.php:831
+#: includes/admin/class-ajax.php:852
 msgid ""
 "Resetted WP ERP successfully. You will be redirected soon. Please Setup WP "
 "ERP again or Skip to continue."
 msgstr ""
 
-#: includes/admin/class-ajax.php:835
+#: includes/admin/class-ajax.php:856
 msgid "Invalid confirmation text. Please give valid confirmation text."
 msgstr ""
 
@@ -17398,8 +16297,14 @@ msgstr ""
 msgid "Modules"
 msgstr ""
 
-#: includes/admin/class-menu.php:130 includes/admin/views/add-ons.php:648
+#: includes/admin/class-menu.php:130 includes/admin/views/add-ons.php:656
 msgid "WP ERP Pro"
+msgstr ""
+
+#: includes/admin/class-menu.php:131 includes/admin/class-menu.php:133
+#: includes/settings/assets/src/components/menu/SettingsMenu.vue:3
+#: modules/accounting/includes/classes/class-admin.php:157 wp-erp.php:332
+msgid "Settings"
 msgstr ""
 
 #: includes/admin/class-setup-wizard.php:57
@@ -17417,7 +16322,7 @@ msgstr ""
 #: includes/admin/class-setup-wizard.php:77
 #: includes/admin/views/welcome-screen.php:14
 #: includes/framework/views/status-report.php:62
-#: modules/hrm/includes/functions.php:563
+#: modules/hrm/includes/functions.php:565
 #: modules/hrm/views/dashboard-badge.php:54 modules/hrm/views/dashboard.php:31
 #: modules/hrm/views/employee/empty-employee.php:151
 msgid "Departments"
@@ -17426,7 +16331,7 @@ msgstr ""
 #: includes/admin/class-setup-wizard.php:82
 #: includes/admin/views/welcome-screen.php:15
 #: includes/framework/views/status-report.php:67
-#: modules/hrm/includes/functions.php:567
+#: modules/hrm/includes/functions.php:569
 #: modules/hrm/views/dashboard-badge.php:67
 msgid "Designations"
 msgstr ""
@@ -17498,6 +16403,51 @@ msgstr ""
 msgid "This name will be shown as your company name."
 msgstr ""
 
+#: includes/admin/class-setup-wizard.php:253 includes/settings/General.php:38
+msgid "Financial Year Starts"
+msgstr ""
+
+#: includes/admin/class-setup-wizard.php:261
+#: includes/framework/views/status-report.php:169
+#: includes/settings/General.php:42
+msgid "Financial and tax calculation starts from this month of every year."
+msgstr ""
+
+#: includes/admin/class-setup-wizard.php:266
+#: includes/framework/views/status-report.php:163
+#: includes/settings/General.php:30
+msgid "Company Start Date"
+msgstr ""
+
+#: includes/admin/class-setup-wizard.php:272
+#: includes/framework/views/status-report.php:164
+#: includes/settings/General.php:33
+msgid "The date the company officially started."
+msgstr ""
+
+#: includes/admin/class-setup-wizard.php:279
+#: includes/framework/views/status-report.php:193
+#: includes/settings/General.php:61
+#: modules/accounting/assets/src/admin/components/reports/LedgerReport.vue:27
+#: modules/accounting/assets/src/admin/components/reports/sales-tax/AgencyBased.vue:42
+#: modules/accounting/assets/src/admin/components/reports/sales-tax/CategoryBased.vue:41
+#: modules/accounting/assets/src/admin/components/reports/sales-tax/CustomerBased.vue:41
+msgid "Currency"
+msgstr ""
+
+#: includes/admin/class-setup-wizard.php:286
+#: includes/admin/class-setup-wizard.php:304
+#: includes/framework/views/status-report.php:179
+#: includes/settings/General.php:48
+msgid "Format of date to show accross the system."
+msgstr ""
+
+#: includes/admin/class-setup-wizard.php:291
+#: includes/framework/views/status-report.php:178
+#: includes/settings/General.php:46
+msgid "Date Format"
+msgstr ""
+
 #: includes/admin/class-setup-wizard.php:309
 #: includes/admin/views/company-editor.php:168
 msgid "What sort of business do you do?"
@@ -17561,6 +16511,28 @@ msgstr ""
 #: includes/admin/class-setup-wizard.php:658
 #: includes/admin/class-setup-wizard.php:661
 msgid "Department name"
+msgstr ""
+
+#: includes/admin/class-setup-wizard.php:663
+#: includes/admin/class-setup-wizard.php:745
+#: includes/settings/assets/src/components/email/templates/EmailTemplate.vue:11
+#: includes/settings/assets/src/components/hr/leave-years/HRLeaveYears.vue:36
+#: modules/accounting/assets/src/admin/components/chart-accounts/ChartOfAccounts.vue:9
+#: modules/accounting/assets/src/admin/components/people/People.vue:6
+#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:141
+#: modules/accounting/assets/src/admin/components/products/Products.vue:6
+#: modules/crm/crm.php:187 modules/hrm/views/announcements.php:35
+#: modules/hrm/views/departments.php:5 modules/hrm/views/designation.php:4
+#: modules/hrm/views/employee/single.php:10 modules/hrm/views/employee.php:12
+#: modules/hrm/views/leave/holiday.php:252
+#: modules/hrm/views/leave/leave-entitlements.php:16
+#: modules/hrm/views/leave/leave-entitlements.php:48
+#: modules/hrm/views/leave/leave-entitlements.php:49
+#: modules/hrm/views/leave/leave-policies.php:4
+#: modules/hrm/views/leave/new-policy.php:40
+#: modules/hrm/views/leave/new-policy.php:42
+#: modules/hrm/views/leave/new-request.php:29
+msgid "Add New"
 msgstr ""
 
 #: includes/admin/class-setup-wizard.php:728
@@ -17683,161 +16655,161 @@ msgstr ""
 msgid "Role"
 msgstr ""
 
-#: includes/admin/views/add-ons.php:648
+#: includes/admin/views/add-ons.php:656
 msgid "View All Extensions"
 msgstr ""
 
-#: includes/admin/views/add-ons.php:657
+#: includes/admin/views/add-ons.php:665
 msgid "The Ultimate Company<br>& Business Management<br>Solution"
 msgstr ""
 
-#: includes/admin/views/add-ons.php:659 includes/admin/views/add-ons.php:876
+#: includes/admin/views/add-ons.php:667 includes/admin/views/add-ons.php:884
 msgid "Get Started Now"
 msgstr ""
 
-#: includes/admin/views/add-ons.php:660
+#: includes/admin/views/add-ons.php:668
 msgid "Try Demo"
 msgstr ""
 
-#: includes/admin/views/add-ons.php:668
+#: includes/admin/views/add-ons.php:676
 msgid "Why WP ERP"
 msgstr ""
 
-#: includes/admin/views/add-ons.php:668 includes/admin/views/add-ons.php:874
+#: includes/admin/views/add-ons.php:676 includes/admin/views/add-ons.php:882
 msgid "Pro"
 msgstr ""
 
-#: includes/admin/views/add-ons.php:669
+#: includes/admin/views/add-ons.php:677
 msgid "Automate & manage your growing business even better <br>using WP ERP Pro"
 msgstr ""
 
-#: includes/admin/views/add-ons.php:677
+#: includes/admin/views/add-ons.php:685
 msgid "Gain access to nine powerful<br>extensions with a single purchase"
 msgstr ""
 
-#: includes/admin/views/add-ons.php:678
+#: includes/admin/views/add-ons.php:686
 msgid "Use these premium extensions to<br>supercharge your business"
 msgstr ""
 
-#: includes/admin/views/add-ons.php:686
+#: includes/admin/views/add-ons.php:694
 msgid "Add other individual extensions<br>which suit your business"
 msgstr ""
 
-#: includes/admin/views/add-ons.php:687
+#: includes/admin/views/add-ons.php:695
 msgid "Only add those extensions which you <br>need & save your money"
 msgstr ""
 
-#: includes/admin/views/add-ons.php:695
+#: includes/admin/views/add-ons.php:703
 msgid "Priority support <br>system"
 msgstr ""
 
-#: includes/admin/views/add-ons.php:696
+#: includes/admin/views/add-ons.php:704
 msgid "Connecting you to our highly-qualified <br>support team 24/7/365"
 msgstr ""
 
-#: includes/admin/views/add-ons.php:704
+#: includes/admin/views/add-ons.php:712
 msgid "Save money <br>User-based Pricing"
 msgstr ""
 
-#: includes/admin/views/add-ons.php:705
+#: includes/admin/views/add-ons.php:713
 msgid "You are billed for each user added to <br>your user workspace."
 msgstr ""
 
-#: includes/admin/views/add-ons.php:715
+#: includes/admin/views/add-ons.php:723
 msgid "What you will get"
 msgstr ""
 
-#: includes/admin/views/add-ons.php:716
+#: includes/admin/views/add-ons.php:724
 msgid ""
 "Take your business to the next level with 9 accessible premium <br> "
 "extensions  & different features"
 msgstr ""
 
-#: includes/admin/views/add-ons.php:752
+#: includes/admin/views/add-ons.php:760
 msgid "Exclusive Features"
 msgstr ""
 
-#: includes/admin/views/add-ons.php:759
+#: includes/admin/views/add-ons.php:767
 msgid "HR Email Digest<br>weekly/Monthly"
 msgstr ""
 
-#: includes/admin/views/add-ons.php:760
+#: includes/admin/views/add-ons.php:768
 msgid ""
 "Keep up to date with the latest in <br>HR news and trends with this <br> "
 "exclusive feature"
 msgstr ""
 
-#: includes/admin/views/add-ons.php:766
+#: includes/admin/views/add-ons.php:774
 msgid "CRM Customizable<br>Life Stages"
 msgstr ""
 
-#: includes/admin/views/add-ons.php:767
+#: includes/admin/views/add-ons.php:775
 msgid ""
 "Try this feature now to customize <br>Customer life stages & prioritize "
 "<br>your work with them"
 msgstr ""
 
-#: includes/admin/views/add-ons.php:773
+#: includes/admin/views/add-ons.php:781
 msgid "Task Management<br>in CRM"
 msgstr ""
 
-#: includes/admin/views/add-ons.php:774
+#: includes/admin/views/add-ons.php:782
 msgid ""
 "The feature lets you manage <br>tasks, collaborate among teams <br>and be "
 "super productive"
 msgstr ""
 
-#: includes/admin/views/add-ons.php:780
+#: includes/admin/views/add-ons.php:788
 msgid "Sale and Purchase Returns"
 msgstr ""
 
-#: includes/admin/views/add-ons.php:781
+#: includes/admin/views/add-ons.php:789
 msgid ""
 "Creating sales & purchase returns<br>for your accounts is easier than "
 "ever<br>with WP ERP Accounting"
 msgstr ""
 
-#: includes/admin/views/add-ons.php:787
+#: includes/admin/views/add-ons.php:795
 msgid "Work from Home"
 msgstr ""
 
-#: includes/admin/views/add-ons.php:788
+#: includes/admin/views/add-ons.php:796
 msgid ""
 "Digitize the process for requesting<br>work from home privileges as well "
 "as<br>the approval process"
 msgstr ""
 
-#: includes/admin/views/add-ons.php:794
+#: includes/admin/views/add-ons.php:802
 msgid "Employee Resignation"
 msgstr ""
 
-#: includes/admin/views/add-ons.php:795
+#: includes/admin/views/add-ons.php:803
 msgid ""
 "Automate and simplify employee<br>resignation process using this "
 "feature<br>of WP ERP HR"
 msgstr ""
 
-#: includes/admin/views/add-ons.php:801
+#: includes/admin/views/add-ons.php:809
 msgid "Company Org Chart"
 msgstr ""
 
-#: includes/admin/views/add-ons.php:802
+#: includes/admin/views/add-ons.php:810
 msgid ""
 "Have your organizational structure<br>and define the flow of "
 "employees'<br>work with this feature"
 msgstr ""
 
-#: includes/admin/views/add-ons.php:811
+#: includes/admin/views/add-ons.php:819
 msgid "Choose other premium extensions"
 msgstr ""
 
-#: includes/admin/views/add-ons.php:812
+#: includes/admin/views/add-ons.php:820
 msgid ""
 "Build a modern, convenient and reliable business<br>management system for "
 "your company"
 msgstr ""
 
-#: includes/admin/views/add-ons.php:818 includes/admin/views/modules.php:600
+#: includes/admin/views/add-ons.php:826 includes/admin/views/modules.php:600
 #: includes/admin/views/modules.php:606 includes/admin/views/modules.php:642
 #: modules/accounting/assets/src/admin/components/select/SimpleSelect.vue:4
 #: modules/crm/includes/functions-customer.php:320
@@ -17869,11 +16841,39 @@ msgstr ""
 msgid "All"
 msgstr ""
 
-#: includes/admin/views/add-ons.php:874
+#: includes/admin/views/add-ons.php:829 includes/admin/views/modules.php:619
+#: includes/settings/Email.php:103 includes/settings/Email.php:227
+msgid "HRM"
+msgstr ""
+
+#: includes/admin/views/add-ons.php:832 includes/admin/views/modules.php:581
+#: includes/admin/views/modules.php:631 includes/framework/modules.php:65
+#: includes/framework/views/status-report.php:113
+#: includes/settings/Email.php:103 includes/settings/Email.php:229
+#: modules/accounting/assets/src/admin/components/dashboard/DashBoard.vue:117
+#: modules/accounting/assets/src/admin/components/menu/AccountingMenu.vue:47
+#: modules/accounting/includes/classes/class-admin.php:39
+#: modules/accounting/includes/classes/class-settings.php:13
+#: modules/accounting/includes/views/dashboard/dashboard.php:2
+msgid "Accounting"
+msgstr ""
+
+#: includes/admin/views/add-ons.php:835 includes/admin/views/modules.php:625
+#: includes/framework/views/status-report.php:83
+#: includes/settings/Email.php:103 includes/settings/Email.php:228
+#: modules/crm/crm.php:352 modules/crm/crm.php:465
+#: modules/crm/includes/admin/class-menu.php:32
+#: modules/crm/includes/admin/class-settings.php:17
+#: modules/crm/includes/class-form-handler.php:23
+#: modules/crm/views/dashboard-badge.php:7
+msgid "CRM"
+msgstr ""
+
+#: includes/admin/views/add-ons.php:882
 msgid "Say Hello to WP ERP"
 msgstr ""
 
-#: includes/admin/views/add-ons.php:875
+#: includes/admin/views/add-ons.php:883
 msgid ""
 "And goodbye to papers, spreadsheets, wasted time,<br> uncertainty, "
 "frustration - run business smoothly."
@@ -18048,8 +17048,8 @@ msgstr ""
 #: includes/admin/views/company-editor.php:221
 #: modules/accounting/assets/src/admin/components/chart-accounts/ChartOfAccounts.vue:108
 #: modules/accounting/assets/src/admin/components/people/People.vue:86
-#: modules/accounting/assets/src/admin/components/product-category/ProductCategory.vue:88
-#: modules/accounting/assets/src/admin/components/products/Products.vue:94
+#: modules/accounting/assets/src/admin/components/product-category/ProductCategory.vue:89
+#: modules/accounting/assets/src/admin/components/products/Products.vue:95
 #: modules/accounting/assets/src/admin/components/tax/SingleTaxRate.vue:78
 #: modules/accounting/assets/src/admin/components/tax/TaxAgencies.vue:63
 #: modules/accounting/assets/src/admin/components/tax/TaxCategories.vue:63
@@ -18067,6 +17067,50 @@ msgstr ""
 
 #: includes/admin/views/company.php:2
 msgid "Company Details"
+msgstr ""
+
+#: includes/admin/views/company.php:17
+#: includes/settings/assets/src/components/email/templates/EmailTemplate.vue:37
+#: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:8
+#: modules/accounting/assets/src/admin/components/chart-accounts/ChartOfAccounts.vue:111
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:9
+#: modules/accounting/assets/src/admin/components/people/People.vue:96
+#: modules/accounting/assets/src/admin/components/people/PeopleTransaction.vue:108
+#: modules/accounting/assets/src/admin/components/product-category/ProductCategory.vue:93
+#: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:9
+#: modules/accounting/assets/src/admin/components/tax/NewTaxAgency.vue:7
+#: modules/accounting/assets/src/admin/components/tax/NewTaxCategory.vue:7
+#: modules/accounting/assets/src/admin/components/tax/NewTaxZone.vue:7
+#: modules/accounting/assets/src/admin/components/tax/SingleTaxRate.vue:88
+#: modules/accounting/assets/src/admin/components/tax/TaxAgencies.vue:73
+#: modules/accounting/assets/src/admin/components/tax/TaxCategories.vue:73
+#: modules/accounting/assets/src/admin/components/tax/TaxRates.vue:83
+#: modules/accounting/assets/src/admin/components/tax/TaxZones.vue:77
+#: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:282
+#: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:335
+#: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:178
+#: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:197
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:173
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:191
+#: modules/crm/assets/js/crm-contacts.js:1136
+#: modules/crm/includes/class-campaigns-list-table.php:88
+#: modules/crm/includes/class-contact-group-list-table.php:116
+#: modules/crm/includes/class-contact-subscriber-list-table.php:196
+#: modules/crm/includes/functions-localize.php:13
+#: modules/hrm/includes/class-announcement-list-table.php:131
+#: modules/hrm/includes/class-announcement.php:177
+#: modules/hrm/includes/class-department-list-table.php:216
+#: modules/hrm/includes/class-designation-list-table.php:82
+#: modules/hrm/includes/class-employee-list-table.php:235
+#: modules/hrm/includes/class-leave-policy-name-list-table.php:109
+#: modules/hrm/includes/class-policy-list-table.php:207
+#: modules/hrm/includes/class-walker-department.php:42
+#: modules/hrm/views/employee/single.php:82
+#: modules/hrm/views/js-templates/row-dept.php:10
+#: modules/hrm/views/js-templates/row-desig.php:10
+#: modules/hrm/views/js-templates/row-employee.php:11
+#: modules/hrm/views/leave/holiday.php:111
+msgid "Edit"
 msgstr ""
 
 #: includes/admin/views/company.php:28
@@ -18327,6 +17371,21 @@ msgstr ""
 msgid "New Transaction"
 msgstr ""
 
+#: includes/admin/views/tools/general.php:59
+#: includes/settings/assets/src/components/act/financial-year/AcFinancialYears.vue:42
+#: includes/settings/assets/src/components/crm/contact-forms/CrmContactFormSingle.vue:94
+#: includes/settings/assets/src/components/hr/leave-years/HRLeaveYears.vue:41
+#: includes/settings/assets/src/components/layouts/BaseContentLayout.vue:121
+#: includes/settings/assets/src/components/license/License.vue:34
+msgid "Save Changes"
+msgstr ""
+
+#: includes/admin/views/tools/misc.php:3
+#: includes/settings/assets/src/components/email/email-connect/MailgunEmail.vue:23
+#: includes/settings/assets/src/components/email/email-connect/SmtpEmail.vue:22
+msgid "Send Test Email"
+msgstr ""
+
 #: includes/admin/views/tools/misc.php:9
 msgid ""
 "The test email has been sent by WordPress. Please note this does NOT mean "
@@ -18371,12 +17430,41 @@ msgstr ""
 msgid "Send Email"
 msgstr ""
 
-#: includes/admin/views/tools.php:16 includes/functions.php:3691
+#: includes/admin/views/tools.php:16 includes/class-promotion.php:68
+#: includes/functions.php:885 includes/functions.php:3711
+#: modules/crm/views/reports/growth-report.php:38
+#: modules/crm/views/reports/growth-report.php:40
 msgid "%s"
+msgstr ""
+
+#: includes/admin/views/tools.php:33 includes/settings/Email.php:32
+#: includes/settings/General.php:15
+#: modules/accounting/assets/src/admin/components/help/HelpContent.vue:43
+#: modules/crm/views/help.php:10 modules/hrm/views/help.php:10
+msgid "General"
 msgstr ""
 
 #: includes/admin/views/tools.php:36
 msgid "Misc."
+msgstr ""
+
+#: includes/admin/views/tools.php:37
+#: includes/settings/assets/src/components/license/License.vue:62
+#: modules/accounting/assets/src/admin/components/transactions/TransactionsFilter.vue:33
+#: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:70
+#: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesStats.vue:17
+#: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:99
+#: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesStats.vue:17
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:96
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesStats.vue:17
+#: modules/crm/includes/class-contact-subscriber-list-table.php:173
+#: modules/hrm/assets/js/requests.js:135 modules/hrm/assets/js/requests.js:172
+#: modules/hrm/assets/js/requests.js:181 modules/hrm/assets/js/requests.js:190
+#: modules/hrm/includes/class-employee-list-table.php:214
+#: modules/hrm/includes/class-leave-request-list-table.php:95
+#: modules/hrm/views/employee/tab-leave.php:128
+#: modules/hrm/views/reporting/headcount.php:156
+msgid "Status"
 msgstr ""
 
 #: includes/admin/views/tools.php:39
@@ -18409,7 +17497,7 @@ msgstr ""
 #: includes/framework/views/status-report.php:52
 #: modules/accounting/assets/src/admin/components/people/Employees.vue:4
 #: modules/accounting/includes/classes/class-admin.php:85
-#: modules/hrm/includes/functions.php:555
+#: modules/hrm/includes/functions.php:557
 #: modules/hrm/views/dashboard-badge.php:43 modules/hrm/views/dashboard.php:20
 msgid "Employees"
 msgstr ""
@@ -18793,6 +17881,20 @@ msgstr ""
 msgid "Is Enabled"
 msgstr ""
 
+#: includes/class-email.php:470
+#: includes/settings/assets/src/components/email/notifications/EmailNotification.vue:81
+#: includes/settings/assets/src/components/email/templates/EmailTemplate.vue:19
+#: includes/settings/assets/src/components/email/templates/EmailTemplate.vue:51
+#: modules/accounting/assets/src/admin/components/email/SendMail.vue:18
+#: modules/crm/includes/functions-localize.php:20
+#: modules/crm/views/js-templates/customer-add-schedules.php:137
+#: modules/crm/views/js-templates/customer-email-note.php:39
+#: modules/crm/views/js-templates/customer-log-activity.php:20
+#: modules/crm/views/js-templates/single-schedule-details.php:73
+#: modules/hrm/includes/emails/class-email-new-leave-request.php:125
+msgid "Subject"
+msgstr ""
+
 #: includes/class-email.php:473
 #: modules/hrm/includes/emails/class-email-new-leave-request.php:128
 msgid ""
@@ -18816,6 +17918,12 @@ msgstr ""
 #: includes/class-email.php:488
 #: modules/hrm/includes/emails/class-email-new-leave-request.php:143
 msgid "Email Body"
+msgstr ""
+
+#: includes/class-email.php:514
+#: includes/settings/assets/src/components/email/notifications/EmailNotification.vue:97
+#: modules/hrm/includes/emails/class-email-new-leave-request.php:169
+msgid "Template Tags"
 msgstr ""
 
 #: includes/class-email.php:516
@@ -18905,6 +18013,10 @@ msgstr ""
 msgid "Unauthorized people property"
 msgstr ""
 
+#: includes/class-promotion.php:69
+msgid "Get Now"
+msgstr ""
+
 #: includes/class-scripts.php:174
 msgid "Set company logo"
 msgstr ""
@@ -18922,7 +18034,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/chart-accounts/AddChartAccounts.vue:7
 #: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:192
 #: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:215
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:205
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:207
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:10
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:142
 #: modules/accounting/assets/src/admin/components/product-category/ProductCategory.vue:50
@@ -18950,17 +18062,17 @@ msgstr ""
 msgid "Allowed Files"
 msgstr ""
 
-#: includes/class-updates.php:127
+#: includes/class-updates.php:128
 msgid ""
 "<strong>WP ERP Data Update Required</strong> &#8211; We need to update your "
 "install to the latest version"
 msgstr ""
 
-#: includes/class-updates.php:128
+#: includes/class-updates.php:129
 msgid "Run the updater"
 msgstr ""
 
-#: includes/class-updates.php:133
+#: includes/class-updates.php:134
 msgid ""
 "It is strongly recommended that you backup your database before proceeding. "
 "Are you sure you wish to run the updater now?"
@@ -18977,6 +18089,21 @@ msgid "Deactivated module %s"
 msgid_plural "Deactivated modules %s"
 msgstr[0] ""
 msgstr[1] ""
+
+#: includes/framework/class-settings-page.php:494
+#: includes/settings/Template.php:490
+msgid "Delete this image?"
+msgstr ""
+
+#: includes/framework/class-settings-page.php:760
+#: includes/settings/Template.php:756
+msgid "Hard Crop?"
+msgstr ""
+
+#: includes/framework/class-settings-page.php:787
+#: includes/settings/Template.php:783
+msgid "Select a page&hellip;"
+msgstr ""
 
 #: includes/framework/modules.php:233
 msgid "Invalid module name %s"
@@ -18997,6 +18124,10 @@ msgstr ""
 
 #: includes/framework/modules.php:338
 msgid "Manage all payment gateways for ERP Accounting module."
+msgstr ""
+
+#: includes/framework/modules.php:350 includes/settings/Woocommerce.php:17
+msgid "WooCommerce"
 msgstr ""
 
 #: includes/framework/modules.php:351
@@ -19431,6 +18562,16 @@ msgstr ""
 msgid "The date the company's financial year ends."
 msgstr ""
 
+#: includes/framework/views/status-report.php:183
+#: includes/settings/Email.php:138
+msgid "Enable SMTP"
+msgstr ""
+
+#: includes/framework/views/status-report.php:188
+#: includes/settings/Email.php:513
+msgid "Enable IMAP"
+msgstr ""
+
 #: includes/framework/views/status-report.php:198
 #: modules/accounting/includes/classes/class-settings.php:90
 msgid "Currency Position"
@@ -19857,8 +18998,31 @@ msgstr ""
 msgid "Theme"
 msgstr ""
 
+#: includes/framework/views/status-report.php:637
+#: includes/settings/assets/src/components/act/financial-year/AcFinancialYears.vue:8
+#: includes/settings/assets/src/components/email/templates/EmailTemplate.vue:46
+#: includes/settings/assets/src/components/hr/leave-years/HRLeaveYears.vue:7
+#: modules/accounting/assets/src/admin/components/chart-accounts/ChartOfAccounts.vue:105
+#: modules/accounting/assets/src/admin/components/people/Employees.vue:52
+#: modules/accounting/assets/src/admin/components/people/People.vue:82
+#: modules/crm/includes/class-contact-group-list-table.php:86
+#: modules/crm/includes/class-contact-subscriber-list-table.php:169
+#: modules/crm/views/company/single.php:89
+#: modules/crm/views/js-templates/new-contact-group.php:5
+#: modules/hrm/includes/class-employee.php:1427
+#: modules/hrm/views/employee/tab-general.php:289
+#: modules/hrm/views/js-templates/dependents.php:5
+#: modules/hrm/views/reporting/headcount.php:151
+msgid "Name"
+msgstr ""
+
 #: includes/framework/views/status-report.php:638
 msgid "The name of the current active theme."
+msgstr ""
+
+#: includes/framework/views/status-report.php:642
+#: includes/settings/assets/src/components/license/License.vue:60
+msgid "Version"
 msgstr ""
 
 #: includes/framework/views/status-report.php:643
@@ -20896,15 +20060,20 @@ msgstr ""
 msgid "Nonce verification failed!"
 msgstr ""
 
-#: includes/functions.php:3444
+#: includes/functions.php:2963
+#: includes/settings/assets/src/components/email/templates/EmailTemplate.vue:20
+msgid "Enable/Disable"
+msgstr ""
+
+#: includes/functions.php:3464
 msgid "Sorry! You are not allowed to access this page."
 msgstr ""
 
-#: includes/functions.php:3585
+#: includes/functions.php:3605
 msgid "ERP data reset completed"
 msgstr ""
 
-#: includes/functions.php:3625
+#: includes/functions.php:3645
 msgid "Something went wrong when resetting. Please try again."
 msgstr ""
 
@@ -20945,6 +20114,796 @@ msgstr ""
 
 #: includes/lib/class-weforms-upsell.php:350
 msgid "You don't have permission to install the plugins"
+msgstr ""
+
+#: includes/settings/Ajax.php:141 includes/settings/Ajax.php:200
+#: includes/settings/Ajax.php:241 includes/settings/Ajax.php:277
+#: modules/hrm/includes/class-ajax.php:1073
+msgid "You do not have sufficient permission to do this action"
+msgstr ""
+
+#: includes/settings/Ajax.php:248
+msgid "Invalid email template ID"
+msgstr ""
+
+#: includes/settings/Ajax.php:263
+msgid "Template updated successfully"
+msgstr ""
+
+#: includes/settings/Ajax.php:364
+msgid "ERP SMTP Test Mail"
+msgstr ""
+
+#: includes/settings/Ajax.php:365 includes/settings/Ajax.php:452
+msgid "This is a test email by WP ERP."
+msgstr ""
+
+#: includes/settings/Ajax.php:407 includes/settings/Ajax.php:482
+msgid "Test email has been sent successfully to "
+msgstr ""
+
+#: includes/settings/Ajax.php:428
+msgid "No private API key provided"
+msgstr ""
+
+#: includes/settings/Ajax.php:434
+msgid "No domain address provided"
+msgstr ""
+
+#: includes/settings/Ajax.php:440
+msgid "No region selected"
+msgstr ""
+
+#: includes/settings/Ajax.php:451
+msgid "ERP Mailgun Test Mail"
+msgstr ""
+
+#: includes/settings/Ajax.php:567
+msgid "Licenses saved succesfully"
+msgstr ""
+
+#: includes/settings/Email.php:15
+msgid "Emails"
+msgstr ""
+
+#: includes/settings/Email.php:33 includes/settings/Email.php:122
+msgid "Email Connect"
+msgstr ""
+
+#: includes/settings/Email.php:34
+msgid "Email Templates"
+msgstr ""
+
+#: includes/settings/Email.php:35
+msgid "Notifications & Templates"
+msgstr ""
+
+#: includes/settings/Email.php:46
+msgid "Email Sender Options"
+msgstr ""
+
+#: includes/settings/Email.php:48
+msgid ""
+"Email notification settings for ERP. Customize the look and feel of "
+"outgoing emails."
+msgstr ""
+
+#: includes/settings/Email.php:52
+msgid "Sender Name"
+msgstr ""
+
+#: includes/settings/Email.php:57
+msgid "The senders name appears on the outgoing emails"
+msgstr ""
+
+#: includes/settings/Email.php:61
+msgid "Sender Address"
+msgstr ""
+
+#: includes/settings/Email.php:66
+msgid "The senders email appears on the outgoing emails"
+msgstr ""
+
+#: includes/settings/Email.php:70
+msgid "Header Image"
+msgstr ""
+
+#: includes/settings/Email.php:73
+msgid "Upload a logo/banner and provide the URL here."
+msgstr ""
+
+#: includes/settings/Email.php:81
+msgid "Footer Text"
+msgstr ""
+
+#: includes/settings/Email.php:87
+msgid "The text apears on each emails footer area."
+msgstr ""
+
+#: includes/settings/Email.php:96
+msgid "Notification Emails"
+msgstr ""
+
+#: includes/settings/Email.php:97
+msgid ""
+"Email notifications sent from WP ERP are listed below. Click on an email to "
+"configure it."
+msgstr ""
+
+#: includes/settings/Email.php:103
+#: modules/crm/includes/functions-dashboard.php:63
+#: modules/crm/includes/functions-dashboard.php:157
+#: modules/crm/views/js-templates/new-customer.php:309
+msgid "Others"
+msgstr ""
+
+#: includes/settings/Email.php:132
+msgid "SMTP Options"
+msgstr ""
+
+#: includes/settings/Email.php:134 includes/settings/Email.php:286
+msgid "Email outgoing settings for ERP."
+msgstr ""
+
+#: includes/settings/Email.php:146 includes/settings/Email.php:538
+msgid "Mail Server"
+msgstr ""
+
+#: includes/settings/Email.php:152
+msgid "SMTP host address."
+msgstr ""
+
+#: includes/settings/Email.php:156 includes/settings/Email.php:574
+msgid "Port"
+msgstr ""
+
+#: includes/settings/Email.php:159
+msgid "SSL: 465<br> TLS: 587"
+msgstr ""
+
+#: includes/settings/Email.php:163 includes/settings/Email.php:581
+msgid "Authentication"
+msgstr ""
+
+#: includes/settings/Email.php:166 includes/settings/Email.php:586
+msgid "Authentication type."
+msgstr ""
+
+#: includes/settings/Email.php:167 includes/settings/Email.php:584
+msgid "None"
+msgstr ""
+
+#: includes/settings/Email.php:167 includes/settings/Email.php:584
+msgid "SSL"
+msgstr ""
+
+#: includes/settings/Email.php:167 includes/settings/Email.php:584
+msgid "TLS"
+msgstr ""
+
+#: includes/settings/Email.php:171 includes/settings/Email.php:548
+msgid "Username"
+msgstr ""
+
+#: includes/settings/Email.php:177 includes/settings/Email.php:551
+msgid "Your email id."
+msgstr ""
+
+#: includes/settings/Email.php:181 includes/settings/Email.php:558
+msgid "Password"
+msgstr ""
+
+#: includes/settings/Email.php:184 includes/settings/Email.php:561
+msgid "Your email password."
+msgstr ""
+
+#: includes/settings/Email.php:188
+msgid "Enable Debugging"
+msgstr ""
+
+#: includes/settings/Email.php:212
+#: includes/settings/assets/src/components/email/templates/EmailTemplate.vue:9
+msgid "Saved Replies"
+msgstr ""
+
+#: includes/settings/Email.php:221
+msgid "Notification & Template Settings"
+msgstr ""
+
+#: includes/settings/Email.php:223
+msgid "Email notifications and templates management for ERP"
+msgstr ""
+
+#: includes/settings/Email.php:259
+msgid "Check Emails "
+msgstr ""
+
+#: includes/settings/Email.php:262
+msgid "Interval time to run cron for checking inbound emails."
+msgstr ""
+
+#: includes/settings/Email.php:285
+msgid "SMTP"
+msgstr ""
+
+#: includes/settings/Email.php:296 includes/settings/Email.php:681
+msgid "Mailgun"
+msgstr ""
+
+#: includes/settings/Email.php:307
+msgid "IMAP Connection"
+msgstr ""
+
+#: includes/settings/Email.php:308
+msgid "Connect to Custom IMAP server"
+msgstr ""
+
+#: includes/settings/Email.php:318
+msgid "Google Connect"
+msgstr ""
+
+#: includes/settings/Email.php:319
+msgid "Connect your Gmail or Gsuite account"
+msgstr ""
+
+#: includes/settings/Email.php:388
+msgid "Connected"
+msgstr ""
+
+#: includes/settings/Email.php:388
+msgid "Not Connected"
+msgstr ""
+
+#: includes/settings/Email.php:405
+#: modules/accounting/assets/src/admin/components/people/Employees.vue:55
+#: modules/accounting/assets/src/admin/components/people/People.vue:84
+#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:43
+#: modules/crm/includes/class-contact-subscriber-list-table.php:170
+#: modules/crm/includes/class-subscription.php:165
+#: modules/crm/includes/functions-customer.php:532
+#: modules/crm/includes/functions-customer.php:1692
+#: modules/crm/includes/functions-customer.php:3020
+#: modules/crm/includes/functions-customer.php:3111
+#: modules/crm/views/js-templates/customer-add-schedules.php:91
+#: modules/crm/views/js-templates/new-customer.php:89
+#: modules/hrm/views/employee/tab-general.php:20
+#: modules/hrm/views/js-templates/new-employee.php:85
+msgid "Email"
+msgstr ""
+
+#: includes/settings/Email.php:406
+#: includes/settings/assets/src/components/email/notifications/EmailNotification.vue:164
+#: includes/settings/assets/src/components/integration/Integration.vue:148
+#: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:61
+#: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:61
+#: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:75
+#: modules/accounting/assets/src/admin/components/opening-balance/OpeningBalance.vue:277
+#: modules/accounting/assets/src/admin/components/tax/NewTaxCategory.vue:23
+#: modules/accounting/assets/src/admin/components/tax/TaxCategories.vue:62
+#: modules/crm/includes/class-subscription-widget.php:71
+#: modules/crm/views/js-templates/new-contact-group.php:16
+#: modules/hrm/includes/class-leave-policy-name-list-table.php:77
+#: modules/hrm/includes/class-policy-list-table.php:165
+#: modules/hrm/views/employee/tab-leave.php:126
+#: modules/hrm/views/js-templates/holiday.php:49
+#: modules/hrm/views/js-templates/new-dept.php:11
+#: modules/hrm/views/js-templates/new-designation.php:9
+#: modules/hrm/views/leave/holiday.php:95
+#: modules/hrm/views/leave/new-policy.php:120
+#: modules/hrm/views/leave/policy-name.php:49
+msgid "Description"
+msgstr ""
+
+#: includes/settings/Email.php:458
+#: includes/settings/assets/src/components/email/notifications/EmailNotification.vue:46
+#: includes/settings/assets/src/components/integration/Integration.vue:31
+msgid "Configure"
+msgstr ""
+
+#: includes/settings/Email.php:483 includes/settings/Email.php:503
+msgid "IMAP/POP3 Options"
+msgstr ""
+
+#: includes/settings/Email.php:493
+msgid ""
+"Your server does not have PHP IMAP extension loaded. To enable this "
+"feature, please contact your hosting provider and ask to enable PHP IMAP "
+"extension."
+msgstr ""
+
+#: includes/settings/Email.php:505
+msgid "Email incoming settings for ERP."
+msgstr ""
+
+#: includes/settings/Email.php:529
+msgid "Cron Schedule"
+msgstr ""
+
+#: includes/settings/Email.php:532
+msgid "Interval time to run cron."
+msgstr ""
+
+#: includes/settings/Email.php:544
+msgid "IMAP/POP3 host address."
+msgstr ""
+
+#: includes/settings/Email.php:565
+msgid "Protocol"
+msgstr ""
+
+#: includes/settings/Email.php:568
+msgid "Protocol type."
+msgstr ""
+
+#: includes/settings/Email.php:569
+msgid "IMAP"
+msgstr ""
+
+#: includes/settings/Email.php:569
+msgid "POP3"
+msgstr ""
+
+#: includes/settings/Email.php:577
+msgid "IMAP: 993<br> POP3: 995"
+msgstr ""
+
+#: includes/settings/Email.php:616
+msgid "Gmail / G suite Authentication"
+msgstr ""
+
+#: includes/settings/Email.php:638
+msgid ""
+"<a target=\"_blank\" "
+"href=\"https://console.developers.google.com/flows/enableapi?apiid=gmail&"
+"pli=1\">Create a Google App</a> and authorize your account to Send and "
+"Recieve emails using Gmail. Follow instructions from this <a "
+"target=\"_blank\" "
+"href=\"https://wperp.com/docs/crm/tutorials/how-to-configure-gmail-api-"
+"connection-in-the-crm-settings/?utm_source=Free+Plugin&utm_medium=CTA&utm_"
+"content=Backend&utm_campaign=Docs\">Documentation</a> to get started"
+msgstr ""
+
+#: includes/settings/Email.php:642
+msgid "Client ID"
+msgstr ""
+
+#: includes/settings/Email.php:645
+msgid "Your APP Client ID"
+msgstr ""
+
+#: includes/settings/Email.php:649
+msgid "Client Secret"
+msgstr ""
+
+#: includes/settings/Email.php:652
+msgid "Your APP Client Secret"
+msgstr ""
+
+#: includes/settings/Email.php:656
+msgid "Redirect URL to use"
+msgstr ""
+
+#: includes/settings/Email.php:659
+msgid "Copy and Use this url when oAuth consent asks for Authorized Redirect URL"
+msgstr ""
+
+#: includes/settings/Email.php:687
+msgid "Enable Mailgun"
+msgstr ""
+
+#: includes/settings/Email.php:695
+msgid "Private API Key"
+msgstr ""
+
+#: includes/settings/Email.php:698
+msgid ""
+"Get private API key from your Mailgun account <a "
+"href=\"https://app.mailgun.com/app/account/security/api_keys\" "
+"target=\"_blank\">Mailgun account</a>"
+msgstr ""
+
+#: includes/settings/Email.php:702
+msgid "Domain"
+msgstr ""
+
+#: includes/settings/Email.php:705
+msgid ""
+"Get sending domain from your Mailgun account <a "
+"href=\"https://app.mailgun.com/app/sending/domains\" "
+"target=\"_blank\">Mailgun account</a><br /><mark>Notice:</mark> In Sandbox "
+"domain with Free plan, only 5 Authorized Recipients are allowed. <a "
+"href=\"https://help.mailgun.com/hc/en-us/articles/217531258-Authorized-"
+"Recipients\" target=\"_blank\">Learn More</a>"
+msgstr ""
+
+#: includes/settings/Email.php:709
+msgid "Region"
+msgstr ""
+
+#: includes/settings/Email.php:712
+msgid "Mailgun API Region"
+msgstr ""
+
+#: includes/settings/Email.php:715
+msgid "Europe (EU)"
+msgstr ""
+
+#: includes/settings/Email.php:721
+msgid "Limit"
+msgstr ""
+
+#: includes/settings/Email.php:724
+msgid "Hourly sending limit, That&apos;s 1 email per 1 second(s)"
+msgstr ""
+
+#: includes/settings/General.php:28
+msgid "General Options"
+msgstr ""
+
+#: includes/settings/General.php:69
+msgid "Default Country (HRM, CRM, AC)"
+msgstr ""
+
+#: includes/settings/General.php:76
+msgid "Role Based Login Redirection"
+msgstr ""
+
+#: includes/settings/General.php:79 includes/settings/General.php:88
+#: modules/accounting/includes/classes/class-settings.php:62
+#: modules/crm/includes/admin/class-settings.php:76
+msgid "On"
+msgstr ""
+
+#: includes/settings/General.php:79 includes/settings/General.php:88
+#: modules/accounting/includes/classes/class-settings.php:62
+#: modules/crm/includes/admin/class-settings.php:76
+msgid "Off"
+msgstr ""
+
+#: includes/settings/General.php:80
+msgid ""
+"User will be redirected to the related page regrading their role after "
+"login."
+msgstr ""
+
+#: includes/settings/General.php:85
+msgid "Enable Debug Mode"
+msgstr ""
+
+#: includes/settings/General.php:89
+msgid "Switching testing or production mode"
+msgstr ""
+
+#: includes/settings/Integration.php:15
+#: includes/settings/assets/src/components/integration/Integration.vue:147
+msgid "Integration"
+msgstr ""
+
+#: includes/settings/Integration.php:35
+msgid "Integration Management"
+msgstr ""
+
+#: includes/settings/Integration.php:36
+msgid ""
+"Various integrations to WP ERP. Click <strong>Configure</strong> to manage "
+"the settings."
+msgstr ""
+
+#: includes/settings/License.php:15
+msgid "Licenses"
+msgstr ""
+
+#: includes/settings/License.php:50
+msgid "License Manager"
+msgstr ""
+
+#: includes/settings/License.php:51
+msgid ""
+"Enter your extension license keys here to receive updates for purchased "
+"extensions. Visit <a href=\"%s\" target=\"_blank\">your account</a> page."
+msgstr ""
+
+#: includes/settings/assets/src/components/act/financial-year/AcFinancialYears.vue:12
+#: includes/settings/assets/src/components/hr/leave-years/HRLeaveYears.vue:11
+#: modules/hrm/assets/js/requests.js:71 modules/hrm/assets/js/requests.js:89
+#: modules/hrm/includes/class-announcement-list-table.php:247
+#: modules/hrm/views/js-templates/holiday-import.php:21
+#: modules/hrm/views/js-templates/holiday.php:15
+#: modules/hrm/views/leave/holiday.php:92
+msgid "Start Date"
+msgstr ""
+
+#: includes/settings/assets/src/components/act/financial-year/AcFinancialYears.vue:16
+#: includes/settings/assets/src/components/hr/leave-years/HRLeaveYears.vue:15
+#: modules/hrm/assets/js/requests.js:75 modules/hrm/assets/js/requests.js:93
+#: modules/hrm/includes/class-announcement-list-table.php:251
+#: modules/hrm/views/js-templates/holiday-import.php:22
+#: modules/hrm/views/js-templates/holiday.php:38
+#: modules/hrm/views/leave/holiday.php:93
+msgid "End Date"
+msgstr ""
+
+#: includes/settings/assets/src/components/act/financial-year/AcFinancialYears.vue:26
+#: includes/settings/assets/src/components/hr/leave-years/HRLeaveYears.vue:25
+#: modules/hrm/includes/functions-dashboard-widgets.php:446
+msgid "Start date"
+msgstr ""
+
+#: includes/settings/assets/src/components/act/financial-year/AcFinancialYears.vue:30
+#: includes/settings/assets/src/components/hr/leave-years/HRLeaveYears.vue:29
+#: modules/hrm/includes/functions-dashboard-widgets.php:450
+msgid "End date"
+msgstr ""
+
+#: includes/settings/assets/src/components/base/ShowErrors.vue:4
+#: modules/accounting/assets/src/admin/components/base/ShowErrors.vue:4
+msgid "Please complete these fields"
+msgstr ""
+
+#: includes/settings/assets/src/components/base/SubmitButton.vue:14
+#: modules/accounting/assets/src/admin/components/base/SubmitButton.vue:12
+#: modules/accounting/assets/src/admin/components/transactions/TransactionsFilter.vue:71
+msgid "Submit"
+msgstr ""
+
+#: includes/settings/assets/src/components/crm/contact-forms/CrmContactFormSingle.vue:9
+msgid "Form Field"
+msgstr ""
+
+#: includes/settings/assets/src/components/crm/contact-forms/CrmContactFormSingle.vue:10
+msgid "CRM Contact Option\t"
+msgstr ""
+
+#: includes/settings/assets/src/components/crm/contact-forms/CrmContactFormSingle.vue:90
+#: modules/accounting/assets/src/admin/components/transactions/TransactionsFilter.vue:69
+#: modules/crm/assets/js/vue-table.js:402
+#: modules/hrm/includes/class-announcement-list-table.php:260
+#: modules/hrm/includes/class-employee-list-table.php:94
+#: modules/hrm/views/requests.php:47
+msgid "Reset"
+msgstr ""
+
+#: includes/settings/assets/src/components/email/email-connect/EmailConnect.vue:10
+msgid "Outgoing Email Setting"
+msgstr ""
+
+#: includes/settings/assets/src/components/email/email-connect/EmailConnect.vue:23
+msgid "Incoming Email Setting"
+msgstr ""
+
+#: includes/settings/assets/src/components/email/email-connect/GoogleEmail.vue:13
+msgid "Click to Authorize your gmail account"
+msgstr ""
+
+#: includes/settings/assets/src/components/email/email-connect/GoogleEmail.vue:17
+msgid "Disconnect"
+msgstr ""
+
+#: includes/settings/assets/src/components/email/email-connect/ImapEmail.vue:14
+#: includes/settings/assets/src/components/email/email-connect/ImapEmail.vue:39
+msgid "Test Connection"
+msgstr ""
+
+#: includes/settings/assets/src/components/email/email-connect/ImapEmail.vue:15
+msgid "Click on the Above Button Before Saving the Setting"
+msgstr ""
+
+#: includes/settings/assets/src/components/email/email-connect/ImapEmail.vue:50
+msgid "Testing Connection"
+msgstr ""
+
+#: includes/settings/assets/src/components/email/email-connect/ImapEmail.vue:69
+msgid " Test Connection"
+msgstr ""
+
+#: includes/settings/assets/src/components/email/email-connect/ImapEmail.vue:75
+msgid " OK"
+msgstr ""
+
+#: includes/settings/assets/src/components/email/email-connect/MailgunEmail.vue:14
+#: includes/settings/assets/src/components/email/email-connect/SmtpEmail.vue:14
+msgid "Test Mail"
+msgstr ""
+
+#: includes/settings/assets/src/components/email/email-connect/MailgunEmail.vue:15
+#: includes/settings/assets/src/components/email/email-connect/SmtpEmail.vue:15
+msgid "An Email Address to Test the Connection"
+msgstr ""
+
+#: includes/settings/assets/src/components/email/email-connect/MailgunEmail.vue:18
+#: includes/settings/assets/src/components/email/email-connect/SmtpEmail.vue:18
+msgid "Email here"
+msgstr ""
+
+#: includes/settings/assets/src/components/email/notifications/EmailNotification.vue:54
+#: includes/settings/assets/src/components/integration/Integration.vue:39
+msgid "No templates found."
+msgstr ""
+
+#: includes/settings/assets/src/components/email/notifications/EmailNotification.vue:62
+msgid "Configure Template"
+msgstr ""
+
+#: includes/settings/assets/src/components/email/notifications/EmailNotification.vue:72
+msgid "Disable/Enable"
+msgstr ""
+
+#: includes/settings/assets/src/components/email/notifications/EmailNotification.vue:86
+msgid "Heading"
+msgstr ""
+
+#: includes/settings/assets/src/components/email/notifications/EmailNotification.vue:91
+#: includes/settings/assets/src/components/email/templates/EmailTemplate.vue:70
+msgid "Body"
+msgstr ""
+
+#: includes/settings/assets/src/components/email/notifications/EmailNotification.vue:115
+#: includes/settings/assets/src/components/integration/Integration.vue:93
+#: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:180
+#: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:185
+#: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:208
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:200
+#: modules/accounting/assets/src/admin/components/journal/JournalCreate.vue:111
+#: modules/accounting/assets/src/admin/components/opening-balance/OpeningBalance.vue:284
+#: modules/accounting/assets/src/admin/components/pay-bill/PayBillCreate.vue:167
+#: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:183
+#: modules/accounting/assets/src/admin/components/product-category/ProductCategory.vue:24
+#: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:197
+#: modules/accounting/assets/src/admin/components/rec-payment/RecPaymentCreate.vue:196
+#: modules/accounting/assets/src/admin/components/tax/NewTaxAgency.vue:28
+#: modules/accounting/assets/src/admin/components/tax/NewTaxCategory.vue:33
+#: modules/accounting/assets/src/admin/components/tax/NewTaxRate.vue:95
+#: modules/accounting/assets/src/admin/components/tax/NewTaxZone.vue:38
+#: modules/accounting/assets/src/admin/components/tax/RecordPayTax.vue:68
+#: modules/accounting/assets/src/admin/components/tax/TaxRateLineAdd.vue:37
+#: modules/crm/assets/js/crm-contacts.js:734 modules/crm/crm.php:189
+msgid "Save"
+msgstr ""
+
+#: includes/settings/assets/src/components/email/notifications/EmailNotification.vue:119
+#: includes/settings/assets/src/components/email/templates/EmailTemplate.vue:83
+#: includes/settings/assets/src/components/email/templates/EmailTemplate.vue:231
+#: includes/settings/assets/src/components/integration/Integration.vue:99
+#: modules/accounting/assets/src/admin/components/email/SendMail.vue:48
+#: modules/accounting/assets/src/admin/components/people/ExportModal.vue:56
+#: modules/accounting/assets/src/admin/components/people/ImportModal.vue:61
+#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:140
+#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:249
+#: modules/accounting/assets/src/admin/components/product-category/ProductCategory.vue:51
+#: modules/accounting/assets/src/admin/components/products/ExportModal.vue:59
+#: modules/accounting/assets/src/admin/components/products/ImportModal.vue:158
+#: modules/accounting/assets/src/admin/components/transactions/TransactionsFilter.vue:67
+#: modules/crm/assets/js/crm-contacts.js:735
+#: modules/crm/assets/js/vue-table.js:401
+#: modules/crm/views/company/single.php:154
+#: modules/crm/views/contact/single.php:160
+#: modules/crm/views/js-templates/customer-email-note.php:66
+#: modules/crm/views/js-templates/customer-log-activity.php:77
+#: modules/crm/views/js-templates/customer-newnote.php:42
+#: modules/crm/views/js-templates/customer-schedule-note.php:140
+#: modules/crm/views/js-templates/customer-tasks-note.php:68
+#: modules/hrm/assets/js/requests.js:582 modules/hrm/hrm.php:227
+#: modules/hrm/includes/class-announcement-list-table.php:259
+#: modules/hrm/includes/class-employee-list-table.php:93
+#: modules/hrm/views/requests.php:42
+msgid "Cancel"
+msgstr ""
+
+#: includes/settings/assets/src/components/email/notifications/EmailNotification.vue:160
+#: includes/settings/assets/src/components/email/templates/EmailTemplate.vue:18
+msgid "Template Name"
+msgstr ""
+
+#: includes/settings/assets/src/components/email/notifications/EmailNotification.vue:168
+msgid "Disable / Enable"
+msgstr ""
+
+#: includes/settings/assets/src/components/email/templates/EmailTemplate.vue:37
+msgid "Add new Template"
+msgstr ""
+
+#: includes/settings/assets/src/components/email/templates/EmailTemplate.vue:57
+msgid "Short Codes"
+msgstr ""
+
+#: includes/settings/assets/src/components/email/templates/EmailTemplate.vue:227
+#: includes/settings/assets/src/components/email/templates/EmailTemplate.vue:233
+#: modules/accounting/assets/src/admin/components/people/People.vue:97
+#: modules/accounting/assets/src/admin/components/people/PeopleTransaction.vue:109
+#: modules/accounting/assets/src/admin/components/product-category/ProductCategory.vue:94
+#: modules/accounting/assets/src/admin/components/tax/SingleTaxRate.vue:89
+#: modules/accounting/assets/src/admin/components/tax/TaxAgencies.vue:74
+#: modules/accounting/assets/src/admin/components/tax/TaxCategories.vue:74
+#: modules/accounting/assets/src/admin/components/tax/TaxRates.vue:84
+#: modules/accounting/assets/src/admin/components/tax/TaxZones.vue:78
+#: modules/crm/assets/js/crm-contacts.js:299
+#: modules/crm/assets/js/crm-contacts.js:1150
+#: modules/crm/includes/class-campaigns-list-table.php:89
+#: modules/crm/includes/class-campaigns-list-table.php:115
+#: modules/crm/includes/class-contact-group-list-table.php:122
+#: modules/crm/includes/class-contact-group-list-table.php:158
+#: modules/crm/includes/class-contact-subscriber-list-table.php:197
+#: modules/crm/includes/class-contact-subscriber-list-table.php:215
+#: modules/crm/includes/functions-localize.php:14
+#: modules/hrm/assets/js/requests.js:311
+#: modules/hrm/includes/class-department-list-table.php:217
+#: modules/hrm/includes/class-designation-list-table.php:83
+#: modules/hrm/includes/class-designation-list-table.php:108
+#: modules/hrm/includes/class-employee-list-table.php:231
+#: modules/hrm/includes/class-entitlements-list-table.php:227
+#: modules/hrm/includes/class-entitlements-list-table.php:267
+#: modules/hrm/includes/class-leave-policy-name-list-table.php:38
+#: modules/hrm/includes/class-leave-policy-name-list-table.php:110
+#: modules/hrm/includes/class-leave-request-list-table.php:286
+#: modules/hrm/includes/class-leave-request-list-table.php:313
+#: modules/hrm/includes/class-policy-list-table.php:212
+#: modules/hrm/includes/class-policy-list-table.php:259
+#: modules/hrm/includes/class-walker-department.php:43
+#: modules/hrm/views/employee/tab-notes-row.php:19
+#: modules/hrm/views/employee/tab-notes.php:48
+#: modules/hrm/views/js-templates/row-dept.php:11
+#: modules/hrm/views/js-templates/row-desig.php:11
+#: modules/hrm/views/js-templates/row-employee.php:12
+#: modules/hrm/views/leave/holiday.php:112
+#: modules/hrm/views/leave/holiday.php:153
+msgid "Delete"
+msgstr ""
+
+#: includes/settings/assets/src/components/email/templates/EmailTemplate.vue:228
+msgid "Are you sure to delete this ?"
+msgstr ""
+
+#: includes/settings/assets/src/components/integration/Integration.vue:46
+msgid " Integration"
+msgstr ""
+
+#: includes/settings/assets/src/components/integration/Integration.vue:54
+msgid "Active Gateway"
+msgstr ""
+
+#: includes/settings/assets/src/components/integration/Integration.vue:82
+msgid "Test Dropbox Connection"
+msgstr ""
+
+#: includes/settings/assets/src/components/layouts/BaseContentLayout.vue:76
+msgid "Select date"
+msgstr ""
+
+#: includes/settings/assets/src/components/license/License.vue:28
+msgid "No extensions found."
+msgstr ""
+
+#: includes/settings/assets/src/components/license/License.vue:59
+msgid "Extension"
+msgstr ""
+
+#: includes/settings/assets/src/components/license/License.vue:61
+msgid "License Key"
+msgstr ""
+
+#: includes/settings/assets/src/components/searchbar/SearchBar.vue:30
+msgid "Sorry ! Nothings found for your query. Please try again !"
+msgstr ""
+
+#: includes/settings/assets/src/components/select/MultiSelect.vue:70
+#: modules/accounting/assets/src/admin/components/select/MultiSelect.vue:57
+msgid "Please search"
+msgstr ""
+
+#: includes/settings/assets/src/components/woocommerce/WooCommerce.vue:12
+msgid "Connect with WooCommerce"
+msgstr ""
+
+#: includes/settings/assets/src/components/woocommerce/WooCommerce.vue:83
+msgid "Get WooCommerce Extension"
+msgstr ""
+
+#: includes/settings/assets/src/components/woocommerce/WooCommerce.vue:85
+msgid "Activate WooCommerce"
+msgstr ""
+
+#: includes/settings/assets/src/components/woocommerce/WooCommerce.vue:89
+msgid "Get WP ERP Pro"
 msgstr ""
 
 #: includes/updates/bp/class-erp-acct-bg-process-1.5.0.php:253
@@ -21158,7 +21117,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/people/People.vue:133
 #: modules/accounting/assets/src/admin/components/people/SelectCustomers.vue:4
 #: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:94
-#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:92
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:91
 #: modules/crm/includes/functions-customer.php:198
 #: modules/crm/includes/functions-customer.php:225
 msgid "Customer"
@@ -21275,9 +21234,9 @@ msgid "Account for the resource."
 msgstr ""
 
 #: modules/accounting/api/class-rest-api-invoices.php:471
-#: modules/accounting/assets/src/admin/components/transactions/sales/InvoiceSingleContent.vue:169
+#: modules/accounting/assets/src/admin/components/transactions/sales/InvoiceSingleContent.vue:173
 #: modules/accounting/assets/src/admin/components/transactions/sales/Sales.vue:50
-#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:358
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:357
 #: modules/accounting/assets/src/admin/components/transactions/sales/SalesSingle.vue:139
 msgid "Invoice"
 msgstr ""
@@ -21545,7 +21504,7 @@ msgid "ISO code of the country."
 msgstr ""
 
 #: modules/accounting/api/class-rest-api-product-cats.php:285
-#: modules/accounting/assets/src/admin/components/products/Products.vue:82
+#: modules/accounting/assets/src/admin/components/products/Products.vue:83
 msgid "Product Category"
 msgstr ""
 
@@ -21735,81 +21694,12 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/people/People.vue:133
 #: modules/accounting/assets/src/admin/components/people/SelectVendors.vue:4
 #: modules/accounting/assets/src/admin/components/products/ProductModal.vue:122
-#: modules/accounting/assets/src/admin/components/products/Products.vue:91
+#: modules/accounting/assets/src/admin/components/products/Products.vue:92
 msgid "Vendor"
 msgstr ""
 
 #: modules/accounting/api/class-rest-api-vendors.php:503
 msgid " vendor has been %s"
-msgstr ""
-
-#: modules/accounting/assets/js/bootstrap.js:157
-msgid "tr"
-msgstr ""
-
-#: modules/accounting/assets/js/bootstrap.js:1408
-msgid "multiselect"
-msgstr ""
-
-#: modules/accounting/assets/js/bootstrap.js:2396
-msgid "dropdown"
-msgstr ""
-
-#: modules/accounting/assets/js/bootstrap.js:3074
-msgid "modal"
-msgstr ""
-
-#: modules/accounting/assets/js/bootstrap.js:3345
-msgid "button"
-msgstr ""
-
-#: modules/accounting/assets/js/bootstrap.js:5087
-#: modules/accounting/assets/src/admin/components/list-table/ListTable.vue:268
-msgid "No items found."
-msgstr ""
-
-#: modules/accounting/assets/js/bootstrap.js:5737
-#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:246
-msgid ""
-"This email already exists in CRM! Do you want to import and update the "
-"contact?"
-msgstr ""
-
-#: modules/accounting/assets/js/bootstrap.js:5742
-#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:251
-msgid "Import & Update"
-msgstr ""
-
-#: modules/accounting/assets/js/bootstrap.js:5752
-#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:262
-msgid "Email already exists as customer/vendor"
-msgstr ""
-
-#: modules/accounting/assets/js/bootstrap.js:5803
-#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:313
-msgid "First name is required"
-msgstr ""
-
-#: modules/accounting/assets/js/bootstrap.js:5807
-#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:317
-msgid "Last name is required"
-msgstr ""
-
-#: modules/accounting/assets/js/bootstrap.js:5811
-#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:321
-msgid "Email is required"
-msgstr ""
-
-#: modules/accounting/assets/js/bootstrap.js:6044
-#: modules/accounting/assets/src/admin/components/base/Media.vue:76
-msgid "Select & Crop Image"
-msgstr ""
-
-#: modules/accounting/assets/js/bootstrap.js:6101
-#: modules/accounting/assets/js/bootstrap.js:6103
-#: modules/accounting/assets/src/admin/components/base/Media.vue:138
-#: modules/accounting/assets/src/admin/components/base/Media.vue:140
-msgid "Select Image"
 msgstr ""
 
 #: modules/accounting/assets/src/admin/components/bank-accounts/BankAccounts.vue:6
@@ -21850,6 +21740,15 @@ msgstr ""
 msgid "uploaded"
 msgstr ""
 
+#: modules/accounting/assets/src/admin/components/base/Media.vue:76
+msgid "Select & Crop Image"
+msgstr ""
+
+#: modules/accounting/assets/src/admin/components/base/Media.vue:138
+#: modules/accounting/assets/src/admin/components/base/Media.vue:140
+msgid "Select Image"
+msgstr ""
+
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:8
 #: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:9
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:9
@@ -21874,7 +21773,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:67
 #: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:96
 #: modules/accounting/assets/src/admin/components/transactions/sales/InvoiceSingleContent.vue:44
-#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:94
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:93
 #: modules/accounting/includes/functions/transactions.php:941
 #: modules/accounting/includes/views/transactions/invoice-readonly.php:51
 msgid "Due Date"
@@ -21994,7 +21893,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:98
 #: modules/accounting/assets/src/admin/components/transactions/sales/InvoiceSingleContent.vue:89
 #: modules/accounting/assets/src/admin/components/transactions/sales/PaymentSingleContent.vue:76
-#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:96
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:95
 #: modules/accounting/includes/views/transactions/invoice-readonly.php:55
 #: modules/accounting/includes/views/transactions/invoice-readonly.php:117
 #: modules/crm/views/reports/activity-report.php:60
@@ -22010,8 +21909,8 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:88
 #: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:115
 #: modules/accounting/assets/src/admin/components/expense/ExpenseSingle.vue:108
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:111
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:112
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:113
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:114
 #: modules/accounting/assets/src/admin/components/journal/JournalCreate.vue:35
 #: modules/accounting/assets/src/admin/components/journal/JournalCreate.vue:51
 #: modules/accounting/assets/src/admin/components/journal/JournalCreate.vue:67
@@ -22024,7 +21923,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:124
 #: modules/accounting/assets/src/admin/components/rec-payment/RecPaymentCreate.vue:107
 #: modules/accounting/assets/src/admin/components/reports/LedgerReport.vue:91
-#: modules/accounting/assets/src/admin/components/reports/sales-tax/AgencyBased.vue:131
+#: modules/accounting/assets/src/admin/components/reports/sales-tax/AgencyBased.vue:132
 #: modules/accounting/assets/src/admin/components/tax/PayTaxSingle.vue:99
 #: modules/accounting/assets/src/admin/components/tax/RecordPayTax.vue:63
 #: modules/accounting/assets/src/admin/components/transactions/TransParticulars.vue:3
@@ -22057,7 +21956,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:93
 #: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:107
 #: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:108
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:104
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:106
 #: modules/accounting/assets/src/admin/components/journal/JournalCreate.vue:87
 #: modules/accounting/assets/src/admin/components/opening-balance/OpeningBalance.vue:266
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillCreate.vue:87
@@ -22085,7 +21984,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:120
 #: modules/accounting/assets/src/admin/components/email/SendMail.vue:34
 #: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:134
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:130
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:132
 #: modules/accounting/assets/src/admin/components/journal/JournalCreate.vue:103
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillCreate.vue:102
 #: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:109
@@ -22097,7 +21996,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:182
 #: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:187
 #: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:210
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:200
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:202
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillCreate.vue:168
 #: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:184
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:199
@@ -22110,8 +22009,8 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:188
 #: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:195
 #: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:211
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:201
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:208
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:203
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:210
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillCreate.vue:169
 #: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:185
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:200
@@ -22123,7 +22022,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:189
 #: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:194
 #: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:217
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:207
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:209
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:205
 msgid "Update and New"
 msgstr ""
@@ -22153,7 +22052,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:458
 #: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:461
 #: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:593
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:635
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:637
 #: modules/accounting/assets/src/admin/components/journal/JournalCreate.vue:237
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillCreate.vue:400
 #: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:442
@@ -22163,7 +22062,7 @@ msgid "Transaction Date is required."
 msgstr ""
 
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:462
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:639
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:641
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:587
 msgid "Due Date is required."
 msgstr ""
@@ -22171,7 +22070,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:466
 #: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:473
 #: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:609
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:643
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:645
 #: modules/accounting/assets/src/admin/components/journal/JournalCreate.vue:241
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillCreate.vue:416
 #: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:458
@@ -22274,7 +22173,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/people/PeopleTransaction.vue:99
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:28
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseSingle.vue:68
-#: modules/accounting/assets/src/admin/components/reports/sales-tax/AgencyBased.vue:128
+#: modules/accounting/assets/src/admin/components/reports/sales-tax/AgencyBased.vue:129
 #: modules/accounting/assets/src/admin/components/reports/sales-tax/CategoryBased.vue:104
 #: modules/accounting/assets/src/admin/components/reports/sales-tax/CustomerBased.vue:114
 #: modules/accounting/assets/src/admin/components/transactions/sales/InvoiceSingleContent.vue:40
@@ -22315,6 +22214,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseSingle.vue:123
 #: modules/accounting/assets/src/admin/components/transactions/sales/InvoiceSingleContent.vue:102
 #: modules/accounting/assets/src/admin/components/transactions/sales/PaymentSingleContent.vue:89
+#: modules/accounting/includes/views/transactions/invoice-readonly.php:127
 msgid "Attachments"
 msgstr ""
 
@@ -22373,10 +22273,10 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/people/PeopleTransaction.vue:105
 #: modules/accounting/assets/src/admin/components/rec-payment/RecPaymentCreate.vue:78
 #: modules/accounting/assets/src/admin/components/reports/LedgerReport.vue:94
-#: modules/accounting/assets/src/admin/components/reports/sales-tax/AgencyBased.vue:140
+#: modules/accounting/assets/src/admin/components/reports/sales-tax/AgencyBased.vue:141
 #: modules/accounting/assets/src/admin/components/select/SelectAccounts.vue:4
 #: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:97
-#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:95
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:94
 #: modules/accounting/assets/src/admin/components/transfers/NewTransfer.vue:23
 #: modules/accounting/assets/src/admin/components/transfers/NewTransfer.vue:31
 msgid "Balance"
@@ -22404,7 +22304,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/tax/TaxZones.vue:164
 #: modules/accounting/assets/src/admin/components/tax/TaxZones.vue:188
 #: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:268
-#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:261
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:260
 #: modules/crm/crm.php:193
 msgid "Are you sure to delete?"
 msgstr ""
@@ -22620,7 +22520,7 @@ msgid "Expense Updated!"
 msgstr ""
 
 #: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:421
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:526
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:528
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:510
 msgid "Conversion Successful!"
 msgstr ""
@@ -22813,25 +22713,25 @@ msgstr ""
 msgid "Discount value"
 msgstr ""
 
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:96
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:98
 msgid "Select sales tax"
 msgstr ""
 
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:309
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:311
 #: modules/accounting/assets/src/admin/components/rec-payment/RecPaymentCreate.vue:276
 msgid "Invoice does not exists!"
 msgstr ""
 
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:523
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:525
 msgid "Invoice Updated!"
 msgstr ""
 
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:631
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:633
 #: modules/accounting/assets/src/admin/components/rec-payment/RecPaymentCreate.vue:496
 msgid "Customer Name is required."
 msgstr ""
 
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:647
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:649
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:593
 msgid "Please select a product."
 msgstr ""
@@ -22863,7 +22763,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/opening-balance/OpeningBalance.vue:236
 #: modules/accounting/assets/src/admin/components/people/PeopleTransaction.vue:103
 #: modules/accounting/assets/src/admin/components/reports/LedgerReport.vue:92
-#: modules/accounting/assets/src/admin/components/reports/sales-tax/AgencyBased.vue:134
+#: modules/accounting/assets/src/admin/components/reports/sales-tax/AgencyBased.vue:135
 #: modules/accounting/assets/src/admin/components/tax/RecordPayTax.vue:113
 #: modules/accounting/assets/src/admin/components/tax/RecordPayTax.vue:115
 #: modules/accounting/assets/src/admin/components/tax/RecordPayTax.vue:236
@@ -22883,7 +22783,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/opening-balance/OpeningBalance.vue:237
 #: modules/accounting/assets/src/admin/components/people/PeopleTransaction.vue:104
 #: modules/accounting/assets/src/admin/components/reports/LedgerReport.vue:93
-#: modules/accounting/assets/src/admin/components/reports/sales-tax/AgencyBased.vue:137
+#: modules/accounting/assets/src/admin/components/reports/sales-tax/AgencyBased.vue:138
 #: modules/accounting/assets/src/admin/components/tax/RecordPayTax.vue:116
 msgid "Credit"
 msgstr ""
@@ -22917,7 +22817,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/journal/JournalList.vue:50
 #: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:62
 #: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:91
-#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:89
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:88
 msgid "Voucher No."
 msgstr ""
 
@@ -22966,6 +22866,10 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/list-table/ListTable.vue:142
 #: modules/hrm/views/requests.php:202
 msgid "Show more details"
+msgstr ""
+
+#: modules/accounting/assets/src/admin/components/list-table/ListTable.vue:268
+msgid "No items found."
 msgstr ""
 
 #: modules/accounting/assets/src/admin/components/opening-balance/OpeningBalance.vue:8
@@ -23126,10 +23030,10 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:356
 #: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesStats.vue:9
 #: modules/accounting/assets/src/admin/components/transactions/sales/Sales.vue:52
-#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:191
-#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:201
-#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:210
-#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:360
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:190
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:200
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:209
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:359
 #: modules/accounting/assets/src/admin/components/transactions/sales/SalesSingle.vue:174
 #: modules/accounting/assets/src/admin/components/transactions/sales/SalesStats.vue:9
 msgid "Payment"
@@ -23169,7 +23073,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/transactions/purchases/Purchases.vue:55
 #: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:358
 #: modules/accounting/assets/src/admin/components/transactions/sales/Sales.vue:51
-#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:362
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:361
 #: modules/accounting/assets/src/admin/components/transactions/sales/SalesSingle.vue:172
 msgid "Receive"
 msgstr ""
@@ -23227,8 +23131,8 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/people/Employees.vue:47
 #: modules/accounting/assets/src/admin/components/people/People.vue:77
 #: modules/accounting/assets/src/admin/components/people/PeopleTransaction.vue:94
-#: modules/accounting/assets/src/admin/components/product-category/ProductCategory.vue:98
-#: modules/accounting/assets/src/admin/components/products/Products.vue:100
+#: modules/accounting/assets/src/admin/components/product-category/ProductCategory.vue:99
+#: modules/accounting/assets/src/admin/components/products/Products.vue:101
 #: modules/accounting/assets/src/admin/components/reports/BalanceSheet.vue:173
 #: modules/accounting/assets/src/admin/components/reports/IncomeStatement.vue:99
 #: modules/accounting/assets/src/admin/components/reports/TrialBalance.vue:85
@@ -23259,7 +23163,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/products/ExportModal.vue:60
 #: modules/accounting/assets/src/admin/components/products/Products.vue:11
 #: modules/crm/crm.php:254 modules/crm/crm.php:278
-#: modules/crm/views/company.php:33 modules/crm/views/contact.php:42
+#: modules/crm/views/company.php:33 modules/crm/views/contact.php:44
 #: modules/hrm/views/employee.php:23 modules/hrm/views/employee.php:24
 msgid "Export"
 msgstr ""
@@ -23306,7 +23210,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/products/ImportModal.vue:159
 #: modules/accounting/assets/src/admin/components/products/Products.vue:10
 #: modules/crm/crm.php:253 modules/crm/crm.php:277
-#: modules/crm/views/company.php:32 modules/crm/views/contact.php:41
+#: modules/crm/views/company.php:32 modules/crm/views/contact.php:43
 #: modules/hrm/hrm.php:185 modules/hrm/views/employee.php:17
 #: modules/hrm/views/employee.php:18
 msgid "Import"
@@ -23329,7 +23233,7 @@ msgid "Export Vendors"
 msgstr ""
 
 #: modules/accounting/assets/src/admin/components/people/People.vue:238
-#: modules/accounting/assets/src/admin/components/product-category/ProductCategory.vue:139
+#: modules/accounting/assets/src/admin/components/product-category/ProductCategory.vue:140
 #: modules/accounting/assets/src/admin/components/tax/SingleTaxRate.vue:147
 #: modules/accounting/assets/src/admin/components/tax/TaxAgencies.vue:165
 #: modules/accounting/assets/src/admin/components/tax/TaxAgencies.vue:196
@@ -23340,7 +23244,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/tax/TaxRecords.vue:196
 #: modules/accounting/assets/src/admin/components/tax/TaxZones.vue:169
 #: modules/accounting/assets/src/admin/components/tax/TaxZones.vue:200
-#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:267
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:266
 msgid "Deleted !"
 msgstr ""
 
@@ -23415,6 +23319,32 @@ msgstr ""
 msgid "Show More"
 msgstr ""
 
+#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:246
+msgid ""
+"This email already exists in CRM! Do you want to import and update the "
+"contact?"
+msgstr ""
+
+#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:251
+msgid "Import & Update"
+msgstr ""
+
+#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:262
+msgid "Email already exists as customer/vendor"
+msgstr ""
+
+#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:313
+msgid "First name is required"
+msgstr ""
+
+#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:317
+msgid "Last name is required"
+msgstr ""
+
+#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:321
+msgid "Email is required"
+msgstr ""
+
 #: modules/accounting/assets/src/admin/components/people/PeopleSearch.vue:5
 msgid "Search People"
 msgstr ""
@@ -23459,18 +23389,18 @@ msgstr ""
 msgid "Parent Category"
 msgstr ""
 
-#: modules/accounting/assets/src/admin/components/product-category/ProductCategory.vue:133
-#: modules/accounting/assets/src/admin/components/product-category/ProductCategory.vue:150
-#: modules/accounting/assets/src/admin/components/products/Products.vue:170
-#: modules/accounting/assets/src/admin/components/products/Products.vue:188
+#: modules/accounting/assets/src/admin/components/product-category/ProductCategory.vue:134
+#: modules/accounting/assets/src/admin/components/product-category/ProductCategory.vue:151
+#: modules/accounting/assets/src/admin/components/products/Products.vue:171
+#: modules/accounting/assets/src/admin/components/products/Products.vue:189
 msgid "Are you sure want to delete?"
 msgstr ""
 
-#: modules/accounting/assets/src/admin/components/product-category/ProductCategory.vue:188
+#: modules/accounting/assets/src/admin/components/product-category/ProductCategory.vue:189
 msgid "Product category added!"
 msgstr ""
 
-#: modules/accounting/assets/src/admin/components/product-category/ProductCategory.vue:204
+#: modules/accounting/assets/src/admin/components/product-category/ProductCategory.vue:205
 msgid "Product category updated!"
 msgstr ""
 
@@ -23561,7 +23491,7 @@ msgid "Product/Service Details"
 msgstr ""
 
 #: modules/accounting/assets/src/admin/components/products/ProductModal.vue:44
-#: modules/accounting/assets/src/admin/components/products/Products.vue:88
+#: modules/accounting/assets/src/admin/components/products/Products.vue:89
 msgid "Product Type"
 msgstr ""
 
@@ -23575,18 +23505,18 @@ msgid "Product Information"
 msgstr ""
 
 #: modules/accounting/assets/src/admin/components/products/ProductModal.vue:83
-#: modules/accounting/assets/src/admin/components/products/Products.vue:79
+#: modules/accounting/assets/src/admin/components/products/Products.vue:80
 msgid "Cost Price"
 msgstr ""
 
 #: modules/accounting/assets/src/admin/components/products/ProductModal.vue:92
-#: modules/accounting/assets/src/admin/components/products/Products.vue:76
+#: modules/accounting/assets/src/admin/components/products/Products.vue:77
 msgid "Sale Price"
 msgstr ""
 
 #: modules/accounting/assets/src/admin/components/products/ProductModal.vue:106
 #: modules/crm/views/help.php:24 modules/hrm/includes/class-settings.php:33
-#: modules/hrm/includes/class-settings.php:125 modules/hrm/views/help.php:30
+#: modules/hrm/includes/class-settings.php:131 modules/hrm/views/help.php:30
 msgid "Miscellaneous"
 msgstr ""
 
@@ -23599,7 +23529,7 @@ msgstr ""
 msgid "self"
 msgstr ""
 
-#: modules/accounting/assets/src/admin/components/products/Products.vue:85
+#: modules/accounting/assets/src/admin/components/products/Products.vue:86
 #: modules/accounting/assets/src/admin/components/tax/NewTaxCategory.vue:7
 #: modules/accounting/assets/src/admin/components/tax/NewTaxRate.vue:43
 #: modules/accounting/assets/src/admin/components/tax/NewTaxRate.vue:63
@@ -24180,7 +24110,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/transactions/TransactionsFilter.vue:43
 #: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:63
 #: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:92
-#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:90
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:89
 #: modules/hrm/includes/class-announcement-list-table.php:39
 #: modules/hrm/includes/class-announcement.php:369
 #: modules/hrm/includes/class-policy-list-table.php:168
@@ -24209,19 +24139,19 @@ msgstr ""
 
 #: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:64
 #: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:93
-#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:91
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:90
 msgid "Ref"
 msgstr ""
 
 #: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:66
 #: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:95
-#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:93
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:92
 msgid "Trn Date"
 msgstr ""
 
 #: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:188
 #: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:302
-#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:302
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:301
 msgid "Are you sure to void the transaction?"
 msgstr ""
 
@@ -24230,8 +24160,8 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:205
 #: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:305
 #: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:312
-#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:305
-#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:312
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:304
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:311
 msgid "Transaction has been void!"
 msgstr ""
 
@@ -24242,7 +24172,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:336
 #: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:198
 #: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:224
-#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:193
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:192
 msgid "Void"
 msgstr ""
 
@@ -24261,11 +24191,11 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:219
 #: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:238
 #: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:244
-#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:179
-#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:187
-#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:214
-#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:233
-#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:239
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:178
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:186
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:213
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:232
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:238
 msgid "No actions found"
 msgstr ""
 
@@ -24327,15 +24257,15 @@ msgstr ""
 msgid "Shipping Tax"
 msgstr ""
 
-#: modules/accounting/assets/src/admin/components/transactions/sales/InvoiceSingleContent.vue:165
+#: modules/accounting/assets/src/admin/components/transactions/sales/InvoiceSingleContent.vue:169
 #: modules/accounting/assets/src/admin/components/transactions/sales/Sales.vue:53
-#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:355
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:354
 #: modules/accounting/assets/src/admin/components/transactions/sales/SalesSingle.vue:137
 #: modules/accounting/includes/functions/transactions.php:915
 msgid "Estimate"
 msgstr ""
 
-#: modules/accounting/assets/src/admin/components/transactions/sales/InvoiceSingleContent.vue:167
+#: modules/accounting/assets/src/admin/components/transactions/sales/InvoiceSingleContent.vue:171
 msgid "Sales Return Invoice"
 msgstr ""
 
@@ -24355,14 +24285,14 @@ msgstr ""
 msgid "Sales Return"
 msgstr ""
 
-#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:175
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:174
 msgid "Make Invoice"
 msgstr ""
 
-#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:197
-#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:205
-#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:223
-#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:229
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:196
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:204
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:222
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:228
 msgid "Receive Return"
 msgstr ""
 
@@ -25112,7 +25042,7 @@ msgstr ""
 msgid "Quantity"
 msgstr ""
 
-#: modules/accounting/includes/views/transactions/invoice-readonly.php:131
+#: modules/accounting/includes/views/transactions/invoice-readonly.php:141
 msgid "Powered By "
 msgstr ""
 
@@ -25300,15 +25230,15 @@ msgstr ""
 msgid "Already Exist "
 msgstr ""
 
-#: modules/crm/assets/js/crm-contacts.js:1985
+#: modules/crm/assets/js/crm-contacts.js:1986
 msgid "Select contact fields to export"
 msgstr ""
 
-#: modules/crm/assets/js/crm-contacts.js:1986
+#: modules/crm/assets/js/crm-contacts.js:1987
 msgid "Select company fields to export"
 msgstr ""
 
-#: modules/crm/assets/js/crm-contacts.js:2379
+#: modules/crm/assets/js/crm-contacts.js:2380
 msgid "No group found"
 msgstr ""
 
@@ -25957,7 +25887,7 @@ msgstr ""
 #: modules/crm/views/company/single.php:203
 #: modules/crm/views/contact/single.php:208
 #: modules/crm/views/js-templates/customer-import-users.php:88
-#: modules/crm/views/js-templates/customer-import.php:105
+#: modules/crm/views/js-templates/customer-import.php:110
 #: modules/crm/views/js-templates/new-customer.php:265
 msgid "Contact Group"
 msgstr ""
@@ -26000,7 +25930,7 @@ msgstr ""
 #: modules/hrm/includes/class-department-list-table.php:217
 #: modules/hrm/includes/class-designation-list-table.php:83
 #: modules/hrm/includes/class-employee-list-table.php:239
-#: modules/hrm/includes/class-entitlements-list-table.php:222
+#: modules/hrm/includes/class-entitlements-list-table.php:227
 #: modules/hrm/includes/class-policy-list-table.php:212
 #: modules/hrm/views/js-templates/row-dept.php:11
 #: modules/hrm/views/js-templates/row-desig.php:11
@@ -26175,7 +26105,7 @@ msgstr ""
 #: modules/crm/includes/functions-customer.php:1863
 #: modules/crm/views/import-user-to-crm.php:35
 #: modules/crm/views/js-templates/customer-import-users.php:70
-#: modules/crm/views/js-templates/customer-import.php:85
+#: modules/crm/views/js-templates/customer-import.php:90
 #: modules/crm/views/js-templates/new-customer.php:108
 msgid "Life Stage"
 msgstr ""
@@ -27180,7 +27110,7 @@ msgstr ""
 msgid "View all subscriber"
 msgstr ""
 
-#: modules/crm/views/contact.php:34
+#: modules/crm/views/contact.php:35
 msgid "Import Users"
 msgstr ""
 
@@ -27366,6 +27296,7 @@ msgstr ""
 #: modules/hrm/includes/class-entitlements-list-table.php:166
 #: modules/hrm/includes/class-entitlements-list-table.php:186
 #: modules/hrm/includes/class-entitlements-list-table.php:188
+#: modules/hrm/includes/class-entitlements-list-table.php:191
 #: modules/hrm/includes/class-leave-request-list-table.php:161
 #: modules/hrm/includes/class-leave-request-list-table.php:176
 #: modules/hrm/includes/class-leave-request-list-table.php:179
@@ -27459,17 +27390,17 @@ msgid "Selected user role are considered to import."
 msgstr ""
 
 #: modules/crm/views/js-templates/customer-import-users.php:65
-#: modules/crm/views/js-templates/customer-import.php:80
+#: modules/crm/views/js-templates/customer-import.php:85
 msgid "Contact owner for contact."
 msgstr ""
 
 #: modules/crm/views/js-templates/customer-import-users.php:83
-#: modules/crm/views/js-templates/customer-import.php:100
+#: modules/crm/views/js-templates/customer-import.php:105
 msgid "Life stage for contact."
 msgstr ""
 
 #: modules/crm/views/js-templates/customer-import-users.php:101
-#: modules/crm/views/js-templates/customer-import.php:118
+#: modules/crm/views/js-templates/customer-import.php:123
 msgid "Imported contacts will be subscribed in selected group."
 msgstr ""
 
@@ -27766,7 +27697,7 @@ msgstr ""
 #: modules/hrm/assets/js/requests.js:173 modules/hrm/assets/js/requests.js:182
 #: modules/hrm/includes/class-ajax.php:2320
 #: modules/hrm/includes/class-ajax.php:2434
-#: modules/hrm/includes/class-employee.php:2370
+#: modules/hrm/includes/class-employee.php:2384
 #: modules/hrm/includes/functions-leave.php:1959
 msgid "Pending"
 msgstr ""
@@ -28093,14 +28024,14 @@ msgstr ""
 #: modules/hrm/includes/class-ajax.php:2441
 #: modules/hrm/includes/class-settings.php:31
 #: modules/hrm/includes/class-settings.php:88
-#: modules/hrm/includes/functions.php:614
+#: modules/hrm/includes/functions.php:616
 #: modules/hrm/views/employee/single.php:116
 #: modules/hrm/views/employee/tab-leave.php:13
 msgid "Leave"
 msgstr ""
 
 #: modules/hrm/includes/admin/class-menu.php:136
-#: modules/hrm/includes/functions.php:559
+#: modules/hrm/includes/functions.php:561
 msgid "Requests"
 msgstr ""
 
@@ -28609,7 +28540,7 @@ msgid "Announcement"
 msgstr ""
 
 #: modules/hrm/includes/class-announcement.php:172
-#: modules/hrm/includes/functions.php:571
+#: modules/hrm/includes/functions.php:573
 msgid "Announcements"
 msgstr ""
 
@@ -28875,163 +28806,163 @@ msgstr ""
 msgid "Please provide a valid user url"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1349
+#: modules/hrm/includes/class-employee.php:1352
 #: modules/hrm/views/employee/tab-general.php:203
 #: modules/hrm/views/js-templates/education-form.php:5
 msgid "School Name"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1350
+#: modules/hrm/includes/class-employee.php:1353
 #: modules/hrm/views/employee/tab-general.php:204
 #: modules/hrm/views/js-templates/education-form.php:15
 msgid "Degree"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1351
+#: modules/hrm/includes/class-employee.php:1354
 msgid "Field"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1352
+#: modules/hrm/includes/class-employee.php:1355
 msgid "Completion date"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1353
+#: modules/hrm/includes/class-employee.php:1356
 #: modules/hrm/views/js-templates/education-form.php:51
 msgid "Result type"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1354
+#: modules/hrm/includes/class-employee.php:1357
 #: modules/hrm/views/employee/tab-general.php:207
 msgid "Result"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1359
-#: modules/hrm/includes/class-employee.php:1430
+#: modules/hrm/includes/class-employee.php:1362
+#: modules/hrm/includes/class-employee.php:1433
 msgid "%s is required."
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1373
+#: modules/hrm/includes/class-employee.php:1376
 msgid "Could not create education."
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1425
+#: modules/hrm/includes/class-employee.php:1428
 msgid "Relation"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1436
-#: modules/hrm/includes/class-employee.php:1517
-#: modules/hrm/includes/class-employee.php:2041
-#: modules/hrm/includes/class-employee.php:2066
+#: modules/hrm/includes/class-employee.php:1439
+#: modules/hrm/includes/class-employee.php:1520
+#: modules/hrm/includes/class-employee.php:2055
+#: modules/hrm/includes/class-employee.php:2080
 msgid "Invalid date format"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1451
+#: modules/hrm/includes/class-employee.php:1454
 msgid "Could not create dependent."
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1501
+#: modules/hrm/includes/class-employee.php:1504
 msgid "Missing Company Name"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1505
+#: modules/hrm/includes/class-employee.php:1508
 msgid "Missing Job Title"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1509
+#: modules/hrm/includes/class-employee.php:1512
 msgid "Missing From Date"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1513
+#: modules/hrm/includes/class-employee.php:1516
 msgid "Missing To Date"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1526
+#: modules/hrm/includes/class-employee.php:1529
 msgid "Could not create work experience."
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1640
+#: modules/hrm/includes/class-employee.php:1643
 msgid "This job history does not exist or does not belongs to the supplied user"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1678
+#: modules/hrm/includes/class-employee.php:1681
 msgid "Invalid Employment Type"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1682
+#: modules/hrm/includes/class-employee.php:1687
 msgid "Invalid Employment Status"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1720
-#: modules/hrm/includes/class-employee.php:1837
-#: modules/hrm/includes/class-employee.php:1939
+#: modules/hrm/includes/class-employee.php:1725
+#: modules/hrm/includes/class-employee.php:1851
+#: modules/hrm/includes/class-employee.php:1953
 msgid ""
 "This date cannot be used for the current history. An old history already "
 "exists after this date."
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1794
+#: modules/hrm/includes/class-employee.php:1808
 msgid "Invalid Pay Type"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1798
+#: modules/hrm/includes/class-employee.php:1812
 msgid "Invalid Pay Rate"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1802
+#: modules/hrm/includes/class-employee.php:1816
 msgid "Invalid Reason Type"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1896
+#: modules/hrm/includes/class-employee.php:1910
 msgid "Invalid Designation Type"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1900
+#: modules/hrm/includes/class-employee.php:1914
 msgid "Invalid Department Type"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1904
+#: modules/hrm/includes/class-employee.php:1918
 msgid "Invalid Reporting To User"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:2033
+#: modules/hrm/includes/class-employee.php:2047
 msgid "Invalid Performance Type received"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:2037
-#: modules/hrm/includes/class-employee.php:2062
+#: modules/hrm/includes/class-employee.php:2051
+#: modules/hrm/includes/class-employee.php:2076
 msgid "Missing Date"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:2048
+#: modules/hrm/includes/class-employee.php:2062
 msgid "Invalid reporting to used."
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:2056
+#: modules/hrm/includes/class-employee.php:2070
 msgid "Invalid reviewer user."
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:2072
+#: modules/hrm/includes/class-employee.php:2086
 msgid "Invalid supervisor user."
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:2090
-#: modules/hrm/includes/class-employee.php:2156
+#: modules/hrm/includes/class-employee.php:2104
+#: modules/hrm/includes/class-employee.php:2170
 msgid "This note does not exist or does not belongs to the supplied user"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:2510
+#: modules/hrm/includes/class-employee.php:2524
 #: modules/hrm/views/employee/tab-general.php:347
 #: modules/hrm/views/js-templates/employee-terminate.php:17
 msgid "Termination Type"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:2512
+#: modules/hrm/includes/class-employee.php:2526
 #: modules/hrm/views/employee/tab-general.php:348
 #: modules/hrm/views/js-templates/employee-terminate.php:30
 msgid "Termination Reason"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:2514
+#: modules/hrm/includes/class-employee.php:2528
 #: modules/hrm/views/employee/tab-general.php:349
 msgid "Eligible for Hire"
 msgstr ""
@@ -29079,12 +29010,13 @@ msgid "Available Leave"
 msgstr ""
 
 #: modules/hrm/includes/class-entitlements-list-table.php:188
+#: modules/hrm/includes/class-entitlements-list-table.php:191
 #: modules/hrm/includes/class-leave-request-list-table.php:179
 #: modules/hrm/views/employee/tab-leave.php:35
 msgid "Extra Leave"
 msgstr ""
 
-#: modules/hrm/includes/class-entitlements-list-table.php:204
+#: modules/hrm/includes/class-entitlements-list-table.php:209
 #: modules/hrm/views/employee/tab-leave-history.php:20
 msgid "days"
 msgstr ""
@@ -29438,7 +29370,7 @@ msgid "Workdays"
 msgstr ""
 
 #: modules/hrm/includes/class-settings.php:32
-#: modules/hrm/includes/class-settings.php:109
+#: modules/hrm/includes/class-settings.php:115
 msgid "Leave Years"
 msgstr ""
 
@@ -29458,15 +29390,25 @@ msgstr ""
 msgid "Employees can apply for leave, even when there is no entitlement left."
 msgstr ""
 
-#: modules/hrm/includes/class-settings.php:127
+#: modules/hrm/includes/class-settings.php:100
+msgid "Auto Assign Leave Policy"
+msgstr ""
+
+#: modules/hrm/includes/class-settings.php:103
+msgid ""
+"Employees will be assigned relevant leave policies automatically after "
+"updating their Employment type"
+msgstr ""
+
+#: modules/hrm/includes/class-settings.php:133
 msgid "HRM miscellaneous settings."
 msgstr ""
 
-#: modules/hrm/includes/class-settings.php:131
+#: modules/hrm/includes/class-settings.php:137
 msgid "Remove WP User"
 msgstr ""
 
-#: modules/hrm/includes/class-settings.php:134
+#: modules/hrm/includes/class-settings.php:140
 msgid "Remove wp user on removing employee."
 msgstr ""
 

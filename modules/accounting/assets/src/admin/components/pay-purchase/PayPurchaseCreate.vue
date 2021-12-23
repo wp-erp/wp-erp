@@ -66,8 +66,8 @@
                 <div class="table-container">
                     <table class="wperp-table wperp-form-table">
                         <thead>
-                            <tr>
-                                <th scope="col" class="col--id column-primary">{{ __('Voucher No', 'erp') }}</th>
+                            <tr class="inline-edit-row">
+                                <th scope="col" class="col--id">{{ __('Voucher No', 'erp') }}</th>
                                 <th scope="col">{{ __('Due Date', 'erp') }}</th>
                                 <th scope="col">{{ __('Total', 'erp') }}</th>
                                 <th scope="col">{{ __('Balance', 'erp') }}</th>
@@ -76,8 +76,8 @@
                             </tr>
                         </thead>
                         <tbody>
-                        <tr :key="key" v-for="(item,key) in pay_purchases">
-                            <td scope="row" class="col--id column-primary">#{{item.voucher_no}}</td>
+                        <tr :key="key" v-for="(item,key) in pay_purchases" class="inline-edit-row">
+                            <td scope="row" class="col--id">#{{item.voucher_no}}</td>
                             <td class="col--due-date" :data-colname="__('Due Date', 'erp')">{{item.due_date}}</td>
                             <td class="col--total" :data-colname="__('Total', 'erp')">{{moneyFormat(item.total)}}</td>
                             <td class="col--due" :data-colname="__('Due', 'erp')">{{formatAmount(item.due, true)}}</td>
@@ -89,21 +89,21 @@
                             </td>
                         </tr>
 
-                        <tr class="total-amount-row">
-                            <td class="text-right pr-0 hide-sm" colspan="4">{{ __('Total Amount', 'erp') }}</td>
+                        <tr class="total-amount-row inline-edit-row">
+                            <td class="text-right pr-0" colspan="4">{{ __('Total Amount', 'erp') }}</td>
                             <td class="text-right" :data-colname="__('Total Amount', 'erp')">
                                 <input type="text" class="text-right wperp-form-field" name="finalamount"
                                 :value="moneyFormat(finalTotalAmount)" readonly disabled/></td>
                             <td class="text-right"></td>
                         </tr>
                         </tbody>
-                        <tr class="wperp-form-group">
+                        <tr class="wperp-form-group inline-edit-row">
                             <td colspan="9" style="text-align: left;">
                                 <label>{{ __('Particulars', 'erp') }}</label>
                                 <textarea v-model="particulars" rows="4" maxlength="250" class="wperp-form-field display-flex" :placeholder="__('Internal Information', 'erp')"></textarea>
                             </td>
                         </tr>
-                        <tr class="add-attachment-row">
+                        <tr class="add-attachment-row inline-edit-row">
                             <td colspan="9" style="text-align: left;">
                                 <div class="attachment-container">
                                     <label class="col--attachement">{{ __('Attachment', 'erp') }}</label>
@@ -112,7 +112,7 @@
                             </td>
                         </tr>
                         <tfoot>
-                        <tr>
+                        <tr class="inline-edit-row">
                             <td colspan="9" style="text-align: right;">
                                 <combo-button :options="createButtons" />
                             </td>

@@ -3151,3 +3151,224 @@ function erp_hr_get_financial_year_from_date_range( $start_date, $end_date ) {
         )
     );
 }
+
+/**
+ * Automatic removal of old entitlements and assignment of new entitlements
+ * after employee type change
+ *
+ * @since 1.10.2
+ *
+ * @param object $erp_user instance of \WeDevs\ERP\HRM\Models\Employee
+ *
+ * @return void
+ */
+function erp_hr_manage_leave_policy_on_employee_type_change( $erp_user ) {
+    $user_previous_entitlements = erp_hr_leave_get_entitlements( [
+        'user_id' => $erp_user->user_id,
+    ] ) ['data'];
+
+    $f_year = erp_hr_get_financial_year_from_date();
+
+    if ( empty( $f_year ) ) {
+        return;
+    }
+
+    $policies = get_employee_matched_leave_policies( $erp_user, $f_year );
+
+    usort(
+        $user_previous_entitlements,
+        function ( $a, $b ) {
+            if ( $a->day_in > $b->day_in ) {
+                return -1;
+            } elseif ( $a->day_in < $b->day_in ) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+    );
+
+    foreach ( $policies as $policy ) {
+        $no_entitlements = count( $user_previous_entitlements );
+        $do_not_delete   = [];
+
+        for ( $i = 0; $i < $no_entitlements; $i++ ) {
+            if ( $user_previous_entitlements[ $i ]->leave_id === $policy->leave_id ) {
+                $do_not_delete[] = $i;
+            }
+        }
+
+        foreach ( $do_not_delete as $index ) {
+            unset( $user_previous_entitlements[ $index ] );
+        }
+    }
+
+    $last_entitlement_id = false;
+
+    foreach ( $policies as $policy ) {
+        $data = [
+            'user_id'     => $erp_user->user_id,
+            'leave_id'    => $policy->leave_id,
+            'created_by'  => get_current_user_id(),
+            'trn_id'      => $policy->id,
+            'trn_type'    => 'leave_policies',
+            'day_in'      => $policy->days,
+            'day_out'     => 0,
+            'description' => ! empty( $policy->description ) ? $policy->description : 'Generated',
+            'f_year'      => $policy->f_year,
+        ];
+
+        $new_entitlement_id = erp_hr_leave_insert_entitlement( $data );
+
+        if ( is_wp_error( $new_entitlement_id ) ) {
+            //TODO handle can't create new entitlement
+        } elseif ( ! empty( $user_previous_entitlements ) ) {
+            $last_entitlement_id = $new_entitlement_id;
+            $new_entitlement     = Leave_Entitlement::find( $new_entitlement_id );
+            $leave               = Leave::find( $new_entitlement->leave_id );
+            $old_entitlement     = Leave_Entitlement::find( array_shift( $user_previous_entitlements )->id );
+
+            transfer_requests_to_new_entitlements( $old_entitlement, $new_entitlement, $leave );
+
+            $old_entitlement->delete();
+        }
+    }
+
+    if ( empty( $user_previous_entitlements ) || $last_entitlement_id === false ) {
+        erp_hrm_purge_cache( [ 'list' => 'leave_entitlement' ] );
+        return;
+    }
+
+    // if count( $user_previous_entitlements ) > count( $policies )
+    $new_entitlement = Leave_Entitlement::find( $last_entitlement_id );
+    $leave           = Leave::find( $new_entitlement->leave_id );
+
+    foreach ( $user_previous_entitlements as $old_entitlement_info ) {
+        $old_entitlement = Leave_Entitlement::find( $old_entitlement_info->id );
+
+        transfer_requests_to_new_entitlements( $old_entitlement, $new_entitlement, $leave );
+
+        $old_entitlement->delete();
+    }
+    // if no policy matched, no old entitlement will be deleted or no new entitlement will be created
+
+    erp_hrm_purge_cache( [ 'list' => 'leave_entitlement' ] );
+}
+
+/**
+ * Get applicable leave policies of the Employee
+ *
+ * @since 1.10.2
+ *
+ * @param object $erp_user instance of \WeDevs\ERP\HRM\Models\Employee
+ * @param object $f_year
+ *
+ * return object
+ */
+function get_employee_matched_leave_policies( $erp_user, $f_year ) {
+    $policies = Leave_Policy::where(
+        function ( $query ) use ( $erp_user ) {
+            $query->where( 'employee_type', $erp_user->type )
+                    ->orWhere( 'employee_type', '-1' );
+        }
+    );
+
+    if ( $erp_user->department !== '0' ) {
+        $policies = $policies->where(
+            function ( $query ) use ( $erp_user ) {
+                $query->where( 'department_id', $erp_user->department )
+                        ->orWhere( 'department_id', '-1' );
+            }
+        );
+    }
+
+    if ( $erp_user->designation !== '0' ) {
+        $policies = $policies->where(
+            function ( $query ) use ( $erp_user ) {
+                $query->where( 'designation_id', $erp_user->designation )
+                        ->orWhere( 'designation_id', '-1' );
+            }
+        );
+    }
+
+    if ( $erp_user->location !== '0' ) {
+        $policies = $policies->where(
+            function ( $query ) use ( $erp_user ) {
+                $query->where( 'location_id', $erp_user->location )
+                        ->orWhere( 'location_id', '-1' );
+            }
+        );
+    }
+
+    $employee = new \WeDevs\ERP\HRM\Employee( $erp_user->user_id );
+
+    if ( $employee->get_gender() ) {
+        $policies = $policies->where(
+            function ( $query ) use ( $employee ) {
+                $query->where( 'gender', $employee->get_gender() )
+                        ->orWhere( 'gender', '-1' );
+            }
+        );
+    }
+
+    if ( $employee->get_marital_status() ) {
+        $policies = $policies->where(
+            function ( $query ) use ( $employee ) {
+                $query->where( 'marital', $employee->get_marital_status() )
+                        ->orWhere( 'marital', '-1' );
+            }
+        );
+    }
+
+    $policies = $policies->where(
+        function ( $query ) use ( $f_year ) {
+            $query->where( 'f_year', $f_year->id );
+        }
+    );
+
+    return $policies->orderByDesc( 'days' )
+                        ->get();
+}
+
+/**
+ * Assign requests of old entitlements to new entitlement
+ *
+ * @since 1.10.2
+ *
+ * @param object $old_entitlement
+ * @param object $new_entitlement
+ * @param object $leave
+ *
+ * return void
+ */
+function transfer_requests_to_new_entitlements( $old_entitlement, $new_entitlement, $leave ) {
+    if ( ! $old_entitlement->leave_requests ) {
+        return;
+    }
+
+    // assign the old entitlement requests to the new one
+    foreach ( $old_entitlement->leave_requests as $request ) {
+        if ( ! $request->approval_status ) {
+            $new_entitlement->leave_requests()->save( $request );
+            $leave->requests()->save( $request );
+            continue;
+        }
+
+        foreach ( $request->approval_status as $status ) {
+            if ( ! $status->entitlements ) {
+                continue;
+            }
+
+            foreach ( $status->entitlements as $entitlement_after_processed_request ) {
+                $leave->entitlements()->save( $entitlement_after_processed_request );
+            }
+        }
+
+        if ( $request->unpaid ) {
+            $leave->unpaids()->save( $request->unpaid );
+        }
+
+        $new_entitlement->leave_requests()->save( $request );
+        $leave->requests()->save( $request );
+    }
+}
