@@ -255,7 +255,7 @@ export default {
                                     } );
                                 }
 
-                                fields[ index ]['value'] = initialCheckedData;
+                                self.fields[ index ]['value'] = initialCheckedData;
                             } else if ( 'select' === item.type ) {
                                 Object.keys( item.options ).forEach( optionKey  => {
                                     if ( optionKey === item.value ) {
