@@ -31,7 +31,6 @@ class Email extends Template {
         return apply_filters( 'erp_settings_email_sections', [
             'general'       => __( 'General', 'erp' ),
             'email_connect' => __( 'Email Connect', 'erp' ),
-            'templates'     => __( 'Email Templates', 'erp' ),
             'notification'  => __( 'Notifications & Templates', 'erp' )
         ] );
     }
