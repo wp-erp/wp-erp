@@ -291,19 +291,21 @@ class Modules {
         }
 
         $active_modules = $this->get_active_modules();
-        $deactived      = [];
+        $deactivated    = [];
 
         foreach ( $active_modules as $module_name => $active_module ) {
-            if ( in_array( $module_name, $modules ) ) {
+            if ( in_array( $module_name, $modules, true ) ) {
                 unset( $active_modules[ $module_name ] );
-                $deactived[] = $module_name;
+                $deactivated[] = $module_name;
             }
         }
 
         update_option( 'erp_modules', $active_modules );
 
-        // action to do additional tasks when module deactivated
-        do_action( 'erp_module_after_deactivated', $module_name );
+        foreach ( $deactivated as $module_name ) {
+            // action to do additional tasks when module deactivated
+            do_action( 'erp_module_after_deactivated', $module_name );
+        }
 
         return true;
     }
@@ -354,7 +356,7 @@ class Modules {
                     'is_hrm'        => false,
                     'is_crm'        => false,
                     'is_acc'        => true,
-                    'category'      => [ 'accounting' ],
+                    'category'      => [ 'crm', 'accounting' ],
                     'doc_id'        => 0,
                     'doc_link'      => 'https://wperp.com/docs/accounting-add-ons/woocommerce-integration/',
                     'module_link'   => 'https://wperp.com/downloads/woocommerce-crm/',

@@ -41,7 +41,7 @@ export default {
     created() {
        this.initializeDataByFormName( this.$route.params.id || this.formName );
 
-       if( this.localizedData.plugins.length > 0 && typeof this.$route.params.id === 'undefined' ) {
+       if( this.localizedData.length && this.localizedData.plugins.length > 0 && typeof this.$route.params.id === 'undefined' ) {
             this.$router.push(`/erp-crm/contact_forms/${this.localizedData.plugins[0]}`);
        }
     },
@@ -73,7 +73,8 @@ export default {
             const localizedData        = parentMenu.fields.contact_forms.localized_data;
             const defaultLocalizedData = parentMenu.fields.contact_forms.localized_data;
 
-            this.formName = formName;
+            this.formName      = formName;
+            this.localizedData = {};
 
             if ( typeof localizedData !== 'undefined' ) {
                 this.defaultLocalizedData = defaultLocalizedData;

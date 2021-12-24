@@ -127,6 +127,14 @@ class Customer_Relationship {
      * @return void
      */
     private function init_filters() {
+        add_filter(
+            'erp_settings_email_sections',
+            function ( $emails ) {
+                $emails['templates'] = __( 'Email Templates', 'erp' );
+
+                return $emails;
+            }
+        );
     }
 
     /**
@@ -194,6 +202,7 @@ class Customer_Relationship {
             'delConfirm'                  => __( 'Are you sure to delete this?', 'erp' ),
             'checkedConfirm'              => __( 'Select atleast one group', 'erp' ),
             'contact_exit'                => __( 'Already exists as a contact or company', 'erp' ),
+            'import_acc_user_text'        => __( 'Already exists in Accounting! Do you want to make this as a', 'erp' ),
             'make_contact_text'           => __( 'This user already exists! Do you want to make this user as a', 'erp' ),
             'wpuser_make_contact_text'    => __( 'This is wp user! Do you want to create this user as a', 'erp' ),
             'create_contact_text'         => __( 'Create new', 'erp' ),
