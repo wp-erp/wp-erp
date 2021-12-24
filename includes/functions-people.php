@@ -591,8 +591,6 @@ function erp_insert_people( $args = [], $return_object = false ) {
         $user = \get_user_by( 'email', $args['email'] );
     }
 
-    error_log( 'user:'.print_r($user, true) );
-
     if ( ! $existing_people->id ) {
         if ( ! $user ) {
             $user             = new stdClass();
@@ -743,6 +741,13 @@ function erp_insert_people( $args = [], $return_object = false ) {
         'type'          => $people_type,
         'erp-people-by' => [ (int) $people->id, $people->email, (int) $people->user_id ]
     ] );
+    
+    /*
+     * Action hook to trigger any event when a people is created.
+     * 
+     * @since 1.10.3 
+     */
+    do_action( 'erp_people_created', $people->id, $people, $people_type );
 
     return $return_object ? $people : $people->id;
 }
