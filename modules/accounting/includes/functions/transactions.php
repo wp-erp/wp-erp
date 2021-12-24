@@ -967,17 +967,17 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
 
         // Add Table Items
         foreach ( $transaction->line_items as $line ) {
-            $trn_pdf->add_item( [ $line['name'], $line['qty'], erp_acct_get_price( $line['unit_price'] ), erp_acct_get_price( $line['item_total'] )  ] );
+            $trn_pdf->add_item( [ $line['name'], $line['qty'], str_replace( '&nbsp;', ' ', erp_acct_get_price( $line['unit_price'] ) ), str_replace( '&nbsp;', ' ', erp_acct_get_price( $line['item_total'] ) ) ] );
         }
 
         $status = erp_acct_get_formatted_status( $transaction->status );
 
         $trn_pdf->add_badge( sprintf( __( '%1$s', 'erp' ), $status ) );
-        $trn_pdf->add_total( __( 'SUB TOTAL', 'erp' ), erp_acct_get_price( $transaction->amount ) );
-        $trn_pdf->add_total( __( 'DISCOUNT', 'erp' ), erp_acct_get_price( $transaction->discount ) );
-        $trn_pdf->add_total( __( 'TAX', 'erp' ), erp_acct_get_price( $transaction->tax ) );
-        $trn_pdf->add_total( __( 'TOTAL', 'erp' ), erp_acct_get_price( $transaction->amount + $transaction->tax - $transaction->discount ) );
-        $trn_pdf->add_total( __( 'DUE', 'erp' ), $transaction->total_due );
+        $trn_pdf->add_total( __( 'SUB TOTAL', 'erp' ), str_replace( '&nbsp;', ' ', erp_acct_get_price( $transaction->amount ) ) );
+        $trn_pdf->add_total( __( 'DISCOUNT', 'erp' ), str_replace( '&nbsp;', ' ', erp_acct_get_price( $transaction->discount ) ) );
+        $trn_pdf->add_total( __( 'TAX', 'erp' ), str_replace( '&nbsp;', ' ', erp_acct_get_price( $transaction->tax ) ) );
+        $trn_pdf->add_total( __( 'TOTAL', 'erp' ), str_replace( '&nbsp;', ' ', erp_acct_get_price( $transaction->amount + $transaction->tax - $transaction->discount ) ) );
+        $trn_pdf->add_total( __( 'DUE', 'erp' ), str_replace( '&nbsp;', ' ', erp_acct_get_price( $transaction->total_due ) ) );
 
         // Add particulars
         if ( $transaction->particulars ) {
