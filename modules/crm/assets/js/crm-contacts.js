@@ -1610,9 +1610,7 @@
                         type = form.find('#erp-customer-type').val(),
                         id   = form.find('#erp-customer-id').val();
 
-                    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
-                    if ( val == '' || !re.test( val ) ) {
+                    if ( val.trim() == '' ) {
                         return false;
                     }
 
@@ -1631,6 +1629,9 @@
                             if ( $.inArray( 'contact', response.types ) != -1 || $.inArray( 'company', response.types ) != -1 ) {
                                 form.find('.modal-suggession').remove();
                                 form.find('header.modal-header').append('<div class="modal-suggession">' + wpErpCrm.contact_exit + '</div>');
+                            } else if ( $.inArray( 'customer', response.types ) != -1 || $.inArray( 'vendor', response.types != -1 ) ){
+                                form.find('.modal-suggession').remove();
+                                form.find('header.modal-header').append('<div class="modal-suggession">' + wpErpCrm.import_acc_user_text + ' ' + type + ' ? <a href="#" id="erp-crm-create-contact-other-type" data-type="'+ type +'" data-user_id="'+ response.id +'">' + wpErpCrm.create_contact_text + ' ' + type + '</a></div>');
                             } else if ( typeof response.data !== undefined && 'wp_user' == response.data.types ) {
                                 form.find('.modal-suggession').remove();
                                 form.find('header.modal-header').append('<div class="modal-suggession">' + wpErpCrm.wpuser_make_contact_text + ' ' + type + ' ? <a href="#" id="erp-crm-create-contact-other-type" data-type="'+ type +'" data-is_wp="yes" data-user_id="'+ response.data.ID +'">' + wpErpCrm.create_contact_text + ' ' + type + '</a></div>');
