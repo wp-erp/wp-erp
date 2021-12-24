@@ -339,8 +339,6 @@ class Ajax_Handler {
 
         erp_crm_edit_contact_subscriber( $group_ids, $customer_id );
 
-        do_action( 'erp_crm_save_contact_data', $customer, $customer_id, $data );
-
         $customer_data = $customer->to_array();
         $statuses      = erp_crm_customer_get_status_count( $data['type'] );
 

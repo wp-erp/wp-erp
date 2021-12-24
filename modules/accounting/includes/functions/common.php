@@ -599,63 +599,38 @@ function erp_acct_get_all_trn_statuses() {
     return $wpdb->get_results( "SELECT id,type_name as name, slug FROM {$wpdb->prefix}erp_acct_trn_status_types", ARRAY_A );
 }
 
-// accounting customer auto create
-add_action( 'erp_crm_save_contact_data', 'erp_acct_customer_create_from_crm', 10, 3 );
-add_action( 'erp_crm_contact_created', 'erp_acct_customer_auto_create_from_crm', 10, 2 );
+add_action( 'erp_people_created', 'erp_acct_customer_create_from_crm', 10, 3 );
 
 /**
  * Auto create customer when creating CRM contact/company
  *
- * @param  $customer
- * @param  $customer_id
- * @param  $data
+ * @since 1.2.7
+ * @since 1.10.3 Removed an unused parameter $customer
  *
- * @since  1.2.7
+ * @param int|string $customer_id ID of the people that has been created
+ * @param array      $data        Data of the newly created people
+ * @param string     $people_type Type of the newly created people
+ *
+ * @return mixed
  */
-function erp_acct_customer_create_from_crm( $customer, $customer_id, $data ) {
-    $customer_auto_import = (int) erp_get_option( 'customer_auto_import', false, 0 );
-    $crm_user_type        = erp_get_option( 'crm_user_type', false, [] ); // Contact or Company
+function erp_acct_customer_create_from_crm( $customer_id, $data, $people_type ) {
+    if ( 'contact' === $people_type || 'company' === $people_type ) {
+        $customer_auto_import = (int) erp_get_option( 'customer_auto_import', false, 0 );
+        $crm_user_type        = erp_get_option( 'crm_user_type', false, [] ); // Contact or Company
+        // Check whether the email already exists in Accounting
+        $exists_people        = erp_acct_exist_people( $data['email'], [ 'customer', 'vendor' ] );
+        
+        if ( ! $exists_people && $customer_auto_import && count( $crm_user_type ) ) {
+            // No need to add wordpress `user id` again
+            // `user id` already added when contact is created
+            $data['is_wp_user'] = false;
+            $data['wp_user_id'] = '';
+            $data['people_id'] = $customer_id;
+            $data['type']      = 'customer';
 
-    if ( ! $customer_auto_import ) {
-        return;
-    }
-
-    if ( ! count( $crm_user_type ) ) {
-        return;
-    }
-
-    // no need to add wordpress `user id` again
-    // [ `user id` already added when contact is created ]
-    $data['is_wp_user'] = false;
-    $data['wp_user_id'] = '';
-
-    if ( ! isset( $data['company'] ) ) {
-        // the created crm user type is NOT a company
-        if ( ! in_array( 'contact', $crm_user_type ) ) {
-            return;
-        }
-    } else {
-        if ( ! in_array( 'company', $crm_user_type ) ) {
-            return;
-        }
-    }
-
-    $data['people_id'] = $customer_id;
-    $data['type']      = 'customer';
-
-    erp_convert_to_people( $data );
-}
-
-/**
- * Accounting customer auto create from crm
- *
- * @since  1.2.8
- *
- * @param int    $contact_id
- * @param object $data
- */
-function erp_acct_customer_auto_create_from_crm( $contact_id, $data ) {
-    erp_acct_customer_create_from_crm( [], $contact_id, $data );
+            erp_convert_to_people( $data );
+         }
+    }    
 }
 
 /**
