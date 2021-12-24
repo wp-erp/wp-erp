@@ -1610,9 +1610,7 @@
                         type = form.find('#erp-customer-type').val(),
                         id   = form.find('#erp-customer-id').val();
 
-                    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
-                    if ( val == '' || !re.test( val ) ) {
+                    if ( val.trim() == '' ) {
                         return false;
                     }
 
