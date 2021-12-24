@@ -127,6 +127,14 @@ class Customer_Relationship {
      * @return void
      */
     private function init_filters() {
+        add_filter(
+            'erp_settings_email_sections',
+            function ( $emails ) {
+                $emails['templates'] = __( 'Email Templates', 'erp' );
+
+                return $emails;
+            }
+        );
     }
 
     /**
