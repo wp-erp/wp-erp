@@ -81,8 +81,8 @@ class Ajax {
 
         $capability_for_type = [
             'employee' => 'erp_create_employee',
-            'contact'  => 'erp_crm_manager',
-            'company'  => 'erp_crm_manager',
+            'contact'  => 'erp_crm_add_contact',
+            'company'  => 'erp_crm_add_contact', //NB: no capability for company, using contact capability
             'customer' => 'erp_ac_create_customer',
             'vendor'   => 'erp_ac_create_vendor',
         ];

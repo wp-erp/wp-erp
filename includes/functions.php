@@ -1390,10 +1390,10 @@ function erp_process_csv_export() {
         return new \WP_Error( 'no-permission', __( 'Sorry ! You do not have permission to access this page', 'erp' ) );
     }
 
-    $allowed_caps = [
+    $capability_for_type = [
         'employee' => 'erp_list_employee',
-        'contact'  => 'erp_crm_manager',
-        'company'  => 'erp_crm_manager',
+        'contact'  => 'erp_crm_list_contact',
+        'company'  => 'erp_crm_list_contact', //NB: no capability for company in CRM so using contact capability
         'customer' => 'erp_ac_view_customer',
         'vendor'   => 'erp_ac_view_vendor',
         'product'  => 'erp_ac_manager',
@@ -1416,7 +1416,7 @@ function erp_process_csv_export() {
                 return new \WP_Error( 'no-permission', __( 'Unknown import type!', 'erp' ) );
             }
 
-            if ( ! current_user_can( 'administrator' ) && ! current_user_can( $allowed_caps[ $type ] ) ) {
+            if ( ! current_user_can( 'administrator' ) && ! current_user_can( $capability_for_type[ $type ] ) ) {
                 return new \WP_Error( 'no-permission', __( 'Sorry ! You do not have permission to access this page', 'erp' ) );
             }
 

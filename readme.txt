@@ -5,7 +5,7 @@ Tags: business manager, erp, accounting, crm, hr, project manager, small busines
 Requires at least: 4.4
 Tested up to: 5.8.2
 Requires PHP: 5.6
-Stable tag: 1.10.2
+Stable tag: 1.10.3
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -271,6 +271,20 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+
+= v1.10.3 -> December 24, 2021 =
+--------------------------
+
+- [update] Functionality to import Accounting customers and vendors as CRM contacts
+- [update] Restrict access of CRM agents to their own contacts only while importing/exporting csv
+- [fix] CRM agent's top navigation bar status count was showing wrong
+- [fix] CRM manager can't access all contacts if CRM Agent adds or lists contacts first after a cache invalidation
+- [fix] CRM contacts settings were not being saved and parsed properly
+- [fix] CRM contact form settings were throwing error when no contact form is available
+- [fix] Email templates settings were generating error when CRM module was not active
+- [fix] Compatibility issues of some hooks
+- [fix] Compatibility issue with PDF Invoice plugin
+- [notice] Limited time promotional offer on holiday sale
 
 = v1.10.2 -> November 16, 2021 =
 --------------------------
