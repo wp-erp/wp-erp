@@ -1815,3 +1815,16 @@ function erp_acct_get_formatted_status( $trn_status ) {
 
     return $status;
 }
+
+/**
+ * Formats amount with currency in appropriate form.
+ *
+ * @since 1.10.4
+ *
+ * @param int|float|string $amount
+ *
+ * @return string
+ */
+function erp_acct_format_amount( $amount ) {
+    return str_replace( '&nbsp;', ' ', erp_acct_get_price( $amount ) );
+}
