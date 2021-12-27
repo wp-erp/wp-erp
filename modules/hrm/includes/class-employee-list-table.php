@@ -477,7 +477,7 @@ class Employee_List_Table extends \WP_List_Table {
         $this->items  = erp_hr_get_employees( $args );
 
         $args['count'] = true;
-        $total_items   = count( $this->items );
+        $total_items   = erp_hr_get_employees( $args );
 
         $this->set_pagination_args( [
             'total_items' => $total_items,
