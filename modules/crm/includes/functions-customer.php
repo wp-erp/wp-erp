@@ -1014,6 +1014,8 @@ function erp_crm_customer_schedule_notification() {
 /**
  * Get current datetime of contact according to timezone
  *
+ * @since WP_ERP_SINCE
+ *
  * @param array $extra An associative array with a key 'client_time_zone' containing the timezone value
  *
  * @return string
