@@ -49,8 +49,6 @@ class Ajax {
         $type  = ! empty( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
         $path  = ! empty( $_POST['path'] ) ? sanitize_text_field( wp_unslash( $_POST['path'] ) ) : '';
         $nonce = wp_create_nonce( 'erp-import-export-nonce' );
-        $page  = "?page=erp-accounting&action=download_sample&type={$type}&_wpnonce={$nonce}#{$path}";
-        $url   = admin_url( "admin.php{$page}" );
 
         switch ( $type ) {
             case 'customers':
@@ -61,6 +59,9 @@ class Ajax {
                 $type = 'vendor';
                 break;
         }
+
+        $page = "?page=erp-accounting&action=download_sample&type={$type}&_wpnonce={$nonce}#{$path}";
+        $url  = admin_url( "admin.php{$page}" );
 
         wp_send_json_success( $url );
     }
