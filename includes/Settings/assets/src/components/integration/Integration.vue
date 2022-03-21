@@ -200,7 +200,6 @@ export default {
     methods: {
         configure(item, key) {
             if ( key === 'mailchimp' ) {
-                console.log('mailchimp')
                 this.$router.push({
                     name: 'MailchimpSettings',
                 });
