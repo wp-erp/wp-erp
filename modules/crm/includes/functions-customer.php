@@ -1119,7 +1119,9 @@ function erp_crm_save_contact_group( $data ) {
             'erp-crm-contact-group-detail'  => $data['id']
         ];
 
-        do_action( 'erp_crm_update_contact_group', $result );
+        if ( $result ) {
+            do_action( 'erp_crm_update_contact_group', $data );
+        }
     } else {
         $result = WeDevs\ERP\CRM\Models\ContactGroup::create( $data );
         do_action( 'erp_crm_create_contact_group', $result );
