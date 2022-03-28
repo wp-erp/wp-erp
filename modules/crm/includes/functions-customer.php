@@ -1600,7 +1600,7 @@ function erp_crm_edit_contact_subscriber( $groups, $user_id ) {
                     'unsubscribe_at' => current_time( 'mysql' ),
                 ] );
 
-            do_action( 'erp_crm_delete_contact_subscriber', $subscriber );
+            do_action( 'erp_crm_delete_contact_subscriber', $subscriber, $del_group_id );
         }
     }
 
