@@ -1644,6 +1644,39 @@ function erp_crm_contact_unsubscribe_subscriber( $user_id, $group_id ) {
 }
 
 /**
+ * Change the subscription status of a user into a group to subscribe
+ *
+ * @param $user_id
+ * @param $group_id
+ * @return bool|int
+ */
+function erp_crm_contact_resubscribe_subscriber( $user_id, $group_id ) {
+    if ( empty( $user_id ) || empty( $group_id ) ) {
+        return false;
+    }
+
+    $updated = \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $user_id )
+        ->where( 'group_id', $group_id )
+        ->where( 'status', 'unsubscribe' )
+        ->update( [
+            'status'         => 'subscribe',
+            'subscribe_at'   => current_time( 'mysql' ),
+            'unsubscribe_at' => null,
+        ] );
+
+    if ( $updated ) {
+        do_action( 'erp_crm_create_contact_subscriber', $user_id, $group_id );
+
+        erp_crm_purge_cache( [ 'list' => 'contact_groups' ] );
+        erp_crm_purge_cache( [ 'list' => 'contact_group_subscriber' ] );
+
+        return $updated;
+    }
+
+    return false;
+}
+
+/**
  * Contact Group subscription statuses
  *
  * @since 1.1.17
