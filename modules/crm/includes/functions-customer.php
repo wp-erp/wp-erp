@@ -1613,8 +1613,11 @@ function erp_crm_edit_contact_subscriber( $groups, $user_id ) {
 /**
  * Change the subscription status of a user into a group to unsubscribe
  *
+ * @since 1.10.6
+ *
  * @param $user_id
  * @param $group_id
+ *
  * @return bool|int
  */
 function erp_crm_contact_unsubscribe_subscriber( $user_id, $group_id ) {
@@ -1646,8 +1649,11 @@ function erp_crm_contact_unsubscribe_subscriber( $user_id, $group_id ) {
 /**
  * Change the subscription status of a user into a group to subscribe
  *
+ * @since 1.10.6
+ *
  * @param $user_id
  * @param $group_id
+ *
  * @return bool|int
  */
 function erp_crm_contact_resubscribe_subscriber( $user_id, $group_id ) {
