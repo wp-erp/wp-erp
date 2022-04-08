@@ -245,10 +245,9 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
         $items = $request['line_items'];
 
         foreach ( $items as $value ) {
-            $sub_total = $value['qty'] * $value['unit_price'];
-
-            $item_total += $sub_total;
-            $item_tax_total += $value['tax'];
+            $sub_total            = $value['qty'] * $value['unit_price'];
+            $item_total          += $sub_total;
+            $item_tax_total      += $value['tax'];
             $item_discount_total += $value['discount'];
         }
 
@@ -306,10 +305,9 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
         $items = $request['line_items'];
 
         foreach ( $items as $value ) {
-            $sub_total = $value['qty'] * $value['unit_price'];
-
-            $item_total += $sub_total;
-            $item_tax_total += $value['tax'];
+            $sub_total            = $value['qty'] * $value['unit_price'];
+            $item_total          += $sub_total;
+            $item_tax_total      += $value['tax'];
             $item_discount_total += $value['discount'];
         }
 
