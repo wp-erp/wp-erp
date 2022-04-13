@@ -6,7 +6,7 @@ namespace WeDevs\ERP\Settings;
  * WooCommerce settings class
  */
 class Woocommerce extends Template {
-    
+
     /**
      * Constructor function
      *
@@ -48,14 +48,14 @@ class Woocommerce extends Template {
 
     /**
      * Gets integration notice
-     * 
+     *
      * @since 1.2.1
      *
      * @return void
      */
     public function get_integration_notice() {
         $erp_pro_url = 'https://wperp.com/pricing/?nocache&utm_medium=modules&utm_source=erp-settings-page';
-        
+
         return __( "We're Sorry, WooCommerce Integration Is Not<br>Available on WP ERP Free. Please Upgrade to<br><a target='_blank' href='{$erp_pro_url}'>WP ERP Pro</a> to Unlock This feature.", "erp" );
     }
 }
