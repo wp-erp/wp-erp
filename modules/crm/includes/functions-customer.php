@@ -1023,7 +1023,7 @@ function erp_crm_customer_schedule_notification() {
 function erp_crm_get_current_datetime( $time_zone = false ) {
     $current_time = current_time( 'mysql' ); // the old approach: if client time zone information is not present then using site timezone
 
-    if ( empty( $time_zone) ) {
+    if ( empty( $time_zone ) ) {
         return $current_time;
     }
 
