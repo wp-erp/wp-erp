@@ -999,7 +999,7 @@ function erp_crm_customer_schedule_notification() {
     foreach ( $schedules as $key => $activity ) {
         $extra = json_decode( base64_decode( $activity['extra'] ), true );
 
-        $current_time = erp_crm_get_current_datetime( $extra );
+        $current_time = erp_crm_get_current_datetime( empty( $extra['client_time_zone'] ) ? '' : $extra['client_time_zone'] );
 
         if ( isset( $extra['allow_notification'] ) && $extra['allow_notification'] == 'true' ) {
             if ( ( $current_time >= $extra['notification_datetime'] ) && ( $activity['start_date'] >= $current_time ) ) {
@@ -1014,22 +1014,23 @@ function erp_crm_customer_schedule_notification() {
 /**
  * Get current datetime of contact according to timezone
  *
- * @since WP_ERP_SINCE
+ * @since 1.10.6
  *
- * @param array $extra An associative array with a key 'client_time_zone' containing the timezone value
+ * @param string $time_zone
  *
  * @return string
  */
-function erp_crm_get_current_datetime( $extra ) {
-    if ( ! empty( $extra['client_time_zone'] ) ) {
-        try {
-            $current_time = new \DateTime( 'now', new \DateTimeZone( $extra['client_time_zone'] ) );
-            $current_time = $current_time->format( 'Y-m-d H:i:s' );
-        } catch ( \Exception $e ) { // the provided timezone may be invalid or unknown
-            $current_time = current_time( 'mysql' ); // the old approach: if client time zone information is not present or invalid then using site timezone
-        }
-    } else {
-        $current_time = current_time( 'mysql' ); // the old approach: if client time zone information is not present then using site timezone
+function erp_crm_get_current_datetime( $time_zone = false ) {
+    $current_time = current_time( 'mysql' ); // the old approach: if client time zone information is not present then using site timezone
+
+    if ( empty( $time_zone) ) {
+        return $current_time;
+    }
+
+    try {
+        $current_time = new \DateTime( 'now', new \DateTimeZone( $time_zone) );
+        $current_time = $current_time->format( 'Y-m-d H:i:s' );
+    } catch ( \Exception $e ) {
     }
 
     return $current_time;
