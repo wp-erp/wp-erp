@@ -89,7 +89,7 @@ class Ajax {
         }
 
         if ( $has_not_permission ) {
-            $this->send_error( erp_get_message ( ['type' => 'error_permission'] ) );
+            $this->send_error( erp_get_message ( [ 'type' => 'error_permission' ] ) );
         }
 
         $result = $settings->save( $section );
@@ -98,9 +98,16 @@ class Ajax {
             $this->send_error( $result->get_error_message() );
         }
 
-        $this->send_success( [
-            'message' => erp_get_message( [ 'type' => 'save_success', 'additional' => 'Settings' ] )
-        ] );
+        $this->send_success(
+            [
+                'message' => erp_get_message(
+                    [
+                        'type'       => 'save_success',
+                        'additional' => 'Settings',
+                    ]
+                )
+            ]
+        );
     }
 
     /**

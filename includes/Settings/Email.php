@@ -400,29 +400,34 @@ class Email extends Template {
                     <thead>
                     <tr>
                         <?php
-                        $columns = apply_filters( 'erp_email_setting_columns', [
-                            'name'        => __( 'Email', 'erp' ),
-                            'description' => __( 'Description', 'erp' ),
-                            'actions'     => '',
-                        ] );
+                        $columns = apply_filters(
+                            'erp_email_setting_columns',
+                            [
+                                'name'        => __( 'Email', 'erp' ),
+                                'description' => __( 'Description', 'erp' ),
+                                'actions'     => '',
+                            ]
+                        );
 
-        foreach ( $columns as $key => $column ) {
-            echo '<th class="erp-settings-table-' . esc_attr( $key ) . '">' . esc_html( $column ) . '</th>';
-        } ?>
+                        foreach ( $columns as $key => $column ) {
+                            echo '<th class="erp-settings-table-' . esc_attr( $key ) . '">' . esc_html( $column ) . '</th>';
+                        }
+                        ?>
                     </tr>
                     </thead>
                     <tbody id="email_list_view">
                     <?php
                     foreach ( $email_templates as $email_key => $email ) {
-                        if ( strpos( get_class( $email ), 'HRM' ) !== false ||
-                            strpos( get_class( $email ), 'ERP_Document' ) !== false ||
-                            strpos( get_class( $email ), 'ERP_Recruitment' ) !== false ||
-                            strpos( get_class( $email ), 'Training' ) !== false
+                        if (
+                            false !== strpos( get_class( $email ), 'HRM' ) ||
+                            false !== strpos( get_class( $email ), 'ERP_Document' ) ||
+                            false !== strpos( get_class( $email ), 'ERP_Recruitment' ) ||
+                            false !== strpos( get_class( $email ), 'Training' )
                         ) {
                             $tr_class = 'hrm';
-                        } elseif ( strpos( get_class( $email ), 'CRM' ) !== false ) {
+                        } elseif ( false !== strpos( get_class( $email ), 'CRM' ) ) {
                             $tr_class = 'crm';
-                        } elseif ( strpos( get_class( $email ), 'Accounting' ) !== false ) {
+                        } elseif ( false !== strpos( get_class( $email ), 'Accounting' ) ) {
                             $tr_class = 'accounting';
                         } else {
                             $tr_class = 'others';
