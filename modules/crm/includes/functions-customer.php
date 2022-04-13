@@ -1028,7 +1028,7 @@ function erp_crm_get_current_datetime( $time_zone = false ) {
     }
 
     try {
-        $current_time = new \DateTime( 'now', new \DateTimeZone( $time_zone) );
+        $current_time = new \DateTime( 'now', new \DateTimeZone( $time_zone ) );
         $current_time = $current_time->format( 'Y-m-d H:i:s' );
     } catch ( \Exception $e ) {
     }
