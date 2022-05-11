@@ -18,7 +18,7 @@
 <script>
 // Vue click outside
 // https://jsfiddle.net/Linusborg/Lx49LaL8/
-import Popper from 'popper.js';
+import Popper from '@popperjs/core';
 
 export default {
 
