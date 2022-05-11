@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import Popper from 'popper.js';
+import Popper from '@popperjs/core';
 
 export default {
 
