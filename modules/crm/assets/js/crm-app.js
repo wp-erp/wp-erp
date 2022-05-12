@@ -561,7 +561,7 @@ Vue.component( 'schedule-note', {
                 tpEnd                       : '',
                 inviteContact               : [],
                 removeAtchFlag              : [],
-                client_time_zone            : 'not initiated',
+                client_time_zone            : '',
             },
 
             isValid: false
