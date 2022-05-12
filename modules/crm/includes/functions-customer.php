@@ -999,7 +999,13 @@ function erp_crm_customer_schedule_notification() {
     foreach ( $schedules as $key => $activity ) {
         $extra = json_decode( base64_decode( $activity['extra'] ), true );
 
-        $current_time = erp_crm_get_current_datetime( empty( $extra['client_time_zone'] ) ? '' : $extra['client_time_zone'] );
+        $current_time = erp_current_datetime();
+
+        if ( ! empty( $extra['client_time_zone'] ) ) {
+            $current_time = $current_time->setTimezone( $extra['client_time_zone'] );
+        }
+
+        $current_time = $current_time->format( 'Y-m-d H:i:s' );
 
         if ( isset( $extra['allow_notification'] ) && $extra['allow_notification'] == 'true' ) {
             if ( ( $current_time >= $extra['notification_datetime'] ) && ( $activity['start_date'] >= $current_time ) ) {
@@ -1009,31 +1015,6 @@ function erp_crm_customer_schedule_notification() {
             }
         }
     }
-}
-
-/**
- * Get current datetime of contact according to timezone
- *
- * @since 1.10.6
- *
- * @param string $time_zone
- *
- * @return string
- */
-function erp_crm_get_current_datetime( $time_zone = false ) {
-    $current_time = current_time( 'mysql' ); // the old approach: if client time zone information is not present then using site timezone
-
-    if ( empty( $time_zone ) ) {
-        return $current_time;
-    }
-
-    try {
-        $current_time = new \DateTime( 'now', new \DateTimeZone( $time_zone ) );
-        $current_time = $current_time->format( 'Y-m-d H:i:s' );
-    } catch ( \Exception $e ) {
-    }
-
-    return $current_time;
 }
 
 /**
