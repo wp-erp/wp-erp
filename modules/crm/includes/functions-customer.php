@@ -1002,7 +1002,7 @@ function erp_crm_customer_schedule_notification() {
         $current_time = erp_current_datetime();
 
         if ( ! empty( $extra['client_time_zone'] ) ) {
-            $current_time = $current_time->setTimezone( $extra['client_time_zone'] );
+            $current_time = $current_time->setTimezone( new DateTimeZone( $extra['client_time_zone'] ) );
         }
 
         $current_time = $current_time->format( 'Y-m-d H:i:s' );
