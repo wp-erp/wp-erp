@@ -4223,10 +4223,6 @@ function erp_crm_schedule_inbound_email_cron( $value ) {
         return;
     }
 
-    if ( ! isset( $value['id'] ) || 'schedule' !== $value['id'] ) {
-        return;
-    }
-
     $recurrence = isset( $_POST['schedule'] ) ? sanitize_text_field( wp_unslash( $_POST['schedule'] ) ) : 'hourly';
     wp_clear_scheduled_hook( 'erp_crm_inbound_email_scheduled_events' );
     wp_schedule_event( time(), $recurrence, 'erp_crm_inbound_email_scheduled_events' );
