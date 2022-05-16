@@ -115,7 +115,11 @@ export default {
                     break;
             }
 
-        return label;
-      }
+            return label;
+        },
+
+        isEmpty: function (value) {
+            return !value || (typeof value === 'object' && (value.length === 0 || Object.keys(value).length === 0));
+        },
     }
 };
