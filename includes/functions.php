@@ -3578,7 +3578,7 @@ function erp_reset_data() {
              */
             $non_erp_roles = array_diff( (array) $user->roles, $erp_roles );
             if ( empty( $non_erp_roles ) ) {
-                wp_delete_user( $user->user_id );
+                wp_delete_user( $user->ID );
                 continue;
             }
 
@@ -3665,6 +3665,8 @@ function erp_reset_data() {
             OR option_name LIKE '%_erp_%'
             OR option_name LIKE '%_erp-%'"
         );
+
+        error_log( 'options: ' . print_r( $options, true ) );
 
         foreach ( $options as $option ) {
             delete_option( $option->option_name );
