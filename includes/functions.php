@@ -1877,16 +1877,7 @@ function erp_mail_send_via_gmail( $to, $subject, $message, $headers = '', $attac
 
     try {
         $response = $service->users_messages->send( 'me', $email );
-        error_log( 'Sending email to : ' . $to );
     } catch ( Google_Service_Exception $exception ) {
-        error_log( 'Failed sending email to : ------------------------ ' );
-        error_log( print_r( $to, 1 ) );
-        error_log( print_r( $subject, 1 ) );
-        error_log( print_r( $headers, 1 ) );
-        error_log( print_r( $exception->getMessage(), 1 ) );
-        // error_log(print_r(debug_backtrace(),1));
-        error_log( '-------------------------------' );
-
         return false;
     }
 
@@ -3666,8 +3657,6 @@ function erp_reset_data() {
             OR option_name LIKE '%_erp-%'"
         );
 
-        error_log( 'options: ' . print_r( $options, true ) );
-
         foreach ( $options as $option ) {
             delete_option( $option->option_name );
         }
@@ -3678,7 +3667,8 @@ function erp_reset_data() {
         wp_clear_scheduled_hook( 'erp_weekly_scheduled_events' );
 
         // Deactivate & activate wp-erp
-        $plugin_wp_erp = end( explode( '/', WPERP_URL ) ) . '/wp-erp.php';
+        $wp_erp_url    = explode( '/', WPERP_URL );
+        $plugin_wp_erp = end( $wp_erp_url ) . '/wp-erp.php';
         deactivate_plugins( $plugin_wp_erp );
 
         // Activate and add deafult modules
@@ -3688,7 +3678,8 @@ function erp_reset_data() {
 
         // If ERP Pro is installed & activated, do the same for this
         if ( function_exists( 'wp_erp_pro' ) ) {
-            $plugin_erp_pro = end( explode( '/', ERP_PRO_DIR ) ) . '/erp-pro.php';
+            $erp_pro_url    = explode( '/', ERP_PRO_DIR );
+            $plugin_erp_pro = end( $erp_pro_url ) . '/erp-pro.php';
 
             if ( is_plugin_active( $plugin_erp_pro ) ) {
                 deactivate_plugins( $plugin_erp_pro );
