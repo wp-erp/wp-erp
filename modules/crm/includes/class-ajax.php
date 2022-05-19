@@ -1791,32 +1791,40 @@ class Ajax_Handler {
      * @return void
      */
     public function activity_attachment() {
-        $files         = ( ! empty( $_FILES['files'] ) ) ? $_FILES['files'] : []; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-        $wp_upload_dir = wp_upload_dir();
-        $subdir        = apply_filters( 'crm_attachmet_directory', 'crm-attachments' );
-        $path          = $wp_upload_dir['basedir'] . '/' . $subdir . '/';
-        $attatchments  = [];
-        $file_names    = [];
+        $this->verify_nonce( 'wp-erp-crm-customer-feed' );
 
-        //Create CRM attachments directory
-        if ( ! file_exists( $path ) ) {
-            wp_mkdir_p( $path );
+        if ( ! current_user_can( 'erp_crm_manage_activites' ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
+        $files         = ! empty( $_FILES['files'] ) ? $_FILES['files'] : []; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+        $path          = erp_crm_get_attachment_dir();
+        $attatchments  = [];
+        $file_names    = [];
+        $errors        = [];
+
         foreach ( $files['name'] as $key => $file ) {
-            $extension    = pathinfo( $file, PATHINFO_EXTENSION );
+            $fileinfo  = wp_check_filetype_and_ext( $files['tmp_name'][ $key ], $file );
+            $extension = $fileinfo['ext'];
+            $type      = $fileinfo['type'];
+
+            if ( ! $extension || ! $type ) {
+                /* translators: file name */
+                $errors[] = sprintf( __( '%s is not a valid file.', 'erp' ), $file );
+            }
+
             $new_filename = $file;
 
-            if ( file_exists( $path . $new_filename ) ) {
+            if ( file_exists( trailingslashit( $path ) . $new_filename ) ) {
                 $new_filename = uniqid() . '.' . $extension;
             }
 
             if ( absint( $files['error'][ $key ] ) == 0 ) {
-                if ( move_uploaded_file( $files['tmp_name'][ $key ], $path . $new_filename ) ) {
-                    $file_name      = $path . $new_filename;
+                if ( move_uploaded_file( $files['tmp_name'][ $key ], trailingslashit( $path ) . $new_filename ) ) {
+                    $file_name      = trailingslashit( $path ) . $new_filename;
                     $attatchments[] = [
                         'name' => $file,
-                        'path' => $path . basename( $file_name ),
+                        'path' => trailingslashit( $path ) . basename( $file_name ),
                         'slug' => $new_filename,
                     ];
                     $file_names[]   = $file;
@@ -1824,9 +1832,15 @@ class Ajax_Handler {
             }
         }
 
-        wp_send_json_success( [
-            'url'   => $attatchments,
-            'files' => $file_names,
-        ] );
+        if ( ! empty( $errors ) ) {
+            $this->send_error( implode( '<br>', $errors ) );
+        }
+
+        $this->send_success(
+            [
+                'url'   => $attatchments,
+                'files' => $file_names,
+            ]
+        );
     }
 }
