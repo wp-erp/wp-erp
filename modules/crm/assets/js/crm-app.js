@@ -66,6 +66,7 @@ var mixin = {
             vm.progressbar = true;
 
             formData.append( 'action', 'erp_crm_activity_attachment' );
+            formData.append( '_wpnonce', wpCRMvue.nonce );
             el.css( 'display', 'block' );
 
             $.each( input, function( index, object ) {
@@ -86,9 +87,10 @@ var mixin = {
                     if ( response.success ) {
                         vm.feedData.attachments = response.data.url;
                         vm.files = response.data.files;
+                    } else {
+                        alert( response.data );
                     }
                 },
-
                 xhr: function(){
                     //upload Progress
                     var xhr = $.ajaxSettings.xhr();

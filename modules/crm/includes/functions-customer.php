@@ -4202,3 +4202,23 @@ function erp_crm_get_tasks_menu_html( $selected = '' ) {
     <?php
     echo ob_get_clean();
 }
+
+/**
+ * Retrieves directory path for CRM attachments.
+ * If the uploads dir for CRM doesn't exist, it will be created.
+ *
+ * @since 1.10.6
+ *
+ * @return string
+ */
+function erp_crm_get_attachment_dir() {
+    $upload_dir = wp_upload_dir();
+    $sub_dir    = apply_filters( 'crm_attachmet_directory', 'crm-attachments' );
+    $full_path  = trailingslashit( $upload_dir['basedir'] ) . $sub_dir;
+
+    if ( ! file_exists( $full_path ) ) {
+        wp_mkdir_p( $full_path );
+    }
+
+    return $full_path;
+}
