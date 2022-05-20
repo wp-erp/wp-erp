@@ -35,7 +35,7 @@ $customer_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
     <input v-if="feed" id="tasks_activity_message_{{ feed.id }}" v-model="feedData.message" type="hidden" name="tasks_activity_message_{{ feed.id }}" value="{{ feed.message }}">
 
     <div class="crm-attachments" id="{{feed ? 'crm-attachments-' + feed.id : 'crm-attachments'}}">
-       <div id="progress-wrp"><div class="progress-bar"></div ><div class="status"><?php esc_attr_e( '0', 'erp' ); ?>%</div></div>
+       <div id="progress-wrp"><div class="progress-bar"></div ><div class="status"><?php esc_html_e( '0', 'erp' ); ?>%</div></div>
        <div id="crm-atch-output"></div>
     </div>
 
