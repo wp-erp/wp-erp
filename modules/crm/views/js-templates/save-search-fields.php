@@ -1,6 +1,6 @@
 <div class="or-divider" v-if="index != 0">
     <hr>
-    <span><?php esc_attr_e( 'Or', 'erp' ); ?></span>
+    <span><?php esc_html_e( 'Or', 'erp' ); ?></span>
 </div>
 
 <div class="search-fields" v-if="searchFields" v-bind:class="marginClass">
@@ -13,7 +13,7 @@
                         <option v-for="( conditionKey, condition ) in searchField.condition" value="{{conditionKey}}">{{ condition }}</option>
                     </select>
                 </td>
-                <td colspan="2" align="right" v-if="searchFieldKey != 0">Or</td>
+                <td colspan="2" align="right" v-if="searchFieldKey != 0"><?php esc_html_e( 'Or', 'erp' ); ?></td>
                 <td>
                     <input type="text" v-if="searchField.type == 'text'" name="save_search[{{index}}][{{searchKey}}][value][]" v-bind:value="searchField.text" v-model="searchField.text">
 
@@ -29,16 +29,16 @@
 
 <div class="erp-save-search-filter-actions">
     <div class="and-action erp-left">
-        <label for="or-action-add" v-if="!isdisabled"><?php esc_attr_e( 'And', 'erp' ); ?></label>
+        <label for="or-action-add" v-if="!isdisabled"><?php esc_html_e( 'And', 'erp' ); ?></label>
         <select name="and-action-add" class="and-action-add" style="width: 180px;" id="and-action-add" v-model="andSelection" v-on:change="andAdd(index)" data-placeholder="<?php esc_attr_e( 'Select a field', 'erp' ); ?>">
-            <option value=""><?php esc_attr_e( '--Select--', 'erp' ); ?></option>
+            <option value=""><?php esc_html_e( '--Select--', 'erp' ); ?></option>
             <option v-for="( key, searchOption ) in searchOptions" value="{{key}}">{{ searchOption.title }}</option>
         </select>
     </div>
     <div class="or-action erp-right" v-if="!isdisabled && (totalSearchItem-1) == index ">
-        <label for="or-action-add"><?php esc_attr_e( 'Or', 'erp' ); ?></label>
+        <label for="or-action-add"><?php esc_html_e( 'Or', 'erp' ); ?></label>
         <select name="or-action-add" class="or-action-add" style="width: 180px;" id="or-action-add" v-model="orSelection" v-on:change="orAdd(index)"  data-placeholder="<?php esc_attr_e( 'Select a field', 'erp' ); ?>">
-            <option value=""><?php esc_attr_e( '--Select--', 'erp' ); ?></option>
+            <option value=""><?php esc_html_e( '--Select--', 'erp' ); ?></option>
             <option v-for="( key, searchOption ) in searchOptions" value="{{key}}">{{ searchOption.title }}</option>
         </select>
     </div>

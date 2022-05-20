@@ -22,7 +22,6 @@
     }
 
     $contact_groups = erp_crm_get_contact_groups( [ 'number' => '-1' ] );
-
     $groups         = [ '' => __( '&mdash; Select Group &mdash;', 'erp' ) ];
 
     foreach ( $contact_groups as $group ) {

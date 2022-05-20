@@ -1,6 +1,6 @@
 <?php
     global $wp_roles;
-    
+
     delete_option( 'erp_users_to_contacts_import_attempt' );
     delete_option( 'erp_users_to_contacts_import_exists' );
 
@@ -108,7 +108,7 @@
 
 <div id="import-status-indicator" class="erp-progress-status-indicator" style="display: none;">
     <div class="status">
-        <span id="progress-total">100%</span>
+        <span id="progress-total"><?php esc_html_e( '100', 'erp' ); ?>%</span>
     </div>
     <div class="progress">
         <progress id="progressbar-total" max="100" value="0"></progress>
