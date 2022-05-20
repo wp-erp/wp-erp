@@ -171,7 +171,7 @@ class Ajax_Handler {
         $this->verify_hrm_nonce();
 
         // Check permission
-        if ( current_user_can( 'erp_leave_manage' ) === false && erp_hr_is_current_user_dept_lead() === false ) {
+        if ( ! current_user_can( 'erp_leave_manage' ) && ! erp_hr_is_current_user_dept_lead() ) {
             $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
@@ -2641,7 +2641,7 @@ class Ajax_Handler {
      *
      * @return void
      */
-    public function verify_hrm_nonce() {
+    private function verify_hrm_nonce() {
         $this->verify_nonce( 'wp-erp-hr-nonce' );
     }
 }
