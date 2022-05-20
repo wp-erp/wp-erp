@@ -3350,6 +3350,11 @@ function erp_user_bulk_actions() {
  * @return void
  */
 function erp_handle_user_bulk_actions() {
+    // Check permission
+    if ( ! ( current_user_can( erp_crm_get_manager_role() ) || current_user_can( erp_crm_get_agent_role() ) ) ) {
+        wp_die( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+    }
+
     $wp_list_table = _get_list_table( 'WP_Users_List_Table' );
     $action        = $wp_list_table->current_action();
 
