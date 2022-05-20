@@ -382,33 +382,41 @@ function erp_crm_customer_add_company( $customer_id, $company_id ) {
  *
  * @since 1.1.0
  *
- * @param $postdata array
+ * @param int|string $customer_id
  *
  * @return array
  */
-function erp_crm_customer_get_company( $postdata ) {
+function erp_crm_customer_get_company( $customer_id ) {
     global $wpdb;
-    $results = [];
 
-    if ( isset( $postdata['id'] ) && empty( $postdata['id'] ) ) {
+    if ( empty( $customer_id ) ) {
         return new WP_Error( 'no-ids', __( 'No contact found', 'erp' ) );
     }
 
-    $sql = 'SELECT com.* FROM ' . $wpdb->prefix . 'erp_crm_customer_companies AS com
-            LEFT JOIN ' . $wpdb->prefix . 'erp_peoples AS peop ON peop.id = com.company_id
-            WHERE com.customer_id = ' . $postdata['id'];
+    $data = $wpdb->get_results(
+        $wpdb->prepare(
+            "SELECT com.*
+            FROM {$wpdb->prefix}erp_crm_customer_companies AS com
+            LEFT JOIN {$wpdb->prefix}erp_peoples AS people
+            ON people.id = com.company_id
+            WHERE com.customer_id = %d",
+            $customer_id
+        ),
+        ARRAY_A
+    );
 
-    $data = $wpdb->get_results( $sql, ARRAY_A );
+    if ( is_wp_error( $data ) || empty( $data ) ) {
+        return [];
+    }
 
-    if ( $data ) {
-        foreach ( $data as $key => $value ) {
-            $company                                       = new \WeDevs\ERP\CRM\Contact( intval( $value['company_id'] ) );
-            $results[ $key ]                               = $value;
-            $results[ $key ]['contact_details']            = $company->to_array();
-            $country                                       = $results[ $key ]['contact_details']['country'];
-            $results[ $key ]['contact_details']['country'] = erp_get_country_name( $country );
-            $results[ $key ]['contact_details']['state']   = erp_get_state_name( $country, $results[ $key ]['contact_details']['state'] );
-        }
+    $results = [];
+    foreach ( $data as $key => $value ) {
+        $company                                       = new \WeDevs\ERP\CRM\Contact( intval( $value['company_id'] ) );
+        $results[ $key ]                               = $value;
+        $results[ $key ]['contact_details']            = $company->to_array();
+        $country                                       = $results[ $key ]['contact_details']['country'];
+        $results[ $key ]['contact_details']['country'] = erp_get_country_name( $country );
+        $results[ $key ]['contact_details']['state']   = erp_get_state_name( $country, $results[ $key ]['contact_details']['state'] );
     }
 
     return $results;
@@ -419,24 +427,34 @@ function erp_crm_customer_get_company( $postdata ) {
  *
  * @since 1.0
  *
- * @param array $postdata
+ * @param int|string $company_id
  *
  * @return array
  */
-function erp_crm_company_get_customers( $postdata ) {
+function erp_crm_company_get_customers( $company_id ) {
     global $wpdb;
-    $results = [];
 
-    if ( isset( $postdata['id'] ) && empty( $postdata['id'] ) ) {
-        return new WP_Error( 'no-ids', __( 'No comapany found', 'erp' ) );
+    if ( empty( $company_id ) ) {
+        return new WP_Error( 'no-ids', __( 'No company found', 'erp' ) );
     }
 
-    $sql = 'SELECT  com.* FROM ' . $wpdb->prefix . 'erp_crm_customer_companies AS com
-            LEFT JOIN ' . $wpdb->prefix . 'erp_peoples AS peop ON peop.id = com.customer_id
-            WHERE com.company_id = ' . $postdata['id'];
+    $data = $wpdb->get_results(
+        $wpdb->prepare(
+            "SELECT com.*
+            FROM {$wpdb->prefix}erp_crm_customer_companies AS com
+            LEFT JOIN {$wpdb->prefix}erp_peoples AS people
+            ON people.id = com.customer_id
+            WHERE com.company_id = %d",
+            $company_id
+        ),
+        ARRAY_A
+    );
 
-    $data = $wpdb->get_results( $sql, ARRAY_A );
+    if ( is_wp_error( $data ) || empty( $data ) ) {
+        return [];
+    }
 
+    $results = [];
     if ( $data ) {
         foreach ( $data as $key => $value ) {
             $customer                                      = new \WeDevs\ERP\CRM\Contact( intval( $value['customer_id'] ) );
@@ -601,8 +619,8 @@ function erp_crm_customer_prepare_schedule_postdata( $postdata ) {
 
     $extra_data = [
         'schedule_title'     => ( isset( $postdata['schedule_title'] ) && ! empty( $postdata['schedule_title'] ) ) ? $postdata['schedule_title'] : '',
-        'all_day'            => isset( $postdata['all_day'] ) ? (string) $postdata['all_day'] : 'false',
-        'allow_notification' => isset( $postdata['allow_notification'] ) ? (string) $postdata['allow_notification'] : 'false',
+        'all_day'            => isset( $postdata['all_day'] ) ? (string) $postdata['all_day'] : false,
+        'allow_notification' => isset( $postdata['allow_notification'] ) ? (string) $postdata['allow_notification'] : false,
         'invite_contact'     => ( isset( $postdata['invite_contact'] ) && ! empty( $postdata['invite_contact'] ) ) ? $postdata['invite_contact'] : [],
         'attachments'        => ! empty ( $attachments ) ? $attachments : []
     ];
@@ -611,8 +629,8 @@ function erp_crm_customer_prepare_schedule_postdata( $postdata ) {
     $extra_data['notification_time']          = ( isset( $postdata['notification_time'] ) && $extra_data['allow_notification'] == 'true' ) ? $postdata['notification_time'] : '';
     $extra_data['notification_time_interval'] = ( isset( $postdata['notification_time_interval'] ) && $extra_data['allow_notification'] == 'true' ) ? $postdata['notification_time_interval'] : '';
 
-    $start_time = ( isset( $postdata['start_time'] ) && $extra_data['all_day'] == 'false' ) ? $postdata['start_time'] : '00:00:00';
-    $end_time   = ( isset( $postdata['end_time'] ) && $extra_data['all_day'] == 'false' ) ? $postdata['end_time'] : '00:00:00';
+    $start_time = ( isset( $postdata['start_time'] ) && ! $extra_data['all_day'] ) ? $postdata['start_time'] : '00:00:00';
+    $end_time   = ( isset( $postdata['end_time'] ) && ! $extra_data['all_day'] ) ? $postdata['end_time'] : '00:00:00';
 
     if ( $extra_data['allow_notification'] == 'true' ) {
         $notify_date = new \DateTime( $postdata['start_date'] . $start_time );
@@ -950,11 +968,10 @@ function erp_crm_customer_get_single_activity_feed( $feed_id ) {
  * @return mixed
  */
 function erp_crm_process_attachment_data( $attachments ) {
-    $subdir      = apply_filters( 'crm_attachmet_directory', 'crm-attachments' );
-    $upload_dir  = wp_upload_dir();
+    $attachment_dir = erp_crm_get_attachment_dir();
 
     foreach ( $attachments as $key => $item ) {
-        $attachments[ $key ]['url'] = $upload_dir['baseurl'] . '/' . $subdir . '/' . $item['slug'];
+        $attachments[ $key ]['url'] = trailingslashit( $attachment_dir ) . $item['slug'];
     }
 
     return $attachments;
