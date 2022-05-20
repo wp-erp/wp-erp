@@ -137,7 +137,7 @@ class Form_Handler {
     }
 
     /**
-     * Hnadle leave calendar filter
+     * Handle leave calendar filter
      *
      * @since 0.1
      *
@@ -151,6 +151,7 @@ class Form_Handler {
         if ( ! isset( $_POST['erp_leave_calendar_filter'] ) ) {
             return;
         }
+
         $designation = isset( $_POST['designation'] ) ? sanitize_text_field( wp_unslash( $_POST['designation'] ) ) : '';
         $department  = isset( $_POST['department'] ) ? sanitize_text_field( wp_unslash( $_POST['department'] ) ) : '';
         $url         = admin_url( "admin.php?page=erp-hr&section=leave&sub-section=leave-calendar&designation=$designation&department=$department" );
@@ -196,7 +197,7 @@ class Form_Handler {
             return;
         }
 
-        // Check nonce validaion
+        // Check nonce validation
         if ( ! $this->verify_current_page_screen( 'erp-hr', 'bulk-leave_policies' ) ) {
             return;
         }
@@ -841,7 +842,7 @@ class Form_Handler {
      * @return void
      */
     public function leave_request() {
-        if ( !isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'erp-leave-req-new' ) ) {
+        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'erp-leave-req-new' ) ) {
             die( esc_html__( 'Something went wrong!', 'erp' ) );
         }
 
@@ -993,7 +994,7 @@ class Form_Handler {
             return;
         }
 
-        // Nonce validaion
+        // Nonce validation
         if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'wp-erp-hr-employee-update-nonce' ) ) {
             return;
         }
@@ -1031,14 +1032,14 @@ class Form_Handler {
      * @return void
      */
     public function employee_permission() {
-        if ( !isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'wp-erp-hr-employee-permission-nonce' ) ) {
+        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'wp-erp-hr-employee-permission-nonce' ) ) {
             return;
         }
 
         $hr_manager_role = erp_hr_get_manager_role();
 
         if ( ! current_user_can( $hr_manager_role ) ) {
-            wp_die( esc_html__( 'Permission Denied!', 'erp' ) );
+            wp_die( esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
         $employee_id    = isset( $_POST['employee_id'] ) ? absint( $_POST['employee_id'] ) : 0;
@@ -1102,7 +1103,7 @@ class Form_Handler {
      * @return mixed
      */
     public function leave_policy_create() {
-        // Nonce validaion
+        // Nonce validation
         if ( ! isset( $_POST['_wpnonce'] ) ||
             ! wp_verify_nonce(
                 sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'erp-leave-policy'
@@ -1228,7 +1229,7 @@ class Form_Handler {
             return;
         }
 
-        if ( ! isset( $_POST['action'] ) || $_POST['action'] !== 'erp-hr-fyears-setting' ) {
+        if ( ! isset( $_POST['action'] ) || sanitize_key( $_POST['action'] ) !== 'erp-hr-fyears-setting' ) {
             return;
         }
 
