@@ -4,20 +4,20 @@ $customer_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
 <div id="log-activity">
     <p>
         <select name="log_type" v-model="feedData.log_type" id="log-type" class="erp-left">
-            <option value=""><?php esc_attr_e( '-- Select type --', 'erp' ); ?></option>
-            <option value="call"><?php esc_attr_e( 'Log a Call', 'erp' ); ?></option>
-            <option value="meeting"><?php esc_attr_e( 'Log a Meeting', 'erp' ); ?></option>
-            <option value="email"><?php esc_attr_e( 'Log an Email', 'erp' ); ?></option>
-            <option value="sms"><?php esc_attr_e( 'Log an SMS', 'erp' ); ?></option>
+            <option value=""><?php esc_html_e( '-- Select type --', 'erp' ); ?></option>
+            <option value="call"><?php esc_html_e( 'Log a Call', 'erp' ); ?></option>
+            <option value="meeting"><?php esc_html_e( 'Log a Meeting', 'erp' ); ?></option>
+            <option value="email"><?php esc_html_e( 'Log an Email', 'erp' ); ?></option>
+            <option value="sms"><?php esc_html_e( 'Log an SMS', 'erp' ); ?></option>
         </select>
 
-        <input class="erp-right" v-model="feedData.tp" type="text" v-timepicker="feedData.tp" placeholder="12.00pm" size="10">
+        <input class="erp-right" v-model="feedData.tp" type="text" v-timepicker="feedData.tp" placeholder="<?php esc_html_e( '12.00pm', 'erp' ); ?>" size="10">
         <input class="erp-right" v-model="feedData.dt" type="text" v-datepicker="feedData.dt" datedisable="upcomming" placeholder="yy-mm-dd">
         <span class="clearfix"></span>
     </p>
 
     <p v-if="feedData.log_type == 'email'">
-        <label><?php esc_attr_e( 'Subject', 'erp' ); ?></label>
+        <label><?php esc_html_e( 'Subject', 'erp' ); ?></label>
         <span class="sep">:</span>
         <span class="value">
             <input type="text" class="email_subject" name="email_subject" v-model="feedData.email_subject" placeholder="<?php esc_attr_e( 'Subject log...', 'erp' ); ?>">
@@ -42,13 +42,13 @@ $customer_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
     <input v-if="feed" id="log_activity_message_{{ feed.id }}" v-model="feedData.message" type="hidden" name="log_activity_message_{{ feed.id }}" value="{{ feed.message }}">
 
     <div class="crm-attachments" id="{{feed ? 'crm-attachments-' + feed.id : 'crm-attachments'}}">
-       <div id="progress-wrp"><div class="progress-bar"></div ><div class="status">0%</div></div>
+       <div id="progress-wrp"><div class="progress-bar"></div ><div class="status"><?php esc_html_e( '0', 'erp' ); ?>%</div></div>
        <div id="crm-atch-output"></div>
     </div>
 
     <div class="timeline-body" v-if="feed">
         <div class="timeline-activity-attachments">
-            <?php esc_attr_e( 'Attachments : ', 'erp' ); ?>
+            <?php esc_html_e( 'Attachments : ', 'erp' ); ?>
             <ul v-if="(feed.extra.attachments && feed.extra.attachments.length > 0)">
                 <li v-for="file in feed.extra.attachments">
                     <a id="activity-atch-name-{{{feed.id}}}-{{{$index}}}" target="_blank" href="{{{file.url}}}">{{{file.name}}}{{{updateAttachments(feed.id, file, $index, false)}}}</a>
@@ -58,7 +58,7 @@ $customer_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
                 </li>
             </ul>
             <input type="file" name="attachments[]" class="crm-activity-attachment" id="activity-attachment-{{feed.id}}" v-on:change="addAttachments(feed)" multiple>
-            <label for="activity-attachment-{{feed.id}}" class="attachments-label" title="Add File"><?php _e( '+ Add File', 'erp' ); ?></label>
+            <label for="activity-attachment-{{feed.id}}" class="attachments-label" title="<?php esc_attr_e( 'Add File', 'erp' ); ?>"><?php esc_html_e( '+ Add File', 'erp' ); ?></label>
         </div>
     </div>
 
@@ -71,9 +71,9 @@ $customer_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
         <input type="submit" v-if="feed" :disabled = "!isValid" class="button button-primary" name="edit_log_activity" value="<?php esc_attr_e( 'Update Log', 'erp' ); ?>">
         <input v-if="!feed" type="file" name="attachments[]" class="crm-activity-attachment" id="activity-attachment" v-on:change="addAttachments()" multiple>
         <label v-if="!feed" for="activity-attachment" class="attachments-label" title="Attach File">
-            <span class="btn-activity-atch dashicons dashicons-paperclip"></span><?php _e( 'Attach File', 'erp' ); ?>
+            <span class="btn-activity-atch dashicons dashicons-paperclip"></span><?php esc_html_e( 'Attach File', 'erp' ); ?>
         </label>
         <input type="reset" v-if="!feed" class="button button-default" value="<?php esc_attr_e( 'Discard', 'erp' ); ?>">
-        <button class="button" v-if="feed" @click.prevent="cancelUpdateFeed"><?php esc_attr_e( 'Cancel', 'erp' ); ?></button>
+        <button class="button" v-if="feed" @click.prevent="cancelUpdateFeed"><?php esc_html_e( 'Cancel', 'erp' ); ?></button>
     </div>
 </div>
