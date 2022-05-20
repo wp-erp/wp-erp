@@ -117,7 +117,8 @@ class Ajax {
             $this->send_error( erp_get_message( ['type' => 'error_permission'] ) );
         }
 
-        $data = Helpers::process_settings_data( $_POST );
+        $postdata = map_deep( wp_unslash( $_POST ), 'sanitize_text_field' );
+        $data     = Helpers::process_settings_data( $postdata );
 
         if ( is_wp_error( $data ) ) {
             $this->send_error( erp_get_message( ['type' => 'error_process'] ) );
@@ -520,7 +521,7 @@ class Ajax {
         }
 
         if ( ! empty( $_REQUEST['extensions'] ) ) {
-            $extensions = map_deep( wp_unslash( $_REQUEST['extensions'] ), 'sanitize_text_field' );
+            $extensions = array_map( 'sanitize_text_field', wp_unslash( $_REQUEST['extensions'] ) );
 
             foreach ( $extensions as $ext ) {
                 $old_key = get_option( $ext['id'] );

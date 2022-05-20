@@ -1223,7 +1223,7 @@ class Ajax_Handler {
             'offset'      => ! empty( $_POST['offset'] ) ? intval( wp_unslash( $_POST['offset'] ) ) : null,
             'count'       => ! empty( $_POST['count'] ) ? intval( wp_unslash( $_POST['count'] ) ) : null,
             'assigned_to' => ! empty( $_POST['assigned_to'] ) ? intval( wp_unslash( $_POST['assigned_to'] ) ) : null,
-            'created_by'  => ! empty( $_POST['created_by'] ) ? map_deep( 'sanitize_text_field', wp_unslash( $_POST['created_by'] ) ) : null,
+            'created_by'  => ! empty( $_POST['created_by'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['created_by'] ) ) : null,
             'type'        => ! empty( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : null,
             'created_at'  => ! empty( $_POST['created_at'] ) ? sanitize_text_field( wp_unslash( $_POST['created_at'] ) ) : null,
         ];
@@ -1266,8 +1266,8 @@ class Ajax_Handler {
         $user_id         = absint( wp_unslash( $_POST['user_id'] ) );
         $created_by      = ! empty( $_POST['created_by'] ) ? absint( wp_unslash( $_POST['created_by'] ) ) : '';
         $email_subject   = ! empty( $_POST['email_subject'] ) ? sanitize_text_field( wp_unslash( $_POST['email_subject'] ) ) : '';
-        $attachments     = ! empty( $_POST['attachments'] ) ? map_deep( wp_unslash( $_POST['attachments'] ), 'sanitize_file_name' ) : [];
-        $old_attachments = ! empty( $_POST['old_attachments'] ) ? map_deep( wp_unslash( $_POST['old_attachments'] ), 'sanitize_file_name' ) : [];
+        $attachments     = ! empty( $_POST['attachments'] ) ? map_deep( wp_unslash( $_POST['attachments'] ), 'sanitize_text_field' ) : [];
+        $old_attachments = ! empty( $_POST['old_attachments'] ) ? map_deep( wp_unslash( $_POST['old_attachments'] ), 'sanitize_text_field' ) : [];
 
         if ( ! empty( $old_attachments) ) {
             foreach( $old_attachments as $old_atch ) {

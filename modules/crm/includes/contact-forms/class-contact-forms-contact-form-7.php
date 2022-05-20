@@ -111,7 +111,7 @@ class CF7 {
         $cf7_settings = $cfi_settings['contact_form_7'];
 
         if ( in_array( sanitize_text_field( wp_unslash( $_POST['_wpcf7'] ) ), array_keys( $cf7_settings ) ) ) {
-            do_action( 'wperp_integration_contact_form_7_form_submit', map_deep( 'sanitize_text_field', wp_unslash( $_POST ) ), 'contact_form_7', sanitize_text_field( wp_unslash( $_POST['_wpcf7'] ) ) );
+            do_action( 'wperp_integration_contact_form_7_form_submit', map_deep( wp_unslash( $_POST ), 'sanitize_text_field' ), 'contact_form_7', sanitize_text_field( wp_unslash( $_POST['_wpcf7'] ) ) );
         }
     }
 }

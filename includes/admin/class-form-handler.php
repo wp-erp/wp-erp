@@ -58,7 +58,7 @@ class Form_Handler {
             $all_modules    = array_merge( $all_modules, $active_modules );
         }
         update_option( 'erp_modules', $all_modules );
-        wp_redirect( isset( $_POST['_wp_http_referer'] ) ? sanitize_text_field( wp_unslash( $_POST['_wp_http_referer'] ) ) : '' );
+        wp_redirect( isset( $_POST['_wp_http_referer'] ) ? esc_url_raw( wp_unslash( $_POST['_wp_http_referer'] ) ) : '' );
         exit();
     }
 
@@ -90,7 +90,7 @@ class Form_Handler {
             wp_die( esc_html__( 'Cheating?', 'erp' ) );
         }
 
-        $posted   = array_map( 'strip_tags_deep', $_POST );
+        $posted   = array_map( 'strip_tags_deep', wp_unslash( $_POST ) );
         $posted   = array_map( 'trim_deep', $posted );
 
         $errors   = [];

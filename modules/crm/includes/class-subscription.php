@@ -263,7 +263,8 @@ class Subscription {
             $this->send_error( [ 'msg' => __( 'Invalid operation', 'erp' ) ] );
         }
 
-        parse_str( map_deep( 'sanitize_text_field', wp_unslash( $_POST['form_data'] ) ), $form_data );
+        parse_str( wp_unslash( $_POST['form_data'] ), $form_data );
+        $form_data = map_deep( $form_data, 'sanitize_text_field' );
 
         if ( empty( $form_data['contact']['email'] ) || ! is_email( $form_data['contact']['email'] ) ) {
             $this->send_error( [ 'msg' => __( 'Please provide a valid email address', 'erp' ) ] );
