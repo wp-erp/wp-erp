@@ -547,7 +547,7 @@ class Subscription {
 
             if ( ! empty( $this->sub_page_id ) && absint( $page->ID ) === $this->sub_page_id ) {
                 if ( ! empty( $_GET['subscription-id'] ) ) {
-                    $subscription_ids = explode( ':', sanitize_text_field( wp_unslash( $_GET['subscription-id'] ) ) );
+                    $subscription_ids = array_map( 'intval', explode( ':', wp_unslash( $_GET['subscription-id'] ) ) );
 
                     $this->subscribed_groups = Models\ContactSubscriber::whereIn( 'hash', $subscription_ids )->get();
 
@@ -659,7 +659,7 @@ class Subscription {
             }
         }
 
-        do_action( 'erp_subscription_unsubscribe', $_GET, $this );
+        do_action( 'erp_subscription_unsubscribe', $this );
     }
 
     /**
@@ -741,7 +741,7 @@ class Subscription {
                         $group_names[] = $unsubscribed_group->name;
                     }
 
-                    $group_names = apply_filters( 'erp_subscription_unsubscribe_group_list', $group_names, $_GET, $this );
+                    $group_names = apply_filters( 'erp_subscription_unsubscribe_group_list', $group_names, $this );
 
                     $content .= '<ul><li>' . implode( '</li><li>', $group_names ) . '</li></ul>';
                 }

@@ -1,5 +1,5 @@
 <?php
-    if ( isset( $_GET['filter_assign_contact' ] ) && !empty( $_GET['filter_assign_contact' ] ) ) {
+    if ( ! empty( $_GET['filter_assign_contact' ] ) ) {
         $id = intval( $_GET['filter_assign_contact'] );
 
         $custom_data = [
@@ -19,13 +19,13 @@
 <div class="wrap erp-crm-customer erp-crm-customer-listing" id="wp-erp">
 
     <h2>
-        <?php esc_attr_e( 'Contacts', 'erp' ); ?>
+        <?php esc_html_e( 'Contacts', 'erp' ); ?>
 
-        <?php if ( current_user_can( 'erp_crm_add_contact' ) ) { ?>
-            <a href="#" @click.prevent="addContact( 'company', '<?php esc_attr_e( 'Add New Company', 'erp' ); ?>' )" id="erp-company-new" class="erp-contact-new add-new-h2" data-type="company" title="<?php esc_attr_e( 'Add New Company', 'erp' ); ?>"><?php esc_attr_e( 'Add New Company', 'erp' ); ?></a>
-        <?php } ?>
+        <?php if ( current_user_can( 'erp_crm_add_contact' ) ) : ?>
+            <a href="#" @click.prevent="addContact( 'company', '<?php esc_html_e( 'Add New Company', 'erp' ); ?>' )" id="erp-company-new" class="erp-contact-new add-new-h2" data-type="company" title="<?php esc_attr_e( 'Add New Company', 'erp' ); ?>"><?php esc_html_e( 'Add New Company', 'erp' ); ?></a>
+        <?php endif; ?>
 
-        <a href="#" @click.prevent="addSearchSegment()" id="erp-contact-search-segmen" class="erp-search-segment add-new-h2" v-text="( showHideSegment ) ? '<?php esc_attr_e( 'Hide Search Segment', 'erp' ); ?>' : '<?php esc_attr_e( 'Add Search Segment', 'erp' ); ?>'"></a>
+        <a href="#" @click.prevent="addSearchSegment()" id="erp-contact-search-segmen" class="erp-search-segment add-new-h2" v-text="( showHideSegment ) ? '<?php esc_html_e( 'Hide Search Segment', 'erp' ); ?>' : '<?php esc_html_e( 'Add Search Segment', 'erp' ); ?>'"></a>
 
         <?php if ( current_user_can( 'erp_crm_manager' ) ) : ?>
             <div class="erp-btn-group" id="crm-import-export">
