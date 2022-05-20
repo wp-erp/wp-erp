@@ -62,13 +62,15 @@ var mixin = {
         },
 
         uploadFile: function( input, el ) {
-            var formData   = new FormData();
-            vm.progressbar = true;
+            vm.progressbar   = true;
+            var formData     = new FormData(),
+                atchOutputEl = $( `#${el.attr('id')}` ).find( '#crm-atch-output' );
+
+            atchOutputEl.html( '' );
+            el.css( 'display', 'block' );
 
             formData.append( 'action', 'erp_crm_activity_attachment' );
             formData.append( '_wpnonce', wpCRMvue.nonce );
-            el.css( 'display', 'block' );
-
             $.each( input, function( index, object ) {
                 $.each( object.files, function( i, file ) {
                     formData.append( 'files[]', file );
@@ -88,7 +90,7 @@ var mixin = {
                         vm.feedData.attachments = response.data.url;
                         vm.files = response.data.files;
                     } else {
-                        alert( response.data );
+                        atchOutputEl.html( response.data );
                     }
                 },
                 xhr: function(){
@@ -740,10 +742,11 @@ var vm = new Vue({
             this.offset = this.offset + this.limit;
 
             var data = {
-                action : 'erp_crm_get_customer_activity',
-                customer_id : this.customer_id,
-                limit: this.limit,
-                offset: this.offset,
+                action     : 'erp_crm_get_customer_activity',
+                _wpnonce   : wpCRMvue.nonce,
+                customer_id: this.customer_id,
+                limit      : this.limit,
+                offset     : this.offset,
             };
 
             if ( this.filterFeeds.customer_id ) {
@@ -993,10 +996,11 @@ var vm = new Vue({
         fetchFeeds: function( filter ) {
 
             var data = {
-                action : 'erp_crm_get_customer_activity',
-                customer_id : this.customer_id,
-                limit: this.limit,
-                offset: this.offset,
+                action     : 'erp_crm_get_customer_activity',
+                _wpnonce   : wpCRMvue.nonce,
+                customer_id: this.customer_id,
+                limit      : this.limit,
+                offset     : this.offset,
             };
 
 
