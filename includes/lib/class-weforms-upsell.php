@@ -63,7 +63,7 @@ if ( ! class_exists( 'WeForms_Upsell' ) ) {
             } ?>
         <div class="updated" id="weforms-upsell-prompt">
             <div class="weforms-upsell-logo">
-                <img src="https://wedevs-com-wedevs.netdna-ssl.com/wp-content/uploads/2017/08/weforms-upsell.png" width="272" height="71" alt="weForms Logo">
+                <img src="" width="272" height="71" alt="weForms Logo">
             </div>
             <div class="weforms-upsell-text">
                 <h2>weForms is here!</h2>
