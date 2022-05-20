@@ -1936,18 +1936,27 @@ class Ajax_Handler {
     }
 
     /**
-     * Email Attatchment
+     * Upload and process activity attachments.
      *
-     * @return void
+     * @return mixed
      */
     public function activity_attachment() {
         $this->verify_nonce( 'wp-erp-crm-customer-feed' );
 
-        if ( ! current_user_can( 'erp_crm_manage_activites' ) ) {
+        if ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'erp_crm_manage_activites' ) ) {
             $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
-        $files         = ! empty( $_FILES['files'] ) ? $_FILES['files'] : [];  //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+        if ( empty( $_FILES['files'] ) ) {
+            $this->send_success(
+                [
+                    'url'   => [],
+                    'files' => [],
+                ]
+            );
+        }
+
+        $files         = $_FILES['files'];  //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         $path          = erp_crm_get_attachment_dir();
         $attatchments  = [];
         $invalid_files = [];
@@ -1980,6 +1989,7 @@ class Ajax_Handler {
             );
         }
 
+        $uploaded_files = [];
         foreach ( $valid_files as $file ) {
             $new_filename = $file['name'];
             if ( file_exists( trailingslashit( $path ) . $file['name'] ) ) {
@@ -1988,8 +1998,8 @@ class Ajax_Handler {
 
             $relative_filepath = trailingslashit( $path ) . $new_filename;
             if ( move_uploaded_file( $file['tmp_name'], $relative_filepath ) ) {
-                $uloaded_files[] = $file['name'];
-                $attatchments [] = [
+                $uploaded_files[] = $file['name'];
+                $attatchments[]   = [
                     'name' => $file['name'],
                     'path' => trailingslashit( $path ) . basename( $relative_filepath ),
                     'slug' => $new_filename,
@@ -2000,7 +2010,7 @@ class Ajax_Handler {
         $this->send_success(
             [
                 'url'   => $attatchments,
-                'files' => $uloaded_files,
+                'files' => $uploaded_files,
             ]
         );
     }

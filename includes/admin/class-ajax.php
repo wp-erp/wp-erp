@@ -46,11 +46,14 @@ class Ajax {
      * @return mixed
      */
     public function generate_csv_url() {
-        $type  = ! empty( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
-        $path  = ! empty( $_POST['path'] ) ? sanitize_text_field( wp_unslash( $_POST['path'] ) ) : '';
-        $nonce = wp_create_nonce( 'erp-import-export-nonce' );
-        $page  = "?page=erp-accounting&action=download_sample&type={$type}&_wpnonce={$nonce}#{$path}";
-        $url   = admin_url( "admin.php{$page}" );
+        $this->verify_nonce( 'erp-import-export-nonce' );
+
+        if ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'erp_ac_create_customer' ) && ! current_user_can( 'erp_ac_create_vendor' ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
+        $type = ! empty( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
+        $path = ! empty( $_POST['path'] ) ? sanitize_text_field( wp_unslash( $_POST['path'] ) ) : '';
 
         switch ( $type ) {
             case 'customers':
@@ -62,7 +65,11 @@ class Ajax {
                 break;
         }
 
-        wp_send_json_success( $url );
+        $nonce = wp_create_nonce( 'erp-import-export-nonce' );
+        $page  = "?page=erp-accounting&action=download_sample&type={$type}&_wpnonce={$nonce}#{$path}";
+        $url   = admin_url( "admin.php{$page}" );
+
+        $this->send_success( $url );
     }
 
     /**
@@ -87,9 +94,7 @@ class Ajax {
             'vendor'   => 'erp_ac_create_vendor',
         ];
 
-        $fields   = ! empty( $_POST['fields'] )    ? array_map( 'sanitize_text_field', wp_unslash( $_POST['fields'] ) ) : [];
-        $type     = ! empty( $_POST['type'] )      ? sanitize_text_field( wp_unslash( $_POST['type'] ) )                : '';
-        $csv_file = ! empty( $_FILES['csv_file'] ) ? $_FILES['csv_file']                                                : []; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+        $type = ! empty( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
 
         if ( ! in_array( $type, [ 'contact', 'company', 'employee', 'vendor', 'customer' ], true ) ) {
             $this->send_error( __( 'Unknown import type!', 'erp' ) );
@@ -99,7 +104,9 @@ class Ajax {
             $this->send_error( __( 'Sorry ! You do not have permission to access this page', 'erp' ) );
         }
 
-        $files = wp_check_filetype_and_ext( $csv_file['tmp_name'], $csv_file['name'] );
+        $fields   = ! empty( $_POST['fields'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['fields'] ) ) : [];
+        $csv_file = ! empty( $_FILES['csv_file'] ) ? $_FILES['csv_file'] : [];                                              // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+        $files    = wp_check_filetype_and_ext( $csv_file['tmp_name'], $csv_file['name'] );
 
         if ( 'csv' !== $files['ext'] && 'text/csv' !== $files['type'] ) {
             $this->send_error( __( 'The file is not a valid CSV file! Please provide a valid one.', 'erp' ) );
@@ -498,6 +505,10 @@ class Ajax {
             return;
         }
 
+        if ( ! current_user_can( 'manage_options' ) ) {
+            $this->send_error( erp_get_message( ['type' => 'error_permission'] ) );
+        }
+
         if ( empty( $_REQUEST['mail_server'] ) ) {
             $this->send_error( esc_html__( 'No host address provided', 'erp' ) );
         }
@@ -788,11 +799,11 @@ class Ajax {
             $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
-        if ( isset( $_POST['module_id'] ) && ! empty( $_POST['module_id'] ) ) {
+        if ( ! empty( $_POST['module_id'] ) ) {
             if ( is_array( $_POST['module_id'] ) ) {
                 $module_ids   = array_map( 'sanitize_text_field', wp_unslash( $_POST['module_id'] ) );
             } else {
-                $module_ids[] = isset( $_POST['module_id'] ) ? sanitize_text_field( wp_unslash( $_POST['module_id'] ) ) : '';
+                $module_ids[] = sanitize_text_field( wp_unslash( $_POST['module_id'] ) );
             }
         }
 
