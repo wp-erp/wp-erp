@@ -795,20 +795,6 @@ class Template {
     }
 
     /**
-     * Filters attachment data before inserting into database.
-     *
-     * @since 1.10.6
-     *
-     * @param array $data
-     *
-     * @return array
-     */
-    public function filter_attachment_data( $data ) {
-        $data['post_status'] = 'erp_hr_rec';
-        return $data;
-    }
-
-    /**
      * Output sections
      */
     public function output_sections() {
