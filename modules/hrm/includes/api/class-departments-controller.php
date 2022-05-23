@@ -120,7 +120,7 @@ class Departments_Controller extends REST_Controller {
         $item = new \WeDevs\ERP\HRM\Department( $id );
 
         if ( empty( $id ) || empty( $item->id ) ) {
-            return new WP_Error( 'rest_department_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_department_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $item     = $this->prepare_item_for_response( $item, $request );
@@ -163,7 +163,7 @@ class Departments_Controller extends REST_Controller {
         $department = new \WeDevs\ERP\HRM\Department( $id );
 
         if ( ! $department ) {
-            return new WP_Error( 'rest_department_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 400 ] );
+            return new WP_Error( 'rest_department_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 400 ] );
         }
 
         $item = $this->prepare_item_for_database( $request );
@@ -311,13 +311,13 @@ class Departments_Controller extends REST_Controller {
             'type'       => 'object',
             'properties' => [
                 'id'          => [
-                    'description' => __( 'Unique identifier for the resource.' ),
+                    'description' => __( 'Unique identifier for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
                 'title'       => [
-                    'description' => __( 'Title for the resource.' ),
+                    'description' => __( 'Title for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -326,7 +326,7 @@ class Departments_Controller extends REST_Controller {
                     'required'    => true,
                 ],
                 'description' => [
-                    'description' => __( 'Description for the resource.' ),
+                    'description' => __( 'Description for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -334,12 +334,12 @@ class Departments_Controller extends REST_Controller {
                     ],
                 ],
                 'parent'      => [
-                    'description' => __( 'Parent for the resource.' ),
+                    'description' => __( 'Parent for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],
                 ],
                 'head'        => [
-                    'description' => __( 'Head for the resource.' ),
+                    'description' => __( 'Head for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],
                 ],

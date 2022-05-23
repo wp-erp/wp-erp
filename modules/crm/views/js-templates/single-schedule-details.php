@@ -70,7 +70,7 @@
     <hr>
     <# if( data.schedule.log_type == 'email' ) { #>
         <span class='email_subject'>
-                <?php esc_attr_e( 'Subject', 'erp' ); ?> : {{ data.schedule.email_subject }}
+                <?php esc_html_e( 'Subject', 'erp' ); ?> : {{ data.schedule.email_subject }}
         </span> |
     <# } #>
 

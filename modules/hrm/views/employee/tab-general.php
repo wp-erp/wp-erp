@@ -6,7 +6,7 @@
 
         <div class="handle-actions hide-if-no-js">
             <button type="button" class="handlediv" aria-expanded="true">
-                <span class="screen-reader-text"><?php _e( 'Click to toggle', 'erp' ); ?></span>
+                <span class="screen-reader-text"><?php esc_html_e( 'Click to toggle', 'erp' ); ?></span>
                 <span class="toggle-indicator" aria-hidden="true"></span>
             </button>
         </div>
@@ -36,7 +36,7 @@
 
             <div class="handle-actions hide-if-no-js">
                 <button type="button" class="handlediv" aria-expanded="true">
-                    <span class="screen-reader-text"><?php _e( 'Click to toggle', 'erp' ); ?></span>
+                    <span class="screen-reader-text"><?php esc_html_e( 'Click to toggle', 'erp' ); ?></span>
                     <span class="toggle-indicator" aria-hidden="true"></span>
                 </button>
             </div>
@@ -50,7 +50,7 @@
                 <?php
                 if ( $employee->get_reporting_to() ) {
                     $reporting_to      = erp_hr_get_employee_name( $employee->get_reporting_to() );
-                    $reporting_to_link =  erp_hr_get_single_link( $employee->get_reporting_to(), $reporting_to );
+                    $reporting_to_link = erp_hr_get_single_link( $employee->get_reporting_to(), $reporting_to );
                 }
                 ?>
 
@@ -80,7 +80,7 @@
 
             <div class="handle-actions hide-if-no-js">
                 <button type="button" class="handlediv" aria-expanded="true">
-                    <span class="screen-reader-text"><?php _e( 'Click to toggle', 'erp' ); ?></span>
+                    <span class="screen-reader-text"><?php esc_html_e( 'Click to toggle', 'erp' ); ?></span>
                     <span class="toggle-indicator" aria-hidden="true"></span>
                 </button>
             </div>
@@ -121,7 +121,7 @@
 
             <div class="handle-actions hide-if-no-js">
                 <button type="button" class="handlediv" aria-expanded="true">
-                    <span class="screen-reader-text"><?php _e( 'Click to toggle', 'erp' ); ?></span>
+                    <span class="screen-reader-text"><?php esc_html_e( 'Click to toggle', 'erp' ); ?></span>
                     <span class="toggle-indicator" aria-hidden="true"></span>
                 </button>
             </div>
@@ -167,8 +167,9 @@
                         <?php } ?>
                     </tbody>
                 </table>
-            <?php
-            } else { ?>
+				<?php
+            } else {
+				?>
 
                 <?php esc_html_e( 'No work experiences found.', 'erp' ); ?>
 
@@ -185,7 +186,7 @@
 
             <div class="handle-actions hide-if-no-js">
                 <button type="button" class="handlediv" aria-expanded="true">
-                    <span class="screen-reader-text"><?php _e( 'Click to toggle', 'erp' ); ?></span>
+                    <span class="screen-reader-text"><?php esc_html_e( 'Click to toggle', 'erp' ); ?></span>
                     <span class="toggle-indicator" aria-hidden="true"></span>
                 </button>
             </div>
@@ -223,11 +224,11 @@
                                         $result_type = $education->result_type;
                                         $result      = (object) json_decode( $education->result );
 
-                                        if ( $result_type === 'percentage' ) {
-                                            echo esc_html( $result->gpa ) . '%';
-                                        } else if ( $result_type === 'grade' ) {
-                                            echo esc_html( $result->gpa) . ' out of ' . esc_html( $result->scale );
-                                        }
+                                    if ( 'percentage' === $result_type ) {
+                                        echo esc_html( $result->gpa ) . '%';
+                                    } elseif ( $result_type === 'grade' ) {
+                                        echo esc_html( $result->gpa ) . ' out of ' . esc_html( $result->scale );
+                                    }
                                     ?>
                                 </td>
                                 <td><?php echo $education->notes ? esc_html( $education->notes ) : '-'; ?></td>
@@ -251,8 +252,9 @@
                         <?php } ?>
                     </tbody>
                 </table>
-            <?php
-            } else { ?>
+                <?php
+            } else {
+                ?>
 
                 <?php esc_html_e( 'No education information found.', 'erp' ); ?>
 
@@ -270,7 +272,7 @@
 
             <div class="handle-actions hide-if-no-js">
                 <button type="button" class="handlediv" aria-expanded="true">
-                    <span class="screen-reader-text"><?php _e( 'Click to toggle', 'erp' ); ?></span>
+                    <span class="screen-reader-text"><?php esc_html_e( 'Click to toggle', 'erp' ); ?></span>
                     <span class="toggle-indicator" aria-hidden="true"></span>
                 </button>
             </div>
@@ -312,8 +314,9 @@
                         <?php } ?>
                     </tbody>
                 </table>
-            <?php
-            } else { ?>
+                <?php
+            } else {
+                ?>
 
                 <?php esc_html_e( 'No dependent information found.', 'erp' ); ?>
 
@@ -333,7 +336,7 @@
 
                 <div class="handle-actions hide-if-no-js">
                     <button type="button" class="handlediv" aria-expanded="true">
-                        <span class="screen-reader-text"><?php _e( 'Click to toggle', 'erp' ); ?></span>
+                        <span class="screen-reader-text"><?php esc_html_e( 'Click to toggle', 'erp' ); ?></span>
                         <span class="toggle-indicator" aria-hidden="true"></span>
                     </button>
                 </div>

@@ -413,7 +413,7 @@ class Employee_List_Table extends \WP_List_Table {
 
 		?>
         <p class="search-box erp-hr-employee-search">
-            <label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>"><?php echo $text; ?>:</label>
+            <label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>"><?php echo esc_html( $text ); ?>:</label>
             <input type="search"
                 id="<?php echo esc_attr( $input_id ); ?>"
                 name="s"

@@ -142,7 +142,7 @@ class Contacts_Groups_Controller extends REST_Controller {
         $item  = (object) erp_crm_get_contact_group_by_id( $id );
 
         if ( empty( $id ) || empty( $item->id ) ) {
-            return new WP_Error( 'rest_group_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_group_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $item     = $this->prepare_item_for_response( $item, $request );
@@ -257,7 +257,7 @@ class Contacts_Groups_Controller extends REST_Controller {
      */
     public function subscribe_contact( $request ) {
         if ( ! isset( $request['contact_ids'] ) || empty( $request['contact_ids'] ) ) {
-            return new WP_Error( 'rest_group_invalid_contact_ids', __( 'Required contact ids.' ), [ 'status' => 400 ] );
+            return new WP_Error( 'rest_group_invalid_contact_ids', __( 'Required contact ids.', 'erp' ), [ 'status' => 400 ] );
         }
 
         $contact_ids = explode( ',', str_replace( ' ', '', $request['contact_ids'] ) );
@@ -352,13 +352,13 @@ class Contacts_Groups_Controller extends REST_Controller {
             'type'       => 'object',
             'properties' => [
                 'id'     => [
-                    'description' => __( 'Unique identifier for the resource.' ),
+                    'description' => __( 'Unique identifier for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
                 'name'  => [
-                    'description' => __( 'Name for the resource.' ),
+                    'description' => __( 'Name for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [

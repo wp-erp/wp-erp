@@ -6,11 +6,15 @@ namespace WeDevs\ERP;
  * People Class
  */
 class Uploader {
-    public function upload_file() {
 
-        // check if guest post enabled for guests
-        if ( ! is_user_logged_in() ) {
-            die( 'error' );
+    /**
+     * Uploads files.
+     *
+     * @return mixed
+     */
+    public function upload_file() {
+        if ( ! current_user_can( 'upload_files' ) ) {
+            wp_die( __( 'Sorry, you are not allowed to upload files.', 'erp' ) );
         }
 
         $upload = [
@@ -41,7 +45,7 @@ class Uploader {
      *
      * @param string $field_name file input field name
      *
-     * @return bool|int attachment id on success, bool false instead
+     * @return array
      */
     public function handle_upload( $upload_data ) {
 
@@ -62,12 +66,34 @@ class Uploader {
             $file_name = basename( $upload_data['name'] );
             $file_type = wp_check_filetype( $file_name );
 
-            $attachment = [
-                'post_mime_type' => $file_type['type'],
-                'post_title'     => preg_replace( '/\.[^.]+$/', '', basename( $file_name ) ),
-                'post_content'   => '',
-                'post_status'    => 'inherit',
-            ];
+            /**
+             * To modify uploaded attachment data before inserting into database.
+             *
+             * @since 1.10.6
+             *
+             * @param array $attachment_data
+             *              post_mime_type The mime type of the file.
+             *              post_title     The generated title of the post.
+             *              post_content   The generated post content.
+             *              post_status    The initial post status.
+             *
+             * @param array $upload_data
+             *              name           The name of the file as provided by the user.
+             *              type           The mime type of the file.
+             *              tmp_name       The absolute path to the uploaded file.
+             *              error          The error data if any.
+             *              size           The size of the file in bytes.
+             */
+            $attachment = apply_filters(
+                'erp_upload_attachment_data',
+                [
+                    'post_mime_type' => $file_type['type'],
+                    'post_title'     => ! empty( $upload_data['post_title'] ) ? $upload_data['post_title'] : preg_replace( '/\.[^.]+$/', '', basename( $file_name ) ),
+                    'post_content'   => ! empty( $upload_data['post_content'] ) ? $upload_data['post_content'] : '',
+                    'post_status'    => ! empty( $upload_data['post_status'] ) ? $upload_data['post_status'] : 'inherit',
+                ],
+                $upload_data
+            );
 
             $attach_id   = wp_insert_attachment( $attachment, $file_loc );
             $attach_data = wp_generate_attachment_metadata( $attach_id, $file_loc );

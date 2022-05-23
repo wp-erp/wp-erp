@@ -742,7 +742,7 @@ class Email extends Template {
             return;
         }
 
-        $current_section = isset( $_GET['sub_section'] ) ? sanitize_key( $_GET['sub_section'] ) : false;
+        $current_section = isset( $_GET['sub_section'] ) ? sanitize_text_field( wp_unslash( $_GET['sub_section'] ) ) : false;
 
         // Define emails that can be customised here
         $email_templates = wperp()->emailer->get_emails();
@@ -760,8 +760,6 @@ class Email extends Template {
     }
 
     public function save( $section = false ) {
-        global $current_class;
-
         if ( isset( $_POST['_wpnonce'] ) && wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-settings-nonce' ) ) {
             $from_sections = false;
 
@@ -776,8 +774,8 @@ class Email extends Template {
             // Modify options data for some sub sections
             $sub_section = isset( $_POST['sub_section' ] ) ? sanitize_text_field( wp_unslash( $_POST['sub_section' ] ) ) : null;
 
-            if ( ! empty ( $sub_sub_section ) ) {
-                $options = $options[ $sub_sub_section ];
+            if ( ! empty ( $sub_section ) ) {
+                $options = $options[ $sub_section ];
             }
 
             // Options to update will be stored here
@@ -834,7 +832,7 @@ class Email extends Template {
                     $option_id = 'erp_settings_' . $this->id . '_' . $section;
 
                     // If it's incoming/outgoing email, then toggle email providers
-                    $this->toggle_providers( $section, $_POST );
+                    $this->toggle_providers( $section, map_deep( wp_unslash( $_POST ), 'sanitize_text_field' ) );
 
                     if ( 'imap' === $section ) {
                         $imap_settings = get_option( 'erp_settings_erp-email_imap', [] );

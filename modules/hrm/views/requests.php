@@ -8,13 +8,13 @@
             <div class="wperp-filter-dropdown">
                 <a class="wperp-btn btn--default">
                     <span class="dashicons dashicons-filter"></span>
-                    <?php _e( 'Filters', 'erp' ) ?>
+                    <?php esc_html_e( 'Filters', 'erp' ) ?>
                     <span class="dashicons dashicons-arrow-down-alt2"></span>
                 </a>
 
                 <div class="erp-dropdown-filter-content" id="erp-dropdown-content">
                     <div class="wperp-filter-panel wperp-filter-panel-default">
-                        <h3><?php _e( 'Filter', 'erp' ); ?></h3>
+                        <h3><?php esc_html_e( 'Filter', 'erp' ); ?></h3>
 
                         <div class="wperp-filter-panel-body">
                             <select name="employee" id="erp-hr-filter-employee" class="erp-hrm-select2" v-model="employee">
@@ -39,17 +39,17 @@
                             <input type="submit"
                                 class="wperp-btn btn--cancel btn--filter"
                                 @click.prevent="toggleDropdown()"
-                                value="<?php _e( 'Cancel', 'erp' ); ?>">
+                                value="<?php esc_attr_e( 'Cancel', 'erp' ); ?>">
 
                             <input type="submit"
                                 class="wperp-btn btn--reset btn--filter"
                                 @click.prevent="resetDropdown()"
-                                value="<?php _e( 'Reset', 'erp' ); ?>">
+                                value="<?php esc_attr_e( 'Reset', 'erp' ); ?>">
 
                             <input type="submit"
                                 class="wperp-btn btn--primary"
                                 @click.prevent="filterData()"
-                                value="<?php _e( 'Apply', 'erp' ); ?>">
+                                value="<?php esc_attr_e( 'Apply', 'erp' ); ?>">
                         </div>
                     </div>
                 </div>
@@ -88,7 +88,7 @@
 
                             <a v-else class="first-page button" href="#" @click.prevent="goFirstPage()">
                                 <span class="screen-reader-text">
-                                    <?php _e( 'First page', 'erp' ) ?>
+                                    <?php esc_html_e( 'First page', 'erp' ) ?>
                                 </span>
                                 <span aria-hidden="true">«</span>
                             </a>
@@ -99,13 +99,13 @@
 
                             <a v-else class="prev-page button" href="#" @click.prevent="goToPage('prev')">
                                 <span class="screen-reader-text">
-                                    <?php _e( 'Previous page', 'erp' ) ?>
+                                    <?php esc_html_e( 'Previous page', 'erp' ) ?>
                                 </span>
                                 <span aria-hidden="true">‹</span>
                             </a>
 
                             <span class="screen-reader-text">
-                                <?php _e( 'Current Page', 'erp' ) ?>
+                                <?php esc_html_e( 'Current Page', 'erp' ) ?>
                             </span>
 
                             <input type="text"
@@ -116,7 +116,7 @@
                                 v-model="pageNumberInput"
                                 aria-describedby="table-paging"
                                 @keydown.enter.prevent="goToPage(pageNumberInput)">
-                                <?php _e( ' of ', 'erp' ) ?>
+                                <?php esc_attr_e( ' of ', 'erp' ) ?>
                                 <span class="total-pages">{{ totalPage }}</span>
 
                             <span v-if="isLastPage()"
@@ -128,7 +128,7 @@
                                 href="#"
                                 @click.prevent="goToPage('next')">
                                 <span class="screen-reader-text">
-                                    <?php _e( 'Next page', 'erp' ) ?>
+                                    <?php esc_html_e( 'Next page', 'erp' ) ?>
                                 </span>
                                 <span aria-hidden="true">›</span>
                             </a>
@@ -141,7 +141,7 @@
                                 href="#"
                                 class="last-page button"
                                 @click.prevent="goLastPage()">
-                                <span class="screen-reader-text"><?php _e( 'Last page', 'erp' ) ?></span>
+                                <span class="screen-reader-text"><?php esc_html_e( 'Last page', 'erp' ) ?></span>
                                 <span aria-hidden="true">»</span>
                             </a>
                         </span>
@@ -156,7 +156,7 @@
                             <tr>
                                 <td v-if="! hideCb" id="cb" class="manage-column column-cb check-column">
                                     <label class="screen-reader-text" for="cb-select-all-1">
-                                        <?php _e( 'Select All', 'erp' ); ?>
+                                        <?php esc_html_e( 'Select All', 'erp' ); ?>
                                     </label>
 
                                     <input id="cb-select-all-1" v-model="checkAllCheckbox" @change="triggerAllCheckBox()" type="checkbox">
@@ -164,11 +164,11 @@
 
                                 <td class="actions bulkactions" v-if="hasBulkAction() && checkboxItems.length" :colspan="columnCount">
                                     <label for="bulk-action-selector-top" class="screen-reader-text">
-                                        <?php _e( 'Select bulk action', 'erp' ); ?>
+                                        <?php esc_html_e( 'Select bulk action', 'erp' ); ?>
                                     </label>
 
                                     <select name="action" id="bulk-action-selector-top" v-model="bulkaction1">
-                                        <option value="-1"><?php _e( 'Bulk Actions', 'erp' ); ?></option>
+                                        <option value="-1"><?php esc_html_e( 'Bulk Actions', 'erp' ); ?></option>
                                         <option v-for="actions in bulkactions" value="{{ actions.id }}">{{ actions.text }}</option>
                                     </select>
 
@@ -199,7 +199,7 @@
                                     <a :href="request.employee.url" target="_blank">{{ request.employee.name }}</a>
                                     <button @click='toggleMoreInfo' type="button" class="toggle-row-btn">
                                         <span class="screen-reader-text">
-                                            <?php _e( 'Show more details', 'erp' ); ?>
+                                            <?php esc_html_e( 'Show more details', 'erp' ); ?>
                                         </span>
                                     </button>
                                 </td>
@@ -281,8 +281,8 @@
 
                             <tr v-if="!requests.length || !isLoaded">
                                 <td :colspan="columnCount">
-                                    <span v-if="!isLoaded"><?php _e( 'Loading', 'erp' ); ?>...</span>
-                                    <span v-else><?php _e( 'No requests found.', 'erp' ); ?></span>
+                                    <span v-if="!isLoaded"><?php esc_html_e( 'Loading', 'erp' ); ?>...</span>
+                                    <span v-else><?php esc_html_e( 'No requests found.', 'erp' ); ?></span>
                                 </td>
                             </tr>
                         </tbody>
@@ -291,7 +291,7 @@
                             <tr>
                                 <td v-if="! hideCb" id="cb" class="manage-column column-cb check-column">
                                     <label class="screen-reader-text" for="cb-select-all-2">
-                                        <?php _e( 'Select All', 'erp' ); ?>
+                                        <?php esc_html_e( 'Select All', 'erp' ); ?>
                                     </label>
 
                                     <input id="cb-select-all-2" v-model="checkAllCheckbox" @change="triggerAllCheckBox()" type="checkbox">
@@ -299,11 +299,11 @@
 
                                 <td class="actions bulkactions" v-if="hasBulkAction() && checkboxItems.length" :colspan="columnCount">
                                     <label for="bulk-action-selector-bottom" class="screen-reader-text">
-                                        <?php _e( 'Select bulk action', 'erp' ); ?>
+                                        <?php esc_html_e( 'Select bulk action', 'erp' ); ?>
                                     </label>
 
                                     <select name="action" id="bulk-action-selector-bottom" v-model="bulkaction2">
-                                        <option value="-1"><?php _e( 'Bulk Actions', 'erp' ); ?></option>
+                                        <option value="-1"><?php esc_html_e( 'Bulk Actions', 'erp' ); ?></option>
                                         <option v-for="actions in bulkactions" value="{{ actions.id }}">{{ actions.text }}</option>
                                     </select>
 

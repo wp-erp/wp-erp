@@ -91,7 +91,7 @@ abstract class REST_Controller {
         return [
             'context'  => $this->get_context_param(),
             'page'     => [
-                'description'       => __( 'Current page of the collection.' ),
+                'description'       => __( 'Current page of the collection.', 'erp' ),
                 'type'              => 'integer',
                 'default'           => 1,
                 'sanitize_callback' => 'absint',
@@ -99,7 +99,7 @@ abstract class REST_Controller {
                 'minimum'           => 1,
             ],
             'per_page' => [
-                'description'       => __( 'Maximum number of items to be returned in result set.' ),
+                'description'       => __( 'Maximum number of items to be returned in result set.', 'erp' ),
                 'type'              => 'integer',
                 'default'           => 20,
                 'minimum'           => 1,
@@ -108,7 +108,7 @@ abstract class REST_Controller {
                 'validate_callback' => 'rest_validate_request_arg',
             ],
             'search'   => [
-                'description'       => __( 'Limit results to those matching a string.' ),
+                'description'       => __( 'Limit results to those matching a string.', 'erp' ),
                 'type'              => 'string',
                 'sanitize_callback' => 'sanitize_text_field',
                 'validate_callback' => 'rest_validate_request_arg',
@@ -127,7 +127,7 @@ abstract class REST_Controller {
      */
     public function get_context_param( $args = [] ) {
         $param_details = [
-            'description'       => __( 'Scope under which the request is made; determines fields present in response.' ),
+            'description'       => __( 'Scope under which the request is made; determines fields present in response.', 'erp' ),
             'type'              => 'string',
             'sanitize_callback' => 'sanitize_key',
             'validate_callback' => 'rest_validate_request_arg',

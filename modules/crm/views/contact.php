@@ -1,5 +1,5 @@
 <?php
-    if ( isset( $_GET['filter_assign_contact' ] ) && !empty( $_GET['filter_assign_contact' ] ) ) {
+    if ( ! empty( $_GET['filter_assign_contact' ] ) ) {
         $id          = intval( $_GET['filter_assign_contact'] );
         $custom_data = [
             'filter_assign_contact' => [
@@ -8,12 +8,13 @@
             ],
             'searchFields' => array_keys( erp_crm_get_serach_key( 'contact' ) ),
         ];
-    } elseif ( isset( $_GET['filter_contact_company' ] ) && !empty( $_GET['filter_contact_company' ] ) ) {
+    } elseif ( ! empty( $_GET['filter_contact_company' ] ) ) {
         $id          = intval( $_GET['filter_contact_company'] );
+        $people      = erp_get_people( $id );
         $custom_data = [
             'filter_contact_company' => [
                 'id'           => $id,
-                'display_name' => erp_get_people( $id )->company,
+                'display_name' => $people->company,
             ],
             'searchFields' => array_keys( erp_crm_get_serach_key( 'contact' ) ),
         ];
@@ -27,12 +28,12 @@
 <div class="wrap erp-crm-customer erp-crm-customer-listing" id="wp-erp" v-cloak>
 
     <h2>
-        <?php esc_attr_e( 'Contacts', 'erp' ); ?>
+        <?php esc_html_e( 'Contacts', 'erp' ); ?>
 
         <?php if ( current_user_can( 'erp_crm_add_contact' ) ) : ?>
-            <a href="#" @click.prevent="addContact( 'contact', '<?php esc_attr_e( 'Add New Contact', 'erp' ); ?>' )" id="erp-customer-new" class="erp-contact-new add-new-h2"><?php esc_attr_e( 'Add New Contact', 'erp' ); ?></a>
+            <a href="#" @click.prevent="addContact( 'contact', '<?php esc_html_e( 'Add New Contact', 'erp' ); ?>' )" id="erp-customer-new" class="erp-contact-new add-new-h2"><?php esc_html_e( 'Add New Contact', 'erp' ); ?></a>
             <?php if ( erp_crm_is_current_user_manager() ) { ?>
-                <a href="#" @click.prevent="importUsers()" id="erp-contact-import-users" class="erp-contact-import-users add-new-h2"><?php esc_attr_e( 'Import Users', 'erp' ); ?></a>
+                <a href="#" @click.prevent="importUsers()" id="erp-contact-import-users" class="erp-contact-import-users add-new-h2"><?php esc_html_e( 'Import Users', 'erp' ); ?></a>
             <?php } ?>
         <?php endif; ?>
 
