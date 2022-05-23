@@ -62,8 +62,15 @@ class PDF_Install {
      * @param $plugin_to_activate
      */
     public function show_activation_notice() {
-        echo '<div class="updated notice is-dismissible"><p>';
-        echo esc_html__( 'Plugin <strong>activated.</strong>', 'erp' );
-        echo '</p></div>';
+        ?>
+        <div class="updated notice is-dismissible">
+            <p>
+                <?php
+                /* translators: 1) opening strong tag, 2) closing strong tag */
+                printf( esc_html__( 'Plugin %1$sactivated%2$s', 'erp' ), '<strong>', '</strong>' );
+                ?>.
+            </p>
+        </div>
+        <?php
     }
 }
