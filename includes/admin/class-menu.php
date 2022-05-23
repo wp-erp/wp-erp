@@ -146,17 +146,17 @@ class Admin_Menu {
      * @return void
      */
     public function router() {
-        $component = 'settings';
-        $menu      = erp_menu();
-        $menu      = $menu[$component];
+        $component   = 'settings';
+        $menu        = erp_menu();
+        $menu        = $menu[ $component ];
+        $section     = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : false;
+        $section     = $section && isset( $menu[ $section ] ) ? $section : 'settings';
+        $sub_section = isset( $_GET['sub_section'] ) ? sanitize_text_field( wp_unslash( $_GET['sub_section'] ) ) : false;
+        $sub_section = $sub_section && ! empty( $menu[ $section ]['submenu'][ $sub_section ] ) ? $sub_section : false;
+        $callback    = $menu[ $section ]['callback'];
 
-        $section = ( isset( $_GET['section'] ) && isset( $menu[$_GET['section']] ) ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : 'settings';
-        $sub     = ( isset( $_GET['sub-section'] ) && !empty( $menu[$section]['submenu'][$_GET['sub-section']] ) ) ? sanitize_text_field( wp_unslash( $_GET['sub-section']  ) ) : false;
-
-        $callback = $menu[$section]['callback'];
-
-        if ( $sub ) {
-            $callback = $menu[$section]['submenu'][$sub]['callback'];
+        if ( $sub_section ) {
+            $callback = $menu[ $section ]['submenu'][ $sub_section ]['callback'];
         }
 
         call_user_func( $callback );

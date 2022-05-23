@@ -150,19 +150,15 @@ class Form_Handler {
      * @return void
      */
     public function audit_log_bulk_action() {
-        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! isset( $_GET['page'] ) ) {
-            return;
-        }
-
-        if ( $_GET['page'] != 'erp-audit-log' ) {
-            return;
-        }
-
         if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'bulk-audit_logs' ) ) {
             return;
         }
 
-        $request_uri = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+        if ( ! isset( $_GET['page'] ) || 'erp-audit-log' !== $_GET['page'] ) {
+            return;
+        }
+
+        $request_uri = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
 
         $redirect = remove_query_arg( [ '_wp_http_referer', '_wpnonce', 'filter_audit_log' ], $request_uri );
         wp_redirect( $redirect );

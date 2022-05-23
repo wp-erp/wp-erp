@@ -742,7 +742,7 @@ class Email extends Template {
             return;
         }
 
-        $current_section = isset( $_GET['sub_section'] ) ? sanitize_key( $_GET['sub_section'] ) : false;
+        $current_section = isset( $_GET['sub_section'] ) ? sanitize_text_field( wp_unslash( $_GET['sub_section'] ) ) : false;
 
         // Define emails that can be customised here
         $email_templates = wperp()->emailer->get_emails();
