@@ -144,7 +144,7 @@ $f_year = ! empty( $form_data ) ? $form_data['f-year'] : ( ! empty( $leave_polic
 
             <div class="row applicable-form-row">
                 <?php erp_html_form_input( [
-                    'label' => __( 'Applicable After', 'erp-pro' ),
+                    'label' => __( 'Applicable After', 'erp' ),
                     'name'  => 'applicable-from',
                     'class' => 'leave-policy-input',
                     'value' => ! empty( $leave_policy ) ? $leave_policy->applicable_from_days : '0',
