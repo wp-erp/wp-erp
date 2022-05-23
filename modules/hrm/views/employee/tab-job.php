@@ -234,39 +234,39 @@
                     </td>
                     <td>
                         <?php
-                            $locations = erp_company_get_location_dropdown_raw();
+                        $locations = erp_company_get_location_dropdown_raw();
 
-                            if ( ! empty( $row['location'] ) && array_key_exists( $row['location'], $locations ) ) {
-                                echo esc_html( $locations[ $row['location'] ] );
-                            } else {
-                                echo esc_html( erp_get_company_default_location_name() );
-                            }
+                        if ( ! empty( $row['location'] ) && array_key_exists( $row['location'], $locations ) ) {
+                            echo esc_html( $locations[ $row['location'] ] );
+                        } else {
+                            echo esc_html( erp_get_company_default_location_name() );
+                        }
                         ?>
                     </td>
                     <td>
                         <?php
-                            $departments = erp_hr_get_departments_dropdown_raw();
+                        $departments = erp_hr_get_departments_dropdown_raw();
 
-                            if ( empty( $row['department'] ) ) {
-                                echo '--';
-                            } else if ( array_key_exists( $row['department'], $departments ) ) {
-                                echo esc_html( $departments[ $row['department'] ] );
-                            } else {
-                                echo esc_html( $row['department'] );
-                            }
+                        if ( empty( $row['department'] ) ) {
+                            echo '--';
+                        } elseif ( array_key_exists( $row['department'], $departments ) ) {
+                            echo esc_html( $departments[ $row['department'] ] );
+                        } else {
+                            echo esc_html( $row['department'] );
+                        }
                         ?>
                     </td>
                     <td>
                         <?php
-                            $designations = erp_hr_get_designation_dropdown_raw();
+                        $designations = erp_hr_get_designation_dropdown_raw();
 
-                            if ( empty( $row['designation'] ) ) {
-                                echo '--';
-                            } else if ( array_key_exists( $row['designation'], $designations ) ) {
-                                echo esc_html( $designations[ $row['designation'] ] );
-                            } else {
-                                echo esc_html( $row['designation'] );
-                            }
+                        if ( empty( $row['designation'] ) ) {
+                            echo '--';
+                        } elseif ( array_key_exists( $row['designation'], $designations ) ) {
+                            echo esc_html( $designations[ $row['designation'] ] );
+                        } else {
+                            echo esc_html( $row['designation'] );
+                        }
                         ?>
                     </td>
                     <td>

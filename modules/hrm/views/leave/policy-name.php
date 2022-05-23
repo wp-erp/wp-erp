@@ -1,11 +1,11 @@
 <?php
 
 $id            = isset( $_GET['id'] ) ? absint( wp_unslash( $_GET['id'] ) ) : 0;
-$submit_button = esc_attr( 'Save', 'erp' );
+$submit_button = esc_attr__( 'Save', 'erp' );
 
 if ( $id ) {
     $leave         = \WeDevs\ERP\HRM\Models\Leave::find( $id );
-    $submit_button = esc_attr( 'Update', 'erp' );
+    $submit_button = esc_attr__( 'Update', 'erp' );
 }
 
 ?>
@@ -21,7 +21,8 @@ if ( $id ) {
             <form method="POST" id='erp-hr-leave-type-create'>
 
                 <!-- show error message -->
-                <?php global $policy_name_create_error;
+                <?php
+                    global $policy_name_create_error;
 
                     if ( isset( $policy_name_create_error ) && count( $policy_name_create_error->errors ) ) {
                         echo '<ul>';
@@ -40,7 +41,7 @@ if ( $id ) {
                         'value'       => empty( $leave ) ? '' : $leave->name,
                         'required'    => true,
                         'help'        => esc_html__( 'Unique leave type eg: Annual Leave, Casual Leave etc.', 'erp' ),
-                        'placeholder' => 'Annual leave',
+                        'placeholder' => esc_html__( 'Annual leave', 'erp' ),
                     ] ); ?>
                 </div>
 
