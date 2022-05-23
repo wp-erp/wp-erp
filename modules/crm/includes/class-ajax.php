@@ -1506,7 +1506,7 @@ class Ajax_Handler {
                 break;
 
             default:
-                do_action( 'erp_crm_save_customer_feed_data', $_POST );
+                do_action( 'erp_crm_save_customer_feed_data' );
                 break;
         }
     }
