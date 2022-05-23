@@ -119,7 +119,7 @@ class Designations_Controller extends REST_Controller {
         $item = new \WeDevs\ERP\HRM\Designation( $id );
 
         if ( empty( $id ) || empty( $item->id ) ) {
-            return new WP_Error( 'rest_designation_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_designation_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $item     = $this->prepare_item_for_response( $item, $request );
@@ -163,7 +163,7 @@ class Designations_Controller extends REST_Controller {
         $designation = new \WeDevs\ERP\HRM\Designation( $id );
 
         if ( ! $designation ) {
-            return new WP_Error( 'rest_designation_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 400 ] );
+            return new WP_Error( 'rest_designation_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 400 ] );
         }
 
         $item = $this->prepare_item_for_database( $request );
@@ -261,13 +261,13 @@ class Designations_Controller extends REST_Controller {
             'type'       => 'object',
             'properties' => [
                 'id'            => [
-                    'description' => __( 'Unique identifier for the resource.' ),
+                    'description' => __( 'Unique identifier for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
                 'title'         => [
-                    'description' => __( 'Title for the resource.' ),
+                    'description' => __( 'Title for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -276,7 +276,7 @@ class Designations_Controller extends REST_Controller {
                     'required'    => true,
                 ],
                 'description'  => [
-                    'description' => __( 'Description for the resource.' ),
+                    'description' => __( 'Description for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
