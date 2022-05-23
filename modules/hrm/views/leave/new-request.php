@@ -8,10 +8,10 @@
             <?php
             use WeDevs\ERP\HRM\Models\Financial_Year;
 
-            if ( isset( $_GET['insert_error'] ) && $_GET['insert_error'] !== '' ) {
+            if ( ! empty( $_GET['insert_error'] ) ) {
                 $errors = new \WeDevs\ERP\ERP_Errors( sanitize_text_field( wp_unslash( $_GET['insert_error'] ) ) );
                 echo $errors->display();
-            } elseif ( isset( $_GET['msg'] ) && $_GET['msg'] == 'submitted' ) {
+            } elseif ( isset( $_GET['msg'] ) && ( 'submitted' === sanitize_text_field( wp_unslash( $_GET['msg'] ) ) ) ) {
                 erp_html_show_notice( __( 'Leave request has been submitted successfully.', 'erp' ), 'updated', true );
             }
             $financial_years = [];

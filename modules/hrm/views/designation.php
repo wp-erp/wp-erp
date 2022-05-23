@@ -7,7 +7,9 @@
     <?php if ( isset( $_GET['desig_delete'] ) ) { ?>
         <div id="message" class="error notice is-dismissible below-h2">
             <p><?php esc_html_e( 'Some designation doesn\'t delete because those designation assign some employees.', 'erp' ); ?></p>
-            <button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span></button>
+            <button type="button" class="notice-dismiss">
+                <span class="screen-reader-text"><?php esc_html_e( 'Dismiss this notice.', 'erp' ); ?></span>
+            </button>
         </div>
     <?php } ?>
 

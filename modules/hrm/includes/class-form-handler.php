@@ -279,9 +279,9 @@ class Form_Handler {
 
             if ( $action == 'entitlement_delete' ) {
                 if ( isset( $_GET['entitlement_id'] ) && ! empty( $_GET['entitlement_id'] ) ) {
-                    $array = array_map( 'sanitize_text_field', wp_unslash( $_GET['entitlement_id'] ) );
+                    $array = array_map( 'absint', wp_unslash( $_GET['entitlement_id'] ) );
 
-                    foreach ( $array as $key => $ent_id ) {
+                    foreach ( $array as $ent_id ) {
                         erp_hr_delete_entitlement( $ent_id, 0, $ent_id );
                     }
                 }
@@ -316,7 +316,7 @@ class Form_Handler {
 
         if ( $action ) {
             $page_status    = ( isset( $_GET['status'] ) && ! empty( $_GET['status'] ) ) ? sanitize_text_field( wp_unslash( $_GET['status'] ) ) : 'all';
-            $paged          = ( isset( $_GET['paged'] ) && !empty( $_GET['paged'] ) ) ? sanitize_text_field( wp_unslash( $_GET['paged'] ) ) : 1;
+            $paged          = ( isset( $_GET['paged'] ) && ! empty( $_GET['paged'] ) ) ? absint( wp_unslash( $_GET['paged'] ) ) : 1;
             $request_ids    = ( isset( $_GET['request_id'] ) && ! empty( $_GET['request_id'] ) ) ? array_map( 'absint', wp_unslash( $_GET['request_id'] ) ) : [];
             $redirect_url   = admin_url( sprintf( 'admin.php?page=erp-hr&section=leave&status=%s&paged=%d', $page_status, $paged ) );
 
@@ -326,7 +326,7 @@ class Form_Handler {
 
                 case 'delete':
 
-                    foreach ( $request_ids as $key => $request_id ) {
+                    foreach ( $request_ids as $request_id ) {
                         $response = erp_hr_delete_leave_request( $request_id );
 
                         if ( is_wp_error( $response ) ) {
@@ -407,7 +407,7 @@ class Form_Handler {
                 case 'delete':
 
                     if ( isset( $_GET['employee_id'] ) && ! empty( $_GET['employee_id'] ) ) {
-                        erp_employee_delete( array_map( 'sanitize_text_field', wp_unslash( $_GET['employee_id'] ) ), false );
+                        erp_employee_delete( array_map( 'absint', wp_unslash( $_GET['employee_id'] ) ), false );
                     }
 
                     wp_redirect( $redirect );
@@ -415,7 +415,7 @@ class Form_Handler {
 
                 case 'permanent_delete':
                     if ( isset( $_GET['employee_id'] ) && ! empty( $_GET['employee_id'] ) ) {
-                        erp_employee_delete( array_map( 'sanitize_text_field', wp_unslash( $_GET['employee_id'] ) ), true );
+                        erp_employee_delete( array_map( 'absint', wp_unslash( $_GET['employee_id'] ) ), true );
                     }
 
                     wp_redirect( $redirect );
@@ -423,7 +423,7 @@ class Form_Handler {
 
                 case 'restore':
                     if ( isset( $_GET['employee_id'] ) && ! empty( $_GET['employee_id'] ) ) {
-                        erp_employee_restore( array_map( 'sanitize_text_field', wp_unslash( $_GET['employee_id'] ) ) );
+                        erp_employee_restore( array_map( 'absint', wp_unslash( $_GET['employee_id'] ) ) );
                     }
 
                     wp_redirect( $redirect );
@@ -449,6 +449,7 @@ class Form_Handler {
      * @return void [redirection]
      */
     public function designation_bulk_action() {
+        // Nonce validation
         if ( ! $this->verify_current_page_screen( 'erp-hr', 'bulk-designations' ) ) {
             return;
         }
@@ -475,7 +476,7 @@ class Form_Handler {
                 case 'designation_delete':
 
                     if ( isset( $_GET['desig'] ) && ! empty( $_GET['desig'] ) ) {
-                        $not_deleted_item = erp_hr_delete_designation( array_map( 'sanitize_text_field', wp_unslash( $_GET['desig'] ) ) );
+                        $not_deleted_item = erp_hr_delete_designation( array_map( 'absint', wp_unslash( $_GET['desig'] ) ) );
                     }
 
                     if ( ! empty( $not_deleted_item ) ) {
@@ -524,9 +525,9 @@ class Form_Handler {
                 case 'delete_department':
 
                     if ( isset( $_GET['department_id'] ) ) {
-                        $array = array_map( 'sanitize_text_field', wp_unslash( $_GET['department_id'] ) );
+                        $array = array_map( 'absint', wp_unslash( $_GET['department_id'] ) );
 
-                        foreach ( $array as $key => $dept_id ) {
+                        foreach ( $array as $dept_id ) {
                             $resp[] = erp_hr_delete_department( $dept_id );
                         }
                     }
@@ -575,7 +576,7 @@ class Form_Handler {
             switch ( $action ) {
                 case 'trash':
                     if ( ! empty( $_GET['id'] ) ) {
-                        $announcement_ids = array_map( 'sanitize_text_field', wp_unslash( $_GET['id'] ) );
+                        $announcement_ids = array_map( 'absint', wp_unslash( $_GET['id'] ) );
                         $fail_count       = erp_hr_trash_announcements( $announcement_ids );
                     }
 
@@ -591,7 +592,7 @@ class Form_Handler {
 
                 case 'delete_permanently':
                     if ( ! empty( $_GET['id'] ) ) {
-                        $announcement_ids = array_map( 'sanitize_text_field', wp_unslash( $_GET['id'] ) );
+                        $announcement_ids = array_map( 'absint', wp_unslash( $_GET['id'] ) );
                         $fail_count       = erp_hr_trash_announcements( $announcement_ids, true );
                     }
 
@@ -607,7 +608,7 @@ class Form_Handler {
 
                 case 'restore':
                     if ( ! empty( $_GET['id'] ) ) {
-                        $announcement_ids = array_map( 'sanitize_text_field', wp_unslash( $_GET['id'] ) );
+                        $announcement_ids = array_map( 'absint', wp_unslash( $_GET['id'] ) );
                         $fail_count       = erp_hr_restore_announcements( $announcement_ids );
                     }
 
@@ -670,17 +671,17 @@ class Form_Handler {
             wp_die( esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
-        if ( isset( $get['action'] ) && $get['action'] == 'trash' ) {
+        if ( isset( $get['action'] ) && ( 'trash' === sanitize_text_field( wp_unslash( $get['action'] ) ) ) ) {
             if ( isset( $get['holiday_id'] ) ) {
-                erp_hr_delete_holidays( $get['holiday_id'] );
+                erp_hr_delete_holidays( absint( $get['holiday_id'] ) );
 
                 return true;
             }
         }
 
-        if ( isset( $get['action2'] ) && $get['action2'] == 'trash' ) {
+        if ( isset( $get['action2'] ) && ( 'trash' === sanitize_text_field( wp_unslash( $get['action2'] ) ) ) ) {
             if ( isset( $get['holiday_id'] ) ) {
-                erp_hr_delete_holidays( $get['holiday_id'] );
+                erp_hr_delete_holidays( absint( $get['holiday_id'] ) );
 
                 return true;
             }

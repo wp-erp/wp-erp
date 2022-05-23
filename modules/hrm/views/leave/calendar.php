@@ -1,6 +1,6 @@
 <?php
-$department_id  =    isset( $_GET['department'] ) && $_GET['department'] != '-1' ? absint( wp_unslash( $_GET['department'] ) ) : 0;
-$designation_id =   isset( $_GET['designation'] ) && $_GET['designation'] != '-1' ? absint( wp_unslash( $_GET['designation'] ) ) : 0;
+$department_id  = isset( $_GET['department'] ) && absint( wp_unslash( $_GET['department'] ) ) != '-1' ? absint( wp_unslash( $_GET['department'] ) ) : 0;
+$designation_id = isset( $_GET['designation'] ) && absint( wp_unslash( $_GET['designation'] ) ) != '-1' ? absint( wp_unslash( $_GET['designation'] ) ) : 0;
 
 $args = [
     'status'            => 1,
