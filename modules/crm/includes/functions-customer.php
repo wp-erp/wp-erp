@@ -647,8 +647,8 @@ function erp_crm_customer_prepare_schedule_postdata( $postdata ) {
         'message'    => $postdata['message'],
         'type'       => 'log_activity',
         'log_type'   => ( isset( $postdata['schedule_type'] ) && ! empty( $postdata['schedule_type'] ) ) ? $postdata['schedule_type'] : '',
-        'start_date' => date( 'Y-m-d H:i:s', strtotime( $postdata['start_date'] . $start_time ) ),
-        'end_date'   => date( 'Y-m-d H:i:s', strtotime( $postdata['end_date'] . $end_time ) ),
+        'start_date' => erp_current_datetime()->modify( $postdata['start_date'] . $start_time )->format( 'Y-m-d H:i:s' ),
+        'end_date'   => erp_current_datetime()->modify( $postdata['end_date'] . $end_time )->format( 'Y-m-d H:i:s' ),
         'extra'      => base64_encode( wp_json_encode( $extra_data ) ),
     ];
 

@@ -317,7 +317,7 @@ class Ajax_Handler {
         }
 
         $current_user_id                      = get_current_user_id();
-        $posted                               = array_map( 'strip_tags_deep', wp_unslash( $_POST ) );
+        $posted                               = map_deep( wp_unslash( $_POST ), 'sanitize_text_field' );
         $posted['contact']['main']['company'] = stripslashes( ! empty( $posted['contact']['main']['company'] ) ? $posted['contact']['main']['company'] : '' ); // To remove Apostrophe slash
 
         $data = array_merge( $posted['contact']['main'], $posted['contact']['meta'], $posted['contact']['social'] );
@@ -1428,29 +1428,31 @@ class Ajax_Handler {
                 break;
 
             case 'schedule':
-                $save_data = erp_crm_customer_prepare_schedule_postdata(
-                    [
-                        'id'                         => $activity_id,
-                        'user_id'                    => $user_id,
-                        'created_by'                 => $created_by,
-                        'message'                    => $message,
-                        'attachments'                => $attachments,
-                        'old_attachments'            => $old_attachments,
-                        'schedule_type'              => ! empty( $_POST['schedule_type'] ) ? sanitize_text_field( wp_unslash( $_POST['schedule_type'] ) ) : '',
-                        'schedule_title'             => ! empty( $_POST['schedule_title'] ) ? sanitize_text_field( wp_unslash( $_POST['schedule_title'] ) ) : '',
-                        'all_day'                    => ! empty( $_POST['all_day'] ) ? sanitize_text_field( wp_unslash( $_POST['all_day'] ) ) : false,
-                        'allow_notification'         => ! empty( $_POST['allow_notification'] ) ? sanitize_text_field( wp_unslash( $_POST['allow_notification'] ) ) : false,
-                        'invite_contact'             => ! empty( $_POST['invite_contact'] ) ? array_map( 'intval', (array) wp_unslash( $_POST['invite_contact'] ) ) : [],
-                        'notification_via'           => ! empty( $_POST['notification_via'] ) ? sanitize_text_field( wp_unslash( $_POST['notification_via'] ) ) : null,
-                        'notification_time'          => ! empty( $_POST['notification_time'] ) ? sanitize_text_field( wp_unslash( $_POST['notification_time'] ) ) : null,
-                        'notification_time_interval' => ! empty( $_POST['notification_time_interval'] ) ? sanitize_text_field( wp_unslash( $_POST['notification_time_interval'] ) ) : null,
-                        'start_time'                 => ! empty( $_POST['start_time'] ) ? sanitize_text_field( wp_unslash( $_POST['start_time'] ) ) : '',
-                        'end_time'                   => ! empty( $_POST['end_time'] ) ? sanitize_text_field( wp_unslash( $_POST['end_time'] ) ) : '',
+                $data = [
+                    'id'                         => $activity_id,
+                    'user_id'                    => $user_id,
+                    'type'                       => $activity_type,
+                    'created_by'                 => $created_by,
+                    'message'                    => $message,
+                    'attachments'                => $attachments,
+                    'old_attachments'            => $old_attachments,
+                    'schedule_type'              => ! empty( $_POST['schedule_type'] ) ? sanitize_text_field( wp_unslash( $_POST['schedule_type'] ) ) : '',
+                    'schedule_title'             => ! empty( $_POST['schedule_title'] ) ? sanitize_text_field( wp_unslash( $_POST['schedule_title'] ) ) : '',
+                    'all_day'                    => ! empty( $_POST['all_day'] ) ? sanitize_text_field( wp_unslash( $_POST['all_day'] ) ) : false,
+                    'photo_id'                   => ! empty( $_POST['photo_id'] ) ? sanitize_text_field( wp_unslash( $_POST['photo_id'] ) ) : '',
+                    'allow_notification'         => ! empty( $_POST['allow_notification'] ) ? sanitize_text_field( wp_unslash( $_POST['allow_notification'] ) ) : false,
+                    'invite_contact'             => ! empty( $_POST['invite_contact'] ) ? array_map( 'intval', (array) wp_unslash( $_POST['invite_contact'] ) ) : [],
+                    'notification_via'           => ! empty( $_POST['notification_via'] ) ? sanitize_text_field( wp_unslash( $_POST['notification_via'] ) ) : null,
+                    'notification_time'          => ! empty( $_POST['notification_time'] ) ? sanitize_text_field( wp_unslash( $_POST['notification_time'] ) ) : null,
+                    'notification_time_interval' => ! empty( $_POST['notification_time_interval'] ) ? sanitize_text_field( wp_unslash( $_POST['notification_time_interval'] ) ) : null,
+                    'start_time'                 => ! empty( $_POST['start_time'] ) ? sanitize_text_field( wp_unslash( $_POST['start_time'] ) ) : '',
+                    'end_time'                   => ! empty( $_POST['end_time'] ) ? sanitize_text_field( wp_unslash( $_POST['end_time'] ) ) : '',
+                    'start_date'                 => ! empty( $_POST['start_date'] ) ? sanitize_text_field( wp_unslash( $_POST['start_date'] ) ) : '',
+                    'end_date'                   => ! empty( $_POST['end_date'] ) ? sanitize_text_field( wp_unslash( $_POST['end_date'] ) ) : '',
+                ];
 
-                    ]
-                );
-
-                $data = erp_crm_save_customer_feed_data( $save_data );
+                $save_data = erp_crm_customer_prepare_schedule_postdata( $data );
+                $data      = erp_crm_save_customer_feed_data( $save_data );
 
                 do_action( 'erp_crm_save_customer_schedule_feed', $save_data );
 
