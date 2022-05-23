@@ -1174,7 +1174,7 @@ class Ajax_Handler {
      * @return void
      */
     public function employee_add_note() {
-        $this->verify_hrm_nonce();
+        $this->verify_nonce( 'wp-erp-hr-employee-nonce' );
 
         $user_id = isset( $_POST['user_id'] ) ? intval( $_POST['user_id'] ) : 0;
         $note    = isset( $_POST['note'] ) ? wp_strip_all_tags( sanitize_text_field( wp_unslash( $_POST['note'] ) ) ) : 0;
