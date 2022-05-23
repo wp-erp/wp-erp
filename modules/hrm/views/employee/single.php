@@ -14,7 +14,7 @@
     ?>
     </h2>
 
-    <?php if ( isset( $_GET['msg'] ) && $_GET['msg'] == 'success' ) {  ?>
+    <?php if ( isset( $_GET['msg'] ) && ( 'success' === sanitize_text_field( wp_unslash( $_GET['msg'] ) ) ) ) {  ?>
     <div class="notice notice-success is-dismissible">
         <p> <?php esc_html_e( 'Data Successfully saved.', 'erp' ); ?> </p>
     </div>
@@ -90,7 +90,7 @@
                                     <a class="button" href="#" id="erp-employee-terminate" data-id="<?php echo esc_html( $employee->get_user_id() ); ?>" data-template="erp-employment-terminate" data-title="<?php esc_html_e( 'Terminate Employee', 'erp' ); ?>"><?php esc_html_e( 'Terminate', 'erp' ); ?></a>
                                 <?php } ?>
 
-                                <?php if ( ( isset( $_GET['tab'] ) && $_GET['tab'] == 'general' ) || !isset( $_GET['tab'] )  ) { ?>
+                                <?php if ( ( isset( $_GET['tab'] ) && ( 'general' === sanitize_text_field( wp_unslash( $_GET['tab'] ) ) ) ) || ! isset( $_GET['tab'] )  ) { ?>
                                     <a class="button" id="erp-employee-print" href="#"><?php esc_html_e( 'Print', 'erp' ); ?></a>
                                 <?php } ?>
                             </div>
