@@ -382,11 +382,11 @@ class Admin {
             ) ); ?>');
         </script>
         <?php
-        
+
         /**
-         * Action hook to enqueue supporting 
+         * Action hook to enqueue supporting
          * script for data localization
-         * 
+         *
          * @since 1.9.0
          */
         do_action( 'erp_acct_locale_script' );
@@ -396,8 +396,10 @@ class Admin {
         $component = 'accounting';
         $menu      = erp_menu();
         $menu      = $menu[ $component ];
-        $section   = ( isset( $_GET['section'] ) && isset( $menu[ $_GET['section'] ] ) ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : 'dashboard';
-        $sub       = ( isset( $_GET['sub-section'] ) && ! empty( $menu[ $section ]['submenu'][ $_GET['sub-section'] ] ) ) ? sanitize_text_field( wp_unslash( $_GET['sub-section'] ) ) : false;
+        $section   = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : 'dashboard';
+        $section   = isset( $menu[ $section] ) ? $section : 'dashboard';
+        $sub       = isset( $_GET['sub-section'] ) ? sanitize_text_field( wp_unslash( $_GET['sub-section'] ) ) : false;
+        $sub       = $sub && ! empty( $menu[ $section ]['submenu'][ $sub ] ) ? $sub : false;
     }
 
     /**

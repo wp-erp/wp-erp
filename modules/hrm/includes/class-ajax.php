@@ -2485,11 +2485,11 @@ class Ajax_Handler {
 
         if ( empty( $_POST['fyears'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
             $this->send_error( erp_get_message ( [
-				'type' => 'error',
-				'text' => __( 'Financial year is required', 'erp' ),
-			] ) );
+				      'type' => 'error',
+				      'text' => __( 'Financial year is required', 'erp' ),
+			      ] ) );
         }
-
+        
         $inserted = erp_settings_save_leave_years( $_POST['fyears'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
         if ( is_wp_error( $inserted ) ) {

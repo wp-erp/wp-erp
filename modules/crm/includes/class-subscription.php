@@ -253,12 +253,18 @@ class Subscription {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
+        // Check permission
+        if ( ! ( current_user_can( erp_crm_get_manager_role() ) || current_user_can( erp_crm_get_agent_role() ) ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
         // validations
         if ( empty( $_POST['form_data'] ) ) {
             $this->send_error( [ 'msg' => __( 'Invalid operation', 'erp' ) ] );
-        } else {
-            parse_str( $_POST['form_data'], $form_data ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         }
+
+        parse_str( wp_unslash( $_POST['form_data'] ), $form_data );
+        $form_data = map_deep( $form_data, 'sanitize_text_field' );
 
         if ( empty( $form_data['contact']['email'] ) || ! is_email( $form_data['contact']['email'] ) ) {
             $this->send_error( [ 'msg' => __( 'Please provide a valid email address', 'erp' ) ] );
@@ -542,7 +548,7 @@ class Subscription {
 
             if ( ! empty( $this->sub_page_id ) && absint( $page->ID ) === $this->sub_page_id ) {
                 if ( ! empty( $_GET['subscription-id'] ) ) {
-                    $subscription_ids = explode( ':', sanitize_text_field( wp_unslash( $_GET['subscription-id'] ) ) );
+                    $subscription_ids = array_map( 'intval', explode( ':', wp_unslash( $_GET['subscription-id'] ) ) );
 
                     $this->subscribed_groups = Models\ContactSubscriber::whereIn( 'hash', $subscription_ids )->get();
 
@@ -654,7 +660,7 @@ class Subscription {
             }
         }
 
-        do_action( 'erp_subscription_unsubscribe', $_GET, $this );
+        do_action( 'erp_subscription_unsubscribe', $this );
     }
 
     /**
@@ -736,7 +742,7 @@ class Subscription {
                         $group_names[] = $unsubscribed_group->name;
                     }
 
-                    $group_names = apply_filters( 'erp_subscription_unsubscribe_group_list', $group_names, $_GET, $this );
+                    $group_names = apply_filters( 'erp_subscription_unsubscribe_group_list', $group_names, $this );
 
                     $content .= '<ul><li>' . implode( '</li><li>', $group_names ) . '</li></ul>';
                 }
@@ -780,7 +786,8 @@ class Subscription {
         if ( empty( $_POST['form_data'] ) ) {
             $this->send_error( [ 'msg' => __( 'Invalid operation', 'erp' ) ] );
         } else {
-            parse_str( sanitize_text_field( wp_unslash( $_POST['form_data'] ) ), $form_data );
+            parse_str( wp_unslash( $_POST['form_data'] ), $form_data );
+            $form_data = map_deep( 'sanitize_text_field', $form_data );
         }
 
         if ( empty( $form_data['id'] ) ) {

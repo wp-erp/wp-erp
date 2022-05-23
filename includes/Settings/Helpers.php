@@ -61,7 +61,7 @@ class Helpers {
             return $query_arg;
         }
 
-        $current_tab = $query_arg['tab'] = isset( $_GET['tab'] ) ? sanitize_title( wp_unslash( $_GET['tab'] ) ) : $settings[0]->get_id();
+        $current_tab = $query_arg['tab'] = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : $settings[0]->get_id();
 
         foreach ( $settings as $obj ) {
             $sections[$obj->get_id()] = isset( $obj->sections ) ? $obj->sections : [];

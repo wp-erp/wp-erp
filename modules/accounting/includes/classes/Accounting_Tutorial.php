@@ -65,7 +65,7 @@ class Accounting_Tutorial {
 		}
 
 		if ( 'wp-erp_page_erp-accounting' === $screen->id ) {
-			$tab = ! empty( $_GET['tab'] ) ? $_GET['tab'] : 'dashboard';
+			$tab = ! empty( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : 'dashboard';
 
             wp_enqueue_style( 'wp-pointer' );
             wp_enqueue_script( 'wp-pointer' );

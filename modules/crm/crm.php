@@ -44,6 +44,9 @@ class Customer_Relationship {
         // Include required files
         $this->includes();
 
+        // Create files and folders
+        $this->create_files();
+
         // Initialize the classes
         $this->init_classes();
 
@@ -68,6 +71,29 @@ class Customer_Relationship {
         define( 'WPERP_CRM_VIEWS', __DIR__ . '/views' );
         define( 'WPERP_CRM_JS_TMPL', WPERP_CRM_VIEWS . '/js-templates' );
         define( 'WPERP_CRM_ASSETS', plugins_url( '/assets', __FILE__ ) );
+    }
+
+    /**
+     * Creates necessary files and folders.
+     *
+     * @since 1.10.6
+     *
+     * @return void
+     */
+    private function create_files() {
+        $file_path     = erp_crm_get_attachment_dir();
+        $htaccess_file = trailingslashit( $file_path ) . '.htaccess';
+
+        if ( file_exists( $htaccess_file ) ) {
+            return;
+        }
+
+        $content = 'deny from all';
+        $file    = @fopen( $htaccess_file, 'w' );
+        if ( $file ) {
+            fwrite( $file, $content );
+            fclose( $file );
+        }
     }
 
     /**
@@ -460,6 +486,7 @@ class Customer_Relationship {
         wp_localize_script( 'wp-erp-crm-vue-customer', 'erpCrmApp', [
             'reattach' => __( 'Reattach', 'erp' ),
             'remove'   => __( 'Remove', 'erp' ),
+            'nonce'    => wp_create_nonce( 'erp-crm-app-nonce' ),
         ] );
 
         wp_enqueue_script( 'post' );
