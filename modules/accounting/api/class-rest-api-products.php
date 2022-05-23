@@ -203,7 +203,7 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
         $item = erp_acct_get_product( $id );
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_inventory_product_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_inventory_product_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $additional_fields['namespace'] = $this->namespace;
@@ -257,7 +257,7 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_payment_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_payment_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $item = $this->prepare_item_for_database( $request );
@@ -307,7 +307,7 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
      * Validates csv file data for products
      *
      * @param WP_REST_Request $request
-     * 
+     *
      * @return WP_Error|WP_REST_Response
      */
     public function validate_csv_data( $request ) {
@@ -333,12 +333,12 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         return $response;
     }
-    
+
     /**
      * Import products from csv
      *
      * @param WP_REST_Request $request
-     * 
+     *
      * @return WP_Error|WP_REST_Response
      */
     public function import_products( $request ) {
@@ -485,13 +485,13 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
             'type'       => 'object',
             'properties' => [
                 'id'              => [
-                    'description' => __( 'Unique identifier for the resource.' ),
+                    'description' => __( 'Unique identifier for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
                 'name'            => [
-                    'description' => __( 'Name for the resource.' ),
+                    'description' => __( 'Name for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -586,13 +586,13 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
                     ],
                 ],
                 'cost_price'      => [
-                    'description' => __( 'Cost price for the resource.' ),
+                    'description' => __( 'Cost price for the resource.', 'erp' ),
                     'type'        => 'number',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
                 'sale_price'      => [
-                    'description' => __( 'Sale price for the resource.' ),
+                    'description' => __( 'Sale price for the resource.', 'erp' ),
                     'type'        => 'number',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
