@@ -278,8 +278,8 @@ class Ajax {
             $this->send_error( _( 'You do not have sufficient permission to do this action', 'erp' ) );
         }
 
-        $option_id    = ! empty( $_REQUEST['option_id'] ) ? sanitize_text_field( $_REQUEST['option_id'] ) : '';
-        $option_value = ! empty( $_REQUEST['option_value'] ) ? sanitize_text_field( $_REQUEST['option_value'] ) : '';
+        $option_id    = ! empty( $_REQUEST['option_id'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['option_id'] ) ) : '';
+        $option_value = ! empty( $_REQUEST['option_value'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['option_value'] ) ) : '';
 
         if ( ! empty( $option_id ) ) {
             $email_option = get_option( $option_id );
@@ -312,37 +312,31 @@ class Ajax {
 
         if ( empty( $_REQUEST['mail_server'] ) ) {
             $this->send_error( [ 'message' => esc_html__( 'No host address provided', 'erp' ) ] );
-        } else {
-            $mail_server = sanitize_text_field( wp_unslash( $_REQUEST['mail_server'] ) );
         }
 
         if ( empty( $_REQUEST['port'] ) ) {
             $this->send_error( [ 'message' => esc_html__( 'No port address provided', 'erp' ) ] );
-        } else {
-            $port = sanitize_text_field( wp_unslash( $_REQUEST['port'] ) );
         }
 
-        if ( ! empty( $_REQUEST['authentication'] ) ) {
-            $authentication = sanitize_text_field( wp_unslash( $_REQUEST['authentication'] ) );
+        $authentication = '';
 
+        if ( ! empty( $_REQUEST['authentication'] ) ) {
             if ( empty( $_REQUEST['username'] ) ) {
                 $this->send_error( [ 'message' => esc_html__( 'No email address provided', 'erp' ) ] );
-            } else {
-                $username = sanitize_text_field( wp_unslash( $_REQUEST['username'] ) );
             }
 
             if ( empty( $_REQUEST['password'] ) ) {
                 $this->send_error( [ 'message' => esc_html__( 'No email password provided', 'erp' ) ] );
-            } else {
-                $password = sanitize_text_field( wp_unslash( $_REQUEST['password'] ) );
             }
+
+            $authentication = sanitize_text_field( wp_unslash( $_REQUEST['authentication'] ) );
+            $username       = sanitize_email( wp_unslash( $_REQUEST['username'] ) );
+            $password       = sanitize_text_field( wp_unslash( $_REQUEST['password'] ) );
         }
 
-        if ( empty( $_REQUEST['test_email'] ) ) {
-            $to = get_option( 'admin_email' );
-        } else {
-            $to = sanitize_text_field( wp_unslash( $_REQUEST['test_email'] ) );
-        }
+        $mail_server = esc_url_raw( wp_unslash( $_REQUEST['mail_server'] ) );
+        $port        = sanitize_text_field( wp_unslash( $_REQUEST['port'] ) );
+        $to          = empty( $_REQUEST['test_email'] ) ? get_option( 'admin_email' ) : sanitize_email( wp_unslash( $_REQUEST['test_email'] ) );
 
         global $phpmailer, $wp_version;
 

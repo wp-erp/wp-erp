@@ -63,33 +63,33 @@ if ( ! class_exists( 'WeForms_Upsell' ) ) {
             } ?>
         <div class="updated" id="weforms-upsell-prompt">
             <div class="weforms-upsell-logo">
-                <img src="" width="272" height="71" alt="weForms Logo">
+                <img src="" width="272" height="71" alt="<?php esc_html_e( 'weForms Logo', 'erp' ); ?>">
             </div>
             <div class="weforms-upsell-text">
-                <h2>weForms is here!</h2>
+                <h2><?php esc_html_e( 'weForms is here!', 'erp' ); ?></h2>
 
-                <p>weForms is the next generation contact form plugin for WordPress.</p>
+                <p><?php esc_html_e( 'weForms is the next generation contact form plugin for WordPress.', 'erp' ); ?></p>
             </div>
             <div class="weforms-upsell-cta">
-                <button id="weforms-upsell-prompt-btn" class="button"><?php esc_html_e( 'Install Now', 'weforms' ); ?></button>
-                &nbsp;<a href="#" class="learn-more" data-tube="NJvjy9WFyAM">Learn More</a>
+                <button id="weforms-upsell-prompt-btn" class="button"><?php esc_html_e( 'Install Now', 'erp' ); ?></button>
+                &nbsp;<a href="#" class="learn-more" data-tube="NJvjy9WFyAM"><?php esc_html_e( 'Learn More', 'erp' ); ?></a>
             </div>
-            <button type="button" class="notice-dismiss" style="padding: 3px;" title="<?php esc_html_e( 'Dismiss this notice.' ); ?>">
-                <span class="screen-reader-text"><?php esc_html_e( 'Dismiss this notice.' ); ?></span>
+            <button type="button" class="notice-dismiss" style="padding: 3px;" title="<?php esc_html_e( 'Dismiss this notice.', 'erp' ); ?>">
+                <span class="screen-reader-text"><?php esc_html_e( 'Dismiss this notice.', 'erp' ); ?></span>
             </button>
         </div>
 
         <div class="weforms-upsell-modal" id="weforms-upsell-modal">
             <a class="close">
                 &times;
-                <span class="screen-reader-text">Close modal window</span>
+                <span class="screen-reader-text"><?php esc_html_e( 'Close modal window', 'erp' ); ?></span>
             </a>
             <div class="video-wrap">
                 <iframe id="weforms-upsell-modal-iframe" width="1280" height="720" src="" frameborder="0" allowfullscreen></iframe>
             </div>
 
             <div class="learn-more">
-                <a href="<?php echo esc_url( $this->learn_more_link() ); ?>" target="_blank" class="button button-primary">Learn more about weForms</a>
+                <a href="<?php echo esc_url( $this->learn_more_link() ); ?>" target="_blank" class="button button-primary"><?php esc_html_e( 'Learn more about weForms', 'erp' ); ?></a>
             </div>
         </div>
         <div class="weforms-upsell-modal-backdrop" id="weforms-upsell-modal-backdrop"></div>
@@ -347,7 +347,7 @@ if ( ! class_exists( 'WeForms_Upsell' ) ) {
             check_ajax_referer( 'weforms_upsell_installer' );
 
             if ( ! current_user_can( 'manage_options' ) ) {
-                wp_send_json_error( __( 'You don\'t have permission to install the plugins' ) );
+                wp_send_json_error( __( 'You don\'t have permission to install the plugins', 'erp' ) );
             }
 
             if ( ! class_exists( 'WP_User_Frontend' ) ) {
