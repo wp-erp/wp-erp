@@ -85,7 +85,7 @@ foreach ( Financial_Year::all() as $f_year ) {
     </div>
 
     <div class="row">
-        <label for="leave_document"><?php echo esc_html__( 'Document', 'wp-erp' ); ?></label>
+        <label for="leave_document"><?php echo esc_html__( 'Document', 'erp' ); ?></label>
         <input type="file" name="leave_document[]" id="leave_document" multiple>
     </div>
 
