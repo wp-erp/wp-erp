@@ -968,10 +968,12 @@ function erp_crm_customer_get_single_activity_feed( $feed_id ) {
  * @return mixed
  */
 function erp_crm_process_attachment_data( $attachments ) {
-    $attachment_dir = erp_crm_get_attachment_dir();
+    $upload_dir = wp_upload_dir();
+    $sub_dir    = apply_filters( 'crm_attachmet_directory', 'crm-attachments' );
+    $full_path  = trailingslashit( $upload_dir['baseurl'] ) . $sub_dir;
 
     foreach ( $attachments as $key => $item ) {
-        $attachments[ $key ]['url'] = trailingslashit( $attachment_dir ) . $item['slug'];
+        $attachments[ $key ]['url'] = trailingslashit( $full_path ) . $item['slug'];
     }
 
     return $attachments;
