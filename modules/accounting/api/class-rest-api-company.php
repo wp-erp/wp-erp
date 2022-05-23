@@ -91,12 +91,12 @@ class Company_Controller extends \WeDevs\ERP\API\REST_Controller {
             'type'       => 'object',
             'properties' => [
                 'logo'         => [
-                    'description' => __( 'Company logo for the resource.' ),
+                    'description' => __( 'Company logo for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'embed', 'view' ],
                 ],
                 'name' => [
-                    'description' => __( 'Company name for the resource.' ),
+                    'description' => __( 'Company name for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'view' ],
                 ],

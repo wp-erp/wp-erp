@@ -5,7 +5,7 @@ $crm_users = erp_crm_get_crm_user();
 ?>
 <div class="wrap erp erp-crm-activities erp-single-customer" id="wp-erp">
 
-    <h2><?php esc_attr_e( 'Contacts', 'erp' ); ?></h2>
+    <h2><?php esc_html_e( 'Contacts', 'erp' ); ?></h2>
     <?php do_action( 'erp_crm_contact_menu', 'activities' ); ?>
     <hr>
     <div class="erp-customer-feeds" id="erp-customer-feeds" v-cloak>
@@ -14,9 +14,9 @@ $crm_users = erp_crm_get_crm_user();
 
             <div class="filters">
                 <select style="width:180px;" v-selecttwo="filterFeeds.type" class="select2" v-model="filterFeeds.type" id="activity-type" data-placeholder="<?php esc_attr_e( 'Select a type', 'erp' ); ?>">
-                    <option value=""><?php esc_attr_e( 'All Types', 'erp' ); ?></option>
+                    <option value=""><?php esc_html_e( 'All Types', 'erp' ); ?></option>
                     <?php foreach ( $feeds_tab as $key => $value ) { ?>
-                        <option value="<?php echo esc_attr( $key ); ?>"><?php echo esc_attr( $value['title'] ); ?></option>
+                        <option value="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $value['title'] ); ?></option>
                     <?php } ?>
                 </select>
             </div>
@@ -24,9 +24,9 @@ $crm_users = erp_crm_get_crm_user();
             <?php if ( ! current_user_can( 'erp_crm_agent' ) ) { ?>
             <div class="filters">
                 <select style="width:260px;" v-selecttwo="filterFeeds.created_by" class="select2" v-model="filterFeeds.created_by" id="activity-created-by" data-placeholder="<?php esc_attr_e( 'Created by..', 'erp' ); ?>">
-                    <option value="-1"><?php esc_attr_e( 'All', 'erp' ); ?></option>
+                    <option value="-1"><?php esc_html_e( 'All', 'erp' ); ?></option>
                     <?php foreach ( $crm_users as $crm_user ) { ?>
-                        <option value="<?php echo esc_attr( $crm_user->ID ); ?>"><?php echo esc_attr( $crm_user->display_name ); ?></option>
+                        <option value="<?php echo esc_attr( $crm_user->ID ); ?>"><?php echo esc_html( $crm_user->display_name ); ?></option>
                     <?php } ?>
                 </select>
             </div>
@@ -66,13 +66,13 @@ $crm_users = erp_crm_get_crm_user();
             <div class="feed-load-more" v-show="( feeds.length >= limit ) && !loadingFinish">
                 <button @click="loadMoreContent( feeds )" class="button">
                     <i class="fa fa-cog fa-spin" v-if="loading"></i>
-                    &nbsp;<span v-if="!loading"><?php esc_attr_e( 'Load More', 'erp' ); ?></span>
-                    &nbsp;<span v-else><?php esc_attr_e( 'Loading..', 'erp' ); ?></span>
+                    &nbsp;<span v-if="!loading"><?php esc_html_e( 'Load More', 'erp' ); ?></span>
+                    &nbsp;<span v-else><?php esc_html_e( 'Loading..', 'erp' ); ?></span>
                 </button>
             </div>
 
             <div class="no-activity-found" v-if="!feeds.length">
-                <?php esc_attr_e( 'No Activity found for this Contact', 'erp' ); ?>
+                <?php esc_html_e( 'No Activity found for this Contact', 'erp' ); ?>
             </div>
 
         </div>

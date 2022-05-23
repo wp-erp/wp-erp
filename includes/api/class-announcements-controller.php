@@ -310,13 +310,13 @@ class Announcements_Controller extends REST_Controller {
             'type'       => 'object',
             'properties' => [
                 'id'              => [
-                    'description' => __( 'Unique identifier for the resource.' ),
+                    'description' => __( 'Unique identifier for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
                 'title'           => [
-                    'description' => __( 'Title for the resource.' ),
+                    'description' => __( 'Title for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -325,7 +325,7 @@ class Announcements_Controller extends REST_Controller {
                     'required'    => true,
                 ],
                 'body'            => [
-                    'description' => __( 'Body for the resource.' ),
+                    'description' => __( 'Body for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -334,7 +334,7 @@ class Announcements_Controller extends REST_Controller {
                     'required'    => true,
                 ],
                 'status'          => [
-                    'description' => __( 'Status for the resource.' ),
+                    'description' => __( 'Status for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -342,7 +342,7 @@ class Announcements_Controller extends REST_Controller {
                     ],
                 ],
                 'recipient_type'  => [
-                    'description' => __( 'Recipient type for the resource.' ),
+                    'description' => __( 'Recipient type for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [

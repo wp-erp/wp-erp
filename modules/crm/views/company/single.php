@@ -18,19 +18,19 @@ $trashed      = erp_is_people_trashed( $customer->id );
         esc_attr_e( 'Company #', 'erp' );
         echo esc_attr( $customer->id );
         ?>
-        <a href="<?php echo esc_url_raw( add_query_arg( [ 'page' => 'erp-crm', 'section' => 'contact', 'sub-section' => 'companies' ], admin_url( 'admin.php' ) ) ); ?>" id="erp-contact-list" class="add-new-h2"><?php esc_attr_e( 'Back to Company list', 'erp' ); ?></a>
+        <a href="<?php echo esc_url_raw( add_query_arg( [ 'page' => 'erp-crm', 'section' => 'contact', 'sub-section' => 'companies' ], admin_url( 'admin.php' ) ) ); ?>" id="erp-contact-list" class="add-new-h2"><?php esc_html_e( 'Back to Company list', 'erp' ); ?></a>
 
         <?php if ( ! $trashed ) : ?>
-            <?php if ( current_user_can( 'erp_crm_edit_contact', $customer->id ) || current_user_can( erp_crm_get_manager_role() ) ) { ?>
+            <?php if ( current_user_can( 'erp_crm_edit_contact', $customer->id ) || current_user_can( erp_crm_get_manager_role() ) ) : ?>
                 <span class="edit">
-                    <a href="#" @click.prevent="editContact( 'company', '<?php echo esc_attr( $customer->id ); ?>', '<?php esc_attr_e( 'Edit this company', 'erp' ); ?>' )" data-id="<?php echo esc_attr( $customer->id ); ?>" data-single_view="1" title="<?php esc_attr_e( 'Edit this Company', 'erp' ); ?>" class="add-new-h2"><?php esc_attr_e( 'Edit this Company', 'erp' ); ?></a>
+                    <a href="#" @click.prevent="editContact( 'company', '<?php echo esc_attr( $customer->id ); ?>', '<?php esc_attr_e( 'Edit this company', 'erp' ); ?>' )" data-id="<?php echo esc_attr( $customer->id ); ?>" data-single_view="1" title="<?php esc_attr_e( 'Edit this Company', 'erp' ); ?>" class="add-new-h2"><?php esc_html_e( 'Edit this Company', 'erp' ); ?></a>
                 </span>
-                <?php if ( ! $customer->user_id && erp_crm_current_user_can_make_wp_user() ) { ?>
+                <?php if ( ! $customer->user_id && erp_crm_current_user_can_make_wp_user() ) : ?>
                     <span class="make-wp-user">
-                        <a href="#" @click.prevent="makeWPUser( 'company', '<?php echo esc_attr( $customer->id ); ?>', '<?php esc_attr_e( 'Make WP User', 'erp' ); ?>', '<?php echo esc_attr( $customer->email ); ?>' )" data-single_view="1" title="<?php esc_attr_e( 'Make this contact as a WP User', 'erp' ); ?>" class="add-new-h2"><?php esc_attr_e( 'Make WP User', 'erp' ); ?></a>
+                        <a href="#" @click.prevent="makeWPUser( 'company', '<?php echo esc_attr( $customer->id ); ?>', '<?php esc_attr_e( 'Make WP User', 'erp' ); ?>', '<?php echo esc_attr( $customer->email ); ?>' )" data-single_view="1" title="<?php esc_attr_e( 'Make this contact as a WP User', 'erp' ); ?>" class="add-new-h2"><?php esc_html_e( 'Make WP User', 'erp' ); ?></a>
                     </span>
-                <?php } ?>
-            <?php } ?>
+                <?php endif; ?>
+            <?php endif; ?>
         <?php endif; ?>
     </h2>
 
@@ -83,7 +83,7 @@ $trashed      = erp_is_people_trashed( $customer->id );
 
                     <div class="postbox customer-basic-info">
                         <div class="erp-handlediv" title="<?php esc_attr_e( 'Click to toggle', 'erp' ); ?>"><br></div>
-                        <h3 class="erp-hndle"><span><?php esc_attr_e( 'Basic Info', 'erp' ); ?></span></h3>
+                        <h3 class="erp-hndle"><span><?php esc_html_e( 'Basic Info', 'erp' ); ?></span></h3>
                         <div class="inside">
                             <ul class="erp-list separated">
                                 <li><?php erp_print_key_value( __( 'Name', 'erp' ), $customer->get_full_name() ); ?></li>
@@ -103,7 +103,7 @@ $trashed      = erp_is_people_trashed( $customer->id );
 
                             <div class="erp-crm-assign-contact">
                                 <div class="inner-wrap">
-                                    <h4><?php esc_attr_e( 'Contact Owner', 'erp' ); ?></h4>
+                                    <h4><?php esc_html_e( 'Contact Owner', 'erp' ); ?></h4>
                                     <div class="user-wrap">
                                         <div class="user-wrap-content">
                                             <?php
@@ -125,7 +125,7 @@ $trashed      = erp_is_people_trashed( $customer->id );
                                                 </div>
                                             <?php } else { ?>
                                                 <div class="user-details">
-                                                    <p><?php esc_attr_e( 'Nobody', 'erp' ); ?></p>
+                                                    <p><?php esc_html_e( 'Nobody', 'erp' ); ?></p>
                                                 </div>
                                             <?php } ?>
                                             <div class="clearfix"></div>
@@ -141,9 +141,9 @@ $trashed      = erp_is_people_trashed( $customer->id );
 
                                             <div class="crm-aget-search-select-wrap">
                                                 <select name="erp_select_assign_contact" id="erp-select-user-for-assign-contact" style="width: 300px; margin-bottom: 20px;" data-placeholder="<?php esc_attr_e( 'Search a crm agent', 'erp' ); ?>" data-val="<?php echo esc_attr( $crm_user_id ); ?>" data-selected="<?php echo esc_attr( $user_string ); ?>">
-                                                    <option value=""><?php esc_attr_e( 'Select a agent', 'erp' ); ?></option>
+                                                    <option value=""><?php esc_html_e( 'Select a agent', 'erp' ); ?></option>
                                                     <?php if ( $crm_user_id ) { ?>
-                                                        <option value="<?php echo esc_attr( $crm_user_id ); ?>" selected><?php echo esc_attr( $user_string ); ?></option>
+                                                        <option value="<?php echo esc_attr( $crm_user_id ); ?>" selected><?php echo esc_html( $user_string ); ?></option>
                                                     <?php } ?>
                                                 </select>
                                             </div>
@@ -163,11 +163,11 @@ $trashed      = erp_is_people_trashed( $customer->id );
 
                     <div class="postbox erp-customer-tag-div" id="tagsdiv-post_tag">
                         <div class="erp-handlediv" title="<?php esc_attr_e( 'Click to toggle', 'erp' ); ?>"><br></div>
-                        <h3 class="erp-hndle"><span><?php esc_attr_e( 'Tag', 'erp' ); ?></span></h3>
+                        <h3 class="erp-hndle"><span><?php esc_html_e( 'Tag', 'erp' ); ?></span></h3>
                         <div class="inside">
                             <div class="tagsdiv" id="tagsdiv-erp-crm-tag">
                                 <div class="nojs-tags hide-if-js">
-                                    <label for="tax-input-post_tag">Add or remove tags</label>
+                                    <label for="tax-input-post_tag"><?php esc_html_e( 'Add or remove tags', 'erp' ); ?></label>
                                     <p><textarea name="tax_input[erp_crm_tag]" rows="3" cols="20" class="the-tags" id="tax-input-erp_crm_tag" aria-describedby="new-tag-post_tag-desc">
                                             <?php echo esc_html( implode( ',', $contact_tags ) ); ?>
                                         </textarea></p>
@@ -180,9 +180,9 @@ $trashed      = erp_is_people_trashed( $customer->id );
                                             <input style="width: 82%;" data-wp-taxonomy="erp_crm_tag" type="text" id="new-tag-erp-crm-tag" name="newtag[erp_crm_tag]" class="newtag form-input-tip" size="16" autocomplete="on" aria-describedby="new-tag-erp-crm-tag-desc" value="" />
                                             <input type="button" id="add-crm-tag" class="button tagadd" value="<?php esc_attr_e( 'Add', 'erp' ); ?>" /></p>
                                     </div>
-                                    <p class="howto" id="new-tag-erp-crm-tag-desc"><?php esc_attr_e( 'Separate tags with commas', 'erp' ); ?></p>
+                                    <p class="howto" id="new-tag-erp-crm-tag-desc"><?php esc_html_e( 'Separate tags with commas', 'erp' ); ?></p>
 
-                                    <p><?php ?></p>
+                                    <p></p>
                                 </div>
                                 <ul class="tagchecklist" role="list" style="margin-bottom: 0;"></ul>
                             </div>
