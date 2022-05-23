@@ -444,7 +444,7 @@ class Ajax_Handler {
             erp_hr_delete_entitlement( $id, $user_id, $policy_id );
             $this->send_success();
         } else {
-            $this->send_error( __( 'Something went wrong !', 'erp' ) );
+            $this->send_error( __( 'Something went wrong!', 'erp' ) );
         }
     }
 
@@ -643,7 +643,7 @@ class Ajax_Handler {
             $this->send_success( __( 'Department has been deleted', 'erp' ) );
         }
 
-        $this->send_error( __( 'Something went worng!', 'erp' ) );
+        $this->send_error( __( 'Something went wrong!', 'erp' ) );
     }
 
     /**
@@ -866,6 +866,11 @@ class Ajax_Handler {
 
         if ( ! $user ) {
             $this->send_error( __( 'No employee found', 'erp' ) );
+        }
+
+        // Check permission
+        if ( ! current_user_can( 'erp_edit_employee', $user->ID ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
         $user = apply_filters( 'pre_erp_hr_employee_args', $user );
@@ -2086,7 +2091,7 @@ class Ajax_Handler {
      * @return void
      */
     public function get_employee_leave_history() {
-        $this->verify_nonce( 'erp-hr-empl-leave-history' ); // WordPress.Security.NonceVerification.Missing
+        $this->verify_nonce( 'erp-hr-empl-leave-history' );
 
         $year    = isset( $_POST['f_year'] ) ? intval( $_POST['f_year'] ) : gmdate( 'Y' );
         $user_id = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;

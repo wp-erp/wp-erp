@@ -1494,12 +1494,10 @@ function erp_hr_get_leave_requests( $args = [], $cached = true ) {
     }
 
     $query = $fields . $tables . $join . $where . $orderby . $limit;
-    //echo $query; die();
+
     $requests = $wpdb->get_results( $query, ARRAY_A );
 
     $total_row_found = absint( $wpdb->get_var( 'SELECT FOUND_ROWS()' ) );
-
-    //echo "<pre>"; print_r( $requests ); die;
 
     $formatted_data = [];
 
