@@ -102,8 +102,8 @@ final class Accounting {
      */
     public function pdf_notice_message( $type ) {
         $protocol = empty( $_SERVER['HTTPS'] ) ? 'http' : 'https';
-        $host     = empty( $_SERVER['HTTP_HOST'] ) ? '' : sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) );
-        $uri      = empty( $_SERVER['REQUEST_URI'] ) ? '' : sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) );
+        $host     = empty( $_SERVER['HTTP_HOST'] ) ? '' : esc_url_raw( wp_unslash( $_SERVER['HTTP_HOST'] ) );
+        $uri      = empty( $_SERVER['REQUEST_URI'] ) ? '' : esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) );
         $sign     = empty( $_GET ) ? '?' : '&';
 
         $actual_link = esc_url( $protocol . '://' . $host . $uri );

@@ -263,7 +263,7 @@ class CRM_Settings extends Template {
 
                 return;
             }
-            
+
             parent::save();
         }
     }
@@ -274,15 +274,11 @@ class CRM_Settings extends Template {
      * @return void
      */
     public function cron_schedule( $value ) {
-        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-nonce' ) ) {
-            // die();
-        }
-
-        if ( !isset( $_GET['section'] ) || ( $_GET['section'] != 'email_connect' ) ) {
+        if ( ! isset( $_GET['section'] ) || ( $_GET['section'] !== 'email_connect' ) ) {
             return;
         }
 
-        if ( !isset( $value['id'] ) || ( $value['id'] != 'schedule' ) ) {
+        if ( ! isset( $value['id'] ) || ( $value['id'] !== 'schedule' ) ) {
             return;
         }
 

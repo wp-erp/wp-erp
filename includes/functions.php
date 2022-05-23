@@ -9,7 +9,7 @@ function erp_process_actions() {
     if ( isset( $_REQUEST['erp-action'] ) ) {
         $action = sanitize_text_field( wp_unslash( $_REQUEST['erp-action'] ) );
 
-        do_action( 'erp_action_' . $action, $_REQUEST );
+        do_action( 'erp_action_' . $action, map_deep( wp_unslash( $_REQUEST ), 'sanitize_text_field' ) );
     }
 }
 
@@ -2070,8 +2070,6 @@ function erp_make_csv_file( $items, $file_name, $field_data = true ) {
  * @param void
  */
 function erp_import_export_download_sample() {
-    $type = isset( $_REQUEST['type'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['type'] ) ) : '';
-
     if ( ! isset( $_REQUEST['action'] ) || $_REQUEST['action'] !== 'download_sample' ) {
         return;
     }
@@ -2080,11 +2078,11 @@ function erp_import_export_download_sample() {
         return;
     }
 
-    if ( empty( $type ) ) {
+    if ( empty( $_REQUEST['type'] ) ) {
         return;
     }
 
-    $type   = strtolower( $type );
+    $type   = strtolower( sanitize_text_field( wp_unslash( $_REQUEST['type'] ) ) );
     $fields = erp_get_import_export_fields();
 
     if ( isset( $fields[ $type ] ) ) {
@@ -2576,10 +2574,14 @@ function erp_render_menu( $component ) {
     //check current tab
     $tab = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : 'dashboard';
 
-    echo "<div class='erp-nav-container erp-hide-print'>";
-    echo erp_render_menu_header( $component );
-    echo wp_kses_post( erp_build_menu( $menu[ $component ], $tab, $component ) );
-    echo '</div>';
+    ?>
+    <div class='erp-nav-container erp-hide-print'>
+        <?php
+        echo erp_render_menu_header( $component );
+        echo wp_kses_post( erp_build_menu( $menu[ $component ], $tab, $component ) );
+        ?>
+    </div>
+    <?php
 }
 
 /**
@@ -2933,8 +2935,7 @@ function add_enable_disable_option_save() {
         }
 
         if ( isset( $_POST['isEnableEmail'] ) ) {
-            $is_enable_email = array_map( 'sanitize_text_field', $_POST['isEnableEmail'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash
-            $is_enable_email = array_map( 'wp_unslash', $is_enable_email );
+            $is_enable_email = array_map( 'sanitize_text_field', wp_unslash( $_POST['isEnableEmail'] ) );
 
             foreach ( $is_enable_email as $key => $value ) {
                 $email_arr              = get_option( $key );

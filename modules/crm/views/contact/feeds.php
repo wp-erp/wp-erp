@@ -37,15 +37,15 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
     <div class="activity-content">
         <div class="activity-feed" style="margin-bottom: 10px">
             <select name="" id="" v-model="findFeeds.type">
-                <option value="all">All Activities</option>
-                <option value="email">Email</option>
-                <option value="tasks">Task</option>
-                <option value="log_activity">Schedule</option>
-                <option value="new_note">Note</option>
+                <option value="all"><?php esc_html_e( 'All Activities', 'erp' ); ?></option>
+                <option value="email"><?php esc_html_e( 'Email', 'erp' ); ?></option>
+                <option value="tasks"><?php esc_html_e( 'Task', 'erp' ); ?></option>
+                <option value="log_activity"><?php esc_html_e( 'Schedule', 'erp' ); ?></option>
+                <option value="new_note"><?php esc_html_e( 'Note', 'erp' ); ?></option>
             </select>
             <input type="text" placeholder="From" class="erp-date-field" v-model="findFeeds.created_from">
             <input type="text" placeholder="To" class="erp-date-field" v-model="findFeeds.created_to">
-            <input type="submit" value="Filter" class="button action" @click="searchFeeds">
+            <input type="submit" value="<?php esc_attr_e( 'Filter', 'erp' ); ?>" class="button action" @click="searchFeeds">
         </div>
         <ul class="timeline" v-if = "feeds.length">
             <template v-for="( month, feed_obj ) in feeds | formatFeeds">
@@ -57,7 +57,7 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
 
                 <li v-for="feed in feed_obj">
                     <timeline-feed :i18n="i18n" :is="loadTimelineComponent( feed.type )" :feed="feed"></timeline-feed>
-                    <?php do_action( 'erp_add_custom_content_after_feed', $_GET['id'] ); ?>
+                    <?php do_action( 'erp_add_custom_content_after_feed', intval( $_GET['id'] ) ); ?>
                 </li>
 
             </template>
@@ -65,13 +65,13 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
         <div class="feed-load-more" v-show="( feeds.length >= limit ) && !loadingFinish">
             <button @click="loadMoreContent( feeds )" class="button">
                 <i class="fa fa-cog fa-spin" v-if="loading"></i>
-                &nbsp;<span v-if="!loading"><?php esc_attr_e( 'Load More', 'erp' ); ?></span>
-                &nbsp;<span v-else><?php esc_attr_e( 'Loading..', 'erp' ); ?></span>
+                &nbsp;<span v-if="!loading"><?php esc_html_e( 'Load More', 'erp' ); ?></span>
+                &nbsp;<span v-else><?php esc_html_e( 'Loading..', 'erp' ); ?></span>
             </button>
         </div>
 
         <div class="no-activity-found" v-if="!feeds.length">
-            <?php esc_attr_e( 'No Activity found for this Contact', 'erp' ); ?>
+            <?php esc_html_e( 'No Activity found for this Contact', 'erp' ); ?>
         </div>
     </div>
 </div>

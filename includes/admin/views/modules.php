@@ -597,38 +597,38 @@
                     <?php if ( ! $is_pro_active ) : ?>
                     <li>
                         <button id="all" class="btn active">
-                            <span><?php _e( 'All', 'erp' ); ?></span>
+                            <span><?php esc_html_e( 'All', 'erp' ); ?></span>
                         </button>
                     </li>
                     <?php else : ?>
                     <li>
                         <button id="all" class="btn">
-                            <span><?php _e( 'All', 'erp' ); ?></span>
+                            <span><?php esc_html_e( 'All', 'erp' ); ?></span>
                         </button>
                     </li>
                     <li>
                         <button id="purchased" class="btn active">
                             <img src="<?php echo esc_url( WPERP_ASSETS . '/images/icons/purchaged.svg' ); ?>" alt="<?php echo esc_attr( 'Purchased' ); ?>" />
-                            <span><?php echo __( 'Purchased', 'erp' ); ?></span>
+                            <span><?php esc_html_e( 'Purchased', 'erp' ); ?></span>
                         </button>
                     </li>
                     <?php endif; ?>
                     <li>
                         <button id="hrm" class="btn">
                             <img src="<?php echo esc_url( WPERP_ASSETS . '/images/icons/hrm-colored.svg' ); ?>" alt="<?php echo esc_attr( 'HRM' ); ?>" />
-                            <span><?php echo __( 'HRM', 'erp' ); ?></span>
+                            <span><?php esc_html_e( 'HRM', 'erp' ); ?></span>
                         </button>
                     </li>
                     <li>
                         <button id="crm" class="btn">
                             <img src="<?php echo esc_url( WPERP_ASSETS . '/images/icons/crm-colored.svg' ); ?>" alt="<?php echo esc_attr( 'CRM' ); ?>" />
-                            <span><?php echo __( 'CRM', 'erp' ); ?></span>
+                            <span><?php esc_html_e( 'CRM', 'erp' ); ?></span>
                         </button>
                     </li>
                     <li>
                         <button id="accounting" class="btn">
                             <img src="<?php echo esc_url( WPERP_ASSETS . '/images/icons/accounting-colored.svg' ); ?>" alt="<?php echo esc_attr( 'Accounting' ); ?>" />
-                            <span><?php echo __( 'Accounting', 'erp' ); ?></span>
+                            <span><?php esc_html_e( 'Accounting', 'erp' ); ?></span>
                         </button>
                     </li>
 
@@ -707,8 +707,8 @@
             $license_id     = intval( wp_erp_pro()->update->get_license_id() );
             $purchase_url   = trailingslashit( wp_erp_pro()->update->get_base_url() ) . 'pricing?utm_source=wp-admin&utm_medium=link&utm_campaign=erp-pro-extension-page';
             $licensed_users = wp_erp_pro()->update->get_licensed_user();
-            $existing_users = wp_erp_pro()->update->count_users(); 
-    
+            $existing_users = wp_erp_pro()->update->count_users();
+
             if ( ! empty( $license_id ) ) {
                 $purchase_url  .= "&license_id={$license_id}&action=upgrade";
             }
@@ -789,7 +789,7 @@
                                         <span class="slider round"></span>
                                     </label>
                                 <?php else : ?>
-                                    <a href="<?php echo esc_url( $purchase_url ); ?>" class="button button-primary"  target="_blank" title="<?php _e( 'Get It', 'erp' ); ?>" ><?php _e( 'Get It', 'erp' ); ?></a>
+                                    <a href="<?php echo esc_url( $purchase_url ); ?>" class="button button-primary"  target="_blank" title="<?php esc_attr_e( 'Get It', 'erp' ); ?>" ><?php esc_html_e( 'Get It', 'erp' ); ?></a>
                                 <?php endif; ?>
                             </div>
                         </div>
