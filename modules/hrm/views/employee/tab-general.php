@@ -6,7 +6,7 @@
 
         <div class="handle-actions hide-if-no-js">
             <button type="button" class="handlediv" aria-expanded="true">
-                <span class="screen-reader-text"><?php _e( 'Click to toggle', 'erp' ); ?></span>
+                <span class="screen-reader-text"><?php esc_html_e( 'Click to toggle', 'erp' ); ?></span>
                 <span class="toggle-indicator" aria-hidden="true"></span>
             </button>
         </div>
@@ -36,7 +36,7 @@
 
             <div class="handle-actions hide-if-no-js">
                 <button type="button" class="handlediv" aria-expanded="true">
-                    <span class="screen-reader-text"><?php _e( 'Click to toggle', 'erp' ); ?></span>
+                    <span class="screen-reader-text"><?php esc_html_e( 'Click to toggle', 'erp' ); ?></span>
                     <span class="toggle-indicator" aria-hidden="true"></span>
                 </button>
             </div>
@@ -80,7 +80,7 @@
 
             <div class="handle-actions hide-if-no-js">
                 <button type="button" class="handlediv" aria-expanded="true">
-                    <span class="screen-reader-text"><?php _e( 'Click to toggle', 'erp' ); ?></span>
+                    <span class="screen-reader-text"><?php esc_html_e( 'Click to toggle', 'erp' ); ?></span>
                     <span class="toggle-indicator" aria-hidden="true"></span>
                 </button>
             </div>
@@ -121,7 +121,7 @@
 
             <div class="handle-actions hide-if-no-js">
                 <button type="button" class="handlediv" aria-expanded="true">
-                    <span class="screen-reader-text"><?php _e( 'Click to toggle', 'erp' ); ?></span>
+                    <span class="screen-reader-text"><?php esc_html_e( 'Click to toggle', 'erp' ); ?></span>
                     <span class="toggle-indicator" aria-hidden="true"></span>
                 </button>
             </div>
@@ -185,7 +185,7 @@
 
             <div class="handle-actions hide-if-no-js">
                 <button type="button" class="handlediv" aria-expanded="true">
-                    <span class="screen-reader-text"><?php _e( 'Click to toggle', 'erp' ); ?></span>
+                    <span class="screen-reader-text"><?php esc_html_e( 'Click to toggle', 'erp' ); ?></span>
                     <span class="toggle-indicator" aria-hidden="true"></span>
                 </button>
             </div>
@@ -270,7 +270,7 @@
 
             <div class="handle-actions hide-if-no-js">
                 <button type="button" class="handlediv" aria-expanded="true">
-                    <span class="screen-reader-text"><?php _e( 'Click to toggle', 'erp' ); ?></span>
+                    <span class="screen-reader-text"><?php esc_html_e( 'Click to toggle', 'erp' ); ?></span>
                     <span class="toggle-indicator" aria-hidden="true"></span>
                 </button>
             </div>
@@ -333,7 +333,7 @@
 
                 <div class="handle-actions hide-if-no-js">
                     <button type="button" class="handlediv" aria-expanded="true">
-                        <span class="screen-reader-text"><?php _e( 'Click to toggle', 'erp' ); ?></span>
+                        <span class="screen-reader-text"><?php esc_html_e( 'Click to toggle', 'erp' ); ?></span>
                         <span class="toggle-indicator" aria-hidden="true"></span>
                     </button>
                 </div>
