@@ -274,11 +274,11 @@ class CRM_Settings extends Template {
      * @return void
      */
     public function cron_schedule( $value ) {
-        if ( ! isset( $_GET['section'] ) || ( $_GET['section'] !== 'email_connect' ) ) {
+        if ( ! isset( $_GET['section'] ) || 'email_connect' !== sanitize_text_field( wp_unslash( $_GET['section'] ) ) ) {
             return;
         }
 
-        if ( ! isset( $value['id'] ) || ( $value['id'] !== 'schedule' ) ) {
+        if ( ! isset( $value['id'] ) || ( 'schedule' !== $value['id'] ) ) {
             return;
         }
 

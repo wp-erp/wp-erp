@@ -570,7 +570,7 @@ class Subscription {
                     $this->people_id = $meta->erp_people_id;
                     $this->hash      = $meta->meta_value;
 
-                    switch ( $_GET['erp-subscription-action'] ) {
+                    switch ( sanitize_text_field( wp_unslash( $_GET['erp-subscription-action'] ) ) ) {
                         case 'edit':
                             $this->page_action     = 'edit';
                             $erp_subscription_edit = [
