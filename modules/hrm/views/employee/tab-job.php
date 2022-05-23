@@ -3,7 +3,7 @@
 
     <h3><?php esc_html_e( 'Employee Status', 'erp' ); ?></h3>
     <?php if ( current_user_can( 'erp_manage_jobinfo' ) ) { ?>
-        <a href="#" id="erp-empl-status" class="action button" data-id="<?php echo esc_html( $employee->get_user_id() ); ?>"
+        <a href="#" id="erp-empl-status" class="action button" data-id="<?php echo esc_attr( $employee->get_user_id() ); ?>"
             data-template="erp-employment-status"
             data-title="<?php esc_html_e( 'Employee Status', 'erp' ); ?>"><?php esc_html_e( 'Update Status', 'erp' ); ?></a>
     <?php } ?>
@@ -38,7 +38,7 @@
                         </td>
                         <td class="action">
                             <?php if ( current_user_can( 'erp_manage_jobinfo', $employee->get_user_id() ) && ( 0 !== $num ) ) { ?>
-                                <a href="#" class="remove" data-id="<?php echo esc_html( $employment_history['id'] ); ?>"><span class="dashicons dashicons-trash"></span></a>
+                                <a href="#" class="remove" data-id="<?php echo esc_attr( $employment_history['id'] ); ?>"><span class="dashicons dashicons-trash"></span></a>
                             <?php } ?>
                         </td>
                     </tr>
@@ -57,7 +57,7 @@
 
     <h3><?php esc_html_e( 'Employment Type', 'erp' ); ?></h3>
     <?php if ( current_user_can( 'erp_manage_jobinfo' ) ) { ?>
-        <a href="#" id="erp-empl-type" class="action button" data-id="<?php echo esc_html( $employee->get_user_id() ); ?>"
+        <a href="#" id="erp-empl-type" class="action button" data-id="<?php echo esc_attr( $employee->get_user_id() ); ?>"
             data-template="erp-employment-type"
             data-title="<?php esc_html_e( 'Employment Type', 'erp' ); ?>"><?php esc_html_e( 'Update Type', 'erp' ); ?></a>
     <?php } ?>
@@ -95,7 +95,7 @@
                                 <?php if ( 0 !== $num ) : ?>
                                     <a href="#"
                                         class="remove"
-                                        data-id="<?php echo esc_html( $employment_history['id'] ); ?>">
+                                        data-id="<?php echo esc_attr( $employment_history['id'] ); ?>">
                                         <span class="dashicons dashicons-trash"></span>
                                     </a>
                                 <?php else : ?>
@@ -127,7 +127,7 @@
 
         <h3><?php esc_html_e( 'Compensation', 'erp' ); ?></h3>
         <?php if ( current_user_can( 'erp_manage_jobinfo' ) ) { ?>
-            <a href="#" id="erp-empl-compensation" class="action button" data-id="<?php echo esc_html( $employee->get_user_id() ); ?>" data-template="erp-employment-compensation" data-title="<?php esc_html_e( 'Update Compensation', 'erp' ); ?>"><?php esc_html_e( 'Update Compensation', 'erp' ); ?></a>
+            <a href="#" id="erp-empl-compensation" class="action button" data-id="<?php echo esc_attr( $employee->get_user_id() ); ?>" data-template="erp-employment-compensation" data-title="<?php esc_html_e( 'Update Compensation', 'erp' ); ?>"><?php esc_html_e( 'Update Compensation', 'erp' ); ?></a>
         <?php } ?>
 
         <table class="widefat">
@@ -173,7 +173,7 @@
                                     <?php if ( 0 !== $num ) : ?>
                                         <a href="#"
                                             class="remove"
-                                            data-id="<?php echo esc_html( $compensation['id'] ); ?>">
+                                            data-id="<?php echo esc_attr( $compensation['id'] ); ?>">
                                             <span class="dashicons dashicons-trash"></span>
                                         </a>
                                     <?php else : ?>
@@ -205,7 +205,7 @@
 
     <h3><?php esc_html_e( 'Job Information', 'erp' ); ?></h3>
     <?php if ( current_user_can( 'erp_manage_jobinfo' ) ) { ?>
-        <a href="#" id="erp-empl-jobinfo" class="action button" data-id="<?php echo esc_html( $employee->get_user_id() ); ?>" data-template="erp-employment-jobinfo" data-title="<?php esc_html_e( 'Update Job Information', 'erp' ); ?>"><?php esc_html_e( 'Update Job Information', 'erp' ); ?></a>
+        <a href="#" id="erp-empl-jobinfo" class="action button" data-id="<?php echo esc_attr( $employee->get_user_id() ); ?>" data-template="erp-employment-jobinfo" data-title="<?php esc_html_e( 'Update Job Information', 'erp' ); ?>"><?php esc_html_e( 'Update Job Information', 'erp' ); ?></a>
     <?php } ?>
     <table class="widefat">
         <thead>
@@ -285,7 +285,7 @@
                             <?php if ( 0 !== $num ) : ?>
                                 <a href="#"
                                     class="remove"
-                                    data-id="<?php echo esc_html( $row['id'] ); ?>">
+                                    data-id="<?php echo esc_attr( $row['id'] ); ?>">
                                     <span class="dashicons dashicons-trash"></span>
                                 </a>
                             <?php else : ?>

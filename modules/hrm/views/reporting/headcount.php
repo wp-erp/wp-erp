@@ -54,10 +54,10 @@
             <input type="hidden" name="type" value="headcount">
             <select name="year">
             <?php
-                echo '<option value="-1">-Select Year-</option>';
+                echo '<option value="-1">-' . esc_attr( 'Select Year', 'erp' ) . '-</option>';
 
                 for ( $i = $current_year; $i >= $start_year; $i-- ) {
-                    echo '<option value"' . esc_attr( $i ) . '"' . selected( $query_year, $i ) . '>' . esc_html( $i ) . '</option>';
+                    echo '<option value="' . esc_attr( $i ) . '"' . selected( $query_year, $i ) . '>' . esc_html( $i ) . '</option>';
                 }
             ?>
             </select>
@@ -85,16 +85,14 @@
 
                     <div class="postbox">
 
-                        <div class="handlediv" title="Click to toggle"><br></div>
+                        <div class="handlediv" title="<?php esc_html_e( 'Click to toggle', 'erp' ); ?>"><br></div>
                         <!-- Toggle -->
 
                         <h2 class="hndle"><span><?php esc_html_e( 'Headcount by Month', 'erp' ); ?></span>
                         </h2>
 
                         <div class="inside">
-
                             <div id="emp-headcount" style="width:100%;height:400px;"></div>
-
                         </div>
                         <!-- .inside -->
 
@@ -142,9 +140,6 @@
     </div>
     <!-- #poststuff -->
 
-
-
-
     <table class="widefat striped">
         <thead>
             <tr>
@@ -157,10 +152,9 @@
             </tr>
         </thead>
         <tbody>
-            <?php
-            foreach ( $user_filtered as $user_id ) {
+            <?php foreach ( $user_filtered as $user_id ) :
                 $employee     = new \WeDevs\ERP\HRM\Employee( intval( $user_id ) );
-                $employee_url = '<a href="' . admin_url( 'admin.php?page=erp-hr&section=people&sub-section=employee&action=view&id=' . $employee->get_user_id() ) . '">' . $employee->display_name . '</a>';            ?>
+                $employee_url = '<a href="' . admin_url( 'admin.php?page=erp-hr&section=people&sub-section=employee&action=view&id=' . $employee->get_user_id() ) . '">' . $employee->display_name . '</a>';
             ?>
                 <tr>
                     <td><?php echo wp_kses_post( $employee_url ); ?></td>
@@ -170,9 +164,7 @@
                     <td><?php echo esc_attr( $employee->location_name ); ?></td>
                     <td><?php echo esc_attr( $employee->status ); ?></td>
                 </tr>
-            <?php
-                }
-             ?>
+            <?php endforeach; ?>
         </tbody>
     </table>
 </div>
