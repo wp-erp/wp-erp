@@ -407,13 +407,13 @@ class Ajax_Handler {
 
         if ( count( $valid_import ) > 0 ) {
             $html_class = 'updated notice';
-            $msg .= sprintf( __( 'Successfully imported %u data<br>', 'wp-erp' ), count( $valid_import ) );
+            $msg .= sprintf( __( 'Successfully imported %u data<br>', 'erp' ), count( $valid_import ) );
         }
 
         if ( count( $error_list ) > 0 ) {
             $html_class = 'error  notice';
             $err_string = implode( ',', $error_list );
-            $msg .= sprintf( __( 'Something went wrong. Failed to import line no  %s.', 'wp-erp' ), $err_string );
+            $msg .= sprintf( __( 'Something went wrong! Failed to import line no  %s.', 'erp' ), $err_string );
         }
 
         $msg = "<div class='{$html_class}'><p>{$msg}</p></div>";
@@ -444,7 +444,7 @@ class Ajax_Handler {
             erp_hr_delete_entitlement( $id, $user_id, $policy_id );
             $this->send_success();
         } else {
-            $this->send_error( __( 'Something went wrong!', 'erp' ) );
+            $this->send_error( __( 'Something went wrong! Please try again later.', 'erp' ) );
         }
     }
 
@@ -561,7 +561,7 @@ class Ajax_Handler {
             $this->send_success( $department );
         }
 
-        $this->send_success( __( 'Something went wrong!', 'erp' ) );
+        $this->send_success( __( 'Something went wrong! Please try again later.', 'erp' ) );
     }
 
     /**
@@ -643,7 +643,7 @@ class Ajax_Handler {
             $this->send_success( __( 'Department has been deleted', 'erp' ) );
         }
 
-        $this->send_error( __( 'Something went wrong!', 'erp' ) );
+        $this->send_error( __( 'Something went wrong! Please try again later.', 'erp' ) );
     }
 
     /**
@@ -702,7 +702,7 @@ class Ajax_Handler {
             $this->send_success( $designation );
         }
 
-        $this->send_error( __( 'Something went wrong!', 'erp' ) );
+        $this->send_error( __( 'Something went wrong! Please try again later.', 'erp' ) );
     }
 
     /**
@@ -731,7 +731,7 @@ class Ajax_Handler {
             $this->send_success( __( 'Designation has been deleted', 'erp' ) );
         }
 
-        $this->send_error( __( 'Something went wrong!', 'erp' ) );
+        $this->send_error( __( 'Something went wrong! Please try again later.', 'erp' ) );
     }
 
     /**
@@ -1295,7 +1295,7 @@ class Ajax_Handler {
         $id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
 
         if ( ! $id ) {
-            $this->send_error( __( 'Something went wrong', 'erp' ) );
+            $this->send_error( __( 'Something went wrong! Please try again later.', 'erp' ) );
         }
 
         // Check permission
@@ -2077,7 +2077,7 @@ class Ajax_Handler {
         } elseif ( is_wp_error( $request_id ) ) {
             $this->send_error( $request_id->get_error_message() );
         } else {
-            $this->send_error( __( 'Something went wrong, please try again.', 'erp' ) );
+            $this->send_error( __( 'Something went wrong! Please try again later.', 'erp' ) );
         }
 
         exit();
@@ -2320,7 +2320,7 @@ class Ajax_Handler {
                 $date_format = erp_get_date_format( 'Y-m-d' );
 
                 if ( is_wp_error( $results ) ) {
-                    $this->send_error( __( 'Something went wrong!', 'erp' ) );
+                    $this->send_error( __( 'Something went wrong! Please try again later.', 'erp' ) );
                 }
 
                 $requests = [];
@@ -2372,7 +2372,7 @@ class Ajax_Handler {
         }
 
         if ( is_wp_error( $requests ) ) {
-            $this->send_error( __( 'Something went wrong!', 'erp' ) );
+            $this->send_error( __( 'Something went wrong! Please try again later.', 'erp' ) );
         }
 
         $this->send_success( $requests );
@@ -2431,7 +2431,7 @@ class Ajax_Handler {
         $result = (array) apply_filters( "erp_hr_employee_{$request_type}_request_bulk_action", $req_ids, $action );
 
         if ( is_wp_error( $result ) ) {
-            $this->send_error( __( 'Something went wrong! Try again later.', 'erp' ) );
+            $this->send_error( __( 'Something went wrong! Please try again later.', 'erp' ) );
         }
 
         if ( 0 === count( $result ) && 'deleted' !== $action ) {
@@ -2485,11 +2485,11 @@ class Ajax_Handler {
 
         if ( empty( $_POST['fyears'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
             $this->send_error( erp_get_message ( [
-				'type' => 'error',
-				'text' => __( 'Financial year is required', 'erp' ),
-			] ) );
+				      'type' => 'error',
+				      'text' => __( 'Financial year is required', 'erp' ),
+			      ] ) );
         }
-
+        
         $inserted = erp_settings_save_leave_years( $_POST['fyears'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
         if ( is_wp_error( $inserted ) ) {

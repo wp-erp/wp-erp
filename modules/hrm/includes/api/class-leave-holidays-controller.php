@@ -118,7 +118,7 @@ class Leave_Holidays_Controller extends REST_Controller {
         $item = \WeDevs\ERP\HRM\Models\Leave_Holiday::find( $id );
 
         if ( empty( $id ) || empty( $item->id ) ) {
-            return new WP_Error( 'rest_holiday_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_holiday_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $item     = $this->prepare_item_for_response( $item, $request );
@@ -162,7 +162,7 @@ class Leave_Holidays_Controller extends REST_Controller {
         $holiday = \WeDevs\ERP\HRM\Models\Leave_Holiday::find( $id );
 
         if ( empty( $id ) || empty( $holiday->id ) ) {
-            return new WP_Error( 'rest_holiday_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 400 ] );
+            return new WP_Error( 'rest_holiday_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 400 ] );
         }
 
         $item = $this->prepare_item_for_database( $request );
@@ -267,13 +267,13 @@ class Leave_Holidays_Controller extends REST_Controller {
             'type'       => 'object',
             'properties' => [
                 'id'          => [
-                    'description' => __( 'Unique identifier for the resource.' ),
+                    'description' => __( 'Unique identifier for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
                 'name'        => [
-                    'description' => __( 'Name for the resource.' ),
+                    'description' => __( 'Name for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -282,7 +282,7 @@ class Leave_Holidays_Controller extends REST_Controller {
                     'required'    => true,
                 ],
                 'start_date'  => [
-                    'description' => __( 'Start date for the resource.' ),
+                    'description' => __( 'Start date for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -291,7 +291,7 @@ class Leave_Holidays_Controller extends REST_Controller {
                     'required'    => true,
                 ],
                 'end_date'    => [
-                    'description' => __( 'End date for the resource.' ),
+                    'description' => __( 'End date for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -299,7 +299,7 @@ class Leave_Holidays_Controller extends REST_Controller {
                     ],
                 ],
                 'description' => [
-                    'description' => __( 'Description for the resource.' ),
+                    'description' => __( 'Description for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [

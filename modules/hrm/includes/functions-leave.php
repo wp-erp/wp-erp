@@ -2717,30 +2717,30 @@ function import_holidays_csv( $file ) {
         $description = ( isset( $data['description'] ) ) ? $data['description'] : '';
 
         if ( empty( $title ) ) {
-            $line_error .= __( 'Title can not be empty', 'wp-erp' ) . '<br>';
+            $line_error .= __( 'Title can not be empty', 'erp' ) . '<br>';
         }
 
         if ( strlen( $title ) > 200 ) {
-            $line_error .= __( 'Title can not be more than 200 charecters', 'wp-erp' ) . '<br>';
+            $line_error .= __( 'Title can not be more than 200 characters', 'erp' ) . '<br>';
         }
 
         if ( empty( $start ) || empty( $end ) ) {
-            $line_error .= __( 'Start OR End date can not be empty', 'wp-erp' ) . '<br>';
+            $line_error .= __( 'Start OR End date can not be empty', 'erp' ) . '<br>';
         }
 
         if ( ! is_string( $title ) && ! is_string( $start ) && ! is_string( $end ) ) {
-            $line_error .= __( 'Title, Start & End must be', 'wp-erp' ) . '<br>';
+            $line_error .= __( 'Title, Start & End must be', 'erp' ) . '<br>';
         }
 
         if ( ! preg_match ( "/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/", $start ) ) {
-            $line_error .= __( 'Start date should be valid format. Ex YYYY-MM-DD', 'wp-erp' ) . '<br>';
+            $line_error .= __( 'Start date should be valid format. Ex YYYY-MM-DD', 'erp' ) . '<br>';
         } elseif ( DateTime::createFromFormat( 'Y-m-d H:i:s', $start ) === false ) {
             $start = erp_current_datetime()->modify( $start )->format( 'Y-m-d 00:00:00' );
             $csv->data[ $data_key ]['start'] = $start;
         }
 
         if ( ! preg_match ( "/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/", $end )  ) {
-            $line_error .= __( 'End date should be valid format. Ex YYYY-MM-DD', 'wp-erp' ) . '<br>';
+            $line_error .= __( 'End date should be valid format. Ex YYYY-MM-DD', 'erp' ) . '<br>';
         } elseif ( DateTime::createFromFormat( 'Y-m-d H:i:s', $end ) === false ) {
             $end = erp_current_datetime()->modify( $end )->format( 'Y-m-d 23:59:59' );
             $csv->data[ $data_key ]['end'] = $end;
@@ -2750,11 +2750,11 @@ function import_holidays_csv( $file ) {
         $holiday = $holiday_model->where( 'title', '=', $title )->where( 'start', '=', $start );
 
         if ( $holiday->count() ) {
-            $line_error .= __( 'Holiday entry already exists', 'wp-erp' ) . '<br>';
+            $line_error .= __( 'Holiday entry already exists', 'erp' ) . '<br>';
         }
 
         if ( ! empty( $line_error ) ) {
-            $error_msg .= __( '<strong>Error at #ROW ' . ( $data_key + 1 ) . '</strong>', 'wp-erp' ) . '<br>';
+            $error_msg .= __( '<strong>Error at #ROW ' . ( $data_key + 1 ) . '</strong>', 'erp' ) . '<br>';
             $error_msg .= $line_error;
         }
 
