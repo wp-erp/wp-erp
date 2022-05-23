@@ -291,7 +291,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_tax_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_tax_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $item = erp_acct_get_tax_rate( $id );
@@ -356,7 +356,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         $item_rates = [];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_tax_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_tax_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $tax_data = $this->prepare_item_for_database( $request );
@@ -398,7 +398,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         $item_rates = [];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_tax_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_tax_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $tax_data = $this->prepare_item_for_database( $request );
@@ -433,7 +433,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_tax_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_tax_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $tax_data = $this->prepare_line_item_for_database( $request );
@@ -463,7 +463,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         $item_rates = [];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_tax_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_tax_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $tax_data = $this->prepare_line_item_for_database( $request );
@@ -492,7 +492,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         $id = (int) $request['db_id'];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_tax_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_tax_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         erp_acct_delete_tax_rate_line( $id );
@@ -511,7 +511,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_tax_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_tax_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $item = erp_acct_get_tax_rate( $id );
@@ -584,7 +584,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_tax_pay_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_tax_pay_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $item = erp_acct_get_tax_pay_record( $id );
@@ -951,19 +951,19 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
             'type'       => 'object',
             'properties' => [
                 'id'          => [
-                    'description' => __( 'Unique identifier for the resource.' ),
+                    'description' => __( 'Unique identifier for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
                 'tax_rate_name'       => [
-                    'description' => __( 'Tax rate name for the resource.' ),
+                    'description' => __( 'Tax rate name for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'view', 'edit' ],
                     'readonly'    => true,
                 ],
                 'is_compound' => [
-                    'description' => __( 'Tax type for the resource.' ),
+                    'description' => __( 'Tax type for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],
                 ],

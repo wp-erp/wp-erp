@@ -165,7 +165,7 @@ class Tax_Rate_Names_Controller extends \WeDevs\ERP\API\REST_Controller {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_tax_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_tax_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $item = erp_acct_get_tax_rate_name( $id );
@@ -219,9 +219,9 @@ class Tax_Rate_Names_Controller extends \WeDevs\ERP\API\REST_Controller {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_tax_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_tax_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
-        
+
         $tax_data = $this->prepare_item_for_database( $request );
         $old_data = erp_acct_get_tax_rate_name( $id );
         $tax_id   = erp_acct_update_tax_rate_name( $tax_data, $id );
@@ -251,7 +251,7 @@ class Tax_Rate_Names_Controller extends \WeDevs\ERP\API\REST_Controller {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_tax_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_tax_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $item = erp_acct_get_tax_rate_name( $id );
@@ -381,13 +381,13 @@ class Tax_Rate_Names_Controller extends \WeDevs\ERP\API\REST_Controller {
             'type'       => 'object',
             'properties' => [
                 'id'   => [
-                    'description' => __( 'Unique identifier for the resource.' ),
+                    'description' => __( 'Unique identifier for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
                 'tax_rate_name' => [
-                    'description' => __( 'Tax rate name for the resource.' ),
+                    'description' => __( 'Tax rate name for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'view', 'edit' ],
                     'arg_options' => [
@@ -395,7 +395,7 @@ class Tax_Rate_Names_Controller extends \WeDevs\ERP\API\REST_Controller {
                     ],
                 ],
                 'tax_number' => [
-                    'description' => __( 'Tax number for the resource.' ),
+                    'description' => __( 'Tax number for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'view', 'edit' ],
                     'arg_options' => [
@@ -403,7 +403,7 @@ class Tax_Rate_Names_Controller extends \WeDevs\ERP\API\REST_Controller {
                     ],
                 ],
                 'default' => [
-                    'description' => __( 'Tax default value for the resource.' ),
+                    'description' => __( 'Tax default value for the resource.', 'erp' ),
                     'type'        => [ 'integer', 'string', 'boolean' ],
                     'context'     => [ 'view', 'edit' ],
                 ],
