@@ -98,12 +98,12 @@ class Form_Handler {
             return;
         }
 
-        if ( isset( $_GET['groupaction'] ) && $_GET['groupaction'] === 'view-subscriber' ) {
-            if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'bulk-contactsubscribers' ) ) {
+        if ( isset( $_GET['groupaction'] ) && 'view-subscriber' === sanitize_text_field( wp_unslash( $_GET['groupaction'] ) ) ) {
+            if ( ! wp_verify_nonce( sanitize_key( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'bulk-contactsubscribers' ) ) {
                 return;
             }
         } else {
-            if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'bulk-contactgroups' ) ) {
+            if ( ! wp_verify_nonce( sanitize_key( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'bulk-contactgroups' ) ) {
                 return;
             }
         }
