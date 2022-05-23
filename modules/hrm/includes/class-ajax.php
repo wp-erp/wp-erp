@@ -2200,7 +2200,7 @@ class Ajax_Handler {
                 $weekday = strtolower( $date->format( 'D' ) );
                 if ( in_array( $weekday, $weekends ) ) {
                     $match_holidays[] = array(
-                        'title'      => __( 'Weekly Holiday', 'erp-pro' ),
+                        'title'      => __( 'Weekly Holiday', 'erp' ),
                         'start'      => erp_current_datetime()
                             ->modify( $date->format( 'Y-m-d' ) )
                             ->setTime( 0, 0, 0 )->format( 'Y-m-d' ),
@@ -2290,7 +2290,7 @@ class Ajax_Handler {
         }
 
         if ( isset( $_REQUEST['date'] ) ) {
-            $date = $_REQUEST['date'];
+            $date = (array) $_REQUEST['date'];
 
             array_walk( $date, function( &$value, $key ) {
                 $value = sanitize_text_field( wp_unslash( $value ) );
