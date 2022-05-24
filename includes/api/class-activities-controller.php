@@ -485,12 +485,12 @@ class Activities_Controller extends REST_Controller {
         return [
             'context'                => $this->get_context_param(),
             'type'                   => [
-                'description'        => __( 'The type of activities.' ),
+                'description'        => __( 'The type of activities.', 'erp' ),
                 'type'               => 'string',
                 'default'            => 'log',
             ],
             'page'                   => [
-                'description'        => __( 'Current page of the collection.' ),
+                'description'        => __( 'Current page of the collection.', 'erp' ),
                 'type'               => 'integer',
                 'default'            => 1,
                 'sanitize_callback'  => 'absint',
@@ -498,7 +498,7 @@ class Activities_Controller extends REST_Controller {
                 'minimum'            => 1,
             ],
             'per_page'               => [
-                'description'        => __( 'Maximum number of items to be returned in result set.' ),
+                'description'        => __( 'Maximum number of items to be returned in result set.', 'erp' ),
                 'type'               => 'integer',
                 'default'            => 20,
                 'minimum'            => 1,

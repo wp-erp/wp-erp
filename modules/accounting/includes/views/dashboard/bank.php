@@ -35,8 +35,7 @@
             <?php
             } ?>
             <li class="total">
-                <span class="account-title"><?php esc_attr_e( 'Total Balance ', 'erp' ); ?></span> <span class="price"><a
-                        href="#"><?php echo esc_html( $balance ); ?></a></span>
+                <span class="account-title"><?php esc_html_e( 'Total Balance ', 'erp' ); ?></span> <span class="price"><a href="#"><?php echo esc_html( $balance ); ?></a></span>
             </li>
         </ul>
     </div>

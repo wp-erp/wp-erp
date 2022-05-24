@@ -96,6 +96,13 @@ class Template {
         return [];
     }
 
+    /**
+     * Saves settings.
+     *
+     * @param string $section
+     *
+     * @return void
+     */
     public function save( $section = false ) {
         global $current_class;
 
@@ -174,8 +181,16 @@ class Template {
         }
     }
 
+    /**
+     * Parses option value
+     *
+     * @param array $value
+     *
+     * @return string|null
+     */
     public function parse_option_value( $value ) {
-        if ( isset( $_POST['_wpnonce'] ) && wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-settings-nonce' ) ) {
+        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-settings-nonce' ) ) {
+            return null;
         }
 
         $type         = isset( $value['type'] ) ? sanitize_title( $value['type'] ) : '';
@@ -235,40 +250,27 @@ class Template {
                 break;
 
             case 'image':
-                if ( isset( $_FILES[ $value['id'] ] ) ) {
-                    $file = $_FILES[ $value['id'] ];
+                $option_value = '';
 
-                    $upload = array(
-                        'name'     => $file['name'],
-                        'type'     => $file['type'],
-                        'tmp_name' => $file['tmp_name'],
-                        'error'    => $file['error'],
-                        'size'     => $file['size']
-                    );
+                if ( ! isset( $_FILES[ $value['id'] ] ) ) {
+                    break;
+                }
 
-                    $uploaded_file = wp_handle_upload( $upload, array( 'test_form' => false ) );
+                $file   = $_FILES[ $value['id'] ];
+                $upload = [
+                    'name'        => isset( $file['name'] ) ? sanitize_file_name( wp_unslash( $file['name'] ) ) : '',
+                    'type'        => isset( $file['type'] ) ? sanitize_mime_type( wp_unslash( $file['type'] ) ) : '',
+                    'tmp_name'    => isset( $file['tmp_name'] ) ? sanitize_file_name( wp_unslash( $file['tmp_name'] ) ) : '',
+                    'error'       => isset( $file['error'] ) ? sanitize_text_field( wp_unslash( $file['error'] ) ) : '',
+                    'size'        => isset( $file['size'] ) ? sanitize_text_field( wp_unslash( $file['size'] ) ) : '',
+                    'post_status' => 'erp_hr_rec',
+                ];
 
-                    if ( isset( $uploaded_file['file'] ) ) {
-                        $file_loc  = $uploaded_file['file'];
-                        $file_name = $_FILES[ $value['id'] ]['name'];
-                        $file_type = wp_check_filetype( $file_name );
+                $uploader = new \WeDevs\ERP\Uploader();
+                $uploaded = $uploader->handle_upload( $upload );
 
-                        $attachment = array(
-                            'post_mime_type' => $file_type['type'],
-                            'post_title'     => preg_replace( '/\.[^.]+$/', '', basename( $file_name ) ),
-                            'post_content'   => '',
-                            'post_status'    => 'erp_hr_rec'
-                        );
-
-                        $attach_id   = wp_insert_attachment( $attachment, $file_loc );
-                        $attach_data = wp_generate_attachment_metadata( $attach_id, $file_loc );
-
-                        wp_update_attachment_metadata( $attach_id, $attach_data );
-
-                        $option_value = $attach_id;
-                    }
-                } else {
-                    $option_value = '';
+                if ( $uploaded['success'] && ! empty( $uploaded['attach_id'] ) ) {
+                    $option_value = $uploaded['attach_id'];
                 }
 
                 break;
@@ -277,10 +279,9 @@ class Template {
             case 'multiselect':
 
                 // Get countries array
+                $selected_countries = [];
                 if ( isset( $_POST[ $value['id'] ] ) ) {
                     $selected_countries = array_map( 'sanitize_text_field', wp_unslash( (array) $_POST[ $value['id'] ] ) );
-                } else {
-                    $selected_countries = [];
                 }
 
                 $option_value = $selected_countries;

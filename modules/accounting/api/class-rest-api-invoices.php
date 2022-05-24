@@ -200,7 +200,7 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_invoice_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_invoice_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $item = erp_acct_get_invoice( $id );
@@ -287,13 +287,13 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_invoice_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_invoice_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $can_edit = erp_acct_check_voucher_edit_state( $id );
 
         if ( ! $can_edit ) {
-            return new WP_Error( 'rest_invoice_invalid_edit', __( 'Invalid edit permission for update.' ), [ 'status' => 403 ] );
+            return new WP_Error( 'rest_invoice_invalid_edit', __( 'Invalid edit permission for update.', 'erp' ), [ 'status' => 403 ] );
         }
 
         $invoice_data = $this->prepare_item_for_database( $request );
@@ -350,7 +350,7 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_invoice_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_invoice_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         erp_acct_void_invoice( $id );
@@ -369,7 +369,7 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_invoice_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_invoice_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $args = [
@@ -577,13 +577,13 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
             'type'       => 'object',
             'properties' => [
                 'customer_id'     => [
-                    'description' => __( 'Customer id for the resource.' ),
+                    'description' => __( 'Customer id for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],
                     'required'    => true,
                 ],
                 'date'            => [
-                    'description' => __( 'Date for the resource.' ),
+                    'description' => __( 'Date for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -592,7 +592,7 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'required'    => true,
                 ],
                 'due_date'        => [
-                    'description' => __( 'Due date for the resource.' ),
+                    'description' => __( 'Due date for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -660,7 +660,7 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
                             'context'     => [ 'view', 'edit' ],
                         ],
                         'tax'          => [
-                            'description' => __( 'Tax.' ),
+                            'description' => __( 'Tax.', 'erp' ),
                             'type'        => 'number',
                             'context'     => [ 'edit' ],
                         ],
@@ -670,14 +670,14 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
                             'context'     => [ 'view', 'edit' ],
                         ],
                         'item_total'   => [
-                            'description' => __( 'Item total.' ),
+                            'description' => __( 'Item total.', 'erp' ),
                             'type'        => 'number',
                             'context'     => [ 'edit' ],
                         ],
                     ],
                 ],
                 'type'            => [
-                    'description' => __( 'Type for the resource.' ),
+                    'description' => __( 'Type for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -685,12 +685,12 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
                     ],
                 ],
                 'status'          => [
-                    'description' => __( 'Status for the resource.' ),
+                    'description' => __( 'Status for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],
                 ],
                 'particulars'          => [
-                    'description' => __( 'Status for the resource.' ),
+                    'description' => __( 'Status for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -698,7 +698,7 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
                     ],
                 ],
                 'estimate'        => [
-                    'description' => __( 'Status for the resource.' ),
+                    'description' => __( 'Status for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],
                     'required'    => true,

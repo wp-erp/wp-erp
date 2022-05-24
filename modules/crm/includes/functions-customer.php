@@ -382,33 +382,37 @@ function erp_crm_customer_add_company( $customer_id, $company_id ) {
  *
  * @since 1.1.0
  *
- * @param $postdata array
+ * @param int|string $contact_id
  *
  * @return array
  */
-function erp_crm_customer_get_company( $postdata ) {
+function erp_crm_customer_get_company( $contact_id ) {
     global $wpdb;
-    $results = [];
 
-    if ( isset( $postdata['id'] ) && empty( $postdata['id'] ) ) {
-        return new WP_Error( 'no-ids', __( 'No contact found', 'erp' ) );
+    $data = $wpdb->get_results(
+        $wpdb->prepare(
+            "SELECT com.*
+            FROM {$wpdb->prefix}erp_crm_customer_companies AS com
+            LEFT JOIN {$wpdb->prefix}erp_peoples AS peop
+                ON peop.id = com.company_id
+            WHERE com.customer_id = %d",
+            [ $contact_id ]
+        ),
+        ARRAY_A
+    );
+
+    if ( empty( $data ) || is_wp_error( $data ) ) {
+        return [];
     }
 
-    $sql = 'SELECT com.* FROM ' . $wpdb->prefix . 'erp_crm_customer_companies AS com
-            LEFT JOIN ' . $wpdb->prefix . 'erp_peoples AS peop ON peop.id = com.company_id
-            WHERE com.customer_id = ' . $postdata['id'];
-
-    $data = $wpdb->get_results( $sql, ARRAY_A );
-
-    if ( $data ) {
-        foreach ( $data as $key => $value ) {
-            $company                                       = new \WeDevs\ERP\CRM\Contact( intval( $value['company_id'] ) );
-            $results[ $key ]                               = $value;
-            $results[ $key ]['contact_details']            = $company->to_array();
-            $country                                       = $results[ $key ]['contact_details']['country'];
-            $results[ $key ]['contact_details']['country'] = erp_get_country_name( $country );
-            $results[ $key ]['contact_details']['state']   = erp_get_state_name( $country, $results[ $key ]['contact_details']['state'] );
-        }
+    $results = [];
+    foreach ( $data as $key => $value ) {
+        $company                                       = new \WeDevs\ERP\CRM\Contact( intval( $value['company_id'] ) );
+        $results[ $key ]                               = $value;
+        $results[ $key ]['contact_details']            = $company->to_array();
+        $country                                       = $results[ $key ]['contact_details']['country'];
+        $results[ $key ]['contact_details']['country'] = erp_get_country_name( $country );
+        $results[ $key ]['contact_details']['state']   = erp_get_state_name( $country, $results[ $key ]['contact_details']['state'] );
     }
 
     return $results;
@@ -419,33 +423,37 @@ function erp_crm_customer_get_company( $postdata ) {
  *
  * @since 1.0
  *
- * @param array $postdata
+ * @param int|string $company_id
  *
  * @return array
  */
-function erp_crm_company_get_customers( $postdata ) {
+function erp_crm_company_get_customers( $company_id ) {
     global $wpdb;
-    $results = [];
 
-    if ( isset( $postdata['id'] ) && empty( $postdata['id'] ) ) {
-        return new WP_Error( 'no-ids', __( 'No comapany found', 'erp' ) );
+    $data = $wpdb->get_results(
+        $wpdb->prepare(
+            "SELECT com.*
+            FROM {$wpdb->prefix}erp_crm_customer_companies AS com
+            LEFT JOIN {$wpdb->prefix}erp_peoples AS peop
+                ON peop.id = com.customer_id
+            WHERE com.company_id = %d",
+            [ $company_id ]
+        ),
+        ARRAY_A
+    );
+
+    if ( empty( $data ) || is_wp_error( $data ) ) {
+        return [];
     }
 
-    $sql = 'SELECT  com.* FROM ' . $wpdb->prefix . 'erp_crm_customer_companies AS com
-            LEFT JOIN ' . $wpdb->prefix . 'erp_peoples AS peop ON peop.id = com.customer_id
-            WHERE com.company_id = ' . $postdata['id'];
-
-    $data = $wpdb->get_results( $sql, ARRAY_A );
-
-    if ( $data ) {
-        foreach ( $data as $key => $value ) {
-            $customer                                      = new \WeDevs\ERP\CRM\Contact( intval( $value['customer_id'] ) );
-            $results[ $key ]                               = $value;
-            $results[ $key ]['contact_details']            = $customer->to_array();
-            $country                                       = $results[ $key ]['contact_details']['country'];
-            $results[ $key ]['contact_details']['country'] = erp_get_country_name( $country );
-            $results[ $key ]['contact_details']['state']   = erp_get_state_name( $country, $results[ $key ]['contact_details']['state'] );
-        }
+    $results = [];
+    foreach ( $data as $key => $value ) {
+        $customer                                      = new \WeDevs\ERP\CRM\Contact( intval( $value['customer_id'] ) );
+        $results[ $key ]                               = $value;
+        $results[ $key ]['contact_details']            = $customer->to_array();
+        $country                                       = $results[ $key ]['contact_details']['country'];
+        $results[ $key ]['contact_details']['country'] = erp_get_country_name( $country );
+        $results[ $key ]['contact_details']['state']   = erp_get_state_name( $country, $results[ $key ]['contact_details']['state'] );
     }
 
     return $results;
@@ -601,8 +609,8 @@ function erp_crm_customer_prepare_schedule_postdata( $postdata ) {
 
     $extra_data = [
         'schedule_title'     => ( isset( $postdata['schedule_title'] ) && ! empty( $postdata['schedule_title'] ) ) ? $postdata['schedule_title'] : '',
-        'all_day'            => isset( $postdata['all_day'] ) ? (string) $postdata['all_day'] : 'false',
-        'allow_notification' => isset( $postdata['allow_notification'] ) ? (string) $postdata['allow_notification'] : 'false',
+        'all_day'            => isset( $postdata['all_day'] ) ? (string) $postdata['all_day'] : false,
+        'allow_notification' => isset( $postdata['allow_notification'] ) ? (string) $postdata['allow_notification'] : false,
         'invite_contact'     => ( isset( $postdata['invite_contact'] ) && ! empty( $postdata['invite_contact'] ) ) ? $postdata['invite_contact'] : [],
         'attachments'        => ! empty ( $attachments ) ? $attachments : []
     ];
@@ -611,8 +619,8 @@ function erp_crm_customer_prepare_schedule_postdata( $postdata ) {
     $extra_data['notification_time']          = ( isset( $postdata['notification_time'] ) && $extra_data['allow_notification'] == 'true' ) ? $postdata['notification_time'] : '';
     $extra_data['notification_time_interval'] = ( isset( $postdata['notification_time_interval'] ) && $extra_data['allow_notification'] == 'true' ) ? $postdata['notification_time_interval'] : '';
 
-    $start_time = ( isset( $postdata['start_time'] ) && $extra_data['all_day'] == 'false' ) ? $postdata['start_time'] : '00:00:00';
-    $end_time   = ( isset( $postdata['end_time'] ) && $extra_data['all_day'] == 'false' ) ? $postdata['end_time'] : '00:00:00';
+    $start_time = ( isset( $postdata['start_time'] ) && ! $extra_data['all_day'] ) ? $postdata['start_time'] : '00:00:00';
+    $end_time   = ( isset( $postdata['end_time'] ) && ! $extra_data['all_day'] ) ? $postdata['end_time'] : '00:00:00';
 
     if ( $extra_data['allow_notification'] == 'true' ) {
         $notify_date = new \DateTime( $postdata['start_date'] . $start_time );
@@ -629,8 +637,8 @@ function erp_crm_customer_prepare_schedule_postdata( $postdata ) {
         'message'    => $postdata['message'],
         'type'       => 'log_activity',
         'log_type'   => ( isset( $postdata['schedule_type'] ) && ! empty( $postdata['schedule_type'] ) ) ? $postdata['schedule_type'] : '',
-        'start_date' => date( 'Y-m-d H:i:s', strtotime( $postdata['start_date'] . $start_time ) ),
-        'end_date'   => date( 'Y-m-d H:i:s', strtotime( $postdata['end_date'] . $end_time ) ),
+        'start_date' => erp_current_datetime()->modify( $postdata['start_date'] . $start_time )->format( 'Y-m-d H:i:s' ),
+        'end_date'   => erp_current_datetime()->modify( $postdata['end_date'] . $end_time )->format( 'Y-m-d H:i:s' ),
         'extra'      => base64_encode( wp_json_encode( $extra_data ) ),
     ];
 
@@ -950,11 +958,12 @@ function erp_crm_customer_get_single_activity_feed( $feed_id ) {
  * @return mixed
  */
 function erp_crm_process_attachment_data( $attachments ) {
-    $subdir      = apply_filters( 'crm_attachmet_directory', 'crm-attachments' );
-    $upload_dir  = wp_upload_dir();
+    $upload_dir = wp_upload_dir();
+    $sub_dir    = apply_filters( 'crm_attachmet_directory', 'crm-attachments' );
+    $full_path  = trailingslashit( $upload_dir['baseurl'] ) . $sub_dir;
 
     foreach ( $attachments as $key => $item ) {
-        $attachments[ $key ]['url'] = $upload_dir['baseurl'] . '/' . $subdir . '/' . $item['slug'];
+        $attachments[ $key ]['url'] = trailingslashit( $full_path ) . $item['slug'];
     }
 
     return $attachments;
@@ -1542,7 +1551,23 @@ function erp_crm_edit_contact_subscriber( $groups, $user_id ) {
 
     if ( ! empty( $groups ) ) {
         foreach ( $groups as $group ) {
-            if ( in_array( $group, $db, true ) ) {
+            /*
+             * At this moment, it's not safe to use
+             * strict comparison, because the datatype of `$group`
+             * and the datatype of values of `$db` will be more likely different.
+             * So, to use strict comparison, it has be made sure that
+             * those both are same datatype, which is not necessary
+             * at this moment, but can be added in future.
+             */
+            if ( in_array( $group, $db ) ) {
+                /*
+                 * It may happen that from somewhere the group is an integer holding the id,
+                 * from other places it can be passed as array where id will be an index.
+                 */
+                if ( is_array( $group ) && isset( $group['id'] ) ) {
+                    $group = $group['id'];
+                }
+
                 $existing_group[] = $group;
 
                 if ( $existing_group_with_status[ $group ] === 'unsubscribe' ) {
@@ -3333,6 +3358,11 @@ function erp_user_bulk_actions() {
  * @return void
  */
 function erp_handle_user_bulk_actions() {
+    // Check permission
+    if ( ! ( current_user_can( erp_crm_get_manager_role() ) || current_user_can( erp_crm_get_agent_role() ) ) ) {
+        wp_die( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+    }
+
     $wp_list_table = _get_list_table( 'WP_Users_List_Table' );
     $action        = $wp_list_table->current_action();
 
@@ -3532,7 +3562,7 @@ function erp_crm_check_new_inbound_emails() {
 
         do_action( 'erp_crm_new_inbound_emails', $emails );
 
-        $server_host  = isset( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : '';
+        $server_host  = isset( $_SERVER['HTTP_HOST'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : '';
         $email_regexp = '([a-z0-9]+[.][0-9]+[.][0-9]+[.][r][1|2])@' . $server_host;
 
         $filtered_emails = [];
@@ -4201,4 +4231,24 @@ function erp_crm_get_tasks_menu_html( $selected = '' ) {
 
     <?php
     echo ob_get_clean();
+}
+
+/**
+ * Retrieves directory path for CRM attachments.
+ * If the uploads dir for CRM doesn't exist, it will be created.
+ *
+ * @since 1.10.6
+ *
+ * @return string
+ */
+function erp_crm_get_attachment_dir() {
+    $upload_dir = wp_upload_dir();
+    $sub_dir    = apply_filters( 'crm_attachmet_directory', 'crm-attachments' );
+    $full_path  = trailingslashit( $upload_dir['basedir'] ) . $sub_dir;
+
+    if ( ! file_exists( $full_path ) ) {
+        wp_mkdir_p( $full_path );
+    }
+
+    return $full_path;
 }

@@ -30,7 +30,7 @@ class Contact_Group_List_Table extends WP_List_Table {
      * @return void
      */
     public function no_items() {
-        esc_attr_e( 'No contact group found.', 'erp' );
+        esc_html_e( 'No contact group found.', 'erp' );
     }
 
     /**

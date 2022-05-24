@@ -179,7 +179,7 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
         $item = erp_acct_get_bank( $id );
 
         if ( empty( $id ) || empty( $item->id ) ) {
-            return new WP_Error( 'rest_bank_account_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_bank_account_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $item     = $this->prepare_item_for_response( $item, $request, [] );
@@ -200,7 +200,7 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
         $item = erp_acct_delete_bank( $id );
 
         if ( empty( $id ) || empty( $item->id ) ) {
-            return new WP_Error( 'rest_bank_account_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_bank_account_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $item     = $this->prepare_item_for_response( $item, $request, [] );
@@ -220,7 +220,7 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
         $item = $this->prepare_item_for_database( $request );
 
         if ( empty( $item['from_account_id'] ) || empty( $item['to_account_id'] ) ) {
-            return new WP_Error( 'rest_transfer_invalid_accounts', __( 'Both accounts should be present.' ), [ 'status' => 400 ] );
+            return new WP_Error( 'rest_transfer_invalid_accounts', __( 'Both accounts should be present.', 'erp' ), [ 'status' => 400 ] );
         }
         $args               = [];
         $args['start_date'] = date( 'Y-m-d' );
@@ -232,13 +232,13 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
         $ledger_details = get_ledger_balance_with_opening_balance( $item['from_account_id'], $args['start_date'], $args['end_date'] );
 
         if ( empty( $ledger_details ) ) {
-            return new WP_Error( 'rest_transfer_invalid_account', __( 'Something Went Wrong! Account not found.' ), [ 'status' => 400 ] );
+            return new WP_Error( 'rest_transfer_invalid_account', __( 'Something Went Wrong! Account not found.', 'erp' ), [ 'status' => 400 ] );
         }
 
         $from_balance = $ledger_details['balance'];
 
         // if ( $from_balance < $item['amount'] ) {
-        //     return new WP_Error( 'rest_transfer_insufficient_funds', __( 'Not enough money on selected transfer source.' ), [ 'status' => 400 ] );
+        //     return new WP_Error( 'rest_transfer_insufficient_funds', __( 'Not enough money on selected transfer source.', 'erp' ), [ 'status' => 400 ] );
         // }
 
         $id = erp_acct_perform_transfer( $item );
@@ -311,7 +311,7 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
         $items = erp_acct_get_banks( true, true, false );
 
         if ( empty( $items ) ) {
-            return new WP_Error( 'rest_empty_accounts', __( 'Bank accounts are empty.' ), [ 'status' => 204 ] );
+            return new WP_Error( 'rest_empty_accounts', __( 'Bank accounts are empty.', 'erp' ), [ 'status' => 204 ] );
         }
 
         $formatted_items = [];
@@ -341,7 +341,7 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
         $items           = erp_acct_get_dashboard_banks();
 
         if ( empty( $items ) ) {
-            return new WP_Error( 'rest_empty_accounts', __( 'Bank accounts are empty.' ), [ 'status' => 204 ] );
+            return new WP_Error( 'rest_empty_accounts', __( 'Bank accounts are empty.', 'erp' ), [ 'status' => 204 ] );
         }
 
         foreach ( $items as $item ) {
@@ -367,11 +367,11 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
         erp_log()->add(
             [
                 'component'     => 'Accounting',
-                'sub_component' => __( 'Transfer', 'erp' ),
+                'sub_component' => __( 'Transfer', 'erp', 'erp' ),
                 'old_value'     => '',
                 'new_value'     => '',
                 // translators: %1$s: amount, %2$s: id
-                'message'       => sprintf( __( '%1$s has been transferred from %2$s to %3$s', 'erp' ), $data['amount'], erp_acct_get_ledger_name_by_id( $data['from_account_id'] ), erp_acct_get_ledger_name_by_id( $data['to_account_id'] ) ),
+                'message'       => sprintf( __( '%1$s has been transferred from %2$s to %3$s', 'erp', 'erp' ), $data['amount'], erp_acct_get_ledger_name_by_id( $data['from_account_id'] ), erp_acct_get_ledger_name_by_id( $data['to_account_id'] ) ),
                 'changetype'    => $action,
                 'created_by'    => get_current_user_id(),
             ]
@@ -524,13 +524,13 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
             'type'       => 'object',
             'properties' => [
                 'id'              => [
-                    'description' => __( 'Unique identifier for the resource.' ),
+                    'description' => __( 'Unique identifier for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
                 'date'            => [
-                    'description' => __( 'Date for the resource.' ),
+                    'description' => __( 'Date for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -539,25 +539,25 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'required'    => true,
                 ],
                 'from_account_id' => [
-                    'description' => __( 'From account id for the resource.' ),
+                    'description' => __( 'From account id for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],
                     'required'    => true,
                 ],
                 'to_account_id'   => [
-                    'description' => __( 'To account id for the resource.' ),
+                    'description' => __( 'To account id for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],
                     'required'    => true,
                 ],
                 'amount'          => [
-                    'description' => __( 'Amount for the resource.' ),
+                    'description' => __( 'Amount for the resource.', 'erp' ),
                     'type'        => 'number',
                     'context'     => [ 'edit' ],
                     'required'    => true,
                 ],
                 'particulars'     => [
-                    'description' => __( 'Particulars for the resource.' ),
+                    'description' => __( 'Particulars for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [

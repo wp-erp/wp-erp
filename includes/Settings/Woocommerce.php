@@ -14,7 +14,7 @@ class Woocommerce extends Template {
      */
     public function __construct() {
         $this->id     = 'erp-woocommerce';
-        $this->label  = __( 'WooCommerce', 'erp-pro' );
+        $this->label  = __( 'WooCommerce', 'erp' );
         $this->icon   = WPERP_ASSETS . '/images/wperp-settings/woocommerce.png';
 
         $this->extra  = [
