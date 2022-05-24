@@ -1,6 +1,6 @@
 <div class="erp-crm-new-schedule-wrapper">
 <?php
-    $tab             = ( isset( $_GET['tab'] ) && ! empty( $_GET['tab'] ) ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : 'own';
+    $tab              = ! empty( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : 'own';
     $selected_user_id = ( $tab === 'own' ) ? get_current_user_id() : '';
 ?>
     <# if( new Date( data.current_date ) >= new Date() ) { #>
@@ -21,26 +21,26 @@
 
             <div class="schedule-datetime">
                 <p class="erp-left schedule-start">
-                    <label><?php esc_attr_e( 'Start', 'erp' ); ?></label>
+                    <label><?php esc_html_e( 'Start', 'erp' ); ?></label>
                     <span class="sep">:</span>
                     <span class="value">
                         <input name="start_date" type="hidden" value="{{ data.current_date }}">
                         <input class="start-date erp-date-field" name="start_date" type="text" value="{{ data.current_date }}" disabled="disabled" placeholder="yy-mm-dd"><span class="datetime-sep">@</span>
-                        <input class="start-time erp-time-field" required name="start_time" type="text" placeholder="12.00pm" size="10">
+                        <input class="start-time erp-time-field" required name="start_time" type="text" placeholder="<?php esc_attr_e( '12.00pm', 'erp' ); ?>" size="10">
                     </span>
                 </p>
 
                 <p class="erp-left schedule-end">
-                    <label><?php esc_attr_e( 'End', 'erp' ); ?></label>
+                    <label><?php esc_html_e( 'End', 'erp' ); ?></label>
                     <span class="sep">:</span>
                     <span class="value">
                         <input class="start-date erp-date-field" required name="end_date" type="text" value="{{ data.current_date }}"  placeholder="yy-mm-dd"><span class="datetime-sep">@</span>
-                        <input class="start-time erp-time-field" required name="end_time" type="text" placeholder="12.00pm" size="10">
+                        <input class="start-time erp-time-field" required name="end_time" type="text" placeholder="<?php esc_attr_e( '12.00pm', 'erp' ); ?>" size="10">
                     </span>
                 </p>
 
                 <p class="erp-left schedule-all-day">
-                    <input type="checkbox" name="all_day" value="true"> <?php esc_attr_e( 'All Day', 'erp' ); ?>
+                    <input type="checkbox" name="all_day" value="true"> <?php esc_html_e( 'All Day', 'erp' ); ?>
                 </p>
                 <div class="clearfix"></div>
             </div>
@@ -63,47 +63,47 @@
 
             <div class="schedule-notification">
                 <p class="erp-left schedule-type">
-                    <label><?php esc_attr_e( 'Schedule Type', 'erp' ); ?></label>
+                    <label><?php esc_html_e( 'Schedule Type', 'erp' ); ?></label>
                     <span class="sep">:</span>
                     <span class="value">
                         <select name="schedule_type" id="schedule_type" required>
-                            <option value="" selected><?php esc_attr_e( '--Select--', 'erp' ); ?></option>
-                            <option value="meeting"><?php esc_attr_e( 'Meeting', 'erp' ); ?></option>
-                            <option value="call"><?php esc_attr_e( 'Call', 'erp' ); ?></option>
+                            <option value="" selected><?php esc_html_e( '--Select--', 'erp' ); ?></option>
+                            <option value="meeting"><?php esc_html_e( 'Meeting', 'erp' ); ?></option>
+                            <option value="call"><?php esc_html_e( 'Call', 'erp' ); ?></option>
                         </select>
                     </span>
                 </p>
 
                 <p class="erp-left schedule-notification-allow">
-                    <input type="checkbox" name="allow_notification" value="true"> <?php esc_attr_e( 'Allow notification', 'erp' ); ?>
-                    <?php echo erp_help_tip( esc_html__( "You can send reminder notification through SMS or Email.", 'erp' ) ); ?>
+                    <input type="checkbox" name="allow_notification" value="true"> <?php esc_html_e( 'Allow notification', 'erp' ); ?>
+                    <?php echo erp_help_tip( esc_html__( 'You can send reminder notification through SMS or Email.', 'erp' ) ); ?>
                 </p>
                 <div class="clearfix"></div>
             </div>
 
             <div class="schedule-notification" id="schedule-notification-wrap">
                 <p class="erp-left schedule-notification-via">
-                    <label><?php esc_attr_e( 'Notify Via', 'erp' ); ?></label>
+                    <label><?php esc_html_e( 'Notify Via', 'erp' ); ?></label>
                     <span class="sep">:</span>
                     <span class="value">
                         <select name="notification_via" id="notification_via">
-                            <option value="" selected><?php esc_attr_e( '--Select--', 'erp' ); ?></option>
-                            <option value="email"><?php esc_attr_e( 'Email', 'erp' ); ?></option>
-                            <option value="sms" value="disabled"><?php esc_attr_e( 'SMS', 'erp' ); ?></option>
+                            <option value="" selected><?php esc_html_e( '--Select--', 'erp' ); ?></option>
+                            <option value="email"><?php esc_html_e( 'Email', 'erp' ); ?></option>
+                            <option value="sms" value="disabled"><?php esc_html_e( 'SMS', 'erp' ); ?></option>
                         </select>
                     </span>
                 </p>
 
                 <p class="erp-left schedule-notification-before">
-                    <label><?php esc_attr_e( 'Notify before', 'erp' ); ?></label>
+                    <label><?php esc_html_e( 'Notify before', 'erp' ); ?></label>
                     <span class="sep">:</span>
                     <span class="value">
-                        <input type="text" name="notification_time_interval" placeholder="10" style="width:60px;">
+                        <input type="text" name="notification_time_interval" placeholder="<?php esc_attr_e( '10', 'erp' ); ?>" style="width:60px;">
                         <select name="notification_time" id="notification_time">
-                            <option value="" selected><?php esc_attr_e( '-Select-', 'erp' ); ?></option>
-                            <option value="minute"><?php esc_attr_e( 'minute', 'erp' ); ?></option>
-                            <option value="hour"><?php esc_attr_e( 'hour', 'erp' ); ?></option>
-                            <option value="day"><?php esc_attr_e( 'day', 'erp' ); ?></option>
+                            <option value="" selected><?php esc_html_e( '-Select-', 'erp' ); ?></option>
+                            <option value="minute"><?php esc_html_e( 'minute', 'erp' ); ?></option>
+                            <option value="hour"><?php esc_html_e( 'hour', 'erp' ); ?></option>
+                            <option value="day"><?php esc_html_e( 'day', 'erp' ); ?></option>
                         </select>
                     </span>
                 </p>
@@ -121,20 +121,20 @@
 
             <p>
                 <select name="log_type" required id="erp-crm-feed-log-type" class="erp-left">
-                    <option value=""><?php esc_attr_e( '-- Select type --', 'erp' ); ?></option>
-                    <option value="call"><?php esc_attr_e( 'Log a Call', 'erp' ); ?></option>
-                    <option value="meeting"><?php esc_attr_e( 'Log a Meeting', 'erp' ); ?></option>
-                    <option value="email"><?php esc_attr_e( 'Log an Email', 'erp' ); ?></option>
-                    <option value="sms"><?php esc_attr_e( 'Log an SMS', 'erp' ); ?></option>
+                    <option value=""><?php esc_html_e( '-- Select type --', 'erp' ); ?></option>
+                    <option value="call"><?php esc_html_e( 'Log a Call', 'erp' ); ?></option>
+                    <option value="meeting"><?php esc_html_e( 'Log a Meeting', 'erp' ); ?></option>
+                    <option value="email"><?php esc_html_e( 'Log an Email', 'erp' ); ?></option>
+                    <option value="sms"><?php esc_html_e( 'Log an SMS', 'erp' ); ?></option>
                 </select>
-                <input class="erp-right erp-time-field" type="text" required placeholder="12.00pm" size="10" name="log_time">
+                <input class="erp-right erp-time-field" type="text" required placeholder="<?php esc_attr_e( '12.00pm', 'erp' ); ?>" size="10" name="log_time">
                 <input class="erp-right erp-date-field" disabled="disabled" name="log_date" value="{{ data.current_date }}" type="text" placeholder="yy-mm-dd">
                 <input name="log_date" type="hidden" value="{{ data.current_date }}">
                 <span class="clearfix"></span>
             </p>
 
             <p class="log-email-subject erp-hide">
-                <label><?php esc_attr_e( 'Subject', 'erp' ); ?></label>
+                <label><?php esc_html_e( 'Subject', 'erp' ); ?></label>
                 <span class="sep">:</span>
                 <span class="value">
                     <input type="text" class="email_subject" name="email_subject" placeholder="<?php esc_attr_e( 'Subject log...', 'erp' ); ?>">

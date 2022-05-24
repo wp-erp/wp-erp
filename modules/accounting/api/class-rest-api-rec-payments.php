@@ -153,7 +153,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_payment_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_payment_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $item = erp_acct_get_payment( $id );
@@ -215,7 +215,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_payment_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_payment_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $payment_data = $this->prepare_item_for_database( $request );
@@ -258,7 +258,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_payment_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_payment_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         erp_acct_void_payment( $id );
@@ -447,13 +447,13 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
             'type'       => 'object',
             'properties' => [
                 'id'              => [
-                    'description' => __( 'Unique identifier for the resource.' ),
+                    'description' => __( 'Unique identifier for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
                 'voucher_no'      => [
-                    'description' => __( 'Voucher no. for the resource.' ),
+                    'description' => __( 'Voucher no. for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -461,7 +461,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
                     ],
                 ],
                 'customer_id'     => [
-                    'description' => __( 'Vendor id for the resource.' ),
+                    'description' => __( 'Vendor id for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -470,7 +470,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'required'    => true,
                 ],
                 'trn_date'        => [
-                    'description' => __( 'Date for the resource.' ),
+                    'description' => __( 'Date for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -504,7 +504,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
                             'context'     => [ 'view', 'edit' ],
                         ],
                         'phone'       => [
-                            'description' => __( 'Phone for the resource.' ),
+                            'description' => __( 'Phone for the resource.', 'erp' ),
                             'type'        => 'string',
                             'context'     => [ 'edit' ],
                         ],
@@ -538,7 +538,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
                     ],
                 ],
                 'check_no'        => [
-                    'description' => __( 'Check no for the resource.' ),
+                    'description' => __( 'Check no for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -546,7 +546,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
                     ],
                 ],
                 'name'            => [
-                    'description' => __( 'Check name for the resource.' ),
+                    'description' => __( 'Check name for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -554,7 +554,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
                     ],
                 ],
                 'type'            => [
-                    'description' => __( 'Type for the resource.' ),
+                    'description' => __( 'Type for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -562,7 +562,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
                     ],
                 ],
                 'status'          => [
-                    'description' => __( 'Status for the resource.' ),
+                    'description' => __( 'Status for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [

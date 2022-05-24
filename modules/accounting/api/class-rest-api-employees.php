@@ -139,7 +139,7 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
         $item     = (array) erp_get_people( $people_id );
 
         if ( empty( $item['id'] ) ) {
-            return new WP_Error( 'rest_employee_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_employee_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $item['designation']  = $employee->get_designation( 'view' );
@@ -396,7 +396,7 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
         return [
             'context'  => $this->get_context_param(),
             'page'     => [
-                'description'       => __( 'Current page of the collection.' ),
+                'description'       => __( 'Current page of the collection.', 'erp' ),
                 'type'              => 'integer',
                 'default'           => 1,
                 'sanitize_callback' => 'absint',
@@ -404,7 +404,7 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'minimum'           => 1,
             ],
             'per_page' => [
-                'description'       => __( 'Maximum number of items to be returned in result set.' ),
+                'description'       => __( 'Maximum number of items to be returned in result set.', 'erp' ),
                 'type'              => 'integer',
                 'default'           => 20,
                 'minimum'           => 1,
@@ -413,7 +413,7 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'validate_callback' => 'rest_validate_request_arg',
             ],
             'search'   => [
-                'description'       => __( 'Limit results to those matching a string.' ),
+                'description'       => __( 'Limit results to those matching a string.', 'erp' ),
                 'type'              => 'string',
                 'sanitize_callback' => 'sanitize_text_field',
                 'validate_callback' => 'rest_validate_request_arg',

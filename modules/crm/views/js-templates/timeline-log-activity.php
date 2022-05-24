@@ -11,7 +11,7 @@
         <span class="timeline-feed-header-text">
             <template v-if="isLog">{{{ headerText }}}</template>
             <template v-if="isSchedule">{{{ headerScheduleText }}}</template>
-            <span v-if="( countUser != 0 && countUser != 1 )"> and <strong><tooltip :content="countUser" :title="invitedUser"></tooltip></strong></span>
+            <span v-if="( countUser != 0 && countUser != 1 )"> <?php esc_html_e( 'and', 'erp' ); ?> <strong><tooltip :content="countUser" :title="invitedUser"></tooltip></strong></span>
         </span>
     </h3>
 

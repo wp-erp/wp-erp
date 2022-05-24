@@ -213,7 +213,7 @@ class License {
      */
     public function save_and_activate_license() {
         if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-nonce' ) ) {
-            // die();
+            wp_die( __( 'Nonce verification failed!', 'erp' ) );
         }
 
         if ( isset( $_POST[ $this->get_license_option_key() ] ) ) {

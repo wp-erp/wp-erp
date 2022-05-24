@@ -136,7 +136,7 @@ class Leave_Policies_Controller extends REST_Controller {
         $item = erp_hr_leave_get_policy( $id );
 
         if ( empty( $id ) || empty( $item->id ) ) {
-            return new WP_Error( 'rest_policy_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_policy_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $item     = $this->prepare_item_for_response( $item, $request );
@@ -181,7 +181,7 @@ class Leave_Policies_Controller extends REST_Controller {
         $policy = erp_hr_leave_get_policy( $id );
 
         if ( empty( $id ) || empty( $policy->id ) ) {
-            return new WP_Error( 'rest_policy_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 400 ] );
+            return new WP_Error( 'rest_policy_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 400 ] );
         }
 
         $item = $this->prepare_item_for_database( $request );
@@ -353,13 +353,13 @@ class Leave_Policies_Controller extends REST_Controller {
             'type'       => 'object',
             'properties' => [
                 'id'          => [
-                    'description' => __( 'Unique identifier for the resource.' ),
+                    'description' => __( 'Unique identifier for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
                 'name'        => [
-                    'description' => __( 'Name for the resource.' ),
+                    'description' => __( 'Name for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -368,13 +368,13 @@ class Leave_Policies_Controller extends REST_Controller {
                     'required'    => true,
                 ],
                 'days'        => [
-                    'description' => __( 'Days for the resource.' ),
+                    'description' => __( 'Days for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'required'    => true,
                 ],
                 'color'       => [
-                    'description' => __( 'Color for the resource.' ),
+                    'description' => __( 'Color for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [

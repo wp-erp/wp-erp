@@ -169,7 +169,7 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_people_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_people_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $people = erp_get_people( $id );
@@ -193,7 +193,7 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_people_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_people_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $row = $wpdb->get_row( $wpdb->prepare( "SELECT street_1, street_2, city, state, postal_code, country FROM {$wpdb->prefix}erp_peoples WHERE id = %d", $id ), ARRAY_A );
@@ -378,13 +378,13 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
             'type'       => 'object',
             'properties' => [
                 'id'         => [
-                    'description' => __( 'Unique identifier for the resource.' ),
+                    'description' => __( 'Unique identifier for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
                 'first_name' => [
-                    'description' => __( 'First name for the resource.' ),
+                    'description' => __( 'First name for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -393,7 +393,7 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'required'    => true,
                 ],
                 'last_name'  => [
-                    'description' => __( 'Last name for the resource.' ),
+                    'description' => __( 'Last name for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -402,14 +402,14 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'required'    => true,
                 ],
                 'email'      => [
-                    'description' => __( 'The email address for the resource.' ),
+                    'description' => __( 'The email address for the resource.', 'erp' ),
                     'type'        => 'string',
                     'format'      => 'email',
                     'context'     => [ 'edit' ],
                     'required'    => true,
                 ],
                 'phone'      => [
-                    'description' => __( 'Phone for the resource.' ),
+                    'description' => __( 'Phone for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -417,7 +417,7 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
                     ],
                 ],
                 'other'      => [
-                    'description' => __( 'Other for the resource.' ),
+                    'description' => __( 'Other for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -425,13 +425,13 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
                     ],
                 ],
                 'website'    => [
-                    'description' => __( 'Website of the resource.' ),
+                    'description' => __( 'Website of the resource.', 'erp' ),
                     'type'        => 'string',
                     'format'      => 'uri',
                     'context'     => [ 'embed', 'view', 'edit' ],
                 ],
                 'notes'      => [
-                    'description' => __( 'Notes of the resource.' ),
+                    'description' => __( 'Notes of the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'arg_options' => [
@@ -484,13 +484,13 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
                             'context'     => [ 'view', 'edit' ],
                         ],
                         'email'       => [
-                            'description' => __( 'The email address for the resource.' ),
+                            'description' => __( 'The email address for the resource.', 'erp' ),
                             'type'        => 'string',
                             'format'      => 'email',
                             'context'     => [ 'edit' ],
                         ],
                         'phone'       => [
-                            'description' => __( 'Phone for the resource.' ),
+                            'description' => __( 'Phone for the resource.', 'erp' ),
                             'type'        => 'string',
                             'context'     => [ 'edit' ],
                         ],
