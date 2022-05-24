@@ -22,7 +22,7 @@
     "@riophae/vue-treeselect": "0.0.38",
     "@wordpress/hooks": "^2.6.0",
     "accounting": "^0.4.1",
-    "axios": "^0.19.0",
+    "axios": "^0.21.2",
     "popper.js": "^1.16.0",
     "v-calendar": "^0.9.7",
     "vue": "^2.6.11",
