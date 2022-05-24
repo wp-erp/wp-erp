@@ -382,30 +382,26 @@ function erp_crm_customer_add_company( $customer_id, $company_id ) {
  *
  * @since 1.1.0
  *
- * @param int|string $customer_id
+ * @param int|string $contact_id
  *
  * @return array
  */
-function erp_crm_customer_get_company( $customer_id ) {
+function erp_crm_customer_get_company( $contact_id ) {
     global $wpdb;
-
-    if ( empty( $customer_id ) ) {
-        return new WP_Error( 'no-ids', __( 'No contact found', 'erp' ) );
-    }
 
     $data = $wpdb->get_results(
         $wpdb->prepare(
             "SELECT com.*
             FROM {$wpdb->prefix}erp_crm_customer_companies AS com
-            LEFT JOIN {$wpdb->prefix}erp_peoples AS people
-            ON people.id = com.company_id
+            LEFT JOIN {$wpdb->prefix}erp_peoples AS peop
+                ON peop.id = com.company_id
             WHERE com.customer_id = %d",
-            $customer_id
+            [ $contact_id ]
         ),
         ARRAY_A
     );
 
-    if ( is_wp_error( $data ) || empty( $data ) ) {
+    if ( empty( $data ) || is_wp_error( $data ) ) {
         return [];
     }
 
@@ -434,36 +430,30 @@ function erp_crm_customer_get_company( $customer_id ) {
 function erp_crm_company_get_customers( $company_id ) {
     global $wpdb;
 
-    if ( empty( $company_id ) ) {
-        return new WP_Error( 'no-ids', __( 'No company found', 'erp' ) );
-    }
-
     $data = $wpdb->get_results(
         $wpdb->prepare(
             "SELECT com.*
             FROM {$wpdb->prefix}erp_crm_customer_companies AS com
-            LEFT JOIN {$wpdb->prefix}erp_peoples AS people
-            ON people.id = com.customer_id
+            LEFT JOIN {$wpdb->prefix}erp_peoples AS peop
+                ON peop.id = com.customer_id
             WHERE com.company_id = %d",
-            $company_id
+            [ $company_id ]
         ),
         ARRAY_A
     );
 
-    if ( is_wp_error( $data ) || empty( $data ) ) {
+    if ( empty( $data ) || is_wp_error( $data ) ) {
         return [];
     }
 
     $results = [];
-    if ( $data ) {
-        foreach ( $data as $key => $value ) {
-            $customer                                      = new \WeDevs\ERP\CRM\Contact( intval( $value['customer_id'] ) );
-            $results[ $key ]                               = $value;
-            $results[ $key ]['contact_details']            = $customer->to_array();
-            $country                                       = $results[ $key ]['contact_details']['country'];
-            $results[ $key ]['contact_details']['country'] = erp_get_country_name( $country );
-            $results[ $key ]['contact_details']['state']   = erp_get_state_name( $country, $results[ $key ]['contact_details']['state'] );
-        }
+    foreach ( $data as $key => $value ) {
+        $customer                                      = new \WeDevs\ERP\CRM\Contact( intval( $value['customer_id'] ) );
+        $results[ $key ]                               = $value;
+        $results[ $key ]['contact_details']            = $customer->to_array();
+        $country                                       = $results[ $key ]['contact_details']['country'];
+        $results[ $key ]['contact_details']['country'] = erp_get_country_name( $country );
+        $results[ $key ]['contact_details']['state']   = erp_get_state_name( $country, $results[ $key ]['contact_details']['state'] );
     }
 
     return $results;
@@ -1561,7 +1551,23 @@ function erp_crm_edit_contact_subscriber( $groups, $user_id ) {
 
     if ( ! empty( $groups ) ) {
         foreach ( $groups as $group ) {
-            if ( in_array( $group, $db, true ) ) {
+            /*
+             * At this moment, it's not safe to use
+             * strict comparison, because the datatype of `$group`
+             * and the datatype of values of `$db` will be more likely different.
+             * So, to use strict comparison, it has be made sure that
+             * those both are same datatype, which is not necessary
+             * at this moment, but can be added in future.
+             */
+            if ( in_array( $group, $db ) ) {
+                /*
+                 * It may happen that from somewhere the group is an integer holding the id,
+                 * from other places it can be passed as array where id will be an index.
+                 */
+                if ( is_array( $group ) && isset( $group['id'] ) ) {
+                    $group = $group['id'];
+                }
+
                 $existing_group[] = $group;
 
                 if ( $existing_group_with_status[ $group ] === 'unsubscribe' ) {

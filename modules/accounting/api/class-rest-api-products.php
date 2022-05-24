@@ -409,19 +409,19 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
             $prepared_item['name'] = $request['name'];
         }
 
-        if ( isset( $request['product_type_id'] ) ) {
+        if ( isset( $request['product_type_id']['id'] ) ) {
             $prepared_item['product_type_id'] = $request['product_type_id']['id'];
         }
 
-        if ( isset( $request['category_id'] ) ) {
+        if ( isset( $request['category_id']['id'] ) ) {
             $prepared_item['category_id'] = $request['category_id']['id'];
         }
 
-        if ( isset( $request['tax_cat_id'] ) ) {
+        if ( isset( $request['tax_cat_id']['id'] ) ) {
             $prepared_item['tax_cat_id'] = $request['tax_cat_id']['id'];
         }
 
-        if ( isset( $request['vendor'] ) ) {
+        if ( isset( $request['vendor']['id'] ) ) {
             $prepared_item['vendor'] = $request['vendor']['id'];
         }
 

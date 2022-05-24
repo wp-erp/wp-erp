@@ -746,13 +746,14 @@ class Ajax_Handler {
         unset( $_POST['_wpnonce'] );
         unset( $_POST['action'] );
 
-        $posted  = array_map( 'strip_tags_deep', $_POST );
+        $posted  = map_deep( wp_unslash( $_POST ), 'sanitize_text_field' );
         $user_id = null;
+
         // Check permission for editing and adding new employee
         if ( isset( $posted['user_id'] ) && $posted['user_id'] ) {
             $user_id = absint( $posted['user_id'] );
 
-            if ( ! current_user_can( 'erp_edit_employee', $posted['user_id'] ) ) {
+            if ( ! current_user_can( 'erp_edit_employee', $user_id ) ) {
                 $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
             }
         } else {
@@ -2489,7 +2490,7 @@ class Ajax_Handler {
 				      'text' => __( 'Financial year is required', 'erp' ),
 			      ] ) );
         }
-        
+
         $inserted = erp_settings_save_leave_years( $_POST['fyears'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
         if ( is_wp_error( $inserted ) ) {

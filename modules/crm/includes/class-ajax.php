@@ -250,18 +250,18 @@ class Ajax_Handler {
         }
 
         if ( empty( $_POST['id'] ) ) {
-            $this->send_error( __( 'Contact/Company id must be required', 'erp' ) );
+            $this->send_error( __( 'Contact/Company ID is required', 'erp' ) );
         }
 
         $customer_id = intval( wp_unslash( $_POST['id'] ) );
         $data        = [];
 
         switch ( $_POST['type'] ) {
-            case 'contact':
+            case 'contact_companies':
                 $data = erp_crm_customer_get_company( $customer_id );
                 break;
 
-            case 'company':
+            case 'company_contacts':
                 $data = erp_crm_company_get_customers( $customer_id );
                 break;
         }
