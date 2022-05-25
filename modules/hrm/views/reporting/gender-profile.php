@@ -102,9 +102,6 @@
         </table>
 
     </div>
-    <?php
-        error_log(print_r($yaxis, true));
-    ?>
 
     <script>
         ;
