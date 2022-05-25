@@ -132,16 +132,16 @@
                 });
 
                 var data = [
-                    {label: 'Male', color:'#648d9e', data: <?php echo json_encode( $male ); ?>},
-                    {label: 'Female', color:'#D797AF', data: <?php echo json_encode( $female ); ?>},
-                    {label: 'Unspecified', color:'#AAC6D4', data: <?php echo json_encode( $unspecified ); ?>},
+                    {label: "<?php esc_html_e( 'Male', 'erp' ); ?>", color:'#648d9e', data: <?php echo wp_json_encode( $male ); ?>},
+                    {label: "<?php esc_html_e( 'Female', 'erp' ); ?>", color:'#D797AF', data: <?php echo wp_json_encode( $female ); ?>},
+                    {label: "<?php esc_html_e( 'Unspecified', 'erp' ); ?>", color:'#AAC6D4', data: <?php echo wp_json_encode( $unspecified ); ?>},
                 ];
 
                 $.plot($("#emp-gender-ratio-by-department"), data, {
 
                     xaxis: {
                         tickSize: 5,
-                        axisLabel: "Gender count",
+                        axisLabel: "<?php esc_html_e( 'Gender count', 'erp' ); ?>",
                         axisLabelUseCanvas: true,
                         axisLabelFontSizePixels: 14,
                         axisLabelFontFamily: 'Verdana, Arial',
@@ -164,8 +164,8 @@
                     },
                     yaxis: {
                         tickLength: 0,
-                        ticks: <?php echo json_encode( $yaxis ); ?>,
-                        axisLabel: "Departments",
+                        ticks: <?php echo wp_json_encode( $yaxis ); ?>,
+                        axisLabel: "<?php esc_html_e( 'Departments', 'erp' ); ?>",
                         axisLabelUseCanvas: true,
                         axisLabelFontSizePixels: 14,
                         axisLabelFontFamily: 'Verdana, Arial',
@@ -203,8 +203,6 @@
                             var y = item.datapoint[0] - item.datapoint[2];
 
                             var color = item.series.color;
-
-                            //console.log(item.series.xaxis.ticks[x].label);
 
                             showTooltip(item.pageX,
                             item.pageY,

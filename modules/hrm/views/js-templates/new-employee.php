@@ -10,7 +10,7 @@
                             <img src="{{ data.avatar.url }}" alt="Image">
                             <a href="#" class="erp-remove-photo">&times;</a>
                         <# } else { #>
-                            <img src="<?php echo esc_html( WPERP_ASSETS . '/images/mystery-person.png' ); ?>" alt="">
+                            <img src="<?php echo esc_url( WPERP_ASSETS . '/images/mystery-person.png' ); ?>" alt="">
 
                             <a href="#" id="erp-set-emp-photo" class="button-primary">
                                 <i class="fa fa-cloud-upload"></i>
