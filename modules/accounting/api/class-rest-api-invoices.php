@@ -433,22 +433,25 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function upload_attachments( $request ) {
         $file_names     = isset( $_FILES['attachments']['name'] ) ? array_map( 'sanitize_file_name', (array) wp_unslash( $_FILES['attachments']['name'] ) ) : [];
         $file_tmp_names = isset( $_FILES['attachments']['tmp_name'] ) ? array_map( 'sanitize_url', (array) wp_unslash( $_FILES['attachments']['tmp_name'] ) ) : [];
-        $file_tmp_names = isset( $_FILES['attachments']['type'] ) ? array_map( 'sanitize_mime_type', (array) wp_unslash( $_FILES['attachments']['type'] ) ) : [];
-        $file_errors    = isset( $_FILES['attachments']['error'] ) ? array_map( 'sanitize_text_field', (array) $_FILES['attachments']['error'] ) : [];
-        $file_sizes     = isset( $_FILES['attachments']['size'] ) ? array_map( 'sanitize_text_field', (array) $_FILES['attachments']['size'] ) : [];
+        $file_typess    = isset( $_FILES['attachments']['type'] ) ? array_map( 'sanitize_mime_type', (array) wp_unslash( $_FILES['attachments']['type'] ) ) : [];
+        $file_errors    = isset( $_FILES['attachments']['error'] ) ? array_map( 'sanitize_text_field', (array) wp_unslash( $_FILES['attachments']['error'] ) ) : [];
+        $file_sizes     = isset( $_FILES['attachments']['size'] ) ? array_map( 'sanitize_text_field', (array) wp_unslash( $_FILES['attachments']['size'] ) ) : [];
         $uploaded_files = [];
 
+        if ( ! function_exists( 'wp_handle_upload' ) ) {
+            require_once ABSPATH . 'wp-admin/includes/file.php';
+        }
+
         for ( $i = 0; $i < count( $file_names ); ++ $i ) {
-            $uploaded_files[] = wp_handle_upload(
-                [
-                    'name'     => $file_names[ $i ],
-                    'tmp_name' => $file_tmp_names[ $i ],
-                    'type'     => $file_tmp_names[ $i ],
-                    'error'    => $file_errors[ $i ],
-                    'size'     => $file_sizes[ $i ],
-                ],
-                [ 'test_form' => false ]
-            );
+            $upload_data = [
+                'name'     => $file_names[ $i ],
+                'tmp_name' => $file_tmp_names[ $i ],
+                'type'     => $file_types[ $i ],
+                'error'    => $file_errors[ $i ],
+                'size'     => $file_sizes[ $i ],
+            ];
+
+            $uploaded_files[] = wp_handle_upload( $upload_data, [ 'test_form' => false ] );
         }
 
         $response = rest_ensure_response( $uploaded_files );
