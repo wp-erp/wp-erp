@@ -262,9 +262,9 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields['namespace']  = $this->namespace;
         $additional_fields['rest_base']  = $this->rest_base;
 
-        $invoice_id = erp_acct_insert_invoice( $invoice_data );
+        $invoice = erp_acct_insert_invoice( $invoice_data );
 
-        $invoice_data['id'] = $invoice_id;
+        $invoice_data['id'] = $invoice['id'];
 
         $this->add_log( $invoice_data, 'add' );
 
@@ -327,7 +327,9 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $invoice_id = erp_acct_update_invoice( $invoice_data, $id );
 
-        $this->add_log( $id, 'edit', $old_data );
+        $new_data = erp_acct_get_invoice( $id );
+
+        $this->add_log( $new_data, 'edit', $old_data );
 
         $invoice_data['id'] = $invoice_id;
 
@@ -433,7 +435,7 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function upload_attachments( $request ) {
         $file_names     = isset( $_FILES['attachments']['name'] ) ? array_map( 'sanitize_file_name', (array) wp_unslash( $_FILES['attachments']['name'] ) ) : [];
         $file_tmp_names = isset( $_FILES['attachments']['tmp_name'] ) ? array_map( 'sanitize_url', (array) wp_unslash( $_FILES['attachments']['tmp_name'] ) ) : [];
-        $file_typess    = isset( $_FILES['attachments']['type'] ) ? array_map( 'sanitize_mime_type', (array) wp_unslash( $_FILES['attachments']['type'] ) ) : [];
+        $file_types     = isset( $_FILES['attachments']['type'] ) ? array_map( 'sanitize_mime_type', (array) wp_unslash( $_FILES['attachments']['type'] ) ) : [];
         $file_errors    = isset( $_FILES['attachments']['error'] ) ? array_map( 'sanitize_text_field', (array) wp_unslash( $_FILES['attachments']['error'] ) ) : [];
         $file_sizes     = isset( $_FILES['attachments']['size'] ) ? array_map( 'sanitize_text_field', (array) wp_unslash( $_FILES['attachments']['size'] ) ) : [];
         $uploaded_files = [];
@@ -463,17 +465,16 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Log for invoice related actions
      *
-     * @param int $id
+     * @param array  $data
      * @param string $action
-     * @param array $old_data
+     * @param array  $old_data
      *
      * @return void
      */
-    public function add_log( $id, $action, $old_data = [] ) {
+    public function add_log( $data, $action, $old_data = [] ) {
         switch ( $action ) {
             case 'edit':
                 $operation = 'updated';
-                $data      = erp_acct_get_invoice( $id );
                 $changes   = ! empty( $old_data ) ? erp_get_array_diff( (array) $data, (array) $old_data ) : [];
                 unset( $changes['pdf_link'], $changes['attachments'], $changes['line_items'] );
                 break;
