@@ -248,71 +248,63 @@ function erp_hr_dashboard_widget_latest_announcement() {
 function erp_hr_dashboard_widget_whoisout() {
     $leave_requests           = erp_hr_get_current_month_leave_list();
     $leave_requests_nextmonth = erp_hr_get_next_month_leave_list(); ?>
-    <?php if ( $leave_requests ) { ?>
 
+    <?php if ( $leave_requests ) : ?>
         <h4><?php esc_html_e( 'This Month', 'erp' ); ?></h4>
 
         <ul class="erp-list list-two-side list-sep">
-            <?php foreach ( $leave_requests as $key => $leave ) { ?>
+            <?php foreach ( $leave_requests as $key => $leave ) : ?>
                 <?php $employee = new \WeDevs\ERP\HRM\Employee( intval( $leave->user_id ) ); ?>
                 <li>
                     <a href="<?php echo esc_url( $employee->get_details_url() ); ?>"><?php echo esc_html( $employee->get_full_name() ); ?></a>
                     <?php
-                    if ( $leave->day_status_id != '1' ) {
+                    if ( $leave->day_status_id != '1' ) :
                         $days = erp_hr_leave_request_get_day_statuses( $leave->day_status_id );
 
-                        if ( $leave->day_status_id == '2' ) {
-                            $img = WPERP_URL . '/assets/images/Morning.svg';
-                            echo "&nbsp; <img src='$img' height='20' title='$days' />";
-                        } elseif ( $leave->day_status_id == '3' ) {
-                            $img = WPERP_URL . '/assets/images/Afternoon.svg';
-                            echo "&nbsp; <img src='$img' height='18' title='$days' />";
-                        }
-                    }
+                        if ( $leave->day_status_id == '2' ) :
+                            ?>&nbsp;<img src='<?php echo esc_url( WPERP_URL . '/assets/images/Morning.svg' ); ?>' height='20' title='<?php echo esc_attr( $days ); ?>'/><?php
+                        elseif ( $leave->day_status_id == '3' ) :
+                            ?>&nbsp; <img src='<?php echo esc_url( WPERP_URL . '/assets/images/Afternoon.svg' ); ?>' height='18' title='<?php echo esc_attr( $days ); ?>'/><?php
+                        endif;
+                    endif;
                     ?>
                     <span><i class="fa fa-calendar"></i> <?php echo esc_html( erp_format_date( $leave->start_date, 'M d' ) ) . ' - ' . esc_html( erp_format_date( $leave->end_date, 'M d' ) ); ?></span>
                 </li>
-            <?php } ?>
+            <?php endforeach; ?>
         </ul>
-    <?php } ?>
+    <?php endif; ?>
 
-    <?php if ( $leave_requests_nextmonth ) { ?>
+    <?php if ( $leave_requests_nextmonth ) : ?>
         <h4><?php esc_html_e( 'Next Month', 'erp' ); ?></h4>
 
         <ul class="erp-list list-two-side list-sep">
-            <?php foreach ( $leave_requests_nextmonth as $key => $leave ) { ?>
+            <?php foreach ( $leave_requests_nextmonth as $key => $leave ) : ?>
                 <?php $employee = new \WeDevs\ERP\HRM\Employee( intval( $leave->user_id ) ); ?>
                 <li>
                     <a href="<?php echo esc_url( $employee->get_details_url() ); ?>">
                         <?php echo esc_html( $employee->get_full_name() ); ?>
                     </a>
                     <?php
-                    if ( $leave->day_status_id != '1' ) {
+                    if ( $leave->day_status_id != '1' ) :
                         $days = erp_hr_leave_request_get_day_statuses( $leave->day_status_id );
 
-                        if ( $leave->day_status_id == '2' ) {
-                            $img = WPERP_URL . '/assets/images/Morning.svg';
-                            echo "&nbsp; <img src='$img' height='20' title='" . esc_attr( $days ) . "' />";
-                        } elseif ( $leave->day_status_id == '3' ) {
-                            $img = WPERP_URL . '/assets/images/Afternoon.svg';
-                            echo "&nbsp; <img src='$img' height='18' title='" . esc_attr( $days ) . "' />";
-                        }
-                    }
+                        if ( $leave->day_status_id == '2' ) :
+                            ?>&nbsp;<img src='<?php echo esc_url( WPERP_URL . '/assets/images/Morning.svg' ); ?>' height='20' title='<?php echo esc_attr( $days ); ?>'/><?php
+                        elseif ( $leave->day_status_id == '3' ) :
+                            ?>&nbsp; <img src='<?php echo esc_url( WPERP_URL . '/assets/images/Afternoon.svg' ); ?>' height='18' title='<?php echo esc_attr( $days ); ?>'/><?php
+                        endif;
+                    endif;
                     ?>
                     <span><i class="fa fa-calendar"></i> <?php echo esc_html( erp_format_date( $leave->start_date, 'M d' ) ) . ' - ' . esc_html( erp_format_date( $leave->end_date, 'M d' ) ); ?></span>
                 </li>
-            <?php } ?>
+            <?php endforeach; ?>
         </ul>
-
-    <?php } ?>
-
-    <?php if ( ! $leave_requests && ! $leave_requests_nextmonth ) { ?>
-
-        <?php esc_html_e( 'No one is on vacation on this or next month', 'erp' ); ?>
-
-    <?php } ?>
+    <?php endif; ?>
 
     <?php
+    if ( ! $leave_requests && ! $leave_requests_nextmonth ) :
+        esc_html_e( 'No one is on vacation on this or next month', 'erp' );
+    endif;
 }
 
 /**
@@ -323,7 +315,7 @@ function erp_hr_dashboard_widget_whoisout() {
  * @return void
  */
 function erp_hr_dashboard_widget_leave_calendar() {
-    $user_id        = get_current_user_id();
+    $user_id = get_current_user_id();
     ?>
     <style>
         .fc-time {
