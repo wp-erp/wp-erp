@@ -873,7 +873,7 @@
             var state      = $(this).prop( 'checked' );
             var toggle     = ( state ) ? 'activate' : 'deactivate';
 
-            toastr.success( '<?php echo __( 'Please wait!', 'erp'); ?>', '', {timeOut: 1000} );
+            toastr.success( '<?php esc_html_e( 'Please wait!', 'erp'); ?>', '', {timeOut: 1000} );
 
             wp.ajax.send( 'erp-toggle-module', {
                 data: {
@@ -900,7 +900,7 @@
              var toggle     = ( state ) ? 'activate' : 'deactivate';
              var th         = $(this);
 
-            toastr.success( '<?php echo __( 'Please wait!', 'erp'); ?>', '', {timeOut: 1000} );
+            toastr.success( '<?php esc_html_e( 'Please wait!', 'erp'); ?>', '', {timeOut: 1000} );
 
              wp.ajax.send( 'erp-pro-toggle-extension', {
                 data: {
@@ -935,7 +935,7 @@
                 modules.push($( this ).val() );
             } );
 
-            toastr.success( '<?php echo __( 'Please wait!', 'erp'); ?>', '', {timeOut: 1000} );
+            toastr.success( '<?php esc_html_e( 'Please wait!', 'erp'); ?>', '', {timeOut: 1000} );
 
             wp.ajax.send( 'erp-pro-toggle-extension', {
                 data: {

@@ -70,7 +70,7 @@
         :extra-bulk-action="extraBulkAction"
         :additional-params="additionalParams"
         :remove-url-params="removeUrlParams"
-        :custom-data = '<?php echo json_encode( $custom_data, JSON_UNESCAPED_UNICODE ); ?>'
+        :custom-data = '<?php echo wp_json_encode( $custom_data, JSON_UNESCAPED_UNICODE ); ?>'
     ></vtable>
 
 </div>

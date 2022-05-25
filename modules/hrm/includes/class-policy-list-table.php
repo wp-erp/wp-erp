@@ -85,11 +85,11 @@ class Leave_Policies_List_Table extends \WP_List_Table {
                             '-1'    => esc_html__( 'All', 'erp' ),
                         ] + erp_hr_get_employee_types();
         $employee_type = isset( $_GET['filter_employee_type'] ) ? sanitize_text_field( wp_unslash( $_GET['filter_employee_type'] ) ) : '';
-        
+
         ?><div class="alignleft actions">
 
             <label class="screen-reader-text" for="filter_year"><?php esc_html_e( 'Filter by year', 'erp' ); ?></label>
-            <input type="hidden" name="status" value="<?php echo esc_html( $this->page_status ); ?>">
+            <input type="hidden" name="status" value="<?php echo esc_attr( $this->page_status ); ?>">
             <select name="filter_year" id="filter_year">
                 <?php
                 foreach ( $financial_years as $f_id => $f_name ) {

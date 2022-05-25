@@ -41,13 +41,8 @@ function erp_hr_dashboard_widget_birthday() {
                 $employee = new \WeDevs\ERP\HRM\Employee( intval( $user->user_id ) ); ?>
                 <li>
                     <a href="<?php echo esc_url( $employee->get_details_url() ); ?>" class="erp-tips" title="<?php echo esc_attr( $employee->get_full_name() ); ?>">
-                    <?php echo wp_kses_post( $employee->get_avatar( 32 ) ); ?></a> &nbsp;
-                    <?php if ( !isset( $_COOKIE[ $employee->get_user_id() ] ) ) { ?>
-                        <!-- <a href="#" title="Send birthday wish email to <?php /*echo $employee->get_full_name();*/ ?>"
-                            class="send-wish" data-user_id="<?php /*echo intval( $employee->get_user_id() );*/ ?>">
-                            <i class="fa fa-envelope-o" aria-hidden="true"></i>
-                        </a> -->
-                    <?php } ?>
+                        <?php echo wp_kses_post( $employee->get_avatar( 32 ) ); ?>
+                    </a> &nbsp;
                 </li>
             <?php
             } ?>
@@ -214,7 +209,7 @@ function erp_hr_dashboard_widget_latest_announcement() {
         <?php
         $i = 0;
 
-        foreach ( $announcements as $key => $announcement ) { ?>
+        foreach ( $announcements as $announcement ) { ?>
             <li class="<?php echo ( $announcement->status !== 'read' ) ? 'unread' : 'read'; ?>">
                 <div class="announcement-title">
                     <a href="#" <?php echo ( $announcement->status == 'read' ) ? 'class="read"' : ''; ?>>
@@ -229,9 +224,9 @@ function erp_hr_dashboard_widget_latest_announcement() {
 
                 <div class="announcement-row-actions">
                     <?php if ( ! current_user_can( erp_hr_get_manager_role() ) ) { ?>
-                        <a href="#" class="mark-read erp-tips <?php echo ( $announcement->status == 'read' ) ? 'erp-hide' : ''; ?>" title="<?php esc_html_e( 'Mark as Read', 'erp' ); ?>" data-row_id="<?php echo esc_html( $announcement->id ); ?>"><i class="dashicons dashicons-yes"></i></a>
+                        <a href="#" class="mark-read erp-tips <?php echo ( $announcement->status == 'read' ) ? 'erp-hide' : ''; ?>" title="<?php esc_attr_e( 'Mark as Read', 'erp' ); ?>" data-row_id="<?php echo esc_attr( $announcement->id ); ?>"><i class="dashicons dashicons-yes"></i></a>
                     <?php } ?>
-                    <a href="#" class="view-full erp-tips" title="<?php esc_html_e( 'View full announcement', 'erp' ); ?>" data-row_id="<?php echo esc_html( $announcement->ID ); ?>"><i class="dashicons dashicons-editor-expand"></i></a>
+                    <a href="#" class="view-full erp-tips" title="<?php esc_html_e( 'View full announcement', 'erp' ); ?>" data-row_id="<?php echo esc_attr( $announcement->ID ); ?>"><i class="dashicons dashicons-editor-expand"></i></a>
                 </div>
             </li>
         <?php $i++;
@@ -297,10 +292,10 @@ function erp_hr_dashboard_widget_whoisout() {
 
                         if ( $leave->day_status_id == '2' ) {
                             $img = WPERP_URL . '/assets/images/Morning.svg';
-                            echo "&nbsp; <img src='$img' height='20' title='$days' />";
+                            echo "&nbsp; <img src='$img' height='20' title='" . esc_attr( $days ) . "' />";
                         } elseif ( $leave->day_status_id == '3' ) {
                             $img = WPERP_URL . '/assets/images/Afternoon.svg';
-                            echo "&nbsp; <img src='$img' height='18' title='$days' />";
+                            echo "&nbsp; <img src='$img' height='18' title='" . esc_attr( $days ) . "' />";
                         }
                     }
                     ?>
