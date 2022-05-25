@@ -227,7 +227,7 @@ class ERP_Settings_Page {
             case 'hidden':
             case 'hidden-fixed':
                 $option_value = '';
-                if ( isset( $_POST[$value['id']] ) ) {
+                if ( isset( $_POST[ $value['id'] ] ) ) {
                     $option_value = sanitize_text_field( wp_unslash( $_POST[ $value['id'] ] ) );
                 }
                 break;
