@@ -256,13 +256,12 @@ class Template {
                     break;
                 }
 
-                $file   = $_FILES[ $value['id'] ];
                 $upload = [
-                    'name'        => isset( $file['name'] ) ? sanitize_file_name( wp_unslash( $file['name'] ) ) : '',
-                    'type'        => isset( $file['type'] ) ? sanitize_mime_type( wp_unslash( $file['type'] ) ) : '',
-                    'tmp_name'    => isset( $file['tmp_name'] ) ? sanitize_file_name( wp_unslash( $file['tmp_name'] ) ) : '',
-                    'error'       => isset( $file['error'] ) ? sanitize_text_field( wp_unslash( $file['error'] ) ) : '',
-                    'size'        => isset( $file['size'] ) ? sanitize_text_field( wp_unslash( $file['size'] ) ) : '',
+                    'name'        => isset( $_FILES[ $value['id'] ]['name'] ) ? sanitize_file_name( wp_unslash( $_FILES[ $value['id'] ]['name'] ) ) : '',
+                    'type'        => isset( $_FILES[ $value['id'] ]['type'] ) ? sanitize_mime_type( wp_unslash( $_FILES[ $value['id'] ]['type'] ) ) : '',
+                    'tmp_name'    => isset( $_FILES[ $value['id'] ]['tmp_name'] ) ? sanitize_url( wp_unslash( $_FILES[ $value['id'] ]['tmp_name'] ) ) : '',
+                    'error'       => isset( $_FILES[ $value['id'] ]['error'] ) ? sanitize_text_field( wp_unslash( $_FILES[ $value['id'] ]['error'] ) ) : '',
+                    'size'        => isset( $_FILES[ $value['id'] ]['size'] ) ? sanitize_text_field( wp_unslash( $_FILES[ $value['id'] ]['size'] ) ) : '',
                     'post_status' => 'erp_hr_rec',
                 ];
 

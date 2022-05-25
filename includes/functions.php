@@ -2752,16 +2752,21 @@ function erp_render_menu_header( $component ) {
 /**
  * RSS feed
  *
- * @return void
+ * @return object|false
  */
 function erp_web_feed() {
-    $url = 'https://wperp.com/feed/';
-    $ch = curl_init();
-    curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
-    curl_setopt( $ch, CURLOPT_URL, $url );
+    $url  = 'https://wperp.com/feed/';
+    $args = [
+        'timeout'   => 15,
+        'sslverify' => false,
+    ];
 
-    $data = curl_exec( $ch );
-    curl_close( $ch );
+    $response = wp_remote_post( $url, $args );
+
+    $data = '';
+    if ( ! is_wp_error( $response ) ) {
+        $data = wp_remote_retrieve_body( $response );
+    }
 
     return simplexml_load_string( $data );
 }

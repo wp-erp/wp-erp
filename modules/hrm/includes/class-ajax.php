@@ -294,13 +294,13 @@ class Ajax_Handler {
         $holiday_model = new \WeDevs\ERP\HRM\Models\Leave_Holiday();
 
         // create the ical parser object
-        $temp_name = isset( $_FILES['ics']['tmp_name'] ) ? sanitize_text_field( wp_unslash( $_FILES['ics']['tmp_name'] ) ) : '';
+        $temp_name = sanitize_url( wp_unslash( $_FILES['ics']['tmp_name'] ) );
 
         /***** Check if file is csv start ******/
         $mimes = [ 'application/vnd.ms-excel', 'text/csv' ];
 
-        if ( in_array( sanitize_text_field( wp_unslash( $_FILES['ics']['type'] ) ), $mimes, true ) ) {
-            $import_csv_data = import_holidays_csv( $_FILES['ics']['tmp_name'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+        if ( in_array( sanitize_mime_type( wp_unslash( $_FILES['ics']['type'] ) ), $mimes, true ) ) {
+            $import_csv_data = import_holidays_csv( $temp_name );
             $this->send_success( $import_csv_data );
         }
         /***** Check if file is csv end ******/
