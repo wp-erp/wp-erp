@@ -13,7 +13,7 @@
                         <div class="erp-info-box-content">
                             <div class="erp-info-box-content-row">
                                 <div class="erp-info-box-content-left">
-                                    <h3><?php echo esc_html_e( number_format_i18n( $contacts_count['all']['count'], 0 ) ); ?></h3>
+                                    <h3><?php echo esc_html( number_format_i18n( $contacts_count['all']['count'], 0 ) ); ?></h3>
                                     <p>
                                         <?php echo wp_kses_post( sprintf( _n( 'Contact', 'Contacts', $contacts_count['all']['count'], 'erp' ), number_format_i18n( $companies_count['all']['count'] ), 0 ) ); ?>
                                     </p>

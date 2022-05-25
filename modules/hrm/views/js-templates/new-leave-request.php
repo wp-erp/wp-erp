@@ -24,7 +24,7 @@ foreach ( Financial_Year::all() as $f_year ) {
 <div class="erp-hr-leave-request-new erp-hr-leave-reqs-wrap">
     <?php
     if ( count( $financial_years ) === 1 ) { ?>
-        <input type="hidden" name="f_year" id="f_year" class="f_year" value="<?php echo key( $financial_years ); ?>" />
+        <input type="hidden" name="f_year" id="f_year" class="f_year" value="<?php echo esc_attr( key( $financial_years ) ); ?>" />
         <?php
     } else {
         echo '<div class="row">';
@@ -89,7 +89,7 @@ foreach ( Financial_Year::all() as $f_year ) {
         <input type="file" name="leave_document[]" id="leave_document" multiple>
     </div>
 
-    <input type="hidden" name="employee_id" id="erp-hr-leave-req-employee-id" value="<?php echo esc_html( get_current_user_id() ); ?>">
+    <input type="hidden" name="employee_id" id="erp-hr-leave-req-employee-id" value="<?php echo esc_attr( get_current_user_id() ); ?>">
     <input type="hidden" name="action" value="erp-hr-leave-req-new">
     <?php wp_nonce_field( 'erp-leave-req-new' ); ?>
 </div>

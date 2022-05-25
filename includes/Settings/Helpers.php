@@ -163,7 +163,7 @@ class Helpers {
             <ul class="erp-nav">
 
             <?php foreach ( $tab_sections as $slug => $label ) : ?>
-                <li class="<?php echo $current_section == $slug ? 'active' : ''; ?>"><a href="<?php echo esc_url( admin_url( 'admin.php?page=erp-settings&tab=' . $current_tab . '&section=' . sanitize_title( $slug ) ) ); ?>"><?php esc_html_e( $label ); ?></a></li>
+                <li class="<?php echo $current_section == $slug ? 'active' : ''; ?>"><a href="<?php echo esc_url( admin_url( 'admin.php?page=erp-settings&tab=' . $current_tab . '&section=' . sanitize_title( $slug ) ) ); ?>"><?php echo esc_html( $label ); ?></a></li>
             <?php endforeach; ?>
 
             </ul>
