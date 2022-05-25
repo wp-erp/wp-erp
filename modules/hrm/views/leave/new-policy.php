@@ -64,7 +64,7 @@ $f_year = ! empty( $form_data ) ? $form_data['f-year'] : ( ! empty( $leave_polic
     <form class="leave-policy-form" action="<?php echo esc_url( erp_hr_new_policy_url( $id, $action ) ); ?>" method="POST">
 
         <!-- show error message -->
-        <?php echo $error_messages; ?>
+        <?php echo esc_html( $error_messages ); ?>
 
         <div class="form-group">
             <div class="row">
