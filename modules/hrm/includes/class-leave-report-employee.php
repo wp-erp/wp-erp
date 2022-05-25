@@ -71,12 +71,12 @@ class Leave_Report_Employee_Based extends \WP_List_Table {
                     echo sprintf( "<option value='%s'%s>%s</option>\n", esc_html( $f_id ), selected( $selected_year, $f_id, false ), esc_html( $f_name ) );
                 }
         $selected = ( $selected_year == 'custom' ) ? 'selected' : ''; ?>
-                <option value="custom" <?php echo esc_html( $selected ); ?>><?php esc_html_e( 'Custom', 'erp' ); ?></option>
+                <option value="custom" <?php echo esc_attr( $selected ); ?>><?php esc_html_e( 'Custom', 'erp' ); ?></option>
             </select>
             <span id="custom-date-range"></span>
             <?php if ( $selected ) { ?>
                 <span id="custom-input" style="float:left">
-                    <span>From </span><input name="start" class="erp-leave-date-field" type="text" value="<?php echo esc_html( $date_range_start ); ?>">&nbsp;<span>To </span><input name="end" class="erp-leave-date-field" type="text" value="<?php echo esc_html( $date_range_end ); ?>">
+                    <span><?php esc_html_e( 'From', 'erp' ); ?> </span><input name="start" class="erp-leave-date-field" type="text" value="<?php echo esc_attr( $date_range_start ); ?>">&nbsp;<span><?php esc_html_e( 'To', 'erp' ); ?> </span><input name="end" class="erp-leave-date-field" type="text" value="<?php echo esc_attr( $date_range_end ); ?>">
                 </span>
             <?php } ?>
             <select name="filter_designation" id="filter_designation">

@@ -213,7 +213,7 @@ function erp_crm_dashboard_widget_my_schedules() {
                 },
                 editable: false,
                 eventLimit: true,
-                events: <?php echo json_encode( $schedules_data ); ?>,
+                events: <?php echo wp_json_encode( $schedules_data ); ?>,
                 eventClick: function(calEvent, jsEvent, view) {
                     var scheduleId = calEvent.schedule.id;
                     $.erpPopup({
@@ -406,16 +406,16 @@ function customer_statics() {
                 zoomOnScroll: false,
                 series: {
                     regions: [{
-                        values: <?php echo json_encode( $customer_countries ); ?>,
+                        values: <?php echo wp_json_encode( $customer_countries ); ?>,
                         scale: ['#C8EEFF', '#0071A4'],
                         normalizeFunction: 'polynomial'
                     }]
                 },
                 onRegionTipShow: function (e, el, code) {
-                    if (typeof <?php echo json_encode( $customer_countries ); ?>[code] === 'undefined') {
+                    if (typeof <?php echo wp_json_encode( $customer_countries ); ?>[code] === 'undefined') {
                         el.html('No data');
                     } else {
-                        el.html(el.html() + ': ' + <?php echo json_encode( $customer_countries ); ?>[code]);
+                        el.html(el.html() + ': ' + <?php echo wp_json_encode( $customer_countries ); ?>[code]);
                     }
                 }
             });
