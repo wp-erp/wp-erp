@@ -233,7 +233,7 @@ $schedules_data = erp_crm_get_schedule_data( $tab );
 
                                 // Add in current calendar only if current user id in invited_user array or not in own tab
                                 const currentUserId = <?php echo get_current_user_id() ?>;
-                                const currentTab    = "<?php echo $tab ?>";
+                                const currentTab    = "<?php echo esc_attr( $tab ); ?>";
                                 const existsArray   = res.extra.invited_user.filter(x => parseInt(x.id) === currentUserId);
 
                                 if( existsArray.length > 0 || currentTab !== 'own' ){
