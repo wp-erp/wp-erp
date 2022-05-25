@@ -248,6 +248,7 @@ class Customer_Relationship {
             'date_format'          => get_option( 'date_format' ),
             'timeline_feed_header' => apply_filters( 'erp_crm_contact_timeline_feeds_header', '' ),
             'timeline_feed_body'   => apply_filters( 'erp_crm_contact_timeline_feeds_body', '' ),
+            'validatingAtch'       => __( 'Validating attachments...', 'erp' ),
         ] );
 
         /*
@@ -355,9 +356,8 @@ class Customer_Relationship {
 
                 case 'reports':
                     if ( isset( $_GET['type'] ) && sanitize_text_field( wp_unslash( $_GET['type'] ) ) === 'growth-report' ) {
-                        wp_enqueue_script( 'erp-momentjs' );
                         wp_enqueue_script( 'erp-crm-chart', WPERP_CRM_ASSETS . "/js/chart$suffix.min.js", [], gmdate( 'Ymd' ), true );
-                        wp_enqueue_script( 'erp-crm-report', WPERP_CRM_ASSETS . "/js/report$suffix.js", [], gmdate( 'Ymd' ), true );
+                        wp_enqueue_script( 'erp-crm-report', WPERP_CRM_ASSETS . "/js/report$suffix.js", [ 'moment' ], gmdate( 'Ymd' ), true );
                     }
                     break;
         }

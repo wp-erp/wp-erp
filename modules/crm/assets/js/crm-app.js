@@ -69,6 +69,8 @@ var mixin = {
             atchOutputEl.html( '' );
             el.css( 'display', 'block' );
 
+            $( 'input[name="save_notes"]' ).attr( 'disabled', true );
+
             formData.append( 'action', 'erp_crm_activity_attachment' );
             formData.append( '_wpnonce', wpCRMvue.nonce );
             $.each( input, function( index, object ) {
@@ -92,6 +94,8 @@ var mixin = {
                     } else {
                         atchOutputEl.html( response.data );
                     }
+
+                    $( 'input[name="save_notes"]' ).attr( 'disabled', false );
                 },
                 xhr: function(){
                     //upload Progress
@@ -107,6 +111,10 @@ var mixin = {
                             //update progressbar
                             $( '.progress-bar' ).css( 'width', + percent +'%' );
                             $( '.status' ).text(percent +'%');
+                            console.log( percent )
+                            if ( percent === 100 ) {
+                                atchOutputEl.html( wpCRMvue.validatingAtch );
+                            }
                         }, true);
                     }
 
