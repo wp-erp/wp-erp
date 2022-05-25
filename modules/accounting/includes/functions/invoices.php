@@ -157,7 +157,7 @@ function erp_acct_format_invoice_line_items( $voucher_no ) {
 
     $results = $wpdb->get_results( $sql, ARRAY_A );
 
-    if ( ! empty( reset( $results )['ecommerce_type'] ) ) {
+    if ( ! is_null( $results ) && ! empty( reset( $results )['ecommerce_type'] ) ) {
         // product name should not fetch form `erp_acct_products`
         $results = array_map(
             function ( $result ) {
@@ -1122,7 +1122,7 @@ function erp_acct_get_invoice_due( $invoice_no ) {
         ARRAY_A
     );
 
-    return $result['due'];
+    return ! empty( $result['due'] ) ? $result['due'] : 0;
 }
 
 /**
