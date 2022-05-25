@@ -1734,21 +1734,17 @@ function erp_acct_get_pdf_filename( $voucher_no ) {
 function erp_acct_insert_data_into_people_trn_details( $transaction, $voucher_no ) {
     global $wpdb;
 
-    $data = [];
-
     if ( ! empty( $transaction['customer_id'] ) ) {
         $people_id = $transaction['customer_id'];
+    } else if ( ! empty( $transaction['vendor_id'] ) ) {
+        $people_id = $transaction['vendor_id'];
     } else {
-        if ( ! empty( $transaction['vendor_id'] ) ) {
-            $people_id = $transaction['vendor_id'];
-        } else {
-            $people_id = $transaction['people_id'];
-        }
+        $people_id = $transaction['people_id'];
     }
 
     $date = ! empty( $transaction['trn_date'] ) ? $transaction['trn_date'] : $transaction['date'];
 
-    $wpdb->insert(
+    $inserted = $wpdb->insert(
         $wpdb->prefix . 'erp_acct_people_trn_details',
         [
             'people_id'   => $people_id,
@@ -1763,6 +1759,12 @@ function erp_acct_insert_data_into_people_trn_details( $transaction, $voucher_no
             'updated_by'  => $transaction['updated_by'],
         ]
     );
+
+    if ( ! $inserted ) {
+        throw new \Exception( __( 'Failed to create people transaction details', 'erp' ) );
+    }
+
+    return $wpdb->insert_id;
 }
 
 /**

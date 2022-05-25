@@ -264,14 +264,14 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $invoice = erp_acct_insert_invoice( $invoice_data );
 
+        if ( is_wp_error( $invoice ) ) {
+            $response = rest_ensure_response( $invoice );
+            $response->set_status( 507 );
+        }
+
         $invoice_data['id'] = $invoice['id'];
-
         $this->add_log( $invoice_data, 'add' );
-
-        $invoice_data = $this->prepare_item_for_response( $invoice_data, $request, $additional_fields );
-
-        $response = rest_ensure_response( $invoice_data );
-        $response->set_status( 201 );
+        $response = $this->prepare_item_for_response( $invoice_data, $request, $additional_fields );
 
         return $response;
     }
@@ -323,11 +323,9 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields['namespace']  = $this->namespace;
         $additional_fields['rest_base']  = $this->rest_base;
 
-        $old_data = erp_acct_get_invoice( $id );
-
+        $old_data   = erp_acct_get_invoice( $id );
         $invoice_id = erp_acct_update_invoice( $invoice_data, $id );
-
-        $new_data = erp_acct_get_invoice( $id );
+        $new_data   = erp_acct_get_invoice( $id );
 
         $this->add_log( $new_data, 'edit', $old_data );
 
