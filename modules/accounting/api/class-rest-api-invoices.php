@@ -431,11 +431,27 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Request
      */
     public function upload_attachments( $request ) {
-        $file = $_FILES['attachments'];
+        $file_names     = isset( $_FILES['files']['name'] ) ? array_map( 'sanitize_file_name', (array) wp_unslash( $_FILES['files']['name'] ) ) : [];
+        $file_tmp_names = isset( $_FILES['files']['tmp_name'] ) ? array_map( 'sanitize_url', (array) wp_unslash( $_FILES['files']['tmp_name'] ) ) : [];
+        $file_tmp_names = isset( $_FILES['files']['type'] ) ? array_map( 'sanitize_mime_type', (array) wp_unslash( $_FILES['files']['type'] ) ) : [];
+        $file_errors    = isset( $_FILES['files']['error'] ) ? array_map( 'sanitize_text_field', (array) $_FILES['files']['error'] ) : [];
+        $file_sizes     = isset( $_FILES['files']['size'] ) ? array_map( 'sanitize_text_field', (array) $_FILES['files']['size'] ) : [];
+        $uploaded_files = [];
 
-        $movefiles = erp_acct_upload_attachments( $file );
+        for ( $i = 0; $i < count( $file_names ); ++ $i ) {
+            $uploaded_files[] = wp_handle_upload(
+                [
+                    'name'     => $file_names[ $i ],
+                    'tmp_name' => $file_tmp_names[ $i ],
+                    'type'     => $file_tmp_names[ $i ],
+                    'error'    => $file_errors[ $i ],
+                    'size'     => $file_sizes[ $i ],
+                ],
+                [ 'test_form' => false ]
+            );
+        }
 
-        $response = rest_ensure_response( $movefiles );
+        $response = rest_ensure_response( $uploaded_files );
         $response->set_status( 200 );
 
         return $response;

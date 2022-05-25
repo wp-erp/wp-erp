@@ -60,10 +60,9 @@ class Scripts {
         // register vendors first
         wp_register_script( 'erp-select2', $vendor . '/select2/select2.full.min.js', [ 'jquery' ], $this->version, true );
         wp_register_script( 'erp-tiptip', $vendor . '/tiptip/jquery.tipTip.min.js', [ 'jquery' ], $this->version, true );
-        wp_register_script( 'erp-momentjs', $vendor . '/moment/moment.min.js', false, $this->version, true );
-        wp_register_script( 'erp-fullcalendar', $vendor . '/fullcalendar/fullcalendar' . $this->suffix . '.js', [ 'jquery', 'erp-momentjs' ], $this->version, true );
-        wp_register_script( 'erp-datetimepicker', $vendor . '/jquery-ui/timepicker-addon/jquery-ui-timepicker-addon.min.js', [ 'jquery', 'erp-momentjs' ], $this->version, true );
-        wp_register_script( 'erp-timepicker', $vendor . '/timepicker/jquery.timepicker.min.js', [ 'jquery', 'erp-momentjs' ], $this->version, true );
+        wp_register_script( 'erp-fullcalendar', $vendor . '/fullcalendar/fullcalendar' . $this->suffix . '.js', [ 'jquery', 'moment' ], $this->version, true );
+        wp_register_script( 'erp-datetimepicker', $vendor . '/jquery-ui/timepicker-addon/jquery-ui-timepicker-addon.min.js', [ 'jquery', 'moment' ], $this->version, true );
+        wp_register_script( 'erp-timepicker', $vendor . '/timepicker/jquery.timepicker.min.js', [ 'jquery', 'moment' ], $this->version, true );
         wp_register_script( 'erp-vuejs', $vendor . '/vue/vue' . $this->suffix . '.js', [ 'jquery' ], $this->version, true );
         wp_register_script( 'erp-trix-editor', $vendor . '/trix/trix.js', [ 'jquery' ], $this->version, true );
         wp_register_script( 'erp-nprogress', $vendor . '/nprogress/nprogress.js', [ 'jquery' ], $this->version, true );

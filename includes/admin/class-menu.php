@@ -309,6 +309,7 @@ class Admin_Menu {
      * @return void
      */
     public function addon_page() {
+        wp_enqueue_style( 'erp-addons-fonts', 'https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700;900&display=swap', [], WPERP_VERSION );
         include_once __DIR__ . '/views/add-ons.php';
     }
 }
