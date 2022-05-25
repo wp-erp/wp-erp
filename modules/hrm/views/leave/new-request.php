@@ -10,7 +10,7 @@
 
             if ( ! empty( $_GET['insert_error'] ) ) {
                 $errors = new \WeDevs\ERP\ERP_Errors( sanitize_text_field( wp_unslash( $_GET['insert_error'] ) ) );
-                echo $errors->display();
+                echo esc_html( $errors->display() );
             } elseif ( isset( $_GET['msg'] ) && ( 'submitted' === sanitize_text_field( wp_unslash( $_GET['msg'] ) ) ) ) {
                 erp_html_show_notice( __( 'Leave request has been submitted successfully.', 'erp' ), 'updated', true );
             }
@@ -33,7 +33,7 @@
             <form action="" method="post" class="new-leave-request-form" enctype="multipart/form-data">
                 <?php
                 if ( count( $financial_years ) === 1 ) { ?>
-                    <input type="hidden" name="f_year" id="f_year" class="f_year" value="<?php echo key( $financial_years ); ?>" />
+                    <input type="hidden" name="f_year" id="f_year" class="f_year" value="<?php echo esc_attr( key( $financial_years ) ); ?>" />
                     <?php
                 } else {
                     echo '<div class="row">';

@@ -5,7 +5,7 @@
     <?php if ( current_user_can( 'erp_manage_jobinfo' ) ) { ?>
         <a href="#" id="erp-empl-status" class="action button" data-id="<?php echo esc_attr( $employee->get_user_id() ); ?>"
             data-template="erp-employment-status"
-            data-title="<?php esc_html_e( 'Employee Status', 'erp' ); ?>"><?php esc_html_e( 'Update Status', 'erp' ); ?></a>
+            data-title="<?php esc_attr_e( 'Employee Status', 'erp' ); ?>"><?php esc_html_e( 'Update Status', 'erp' ); ?></a>
     <?php } ?>
     <table class="widefat">
         <thead>

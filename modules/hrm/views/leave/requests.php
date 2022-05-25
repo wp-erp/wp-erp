@@ -10,7 +10,7 @@
     <?php
     if ( ! empty( $_GET['error'] ) ) {
         $errors = new \WeDevs\ERP\ERP_Errors( sanitize_text_field( wp_unslash( $_GET['error'] ) ) );
-        echo $errors->display();
+        echo esc_html( $errors->display() );
     }
     ?>
     <div class="erp-hr-leave-requests-inner">
