@@ -431,11 +431,11 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Request
      */
     public function upload_attachments( $request ) {
-        $file_names     = isset( $_FILES['files']['name'] ) ? array_map( 'sanitize_file_name', (array) wp_unslash( $_FILES['files']['name'] ) ) : [];
-        $file_tmp_names = isset( $_FILES['files']['tmp_name'] ) ? array_map( 'sanitize_url', (array) wp_unslash( $_FILES['files']['tmp_name'] ) ) : [];
-        $file_tmp_names = isset( $_FILES['files']['type'] ) ? array_map( 'sanitize_mime_type', (array) wp_unslash( $_FILES['files']['type'] ) ) : [];
-        $file_errors    = isset( $_FILES['files']['error'] ) ? array_map( 'sanitize_text_field', (array) $_FILES['files']['error'] ) : [];
-        $file_sizes     = isset( $_FILES['files']['size'] ) ? array_map( 'sanitize_text_field', (array) $_FILES['files']['size'] ) : [];
+        $file_names     = isset( $_FILES['attachments']['name'] ) ? array_map( 'sanitize_file_name', (array) wp_unslash( $_FILES['attachments']['name'] ) ) : [];
+        $file_tmp_names = isset( $_FILES['attachments']['tmp_name'] ) ? array_map( 'sanitize_url', (array) wp_unslash( $_FILES['attachments']['tmp_name'] ) ) : [];
+        $file_tmp_names = isset( $_FILES['attachments']['type'] ) ? array_map( 'sanitize_mime_type', (array) wp_unslash( $_FILES['attachments']['type'] ) ) : [];
+        $file_errors    = isset( $_FILES['attachments']['error'] ) ? array_map( 'sanitize_text_field', (array) $_FILES['attachments']['error'] ) : [];
+        $file_sizes     = isset( $_FILES['attachments']['size'] ) ? array_map( 'sanitize_text_field', (array) $_FILES['attachments']['size'] ) : [];
         $uploaded_files = [];
 
         for ( $i = 0; $i < count( $file_names ); ++ $i ) {
