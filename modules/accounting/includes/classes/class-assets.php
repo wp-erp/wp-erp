@@ -26,6 +26,9 @@ class Assets {
             $screen = get_current_screen();
 
             if ( 'wp-erp_page_erp-settings' === $screen->base ) {
+                // Include Chart JS library
+                wp_enqueue_script( 'erp-chartjs' );
+
                 wp_enqueue_script( 'accounting-helper', ERP_ACCOUNTING_ASSETS . '/js/accounting-helper.js', [ 'jquery', 'erp-tiptip' ], false, true );
 
                 wp_localize_script(
