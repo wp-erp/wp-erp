@@ -312,7 +312,10 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
      */
     public function validate_csv_data( $request ) {
         $args = [
-            'csv_file'        => ! empty( $_FILES['csv_file'] )         ? $_FILES['csv_file']         : '',
+            'csv_file'        => [
+                'name'     => ! empty( $_FILES['csv_file']['name'] )     ? sanitize_file_name( wp_unslash( $_FILES['csv_file']['name'] ) ) : '',
+                'tmp_name' => ! empty( $_FILES['csv_file']['tmp_name'] ) ? sanitize_url( wp_unslash( $_FILES['csv_file']['tmp_name'] ) )   : '',
+            ],
             'type'            => ! empty( $request['type'] )            ? $request['type']            : '',
             'category_id'     => ! empty( $request['category_id'] )     ? $request['category_id']     : '',
             'product_type_id' => ! empty( $request['product_type_id'] ) ? $request['product_type_id'] : '',

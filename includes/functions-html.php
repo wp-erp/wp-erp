@@ -264,9 +264,9 @@ function erp_html_form_input( $args = [] ) {
             <script type="text/javascript">
                 jQuery(function($) {
                     var pick_files = '<?php echo esc_html( $pick_files ); ?>',
-                        id         = '<?php echo esc_html( $id ); ?>',
+                        id         = '<?php echo esc_attr( $id ); ?>',
                         drop_jone  = '<?php echo esc_html( $drop ); ?>',
-                        action     = '<?php echo esc_html( $action ); ?>',
+                        action     = '<?php echo esc_attr( $action ); ?>',
                         callback   = '<?php echo esc_html( $call_back ); ?>';
 
                     new ERP_Uploader( action, pick_files, id, drop_jone, 'file_upload', 'doc,docx,xls,xlsx,jpg,jpeg,gif,png,pdf,bmp,zip,rar', 1024, callback );

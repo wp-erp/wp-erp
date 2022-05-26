@@ -213,7 +213,6 @@ class Admin_Menu {
      * @return void
      */
     public function hr_calendar_script() {
-        wp_enqueue_script( 'erp-momentjs' );
         wp_enqueue_script( 'erp-fullcalendar' );
         enqueue_fullcalendar_locale();
         wp_enqueue_style( 'erp-fullcalendar' );

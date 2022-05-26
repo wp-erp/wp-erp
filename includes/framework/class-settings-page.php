@@ -6,7 +6,7 @@ use WeDevs\ERP\Settings\Helpers;
 
 /**
  * Erp Settings page main class
- * 
+ *
  * @deprecated 1.9.0
  */
 class ERP_Settings_Page {
@@ -179,9 +179,6 @@ class ERP_Settings_Page {
     }
 
     public function parse_option_value( $value ) {
-        if ( isset( $_POST['_wpnonce'] ) && wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-settings-nonce' ) ) {
-        }
-
         $type         = isset( $value['type'] ) ? sanitize_title( $value['type'] ) : '';
         $option_value = null;
 
@@ -229,73 +226,51 @@ class ERP_Settings_Page {
             case 'radio':
             case 'hidden':
             case 'hidden-fixed':
-
-               if ( isset( $_POST[$value['id']] ) ) {
-                   $option_value = sanitize_text_field( wp_unslash( $_POST[ $value['id'] ] ) );
-               } else {
-                   $option_value = '';
-               }
-
+                $option_value = '';
+                if ( isset( $_POST[ $value['id'] ] ) ) {
+                    $option_value = sanitize_text_field( wp_unslash( $_POST[ $value['id'] ] ) );
+                }
                 break;
 
             case 'image':
-                if ( isset( $_FILES[ $value['id'] ] ) ) {
-                    $file = $_FILES[ $value['id'] ];
+                $option_value = '';
 
-                    $upload = array(
-                        'name'     => $file['name'],
-                        'type'     => $file['type'],
-                        'tmp_name' => $file['tmp_name'],
-                        'error'    => $file['error'],
-                        'size'     => $file['size']
-                    );
+                if ( ! isset( $_FILES[ $value['id'] ] ) ) {
+                    break;
+                }
 
-                    $uploaded_file = wp_handle_upload( $upload, array( 'test_form' => false ) );
+                $upload = [
+                    'name'        => isset( $_FILES[ $value['id'] ]['name'] ) ? sanitize_file_name( wp_unslash( $_FILES[ $value['id'] ]['name'] ) ) : '',
+                    'type'        => isset( $_FILES[ $value['id'] ]['type'] ) ? sanitize_mime_type( wp_unslash( $_FILES[ $value['id'] ]['type'] ) ) : '',
+                    'tmp_name'    => isset( $_FILES[ $value['id'] ]['tmp_name'] ) ? sanitize_url( wp_unslash( $_FILES[ $value['id'] ]['tmp_name'] ) ) : '',
+                    'error'       => isset( $_FILES[ $value['id'] ]['error'] ) ? sanitize_text_field( wp_unslash( $_FILES[ $value['id'] ]['error'] ) ) : '',
+                    'size'        => isset( $_FILES[ $value['id'] ]['size'] ) ? sanitize_text_field( wp_unslash( $_FILES[ $value['id'] ]['size'] ) ) : '',
+                    'post_status' => 'erp_hr_rec',
+                ];
 
-                    if ( isset( $uploaded_file['file'] ) ) {
-                        $file_loc  = $uploaded_file['file'];
-                        $file_name = $_FILES[ $value['id'] ]['name'];
-                        $file_type = wp_check_filetype( $file_name );
+                $uploader = new \WeDevs\ERP\Uploader();
+                $uploaded = $uploader->handle_upload( $upload );
 
-                        $attachment = array(
-                            'post_mime_type' => $file_type['type'],
-                            'post_title'     => preg_replace( '/\.[^.]+$/', '', basename( $file_name ) ),
-                            'post_content'   => '',
-                            'post_status'    => 'erp_hr_rec'
-                        );
-
-                        $attach_id   = wp_insert_attachment( $attachment, $file_loc );
-                        $attach_data = wp_generate_attachment_metadata( $attach_id, $file_loc );
-
-                        wp_update_attachment_metadata( $attach_id, $attach_data );
-
-                        $option_value = $attach_id;
-                    }
-                } else {
-                    $option_value = '';
+                if ( $uploaded['success'] && ! empty( $uploaded['attach_id'] ) ) {
+                    $option_value = $uploaded['attach_id'];
                 }
 
                 break;
 
             // Special types
             case 'multiselect':
-
                 // Get countries array
+                $selected_countries = [];
                 if ( isset( $_POST[ $value['id'] ] ) ) {
                     $selected_countries = array_map( 'sanitize_text_field', wp_unslash( (array) $_POST[ $value['id'] ] ) );
-                } else {
-                    $selected_countries = [];
                 }
 
                 $option_value = $selected_countries;
-
                 break;
 
             // Custom handling
             default:
-
                 do_action( 'erp_update_option_' . $type, $value );
-
                 break;
 
         }

@@ -197,11 +197,9 @@ class Department_List_Table extends \WP_List_Table {
                 case 'cb':
                     ?>
                     <th scope="row" class="check-column">
-
                         <label class="screen-reader-text" for="cb-select-<?php the_ID(); ?>"><?php printf( esc_html__( 'Select %s' ), esc_html( $department->title ) ); ?></label>
-                        <input id="cb-select-<?php the_ID(); ?>" type="checkbox" name="department_id[]" value="<?php echo esc_html( $department->id ); ?>" />
+                        <input id="cb-select-<?php the_ID(); ?>" type="checkbox" name="department_id[]" value="<?php echo esc_attr( $department->id ); ?>" />
                         <div class="locked-indicator"></div>
-
                     </th>
                     <?php
                     break;

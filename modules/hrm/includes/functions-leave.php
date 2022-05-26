@@ -3027,23 +3027,37 @@ function erp_hr_is_current_user_dept_lead() {
  * @param $leaves
  */
 function erp_hr_save_leave_attachment( $request_id, $request, $leaves ) {
-    if ( isset( $_FILES['leave_document'] ) && isset( $_FILES['leave_document']['name'] ) && ! empty( $_FILES['leave_document']['name'][0] ) ) {
-        $uploader = new \WeDevs\ERP\Uploader();
+    if ( ! isset( $_FILES['leave_document'] ) ) {
+        return;
+    }
 
-        foreach ( $_FILES['leave_document']['name'] as $key => $value ) {
-            $upload = [
-                'name'     => isset( $_FILES['leave_document'], $_FILES['leave_document']['name'][$key] ) ? sanitize_text_field( wp_unslash( $_FILES['leave_document']['name'][$key] ) ) : '',
-                'type'     => isset( $_FILES['leave_document'], $_FILES['leave_document']['type'][$key] ) ? sanitize_text_field( wp_unslash( $_FILES['leave_document']['type'][$key] ) ) : '',
-                'tmp_name' => isset( $_FILES['leave_document'], $_FILES['leave_document']['tmp_name'][$key] ) ? $_FILES['leave_document']['tmp_name'][$key] : '',
-                'error'    => isset( $_FILES['leave_document'], $_FILES['leave_document']['error'][$key] ) ? sanitize_text_field( wp_unslash( $_FILES['leave_document']['error'][$key] ) ) : '',
-                'size'     => isset( $_FILES['leave_document'], $_FILES['leave_document']['size'][$key] ) ? sanitize_text_field( wp_unslash( $_FILES['leave_document']['size'][$key] ) ) : '',
-            ];
+    $file_names     = isset( $_FILES['leave_document']['name'] ) ? array_map( 'sanitize_file_name', (array) wp_unslash( $_FILES['leave_document']['name'] ) ) : [];
+    $file_tmp_names = isset( $_FILES['leave_document']['tmp_name'] ) ? array_map( 'sanitize_url', (array) wp_unslash( $_FILES['leave_document']['tmp_name'] ) ) : [];
+    $file_types     = isset( $_FILES['leave_document']['type'] ) ? array_map( 'sanitize_text_field', (array) $_FILES['leave_document']['type'] ) : [];
+    $file_sizes     = isset( $_FILES['leave_document']['size'] ) ? array_map( 'sanitize_text_field', (array) $_FILES['leave_document']['size'] ) : [];
+    $file_errors    = isset( $_FILES['leave_document']['error'] ) ? array_map( 'sanitize_text_field', (array) $_FILES['leave_document']['error'] ) : [];
 
-            $file   = $uploader->handle_upload( $upload );
+    $uploader = new \WeDevs\ERP\Uploader();
 
-            if ( isset( $file['success'] ) && $file['success'] ) {
-                add_user_meta( $request['user_id'], 'leave_document_' . $request_id, $file['attach_id'] );
-            }
+    for ( $i = 0; $i < count( $file_names ); ++ $i ) {
+        $fileinfo = wp_check_filetype_and_ext( $file_tmp_names[ $i ], $file_names[ $i ] );
+
+        if ( ! $fileinfo['ext'] || ! $fileinfo['type'] || 0 !== (int) $file_errors[ $i ] ) {
+            continue;
+        }
+
+        $uploaded = $uploader->handle_upload(
+            [
+                'name'     => $file_names[ $i ],
+                'tmp_name' => $file_tmp_names[ $i ],
+                'type'     => $file_types[ $i ],
+                'error'    => $file_errors[ $i ],
+                'size'     => $file_sizes[ $i ],
+            ]
+        );
+
+        if ( ! empty( $uploaded['success'] ) ) {
+            add_user_meta( $request['user_id'], 'leave_document_' . $request_id, $uploaded['attach_id'] );
         }
     }
 }

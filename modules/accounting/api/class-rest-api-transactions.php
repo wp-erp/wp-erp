@@ -481,6 +481,10 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
             }
         }
 
+        if ( ! count( $chart_statuses ) ) {
+            array_push( $chart_statuses, $expense_status );
+        }
+
         $response = rest_ensure_response( $chart_statuses );
 
         $response->set_status( 200 );
