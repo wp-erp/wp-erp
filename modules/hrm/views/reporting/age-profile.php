@@ -201,13 +201,13 @@
 
         (function($){
             var ageBreakdownDepartment = [
-                {label: 'Under 18', color:'#3e6d98', data: <?php echo json_encode( $_under18 ); ?>},
-                {label: '18-25', color:'#648d9e', data: <?php echo json_encode( $_18_to_25 ); ?>},
-                {label: '26-35', color:'#D797AF', data: <?php echo json_encode( $_26_to_35 ); ?>},
-                {label: '36-45', color:'#DFABBF', data: <?php echo json_encode( $_36_to_45 ); ?>},
-                {label: '46-55', color:'#AAC6D4', data: <?php echo json_encode( $_46_to_55 ); ?>},
-                {label: '56-65', color:'#AAC6D4', data: <?php echo json_encode( $_56_to_65 ); ?>},
-                {label: '65+', color:'#5E606E', data: <?php echo json_encode( $_65_plus ); ?>}
+                {label: 'Under 18', color:'#3e6d98', data: <?php echo wp_json_encode( $_under18 ); ?>},
+                {label: '18-25', color:'#648d9e', data: <?php echo wp_json_encode( $_18_to_25 ); ?>},
+                {label: '26-35', color:'#D797AF', data: <?php echo wp_json_encode( $_26_to_35 ); ?>},
+                {label: '36-45', color:'#DFABBF', data: <?php echo wp_json_encode( $_36_to_45 ); ?>},
+                {label: '46-55', color:'#AAC6D4', data: <?php echo wp_json_encode( $_46_to_55 ); ?>},
+                {label: '56-65', color:'#AAC6D4', data: <?php echo wp_json_encode( $_56_to_65 ); ?>},
+                {label: '65+', color:'#5E606E', data: <?php echo wp_json_encode( $_65_plus ); ?>}
             ];
 
             $(document).ready(function() {
@@ -236,7 +236,7 @@
                     },
                     yaxis: {
                         tickLength: 0,
-                        ticks: <?php echo json_encode( $yaxis_ticks ); ?>,
+                        ticks: <?php echo wp_json_encode( $yaxis_ticks ); ?>,
                         axisLabel: "Departments",
                         axisLabelUseCanvas: true,
                         axisLabelFontSizePixels: 14,

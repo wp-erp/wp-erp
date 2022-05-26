@@ -104,24 +104,29 @@ class Ajax {
             $this->send_error( __( 'Sorry ! You do not have permission to access this page', 'erp' ) );
         }
 
-        $fields   = ! empty( $_POST['fields'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['fields'] ) ) : [];
-        $csv_file = ! empty( $_FILES['csv_file'] ) ? $_FILES['csv_file'] : [];                                              // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-        $files    = wp_check_filetype_and_ext( $csv_file['tmp_name'], $csv_file['name'] );
+        if ( empty( $_FILES['csv_file'] ) ) {
+            $this->send_error( __( 'No CSV file selected!', 'erp' ) );
+        }
 
-        if ( 'csv' !== $files['ext'] && 'text/csv' !== $files['type'] ) {
+        $file_name    = isset( $_FILES['csv_file']['name'] ) ? sanitize_file_name( wp_unslash( $_FILES['csv_file']['name'] ) ) : '';
+        $file_tmpname = isset( $_FILES['csv_file']['tmp_name'] ) ? sanitize_url( wp_unslash( $_FILES['csv_file']['tmp_name'] ) ) : '';
+        $file_info    = wp_check_filetype_and_ext( $file_tmpname, $file_name );
+
+        if ( 'csv' !== $file_info['ext'] && 'text/csv' !== $file_info['type'] ) {
             $this->send_error( __( 'The file is not a valid CSV file! Please provide a valid one.', 'erp' ) );
         }
 
+        $fields = ! empty( $_POST['fields'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['fields'] ) ) : [];
+
         $csv = new \ParseCsv\Csv();
         $csv->encoding( null, 'UTF-8' );
-        $csv->parse( $csv_file['tmp_name'] );
+        $csv->parse( $file_tmpname );
 
         if ( empty( $csv->data ) ) {
             $this->send_error( __( 'No data found to import!', 'erp' ) );
         }
 
         $csv_data   = [];
-
         $csv_data[] = array_keys( $csv->data[0] );
 
         foreach ( $csv->data as $data_item ) {

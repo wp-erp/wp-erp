@@ -3,7 +3,6 @@ namespace WeDevs\ERP\Accounting;
 
 use WeDevs\ERP\Framework\Traits\Ajax;
 use WeDevs\ERP\Framework\Traits\Hooker;
-use WP_Error;
 
 /**
  * Ajax handler

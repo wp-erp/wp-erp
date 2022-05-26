@@ -4,21 +4,21 @@
     <?php if ( ! empty( $args['full_name_lbl'] ) ) : ?>
         <label class="full-name">
             <?php echo esc_html( $args['full_name_lbl'] ); ?>
-            <input type="text" name="contact[full_name]" placeholder="<?php echo esc_html( $args['full_name_placeholder'] ); ?>">
+            <input type="text" name="contact[full_name]" placeholder="<?php echo esc_attr( $args['full_name_placeholder'] ); ?>">
         </label>
 
     <?php else : ?>
         <?php if ( ! empty( $args['first_name_lbl'] ) ) : ?>
             <label class="first-name">
                 <?php echo esc_html( $args['first_name_lbl'] ); ?>
-                <input type="text" name="contact[first_name]" placeholder="<?php echo esc_html( $args['first_name_placeholder'] ); ?>">
+                <input type="text" name="contact[first_name]" placeholder="<?php echo esc_attr( $args['first_name_placeholder'] ); ?>">
             </label>
         <?php endif; ?>
 
         <?php if ( ! empty( $args['last_name_lbl'] ) ) : ?>
             <label class="last-name">
                 <?php echo esc_html( $args['last_name_lbl'] ); ?>
-                <input type="text" name="contact[last_name]" placeholder="<?php echo esc_html( $args['last_name_placeholder'] ); ?>">
+                <input type="text" name="contact[last_name]" placeholder="<?php echo esc_attr( $args['last_name_placeholder'] ); ?>">
             </label>
         <?php endif; ?>
     <?php endif; ?>
@@ -27,7 +27,7 @@
 
     <label class="email">
         <?php echo esc_html( $args['email_lbl'] ); ?>
-        <input type="email" name="contact[email]" placeholder="<?php echo esc_html( $args['email_placeholder'] ); ?>">
+        <input type="email" name="contact[email]" placeholder="<?php echo esc_attr( $args['email_placeholder'] ); ?>">
     </label>
 
     <?php do_action( 'erp_subscription_form_after_email', $args ); ?>
