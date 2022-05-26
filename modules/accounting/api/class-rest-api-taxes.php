@@ -885,16 +885,16 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         $item = (object) $item;
 
         $data = [
-            'id'           => (int) $item->id,
-            'voucher_no'   => $item->voucher_no,
-            'agency_id'    => erp_acct_get_tax_agency_name_by_id( $item->agency_id ),
-            'trn_date'     => $item->trn_date,
-            'particulars'  => $item->particulars,
-            'amount'       => $item->amount,
-            'trn_by'       => $item->trn_by,
-            'ledger_id'    => erp_acct_get_ledger_name_by_id( $item->ledger_id ),
-            'voucher_type' => $item->voucher_type,
-            'created_at'   => $item->created_at,
+            'id'           => isset( $item->id ) ? (int) $item->id : 0,
+            'voucher_no'   => isset( $item->voucher_no ) ? $item->voucher_no : '',
+            'agency_id'    => isset( $item->agency_id ) ? erp_acct_get_tax_agency_name_by_id( $item->agency_id ) : '',
+            'trn_date'     => isset( $item->trn_date ) ? $item->trn_date : '',
+            'particulars'  => isset( $item->particulars ) ? $item->particulars : '',
+            'amount'       => isset( $item->amount ) ? $item->amount : '',
+            'trn_by'       => isset( $item->trn_by ) ? $item->trn_by : '',
+            'ledger_id'    => isset( $item->ledger_id ) ? erp_acct_get_ledger_name_by_id( $item->ledger_id ) : '',
+            'voucher_type' => isset( $item->voucher_type ) ? $item->voucher_type : '',
+            'created_at'   => isset( $item->created_at ) ? $item->created_at : '',
         ];
 
         $data = array_merge( $data, $additional_fields );

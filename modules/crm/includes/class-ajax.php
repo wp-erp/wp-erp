@@ -186,7 +186,7 @@ class Ajax_Handler {
         }
 
         if ( isset( $_REQUEST['filter_contact_company'] ) && ! empty( $_REQUEST['filter_contact_company'] ) ) {
-            $companies = erp_crm_company_get_customers( [ 'id' => sanitize_text_field( wp_unslash( $_REQUEST['filter_contact_company'] ) ) ] );
+            $companies = erp_crm_company_get_customers( intval( wp_unslash( $_REQUEST['filter_contact_company'] ) ) );
 
             foreach ( $companies as $company ) {
                 $contacts['data'][] = $company['contact_details'];

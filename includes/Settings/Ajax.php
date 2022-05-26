@@ -147,6 +147,10 @@ class Ajax {
 
         $can_not_be_disabled = Helpers::get_fixedly_enabled_email_templates();
 
+        if ( ! is_array( $email_templates ) && ! is_object( $email_templates ) ) {
+            $this->send_success( $emails );
+        }
+
         foreach ( $email_templates as $key => $email ) {
             $email_option    = $email->get_option_id();
             $option_value    = get_option( $email_option );
