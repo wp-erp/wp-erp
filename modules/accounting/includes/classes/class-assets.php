@@ -25,11 +25,7 @@ class Assets {
         if ( is_admin() ) {
             $screen = get_current_screen();
 
-            if ( 'wp-erp_page_erp-accounting' === $screen->base ) {
-                // Include Chart JS library For Accounting page
-                wp_enqueue_script( 'erp-chartjs' );
-            } elseif ( 'wp-erp_page_erp-settings' === $screen->base ) {
-
+            if ( 'wp-erp_page_erp-settings' === $screen->base ) {
                 wp_enqueue_script( 'accounting-helper', ERP_ACCOUNTING_ASSETS . '/js/accounting-helper.js', [ 'jquery', 'erp-tiptip' ], false, true );
 
                 wp_localize_script(

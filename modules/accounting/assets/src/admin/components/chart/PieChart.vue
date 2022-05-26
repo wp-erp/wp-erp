@@ -90,7 +90,7 @@ export default {
                                             if (self.id === 'payment') {
                                                 text.push(`<span class="chart-value">${self.moneyFormat(datasets[0].data[i])}</span><br>`);
                                             } else {
-                                                text.push(`<span class="chart-value">${datasets[0].data[i]}</span><br>`);
+                                                text.push(`<span class="chart-value">${datasets[0].data[i]}</span>`);
                                             }
                                         }
 
