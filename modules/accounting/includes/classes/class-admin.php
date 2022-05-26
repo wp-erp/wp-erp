@@ -328,6 +328,10 @@ class Admin {
      * @return void
      */
     public function init_hooks() {
+        if ( ! isset( $_GET['page'] ) || 'erp-accounting' !== sanitize_text_field( wp_unslash( $_GET['page'] ) ) ) {
+            return;
+        }
+
         add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
 
         // Ajax hooks
