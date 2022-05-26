@@ -356,7 +356,7 @@ class Customer_Relationship {
                 case 'reports':
                     if ( isset( $_GET['type'] ) && sanitize_text_field( wp_unslash( $_GET['type'] ) ) === 'growth-report' ) {
                         wp_enqueue_script( 'erp-momentjs' );
-                        wp_enqueue_script( 'erp-crm-chart', WPERP_CRM_ASSETS . "/js/chart$suffix.min.js", [], gmdate( 'Ymd' ), true );
+                        wp_enqueue_script( 'erp-chartjs' );
                         wp_enqueue_script( 'erp-crm-report', WPERP_CRM_ASSETS . "/js/report$suffix.js", [], gmdate( 'Ymd' ), true );
                     }
                     break;
