@@ -794,8 +794,6 @@ class Form_Handler {
             exit;
         }
 
-        //echo "<pre>"; print_r( $employees ); die();
-
         $affected = 0;
 
         foreach ( $employees as $employee ) {

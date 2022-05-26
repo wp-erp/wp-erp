@@ -4192,9 +4192,17 @@ function erp_crm_get_contacts_menu_html( $selected = 'contacts' ) {
         <ul class="erp-nav">
             <?php foreach ( $dropdown as $key => $value ) : ?>
                 <?php if ( 'crm_life_stages' === $key && current_user_can( $value['caps'] ) ) : ?>
-                <li><a href="<?php echo admin_url( 'admin.php?page=erp-settings#/erp-crm/crm_life_stages' ); ?>" class="" data-key="<?php echo $key; ?>"><?php echo $value['title']; ?></a></li>
+                    <li>
+                        <a href="<?php echo esc_url( admin_url( 'admin.php?page=erp-settings#/erp-crm/crm_life_stages' ) ); ?>" class="" data-key="<?php echo esc_attr( $key ); ?>">
+                            <?php echo esc_html( $value['title'] ); ?>
+                        </a>
+                    </li>
                 <?php elseif ( current_user_can( $value['caps'] ) ) : ?>
-                <li class="<?php echo $key === $selected ? 'active' : ''; ?>"><a href="<?php echo add_query_arg( array( 'sub-section' => $key ), admin_url( 'admin.php?page=erp-crm&section=contact' ) ); ?>" class="" data-key="<?php echo $key; ?>"><?php echo $value['title']; ?></a></li>
+                    <li class="<?php echo $key === $selected ? 'active' : ''; ?>">
+                        <a href="<?php echo esc_url( add_query_arg( array( 'sub-section' => $key ), admin_url( 'admin.php?page=erp-crm&section=contact' ) ) ); ?>" class="" data-key="<?php echo esc_attr( $key ); ?>">
+                            <?php echo esc_html( $value['title'] ); ?>
+                        </a>
+                    </li>
                 <?php endif; ?>
             <?php endforeach; ?>
         </ul>
@@ -4224,7 +4232,11 @@ function erp_crm_get_tasks_menu_html( $selected = '' ) {
     <div class="erp-custom-menu-container" style="background: none; border: none; margin: 15px 0 15px 0; padding-left: 0;">
         <ul class="erp-nav">
             <?php foreach ( $dropdown as $key => $value ) : ?>
-            <li class="<?php echo $key === $selected ? 'active' : ''; ?>"><a href="<?php echo add_query_arg( array( 'sub-section' => $key ), admin_url( 'admin.php?page=erp-crm&section=task' ) ); ?>" data-key="<?php echo $key; ?>"><?php echo $value; ?></a></li>
+                <li class="<?php echo $key === $selected ? 'active' : ''; ?>">
+                    <a href="<?php echo esc_url( add_query_arg( array( 'sub-section' => $key ), admin_url( 'admin.php?page=erp-crm&section=task' ) ) ); ?>" data-key="<?php echo esc_attr( $key ); ?>">
+                        <?php echo esc_html( $value ); ?>
+                    </a>
+                </li>
             <?php endforeach; ?>
         </ul>
     </div>
