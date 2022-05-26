@@ -23,7 +23,6 @@
 </template>
 
 <script>
-import 'assets/js/plugins/chart.min';
 import 'assets/js/status_chart';
 
 import ComboBox from 'admin/components/select/ComboBox.vue';

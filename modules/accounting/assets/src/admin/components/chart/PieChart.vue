@@ -11,7 +11,6 @@
 </template>
 
 <script>
-import 'assets/js/plugins/chart.min';
 
 export default {
     name: 'PieChart',
