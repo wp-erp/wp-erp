@@ -360,6 +360,7 @@ class Admin {
 
         // load hook
         wp_enqueue_script( 'erp-sweetalert' );
+        wp_enqueue_script( 'erp-chartjs' );
         wp_enqueue_script( 'accounting-bootstrap' );
 
         // JS do action

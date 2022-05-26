@@ -11,7 +11,6 @@
 </template>
 
 <script>
-import 'assets/js/plugins/chart.min';
 
 export default {
     name: 'PieChart',
@@ -24,83 +23,105 @@ export default {
 
     methods: {
         makeChart() {
-            var self = this;
-            var colors = this.colors;
-            var labels = this.labels;
-            var data = this.data;
-            var bgColor = colors;
-            var dataChart = {
+            let self = this;
+            let colors = this.colors;
+            let labels = this.labels;
+            let data = this.data;
+            let bgColor = colors;
+            let dataChart = {
                 labels: labels,
                 datasets: [{
                     data: data,
                     backgroundColor: bgColor
                 }]
             };
-            var config = {
+            let config = {
                 type: 'doughnut',
                 data: dataChart,
                 options: {
                     maintainAspectRatio: true,
-                    cutoutPercentage: 45,
-                    legend: {
-                        display: false
-                    },
-                    // generate custom labels
-                    legendCallback: function(chart) {
-                        var text = [];
-                        text.push('<ul class="chart-labels-list">');
-                        if (chart.data.datasets.length) {
-                            for (var i = 0; i < chart.data.datasets[0].data.length; ++i) {
-                                text.push('<li><div class="label-icon-wrapper"><span class="chart-label-icon" style="background-color:' + chart.data.datasets[0].backgroundColor[i] + '"></span> </div><div class="chart-label-values">');
-                                if (chart.data.datasets[0].data[i]) {
-                                    if (self.id === 'payment') {
-                                        text.push('<span class="chart-value">' + self.moneyFormat(chart.data.datasets[0].data[i]) + '</span><br>');
-                                    } else {
-                                        text.push('<span class="chart-value">' + chart.data.datasets[0].data[i]);
-                                    }
+                    aspectRatio: 1.8,
+                    cutout: '45%',
+                    plugins: {
+                        // Custom Tooltip
+                        tooltip: {
+                            yPadding: 10,
+                            callbacks: {
+                                label: function(context) {
+                                    let total = 0;
+                                    const { dataset, label, raw, formattedValue } = context;
+
+                                    dataset.data.forEach(function(element) {
+                                        if (element !== 0) {
+                                            total += parseFloat(element);
+                                        }
+                                    });
+
+                                    const percentTxt = Math.round(raw / total * 100);
+                                    return `${label} : ${formattedValue} (${percentTxt}%)`;
                                 }
-                                if (chart.data.labels[i]) {
-                                    text.push('<span class="chart-label"> ' + chart.data.labels[i] + '</span>');
-                                }
-                                text.push('</div></li>');
                             }
-                        }
-                        text.push('</ul>');
+                        },
 
-                        return text.join('');
-                    },
-                    // generate custom tooltips
-                    tooltips: {
-                        yPadding: 10,
-                        callbacks: {
-                            label: function(tooltipItem, data) {
-                                var total = 0;
+                        // Custom Legend Generator
+                        legend: {
+                            display: true,
+                            labels: {
+                                generateLabels: function(chart) {
+                                    const { data } = chart;
+                                    const { datasets, labels } = data;
 
-                                data.datasets[tooltipItem.datasetIndex].data.forEach(function(element) {
-                                    if (element !== 0) {
-                                        total += parseFloat(element);
+                                    if (! datasets.length) {
+                                        return [];
                                     }
-                                });
 
-                                var value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
-                                var percentTxt = Math.round(value / total * 100);
-                                return data.labels[tooltipItem.index] + ': ' + data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] + ' (' + percentTxt + '%)';
-                            }
+                                    let text = [];
+                                    text.push('<ul class="chart-labels-list">');
+
+                                    for (let i = 0; i < datasets[0].data.length; ++i) {
+                                        text.push(`<li>
+                                            <div class="label-icon-wrapper">
+                                                <span class="chart-label-icon" style="background-color:${datasets[0].backgroundColor[i]}"></span>
+                                            </div>
+                                            <div class="chart-label-values">
+                                        `);
+
+                                        if (datasets[0].data[i]) {
+                                            if (self.id === 'payment') {
+                                                text.push(`<span class="chart-value">${self.moneyFormat(datasets[0].data[i])}</span><br>`);
+                                            } else {
+                                                text.push(`<span class="chart-value">${datasets[0].data[i]}</span>`);
+                                            }
+                                        }
+
+                                        if (labels[i]) {
+                                            text.push(`<span class="chart-label"> ${labels[i]}</span>`);
+                                        }
+
+                                        text.push(`</div></li>`);
+                                    }
+
+                                    text.push(`</ul>`);
+
+                                    // Set the custom legend HTML
+                                    document.getElementById(self.id + '_legend').innerHTML = text.join('');
+
+                                    // We don't need to manage legend items,
+                                    // as if we're just updated the Inner HTML element
+                                    return [];
+                                }
+                            },
                         }
                     }
                 }
             };
 
             setTimeout(function() {
-                var chartCtx = document.getElementById(self.id + '_chart');
+                let chartCtx = document.getElementById(self.id + '_chart');
 
                 if (chartCtx !== null) {
                     chartCtx = chartCtx.getContext('2d');
-                    // eslint-disable-next-line no-undef
-                    var chart = new Chart(chartCtx, config);
-                    var legend = chart.generateLegend();
-                    var legendHolder = document.getElementById(self.id + '_legend');
-                    legendHolder.innerHTML = legend;
+                    new Chart(chartCtx, config);
                 }
             }, 1000);
         }
