@@ -284,9 +284,11 @@ class License {
      * @return void
      */
     public function show_error( $message ) {
-        echo '<div class="error">';
-        echo '<p>' . wp_kses_post( $message ) . '</p>';
-        echo '</div>';
+        ?>
+        <div class="error">
+            <p><?php echo wp_kses_post( $message ); ?></p>
+        </div>
+        <?php
     }
 
     /**

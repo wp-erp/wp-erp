@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function erp_html_form_help( $value = '' ) {
     if ( ! empty( $value ) ) {
-        echo '<span class="description">' . wp_kses_post( $value ) . '</span>';
+        ?><span class="description"><?php echo wp_kses_post( $value ); ?></span><?php
     }
 }
 
@@ -26,7 +26,7 @@ function erp_html_form_help( $value = '' ) {
  */
 function erp_html_form_error( $value = '' ) {
     if ( ! empty( $value ) ) {
-        echo '<span class="error-text">' . wp_kses_post( $value ) . '</span>';
+        ?><span class="error-text"><?php echo wp_kses_post( $value ); ?></span><?php
     }
 }
 
@@ -225,7 +225,7 @@ function erp_html_form_input( $args = [] ) {
                     echo '<input type="radio" ' . checked( $field['value'], $key, false ) . ' id="' . esc_attr( $field_attributes['id'] ) . '-' . esc_attr( $key ) . '" value="' . esc_attr( $key ) . '" ' . wp_kses_post( implode( ' ', $custom_attributes ) ) . '"/>' . esc_html( $value ) . '&nbsp;';
                 }
             }
-            
+
             echo '</span>';
             break;
 
