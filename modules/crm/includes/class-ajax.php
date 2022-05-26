@@ -1958,24 +1958,26 @@ class Ajax_Handler {
             );
         }
 
-        $files         = $_FILES['files'];  //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-        $path          = erp_crm_get_attachment_dir();
-        $attatchments  = [];
-        $invalid_files = [];
-        $valid_files   = [];
+        $file_names     = isset( $_FILES['files']['name'] ) ? array_map( 'sanitize_file_name', (array) wp_unslash( $_FILES['files']['name'] ) ) : [];
+        $file_tmp_names = isset( $_FILES['files']['tmp_name'] ) ? array_map( 'sanitize_url', (array) wp_unslash( $_FILES['files']['tmp_name'] ) ) : [];
+        $file_errors    = isset( $_FILES['files']['error'] ) ? array_map( 'sanitize_text_field', (array) $_FILES['files']['error'] ) : [];
+        $path           = erp_crm_get_attachment_dir();
+        $attatchments   = [];
+        $invalid_files  = [];
+        $valid_files    = [];
 
         // Verify extension and type of each file
-        foreach ( $files['name'] as $index => $file ) {
-            $fileinfo = wp_check_filetype_and_ext( $files['tmp_name'][ $index ], $file );
+        foreach ( $file_names as $index => $file_name ) {
+            $fileinfo = wp_check_filetype_and_ext( $file_tmp_names[ $index ], $file_name );
 
-            if ( ! $fileinfo['ext'] || ! $fileinfo['type'] || 0 !== intval( $files['error'][ $index ] ) ) {
-                $invalid_files[] = $file;
+            if ( ! $fileinfo['ext'] || ! $fileinfo['type'] || 0 !== (int) $file_errors[ $index ] ) {
+                $invalid_files[] = $file_name;
                 continue;
             }
 
             $valid_files[] = [
-                'name'     => $file,
-                'tmp_name' => $files['tmp_name'][ $index ],
+                'name'     => $file_name,
+                'tmp_name' => $file_tmp_names[ $index ],
                 'ext'      => $fileinfo['ext'],
             ];
         }
@@ -1983,8 +1985,11 @@ class Ajax_Handler {
         if ( ! empty( $invalid_files ) ) {
             $this->send_error(
                 sprintf(
-                    /* translators: 1) line break tag, 2) list of file names */
-                    __( 'The following files are not valid: %1$s%2$s', 'erp' ),
+                    /* translators: 1) opening <strong> tag, 2) closing <strong> tag, 3) line break tag, 4) line break tag, 5) list of file names */
+                    __( '%1$sThe attachments will not be uploaded.%2$s%3$sThe following files are not valid: %4$s%5$s', 'erp' ),
+                    '<strong>',
+                    '</strong>',
+                    '<br>',
                     '<br>',
                     implode( '<br>', $invalid_files )
                 )

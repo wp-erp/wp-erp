@@ -18,9 +18,9 @@ class Uploader {
         }
 
         $upload = [
-            'name'     => isset( $_FILES['file'], $_FILES['file']['name'] ) ? sanitize_text_field( wp_unslash( $_FILES['file']['name'] ) ) : '',
-            'type'     => isset( $_FILES['file'], $_FILES['file']['type'] ) ? sanitize_text_field( wp_unslash( $_FILES['file']['type'] ) ) : '',
-            'tmp_name' => isset( $_FILES['file'], $_FILES['file']['tmp_name'] ) ? sanitize_text_field( wp_unslash( $_FILES['file']['tmp_name'] ) ) : '',
+            'name'     => isset( $_FILES['file'], $_FILES['file']['name'] ) ? sanitize_file_name( wp_unslash( $_FILES['file']['name'] ) ) : '',
+            'type'     => isset( $_FILES['file'], $_FILES['file']['type'] ) ? sanitize_mime_type( wp_unslash( $_FILES['file']['type'] ) ) : '',
+            'tmp_name' => isset( $_FILES['file'], $_FILES['file']['tmp_name'] ) ? sanitize_url( wp_unslash( $_FILES['file']['tmp_name'] ) ) : '',
             'error'    => isset( $_FILES['file'], $_FILES['file']['error'] ) ? sanitize_text_field( wp_unslash( $_FILES['file']['error'] ) ) : '',
             'size'     => isset( $_FILES['file'], $_FILES['file']['size'] ) ? sanitize_text_field( wp_unslash( $_FILES['file']['size'] ) ) : '',
         ];

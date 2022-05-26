@@ -14,44 +14,62 @@ var colors = ['#208DF8', '#E9485E', '#FF9900', '#2DCB67'],
 		data: dataChart,
 		options: {
 			maintainAspectRatio: true,
-			cutoutPercentage: 45,
-			legend: {
-				display: false
-			},
-			// generate custom labels
-			legendCallback: function(chart) {
-				var text = [];
-				text.push('<ul class="chart-labels-list">');
-				if (chart.data.datasets.length) {
-					for (var i = 0; i < chart.data.datasets[0].data.length; ++i) {
-						text.push('<li><div class="label-icon-wrapper">\
-							<span class="chart-label-icon" style="background-color:' + chart.data.datasets[0].backgroundColor[i] + '"></span>\
-							</div><div class="chart-label-values">');
-						if (chart.data.datasets[0].data[i]) {
-							text.push('<span class="chart-value">' + chart.data.datasets[0].data[i] + '</span>');
-						}
-						if (chart.data.labels[i]) {
-							text.push('<span class="chart-label"> ' + chart.data.labels[i] + '</span>');
-						}
-						text.push('</div></li>');
-					}
-				}
-				text.push('</ul>');
+			aspectRatio: 1.8,
+			cutout: '45%',
+			plugins: {
+				legend: {
+					display: true,
+					labels: {
+						generateLabels: function(chart) {
+							const { data } = chart;
+							const { datasets, labels } = data;
 
-				return text.join("");
-			},
+							if (! datasets.length) {
+								return [];
+							}
+
+							let text = [];
+							text.push('<ul class="chart-labels-list">');
+
+							for (let i = 0; i < datasets[0].data.length; ++i) {
+								text.push(`<li>
+									<div class="label-icon-wrapper">
+										<span class="chart-label-icon" style="background-color:${datasets[0].backgroundColor[i]}"></span>
+									</div>
+									<div class="chart-label-values">
+								`);
+
+								if (datasets[0].data[i]) {
+									text.push(`<span class="chart-value">${datasets[0].data[i]}</span>`);
+								}
+
+								if (labels[i]) {
+									text.push(`<span class="chart-label"> ${labels[i]}</span>`);
+								}
+
+								text.push(`</div></li>`);
+							}
+
+							text.push(`</ul>`);
+
+							// Set the custom legend HTML
+							document.getElementById('status_legend').innerHTML = text.join('');
+
+							// We don't need to manage legend items,
+							// as if we're just updated the Inner HTML element
+							return [];
+						}
+					},
+				}
+			}
 		}
 	};
-	
+
 	setTimeout(function() {
-		var status_chart_ctx = document.getElementById('status_chart');
+		let status_chart_ctx = document.getElementById('status_chart');
 
 		if ( status_chart_ctx !== null ) {
-			status_chart_ctx = status_chart_ctx.getContext("2d"),
-			status_chart = new Chart(status_chart_ctx, config),
-			status_legend = status_chart.generateLegend(),
-			status_legendHolder = document.getElementById("status_legend");
-			status_legendHolder.innerHTML = status_legend
+			status_chart_ctx = status_chart_ctx.getContext("2d");
+			new Chart(status_chart_ctx, config);
 		}
-	
 	}, 1000);

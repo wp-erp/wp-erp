@@ -25,7 +25,6 @@
 
 <script>
 import HTTP from 'admin/http';
-import 'admin/components/chart/chart.min';
 
 export default {
     name: 'Chart',
@@ -186,24 +185,27 @@ export default {
                 options: {
                     maintainAspectRatio: true,
                     responsive: true,
-                    legend: {
-                        display: false
-                    },
                     scales: {
-                        yAxes: [{
+                        y: {
+                            min: 0,
                             ticks: {
                                 beginAtZero: true,
-                                callback: function(value, index, values) {
+                                callback: function(value, index) {
                                     return erp_acct_var.symbol + value;
                                 }
                             }
-                        }]
+                        }
                     },
-                    tooltips: {
-                        callbacks: {
-                            label: function(tooltipItems, data) {
-                                return erp_acct_var.symbol + tooltipItems.yLabel.toString();
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return erp_acct_var.symbol + context.parsed.y.toString();
+                                }
                             }
+                        },
+                        legend: {
+                            display: false
                         }
                     }
                 }
