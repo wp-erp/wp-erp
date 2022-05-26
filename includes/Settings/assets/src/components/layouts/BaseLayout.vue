@@ -21,7 +21,7 @@
                 :inputs="inputFields"
                 :single_option="single_option"
                 :options="options">
-                
+
                 <!-- Extended-data slot which will be append before Save changes button -->
                 <div slot="extended-data">
                     <slot name="extended-data"></slot>
@@ -127,12 +127,11 @@ export default {
             }
         }
 
-        this.allFields   = fields;
-        this.inputFields = fields;
+        this.allFields = this.inputFields = fields;
 
         if ( typeof fields !== 'undefined' && Object.keys( fields ).length > 0 ) {
-            this.subSectionTitle       = fields[0].title;
-            this.subSectionDescription = fields[0].desc;
+            this.subSectionTitle       = fields[0]?.title;
+            this.subSectionDescription = fields[0]?.desc;
 
             if ( this.enable_content ) {
                 // Process the fields and get the real input fields
