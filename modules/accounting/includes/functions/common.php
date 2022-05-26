@@ -507,7 +507,7 @@ function erp_acct_quick_access_menu() {
         'tax_rate'        => [
             'title' => 'Tax Payment',
             'slug'  => 'pay_tax',
-            'url'   => 'pay-tax',
+            'url'   => 'settings/pay-tax',
         ],
         'opening_balance' => [
             'title' => __( 'Opening Balance', 'erp' ),
@@ -619,7 +619,7 @@ function erp_acct_customer_create_from_crm( $customer_id, $data, $people_type ) 
         $crm_user_type        = erp_get_option( 'crm_user_type', false, [] ); // Contact or Company
         // Check whether the email already exists in Accounting
         $exists_people        = erp_acct_exist_people( $data['email'], [ 'customer', 'vendor' ] );
-        
+
         if ( ! $exists_people && $customer_auto_import && count( $crm_user_type ) ) {
             // No need to add wordpress `user id` again
             // `user id` already added when contact is created
@@ -630,7 +630,7 @@ function erp_acct_customer_create_from_crm( $customer_id, $data, $people_type ) 
 
             erp_convert_to_people( $data );
          }
-    }    
+    }
 }
 
 /**
