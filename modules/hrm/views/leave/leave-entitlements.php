@@ -38,7 +38,7 @@ $active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['ta
             $errors    = new ERP_Errors( $error_key );
             $form_data = $errors->get_form_data();
 
-            echo esc_html( $errors->display() );
+            echo wp_kses_post( $errors->display() );
 
             if ( isset( $form_data['affected'] ) ) {
                 erp_html_show_notice( sprintf( __( '%d Employee(s) has been entitled to this leave policy.', 'erp' ), sanitize_text_field( wp_unslash( $form_data['affected'] ) ) ), 'updated', true );
