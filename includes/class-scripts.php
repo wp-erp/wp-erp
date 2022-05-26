@@ -89,6 +89,9 @@ class Scripts {
         wp_register_script( 'erp-flotchart-selection', $vendor . '/flot/jquery.flot.selection.js', [ 'jquery' ], $this->version, true );
         wp_register_script( 'erp-flotchart-stack', $vendor . '/flot/jquery.flot.stack.js', [ 'jquery' ], $this->version, true );
 
+        // Chart js library
+        wp_register_script( 'erp-chartjs', $vendor . '/chartjs/chart.min.js', [ 'jquery' ], $this->version, true );
+
         // core js files
         wp_register_script( 'erp-popup', $js . '/jquery-popup' . $this->suffix . '.js', [ 'jquery' ], $this->version, true );
         wp_register_script( 'erp-script', $js . '/erp' . $this->suffix . '.js', [ 'jquery', 'backbone', 'underscore', 'wp-util', 'jquery-ui-datepicker' ], $this->version, true );
