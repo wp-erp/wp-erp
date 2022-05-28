@@ -13,7 +13,7 @@
     </div>
 
     <div class="row">
-        <label for="send-password-to-email"><?php esc_html_e( 'Send password' ); ?></label>
+        <label for="send-password-to-email"><?php esc_html_e( 'Send password', 'erp' ); ?></label>
         <span class="checkbox">
             <label for="send-password-to-email">
                 <input type="checkbox" id="send-password-to-email" name="send_password_notification"> <?php esc_html_e( 'Send password to this user email', 'erp' ); ?>

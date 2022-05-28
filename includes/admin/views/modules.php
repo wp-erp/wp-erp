@@ -748,7 +748,7 @@
                     }
                 }
             ?>
-                <div class="erp_addon_col <?php esc_attr_e( $cat_str ) ;?> <?php esc_attr_e( $is_active ); ?> <?php esc_attr_e( $purchased_module ); ?>">
+                <div class="erp_addon_col <?php echo esc_attr( "$cat_str $is_active $purchased_module" ); ?>">
                     <div class="erp_addon">
 
                         <div class="erp_addon_item_row erp_addon_item_row_top">
@@ -784,8 +784,8 @@
                             <div class="erp-links">
                                 <?php if ( $is_pro_active &&  ( $module->is_pro || in_array( $module->path, $my_modules ) ) ) : ?>
                                     <label class="switch">
-                                        <input class="extension_action" type="checkbox" <?php esc_html_e($checked); ?>
-                                               data-module-id="<?php echo esc_attr($module->id); ?>">
+                                        <input class="extension_action" type="checkbox" <?php echo esc_attr( $checked ); ?>
+                                               data-module-id="<?php echo esc_attr( $module->id ); ?>">
                                         <span class="slider round"></span>
                                     </label>
                                 <?php else : ?>
@@ -895,16 +895,16 @@
         } );
 
         $( '.extension_action' ).click( function() {
-             var module_id  = $(this).data('module-id');
-             var state      = $(this).prop( 'checked' );
-             var toggle     = ( state ) ? 'activate' : 'deactivate';
-             var th         = $(this);
+            var module_id = $(this).data('module-id');
+            var state     = $(this).prop( 'checked' );
+            var toggle    = ( state ) ? 'activate' : 'deactivate';
+            var th        = $(this);
 
             toastr.success( '<?php esc_html_e( 'Please wait!', 'erp'); ?>', '', {timeOut: 1000} );
 
-             wp.ajax.send( 'erp-pro-toggle-extension', {
+            wp.ajax.send( 'erp-pro-toggle-extension', {
                 data: {
-                    '_wpnonce': '<?php echo wp_create_nonce( 'wp-erp-pro-toggle-extension' )  ?>',
+                    '_wpnonce': '<?php echo wp_create_nonce( 'wp-erp-pro-toggle-extension' ); ?>',
                     module_id:  module_id,
                     toggle:     toggle
                 },

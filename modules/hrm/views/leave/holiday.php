@@ -36,7 +36,7 @@ class Leave_Holiday_List_Table extends WP_List_Table {
         <label class="screen-reader-text" for="new_role"><?php esc_html_e( 'To', 'erp' ); ?></label>
         <input type="text" placeholder="<?php esc_attr_e( 'To date', 'erp' ); ?>" name="to" value="<?php echo esc_attr( $to ); ?>" class="erp-leave-date-picker-to">
         <?php
-        submit_button( __( 'Filter' ), 'button', 'filter', false );
+        submit_button( __( 'Filter', 'erp' ), 'button', 'filter', false );
     }
 
     /**

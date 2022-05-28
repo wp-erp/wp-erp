@@ -324,12 +324,12 @@ class Ajax_Handler {
                     ->where( 'start', '=', $start );
 
                 $days = erp_date_duration( $start, $end );
-                $days = $days . ' ' . _n( __( 'day', 'erp' ), __( 'days', 'erp' ), $days );
+                $days = $days . ' ' . _n( 'day', 'days', $days, 'erp' );
 
                 // insert only unique one
                 if ( ! $holiday->count() ) {
                     $days = erp_date_duration( $start, $end );
-                    $days = $days . ' ' . _n( __( 'day', 'erp' ), __( 'days', 'erp' ), $days );
+                    $days = $days . ' ' . _n( 'day', 'days', $days, 'erp' );
 
                     $ical_data[] = [
                         'title'       => $title,
@@ -1201,8 +1201,8 @@ class Ajax_Handler {
      * @return json
      */
     public function employee_load_note() {
-        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'wp-erp-hr-nonce' ) ) {
-            // $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'wp-erp-hr-nonce' ) ) {
+            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
         $employee_id = isset( $_POST['user_id'] ) ? intval( $_POST['user_id'] ) : 0;
@@ -2291,13 +2291,7 @@ class Ajax_Handler {
         }
 
         if ( isset( $_REQUEST['date'] ) ) {
-            $date = (array) $_REQUEST['date'];
-
-            array_walk( $date, function( &$value, $key ) {
-                $value = sanitize_text_field( wp_unslash( $value ) );
-            });
-
-            $args['date'] = $date;
+            $args['date'] = array_map( 'sanitize_text_field', (array) wp_unslash( $_REQUEST['date'] ) );
         }
 
         $page_no          = ! empty( $_REQUEST['page'] ) ? intval( wp_unslash( $_REQUEST['page'] ) ) : 1;
@@ -2420,11 +2414,7 @@ class Ajax_Handler {
         $req_ids = [];
 
         if ( ! empty( $_REQUEST['req_id'] ) ) {
-            $req_ids = (array) $_REQUEST['req_id'];
-
-            array_walk( $req_ids, function( &$id, $index ) {
-                $id = intval( wp_unslash( $id ) );
-            } );
+            $req_ids = array_map( 'intval', (array) wp_unslash( $_REQUEST['req_id'] ) );
         }
 
         $action = ! empty( $_REQUEST['action_type'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['action_type'] ) ) : '';
@@ -2491,7 +2481,8 @@ class Ajax_Handler {
 			      ] ) );
         }
 
-        $inserted = erp_settings_save_leave_years( $_POST['fyears'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+        $f_years  = array_map( 'sanitize_text_field', wp_unslash( $_POST['fyears'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+        $inserted = erp_settings_save_leave_years( $f_years );
 
         if ( is_wp_error( $inserted ) ) {
             $this->send_error( $inserted->get_error_message() );

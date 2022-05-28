@@ -1,10 +1,8 @@
-<link rel="stylesheet" href="<?php echo esc_url_raw( WPERP_CRM_ASSETS . '/css/erp-subscription-edit.css?ver=' . WPERP_VERSION ); ?>">
-
 <?php do_action( 'erp_edit_subscription_page_before_form' ); ?>
 
 <?php if ( ! empty( $contact_lists ) ) : ?>
     <form class="<?php echo esc_html( implode( ' ', $class_names ) ); ?>">
-        <p><?php esc_html_e( $page_content, 'erp' ); ?></p>
+        <p><?php echo esc_html( $page_content ); ?></p>
 
         <ul>
             <?php foreach ( $contact_lists as $list_type => $lists ) { ?>
