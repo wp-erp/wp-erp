@@ -8,7 +8,7 @@ $id            = isset( $_GET['id'] ) ? absint( wp_unslash( $_GET['id'] ) ) : 0;
 $action        = isset( $_GET['action'] ) ? sanitize_key( wp_unslash( $_GET['action'] ) ) : '';
 $disabled      = false;
 $leave_policy  = [];
-$submit_button = esc_attr( 'Save', 'erp' );
+$submit_button = esc_attr__( 'Save', 'erp' );
 
 $leave_names   = [
                      '' => '&mdash; ' . esc_attr__( 'select leave type', 'erp' ) . ' &mdash;',
@@ -20,10 +20,10 @@ if ( $id ) {
 
     if ( $action === 'edit' ) {
         $disabled      = true;
-        $submit_button = esc_attr( 'Update', 'erp' );
+        $submit_button = esc_attr__( 'Update', 'erp' );
     } elseif ( $action === 'copy' ) {
         $disabled      = false;
-        $submit_button = esc_attr( 'Copy', 'erp' );
+        $submit_button = esc_attr__( 'Copy', 'erp' );
     }
 }
 

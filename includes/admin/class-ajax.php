@@ -855,22 +855,22 @@ class Ajax {
 
         $reset_text = sanitize_text_field( wp_unslash( $_POST['erp_reset_confirmation'] ) );
 
-        if ( $reset_text === 'Reset' ) {
-            $resetted = erp_reset_data();
-
-            if ( is_wp_error( $resetted ) ) {
-                $this->send_error( esc_html__( 'Sorry, Something went wrong. Please try again !', 'erp' ) );
-            }
-
-            $page =  'erp-setup'; // Valid Option: erp or erp-setup
-
-            $this->send_success( [
-                'message'        => esc_html__( 'Resetted WP ERP successfully. You will be redirected soon. Please Setup WP ERP again or Skip to continue.', 'erp' ),
-                'redirected_url' => admin_url( "admin.php?page=$page" )
-            ] );
-        } else {
+        if ( ! isset( $_POST['erp_reset_confirmation'] ) || 'Reset' !== sanitize_text_field( wp_unslash( $_POST['erp_reset_confirmation'] ) ) ) {
             $this->send_error( esc_html__( 'Invalid confirmation text. Please give valid confirmation text.', 'erp' ) );
         }
+
+        $resetted = erp_reset_data();
+
+        if ( is_wp_error( $resetted ) ) {
+            $this->send_error( esc_html__( 'Sorry, Something went wrong. Please try again !', 'erp' ) );
+        }
+
+        $this->send_success(
+            [
+                'message'        => esc_html__( 'Resetted WP ERP successfully. You will be redirected soon. Please Setup WP ERP again or Skip to continue.', 'erp' ),
+                'redirected_url' => admin_url( "admin.php?page=erp-setup" ),
+            ]
+        );
     }
 }
 

@@ -49,7 +49,7 @@ class Form_Handler {
 
         foreach ( $all_modules as $key => $module ) {
             if ( ! in_array( $key, $modules ) ) {
-                unset( $all_modules[$key] );
+                unset( $all_modules[ $key ] );
             }
         }
 
@@ -58,7 +58,11 @@ class Form_Handler {
             $all_modules    = array_merge( $all_modules, $active_modules );
         }
         update_option( 'erp_modules', $all_modules );
-        wp_redirect( isset( $_POST['_wp_http_referer'] ) ? esc_url_raw( wp_unslash( $_POST['_wp_http_referer'] ) ) : '' );
+
+        if ( isset( $_POST['_wp_http_referer'] ) ) {
+            wp_safe_redirect( esc_url_raw( wp_unslash( $_POST['_wp_http_referer'] ) ) );
+        }
+
         exit();
     }
 

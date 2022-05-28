@@ -797,7 +797,7 @@ class Ajax_Handler {
                     ! current_user_can('manage_options') &&
                     (int) $user->contact_owner !== get_current_user_id()
                 ) {
-                    continue;;
+                    continue;
                 }
 
                 if ( in_array( 'company', $user->types, true ) ) {
@@ -929,9 +929,9 @@ class Ajax_Handler {
 
         $data = [
             'id'          => ! empty( $_POST['id'] ) ? intval( wp_unslash( $_POST['id'] ) ) : '',
-            'name'        => ! empty(  $_POST['group_name'] ) ? sanitize_text_field( wp_unslash( $_POST['group_name'] ) ) : '',
+            'name'        => ! empty( $_POST['group_name'] ) ? sanitize_text_field( wp_unslash( $_POST['group_name'] ) ) : '',
             'description' => ! empty( $_POST['group_description'] ) ? sanitize_text_field( wp_unslash( $_POST['group_description'] ) ) : '',
-            'private'     => ! empty( $_POST['group_private'] ) && erp_validate_boolean( wp_unslash( $_POST['group_private'] ) ) ? 1 : null,
+            'private'     => ! empty( $_POST['group_private'] ) && erp_validate_boolean( sanitize_text_field( wp_unslash( $_POST['group_private'] ) ) ) ? 1 : null,
         ];
 
         erp_crm_save_contact_group( $data );
@@ -1247,7 +1247,7 @@ class Ajax_Handler {
         }
 
         // Check permission
-        if ( ! ( current_user_can( erp_crm_get_manager_role() ) || current_user_can( erp_crm_get_agent_role() ) ) ) {
+        if ( ! current_user_can( erp_crm_get_manager_role() ) && ! current_user_can( erp_crm_get_agent_role() ) ) {
             $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
@@ -1960,7 +1960,7 @@ class Ajax_Handler {
 
         $file_names     = isset( $_FILES['files']['name'] ) ? array_map( 'sanitize_file_name', (array) wp_unslash( $_FILES['files']['name'] ) ) : [];
         $file_tmp_names = isset( $_FILES['files']['tmp_name'] ) ? array_map( 'sanitize_url', (array) wp_unslash( $_FILES['files']['tmp_name'] ) ) : [];
-        $file_errors    = isset( $_FILES['files']['error'] ) ? array_map( 'sanitize_text_field', (array) $_FILES['files']['error'] ) : [];
+        $file_errors    = isset( $_FILES['files']['error'] ) ? array_map( 'sanitize_text_field', (array) wp_unslash( $_FILES['files']['error'] ) ) : [];
         $path           = erp_crm_get_attachment_dir();
         $attatchments   = [];
         $invalid_files  = [];

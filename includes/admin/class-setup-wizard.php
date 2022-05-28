@@ -139,7 +139,7 @@ class Setup_Wizard {
             <?php // do_action( 'admin_head' ); ?>
         </head>
         <body class="erp-setup wp-core-ui">
-            <h1 class="erp-logo"><a href="http://wperp.com/"><?php esc_html( 'WP ERP', 'erp' ); ?></a></h1>
+            <h1 class="erp-logo"><a href="http://wperp.com/"><?php esc_html_e( 'WP ERP', 'erp' ); ?></a></h1>
         <?php
     }
 
@@ -412,7 +412,7 @@ class Setup_Wizard {
             'erp_debug_mode'      => 0,
         ] );
 
-        wp_redirect( esc_url_raw( $this->get_next_step_link() ) );
+        wp_safe_redirect( esc_url_raw( $this->get_next_step_link() ) );
         exit;
     }
 
@@ -550,7 +550,7 @@ class Setup_Wizard {
             unset( $this->steps['workdays'] );
         }
 
-        wp_redirect( esc_url_raw( $this->get_next_step_link() ) );
+        wp_safe_redirect( esc_url_raw( $this->get_next_step_link() ) );
         exit;
     }
 
@@ -659,7 +659,7 @@ class Setup_Wizard {
 
         update_option( 'include_wemail', $install_wemail );
 
-        wp_redirect( esc_url_raw( $this->get_next_step_link() ) );
+        wp_safe_redirect( esc_url_raw( $this->get_next_step_link() ) );
         exit;
     }
 
@@ -741,7 +741,7 @@ class Setup_Wizard {
             }
         }
 
-        wp_redirect( esc_url_raw( $this->get_next_step_link() ) );
+        wp_safe_redirect( esc_url_raw( $this->get_next_step_link() ) );
         exit;
     }
 
@@ -801,7 +801,7 @@ class Setup_Wizard {
             }
         }
 
-        wp_redirect( esc_url_raw( $this->get_next_step_link() ) );
+        wp_safe_redirect( esc_url_raw( $this->get_next_step_link() ) );
         exit;
     }
 
@@ -877,7 +877,7 @@ class Setup_Wizard {
             }
         }
 
-        wp_redirect( esc_url_raw( $this->get_next_step_link() ) );
+        wp_safe_redirect( esc_url_raw( $this->get_next_step_link() ) );
         exit;
     }
 
@@ -938,7 +938,7 @@ class Setup_Wizard {
     public function setup_step_newsletter_save() {
         check_admin_referer( 'erp-setup' );
 
-        wp_redirect( esc_url_raw( $this->get_next_step_link() ) );
+        wp_safe_redirect( esc_url_raw( $this->get_next_step_link() ) );
         exit;
     }
 

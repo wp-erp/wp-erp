@@ -8,7 +8,7 @@
             <div class="wperp-filter-dropdown">
                 <a class="wperp-btn btn--default">
                     <span class="dashicons dashicons-filter"></span>
-                    <?php esc_html_e( 'Filters', 'erp' ) ?>
+                    <?php esc_html_e( 'Filters', 'erp' ); ?>
                     <span class="dashicons dashicons-arrow-down-alt2"></span>
                 </a>
 
@@ -88,7 +88,7 @@
 
                             <a v-else class="first-page button" href="#" @click.prevent="goFirstPage()">
                                 <span class="screen-reader-text">
-                                    <?php esc_html_e( 'First page', 'erp' ) ?>
+                                    <?php esc_html_e( 'First page', 'erp' ); ?>
                                 </span>
                                 <span aria-hidden="true">«</span>
                             </a>
@@ -99,13 +99,13 @@
 
                             <a v-else class="prev-page button" href="#" @click.prevent="goToPage('prev')">
                                 <span class="screen-reader-text">
-                                    <?php esc_html_e( 'Previous page', 'erp' ) ?>
+                                    <?php esc_html_e( 'Previous page', 'erp' ); ?>
                                 </span>
                                 <span aria-hidden="true">‹</span>
                             </a>
 
                             <span class="screen-reader-text">
-                                <?php esc_html_e( 'Current Page', 'erp' ) ?>
+                                <?php esc_html_e( 'Current Page', 'erp' ); ?>
                             </span>
 
                             <input type="text"
@@ -116,7 +116,7 @@
                                 v-model="pageNumberInput"
                                 aria-describedby="table-paging"
                                 @keydown.enter.prevent="goToPage(pageNumberInput)">
-                                <?php esc_attr_e( ' of ', 'erp' ) ?>
+                                <?php esc_attr_e( ' of ', 'erp' ); ?>
                                 <span class="total-pages">{{ totalPage }}</span>
 
                             <span v-if="isLastPage()"
@@ -128,7 +128,7 @@
                                 href="#"
                                 @click.prevent="goToPage('next')">
                                 <span class="screen-reader-text">
-                                    <?php esc_html_e( 'Next page', 'erp' ) ?>
+                                    <?php esc_html_e( 'Next page', 'erp' ); ?>
                                 </span>
                                 <span aria-hidden="true">›</span>
                             </a>
@@ -141,7 +141,7 @@
                                 href="#"
                                 class="last-page button"
                                 @click.prevent="goLastPage()">
-                                <span class="screen-reader-text"><?php esc_html_e( 'Last page', 'erp' ) ?></span>
+                                <span class="screen-reader-text"><?php esc_html_e( 'Last page', 'erp' ); ?></span>
                                 <span aria-hidden="true">»</span>
                             </a>
                         </span>

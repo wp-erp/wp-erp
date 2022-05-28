@@ -726,6 +726,8 @@ class Subscription {
                 $contact_lists  = $this->get_lists_subscriber_belongs_to( $this->people_id );
                 $hash           = $this->hash;
 
+                wp_enqueue_style( 'erp-subscription-edit-styles', WPERP_CRM_ASSETS . '/css/erp-subscription-edit.css', [], WPERP_VERSION );
+
                 ob_start();
                 include $template;
                 $content = ob_get_clean();

@@ -34,11 +34,11 @@
             $adminbar_menus = get_option( '_erp_adminbar_menu', [] );
             ?>
             <ul class="erp-list list-inline erp-toolbar-menu">
-                <?php foreach( $menus as $menu_item ): ?>
+                <?php foreach ( $menus as $menu_item ): ?>
                     <li>
                         <label>
                             <input type="checkbox" name="menu[]" value="<?php echo htmlspecialchars( serialize( $menu_item ) ); ?>" <?php checked( in_array( $menu_item, $inactive_menus ), true ); ?>>
-                            <?php esc_html_e( $menu_item[0] ); ?>
+                            <?php echo esc_html( $menu_item[0] ); ?>
                         </label>
                     </li>
                 <?php endforeach; ?>
