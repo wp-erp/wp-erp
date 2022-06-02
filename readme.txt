@@ -175,6 +175,8 @@ Appsero SDK **does not gather any data by default.** The SDK only starts gatheri
 
 Integrating Appsero SDK **DOES NOT IMMEDIATELY** start gathering data, **without confirmation from users in any case.**
 
+All the promotional data for marketing are fetched through REST API from the official website of [WP ERP](https://wperp.com/)
+
 = Contribute =
 This may have bugs and lack of many features. If you want to contribute on this project, you are more than welcome. Please fork the repository from [Github](https://github.com/wp-erp/wp-erp).
 
