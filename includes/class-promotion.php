@@ -35,7 +35,7 @@ class Promotion {
         $promo_notice  = get_transient( 'erp_promo_notice' );
 
         if ( false === $promo_notice ) {
-            $promo_notice_url = 'https://raw.githubusercontent.com/wp-erp/erp-utils/main/promotions.json';
+            $promo_notice_url = 'http://wperp.com/wp-json/erp/v1/promotions';
             $response         = wp_remote_get( $promo_notice_url, [ 'timeout' => 15 ] );
 
             if ( is_wp_error( $response ) || $response['response']['code'] !== 200 ) {
@@ -56,7 +56,7 @@ class Promotion {
         $offer            = new \stdClass;
         $offer->link      = $promo_notice['action_url'];
         $offer->key       = "erp-{$promo_notice['key']}";
-        $offer->btn_txt   = ! empty( $promo_notice['action_title'] ) ? $promo_notice['action_title'] : 'Get Now';
+        $offer->btn_txt   = ! empty( $promo_notice['action_title'] ) ? $promo_notice['action_title'] : __( 'Get Now', 'erp' );
         $offer->message   = [];
         $offer->message[] = sprintf( __( '<strong>%s</strong>', 'erp' ), $promo_notice['title'] );
 
@@ -89,7 +89,7 @@ class Promotion {
                 <?php echo wp_kses( $offer->message, [ 'strong' => [], 'br' => [] ] ); ?>
                 <p>
                     <a target="_blank"
-                        href="<?php echo esc_url( $offer->link ) ?>"
+                        href="<?php echo esc_url_raw( $offer->link ) ?>"
                         style="padding:5px 15px;">
                         <?php echo esc_html( $offer->btn_txt ); ?>
                     </a>
