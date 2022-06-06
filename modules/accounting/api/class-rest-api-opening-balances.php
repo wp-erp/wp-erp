@@ -195,7 +195,7 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields = [];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_opening_balance_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_opening_balance_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $ledgers = erp_acct_get_opening_balance( $id );
@@ -237,7 +237,7 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields = [];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_opening_balance_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_opening_balance_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $result = $wpdb->get_row( $wpdb->prepare( "select count(*) as num from {$wpdb->prefix}erp_acct_opening_balances where financial_year_id = %d", $id ) );
@@ -261,7 +261,7 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields = [];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_opening_balance_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_opening_balance_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $item = erp_acct_get_virtual_acct( $id );
@@ -315,7 +315,7 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
         $total_cr = ( isset( $request['total_dr'] ) ? $request['total_dr'] : 0 );
 
         if ( $total_dr !== $total_cr ) {
-            return new WP_Error( 'rest_opening_balance_invalid_amount', __( 'Summation of debit and credit must be equal.' ), [ 'status' => 400 ] );
+            return new WP_Error( 'rest_opening_balance_invalid_amount', __( 'Summation of debit and credit must be equal.', 'erp' ), [ 'status' => 400 ] );
         }
 
         $opening_balance_data['amount'] = $total_dr;
@@ -454,51 +454,51 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
             'type'       => 'object',
             'properties' => [
                 'id'      => [
-                    'description' => __( 'Unique identifier for the resource.' ),
+                    'description' => __( 'Unique identifier for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
                 'year'    => [
-                    'description' => __( 'Unique identifier for the resource.' ),
+                    'description' => __( 'Unique identifier for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
                 'ledgers' => [
-                    'description' => __( 'Ledger names for the resource.' ),
+                    'description' => __( 'Ledger names for the resource.', 'erp' ),
                     'type'        => 'array',
                     'context'     => [ 'edit' ],
                 ],
                 'acct_pay' => [
-                    'description' => __( 'Ledger names for the resource.' ),
+                    'description' => __( 'Ledger names for the resource.', 'erp' ),
                     'type'        => 'array',
                     'context'     => [ 'edit' ],
                 ],
                 'acct_rec' => [
-                    'description' => __( 'Ledger names for the resource.' ),
+                    'description' => __( 'Ledger names for the resource.', 'erp' ),
                     'type'        => 'array',
                     'context'     => [ 'edit' ],
                 ],
                 'tax_pay' => [
-                    'description' => __( 'Ledger names for the resource.' ),
+                    'description' => __( 'Ledger names for the resource.', 'erp' ),
                     'type'        => 'array',
                     'context'     => [ 'edit' ],
                 ],
                 'total_dr'      => [
-                    'description' => __( 'Unique identifier for the resource.' ),
+                    'description' => __( 'Unique identifier for the resource.', 'erp' ),
                     'type'        => 'number',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
                 'total_cr'      => [
-                    'description' => __( 'Unique identifier for the resource.' ),
+                    'description' => __( 'Unique identifier for the resource.', 'erp' ),
                     'type'        => 'number',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
                 'description'      => [
-                    'description' => __( 'Unique identifier for the resource.' ),
+                    'description' => __( 'Unique identifier for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'arg_options' => [

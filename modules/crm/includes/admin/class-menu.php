@@ -137,8 +137,10 @@ class Admin_Menu {
         $menu      = erp_menu();
         $menu      = $menu[$component];
 
-        $section = ( isset( $_GET['section'] ) && isset( $menu[$_GET['section']] ) ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : 'dashboard';
-        $sub     = ( isset( $_GET['sub-section'] ) && !empty( $menu[$section]['submenu'][$_GET['sub-section']] ) ) ? sanitize_text_field( wp_unslash( $_GET['sub-section'] ) ) : false;
+        $section = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : 'dashboard';
+        $section = isset( $menu[ $section ] ) ? $section : 'dashboard';
+        $sub     = isset( $_GET['sub-section'] ) ? sanitize_text_field( wp_unslash( $_GET['sub-section'] ) ) : false;
+        $sub     = ! $sub || empty( $menu[ $section ]['submenu'][ $sub ] ) ? false : $sub;
 
         $callback = $menu[$section]['callback'];
 

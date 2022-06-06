@@ -10,7 +10,7 @@ class Email extends Template {
     /**
      * Class constructor
      */
-    function __construct() {
+    public function __construct() {
         $this->id            = 'erp-email';
         $this->label         = __( 'Emails', 'erp' );
         $this->sections      = $this->get_sections();
@@ -386,94 +386,100 @@ class Email extends Template {
             $status    = esc_attr( ( $imap_status ) ? 'yes green' : 'no red' );
             $connected = esc_attr( ( $imap_status ) ? __( 'Connected', 'erp' ) : __( 'Not Connected', 'erp' ) );
 
-            return sprintf( "<span class='dashicons dashicons-%s'>%s</span>", $status, $connected );
+            return sprintf( "<span class='dashicons dashicons-%s'>%s</span>", esc_attr( $status ), esc_html( $connected ) );
         }
     }
 
     public function notification_emails() {
         $email_templates = wperp()->emailer->get_emails();
-
-        //ob_start(); ?>
+        $columns         = apply_filters( 'erp_email_setting_columns', [
+            'name'        => __( 'Email', 'erp' ),
+            'description' => __( 'Description', 'erp' ),
+            'actions'     => '',
+        ] );
+        ?>
         <tr valign="top">
             <td class="erp-settings-table-wrapper" colspan="2">
                 <table class="erp-settings-table widefat" cellspacing="0">
                     <thead>
-                    <tr>
-                        <?php
-                        $columns = apply_filters(
-                            'erp_email_setting_columns',
-                            [
-                                'name'        => __( 'Email', 'erp' ),
-                                'description' => __( 'Description', 'erp' ),
-                                'actions'     => '',
-                            ]
-                        );
-
-                        foreach ( $columns as $key => $column ) {
-                            echo '<th class="erp-settings-table-' . esc_attr( $key ) . '">' . esc_html( $column ) . '</th>';
-                        }
-                        ?>
-                    </tr>
+                        <tr>
+                            <?php foreach ( $columns as $key => $column ) : ?>
+                                <th class="erp-settings-table-<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $column ); ?></th>
+                            <?php endforeach; ?>
+                        </tr>
                     </thead>
+
                     <tbody id="email_list_view">
                     <?php
-                    foreach ( $email_templates as $email_key => $email ) {
+                    foreach ( $email_templates as $email_key => $email ) :
                         if (
-                            false !== strpos( get_class( $email ), 'HRM' ) ||
+                            false !== strpos( get_class( $email ), 'HRM' )  ||
                             false !== strpos( get_class( $email ), 'ERP_Document' ) ||
                             false !== strpos( get_class( $email ), 'ERP_Recruitment' ) ||
                             false !== strpos( get_class( $email ), 'Training' )
-                        ) {
+                        ) :
                             $tr_class = 'hrm';
-                        } elseif ( false !== strpos( get_class( $email ), 'CRM' ) ) {
+                        elseif ( false !== strpos( get_class( $email ), 'CRM' ) ) :
                             $tr_class = 'crm';
-                        } elseif ( false !== strpos( get_class( $email ), 'Accounting' ) ) {
+                        elseif ( false !== strpos( get_class( $email ), 'Accounting' ) ) :
                             $tr_class = 'accounting';
-                        } else {
+                        else :
                             $tr_class = 'others';
-                        }
+                        endif;
+                        ?>
+                        <tr class="tag_<?php echo esc_attr( $tr_class ); ?>">
+                            <?php
+                            foreach ( $columns as $key => $column ) :
+                                switch ( $key ) :
+                                    case 'name':
+                                        ?>
+                                        <td class="erp-settings-table-<?php echo esc_attr( $key ); ?>">
+                                            <a href="<?php echo esc_url( admin_url( 'admin.php?page=erp-settings&tab=erp-email&section=general&sub_section=' . esc_attr( strtolower( $email_key ) ) ) ); ?>">
+                                                <?php echo esc_html( $email->get_title() ); ?>
+                                            </a>
+                                        </td>
+                                        <?php
+                                        break;
 
-                        echo '<tr class="tag_' . $tr_class . '">';
+                                    case 'status':
+                                    case 'module':
+                                    case 'recipient':
+                                        ?><td class="erp-settings-table-<?php echo esc_attr( $key ); ?>"></td><?php
+                                        break;
 
-                        foreach ( $columns as $key => $column ) {
-                            switch ( $key ) {
-                                case 'name':
-                                    echo '<td class="erp-settings-table-' . esc_attr( $key ) . '">
-                                            <a href="' . esc_url( admin_url( 'admin.php?page=erp-settings&tab=erp-email&section=general&sub_section=' . esc_attr( strtolower( $email_key ) ) ) ) . '">' . esc_html( $email->get_title() ) . '</a>
-                                        </td>';
-                                    break;
+                                    case 'description':
+                                        ?>
+                                        <td class="erp-settings-table-<?php echo esc_attr( $key ); ?>">
+                                            <span class="help"><?php echo esc_html( $email->get_description() ); ?></span>
+                                        </td>
+                                        <?php
+                                        break;
 
-                                case 'status':
-                                case 'module':
-                                case 'recipient':
-                                    echo '<td class="erp-settings-table-' . esc_attr( $key ) . '">
+                                    case 'actions':
+                                        ?>
+                                        <td class="erp-settings-table-<?php echo esc_attr( $key ); ?>">
+                                            <a class="button alignright" href="<?php echo esc_url( admin_url( 'admin.php?page=erp-settings&tab=erp-email&section=general&sub_section=' . esc_attr( strtolower( $email_key ) ) ) ); ?>">
+                                                <?php esc_html_e( 'Configure', 'erp' ); ?>
+                                            </a>
+                                        </td>
+                                        <?php
+                                        break;
 
-                                        </td>';
-                                    break;
-
-                                case 'description':
-                                    echo '<td class="erp-settings-table-' . esc_attr( $key ) . '">
-                                            <span class="help">' . esc_html( $email->get_description() ) . '</span>
-                                        </td>';
-                                    break;
-
-                                case 'actions':
-                                    echo '<td class="erp-settings-table-' . esc_attr( $key ) . '">
-                                            <a class="button alignright" href="' . esc_url( admin_url( 'admin.php?page=erp-settings&tab=erp-email&section=general&sub_section=' . strtolower( $email_key ) ) ) . '">' . esc_html__( 'Configure', 'erp' ) . '</a>
-                                        </td>';
-                                    break;
-
-                                default:
-                                    do_action( 'erp_email_setting_column_' . $key, $email );
-                                    break;
-                            }
-                        }
-                    } ?>
+                                    default:
+                                        do_action( 'erp_email_setting_column_' . $key, $email );
+                                        break;
+                                endswitch;
+                            endforeach;
+                        ?>
+                        </tr>
+                        <?php
+                    endforeach;
+                    ?>
                     </tbody>
                 </table>
             </td>
         </tr>
-        <?php //return ob_get_clean();
+        <?php
     }
 
     /**
@@ -494,7 +500,8 @@ class Email extends Template {
                 'id'    => 'label_imap',
                 'type'  => 'label',
                 'desc'  => sprintf(
-                    '%s' . __( 'Your server does not have PHP IMAP extension loaded. To enable this feature, please contact your hosting provider and ask to enable PHP IMAP extension.', 'erp' ) . '%s',
+                    /* translators: 1) opening tags of <section> and <p>, 2) closing tags of </p> and </section> */
+                    __( '%1$sYour server does not have PHP IMAP extension loaded. To enable this feature, please contact your hosting provider and ask to enable PHP IMAP extension. %2$s', 'erp' ),
                     '<section class="notice notice-warning"><p>',
                     '</p></section>'
                 ),
@@ -526,7 +533,7 @@ class Email extends Template {
         $cron_schedules = [];
 
         foreach ( $schedules as $key => $value ) {
-            $cron_schedules[$key] = $value['display'];
+            $cron_schedules[ $key ] = $value['display'];
         }
 
         $fields[] = [
@@ -639,7 +646,14 @@ class Email extends Template {
             'title' => '',
             'id'    => 'label_gmail',
             'type'  => 'label',
-            'desc'  => __( '<a target="_blank" href="https://console.developers.google.com/flows/enableapi?apiid=gmail&pli=1">Create a Google App</a> and authorize your account to Send and Recieve emails using Gmail. Follow instructions from this <a target="_blank" href="https://wperp.com/docs/crm/tutorials/how-to-configure-gmail-api-connection-in-the-crm-settings/?utm_source=Free+Plugin&utm_medium=CTA&utm_content=Backend&utm_campaign=Docs">Documentation</a> to get started', 'erp' ),
+            'desc'  => sprintf(
+                /* translators: 1) opening anchor tag with google developers link, 2) closing anchor tag, 3) opening anchor tag with doc link, 4) closing anchor tag */
+                __( '%1$sCreate a Google App%2$s and authorize your account to Send and Recieve emails using Gmail. Follow instructions from this %3$sDocumentation%4$s to get started', 'erp' ),
+                '<a target="_blank" href="https://console.developers.google.com/flows/enableapi?apiid=gmail&pli=1">',
+                '</a>',
+                '<a target="_blank" href="https://wperp.com/docs/crm/tutorials/how-to-configure-gmail-api-connection-in-the-crm-settings/?utm_source=Free+Plugin&utm_medium=CTA&utm_content=Backend&utm_campaign=Docs">',
+                '</a>'
+            ),
         ];
 
         $fields[] = [
@@ -747,7 +761,7 @@ class Email extends Template {
             return;
         }
 
-        $current_section = isset( $_GET['sub_section'] ) ? sanitize_key( $_GET['sub_section'] ) : false;
+        $current_section = isset( $_GET['sub_section'] ) ? sanitize_text_field( wp_unslash( $_GET['sub_section'] ) ) : false;
 
         // Define emails that can be customised here
         $email_templates = wperp()->emailer->get_emails();
@@ -764,9 +778,14 @@ class Email extends Template {
         }
     }
 
+    /**
+     * Saves settings.
+     *
+     * @param $section (Optional)
+     *
+     * @return void
+     */
     public function save( $section = false ) {
-        global $current_class;
-
         if ( isset( $_POST['_wpnonce'] ) && wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-settings-nonce' ) ) {
             $from_sections = false;
 
@@ -781,8 +800,8 @@ class Email extends Template {
             // Modify options data for some sub sections
             $sub_section = isset( $_POST['sub_section' ] ) ? sanitize_text_field( wp_unslash( $_POST['sub_section' ] ) ) : null;
 
-            if ( ! empty ( $sub_sub_section ) ) {
-                $options = $options[ $sub_sub_section ];
+            if ( ! empty ( $sub_section ) ) {
+                $options = $options[ $sub_section ];
             }
 
             // Options to update will be stored here
@@ -839,7 +858,7 @@ class Email extends Template {
                     $option_id = 'erp_settings_' . $this->id . '_' . $section;
 
                     // If it's incoming/outgoing email, then toggle email providers
-                    $this->toggle_providers( $section, $_POST );
+                    $this->toggle_providers( $section, map_deep( wp_unslash( $_POST ), 'sanitize_text_field' ) );
 
                     if ( 'imap' === $section ) {
                         $imap_settings = get_option( 'erp_settings_erp-email_imap', [] );
@@ -854,5 +873,3 @@ class Email extends Template {
         }
     }
 }
-
-// return new Email();

@@ -15,7 +15,7 @@
             <people-search v-model="search" />
         </div>
 
-        <people-modal v-if="showModal" :people.sync="people" :title="buttonTitle" @close="showModal = false" />
+        <people-modal v-if="showModal" :people.sync="people" :title="buttonTitle" :type="peopleType" @close="showModal = false" />
 
         <import-modal v-if="showImportModal" :title="importTitle" :type="url" @close="showImportModal = false" />
 
@@ -89,7 +89,7 @@ export default {
             paginationData: {
                 totalItems : 0,
                 totalPages : 0,
-                perPage    : 20,
+                perPage    : 10,
                 currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
             },
             actions : [
@@ -106,7 +106,8 @@ export default {
             pageTitle             : '',
             url                   : '',
             singleUrl             : '',
-            isActiveOptionDropdown: false
+            isActiveOptionDropdown: false,
+            peopleType            : 'customer',
         };
     },
 
@@ -130,12 +131,31 @@ export default {
             this.fetchItems();
         });
 
-        this.buttonTitle = (this.$route.name.toLowerCase() === 'customers') ? __('Customer', 'erp') : __('Vendor', 'erp');
-        this.importTitle = (this.$route.name.toLowerCase() === 'customers') ? __('Import Customers', 'erp') : __('Import Vendors', 'erp');
-        this.exportTitle = (this.$route.name.toLowerCase() === 'customers') ? __('Export Customers', 'erp') : __('Export Vendors', 'erp');
-        this.pageTitle   = (this.$route.name.toLowerCase() === 'customers') ? __('Customers', 'erp') : __('Vendors', 'erp');
-        this.url         = this.$route.name.toLowerCase();
-        this.singleUrl   = (this.url === 'customers') ? 'CustomerDetails' : 'VendorDetails';
+        if ( this.$route.name.toLowerCase().includes( 'customer' ) ) {
+            this.peopleType  = 'customer';
+            this.pageTitle   = __('Customers', 'erp');
+            this.buttonTitle = __('Customer', 'erp');
+            this.importTitle = __('Import Customers', 'erp');
+            this.exportTitle = __('Export Customers', 'erp');
+            this.url         = 'customers';
+            this.singleUrl   = 'CustomerDetails';
+        } else if ( this.$route.name.toLowerCase().includes( 'vendor' ) ) {
+            this.peopleType  = 'vendor';
+            this.pageTitle   = __('Vendors', 'erp');
+            this.buttonTitle = __('Vendor', 'erp');
+            this.importTitle = __('Import Vendors', 'erp');
+            this.exportTitle = __('Export Vendors', 'erp');
+            this.url         = 'vendors';
+            this.singleUrl   = 'VendorDetails';
+        } else {
+            this.peopleType  = 'people';
+            this.pageTitle   = __('Peoples', 'erp');
+            this.buttonTitle = __('People', 'erp');
+            this.importTitle = __('Import People', 'erp');
+            this.exportTitle = __('Export People', 'erp');
+            this.url         = this.$route.name.toLowerCase();
+            this.singleUrl   = 'PeopleDetails';
+        }
 
         this.fetchItems();
     },
@@ -245,6 +265,7 @@ export default {
         },
 
         goToPage(page) {
+            this.$store.dispatch('spinner/setSpinner', true);
             const queries = Object.assign({}, this.$route.query);
             this.paginationData.currentPage = page;
 

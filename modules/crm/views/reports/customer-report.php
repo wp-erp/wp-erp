@@ -1,19 +1,14 @@
 <?php
-if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-nonce' ) ) {
-    // die();
-}
 
 $data         = [];
-$start        = !empty( $_POST['start'] ) ? sanitize_text_field( wp_unslash( $_POST['start'] ) ) : false;
-$end          = !empty( $_POST['end'] ) ? sanitize_text_field( wp_unslash( $_POST['end'] ) ) : date( 'Y-m-d' );
-$filter_type  = !empty( $_POST['filter_type'] ) ? sanitize_text_field( wp_unslash( $_POST['filter_type'] ) ) : 'life_stage';
-
+$start        = ! empty( $_POST['start'] ) ? sanitize_text_field( wp_unslash( $_POST['start'] ) ) : false;
+$end          = ! empty( $_POST['end'] ) ? sanitize_text_field( wp_unslash( $_POST['end'] ) ) : erp_current_datetime()->format( 'Y-m-d' );
+$filter_type  = ! empty( $_POST['filter_type'] ) ? sanitize_text_field( wp_unslash( $_POST['filter_type'] ) ) : 'life_stage';
 $reports      = erp_crm_customer_reporting_query( $start, $end, $filter_type );
-
 $life_stages  = erp_crm_get_life_stages_dropdown_raw();
 
 ?><div class="wrap">
-    <h2 class="report-title"><?php esc_attr_e( 'Customer Report', 'erp' ); ?></h2>
+    <h2 class="report-title"><?php esc_html_e( 'Customer Report', 'erp' ); ?></h2>
     <div class="erp-crm-report-header-wrap">
         <?php erp_crm_customer_report_filter_form(); ?>
         <button class="print" onclick="window.print()">Print</button>
@@ -21,9 +16,9 @@ $life_stages  = erp_crm_get_life_stages_dropdown_raw();
     <table class="table widefat striped">
         <thead>
             <tr>
-                <th><?php esc_attr_e( 'Label', 'erp' ); ?></th>
+                <th><?php esc_html_e( 'Label', 'erp' ); ?></th>
                 <?php foreach ( $life_stages as $life_stage ) { ?>
-                    <th><?php esc_attr_e( $life_stage, 'erp' ); ?></th>
+                    <th><?php esc_html_e( $life_stage, 'erp' ); ?></th>
                 <?php } ?>
             </tr>
         </thead>
@@ -36,9 +31,9 @@ $life_stages  = erp_crm_get_life_stages_dropdown_raw();
 
     $data =  apply_filters( 'erp_crm_customer_report', $data ); ?>
             <tr>
-                <td><?php esc_attr_e( 'All', 'erp' ); ?></td>
+                <td><?php esc_html_e( 'All', 'erp' ); ?></td>
                 <?php foreach ( $life_stages as $slug => $title ) { ?>
-                    <td><?php echo array_key_exists( $slug, $data ) ? esc_attr( $data[ $slug ] ) : 0; ?></td>
+                    <td><?php echo array_key_exists( $slug, $data ) ? esc_html( $data[ $slug ] ) : 0; ?></td>
                 <?php } ?>
             </tr>
 
@@ -50,7 +45,7 @@ $life_stages  = erp_crm_get_life_stages_dropdown_raw();
 
         foreach ( $data as $key => $value ) { ?>
                     <tr>
-                        <td><?php echo esc_attr( $key ); ?></td>
+                        <td><?php echo esc_html( $key ); ?></td>
 
                         <td>
                         <?php $num = 0;
@@ -61,7 +56,7 @@ $life_stages  = erp_crm_get_life_stages_dropdown_raw();
                                 }
                             }
 
-                            echo esc_attr( $num );
+                            echo esc_html( $num );
                         ?>
                         </td>
 
@@ -74,7 +69,7 @@ $life_stages  = erp_crm_get_life_stages_dropdown_raw();
                                 }
                             }
 
-                            echo esc_attr( $num );
+                            echo esc_html( $num );
                         ?>
                         </td>
 
@@ -87,7 +82,7 @@ $life_stages  = erp_crm_get_life_stages_dropdown_raw();
                                 }
                             }
 
-                            echo esc_attr( $num );
+                            echo esc_html( $num );
                         ?>
                         </td>
 
@@ -100,7 +95,7 @@ $life_stages  = erp_crm_get_life_stages_dropdown_raw();
                                 }
                             }
 
-                            echo esc_attr( $num );
+                            echo esc_html( $num );
                         ?>
                         </td>
                     </tr>
@@ -114,7 +109,7 @@ $life_stages  = erp_crm_get_life_stages_dropdown_raw();
 
         foreach ( $data as $key => $value ) { ?>
                     <tr>
-                        <td><?php echo esc_attr( $key ) !== -1 ? esc_html( erp_get_country_name( $key ) ) : 'Other'; ?></td>
+                        <td><?php echo esc_attr( $key ) !== -1 ? esc_html( erp_get_country_name( $key ) ) : esc_html__( 'Other', 'erp' ); ?></td>
 
                         <td>
                         <?php $num = 0;
@@ -125,7 +120,7 @@ $life_stages  = erp_crm_get_life_stages_dropdown_raw();
                                 }
                             }
 
-                            echo esc_attr( $num );
+                            echo esc_html( $num );
                         ?>
                         </td>
 
@@ -138,7 +133,7 @@ $life_stages  = erp_crm_get_life_stages_dropdown_raw();
                                 }
                             }
 
-                            echo esc_attr( $num );
+                            echo esc_html( $num );
                         ?>
                         </td>
 
@@ -151,7 +146,7 @@ $life_stages  = erp_crm_get_life_stages_dropdown_raw();
                                 }
                             }
 
-                            echo esc_attr( $num );
+                            echo esc_html( $num );
                         ?>
                         </td>
 
@@ -164,7 +159,7 @@ $life_stages  = erp_crm_get_life_stages_dropdown_raw();
                                 }
                             }
 
-                            echo esc_attr( $num );
+                            echo esc_html( $num );
                         ?>
                         </td>
                     </tr>
@@ -172,7 +167,7 @@ $life_stages  = erp_crm_get_life_stages_dropdown_raw();
     } elseif ( $filter_type === 'source' ) {
         foreach ( $reports as $key => $value ) { ?>
                     <tr>
-                        <td><?php echo esc_attr( $key ); ?></td>
+                        <td><?php echo esc_html( $key ); ?></td>
 
                         <td>
                         <?php $num = 0;
@@ -183,7 +178,7 @@ $life_stages  = erp_crm_get_life_stages_dropdown_raw();
                                 }
                             }
 
-                            echo esc_attr( $num );
+                            echo esc_html( $num );
                         ?>
                         </td>
 
@@ -196,7 +191,7 @@ $life_stages  = erp_crm_get_life_stages_dropdown_raw();
                                 }
                             }
 
-                            echo esc_attr( $num );
+                            echo esc_html( $num );
                         ?>
                         </td>
 
@@ -209,7 +204,7 @@ $life_stages  = erp_crm_get_life_stages_dropdown_raw();
                                 }
                             }
 
-                            echo esc_attr( $num );
+                            echo esc_html( $num );
                         ?>
                         </td>
 
@@ -222,7 +217,7 @@ $life_stages  = erp_crm_get_life_stages_dropdown_raw();
                                 }
                             }
 
-                            echo esc_attr( $num );
+                            echo esc_html( $num );
                         ?>
                         </td>
                     </tr>
@@ -230,7 +225,7 @@ $life_stages  = erp_crm_get_life_stages_dropdown_raw();
     } elseif ( $filter_type === 'group' ) {
         foreach ( $reports as $key => $value ) { ?>
                     <tr>
-                        <td><?php echo esc_attr( $key ); ?></td>
+                        <td><?php echo esc_html( $key ); ?></td>
 
                         <td>
                         <?php $num = 0;
@@ -241,7 +236,7 @@ $life_stages  = erp_crm_get_life_stages_dropdown_raw();
                                 }
                             }
 
-                            echo esc_attr( $num );
+                            echo esc_html( $num );
                         ?>
                         </td>
 
@@ -254,7 +249,7 @@ $life_stages  = erp_crm_get_life_stages_dropdown_raw();
                                 }
                             }
 
-                            echo esc_attr( $num );
+                            echo esc_html( $num );
                         ?>
                         </td>
 
@@ -267,7 +262,7 @@ $life_stages  = erp_crm_get_life_stages_dropdown_raw();
                                 }
                             }
 
-                            echo esc_attr( $num );
+                            echo esc_html( $num );
                         ?>
                         </td>
 
@@ -280,7 +275,7 @@ $life_stages  = erp_crm_get_life_stages_dropdown_raw();
                                 }
                             }
 
-                            echo esc_attr( $num );
+                            echo esc_html( $num );
                         ?>
                         </td>
                     </tr>

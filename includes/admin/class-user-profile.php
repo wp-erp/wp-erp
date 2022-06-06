@@ -78,6 +78,6 @@ class User_Profile {
             return;
         }
 
-        do_action( 'erp_update_user', $user_id, $_POST );
+        do_action( 'erp_update_user', $user_id, map_deep( wp_unslash( $_POST ), 'sanitize_text_field' ) );
     }
 }

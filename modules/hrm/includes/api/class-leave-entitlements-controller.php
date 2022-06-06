@@ -110,7 +110,7 @@ class Leave_Entitlements_Controller extends REST_Controller {
         $item = \WeDevs\ERP\HRM\Models\Leave_Entitlement::find( $id );
 
         if ( empty( $id ) || empty( $item->id ) ) {
-            return new WP_Error( 'rest_policy_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_policy_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $item     = $this->prepare_item_for_response( $item, $request );
@@ -251,31 +251,31 @@ class Leave_Entitlements_Controller extends REST_Controller {
             'type'       => 'object',
             'properties' => [
                 'id'          => [
-                    'description' => __( 'Unique identifier for the resource.' ),
+                    'description' => __( 'Unique identifier for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
                 'employee_id'          => [
-                    'description' => __( 'Employee id for the resource.' ),
+                    'description' => __( 'Employee id for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'required'    => true,
                 ],
                 'policy'          => [
-                    'description' => __( 'Policy for the resource.' ),
+                    'description' => __( 'Policy for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'required'    => true,
                 ],
                 'days'            => [
-                    'description' => __( 'Days for the resource.' ),
+                    'description' => __( 'Days for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'required'    => true,
                 ],
                 'start_date'      => [
-                    'description' => __( 'Start date for the resource.' ),
+                    'description' => __( 'Start date for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -284,7 +284,7 @@ class Leave_Entitlements_Controller extends REST_Controller {
                     'required'    => true,
                 ],
                 'end_date'        => [
-                    'description' => __( 'End date for the resource.' ),
+                    'description' => __( 'End date for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [

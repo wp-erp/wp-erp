@@ -64,18 +64,18 @@ var chart = new Chart(ctx, {
     options: {
         maintainAspectRatio: false,
         scales: {
-            xAxes: [{
+            x: {
                 stacked: true,
                 gridLines: {
                     display: false
-                 }
-            }],
-            yAxes: [{
+                }
+            },
+            y: {
                 stacked: true,
                 gridLines: {
                     display: true
-                 }
-            }]
+                }
+            }
         }
     }
 });

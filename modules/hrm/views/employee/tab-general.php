@@ -6,7 +6,7 @@
 
         <div class="handle-actions hide-if-no-js">
             <button type="button" class="handlediv" aria-expanded="true">
-                <span class="screen-reader-text"><?php _e( 'Click to toggle', 'erp' ); ?></span>
+                <span class="screen-reader-text"><?php esc_html_e( 'Click to toggle', 'erp' ); ?></span>
                 <span class="toggle-indicator" aria-hidden="true"></span>
             </button>
         </div>
@@ -36,7 +36,7 @@
 
             <div class="handle-actions hide-if-no-js">
                 <button type="button" class="handlediv" aria-expanded="true">
-                    <span class="screen-reader-text"><?php _e( 'Click to toggle', 'erp' ); ?></span>
+                    <span class="screen-reader-text"><?php esc_html_e( 'Click to toggle', 'erp' ); ?></span>
                     <span class="toggle-indicator" aria-hidden="true"></span>
                 </button>
             </div>
@@ -50,7 +50,7 @@
                 <?php
                 if ( $employee->get_reporting_to() ) {
                     $reporting_to      = erp_hr_get_employee_name( $employee->get_reporting_to() );
-                    $reporting_to_link =  erp_hr_get_single_link( $employee->get_reporting_to(), $reporting_to );
+                    $reporting_to_link = erp_hr_get_single_link( $employee->get_reporting_to(), $reporting_to );
                 }
                 ?>
 
@@ -80,7 +80,7 @@
 
             <div class="handle-actions hide-if-no-js">
                 <button type="button" class="handlediv" aria-expanded="true">
-                    <span class="screen-reader-text"><?php _e( 'Click to toggle', 'erp' ); ?></span>
+                    <span class="screen-reader-text"><?php esc_html_e( 'Click to toggle', 'erp' ); ?></span>
                     <span class="toggle-indicator" aria-hidden="true"></span>
                 </button>
             </div>
@@ -121,7 +121,7 @@
 
             <div class="handle-actions hide-if-no-js">
                 <button type="button" class="handlediv" aria-expanded="true">
-                    <span class="screen-reader-text"><?php _e( 'Click to toggle', 'erp' ); ?></span>
+                    <span class="screen-reader-text"><?php esc_html_e( 'Click to toggle', 'erp' ); ?></span>
                     <span class="toggle-indicator" aria-hidden="true"></span>
                 </button>
             </div>
@@ -157,8 +157,8 @@
                                 <td width="10%">
                                     <?php if ( current_user_can( 'erp_edit_employee', $employee->get_user_id() ) ) { ?>
                                         <div class="row-actions erp-hide-print">
-                                            <a href="#" class="work-experience-edit" data-template="erp-employment-work-experience" data-title="<?php esc_attr_e( 'Work Experience', 'erp' ); ?>" data-data='<?php echo json_encode( $experience ); ?>' data-button="<?php esc_attr_e( 'Update Experience', 'erp' ); ?>"><span class="dashicons dashicons-edit"></span></a>
-                                            <a href="#" class="work-experience-delete" data-employee_id="<?php echo esc_html( $employee->get_user_id() ); ?>" data-id="<?php echo esc_html( $experience->id ); ?>" data-action="erp-hr-emp-delete-exp"><span class="dashicons dashicons-trash"></span></a>
+                                            <a href="#" class="work-experience-edit" data-template="erp-employment-work-experience" data-title="<?php esc_attr_e( 'Work Experience', 'erp' ); ?>" data-data='<?php echo wp_json_encode( $experience ); ?>' data-button="<?php esc_attr_e( 'Update Experience', 'erp' ); ?>"><span class="dashicons dashicons-edit"></span></a>
+                                            <a href="#" class="work-experience-delete" data-employee_id="<?php echo esc_attr( $employee->get_user_id() ); ?>" data-id="<?php echo esc_attr( $experience->id ); ?>" data-action="erp-hr-emp-delete-exp"><span class="dashicons dashicons-trash"></span></a>
                                         </div>
                                     <?php } ?>
                                 </td>
@@ -167,14 +167,15 @@
                         <?php } ?>
                     </tbody>
                 </table>
-            <?php
-            } else { ?>
+				<?php
+            } else {
+				?>
 
                 <?php esc_html_e( 'No work experiences found.', 'erp' ); ?>
 
             <?php } ?>
             <?php if ( current_user_can( 'erp_edit_employee', $employee->get_user_id() ) ) { ?>
-                <a class="button button-secondary erp-hide-print" id="erp-empl-add-exp" href="#" data-data='<?php echo json_encode( [ 'employee_id' => $employee->get_user_id() ] ); ?>' data-button="<?php esc_attr_e( 'Create Experience', 'erp' ); ?>"  data-template="erp-employment-work-experience" data-title="<?php esc_attr_e( 'Work Experience', 'erp' ); ?>"><?php esc_html_e( '+ Add Experience', 'erp' ); ?></a>
+                <a class="button button-secondary erp-hide-print" id="erp-empl-add-exp" href="#" data-data='<?php echo wp_json_encode( [ 'employee_id' => $employee->get_user_id() ] ); ?>' data-button="<?php esc_attr_e( 'Create Experience', 'erp' ); ?>" data-template="erp-employment-work-experience" data-title="<?php esc_attr_e( 'Work Experience', 'erp' ); ?>"><?php esc_html_e( '+ Add Experience', 'erp' ); ?></a>
             <?php } ?>
         </div>
     </div><!-- .postbox -->
@@ -185,7 +186,7 @@
 
             <div class="handle-actions hide-if-no-js">
                 <button type="button" class="handlediv" aria-expanded="true">
-                    <span class="screen-reader-text"><?php _e( 'Click to toggle', 'erp' ); ?></span>
+                    <span class="screen-reader-text"><?php esc_html_e( 'Click to toggle', 'erp' ); ?></span>
                     <span class="toggle-indicator" aria-hidden="true"></span>
                 </button>
             </div>
@@ -223,11 +224,11 @@
                                         $result_type = $education->result_type;
                                         $result      = (object) json_decode( $education->result );
 
-                                        if ( $result_type === 'percentage' ) {
-                                            echo esc_html( $result->gpa ) . '%';
-                                        } else if ( $result_type === 'grade' ) {
-                                            echo esc_html( $result->gpa) . ' out of ' . esc_html( $result->scale );
-                                        }
+                                    if ( 'percentage' === $result_type ) {
+                                        echo esc_html( $result->gpa ) . '%';
+                                    } elseif ( $result_type === 'grade' ) {
+                                        echo esc_html( $result->gpa ) . ' out of ' . esc_html( $result->scale );
+                                    }
                                     ?>
                                 </td>
                                 <td><?php echo $education->notes ? esc_html( $education->notes ) : '-'; ?></td>
@@ -241,8 +242,8 @@
                                 <td width="10%">
                                     <?php if ( current_user_can( 'erp_edit_employee', $employee->get_user_id() ) ) { ?>
                                         <div class="row-actions erp-hide-print">
-                                            <a href="#" class="education-edit" data-template="erp-employment-education" data-title="<?php esc_attr_e( 'Education', 'erp' ); ?>" data-data='<?php echo json_encode( $education ); ?>' data-button="<?php esc_attr_e( 'Update Info', 'erp' ); ?>"><span class="dashicons dashicons-edit"></span></a>
-                                            <a href="#" class="education-delete" data-employee_id="<?php echo esc_html( $employee->get_user_id() ); ?>" data-id="<?php echo esc_html( $education->id ); ?>" data-action="erp-hr-emp-delete-education"><span class="dashicons dashicons-trash"></span></a>
+                                            <a href="#" class="education-edit" data-template="erp-employment-education" data-title="<?php esc_attr_e( 'Education', 'erp' ); ?>" data-data='<?php echo wp_json_encode( $education ); ?>' data-button="<?php esc_attr_e( 'Update Info', 'erp' ); ?>"><span class="dashicons dashicons-edit"></span></a>
+                                            <a href="#" class="education-delete" data-employee_id="<?php echo esc_attr( $employee->get_user_id() ); ?>" data-id="<?php echo esc_attr( $education->id ); ?>" data-action="erp-hr-emp-delete-education"><span class="dashicons dashicons-trash"></span></a>
                                         </div>
                                     <?php } ?>
                                 </td>
@@ -251,15 +252,16 @@
                         <?php } ?>
                     </tbody>
                 </table>
-            <?php
-            } else { ?>
+                <?php
+            } else {
+                ?>
 
                 <?php esc_html_e( 'No education information found.', 'erp' ); ?>
 
             <?php } ?>
 
             <?php if ( current_user_can( 'erp_edit_employee', $employee->get_user_id() ) ) { ?>
-                <a class="button button-secondary erp-hide-print" id="erp-empl-add-education" href="#" data-data='<?php echo json_encode( [ 'employee_id' => $employee->get_user_id() ] ); ?>'  data-template="erp-employment-education" data-title="<?php esc_attr_e( 'Education', 'erp' ); ?>" data-button="<?php esc_attr_e( 'Add Education', 'erp' ); ?>"><?php esc_html_e( '+ Add Education', 'erp' ); ?></a>
+                <a class="button button-secondary erp-hide-print" id="erp-empl-add-education" href="#" data-data='<?php echo wp_json_encode( [ 'employee_id' => $employee->get_user_id() ] ); ?>'  data-template="erp-employment-education" data-title="<?php esc_attr_e( 'Education', 'erp' ); ?>" data-button="<?php esc_attr_e( 'Add Education', 'erp' ); ?>"><?php esc_html_e( '+ Add Education', 'erp' ); ?></a>
             <?php } ?>
         </div>
     </div><!-- .postbox -->
@@ -270,7 +272,7 @@
 
             <div class="handle-actions hide-if-no-js">
                 <button type="button" class="handlediv" aria-expanded="true">
-                    <span class="screen-reader-text"><?php _e( 'Click to toggle', 'erp' ); ?></span>
+                    <span class="screen-reader-text"><?php esc_html_e( 'Click to toggle', 'erp' ); ?></span>
                     <span class="toggle-indicator" aria-hidden="true"></span>
                 </button>
             </div>
@@ -302,8 +304,8 @@
                                 <td width="10%">
                                     <?php if ( current_user_can( 'erp_edit_employee', $employee->get_user_id() ) ) { ?>
                                         <div class="row-actions erp-hide-print">
-                                            <a href="#" class="dependent-edit" data-template="erp-employment-dependent" data-title="<?php esc_attr_e( 'Dependents', 'erp' ); ?>" data-data='<?php echo json_encode( $dependent ); ?>' data-button="<?php esc_attr_e( 'Update Dependent', 'erp' ); ?>"><span class="dashicons dashicons-edit"></span></a>
-                                            <a href="#" class="dependent-delete" data-employee_id="<?php echo esc_html( $employee->get_user_id() ); ?>" data-id="<?php echo esc_html( $dependent->id ); ?>" data-action="erp-hr-emp-delete-dependent"><span class="dashicons dashicons-trash"></span></a>
+                                            <a href="#" class="dependent-edit" data-template="erp-employment-dependent" data-title="<?php esc_attr_e( 'Dependents', 'erp' ); ?>" data-data='<?php echo wp_json_encode( $dependent ); ?>' data-button="<?php esc_attr_e( 'Update Dependent', 'erp' ); ?>"><span class="dashicons dashicons-edit"></span></a>
+                                            <a href="#" class="dependent-delete" data-employee_id="<?php echo esc_attr( $employee->get_user_id() ); ?>" data-id="<?php echo esc_attr( $dependent->id ); ?>" data-action="erp-hr-emp-delete-dependent"><span class="dashicons dashicons-trash"></span></a>
                                         </div>
                                     <?php } ?>
                                 </td>
@@ -312,15 +314,16 @@
                         <?php } ?>
                     </tbody>
                 </table>
-            <?php
-            } else { ?>
+                <?php
+            } else {
+                ?>
 
                 <?php esc_html_e( 'No dependent information found.', 'erp' ); ?>
 
             <?php } ?>
 
             <?php if ( current_user_can( 'erp_edit_employee', $employee->get_user_id() ) ) { ?>
-                <a class="button button-secondary erp-hide-print" id="erp-empl-add-dependent" href="#" data-data='<?php echo json_encode( [ 'employee_id' => $employee->get_user_id() ] ); ?>'  data-template="erp-employment-dependent" data-title="<?php esc_attr_e( 'Dependent', 'erp' ); ?>" data-button="<?php esc_attr_e( 'Add Dependent', 'erp' ); ?>"><?php esc_html_e( '+ Add Dependents', 'erp' ); ?></a>
+                <a class="button button-secondary erp-hide-print" id="erp-empl-add-dependent" href="#" data-data='<?php echo wp_json_encode( [ 'employee_id' => $employee->get_user_id() ] ); ?>' data-template="erp-employment-dependent" data-title="<?php esc_attr_e( 'Dependent', 'erp' ); ?>" data-button="<?php esc_attr_e( 'Add Dependent', 'erp' ); ?>"><?php esc_html_e( '+ Add Dependents', 'erp' ); ?></a>
             <?php } ?>
         </div>
     </div><!-- .postbox -->
@@ -333,7 +336,7 @@
 
                 <div class="handle-actions hide-if-no-js">
                     <button type="button" class="handlediv" aria-expanded="true">
-                        <span class="screen-reader-text"><?php _e( 'Click to toggle', 'erp' ); ?></span>
+                        <span class="screen-reader-text"><?php esc_html_e( 'Click to toggle', 'erp' ); ?></span>
                         <span class="toggle-indicator" aria-hidden="true"></span>
                     </button>
                 </div>
@@ -349,7 +352,7 @@
                 <p><?php esc_html_e( 'Eligible for Hire', 'erp' ); ?> : <?php echo isset( $termination_data['eligible_for_rehire'] ) ? esc_html( erp_hr_get_terminate_rehire_options( $termination_data['eligible_for_rehire'] ) ) : ''; ?></p>
 
                 <?php if ( current_user_can( 'erp_edit_employee', $employee->get_user_id() ) ) { ?>
-                    <a class="button button-secondary erp-hide-print" id="erp-employee-terminate" href="#" data-id="<?php echo esc_html( $employee->get_user_id() ); ?>" data-template="erp-employment-terminate" data-data='<?php echo json_encode( $termination_data ); ?>' data-title="<?php esc_attr_e( 'Update Termination', 'erp' ); ?>" data-button="<?php esc_attr_e( 'Change Termination', 'erp' ); ?>"><?php esc_html_e( 'Change Termination', 'erp' ); ?></a>
+                    <a class="button button-secondary erp-hide-print" id="erp-employee-terminate" href="#" data-id="<?php echo esc_attr( $employee->get_user_id() ); ?>" data-template="erp-employment-terminate" data-data='<?php echo wp_json_encode( $termination_data ); ?>' data-title="<?php esc_attr_e( 'Update Termination', 'erp' ); ?>" data-button="<?php esc_attr_e( 'Change Termination', 'erp' ); ?>"><?php esc_html_e( 'Change Termination', 'erp' ); ?></a>
                 <?php } ?>
             </div>
         </div><!-- .postbox -->

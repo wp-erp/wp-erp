@@ -546,10 +546,10 @@ export default {
 
             HTTP.post('/invoices', requestData).then(res => {
                 this.$store.dispatch('spinner/setSpinner', false);
-                this.showAlert('success', this.inv_title + ' Created!');
+                this.showAlert( 'success', `${this.inv_title } ` + __( 'created successfully!', 'erp' ) );
             }).catch(error => {
                 this.$store.dispatch('spinner/setSpinner', false);
-                throw error;
+                this.showAlert( 'error', __( 'Could not create', 'erp' ) + ` ${this.inv_title}` );
             }).then(() => {
                 if (this.actionType === 'save' || this.actionType === 'draft') {
                     this.$router.push({ name: 'Sales' });

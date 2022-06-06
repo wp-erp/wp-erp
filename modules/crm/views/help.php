@@ -1,8 +1,8 @@
 <div class="wrap">
     <h1>
-        <?php esc_attr_e( 'CRM Help', 'erp' ); ?>
+        <?php esc_html_e( 'CRM Help', 'erp' ); ?>
         <a href="https://wperp.com/docs/crm/" target="_blank" class="page-title-action">
-            <?php esc_attr_e( 'View all Documentations', 'erp' ); ?>
+            <?php esc_html_e( 'View all Documentations', 'erp' ); ?>
         </a>
     </h1>
     <?php
@@ -31,22 +31,20 @@
 
     $sections = apply_filters( 'erp_crm_help_docs', $erp_doc_sections );
 
-    if ( ! empty( $sections ) ) { ?>
+    if ( ! empty( $sections ) ) : ?>
         <div id="dashboard-widgets-wrap">
             <div id="dashboard-widgets" class="metabox-holder">
-                <?php foreach ( $sections as $section_title => $docs ) { ?>
+                <?php foreach ( $sections as $section_title => $docs ) : ?>
                     <div class="erp-help-section postbox-container">
                         <div class="metabox-holder">
-
                             <div class="meta-box-sortables">
-
                                 <div class="postbox">
                                     <h2 class="hndle"><?php echo esc_html( $section_title ); ?></h2>
 
-                                    <?php if ( !empty( $docs ) ) { ?>
+                                    <?php if ( ! empty( $docs ) ) : ?>
                                         <div class="erp-help-questions">
                                             <ul>
-                                                <?php foreach ( $docs as $title => $link ) { ?>
+                                                <?php foreach ( $docs as $title => $link ) : ?>
                                                     <?php
                                                     $tracking_url = add_query_arg(
                                                         [
@@ -62,23 +60,18 @@
                                                     <li>
                                                         <a href="<?php echo esc_url_raw( $tracking_url ); ?>" target="_blank"><?php echo esc_html( $title ); ?> <span class="dashicons dashicons-arrow-right-alt2"></span></a>
                                                     </li>
-                                                <?php } ?>
+                                                <?php endforeach; ?>
                                             </ul>
                                         </div>
-                                    <?php } ?>
+                                    <?php endif; ?>
                                 </div>
-
                             </div>
-
                         </div>
                     </div>
-                <?php } ?>
+                <?php endforeach; ?>
             </div>
         </div>
-    <?php } else { ?>
-
-    <?php } ?>
-
+    <?php endif; ?>
 </div>
 
 
