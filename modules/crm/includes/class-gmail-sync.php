@@ -107,8 +107,6 @@ class Gmail_Sync {
         try {
             $data = $this->gmail->users_history->listUsersHistory( $this->userid, [ 'startHistoryId' => $historyid ] );
         } catch ( Google_Service_Exception $e ) {
-            error_log( 'Gmail API SYNC error : ' );
-            error_log( $e->getMessage() );
             $this->full_sync();
 
             return;
@@ -178,7 +176,6 @@ class Gmail_Sync {
                 $att  = $this->gmail->users_messages_attachments->get( $this->userid, $message->getId(), $value['body']['attachmentId'] );
                 $data = $att->getData();
             } catch ( Exception $e ) {
-                error_log( 'Failed to fetch attachment : ', $e->getMessage() );
                 continue;
             }
             $data = [ 'id'   => $value['body']['attachmentId'],
@@ -269,8 +266,7 @@ class Gmail_Sync {
     public function process_emails( $emails ) {
         do_action( 'erp_crm_new_inbound_emails', $emails );
 
-        $http_host = isset( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-
+        $http_host = isset( $_SERVER['HTTP_HOST'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : '';
         $email_regexp = '([a-z0-9]+[.][0-9]+[.][0-9]+[.][r][1|2])@' . $http_host;
 
         foreach ( $emails as $email ) {

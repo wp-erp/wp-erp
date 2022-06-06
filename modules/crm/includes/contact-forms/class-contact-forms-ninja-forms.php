@@ -134,10 +134,6 @@ class Ninja_Forms {
         $form_id = 0;
         $data    = [];
 
-        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-nonce' ) ) {
-            // die();
-        }
-
         if ( version_compare( get_option( 'ninja_forms_version', '0.0.0' ), '3', '<' ) ) {
             /* Support for version < 3.0 */
             $sub     = $nf->sub( $sub_id );

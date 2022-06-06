@@ -6,7 +6,7 @@
         $email_settings = get_option( 'erp_settings_erp-email_general', [] );
 
         if ( isset( $_GET['sent'] ) ) {
-            erp_html_show_notice(  esc_html__( 'The test email has been sent by WordPress. Please note this does NOT mean it has been delivered.', 'erp' ) );
+            erp_html_show_notice( esc_html__( 'The test email has been sent by WordPress. Please note this does NOT mean it has been delivered.', 'erp' ) );
         }
         ?>
 

@@ -145,7 +145,7 @@ export default {
                 query: {
                     start: this.start_date,
                     end  : this.end_date
-                } });
+                } }).catch(()=>{});
         },
 
         fetchItems() {

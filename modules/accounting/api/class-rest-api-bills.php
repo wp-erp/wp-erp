@@ -183,7 +183,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_bill_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_bill_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $bill_data = erp_acct_get_bill( $id );
@@ -247,13 +247,13 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_bill_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_bill_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $can_edit = erp_acct_check_voucher_edit_state( $id );
 
         if ( ! $can_edit ) {
-            return new WP_Error( 'rest_bill_invalid_edit', __( 'Invalid edit permission for update.' ), [ 'status' => 403 ] );
+            return new WP_Error( 'rest_bill_invalid_edit', __( 'Invalid edit permission for update.', 'erp' ), [ 'status' => 403 ] );
         }
 
         $bill_data = $this->prepare_item_for_database( $request );
@@ -298,7 +298,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_bill_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_bill_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         erp_acct_void_bill( $id );
@@ -317,7 +317,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_bill_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_bill_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $args = [
@@ -533,18 +533,18 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
             'type'       => 'object',
             'properties' => [
                 'id'           => [
-                    'description' => __( 'Unique identifier for the resource.' ),
+                    'description' => __( 'Unique identifier for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
                 'voucher_no'   => [
-                    'description' => __( 'Voucher no. for the resource.' ),
+                    'description' => __( 'Voucher no. for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],
                 ],
                 'vendor_id'    => [
-                    'description' => __( 'People id for the resource.' ),
+                    'description' => __( 'People id for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -553,7 +553,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'required'    => true,
                 ],
                 'trn_date'     => [
-                    'description' => __( 'Date for the resource.' ),
+                    'description' => __( 'Date for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -562,7 +562,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'required'    => true,
                 ],
                 'due_date'     => [
-                    'description' => __( 'Due date for the resource.' ),
+                    'description' => __( 'Due date for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -571,7 +571,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'required'    => true,
                 ],
                 'ref'     => [
-                    'description' => __( 'Reference number for the resource.' ),
+                    'description' => __( 'Reference number for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -579,7 +579,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
                     ],
                 ],
                 'billing_address' => [
-                    'description' => __( 'Billing address for the resource.' ),
+                    'description' => __( 'Billing address for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -613,7 +613,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
                     ],
                 ],
                 'status'       => [
-                    'description' => __( 'Status for the resource.' ),
+                    'description' => __( 'Status for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],
                     'required'    => true,

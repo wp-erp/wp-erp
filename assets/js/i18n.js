@@ -353,6 +353,15 @@ var I18N_HOOK_REGEXP = /^i18n\.(n?gettext|has_translation)(_|$)/;
  * @see http://messageformat.github.io/Jed/
  */
 
+/**
+ * @typedef {(data?: LocaleData, domain?: string) => void} ResetLocaleData
+ *
+ * Resets all current Tannin instance locale data and sets the specified
+ * locale data for the domain. Accepts data in a Jed-formatted JSON object shape.
+ *
+ * @see http://messageformat.github.io/Jed/
+ */
+
 /** @typedef {() => void} SubscribeCallback */
 
 /** @typedef {() => void} UnsubscribeCallback */
@@ -425,18 +434,20 @@ var I18N_HOOK_REGEXP = /^i18n\.(n?gettext|has_translation)(_|$)/;
  * An i18n instance
  *
  * @typedef I18n
- * @property {GetLocaleData} getLocaleData Returns locale data by domain in a Jed-formatted JSON object shape.
- * @property {SetLocaleData} setLocaleData Merges locale data into the Tannin instance by domain. Accepts data in a
- *                                         Jed-formatted JSON object shape.
- * @property {Subscribe} subscribe         Subscribes to changes of Tannin locale data.
- * @property {__} __                       Retrieve the translation of text.
- * @property {_x} _x                       Retrieve translated string with gettext context.
- * @property {_n} _n                       Translates and retrieves the singular or plural form based on the supplied
- *                                         number.
- * @property {_nx} _nx                     Translates and retrieves the singular or plural form based on the supplied
- *                                         number, with gettext context.
- * @property {IsRtl} isRTL                 Check if current locale is RTL.
- * @property {HasTranslation} hasTranslation Check if there is a translation for a given string.
+ * @property {GetLocaleData} getLocaleData     Returns locale data by domain in a Jed-formatted JSON object shape.
+ * @property {SetLocaleData} setLocaleData     Merges locale data into the Tannin instance by domain. Accepts data in a
+ *                                             Jed-formatted JSON object shape.
+ * @property {ResetLocaleData} resetLocaleData Resets all current Tannin instance locale data and sets the specified
+ *                                             locale data for the domain. Accepts data in a Jed-formatted JSON object shape.
+ * @property {Subscribe} subscribe             Subscribes to changes of Tannin locale data.
+ * @property {__} __                           Retrieve the translation of text.
+ * @property {_x} _x                           Retrieve translated string with gettext context.
+ * @property {_n} _n                           Translates and retrieves the singular or plural form based on the supplied
+ *                                             number.
+ * @property {_nx} _nx                         Translates and retrieves the singular or plural form based on the supplied
+ *                                             number, with gettext context.
+ * @property {IsRtl} isRTL                     Check if current locale is RTL.
+ * @property {HasTranslation} hasTranslation   Check if there is a translation for a given string.
  */
 
 /**
@@ -502,6 +513,16 @@ var createI18n = function createI18n(initialData, initialDomain, hooks) {
   var setLocaleData = function setLocaleData(data, domain) {
     doSetLocaleData(data, domain);
     notifyListeners();
+  };
+  /** @type {ResetLocaleData} */
+
+
+  var resetLocaleData = function resetLocaleData(data, domain) {
+    // Reset all current Tannin locale data.
+    tannin.data = {}; // Reset cached plural forms functions cache.
+
+    tannin.pluralForms = {};
+    setLocaleData(data, domain);
   };
   /**
    * Wrapper for Tannin's `dcnpgettext`. Populates default locale data if not
@@ -727,6 +748,7 @@ var createI18n = function createI18n(initialData, initialDomain, hooks) {
   return {
     getLocaleData: getLocaleData,
     setLocaleData: setLocaleData,
+    resetLocaleData: resetLocaleData,
     subscribe: subscribe,
     __: __,
     _x: _x,
@@ -814,6 +836,7 @@ window.sprintf = __WEBPACK_IMPORTED_MODULE_0__wordpress_i18n__["c" /* sprintf */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__default_i18n__ = __webpack_require__(16);
 /* unused harmony reexport defaultI18n */
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_2__default_i18n__["b"]; });
+/* unused harmony reexport resetLocaleData */
 /* unused harmony reexport getLocaleData */
 /* unused harmony reexport subscribe */
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_2__default_i18n__["a"]; });
@@ -859,7 +882,7 @@ var logErrorOnce = __WEBPACK_IMPORTED_MODULE_0_memize___default()(console.error)
  * @param {string}    format The format of the string to generate.
  * @param {...*} args Arguments to apply to the format.
  *
- * @see http://www.diveintojavascript.com/projects/javascript-sprintf
+ * @see https://www.npmjs.com/package/sprintf-js
  *
  * @return {string} The formatted string.
  */
@@ -1856,6 +1879,7 @@ function evaluate( postfix, variables ) {
 "use strict";
 /* unused harmony export getLocaleData */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return setLocaleData; });
+/* unused harmony export resetLocaleData */
 /* unused harmony export subscribe */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __; });
 /* unused harmony export _x */
@@ -1912,6 +1936,17 @@ var getLocaleData = i18n.getLocaleData.bind(i18n);
  */
 
 var setLocaleData = i18n.setLocaleData.bind(i18n);
+/**
+ * Resets all current Tannin instance locale data and sets the specified
+ * locale data for the domain. Accepts data in a Jed-formatted JSON object shape.
+ *
+ * @see http://messageformat.github.io/Jed/
+ *
+ * @param {LocaleData} [data]   Locale data configuration.
+ * @param {string}     [domain] Domain for which configuration applies.
+ */
+
+var resetLocaleData = i18n.resetLocaleData.bind(i18n);
 /**
  * Subscribes to changes of locale data
  *
@@ -2547,7 +2582,7 @@ function _arrayWithoutHoles(arr) {
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = _iterableToArray;
 function _iterableToArray(iter) {
-  if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
+  if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
 }
 
 /***/ }),

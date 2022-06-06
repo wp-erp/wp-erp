@@ -58,7 +58,7 @@ class Leave_Requests_List_Table extends \WP_List_Table {
         <div class="alignleft actions">
 
             <label class="screen-reader-text" for="filter_year"><?php esc_html_e( 'Filter by year', 'erp' ); ?></label>
-            <input type="hidden" name="status" value="<?php echo esc_html( $this->page_status ); ?>">
+            <input type="hidden" name="status" value="<?php echo esc_attr( $this->page_status ); ?>">
             <select name="filter_year" id="filter_year">
                 <?php
                 foreach ( $financial_years as $f_id => $f_name ) {

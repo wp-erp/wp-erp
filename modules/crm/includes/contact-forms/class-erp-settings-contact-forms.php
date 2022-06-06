@@ -188,9 +188,10 @@ class ERP_Settings_Contact_Forms {
 
         if ( ! empty( $_POST['plugin'] ) && ! empty( $_POST['formId'] ) && ! empty( $_POST['map'] ) ) {
             $required_options = $this->get_required_crm_contact_options();
+            $map_data         = array_map( 'sanitize_text_field', wp_unslash( $_POST['map'] ) );
 
             // if map contains full_name, then remove first and last names from required options
-            if ( in_array( 'full_name', $_POST['map'], true ) ) {
+            if ( in_array( 'full_name', $map_data, true ) ) {
                 $index = array_search( 'first_name', $required_options );
                 unset( $required_options[ $index ] );
 
@@ -200,7 +201,7 @@ class ERP_Settings_Contact_Forms {
                 array_unshift( $required_options, 'full_name' );
             }
 
-            $diff = array_diff( $required_options, array_map( 'sanitize_text_field', wp_unslash( $_POST['map'] ) ) );
+            $diff = array_diff( $required_options, $map_data );
 
             if ( ! empty( $diff ) ) {
                 $required_options = array_map( function ( $option ) {
@@ -211,13 +212,13 @@ class ERP_Settings_Contact_Forms {
                     __( '%s fields are required', 'erp' ),
                     implode( ', ', $required_options )
                 );
-            } elseif ( empty( $_POST['contactOwner'] ) && absint( $_POST['contactOwner'] ) ) {
+            } elseif ( empty( $_POST['contactOwner'] ) ) {
                 $response['msg'] = __( 'Please set a contact owner.', 'erp' );
             } else {
                 $settings = get_option( 'wperp_crm_contact_forms' );
 
                 $settings[ sanitize_text_field( wp_unslash( $_POST['plugin'] ) ) ][ sanitize_text_field( wp_unslash( $_POST['formId'] ) ) ] = [
-                    'map'           => array_map( 'sanitize_text_field', wp_unslash( $_POST['map'] ) ),
+                    'map'           => $map_data,
                     'contact_group' => isset( $_POST['contactGroup'] ) ? sanitize_text_field( wp_unslash( $_POST['contactGroup'] ) ) : '',
                     'contact_owner' => isset( $_POST['contactOwner'] ) ? sanitize_text_field( wp_unslash( $_POST['contactOwner'] ) ) : '',
                 ];
@@ -253,13 +254,15 @@ class ERP_Settings_Contact_Forms {
 
         if ( ! erp_crm_is_current_user_manager() ) {
             $response['msg'] = __( 'Unauthorized operation', 'erp' );
-        } elseif ( ! empty( $_POST['plugin'] ) && !empty( $_POST['formId'] ) ) {
+        } elseif ( ! empty( $_POST['plugin'] ) && ! empty( $_POST['formId'] ) ) {
             $settings = get_option( 'wperp_crm_contact_forms' );
+            $plugin   = sanitize_text_field( wp_unslash( $_POST['plugin'] ) );
+            $form_id  = sanitize_text_field( wp_unslash( $_POST['formId'] ) );
 
-            if ( ! empty( $settings[ $_POST['plugin'] ][ $_POST['formId'] ] ) ) {
-                $map = $settings[ sanitize_text_field( wp_unslash( $_POST['plugin'] ) ) ][ sanitize_text_field( wp_unslash( $_POST['formId'] ) ) ]['map'];
+            if ( ! empty( $settings[ $plugin ][ $form_id ] ) ) {
+                $map = $settings[ $plugin ][ $form_id ]['map'];
 
-                unset( $settings[ $_POST['plugin'] ][ $_POST['formId'] ] );
+                unset( $settings[ $plugin ][ $form_id ] );
 
                 update_option( 'wperp_crm_contact_forms', $settings );
 

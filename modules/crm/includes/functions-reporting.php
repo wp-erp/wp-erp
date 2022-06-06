@@ -104,7 +104,8 @@ function erp_crm_customer_report_filter_form( $start = true, $end = true, $type 
         ] );
     }
 
-    erp_html_form_input( [
+    erp_html_form_input(
+        [
             'name'        => 'filter_type',
             'placeholder' => esc_html__( 'Select a type', 'erp' ),
             'type'        => 'select',
@@ -146,7 +147,8 @@ function erp_crm_growth_report_filter_form( $start = true, $end = true, $type = 
 
     echo '<form class="erp-crm-report-filter-form" action="" method="post">';
 
-    erp_html_form_input( [
+    erp_html_form_input(
+        [
             'name'        => 'filter_type',
             'placeholder' => esc_html__( 'Select a type', 'erp' ),
             'type'        => 'select',
@@ -161,23 +163,27 @@ function erp_crm_growth_report_filter_form( $start = true, $end = true, $type = 
     );
 
     if ( $start ) {
-        erp_html_form_input( [
-            'name'        => 'start',
-            'type'        => 'text',
-            'class'       => 'erp-date-picker-from custom-filter',
-            'placeholder' => esc_html__( 'From', 'erp' ),
-            'value'       => isset( $_POST['start'] ) ? sanitize_text_field( wp_unslash( $_POST['start'] ) ) : '',
-        ] );
+        erp_html_form_input(
+            [
+                'name'        => 'start',
+                'type'        => 'text',
+                'class'       => 'erp-date-picker-from custom-filter',
+                'placeholder' => esc_html__( 'From', 'erp' ),
+                'value'       => isset( $_POST['start'] ) ? sanitize_text_field( wp_unslash( $_POST['start'] ) ) : '',
+            ]
+        );
     }
 
     if ( $end ) {
-        erp_html_form_input( [
-            'name'        => 'end',
-            'type'        => 'text',
-            'class'       => 'erp-date-picker-to custom-filter',
-            'placeholder' => esc_html__( 'To', 'erp' ),
-            'value'       => isset( $_POST['end'] ) ? sanitize_text_field( wp_unslash( $_POST['end'] ) ) : '',
-        ] );
+        erp_html_form_input(
+            [
+                'name'        => 'end',
+                'type'        => 'text',
+                'class'       => 'erp-date-picker-to custom-filter',
+                'placeholder' => esc_html__( 'To', 'erp' ),
+                'value'       => isset( $_POST['end'] ) ? sanitize_text_field( wp_unslash( $_POST['end'] ) ) : '',
+            ]
+        );
     }
 
     wp_nonce_field( 'erp_crm_nonce_report' );

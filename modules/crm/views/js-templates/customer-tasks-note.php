@@ -5,7 +5,7 @@ $customer_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
 
     <div class="assign-task-wrap">
         <p class="assign-task-title">
-            <input type="text" v-model="feedData.task_title" placeholder="<?php esc_attr_e( 'Enter your task title here..' ); ?>">
+            <input type="text" v-model="feedData.task_title" placeholder="<?php esc_attr_e( 'Enter your task title here..', 'erp' ); ?>">
         </p>
         <p class="assign-taskes-users">
             <select name="selected_contact" v-model="feedData.inviteContact" v-selecttwo="feedData.inviteContact" class="select2" multiple="multiple" style="width: 100%" data-placeholder="<?php esc_attr_e( 'Agents or managers..', 'erp' ); ?>">
@@ -22,7 +22,7 @@ $customer_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
                 <input v-model="feedData.dt" type="text" v-datepicker="feedData.dt" datedisable="previous" placeholder="yy-mm-dd">
             </p>
             <p class="erp-left assign-task-time">
-                <input v-model="feedData.tp"  type="text" v-timepicker="feedData.tp" placeholder="12.00pm" size="10">
+                <input v-model="feedData.tp"  type="text" v-timepicker="feedData.tp" placeholder="<?php esc_attr_e( '12.00pm', 'erp' ); ?>" size="10">
             </p>
             <div class="clearfix"></div>
         </div>
@@ -35,7 +35,7 @@ $customer_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
     <input v-if="feed" id="tasks_activity_message_{{ feed.id }}" v-model="feedData.message" type="hidden" name="tasks_activity_message_{{ feed.id }}" value="{{ feed.message }}">
 
     <div class="crm-attachments" id="{{feed ? 'crm-attachments-' + feed.id : 'crm-attachments'}}">
-       <div id="progress-wrp"><div class="progress-bar"></div ><div class="status">0%</div></div>
+       <div id="progress-wrp"><div class="progress-bar"></div ><div class="status"><?php esc_html_e( '0', 'erp' ); ?>%</div></div>
        <div id="crm-atch-output"></div>
     </div>
 
@@ -51,7 +51,7 @@ $customer_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
                 </li>
             </ul>
             <input type="file" name="attachments[]" class="crm-activity-attachment" id="activity-attachment-{{feed.id}}" v-on:change="addAttachments(feed)" multiple>
-            <label for="activity-attachment-{{feed.id}}" class="attachments-label" title="Add File"><?php _e( '+ Add File', 'erp' ); ?></label>
+            <label for="activity-attachment-{{feed.id}}" class="attachments-label" title="<?php esc_attr_e( 'Add File', 'erp' ); ?>"><?php esc_html_e( '+ Add File', 'erp' ); ?></label>
         </div>
     </div>
 
@@ -63,8 +63,8 @@ $customer_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
         <input type="submit" v-if="!feed" :disabled = "!isValid" class="button button-primary" name="add_tasks_activity" value="<?php esc_attr_e( 'Create Task', 'erp' ); ?>">
         <input type="submit" v-if="feed" :disabled = "!isValid" class="button button-primary" name="edit_tasks_activity" value="<?php esc_attr_e( 'Update Task', 'erp' ); ?>">
         <input v-if="!feed" type="file" name="attachments[]" class="crm-activity-attachment" id="activity-attachment" v-on:change="addAttachments()" multiple>
-        <label v-if="!feed" for="activity-attachment" class="attachments-label" title="Attach File"><span class="btn-activity-atch dashicons dashicons-paperclip"></span><?php _e( 'Attach File', 'erp' ); ?></label>
+        <label v-if="!feed" for="activity-attachment" class="attachments-label" title="Attach File"><span class="btn-activity-atch dashicons dashicons-paperclip"></span><?php esc_html_e( 'Attach File', 'erp' ); ?></label>
         <input type="reset" v-if="!feed" class="button button-default" value="<?php esc_attr_e( 'Discard', 'erp' ); ?>">
-        <button class="button" v-if="feed" @click.prevent="cancelUpdateFeed"><?php esc_attr_e( 'Cancel', 'erp' ); ?></button>
+        <button class="button" v-if="feed" @click.prevent="cancelUpdateFeed"><?php esc_html_e( 'Cancel', 'erp' ); ?></button>
     </div>
 </div>

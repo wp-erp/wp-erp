@@ -13,8 +13,8 @@
     ) {
         ?>
         <a href="#" id="erp-empl-performance-reviews" class="action button"
-           data-id="<?php echo esc_html( $employee->get_user_id() ); ?>" data-template="erp-employment-performance-reviews"
-           data-title="<?php esc_html_e( 'Performance Review', 'erp' ); ?>"><span
+           data-id="<?php echo esc_attr( $employee->get_user_id() ); ?>" data-template="erp-employment-performance-reviews"
+           data-title="<?php esc_attr_e( 'Performance Review', 'erp' ); ?>"><span
                 class="dashicons dashicons-plus erp-performance-dashicon"></span> <?php esc_html_e( 'Add Performance Reviews', 'erp' ); ?>
         </a>
         <?php
@@ -68,7 +68,7 @@
                         <?php if ( current_user_can( 'erp_delete_review', $employee->get_user_id() ) ||
                                     ( get_current_user_id() === $department_lead_id )
                                 ) { ?>
-                            <a href="#" class="performance-remove" data-userid="<?php echo esc_html( $employee->get_user_id() ); ?>" data-id="<?php echo esc_html( $row->id ); ?>"><span
+                            <a href="#" class="performance-remove" data-userid="<?php echo esc_attr( $employee->get_user_id() ); ?>" data-id="<?php echo esc_attr( $row->id ); ?>"><span
                                     class="dashicons dashicons-trash"></span></a>
                         <?php } ?>
                     </td>
@@ -91,8 +91,8 @@
         ( get_current_user_id() === $department_lead_id )
     ) { ?>
         <a href="#" id="erp-empl-performance-comments" class="action button"
-           data-id="<?php echo esc_html( $employee->get_user_id() ); ?>" data-template="erp-employment-performance-comments"
-           data-title="<?php esc_html_e( 'Performance Comments', 'erp' ); ?>"><span
+           data-id="<?php echo esc_attr( $employee->get_user_id() ); ?>" data-template="erp-employment-performance-comments"
+           data-title="<?php esc_attr_e( 'Performance Comments', 'erp' ); ?>"><span
                 class="dashicons dashicons-plus erp-performance-dashicon"></span> <?php esc_html_e( 'Add Performance Comments', 'erp' ); ?>
         </a>
     <?php } ?>
@@ -132,7 +132,7 @@
                         <?php if ( current_user_can( 'erp_delete_review', $employee->get_user_id() ) ||
                                     ( get_current_user_id() === $department_lead_id )
                                 ) { ?>
-                            <a href="#" class="performance-remove" data-userid="<?php echo esc_html( $employee->get_user_id() ); ?>" data-id="<?php echo esc_html( $row->id ); ?>"><span
+                            <a href="#" class="performance-remove" data-userid="<?php echo esc_attr( $employee->get_user_id() ); ?>" data-id="<?php echo esc_attr( $row->id ); ?>"><span
                                     class="dashicons dashicons-trash"></span></a>
                         <?php } ?>
                     </td>
@@ -154,9 +154,9 @@
     <?php if ( current_user_can( 'erp_create_review', $employee->get_user_id() ) ||
         ( get_current_user_id() === $department_lead_id )
     ) { ?>
-        <a href="#" id="erp-empl-performance-goals" class="action button" data-id="<?php echo esc_html( $employee->get_user_id() ); ?>"
+        <a href="#" id="erp-empl-performance-goals" class="action button" data-id="<?php echo esc_attr( $employee->get_user_id() ); ?>"
            data-template="erp-employment-performance-goals"
-           data-title="<?php esc_html_e( 'Performance Goals', 'erp' ); ?>"><span
+           data-title="<?php esc_attr_e( 'Performance Goals', 'erp' ); ?>"><span
                 class="dashicons dashicons-plus erp-performance-dashicon"></span> <?php esc_html_e( 'Add Performance Goals', 'erp' ); ?>
         </a>
     <?php } ?>
@@ -197,7 +197,7 @@
                         <?php if ( current_user_can( 'erp_delete_review', $employee->get_user_id() ) ||
                                     ( get_current_user_id() === $department_lead_id )
                                 ) { ?>
-                            <a href="#" class="performance-remove" data-userid="<?php echo esc_html( $employee->get_user_id() ); ?>" data-id="<?php echo esc_html( $row->id ); ?>"><span
+                            <a href="#" class="performance-remove" data-userid="<?php echo esc_attr( $employee->get_user_id() ); ?>" data-id="<?php echo esc_attr( $row->id ); ?>"><span
                                     class="dashicons dashicons-trash"></span></a>
                         <?php } ?>
                     </td>

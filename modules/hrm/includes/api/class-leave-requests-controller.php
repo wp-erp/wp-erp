@@ -116,7 +116,7 @@ class Leave_Requests_Controller extends REST_Controller {
         $item = erp_hr_get_leave_request( $id );
 
         if ( empty( $id ) || empty( $item->id ) ) {
-            return new WP_Error( 'rest_leave_request_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_leave_request_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $item     = $this->prepare_item_for_response( $item, $request );
@@ -139,7 +139,7 @@ class Leave_Requests_Controller extends REST_Controller {
         $policies = erp_hr_get_assign_policy_from_entitlement( $data['employee_id'] );
 
         if ( ! $policies ) {
-            return new WP_Error( 'rest_leave_request_required_entitlement', __( 'Set entitlement to the employee first.' ), [ 'status' => 400 ] );
+            return new WP_Error( 'rest_leave_request_required_entitlement', __( 'Set entitlement to the employee first.', 'erp' ), [ 'status' => 400 ] );
         }
 
         $id            = erp_hr_leave_insert_request( $item );
@@ -256,25 +256,25 @@ class Leave_Requests_Controller extends REST_Controller {
             'type'       => 'object',
             'properties' => [
                 'id'          => [
-                    'description' => __( 'Unique identifier for the resource.' ),
+                    'description' => __( 'Unique identifier for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
                 'employee_id' => [
-                    'description' => __( 'Employee id for the resource.' ),
+                    'description' => __( 'Employee id for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],
                     'required'    => true,
                 ],
                 'policy'      => [
-                    'description' => __( 'Employee id for the resource.' ),
+                    'description' => __( 'Employee id for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],
                     'required'    => true,
                 ],
                 'start_date'  => [
-                    'description' => __( 'Start date for the resource.' ),
+                    'description' => __( 'Start date for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -283,7 +283,7 @@ class Leave_Requests_Controller extends REST_Controller {
                     'required'    => true,
                 ],
                 'end_date'    => [
-                    'description' => __( 'End date for the resource.' ),
+                    'description' => __( 'End date for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -292,7 +292,7 @@ class Leave_Requests_Controller extends REST_Controller {
                     'required'    => true,
                 ],
                 'reason'     => [
-                    'description' => __( 'Reason for the resource.' ),
+                    'description' => __( 'Reason for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [

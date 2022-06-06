@@ -130,8 +130,8 @@ class Reports_Controller extends \WeDevs\ERP\API\REST_Controller {
      */
     public function get_trial_balance( $request ) {
         $args = [
-            'start_date' => ! empty( $request['start_date'] ) ? $request['start_date'] : null,
-            'end_date'   => ! empty( $request['end_date'] ) ? $request['end_date'] : null,
+            'start_date' => ! empty( $request['start_date'] ) ? erp_current_datetime()->modify( $request['start_date'] )->format( 'Y-m-d' ) : erp_current_datetime()->modify( 'first day of January' )->format( 'Y-m-d' ),
+            'end_date'   => ! empty( $request['end_date'] ) ? erp_current_datetime()->modify( $request['end_date'] )->format( 'Y-m-d' ) : erp_current_datetime()->format( 'Y-m-d' ),
         ];
 
         $data = erp_acct_get_trial_balance( $args );

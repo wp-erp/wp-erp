@@ -1,6 +1,6 @@
 <?php
-$department_id  =    isset( $_GET['department'] ) && $_GET['department'] != '-1' ? absint( wp_unslash( $_GET['department'] ) ) : 0;
-$designation_id =   isset( $_GET['designation'] ) && $_GET['designation'] != '-1' ? absint( wp_unslash( $_GET['designation'] ) ) : 0;
+$department_id  = isset( $_GET['department'] ) && absint( wp_unslash( $_GET['department'] ) ) != '-1' ? absint( wp_unslash( $_GET['department'] ) ) : 0;
+$designation_id = isset( $_GET['designation'] ) && absint( wp_unslash( $_GET['designation'] ) ) != '-1' ? absint( wp_unslash( $_GET['designation'] ) ) : 0;
 
 $args = [
     'status'            => 1,
@@ -78,7 +78,7 @@ foreach ( $leave_requests as $key => $leave_request ) {
                     'value'       => $designation_id,
                 ] );
             ?>
-            <input type="submit" class="button" name="erp_leave_calendar_filter" value="<?php esc_html_e( 'Filter', 'erp' ); ?>">
+            <input type="submit" class="button" name="erp_leave_calendar_filter" value="<?php esc_attr_e( 'Filter', 'erp' ); ?>">
             <?php wp_nonce_field( 'erp_calendar_filter' ); ?>
         </form>
     </div>
@@ -95,9 +95,9 @@ foreach ( $leave_requests as $key => $leave_request ) {
                 right: 'month,agendaWeek,agendaDay'
             },
             editable: false,
-            firstDay: <?php echo esc_html( get_option( 'start_of_week', 1 ) );?>,
+            firstDay: <?php echo esc_attr( get_option( 'start_of_week', 1 ) );?>,
             eventLimit: 4, // allow "more" link when too many events
-            events: <?php echo json_encode( $events ); ?>,
+            events: <?php echo wp_json_encode( $events ); ?>,
             eventRender: function( event, element, calEvent ) {
                 if( event.img != 'undefined' ) {
                     element.find('.fc-content').find('.fc-title').before( $("<span class=\"fc-event-icons erp-leave-avatar\">"+event.img+"</span>") );

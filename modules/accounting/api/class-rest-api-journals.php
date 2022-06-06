@@ -136,7 +136,7 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields = [];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_journal_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_journal_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $item = erp_acct_get_journal( $id );
@@ -320,13 +320,13 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
             'type'       => 'object',
             'properties' => [
                 'id'          => [
-                    'description' => __( 'Unique identifier for the resource.' ),
+                    'description' => __( 'Unique identifier for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
                 'trn_date' => [
-                    'description' => __( 'Transaction date for the resource.' ),
+                    'description' => __( 'Transaction date for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -334,7 +334,7 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
                     ],
                 ],
                 'ref' => [
-                    'description' => __( 'Reference for the resource.' ),
+                    'description' => __( 'Reference for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -342,7 +342,7 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
                     ],
                 ],
                 'type' => [
-                    'description' => __( 'Type for the resource.' ),
+                    'description' => __( 'Type for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -380,7 +380,7 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
                     ],
                 ],
                 'particulars' => [
-                    'description' => __( 'Particulars for the resource.' ),
+                    'description' => __( 'Particulars for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -388,7 +388,7 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
                     ],
                 ],
                 'attachments' => [
-                    'description' => __( 'Attachments for the resource.' ),
+                    'description' => __( 'Attachments for the resource.', 'erp' ),
                     'type'        => 'object',
                     'context'     => [ 'edit' ],
                 ],
