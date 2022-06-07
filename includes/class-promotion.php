@@ -32,22 +32,42 @@ class Promotion {
             return;
         }
 
-        $current_time      = erp_current_datetime()->setTimezone ( new \DateTimeZone( 'America/New_York' ) );
-        $promotion_start   = $current_time->setDate( 2021, 12, 24 )->setTime( 9, 0, 0 );
-        $promotion_end     = $current_time->setDate( 2022, 01, 12 )->setTime( 23, 59, 59 );
+        $promo_notice  = get_transient( 'erp_promo_notice' );
 
-        // 2021-03-15 09:00:00 EST - 2021-03-22 23:59:59 EST
-        if ( $current_time > $promotion_end || $current_time < $promotion_start ) {
+        if ( false === $promo_notice ) {
+            $promo_notice_url = 'http://wperp.com/wp-json/erp/v1/promotions';
+            $response         = wp_remote_get( $promo_notice_url, [ 'timeout' => 15 ] );
+
+            if ( is_wp_error( $response ) || $response['response']['code'] !== 200 ) {
+                return;
+            }
+
+            $promo_notice = wp_remote_retrieve_body( $response );
+            set_transient( 'erp_promo_notice', $promo_notice, DAY_IN_SECONDS );
+        }
+
+        $promo_notice = json_decode( $promo_notice, true );
+        $current_time = erp_current_datetime()->setTimezone( new \DateTimeZone( 'America/New_York' ) )->format( 'Y-m-d H:i:s T' );
+
+        if ( $current_time > $promo_notice['end_date'] || $current_time < $promo_notice['start_date'] ) {
             return;
         }
 
-        if ( $current_time >= $promotion_start && $current_time <= $promotion_end ) {
-            $msg            = __( 'Happy Holidays.<br>Let The Festivities Begin.<br>Enjoy Up To <strong>35% OFF</strong> on <strong>WP ERP Pro.</strong>', 'erp' );
-            $option_name    = 'erp_holidays_offer_2021';
+        $offer            = new \stdClass;
+        $offer->link      = $promo_notice['action_url'];
+        $offer->key       = "erp-{$promo_notice['key']}";
+        $offer->btn_txt   = ! empty( $promo_notice['action_title'] ) ? $promo_notice['action_title'] : __( 'Get Now', 'erp' );
+        $offer->message   = [];
+        $offer->message[] = sprintf( __( '<strong>%s</strong>', 'erp' ), $promo_notice['title'] );
 
-            $this->generate_notice( $msg, $option_name );
-            return;
+        if ( ! empty( $promo_notice['description'] ) ) {
+            $offer->message[] = sprintf( __( '%s', 'erp' ), $promo_notice['description'] );
         }
+
+        $offer->message[] = sprintf( __( '%s', 'erp' ), $promo_notice['content'] );
+        $offer->message   = implode( '<br>', $offer->message );
+
+        return $this->generate_notice( $offer );
     }
 
     /**
@@ -57,22 +77,23 @@ class Promotion {
      *
      * @return void
      */
-    public function generate_notice( $message, $option_name ) {
+    public function generate_notice( $offer ) {
         // check if it has already been dismissed
-        $hide_notice = get_option( $option_name, 'no' );
-
-        if ( 'hide' === $hide_notice ) {
+        if ( 'hide' === get_option( $offer->key, 'no' ) ) {
             return;
         }
+
         ?>
         <div class="notice is-dismissible erp-promotional-offer-notice" id="erp-promotional-offer-notice">
             <p class="highlight-text">
-                <?php echo wp_kses( $message, [ 'strong' => [], 'br' => [] ] ); ?>
-                <a target="_blank"
-                    href="https://wperp.com/pricing/?nocache&utm_medium=text&utm_source=wordpress-erp-holidaysale2021"
-                    style="padding:5px 15px;">
-                    <?php esc_html_e( 'Get Now', 'erp' ); ?>
-                </a>
+                <?php echo wp_kses( $offer->message, [ 'strong' => [], 'br' => [] ] ); ?>
+                <p>
+                    <a target="_blank"
+                        href="<?php echo esc_url_raw( $offer->link ) ?>"
+                        style="padding:5px 15px;">
+                        <?php echo esc_html( $offer->btn_txt ); ?>
+                    </a>
+                </p>
             </p>
         </div><!-- #erp-promotional-offer-notice -->
 
@@ -82,7 +103,7 @@ class Promotion {
 
                 wp.ajax.post('erp-dismiss-promotional-offer-notice-temp', {
                     dismissed   : true,
-                    option_name : '<?php echo esc_html( $option_name ); ?>',
+                    option_name : '<?php echo esc_attr( $offer->key ); ?>',
                     _wpnonce    : '<?php echo wp_create_nonce( 'erp_admin' ); ?>',
                 } );
             });

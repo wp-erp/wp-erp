@@ -157,7 +157,7 @@ function erp_acct_format_invoice_line_items( $voucher_no ) {
 
     $results = $wpdb->get_results( $sql, ARRAY_A );
 
-    if ( ! empty( reset( $results )['ecommerce_type'] ) ) {
+    if ( ! is_null( $results ) && ! empty( reset( $results )['ecommerce_type'] ) ) {
         // product name should not fetch form `erp_acct_products`
         $results = array_map(
             function ( $result ) {
@@ -198,7 +198,7 @@ function erp_acct_insert_invoice( $data ) {
     try {
         $wpdb->query( 'START TRANSACTION' );
 
-        $wpdb->insert(
+        $inserted = $wpdb->insert(
             $wpdb->prefix . 'erp_acct_voucher_no',
             [
                 'type'       => 'invoice',
@@ -209,11 +209,15 @@ function erp_acct_insert_invoice( $data ) {
             ]
         );
 
+        if ( ! $inserted ) {
+            throw new \Exception( __( 'Failed to create voucher', 'erp' ) );
+        }
+
         $voucher_no = $wpdb->insert_id;
 
         $invoice_data = erp_acct_get_formatted_invoice_data( $data, $voucher_no );
 
-        $wpdb->insert(
+        $inserted = $wpdb->insert(
             $wpdb->prefix . 'erp_acct_invoices',
             [
                 'voucher_no'      => $invoice_data['voucher_no'],
@@ -237,6 +241,10 @@ function erp_acct_insert_invoice( $data ) {
                 'created_by'      => $invoice_data['created_by'],
             ]
         );
+
+        if ( ! $inserted ) {
+            throw new \Exception( __( 'Failed to create invoice', 'erp' ) );
+        }
 
         erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no );
 
@@ -262,7 +270,11 @@ function erp_acct_insert_invoice( $data ) {
     } catch ( Exception $e ) {
         $wpdb->query( 'ROLLBACK' );
 
-        return new WP_Error( 'invoice-exception', $e->getMessage() );
+        return new WP_Error(
+            'invoice-exception',
+            /* translators: error message */
+            sprintf( __( 'Could not create invoice. Error: %s', 'erp' ), $e->getMessage() )
+        );
     }
 
     $invoice = erp_acct_get_invoice( $voucher_no );
@@ -287,9 +299,9 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no, $c
 
     $user_id = get_current_user_id();
 
-    $invoice_data['created_at'] = date( 'Y-m-d' );
+    $invoice_data['created_at'] = erp_current_datetime()->format( 'Y-m-d' );
     $invoice_data['created_by'] = $user_id;
-    $invoice_data['updated_at'] = date( 'Y-m-d' );
+    $invoice_data['updated_at'] = erp_current_datetime()->format( 'Y-m-d' );
     $invoice_data['updated_by'] = $user_id;
 
     $estimate_type      = 1;
@@ -302,7 +314,7 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no, $c
         $sub_total = $item['qty'] * $item['unit_price'];
 
         // insert into invoice details
-        $wpdb->insert(
+        $inserted = $wpdb->insert(
             $wpdb->prefix . 'erp_acct_invoice_details',
             [
                 'trn_no'         => $voucher_no,
@@ -318,6 +330,10 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no, $c
                 'created_by'     => $invoice_data['created_by'],
             ]
         );
+
+        if ( ! $inserted ) {
+            throw new Exception( __( 'Failed to create invoice details', 'erp' ) );
+        }
 
         $details_id = $wpdb->insert_id;
 
@@ -344,7 +360,7 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no, $c
                 }
 
                 /*==== insert into invoice details tax ====*/
-                $wpdb->insert(
+                $inserted = $wpdb->insert(
                     $wpdb->prefix . 'erp_acct_invoice_details_tax',
                     [
                         'invoice_details_id' => $details_id,
@@ -355,6 +371,10 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no, $c
                         'created_by'         => $invoice_data['created_by'],
                     ]
                 );
+
+                if ( ! $inserted ) {
+                    throw new Exception( __( 'Failed to create tax data of invoice details', 'erp' ) );
+                }
             }
         }
     }
@@ -370,7 +390,7 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no, $c
                 $credit = $tax_agency_detail;
             }
 
-            $wpdb->insert(
+            $inserted = $wpdb->insert(
                 $wpdb->prefix . 'erp_acct_tax_agency_details',
                 [
                     'agency_id'   => $agency_id,
@@ -383,6 +403,10 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no, $c
                     'created_by'  => $invoice_data['created_by'],
                 ]
             );
+
+            if ( ! $inserted ) {
+                throw new \Exception( __( 'Failed to create tax agency details', 'erp' ) );
+            }
         }
     }
 }
@@ -415,7 +439,7 @@ function erp_acct_insert_invoice_account_details( $invoice_data, $voucher_no, $c
         $credit     = 0;
     }
 
-    $wpdb->insert(
+    $inserted = $wpdb->insert(
         $wpdb->prefix . 'erp_acct_invoice_account_details',
         [
             'invoice_no'  => $invoice_no,
@@ -430,6 +454,12 @@ function erp_acct_insert_invoice_account_details( $invoice_data, $voucher_no, $c
             'updated_by'  => $invoice_data['created_by'],
         ]
     );
+
+    if ( ! $inserted ) {
+        throw new \Exception( __( 'Failed to create invoice account details', 'erp' ) );
+    }
+
+    return $wpdb->insert_id;
 }
 
 /**
@@ -775,7 +805,8 @@ function erp_acct_void_invoice( $invoice_no ) {
  *
  * @param array $invoice_data
  *
- * @return mixed
+ * @return void
+ * @throws Exception
  */
 function erp_acct_insert_invoice_data_into_ledger( $invoice_data, $voucher_no = 0, $contra = false ) {
     global $wpdb;
@@ -815,7 +846,7 @@ function erp_acct_insert_invoice_data_into_ledger( $invoice_data, $voucher_no = 
     }
 
     // insert amount in ledger_details
-    $wpdb->insert(
+    $inserted = $wpdb->insert(
         $wpdb->prefix . 'erp_acct_ledger_details',
         [
             'ledger_id'   => $sales_ledger_id,
@@ -831,9 +862,13 @@ function erp_acct_insert_invoice_data_into_ledger( $invoice_data, $voucher_no = 
         ]
     );
 
+    if ( ! $inserted ) {
+        throw new \Exception( __( 'Failed to insert amount in ledger details', 'erp' ) );
+    }
+
     // insert discount in ledger_details
     if ( (float) $discount_debit > 0 || (float) $discount_credit > 0 ) {
-        $wpdb->insert(
+        $inserted = $wpdb->insert(
             $wpdb->prefix . 'erp_acct_ledger_details',
             [
                 'ledger_id'   => $sales_discount_ledger_id,
@@ -848,11 +883,15 @@ function erp_acct_insert_invoice_data_into_ledger( $invoice_data, $voucher_no = 
                 'updated_by'  => $user_id,
             ]
         );
+
+        if ( ! $inserted ) {
+            throw new \Exception( __( 'Failed to insert discount in ledger details', 'erp' ) );
+        }
     }
 
     // insert shipping in ledger_details
     if ( (float) $shipment_debit > 0 || (float) $shipment_credit > 0 ) {
-        $wpdb->insert(
+        $inserted = $wpdb->insert(
             $wpdb->prefix . 'erp_acct_ledger_details',
             [
                 'ledger_id'   => $sales_shipping_ledger_id,
@@ -867,11 +906,15 @@ function erp_acct_insert_invoice_data_into_ledger( $invoice_data, $voucher_no = 
                 'updated_by'  => $user_id,
             ]
         );
+
+        if ( ! $inserted ) {
+            throw new \Exception( __( 'Failed to insert shipping in ledger details', 'erp' ) );
+        }
     }
 
     // insert shipping tax in ledger_details
     if ( (float) $shipment_tax_debit > 0 || (float) $shipment_tax_credit > 0 ) {
-        $wpdb->insert(
+        $inserted = $wpdb->insert(
             $wpdb->prefix . 'erp_acct_ledger_details',
             [
                 'ledger_id'   => $sales_shipping_tax_ledger_id,
@@ -886,9 +929,13 @@ function erp_acct_insert_invoice_data_into_ledger( $invoice_data, $voucher_no = 
                 'updated_by'  => $user_id,
             ]
         );
+
+        if ( ! $inserted ) {
+            throw new \Exception( __( 'Failed to insert shipping tax in ledger details', 'erp' ) );
+        }
     }
 
-    erp_acct_purge_cache( ['list' => 'sales_transaction'] );
+    erp_acct_purge_cache( [ 'list' => 'sales_transaction' ] );
 }
 
 /**
@@ -1122,7 +1169,7 @@ function erp_acct_get_invoice_due( $invoice_no ) {
         ARRAY_A
     );
 
-    return $result['due'];
+    return ! empty( $result['due'] ) ? $result['due'] : 0;
 }
 
 /**

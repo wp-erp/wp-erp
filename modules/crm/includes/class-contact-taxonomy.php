@@ -138,7 +138,7 @@ class Contact_Taxonomy {
     public function admin_menu_highlight() {
         global $plugin_page;
 
-        if ( isset( $_GET['taxonomy'] ) && ( $_GET['taxonomy'] === $this->taxonomy ) ) {
+        if ( isset( $_GET['taxonomy'] ) && ( sanitize_text_field( wp_unslash( $_GET['taxonomy'] ) ) === $this->taxonomy ) ) {
             $plugin_page = 'erp-sales';
         }
     }

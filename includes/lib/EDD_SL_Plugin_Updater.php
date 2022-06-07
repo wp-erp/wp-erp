@@ -172,14 +172,14 @@ class EDD_SL_Plugin_Updater {
 
             if ( empty( $version_info->download_link ) ) {
                 wp_kses_post( printf(
-                    esc_html__( 'There is a new version of %1$s available. <a target="_blank" class="thickbox" href="%2$s">View version %3$s details</a>.', 'easy-digital-downloads' ),
+                    esc_html__( 'There is a new version of %1$s available. <a target="_blank" class="thickbox" href="%2$s">View version %3$s details</a>.', 'erp' ),
                     esc_html( $version_info->name ),
                     esc_url( $changelog_link ),
                     esc_html( $version_info->new_version )
                 ) );
             } else {
                 wp_kses_post( printf(
-                    esc_html__( 'There is a new version of %1$s available. <a target="_blank" class="thickbox" href="%2$s">View version %3$s details</a> or <a href="%4$s">update now</a>.', 'easy-digital-downloads' ),
+                    esc_html__( 'There is a new version of %1$s available. <a target="_blank" class="thickbox" href="%2$s">View version %3$s details</a> or <a href="%4$s">update now</a>.', 'erp' ),
                     esc_html( $version_info->name ),
                     esc_url( $changelog_link ),
                     esc_html( $version_info->new_version ),
@@ -314,7 +314,7 @@ class EDD_SL_Plugin_Updater {
         }
 
         if ( ! current_user_can( 'update_plugins' ) ) {
-            wp_die( esc_html__( 'You do not have permission to install plugin updates', 'easy-digital-downloads' ), esc_html__( 'Error', 'easy-digital-downloads' ), [ 'response' => 403 ] );
+            wp_die( esc_html__( 'You do not have permission to install plugin updates', 'erp' ), esc_html__( 'Error', 'erp' ), [ 'response' => 403 ] );
         }
 
         $data         = isset( $_REQUEST['slug'] ) ? $edd_plugin_data[ sanitize_text_field( wp_unslash( $_REQUEST['slug'] ) ) ] : '';

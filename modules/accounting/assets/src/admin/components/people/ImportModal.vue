@@ -106,6 +106,7 @@ export default {
         wp.ajax.send({
             data: {
                 action: 'erp_acct_get_sample_csv_url',
+                _wpnonce: this.nonce,
                 type: this.type,
                 path: this.$router.currentRoute.path,
                 nonce: this.nonce,

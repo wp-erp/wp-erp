@@ -50,9 +50,12 @@ class Ajax {
             wp_send_json_error( __( 'Nonce verification failed!', 'erp' ) );
         }
 
-        $type  = ! empty( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
-        $path  = ! empty( $_POST['path'] ) ? sanitize_text_field( wp_unslash( $_POST['path'] ) ) : '';
-        $nonce = wp_create_nonce( 'erp-import-export-nonce' );
+        if ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'erp_ac_create_customer' ) && ! current_user_can( 'erp_ac_create_vendor' ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
+        $type = ! empty( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
+        $path = ! empty( $_POST['path'] ) ? sanitize_text_field( wp_unslash( $_POST['path'] ) ) : '';
 
         switch ( $type ) {
             case 'customers':
@@ -64,10 +67,11 @@ class Ajax {
                 break;
         }
 
-        $page = "?page=erp-accounting&action=download_sample&type={$type}&_wpnonce={$nonce}#{$path}";
-        $url  = admin_url( "admin.php{$page}" );
+        $nonce = wp_create_nonce( 'erp-import-export-nonce' );
+        $page  = "?page=erp-accounting&action=download_sample&type={$type}&_wpnonce={$nonce}#{$path}";
+        $url   = admin_url( "admin.php{$page}" );
 
-        wp_send_json_success( $url );
+        $this->send_success( $url );
     }
 
     /**
@@ -92,9 +96,7 @@ class Ajax {
             'vendor'   => 'erp_ac_create_vendor',
         ];
 
-        $fields   = ! empty( $_POST['fields'] )    ? array_map( 'sanitize_text_field', wp_unslash( $_POST['fields'] ) ) : [];
-        $type     = ! empty( $_POST['type'] )      ? sanitize_text_field( wp_unslash( $_POST['type'] ) )                : '';
-        $csv_file = ! empty( $_FILES['csv_file'] ) ? $_FILES['csv_file']                                                : []; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+        $type = ! empty( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
 
         if ( ! in_array( $type, [ 'contact', 'company', 'employee', 'vendor', 'customer' ], true ) ) {
             $this->send_error( __( 'Unknown import type!', 'erp' ) );
@@ -104,22 +106,29 @@ class Ajax {
             $this->send_error( __( 'Sorry ! You do not have permission to access this page', 'erp' ) );
         }
 
-        $files = wp_check_filetype_and_ext( $csv_file['tmp_name'], $csv_file['name'] );
+        if ( empty( $_FILES['csv_file'] ) ) {
+            $this->send_error( __( 'No CSV file selected!', 'erp' ) );
+        }
 
-        if ( 'csv' !== $files['ext'] && 'text/csv' !== $files['type'] ) {
+        $file_name    = isset( $_FILES['csv_file']['name'] ) ? sanitize_file_name( wp_unslash( $_FILES['csv_file']['name'] ) ) : '';
+        $file_tmpname = isset( $_FILES['csv_file']['tmp_name'] ) ? sanitize_url( wp_unslash( $_FILES['csv_file']['tmp_name'] ) ) : '';
+        $file_info    = wp_check_filetype_and_ext( $file_tmpname, $file_name );
+
+        if ( 'csv' !== $file_info['ext'] && 'text/csv' !== $file_info['type'] ) {
             $this->send_error( __( 'The file is not a valid CSV file! Please provide a valid one.', 'erp' ) );
         }
 
+        $fields = ! empty( $_POST['fields'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['fields'] ) ) : [];
+
         $csv = new \ParseCsv\Csv();
         $csv->encoding( null, 'UTF-8' );
-        $csv->parse( $csv_file['tmp_name'] );
+        $csv->parse( $file_tmpname );
 
         if ( empty( $csv->data ) ) {
             $this->send_error( __( 'No data found to import!', 'erp' ) );
         }
 
         $csv_data   = [];
-
         $csv_data[] = array_keys( $csv->data[0] );
 
         foreach ( $csv->data as $data_item ) {
@@ -503,6 +512,10 @@ class Ajax {
             return;
         }
 
+        if ( ! current_user_can( 'manage_options' ) ) {
+            $this->send_error( erp_get_message( ['type' => 'error_permission'] ) );
+        }
+
         if ( empty( $_REQUEST['mail_server'] ) ) {
             $this->send_error( esc_html__( 'No host address provided', 'erp' ) );
         }
@@ -793,11 +806,11 @@ class Ajax {
             $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
-        if ( isset( $_POST['module_id'] ) && ! empty( $_POST['module_id'] ) ) {
+        if ( ! empty( $_POST['module_id'] ) ) {
             if ( is_array( $_POST['module_id'] ) ) {
                 $module_ids   = array_map( 'sanitize_text_field', wp_unslash( $_POST['module_id'] ) );
             } else {
-                $module_ids[] = isset( $_POST['module_id'] ) ? sanitize_text_field( wp_unslash( $_POST['module_id'] ) ) : '';
+                $module_ids[] = sanitize_text_field( wp_unslash( $_POST['module_id'] ) );
             }
         }
 
@@ -844,22 +857,22 @@ class Ajax {
 
         $reset_text = sanitize_text_field( wp_unslash( $_POST['erp_reset_confirmation'] ) );
 
-        if ( $reset_text === 'Reset' ) {
-            $resetted = erp_reset_data();
-
-            if ( is_wp_error( $resetted ) ) {
-                $this->send_error( esc_html__( 'Sorry, Something went wrong. Please try again !', 'erp' ) );
-            }
-
-            $page =  'erp-setup'; // Valid Option: erp or erp-setup
-
-            $this->send_success( [
-                'message'        => esc_html__( 'Resetted WP ERP successfully. You will be redirected soon. Please Setup WP ERP again or Skip to continue.', 'erp' ),
-                'redirected_url' => admin_url( "admin.php?page=$page" )
-            ] );
-        } else {
+        if ( ! isset( $_POST['erp_reset_confirmation'] ) || 'Reset' !== sanitize_text_field( wp_unslash( $_POST['erp_reset_confirmation'] ) ) ) {
             $this->send_error( esc_html__( 'Invalid confirmation text. Please give valid confirmation text.', 'erp' ) );
         }
+
+        $resetted = erp_reset_data();
+
+        if ( is_wp_error( $resetted ) ) {
+            $this->send_error( esc_html__( 'Sorry, Something went wrong. Please try again !', 'erp' ) );
+        }
+
+        $this->send_success(
+            [
+                'message'        => esc_html__( 'Resetted WP ERP successfully. You will be redirected soon. Please Setup WP ERP again or Skip to continue.', 'erp' ),
+                'redirected_url' => admin_url( "admin.php?page=erp-setup" ),
+            ]
+        );
     }
 }
 

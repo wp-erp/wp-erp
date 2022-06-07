@@ -1,11 +1,11 @@
 <?php
-$tab            = ( isset( $_GET['tab'] ) && ! empty( $_GET['tab'] ) ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : 'own';
-$sub_section    = ( isset( $_GET['sub-section'] ) && ! empty( $_GET['sub-section'] ) ) ? sanitize_text_field( wp_unslash( $_GET['sub-section'] ) ) : '';
+$tab            = ! empty( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : 'own';
+$sub_section    = ! empty( $_GET['sub-section'] ) ? sanitize_text_field( wp_unslash( $_GET['sub-section'] ) ) : '';
 $schedules_data = erp_crm_get_schedule_data( $tab );
 ?>
 <div class="wrap erp erp-crm-schedules" id="wp-erp">
     <h2>
-        <?php esc_attr_e( 'Tasks', 'erp' ); ?>
+        <?php esc_html_e( 'Tasks', 'erp' ); ?>
         <?php
         if ( $sub_section !== 'tasks' ) :
             echo erp_help_tip( esc_html__( 'Click on the date to create a schedule.', 'erp' ) );
@@ -17,8 +17,8 @@ $schedules_data = erp_crm_get_schedule_data( $tab );
 
     <?php if ( current_user_can( erp_crm_get_manager_role() ) ) { ?>
         <h2 class="nav-tab-wrapper erp-nav-tab-wrapper">
-            <a class="nav-tab <?php echo $tab == 'own' ? 'nav-tab-active' : ''; ?>" href="<?php echo esc_url_raw( add_query_arg( [ 'page'=>'erp-crm', 'section' => 'task', 'sub-section' => 'schedules', 'tab' => 'own' ], admin_url( 'admin.php' ) ) ); ?>"><?php esc_attr_e( 'My Schedules', 'erp' ); ?></a>
-            <a class="nav-tab <?php echo $tab == 'all' ? 'nav-tab-active' : ''; ?>" href="<?php echo esc_url_raw( add_query_arg( [ 'page'=>'erp-crm', 'section' => 'task', 'sub-section' => 'schedules', 'tab' => 'all' ], admin_url( 'admin.php' ) ) ); ?>"><?php esc_attr_e( 'All Schedules', 'erp' ); ?></a>
+            <a class="nav-tab <?php echo $tab == 'own' ? 'nav-tab-active' : ''; ?>" href="<?php echo esc_url_raw( add_query_arg( [ 'page'=>'erp-crm', 'section' => 'task', 'sub-section' => 'schedules', 'tab' => 'own' ], admin_url( 'admin.php' ) ) ); ?>"><?php esc_html_e( 'My Schedules', 'erp' ); ?></a>
+            <a class="nav-tab <?php echo $tab == 'all' ? 'nav-tab-active' : ''; ?>" href="<?php echo esc_url_raw( add_query_arg( [ 'page'=>'erp-crm', 'section' => 'task', 'sub-section' => 'schedules', 'tab' => 'all' ], admin_url( 'admin.php' ) ) ); ?>"><?php esc_html_e( 'All Schedules', 'erp' ); ?></a>
         </h2>
     <?php } ?>
 
@@ -233,7 +233,7 @@ $schedules_data = erp_crm_get_schedule_data( $tab );
 
                                 // Add in current calendar only if current user id in invited_user array or not in own tab
                                 const currentUserId = <?php echo get_current_user_id() ?>;
-                                const currentTab    = "<?php echo $tab ?>";
+                                const currentTab    = "<?php echo esc_attr( $tab ); ?>";
                                 const existsArray   = res.extra.invited_user.filter(x => parseInt(x.id) === currentUserId);
 
                                 if( existsArray.length > 0 || currentTab !== 'own' ){

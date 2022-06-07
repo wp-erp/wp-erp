@@ -125,7 +125,7 @@ class Announcements_Controller extends REST_Controller {
         $item->id = $item->ID;
 
         if ( empty( $id ) || empty( $item->id ) ) {
-            return new WP_Error( 'rest_announcement_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_announcement_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $item     = $this->prepare_item_for_response( $item, $request );
@@ -181,7 +181,7 @@ class Announcements_Controller extends REST_Controller {
         $announcement = get_post( $id );
 
         if ( empty( $id ) || empty( $announcement->ID ) ) {
-            return new WP_Error( 'rest_announcement_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 400 ] );
+            return new WP_Error( 'rest_announcement_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 400 ] );
         }
 
         $item = $this->prepare_item_for_database( $request );
@@ -303,13 +303,13 @@ class Announcements_Controller extends REST_Controller {
             'type'       => 'object',
             'properties' => [
                 'id'              => [
-                    'description' => __( 'Unique identifier for the resource.' ),
+                    'description' => __( 'Unique identifier for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
                 'title'           => [
-                    'description' => __( 'Title for the resource.' ),
+                    'description' => __( 'Title for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -318,7 +318,7 @@ class Announcements_Controller extends REST_Controller {
                     'required'    => true,
                 ],
                 'body'            => [
-                    'description' => __( 'Body for the resource.' ),
+                    'description' => __( 'Body for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -327,7 +327,7 @@ class Announcements_Controller extends REST_Controller {
                     'required'    => true,
                 ],
                 'status'          => [
-                    'description' => __( 'Status for the resource.' ),
+                    'description' => __( 'Status for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -335,7 +335,7 @@ class Announcements_Controller extends REST_Controller {
                     ],
                 ],
                 'recipient_type'  => [
-                    'description' => __( 'Recipient type for the resource.' ),
+                    'description' => __( 'Recipient type for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [

@@ -10,7 +10,7 @@
             'custom_attr' => [ 'rows' => 3, 'cols' => 30 ],
         ] ); ?>
 
-        <input type="hidden" name="user_id" value="<?php echo esc_html( $employee->get_user_id() ); ?>">
+        <input type="hidden" name="user_id" value="<?php echo esc_attr( $employee->get_user_id() ); ?>">
         <input type="hidden" name="action" id="erp-employee-action" value="erp-hr-employee-new-note">
 
         <?php wp_nonce_field( 'wp-erp-hr-employee-nonce' ); ?>
@@ -45,7 +45,7 @@
                     </div>
                     <?php if ( current_user_can( 'manage_options' ) or ( wp_get_current_user()->ID == $note->comment_by ) ) { ?>
                         <div class="row-action">
-                            <span class="delete"><a href="#" class="delete_note" data-note_id="<?php echo esc_html( $note->id ); ?>"><?php esc_html_e( 'Delete', 'erp' ); ?></a></span>
+                            <span class="delete"><a href="#" class="delete_note" data-note_id="<?php echo esc_attr( $note->id ); ?>"><?php esc_html_e( 'Delete', 'erp' ); ?></a></span>
                         </div>
                     <?php } ?>
                 </div>
@@ -57,7 +57,7 @@
     } ?>
 
     <?php $display_class = ( $total_notes > $no_of_notes ) ? 'show' : 'hide'; ?>
-    <div class="wperp-load-more-btn <?php echo esc_html( $display_class ); ?>">
+    <div class="wperp-load-more-btn <?php echo esc_attr( $display_class ); ?>">
             <?php submit_button(
                 'Load More',
                 false,

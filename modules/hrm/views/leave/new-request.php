@@ -8,10 +8,10 @@
             <?php
             use WeDevs\ERP\HRM\Models\Financial_Year;
 
-            if ( isset( $_GET['insert_error'] ) && $_GET['insert_error'] !== '' ) {
+            if ( ! empty( $_GET['insert_error'] ) ) {
                 $errors = new \WeDevs\ERP\ERP_Errors( sanitize_text_field( wp_unslash( $_GET['insert_error'] ) ) );
-                echo $errors->display();
-            } elseif ( isset( $_GET['msg'] ) && $_GET['msg'] == 'submitted' ) {
+                echo wp_kses_post( $errors->display() );
+            } elseif ( isset( $_GET['msg'] ) && ( 'submitted' === sanitize_text_field( wp_unslash( $_GET['msg'] ) ) ) ) {
                 erp_html_show_notice( __( 'Leave request has been submitted successfully.', 'erp' ), 'updated', true );
             }
             $financial_years = [];
@@ -33,7 +33,7 @@
             <form action="" method="post" class="new-leave-request-form" enctype="multipart/form-data">
                 <?php
                 if ( count( $financial_years ) === 1 ) { ?>
-                    <input type="hidden" name="f_year" id="f_year" class="f_year" value="<?php echo key( $financial_years ); ?>" />
+                    <input type="hidden" name="f_year" id="f_year" class="f_year" value="<?php echo esc_attr( key( $financial_years ) ); ?>" />
                     <?php
                 } else {
                     echo '<div class="row">';
@@ -113,7 +113,7 @@
                 </div>
 
                 <div class="row">
-                    <label for="leave_document"><?php echo esc_html__( 'Document', 'wp-erp' ); ?></label>
+                    <label for="leave_document"><?php echo esc_html__( 'Document', 'erp' ); ?></label>
                     <input type="file" name="leave_document[]" id="leave_document" multiple>
                 </div>
 
