@@ -123,7 +123,7 @@ if ( ! class_exists( 'WP_Async_Request' ) ) {
                 'timeout'   => 0.01,
                 'blocking'  => false,
                 'body'      => $this->data,
-                'cookies'   => $_COOKIE,
+                'cookies'   => map_deep( wp_unslash( $_COOKIE ), 'sanitize_text_field' ),
                 'sslverify' => apply_filters( 'https_local_ssl_verify', false ),
             ];
         }

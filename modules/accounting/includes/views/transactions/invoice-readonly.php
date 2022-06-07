@@ -8,7 +8,6 @@ $transaction = erp_acct_get_transaction( $transaction_id );
 
 <head>
     <title><?php printf( '%s %s %s', esc_attr( $transaction['type'] ), esc_attr__( 'from', 'erp' ), esc_attr( $company->name ) ); ?></title>
-    <link rel="stylesheet" href="<?php echo esc_url( WPERP_ASSETS . '/css/invoice-front.css' ); ?>">
     <?php do_action( 'erp_readonly_invoice_header' ); ?>
 </head>
 

@@ -4,8 +4,8 @@
 ?>
 
 <div class="erp-badge-box box-crm">
-    <h2><?php esc_attr_e( 'CRM', 'erp' ); ?>
-        <a href="<?php echo esc_url_raw( admin_url( 'admin.php?page=erp-crm' ) ); ?>" class="btn"><?php esc_attr_e( 'Visit Dashboard', 'erp' ); ?></a>
+    <h2><?php esc_html_e( 'CRM', 'erp' ); ?>
+        <a href="<?php echo esc_url_raw( admin_url( 'admin.php?page=erp-crm' ) ); ?>" class="btn"><?php esc_html_e( 'Visit Dashboard', 'erp' ); ?></a>
     </h2>
 
     <ul class="erp-badge-crm-count">
@@ -41,7 +41,7 @@
             </div>
 
             <div class="count-footer">
-                <a href="<?php echo esc_url_raw( admin_url( 'admin.php?page=erp-crm&section=contact&sub-section=contacts' ) ); ?>"><?php esc_attr_e( 'View all Contacts', 'erp' ); ?></a>
+                <a href="<?php echo esc_url_raw( admin_url( 'admin.php?page=erp-crm&section=contact&sub-section=contacts' ) ); ?>"><?php esc_html_e( 'View all Contacts', 'erp' ); ?></a>
             </div>
         </li><!-- .count-box -->
 
@@ -77,7 +77,7 @@
             </div>
 
             <div class="count-footer">
-                <a href="<?php echo esc_url_raw( add_query_arg( ['page' => 'erp-crm', 'section' => 'contact', 'sub-section' => 'companies'], admin_url( 'admin.php' ) ) ); ?>"><?php esc_attr_e( 'View all Companies', 'erp' ); ?></a>
+                <a href="<?php echo esc_url_raw( add_query_arg( [ 'page' => 'erp-crm', 'section' => 'contact', 'sub-section' => 'companies' ], admin_url( 'admin.php' ) ) ); ?>"><?php esc_html_e( 'View all Companies', 'erp' ); ?></a>
             </div>
         </li><!-- .count-box -->
 

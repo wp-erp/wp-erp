@@ -3,9 +3,9 @@ Contributors: tareq1988, nizamuddinbabu, wedevs
 Donate Link: https://tareq.co/donate
 Tags: business manager, erp, accounting, crm, hr, project manager, small business, SME, contact, contacts, Customer Relationship Management, employee, leave management, hr, human resource management, job, jobs, job listing, lead management, opportunity, schedule, task, lead, holiday, company
 Requires at least: 4.4
-Tested up to: 5.8.2
+Tested up to: 6.0
 Requires PHP: 5.6
-Stable tag: 1.10.4
+Stable tag: 1.10.6
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -175,6 +175,8 @@ Appsero SDK **does not gather any data by default.** The SDK only starts gatheri
 
 Integrating Appsero SDK **DOES NOT IMMEDIATELY** start gathering data, **without confirmation from users in any case.**
 
+All the promotional data for marketing are fetched through REST API from the official website of [WP ERP](https://wperp.com/)
+
 = Contribute =
 This may have bugs and lack of many features. If you want to contribute on this project, you are more than welcome. Please fork the repository from [Github](https://github.com/wp-erp/wp-erp).
 
@@ -271,6 +273,18 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+
+= v1.10.6 -> May 24, 2022 =
+--------------------------
+
+- [update] Enhanced securities to avoid vulnerabilities
+- [fix] Sanitization, escaping, permission and data validation all over the plugin
+- [fix] Fixed missing translation issues
+
+= v1.10.5 -> March 15, 2022 =
+--------------------------
+
+- [notice] Limited time promotional offer on WeDevs' anniversary
 
 = v1.10.4 -> December 29, 2021 =
 --------------------------

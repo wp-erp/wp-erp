@@ -48,8 +48,12 @@ class Ajax {
     public function generate_csv_url() {
         $this->verify_nonce( 'erp-import-export-nonce' );
 
-        $type  = ! empty( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
-        $path  = ! empty( $_POST['path'] ) ? sanitize_text_field( wp_unslash( $_POST['path'] ) ) : '';
+        if ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'erp_ac_create_customer' ) && ! current_user_can( 'erp_ac_create_vendor' ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
+        $type = ! empty( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
+        $path = ! empty( $_POST['path'] ) ? sanitize_text_field( wp_unslash( $_POST['path'] ) ) : '';
 
         switch ( $type ) {
             case 'customers':
@@ -62,10 +66,10 @@ class Ajax {
         }
 
         $nonce = wp_create_nonce( 'erp-import-export-nonce' );
-        $page = "?page=erp-accounting&action=download_sample&type={$type}&_wpnonce={$nonce}#{$path}";
-        $url  = admin_url( "admin.php{$page}" );
+        $page  = "?page=erp-accounting&action=download_sample&type={$type}&_wpnonce={$nonce}#{$path}";
+        $url   = admin_url( "admin.php{$page}" );
 
-        wp_send_json_success( $url );
+        $this->send_success( $url );
     }
 
     /**

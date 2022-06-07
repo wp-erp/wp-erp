@@ -203,7 +203,7 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
         $item = erp_acct_get_product( $id );
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_inventory_product_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_inventory_product_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $additional_fields['namespace'] = $this->namespace;
@@ -257,7 +257,7 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_payment_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_payment_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $item = $this->prepare_item_for_database( $request );
@@ -307,12 +307,15 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
      * Validates csv file data for products
      *
      * @param WP_REST_Request $request
-     * 
+     *
      * @return WP_Error|WP_REST_Response
      */
     public function validate_csv_data( $request ) {
         $args = [
-            'csv_file'        => ! empty( $_FILES['csv_file'] )         ? $_FILES['csv_file']         : '',
+            'csv_file'        => [
+                'name'     => ! empty( $_FILES['csv_file']['name'] )     ? sanitize_file_name( wp_unslash( $_FILES['csv_file']['name'] ) ) : '',
+                'tmp_name' => ! empty( $_FILES['csv_file']['tmp_name'] ) ? sanitize_url( wp_unslash( $_FILES['csv_file']['tmp_name'] ) )   : '',
+            ],
             'type'            => ! empty( $request['type'] )            ? $request['type']            : '',
             'category_id'     => ! empty( $request['category_id'] )     ? $request['category_id']     : '',
             'product_type_id' => ! empty( $request['product_type_id'] ) ? $request['product_type_id'] : '',
@@ -333,12 +336,12 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         return $response;
     }
-    
+
     /**
      * Import products from csv
      *
      * @param WP_REST_Request $request
-     * 
+     *
      * @return WP_Error|WP_REST_Response
      */
     public function import_products( $request ) {
@@ -409,19 +412,19 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
             $prepared_item['name'] = $request['name'];
         }
 
-        if ( isset( $request['product_type_id'] ) ) {
+        if ( isset( $request['product_type_id']['id'] ) ) {
             $prepared_item['product_type_id'] = $request['product_type_id']['id'];
         }
 
-        if ( isset( $request['category_id'] ) ) {
+        if ( isset( $request['category_id']['id'] ) ) {
             $prepared_item['category_id'] = $request['category_id']['id'];
         }
 
-        if ( isset( $request['tax_cat_id'] ) ) {
+        if ( isset( $request['tax_cat_id']['id'] ) ) {
             $prepared_item['tax_cat_id'] = $request['tax_cat_id']['id'];
         }
 
-        if ( isset( $request['vendor'] ) ) {
+        if ( isset( $request['vendor']['id'] ) ) {
             $prepared_item['vendor'] = $request['vendor']['id'];
         }
 
@@ -485,13 +488,13 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
             'type'       => 'object',
             'properties' => [
                 'id'              => [
-                    'description' => __( 'Unique identifier for the resource.' ),
+                    'description' => __( 'Unique identifier for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
                 'name'            => [
-                    'description' => __( 'Name for the resource.' ),
+                    'description' => __( 'Name for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -586,13 +589,13 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
                     ],
                 ],
                 'cost_price'      => [
-                    'description' => __( 'Cost price for the resource.' ),
+                    'description' => __( 'Cost price for the resource.', 'erp' ),
                     'type'        => 'number',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
                 'sale_price'      => [
-                    'description' => __( 'Sale price for the resource.' ),
+                    'description' => __( 'Sale price for the resource.', 'erp' ),
                     'type'        => 'number',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,

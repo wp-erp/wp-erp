@@ -141,7 +141,7 @@ class Contacts_Controller extends REST_Controller {
         $item = erp_get_people( $id );
 
         if ( empty( $id ) || empty( $item->id ) ) {
-            return new WP_Error( 'rest_contact_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_contact_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $additional_fields = [];
@@ -220,7 +220,7 @@ class Contacts_Controller extends REST_Controller {
         $item = erp_get_people( $id );
 
         if ( ! $item ) {
-            return new WP_Error( 'rest_contact_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 400 ] );
+            return new WP_Error( 'rest_contact_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 400 ] );
         }
 
         if ( isset( $request['email'] ) ) {
@@ -422,13 +422,13 @@ class Contacts_Controller extends REST_Controller {
             'type'       => 'object',
             'properties' => [
                 'id'          => [
-                    'description' => __( 'Unique identifier for the resource.' ),
+                    'description' => __( 'Unique identifier for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
                 'first_name'  => [
-                    'description' => __( 'First name for the resource.' ),
+                    'description' => __( 'First name for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -437,7 +437,7 @@ class Contacts_Controller extends REST_Controller {
                     'required'    => true,
                 ],
                 'last_name'   => [
-                    'description' => __( 'Last name for the resource.' ),
+                    'description' => __( 'Last name for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -446,14 +446,14 @@ class Contacts_Controller extends REST_Controller {
                     'required'    => true,
                 ],
                 'email'       => [
-                    'description' => __( 'The email address for the resource.' ),
+                    'description' => __( 'The email address for the resource.', 'erp' ),
                     'type'        => 'string',
                     'format'      => 'email',
                     'context'     => [ 'edit' ],
                     'required'    => true,
                 ],
                 'company'     => [
-                    'description' => __( 'Company for the resource.' ),
+                    'description' => __( 'Company for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -461,7 +461,7 @@ class Contacts_Controller extends REST_Controller {
                     ],
                 ],
                 'phone'       => [
-                    'description' => __( 'Phone for the resource.' ),
+                    'description' => __( 'Phone for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -469,7 +469,7 @@ class Contacts_Controller extends REST_Controller {
                     ],
                 ],
                 'mobile'      => [
-                    'description' => __( 'Mobile for the resource.' ),
+                    'description' => __( 'Mobile for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -477,7 +477,7 @@ class Contacts_Controller extends REST_Controller {
                     ],
                 ],
                 'other'       => [
-                    'description' => __( 'Other for the resource.' ),
+                    'description' => __( 'Other for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -485,13 +485,13 @@ class Contacts_Controller extends REST_Controller {
                     ],
                 ],
                 'website'         => [
-                    'description' => __( 'Website of the resource.' ),
+                    'description' => __( 'Website of the resource.', 'erp' ),
                     'type'        => 'string',
                     'format'      => 'uri',
                     'context'     => [ 'embed', 'view', 'edit' ],
                 ],
                 'fax'             => [
-                    'description' => __( 'Fax of the resource.' ),
+                    'description' => __( 'Fax of the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'arg_options' => [
@@ -499,7 +499,7 @@ class Contacts_Controller extends REST_Controller {
                     ],
                 ],
                 'notes'           => [
-                    'description' => __( 'Notes of the resource.' ),
+                    'description' => __( 'Notes of the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'arg_options' => [
@@ -507,7 +507,7 @@ class Contacts_Controller extends REST_Controller {
                     ],
                 ],
                 'street_1'        => [
-                    'description' => __( 'Street 1 of the resource.' ),
+                    'description' => __( 'Street 1 of the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'arg_options' => [
@@ -515,7 +515,7 @@ class Contacts_Controller extends REST_Controller {
                     ],
                 ],
                 'street_2'        => [
-                    'description' => __( 'Street 1 of the resource.' ),
+                    'description' => __( 'Street 1 of the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'arg_options' => [
@@ -523,7 +523,7 @@ class Contacts_Controller extends REST_Controller {
                     ],
                 ],
                 'city'            => [
-                    'description' => __( 'City of the resource.' ),
+                    'description' => __( 'City of the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'arg_options' => [
@@ -531,7 +531,7 @@ class Contacts_Controller extends REST_Controller {
                     ],
                 ],
                 'state'           => [
-                    'description' => __( 'State of the resource.' ),
+                    'description' => __( 'State of the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'arg_options' => [
@@ -539,7 +539,7 @@ class Contacts_Controller extends REST_Controller {
                     ],
                 ],
                 'postal_code'     => [
-                    'description' => __( 'Postal Code of the resource.' ),
+                    'description' => __( 'Postal Code of the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'arg_options' => [
@@ -547,7 +547,7 @@ class Contacts_Controller extends REST_Controller {
                     ],
                 ],
                 'country'         => [
-                    'description' => __( 'Country of the resource.' ),
+                    'description' => __( 'Country of the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'arg_options' => [
@@ -555,7 +555,7 @@ class Contacts_Controller extends REST_Controller {
                     ],
                 ],
                 'currency'        => [
-                    'description' => __( 'Currency of the resource.' ),
+                    'description' => __( 'Currency of the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'arg_options' => [
@@ -563,7 +563,7 @@ class Contacts_Controller extends REST_Controller {
                     ],
                 ],
                 'type'            => [
-                    'description' => __( 'Type of the resource.' ),
+                    'description' => __( 'Type of the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'arg_options' => [
@@ -571,13 +571,13 @@ class Contacts_Controller extends REST_Controller {
                     ],
                 ],
                 'owner'           => [
-                    'description' => __( 'Owner of the resource.' ),
+                    'description' => __( 'Owner of the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'required'    => true,
                 ],
                 'life_stage'      => [
-                    'description' => __( 'Life stage of the resource.' ),
+                    'description' => __( 'Life stage of the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'arg_options' => [

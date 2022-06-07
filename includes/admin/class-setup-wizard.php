@@ -44,10 +44,6 @@ class Setup_Wizard {
      * Show the setup wizard
      */
     public function setup_wizard() {
-        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'erp-setup' ) ) {
-            //return;
-        }
-
         if ( empty( $_GET['page'] ) || 'erp-setup' !== $_GET['page'] ) {
             return;
         }
@@ -100,7 +96,7 @@ class Setup_Wizard {
             ],
         ];
 
-        $this->step = isset( $_GET['step'] ) ? sanitize_key( $_GET['step'] ) : current( array_keys( $this->steps ) );
+        $this->step = isset( $_GET['step'] ) ? sanitize_text_field( wp_unslash( $_GET['step'] ) ) : current( array_keys( $this->steps ) );
         $suffix     = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '';
 
         wp_enqueue_style( 'jquery-ui', WPERP_ASSETS . '/vendor/jquery-ui/jquery-ui-1.9.1.custom.css' );
@@ -143,7 +139,7 @@ class Setup_Wizard {
             <?php // do_action( 'admin_head' ); ?>
         </head>
         <body class="erp-setup wp-core-ui">
-            <h1 class="erp-logo"><a href="http://wperp.com/">WP ERP</a></h1>
+            <h1 class="erp-logo"><a href="http://wperp.com/"><?php esc_html_e( 'WP ERP', 'erp' ); ?></a></h1>
         <?php
     }
 
@@ -308,24 +304,27 @@ class Setup_Wizard {
                 <tr>
                     <th scope="row"><label for="business_type"><?php esc_html_e( 'What sort of business do you do?', 'erp' ); ?></label></th>
                     <td>
-                        <?php erp_html_form_input( [
-                            'name'    => 'business_type',
-                            'type'    => 'select',
-                            'value'   => $business_type,
-                            'options' => [
-                                ''                 => '-- select --',
-                                'Freelance'        => 'Freelance',
-                                'FreelanceDev'     => 'Freelance (Developer)',
-                                'FreelanceDes'     => 'Freelance (Design)',
-                                'SmallBLocal'      => 'Small Business: Local Service (e.g. Hairdresser)',
-                                'SmallBWeb'        => 'Small Business: Web Business',
-                                'SmallBOther'      => 'Small Business (Other)',
-                                'ecommerceWoo'     => 'eCommerce (WooCommerce)',
-                                'ecommerceShopify' => 'eCommerce (Shopify)',
-                                'ecommerceOther'   => 'eCommerce (Other)',
-                                'Other'            => 'Other',
-                            ],
-                        ] ); ?>
+                        <?php
+                        erp_html_form_input(
+                            [
+                                'name'    => 'business_type',
+                                'type'    => 'select',
+                                'value'   => $business_type,
+                                'options' => [
+                                    ''                 => '--' . __( 'select', 'erp' ) . '--',
+                                    'Freelance'        => __( 'Freelance', 'erp' ),
+                                    'FreelanceDev'     => __( 'Freelance (Developer)', 'erp' ),
+                                    'FreelanceDes'     => __( 'Freelance (Design)', 'erp' ),
+                                    'SmallBLocal'      => __( 'Small Business: Local Service (e.g. Hairdresser)', 'erp' ),
+                                    'SmallBWeb'        => __( 'Small Business: Web Business', 'erp' ),
+                                    'SmallBOther'      => __( 'Small Business (Other)', 'erp' ),
+                                    'ecommerceWoo'     => __( 'eCommerce (WooCommerce)', 'erp' ),
+                                    'ecommerceShopify' => __( 'eCommerce (Shopify)', 'erp' ),
+                                    'ecommerceOther'   => __( 'eCommerce (Other)', 'erp' ),
+                                    'Other'            => __( 'Other', 'erp' ),
+                                ],
+                            ]
+                        ); ?>
                     </td>
                 </tr>
 
@@ -337,13 +336,26 @@ class Setup_Wizard {
                     <td class="updated">
                         <input type="checkbox" name="share_essentials" id="share_essentials" class="switch-input">
                         <label for="share_essentials" class="switch-label">
-                            <span class="toggle--on">On</span>
-                            <span class="toggle--off">Off</span>
+                            <span class="toggle--on"><?php esc_html_e( 'On', 'erp' ); ?></span>
+                            <span class="toggle--off"><?php esc_html_e( 'Off', 'erp' ); ?></span>
                         </label>
                         <span class="description">
-                            Want to help make WP ERP even more awesome? Allow weDevs to collect non-sensitive diagnostic data and usage information. <a class="insights-data-we-collect" href="#">what we collect</a>
+                        <?php esc_html_e( 'Want to help make WP ERP even more awesome? Allow weDevs to collect non-sensitive diagnostic data and usage information.', 'erp' ); ?>
+                        <a class="insights-data-we-collect" href="#"> <?php esc_html_e( 'what we collect', 'erp' ); ?></a>
                         </span>
-                        <p class="description" style="display:none;">Server environment details (php, mysql, server, WordPress versions), Number of users in your site, Site language, Number of active and inactive plugins, Site name and url, Your name and email address. No sensitive data is tracked. We are using Appsero to collect your data. <a href="https://appsero.com/privacy-policy/">Learn more</a> about how Appsero collects and handle your data.</p>
+                        <p class="description" style="display:none;">
+                        <?php
+                        printf(
+                            esc_html__(
+                                /* translators: 1) opening anchor tag with link, 2) closing anchor tag */
+                                'Server environment details (php, mysql, server, WordPress versions), Number of users in your site, Site language, Number of active and inactive plugins, Site name and url, Your name and email address. No sensitive data is tracked. We are using Appsero to collect your data. %1$sLearn more%2$s about how Appsero collects and handle your data.',
+                                'erp'
+                            ),
+                            '<a href="https://appsero.com/privacy-policy/">',
+                            '</a>'
+                        );
+                        ?>
+                        </p>
                     </td>
 
                     <script type="text/javascript">
@@ -400,7 +412,7 @@ class Setup_Wizard {
             'erp_debug_mode'      => 0,
         ] );
 
-        wp_redirect( esc_url_raw( $this->get_next_step_link() ) );
+        wp_safe_redirect( esc_url_raw( $this->get_next_step_link() ) );
         exit;
     }
 
@@ -417,7 +429,7 @@ class Setup_Wizard {
         $modules['pm'] = [
             'title'       => 'WP Project Manager',
             'slug'        => 'wp-project-manager',
-            'description' => 'Project, Task Management & Team Collaboration Software',
+            'description' => __( 'Project, Task Management & Team Collaboration Software', 'erp' ),
         ];
 
         // Should `WP Project Manager` plugin installs by default?
@@ -443,8 +455,8 @@ class Setup_Wizard {
                     <td>
                         <input type="checkbox" name="modules[]" id="erp_module_<?php echo esc_attr( $slug ); ?>" class="switch-input" value="<?php echo esc_attr( $slug ); ?>" <?php checked( $slug, $checked ); ?>>
                         <label for="erp_module_<?php echo esc_attr( $slug ); ?>" class="switch-label">
-                            <span class="toggle--on">On</span>
-                            <span class="toggle--off">Off</span>
+                            <span class="toggle--on"><?php esc_html_e( 'On', 'erp' ); ?></span>
+                            <span class="toggle--off"><?php esc_html_e( 'Off', 'erp' ); ?></span>
                         </label>
                         <span class="description"><?php echo isset( $module['description'] ) ? esc_html( $module['description'] ) : ''; ?></span>
                     </td>
@@ -454,11 +466,13 @@ class Setup_Wizard {
             </table>
 
             <span class="plugin-install-info">
-                <span class="plugin-install-info-label">The following plugin will be installed and activated for you:</span>
+                <span class="plugin-install-info-label">
+                    <?php esc_html_e( 'The following plugin will be installed and activated for you', 'erp' ); ?>:
+                </span>
                 <br>
                 <span class="plugin-install-info-list">
                     <span class="plugin-install-info-list-item">
-                        <a href="https://wordpress.org/plugins/wedevs-project-manager/" target="_blank">WP Project Manager</a>
+                        <a href="https://wordpress.org/plugins/wedevs-project-manager/" target="_blank"><?php esc_html( 'WP Project Manager' ); ?></a>
                     </span>
                 </span>
             </span>
@@ -536,7 +550,7 @@ class Setup_Wizard {
             unset( $this->steps['workdays'] );
         }
 
-        wp_redirect( esc_url_raw( $this->get_next_step_link() ) );
+        wp_safe_redirect( esc_url_raw( $this->get_next_step_link() ) );
         exit;
     }
 
@@ -559,8 +573,21 @@ class Setup_Wizard {
                     <td>
                         <label for="wemail_install">
                             <span class="description">
-                                <?php printf( esc_html__( 'To collect and create your CRM leads and subscriers, we recommend installing %s plugin. ', 'erp' ), '<em style="color: #19ACB8;">weMail</em>' ); ?><br/>
-                                <?php printf( esc_html__( 'It simplifies email marketing inside the WordPress dashboard and it has tight integration with %s plugin.', 'erp' ), '<em style="color: #19ACB8;">WP ERP</em>' ); ?>
+                                <?php
+                                printf(
+                                    /* translators: weMail plugin name with style */
+                                    esc_html__( 'To collect and create your CRM leads and subscriers, we recommend installing %s plugin. ', 'erp' ),
+                                    '<em style="color: #19ACB8;">weMail</em>'
+                                );
+                                ?>
+                                <br/>
+                                <?php
+                                printf(
+                                    /* translators: WP ERP plugin name with style */
+                                    esc_html__( 'It simplifies email marketing inside the WordPress dashboard and it has tight integration with %s plugin.', 'erp' ),
+                                    '<em style="color: #19ACB8;">WP ERP</em>'
+                                );
+                                ?>
                             </span>
                         </label><br/><br/>
                         <input type="checkbox" name="wemail_install" id="wemail_install" class="switch-input" value="yes" checked>
@@ -578,7 +605,7 @@ class Setup_Wizard {
                 <br>
                 <span class="plugin-install-info-list">
                     <span class="plugin-install-info-list-item">
-                        <a href="https://wordpress.org/plugins/wemail/" target="_blank">weMail</a>
+                        <a href="https://wordpress.org/plugins/wemail/" target="_blank"><?php esc_html( 'weMail' ); ?></a>
                     </span>
                 </span>
             </span>
@@ -632,7 +659,7 @@ class Setup_Wizard {
 
         update_option( 'include_wemail', $install_wemail );
 
-        wp_redirect( esc_url_raw( $this->get_next_step_link() ) );
+        wp_safe_redirect( esc_url_raw( $this->get_next_step_link() ) );
         exit;
     }
 
@@ -714,7 +741,7 @@ class Setup_Wizard {
             }
         }
 
-        wp_redirect( esc_url_raw( $this->get_next_step_link() ) );
+        wp_safe_redirect( esc_url_raw( $this->get_next_step_link() ) );
         exit;
     }
 
@@ -774,7 +801,7 @@ class Setup_Wizard {
             }
         }
 
-        wp_redirect( esc_url_raw( $this->get_next_step_link() ) );
+        wp_safe_redirect( esc_url_raw( $this->get_next_step_link() ) );
         exit;
     }
 
@@ -850,7 +877,7 @@ class Setup_Wizard {
             }
         }
 
-        wp_redirect( esc_url_raw( $this->get_next_step_link() ) );
+        wp_safe_redirect( esc_url_raw( $this->get_next_step_link() ) );
         exit;
     }
 
@@ -911,7 +938,7 @@ class Setup_Wizard {
     public function setup_step_newsletter_save() {
         check_admin_referer( 'erp-setup' );
 
-        wp_redirect( esc_url_raw( $this->get_next_step_link() ) );
+        wp_safe_redirect( esc_url_raw( $this->get_next_step_link() ) );
         exit;
     }
 
