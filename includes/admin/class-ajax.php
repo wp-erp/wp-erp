@@ -46,13 +46,10 @@ class Ajax {
      * @return mixed
      */
     public function generate_csv_url() {
-        if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'erp-import-export-nonce' ) ) {
-            wp_send_json_error( __( 'Nonce verification failed!', 'erp' ) );
-        }
+        $this->verify_nonce( 'erp-import-export-nonce' );
 
         $type  = ! empty( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
         $path  = ! empty( $_POST['path'] ) ? sanitize_text_field( wp_unslash( $_POST['path'] ) ) : '';
-        $nonce = wp_create_nonce( 'erp-import-export-nonce' );
 
         switch ( $type ) {
             case 'customers':
@@ -64,6 +61,7 @@ class Ajax {
                 break;
         }
 
+        $nonce = wp_create_nonce( 'erp-import-export-nonce' );
         $page = "?page=erp-accounting&action=download_sample&type={$type}&_wpnonce={$nonce}#{$path}";
         $url  = admin_url( "admin.php{$page}" );
 

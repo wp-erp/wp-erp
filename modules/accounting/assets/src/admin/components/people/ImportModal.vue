@@ -108,7 +108,7 @@ export default {
                 action: 'erp_acct_get_sample_csv_url',
                 type: this.type,
                 path: this.$router.currentRoute.path,
-                nonce: this.nonce,
+                _wpnonce: this.nonce,
             },
             success: function(response) {
                 self.sampleUrl = response;
