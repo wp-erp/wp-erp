@@ -1044,7 +1044,7 @@ function erp_crm_send_schedule_notification( $activity, $extra = false ) {
             array_push( $users, $created_user );
 
             foreach ( $users as $key => $user ) {
-                $body = sprintf( __( 'You have a schedule after %s %s at %s%s', 'erp' ), $extra['notification_time_interval'], $extra['notification_time'], date( 'F j, Y, g:i a', strtotime( $activity['start_date'] ) ), empty( $extra['client_time_zone'] ) ? '' : ( '(' . $extra['client_time_zone'] . ')' ) );
+                $body = sprintf( __( 'You have a schedule after %s %s at %s%s', 'erp' ), isset( $extra['notification_time_interval'] ) ? $extra['notification_time_interval'] : '', isset( $extra['notification_time'] ) ? $extra['notification_time'] : '', erp_current_datetime()->modify( $activity['start_date'] )->format( 'F j, Y, g:i a' ), empty( $extra['client_time_zone'] ) ? '' : ( '(' . $extra['client_time_zone'] . ')' ) );
                 erp_mail( $user, __( 'ERP Schedule', 'erp' ), $body );
             }
             erp_crm_update_schedule_notification_flag( $activity['id'], true );
