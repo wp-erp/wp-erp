@@ -103,7 +103,7 @@ class Ajax {
                 'message' => erp_get_message(
                     [
                         'type'       => 'save_success',
-                        'additional' => 'Settings',
+                        'additional' => 'Settings'
                     ]
                 )
             ]
@@ -345,7 +345,7 @@ class Ajax {
             $password       = sanitize_text_field( wp_unslash( $_REQUEST['password'] ) );
         }
 
-        $mail_server = esc_url_raw( wp_unslash( $_REQUEST['mail_server'] ) );
+        $mail_server = str_replace( [ 'https://', 'http://' ], '', esc_url_raw( wp_unslash( $_REQUEST['mail_server'] ) ) );
         $port        = sanitize_text_field( wp_unslash( $_REQUEST['port'] ) );
         $to          = empty( $_REQUEST['test_email'] ) ? get_option( 'admin_email' ) : sanitize_email( wp_unslash( $_REQUEST['test_email'] ) );
 
