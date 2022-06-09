@@ -235,7 +235,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
         $id = $request['chart_id'];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_empty_chart_id', __( 'Chart ID is Empty.' ), [ 'status' => 400 ] );
+            return new WP_Error( 'rest_empty_chart_id', __( 'Chart ID is Empty.', 'erp' ), [ 'status' => 400 ] );
         }
 
         $items = erp_acct_get_ledgers_by_chart_id( $id );
@@ -260,7 +260,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_ledger_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_ledger_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $item = erp_acct_get_ledger( $id );
@@ -284,7 +284,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
         $exist = $wpdb->get_var( $wpdb->prepare( "SELECT name FROM {$wpdb->prefix}erp_acct_ledgers WHERE name = %s", $request['name'] ) );
 
         if ( $exist ) {
-            return new WP_Error( 'rest_ledger_name_already_exist', __( 'Name already exist.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_ledger_name_already_exist', __( 'Name already exist.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $item = $this->prepare_item_for_database( $request );
@@ -315,7 +315,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_ledger_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_ledger_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $item = $this->prepare_item_for_database( $request );
@@ -348,7 +348,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_ledger_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_ledger_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $item = erp_acct_get_ledger( $id );
@@ -388,7 +388,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
         $items = erp_acct_get_banks( true, false, false );
 
         if ( empty( $items ) ) {
-            return new WP_Error( 'rest_empty_accounts', __( 'Bank accounts are empty.' ), [ 'status' => 204 ] );
+            return new WP_Error( 'rest_empty_accounts', __( 'Bank accounts are empty.', 'erp' ), [ 'status' => 204 ] );
         }
 
         $formatted_items = [];
@@ -473,7 +473,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
         $category = erp_acct_create_ledger_category( $request );
 
         if ( ! $category ) {
-            return new WP_Error( 'rest_ledger_already_exist', __( 'Category already exist.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_ledger_already_exist', __( 'Category already exist.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $response = rest_ensure_response( $category );
@@ -494,13 +494,13 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_ledger_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_ledger_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $category = erp_acct_update_ledger_category( $request );
 
         if ( ! $category ) {
-            return new WP_Error( 'rest_ledger_already_exist', __( 'Category already exist.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_ledger_already_exist', __( 'Category already exist.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $response = rest_ensure_response( $category );
@@ -517,7 +517,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_payment_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_payment_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         erp_acct_delete_ledger_category( $id );
@@ -660,24 +660,24 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
             'type'       => 'object',
             'properties' => [
                 'id'          => [
-                    'description' => __( 'Unique identifier for the resource.' ),
+                    'description' => __( 'Unique identifier for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
                 'chart_id'    => [
-                    'description' => __( 'Type for the resource.' ),
+                    'description' => __( 'Type for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],
                     'required'    => true,
                 ],
                 'category_id' => [
-                    'description' => __( 'Code for the resource.' ),
+                    'description' => __( 'Code for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],
                 ],
                 'name'        => [
-                    'description' => __( 'Name for the resource.' ),
+                    'description' => __( 'Name for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -686,7 +686,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'required'    => true,
                 ],
                 'code'        => [
-                    'description' => __( 'Description for the resource.' ),
+                    'description' => __( 'Description for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [

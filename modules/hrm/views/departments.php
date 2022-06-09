@@ -13,7 +13,9 @@
     <?php if ( isset( $_GET['department_delete'] ) ) { ?>
         <div id="message" class="error notice is-dismissible below-h2">
             <p><?php esc_html_e( 'Some department doesn\'t delete because some employees work under those department', 'erp' ); ?></p>
-            <button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span></button>
+            <button type="button" class="notice-dismiss">
+                <span class="screen-reader-text"><?php esc_html_e( 'Dismiss this notice.', 'erp' ); ?></span>
+            </button>
         </div>
     <?php } ?>
 

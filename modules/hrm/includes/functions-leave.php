@@ -1494,12 +1494,10 @@ function erp_hr_get_leave_requests( $args = [], $cached = true ) {
     }
 
     $query = $fields . $tables . $join . $where . $orderby . $limit;
-    //echo $query; die();
+
     $requests = $wpdb->get_results( $query, ARRAY_A );
 
     $total_row_found = absint( $wpdb->get_var( 'SELECT FOUND_ROWS()' ) );
-
-    //echo "<pre>"; print_r( $requests ); die;
 
     $formatted_data = [];
 
@@ -2719,30 +2717,30 @@ function import_holidays_csv( $file ) {
         $description = ( isset( $data['description'] ) ) ? $data['description'] : '';
 
         if ( empty( $title ) ) {
-            $line_error .= __( 'Title can not be empty', 'wp-erp' ) . '<br>';
+            $line_error .= __( 'Title can not be empty', 'erp' ) . '<br>';
         }
 
         if ( strlen( $title ) > 200 ) {
-            $line_error .= __( 'Title can not be more than 200 charecters', 'wp-erp' ) . '<br>';
+            $line_error .= __( 'Title can not be more than 200 characters', 'erp' ) . '<br>';
         }
 
         if ( empty( $start ) || empty( $end ) ) {
-            $line_error .= __( 'Start OR End date can not be empty', 'wp-erp' ) . '<br>';
+            $line_error .= __( 'Start OR End date can not be empty', 'erp' ) . '<br>';
         }
 
         if ( ! is_string( $title ) && ! is_string( $start ) && ! is_string( $end ) ) {
-            $line_error .= __( 'Title, Start & End must be', 'wp-erp' ) . '<br>';
+            $line_error .= __( 'Title, Start & End must be', 'erp' ) . '<br>';
         }
 
         if ( ! preg_match ( "/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/", $start ) ) {
-            $line_error .= __( 'Start date should be valid format. Ex YYYY-MM-DD', 'wp-erp' ) . '<br>';
+            $line_error .= __( 'Start date should be valid format. Ex YYYY-MM-DD', 'erp' ) . '<br>';
         } elseif ( DateTime::createFromFormat( 'Y-m-d H:i:s', $start ) === false ) {
             $start = erp_current_datetime()->modify( $start )->format( 'Y-m-d 00:00:00' );
             $csv->data[ $data_key ]['start'] = $start;
         }
 
         if ( ! preg_match ( "/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/", $end )  ) {
-            $line_error .= __( 'End date should be valid format. Ex YYYY-MM-DD', 'wp-erp' ) . '<br>';
+            $line_error .= __( 'End date should be valid format. Ex YYYY-MM-DD', 'erp' ) . '<br>';
         } elseif ( DateTime::createFromFormat( 'Y-m-d H:i:s', $end ) === false ) {
             $end = erp_current_datetime()->modify( $end )->format( 'Y-m-d 23:59:59' );
             $csv->data[ $data_key ]['end'] = $end;
@@ -2752,11 +2750,11 @@ function import_holidays_csv( $file ) {
         $holiday = $holiday_model->where( 'title', '=', $title )->where( 'start', '=', $start );
 
         if ( $holiday->count() ) {
-            $line_error .= __( 'Holiday entry already exists', 'wp-erp' ) . '<br>';
+            $line_error .= __( 'Holiday entry already exists', 'erp' ) . '<br>';
         }
 
         if ( ! empty( $line_error ) ) {
-            $error_msg .= __( '<strong>Error at #ROW ' . ( $data_key + 1 ) . '</strong>', 'wp-erp' ) . '<br>';
+            $error_msg .= __( '<strong>Error at #ROW ' . ( $data_key + 1 ) . '</strong>', 'erp' ) . '<br>';
             $error_msg .= $line_error;
         }
 
@@ -3029,23 +3027,37 @@ function erp_hr_is_current_user_dept_lead() {
  * @param $leaves
  */
 function erp_hr_save_leave_attachment( $request_id, $request, $leaves ) {
-    if ( isset( $_FILES['leave_document'] ) && isset( $_FILES['leave_document']['name'] ) && ! empty( $_FILES['leave_document']['name'][0] ) ) {
-        $uploader = new \WeDevs\ERP\Uploader();
+    if ( ! isset( $_FILES['leave_document'] ) ) {
+        return;
+    }
 
-        foreach ( $_FILES['leave_document']['name'] as $key => $value ) {
-            $upload = [
-                'name'     => isset( $_FILES['leave_document'], $_FILES['leave_document']['name'][$key] ) ? sanitize_text_field( wp_unslash( $_FILES['leave_document']['name'][$key] ) ) : '',
-                'type'     => isset( $_FILES['leave_document'], $_FILES['leave_document']['type'][$key] ) ? sanitize_text_field( wp_unslash( $_FILES['leave_document']['type'][$key] ) ) : '',
-                'tmp_name' => isset( $_FILES['leave_document'], $_FILES['leave_document']['tmp_name'][$key] ) ? $_FILES['leave_document']['tmp_name'][$key] : '',
-                'error'    => isset( $_FILES['leave_document'], $_FILES['leave_document']['error'][$key] ) ? sanitize_text_field( wp_unslash( $_FILES['leave_document']['error'][$key] ) ) : '',
-                'size'     => isset( $_FILES['leave_document'], $_FILES['leave_document']['size'][$key] ) ? sanitize_text_field( wp_unslash( $_FILES['leave_document']['size'][$key] ) ) : '',
-            ];
+    $file_names     = isset( $_FILES['leave_document']['name'] ) ? array_map( 'sanitize_file_name', (array) wp_unslash( $_FILES['leave_document']['name'] ) ) : [];
+    $file_tmp_names = isset( $_FILES['leave_document']['tmp_name'] ) ? array_map( 'sanitize_url', (array) wp_unslash( $_FILES['leave_document']['tmp_name'] ) ) : [];
+    $file_types     = isset( $_FILES['leave_document']['type'] ) ? array_map( 'sanitize_text_field', (array) $_FILES['leave_document']['type'] ) : [];
+    $file_sizes     = isset( $_FILES['leave_document']['size'] ) ? array_map( 'sanitize_text_field', (array) $_FILES['leave_document']['size'] ) : [];
+    $file_errors    = isset( $_FILES['leave_document']['error'] ) ? array_map( 'sanitize_text_field', (array) $_FILES['leave_document']['error'] ) : [];
 
-            $file   = $uploader->handle_upload( $upload );
+    $uploader = new \WeDevs\ERP\Uploader();
 
-            if ( isset( $file['success'] ) && $file['success'] ) {
-                add_user_meta( $request['user_id'], 'leave_document_' . $request_id, $file['attach_id'] );
-            }
+    for ( $i = 0; $i < count( $file_names ); ++ $i ) {
+        $fileinfo = wp_check_filetype_and_ext( $file_tmp_names[ $i ], $file_names[ $i ] );
+
+        if ( ! $fileinfo['ext'] || ! $fileinfo['type'] || 0 !== (int) $file_errors[ $i ] ) {
+            continue;
+        }
+
+        $uploaded = $uploader->handle_upload(
+            [
+                'name'     => $file_names[ $i ],
+                'tmp_name' => $file_tmp_names[ $i ],
+                'type'     => $file_types[ $i ],
+                'error'    => $file_errors[ $i ],
+                'size'     => $file_sizes[ $i ],
+            ]
+        );
+
+        if ( ! empty( $uploaded['success'] ) ) {
+            add_user_meta( $request['user_id'], 'leave_document_' . $request_id, $uploaded['attach_id'] );
         }
     }
 }

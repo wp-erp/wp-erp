@@ -121,7 +121,7 @@ class Entitlement_List_Table extends \WP_List_Table {
                                 continue;
                             }
                             $selected = $policy['policy_id'] == $selected_leave_id ? 'selected="selected"' : '';
-                            echo "<option value='{$policy['policy_id']}' $selected>{$policy['name']}</option>";
+                            echo sprintf( "<option value='%s' %s>%s</option>", esc_attr( $policy['policy_id'] ), esc_attr( $selected ), esc_html( $policy['name'] ) );
                         }
                     } ?>
                 </select>

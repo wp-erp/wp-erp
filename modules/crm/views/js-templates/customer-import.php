@@ -3,13 +3,10 @@
     $life_stages    = [];
     $groups         = [];
     $type           = '';
-
     $life_stages    = erp_crm_get_life_stages_dropdown_raw();
     $crm_users      = erp_crm_get_crm_user();
-
     $section        = ! empty( $_GET['section'] )     ? sanitize_text_field( wp_unslash( $_GET['section'] ) )     : '';
     $sub_section    = ! empty( $_GET['sub-section'] ) ? sanitize_text_field( wp_unslash( $_GET['sub-section'] ) ) : 'contacts';
-
     $page           = "?page=erp-crm&section={$section}&sub-section={$sub_section}&action=download_sample";
 
     if ( 'contact' === $section ) {
@@ -25,7 +22,6 @@
     }
 
     $contact_groups = erp_crm_get_contact_groups( [ 'number' => '-1' ] );
-
     $groups         = [ '' => __( '&mdash; Select Group &mdash;', 'erp' ) ];
 
     foreach ( $contact_groups as $group ) {

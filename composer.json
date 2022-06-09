@@ -16,7 +16,6 @@
         "illuminate/database": "~5.0",
         "tareq1988/wp-eloquent": "dev-master",
         "johngrogg/ics-parser": "~1.0",
-        "symfony/var-dumper": "^2.8",
         "google/apiclient": "^2.0",
         "google/apiclient-services": "^0.64",
         "appsero/client": "^1.1",
