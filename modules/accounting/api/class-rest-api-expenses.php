@@ -168,7 +168,7 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_expense_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_expense_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $expense_data       = erp_acct_get_expense( $id );
@@ -198,7 +198,7 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_check_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_check_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $expense_data       = erp_acct_get_check( $id );
@@ -265,7 +265,7 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_expense_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_expense_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $expense_data = $this->prepare_item_for_database( $request );
@@ -311,7 +311,7 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_expense_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_expense_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         erp_acct_void_expense( $id );
@@ -507,24 +507,24 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
             'type'       => 'object',
             'properties' => [
                 'id'              => [
-                    'description' => __( 'Unique identifier for the resource.' ),
+                    'description' => __( 'Unique identifier for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
                 'voucher_no'      => [
-                    'description' => __( 'Voucher no. for the resource.' ),
+                    'description' => __( 'Voucher no. for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],
                 ],
                 'people_id'       => [
-                    'description' => __( 'People id for the resource.' ),
+                    'description' => __( 'People id for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],
                     'required'    => true,
                 ],
                 'ref'       => [
-                    'description' => __( 'Reference for the resource.' ),
+                    'description' => __( 'Reference for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -532,7 +532,7 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
                     ],
                 ],
                 'trn_date'        => [
-                    'description' => __( 'Date for the resource.' ),
+                    'description' => __( 'Date for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -541,12 +541,12 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'required'    => true,
                 ],
                 'trn_by'        => [
-                    'description' => __( 'Trans by for the resource.' ),
+                    'description' => __( 'Trans by for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],
                 ],
                 'billing_address' => [
-                    'description' => __( 'Billing address for the resource.' ),
+                    'description' => __( 'Billing address for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -581,7 +581,7 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
                     ],
                 ],
                 'particulars'     => [
-                    'description' => __( 'Particulars for the resource.' ),
+                    'description' => __( 'Particulars for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -589,7 +589,7 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
                     ],
                 ],
                 'status'          => [
-                    'description' => __( 'Status for the resource.' ),
+                    'description' => __( 'Status for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],
                 ],
@@ -602,7 +602,7 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
                     ],
                 ],
                 'check_no'        => [
-                    'description' => __( 'Payment method for the resource.' ),
+                    'description' => __( 'Payment method for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -610,7 +610,7 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
                     ],
                 ],
                 'deposit_to'      => [
-                    'description' => __( 'Account for the resource.' ),
+                    'description' => __( 'Account for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],
                     'required'    => true,

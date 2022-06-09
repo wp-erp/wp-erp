@@ -597,38 +597,38 @@
                     <?php if ( ! $is_pro_active ) : ?>
                     <li>
                         <button id="all" class="btn active">
-                            <span><?php _e( 'All', 'erp' ); ?></span>
+                            <span><?php esc_html_e( 'All', 'erp' ); ?></span>
                         </button>
                     </li>
                     <?php else : ?>
                     <li>
                         <button id="all" class="btn">
-                            <span><?php _e( 'All', 'erp' ); ?></span>
+                            <span><?php esc_html_e( 'All', 'erp' ); ?></span>
                         </button>
                     </li>
                     <li>
                         <button id="purchased" class="btn active">
                             <img src="<?php echo esc_url( WPERP_ASSETS . '/images/icons/purchaged.svg' ); ?>" alt="<?php echo esc_attr( 'Purchased' ); ?>" />
-                            <span><?php echo __( 'Purchased', 'erp' ); ?></span>
+                            <span><?php esc_html_e( 'Purchased', 'erp' ); ?></span>
                         </button>
                     </li>
                     <?php endif; ?>
                     <li>
                         <button id="hrm" class="btn">
                             <img src="<?php echo esc_url( WPERP_ASSETS . '/images/icons/hrm-colored.svg' ); ?>" alt="<?php echo esc_attr( 'HRM' ); ?>" />
-                            <span><?php echo __( 'HRM', 'erp' ); ?></span>
+                            <span><?php esc_html_e( 'HRM', 'erp' ); ?></span>
                         </button>
                     </li>
                     <li>
                         <button id="crm" class="btn">
                             <img src="<?php echo esc_url( WPERP_ASSETS . '/images/icons/crm-colored.svg' ); ?>" alt="<?php echo esc_attr( 'CRM' ); ?>" />
-                            <span><?php echo __( 'CRM', 'erp' ); ?></span>
+                            <span><?php esc_html_e( 'CRM', 'erp' ); ?></span>
                         </button>
                     </li>
                     <li>
                         <button id="accounting" class="btn">
                             <img src="<?php echo esc_url( WPERP_ASSETS . '/images/icons/accounting-colored.svg' ); ?>" alt="<?php echo esc_attr( 'Accounting' ); ?>" />
-                            <span><?php echo __( 'Accounting', 'erp' ); ?></span>
+                            <span><?php esc_html_e( 'Accounting', 'erp' ); ?></span>
                         </button>
                     </li>
 
@@ -707,8 +707,8 @@
             $license_id     = intval( wp_erp_pro()->update->get_license_id() );
             $purchase_url   = trailingslashit( wp_erp_pro()->update->get_base_url() ) . 'pricing?utm_source=wp-admin&utm_medium=link&utm_campaign=erp-pro-extension-page';
             $licensed_users = wp_erp_pro()->update->get_licensed_user();
-            $existing_users = wp_erp_pro()->update->count_users(); 
-    
+            $existing_users = wp_erp_pro()->update->count_users();
+
             if ( ! empty( $license_id ) ) {
                 $purchase_url  .= "&license_id={$license_id}&action=upgrade";
             }
@@ -748,7 +748,7 @@
                     }
                 }
             ?>
-                <div class="erp_addon_col <?php esc_attr_e( $cat_str ) ;?> <?php esc_attr_e( $is_active ); ?> <?php esc_attr_e( $purchased_module ); ?>">
+                <div class="erp_addon_col <?php echo esc_attr( "$cat_str $is_active $purchased_module" ); ?>">
                     <div class="erp_addon">
 
                         <div class="erp_addon_item_row erp_addon_item_row_top">
@@ -784,12 +784,12 @@
                             <div class="erp-links">
                                 <?php if ( $is_pro_active &&  ( $module->is_pro || in_array( $module->path, $my_modules ) ) ) : ?>
                                     <label class="switch">
-                                        <input class="extension_action" type="checkbox" <?php esc_html_e($checked); ?>
-                                               data-module-id="<?php echo esc_attr($module->id); ?>">
+                                        <input class="extension_action" type="checkbox" <?php echo esc_attr( $checked ); ?>
+                                               data-module-id="<?php echo esc_attr( $module->id ); ?>">
                                         <span class="slider round"></span>
                                     </label>
                                 <?php else : ?>
-                                    <a href="<?php echo esc_url( $purchase_url ); ?>" class="button button-primary"  target="_blank" title="<?php _e( 'Get It', 'erp' ); ?>" ><?php _e( 'Get It', 'erp' ); ?></a>
+                                    <a href="<?php echo esc_url( $purchase_url ); ?>" class="button button-primary"  target="_blank" title="<?php esc_attr_e( 'Get It', 'erp' ); ?>" ><?php esc_html_e( 'Get It', 'erp' ); ?></a>
                                 <?php endif; ?>
                             </div>
                         </div>
@@ -873,7 +873,7 @@
             var state      = $(this).prop( 'checked' );
             var toggle     = ( state ) ? 'activate' : 'deactivate';
 
-            toastr.success( '<?php echo __( 'Please wait!', 'erp'); ?>', '', {timeOut: 1000} );
+            toastr.success( '<?php esc_html_e( 'Please wait!', 'erp'); ?>', '', {timeOut: 1000} );
 
             wp.ajax.send( 'erp-toggle-module', {
                 data: {
@@ -895,16 +895,16 @@
         } );
 
         $( '.extension_action' ).click( function() {
-             var module_id  = $(this).data('module-id');
-             var state      = $(this).prop( 'checked' );
-             var toggle     = ( state ) ? 'activate' : 'deactivate';
-             var th         = $(this);
+            var module_id = $(this).data('module-id');
+            var state     = $(this).prop( 'checked' );
+            var toggle    = ( state ) ? 'activate' : 'deactivate';
+            var th        = $(this);
 
-            toastr.success( '<?php echo __( 'Please wait!', 'erp'); ?>', '', {timeOut: 1000} );
+            toastr.success( '<?php esc_html_e( 'Please wait!', 'erp'); ?>', '', {timeOut: 1000} );
 
-             wp.ajax.send( 'erp-pro-toggle-extension', {
+            wp.ajax.send( 'erp-pro-toggle-extension', {
                 data: {
-                    '_wpnonce': '<?php echo wp_create_nonce( 'wp-erp-pro-toggle-extension' )  ?>',
+                    '_wpnonce': '<?php echo wp_create_nonce( 'wp-erp-pro-toggle-extension' ); ?>',
                     module_id:  module_id,
                     toggle:     toggle
                 },
@@ -935,7 +935,7 @@
                 modules.push($( this ).val() );
             } );
 
-            toastr.success( '<?php echo __( 'Please wait!', 'erp'); ?>', '', {timeOut: 1000} );
+            toastr.success( '<?php esc_html_e( 'Please wait!', 'erp'); ?>', '', {timeOut: 1000} );
 
             wp.ajax.send( 'erp-pro-toggle-extension', {
                 data: {

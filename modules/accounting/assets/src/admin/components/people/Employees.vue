@@ -22,7 +22,7 @@
                 <strong><a href="#">{{ data.row.title }}</a></strong>
             </template>
             <template slot="employee" slot-scope="data">
-                <router-link :to="{ name: 'EmployeeDetails', params: { id: data.row.people_id } }">{{data.row.employee}}</router-link>
+                <router-link :to="{ name: 'EmployeeDetails', params: { id: data.row.id } }">{{ data.row.employee }}</router-link>
             </template>
         </list-table>
     </div>

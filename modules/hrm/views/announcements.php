@@ -32,7 +32,7 @@ if ( ! empty( $_GET['bulk-operation-failed'] ) ) {
 <div class="wrap erp erp-hr-announcement">
     <h2>
         <?php esc_html_e( 'People', 'erp' ); ?>
-        <a href="<?php echo admin_url( 'post-new.php?post_type=erp_hr_announcement' ); ?>" id="erp-new-announcement" data-single="1" class="add-new-h2"><?php esc_html_e( 'Add New', 'erp' ); ?></a>
+        <a href="<?php echo esc_url( admin_url( 'post-new.php?post_type=erp_hr_announcement' ) ); ?>" id="erp-new-announcement" data-single="1" class="add-new-h2"><?php esc_html_e( 'Add New', 'erp' ); ?></a>
     </h2>
 
     <?php if ( ! empty( $reason_text ) ) { ?>

@@ -31,12 +31,12 @@ class Leave_Holiday_List_Table extends WP_List_Table {
         $to           = isset( $_GET['to'] ) ? sanitize_text_field( wp_unslash( $_GET['to'] ) ) : date( 'Y-12-31' ); ?>
 
         <label class="screen-reader-text" for="new_role"><?php esc_html_e( 'From', 'erp' ); ?></label>
-        <input type="text" placeholder="<?php esc_html_e( 'From date', 'erp' ); ?>" name="from" value="<?php echo esc_attr( $from ); ?>" class="erp-leave-date-picker-from">
+        <input type="text" placeholder="<?php esc_attr_e( 'From date', 'erp' ); ?>" name="from" value="<?php echo esc_attr( $from ); ?>" class="erp-leave-date-picker-from">
 
         <label class="screen-reader-text" for="new_role"><?php esc_html_e( 'To', 'erp' ); ?></label>
-        <input type="text" placeholder="<?php esc_html_e( 'To date', 'erp' ); ?>" name="to" value="<?php echo esc_attr( $to ); ?>" class="erp-leave-date-picker-to">
+        <input type="text" placeholder="<?php esc_attr_e( 'To date', 'erp' ); ?>" name="to" value="<?php echo esc_attr( $to ); ?>" class="erp-leave-date-picker-to">
         <?php
-        submit_button( __( 'Filter' ), 'button', 'filter', false );
+        submit_button( __( 'Filter', 'erp' ), 'button', 'filter', false );
     }
 
     /**
@@ -123,7 +123,7 @@ class Leave_Holiday_List_Table extends WP_List_Table {
      */
     public function single_row( $item ) {
         ?>
-            <tr data-json='<?php echo json_encode( $item ); ?>'>
+            <tr data-json='<?php echo wp_json_encode( $item ); ?>'>
                 <?php $this->single_row_columns( $item ); ?>
             </tr>
         <?php

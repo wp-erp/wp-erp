@@ -16,7 +16,7 @@
                 </div>
                  <?php if ( current_user_can( 'manage_options' ) or ( wp_get_current_user()->ID == $note->comment_by ) ) { ?>
                  <div class="row-action">
-                    <span class="delete"><a href="#" class="delete_note " data-note_id="<?php echo esc_html( $note->id ); ?>"><?php esc_html_e( 'Delete', 'erp' ); ?></a></span>
+                    <span class="delete"><a href="#" class="delete_note " data-note_id="<?php echo esc_attr( $note->id ); ?>"><?php esc_html_e( 'Delete', 'erp' ); ?></a></span>
                 </div>
                  <?php } ?>
             </div>

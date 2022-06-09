@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function erp_html_form_help( $value = '' ) {
     if ( ! empty( $value ) ) {
-        echo '<span class="description">' . wp_kses_post( $value ) . '</span>';
+        ?><span class="description"><?php echo wp_kses_post( $value ); ?></span><?php
     }
 }
 
@@ -26,7 +26,7 @@ function erp_html_form_help( $value = '' ) {
  */
 function erp_html_form_error( $value = '' ) {
     if ( ! empty( $value ) ) {
-        echo '<span class="error-text">' . wp_kses_post( $value ) . '</span>';
+        ?><span class="error-text"><?php echo wp_kses_post( $value ); ?></span><?php
     }
 }
 
@@ -225,7 +225,7 @@ function erp_html_form_input( $args = [] ) {
                     echo '<input type="radio" ' . checked( $field['value'], $key, false ) . ' id="' . esc_attr( $field_attributes['id'] ) . '-' . esc_attr( $key ) . '" value="' . esc_attr( $key ) . '" ' . wp_kses_post( implode( ' ', $custom_attributes ) ) . '"/>' . esc_html( $value ) . '&nbsp;';
                 }
             }
-            
+
             echo '</span>';
             break;
 
@@ -264,9 +264,9 @@ function erp_html_form_input( $args = [] ) {
             <script type="text/javascript">
                 jQuery(function($) {
                     var pick_files = '<?php echo esc_html( $pick_files ); ?>',
-                        id         = '<?php echo esc_html( $id ); ?>',
+                        id         = '<?php echo esc_attr( $id ); ?>',
                         drop_jone  = '<?php echo esc_html( $drop ); ?>',
-                        action     = '<?php echo esc_html( $action ); ?>',
+                        action     = '<?php echo esc_attr( $action ); ?>',
                         callback   = '<?php echo esc_html( $call_back ); ?>';
 
                     new ERP_Uploader( action, pick_files, id, drop_jone, 'file_upload', 'doc,docx,xls,xlsx,jpg,jpeg,gif,png,pdf,bmp,zip,rar', 1024, callback );

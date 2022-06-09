@@ -61,7 +61,7 @@ class Helpers {
             return $query_arg;
         }
 
-        $current_tab = $query_arg['tab'] = isset( $_GET['tab'] ) ? sanitize_title( wp_unslash( $_GET['tab'] ) ) : $settings[0]->get_id();
+        $current_tab = $query_arg['tab'] = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : $settings[0]->get_id();
 
         foreach ( $settings as $obj ) {
             $sections[$obj->get_id()] = isset( $obj->sections ) ? $obj->sections : [];
@@ -163,7 +163,7 @@ class Helpers {
             <ul class="erp-nav">
 
             <?php foreach ( $tab_sections as $slug => $label ) : ?>
-                <li class="<?php echo $current_section == $slug ? 'active' : ''; ?>"><a href="<?php echo esc_url( admin_url( 'admin.php?page=erp-settings&tab=' . $current_tab . '&section=' . sanitize_title( $slug ) ) ); ?>"><?php esc_html_e( $label ); ?></a></li>
+                <li class="<?php echo $current_section == $slug ? 'active' : ''; ?>"><a href="<?php echo esc_url( admin_url( 'admin.php?page=erp-settings&tab=' . $current_tab . '&section=' . sanitize_title( $slug ) ) ); ?>"><?php echo esc_html( $label ); ?></a></li>
             <?php endforeach; ?>
 
             </ul>
