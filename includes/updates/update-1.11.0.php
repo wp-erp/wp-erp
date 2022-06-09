@@ -1,16 +1,16 @@
 <?php
 
 /**
- * Class to handle updates for version 1.10.6
+ * Class to handle updates for version 1.11.0
  *
- * @since 1.10.6
+ * @since 1.11.0
  */
-class ERP_Update_1_10_6 {
+class ERP_Update_1_11_0 {
 
     /**
      * Class constructor.
      *
-     * @since 1.10.6
+     * @since 1.11.0
      */
     public function __construct() {
         $this->modify_qty_columns();
@@ -19,7 +19,7 @@ class ERP_Update_1_10_6 {
     /**
      * Modifies `qty` columns in different tables.
      *
-     * @since 1.10.6
+     * @since 1.11.0
      *
      * @return void
      */
@@ -37,4 +37,4 @@ class ERP_Update_1_10_6 {
     }
 }
 
-new ERP_Update_1_10_6();
+new ERP_Update_1_11_0();

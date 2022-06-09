@@ -58,7 +58,7 @@ class Updates {
         '1.8.5'   => 'updates/update-1.8.5.php',
         '1.10.0'  => 'updates/update-1.10.0.php',
         '1.10.2'  => 'updates/update-1.10.2.php',
-        '1.10.6'  => 'updates/update-1.10.6.php',
+        '1.11.0'  => 'updates/update-1.11.0.php',
     ];
 
     /**
