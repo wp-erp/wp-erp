@@ -30,6 +30,7 @@ import ExpensesStats from 'admin/components/transactions/expenses/ExpensesStats.
 import ExpensesList from 'admin/components/transactions/expenses/ExpensesList.vue';
 import TransactionsFilter from 'admin/components/transactions/TransactionsFilter.vue';
 import {mapState} from "vuex";
+import HTTP from 'admin/http';
 
 export default {
     name: 'Expenses',
@@ -60,7 +61,15 @@ export default {
     },
     created() {
         if(!this.people.length){
-            this.$store.dispatch('expense/fetchPeople');
+            HTTP.get('/people', {
+                params: {
+                    type: 'all',
+                    per_page: -1,
+                    page: 1 // *offset issue
+                }
+            }).then(response => {
+                this.$store.dispatch('expense/fillPeople', response.data);
+            });
         }
     },
     computed: mapState({
