@@ -3614,51 +3614,45 @@ function erp_reset_data() {
             remove_role( $role );
         }
 
-        // $options = [
-        //     'wp_erp_version',
-        //     'wp_erp_db_version',
-        //     'erp_modules',
-        //     'erp_email_settings_employee-welcome',
-        //     'erp_email_settings_new-leave-request',
-        //     'erp_email_settings_approved-leave-request',
-        //     'erp_email_settings_rejected-leave-request',
-        //     'erp_email_settings_new-task-assigned',
-        //     'erp_setup_wizard_ran',
-        //     'erp_settings_general',
-        //     'erp_settings_accounting',
-        //     'erp_settings_erp-hr_workdays',
-        //     'wp_erp_activation_dismiss',
-        //     '_erp_admin_menu',
-        //     '_erp_adminbar_menu',
-        //     'erp_settings_erp-email_general',
-        //     'erp_settings_erp-email_smtp',
-        //     'erp_settings_erp-email_mailgun',
-        //     'erp_settings_erp-email_gmail',
-        //     'erp_settings_erp-email_imap',
-        //     '_erp_company',
-        //     'erp_settings_erp-crm_subscription',
-        //     'erp_acct_new_ledgers',
-        //     'erp_email_settings_new-contact-assigned',
-        //     'erp_email_settings_hiring-anniversary-wish',
-        //     'wp_erp_install_date',
-        //     'widget_erp-subscription-from-widget',
-        //     'erp_tracking_notice',
-        // ];
-
-        // Delete all erp options
-        $options = $wpdb->get_results(
-            "SELECT option_name
-            FROM {$wpdb->prefix}options
-            WHERE option_name LIKE 'erp_%'
-            OR option_name LIKE 'erp-%'
-            OR option_name LIKE '%-erp-%'
-            OR option_name LIKE '%-erp_%'
-            OR option_name LIKE '%_erp_%'
-            OR option_name LIKE '%_erp-%'"
-        );
+        $options = [
+            'wp_erp_version',
+            'wp_erp_db_version',
+            'erp_modules',
+            'erp_setup_wizard_ran',
+            'wp_erp_install_date',
+            'erp_tracking_notice',
+            'wp_erp_activation_dismiss',
+            '_erp_admin_menu',
+            '_erp_adminbar_menu',
+            '_erp_company',
+            'erp_acct_new_ledgers',
+            'erp_email_settings_employee-welcome',
+            'erp_email_settings_new-leave-request',
+            'erp_email_settings_approved-leave-request',
+            'erp_email_settings_rejected-leave-request',
+            'erp_email_settings_new-task-assigned',
+            'erp_email_settings_new-contact-assigned',
+            'erp_email_settings_hiring-anniversary-wish',
+            'erp_email_settings_govt-holiday-reminder',
+            'erp_email_settings_transectional-email',
+            'erp_email_settings_transectional-email-payments',
+            'erp_email_settings_transectional-email-estimate',
+            'erp_email_settings_transectional-email-purchase-order',
+            'erp_email_settings_transectional-email-pay-purchase',
+            'erp_settings_general',
+            'erp_settings_accounting',
+            'erp_settings_erp-hr_workdays',
+            'erp_settings_erp-crm_subscription',
+            'erp_settings_erp-email_general',
+            'erp_settings_erp-email_smtp',
+            'erp_settings_erp-email_mailgun',
+            'erp_settings_erp-email_gmail',
+            'erp_settings_erp-email_imap',
+            'widget_erp-subscription-from-widget',
+        ];
 
         foreach ( $options as $option ) {
-            delete_option( $option->option_name );
+            delete_option( $option );
         }
 
         // Clear some other scheduled events registered as cron jobs
