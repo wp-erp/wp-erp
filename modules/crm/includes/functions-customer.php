@@ -4264,3 +4264,28 @@ function erp_crm_get_attachment_dir() {
 
     return $full_path;
 }
+
+/**
+ * Set cron schedule event to check new inbound emails.
+ *
+ * @since 1.11.0
+ *
+ * @return void
+ */
+function erp_crm_schedule_inbound_email_cron( $value ) {
+    if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-settings-nonce' ) ) {
+        wp_die( __( 'Unauthorized attempt!', 'erp' ), 403 );
+    }
+
+    if ( ! isset( $_POST['module'] ) || 'erp-email' !== sanitize_text_field( wp_unslash( $_POST['module'] ) ) ) {
+        return;
+    }
+
+    if ( ! isset( $_POST['section'] ) || 'imap' !== sanitize_text_field( wp_unslash( $_POST['section'] ) ) ) {
+        return;
+    }
+
+    $recurrence = isset( $_POST['schedule'] ) ? sanitize_text_field( wp_unslash( $_POST['schedule'] ) ) : 'hourly';
+    wp_clear_scheduled_hook( 'erp_crm_inbound_email_scheduled_events' );
+    wp_schedule_event( time(), $recurrence, 'erp_crm_inbound_email_scheduled_events' );
+}
