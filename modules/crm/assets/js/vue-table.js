@@ -42,7 +42,7 @@ Vue.component('vtable', {
         +'<div class="vtable-wrap list-table-wrap {{ wrapperClass }}">'
             +'<div class="list-table-inner {{ tableWrapper }}">'
                 +'<form method="get">'
-                    +'<div class="tablenav top" style="padding-top:0;">'
+                    +'<div class="tablenav top" style="padding-top:0; height: auto;">'
                         +'<ul v-if="!hasTopNavFilter()" class="subsubsub">'
                             +'<li v-for="( key, filter ) in topNavFilter.data" class="{{key}}"><a href="#" @click.prevent="callTopNavFilterAction( key, filter )" :class="{ \'current\': iscurrentTopNavFilter( key ) }">{{ filter.label }} <span class="count">({{ filter.count }})</span></a> <span v-if="!ifTopNavFilterLastItem( key )"> | </span></li>'
                         +'</ul>'
