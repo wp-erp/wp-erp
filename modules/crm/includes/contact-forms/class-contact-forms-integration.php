@@ -109,8 +109,10 @@ class Contact_Forms_Integration {
                         $is_nested = preg_match_all( '/(.*)\.(.*)/', $option, $match );
 
                         if ( $is_nested ) {
-                            $contact[ $match[1][0] ][ $match[2][0] ] = $data[ $field ];
-                        } else {
+                            if ( empty( $contact[ $match[1][0] ] ) || empty( $contact[ $match[1][0] ][ $match[2][0] ] ) ) {
+                                $contact[ $match[1][0] ][ $match[2][0] ] = $data[ $field ];
+                            }
+                        } elseif ( empty( $contact[ $option ] ) ) {
                             $contact[ $option ] = $data[ $field ];
                         }
                     }
