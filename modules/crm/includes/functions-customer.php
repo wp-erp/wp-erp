@@ -626,6 +626,7 @@ function erp_crm_customer_prepare_schedule_postdata( $postdata ) {
         $notify_date = new \DateTime( $postdata['start_date'] . $start_time );
         $notify_date->modify( '-' . $extra_data['notification_time_interval'] . ' ' . $extra_data['notification_time'] );
         $extra_data['notification_datetime'] = $notify_date->format( 'Y-m-d H:i:s' );
+        $extra_data['client_time_zone']      = ! empty( $postdata['client_time_zone'] ) ? sanitize_text_field( wp_unslash( $postdata['client_time_zone'] ) ) : '';
     } else {
         $extra_data['notification_datetime'] = '';
     }
@@ -1007,8 +1008,16 @@ function erp_crm_customer_schedule_notification() {
     foreach ( $schedules as $key => $activity ) {
         $extra = json_decode( base64_decode( $activity['extra'] ), true );
 
+        $current_time = erp_current_datetime();
+
+        if ( ! empty( $extra['client_time_zone'] ) ) {
+            $current_time = $current_time->setTimezone( new DateTimeZone( $extra['client_time_zone'] ) );
+        }
+
+        $current_time = $current_time->format( 'Y-m-d H:i:s' );
+
         if ( isset( $extra['allow_notification'] ) && $extra['allow_notification'] == 'true' ) {
-            if ( ( current_time( 'mysql' ) >= $extra['notification_datetime'] ) && ( $activity['start_date'] >= current_time( 'mysql' ) ) ) {
+            if ( ( $current_time >= $extra['notification_datetime'] ) && ( $activity['start_date'] >= $current_time ) ) {
                 if ( ! $activity['sent_notification'] ) {
                     erp_crm_send_schedule_notification( $activity, $extra );
                 }
@@ -1044,7 +1053,7 @@ function erp_crm_send_schedule_notification( $activity, $extra = false ) {
             array_push( $users, $created_user );
 
             foreach ( $users as $key => $user ) {
-                $body = sprintf( __( 'You have a schedule after %s %s at %s', 'erp' ), $extra['notification_time_interval'], $extra['notification_time'], date( 'F j, Y, g:i a', strtotime( $activity['start_date'] ) ) );
+                $body = sprintf( __( 'You have a schedule after %s %s at %s%s', 'erp' ), isset( $extra['notification_time_interval'] ) ? $extra['notification_time_interval'] : '', isset( $extra['notification_time'] ) ? $extra['notification_time'] : '', erp_current_datetime()->modify( $activity['start_date'] )->format( 'F j, Y, g:i a' ), empty( $extra['client_time_zone'] ) ? '' : ( '(' . $extra['client_time_zone'] . ')' ) );
                 erp_mail( $user, __( 'ERP Schedule', 'erp' ), $body );
             }
             erp_crm_update_schedule_notification_flag( $activity['id'], true );
