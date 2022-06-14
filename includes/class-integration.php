@@ -132,27 +132,28 @@ class Integration extends Settings_Page {
     public function admin_options() {
         ?>
         <h3  style="padding-top: 10px;"><?php echo esc_html( $this->get_title() ); ?></h3>
-        <?php echo wp_kses_post( wpautop( $this->get_description() ) ); ?>
-
         <?php
-            /**
-             * erp_email_settings_before action hook.
-             *
-             * @param string $integration The integration object
-             */
-            do_action( 'erp_integration_settings_before', $this ); ?>
+        echo wp_kses_post( wpautop( $this->get_description() ) );
+
+        /**
+         * erp_email_settings_before action hook.
+         *
+         * @param object WeDevs\ERP\Integration
+         */
+        do_action( 'erp_integration_settings_before', $this );
+        ?>
 
         <table class="form-table">
             <?php $this->generate_settings_html(); ?>
         </table>
 
         <?php
-            /**
-             * erp_integration_settings_after action hook.
-             *
-             * @param string $integration The integration object
-             */
-            do_action( 'erp_integration_settings_after', $this ); ?>
+        /**
+         * erp_integration_settings_after action hook.
+         *
+         * @param object WeDevs\ERP\Integration
+         */
+        do_action( 'erp_integration_settings_after', $this ); ?>
         <?php
     }
 }

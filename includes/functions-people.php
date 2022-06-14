@@ -43,7 +43,11 @@ function erp_get_peoples( $args = [] ) {
     ];
 
     $args                 = wp_parse_args( $args, $defaults );
-    $args['crm_agent_id'] = ( ! erp_crm_is_current_user_manager() && erp_crm_is_current_user_crm_agent() ) ? get_current_user_id() : false;
+    $args['crm_agent_id'] = false;
+
+    if ( erp_is_module_active( 'crm' ) ) {
+        $args['crm_agent_id'] = ( ! erp_crm_is_current_user_manager() && erp_crm_is_current_user_crm_agent() ) ? get_current_user_id() : false;
+    }
 
     $people_type  = is_array( $args['type'] ) ? implode( '-', $args['type'] )       : $args['type'];
     $last_changed = erp_cache_get_last_changed( 'crm', 'people' );
@@ -102,9 +106,11 @@ function erp_get_peoples( $args = [] ) {
             $sql['where'][] = "AND people.contact_owner='$contact_owner'";
         }
 
-        if ( ! erp_crm_is_current_user_manager() && erp_crm_is_current_user_crm_agent() ) {
-            $current_user_id = get_current_user_id();
-            $sql['where'][]  = "AND people.contact_owner='$current_user_id'";
+        if ( erp_is_module_active( 'crm' ) ) {
+            if ( ! erp_crm_is_current_user_manager() && erp_crm_is_current_user_crm_agent() ) {
+                $current_user_id = get_current_user_id();
+                $sql['where'][]  = "AND people.contact_owner='$current_user_id'";
+            }
         }
 
         // Check if the row want to search

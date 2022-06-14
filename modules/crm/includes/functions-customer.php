@@ -382,33 +382,37 @@ function erp_crm_customer_add_company( $customer_id, $company_id ) {
  *
  * @since 1.1.0
  *
- * @param $postdata array
+ * @param int|string $contact_id
  *
  * @return array
  */
-function erp_crm_customer_get_company( $postdata ) {
+function erp_crm_customer_get_company( $contact_id ) {
     global $wpdb;
-    $results = [];
 
-    if ( isset( $postdata['id'] ) && empty( $postdata['id'] ) ) {
-        return new WP_Error( 'no-ids', __( 'No contact found', 'erp' ) );
+    $data = $wpdb->get_results(
+        $wpdb->prepare(
+            "SELECT com.*
+            FROM {$wpdb->prefix}erp_crm_customer_companies AS com
+            LEFT JOIN {$wpdb->prefix}erp_peoples AS peop
+                ON peop.id = com.company_id
+            WHERE com.customer_id = %d",
+            [ $contact_id ]
+        ),
+        ARRAY_A
+    );
+
+    if ( empty( $data ) || is_wp_error( $data ) ) {
+        return [];
     }
 
-    $sql = 'SELECT com.* FROM ' . $wpdb->prefix . 'erp_crm_customer_companies AS com
-            LEFT JOIN ' . $wpdb->prefix . 'erp_peoples AS peop ON peop.id = com.company_id
-            WHERE com.customer_id = ' . $postdata['id'];
-
-    $data = $wpdb->get_results( $sql, ARRAY_A );
-
-    if ( $data ) {
-        foreach ( $data as $key => $value ) {
-            $company                                       = new \WeDevs\ERP\CRM\Contact( intval( $value['company_id'] ) );
-            $results[ $key ]                               = $value;
-            $results[ $key ]['contact_details']            = $company->to_array();
-            $country                                       = $results[ $key ]['contact_details']['country'];
-            $results[ $key ]['contact_details']['country'] = erp_get_country_name( $country );
-            $results[ $key ]['contact_details']['state']   = erp_get_state_name( $country, $results[ $key ]['contact_details']['state'] );
-        }
+    $results = [];
+    foreach ( $data as $key => $value ) {
+        $company                                       = new \WeDevs\ERP\CRM\Contact( intval( $value['company_id'] ) );
+        $results[ $key ]                               = $value;
+        $results[ $key ]['contact_details']            = $company->to_array();
+        $country                                       = $results[ $key ]['contact_details']['country'];
+        $results[ $key ]['contact_details']['country'] = erp_get_country_name( $country );
+        $results[ $key ]['contact_details']['state']   = erp_get_state_name( $country, $results[ $key ]['contact_details']['state'] );
     }
 
     return $results;
@@ -419,33 +423,37 @@ function erp_crm_customer_get_company( $postdata ) {
  *
  * @since 1.0
  *
- * @param array $postdata
+ * @param int|string $company_id
  *
  * @return array
  */
-function erp_crm_company_get_customers( $postdata ) {
+function erp_crm_company_get_customers( $company_id ) {
     global $wpdb;
-    $results = [];
 
-    if ( isset( $postdata['id'] ) && empty( $postdata['id'] ) ) {
-        return new WP_Error( 'no-ids', __( 'No comapany found', 'erp' ) );
+    $data = $wpdb->get_results(
+        $wpdb->prepare(
+            "SELECT com.*
+            FROM {$wpdb->prefix}erp_crm_customer_companies AS com
+            LEFT JOIN {$wpdb->prefix}erp_peoples AS peop
+                ON peop.id = com.customer_id
+            WHERE com.company_id = %d",
+            [ $company_id ]
+        ),
+        ARRAY_A
+    );
+
+    if ( empty( $data ) || is_wp_error( $data ) ) {
+        return [];
     }
 
-    $sql = 'SELECT  com.* FROM ' . $wpdb->prefix . 'erp_crm_customer_companies AS com
-            LEFT JOIN ' . $wpdb->prefix . 'erp_peoples AS peop ON peop.id = com.customer_id
-            WHERE com.company_id = ' . $postdata['id'];
-
-    $data = $wpdb->get_results( $sql, ARRAY_A );
-
-    if ( $data ) {
-        foreach ( $data as $key => $value ) {
-            $customer                                      = new \WeDevs\ERP\CRM\Contact( intval( $value['customer_id'] ) );
-            $results[ $key ]                               = $value;
-            $results[ $key ]['contact_details']            = $customer->to_array();
-            $country                                       = $results[ $key ]['contact_details']['country'];
-            $results[ $key ]['contact_details']['country'] = erp_get_country_name( $country );
-            $results[ $key ]['contact_details']['state']   = erp_get_state_name( $country, $results[ $key ]['contact_details']['state'] );
-        }
+    $results = [];
+    foreach ( $data as $key => $value ) {
+        $customer                                      = new \WeDevs\ERP\CRM\Contact( intval( $value['customer_id'] ) );
+        $results[ $key ]                               = $value;
+        $results[ $key ]['contact_details']            = $customer->to_array();
+        $country                                       = $results[ $key ]['contact_details']['country'];
+        $results[ $key ]['contact_details']['country'] = erp_get_country_name( $country );
+        $results[ $key ]['contact_details']['state']   = erp_get_state_name( $country, $results[ $key ]['contact_details']['state'] );
     }
 
     return $results;
@@ -601,8 +609,8 @@ function erp_crm_customer_prepare_schedule_postdata( $postdata ) {
 
     $extra_data = [
         'schedule_title'     => ( isset( $postdata['schedule_title'] ) && ! empty( $postdata['schedule_title'] ) ) ? $postdata['schedule_title'] : '',
-        'all_day'            => isset( $postdata['all_day'] ) ? (string) $postdata['all_day'] : 'false',
-        'allow_notification' => isset( $postdata['allow_notification'] ) ? (string) $postdata['allow_notification'] : 'false',
+        'all_day'            => isset( $postdata['all_day'] ) ? (string) $postdata['all_day'] : false,
+        'allow_notification' => isset( $postdata['allow_notification'] ) ? (string) $postdata['allow_notification'] : false,
         'invite_contact'     => ( isset( $postdata['invite_contact'] ) && ! empty( $postdata['invite_contact'] ) ) ? $postdata['invite_contact'] : [],
         'attachments'        => ! empty ( $attachments ) ? $attachments : []
     ];
@@ -611,13 +619,14 @@ function erp_crm_customer_prepare_schedule_postdata( $postdata ) {
     $extra_data['notification_time']          = ( isset( $postdata['notification_time'] ) && $extra_data['allow_notification'] == 'true' ) ? $postdata['notification_time'] : '';
     $extra_data['notification_time_interval'] = ( isset( $postdata['notification_time_interval'] ) && $extra_data['allow_notification'] == 'true' ) ? $postdata['notification_time_interval'] : '';
 
-    $start_time = ( isset( $postdata['start_time'] ) && $extra_data['all_day'] == 'false' ) ? $postdata['start_time'] : '00:00:00';
-    $end_time   = ( isset( $postdata['end_time'] ) && $extra_data['all_day'] == 'false' ) ? $postdata['end_time'] : '00:00:00';
+    $start_time = ( isset( $postdata['start_time'] ) && ! $extra_data['all_day'] ) ? $postdata['start_time'] : '00:00:00';
+    $end_time   = ( isset( $postdata['end_time'] ) && ! $extra_data['all_day'] ) ? $postdata['end_time'] : '00:00:00';
 
     if ( $extra_data['allow_notification'] == 'true' ) {
         $notify_date = new \DateTime( $postdata['start_date'] . $start_time );
         $notify_date->modify( '-' . $extra_data['notification_time_interval'] . ' ' . $extra_data['notification_time'] );
         $extra_data['notification_datetime'] = $notify_date->format( 'Y-m-d H:i:s' );
+        $extra_data['client_time_zone']      = ! empty( $postdata['client_time_zone'] ) ? sanitize_text_field( wp_unslash( $postdata['client_time_zone'] ) ) : '';
     } else {
         $extra_data['notification_datetime'] = '';
     }
@@ -629,8 +638,8 @@ function erp_crm_customer_prepare_schedule_postdata( $postdata ) {
         'message'    => $postdata['message'],
         'type'       => 'log_activity',
         'log_type'   => ( isset( $postdata['schedule_type'] ) && ! empty( $postdata['schedule_type'] ) ) ? $postdata['schedule_type'] : '',
-        'start_date' => date( 'Y-m-d H:i:s', strtotime( $postdata['start_date'] . $start_time ) ),
-        'end_date'   => date( 'Y-m-d H:i:s', strtotime( $postdata['end_date'] . $end_time ) ),
+        'start_date' => erp_current_datetime()->modify( $postdata['start_date'] . $start_time )->format( 'Y-m-d H:i:s' ),
+        'end_date'   => erp_current_datetime()->modify( $postdata['end_date'] . $end_time )->format( 'Y-m-d H:i:s' ),
         'extra'      => base64_encode( wp_json_encode( $extra_data ) ),
     ];
 
@@ -950,11 +959,12 @@ function erp_crm_customer_get_single_activity_feed( $feed_id ) {
  * @return mixed
  */
 function erp_crm_process_attachment_data( $attachments ) {
-    $subdir      = apply_filters( 'crm_attachmet_directory', 'crm-attachments' );
-    $upload_dir  = wp_upload_dir();
+    $upload_dir = wp_upload_dir();
+    $sub_dir    = apply_filters( 'crm_attachmet_directory', 'crm-attachments' );
+    $full_path  = trailingslashit( $upload_dir['baseurl'] ) . $sub_dir;
 
     foreach ( $attachments as $key => $item ) {
-        $attachments[ $key ]['url'] = $upload_dir['baseurl'] . '/' . $subdir . '/' . $item['slug'];
+        $attachments[ $key ]['url'] = trailingslashit( $full_path ) . $item['slug'];
     }
 
     return $attachments;
@@ -998,8 +1008,16 @@ function erp_crm_customer_schedule_notification() {
     foreach ( $schedules as $key => $activity ) {
         $extra = json_decode( base64_decode( $activity['extra'] ), true );
 
+        $current_time = erp_current_datetime();
+
+        if ( ! empty( $extra['client_time_zone'] ) ) {
+            $current_time = $current_time->setTimezone( new DateTimeZone( $extra['client_time_zone'] ) );
+        }
+
+        $current_time = $current_time->format( 'Y-m-d H:i:s' );
+
         if ( isset( $extra['allow_notification'] ) && $extra['allow_notification'] == 'true' ) {
-            if ( ( current_time( 'mysql' ) >= $extra['notification_datetime'] ) && ( $activity['start_date'] >= current_time( 'mysql' ) ) ) {
+            if ( ( $current_time >= $extra['notification_datetime'] ) && ( $activity['start_date'] >= $current_time ) ) {
                 if ( ! $activity['sent_notification'] ) {
                     erp_crm_send_schedule_notification( $activity, $extra );
                 }
@@ -1035,7 +1053,7 @@ function erp_crm_send_schedule_notification( $activity, $extra = false ) {
             array_push( $users, $created_user );
 
             foreach ( $users as $key => $user ) {
-                $body = sprintf( __( 'You have a schedule after %s %s at %s', 'erp' ), $extra['notification_time_interval'], $extra['notification_time'], date( 'F j, Y, g:i a', strtotime( $activity['start_date'] ) ) );
+                $body = sprintf( __( 'You have a schedule after %s %s at %s%s', 'erp' ), isset( $extra['notification_time_interval'] ) ? $extra['notification_time_interval'] : '', isset( $extra['notification_time'] ) ? $extra['notification_time'] : '', erp_current_datetime()->modify( $activity['start_date'] )->format( 'F j, Y, g:i a' ), empty( $extra['client_time_zone'] ) ? '' : ( '(' . $extra['client_time_zone'] . ')' ) );
                 erp_mail( $user, __( 'ERP Schedule', 'erp' ), $body );
             }
             erp_crm_update_schedule_notification_flag( $activity['id'], true );
@@ -1544,7 +1562,23 @@ function erp_crm_edit_contact_subscriber( $groups, $user_id ) {
 
     if ( ! empty( $groups ) ) {
         foreach ( $groups as $group ) {
-            if ( in_array( $group, $db, true ) ) {
+            /*
+             * At this moment, it's not safe to use
+             * strict comparison, because the datatype of `$group`
+             * and the datatype of values of `$db` will be more likely different.
+             * So, to use strict comparison, it has be made sure that
+             * those both are same datatype, which is not necessary
+             * at this moment, but can be added in future.
+             */
+            if ( in_array( $group, $db ) ) {
+                /*
+                 * It may happen that from somewhere the group is an integer holding the id,
+                 * from other places it can be passed as array where id will be an index.
+                 */
+                if ( is_array( $group ) && isset( $group['id'] ) ) {
+                    $group = $group['id'];
+                }
+
                 $existing_group[] = $group;
 
                 if ( $existing_group_with_status[ $group ] === 'unsubscribe' ) {
@@ -3407,6 +3441,11 @@ function erp_user_bulk_actions() {
  * @return void
  */
 function erp_handle_user_bulk_actions() {
+    // Check permission
+    if ( ! ( current_user_can( erp_crm_get_manager_role() ) || current_user_can( erp_crm_get_agent_role() ) ) ) {
+        wp_die( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+    }
+
     $wp_list_table = _get_list_table( 'WP_Users_List_Table' );
     $action        = $wp_list_table->current_action();
 
@@ -3606,7 +3645,7 @@ function erp_crm_check_new_inbound_emails() {
 
         do_action( 'erp_crm_new_inbound_emails', $emails );
 
-        $server_host  = isset( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : '';
+        $server_host  = isset( $_SERVER['HTTP_HOST'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : '';
         $email_regexp = '([a-z0-9]+[.][0-9]+[.][0-9]+[.][r][1|2])@' . $server_host;
 
         $filtered_emails = [];
@@ -4236,9 +4275,17 @@ function erp_crm_get_contacts_menu_html( $selected = 'contacts' ) {
         <ul class="erp-nav">
             <?php foreach ( $dropdown as $key => $value ) : ?>
                 <?php if ( 'crm_life_stages' === $key && current_user_can( $value['caps'] ) ) : ?>
-                <li><a href="<?php echo admin_url( 'admin.php?page=erp-settings#/erp-crm/crm_life_stages' ); ?>" class="" data-key="<?php echo $key; ?>"><?php echo $value['title']; ?></a></li>
+                    <li>
+                        <a href="<?php echo esc_url( admin_url( 'admin.php?page=erp-settings#/erp-crm/crm_life_stages' ) ); ?>" class="" data-key="<?php echo esc_attr( $key ); ?>">
+                            <?php echo esc_html( $value['title'] ); ?>
+                        </a>
+                    </li>
                 <?php elseif ( current_user_can( $value['caps'] ) ) : ?>
-                <li class="<?php echo $key === $selected ? 'active' : ''; ?>"><a href="<?php echo add_query_arg( array( 'sub-section' => $key ), admin_url( 'admin.php?page=erp-crm&section=contact' ) ); ?>" class="" data-key="<?php echo $key; ?>"><?php echo $value['title']; ?></a></li>
+                    <li class="<?php echo $key === $selected ? 'active' : ''; ?>">
+                        <a href="<?php echo esc_url( add_query_arg( array( 'sub-section' => $key ), admin_url( 'admin.php?page=erp-crm&section=contact' ) ) ); ?>" class="" data-key="<?php echo esc_attr( $key ); ?>">
+                            <?php echo esc_html( $value['title'] ); ?>
+                        </a>
+                    </li>
                 <?php endif; ?>
             <?php endforeach; ?>
         </ul>
@@ -4268,11 +4315,60 @@ function erp_crm_get_tasks_menu_html( $selected = '' ) {
     <div class="erp-custom-menu-container" style="background: none; border: none; margin: 15px 0 15px 0; padding-left: 0;">
         <ul class="erp-nav">
             <?php foreach ( $dropdown as $key => $value ) : ?>
-            <li class="<?php echo $key === $selected ? 'active' : ''; ?>"><a href="<?php echo add_query_arg( array( 'sub-section' => $key ), admin_url( 'admin.php?page=erp-crm&section=task' ) ); ?>" data-key="<?php echo $key; ?>"><?php echo $value; ?></a></li>
+                <li class="<?php echo $key === $selected ? 'active' : ''; ?>">
+                    <a href="<?php echo esc_url( add_query_arg( array( 'sub-section' => $key ), admin_url( 'admin.php?page=erp-crm&section=task' ) ) ); ?>" data-key="<?php echo esc_attr( $key ); ?>">
+                        <?php echo esc_html( $value ); ?>
+                    </a>
+                </li>
             <?php endforeach; ?>
         </ul>
     </div>
 
     <?php
     echo ob_get_clean();
+}
+
+/**
+ * Retrieves directory path for CRM attachments.
+ * If the uploads dir for CRM doesn't exist, it will be created.
+ *
+ * @since 1.10.6
+ *
+ * @return string
+ */
+function erp_crm_get_attachment_dir() {
+    $upload_dir = wp_upload_dir();
+    $sub_dir    = apply_filters( 'crm_attachmet_directory', 'crm-attachments' );
+    $full_path  = trailingslashit( $upload_dir['basedir'] ) . $sub_dir;
+
+    if ( ! file_exists( $full_path ) ) {
+        wp_mkdir_p( $full_path );
+    }
+
+    return $full_path;
+}
+
+/**
+ * Set cron schedule event to check new inbound emails.
+ *
+ * @since 1.11.0
+ *
+ * @return void
+ */
+function erp_crm_schedule_inbound_email_cron( $value ) {
+    if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-settings-nonce' ) ) {
+        wp_die( __( 'Unauthorized attempt!', 'erp' ), 403 );
+    }
+
+    if ( ! isset( $_POST['module'] ) || 'erp-email' !== sanitize_text_field( wp_unslash( $_POST['module'] ) ) ) {
+        return;
+    }
+
+    if ( ! isset( $_POST['section'] ) || 'imap' !== sanitize_text_field( wp_unslash( $_POST['section'] ) ) ) {
+        return;
+    }
+
+    $recurrence = isset( $_POST['schedule'] ) ? sanitize_text_field( wp_unslash( $_POST['schedule'] ) ) : 'hourly';
+    wp_clear_scheduled_hook( 'erp_crm_inbound_email_scheduled_events' );
+    wp_schedule_event( time(), $recurrence, 'erp_crm_inbound_email_scheduled_events' );
 }

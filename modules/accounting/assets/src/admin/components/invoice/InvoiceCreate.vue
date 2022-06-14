@@ -263,10 +263,10 @@ export default {
 
     created() {
         if (this.$route.name === 'EstimateCreate') {
-            this.inv_title = 'Estimate';
+            this.inv_title = __('Estimate', 'erp');
             this.inv_type  = { id: 1, name: 'Estimate' };
         } else {
-            this.inv_title = 'Invoice';
+            this.inv_title = __('Invoice', 'erp');
             this.inv_type  = { id: 0, name: 'Invoice' };
         }
 
@@ -369,7 +369,7 @@ export default {
             };
 
             if (invoice.estimate === '1') {
-                this.inv_title = 'Estimate';
+                this.inv_title = __('Estimate', 'erp');
                 this.inv_type = { id: 1, name: 'Estimate' };
                 this.finalTotalAmount = parseFloat(invoice.amount) +
                     parseFloat(invoice.tax) - parseFloat(this.discount);
@@ -546,10 +546,10 @@ export default {
 
             HTTP.post('/invoices', requestData).then(res => {
                 this.$store.dispatch('spinner/setSpinner', false);
-                this.showAlert('success', this.inv_title + ' Created!');
+                this.showAlert( 'success', `${this.inv_title } ` + __( 'created successfully!', 'erp' ) );
             }).catch(error => {
                 this.$store.dispatch('spinner/setSpinner', false);
-                throw error;
+                this.showAlert( 'error', __( 'Could not create', 'erp' ) + ` ${this.inv_title}` );
             }).then(() => {
                 if (this.actionType === 'save' || this.actionType === 'draft') {
                     this.$router.push({ name: 'Sales' });

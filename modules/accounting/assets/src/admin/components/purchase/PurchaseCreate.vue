@@ -68,11 +68,14 @@
                                     <multi-select v-model="line.product" :options="products" @input="setLineData(line)" />
                                 </th>
                                 <td class="col--qty">
-                                    <input min="0" type="number"
+                                    <input min="0"
+                                        type="number"
                                         v-model="line.qty"
                                         @keyup="lineUpdate(index)"
                                         name="qty"
-                                        class="wperp-form-field" :required="!!line.product">
+                                        step="any"
+                                        class="wperp-form-field"
+                                        :required="!!line.product">
                                 </td>
                                 <td class="col--uni_price" :data-colname="__('Unit Price', 'erp')">
                                     <input min="0" type="number" v-model="line.unitPrice"
@@ -245,7 +248,7 @@
             },
             taxRates() {
                 if (this.$route.params.id) {
-                    let rate = this.taxZones.filter( item=>  parseInt(item.id) === this.taxRate )
+                    let rate = this.taxZones.filter( item => parseInt(item.id) === this.taxRate )
                     this.taxRate = rate[0]
                 }
             }
@@ -256,10 +259,11 @@
         computed: {
             ...mapState({ actionType: state => state.combo.btnID }),
             totalAmount(){
-                let total = 0
+                let total = 0;
+
                 this.transactionLines.forEach(item => {
                     if(item.qty && item.unitPrice){
-                        total += parseInt(item.qty) * parseFloat( item.unitPrice )
+                        total += parseFloat(item.qty) * parseFloat( item.unitPrice )
                     }
                 })
                 return total + this.taxTotalAmount;
@@ -314,7 +318,7 @@
         },
         methods: {
             setLineData(line){
-                line.qty  = 1
+                line.qty = 1;
 
                 if (this.$route.params.id) {
                     line.unitPrice = parseFloat(line.product.cost_price);
@@ -331,7 +335,7 @@
             },
             lineUpdate(index){
                 let line = this.transactionLines[index]
-                line.amount =  parseInt(line.qty) * parseFloat( line.unitPrice )
+                line.amount =  parseFloat(line.qty) * parseFloat( line.unitPrice )
                 this.$set(this.transactionLines, index, line)
             },
             disableLineTax(index){
@@ -389,13 +393,13 @@
                 this.status                       = purchase.status;
                 this.transactionLines             = purchase.line_items;
                 this.transactionLines.map( item => {
-                    let product =  this.products.filter( p => { return p.id == item.product_id})
-                    item.product = product[0]
-                    item.applyTax = parseFloat(item.tax) > 0
-                    item.taxAmount = item.tax ? parseFloat(item.tax) : 0
-                    item.tax_rate =  parseFloat(item.tax_rate)
-                    item.unitPrice = parseFloat(item.price)
-                    item.tax_cat_id = product.length ? product[0].tax_cat_id : null
+                    let product         = this.products.filter( p => p.id == item.product_id )
+                        item.product    = product[0]
+                        item.applyTax   = parseFloat(item.tax) > 0
+                        item.taxAmount  = item.tax ? parseFloat(item.tax) : 0
+                        item.tax_rate   = parseFloat(item.tax_rate)
+                        item.unitPrice  = parseFloat(item.price)
+                        item.tax_cat_id = product.length ? product[0].tax_cat_id : null
                 })
                 this.particulars                  = purchase.particulars;
                 this.attachments                  = purchase.attachments;
@@ -432,7 +436,7 @@
                         this.products.push({
                             id               : element.id,
                             name             : element.name,
-                            unitPrice        : element.cost_price,
+                            unitPrice        : element.sale_price,
                             tax_cat_id       : parseInt(element.tax_cat_id) || null,
                             product_type_name: element.product_type_name
                         });

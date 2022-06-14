@@ -132,17 +132,23 @@ class Leave_Policy_Name_List_Table extends WP_List_Table {
             return;
         }
 
-        // security check!
-        if ( isset( $_POST['_wpnonce'] ) && ! empty( $_POST['_wpnonce'] ) ) {
-            $nonce  = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
-            $action = 'bulk-' . $this->_args['plural'];
-
-            if ( ! wp_verify_nonce( $nonce, $action ) ) {
-                wp_die( 'Nope! Security check failed!' );
-            }
+        if ( empty( $_POST['_wpnonce'] ) ) {
+            wp_die( esc_html__( 'Error: Nonce verification failed', 'erp' ) );
         }
 
-        $ids = array_map( 'sanitize_text_field', wp_unslash( $_REQUEST['ids'] ) );
+        $nonce  = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
+        $action = 'bulk-' . $this->_args['plural'];
+
+        if ( ! wp_verify_nonce( $nonce, $action ) ) {
+            wp_die( esc_html__( 'Error: Nonce verification failed', 'erp' ) );
+        }
+
+        // Check permission
+        if ( ! current_user_can( 'erp_leave_manage' ) ) {
+            wp_die( esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
+        $ids = array_map( 'intval', wp_unslash( $_REQUEST['ids'] ) );
 
         foreach ( $ids as $id ) {
             erp_hr_remove_leave_policy_name( $id );

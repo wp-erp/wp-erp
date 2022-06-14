@@ -17,8 +17,6 @@ class CRM_Settings extends Template {
         $this->label    = __( 'CRM', 'erp' );
         $this->sections = $this->get_sections();
         $this->icon     = WPERP_ASSETS . '/images/wperp-settings/crm.png';
-
-        add_action( 'erp_update_option', [ $this, 'cron_schedule' ] );
     }
 
     /**
@@ -263,31 +261,8 @@ class CRM_Settings extends Template {
 
                 return;
             }
-            
+
             parent::save();
         }
-    }
-
-    /**
-     * Set cron schedule event to check new inbound emails
-     *
-     * @return void
-     */
-    public function cron_schedule( $value ) {
-        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-nonce' ) ) {
-            // die();
-        }
-
-        if ( !isset( $_GET['section'] ) || ( $_GET['section'] != 'email_connect' ) ) {
-            return;
-        }
-
-        if ( !isset( $value['id'] ) || ( $value['id'] != 'schedule' ) ) {
-            return;
-        }
-
-        $recurrence = isset( $_POST['schedule'] ) ? sanitize_text_field( wp_unslash( $_POST['schedule'] ) ) : 'hourly';
-        wp_clear_scheduled_hook( 'erp_crm_inbound_email_scheduled_events' );
-        wp_schedule_event( time(), $recurrence, 'erp_crm_inbound_email_scheduled_events' );
     }
 }

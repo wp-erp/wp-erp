@@ -917,7 +917,7 @@
                         form['policy-name-id'].value = id;
                         form.name.value              = response.name;
                         form.description.value       = response.description;
-                        form.submit.value            = wpErpHr.update_status;
+                        form.submit.value            = wpErpHr.popup.update_status;
                     },
                     error: function ( error ) {
                         swal( '', error, 'error' );

@@ -9,7 +9,7 @@ function erp_process_actions() {
     if ( isset( $_REQUEST['erp-action'] ) ) {
         $action = sanitize_text_field( wp_unslash( $_REQUEST['erp-action'] ) );
 
-        do_action( 'erp_action_' . $action, $_REQUEST );
+        do_action( 'erp_action_' . $action, map_deep( wp_unslash( $_REQUEST ), 'sanitize_text_field' ) );
     }
 }
 
@@ -1877,16 +1877,7 @@ function erp_mail_send_via_gmail( $to, $subject, $message, $headers = '', $attac
 
     try {
         $response = $service->users_messages->send( 'me', $email );
-        error_log( 'Sending email to : ' . $to );
     } catch ( Google_Service_Exception $exception ) {
-        error_log( 'Failed sending email to : ------------------------ ' );
-        error_log( print_r( $to, 1 ) );
-        error_log( print_r( $subject, 1 ) );
-        error_log( print_r( $headers, 1 ) );
-        error_log( print_r( $exception->getMessage(), 1 ) );
-        // error_log(print_r(debug_backtrace(),1));
-        error_log( '-------------------------------' );
-
         return false;
     }
 
@@ -2070,8 +2061,6 @@ function erp_make_csv_file( $items, $file_name, $field_data = true ) {
  * @param void
  */
 function erp_import_export_download_sample() {
-    $type = isset( $_REQUEST['type'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['type'] ) ) : '';
-
     if ( ! isset( $_REQUEST['action'] ) || $_REQUEST['action'] !== 'download_sample' ) {
         return;
     }
@@ -2080,11 +2069,11 @@ function erp_import_export_download_sample() {
         return;
     }
 
-    if ( empty( $type ) ) {
+    if ( empty( $_REQUEST['type'] ) ) {
         return;
     }
 
-    $type   = strtolower( $type );
+    $type   = strtolower( sanitize_text_field( wp_unslash( $_REQUEST['type'] ) ) );
     $fields = erp_get_import_export_fields();
 
     if ( isset( $fields[ $type ] ) ) {
@@ -2576,10 +2565,14 @@ function erp_render_menu( $component ) {
     //check current tab
     $tab = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : 'dashboard';
 
-    echo "<div class='erp-nav-container erp-hide-print'>";
-    echo erp_render_menu_header( $component );
-    echo wp_kses_post( erp_build_menu( $menu[ $component ], $tab, $component ) );
-    echo '</div>';
+    ?>
+    <div class='erp-nav-container erp-hide-print'>
+        <?php
+        echo erp_render_menu_header( $component );
+        echo wp_kses_post( erp_build_menu( $menu[ $component ], $tab, $component ) );
+        ?>
+    </div>
+    <?php
 }
 
 /**
@@ -2750,16 +2743,21 @@ function erp_render_menu_header( $component ) {
 /**
  * RSS feed
  *
- * @return void
+ * @return object|false
  */
 function erp_web_feed() {
-    $url = 'https://wperp.com/feed/';
-    $ch = curl_init();
-    curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
-    curl_setopt( $ch, CURLOPT_URL, $url );
+    $url  = 'https://wperp.com/feed/';
+    $args = [
+        'timeout'   => 15,
+        'sslverify' => false,
+    ];
 
-    $data = curl_exec( $ch );
-    curl_close( $ch );
+    $response = wp_remote_post( $url, $args );
+
+    $data = '';
+    if ( ! is_wp_error( $response ) ) {
+        $data = wp_remote_retrieve_body( $response );
+    }
 
     return simplexml_load_string( $data );
 }
@@ -2933,8 +2931,7 @@ function add_enable_disable_option_save() {
         }
 
         if ( isset( $_POST['isEnableEmail'] ) ) {
-            $is_enable_email = array_map( 'sanitize_text_field', $_POST['isEnableEmail'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash
-            $is_enable_email = array_map( 'wp_unslash', $is_enable_email );
+            $is_enable_email = array_map( 'sanitize_text_field', wp_unslash( $_POST['isEnableEmail'] ) );
 
             foreach ( $is_enable_email as $key => $value ) {
                 $email_arr              = get_option( $key );
@@ -3550,24 +3547,42 @@ function erp_reset_data() {
 
         $wpdb->query('START TRANSACTION');
 
-        $options = [
-            'wp_erp_version', 'wp_erp_db_version', 'erp_modules',
-            'erp_email_settings_employee-welcome', 'erp_email_settings_new-leave-request',
-            'erp_email_settings_approved-leave-request', 'erp_email_settings_rejected-leave-request',
-            'erp_email_settings_new-task-assigned', 'erp_setup_wizard_ran', 'erp_settings_general',
-            'erp_settings_accounting', 'erp_settings_erp-hr_workdays', 'wp_erp_activation_dismiss',
-            '_erp_admin_menu', '_erp_adminbar_menu', 'erp_settings_erp-email_general', 'erp_settings_erp-email_smtp',
-            'erp_settings_erp-email_mailgun', 'erp_settings_erp-email_gmail', 'erp_settings_erp-email_imap',
-            '_erp_company', 'erp_settings_erp-crm_subscription', 'erp_acct_new_ledgers',
-            'erp_email_settings_new-contact-assigned', 'erp_email_settings_hiring-anniversary-wish',
-            'wp_erp_install_date', 'widget_erp-subscription-from-widget', 'erp_tracking_notice'
+        $erp_roles = [
+            'erp_hr_manager',
+            'employee',
+            'erp_crm_manager',
+            'erp_crm_agent',
+            'erp_ac_manager',
+            'erp_ac_agency'
         ];
 
-        $roles = [
-            'erp_hr_manager', 'employee',
-            'erp_crm_manager', 'erp_crm_agent',
-            'erp_ac_manager', 'erp_ac_agency'
-        ];
+        // Delete users table data related to the employees/people
+        $users = $wpdb->get_results( "SELECT user_id FROM {$wpdb->prefix}erp_peoples WHERE user_id <> 0" );
+
+        foreach ( $users as $user ) {
+            // Retrieves user object
+            $user = get_userdata( $user->user_id );
+            if ( ! $user ) {
+                continue;
+            }
+
+            /*
+             * Check if user has any other role(s) not given by erp
+             * If not, delete the user.
+             * But if user has other roles, we shouldn't delete the user.
+             * In that case we will just remove all the erp roles
+             * from the user.
+             */
+            $non_erp_roles = array_diff( (array) $user->roles, $erp_roles );
+            if ( empty( $non_erp_roles ) ) {
+                wp_delete_user( $user->ID );
+                continue;
+            }
+
+            foreach ( $erp_roles as $erp_role ) {
+                $user->remove_role( $erp_role );
+            }
+        }
 
         $tables = $wpdb->get_results(
             "SELECT TABLE_NAME FROM information_schema.TABLES
@@ -3575,12 +3590,6 @@ function erp_reset_data() {
             AND TABLE_NAME LIKE '{$wpdb->prefix}erp\_%'
             AND TABLE_NAME NOT LIKE '{$wpdb->prefix}erp\_audit\_log'"
         );
-
-        // Delete users table data related to the employees/people
-        $users = $wpdb->get_results( "SELECT user_id FROM {$wpdb->prefix}erp_peoples WHERE user_id <> 0" );
-        foreach ( $users as $user ) {
-            wp_delete_user( $user->user_id );
-        }
 
         $table_names = [];
         foreach ( $tables as $table ) {
@@ -3607,9 +3616,46 @@ function erp_reset_data() {
 
         erp_log()->insert_log( $log_data );
 
-        foreach ( $roles as $role ) {
+        foreach ( $erp_roles as $role ) {
             remove_role( $role );
         }
+
+        $options = [
+            'wp_erp_version',
+            'wp_erp_db_version',
+            'erp_modules',
+            'erp_setup_wizard_ran',
+            'wp_erp_install_date',
+            'erp_tracking_notice',
+            'wp_erp_activation_dismiss',
+            '_erp_admin_menu',
+            '_erp_adminbar_menu',
+            '_erp_company',
+            'erp_acct_new_ledgers',
+            'erp_email_settings_employee-welcome',
+            'erp_email_settings_new-leave-request',
+            'erp_email_settings_approved-leave-request',
+            'erp_email_settings_rejected-leave-request',
+            'erp_email_settings_new-task-assigned',
+            'erp_email_settings_new-contact-assigned',
+            'erp_email_settings_hiring-anniversary-wish',
+            'erp_email_settings_govt-holiday-reminder',
+            'erp_email_settings_transectional-email',
+            'erp_email_settings_transectional-email-payments',
+            'erp_email_settings_transectional-email-estimate',
+            'erp_email_settings_transectional-email-purchase-order',
+            'erp_email_settings_transectional-email-pay-purchase',
+            'erp_settings_general',
+            'erp_settings_accounting',
+            'erp_settings_erp-hr_workdays',
+            'erp_settings_erp-crm_subscription',
+            'erp_settings_erp-email_general',
+            'erp_settings_erp-email_smtp',
+            'erp_settings_erp-email_mailgun',
+            'erp_settings_erp-email_gmail',
+            'erp_settings_erp-email_imap',
+            'widget_erp-subscription-from-widget',
+        ];
 
         foreach ( $options as $option ) {
             delete_option( $option );
@@ -3621,7 +3667,8 @@ function erp_reset_data() {
         wp_clear_scheduled_hook( 'erp_weekly_scheduled_events' );
 
         // Deactivate & activate wp-erp
-        $plugin_wp_erp = end( explode( '/', WPERP_URL ) ) . '/wp-erp.php';
+        $wp_erp_url    = explode( '/', WPERP_URL );
+        $plugin_wp_erp = end( $wp_erp_url ) . '/wp-erp.php';
         deactivate_plugins( $plugin_wp_erp );
 
         // Activate and add deafult modules
@@ -3631,7 +3678,8 @@ function erp_reset_data() {
 
         // If ERP Pro is installed & activated, do the same for this
         if ( function_exists( 'wp_erp_pro' ) ) {
-            $plugin_erp_pro = end( explode( '/', ERP_PRO_DIR ) ) . '/erp-pro.php';
+            $erp_pro_url    = explode( '/', ERP_PRO_DIR );
+            $plugin_erp_pro = end( $erp_pro_url ) . '/erp-pro.php';
 
             if ( is_plugin_active( $plugin_erp_pro ) ) {
                 deactivate_plugins( $plugin_erp_pro );

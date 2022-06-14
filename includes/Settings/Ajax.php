@@ -23,7 +23,7 @@ class Ajax {
      *
      * @return void
      */
-    public function __construct () {
+    public function __construct() {
         // Common settings
         $this->action( 'wp_ajax_erp-settings-save', 'erp_settings_save' );
         $this->action( 'wp_ajax_erp-settings-get-data', 'erp_settings_get_data' );
@@ -52,44 +52,44 @@ class Ajax {
         $this->verify_nonce( 'erp-settings-nonce' );
 
         $has_not_permission = ! current_user_can( 'manage_options' );
-        $module             = ! empty( $_REQUEST['module'] )          ? sanitize_text_field( wp_unslash( $_REQUEST['module'] ) )          : '';
-        $section            = ! empty( $_REQUEST['section'] )         ? sanitize_text_field( wp_unslash( $_REQUEST['section'] ) )         : '';
+        $module             = ! empty( $_REQUEST['module'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['module'] ) ) : '';
+        $section            = ! empty( $_REQUEST['section'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['section'] ) ) : '';
         $sub_section        = ! empty( $_REQUEST['sub_sub_section'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['sub_sub_section'] ) ) : '';
 
         switch ( $module ) {
             case 'general':
-                $settings           = ( new General() );
+                $settings = ( new General() );
                 break;
 
             case 'erp-hr':
-                $settings           = ( new \WeDevs\ERP\HRM\Settings() );
+                $settings = ( new \WeDevs\ERP\HRM\Settings() );
                 $has_not_permission = $has_not_permission && ! current_user_can( 'erp_hr_manager' );
                 break;
 
             case 'erp-ac':
-                $settings           = ( new \WeDevs\ERP\Accounting\Includes\Classes\Settings() );
+                $settings = ( new \WeDevs\ERP\Accounting\Includes\Classes\Settings() );
                 $has_not_permission = $has_not_permission && ! current_user_can( 'erp_ac_manager' );
                 break;
 
             case 'erp-crm':
-                $settings           = ( new \WeDevs\ERP\CRM\CRM_Settings() );
+                $settings = ( new \WeDevs\ERP\CRM\CRM_Settings() );
                 $has_not_permission = $has_not_permission && ! current_user_can( 'erp_crm_manager' );
                 break;
 
             case 'erp-email':
-                $settings           = new Email();
+                $settings = new Email();
                 break;
 
             case 'erp-integration':
-                $settings           = new Integration();
+                $settings = new Integration();
                 break;
 
             default:
-                $settings           = apply_filters( "erp_settings_save_{$module}_section", $module, $section, $sub_section );
+                $settings = apply_filters( "erp_settings_save_{$module}_section", $module, $section, $sub_section );
         }
 
         if ( $has_not_permission ) {
-            $this->send_error( erp_get_message ( ['type' => 'error_permission'] ) );
+            $this->send_error( erp_get_message ( [ 'type' => 'error_permission' ] ) );
         }
 
         $result = $settings->save( $section );
@@ -98,9 +98,16 @@ class Ajax {
             $this->send_error( $result->get_error_message() );
         }
 
-        $this->send_success( [
-            'message' => erp_get_message( [ 'type' => 'save_success', 'additional' => 'Settings' ] )
-        ] );
+        $this->send_success(
+            [
+                'message' => erp_get_message(
+                    [
+                        'type'       => 'save_success',
+                        'additional' => 'Settings'
+                    ]
+                )
+            ]
+        );
     }
 
     /**
@@ -114,10 +121,11 @@ class Ajax {
         $this->verify_nonce( 'erp-settings-nonce' );
 
         if ( ! current_user_can( 'manage_options' ) ) {
-            $this->send_error( erp_get_message( ['type' => 'error_permission'] ) );
+            $this->send_error( erp_get_message( [ 'type' => 'error_permission' ] ) );
         }
 
-        $data = Helpers::process_settings_data( $_POST );
+        $postdata = map_deep( wp_unslash( $_POST ), 'sanitize_text_field' );
+        $data     = Helpers::process_settings_data( $postdata );
 
         if ( is_wp_error( $data ) ) {
             $this->send_error( erp_get_message( ['type' => 'error_process'] ) );
@@ -138,13 +146,17 @@ class Ajax {
         $this->verify_nonce( 'erp-settings-nonce' );
 
         if ( ! current_user_can( 'manage_options' ) ) {
-            $this->send_error( _( 'You do not have sufficient permission to do this action', 'erp' ) );
+            $this->send_error( esc_html__( 'You do not have sufficient permission to do this action', 'erp' ) );
         }
 
         $email_templates     = wperp()->emailer->get_emails();
         $emails              = [];
 
         $can_not_be_disabled = Helpers::get_fixedly_enabled_email_templates();
+
+        if ( ! is_array( $email_templates ) && ! is_object( $email_templates ) ) {
+            $this->send_success( $emails );
+        }
 
         foreach ( $email_templates as $key => $email ) {
             $email_option    = $email->get_option_id();
@@ -176,9 +188,9 @@ class Ajax {
                 false !== strpos( get_class( $email ), 'Training' )
             ) {
                 $emails['hrm'][] = $email_data;
-            } else if ( false !== strpos( get_class( $email ), 'CRM' ) ) {
+            } elseif ( false !== strpos( get_class( $email ), 'CRM' ) ) {
                 $emails['crm'][] = $email_data;
-            } else if ( false !== strpos( get_class( $email ), 'Accounting' ) ) {
+            } elseif ( false !== strpos( get_class( $email ), 'Accounting' ) ) {
                 $emails['acct'][] = $email_data;
             }
         }
@@ -197,12 +209,12 @@ class Ajax {
         $this->verify_nonce( 'erp-settings-nonce' );
 
         if ( ! current_user_can( 'manage_options' ) ) {
-            $this->send_error( _( 'You do not have sufficient permission to do this action', 'erp' ) );
+            $this->send_error( esc_html__( 'You do not have sufficient permission to do this action', 'erp' ) );
         }
 
         $can_not_be_disabled = Helpers::get_fixedly_enabled_email_templates();
 
-        $template                      = ! empty( $_REQUEST['template'] ) ? sanitize_text_field( $_REQUEST['template'] ) : '';
+        $template                      = ! empty( $_REQUEST['template'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['template'] ) ) : '';
         $email                         = wperp()->emailer->get_email( $template );
         $option_id                     = $email->get_option_id();
         $email_data                    = get_option( $option_id );
@@ -218,7 +230,7 @@ class Ajax {
             $email_data['is_enable'] = 'no';
         }
 
-        foreach( $email->find as $key => $find ) {
+        foreach ( $email->find as $key => $find ) {
             $email_data['tags'][] = $find;
         }
 
@@ -238,10 +250,10 @@ class Ajax {
         $this->verify_nonce( 'erp-settings-nonce' );
 
         if ( ! current_user_can( 'manage_options' ) ) {
-            $this->send_error( _( 'You do not have sufficient permission to do this action', 'erp' ) );
+            $this->send_error( esc_html__( 'You do not have sufficient permission to do this action', 'erp' ) );
         }
 
-        $email_id   = ! empty( $_REQUEST['id'] )        ? sanitize_text_field( wp_unslash( $_REQUEST['id'] ) )        : '';
+        $email_id   = ! empty( $_REQUEST['id'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['id'] ) ) : '';
         $is_enabled = ! empty( $_REQUEST['is_enable'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['is_enable'] ) ) : '';
 
         if ( empty( $email_id ) ) {
@@ -251,7 +263,7 @@ class Ajax {
         $option_data = [
             'subject' => ! empty( $_REQUEST['subject'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['subject'] ) )  : '',
             'heading' => ! empty( $_REQUEST['heading'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['heading'] ) )  : '',
-            'body'    => ! empty( $_REQUEST['body'] )    ? wp_kses_post( wp_unslash( $_REQUEST['body'] ) )            : '',
+            'body'    => ! empty( $_REQUEST['body'] ) ? wp_kses_post( wp_unslash( $_REQUEST['body'] ) ) : '',
         ];
 
         if ( 'yes' === $is_enabled ) {
@@ -274,11 +286,11 @@ class Ajax {
         $this->verify_nonce( 'erp-settings-nonce' );
 
         if ( ! current_user_can( 'manage_options' ) ) {
-            $this->send_error( _( 'You do not have sufficient permission to do this action', 'erp' ) );
+            $this->send_error( esc_html__( 'You do not have sufficient permission to do this action', 'erp' ) );
         }
 
-        $option_id    = ! empty( $_REQUEST['option_id'] ) ? sanitize_text_field( $_REQUEST['option_id'] ) : '';
-        $option_value = ! empty( $_REQUEST['option_value'] ) ? sanitize_text_field( $_REQUEST['option_value'] ) : '';
+        $option_id    = ! empty( $_REQUEST['option_id'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['option_id'] ) ) : '';
+        $option_value = ! empty( $_REQUEST['option_value'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['option_value'] ) ) : '';
 
         if ( ! empty( $option_id ) ) {
             $email_option = get_option( $option_id );
@@ -306,42 +318,36 @@ class Ajax {
         $this->verify_nonce( 'erp-settings-nonce' );
 
         if ( ! current_user_can( 'manage_options' ) ) {
-            $this->send_error( erp_get_message( ['type' => 'error_permission'] ) );
+            $this->send_error( erp_get_message( [ 'type' => 'error_permission' ] ) );
         }
 
         if ( empty( $_REQUEST['mail_server'] ) ) {
             $this->send_error( [ 'message' => esc_html__( 'No host address provided', 'erp' ) ] );
-        } else {
-            $mail_server = sanitize_text_field( wp_unslash( $_REQUEST['mail_server'] ) );
         }
 
         if ( empty( $_REQUEST['port'] ) ) {
             $this->send_error( [ 'message' => esc_html__( 'No port address provided', 'erp' ) ] );
-        } else {
-            $port = sanitize_text_field( wp_unslash( $_REQUEST['port'] ) );
         }
 
-        if ( ! empty( $_REQUEST['authentication'] ) ) {
-            $authentication = sanitize_text_field( wp_unslash( $_REQUEST['authentication'] ) );
+        $authentication = '';
 
+        if ( ! empty( $_REQUEST['authentication'] ) ) {
             if ( empty( $_REQUEST['username'] ) ) {
                 $this->send_error( [ 'message' => esc_html__( 'No email address provided', 'erp' ) ] );
-            } else {
-                $username = sanitize_text_field( wp_unslash( $_REQUEST['username'] ) );
             }
 
             if ( empty( $_REQUEST['password'] ) ) {
                 $this->send_error( [ 'message' => esc_html__( 'No email password provided', 'erp' ) ] );
-            } else {
-                $password = sanitize_text_field( wp_unslash( $_REQUEST['password'] ) );
             }
+
+            $authentication = sanitize_text_field( wp_unslash( $_REQUEST['authentication'] ) );
+            $username       = sanitize_email( wp_unslash( $_REQUEST['username'] ) );
+            $password       = sanitize_text_field( wp_unslash( $_REQUEST['password'] ) );
         }
 
-        if ( empty( $_REQUEST['test_email'] ) ) {
-            $to = get_option( 'admin_email' );
-        } else {
-            $to = sanitize_text_field( wp_unslash( $_REQUEST['test_email'] ) );
-        }
+        $mail_server = str_replace( [ 'https://', 'http://' ], '', esc_url_raw( wp_unslash( $_REQUEST['mail_server'] ) ) );
+        $port        = sanitize_text_field( wp_unslash( $_REQUEST['port'] ) );
+        $to          = empty( $_REQUEST['test_email'] ) ? get_option( 'admin_email' ) : sanitize_email( wp_unslash( $_REQUEST['test_email'] ) );
 
         global $phpmailer, $wp_version;
 
@@ -404,7 +410,14 @@ class Ajax {
         try {
             $result = $phpmailer->Send();
 
-            $this->send_success( [ 'message' => esc_html__( 'Test email has been sent successfully to ', 'erp' ) . $to ] );
+            $this->send_success(
+                [
+                    'message' => sprintf(
+                        esc_html__( 'Test email has been sent successfully to %s', 'erp' ),
+                        $to
+                    )
+                ]
+            );
         } catch ( \Exception $e ) {
             $this->send_error( $e->getMessage() );
         }
@@ -496,7 +509,7 @@ class Ajax {
         $this->verify_nonce( 'erp-settings-nonce' );
 
         if ( ! current_user_can( 'manage_options' ) ) {
-            $this->send_error( erp_get_message( ['type' => 'error_permission'] ) );
+            $this->send_error( erp_get_message( [ 'type' => 'error_permission' ] ) );
         }
 
         $email_settings  = ( new \WeDevs\ERP\Settings\Email() );
@@ -520,7 +533,7 @@ class Ajax {
         }
 
         if ( ! empty( $_REQUEST['extensions'] ) ) {
-            $extensions = map_deep( wp_unslash( $_REQUEST['extensions'] ), 'sanitize_text_field' );
+            $extensions = array_map( 'sanitize_text_field', wp_unslash( $_REQUEST['extensions'] ) );
 
             foreach ( $extensions as $ext ) {
                 $old_key = get_option( $ext['id'] );
@@ -539,10 +552,10 @@ class Ajax {
 
                 if ( ! empty( $license_key ) ) {
                     $api_params = [
-                        'edd_action'=> 'activate_license',
-                        'license'   => $license_key,
-                        'item_name' => urlencode( $ext['name'] ),
-                        'url'       => home_url(),
+                        'edd_action' => 'activate_license',
+                        'license'    => $license_key,
+                        'item_name'  => rawurlencode( $ext['name'] ),
+                        'url'        => home_url(),
                     ];
 
                     $response = wp_remote_post( 'https://wperp.com/', [

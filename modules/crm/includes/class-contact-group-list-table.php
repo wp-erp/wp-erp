@@ -30,7 +30,7 @@ class Contact_Group_List_Table extends WP_List_Table {
      * @return void
      */
     public function no_items() {
-        esc_attr_e( 'No contact group found.', 'erp' );
+        esc_html_e( 'No contact group found.', 'erp' );
     }
 
     /**
@@ -203,9 +203,11 @@ class Contact_Group_List_Table extends WP_List_Table {
 		}
 		?>
         <p class="search-box">
-            <label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>"><?php echo $text; ?>:</label>
-            <input type="search" placeholder="<?php _e( 'Contact Group', 'erp' ); ?>" id="<?php echo esc_attr( $input_id ); ?>" name="s" value="<?php _admin_search_query(); ?>" />
-                <?php submit_button( $text, '', '', false, array( 'id' => 'search-submit' ) ); ?>
+            <label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>">
+                <?php echo esc_html( $text ); ?>:
+            </label>
+            <input type="search" placeholder="<?php esc_attr_e( 'Contact Group', 'erp' ); ?>" id="<?php echo esc_attr( $input_id ); ?>" name="s" value="<?php _admin_search_query(); ?>" />
+            <?php submit_button( $text, '', '', false, array( 'id' => 'search-submit' ) ); ?>
         </p>
 		<?php
 	}
