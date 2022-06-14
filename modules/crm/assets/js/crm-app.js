@@ -576,6 +576,7 @@ Vue.component( 'schedule-note', {
                 tpEnd                       : '',
                 inviteContact               : [],
                 removeAtchFlag              : [],
+                client_time_zone            : '',
             },
 
             isValid: false
@@ -583,7 +584,8 @@ Vue.component( 'schedule-note', {
     },
 
     created: function() {
-        this.feedData.old_attachments = [];
+        this.feedData.old_attachments  = [];
+        this.feedData.client_time_zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     },
 
     compiled: function() {
