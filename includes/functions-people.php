@@ -448,6 +448,8 @@ function erp_insert_people( $args = [], $return_object = false ) {
 
     $existing_people = \WeDevs\ERP\Framework\Models\People::firstOrNew( [ 'id' => $args['id'] ] );
 
+    $old_email = $existing_people->email;
+
     $defaults = [
         'id'            => $existing_people->id,
         'first_name'    => $existing_people->first_name,
@@ -748,6 +750,15 @@ function erp_insert_people( $args = [], $return_object = false ) {
         'type'          => $people_type,
         'erp-people-by' => [ (int) $people->id, $people->email, (int) $people->user_id ]
     ] );
+
+    if ( ! empty( $old_email ) && $old_email !== $people->email ) {
+        /**
+         * To update email in Mailchimp we need to provide the previous email too
+         *
+         * @since 1.10.6
+         */
+        do_action( 'erp_people_email_updated', $people->id, $people, $people_type, $old_email );
+    }
 
     /*
      * Action hook to trigger any event when a people is created.
