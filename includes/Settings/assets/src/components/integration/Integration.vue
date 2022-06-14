@@ -199,6 +199,13 @@ export default {
 
     methods: {
         configure(item, key) {
+            if ( key === 'mailchimp' ) {
+                this.$router.push({
+                    name: 'MailchimpSettings',
+                });
+                return;
+            }
+
             this.singleItem = item;
             this.subSection = key;
 

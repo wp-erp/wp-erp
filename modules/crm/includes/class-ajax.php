@@ -1087,10 +1087,10 @@ class Ajax_Handler {
                 'group_id' => $group_id,
             ];
 
+            erp_crm_create_new_contact_subscriber( $data );
+
             do_action( 'erp_crm_log_assign_contact_group', $group_id, $user_id );
         }
-
-        erp_crm_create_new_contact_subscriber( $data );
 
         $this->send_success( __( 'Succesfully subscriber for this user', 'erp' ) );
     }

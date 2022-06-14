@@ -1137,7 +1137,9 @@ function erp_crm_save_contact_group( $data ) {
             'erp-crm-contact-group-detail'  => $data['id']
         ];
 
-        do_action( 'erp_crm_update_contact_group', $result );
+        if ( $result ) {
+            do_action( 'erp_crm_update_contact_group', $data );
+        }
     } else {
         $result = WeDevs\ERP\CRM\Models\ContactGroup::create( $data );
         do_action( 'erp_crm_create_contact_group', $result );
@@ -1634,12 +1636,84 @@ function erp_crm_edit_contact_subscriber( $groups, $user_id ) {
                     'unsubscribe_at' => current_time( 'mysql' ),
                 ] );
 
-            do_action( 'erp_crm_delete_contact_subscriber', $subscriber );
+            do_action( 'erp_crm_delete_contact_subscriber', $user_id, $del_group_id );
         }
     }
 
     erp_crm_purge_cache( [ 'list' => 'contact_groups' ] );
     erp_crm_purge_cache( [ 'list' => 'contact_group_subscriber' ] );
+}
+
+/**
+ * Change the subscription status of a user into a group to unsubscribe
+ *
+ * @since 1.10.6
+ *
+ * @param $user_id
+ * @param $group_id
+ *
+ * @return bool|int
+ */
+function erp_crm_contact_unsubscribe_subscriber( $user_id, $group_id ) {
+    if ( empty( $user_id ) || empty( $group_id ) ) {
+        return false;
+    }
+
+    $updated = \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $user_id )
+        ->where( 'group_id', $group_id )
+        ->where( 'status', 'subscribe' )
+        ->update( [
+            'status'         => 'unsubscribe',
+            'subscribe_at'   => null,
+            'unsubscribe_at' => current_time( 'mysql' ),
+        ] );
+
+    if ( $updated ) {
+        do_action( 'erp_crm_delete_contact_subscriber', $user_id, $group_id );
+
+        erp_crm_purge_cache( [ 'list' => 'contact_groups' ] );
+        erp_crm_purge_cache( [ 'list' => 'contact_group_subscriber' ] );
+
+        return $updated;
+    }
+
+    return false;
+}
+
+/**
+ * Change the subscription status of a user into a group to subscribe
+ *
+ * @since 1.10.6
+ *
+ * @param $user_id
+ * @param $group_id
+ *
+ * @return bool|int
+ */
+function erp_crm_contact_resubscribe_subscriber( $user_id, $group_id ) {
+    if ( empty( $user_id ) || empty( $group_id ) ) {
+        return false;
+    }
+
+    $updated = \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $user_id )
+        ->where( 'group_id', $group_id )
+        ->where( 'status', 'unsubscribe' )
+        ->update( [
+            'status'         => 'subscribe',
+            'subscribe_at'   => current_time( 'mysql' ),
+            'unsubscribe_at' => null,
+        ] );
+
+    if ( $updated ) {
+        do_action( 'erp_crm_create_contact_subscriber', $user_id, $group_id );
+
+        erp_crm_purge_cache( [ 'list' => 'contact_groups' ] );
+        erp_crm_purge_cache( [ 'list' => 'contact_group_subscriber' ] );
+
+        return $updated;
+    }
+
+    return false;
 }
 
 /**
