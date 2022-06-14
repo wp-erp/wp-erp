@@ -101,14 +101,15 @@ export default {
 
         this.peopleFields = erp_acct_var.erp_fields;
         this.nonce = erp_acct_var.export_import_nonce;
-        this.peopleType = 'customers' == this.type ? 'customer' : 'vendor';
+        this.peopleType = 'customers' === this.type ? 'customer' : 'vendor';
 
         wp.ajax.send({
             data: {
                 action: 'erp_acct_get_sample_csv_url',
                 _wpnonce: this.nonce,
                 type: this.type,
-                path: this.$router.currentRoute.path
+                path: this.$router.currentRoute.path,
+                _wpnonce: this.nonce,
             },
             success: function(response) {
                 self.sampleUrl = response;
