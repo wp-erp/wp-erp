@@ -755,7 +755,7 @@ function erp_insert_people( $args = [], $return_object = false ) {
         /**
          * To update email in Mailchimp we need to provide the previous email too
          *
-         * @since 1.10.6
+         * @since 1.11.0
          */
         do_action( 'erp_people_email_updated', $people->id, $people, $people_type, $old_email );
     }

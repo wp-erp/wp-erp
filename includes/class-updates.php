@@ -256,7 +256,7 @@ class Updates {
     /**
      * Retrieves memory limit.
      *
-     * @since 1.10.6
+     * @since 1.11.0
      *
      * @return int
      */
