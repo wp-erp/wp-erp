@@ -316,9 +316,10 @@ class Ajax_Handler {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
-        $current_user_id                      = get_current_user_id();
-        $posted                               = map_deep( wp_unslash( $_POST ), 'sanitize_text_field' );
-        $posted['contact']['main']['company'] = stripslashes( ! empty( $posted['contact']['main']['company'] ) ? $posted['contact']['main']['company'] : '' ); // To remove Apostrophe slash
+        $current_user_id                         = get_current_user_id();
+        $posted                                  = map_deep( wp_unslash( $_POST ), 'sanitize_text_field' );
+        $posted['contact']['meta']['life_stage'] = isset( $_POST['contact']['meta']['life_stage'] ) ? sanitize_title_with_dashes( wp_unslash( $_POST['contact']['meta']['life_stage'] ) ) : '';
+        $posted['contact']['main']['company']    = stripslashes( ! empty( $posted['contact']['main']['company'] ) ? $posted['contact']['main']['company'] : '' ); // To remove Apostrophe slash
 
         $data = array_merge( $posted['contact']['main'], $posted['contact']['meta'], $posted['contact']['social'] );
 
