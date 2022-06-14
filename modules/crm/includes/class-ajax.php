@@ -167,7 +167,7 @@ class Ajax_Handler {
                 if ( $_REQUEST['status'] === 'trash' ) {
                     $args['trashed'] = true;
                 } else {
-                    $args['life_stage'] = sanitize_text_field( wp_unslash( $_REQUEST['status'] ) );
+                    $args['life_stage'] = sanitize_title_with_dashes( wp_unslash( $_REQUEST['status'] ) );
                 }
             }
         }
