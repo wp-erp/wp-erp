@@ -11,8 +11,8 @@ $leave_policy  = [];
 $submit_button = esc_attr__( 'Save', 'erp' );
 
 $leave_names   = [
-                     '' => '&mdash; ' . esc_attr__( 'select leave type', 'erp' ) . ' &mdash;',
-                 ] + wp_list_pluck( erp_hr_get_leave_policy_names(), 'name', 'id' );
+                    '' => '&mdash; ' . esc_attr__( 'select leave type', 'erp' ) . ' &mdash;',
+                ] + wp_list_pluck( erp_hr_get_leave_policy_names()->toArray(), 'name', 'id' );
 
 // edit / copy
 if ( $id ) {
