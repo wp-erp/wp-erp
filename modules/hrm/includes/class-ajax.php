@@ -2481,7 +2481,7 @@ class Ajax_Handler {
 			      ] ) );
         }
 
-        $f_years  = array_map( 'sanitize_text_field', wp_unslash( $_POST['fyears'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+        $f_years  = map_deep( wp_unslash( $_POST['fyears'] ), 'sanitize_text_field' );  // phpcs:ignore WordPress.Security.NonceVerification.Missing
         $inserted = erp_settings_save_leave_years( $f_years );
 
         if ( is_wp_error( $inserted ) ) {

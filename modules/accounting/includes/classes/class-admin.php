@@ -356,6 +356,8 @@ class Admin {
      * @return void
      */
     public function enqueue_scripts() {
+        wp_enqueue_media();
+
         // load styles
         wp_enqueue_style( 'erp-sweetalert' );
         wp_enqueue_style( 'accounting-admin' );
