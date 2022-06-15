@@ -1825,8 +1825,7 @@
                 },
 
                 importUsers: function() {
-                    var self = this,
-                        type = self.data('type');
+                    var self = this;
 
                     $.erpPopup({
                         title: wpErpCrm.import_users,

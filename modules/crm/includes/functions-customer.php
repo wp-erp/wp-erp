@@ -609,7 +609,7 @@ function erp_crm_customer_prepare_schedule_postdata( $postdata ) {
 
     $extra_data = [
         'schedule_title'     => ( isset( $postdata['schedule_title'] ) && ! empty( $postdata['schedule_title'] ) ) ? $postdata['schedule_title'] : '',
-        'all_day'            => isset( $postdata['all_day'] ) ? (string) $postdata['all_day'] : false,
+        'all_day'            => isset( $postdata['all_day'] ) ? (string) $postdata['all_day'] : 'false',
         'allow_notification' => isset( $postdata['allow_notification'] ) ? (string) $postdata['allow_notification'] : false,
         'invite_contact'     => ( isset( $postdata['invite_contact'] ) && ! empty( $postdata['invite_contact'] ) ) ? $postdata['invite_contact'] : [],
         'attachments'        => ! empty ( $attachments ) ? $attachments : []
@@ -619,8 +619,8 @@ function erp_crm_customer_prepare_schedule_postdata( $postdata ) {
     $extra_data['notification_time']          = ( isset( $postdata['notification_time'] ) && $extra_data['allow_notification'] == 'true' ) ? $postdata['notification_time'] : '';
     $extra_data['notification_time_interval'] = ( isset( $postdata['notification_time_interval'] ) && $extra_data['allow_notification'] == 'true' ) ? $postdata['notification_time_interval'] : '';
 
-    $start_time = ( isset( $postdata['start_time'] ) && ! $extra_data['all_day'] ) ? $postdata['start_time'] : '00:00:00';
-    $end_time   = ( isset( $postdata['end_time'] ) && ! $extra_data['all_day'] ) ? $postdata['end_time'] : '00:00:00';
+    $start_time = ( isset( $postdata['start_time'] ) && ( $extra_data['all_day'] === 'false' ) ) ? $postdata['start_time'] : '00:00:00';
+    $end_time   = ( isset( $postdata['end_time'] ) &&  ( $extra_data['all_day'] === 'false' ) ) ? $postdata['end_time'] : '00:00:00';
 
     if ( $extra_data['allow_notification'] == 'true' ) {
         $notify_date = new \DateTime( $postdata['start_date'] . $start_time );

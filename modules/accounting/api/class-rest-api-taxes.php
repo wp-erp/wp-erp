@@ -920,13 +920,13 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         $item = (object) $item;
 
         $data = [
-            'tax_zone_id'           => (int) $item->tax_zone_id,
-            'agency_id'             => (int) $item->agency_id,
-            'tax_rate_id'           => (int) $item->tax_rate_id,
-            'tax_rate_name'         => $item->tax_rate_name,
-            'default'               => (int) $item->default,
-            'sales_tax_category_id' => $item->tax_cat_id,
-            'tax_rate'              => ! empty( $item->tax_rate ) ? $item->tax_rate : null,
+            'tax_zone_id'           => ! empty( $item->tax_zone_id ) ? (int) $item->tax_zone_id : null,
+            'agency_id'             => ! empty( $item->agency_id ) ? (int) $item->agency_id : null,
+            'tax_rate_id'           => ! empty( $item->tax_rate_id ) ? (int) $item->tax_rate_id : null,
+            'tax_rate_name'         => ! empty( $item->tax_rate_name ) ? $item->tax_rate_name : null,
+            'default'               => ! empty( $item->default ) ? (int) $item->default : null,
+            'sales_tax_category_id' => ! empty( $item->tax_cat_id ) ? $item->tax_cat_id : null,
+            'tax_rate'              => ! empty( $item->tax_rate ) ? $item->tax_rate : 0,
         ];
 
         $data = array_merge( $data, $additional_fields );
