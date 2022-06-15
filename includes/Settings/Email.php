@@ -410,24 +410,24 @@ class Email extends Template {
                     </thead>
 
                     <tbody id="email_list_view">
-                        <?php
-                        foreach ( $email_templates as $email_key => $email ) :
-                            if (
-                                false !== strpos( get_class( $email ), 'HRM' )  ||
-                                false !== strpos( get_class( $email ), 'ERP_Document' ) ||
-                                false !== strpos( get_class( $email ), 'ERP_Recruitment' ) ||
-                                false !== strpos( get_class( $email ), 'Training' )
-                            ) :
-                                $tr_class = 'hrm';
-                            elseif ( false !== strpos( get_class( $email ), 'CRM' ) ) :
-                                $tr_class = 'crm';
-                            elseif ( false !== strpos( get_class( $email ), 'Accounting' ) ) :
-                                $tr_class = 'accounting';
-                            else :
-                                $tr_class = 'others';
-                            endif;
-                            ?>
-                            <tr class="tag_<?php echo esc_attr( $tr_class ); ?>">
+                    <?php
+                    foreach ( $email_templates as $email_key => $email ) :
+                        if (
+                            false !== strpos( get_class( $email ), 'HRM' )  ||
+                            false !== strpos( get_class( $email ), 'ERP_Document' ) ||
+                            false !== strpos( get_class( $email ), 'ERP_Recruitment' ) ||
+                            false !== strpos( get_class( $email ), 'Training' )
+                        ) :
+                            $tr_class = 'hrm';
+                        elseif ( false !== strpos( get_class( $email ), 'CRM' ) ) :
+                            $tr_class = 'crm';
+                        elseif ( false !== strpos( get_class( $email ), 'Accounting' ) ) :
+                            $tr_class = 'accounting';
+                        else :
+                            $tr_class = 'others';
+                        endif;
+                        ?>
+                        <tr class="tag_<?php echo esc_attr( $tr_class ); ?>">
                             <?php
                             foreach ( $columns as $key => $column ) :
                                 switch ( $key ) :
@@ -470,8 +470,11 @@ class Email extends Template {
                                         break;
                                 endswitch;
                             endforeach;
-                        endforeach;
                         ?>
+                        </tr>
+                        <?php
+                    endforeach;
+                    ?>
                     </tbody>
                 </table>
             </td>

@@ -5,7 +5,7 @@ Tags: business manager, erp, accounting, crm, hr, project manager, small busines
 Requires at least: 4.4
 Tested up to: 6.0
 Requires PHP: 5.6
-Stable tag: 1.10.6
+Stable tag: 1.11.0
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -274,6 +274,22 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 == Changelog ==
 
+= v1.11.0 -> June 15, 2022 =
+--------------------------
+
+- [update] Some package compatibilities
+- [update] Support for fractional quantity during transactions (Accounting)
+- [fix] All people were not being loaded in filter dropdown for transaction (Accounting)
+- [fix] Download link of sample csv for customer and vendor was not working (Accounting)
+- [fix] Inbound email using IMAP was not working (CRM)
+- [fix] Gravity form integration was not working properly (CRM)
+- [fix] Contact list table UI was breaking in some cases (CRM)
+- [fix] Timezone inconsistencies for contact related operations (CRM)
+- [fix] Some contact integration related issues (CRM)
+- [fix] Non alphanumeric slug was causing issue for life stages (CRM)
+- [fix] Retrieving people was throwing error when CRM module was deactivated
+- [fix] Resetting ERP was removing admin access in some cases
+
 = v1.10.6 -> May 24, 2022 =
 --------------------------
 
@@ -309,14 +325,14 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 = v1.10.2 -> November 16, 2021 =
 --------------------------
 
-[new] Option to assign relevant leave policies to employees after employment type is changed
-[update] ERP addon page backend optimization
-[update] Attachment download links are included in single invoice view and in downloadable invoice
-[fix] CRM Growth report labels were not translatable
-[fix] Contact group subscriber bulk delete was not working
-[fix] Page responsive issues on whole Accounting module
-[fix] Action trigger and action dropdown issues on small screen
-[notice] Promotional offer notice regarding Black Friday and Cyber Monday
+- [new] Option to assign relevant leave policies to employees after employment type is changed
+- [update] ERP addon page backend optimization
+- [update] Attachment download links are included in single invoice view and in downloadable invoice
+- [fix] CRM Growth report labels were not translatable
+- [fix] Contact group subscriber bulk delete was not working
+- [fix] Page responsive issues on whole Accounting module
+- [fix] Action trigger and action dropdown issues on small screen
+- [notice] Promotional offer notice regarding Black Friday and Cyber Monday
 
 = v1.10.1 -> October 12, 2021 =
 --------------------------

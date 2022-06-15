@@ -11,6 +11,7 @@ $contact_tags     = wp_get_object_terms( $customer->id, 'erp_crm_tag', [ 'orderb
 $contact_tags     = wp_list_pluck( $contact_tags, 'name' );
 $contact_list_url = add_query_arg( [ 'page' => 'erp-crm', 'section' => 'contact', 'sub-section' => 'contacts' ], admin_url( 'admin.php' ) );
 $trashed          = erp_is_people_trashed( $customer->id );
+$life_stages      = erp_crm_get_life_stages_dropdown_raw();
 ?>
 <div class="wrap erp erp-crm-customer erp-single-customer" id="wp-erp" v-cloak>
     <h2>
@@ -99,7 +100,7 @@ $trashed          = erp_is_people_trashed( $customer->id );
                                 <li><?php erp_print_key_value( __( 'Country', 'erp' ), $customer->get_country() ); ?></li>
                                 <li><?php erp_print_key_value( __( 'Postal Code', 'erp' ), $customer->get_postal_code() ); ?></li>
                                 <li><?php erp_print_key_value( __( 'Source', 'erp' ), $customer->get_source() ); ?></li>
-                                <li><?php erp_print_key_value( __( 'Life stage', 'erp' ), $customer->get_life_stage() ); ?></li>
+                                <li><?php erp_print_key_value( __( 'Life stage', 'erp' ), $life_stages[ $customer->get_life_stage() ] ); ?></li>
 
                                 <?php do_action( 'erp_crm_single_contact_basic_info', $customer ); ?>
                             </ul>

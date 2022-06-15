@@ -68,11 +68,14 @@
                                     <multi-select v-model="line.product" :options="products" @input="setLineData(line)" />
                                 </th>
                                 <td class="col--qty">
-                                    <input min="0" type="number"
+                                    <input min="0"
+                                        type="number"
                                         v-model="line.qty"
                                         @keyup="lineUpdate(index)"
                                         name="qty"
-                                        class="wperp-form-field" :required="!!line.product">
+                                        step="any"
+                                        class="wperp-form-field"
+                                        :required="!!line.product">
                                 </td>
                                 <td class="col--uni_price" :data-colname="__('Unit Price', 'erp')">
                                     <input min="0" type="number" v-model="line.unitPrice"
@@ -260,7 +263,7 @@
 
                 this.transactionLines.forEach(item => {
                     if(item.qty && item.unitPrice){
-                        total += parseInt(item.qty) * parseFloat( item.unitPrice )
+                        total += parseFloat(item.qty) * parseFloat( item.unitPrice )
                     }
                 })
                 return total + this.taxTotalAmount;
@@ -332,7 +335,7 @@
             },
             lineUpdate(index){
                 let line = this.transactionLines[index]
-                line.amount =  parseInt(line.qty) * parseFloat( line.unitPrice )
+                line.amount =  parseFloat(line.qty) * parseFloat( line.unitPrice )
                 this.$set(this.transactionLines, index, line)
             },
             disableLineTax(index){

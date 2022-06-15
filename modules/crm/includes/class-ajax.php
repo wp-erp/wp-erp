@@ -167,7 +167,7 @@ class Ajax_Handler {
                 if ( $_REQUEST['status'] === 'trash' ) {
                     $args['trashed'] = true;
                 } else {
-                    $args['life_stage'] = sanitize_text_field( wp_unslash( $_REQUEST['status'] ) );
+                    $args['life_stage'] = sanitize_title_with_dashes( wp_unslash( $_REQUEST['status'] ) );
                 }
             }
         }
@@ -316,9 +316,10 @@ class Ajax_Handler {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
-        $current_user_id                      = get_current_user_id();
-        $posted                               = map_deep( wp_unslash( $_POST ), 'sanitize_text_field' );
-        $posted['contact']['main']['company'] = stripslashes( ! empty( $posted['contact']['main']['company'] ) ? $posted['contact']['main']['company'] : '' ); // To remove Apostrophe slash
+        $current_user_id                         = get_current_user_id();
+        $posted                                  = map_deep( wp_unslash( $_POST ), 'sanitize_text_field' );
+        $posted['contact']['meta']['life_stage'] = isset( $_POST['contact']['meta']['life_stage'] ) ? sanitize_title_with_dashes( wp_unslash( $_POST['contact']['meta']['life_stage'] ) ) : '';
+        $posted['contact']['main']['company']    = stripslashes( ! empty( $posted['contact']['main']['company'] ) ? $posted['contact']['main']['company'] : '' ); // To remove Apostrophe slash
 
         $data = array_merge( $posted['contact']['main'], $posted['contact']['meta'], $posted['contact']['social'] );
 
@@ -1087,10 +1088,10 @@ class Ajax_Handler {
                 'group_id' => $group_id,
             ];
 
+            erp_crm_create_new_contact_subscriber( $data );
+
             do_action( 'erp_crm_log_assign_contact_group', $group_id, $user_id );
         }
-
-        erp_crm_create_new_contact_subscriber( $data );
 
         $this->send_success( __( 'Succesfully subscriber for this user', 'erp' ) );
     }

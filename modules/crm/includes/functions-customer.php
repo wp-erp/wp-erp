@@ -609,7 +609,7 @@ function erp_crm_customer_prepare_schedule_postdata( $postdata ) {
 
     $extra_data = [
         'schedule_title'     => ( isset( $postdata['schedule_title'] ) && ! empty( $postdata['schedule_title'] ) ) ? $postdata['schedule_title'] : '',
-        'all_day'            => isset( $postdata['all_day'] ) ? (string) $postdata['all_day'] : false,
+        'all_day'            => isset( $postdata['all_day'] ) ? (string) $postdata['all_day'] : 'false',
         'allow_notification' => isset( $postdata['allow_notification'] ) ? (string) $postdata['allow_notification'] : false,
         'invite_contact'     => ( isset( $postdata['invite_contact'] ) && ! empty( $postdata['invite_contact'] ) ) ? $postdata['invite_contact'] : [],
         'attachments'        => ! empty ( $attachments ) ? $attachments : []
@@ -619,13 +619,14 @@ function erp_crm_customer_prepare_schedule_postdata( $postdata ) {
     $extra_data['notification_time']          = ( isset( $postdata['notification_time'] ) && $extra_data['allow_notification'] == 'true' ) ? $postdata['notification_time'] : '';
     $extra_data['notification_time_interval'] = ( isset( $postdata['notification_time_interval'] ) && $extra_data['allow_notification'] == 'true' ) ? $postdata['notification_time_interval'] : '';
 
-    $start_time = ( isset( $postdata['start_time'] ) && ! $extra_data['all_day'] ) ? $postdata['start_time'] : '00:00:00';
-    $end_time   = ( isset( $postdata['end_time'] ) && ! $extra_data['all_day'] ) ? $postdata['end_time'] : '00:00:00';
+    $start_time = ( isset( $postdata['start_time'] ) && ( $extra_data['all_day'] === 'false' ) ) ? $postdata['start_time'] : '00:00:00';
+    $end_time   = ( isset( $postdata['end_time'] ) &&  ( $extra_data['all_day'] === 'false' ) ) ? $postdata['end_time'] : '00:00:00';
 
     if ( $extra_data['allow_notification'] == 'true' ) {
         $notify_date = new \DateTime( $postdata['start_date'] . $start_time );
         $notify_date->modify( '-' . $extra_data['notification_time_interval'] . ' ' . $extra_data['notification_time'] );
         $extra_data['notification_datetime'] = $notify_date->format( 'Y-m-d H:i:s' );
+        $extra_data['client_time_zone']      = ! empty( $postdata['client_time_zone'] ) ? sanitize_text_field( wp_unslash( $postdata['client_time_zone'] ) ) : '';
     } else {
         $extra_data['notification_datetime'] = '';
     }
@@ -1007,8 +1008,16 @@ function erp_crm_customer_schedule_notification() {
     foreach ( $schedules as $key => $activity ) {
         $extra = json_decode( base64_decode( $activity['extra'] ), true );
 
+        $current_time = erp_current_datetime();
+
+        if ( ! empty( $extra['client_time_zone'] ) ) {
+            $current_time = $current_time->setTimezone( new DateTimeZone( $extra['client_time_zone'] ) );
+        }
+
+        $current_time = $current_time->format( 'Y-m-d H:i:s' );
+
         if ( isset( $extra['allow_notification'] ) && $extra['allow_notification'] == 'true' ) {
-            if ( ( current_time( 'mysql' ) >= $extra['notification_datetime'] ) && ( $activity['start_date'] >= current_time( 'mysql' ) ) ) {
+            if ( ( $current_time >= $extra['notification_datetime'] ) && ( $activity['start_date'] >= $current_time ) ) {
                 if ( ! $activity['sent_notification'] ) {
                     erp_crm_send_schedule_notification( $activity, $extra );
                 }
@@ -1044,7 +1053,7 @@ function erp_crm_send_schedule_notification( $activity, $extra = false ) {
             array_push( $users, $created_user );
 
             foreach ( $users as $key => $user ) {
-                $body = sprintf( __( 'You have a schedule after %s %s at %s', 'erp' ), $extra['notification_time_interval'], $extra['notification_time'], date( 'F j, Y, g:i a', strtotime( $activity['start_date'] ) ) );
+                $body = sprintf( __( 'You have a schedule after %s %s at %s%s', 'erp' ), isset( $extra['notification_time_interval'] ) ? $extra['notification_time_interval'] : '', isset( $extra['notification_time'] ) ? $extra['notification_time'] : '', erp_current_datetime()->modify( $activity['start_date'] )->format( 'F j, Y, g:i a' ), empty( $extra['client_time_zone'] ) ? '' : ( '(' . $extra['client_time_zone'] . ')' ) );
                 erp_mail( $user, __( 'ERP Schedule', 'erp' ), $body );
             }
             erp_crm_update_schedule_notification_flag( $activity['id'], true );
@@ -1128,7 +1137,9 @@ function erp_crm_save_contact_group( $data ) {
             'erp-crm-contact-group-detail'  => $data['id']
         ];
 
-        do_action( 'erp_crm_update_contact_group', $result );
+        if ( $result ) {
+            do_action( 'erp_crm_update_contact_group', $data );
+        }
     } else {
         $result = WeDevs\ERP\CRM\Models\ContactGroup::create( $data );
         do_action( 'erp_crm_create_contact_group', $result );
@@ -1625,12 +1636,84 @@ function erp_crm_edit_contact_subscriber( $groups, $user_id ) {
                     'unsubscribe_at' => current_time( 'mysql' ),
                 ] );
 
-            do_action( 'erp_crm_delete_contact_subscriber', $subscriber );
+            do_action( 'erp_crm_delete_contact_subscriber', $user_id, $del_group_id );
         }
     }
 
     erp_crm_purge_cache( [ 'list' => 'contact_groups' ] );
     erp_crm_purge_cache( [ 'list' => 'contact_group_subscriber' ] );
+}
+
+/**
+ * Change the subscription status of a user into a group to unsubscribe
+ *
+ * @since 1.11.0
+ *
+ * @param $user_id
+ * @param $group_id
+ *
+ * @return bool|int
+ */
+function erp_crm_contact_unsubscribe_subscriber( $user_id, $group_id ) {
+    if ( empty( $user_id ) || empty( $group_id ) ) {
+        return false;
+    }
+
+    $updated = \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $user_id )
+        ->where( 'group_id', $group_id )
+        ->where( 'status', 'subscribe' )
+        ->update( [
+            'status'         => 'unsubscribe',
+            'subscribe_at'   => null,
+            'unsubscribe_at' => current_time( 'mysql' ),
+        ] );
+
+    if ( $updated ) {
+        do_action( 'erp_crm_delete_contact_subscriber', $user_id, $group_id );
+
+        erp_crm_purge_cache( [ 'list' => 'contact_groups' ] );
+        erp_crm_purge_cache( [ 'list' => 'contact_group_subscriber' ] );
+
+        return $updated;
+    }
+
+    return false;
+}
+
+/**
+ * Change the subscription status of a user into a group to subscribe
+ *
+ * @since 1.11.0
+ *
+ * @param $user_id
+ * @param $group_id
+ *
+ * @return bool|int
+ */
+function erp_crm_contact_resubscribe_subscriber( $user_id, $group_id ) {
+    if ( empty( $user_id ) || empty( $group_id ) ) {
+        return false;
+    }
+
+    $updated = \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $user_id )
+        ->where( 'group_id', $group_id )
+        ->where( 'status', 'unsubscribe' )
+        ->update( [
+            'status'         => 'subscribe',
+            'subscribe_at'   => current_time( 'mysql' ),
+            'unsubscribe_at' => null,
+        ] );
+
+    if ( $updated ) {
+        do_action( 'erp_crm_create_contact_subscriber', $user_id, $group_id );
+
+        erp_crm_purge_cache( [ 'list' => 'contact_groups' ] );
+        erp_crm_purge_cache( [ 'list' => 'contact_group_subscriber' ] );
+
+        return $updated;
+    }
+
+    return false;
 }
 
 /**
@@ -4263,4 +4346,29 @@ function erp_crm_get_attachment_dir() {
     }
 
     return $full_path;
+}
+
+/**
+ * Set cron schedule event to check new inbound emails.
+ *
+ * @since 1.11.0
+ *
+ * @return void
+ */
+function erp_crm_schedule_inbound_email_cron( $value ) {
+    if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-settings-nonce' ) ) {
+        wp_die( __( 'Unauthorized attempt!', 'erp' ), 403 );
+    }
+
+    if ( ! isset( $_POST['module'] ) || 'erp-email' !== sanitize_text_field( wp_unslash( $_POST['module'] ) ) ) {
+        return;
+    }
+
+    if ( ! isset( $_POST['section'] ) || 'imap' !== sanitize_text_field( wp_unslash( $_POST['section'] ) ) ) {
+        return;
+    }
+
+    $recurrence = isset( $_POST['schedule'] ) ? sanitize_text_field( wp_unslash( $_POST['schedule'] ) ) : 'hourly';
+    wp_clear_scheduled_hook( 'erp_crm_inbound_email_scheduled_events' );
+    wp_schedule_event( time(), $recurrence, 'erp_crm_inbound_email_scheduled_events' );
 }

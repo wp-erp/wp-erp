@@ -129,6 +129,7 @@ $notification_types = erp_crm_activity_schedule_notification_type();
         <input type="hidden"  v-model="feedData.created_by" name="created_by" value="<?php echo esc_attr( get_current_user_id() ); ?>">
         <input type="hidden" name="user_id" v-model="feedData.user_id" value="<?php echo esc_attr( $customer_id ); ?>" >
         <input type="hidden" name="action" v-model="feedData.action" value="erp_customer_feeds_save_notes">
+        <input type="hidden" name="client_time_zone" v-model="feedData.client_time_zone">
         <input type="hidden" name="type" v-model="feedData.type" value="schedule">
         <input type="submit" v-if="!feed" :disabled = "!isValid" class="button button-primary" name="create_schedule" value="<?php esc_attr_e( 'Create Schedule', 'erp' ); ?>">
         <input type="submit" v-if="feed" :disabled = "!isValid" class="button button-primary" name="edit_schedule" value="<?php esc_attr_e( 'Update Schedule', 'erp' ); ?>">

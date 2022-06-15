@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import Popper from 'popper.js';
+import { createPopper } from '@popperjs/core';
 
 export default {
 
@@ -88,7 +88,7 @@ export default {
             }
 
             const element = this.$el;
-            this.createPopper(element);
+            this.initPopper(element);
         },
 
         hideMenu() {
@@ -96,9 +96,9 @@ export default {
             this.removePopper();
         },
 
-        createPopper(element) {
+        initPopper(element) {
             this.removePopper();
-            this._popper = new Popper(element, this.$refs.menu, {
+            this._popper = new createPopper(element, this.$refs.menu, {
                 placement: this.placement
             });
         },

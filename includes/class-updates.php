@@ -58,6 +58,7 @@ class Updates {
         '1.8.5'   => 'updates/update-1.8.5.php',
         '1.10.0'  => 'updates/update-1.10.0.php',
         '1.10.2'  => 'updates/update-1.10.2.php',
+        '1.11.0'  => 'updates/update-1.11.0.php',
     ];
 
     /**
@@ -250,5 +251,28 @@ class Updates {
         }
 
         return $return;
+    }
+
+    /**
+     * Retrieves memory limit.
+     *
+     * @since 1.11.0
+     *
+     * @return int
+     */
+    protected function get_memory_limit() {
+        if ( function_exists( 'ini_get' ) ) {
+            $memory_limit = ini_get( 'memory_limit' );
+        } else {
+            // Sensible default.
+            $memory_limit = '128M';
+        }
+
+        if ( ! $memory_limit || -1 === intval( $memory_limit ) ) {
+            // Unlimited, set to 32GB.
+            $memory_limit = '32000M';
+        }
+
+        return intval( $memory_limit ) * 1024 * 1024;
     }
 }
