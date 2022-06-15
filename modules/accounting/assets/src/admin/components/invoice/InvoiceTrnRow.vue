@@ -7,6 +7,8 @@
             <input type="number"
                 v-model="line.qty"
                 @keyup="respondAtChange"
+                min="0"
+                step="any"
                 name="qty"
                 class="wperp-form-field" :required="line.selectedProduct ? true : false">
         </td>
@@ -107,7 +109,7 @@ export default {
             row.unitPrice = parseFloat(row.unit_price);
             row.applyTax  = true;
             row.taxAmount = row.tax;
-            row.amount    = parseInt(row.qty) * parseFloat(row.unit_price);
+            row.amount    = parseFloat(row.qty) * parseFloat(row.unit_price);
         },
 
         respondAtChange() {
@@ -131,7 +133,7 @@ export default {
             }
 
             // Set Amount
-            return parseInt(this.line.qty) * parseFloat(this.line.unitPrice);
+            return parseFloat(this.line.qty) * parseFloat(this.line.unitPrice);
         },
 
         getTaxRate() {

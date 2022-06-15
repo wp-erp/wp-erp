@@ -43,7 +43,11 @@ function erp_get_peoples( $args = [] ) {
     ];
 
     $args                 = wp_parse_args( $args, $defaults );
-    $args['crm_agent_id'] = ( ! erp_crm_is_current_user_manager() && erp_crm_is_current_user_crm_agent() ) ? get_current_user_id() : false;
+    $args['crm_agent_id'] = false;
+
+    if ( erp_is_module_active( 'crm' ) ) {
+        $args['crm_agent_id'] = ( ! erp_crm_is_current_user_manager() && erp_crm_is_current_user_crm_agent() ) ? get_current_user_id() : false;
+    }
 
     $people_type  = is_array( $args['type'] ) ? implode( '-', $args['type'] )       : $args['type'];
     $last_changed = erp_cache_get_last_changed( 'crm', 'people' );
@@ -102,9 +106,11 @@ function erp_get_peoples( $args = [] ) {
             $sql['where'][] = "AND people.contact_owner='$contact_owner'";
         }
 
-        if ( ! erp_crm_is_current_user_manager() && erp_crm_is_current_user_crm_agent() ) {
-            $current_user_id = get_current_user_id();
-            $sql['where'][]  = "AND people.contact_owner='$current_user_id'";
+        if ( erp_is_module_active( 'crm' ) ) {
+            if ( ! erp_crm_is_current_user_manager() && erp_crm_is_current_user_crm_agent() ) {
+                $current_user_id = get_current_user_id();
+                $sql['where'][]  = "AND people.contact_owner='$current_user_id'";
+            }
         }
 
         // Check if the row want to search
@@ -442,6 +448,8 @@ function erp_insert_people( $args = [], $return_object = false ) {
 
     $existing_people = \WeDevs\ERP\Framework\Models\People::firstOrNew( [ 'id' => $args['id'] ] );
 
+    $old_email = $existing_people->email;
+
     $defaults = [
         'id'            => $existing_people->id,
         'first_name'    => $existing_people->first_name,
@@ -742,11 +750,20 @@ function erp_insert_people( $args = [], $return_object = false ) {
         'type'          => $people_type,
         'erp-people-by' => [ (int) $people->id, $people->email, (int) $people->user_id ]
     ] );
-    
+
+    if ( ! empty( $old_email ) && $old_email !== $people->email ) {
+        /**
+         * To update email in Mailchimp we need to provide the previous email too
+         *
+         * @since 1.11.0
+         */
+        do_action( 'erp_people_email_updated', $people->id, $people, $people_type, $old_email );
+    }
+
     /*
      * Action hook to trigger any event when a people is created.
-     * 
-     * @since 1.10.3 
+     *
+     * @since 1.10.3
      */
     do_action( 'erp_people_created', $people->id, $people, $people_type );
 

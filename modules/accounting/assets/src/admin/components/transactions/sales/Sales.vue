@@ -27,6 +27,7 @@ import SalesStats from 'admin/components/transactions/sales/SalesStats.vue';
 import SalesList from 'admin/components/transactions/sales/SalesList.vue';
 import TransactionsFilter from 'admin/components/transactions/TransactionsFilter.vue';
 import {mapState} from "vuex";
+import HTTP from 'admin/http';
 
 export default {
     name: 'Sales',
@@ -66,7 +67,15 @@ export default {
         }, 200);
 
         if(!this.customers.length){
-            this.$store.dispatch('sales/fillCustomers', []);
+            HTTP.get('/people', {
+                params: {
+                    type    : 'customer',
+                    per_page: -1,
+                    page    : 1,
+                }
+            }).then(response => {
+                this.$store.dispatch('sales/fillCustomers', response.data);
+            });
         }
     },
 

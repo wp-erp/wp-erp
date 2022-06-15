@@ -201,9 +201,20 @@ export default new Router({
         },
 
         {
+            name     : 'erp-integration-root',
             path     : '/erp-integration',
-            name     : 'Integration',
-            component: Integration,
+            component: {
+                render(c) {
+                    return c('router-view');
+                }
+            },
+            children: [
+                {
+                    path     : '',
+                    name     : 'Integration',
+                    component: Integration,
+                }
+            ]
         },
 
         {

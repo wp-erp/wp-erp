@@ -221,7 +221,7 @@ function erp_acct_insert_purchase( $data ) {
 
             $details_id = $wpdb->insert_id;
 
-            if ( isset( $purchase_data['tax_rate'] ) ) {
+            if ( isset( $purchase_data['tax_rate'] ) && isset( $purchase_data['tax_rate']['id'] ) ) {
                 $tax_rate_agency = erp_acct_get_tax_rate_with_agency( $purchase_data['tax_rate']['id'], $item['tax_cat_id'] );
 
                 foreach ( $tax_rate_agency as $tra ) {
