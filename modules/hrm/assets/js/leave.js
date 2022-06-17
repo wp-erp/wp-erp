@@ -328,23 +328,64 @@
             },
 
             submit: function(modal) {
-                wp.ajax.send( {
-                    data: this.serializeObject(),
-                    success: function(res) {
-                        modal.closeModal();
+                const titles = $(this).find('input[name="title[]"]').map(function(){return $(this).val();}).get();
+                const starts = $(this).find('input[name="start[]"]').map(function(){return $(this).val();}).get();
+                const ends = $(this).find('input[name="end[]"]').map(function(){return $(this).val();}).get();
+                const descriptions = $(this).find('input[name="description[]"]').map(function(){return $(this).val();}).get();
 
-                        $( '.list-table-wrap' ).load( window.location.href + ' .list-wrap-inner', function() {
-                            Leave.initDateField();
-                            Leave.initToggleCheckbox();
+                const referer = $(this).find('input[name="_wp_http_referer"]').val();
+                const action = $(this).find('input[name="action"]').val();
+                const nonce = $(this).find('input[name="_wpnonce"]').val();
+                const chunkSize = 30;
+                const total = titles.length;
+                let done = 0;
+                const updateArea = $(this).find('#holiday_import_warning');
+                updateArea.removeClass('erp-hide');
+                updateArea.find('.total_count').text(total);
+                const doneCount = updateArea.find('.done_count');
 
-                            $('#holiday_msg').html( res );
-                        } );
-                    },
-                    error: function(error) {
-                        modal.enableButton();
-                        modal.showError( error );
+                for ( let index = 0; index < total; index += chunkSize ) {
+                    const form = new FormData();
+                    form.append("_wpnonce", nonce);
+                    form.append("action", action);
+                    form.append("_wp_http_referer", referer);
+
+                    for ( let offset = 0; offset < chunkSize; offset++) {
+                        if(offset + index >= titles.length){
+                            break;
+                        }
+
+                        form.append("title[]", titles[offset + index]);
+                        form.append("start[]", starts[offset + index]);
+                        form.append("end[]", ends[offset + index]);
+                        form.append("description[]", descriptions[offset + index]);
                     }
-                });
+
+                    wp.ajax.send( {
+                        data: form,
+                        processData: false,
+                        contentType: false,
+                        success: function(res) {
+                            $( '.list-table-wrap' ).load( window.location.href + ' .list-wrap-inner', function() {
+                                Leave.initDateField();
+                                Leave.initToggleCheckbox();
+                                done += chunkSize;
+                                doneCount.text(Math.min(done, total));
+
+                                if ( done >= total ) {
+                                    updateArea.addClass('erp-hide');
+                                    modal.closeModal();
+                                }
+
+                                $('#holiday_msg').html( res );
+                            } );
+                        },
+                        error: function(error) {
+                            modal.enableButton();
+                            modal.showError( error );
+                        }
+                    });
+                }
             },
 
             import: function(e) {
@@ -874,7 +915,7 @@
                 };
 
                 $( '.erp-loader' ).css( 'display', 'block' );
-                
+
                 wp.ajax.send( 'erp-hr-leave-type-create', {
                     data: data,
                     success: function ( response ) {
@@ -928,7 +969,7 @@
             remove: function ( e ) {
                 e.preventDefault();
                 Leave.leaveType.resetForm(); // Necessary in case the form is in edit mode before deleting
-                
+
                 var self = $( this );
 
                 swal({
@@ -958,7 +999,7 @@
                                 type: 'success',
                                 timer: 2200,
                                 showConfirmButton: false
-                            });                            
+                            });
                         },
                         error: function ( error ) {
                             swal( '', error, 'error' );
@@ -978,7 +1019,7 @@
 
                 var cbs = form['ids[]'];
                 var ids = [];
-                
+
                 for ( var i = 0; i < cbs.length; i++ ) {
                     if ( cbs[i].checked ) {
                         ids.push( cbs[i].value );
@@ -1007,7 +1048,7 @@
                         },
                         success: function ( response ) {
                             Leave.leaveType.reloadTable();
-                            
+
                             swal({
                                 title: '',
                                 text: response,
