@@ -372,12 +372,18 @@
                                 done += chunkSize;
                                 doneCount.text(Math.min(done, total));
 
+                                $('#holiday_msg').html( res );
+
                                 if ( done >= total ) {
                                     updateArea.addClass('erp-hide');
+
+                                    const msg_element = $('#holiday_msg div p');
+                                    let msg = msg_element.text();
+                                    msg = msg.replace( /\d+/g, total);
+                                    msg_element.text(msg);
+
                                     modal.closeModal();
                                 }
-
-                                $('#holiday_msg').html( res );
                             } );
                         },
                         error: function(error) {
