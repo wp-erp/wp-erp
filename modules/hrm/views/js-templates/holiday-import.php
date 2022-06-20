@@ -69,4 +69,10 @@ input:read-only:focus {
 .ui-datepicker{
   z-index: 1000000 !important;
 }
+
+#holiday_import_warning {
+  color: #e04a4a;
+  font-weight: bold;
+  padding: 10px 0;
+}
 </style>
