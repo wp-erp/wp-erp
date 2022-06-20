@@ -392,6 +392,10 @@
                         }
                     });
                 }
+
+                if ( total === 0 ) {
+                    setTimeout(() => modal.closeModal(), 300);
+                }
             },
 
             import: function(e) {
