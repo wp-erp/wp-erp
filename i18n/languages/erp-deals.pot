@@ -1,0 +1,1675 @@
+# Copyright (C) 2020 weDevs
+# This file is distributed under the GPL2.
+msgid ""
+msgstr ""
+"Project-Id-Version: WP ERP - Deals 1.1.2\n"
+"Report-Msgid-Bugs-To: http://wperp.com/support/\n"
+"POT-Creation-Date: 2020-05-28 09:09:37+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2020-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"X-Generator: grunt-wp-i18n 0.5.4\n"
+
+#: includes/class-admin.php:91 includes/class-admin.php:93
+#: includes/class-admin.php:107 includes/class-admin.php:178
+#: includes/class-admin.php:453 includes/class-admin.php:729
+msgid "Deals"
+msgstr ""
+
+#: includes/class-admin.php:92 includes/class-admin.php:666
+msgid "Overview"
+msgstr ""
+
+#: includes/class-admin.php:94 includes/class-admin.php:131
+#: includes/class-admin.php:591
+msgid "Activities"
+msgstr ""
+
+#: includes/class-admin.php:95 includes/class-admin.php:139
+#: wp-erp-deals.php:137
+msgid "Settings"
+msgstr ""
+
+#: includes/class-admin.php:115
+msgid "Dashboard"
+msgstr ""
+
+#: includes/class-admin.php:123
+msgid "All Deals"
+msgstr ""
+
+#: includes/class-admin.php:255 includes/class-hooks.php:185
+msgid "ERP Settings"
+msgstr ""
+
+#: includes/class-admin.php:452
+msgid "Deal"
+msgstr ""
+
+#: includes/class-admin.php:454
+msgid "Add New"
+msgstr ""
+
+#: includes/class-admin.php:455
+msgid "Schedule an activity"
+msgstr ""
+
+#: includes/class-admin.php:456
+msgid "Edit activity"
+msgstr ""
+
+#: includes/class-admin.php:457
+msgid "Mark as done"
+msgstr ""
+
+#: includes/class-admin.php:458
+msgid "Mark as incomplete"
+msgstr ""
+
+#: includes/class-admin.php:459
+msgid "Overdue"
+msgstr ""
+
+#: includes/class-admin.php:460
+msgid "Planned"
+msgstr ""
+
+#: includes/class-admin.php:461
+msgid "You have no activities scheduled for this deal"
+msgstr ""
+
+#: includes/class-admin.php:462
+msgid "Cancel"
+msgstr ""
+
+#: includes/class-admin.php:463
+msgid "Save Activity"
+msgstr ""
+
+#: includes/class-admin.php:464 includes/class-shortcodes.php:155
+msgid "Date"
+msgstr ""
+
+#: includes/class-admin.php:465
+msgid "Time"
+msgstr ""
+
+#: includes/class-admin.php:466
+msgid "Duration"
+msgstr ""
+
+#: includes/class-admin.php:467
+msgid "Add New Deal"
+msgstr ""
+
+#: includes/class-admin.php:468
+msgid "Save"
+msgstr ""
+
+#: includes/class-admin.php:469
+msgid "No contact found"
+msgstr ""
+
+#: includes/class-admin.php:470
+msgid "No company found"
+msgstr ""
+
+#: includes/class-admin.php:471
+msgid "Contact"
+msgstr ""
+
+#: includes/class-admin.php:472
+msgid "Company"
+msgstr ""
+
+#: includes/class-admin.php:473
+msgid "Deal Title"
+msgstr ""
+
+#: includes/class-admin.php:474
+msgid "Deal Value"
+msgstr ""
+
+#: includes/class-admin.php:475
+msgid "Pipeline Stage"
+msgstr ""
+
+#: includes/class-admin.php:476
+msgid "Expected close date"
+msgstr ""
+
+#: includes/class-admin.php:477
+msgid "Overdue %s days"
+msgstr ""
+
+#: includes/class-admin.php:478
+msgid "you"
+msgstr ""
+
+#: includes/class-admin.php:479
+msgid "Owner"
+msgstr ""
+
+#: includes/class-admin.php:480
+msgid "Deal created successfully"
+msgstr ""
+
+#: includes/class-admin.php:481
+msgid "Assigned To"
+msgstr ""
+
+#: includes/class-admin.php:482
+msgid "Won"
+msgstr ""
+
+#: includes/class-admin.php:483
+msgid "Mark as Won"
+msgstr ""
+
+#: includes/class-admin.php:484
+msgid "Lost"
+msgstr ""
+
+#: includes/class-admin.php:485
+msgid "Mark as Lost"
+msgstr ""
+
+#: includes/class-admin.php:486
+msgid "Delete"
+msgstr ""
+
+#: includes/class-admin.php:487 includes/class-admin.php:639
+msgid "Trash"
+msgstr ""
+
+#: includes/class-admin.php:488
+msgid "Move to Trash"
+msgstr ""
+
+#: includes/class-admin.php:489
+msgid "Move to Another Pipeline"
+msgstr ""
+
+#: includes/class-admin.php:490
+msgid "Select a reason"
+msgstr ""
+
+#: includes/class-admin.php:491
+msgid "Lost reason"
+msgstr ""
+
+#: includes/class-admin.php:492
+msgid "Other lost reason"
+msgstr ""
+
+#: includes/class-admin.php:493 includes/class-shortcodes.php:122
+msgid "Other"
+msgstr ""
+
+#: includes/class-admin.php:494
+msgid "Lost reason comment"
+msgstr ""
+
+#: includes/class-admin.php:495
+msgid "optional"
+msgstr ""
+
+#: includes/class-admin.php:496
+msgid "Open deals"
+msgstr ""
+
+#: includes/class-admin.php:497
+msgid "Won deals"
+msgstr ""
+
+#: includes/class-admin.php:498
+msgid "Lost deals"
+msgstr ""
+
+#: includes/class-admin.php:499
+msgid "Trashed deals"
+msgstr ""
+
+#: includes/class-admin.php:500
+msgid "Transfer ownership"
+msgstr ""
+
+#: includes/class-admin.php:501
+msgid "Select Owner"
+msgstr ""
+
+#: includes/class-admin.php:502
+msgid "days"
+msgstr ""
+
+#: includes/class-admin.php:503
+msgid "hours"
+msgstr ""
+
+#: includes/class-admin.php:504
+msgid "minutes"
+msgstr ""
+
+#: includes/class-admin.php:505
+msgid "seconds"
+msgstr ""
+
+#: includes/class-admin.php:506
+msgid "Been here for"
+msgstr ""
+
+#: includes/class-admin.php:507
+msgid "This deal has not been in this stage yet"
+msgstr ""
+
+#: includes/class-admin.php:508
+msgid "Been here for few seconds"
+msgstr ""
+
+#: includes/class-admin.php:509
+msgid "Been here for few minutes"
+msgstr ""
+
+#: includes/class-admin.php:510
+msgid "Been here for few hours"
+msgstr ""
+
+#: includes/class-admin.php:511
+msgid "This should be a number with or without 2 decimal places."
+msgstr ""
+
+#: includes/class-admin.php:512
+msgid "Pipeline "
+msgstr ""
+
+#: includes/class-admin.php:513
+msgid "Select Pipeline "
+msgstr ""
+
+#: includes/class-admin.php:514
+msgid "There is no stage for this pipeline."
+msgstr ""
+
+#: includes/class-admin.php:515
+msgid "Set expected close date"
+msgstr ""
+
+#: includes/class-admin.php:516 includes/class-shortcodes.php:126
+msgid "Street 1"
+msgstr ""
+
+#: includes/class-admin.php:517 includes/class-shortcodes.php:127
+msgid "Street 2"
+msgstr ""
+
+#: includes/class-admin.php:518 includes/class-shortcodes.php:128
+msgid "City"
+msgstr ""
+
+#: includes/class-admin.php:519 includes/class-shortcodes.php:131
+msgid "Country"
+msgstr ""
+
+#: includes/class-admin.php:520 includes/class-shortcodes.php:129
+msgid "State"
+msgstr ""
+
+#: includes/class-admin.php:521 includes/class-shortcodes.php:130
+msgid "Postal Code"
+msgstr ""
+
+#: includes/class-admin.php:522
+msgid "Switch to another contact"
+msgstr ""
+
+#: includes/class-admin.php:523
+msgid "Switch to another company"
+msgstr ""
+
+#: includes/class-admin.php:524
+msgid "Participants"
+msgstr ""
+
+#: includes/class-admin.php:525
+msgid "Add participants"
+msgstr ""
+
+#: includes/class-admin.php:526
+msgid "Add participant"
+msgstr ""
+
+#: includes/class-admin.php:527
+msgid "Remove"
+msgstr ""
+
+#: includes/class-admin.php:528
+msgid "There are no participants linked to this deal"
+msgstr ""
+
+#: includes/class-admin.php:529
+msgid "Are you sure you want to remove this participant?"
+msgstr ""
+
+#: includes/class-admin.php:530
+msgid "Yes, remove it!"
+msgstr ""
+
+#: includes/class-admin.php:531
+msgid "Remove participant"
+msgstr ""
+
+#: includes/class-admin.php:532
+msgid "Close"
+msgstr ""
+
+#: includes/class-admin.php:533
+msgid "Add"
+msgstr ""
+
+#: includes/class-admin.php:534
+msgid "Agents"
+msgstr ""
+
+#: includes/class-admin.php:535
+msgid "Add agents"
+msgstr ""
+
+#: includes/class-admin.php:536
+msgid "There are no additional agents for this deal."
+msgstr ""
+
+#: includes/class-admin.php:537
+msgid "Are you sure you want to remove this agent?"
+msgstr ""
+
+#: includes/class-admin.php:538
+msgid "Note"
+msgstr ""
+
+#: includes/class-admin.php:539 includes/class-shortcodes.php:125
+msgid "Notes"
+msgstr ""
+
+#: includes/class-admin.php:540
+msgid "enter 3 or more characters"
+msgstr ""
+
+#: includes/class-admin.php:541
+msgid "Hour"
+msgstr ""
+
+#: includes/class-admin.php:542
+msgid "Min"
+msgstr ""
+
+#: includes/class-admin.php:543
+msgid "Add attachments for this deal"
+msgstr ""
+
+#: includes/class-admin.php:544
+msgid "Attachments"
+msgstr ""
+
+#: includes/class-admin.php:545
+msgid "Add Attachment"
+msgstr ""
+
+#: includes/class-admin.php:546
+msgid "Add attachments"
+msgstr ""
+
+#: includes/class-admin.php:547
+msgid "Select files"
+msgstr ""
+
+#: includes/class-admin.php:548
+msgid "Attach more files"
+msgstr ""
+
+#: includes/class-admin.php:549
+msgid "Email template"
+msgstr ""
+
+#: includes/class-admin.php:550
+msgid "Save template"
+msgstr ""
+
+#: includes/class-admin.php:551
+msgid "Save this template"
+msgstr ""
+
+#: includes/class-admin.php:552
+msgid "Send email"
+msgstr ""
+
+#: includes/class-admin.php:553
+msgid "Select email template"
+msgstr ""
+
+#: includes/class-admin.php:554
+msgid "From"
+msgstr ""
+
+#: includes/class-admin.php:555
+msgid "To"
+msgstr ""
+
+#: includes/class-admin.php:556
+msgid "Subject"
+msgstr ""
+
+#: includes/class-admin.php:557
+msgid ""
+"No template found. You can create email template in <a href=\"%s\" "
+"target=\"_blank\">CRM Settings</a>"
+msgstr ""
+
+#: includes/class-admin.php:558
+msgid "Email Attachments"
+msgstr ""
+
+#: includes/class-admin.php:559
+msgid "Deal Attachments"
+msgstr ""
+
+#: includes/class-admin.php:560
+msgid "You haven't attached any files for this email yet"
+msgstr ""
+
+#: includes/class-admin.php:561
+msgid "Select deal attachment from list below"
+msgstr ""
+
+#: includes/class-admin.php:562
+msgid "You've attached all deal files to your email"
+msgstr ""
+
+#: includes/class-admin.php:563
+msgid "File Name"
+msgstr ""
+
+#: includes/class-admin.php:564
+msgid "Size"
+msgstr ""
+
+#: includes/class-admin.php:565
+msgid "Choose email attachment from the deal attachment list below"
+msgstr ""
+
+#: includes/class-admin.php:566
+msgid "Pin this note"
+msgstr ""
+
+#: includes/class-admin.php:567
+msgid "Unpin this note"
+msgstr ""
+
+#: includes/class-admin.php:568
+msgid "Unpin"
+msgstr ""
+
+#: includes/class-admin.php:569
+msgid "Title"
+msgstr ""
+
+#: includes/class-admin.php:570
+msgid "Status"
+msgstr ""
+
+#: includes/class-admin.php:571
+msgid "Done"
+msgstr ""
+
+#: includes/class-admin.php:572
+msgid "Type"
+msgstr ""
+
+#: includes/class-admin.php:573
+msgid "Due date"
+msgstr ""
+
+#: includes/class-admin.php:574
+msgid "Edit"
+msgstr ""
+
+#: includes/class-admin.php:575
+msgid "Open Activities"
+msgstr ""
+
+#: includes/class-admin.php:576
+msgid "You have no upcoming activity for this deal."
+msgstr ""
+
+#: includes/class-admin.php:577
+msgid "Are you sure you want to delete this activity?"
+msgstr ""
+
+#: includes/class-admin.php:578
+msgid "Yes, delete it"
+msgstr ""
+
+#: includes/class-admin.php:579
+msgid "Competitor"
+msgstr ""
+
+#: includes/class-admin.php:580
+msgid "Competitors"
+msgstr ""
+
+#: includes/class-admin.php:581
+msgid "Competitor Name"
+msgstr ""
+
+#: includes/class-admin.php:582 includes/class-shortcodes.php:123
+#: includes/class-shortcodes.php:178
+msgid "Website"
+msgstr ""
+
+#: includes/class-admin.php:583
+msgid "Strengths"
+msgstr ""
+
+#: includes/class-admin.php:584
+msgid "Weaknesses"
+msgstr ""
+
+#: includes/class-admin.php:585
+msgid "No competitor record found"
+msgstr ""
+
+#: includes/class-admin.php:586
+msgid "Add New Competitor"
+msgstr ""
+
+#: includes/class-admin.php:587
+msgid "Edit Competitor"
+msgstr ""
+
+#: includes/class-admin.php:588 includes/class-shortcodes.php:173
+msgid "Name"
+msgstr ""
+
+#: includes/class-admin.php:589
+msgid "Are you sure you want to delete this competitor?"
+msgstr ""
+
+#: includes/class-admin.php:590
+msgid "All"
+msgstr ""
+
+#: includes/class-admin.php:592
+msgid "Activity"
+msgstr ""
+
+#: includes/class-admin.php:593
+msgid "Emails"
+msgstr ""
+
+#: includes/class-admin.php:594 includes/class-shortcodes.php:118
+msgid "Email"
+msgstr ""
+
+#: includes/class-admin.php:595
+msgid "Attachment"
+msgstr ""
+
+#: includes/class-admin.php:596
+msgid "Changelog"
+msgstr ""
+
+#: includes/class-admin.php:597
+msgid "Mark as To Do"
+msgstr ""
+
+#: includes/class-admin.php:598
+msgid "Download"
+msgstr ""
+
+#: includes/class-admin.php:599
+msgid "No item found for this timeline"
+msgstr ""
+
+#: includes/class-admin.php:600
+msgid "Pinned Note"
+msgstr ""
+
+#: includes/class-admin.php:601
+msgid "Are you sure you want to remove this attachment?"
+msgstr ""
+
+#: includes/class-admin.php:602
+msgid "Are you sure you want to delete this note?"
+msgstr ""
+
+#: includes/class-admin.php:603
+msgid "Loading"
+msgstr ""
+
+#: includes/class-admin.php:604
+msgid "Deal created"
+msgstr ""
+
+#: includes/class-admin.php:605
+msgid "Activity created"
+msgstr ""
+
+#: includes/class-admin.php:606
+msgid "not set"
+msgstr ""
+
+#: includes/class-admin.php:607
+msgid "removed"
+msgstr ""
+
+#: includes/class-admin.php:608
+msgid "Old Value"
+msgstr ""
+
+#: includes/class-admin.php:609
+msgid "New Value"
+msgstr ""
+
+#: includes/class-admin.php:610
+msgid "Field"
+msgstr ""
+
+#: includes/class-admin.php:611
+msgid "Marked as done"
+msgstr ""
+
+#: includes/class-admin.php:612
+msgid "Marked as todo"
+msgstr ""
+
+#: includes/class-admin.php:613 includes/class-deals.php:1789
+msgid "Stage"
+msgstr ""
+
+#: includes/class-admin.php:614
+msgid "Value"
+msgstr ""
+
+#: includes/class-admin.php:615 includes/class-shortcodes.php:179
+msgid "Currency"
+msgstr ""
+
+#: includes/class-admin.php:616
+msgid "deleted"
+msgstr ""
+
+#: includes/class-admin.php:617 includes/class-log.php:561
+msgid "Added new note"
+msgstr ""
+
+#: includes/class-admin.php:618
+msgid "Activity Types"
+msgstr ""
+
+#: includes/class-admin.php:619
+msgid "Lost Reasons"
+msgstr ""
+
+#: includes/class-admin.php:620
+msgid "Customize sales stages"
+msgstr ""
+
+#: includes/class-admin.php:621
+msgid "Edit stage"
+msgstr ""
+
+#: includes/class-admin.php:622
+msgid "Add new pipeline"
+msgstr ""
+
+#: includes/class-admin.php:623
+msgid "Add Stage"
+msgstr ""
+
+#: includes/class-admin.php:624
+msgid "Delete Pipeline"
+msgstr ""
+
+#: includes/class-admin.php:625
+msgid "Delete deals"
+msgstr ""
+
+#: includes/class-admin.php:626
+msgid "Move deals to another pipeline"
+msgstr ""
+
+#: includes/class-admin.php:627
+msgid "Delete pipeline and deals"
+msgstr ""
+
+#: includes/class-admin.php:628
+msgid "Do not change"
+msgstr ""
+
+#: includes/class-admin.php:629
+msgid "Life Stage"
+msgstr ""
+
+#: includes/class-admin.php:630
+msgid "Stage Name"
+msgstr ""
+
+#: includes/class-admin.php:631
+msgid "Yes, delete this stage"
+msgstr ""
+
+#: includes/class-admin.php:632
+msgid "Delete stage"
+msgstr ""
+
+#: includes/class-admin.php:633
+msgid "Edit Pipeline"
+msgstr ""
+
+#: includes/class-admin.php:634
+msgid "Pipeline title"
+msgstr ""
+
+#: includes/class-admin.php:635
+msgid "Add Pipeline"
+msgstr ""
+
+#: includes/class-admin.php:636
+msgid "Yes, delete this pipeline"
+msgstr ""
+
+#: includes/class-admin.php:637
+msgid "Active"
+msgstr ""
+
+#: includes/class-admin.php:638
+msgid "Trashed"
+msgstr ""
+
+#: includes/class-admin.php:640
+msgid "Restore"
+msgstr ""
+
+#: includes/class-admin.php:641
+msgid "Edit Activity Type"
+msgstr ""
+
+#: includes/class-admin.php:642
+msgid "Add Activity Type"
+msgstr ""
+
+#: includes/class-admin.php:643
+msgid "Icon"
+msgstr ""
+
+#: includes/class-admin.php:644
+msgid ""
+"Are you sure you want to trash this activity? The activities related to "
+"this type will also send to trash."
+msgstr ""
+
+#: includes/class-admin.php:645
+msgid "Yes, Trash it"
+msgstr ""
+
+#: includes/class-admin.php:646
+msgid "No active activity type is found"
+msgstr ""
+
+#: includes/class-admin.php:647
+msgid "No trashed activity type is found"
+msgstr ""
+
+#: includes/class-admin.php:648
+msgid "You do not have any pre-defined lost reason"
+msgstr ""
+
+#: includes/class-admin.php:649
+msgid ""
+"Here you can manage lost reasons. When a deal is marked as lost, users can "
+"choose between these options."
+msgstr ""
+
+#: includes/class-admin.php:650
+msgid "Are you sure you want to delete this lost reason?"
+msgstr ""
+
+#: includes/class-admin.php:651
+msgid "Marked as won"
+msgstr ""
+
+#: includes/class-admin.php:652
+msgid "Reopen"
+msgstr ""
+
+#: includes/class-admin.php:653
+msgid "Reopened"
+msgstr ""
+
+#: includes/class-admin.php:654
+msgid "Restored"
+msgstr ""
+
+#: includes/class-admin.php:655
+msgid "Marked as lost"
+msgstr ""
+
+#: includes/class-admin.php:656
+msgid ""
+"Are you sure you want to trash this deal? The activities related to this "
+"deal will also send to trash."
+msgstr ""
+
+#: includes/class-admin.php:657
+msgid "Are you sure you want to delete this deal?"
+msgstr ""
+
+#: includes/class-admin.php:658
+msgid ""
+"All activities, notes, attachments etc associated with it will also "
+"permenently delete."
+msgstr ""
+
+#: includes/class-admin.php:659
+msgid "Contacts"
+msgstr ""
+
+#: includes/class-admin.php:660
+msgid "No activities found"
+msgstr ""
+
+#: includes/class-admin.php:661
+msgid "Load More"
+msgstr ""
+
+#: includes/class-admin.php:662
+msgid "Select Period"
+msgstr ""
+
+#: includes/class-admin.php:663
+msgid "Todo"
+msgstr ""
+
+#: includes/class-admin.php:664
+msgid "Completed"
+msgstr ""
+
+#: includes/class-admin.php:665
+msgid "Apply"
+msgstr ""
+
+#: includes/class-admin.php:667
+msgid "New Deals"
+msgstr ""
+
+#: includes/class-admin.php:668
+msgid "Won Deals"
+msgstr ""
+
+#: includes/class-admin.php:669
+msgid "Lost Deals"
+msgstr ""
+
+#: includes/class-admin.php:670
+msgid "Day"
+msgstr ""
+
+#: includes/class-admin.php:671
+msgid "Today"
+msgstr ""
+
+#: includes/class-admin.php:672
+msgid "Yesterday"
+msgstr ""
+
+#: includes/class-admin.php:673
+msgid "Month"
+msgstr ""
+
+#: includes/class-admin.php:674
+msgid "This month"
+msgstr ""
+
+#: includes/class-admin.php:675
+msgid "Last month"
+msgstr ""
+
+#: includes/class-admin.php:676
+msgid "Week"
+msgstr ""
+
+#: includes/class-admin.php:677
+msgid "This week"
+msgstr ""
+
+#: includes/class-admin.php:678
+msgid "Last week"
+msgstr ""
+
+#: includes/class-admin.php:679
+msgid "This year"
+msgstr ""
+
+#: includes/class-admin.php:680
+msgid "Last year"
+msgstr ""
+
+#: includes/class-admin.php:681
+msgid "Deal Progress"
+msgstr ""
+
+#: includes/class-admin.php:682
+msgid "All Agents"
+msgstr ""
+
+#: includes/class-admin.php:683
+msgid "All Owners"
+msgstr ""
+
+#: includes/class-admin.php:684
+msgid "Counts of deals reached the stage"
+msgstr ""
+
+#: includes/class-admin.php:685
+msgid "Values of deals reached the stage"
+msgstr ""
+
+#: includes/class-admin.php:686
+msgid "Average deal value"
+msgstr ""
+
+#: includes/class-admin.php:687
+msgid "Average time until the stage reached (days)"
+msgstr ""
+
+#: includes/class-admin.php:688
+msgid "No statistic found. Try different filter."
+msgstr ""
+
+#: includes/class-admin.php:689
+msgid "Count"
+msgstr ""
+
+#: includes/class-admin.php:690
+msgid "Total"
+msgstr ""
+
+#: includes/class-admin.php:691
+msgid "Activity Progress"
+msgstr ""
+
+#: includes/class-admin.php:692
+msgid "Open"
+msgstr ""
+
+#: includes/class-admin.php:693
+msgid "Most recent open deals"
+msgstr ""
+
+#: includes/class-admin.php:694
+msgid "Most recent won deals"
+msgstr ""
+
+#: includes/class-admin.php:695
+msgid "No deal found"
+msgstr ""
+
+#: includes/class-admin.php:696
+msgid "You have to input either contact or company name"
+msgstr ""
+
+#: includes/class-admin.php:697
+msgid "No company is linked to this deal"
+msgstr ""
+
+#: includes/class-admin.php:698
+msgid "No contact is linked to this deal"
+msgstr ""
+
+#: includes/class-admin.php:699
+msgid "Are you sure you want to remove this company from this deal?"
+msgstr ""
+
+#: includes/class-admin.php:700
+msgid "Are you sure you want to remove this contact from this deal?"
+msgstr ""
+
+#: includes/class-admin.php:701
+msgid "removed contact"
+msgstr ""
+
+#: includes/class-admin.php:702
+msgid "removed company"
+msgstr ""
+
+#: includes/class-admin.php:703
+msgid "added contact"
+msgstr ""
+
+#: includes/class-admin.php:704
+msgid "added company"
+msgstr ""
+
+#: includes/class-admin.php:705
+msgid "sent an email to"
+msgstr ""
+
+#: includes/class-admin.php:706
+msgid "on"
+msgstr ""
+
+#: includes/class-admin.php:707
+msgid "replied to"
+msgstr ""
+
+#: includes/class-admin.php:708
+msgid "Reply"
+msgstr ""
+
+#: includes/class-admin.php:709
+msgid "Reply Message"
+msgstr ""
+
+#: includes/class-admin.php:710
+msgid "select email template"
+msgstr ""
+
+#: includes/class-admin.php:711
+msgid "Exp. close date"
+msgstr ""
+
+#: includes/class-admin.php:712
+msgid "Created at"
+msgstr ""
+
+#: includes/class-admin.php:713
+msgid "This deal has no activity"
+msgstr ""
+
+#: includes/class-admin.php:714
+msgid "Lost at"
+msgstr ""
+
+#: includes/class-admin.php:715
+msgid "Won at"
+msgstr ""
+
+#: includes/class-ajax.php:144 includes/class-ajax.php:188
+#: includes/class-ajax.php:194 includes/class-ajax.php:768
+#: includes/class-deals.php:660 includes/class-deals.php:1476
+#: includes/class-deals.php:1600 includes/class-deals.php:1615
+msgid "Invalid deal"
+msgstr ""
+
+#: includes/class-ajax.php:167 includes/class-ajax.php:319
+#: includes/class-ajax.php:342 includes/class-ajax.php:506
+#: includes/class-ajax.php:603 includes/class-ajax.php:626
+#: includes/class-ajax.php:668 includes/class-ajax.php:694
+#: includes/class-ajax.php:717 includes/class-ajax.php:740
+#: includes/class-ajax.php:833 includes/class-ajax.php:858
+#: includes/class-ajax.php:884 includes/class-ajax.php:946
+#: includes/class-ajax.php:973 includes/class-ajax.php:996
+#: includes/class-ajax.php:1025 includes/class-ajax.php:1048
+#: includes/class-ajax.php:1071 includes/class-ajax.php:1098
+#: includes/class-ajax.php:1121 includes/class-ajax.php:1150
+#: includes/class-ajax.php:1182 includes/class-ajax.php:1205
+#: includes/class-ajax.php:1232 includes/class-ajax.php:1255
+#: includes/class-ajax.php:1282
+msgid "Invalid operation"
+msgstr ""
+
+#: includes/class-ajax.php:515
+msgid "Unable to delete activity"
+msgstr ""
+
+#: includes/class-ajax.php:532
+msgid "Invalid type or id"
+msgstr ""
+
+#: includes/class-ajax.php:609
+msgid "Unable to add agents. Please try again"
+msgstr ""
+
+#: includes/class-ajax.php:632
+msgid "Unable to remove agents. Please try again"
+msgstr ""
+
+#: includes/class-ajax.php:677
+msgid "Unable to delete note"
+msgstr ""
+
+#: includes/class-ajax.php:700
+msgid "Unable to add attachment. Please try again"
+msgstr ""
+
+#: includes/class-ajax.php:723
+msgid "Unable to remove attachment. Please try again"
+msgstr ""
+
+#: includes/class-ajax.php:750
+msgid "Template saved successfully"
+msgstr ""
+
+#: includes/class-ajax.php:772 includes/class-ajax.php:792
+msgid "Invalid email"
+msgstr ""
+
+#: includes/class-ajax.php:776
+msgid "Email subject is required"
+msgstr ""
+
+#: includes/class-ajax.php:780
+msgid "Email body cannot be empty"
+msgstr ""
+
+#: includes/class-ajax.php:807
+msgid "Could not send email. Please try again."
+msgstr ""
+
+#: includes/class-ajax.php:815
+msgid "Your email has been sent"
+msgstr ""
+
+#: includes/class-ajax.php:867
+msgid "Unable to delete competitor"
+msgstr ""
+
+#: includes/class-ajax.php:907 includes/class-ajax.php:942
+#: includes/class-ajax.php:969 includes/class-ajax.php:992
+#: includes/class-ajax.php:1021 includes/class-ajax.php:1044
+#: includes/class-ajax.php:1067 includes/class-ajax.php:1094
+#: includes/class-ajax.php:1117 includes/class-ajax.php:1146
+#: includes/class-ajax.php:1178 includes/class-ajax.php:1201
+#: includes/class-ajax.php:1228
+msgid "You don't have permission for this operation"
+msgstr ""
+
+#: includes/class-ajax.php:1259
+msgid "Invalid people type"
+msgstr ""
+
+#: includes/class-deals.php:349
+msgid "Deal does not exist"
+msgstr ""
+
+#: includes/class-deals.php:436
+msgid "Add activity"
+msgstr ""
+
+#: includes/class-deals.php:441
+msgid "Take notes"
+msgstr ""
+
+#: includes/class-deals.php:446
+msgid "Send Mail"
+msgstr ""
+
+#: includes/class-deals.php:451
+msgid "Upload Files"
+msgstr ""
+
+#: includes/class-deals.php:506
+msgid "Either contact or company name is required"
+msgstr ""
+
+#: includes/class-deals.php:510
+msgid "Deal title is required"
+msgstr ""
+
+#: includes/class-deals.php:514
+msgid "Invalid pipline stage"
+msgstr ""
+
+#: includes/class-deals.php:518
+msgid "Invalid lost reason"
+msgstr ""
+
+#: includes/class-deals.php:535
+msgid "Could not save the deal. Please try again."
+msgstr ""
+
+#: includes/class-deals.php:680
+msgid "You do not have permission to delete a deal"
+msgstr ""
+
+#: includes/class-deals.php:695
+msgid "Invalid delete action"
+msgstr ""
+
+#: includes/class-deals.php:869
+msgid "Invalid activity type"
+msgstr ""
+
+#: includes/class-deals.php:873
+msgid "Invalid activity title"
+msgstr ""
+
+#: includes/class-deals.php:877
+msgid "Invalid activity deal id"
+msgstr ""
+
+#: includes/class-deals.php:881
+msgid "Invalid CRM agent"
+msgstr ""
+
+#: includes/class-deals.php:885
+msgid "Invalid start date"
+msgstr ""
+
+#: includes/class-deals.php:889
+msgid "You do not have permission to edit this activity"
+msgstr ""
+
+#: includes/class-deals.php:897
+msgid "You do not have permission to assign other agent to an activity"
+msgstr ""
+
+#: includes/class-deals.php:924
+msgid "Could not save the activity. Please try again."
+msgstr ""
+
+#: includes/class-deals.php:954
+msgid "Invalid activity"
+msgstr ""
+
+#: includes/class-deals.php:958
+msgid "You do not have permission to delete this activity"
+msgstr ""
+
+#: includes/class-deals.php:1084 includes/class-deals.php:1134
+msgid "Invalid agent id format"
+msgstr ""
+
+#: includes/class-deals.php:1219 includes/class-deals.php:1224
+msgid "Invalid deal id"
+msgstr ""
+
+#: includes/class-deals.php:1228
+msgid "Note content should not be empty"
+msgstr ""
+
+#: includes/class-deals.php:1253
+msgid "Could not save deal note. Please try again."
+msgstr ""
+
+#: includes/class-deals.php:1284
+msgid "Invalid note"
+msgstr ""
+
+#: includes/class-deals.php:1288
+msgid "You do not have permission to delete this note"
+msgstr ""
+
+#: includes/class-deals.php:1480
+msgid "No email address found"
+msgstr ""
+
+#: includes/class-deals.php:1565
+msgid "Could not send email to these addresses %s"
+msgstr ""
+
+#: includes/class-deals.php:1567
+msgid "Could not send email to %s"
+msgstr ""
+
+#: includes/class-deals.php:1604
+msgid "Competitor name is required"
+msgstr ""
+
+#: includes/class-deals.php:1608
+msgid "Invalid URL"
+msgstr ""
+
+#: includes/class-deals.php:1673
+msgid "Invalid competitor"
+msgstr ""
+
+#: includes/class-deals.php:1677
+msgid "You do not have permission to delete this competitor"
+msgstr ""
+
+#: includes/class-deals.php:1746
+msgid "Creating a pipeline requires at least one stage"
+msgstr ""
+
+#: includes/class-deals.php:1763 includes/class-deals.php:1896
+#: includes/class-deals.php:2032
+msgid "Title cannot be empty"
+msgstr ""
+
+#: includes/class-deals.php:1777
+msgid "Could not save pipeline. Please try again."
+msgstr ""
+
+#: includes/class-deals.php:1815 includes/class-deals.php:1901
+msgid "Invalid pipeline"
+msgstr ""
+
+#: includes/class-deals.php:1822
+msgid "You cannot delete the last pipeline of the system"
+msgstr ""
+
+#: includes/class-deals.php:1831
+msgid ""
+"This pipeline has one or more deals. Please provide another stage id to "
+"transfer"
+msgstr ""
+
+#: includes/class-deals.php:1838 includes/class-deals.php:1965
+msgid "Invalid pipeline stage to transfer deals"
+msgstr ""
+
+#: includes/class-deals.php:1921
+msgid "Could not save pipeline stage. Please try again."
+msgstr ""
+
+#: includes/class-deals.php:1942
+msgid "Invalid pipeline stage"
+msgstr ""
+
+#: includes/class-deals.php:1949
+msgid "At least one stage must be exists in a pipeline"
+msgstr ""
+
+#: includes/class-deals.php:1958
+msgid ""
+"This stage has one or more deals. Please provide another stage id to "
+"transfer"
+msgstr ""
+
+#: includes/class-deals.php:2036
+msgid "Icon cannot be empty"
+msgstr ""
+
+#: includes/class-deals.php:2055
+msgid "Could not save activity type. Please try again."
+msgstr ""
+
+#: includes/class-deals.php:2089
+msgid "Could not trash activity type. Please try again."
+msgstr ""
+
+#: includes/class-deals.php:2124
+msgid "Lost reason cannot be empty"
+msgstr ""
+
+#: includes/class-deals.php:2138
+msgid "Could not save lost reason. Please try again."
+msgstr ""
+
+#: includes/class-deals.php:2157
+msgid "Invalid lost_reason"
+msgstr ""
+
+#: includes/class-frontend.php:78
+msgid "File not found"
+msgstr ""
+
+#: includes/class-log.php:271
+msgid ""
+"<span data-type=\"deal\">New deal</span>: <a href=\"%s\" "
+"target=\"_blank\">%s</a>"
+msgstr ""
+
+#: includes/class-log.php:278
+msgid ""
+"<span data-type=\"deal\">Updated</span> <a href=\"%s\" "
+"target=\"_blank\">%s</a>"
+msgstr ""
+
+#: includes/class-log.php:306
+msgid ""
+"<span data-type=\"deal\">Updated</span>: <a href=\"%s\" "
+"target=\"_blank\">%s</a> (<span data-sub-changes=\"trashed\">trashed</span>)"
+msgstr ""
+
+#: includes/class-log.php:310
+msgid ""
+"<span data-type=\"deal\">Updated</span>: <a href=\"%s\" "
+"target=\"_blank\">%s</a> (<span "
+"data-sub-changes=\"restored\">restored</span>)"
+msgstr ""
+
+#: includes/class-log.php:314
+msgid "<span data-type=\"deal\">Deleted</span>: %s"
+msgstr ""
+
+#: includes/class-log.php:378
+msgid ""
+"<span data-type=\"activity\" data-type-id=\"%d\">New activity</span>: <a "
+"href=\"%s\" target=\"_blank\">%s</a>"
+msgstr ""
+
+#: includes/class-log.php:385
+msgid ""
+"<span data-type=\"activity\" data-type-id=\"%d\">Updated activity</span>: "
+"<a href=\"%s\" target=\"_blank\">%s</a>"
+msgstr ""
+
+#: includes/class-log.php:410
+msgid ""
+"<span data-type=\"activity\">Deleted activity</span>: <span "
+"data-title>%s</span>"
+msgstr ""
+
+#: includes/class-log.php:440 includes/class-log.php:476
+#: includes/class-log.php:502 includes/class-log.php:534
+msgid "Updated"
+msgstr ""
+
+#: includes/class-log.php:443
+msgid "Added agent"
+msgstr ""
+
+#: includes/class-log.php:443
+msgid "Added agents"
+msgstr ""
+
+#: includes/class-log.php:479
+msgid "Removed agent"
+msgstr ""
+
+#: includes/class-log.php:479
+msgid "Removed agents"
+msgstr ""
+
+#: includes/class-log.php:505
+msgid "Add attachment"
+msgstr ""
+
+#: includes/class-log.php:537
+msgid "Removed attachment"
+msgstr ""
+
+#: includes/class-log.php:537
+msgid "Removed attachments"
+msgstr ""
+
+#: includes/class-log.php:561
+msgid "Edited note"
+msgstr ""
+
+#: includes/class-log.php:562 includes/class-log.php:575
+#: includes/class-log.php:581 includes/class-log.php:610
+msgid ""
+"<span data-type=\"deal\">Updated</span> <a href=\"%s\" "
+"target=\"_blank\">%s</a> - <span data-sub-changes=\"%s\">%s</span>"
+msgstr ""
+
+#: includes/class-log.php:574
+msgid "Pinned a note"
+msgstr ""
+
+#: includes/class-log.php:577 includes/class-log.php:582
+msgid "yes"
+msgstr ""
+
+#: includes/class-log.php:580
+msgid "Unpinned a note"
+msgstr ""
+
+#: includes/class-log.php:605
+msgid "Deleted note"
+msgstr ""
+
+#: includes/class-shortcodes.php:114
+msgid "Company/Contact"
+msgstr ""
+
+#: includes/class-shortcodes.php:116
+msgid "Contact First Name"
+msgstr ""
+
+#: includes/class-shortcodes.php:117
+msgid "Contact Last Name"
+msgstr ""
+
+#: includes/class-shortcodes.php:119
+msgid "Company Name"
+msgstr ""
+
+#: includes/class-shortcodes.php:120 includes/class-shortcodes.php:175
+msgid "Phone"
+msgstr ""
+
+#: includes/class-shortcodes.php:121 includes/class-shortcodes.php:177
+msgid "Mobile"
+msgstr ""
+
+#: includes/class-shortcodes.php:124 includes/class-shortcodes.php:176
+msgid "Fax"
+msgstr ""
+
+#: includes/class-shortcodes.php:132
+msgid "Currency Code"
+msgstr ""
+
+#: includes/class-shortcodes.php:133
+msgid "Currency Symbol"
+msgstr ""
+
+#: includes/class-shortcodes.php:134
+msgid "Currency Name"
+msgstr ""
+
+#: includes/class-shortcodes.php:139
+msgid "Contact Custom Meta"
+msgstr ""
+
+#: includes/class-shortcodes.php:147
+msgid "Company Custom Meta"
+msgstr ""
+
+#: includes/class-shortcodes.php:157
+msgid "Current date"
+msgstr ""
+
+#: includes/class-shortcodes.php:158
+msgid "Full name of current day"
+msgstr ""
+
+#: includes/class-shortcodes.php:159
+msgid "Short name of current day"
+msgstr ""
+
+#: includes/class-shortcodes.php:160
+msgid "Current Month number"
+msgstr ""
+
+#: includes/class-shortcodes.php:161
+msgid "Full name of current month"
+msgstr ""
+
+#: includes/class-shortcodes.php:162
+msgid "Short name of current month"
+msgstr ""
+
+#: includes/class-shortcodes.php:163
+msgid "Year"
+msgstr ""
+
+#: includes/class-shortcodes.php:170
+msgid "Your Company"
+msgstr ""
+
+#: includes/class-shortcodes.php:172
+msgid "Logo"
+msgstr ""
+
+#: includes/class-shortcodes.php:174
+msgid "Mailing Address"
+msgstr ""
+
+#: views/settings-page.php:129
+msgid ""
+"You are about to delete <strong>%s</strong> stage. Are you sure you want to "
+"do this?"
+msgstr ""
+
+#: views/settings-page.php:133
+msgid "There are <strong>%s deals</strong> in this stage right now."
+msgstr ""
+
+#: views/settings-page.php:136
+msgid "There is <strong>%s deal</strong> in this stage right now."
+msgstr ""
+
+#: views/settings-page.php:142
+msgid "Please choose into which stage these deals should be moved after deletion."
+msgstr ""
+
+#: views/settings-page.php:257
+msgid ""
+"You are about to delete <strong>%s</strong> pipeline. Are you sure you want "
+"to do this?"
+msgstr ""
+
+#: views/settings-page.php:261
+msgid "There are <strong>%s deals</strong> in this pipeline right now."
+msgstr ""
+
+#: views/settings-page.php:264
+msgid "There is <strong>%s deal</strong> in this pipeline right now."
+msgstr ""
+
+#: views/settings-page.php:269
+msgid ""
+"Please choose into which pipeline these deals should be moved after "
+"deletion."
+msgstr ""
+
+#: wp-erp-deals.php:135
+msgid "Manage Deals"
+msgstr ""
+
+#: wp-erp-deals.php:151
+msgid ""
+"<strong>Error:</strong> <a href=\"%s\">WP ERP</a> Plugin is required to use "
+"Deals plugin."
+msgstr ""
+
+#: wp-erp-deals.php:171
+msgid "You need to install WP-ERP main plugin to use this addon"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "WP ERP - Deals"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "http://wperp.com/downloads/erp-deals"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "Deal Management add-on for WP ERP - CRM Module"
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "weDevs"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://wedevs.com"
+msgstr ""
