@@ -392,7 +392,7 @@ function customer_statics() {
         }
 
         $customer_countries = array_count_values( $codes );
-        set_transient( 'erp_customer_countries_widget', $customer_countries, time() + ( 3 * HOUR_IN_SECONDS ) );
+        set_transient( 'erp_customer_countries_widget', $customer_countries, 3 * HOUR_IN_SECONDS );
     } else {
         $customer_countries = get_transient( 'erp_customer_countries_widget' );
     }
