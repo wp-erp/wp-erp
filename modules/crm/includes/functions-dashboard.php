@@ -379,14 +379,13 @@ function customer_statics() {
     echo '<div id="erp-hr-customer-statics" style="width: 100%; height: 300px;"></div>';
     $customer_countries = [];
 
-    if ( false == get_transient( 'erp_customer_countries_widget' ) ) {
+    if ( false === get_transient( 'erp_customer_countries_widget' ) ) {
         global $wpdb;
         $countries = $wpdb->get_results( 'SELECT country FROM ' . $wpdb->prefix . 'erp_peoples', OBJECT );
-
         $codes     = [];
 
         foreach ( $countries as $code_of ) {
-            if ( !is_null( $code_of->country ) ) {
+            if ( ! is_null( $code_of->country ) ) {
                 $codes[] = $code_of->country;
             }
         }
@@ -397,7 +396,8 @@ function customer_statics() {
         $customer_countries = get_transient( 'erp_customer_countries_widget' );
     }
 
-    ob_start(); ?>
+    ob_start();
+    ?>
     <script>
         jQuery(document).ready(function () {
             jQuery('#erp-hr-customer-statics').vectorMap({
