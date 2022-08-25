@@ -1263,7 +1263,7 @@ class Ajax_Handler {
         $save_data       = [];
         $activity_id     = ! empty( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : '';
         $activity_type   = ! empty( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
-        $message         = sanitize_textarea_field( wp_unslash( $_POST['message'] ) );
+        $message         = wp_kses_post( wp_unslash( $_POST['message'] ) );
         $user_id         = absint( wp_unslash( $_POST['user_id'] ) );
         $created_by      = ! empty( $_POST['created_by'] ) ? absint( wp_unslash( $_POST['created_by'] ) ) : '';
         $email_subject   = ! empty( $_POST['email_subject'] ) ? sanitize_text_field( wp_unslash( $_POST['email_subject'] ) ) : '';
