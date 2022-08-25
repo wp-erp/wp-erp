@@ -2476,10 +2476,14 @@ class Ajax_Handler {
         }
 
         if ( empty( $_POST['fyears'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
-            $this->send_error( erp_get_message ( [
-				      'type' => 'error',
-				      'text' => __( 'Financial year is required', 'erp' ),
-			      ] ) );
+            $this->send_error(
+                erp_get_message (
+                    [
+                        'type' => 'error',
+                        'text' => __( 'Financial year is required', 'erp' ),
+			        ]
+                )
+            );
         }
 
         $f_years  = map_deep( wp_unslash( $_POST['fyears'] ), 'sanitize_text_field' );  // phpcs:ignore WordPress.Security.NonceVerification.Missing
