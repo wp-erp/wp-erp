@@ -673,7 +673,7 @@ class Form_Handler {
 
         if ( isset( $get['action'] ) && ( 'trash' === sanitize_text_field( wp_unslash( $get['action'] ) ) ) ) {
             if ( isset( $get['holiday_id'] ) ) {
-                erp_hr_delete_holidays( absint( $get['holiday_id'] ) );
+                erp_hr_delete_holidays( array_map( 'absint', $get['holiday_id'] ) );
 
                 return true;
             }
@@ -681,7 +681,7 @@ class Form_Handler {
 
         if ( isset( $get['action2'] ) && ( 'trash' === sanitize_text_field( wp_unslash( $get['action2'] ) ) ) ) {
             if ( isset( $get['holiday_id'] ) ) {
-                erp_hr_delete_holidays( absint( $get['holiday_id'] ) );
+                erp_hr_delete_holidays( array_map( 'absint', $get['holiday_id'] ) );
 
                 return true;
             }
