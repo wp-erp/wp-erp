@@ -359,13 +359,14 @@ class Ajax_Handler {
     public function import_holiday() {
         $this->verify_nonce( 'erp-leave-holiday-import' );
 
-        // Check permission
         if ( ! current_user_can( 'erp_leave_manage' ) ) {
             $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
-        $data = [];
-        $line = 1;
+        $line       = 1;
+        $data       = [];
+        $error_list = [];
+        $response   = '';
 
         foreach ( $_POST['title'] as $key => $title ) {
             $data[ $key ]['title'] = sanitize_text_field( wp_unslash( $title ) );
@@ -407,18 +408,18 @@ class Ajax_Handler {
 
         if ( count( $valid_import ) > 0 ) {
             $html_class = 'updated notice';
-            $msg .= sprintf( __( 'Successfully imported %u data<br>', 'erp' ), count( $valid_import ) );
+            $response .= sprintf( __( 'Successfully imported %u data<br>', 'erp' ), count( $valid_import ) );
         }
 
         if ( count( $error_list ) > 0 ) {
             $html_class = 'error  notice';
             $err_string = implode( ',', $error_list );
-            $msg .= sprintf( __( 'Something went wrong! Failed to import line no  %s.', 'erp' ), $err_string );
+            $response .= sprintf( __( 'Something went wrong! Failed to import line no  %s.', 'erp' ), $err_string );
         }
 
-        $msg = "<div class='{$html_class}'><p>{$msg}</p></div>";
+        $response = "<div class='{$html_class}'><p>{$response}</p></div>";
 
-        $this->send_success( $msg );
+        $this->send_success( $response );
     }
 
     /**
@@ -2481,7 +2482,7 @@ class Ajax_Handler {
 			      ] ) );
         }
 
-        $f_years  = array_map( 'sanitize_text_field', wp_unslash( $_POST['fyears'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+        $f_years  = map_deep( wp_unslash( $_POST['fyears'] ), 'sanitize_text_field' );  // phpcs:ignore WordPress.Security.NonceVerification.Missing
         $inserted = erp_settings_save_leave_years( $f_years );
 
         if ( is_wp_error( $inserted ) ) {
