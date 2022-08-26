@@ -328,12 +328,19 @@ class Admin {
      * @return void
      */
     public function init_hooks() {
-        if ( isset( $_GET['page'] ) && 'erp-accounting' === sanitize_text_field( wp_unslash( $_GET['page'] ) ) ) {
+        if (
+            isset( $_GET['page'] ) &&
+            (
+                'erp-accounting' === $_GET['page'] ||
+                (
+                    'erp-hr' === $_GET['page'] &&
+                    isset( $_GET['section'] ) &&
+                    'reimbursement' === $_GET['section']
+                )
+            )
+        ) {
             add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
         }
-
-        // Ajax hooks
-        new Ajax_Handler();
     }
 
     /**
@@ -342,6 +349,8 @@ class Admin {
      * @return void
      */
     public function init_classes() {
+        new Ajax_Handler();
+
         // Initialization of Accounting Tutorial Class if tutorial mode is enabled
         $tutorial_tab = ! empty( $_GET['tutorial'] ) ? true : false;
 
