@@ -3,9 +3,9 @@ Contributors: tareq1988, nizamuddinbabu, wedevs
 Donate Link: https://tareq.co/donate
 Tags: business manager, erp, accounting, crm, hr, project manager, small business, SME, contact, contacts, Customer Relationship Management, employee, leave management, hr, human resource management, job, jobs, job listing, lead management, opportunity, schedule, task, lead, holiday, company
 Requires at least: 4.4
-Tested up to: 6.0
+Tested up to: 6.0.1
 Requires PHP: 5.6
-Stable tag: 1.11.0
+Stable tag: 1.11.1
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -273,6 +273,15 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+
+= v1.11.1 -> August 26, 2022 =
+--------------------------
+
+- [update] Optimized holiday importing process in favor of large number of data (HRM)
+- [fix] Bulk delete was not working for Holidays (HRM)
+- [fix] Life stages, names of that are formed with non-English strings, were not supported while importing contacts from Users (CRM)
+- [fix] Text formats were not persisting while creating different activities for any contact/company (CRM)
+- [fix] Some caching issues to avoid data inconsistency
 
 = v1.11.0 -> June 15, 2022 =
 --------------------------
