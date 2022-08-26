@@ -14,6 +14,10 @@
     <div id="holiday-import-hint" class="pull-right"></div>
 
     <div class="holiday-data-wrap">
+        <div id="holiday_import_warning" class="erp-hide">
+            <?php esc_html_e( 'Please do not close or refresh the window until the process is finished.', 'erp' ); ?>
+            <span class="done_count">0</span> <?php esc_html_e( 'of', 'erp' ); ?> <span class="total_count"></span> <?php esc_html_e( 'holidays imported.', 'erp' ); ?>
+        </div>
         <table class="wp-list-table widefat fixed striped" id="erp-hr-holiday-data">
             <thead>
                 <tr>
@@ -64,5 +68,11 @@ input:read-only:focus {
 
 .ui-datepicker{
   z-index: 1000000 !important;
+}
+
+#holiday_import_warning {
+  color: #e04a4a;
+  font-weight: bold;
+  padding: 10px 0;
 }
 </style>

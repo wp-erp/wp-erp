@@ -328,23 +328,74 @@
             },
 
             submit: function(modal) {
-                wp.ajax.send( {
-                    data: this.serializeObject(),
-                    success: function(res) {
-                        modal.closeModal();
+                var titles = $(this).find('input[name="title[]"]').map(function(){return $(this).val();}).get();
+                var starts = $(this).find('input[name="start[]"]').map(function(){return $(this).val();}).get();
+                var ends = $(this).find('input[name="end[]"]').map(function(){return $(this).val();}).get();
+                var descriptions = $(this).find('input[name="description[]"]').map(function(){return $(this).val();}).get();
 
-                        $( '.list-table-wrap' ).load( window.location.href + ' .list-wrap-inner', function() {
-                            Leave.initDateField();
-                            Leave.initToggleCheckbox();
+                var referer = $(this).find('input[name="_wp_http_referer"]').val();
+                var action = $(this).find('input[name="action"]').val();
+                var nonce = $(this).find('input[name="_wpnonce"]').val();
+                var chunkSize = 30;
+                var total = titles.length;
+                var done = 0;
+                var updateArea = $(this).find('#holiday_import_warning');
+                updateArea.removeClass('erp-hide');
+                updateArea.find('.total_count').text(total);
+                var doneCount = updateArea.find('.done_count');
 
-                            $('#holiday_msg').html( res );
-                        } );
-                    },
-                    error: function(error) {
-                        modal.enableButton();
-                        modal.showError( error );
+                for ( var index = 0; index < total; index += chunkSize ) {
+                    var form = new FormData();
+                    form.append("_wpnonce", nonce);
+                    form.append("action", action);
+                    form.append("_wp_http_referer", referer);
+
+                    for ( var offset = 0; offset < chunkSize; offset++) {
+                        if(offset + index >= titles.length){
+                            break;
+                        }
+
+                        form.append("title[]", titles[offset + index]);
+                        form.append("start[]", starts[offset + index]);
+                        form.append("end[]", ends[offset + index]);
+                        form.append("description[]", descriptions[offset + index]);
                     }
-                });
+
+                    wp.ajax.send( {
+                        data: form,
+                        processData: false,
+                        contentType: false,
+                        success: function(res) {
+                            $( '.list-table-wrap' ).load( window.location.href + ' .list-wrap-inner', function() {
+                                Leave.initDateField();
+                                Leave.initToggleCheckbox();
+                                done += chunkSize;
+                                doneCount.text(Math.min(done, total));
+
+                                $('#holiday_msg').html( res );
+
+                                if ( done >= total ) {
+                                    updateArea.addClass('erp-hide');
+
+                                    var msg_element = $('#holiday_msg div p');
+                                    var msg = msg_element.text();
+                                    msg = msg.replace( /\d+/g, total);
+                                    msg_element.text(msg);
+
+                                    modal.closeModal();
+                                }
+                            } );
+                        },
+                        error: function(error) {
+                            modal.enableButton();
+                            modal.showError( error );
+                        }
+                    });
+                }
+
+                if ( total === 0 ) {
+                    setTimeout( modal.closeModal, 300 );
+                }
             },
 
             import: function(e) {
@@ -874,7 +925,7 @@
                 };
 
                 $( '.erp-loader' ).css( 'display', 'block' );
-                
+
                 wp.ajax.send( 'erp-hr-leave-type-create', {
                     data: data,
                     success: function ( response ) {
@@ -928,7 +979,7 @@
             remove: function ( e ) {
                 e.preventDefault();
                 Leave.leaveType.resetForm(); // Necessary in case the form is in edit mode before deleting
-                
+
                 var self = $( this );
 
                 swal({
@@ -958,7 +1009,7 @@
                                 type: 'success',
                                 timer: 2200,
                                 showConfirmButton: false
-                            });                            
+                            });
                         },
                         error: function ( error ) {
                             swal( '', error, 'error' );
@@ -978,7 +1029,7 @@
 
                 var cbs = form['ids[]'];
                 var ids = [];
-                
+
                 for ( var i = 0; i < cbs.length; i++ ) {
                     if ( cbs[i].checked ) {
                         ids.push( cbs[i].value );
@@ -1007,7 +1058,7 @@
                         },
                         success: function ( response ) {
                             Leave.leaveType.reloadTable();
-                            
+
                             swal({
                                 title: '',
                                 text: response,
