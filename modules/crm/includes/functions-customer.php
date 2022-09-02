@@ -711,7 +711,7 @@ function erp_crm_get_feed_activity( $args = [] ) {
             $results = $results->where( 'user_id', $postdata['customer_id'] );
         }
 
-        if ( current_user_can( 'erp_crm_agent' ) ) {
+        if ( erp_crm_is_current_user_crm_agent() ) {
             $contact_owner = get_current_user_id();
             $people_ids    = array_keys( $wpdb->get_results( "SELECT id FROM {$wpdb->prefix}erp_peoples WHERE contact_owner = {$contact_owner}", OBJECT_K ) );
 
