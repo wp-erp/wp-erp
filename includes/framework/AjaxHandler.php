@@ -8,7 +8,7 @@ use WeDevs\ERP\Framework\Traits\Hooker;
 /**
  * Ajax handler
  */
-class Ajax_Handler {
+class AjaxHandler {
     use Ajax;
     use Hooker;
 

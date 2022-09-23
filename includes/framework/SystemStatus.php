@@ -3,7 +3,7 @@
 namespace WeDevs\ERP\Framework;
 
  // @since 1.3.4
-class System_Status {
+class SystemStatus {
 
     /**
      * Get array of environment information. Includes thing like software

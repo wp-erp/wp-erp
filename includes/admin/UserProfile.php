@@ -5,7 +5,7 @@ namespace WeDevs\ERP\Admin;
 /**
  * Loads HR users admin area
  */
-class User_Profile {
+class UserProfile {
 
     /**
      * The HR users admin loader

@@ -10,7 +10,7 @@
                 <input type="hidden" name="page" value="erp-tools">
                 <input type="hidden" name="tab" value="log">
                 <?php
-                $audit_log = new \WeDevs\ERP\Admin\Auditlog_List_Table();
+                $audit_log = new \WeDevs\ERP\Admin\AuditlogListTable();
                 $audit_log->prepare_items();
                 $audit_log->views();
 

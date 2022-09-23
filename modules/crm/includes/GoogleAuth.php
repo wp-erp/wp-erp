@@ -5,7 +5,7 @@ namespace WeDevs\ERP\CRM;
 use Google_Client;
 use Google_Service_Gmail;
 
-class Google_Auth {
+class GoogleAuth {
 
     /**
      * @var Google_Client

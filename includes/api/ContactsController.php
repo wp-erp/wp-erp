@@ -6,7 +6,7 @@ use WP_Error;
 use WP_REST_Response;
 use WP_REST_Server;
 
-class Contacts_Controller extends REST_Controller {
+class ContactsController extends REST_Controller {
 
     /**
      * Endpoint namespace.

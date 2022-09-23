@@ -10,7 +10,7 @@ namespace WeDevs\ERP\Admin;
 /**
  * The class
  */
-class Setup_Wizard {
+class SetupWizard {
 
     /** @var string Currenct Step */
     private $step   = '';
@@ -1117,4 +1117,4 @@ class Setup_Wizard {
     }
 }
 
-return new Setup_Wizard();
+return new SetupWizard();

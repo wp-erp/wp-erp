@@ -6,7 +6,7 @@ use WP_Error;
 use WP_REST_Response;
 use WP_REST_Server;
 
-class Contacts_Groups_Controller extends REST_Controller {
+class ContactsGroupsController extends REST_Controller {
 
     /**
      * Endpoint namespace.
@@ -233,7 +233,7 @@ class Contacts_Groups_Controller extends REST_Controller {
             $items = erp_get_people_by( 'id', $item_ids );
         }
 
-        $contacts_controller = new Contacts_Controller();
+        $contacts_controller = new ContactsController();
 
         $formated_items = [];
 

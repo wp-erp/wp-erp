@@ -6,7 +6,7 @@ use WP_Error;
 use WP_REST_Response;
 use WP_REST_Server;
 
-class Schedules_Controller extends REST_Controller {
+class SchedulesController extends REST_Controller {
 
     /**
      * Endpoint namespace.

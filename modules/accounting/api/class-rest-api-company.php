@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
 
-class Company_Controller extends \WeDevs\ERP\API\REST_Controller {
+class CompanyController extends \WeDevs\ERP\API\REST_Controller {
 
     /**
      * Endpoint namespace.

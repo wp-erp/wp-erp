@@ -3,9 +3,9 @@
 namespace WeDevs\ERP\API;
 
 /**
- * API_Registrar class
+ * ApiRegistrar class
  */
-class API_Registrar {
+class ApiRegistrar {
 
     /**
      * Constructor

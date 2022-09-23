@@ -7,7 +7,7 @@ use Google_Service_Exception;
 use Google_Service_Gmail;
 use Google_Service_Gmail_Message;
 
-class Gmail_Sync {
+class GmailSync {
 
     /**
      * @var Google_Service_Gmail
@@ -15,7 +15,7 @@ class Gmail_Sync {
     private $gmail;
 
     /**
-     * @var Google_Auth
+     * @var GoogleAuth
      */
     private $client;
 

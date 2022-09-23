@@ -873,5 +873,3 @@ class Ajax {
         );
     }
 }
-
-new Ajax();

@@ -4,7 +4,7 @@ namespace WeDevs\ERP\Admin;
 
 use WeDevs\ERP\Framework\Traits\Hooker;
 
-class Admin_Page {
+class AdminPage {
     use Hooker;
 
     public function __construct() {
@@ -44,7 +44,7 @@ class Admin_Page {
      * @return void
      */
     public function init_classes() {
-        new Form_Handler();
+        new FormHandler();
         new Ajax();
     }
 
@@ -212,5 +212,3 @@ class Admin_Page {
         }
     }
 }
-
-new Admin_Page();

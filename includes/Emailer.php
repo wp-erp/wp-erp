@@ -2,7 +2,8 @@
 
 namespace WeDevs\ERP;
 
-use Email;
+// ToDo: Need to check further.
+use WeDevs\ERP\Settings\Email;
 
 /**
  * Emailer Class

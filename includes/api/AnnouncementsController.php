@@ -7,7 +7,7 @@ use WP_Error;
 use WP_REST_Response;
 use WP_REST_Server;
 
-class Announcements_Controller extends REST_Controller {
+class AnnouncementsController extends REST_Controller {
 
     /**
      * Endpoint namespace.

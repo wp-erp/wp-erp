@@ -5,7 +5,7 @@ namespace WeDevs\ERP\Admin;
 /**
  * Administration Module Class
  */
-class Admin_Module {
+class AdminModule {
     public function __construct() {
         $this->output();
 

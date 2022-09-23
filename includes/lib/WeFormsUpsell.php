@@ -1,11 +1,11 @@
 <?php
 
-if ( ! class_exists( 'WeForms_Upsell' ) ) {
+if ( ! class_exists( 'WeFormsUpsell' ) ) {
 
 /**
  * weForms Upsell Class
  */
-    class WeForms_Upsell {
+    class WeFormsUpsell {
 
     /**
      * Affiliate code for referal tracking

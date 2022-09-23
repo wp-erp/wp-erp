@@ -124,7 +124,7 @@ class Customer_Relationship {
     private function init_classes() {
         if ( is_admin() ) {
             new Ajax_Handler();
-            new Form_Handler();
+            new FormHandler();
             new Admin_Menu();
             new User_Profile();
             new Log();

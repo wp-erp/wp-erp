@@ -10,7 +10,7 @@ use WeDevs\ERP\Framework\Traits\Hooker;
  *
  * Handles all the form submission
  */
-class Form_Handler {
+class FormHandler {
     use Hooker;
 
     /**
@@ -217,4 +217,4 @@ class Form_Handler {
     }
 }
 
-new Form_Handler();
+new FormHandler();

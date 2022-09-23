@@ -7,7 +7,7 @@ use WeDevs\ERP\Framework\Traits\Hooker;
 /**
  * Administration Menu Class
  */
-class Admin_Menu {
+class AdminMenu {
     use Hooker;
 
     /**
@@ -186,7 +186,7 @@ class Admin_Menu {
      * @return void
      */
     public function module() {
-        new \WeDevs\ERP\Admin\Admin_Module();
+        new \WeDevs\ERP\Admin\AdminModule();
     }
 
     /**
@@ -313,5 +313,3 @@ class Admin_Menu {
         include_once __DIR__ . '/views/add-ons.php';
     }
 }
-
-return new Admin_Menu();

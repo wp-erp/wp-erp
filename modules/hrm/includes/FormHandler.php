@@ -15,7 +15,7 @@ use WP_Error;
  * are needed to submit via regular form submits. This class
  * Handles those form submission in this module
  */
-class Form_Handler {
+class FormHandler {
 
     /**
      * Hook 'em all
@@ -1293,4 +1293,4 @@ class Form_Handler {
     }
 }
 
-new Form_Handler();
+new FormHandler();

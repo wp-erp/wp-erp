@@ -5,7 +5,7 @@ namespace WeDevs\ERP\API;
 use WP_REST_Response;
 use WP_REST_Server;
 
-class Utility_Controller extends REST_Controller {
+class UtilityController extends REST_Controller {
 
     /**
      * Endpoint namespace.

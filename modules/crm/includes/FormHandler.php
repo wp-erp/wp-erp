@@ -7,7 +7,7 @@ namespace WeDevs\ERP\CRM;
  *
  * @since 1.0
  */
-class Form_Handler {
+class FormHandler {
 
     /**
      * Hook all actions

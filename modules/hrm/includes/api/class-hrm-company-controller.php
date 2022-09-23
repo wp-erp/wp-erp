@@ -6,7 +6,7 @@ use WeDevs\ERP\API\REST_Controller;
 use WP_REST_Response;
 use WP_REST_Server;
 
-class Company_Controller extends REST_Controller {
+class CompanyController extends REST_Controller {
 
     /**
      * Endpoint namespace.

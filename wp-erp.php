@@ -36,6 +36,13 @@
  */
 
 // don't call the file directly
+use WeDevs\ERP\Scripts;
+use WeDevs\ERP\Updates;
+use WeDevs\ERP\Admin\AdminMenu;
+use WeDevs\ERP\Admin\AdminPage;
+use WeDevs\ERP\API\ApiRegistrar;
+use WeDevs\ERP\Admin\UserProfile;
+
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
@@ -226,14 +233,17 @@ final class WeDevs_ERP {
         require_once WPERP_INCLUDES . '/functions-html.php';
         require_once WPERP_INCLUDES . '/functions-company.php';
         require_once WPERP_INCLUDES . '/functions-people.php';
-        require_once WPERP_INCLUDES . '/api/class-api-registrar.php';
+//        require_once WPERP_INCLUDES . '/api/class-api-registrar.php';
+        new ApiRegistrar();
         require_once WPERP_INCLUDES . '/class-i18n.php';
         require_once WPERP_INCLUDES . '/functions-cache-helper.php';
 
         if ( is_admin() ) {
             require_once WPERP_INCLUDES . '/admin/functions.php';
-            require_once WPERP_INCLUDES . '/admin/class-menu.php';
-            require_once WPERP_INCLUDES . '/admin/class-admin.php';
+//            require_once WPERP_INCLUDES . '/admin/class-menu.php';
+            new AdminMenu();
+//            require_once WPERP_INCLUDES . '/admin/class-admin.php';
+            new AdminPage();
 
             // Includes background process libs
             require_once WPERP_INCLUDES . '/lib/bgprocess/wp-async-request.php';
@@ -273,10 +283,10 @@ final class WeDevs_ERP {
     private function instantiate() {
         $this->setup_database();
 
-        new \WeDevs\ERP\Admin\User_Profile();
-        new \WeDevs\ERP\Scripts();
-        new \WeDevs\ERP\Updates();
-        new \WeDevs\ERP\API\API_Registrar();
+        new UserProfile();
+        new Scripts();
+        new Updates();
+        new ApiRegistrar();
         new \WeDevs\ERP\Promotion();
         new \WeDevs\ERP\AddonTask();
         new \WeDevs\ERP\ERP_i18n();
@@ -289,8 +299,8 @@ final class WeDevs_ERP {
         $this->container['modules']     = new \WeDevs\ERP\Framework\Modules();
         $this->container['emailer']     = \WeDevs\ERP\Emailer::init();
         $this->container['integration'] = \WeDevs\ERP\Integration::init();
-        $this->container['google_auth'] = \WeDevs\ERP\CRM\Google_Auth::init();
-        $this->container['google_sync'] = \WeDevs\ERP\CRM\Gmail_Sync::init();
+        $this->container['google_auth'] = \WeDevs\ERP\CRM\GoogleAuth::init();
+        $this->container['google_sync'] = \WeDevs\ERP\CRM\GmailSync::init();
     }
 
     /**

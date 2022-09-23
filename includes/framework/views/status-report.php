@@ -4,7 +4,7 @@
  */
 global $wpdb;
 
-$system_status    = new \WeDevs\ERP\Framework\System_Status();
+$system_status    = new \WeDevs\ERP\Framework\SystemStatus();
 $environment      = $system_status->get_environment_info();
 $database         = $system_status->get_database_info();
 $post_type_counts = $system_status->get_post_type_counts();
