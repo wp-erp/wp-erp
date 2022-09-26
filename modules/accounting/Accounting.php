@@ -231,10 +231,6 @@ final class Accounting {
         LedgerMap::get_instance();
         new SendEmail();
         new UserProfile();
-
-        if ( $this->is_request( 'admin' ) ) {
-            new Admin();
-        }
     }
 
     /**

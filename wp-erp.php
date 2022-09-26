@@ -241,8 +241,6 @@ final class WeDevs_ERP {
         require_once WPERP_INCLUDES . '/functions-company.php';
         require_once WPERP_INCLUDES . '/functions-people.php';
 //        require_once WPERP_INCLUDES . '/api/class-api-registrar.php';
-        new ApiRegistrar();
-        new ERP_i18n();
 //        require_once WPERP_INCLUDES . '/class-i18n.php';
         require_once WPERP_INCLUDES . '/functions-cache-helper.php';
 
@@ -279,7 +277,6 @@ final class WeDevs_ERP {
 
         // Validates data
 //        require_once WPERP_INCLUDES . '/class-validate-data.php';
-        new ValidateData();
         // cli command
         if ( defined( 'WP_CLI' ) && WP_CLI ) {
             include WPERP_INCLUDES . '/cli/commands.php';

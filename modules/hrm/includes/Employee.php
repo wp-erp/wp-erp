@@ -1,7 +1,7 @@
 <?php
 namespace WeDevs\ERP\HRM;
 
-use WeDevs\ERP\Admin\Models\Company_Locations;
+use WeDevs\ERP\Admin\Models\CompanyLocations;
 use WeDevs\ERP\HRM\Models\Department as HRDepartment;
 use WeDevs\ERP\HRM\Models\Designation;
 use WeDevs\ERP\HRM\Models\LeaveHoliday;
@@ -922,7 +922,7 @@ class Employee {
                 return $this->erp_user->location;
             }
 
-            $location = Company_Locations::find( $this->location );
+            $location = CompanyLocations::find( $this->location );
 
             if ( $location ) {
                 return stripslashes( $location->name );

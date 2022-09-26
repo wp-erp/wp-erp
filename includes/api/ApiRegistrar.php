@@ -26,10 +26,10 @@ class ApiRegistrar {
      */
     public function register_rest_routes() {
         $controllers = [
-            '\WeDevs\ERP\API\Utility_Controller',
+            '\WeDevs\ERP\API\UtilityController',
         ];
 
-        if ( erp_is_module_active( 'crm' ) ) {
+        if ( erp_is_module_active( 'CRM' ) ) {
             $controllers = array_merge( $controllers, [
                 '\WeDevs\ERP\API\Contacts_Controller',
                 '\WeDevs\ERP\API\Contacts_Groups_Controller',

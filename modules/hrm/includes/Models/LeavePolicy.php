@@ -106,6 +106,6 @@ class LeavePolicy extends Model {
      * @return object
      */
     public function location() {
-        return $this->belongsTo( 'WeDevs\ERP\Admin\Models\Company_Locations', 'location_id', 'id' );
+        return $this->belongsTo( 'WeDevs\ERP\Admin\Models\CompanyLocations', 'location_id', 'id' );
     }
 }

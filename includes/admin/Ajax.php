@@ -2,7 +2,7 @@
 
 namespace WeDevs\ERP\Admin;
 
-use WeDevs\ERP\Admin\Models\Company_Locations;
+use WeDevs\ERP\Admin\Models\CompanyLocations;
 use WeDevs\ERP\Company;
 use WeDevs\ERP\Framework\Models\APIKey;
 use WeDevs\ERP\Framework\Traits\Hooker;
@@ -401,7 +401,7 @@ class Ajax {
         $location_id   = isset( $_POST['id'] ) ? intval( wp_unslash( $_POST['id'] ) ) : 0;
 
         if ( $location_id ) {
-            Company_Locations::find( $location_id )->delete();
+            CompanyLocations::find( $location_id )->delete();
         }
 
         $this->send_success();
@@ -418,7 +418,7 @@ class Ajax {
             $this->send_error();
         }
 
-        $log       = \WeDevs\ERP\Admin\Models\Audit_Log::find( $log_id );
+        $log       = \WeDevs\ERP\Admin\Models\AuditLog::find( $log_id );
         $old_value = maybe_unserialize( base64_decode( $log->old_value ) );
         $new_value = maybe_unserialize( base64_decode( $log->new_value ) );
         ob_start(); ?>

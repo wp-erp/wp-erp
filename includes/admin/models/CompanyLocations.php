@@ -5,9 +5,9 @@ namespace WeDevs\ERP\Admin\Models;
 use WeDevs\ERP\Framework\Model;
 
 /**
- * Class Company_Locations
+ * Class CompanyLocations
  */
-class Company_Locations extends Model {
+class CompanyLocations extends Model {
     protected $table = 'erp_company_locations';
 
     protected $fillable = [ 'name', 'address_1', 'address_2', 'city', 'state', 'zip', 'country' ];

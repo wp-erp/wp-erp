@@ -63,7 +63,7 @@ class Log {
         $args  = wp_parse_args( $args, $defaults );
         $where = $results = [];
 
-        $audits    = new \WeDevs\ERP\Admin\Models\Audit_Log();
+        $audits    = new \WeDevs\ERP\Admin\Models\AuditLog();
         $audit_log = $audits->leftjoin( $wpdb->users, 'created_by', '=', $wpdb->users . '.ID' )->select( $wpdb->users . '.display_name', $wpdb->prefix . 'erp_audit_log.*' );
 
         if ( isset( $args['component'] ) && ! empty( $args['component'] ) ) {
@@ -157,7 +157,7 @@ class Log {
 
         $id = $wpdb->insert( $table, $fields, $formated );
 
-        //$inserted = \WeDevs\ERP\Admin\Models\Audit_Log::create( $fields );
+        //$inserted = \WeDevs\ERP\Admin\Models\AuditLog::create( $fields );
 
         do_action( 'erp_after_insert_audit_log', $id, $fields );
 

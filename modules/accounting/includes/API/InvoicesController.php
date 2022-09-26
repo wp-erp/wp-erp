@@ -5,12 +5,13 @@ namespace WeDevs\ERP\Accounting\API;
 use WP_Error;
 use WP_REST_Response;
 use WP_REST_Server;
+use WeDevs\ERP\API\REST_Controller;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
 
-class InvoicesController extends \WeDevs\ERP\API\REST_Controller {
+class InvoicesController extends REST_Controller {
 
     /**
      * Endpoint namespace.

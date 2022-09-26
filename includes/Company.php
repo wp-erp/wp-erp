@@ -2,7 +2,7 @@
 
 namespace WeDevs\ERP;
 
-use WeDevs\ERP\Admin\Models\Company_Locations;
+use WeDevs\ERP\Admin\Models\CompanyLocations;
 use WP_Error;
 
 /**
@@ -170,7 +170,7 @@ class Company {
     }
 
     public function get_locations() {
-        $locations = new Company_Locations();
+        $locations = new CompanyLocations();
 
         return $locations::all()->toArray();
     }
@@ -208,7 +208,7 @@ class Company {
             return new WP_Error( 'no-country', __( 'No country provided.', 'erp' ) );
         }
 
-        $location = new Company_Locations();
+        $location = new CompanyLocations();
 
         if ( ! $location_id ) {
             $new_location = $location->create( $fields );

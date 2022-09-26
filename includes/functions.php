@@ -924,7 +924,7 @@ function erp_financial_end_date() {
  * @return array
  */
 function erp_get_audit_log_modules() {
-    return \WeDevs\ERP\Admin\Models\Audit_Log::select( 'component' )->distinct()->get()->toArray();
+    return \WeDevs\ERP\Admin\Models\AuditLog::select( 'component' )->distinct()->get()->toArray();
 }
 
 /**
@@ -935,7 +935,7 @@ function erp_get_audit_log_modules() {
  * @return array
  */
 function erp_get_audit_log_sub_component() {
-    return \WeDevs\ERP\Admin\Models\Audit_Log::select( 'sub_component' )->distinct()->get()->toArray();
+    return \WeDevs\ERP\Admin\Models\AuditLog::select( 'sub_component' )->distinct()->get()->toArray();
 }
 
 /**
