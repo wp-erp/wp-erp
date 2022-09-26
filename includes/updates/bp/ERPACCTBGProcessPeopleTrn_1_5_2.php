@@ -12,7 +12,7 @@ if ( ! class_exists( 'WP_Background_Process', false ) ) {
     require_once WPERP_INCLUDES . '/lib/bgprocess/wp-background-process.php';
 }
 
-class ERP_ACCT_BG_Process_People_Trn extends WP_Background_Process {
+class ERPACCTBGProcessPeopleTrn_1_5_2 extends WP_Background_Process {
 
     /**
      * @var string
