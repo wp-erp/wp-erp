@@ -4,7 +4,7 @@ namespace WeDevs\ERP\HRM;
 use WeDevs\ERP\Admin\Models\Company_Locations;
 use WeDevs\ERP\HRM\Models\Department as HRDepartment;
 use WeDevs\ERP\HRM\Models\Designation;
-use WeDevs\ERP\HRM\Models\Leave_Holiday;
+use WeDevs\ERP\HRM\Models\LeaveHoliday;
 use WP_Error;
 use WP_User;
 
@@ -2373,7 +2373,7 @@ class Employee {
             $leave_requests = $leave_requests['data'];
         }
 
-        $holidays = Leave_Holiday::whereDate( 'start', '>=', $date_range['start'] )
+        $holidays = LeaveHoliday::whereDate( 'start', '>=', $date_range['start'] )
             ->whereDate( 'end', '<=', $date_range['end'] )
             ->get();
 

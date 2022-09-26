@@ -34,50 +34,50 @@ class Leave extends Model {
      * @return object
      */
     public function policies() {
-        return $this->hasMany( 'WeDevs\ERP\HRM\Models\Leave_Policy' );
+        return $this->hasMany( 'WeDevs\ERP\HRM\Models\LeavePolicy' );
     }
 
     /**
-     * Relation to Leave_Entitlement model
+     * Relation to LeaveEntitlement model
      *
      * @since 1.6.0
      *
      * @return object
      */
     public function entitlements() {
-        return $this->hasMany( 'WeDevs\ERP\HRM\Models\Leave_Entitlement' );
+        return $this->hasMany( 'WeDevs\ERP\HRM\Models\LeaveEntitlement' );
     }
 
     /**
-     * Relation to Leave_Request model
+     * Relation to LeaveRequest model
      *
      * @since 1.6.0
      *
      * @return object
      */
     public function requests() {
-        return $this->hasMany( 'WeDevs\ERP\HRM\Models\Leave_Request' );
+        return $this->hasMany( 'WeDevs\ERP\HRM\Models\LeaveRequest' );
     }
 
     /**
-     * Relation to Leave_Encashment_Request model
+     * Relation to LeaveEncashmentRequest model
      *
      * @since 1.6.0
      *
      * @return object
      */
     public function encashments() {
-        return $this->hasMany( 'WeDevs\ERP\HRM\Models\Leave_Encashment_Request' );
+        return $this->hasMany( 'WeDevs\ERP\HRM\Models\LeaveEncashmentRequest' );
     }
 
     /**
-     * Relation to Leaves_Unpaid model
+     * Relation to LeavesUnpaid model
      *
      * @since 1.6.0
      *
      * @return object
      */
     public function unpaids() {
-        return $this->hasMany( 'WeDevs\ERP\HRM\Models\Leaves_Unpaid' );
+        return $this->hasMany( 'WeDevs\ERP\HRM\Models\LeavesUnpaid' );
     }
 }

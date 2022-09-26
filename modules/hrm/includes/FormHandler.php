@@ -4,8 +4,8 @@ namespace WeDevs\ERP\HRM;
 
 use stdClass;
 use WeDevs\ERP\ERP_Errors;
-use WeDevs\ERP\HRM\Models\Financial_Year;
-use WeDevs\ERP\HRM\Models\Leave_Policy;
+use WeDevs\ERP\HRM\Models\FinancialYear;
+use WeDevs\ERP\HRM\Models\LeavePolicy;
 use WP_Error;
 
 /**
@@ -260,7 +260,7 @@ class FormHandler {
             wp_die( esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
-        $employee_table = new \WeDevs\ERP\HRM\Entitlement_List_Table();
+        $employee_table = new \WeDevs\ERP\HRM\EntitlementListTable();
         $action         = $employee_table->current_action();
 
         if ( $action ) {
@@ -311,7 +311,7 @@ class FormHandler {
             wp_die( esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
-        $leave_request_table = new \WeDevs\ERP\HRM\Leave_Requests_List_Table();
+        $leave_request_table = new \WeDevs\ERP\HRM\LeaveRequestsListTable();
         $action              = $leave_request_table->current_action();
 
         if ( $action ) {
@@ -390,7 +390,7 @@ class FormHandler {
             wp_die( esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
-        $employee_table = new \WeDevs\ERP\HRM\Employee_List_Table();
+        $employee_table = new \WeDevs\ERP\HRM\EmployeeListTable();
         $action         = $employee_table->current_action();
 
         if ( $action ) {
@@ -459,7 +459,7 @@ class FormHandler {
             wp_die( esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
-        $employee_table = new \WeDevs\ERP\HRM\Designation_List_Table();
+        $employee_table = new \WeDevs\ERP\HRM\DesignationListTable();
         $action         = $employee_table->current_action();
 
         if ( $action ) {
@@ -507,7 +507,7 @@ class FormHandler {
             wp_die( esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
-        $employee_table = new \WeDevs\ERP\HRM\Department_List_Table();
+        $employee_table = new \WeDevs\ERP\HRM\DepartmentListTable();
         $action         = $employee_table->current_action();
 
         if ( $action ) {
@@ -560,7 +560,7 @@ class FormHandler {
             wp_die( esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
-        $announcement_table = new \WeDevs\ERP\HRM\Announcement_List_Table();
+        $announcement_table = new \WeDevs\ERP\HRM\AnnouncementListTable();
         $action             = $announcement_table->current_action();
 
         if ( $action ) {
@@ -741,7 +741,7 @@ class FormHandler {
         if ( $leave_policy == '' ) {
             $errors->add( new WP_Error( 'leave_policy', esc_attr__( 'Error: Please select a leave policy.', 'erp' ) ) );
         } else {
-            $policy = Leave_Policy::find( $leave_policy );
+            $policy = LeavePolicy::find( $leave_policy );
 
             if ( ! $policy ) {
                 $errors->add( new WP_Error( 'leave_policy', esc_attr__( 'Error: Invalid policy selected. Please check your input.', 'erp' ) ) );
@@ -877,7 +877,7 @@ class FormHandler {
             'reason'       => $leave_reason,
         ] );
 
-        $entitlement = \WeDevs\ERP\HRM\Models\Leave_Entitlement::find( $leave_policy );
+        $entitlement = \WeDevs\ERP\HRM\Models\LeaveEntitlement::find( $leave_policy );
         $f_year_text = '';
 
         if ( $entitlement ) {
@@ -1250,7 +1250,7 @@ class FormHandler {
                 // we have existing record
                 $f_id = explode( 'id-', $key )[1]; // id-3 => 3
 
-                $policy_exist = Leave_Policy::where( 'f_year', $f_id )->first();
+                $policy_exist = LeavePolicy::where( 'f_year', $f_id )->first();
 
                 if ( $policy_exist ) {
                     $errors->add( esc_html__(
@@ -1262,7 +1262,7 @@ class FormHandler {
                 }
 
                 // otherwise, update an existing one
-                Financial_Year::find( $f_id )->update( [
+                FinancialYear::find( $f_id )->update( [
                     'fy_name'     => $fname,
                     'start_date'  => erp_mysqldate_to_phptimestamp( $starts[ $key ] ),
                     'end_date'    => erp_mysqldate_to_phptimestamp( $ends[ $key ] ),
@@ -1274,7 +1274,7 @@ class FormHandler {
             }
 
             // or create a new one
-            Financial_Year::create( [
+            FinancialYear::create( [
                 'fy_name'     => $fname,
                 'start_date'  => erp_mysqldate_to_phptimestamp( $starts[ $key ] ),
                 'end_date'    => erp_mysqldate_to_phptimestamp( $ends[ $key ] ),

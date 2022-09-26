@@ -6,7 +6,7 @@ use WeDevs\ERP\Framework\Traits\Hooker;
 use WeDevs\ERP\HRM\Models\Dependents;
 use WeDevs\ERP\HRM\Models\Designation;
 use WeDevs\ERP\HRM\Models\Employee;
-use WeDevs\ERP\HRM\Models\Leave_Request;
+use WeDevs\ERP\HRM\Models\LeaveRequest;
 
 /**
  * Ajax handler
@@ -226,7 +226,7 @@ class HrLog {
             return;
         }
 
-        $exp = \WeDevs\ERP\HRM\Models\Work_Experience::find( $exp_id )->toArray();
+        $exp = \WeDevs\ERP\HRM\Models\WorkExperience::find( $exp_id )->toArray();
 
         $employee = new \WeDevs\ERP\HRM\Employee( intval( $exp['employee_id'] ) );
 
@@ -715,7 +715,7 @@ class HrLog {
             return;
         }
 
-        $new_policy = \WeDevs\ERP\HRM\Models\Leave_Policy::find( $policy_id )->toArray();
+        $new_policy = \WeDevs\ERP\HRM\Models\LeavePolicy::find( $policy_id )->toArray();
 
         $old_policy['effective_date'] = ! empty( $old_policy['effective_date'] )
                                         ? erp_format_date( $old_policy['effective_date'], 'Y-m-d' )
@@ -862,7 +862,7 @@ class HrLog {
         }
 
         $employee = new \WeDevs\ERP\HRM\Employee( intval( $old_data['user_id'] ) );
-        $request  = Leave_Request::find( $request_id );
+        $request  = LeaveRequest::find( $request_id );
         $changes  = erp_get_array_diff( $request->toArray(), $old_data, true );
 
         if ( ! empty( $changes['old_value'] ) || ! empty( $changes['new_value'] ) ) {
@@ -956,7 +956,7 @@ class HrLog {
             return;
         }
 
-        $holiday = \WeDevs\ERP\HRM\Models\Leave_Holiday::find( $holiday_id );
+        $holiday = \WeDevs\ERP\HRM\Models\LeaveHoliday::find( $holiday_id );
 
         if ( !$holiday ) {
             return;
@@ -985,7 +985,7 @@ class HrLog {
             return;
         }
 
-        $old_holiday = \WeDevs\ERP\HRM\Models\Leave_Holiday::find( $holiday_id )->toArray();
+        $old_holiday = \WeDevs\ERP\HRM\Models\LeaveHoliday::find( $holiday_id )->toArray();
         unset( $old_holiday['created_at'], $old_holiday['updated_at'] );
 
         $old_holiday['start'] = erp_format_date( $old_holiday['start'], 'Y-m-d' );

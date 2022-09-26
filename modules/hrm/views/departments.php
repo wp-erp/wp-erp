@@ -30,7 +30,7 @@
                 <input type="hidden" name="section" value="people">
                 <input type="hidden" name="sub-section" value="department">
                 <?php
-                $department_table = new \WeDevs\ERP\HRM\Department_List_Table();
+                $department_table = new \WeDevs\ERP\HRM\DepartmentListTable();
                 $department_table->prepare_items();
                 $department_table->views();
                 $department_table->display();

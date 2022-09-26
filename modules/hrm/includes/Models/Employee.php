@@ -50,11 +50,11 @@ class Employee extends Model {
      * @return object
      */
     public function leave_requests() {
-        return $this->hasMany( 'WeDevs\ERP\HRM\Models\Leave_Request', 'user_id', 'user_id' );
+        return $this->hasMany( 'WeDevs\ERP\HRM\Models\LeaveRequest', 'user_id', 'user_id' );
     }
 
     public function scopeleave_requests() {
-        return $this->hasMany( 'WeDevs\ERP\HRM\Models\Leave_Request', 'user_id', 'user_id' );
+        return $this->hasMany( 'WeDevs\ERP\HRM\Models\LeaveRequest', 'user_id', 'user_id' );
     }
 
     public function educations() {
@@ -66,11 +66,11 @@ class Employee extends Model {
     }
 
     public function experiences() {
-        return $this->hasMany( 'WeDevs\ERP\HRM\Models\Work_Experience', 'employee_id', 'user_id' );
+        return $this->hasMany( 'WeDevs\ERP\HRM\Models\WorkExperience', 'employee_id', 'user_id' );
     }
 
     public function histories() {
-        return $this->hasMany( 'WeDevs\ERP\HRM\Models\Employee_History', 'user_id', 'user_id' );
+        return $this->hasMany( 'WeDevs\ERP\HRM\Models\EmployeeHistory', 'user_id', 'user_id' );
     }
 
     public function performances() {
@@ -82,7 +82,7 @@ class Employee extends Model {
     }
 
     public function entitlements() {
-        return $this->hasMany( '\WeDevs\ERP\HRM\Models\Leave_Entitlement', 'user_id', 'user_id' )->where( 'trn_type', '=', 'leave_policies' );
+        return $this->hasMany( '\WeDevs\ERP\HRM\Models\LeaveEntitlement', 'user_id', 'user_id' )->where( 'trn_type', '=', 'leave_policies' );
     }
 
     public function notes() {
@@ -90,6 +90,6 @@ class Employee extends Model {
     }
 
     public function user() {
-        return $this->belongsTo( 'WeDevs\ERP\HRM\Models\Hr_User', 'user_id', 'ID' );
+        return $this->belongsTo( 'WeDevs\ERP\HRM\Models\HrUser', 'user_id', 'ID' );
     }
 }

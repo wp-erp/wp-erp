@@ -5,14 +5,14 @@ namespace WeDevs\ERP\HRM\Models;
 use WeDevs\ERP\Framework\Model;
 
 /**
- * Class Leaves_Unpaid
+ * Class LeaveEncashmentRequest
  */
-class Leaves_Unpaid extends Model {
-    protected $table = 'erp_hr_leaves_unpaid';
+class LeaveEncashmentRequest extends Model {
+    protected $table = 'erp_hr_leave_encashment_requests';
 
     protected $fillable = [
-        'leave_id', 'leave_request_id', 'leave_approval_status_id',
-        'user_id', 'f_year', 'days', 'amount', 'total',
+        'user_id', 'leave_id', 'approved_by', 'approval_status_id',
+        'f_year', 'encash_days', 'forward_days', 'amount', 'total',
     ];
 
     /**
@@ -41,36 +41,14 @@ class Leaves_Unpaid extends Model {
     }
 
     /**
-     * Relation to Leave_Entitlement model
+     * Relation to LeaveEntitlement model
      *
      * @since 1.6.0
      *
      * @return object
      */
-    public function entitlement() {
-        return $this->hasOne( 'WeDevs\ERP\HRM\Models\Leave_Entitlement', 'trn_id' );
-    }
-
-    /**
-     * Relation to Leave_Request model
-     *
-     * @since 1.6.0
-     *
-     * @return object
-     */
-    public function leave_request() {
-        return $this->belongsTo( 'WeDevs\ERP\HRM\Models\Leave_Request' );
-    }
-
-    /**
-     * Relation to Leave_Request_Detail model
-     *
-     * @since 1.6.0
-     *
-     * @return object
-     */
-    public function details() {
-        return $this->hasMany( 'WeDevs\ERP\HRM\Models\Leave_Request_Detail', 'leave_request_id', 'leave_request_id' );
+    public function entitlements() {
+        return $this->hasMany( 'WeDevs\ERP\HRM\Models\LeaveEntitlement', 'trn_id' );
     }
 
     /**
@@ -85,6 +63,17 @@ class Leaves_Unpaid extends Model {
     }
 
     /**
+     * Relation to User model
+     *
+     * @since 1.6.0
+     *
+     * @return object
+     */
+    public function approver() {
+        return $this->belongsTo( 'WeDevs\ORM\WP\User', 'approved_by', 'ID' );
+    }
+
+    /**
      * Relation to Financial Year
      *
      * @since 1.6.0
@@ -92,6 +81,6 @@ class Leaves_Unpaid extends Model {
      * @return object
      */
     public function financial_year() {
-        return $this->belongsTo( 'WeDevs\ERP\HRM\Models\Financial_Year', 'f_year', 'id' );
+        return $this->belongsTo( 'WeDevs\ERP\HRM\Models\FinancialYear', 'f_year', 'id' );
     }
 }

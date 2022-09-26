@@ -7,7 +7,7 @@ use WP_List_Table;
 /**
  *  List table class
  */
-class Announcement_List_Table extends WP_List_Table {
+class AnnouncementListTable extends WP_List_Table {
     private $counts = [];
 
     public function __construct() {

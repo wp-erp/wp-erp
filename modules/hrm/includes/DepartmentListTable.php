@@ -5,7 +5,7 @@ namespace WeDevs\ERP\HRM;
 /**
  * List table class
  */
-class Department_List_Table extends \WP_List_Table {
+class DepartmentListTable extends \WP_List_Table {
     protected $per_page;
 
     public function __construct() {

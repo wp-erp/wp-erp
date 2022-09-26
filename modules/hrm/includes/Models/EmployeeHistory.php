@@ -7,7 +7,7 @@ use WeDevs\ERP\Framework\Model;
 /**
  * Class Performance
  */
-class Employee_History extends Model {
+class EmployeeHistory extends Model {
     protected $table = 'erp_hr_employee_history';
 
     public $timestamps = false;

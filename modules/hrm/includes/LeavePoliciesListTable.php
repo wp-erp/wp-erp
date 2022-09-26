@@ -2,12 +2,12 @@
 
 namespace WeDevs\ERP\HRM;
 
-use WeDevs\ERP\HRM\Models\Financial_Year;
+use WeDevs\ERP\HRM\Models\FinancialYear;
 
 /**
  * List table class
  */
-class Leave_Policies_List_Table extends \WP_List_Table {
+class LeavePoliciesListTable extends \WP_List_Table {
     public function __construct() {
         global $status, $page;
 
@@ -67,7 +67,7 @@ class Leave_Policies_List_Table extends \WP_List_Table {
             return;
         }
 
-        $financial_years = wp_list_pluck( Financial_Year::orderBy( 'start_date', 'desc' )->get(), 'fy_name', 'id' );
+        $financial_years = wp_list_pluck( FinancialYear::orderBy( 'start_date', 'desc' )->get(), 'fy_name', 'id' );
 
         if ( empty( $financial_years ) ) {
             return;
@@ -104,7 +104,7 @@ class Leave_Policies_List_Table extends \WP_List_Table {
             </select>
 
             <?php submit_button( __( 'Filter', 'erp' ), 'button', 'filter_by_year', false ); ?>
-        
+
         </div><?php
     }
 

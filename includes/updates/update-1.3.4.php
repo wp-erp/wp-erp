@@ -130,7 +130,7 @@ function wperp_update_remove_entitlements_1_3_4() {
     $employees    = \WeDevs\ERP\HRM\Models\Employee::select( 'user_id' )->where( 'status', '!=', 'active' )->get()->toArray();
 
     if ( $period && $employees ) {
-        $entitlements = \WeDevs\ERP\HRM\Models\Leave_Entitlement::select( 'id' )
+        $entitlements = \WeDevs\ERP\HRM\Models\LeaveEntitlement::select( 'id' )
             ->whereIn( 'user_id', $employees )
             ->whereDate( 'from_date', '>=', $period['start'] )
             ->whereDate( 'to_date', '<=', $period['end'] )

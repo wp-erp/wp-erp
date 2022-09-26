@@ -2,12 +2,12 @@
 
 namespace WeDevs\ERP\HRM;
 
-use WeDevs\ERP\HRM\Models\Financial_Year;
+use WeDevs\ERP\HRM\Models\FinancialYear;
 
 /**
  * List table class
  */
-class Entitlement_List_Table extends \WP_List_Table {
+class EntitlementListTable extends \WP_List_Table {
     protected $entitlement_data = [];
 
     public function __construct() {
@@ -61,7 +61,7 @@ class Entitlement_List_Table extends \WP_List_Table {
         if ( $which != 'top' ) {
             return;
         }
-        $entitlement_years = wp_list_pluck( Financial_Year::orderBy( 'start_date', 'desc' )->get(), 'fy_name', 'id' );
+        $entitlement_years = wp_list_pluck( FinancialYear::orderBy( 'start_date', 'desc' )->get(), 'fy_name', 'id' );
 
         if ( empty( $entitlement_years ) ) {
             return;
@@ -73,7 +73,7 @@ class Entitlement_List_Table extends \WP_List_Table {
             $selected_f_year = erp_hr_get_financial_year_from_date()->id;
         }
 
-        $policies    = \WeDevs\ERP\HRM\Models\Leave_Policy::all();
+        $policies    = \WeDevs\ERP\HRM\Models\LeavePolicy::all();
         $policy_data = [];
 
         foreach ( $policies as $policy ) {
@@ -159,7 +159,7 @@ class Entitlement_List_Table extends \WP_List_Table {
     }
 
     public function column_validity( $item ) {
-        $f_year = Financial_Year::find( $item->f_year );
+        $f_year = FinancialYear::find( $item->f_year );
 
         $str = '<p><strong>' . erp_format_date( $f_year->start_date ) . ' &mdash; ' . erp_format_date( $f_year->end_date ) . '</strong></p>';
 

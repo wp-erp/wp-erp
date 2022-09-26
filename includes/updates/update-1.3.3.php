@@ -8,7 +8,7 @@
  * @return void
  */
 function wperp_update_1_3_3_update_holidays_table() {
-    $holidays = \WeDevs\ERP\HRM\Models\Leave_Holiday::all();
+    $holidays = \WeDevs\ERP\HRM\Models\LeaveHoliday::all();
 
     foreach ( $holidays as $holiday ) {
         $end           = $holiday->end;

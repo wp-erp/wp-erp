@@ -502,7 +502,7 @@ function erp_hr_holiday_reminder_to_employees() {
     $start_date = erp_current_datetime()->format( 'Y-m-d H:i:s' );
     $end_date   = erp_current_datetime()->modify( 'next day' )->format( 'Y-m-d H:i:s' );
 
-    $holiday = new \WeDevs\ERP\HRM\Models\Leave_Holiday();
+    $holiday = new \WeDevs\ERP\HRM\Models\LeaveHoliday();
     $holiday = $holiday->where(
         function ( $condition ) use ( $start_date, $end_date ) {
             $condition->whereBetween( 'start', [ $start_date, $end_date ] );

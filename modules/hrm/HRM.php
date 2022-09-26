@@ -1,6 +1,8 @@
 <?php
 namespace WeDevs\ERP\HRM\Main;
 
+use WeDevs\ERP\HRM\Employee;
+use WeDevs\ERP\HRM\LeaveEntitlementBGProcess;
 use WeDevs_ERP;
 use WeDevs\ERP\HRM\HrLog;
 use WeDevs\ERP\HRM\Emailer;
@@ -84,8 +86,8 @@ class HRM {
         require_once WPERP_HRM_PATH . '/includes/functions-reporting.php';
         require_once WPERP_HRM_PATH . '/includes/functions-announcement.php';
         require_once WPERP_HRM_PATH . '/includes/actions-filters.php';
-        require_once WPERP_HRM_PATH . '/includes/class-leave-entitlement-bg-process.php';
-
+//        require_once WPERP_HRM_PATH . '/includes/class-leave-entitlement-bg-process.php';
+        new LeaveEntitlementBGProcess();
         // cli command
         if ( defined( 'WP_CLI' ) && WP_CLI ) {
             include WPERP_HRM_PATH . '/includes/cli/commands.php';

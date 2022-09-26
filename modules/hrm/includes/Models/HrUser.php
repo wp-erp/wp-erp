@@ -5,9 +5,9 @@ namespace WeDevs\ERP\HRM\Models;
 use WeDevs\ORM\WP\User;
 
 /**
- * Class Hr_User
+ * Class HrUser
  */
-class Hr_User extends User {
+class HrUser extends User {
 
     // protected $table = 'wp_users';
     public $timestamps = false;

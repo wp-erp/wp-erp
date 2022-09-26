@@ -107,7 +107,7 @@ class Leave_Entitlements_Controller extends REST_Controller {
      */
     public function get_entitlement( $request ) {
         $id   = (int) $request['id'];
-        $item = \WeDevs\ERP\HRM\Models\Leave_Entitlement::find( $id );
+        $item = \WeDevs\ERP\HRM\Models\LeaveEntitlement::find( $id );
 
         if ( empty( $id ) || empty( $item->id ) ) {
             return new WP_Error( 'rest_policy_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
@@ -130,7 +130,7 @@ class Leave_Entitlements_Controller extends REST_Controller {
         $item = $this->prepare_item_for_database( $request );
         $id   = erp_hr_leave_insert_entitlement( $item );
 
-        $entitlement = \WeDevs\ERP\HRM\Models\Leave_Entitlement::find( $id );
+        $entitlement = \WeDevs\ERP\HRM\Models\LeaveEntitlement::find( $id );
 
         $request->set_param( 'context', 'edit' );
         $response = $this->prepare_item_for_response( $entitlement, $request );
@@ -151,7 +151,7 @@ class Leave_Entitlements_Controller extends REST_Controller {
     public function delete_entitlement( $request ) {
         $id = (int) $request['id'];
 
-        $item        = \WeDevs\ERP\HRM\Models\Leave_Entitlement::find( $id );
+        $item        = \WeDevs\ERP\HRM\Models\LeaveEntitlement::find( $id );
         $employee_id = (int) $item->user_id;
         $policy_id   = (int) $item->policy_id;
 

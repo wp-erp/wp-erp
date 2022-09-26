@@ -4,9 +4,9 @@ namespace WeDevs\ERP\HRM;
 use ICal;
 use WeDevs\ERP\Framework\Traits\Ajax;
 use WeDevs\ERP\Framework\Traits\Hooker;
-use WeDevs\ERP\HRM\Models\Financial_Year;
-use WeDevs\ERP\HRM\Models\Leave_Entitlement;
-use WeDevs\ERP\HRM\Models\Leave_Policy;
+use WeDevs\ERP\HRM\Models\FinancialYear;
+use WeDevs\ERP\HRM\Models\LeaveEntitlement;
+use WeDevs\ERP\HRM\Models\LeavePolicy;
 
 /**
  * Ajax handler
@@ -291,7 +291,7 @@ class AjaxHandler {
          * We'll ignore duplicate entries with the same title and
          * start date in the foreach loop when inserting an entry
          */
-        $holiday_model = new \WeDevs\ERP\HRM\Models\Leave_Holiday();
+        $holiday_model = new \WeDevs\ERP\HRM\Models\LeaveHoliday();
 
         // create the ical parser object
         $temp_name = sanitize_url( wp_unslash( $_FILES['ics']['tmp_name'] ) );
@@ -497,7 +497,7 @@ class AjaxHandler {
             $this->send_error( esc_attr__( 'Invalid Policy id.', 'erp' ) );
         }
 
-        $policy = Leave_Policy::find( $policy_id );
+        $policy = LeavePolicy::find( $policy_id );
 
         if ( ! $policy ) {
             $this->send_error( esc_attr__( 'No policy found with given policy id.', 'erp' ) );
@@ -1870,7 +1870,7 @@ class AjaxHandler {
         }
 
         // check if start_date and end_dates are in same f_year
-        $entitlement = Leave_Entitlement::find( $policy_id );
+        $entitlement = LeaveEntitlement::find( $policy_id );
 
         if ( ! $entitlement ) {
             $this->send_error( esc_attr__( 'Invalid leave policy.', 'erp' ) );
@@ -1951,7 +1951,7 @@ class AjaxHandler {
             $error_string = esc_html__( 'No entitlement found for selected year. Please contact with HR.', 'erp' );
         }
 
-        $financial_year = Financial_Year::find( $f_year );
+        $financial_year = FinancialYear::find( $f_year );
 
         if ( ! $financial_year ) {
             $this->send_error( esc_attr__( 'Invalid year.', 'erp' ) );
@@ -2017,7 +2017,7 @@ class AjaxHandler {
         } elseif ( $available > 0 ) {
             $content = sprintf( '<span class="description green"> %s %s</span>', erp_number_format_i18n( $available ), __( 'days are available', 'erp' ) );
         } else {
-            //$leave_policy_day = \WeDevs\ERP\HRM\Models\Leave_Policy::select( 'value' )->where( 'id', $policy_id )->pluck( 'value' );
+            //$leave_policy_day = \WeDevs\ERP\HRM\Models\LeavePolicy::select( 'value' )->where( 'id', $policy_id )->pluck( 'value' );
             //$content          = sprintf( '<span class="description">%d %s</span>', number_format_i18n( $leave_policy_day ), __( 'days are available', 'erp' ) );
         }
 
@@ -2152,7 +2152,7 @@ class AjaxHandler {
         $start_date = $start->format( 'Y-m-d H:i:s' );
         $end_date   = $end->format( 'Y-m-d H:i:s' );
 
-        $holiday = new \WeDevs\ERP\HRM\Models\Leave_Holiday();
+        $holiday = new \WeDevs\ERP\HRM\Models\LeaveHoliday();
         $holiday = $holiday->where(
             function ( $condition ) use ( $start_date ) {
                 $condition->where( 'start', '<=', $start_date );

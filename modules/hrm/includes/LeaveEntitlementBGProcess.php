@@ -13,9 +13,9 @@ if ( ! class_exists( 'WP_Background_Process', false ) ) {
 }
 
 /**
- * Class Leave_Entitlement_BG_Process
+ * Class LeaveEntitlementBGProcess
  */
-class Leave_Entitlement_BG_Process extends WP_Background_Process {
+class LeaveEntitlementBGProcess extends WP_Background_Process {
 
     /**
      * Background process id, must be unique.
@@ -63,4 +63,4 @@ class Leave_Entitlement_BG_Process extends WP_Background_Process {
     }
 }
 
-new Leave_Entitlement_BG_Process();
+new LeaveEntitlementBGProcess();

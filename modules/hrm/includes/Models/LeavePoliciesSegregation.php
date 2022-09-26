@@ -5,9 +5,9 @@ namespace WeDevs\ERP\HRM\Models;
 use WeDevs\ERP\Framework\Model;
 
 /**
- * Class Leave_Policies_Segregation
+ * Class LeavePoliciesSegregation
  */
-class Leave_Policies_Segregation extends Model {
+class LeavePoliciesSegregation extends Model {
     protected $table = 'erp_hr_leave_policies_segregation';
 
     protected $fillable = [
@@ -30,13 +30,13 @@ class Leave_Policies_Segregation extends Model {
     }
 
     /**
-     * Relation to Leave_Policy model
+     * Relation to LeavePolicy model
      *
      * @since 1.6.0
      *
      * @return object
      */
     public function leave_policy() {
-        return $this->belongsTo( 'WeDevs\ERP\HRM\Models\Leave_Policy' );
+        return $this->belongsTo( 'WeDevs\ERP\HRM\Models\LeavePolicy' );
     }
 }

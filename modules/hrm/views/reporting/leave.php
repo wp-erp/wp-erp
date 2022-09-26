@@ -7,7 +7,7 @@
             <input type="hidden" name="sub-section" value="report">
             <input type="hidden" name="type" value="leaves">
             <?php
-            $leaves = new \WeDevs\ERP\HRM\Leave_Report_Employee_Based();
+            $leaves = new \WeDevs\ERP\HRM\LeaveReportEmployeeBased();
             $leaves->prepare_items();
             $leaves->display();
             ?>

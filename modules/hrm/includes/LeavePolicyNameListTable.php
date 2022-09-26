@@ -8,7 +8,7 @@ use WP_List_Table;
 /**
  * List table class
  */
-class Leave_Policy_Name_List_Table extends WP_List_Table {
+class LeavePolicyNameListTable extends WP_List_Table {
     public function __construct() {
         parent::__construct( [
             'singular' => 'type',

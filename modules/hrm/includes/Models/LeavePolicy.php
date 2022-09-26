@@ -7,7 +7,7 @@ use WeDevs\ERP\Framework\Model;
 /**
  * Class Leave_Policies
  */
-class Leave_Policy extends Model {
+class LeavePolicy extends Model {
     protected $table = 'erp_hr_leave_policies';
 
     protected $fillable = [
@@ -44,25 +44,25 @@ class Leave_Policy extends Model {
     }
 
     /**
-     * Relation to Leave_Entitlement model
+     * Relation to LeaveEntitlement model
      *
      * @since 1.6.0
      *
      * @return object
      */
     public function entitlements() {
-        return $this->hasMany( 'WeDevs\ERP\HRM\Models\Leave_Entitlement', 'trn_id', 'id' )->where( 'trn_type', '=', 'leave_policies' );
+        return $this->hasMany( 'WeDevs\ERP\HRM\Models\LeaveEntitlement', 'trn_id', 'id' )->where( 'trn_type', '=', 'leave_policies' );
     }
 
     /**
-     * Relation to Leave_Policies_Segregation
+     * Relation to LeavePoliciesSegregation
      *
      * @since 1.6.0
      *
      * @return object
      */
     public function segregation() {
-        return $this->hasOne( 'WeDevs\ERP\HRM\Models\Leave_Policies_Segregation', 'leave_policy_id' );
+        return $this->hasOne( 'WeDevs\ERP\HRM\Models\LeavePoliciesSegregation', 'leave_policy_id' );
     }
 
     /**
@@ -95,7 +95,7 @@ class Leave_Policy extends Model {
      * @return object
      */
     public function financial_year() {
-        return $this->belongsTo( 'WeDevs\ERP\HRM\Models\Financial_Year', 'f_year', 'id' );
+        return $this->belongsTo( 'WeDevs\ERP\HRM\Models\FinancialYear', 'f_year', 'id' );
     }
 
     /**

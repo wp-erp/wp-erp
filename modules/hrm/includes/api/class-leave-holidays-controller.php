@@ -115,7 +115,7 @@ class Leave_Holidays_Controller extends REST_Controller {
      */
     public function get_holiday( $request ) {
         $id   = (int) $request['id'];
-        $item = \WeDevs\ERP\HRM\Models\Leave_Holiday::find( $id );
+        $item = \WeDevs\ERP\HRM\Models\LeaveHoliday::find( $id );
 
         if ( empty( $id ) || empty( $item->id ) ) {
             return new WP_Error( 'rest_holiday_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
@@ -138,7 +138,7 @@ class Leave_Holidays_Controller extends REST_Controller {
         $item       = $this->prepare_item_for_database( $request );
 
         $holiday_id = erp_hr_leave_insert_holiday( $item );
-        $holiday    = \WeDevs\ERP\HRM\Models\Leave_Holiday::find( $holiday_id );
+        $holiday    = \WeDevs\ERP\HRM\Models\LeaveHoliday::find( $holiday_id );
 
         $request->set_param( 'context', 'edit' );
         $response = $this->prepare_item_for_response( $holiday, $request );
@@ -159,7 +159,7 @@ class Leave_Holidays_Controller extends REST_Controller {
     public function update_holiday( $request ) {
         $id = (int) $request['id'];
 
-        $holiday = \WeDevs\ERP\HRM\Models\Leave_Holiday::find( $id );
+        $holiday = \WeDevs\ERP\HRM\Models\LeaveHoliday::find( $id );
 
         if ( empty( $id ) || empty( $holiday->id ) ) {
             return new WP_Error( 'rest_holiday_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 400 ] );
@@ -168,7 +168,7 @@ class Leave_Holidays_Controller extends REST_Controller {
         $item = $this->prepare_item_for_database( $request );
 
         $holiday_id = erp_hr_leave_insert_holiday( $item );
-        $holiday    = \WeDevs\ERP\HRM\Models\Leave_Holiday::find( $holiday_id );
+        $holiday    = \WeDevs\ERP\HRM\Models\LeaveHoliday::find( $holiday_id );
 
         $request->set_param( 'context', 'edit' );
         $response = $this->prepare_item_for_response( $holiday, $request );

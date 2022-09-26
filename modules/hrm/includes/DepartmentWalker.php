@@ -10,7 +10,7 @@ namespace WeDevs\ERP\HRM;
  *
  * @author Tareq Hasan
  */
-class Department_Walker extends \Walker {
+class DepartmentWalker extends \Walker {
     public $db_fields = ['parent' => 'parent', 'id' => 'id'];
 
     /**

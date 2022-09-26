@@ -5,9 +5,9 @@ namespace WeDevs\ERP\HRM\Models;
 use WeDevs\ERP\Framework\Model;
 
 /**
- * Class Leave_Approval_Status
+ * Class LeaveApprovalStatus
  */
-class Leave_Approval_Status extends Model {
+class LeaveApprovalStatus extends Model {
     protected $table = 'erp_hr_leave_approval_status';
 
     protected $fillable = [
@@ -30,57 +30,57 @@ class Leave_Approval_Status extends Model {
     }
 
     /**
-     * Relation to Leave_Entitlement model
+     * Relation to LeaveEntitlement model
      *
      * @since 1.6.0
      *
      * @return object
      */
     public function entitlements() {
-        return $this->hasMany( 'WeDevs\ERP\HRM\Models\Leave_Entitlement', 'trn_id' );
+        return $this->hasMany( 'WeDevs\ERP\HRM\Models\LeaveEntitlement', 'trn_id' );
     }
 
     /**
-     * Relation to Leave_Request_Detail model
+     * Relation to LeaveRequestDetail model
      *
      * @since 1.6.0
      *
      * @return object
      */
     public function details() {
-        return $this->hasMany( 'WeDevs\ERP\HRM\Models\Leave_Request_Detail', 'leave_request_id', 'leave_request_id' );
+        return $this->hasMany( 'WeDevs\ERP\HRM\Models\LeaveRequestDetail', 'leave_request_id', 'leave_request_id' );
     }
 
     /**
-     * Relation to Leave_Request model
+     * Relation to LeaveRequest model
      *
      * @since 1.6.0
      *
      * @return object
      */
     public function leave_request() {
-        return $this->belongsTo( 'WeDevs\ERP\HRM\Models\Leave_Request' );
+        return $this->belongsTo( 'WeDevs\ERP\HRM\Models\LeaveRequest' );
     }
 
     /**
-     * Relation to Leaves_Unpaid model
+     * Relation to LeavesUnpaid model
      *
      * @since 1.6.0
      *
      * @return object
      */
     public function unpaids() {
-        return $this->hasMany( 'WeDevs\ERP\HRM\Models\Leaves_Unpaid', 'leave_request_id', 'leave_request_id' );
+        return $this->hasMany( 'WeDevs\ERP\HRM\Models\LeavesUnpaid', 'leave_request_id', 'leave_request_id' );
     }
 
     /**
-     * Relation to Hr_User model
+     * Relation to HrUser model
      *
      * @since 1.6.0
      *
      * @return object
      */
     public function leave_approved_by() {
-        return $this->belongsTo( 'WeDevs\ERP\HRM\Models\Hr_User', 'approved_by', 'id' );
+        return $this->belongsTo( 'WeDevs\ERP\HRM\Models\HrUser', 'approved_by', 'id' );
     }
 }

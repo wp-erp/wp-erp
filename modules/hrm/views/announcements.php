@@ -53,7 +53,7 @@ if ( ! empty( $_GET['bulk-operation-failed'] ) ) {
                 <input type="hidden" name="section" value="people">
                 <input type="hidden" name="sub-section" value="announcement">
                 <?php
-                $announcement = new \WeDevs\ERP\HRM\Announcement_List_Table();
+                $announcement = new \WeDevs\ERP\HRM\AnnouncementListTable();
                 $announcement->prepare_items();
                 $announcement->views();
                 $announcement->display();

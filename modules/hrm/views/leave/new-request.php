@@ -6,7 +6,7 @@
         </h3>
         <div class="inside">
             <?php
-            use WeDevs\ERP\HRM\Models\Financial_Year;
+            use WeDevs\ERP\HRM\Models\FinancialYear;
 
             if ( ! empty( $_GET['insert_error'] ) ) {
                 $errors = new \WeDevs\ERP\ERP_Errors( sanitize_text_field( wp_unslash( $_GET['insert_error'] ) ) );
@@ -17,7 +17,7 @@
             $financial_years = [];
             $current_f_year  = erp_hr_get_financial_year_from_date();
 
-            foreach ( Financial_Year::all() as $f_year ) {
+            foreach ( FinancialYear::all() as $f_year ) {
                 if ( $f_year['start_date'] < $current_f_year->start_date ) {
                     continue;
                 }

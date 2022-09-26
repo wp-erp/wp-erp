@@ -1,8 +1,8 @@
 <?php
 
 use WeDevs\ERP\ERP_Errors;
-use WeDevs\ERP\HRM\Models\Financial_Year;
-use WeDevs\ERP\HRM\Models\Leave_Policy;
+use WeDevs\ERP\HRM\Models\FinancialYear;
+use WeDevs\ERP\HRM\Models\LeavePolicy;
 
 $id            = isset( $_GET['id'] ) ? absint( wp_unslash( $_GET['id'] ) ) : 0;
 $action        = isset( $_GET['action'] ) ? sanitize_key( wp_unslash( $_GET['action'] ) ) : '';
@@ -16,7 +16,7 @@ $leave_names   = [
 
 // edit / copy
 if ( $id ) {
-    $leave_policy = Leave_Policy::find( $id );
+    $leave_policy = LeavePolicy::find( $id );
 
     if ( $action === 'edit' ) {
         $disabled      = true;
@@ -30,7 +30,7 @@ if ( $id ) {
 $financial_years = [];
 $current_f_year  = erp_hr_get_financial_year_from_date();
 
-foreach ( Financial_Year::all() as $f_year ) {
+foreach ( FinancialYear::all() as $f_year ) {
     if ( $f_year['start_date'] < $current_f_year->start_date ) {
         continue;
     }

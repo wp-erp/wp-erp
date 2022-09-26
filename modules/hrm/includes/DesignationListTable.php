@@ -7,7 +7,7 @@ use WP_List_Table;
 /**
  * List table class
  */
-class Designation_List_Table extends WP_List_Table {
+class DesignationListTable extends WP_List_Table {
     public function __construct() {
         global $status, $page;
 

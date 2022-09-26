@@ -24,7 +24,7 @@
                 <input type="hidden" name="section" value="people">
                 <input type="hidden" name="sub-section" value="designation">
                 <?php
-                $designation = new \WeDevs\ERP\HRM\Designation_List_Table();
+                $designation = new \WeDevs\ERP\HRM\DesignationListTable();
                 $designation->prepare_items();
                 $designation->views();
                 $designation->display();

@@ -5,9 +5,9 @@ namespace WeDevs\ERP\HRM\Models;
 use WeDevs\ERP\Framework\Model;
 
 /**
- * Class Financial_Year
+ * Class FinancialYear
  */
-class Financial_Year extends Model {
+class FinancialYear extends Model {
     protected $table = 'erp_hr_financial_years';
 
     protected $fillable = [

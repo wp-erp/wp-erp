@@ -5,9 +5,9 @@ namespace WeDevs\ERP\HRM\Models;
 use WeDevs\ERP\Framework\Model;
 
 /**
- * Class Leave_Request_Detail
+ * Class LeaveRequestDetail
  */
-class Leave_Request_Detail extends Model {
+class LeaveRequestDetail extends Model {
     protected $table = 'erp_hr_leave_request_details';
 
     protected $fillable = [
@@ -30,24 +30,24 @@ class Leave_Request_Detail extends Model {
     }
 
     /**
-     * Relation to Leave_Request model
+     * Relation to LeaveRequest model
      *
      * @since 1.6.0
      *
      * @return object
      */
     public function leave_request() {
-        return $this->belongsTo( 'WeDevs\ERP\HRM\Models\Leave_Request' );
+        return $this->belongsTo( 'WeDevs\ERP\HRM\Models\LeaveRequest' );
     }
 
     /**
-     * Relation to Leave_Approval_Status model
+     * Relation to LeaveApprovalStatus model
      *
      * @since 1.6.0
      *
      * @return object
      */
     public function leave_approval_status() {
-        return $this->hasMany( 'WeDevs\ERP\HRM\Models\Leave_Approval_Status', 'leave_request_id', 'leave_request_id' );
+        return $this->hasMany( 'WeDevs\ERP\HRM\Models\LeaveApprovalStatus', 'leave_request_id', 'leave_request_id' );
     }
 }

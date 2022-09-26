@@ -5,9 +5,9 @@ namespace WeDevs\ERP\HRM\Models;
 use WeDevs\ERP\Framework\Model;
 
 /**
- * Class Leave_Holiday
+ * Class LeaveHoliday
  */
-class Leave_Holiday extends Model {
+class LeaveHoliday extends Model {
     protected $table = 'erp_hr_holiday';
 
     protected $fillable = [ 'title', 'start', 'end', 'description', 'range_status', 'created_at', 'updated_at' ];

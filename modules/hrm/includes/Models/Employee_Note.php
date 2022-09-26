@@ -15,7 +15,7 @@ class Employee_Note extends Model {
     protected $fillable = [ 'user_id', 'comment', 'comment_by' ];
 
     public function user() {
-        return $this->belongsTo( '\WeDevs\ERP\HRM\Models\Hr_User', 'comment_by' );
+        return $this->belongsTo( '\WeDevs\ERP\HRM\Models\HrUser', 'comment_by' );
     }
 
     public function employee() {

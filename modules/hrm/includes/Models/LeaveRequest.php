@@ -7,7 +7,7 @@ use WeDevs\ERP\Framework\Model;
 /**
  * Class Leave_request
  */
-class Leave_Request extends Model {
+class LeaveRequest extends Model {
     protected $table = 'erp_hr_leave_requests';
 
     protected $fillable = [
@@ -41,47 +41,47 @@ class Leave_Request extends Model {
     }
 
     /**
-     * Relation to Leave_Request_Detail model
+     * Relation to LeaveRequestDetail model
      *
      * @since 1.6.0
      *
      * @return object
      */
     public function details() {
-        return $this->hasMany( 'WeDevs\ERP\HRM\Models\Leave_Request_Detail', 'leave_request_id', 'id' );
+        return $this->hasMany( 'WeDevs\ERP\HRM\Models\LeaveRequestDetail', 'leave_request_id', 'id' );
     }
 
     /**
-     * Relation to Leave_Approval_Status model
+     * Relation to LeaveApprovalStatus model
      *
      * @since 1.6.0
      *
      * @return object
      */
     public function approval_status() {
-        return $this->hasMany( 'WeDevs\ERP\HRM\Models\Leave_Approval_Status', 'leave_request_id', 'id' )->orderBy( 'id', 'desc' );
+        return $this->hasMany( 'WeDevs\ERP\HRM\Models\LeaveApprovalStatus', 'leave_request_id', 'id' )->orderBy( 'id', 'desc' );
     }
 
     /**
-     * Relation to Leave_Approval_Status model
+     * Relation to LeaveApprovalStatus model
      *
      * @since 1.6.0
      *
      * @return object
      */
     public function latest_approval_status() {
-        return $this->hasOne( 'WeDevs\ERP\HRM\Models\Leave_Approval_Status', 'leave_request_id', 'id' )->orderBy( 'id', 'desc' );
+        return $this->hasOne( 'WeDevs\ERP\HRM\Models\LeaveApprovalStatus', 'leave_request_id', 'id' )->orderBy( 'id', 'desc' );
     }
 
     /**
-     * Relation to Leaves_Unpaid model
+     * Relation to LeavesUnpaid model
      *
      * @since 1.6.0
      *
      * @return object
      */
     public function unpaid() {
-        return $this->hasOne( 'WeDevs\ERP\HRM\Models\Leaves_Unpaid', 'leave_request_id', 'id' );
+        return $this->hasOne( 'WeDevs\ERP\HRM\Models\LeavesUnpaid', 'leave_request_id', 'id' );
     }
 
     /**
@@ -103,6 +103,6 @@ class Leave_Request extends Model {
      * @return object
      */
     public function entitlement() {
-        return $this->hasOne( 'WeDevs\ERP\HRM\Models\Leave_Entitlement', 'id', 'leave_entitlement_id' );
+        return $this->hasOne( 'WeDevs\ERP\HRM\Models\LeaveEntitlement', 'id', 'leave_entitlement_id' );
     }
 }

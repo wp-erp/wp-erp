@@ -7,7 +7,7 @@ use user_switching;
 /**
  * List table class
  */
-class Employee_List_Table extends \WP_List_Table {
+class EmployeeListTable extends \WP_List_Table {
     private $counts = [];
 
     private $page_status = '';

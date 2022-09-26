@@ -22,7 +22,7 @@
                     <input type="hidden" name="section" value="leave">
                     <input type="hidden" name="sub-section" value="leave-requests">
                     <?php
-                    $requests_table = new \WeDevs\ERP\HRM\Leave_Requests_List_Table();
+                    $requests_table = new \WeDevs\ERP\HRM\LeaveRequestsListTable();
                     $requests_table->prepare_items();
                     $requests_table->search_box( __( 'Search Employee', 'erp' ), 'employee_search' );
                     $requests_table->views();

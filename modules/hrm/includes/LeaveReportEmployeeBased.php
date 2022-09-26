@@ -2,8 +2,8 @@
 
 namespace WeDevs\ERP\HRM;
 
-use WeDevs\ERP\HRM\Models\Financial_Year;
-use WeDevs\ERP\HRM\Models\Leave_Policy;
+use WeDevs\ERP\HRM\Models\FinancialYear;
+use WeDevs\ERP\HRM\Models\LeavePolicy;
 
 /*
  * List table class
@@ -12,7 +12,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
     require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 }
 
-class Leave_Report_Employee_Based extends \WP_List_Table {
+class LeaveReportEmployeeBased extends \WP_List_Table {
     protected $reports;
 
     protected $policies;
@@ -33,7 +33,7 @@ class Leave_Report_Employee_Based extends \WP_List_Table {
         $policy_tbl     = "{$wpdb->prefix}erp_hr_leave_policies";
         $leave_name_tbl = "{$wpdb->prefix}erp_hr_leaves";
 
-        $this->policies = Leave_Policy::select( "$leave_name_tbl.name", "$policy_tbl.id", "$policy_tbl.leave_id" )
+        $this->policies = LeavePolicy::select( "$leave_name_tbl.name", "$policy_tbl.id", "$policy_tbl.leave_id" )
             ->leftJoin( $leave_name_tbl, "$policy_tbl.leave_id", '=', "$leave_name_tbl.id" )
             ->get();
 
@@ -59,7 +59,7 @@ class Leave_Report_Employee_Based extends \WP_List_Table {
         $selected_department   = ( isset( $_POST['filter_department'] ) ) ? sanitize_text_field( wp_unslash( $_POST['filter_department'] ) ) : 0;
         $selected_type         = ( isset( $_POST['filter_employment_type'] ) ) ? sanitize_text_field( wp_unslash( $_POST['filter_employment_type'] ) ) : '';
 
-        $financial_years       =  [ '' => esc_attr__( 'select year', 'erp' ) ] + wp_list_pluck( Financial_Year::all(), 'fy_name', 'id' );
+        $financial_years       =  [ '' => esc_attr__( 'select year', 'erp' ) ] + wp_list_pluck( FinancialYear::all(), 'fy_name', 'id' );
         $selected_year         = ( isset( $_POST['filter_year'] ) ) ? sanitize_text_field( wp_unslash( $_POST['filter_year'] ) ) : $this->current_f_year;
         $date_range_start      = isset( $_REQUEST['start'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['start'] ) ) : '';
         $date_range_end        = isset( $_REQUEST['end'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['end'] ) ) : ''; ?>
