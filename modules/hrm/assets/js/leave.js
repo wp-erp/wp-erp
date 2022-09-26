@@ -247,7 +247,7 @@
                         Leave.initToggleCheckbox();
                     },
                     onSubmit: function(modal) {
-                        e.data.holiday.submit.call(this, modal);
+                        e.data.holiday.submit.call(this, modal, 'add');
                     }
                 }); //popup
             },
@@ -327,22 +327,44 @@
                 }
             },
 
-            submit: function(modal) {
-                var titles = $(this).find('input[name="title[]"]').map(function(){return $(this).val();}).get();
-                var starts = $(this).find('input[name="start[]"]').map(function(){return $(this).val();}).get();
-                var ends = $(this).find('input[name="end[]"]').map(function(){return $(this).val();}).get();
-                var descriptions = $(this).find('input[name="description[]"]').map(function(){return $(this).val();}).get();
+            submit: function(modal, context) {
+                if ( context !== 'import' ) {
+                    wp.ajax.send( {
+                        data: this.serializeObject(),
+                        success: function(res) {
+                            modal.closeModal();
 
-                var referer = $(this).find('input[name="_wp_http_referer"]').val();
-                var action = $(this).find('input[name="action"]').val();
-                var nonce = $(this).find('input[name="_wpnonce"]').val();
-                var chunkSize = 30;
-                var total = titles.length;
-                var done = 0;
-                var updateArea = $(this).find('#holiday_import_warning');
+                            $( '.list-table-wrap' ).load( window.location.href + ' .list-wrap-inner', function() {
+                                Leave.initDateField();
+                                Leave.initToggleCheckbox();
+
+                                $('#holiday_msg').html( res );
+                            } );
+                        },
+                        error: function(error) {
+                            modal.enableButton();
+                            modal.showError( error );
+                        }
+                    });
+                    return;
+                }
+
+                var self         = Leave.holiday,
+                    titles       = self.parseInputArray( $(this), 'input[name="title[]"]' ),
+                    starts       = self.parseInputArray( $(this), 'input[name="start[]"]' ),
+                    ends         = self.parseInputArray( $(this), 'input[name="end[]"]' ),
+                    descriptions = self.parseInputArray( $(this), 'input[name="description[]"]' ),
+                    referer      = $(this).find('input[name="_wp_http_referer"]').val(),
+                    action       = $(this).find('input[name="action"]').val(),
+                    nonce        = $(this).find('input[name="_wpnonce"]').val(),
+                    updateArea   = $(this).find('#holiday_import_warning'),
+                    doneCount    = updateArea.find('.done_count'),
+                    total        = titles.length,
+                    chunkSize    = 30,
+                    done         = 0;
+
                 updateArea.removeClass('erp-hide');
                 updateArea.find('.total_count').text(total);
-                var doneCount = updateArea.find('.done_count');
 
                 for ( var index = 0; index < total; index += chunkSize ) {
                     var form = new FormData();
@@ -394,10 +416,11 @@
                 }
 
                 if ( total === 0 ) {
-                    setTimeout( modal.closeModal, 300 );
+                    setTimeout( function() {
+                        modal.closeModal();
+                    }, 300 );
                 }
             },
-
             import: function(e) {
                 e.preventDefault();
 
@@ -412,9 +435,15 @@
                         Leave.holiday.checkRange();
                     },
                     onSubmit: function(modal) {
-                        e.data.holiday.submit.call(this, modal);
+                        e.data.holiday.submit.call(this, modal, 'import');
                     }
                 }); //popup
+            },
+            parseInputArray: function( elem, field ) {
+                return elem.find( field )
+                    .map( function() {
+                        return $(this).val();
+                    } ).get();
             },
         },
 
