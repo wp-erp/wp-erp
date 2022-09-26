@@ -11,7 +11,7 @@ function wperp_update_1_3_2_set_role() {
     remove_role( 'erp_hr_manager' );
     remove_role( 'employee' );
 
-    $installer = new \WeDevs_ERP_Installer();
+    $installer = new \WeDevsERPInstaller();
     $installer->create_roles();
 }
 wperp_update_1_3_2_set_role();

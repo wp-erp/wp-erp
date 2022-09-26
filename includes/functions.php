@@ -1640,7 +1640,7 @@ function erp_mail( $to, $subject, $message, $headers = '', $attachments = [], $c
         $region          = ! empty( $erp_mailgun_settings['region'] ) ? $erp_mailgun_settings['region'] : '';
 
         if ( ! empty( $private_api_key ) && ! empty( $domain ) && ! empty( $region ) ) {
-            $mailgun = new \WeDevs\ERP\Email_Mailgun( $private_api_key, $region, $domain );
+            $mailgun = new \WeDevs\ERP\EmailMailgun( $private_api_key, $region, $domain );
 
             $data = [
                 'subject'         => $subject,

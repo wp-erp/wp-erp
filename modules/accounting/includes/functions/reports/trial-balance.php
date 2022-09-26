@@ -749,7 +749,7 @@ function erp_acct_get_trial_balance( $args ) {
     /*
      * Let's create some virtual ledgers
      */
-    $final_accounts    = new \WeDevs\ERP\Accounting\Includes\Classes\Final_Accounts( $args );
+    $final_accounts    = new \WeDevs\ERP\Accounting\Classes\FinalAccounts( $args );
 
     $results['rows'][] = [
         'chart_id'   => '1',

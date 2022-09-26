@@ -1446,7 +1446,7 @@ function erp_acct_send_email_with_pdf_attached( $request, $transaction, $file_na
         return;
     }
 
-    $trn_email = new \WeDevs\ERP\Accounting\Includes\Classes\Send_Email();
+    $trn_email = new \WeDevs\ERP\Accounting\Classes\SendEmail();
     $user_id   = null;
     $trn_id    = null;
     $result    = [];

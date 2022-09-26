@@ -82,7 +82,7 @@ class Contact_Subscriber_List_Table extends \WP_List_Table {
      * @return string
      */
     public function column_default( $subscriber_contact, $column_name ) {
-        $contact = new \WeDevs\ERP\CRM\Contact( $subscriber_contact->user_id );
+        $contact = new \WeDevs\ERP\CRM\Main\Contact( $subscriber_contact->user_id );
         $type    = '';
 
         switch ( $column_name ) {
@@ -186,7 +186,7 @@ class Contact_Subscriber_List_Table extends \WP_List_Table {
      * @return string
      */
     public function column_name( $subscriber_contact ) {
-        $contact    = new \WeDevs\ERP\CRM\Contact( $subscriber_contact->user_id );
+        $contact    = new \WeDevs\ERP\CRM\Main\Contact( $subscriber_contact->user_id );
         $actions    = [];
         $edit_url   = '';
         $group_id   = isset( $_GET['filter_contact_group'] ) ? sanitize_text_field( wp_unslash( $_GET['filter_contact_group'] ) ) : 0;

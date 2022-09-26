@@ -302,7 +302,7 @@ function erp_crm_dashboard_widget_latest_contact() {
         <ul class="erp-list erp-latest-contact-list">
             <?php foreach ( $contacts as $contact ) { ?>
                 <?php
-                    $contact_obj = new WeDevs\ERP\CRM\Contact( (int) $contact->id );
+                    $contact_obj = new WeDevs\ERP\CRM\Main\Contact( (int) $contact->id );
                     $life_stage  = $contact_obj->get_life_stage();
                 ?>
                 <li>
@@ -330,7 +330,7 @@ function erp_crm_dashboard_widget_latest_contact() {
         <ul class="erp-list erp-latest-contact-list">
             <?php foreach ( $companies as $company ) { ?>
                 <?php
-                    $company_obj = new WeDevs\ERP\CRM\Contact( intval( $company->id ) );
+                    $company_obj = new WeDevs\ERP\CRM\Main\Contact( intval( $company->id ) );
                     $life_stage  = $company_obj->get_life_stage();
                 ?>
                 <li>
@@ -377,7 +377,7 @@ function customer_statics() {
     wp_enqueue_style( 'erp-jvectormap' );
 
     echo '<div id="erp-hr-customer-statics" style="width: 100%; height: 300px;"></div>';
-    
+
     $customer_countries = get_transient( 'erp_customer_countries_widget' );
 
     if ( false === $customer_countries ) {

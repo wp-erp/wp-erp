@@ -330,7 +330,7 @@ function erp_hr_schedule_check_todays_birthday() {
  * @return array
  */
 function erp_hr_schedule_check_todays_work_anniversary() {
-    $anniversary_wish_email = wperp()->emailer->get_email( 'Hiring_Anniversary_Wish' );
+    $anniversary_wish_email = wperp()->emailer->get_email( 'HiringAnniversaryWish' );
 
     if ( is_a( $anniversary_wish_email, '\WeDevs\ERP\Email' ) ) {
         $db = new \WeDevs\ORM\Eloquent\Database();
@@ -483,7 +483,7 @@ function erp_hr_exclude_recipients( $recipients ) {
  * @return mixed
  */
 function erp_hr_send_birthday_wish_email( $user_id ) {
-    $birthday_wish_email = wperp()->emailer->get_email( 'Birthday_Wish' );
+    $birthday_wish_email = wperp()->emailer->get_email( 'BirthdayWish' );
 
     if ( is_a( $birthday_wish_email, '\WeDevs\ERP\Email' ) ) {
         $birthday_wish_email->trigger( $user_id );
@@ -511,7 +511,7 @@ function erp_hr_holiday_reminder_to_employees() {
     $holidays        = $holiday->get()->toArray();
     $employees       = erp_hr_get_employees( [ 'number' => -1 ] );
 
-    $emailer         = wperp()->emailer->get_email( 'Govt_Holiday_Reminder' );
+    $emailer         = wperp()->emailer->get_email( 'GovtHolidayReminder' );
 
     if ( ! is_a( $emailer, '\WeDevs\ERP\Email' ) ) {
         return;

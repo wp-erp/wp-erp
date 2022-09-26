@@ -36,12 +36,15 @@
  */
 
 // don't call the file directly
+use WeDevs\ERP\ERP_i18n;
 use WeDevs\ERP\Scripts;
 use WeDevs\ERP\Updates;
 use WeDevs\ERP\Admin\AdminMenu;
 use WeDevs\ERP\Admin\AdminPage;
 use WeDevs\ERP\API\ApiRegistrar;
 use WeDevs\ERP\Admin\UserProfile;
+use WeDevs\ERP\ValidateData;
+use WeDevs\ERP\WeDevsERPInstaller;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
@@ -228,14 +231,16 @@ final class WeDevs_ERP {
     private function includes() {
         include __DIR__ . '/vendor/autoload.php';
         require_once WPERP_INCLUDES . '/functions.php';
-        require_once WPERP_INCLUDES . '/class-install.php';
+//        require_once WPERP_INCLUDES . '/class-install.php';
+        new WeDevsERPInstaller();
         require_once WPERP_INCLUDES . '/actions-filters.php';
         require_once WPERP_INCLUDES . '/functions-html.php';
         require_once WPERP_INCLUDES . '/functions-company.php';
         require_once WPERP_INCLUDES . '/functions-people.php';
 //        require_once WPERP_INCLUDES . '/api/class-api-registrar.php';
         new ApiRegistrar();
-        require_once WPERP_INCLUDES . '/class-i18n.php';
+        new ERP_i18n();
+//        require_once WPERP_INCLUDES . '/class-i18n.php';
         require_once WPERP_INCLUDES . '/functions-cache-helper.php';
 
         if ( is_admin() ) {
@@ -264,8 +269,8 @@ final class WeDevs_ERP {
         require_once WPERP_INCLUDES . '/updates/bp/class-erp-hr-bg-process-1.10.0.php';
 
         // Validates data
-        require_once WPERP_INCLUDES . '/class-validate-data.php';
-
+//        require_once WPERP_INCLUDES . '/class-validate-data.php';
+        new ValidateData();
         // cli command
         if ( defined( 'WP_CLI' ) && WP_CLI ) {
             include WPERP_INCLUDES . '/cli/commands.php';
@@ -289,8 +294,8 @@ final class WeDevs_ERP {
         new ApiRegistrar();
         new \WeDevs\ERP\Promotion();
         new \WeDevs\ERP\AddonTask();
-        new \WeDevs\ERP\ERP_i18n();
-        new \WeDevs\ERP\Validate_Data();
+        new ERP_i18n();
+        new ValidateData();
         new \WeDevs\ERP\Settings\Ajax();
 
         // Appsero Tracker

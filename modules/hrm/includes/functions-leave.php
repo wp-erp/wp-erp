@@ -1867,13 +1867,13 @@ function erp_hr_leave_request_update_status( $request_id, $status, $comments = '
 
     // notification email
     if ( 1 === $status ) {
-        $approved_email = wperp()->emailer->get_email( 'Approved_Leave_Request' );
+        $approved_email = wperp()->emailer->get_email( 'ApprovedLeaveRequest' );
 
         if ( is_a( $approved_email, '\WeDevs\ERP\Email' ) ) {
             $approved_email->trigger( $request_id );
         }
     } elseif ( 3 === $status ) {
-        $rejected_email = wperp()->emailer->get_email( 'Rejected_Leave_Request' );
+        $rejected_email = wperp()->emailer->get_email( 'RejectedLeaveRequest' );
 
         if ( is_a( $rejected_email, '\WeDevs\ERP\Email' ) ) {
             $rejected_email->trigger( $request_id );

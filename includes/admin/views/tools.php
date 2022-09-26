@@ -69,7 +69,7 @@
                 break;
 
             case 'danger-zone':
-                new \WeDevs\ERP\Danger_Zone();
+                new \WeDevs\ERP\DangerZone();
                 break;
 
             default:

@@ -1,5 +1,5 @@
 <?php
-$customer_table = new \WeDevs\ERP\CRM\Contact_Group_List_Table();
+$customer_table = new \WeDevs\ERP\CRM\Main\Contact_Group_List_Table();
 $customer_table->prepare_items();
 ?>
 

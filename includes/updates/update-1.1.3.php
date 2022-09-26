@@ -35,7 +35,7 @@ function erp_ac_update_1_1_3_payment() {
 
     foreach ( $get_payments as $key => $value ) {
         $invoice_number = erp_ac_updater_get_invoice_num_fromat_from_submit_invoice( $value->invoice_format, $payment );
-        \WeDevs\ERP\Accounting\Model\Transaction::where( 'id', '=', $value->id )->update( [ 'invoice_number' => $invoice_number, 'invoice_format' => $payment  ] );
+        \WeDevs\ERP\Accounting\Main\Model\Transaction::where( 'id', '=', $value->id )->update( [ 'invoice_number' => $invoice_number, 'invoice_format' => $payment  ] );
     }
 }
 
@@ -54,7 +54,7 @@ function erp_ac_update_1_1_3_invoice() {
 
     foreach ( $get_invoices as $key => $value ) {
         $invoice_number = erp_ac_updater_get_invoice_num_fromat_from_submit_invoice( $value->invoice_format, $invoice );
-        \WeDevs\ERP\Accounting\Model\Transaction::where( 'id', '=', $value->id )->update( [ 'invoice_number' => $invoice_number, 'invoice_format' => $invoice  ] );
+        \WeDevs\ERP\Accounting\Main\Model\Transaction::where( 'id', '=', $value->id )->update( [ 'invoice_number' => $invoice_number, 'invoice_format' => $invoice  ] );
     }
 }
 

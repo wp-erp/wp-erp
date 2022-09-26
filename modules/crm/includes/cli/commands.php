@@ -1,6 +1,6 @@
 <?php
 
-namespace WeDevs\ERP\CRM\CLI;
+namespace WeDevs\ERP\CRM\Main\CLI;
 
 use WP_CLI;
 use WP_CLI_Command;

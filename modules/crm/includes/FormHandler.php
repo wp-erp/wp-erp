@@ -41,7 +41,7 @@ class FormHandler {
         $crm_manager_role = erp_crm_get_manager_role();
         $crm_agent_role   = erp_crm_get_agent_role();
 
-        // TODO::We are duplicating \WeDevs\ERP\CRM\User_Profile->update_user() process here,
+        // TODO::We are duplicating \WeDevs\ERP\CRM\UserProfile->update_user() process here,
         // which we shouldn't. We should update above method and use that.
         if ( current_user_can( $crm_manager_role ) ) {
             if ( $enable_crm_manager ) {
@@ -108,7 +108,7 @@ class FormHandler {
             }
         }
 
-        $customer_table = new \WeDevs\ERP\CRM\Contact_Subscriber_List_Table();
+        $customer_table = new \WeDevs\ERP\CRM\Main\Contact_Subscriber_List_Table();
         $action         = $customer_table->current_action();
 
         if ( $action ) {

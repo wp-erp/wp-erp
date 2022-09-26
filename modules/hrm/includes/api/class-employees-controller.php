@@ -12,7 +12,7 @@ use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
 
-class Employees_Controller extends REST_Controller {
+class EmployeesController extends REST_Controller {
 
     /**
      * Endpoint namespace.
@@ -537,7 +537,7 @@ class Employees_Controller extends REST_Controller {
 
         // User Notification
         if ( isset( $request['user_notification'] ) && $request['user_notification'] == true ) {
-            $emailer    = wperp()->emailer->get_email( 'New_Employee_Welcome' );
+            $emailer    = wperp()->emailer->get_email( 'NewEmployeeWelcome' );
             $send_login = isset( $request['login_info'] ) ? true : false;
 
             if ( is_a( $emailer, '\WeDevs\ERP\Email' ) ) {
@@ -1229,7 +1229,7 @@ class Employees_Controller extends REST_Controller {
 
         if ( ! is_wp_error( $request_id ) ) {
             // notification email
-            $emailer = wperp()->emailer->get_email( 'New_Leave_Request' );
+            $emailer = wperp()->emailer->get_email( 'NewLeaveRequest' );
 
             if ( is_a( $emailer, '\WeDevs\ERP\Email' ) ) {
                 $emailer->trigger( $request_id );

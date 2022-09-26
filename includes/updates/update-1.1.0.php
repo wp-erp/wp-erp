@@ -323,7 +323,7 @@ function erp_ac_table_update() {
 function erp_ac_update_manager_capabilities() {
     remove_role( 'erp_ac_manager' );
 
-    $installer = new \WeDevs_ERP_Installer();
+    $installer = new \WeDevsERPInstaller();
     $installer->create_roles();
     $installer->set_role();
 }

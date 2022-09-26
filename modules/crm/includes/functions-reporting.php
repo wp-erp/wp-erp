@@ -204,7 +204,7 @@ function erp_crm_growth_report_filter_form( $start = true, $end = true, $type = 
  * @since  1.3.6
  */
 function erp_crm_activity_reporting_query( $start_date, $end_date ) {
-    $activities = \WeDevs\ERP\CRM\Models\Activity::select( 'type', \WeDevs\ORM\Eloquent\Facades\DB::raw( 'count(*) as total' ) );
+    $activities = \WeDevs\ERP\CRM\Main\Models\Activity::select( 'type', \WeDevs\ORM\Eloquent\Facades\DB::raw( 'count(*) as total' ) );
 
     if ( $start_date ) {
         $activities->whereBetween( \WeDevs\ORM\Eloquent\Facades\DB::raw( 'created_at' ), [
