@@ -58,8 +58,8 @@ function erp_acct_updater_populate_people_transactions() {
         voucher.type = 'pay_bill' OR voucher.type = 'purchase' OR voucher.type = 'pay_purchase' OR
         voucher.type = 'people_trn'", ARRAY_A );
 
-    if ( !class_exists( '\WeDevs\ERP\Updates\BP\ERP_ACCT_BG_Process_People_Trn' ) || empty( $bg_process_people_trn ) ) {
-        $bg_process_people_trn = new \WeDevs\ERP\Updates\BP\ERP_ACCT_BG_Process_People_Trn();
+    if ( !class_exists( '\WeDevs\ERP\Updates\BP\ERPACCTBGProcess1_5_0PeopleTrn' ) || empty( $bg_process_people_trn ) ) {
+        $bg_process_people_trn = new \WeDevs\ERP\Updates\BP\ERPACCTBGProcess1_5_0PeopleTrn();
     }
 
     // loop through vouchers

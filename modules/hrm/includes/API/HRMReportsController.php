@@ -7,7 +7,7 @@ use WP_Error;
 use WP_REST_Response;
 use WP_REST_Server;
 
-class HRM_Reports_Controller extends REST_Controller {
+class HRMReportsController extends REST_Controller {
 
     /**
      * Endpoint namespace.

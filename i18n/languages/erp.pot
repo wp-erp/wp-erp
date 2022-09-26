@@ -24543,113 +24543,113 @@ msgstr ""
 msgid "Account To"
 msgstr ""
 
-#: modules/accounting/includes/classes/Accounting_Tutorial.php:101
+#: modules/accounting/includes/classes/AccountingTutorial.php:101
 msgid "Accounting Tutorial"
 msgstr ""
 
-#: modules/accounting/includes/classes/Accounting_Tutorial.php:102
+#: modules/accounting/includes/classes/AccountingTutorial.php:102
 msgid ""
 "To make it easy to understand, we've added step by step guides on how to "
 "get started with the Accounting system. Press Next to start"
 msgstr ""
 
-#: modules/accounting/includes/classes/Accounting_Tutorial.php:117
+#: modules/accounting/includes/classes/AccountingTutorial.php:117
 msgid "Add Customers"
 msgstr ""
 
-#: modules/accounting/includes/classes/Accounting_Tutorial.php:118
+#: modules/accounting/includes/classes/AccountingTutorial.php:118
 msgid ""
 "Create your customers profile before creating an invoice for them. You can "
 "also get the customer list here from the CRM directly if you have enabled "
 "sync from the Settings."
 msgstr ""
 
-#: modules/accounting/includes/classes/Accounting_Tutorial.php:133
+#: modules/accounting/includes/classes/AccountingTutorial.php:133
 msgid "Add Vendors"
 msgstr ""
 
-#: modules/accounting/includes/classes/Accounting_Tutorial.php:134
+#: modules/accounting/includes/classes/AccountingTutorial.php:134
 msgid ""
 "Create a vendor profile before creating a purchase from them. Vendors are "
 "required before creating a purchase or purchase order."
 msgstr ""
 
-#: modules/accounting/includes/classes/Accounting_Tutorial.php:149
-#: modules/accounting/includes/classes/Accounting_Tutorial.php:160
+#: modules/accounting/includes/classes/AccountingTutorial.php:149
+#: modules/accounting/includes/classes/AccountingTutorial.php:160
 msgid "Configuring Tax"
 msgstr ""
 
-#: modules/accounting/includes/classes/Accounting_Tutorial.php:150
+#: modules/accounting/includes/classes/AccountingTutorial.php:150
 msgid ""
 "Creating Tax Zones, Tax Category and agency are required before adding Tax "
 "Rates"
 msgstr ""
 
-#: modules/accounting/includes/classes/Accounting_Tutorial.php:161
+#: modules/accounting/includes/classes/AccountingTutorial.php:161
 msgid ""
 "After adding Tax Zones, Tax Category and Agency, you need to set the Tax "
 "Rates based on your country's Tax policy."
 msgstr ""
 
-#: modules/accounting/includes/classes/Accounting_Tutorial.php:176
+#: modules/accounting/includes/classes/AccountingTutorial.php:176
 msgid "Add Products or Service"
 msgstr ""
 
-#: modules/accounting/includes/classes/Accounting_Tutorial.php:177
+#: modules/accounting/includes/classes/AccountingTutorial.php:177
 msgid ""
 "Create the product or service that you sell having product or service is  "
 "required before creating transactions."
 msgstr ""
 
-#: modules/accounting/includes/classes/Accounting_Tutorial.php:192
+#: modules/accounting/includes/classes/AccountingTutorial.php:192
 msgid "Add Bank Accounts"
 msgstr ""
 
-#: modules/accounting/includes/classes/Accounting_Tutorial.php:193
+#: modules/accounting/includes/classes/AccountingTutorial.php:193
 msgid ""
 "Add your bank account(s) where you want to deposit your sales amounts and "
 "from where you want to pay for the purchases."
 msgstr ""
 
-#: modules/accounting/includes/classes/Accounting_Tutorial.php:208
+#: modules/accounting/includes/classes/AccountingTutorial.php:208
 msgid "Add Opening Balance"
 msgstr ""
 
-#: modules/accounting/includes/classes/Accounting_Tutorial.php:209
+#: modules/accounting/includes/classes/AccountingTutorial.php:209
 msgid ""
 "Add your business opening balance & add initial balance in your Bank "
 "accounts."
 msgstr ""
 
-#: modules/accounting/includes/classes/Accounting_Tutorial.php:219
+#: modules/accounting/includes/classes/AccountingTutorial.php:219
 msgid "Add Transactions"
 msgstr ""
 
-#: modules/accounting/includes/classes/Accounting_Tutorial.php:220
+#: modules/accounting/includes/classes/AccountingTutorial.php:220
 msgid ""
 "Now you are ready to have your transactions including sales, purchase and "
 "expenses."
 msgstr ""
 
-#: modules/accounting/includes/classes/Accounting_Tutorial.php:238
+#: modules/accounting/includes/classes/AccountingTutorial.php:238
 msgid "Journal Entry"
 msgstr ""
 
-#: modules/accounting/includes/classes/Accounting_Tutorial.php:239
+#: modules/accounting/includes/classes/AccountingTutorial.php:239
 msgid ""
 "Journal entry is available under the Transactions as well. <br /><br />You "
 "are done and best of luck!"
 msgstr ""
 
-#: modules/accounting/includes/classes/Accounting_Tutorial.php:296
+#: modules/accounting/includes/classes/AccountingTutorial.php:296
 msgid "Dismiss"
 msgstr ""
 
-#: modules/accounting/includes/classes/Accounting_Tutorial.php:297
+#: modules/accounting/includes/classes/AccountingTutorial.php:297
 msgid "Next"
 msgstr ""
 
-#: modules/accounting/includes/classes/Accounting_Tutorial.php:303
+#: modules/accounting/includes/classes/AccountingTutorial.php:303
 msgid "Complete & Close Tutorial"
 msgstr ""
 

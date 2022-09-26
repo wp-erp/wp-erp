@@ -1,6 +1,6 @@
 <?php
 
-namespace WeDevs\ERP\Updates\BP\Leave;
+namespace WeDevs\ERP\Updates\BP\Leaves\Leave_1_6_0;
 
 use WP_Background_Process;
 
@@ -20,7 +20,7 @@ if ( ! class_exists( 'WP_Background_Process', false ) ) {
  *
  * @since 1.6.0
  */
-class ERP_HR_Leave_Request extends WP_Background_Process {
+class ERPHRLeaveRequest extends WP_Background_Process {
 
     /**
      * Background process name.
@@ -75,7 +75,6 @@ class ERP_HR_Leave_Request extends WP_Background_Process {
         $ret = '';
 
         switch ( $this->request_data['task'] ) {
-
             case 'leave_request':
                 $ret = $this->insert_leave_request();
                 break;
@@ -95,7 +94,6 @@ class ERP_HR_Leave_Request extends WP_Background_Process {
             default:
                 $ret = false;
                 break;
-
         }
 
         return $ret;
@@ -131,7 +129,7 @@ class ERP_HR_Leave_Request extends WP_Background_Process {
                     true
                 )
             );
-        // no result found: can be because of query error, handle this problem here probably log this error.
+			// no result found: can be because of query error, handle this problem here probably log this error.
             // todo: keep log here.
         } elseif ( is_array( $leave_request_data ) && ! empty( $leave_request_data ) ) {
             // store datas for further use.
@@ -355,7 +353,7 @@ class ERP_HR_Leave_Request extends WP_Background_Process {
                         true
                     )
                 );
-            // todo: query error, do logging or something here.
+				// todo: query error, do logging or something here.
             } else {
                 $this->request_data['leave_entitlement_id'] = $wpdb->insert_id;
 
@@ -551,4 +549,4 @@ class ERP_HR_Leave_Request extends WP_Background_Process {
 }
 
 global $bg_progess_hr_leave_requests;
-$bg_progess_hr_leave_requests      = new \WeDevs\ERP\Updates\BP\Leave\ERP_HR_Leave_Request();
+$bg_progess_hr_leave_requests = new ERPHRLeaveRequest();

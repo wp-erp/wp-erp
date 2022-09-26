@@ -7,13 +7,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Accounting_Tutorial Class
+ * AccountingTutorial Class
  *
  * Make a Quick tour tutorial to demonstrate accounting module
  *
  * @since 1.9.0
  */
-class Accounting_Tutorial {
+class AccountingTutorial {
 
     /**
      * Default URL for accounting module tutorial
@@ -332,4 +332,4 @@ class Accounting_Tutorial {
 	}
 }
 
-new Accounting_Tutorial();
+new AccountingTutorial();

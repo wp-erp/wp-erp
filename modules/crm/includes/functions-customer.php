@@ -269,7 +269,7 @@ function erp_crm_get_contact_dropdown( $label = [] ) {
     $list     = [];
 
     foreach ( $contacts as $key => $contact ) {
-        $contact_obj              = new \WeDevs\ERP\CRM\Main\Contact( intval( $contact->id ) );
+        $contact_obj              = new \WeDevs\ERP\CRM\Contact( intval( $contact->id ) );
         $list[ $contact_obj->id ] = $contact_obj->get_full_name() . '( ' . $contact_obj->get_email() . ' ) ';
     }
 
@@ -407,7 +407,7 @@ function erp_crm_customer_get_company( $contact_id ) {
 
     $results = [];
     foreach ( $data as $key => $value ) {
-        $company                                       = new \WeDevs\ERP\CRM\Main\Contact( intval( $value['company_id'] ) );
+        $company                                       = new \WeDevs\ERP\CRM\Contact( intval( $value['company_id'] ) );
         $results[ $key ]                               = $value;
         $results[ $key ]['contact_details']            = $company->to_array();
         $country                                       = $results[ $key ]['contact_details']['country'];
@@ -448,7 +448,7 @@ function erp_crm_company_get_customers( $company_id ) {
 
     $results = [];
     foreach ( $data as $key => $value ) {
-        $customer                                      = new \WeDevs\ERP\CRM\Main\Contact( intval( $value['customer_id'] ) );
+        $customer                                      = new \WeDevs\ERP\CRM\Contact( intval( $value['customer_id'] ) );
         $results[ $key ]                               = $value;
         $results[ $key ]['contact_details']            = $customer->to_array();
         $country                                       = $results[ $key ]['contact_details']['country'];
@@ -1450,7 +1450,7 @@ function erp_crm_create_new_contact_subscriber( $args = [] ) {
 
     $subscriber = \WeDevs\ERP\CRM\Models\ContactSubscriber::create( $args );
 
-    $contact = new \WeDevs\ERP\CRM\Main\Contact( $subscriber->user_id );
+    $contact = new \WeDevs\ERP\CRM\Contact( $subscriber->user_id );
     $hash_id = sha1( microtime() . 'erp-subscription' . $args['group_id'] . $args['user_id'] );
 
     if ( ! $contact->hash ) {
@@ -2662,7 +2662,7 @@ function erp_crm_save_email_activity( $email, $inbound_email_address ) {
     $contact_id = (int) $save_data['user_id'];
     $sender_id  = $save_data['created_by'];
 
-    $contact = new \WeDevs\ERP\CRM\Main\Contact( $contact_id );
+    $contact = new \WeDevs\ERP\CRM\Contact( $contact_id );
 
     $contact_owner_id = $contact->get_contact_owner();
     $contact_owner    = get_userdata( $contact_owner_id );
@@ -2735,7 +2735,7 @@ function erp_crm_save_contact_owner_email_activity( $email, $inbound_email_addre
 
     $contact_id = intval( $save_data['user_id'] );
 
-    $contact = new \WeDevs\ERP\CRM\Main\Contact( $contact_id );
+    $contact = new \WeDevs\ERP\CRM\Contact( $contact_id );
 
     $headers = '';
     $headers .= 'Content-Type: text/html; charset=UTF-8' . "\r\n";
@@ -2972,7 +2972,7 @@ function erp_crm_contact_form_section() {
  */
 function erp_crm_settings_pages( $settings ) {
     if ( erp_crm_is_current_user_manager() ) {
-        $settings[] = new \WeDevs\ERP\CRM\Main\CRMSettings();
+        $settings[] = new \WeDevs\ERP\CRM\CRMSettings();
     }
 
     return $settings;
@@ -3383,7 +3383,7 @@ function erp_crm_render_save_replies( $template_id, $contact_id ) {
     //     return new WP_Error( 'no-contact', __( 'No contact found', 'erp' ) );
     // }
 
-    $contacts       = new \WeDevs\ERP\CRM\Main\Contact( $contact_id );
+    $contacts       = new \WeDevs\ERP\CRM\Contact( $contact_id );
     $templates      = (object) erp_crm_get_save_replies_by_id( $template_id );
     $shortcodes     = erp_crm_get_save_replies_shortcodes();
     $contacts_info  = $contacts->data;
@@ -3669,7 +3669,7 @@ function erp_crm_check_new_inbound_emails() {
                     return $current_item;
                 }, $email['attachments'] );
                 /*** Save uploaded files start *****/
-                $g_uploader           = new \WeDevs\ERP\CRM\Main\GmailSync();
+                $g_uploader           = new \WeDevs\ERP\CRM\GmailSync();
                 $email['attachments'] = $g_uploader->save_attachments( $email['attachments'] );
                 /*** Save uploaded files end *****/
                 // Save & sent the email
@@ -4025,7 +4025,7 @@ function erp_crm_login_redirect( $redirect_to, $roles ) {
  * @return WP_Error | string
  */
 function erp_crm_get_life_stage( $contact_id ) {
-    $contact = new \WeDevs\ERP\CRM\Main\Contact( $contact_id );
+    $contact = new \WeDevs\ERP\CRM\Contact( $contact_id );
 
     if ( empty( $contact ) ) {
         return new \WP_Error( 'no-erp-people', __( 'People not exists', 'erp' ) );
@@ -4045,7 +4045,7 @@ function erp_crm_get_life_stage( $contact_id ) {
  * @return bool|string|WP_Error
  */
 function erp_crm_update_life_stage( $contact_id, $stage ) {
-    $contact = new \WeDevs\ERP\CRM\Main\Contact( $contact_id );
+    $contact = new \WeDevs\ERP\CRM\Contact( $contact_id );
 
     if ( empty( $contact ) ) {
         return new \WP_Error( 'no-erp-people', __( 'People not exists', 'erp' ) );
@@ -4064,7 +4064,7 @@ function erp_crm_update_life_stage( $contact_id, $stage ) {
  * @return string|WP_Error
  */
 function erp_crm_get_contact_owner( $contact_id ) {
-    $contact = new \WeDevs\ERP\CRM\Main\Contact( $contact_id );
+    $contact = new \WeDevs\ERP\CRM\Contact( $contact_id );
 
     if ( empty( $contact ) ) {
         return new \WP_Error( 'no-erp-people', __( 'People not exists', 'erp' ) );
@@ -4090,7 +4090,7 @@ function erp_crm_update_contact_owner( $contact_id, $owner_id, $field_type = 'us
         return new \WP_Error( 'no-erp-people', __( 'People not exists', 'erp' ) );
     }
 
-    $contact = new \WeDevs\ERP\CRM\Main\Contact( $people->id );
+    $contact = new \WeDevs\ERP\CRM\Contact( $people->id );
 
     $contact->update_contact_owner( $owner_id );
 }
@@ -4125,7 +4125,7 @@ function erp_crm_get_contact_groups_list() {
  * @return string|WP_Error
  */
 function erp_crm_get_contact_hash( $contact_id ) {
-    $contact = new \WeDevs\ERP\CRM\Main\Contact( $contact_id );
+    $contact = new \WeDevs\ERP\CRM\Contact( $contact_id );
 
     if ( empty( $contact ) ) {
         return new \WP_Error( 'no-erp-people', __( 'People not exists', 'erp' ) );
@@ -4145,7 +4145,7 @@ function erp_crm_get_contact_hash( $contact_id ) {
  * @return WP_Error|void
  */
 function erp_crm_update_contact_hash( $contact_id, $hash ) {
-    $contact = new \WeDevs\ERP\CRM\Main\Contact( $contact_id );
+    $contact = new \WeDevs\ERP\CRM\Contact( $contact_id );
 
     if ( empty( $contact ) ) {
         return new \WP_Error( 'no-erp-people', __( 'People not exists', 'erp' ) );

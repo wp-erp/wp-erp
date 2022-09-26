@@ -7,7 +7,7 @@ use WP_List_Table;
 /**
  * Campaign List table class
  */
-class Campaign_List_Table extends WP_List_Table {
+class CampaignListTable extends WP_List_Table {
     private $counts = [];
 
     public function __construct() {

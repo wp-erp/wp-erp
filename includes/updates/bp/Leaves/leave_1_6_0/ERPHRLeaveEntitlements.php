@@ -1,6 +1,6 @@
 <?php
 
-namespace WeDevs\ERP\Updates\BP\Leave;
+namespace WeDevs\ERP\Updates\BP\Leaves\Leave_1_6_0;
 
 use WP_Background_Process;
 
@@ -17,7 +17,7 @@ if ( ! class_exists( 'WP_Background_Process', false ) ) {
  *
  * @since 1.6.0
  */
-class ERP_HR_Leave_Entitlements extends WP_Background_Process {
+class ERPHRLeaveEntitlements extends WP_Background_Process {
 
     /**
      * Background process id, must be unique.
@@ -615,4 +615,4 @@ class ERP_HR_Leave_Entitlements extends WP_Background_Process {
 }
 
 global $bg_progess_hr_leaves_entitlements;
-$bg_progess_hr_leaves_entitlements = new \WeDevs\ERP\Updates\BP\Leave\ERP_HR_Leave_Entitlements();
+$bg_progess_hr_leaves_entitlements = new ERPHRLeaveEntitlements();

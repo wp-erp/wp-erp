@@ -353,7 +353,7 @@ class Admin {
         $tutorial_tab = ! empty( $_GET['tutorial'] ) ? true : false;
 
         if ( $tutorial_tab ) {
-            new \WeDevs\ERP\Accounting\Classes\Accounting_Tutorial();
+            new \WeDevs\ERP\Accounting\Classes\AccountingTutorial();
         }
     }
 

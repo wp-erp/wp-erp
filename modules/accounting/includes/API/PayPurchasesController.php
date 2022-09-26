@@ -1,6 +1,6 @@
 <?php
 
-namespace WeDevs\ERP\Accounting\Main\API;
+namespace WeDevs\ERP\Accounting\API;
 
 use WP_Error;
 use WP_REST_Response;

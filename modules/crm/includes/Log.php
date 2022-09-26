@@ -183,7 +183,7 @@ class Log {
     public function create_activity( $data ) {
         $title         = '';
         $invited_users = '';
-        $contact       = new \WeDevs\ERP\CRM\Main\Contact( $data['user_id'] );
+        $contact       = new Contact( $data['user_id'] );
 
         if ( isset( $data['invite_contact'] ) ) {
             foreach ( $data['invite_contact'] as $user_id ) {

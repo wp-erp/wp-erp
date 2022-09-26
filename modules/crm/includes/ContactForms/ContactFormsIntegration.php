@@ -140,7 +140,7 @@ class ContactFormsIntegration {
             $people_id = erp_insert_people( $contact );
 
             if ( ! is_wp_error( $people_id ) ) {
-                $customer = new \WeDevs\ERP\CRM\Main\Contact( absint( $people_id ), 'contact' );
+                $customer = new \WeDevs\ERP\CRM\Contact( absint( $people_id ), 'contact' );
 
                 $customer->update_life_stage( 'lead' );
                 $customer->update_meta( 'source', 'contact_form' );

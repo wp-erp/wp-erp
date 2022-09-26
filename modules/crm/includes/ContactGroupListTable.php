@@ -7,7 +7,7 @@ use WP_List_Table;
 /**
  * Customer List table class
  */
-class Contact_Group_List_Table extends WP_List_Table {
+class ContactGroupListTable extends WP_List_Table {
     private $counts = [];
 
     public function __construct() {

@@ -36,9 +36,12 @@
  */
 
 // don't call the file directly
-use WeDevs\ERP\ERP_i18n;
 use WeDevs\ERP\Scripts;
 use WeDevs\ERP\Updates;
+use WeDevs\ERP\ERP_i18n;
+use WeDevs\ERP\AddonTask;
+use WeDevs\ERP\Promotion;
+use WeDevs\ERP\Settings\Ajax;
 use WeDevs\ERP\Admin\AdminMenu;
 use WeDevs\ERP\Admin\AdminPage;
 use WeDevs\ERP\API\ApiRegistrar;
@@ -254,19 +257,25 @@ final class WeDevs_ERP {
             require_once WPERP_INCLUDES . '/lib/bgprocess/wp-async-request.php';
             require_once WPERP_INCLUDES . '/lib/bgprocess/wp-background-process.php';
 
-            require_once WPERP_INCLUDES . '/updates/bp/class-erp-acct-bg-process-1.5.0.php';
-            require_once WPERP_INCLUDES . '/updates/bp/class-erp-acct-bg-process-1.5.2.php';
+//            require_once WPERP_INCLUDES . '/Updates/BP/class-erp-acct-bg-process-1.5.0.php';
+            new Updates\BP\ERPACCTBGProcess1_5_0();
+//            require_once WPERP_INCLUDES . '/Updates/BP/class-erp-acct-bg-process-1.5.2.php';
+            new Updates\BP\ERPACCTBGProcessPeopleTrn_1_5_2();
         }
 
         // `Leave` related background process files
-        require_once WPERP_INCLUDES . '/updates/bp/leave_1_6_0/class-erp-hr-leave-entitlements.php';
-        require_once WPERP_INCLUDES . '/updates/bp/leave_1_6_0/class-erp-hr-leave-request.php';
+//        require_once WPERP_INCLUDES . '/Updates/BP/Leaves/Leave_1_6_0/class-erp-hr-leave-entitlements.php';
+        new Updates\BP\Leaves\Leave_1_6_0\ERPHRLeaveEntitlements();
+//        require_once WPERP_INCLUDES . '/Updates/BP/Leaves/Leave_1_6_0/class-erp-hr-leave-request.php';
+        new Updates\BP\Leaves\Leave_1_6_0\ERPHRLeaveRequest();
 
         // Version 1.6.5 background files
-        require_once WPERP_INCLUDES . '/updates/bp/class-erp-bg-process-1.6.5.php';
+//        require_once WPERP_INCLUDES . '/Updates/BP/class-erp-bg-process-1.6.5.php';
+        new Updates\BP\ERP_BG_PROCESS_1_6_5();
 
         // Version 1.10.0 background files
-        require_once WPERP_INCLUDES . '/updates/bp/class-erp-hr-bg-process-1.10.0.php';
+//        require_once WPERP_INCLUDES . '/Updates/BP/class-erp-hr-bg-process-1.10.0.php';
+        new Updates\BP\ERP_HR_BG_PROCESS_1_10_0();
 
         // Validates data
 //        require_once WPERP_INCLUDES . '/class-validate-data.php';
@@ -292,11 +301,11 @@ final class WeDevs_ERP {
         new Scripts();
         new Updates();
         new ApiRegistrar();
-        new \WeDevs\ERP\Promotion();
-        new \WeDevs\ERP\AddonTask();
+        new Promotion();
+        new AddonTask();
         new ERP_i18n();
         new ValidateData();
-        new \WeDevs\ERP\Settings\Ajax();
+        new Ajax();
 
         // Appsero Tracker
         \WeDevs\ERP\Tracker::get_instance()->init();

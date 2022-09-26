@@ -424,14 +424,14 @@ class HRM {
     public function load_hrm_rest_controllers( $controller ) {
         $hrm_controller = [
             '\WeDevs\ERP\HRM\API\EmployeesController',
-            '\WeDevs\ERP\HRM\API\Departments_Controller',
-            '\WeDevs\ERP\HRM\API\Designations_Controller',
+            '\WeDevs\ERP\HRM\API\DepartmentsController',
+            '\WeDevs\ERP\HRM\API\DesignationsController',
             '\WeDevs\ERP\HRM\API\Birthdays_Controller',
-            '\WeDevs\ERP\HRM\API\HRM_Reports_Controller',
-            '\WeDevs\ERP\HRM\API\Leave_Entitlements_Controller',
-            '\WeDevs\ERP\HRM\API\Leave_Holidays_Controller',
-            '\WeDevs\ERP\HRM\API\Leave_Policies_Controller',
-            '\WeDevs\ERP\HRM\API\Leave_Requests_Controller',
+            '\WeDevs\ERP\HRM\API\HRMReportsController',
+            '\WeDevs\ERP\HRM\API\LeaveEntitlementsController',
+            '\WeDevs\ERP\HRM\API\LeaveHolidaysController',
+            '\WeDevs\ERP\HRM\API\LeavePoliciesController',
+            '\WeDevs\ERP\HRM\API\LeaveRequestsController',
             '\WeDevs\ERP\HRM\API\AnnouncementsController',
             '\WeDevs\ERP\HRM\API\CompanyController',
         ];

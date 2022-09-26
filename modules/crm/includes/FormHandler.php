@@ -108,7 +108,7 @@ class FormHandler {
             }
         }
 
-        $customer_table = new \WeDevs\ERP\CRM\Main\Contact_Subscriber_List_Table();
+        $customer_table = new \WeDevs\ERP\CRM\ContactSubscriberListTable();
         $action         = $customer_table->current_action();
 
         if ( $action ) {

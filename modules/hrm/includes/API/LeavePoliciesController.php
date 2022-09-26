@@ -7,7 +7,7 @@ use WP_Error;
 use WP_REST_Response;
 use WP_REST_Server;
 
-class Leave_Holidays_Controller extends REST_Controller {
+class LeavePoliciesController extends REST_Controller {
 
     /**
      * Endpoint namespace.
@@ -21,7 +21,25 @@ class Leave_Holidays_Controller extends REST_Controller {
      *
      * @var string
      */
-    protected $rest_base = 'hrm/leaves/holidays';
+    protected $rest_base = 'hrm/leaves/policies';
+
+    /**
+     * Activate types of leave policy.
+     *
+     * @var array
+     */
+    protected $activate_types = [];
+
+    /**
+     * Class constructor.
+     */
+    public function __construct() {
+        $this->activate_types = [
+            1 => 'immediately',
+            2 => 'after_days',
+            3 => 'manually',
+        ];
+    }
 
     /**
      * Register the routes for the objects of the controller.
@@ -30,15 +48,15 @@ class Leave_Holidays_Controller extends REST_Controller {
         register_rest_route( $this->namespace, '/' . $this->rest_base, [
             [
                 'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_holidays' ],
+                'callback'            => [ $this, 'get_policies' ],
                 'args'                => $this->get_collection_params(),
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_view_list' );
+                    return current_user_can( 'erp_leave_manage' );
                 },
             ],
             [
                 'methods'             => WP_REST_Server::CREATABLE,
-                'callback'            => [ $this, 'create_holiday' ],
+                'callback'            => [ $this, 'create_policy' ],
                 'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_leave_manage' );
@@ -50,17 +68,17 @@ class Leave_Holidays_Controller extends REST_Controller {
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', [
             [
                 'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_holiday' ],
+                'callback'            => [ $this, 'get_policy' ],
                 'args'                => [
                     'context' => $this->get_context_param( [ 'default' => 'view' ] ),
                 ],
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_view_list' );
+                    return current_user_can( 'erp_leave_manage' );
                 },
             ],
             [
                 'methods'             => WP_REST_Server::EDITABLE,
-                'callback'            => [ $this, 'update_holiday' ],
+                'callback'            => [ $this, 'update_policy' ],
                 'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_leave_manage' );
@@ -68,7 +86,7 @@ class Leave_Holidays_Controller extends REST_Controller {
             ],
             [
                 'methods'             => WP_REST_Server::DELETABLE,
-                'callback'            => [ $this, 'delete_holiday' ],
+                'callback'            => [ $this, 'delete_policy' ],
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_leave_manage' );
                 },
@@ -78,20 +96,20 @@ class Leave_Holidays_Controller extends REST_Controller {
     }
 
     /**
-     * Get a collection of holidays
+     * Get a collection of policies
      *
      * @param WP_REST_Request $request
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_holidays( $request ) {
+    public function get_policies( $request ) {
         $args = [
             'number' => $request['per_page'],
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
         ];
 
-        $items       = erp_hr_get_holidays( $args );
-        $total_items = erp_hr_count_holidays( $args );
+        $items       = erp_hr_leave_get_policies( $args );
+        $total_items = erp_hr_count_leave_policies();
 
         $formated_items = [];
 
@@ -107,18 +125,18 @@ class Leave_Holidays_Controller extends REST_Controller {
     }
 
     /**
-     * Get a specific holiday
+     * Get a specific policy
      *
      * @param WP_REST_Request $request
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_holiday( $request ) {
+    public function get_policy( $request ) {
         $id   = (int) $request['id'];
-        $item = \WeDevs\ERP\HRM\Models\LeaveHoliday::find( $id );
+        $item = erp_hr_leave_get_policy( $id );
 
         if ( empty( $id ) || empty( $item->id ) ) {
-            return new WP_Error( 'rest_holiday_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_policy_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $item     = $this->prepare_item_for_response( $item, $request );
@@ -128,20 +146,21 @@ class Leave_Holidays_Controller extends REST_Controller {
     }
 
     /**
-     * Create a holiday
+     * Create an policy
+     *
+     * @since 1.1.10
+     * @since 1.2.0  erp_hr_leave_insert_policy is now returns Leave_Policies model
      *
      * @param WP_REST_Request $request
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function create_holiday( $request ) {
-        $item       = $this->prepare_item_for_database( $request );
-
-        $holiday_id = erp_hr_leave_insert_holiday( $item );
-        $holiday    = \WeDevs\ERP\HRM\Models\LeaveHoliday::find( $holiday_id );
+    public function create_policy( $request ) {
+        $item   = $this->prepare_item_for_database( $request );
+        $policy = erp_hr_leave_insert_policy( $item );
 
         $request->set_param( 'context', 'edit' );
-        $response = $this->prepare_item_for_response( $holiday, $request );
+        $response = $this->prepare_item_for_response( $policy, $request );
         $response = rest_ensure_response( $response );
         $response->set_status( 201 );
         $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $id ) ) );
@@ -150,28 +169,28 @@ class Leave_Holidays_Controller extends REST_Controller {
     }
 
     /**
-     * Update a holiday
+     * Update an policy
      *
      * @param WP_REST_Request $request
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function update_holiday( $request ) {
+    public function update_policy( $request ) {
         $id = (int) $request['id'];
 
-        $holiday = \WeDevs\ERP\HRM\Models\LeaveHoliday::find( $id );
+        $policy = erp_hr_leave_get_policy( $id );
 
-        if ( empty( $id ) || empty( $holiday->id ) ) {
-            return new WP_Error( 'rest_holiday_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 400 ] );
+        if ( empty( $id ) || empty( $policy->id ) ) {
+            return new WP_Error( 'rest_policy_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 400 ] );
         }
 
         $item = $this->prepare_item_for_database( $request );
 
-        $holiday_id = erp_hr_leave_insert_holiday( $item );
-        $holiday    = \WeDevs\ERP\HRM\Models\LeaveHoliday::find( $holiday_id );
+        $policy_id = erp_hr_leave_insert_policy( $item );
+        $policy    = erp_hr_leave_get_policy( $policy_id );
 
         $request->set_param( 'context', 'edit' );
-        $response = $this->prepare_item_for_response( $holiday, $request );
+        $response = $this->prepare_item_for_response( $policy, $request );
         $response = rest_ensure_response( $response );
         $response->set_status( 201 );
         $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $id ) ) );
@@ -180,16 +199,16 @@ class Leave_Holidays_Controller extends REST_Controller {
     }
 
     /**
-     * Delete a holiday
+     * Delete an policy
      *
      * @param WP_REST_Request $request
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function delete_holiday( $request ) {
+    public function delete_policy( $request ) {
         $id = (int) $request['id'];
 
-        erp_hr_delete_holidays( $id );
+        erp_hr_leave_policy_delete( $id );
 
         return new WP_REST_Response( true, 204 );
     }
@@ -206,19 +225,52 @@ class Leave_Holidays_Controller extends REST_Controller {
 
         // required arguments.
         if ( isset( $request['name'] ) ) {
-            $prepared_item['title'] = $request['name'];
+            $prepared_item['name'] = $request['name'];
         }
 
-        if ( isset( $request['start_date'] ) ) {
-            $prepared_item['start'] = date( 'Y-m-d', strtotime( $request['start_date'] ) );
+        if ( isset( $request['days'] ) ) {
+            $prepared_item['value'] = absint( $request['days'] );
         }
+
+        $prepared_item['color'] = isset( $request['color'] ) ? $request['color'] : '#fafafa';
 
         // optional arguments.
         if ( isset( $request['id'] ) ) {
             $prepared_item['id'] = absint( $request['id'] );
         }
 
-        $prepared_item['end'] = isset( $request['end_date'] ) ? date( 'Y-m-d', strtotime( $request['end_date'] ) ) : date( 'Y-m-d', strtotime( $request['start_date'] . '+1 days' ) );
+        if ( isset( $request['department'] ) ) {
+            $prepared_item['department'] = absint( $request['department'] );
+        }
+
+        if ( isset( $request['designation'] ) ) {
+            $prepared_item['designation'] = absint( $request['designation'] );
+        }
+
+        if ( isset( $request['gender'] ) ) {
+            $prepared_item['gender'] = $request['gender'];
+        }
+
+        if ( isset( $request['marital'] ) ) {
+            $prepared_item['marital'] = $request['marital'];
+        }
+
+        if ( isset( $request['activate'] ) ) {
+            $activate_types            = array_flip( $this->activate_types );
+            $prepared_item['activate'] = $activate_types[ $request['activate'] ];
+        }
+
+        if ( isset( $request['execute_day'] ) ) {
+            $prepared_item['execute_day'] = absint( $request['execute_day'] );
+        }
+
+        if ( isset( $request['effective_date'] ) ) {
+            $prepared_item['effective_date'] = date( 'Y-m-d', strtotime( $request['effective_date'] ) );
+        }
+
+        if ( isset( $request['location'] ) ) {
+            $prepared_item['location'] = absint( $request['location'] );
+        }
 
         if ( isset( $request['description'] ) ) {
             $prepared_item['description'] = $request['description'];
@@ -238,12 +290,46 @@ class Leave_Holidays_Controller extends REST_Controller {
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
         $data = [
-            'id'          => (int) $item->id,
-            'name'        => $item->title,
-            'start_date'  => date( 'Y-m-d', strtotime( $item->start ) ),
-            'end_date'    => date( 'Y-m-d', strtotime( $item->end ) ),
-            'description' => $item->description,
+            'id'             => (int) $item->id,
+            'name'           => $item->name,
+            'days'           => (int) $item->value,
+            'color'          => $item->color,
+            'gender'         => ( $item->gender != -1 ) ? $item->gender : null,
+            'marital'        => ( $item->marital != -1 ) ? $item->marital : null,
+            'activate'       => $this->activate_types[ $item->activate ],
+            'execute_day'    => (int) $item->execute_day,
+            'effective_date' => date( 'Y-m-d', strtotime( $item->effective_date ) ),
+            'location'       => ( $item->location != -1 ) ? $item->location : null,
+            'description'    => $item->description,
         ];
+
+        if ( isset( $request['include'] ) ) {
+            $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
+
+            if ( in_array( 'department', $include_params ) ) {
+                $departments_controller = new DepartmentsController();
+
+                $department_id      = (int) $item->department;
+                $data['department'] = null;
+
+                if ( $department_id ) {
+                    $department         = $departments_controller->get_department( ['id' => $department_id ] );
+                    $data['department'] = ! is_wp_error( $department ) ? $department->get_data() : null;
+                }
+            }
+
+            if ( in_array( 'designation', $include_params ) ) {
+                $designations_controller = new DesignationsController();
+
+                $designation_id      = (int) $item->designation;
+                $data['designation'] = null;
+
+                if ( $designation_id ) {
+                    $designation         = $designations_controller->get_designation( ['id' => $designation_id ] );
+                    $data['designation'] = ! is_wp_error( $designation ) ? $designation->get_data() : null;
+                }
+            }
+        }
 
         $data = array_merge( $data, $additional_fields );
 
@@ -263,7 +349,7 @@ class Leave_Holidays_Controller extends REST_Controller {
     public function get_item_schema() {
         $schema = [
             '$schema'    => 'http://json-schema.org/draft-04/schema#',
-            'title'      => 'holiday',
+            'title'      => 'policy',
             'type'       => 'object',
             'properties' => [
                 'id'          => [
@@ -281,25 +367,14 @@ class Leave_Holidays_Controller extends REST_Controller {
                     ],
                     'required'    => true,
                 ],
-                'start_date'  => [
-                    'description' => __( 'Start date for the resource.', 'erp' ),
-                    'type'        => 'string',
-                    'context'     => [ 'edit' ],
-                    'arg_options' => [
-                        'sanitize_callback' => 'sanitize_text_field',
-                    ],
+                'days'        => [
+                    'description' => __( 'Days for the resource.', 'erp' ),
+                    'type'        => 'integer',
+                    'context'     => [ 'embed', 'view', 'edit' ],
                     'required'    => true,
                 ],
-                'end_date'    => [
-                    'description' => __( 'End date for the resource.', 'erp' ),
-                    'type'        => 'string',
-                    'context'     => [ 'edit' ],
-                    'arg_options' => [
-                        'sanitize_callback' => 'sanitize_text_field',
-                    ],
-                ],
-                'description' => [
-                    'description' => __( 'Description for the resource.', 'erp' ),
+                'color'       => [
+                    'description' => __( 'Color for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [

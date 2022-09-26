@@ -8,7 +8,7 @@ use WP_Error;
 use WP_REST_Response;
 use WP_REST_Server;
 
-class Leave_Requests_Controller extends REST_Controller {
+class LeaveRequestsController extends REST_Controller {
 
     /**
      * Endpoint namespace.
@@ -222,7 +222,7 @@ class Leave_Requests_Controller extends REST_Controller {
             $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
 
             if ( in_array( 'policy', $include_params ) ) {
-                $policies_controller = new Leave_Policies_Controller();
+                $policies_controller = new LeavePoliciesController();
 
                 $policy_id      = (int) $item->policy_id;
                 $data['policy'] = null;

@@ -1,6 +1,6 @@
 <?php
 
-namespace WeDevs\ERP\Accounting\Main\API;
+namespace WeDevs\ERP\Accounting\API;
 
 use WeDevs\ERP\HRM\Employee;
 use WP_Error;

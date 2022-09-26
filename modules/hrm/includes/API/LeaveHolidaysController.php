@@ -7,7 +7,7 @@ use WP_Error;
 use WP_REST_Response;
 use WP_REST_Server;
 
-class Departments_Controller extends REST_Controller {
+class LeaveHolidaysController extends REST_Controller {
 
     /**
      * Endpoint namespace.
@@ -21,7 +21,7 @@ class Departments_Controller extends REST_Controller {
      *
      * @var string
      */
-    protected $rest_base = 'hrm/departments';
+    protected $rest_base = 'hrm/leaves/holidays';
 
     /**
      * Register the routes for the objects of the controller.
@@ -30,7 +30,7 @@ class Departments_Controller extends REST_Controller {
         register_rest_route( $this->namespace, '/' . $this->rest_base, [
             [
                 'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_departments' ],
+                'callback'            => [ $this, 'get_holidays' ],
                 'args'                => $this->get_collection_params(),
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_view_list' );
@@ -38,9 +38,10 @@ class Departments_Controller extends REST_Controller {
             ],
             [
                 'methods'             => WP_REST_Server::CREATABLE,
-                'callback'            => [ $this, 'create_department' ],
+                'callback'            => [ $this, 'create_holiday' ],
+                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_manage_department' );
+                    return current_user_can( 'erp_leave_manage' );
                 },
             ],
             'schema' => [ $this, 'get_public_item_schema' ],
@@ -49,7 +50,7 @@ class Departments_Controller extends REST_Controller {
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', [
             [
                 'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_department' ],
+                'callback'            => [ $this, 'get_holiday' ],
                 'args'                => [
                     'context' => $this->get_context_param( [ 'default' => 'view' ] ),
                 ],
@@ -59,17 +60,17 @@ class Departments_Controller extends REST_Controller {
             ],
             [
                 'methods'             => WP_REST_Server::EDITABLE,
-                'callback'            => [ $this, 'update_department' ],
+                'callback'            => [ $this, 'update_holiday' ],
                 'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_manage_department' );
+                    return current_user_can( 'erp_leave_manage' );
                 },
             ],
             [
                 'methods'             => WP_REST_Server::DELETABLE,
-                'callback'            => [ $this, 'delete_department' ],
+                'callback'            => [ $this, 'delete_holiday' ],
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_manage_department' );
+                    return current_user_can( 'erp_leave_manage' );
                 },
             ],
             'schema' => [ $this, 'get_public_item_schema' ],
@@ -77,28 +78,25 @@ class Departments_Controller extends REST_Controller {
     }
 
     /**
-     * Get a collection of departments
+     * Get a collection of holidays
      *
      * @param WP_REST_Request $request
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_departments( $request ) {
+    public function get_holidays( $request ) {
         $args = [
             'number' => $request['per_page'],
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
-            's'      => $request['s'] ? $request['s'] : '',
         ];
 
-        $items       = erp_hr_get_departments( $args );
-        $total_items = erp_hr_count_departments();
+        $items       = erp_hr_get_holidays( $args );
+        $total_items = erp_hr_count_holidays( $args );
 
         $formated_items = [];
 
         foreach ( $items as $item ) {
-            $additional_fields = [];
-
-            $data             = $this->prepare_item_for_response( $item, $request, $additional_fields );
+            $data             = $this->prepare_item_for_response( $item, $request );
             $formated_items[] = $this->prepare_response_for_collection( $data );
         }
 
@@ -109,18 +107,18 @@ class Departments_Controller extends REST_Controller {
     }
 
     /**
-     * Get a specific department
+     * Get a specific holiday
      *
      * @param WP_REST_Request $request
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_department( $request ) {
+    public function get_holiday( $request ) {
         $id   = (int) $request['id'];
-        $item = new \WeDevs\ERP\HRM\Department( $id );
+        $item = \WeDevs\ERP\HRM\Models\LeaveHoliday::find( $id );
 
         if ( empty( $id ) || empty( $item->id ) ) {
-            return new WP_Error( 'rest_department_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_holiday_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $item     = $this->prepare_item_for_response( $item, $request );
@@ -130,19 +128,20 @@ class Departments_Controller extends REST_Controller {
     }
 
     /**
-     * Create a department
+     * Create a holiday
      *
      * @param WP_REST_Request $request
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function create_department( $request ) {
+    public function create_holiday( $request ) {
         $item       = $this->prepare_item_for_database( $request );
-        $id         = erp_hr_create_department( $item );
-        $department = new \WeDevs\ERP\HRM\Department( $id );
+
+        $holiday_id = erp_hr_leave_insert_holiday( $item );
+        $holiday    = \WeDevs\ERP\HRM\Models\LeaveHoliday::find( $holiday_id );
 
         $request->set_param( 'context', 'edit' );
-        $response = $this->prepare_item_for_response( $department, $request );
+        $response = $this->prepare_item_for_response( $holiday, $request );
         $response = rest_ensure_response( $response );
         $response->set_status( 201 );
         $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $id ) ) );
@@ -151,30 +150,28 @@ class Departments_Controller extends REST_Controller {
     }
 
     /**
-     * Update a department
+     * Update a holiday
      *
      * @param WP_REST_Request $request
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function update_department( $request ) {
+    public function update_holiday( $request ) {
         $id = (int) $request['id'];
 
-        $department = new \WeDevs\ERP\HRM\Department( $id );
+        $holiday = \WeDevs\ERP\HRM\Models\LeaveHoliday::find( $id );
 
-        if ( ! $department ) {
-            return new WP_Error( 'rest_department_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 400 ] );
+        if ( empty( $id ) || empty( $holiday->id ) ) {
+            return new WP_Error( 'rest_holiday_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 400 ] );
         }
 
         $item = $this->prepare_item_for_database( $request );
-        $id   = erp_hr_create_department( $item );
 
-        if ( is_wp_error( $id ) ) {
-            return $id;
-        }
+        $holiday_id = erp_hr_leave_insert_holiday( $item );
+        $holiday    = \WeDevs\ERP\HRM\Models\LeaveHoliday::find( $holiday_id );
 
         $request->set_param( 'context', 'edit' );
-        $response = $this->prepare_item_for_response( $department, $request );
+        $response = $this->prepare_item_for_response( $holiday, $request );
         $response = rest_ensure_response( $response );
         $response->set_status( 201 );
         $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $id ) ) );
@@ -183,27 +180,24 @@ class Departments_Controller extends REST_Controller {
     }
 
     /**
-     * Delete a department
+     * Delete a holiday
      *
-     * @since 1.0.0
+     * @param WP_REST_Request $request
      *
-     * @param $request
-     *
-     * @return WP_REST_Response
+     * @return WP_Error|WP_REST_Request
      */
-    public function delete_department( $request ) {
+    public function delete_holiday( $request ) {
         $id = (int) $request['id'];
 
-        erp_hr_delete_department( $id );
-        $response = rest_ensure_response( true );
+        erp_hr_delete_holidays( $id );
 
-        return new WP_REST_Response( $response, 204 );
+        return new WP_REST_Response( true, 204 );
     }
 
     /**
      * Prepare a single item for create or update
      *
-     * @param \WP_REST_Request $request request object
+     * @param WP_REST_Request $request request object
      *
      * @return array $prepared_item
      */
@@ -211,25 +205,23 @@ class Departments_Controller extends REST_Controller {
         $prepared_item = [];
 
         // required arguments.
-        if ( ! empty( $request['title'] ) ) {
-            $prepared_item['title'] = $request['title'];
+        if ( isset( $request['name'] ) ) {
+            $prepared_item['title'] = $request['name'];
+        }
+
+        if ( isset( $request['start_date'] ) ) {
+            $prepared_item['start'] = date( 'Y-m-d', strtotime( $request['start_date'] ) );
         }
 
         // optional arguments.
-        if ( ! empty( $request['id'] ) ) {
+        if ( isset( $request['id'] ) ) {
             $prepared_item['id'] = absint( $request['id'] );
         }
 
-        if ( ! empty( $request['description'] ) ) {
+        $prepared_item['end'] = isset( $request['end_date'] ) ? date( 'Y-m-d', strtotime( $request['end_date'] ) ) : date( 'Y-m-d', strtotime( $request['start_date'] . '+1 days' ) );
+
+        if ( isset( $request['description'] ) ) {
             $prepared_item['description'] = $request['description'];
-        }
-
-        if ( ! empty( $request['parent'] ) ) {
-            $prepared_item['parent'] = absint( $request['parent'] );
-        }
-
-        if ( ! empty( $request['head'] ) ) {
-            $prepared_item['lead'] = absint( $request['head'] );
         }
 
         return $prepared_item;
@@ -246,25 +238,12 @@ class Departments_Controller extends REST_Controller {
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
         $data = [
-            'id'              => (int) $item->id,
-            'title'           => $item->title,
-            'lead'            => $item->lead,
-            'parent'          => $item->parent,
-            'description'     => $item->description,
-            'total_employees' => $item->num_of_employees(),
+            'id'          => (int) $item->id,
+            'name'        => $item->title,
+            'start_date'  => date( 'Y-m-d', strtotime( $item->start ) ),
+            'end_date'    => date( 'Y-m-d', strtotime( $item->end ) ),
+            'description' => $item->description,
         ];
-
-        if ( isset( $request['include'] ) ) {
-            $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
-
-            if ( in_array( 'parent', $include_params ) ) {
-                $data['parent'] = $this->get_parent_department( $item );
-            }
-
-            if ( in_array( 'head', $include_params ) ) {
-                $data['head'] = $this->get_user( intval( $item->lead ) );
-            }
-        }
 
         $data = array_merge( $data, $additional_fields );
 
@@ -277,29 +256,6 @@ class Departments_Controller extends REST_Controller {
     }
 
     /**
-     * Get the parent of a department
-     *
-     * @param object $item
-     *
-     * @return array
-     */
-    public function get_parent_department( $item ) {
-        $parent_id = (int) $item->get_parent_id( $item->id );
-
-        if ( ! $parent_id ) {
-            return null;
-        }
-
-        $parent = new \WeDevs\ERP\HRM\Department( $parent_id );
-
-        return [
-            'id'     => $parent->id,
-            'title'  => $parent->title,
-            '_links' => $this->prepare_links( $parent ),
-        ];
-    }
-
-    /**
      * Get the User's schema, conforming to JSON Schema
      *
      * @return array
@@ -307,7 +263,7 @@ class Departments_Controller extends REST_Controller {
     public function get_item_schema() {
         $schema = [
             '$schema'    => 'http://json-schema.org/draft-04/schema#',
-            'title'      => 'department',
+            'title'      => 'holiday',
             'type'       => 'object',
             'properties' => [
                 'id'          => [
@@ -316,14 +272,31 @@ class Departments_Controller extends REST_Controller {
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
-                'title'       => [
-                    'description' => __( 'Title for the resource.', 'erp' ),
+                'name'        => [
+                    'description' => __( 'Name for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                     'required'    => true,
+                ],
+                'start_date'  => [
+                    'description' => __( 'Start date for the resource.', 'erp' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                    'required'    => true,
+                ],
+                'end_date'    => [
+                    'description' => __( 'End date for the resource.', 'erp' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
                 ],
                 'description' => [
                     'description' => __( 'Description for the resource.', 'erp' ),
@@ -332,16 +305,6 @@ class Departments_Controller extends REST_Controller {
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
-                ],
-                'parent'      => [
-                    'description' => __( 'Parent for the resource.', 'erp' ),
-                    'type'        => 'integer',
-                    'context'     => [ 'edit' ],
-                ],
-                'head'        => [
-                    'description' => __( 'Head for the resource.', 'erp' ),
-                    'type'        => 'integer',
-                    'context'     => [ 'edit' ],
                 ],
             ],
         ];

@@ -1191,7 +1191,7 @@ class AjaxHandler {
         }
 
         $customer_id = absint( wp_unslash( $_POST['customer_id'] ) );
-        $customer    = new \WeDevs\ERP\CRM\Main\Contact( $customer_id );
+        $customer    = new \WeDevs\ERP\CRM\Contact( $customer_id );
         $postdata    = wp_unslash( $_POST );
 
         unset( $postdata['_wp_http_referer'], $postdata['_wpnonce'], $postdata['action'], $postdata['customer_id'] );
@@ -1321,7 +1321,7 @@ class AjaxHandler {
                 ];
 
                 $data    = erp_crm_save_customer_feed_data( $save_data );
-                $contact = new \WeDevs\ERP\CRM\Main\Contact( $user_id );
+                $contact = new \WeDevs\ERP\CRM\Contact( $user_id );
 
                 $headers = '';
                 $headers .= 'Content-Type: text/html; charset=UTF-8' . "\r\n";

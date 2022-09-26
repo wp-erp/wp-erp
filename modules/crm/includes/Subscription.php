@@ -358,7 +358,7 @@ class Subscription {
             return new WP_Error( 'error-insert-people', __( 'Unable to save data, please try again', 'erp' ) );
         }
 
-        $contact = new \WeDevs\ERP\CRM\Main\Contact( absint( $contact_id ), 'contact' );
+        $contact = new Contact( absint( $contact_id ), 'contact' );
 
         // insert metadata for new contact
         if ( empty( $existing_contact ) ) {
