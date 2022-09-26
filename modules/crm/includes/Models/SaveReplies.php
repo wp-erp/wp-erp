@@ -1,13 +1,13 @@
 <?php
 
-namespace WeDevs\ERP\CRM\Main\Models;
+namespace WeDevs\ERP\CRM\Models;
 
 use WeDevs\ERP\Framework\Model;
 
 /**
  * Class Dependents
  */
-class Save_Replies extends Model {
+class SaveReplies extends Model {
     protected $table = 'erp_crm_save_email_replies';
 
     protected $fillable = [ 'name', 'subject', 'template' ];

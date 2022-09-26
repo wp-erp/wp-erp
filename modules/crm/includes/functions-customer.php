@@ -694,7 +694,7 @@ function erp_crm_get_feed_activity( $args = [] ) {
     $feeds        = wp_cache_get( $cache_key, 'erp' );
 
     if ( false === $feeds ) {
-        $results = \WeDevs\ERP\CRM\Main\Models\Activity::select( [
+        $results = \WeDevs\ERP\CRM\Models\Activity::select( [
             '*',
             $db->raw( 'MONTHNAME(`created_at`) as feed_month, YEAR( `created_at` ) as feed_year' ),
         ] )
@@ -833,14 +833,14 @@ function erp_crm_get_feed_activity( $args = [] ) {
  */
 function erp_crm_save_customer_feed_data( $data ) {
     if ( isset( $data['id'] ) && ! empty( $data['id'] ) ) {
-        $saved_activity    = WeDevs\ERP\CRM\Main\Models\Activity::find( $data['id'] )->update( $data );
+        $saved_activity    = WeDevs\ERP\CRM\Models\Activity::find( $data['id'] )->update( $data );
         $saved_activity_id = $data['id'];
     } else {
-        $saved_activity    = WeDevs\ERP\CRM\Main\Models\Activity::create( $data );
+        $saved_activity    = WeDevs\ERP\CRM\Models\Activity::create( $data );
         $saved_activity_id = $saved_activity->id;
     }
 
-    $activity = WeDevs\ERP\CRM\Main\Models\Activity::
+    $activity = WeDevs\ERP\CRM\Models\Activity::
     with( [
         'contact'    => function ( $query ) {
             $query->with( 'types' );
@@ -906,7 +906,7 @@ function erp_crm_customer_get_single_activity_feed( $feed_id ) {
     if ( false === $data ) {
 
         $results = [];
-        $data    = WeDevs\ERP\CRM\Main\Models\Activity::with( [
+        $data    = WeDevs\ERP\CRM\Models\Activity::with( [
             'contact'    => function ( $query ) {
                 $query->with( 'types' );
             },
@@ -980,10 +980,10 @@ function erp_crm_process_attachment_data( $attachments ) {
  * @return collection
  */
 function erp_crm_customer_delete_activity_feed( $feed_id ) {
-    $activity = WeDevs\ERP\CRM\Main\Models\Activity::find( $feed_id );
+    $activity = WeDevs\ERP\CRM\Models\Activity::find( $feed_id );
 
     if ( $activity->type === 'tasks' ) {
-        WeDevs\ERP\CRM\Main\Models\ActivityUser::where( 'activity_id', $activity->id )->delete();
+        WeDevs\ERP\CRM\Models\ActivityUser::where( 'activity_id', $activity->id )->delete();
     }
 
     erp_crm_purge_cache( [ 'list' => 'feeds', 'feed-detail' => $feed_id ] );
@@ -999,7 +999,7 @@ function erp_crm_customer_delete_activity_feed( $feed_id ) {
  * @return void
  */
 function erp_crm_customer_schedule_notification() {
-    $schedules = \WeDevs\ERP\CRM\Main\Models\Activity::schedules()->get()->toArray();
+    $schedules = \WeDevs\ERP\CRM\Models\Activity::schedules()->get()->toArray();
 
     if ( empty( $schedules ) ) {
         return;
@@ -1079,7 +1079,7 @@ function erp_crm_update_schedule_notification_flag( $activity_id, $flag ) {
     if ( ! $activity_id ) {
         return;
     }
-    \WeDevs\ERP\CRM\Main\Models\Activity::find( $activity_id )->update( [ 'sent_notification' => $flag ] );
+    \WeDevs\ERP\CRM\Models\Activity::find( $activity_id )->update( [ 'sent_notification' => $flag ] );
 }
 
 /**
@@ -1097,14 +1097,14 @@ function erp_crm_update_schedule_notification_flag( $activity_id, $flag ) {
  */
 function erp_crm_assign_task_to_users( $data, $save_data ) {
     if ( $save_data['id'] ) {
-        \WeDevs\ERP\CRM\Main\Models\ActivityUser::where( 'activity_id', $save_data['id'] )->delete();
+        \WeDevs\ERP\CRM\Models\ActivityUser::where( 'activity_id', $save_data['id'] )->delete();
     }
 
     $user_ids = [];
 
     if ( isset( $data['extra']['invited_user'] ) && count( $data['extra']['invited_user'] ) > 0 ) {
         foreach ( $data['extra']['invited_user'] as $key => $user ) {
-            $res = \WeDevs\ERP\CRM\Main\Models\ActivityUser::create( [
+            $res = \WeDevs\ERP\CRM\Models\ActivityUser::create( [
                 'activity_id' => $data['id'],
                 'user_id'     => $user['id'],
             ] );
@@ -1131,7 +1131,7 @@ function erp_crm_assign_task_to_users( $data, $save_data ) {
  */
 function erp_crm_save_contact_group( $data ) {
     if ( ! empty( $data['id'] ) ) {
-        $result = WeDevs\ERP\CRM\Main\Models\ContactGroup::find( $data['id'] )->update( $data );
+        $result = WeDevs\ERP\CRM\Models\ContactGroup::find( $data['id'] )->update( $data );
         $args   = [
             'list'                          => 'contact_groups',
             'erp-crm-contact-group-detail'  => $data['id']
@@ -1141,7 +1141,7 @@ function erp_crm_save_contact_group( $data ) {
             do_action( 'erp_crm_update_contact_group', $data );
         }
     } else {
-        $result = WeDevs\ERP\CRM\Main\Models\ContactGroup::create( $data );
+        $result = WeDevs\ERP\CRM\Models\ContactGroup::create( $data );
         do_action( 'erp_crm_create_contact_group', $result );
         $args = [ 'list' => 'contact_groups' ];
     }
@@ -1175,14 +1175,14 @@ function erp_crm_get_contact_groups( $args = [] ) {
     if ( false === $items ) {
         // Check if args count true, then return total count customer according to above filter
         if ( $args['count'] ) {
-            $result = WeDevs\ERP\CRM\Main\Models\ContactGroup::count();
+            $result = WeDevs\ERP\CRM\Models\ContactGroup::count();
             wp_cache_set( $cache_key, $result, 'erp' );
 
             return $result;
         }
 
         $results       = [];
-        $contact_group = new WeDevs\ERP\CRM\Main\Models\ContactGroup();
+        $contact_group = new WeDevs\ERP\CRM\Models\ContactGroup();
 
         $contact_group = $contact_group->with( 'contact_subscriber' );
 
@@ -1260,7 +1260,7 @@ function erp_crm_get_contact_group_by_id( $id ) {
     $contact_group = wp_cache_get( 'erp-crm-contact-group-detail-' . $id, 'erp' );
 
     if( false === $contact_group ) {
-        $contact_group = WeDevs\ERP\CRM\Main\Models\ContactGroup::find( $id )->toArray();
+        $contact_group = WeDevs\ERP\CRM\Models\ContactGroup::find( $id )->toArray();
 
         wp_cache_set( 'erp-crm-contact-group-detail-' . $id, $contact_group, 'erp' );
     }
@@ -1279,9 +1279,9 @@ function erp_crm_get_contact_group_by_id( $id ) {
  */
 function erp_crm_contact_group_delete( $id ) {
     if ( is_array( $id ) ) {
-        WeDevs\ERP\CRM\Main\Models\ContactGroup::destroy( $id );
+        WeDevs\ERP\CRM\Models\ContactGroup::destroy( $id );
     } else {
-        WeDevs\ERP\CRM\Main\Models\ContactGroup::find( $id )->delete();
+        WeDevs\ERP\CRM\Models\ContactGroup::find( $id )->delete();
     }
 
     $args = [ 'list' => 'contact_groups', 'erp-crm-contact-group-detail' => $id ];
@@ -1322,7 +1322,7 @@ function erp_crm_get_subscriber_contact( $args = [] ) {
         $contact_group_tb     = $wpdb->prefix . 'erp_crm_contact_group';
         $contact_tags         = $wpdb->prefix . 'erp_crm_contact_tag';
 
-        $contact_subscribers = WeDevs\ERP\CRM\Main\Models\ContactSubscriber::leftjoin( $contact_group_tb, $contact_group_tb . '.id', '=', $contact_subscribe_tb . '.group_id' );
+        $contact_subscribers = WeDevs\ERP\CRM\Models\ContactSubscriber::leftjoin( $contact_group_tb, $contact_group_tb . '.id', '=', $contact_subscribe_tb . '.group_id' );
 
         // $contact_subscribers = $contact_subscribers::leftjoin('')
         if ( ! current_user_can( 'erp_crm_create_groups' ) ) {
@@ -1413,7 +1413,7 @@ function erp_crm_get_contact_group_dropdown( $label = [] ) {
  * @return array
  */
 function erp_crm_get_assign_subscriber_contact() {
-    $data = \WeDevs\ERP\CRM\Main\Models\ContactSubscriber::select( 'user_id' )->distinct()->get()->toArray();
+    $data = \WeDevs\ERP\CRM\Models\ContactSubscriber::select( 'user_id' )->distinct()->get()->toArray();
 
     return wp_list_pluck( $data, 'user_id' );
 }
@@ -1448,7 +1448,7 @@ function erp_crm_create_new_contact_subscriber( $args = [] ) {
         return new WP_Error( 'user-id', __( 'No contact founds', 'erp' ) );
     }
 
-    $subscriber = \WeDevs\ERP\CRM\Main\Models\ContactSubscriber::create( $args );
+    $subscriber = \WeDevs\ERP\CRM\Models\ContactSubscriber::create( $args );
 
     $contact = new \WeDevs\ERP\CRM\Main\Contact( $subscriber->user_id );
     $hash_id = sha1( microtime() . 'erp-subscription' . $args['group_id'] . $args['user_id'] );
@@ -1475,7 +1475,7 @@ function erp_crm_create_new_contact_subscriber( $args = [] ) {
  * @return array
  */
 function erp_crm_get_editable_assign_contact( $user_id ) {
-    $data = \WeDevs\ERP\CRM\Main\Models\ContactSubscriber::where( 'user_id', $user_id )->distinct()->get()->toArray();
+    $data = \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $user_id )->distinct()->get()->toArray();
 
     return $data;
 }
@@ -1494,7 +1494,7 @@ function erp_crm_get_user_assignable_groups( $user_id ) {
         return new WP_Error( 'no-user-id', __( 'No contact found', 'erp' ) );
     }
 
-    $data = \WeDevs\ERP\CRM\Main\Models\ContactSubscriber::with( 'groups' )
+    $data = \WeDevs\ERP\CRM\Models\ContactSubscriber::with( 'groups' )
                                                          ->where( [
             'user_id' => $user_id,
             'status'  => 'subscribe',
@@ -1523,9 +1523,9 @@ function erp_crm_contact_subscriber_delete( $id, $group_id ) {
     do_action( 'erp_crm_pre_unsubscribed_contact', $id, $group_id );
 
     if ( is_array( $id ) ) {
-        $deleted = \WeDevs\ERP\CRM\Main\Models\ContactSubscriber::whereIn( 'user_id', $id )->where( 'group_id', $group_id )->delete();
+        $deleted = \WeDevs\ERP\CRM\Models\ContactSubscriber::whereIn( 'user_id', $id )->where( 'group_id', $group_id )->delete();
     } else {
-        $deleted = \WeDevs\ERP\CRM\Main\Models\ContactSubscriber::where( 'user_id', $id )->where( 'group_id', $group_id )->delete();
+        $deleted = \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $id )->where( 'group_id', $group_id )->delete();
     }
 
     erp_crm_purge_cache( [ 'list' => 'contact_groups' ] );
@@ -1551,7 +1551,7 @@ function erp_crm_contact_subscriber_delete( $id, $group_id ) {
  * @return void
  */
 function erp_crm_edit_contact_subscriber( $groups, $user_id ) {
-    $data = \WeDevs\ERP\CRM\Main\Models\ContactSubscriber::where( 'user_id', $user_id )->distinct()->get()->toArray();
+    $data = \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $user_id )->distinct()->get()->toArray();
 
     $db                         = wp_list_pluck( $data, 'group_id' );
     $existing_group_with_status = wp_list_pluck( $data, 'status', 'group_id' );
@@ -1594,7 +1594,7 @@ function erp_crm_edit_contact_subscriber( $groups, $user_id ) {
 
     if ( ! empty( $unsubscribe_group ) ) {
         foreach ( $unsubscribe_group as $unsubscribe_group_key => $unsubscribe_group_id ) {
-            $updated = \WeDevs\ERP\CRM\Main\Models\ContactSubscriber::where( 'user_id', $user_id )
+            $updated = \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $user_id )
                                                                     ->where( 'group_id', $unsubscribe_group_id )
                                                                     ->update( [
                     'status'         => 'subscribe',
@@ -1603,7 +1603,7 @@ function erp_crm_edit_contact_subscriber( $groups, $user_id ) {
                 ] );
 
             if ( $updated ) {
-                $subscriber = \WeDevs\ERP\CRM\Main\Models\ContactSubscriber::where( 'user_id', $user_id )
+                $subscriber = \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $user_id )
                                                                            ->where( 'group_id', $unsubscribe_group_id )
                                                                            ->where( 'status', 'subscribe' )
                                                                            ->first();
@@ -1627,7 +1627,7 @@ function erp_crm_edit_contact_subscriber( $groups, $user_id ) {
 
     if ( ! empty( $del_group ) ) {
         foreach ( $del_group as $del_group_key => $del_group_id ) {
-            $subscriber = \WeDevs\ERP\CRM\Main\Models\ContactSubscriber::where( 'user_id', $user_id )
+            $subscriber = \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $user_id )
                                                                        ->where( 'group_id', $del_group_id )
                                                                        ->where( 'status', 'subscribe' )
                                                                        ->update( [
@@ -1659,7 +1659,7 @@ function erp_crm_contact_unsubscribe_subscriber( $user_id, $group_id ) {
         return false;
     }
 
-    $updated = \WeDevs\ERP\CRM\Main\Models\ContactSubscriber::where( 'user_id', $user_id )
+    $updated = \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $user_id )
                                                             ->where( 'group_id', $group_id )
                                                             ->where( 'status', 'subscribe' )
                                                             ->update( [
@@ -1695,7 +1695,7 @@ function erp_crm_contact_resubscribe_subscriber( $user_id, $group_id ) {
         return false;
     }
 
-    $updated = \WeDevs\ERP\CRM\Main\Models\ContactSubscriber::where( 'user_id', $user_id )
+    $updated = \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $user_id )
                                                             ->where( 'group_id', $group_id )
                                                             ->where( 'status', 'unsubscribe' )
                                                             ->update( [
@@ -1755,7 +1755,7 @@ function erp_crm_get_campaigns( $args = [] ) {
     $items     = wp_cache_get( $cache_key, 'erp' );
 
     if ( false === $items ) {
-        $campaigns = new \WeDevs\ERP\CRM\Main\Models\Campaign();
+        $campaigns = new \WeDevs\ERP\CRM\Models\Campaign();
 
         if ( $args['withgroup'] ) {
             $campaigns = $campaigns->with( 'groups' );
@@ -1782,7 +1782,7 @@ function erp_crm_get_campaigns( $args = [] ) {
 
         // Check if args count true, then return total count customer according to above filter
         if ( $args['count'] ) {
-            $items = WeDevs\ERP\CRM\Main\Models\Campaign::count();
+            $items = WeDevs\ERP\CRM\Models\Campaign::count();
         }
 
         wp_cache_set( $cache_key, $items, 'erp' );
@@ -1957,7 +1957,7 @@ function erp_crm_get_serach_key( $type = '' ) {
                 '!'  => __( 'not in group', 'erp' ),
                 '!~' => __( 'unsubscribed from', 'erp' ),
             ],
-	        'options'   => erp_html_generate_dropdown( wp_list_pluck( \WeDevs\ERP\CRM\Main\Models\ContactGroup::select( 'id', 'name' )->get()->keyBy( 'id' )->toArray(), 'name' ) ),
+	        'options'   => erp_html_generate_dropdown( wp_list_pluck( \WeDevs\ERP\CRM\Models\ContactGroup::select( 'id', 'name' )->get()->keyBy( 'id' )->toArray(), 'name' ) ),
         ],
 
         'other' => [
@@ -2164,7 +2164,7 @@ function erp_crm_get_save_search_regx( $values ) {
  * @return bool
  */
 function erp_crm_check_segment_exists( $name ) {
-    $exists = WeDevs\ERP\CRM\Main\Models\SaveSearch::where( 'search_name', $name )->first();
+    $exists = WeDevs\ERP\CRM\Models\SaveSearch::where( 'search_name', $name )->first();
 
     return $exists ? true : false;
 }
@@ -2180,12 +2180,12 @@ function erp_crm_check_segment_exists( $name ) {
  */
 function erp_crm_insert_save_search( $data ) {
     if ( $data['id'] ) {
-        $updated_item = WeDevs\ERP\CRM\Main\Models\SaveSearch::find( $data['id'] );
+        $updated_item = WeDevs\ERP\CRM\Models\SaveSearch::find( $data['id'] );
         $updated_item->update( $data );
 
         return $updated_item;
     } else {
-        return WeDevs\ERP\CRM\Main\Models\SaveSearch::create( $data );
+        return WeDevs\ERP\CRM\Models\SaveSearch::create( $data );
     }
 }
 
@@ -2211,11 +2211,11 @@ function erp_crm_get_save_search_item( $args = [] ) {
     $args = wp_parse_args( $args, $defaults );
 
     if ( $args['id'] ) {
-        return WeDevs\ERP\CRM\Main\Models\SaveSearch::find( $args['id'] )->toArray();
+        return WeDevs\ERP\CRM\Models\SaveSearch::find( $args['id'] )->toArray();
     }
 
     $results     = [];
-    $search_keys = WeDevs\ERP\CRM\Main\Models\SaveSearch::where( 'user_id', '=', $args['user_id'] )
+    $search_keys = WeDevs\ERP\CRM\Models\SaveSearch::where( 'user_id', '=', $args['user_id'] )
                                                         ->orWhere( 'global', '=', 1 );
 
     if ( isset( $args['type'] ) && ! empty( $args['type'] ) ) {
@@ -2267,7 +2267,7 @@ function erp_crm_get_save_search_item( $args = [] ) {
  * @return bool
  */
 function erp_crm_delete_save_search_item( $id ) {
-    return WeDevs\ERP\CRM\Main\Models\SaveSearch::find( $id )->delete();
+    return WeDevs\ERP\CRM\Models\SaveSearch::find( $id )->delete();
 }
 
 /**
@@ -2284,7 +2284,7 @@ function erp_crm_get_search_by_already_saved( $save_search_id ) {
         return '';
     }
 
-    $data = WeDevs\ERP\CRM\Main\Models\SaveSearch::find( $save_search_id );
+    $data = WeDevs\ERP\CRM\Models\SaveSearch::find( $save_search_id );
 
     return $data->search_val;
 }
@@ -2577,9 +2577,9 @@ function erp_crm_is_people_belongs_to_saved_search( $sql, $args ) {
 function erp_crm_get_todays_schedules_activity( $user_id = '' ) {
     $results  = [];
     $db       = new \WeDevs\ORM\Eloquent\Database();
-    $activity = new WeDevs\ERP\CRM\Main\Models\Activity();
+    $activity = new WeDevs\ERP\CRM\Models\Activity();
 
-    $res = \WeDevs\ERP\CRM\Main\Models\Activity::with( [
+    $res = \WeDevs\ERP\CRM\Models\Activity::with( [
         'contact' => function ( $query ) {
             $query->with( 'types' );
         },
@@ -2610,9 +2610,9 @@ function erp_crm_get_next_seven_day_schedules_activities( $user_id = '' ) {
     global $wpdb;
     $results  = [];
     $db       = new \WeDevs\ORM\Eloquent\Database();
-    $activity = new WeDevs\ERP\CRM\Main\Models\Activity();
+    $activity = new WeDevs\ERP\CRM\Models\Activity();
 
-    $res = \WeDevs\ERP\CRM\Main\Models\Activity::with( [
+    $res = \WeDevs\ERP\CRM\Models\Activity::with( [
         'contact' => function ( $query ) {
             $query->with( 'types' );
         },
@@ -2892,7 +2892,7 @@ function erp_crm_get_email_from_name() {
  */
 function erp_crm_track_email_opened() {
     if ( isset( $_GET['aid'] ) ) {
-        $activity = \WeDevs\ERP\CRM\Main\Models\Activity::find( sanitize_text_field( wp_unslash( $_GET['aid'] ) ) );
+        $activity = \WeDevs\ERP\CRM\Models\Activity::find( sanitize_text_field( wp_unslash( $_GET['aid'] ) ) );
         $extra    = json_decode( base64_decode( $activity->extra ), true );
 
         if ( isset( $extra['email_opened_at'] ) && ! is_array( $extra['email_opened_at'] ) ) {
@@ -3154,7 +3154,7 @@ function erp_crm_insert_save_replies( $args = [] ) {
         $args['id'] = 0;
     }
 
-    $save_replies = WeDevs\ERP\CRM\Main\Models\Save_Replies::firstOrNew( [ 'id' => $args['id'] ] );
+    $save_replies = WeDevs\ERP\CRM\Models\SaveReplies::firstOrNew( [ 'id' => $args['id'] ] );
 
     $current_data = [
         'name'     => $save_replies->name,
@@ -3299,7 +3299,7 @@ function erp_crm_get_save_replies( $args = [] ) {
 
     if ( false === $items ) {
         $results      = [];
-        $save_replies = new WeDevs\ERP\CRM\Main\Models\Save_Replies();
+        $save_replies = new WeDevs\ERP\CRM\Models\SaveReplies();
 
         // Check if want all data without any pagination
         if ( $args['number'] != '-1' && ! $args['count'] ) {
@@ -3315,7 +3315,7 @@ function erp_crm_get_save_replies( $args = [] ) {
 
         // Check if args count true, then return total count customer according to above filter
         if ( $args['count'] ) {
-            $items = WeDevs\ERP\CRM\Main\Models\Save_Replies::count();
+            $items = WeDevs\ERP\CRM\Models\SaveReplies::count();
         }
 
         wp_cache_set( $cache_key, $items, 'erp' );
@@ -3339,9 +3339,9 @@ function erp_crm_get_save_replies_by_id( $id ) {
     }
 
     if ( is_array( $id ) ) {
-        return WeDevs\ERP\CRM\Main\Models\Save_Replies::whereIn( 'id', $id )->get()->toArray();
+        return WeDevs\ERP\CRM\Models\SaveReplies::whereIn( 'id', $id )->get()->toArray();
     } else {
-        return WeDevs\ERP\CRM\Main\Models\Save_Replies::find( $id )->toArray();
+        return WeDevs\ERP\CRM\Models\SaveReplies::find( $id )->toArray();
     }
 }
 
@@ -3358,9 +3358,9 @@ function erp_crm_save_replies_delete( $id ) {
     }
 
     if ( is_array( $id ) ) {
-        return WeDevs\ERP\CRM\Main\Models\Save_Replies::destroy( $id );
+        return WeDevs\ERP\CRM\Models\SaveReplies::destroy( $id );
     } else {
-        return WeDevs\ERP\CRM\Main\Models\Save_Replies::find( $id )->delete();
+        return WeDevs\ERP\CRM\Models\SaveReplies::find( $id )->delete();
     }
 }
 
@@ -4103,7 +4103,7 @@ function erp_crm_update_contact_owner( $contact_id, $owner_id, $field_type = 'us
  * @return array
  */
 function erp_crm_get_contact_groups_list() {
-    $groups         = \WeDevs\ERP\CRM\Main\Models\ContactGroup::select( 'id', 'name' )->get();
+    $groups         = \WeDevs\ERP\CRM\Models\ContactGroup::select( 'id', 'name' )->get();
     $contact_groups = apply_filters( 'erp_crm_get_contact_group_list', $groups );
 
     $list = [];

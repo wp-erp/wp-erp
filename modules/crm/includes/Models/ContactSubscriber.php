@@ -1,6 +1,6 @@
 <?php
 
-namespace WeDevs\ERP\CRM\Main\Models;
+namespace WeDevs\ERP\CRM\Models;
 
 use WeDevs\ERP\Framework\Model;
 

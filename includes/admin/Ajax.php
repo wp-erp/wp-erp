@@ -271,7 +271,7 @@ class Ajax {
                     if ( ! empty( $_POST['contact_group'] ) ) {
                         $contact_group = absint( $_POST['contact_group'] );
 
-                        $existing_data = \WeDevs\ERP\CRM\Main\Models\ContactSubscriber::where( [
+                        $existing_data = \WeDevs\ERP\CRM\Models\ContactSubscriber::where( [
                             'group_id' => $contact_group,
                             'user_id'  => $people->id,
                         ] )->first();
@@ -679,7 +679,7 @@ class Ajax {
                     }
                 }
 
-                $existing_data = \WeDevs\ERP\CRM\Main\Models\ContactSubscriber::where( [ 'group_id' => $contact_group, 'user_id' => $people->id ] )->first();
+                $existing_data = \WeDevs\ERP\CRM\Models\ContactSubscriber::where( [ 'group_id' => $contact_group, 'user_id' => $people->id ] )->first();
 
                 if ( empty( $existing_data ) ) {
                     $hash = sha1( microtime() . 'erp-subscription-form' . $contact_group . $people->id );

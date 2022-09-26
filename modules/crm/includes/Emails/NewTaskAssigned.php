@@ -41,7 +41,7 @@ class NewTaskAssigned extends Email {
     public function trigger( $data ) {
         global $current_user;
 
-        $activity = \WeDevs\ERP\CRM\Main\Models\Activity::where( [
+        $activity = \WeDevs\ERP\CRM\Models\Activity::where( [
             'id'   => intval( $data['activity_id'] ),
             'type' => 'tasks',
         ] )->first();

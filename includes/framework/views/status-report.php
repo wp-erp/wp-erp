@@ -106,7 +106,7 @@ $security         = $system_status->get_security_info();
 		<tr>
 			<td data-export-label="Contact Groups"><?php esc_html_e( 'Contact Groups', 'erp' ); ?>:</td>
 			<td class="help"><?php echo wp_kses_post( erp_help_tip( esc_html__( 'Total contact groups count.', 'erp' ) ) ); ?></td>
-			<td><?php echo esc_html( \WeDevs\ERP\CRM\Main\Models\ContactGroup::count() ); ?></td>
+			<td><?php echo esc_html( \WeDevs\ERP\CRM\Models\ContactGroup::count() ); ?></td>
 		</tr>
 		<tr>
 			<td data-export-label="Accounting">

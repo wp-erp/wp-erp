@@ -3,6 +3,7 @@ namespace WeDevs\ERP\CRM\Main;
 
 use WeDevs\ERP\CRM\Admin\AdminMenu;
 use WeDevs\ERP\CRM\AjaxHandler;
+use WeDevs\ERP\CRM\Contact;
 use WeDevs\ERP\CRM\ContactForms\ContactFormsIntegration;
 use WeDevs\ERP\CRM\Emailer;
 use WeDevs\ERP\CRM\FormHandler;
@@ -117,7 +118,7 @@ class CRM {
         require_once WPERP_CRM_PATH . '/includes/functions-dashboard.php';
         require_once WPERP_CRM_PATH . '/includes/functions-reporting.php';
         require_once WPERP_CRM_PATH . '/includes/functions-capabilities.php';
-//        require_once WPERP_CRM_PATH . '/includes/ContactForms/class-contact-forms-integration.php';
+		//        require_once WPERP_CRM_PATH . '/includes/ContactForms/class-contact-forms-integration.php';
         new ContactFormsIntegration();
         // cli command
         if ( defined( 'WP_CLI' ) && WP_CLI ) {
@@ -285,90 +286,90 @@ class CRM {
                 wp_enqueue_script( 'erp-flotchart-tooltip' );
                 break;
 
-                case 'contact':
-                    $sub_section = isset( $_GET['sub-section'] ) ? sanitize_text_field( wp_unslash( $_GET['sub-section'] ) ) : 'contacts';
+			case 'contact':
+				$sub_section = isset( $_GET['sub-section'] ) ? sanitize_text_field( wp_unslash( $_GET['sub-section'] ) ) : 'contacts';
 
-                    switch ( $sub_section ) {
-                        case 'contacts':
-                            $this->load_contact_company_scripts( $suffix, $contact_actvity_localize );
+				switch ( $sub_section ) {
+					case 'contacts':
+						$this->load_contact_company_scripts( $suffix, $contact_actvity_localize );
 
-                            $customer                             = new Contact( null, 'contact' );
-                            $localize_script['customer_empty']    = $customer->to_array();
-                            $localize_script['erp_fields']        = erp_get_import_export_fields();
-                            $localize_script['import']            = __( 'Import', 'erp' );
-                            $localize_script['export']            = __( 'Export', 'erp' );
-                            $localize_script['import_title']      = __( 'Import Contacts', 'erp' );
-                            $localize_script['export_title']      = __( 'Export Contacts', 'erp' );
-                            $localize_script['import_users']      = __( 'Import Users As Contacts', 'erp' );
-                            $localize_script['statuses']          = erp_crm_customer_get_status_count( 'contact' );
-                            $localize_script['contact_type']      = 'contact';
-                            $localize_script['life_stages']       = erp_crm_get_life_stages_dropdown_raw();
-                            $localize_script['searchFields']      = erp_crm_get_serach_key( 'contact' );
-                            $localize_script['saveAdvanceSearch'] = erp_crm_get_save_search_item( [ 'type' => 'contact' ] );
-                            $localize_script['isAdmin']           = current_user_can( 'manage_options' );
-                            $localize_script['isCrmManager']      = current_user_can( 'erp_crm_manager' );
-                            $localize_script['isAgent']           = current_user_can( 'erp_crm_agent' );
+						$customer                             = new Contact( null, 'contact' );
+						$localize_script['customer_empty']    = $customer->to_array();
+						$localize_script['erp_fields']        = erp_get_import_export_fields();
+						$localize_script['import']            = __( 'Import', 'erp' );
+						$localize_script['export']            = __( 'Export', 'erp' );
+						$localize_script['import_title']      = __( 'Import Contacts', 'erp' );
+						$localize_script['export_title']      = __( 'Export Contacts', 'erp' );
+						$localize_script['import_users']      = __( 'Import Users As Contacts', 'erp' );
+						$localize_script['statuses']          = erp_crm_customer_get_status_count( 'contact' );
+						$localize_script['contact_type']      = 'contact';
+						$localize_script['life_stages']       = erp_crm_get_life_stages_dropdown_raw();
+						$localize_script['searchFields']      = erp_crm_get_serach_key( 'contact' );
+						$localize_script['saveAdvanceSearch'] = erp_crm_get_save_search_item( [ 'type' => 'contact' ] );
+						$localize_script['isAdmin']           = current_user_can( 'manage_options' );
+						$localize_script['isCrmManager']      = current_user_can( 'erp_crm_manager' );
+						$localize_script['isAgent']           = current_user_can( 'erp_crm_agent' );
 
-                            $country = \WeDevs\ERP\Countries::instance();
-                            wp_localize_script( 'erp-script', 'wpErpCountries', $country->load_country_states() );
-                            break;
+						$country = \WeDevs\ERP\Countries::instance();
+						wp_localize_script( 'erp-script', 'wpErpCountries', $country->load_country_states() );
+						break;
 
-                        case 'companies':
-                            $this->load_contact_company_scripts( $suffix, $contact_actvity_localize );
+					case 'companies':
+						$this->load_contact_company_scripts( $suffix, $contact_actvity_localize );
 
-                            $customer                             = new Contact( null, 'company' );
-                            $localize_script['customer_empty']    = $customer->to_array();
-                            $localize_script['erp_fields']        = erp_get_import_export_fields();
-                            $localize_script['import']            = __( 'Import', 'erp' );
-                            $localize_script['export']            = __( 'Export', 'erp' );
-                            $localize_script['import_title']      = __( 'Import Companies', 'erp' );
-                            $localize_script['export_title']      = __( 'Export Companies', 'erp' );
-                            $localize_script['statuses']          = erp_crm_customer_get_status_count( 'company' );
-                            $localize_script['contact_type']      = 'company';
-                            $localize_script['life_stages']       = erp_crm_get_life_stages_dropdown_raw();
-                            $localize_script['searchFields']      = erp_crm_get_serach_key( 'company' );
-                            $localize_script['saveAdvanceSearch'] = erp_crm_get_save_search_item( [ 'type' => 'company' ] );
-                            $localize_script['isAdmin']           = current_user_can( 'manage_options' );
-                            $localize_script['isCrmManager']      = current_user_can( 'erp_crm_manager' );
-                            $localize_script['isAgent']           = current_user_can( 'erp_crm_agent' );
+						$customer                             = new Contact( null, 'company' );
+						$localize_script['customer_empty']    = $customer->to_array();
+						$localize_script['erp_fields']        = erp_get_import_export_fields();
+						$localize_script['import']            = __( 'Import', 'erp' );
+						$localize_script['export']            = __( 'Export', 'erp' );
+						$localize_script['import_title']      = __( 'Import Companies', 'erp' );
+						$localize_script['export_title']      = __( 'Export Companies', 'erp' );
+						$localize_script['statuses']          = erp_crm_customer_get_status_count( 'company' );
+						$localize_script['contact_type']      = 'company';
+						$localize_script['life_stages']       = erp_crm_get_life_stages_dropdown_raw();
+						$localize_script['searchFields']      = erp_crm_get_serach_key( 'company' );
+						$localize_script['saveAdvanceSearch'] = erp_crm_get_save_search_item( [ 'type' => 'company' ] );
+						$localize_script['isAdmin']           = current_user_can( 'manage_options' );
+						$localize_script['isCrmManager']      = current_user_can( 'erp_crm_manager' );
+						$localize_script['isAgent']           = current_user_can( 'erp_crm_agent' );
 
-                            $country = \WeDevs\ERP\Countries::instance();
-                            wp_localize_script( 'erp-script', 'wpErpCountries', $country->load_country_states() );
-                            break;
+						$country = \WeDevs\ERP\Countries::instance();
+						wp_localize_script( 'erp-script', 'wpErpCountries', $country->load_country_states() );
+						break;
 
-                        case 'activities':
-                            wp_enqueue_script( 'underscore' );
-                            wp_enqueue_script( 'erp-vuejs' );
-                            wp_enqueue_style( 'erp-nprogress' );
-                            wp_enqueue_script( 'erp-nprogress' );
-                            wp_enqueue_script( 'wp-erp-crm-vue-component', WPERP_CRM_ASSETS . '/js/crm-components.js', apply_filters( 'crm_vue_customer_script', [ 'erp-nprogress', 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ] ), gmdate( 'Ymd' ), true );
+					case 'activities':
+						wp_enqueue_script( 'underscore' );
+						wp_enqueue_script( 'erp-vuejs' );
+						wp_enqueue_style( 'erp-nprogress' );
+						wp_enqueue_script( 'erp-nprogress' );
+						wp_enqueue_script( 'wp-erp-crm-vue-component', WPERP_CRM_ASSETS . '/js/crm-components.js', apply_filters( 'crm_vue_customer_script', [ 'erp-nprogress', 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ] ), gmdate( 'Ymd' ), true );
 
-                            do_action( 'erp_crm_load_contact_vue_scripts' );
+						do_action( 'erp_crm_load_contact_vue_scripts' );
 
-                            wp_enqueue_script( 'wp-erp-crm-vue-customer', WPERP_CRM_ASSETS . "/js/crm-app$suffix.js", [ 'wp-erp-crm-vue-component', 'erp-nprogress', 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ], gmdate( 'Ymd' ), true );
-                            wp_enqueue_script( 'post' );
+						wp_enqueue_script( 'wp-erp-crm-vue-customer', WPERP_CRM_ASSETS . "/js/crm-app$suffix.js", [ 'wp-erp-crm-vue-component', 'erp-nprogress', 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ], gmdate( 'Ymd' ), true );
+						wp_enqueue_script( 'post' );
 
-                            $contact_actvity_localize['isActivityPage'] = true;
-                            wp_localize_script( 'wp-erp-crm-vue-component', 'wpCRMvue', $contact_actvity_localize );
-                            break;
-                    }
+						$contact_actvity_localize['isActivityPage'] = true;
+						wp_localize_script( 'wp-erp-crm-vue-component', 'wpCRMvue', $contact_actvity_localize );
+						break;
+				}
 
-                    break;
+                break;
 
-                case 'task':
-                    wp_enqueue_style( 'erp-timepicker' );
-                    wp_enqueue_script( 'erp-timepicker' );
-                    wp_enqueue_script( 'underscore' );
-                    wp_enqueue_script( 'erp-trix-editor' );
-                    wp_enqueue_style( 'erp-trix-editor' );
-                    break;
+			case 'task':
+				wp_enqueue_style( 'erp-timepicker' );
+				wp_enqueue_script( 'erp-timepicker' );
+				wp_enqueue_script( 'underscore' );
+				wp_enqueue_script( 'erp-trix-editor' );
+				wp_enqueue_style( 'erp-trix-editor' );
+                break;
 
-                case 'reports':
-                    if ( isset( $_GET['type'] ) && sanitize_text_field( wp_unslash( $_GET['type'] ) ) === 'growth-report' ) {
-                        wp_enqueue_script( 'erp-chartjs' );
-                        wp_enqueue_script( 'erp-crm-report', WPERP_CRM_ASSETS . "/js/report$suffix.js", [ 'moment' ], gmdate( 'Ymd' ), true );
-                    }
-                    break;
+			case 'reports':
+				if ( isset( $_GET['type'] ) && sanitize_text_field( wp_unslash( $_GET['type'] ) ) === 'growth-report' ) {
+					wp_enqueue_script( 'erp-chartjs' );
+					wp_enqueue_script( 'erp-crm-report', WPERP_CRM_ASSETS . "/js/report$suffix.js", [ 'moment' ], gmdate( 'Ymd' ), true );
+				}
+                break;
         }
 
         wp_localize_script( 'erp-vue-table', 'wpVueTable', [
