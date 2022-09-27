@@ -7,7 +7,7 @@ use WeDevs\ERP\Settings\Template;
 /**
  * CRM Settings class
  */
-class CRMSettings extends Template {
+class Settings extends Template {
 
     /**
      * Init CRMSettings initial data

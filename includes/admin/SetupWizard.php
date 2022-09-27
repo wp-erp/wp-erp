@@ -957,7 +957,7 @@ class SetupWizard {
                 <div class="erp-setup-next-steps-first">
                     <h2><?php esc_html_e( 'Next Steps &rarr;', 'erp' ); ?></h2>
                     <?php
-                        $is_hrm_activated = erp_is_module_active( 'hrm' );
+                        $is_hrm_activated = erp_is_module_active( 'HRM' );
 
                         if ( $is_hrm_activated ) { ?>
                             <a class="button button-primary button-large btn-add-employees"

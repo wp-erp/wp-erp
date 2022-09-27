@@ -3,9 +3,9 @@
     <?php
     $current_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : 'general';
 
-    $is_crm_activated = erp_is_module_active( 'crm' );
-    $is_hrm_activated = erp_is_module_active( 'hrm' );
-    $is_acc_activated = erp_is_module_active( 'accounting' );
+    $is_crm_activated = erp_is_module_active( 'CRM' );
+    $is_hrm_activated = erp_is_module_active( 'HRM' );
+    $is_acc_activated = erp_is_module_active( 'Accounting' );
 
     $erp_import_export_fields = erp_get_import_export_fields();
     $keys                     = array_keys( $erp_import_export_fields );

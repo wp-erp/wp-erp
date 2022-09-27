@@ -2,6 +2,7 @@
 
 namespace WeDevs\ERP\Settings;
 
+use WeDevs\ERP\CRM\Admin\CRMSettings;
 use WeDevs\ERP\Framework\Traits\Ajax as Trait_Ajax;
 use WeDevs\ERP\Framework\Traits\Hooker;
 use WeDevs\ERP\EmailMailgun;
@@ -72,7 +73,7 @@ class Ajax {
                 break;
 
             case 'erp-crm':
-                $settings = ( new \WeDevs\ERP\CRM\CRMSettings() );
+                $settings = ( new \WeDevs\ERP\CRM\Admin\Settings() );
                 $has_not_permission = $has_not_permission && ! current_user_can( 'erp_crm_manager' );
                 break;
 

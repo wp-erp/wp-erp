@@ -2972,7 +2972,7 @@ function erp_crm_contact_form_section() {
  */
 function erp_crm_settings_pages( $settings ) {
     if ( erp_crm_is_current_user_manager() ) {
-        $settings[] = new \WeDevs\ERP\CRM\CRMSettings();
+        $settings[] = new \WeDevs\ERP\CRM\Admin\Settings();
     }
 
     return $settings;

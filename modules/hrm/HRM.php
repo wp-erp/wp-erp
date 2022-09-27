@@ -3,6 +3,7 @@ namespace WeDevs\ERP\HRM\Main;
 
 use WeDevs\ERP\HRM\Employee;
 use WeDevs\ERP\HRM\LeaveEntitlementBGProcess;
+use WeDevs\ERP\HRM\Settings;
 use WeDevs_ERP;
 use WeDevs\ERP\HRM\HrLog;
 use WeDevs\ERP\HRM\Emailer;

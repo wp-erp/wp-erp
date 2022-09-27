@@ -6,7 +6,7 @@
 
         <div class="col-3">
             <?php
-                if ( erp_is_module_active( 'hrm' ) ) {
+                if ( erp_is_module_active( 'HRM' ) ) {
                     include WPERP_HRM_VIEWS . '/dashboard-badge.php';
                 }
             ?>
@@ -41,11 +41,11 @@
         </div>
         <div class="col-3">
             <?php
-                if ( erp_is_module_active( 'crm' ) ) {
+                if ( erp_is_module_active( 'CRM' ) ) {
                     include WPERP_CRM_VIEWS . '/dashboard-badge.php';
                 }
 
-                if ( erp_is_module_active( 'accounting' ) ) {
+                if ( erp_is_module_active( 'Accounting' ) ) {
                     include ERP_ACCOUNTING_VIEWS . '/dashboard/dashboard.php';
                 }
             ?>
