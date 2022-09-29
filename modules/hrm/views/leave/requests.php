@@ -9,7 +9,7 @@
 
     <?php
     if ( ! empty( $_GET['error'] ) ) {
-        $errors = new \WeDevs\ERP\ERP_Errors( sanitize_text_field( wp_unslash( $_GET['error'] ) ) );
+        $errors = new \WeDevs\ERP\ErpErrors( sanitize_text_field( wp_unslash( $_GET['error'] ) ) );
         echo wp_kses_post( $errors->display() );
     }
     ?>

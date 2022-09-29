@@ -2,7 +2,7 @@
 namespace WeDevs\ERP;
 
 use WeDevs\ERP\Framework\Traits\Hooker;
-use WeDevs\ERP\ERPErrors as ERPErrors;
+use WeDevs\ERP\ErpErrors;
 use WP_Error;
 
 class ValidateData {

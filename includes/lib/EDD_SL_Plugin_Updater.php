@@ -1,4 +1,5 @@
 <?php
+namespace WeDevs\ERP\lib;
 
 // uncomment this line for testing
 //set_site_transient( 'update_plugins', null );

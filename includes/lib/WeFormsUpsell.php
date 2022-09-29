@@ -1,4 +1,5 @@
 <?php
+namespace WeDevs\ERP\lib;
 
 if ( ! class_exists( 'WeFormsUpsell' ) ) {
 

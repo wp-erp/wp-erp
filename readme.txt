@@ -1304,7 +1304,7 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 * [fix] Show tasks based on permission and tab in CRM Schedule calendar
 * [fix] Fix contact editor error when assigned to one group
-* [fix] Update ERP_Settings_Page class. Fix #409.
+* [fix] Update ErpSettingsPage class. Fix #409.
 * [fix] Fix core Updates class
 * [fix] Fix WP User to CRM importer meta sync error
 * [fix] Fix comapny default address zip error

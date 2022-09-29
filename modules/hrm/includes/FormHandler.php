@@ -3,7 +3,7 @@
 namespace WeDevs\ERP\HRM;
 
 use stdClass;
-use WeDevs\ERP\ERP_Errors;
+use WeDevs\ERP\ErpErrors;
 use WeDevs\ERP\HRM\Models\FinancialYear;
 use WeDevs\ERP\HRM\Models\LeavePolicy;
 use WP_Error;
@@ -320,7 +320,7 @@ class FormHandler {
             $request_ids    = ( isset( $_GET['request_id'] ) && ! empty( $_GET['request_id'] ) ) ? array_map( 'absint', wp_unslash( $_GET['request_id'] ) ) : [];
             $redirect_url   = admin_url( sprintf( 'admin.php?page=erp-hr&section=leave&status=%s&paged=%d', $page_status, $paged ) );
 
-            $error = new ERP_Errors( 'leave_request_status_change' );
+            $error = new ErpErrors( 'leave_request_status_change' );
 
             switch ( $action ) {
 
@@ -707,7 +707,7 @@ class FormHandler {
         }
 
         $affected  = 0;
-        $errors    = new \WeDevs\ERP\ERP_Errors( 'create_entitlements' );
+        $errors    = new \WeDevs\ERP\ErpErrors( 'create_entitlements' );
         $employees = [];
         $page_url  = admin_url( 'admin.php?page=erp-hr&section=leave&sub-section=leave-entitlements&tab=assignment' );
 
@@ -849,7 +849,7 @@ class FormHandler {
             wp_die( esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
-        $errors = new ERP_Errors( 'new_leave_request' );
+        $errors = new ErpErrors( 'new_leave_request' );
 
         if ( empty( trim( sanitize_text_field( wp_unslash( $_POST['leave_reason'] ) ) ) ) ) {
             $errors->add( esc_attr__( 'Leave reason field can not be blank.', 'erp' ) );
@@ -967,7 +967,7 @@ class FormHandler {
         $redirect_to = remove_query_arg( [ 'status' ], admin_url( 'admin.php?page=erp-hr&section=leave' ) );
 
         if ( is_wp_error( $return ) ) {
-            $errors = new ERP_Errors( 'leave_request_status_change' );
+            $errors = new ErpErrors( 'leave_request_status_change' );
             $errors->add( $return );
             $errors->save();
             $redirect_to = add_query_arg( [ 'error' => 'leave_request_status_change', 'filter_year' => $f_year ], $redirect_to );
@@ -1116,7 +1116,7 @@ class FormHandler {
             wp_die( esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
-        $errors = new ERP_Errors( 'policy_create_error' );
+        $errors = new ErpErrors( 'policy_create_error' );
 
         $id                  = ! empty( $_POST['policy-id'] ) ? absint( wp_unslash( $_POST['policy-id'] ) ) : 0;
         $leave_id            = ! empty( $_POST['leave-id'] ) ? absint( wp_unslash( $_POST['leave-id'] ) ) : 0;
@@ -1243,7 +1243,7 @@ class FormHandler {
         $current_user_id = get_current_user_id();
         $url             = admin_url( 'admin.php?page=erp-settings#/erp-hr/financial' );
 
-        $errors = new ERP_Errors( 'leave_financial_years_create' );
+        $errors = new ErpErrors( 'leave_financial_years_create' );
 
         foreach ( $fnames as $key => $fname ) {
             if ( strpos( $key, 'id-' ) !== false ) {

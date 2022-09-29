@@ -9,7 +9,7 @@
             use WeDevs\ERP\HRM\Models\FinancialYear;
 
             if ( ! empty( $_GET['insert_error'] ) ) {
-                $errors = new \WeDevs\ERP\ERP_Errors( sanitize_text_field( wp_unslash( $_GET['insert_error'] ) ) );
+                $errors = new \WeDevs\ERP\ErpErrors( sanitize_text_field( wp_unslash( $_GET['insert_error'] ) ) );
                 echo wp_kses_post( $errors->display() );
             } elseif ( isset( $_GET['msg'] ) && ( 'submitted' === sanitize_text_field( wp_unslash( $_GET['msg'] ) ) ) ) {
                 erp_html_show_notice( __( 'Leave request has been submitted successfully.', 'erp' ), 'updated', true );

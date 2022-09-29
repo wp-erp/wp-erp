@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-class ERPErrors {
+class ErpErrors {
 
     /**
      * Undocumented variable

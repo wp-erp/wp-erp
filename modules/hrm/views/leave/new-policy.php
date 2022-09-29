@@ -1,6 +1,6 @@
 <?php
 
-use WeDevs\ERP\ERP_Errors;
+use WeDevs\ERP\ErpErrors;
 use WeDevs\ERP\HRM\Models\FinancialYear;
 use WeDevs\ERP\HRM\Models\LeavePolicy;
 
@@ -42,7 +42,7 @@ $leave_help_text = esc_html__( 'Select A Leave Type', 'erp' ) . ' ' . esc_attr__
 $f_year_help_text = __( 'Select Year', 'erp' ) . ' ' . esc_attr__( 'Or', 'erp' ) . ' ' . sprintf( '<a href="?page=erp-settings#/erp-hr/financial">%s</a>', __( 'Add New', 'erp' ) );
 
 // get error data
-$errors         = new ERP_Errors( 'policy_create_error' );
+$errors         = new ErpErrors( 'policy_create_error' );
 $error_messages = '';
 $form_data      = [];
 
