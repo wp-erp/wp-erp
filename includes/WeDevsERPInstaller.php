@@ -2216,5 +2216,3 @@ Account Manager
         }
     }
 }
-
-new WeDevsERPInstaller();

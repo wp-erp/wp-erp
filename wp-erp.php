@@ -234,8 +234,6 @@ final class WeDevs_ERP {
     private function includes() {
         include __DIR__ . '/vendor/autoload.php';
         require_once WPERP_INCLUDES . '/functions.php';
-//        require_once WPERP_INCLUDES . '/class-install.php';
-        new WeDevsERPInstaller();
         require_once WPERP_INCLUDES . '/actions-filters.php';
         require_once WPERP_INCLUDES . '/functions-html.php';
         require_once WPERP_INCLUDES . '/functions-company.php';
@@ -246,33 +244,22 @@ final class WeDevs_ERP {
 
         if ( is_admin() ) {
             require_once WPERP_INCLUDES . '/admin/functions.php';
-//            require_once WPERP_INCLUDES . '/admin/class-menu.php';
-            new AdminMenu();
-//            require_once WPERP_INCLUDES . '/admin/class-admin.php';
-            new AdminPage();
-
             // Includes background process libs
             require_once WPERP_INCLUDES . '/lib/bgprocess/wp-async-request.php';
             require_once WPERP_INCLUDES . '/lib/bgprocess/wp-background-process.php';
 
-//            require_once WPERP_INCLUDES . '/Updates/BP/class-erp-acct-bg-process-1.5.0.php';
             new Updates\BP\ERPACCTBGProcess1_5_0();
-//            require_once WPERP_INCLUDES . '/Updates/BP/class-erp-acct-bg-process-1.5.2.php';
             new Updates\BP\ERPACCTBGProcessPeopleTrn_1_5_2();
         }
 
         // `Leave` related background process files
-//        require_once WPERP_INCLUDES . '/Updates/BP/Leaves/Leave_1_6_0/class-erp-hr-leave-entitlements.php';
         new Updates\BP\Leaves\Leave_1_6_0\ERPHRLeaveEntitlements();
-//        require_once WPERP_INCLUDES . '/Updates/BP/Leaves/Leave_1_6_0/class-erp-hr-leave-request.php';
         new Updates\BP\Leaves\Leave_1_6_0\ERPHRLeaveRequest();
 
         // Version 1.6.5 background files
-//        require_once WPERP_INCLUDES . '/Updates/BP/class-erp-bg-process-1.6.5.php';
         new Updates\BP\ERP_BG_PROCESS_1_6_5();
 
         // Version 1.10.0 background files
-//        require_once WPERP_INCLUDES . '/Updates/BP/class-erp-hr-bg-process-1.10.0.php';
         new Updates\BP\ERP_HR_BG_PROCESS_1_10_0();
 
         // Validates data
@@ -293,6 +280,10 @@ final class WeDevs_ERP {
      */
     private function instantiate() {
         $this->setup_database();
+
+        new WeDevsERPInstaller();
+        new AdminMenu();
+        new AdminPage();
 
         new UserProfile();
         new Scripts();

@@ -1,5 +1,7 @@
 <?php
 
+use WeDevs\ERP\Updates\BP\ERPACCTBGProcess1_5_0;
+
 /**
  * Create accounting tables
  *
@@ -1115,7 +1117,7 @@ function erp_acct_populate_transactions() {
     $transactions = $wpdb->get_results( "SELECT id FROM {$wpdb->prefix}erp_ac_transactions", ARRAY_A );
 
     if ( !class_exists( '\WeDevs\ERP\Updates\BP\ERPACCTBGProcess1_5_0' ) || empty( $bg_process ) ) {
-        $bg_process = new \WeDevs\ERP\Updates\BP\ERPACCTBGProcess1_5_0();
+        $bg_process = new ERPACCTBGProcess1_5_0();
     }
 
     // loop through transactions

@@ -3,6 +3,7 @@
 namespace WeDevs\ERP\Admin;
 
 use WeDevs\ERP\Framework\Traits\Hooker;
+use WeDevs\ERP\Status;
 
 /**
  * Administration Menu Class
@@ -177,7 +178,7 @@ class AdminMenu {
      * @return void
      */
     public function status_page() {
-        new \WeDevs\ERP\Status();
+        new Status();
     }
 
     /**
@@ -186,7 +187,7 @@ class AdminMenu {
      * @return void
      */
     public function module() {
-        new \WeDevs\ERP\Admin\AdminModule();
+        new AdminModule();
     }
 
     /**

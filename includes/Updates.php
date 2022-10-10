@@ -3,6 +3,8 @@
 namespace WeDevs\ERP;
 
 use WeDevs\ERP\Framework\Traits\Hooker;
+use WeDevs\ERP\Updates\BP\ERPACCTBGProcess1_5_0;
+use WeDevs\ERP\Updates\BP\ERPACCTBGProcessPeopleTrn_1_5_2;
 
 /*
  * Installation related functions and actions.
@@ -153,8 +155,8 @@ class Updates {
         global $bg_process;
         global $bg_process_people_trn;
 
-        $bg_process            = new \WeDevs\ERP\Updates\BP\ERPACCTBGProcess1_5_0();
-        $bg_process_people_trn = new \WeDevs\ERP\Updates\BP\ERPACCTBGProcessPeopleTrn_1_5_2();
+        $bg_process            = new ERPACCTBGProcess1_5_0();
+        $bg_process_people_trn = new ERPACCTBGProcessPeopleTrn_1_5_2();
 
         if ( isset( $_GET['wperp_do_update'] ) && sanitize_text_field( wp_unslash( $_GET['wperp_do_update'] ) ) ) {
             $this->perform_updates();

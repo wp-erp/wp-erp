@@ -2,6 +2,8 @@
 
 namespace WeDevs\ERP\CRM\Admin;
 
+use WeDevs\ERP\CRM\Contact;
+
 /**
  * Admin Menu
  */
@@ -453,5 +455,3 @@ class AdminMenu {
         include WPERP_CRM_VIEWS . '/help.php';
     }
 }
-
-//new AdminMenu();
