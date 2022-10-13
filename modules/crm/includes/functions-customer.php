@@ -3393,7 +3393,7 @@ function erp_crm_render_save_replies( $template_id, $contact_id ) {
         if ( $shortcode_val['is_meta'] ) {
             $data[] = erp_people_get_meta( $contact_id, $shortcode_val['key'], true );
         } else {
-            if ( property_exists( $contacts_info, $shortcode_val['key'] ) ) {
+            if ( isset( $contacts_info->{$shortcode_val['key']} ) ) {
                 if ( $shortcode == '%country%' ) {
                     $data[] = erp_get_country_name( $contacts_info->{$shortcode_val['key']} );
                 } elseif ( $shortcode == '%state%' ) {
