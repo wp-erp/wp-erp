@@ -2,6 +2,8 @@
 
 namespace WeDevs\ERP;
 
+use DateTime;
+
 /**
  * Installation related functions and actions.
  *
