@@ -155,7 +155,7 @@
                                     'label' => __( 'Date of Birth', 'erp' ),
                                     'name'  => 'contact[meta][date_of_birth]',
                                     'value' => '{{ data.date_of_birth }}',
-                                    'class' => 'erp-date-field erp-crm-date-field',
+                                    'class' => 'erp-crm-date-field',
                                 ] ); ?>
                             </div>
                             <div class="col-3">

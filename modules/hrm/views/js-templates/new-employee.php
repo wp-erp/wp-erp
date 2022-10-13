@@ -380,7 +380,7 @@
                                     'label' => __( 'Date of Birth', 'erp' ),
                                     'name'  => 'work[date_of_birth]',
                                     'value' => '{{ data.work.date_of_birth }}',
-                                    'class' => 'erp-date-field',
+                                    'class' => 'erp-hr-date-field',
                                 ] );
                                 ?>
                             </div>

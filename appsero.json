@@ -1,0 +1,30 @@
+{
+    "exclude": [
+        ".editorconfig",
+        ".env",
+        ".env.example",
+        ".gitignore",
+        ".php_cs",
+        ".svnignore",
+        "appsero.json",
+        "codeception.yml",
+        "composer.json",
+        "composer.lock",
+        "eslintrc.js",
+        "Gruntfile.js",
+        "package-lock.json",
+        "package.json",
+        "phpcs.xml",
+        "README.md",
+        "webpack.config.js",
+        ".github",
+        "assets/less",
+        "includes/Settings/assets/less",
+        "includes/Settings/assets/src",
+        "modules/accounting/assets/less",
+        "modules/accounting/assets/src",
+        "modules/crm/assets/less",
+        "node_modules",
+        "tests"
+    ]
+}

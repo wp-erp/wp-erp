@@ -711,7 +711,7 @@ function erp_crm_get_feed_activity( $args = [] ) {
             $results = $results->where( 'user_id', $postdata['customer_id'] );
         }
 
-        if ( current_user_can( 'erp_crm_agent' ) ) {
+        if ( erp_crm_is_current_user_crm_agent() ) {
             $contact_owner = get_current_user_id();
             $people_ids    = array_keys( $wpdb->get_results( "SELECT id FROM {$wpdb->prefix}erp_peoples WHERE contact_owner = {$contact_owner}", OBJECT_K ) );
 
@@ -3393,7 +3393,7 @@ function erp_crm_render_save_replies( $template_id, $contact_id ) {
         if ( $shortcode_val['is_meta'] ) {
             $data[] = erp_people_get_meta( $contact_id, $shortcode_val['key'], true );
         } else {
-            if ( property_exists( $contacts_info, $shortcode_val['key'] ) ) {
+            if ( isset( $contacts_info->{$shortcode_val['key']} ) ) {
                 if ( $shortcode == '%country%' ) {
                     $data[] = erp_get_country_name( $contacts_info->{$shortcode_val['key']} );
                 } elseif ( $shortcode == '%state%' ) {
