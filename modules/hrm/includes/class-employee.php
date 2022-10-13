@@ -1817,8 +1817,8 @@ class Employee {
             return new WP_Error( 'invalid-pay-type', __( 'Invalid Pay Type', 'erp' ) );
         }
 
-        if ( empty( $args['pay_rate'] ) ) {
-            return new WP_Error( 'invalid-pay-rate', __( 'Invalid Pay Rate', 'erp' ) );
+        if ( empty( $args['pay_rate'] ) || ! erp_is_valid_currency_amount( $args['pay_rate'] ) ) {
+            return new WP_Error( 'invalid-pay-rate', __( 'The pay rate is not valid! It should be an integer or a decimal place number with maximum 4 places.', 'erp' ) );
         }
 
         if ( ! empty( $args['reason'] ) && ! array_key_exists( $args['reason'], $reasons ) ) {
