@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP ERP 1.11.1\n"
+"Project-Id-Version: WP ERP 1.11.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-erp\n"
-"POT-Creation-Date: 2022-08-26 10:12:09+00:00\n"
+"POT-Creation-Date: 2022-10-13 04:49:14+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -114,8 +114,8 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/tax/TaxCategories.vue:74
 #: modules/accounting/assets/src/admin/components/tax/TaxRates.vue:84
 #: modules/accounting/assets/src/admin/components/tax/TaxZones.vue:78
-#: modules/crm/assets/js/crm-contacts.js:299
-#: modules/crm/assets/js/crm-contacts.js:1150
+#: modules/crm/assets/js/crm-contacts.js:306
+#: modules/crm/assets/js/crm-contacts.js:1157
 #: modules/crm/includes/class-campaigns-list-table.php:89
 #: modules/crm/includes/class-campaigns-list-table.php:115
 #: modules/crm/includes/class-contact-group-list-table.php:122
@@ -166,7 +166,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/products/ExportModal.vue:59
 #: modules/accounting/assets/src/admin/components/products/ImportModal.vue:158
 #: modules/accounting/assets/src/admin/components/transactions/TransactionsFilter.vue:67
-#: modules/crm/assets/js/crm-contacts.js:735
+#: modules/crm/assets/js/crm-contacts.js:742
 #: modules/crm/assets/js/vue-table.js:401
 #: modules/crm/views/company/single.php:154
 #: modules/crm/views/contact/single.php:161
@@ -16470,7 +16470,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/reports/LedgerReport.vue:89
 #: modules/accounting/assets/src/admin/components/transactions/sales/InvoiceSingleContent.vue:48
 #: modules/accounting/assets/src/admin/components/transactions/sales/PaymentSingleContent.vue:40
-#: modules/crm/assets/js/crm-contacts.js:291
+#: modules/crm/assets/js/crm-contacts.js:298
 #: modules/crm/includes/class-campaigns-list-table.php:71
 #: modules/crm/includes/class-contact-group-list-table.php:90
 #: modules/hrm/includes/class-leave-policy-name-list-table.php:78
@@ -16487,7 +16487,7 @@ msgid "Cheating?"
 msgstr ""
 
 #: includes/admin/class-form-handler.php:102
-#: modules/crm/assets/js/crm-contacts.js:264
+#: modules/crm/assets/js/crm-contacts.js:271
 msgid "Company name"
 msgstr ""
 
@@ -17345,7 +17345,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/people/People.vue:85
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:47
 #: modules/accounting/assets/src/admin/components/userinfo/UserBasic.vue:22
-#: modules/crm/assets/js/crm-contacts.js:275
+#: modules/crm/assets/js/crm-contacts.js:282
 #: modules/crm/includes/functions-customer.php:1819
 #: modules/crm/includes/functions-customer.php:3231
 #: modules/crm/views/company/single.php:90
@@ -17445,7 +17445,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:197
 #: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:173
 #: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:191
-#: modules/crm/assets/js/crm-contacts.js:1136
+#: modules/crm/assets/js/crm-contacts.js:1143
 #: modules/crm/includes/class-campaigns-list-table.php:88
 #: modules/crm/includes/class-contact-group-list-table.php:116
 #: modules/crm/includes/class-contact-subscriber-list-table.php:196
@@ -17782,7 +17782,7 @@ msgstr ""
 
 #: includes/admin/views/tools.php:16 includes/class-promotion.php:64
 #: includes/class-promotion.php:67 includes/functions.php:885
-#: includes/functions.php:3759
+#: includes/functions.php:3751
 #: modules/accounting/includes/functions/transactions.php:987
 #: modules/accounting/includes/functions/transactions.php:1236
 msgid "%s"
@@ -18384,7 +18384,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/tax/NewTaxCategory.vue:32
 #: modules/accounting/assets/src/admin/components/tax/NewTaxZone.vue:37
 #: modules/accounting/assets/src/admin/components/tax/TaxRateRow.vue:34
-#: modules/crm/assets/js/crm-contacts.js:733 modules/crm/crm.php:222
+#: modules/crm/assets/js/crm-contacts.js:740 modules/crm/crm.php:222
 #: modules/crm/views/edit-subscription-form.php:27 modules/hrm/hrm.php:178
 #: modules/hrm/views/leave/new-policy.php:23
 #: modules/hrm/views/leave/policy-name.php:8
@@ -20361,20 +20361,20 @@ msgstr ""
 msgid "Your license key expires on %s."
 msgstr ""
 
-#: includes/functions.php:2960
+#: includes/functions.php:2952
 #: includes/settings/assets/src/components/email/templates/EmailTemplate.vue:20
 msgid "Enable/Disable"
 msgstr ""
 
-#: includes/functions.php:3461
+#: includes/functions.php:3453
 msgid "Sorry! You are not allowed to access this page."
 msgstr ""
 
-#: includes/functions.php:3614
+#: includes/functions.php:3606
 msgid "ERP data reset completed"
 msgstr ""
 
-#: includes/functions.php:3693
+#: includes/functions.php:3685
 msgid "Something went wrong when resetting. Please try again."
 msgstr ""
 
@@ -21030,7 +21030,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/tax/NewTaxZone.vue:38
 #: modules/accounting/assets/src/admin/components/tax/RecordPayTax.vue:68
 #: modules/accounting/assets/src/admin/components/tax/TaxRateLineAdd.vue:37
-#: modules/crm/assets/js/crm-contacts.js:734 modules/crm/crm.php:223
+#: modules/crm/assets/js/crm-contacts.js:741 modules/crm/crm.php:223
 #: modules/hrm/views/leave/new-policy.php:11
 #: modules/hrm/views/leave/policy-name.php:4
 msgid "Save"
@@ -23725,7 +23725,7 @@ msgid "Miscellaneous"
 msgstr ""
 
 #: modules/accounting/assets/src/admin/components/products/ProductModal.vue:112
-#: modules/crm/assets/js/crm-contacts.js:285
+#: modules/crm/assets/js/crm-contacts.js:292
 msgid "Owner"
 msgstr ""
 
@@ -23940,8 +23940,8 @@ msgid ""
 msgstr ""
 
 #: modules/accounting/assets/src/admin/components/reports/TrialBalance.vue:15
-#: modules/crm/assets/js/crm-contacts.js:1143
-#: modules/crm/assets/js/crm-contacts.js:1240
+#: modules/crm/assets/js/crm-contacts.js:1150
+#: modules/crm/assets/js/crm-contacts.js:1247
 #: modules/hrm/assets/js/requests.js:287 modules/hrm/assets/js/requests.js:304
 #: modules/hrm/assets/js/requests.js:323
 msgid "View"
@@ -25304,38 +25304,38 @@ msgstr ""
 msgid "Powered By "
 msgstr ""
 
-#: modules/crm/assets/js/crm-contacts.js:40
-#: modules/crm/assets/js/crm-contacts.js:328
+#: modules/crm/assets/js/crm-contacts.js:47
+#: modules/crm/assets/js/crm-contacts.js:335
 msgid "Filter by Owner"
 msgstr ""
 
-#: modules/crm/assets/js/crm-contacts.js:82
-#: modules/crm/assets/js/crm-contacts.js:355
+#: modules/crm/assets/js/crm-contacts.js:89
+#: modules/crm/assets/js/crm-contacts.js:362
 msgid "Filter by Company"
 msgstr ""
 
-#: modules/crm/assets/js/crm-contacts.js:264
+#: modules/crm/assets/js/crm-contacts.js:271
 msgid "Contact name"
 msgstr ""
 
-#: modules/crm/assets/js/crm-contacts.js:270
+#: modules/crm/assets/js/crm-contacts.js:277
 msgid "Email Address"
 msgstr ""
 
-#: modules/crm/assets/js/crm-contacts.js:279
+#: modules/crm/assets/js/crm-contacts.js:286
 #: modules/crm/views/contact/single.php:103
 msgid "Life stage"
 msgstr ""
 
-#: modules/crm/assets/js/crm-contacts.js:305
-#: modules/crm/assets/js/crm-contacts.js:1157
+#: modules/crm/assets/js/crm-contacts.js:312
+#: modules/crm/assets/js/crm-contacts.js:1164
 #: modules/hrm/includes/class-employee-list-table.php:231
 #: modules/hrm/includes/class-employee-list-table.php:275
 msgid "Permanent Delete"
 msgstr ""
 
-#: modules/crm/assets/js/crm-contacts.js:311
-#: modules/crm/assets/js/crm-contacts.js:1164
+#: modules/crm/assets/js/crm-contacts.js:318
+#: modules/crm/assets/js/crm-contacts.js:1171
 #: modules/hrm/includes/class-announcement-list-table.php:121
 #: modules/hrm/includes/class-announcement-list-table.php:216
 #: modules/hrm/includes/class-employee-list-table.php:249
@@ -25343,26 +25343,26 @@ msgstr ""
 msgid "Restore"
 msgstr ""
 
-#: modules/crm/assets/js/crm-contacts.js:317
+#: modules/crm/assets/js/crm-contacts.js:324
 #: modules/crm/views/js-templates/new-bulk-contact-group.php:5
 #: modules/crm/views/js-templates/new-customer.php:270
 #: modules/crm/views/js-templates/new-subscriber-contact.php:17
 msgid "Assign Group"
 msgstr ""
 
-#: modules/crm/assets/js/crm-contacts.js:342
+#: modules/crm/assets/js/crm-contacts.js:349
 msgid "Filter by Segment"
 msgstr ""
 
-#: modules/crm/assets/js/crm-contacts.js:401
+#: modules/crm/assets/js/crm-contacts.js:408
 msgid "Search.."
 msgstr ""
 
-#: modules/crm/assets/js/crm-contacts.js:728
+#: modules/crm/assets/js/crm-contacts.js:735
 msgid "Add Filter"
 msgstr ""
 
-#: modules/crm/assets/js/crm-contacts.js:729
+#: modules/crm/assets/js/crm-contacts.js:736
 #: modules/crm/views/js-templates/save-search-fields.php:3
 #: modules/crm/views/js-templates/save-search-fields.php:16
 #: modules/crm/views/js-templates/save-search-fields.php:39
@@ -25373,131 +25373,131 @@ msgstr ""
 msgid "Or"
 msgstr ""
 
-#: modules/crm/assets/js/crm-contacts.js:730
+#: modules/crm/assets/js/crm-contacts.js:737
 msgid "Or Filter"
 msgstr ""
 
-#: modules/crm/assets/js/crm-contacts.js:731
+#: modules/crm/assets/js/crm-contacts.js:738
 msgid "Name this Segment.."
 msgstr ""
 
-#: modules/crm/assets/js/crm-contacts.js:732
+#: modules/crm/assets/js/crm-contacts.js:739
 msgid "Make segment available for all users"
 msgstr ""
 
-#: modules/crm/assets/js/crm-contacts.js:736
+#: modules/crm/assets/js/crm-contacts.js:743
 msgid "Name this Group.."
 msgstr ""
 
-#: modules/crm/assets/js/crm-contacts.js:737
+#: modules/crm/assets/js/crm-contacts.js:744
 msgid "Save new Segment"
 msgstr ""
 
-#: modules/crm/assets/js/crm-contacts.js:738
+#: modules/crm/assets/js/crm-contacts.js:745
 msgid "Save Contact Group"
 msgstr ""
 
-#: modules/crm/assets/js/crm-contacts.js:739
+#: modules/crm/assets/js/crm-contacts.js:746
 msgid "Update this Segment"
 msgstr ""
 
-#: modules/crm/assets/js/crm-contacts.js:740
+#: modules/crm/assets/js/crm-contacts.js:747
 msgid "Delete this Segment"
 msgstr ""
 
-#: modules/crm/assets/js/crm-contacts.js:741
+#: modules/crm/assets/js/crm-contacts.js:748
 msgid "Reset all filter"
 msgstr ""
 
-#: modules/crm/assets/js/crm-contacts.js:877
+#: modules/crm/assets/js/crm-contacts.js:884
 msgid "You have not any filter for saving"
 msgstr ""
 
-#: modules/crm/assets/js/crm-contacts.js:889
-#: modules/crm/assets/js/crm-contacts.js:911
+#: modules/crm/assets/js/crm-contacts.js:896
+#: modules/crm/assets/js/crm-contacts.js:918
 #: modules/crm/includes/functions-customer.php:2235
 msgid "Own Search"
 msgstr ""
 
-#: modules/crm/assets/js/crm-contacts.js:897
-#: modules/crm/assets/js/crm-contacts.js:903
+#: modules/crm/assets/js/crm-contacts.js:904
+#: modules/crm/assets/js/crm-contacts.js:910
 #: modules/crm/includes/functions-customer.php:2241
 msgid "Global Search"
 msgstr ""
 
-#: modules/crm/assets/js/crm-contacts.js:1137
+#: modules/crm/assets/js/crm-contacts.js:1144
 #: modules/crm/views/contact/single.php:27
 msgid "Edit this contact"
 msgstr ""
 
-#: modules/crm/assets/js/crm-contacts.js:1144
+#: modules/crm/assets/js/crm-contacts.js:1151
 msgid "View this contact"
 msgstr ""
 
-#: modules/crm/assets/js/crm-contacts.js:1151
+#: modules/crm/assets/js/crm-contacts.js:1158
 msgid "Delete this contact"
 msgstr ""
 
-#: modules/crm/assets/js/crm-contacts.js:1158
+#: modules/crm/assets/js/crm-contacts.js:1165
 msgid "Permanent Delete this contact"
 msgstr ""
 
-#: modules/crm/assets/js/crm-contacts.js:1165
+#: modules/crm/assets/js/crm-contacts.js:1172
 msgid "Restore this contact"
 msgstr ""
 
-#: modules/crm/assets/js/crm-contacts.js:1184
-#: modules/crm/assets/js/crm-contacts.js:1187
+#: modules/crm/assets/js/crm-contacts.js:1191
+#: modules/crm/assets/js/crm-contacts.js:1194
 msgid "Search Company"
 msgstr ""
 
-#: modules/crm/assets/js/crm-contacts.js:1184
-#: modules/crm/assets/js/crm-contacts.js:1187
+#: modules/crm/assets/js/crm-contacts.js:1191
+#: modules/crm/assets/js/crm-contacts.js:1194
 #: modules/crm/views/campaigns.php:15
 msgid "Search Contact"
 msgstr ""
 
-#: modules/crm/assets/js/crm-contacts.js:1197 modules/crm/views/company.php:28
+#: modules/crm/assets/js/crm-contacts.js:1204 modules/crm/views/company.php:28
 msgid "Hide Search Segment"
 msgstr ""
 
-#: modules/crm/assets/js/crm-contacts.js:1198
+#: modules/crm/assets/js/crm-contacts.js:1205
 msgid "Search Segment"
 msgstr ""
 
-#: modules/crm/assets/js/crm-contacts.js:1370
+#: modules/crm/assets/js/crm-contacts.js:1377
 msgid "Edit this "
 msgstr ""
 
-#: modules/crm/assets/js/crm-contacts.js:1873
+#: modules/crm/assets/js/crm-contacts.js:1880
 msgid "Successfully imported all users!"
 msgstr ""
 
-#: modules/crm/assets/js/crm-contacts.js:1876
+#: modules/crm/assets/js/crm-contacts.js:1883
 msgid "No users found to import!"
 msgstr ""
 
-#: modules/crm/assets/js/crm-contacts.js:1881
+#: modules/crm/assets/js/crm-contacts.js:1888
 msgid "Imported "
 msgstr ""
 
-#: modules/crm/assets/js/crm-contacts.js:1881
+#: modules/crm/assets/js/crm-contacts.js:1888
 msgid " out of "
 msgstr ""
 
-#: modules/crm/assets/js/crm-contacts.js:1884
+#: modules/crm/assets/js/crm-contacts.js:1891
 msgid "Already Exist "
 msgstr ""
 
-#: modules/crm/assets/js/crm-contacts.js:1987
+#: modules/crm/assets/js/crm-contacts.js:1994
 msgid "Select contact fields to export"
 msgstr ""
 
-#: modules/crm/assets/js/crm-contacts.js:1988
+#: modules/crm/assets/js/crm-contacts.js:1995
 msgid "Select company fields to export"
 msgstr ""
 
-#: modules/crm/assets/js/crm-contacts.js:2381
+#: modules/crm/assets/js/crm-contacts.js:2388
 #: modules/crm/includes/class-ajax.php:963
 #: modules/crm/includes/class-ajax.php:991
 msgid "No group found"
@@ -29233,7 +29233,9 @@ msgid "Invalid Pay Type"
 msgstr ""
 
 #: modules/hrm/includes/class-employee.php:1821
-msgid "Invalid Pay Rate"
+msgid ""
+"The pay rate is not valid! It should be an integer or a decimal place "
+"number with maximum 4 places."
 msgstr ""
 
 #: modules/hrm/includes/class-employee.php:1825
@@ -31820,7 +31822,7 @@ msgstr ""
 msgid "This is a dummy theme"
 msgstr ""
 
-#: vendor/wp-cli/core-command/src/Core_Command.php:687
+#: vendor/wp-cli/core-command/src/Core_Command.php:723
 msgid "Wildcard DNS may not be configured correctly."
 msgstr ""
 
@@ -31929,8 +31931,8 @@ msgctxt "US state of Georgia"
 msgid "Georgia"
 msgstr ""
 
-#: vendor/wp-cli/core-command/src/Core_Command.php:452
-#: vendor/wp-cli/core-command/src/Core_Command.php:526
+#: vendor/wp-cli/core-command/src/Core_Command.php:463
+#: vendor/wp-cli/core-command/src/Core_Command.php:537
 #. translators: placeholder is blog name
 #. translators: placeholder is user supplied title
 msgctxt "Default network name"

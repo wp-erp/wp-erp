@@ -9,7 +9,14 @@
                     dateFormat: 'yy-mm-dd',
                     changeMonth: true,
                     changeYear: true,
-                    yearRange: '-50:+5',
+                    yearRange: '-100:+5',
+                });
+
+                $('.erp-crm-date-field').datepicker({
+                    dateFormat: 'yy-mm-dd',
+                    changeMonth: true,
+                    changeYear: true,
+                    yearRange: '-100:-2',
                 });
 
                 $( '.erp-select2' ).select2({
