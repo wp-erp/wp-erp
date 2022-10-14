@@ -3,6 +3,7 @@
 namespace WeDevs\ERP\HRM;
 
 use WeDevs\ERP\HRM\Models\FinancialYear;
+use WeDevs\ERP\HRM\Models\LeavePolicy;
 
 /**
  * List table class
@@ -45,30 +46,7 @@ class LeaveRequestsListTable extends \WP_List_Table {
             return;
         }
 
-        $financial_years = wp_list_pluck( FinancialYear::orderBy( 'start_date', 'desc' )->get(), 'fy_name', 'id' );
-
-        if ( empty( $financial_years ) ) {
-            return;
-        }
-
-        $f_year = erp_hr_get_financial_year_from_date();
-        $f_year = ! empty( $f_year ) ? $f_year->id : '';
-
-        $selected_year = ( isset( $_GET['filter_year'] ) ) ? absint( wp_unslash( $_GET['filter_year'] ) ) : $f_year; ?>
-        <div class="alignleft actions">
-
-            <label class="screen-reader-text" for="filter_year"><?php esc_html_e( 'Filter by year', 'erp' ); ?></label>
-            <input type="hidden" name="status" value="<?php echo esc_attr( $this->page_status ); ?>">
-            <select name="filter_year" id="filter_year">
-                <?php
-                foreach ( $financial_years as $f_id => $f_name ) {
-                    echo sprintf( "<option value='%s'%s>%s</option>\n", esc_html( $f_id ), selected( $selected_year, $f_id, false ), esc_html( $f_name ) );
-                } ?>
-            </select>
-
-            <?php
-            submit_button( __( 'Filter' ), 'button', 'filter_by_year', false );
-        echo '</div>';
+        $this->filter_option();
     }
 
     /**
@@ -98,7 +76,7 @@ class LeaveRequestsListTable extends \WP_List_Table {
         ];
 
         if ( isset( $_GET['status'] ) && $_GET['status'] == 3 ) {
-            $columns['approved_by'] =  __( 'Rejected By', 'erp' );
+            $columns['approved_by'] = __( 'Rejected By', 'erp' );
         }
 
         return $columns;
@@ -116,7 +94,6 @@ class LeaveRequestsListTable extends \WP_List_Table {
         global $wpdb;
 
         switch ( $column_name ) {
-
             case 'policy':
                 return esc_html( $item->policy_name );
 
@@ -169,7 +146,7 @@ class LeaveRequestsListTable extends \WP_List_Table {
             case 'available':
                 $available = '';
 
-                if ( floatval( $item->available ) >= 0 && floatval( $item->extra_leaves ) == 0  ) {
+                if ( floatval( $item->available ) >= 0 && floatval( $item->extra_leaves ) == 0 ) {
                     if ( floatval( $item->available ) == 0 ) {
                         $available = '&mdash;';
                     } else {
@@ -221,7 +198,7 @@ class LeaveRequestsListTable extends \WP_List_Table {
      * @return void
      */
     public function search_box( $text, $input_id ) {
-        if ( empty( $_REQUEST['s'] ) && !$this->has_items() ) {
+        if ( empty( $_REQUEST['s'] ) && ! $this->has_items() ) {
             return;
         }
 
@@ -290,9 +267,9 @@ class LeaveRequestsListTable extends \WP_List_Table {
             $actions['approved']   = sprintf( '<a class="erp-hr-leave-approve-btn" data-id="%s" href="%s">%s</a>', $item->id, $approve_url, __( 'Approve', 'erp' ) );
             $actions['reject']     = sprintf( '<a class="erp-hr-leave-reject-btn" data-id="%s" href="%s">%s</a>', $item->id, $reject_url, __( 'Reject', 'erp' ) );
         } elseif ( $item->status == '1' ) {
-            $actions['reject']   = sprintf( '<a class="erp-hr-leave-reject-btn" data-id="%s" href="%s">%s</a>', $item->id, $reject_url, __( 'Reject', 'erp' ) );
+            $actions['reject'] = sprintf( '<a class="erp-hr-leave-reject-btn" data-id="%s" href="%s">%s</a>', $item->id, $reject_url, __( 'Reject', 'erp' ) );
         } elseif ( $item->status == '3' ) {
-            $actions['approved']   = sprintf( '<a class="erp-hr-leave-approve-btn" data-id="%s" href="%s">%s</a>', $item->id, $approve_url, __( 'Approve', 'erp' ) );
+            $actions['approved'] = sprintf( '<a class="erp-hr-leave-approve-btn" data-id="%s" href="%s">%s</a>', $item->id, $approve_url, __( 'Approve', 'erp' ) );
         }
 
         return sprintf(
@@ -317,7 +294,7 @@ class LeaveRequestsListTable extends \WP_List_Table {
             $actions['approved'] = __( 'Approve', 'erp' );
             $actions['reject']   = __( 'Reject', 'erp' );
         } elseif ( $this->page_status == '1' ) {
-            $actions['reject']   = __( 'Reject', 'erp' );
+            $actions['reject'] = __( 'Reject', 'erp' );
         } elseif ( $this->page_status == '3' ) {
             $actions['approved'] = __( 'Approve', 'erp' );
         } else {
@@ -347,8 +324,8 @@ class LeaveRequestsListTable extends \WP_List_Table {
      *
      * @return array
      */
-    public function get_views() {
-        // get current year as default f_year
+    public function get_status() {
+		//         get current year as default f_year
         $current_f_year = erp_hr_get_financial_year_from_date();
         $f_year         = isset( $_GET['filter_year'] ) ? absint( wp_unslash( $_GET['filter_year'] ) ) : ( ! empty( $current_f_year ) ? $current_f_year->id : '' );
 
@@ -370,7 +347,7 @@ class LeaveRequestsListTable extends \WP_List_Table {
      */
     public function prepare_items() {
         $columns               = $this->get_columns();
-        $hidden                = [ ];
+        $hidden                = [];
         $sortable              = $this->get_sortable_columns();
         $this->_column_headers = [ $columns, $hidden, $sortable ];
 
@@ -408,5 +385,105 @@ class LeaveRequestsListTable extends \WP_List_Table {
             'total_items' => $total,
             'per_page'    => $per_page,
         ] );
+    }
+
+    /**
+     * Render extra filtering option in
+     * top of the table
+     *
+     * @since 0.1
+     *
+     * @param string $which
+     *
+     * @return void
+     */
+    public function filter_option() {
+        $selected_leave_policy   = ( isset( $_GET['leave_policy'] ) ) ? sanitize_text_field( wp_unslash( $_GET['leave_policy'] ) ) : 0;
+        $filter_leave_status   = ( isset( $_GET['filter_leave_status'] ) ) ? sanitize_text_field( wp_unslash( $_GET['filter_leave_status'] ) ) : 'all';
+        $filter_financial_year   = ( isset( $_GET['financial_year'] ) ) ? sanitize_text_field( wp_unslash( $_GET['financial_year'] ) ) : 'all';
+        $financial_years = [];
+        $current_f_year  = erp_hr_get_financial_year_from_date();
+        foreach ( FinancialYear::all() as $f_year ) {
+            $financial_years[ $f_year['id'] ] = $f_year['fy_name'];
+        }
+        ?>
+
+        <div class="wperp-filter-dropdown" style="margin: -46px 0 0 0;">
+            <a style="background-color: #1a9ed4 !important; color: rgb(255, 255, 255);" class="wperp-btn btn--default"><span class="dashicons dashicons-filter"></span>Filters<span class="dashicons dashicons-arrow-down-alt2"></span></a>
+
+            <div class="erp-dropdown-filter-content" id="erp-dropdown-content">
+                <div class="wperp-filter-panel wperp-filter-panel-default" style="width: 350px !important;">
+                    <h3><?php esc_html_e( 'Filter Leave Request', 'erp' ); ?></h3>
+                    <div class="wperp-filter-panel-body">
+                        <label class="screen-reader-text" for="new_role"><?php esc_html_e( 'Employee name', 'erp' ); ?></label>
+                        <input autocomplete="off" type="text" name="employee_name" id="employee_name" placeholder="<?php esc_attr_e( 'Search by employee name', 'erp' ); ?>" />
+
+                        <select name='financial_year' id='financial_year'>
+                            <?php
+                            foreach ( $financial_years as $key => $year ) {
+                                echo sprintf( "<option value='%s'%s>%s</option>\n", esc_html( $key ), selected( $filter_financial_year, esc_html( $key ), false ), esc_html( $year ) );
+                            }
+                            ?>
+                        </select>
+                        <label class="screen-reader-text" for="new_role"><?php esc_html_e( 'Filter by Policy', 'erp' ); ?></label>
+                        <select name='leave_policy' id='leave_policy'>
+                            <option value=''><?php echo esc_attr__( 'All Policy', 'erp' ); ?></option>
+                            <?php
+							foreach ( $policy_data as $policy ) {
+								$selected = $policy['policy_id'] == $selected_leave_policy ? 'selected="selected"' : '';
+								echo sprintf( "<option value='%s' %s>%s</option>", esc_attr( $policy['policy_id'] ), esc_attr( $selected ), esc_html( $policy['name'] ) );
+							}
+							?>
+                        </select>
+
+                        <label class="screen-reader-text" for="new_role"><?php esc_html_e( 'Filter by Leave status', 'erp' ); ?></label>
+                        <select name="filter_leave_status" id="filter_leave_status">
+                            <?php
+                            foreach ( $this->counts as $key => $title ) {
+                                echo sprintf( "<option value='%s'%s>%s</option>\n", esc_html( $key ), selected( $filter_leave_status, esc_html( $key ), false ), esc_html( $title['label'] ) );
+                            }
+                            ?>
+                        </select>
+                    </div>
+
+                    <div class="wperp-filter-panel-footer">
+                        <input type="submit" class="wperp-btn btn--cancel btn--filter" value="<?php esc_attr_e( 'Cancel', 'erp' ); ?>" name="hide_filter">
+                        <input type="submit" class="wperp-btn btn--reset btn--filter" value="<?php esc_attr_e( 'Reset', 'erp' ); ?>" name="reset_filter">
+                        <input type="submit" name="filter_employee" id="filter" class="wperp-btn btn--primary" value="<?php esc_attr_e( 'Apply', 'erp' ); ?>">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type='text/javascript'>
+            ;jQuery(function ($) {
+                var policies = <?php
+                    $policies = \WeDevs\ERP\HRM\Models\LeavePolicy::all();
+                    $result = [];
+
+                    foreach ( $policies as $policy ) {
+                        $result[ $policy['f_year'] ][] = [
+                            'name'          => $policy->leave->name,
+                            'policy_id'     => $policy['id'],
+                            'employee_type' => $policy['employee_type'],
+                        ];
+                    }
+                    echo wp_json_encode( $result );
+                    ?>;
+                $('#financial_year').on('change', function (e) {
+                    var f_year = $('#financial_year').val();
+                    if (policies[f_year]) {
+                        $.each(policies[f_year], function (id, policy) {
+                            if (employee_type != '' && policy.employee_type != employee_type) {
+                                return;
+                            }
+                            var option = new Option(policy.name, policy.policy_id);
+                            $('#leave_policy').append(option);
+                        });
+                    }
+                });
+
+            });
+        </script>
+		<?php
     }
 }

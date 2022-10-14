@@ -24,7 +24,7 @@
                     <?php
                     $requests_table = new \WeDevs\ERP\HRM\LeaveRequestsListTable();
                     $requests_table->prepare_items();
-                    $requests_table->search_box( __( 'Search Employee', 'erp' ), 'employee_search' );
+//                    $requests_table->search_box( __( 'Search Employee', 'erp' ), 'employee_search' );
                     $requests_table->views();
 
                     $requests_table->display();
