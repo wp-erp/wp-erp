@@ -370,6 +370,15 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
     margin-bottom: 10px;
 }
 
+.erp-dropdown-filter-content .wperp-filter-panel h2 {
+    padding: 17px 0 0 20px !important;
+    margin: 0 !important;
+    color: #000000 !important;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 20px;
+}
+
 .erp-dropdown-filter-content .wperp-filter-panel h3 {
     padding: 17px 0 0 20px !important;
     margin: 0 !important;
@@ -377,15 +386,34 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
 }
 
 .erp-dropdown-filter-content .wperp-filter-panel .wperp-filter-panel-body select, .erp-dropdown-filter-content .wperp-filter-panel .wperp-filter-panel-body input {
-    width: 180px !important;
-    margin: 7px 5px !important;
-    border: 0.5px solid rgb(231, 231, 231);
+    width: 100% !important;
+    margin: 7px 0px !important;
+    border: 1px solid #E2E2E2;
+    max-width: 100% !important;
     font-weight: 300;
+    height: 35px;
+}
+
+
+.erp-dropdown-filter-content .wperp-filter-panel .wperp-filter-panel-body .input-component {
+    margin-bottom: 10px;
+}
+.erp-dropdown-filter-content .wperp-filter-panel .wperp-filter-panel-body label {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    color: #000000;
 }
 
 .erp-dropdown-filter-content .wperp-filter-panel .wperp-filter-panel-body input {
     border-radius: 3px;
     padding: 10px;
+    height: 35px;
+}
+.erp-dropdown-filter-content .wperp-filter-panel .wperp-filter-panel-body #employee_name {
+    border-radius: 3px;
+    padding: 0 0 0 10px;
+    height: 35px;
 }
 
 .erp-dropdown-filter-content .wperp-filter-panel .wperp-filter-panel-body .select2-container {
@@ -452,11 +480,23 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
     border-radius: 3px;
     float: left !important;
     margin-left: 17px;
+    margin-right: 14px;
 }
 
 .wperp-filter-dropdown .wperp-btn.btn--primary {
     background-color: #1a9ed4;
     color: #fff!important;
+}
+
+.wperp-filter-dropdown .btn--filter {
+    background-color: #2271B1;
+    color: #fff!important;
+}
+.wperp-filter-dropdown .btn--filter-apply {
+    background-color: #2271B1;
+    color: #fff!important;
+    width: 61px;
+    height: 35px;
 }
 
 .wperp-filter-dropdown .wperp-btn.btn--reset {
@@ -587,12 +627,27 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
     position: absolute;
     background-color: #f6f6f6;
     min-width: 175px;
-    overflow: hidden;
     border: 1px solid rgb(235, 233, 233);
     z-index: 1;
+    margin: 12px 0px;
     padding: 0;
     left: inherit !important;
     right: 0 !important;
+}
+
+.show:before {
+    content: "";
+    background: #FFFFFF;
+    width: 16px;
+    height: 16px;
+    position: absolute;
+    top: -8px;
+    left: 75%;
+    border: 1px solid rgb(235, 233, 233);
+    transform: translateX(-50%) rotate(45deg);
+    border-bottom-width: 0;
+    border-right-width: 0;
+    margin-left: 12px;
 }
 
 .erp-dropdown-filter-content a {

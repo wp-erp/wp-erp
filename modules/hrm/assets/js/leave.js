@@ -44,6 +44,7 @@
 
             // Leaave report custom filter
             $( '#filter_year' ).on( 'change', self, this.customFilterLeaveReport );
+            $( '#filter_leave_year' ).on( 'change', self, this.customLeaveFilter );
             $( 'input[name="end"], input[name="start"]' ).on( 'change', self, this.checkDateRange );
 
             // leave entitlement initialize
@@ -1139,6 +1140,25 @@
             } else {
                 var element = '<span id="custom-input" style="float:left"><span>From </span><input name="start" class="erp-leave-date-field" type="text">&nbsp;<span>To </span><input name="end" class="erp-leave-date-field" type="text"></span>';
                 $('#custom-date-range').after( element );
+            }
+            Leave.initDateField();
+        },
+
+        customLeaveFilter: function() {
+            if ( 'custom' !== this.value ) {
+                $('#custom-input').remove();
+            } else {
+                var element = '<div class="input-component" id="custom-input" style="display: flex; justify-content: space-between;">' +
+                    '<div>' +
+                    '<label for="start_date">From ' +
+                    '<input autocomplete="off" name="start_date" class="erp-leave-date-field" type="text">&nbsp;' +
+                    '</div>' +
+                    '<div>' +
+                    '<label for="end_date">To ' +
+                    '<input autocomplete="off" name="end_date" class="erp-leave-date-field" type="text">' +
+                    ' </div>' +
+                    '</div>';
+                $('#custom-date-range-leave-filter').append( element );
             }
             Leave.initDateField();
         },
