@@ -974,3 +974,53 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
 .text-green {
     color: rgb(33, 131, 33) !important;
 }
+
+.input-component label.checkbox {
+    padding: 5px 15px;
+    background: #F4F4F4;
+    border-radius: 3px;
+}
+
+.input-component label span {
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 16px;
+    text-align: center;
+    color: #B4B4B4;
+}
+
+.input-component input.leave-status {
+    display: none;
+}
+
+.input-component input.leave-status:checked+label {
+    background: #CEF4E4;
+}
+
+.input-component input.leave-status:checked+label span {
+    color: #0D3A26;
+}
+
+.input-component input.leave-status[id='1']:checked+label {
+    background: #CEF4E4;
+}
+
+.input-component input.leave-status[id='1']:checked+label span {
+    color: #0D3A26;
+}
+
+.input-component input.leave-status[id='2']:checked+label {
+    background: #FFE9C9;
+}
+
+.input-component input.leave-status[id='2']:checked+label span {
+    color: #3A180D;
+}
+
+.input-component input.leave-status[id='3']:checked+label {
+    background: #FFC9C9;
+}
+
+.input-component input.leave-status[id='3']:checked+label span {
+    color: #3A0D0D;
+}

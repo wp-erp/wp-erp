@@ -470,14 +470,16 @@ class LeaveRequestsListTable extends \WP_List_Table {
                         </div>
                         <div class='input-component'>
                             <label for="filter_leave_status"><?php esc_html_e( 'Leave status', 'erp' ); ?></label>
-                            <select name="filter_leave_status" id="filter_leave_status">
-                                <option value=''><?php echo esc_attr__( 'Filter by status', 'erp' ); ?></option>
+                            <div style="margin: 15px 0 25px 0">
                                 <?php
                                 foreach ( $this->counts as $key => $title ) {
-                                    echo sprintf( "<option value='%s'%s>%s</option>\n", esc_html( $key ), selected( $filter_leave_status, esc_html( $key ), false ), esc_html( $title['label'] ) );
+                                    if ( 'all' === $key ) {
+                                        continue;
+                                    }
+                                    echo sprintf( "<input class='leave-status' id='%s' type='checkbox' value='%s' %s ><label class='checkbox' for='%s'><span>%s</span></label>\n", esc_html( $key ), esc_html( $key ), selected( $filter_leave_status, esc_html( $key ), false ), esc_html( $key ), esc_html( $title['label'] ) );
                                 }
                                 ?>
-                            </select>
+                            </div>
                         </div>
                         <div class='input-component'>
                             <label for='filter_leave_year'><?php esc_html_e( 'Date range', 'erp' ); ?></label>
@@ -515,38 +517,6 @@ class LeaveRequestsListTable extends \WP_List_Table {
                 </div>
             </div>
         </div>
-        <script type='text/javascript'>
-            jQuery(function ($) {
-                var policies =
-                <?php
-                    $policies = LeavePolicy::all();
-                    $result = [];
-
-				foreach ( $policies as $policy ) {
-					$result[ $policy['f_year'] ][] = [
-						'name'          => $policy->leave->name,
-						'policy_id'     => $policy['id'],
-						'employee_type' => $policy['employee_type'],
-					];
-				}
-                    echo wp_json_encode( $result );
-				?>
-                    ;
-                $('#financial_year').on('change', function (e) {
-                    var f_year = $('#financial_year').val()
-                    if (policies[f_year]) {
-                        $.each(policies[f_year], function (id, policy) {
-                            if (employee_type != '' && policy.employee_type != employee_type) {
-                                return
-                            }
-                            var option = new Option(policy.name, policy.policy_id)
-                            $('#leave_policy').append(option)
-                        })
-                    }
-                })
-
-            })
-        </script>
         <?php
     }
 
