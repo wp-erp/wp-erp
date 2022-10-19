@@ -403,6 +403,7 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
     font-size: 14px;
     line-height: 20px;
     color: #000000;
+    margin-right: 17px;
 }
 
 .erp-dropdown-filter-content .wperp-filter-panel .wperp-filter-panel-body input {
@@ -475,12 +476,15 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
 
 .wperp-filter-dropdown .wperp-btn.btn--cancel {
     background-color: #fff;
-    color: rgb(114, 129, 145) !important;
     border: 1px solid #e2e2e2;
     border-radius: 3px;
     float: left !important;
     margin-left: 17px;
     margin-right: 14px;
+    font-weight: 500;
+    font-size: 11px;
+    line-height: 13px;
+    color: #72777C !important;
 }
 
 .wperp-filter-dropdown .wperp-btn.btn--primary {
@@ -497,10 +501,16 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
     color: #fff!important;
     width: 61px;
     height: 35px;
+    font-weight: 500;
+    font-size: 11px;
+    line-height: 13px;
 }
 
 .wperp-filter-dropdown .wperp-btn.btn--reset {
-    color: #3c9fd4 !important;
+    color: #1A9ED4 !important;
+    font-weight: 500;
+    font-size: 11px;
+    line-height: 13px;
     background-color: #fff;
     border: 1px solid #e2e2e2;
     border-radius: 3px;
@@ -1023,4 +1033,41 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
 
 .input-component input.leave-status[id='3']:checked+label span {
     color: #3A0D0D;
+}
+
+.zero-request{
+    width: 100%;
+    height: 518px;
+    background: #FFFFFF;
+    border: 1px solid #B6B7BA;
+    border-radius: 5px;
+    text-align: center;
+    margin-top: 70px;
+}
+
+.zero-request img{
+    vertical-align: middle;
+    width: 215px;
+    margin-top: 71px;
+}
+
+.zero-request .title p{
+    font-weight: 500;
+    font-size: 21px;
+    line-height: 25px;
+    color: #000000;
+    margin-top: 40px;
+}
+
+.zero-request .description p{
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+    color: #909090;
+}
+
+.zero-request .filter-button{
+    width: 57%;
+    margin-top: 77px;
+    text-align: left;
 }

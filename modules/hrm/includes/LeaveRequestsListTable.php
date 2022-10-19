@@ -16,6 +16,8 @@ class LeaveRequestsListTable extends \WP_List_Table {
 
     private $users = [];
 
+    public $empty_list = false;
+
     public function __construct() {
         global $status, $page;
 
@@ -382,6 +384,10 @@ class LeaveRequestsListTable extends \WP_List_Table {
         $this->items   = $query_results['data'];
         $total         = $query_results['total'];
 
+        if ( 0 === $total ) {
+            $this->empty_list = true;
+        }
+
         $this->set_pagination_args( [
             'total_items' => $total,
             'per_page'    => $per_page,
@@ -430,7 +436,7 @@ class LeaveRequestsListTable extends \WP_List_Table {
             <a class="wperp-btn btn--filter">
                 <svg style="margin: 8px 10px 8px 10px;" width='17' height='12' viewBox='0 0 17 12' fill='none' xmlns='http://www.w3.org/2000/svg'>
                     <path d='M6.61111 11.6668H10.3889V9.77794H6.61111V11.6668ZM0 0.333496V2.22239H17V0.333496H0ZM2.83333 6.94461H14.1667V5.05572H2.83333V6.94461Z' fill='white' />
-                </svg><?php esc_html_e( 'Filter Leave Requests', 'erp' ); ?><span class="dashicons dashicons-arrow-down-alt2"></span></a>
+                </svg><?php esc_html_e( 'Filter Leave Requests', 'erp' ); ?>&nbsp;&nbsp;&nbsp;</a>
 
             <div class="erp-dropdown-filter-content" id="erp-dropdown-content">
                 <div class="wperp-filter-panel wperp-filter-panel-default" style="width: 450px !important;">
@@ -472,6 +478,9 @@ class LeaveRequestsListTable extends \WP_List_Table {
                             <label for="filter_leave_status"><?php esc_html_e( 'Leave status', 'erp' ); ?></label>
                             <div style="margin: 15px 0 25px 0">
                                 <?php
+                                if(empty( $this->counts)){
+                                    $this->counts = erp_hr_leave_get_requests_count( $f_year );
+                                }
                                 foreach ( $this->counts as $key => $title ) {
                                     if ( 'all' === $key ) {
                                         continue;
