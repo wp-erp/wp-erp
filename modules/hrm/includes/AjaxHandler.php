@@ -123,7 +123,6 @@ class AjaxHandler {
         // Get leave & holiday data for hr dashboard calender
         $this->action( 'wp_ajax_erp-hr-get-leave-by-date', 'get_leave_holiday_by_date' );
 
-
         // AJAX hooks for employee requests
         $this->action( 'wp_ajax_erp_hr_employee_get_requests', 'get_employee_requests' );
         $this->action( 'wp_ajax_erp_hr_get_total_pending_requests', 'get_total_pending_requests' );
@@ -132,7 +131,51 @@ class AjaxHandler {
         // AJAX hooks for Settings Actions
         $this->action( 'wp_ajax_erp-settings-get-hr-financial-years', 'erp_settings_get_hr_financial_years' );
         $this->action( 'wp_ajax_erp-settings-financial-years-save', 'erp_settings_save_hr_financial_years' );
+
+        // Get filtered employee
+        $this->action( 'wp_ajax_search_live_employee', 'search_live_employee' );
     }
+
+    /**
+     * Search live employee.
+     *
+     * @return void
+     */
+    public function search_live_employee() {
+        $this->verify_hrm_nonce();
+
+        $employee_name = isset( $_POST['employee_name'] ) ? sanitize_text_field( wp_unslash( $_POST['employee_name'] ) ) : ''; // phpcs:ignore.
+        $users         = new \WP_User_Query( [
+            'search'         => '*' . esc_attr( $employee_name ) . '*',
+            'search_columns' => [
+                'user_login',
+                'user_nicename',
+                'user_email',
+                'display_name',
+            ],
+        ] );
+
+        $users_found = $users->get_results();
+
+        $employees = [];
+        foreach ( $users_found as $user ) {
+            $employee = ( new Employee( $user ) )->to_array();
+            if ( null === $employee['employee_id'] ) {
+                continue;
+            }
+
+            $designation = erp_hr_get_single_designation( (int) $employee['work']['designation'] );
+            $employee['work']['designation'] = $designation->data;
+            $employees[] = $employee;
+        }
+
+        if ( empty( $employees ) ) {
+            $this->send_error( [ 'data' => __( 'Sorry, no employee found!', 'erp' ) ] );
+        }
+
+        $this->send_success( $employees );
+    }
+
 
     /**
      * Leave approve

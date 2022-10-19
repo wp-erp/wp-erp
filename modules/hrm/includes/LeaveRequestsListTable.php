@@ -445,6 +445,7 @@ class LeaveRequestsListTable extends \WP_List_Table {
                         <div class="input-component">
                             <label for="employee_name"><?php esc_html_e( 'Employee name', 'erp' ); ?></label>
                             <input autocomplete="off" type="text" name="employee_name" id="employee_name" placeholder="<?php esc_attr_e( 'Search by employee name', 'erp' ); ?>" />
+                            <span id='live-employee-search'></span>
                         </div>
 
                         <div class='input-component' style="display: flex; justify-content: space-between; ">

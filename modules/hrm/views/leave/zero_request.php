@@ -1,9 +1,8 @@
 <?php
 $requests_table = new \WeDevs\ERP\HRM\LeaveRequestsListTable();
-//$requests_table->filter_option();
 ?>
 <div class="zero-request">
-    <img src="<?php echo esc_url( WPERP_ASSETS . '/images/zero_request.svg' ); ?>" alt=''>
+    <img class="main-image" src="<?php echo esc_url( WPERP_ASSETS . '/images/zero_request.svg' ); ?>" alt=''>
     <div class="title">
         <p>
             <?php echo esc_html__( 'Sit back and relax', 'erp' ); ?>

@@ -45,6 +45,8 @@
             // Leaave report custom filter
             $( '#filter_year' ).on( 'change', self, this.customFilterLeaveReport );
             $( '#filter_leave_year' ).on( 'change', self, this.customLeaveFilter );
+            $( '.input-component' ).on( 'keyup', '#employee_name', self, this.searchEmployee );
+            $( '.input-component' ).on( 'click', '.list-employee-name', self, this.setEmployee );
             $( 'input[name="end"], input[name="start"]' ).on( 'change', self, this.checkDateRange );
 
             // leave entitlement initialize
@@ -1161,6 +1163,43 @@
                 $('#custom-date-range-leave-filter').append( element );
             }
             Leave.initDateField();
+        },
+
+        setEmployee: function (e) {
+            e.preventDefault();
+            $("#employee_name").val($(this).data('employee_full_name'));
+            // $('#live-search').remove();
+        },
+        searchEmployee: function (e){
+            e.preventDefault();
+            let employee_name = $("#employee_name").val();
+            if (employee_name.length < 3){
+                return;
+            }
+            wp.ajax.send( 'search_live_employee', {
+                data: {
+                    '_wpnonce': wpErpHr.nonce,
+                    employee_name: employee_name
+                },
+                success: function(response) {
+                    var element = '<ul id="live-search"> ';
+                    for (let i = 0; i < response.length; i++){
+                        element += '<li><span class="employee_name">' +
+                            '<div class="list-main">'+ response[i]['avatar']['image'] +
+                            '<div class="list-employee-name" data-employee_full_name="'+ response[i]['name']['full_name'] +'">'+ response[i]['name']['full_name']
+                            +'<div class="list-employee-designation">'+ response[i]['work']['designation']['title'] +
+                            '</div>' +
+                            '</div>' +
+                            '</div>' +
+                            '</span></li> ';
+                    }
+                    element += '</ul> ';
+                    $('#live-employee-search').append( element );
+                },
+                error: function(error) {
+                    alert( error.data );
+                }
+            });
         },
 
         checkDateRange: function() {
