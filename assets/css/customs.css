@@ -1112,12 +1112,15 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
     box-sizing: border-box;
     position: absolute;
     width: 345px;
-    height: 250px;
-
+    max-height: 250px;
     background: #FFFFFF;
     border: 1px solid #E2E2E2;
     box-shadow: 0px 5px 12px rgba(0, 100, 235, 0.06);
     overflow: scroll;
+}
+
+.input-component #live-employee-search #live-search .hidden {
+    display: none;
 }
 
 /*.input-component #live-employee-search #live-search li a {*/

@@ -1,5 +1,6 @@
 /* jshint devel:true */
 /* global wpErpHr */
+/* global wpErpLeavePolicies */
 /* global wp */
 
 ;(function($) {
@@ -45,8 +46,17 @@
             // Leaave report custom filter
             $( '#filter_year' ).on( 'change', self, this.customFilterLeaveReport );
             $( '#filter_leave_year' ).on( 'change', self, this.customLeaveFilter );
-            $( '.input-component' ).on( 'keyup', '#employee_name', self, this.searchEmployee );
+            let x_timer;
+            $( '.input-component' ).on( 'keyup', '#employee_name', function (e){
+                clearTimeout(x_timer);
+                var user_name = $(this).val();
+                x_timer = setTimeout(function(){
+                    self.searchEmployee()
+                }, 1000);
+            });
+            // $( '.input-component' ).on( 'keyup', '#employee_name', self, this.searchEmployee );
             $( '.input-component' ).on( 'click', '.list-employee-name', self, this.setEmployee );
+            $( '#wperp-filter-dropdown' ).on( 'change', '#financial_year', self, this.setPolicy );
             $( 'input[name="end"], input[name="start"]' ).on( 'change', self, this.checkDateRange );
 
             // leave entitlement initialize
@@ -1165,14 +1175,29 @@
             Leave.initDateField();
         },
 
+        setPolicy: function (e) {
+            e.preventDefault();
+            var select_string = 'All Policy';
+            var f_year = $('#financial_year').val();
+            $('#leave_policy option').remove();
+            var option = new Option(select_string, '');
+            $('#leave_policy').append(option);
+
+            if (wpErpLeavePolicies[f_year]) {
+                $.each(wpErpLeavePolicies[f_year], function (id, policy) {
+                    var option = new Option(policy.name, policy.policy_id);
+                    $('#leave_policy').append(option);
+                });
+            }
+        },
         setEmployee: function (e) {
             e.preventDefault();
             $("#employee_name").val($(this).data('employee_full_name'));
-            // $('#live-search').remove();
+            $('#live-search').addClass('hidden');
         },
         searchEmployee: function (e){
-            e.preventDefault();
             let employee_name = $("#employee_name").val();
+            $('#live-search').remove();
             if (employee_name.length < 3){
                 return;
             }
@@ -1197,7 +1222,17 @@
                     $('#live-employee-search').append( element );
                 },
                 error: function(error) {
-                    alert( error.data );
+                    // alert( error.data );
+                    $('#live-search').remove();
+                    var element = '<ul id="live-search"> ';
+                        element += '<li><span class="employee_name">' +
+                            '<div class="list-main"><div class="list-employee-name">'+ error.data
+                            +'<div class="list-employee-designation"></div>' +
+                            '</div>' +
+                            '</div>' +
+                            '</span></li> ';
+                    element += '</ul> ';
+                    $('#live-employee-search').append( element );
                 }
             });
         },
