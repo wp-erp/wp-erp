@@ -43,7 +43,7 @@
             $( '.erp-hr-leave-requests' ).on( 'click', '.erp-hr-leave-reject-btn', self, this.leave.reject );
             $( '.request-list-table' ).on( 'click', 'a.submitdelete', self, this.leave.remove );
 
-            // Leaave report custom filter
+            // Leave report custom filter
             $( '#filter_year' ).on( 'change', self, this.customFilterLeaveReport );
             $( '#filter_leave_year' ).on( 'change', self, this.customLeaveFilter );
             let x_timer;
@@ -56,7 +56,7 @@
             });
             // $( '.input-component' ).on( 'keyup', '#employee_name', self, this.searchEmployee );
             $( '.input-component' ).on( 'click', '.list-employee-name', self, this.setEmployee );
-            $( '#wperp-filter-dropdown' ).on( 'change', '#financial_year', self, this.setPolicy );
+            $( '#wperp-filter-dropdown' ).on( 'change', '#financial_year', self, this.setLeavePolicy );
             $( 'input[name="end"], input[name="start"]' ).on( 'change', self, this.checkDateRange );
 
             // leave entitlement initialize
@@ -1175,7 +1175,7 @@
             Leave.initDateField();
         },
 
-        setPolicy: function (e) {
+        setLeavePolicy: function (e) {
             e.preventDefault();
             var select_string = 'All Policy';
             var f_year = $('#financial_year').val();

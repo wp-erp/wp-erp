@@ -1137,3 +1137,50 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
 .input-component #live-search li:hover:not(.header) {
     background-color: #F7F7F7;
 }
+
+.wperp-filter-dropdown #search-main{
+    display: flex;
+}
+.wperp-filter-dropdown #search-main .filter-left{
+    display: flex;
+    align-items: center;
+}
+.wperp-filter-dropdown #search-main .filter-left .single-filter{
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    flex-direction: row;
+    padding: 7px 13px;
+    height: 30px;
+    background: #FFFFFF;
+    border: 1px solid #E2E2E2;
+    border-radius: 33px;
+    margin-right: 10px;
+}
+.wperp-filter-dropdown #search-main .filter-left .single-filter .filter-text{
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 16px;
+    color: #000000;
+    flex: none;
+    margin-right: 5px;
+}
+.wperp-filter-dropdown #search-main .filter-left .single-filter .filter-close{
+    color: #B1B1B1;
+    text-decoration: none;
+}
+.wperp-filter-dropdown #search-main .filter-left .clear-filter{
+    width: 66px;
+    height: 16px;
+    vertical-align: middle;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 16px;
+    margin: 0 30px 0 40px;
+}
+
+.wperp-filter-dropdown #search-main .filter-left .clear-filter a{
+    color: #5C626A !important;
+}
+
