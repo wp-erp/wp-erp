@@ -5,7 +5,7 @@
 
 ;(function($) {
     'use strict';
-
+    var x_timer;
     var Leave = {
 
         initialize: function() {
@@ -46,7 +46,6 @@
             // Leave report custom filter
             $( '#filter_year' ).on( 'change', self, this.customFilterLeaveReport );
             $( '#filter_leave_year' ).on( 'change', self, this.customLeaveFilter );
-            let x_timer;
             $( '.input-component' ).on( 'keyup', '#employee_name', function (e){
                 clearTimeout(x_timer);
                 var user_name = $(this).val();
@@ -1196,7 +1195,7 @@
             $('#live-search').addClass('hidden');
         },
         searchEmployee: function (e){
-            let employee_name = $("#employee_name").val();
+            var employee_name = $("#employee_name").val();
             $('#live-search').remove();
             if (employee_name.length < 3){
                 return;
@@ -1208,7 +1207,7 @@
                 },
                 success: function(response) {
                     var element = '<ul id="live-search"> ';
-                    for (let i = 0; i < response.length; i++){
+                    for (var i = 0; i < response.length; i++){
                         element += '<li><span class="employee_name">' +
                             '<div class="list-main">'+ response[i]['avatar']['image'] +
                             '<div class="list-employee-name" data-employee_full_name="'+ response[i]['name']['full_name'] +'">'+ response[i]['name']['full_name']
