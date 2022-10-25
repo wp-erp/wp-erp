@@ -491,16 +491,48 @@ class LeaveRequestsListTable extends \WP_List_Table {
             <div id="search-main">
                 <div class="filter-left">
                     <?php
+                    // phpcs:disable
+                    $clear_all_url = admin_url( 'admin.php?page=erp-hr&section=leave&sub-section=leave-requests' );
                     if ( ! empty( $filters ) ) {
-                        foreach ( $filters as $filter ) {
-							?>
+                        foreach ( $filters as $key => $filter ) {
+                            $build_url['employee_name'] = '';
+                            $build_url['financial_year'] = '';
+                            $build_url['leave_policy'] = '';
+                            $build_url['filter_leave_status'] = '';
+                            $build_url['filter_leave_year'] = '';
+                            $build_url = wp_parse_args( $filters, $build_url);
+                            if ( ! empty( $filters['filter_leave_year'] ) ) {
+                                if ( 'custom' === $_GET['filter_leave_year'] ) {
+                                    $build_url['start_date'] = $_GET['start_date'];
+                                    $build_url['end_date'] = $_GET['end_date'];
+                                }
+                                $build_url['filter_leave_year'] = $_GET['filter_leave_year'];
+                            }
+                            if ( ! empty( $filters['financial_year'] ) ) {
+                                $build_url['financial_year'] = $_GET['financial_year'];
+                            }
+                            if ( ! empty( $filters['leave_policy'] ) ) {
+                                $build_url['leave_policy'] = $_GET['leave_policy'];
+                            }
+                            if ( ! empty( $filters['filter_leave_status'] ) ) {
+                                $build_url['filter_leave_status'] = $_GET['filter_leave_status'];
+                            }
+                            if ( 'filter_leave_year' === $key && 'custom' === $_GET['filter_leave_year'] ) {
+                                unset( $build_url['start_date']);
+                                unset( $build_url['end_date']);
+                                $build_url['filter_leave_year'] = '';
+                            }
+                            $build_url[ $key ] = '';
+                            $url = count($filters) > 1 ? admin_url( 'admin.php?page=erp-hr&section=leave&sub-section=leave-requests&' . http_build_query( $build_url ) ) : $clear_all_url;
+                            // phpcs:enable
+                            ?>
                         <div class="single-filter">
                             <div class="filter-text">
                                 <?php
                                 echo esc_html( $filter );
                                 ?>
                             </div>
-                            <a href="" class="filter-close">
+                            <a href="<?php echo esc_url( $url ); ?>" class="filter-close">
                                 X
                             </a>
                         </div>
@@ -508,7 +540,7 @@ class LeaveRequestsListTable extends \WP_List_Table {
                         }
 						?>
                         <div class="clear-filter">
-                            <a href="<?php echo admin_url('admin.php?page=erp-hr&section=leave&sub-section=leave-requests');?>">
+                            <a href="<?php echo esc_url( $clear_all_url ); ?>">
                                 <?php echo __( 'Clear filter', 'erp' ); ?>
                             </a>
                         </div>
@@ -517,7 +549,7 @@ class LeaveRequestsListTable extends \WP_List_Table {
                     ?>
                 </div>
                 <div class="filter-right">
-                    <a class='wperp-btn btn--filter'>
+                    <a id='wperp-leave-filter-dropdown' class='wperp-btn btn--filter'>
                         <svg style='margin: 8px 10px 8px 10px;' width='17' height='12' viewBox='0 0 17 12' fill='none' xmlns='http://www.w3.org/2000/svg'>
                             <path d='M6.61111 11.6668H10.3889V9.77794H6.61111V11.6668ZM0 0.333496V2.22239H17V0.333496H0ZM2.83333 6.94461H14.1667V5.05572H2.83333V6.94461Z' fill='white' />
                         </svg><?php esc_html_e( 'Filter Leave Requests', 'erp' ); ?>&nbsp;&nbsp;&nbsp;
@@ -525,7 +557,7 @@ class LeaveRequestsListTable extends \WP_List_Table {
                 </div>
             </div>
 
-            <div class="erp-dropdown-filter-content" id="erp-dropdown-content">
+            <div class="erp-dropdown-filter-content" id="erp-leave-dropdown-content">
                 <div class="wperp-filter-panel wperp-filter-panel-default" style="width: 450px !important;">
                     <h2><?php esc_html_e( 'Filter Leave Request', 'erp' ); ?></h2>
                     <div class="wperp-filter-panel-body">

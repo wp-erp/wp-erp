@@ -101,6 +101,7 @@
             });
 
             $('body').on( 'click', '.wperp-filter-dropdown a', this.employee.toggleFilterDropdown );
+            $('.wperp-filter-dropdown').on( 'click', '#wperp-leave-filter-dropdown', this.employee.toggleLeaveFilterDropdown );
 
             $( 'body' ).on( 'click', 'input[name="hide_filter"]', function(e) {
                 e.preventDefault();
@@ -1274,6 +1275,10 @@
 
             toggleFilterDropdown: function() {
                 document.getElementById( 'erp-dropdown-content' ).classList.toggle( 'show' );
+            },
+
+            toggleLeaveFilterDropdown: function() {
+                document.getElementById( 'erp-leave-dropdown-content' ).classList.toggle( 'show' );
             },
 
             general: {
