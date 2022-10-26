@@ -1160,7 +1160,7 @@
                 $('#custom-input').remove();
             } else {
                 var element = '<div class="input-component" id="custom-input" style="display: flex; justify-content: space-between;">' +
-                    '<div>' +
+                    '<div style="display: flex">' +
                     '<label for="start_date">From ' +
                     '<input autocomplete="off" name="start_date" class="erp-leave-date-field" type="text">&nbsp;' +
                     '</div>' +
