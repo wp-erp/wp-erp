@@ -33,7 +33,7 @@ class AdminPage {
         // Setup/welcome
         if ( ! empty( $_GET['page'] ) ) {
             if ( 'erp-setup' == $_GET['page'] ) {
-                include_once __DIR__ . '/class-setup-wizard.php';
+                new SetupWizard();
             }
         }
     }
