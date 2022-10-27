@@ -25,6 +25,7 @@
                     $requests_table = new \WeDevs\ERP\HRM\LeaveRequestsListTable();
                     $requests_table->prepare_items();
                     if ( $requests_table->empty_list ) {
+                        $requests_table->filter_option();
                         include WPERP_HRM_VIEWS . '/leave/zero_request.php';
                         return;
                     }

@@ -373,7 +373,7 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
 .erp-dropdown-filter-content .wperp-filter-panel h2 {
     padding: 17px 0 0 20px !important;
     margin: 0 !important;
-    color: #000000 !important;
+    color: #64748B !important;
     font-weight: 700;
     font-size: 18px;
     line-height: 20px;
@@ -399,10 +399,11 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
     margin-bottom: 10px;
 }
 .erp-dropdown-filter-content .wperp-filter-panel .wperp-filter-panel-body label {
+    font-style: normal;
     font-weight: 400;
     font-size: 14px;
     line-height: 20px;
-    color: #000000;
+    color: #64748B;
     margin-right: 17px;
 }
 
@@ -1019,12 +1020,39 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
     color: #0D3A26;
 }
 
+.input-component input.leave-status[id='1']:hover+label {
+    background: #FFFFFF;
+    border: 1px solid #CEF4E4;
+}
+
+.input-component input.leave-status[id='1']:hover+label span {
+    color: #000000;
+}
+
 .input-component input.leave-status[id='2']:checked+label {
     background: #FFE9C9;
 }
 
 .input-component input.leave-status[id='2']:checked+label span {
     color: #3A180D;
+}
+
+.input-component input.leave-status[id='2']:hover+label {
+    background: #FFFFFF;
+    border: 1px solid #FFE9C9;
+}
+
+.input-component input.leave-status[id='2']:hover+label span {
+    color: #000000;
+}
+
+.input-component input.leave-status[id='3']:hover+label {
+    background: #FFFFFF;
+    border: 1px solid #FFC9C9;
+}
+
+.input-component input.leave-status[id='3']:hover+label span {
+    color: #000000;
 }
 
 .input-component input.leave-status[id='3']:checked+label {

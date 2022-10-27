@@ -429,11 +429,9 @@ class LeaveRequestsListTable extends \WP_List_Table {
      *
      * @since 0.1
      *
-     * @param string $which
-     *
      * @return void
      */
-    public function filter_option() {
+    public function filter_option( $filtered_option = true ) {
         // phpcs:disable
         $policies    = LeavePolicy::all();
         $policy_data = [];
@@ -490,7 +488,9 @@ class LeaveRequestsListTable extends \WP_List_Table {
         <div id="wperp-filter-dropdown" class="wperp-filter-dropdown" style="margin: -46px 0 0 0;">
             <div id="search-main">
                 <?php
+                if ( $filtered_option ) {
                     $this->filtered_option( $filters );
+                }
                 ?>
                 <div class="filter-right">
                     <a id='wperp-leave-filter-dropdown' class='wperp-btn btn--filter'>
@@ -548,7 +548,7 @@ class LeaveRequestsListTable extends \WP_List_Table {
                                     if ( 'all' === $key ) {
                                         continue;
                                     }
-                                    echo sprintf( "<input name='filter_leave_status' class='leave-status' id='%s' type='radio' value='%s' ><label class='checkbox' for='%s'><span>%s</span></label>\n", esc_html( $key ), esc_html( $key ), esc_html( $key ), esc_html( $title['label'] ) );
+                                    echo sprintf( "<input name='filter_leave_status' class='filter_leave_status leave-status' id='%s' type='radio' value='%s' ><label class='checkbox' for='%s'><span>%s</span></label>\n", esc_html( $key ), esc_html( $key ), esc_html( $key ), esc_html( $title['label'] ) );
                                 }
                                 ?>
                             </div>
@@ -567,8 +567,8 @@ class LeaveRequestsListTable extends \WP_List_Table {
                     </div>
 
                     <div class="wperp-filter-panel-footer">
-                        <input type="submit" class="wperp-btn btn--cancel btn--filter-apply" value="<?php esc_attr_e( 'Cancel', 'erp' ); ?>" name="hide_filter">
-                        <input type="submit" class="wperp-btn btn--reset btn--filter-apply" value="<?php esc_attr_e( 'Reset', 'erp' ); ?>" name="reset_filter">
+                        <input type="button" class="wperp-btn btn--cancel btn--filter-apply" value="<?php esc_attr_e( 'Cancel', 'erp' ); ?>" name="hide_filter">
+                        <input type="button" class="wperp-btn btn--reset btn--filter-apply" value="<?php esc_attr_e( 'Reset', 'erp' ); ?>" name="leave_filter_reset">
                         <input type="submit" name="filter_employee" id="filter" class="wperp-btn btn--filter-apply" value="<?php esc_attr_e( 'Apply', 'erp' ); ?>">
                     </div>
                 </div>
